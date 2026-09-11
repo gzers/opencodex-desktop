@@ -1,0 +1,464 @@
+{
+  "allowed_implementation_statuses": [
+    "implemented",
+    "planned",
+    "unsupported",
+    "compatibility_only"
+  ],
+  "capabilities": [
+    {
+      "capability_id": "CAP-VNEXT-CORE-ACTIVATION",
+      "execution_boundary": "explicit successor-bound or explicit-invocation only; excluded and mixed intents fail closed before governed routing",
+      "implementation_status": "implemented",
+      "name": "项目绑定、意图与写入范围判断",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/validate_routing.py::run_validation",
+      "verification_ids": [
+        "VER-PG-ROUTING",
+        "VER-PG-FAIL-CLOSED"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-CORE-AUTHORITY",
+      "execution_boundary": "DMD and IMP human fields remain Markdown-owned below the project marker's exact docs_root; runtime objects are source-bound projections and cannot independently mutate lifecycle or conclusions",
+      "implementation_status": "implemented",
+      "name": "人类事实与运行控制单一权威",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::verify_source_binding",
+      "verification_ids": [
+        "VER-CORE-AUTHORITY",
+        "VER-PROJECT-DOCS-ROOT",
+        "VER-CONFIGURATION-LITE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-CORE-SHARED-PATH",
+      "execution_boundary": "ownership plans must bind the sealed project shared-path policy whose governance paths are derived from docs_root; contributors cannot claim integration-owned paths",
+      "implementation_status": "implemented",
+      "name": "共享路径固定输入与写入阻断",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::verify_ownership_policy",
+      "verification_ids": [
+        "VER-SHARED-PATH-POLICY",
+        "VER-SHARED-PATH-RUNTIME",
+        "VER-PROJECT-DOCS-ROOT"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-CORE-ADAPTER-NEUTRALITY",
+      "execution_boundary": "Codex, Claude, human, and CI adapters exchange content proposals and attestations only; they cannot own runtime control or sign closure certificates",
+      "implementation_status": "implemented",
+      "name": "多执行器合同中立",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/adapters.py::build_executor_request",
+      "verification_ids": [
+        "VER-ADAPTER-CONTRACT"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-CORE-SINGLE-SOURCE",
+      "execution_boundary": "project layout is read from one project marker, Skill registries resolve only below the installed Skill root, and one-time re-anchor inputs become one digest-bound plan value; mirrored provider code remains a byte-checked projection",
+      "implementation_status": "implemented",
+      "name": "Skill 单一源码与构建身份",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/core/layer-model.md",
+      "verification_ids": [
+        "VER-SKILL-REGISTRY",
+        "VER-CONFIGURATION-LITE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-FACT-DEMAND",
+      "execution_boundary": "DMD Markdown owns human state and acceptance facts; runtime objects enforce source binding and typed relations without status directories",
+      "implementation_status": "implemented",
+      "name": "需求事实管理",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::new_demand",
+      "verification_ids": [
+        "VER-FACT-DMD-AUTHORITY",
+        "VER-PROJECT-CATALOG-RECONCILE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-FACT-DEMAND-WALKTHROUGH",
+      "execution_boundary": "analysis-only; no evidence recording, adoption, writeback, task activation, or closure mutation",
+      "implementation_status": "implemented",
+      "name": "需求与闭环推演分析",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-facts.md",
+      "verification_ids": [
+        "VER-DEMAND-WALKTHROUGH-ANALYSIS"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-FACT-PRODUCT-SPEC",
+      "execution_boundary": "human-readable product facts are reconstructed from the product overview, capability modules, processes, and shared rules; no duplicate business-architecture authority",
+      "implementation_status": "implemented",
+      "name": "产品规格事实",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-facts.md",
+      "verification_ids": [
+        "VER-CORE-PRODUCT-REBUILD"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-FACT-ARCHITECTURE",
+      "execution_boundary": "architecture maps, overall architecture, and owned domains are human facts; runtime indexes and boards remain disposable projections",
+      "implementation_status": "implemented",
+      "name": "系统架构事实",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-facts.md",
+      "verification_ids": [
+        "VER-CORE-ARCHITECTURE-REBUILD"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-FACT-WRITEBACK",
+      "execution_boundary": "required writeback must reference an actual changed Markdown target whose before and after digests are bound into the receipt before atomic task closure",
+      "implementation_status": "implemented",
+      "name": "验证后长期事实回写",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::RuntimeStore.commit_task_closure",
+      "verification_ids": [
+        "VER-FACT-WRITEBACK-CERTIFICATE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-IMPLEMENTATION",
+      "execution_boundary": "IMP is admitted only for durable human technical choices; runtime state remains source-bound and may relate many-to-many with DMD",
+      "implementation_status": "implemented",
+      "name": "复杂开发实施事实",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::new_implementation",
+      "verification_ids": [
+        "VER-FACT-IMP-AUTHORITY",
+        "VER-PROJECT-CATALOG-RECONCILE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-TASK",
+      "execution_boundary": "TASK contracts freeze owner, scope, checks, acceptance bindings, and writeback before execution; CAS and certificate closure prevent silent drift",
+      "implementation_status": "implemented",
+      "name": "确定性任务控制",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::new_task",
+      "verification_ids": [
+        "VER-RUNTIME-TASK"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-WORKTREE",
+      "execution_boundary": "plan, prepare, status, verify, integrate, and cleanup operate only on caller-supplied local Git repository and Worktree paths with a frozen exact plan and shared-path policy; the provider has no AI or network client, while caller-supplied test argv still requires an external sandbox and explicit authority",
+      "implementation_status": "implemented",
+      "name": "Worktree 隔离执行",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/integration/worktree_cli.py::main",
+      "verification_ids": [
+        "VER-WORKTREE-PARALLEL",
+        "VER-WORKTREE-CLI-SESSION"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-REVIEW",
+      "execution_boundary": "review criteria reuse TASK.required_checks and review results reuse RCP.checks; no independent review lifecycle or release authorization",
+      "implementation_status": "implemented",
+      "name": "TASK/RCP 检查式审阅与 finding",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::close_task",
+      "verification_ids": [
+        "VER-RUNTIME-REVIEW"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-TEST",
+      "execution_boundary": "test and review results are immutable named RCP checks; missing or failed required checks block closure without creating parallel TESTREC state",
+      "implementation_status": "implemented",
+      "name": "测试回执与失败轮次",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::build_receipt",
+      "verification_ids": [
+        "VER-RUNTIME-TEST-RECEIPT"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-VALIDATION",
+      "execution_boundary": "fast, provider-replay, release, and provider-live are explicit separate gates; certificates keep bounded summaries and digests, large evidence stays external, and retention defaults to a drift-bound preview that protects certificate references",
+      "implementation_status": "implemented",
+      "name": "分层验证、压缩证据与保留",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/validation/gates.py::run_gate_plan",
+      "verification_ids": [
+        "VER-EVIDENCE-COMPACTION",
+        "VER-VALIDATION-GATES",
+        "VER-EVIDENCE-RETENTION"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-RELEASE",
+      "execution_boundary": "human-readable REL fact only; does not execute artifact publication, EPLAN/TXN, synchronization, or release commands",
+      "implementation_status": "implemented",
+      "name": "按需 REL 发布事实与回退结论",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-delivery.md",
+      "verification_ids": [
+        "VER-RUNTIME-RELEASE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-RUN",
+      "execution_boundary": "human-readable RUN fact only; does not operate production systems or claim automated observation",
+      "implementation_status": "implemented",
+      "name": "按需 RUN 运行观察与事故结论",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-delivery.md",
+      "verification_ids": [
+        "VER-RUNTIME-RUN"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-EVIDENCE",
+      "execution_boundary": "create and maintain durable EVD Markdown only when human-readable support value exists",
+      "implementation_status": "implemented",
+      "name": "项目支撑证据",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-EVD"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-KNOWLEDGE",
+      "execution_boundary": "ordinary knowledge uses descriptive Markdown; stable multi-source or adopted knowledge may be promoted to KNOW",
+      "implementation_status": "implemented",
+      "name": "项目知识管理",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-KNOWLEDGE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-KNOWLEDGE-CHANNEL",
+      "execution_boundary": "document channel identity, access boundary, scope, destination, and refresh policy; connectors, credentials, cursors, deduplication, and candidate state remain outside Markdown",
+      "implementation_status": "implemented",
+      "name": "知识渠道登记与采集边界",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-KNOWLEDGE-CHANNEL"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-COLLABORATION",
+      "execution_boundary": "create COL packages for explicit participants, inputs, outputs, originals, disposition, and retention; ordinary conversations are excluded",
+      "implementation_status": "implemented",
+      "name": "项目协作资料",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-COLLABORATION"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-INTERFACE-DOCS",
+      "execution_boundary": "human-readable interface documents are primary; Apifox and other tool-ready content is a derived final section in the same document",
+      "implementation_status": "implemented",
+      "name": "接口文档协作主线",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-INTERFACE-DOCS"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-CONTROLLED-DOCS",
+      "execution_boundary": "maintain CDOC current version, parent version, original digest, approval state, location, and retention without duplicating every version body",
+      "implementation_status": "implemented",
+      "name": "受控文档版本链",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-CONTROLLED-DOCS"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-INITIALIZE",
+      "execution_boundary": "the globally installed Skill accepts an explicit docs_root, plans a 14-file maximum project footprint, previews without writing, requires an explicit plan digest and external transaction directory for apply, preserves existing project content through managed blocks, vendors no Skill/runtime/tests, and supports exact verify/recover; generated authority/shared-path policies use the same document-layout derivation and canonical runtime sealer, and an applied project must pass both configuration audit and runtime policy loading; self-project Test mirror assembly remains a separate build tool",
+      "implementation_status": "implemented",
+      "name": "项目初始化",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/project_init.py::build_plan",
+      "verification_ids": [
+        "VER-OPS-INITIALIZE",
+        "VER-PROJECT-DOCS-ROOT"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-MIGRATE",
+      "execution_boundary": "executes only caller-supplied exact before/after file plans; it does not discover legacy semantics, generate an importer, or authorize migration",
+      "implementation_status": "implemented",
+      "name": "精确迁移计划执行",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/operations.py::build_operation_plan",
+      "verification_ids": [
+        "VER-OPS-MIGRATE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-MIGRATION-PREVIEW",
+      "execution_boundary": "classifies only an explicitly supplied project, builds Git-aware body-free plans, supports Test-only legacy preview and successor docs_root re-anchor plan/preview on a clean linked Worktree, exposes formal_apply_available=false plus guided_execution_state for the exact frozen plan, never exposes formal re-anchor apply, and never infers or generalizes authorization",
+      "implementation_status": "implemented",
+      "name": "旧项目识别、Test 迁移与只读重锚定预演",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/migration/current_project.py::build_current_project_plan",
+      "verification_ids": [
+        "VER-MIGRATION-BINDING",
+        "VER-MIGRATION-INVENTORY",
+        "VER-MIGRATION-COMPACT-PLAN",
+        "VER-MIGRATION-CURRENT-PROJECT-IMPORTER",
+        "VER-MIGRATION-TEST-PREVIEW",
+        "VER-MIGRATION-ATTACKS",
+        "VER-MIGRATION-CLI",
+        "VER-PROJECT-DOCS-ROOT",
+        "VER-CONFIGURATION-LITE",
+        "VER-REANCHOR-READONLY"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-UPGRADE",
+      "execution_boundary": "applies a frozen digest-confirmed file plan with a durable transaction journal; domain-specific upgrade planning remains outside the kernel",
+      "implementation_status": "implemented",
+      "name": "精确协议与基线升级事务",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/operations.py::apply_operation",
+      "verification_ids": [
+        "VER-OPS-UPGRADE",
+        "VER-OPS-EPLAN-TXN"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-SYNC",
+      "execution_boundary": "uses the project-owned managed Skill set and one caller-supplied target root to preview an exact replacement plan; it does not select global targets; apply re-verifies the current final-acceptance certificate, requires an external attempt directory and explicit plan digest, installs or updates the four active Skills, removes the four retired managed Skills plus explicitly registered legacy transaction and malformed empty directories without aliases or empty roots, preserves every other unmanaged Skill, and delegates byte backup, drift refusal, verify, and recover to the exact transaction kernel",
+      "implementation_status": "implemented",
+      "name": "全局受管 Skill 精确替换",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/integration/global_skill_sync.py::apply_sync",
+      "verification_ids": [
+        "VER-GLOBAL-SKILL-SYNC",
+        "VER-OPS-SYNC",
+        "VER-OPS-EPLAN-TXN"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-RECOVER",
+      "execution_boundary": "recovers only the exact transaction and refuses to overwrite later user drift; destructive or external recovery still requires separate authorization",
+      "implementation_status": "implemented",
+      "name": "失败恢复",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/operations.py::recover_operation",
+      "verification_ids": [
+        "VER-OPS-RECOVER",
+        "VER-OPS-EPLAN-TXN"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-OPS-LEGACY",
+      "execution_boundary": "explicit read-only inventory of a recognized legacy manifest and files; no default loading, writer, importer, migration, or compatibility fallback",
+      "implementation_status": "compatibility_only",
+      "name": "历史项目治理格式只读盘点",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/migration/legacy_inventory.py::inventory_legacy_project",
+      "verification_ids": [
+        "VER-LEGACY-READ-COMPATIBILITY"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-BOUNDED-READ",
+      "execution_boundary": "direct and bounded source lookup is authoritative; stale or unavailable caches fall back without hiding source objects",
+      "implementation_status": "implemented",
+      "name": "有界读取",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/index.py::RuntimeIndex.query",
+      "verification_ids": [
+        "VER-QUERY-BOUNDED-READ"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-SQLITE-FTS",
+      "execution_boundary": "disposable source-bound acceleration only; cache loss, corruption, or staleness cannot change facts or closure",
+      "implementation_status": "implemented",
+      "name": "SQLite 与 FTS 索引",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/index.py::RuntimeIndex.rebuild",
+      "verification_ids": [
+        "VER-QUERY-SQLITE-FTS",
+        "VER-PROJECT-CATALOG-RECONCILE",
+        "VER-PROJECT-REFRESH-CLI",
+        "VER-QUERY-DOCUMENT-INDEX",
+        "VER-PROJECT-DOCS-ROOT"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-VECTOR",
+      "execution_boundary": "FTS is always available; vector and hybrid retrieval are explicit disposable projections bound to provider configuration and source digests, external adapters receive no implicit credentials, sensitive inputs are blocked from external providers, and unavailability falls back to FTS without changing facts or closure",
+      "implementation_status": "implemented",
+      "name": "可选语义与混合检索",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/semantic.py::hybrid_query",
+      "verification_ids": [
+        "VER-QUERY-VECTOR",
+        "VER-QUERY-VECTOR-PROVIDER-CONTRACT",
+        "VER-QUERY-SEMANTIC-PROVIDER",
+        "VER-QUERY-SEMANTIC-BENCHMARK"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-BOARD",
+      "execution_boundary": "projection-only static browser board and root entry are rebuilt from Markdown facts and runtime contracts with source-freshness checks; default task selection and detail interaction are read-only and cannot own or mutate project state",
+      "implementation_status": "implemented",
+      "name": "派生项目看板",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/board.py::refresh_static_board",
+      "verification_ids": [
+        "VER-QUERY-BOARD",
+        "VER-QUERY-STATIC-BOARD",
+        "VER-PROJECT-REFRESH-CLI"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-PARALLEL",
+      "execution_boundary": "platform-neutral ownership and scope contract only; it does not create, merge, or clean physical Git worktrees",
+      "implementation_status": "implemented",
+      "name": "并行所有权与共享路径阻断",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::new_ownership_plan",
+      "verification_ids": [
+        "VER-SHARED-PATH-RUNTIME"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-INTEGRATION-CERT",
+      "execution_boundary": "ICERT is committed only from stored contributor and integration TASK/RCP/CERT evidence bound to the current ownership and shared-path policy",
+      "implementation_status": "implemented",
+      "name": "集成与关闭证书",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/runtime/kernel.py::RuntimeStore.commit_integration_certificate",
+      "verification_ids": [
+        "VER-RUNTIME-INTEGRATION-CERTIFICATE"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-QUERY-BENCHMARK",
+      "execution_boundary": "static source metrics are available as optional evidence; full 10k and A/B Test runs do not become capability-preservation obligations",
+      "implementation_status": "implemented",
+      "name": "性能与稳健性基准",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "scripts/lib/integration/static_benchmark.py::summarize",
+      "verification_ids": [
+        "VER-VNEXT-BENCHMARK"
+      ]
+    }
+  ],
+  "format": "adg-vnext-capability-registry-v1",
+  "updated_at": "2026-08-19"
+}

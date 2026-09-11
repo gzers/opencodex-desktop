@@ -1,0 +1,69 @@
+{
+  "allowed_dispositions": [
+    "preserve",
+    "replace",
+    "compatibility_only",
+    "retire"
+  ],
+  "capabilities": [
+    {
+      "disposition": "replace",
+      "id": "project-governance-standard-profile",
+      "name": "项目治理标准能力",
+      "reason": "由全局 project-governance Skill 提供，项目只保存绑定与事实。",
+      "target_capability_ids": [
+        "CAP-VNEXT-CORE-ACTIVATION",
+        "CAP-VNEXT-CORE-AUTHORITY",
+        "CAP-VNEXT-CORE-SHARED-PATH",
+        "CAP-VNEXT-CORE-ADAPTER-NEUTRALITY",
+        "CAP-VNEXT-CORE-SINGLE-SOURCE",
+        "CAP-VNEXT-FACT-DEMAND",
+        "CAP-VNEXT-FACT-DEMAND-WALKTHROUGH",
+        "CAP-VNEXT-FACT-PRODUCT-SPEC",
+        "CAP-VNEXT-FACT-ARCHITECTURE",
+        "CAP-VNEXT-FACT-WRITEBACK",
+        "CAP-VNEXT-DELIVERY-IMPLEMENTATION",
+        "CAP-VNEXT-DELIVERY-TASK",
+        "CAP-VNEXT-DELIVERY-WORKTREE",
+        "CAP-VNEXT-DELIVERY-REVIEW",
+        "CAP-VNEXT-DELIVERY-TEST",
+        "CAP-VNEXT-DELIVERY-VALIDATION",
+        "CAP-VNEXT-DELIVERY-RELEASE",
+        "CAP-VNEXT-DELIVERY-RUN",
+        "CAP-VNEXT-MAT-EVIDENCE",
+        "CAP-VNEXT-MAT-KNOWLEDGE",
+        "CAP-VNEXT-MAT-KNOWLEDGE-CHANNEL",
+        "CAP-VNEXT-MAT-COLLABORATION",
+        "CAP-VNEXT-MAT-INTERFACE-DOCS",
+        "CAP-VNEXT-MAT-CONTROLLED-DOCS",
+        "CAP-VNEXT-OPS-INITIALIZE",
+        "CAP-VNEXT-OPS-MIGRATE",
+        "CAP-VNEXT-OPS-MIGRATION-PREVIEW",
+        "CAP-VNEXT-OPS-UPGRADE",
+        "CAP-VNEXT-OPS-SYNC",
+        "CAP-VNEXT-OPS-RECOVER",
+        "CAP-VNEXT-OPS-LEGACY",
+        "CAP-VNEXT-QUERY-BOUNDED-READ",
+        "CAP-VNEXT-QUERY-SQLITE-FTS",
+        "CAP-VNEXT-QUERY-VECTOR",
+        "CAP-VNEXT-QUERY-BOARD",
+        "CAP-VNEXT-QUERY-PARALLEL",
+        "CAP-VNEXT-QUERY-INTEGRATION-CERT",
+        "CAP-VNEXT-QUERY-BENCHMARK"
+      ],
+      "verification_ids": []
+    }
+  ],
+  "final_gate_policy": {
+    "exempt_dispositions": [
+      "retire"
+    ],
+    "required_dispositions": [
+      "preserve",
+      "replace",
+      "compatibility_only"
+    ]
+  },
+  "format": "adg-vnext-capability-disposition-v2",
+  "project_id": "opencodex-desktop"
+}

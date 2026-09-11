@@ -1,0 +1,44 @@
+{
+  "baseline": {
+    "acceptance_certificate_id": null,
+    "baseline_id": "BASE-PG-OPENCODEX-APP-F443FA6C892D",
+    "promotion_rule": "verified-project-adoption-required",
+    "status": "candidate"
+  },
+  "format": "adg-vnext-skill-registry-v2",
+  "project_id": "opencodex-desktop",
+  "resolution": {
+    "mode": "global-skill",
+    "project_does_not_vendor_skill_sources": true
+  },
+  "skills": [
+    {
+      "active_in_project": true,
+      "display_name": "项目推进编排",
+      "name": "project-management",
+      "portfolio_tier": "orchestration",
+      "source_ref": "skill://project-management"
+    },
+    {
+      "active_in_project": true,
+      "display_name": "项目治理",
+      "name": "project-governance",
+      "portfolio_tier": "domain",
+      "source_ref": "skill://project-governance"
+    },
+    {
+      "active_in_project": true,
+      "display_name": "开发知识",
+      "name": "development-knowledge",
+      "portfolio_tier": "domain",
+      "source_ref": "skill://development-knowledge"
+    },
+    {
+      "active_in_project": true,
+      "display_name": "设计工作室",
+      "name": "design-studio",
+      "portfolio_tier": "domain",
+      "source_ref": "skill://design-studio"
+    }
+  ]
+}

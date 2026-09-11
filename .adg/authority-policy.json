@@ -1,0 +1,28 @@
+{
+  "format": "adg-vnext-authority-policy-v1",
+  "human_fact_authority": {
+    "CDOC": "docs/OpenCodex桌面管理器-项目治理/04-项目资料/**/CDOC-*",
+    "COL": "docs/OpenCodex桌面管理器-项目治理/04-项目资料/**/COL-*",
+    "DMD": "docs/OpenCodex桌面管理器-项目治理/01-需求管理/**/DMD-*.md",
+    "EVD": "docs/OpenCodex桌面管理器-项目治理/04-项目资料/**/EVD-*",
+    "IMP": "docs/OpenCodex桌面管理器-项目治理/03-开发实施/**/IMP-*.md",
+    "KNOW": "docs/OpenCodex桌面管理器-项目治理/04-项目资料/**/KNOW-*",
+    "REL": "docs/OpenCodex桌面管理器-项目治理/03-开发实施/**/REL-*.md",
+    "RUN": "docs/OpenCodex桌面管理器-项目治理/03-开发实施/**/RUN-*.md"
+  },
+  "policy_id": "AUTH-OPENCODEX-APP",
+  "projection_policy": {
+    "cache_root": ".adg/cache",
+    "owns_human_fact": false,
+    "owns_lifecycle_state": false
+  },
+  "runtime_control_authority": [
+    "TASK",
+    "RCP",
+    "EPLAN",
+    "TXN",
+    "CERT",
+    "OWNERSHIP",
+    "ICERT"
+  ]
+}

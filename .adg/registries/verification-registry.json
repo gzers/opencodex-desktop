@@ -1,0 +1,490 @@
+{
+  "allowed_statuses": [
+    "planned",
+    "candidate-passed",
+    "verified",
+    "failed"
+  ],
+  "format": "adg-vnext-verification-registry-v1",
+  "passing_statuses": [
+    "candidate-passed",
+    "verified"
+  ],
+  "updated_at": "2026-08-19",
+  "verifications": {
+    "VER-ADAPTER-CONTRACT": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_operations_and_adapters.py -k test_ai_human_and_ci_share_one_contract_without_control_authority -v",
+      "scope": "platform-neutral executor request/response and CI attestation boundary",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_operations_and_adapters.py::AdapterTests.test_ai_human_and_ci_share_one_contract_without_control_authority"
+    },
+    "VER-CONFIGURATION-LITE": {
+      "command": "python3 -m unittest tests.runtime.test_configuration_lite tests.runtime.test_configurable_docs_root tests.runtime.test_migration_binding -v",
+      "scope": "project layout, installed Skill registry references, and re-anchor operation inputs each have one canonical owner; authority/shared-path derived values use the canonical layout and policy validators, while duplicate, missing, escaping, malformed, digest-drifted, or post-freeze override inputs fail closed",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_configuration_lite.py::ConfigurationLiteTests"
+    },
+    "VER-CONVERSATION-NONDEFAULT": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "ordinary Agent conversations remain excluded; only explicitly valuable collaboration may enter COL",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-CORE-ARCHITECTURE-REBUILD": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_architecture_map_sources_and_targets_resolve -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_architecture_map_sources_and_targets_resolve"
+    },
+    "VER-CORE-AUTHORITY": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_markdown_and_runtime_authorities_do_not_compete -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_markdown_and_runtime_authorities_do_not_compete"
+    },
+    "VER-CORE-PRODUCT-REBUILD": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_stable_ids_are_unique -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_stable_ids_are_unique"
+    },
+    "VER-CORE-SOURCE-REFS": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_source_refs_resolve_to_local_or_pinned_source_project -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_source_refs_resolve_to_local_or_pinned_source_project"
+    },
+    "VER-CORE-STABLE-IDS": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_stable_ids_are_unique -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_stable_ids_are_unique"
+    },
+    "VER-DEMAND-WALKTHROUGH-ANALYSIS": {
+      "command": "python3 -m unittest discover -s skills/project-governance/tests -p test_validate_routing.py -v",
+      "status": "candidate-passed",
+      "test_ref": "skills/project-governance/tests/test_validate_routing.py::RoutingPolicyTests.test_demand_walkthrough_is_separate_analysis_only_capability"
+    },
+    "VER-EVIDENCE-COMPACTION": {
+      "command": "python3 -m unittest discover -s tests -p test_evidence_compaction.py -v",
+      "scope": "v2 final certificates and acceptance reports keep only bounded summaries, paths, and digests while remaining compatible with v1 evidence",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_evidence_compaction.py::EvidenceCompactionTests"
+    },
+    "VER-EVIDENCE-RETENTION": {
+      "command": "python3 -m unittest discover -s tests -p test_retention.py -v",
+      "scope": "retention defaults to a digest-bound preview, preserves certificate references, and skips unmarked directories and symlinks",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_retention.py::RetentionTests"
+    },
+    "VER-FACT-DMD-AUTHORITY": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_markdown_and_runtime_authorities_do_not_compete -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_markdown_and_runtime_authorities_do_not_compete"
+    },
+    "VER-FACT-IMP-AUTHORITY": {
+      "command": "python3 -m unittest tests.test_core_facts.CoreFactTests.test_markdown_and_runtime_authorities_do_not_compete -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_core_facts.py::CoreFactTests.test_markdown_and_runtime_authorities_do_not_compete"
+    },
+    "VER-FACT-WRITEBACK-CERTIFICATE": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_runtime_integrity.py -k test_writeback_is_bound_to_real_changed_markdown -v",
+      "scope": "TASK closure requires real changed Markdown writeback bound by before/after digests",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_integrity.py::RuntimeIntegrityTests.test_writeback_is_bound_to_real_changed_markdown"
+    },
+    "VER-GENERATED-RELATIONS": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_runtime_integrity.py -k test_one_task_can_cover_distinct_acceptance_for_multiple_demands -v",
+      "scope": "typed many-to-many runtime relations replace manually maintained reverse-link copies",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_integrity.py::RuntimeIntegrityTests.test_one_task_can_cover_distinct_acceptance_for_multiple_demands"
+    },
+    "VER-GLOBAL-SKILL-SYNC": {
+      "command": "PYTHONPYCACHEPREFIX=/tmp/esm-pyc python3 -m unittest tests.test_global_skill_sync -v",
+      "scope": "manifest-driven global Skill replacement with four active installs or updates, four retired managed deletions plus exact registered legacy artifact cleanup including empty roots, preservation of every other unmanaged Skill, preview-by-default, verified final-certificate gate, external attempt directory, digest confirmation, drift refusal, transaction backup, verify, and recover",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_global_skill_sync.py::GlobalSkillSyncTests"
+    },
+    "VER-LEGACY-INVENTORY": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_projections_and_legacy.py -k test_inventory_is_read_only_and_digest_stable -v",
+      "scope": "bounded read-only inventory with stable digest and no source mutation",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_projections_and_legacy.py::LegacyInventoryTests.test_inventory_is_read_only_and_digest_stable"
+    },
+    "VER-LEGACY-READ-COMPATIBILITY": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_projections_and_legacy.py -v",
+      "scope": "explicit legacy inventory only; duplicate-key and unsafe-manifest inputs fail closed",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_projections_and_legacy.py::LegacyInventoryTests"
+    },
+    "VER-MATERIAL-COLLABORATION": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "COL document placement and minimum human-fact contract only",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-MATERIAL-CONTROLLED-DOCS": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "CDOC human version-chain responsibility only",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-MATERIAL-EVD": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "on-demand EVD human-readable evidence contract only",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-MATERIAL-INTERFACE-DOCS": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "interface document structure and final derived Apifox section only",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_interface_template_keeps_apifox_as_the_final_section"
+    },
+    "VER-MATERIAL-KNOWLEDGE": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "ordinary knowledge and KNOW document admission only",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-MATERIAL-KNOWLEDGE-CHANNEL": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "channel registration boundary only; excludes live collectors and credentials",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-MATERIAL-RESPONSIBILITY-ROUTING": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-MIGRATION-ATTACKS": {
+      "command": "python3 -m unittest discover -s tests -p test_migration_attacks.py -v",
+      "scope": "source drift, symlink retention, path escape, duplicate marker, and unsafe migration inputs fail closed before preview output",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_migration_attacks.py::MigrationAttackTests"
+    },
+    "VER-MIGRATION-BINDING": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_migration_binding.py -v",
+      "scope": "successor, recognized legacy, mixed, partial, damaged, recovery, and unbound classifications are mutually exclusive and source anchored",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_migration_binding.py::MigrationBindingTests"
+    },
+    "VER-MIGRATION-CLI": {
+      "command": "python3 -m unittest discover -s tests -p test_migration_cli.py -v",
+      "scope": "binding, inventory, compact-plan, and Test preview commands preserve the same plan and safety contracts",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_migration_cli.py::MigrationCliTests"
+    },
+    "VER-MIGRATION-COMPACT-PLAN": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_migration_plan.py -v",
+      "scope": "compact plans are deterministic, contain no file bodies or base64 rollback payloads, and require explicit semantic resolutions",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_migration_plan.py::CompactMigrationPlanTests"
+    },
+    "VER-MIGRATION-CURRENT-PROJECT-IMPORTER": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_current_project_importer.py -v",
+      "scope": "the current Skill Management importer maps open control objects, core facts, implementation packages, root entries, and Skills without silently guessing unresolved semantics",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_current_project_importer.py::CurrentProjectImporterTests"
+    },
+    "VER-MIGRATION-INVENTORY": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_migration_inventory.py -v",
+      "scope": "Git-aware inventory covers docs, legacy control, execution history, Skills, root governance entries, and untracked unsafe paths with one disposition per item",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_migration_inventory.py::MigrationInventoryTests"
+    },
+    "VER-MIGRATION-TEST-PREVIEW": {
+      "command": "python3 -m unittest discover -s tests -p test_current_project_preview.py -v",
+      "scope": "a ready compact plan materializes only below the Test workspace, preserves source bytes, and leaves the formal source repository unchanged",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_current_project_preview.py::CurrentProjectPreviewTests"
+    },
+    "VER-MINIMAL-INITIALIZE": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_mirror_has_only_expected_document_top_levels"
+    },
+    "VER-NO-STATE-DIRECTORIES": {
+      "command": "python3 -m unittest tests.test_vnext_structure.VNextStructureTests.test_retired_physical_patterns_do_not_reappear -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_retired_physical_patterns_do_not_reappear"
+    },
+    "VER-OPS-EPLAN-TXN": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_operations_and_adapters.py -k test_apply_verify_and_exact_recover -v",
+      "scope": "exact before/after file plan, digest confirmation, journaled apply/verify, and drift-safe recover kernel",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_operations_and_adapters.py::OperationTests.test_apply_verify_and_exact_recover"
+    },
+    "VER-OPS-INITIALIZE": {
+      "command": "python3 -m unittest discover -s skills/project-governance/tests -p test_project_init.py -v",
+      "scope": "an isolated project-governance Skill resolves every capability provider inside its own subtree, keeps bundled runtime/integration/validation byte-identical to source, exposes deterministic provider CLI entry points, and can plan, preview, digest-confirm, apply, verify, configuration-audit, runtime-policy-load, and recover a minimal 14-file governed-project footprint without vendoring project implementation code",
+      "status": "candidate-passed",
+      "test_ref": "skills/project-governance/tests/test_project_init.py::ProjectInitTests"
+    },
+    "VER-OPS-MIGRATE": {
+      "command": "python3 -m unittest tests.test_vnext_structure.VNextStructureTests.test_exact_operation_provider_supports_declared_boundaries -v",
+      "scope": "generic exact migrate-plan transaction boundary only; excludes semantic discovery or automatic import",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_exact_operation_provider_supports_declared_boundaries"
+    },
+    "VER-OPS-RECOVER": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_operations_and_adapters.py -k test_apply_verify_and_exact_recover -v",
+      "scope": "exact transaction recovery that refuses later user drift",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_operations_and_adapters.py::OperationTests.test_apply_verify_and_exact_recover"
+    },
+    "VER-OPS-SYNC": {
+      "command": "python3 -m unittest tests.test_vnext_structure.VNextStructureTests.test_exact_operation_provider_supports_declared_boundaries -v",
+      "scope": "generic exact sync-plan transaction boundary only; excludes target selection, installation, and authorization",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_exact_operation_provider_supports_declared_boundaries"
+    },
+    "VER-OPS-UPGRADE": {
+      "command": "python3 -m unittest tests.test_vnext_structure.VNextStructureTests.test_exact_operation_provider_supports_declared_boundaries -v",
+      "scope": "generic exact upgrade-plan transaction boundary only; excludes domain-specific upgrade planning",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_exact_operation_provider_supports_declared_boundaries"
+    },
+    "VER-PG-FAIL-CLOSED": {
+      "command": "python3 -m unittest discover -s skills/project-governance/tests -p test_validate_routing.py -v",
+      "status": "candidate-passed",
+      "test_ref": "skills/project-governance/tests/test_validate_routing.py::RoutingPolicyTests"
+    },
+    "VER-PG-QUICK-VALIDATE": {
+      "command": "python3 ${CODEX_HOME:-$HOME/.codex}/skills/.system/skill-creator/scripts/quick_validate.py skills/project-governance",
+      "status": "candidate-passed",
+      "test_ref": "skills/project-governance/SKILL.md"
+    },
+    "VER-PG-ROUTING": {
+      "command": "python3 -m unittest discover -s skills/project-governance/tests -p test_validate_routing.py -v",
+      "scope": "routing policy and capability/verification registries resolve from the installed Skill root in source, symlink, and standalone layouts from any working directory",
+      "status": "candidate-passed",
+      "test_ref": "skills/project-governance/tests/test_validate_routing.py::RoutingPolicyTests"
+    },
+    "VER-PROJECT-CATALOG-RECONCILE": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_project_catalog.py -v",
+      "scope": "complete nonterminal DMD and IMP Markdown is adopted as source-bound runtime projection; terminal history without closure evidence stays history-only",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_project_catalog.py::ProjectCatalogTests"
+    },
+    "VER-PROJECT-DOCS-ROOT": {
+      "command": "python3 -m unittest discover -s tests/runtime -p test_configurable_docs_root.py -v && python3 -m unittest discover -s skills/project-governance/tests -p test_project_init.py -v && python3 -m unittest tests.runtime.test_migration_binding tests.test_current_project_preview -v",
+      "scope": "docs_root is the single safe governance anchor for initialization, Catalog, source binding, index freshness, shared paths, migration binding and Test preview; default docs remains compatible while sibling Markdown is excluded",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_configurable_docs_root.py::ConfigurableDocsRootTests"
+    },
+    "VER-PROJECT-REFRESH-CLI": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_runtime_feature_cli.py -v",
+      "scope": "project refresh reconciles eligible sources and rebuilds catalog, SQLite/FTS, optional vector, and static board while freshness checks fail closed on unmanaged or drifted eligible sources",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_feature_cli.py::RuntimeFeatureCliTests"
+    },
+    "VER-QUERY-BOARD": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_projections_and_legacy.py -k test_board_refresh_selects_active_task_and_detects_new_objects -v",
+      "scope": "optional projection-only board provider; old mandatory state/board control chain is retired",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_projections_and_legacy.py::ProjectionTests.test_board_refresh_selects_active_task_and_detects_new_objects"
+    },
+    "VER-QUERY-BOUNDED-READ": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_vnext_runtime.VNextRuntimeTests.test_cache_delete_falls_back_and_rebuild_is_equivalent -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_vnext_runtime.py::VNextRuntimeTests.test_cache_delete_falls_back_and_rebuild_is_equivalent"
+    },
+    "VER-QUERY-DOCUMENT-INDEX": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_index_project_documents.py -v",
+      "scope": "Markdown additions and changes invalidate the index deterministically, and Chinese substring search is equivalent in SQLite/FTS and bounded fallback",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_index_project_documents.py::ProjectDocumentIndexTests"
+    },
+    "VER-QUERY-SEMANTIC-BENCHMARK": {
+      "command": "python3 -m unittest discover -s tests -p test_semantic_benchmark.py -v",
+      "scope": "a fixed Chinese query set measures FTS, fake semantic, and hybrid recall, provider input bytes, estimated tokens, and query wall time without claiming live-model verification",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_semantic_benchmark.py::SemanticBenchmarkTests"
+    },
+    "VER-QUERY-SEMANTIC-PROVIDER": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_semantic_provider.py -v",
+      "scope": "external command or HTTP providers require explicit gates, receive no inherited credentials, exclude sensitive corpus rows, bind configuration and content digests, and fall back to FTS",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_semantic_provider.py::SemanticProviderTests"
+    },
+    "VER-QUERY-SQLITE-FTS": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_vnext_runtime.VNextRuntimeTests.test_stale_cache_never_hides_new_source_object -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_vnext_runtime.py::VNextRuntimeTests.test_stale_cache_never_hides_new_source_object"
+    },
+    "VER-QUERY-STATIC-BOARD": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_board_product.py -v",
+      "scope": "the managed root entry and static browser board provide project-name document tree, full-height layout, active-task default, clickable details, tab reset, and stale-source detection",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_board_product.py::StaticBoardProductTests"
+    },
+    "VER-QUERY-VECTOR": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_projections_and_legacy.py -k test_sqlite_vector_cache_is_disposable_and_source_bound -v",
+      "scope": "optional disposable SQLite vector provider with no fact, state, or closure authority",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_projections_and_legacy.py::ProjectionTests.test_sqlite_vector_cache_is_disposable_and_source_bound"
+    },
+    "VER-QUERY-VECTOR-PROVIDER-CONTRACT": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_vector_provider_contract.py -v",
+      "scope": "hash vectors are test-only and explicit; missing vector configuration always falls back to deterministic FTS",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_vector_provider_contract.py::VectorProviderContractTests"
+    },
+    "VER-RCP-UNIFIED-RECEIPT": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_vnext_runtime.VNextRuntimeTests.test_successful_vertical_close_uses_one_receipt_and_certificate -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_vnext_runtime.py::VNextRuntimeTests.test_successful_vertical_close_uses_one_receipt_and_certificate"
+    },
+    "VER-REANCHOR-READONLY": {
+      "command": "python3 -m unittest discover -s tests -p test_reanchor_readonly.py -v",
+      "scope": "successor re-anchor freezes one payload-free operation input set and provides only plan/preview; machine output keeps formal provider apply unavailable while reporting guided execution as blocked or ready for explicit host authorization; dirty, ignored, opaque, symlink, escaping, policy-drift, and source-drift states fail closed with zero source writes",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_reanchor_readonly.py::ReadOnlyReanchorSmokeTests"
+    },
+    "VER-RELATION-MANY-TO-MANY": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_runtime_integrity.RuntimeIntegrityTests.test_one_task_can_cover_distinct_acceptance_for_multiple_demands -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_integrity.py::RuntimeIntegrityTests.test_one_task_can_cover_distinct_acceptance_for_multiple_demands"
+    },
+    "VER-RUNTIME-INTEGRATION-CERTIFICATE": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests/runtime -p test_runtime_integrity.py -k test_icert_requires_controlled_commit_from_stored_evidence -v",
+      "scope": "controlled ICERT commit from stored contributor and integration closure evidence",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_integrity.py::RuntimeIntegrityTests.test_icert_requires_controlled_commit_from_stored_evidence"
+    },
+    "VER-RUNTIME-RELEASE": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "on-demand REL human fact contract only; excludes publication or deployment execution",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-RUNTIME-REVIEW": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "review gate reuse of TASK.required_checks and RCP.checks only",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_review_reuses_task_and_receipt_check_semantics"
+    },
+    "VER-RUNTIME-RUN": {
+      "command": "python3 -m unittest discover -s tests -p test_vnext_structure.py -v",
+      "scope": "on-demand RUN human fact contract only; excludes production operation",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_on_demand_release_run_and_material_contracts_are_complete"
+    },
+    "VER-RUNTIME-TASK": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_vnext_runtime.VNextRuntimeTests.test_successful_vertical_close_uses_one_receipt_and_certificate -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_vnext_runtime.py::VNextRuntimeTests.test_successful_vertical_close_uses_one_receipt_and_certificate"
+    },
+    "VER-RUNTIME-TEST-RECEIPT": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_runtime_integrity.RuntimeIntegrityTests.test_closed_task_rechecks_receipt_result_and_exact_checks -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_integrity.py::RuntimeIntegrityTests.test_closed_task_rechecks_receipt_result_and_exact_checks"
+    },
+    "VER-SHARED-PATH-POLICY": {
+      "command": "python3 -m unittest tests.test_vnext_structure.VNextStructureTests.test_shared_path_policy_matches_runtime_seal_contract -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_vnext_structure.py::VNextStructureTests.test_shared_path_policy_matches_runtime_seal_contract"
+    },
+    "VER-SHARED-PATH-RUNTIME": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_runtime_integrity.RuntimeIntegrityTests.test_ownership_requires_bound_shared_path_policy -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_runtime_integrity.py::RuntimeIntegrityTests.test_ownership_requires_bound_shared_path_policy"
+    },
+    "VER-SKILL-DK-ROUTING": {
+      "command": "python3 -m unittest discover -s tests -p test_skill_portfolio.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_copied_skill_routing_boundaries_are_explicit"
+    },
+    "VER-SKILL-DK-STRUCTURE": {
+      "command": "python3 -m unittest discover -s tests -p test_skill_portfolio.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_skill_frontmatter_names_match_directories"
+    },
+    "VER-SKILL-DS-ROUTING": {
+      "command": "python3 -m unittest discover -s tests -p test_skill_portfolio.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_copied_skill_routing_boundaries_are_explicit"
+    },
+    "VER-SKILL-DS-STRUCTURE": {
+      "command": "python3 -m unittest discover -s tests -p test_skill_portfolio.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_skill_frontmatter_names_match_directories"
+    },
+    "VER-SKILL-PM-ROUTING": {
+      "command": "python3 -m unittest discover -s tests -p test_skill_portfolio.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_copied_skill_routing_boundaries_are_explicit"
+    },
+    "VER-SKILL-PM-STRUCTURE": {
+      "command": "python3 -m unittest discover -s tests -p test_skill_portfolio.py -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_skill_frontmatter_names_match_directories"
+    },
+    "VER-SKILL-REGISTRY": {
+      "command": "python3 -m unittest tests.test_skill_portfolio.SkillPortfolioTests.test_registry_separates_portfolio_and_internal_layers -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_skill_portfolio.py::SkillPortfolioTests.test_registry_separates_portfolio_and_internal_layers"
+    },
+    "VER-SOURCE-REGISTRY": {
+      "command": "PYTHONPATH=. python3 -m unittest discover -s tests -p test_source_registry.py -v",
+      "scope": "all active candidate Skill source registries and source ownership rules",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_source_registry.py::SourceRegistryTests"
+    },
+    "VER-VALIDATION-GATES": {
+      "command": "python3 -m unittest discover -s tests -p test_validation_gates.py -v",
+      "scope": "gate plans are digest-bound with bounded output; fast and release never invoke a live provider, while provider-live requires explicit Test paths",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_validation_gates.py::ValidationGateTests"
+    },
+    "VER-VNEXT-BENCHMARK": {
+      "command": "python3 -m unittest tests.test_integration_tools.IntegrationToolTests.test_static_summary_excludes_runtime_cache -v",
+      "scope": "static source/package summary provider; full 10k and A/B remain separate required project-acceptance evidence, not a functional-capability definition",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_integration_tools.py::IntegrationToolTests.test_static_summary_excludes_runtime_cache"
+    },
+    "VER-VNEXT-VERTICAL-SLICE": {
+      "command": "PYTHONPATH=. python3 -m unittest tests.runtime.test_vnext_runtime.VNextRuntimeTests.test_successful_vertical_close_uses_one_receipt_and_certificate -v",
+      "status": "candidate-passed",
+      "test_ref": "tests/runtime/test_vnext_runtime.py::VNextRuntimeTests.test_successful_vertical_close_uses_one_receipt_and_certificate"
+    },
+    "VER-WORKTREE-CLI-SESSION": {
+      "command": "python3 -m unittest discover -s tests -p test_worktree_cli.py -v",
+      "scope": "non-Codex callers can plan, prepare, inspect, verify, integrate, resume, and clean a Worktree session through argv-only CLI contracts",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_worktree_cli.py::WorktreeCliTests"
+    },
+    "VER-WORKTREE-PARALLEL": {
+      "command": "PYTHONPYCACHEPREFIX=/tmp/adg-pyc python3 -m unittest tests/test_worktree_execution.py -v",
+      "environment": "Test-only",
+      "observed_evidence": {
+        "benchmark_rounds": 5,
+        "equivalent_results": true,
+        "parallel_median_seconds": 0.334031,
+        "parallel_p95_seconds": 0.339848,
+        "parallel_reduction_percent": 64.87,
+        "real_execution": {
+          "attempt_ref": "external-test-evidence:worktree-gate-20260815/attempt-02",
+          "baseline_commit": "f2b9b097d9f09dc3f959672d7e86f2e65a451f28",
+          "cleanup_journal_digest": "84fc1574b5fa8b1c51a43fe55ecdd3ebebb71f9bfb48f51b74515378bd481775",
+          "cleanup_state": "completed",
+          "contributor_commits": [
+            "25b900474a87dad2393b5d5898b562bb4d5f8192",
+            "b5c1fe68e2097b5dfe0ff8cacb30fa147cb776ec",
+            "ee6a2b77a38768c87a955db98642e833f17b83eb"
+          ],
+          "integration_commit": "e9a7e3687bca9d342922339e732b990f3e465d7b",
+          "integration_digest": "19d7817d4e0903f9e0b4bb9be780280badb5da7548caff9d3d2804df1702e63e",
+          "plan_digest": "951cf4bc00f216b98644ba9df7f0d00d0991ee20602f3ca9a5269f7123e5b1eb"
+        },
+        "required_reduction_percent": 40.0,
+        "sequential_median_seconds": 0.950742,
+        "sequential_p95_seconds": 0.970828,
+        "tests_run": 18,
+        "tests_status": "passed"
+      },
+      "reason": "18 attack-oriented tests, the five-round benchmark, and a real three-contributor Test integration all passed; the user explicitly authorized full target-mode completion after the earlier P0 risk and capability-disposition clarification",
+      "required_by_final_gate": true,
+      "scope": "physical Git worktree prepare, merge, and cleanup in the isolated Test workspace",
+      "status": "candidate-passed",
+      "test_ref": "tests/test_worktree_execution.py"
+    }
+  }
+}
