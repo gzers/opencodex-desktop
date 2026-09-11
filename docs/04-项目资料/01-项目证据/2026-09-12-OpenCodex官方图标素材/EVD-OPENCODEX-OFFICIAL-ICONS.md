@@ -67,3 +67,8 @@ OpenCodex 官方仓库 `lidge-jun/opencodex` 提供多用途图标资产，可�
 | `AppIcon-light-1024-512.png` / `AppIcon-dark-1024-512.png` | 预览图，非最终资产 |
 
 派生规则：保留官方轮廓与透明背景；App 图标使用 1024px 画布、圆角 185/1024、图形尺寸 660/1024；托盘使用 macOS Template Image 语义。当前是本地派生预览，尚未进入实施资产或授权代码实施。
+
+### 2026-09-12 修正补充
+
+- 暗色 App 图标新增 `AppIcon-dark-solid-1024.png`：使用单一深底色，避免原渐变稿在主体周边出现可感知背景差异。
+- 托盘新增纯白版本：`tray-white-512.png`、`tray-white-template.png`、`tray-white-template@2x.png`，供浅色菜单栏场景直接使用；黑色 Template Image 保留为系统自动适配版本。
