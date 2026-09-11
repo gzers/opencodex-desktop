@@ -53,3 +53,17 @@ OpenCodex 官方仓库 `lidge-jun/opencodex` 提供多用途图标资产，可�
 ## 保留策略
 
 长期保留；素材体积小、具备官方来源核对价值。若上游许可或资产发生变更，以更新后的本 EVD 为准。
+
+## 派生 macOS 图标（2026-09-12）
+
+`generated-macos/` 目录保存基于官方素材派生的 macOS 规范草稿：
+
+| 文件 | 说明 |
+|---|---|
+| `AppIcon-light-1024.png` | 亮色 macOS App 图标画布，浅灰渐变底 + 深色官方 logo |
+| `AppIcon-dark-1024.png` | 暗色 macOS App 图标画布，深蓝黑渐变底 + 浅色官方 logo |
+| `AppIcon-light.icns` / `AppIcon-dark.icns` | macOS `.icns` 全尺寸导出 |
+| `tray-template.png` / `tray-template@2x.png` | macOS 菜单栏 Template Image，18/36pt，黑色单色 + alpha |
+| `AppIcon-light-1024-512.png` / `AppIcon-dark-1024-512.png` | 预览图，非最终资产 |
+
+派生规则：保留官方轮廓与透明背景；App 图标使用 1024px 画布、圆角 185/1024、图形尺寸 660/1024；托盘使用 macOS Template Image 语义。当前是本地派生预览，尚未进入实施资产或授权代码实施。
