@@ -948,7 +948,7 @@ body:before{content:"";z-index:-1;pointer-events:none;filter:blur(70px);
   - 挂在 `.window` 上：它已是 `position:relative;isolation:isolate;overflow:hidden`，负 z 伪元素正好贴在 `--bg` 之上、内容之下，且**不随 `.main` 滚动**。
   - `.main` 本身无背景色，因此光能透出；卡片仍是实色，光只在卡片间隙与页边读得到。
 - 一处与官方的差异：官方是 `position:fixed;inset:-20%`（相对视口过扫），我们约束在模拟窗口内，改为 `inset:0`，光斑范围相对窗口略小，观感对齐。
-- 侧栏 `--rail` 保持不透明（不做官方那种玻璃化），避免可读性回归。
+- 侧栏 `--rail` 当时保持不透明；后续按反馈改成同款玻璃质感，见下一节。
 
 ### 实测（同位置取样像素）
 
@@ -966,3 +966,48 @@ body:before{content:"";z-index:-1;pointer-events:none;filter:blur(70px);
 
 - `截图/现行/` 全套已按新背景重出（概览 light/dark/最小窗口/大窗口/展开、设置、日志、面板、通知中心与详情）。
 - `截图/对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png` 与 4 张 WebDAV 状态图已重出。
+
+## 2026-09-13 · 侧栏与标题栏套用官方面板玻璃质感
+
+### 取源（官方构建产物）
+
+官方对「栏类」元素统一用同一组 token：
+
+```css
+--glass-rail: #f9f9f9a8;   /* dark: #1717179e */
+--glass-blur: saturate(1.6) blur(22px);
+```
+
+用法（官方侧栏与移动端顶栏）：
+
+```css
+.sidebar / .mobile-topbar{
+  background:var(--glass-rail);
+  -webkit-backdrop-filter:var(--glass-blur);
+  border-right / border-bottom:1px solid var(--border);
+}
+```
+
+### 落地
+
+- 新增 token `--glass-rail`（亮 `#f9f9f9a8` / 暗 `#1717179e`）与 `--glass-blur`（`saturate(1.6) blur(22px)`），取值与官方一致。
+- 套用位置：`.side`（侧栏）、`.titlebar`（标题栏）、`body.panel-mode .side`（64px 图标栏）。
+- 两处都保留了原有的 1px 边框分隔。
+
+### 实测
+
+- 计算样式：亮 `rgba(249,249,249,0.66)` / 暗 `rgba(23,23,23,0.62)`，`backdrop-filter: saturate(1.6) blur(22px)` 均生效。
+- 侧栏底色众数（取「栏内最常见颜色」，避开导航按钮）：
+
+| | 我们 | 官方面板 |
+|---|---|---|
+| light | (249,249,249) | (249,249,249) |
+| dark | (27,27,27) | (23,23,23) |
+
+- 说明：官方的环境光是 `position:fixed;inset:-20%`，光斑中心被推到画布外，只有边缘渐隐进入视口，所以**玻璃栏本身看起来接近中性**——实测我们与官方一致（差 ≤4 级）。
+- 顺带修正：环境光伪元素此前用 `inset:0`，导致左上角光斑过浓（侧栏顶部被染成 (231,233,237)）。改为与官方一致的 `inset:-20%` 后，中心移出画布、只留渐隐边，观感对齐。
+- 零 console error / page error；导航选中态、WebDAV 状态机、通知详情与删除、面板 iframe 加载等既有回归全部通过。
+
+### 截图
+
+- `截图/现行/` 全套（19 张）与 `截图/对比-20260913/`（18 张）按玻璃栏 + 修正后的环境光重出。

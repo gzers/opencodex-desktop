@@ -25,6 +25,7 @@
 - 应用窗口按 **1180 × 760**（标准 macOS 应用窗口，同类 Tauri 桌面端默认区间）表达，最小 900 × 600。
 - 视觉基准优先使用官方 GUI 构建产物中的设计 token 与源码级快照；截图仅作为视觉 QA 证据，不用作样式来源。
 - 页面背景套用**官方面板的环境光渐变**：`.window::before` 用三层柔光 radial-gradient（取自官方 `body:before`）叠在 `--bg` 之上、内容之下；亮暗各一套（`--glow-1/2/3`）。挂在非滚动的 `.window` 上，内容滚动时背景不动。
+- **侧栏与标题栏用官方同款玻璃质感**：`--glass-rail`（light `#f9f9f9a8` / dark `#1717179e`）+ `backdrop-filter:var(--glass-blur)`（`saturate(1.6) blur(22px)`），环境光从背后透出；面板模式的 64px 图标栏同样处理。
 
 ## 目录结构
 
