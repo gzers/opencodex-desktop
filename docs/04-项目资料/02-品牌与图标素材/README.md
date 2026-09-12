@@ -203,10 +203,10 @@
 
 | 文件 | 规格 | SHA-256 |
 |---|---|---|
-| `AppIcon.icns` | 多尺寸 macOS icon | `ac5284922b2bb60e5076f2c358340255f1869ce584e0e5a8028ea88ec7c0a159` |
-| `AppIcon.svg` | macOS 圆角底板 SVG | `19178f7f5221a829215ef352e0c1fa7495316eefc1c500a7923ee7d690d1edd1` |
-| `png/1024.png` | 1024×1024 PNG | `67b3ab4948ea47741f0097d1044fbc6c42e56d707540ae3c9b35ee589774ea92` |
-| `png/512.png` | 512×512 PNG | `332128546fc6a98e651d308b31fdf26acd8af49c2d7e5783e965b8f31e2a012d` |
+| `AppIcon.icns` | 白色圆角底板，主体 75% | `4cdb2c2c0ff1478c19d24c2e490b08a2ef7847a7dd68ea458fe3fb5dea49a408` |
+| `AppIcon.svg` | macOS 白色圆角底板 SVG | `8e11526eec2d6b9e2b888ba7ba6c2d9ac2d642e244b95bfeaa38b0b4c478669b` |
+| `png/1024.png` | 1024×1024 PNG | `db8d1afe1750b8f0f75b1e98414bb4390677cd58bbc7f8bfe790f021473fbcbd` |
+| `png/512.png` | 512×512 PNG | `ce4ad7615ba5c8549567f5246add40eb28add94d69ad96b0f7215d0d279260c3` |
 
 ### 03-平台交付 / Windows AppIcon
 
@@ -259,15 +259,17 @@
 
 ## 素材清单修订（2026-09-12）
 
-本次修订只更新交付细节，不改变设计基准。
+本次修订只更新平台交付细节，不改变设计基准。
 
-- 补充 `03-平台交付/macOS/AppIcon/AppIcon.svg`。
+- 补充 macOS AppIcon 源级 SVG。
+- 将 macOS AppIcon 调整为白色圆角底板，并放大主体比例。
 - 将 Windows AppIcon、Windows Tray、Favicon ICO 更新为多尺寸 ICO。
 - 移除 macOS Tray 未纳入交付目录规划的 512px 中间 PNG。
 
 | 文件 | 规格 | SHA-256 |
 |---|---|---|
-| `03-平台交付/macOS/AppIcon/AppIcon.svg` | macOS 圆角底板 SVG | `19178f7f5221a829215ef352e0c1fa7495316eefc1c500a7923ee7d690d1edd1` |
+| `03-平台交付/macOS/AppIcon/AppIcon.svg` | macOS 白色圆角底板 SVG | `8e11526eec2d6b9e2b888ba7ba6c2d9ac2d642e244b95bfeaa38b0b4c478669b` |
+| `03-平台交付/macOS/AppIcon/AppIcon.icns` | 白色圆角底板，主体 75% | `4cdb2c2c0ff1478c19d24c2e490b08a2ef7847a7dd68ea458fe3fb5dea49a408` |
 | `03-平台交付/Windows/AppIcon/AppIcon.ico` | 多尺寸 ICO（16/24/32/48/64/128/256） | `9e66134cada279adade3a0f9bc9f0197455ecc9bac32f0d2e4505287d79b075f` |
 | `03-平台交付/Windows/Tray/tray-dark.ico` | 多尺寸 ICO（16/24/32） | `a8492ef181fcea38fe29a50b67bcb4ae2fbf34e44f906deca3b430452633956c` |
 | `03-平台交付/Windows/Tray/tray-light.ico` | 多尺寸 ICO（16/24/32） | `2248c14febc5c55bf725b6e0578fff359be5abca4745ffe92fef0d17d59891a2` |
