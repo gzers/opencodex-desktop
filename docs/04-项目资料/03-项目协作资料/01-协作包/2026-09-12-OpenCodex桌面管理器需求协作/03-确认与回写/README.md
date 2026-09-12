@@ -18,13 +18,18 @@
 - 界面确认：套壳版本升级**并入设置「版本升级」分区**与 OpenCodex 版本并列；外部（概览）**只通过通知中心**提示，不新增卡片。
 - 已回写 `DMD-OPENCODEX-DESKTOP-MANAGER`：新增 `AC-OPENCODEX-DESKTOP-09`，并在 §6 升级边界补充应用自身更新条款。
 
+## 2026-09-13 追加确认（二）
+
+- CLI 控制面确认：采纳可选 CLI 控制面，形态参考 Obsidian 自带 CLI 开关——**设置中默认关闭**、手动启用；CLI 是**运行中管理器实例的客户端**，经本地 IPC 委托执行，不产生第二写入者；能力仅覆盖**管理器自有域**（发现与只读状态、启停、数据根、备份、加密导出/导入、WebDAV、自更新检查）；**不提供**任何直接改写 OpenCodex 自身配置的通道，该类变更仍走官方 CLI；变更层命令需运行实例与显式确认，破坏性操作需确认标志，并提供 `--json` 机读输出。
+- 已回写 `DMD-OPENCODEX-DESKTOP-MANAGER`：新增 `AC-OPENCODEX-DESKTOP-10`，并在 §8 范围补充「CLI 控制面（可选）」、§9 增补 AC-10 行、§10 安全边界补充本机 IPC 访问控制条款。
+
 ## 回写状态
 
 | 对象 | 状态 |
 |---|---|
-| `DMD-OPENCODEX-DESKTOP-MANAGER` | 已回写 revision 2；2026-09-13 追加 `AC-09`（应用自身更新）。 |
+| `DMD-OPENCODEX-DESKTOP-MANAGER` | 已回写 revision 2；2026-09-13 追加 `AC-09`（应用自身更新）与 `AC-10`（可选 CLI 控制面）。 |
 | `IMP` | 未创建；需基于 revision 2 冻结实现契约。 |
-| 安全评审 | P1 配置迁移与 P2 WebDAV 实施前必须执行。 |
+| 安全评审 | P1 配置迁移、P2 WebDAV 与可选 CLI 控制面实施前必须执行（CLI 含本机 IPC 访问控制）。 |
 
 ## 下一步
 

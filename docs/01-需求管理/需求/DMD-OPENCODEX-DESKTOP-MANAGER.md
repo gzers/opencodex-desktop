@@ -3,16 +3,16 @@ id: DMD-OPENCODEX-DESKTOP-MANAGER
 title: "OpenCodeX-Desktop"
 product_name: "OpenCodeX-Desktop"
 state: in_progress
-summary: "Tauri v2 + Rust 桌面壳，负责发现 OpenCodex、管理统一数据根与 OPENCODEX_HOME、托管官方启停子进程、观测状态日志、支持加密配置迁移与 WebDAV 同步；不管理 npm，不替代官方更新核心。"
-next_action: "基于 revision 2 创建 IMP，冻结 P0 技术契约、进程模型、统一数据根布局、状态协议与验收环境；配置导出与 WebDAV 实施前完成安全评审。"
-acceptance_criteria: [{"id":"AC-OPENCODEX-DESKTOP-01","text":"应用能发现并展示本机 OpenCodex 安装路径、版本与运行状态，且不执行 npm 安装、卸载或依赖管理。"},{"id":"AC-OPENCODEX-DESKTOP-02","text":"应用支持选择或切换 OPENCODEX_HOME，并将 OpenCodeX-Desktop 自身的配置、缓存、日志、备份和导出产物保存在可自定义的统一数据根中按结构划分。"},{"id":"AC-OPENCODEX-DESKTOP-03","text":"主界面可通过托管 ocx start/stop/restart 子进程完成启动、停止和重启，并展示健康状态、端口、进程标识与最近错误摘要。"},{"id":"AC-OPENCODEX-DESKTOP-04","text":"应用能打开官方 Web 面板，并以只读和脱敏方式查看最近日志；代理离线时能明确说明日志能力不可用。"},{"id":"AC-OPENCODEX-DESKTOP-05","text":"应用能识别外部 provider 接管与 startup at-risk 状态，不直接改写外部配置，只提供用户确认后的官方 restore 引导或说明。"},{"id":"AC-OPENCODEX-DESKTOP-06","text":"配置导出支持全量内容，敏感凭据必须封装在用户口令保护的加密导出容器中；导入前完成格式校验、当前配置备份和显式确认，不得在仓库、日志或界面明文展示凭据。"},{"id":"AC-OPENCODEX-DESKTOP-07","text":"WebDAV 同步支持全量内容含敏感凭据，上传前必须客户端加密；执行覆盖前生成可恢复备份，检测到冲突时提示用户确认，不静默丢失目标端历史。"},{"id":"AC-OPENCODEX-DESKTOP-08","text":"升级前先完成备份；应用可引导用户使用官方 ocx update，但不接管 npm 包管理器，也不重写官方更新事务。"},{"id":"AC-OPENCODEX-DESKTOP-09","text":"应用支持自身的版本检查与更新：可区分 stable/beta 更新通道，更新包必须校验签名后才安装，安装完成后重启应用生效；该过程不接管、不替代官方 ocx update，也不停止由桌面壳托管的 OpenCodex 代理；更新失败保留可回滚的上一版本，并展示失败原因与恢复建议。"}]
+summary: "Tauri v2 + Rust 桌面壳，负责发现 OpenCodex、管理统一数据根与 OPENCODEX_HOME、托管官方启停子进程、观测状态日志、支持加密配置迁移与 WebDAV 同步，并提供可选、默认关闭的 CLI 控制面；不管理 npm，不替代官方更新核心。"
+next_action: "基于 revision 2 创建 IMP，冻结 P0 技术契约、进程模型、统一数据根布局、状态协议、CLI 控制面 IPC 契约与验收环境；配置导出、WebDAV 与 CLI 控制面实施前完成安全评审。"
+acceptance_criteria: [{"id":"AC-OPENCODEX-DESKTOP-01","text":"应用能发现并展示本机 OpenCodex 安装路径、版本与运行状态，且不执行 npm 安装、卸载或依赖管理。"},{"id":"AC-OPENCODEX-DESKTOP-02","text":"应用支持选择或切换 OPENCODEX_HOME，并将 OpenCodeX-Desktop 自身的配置、缓存、日志、备份和导出产物保存在可自定义的统一数据根中按结构划分。"},{"id":"AC-OPENCODEX-DESKTOP-03","text":"主界面可通过托管 ocx start/stop/restart 子进程完成启动、停止和重启，并展示健康状态、端口、进程标识与最近错误摘要。"},{"id":"AC-OPENCODEX-DESKTOP-04","text":"应用能打开官方 Web 面板，并以只读和脱敏方式查看最近日志；代理离线时能明确说明日志能力不可用。"},{"id":"AC-OPENCODEX-DESKTOP-05","text":"应用能识别外部 provider 接管与 startup at-risk 状态，不直接改写外部配置，只提供用户确认后的官方 restore 引导或说明。"},{"id":"AC-OPENCODEX-DESKTOP-06","text":"配置导出支持全量内容，敏感凭据必须封装在用户口令保护的加密导出容器中；导入前完成格式校验、当前配置备份和显式确认，不得在仓库、日志或界面明文展示凭据。"},{"id":"AC-OPENCODEX-DESKTOP-07","text":"WebDAV 同步支持全量内容含敏感凭据，上传前必须客户端加密；执行覆盖前生成可恢复备份，检测到冲突时提示用户确认，不静默丢失目标端历史。"},{"id":"AC-OPENCODEX-DESKTOP-08","text":"升级前先完成备份；应用可引导用户使用官方 ocx update，但不接管 npm 包管理器，也不重写官方更新事务。"},{"id":"AC-OPENCODEX-DESKTOP-09","text":"应用支持自身的版本检查与更新：可区分 stable/beta 更新通道，更新包必须校验签名后才安装，安装完成后重启应用生效；该过程不接管、不替代官方 ocx update，也不停止由桌面壳托管的 OpenCodex 代理；更新失败保留可回滚的上一版本，并展示失败原因与恢复建议。"},{"id":"AC-OPENCODEX-DESKTOP-10","text":"应用提供可选、默认关闭的 CLI 控制面：启用后 CLI 作为运行中管理器实例的客户端，经本地 IPC 委托执行，不产生独立的第二写入者；能力限定在管理器自有域（发现与只读状态、启停、数据根、备份、加密导出/导入、WebDAV 同步、自更新检查），不提供任何直接改写 OpenCodex 自身配置（provider、路由、模型映射）的通道，该类变更仍走官方 CLI；变更层命令要求运行实例与显式确认，破坏性操作需确认标志，并提供机读输出。"}]
 implementation_ids: []
 resolution: null
 ---
 
 # DMD-OPENCODEX-DESKTOP-MANAGER OpenCodeX-Desktop
 
-> Revision 2，2026-09-12 根据用户确认回写；2026-09-12 确认软件名称为 **OpenCodeX-Desktop**；2026-09-13 追加 AC-09「应用自身版本更新」（见 §6 / §9）。原始讨论与核验线索见 `COL-LOCAL-20260912-01`；本文件是稳定需求权威。
+> Revision 2，2026-09-12 根据用户确认回写；2026-09-12 确认软件名称为 **OpenCodeX-Desktop**；2026-09-13 追加 AC-09「应用自身版本更新」（见 §6 / §9）；2026-09-13 追加 AC-10「可选 CLI 控制面」（见 §8 / §9）。原始讨论与核验线索见 `COL-LOCAL-20260912-01`；本文件是稳定需求权威。
 
 ## 1. 问题与目标
 
@@ -139,7 +139,17 @@ UI 状态至少区分：未发现、未运行、启动中、运行中、待就�
 | P0 | Tauri 壳、OpenCodex 发现、统一数据根与 `OPENCODEX_HOME` 选择/切换、直接子进程启停、状态观测、日志入口、官方 Web 面板入口、startup at-risk 与外部 provider 接管检测引导。 |
 | P1 | 加密全量配置导出/导入、导入备份与确认。 |
 | P2 | WebDAV 加密全量同步、冲突提示、覆盖备份、同步历史。 |
-| 不包含 | 重写 OpenCodex 核心、绕过官方 API、接管 npm 包管理器、替代官方 update 事务、接管 codex-shim、明文迁移或同步凭据、自动覆盖外部 provider 配置。 |
+| P1（可选） | 可选 CLI 控制面：默认关闭，启用后经运行中实例委托执行，仅覆盖管理器自有域。 |
+| 不包含 | 重写 OpenCodex 核心、绕过官方 API、接管 npm 包管理器、替代官方 update 事务、接管 codex-shim、明文迁移或同步凭据、自动覆盖外部 provider 配置、通过本项目 CLI 直接改写 OpenCodex 自身配置。 |
+
+### CLI 控制面（可选）
+
+- 提供可选的 CLI 控制面，开关位于应用设置中，**默认关闭**；启用后才注册或暴露 CLI 入口，并明确提示开放的能力范围。
+- CLI 是**运行中管理器实例的客户端**，经本地 IPC 委托实例执行，不产生独立的第二写入者；实例未运行时，只读命令应明确报错或降级，状态变更类命令不得绕过实例直接写状态。
+- 命令能力限定在**管理器自有域**：发现与只读状态、`start/stop/restart`、数据根、备份、加密导出/导入、WebDAV 同步、自更新检查。
+- **不提供**任何直接改写 OpenCodex 自身配置（provider、路由、模型映射）的写入通道；该类变更一律走官方 CLI。
+- 变更层命令需运行实例与显式确认；破坏性操作必须带确认标志，其校验、备份与确认语义与 GUI 一致。
+- 提供 `--json` 机读输出，并满足非交互与幂等要求，供脚本和 AI 代理使用。
 
 ## 9. 验收标准
 
@@ -154,6 +164,7 @@ UI 状态至少区分：未发现、未运行、启动中、运行中、待就�
 | AC-07 | WebDAV | 全量同步含敏感内容，客户端加密、冲突提示、覆盖前备份、可恢复。 |
 | AC-08 | 升级 | 升级前备份，引导官方 `ocx update`，不接管 npm。 |
 | AC-09 | 应用自身更新 | 支持自身版本检查与更新（stable/beta 通道、签名校验、重启生效），不接管 `ocx update`，失败可回滚。 |
+| AC-10 | CLI 控制面 | 提供可选、默认关闭的 CLI；经运行中实例委托执行；仅覆盖管理器自有域；不提供 OpenCodex 配置写入通道；破坏性操作需确认，支持机读输出。 |
 
 ## 10. 安全边界
 
@@ -161,6 +172,7 @@ UI 状态至少区分：未发现、未运行、启动中、运行中、待就�
 - P1 配置导出/导入和 P2 WebDAV 实施前必须完成安全评审。
 - 敏感配置在 UI 中默认掩码，仅在明确输入口令或必要校验场景短暂解密。
 - 备份必须可定位、可校验、可恢复；同步覆盖不得造成无法恢复的历史丢失。
+- 可选 CLI 控制面默认关闭；启用后本地 IPC 必须做本机访问控制（受限文件权限与调用方校验），关闭时不得留下可被调用的监听端点。
 
 ## 11. 流程边界
 
