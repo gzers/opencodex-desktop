@@ -9,6 +9,10 @@
   color-scheme:light dark;
 
   --bg:#f9f9f9;
+  /* 环境光：取自官方面板 body:before 的三处 radial-gradient */
+  --glow-1:#a4c4ff6b;
+  --glow-2:#a8e2c561;
+  --glow-3:#ffe0c24d;
   --panel:#fff;
   --rail:#f9f9f9;
   --raised:#f4f4f4;
@@ -77,6 +81,9 @@
 }
 html[data-theme="dark"]{
   --bg:#212121;
+  --glow-1:#6082c829;
+  --glow-2:#58a08221;
+  --glow-3:#b48c6414;
   --panel:#262626;
   --rail:#171717;
   --raised:#303030;
@@ -123,6 +130,14 @@ button{font:inherit}
   display:grid;grid-template-rows:44px minmax(0,1fr);border-radius:14px;overflow:hidden;
   background:var(--bg);border:1px solid color-mix(in srgb,var(--text) 10%,transparent);
   box-shadow:0 24px 70px #00000026,0 6px 18px #00000017;position:relative;isolation:isolate;
+}
+/* 与官方面板一致的环境光背景：三层柔光叠加，内容之上不可交互。 */
+.window::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;filter:blur(70px);
+  background:
+    radial-gradient(42% 38% at 12% 6%,var(--glow-1),#0000 70%),
+    radial-gradient(46% 42% at 88% 18%,var(--glow-2),#0000 70%),
+    radial-gradient(40% 36% at 70% 92%,var(--glow-3),#0000 72%);
 }
 .titlebar{display:grid;grid-template-columns:92px minmax(0,1fr) 130px;align-items:center;background:var(--raised);border-bottom:1px solid var(--border);color:var(--text)}
 .traffic{display:flex;gap:8px;padding-left:14px}
