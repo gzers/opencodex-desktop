@@ -24,7 +24,7 @@
 - 2026-09-12 已复核：官方面板模式下左栏约 64px，中文官方面板主内容区约 1116px；概览页维持 232px 完整侧栏。
 - 侧栏已替换为 OpenCodex 风格 2px 线性 SVG 图标，统一 18px；面板图标栏放大到 20px。品牌标记改为内联官方风格渐变云标，尺寸 28px，避免外部 Logo 被拉伸。
 - 新增官方 GUI 源码级快照预览通道：从官方 GUI 渲染结果复制 DOM 与 CSS；light / dark 截图已验证无 console error。
-- 新增 `风格基准/design-tokens.md`：颜色、字体、间距、圆角、控件尺寸等以官方 `gui/dist` 构建产物为来源，原型 token 与官方基准对齐。
+- 新增 `design-tokens.md`：颜色、字体、间距、圆角、控件尺寸等以官方 `gui/dist` 构建产物为来源，原型 token 与官方基准对齐。
 - 新增官方 light / dark 截图与原型 light / dark 截图对照；截图仅用于视觉 QA，不用作样式来源。
 - 官方快照与原型 shell 已验证 `ocx-theme` 同步，dark 模式下双方均切换为官方 dark token。
 - 原型已改为 `index.html` 根入口，hash 路由串连侧栏页面；界面按 1180 × 760 macOS 应用窗口呈现，弹层与提示约束在窗口内。
@@ -80,7 +80,7 @@
 - 用无头 Chromium 加载 `index.html#overview`，实测 viewport `1180×760 / 1280×800 / 1440×900 / 1512×982 / 1728×1117 / 1920×1080`。
 - 记录 `.window` 实际尺寸、`.main` 滚动高度、各区块 bounding box、每个按钮的文本 / 类名 / 禁用态 / 坐标。
 - 全程无 console error、page error。
-- 证据截图：`风格基准/原型截图/归档-概览方案对比-20260913/audit-overview-1180x760.png`、`audit-overview-1920x1080.png`、`audit-page-1180x760.png`。
+- 证据截图：`截图/归档-20260913/概览方案/audit-overview-1180x760.png`、`audit-overview-1920x1080.png`、`audit-page-1180x760.png`。
 
 ### 结论摘要
 
@@ -145,7 +145,7 @@
 ### 本次未改动
 
 - 未修改 `index.html`；以上仅为审计结论与改法建议，是否落原型待确认（QA-12 ~ QA-15）。
-- 同类产品调研见 `参考调研-2026-09-12.md`：同类 Tauri 桌面端默认窗口为 1000×650 ~ 1280×800，进程控制普遍放在常驻状态条，按钮按状态渲染而非禁用，卡片有 compact / detailed 密度分级。
+- 同类产品调研见 `同类产品调研-2026-09-12.md`：同类 Tauri 桌面端默认窗口为 1000×650 ~ 1280×800，进程控制普遍放在常驻状态条，按钮按状态渲染而非禁用，卡片有 compact / detailed 密度分级。
 
 ## 2026-09-13 · 概览布局方案 B / C / B+ 已落原型
 
@@ -211,9 +211,9 @@
 
 ### 证据截图
 
-方案对比期间的全部截图已归档到 `风格基准/原型截图/归档-概览方案对比-20260913/`：`prototype-overview-baseline-1180x760.png`、`prototype-overview-b-light.png`、`prototype-overview-c-light.png`、`prototype-overview-c-sheet-light.png`、`prototype-overview-b-dark.png`、`prototype-overview-c-dark.png`、`prototype-overview-b-900x640.png`、`prototype-overview-c-900x640.png`、`prototype-overview-b2-light.png`、`prototype-overview-b2-running-light.png`、`prototype-overview-b2-expanded-light.png`、`prototype-overview-b2-dark.png`、`prototype-overview-b2-900x640.png`、`prototype-overview-b2-cards-light.png`、`prototype-overview-b2-cards-wide-light.png`。
+方案对比期间的全部截图已归档到 `截图/归档-20260913/概览方案/`：`prototype-overview-baseline-1180x760.png`、`prototype-overview-b-light.png`、`prototype-overview-c-light.png`、`prototype-overview-c-sheet-light.png`、`prototype-overview-b-dark.png`、`prototype-overview-c-dark.png`、`prototype-overview-b-900x640.png`、`prototype-overview-c-900x640.png`、`prototype-overview-b2-light.png`、`prototype-overview-b2-running-light.png`、`prototype-overview-b2-expanded-light.png`、`prototype-overview-b2-dark.png`、`prototype-overview-b2-900x640.png`、`prototype-overview-b2-cards-light.png`、`prototype-overview-b2-cards-wide-light.png`。
 
-定稿后的现行截图（`风格基准/原型截图/`）：`prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-expanded-light.png`、`prototype-overview-annotated-light.png`、`prototype-overview-annotated-dark.png`、`prototype-panel-light.png`、`prototype-panel-dark.png`、`prototype-logs-doctor-light.png`。
+定稿后的现行截图（`截图/现行/`）：`prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-expanded-light.png`、`prototype-overview-annotated-light.png`、`prototype-overview-annotated-dark.png`、`prototype-panel-light.png`、`prototype-panel-dark.png`、`prototype-logs-doctor-light.png`。
 
 ### 已关闭
 
@@ -336,7 +336,7 @@
 ### 清理
 
 - 修掉随 baseline 卡片移除后产生的空引用报错：`#refreshBtn`、`#panelBtn` 的 `onclick` 绑定（`Cannot set properties of null`）。
-- 方案对比期间的全部截图归档到 `风格基准/原型截图/归档-概览方案对比-20260913/`。
+- 方案对比期间的全部截图归档到 `截图/归档-20260913/概览方案/`。
 
 ## 2026-09-13 · 快捷动作卡改为「整行条目」
 
@@ -469,7 +469,7 @@
 
 ### 截图
 
-`风格基准/原型截图/布局方案对比-20260913/`：`乙按钮-现状-左对齐.png`、`乙按钮-等宽双列.png`、`乙按钮-主操作整行.png`、`乙按钮-沉底页脚.png`、`乙按钮-两端对齐.png`
+`截图/对比-20260913/`：`乙按钮-现状-左对齐.png`、`乙按钮-等宽双列.png`、`乙按钮-主操作整行.png`、`乙按钮-沉底页脚.png`、`乙按钮-两端对齐.png`
 
 ## 2026-09-13 · 模块区定稿（乙 + 等宽双列 + 页脚分隔线）
 
@@ -502,8 +502,8 @@
 
 ### 截图
 
-- `风格基准/原型截图/布局方案对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png`（模块区特写）
-- `风格基准/原型截图/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`（已按定稿重出）
+- `截图/对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png`（模块区特写）
+- `截图/现行/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`（已按定稿重出）
 
 ## 2026-09-13 · 大窗口限宽居中（W1）+ 高窗口默认展开运行详情（H1）
 
@@ -536,8 +536,8 @@
 
 ### 截图
 
-- `风格基准/原型截图/prototype-overview-wide-light.png`（1920 × 1080，限宽居中 + 展开详情）
-- `风格基准/原型截图/prototype-overview-expanded-light.png`（1440 × 900，自动展开）
+- `截图/现行/prototype-overview-wide-light.png`（1920 × 1080，限宽居中 + 展开详情）
+- `截图/现行/prototype-overview-expanded-light.png`（1440 × 900，自动展开）
 
 ## 2026-09-13 · 图标修正（设置 / 日志 / 主题）
 
@@ -561,13 +561,13 @@
 
 ### 截图
 
-- `风格基准/原型截图/prototype-settings-light.png`、`prototype-settings-dark.png`（设置路由 + 新图标）
+- `截图/现行/prototype-settings-light.png`、`prototype-settings-dark.png`（设置路由 + 新图标）
 
 ## 2026-09-13 · 面板主题跟随外壳（light / dark 联动）
 
 ### 问题
 
-官方面板以 iframe 嵌入（`#panelReal` → `官方页面快照/rendered-dom.html`）。快照本身支持 `:root[data-theme=light|dark]`，但只在**加载时**读一次种子，外壳切主题后面板不跟随；且 iframe 是 file:// 跨源，父页无法直接改它的 DOM。
+官方面板以 iframe 嵌入（`#panelReal` → `../原型/官方页面快照/rendered-dom.html`）。快照本身支持 `:root[data-theme=light|dark]`，但只在**加载时**读一次种子，外壳切主题后面板不跟随；且 iframe 是 file:// 跨源，父页无法直接改它的 DOM。
 
 ### 落地
 
@@ -589,7 +589,7 @@
 
 ### 截图
 
-- `风格基准/原型截图/prototype-panel-light.png`、`prototype-panel-dark.png`（已按联动重出）
+- `截图/现行/prototype-panel-light.png`、`prototype-panel-dark.png`（已按联动重出）
 
 ## 2026-09-13 · 亮暗色收敛为单一取值
 
@@ -650,7 +650,7 @@
 
 ### 截图
 
-- `风格基准/原型截图/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`、`prototype-settings-light.png`、`prototype-panel-light.png` 等已按新侧栏重出。
+- `截图/现行/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`、`prototype-settings-light.png`、`prototype-panel-light.png` 等已按新侧栏重出。
 
 ## 2026-09-13 · 模块区右上角入口改为「更多」省略号
 
@@ -671,7 +671,7 @@
 
 ### 截图
 
-- `风格基准/原型截图/布局方案对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png`（已重出）
+- `截图/对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png`（已重出）
 
 ## 2026-09-13 · 日志 / 设置分区标签改为官方面板同款下划线 tab
 
@@ -704,7 +704,7 @@
 
 ### 截图
 
-- `风格基准/原型截图/prototype-logs-light.png`、`prototype-logs-dark.png`、`prototype-settings-light.png`、`prototype-settings-dark.png`（已重出）
+- `截图/现行/prototype-logs-light.png`、`prototype-logs-dark.png`、`prototype-settings-light.png`、`prototype-settings-dark.png`（已重出）
 
 ## 2026-09-13 · 修复导航选中态出现「双选中」
 
@@ -750,7 +750,7 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
 
 ### 截图
 
-- `风格基准/原型截图/prototype-panel-light.png`、`prototype-panel-dark.png`（已重出，图标栏只高亮「面板」）
+- `截图/现行/prototype-panel-light.png`、`prototype-panel-dark.png`（已重出，图标栏只高亮「面板」）
 
 ## 2026-09-13 · 应用界面去掉阶段编号（P0 / P1 / P2）
 
@@ -778,7 +778,7 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
 
 ### 截图
 
-- `风格基准/原型截图/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`、`prototype-settings-light.png`、`prototype-settings-dark.png`、`prototype-logs-light.png`、`prototype-logs-dark.png`（已重出）
+- `截图/现行/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`、`prototype-settings-light.png`、`prototype-settings-dark.png`、`prototype-logs-light.png`、`prototype-logs-dark.png`（已重出）
 
 ## 2026-09-13 · 模块区卡片顺序调整
 
@@ -804,8 +804,8 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
 
 ### 截图
 
-- `风格基准/原型截图/布局方案对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png`（已重出）
-- `风格基准/原型截图/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`（已重出）
+- `截图/对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png`（已重出）
+- `截图/现行/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`（已重出）
 
 ## 2026-09-13 · WebDAV 未配置态：内容态替换（方案 A）
 
@@ -849,8 +849,8 @@ WebDAV 卡在没配置时仍显示「立即同步 / 测试连接」两颗动作�
 
 ### 截图
 
-- `风格基准/原型截图/布局方案对比-20260913/WebDAV-未配置-空态.png`、`WebDAV-未连接.png`、`WebDAV-已同步.png`、`WebDAV-冲突待处理.png`
-- `风格基准/原型截图/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`（默认态已重出）
+- `截图/对比-20260913/WebDAV-未配置-空态.png`、`WebDAV-未连接.png`、`WebDAV-已同步.png`、`WebDAV-冲突待处理.png`
+- `截图/现行/prototype-overview-light.png`、`prototype-overview-dark.png`、`prototype-overview-min-window-light.png`（默认态已重出）
 
 ## 2026-09-13 · 套壳应用版本并入设置「版本升级」，外部只走通知
 
@@ -881,8 +881,8 @@ WebDAV 卡在没配置时仍显示「立即同步 / 测试连接」两颗动作�
 
 ### 截图
 
-- `风格基准/原型截图/prototype-settings-upgrade-light.png`（设置 → 版本升级，两块并列）
-- `风格基准/原型截图/prototype-settings-light.png`、`prototype-settings-dark.png`、`prototype-overview-light.png`、`prototype-overview-dark.png`（角标已更新）
+- `截图/现行/prototype-settings-upgrade-light.png`（设置 → 版本升级，两块并列）
+- `截图/现行/prototype-settings-light.png`、`prototype-settings-dark.png`、`prototype-overview-light.png`、`prototype-overview-dark.png`（角标已更新）
 
 ### 遗留
 
@@ -916,6 +916,6 @@ WebDAV 卡在没配置时仍显示「立即同步 / 测试连接」两颗动作�
 
 ### 截图
 
-- `风格基准/原型截图/prototype-notifications-light.png`、`prototype-notifications-dark.png`（通知中心 + 单条删除）
-- `风格基准/原型截图/prototype-notification-detail-light.png`、`prototype-notification-detail-dark.png`（详情弹窗）
-- `风格基准/原型截图/prototype-logs-light.png`、`prototype-logs-dark.png`（通知历史 + 单条删除）
+- `截图/现行/prototype-notifications-light.png`、`prototype-notifications-dark.png`（通知中心 + 单条删除）
+- `截图/现行/prototype-notification-detail-light.png`、`prototype-notification-detail-dark.png`（详情弹窗）
+- `截图/现行/prototype-logs-light.png`、`prototype-logs-dark.png`（通知历史 + 单条删除）
