@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OpenCodeX-Desktop · P0 原型</title>
+<title>OpenCodeX-Desktop · 原型</title>
 <style>
 :root{
   color-scheme:light dark;
@@ -115,9 +115,11 @@ body{
 }
 html[data-theme="dark"] body{background:#111111}
 button{font:inherit}
-.desktop{min-height:100vh;display:grid;place-items:center;padding:32px 24px}
+:root{--win-w:1180px;--win-h:760px}
+.desktop{min-height:100vh;display:grid;grid-template-columns:auto 320px;gap:22px;align-items:safe center;justify-content:safe center;padding:22px 22px}
+.stage{position:relative;width:var(--win-w)}
 .window{
-  width:min(1180px,96vw);height:min(760px,88vh);min-width:1020px;min-height:660px;
+  width:100%;height:min(var(--win-h),calc(100vh - 48px));min-width:0;min-height:600px;
   display:grid;grid-template-rows:44px minmax(0,1fr);border-radius:14px;overflow:hidden;
   background:var(--bg);border:1px solid color-mix(in srgb,var(--text) 10%,transparent);
   box-shadow:0 24px 70px #00000026,0 6px 18px #00000017;position:relative;isolation:isolate;
@@ -128,13 +130,15 @@ button{font:inherit}
 .traffic .close{background:#ff5f57}.traffic .minimize{background:#febc2e}.traffic .zoom{background:#28c840}
 .window-title{text-align:center;font-size:var(--text-label);font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .window-meta{text-align:right;padding-right:14px;font-size:var(--text-caption);color:var(--muted)}
-.app{display:grid;grid-template-columns:232px minmax(0,1fr);height:100%;min-height:0}
+.app{display:grid;grid-template-columns:244px minmax(0,1fr);height:100%;min-height:0}
 .side{position:relative;height:100%;min-height:0;background:var(--rail);color:var(--text);padding:18px 14px;display:flex;flex-direction:column;gap:18px;border-right:1px solid var(--border)}
-.brand{display:flex;gap:10px;align-items:center;min-width:0}
-.brand img{width:34px;height:34px;border-radius:var(--radius-sm);display:block}
-.brand strong{display:block;font-size:var(--text-subtitle);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.brand span{display:block;color:var(--muted);font-size:var(--text-label);margin-top:2px}
+.brand{display:flex;gap:10px;align-items:center;min-width:0;min-height:var(--control-lg)}
+.brand-mark{width:40px;height:40px;flex:none;display:block;filter:drop-shadow(0 1px 2px #3941ff26)}
+.brand>div{min-width:0}
+.brand strong{display:block;font-size:var(--text-subtitle);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand span{display:block;color:var(--muted);font-size:var(--text-caption);margin-top:3px;line-height:1.2}
 .nav{display:flex;flex-direction:column;gap:3px}
+.nav svg{width:18px;height:18px;flex:none}
 .nav button{
   display:flex;align-items:center;gap:9px;border:0;background:transparent;color:var(--muted);
   min-height:var(--control-lg);padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;text-align:left;transition:background var(--motion-fast),color var(--motion-fast);
@@ -144,9 +148,10 @@ button{font:inherit}
 .nav .tag{margin-left:auto;font-size:var(--text-micro);padding:2px 6px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--panel);color:var(--muted)}
 .side-note{margin-top:auto;color:var(--muted);font-size:var(--text-caption);line-height:1.5}
 .theme-seg{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel)}
-.theme-seg button{min-height:26px;border:0;background:transparent;color:var(--muted);border-radius:var(--radius-pill);padding:4px 9px;font-size:var(--text-label);cursor:pointer;transition:background var(--motion-fast),color var(--motion-fast)}
+.theme-seg button{display:inline-flex;align-items:center;justify-content:center;width:28px;height:26px;padding:0;border:0;background:transparent;color:var(--muted);border-radius:var(--radius-pill);cursor:pointer;transition:background var(--motion-fast),color var(--motion-fast)}
+.theme-seg svg{width:15px;height:15px}
 .theme-seg button:hover{color:var(--text)}
-.theme-seg button.active{background:var(--panel);color:var(--text);box-shadow:var(--shadow-sm)}
+.theme-seg button.active{background:var(--raised);color:var(--text);box-shadow:var(--shadow-sm)}
 .main{height:100%;min-height:0;overflow:auto;padding:20px 22px 24px;width:100%}
 .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:18px}
 .page-title h1{font-size:var(--text-display);letter-spacing:-.02em;margin:0}
@@ -265,15 +270,289 @@ button{font:inherit}
 .link-chip{min-height:32px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:var(--radius-pill);padding:5px 11px;font-size:var(--text-label);cursor:pointer;transition:background var(--motion-fast),color var(--motion-fast)}
 .link-chip:hover{background:var(--hover);color:var(--text)}
 
+/* Overview behaves as a one-screen control deck. */
+.console-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.environment-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.environment-strip .metric{background:var(--rail)}
+.environment-strip .metric div{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-flex;align-items:center;min-height:22px;padding:2px 8px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);color:var(--muted);font-size:var(--text-micro);font-weight:600;white-space:nowrap}
+
+/* 概览定稿（B+ 合并版）：一行运行摘要 + 页内折叠运行详情 + 压缩快捷动作卡。 */
+html[data-route="overview"] #statePill{display:none}
+.btn[hidden]{display:none}
+.main{container-type:inline-size}
+
+/* 运行状态卡：摘要行与主操作同一张卡。 */
+.ovb-status{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.ovb-main{min-width:0;flex:1 1 320px}
+.ovb-note{margin:9px 0 0;color:var(--muted);font-size:var(--text-label);line-height:1.5}
+.ovb-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ovc-line{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:var(--text-control)}
+.ovc-fact{color:var(--muted);display:flex;align-items:center;gap:7px}
+.ovc-fact b{color:var(--text);font-weight:650;font-variant-numeric:tabular-nums}
+.ovc-fact.mono b{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-label);font-weight:550}
+.ovc-badge{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.ovc-badge.running{background:var(--green)}
+.ovc-badge.busy{background:var(--blue)}
+.ovc-badge.warn{background:var(--amber)}
+.ovc-badge.bad{background:var(--red)}
+
+/* 运行详情：页内折叠，折叠条自带关键事实。 */
+.ovb-detail{padding:0}
+.ovb-detail>summary{cursor:pointer;list-style:none;padding:14px 16px;font-size:var(--text-body);font-weight:600;display:flex;align-items:center;gap:12px}
+.ovb-detail>summary::-webkit-details-marker{display:none}
+.ovb-detail>summary>span{white-space:nowrap}
+.ovb-detail-facts{flex:1;min-width:0;color:var(--muted);font-size:var(--text-label);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ovb-detail>summary::after{content:"展开";margin-left:auto;flex:none;color:var(--muted);font-size:var(--text-label);font-weight:500}
+.ovb-detail[open]>summary::after{content:"收起"}
+@container (max-width:819px){.ovb-detail-body{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ovb-detail-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 16px 16px}
+.ovb-detail-body .wide{grid-column:1/-1}
+
+/* 模块区（配置迁移 / WebDAV 同步 / 版本升级）：顶部一行三格，
+   动作区以分割线与上方信息分离，作为卡片页脚。 */
+.route-section.active.ov{display:flex;flex-direction:column;gap:16px}
+.route-section.active.ov>*{margin-top:0}
+/* 大窗口限宽居中：内容区超过 1160px 时不再横向拉伸（官方面板 #panelSection 仍全幅）。 */
+@container (min-width:1280px){
+  .main>*{max-width:1160px;margin-inline:auto}
+  .main>#panelSection{max-width:none}
+}
+.mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;order:-1}
+.mods>.card{margin-top:0}
+.mod{display:flex;flex-direction:column;gap:10px}
+.mod-head{display:flex;align-items:center;gap:10px}
+.mod-head h3{margin:0 auto 0 0;font-size:var(--text-body);font-weight:650}
+.mod-go{
+  display:flex;align-items:center;justify-content:center;width:20px;height:20px;
+  border-radius:50%;background:var(--raised);color:var(--muted);line-height:1;flex:none;
+}
+.mod-go svg{width:13px;height:13px;display:block}
+.mod-status{display:grid;gap:6px;font-size:var(--text-label);color:var(--muted)}
+.mod-status span{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.mod-status b{color:var(--text);font-weight:600;white-space:nowrap}
+.mod-status b.warning{color:var(--amber)}
+.mod-actions{
+  display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;
+  margin-top:auto;padding-top:10px;border-top:1px solid var(--border-soft);
+}
+.mod-actions .btn{width:100%;padding:7px 8px}
+/* 「进入设置」由右上角的箭头承担，不再占用动作按钮位。 */
+.mod-actions .btn[data-settings-section]{display:none}
+@container (max-width:759px){
+  .mods{gap:8px}
+  .mod{padding:12px 12px;gap:8px}
+  .mod-head h3{font-size:var(--text-control)}
+  .mod-actions{gap:6px}
+  .mod-actions .btn{padding:6px 8px;font-size:var(--text-label)}
+}
+
+
+/* 模拟窗口的拖拽调整手柄（预览工具，不属于软件界面）。 */
+.rz{position:absolute;z-index:6;background:transparent;touch-action:none}
+.rz-e{top:0;right:-6px;width:12px;height:100%;cursor:ew-resize}
+.rz-s{left:0;bottom:-6px;height:12px;width:100%;cursor:ns-resize}
+.rz-se{right:-7px;bottom:-7px;width:18px;height:18px;cursor:nwse-resize}
+.rz-se::after{
+  content:"";position:absolute;right:4px;bottom:4px;width:9px;height:9px;
+  border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);
+  border-radius:0 0 4px 0;opacity:.5;
+}
+body.resizing{user-select:none}
+body.resizing .window{box-shadow:0 30px 80px #00000033,0 0 0 2px #3941ff66}
+
+/* 诊断中心：官方 ocx doctor 的只读摘要承载区。 */
+.doctor-out{
+  margin-top:14px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-label);line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;color:var(--muted);
+}
+.doctor-out.show{color:var(--text);max-height:300px;overflow:auto}
+.doctor-out .ok{color:var(--green)}
+.doctor-out .warn{color:var(--amber)}
+.doctor-out .mask{color:var(--blue)}
+.doctor-hint{margin:10px 0 0;color:var(--muted);font-size:var(--text-label);line-height:1.5}
+.doctor-hint code,.card-head code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);color:var(--text)}
+
+/* Prototype annotations and test controls stay outside the simulated application. */
+.prototype-side{
+  height:min(var(--win-h),calc(100vh - 48px));min-height:600px;display:flex;flex-direction:column;gap:12px;
+  padding:14px;border-radius:16px;overflow:auto;color:#0d0d0d;
+  background:linear-gradient(180deg,#ffffffee,#f5f5f7ee);
+  border:1px solid #dedee4;box-shadow:0 18px 44px #10182814;backdrop-filter:blur(18px);
+}
+html[data-theme="dark"] .prototype-side{
+  color:#ececec;background:linear-gradient(180deg,#242424ee,#1c1c1cee);
+  border-color:#3a3a3a;box-shadow:0 18px 44px #00000066;
+}
+.prototype-side .proto-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.prototype-side .proto-kicker{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#3941ff}
+html[data-theme="dark"] .prototype-side .proto-kicker{color:#8f9bff}
+.prototype-side .proto-title{font-size:15px;font-weight:700;line-height:1.2}
+.prototype-side .proto-card{
+  border:1px solid color-mix(in srgb,currentcolor 10%,transparent);border-radius:12px;
+  background:color-mix(in srgb,#ffffff 68%,transparent);padding:12px;
+}
+html[data-theme="dark"] .prototype-side .proto-card{background:#ffffff0a}
+.prototype-side .proto-note-title{font-size:13px;font-weight:650;margin-bottom:5px}
+.prototype-side .proto-note{color:#4b5563;font-size:12px;line-height:1.55}
+html[data-theme="dark"] .prototype-side .proto-note{color:#b9bfca}
+.prototype-side ul{margin:0;padding-left:18px;color:#4b5563;font-size:12px;line-height:1.5}
+html[data-theme="dark"] .prototype-side ul{color:#b9bfca}
+.prototype-side li+li{margin-top:5px}
+.prototype-side .scenarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0}
+.prototype-side .scenarios button{
+  min-height:30px;border:1px solid #d8dae0;background:#ffffff;color:#5f6368;
+  border-radius:999px;padding:4px 8px;font-size:11px;cursor:pointer;transition:.12s;
+}
+.prototype-side .scenarios button:hover{border-color:#b9bcc5;color:#111}
+.prototype-side .scenarios button.active{background:#0d0d0d;border-color:#0d0d0d;color:#fff}
+.prototype-side .proto-hint{margin:8px 0 0;color:#737a85;font-size:11px;line-height:1.45}
+.prototype-side .size-readout{display:flex;align-items:baseline;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
+.prototype-side .size-readout b{font-size:14px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.prototype-side .size-readout span{color:#737a85;font-size:10px;line-height:1.4}
+html[data-theme="dark"] .prototype-side .size-readout span{color:#9aa2ae}
+@media(max-width:1470px){
+  .desktop{grid-template-columns:auto}
+  .prototype-side{width:100%;height:auto;min-height:0;max-height:42vh}
+}
+
+/* Diagnostics center keeps logs and notification history as parallel tabs. */
+/* 分区标签：与官方面板一致的下划线式 tab，从左侧起排。 */
+.diag-tabs,.settings-tabs{display:flex;flex-wrap:wrap;gap:2px;margin:2px 0 16px;border-bottom:1px solid var(--border);overflow:visible}
+.diag-tabs button,.settings-tabs button{
+  display:inline-flex;align-items:center;white-space:nowrap;flex:none;
+  appearance:none;border:0;border-bottom:2px solid transparent;background:transparent;
+  color:var(--muted);font:inherit;font-size:var(--text-control);padding:8px 12px;margin-bottom:-1px;
+  border-radius:0;cursor:pointer;transition:color var(--motion-fast),border-color var(--motion-fast);
+}
+.diag-tabs button:hover,.settings-tabs button:hover{color:var(--text)}
+.diag-tabs button.active,.settings-tabs button.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+.diag-view{display:none}
+.diag-view.active{display:block}
+.history-list{display:grid;gap:8px;max-height:360px;overflow:auto;padding-right:2px}
+.history-item{
+  display:grid;grid-template-columns:8px minmax(0,1fr) auto auto;gap:10px;align-items:start;
+  padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);cursor:pointer;
+  transition:border-color var(--motion-fast),background var(--motion-fast);
+}
+.history-item:hover{background:var(--panel);border-color:color-mix(in srgb,var(--text) 16%,transparent)}
+.history-item .severity{width:8px;height:8px;border-radius:50%;background:var(--muted);margin-top:6px}
+.history-item.warning .severity{background:var(--amber)}
+.history-item.danger .severity{background:var(--red)}
+.history-item.info .severity{background:var(--blue)}
+.history-item strong{display:block;font-size:var(--text-control)}
+.history-item span{display:block;margin-top:3px;color:var(--muted);font-size:var(--text-caption);line-height:1.45}
+.history-item time{color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.history-meta{color:var(--muted);font-size:var(--text-caption)}
+
+/* Non-blocking diagnostics move into the top-right notification center. */
+.notification-wrap{position:relative;display:flex;align-items:center}
+.notification-btn{
+  position:relative;width:34px;height:34px;display:grid;place-items:center;padding:0;
+  border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--muted);cursor:pointer;
+  transition:background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast);
+}
+.notification-btn:hover{background:var(--hover);color:var(--text)}
+.notification-btn svg{width:18px;height:18px}
+.notification-dot{
+  position:absolute;top:-3px;right:-3px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;
+  background:var(--amber);color:#fff;font-size:10px;font-weight:700;line-height:16px;text-align:center;display:none;
+}
+.notification-dot.danger{background:var(--red)}
+.notification-dot.show{display:block}
+.notification-panel{
+  position:absolute;top:42px;right:0;width:min(380px,calc(100vw - 80px));max-height:min(480px,70vh);overflow:auto;
+  border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);
+  display:none;z-index:35;padding:8px;
+}
+.notification-panel.show{display:block}
+.notification-head{display:flex;justify-content:space-between;align-items:center;padding:8px 10px 6px}
+.notification-head h3{margin:0;font-size:var(--text-body)}
+.notification-clear{min-height:28px;border:0;background:transparent;color:var(--muted);border-radius:5px;padding:4px 8px;font-size:var(--text-caption);cursor:pointer}
+.notification-clear:hover{background:var(--hover);color:var(--text)}
+.notification-list{display:grid;gap:6px}
+.notification-item{
+  display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:start;
+  padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);cursor:pointer;
+  transition:border-color var(--motion-fast),background var(--motion-fast);
+}
+.notification-item:hover{background:var(--panel);border-color:color-mix(in srgb,var(--text) 16%,transparent)}
+.notification-item .severity{width:8px;height:8px;border-radius:50%;background:var(--muted);margin-top:6px}
+.notification-item.warning .severity{background:var(--amber)}
+.notification-item.danger .severity{background:var(--red)}
+.notification-item strong{display:block;font-size:var(--text-control);line-height:1.3}
+.notification-item span{display:block;margin-top:3px;color:var(--muted);font-size:var(--text-caption);line-height:1.45}
+.notification-item time{color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.n-actions{display:flex;align-items:center;gap:4px;align-self:center}
+.n-del{
+  width:24px;height:24px;flex:none;display:grid;place-items:center;padding:0;
+  border:1px solid transparent;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;
+  transition:background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast);
+}
+.n-del:hover{background:var(--hover);color:var(--text);border-color:var(--border)}
+.n-del svg{width:14px;height:14px}
+.modal-meta{display:block;margin-top:10px;color:var(--muted);font-size:var(--text-caption)}
+#modalDelete{margin-right:auto;color:var(--red)}
+#modalDelete:hover{background:var(--red-soft);border-color:color-mix(in srgb,var(--red) 30%,transparent)}
+.notification-empty{padding:26px 12px;text-align:center;color:var(--muted);font-size:var(--text-control)}
+
+/* Quick actions stay on Overview; parameter-heavy capabilities live in Settings. */
+.quick-status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.status-tile{
+  display:flex;flex-direction:column;gap:5px;min-height:62px;padding:9px 10px;
+  border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);
+}
+.status-tile-head{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:var(--text-caption);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status-tile-head::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted);flex:none}
+.status-tile-head.positive::before{background:var(--green)}
+.status-tile-head.warning::before{background:var(--amber)}
+.status-tile-head.info::before{background:var(--blue)}
+.status-tile-value{
+  font-size:var(--text-control);font-weight:650;line-height:1.25;overflow-wrap:anywhere;
+  font-variant-numeric:tabular-nums;
+}
+.status-tile-value.positive{color:var(--green)}
+.status-tile-value.warning{color:var(--amber)}
+.status-tile-value.info{color:var(--blue)}
+.action-list{display:grid;gap:8px;margin-top:12px}
+.action-list .btn{width:100%}
+.settings-panel{display:none}
+.settings-panel.active{display:block}
+.setting-list{display:grid;gap:8px;margin-top:14px}
+.setting-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
+.setting-title{font-weight:600;font-size:var(--text-body)}
+.setting-desc{color:var(--muted);font-size:var(--text-label);margin-top:3px;line-height:1.45}
+.setting-row .controls{justify-content:flex-end;flex-wrap:wrap}
+.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
+.field{display:grid;gap:5px}
+.field label{color:var(--muted);font-size:var(--text-caption)}
+.input{min-height:var(--control-md);width:100%;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--rail);color:var(--text);padding:7px 10px;font-size:var(--text-label)}
+.input:read-only{opacity:.88}
+@media(max-width:1100px){.field-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.setting-row{grid-template-columns:1fr}.setting-row .controls{justify-content:flex-start}}
+
 /* Real-page preview is enabled only by a local design preview proxy. */
 #panelReal{position:absolute;inset:0;width:100%;height:100%;border:0;display:none;background:var(--bg)}
 #panelReal.show{display:block}
 .panel-preview-note{position:absolute;left:14px;bottom:14px;z-index:5;display:flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--muted);font-size:var(--text-caption);box-shadow:var(--shadow-sm);pointer-events:none;backdrop-filter:blur(16px) saturate(1.2)}
 
-/* Panel is an immersive view: only the fixed sidebar remains. */
-body.panel-mode .app{grid-template-columns:minmax(0,1fr)}
-body.panel-mode .side,body.panel-mode .titlebar{display:none}
-body.panel-mode .window{grid-template-rows:minmax(0,1fr)}
+/* Selected layout B: keep a narrow icon rail so panel context stays visible. */
+body.panel-mode .app{grid-template-columns:64px minmax(0,1fr)}
+body.panel-mode .side{
+  padding:18px 0 14px;align-items:center;gap:18px;background:var(--rail);
+}
+body.panel-mode .brand{
+  display:flex;justify-content:center;align-items:center;
+  width:var(--control-lg);height:var(--control-lg);padding:0;margin:0 auto;flex:none;
+}
+body.panel-mode .brand div{display:none}
+body.panel-mode .brand-mark{width:34px;height:34px}
+body.panel-mode .nav{width:100%;align-items:center}
+body.panel-mode .nav button{width:var(--control-lg);height:var(--control-lg);min-height:var(--control-lg);padding:0;justify-content:center;gap:0;border-radius:var(--radius-sm)}
+body.panel-mode .nav svg{width:18px;height:18px}
+body.panel-mode .nav-label,body.panel-mode .nav .tag,body.panel-mode .side-note{display:none}
+body.panel-mode .window{grid-template-rows:44px minmax(0,1fr)}
 body.panel-mode .main{padding:0;overflow:hidden}
 body.panel-mode .topbar,body.panel-mode .notice,body.panel-mode .menu-hint,body.panel-mode .footer-note,body.panel-mode .state-pill{display:none}
 body.panel-mode #panelSection{display:block;height:100%;min-height:0}
@@ -284,67 +563,75 @@ body.panel-mode .panel-shell{height:100%}
 </head>
 <body>
 <div class="desktop">
+<div class="stage">
 <div class="window">
   <header class="titlebar">
     <div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div>
     <div class="window-title">OpenCodeX-Desktop</div>
-    <div class="window-meta">P0 · Mock</div>
+    <div class="window-meta">本地 · 127.0.0.1:10100</div>
   </header>
   <div class="app">
   <aside class="side">
     <div class="brand">
-      <img src="../../../../02-品牌与图标素材/04-品牌组件/Logo/logo-dark.svg" alt="OpenCodex logo">
+      <svg class="brand-mark" viewBox="0 0 24 24" role="img" aria-label="OpenCodeX logo">
+                      <defs>
+                        <linearGradient id="desktopBrandGradient" gradientUnits="userSpaceOnUse" x1="12" y1="3" x2="12" y2="21">
+                          <stop stop-color="#B1A7FF"/><stop offset=".5" stop-color="#7A9DFF"/><stop offset="1" stop-color="#3941FF"/>
+                        </linearGradient>
+                        <mask id="desktopBrandKnockout" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+                          <rect width="24" height="24" fill="#fff"/>
+                          <svg x="7.5" y="7.5" width="9" height="9" viewBox="0 0 1024 1024" fill="#000">
+                            <path d="M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/>
+                            <path d="M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/>
+                            <path d="M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z"/>
+                            <path d="M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/>
+                            <path d="M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z"/>
+                          </svg>
+                        </mask>
+                      </defs>
+                      <path mask="url(#desktopBrandKnockout)" fill="url(#desktopBrandGradient)" d="M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z"/>
+                    </svg>
       <div>
         <strong>OpenCodeX-Desktop</strong>
-        <span>P0 Prototype</span>
+        <span>Desktop Manager</span>
       </div>
     </div>
     <nav class="nav">
-      <button data-route="overview" id="overviewNavBtn" class="active">📊 概览</button>
-      <button data-route="panel" id="panelNavBtn">🧩 官方面板</button>
-      <button data-route="installation">📦 安装与数据根</button>
-      <button data-route="process">⚙️ 进程控制</button>
-      <button data-route="logs">🧾 日志</button>
-      <button data-route="config">🔐 配置迁移<span class="tag">P1</span></button>
-      <button data-route="webdav">☁️ WebDAV<span class="tag">P2</span></button>
-      <button data-route="upgrade">⬆️ 升级</button>
+      <button data-route="overview" id="overviewNavBtn" class="active" title="概览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">概览</span></button>
+      <button data-route="panel" id="panelNavBtn" title="面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg><span class="nav-label">面板</span></button>
+      <button data-route="logs" title="日志"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg><span class="nav-label">日志</span></button>
+      <button data-route="settings" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="nav-label">设置</span></button>
     </nav>
-    <div class="side-note">
-      原型模式：仅使用 mock 数据。<br>不会读取真实配置或执行真实命令。
-    </div>
   </aside>
 
   <main class="main">
     <header class="topbar">
       <div class="page-title">
         <h1 id="routeTitle">OpenCodex 运行概览</h1>
-        <p id="routeSubtitle">发现安装、切换数据根、托管官方启停子进程并观察状态。</p>
+        <p id="routeSubtitle">发现安装、切换数据目录、托管官方启停子进程并观察状态。</p>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <div class="theme-seg" id="themeSeg" role="group" aria-label="主题">
-          <button data-theme-option="light">Light</button>
-          <button data-theme-option="dark">Dark</button>
-          <button data-theme-option="system" class="active">System</button>
+          <button data-theme-option="light" title="浅色" aria-label="浅色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+          <button data-theme-option="dark" title="深色" aria-label="深色"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+          <button data-theme-option="system" class="active" title="跟随系统" aria-label="跟随系统"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8.5 20.5h7M12 17v3.5"/></svg></button>
         </div>
-        <span class="pill prototype-pill">● 原型 · Mock</span>
         <span id="statePill" class="state-pill state-muted">未加载</span>
+        <div class="notification-wrap">
+          <button class="notification-btn" id="notificationBtn" title="通知" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg>
+            <span class="notification-dot" id="notificationDot">3</span>
+          </button>
+          <div class="notification-panel" id="notificationPanel">
+            <div class="notification-head">
+              <h3>通知</h3>
+              <button class="notification-clear" id="notificationClear">全部已读</button>
+            </div>
+            <div class="notification-list" id="notificationList"></div>
+          </div>
+        </div>
       </div>
     </header>
-
-    <div class="notice">
-      <div class="dot"></div>
-      <div>
-        <strong>原型边界</strong>
-        <p>这里只验证 P0 交互。真实实现中，桌面壳会直接托管官方 <code>ocx start / stop / restart</code> 子进程，不会安装或管理 launchd，不会接管 <code>codex-shim</code>。</p>
-      </div>
-    </div>
-
-    <div class="menu-hint">
-      <span>macOS 菜单：</span>
-      <code>进程 · 启动 / 停止 / 重启</code>
-      <code>视图 · 官方面板 / 浏览器打开</code>
-      <code>日志 · 打开日志目录</code>
-    </div>
 
     <section class="route-section" id="panelSection">
       <div class="panel-shell" id="panelShell">
@@ -360,10 +647,8 @@ body.panel-mode .panel-shell{height:100%}
               <div class="mock-rail"><span></span><span></span><span></span><span></span><span></span></div>
               <div class="mock-content"><div></div><div></div><div></div></div>
             </div>
-            <p class="mock-note">占位示意：真实实现使用 WebView 全幅承载官方 GUI，并保持官方 light / dark / system 主题。当前原型加载官方页面离线快照用于视觉对照。</p>
           </div>
-          <iframe id="panelReal" data-proxy="./官方页面快照/rendered-dom.html" title="OpenCodex 官方面板真实页面预览" referrerpolicy="no-referrer"></iframe>
-          <div class="panel-preview-note" id="panelPreviewNote">原型预览 · 真实官方页面</div>
+          <iframe id="panelReal" data-proxy="./官方页面快照/rendered-dom.html?v=zh-CN-2" title="OpenCodex 面板真实页面预览" referrerpolicy="no-referrer"></iframe>
           <div class="panel-actions">
             <button id="panelOverviewBtn" title="返回概览">概览</button>
             <button id="panelReloadBtn" title="重新加载面板">重载</button>
@@ -373,86 +658,97 @@ body.panel-mode .panel-shell{height:100%}
       </div>
     </section>
 
-    <section class="route-section active" id="route-overview">
-    <div class="scenarios" id="scenarios">
-      <button data-state="loading">loading</button>
-      <button data-state="not_found">not found</button>
-      <button data-state="stopped">stopped</button>
-      <button data-state="starting">starting</button>
-      <button data-state="pending">pending</button>
-      <button data-state="running">running</button>
-      <button data-state="starting_failed">start failed</button>
-      <button data-state="at_risk">at-risk</button>
-      <button data-state="external_takeover">external takeover</button>
-      <button data-state="unreachable">unreachable</button>
-    </div>
-
-    <div>
-        <article class="card">
-          <div class="card-head">
-            <div>
-              <h2>运行状态</h2>
-              <p>状态来自官方命令的 mock 投影。</p>
-            </div>
-            <div class="toolbar">
-              <button class="btn ghost" id="refreshBtn">刷新状态</button>
-              <button class="btn" id="panelBtn" disabled>嵌入官方面板</button>
-            </div>
+    <section class="route-section active ov" id="route-overview">
+      <article class="card ovb-status">
+        <div class="ovb-main">
+          <div class="ovc-line">
+            <span class="ovc-fact"><i class="ovc-badge" data-b="statebadge"></i><b data-b="statetext">未加载</b></span>
+            <span class="ovc-fact">端口 <b data-b="port">—</b></span>
+            <span class="ovc-fact">版本 <b data-b="version">—</b></span>
+            <span class="ovc-fact mono">数据目录 <b data-b="rootshort">—</b></span>
           </div>
-          <div class="grid">
-            <div class="metric"><label>状态</label><div id="mState">—</div></div>
-            <div class="metric"><label>健康</label><div id="mHealth">—</div></div>
-            <div class="metric"><label>端口</label><div id="mPort">—</div></div>
-            <div class="metric"><label>PID / 进程</label><div id="mPid">—</div></div>
-          </div>
+          <p class="ovb-note" data-b="note">正在探测本机 OpenCodex 安装…</p>
+        </div>
+        <div class="ovb-actions">
+          <button class="btn primary" data-control="start" data-act="start">启动 OpenCodex</button>
+          <button class="btn primary" data-act="panel">打开面板</button>
+          <button class="btn danger" data-control="stop" data-act="stop">停止</button>
+          <button class="btn" data-control="restart" data-act="restart">重启</button>
+          <button class="btn" data-act="advice">查看建议</button>
+          <button class="btn ghost" data-act="refresh">刷新状态</button>
+          <button class="btn ghost" data-act="logs">查看日志</button>
+        </div>
+      </article>
 
-          <div id="riskArea" style="margin-top:14px"></div>
-
-          <div style="margin-top:15px">
-            <div class="controls">
-              <button class="btn primary" data-control="start">启动 OpenCodex</button>
-              <button class="btn danger" data-control="stop" disabled>停止</button>
-              <button class="btn" data-control="restart" disabled>重启</button>
-              <button class="btn" data-control="doctor">运行 Doctor 摘要</button>
+      <details class="card ovb-detail">
+        <summary>
+          <span>运行详情</span>
+          <span class="ovb-detail-facts" data-b="detailfacts">—</span>
+        </summary>
+        <div class="ovb-detail-body">
+          <div class="metric"><label>健康</label><div data-b="health">—</div></div>
+          <div class="metric"><label>PID / 进程</label><div data-b="pid">—</div></div>
+          <div class="metric"><label>Runtime</label><div data-b="runtime">—</div></div>
+          <div class="metric wide"><label>可执行文件</label><div>/Users/ezio/.local/bin/ocx</div></div>
+          <div class="metric wide"><label>数据目录</label><div data-b="root">—</div></div>
+          <div class="metric wide"><label>OPENCODEX_HOME</label><div data-b="home">—</div></div>
+          <div class="metric wide">
+            <label>目录入口</label>
+            <div class="controls" style="margin-top:8px">
+              <button class="btn ghost" onclick="openSettingsSection('installation')">选择数据目录</button>
+              <button class="btn ghost" onclick="location.hash='#logs'">打开日志目录</button>
             </div>
           </div>
+        </div>
+      </details>
 
-          <div style="margin-top:14px" id="errorArea"></div>
+      <div class="mods" id="mods">
+        <article class="card mod" data-mod-section="upgrade">
+          <div class="mod-head">
+            <h3>版本升级</h3>
+            <span class="tag">可用</span>
+            <span class="mod-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></span>
+          </div>
+          <div class="mod-status">
+            <span>升级状态 <b class="warning">可升级</b></span>
+            <span>最新版本 <b>2.51.0</b></span>
+          </div>
+          <div class="mod-actions">
+            <button class="btn primary" data-prototype-action="check-update">检查更新</button>
+            <button class="btn" data-prototype-action="preupdate-backup">升级前备份</button>
+            <button class="btn ghost" data-settings-section="upgrade">升级设置</button>
+          </div>
         </article>
-      <div class="route-links">
-        <button class="link-chip" data-route="installation">安装与数据根</button>
-        <button class="link-chip" data-route="process">进程控制</button>
-        <button class="link-chip" data-route="logs">查看日志</button>
-        <button class="link-chip" data-route="config">配置迁移 · P1</button>
-      </div>
-    </section>
 
-    <section class="route-section" id="route-process">
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <h2>进程控制</h2>
-            <p>桌面壳托管官方子进程，不接管 launchd 或 codex-shim。</p>
+        <article class="card mod" data-mod-section="migration">
+          <div class="mod-head">
+            <h3>配置迁移</h3>
+            <span class="tag">规划中</span>
+            <span class="mod-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></span>
           </div>
-          <div class="toolbar">
-            <button class="btn ghost" id="refreshProcessBtn">刷新状态</button>
-            <button class="btn" id="panelBtnFromProcess" disabled>打开官方面板</button>
+          <div class="mod-status">
+            <span>加密容器 <b>规划中</b></span>
+            <span>导入校验 <b>规划中</b></span>
           </div>
-        </div>
-        <div class="grid">
-          <div class="metric"><label>状态</label><div id="processState">—</div></div>
-          <div class="metric"><label>健康</label><div id="processHealth">—</div></div>
-          <div class="metric"><label>端口</label><div id="processPort">—</div></div>
-          <div class="metric"><label>PID / 进程</label><div id="processPid">—</div></div>
-        </div>
-        <div class="controls" style="margin-top:15px">
-          <button class="btn primary" data-control="start">启动 OpenCodex</button>
-          <button class="btn danger" data-control="stop" disabled>停止</button>
-          <button class="btn" data-control="restart" disabled>重启</button>
-          <button class="btn" data-control="doctor">运行 Doctor 摘要</button>
-        </div>
-        <div id="processRiskArea" style="margin-top:14px"></div>
-        <div id="processErrorArea" style="margin-top:14px"></div>
+          <div class="mod-actions">
+            <button class="btn" data-prototype-action="export">导出配置</button>
+            <button class="btn" data-prototype-action="import">导入配置</button>
+            <button class="btn ghost" data-settings-section="migration">迁移设置</button>
+          </div>
+        </article>
+
+        <article class="card mod" data-mod-section="sync" id="syncCard">
+          <div class="mod-head">
+            <h3>WebDAV 同步</h3>
+            <span class="tag" id="syncTag">未配置</span>
+            <span class="mod-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></span>
+          </div>
+          <div class="mod-status">
+            <span>连接状态 <b id="syncConn">未配置</b></span>
+            <span>冲突策略 <b id="syncConflict">未设置</b></span>
+          </div>
+          <div class="mod-actions" id="syncActions"></div>
+        </article>
       </div>
     </section>
 
@@ -460,125 +756,496 @@ body.panel-mode .panel-shell{height:100%}
       <article class="card">
         <div class="card-head">
           <div>
-            <h2>最近日志</h2>
-            <p>只读展示；敏感值固定脱敏。</p>
+            <h2>诊断中心</h2>
+            <p>日志与通知历史并行管理；敏感值固定脱敏。</p>
           </div>
+        </div>
+
+        <div class="diag-tabs" role="tablist" aria-label="诊断分区">
+          <button type="button" data-diag-tab="logs" class="active">日志历史</button>
+          <button type="button" data-diag-tab="notifications">通知历史</button>
+        </div>
+
+        <div class="diag-view active" id="diag-logs">
           <div class="logbar">
-            <span id="logMeta">100 行 · mock</span>
+            <span class="history-meta" id="logMeta">当前 100 行 · 本地滚动截断 · mock</span>
             <div class="toolbar">
+              <button class="btn ghost" data-prototype-action="clear-logs">清理日志</button>
               <button class="btn" id="logDirBtn">打开日志目录</button>
             </div>
           </div>
+          <div class="log" id="logView"></div>
         </div>
-        <div class="log" id="logView"></div>
+
+        <div class="diag-view" id="diag-notifications">
+          <div class="logbar">
+            <span class="history-meta" id="historyMeta">共 3 条 · 保留最近 30 天</span>
+            <div class="toolbar">
+              <button class="btn ghost" data-prototype-action="clear-notifications">清理通知</button>
+              <button class="btn ghost" data-prototype-action="clear-read-notifications">清理已读</button>
+            </div>
+          </div>
+          <div class="history-list" id="notificationHistory"></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h2>运行环境诊断</h2>
+            <p>调用官方 <code>ocx doctor</code>：默认只读，不修改配置、不设置代理、不改网络。</p>
+          </div>
+          <div class="toolbar">
+            <button class="btn" id="doctorRunBtn">运行 Doctor</button>
+          </div>
+        </div>
+        <div class="doctor-out" id="doctorOut">尚未运行。Doctor 用于解释「为什么状态不对」：路径、WSL 挂载、代理环境变量、ChatGPT 可达性、Codex runtime 与 shim 状态。</div>
+        <p class="doctor-hint">
+          写入型修复（<code>--reclaim-response-temps</code>、<code>--recover-zero-byte-coordinator --yes</code>）需要先停止代理并显式确认，本原型只展示只读摘要。
+        </p>
       </article>
     </section>
 
-    <section class="route-section" id="route-installation">
-      <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));align-items:start">
+    <section class="route-section" id="route-settings">
+      <div class="settings-tabs" id="settingsTabs" role="tablist" aria-label="设置分区">
+        <button type="button" data-settings-section="general" class="active">通用</button>
+        <button type="button" data-settings-section="installation">安装配置</button>
+        <button type="button" data-settings-section="backup">数据与备份</button>
+        <button type="button" data-settings-section="migration">配置迁移</button>
+        <button type="button" data-settings-section="sync">WebDAV 同步</button>
+        <button type="button" data-settings-section="cleanup">日志与通知</button>
+        <button type="button" data-settings-section="upgrade">版本升级</button>
+      </div>
+
+      <section class="settings-panel active" id="settings-general">
         <article class="card">
           <div class="card-head">
             <div>
-              <h2>安装发现</h2>
-              <p>只发现 / 展示 / 校验现有安装。</p>
+              <h2>通用偏好</h2>
+              <p>桌面壳行为、面板承载与通知。</p>
             </div>
-            <button class="btn ghost" id="discoverBtn">重新发现</button>
           </div>
-          <div id="installArea"></div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">启动后自动打开面板</div>
+                <div class="setting-desc">默认关闭；避免面板遮蔽概览里的启停与风险状态。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">关闭</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">面板打开方式</div>
+                <div class="setting-desc">默认内嵌到 App 窗口；加载异常时提供浏览器兜底入口。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">内嵌优先</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">关闭窗口后保持代理运行</div>
+                <div class="setting-desc">桌面壳只隐藏窗口，不自动停止官方 OpenCodex 子进程。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">启停结果通知</div>
+                <div class="setting-desc">通知启动、停止、重启和失败结果；不展示敏感配置。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">同步冲突提醒</div>
+                <div class="setting-desc">检测到本地与远端冲突时暂停覆盖，并要求显式确认。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-panel" id="settings-installation">
+        <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));align-items:start">
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>安装发现</h2>
+                <p>只发现 / 展示 / 校验现有安装。</p>
+              </div>
+              <button class="btn ghost" id="discoverBtn">重新发现</button>
+            </div>
+            <div id="installArea"></div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>数据目录与 OPENCODEX_HOME</h2>
+                <p>管理器产物统一在一个可自定义数据目录内。</p>
+              </div>
+            </div>
+            <div class="seg" id="homeSeg">
+              <button class="active" data-home="managed">跟随数据目录</button>
+              <button data-home="external">自定义路径</button>
+            </div>
+            <div class="pathbox" id="homePath">/Users/ezio/OpenCodexData/opencodex-home</div>
+            <div class="controls" style="margin-top:12px">
+              <button class="btn" id="chooseRootBtn">选择数据目录</button>
+              <button class="btn ghost" id="chooseHomeBtn">选择 OPENCODEX_HOME</button>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>数据目录</h2>
+                <p>分区名待 IMP 冻结。</p>
+              </div>
+            </div>
+            <table class="data-root-table">
+              <thead><tr><th>区域</th><th>用途</th></tr></thead>
+              <tbody>
+                <tr><td><code>manager-state</code></td><td>桌面壳设置与偏好</td></tr>
+                <tr><td><code>backups</code></td><td>升级、导入、同步覆盖前备份</td></tr>
+                <tr><td><code>logs</code></td><td>管理器与运行日志</td></tr>
+                <tr><td><code>exports</code></td><td>加密导出容器</td></tr>
+                <tr><td><code>cache</code></td><td>可丢弃缓存</td></tr>
+                <tr><td><code>sync-state</code></td><td>同步与冲突摘要</td></tr>
+              </tbody>
+            </table>
+          </article>
+        </div>
+      </section>
+
+      <section class="settings-panel" id="settings-backup">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>数据与备份</h2>
+              <p>备份边界基于安装配置里的数据目录。</p>
+            </div>
+            <button class="btn ghost" data-settings-section="installation">打开安装配置</button>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">升级前自动备份</div>
+                <div class="setting-desc">进入官方升级引导前先生成可定位备份。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导入前自动备份</div>
+                <div class="setting-desc">导入校验通过后先备份当前配置，再进入最终确认。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">同步覆盖前自动备份</div>
+                <div class="setting-desc">任何覆盖动作都保留被覆盖侧的可恢复历史。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">备份保留策略</div>
+                <div class="setting-desc">保留最近 10 份；超出的备份必须由用户显式清理。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">最近 10 份</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">备份完整性校验</div>
+                <div class="setting-desc">生成备份后写入校验摘要；恢复前先校验。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">SHA-256</button></div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-panel" id="settings-cleanup">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>日志与通知清理</h2>
+              <p>自动清理只作用于管理器本地记录；不会清理官方 OpenCodex 服务日志。</p>
+            </div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">日志自动清理</div>
+                <div class="setting-desc">本地日志超过上限或保留期后自动截断；原始错误先保留摘要。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">30 天 / 10,000 行</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">通知自动清理</div>
+                <div class="setting-desc">已读通知超过保留期后自动清理；未读和 danger 通知不自动删除。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">30 天</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">启动时清理</div>
+                <div class="setting-desc">应用启动时按策略执行一次轻量清理，不阻塞主窗口。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">清理前备份摘要</div>
+                <div class="setting-desc">danger 日志和重要通知会先生成脱敏摘要，再进入自动清理。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+          </div>
+          <div class="controls" style="margin-top:14px">
+            <button class="btn ghost" onclick="location.hash='#logs'">打开诊断中心</button>
+            <button class="btn" data-prototype-action="clear-logs">立即清理日志</button>
+            <button class="btn" data-prototype-action="clear-notifications">立即清理通知</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-panel" id="settings-migration">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>配置迁移</h2>
+              <p>全量导出 / 导入；敏感凭据只进入加密容器。</p>
+            </div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导出范围</div>
+                <div class="setting-desc">provider、路由、模型映射、启动相关设置与凭据全量导出。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">全量</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导出加密</div>
+                <div class="setting-desc">使用用户口令保护容器；具体算法待安全评审后冻结。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">口令保护</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导入流程</div>
+                <div class="setting-desc">校验容器 → 备份当前配置 → 展示掩码摘要 → 用户确认。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">严格校验</button></div>
+            </div>
+          </div>
+          <div class="controls" style="margin-top:14px">
+            <button class="btn" data-prototype-action="export">导出配置</button>
+            <button class="btn" data-prototype-action="import">导入配置</button>
+            <button class="btn ghost" data-prototype-action="open-exports">打开导出目录</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-panel" id="settings-sync">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>WebDAV 同步</h2>
+              <p>端点、凭据与冲突策略集中在设置里维护。</p>
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field"><label>服务地址</label><input class="input" value="https://dav.example.com/opencodex/" readonly></div>
+            <div class="field"><label>远端目录</label><input class="input" value="/desktop-sync/current" readonly></div>
+            <div class="field"><label>账号</label><input class="input" value="mock-user" readonly></div>
+            <div class="field"><label>应用密码</label><input class="input" type="password" value="mock-password" readonly></div>
+            <div class="field"><label>加密口令</label><input class="input" type="password" value="mock-passphrase" readonly></div>
+            <div class="field"><label>冲突策略</label><input class="input" value="每次询问" readonly></div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">冷同步</div>
+                <div class="setting-desc">运行中不直接写关键文件；覆盖前需要用户确认。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">客户端加密</div>
+                <div class="setting-desc">含敏感内容的对象先在本地加密，再上传到 WebDAV。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">强制开启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">覆盖前备份</div>
+                <div class="setting-desc">保留被覆盖侧快照，冲突时可恢复。</div>
+              </div>
+              <div class="controls"><button class="btn ghost">开启</button></div>
+            </div>
+          </div>
+          <div class="controls" style="margin-top:14px">
+            <button class="btn" data-prototype-action="sync">立即同步</button>
+            <button class="btn ghost" data-prototype-action="test-webdav">测试连接</button>
+            <button class="btn ghost" data-prototype-action="open-sync-history">查看同步历史</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-panel" id="settings-upgrade">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>OpenCodex 版本</h2>
+              <p>官方 npm 包与官方面板；桌面管理器不接管更新事务，只做升级前备份与官方引导。</p>
+            </div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">当前版本</div>
+                <div class="setting-desc">v2.50.0 · npm global · @bitkyc08/opencodex</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="check-update">检查更新</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">升级前备份</div>
+                <div class="setting-desc">先备份当前配置与数据目录状态，再进入官方升级引导。</div>
+              </div>
+              <div class="controls"><button class="btn" data-prototype-action="preupdate-backup">生成备份</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">官方升级引导</div>
+                <div class="setting-desc">只展示并引导 <code>ocx update</code>；不重写更新事务。</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="official-update">打开引导</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">失败后建议</div>
+                <div class="setting-desc">展示备份位置、错误摘要和建议恢复动作。</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="update-failure-help">查看建议</button></div>
+            </div>
+          </div>
         </article>
 
         <article class="card">
           <div class="card-head">
             <div>
-              <h2>数据根与 OpenCodex Home</h2>
-              <p>管理器产物统一在一个可自定义数据根内。</p>
+              <h2>桌面管理器版本</h2>
+              <p>OpenCodeX-Desktop 自身的应用更新；下载校验后重启应用生效，不停止 OpenCodex 代理。</p>
             </div>
           </div>
-          <div class="seg" id="homeSeg">
-            <button class="active" data-home="managed">跟随数据根</button>
-            <button data-home="external">自定义路径</button>
-          </div>
-          <div class="pathbox" id="homePath">/Users/ezio/OpenCodexData/opencodex-home</div>
-          <div class="controls" style="margin-top:12px">
-            <button class="btn" id="chooseRootBtn">选择统一数据根</button>
-            <button class="btn ghost" id="chooseHomeBtn">选择 OPENCODEX_HOME</button>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-head">
-            <div>
-              <h2>统一数据根</h2>
-              <p>分区名待 IMP 冻结。</p>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">当前版本</div>
+                <div class="setting-desc">v0.1.0 · macOS · 发布于 2026-09-08</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="check-app-update">检查应用更新</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">可用更新</div>
+                <div class="setting-desc">v0.1.1 · 面板主题跟随外壳、通知已读态修复 · 2026-09-12</div>
+              </div>
+              <div class="controls"><button class="btn primary" data-prototype-action="install-app-update">下载并重启</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">更新通道与频率</div>
+                <div class="setting-desc">stable · 每 24 小时自动检查；发现更新只发通知，不打断当前操作。</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="app-update-channel">改通道</button></div>
             </div>
           </div>
-          <table class="data-root-table">
-            <thead><tr><th>区域</th><th>用途</th></tr></thead>
-            <tbody>
-              <tr><td><code>manager-state</code></td><td>桌面壳设置与偏好</td></tr>
-              <tr><td><code>backups</code></td><td>升级、导入、同步覆盖前备份</td></tr>
-              <tr><td><code>logs</code></td><td>管理器与运行日志</td></tr>
-              <tr><td><code>exports</code></td><td>加密导出容器</td></tr>
-              <tr><td><code>cache</code></td><td>可丢弃缓存</td></tr>
-              <tr><td><code>sync-state</code></td><td>同步与冲突摘要</td></tr>
-            </tbody>
-          </table>
         </article>
-
-      </div>
+      </section>
     </section>
-
-    <section class="route-section" id="route-config">
-      <article class="card route-placeholder">
-        <div>
-          <strong>配置迁移 · P1</strong>
-          <span>全量导出 / 导入进入用户口令保护的加密容器；导入前校验、备份并显式确认。安全评审后进入实现。</span>
-        </div>
-      </article>
-      <div class="route-links">
-        <button class="link-chip" data-route="overview">返回概览</button>
-        <button class="link-chip" data-route="webdav">查看 WebDAV</button>
-      </div>
-    </section>
-
-    <section class="route-section" id="route-webdav">
-      <article class="card route-placeholder">
-        <div>
-          <strong>WebDAV 同步 · P2</strong>
-          <span>全量内容先客户端加密再上传；冲突提示、覆盖前备份且可恢复。安全评审后进入实现。</span>
-        </div>
-      </article>
-      <div class="route-links">
-        <button class="link-chip" data-route="overview">返回概览</button>
-        <button class="link-chip" data-route="upgrade">查看升级</button>
-      </div>
-    </section>
-
-    <section class="route-section" id="route-upgrade">
-      <article class="card route-placeholder">
-        <div>
-          <strong>升级引导</strong>
-          <span>升级前生成备份；只进入官方升级边界，不接管 npm，也不替代 <code>ocx update</code>。</span>
-        </div>
-      </article>
-      <div class="route-links">
-        <button class="link-chip" data-route="overview">返回概览</button>
-        <button class="link-chip" data-route="installation">查看安装与数据根</button>
-      </div>
-    </section>
-
-    <div class="footer-note">
-      P0 原型 · 版本 2026-09-12 · 交互结论未回写 DMD；最终需求以 <strong>DMD revision 2</strong> 为权威。
-    </div>
   </main>
   </div>
+
 </div>
+
+  <div class="rz rz-e" data-rz="e" title="拖拽调整宽度"></div>
+  <div class="rz rz-s" data-rz="s" title="拖拽调整高度"></div>
+  <div class="rz rz-se" data-rz="se" title="拖拽调整窗口大小"></div>
+</div>
+
+  <aside class="prototype-side" aria-label="原型说明">
+    <div class="proto-head">
+      <div>
+        <div class="proto-kicker">Prototype</div>
+        <div class="proto-title">原型注释与测试器</div>
+      </div>
+      <span class="tag">Mock</span>
+    </div>
+
+    <div class="proto-card">
+      <div class="proto-note-title">窗口尺寸预览</div>
+      <div class="size-readout"><b id="sizeReadout">1180 × 760</b><span id="sizeHint">拖拽窗口右边缘 / 下边缘 / 右下角可自由缩放</span></div>
+      <div class="scenarios" id="sizePresets">
+        <button type="button" data-size="900x600">最小 900×600</button>
+        <button type="button" data-size="1180x760">默认 1180×760</button>
+        <button type="button" data-size="1440x900">大 1440×900</button>
+        <button type="button" data-size="1920x1080">全屏 1920×1080</button>
+        <button type="button" data-size="2560x1440">超宽 2560×1440</button>
+        <button type="button" data-size="fit">适配视口</button>
+      </div>
+    </div>
+
+    <div class="proto-card">
+      <div class="proto-note-title" id="protoNoteTitle">概览</div>
+      <div class="proto-note" id="protoNote">正在加载原型说明。</div>
+      <ul id="protoButtonNotes"></ul>
+    </div>
+
+    <div class="proto-card">
+      <div class="proto-note-title">WebDAV 状态（mock 投影）</div>
+      <div class="scenarios" id="webdavStates">
+        <button type="button" data-webdav="unconfigured" class="active">未配置</button>
+        <button type="button" data-webdav="disconnected">未连接</button>
+        <button type="button" data-webdav="syncing">同步中</button>
+        <button type="button" data-webdav="synced">已同步</button>
+        <button type="button" data-webdav="error">连接失败</button>
+        <button type="button" data-webdav="conflict">冲突待处理</button>
+      </div>
+      <p class="proto-hint">未配置时卡片主体说明未配置，动作区只留一颗「配置 WebDAV」；其余状态由本测试器切换，只驱动 mock 投影。</p>
+    </div>
+    <div class="proto-card">
+      <div class="proto-note-title">状态测试器</div>
+      <div class="scenarios" id="scenarios">
+        <button data-state="loading">loading</button>
+        <button data-state="not_found">not found</button>
+        <button data-state="stopped">stopped</button>
+        <button data-state="starting">starting</button>
+        <button data-state="pending">pending</button>
+        <button data-state="running">running</button>
+        <button data-state="starting_failed">start failed</button>
+        <button data-state="at_risk">at-risk</button>
+        <button data-state="external_takeover">external takeover</button>
+        <button data-state="unreachable">unreachable</button>
+      </div>
+      <p class="proto-hint">状态只驱动 mock 投影，用于检查不同运行条件下的界面层次。</p>
+    </div>
+  </aside>
 
   <div class="modal-mask" id="modalMask">
     <div class="modal">
       <h3 id="modalTitle"></h3>
       <p id="modalBody"></p>
       <div class="modal-actions">
+        <button class="btn ghost" id="modalDelete" hidden>删除</button>
         <button class="btn ghost" id="modalCancel">取消</button>
         <button class="btn primary" id="modalConfirm"></button>
       </div>
@@ -591,16 +1258,6 @@ body.panel-mode .panel-shell{height:100%}
 
 <script>
 const statePill=document.getElementById('statePill');
-const mState=document.getElementById('mState');
-const mHealth=document.getElementById('mHealth');
-const mPort=document.getElementById('mPort');
-const mPid=document.getElementById('mPid');
-const processState=document.getElementById('processState');
-const processHealth=document.getElementById('processHealth');
-const processPort=document.getElementById('processPort');
-const processPid=document.getElementById('processPid');
-const riskArea=document.getElementById('riskArea');
-const errorArea=document.getElementById('errorArea');
 const installArea=document.getElementById('installArea');
 const logView=document.getElementById('logView');
 const modalMask=document.getElementById('modalMask');
@@ -608,20 +1265,82 @@ const modalTitle=document.getElementById('modalTitle');
 const modalBody=document.getElementById('modalBody');
 const modalConfirm=document.getElementById('modalConfirm');
 const modalCancel=document.getElementById('modalCancel');
+const modalDelete=document.getElementById('modalDelete');
+let deleteHandler=null;
 let currentState='loading';
 let pendingAction=null;
 let confirmHandler=null;
 
 const routes={
-  overview:{title:'OpenCodex 运行概览',subtitle:'发现安装、切换数据根、托管官方启停子进程并观察状态。'},
-  panel:{title:'官方面板',subtitle:'全幅承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
-  installation:{title:'安装与数据根',subtitle:'只发现现有安装，统一承载可选数据根与产物分区。'},
-  process:{title:'进程控制',subtitle:'启动、停止、重启与只读进程状态。'},
-  logs:{title:'日志',subtitle:'只读、脱敏，并保留打开日志目录边界。'},
-  config:{title:'配置迁移',subtitle:'P1 范围与安全边界预览，不做可用功能。'},
-  webdav:{title:'WebDAV 同步',subtitle:'P2 范围与加密同步边界预览，不做可用功能。'},
-  upgrade:{title:'升级',subtitle:'升级前备份与官方更新引导，不接管 npm。'}
+  overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
+  panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
+  logs:{title:'诊断中心',subtitle:'日志历史与通知历史分 Tab 管理，支持清理与自动保留策略。'},
+  settings:{title:'设置',subtitle:'集中管理偏好、安装配置、备份、迁移、同步与升级。'}
 };
+const routeNotes={
+  overview:{
+    title:'概览 · 运行控制台',
+    note:'主屏一行读运行摘要，运行详情页内折叠；进程按钮按状态渲染，参数与诊断分别落在设置页和诊断中心。',
+    items:[
+      ['运行摘要','状态、端口、版本、数据目录一行讲完；短路径用 ~ 缩写。'],
+      ['运行详情（折叠）','健康、PID、Runtime、可执行文件、数据目录与 OPENCODEX_HOME 默认收起，折叠条自带关键事实。'],
+      ['进程按钮','按状态渲染：未运行只有「启动 / 刷新状态」，运行中有「打开面板 / 停止 / 重启 / 查看日志」，不画无解释的灰按钮。'],
+      ['查看建议','仅 at-risk / 外部 provider 接管时出现，进入官方 restore 引导前需要确认。'],
+      ['快捷动作','配置迁移 / WebDAV 同步 / 版本升级三张卡；按钮撑满内容宽度，存在建议动作时高亮（当前「检查更新」）。'],
+      ['Doctor','官方只读环境诊断，位于「诊断中心」，不在概览动作行。']
+    ]
+  },
+  panel:{
+    title:'面板 · 内嵌对照',
+    note:'内容区使用离线复刻的官方中文页面；窄图标栏保持路由上下文，不额外弹出新窗口。',
+    items:[
+      ['概览','返回单屏控制台。'],
+      ['重载','重新加载静态快照。'],
+      ['浏览器','仅表达真实实现的浏览器兜底入口。']
+    ]
+  },
+  installation:{
+    title:'设置 · 安装配置',
+    note:'安装发现、数据目录和 OPENCODEX_HOME 已集成到设置；这里只维护环境参数，不做安装动作。',
+    items:[
+      ['重新发现','重新执行安装探测 mock。'],
+      ['选择数据目录','仅表达目录选择，不访问真实文件。'],
+      ['选择 OPENCODEX_HOME','保持 home 可自定义，但不改真实配置。']
+    ]
+  },
+  logs:{
+    title:'诊断中心',
+    note:'日志历史与通知历史并行管理；本地日志保留原始排障能力，通知历史保留最近决策与状态变化。',
+    items:[
+      ['日志历史 / 通知历史','两个 Tab 并行管理，不混用数据类型。'],
+      ['清理日志','清空当前日志视图；真实实现需二次确认。'],
+      ['清理通知 / 清理已读','清空全部或仅清理已读通知。'],
+      ['打开日志目录','真实实现会打开目录，原型只拦截。']
+    ]
+  },
+  settings:{
+    title:'设置',
+    note:'偏好、备份策略、迁移、同步和升级参数集中维护；概览只保留高频动作。',
+    items:[
+      ['通用偏好','面板承载、后台运行和通知边界。'],
+      ['数据与备份','自动备份、保留策略和完整性校验。'],
+      ['配置迁移','P1 加密容器与导入校验。'],
+      ['WebDAV 同步','P2 端点、凭据、加密与冲突策略。'],
+      ['版本升级','两块：OpenCodex 版本（检查、备份、官方引导）与桌面管理器版本（应用自更新）。']
+    ]
+  }
+};
+
+function renderPrototypeNote(route){
+  const note=routeNotes[route]||routeNotes.overview;
+  const title=document.getElementById('protoNoteTitle');
+  const body=document.getElementById('protoNote');
+  const list=document.getElementById('protoButtonNotes');
+  if(!title||!body||!list) return;
+  title.textContent=note.title;
+  body.textContent=note.note;
+  list.innerHTML=(note.items||[]).map(([name,desc])=>`<li><strong>${name}</strong> · ${desc}</li>`).join('');
+}
 let currentRoute='overview';
 
 const scenarios={
@@ -635,6 +1354,20 @@ const scenarios={
   at_risk:{label:'At-risk',cls:'state-warn',state:'At-risk',health:'ready',port:'10100',pid:'39421'},
   external_takeover:{label:'外部接管',cls:'state-warn',state:'外部 provider 接管',health:'ready',port:'10100',pid:'39421'},
   unreachable:{label:'不可达',cls:'state-bad',state:'不可达',health:'unreachable',port:'10100',pid:'39421'}
+};
+
+// 方案 B / C：用一句状态说明替代「不可用的灰按钮」。
+const stateNote={
+  loading:'正在探测本机 OpenCodex 安装与运行状态…',
+  not_found:'未发现可运行的 OpenCodex 安装。原型不提供 npm 安装，安装形态保留给官方 CLI。',
+  stopped:'已发现安装但代理未运行，可以直接启动。',
+  starting:'正在启动代理子进程，请稍候。',
+  pending:'端口已就绪，正在等待官方 ready 检查通过。',
+  running:'代理运行中，可停止或重启；Doctor 只展示只读摘要。',
+  starting_failed:'启动失败：端口 10100 被占用。建议查看日志或重试启动。',
+  at_risk:'官方 status 报告 startup at-risk。桌面壳不会自动修复，请先查看建议再决定是否走官方 restore。',
+  external_takeover:'外部 provider 接管了 Codex 配置。该边界属于 OpenCodex CLI，桌面壳不会覆盖外部配置。',
+  unreachable:'进程或端口不可达。建议刷新状态或查看日志确认原因。'
 };
 
 const installFound={
@@ -698,15 +1431,13 @@ function setInstall(){
 }
 
 function setRoute(route, replace=false){
-  const next=routes[route]?route:'overview';
+  const legacyRoutes={process:'overview',config:'settings',webdav:'settings',upgrade:'settings'};
+  const next=legacyRoutes[route]||((routes[route]||route==='panel')?route:'overview');
   if(next==='panel'){
-    if(['running','pending','at_risk','external_takeover'].includes(currentState)){
-      currentRoute='panel';
-      showPanel(true,true);
-      return;
-    }
-    setRoute('overview',true);
-    toast('面板仅可在 OpenCodex 启动后打开。');
+    currentRoute='panel';
+    showPanel(true,true);
+    renderPrototypeNote('panel');
+    document.querySelectorAll('.route-section').forEach(section=>section.classList.toggle('active',section.id==='panelSection'));
     return;
   }
   currentRoute=next;
@@ -717,9 +1448,10 @@ function setRoute(route, replace=false){
   document.querySelectorAll('.nav button[data-route]').forEach(button=>{
     button.classList.toggle('active',button.dataset.route===next);
   });
-  const meta=routes[next]||{title:'OpenCodex 运行概览',subtitle:'发现安装、切换数据根、托管官方启停子进程并观察状态。'};
+  const meta=routes[next]||{title:'OpenCodex 运行概览',subtitle:'发现安装、切换数据目录、托管官方启停子进程并观察状态。'};
   document.getElementById('routeTitle').textContent=meta.title;
   document.getElementById('routeSubtitle').textContent=meta.subtitle;
+  renderPrototypeNote(next);
   if(next!=='panel') document.body.classList.remove('panel-mode');
   if(next!=='roadmap'){
     try{window.localStorage.setItem('ocx-route',next)}catch(e){}
@@ -736,70 +1468,60 @@ function render(){
   const s=scenarios[currentState];
   statePill.textContent=s.label;
   statePill.className='state-pill '+s.cls;
-  mState.textContent=s.state;
-  mHealth.textContent=s.health;
-  mPort.textContent=s.port;
-  mPid.textContent=s.pid;
-  processState.textContent=s.state;
-  processHealth.textContent=s.health;
-  processPort.textContent=s.port;
-  processPid.textContent=s.pid;
+  const installKnown=!['loading','not_found'].includes(currentState);
+  const values={
+    health:s.health,
+    port:s.port,
+    pid:s.pid,
+    version:installKnown?installFound.version.split('（')[0]:'—',
+    runtime:installKnown?installFound.runtime:'—',
+    home:installKnown?'/Users/ezio/OpenCodexData/opencodex-home':'—',
+    root:installKnown?'/Users/ezio/OpenCodexData':'—',
+    rootshort:installKnown?'~/OpenCodexData':'—',
+    detailfacts:installKnown
+      ?`v${installFound.version.split('（')[0]} · ${installFound.runtime.replace('ChatGPT Codex runtime ','Codex runtime ')} · ~/OpenCodexData`
+      :'尚未探测到安装',
+    note:stateNote[currentState]||''
+  };
+  Object.keys(values).forEach(key=>{
+    document.querySelectorAll(`[data-b="${key}"]`).forEach(el=>{el.textContent=values[key]});
+  });
+  // 方案 B / C：状态驱动按钮可见性，避免出现无法解释的禁用按钮。
+  const badgeClass={'state-running':'running','state-starting':'busy','state-pending':'busy','state-warn':'warn','state-bad':'bad'}[s.cls]||'';
+  document.querySelectorAll('[data-b="statebadge"]').forEach(el=>{el.className='ovc-badge'+(badgeClass?` ${badgeClass}`:'')});
+  document.querySelectorAll('[data-b="statetext"]').forEach(el=>{el.textContent=s.label});
+  document.querySelectorAll('[data-b="statepill"]').forEach(el=>{el.textContent=s.label;el.className='state-pill '+s.cls});
+  // 方案 B / C / B+：按状态渲染动作集合，而不是渲染全部按钮再禁用。
+  const actionsByState={
+    loading:[],
+    not_found:['refresh'],
+    stopped:['start','refresh'],
+    starting:['refresh'],
+    pending:['refresh'],
+    running:['panel','stop','restart','logs'],
+    starting_failed:['start','logs'],
+    at_risk:['advice','refresh'],
+    external_takeover:['advice','refresh'],
+    unreachable:['refresh','logs']
+  };
+  const allowedActions=actionsByState[currentState]||[];
+  document.querySelectorAll('[data-act]').forEach(el=>{el.hidden=!allowedActions.includes(el.dataset.act)});
+  document.querySelectorAll('[data-act="start"]').forEach(el=>{
+    el.textContent=currentState==='starting_failed'?'重试启动':'启动 OpenCodex';
+  });
 
   setInstall();
 
-  riskArea.innerHTML='';
-  errorArea.innerHTML='';
+  renderNotifications();
 
-  if(currentState==='at_risk'){
-    riskArea.innerHTML=`
-      <div class="risk">
-        <h3>Startup at-risk</h3>
-        <p>官方 status 显示自定义本地路由、service/shim 未安装、protection 为 none、rebootSafe 为 false。桌面壳不会自动覆盖配置。</p>
-        <div class="risk-actions">
-          <button class="btn" onclick="openRestoreConfirm('at_risk')">查看官方 restore 引导</button>
-          <button class="btn ghost" onclick="toast('原型提示：真实实现会调用 Doctor 只读摘要。')">查看建议</button>
-        </div>
-      </div>`;
+  if(['at_risk','external_takeover'].includes(currentState)){
     setLog(logHtml('risk'));
-  } else if(currentState==='external_takeover'){
-    riskArea.innerHTML=`
-      <div class="risk">
-        <h3>外部 provider 已接管 Codex 配置</h3>
-        <p>外部应用托管了 <code>~/.codex/config.toml</code>。该所有权边界属于 OpenCodex CLI 本身；桌面壳只解释影响，不会覆盖外部配置。</p>
-        <div class="risk-actions">
-          <button class="btn" onclick="openRestoreConfirm('external_takeover')">查看官方 restore 引导</button>
-        </div>
-      </div>`;
-    setLog(logHtml('risk'));
-  } else if(currentState==='starting_failed'){
-    errorArea.innerHTML=`
-      <div class="risk bad">
-        <h3>启动失败</h3>
-        <p>子进程退出码 1。最近错误：绑定端口 10100 被占用。真实实现会保留完整错误到日志并提供打开日志目录。</p>
-        <div class="risk-actions">
-          <button class="btn" onclick="setState('starting')">重试启动</button>
-          <button class="btn ghost" onclick="toast('原型提示：会打开日志目录。')">打开日志目录</button>
-        </div>
-      </div>`;
+  } else if(['starting_failed','unreachable'].includes(currentState)){
     setLog(logHtml('error'));
-  } else if(currentState==='unreachable'){
-    errorArea.innerHTML=`
-      <div class="risk bad">
-        <h3>代理不可达</h3>
-        <p>端口探活失败。状态不会伪装成运行中；需要刷新状态或查看日志定位原因。</p>
-        <div class="risk-actions">
-          <button class="btn" onclick="setState('running')">刷新后恢复</button>
-        </div>
-      </div>`;
-    setLog(logHtml('offline'));
   } else {
     setLog(logHtml('normal'));
   }
 
-  const panelAvailable=['running','pending','at_risk','external_takeover'].includes(currentState);
-  document.getElementById('panelBtn').disabled=!panelAvailable;
-  document.getElementById('panelBtnFromProcess').disabled=!panelAvailable;
-  if(!panelAvailable && currentRoute==='panel') setRoute('overview',true);
   const controls={
     start:document.querySelectorAll('[data-control="start"]'),
     stop:document.querySelectorAll('[data-control="stop"]'),
@@ -832,8 +1554,7 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
   button.addEventListener('click',()=>{
     const route=button.dataset.route;
     if(route==='panel'){
-      if(['running','pending','at_risk','external_takeover'].includes(currentState)) showPanel(true);
-      else toast('面板仅可在 OpenCodex 启动后打开。');
+      showPanel(true);
     }else{
       setRoute(route);
     }
@@ -842,28 +1563,204 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
 
 window.addEventListener('hashchange',()=>{
   setRoute(location.hash.slice(1),true);
-  if(location.hash==='#panel' && !['running','pending','at_risk','external_takeover'].includes(currentState)){
-    setRoute('overview',true);
-    toast('面板仅可在 OpenCodex 启动后打开。');
-  }
 });
 
-document.getElementById('refreshProcessBtn').onclick=()=>document.getElementById('refreshBtn').click();
-document.getElementById('panelBtnFromProcess').onclick=()=>showPanel(true);
 
 document.querySelectorAll('.nav button[data-locked]').forEach(b=>{
   b.addEventListener('click',()=>toast(b.dataset.locked));
 });
 
-function openModal(title,body,confirmText,handler){
+function openSettingsSection(section){
+  setRoute('settings');
+  showSettingsSection(section);
+}
+window.openSettingsSection=openSettingsSection;
+function showSettingsSection(section){
+  const allowed=['general','installation','backup','migration','sync','cleanup','upgrade'];
+  const next=allowed.includes(section)?section:(new URLSearchParams(location.search).get('section')||'general');
+  document.querySelectorAll('#settingsTabs button').forEach(button=>{
+    button.classList.toggle('active',button.dataset.settingsSection===next);
+  });
+  document.querySelectorAll('.settings-panel').forEach(panel=>{
+    panel.classList.toggle('active',panel.id===`settings-${next}`);
+  });
+}
+
+document.addEventListener('click',event=>{
+  const settingsTarget=event.target.closest('[data-settings-section]');
+  if(settingsTarget){
+    setRoute('settings');
+    showSettingsSection(settingsTarget.dataset.settingsSection);
+    return;
+  }
+  const actionTarget=event.target.closest('[data-prototype-action]');
+  if(!actionTarget) return;
+  const action=actionTarget.dataset.prototypeAction;
+  if(action==='export'){
+    openModal('导出配置','将生成全量配置的加密导出容器；敏感值不会明文展示。导出前会确认口令与目标目录。','继续',()=>toast('原型拦截：不会生成真实导出容器。'));
+  }else if(action==='import'){
+    openModal('导入配置','导入前会校验容器格式和完整性，自动备份当前配置，并展示敏感值掩码后的摘要。','继续查看',()=>toast('原型拦截：不会读取真实配置容器。'));
+  }else if(action==='sync'){
+    openModal('开始 WebDAV 同步','同步采用冷同步；覆盖前会生成可恢复备份，冲突时会暂停并等待确认。','继续',()=>toast('原型拦截：不会连接或写入真实 WebDAV。'));
+  }else if(action==='test-webdav'){
+    toast('原型提示：不会连接真实 WebDAV 端点。');
+  }else if(action==='open-sync-settings'){
+    setRoute('settings');showSettingsSection('sync');
+  }else if(action==='check-update'){
+    toast('原型提示：不会访问 npm registry，也不执行更新。');
+  }else if(action==='preupdate-backup'){
+    openModal('生成升级前备份','备份会写入数据目录的 backups 分区，并生成完整性摘要。','继续',()=>toast('原型拦截：不会生成真实备份。'));
+  }else if(action==='official-update'){
+    toast('原型提示：真实实现只引导官方 ocx update。');
+  }else if(action==='update-failure-help'){
+    toast('原型提示：会展示备份位置、错误摘要和建议恢复动作。');
+  }else if(action==='check-app-update'){
+    toast('原型提示：不会访问真实更新服务；此处演示「已是 / 有可用更新」。');
+  }else if(action==='install-app-update'){
+    openModal('更新 OpenCodeX-Desktop','将下载 v0.1.1、校验签名后重启应用。重启不会停止 OpenCodex 代理，界面会重新接管当前状态。','下载并重启',()=>toast('原型拦截：不会下载或安装真实构建。'));
+  }else if(action==='app-update-channel'){
+    toast('原型提示：应用更新通道与 OpenCodex 的 npm 通道彼此独立。');
+  }else if(action==='open-exports'){
+    toast('原型拦截：不会打开真实目录。');
+  }else if(action==='open-sync-history'){
+    toast('原型提示：会打开同步与冲突历史摘要。');
+  }else if(action==='clear-logs'){
+    openModal('清理日志','将清空当前日志视图；原始文件仍由数据目录的日志分区按保留策略管理。','清理',()=>{setLog('');toast('原型模拟：日志视图已清理。');});
+  }else if(action==='clear-notifications'){
+    openModal('清理全部通知','将清空通知中心与通知历史；未确认的动作摘要不会删除。','清理',()=>{
+      notifications=[];
+      unreadNotifications=0;
+      renderNotifications();
+      toast('原型模拟：全部通知已清理。');
+    });
+  }else if(action==='clear-read-notifications'){
+    openModal('清理已读通知','仅清空已读通知，未读通知保留在通知中心。','清理',()=>{
+      notifications=notifications.filter(item=>!item.read);
+      renderNotifications();
+      toast('原型模拟：已读通知已清理。');
+    });
+  }
+});
+
+let notifications=[
+  {id:'external-takeover',kind:'warning',title:'外部 provider 已接管 Codex 配置',detail:'外部应用托管了 ~/.codex/config.toml。该所有权边界属于 OpenCodex CLI 本身；桌面壳只解释影响，不会覆盖外部配置。',time:'10:24',action:'restore',target:'external_takeover'},
+  {id:'upgrade-available',kind:'warning',title:'OpenCodex 有可用更新',detail:'当前 2.50.0，最新 2.51.0。升级前会先生成备份，并只引导官方 ocx update。',time:'10:18',action:'upgrade'},
+  {id:'app-update-available',kind:'info',title:'桌面管理器有可用更新',detail:'当前 v0.1.0，最新 v0.1.1。下载校验后重启应用生效，不影响 OpenCodex 代理。',time:'10:16',action:'app-update'},
+  {id:'sync-connected',kind:'info',title:'WebDAV 同步连接正常',detail:'最近同步在今天 10:24 完成，没有发现冲突。',time:'10:24',action:'sync'}
+];
+let unreadNotifications=3;
+
+const DEL_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+
+function renderNotifications(){
+  const list=document.getElementById('notificationList');
+  const dot=document.getElementById('notificationDot');
+  if(!list||!dot) return;
+  const visible=notifications.filter(item=>!item.read);
+  dot.textContent=String(visible.length);
+  dot.className='notification-dot'+(visible.some(item=>item.kind==='danger')?' danger':'')+(visible.length?' show':'');
+  list.innerHTML=visible.length?visible.map(item=>`
+    <div class="notification-item ${item.kind}" data-notification="${item.id}" role="button" tabindex="0">
+      <span class="severity"></span>
+      <div><strong>${item.title}</strong><span>${item.detail}</span></div>
+      <div class="n-actions"><button type="button" class="n-del" data-notification-delete="${item.id}" title="删除这条通知" aria-label="删除这条通知">${DEL_ICON}</button></div>
+    </div>`).join(''):'<div class="notification-empty">当前没有未读通知。</div>';
+  renderNotificationHistory();
+}
+
+function renderNotificationHistory(){
+  const list=document.getElementById('notificationHistory');
+  const meta=document.getElementById('historyMeta');
+  if(!list) return;
+  if(meta) meta.textContent=`共 ${notifications.length} 条 · 保留最近 30 天`;
+  list.innerHTML=notifications.length?notifications.map(item=>`
+    <div class="history-item ${item.kind}" data-notification="${item.id}" role="button" tabindex="0">
+      <span class="severity"></span>
+      <div><strong>${item.title}</strong><span>${item.detail}</span></div>
+      <time>${item.time}</time>
+      <div class="n-actions"><button type="button" class="n-del" data-notification-delete="${item.id}" title="删除这条通知" aria-label="删除这条通知">${DEL_ICON}</button></div>
+    </div>`).join(''):'<div class="notification-empty">暂无通知历史。</div>';
+}
+
+function markAllNotificationsRead(){
+  notifications.forEach(item=>item.read=true);
+  unreadNotifications=0;
+  renderNotifications();
+}
+
+// 单条删除：通知中心与通知历史共用同一份数据。
+function deleteNotification(id){
+  const index=notifications.findIndex(entry=>entry.id===id);
+  if(index<0) return;
+  const wasUnread=!notifications[index].read;
+  const title=notifications[index].title;
+  notifications.splice(index,1);
+  if(wasUnread) unreadNotifications=Math.max(0,unreadNotifications-1);
+  renderNotifications();
+  closeNotificationPanel();
+  toast('原型模拟：已删除通知「'+title+'」。');
+}
+function closeNotificationPanel(){
+  notificationPanel.classList.remove('show');
+  notificationBtn.setAttribute('aria-expanded','false');
+}
+// 通知详情弹窗：正文 + 时间/级别；有可执行动作时给「前往处理」，任何时候都能删除。
+function notificationJump(item){
+  if(item.action==='restore') return ()=>openRestoreConfirm(item.target);
+  if(item.action==='upgrade'||item.action==='app-update') return ()=>openSettingsSection('upgrade');
+  if(item.action==='sync') return ()=>openSettingsSection('sync');
+  return null;
+}
+function openNotificationDetail(id){
+  const item=notifications.find(entry=>entry.id===id);
+  if(!item) return;
+  const kindLabel={warning:'警告',danger:'风险',info:'信息'}[item.kind]||'信息';
+  const jump=notificationJump(item);
+  closeNotificationPanel();
+  openModal(item.title,
+    item.detail+'<span class="modal-meta">'+item.time+' · '+kindLabel+'</span>',
+    jump?'前往处理':'关闭', jump,
+    {cancelLabel:'关闭', hideConfirm:!jump, onDelete:()=>deleteNotification(item.id)});
+}
+
+document.addEventListener('click',event=>{
+  const del=event.target.closest('[data-notification-delete]');
+  if(del){ deleteNotification(del.dataset.notificationDelete); return; }
+  const item=event.target.closest('[data-notification]');
+  if(!item) return;
+  const notification=notifications.find(entry=>entry.id===item.dataset.notification);
+  if(!notification) return;
+  if(!notification.read){
+    notification.read=true;
+    unreadNotifications=Math.max(0,unreadNotifications-1);
+    renderNotifications();
+  }
+  openNotificationDetail(notification.id);
+});
+
+function openModal(title,body,confirmText,handler,opts){
+  opts=opts||{};
   modalTitle.textContent=title;
   modalBody.innerHTML=body;
-  modalConfirm.textContent=confirmText;
-  confirmHandler=handler;
+  modalConfirm.textContent=confirmText||'关闭';
+  modalConfirm.hidden=!!opts.hideConfirm;
+  modalCancel.textContent=opts.cancelLabel||'取消';
+  modalDelete.hidden=!opts.onDelete;
+  confirmHandler=handler||null;
+  deleteHandler=opts.onDelete||null;
   modalMask.style.display='flex';
 }
-modalCancel.onclick=()=>{modalMask.style.display='none';confirmHandler=null;};
-modalConfirm.onclick=()=>{modalMask.style.display='none';if(confirmHandler)confirmHandler();confirmHandler=null;};
+function closeModal(){
+  modalMask.style.display='none';
+  confirmHandler=null;
+  deleteHandler=null;
+  modalConfirm.hidden=false;
+  modalDelete.hidden=true;
+  modalCancel.textContent='取消';
+}
+modalCancel.onclick=()=>closeModal();
+modalConfirm.onclick=()=>{const fn=confirmHandler;closeModal();if(fn)fn();};
+modalDelete.onclick=()=>{const fn=deleteHandler;closeModal();if(fn)fn();};
 
 window.openRestoreConfirm=function(kind){
   openModal(
@@ -875,6 +1772,30 @@ window.openRestoreConfirm=function(kind){
     ()=>toast('原型拦截：不会执行 restore。真实实现进入官方引导流程。')
   );
 };
+
+document.querySelectorAll('[data-diag-tab]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const next=button.dataset.diagTab;
+    document.querySelectorAll('[data-diag-tab]').forEach(item=>item.classList.toggle('active',item===button));
+    document.querySelectorAll('.diag-view').forEach(view=>view.classList.toggle('active',view.id===`diag-${next}`));
+  });
+});
+
+const notificationBtn=document.getElementById('notificationBtn');
+const notificationPanel=document.getElementById('notificationPanel');
+notificationBtn.onclick=event=>{
+  event.stopPropagation();
+  const show=!notificationPanel.classList.contains('show');
+  notificationPanel.classList.toggle('show',show);
+  notificationBtn.setAttribute('aria-expanded',String(show));
+};
+document.addEventListener('click',event=>{
+  if(notificationPanel.classList.contains('show')&&!event.target.closest('.notification-wrap')){
+    notificationPanel.classList.remove('show');
+    notificationBtn.setAttribute('aria-expanded','false');
+  }
+});
+document.getElementById('notificationClear').onclick=()=>markAllNotificationsRead();
 
 document.querySelectorAll('[data-control="start"]').forEach(button=>{button.onclick=()=>{
   if(currentState==='not_found'){
@@ -899,25 +1820,35 @@ document.querySelectorAll('[data-control="restart"]').forEach(button=>{button.on
   });
 };});
 document.querySelectorAll('[data-control="doctor"]').forEach(button=>{button.onclick=()=>toast('原型提示：Doctor 只展示只读摘要，不修改配置。');});
-document.getElementById('refreshBtn').onclick=()=>{
+function refreshState(){
   const prev=currentState;
   setState('loading');
   setTimeout(()=>setState(prev==='loading'?'stopped':prev),550);
-};
-document.getElementById('panelBtn').onclick=()=>showPanel(true);
+}
+
+// 概览的状态驱动动作。
+document.querySelectorAll('[data-act="refresh"]').forEach(button=>{button.onclick=refreshState});
+document.querySelectorAll('[data-act="panel"]').forEach(button=>{button.onclick=()=>showPanel(true)});
+document.querySelectorAll('[data-act="logs"]').forEach(button=>{button.onclick=()=>setRoute('logs')});
+document.querySelectorAll('[data-act="advice"]').forEach(button=>{button.onclick=()=>openRestoreConfirm(currentState)});
+
 function showPanel(show, fromRoute=false){
-  const available=['running','pending','at_risk','external_takeover'].includes(currentState);
-  const next=show&&available;
+  const next=show;
+  // 面板内的注释条已移到 App 窗口外，这里保持引用安全。
+  const previewNote=document.getElementById('panelPreviewNote');
+  const setPreviewNote=display=>{if(previewNote)previewNote.style.display=display;};
   if(next&&!fromRoute) setRoute('panel',true);
   if(next&&location.hash!=='#panel') history.replaceState(null,'','#panel');
   document.body.classList.toggle('panel-mode',next);
-  document.getElementById('panelSection').classList.toggle('active',next);
+  document.querySelectorAll('.route-section').forEach(section=>{
+    section.classList.toggle('active',next?section.id==='panelSection':section.id===`route-${currentRoute}`);
+  });
   document.getElementById('panelShell').classList.toggle('show',next);
   document.getElementById('panelEmpty').style.display=next?'none':'flex';
   document.getElementById('panelMock').classList.toggle('show',next);
   const realFrame=document.getElementById('panelReal');
   const previewProxy=realFrame.dataset.proxy||'';
-  const previewUrl=(()=>{try{return new URL(previewProxy,location.href).href}catch(e){return ''}})();
+  const previewUrl=panelFrameUrl();
   if(next&&previewUrl){
     // The snapshot is a copied official page used only for design comparison.
     if(realFrame.dataset.src!==previewUrl){
@@ -925,31 +1856,68 @@ function showPanel(show, fromRoute=false){
       realFrame.src=previewUrl;
     }
     realFrame.classList.add('show');
-    document.getElementById('panelPreviewNote').style.display='flex';
+    setPreviewNote('flex');
   }else{
     realFrame.classList.remove('show');
     if(!previewProxy){
       realFrame.dataset.src='';
       realFrame.src='about:blank';
-      document.getElementById('panelPreviewNote').style.display='none';
+      setPreviewNote('none');
     }
   }
-  document.getElementById('panelNavBtn').classList.toggle('active',next);
-  document.getElementById('overviewNavBtn').classList.toggle('active',!next);
+  // 导航选中态只保留一个：面板模式选中「面板」，否则选中当前路由。
+  document.querySelectorAll('.nav button[data-route]').forEach(button=>{
+    button.classList.toggle('active',next?button.dataset.route==='panel':button.dataset.route===currentRoute);
+  });
   if(next) toast(previewProxy?'原型预览：加载真实官方页面。':'原型模式：仅展示嵌入面板占位。');
 }
 document.getElementById('panelOverviewBtn').onclick=()=>setRoute('overview');
 document.getElementById('panelReloadBtn').onclick=()=>{
   const realFrame=document.getElementById('panelReal');
-  const previewUrl=(()=>{try{return new URL(realFrame.dataset.proxy,location.href).href}catch(e){return ''}})();
-  if(previewUrl){
-    realFrame.src=previewUrl+(previewUrl.includes('?')?'&':'?')+'reload='+Date.now();
-  }
+  const previewUrl=panelFrameUrl(Date.now());
+  if(previewUrl) realFrame.src=previewUrl;
   showPanel(true);
 };
 document.getElementById('panelRetryBtn').onclick=()=>showPanel(true);
 document.getElementById('panelBrowserBtn').onclick=()=>toast('原型拦截：不会打开真实浏览器面板。');
 document.getElementById('logDirBtn').onclick=()=>toast('原型拦截：不会打开真实目录。');
+
+// 诊断中心：官方 ocx doctor 的只读摘要（mock，不执行真实命令）。
+function doctorReportHtml(){
+  return [
+    '<span class="ok">opencodex doctor</span>  · 只读模式',
+    '',
+    'Paths',
+    '  <span class="ok">ok</span>  config: /Users/ezio/OpenCodexData/config.toml',
+    '  <span class="ok">ok</span>  state:  /Users/ezio/OpenCodexData',
+    '  <span class="ok">ok</span>  OPENCODEX_HOME: /Users/ezio/OpenCodexData/opencodex-home',
+    '  --  WSL /mnt drive: 不适用（macOS）',
+    '',
+    'Response-state temp files',
+    '  <span class="ok">ok</span>  没有遗留的 response-state 临时文件',
+    '',
+    'Codex app home targeting',
+    '  <span class="ok">ok</span>  Effective Codex home: /Users/ezio/.codex（未检测到 CODEX_HOME 冲突）',
+    '',
+    'Codex restart safety',
+    '  <span class="warn">!!</span>  service/shim 未安装，protection: none，rebootSafe: false',
+    '      Action: 需要开机自启请运行官方 ocx codex-shim install（本原型不执行）',
+    '',
+    'Codex runtime selection',
+    '  <span class="ok">ok</span>  Selected runtime: 0.154.0-alpha.6.2 (source=managed)',
+    '',
+    'Provider / OAuth',
+    '  <span class="ok">ok</span>  provider key: <span class="mask">••••••••••••</span>',
+    '  <span class="ok">ok</span>  ChatGPT 可达性: 正常',
+    ''
+  ].join('\n');
+}
+document.getElementById('doctorRunBtn').onclick=()=>{
+  const out=document.getElementById('doctorOut');
+  out.innerHTML=doctorReportHtml();
+  out.classList.add('show');
+  toast('原型模拟：展示 Doctor 只读摘要，不执行真实诊断。');
+};
 document.getElementById('discoverBtn').onclick=()=>{
   setState('loading');
   setTimeout(()=>setState(currentState==='loading'?'stopped':currentState),650);
@@ -967,26 +1935,171 @@ document.querySelectorAll('#homeSeg button').forEach(b=>{
   });
 });
 
-function applyTheme(theme){
-  const normalized=['light','dark','system'].includes(theme)?theme:'system';
-  try{window.localStorage.setItem('ocx-theme',normalized)}catch(e){}
-  if(normalized==='system'){
-    const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.setAttribute('data-theme',prefersDark?'dark':'light');
-  }else{
-    document.documentElement.setAttribute('data-theme',normalized);
+// ── 预览工具：模拟窗口的尺寸预设与拖拽缩放（属于原型工具，不属于软件界面）──
+const winRoot=document.documentElement;
+function updateSizeReadout(){
+  const el=document.getElementById('sizeReadout');
+  if(!el) return;
+  const r=document.querySelector('.window').getBoundingClientRect();
+  el.textContent=Math.round(r.width)+' × '+Math.round(r.height);
+}
+function setWinSize(w,h){
+  if(w!=null) winRoot.style.setProperty('--win-w',Math.round(w)+'px');
+  if(h!=null) winRoot.style.setProperty('--win-h',Math.round(h)+'px');
+  updateSizeReadout();
+  if(window.__syncDetailDefault) window.__syncDetailDefault();
+}
+function fitWindow(){
+  const stacked=window.innerWidth<=1470;
+  setWinSize(
+    Math.max(900,Math.round(window.innerWidth-44-(stacked?0:342))),
+    Math.max(600,Math.round(window.innerHeight-44))
+  );
+}
+document.querySelectorAll('#sizePresets button').forEach(button=>{
+  button.addEventListener('click',()=>{
+    document.querySelectorAll('#sizePresets button').forEach(x=>x.classList.toggle('active',x===button));
+    if(button.dataset.size==='fit'){ fitWindow(); return; }
+    const [w,h]=button.dataset.size.split('x').map(Number);
+    setWinSize(w,h);
+  });
+});
+(function resizeHandles(){
+  const stage=document.querySelector('.stage');
+  const frame=document.querySelector('.window');
+  const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+  let drag=null;
+  stage.querySelectorAll('.rz').forEach(handle=>{
+    handle.addEventListener('pointerdown',event=>{
+      event.preventDefault();
+      const r=frame.getBoundingClientRect();
+      drag={axis:handle.dataset.rz,x:event.clientX,y:event.clientY,w:r.width,h:r.height};
+      handle.setPointerCapture(event.pointerId);
+      document.body.classList.add('resizing');
+      document.querySelectorAll('#sizePresets button').forEach(x=>x.classList.remove('active'));
+    });
+  });
+  window.addEventListener('pointermove',event=>{
+    if(!drag) return;
+    setWinSize(
+      drag.axis==='s'?null:clamp(drag.w+event.clientX-drag.x,900,3400),
+      drag.axis==='e'?null:clamp(drag.h+event.clientY-drag.y,600,2000)
+    );
+  });
+  window.addEventListener('pointerup',()=>{
+    if(!drag) return;
+    drag=null;
+    document.body.classList.remove('resizing');
+  });
+})();
+window.addEventListener('resize',()=>{updateSizeReadout(); if(window.__syncDetailDefault) window.__syncDetailDefault();});
+
+// ── 运行详情：高窗口默认展开（用户手动切换后不再自动干预）──
+(function detailDefault(){
+  const detail=document.querySelector('.ovb-detail');
+  if(!detail) return;
+  let userSet=false;
+  const summary=detail.querySelector('summary');
+  if(summary) summary.addEventListener('click',()=>{userSet=true;});
+  window.__syncDetailDefault=function(){
+    if(userSet) return;
+    const win=document.querySelector('.window');
+    const tall=(win?win.clientHeight:window.innerHeight)>=880;
+    if(detail.open!==tall) detail.open=tall;
+  };
+  window.__syncDetailDefault();
+})();
+
+// ── 模块区：点右上角箭头进入对应设置分区 ──
+document.getElementById('mods').addEventListener('click',event=>{
+  const mod=event.target.closest('.mod');
+  if(!mod) return;
+  if(event.target.closest('.mod-go')){
+    openSettingsSection(mod.dataset.modSection);
   }
-  const resolvedTheme=document.documentElement.getAttribute('data-theme');
-  try{window.localStorage.setItem('ocx-shell-theme',resolvedTheme||'light')}catch(e){}
+});
+const sizeDefault=document.querySelector('#sizePresets button[data-size="1180x760"]');
+if(sizeDefault) sizeDefault.classList.add('active');
+
+updateSizeReadout();
+// ── WebDAV 卡片：按「配置 / 连接」状态渲染内容与动作（不渲染无解释的禁用态）──
+// 「未配置」是初始态：卡片主体说明未配置，动作区只留一颗「配置 WebDAV」主按钮，右上角 ⋯ 仍可进设置。
+const webdavStates={
+  unconfigured:{tag:'未配置',conn:'未配置',conflict:'未设置',
+    actions:[['配置 WebDAV','btn primary','open-sync-settings']]},
+  disconnected:{tag:'未连接',conn:'未连接',conflict:'每次询问',
+    actions:[['立即同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
+  syncing:{tag:'同步中',conn:'同步中…',conflict:'每次询问',
+    actions:[['取消同步','btn','sync'],['测试连接','btn ghost','test-webdav']]},
+  synced:{tag:'已同步',conn:'已同步',conflict:'每次询问',
+    actions:[['立即同步','btn primary','sync'],['测试连接','btn ghost','test-webdav']]},
+  error:{tag:'连接失败',conn:'连接失败',conflict:'每次询问',
+    actions:[['重试连接','btn primary','test-webdav'],['立即同步','btn ghost','sync']]},
+  conflict:{tag:'冲突待处理',conn:'已同步',conflict:'待处理',
+    actions:[['处理冲突','btn primary','open-sync-history'],['立即同步','btn ghost','sync']]},
+};
+let webdavState='unconfigured';
+function renderWebdav(state){
+  webdavState=webdavStates[state]?state:'unconfigured';
+  const el=id=>document.getElementById(id);
+  if(!el('syncCard')) return;
+  const cfg=webdavStates[webdavState];
+  el('syncTag').textContent=cfg.tag;
+  el('syncConn').textContent=cfg.conn;
+  el('syncConflict').textContent=cfg.conflict;
+  el('syncActions').innerHTML=cfg.actions.map(([label,cls,act])=>
+    `<button class="${cls}" data-prototype-action="${act}">${label}</button>`).join('');
+  document.querySelectorAll('#webdavStates button').forEach(b=>
+    b.classList.toggle('active',b.dataset.webdav===webdavState));
+}
+window.renderWebdav=renderWebdav;
+document.querySelectorAll('#webdavStates button').forEach(button=>{
+  button.addEventListener('click',()=>renderWebdav(button.dataset.webdav));
+});
+
+// ── 主题：外壳与内嵌面板共用同一个取值（localStorage 键 ocx-theme）──
+// 面板不再保存自己的主题；首帧由 URL 参数给出，切换由 postMessage 实时同步。
+let themeSetting='system';
+function resolvedTheme(){
+  if(themeSetting==='light'||themeSetting==='dark') return themeSetting;
+  try{return window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch(e){return 'light'}
+}
+function panelFrameUrl(cacheBust){
+  const frame=document.getElementById('panelReal');
+  const proxy=(frame&&frame.dataset.proxy)||'';
+  try{
+    const url=new URL(proxy,location.href);
+    url.searchParams.set('theme',resolvedTheme());
+    if(cacheBust) url.searchParams.set('reload',String(cacheBust));
+    return url.href;
+  }catch(e){return ''}
+}
+function syncPanelTheme(){
+  const frame=document.getElementById('panelReal');
+  if(!frame||!frame.contentWindow) return;
+  const theme=resolvedTheme();
+  try{frame.contentWindow.postMessage({type:'ocx-theme',theme},'*')}catch(e){}
+}
+document.getElementById('panelReal').addEventListener('load',syncPanelTheme);
+function applyTheme(theme){
+  themeSetting=['light','dark','system'].includes(theme)?theme:'system';
+  try{window.localStorage.setItem('ocx-theme',themeSetting)}catch(e){}
+  document.documentElement.setAttribute('data-theme',resolvedTheme());
+  syncPanelTheme();
   document.querySelectorAll('#themeSeg button').forEach(button=>{
-    button.classList.toggle('active',button.dataset.themeOption===normalized);
+    button.classList.toggle('active',button.dataset.themeOption===themeSetting);
   });
 }
-
 document.querySelectorAll('#themeSeg button').forEach(button=>{
   button.addEventListener('click',()=>applyTheme(button.dataset.themeOption));
 });
 window.applyTheme=applyTheme;
+// 系统主题变化时只有「跟随系统」需要重算，其它取值不受影响。
+try{
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{
+    if(themeSetting==='system') applyTheme('system');
+  });
+}catch(e){}
 
 function toast(msg){
   const el=document.getElementById('toastEl');
@@ -1000,9 +2113,13 @@ let storedTheme='system';
 try{storedTheme=window.localStorage.getItem('ocx-theme')||'system'}catch(e){}
 applyTheme(storedTheme);
 
+renderWebdav('unconfigured');
+renderPrototypeNote(location.hash.slice(1)||'overview');
+renderNotificationHistory();
+setRoute(location.hash.slice(1)||'overview',true);
+if(currentRoute==='settings') showSettingsSection(new URLSearchParams(location.search).get('section')||'general');
 setState('loading');
 setTimeout(()=>setState('stopped'),800);
-setRoute(location.hash.slice(1)||'overview',true);
 </script>
 </body>
 </html>
