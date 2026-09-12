@@ -30,6 +30,7 @@
 03-平台交付/
 ├── macOS/
 │   ├── AppIcon/
+│   │   ├── AppIcon.svg
 │   │   ├── AppIcon.icns
 │   │   └── png/{16,32,128,256,512,1024}.png
 │   └── Tray/
@@ -203,6 +204,7 @@
 | 文件 | 规格 | SHA-256 |
 |---|---|---|
 | `AppIcon.icns` | 多尺寸 macOS icon | `ac5284922b2bb60e5076f2c358340255f1869ce584e0e5a8028ea88ec7c0a159` |
+| `AppIcon.svg` | macOS 圆角底板 SVG | `19178f7f5221a829215ef352e0c1fa7495316eefc1c500a7923ee7d690d1edd1` |
 | `png/1024.png` | 1024×1024 PNG | `67b3ab4948ea47741f0097d1044fbc6c42e56d707540ae3c9b35ee589774ea92` |
 | `png/512.png` | 512×512 PNG | `332128546fc6a98e651d308b31fdf26acd8af49c2d7e5783e965b8f31e2a012d` |
 
@@ -210,7 +212,7 @@
 
 | 文件 | 规格 | SHA-256 |
 |---|---|---|
-| `AppIcon.ico` | 256×256 PNG-layered ICO | `e5dd7cd85233f68c3622920e5aa94fe54fa9e49788353c2f33f4d76437d26414` |
+| `AppIcon.ico` | 多尺寸 ICO（16/24/32/48/64/128/256） | `9e66134cada279adade3a0f9bc9f0197455ecc9bac32f0d2e4505287d79b075f` |
 | `AppIcon.svg` | 透明背景 SVG | 见 `02-设计基准/opencodex-desktop-aggregation-knockout.svg` |
 | `png/256.png` | 256×256 PNG | `e341c8074d8f9a06ff9846a3afdf9f3b827d9a8b92edac1929eaee0af4b683b7` |
 | `png/512.png` | 512×512 PNG | `3ceab57db1b486da7c526fb10181b61cd9b0ac2b5eec4341fc15dbb6f15c6e92` |
@@ -231,10 +233,10 @@
 | 文件 | 前景色 | SHA-256 |
 |---|---|---|
 | `tray-dark.svg` | `#1A2948` | `0aac6ce7eb2fb9e33458c1b38fd777430d3151d891b26598049ab0ff8b064f9c` |
-| `tray-dark.ico` | 16×16 ICO | `2531dd4e6b6ac3f53524e015075dd0d06afdaa4ffa03b41bc5e3bbc837f81abf` |
+| `tray-dark.ico` | 多尺寸 ICO（16/24/32） | `a8492ef181fcea38fe29a50b67bcb4ae2fbf34e44f906deca3b430452633956c` |
 | `tray-dark@2x.png` | 32×32 px / 2× | `d8512c5d6cd5717995ab71d1e66a30f4aa092e3e7c9cbe1a8f907b20b2687d59` |
 | `tray-light.svg` | `#FFFFFF` | `d9b705416e8daec6c7774915e5435e06adb7c491ed2cdc2bc88ef2258e3602fd` |
-| `tray-light.ico` | 16×16 ICO | `2a5be8d70376e2229bcf9d70b54d70937bbae8cbc85218bb259046e79227baa4` |
+| `tray-light.ico` | 多尺寸 ICO（16/24/32） | `2248c14febc5c55bf725b6e0578fff359be5abca4745ffe92fef0d17d59891a2` |
 | `tray-light@2x.png` | 32×32 px / 2× | `67ccd16320d030659ecd880b9a7698ed75008135bc8938be35049c056405e026` |
 
 ### 04-品牌组件 / Logo
@@ -251,5 +253,22 @@
 |---|---|---|
 | `favicon.svg` | 透明背景 SVG | `c546f8d8b3f7e75111e2992f4671729cc55961ff74ddfc5727cc1c5868b2f8c0` |
 | `favicon.png` | 128×128 PNG | `f96ab822704b6ca841dbb42a6143db1194b623dbca05494a62e09c8fd94d89fe` |
-| `favicon.ico` | 128×128 PNG-layered ICO | `0c24692babba01903a3724205bb9e216e0a3dfa9c73e897ff7e4bf5a623e147e` |
+| `favicon.ico` | 多尺寸 ICO（16/32/48/64/128） | `79666d0c671521daef73e4540555e8e5547c9dd758fb3fc6c8d3f5784a7febe9` |
 
+
+
+## 素材清单修订（2026-09-12）
+
+本次修订只更新交付细节，不改变设计基准。
+
+- 补充 `03-平台交付/macOS/AppIcon/AppIcon.svg`。
+- 将 Windows AppIcon、Windows Tray、Favicon ICO 更新为多尺寸 ICO。
+- 移除 macOS Tray 未纳入交付目录规划的 512px 中间 PNG。
+
+| 文件 | 规格 | SHA-256 |
+|---|---|---|
+| `03-平台交付/macOS/AppIcon/AppIcon.svg` | macOS 圆角底板 SVG | `19178f7f5221a829215ef352e0c1fa7495316eefc1c500a7923ee7d690d1edd1` |
+| `03-平台交付/Windows/AppIcon/AppIcon.ico` | 多尺寸 ICO（16/24/32/48/64/128/256） | `9e66134cada279adade3a0f9bc9f0197455ecc9bac32f0d2e4505287d79b075f` |
+| `03-平台交付/Windows/Tray/tray-dark.ico` | 多尺寸 ICO（16/24/32） | `a8492ef181fcea38fe29a50b67bcb4ae2fbf34e44f906deca3b430452633956c` |
+| `03-平台交付/Windows/Tray/tray-light.ico` | 多尺寸 ICO（16/24/32） | `2248c14febc5c55bf725b6e0578fff359be5abca4745ffe92fef0d17d59891a2` |
+| `04-品牌组件/Favicon/favicon.ico` | 多尺寸 ICO（16/32/48/64/128） | `79666d0c671521daef73e4540555e8e5547c9dd758fb3fc6c8d3f5784a7febe9` |
