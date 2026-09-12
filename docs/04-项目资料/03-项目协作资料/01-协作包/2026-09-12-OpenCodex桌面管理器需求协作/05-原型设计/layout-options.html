@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>官方面板布局方案对比 · 中文快照</title>
+<style>
+:root{--bg:#f9f9f9;--panel:#fff;--border:#e6e6e6;--text:#0d0d0d;--muted:#6e6e6e;--radius:14px;--shadow:0 20px 48px rgba(0,0,0,.08)}
+body{margin:0;background:#ececf0;color:var(--text);font:14px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC",system-ui,sans-serif}
+.wrap{max-width:1500px;margin:0 auto;padding:24px 18px 40px}
+header{margin-bottom:16px}
+h1{font-size:20px;letter-spacing:-.02em;margin:0 0 4px}
+p{color:var(--muted);margin:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;max-width:1000px;margin:0 auto}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card h2{margin:12px 14px 4px;font-size:14px}
+.card p{margin:0 14px 12px;font-size:11px;color:var(--muted);line-height:1.45}
+.mock{height:720px;display:grid;border-top:1px solid var(--border);overflow:hidden}
+.iframe-wrap{position:relative;overflow:hidden;background:#fff}
+iframe{border:0;display:block}
+.tag{display:inline-block;padding:1px 7px;border-radius:999px;border:1px solid var(--border);font-size:10px;color:var(--muted);margin-left:6px;vertical-align:middle}
+.shell-a{grid-template-columns:120px 1fr}
+.shell-a .side{border-right:1px solid var(--border);background:#f7f7f7;padding:12px 8px}
+.shell-a .side b{display:block;font-size:12px;margin-bottom:3px}
+.shell-a .side span{font-size:9px;color:var(--muted);display:block;margin-bottom:10px}
+.shell-a .side nav{display:flex;flex-direction:column;gap:4px}
+.shell-a .side button{text-align:left;border:0;background:transparent;color:#6e6e6e;font-size:9px;padding:5px 6px;border-radius:5px}
+.shell-a .side button.on{background:#ededed;color:#0d0d0d;font-weight:600}
+.shell-b{grid-template-columns:32px 1fr}
+.shell-b .rail{border-right:1px solid var(--border);background:#f7f7f7;padding:8px 0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.shell-b .rail i{width:14px;height:14px;border-radius:4px;background:#ededed;display:block}
+.shell-b .rail i.on{background:#0d0d0d}
+.shell-c{grid-template-columns:1fr}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>官方面板布局方案对比</h1>
+  <p>已选定方案 B。三个方案仍保留作决策记录，均使用中文版官方页面快照。</p>
+</header>
+<div class="grid">
+  <section class="card">
+    <h2>A · 宽侧栏常驻 <span class="tag">双层导航</span></h2>
+    <p>OpenCodeX-Desktop 侧栏完整保留，官方面板占主内容区。上下文最清楚，但内容区被两套导航挤压。</p>
+    <div class="mock shell-a">
+      <aside class="side">
+        <b>OpenCodeX-Desktop</b><span>P0 Prototype</span>
+        <nav>
+          <button class="on">官方面板</button>
+          <button>概览</button>
+          <button>安装与数据根</button>
+          <button>进程控制</button>
+          <button>日志</button>
+        </nav>
+      </aside>
+      <div class="iframe-wrap"><iframe src="./官方页面快照/rendered-dom.html?v=zh-CN-1" title="A 官方面板" style="width:1440px;height:1440px;transform:scale(1.0);transform-origin:0 0"></iframe></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2>B · 窄图标栏常驻 <span class="tag">已选定</span></h2>
+    <p>管理器侧栏收成图标栏，官方页面主内容更大。保留位置感，也减少侧栏宽度压力。</p>
+    <div class="mock shell-b">
+      <aside class="rail"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></aside>
+      <div class="iframe-wrap"><iframe src="./官方页面快照/rendered-dom.html?v=zh-CN-1" title="B 官方面板" style="width:1440px;height:1440px;transform:scale(1.0);transform-origin:0 0"></iframe></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2>C · 全幅沉浸式 <span class="tag">已否决</span></h2>
+    <p>隐藏管理器侧栏，官方页面占据整个窗口。显示区域最大，但管理器上下文容易消失。</p>
+    <div class="mock shell-c">
+      <div class="iframe-wrap"><iframe src="./官方页面快照/rendered-dom.html?v=zh-CN-1" title="C 官方面板" style="width:1440px;height:1440px;transform:scale(1.0);transform-origin:0 0"></iframe></div>
+    </div>
+  </section>
+</div>
+</div>
+</body>
+</html>
