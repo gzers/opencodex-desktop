@@ -13,6 +13,9 @@
   --glow-1:#a4c4ff6b;
   --glow-2:#a8e2c561;
   --glow-3:#ffe0c24d;
+  /* 玻璃质感：官方 --glass-rail / --glass-blur 原值 */
+  --glass-rail:#f9f9f9a8;
+  --glass-blur:saturate(1.6) blur(22px);
   --panel:#fff;
   --rail:#f9f9f9;
   --raised:#f4f4f4;
@@ -84,6 +87,7 @@ html[data-theme="dark"]{
   --glow-1:#6082c829;
   --glow-2:#58a08221;
   --glow-3:#b48c6414;
+  --glass-rail:#1717179e;
   --panel:#262626;
   --rail:#171717;
   --raised:#303030;
@@ -139,14 +143,14 @@ button{font:inherit}
     radial-gradient(46% 42% at 88% 18%,var(--glow-2),#0000 70%),
     radial-gradient(40% 36% at 70% 92%,var(--glow-3),#0000 72%);
 }
-.titlebar{display:grid;grid-template-columns:92px minmax(0,1fr) 130px;align-items:center;background:var(--raised);border-bottom:1px solid var(--border);color:var(--text)}
+.titlebar{display:grid;grid-template-columns:92px minmax(0,1fr) 130px;align-items:center;background:var(--glass-rail);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--border);color:var(--text)}
 .traffic{display:flex;gap:8px;padding-left:14px}
 .traffic span{width:12px;height:12px;border-radius:50%;box-shadow:inset 0 0 0 1px #00000012}
 .traffic .close{background:#ff5f57}.traffic .minimize{background:#febc2e}.traffic .zoom{background:#28c840}
 .window-title{text-align:center;font-size:var(--text-label);font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .window-meta{text-align:right;padding-right:14px;font-size:var(--text-caption);color:var(--muted)}
 .app{display:grid;grid-template-columns:244px minmax(0,1fr);height:100%;min-height:0}
-.side{position:relative;height:100%;min-height:0;background:var(--rail);color:var(--text);padding:18px 14px;display:flex;flex-direction:column;gap:18px;border-right:1px solid var(--border)}
+.side{position:relative;height:100%;min-height:0;background:var(--glass-rail);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);color:var(--text);padding:18px 14px;display:flex;flex-direction:column;gap:18px;border-right:1px solid var(--border)}
 .brand{display:flex;gap:10px;align-items:center;min-width:0;min-height:var(--control-lg)}
 .brand-mark{width:40px;height:40px;flex:none;display:block;filter:drop-shadow(0 1px 2px #3941ff26)}
 .brand>div{min-width:0}
@@ -555,7 +559,7 @@ html[data-theme="dark"] .prototype-side .size-readout span{color:#9aa2ae}
 /* Selected layout B: keep a narrow icon rail so panel context stays visible. */
 body.panel-mode .app{grid-template-columns:64px minmax(0,1fr)}
 body.panel-mode .side{
-  padding:18px 0 14px;align-items:center;gap:18px;background:var(--rail);
+  padding:18px 0 14px;align-items:center;gap:18px;background:var(--glass-rail);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
 }
 body.panel-mode .brand{
   display:flex;justify-content:center;align-items:center;
