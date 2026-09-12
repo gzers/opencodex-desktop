@@ -919,3 +919,50 @@ WebDAV 卡在没配置时仍显示「立即同步 / 测试连接」两颗动作�
 - `截图/现行/prototype-notifications-light.png`、`prototype-notifications-dark.png`（通知中心 + 单条删除）
 - `截图/现行/prototype-notification-detail-light.png`、`prototype-notification-detail-dark.png`（详情弹窗）
 - `截图/现行/prototype-logs-light.png`、`prototype-logs-dark.png`（通知历史 + 单条删除）
+
+## 2026-09-13 · 其他页面套用官方面板的环境光渐变
+
+### 问题
+
+官方面板有一层环境光背景（三处柔光叠加），原型自己的路由是纯色 `--bg`。两者并排时割裂：切到面板像换了个产品。
+
+### 取源（官方构建产物）
+
+官方面板 `assets/index-BoBRSehJ.css` 的 `body:before`：
+
+```css
+body:before{content:"";z-index:-1;pointer-events:none;filter:blur(70px);
+  background:
+    radial-gradient(42% 38% at 12% 6%,  #a4c4ff6b, #0000 70%),
+    radial-gradient(46% 42% at 88% 18%, #a8e2c561, #0000 70%),
+    radial-gradient(40% 36% at 70% 92%, #ffe0c24d, #0000 72%);
+  position:fixed;inset:-20%}
+```
+
+暗色为 `#6082c829 / #58a08221 / #b48c6414`。
+
+### 落地
+
+- 新增 token `--glow-1/2/3`：light `#a4c4ff6b / #a8e2c561 / #ffe0c24d`，dark `#6082c829 / #58a08221 / #b48c6414`（与官方一致）。
+- `.window::before` 承载同一组三层 radial-gradient，`filter:blur(70px)`、`pointer-events:none`、`z-index:-1`。
+  - 挂在 `.window` 上：它已是 `position:relative;isolation:isolate;overflow:hidden`，负 z 伪元素正好贴在 `--bg` 之上、内容之下，且**不随 `.main` 滚动**。
+  - `.main` 本身无背景色，因此光能透出；卡片仍是实色，光只在卡片间隙与页边读得到。
+- 一处与官方的差异：官方是 `position:fixed;inset:-20%`（相对视口过扫），我们约束在模拟窗口内，改为 `inset:0`，光斑范围相对窗口略小，观感对齐。
+- 侧栏 `--rail` 保持不透明（不做官方那种玻璃化），避免可读性回归。
+
+### 实测（同位置取样像素）
+
+| 位置 | 官方面板 light | 概览 light | 官方面板 dark | 概览 dark |
+|---|---|---|---|---|
+| 右上 | (237,249,243) | (229,244,236) | (37,42,40) | (38,44,41) |
+| 右下 | (255,255,255)※ | (249,244,239) | (38,38,38) | (40,38,36) |
+
+※ 官方面板该点落在卡片上，非背景。
+
+- 强度与色相和面板同量级；概览/设置/日志三条路由都生效，面板路由仍是官方快照自带的环境光，不叠加。
+- 零 console error / page error。
+
+### 截图
+
+- `截图/现行/` 全套已按新背景重出（概览 light/dark/最小窗口/大窗口/展开、设置、日志、面板、通知中心与详情）。
+- `截图/对比-20260913/定稿-模块区-乙-等宽双列-页脚分隔.png` 与 4 张 WebDAV 状态图已重出。
