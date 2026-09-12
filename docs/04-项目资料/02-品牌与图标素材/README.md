@@ -203,10 +203,14 @@
 
 | 文件 | 规格 | SHA-256 |
 |---|---|---|
-| `AppIcon.icns` | 白色圆角底板，主体 75% | `4cdb2c2c0ff1478c19d24c2e490b08a2ef7847a7dd68ea458fe3fb5dea49a408` |
-| `AppIcon.svg` | macOS 白色圆角底板 SVG | `8e11526eec2d6b9e2b888ba7ba6c2d9ac2d642e244b95bfeaa38b0b4c478669b` |
-| `png/1024.png` | 1024×1024 PNG | `db8d1afe1750b8f0f75b1e98414bb4390677cd58bbc7f8bfe790f021473fbcbd` |
-| `png/512.png` | 512×512 PNG | `ce4ad7615ba5c8549567f5246add40eb28add94d69ad96b0f7215d0d279260c3` |
+| `AppIcon.icns` | 白色圆角底板，主体 75% | `3a89852efb32d8e0169a0dfdbef6efec53dccb47cfedd9b1445dfc802d180357` |
+| `AppIcon.svg` | macOS 白色圆角底板 SVG | `6f37da285a35795332d8cff8a382f946a2ff27ef1751e61ead1677066e57a75e` |
+| `png/1024.png` | 1024×1024 PNG | `0afa607809efce06ea6e61617b1261f627f8524fa1247b0b0b3aaa3ef963ac99` |
+| `png/512.png` | 512×512 PNG | `1048245a2561a9a9e54eeae9584308a225444d7463426686b9a4fb00798c1a43` |
+| `png/256.png` | 256×256 PNG | `afed76155c13ff64546ad2e34cf209d63f574b3579cc88589b3bd6263796fac1` |
+| `png/128.png` | 128×128 PNG | `359133687664b93d368fa5c9b0da7002cf1dcb3dd58d82d80ff43335153f791d` |
+| `png/32.png` | 32×32 PNG | `22dc59c4fb7539e68c71a6b92411132bf94f8843681e48b376e692024cdceaa2` |
+| `png/16.png` | 16×16 PNG | `616acd7214b27404db467c99c27fc581f523cf7d857e5ad6d29978bb614f3c6e` |
 
 ### 03-平台交付 / Windows AppIcon
 
@@ -262,14 +266,14 @@
 本次修订只更新平台交付细节，不改变设计基准。
 
 - 补充 macOS AppIcon 源级 SVG。
-- 将 macOS AppIcon 调整为白色圆角底板，并放大主体比例。
+- 将 macOS AppIcon 调整为白色圆角底板，彩色主体边界放大到 75%。
 - 将 Windows AppIcon、Windows Tray、Favicon ICO 更新为多尺寸 ICO。
 - 移除 macOS Tray 未纳入交付目录规划的 512px 中间 PNG。
 
 | 文件 | 规格 | SHA-256 |
 |---|---|---|
-| `03-平台交付/macOS/AppIcon/AppIcon.svg` | macOS 白色圆角底板 SVG | `8e11526eec2d6b9e2b888ba7ba6c2d9ac2d642e244b95bfeaa38b0b4c478669b` |
-| `03-平台交付/macOS/AppIcon/AppIcon.icns` | 白色圆角底板，主体 75% | `4cdb2c2c0ff1478c19d24c2e490b08a2ef7847a7dd68ea458fe3fb5dea49a408` |
+| `03-平台交付/macOS/AppIcon/AppIcon.svg` | macOS 白色圆角底板 SVG | `6f37da285a35795332d8cff8a382f946a2ff27ef1751e61ead1677066e57a75e` |
+| `03-平台交付/macOS/AppIcon/AppIcon.icns` | 白色圆角底板，主体 75% | `3a89852efb32d8e0169a0dfdbef6efec53dccb47cfedd9b1445dfc802d180357` |
 | `03-平台交付/Windows/AppIcon/AppIcon.ico` | 多尺寸 ICO（16/24/32/48/64/128/256） | `9e66134cada279adade3a0f9bc9f0197455ecc9bac32f0d2e4505287d79b075f` |
 | `03-平台交付/Windows/Tray/tray-dark.ico` | 多尺寸 ICO（16/24/32） | `a8492ef181fcea38fe29a50b67bcb4ae2fbf34e44f906deca3b430452633956c` |
 | `03-平台交付/Windows/Tray/tray-light.ico` | 多尺寸 ICO（16/24/32） | `2248c14febc5c55bf725b6e0578fff359be5abca4745ffe92fef0d17d59891a2` |
