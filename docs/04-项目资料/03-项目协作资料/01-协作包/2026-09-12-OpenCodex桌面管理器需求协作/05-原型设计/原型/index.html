@@ -137,7 +137,8 @@ button{font:inherit}
 }
 /* 与官方面板一致的环境光背景：三层柔光叠加，内容之上不可交互。 */
 .window::before{
-  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;filter:blur(70px);
+  /* inset:-20% 与官方一致：光斑中心被推到画布外，只留边缘渐隐，避免局部过浓。 */
+  content:"";position:absolute;inset:-20%;z-index:-1;pointer-events:none;filter:blur(70px);
   background:
     radial-gradient(42% 38% at 12% 6%,var(--glow-1),#0000 70%),
     radial-gradient(46% 42% at 88% 18%,var(--glow-2),#0000 70%),
