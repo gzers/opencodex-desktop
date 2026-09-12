@@ -5,14 +5,14 @@ product_name: "OpenCodeX-Desktop"
 state: in_progress
 summary: "Tauri v2 + Rust 桌面壳，负责发现 OpenCodex、管理统一数据根与 OPENCODEX_HOME、托管官方启停子进程、观测状态日志、支持加密配置迁移与 WebDAV 同步；不管理 npm，不替代官方更新核心。"
 next_action: "基于 revision 2 创建 IMP，冻结 P0 技术契约、进程模型、统一数据根布局、状态协议与验收环境；配置导出与 WebDAV 实施前完成安全评审。"
-acceptance_criteria: [{"id":"AC-OPENCODEX-DESKTOP-01","text":"应用能发现并展示本机 OpenCodex 安装路径、版本与运行状态，且不执行 npm 安装、卸载或依赖管理。"},{"id":"AC-OPENCODEX-DESKTOP-02","text":"应用支持选择或切换 OPENCODEX_HOME，并将 OpenCodeX-Desktop 自身的配置、缓存、日志、备份和导出产物保存在可自定义的统一数据根中按结构划分。"},{"id":"AC-OPENCODEX-DESKTOP-03","text":"主界面可通过托管 ocx start/stop/restart 子进程完成启动、停止和重启，并展示健康状态、端口、进程标识与最近错误摘要。"},{"id":"AC-OPENCODEX-DESKTOP-04","text":"应用能打开官方 Web 面板，并以只读和脱敏方式查看最近日志；代理离线时能明确说明日志能力不可用。"},{"id":"AC-OPENCODEX-DESKTOP-05","text":"应用能识别外部 provider 接管与 startup at-risk 状态，不直接改写外部配置，只提供用户确认后的官方 restore 引导或说明。"},{"id":"AC-OPENCODEX-DESKTOP-06","text":"配置导出支持全量内容，敏感凭据必须封装在用户口令保护的加密导出容器中；导入前完成格式校验、当前配置备份和显式确认，不得在仓库、日志或界面明文展示凭据。"},{"id":"AC-OPENCODEX-DESKTOP-07","text":"WebDAV 同步支持全量内容含敏感凭据，上传前必须客户端加密；执行覆盖前生成可恢复备份，检测到冲突时提示用户确认，不静默丢失目标端历史。"},{"id":"AC-OPENCODEX-DESKTOP-08","text":"升级前先完成备份；应用可引导用户使用官方 ocx update，但不接管 npm 包管理器，也不重写官方更新事务。"}]
+acceptance_criteria: [{"id":"AC-OPENCODEX-DESKTOP-01","text":"应用能发现并展示本机 OpenCodex 安装路径、版本与运行状态，且不执行 npm 安装、卸载或依赖管理。"},{"id":"AC-OPENCODEX-DESKTOP-02","text":"应用支持选择或切换 OPENCODEX_HOME，并将 OpenCodeX-Desktop 自身的配置、缓存、日志、备份和导出产物保存在可自定义的统一数据根中按结构划分。"},{"id":"AC-OPENCODEX-DESKTOP-03","text":"主界面可通过托管 ocx start/stop/restart 子进程完成启动、停止和重启，并展示健康状态、端口、进程标识与最近错误摘要。"},{"id":"AC-OPENCODEX-DESKTOP-04","text":"应用能打开官方 Web 面板，并以只读和脱敏方式查看最近日志；代理离线时能明确说明日志能力不可用。"},{"id":"AC-OPENCODEX-DESKTOP-05","text":"应用能识别外部 provider 接管与 startup at-risk 状态，不直接改写外部配置，只提供用户确认后的官方 restore 引导或说明。"},{"id":"AC-OPENCODEX-DESKTOP-06","text":"配置导出支持全量内容，敏感凭据必须封装在用户口令保护的加密导出容器中；导入前完成格式校验、当前配置备份和显式确认，不得在仓库、日志或界面明文展示凭据。"},{"id":"AC-OPENCODEX-DESKTOP-07","text":"WebDAV 同步支持全量内容含敏感凭据，上传前必须客户端加密；执行覆盖前生成可恢复备份，检测到冲突时提示用户确认，不静默丢失目标端历史。"},{"id":"AC-OPENCODEX-DESKTOP-08","text":"升级前先完成备份；应用可引导用户使用官方 ocx update，但不接管 npm 包管理器，也不重写官方更新事务。"},{"id":"AC-OPENCODEX-DESKTOP-09","text":"应用支持自身的版本检查与更新：可区分 stable/beta 更新通道，更新包必须校验签名后才安装，安装完成后重启应用生效；该过程不接管、不替代官方 ocx update，也不停止由桌面壳托管的 OpenCodex 代理；更新失败保留可回滚的上一版本，并展示失败原因与恢复建议。"}]
 implementation_ids: []
 resolution: null
 ---
 
 # DMD-OPENCODEX-DESKTOP-MANAGER OpenCodeX-Desktop
 
-> Revision 2，2026-09-12 根据用户确认回写；2026-09-12 确认软件名称为 **OpenCodeX-Desktop**。原始讨论与核验线索见 `COL-LOCAL-20260912-01`；本文件是稳定需求权威。
+> Revision 2，2026-09-12 根据用户确认回写；2026-09-12 确认软件名称为 **OpenCodeX-Desktop**；2026-09-13 追加 AC-09「应用自身版本更新」（见 §6 / §9）。原始讨论与核验线索见 `COL-LOCAL-20260912-01`；本文件是稳定需求权威。
 
 ## 1. 问题与目标
 
@@ -113,6 +113,10 @@ UI 状态至少区分：未发现、未运行、启动中、运行中、待就�
 - 应用可检测版本偏差并引导用户使用官方 `ocx update`。
 - OpenCodeX-Desktop 不接管 npm、不管理依赖树、不修改 npm prefix、不重写官方更新事务。
 - 升级结果需要展示成功、失败、备份位置和建议恢复动作。
+- **应用自身更新（套壳）是独立能力**：桌面管理器提供自身的版本检查与更新，可区分 stable / beta 更新通道；下载包必须校验签名后才安装，安装完成后重启应用生效。
+- 应用自更新**不接管、不替代**官方 `ocx update`；两套更新通道彼此独立，界面与文案必须让用户分清当前更新的是哪一个对象。
+- 应用自更新重启**不得停止**由桌面壳托管的 OpenCodex 代理；重启后需重新接管并恢复状态展示。
+- 应用自更新失败必须保留可回滚的上一版本，并展示失败原因与恢复建议；更新检查结果以**非阻塞通知**呈现，不打断当前操作。
 
 ## 7. 统一数据根
 
@@ -149,6 +153,7 @@ UI 状态至少区分：未发现、未运行、启动中、运行中、待就�
 | AC-06 | 配置迁移 | 全量导出含敏感内容，但导出容器加密；导入前校验、备份并确认。 |
 | AC-07 | WebDAV | 全量同步含敏感内容，客户端加密、冲突提示、覆盖前备份、可恢复。 |
 | AC-08 | 升级 | 升级前备份，引导官方 `ocx update`，不接管 npm。 |
+| AC-09 | 应用自身更新 | 支持自身版本检查与更新（stable/beta 通道、签名校验、重启生效），不接管 `ocx update`，失败可回滚。 |
 
 ## 10. 安全边界
 

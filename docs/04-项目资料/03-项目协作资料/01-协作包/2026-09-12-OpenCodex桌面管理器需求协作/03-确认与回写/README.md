@@ -12,11 +12,17 @@
 - WebDAV 确认：全量同步，包括敏感内容；客户端加密；允许用户确认覆盖；覆盖前备份；冲突提示。
 - 升级确认：不接管 npm，不替代官方 `ocx update`；升级前备份并引导官方更新。
 
+## 2026-09-13 追加确认
+
+- 应用自身更新确认：桌面管理器支持**自身的版本检查与更新**（可区分 stable / beta 通道、签名校验、安装后重启应用生效）；该能力**不接管、不替代**官方 `ocx update`，且重启**不得停止**由桌面壳托管的 OpenCodex 代理；失败保留可回滚的上一版本。
+- 界面确认：套壳版本升级**并入设置「版本升级」分区**与 OpenCodex 版本并列；外部（概览）**只通过通知中心**提示，不新增卡片。
+- 已回写 `DMD-OPENCODEX-DESKTOP-MANAGER`：新增 `AC-OPENCODEX-DESKTOP-09`，并在 §6 升级边界补充应用自身更新条款。
+
 ## 回写状态
 
 | 对象 | 状态 |
 |---|---|
-| `DMD-OPENCODEX-DESKTOP-MANAGER` | 已回写 revision 2。 |
+| `DMD-OPENCODEX-DESKTOP-MANAGER` | 已回写 revision 2；2026-09-13 追加 `AC-09`（应用自身更新）。 |
 | `IMP` | 未创建；需基于 revision 2 冻结实现契约。 |
 | 安全评审 | P1 配置迁移与 P2 WebDAV 实施前必须执行。 |
 
