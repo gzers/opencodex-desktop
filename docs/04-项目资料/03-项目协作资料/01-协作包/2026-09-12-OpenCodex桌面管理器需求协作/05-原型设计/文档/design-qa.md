@@ -1040,3 +1040,74 @@ body:before{content:"";z-index:-1;pointer-events:none;filter:blur(70px);
 
 - `截图/现行/prototype-panel-light.png`、`prototype-panel-dark.png`（图标栏新尺寸）
 - `截图/现行/` 其余截图一并重出。
+
+## 2026-09-13 · 强调色三层映射收敛（方案 A，定稿）
+
+### 问题
+
+`design-tokens.md` 里的强调色 token 与官方逐字一致（`--accent` 亮 `#0d0d0d` / 暗 `#ececec`、`--accent-soft`、`--accent-ink`、`--accent-ring`），但「哪种语义用哪一层」的映射是乱的：同一个「选中」语义出现四种写法，且混入了第二套色相。
+
+| 位置 | 改前写法 | 层 |
+|---|---|---|
+| 侧栏导航选中 | `--accent-soft` + 中性 `--border` 1px 内描边 | 浅，但描边把强调感中和掉 |
+| 主题分段控件选中 | 中性 `--raised` | **与强调色脱钩** |
+| 数据目录分段控件选中 | 中性 `--panel` + 阴影 | **与强调色脱钩** |
+| 分区 tab 选中 | `--accent` 2px 下划线 + 字重 600 | 中 |
+| 数据目录表 `code` | 品牌蓝 `--brand #3941ff` | **第二套色相** |
+
+### 判据（定稿）
+
+**选位置 → 浅**（`--accent-soft` + 字重 600）　**标位置 → 中**（`--accent` 2px 下划线）　**催动作 → 纯**（`--accent` 实底 + `--accent-ink`）
+
+### 修法
+
+| # | 选择器 | 改前 → 改后 |
+|---|---|---|
+| 1 | `.nav button.active` | `box-shadow:inset 0 0 0 1px var(--border)` → `font-weight:600`（去中性描边，靠浅底+字重） |
+| 2 | `.theme-seg button.active` | `--raised` + `--shadow-sm` → `--accent` 实底 + `--accent-ink` |
+| 3 | `.seg button.active` | `--panel` + `--shadow-sm` → `--accent` 实底 + `--accent-ink` |
+| 4 | `.mock-rail span:first-child` | 去掉同一枚中性描边，与 #1 保持同层 |
+| 5 | `.data-root-table code` | `--brand` → `--text`（蓝色收口） |
+| 6 | `.prototype-pill` | 该选择器在 DOM 中已无引用，**整条删除**（连同 520px 媒体查询） |
+| 7 | 品牌色字面量 | `.brand-mark` 阴影、resize 描边、`.proto-kicker` 三处 `#3941ff*` 魔法值改用 `var(--brand)`，避免 token 变成死代码 |
+
+不动项：**分区 tab 的下划线保持原样**（改前已是官方 `page-tab--active` 写法）；`.scenarios button.active` 改前已是纯 `--accent`。
+
+### 与官方的对应关系
+
+- `.nav button.active`：官方 `nav-item.active{background:var(--accent-soft);color:var(--text)}` + `font-weight:semibold`，**不加边框**。与 #1 一致。
+- `.seg`（数据目录「跟随数据目录 / 自定义路径」）：官方对应物是 `dash-ma-option` 组 —— 容器 `background:var(--surface-soft, var(--raised));padding:3px;border-radius:pill`，选中项是 `btn-primary`（纯）。我们轨道同为 `--raised`、内距同为 3px，故 #3 取纯 **与官方逐字一致**。
+- `.theme-seg`：官方 CSS 里另有 `.usage-segmented`（轨道 `--surface`、选中 `--raised`）。我们的轨道是 `--panel`，若沿用 `--raised` 选中只有 Δ11，实测不可辨（这就是改前「脱钩」的观感来源），因此按 `dash-ma-option` 的「选中=强调纯色」处理。**此处是主动选择，不是照抄**。
+- `--accent-soft` 三层映射：与官方 `.badge-accent`、`.page-tab--active`、`.btn-primary` 三处一一对应。
+
+### 侧栏选中为什么维持 S0（不加深、不加指示条）
+
+侧栏选中 = 一级导航「你在哪一页」，属**选位置**，按判据就该走浅层，与官方 `nav-item.active` 同值。实测三个候选：
+
+| 候选 | 侧栏选中渲染底色 | 与侧栏底(249) 差 |
+|---|---|---|
+| **S0 浅底 + 字重（采用）** | 234 | 15 |
+| S1 再加 3px `--accent` 左指示条 | 234 + 指示条 | 15 + 强调色实体 |
+| S2 纯 `--accent` 实底 | 13 | 236 |
+
+S2 会让一级导航常驻一块纯黑、与页面主按钮抢焦点；S1 是「觉得太弱」时的备选，本轮不采用。
+
+### 实测
+
+计算样式（headless Chromium，窗口 1180×760）：
+
+| 元素 | light | dark |
+|---|---|---|
+| 侧栏导航选中 | `rgba(13,13,13,.06)` · `box-shadow:none` · `font-weight:600` | `rgba(255,255,255,.09)` · `none` · `600` |
+| 主题分段选中 | `rgb(13,13,13)` + `rgb(255,255,255)` 图标 | `rgb(236,236,236)` + `rgb(13,13,13)` 图标 |
+| 数据目录分段选中 | `rgb(13,13,13)` | `rgb(236,236,236)` |
+| 分区 tab 选中下划线 | `rgb(13,13,13)` 2px | `rgb(236,236,236)` 2px |
+| 数据目录表 code | `rgb(13,13,13)` | `rgb(236,236,236)` |
+
+- 逐变体像素差分（对比图脚本）：`现状↔A` 在侧栏/Tab/分段处均有预期差异；`方案 A↔现状` 在分区 tab 处 **0 像素变化**，证明下划线未被误伤。
+- 零 console error / page error；`node --check` 通过；导航、WebDAV 状态机、通知详情与删除、面板 iframe 加载等回归全部通过。
+
+### 截图
+
+- 决策用对比图：`截图/对比-20260913-强调色/强调色对比-light.png`、`强调色对比-dark.png`（5 组对比点 × 现状/方案 A/方案 B）、`侧栏选中强调色对比-light.png`、`侧栏选中强调色对比-dark.png`（S0/S1/S2）。
+- 正式截图：`截图/现行/` 全套 19 张按方案 A 重出。
