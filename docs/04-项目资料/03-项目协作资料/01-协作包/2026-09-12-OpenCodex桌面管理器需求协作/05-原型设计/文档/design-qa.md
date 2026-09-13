@@ -2328,3 +2328,19 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - Skills 源目录、两个开关和「打开 Skills 列表」快捷入口均存在；打开动作为原型拦截。
 - 无页面 JS / console 错误，视口无横向溢出。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · 路径卡置底与点击复制
+
+### 修法
+
+- `Skills 路径` 与 `MCP 路径` 卡片移动到扩展管理设置区最后，形成 `Skills 管理 → Skills 路径 → MCP 管理 → MCP 路径`。
+- 12 条路径改为可点击复制控件，携带完整绝对路径；点击写入浏览器剪贴板并显示「已复制」反馈。
+- 新增专用 `copy-agent-path` 动作，保留剪贴板授权失败时的兜底与原型拦截提示；原有数据目录复制动作不受影响。
+- 扩展管理 Tab 默认锚点改回「MCP 管理」。
+
+### 实测
+
+- Playwright 验证四卡顺序为 `Skills 管理 → Skills 路径 → MCP 管理 → MCP 路径`；两组路径各 6 行。
+- 点击第一条路径后剪贴板读取值为 `/Users/ezio/.claude/skills`，控件出现「已复制」状态。
+- 无页面 JS / console 错误，视口无横向溢出。
+- `node --check` 与 `git diff --check` 通过。

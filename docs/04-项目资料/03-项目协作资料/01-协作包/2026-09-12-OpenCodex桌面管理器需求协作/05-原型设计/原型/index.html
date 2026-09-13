@@ -827,7 +827,11 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .agent-path-kind{color:var(--muted);font-size:var(--text-caption);font-weight:650;white-space:nowrap}
 .agent-path-value{display:flex;align-items:center;min-width:0}
 .agent-path-value code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.agent-path-actions{display:grid;justify-items:end}
+
+.agent-path-copy{padding:7px 10px}
+.agent-path-copy code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.agent-path-copy::after{color:var(--muted)}
+.agent-path-copy.copied::after{color:var(--green)}
 .agent-path-row .btn{min-height:30px;padding:5px 9px;font-size:var(--text-caption);white-space:nowrap}
 @media(max-width:900px){
   .agent-path-row{grid-template-columns:44px minmax(0,1fr) 92px;gap:10px}
@@ -1678,47 +1682,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-extensions">
-        <article class="card" id="card-skills-paths">
-          <div class="card-head">
-            <div>
-              <h2>Skills 路径</h2>
-              <p>集中查看并打开各客户端 Skills 目录；目录覆盖后仍指向当前生效位置。</p>
-            </div>
-          </div>
-          <div class="agent-path-list">
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
-              <div class="agent-path-value"><code>~/.claude/skills</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
-              <div class="agent-path-value"><code>~/.codex/skills</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
-              <div class="agent-path-value"><code>~/.gemini/skills</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
-              <div class="agent-path-value"><code>~/.grok/skills</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
-              <div class="agent-path-value"><code>~/.config/opencode/skills</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
-              <div class="agent-path-value"><code>~/.hermes/skills</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/skills">打开目录</button></div>
-            </div>
-          </div>
-        </article>
-
         <article class="card" id="card-settings-skills">
           <div class="card-head">
             <div>
@@ -1765,47 +1728,47 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card" id="card-mcp-paths">
+        <article class="card" id="card-skills-paths">
           <div class="card-head">
             <div>
-              <h2>MCP 路径</h2>
-              <p>集中查看并打开各客户端 MCP 配置；配置覆盖后仍指向当前生效位置。</p>
+              <h2>Skills 路径</h2>
+              <p>集中查看并打开各客户端 Skills 目录；目录覆盖后仍指向当前生效位置。</p>
             </div>
-            <button class="btn ghost" data-route-link="extensions" style="white-space:nowrap">打开 MCP 列表</button>
           </div>
           <div class="agent-path-list">
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
-              <div class="agent-path-value"><code>~/.claude.json</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude.json">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.claude/skills" title="复制路径"><code>~/.claude/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude/skills">打开目录</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
-              <div class="agent-path-value"><code>~/.codex/config.toml</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/config.toml">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.codex/skills" title="复制路径"><code>~/.codex/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/skills">打开目录</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
-              <div class="agent-path-value"><code>~/.gemini/settings.json</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/settings.json">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.gemini/skills" title="复制路径"><code>~/.gemini/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/skills">打开目录</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
-              <div class="agent-path-value"><code>~/.grok/config.toml</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/config.toml">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.grok/skills" title="复制路径"><code>~/.grok/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/skills">打开目录</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
-              <div class="agent-path-value"><code>~/.config/opencode/opencode.json</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/opencode.json">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.config/opencode/skills" title="复制路径"><code>~/.config/opencode/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/skills">打开目录</button></div>
             </div>
             <div class="agent-path-row">
               <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
-              <div class="agent-path-value"><code>~/.hermes/config.yaml</code></div>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/config.yaml">打开配置</button></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.hermes/skills" title="复制路径"><code>~/.hermes/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/skills">打开目录</button></div>
             </div>
           </div>
         </article>
+
 
         <article class="card" id="card-settings-mcp">
           <div class="card-head">
@@ -1860,6 +1823,49 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </div>
         </article>
+
+        <article class="card" id="card-mcp-paths">
+          <div class="card-head">
+            <div>
+              <h2>MCP 路径</h2>
+              <p>集中查看并打开各客户端 MCP 配置；配置覆盖后仍指向当前生效位置。</p>
+            </div>
+            <button class="btn ghost" data-route-link="extensions" style="white-space:nowrap">打开 MCP 列表</button>
+          </div>
+          <div class="agent-path-list">
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.claude.json" title="复制路径"><code>~/.claude.json</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude.json">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.codex/config.toml" title="复制路径"><code>~/.codex/config.toml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/config.toml">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.gemini/settings.json" title="复制路径"><code>~/.gemini/settings.json</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/settings.json">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.grok/config.toml" title="复制路径"><code>~/.grok/config.toml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/config.toml">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.config/opencode/opencode.json" title="复制路径"><code>~/.config/opencode/opencode.json</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/opencode.json">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.hermes/config.yaml" title="复制路径"><code>~/.hermes/config.yaml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/config.yaml">打开配置</button></div>
+            </div>
+          </div>
+        </article>
+
       </section>
 
       <section class="settings-panel" id="settings-migration">
@@ -2792,7 +2798,7 @@ function flashAnchor(card){
 }
 
 function anchorCard(route,anchor){
-  const candidates=[`card-${anchor}`,anchor,anchor==='general'?'card-general-prefs':anchor==='backup'?'card-backup-data':anchor==='extensions'?'card-mcp-paths':anchor==='upgrade'?'card-upgrade-official':anchor==='about'?'card-about':anchor==='mcp'?'card-ext-mcp':anchor==='notifications'?'card-diag-history':anchor];
+  const candidates=[`card-${anchor}`,anchor,anchor==='general'?'card-general-prefs':anchor==='backup'?'card-backup-data':anchor==='extensions'?'card-settings-mcp':anchor==='upgrade'?'card-upgrade-official':anchor==='about'?'card-about':anchor==='mcp'?'card-ext-mcp':anchor==='notifications'?'card-diag-history':anchor];
   for(const id of candidates){
     const card=document.getElementById(id);
     if(card) return card;
@@ -3095,6 +3101,25 @@ document.addEventListener('click',event=>{
       toast('原型模拟：'+(actionTarget.getAttribute('aria-label')||'设置')+'已'+(next?'开启':'关闭')+'；不保存真实偏好。');
     }else{
       toast('原型模拟：会打开「'+(actionTarget.getAttribute('aria-label')||'设置')+'」选项；不保存真实偏好。');
+    }
+  }else if(action==='copy-agent-path'){
+    const text=actionTarget.dataset.path||actionTarget.querySelector('code')?.textContent||'';
+    const markCopied=()=>{
+      actionTarget.classList.add('copied');clearTimeout(Number(actionTarget.dataset.copyTimer||0));actionTarget.dataset.copyTimer=setTimeout(()=>actionTarget.classList.remove('copied'),1400);toast('已复制路径：'+text);
+    };
+    const fallbackCopy=()=>{
+      const area=document.createElement('textarea');
+      area.value=text;area.setAttribute('readonly','');
+      area.style.position='fixed';area.style.left='-9999px';area.style.opacity='0';
+      document.body.appendChild(area);area.select();
+      const ok=document.execCommand&&document.execCommand('copy');
+      area.remove();
+      if(ok){markCopied();}else{toast('原型拦截：浏览器未授权剪贴板。');}
+    };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(markCopied).catch(fallbackCopy);
+    }else{
+      fallbackCopy();
     }
   }else if(action==='copy-path'){
     actionTarget.classList.add('copied');clearTimeout(Number(actionTarget.dataset.copyTimer||0));actionTarget.dataset.copyTimer=setTimeout(()=>actionTarget.classList.remove('copied'),1400);toast('原型模拟：已复制 '+actionTarget.dataset.path+'；不写剪贴板。');
