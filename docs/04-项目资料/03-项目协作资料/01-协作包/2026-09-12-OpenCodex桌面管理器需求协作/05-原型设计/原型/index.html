@@ -2396,7 +2396,7 @@ ocx update</code></pre>
       </div>
       <span class="tag">Mock</span>
     </div>
-    <a class="proto-link" href="#tray">打开托盘原型 →</a>
+    <a class="proto-link" id="prototypeRouteLink" href="#tray">打开托盘原型 →</a>
 
     <div class="proto-card">
       <div class="proto-note-title">窗口尺寸预览</div>
@@ -2680,6 +2680,12 @@ const routeNotes={
 const prototypeNoteFallback=routeNotes.overview;
 function renderPrototypeNote(route){
   const note=routeNotes[route]||routeNotes[route.startsWith('settings-')?'settings':route.startsWith('ext-')?'ext-skills':'overview']||prototypeNoteFallback;
+  const prototypeRouteLink=document.getElementById('prototypeRouteLink');
+  if(prototypeRouteLink){
+    const isTray=route==='tray';
+    prototypeRouteLink.href=isTray?'#overview':'#tray';
+    prototypeRouteLink.textContent=isTray?'打开主界面 →':'打开托盘原型 →';
+  }
   const title=document.getElementById('protoNoteTitle');
   const body=document.getElementById('protoNote');
   const list=document.getElementById('protoButtonNotes');
