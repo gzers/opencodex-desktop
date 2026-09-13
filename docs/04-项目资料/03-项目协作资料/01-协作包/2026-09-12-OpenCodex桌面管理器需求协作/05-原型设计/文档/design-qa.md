@@ -2085,3 +2085,10 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 验证 Skills 与 MCP 每组 6 个品牌图标均挂载，42 个目标按钮中仅 Hermes 因原始图形细节存在 12 个零宽子路径；可见渲染正常。
 - 配置落点断言通过；提取内联脚本后 `node --check` 通过；`git diff --check` 无格式告警。
+
+### 补充实测：Hermes 图标修正
+
+- 修正 Hermes 引用：原始包内文件名为 `hermesagent.svg`，且包含 3 条路径；先前仅提取第一条导致视觉近似为空。
+- 现已完整嵌入 3 条路径，并统一 7 个目标按钮引用为 `#ext-icon-hermesagent`。
+- Playwright 复验：7 个 Hermes 图标可见，非零矩形尺寸为 15.33 × 16.00px。
+- `node --check` 与 `git diff --check` 通过。
