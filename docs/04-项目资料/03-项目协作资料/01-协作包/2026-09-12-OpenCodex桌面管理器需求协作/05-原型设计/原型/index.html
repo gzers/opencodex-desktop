@@ -255,8 +255,9 @@ button{font:inherit}
 .modal h3{margin:0 0 8px;font-size:var(--text-title)}
 .modal p{color:var(--muted);margin:0 0 15px;font-size:var(--text-body)}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px}
-.modal-warning{display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);border-left:3px solid var(--amber);border-radius:var(--radius-sm);background:var(--amber-soft);color:var(--text);font-size:var(--text-label);line-height:1.5}
-.modal-warning strong{font-weight:650}
+.modal-warning{display:flex;gap:8px;align-items:center;margin-bottom:12px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);border-left:3px solid var(--amber);border-radius:var(--radius-sm);background:var(--amber-soft);color:var(--text);font-size:var(--text-label);line-height:1.4;white-space:nowrap;overflow:hidden}
+.modal-warning strong{font-weight:650;flex:none}
+.modal-warning span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .reset-table{width:100%;border-collapse:collapse;margin:0 0 14px}
 .reset-table{table-layout:fixed}
 .reset-table th,.reset-table td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle;font-size:var(--text-label)}
@@ -2303,7 +2304,7 @@ document.addEventListener('click',event=>{
     const rows=defaults.map(item=>'<tr'+(item.official?' class="official"':'')+'><td>'+item.name+'</td><td class="mono">'+item.current+'</td><td class="reset-arrow">→</td><td class="mono">'+item.value+'</td></tr>').join('');
     openModal(
       '还原默认偏好',
-      '<p class="modal-warning"><strong>警告：</strong>将还原桌面壳偏好与官方共享配置；修改会按默认值写入，并可能影响官方同源开关。</p><table class="reset-table"><thead><tr><th>选项</th><th>原值</th><th></th><th>默认值</th></tr></thead><tbody>'+rows+'</tbody></table>',
+      '<p class="modal-warning"><strong>警告：</strong><span>还原桌面壳偏好与官方共享配置</span></p><table class="reset-table"><thead><tr><th>选项</th><th>原值</th><th></th><th>默认值</th></tr></thead><tbody>'+rows+'</tbody></table>',
       '确认还原',
       ()=>toast('原型模拟：已还原 8 项默认偏好；官方共享项仍按官方同源通道写入。')
     );
