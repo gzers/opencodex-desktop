@@ -2818,7 +2818,7 @@ function applyInterfaceScale(scale){
   const slider=document.getElementById('interfaceScaleRange');
   if(slider && slider.value!==String(value)) slider.value=String(value);
   const settingReadout=document.getElementById('interfaceScaleReadout');
-  if(settingReadout) settingReadout.textContent=value+'%';
+  if(settingReadout) settingReadout.value=String(value);
   document.querySelectorAll('.range-tick').forEach(tick=>{
     const active=Number(tick.dataset.scale)===value;
     tick.classList.toggle('active',active);
