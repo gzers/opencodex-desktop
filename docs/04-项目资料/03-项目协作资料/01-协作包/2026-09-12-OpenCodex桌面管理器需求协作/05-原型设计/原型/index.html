@@ -640,18 +640,21 @@ body.panel-mode .panel-shell{height:100%}
 .env-gate{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:var(--radius);padding:16px}
 .env-gate.busy{border-color:color-mix(in srgb,var(--blue) 24%,transparent);border-left-color:var(--blue);background:var(--blue-soft)}
 .env-gate-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
-.env-gate-head h2{margin:0;font-size:var(--text-subtitle)}
-.env-gate-head p{margin:5px 0 0;color:var(--muted);font-size:var(--text-body);max-width:920px}
-.env-checks{display:grid;gap:8px;margin:14px 0 0}
-.env-check{display:grid;grid-template-columns:130px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
-.env-check b{font-size:var(--text-body)}
-.env-check span{color:var(--muted);font-size:var(--text-label)}
-.env-guidance{margin-top:14px;padding-top:14px;border-top:1px solid var(--border-soft)}
-.env-guidance-label{color:var(--muted);font-size:var(--text-caption);font-weight:650;margin-bottom:8px}
-.env-command{margin-bottom:8px}
-.env-command-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:5px;color:var(--muted);font-size:var(--text-caption)}
-.env-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.env-bound{margin:12px 0 0;color:var(--muted);font-size:var(--text-label)}
+.env-gate-head h2{margin:0;font-size:var(--text-body);font-weight:650}
+.env-gate-head p{margin:4px 0 0;color:var(--muted);font-size:var(--text-label);max-width:920px}
+.env-checks{display:grid;gap:6px;margin:12px 0 0}
+.env-check{display:grid;grid-template-columns:110px minmax(0,1fr) auto;align-items:center;gap:10px;padding:7px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
+.env-check b{font-size:var(--text-label)}
+.env-check span{color:var(--muted);font-size:var(--text-caption)}
+.env-guidance{margin-top:12px;padding-top:12px;border-top:1px solid var(--border-soft)}
+.env-guidance-label{color:var(--muted);font-size:var(--text-caption);font-weight:650;margin-bottom:6px}
+.env-command{margin-bottom:6px}
+.env-command-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px;color:var(--muted);font-size:var(--text-caption)}
+.env-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.env-actions .btn{min-height:30px;padding:5px 10px;font-size:var(--text-label)}
+.env-bound{margin:10px 0 0;color:var(--muted);font-size:var(--text-caption)}
+.env-check .state-pill{min-height:24px;padding:2px 8px;font-size:var(--text-caption)}
+.env-check .state-pill::before{width:6px;height:6px}
 @media(max-width:900px){.env-check{grid-template-columns:1fr;gap:5px}}
 
 
@@ -1811,8 +1814,12 @@ function render(){
     external_takeover:['advice','refresh'],
     unreachable:['refresh','logs']
   };
-  const allowedActions=actionsByState[currentState]||[];
+  const envBlocked=envGateActive&&envState!=='ready';
+  const allowedActions=envBlocked?['refresh']:(actionsByState[currentState]||[]);
   document.querySelectorAll('[data-act]').forEach(el=>{el.hidden=!allowedActions.includes(el.dataset.act)});
+  document.querySelector('.ovb-detail')?.toggleAttribute('hidden',envBlocked);
+  document.getElementById('mods')?.classList.toggle('view-hidden',envBlocked);
+  document.getElementById('recentEventsSection')?.toggleAttribute('hidden',envBlocked);
   document.querySelectorAll('[data-act="start"]').forEach(el=>{
     el.textContent=currentState==='starting_failed'?'重试启动':'启动 OpenCodex';
   });
