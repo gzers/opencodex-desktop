@@ -244,8 +244,8 @@ button{font:inherit}
 .scenarios button.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .footer-note{margin-top:18px;color:var(--muted);font-size:var(--text-label)}
 .modal-mask{position:absolute;inset:0;background:color-mix(in srgb,var(--text) 22%,transparent);display:none;align-items:center;justify-content:center;padding:20px;z-index:30;border-radius:inherit}
-.modal{width:min(520px,100%);max-height:70vh;overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:0 18px 48px #00000029}
-.modal.modal-wide{width:min(640px,100%)}
+.modal{width:min(520px,100%);max-height:min(70vh,calc(100% - 40px));overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:0 18px 48px #00000029}
+.modal.modal-wide{width:min(86%,720px);max-height:78%}
 .modal-body{margin-bottom:14px}
 .modal-lead{margin-bottom:10px}
 .modal-code{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:10px}
@@ -348,13 +348,16 @@ h4.cli-help-title{margin:0 0 10px;font-size:var(--text-body);font-weight:650;col
 h4.cli-help-title.official{margin-top:18px}
 .cli-help-table{width:100%;border-collapse:collapse;table-layout:fixed}
 .cli-help-table th{text-align:left;color:var(--muted);font-size:var(--text-caption);font-weight:600;padding:7px 0;border-bottom:1px solid var(--border)}
-.cli-help-table th:first-child{width:196px}
-.cli-help-table th:last-child{width:calc(100% - 196px)}
-.cli-help-table td{vertical-align:middle;padding:9px 0;border-bottom:1px solid var(--border-soft);font-size:var(--text-caption);line-height:1.55;color:var(--text)}
+.cli-help-table th:first-child{width:56%}
+.cli-help-table th:last-child{width:44%}
+.cli-help-table td{vertical-align:top;padding:8px 10px 8px 0;border-bottom:1px solid var(--border-soft);font-size:var(--text-caption);line-height:1.5;color:var(--text)}
 .cli-help-table tr:last-child td{border-bottom:0}
-.cli-copy-btn{min-height:28px;padding:4px 8px;font-size:var(--text-caption);margin-right:6px;line-height:1}
-.cli-help-table td:first-child{display:flex;align-items:center;gap:6px;white-space:nowrap}
-.cli-help-table td:first-child code{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;vertical-align:middle}
+.cli-copy-btn{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;text-align:left;padding:7px 9px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);color:var(--text);font:inherit;cursor:pointer;transition:border-color var(--motion-fast),background var(--motion-fast)}
+.cli-copy-btn:hover{border-color:color-mix(in srgb,var(--text) 22%,transparent);background:var(--hover)}
+.cli-copy-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.cli-copy-btn::after{content:"复制";color:var(--muted);font-size:var(--text-micro);font-weight:600;white-space:nowrap}
+.cli-copy-btn.copied::after{content:"已复制";color:var(--green)}
+.cli-copy-btn.copied{border-color:color-mix(in srgb,var(--green) 34%,transparent);background:var(--green-soft)}
 .cli-help-footnote{margin:14px 0 0;color:var(--muted);font-size:var(--text-caption)}
 /* 最近事件：只在详情展开时承载高窗口余量；不重复展示完整日志。
    状态来源沿用 actionsByState 的同一份 mock，不做第二个状态机。 */
@@ -1325,6 +1328,18 @@ ocx update</code></pre>
       </section>
     </section>
   </main>
+
+  <div class="modal-mask" id="modalMask">
+    <div class="modal" id="modal">
+      <h3 id="modalTitle"></h3>
+      <div id="modalBody"></div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="modalDelete" hidden>删除</button>
+        <button class="btn ghost" id="modalCancel">取消</button>
+        <button class="btn primary" id="modalConfirm"></button>
+      </div>
+    </div>
+  </div>
   </div>
 
 </div>
@@ -1391,18 +1406,6 @@ ocx update</code></pre>
       <p class="proto-hint">状态只驱动 mock 投影，用于检查不同运行条件下的界面层次。</p>
     </div>
   </aside>
-
-  <div class="modal-mask" id="modalMask">
-    <div class="modal" id="modal">
-      <h3 id="modalTitle"></h3>
-      <div id="modalBody"></div>
-      <div class="modal-actions">
-        <button class="btn ghost" id="modalDelete" hidden>删除</button>
-        <button class="btn ghost" id="modalCancel">取消</button>
-        <button class="btn primary" id="modalConfirm"></button>
-      </div>
-    </div>
-  </div>
 
   <div class="toast" id="toastEl"></div>
 </div>
@@ -1779,15 +1782,15 @@ const cliHelpHtml = `
   <table class="cli-help-table">
     <thead><tr><th>指令</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd --help">复制</button><code>ocxd --help</code></td><td>列出当前版本实际支持的命令与参数，是能力自发现入口。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd status --json">复制</button><code>ocxd status --json</code></td><td>读取管理器与运行实例状态；输出适合脚本和 Agent 校验。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd start --json">复制</button><code>ocxd start --json</code></td><td>经运行中实例启动代理，结果用 JSON 返回。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd stop --json">复制</button><code>ocxd stop --json</code></td><td>经运行中实例停止代理，不做旁路写入。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd restart --json">复制</button><code>ocxd restart --json</code></td><td>经运行中实例重启代理，保留当前运行上下文。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd backup create --json">复制</button><code>ocxd backup create --json</code></td><td>生成数据目录备份，备份语义与 GUI 一致。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd export --confirm --json">复制</button><code>ocxd export --confirm --json</code></td><td>生成加密导出容器；确认标志用于降低误操作风险。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd import --confirm --json">复制</button><code>ocxd import --confirm --json</code></td><td>导入前校验容器并自动备份；确认标志表示准备执行变更。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd sync run --json">复制</button><code>ocxd sync run --json</code></td><td>执行 WebDAV 同步；冲突和覆盖仍按现有规则确认。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd --help" title="复制 ocxd --help"><code>ocxd --help</code></button></td><td>列出当前版本实际支持的命令与参数，是能力自发现入口。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd status --json" title="复制 ocxd status --json"><code>ocxd status --json</code></button></td><td>读取管理器与运行实例状态；输出适合脚本和 Agent 校验。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd start --json" title="复制 ocxd start --json"><code>ocxd start --json</code></button></td><td>经运行中实例启动代理，结果用 JSON 返回。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd stop --json" title="复制 ocxd stop --json"><code>ocxd stop --json</code></button></td><td>经运行中实例停止代理，不做旁路写入。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd restart --json" title="复制 ocxd restart --json"><code>ocxd restart --json</code></button></td><td>经运行中实例重启代理，保留当前运行上下文。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd backup create --json" title="复制 ocxd backup create --json"><code>ocxd backup create --json</code></button></td><td>生成数据目录备份，备份语义与 GUI 一致。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd export --confirm --json" title="复制 ocxd export --confirm --json"><code>ocxd export --confirm --json</code></button></td><td>生成加密导出容器；确认标志用于降低误操作风险。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd import --confirm --json" title="复制 ocxd import --confirm --json"><code>ocxd import --confirm --json</code></button></td><td>导入前校验容器并自动备份；确认标志表示准备执行变更。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocxd sync run --json" title="复制 ocxd sync run --json"><code>ocxd sync run --json</code></button></td><td>执行 WebDAV 同步；冲突和覆盖仍按现有规则确认。</td></tr>
     </tbody>
   </table>
 
@@ -1795,10 +1798,10 @@ const cliHelpHtml = `
   <table class="cli-help-table">
     <thead><tr><th>指令</th><th>说明</th></tr></thead>
     <tbody>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx --help">复制</button><code>ocx --help</code></td><td>列出官方配置 CLI 能力；provider、路由与模型映射从入口开始。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx status --json">复制</button><code>ocx status --json</code></td><td>读取官方配置与运行环境状态，适合先诊断再操作。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx restore">复制</button><code>ocx restore</code></td><td>恢复官方配置；桌面壳只展示入口，不代理或包装执行。</td></tr>
-      <tr><td><button class="btn ghost cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx update">复制</button><code>ocx update</code></td><td>进入官方升级事务；桌面壳只做升级前备份与官方引导。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx --help" title="复制 ocx --help"><code>ocx --help</code></button></td><td>列出官方配置 CLI 能力；provider、路由与模型映射从入口开始。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx status --json" title="复制 ocx status --json"><code>ocx status --json</code></button></td><td>读取官方配置与运行环境状态，适合先诊断再操作。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx restore" title="复制 ocx restore"><code>ocx restore</code></button></td><td>恢复官方配置；桌面壳只展示入口，不代理或包装执行。</td></tr>
+      <tr><td><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="ocx update" title="复制 ocx update"><code>ocx update</code></button></td><td>进入官方升级事务；桌面壳只做升级前备份与官方引导。</td></tr>
     </tbody>
   </table>
 
@@ -1852,7 +1855,7 @@ document.addEventListener('click',event=>{
   }else if(action==='cli-copy-agent'){
     toast('原型提示：真实实现会复制底部显示的 3 行 Agent 提示。');
   }else if(action==='cli-copy-command'){
-    toast('原型模拟：复制 '+actionTarget.dataset.command+'；不写剪贴板。');
+    actionTarget.classList.add('copied');clearTimeout(Number(actionTarget.dataset.copyTimer||0));actionTarget.dataset.copyTimer=setTimeout(()=>actionTarget.classList.remove('copied'),1400);toast('原型模拟：已复制 '+actionTarget.dataset.command+'；不写剪贴板。');
   }else if(action==='check-app-update'){
     toast('原型提示：不会访问真实更新服务；此处演示「已是 / 有可用更新」。');
   }else if(action==='install-app-update'){
