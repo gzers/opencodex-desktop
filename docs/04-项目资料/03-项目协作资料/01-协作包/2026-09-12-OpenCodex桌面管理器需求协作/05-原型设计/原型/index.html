@@ -320,14 +320,29 @@ body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(10
 .tray-os{display:flex;gap:8px;margin-bottom:12px}
 .tray-os button{min-height:32px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);color:var(--muted);padding:5px 11px;font:inherit;font-size:var(--text-label);cursor:pointer}
 .tray-os button.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.tray-menu-wrap{position:relative;min-height:430px;padding-top:34px}
-.tray-menubar{position:absolute;top:0;left:0;right:0;height:32px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--rail);color:var(--muted);font-size:var(--text-caption)}
-.tray-menubar .tray-icon{display:inline-flex;align-items:center;gap:7px;padding:3px 8px;border-radius:6px;color:var(--text);font-weight:600}
-.tray-menubar.mac{background:#f6f6f6;border-color:#d9d9d9;color:#555}
-.tray-menubar.windows{background:#f3f3f3;border-color:#d1d1d1;color:#555;justify-content:space-between}
-.tray-menu{position:absolute;z-index:5;min-width:268px;border-radius:var(--radius-sm);border:1px solid #d9d9d9;background:#ffffff;box-shadow:0 18px 46px #00000022;color:#111;font-size:13px;overflow:hidden}
-.tray-menu.mac{left:8px;top:36px;padding:4px}
-.tray-menu.windows{left:auto;right:12px;top:38px;padding:4px}
+.tray-menu-wrap{position:relative;min-height:490px;border-radius:12px;overflow:hidden;border:1px solid #dedee4;background:#f8fafc}
+.tray-desktop-area{position:absolute;inset:0;background:linear-gradient(180deg,#e2e8f0,#f8fafc)}
+.tray-menubar{position:absolute;top:0;left:0;right:0;height:30px;display:flex;align-items:center;gap:10px;padding:0 10px;background:#f6f6f6;border-bottom:1px solid #d9d9d9;color:#555;font-size:var(--text-caption)}
+.tray-menubar .menu-name{font-weight:600;color:#111}
+.tray-menubar .tray-icon{display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 8px;border-radius:6px;color:var(--text);font-weight:600}
+.tray-menubar.mac .tray-icon:hover,.tray-menubar.mac .tray-icon.active{background:#00000014}
+.tray-menubar.mac .right-area{display:flex;align-items:center;gap:10px;margin-left:auto;color:#555}
+.tray-menubar.mac .right-area .mini{opacity:.75}
+.tray-menubar.mac .right-area .battery{display:inline-flex;align-items:center;gap:3px}
+.tray-menubar.mac .battery-box{width:19px;height:9px;border:1px solid currentColor;border-radius:2px;position:relative;opacity:.8}
+.tray-menubar.mac .battery-box::after{content:"";position:absolute;inset:1px 4px 1px 1px;background:currentColor;border-radius:1px;opacity:.75}
+.tray-menubar.mac .battery-cap{width:1px;height:4px;background:currentColor;border-radius:0 1px 1px 0;opacity:.8}
+.tray-menubar.mac .tray-icon.active{background:#00000012}
+.tray-statusbar{position:absolute;bottom:0;left:0;right:0;height:38px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 10px;background:#e9eef5;border-top:1px solid #c9d2dd;color:#334155;font-size:12px}
+.tray-statusbar .left-area,.tray-statusbar .right-area{display:flex;align-items:center;gap:12px;min-width:0}
+.tray-statusbar .sys-icon{opacity:.75}
+.tray-statusbar .tray-icon{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 8px;border-radius:6px;color:#111827;font-weight:600}
+.tray-statusbar .tray-icon:hover,.tray-statusbar .tray-icon.active{background:#00000012}
+.tray-statusbar.windows{background:#e5e7eb;border-top-color:#c3c9d2;color:#374151}
+.tray-menu{position:absolute;z-index:8;min-width:268px;border-radius:var(--radius-sm);border:1px solid #d9d9d9;background:#ffffff;box-shadow:0 18px 46px #00000022;color:#111;font-size:13px;overflow:hidden}
+.tray-menu.mac{left:8px;top:32px;padding:4px}
+.tray-menu.windows{left:auto;right:10px;bottom:42px;padding:4px}
+.tray-menu.hidden,.tray-menubar.hidden,.tray-statusbar.hidden{display:none}
 .tray-menu .tray-title{padding:8px 10px 6px;color:#6b7280;font-size:12px;line-height:1.35}
 .tray-menu .tray-sep{height:1px;margin:4px 8px;background:#e5e7eb}
 .tray-item{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;width:100%;padding:7px 10px;border:0;border-radius:6px;background:transparent;color:#111;font:inherit;font-size:13px;text-align:left;cursor:pointer}
@@ -343,6 +358,12 @@ body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(10
 .tray-dot.starting_failed,.tray-dot.unreachable{background:#b91c1c;box-shadow:0 0 0 3px #b91c1c22}
 .tray-dot.at_risk,.tray-dot.external_takeover{background:#d97706;box-shadow:0 0 0 3px #d9770622}
 html[data-theme="dark"] .tray-menu{background:#1f2023;border-color:#4b4f58;color:#f3f4f6}
+html[data-theme="dark"] .tray-desktop-area{background:linear-gradient(180deg,#111418,#191b1f)}
+html[data-theme="dark"] .tray-menubar{background:#16181c;border-bottom-color:#3a3f46;color:#d1d5db}
+html[data-theme="dark"] .tray-menubar .menu-name{color:#f3f4f6}
+html[data-theme="dark"] .tray-statusbar{background:#16181c;border-top-color:#3a3f46;color:#d1d5db}
+html[data-theme="dark"] .tray-statusbar .tray-icon{color:#f3f4f6}
+html[data-theme="dark"] .tray-menu-wrap{border-color:#3a3f46}
 html[data-theme="dark"] .tray-item[disabled],html[data-theme="dark"] .tray-item .hint{color:#8b909b}
 html[data-theme="dark"] .tray-item:hover:not([disabled]){background:#ffffff12}
 html[data-theme="dark"] .tray-menu .tray-sep{background:#3d4148}
@@ -2299,14 +2320,51 @@ ocx update</code></pre>
           <button type="button" data-tray-os="windows">Windows 通知区</button>
         </div>
         <div class="tray-menu-wrap" data-tray-shell="mac">
-          <div class="tray-menubar mac">
-            <span>Finder File Edit View Window Help</span>
-            <span class="tray-icon" title="OpenCodeX 托盘">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 21V12"/><path d="M5 7l7 5 7-5"/></svg>
-              <span class="tray-state"><span class="tray-dot stopped"></span><span data-tray-label>未运行</span></span>
+          <div class="tray-desktop-area" aria-hidden="true"></div>
+          <div class="tray-menubar mac" aria-label="macOS 菜单栏">
+            <span class="menu-name">Finder</span>
+            <span>File</span><span>Edit</span><span>View</span><span>Window</span><span>Help</span>
+            <span class="right-area">
+              <span class="mini">Wi-Fi</span>
+              <span class="mini">电池</span><span class="battery-box"></span><span class="battery-cap"></span>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3l2.5 5.5L20 9.5l-4 4 1 5.5-5-2.7-5 2.7 1-5.5-4-4 5.5-1z"/></svg>
+              <span class="tray-icon active" title="OpenCodeX 托盘">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 21V12"/><path d="M5 7l7 5 7-5"/></svg>
+                <span class="tray-state"><span class="tray-dot stopped"></span><span data-tray-label>未运行</span></span>
+              </span>
+            </span>
+          </div>
+          <div class="tray-statusbar windows" aria-label="Windows 任务栏">
+            <span class="left-area">
+              <span class="sys-icon">⊞</span><span class="sys-icon">搜索</span><span class="sys-icon">任务视图</span><span class="sys-icon">Edge</span><span class="sys-icon">资源管理器</span>
+            </span>
+            <span class="right-area">
+              <span class="tray-icon active" title="OpenCodeX 托盘">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 21V12"/><path d="M5 7l7 5 7-5"/></svg>
+                <span class="tray-state"><span class="tray-dot stopped"></span><span data-tray-label>未运行</span></span>
+              </span>
+              <svg class="sys-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 8.5A15 15 0 0 1 22 8.5"/><path d="M6 12a9.5 9.5 0 0 1 12 0"/><path d="M9.5 15.5a4.5 4.5 0 0 1 5 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+              <svg class="sys-icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9v6"/><path d="M8 6v12"/><path d="M12 8v8"/><path d="M16 5v14"/><path d="M20 10v4"/></svg>
+              <span class="sys-icon">09:41</span>
             </span>
           </div>
           <div class="tray-menu mac" role="menu" aria-label="macOS 托盘菜单">
+            <div class="tray-title"><b data-tray-label>未运行</b><div>OpenCodex · 127.0.0.1:10100</div></div>
+            <div class="tray-sep"></div>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="start" data-prototype-action="tray-start">启动 OpenCodex<span class="hint" data-tray-hint="start">可用</span></button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="stop" data-prototype-action="tray-stop">停止<span class="hint" data-tray-hint="stop">未运行</span></button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="restart" data-prototype-action="tray-restart">重启<span class="hint" data-tray-hint="restart">未运行</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-main" data-prototype-action="tray-open-main">打开主界面<span class="hint">App</span></button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-panel" data-prototype-action="tray-open-panel">打开官方面板<span class="hint" data-tray-hint="panel">需运行</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-logs" data-prototype-action="tray-open-logs">打开日志</button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="doctor" data-prototype-action="tray-doctor">运行 Doctor<span class="hint" data-tray-hint="doctor">建议</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item danger" type="button" role="menuitem" data-tray-action="quit" data-prototype-action="tray-quit">退出桌面壳<span class="hint">⌘Q</span></button>
+          </div>
+          <div class="tray-menu windows" role="menu" aria-label="Windows 通知区菜单">
             <div class="tray-title"><b data-tray-label>未运行</b><div>OpenCodex · 127.0.0.1:10100</div></div>
             <div class="tray-sep"></div>
             <button class="tray-item" type="button" role="menuitem" data-tray-action="start" data-prototype-action="tray-start">启动 OpenCodex<span class="hint" data-tray-hint="start">可用</span></button>
@@ -3015,7 +3073,7 @@ const trayDotMap={stopped:'stopped',starting:'starting',pending:'starting',runni
 function renderTray(){
   const shell=document.querySelector('[data-tray-shell]');
   if(!shell) return;
-  shell.className=`tray-menu-wrap ${trayOs}`;
+  shell.dataset.trayShell=trayOs;
   shell.querySelectorAll('[data-tray-label]').forEach(el=>el.textContent=trayStateLabels[trayState]||trayState);
   shell.querySelectorAll('[data-tray-hint]').forEach(el=>{
     el.textContent=trayHints[el.dataset.trayHint]?.[trayState]||'—';
@@ -3023,10 +3081,10 @@ function renderTray(){
   shell.querySelectorAll('.tray-dot').forEach(el=>{
     el.className='tray-dot '+(trayDotMap[trayState]||'stopped');
   });
-  shell.querySelector('.tray-menu')?.classList.toggle('mac',trayOs==='mac');
-  shell.querySelector('.tray-menu')?.classList.toggle('windows',trayOs==='windows');
-  shell.querySelector('.tray-menubar')?.classList.toggle('mac',trayOs==='mac');
-  shell.querySelector('.tray-menubar')?.classList.toggle('windows',trayOs==='windows');
+  shell.querySelector('.tray-menu.mac')?.classList.toggle('hidden',trayOs!=='mac');
+  shell.querySelector('.tray-menu.windows')?.classList.toggle('hidden',trayOs!=='windows');
+  shell.querySelector('.tray-menubar.mac')?.classList.toggle('hidden',trayOs!=='mac');
+  shell.querySelector('.tray-statusbar.windows')?.classList.toggle('hidden',trayOs!=='windows');
   document.querySelectorAll('[data-tray-os]').forEach(button=>{
     button.classList.toggle('active',button.dataset.trayOs===trayOs);
   });
