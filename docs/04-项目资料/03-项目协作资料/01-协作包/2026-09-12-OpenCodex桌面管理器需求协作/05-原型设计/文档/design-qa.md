@@ -2121,3 +2121,18 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - Playwright 验证 Skills 搜索、客户端筛选、页面大小选择和分页摘要。
 - 筛选 Claude 时摘要为「4 / 4 条 · 第 1 / 1 页」；MCP 显示 1 行版本与更新日期。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · 扩展治理配置集中到设置
+
+### 修法
+
+- 设置新增「扩展管理」Tab，集中承载 Skills 源目录、同步方式、备份 / 导出包含，以及 MCP 冲突策略、脱敏、备份 / 导出包含。
+- Skills / MCP 列表移除底部治理卡，仅保留发现、筛选、分页与同步操作。
+- Skills 与 MCP 列表头部新增「设置」快捷按钮，跳转到设置扩展管理 Tab 并记住来源 Tab。
+- 设置里的 Skills / MCP 卡新增对应列表回跳按钮。
+
+### 实测
+
+- Playwright 验证：Skills 设置 → 设置扩展管理 Tab → 回到 Skills；切到 MCP 后设置 → 同一设置 Tab → 回到 MCP。
+- 底部治理卡不再出现在扩展列表下方；设置 Tab 数量更新为 10 个。
+- `node --check` 与 `git diff --check` 通过。

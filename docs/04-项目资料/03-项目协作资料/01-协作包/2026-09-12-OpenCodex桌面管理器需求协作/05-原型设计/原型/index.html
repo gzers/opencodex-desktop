@@ -1049,6 +1049,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
               <button class="btn ghost" data-prototype-action="skills-restore">从备份中恢复</button>
               <button class="btn ghost" data-prototype-action="skills-zip">从 ZIP 安装</button>
               <button class="btn" data-prototype-action="skills-import">导入已有</button>
+              <button class="btn ghost" data-settings-section="extensions" data-ext-tab="skills">设置</button>
             </div>
           </div>
 
@@ -1191,50 +1192,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card">
-          <div class="card-head">
-            <div>
-              <h2>Skills 目录治理</h2>
-              <p>Skills 是管理器自有资产；同步到目标时使用受控写入，不接管客户端其他配置。</p>
-            </div>
-          </div>
-          <div class="setting-list">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Skills 源目录</div>
-                <div class="setting-desc">优先读取 cc-switch / Agent Skills 标准目录；也可选择自定义目录。</div>
-              </div>
-              <div class="controls"><button class="cli-copy-btn skills-source" data-prototype-action="copy-path" data-path="/Users/ezio/.agents/skills" title="复制 Skills 源目录：cc-switch / Agent Skills"><code>/Users/ezio/.agents/skills</code></button><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/.agents/skills">打开</button><button class="btn" data-prototype-action="skills-choose-source">选择</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">同步方式</div>
-                <div class="setting-desc">软链接节省空间并实时联动；复制更稳定，适合迁移和备份快照。</div>
-              </div>
-              <div class="controls"><div class="select" data-select>
-                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Skills 同步方式"><span class="select-value">软链接优先</span></button>
-                <div class="select-menu" role="listbox" aria-label="Skills 同步方式">
-                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">软链接优先</button>
-                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">文件复制</button>
-                </div>
-              </div></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">备份包含 Skills 目录</div>
-                <div class="setting-desc">升级前、导入前和显式备份时纳入 Skills 快照；软链接按解引用复制。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 Skills 目录"></button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">导出包含 Skills 目录</div>
-                <div class="setting-desc">配置迁移导出时纳入 Skills；导入前先生成可恢复快照。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 Skills 目录"></button></div>
-            </div>
-          </div>
-        </article>
         </div>
 
         <div class="ext-view" id="ext-mcp">
@@ -1247,6 +1204,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
               <div class="toolbar">
                 <button class="btn ghost" data-prototype-action="mcp-import">导入已有</button>
                 <button class="btn" data-prototype-action="mcp-add">添加 MCP</button>
+                <button class="btn ghost" data-settings-section="extensions" data-ext-tab="mcp">设置</button>
               </div>
             </div>
 
@@ -1309,51 +1267,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </article>
 
-          <article class="card">
-            <div class="card-head">
-              <div>
-                <h2>MCP 配置治理</h2>
-                <p class="config-note">配置落点：<code>$CODEX_HOME/config.toml → mcp_servers</code>；<code>~/.claude.json</code> 或项目 <code>.mcp.json</code>；<code>~/.gemini/settings.json → mcpServers</code>；<code>~/.grok/config.toml</code>；OpenCode 全局配置；<code>$HERMES_HOME/config.yaml</code>。只写对应配置节点，敏感值仍在确认与导出容器中出现。</p>
-              </div>
-            </div>
-            <div class="setting-list">
-              <div class="setting-row">
-                <div>
-                  <div class="setting-title">同名冲突策略</div>
-                  <div class="setting-desc">目标客户端已有同名 MCP 时暂停写入，展示差异并要求确认。</div>
-                </div>
-                <div class="controls"><div class="select" data-select>
-                  <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="MCP 同名冲突策略"><span class="select-value">每次询问</span></button>
-                  <div class="select-menu" role="listbox" aria-label="MCP 同名冲突策略">
-                    <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">每次询问</button>
-                    <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留目标</button>
-                    <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
-                  </div>
-                </div></div>
-              </div>
-              <div class="setting-row">
-                <div>
-                  <div class="setting-title">敏感值脱敏</div>
-                  <div class="setting-desc">URL token、headers、env 和 API key 默认掩码展示。</div>
-                </div>
-                <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="MCP 敏感值脱敏"></button></div>
-              </div>
-              <div class="setting-row">
-                <div>
-                  <div class="setting-title">备份包含 MCP 配置</div>
-                  <div class="setting-desc">备份快照纳入受管 MCP 定义；凭据仍进入加密容器。</div>
-                </div>
-                <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 MCP 配置"></button></div>
-              </div>
-              <div class="setting-row">
-                <div>
-                  <div class="setting-title">导出包含 MCP 配置</div>
-                  <div class="setting-desc">迁移导出纳入 MCP 定义；导入前先备份目标客户端配置。</div>
-                </div>
-                <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 MCP 配置"></button></div>
-              </div>
-            </div>
-          </article>
         </div>
       </section>
 
@@ -1409,6 +1322,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         <button type="button" data-settings-section="general" class="active">通用</button>
         <button type="button" data-settings-section="installation">安装配置</button>
         <button type="button" data-settings-section="backup">数据与备份</button>
+        <button type="button" data-settings-section="extensions">扩展管理</button>
         <button type="button" data-settings-section="migration">配置迁移</button>
         <button type="button" data-settings-section="sync">WebDAV 同步</button>
         <button type="button" data-settings-section="cleanup">日志与通知</button>
@@ -1677,6 +1591,101 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <button class="btn ghost" onclick="location.hash='#logs'">打开诊断中心</button>
             <button class="btn" data-prototype-action="clear-logs">立即清理日志</button>
             <button class="btn" data-prototype-action="clear-notifications">立即清理通知</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="settings-panel" id="settings-extensions">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>Skills 管理</h2>
+              <p>控制 Skills 源目录、同步与资产参与范围。</p>
+            </div>
+            <button class="btn ghost" data-route-link="extensions">打开 Skills 列表</button>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Skills 源目录</div>
+                <div class="setting-desc">优先读取 cc-switch / Agent Skills 标准目录；也可选择自定义目录。</div>
+              </div>
+              <div class="controls"><button class="cli-copy-btn skills-source" data-prototype-action="copy-path" data-path="/Users/ezio/.agents/skills" title="复制 Skills 源目录：cc-switch / Agent Skills"><code>/Users/ezio/.agents/skills</code></button><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/.agents/skills">打开</button><button class="btn" data-prototype-action="skills-choose-source">选择</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">同步方式</div>
+                <div class="setting-desc">软链接节省空间并实时联动；复制更稳定，适合迁移和备份快照。</div>
+              </div>
+              <div class="controls"><div class="select" data-select>
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Skills 同步方式"><span class="select-value">软链接优先</span></button>
+                <div class="select-menu" role="listbox" aria-label="Skills 同步方式">
+                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">软链接优先</button>
+                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">文件复制</button>
+                </div>
+              </div></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">备份包含 Skills 目录</div>
+                <div class="setting-desc">升级前、导入前和显式备份时纳入 Skills 快照；软链接按解引用复制。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 Skills 目录"></button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导出包含 Skills 目录</div>
+                <div class="setting-desc">配置迁移导出时纳入 Skills；导入前先生成可恢复快照。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 Skills 目录"></button></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>MCP 管理</h2>
+              <p class="config-note">配置落点：<code>$CODEX_HOME/config.toml → mcp_servers</code>；<code>~/.claude.json</code> 或项目 <code>.mcp.json</code>；<code>~/.gemini/settings.json → mcpServers</code>；<code>~/.grok/config.toml</code>；OpenCode 全局配置；<code>$HERMES_HOME/config.yaml</code>。</p>
+            </div>
+            <button class="btn ghost" data-route-link="extensions">打开 MCP 列表</button>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">同名冲突策略</div>
+                <div class="setting-desc">目标客户端已有同名 MCP 时暂停写入，展示差异并要求确认。</div>
+              </div>
+              <div class="controls"><div class="select" data-select>
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="MCP 同名冲突策略"><span class="select-value">每次询问</span></button>
+                <div class="select-menu" role="listbox" aria-label="MCP 同名冲突策略">
+                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">每次询问</button>
+                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留目标</button>
+                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
+                </div>
+              </div></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">敏感值脱敏</div>
+                <div class="setting-desc">URL token、headers、env 和 API key 默认掩码展示。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="MCP 敏感值脱敏"></button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">备份包含 MCP 配置</div>
+                <div class="setting-desc">备份快照纳入受管 MCP 定义；凭据仍进入加密容器。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 MCP 配置"></button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导出包含 MCP 配置</div>
+                <div class="setting-desc">迁移导出纳入 MCP 定义；导入前先备份目标客户端配置。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 MCP 配置"></button></div>
+            </div>
           </div>
         </article>
       </section>
@@ -2519,8 +2528,8 @@ document.querySelectorAll('#scenarios button').forEach(b=>{
 });
 
 document.addEventListener('click',event=>{
-  const link=event.target.closest('.link-chip[data-route]');
-  if(link) setRoute(link.dataset.route);
+  const link=event.target.closest('.link-chip[data-route], [data-route-link]');
+  if(link) setRoute(link.dataset.route||link.dataset.routeLink);
 });
 
 document.querySelectorAll('.nav button[data-route]').forEach(button=>{
@@ -2549,7 +2558,7 @@ function openSettingsSection(section){
 }
 window.openSettingsSection=openSettingsSection;
 function showSettingsSection(section){
-  const allowed=['general','installation','backup','migration','sync','cleanup','cli','upgrade','about'];
+  const allowed=['general','installation','backup','extensions','migration','sync','cleanup','cli','upgrade','about'];
   const next=allowed.includes(section)?section:(new URLSearchParams(location.search).get('section')||'general');
   document.querySelectorAll('#settingsTabs button').forEach(button=>{
     button.classList.toggle('active',button.dataset.settingsSection===next);
@@ -2758,6 +2767,10 @@ document.addEventListener('click',event=>{
   if(settingsTarget){
     setRoute('settings');
     showSettingsSection(settingsTarget.dataset.settingsSection);
+    if(settingsTarget.dataset.extTab&&document.querySelector(`[data-ext-tab="${settingsTarget.dataset.extTab}"]`)){
+      document.querySelectorAll('.ext-tabs button').forEach(button=>button.classList.toggle('active',button.dataset.extTab===settingsTarget.dataset.extTab));
+      applyExtTabs();
+    }
     return;
   }
   const actionTarget=event.target.closest('[data-prototype-action]');
