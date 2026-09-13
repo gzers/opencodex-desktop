@@ -1783,48 +1783,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card" id="card-mcp-paths">
-          <div class="card-head">
-            <div>
-              <h2>MCP 路径</h2>
-              <p>集中查看并打开各客户端 MCP 配置；配置覆盖后仍指向当前生效位置。</p>
-            </div>
-            <button class="btn ghost" data-route-link="extensions" style="white-space:nowrap">打开 MCP 列表</button>
-          </div>
-          <div class="agent-path-list">
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.claude.json" title="复制路径"><code>~/.claude.json</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude.json">打开配置</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.codex/config.toml" title="复制路径"><code>~/.codex/config.toml</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/config.toml">打开配置</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.gemini/settings.json" title="复制路径"><code>~/.gemini/settings.json</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/settings.json">打开配置</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.grok/config.toml" title="复制路径"><code>~/.grok/config.toml</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/config.toml">打开配置</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.config/opencode/opencode.json" title="复制路径"><code>~/.config/opencode/opencode.json</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/opencode.json">打开配置</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.hermes/config.yaml" title="复制路径"><code>~/.hermes/config.yaml</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/config.yaml">打开配置</button></div>
-            </div>
-          </div>
-        </article>
-
         <article class="card" id="card-skills-paths">
           <div class="card-head">
             <div>
@@ -1866,6 +1824,47 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
+        <article class="card" id="card-mcp-paths">
+          <div class="card-head">
+            <div>
+              <h2>MCP 路径</h2>
+              <p>集中查看并打开各客户端 MCP 配置；配置覆盖后仍指向当前生效位置。</p>
+            </div>
+            <button class="btn ghost" data-route-link="extensions" style="white-space:nowrap">打开 MCP 列表</button>
+          </div>
+          <div class="agent-path-list">
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.claude.json" title="复制路径"><code>~/.claude.json</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude.json">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.codex/config.toml" title="复制路径"><code>~/.codex/config.toml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/config.toml">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.gemini/settings.json" title="复制路径"><code>~/.gemini/settings.json</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/settings.json">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.grok/config.toml" title="复制路径"><code>~/.grok/config.toml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/config.toml">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.config/opencode/opencode.json" title="复制路径"><code>~/.config/opencode/opencode.json</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/opencode.json">打开配置</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.hermes/config.yaml" title="复制路径"><code>~/.hermes/config.yaml</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/config.yaml">打开配置</button></div>
+            </div>
+          </div>
+        </article>
 
       </section>
 

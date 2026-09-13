@@ -2358,3 +2358,16 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - 路径字号实测 11px，控件高度 29px；点击复制剪贴板读取值为 `/Users/ezio/.claude/skills`。
 - 无页面 JS / console 错误，视口无横向溢出。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · MCP路径卡顺序调整
+
+### 修法
+
+- 将 `MCP 路径` 移到 `Skills 路径` 之后，最终顺序为 `Skills 管理 → MCP 管理 → Skills 路径 → MCP 路径`。
+
+### 实测
+
+- Playwright 验证四卡顺序；`Skills 路径` 与 `MCP 路径` 各 6 行，路径字号均为 11px。
+- 点击 Skills 路径后剪贴板读取值为 `/Users/ezio/.claude/skills`。
+- 无页面 JS / console 错误，视口无横向溢出。
+- `node --check` 与 `git diff --check` 通过。
