@@ -1646,9 +1646,9 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="card-head">
             <div>
               <h2>MCP 管理</h2>
-              <p class="config-note">配置落点：<code>$CODEX_HOME/config.toml → mcp_servers</code>；<code>~/.claude.json</code> 或项目 <code>.mcp.json</code>；<code>~/.gemini/settings.json → mcpServers</code>；<code>~/.grok/config.toml</code>；OpenCode 全局配置；<code>$HERMES_HOME/config.yaml</code>。</p>
+              <p>统一管理 MCP 写入策略与目标。</p>
             </div>
-            <button class="btn ghost" data-route-link="extensions">打开 MCP 列表</button>
+            <button class="btn ghost" data-route-link="extensions" style="white-space:nowrap">打开 MCP 列表</button>
           </div>
           <div class="setting-list">
             <div class="setting-row">
@@ -1664,6 +1664,13 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                   <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
                 </div>
               </div></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">MCP 配置落点</div>
+                <div class="setting-desc">按客户端适配器写入各自 MCP 配置节点。</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="mcp-targets" style="white-space:nowrap">查看落点</button></div>
             </div>
             <div class="setting-row">
               <div>
@@ -2828,6 +2835,8 @@ document.addEventListener('click',event=>{
     openModal('导入已有 MCP','<p class="modal-lead">扫描各客户端 MCP 配置节点：<code>$CODEX_HOME/config.toml → mcp_servers</code>、<code>~/.claude.json</code> / 项目 <code>.mcp.json</code>、<code>~/.gemini/settings.json → mcpServers</code>、<code>~/.grok/config.toml</code>、OpenCode 全局配置、<code>$HERMES_HOME/config.yaml</code>。</p><p>扫描结果会合并为受管定义；默认不开启任何新目标，敏感值先掩码展示。</p>','继续',()=>toast('原型拦截：不会读取真实客户端配置。'));
   }else if(action==='mcp-add'){
     openModal('添加 MCP 服务器','<p class="modal-lead">统一维护名称、stdio / HTTP、命令或 URL、参数与环境。</p><p>添加后默认不选中任何目标；开启图标才会按客户端适配器写入对应配置节点。</p>','继续',()=>toast('原型拦截：不会写入真实 MCP 配置。'));
+  }else if(action==='mcp-targets'){
+    openModal('MCP 配置落点','<p class="modal-lead">不同客户端使用各自官方配置节点；写入前先校验结构和同名冲突。</p><ul class="about-list"><li><strong>Codex：</strong><code>$CODEX_HOME/config.toml → mcp_servers</code></li><li><strong>Claude Code：</strong><code>~/.claude.json</code> 或项目 <code>.mcp.json</code></li><li><strong>Gemini CLI：</strong><code>~/.gemini/settings.json → mcpServers</code></li><li><strong>Grok Build：</strong><code>$GROK_HOME/config.toml</code> 或 <code>~/.grok/config.toml</code></li><li><strong>OpenCode：</strong><code>~/.config/opencode/opencode.json</code></li><li><strong>Hermes Agent：</strong><code>$HERMES_HOME/config.yaml</code> 或 <code>~/.hermes/config.yaml</code></li></ul>','知道了',null);
   }else if(action==='export'){
     openModal('导出配置','将生成全量配置的加密导出容器；敏感值不会明文展示。导出前会确认口令与目标目录。','继续',()=>toast('原型拦截：不会生成真实导出容器。'));
   }else if(action==='import'){

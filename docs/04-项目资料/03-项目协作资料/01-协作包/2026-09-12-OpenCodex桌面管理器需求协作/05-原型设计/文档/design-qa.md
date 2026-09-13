@@ -2148,3 +2148,16 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 截图确认导航图标已变为拼图形状，浅色 / 深色下随文本色渲染。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · MCP管理卡头单行按钮
+
+### 修法
+
+- 缩短 MCP 管理卡头说明，按钮固定不换行。
+- 新增「MCP 配置落点」设置行，用「查看落点」弹窗保留各客户端官方配置节点，避免把长路径挤进卡头。
+
+### 实测
+
+- Playwright 验证卡头按钮与说明在同一水平带内，按钮尺寸 110 × 37px，未换行。
+- 落点弹窗包含 Codex、Claude Code、Gemini CLI、Grok Build、OpenCode、Hermes Agent 配置位置。
+- `node --check` 与 `git diff --check` 通过。
