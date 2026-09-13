@@ -620,6 +620,7 @@ html[data-theme="dark"] .prototype-side .size-readout span{color:#9aa2ae}
 .setting-title{font-weight:600;font-size:var(--text-body)}
 .setting-desc{color:var(--muted);font-size:var(--text-label);margin-top:3px;line-height:1.45}
 .setting-row .controls{justify-content:flex-end;flex-wrap:wrap}
+.section-actions{display:flex;justify-content:flex-end;gap:8px}
 .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}
 .field{display:grid;gap:5px}
 .field label{color:var(--muted);font-size:var(--text-caption)}
@@ -1093,7 +1094,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
               <h2>官方共享配置</h2>
               <p>与官方 OpenCodex 使用同一配置源；模型、路由与 provider 仍由官方面板或官方 CLI 管理。</p>
             </div>
-            <button class="btn ghost" data-prototype-action="reset-general">还原默认偏好</button>
           </div>
           <div class="setting-list">
             <div class="setting-row">
@@ -1105,6 +1105,10 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </div>
         </article>
+
+        <div class="section-actions">
+          <button class="btn ghost" data-prototype-action="reset-general">还原通用默认</button>
+        </div>
       </section>
 
       <section class="settings-panel" id="settings-installation">
