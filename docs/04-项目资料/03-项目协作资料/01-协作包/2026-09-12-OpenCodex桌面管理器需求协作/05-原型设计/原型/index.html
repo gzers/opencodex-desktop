@@ -258,11 +258,16 @@ button{font:inherit}
 .modal-warning{display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);border-left:3px solid var(--amber);border-radius:var(--radius-sm);background:var(--amber-soft);color:var(--text);font-size:var(--text-label);line-height:1.5}
 .modal-warning strong{font-weight:650}
 .reset-table{width:100%;border-collapse:collapse;margin:0 0 14px}
+.reset-table{table-layout:fixed}
 .reset-table th,.reset-table td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle;font-size:var(--text-label)}
 .reset-table th{color:var(--muted);font-weight:600;white-space:nowrap}
 .reset-table td{color:var(--text)}
+.reset-table th:nth-child(1),.reset-table td:nth-child(1){width:auto}
+.reset-table th:nth-child(2),.reset-table td:nth-child(2){width:32%}
+.reset-table th:nth-child(3),.reset-table td:nth-child(3){width:52px}
+.reset-table th:nth-child(4),.reset-table td:nth-child(4){width:32%}
 .reset-table .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
-.reset-table .reset-arrow{color:var(--muted);padding:0 7px;white-space:nowrap}
+.reset-table .reset-arrow{color:var(--muted);padding:0;text-align:center;white-space:nowrap}
 .reset-table tr:last-child td{border-bottom:0}
 .reset-table tr.official td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
 .reset-table tr.official td:first-child{border-left:3px solid var(--accent)}
