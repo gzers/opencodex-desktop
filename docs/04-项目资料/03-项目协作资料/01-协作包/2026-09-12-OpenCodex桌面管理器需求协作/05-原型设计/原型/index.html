@@ -335,6 +335,7 @@ html[data-route="overview"] #statePill{display:none}
 .cli-rules h3 + p{margin:4px 0 10px;color:var(--text);font-size:var(--text-caption);line-height:1.55}
 .cli-rules h3:last-of-type + p{margin-bottom:0}
 .cli-preview{margin-top:14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:12px}
+.cli-preview h4{margin:0 0 6px;font-size:var(--text-label);font-weight:650;color:var(--muted)}
 .cli-preview pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text)}
 .cli-preview p{margin:8px 0 0;color:var(--muted);font-size:var(--text-caption)}
 /* 最近事件：只在详情展开时承载高窗口余量；不重复展示完整日志。
@@ -1170,12 +1171,15 @@ body.panel-mode .panel-shell{height:100%}
               <div class="controls"><button class="btn primary" data-prototype-action="cli-enable">开启</button></div>
             </div>
 
-            <div class="setting-row" id="cliStatusRow" hidden>
+            <div class="setting-row" id="cliAgentRow" hidden>
               <div>
-                <div class="setting-title">命令入口</div>
-                <div class="setting-desc mono-desc"><code>opencodex-desktop &lt;command&gt; [options]</code>；加 <code>--json</code> 输出机读结果。</div>
+                <div class="setting-title">Agent 接入</div>
+                <div class="setting-desc">终端 / 脚本 / AI 代理用同一命令控制本应用。给 Agent 的提示词可直接引用「管理器 CLI 控制面」；命令能力以 <code>--help</code> 为准。</div>
               </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="cli-copy">复制安装命令</button></div>
+              <div class="controls">
+                <button class="btn ghost" data-prototype-action="cli-copy">复制命令</button>
+                <button class="btn ghost" data-prototype-action="cli-agent-instructions">复制 Agent 提示</button>
+              </div>
             </div>
 
             <div class="setting-row" id="cliRunRow" hidden>
@@ -1195,12 +1199,23 @@ body.panel-mode .panel-shell{height:100%}
             <p>provider、路由、模型映射等 OpenCodex 配置仍走官方 CLI；CLI 不做第二个写入者。</p>
           </div>
 
-          <div class="cli-preview" id="cliPreview" hidden>
+          <div class="cli-preview" id="cliAccess" hidden>
+            <h4>终端验证</h4>
             <pre><code>opencodex-desktop status --json
 opencodex-desktop start --json
 opencodex-desktop backup create --json
 opencodex-desktop export --confirm --json</code></pre>
             <p>变更层命令需运行实例与显式确认；破坏性操作必须带确认标志，备份语义与 GUI 一致。</p>
+          </div>
+
+          <div class="cli-preview" id="cliAgentPrompt" hidden>
+            <h4>Agent 提示片段</h4>
+            <pre><code>本机已启用 OpenCodeX-Desktop CLI 控制面。
+可用命令：opencodex-desktop &lt;command&gt; [options]，先执行 --help 查看能力。
+只操作管理器自有域：发现与只读状态、启停、数据目录、备份、加密导出/导入、WebDAV 同步、自更新检查。
+不要改写 OpenCodex 自身配置（provider、路由、模型映射）；该类变更走官方 CLI。
+状态变更需显式确认；破坏性操作必须带确认标志，先 --json 校验输出。</code></pre>
+            <p>提示片段只声明边界与入口；命令集待 IMP 冻结，真实实现应让 Agent 通过 <code>--help</code> / <code>--json</code> 自发现能力。</p>
           </div>
         </article>
       </section>
@@ -1756,11 +1771,13 @@ document.addEventListener('click',event=>{
     toast('原型提示：会展示备份位置、错误摘要和建议恢复动作。');
   }else if(action==='cli-enable'){
     openModal('开启 CLI 控制面','将注册本机命令入口，并使用本机 IPC 访问控制。CLI 只委托运行中管理器实例执行自有域命令，不提供 OpenCodex 配置写入通道。','开启',()=>{
-      ['cliStatusRow','cliRunRow','cliRules','cliPreview'].forEach(id=>{document.getElementById(id).hidden=false});
+      ['cliAgentRow','cliRunRow','cliRules','cliAccess','cliAgentPrompt'].forEach(id=>{document.getElementById(id).hidden=false});
       toast('原型模拟：CLI 控制面已开启。');
     });
   }else if(action==='cli-copy'){
     toast('原型拦截：不会写入 PATH 或剪贴板。');
+  }else if(action==='cli-agent-instructions'){
+    toast('原型提示：真实实现会复制 Agent 提示片段。');
   }else if(action==='check-app-update'){
     toast('原型提示：不会访问真实更新服务；此处演示「已是 / 有可用更新」。');
   }else if(action==='install-app-update'){
