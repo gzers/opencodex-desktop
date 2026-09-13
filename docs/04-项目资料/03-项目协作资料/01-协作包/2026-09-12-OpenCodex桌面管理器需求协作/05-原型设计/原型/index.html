@@ -626,6 +626,17 @@ body.panel-mode #panelSection{display:block;height:100%;min-height:0}
 body.panel-mode .panel-shell{height:100%}
 
 /* First-run environment gate: short next step now, full installation guidance in settings. */
+.install-layout{display:grid;gap:16px}
+.install-card{margin:0}
+.install-grid{display:grid;gap:8px}
+.install-grid .install-row{grid-template-columns:150px minmax(0,1fr);align-items:center}
+.install-grid .install-row div{font-size:var(--text-caption);font-weight:500}
+.install-grid .install-row div.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
+.path-action-row{display:grid;grid-template-columns:150px minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail)}
+.path-action-row label{color:var(--muted);font-size:var(--text-label)}
+.path-action-row .pathbox{margin:0;border:0;padding:0;background:transparent;font-size:var(--text-caption)}
+.path-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media(max-width:900px){.install-grid .install-row,.path-action-row{grid-template-columns:1fr}.path-actions{justify-content:flex-start}}
 .env-gate{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:var(--radius);padding:16px}
 .env-gate.busy{border-color:color-mix(in srgb,var(--blue) 24%,transparent);border-left-color:var(--blue);background:var(--blue-soft)}
 .env-gate-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
@@ -962,52 +973,63 @@ body.panel-mode .panel-shell{height:100%}
       </section>
 
       <section class="settings-panel" id="settings-installation">
-        <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));align-items:start">
-          <article class="card">
+        <div class="install-layout">
+          <article class="card install-card">
             <div class="card-head">
               <div>
-                <h2>安装发现</h2>
-                <p>只发现 / 展示 / 校验现有安装。</p>
+                <h2>运行环境与安装发现</h2>
+                <p>只发现 / 展示 / 校验现有环境与安装。</p>
               </div>
               <button class="btn ghost" id="discoverBtn">重新发现</button>
             </div>
             <div id="installArea"></div>
           </article>
 
-          <article class="card">
+          <article class="card install-card">
             <div class="card-head">
               <div>
                 <h2>数据目录与 OPENCODEX_HOME</h2>
-                <p>管理器产物统一在一个可自定义数据目录内。</p>
+                <p>自动发现当前路径，可在同一处统一修改。</p>
               </div>
             </div>
-            <div class="seg" id="homeSeg">
-              <button class="active" data-home="managed">跟随数据目录</button>
-              <button data-home="external">自定义路径</button>
-            </div>
-            <div class="pathbox" id="homePath">/Users/ezio/OpenCodexData/opencodex-home</div>
-            <div class="controls" style="margin-top:12px">
-              <button class="btn" id="chooseRootBtn">选择数据目录</button>
-              <button class="btn ghost" id="chooseHomeBtn">选择 OPENCODEX_HOME</button>
+            <div class="install-grid">
+              <div class="path-action-row">
+                <label>数据目录</label>
+                <div class="pathbox">/Users/ezio/OpenCodexData</div>
+                <div class="path-actions">
+                  <button class="btn ghost" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData">复制</button>
+                  <button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData">打开</button>
+                  <button class="btn" data-prototype-action="choose-root">修改</button>
+                </div>
+              </div>
+              <div class="path-action-row">
+                <label>OPENCODEX_HOME</label>
+                <div class="pathbox">/Users/ezio/OpenCodexData/opencodex-home</div>
+                <div class="path-actions">
+                  <button class="btn ghost" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/opencodex-home">复制</button>
+                  <button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/opencodex-home">打开</button>
+                  <button class="btn" data-prototype-action="choose-home">修改</button>
+                </div>
+              </div>
             </div>
           </article>
 
-          <article class="card">
+          <article class="card install-card">
             <div class="card-head">
               <div>
-                <h2>数据目录</h2>
-                <p>分区名待 IMP 冻结。</p>
+                <h2>数据目录分区</h2>
+                <p>分区名待 IMP 冻结；点击路径可复制，右侧可直接打开。</p>
               </div>
             </div>
             <table class="data-root-table">
-              <thead><tr><th>区域</th><th>用途</th></tr></thead>
+              <thead><tr><th>区域</th><th>用途</th><th>操作</th></tr></thead>
               <tbody>
-                <tr><td><code>manager-state</code></td><td>桌面壳设置与偏好</td></tr>
-                <tr><td><code>backups</code></td><td>升级、导入、同步覆盖前备份</td></tr>
-                <tr><td><code>logs</code></td><td>管理器与运行日志</td></tr>
-                <tr><td><code>exports</code></td><td>加密导出容器</td></tr>
-                <tr><td><code>cache</code></td><td>可丢弃缓存</td></tr>
-                <tr><td><code>sync-state</code></td><td>同步与冲突摘要</td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/manager-state"><code>manager-state</code></button></td><td>桌面壳设置与偏好</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/manager-state">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/backups"><code>backups</code></button></td><td>升级、导入、同步覆盖前备份</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/backups">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/logs"><code>logs</code></button></td><td>管理器与运行日志</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/logs">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/exports"><code>exports</code></button></td><td>加密导出容器</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/exports">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/cache"><code>cache</code></button></td><td>可丢弃缓存</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/cache">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="/Users/ezio/OpenCodexData/sync-state"><code>sync-state</code></button></td><td>同步与冲突摘要</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/OpenCodexData/sync-state">打开</button></td></tr>
               </tbody>
             </table>
           </article>
@@ -1636,6 +1658,8 @@ document.querySelectorAll('#envStates button').forEach(button=>{
 });
 
 const installFound={
+  node:'/Users/ezio/.nvm/versions/node/v26.8.1/bin/node · v26.8.1',
+  npm:'/Users/ezio/.nvm/versions/node/v26.8.1/bin/npm · 11.10.0',
   executable:'/Users/ezio/.local/bin/ocx',
   install:'npm global · @bitkyc08/opencodex',
   version:'2.50.0（npm latest 2.51.0）',
@@ -1643,6 +1667,8 @@ const installFound={
 };
 
 const installEmpty={
+  node:'未发现',
+  npm:'未发现',
   executable:'未发现',
   install:'未发现 npm 全局安装',
   version:'—',
@@ -1692,8 +1718,10 @@ function setInstall(){
   }
   const d=currentState==='not_found'?installEmpty:installFound;
   installArea.innerHTML=`
-    <div class="install">
-      <div class="install-row"><label>可执行文件</label><div>${d.executable}</div></div>
+    <div class="install-grid">
+      <div class="install-row"><label>Node.js</label><div class="mono">${d.node}</div></div>
+      <div class="install-row"><label>npm</label><div class="mono">${d.npm}</div></div>
+      <div class="install-row"><label>可执行文件</label><div class="mono">${d.executable}</div></div>
       <div class="install-row"><label>安装形态</label><div>${d.install}</div></div>
       <div class="install-row"><label>版本</label><div>${d.version}</div></div>
       <div class="install-row"><label>Codex runtime</label><div>${d.runtime}</div></div>
@@ -1914,7 +1942,15 @@ document.addEventListener('click',event=>{
   const actionTarget=event.target.closest('[data-prototype-action]');
   if(!actionTarget) return;
   const action=actionTarget.dataset.prototypeAction;
-  if(action==='env-recheck'){
+  if(action==='copy-path'){
+    actionTarget.classList.add('copied');clearTimeout(Number(actionTarget.dataset.copyTimer||0));actionTarget.dataset.copyTimer=setTimeout(()=>actionTarget.classList.remove('copied'),1400);toast('原型模拟：已复制 '+actionTarget.dataset.path+'；不写剪贴板。');
+  }else if(action==='open-path'){
+    toast('原型拦截：不会打开真实 Finder / 文件资源管理器。');
+  }else if(action==='choose-root'){
+    openModal('修改数据目录','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目录检查后展示已有数据摘要，并要求选择「仅切换引用」或「迁移数据」；迁移前自动备份，失败可回滚。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或迁移数据。'));
+  }else if(action==='choose-home'){
+    openModal('修改 OPENCODEX_HOME','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目标已有数据时先展示摘要；变更前自动备份，失败可回滚。两个目录不允许互相嵌套。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或修改真实配置。'));
+  }else if(action==='env-recheck'){
     toast('原型模拟：会重新检查 node / npm / ocx。');
   }else if(action==='env-guide'){
     openSettingsSection('installation');
@@ -2265,18 +2301,6 @@ document.getElementById('discoverBtn').onclick=()=>{
   setState('loading');
   setTimeout(()=>setState(currentState==='loading'?'stopped':currentState),650);
 };
-document.getElementById('chooseRootBtn').onclick=()=>openModal('切换数据目录','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目录检查后展示已有数据摘要，并要求选择「仅切换引用」或「迁移数据」；迁移前自动备份，失败可回滚。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或迁移数据。'));
-document.getElementById('chooseHomeBtn').onclick=()=>openModal('切换 OPENCODEX_HOME','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目标已有数据时先展示摘要；变更前自动备份，失败可回滚。两个目录不允许互相嵌套。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或修改真实配置。'));
-
-document.querySelectorAll('#homeSeg button').forEach(b=>{
-  b.addEventListener('click',()=>{
-    document.querySelectorAll('#homeSeg button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    document.getElementById('homePath').textContent=b.dataset.home==='managed'
-      ? '/Users/ezio/OpenCodexData/opencodex-home'
-      : '/Users/ezio/CustomOpenCodexHome';
-  });
-});
 
 // ── 预览工具：模拟窗口的尺寸预设与拖拽缩放（属于原型工具，不属于软件界面）──
 const winRoot=document.documentElement;
