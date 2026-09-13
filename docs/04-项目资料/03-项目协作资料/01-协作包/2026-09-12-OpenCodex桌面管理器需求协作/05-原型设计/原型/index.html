@@ -591,6 +591,7 @@ html[data-theme="dark"] .prototype-side .size-readout span{color:#9aa2ae}
 .settings-panel.active{display:block}
 .setting-list{display:grid;gap:8px;margin-top:14px}
 .setting-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
+.setting-row[hidden]{display:none}
 .setting-title{font-weight:600;font-size:var(--text-body)}
 .setting-desc{color:var(--muted);font-size:var(--text-label);margin-top:3px;line-height:1.45}
 .setting-row .controls{justify-content:flex-end;flex-wrap:wrap}
@@ -949,35 +950,35 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">启动后自动打开面板</div>
                 <div class="setting-desc">默认关闭；避免面板遮蔽概览里的启停与风险状态。</div>
               </div>
-              <div class="controls"><button class="btn ghost">关闭</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="启动后自动打开面板"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">面板打开方式</div>
                 <div class="setting-desc">默认内嵌到 App 窗口；加载异常时提供浏览器兜底入口。</div>
               </div>
-              <div class="controls"><button class="btn ghost">内嵌优先</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="面板打开方式">内嵌优先</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">关闭窗口后保持代理运行</div>
                 <div class="setting-desc">桌面壳只隐藏窗口，不自动停止官方 OpenCodex 子进程。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="关闭窗口后保持代理运行"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">启停结果通知</div>
                 <div class="setting-desc">通知启动、停止、重启和失败结果；不展示敏感配置。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="启停结果通知"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">同步冲突提醒</div>
                 <div class="setting-desc">检测到本地与远端冲突时暂停覆盖，并要求显式确认。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步冲突提醒"></button></div>
             </div>
           </div>
         </article>
@@ -1097,28 +1098,28 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">日志自动清理</div>
                 <div class="setting-desc">本地日志超过上限或保留期后自动截断；原始错误先保留摘要。</div>
               </div>
-              <div class="controls"><button class="btn ghost">30 天 / 10,000 行</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="日志自动清理">30 天 / 10,000 行</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">通知自动清理</div>
                 <div class="setting-desc">已读通知超过保留期后自动清理；未读和 danger 通知不自动删除。</div>
               </div>
-              <div class="controls"><button class="btn ghost">30 天</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="通知自动清理">30 天</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">启动时清理</div>
                 <div class="setting-desc">应用启动时按策略执行一次轻量清理，不阻塞主窗口。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="启动时清理"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">清理前备份摘要</div>
                 <div class="setting-desc">danger 日志和重要通知会先生成脱敏摘要，再进入自动清理。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="清理前备份摘要"></button></div>
             </div>
           </div>
           <div class="controls" style="margin-top:14px">
@@ -1143,21 +1144,21 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">导出范围</div>
                 <div class="setting-desc">provider、路由、模型映射、启动相关设置与凭据全量导出。</div>
               </div>
-              <div class="controls"><button class="btn ghost">全量</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="导出范围">全量</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">导出加密</div>
                 <div class="setting-desc">使用用户口令保护容器；具体算法待安全评审后冻结。</div>
               </div>
-              <div class="controls"><button class="btn ghost">口令保护</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="导出加密">口令保护</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">导入流程</div>
                 <div class="setting-desc">校验容器 → 备份当前配置 → 展示掩码摘要 → 用户确认。</div>
               </div>
-              <div class="controls"><button class="btn ghost">严格校验</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="导入流程">严格校验</button></div>
             </div>
           </div>
           <div class="controls" style="margin-top:14px">
@@ -1177,12 +1178,12 @@ body.panel-mode .panel-shell{height:100%}
             </div>
           </div>
           <div class="field-grid">
-            <div class="field"><label>服务地址</label><input class="input" value="https://dav.example.com/opencodex/" readonly></div>
-            <div class="field"><label>远端目录</label><input class="input" value="/desktop-sync/current" readonly></div>
-            <div class="field"><label>账号</label><input class="input" value="mock-user" readonly></div>
-            <div class="field"><label>应用密码</label><input class="input" type="password" value="mock-password" readonly></div>
-            <div class="field"><label>加密口令</label><input class="input" type="password" value="mock-passphrase" readonly></div>
-            <div class="field"><label>冲突策略</label><input class="input" value="每次询问" readonly></div>
+            <div class="field"><label>服务地址</label><input class="input" value="https://dav.example.com/opencodex/"></div>
+            <div class="field"><label>远端目录</label><input class="input" value="/desktop-sync/current"></div>
+            <div class="field"><label>账号</label><input class="input" value="mock-user"></div>
+            <div class="field"><label>应用密码</label><input class="input" type="password" value="mock-password"></div>
+            <div class="field"><label>加密口令</label><input class="input" type="password" value="mock-passphrase"></div>
+            <div class="field"><label>冲突策略</label><input class="input" value="每次询问"></div>
           </div>
           <div class="setting-list">
             <div class="setting-row">
@@ -1190,21 +1191,21 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">冷同步</div>
                 <div class="setting-desc">运行中不直接写关键文件；覆盖前需要用户确认。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="冷同步"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">客户端加密</div>
                 <div class="setting-desc">含敏感内容的对象先在本地加密，再上传到 WebDAV。</div>
               </div>
-              <div class="controls"><button class="btn ghost">强制开启</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="客户端加密">强制开启</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">覆盖前备份</div>
                 <div class="setting-desc">保留被覆盖侧快照，冲突时可恢复。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="覆盖前备份"></button></div>
             </div>
           </div>
           <div class="controls" style="margin-top:14px">
@@ -1230,7 +1231,7 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">启用 CLI 控制面</div>
                 <div class="setting-desc">默认关闭；开启后注册本机命令入口。CLI 仅作为运行中实例的客户端，经本地 IPC 委托执行。</div>
               </div>
-              <div class="controls"><button class="btn primary" data-prototype-action="cli-enable">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="cli-toggle" aria-label="启用 CLI 控制面"></button></div>
             </div>
 
             <div class="setting-row" id="cliRunRow" hidden>
@@ -1362,7 +1363,7 @@ ocx update</code></pre>
                 <div class="setting-title">更新通道与频率</div>
                 <div class="setting-desc">stable · 每 24 小时自动检查；发现更新只发通知，不打断当前操作。</div>
               </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="app-update-channel">改通道</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="应用更新通道与频率">stable · 每 24 小时</button></div>
             </div>
           </div>
         </article>
@@ -1982,11 +1983,18 @@ document.addEventListener('click',event=>{
     toast('原型提示：真实实现只引导官方 ocx update。');
   }else if(action==='update-failure-help'){
     toast('原型提示：会展示备份位置、错误摘要和建议恢复动作。');
-  }else if(action==='cli-enable'){
-    openModal('开启 CLI 控制面','将注册本机命令入口，并使用本机 IPC 访问控制。CLI 只委托运行中管理器实例执行自有域命令，不提供 OpenCodex 配置写入通道。','开启',()=>{
-      ['cliRunRow','cliPromptRow','cliRules','cliAccess','cliCommands','cliOfficial','cliAgentPrompt'].forEach(id=>{document.getElementById(id).hidden=false});
-      toast('原型模拟：CLI 控制面已开启。');
-    });
+  }else if(action==='cli-toggle'){
+    const cliSwitch=actionTarget;
+    const setCli=(enabled)=>{
+      cliSwitch.setAttribute('aria-checked',String(enabled));
+      ['cliRunRow','cliPromptRow','cliRules','cliAccess','cliCommands','cliOfficial','cliAgentPrompt'].forEach(id=>{const node=document.getElementById(id);if(node)node.hidden=!enabled;});
+      toast('原型模拟：CLI 控制面已'+(enabled?'开启':'关闭')+'；不修改真实偏好。');
+    };
+    if(cliSwitch.getAttribute('aria-checked')!=='true'){
+      openModal('开启 CLI 控制面','将注册本机命令入口，并使用本机 IPC 访问控制。CLI 只委托运行中管理器实例执行自有域命令，不提供 OpenCodex 配置写入通道。','开启',()=>setCli(true));
+    }else{
+      openModal('关闭 CLI 控制面','将移除本机命令入口并回收本地 IPC 端点；已有备份、导出与同步历史不受影响。','关闭',()=>setCli(false));
+    }
   }else if(action==='cli-copy'){
     toast('原型拦截：不会写入 PATH 或剪贴板。');
   }else if(action==='cli-help'){
