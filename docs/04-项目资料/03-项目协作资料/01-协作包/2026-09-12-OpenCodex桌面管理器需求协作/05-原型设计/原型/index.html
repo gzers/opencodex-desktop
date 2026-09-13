@@ -248,6 +248,7 @@ button{font:inherit}
 .modal.modal-wide{width:min(86%,720px);max-height:78%}
 .modal-body{margin-bottom:14px}
 .modal-lead{margin-bottom:10px}
+.modal-prototype-note{margin:12px 0 0;color:var(--muted);font-size:var(--text-caption)}
 .modal-code{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:10px}
 .modal h3{margin:0 0 8px;font-size:var(--text-title)}
 .modal p{color:var(--muted);margin:0 0 15px;font-size:var(--text-body)}
@@ -1225,7 +1226,7 @@ ocxd status --json</code></pre>
           </div>
 
           <div class="cli-preview" id="cliCommands" hidden>
-            <h4>管理器自有域示例</h4>
+            <h4>管理器自有域示例 · 非最终契约</h4>
             <pre><code>ocxd status --json
 ocxd start --json
 ocxd stop --json
@@ -1238,7 +1239,7 @@ ocxd sync run --json</code></pre>
           </div>
 
           <div class="cli-preview official" id="cliOfficial" hidden>
-            <h4>OpenCodex 配置 · 官方 CLI</h4>
+            <h4>OpenCodex 配置 · 官方 CLI 速查 · 非最终契约</h4>
             <pre><code>ocx --help
 ocx status --json
 ocx restore
@@ -1564,8 +1565,8 @@ function setLog(html){
 
 function logHtml(kind){
   if(kind==='offline'){
-    return `<span class="time">10:24:01</span> [manager] 代理离线，官方 observe logs 能力不可用。
-<span class="time">10:24:01</span> [manager] 仅展示本地服务日志入口。`;
+    return `<span class="time">10:24:01</span> [manager] 代理离线，官方 observe logs 实时能力不可用。
+<span class="time">10:24:01</span> [manager] 本地历史日志仍可查看；敏感值保持脱敏。`;
   }
   if(kind==='error'){
     return `<span class="time">10:23:52</span> <span class="error">[start] 子进程启动失败：绑定端口 10100 被占用</span>
@@ -1805,7 +1806,7 @@ const cliHelpHtml = `
     </tbody>
   </table>
 
-  <p class="cli-help-footnote">变更先确认，破坏性操作必须带确认标志；错误码与退出码约定待 IMP 冻结。</p>
+  <p class="cli-help-footnote">以下为示例命令，非最终契约；变更先确认，破坏性操作必须带确认标志，错误码与退出码约定待 IMP 冻结。</p>
 `;
 
 document.addEventListener('click',event=>{
@@ -1983,7 +1984,7 @@ document.addEventListener('click',event=>{
 function openModal(title,body,confirmText,handler,opts){
   opts=opts||{};
   modalTitle.textContent=title;
-  modalBody.innerHTML=body;
+  modalBody.innerHTML=body+'<p class="modal-prototype-note">当前为原型演示；真实实现尚未启用。</p>';
   modalConfirm.textContent=confirmText||'关闭';
   modalConfirm.hidden=!!opts.hideConfirm;
   modalCancel.textContent=opts.cancelLabel||'取消';
@@ -2007,10 +2008,10 @@ modalDelete.onclick=()=>{const fn=deleteHandler;closeModal();if(fn)fn();};
 
 window.openRestoreConfirm=function(kind){
   openModal(
-    '确认查看官方 restore 引导',
+    '官方 restore 前置确认',
     kind==='external_takeover'
-      ? '外部 provider 接管属于 OpenCodex CLI 本身的问题。桌面壳不会直接改写配置。继续后只会进入官方 restore 引导；实际执行前仍需备份与最终确认。'
-      : '官方 status 报告 startup at-risk。桌面壳不会自动修复。继续后进入官方 restore 引导；真实实现会先要求备份并展示确认摘要。',
+      ? '<p class="modal-lead">外部 provider 接管属于 OpenCodex CLI 本身的问题。桌面壳不直接改写配置。</p><p>真实实现将先展示当前配置摘要与影响，再生成备份；只有显式确认后才进入官方 restore 引导，可随时取消。</p>'
+      : '<p class="modal-lead">官方 status 报告 startup at-risk。桌面壳不自动修复。</p><p>真实实现将先展示当前配置摘要与影响，再生成备份；只有显式确认后才进入官方 restore 引导，可随时取消。</p>',
     '继续查看',
     ()=>toast('原型拦截：不会执行 restore。真实实现进入官方引导流程。')
   );
@@ -2165,8 +2166,8 @@ document.getElementById('discoverBtn').onclick=()=>{
   setState('loading');
   setTimeout(()=>setState(currentState==='loading'?'stopped':currentState),650);
 };
-document.getElementById('chooseRootBtn').onclick=()=>toast('原型拦截：不会访问本地文件。');
-document.getElementById('chooseHomeBtn').onclick=()=>toast('原型拦截：不会访问本地文件。');
+document.getElementById('chooseRootBtn').onclick=()=>openModal('切换数据目录','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目录检查后展示已有数据摘要，并要求选择「仅切换引用」或「迁移数据」；迁移前自动备份，失败可回滚。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或迁移数据。'));
+document.getElementById('chooseHomeBtn').onclick=()=>openModal('切换 OPENCODEX_HOME','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目标已有数据时先展示摘要；变更前自动备份，失败可回滚。两个目录不允许互相嵌套。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或修改真实配置。'));
 
 document.querySelectorAll('#homeSeg button').forEach(b=>{
   b.addEventListener('click',()=>{
