@@ -2161,3 +2161,25 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - Playwright 验证卡头按钮与说明在同一水平带内，按钮尺寸 110 × 37px，未换行。
 - 落点弹窗包含 Codex、Claude Code、Gemini CLI、Grok Build、OpenCode、Hermes Agent 配置位置。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · 扩展管理按钮按真实流程优化
+
+### 来源分析
+
+- 对比 cc-switch `dc0febe` 的 `UnifiedSkillsPanel`、`SkillsPage`、`McpFormModal`、`McpWizardModal` 与用户本机 `~/.cc-switch/cc-switch.db`。
+- Skills 实际流：发现、仓库管理、导入已有、ZIP 安装、检查更新、单项更新、全部更新、卸载、备份恢复、删除备份；本地记录包含 `installed_at`、`content_hash`、`updated_at`。
+- MCP 实际流：导入已有、添加 / 编辑、JSON / TOML 校验、配置向导、按客户端开关写入、删除；删除从所有已启用客户端配置节点移除。
+
+### 修法
+
+- Skills 卡头按真实流重排：检查更新、发现、仓库管理、恢复、ZIP、导入、设置。
+- Skills 行内新增「检查 / 更新」与「卸载」图标按钮，卸载弹窗声明先备份并从已同步客户端移除。
+- MCP 行内新增「编辑」与「删除」图标按钮；编辑弹窗展示 ID、名称、传输类型、命令、参数、环境变量、JSON 预览与校验边界。
+- MCP 删除弹窗使用单行警告，明确会移除所有已启用客户端配置节点且不可撤销。
+- 设置里的 Skills 同步方式新增「测试同步」弹窗，展示目录存在、权限、同名冲突、复制空间与软链接有效性预演。
+- 检查更新、发现、仓库管理、导入已有、ZIP 安装、备份恢复均补充真实实现边界与确认动作。
+
+### 实测
+
+- Playwright 验证 Skills 头部按钮、行内更新 / 卸载、MCP 编辑 / 删除、MCP 落点、Skills 同步预演。
+- 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
