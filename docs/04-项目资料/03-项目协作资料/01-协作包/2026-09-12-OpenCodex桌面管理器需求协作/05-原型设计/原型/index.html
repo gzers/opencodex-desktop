@@ -2362,33 +2362,154 @@ const routeNotes={
     ]
   },
   logs:{
-    title:'诊断中心',
-    note:'日志历史与通知历史并行管理；本地日志保留原始排障能力，通知历史保留最近决策与状态变化。',
+    title:'诊断中心 · 日志与Doctor',
+    note:'先看日志或通知历史，再按需运行 Doctor；历史数据与运行诊断分开，避免把完整排障堆进概览。',
     items:[
-      ['日志历史 / 通知历史','两个 Tab 并行管理，不混用数据类型。'],
-      ['清理日志','清空当前日志视图；真实实现需二次确认。'],
-      ['清理通知 / 清理已读','清空全部或仅清理已读通知。'],
-      ['打开日志目录','真实实现会打开目录，原型只拦截。']
+      ['日志历史','当前 mock 100 行；本地滚动截断，清理前应保留关键摘要。'],
+      ['通知历史','保留最近决策与状态变化，可清空全部或仅清理已读。'],
+      ['清理动作','清理日志 / 清理通知 / 清理已读均为破坏性动作，真实实现需二次确认。'],
+      ['打开日志目录','真实实现会打开本机目录，原型只拦截。'],
+      ['运行 Doctor','运行环境诊断；解释路径、WSL 挂载、代理环境变量、ChatGPT 可达性、Codex runtime 与 shim 状态。']
     ]
   },
   settings:{
-    title:'设置',
-    note:'偏好、备份策略、迁移、同步和升级参数集中维护；Skills 与 MCP 移入独立扩展管理。',
+    title:'设置 · 集中维护',
+    note:'按“桌面壳自有 → 官方共享 → 数据安全 → 扩展维护 → 升级归属”分 Tab；每张卡可锚点直达。',
     items:[
-      ['桌面壳偏好','管理器自有的缩放、面板承载、后台运行和通知边界。'],
-      ['官方共享配置','仅收纳与官方同源且桌面壳相关的开关；模型、路由与 provider 仍走官方。'],
-      ['数据与备份','自动备份、保留策略和完整性校验。'],
-      ['配置迁移','P1 加密容器与导入校验。'],
-      ['WebDAV 同步','P2 端点、凭据、加密与冲突策略。'],
-      ['CLI 控制面','默认关闭；开启后仅委托运行中实例执行管理器自有域命令，不改写 OpenCodex 配置。'],
-      ['版本升级','两块：OpenCodex 版本（检查、备份、官方引导）与桌面管理器版本（应用自更新）。'],
-      ['关于','官方归属、许可、第三方声明与桌面壳边界集中在最后一个 Tab。']
+      ['通用','界面缩放、启动与面板行为、后台运行、通知边界；共享项只有「随 Codex 启动 OpenCodex」，并支持还原默认。'],
+      ['安装配置','运行环境发现、数据目录、OPENCODEX_HOME 与数据分区；路径可复制。'],
+      ['数据与备份','升级 / 导入 / 同步前自动备份，保留策略与完整性校验。'],
+      ['扩展管理','Skills 与 MCP 的同步、备份、导出、脱敏、冲突策略，以及各客户端路径。'],
+      ['配置迁移','导出范围、加密方式、导入校验；敏感凭据只进入加密容器。'],
+      ['WebDAV 同步','端点、冲突策略、冷同步、客户端加密与覆盖前备份。'],
+      ['日志与通知','自动清理范围、启动清理与清理前摘要。'],
+      ['CLI 控制面','默认关闭；开启后仅委托运行中实例，并提供 Agent 提示。'],
+      ['版本升级','OpenCodex 走检查、备份与官方引导；桌面管理器走应用自更新。'],
+      ['关于','官方项目、本应用、版权归属、许可与第三方声明。']
+    ]
+  },
+  'ext-skills':{
+    title:'扩展管理 · Skills',
+    note:'本机 Skills 库按客户端同步；列表承载筛选、版本、分页与行内维护。',
+    items:[
+      ['统计与筛选','已安装数量和 Claude / Codex / Gemini / Grok / OpenCode / Hermes 视图。'],
+      ['搜索与分页','按名称或说明过滤，支持每页 10 / 20 / 50 / 100 条。'],
+      ['目标开关','每个客户端用图标按钮表示是否同步。'],
+      ['行内操作','检查 / 更新、卸载；版本与更新日期直接展示。'],
+      ['设置入口','顶部「设置」回到设置页扩展管理。']
+    ]
+  },
+  'ext-mcp':{
+    title:'扩展管理 · MCP',
+    note:'本机 MCP 服务器按客户端同步；列表承载筛选、版本、分页与行内维护。',
+    items:[
+      ['统计与筛选','已配置数量和各客户端视图。'],
+      ['搜索与分页','按名称或说明过滤，支持每页 10 / 20 / 50 / 100 条。'],
+      ['添加 / 导入','工具栏新增 MCP 或导入外部定义。'],
+      ['目标开关','每个客户端用图标按钮表示是否同步。'],
+      ['行内操作','编辑与删除；stdio / HTTP 等类型直接标识。'],
+      ['设置入口','顶部「设置」回到设置页扩展管理。']
+    ]
+  },
+  'settings-general':{
+    title:'设置 · 通用',
+    note:'桌面壳自有偏好集中在这里；官方共享项单独成卡，避免把外部配置混入管理器设置。',
+    items:[
+      ['界面缩放','50%–200% 滑块加整数刻点，数值输入与滑块双向联动。'],
+      ['启动与面板','主界面、自动面板、内嵌优先 / 浏览器兜底。'],
+      ['后台与通知','关闭窗口后保持代理运行，启停结果与同步冲突提醒。'],
+      ['官方共享配置','随 Codex 启动 OpenCodex；仅同步官方同源开关。'],
+      ['还原通用默认','弹窗列出原值 → 默认值，确认后仅还原本组偏好。']
+    ]
+  },
+  'settings-installation':{
+    title:'设置 · 安装配置',
+    note:'先发现运行环境，再维护数据目录与分区；不代装依赖、不改写官方配置。',
+    items:[
+      ['运行环境与安装发现','按 Node.js → npm → OpenCodex 检查；重新发现只更新 mock。'],
+      ['数据目录与 OPENCODEX_HOME','路径可复制；修改涉及迁移前备份。'],
+      ['数据目录分区','桌面壳状态、备份、日志、导出、缓存与同步摘要分区展示。']
+    ]
+  },
+  'settings-backup':{
+    title:'设置 · 数据与备份',
+    note:'破坏性变更前自动备份；保留策略与校验算法集中维护。',
+    items:[
+      ['自动备份','升级、导入、同步覆盖前自动备份。'],
+      ['保留策略','最近 5 / 10 / 20 份。'],
+      ['完整性校验','SHA-256 / SHA-512 / BLAKE3。']
+    ]
+  },
+  'settings-extensions':{
+    title:'设置 · 扩展管理',
+    note:'先配置同步策略，再按类型查看路径；路径卡集中放在最后，便于扫读与复制。',
+    items:[
+      ['Skills 管理','源目录、软链接 / 复制、备份与导出范围。'],
+      ['MCP 管理','同名冲突、落点、敏感值脱敏、备份与导出范围。'],
+      ['Skills 路径','6 个客户端 Skills 目录，点击复制完整路径。'],
+      ['MCP 路径','6 个客户端 MCP 配置文件，点击复制完整路径。']
+    ]
+  },
+  'settings-migration':{
+    title:'设置 · 配置迁移',
+    note:'导出与导入都以校验为先；敏感凭据只进入加密容器。',
+    items:[
+      ['导出范围','全量 / 仅配置 / 仅凭据。'],
+      ['导出加密','口令保护或密钥保护。'],
+      ['导入流程','严格校验优先；导入前自动备份。'],
+      ['导出目录','真实实现会打开本机目录，原型只拦截。']
+    ]
+  },
+  'settings-sync':{
+    title:'设置 · WebDAV 同步',
+    note:'端点与凭据在卡片主体维护；策略、加密与备份控制同步安全。',
+    items:[
+      ['冲突策略','每次询问 / 保留本地 / 保留远端 / 保留双份。'],
+      ['冷同步与加密','冷同步开关；客户端加密强制开启。'],
+      ['覆盖前备份','远端覆盖前自动备份。'],
+      ['动作','立即同步、测试连接、查看同步历史。']
+    ]
+  },
+  'settings-cleanup':{
+    title:'设置 · 日志与通知',
+    note:'清理策略用于控制本地历史规模；真实清理需二次确认。',
+    items:[
+      ['日志自动清理','按天数和行数组合限制。'],
+      ['通知自动清理','按天数限制。'],
+      ['启动清理','启动时执行清理，清理前保留摘要。']
+    ]
+  },
+  'settings-cli':{
+    title:'设置 · CLI 控制面',
+    note:'默认关闭；开启后只委托运行中实例执行管理器自有域命令。',
+    items:[
+      ['启用 CLI 控制面','开关控制能力入口。'],
+      ['运行中实例','显示当前委托目标。'],
+      ['Agent 提示','查看完整说明或复制 Agent 提示。']
+    ]
+  },
+  'settings-upgrade':{
+    title:'设置 · 版本升级',
+    note:'官方升级保持官方引导，桌面管理器自更新独立处理。',
+    items:[
+      ['OpenCodex 版本','检查更新、升级前备份、官方升级引导、失败建议。'],
+      ['桌面管理器版本','检查更新、下载并重启、通道与频率。']
+    ]
+  },
+  'settings-about':{
+    title:'设置 · 关于',
+    note:'先说明官方项目与本应用归属，再集中展示版权、许可与第三方声明。',
+    items:[
+      ['官方项目','OpenCodex 官网、GitHub、Issues 与版本信息。'],
+      ['本应用','OpenCodeX-Desktop 独立桌面壳，仓库与 Issues 入口。'],
+      ['版权与归属','查看官方许可与第三方声明。']
     ]
   }
 };
 
+const prototypeNoteFallback=routeNotes.overview;
 function renderPrototypeNote(route){
-  const note=routeNotes[route]||routeNotes.overview;
+  const note=routeNotes[route]||routeNotes[route.startsWith('settings-')?'settings':route.startsWith('ext-')?'ext-skills':'overview']||prototypeNoteFallback;
   const title=document.getElementById('protoNoteTitle');
   const body=document.getElementById('protoNote');
   const list=document.getElementById('protoButtonNotes');
@@ -2596,6 +2717,8 @@ function setRoute(route, replace=false){
   document.getElementById('routeTitle').textContent=meta.title;
   document.getElementById('routeSubtitle').textContent=meta.subtitle;
   renderPrototypeNote(next);
+  if(next==='settings') renderPrototypeNote(`settings-${hashParams.get('section')||'general'}`);
+  if(next==='extensions') renderPrototypeNote(`ext-${hashParams.get('tab')||'skills'}`);
   if(aboutRedirect) showSettingsSection('about');
   if(next!=='panel') document.body.classList.remove('panel-mode');
   if(next!=='roadmap'){
@@ -2884,6 +3007,7 @@ function showSettingsSection(section){
   document.querySelectorAll('.settings-panel').forEach(panel=>{
     panel.classList.toggle('active',panel.id===`settings-${next}`);
   });
+  renderPrototypeNote(`settings-${next}`);
 }
 
 const cliHelpHtml = `
@@ -2982,11 +3106,13 @@ function applyExtTabs(){
   const active=document.querySelector('.ext-tabs button.active');
   const next=active?.dataset.extTab||'skills';
   document.querySelectorAll('.ext-view').forEach(view=>view.classList.toggle('active',view.id===`ext-${next}`));
+  renderPrototypeNote(`ext-${next}`);
 }
 document.querySelectorAll('.ext-tabs button').forEach(button=>{
   button.addEventListener('click',()=>{
     document.querySelectorAll('.ext-tabs button').forEach(item=>item.classList.toggle('active',item===button));
     applyExtTabs();
+    renderPrototypeNote(`ext-${button.dataset.extTab||'skills'}`);
   });
 });
 const extensionPagination={
@@ -3807,9 +3933,6 @@ applyTheme(storedTheme);
 
 renderWebdav('unconfigured');
 createAnchorTitles();
-renderPrototypeNote(location.hash.slice(1)||'overview');
-renderNotificationHistory();
-
 setRoute(location.hash.slice(1)||'overview',true);
 if(currentRoute==='settings') showSettingsSection(parseRouteHash(location.hash).params.get('section')||'general');
 renderEnv();
