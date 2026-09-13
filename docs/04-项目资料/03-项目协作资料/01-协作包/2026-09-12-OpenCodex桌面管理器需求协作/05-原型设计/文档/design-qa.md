@@ -2197,3 +2197,19 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 验证宽版弹窗、6 个可见客户端图标、6 个预设、JSON 回填、格式化与配置向导。
 - 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · Tab与卡片标题锚点
+
+### 修法
+
+- 为 25 张功能卡片补语义 id，并给可见卡片标题增加悬停显示的链接图标；点击更新当前 Tab 感知的 URL、滚动定位并短暂高亮。
+- 设置 10 个 Tab、扩展 Skills / MCP 2 个 Tab、诊断日志 / 通知 2 个 Tab 全部支持锚点参数；Tab 锚点同时完成 Tab 激活与 URL 更新。
+- URL 约定为 `#settings?section=xxx`、`#extensions?tab=xxx`、`#logs?tab=xxx`；直接打开带参数地址会先激活路由 / Tab，再滚动到目标卡。
+- 兼容概览运行摘要 / 运行详情 / 最近事件等无 `.card-head` 的卡片；已滚动区域内目标已完全可见时不重复重置滚动位置。
+
+### 实测
+
+- Playwright 验证 19 个标题锚点按钮、14 个 Tab 锚点控件；设置 / 扩展 / 诊断 Tab 切换 hash 与激活状态正确。
+- Playwright 逐一验证 9 个设置 Tab、扩展 MCP、日志通知的直接锚点打开；目标卡片可见并出现高亮，无页面 JS 错误。
+- 标题锚点在概览卡、扩展卡与诊断卡点击后 hash 正确且高亮生效。
+- `node --check` 与 `git diff --check` 通过。

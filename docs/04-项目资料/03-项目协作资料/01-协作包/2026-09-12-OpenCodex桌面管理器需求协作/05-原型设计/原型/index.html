@@ -315,8 +315,22 @@ body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(10
 .panel-scale-tools .panel-actions button{min-width:24px;min-height:22px;padding:2px 6px}
 .panel-scale-tools .panel-actions span{display:grid;place-items:center;min-width:36px;min-height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--rail);font-size:var(--text-caption);font-weight:600;color:var(--muted)}
 /* Root prototype routes keep screens connected without duplicating page shells. */
+
+.anchor-btn{width:24px;height:24px;flex:none;display:inline-grid;place-items:center;padding:0;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;opacity:0;transition:opacity var(--motion-fast),background var(--motion-fast),color var(--motion-fast)}
+.anchor-btn svg{width:14px;height:14px}
+.anchor-btn:hover,.anchor-btn:focus-visible{background:var(--hover);color:var(--text);opacity:1}
+.anchor-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.card-head:hover .anchor-btn,.card-head:focus-within .anchor-btn{opacity:1}
+.card-head-title{display:flex;align-items:center;gap:4px;min-width:0}
+.card-head-title h2,.card-head-title h3{margin:0}
+.card-anchor-flash{outline:2px solid var(--accent);outline-offset:2px;background:color-mix(in srgb,var(--accent) 4%,var(--panel))}
+.tabs-anchor{display:inline-flex;align-items:center;gap:4px}
+.tabs-anchor .anchor-icon{width:12px;height:12px;opacity:.42;transition:opacity var(--motion-fast)}
+.tabs-anchor:hover .anchor-icon,.tabs-anchor:focus-visible .anchor-icon{opacity:1}
+
 .route-section{display:none}
-.route-section.active{display:grid;gap:16px}
+.route-section.active{display:grid;gap:16px;grid-template-rows:auto}
+.route-section.active>.settings-panel{min-width:0;min-height:0}
 .nav button[data-route]{width:100%}
 .route-placeholder{min-height:180px;display:grid;place-items:center;text-align:center}
 .route-placeholder strong{display:block;margin-bottom:6px;color:var(--text);font-size:var(--text-subtitle)}
@@ -975,7 +989,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
     <section class="route-section active ov" id="route-overview">
       <article class="card env-gate" id="envGate" hidden></article>
 
-      <article class="card ovb-status">
+      <article class="card ovb-status" id="card-overview-status">
         <div class="ovb-main">
           <div class="ovc-line">
             <span class="ovc-fact"><i class="ovc-badge" data-b="statebadge"></i><b data-b="statetext">未加载</b></span>
@@ -996,7 +1010,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         </div>
       </article>
 
-      <details class="card ovb-detail">
+      <details class="card ovb-detail" id="card-overview-details">
         <summary>
           <span>运行详情</span>
           <span class="ovb-detail-facts" data-b="detailfacts">—</span>
@@ -1018,7 +1032,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         </div>
       </details>
 
-      <section class="card recent-events" id="recentEventsSection" aria-labelledby="recentEventsTitle">
+      <section class="card recent-events" id="card-overview-events" aria-labelledby="recentEventsTitle">
         <div class="recent-events-head">
           <h2 id="recentEventsTitle">最近事件</h2>
           <button class="btn ghost" data-route="logs" type="button">打开诊断中心</button>
@@ -1027,7 +1041,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <div class="mods" id="mods">
-        <article class="card mod" data-mod-section="upgrade">
+        <article class="card mod" data-mod-section="upgrade" id="card-overview-upgrade">
           <div class="mod-head">
             <h3>版本升级</h3>
             <span class="tag">可用</span>
@@ -1044,7 +1058,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card mod" data-mod-section="migration">
+        <article class="card mod" data-mod-section="migration" id="card-overview-migration">
           <div class="mod-head">
             <h3>配置迁移</h3>
             <span class="tag">规划中</span>
@@ -1061,7 +1075,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card mod" data-mod-section="sync" id="syncCard">
+        <article class="card mod" data-mod-section="sync" id="card-overview-sync">
           <div class="mod-head">
             <h3>WebDAV 同步</h3>
             <span class="tag" id="syncTag">未配置</span>
@@ -1078,12 +1092,12 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
       <section class="route-section" id="route-extensions">
         <div class="ext-tabs" role="tablist" aria-label="扩展分区">
-          <button type="button" data-ext-tab="skills" class="active">Skills</button>
-          <button type="button" data-ext-tab="mcp">MCP</button>
+          <button type="button" data-ext-tab="skills" class="active" data-anchor="skills" aria-label="Skills，查看锚点">Skills<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+          <button type="button" data-ext-tab="mcp" data-anchor="mcp" aria-label="MCP，查看锚点">MCP<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         </div>
 
         <div class="ext-view active" id="ext-skills">
-        <article class="card">
+        <article class="card" id="card-ext-skills">
           <div class="card-head">
             <div>
               <h2>Skills 管理</h2>
@@ -1247,7 +1261,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         </div>
 
         <div class="ext-view" id="ext-mcp">
-          <article class="card">
+          <article class="card" id="card-ext-mcp">
             <div class="card-head">
               <div>
                 <h2>MCP 服务器管理</h2>
@@ -1325,11 +1339,11 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
     <section class="route-section" id="route-logs">
       <div class="diag-tabs" role="tablist" aria-label="诊断分区">
-        <button type="button" data-diag-tab="logs" class="active">日志历史</button>
-        <button type="button" data-diag-tab="notifications">通知历史</button>
+        <button type="button" data-diag-tab="logs" class="active" data-anchor="logs" aria-label="日志历史，查看锚点">日志历史<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-diag-tab="notifications" data-anchor="notifications" aria-label="通知历史，查看锚点">通知历史<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
       </div>
 
-      <article class="card">
+      <article class="card" id="card-diag-history">
         <div class="diag-view active" id="diag-logs">
           <div class="logbar">
             <span class="history-meta" id="logMeta">当前 100 行 · 本地滚动截断 · mock</span>
@@ -1353,7 +1367,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         </div>
       </article>
 
-      <article class="card">
+      <article class="card" id="card-diag-doctor">
         <div class="card-head">
           <div>
             <h2>运行环境诊断</h2>
@@ -1372,20 +1386,20 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
     <section class="route-section" id="route-settings">
       <div class="settings-tabs" id="settingsTabs" role="tablist" aria-label="设置分区">
-        <button type="button" data-settings-section="general" class="active">通用</button>
-        <button type="button" data-settings-section="installation">安装配置</button>
-        <button type="button" data-settings-section="backup">数据与备份</button>
-        <button type="button" data-settings-section="extensions">扩展管理</button>
-        <button type="button" data-settings-section="migration">配置迁移</button>
-        <button type="button" data-settings-section="sync">WebDAV 同步</button>
-        <button type="button" data-settings-section="cleanup">日志与通知</button>
-        <button type="button" data-settings-section="cli">CLI 控制面</button>
-        <button type="button" data-settings-section="upgrade">版本升级</button>
-        <button type="button" data-settings-section="about">关于</button>
+        <button type="button" data-settings-section="general" class="active" data-anchor="general" aria-label="通用，查看锚点">通用<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="installation" data-anchor="installation" aria-label="安装配置，查看锚点">安装配置<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="backup" data-anchor="backup" aria-label="数据与备份，查看锚点">数据与备份<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="extensions" data-anchor="extensions" aria-label="扩展管理，查看锚点">扩展管理<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="migration" data-anchor="migration" aria-label="配置迁移，查看锚点">配置迁移<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="sync" data-anchor="sync" aria-label="WebDAV 同步，查看锚点">WebDAV 同步<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="cleanup" data-anchor="cleanup" aria-label="日志与通知，查看锚点">日志与通知<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="cli" data-anchor="cli" aria-label="CLI 控制面，查看锚点">CLI 控制面<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="upgrade" data-anchor="upgrade" aria-label="版本升级，查看锚点">版本升级<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="about" data-anchor="about" aria-label="关于，查看锚点">关于<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
       </div>
 
       <section class="settings-panel active" id="settings-general">
-        <article class="card">
+        <article class="card" id="card-general-prefs">
           <div class="card-head">
             <div>
               <h2>桌面壳偏好</h2>
@@ -1451,7 +1465,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card">
+        <article class="card" id="card-general-shared">
           <div class="card-head">
             <div>
               <h2>官方共享配置</h2>
@@ -1476,7 +1490,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
       <section class="settings-panel" id="settings-installation">
         <div class="install-layout">
-          <article class="card install-card">
+          <article class="card install-card" id="card-install-runtime">
             <div class="card-head">
               <div>
                 <h2>运行环境与安装发现</h2>
@@ -1487,7 +1501,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <div id="installArea"></div>
           </article>
 
-          <article class="card install-card">
+          <article class="card install-card" id="card-install-paths">
             <div class="card-head">
               <div>
                 <h2>数据目录与 OPENCODEX_HOME</h2>
@@ -1503,7 +1517,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </table>
           </article>
 
-          <article class="card install-card">
+          <article class="card install-card" id="card-install-partitions">
             <div class="card-head">
               <div>
                 <h2>数据目录分区</h2>
@@ -1526,7 +1540,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-backup">
-        <article class="card">
+        <article class="card" id="card-backup-data">
           <div class="card-head">
             <div>
               <h2>数据与备份</h2>
@@ -1589,7 +1603,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-cleanup">
-        <article class="card">
+        <article class="card" id="card-cleanup">
           <div class="card-head">
             <div>
               <h2>日志与通知清理</h2>
@@ -1649,7 +1663,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-extensions">
-        <article class="card">
+        <article class="card" id="card-settings-skills">
           <div class="card-head">
             <div>
               <h2>Skills 管理</h2>
@@ -1695,7 +1709,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card">
+        <article class="card" id="card-settings-mcp">
           <div class="card-head">
             <div>
               <h2>MCP 管理</h2>
@@ -1751,7 +1765,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-migration">
-        <article class="card">
+        <article class="card" id="card-migration">
           <div class="card-head">
             <div>
               <h2>配置迁移</h2>
@@ -1809,7 +1823,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-sync">
-        <article class="card">
+        <article class="card" id="card-sync">
           <div class="card-head">
             <div>
               <h2>WebDAV 同步</h2>
@@ -1869,7 +1883,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </section>
 
       <section class="settings-panel" id="settings-cli">
-        <article class="card">
+        <article class="card" id="card-cli">
           <div class="card-head">
             <div>
               <h2>CLI 控制面</h2>
@@ -1949,7 +1963,7 @@ ocx update</code></pre>
       </section>
 
       <section class="settings-panel" id="settings-upgrade">
-        <article class="card">
+        <article class="card" id="card-upgrade-official">
           <div class="card-head">
             <div>
               <h2>OpenCodex 版本</h2>
@@ -1988,7 +2002,7 @@ ocx update</code></pre>
           </div>
         </article>
 
-        <article class="card">
+        <article class="card" id="card-upgrade-manager">
           <div class="card-head">
             <div>
               <h2>桌面管理器版本</h2>
@@ -2029,7 +2043,7 @@ ocx update</code></pre>
       </section>
 
       <section class="settings-panel" id="settings-about">
-        <article class="card about-card">
+        <article class="card about-card" id="card-about">
           <article class="about-hero">
             <div class="about-head">
               <div>
@@ -2453,8 +2467,9 @@ function setInstall(){
 
 function setRoute(route, replace=false){
   const legacyRoutes={process:'overview',config:'settings',webdav:'settings',upgrade:'settings',about:'settings'};
-  const aboutRedirect=route==='about';
-  const next=legacyRoutes[route]||((routes[route]||route==='panel')?route:'overview');
+  const {route:hashRoute,params:hashParams}=parseRouteHash(route);
+  const aboutRedirect=hashRoute==='about';
+  const next=legacyRoutes[hashRoute]||((routes[hashRoute]||hashRoute==='panel')?hashRoute:'overview');
   if(next==='panel'){
     currentRoute='panel';
     showPanel(true,true);
@@ -2481,7 +2496,8 @@ function setRoute(route, replace=false){
   }else{
     try{window.localStorage.removeItem('ocx-route')}catch(e){}
   }
-  const hash=`#${next}`;
+  const query=hashParams.toString();
+  const hash=`#${next}${query?`?${query}`:''}`;
   if(location.hash!==hash){
     if(replace) history.replaceState(null,'',hash); else location.hash=hash;
   }
@@ -2496,7 +2512,41 @@ function renderRecentEvents(kind){
     : '<li class="recent-events-empty">暂无最近事件。</li>';
 }
 
+function createAnchorTitles(){
+document.querySelectorAll('.card-head, .recent-events-head, .ovb-detail > summary').forEach(head=>{
+  const card=head.closest('[id]');
+  const title=head.querySelector('h2, h3, span');
+  if(!card||!title||head.querySelector('.anchor-btn')) return;
+  const holder=document.createElement('div');
+  holder.className='card-head-title';
+  title.parentNode.insertBefore(holder,title);
+  holder.appendChild(title);
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='anchor-btn';
+  button.title='复制锚点链接';
+  button.setAttribute('aria-label','复制锚点链接');
+  button.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>';
+  button.addEventListener('click',event=>{
+    event.stopPropagation();
+    const route=currentRoute||'overview';
+    let anchor=card.id.replace(/^card-/,'');
+    if(anchor.endsWith('-history')) anchor='logs';
+    if(anchor==='general-prefs') anchor='general';
+    if(anchor==='settings-skills') anchor='skills';
+    if(anchor==='settings-mcp') anchor='mcp';
+    const hash=buildAnchorHash(route,anchor);
+    history.replaceState(null,'',hash);
+    requestAnimationFrame(()=>flashAnchor(card));
+    const text=location.protocol==='file:' ? decodeURI(location.href) : location.href;
+    if(navigator.clipboard?.writeText) navigator.clipboard.writeText(text).catch(()=>{});
+    toast('原型模拟：已复制标题锚点。');
+  });
+  holder.appendChild(button);
+});
+}
 function render(){
+
   const s=scenarios[currentState];
   statePill.textContent=s.label;
   statePill.className='state-pill '+s.cls;
@@ -2576,6 +2626,14 @@ function render(){
 
 function setState(next){
   currentState=next;
+  if(!window.__stateAnchorBound){
+    window.__stateAnchorBound=true;
+    setTimeout(()=>{
+      window.__lastAnchorHash='';
+      applyHashAnchor(location.hash,true);
+      window.__lastAnchorHash=location.hash;
+    },200);
+  }
   document.querySelectorAll('#scenarios button').forEach(b=>{
     b.classList.toggle('active',b.dataset.state===next);
   });
@@ -2603,8 +2661,100 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
   });
 });
 
+window.__lastAnchorHash='';
 window.addEventListener('hashchange',()=>{
-  setRoute(location.hash.slice(1),true);
+  const raw=location.hash;
+  setRoute(raw.slice(1),true);
+  if(window.__lastAnchorHash!==raw){
+    window.__lastAnchorHash=raw;
+    applyHashAnchor(raw,true);
+  }
+});
+
+function parseRouteHash(hash){
+  const raw=String(hash||'').replace(/^#/,'');
+  const [route,query='']=raw.split('?');
+  return {route,params:new URLSearchParams(query)};
+}
+
+function buildAnchorHash(route,anchor){
+  if(route==='settings') return `#settings?section=${anchor}`;
+  if(route==='extensions') return `#extensions?tab=${anchor}`;
+  if(route==='logs') return `#logs?tab=${anchor}`;
+  return `#${route}`;
+}
+
+function flashAnchor(card){
+  if(!card) return;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>card.classList.add('card-anchor-flash')));
+  window.setTimeout(()=>card.classList.remove('card-anchor-flash'),1400);
+}
+
+function anchorCard(route,anchor){
+  const candidates=[`card-${anchor}`,anchor,anchor==='general'?'card-general-prefs':anchor==='backup'?'card-backup-data':anchor==='extensions'?'card-settings-skills':anchor==='upgrade'?'card-upgrade-official':anchor==='about'?'card-about':anchor==='mcp'?'card-ext-mcp':anchor==='notifications'?'card-diag-history':anchor];
+  for(const id of candidates){
+    const card=document.getElementById(id);
+    if(card) return card;
+  }
+  return null;
+}
+
+function applyHashAnchor(hash,silent=false){
+  const {route,params}=parseRouteHash(hash);
+  const anchor=params.get('card')||params.get('section')||params.get('tab');
+  if(!anchor) return;
+  const card=anchorCard(route,anchor);
+  if(!card||card.hidden) return;
+  card.classList.remove('card-anchor-flash');
+  window.setTimeout(()=>{
+    requestAnimationFrame(()=>{
+      const scroller=card.closest('.main');
+      const rect=card.getBoundingClientRect();
+      const viewport=scroller?.getBoundingClientRect();
+      const fullyVisible=viewport&&rect.top>=viewport.top-1&&rect.bottom<=viewport.bottom+1;
+      if(scroller&&!fullyVisible){
+        scroller.scrollTop=0;
+        void scroller.offsetHeight;
+        const top=card.getBoundingClientRect().top-scroller.getBoundingClientRect().top+scroller.scrollTop-8;
+        if(Math.abs(scroller.scrollTop-top)>2) scroller.scrollTo({top,behavior:'auto'});
+      }else if(!scroller){
+        card.scrollIntoView({behavior:'auto',block:'start'});
+      }
+      requestAnimationFrame(()=>{
+        const rect=card.getBoundingClientRect();
+        const view=scroller?.getBoundingClientRect();
+        if(!view||rect.top>=view.top-1&&rect.bottom<=view.bottom+1){
+          card.classList.add('card-anchor-flash');
+          window.setTimeout(()=>card.classList.remove('card-anchor-flash'),1400);
+        }else{
+          flashAnchor(card);
+        }
+      });
+      card.dataset.anchorActive='1';
+      window.setTimeout(()=>delete card.dataset.anchorActive,1400);
+    });
+  },silent?120:60);
+}
+
+// Tab anchors navigate to the explicit tab parameter without changing card selection.
+document.querySelectorAll('[data-anchor]').forEach(button=>{
+  button.addEventListener('click',()=>{
+    const route=button.closest('#settingsTabs')?'settings':button.closest('.ext-tabs')?'extensions':button.closest('.diag-tabs')?'logs':currentRoute;
+    if(route==='settings') showSettingsSection(button.dataset.anchor);
+    const target=buildAnchorHash(route,button.dataset.anchor);
+    history.replaceState(null,'',target);
+    window.__lastAnchorHash=target;
+    hashParams=parseRouteHash(target).params;
+    if(route==='extensions'){
+      document.querySelectorAll('.ext-tabs button').forEach(item=>item.classList.toggle('active',item.dataset.extTab===button.dataset.anchor));
+      applyExtTabs();
+    }
+    if(route==='logs'){
+      document.querySelectorAll('[data-diag-tab]').forEach(item=>item.classList.toggle('active',item.dataset.diagTab===button.dataset.anchor));
+      document.querySelectorAll('.diag-view').forEach(view=>view.classList.toggle('active',view.id===`diag-${button.dataset.anchor}`));
+    }
+    toast('原型模拟：已定位到 Tab 锚点。');
+  });
 });
 
 
@@ -2619,7 +2769,8 @@ function openSettingsSection(section){
 window.openSettingsSection=openSettingsSection;
 function showSettingsSection(section){
   const allowed=['general','installation','backup','extensions','migration','sync','cleanup','cli','upgrade','about'];
-  const next=allowed.includes(section)?section:(new URLSearchParams(location.search).get('section')||'general');
+  const requested=allowed.includes(section)?section:(section?undefined:hashParams?.get('section'))||parseRouteHash(location.hash).params.get('section')||'general';
+  const next=allowed.includes(requested)?requested:'general';
   document.querySelectorAll('#settingsTabs button').forEach(button=>{
     button.classList.toggle('active',button.dataset.settingsSection===next);
   });
@@ -3529,12 +3680,18 @@ try{storedTheme=window.localStorage.getItem('ocx-theme')||'system'}catch(e){}
 applyTheme(storedTheme);
 
 renderWebdav('unconfigured');
+createAnchorTitles();
 renderPrototypeNote(location.hash.slice(1)||'overview');
 renderNotificationHistory();
+
 setRoute(location.hash.slice(1)||'overview',true);
-if(currentRoute==='settings') showSettingsSection(new URLSearchParams(location.search).get('section')||'general');
+if(currentRoute==='settings') showSettingsSection(parseRouteHash(location.hash).params.get('section')||'general');
 renderEnv();
 setState('loading');
+setTimeout(()=>{
+  createAnchorTitles();
+  applyHashAnchor(location.hash,true);
+},100);
 setTimeout(()=>{setEnv('ready');setState('stopped')},800);
 </script>
 </body>
