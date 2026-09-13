@@ -348,6 +348,12 @@ html[data-theme="dark"] .tray-item:hover:not([disabled]){background:#ffffff12}
 html[data-theme="dark"] .tray-menu .tray-sep{background:#3d4148}
 html[data-theme="dark"] .tray-menu .tray-title{color:#a3a9b4}
 
+/* Tray has a standalone direct-access stage outside the mock desktop shell. */
+html[data-route="tray"] .desktop{display:none}
+.tray-stage{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:28px 16px}
+.tray-stage .route-section.active{width:min(900px,100%);gap:16px}
+.tray-stage .card{width:100%;margin:0}
+
 /* Root prototype routes keep screens connected without duplicating page shells. */
 
 .anchor-btn{width:24px;height:24px;flex:none;display:inline-grid;place-items:center;padding:0;border:0;border-radius:6px;background:transparent;color:var(--muted);cursor:pointer;opacity:0;transition:opacity var(--motion-fast),background var(--motion-fast),color var(--motion-fast)}
@@ -1438,52 +1444,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </article>
     </section>
 
-    <section class="route-section tray-route" id="route-tray">
-      <article class="card" id="card-tray-prototype">
-        <div class="card-head">
-          <div>
-            <h2>托盘原型 · 状态菜单</h2>
-            <p>展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。</p>
-          </div>
-          <div class="toolbar tray-controls" aria-label="托盘状态演示">
-            <button class="btn ghost" type="button" data-tray-state="stopped">未运行</button>
-            <button class="btn ghost" type="button" data-tray-state="starting">启动中</button>
-            <button class="btn ghost" type="button" data-tray-state="running">运行中</button>
-            <button class="btn ghost" type="button" data-tray-state="starting_failed">启动失败</button>
-            <button class="btn ghost" type="button" data-tray-state="external_takeover">外部接管</button>
-          </div>
-        </div>
-        <div class="tray-os" role="group" aria-label="托盘系统风格">
-          <button type="button" data-tray-os="mac" class="active">macOS 菜单栏</button>
-          <button type="button" data-tray-os="windows">Windows 通知区</button>
-        </div>
-        <div class="tray-menu-wrap" data-tray-shell="mac">
-          <div class="tray-menubar mac">
-            <span>Finder File Edit View Window Help</span>
-            <span class="tray-icon" title="OpenCodeX 托盘">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 21V12"/><path d="M5 7l7 5 7-5"/></svg>
-              <span class="tray-state"><span class="tray-dot stopped"></span><span data-tray-label>未运行</span></span>
-            </span>
-          </div>
-          <div class="tray-menu mac" role="menu" aria-label="macOS 托盘菜单">
-            <div class="tray-title"><b data-tray-label>未运行</b><div>OpenCodex · 127.0.0.1:10100</div></div>
-            <div class="tray-sep"></div>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="start" data-prototype-action="tray-start">启动 OpenCodex<span class="hint" data-tray-hint="start">可用</span></button>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="stop" data-prototype-action="tray-stop">停止<span class="hint" data-tray-hint="stop">未运行</span></button>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="restart" data-prototype-action="tray-restart">重启<span class="hint" data-tray-hint="restart">未运行</span></button>
-            <div class="tray-sep"></div>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-main" data-prototype-action="tray-open-main">打开主界面<span class="hint">App</span></button>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-panel" data-prototype-action="tray-open-panel">打开官方面板<span class="hint" data-tray-hint="panel">需运行</span></button>
-            <div class="tray-sep"></div>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-logs" data-prototype-action="tray-open-logs">打开日志</button>
-            <button class="tray-item" type="button" role="menuitem" data-tray-action="doctor" data-prototype-action="tray-doctor">运行 Doctor<span class="hint" data-tray-hint="doctor">建议</span></button>
-            <div class="tray-sep"></div>
-            <button class="tray-item danger" type="button" role="menuitem" data-tray-action="quit" data-prototype-action="tray-quit">退出桌面壳<span class="hint">⌘Q</span></button>
-          </div>
-        </div>
-      </article>
-    </section>
-
     <section class="route-section" id="route-settings">
       <div class="settings-tabs" id="settingsTabs" role="tablist" aria-label="设置分区">
         <button type="button" data-settings-section="general" class="active" data-anchor="general" aria-label="通用，查看锚点">通用<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -2310,6 +2270,57 @@ ocx update</code></pre>
   <div class="rz rz-se" data-rz="se" title="拖拽调整窗口大小"></div>
 </div>
 
+</div>
+
+  <div class="tray-stage" id="trayStage">
+    <section class="route-section tray-route" id="route-tray">
+      <article class="card" id="card-tray-prototype">
+        <div class="card-head">
+          <div>
+            <h2>托盘原型 · 状态菜单</h2>
+            <p>展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。</p>
+          </div>
+          <div class="toolbar tray-controls" aria-label="托盘状态演示">
+            <button class="btn ghost" type="button" data-tray-state="stopped">未运行</button>
+            <button class="btn ghost" type="button" data-tray-state="starting">启动中</button>
+            <button class="btn ghost" type="button" data-tray-state="running">运行中</button>
+            <button class="btn ghost" type="button" data-tray-state="starting_failed">启动失败</button>
+            <button class="btn ghost" type="button" data-tray-state="external_takeover">外部接管</button>
+          </div>
+        </div>
+        <div class="tray-os" role="group" aria-label="托盘系统风格">
+          <button type="button" data-tray-os="mac" class="active">macOS 菜单栏</button>
+          <button type="button" data-tray-os="windows">Windows 通知区</button>
+        </div>
+        <div class="tray-menu-wrap" data-tray-shell="mac">
+          <div class="tray-menubar mac">
+            <span>Finder File Edit View Window Help</span>
+            <span class="tray-icon" title="OpenCodeX 托盘">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 21V12"/><path d="M5 7l7 5 7-5"/></svg>
+              <span class="tray-state"><span class="tray-dot stopped"></span><span data-tray-label>未运行</span></span>
+            </span>
+          </div>
+          <div class="tray-menu mac" role="menu" aria-label="macOS 托盘菜单">
+            <div class="tray-title"><b data-tray-label>未运行</b><div>OpenCodex · 127.0.0.1:10100</div></div>
+            <div class="tray-sep"></div>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="start" data-prototype-action="tray-start">启动 OpenCodex<span class="hint" data-tray-hint="start">可用</span></button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="stop" data-prototype-action="tray-stop">停止<span class="hint" data-tray-hint="stop">未运行</span></button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="restart" data-prototype-action="tray-restart">重启<span class="hint" data-tray-hint="restart">未运行</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-main" data-prototype-action="tray-open-main">打开主界面<span class="hint">App</span></button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-panel" data-prototype-action="tray-open-panel">打开官方面板<span class="hint" data-tray-hint="panel">需运行</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="open-logs" data-prototype-action="tray-open-logs">打开日志</button>
+            <button class="tray-item" type="button" role="menuitem" data-tray-action="doctor" data-prototype-action="tray-doctor">运行 Doctor<span class="hint" data-tray-hint="doctor">建议</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item danger" type="button" role="menuitem" data-tray-action="quit" data-prototype-action="tray-quit">退出桌面壳<span class="hint">⌘Q</span></button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </div>
+
+
   <aside class="prototype-side" aria-label="原型说明">
     <div class="proto-head">
       <div>
@@ -2381,8 +2392,6 @@ ocx update</code></pre>
   </aside>
 
   <div class="toast" id="toastEl"></div>
-</div>
-</div>
 
 <script>
 const statePill=document.getElementById('statePill');
@@ -2812,6 +2821,7 @@ function setRoute(route, replace=false){
   renderPrototypeNote(next);
   if(next==='settings') renderPrototypeNote(`settings-${hashParams.get('section')||'general'}`);
   if(next==='extensions') renderPrototypeNote(`ext-${hashParams.get('tab')||'skills'}`);
+  if(next==='tray') renderTray();
   if(aboutRedirect) showSettingsSection('about');
   if(next!=='panel') document.body.classList.remove('panel-mode');
   if(next!=='roadmap'){
@@ -4083,6 +4093,7 @@ createAnchorTitles();
 setRoute(location.hash.slice(1)||'overview',true);
 if(currentRoute==='settings') showSettingsSection(parseRouteHash(location.hash).params.get('section')||'general');
 renderEnv();
+renderTray();
 setState('loading');
 setTimeout(()=>{
   createAnchorTitles();
