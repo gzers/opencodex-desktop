@@ -2311,13 +2311,6 @@ ocx update</code></pre>
             <h2>托盘原型 · 状态菜单</h2>
             <p>展示 macOS 与 Windows 的样式差异；菜单动作全部由管理器自有域触发，不直接读写 OpenCodex 配置。</p>
           </div>
-          <div class="toolbar tray-controls" aria-label="托盘状态演示">
-            <button class="btn ghost" type="button" data-tray-state="stopped">未运行</button>
-            <button class="btn ghost" type="button" data-tray-state="starting">启动中</button>
-            <button class="btn ghost" type="button" data-tray-state="running">运行中</button>
-            <button class="btn ghost" type="button" data-tray-state="starting_failed">启动失败</button>
-            <button class="btn ghost" type="button" data-tray-state="external_takeover">外部接管</button>
-          </div>
         </div>
         <div class="tray-os" role="group" aria-label="托盘系统风格">
           <button type="button" data-tray-os="mac" class="active">macOS 菜单栏</button>
@@ -2416,6 +2409,18 @@ ocx update</code></pre>
       <div class="proto-note-title" id="protoNoteTitle">概览</div>
       <div class="proto-note" id="protoNote">正在加载原型说明。</div>
       <ul id="protoButtonNotes"></ul>
+    </div>
+
+    <div class="proto-card" id="trayStateTester">
+      <div class="proto-note-title">托盘状态（mock 投影）</div>
+      <div class="scenarios" id="trayStates">
+        <button type="button" data-tray-state="stopped" class="active">未运行</button>
+        <button type="button" data-tray-state="starting">启动中</button>
+        <button type="button" data-tray-state="running">运行中</button>
+        <button type="button" data-tray-state="starting_failed">启动失败</button>
+        <button type="button" data-tray-state="external_takeover">外部接管</button>
+      </div>
+      <p class="proto-hint">状态切换只驱动托盘图标点、菜单标题与可用提示；不写入真实偏好。</p>
     </div>
 
     <div class="proto-card">
