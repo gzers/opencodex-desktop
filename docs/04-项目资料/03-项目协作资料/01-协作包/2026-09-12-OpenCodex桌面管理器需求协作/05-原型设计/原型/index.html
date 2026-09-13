@@ -326,6 +326,23 @@ html[data-route="overview"] #statePill{display:none}
 .ovb-detail-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 16px 16px}
 .ovb-detail-body .wide{grid-column:1/-1}
 
+/* 最近事件：只在详情展开时承载高窗口余量；不重复展示完整日志。
+   状态来源沿用 actionsByState 的同一份 mock，不做第二个状态机。 */
+.recent-events{display:none}
+.ovb-detail[open]~.recent-events{display:block}
+.recent-events-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.recent-events-head h2{margin:0;font-size:var(--text-subtitle)}
+.recent-events-head .btn{min-height:30px;padding:5px 10px}
+.recent-events-list{
+  margin:0;padding:0;list-style:none;display:grid;gap:8px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-label);line-height:1.6;
+}
+.recent-events-list li{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;
+  padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);
+}
+.recent-events-list time{display:inline-block;width:66px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.recent-events-list .recent-events-empty{grid-template-columns:minmax(0,1fr);color:var(--muted)}
 /* 模块区（配置迁移 / WebDAV 同步 / 版本升级）：顶部一行三格，
    动作区以分割线与上方信息分离，作为卡片页脚。 */
 .route-section.active.ov{display:flex;flex-direction:column;gap:16px}
@@ -335,7 +352,7 @@ html[data-route="overview"] #statePill{display:none}
   .main>*{max-width:1160px;margin-inline:auto}
   .main>#panelSection{max-width:none}
 }
-.mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;order:-1}
+.mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .mods>.card{margin-top:0}
 .mod{display:flex;flex-direction:column;gap:10px}
 .mod-head{display:flex;align-items:center;gap:10px}
@@ -717,6 +734,14 @@ body.panel-mode .panel-shell{height:100%}
           </div>
         </div>
       </details>
+
+      <section class="card recent-events" id="recentEventsSection" aria-labelledby="recentEventsTitle">
+        <div class="recent-events-head">
+          <h2 id="recentEventsTitle">最近事件</h2>
+          <button class="btn ghost" data-route="logs" type="button">打开诊断中心</button>
+        </div>
+        <ol class="recent-events-list" id="recentEventsList"></ol>
+      </section>
 
       <div class="mods" id="mods">
         <article class="card mod" data-mod-section="upgrade">
@@ -1303,7 +1328,8 @@ const routeNotes={
       ['进程按钮','按状态渲染：未运行只有「启动 / 刷新状态」，运行中有「打开面板 / 停止 / 重启 / 查看日志」，不画无解释的灰按钮。'],
       ['查看建议','仅 at-risk / 外部 provider 接管时出现，进入官方 restore 引导前需要确认。'],
       ['快捷动作','配置迁移 / WebDAV 同步 / 版本升级三张卡；按钮撑满内容宽度，存在建议动作时高亮（当前「检查更新」）。'],
-      ['Doctor','官方只读环境诊断，位于「诊断中心」，不在概览动作行。']
+      ['Doctor','官方只读环境诊断，位于「诊断中心」，不在概览动作行。'],
+      ['最近事件','仅运行详情展开时显示 3 条状态相关摘要；完整排障仍进「诊断中心」。']
     ]
   },
   panel:{
@@ -1373,6 +1399,23 @@ const scenarios={
 };
 
 // 方案 B / C：用一句状态说明替代「不可用的灰按钮」。
+const recentEvents={
+  normal:[
+    ['10:23:40','status refresh: ok'],
+    ['10:23:40','health: ready'],
+    ['10:23:41','config/provider: 已脱敏同步']
+  ],
+  risk:[
+    ['10:23:41','startup: at-risk'],
+    ['10:23:41','routingKind: custom-local'],
+    ['10:23:41','官方建议 ocx restore（需确认）']
+  ],
+  error:[
+    ['10:23:52','start failed: 端口 10100 被占用'],
+    ['10:23:52','exit code: 1'],
+    ['10:23:52','建议查看完整日志或运行 Doctor']
+  ]
+};
 const stateNote={
   loading:'正在探测本机 OpenCodex 安装与运行状态…',
   not_found:'未发现可运行的 OpenCodex 安装。原型不提供 npm 安装，安装形态保留给官方 CLI。',
@@ -1480,6 +1523,15 @@ function setRoute(route, replace=false){
   }
 }
 
+function renderRecentEvents(kind){
+  const list=document.getElementById('recentEventsList');
+  if(!list) return;
+  const items=recentEvents[kind]||[];
+  list.innerHTML=items.length
+    ? items.map(([time,message])=>`<li><time>${time}</time><span>${message}</span></li>`).join('')
+    : '<li class="recent-events-empty">暂无最近事件。</li>';
+}
+
 function render(){
   const s=scenarios[currentState];
   statePill.textContent=s.label;
@@ -1537,6 +1589,12 @@ function render(){
   } else {
     setLog(logHtml('normal'));
   }
+
+  renderRecentEvents(
+    ['at_risk','external_takeover'].includes(currentState)
+      ? 'risk'
+      : (['starting_failed','unreachable'].includes(currentState)?'error':'normal')
+  );
 
   const controls={
     start:document.querySelectorAll('[data-control="start"]'),
