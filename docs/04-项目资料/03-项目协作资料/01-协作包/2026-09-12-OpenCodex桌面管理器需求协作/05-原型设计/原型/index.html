@@ -680,6 +680,32 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .env-check .state-pill{min-height:24px;padding:2px 8px;font-size:var(--text-caption)}
 .env-check .state-pill::before{width:6px;height:6px}
 @media(max-width:900px){.env-check{grid-template-columns:1fr;gap:5px}}
+.about-card{display:grid;gap:16px}
+.about-card article{margin:0}
+.about-hero{border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(135deg,color-mix(in srgb,var(--brand) 8%,var(--panel)),var(--panel) 58%);padding:20px}
+.about-hero h2{margin:2px 0 5px;font-size:26px;letter-spacing:-.02em;line-height:1.15}
+.about-hero-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.about-hero-head p{margin:0;color:var(--muted);font-size:var(--text-body);max-width:760px}
+.about-kicker{display:block;color:var(--muted);font-size:var(--text-caption);font-weight:650;letter-spacing:.04em;text-transform:uppercase}
+.about-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0 0}
+.about-grid dt{color:var(--muted);font-size:var(--text-caption);margin-bottom:5px}
+.about-grid dd{margin:0;color:var(--text);font-size:var(--text-label);line-height:1.5}
+.about-grid .link-chip{margin-right:7px}
+.about-panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:18px}
+.about-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.about-head h3{margin:2px 0 4px;font-size:var(--text-subtitle)}
+.about-head p{margin:0;color:var(--muted);font-size:var(--text-label)}
+.about-list{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+.about-list li{position:relative;padding-left:14px;color:var(--text);font-size:var(--text-label);line-height:1.5}
+.about-list li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.about-note{margin:12px 0 0;color:var(--muted);font-size:var(--text-label);line-height:1.6}
+.about-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.about-compact{background:var(--rail)}
+.about-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0 0}
+.about-facts dt{color:var(--muted);font-size:var(--text-caption);margin-bottom:5px}
+.about-facts dd{margin:0;font-size:var(--text-label)}
+.about-facts .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
+@media(max-width:900px){.about-grid,.about-facts{grid-template-columns:1fr}.about-hero-head,.about-head{flex-direction:column}}
 
 
 </style>
@@ -723,6 +749,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       <button data-route="overview" id="overviewNavBtn" class="active" title="概览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">概览</span></button>
       <button data-route="panel" id="panelNavBtn" title="面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg><span class="nav-label">面板</span></button>
       <button data-route="logs" title="日志"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg><span class="nav-label">日志</span></button>
+      <button data-route="about" title="关于"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M9.5 12.5a2.5 2.5 0 0 1 5 0V17"/><path d="M10 17h4"/></svg><span class="nav-label">关于</span></button>
       <button data-route="settings" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="nav-label">设置</span></button>
     </nav>
   </aside>
@@ -1457,6 +1484,72 @@ ocx update</code></pre>
         </article>
       </section>
     </section>
+
+    <section class="route-section" id="route-about">
+      <article class="card about-card">
+        <article class="about-hero">
+          <div class="about-hero-head">
+            <div>
+              <span class="about-kicker">官方项目</span>
+              <h2>OpenCodex</h2>
+              <p>本机 OpenCodex 代理的桌面壳；不重写核心，不接管配置。</p>
+            </div>
+            <span class="tag">外部项目</span>
+          </div>
+          <dl class="about-grid">
+            <div><dt>项目归属</dt><dd>OpenCodex 由 <strong>lidge-jun</strong> 创建；npm 包由 <strong>bitkyc08</strong> 维护。</dd></div>
+            <div><dt>许可</dt><dd><strong>MIT</strong>。请阅读官方许可与第三方组件声明。</dd></div>
+            <div><dt>官方入口</dt><dd><button class="link-chip" type="button" data-prototype-action="about-open" data-about-open="site">官网</button><button class="link-chip" type="button" data-prototype-action="about-open" data-about-open="repo">GitHub</button><button class="link-chip" type="button" data-prototype-action="about-open" data-about-open="issues">Issues</button></dd></div>
+          </dl>
+        </article>
+
+        <article class="about-panel">
+          <div class="about-head">
+            <div>
+              <span class="about-kicker">本应用</span>
+              <h3>OpenCodeX-Desktop</h3>
+              <p>独立的桌面壳封装，不是 OpenCodex 官方作品。</p>
+            </div>
+            <span class="tag">v0.1.0 · mock</span>
+          </div>
+          <ul class="about-list">
+            <li><strong>不修改</strong> OpenCodex 的 provider、路由或模型映射。</li>
+            <li><strong>不改写</strong>官方配置；相关变更仍通过官方 CLI 完成。</li>
+            <li><strong>不替换</strong>官方更新核心；升级只做备份与官方引导。</li>
+            <li><strong>不重复分发</strong> OpenCodex；运行仍依赖本机已有的官方安装。</li>
+          </ul>
+        </article>
+
+        <article class="about-panel">
+          <div class="about-head">
+            <div>
+              <span class="about-kicker">版权与归属</span>
+              <h3>第三方作品与商标</h3>
+            </div>
+          </div>
+          <p class="about-note">OpenCodex 的名称、界面、品牌与其源代码归其权利人所有。本项目不修改、不重复分发其代码，也不参与官方许可条款；用户应遵守官方许可与服务条款。</p>
+          <div class="about-actions">
+            <button class="btn ghost" data-prototype-action="about-open" data-about-open="license">查看官方许可</button>
+            <button class="btn ghost" data-prototype-action="about-open" data-about-open="notices">查看第三方声明</button>
+          </div>
+        </article>
+
+        <article class="about-panel about-compact">
+          <div class="about-head">
+            <div>
+              <span class="about-kicker">版本信息</span>
+              <h3>安装与环境</h3>
+            </div>
+          </div>
+          <dl class="about-facts">
+            <div><dt>官方 OpenCodex</dt><dd><span class="mono">v2.50.0</span></dd></div>
+            <div><dt>npm 包</dt><dd><span class="mono">@bitkyc08/opencodex</span></dd></div>
+            <div><dt>桌面管理器</dt><dd><span class="mono">v0.1.0 · macOS</span></dd></div>
+            <div><dt>Tauri</dt><dd><span class="mono">v2 · 原型投影</span></dd></div>
+          </dl>
+        </article>
+      </article>
+    </section>
   </main>
 
   <div class="modal-mask" id="modalMask">
@@ -1572,7 +1665,8 @@ const routes={
   overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
   panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
   logs:{title:'诊断中心',subtitle:'日志历史与通知历史分 Tab 管理，支持清理与自动保留策略。'},
-  settings:{title:'设置',subtitle:'集中管理偏好、安装配置、备份、迁移、同步与升级。'}
+  settings:{title:'设置',subtitle:'集中管理偏好、安装配置、备份、迁移、同步与升级。'},
+  about:{title:'关于',subtitle:'先说明官方项目归属与许可，再声明桌面壳边界。'}
 };
 const routeNotes={
   overview:{
@@ -1628,6 +1722,16 @@ const routeNotes={
       ['WebDAV 同步','P2 端点、凭据、加密与冲突策略。'],
       ['CLI 控制面','默认关闭；开启后仅委托运行中实例执行管理器自有域命令，不改写 OpenCodex 配置。'],
       ['版本升级','两块：OpenCodex 版本（检查、备份、官方引导）与桌面管理器版本（应用自更新）。']
+    ]
+  },
+  about:{
+    title:'关于 · 官方归属与封装边界',
+    note:'关于页优先说明官方项目、作者与许可；本应用只声明桌面壳事实，不做二次品牌化或配置写入。',
+    items:[
+      ['官方优先','先展示 OpenCodex 项目归属、许可与官方入口。'],
+      ['封装边界','明确本应用不是官方作品，只提供发现、托管与观测能力。'],
+      ['版权提示','不重复分发官方代码，提示用户遵守官方许可与第三方声明。'],
+      ['版本事实','保留官方版本、npm 包、桌面壳版本与运行时信息的可读映射。']
     ]
   }
 };
@@ -2120,6 +2224,10 @@ document.addEventListener('click',event=>{
     openModal('开始 WebDAV 同步','同步采用冷同步；覆盖前会生成可恢复备份，冲突时会暂停并等待确认。','继续',()=>toast('原型拦截：不会连接或写入真实 WebDAV。'));
   }else if(action==='test-webdav'){
     toast('原型提示：不会连接真实 WebDAV 端点。');
+  }else if(action==='about-open' || actionTarget?.dataset?.aboutOpen){
+    const aboutTarget=actionTarget.getAttribute('data-about-open')||actionTarget.dataset.aboutOpen;
+    const labels={site:'OpenCodex 官网',repo:'OpenCodex GitHub 仓库',issues:'OpenCodex Issues',license:'官方许可文件',notices:'第三方组件声明'};
+    toast('原型拦截：不会打开'+(labels[aboutTarget]||'外部链接')+'。');
   }else if(action==='open-sync-settings'){
     setRoute('settings');showSettingsSection('sync');
   }else if(action==='check-update'){
