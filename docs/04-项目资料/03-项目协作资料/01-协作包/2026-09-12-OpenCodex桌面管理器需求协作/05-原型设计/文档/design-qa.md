@@ -1699,3 +1699,16 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - 关于页三块面板实际间距均为 16px。
 - `node --check` 通过；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归零 console / page error。
 - 截图确认关于页不再出现外层框，卡片间距保持一致。
+## 2026-09-13 · 本应用补充 Issues 入口
+
+### 修法
+
+- 「本应用 GitHub」右侧新增 Issues 链接 chip，与官方项目入口结构一致。
+- `app-repo` 与 `app-issues` 分别映射到 OpenCodeX-Desktop 的仓库与 Issues 提示，不与官方项目混淆。
+
+### 实测
+
+- 本应用入口按钮为「本应用 GitHub」与「Issues」，共 2 个。
+- 点击本应用 Issues 提示「原型拦截：不会打开OpenCodeX-Desktop Issues。」，不打开外部链接。
+- `node --check` 通过；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归零 console / page error。
+- 截图确认本应用链接区与官方项目链接区结构一致。
