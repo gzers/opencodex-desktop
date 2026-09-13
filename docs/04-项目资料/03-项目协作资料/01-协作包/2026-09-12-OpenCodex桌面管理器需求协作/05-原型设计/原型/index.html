@@ -120,7 +120,7 @@ html[data-theme="dark"]{
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
-  font-family:"OpenAI Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-family:"OpenAI Sans","Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Noto Sans KR",-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
   background:#ececf0;color:var(--text);font-size:var(--text-body);line-height:1.5;
 }
 html[data-theme="dark"] body{background:#111111}
@@ -264,13 +264,20 @@ button{font:inherit}
 .menu-hint code{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;color:var(--text);font-size:var(--text-caption)}
 .panel-shell{display:none;height:100%;background:var(--bg);overflow:hidden}
 .panel-shell.show{display:grid;grid-template-rows:1fr}
-.panel-frame{min-height:0;position:relative;background:var(--bg)}
-.panel-actions{position:absolute;right:14px;bottom:14px;z-index:5;display:flex;align-items:center;gap:4px;padding:4px;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);box-shadow:var(--shadow-sm);pointer-events:auto;backdrop-filter:blur(16px) saturate(1.2)}
-.panel-actions button{min-height:28px;border:0;background:transparent;color:var(--muted);border-radius:var(--radius-pill);padding:5px 9px;font-size:var(--text-label);cursor:pointer;transition:color var(--motion-fast),background var(--motion-fast)}
+.panel-frame{min-height:0;position:relative;background:var(--bg);min-width:960px}
+.panel-scale-tools{position:absolute;left:24px;bottom:14px;z-index:41;display:flex;align-items:center;gap:6px}
+.panel-scale-tools .panel-scale-label{display:inline-flex;align-items:center;justify-content:center;min-width:56px;min-height:24px;white-space:nowrap;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--muted);font-size:var(--text-caption);font-weight:600;box-shadow:var(--shadow-sm);pointer-events:none;transition:transform .14s ease}
+.panel-scale-tools .panel-scale-label[hidden]{display:none}
+.panel-scale-tools .panel-actions{position:static;flex-direction:row;align-items:center;gap:0;padding:3px;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);box-shadow:var(--shadow-sm);height:30px}
+.panel-scale-tools .panel-actions button{min-width:24px;min-height:22px;padding:2px 6px}
+.panel-scale-tools .panel-actions span{display:grid;place-items:center;min-width:36px;min-height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--rail);font-size:var(--text-caption);font-weight:600;color:var(--muted)}
+body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(100% / var(--panel-zoom,1));zoom:var(--panel-zoom,1);transform-origin:0 0}
+.panel-actions{position:absolute;right:14px;bottom:14px;z-index:5;display:flex;flex-direction:column;align-items:flex-end;gap:4px;padding:4px;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);box-shadow:var(--shadow-sm);pointer-events:auto;backdrop-filter:blur(16px) saturate(1.2)}
+.panel-actions button{min-height:26px;min-width:56px;border:0;background:transparent;color:var(--muted);border-radius:var(--radius-pill);padding:4px 8px;font-size:var(--text-caption);cursor:pointer;transition:color var(--motion-fast),background var(--motion-fast)}
 .panel-actions button:hover{background:var(--hover);color:var(--text)}
-.panel-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;color:var(--muted);font-size:var(--text-control)}
+.panel-empty{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:24px;color:var(--muted);font-size:var(--text-control)}
 .panel-empty strong{color:var(--text);font-size:var(--text-subtitle)}
-.panel-mock{position:absolute;inset:0;display:none;padding:26px 30px 74px;overflow:hidden}
+.panel-mock{position:absolute;inset:0;display:none;overflow:hidden}
 .panel-mock.show{display:block;background:var(--bg)}
 .mock-top{height:17px;background:var(--raised);border-radius:5px;width:240px;margin-bottom:16px}
 .mock-row{display:grid;grid-template-columns:220px 1fr;gap:18px;align-items:start}
@@ -283,6 +290,13 @@ button{font:inherit}
 @media(max-width:900px){.mock-row{grid-template-columns:1fr}.mock-content{grid-template-columns:1fr}}
 @media(max-width:1100px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1120px){.install-row{grid-template-columns:1fr}}
+/* Prototype panel zoom tester stays compact and anchored to the frame. */
+.panel-scale-tools{position:absolute;right:104px;bottom:14px;z-index:41;display:flex;align-items:center;gap:8px}
+.panel-scale-tools .panel-scale-label{display:inline-flex;align-items:center;justify-content:center;min-width:56px;min-height:24px;white-space:nowrap;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--muted);font-size:var(--text-caption);font-weight:600;box-shadow:var(--shadow-sm);pointer-events:none;transition:transform .14s ease}
+.panel-scale-tools .panel-scale-label[hidden]{display:none}
+.panel-scale-tools .panel-actions{position:static;display:flex;align-items:center;gap:0;padding:3px;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);box-shadow:var(--shadow-sm);height:30px}
+.panel-scale-tools .panel-actions button{min-width:24px;min-height:22px;padding:2px 6px}
+.panel-scale-tools .panel-actions span{display:grid;place-items:center;min-width:36px;min-height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--rail);font-size:var(--text-caption);font-weight:600;color:var(--muted)}
 /* Root prototype routes keep screens connected without duplicating page shells. */
 .route-section{display:none}
 .route-section.active{display:grid;gap:16px}
@@ -796,6 +810,14 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </div>
           <iframe id="panelReal" data-proxy="./官方页面快照/rendered-dom.html?v=zh-CN-2" title="OpenCodex 面板真实页面预览" referrerpolicy="no-referrer"></iframe>
+          <div class="panel-scale-tools" id="panelScaleTools">
+            <span class="panel-scale-label" id="panelScaleLabel" hidden><span id="panelScaleText">界面 100%</span></span>
+            <span class="panel-actions panel-actions-stack">
+              <button id="panelScaleUp" type="button" title="放大界面缩放">+</button>
+              <span id="panelScaleReadout" aria-live="polite">100%</span>
+              <button id="panelScaleDown" type="button" title="缩小界面缩放">−</button>
+            </span>
+          </div>
           <div class="panel-actions">
             <button id="panelOverviewBtn" title="返回概览">概览</button>
             <button id="panelReloadBtn" title="重新加载面板">重载</button>
@@ -978,6 +1000,20 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </div>
           <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">界面缩放</div>
+                <div class="setting-desc">外壳与官方面板使用同一缩放因子；默认 100% 保持 1:1 CSS 像素。</div>
+              </div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="界面缩放"><span class="select-value">100%</span></button>
+              <div class="select-menu" role="listbox" aria-label="界面缩放">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">100%</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">90%</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">80%</button>
+              </div>
+            </div></div>
+            </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">启动后自动打开面板</div>
@@ -2511,6 +2547,14 @@ document.getElementById('panelReloadBtn').onclick=()=>{
 };
 document.getElementById('panelRetryBtn').onclick=()=>showPanel(true);
 document.getElementById('panelBrowserBtn').onclick=()=>toast('原型拦截：不会打开真实浏览器面板。');
+document.getElementById('panelScaleDown').onclick=()=>{
+  const current=parseFloat(document.documentElement.style.getPropertyValue('--panel-zoom')||'1');
+  applyInterfaceScale(Math.round(current*100-10));
+};
+document.getElementById('panelScaleUp').onclick=()=>{
+  const current=parseFloat(document.documentElement.style.getPropertyValue('--panel-zoom')||'1');
+  applyInterfaceScale(Math.round(current*100+10));
+};
 document.getElementById('logDirBtn').onclick=()=>toast('原型拦截：不会打开真实目录。');
 
 // 诊断中心：官方 ocx doctor 的只读摘要（mock，不执行真实命令）。
@@ -2719,6 +2763,43 @@ try{
     if(themeSetting==='system') applyTheme('system');
   });
 }catch(e){}
+
+// ── 界面缩放：设置中的枚举同步作用于外壳与内嵌面板，验证同一缩放因子观感 ──
+// 真实 Tauri 实现中，面板侧应调用 setZoomFactor()，而不是 CSS 拉伸 iframe。
+function applyInterfaceScale(scale){
+  const value=Math.min(125,Math.max(75,Number(scale)||100));
+  document.documentElement.style.setProperty('--panel-zoom',String(value/100));
+  const label=document.getElementById('panelScaleLabel');
+  const text=document.getElementById('panelScaleText');
+  if(text) text.textContent='界面 '+value+'%';
+  if(label){
+    label.hidden=value===100;
+    label.style.transform=value>100?'scale(1.04)':(value<100?'scale(.96)':'none');
+  }
+  const readout=document.getElementById('panelScaleReadout');
+  if(readout) readout.textContent=value+'%';
+  const trigger=document.querySelector('[aria-label="界面缩放"]');
+  if(trigger){
+    const valueNode=trigger.querySelector('.select-value');
+    if(valueNode) valueNode.textContent=value+'%';
+    const menu=trigger.closest('.select')?.querySelector('.select-menu');
+    if(menu){
+      menu.querySelectorAll('.select-option').forEach(option=>{
+        const selected=option.textContent===value+'%';
+        option.classList.toggle('selected',selected);
+        option.setAttribute('aria-selected',String(selected));
+      });
+    }
+  }
+}
+window.applyInterfaceScale=applyInterfaceScale;
+
+document.addEventListener('click',event=>{
+  const scale=event.target.closest('.select-option');
+  if(scale&&scale.closest('.select')?.querySelector('[aria-label="界面缩放"]')){
+    applyInterfaceScale(parseFloat(scale.textContent));
+  }
+});
 
 function toast(msg){
   const el=document.getElementById('toastEl');
