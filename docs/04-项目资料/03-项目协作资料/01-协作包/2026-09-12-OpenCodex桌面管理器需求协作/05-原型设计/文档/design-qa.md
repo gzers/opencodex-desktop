@@ -2001,3 +2001,33 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 ### 实测
 
 - 表头为 3 列；选项名称不再频繁换行；`node --check` 通过。
+
+## 2026-09-13 · 记录 Skills 目录资产候选
+
+### 结论
+
+- 审计官方 OpenCodex v2.53.0（commit `aa05b3e`）后确认：官方只读取 `$CODEX_HOME/skills/*/SKILL.md` 用于 prompt 层识别，没有 Skills 安装、同步、备份、导出或 cc-switch 式软链接管理能力。
+- 用户使用的 `~/.agents/skills` 属于 cc-switch / Agent Skills 生态的目录，不是 OpenCodex 官方共享配置。
+- 因此 Skills 目录应定位为管理器自有资产，不放入「官方共享配置」，也不直接改写 cc-switch 或 OpenCodex 的 Skills 文件。
+- 本轮仅记录候选能力，不改原型。
+
+### 候选记录
+
+| 目录 | 定位 |
+|---|---|
+| `~/.agents/skills` | cc-switch / Agent Skills 生态使用的本机 Skills 来源 |
+| `$CODEX_HOME/skills` | OpenCodex 官方读取的 Skills 目录 |
+| 自定义路径 | 后续可选扩展 |
+
+| 能力 | 初步处理 |
+|---|---|
+| 升级前自动备份 | 可选包含 Skills 目录 |
+| 导入前自动备份 | 可选包含 Skills 目录 |
+| 配置迁移导出 | 可选包含 Skills 目录 |
+| WebDAV 同步 | 暂不纳入；后续若支持必须使用解引用复制，避免软链接跨机失效 |
+
+### 后续策略
+
+- 第一阶段优先采用保守方案：在备份、导入前备份和迁移导出中提供可选包含。
+- 不建议直接读写 cc-switch 配置或 Skills 文件；管理器侧先以发现、只读、复制和归档为主。
+- 若后续做成完整资产管理，可再评估独立「Skills 资产」卡片。
