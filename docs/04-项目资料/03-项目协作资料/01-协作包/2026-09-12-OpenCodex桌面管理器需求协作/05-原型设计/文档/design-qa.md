@@ -1190,3 +1190,26 @@ S2 会让一级导航常驻一块纯黑、与页面主按钮抢焦点；S1 是�
 - 默认态 `#cliRules` 隐藏；确认开启后显示，`#cliScopeRow` 与 `#cliBoundaryRow` 已不存在。
 - `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
 - 全套 19 张截图重出。
+
+## 2026-09-13 · Agent 接入与提示片段
+
+### 问题
+
+CLI 开启后，用户仍不知道怎么让外部 Agent「知道可以操作本软件」。只给命令示例缺少两层信息：入口怎么复制、Agent 需要哪些边界提示。
+
+### 修法
+
+把「命令入口」升级为「Agent 控制面」入口，并拆成两块：
+
+- **Agent 接入行**：提供「复制命令」与「复制 Agent 提示」两个动作。
+- **终端验证**：保留 `status/start/backup create/export --confirm --json` 示例。
+- **Agent 提示片段**：可复制文案，声明命令入口、先 `--help` 自发现能力、只操作管理器自有域、不改写 OpenCodex 配置、状态变更需确认、破坏性操作需确认标志、用 `--json` 校验输出。
+
+原型保持 mock：不写 PATH、不复制剪贴板；真实实现应让 Agent 通过 `--help` / `--json` 自发现能力，提示片段只负责边界声明。
+
+### 实测
+
+- 默认态 5 个相关区块均隐藏；确认开启后「Agent 接入 / 运行中实例 / 规则块 / 终端验证 / Agent 提示片段」全部显示。
+- 点击「复制 Agent 提示」触发原型 toast，不写剪贴板。
+- `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
+- 全套 19 张截图重出。
