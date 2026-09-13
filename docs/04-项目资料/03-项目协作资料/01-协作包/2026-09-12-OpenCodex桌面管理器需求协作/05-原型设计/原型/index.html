@@ -348,10 +348,12 @@ html[data-theme="dark"] .tray-item:hover:not([disabled]){background:#ffffff12}
 html[data-theme="dark"] .tray-menu .tray-sep{background:#3d4148}
 html[data-theme="dark"] .tray-menu .tray-title{color:#a3a9b4}
 
-/* Tray has a standalone direct-access stage outside the mock desktop shell. */
-html[data-route="tray"] .desktop{display:none}
-.tray-stage{min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:28px 16px}
+/* Tray reuses the desktop grid as a routed column; the app stage hides on direct access. */
+html[data-route="tray"] .desktop .stage{display:none}
+.tray-stage{display:none}
+html[data-route="tray"] .tray-stage{display:flex;min-height:100vh;justify-content:center;align-items:flex-start;padding:28px 16px}
 .tray-stage .route-section.active{width:min(900px,100%);gap:16px}
+html[data-route="tray"] .desktop{align-items:flex-start}
 .tray-stage .card{width:100%;margin:0}
 
 /* Root prototype routes keep screens connected without duplicating page shells. */
@@ -2263,7 +2265,6 @@ ocx update</code></pre>
   </div>
   </div>
 
-</div>
 
   <div class="rz rz-e" data-rz="e" title="拖拽调整宽度"></div>
   <div class="rz rz-s" data-rz="s" title="拖拽调整高度"></div>
