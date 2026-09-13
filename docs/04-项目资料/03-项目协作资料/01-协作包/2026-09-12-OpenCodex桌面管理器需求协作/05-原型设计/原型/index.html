@@ -828,7 +828,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .agent-path-value{display:flex;align-items:center;min-width:0}
 .agent-path-value code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-.agent-path-copy{padding:7px 10px}
+.agent-path-copy{padding:5px 9px}
+.agent-path-copy code{font-size:var(--text-caption)}
 .agent-path-copy code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .agent-path-copy::after{color:var(--muted)}
 .agent-path-copy.copied::after{color:var(--green)}
@@ -1728,48 +1729,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
-        <article class="card" id="card-skills-paths">
-          <div class="card-head">
-            <div>
-              <h2>Skills 路径</h2>
-              <p>集中查看并打开各客户端 Skills 目录；目录覆盖后仍指向当前生效位置。</p>
-            </div>
-          </div>
-          <div class="agent-path-list">
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.claude/skills" title="复制路径"><code>~/.claude/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.codex/skills" title="复制路径"><code>~/.codex/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.gemini/skills" title="复制路径"><code>~/.gemini/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.grok/skills" title="复制路径"><code>~/.grok/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.config/opencode/skills" title="复制路径"><code>~/.config/opencode/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/skills">打开目录</button></div>
-            </div>
-            <div class="agent-path-row">
-              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
-              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.hermes/skills" title="复制路径"><code>~/.hermes/skills</code></button>
-              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/skills">打开目录</button></div>
-            </div>
-          </div>
-        </article>
-
-
         <article class="card" id="card-settings-mcp">
           <div class="card-head">
             <div>
@@ -1865,6 +1824,48 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </div>
         </article>
+
+        <article class="card" id="card-skills-paths">
+          <div class="card-head">
+            <div>
+              <h2>Skills 路径</h2>
+              <p>集中查看并打开各客户端 Skills 目录；目录覆盖后仍指向当前生效位置。</p>
+            </div>
+          </div>
+          <div class="agent-path-list">
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-claude"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.claude/skills" title="复制路径"><code>~/.claude/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.claude/skills">打开目录</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-codex"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.codex/skills" title="复制路径"><code>~/.codex/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.codex/skills">打开目录</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-gemini"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.gemini/skills" title="复制路径"><code>~/.gemini/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.gemini/skills">打开目录</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-grok"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.grok/skills" title="复制路径"><code>~/.grok/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.grok/skills">打开目录</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-opencode"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.config/opencode/skills" title="复制路径"><code>~/.config/opencode/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.config/opencode/skills">打开目录</button></div>
+            </div>
+            <div class="agent-path-row">
+              <div class="agent-path-app"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-hermesagent"/></svg></div>
+              <button class="cli-copy-btn agent-path-copy" type="button" data-prototype-action="copy-agent-path" data-path="/Users/ezio/.hermes/skills" title="复制路径"><code>~/.hermes/skills</code></button>
+              <div class="agent-path-actions"><button class="btn ghost" type="button" data-prototype-action="open-path" data-path="/Users/ezio/.hermes/skills">打开目录</button></div>
+            </div>
+          </div>
+        </article>
+
 
       </section>
 

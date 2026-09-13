@@ -2344,3 +2344,17 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - 点击第一条路径后剪贴板读取值为 `/Users/ezio/.claude/skills`，控件出现「已复制」状态。
 - 无页面 JS / console 错误，视口无横向溢出。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · 路径卡顺序与字号校准
+
+### 修法
+
+- `Skills 路径` 移到 `MCP 管理` 之后，最终顺序为 `Skills 管理 → MCP 管理 → MCP 路径 → Skills 路径`。
+- 路径复制控件字号改为 `var(--text-caption)`，内边距调整为 `5px 9px`，使路径观感对齐其他可复制路径控件。
+
+### 实测
+
+- Playwright 验证四卡顺序为 `Skills 管理 → MCP 管理 → MCP 路径 → Skills 路径`；两组路径各 6 行。
+- 路径字号实测 11px，控件高度 29px；点击复制剪贴板读取值为 `/Users/ezio/.claude/skills`。
+- 无页面 JS / console 错误，视口无横向溢出。
+- `node --check` 与 `git diff --check` 通过。
