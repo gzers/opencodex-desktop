@@ -1413,12 +1413,12 @@ ocx update</code></pre>
     <div class="proto-card">
       <div class="proto-note-title">环境前置条件（mock 投影）</div>
       <div class="scenarios" id="envStates">
-        <button type="button" data-env="checking" class="active">检查中</button>
+        <button type="button" data-env="checking">检查中</button>
         <button type="button" data-env="missing_node_brew">缺 Node.js · 有 brew</button>
         <button type="button" data-env="missing_node_nobrew">缺 Node.js · 无 brew</button>
         <button type="button" data-env="missing_npm">缺 npm</button>
         <button type="button" data-env="missing_ocx">缺 OpenCodex</button>
-        <button type="button" data-env="ready">环境通过</button>
+        <button type="button" data-env="ready" class="active">环境通过</button>
       </div>
       <p class="proto-hint">检测按 Node.js → npm → OpenCodex 顺序短路；缺前置时 OpenCodex 发现被阻塞。所有检测均为 mock。</p>
     </div>
@@ -1606,8 +1606,8 @@ const envStates={
     checks:[['Node.js','已发现','ok'],['npm','已发现','ok'],['OpenCodex','已发现','ok']],
     commands:[]}
 };
-let envState='checking';
-let envGateActive=true;
+let envState='ready';
+let envGateActive=false;
 
 function renderEnv(){
   const gate=document.getElementById('envGate');
@@ -1626,7 +1626,7 @@ function renderEnv(){
 }
 function setEnv(next, keepBlocking=true){
   envState=envStates[next]?next:'checking';
-  if(next==='ready') envGateActive=false;
+  envGateActive=envState!=='ready';
   renderEnv();
   render();
 }
@@ -2463,7 +2463,7 @@ setRoute(location.hash.slice(1)||'overview',true);
 if(currentRoute==='settings') showSettingsSection(new URLSearchParams(location.search).get('section')||'general');
 renderEnv();
 setState('loading');
-setTimeout(()=>{setEnv('missing_node_brew');setState('stopped')},800);
+setTimeout(()=>{setEnv('ready');setState('stopped')},800);
 </script>
 </body>
 </html>
