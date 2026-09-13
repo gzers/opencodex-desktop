@@ -1806,3 +1806,31 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - 通用设置两张卡标题分别为「桌面壳偏好」「官方共享配置」，共 7 行设置。
 - 官方共享配置当前只有 1 行，且带「官方共享」标签；开关点击提示「原型模拟：随 Codex 启动 OpenCodex已关闭；不保存真实偏好。」。
 - `node --check` 通过；通用设置切换流程零 console / page error。
+
+## 2026-09-13 · 共享配置候选记录
+
+### 结论
+
+- 通用设置的「官方共享配置」当前只保留 `codexAutoStart`，对应「随 Codex 启动 OpenCodex」。
+- `codexDesktopAuthless` 与 `codexClientCompaction` 虽然来自官方 `/api/settings`，可被共享，但本轮决定只记录，不加入原型。
+- 原型不新增共享配置行，避免首批面暴露过多官方运行行为。
+
+### 候选明细
+
+| 官方字段 | 展示语义 | 结论 | 说明 |
+|---|---|---|---|
+| `codexAutoStart` | 随 Codex 启动 OpenCodex | 已共享 | 当前唯一放入通用设置的官方共享项，默认开启。 |
+| `codexDesktopAuthless` | 不登录直接打开 Codex | 暂不共享 | 官方接口支持，但涉及登录形态，先记录。 |
+| `codexClientCompaction` | 使用客户端压缩 | 暂不共享 | 官方接口支持，但涉及运行行为，先记录。 |
+| `oauthOpenBrowser` | 登录时打开浏览器 | 不放入首批 | 偏登录流程细节。 |
+| `streamMode` | 流式处理策略 | 不放入首批 | 偏运维/高级策略。 |
+| `appOwnedMemoryBudgetMb` | 应用内存预算 | 不放入首批 | 数值型运维配置。 |
+| `ultraFastTier` | 保留自定义 ultrafast 层级 | 不放入首批 | 属模型层级策略。 |
+| `codexMainAccountHardLock` | 主账户高占用阻断 | 不放入首批 | 有阻断/安全含义，需要确认流程。 |
+| `codexAccountPickerEnabled` | 账号选择器开关 | 不放入首批 | 需要账户映射配合。 |
+| `codexQuotaAutoRefresh` | 按账户刷新额度 | 不放入首批 | 按账户结构，UI 复杂。 |
+| `codexShimAutoRestore` | Codex shim 自动恢复 | 不共享 | 无 `/api/settings` 路由，只能走 `ocx config set`。 |
+
+### 实测
+
+- 审计基于官方源码 `v2.53.0 / commit aa05b3e`；原型本轮无代码变更。
