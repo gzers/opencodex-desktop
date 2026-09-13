@@ -338,6 +338,8 @@ html[data-route="overview"] #statePill{display:none}
 .cli-preview h4{margin:0 0 6px;font-size:var(--text-label);font-weight:650;color:var(--muted)}
 .cli-preview pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text)}
 .cli-preview p{margin:8px 0 0;color:var(--muted);font-size:var(--text-caption)}
+.cli-preview.official{border-color:color-mix(in srgb,var(--text) 14%,transparent)}
+.cli-preview.official h4{color:var(--text)}
 /* 最近事件：只在详情展开时承载高窗口余量；不重复展示完整日志。
    状态来源沿用 actionsByState 的同一份 mock，不做第二个状态机。 */
 .recent-events{display:none}
@@ -1196,16 +1198,36 @@ body.panel-mode .panel-shell{height:100%}
             <h3>开放能力</h3>
             <p>发现与只读状态、启停、数据目录、备份、加密导出 / 导入、WebDAV 同步、自更新检查。</p>
             <h3>明确不开放</h3>
-            <p>provider、路由、模型映射等 OpenCodex 配置仍走官方 CLI；CLI 不做第二个写入者。</p>
+            <p>provider、路由、模型映射等 OpenCodex 配置仍走官方 CLI（<code>ocx</code>）；管理器 CLI 不做第二个写入者。常用入口见下方「OpenCodex 配置 · 官方 CLI」。</p>
           </div>
 
           <div class="cli-preview" id="cliAccess" hidden>
-            <h4>终端验证</h4>
+            <h4>先看帮助</h4>
+            <pre><code>opencodex-desktop --help
+opencodex-desktop status --json</code></pre>
+            <p><code>--help</code> 列出当前版本实际支持的命令与参数；脚本和 Agent 以后用它自发现能力，不硬编码命令集。</p>
+          </div>
+
+          <div class="cli-preview" id="cliCommands" hidden>
+            <h4>管理器自有域示例</h4>
             <pre><code>opencodex-desktop status --json
 opencodex-desktop start --json
+opencodex-desktop stop --json
+opencodex-desktop restart --json
 opencodex-desktop backup create --json
-opencodex-desktop export --confirm --json</code></pre>
-            <p>变更层命令需运行实例与显式确认；破坏性操作必须带确认标志，备份语义与 GUI 一致。</p>
+opencodex-desktop export --confirm --json
+opencodex-desktop import --confirm --json
+opencodex-desktop sync run --json</code></pre>
+            <p>变更层命令需运行实例与显式确认；破坏性操作必须带确认标志，备份语义与 GUI 一致。命令集待 IMP 冻结，当前仅为 mock 示例。</p>
+          </div>
+
+          <div class="cli-preview official" id="cliOfficial" hidden>
+            <h4>OpenCodex 配置 · 官方 CLI</h4>
+            <pre><code>ocx --help
+ocx status --json
+ocx restore
+ocx update</code></pre>
+            <p>provider、路由、模型映射等自身配置不属于管理器 CLI；桌面壳只展示入口和检测到的接管 / at-risk 状态，不代理或包装写入动作。</p>
           </div>
 
           <div class="cli-preview" id="cliAgentPrompt" hidden>
@@ -1213,7 +1235,7 @@ opencodex-desktop export --confirm --json</code></pre>
             <pre><code>本机已启用 OpenCodeX-Desktop CLI 控制面。
 可用命令：opencodex-desktop &lt;command&gt; [options]，先执行 --help 查看能力。
 只操作管理器自有域：发现与只读状态、启停、数据目录、备份、加密导出/导入、WebDAV 同步、自更新检查。
-不要改写 OpenCodex 自身配置（provider、路由、模型映射）；该类变更走官方 CLI。
+不要改写 OpenCodex 自身配置（provider、路由、模型映射）；如需变更，提示用户运行官方 CLI（ocx）。
 状态变更需显式确认；破坏性操作必须带确认标志，先 --json 校验输出。</code></pre>
             <p>提示片段只声明边界与入口；命令集待 IMP 冻结，真实实现应让 Agent 通过 <code>--help</code> / <code>--json</code> 自发现能力。</p>
           </div>
@@ -1771,7 +1793,7 @@ document.addEventListener('click',event=>{
     toast('原型提示：会展示备份位置、错误摘要和建议恢复动作。');
   }else if(action==='cli-enable'){
     openModal('开启 CLI 控制面','将注册本机命令入口，并使用本机 IPC 访问控制。CLI 只委托运行中管理器实例执行自有域命令，不提供 OpenCodex 配置写入通道。','开启',()=>{
-      ['cliAgentRow','cliRunRow','cliRules','cliAccess','cliAgentPrompt'].forEach(id=>{document.getElementById(id).hidden=false});
+      ['cliAgentRow','cliRunRow','cliRules','cliAccess','cliCommands','cliOfficial','cliAgentPrompt'].forEach(id=>{document.getElementById(id).hidden=false});
       toast('原型模拟：CLI 控制面已开启。');
     });
   }else if(action==='cli-copy'){
