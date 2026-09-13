@@ -255,6 +255,17 @@ button{font:inherit}
 .modal h3{margin:0 0 8px;font-size:var(--text-title)}
 .modal p{color:var(--muted);margin:0 0 15px;font-size:var(--text-body)}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px}
+.modal-warning{display:flex;gap:8px;align-items:flex-start;margin-bottom:12px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--amber) 34%,transparent);border-left:3px solid var(--amber);border-radius:var(--radius-sm);background:var(--amber-soft);color:var(--text);font-size:var(--text-label);line-height:1.5}
+.modal-warning strong{font-weight:650}
+.reset-table{width:100%;border-collapse:collapse;margin:0 0 14px}
+.reset-table th,.reset-table td{padding:9px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:middle;font-size:var(--text-label)}
+.reset-table th{color:var(--muted);font-weight:600;white-space:nowrap}
+.reset-table td{color:var(--text)}
+.reset-table .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.reset-table .reset-arrow{color:var(--muted);padding:0 7px;white-space:nowrap}
+.reset-table tr:last-child td{border-bottom:0}
+.reset-table tr.official td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.reset-table tr.official td:first-child{border-left:3px solid var(--accent)}
 .toast{position:absolute;right:20px;bottom:24px;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:var(--radius);font-size:var(--text-control);box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:opacity var(--motion-normal),transform var(--motion-normal);z-index:40}
 .toast.show{opacity:1;transform:none}
 
@@ -1082,6 +1093,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
               <h2>官方共享配置</h2>
               <p>与官方 OpenCodex 使用同一配置源；模型、路由与 provider 仍由官方面板或官方 CLI 管理。</p>
             </div>
+            <button class="btn ghost" data-prototype-action="reset-general">还原默认偏好</button>
           </div>
           <div class="setting-list">
             <div class="setting-row">
@@ -2268,6 +2280,24 @@ document.addEventListener('click',event=>{
     toast('原型模拟：会重新检查 node / npm / ocx。');
   }else if(action==='env-guide'){
     openSettingsSection('installation');
+  }else if(action==='reset-general'){
+    const defaults=[
+      {name:'界面缩放', current:'110%', value:'100%', official:false},
+      {name:'启动时打开主界面', current:'关闭', value:'开启', official:false},
+      {name:'启动后自动打开面板', current:'关闭', value:'开启', official:false},
+      {name:'面板打开方式', current:'浏览器兜底', value:'内嵌优先', official:false},
+      {name:'关闭窗口后保持代理运行', current:'关闭', value:'开启', official:false},
+      {name:'启停结果通知', current:'关闭', value:'开启', official:false},
+      {name:'同步冲突提醒', current:'关闭', value:'开启', official:false},
+      {name:'随 Codex 启动 OpenCodex', current:'关闭', value:'开启', official:true}
+    ];
+    const rows=defaults.map(item=>'<tr'+(item.official?' class="official"':'')+'><td>'+item.name+'</td><td class="mono">'+item.current+'</td><td class="reset-arrow">→</td><td class="mono">'+item.value+'</td></tr>').join('');
+    openModal(
+      '还原默认偏好',
+      '<p class="modal-warning"><strong>警告：</strong>将还原桌面壳偏好与官方共享配置；修改会按默认值写入，并可能影响官方同源开关。</p><table class="reset-table"><thead><tr><th>选项</th><th>原值</th><th></th><th>默认值</th></tr></thead><tbody>'+rows+'</tbody></table>',
+      '确认还原',
+      ()=>toast('原型模拟：已还原 8 项默认偏好；官方共享项仍按官方同源通道写入。')
+    );
   }else if(action==='export'){
     openModal('导出配置','将生成全量配置的加密导出容器；敏感值不会明文展示。导出前会确认口令与目标目录。','继续',()=>toast('原型拦截：不会生成真实导出容器。'));
   }else if(action==='import'){
