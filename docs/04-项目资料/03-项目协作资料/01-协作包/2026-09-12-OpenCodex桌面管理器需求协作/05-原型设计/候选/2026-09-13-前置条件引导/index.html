@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>候选预览 · 前置条件引导</title>
+<style>
+:root{
+  --bg:#f4f4f6;--panel:#ffffff;--rail:#f7f7f8;--raised:#f0f0f2;--hover:#ececef;
+  --border:#e2e2e5;--border-soft:#ececef;--text:#141414;--muted:#6e6e73;
+  --accent:#0d0d0d;--accent-ink:#fff;--green:#0f8a4d;--amber:#b45309;--red:#c2362c;--blue:#2860e1;
+  --green-soft:#0f8a4d12;--amber-soft:#b4530914;--red-soft:#c2362c12;--blue-soft:#2860e114;
+  --radius-sm:8px;--radius:12px;--radius-lg:16px;--radius-pill:999px;
+  --text-micro:11px;--text-caption:12px;--text-label:13px;--text-body:14px;--text-subtitle:17px;
+  --control-md:36px;--shadow-sm:0 1px 2px #0000000a;--shadow:0 12px 28px #0000001f;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 "OpenAI Sans",-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC",system-ui,sans-serif}
+.page{max-width:1280px;margin:0 auto;padding:28px 22px 50px}
+.review-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin-bottom:18px}
+.review-head h1{font-size:22px;margin:0}
+.review-head p{margin:6px 0 0;color:var(--muted);max-width:760px}
+.review-badge{white-space:nowrap;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--panel);color:var(--muted);font-size:12px;font-weight:600}
+.candidates{display:flex;gap:8px;margin:18px 0 14px;flex-wrap:wrap}
+.candidates button{min-height:34px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer}
+.candidates button.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.mockbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;color:var(--muted);font-size:12px}
+.mockbar b{color:var(--text)}
+.states{display:inline-flex;gap:6px;flex-wrap:wrap}
+.tag{padding:3px 8px;border:1px solid var(--border);border-radius:999px;background:var(--panel);color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap}
+.mockbar button{min-height:28px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:999px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
+.mockbar button.active{background:var(--raised);color:var(--text);font-weight:600}
+.candidate{display:none}
+.candidate.active{display:block}
+.candidate-note{margin:0 0 14px;color:var(--muted);font-size:13px}
+.desktop{border:1px solid color-mix(in srgb,#000 12%,transparent);border-radius:18px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.titlebar{display:grid;grid-template-columns:90px 1fr 120px;align-items:center;height:38px;background:#fbfbfc;border-bottom:1px solid var(--border)}
+.traffic{display:flex;gap:7px;padding-left:14px}.traffic span{width:11px;height:11px;border-radius:50%}
+.traffic .close{background:#ff5f57}.traffic .minimize{background:#febc2e}.traffic .zoom{background:#28c840}
+.window-title{text-align:center;font-size:12px;color:var(--muted);font-weight:600}
+.window-meta{text-align:right;padding-right:14px;font-size:11px;color:var(--muted)}
+.shell{display:grid;grid-template-columns:190px minmax(0,1fr);min-height:680px}
+.side{border-right:1px solid var(--border);background:#fbfbfc;padding:16px 12px}
+.brand{display:flex;gap:9px;align-items:center;padding:4px 8px 16px}
+.brand-logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(180deg,#b1a7ff,#3941ff)}
+.brand strong{font-size:13px;display:block}.brand span{color:var(--muted);font-size:10px;display:block}
+.nav{display:grid;gap:4px}
+.nav button{display:flex;align-items:center;gap:8px;min-height:34px;border:0;background:transparent;color:var(--muted);border-radius:8px;padding:0 9px;font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.nav button.active{background:#0d0d0d0f;color:var(--text);font-weight:600}
+.main{display:flex;flex-direction:column;min-width:0;background:var(--bg)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 20px;border-bottom:1px solid var(--border);background:color-mix(in srgb,var(--panel) 82%,transparent)}
+.page-title h2{margin:0;font-size:17px}.page-title p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.pill{padding:4px 9px;border-radius:999px;background:var(--red-soft);color:var(--red);font-size:12px;font-weight:600;white-space:nowrap}
+.pill.ok{background:var(--green-soft);color:var(--green)}
+.pill.busy{background:var(--blue-soft);color:var(--blue)}
+.content{padding:20px;flex:1;min-height:0}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:var(--shadow-sm)}
+.card h3{margin:0;font-size:15px}.card p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.gate{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:10px;padding:16px}
+.gate.ok{border-color:color-mix(in srgb,var(--green) 26%,transparent);border-left-color:var(--green);background:var(--green-soft)}
+.gate.busy{border-color:color-mix(in srgb,var(--blue) 24%,transparent);border-left-color:var(--blue);background:var(--blue-soft)}
+.gate-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.gate-head h4{margin:0;font-size:16px}
+.gate-head p{margin:5px 0 0;color:var(--muted);font-size:13px;max-width:760px}
+.checks{display:grid;gap:8px;margin:14px 0}
+.check{display:grid;grid-template-columns:130px 1fr auto;align-items:center;gap:10px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:var(--panel)}
+.check b{font-size:13px}.check span{color:var(--muted);font-size:12px}
+.status{font-size:12px;font-weight:650;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.status.ok{background:var(--green-soft);color:var(--green)}
+.status.warn{background:var(--amber-soft);color:var(--amber)}
+.status.bad{background:var(--red-soft);color:var(--red)}
+.status.busy{background:var(--blue-soft);color:var(--blue)}
+.copy{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;text-align:left;min-height:36px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--rail);color:var(--text);font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;cursor:pointer}
+.copy::after{content:"复制";color:var(--muted);font-size:11px;font-weight:700}
+.copy.copied{border-color:color-mix(in srgb,var(--green) 34%,transparent);background:var(--green-soft)}
+.copy.copied::after{content:"已复制";color:var(--green)}
+.guidance{margin-top:14px;padding-top:14px;border-top:1px solid var(--border-soft)}
+.guidance-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.command{margin-bottom:8px}
+.command-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:5px;color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{min-height:34px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:8px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:var(--raised);border-color:transparent}
+.bound-note{margin:12px 0 0;color:var(--muted);font-size:12px}
+.banner{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center}
+.banner h4{margin:0;font-size:14px}.banner p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.ready-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.tile{padding:11px;border:1px solid var(--border);border-radius:9px;background:var(--rail)}
+.tile label{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px;margin-bottom:6px}
+.tile label::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.tile.positive label::before{background:var(--green)}
+.tile.warning label::before{background:var(--amber)}
+.tile.info label::before{background:var(--blue)}
+.tile div{font-size:13px;font-weight:650}
+.overlay-wrap{min-height:100%;display:grid;place-items:center;padding:12px}
+.overlay{width:min(720px,100%)}
+.disabled-grid{opacity:.45;pointer-events:none;filter:saturate(.6)}
+.footer{margin-top:22px;color:var(--muted);font-size:12px}
+.toast{position:fixed;right:22px;bottom:24px;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:.18s ease;pointer-events:none;z-index:99}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:1000px){.grid,.ready-strip{grid-template-columns:1fr}.check{grid-template-columns:1fr;gap:6px}.shell{grid-template-columns:1fr}.side{display:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="review-head">
+    <div>
+      <h1>候选预览 · 安装前置条件引导</h1>
+      <p>这是独立评审稿，不改动正式原型。三种方向都覆盖首次打开、检测顺序、缺失提示、可复制命令和不代装边界；请先看交互与信息层级，再决定是否合并。</p>
+    </div>
+    <div class="review-badge">仅评审 · mock only</div>
+  </div>
+  <div class="candidates" role="tablist" aria-label="候选方案">
+    <button class="active" data-candidate="a">方案 A · 概览环境门禁卡</button>
+    <button data-candidate="b">方案 B · 首屏就绪引导卡</button>
+    <button data-candidate="c">方案 C · 顶部横幅 + 常规概览</button>
+  </div>
+
+  <section class="candidate active" id="candidate-a">
+    <p class="candidate-note"><b>定位：</b>首次打开时，环境门禁取代概览状态卡，给出最短修复动作；常规概览仍可见但明确被阻塞。</p>
+    <div class="mockbar"><b>状态：</b><div id="statesA" class="states"></div></div>
+    <div class="desktop">
+      <div class="titlebar"><div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div><div class="window-title">OpenCodeX-Desktop</div><div class="window-meta">本地环境</div></div>
+      <div class="shell">
+        <aside class="side"><div class="brand"><div class="brand-logo"></div><div><strong>OpenCodeX-Desktop</strong><span>Desktop Manager</span></div></div><div class="nav"><button class="active">概览</button><button>面板</button><button>日志</button><button>设置</button></div></aside>
+        <main class="main"><div class="topbar"><div class="page-title"><h2>OpenCodex 运行概览</h2><p>发现安装、托管官方启停子进程并观察状态。</p></div><div class="pill" id="pillA">环境未通过</div></div><div class="content" id="contentA"></div></main>
+      </div>
+    </div>
+  </section>
+
+  <section class="candidate" id="candidate-b">
+    <p class="candidate-note"><b>定位：</b>环境未就绪时进入更强的首屏引导，暂时收起常规概览；适合全新机器，但相比 A 更打断。</p>
+    <div class="mockbar"><b>状态：</b><div id="statesB" class="states"></div></div>
+    <div class="desktop">
+      <div class="titlebar"><div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div><div class="window-title">OpenCodeX-Desktop</div><div class="window-meta">本地环境</div></div>
+      <div class="shell">
+        <aside class="side"><div class="brand"><div class="brand-logo"></div><div><strong>OpenCodeX-Desktop</strong><span>Desktop Manager</span></div></div><div class="nav"><button class="active">概览</button><button>面板</button><button>日志</button><button>设置</button></div></aside>
+        <main class="main"><div class="topbar"><div class="page-title"><h2>环境检查</h2><p>通过后进入 OpenCodex 运行概览。</p></div><div class="pill" id="pillB">环境未通过</div></div><div class="content" id="contentB"></div></main>
+      </div>
+    </div>
+  </section>
+
+  <section class="candidate" id="candidate-c">
+    <p class="candidate-note"><b>定位：</b>保持常规概览，不替换原状态卡；用顶部横幅提示阻断原因，完整前置状态仍进设置。侵入性最低，但修复动作较分散。</p>
+    <div class="mockbar"><b>状态：</b><div id="statesC" class="states"></div></div>
+    <div class="desktop">
+      <div class="titlebar"><div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div><div class="window-title">OpenCodeX-Desktop</div><div class="window-meta">本地环境</div></div>
+      <div class="shell">
+        <aside class="side"><div class="brand"><div class="brand-logo"></div><div><strong>OpenCodeX-Desktop</strong><span>Desktop Manager</span></div></div><div class="nav"><button class="active">概览</button><button>面板</button><button>日志</button><button>设置</button></div></aside>
+        <main class="main"><div class="topbar"><div class="page-title"><h2>OpenCodex 运行概览</h2><p>发现安装、托管官方启停子进程并观察状态。</p></div><div class="pill" id="pillC">环境未通过</div></div><div class="content" id="contentC"></div></main>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">所有检测、复制、安装引导均为原型模拟；不执行真实命令，也不写入剪贴板。</div>
+</div>
+<div class="toast" id="toast">原型模拟：已复制命令；不写剪贴板。</div>
+<script>
+const states={
+  checking:{label:'检查中',pill:'检查中',pillCls:'pill busy',gate:'busy',title:'正在检查运行环境',desc:'按 Node.js → npm → OpenCodex 顺序检查；未通过时不继续发现安装。'},
+  missing_node_brew:{label:'缺 Node.js · 有 brew',pill:'环境未通过',pillCls:'pill',gate:'',title:'缺少 Node.js，OpenCodex 发现已暂停',desc:'检测到 Homebrew。可以先安装 Node.js LTS，安装完成后再回来重新检查。',checks:[['Node.js','未发现','bad'],['npm','未检查','busy'],['OpenCodex','未检查','busy']],blocks:[{label:'安装 Node.js',cmd:'brew install node'},{label:'安装后校验',cmd:'node -v && npm -v'}]},
+  missing_node_nobrew:{label:'缺 Node.js · 无 brew',pill:'环境未通过',pillCls:'pill',gate:'',title:'缺少 Node.js，OpenCodex 发现已暂停',desc:'未检测到 Homebrew。请从 Node.js LTS 官方渠道安装；应用不会代装，也不会写入系统环境。',checks:[['Node.js','未发现','bad'],['npm','未检查','busy'],['OpenCodex','未检查','busy']],blocks:[{label:'安装后校验',cmd:'node -v && npm -v'}],link:{text:'打开 Node.js LTS 官网',note:'仅展示安装渠道，不在原型内打开网页。'}},
+  missing_npm:{label:'缺 npm',pill:'环境未通过',pillCls:'pill',gate:'',title:'Node.js 已发现，但 npm 不可用',desc:'npm 通常随 Node.js 提供。建议重新安装 Node.js LTS，或检查 PATH 与 Node 安装完整性。',checks:[['Node.js','已发现','ok'],['npm','未发现','bad'],['OpenCodex','未检查','busy']],blocks:[{label:'安装后校验',cmd:'node -v && npm -v'}]},
+  missing_ocx:{label:'缺 OpenCodex',pill:'环境未通过',pillCls:'pill',gate:'',title:'运行环境已就绪，未发现 OpenCodex',desc:'可以按官方 npm 包安装。应用只展示安装命令，不执行 npm 安装。',checks:[['Node.js','已发现','ok'],['npm','已发现','ok'],['OpenCodex','未发现','bad']],blocks:[{label:'安装 OpenCodex',cmd:'npm install -g @bitkyc08/opencodex'},{label:'安装后校验',cmd:'ocx --version'}],contract:true},
+  ready:{label:'环境通过',pill:'环境通过',pillCls:'pill ok',gate:'ok',title:'运行环境检查通过',desc:'前置条件全部通过，现在继续发现本机 OpenCodex 安装。',checks:[['Node.js','已发现','ok'],['npm','已发现','ok'],['OpenCodex','已发现','ok']]}
+};
+let current='missing_node_brew';
+function stateButtons(host){host.innerHTML=Object.keys(states).map(k=>`<button data-state="${k}" class="${k===current?'active':''}">${states[k].label}</button>`).join('')}
+function gateHTML(key){
+  const s=states[key];
+  return `<div class="gate ${s.gate}">
+    <div class="gate-head"><div><h4>${s.title}</h4><p>${s.desc}</p></div><span class="tag">${key==='checking'?'检查中':'前置条件'}</span></div>
+    <div class="checks">${(s.checks||[]).map(([n,v,c])=>`<div class="check"><b>${n}</b><span>${v}</span><span class="status ${c}">${c==='ok'?'通过':c==='bad'?'未通过':c==='busy'?'未检查':'检查中'}</span></div>`).join('')}</div>
+    ${(s.blocks||[]).length?`<div class="guidance"><div class="guidance-label">最短修复动作 · 示例命令${s.contract?'，非最终契约':''}</div>${s.blocks.map(b=>`<div class="command"><div class="command-label"><span>${b.label}</span></div><button class="copy" data-command="${b.cmd}">${b.cmd}</button></div>`).join('')}${s.link?`<div class="command"><div class="command-label"><span>${s.link.text}</span><span>${s.link.note}</span></div></div>`:''}</div>`:''}
+    <div class="actions"><button class="btn primary" data-recheck>重新检查</button><button class="btn ghost" data-guide>查看完整指引</button></div>
+    <p class="bound-note">应用只做检测与引导，不执行 brew、npm 或 ocx 安装，也不修改 OpenCodex 配置。</p>
+  </div>`;
+}
+function renderA(){const s=states[current];document.getElementById('pillA').textContent=s.pill;document.getElementById('pillA').className=s.pillCls;
+  document.getElementById('contentA').innerHTML=current==='ready'
+    ?`${gateHTML(current)}<div class="grid" style="margin-top:16px"><div class="card"><h3>安装发现</h3><p>可执行文件 · 版本 · 运行时摘要。</p></div><div class="card"><h3>模块</h3><p>配置迁移 / WebDAV / 版本升级。</p></div><div class="card"><h3>数据目录</h3><p>~/OpenCodexData</p></div></div>`
+    :`${gateHTML(current)}<div class="grid" style="margin-top:16px;opacity:.45;pointer-events:none;filter:saturate(.5)"><div class="card"><h3>模块</h3><p>环境通过后启用</p></div><div class="card"><h3>模块</h3><p>环境通过后启用</p></div><div class="card"><h3>模块</h3><p>环境通过后启用</p></div></div>`;}
+function renderB(){const s=states[current];document.getElementById('pillB').textContent=s.pill;document.getElementById('pillB').className=s.pillCls;
+  document.getElementById('contentB').innerHTML=`<div class="overlay-wrap"><div class="overlay">${gateHTML(current)}${current==='ready'?'<div class="grid" style="margin-top:16px"><div class="card"><h3>安装发现</h3><p>可执行文件 · 版本 · 运行时摘要。</p></div><div class="card"><h3>模块</h3><p>配置迁移 / WebDAV / 版本升级。</p></div><div class="card"><h3>数据目录</h3><p>~/OpenCodexData</p></div></div>':''}</div></div>`;}
+function renderC(){const s=states[current];document.getElementById('pillC').textContent=s.pill;document.getElementById('pillC').className=s.pillCls;
+  if(current==='ready'){document.getElementById('contentC').innerHTML=`${gateHTML(current)}<div class="grid" style="margin-top:16px"><div class="card"><h3>安装发现</h3><p>可执行文件 · 版本 · 运行时摘要。</p></div><div class="card"><h3>模块</h3><p>配置迁移 / WebDAV / 版本升级。</p></div><div class="card"><h3>数据目录</h3><p>~/OpenCodexData</p></div></div>`;return}
+  document.getElementById('contentC').innerHTML=`
+    <div class="banner"><div><h4>${s.title}</h4><p>${s.desc}</p></div><div class="actions" style="margin:0"><button class="btn primary" data-guide>查看完整指引</button><button class="btn" data-recheck>重新检查</button></div></div>
+    <div class="ready-strip" style="margin-top:16px"><div class="tile warning"><label>Node.js</label><div>${s.checks?.[0]?.[1]||'未检查'}</div></div><div class="tile warning"><label>npm</label><div>${s.checks?.[1]?.[1]||'未检查'}</div></div><div class="tile warning"><label>OpenCodex</label><div>${s.checks?.[2]?.[1]||'未检查'}</div></div></div>
+    <div class="grid"><div class="card"><h3>安装发现</h3><p>被前置条件阻塞；完整指引在设置 → 安装配置。</p></div><div class="card"><h3>模块</h3><p>仍可见，但操作会被前置条件解释。</p></div><div class="card"><h3>数据目录</h3><p>仍可查看，不依赖运行状态。</p></div></div>`;}
+function renderAll(){['A','B','C'].forEach(v=>{stateButtons(document.getElementById('states'+v))});renderA();renderB();renderC()}
+document.querySelectorAll('.candidates button').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.candidates button').forEach(b=>b.classList.toggle('active',b===btn));
+  document.querySelectorAll('.candidate').forEach(s=>s.classList.toggle('active',s.id==='candidate-'+btn.dataset.candidate));
+}));
+document.addEventListener('click',e=>{
+  const sb=e.target.closest('[data-state]');if(sb){current=sb.dataset.state;renderAll();return}
+  const cp=e.target.closest('.copy');if(cp){document.querySelectorAll('.copy').forEach(n=>n.classList.remove('copied'));cp.classList.add('copied');setTimeout(()=>cp.classList.remove('copied'),1400);toast('原型模拟：已复制 '+cp.dataset.command+'；不写剪贴板。');return}
+  if(e.target.closest('[data-recheck]')){toast('原型模拟：会重新检查 node / npm / ocx。');return}
+  if(e.target.closest('[data-guide]')){toast('原型模拟：会打开设置 → 安装配置的完整前置指引。');return}
+});
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toastTimer);window.__toastTimer=setTimeout(()=>t.classList.remove('show'),1800)}
+renderAll();
+</script>
+</body>
+</html>

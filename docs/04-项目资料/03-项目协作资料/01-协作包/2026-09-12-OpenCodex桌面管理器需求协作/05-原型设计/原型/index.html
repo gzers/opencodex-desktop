@@ -625,6 +625,24 @@ body.panel-mode .topbar,body.panel-mode .notice,body.panel-mode .menu-hint,body.
 body.panel-mode #panelSection{display:block;height:100%;min-height:0}
 body.panel-mode .panel-shell{height:100%}
 
+/* First-run environment gate: short next step now, full installation guidance in settings. */
+.env-gate{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:var(--radius);padding:16px}
+.env-gate.busy{border-color:color-mix(in srgb,var(--blue) 24%,transparent);border-left-color:var(--blue);background:var(--blue-soft)}
+.env-gate-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.env-gate-head h2{margin:0;font-size:var(--text-subtitle)}
+.env-gate-head p{margin:5px 0 0;color:var(--muted);font-size:var(--text-body);max-width:920px}
+.env-checks{display:grid;gap:8px;margin:14px 0 0}
+.env-check{display:grid;grid-template-columns:130px minmax(0,1fr) auto;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
+.env-check b{font-size:var(--text-body)}
+.env-check span{color:var(--muted);font-size:var(--text-label)}
+.env-guidance{margin-top:14px;padding-top:14px;border-top:1px solid var(--border-soft)}
+.env-guidance-label{color:var(--muted);font-size:var(--text-caption);font-weight:650;margin-bottom:8px}
+.env-command{margin-bottom:8px}
+.env-command-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:5px;color:var(--muted);font-size:var(--text-caption)}
+.env-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.env-bound{margin:12px 0 0;color:var(--muted);font-size:var(--text-label)}
+@media(max-width:900px){.env-check{grid-template-columns:1fr;gap:5px}}
+
 
 </style>
 </head>
@@ -726,6 +744,8 @@ body.panel-mode .panel-shell{height:100%}
     </section>
 
     <section class="route-section active ov" id="route-overview">
+      <article class="card env-gate" id="envGate" hidden></article>
+
       <article class="card ovb-status">
         <div class="ovb-main">
           <div class="ovc-line">
@@ -1391,6 +1411,18 @@ ocx update</code></pre>
       <p class="proto-hint">未配置时卡片主体说明未配置，动作区只留一颗「配置 WebDAV」；其余状态由本测试器切换，只驱动 mock 投影。</p>
     </div>
     <div class="proto-card">
+      <div class="proto-note-title">环境前置条件（mock 投影）</div>
+      <div class="scenarios" id="envStates">
+        <button type="button" data-env="checking" class="active">检查中</button>
+        <button type="button" data-env="missing_node_brew">缺 Node.js · 有 brew</button>
+        <button type="button" data-env="missing_node_nobrew">缺 Node.js · 无 brew</button>
+        <button type="button" data-env="missing_npm">缺 npm</button>
+        <button type="button" data-env="missing_ocx">缺 OpenCodex</button>
+        <button type="button" data-env="ready">环境通过</button>
+      </div>
+      <p class="proto-hint">检测按 Node.js → npm → OpenCodex 顺序短路；缺前置时 OpenCodex 发现被阻塞。所有检测均为 mock。</p>
+    </div>
+    <div class="proto-card">
       <div class="proto-note-title">状态测试器</div>
       <div class="scenarios" id="scenarios">
         <button data-state="loading">loading</button>
@@ -1444,7 +1476,8 @@ const routeNotes={
       ['查看建议','仅 at-risk / 外部 provider 接管时出现，进入官方 restore 引导前需要确认。'],
       ['快捷动作','配置迁移 / WebDAV 同步 / 版本升级三张卡；按钮撑满内容宽度，存在建议动作时高亮（当前「检查更新」）。'],
       ['Doctor','官方只读环境诊断，位于「诊断中心」，不在概览动作行。'],
-      ['最近事件','仅运行详情展开时显示 3 条状态相关摘要；完整排障仍进「诊断中心」。']
+      ['最近事件','仅运行详情展开时显示 3 条状态相关摘要；完整排障仍进「诊断中心」。'],
+      ['环境门禁','首次打开先按 Node.js → npm → OpenCodex 顺序短路检查；缺前置时只给当前缺失项和最短修复命令，完整指引仍收敛到设置。']
     ]
   },
   panel:{
@@ -1460,6 +1493,7 @@ const routeNotes={
     title:'设置 · 安装配置',
     note:'安装发现、数据目录和 OPENCODEX_HOME 已集成到设置；这里只维护环境参数，不做安装动作。',
     items:[
+      ['前置条件','按 Node.js → npm → OpenCodex 顺序检查；缺前置时展示可复制修复命令，应用不代装。'],
       ['重新发现','重新执行安装探测 mock。'],
       ['选择数据目录','仅表达目录选择，不访问真实文件。'],
       ['选择 OPENCODEX_HOME','保持 home 可自定义，但不改真实配置。']
@@ -1545,6 +1579,62 @@ const stateNote={
   unreachable:'进程或端口不可达。建议刷新状态或查看日志确认原因。'
 };
 
+const envStates={
+  checking:{tag:'检查中',gate:'busy',title:'正在检查运行环境',
+    desc:'按 Node.js → npm → OpenCodex 顺序检查；未通过时不继续发现安装。',
+    checks:[['Node.js','检查中','busy'],['npm','检查中','busy'],['OpenCodex','检查中','busy']],
+    commands:[]},
+  missing_node_brew:{tag:'环境未通过',gate:'',title:'缺少 Node.js，OpenCodex 发现已暂停',
+    desc:'检测到 Homebrew。可以先安装 Node.js LTS，安装完成后再回来重新检查。',
+    checks:[['Node.js','未发现','bad'],['npm','未检查','busy'],['OpenCodex','未检查','busy']],
+    commands:[['安装 Node.js','brew install node'],['安装后校验','node -v && npm -v']]},
+  missing_node_nobrew:{tag:'环境未通过',gate:'',title:'缺少 Node.js，OpenCodex 发现已暂停',
+    desc:'未检测到 Homebrew。请从 Node.js LTS 官方渠道安装；应用不会代装，也不会写入系统环境。',
+    checks:[['Node.js','未发现','bad'],['npm','未检查','busy'],['OpenCodex','未检查','busy']],
+    commands:[['安装后校验','node -v && npm -v']],
+    link:{text:'Node.js LTS 官方安装渠道',note:'仅展示渠道；真实实现提供打开官网入口。'}},
+  missing_npm:{tag:'环境未通过',gate:'',title:'Node.js 已发现，但 npm 不可用',
+    desc:'npm 通常随 Node.js 提供。建议重新安装 Node.js LTS，或检查 PATH 与 Node 安装完整性。',
+    checks:[['Node.js','已发现','ok'],['npm','未发现','bad'],['OpenCodex','未检查','busy']],
+    commands:[['安装后校验','node -v && npm -v']]},
+  missing_ocx:{tag:'环境未通过',gate:'',title:'运行环境已就绪，未发现 OpenCodex',
+    desc:'可以按官方 npm 包安装。应用只展示安装命令，不执行 npm 安装。',
+    checks:[['Node.js','已发现','ok'],['npm','已发现','ok'],['OpenCodex','未发现','bad']],
+    commands:[['安装 OpenCodex','npm install -g @bitkyc08/opencodex'],['安装后校验','ocx --version']],contract:true},
+  ready:{tag:'环境通过',gate:'ok',title:'运行环境检查通过',
+    desc:'前置条件全部通过，现在继续发现本机 OpenCodex 安装。',
+    checks:[['Node.js','已发现','ok'],['npm','已发现','ok'],['OpenCodex','已发现','ok']],
+    commands:[]}
+};
+let envState='checking';
+let envGateActive=true;
+
+function renderEnv(){
+  const gate=document.getElementById('envGate');
+  if(!gate) return;
+  const cfg=envStates[envState]||envStates.checking;
+  if(envState==='ready'||!envGateActive){gate.hidden=true;return}
+  gate.hidden=false;
+  gate.className='card env-gate'+(cfg.gate?' '+cfg.gate:'');
+  gate.innerHTML=`
+    <div class="env-gate-head"><div><h2>${cfg.title}</h2><p>${cfg.desc}</p></div><span class="tag">${cfg.tag}</span></div>
+    <div class="env-checks">${cfg.checks.map(([name,value,cls])=>`<div class="env-check"><b>${name}</b><span>${value}</span><span class="state-pill state-${cls==='ok'?'running':cls==='bad'?'bad':cls==='busy'?'starting':'muted'}">${cls==='ok'?'通过':cls==='bad'?'未通过':cls==='busy'?'检查中':'未检查'}</span></div>`).join('')}</div>
+    ${cfg.commands.length?`<div class="env-guidance"><div class="env-guidance-label">最短修复动作 · 示例命令${cfg.contract?'，非最终契约':''}</div>${cfg.commands.map(([label,command])=>`<div class="env-command"><div class="env-command-label"><span>${label}</span></div><button class="cli-copy-btn" data-prototype-action="cli-copy-command" data-command="${command}"><code>${command}</code></button></div>`).join('')}${cfg.link?`<div class="env-command"><div class="env-command-label"><span>${cfg.link.text}</span><span>${cfg.link.note}</span></div></div>`:''}</div>`:''}
+    <div class="env-actions"><button class="btn primary" data-prototype-action="env-recheck">重新检查</button><button class="btn ghost" data-prototype-action="env-guide">查看完整指引</button></div>
+    <p class="env-bound">应用只做检测与引导，不执行 brew、npm 或 ocx 安装，也不修改 OpenCodex 配置。</p>`;
+  document.querySelectorAll('#envStates button').forEach(b=>b.classList.toggle('active',b.dataset.env===envState));
+}
+function setEnv(next, keepBlocking=true){
+  envState=envStates[next]?next:'checking';
+  if(next==='ready') envGateActive=false;
+  renderEnv();
+  render();
+}
+window.setEnv=setEnv;
+document.querySelectorAll('#envStates button').forEach(button=>{
+  button.addEventListener('click',()=>setEnv(button.dataset.env));
+});
+
 const installFound={
   executable:'/Users/ezio/.local/bin/ocx',
   install:'npm global · @bitkyc08/opencodex',
@@ -1591,6 +1681,11 @@ function logHtml(kind){
 }
 
 function setInstall(){
+  const blocked=envGateActive&&['missing_node_brew','missing_node_nobrew','missing_npm','missing_ocx'].includes(envState);
+  if(blocked){
+    installArea.innerHTML=`<div class="empty">已按前置条件暂停 OpenCodex 发现；请先处理概览中的环境门禁。</div>`;
+    return;
+  }
   if(currentState==='not_found'||currentState==='loading'){
     installArea.innerHTML=`<div class="empty">${currentState==='loading'?'正在探测本机 OpenCodex 安装…':'未发现可运行 OpenCodex 安装。应用不会执行 npm 安装。'}</div>`;
     return;
@@ -1819,7 +1914,11 @@ document.addEventListener('click',event=>{
   const actionTarget=event.target.closest('[data-prototype-action]');
   if(!actionTarget) return;
   const action=actionTarget.dataset.prototypeAction;
-  if(action==='export'){
+  if(action==='env-recheck'){
+    toast('原型模拟：会重新检查 node / npm / ocx。');
+  }else if(action==='env-guide'){
+    openSettingsSection('installation');
+  }else if(action==='export'){
     openModal('导出配置','将生成全量配置的加密导出容器；敏感值不会明文展示。导出前会确认口令与目标目录。','继续',()=>toast('原型拦截：不会生成真实导出容器。'));
   }else if(action==='import'){
     openModal('导入配置','导入前会校验容器格式和完整性，自动备份当前配置，并展示敏感值掩码后的摘要。','继续查看',()=>toast('原型拦截：不会读取真实配置容器。'));
@@ -2362,8 +2461,9 @@ renderPrototypeNote(location.hash.slice(1)||'overview');
 renderNotificationHistory();
 setRoute(location.hash.slice(1)||'overview',true);
 if(currentRoute==='settings') showSettingsSection(new URLSearchParams(location.search).get('section')||'general');
+renderEnv();
 setState('loading');
-setTimeout(()=>setState('stopped'),800);
+setTimeout(()=>{setEnv('missing_node_brew');setState('stopped')},800);
 </script>
 </body>
 </html>
