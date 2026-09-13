@@ -264,11 +264,9 @@ button{font:inherit}
 .reset-table th{color:var(--muted);font-weight:600;white-space:nowrap}
 .reset-table td{color:var(--text)}
 .reset-table th:nth-child(1),.reset-table td:nth-child(1){width:auto}
-.reset-table th:nth-child(2),.reset-table td:nth-child(2){width:32%}
-.reset-table th:nth-child(3),.reset-table td:nth-child(3){width:52px}
-.reset-table th:nth-child(4),.reset-table td:nth-child(4){width:32%}
+.reset-table th:nth-child(2),.reset-table td:nth-child(2){width:24%}
+.reset-table th:nth-child(3),.reset-table td:nth-child(3){width:24%}
 .reset-table .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
-.reset-table .reset-arrow{color:var(--muted);padding:0;text-align:center;white-space:nowrap}
 .reset-table tr:last-child td{border-bottom:0}
 .reset-table tr.official td{background:color-mix(in srgb,var(--accent) 5%,transparent)}
 .reset-table tr.official td:first-child{border-left:3px solid var(--accent)}
@@ -2301,10 +2299,10 @@ document.addEventListener('click',event=>{
       {name:'同步冲突提醒', current:'关闭', value:'开启', official:false},
       {name:'随 Codex 启动 OpenCodex', current:'关闭', value:'开启', official:true}
     ];
-    const rows=defaults.map(item=>'<tr'+(item.official?' class="official"':'')+'><td>'+item.name+'</td><td class="mono">'+item.current+'</td><td class="reset-arrow">→</td><td class="mono">'+item.value+'</td></tr>').join('');
+    const rows=defaults.map(item=>'<tr'+(item.official?' class="official"':'')+'><td>'+item.name+'</td><td class="mono">'+item.current+'</td><td class="mono">'+item.value+'</td></tr>').join('');
     openModal(
       '还原默认偏好',
-      '<p class="modal-warning"><strong>警告：</strong><span>还原桌面壳偏好与官方共享配置</span></p><table class="reset-table"><thead><tr><th>选项</th><th>原值</th><th></th><th>默认值</th></tr></thead><tbody>'+rows+'</tbody></table>',
+      '<p class="modal-warning"><strong>警告：</strong><span>还原桌面壳偏好与官方共享配置</span></p><table class="reset-table"><thead><tr><th>选项</th><th>原值</th><th>默认值</th></tr></thead><tbody>'+rows+'</tbody></table>',
       '确认还原',
       ()=>toast('原型模拟：已还原 8 项默认偏好；官方共享项仍按官方同源通道写入。')
     );
