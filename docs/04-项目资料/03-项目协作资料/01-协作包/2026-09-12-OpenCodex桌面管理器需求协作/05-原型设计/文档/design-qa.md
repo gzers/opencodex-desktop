@@ -2060,3 +2060,28 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 验证独立路由、Skills / MCP Tab 切换、MCP 筛选、图标开关与导入弹窗。
 - Skills 与 MCP 两页截图布局正常；`node --check` 通过；`git diff --check` 无告警。
+
+## 2026-09-13 · 扩展管理采用品牌图标
+
+### 修法
+
+- 从 `@lobehub/icons-static-svg@1.95.0`（icons.lobehub.com 同源静态包）内嵌 Claude、Codex、Gemini、Grok、OpenCode、Hermes Agent 品牌图标。
+- 使用 SVG sprite + `use` 复用路径，Hermes 较长路径只保留一份；目标开关继续保留选中/未选中高亮。
+- MCP 配置治理卡与「导入已有 MCP」弹窗补充后续开发用的官方配置落点。
+- Skills 源目录按钮补充 cc-switch / Agent Skills 定位说明。
+
+### 官方配置位置考证
+
+| 客户端 | Skills / MCP 配置位置 | 依据 |
+|---|---|---|
+| Codex | `$CODEX_HOME/config.toml`，MCP 键为 `mcp_servers`；Skills 位于 `$CODEX_HOME/skills` | OpenCodex v2.53.0 源码与 Codex 官方 config 文档 |
+| Claude Code | 用户级 MCP 在 `~/.claude.json`（支持 `CLAUDE_CONFIG_DIR`）；项目级 MCP 在项目根 `.mcp.json` | Claude Code 官方 MCP / settings 文档 |
+| Gemini CLI | `~/.gemini/settings.json`，MCP 键为 `mcpServers` | Gemini CLI 官方 MCP 文档 |
+| Grok Build | `GROK_HOME` 或 `~/.grok/config.toml` | OpenCodex v2.53.0 官方适配源码 |
+| OpenCode | `opencodeGlobalConfigPath()`，按 XDG 解析为 `~/.config/opencode/opencode.json` | OpenCodex v2.53.0 官方 registry 源码 |
+| Hermes Agent | `HERMES_HOME` 或 `~/.hermes`，配置文件为 `config.yaml` | OpenCodex v2.53.0 官方 config export 源码 |
+
+### 实测
+
+- Playwright 验证 Skills 与 MCP 每组 6 个品牌图标均挂载，42 个目标按钮中仅 Hermes 因原始图形细节存在 12 个零宽子路径；可见渲染正常。
+- 配置落点断言通过；提取内联脚本后 `node --check` 通过；`git diff --check` 无格式告警。
