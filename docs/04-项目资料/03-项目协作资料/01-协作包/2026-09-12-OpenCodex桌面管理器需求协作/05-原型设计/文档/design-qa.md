@@ -2253,3 +2253,17 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 验证 Skills / MCP 操作文字与按钮组中心均为 1165.5px。
 - 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · Agent路径集中卡片
+
+### 修法
+
+- 设置「扩展管理」Tab 顶部新增「Agent 路径」卡片，按客户端集中展示 Skills 目录与 MCP 配置路径。
+- 路径依据 cc-switch 源码核对：Claude（`~/.claude/skills` / `~/.claude.json`）、Codex（`~/.codex/skills` / `~/.codex/config.toml`）、Gemini（`~/.gemini/skills` / `~/.gemini/settings.json`）、Grok Build（`~/.grok/skills` / `~/.grok/config.toml`）、OpenCode（`~/.config/opencode/skills` / `~/.config/opencode/opencode.json`）、Hermes（`~/.hermes/skills` / `~/.hermes/config.yaml`）。
+- 每行提供「打开目录 / 打开配置」mock 动作；描述目录覆盖后仍显示当前生效路径，为后续开发保留覆盖配置入口。
+- `#settings?section=extensions` 的默认锚点定位改为 Agent 路径卡片。
+
+### 实测
+
+- Playwright 验证 6 个客户端、12 个路径项、12 个打开动作；点击拦截提示正确，无页面 JS 错误。
+- `node --check` 与 `git diff --check` 通过。
