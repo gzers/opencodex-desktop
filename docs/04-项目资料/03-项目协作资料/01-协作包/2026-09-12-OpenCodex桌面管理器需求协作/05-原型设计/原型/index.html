@@ -2843,7 +2843,7 @@ renderWebdav('unconfigured');
 renderPrototypeNote(location.hash.slice(1)||'overview');
 renderNotificationHistory();
 setRoute(location.hash.slice(1)||'overview',true);
-if(currentRoute==='settings') showSettingsSection(location.hash==='#settings'?'about':(new URLSearchParams(location.search).get('section')||'general'));
+if(currentRoute==='settings') showSettingsSection(new URLSearchParams(location.search).get('section')||'general');
 renderEnv();
 setState('loading');
 setTimeout(()=>{setEnv('ready');setState('stopped')},800);
