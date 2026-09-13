@@ -344,6 +344,11 @@ body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(10
 .tray-menu.mac{right:8px;top:32px;padding:4px}
 .tray-menu.windows{left:auto;right:10px;bottom:42px;padding:4px}
 button.tray-icon{border:0;background:transparent;font:inherit;cursor:pointer}
+.tray-item.toggle-item{grid-template-columns:minmax(0,1fr) auto;gap:12px}
+.tray-item.toggle-item .toggle-mark{font-size:11px;color:#6b7280;font-weight:600;white-space:nowrap}
+.tray-item.toggle-item[aria-checked="true"] .toggle-mark{color:var(--green);font-weight:700}
+html[data-theme="dark"] .tray-item.toggle-item .toggle-mark{color:#8b909b}
+html[data-theme="dark"] .tray-item.toggle-item[aria-checked="true"] .toggle-mark{color:#34d399}
 .tray-logo{color:#3f4753;transition:color var(--motion-fast)}
 .tray-logo.state-running{color:var(--green)}
 .tray-logo.state-starting,.tray-logo.state-pending{color:var(--amber)}
@@ -2368,6 +2373,9 @@ ocx update</code></pre>
             <button class="tray-item" type="button" role="menuitem" data-tray-action="open-logs" data-prototype-action="tray-open-logs">打开日志</button>
             <button class="tray-item" type="button" role="menuitem" data-tray-action="doctor" data-prototype-action="tray-doctor">运行 Doctor<span class="hint" data-tray-hint="doctor">建议</span></button>
             <div class="tray-sep"></div>
+            <button class="tray-item toggle-item" type="button" role="menuitemcheckbox" aria-checked="true" data-tray-setting="launchWithCodex" data-prototype-action="tray-setting-launch">随 Codex 启动 OpenCodex<span class="toggle-mark">开启</span></button>
+            <button class="tray-item toggle-item" type="button" role="menuitemcheckbox" aria-checked="true" data-tray-setting="showMainWindow" data-prototype-action="tray-setting-main">启动时显示主界面<span class="toggle-mark">开启</span></button>
+            <div class="tray-sep"></div>
             <button class="tray-item danger" type="button" role="menuitem" data-tray-action="quit" data-prototype-action="tray-quit">退出桌面壳<span class="hint">⌘Q</span></button>
           </div>
           <div class="tray-menu windows" role="menu" aria-label="Windows 通知区菜单">
@@ -2382,6 +2390,9 @@ ocx update</code></pre>
             <div class="tray-sep"></div>
             <button class="tray-item" type="button" role="menuitem" data-tray-action="open-logs" data-prototype-action="tray-open-logs">打开日志</button>
             <button class="tray-item" type="button" role="menuitem" data-tray-action="doctor" data-prototype-action="tray-doctor">运行 Doctor<span class="hint" data-tray-hint="doctor">建议</span></button>
+            <div class="tray-sep"></div>
+            <button class="tray-item toggle-item" type="button" role="menuitemcheckbox" aria-checked="true" data-tray-setting="launchWithCodex" data-prototype-action="tray-setting-launch">随 Codex 启动 OpenCodex<span class="toggle-mark">开启</span></button>
+            <button class="tray-item toggle-item" type="button" role="menuitemcheckbox" aria-checked="true" data-tray-setting="showMainWindow" data-prototype-action="tray-setting-main">启动时显示主界面<span class="toggle-mark">开启</span></button>
             <div class="tray-sep"></div>
             <button class="tray-item danger" type="button" role="menuitem" data-tray-action="quit" data-prototype-action="tray-quit">退出桌面壳<span class="hint">⌘Q</span></button>
           </div>
@@ -3086,6 +3097,7 @@ document.querySelectorAll('.nav button[data-route]').forEach(button=>{
 let trayOs='mac';
 let trayState='stopped';
 let trayOpen=false;
+const trayQuickSettings={launchWithCodex:true,showMainWindow:true};
 const trayStateLabels={stopped:'未运行',starting:'启动中',running:'运行中',starting_failed:'启动失败',external_takeover:'外部接管'};
 const trayHints={
   start:{stopped:'可用',starting:'启动中',running:'已运行',starting_failed:'可重试',external_takeover:'先确认'},
@@ -3120,6 +3132,16 @@ function renderTray(){
   shell.querySelector('.tray-menu.mac')?.classList.toggle('open',trayOs==='mac'&&trayOpen);
   shell.querySelector('.tray-menu.windows')?.classList.toggle('hidden',trayOs!=='windows');
   shell.querySelector('.tray-menu.windows')?.classList.toggle('open',trayOs==='windows'&&trayOpen);
+  document.querySelectorAll('#settings-general [aria-label="随 Codex 启动 OpenCodex"], #settings-general [aria-label="启动时打开主界面"]').forEach(toggle=>{
+    const key=toggle.getAttribute('aria-label')==='随 Codex 启动 OpenCodex'?'launchWithCodex':'showMainWindow';
+    toggle.setAttribute('aria-checked',Boolean(trayQuickSettings[key])?'true':'false');
+  });
+  shell.querySelectorAll('[data-tray-setting]').forEach(el=>{
+    const value=Boolean(trayQuickSettings[el.dataset.traySetting]);
+    el.setAttribute('aria-checked',value?'true':'false');
+    const mark=el.querySelector('.toggle-mark');
+    if(mark) mark.textContent=value?'开启':'关闭';
+  });
   shell.querySelector('.tray-menubar.mac')?.classList.toggle('hidden',trayOs!=='mac');
   shell.querySelector('.tray-statusbar.windows')?.classList.toggle('hidden',trayOs!=='windows');
   document.querySelectorAll('[data-tray-os]').forEach(button=>{
@@ -3135,6 +3157,16 @@ document.addEventListener('click',event=>{
   if(trayOpen&&!event.target.closest('.tray-menu')){trayOpen=false;renderTray();}
   const os=event.target.closest('[data-tray-os]');
   if(os){trayOs=os.dataset.trayOs;trayOpen=false;renderTray();return;}
+  const quick=event.target.closest('[data-tray-setting]');
+  if(quick){
+    const key=quick.dataset.traySetting;
+    trayQuickSettings[key]=!trayQuickSettings[key];
+    renderTray();
+    toast(quick.dataset.traySetting==='launchWithCodex'
+      ?`原型拦截：随 Codex 启动已${trayQuickSettings[key]?'开启':'关闭'}；同步官方同源配置。`
+      :`原型拦截：启动时显示主界面已${trayQuickSettings[key]?'开启':'关闭'}。`);
+    return;
+  }
   const state=event.target.closest('[data-tray-state]');
   if(state){trayState=state.dataset.trayState;renderTray();setState(trayState);return;}
   const item=event.target.closest('.tray-item[data-prototype-action^="tray-"]');
