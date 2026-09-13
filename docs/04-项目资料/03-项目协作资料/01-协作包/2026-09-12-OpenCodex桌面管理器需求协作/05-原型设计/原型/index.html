@@ -201,7 +201,7 @@ button{font:inherit}
 .notice p{margin:2px 0 0;color:var(--muted);font-size:var(--text-body)}
 .layout{display:grid;grid-template-columns:1.35fr .9fr;gap:16px;align-items:start}
 .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm)}
-.card + .card{margin-top:16px}
+.card + .card{margin-top:0}
 .card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
 .card-head h2{font-size:var(--text-subtitle);margin:0}
 .card-head p{margin:3px 0 0;color:var(--muted);font-size:var(--text-label)}
@@ -588,7 +588,7 @@ html[data-theme="dark"] .prototype-side .size-readout span{color:#9aa2ae}
 .action-list{display:grid;gap:8px;margin-top:12px}
 .action-list .btn{width:100%}
 .settings-panel{display:none}
-.settings-panel.active{display:block}
+.settings-panel.active{display:grid;gap:16px}
 .setting-list{display:grid;gap:8px;margin-top:14px}
 .setting-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
 .setting-row[hidden]{display:none}
@@ -630,7 +630,7 @@ body.panel-mode .panel-shell{height:100%}
 
 /* First-run environment gate: short next step now, full installation guidance in settings. */
 .install-layout{display:grid;gap:16px}
-.install-card{margin:0}
+.install-card{margin:0!important}
 .install-grid{display:grid;gap:8px}
 .install-grid .install-row{grid-template-columns:150px minmax(0,1fr);align-items:center}
 .install-grid .install-row div{font-size:var(--text-caption);font-weight:500}
@@ -681,7 +681,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .env-check .state-pill::before{width:6px;height:6px}
 @media(max-width:900px){.env-check{grid-template-columns:1fr;gap:5px}}
 /* About：官方项目与本应用使用同构信息结构 */
-.about-card{display:grid;gap:14px;border:0;background:transparent;padding:0;box-shadow:none}
+.about-card{display:grid;gap:16px;border:0;background:transparent;padding:0;box-shadow:none}
 .about-card>article{margin:0}
 .about-hero,.about-panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:20px;display:grid;gap:16px}
 .about-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
