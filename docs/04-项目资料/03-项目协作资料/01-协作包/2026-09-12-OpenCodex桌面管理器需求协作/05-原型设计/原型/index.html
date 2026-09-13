@@ -910,19 +910,12 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
     </section>
 
     <section class="route-section" id="route-logs">
+      <div class="diag-tabs" role="tablist" aria-label="诊断分区">
+        <button type="button" data-diag-tab="logs" class="active">日志历史</button>
+        <button type="button" data-diag-tab="notifications">通知历史</button>
+      </div>
+
       <article class="card">
-        <div class="card-head">
-          <div>
-            <h2>诊断中心</h2>
-            <p>日志与通知历史并行管理；敏感值固定脱敏。</p>
-          </div>
-        </div>
-
-        <div class="diag-tabs" role="tablist" aria-label="诊断分区">
-          <button type="button" data-diag-tab="logs" class="active">日志历史</button>
-          <button type="button" data-diag-tab="notifications">通知历史</button>
-        </div>
-
         <div class="diag-view active" id="diag-logs">
           <div class="logbar">
             <span class="history-meta" id="logMeta">当前 100 行 · 本地滚动截断 · mock</span>
