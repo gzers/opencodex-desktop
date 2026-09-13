@@ -1234,3 +1234,38 @@ CLI 开启后，用户仍不知道怎么让外部 Agent「知道可以操作本�
 - `#cliAccess` 首行命令为 `opencodex-desktop --help`；`#cliOfficial` 显示 `ocx --help / status --json / restore / update`。
 - `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
 - 全套 19 张截图重出。
+
+## 2026-09-13 · CLI 命名定为 ocxd，Agent 提示收敛
+
+### 决策
+
+- 管理器 CLI 命令名定为 **`ocxd`**；官方 CLI 仍为 **`ocx`**。界面内所有示例从 `opencodex-desktop` 统一改为 `ocxd`。
+- Agent 提示收敛为 3 行，并从底部移到「运行中实例」下方的选项行，行内给「复制 Agent 提示」：
+
+```text
+管理器 CLI：ocxd（先 ocxd --help；仅限管理器自有域）
+官方 CLI：ocx（provider / 路由 / 模型映射）
+规则：变更先确认；破坏性操作带确认标志；用 --json 校验输出。
+```
+
+- 原「Agent 接入」选项行删除；完整命令示例保留在「先看帮助 / 管理器自有域示例 / OpenCodex 配置 · 官方 CLI」。
+
+### 待定方案 · 统一说明书（未实施）
+
+CLI 详细用法不放设置常驻区，提供三个候选承载：
+
+| 方案 | 形态 | 优点 | 代价 |
+|---|---|---|---|
+| A · 页内折叠 | 设置 CLI 分区加 `<details>`「完整命令说明」 | 单页可查、无新路由；与当前代码结构一致 | 设置页变长 |
+| B · 帮助页 / 弹窗 | 「查看完整说明」打开专用帮助页或弹窗 | 设置保持短；说明书可含命令表、权限、错误码、退出码 | 需要新增路由/弹窗维护 |
+| C · 真实 `ocxd --help` 引用 | 界面只留「运行 ocxd --help」 | 零文档漂移；最符合 CLI 单一事实源 | GUI 内无完整可浏览文档，依赖用户开终端 |
+
+建议：**B 为目标形态，A 作为原型期过渡**；P0 不展开，命令集 IMP 冻结后再建说明书。
+
+### 实测
+
+- 页面文本中不再出现 `opencodex-desktop`；所有示例为 `ocxd`，官方示例保持 `ocx`。
+- 默认态 7 个相关区块隐藏；确认开启后「运行中实例 / Agent 提示 / 规则块 / 帮助 / 自有域示例 / 官方 CLI / Agent 提示片段」显示。
+- 点击「复制 Agent 提示」触发原型 toast，不写剪贴板。
+- `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
+- 全套 19 张截图重出。
