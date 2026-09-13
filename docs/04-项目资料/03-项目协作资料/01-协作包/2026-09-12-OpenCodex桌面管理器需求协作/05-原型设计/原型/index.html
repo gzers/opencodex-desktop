@@ -285,7 +285,7 @@ button{font:inherit}
 @media(max-width:1120px){.install-row{grid-template-columns:1fr}}
 /* Root prototype routes keep screens connected without duplicating page shells. */
 .route-section{display:none}
-.route-section.active{display:block}
+.route-section.active{display:grid;gap:16px}
 .nav button[data-route]{width:100%}
 .route-placeholder{min-height:180px;display:grid;place-items:center;text-align:center}
 .route-placeholder strong{display:block;margin-bottom:6px;color:var(--text);font-size:var(--text-subtitle)}
@@ -381,14 +381,14 @@ h4.cli-help-title.official{margin-top:18px}
 .recent-events-list .recent-events-empty{grid-template-columns:minmax(0,1fr);color:var(--muted)}
 /* 模块区（配置迁移 / WebDAV 同步 / 版本升级）：顶部一行三格，
    动作区以分割线与上方信息分离，作为卡片页脚。 */
-.route-section.active.ov{display:flex;flex-direction:column;gap:16px}
+.route-section.active.ov{display:grid;gap:16px}
 .route-section.active.ov>*{margin-top:0}
 /* 大窗口限宽居中：内容区超过 1160px 时不再横向拉伸（官方面板 #panelSection 仍全幅）。 */
 @container (min-width:1280px){
   .main>*{max-width:1160px;margin-inline:auto}
   .main>#panelSection{max-width:none}
 }
-.mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.mods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .mods>.card{margin-top:0}
 .mod{display:flex;flex-direction:column;gap:10px}
 .mod-head{display:flex;align-items:center;gap:10px}
