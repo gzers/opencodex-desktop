@@ -2183,3 +2183,17 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 验证 Skills 头部按钮、行内更新 / 卸载、MCP 编辑 / 删除、MCP 落点、Skills 同步预演。
 - 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · MCP新增弹窗贴近cc-switch流程
+
+### 修法
+
+- 将原来的说明弹窗改为宽版表单：MCP 类型预设、唯一标题、显示名称、6 个客户端图标目标、完整 JSON 编辑区。
+- 预设选中后自动回填标题与配置：fetch / time / memory / sequential-thinking / context7 / 自定义。
+- 新增配置向导和 JSON 格式化动作；编辑器提示 stdio 命令、HTTP / SSE URL 与 TOML 切换校验。
+- 默认不启用任何客户端，避免新增即写入；说明保存后再用行内图标精确同步。
+
+### 实测
+
+- Playwright 验证宽版弹窗、6 个可见客户端图标、6 个预设、JSON 回填、格式化与配置向导。
+- 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
