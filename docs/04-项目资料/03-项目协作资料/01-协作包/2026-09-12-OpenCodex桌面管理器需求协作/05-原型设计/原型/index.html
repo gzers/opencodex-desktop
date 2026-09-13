@@ -686,7 +686,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .about-hero,.about-panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);padding:20px;display:grid;gap:16px}
 .about-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
 .about-kicker{display:block;color:var(--muted);font-size:var(--text-caption);font-weight:650;letter-spacing:.04em;text-transform:uppercase}
-.about-head h2{margin:2px 0 5px;font-size:26px;letter-spacing:-.02em;line-height:1.15}
+.about-head h2{margin:2px 0 5px;font-size:var(--text-subtitle);letter-spacing:-.01em;line-height:1.2}
 .about-head h3{margin:2px 0 5px;font-size:var(--text-subtitle)}
 .about-head p{margin:0;color:var(--muted);font-size:var(--text-label)}
 .about-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0}
@@ -698,7 +698,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .about-link-label{display:inline-flex;align-items:center;gap:7px}
 .about-link-label svg{width:15px;height:15px;flex:0 0 auto}
 .about-note{margin:0;color:var(--muted);font-size:var(--text-label);line-height:1.7}
-.about-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.about-actions{display:flex;justify-content:flex-start;gap:8px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--border-soft)}
 @media(max-width:900px){
   .about-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
   .about-head{flex-direction:column}
@@ -1535,8 +1535,8 @@ ocx update</code></pre>
             </div>
             <p class="about-note">本项目与 OpenCodex 官方项目及其权利人不存在隶属、授权或背书关系。仅在必要范围内使用项目名称、版本与链接进行兼容性说明，不复制或重新分发 OpenCodex 源代码、构建产物、图标、界面素材或商标标识。OpenCodex 的源代码、名称、商标及其他权利仍归其权利人所有；使用官方软件时请以官方仓库中的 LICENSE、NOTICE 和服务条款为准。本项目自身代码与素材按本项目仓库声明的许可发布，二者许可彼此独立。</p>
             <div class="about-actions">
-              <button class="btn ghost" data-prototype-action="about-open" data-about-open="license">查看官方许可</button>
-              <button class="btn ghost" data-prototype-action="about-open" data-about-open="notices">查看第三方声明</button>
+              <button class="link-chip" type="button" data-prototype-action="about-open" data-about-open="license">查看官方许可</button>
+              <button class="link-chip" type="button" data-prototype-action="about-open" data-about-open="notices">查看第三方声明</button>
             </div>
           </article>
 
