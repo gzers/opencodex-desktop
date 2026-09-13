@@ -659,6 +659,14 @@ body.panel-mode .panel-shell{height:100%}
 .toggle[aria-checked="true"]{background:var(--accent)}
 .toggle[aria-checked="true"]::before{transform:translateX(16px)}
 .toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.range{display:inline-flex;align-items:center;gap:8px}
+.range input[type=range]{appearance:none;-webkit-appearance:none;width:clamp(120px,18vw,180px);height:22px;background:transparent;cursor:pointer}
+.range input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:999px;background:var(--border)}
+.range input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;margin-top:-6px;border:2px solid var(--panel);border-radius:50%;background:var(--accent);box-shadow:0 1px 2px #00000033}
+.range input[type=range]::-moz-range-track{height:4px;border-radius:999px;background:var(--border)}
+.range input[type=range]::-moz-range-thumb{width:12px;height:12px;border:2px solid var(--panel);border-radius:50%;background:var(--accent);box-shadow:0 1px 2px #00000033}
+.range input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.range-value{min-width:44px;text-align:right;font-size:var(--text-label);font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
 .select{position:relative;display:inline-flex;min-width:150px;max-width:100%}
 .select-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:34px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:7px 11px;font:inherit;font-size:var(--text-label);line-height:1.2;cursor:pointer;transition:background var(--motion-fast),border-color var(--motion-fast)}
 .select-trigger::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);flex:none;opacity:.62}
@@ -1003,16 +1011,9 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <div class="setting-row">
               <div>
                 <div class="setting-title">界面缩放</div>
-                <div class="setting-desc">外壳与官方面板使用同一缩放因子；默认 100% 保持 1:1 CSS 像素。</div>
+                <div class="setting-desc">外壳与官方面板使用同一缩放因子；支持 50%–200% 自定义，默认 100% 保持 1:1 CSS 像素。</div>
               </div>
-              <div class="controls"><div class="select" data-select>
-              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="界面缩放"><span class="select-value">100%</span></button>
-              <div class="select-menu" role="listbox" aria-label="界面缩放">
-          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">100%</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">90%</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">80%</button>
-              </div>
-            </div></div>
+              <div class="controls"><div class="range"><input id="interfaceScaleRange" type="range" min="50" max="200" step="1" value="100" aria-label="界面缩放"><span class="range-value" id="interfaceScaleReadout" aria-live="polite">100%</span></div></div>
             </div>
             <div class="setting-row">
               <div>
@@ -2790,10 +2791,10 @@ try{
   });
 }catch(e){}
 
-// ── 界面缩放：设置中的枚举同步作用于外壳与内嵌面板，验证同一缩放因子观感 ──
+// ── 界面缩放：设置中的滑块同步作用于外壳与内嵌面板，验证同一缩放因子观感 ──
 // 真实 Tauri 实现中，面板侧应调用 setZoomFactor()，而不是 CSS 拉伸 iframe。
 function applyInterfaceScale(scale){
-  const value=Math.min(125,Math.max(75,Number(scale)||100));
+  const value=Math.min(200,Math.max(50,Math.round(Number(scale)||100)));
   document.documentElement.style.setProperty('--panel-zoom',String(value/100));
   const label=document.getElementById('panelScaleLabel');
   const text=document.getElementById('panelScaleText');
@@ -2802,29 +2803,16 @@ function applyInterfaceScale(scale){
     label.hidden=value===100;
     label.style.transform=value>100?'scale(1.04)':(value<100?'scale(.96)':'none');
   }
-  const readout=document.getElementById('panelScaleReadout');
-  if(readout) readout.textContent=value+'%';
-  const trigger=document.querySelector('[aria-label="界面缩放"]');
-  if(trigger){
-    const valueNode=trigger.querySelector('.select-value');
-    if(valueNode) valueNode.textContent=value+'%';
-    const menu=trigger.closest('.select')?.querySelector('.select-menu');
-    if(menu){
-      menu.querySelectorAll('.select-option').forEach(option=>{
-        const selected=option.textContent===value+'%';
-        option.classList.toggle('selected',selected);
-        option.setAttribute('aria-selected',String(selected));
-      });
-    }
-  }
+  const panelReadout=document.getElementById('panelScaleReadout');
+  if(panelReadout) panelReadout.textContent=value+'%';
+  const slider=document.getElementById('interfaceScaleRange');
+  if(slider && slider.value!==String(value)) slider.value=String(value);
+  const settingReadout=document.getElementById('interfaceScaleReadout');
+  if(settingReadout) settingReadout.textContent=value+'%';
 }
 window.applyInterfaceScale=applyInterfaceScale;
-
-document.addEventListener('click',event=>{
-  const scale=event.target.closest('.select-option');
-  if(scale&&scale.closest('.select')?.querySelector('[aria-label="界面缩放"]')){
-    applyInterfaceScale(parseFloat(scale.textContent));
-  }
+document.getElementById('interfaceScaleRange').addEventListener('input',event=>{
+  applyInterfaceScale(event.target.value);
 });
 
 function toast(msg){
