@@ -2313,3 +2313,18 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - 两卡动作列左边界一致（1105px），路径不再异常截断，视口无横向溢出。
 - 点击动作出现原型拦截提示；无页面 JS / console 错误。
 - `node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · Skills管理配置恢复
+
+### 修法
+
+- 恢复被误删的「Skills 管理」设置卡，包含源目录、同步方式、备份包含 Skills、导出包含 Skills 四项配置。
+- 扩展管理设置区固定为：`Skills 路径 → Skills 管理 → MCP 路径 → MCP 管理`。
+- 修正路径行归属，确保 Skills 路径 6 行都在「Skills 路径」卡内，不混入管理卡。
+
+### 实测
+
+- Playwright 验证四卡顺序与标题；`Skills 路径` 与 `MCP 路径` 各 6 行，`Skills 管理` 4 行配置，`MCP 管理` 5 行配置。
+- Skills 源目录、两个开关和「打开 Skills 列表」快捷入口均存在；打开动作为原型拦截。
+- 无页面 JS / console 错误，视口无横向溢出。
+- `node --check` 与 `git diff --check` 通过。

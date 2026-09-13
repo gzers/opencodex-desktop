@@ -1719,6 +1719,52 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
         </article>
 
+        <article class="card" id="card-settings-skills">
+          <div class="card-head">
+            <div>
+              <h2>Skills 管理</h2>
+              <p>控制 Skills 源目录、同步与资产参与范围。</p>
+            </div>
+            <button class="btn ghost" data-route-link="extensions">打开 Skills 列表</button>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Skills 源目录</div>
+                <div class="setting-desc">优先读取 cc-switch / Agent Skills 标准目录；也可选择自定义目录。</div>
+              </div>
+              <div class="controls"><button class="cli-copy-btn skills-source" data-prototype-action="copy-path" data-path="/Users/ezio/.agents/skills" title="复制 Skills 源目录：cc-switch / Agent Skills"><code>/Users/ezio/.agents/skills</code></button><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/.agents/skills">打开</button><button class="btn" data-prototype-action="skills-choose-source">选择</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">同步方式</div>
+                <div class="setting-desc">软链接节省空间并实时联动；复制更稳定，适合迁移和备份快照。</div>
+              </div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="skills-sync-test" style="white-space:nowrap">测试同步</button><div class="select" data-select>
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Skills 同步方式"><span class="select-value">软链接优先</span></button>
+                <div class="select-menu" role="listbox" aria-label="Skills 同步方式">
+                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">软链接优先</button>
+                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">文件复制</button>
+                </div>
+              </div></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">备份包含 Skills 目录</div>
+                <div class="setting-desc">升级前、导入前和显式备份时纳入 Skills 快照；软链接按解引用复制。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 Skills 目录"></button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导出包含 Skills 目录</div>
+                <div class="setting-desc">配置迁移导出时纳入 Skills；导入前先生成可恢复快照。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 Skills 目录"></button></div>
+            </div>
+          </div>
+        </article>
+
         <article class="card" id="card-mcp-paths">
           <div class="card-head">
             <div>
