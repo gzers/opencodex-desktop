@@ -639,6 +639,12 @@ body.panel-mode .panel-shell{height:100%}
 .path-action-row .pathbox{margin:0;border:0;padding:0;background:transparent;font-size:var(--text-caption)}
 .path-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 @media(max-width:900px){.install-grid .install-row,.path-action-row{grid-template-columns:1fr}.path-actions{justify-content:flex-start}}
+.toggle{position:relative;display:inline-flex;align-items:center;width:38px;height:22px;border:0;border-radius:999px;background:var(--raised);color:transparent;cursor:pointer;transition:background var(--motion-fast)}
+.toggle::before{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px #00000033;transition:transform var(--motion-fast)}
+.toggle[aria-checked="true"]{background:var(--accent)}
+.toggle[aria-checked="true"]::before{transform:translateX(16px)}
+.toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.select-chip{display:inline-flex;align-items:center;min-height:28px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:4px 8px;font:inherit;font-size:var(--text-caption);cursor:pointer}
 .env-gate{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:var(--radius);padding:16px}
 .env-gate.busy{border-color:color-mix(in srgb,var(--blue) 24%,transparent);border-left-color:var(--blue);background:var(--blue-soft)}
 .env-gate-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
@@ -1043,35 +1049,35 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">升级前自动备份</div>
                 <div class="setting-desc">进入官方升级引导前先生成可定位备份。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="升级前自动备份"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">导入前自动备份</div>
                 <div class="setting-desc">导入校验通过后先备份当前配置，再进入最终确认。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导入前自动备份"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">同步覆盖前自动备份</div>
                 <div class="setting-desc">任何覆盖动作都保留被覆盖侧的可恢复历史。</div>
               </div>
-              <div class="controls"><button class="btn ghost">开启</button></div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步覆盖前自动备份"></button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">备份保留策略</div>
                 <div class="setting-desc">保留最近 10 份；超出的备份必须由用户显式清理。</div>
               </div>
-              <div class="controls"><button class="btn ghost">最近 10 份</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="备份保留策略">最近 10 份</button></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">备份完整性校验</div>
                 <div class="setting-desc">生成备份后写入校验摘要；恢复前先校验。</div>
               </div>
-              <div class="controls"><button class="btn ghost">SHA-256</button></div>
+              <div class="controls"><button class="select-chip" type="button" data-prototype-action="mock-setting" aria-label="备份完整性校验">SHA-256</button></div>
             </div>
           </div>
         </article>
@@ -1938,7 +1944,15 @@ document.addEventListener('click',event=>{
   const actionTarget=event.target.closest('[data-prototype-action]');
   if(!actionTarget) return;
   const action=actionTarget.dataset.prototypeAction;
-  if(action==='copy-path'){
+  if(action==='mock-setting'){
+    if(actionTarget.classList.contains('toggle')){
+      const next=actionTarget.getAttribute('aria-checked')!=='true';
+      actionTarget.setAttribute('aria-checked',String(next));
+      toast('原型模拟：'+(actionTarget.getAttribute('aria-label')||'设置')+'已'+(next?'开启':'关闭')+'；不保存真实偏好。');
+    }else{
+      toast('原型模拟：会打开「'+(actionTarget.getAttribute('aria-label')||'设置')+'」选项；不保存真实偏好。');
+    }
+  }else if(action==='copy-path'){
     actionTarget.classList.add('copied');clearTimeout(Number(actionTarget.dataset.copyTimer||0));actionTarget.dataset.copyTimer=setTimeout(()=>actionTarget.classList.remove('copied'),1400);toast('原型模拟：已复制 '+actionTarget.dataset.path+'；不写剪贴板。');
   }else if(action==='open-path'){
     toast('原型拦截：不会打开真实 Finder / 文件资源管理器。');
