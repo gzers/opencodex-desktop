@@ -645,10 +645,21 @@ body.panel-mode .panel-shell{height:100%}
 .toggle[aria-checked="true"]{background:var(--accent)}
 .toggle[aria-checked="true"]::before{transform:translateX(16px)}
 .toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-select{appearance:none;-webkit-appearance:none;min-height:30px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:5px 26px 5px 10px;font:inherit;font-size:var(--text-label);line-height:1.2;cursor:pointer;background-image:linear-gradient(45deg,transparent 49%,currentColor 50%),linear-gradient(-45deg,transparent 49%,currentColor 50%);background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;background-size:5px 5px;background-repeat:no-repeat}
-select:hover{border-color:var(--border);background-color:var(--hover)}
-select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-input.input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.select{position:relative;display:inline-flex;min-width:150px;max-width:100%}
+.select-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:34px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:7px 11px;font:inherit;font-size:var(--text-label);line-height:1.2;cursor:pointer;transition:background var(--motion-fast),border-color var(--motion-fast)}
+.select-trigger::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);flex:none;opacity:.62}
+.select-trigger:hover{background:var(--hover)}
+.select-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.select-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.select-menu{position:absolute;z-index:24;top:calc(100% + 6px);right:0;min-width:max(100%,180px);max-height:min(260px,52vh);overflow:auto;display:none;padding:4px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);box-shadow:var(--shadow-md)}
+.select.open .select-menu{display:block}
+.select.up .select-menu{top:auto;bottom:calc(100% + 6px)}
+.select-option{display:flex;align-items:center;width:100%;min-height:30px;border:0;border-radius:var(--radius-xs);background:transparent;color:var(--text);padding:6px 9px;font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer}
+.select-option:hover{background:var(--hover)}
+.select-option.selected{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:600}
+.select-option:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.field .select{width:100%}
+input.input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .env-gate{border:1px solid color-mix(in srgb,var(--red) 26%,transparent);border-left:4px solid var(--red);background:var(--red-soft);border-radius:var(--radius);padding:16px}
 .env-gate.busy{border-color:color-mix(in srgb,var(--blue) 24%,transparent);border-left-color:var(--blue);background:var(--blue-soft)}
@@ -961,7 +972,13 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                 <div class="setting-title">面板打开方式</div>
                 <div class="setting-desc">默认内嵌到 App 窗口；加载异常时提供浏览器兜底入口。</div>
               </div>
-              <div class="controls"><select aria-label="面板打开方式"><option>内嵌优先</option><option>浏览器兜底</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="面板打开方式"><span class="select-value">内嵌优先</span></button>
+              <div class="select-menu" role="listbox" aria-label="面板打开方式">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">内嵌优先</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">浏览器兜底</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
@@ -1075,14 +1092,28 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                 <div class="setting-title">备份保留策略</div>
                 <div class="setting-desc">保留最近 10 份；超出的备份必须由用户显式清理。</div>
               </div>
-              <div class="controls"><select aria-label="备份保留策略"><option>最近 5 份</option><option selected>最近 10 份</option><option>最近 20 份</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="备份保留策略"><span class="select-value">最近 10 份</span></button>
+              <div class="select-menu" role="listbox" aria-label="备份保留策略">
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">最近 5 份</button>
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">最近 10 份</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">最近 20 份</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">备份完整性校验</div>
                 <div class="setting-desc">生成备份后写入校验摘要；恢复前先校验。</div>
               </div>
-              <div class="controls"><select aria-label="备份完整性校验"><option selected>SHA-256</option><option>SHA-512</option><option>BLAKE3</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="备份完整性校验"><span class="select-value">SHA-256</span></button>
+              <div class="select-menu" role="listbox" aria-label="备份完整性校验">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">SHA-256</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">SHA-512</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">BLAKE3</button>
+              </div>
+            </div></div>
             </div>
           </div>
         </article>
@@ -1102,14 +1133,28 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                 <div class="setting-title">日志自动清理</div>
                 <div class="setting-desc">本地日志超过上限或保留期后自动截断；原始错误先保留摘要。</div>
               </div>
-              <div class="controls"><select aria-label="日志自动清理"><option selected>30 天 / 10,000 行</option><option>7 天 / 5,000 行</option><option>90 天 / 30,000 行</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="日志自动清理"><span class="select-value">30 天 / 10,000 行</span></button>
+              <div class="select-menu" role="listbox" aria-label="日志自动清理">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">30 天 / 10,000 行</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">7 天 / 5,000 行</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">90 天 / 30,000 行</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">通知自动清理</div>
                 <div class="setting-desc">已读通知超过保留期后自动清理；未读和 danger 通知不自动删除。</div>
               </div>
-              <div class="controls"><select aria-label="通知自动清理"><option selected>30 天</option><option>7 天</option><option>90 天</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="通知自动清理"><span class="select-value">30 天</span></button>
+              <div class="select-menu" role="listbox" aria-label="通知自动清理">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">30 天</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">7 天</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">90 天</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
@@ -1148,21 +1193,40 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                 <div class="setting-title">导出范围</div>
                 <div class="setting-desc">provider、路由、模型映射、启动相关设置与凭据全量导出。</div>
               </div>
-              <div class="controls"><select aria-label="导出范围"><option selected>全量</option><option>仅配置</option><option>仅凭据</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="导出范围"><span class="select-value">全量</span></button>
+              <div class="select-menu" role="listbox" aria-label="导出范围">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">全量</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">仅配置</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">仅凭据</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">导出加密</div>
                 <div class="setting-desc">使用用户口令保护容器；具体算法待安全评审后冻结。</div>
               </div>
-              <div class="controls"><select aria-label="导出加密"><option selected>口令保护</option><option>密钥保护</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="导出加密"><span class="select-value">口令保护</span></button>
+              <div class="select-menu" role="listbox" aria-label="导出加密">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">口令保护</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">密钥保护</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
                 <div class="setting-title">导入流程</div>
                 <div class="setting-desc">校验容器 → 备份当前配置 → 展示掩码摘要 → 用户确认。</div>
               </div>
-              <div class="controls"><select aria-label="导入流程"><option selected>严格校验</option><option>标准校验</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="导入流程"><span class="select-value">严格校验</span></button>
+              <div class="select-menu" role="listbox" aria-label="导入流程">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">严格校验</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">标准校验</button>
+              </div>
+            </div></div>
             </div>
           </div>
           <div class="controls" style="margin-top:14px">
@@ -1187,7 +1251,15 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <div class="field"><label>账号</label><input class="input" value="mock-user"></div>
             <div class="field"><label>应用密码</label><input class="input" type="password" value="mock-password"></div>
             <div class="field"><label>加密口令</label><input class="input" type="password" value="mock-passphrase"></div>
-            <div class="field"><label>冲突策略</label><select class="input" aria-label="冲突策略"><option selected>每次询问</option><option>保留本地</option><option>保留远端</option><option>保留双份</option></select></div>
+            <div class="field"><label>冲突策略</label><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="冲突策略"><span class="select-value">每次询问</span></button>
+              <div class="select-menu" role="listbox" aria-label="冲突策略">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">每次询问</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留本地</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留远端</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
+              </div>
+            </div></div>
           </div>
           <div class="setting-list">
             <div class="setting-row">
@@ -1202,7 +1274,12 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                 <div class="setting-title">客户端加密</div>
                 <div class="setting-desc">含敏感内容的对象先在本地加密，再上传到 WebDAV。</div>
               </div>
-              <div class="controls"><select aria-label="客户端加密"><option selected>强制开启</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="客户端加密"><span class="select-value">强制开启</span></button>
+              <div class="select-menu" role="listbox" aria-label="客户端加密">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">强制开启</button>
+              </div>
+            </div></div>
             </div>
             <div class="setting-row">
               <div>
@@ -1367,7 +1444,14 @@ ocx update</code></pre>
                 <div class="setting-title">更新通道与频率</div>
                 <div class="setting-desc">stable · 每 24 小时自动检查；发现更新只发通知，不打断当前操作。</div>
               </div>
-              <div class="controls"><select aria-label="应用更新通道与频率"><option selected>stable · 每 24 小时</option><option>beta · 每 6 小时</option><option>手动检查</option></select></div>
+              <div class="controls"><div class="select" data-select>
+              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="应用更新通道与频率"><span class="select-value">stable · 每 24 小时</span></button>
+              <div class="select-menu" role="listbox" aria-label="应用更新通道与频率">
+          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">stable · 每 24 小时</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">beta · 每 6 小时</button>
+          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">手动检查</button>
+              </div>
+            </div></div>
             </div>
           </div>
         </article>
@@ -1938,6 +2022,65 @@ const cliHelpHtml = `
 
   <p class="cli-help-footnote">以下为示例命令，非最终契约；变更先确认，破坏性操作必须带确认标志，错误码与退出码约定待 IMP 冻结。</p>
 `;
+
+const closeAllSelects=(except)=>{
+  document.querySelectorAll('.select.open').forEach(item=>{
+    if(item===except) return;
+    item.classList.remove('open','up');
+    item.querySelector('.select-trigger')?.setAttribute('aria-expanded','false');
+  });
+};
+document.addEventListener('click',event=>{
+  const trigger=event.target.closest('.select-trigger');
+  if(trigger){
+    const root=trigger.closest('.select');
+    const willOpen=!root.classList.contains('open');
+    closeAllSelects(root);
+    root.classList.toggle('open',willOpen);
+    trigger.setAttribute('aria-expanded',String(willOpen));
+    if(willOpen){
+      const menu=root.querySelector('.select-menu');
+      root.classList.remove('up');
+      if(menu.getBoundingClientRect().bottom>window.innerHeight-8) root.classList.add('up');
+    }
+    return;
+  }
+  const option=event.target.closest('.select-option');
+  if(option){
+    const root=option.closest('.select');
+    root.querySelectorAll('.select-option').forEach(item=>{
+      const selected=item===option;
+      item.classList.toggle('selected',selected);
+      item.setAttribute('aria-selected',String(selected));
+    });
+    root.querySelector('.select-value').textContent=option.textContent.trim();
+    root.classList.remove('open','up');
+    root.querySelector('.select-trigger')?.setAttribute('aria-expanded','false');
+    return;
+  }
+  closeAllSelects();
+});
+document.addEventListener('keydown',event=>{
+  const root=event.target.closest('.select');
+  if(!root){
+    if(event.key==='Escape') closeAllSelects();
+    return;
+  }
+  const trigger=root.querySelector('.select-trigger');
+  if((event.key==='Enter'||event.key===' ')&&event.target===trigger){
+    event.preventDefault();trigger.click();
+  }else if(event.key==='Escape'&&root.classList.contains('open')){
+    root.classList.remove('open','up');trigger.setAttribute('aria-expanded','false');trigger.focus();
+  }else if(root.classList.contains('open')&&(event.key==='ArrowDown'||event.key==='ArrowUp')){
+    event.preventDefault();
+    const options=[...root.querySelectorAll('.select-option')];
+    const index=options.indexOf(document.activeElement);
+    const next=event.key==='ArrowDown'?(index+1)%options.length:(index-1+options.length)%options.length;
+    options[next].focus();
+  }else if(event.key==='Enter'&&event.target.classList.contains('select-option')){
+    event.preventDefault();event.target.click();trigger.focus();
+  }
+});
 
 document.addEventListener('click',event=>{
   const settingsTarget=event.target.closest('[data-settings-section]');
