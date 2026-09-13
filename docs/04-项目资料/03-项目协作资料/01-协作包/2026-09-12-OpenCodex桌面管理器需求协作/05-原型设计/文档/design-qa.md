@@ -1172,3 +1172,21 @@ S2 会让一级导航常驻一块纯黑、与页面主按钮抢焦点；S1 是�
 - 点击「开启」→ 弹窗确认 → 5 个隐藏区块全部显示。
 - `node --check` 通过；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归，active tab / active panel 恒为 1，零 console/page error。
 - `pw-err.js` 5 路由零报错；全套 19 张截图重出。
+
+## 2026-09-13 · CLI 能力边界移出选项行
+
+### 反馈
+
+「开放能力」「明确不开放」被渲染成两行 `setting-row`，看起来像两个可配置选项；但它们是 CLI 固有规则，不是开关。
+
+### 修法
+
+- 删除 `#cliScopeRow` / `#cliBoundaryRow` 两行选项。
+- 新增 `#cliRules` **规则块**：仍保持「开放能力 / 明确不开放」两段，但不再有 `setting-row` 外框，标题弱化为 muted 小标题，正文弱化为 caption；位于选项列表之后、示例命令之前。
+- 开启确认后仍一次性显示：命令入口 / 运行中实例 / 能力边界 / 示例。
+
+### 实测
+
+- 默认态 `#cliRules` 隐藏；确认开启后显示，`#cliScopeRow` 与 `#cliBoundaryRow` 已不存在。
+- `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
+- 全套 19 张截图重出。
