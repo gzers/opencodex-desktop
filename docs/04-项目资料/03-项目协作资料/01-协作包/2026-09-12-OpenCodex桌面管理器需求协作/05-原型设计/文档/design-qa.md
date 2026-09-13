@@ -1213,3 +1213,24 @@ CLI 开启后，用户仍不知道怎么让外部 Agent「知道可以操作本�
 - 点击「复制 Agent 提示」触发原型 toast，不写剪贴板。
 - `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
 - 全套 19 张截图重出。
+
+## 2026-09-13 · CLI 帮助入口与官方 CLI 速查
+
+### 反馈
+
+1. 缺一个 `--help` 指令。
+2. OpenCodex 自身配置仍走官方 CLI，但没有把官方入口列出来，Agent / 用户不知道去哪执行。
+
+### 修法
+
+- **先看帮助**：终端验证块改为以 `opencodex-desktop --help` 开头，说明 `--help` 是能力自发现入口；命令集待 IMP 冻结，不硬编码。
+- **管理器自有域示例**：补充 `stop / restart / import / sync run`，与开放能力一致；保留确认标志与 mock 边界说明。
+- **OpenCodex 配置 · 官方 CLI**：新增官方 CLI 速查块，列出 `ocx --help`、`ocx status --json`、`ocx restore`、`ocx update`；说明 provider / 路由 / 模型映射不属管理器 CLI，桌面壳只展示入口和检测到的接管 / at-risk 状态，不代理或包装写入动作。
+- **规则块与 Agent 提示**：把「明确不开放」指向官方 CLI（`ocx`）速查；提示片段改为「如需变更，提示用户运行官方 CLI（ocx）」。
+
+### 实测
+
+- 默认态 7 个相关区块隐藏；确认开启后全部显示。
+- `#cliAccess` 首行命令为 `opencodex-desktop --help`；`#cliOfficial` 显示 `ocx --help / status --json / restore / update`。
+- `node --check` 通过；`pw-err.js` 5 路由零报错；4 路由 × 8 设置分区 × 2 主题 × 2 尺寸回归无 active tab / panel 冲突，零 console/page error。
+- 全套 19 张截图重出。
