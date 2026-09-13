@@ -2241,3 +2241,15 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 
 - Playwright 验证 Skills / MCP：表头品牌列与行内目标图标中心 x 坐标均为 737.5；表头「操作」与行内按钮中心 x 坐标均为 1165.5。
 - 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · 操作列居中对齐
+
+### 修法
+
+- Skills / MCP 表头「操作」文字居中显示。
+- 行内操作按钮组从右对齐改为列内居中，保证与表头文字同轴。
+
+### 实测
+
+- Playwright 验证 Skills / MCP 操作文字与按钮组中心均为 1165.5px。
+- 无页面 JS 错误；`node --check` 与 `git diff --check` 通过。
