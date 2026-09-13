@@ -729,6 +729,29 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .env-check .state-pill::before{width:6px;height:6px}
 @media(max-width:900px){.env-check{grid-template-columns:1fr;gap:5px}}
 
+
+/* Extensions: Skills and MCP are top-level tabs in a dedicated route. */
+.ext-tabs{display:flex;flex-wrap:wrap;gap:2px;margin:0;border-bottom:1px solid var(--border);overflow:visible}
+.ext-tabs button{
+  display:inline-flex;align-items:center;white-space:nowrap;flex:none;appearance:none;border:0;border-bottom:2px solid transparent;background:transparent;
+  color:var(--muted);font:inherit;font-size:var(--text-control);padding:8px 12px;margin-bottom:-1px;border-radius:0;cursor:pointer;
+  transition:color var(--motion-fast),border-color var(--motion-fast);
+}
+.ext-tabs button:hover{color:var(--text)}
+.ext-tabs button.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+.ext-view{display:none}
+.ext-view.active{display:grid;gap:16px}
+.target-cell{display:grid;place-items:center}
+.target-icon{
+  display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;flex:none;
+  border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--faint);
+  cursor:pointer;transition:border-color var(--motion-fast),background var(--motion-fast),color var(--motion-fast),transform var(--motion-fast);
+}
+.target-icon svg{width:17px;height:17px;display:block}
+.target-icon:hover{border-color:color-mix(in srgb,var(--text) 22%,transparent);background:var(--hover);color:var(--text);transform:translateY(-1px)}
+.target-icon:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.target-icon[aria-checked="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--text)}
+
 /* Skills manager: local source, per-client sync, and snapshot governance. */
 .skills-metrics{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 .skills-chip{display:inline-flex;align-items:center;gap:7px;min-height:32px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:var(--radius-pill);padding:5px 11px;font:inherit;font-size:var(--text-label);cursor:pointer;transition:background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast)}
@@ -751,9 +774,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .skill-target{display:grid;justify-items:center;gap:5px;cursor:pointer}
 .skills-source{min-width:0;max-width:280px}
 @media(max-width:900px){
-  .skills-list-head{display:none}
   .skill-row{grid-template-columns:1fr}
-  .skill-targets{grid-template-columns:repeat(3,1fr);justify-content:stretch;align-items:start}
+  .skills-target-labels,.skill-targets{grid-template-columns:repeat(6,44px);justify-content:stretch}
   .skill-target{justify-items:start}
   .skill-target span{text-align:left}
 }
@@ -824,6 +846,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
     <nav class="nav">
       <button data-route="overview" id="overviewNavBtn" class="active" title="概览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">概览</span></button>
       <button data-route="panel" id="panelNavBtn" title="面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg><span class="nav-label">面板</span></button>
+      <button data-route="extensions" title="Skills & MCP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3v4a2 2 0 0 1-2 2H4M16 21v-4a2 2 0 0 1 2-2h2M3 8h3a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H3m18-8h-3a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h3"/></svg><span class="nav-label">扩展管理</span></button>
       <button data-route="logs" title="日志"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg><span class="nav-label">日志</span></button>
       <button data-route="settings" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="nav-label">设置</span></button>
     </nav>
@@ -995,6 +1018,283 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </div>
     </section>
 
+      <section class="route-section" id="route-extensions">
+        <div class="ext-tabs" role="tablist" aria-label="扩展分区">
+          <button type="button" data-ext-tab="skills" class="active">Skills</button>
+          <button type="button" data-ext-tab="mcp">MCP</button>
+        </div>
+
+        <div class="ext-view active" id="ext-skills">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>Skills 管理</h2>
+              <p>发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。</p>
+            </div>
+            <div class="toolbar">
+              <button class="btn ghost" data-prototype-action="skills-restore">从备份中恢复</button>
+              <button class="btn ghost" data-prototype-action="skills-zip">从 ZIP 安装</button>
+              <button class="btn" data-prototype-action="skills-import">导入已有</button>
+            </div>
+          </div>
+
+          <div class="skills-metrics" role="group" aria-label="Skills 统计">
+            <button type="button" class="skills-chip active" data-skills-filter="installed"><span>已安装</span><b>6</b></button>
+            <button type="button" class="skills-chip" data-skills-filter="claude"><span>Claude</span><b>4</b></button>
+            <button type="button" class="skills-chip" data-skills-filter="codex"><span>Codex</span><b>6</b></button>
+            <button type="button" class="skills-chip" data-skills-filter="gemini"><span>Gemini</span><b>5</b></button>
+            <button type="button" class="skills-chip" data-skills-filter="grok"><span>Grok Build</span><b>0</b></button>
+            <button type="button" class="skills-chip" data-skills-filter="opencode"><span>OpenCode</span><b>2</b></button>
+            <button type="button" class="skills-chip" data-skills-filter="hermes"><span>Hermes</span><b>0</b></button>
+          </div>
+
+          <div class="skills-toolbar">
+            <input class="input skills-search" id="skillsSearch" type="search" value="" placeholder="搜索 Skills 名称或说明" aria-label="搜索 Skills">
+            <button class="btn ghost" data-prototype-action="skills-rescan">重新扫描</button>
+          </div>
+
+          <div class="skills-list-head" aria-hidden="true">
+            <span>Skills</span>
+            <div class="skills-target-labels">
+              <span>Claude</span><span>Codex</span><span>Gemini</span><span>Grok Build</span><span>OpenCode</span><span>Hermes</span>
+            </div>
+          </div>
+
+          <div class="skills-list" id="skillsList">
+            <article class="skill-row" data-skills="claude codex gemini">
+              <div class="skill-info">
+                <div class="skill-title"><h3>design-studio</h3><span class="tag">本地</span></div>
+                <p>产品设计、UX 原型、应用界面草图、交互流程、结构化图表、设计 QA 与视觉探索。</p>
+              </div>
+              <div class="skill-targets">
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Claude" title="Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Codex" title="Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Gemini" title="Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Grok Build" title="Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 OpenCode" title="OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Hermes" title="Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+              </div>
+            </article>
+
+            <article class="skill-row" data-skills="claude codex gemini">
+              <div class="skill-info">
+                <div class="skill-title"><h3>development-knowledge</h3><span class="tag">本地</span></div>
+                <p>通用编程知识、语言和框架用法、库 / API / 工具链说明、技术选型与实现模式。</p>
+              </div>
+              <div class="skill-targets">
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Claude" title="Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Codex" title="Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Gemini" title="Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Grok Build" title="Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 OpenCode" title="OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Hermes" title="Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+              </div>
+            </article>
+
+            <article class="skill-row" data-skills="codex gemini opencode">
+              <div class="skill-info">
+                <div class="skill-title"><h3>hatch-pet</h3><span class="tag">本地</span></div>
+                <p>Create, repair, validate, preview, and package Codex-compatible animated pets.</p>
+              </div>
+              <div class="skill-targets">
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Claude" title="Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Codex" title="Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Gemini" title="Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Grok Build" title="Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 OpenCode" title="OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Hermes" title="Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+              </div>
+            </article>
+
+            <article class="skill-row" data-skills="claude codex gemini">
+              <div class="skill-info">
+                <div class="skill-title"><h3>project-governance</h3><span class="tag">本地</span></div>
+                <p>在已绑定项目中处理需求、长期事实、开发实施、资料、运行控制、回写与关闭。</p>
+              </div>
+              <div class="skill-targets">
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Claude" title="Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Codex" title="Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Gemini" title="Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Grok Build" title="Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 OpenCode" title="OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Hermes" title="Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+              </div>
+            </article>
+
+            <article class="skill-row" data-skills="claude codex gemini">
+              <div class="skill-info">
+                <div class="skill-title"><h3>project-management</h3><span class="tag">本地</span></div>
+                <p>轻量项目执行编排、状态收口、阶段判断和多 skill 调度。</p>
+              </div>
+              <div class="skill-targets">
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Claude" title="Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Codex" title="Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Gemini" title="Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Grok Build" title="Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-management 到 OpenCode" title="OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Hermes" title="Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+              </div>
+            </article>
+
+            <article class="skill-row" data-skills="codex gemini opencode">
+              <div class="skill-info">
+                <div class="skill-title"><h3>skill-audit</h3><span class="tag">本地</span></div>
+                <p>Audit, simplify, rewrite, or measure an existing Codex skill or plugin skill.</p>
+              </div>
+              <div class="skill-targets">
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Claude" title="Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Codex" title="Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Gemini" title="Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Grok Build" title="Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 OpenCode" title="OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Hermes" title="Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+              </div>
+            </article>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>Skills 目录治理</h2>
+              <p>Skills 是管理器自有资产；同步到目标时使用受控写入，不接管客户端其他配置。</p>
+            </div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Skills 源目录</div>
+                <div class="setting-desc">优先读取 cc-switch / Agent Skills 标准目录；也可选择自定义目录。</div>
+              </div>
+              <div class="controls"><button class="cli-copy-btn skills-source" data-prototype-action="copy-path" data-path="/Users/ezio/.agents/skills" title="复制 Skills 源目录"><code>/Users/ezio/.agents/skills</code></button><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/.agents/skills">打开</button><button class="btn" data-prototype-action="skills-choose-source">选择</button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">同步方式</div>
+                <div class="setting-desc">软链接节省空间并实时联动；复制更稳定，适合迁移和备份快照。</div>
+              </div>
+              <div class="controls"><div class="select" data-select>
+                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Skills 同步方式"><span class="select-value">软链接优先</span></button>
+                <div class="select-menu" role="listbox" aria-label="Skills 同步方式">
+                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">软链接优先</button>
+                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">文件复制</button>
+                </div>
+              </div></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">备份包含 Skills 目录</div>
+                <div class="setting-desc">升级前、导入前和显式备份时纳入 Skills 快照；软链接按解引用复制。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 Skills 目录"></button></div>
+            </div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">导出包含 Skills 目录</div>
+                <div class="setting-desc">配置迁移导出时纳入 Skills；导入前先生成可恢复快照。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 Skills 目录"></button></div>
+            </div>
+          </div>
+        </article>
+        </div>
+
+        <div class="ext-view" id="ext-mcp">
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>MCP 服务器管理</h2>
+                <p>把同一个 MCP 服务器按需同步到各客户端配置；只写对应配置节点。</p>
+              </div>
+              <div class="toolbar">
+                <button class="btn ghost" data-prototype-action="mcp-import">导入已有</button>
+                <button class="btn" data-prototype-action="mcp-add">添加 MCP</button>
+              </div>
+            </div>
+
+            <div class="skills-metrics" role="group" aria-label="MCP 统计">
+              <button type="button" class="skills-chip active" data-mcp-filter="all"><span>已配置 1 个</span><b>MCP</b></button>
+              <button type="button" class="skills-chip" data-mcp-filter="claude"><span>Claude</span><b>0</b></button>
+              <button type="button" class="skills-chip" data-mcp-filter="codex"><span>Codex</span><b>1</b></button>
+              <button type="button" class="skills-chip" data-mcp-filter="gemini"><span>Gemini</span><b>0</b></button>
+              <button type="button" class="skills-chip" data-mcp-filter="grok"><span>Grok Build</span><b>0</b></button>
+              <button type="button" class="skills-chip" data-mcp-filter="opencode"><span>OpenCode</span><b>0</b></button>
+              <button type="button" class="skills-chip" data-mcp-filter="hermes"><span>Hermes</span><b>0</b></button>
+            </div>
+
+            <div class="skills-list-head" aria-hidden="true">
+              <span>MCP 服务器</span>
+              <div class="skills-target-labels">
+                <span>Claude</span><span>Codex</span><span>Gemini</span><span>Grok Build</span><span>OpenCode</span><span>Hermes</span>
+              </div>
+            </div>
+
+            <div class="skills-list" id="mcpList">
+              <article class="skill-row" data-mcp="codex">
+                <div class="skill-info">
+                  <div class="skill-title"><h3>node_repl</h3><span class="tag">stdio</span></div>
+                  <p>本机 Node REPL 服务；只同步服务器声明，不接管客户端其他配置。</p>
+                </div>
+                <div class="skill-targets">
+                  <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 node_repl 到 Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16M4 12h16M7 7l10 10M17 7 7 17"/></svg></button></label>
+                  <label class="target-cell"><button class="target-icon" type="button" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 node_repl 到 Codex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg></button></label>
+                  <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 node_repl 到 Gemini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg></button></label>
+                  <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 node_repl 到 Grok Build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M9 7l6 10"/></svg></button></label>
+                  <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 node_repl 到 OpenCode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button></label>
+                  <label class="target-cell"><button class="target-icon" type="button" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 node_repl 到 Hermes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="3"/><path d="M6 20a6 6 0 0 1 12 0"/></svg></button></label>
+                </div>
+              </article>
+            </div>
+          </article>
+
+          <article class="card">
+            <div class="card-head">
+              <div>
+                <h2>MCP 配置治理</h2>
+                <p>MCP 写入会保留客户端非 MCP 配置；敏感值只在确认与导出容器中出现。</p>
+              </div>
+            </div>
+            <div class="setting-list">
+              <div class="setting-row">
+                <div>
+                  <div class="setting-title">同名冲突策略</div>
+                  <div class="setting-desc">目标客户端已有同名 MCP 时暂停写入，展示差异并要求确认。</div>
+                </div>
+                <div class="controls"><div class="select" data-select>
+                  <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="MCP 同名冲突策略"><span class="select-value">每次询问</span></button>
+                  <div class="select-menu" role="listbox" aria-label="MCP 同名冲突策略">
+                    <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">每次询问</button>
+                    <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留目标</button>
+                    <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
+                  </div>
+                </div></div>
+              </div>
+              <div class="setting-row">
+                <div>
+                  <div class="setting-title">敏感值脱敏</div>
+                  <div class="setting-desc">URL token、headers、env 和 API key 默认掩码展示。</div>
+                </div>
+                <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="MCP 敏感值脱敏"></button></div>
+              </div>
+              <div class="setting-row">
+                <div>
+                  <div class="setting-title">备份包含 MCP 配置</div>
+                  <div class="setting-desc">备份快照纳入受管 MCP 定义；凭据仍进入加密容器。</div>
+                </div>
+                <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 MCP 配置"></button></div>
+              </div>
+              <div class="setting-row">
+                <div>
+                  <div class="setting-title">导出包含 MCP 配置</div>
+                  <div class="setting-desc">迁移导出纳入 MCP 定义；导入前先备份目标客户端配置。</div>
+                </div>
+                <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 MCP 配置"></button></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
     <section class="route-section" id="route-logs">
       <div class="diag-tabs" role="tablist" aria-label="诊断分区">
         <button type="button" data-diag-tab="logs" class="active">日志历史</button>
@@ -1048,7 +1348,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         <button type="button" data-settings-section="installation">安装配置</button>
         <button type="button" data-settings-section="backup">数据与备份</button>
         <button type="button" data-settings-section="migration">配置迁移</button>
-        <button type="button" data-settings-section="skills">Skills 管理</button>
         <button type="button" data-settings-section="sync">WebDAV 同步</button>
         <button type="button" data-settings-section="cleanup">日志与通知</button>
         <button type="button" data-settings-section="cli">CLI 控制面</button>
@@ -1255,181 +1554,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">BLAKE3</button>
               </div>
             </div></div>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section class="settings-panel" id="settings-skills">
-        <article class="card">
-          <div class="card-head">
-            <div>
-              <h2>Skills 管理</h2>
-              <p>发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。</p>
-            </div>
-            <div class="toolbar">
-              <button class="btn ghost" data-prototype-action="skills-restore">从备份中恢复</button>
-              <button class="btn ghost" data-prototype-action="skills-zip">从 ZIP 安装</button>
-              <button class="btn" data-prototype-action="skills-import">导入已有</button>
-            </div>
-          </div>
-
-          <div class="skills-metrics" role="group" aria-label="Skills 统计">
-            <button type="button" class="skills-chip active" data-skills-filter="installed"><span>已安装</span><b>6</b></button>
-            <button type="button" class="skills-chip" data-skills-filter="claude"><span>Claude</span><b>4</b></button>
-            <button type="button" class="skills-chip" data-skills-filter="codex"><span>Codex</span><b>6</b></button>
-            <button type="button" class="skills-chip" data-skills-filter="gemini"><span>Gemini</span><b>5</b></button>
-            <button type="button" class="skills-chip" data-skills-filter="grok"><span>Grok Build</span><b>0</b></button>
-            <button type="button" class="skills-chip" data-skills-filter="opencode"><span>OpenCode</span><b>2</b></button>
-            <button type="button" class="skills-chip" data-skills-filter="hermes"><span>Hermes</span><b>0</b></button>
-          </div>
-
-          <div class="skills-toolbar">
-            <input class="input skills-search" id="skillsSearch" type="search" value="" placeholder="搜索 Skills 名称或说明" aria-label="搜索 Skills">
-            <button class="btn ghost" data-prototype-action="skills-rescan">重新扫描</button>
-          </div>
-
-          <div class="skills-list-head" aria-hidden="true">
-            <span>Skills</span>
-            <div class="skills-target-labels">
-              <span>Claude</span><span>Codex</span><span>Gemini</span><span>Grok Build</span><span>OpenCode</span><span>Hermes</span>
-            </div>
-          </div>
-
-          <div class="skills-list" id="skillsList">
-            <article class="skill-row" data-skills="claude codex gemini">
-              <div class="skill-info">
-                <div class="skill-title"><h3>design-studio</h3><span class="tag">本地</span></div>
-                <p>产品设计、UX 原型、应用界面草图、交互流程、结构化图表、设计 QA 与视觉探索。</p>
-              </div>
-              <div class="skill-targets">
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Claude"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Codex"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Gemini"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Grok Build"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 OpenCode"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 design-studio 到 Hermes"></button></label>
-              </div>
-            </article>
-
-            <article class="skill-row" data-skills="claude codex gemini">
-              <div class="skill-info">
-                <div class="skill-title"><h3>development-knowledge</h3><span class="tag">本地</span></div>
-                <p>通用编程知识、语言和框架用法、库 / API / 工具链说明、技术选型与实现模式。</p>
-              </div>
-              <div class="skill-targets">
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Claude"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Codex"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Gemini"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Grok Build"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 OpenCode"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 development-knowledge 到 Hermes"></button></label>
-              </div>
-            </article>
-
-            <article class="skill-row" data-skills="codex gemini opencode">
-              <div class="skill-info">
-                <div class="skill-title"><h3>hatch-pet</h3><span class="tag">本地</span></div>
-                <p>Create, repair, validate, preview, and package Codex-compatible animated pets.</p>
-              </div>
-              <div class="skill-targets">
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Claude"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Codex"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Gemini"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Grok Build"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 OpenCode"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 hatch-pet 到 Hermes"></button></label>
-              </div>
-            </article>
-
-            <article class="skill-row" data-skills="claude codex gemini">
-              <div class="skill-info">
-                <div class="skill-title"><h3>project-governance</h3><span class="tag">本地</span></div>
-                <p>在已绑定项目中处理需求、长期事实、开发实施、资料、运行控制、回写与关闭。</p>
-              </div>
-              <div class="skill-targets">
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Claude"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Codex"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Gemini"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Grok Build"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 OpenCode"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-governance 到 Hermes"></button></label>
-              </div>
-            </article>
-
-            <article class="skill-row" data-skills="claude codex gemini">
-              <div class="skill-info">
-                <div class="skill-title"><h3>project-management</h3><span class="tag">本地</span></div>
-                <p>轻量项目执行编排、状态收口、阶段判断和多 skill 调度。</p>
-              </div>
-              <div class="skill-targets">
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Claude"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Codex"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Gemini"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Grok Build"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-management 到 OpenCode"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 project-management 到 Hermes"></button></label>
-              </div>
-            </article>
-
-            <article class="skill-row" data-skills="codex gemini opencode">
-              <div class="skill-info">
-                <div class="skill-title"><h3>skill-audit</h3><span class="tag">本地</span></div>
-                <p>Audit, simplify, rewrite, or measure an existing Codex skill or plugin skill.</p>
-              </div>
-              <div class="skill-targets">
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Claude"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Codex"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Gemini"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Grok Build"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 OpenCode"></button></label>
-                <label class="skill-target"><button class="toggle" type="button" role="switch" aria-checked="false" data-prototype-action="mock-setting" aria-label="同步 skill-audit 到 Hermes"></button></label>
-              </div>
-            </article>
-          </div>
-        </article>
-
-        <article class="card">
-          <div class="card-head">
-            <div>
-              <h2>Skills 目录治理</h2>
-              <p>Skills 是管理器自有资产；同步到目标时使用受控写入，不接管客户端其他配置。</p>
-            </div>
-          </div>
-          <div class="setting-list">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Skills 源目录</div>
-                <div class="setting-desc">优先读取 cc-switch / Agent Skills 标准目录；也可选择自定义目录。</div>
-              </div>
-              <div class="controls"><button class="cli-copy-btn skills-source" data-prototype-action="copy-path" data-path="/Users/ezio/.agents/skills" title="复制 Skills 源目录"><code>/Users/ezio/.agents/skills</code></button><button class="btn ghost" data-prototype-action="open-path" data-path="/Users/ezio/.agents/skills">打开</button><button class="btn" data-prototype-action="skills-choose-source">选择</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">同步方式</div>
-                <div class="setting-desc">软链接节省空间并实时联动；复制更稳定，适合迁移和备份快照。</div>
-              </div>
-              <div class="controls"><div class="select" data-select>
-                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Skills 同步方式"><span class="select-value">软链接优先</span></button>
-                <div class="select-menu" role="listbox" aria-label="Skills 同步方式">
-                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">软链接优先</button>
-                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">文件复制</button>
-                </div>
-              </div></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">备份包含 Skills 目录</div>
-                <div class="setting-desc">升级前、导入前和显式备份时纳入 Skills 快照；软链接按解引用复制。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="备份包含 Skills 目录"></button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">导出包含 Skills 目录</div>
-                <div class="setting-desc">配置迁移导出时纳入 Skills；导入前先生成可恢复快照。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导出包含 Skills 目录"></button></div>
             </div>
           </div>
         </article>
@@ -1950,6 +2074,7 @@ const routes={
   overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
   panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
   logs:{title:'诊断中心',subtitle:'日志历史与通知历史分 Tab 管理，支持清理与自动保留策略。'},
+  extensions:{title:'扩展管理',subtitle:'集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。'},
   settings:{title:'设置',subtitle:'集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。'}
 };
 const routeNotes={
@@ -1998,13 +2123,12 @@ const routeNotes={
   },
   settings:{
     title:'设置',
-    note:'偏好、备份策略、迁移、同步和升级参数集中维护；概览只保留高频动作。',
+    note:'偏好、备份策略、迁移、同步和升级参数集中维护；Skills 与 MCP 移入独立扩展管理。',
     items:[
       ['桌面壳偏好','管理器自有的缩放、面板承载、后台运行和通知边界。'],
       ['官方共享配置','仅收纳与官方同源且桌面壳相关的开关；模型、路由与 provider 仍走官方。'],
       ['数据与备份','自动备份、保留策略和完整性校验。'],
       ['配置迁移','P1 加密容器与导入校验。'],
-      ['Skills 管理','以本机 Skills 为源，按客户端开关同步；目录治理维护源路径、写入方式和备份范围。'],
       ['WebDAV 同步','P2 端点、凭据、加密与冲突策略。'],
       ['CLI 控制面','默认关闭；开启后仅委托运行中实例执行管理器自有域命令，不改写 OpenCodex 配置。'],
       ['版本升级','两块：OpenCodex 版本（检查、备份、官方引导）与桌面管理器版本（应用自更新）。'],
@@ -2363,7 +2487,7 @@ function openSettingsSection(section){
 }
 window.openSettingsSection=openSettingsSection;
 function showSettingsSection(section){
-  const allowed=['general','installation','backup','skills','migration','sync','cleanup','cli','upgrade','about'];
+  const allowed=['general','installation','backup','migration','sync','cleanup','cli','upgrade','about'];
   const next=allowed.includes(section)?section:(new URLSearchParams(location.search).get('section')||'general');
   document.querySelectorAll('#settingsTabs button').forEach(button=>{
     button.classList.toggle('active',button.dataset.settingsSection===next);
@@ -2465,6 +2589,32 @@ document.addEventListener('keydown',event=>{
   }
 });
 
+function applyExtTabs(){
+  const active=document.querySelector('.ext-tabs button.active');
+  const next=active?.dataset.extTab||'skills';
+  document.querySelectorAll('.ext-view').forEach(view=>view.classList.toggle('active',view.id===`ext-${next}`));
+}
+document.querySelectorAll('.ext-tabs button').forEach(button=>{
+  button.addEventListener('click',()=>{
+    document.querySelectorAll('.ext-tabs button').forEach(item=>item.classList.toggle('active',item===button));
+    applyExtTabs();
+  });
+});
+function applyMcpFilters(){
+  const activeChip=document.querySelector('.skills-chip.active[data-mcp-filter]');
+  const filter=activeChip?.dataset.mcpFilter||'all';
+  document.querySelectorAll('#mcpList .skill-row').forEach(row=>{
+    const match=filter==='all'||row.dataset.mcp.split(/\s+/).includes(filter);
+    row.hidden=!match;
+  });
+}
+document.querySelectorAll('.skills-chip[data-mcp-filter]').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    document.querySelectorAll('.skills-chip[data-mcp-filter]').forEach(item=>item.classList.toggle('active',item===chip));
+    applyMcpFilters();
+  });
+});
+
 function applySkillsFilters(){
   const query=(document.getElementById('skillsSearch')?.value||'').trim().toLowerCase();
   const activeChip=document.querySelector('.skills-chip.active');
@@ -2542,6 +2692,10 @@ document.addEventListener('click',event=>{
     toast('原型模拟：会重新扫描 Skills 源目录与各客户端目标。');
   }else if(action==='skills-choose-source'){
     openModal('选择 Skills 源目录','<p class="modal-lead">默认使用 <code>/Users/ezio/.agents/skills</code>。</p><p>目录切换后只更新管理器引用；不会移动或删除现有 Skills。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或修改真实引用。'));
+  }else if(action==='mcp-import'){
+    openModal('导入已有 MCP','<p class="modal-lead">扫描 Codex、Claude、Gemini、Grok Build、OpenCode 与 Hermes 的 MCP 配置。</p><p>扫描结果会合并为受管定义；默认不开启任何新目标，敏感值先掩码展示。</p>','继续',()=>toast('原型拦截：不会读取真实客户端配置。'));
+  }else if(action==='mcp-add'){
+    openModal('添加 MCP 服务器','<p class="modal-lead">统一维护名称、stdio / HTTP、命令或 URL、参数与环境。</p><p>添加后默认不选中任何目标；开启图标才会按客户端适配器写入对应配置节点。</p>','继续',()=>toast('原型拦截：不会写入真实 MCP 配置。'));
   }else if(action==='export'){
     openModal('导出配置','将生成全量配置的加密导出容器；敏感值不会明文展示。导出前会确认口令与目标目录。','继续',()=>toast('原型拦截：不会生成真实导出容器。'));
   }else if(action==='import'){
