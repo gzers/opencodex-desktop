@@ -995,8 +995,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
         <article class="card">
           <div class="card-head">
             <div>
-              <h2>通用偏好</h2>
-              <p>桌面壳行为、面板承载与通知。</p>
+              <h2>桌面壳偏好</h2>
+              <p>管理器自有行为、面板承载与通知。</p>
             </div>
           </div>
           <div class="setting-list">
@@ -1013,13 +1013,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">80%</button>
               </div>
             </div></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">随 Codex 启动 OpenCodex <span class="tag">官方共享</span></div>
-                <div class="setting-desc">与官方面板同一配置；开启后 Codex 启动时自动运行官方 shim <code>ocx ensure</code>。修改会同步到官方配置，不做旁路写入。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="随 Codex 启动 OpenCodex"></button></div>
             </div>
             <div class="setting-row">
               <div>
@@ -1061,6 +1054,24 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
                 <div class="setting-desc">检测到本地与远端冲突时暂停覆盖，并要求显式确认。</div>
               </div>
               <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步冲突提醒"></button></div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h2>官方共享配置</h2>
+              <p>与官方 OpenCodex 使用同一配置源；模型、路由与 provider 仍由官方面板或官方 CLI 管理。</p>
+            </div>
+          </div>
+          <div class="setting-list">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">随 Codex 启动 OpenCodex <span class="tag">官方共享</span></div>
+                <div class="setting-desc">与官方面板同一配置；开启后 Codex 启动时自动运行官方 shim <code>ocx ensure</code>。修改会同步到官方配置，不做旁路写入。</div>
+              </div>
+              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="随 Codex 启动 OpenCodex"></button></div>
             </div>
           </div>
         </article>
@@ -1745,7 +1756,8 @@ const routeNotes={
     title:'设置',
     note:'偏好、备份策略、迁移、同步和升级参数集中维护；概览只保留高频动作。',
     items:[
-      ['通用偏好','面板承载、后台运行和通知边界。'],
+      ['桌面壳偏好','管理器自有的缩放、面板承载、后台运行和通知边界。'],
+      ['官方共享配置','仅收纳与官方同源且桌面壳相关的开关；模型、路由与 provider 仍走官方。'],
       ['数据与备份','自动备份、保留策略和完整性校验。'],
       ['配置迁移','P1 加密容器与导入校验。'],
       ['WebDAV 同步','P2 端点、凭据、加密与冲突策略。'],
