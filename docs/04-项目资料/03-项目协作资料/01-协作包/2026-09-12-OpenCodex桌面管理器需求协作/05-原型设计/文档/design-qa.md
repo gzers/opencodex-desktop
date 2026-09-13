@@ -2421,3 +2421,15 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 - 切换 Windows 后 shell 仍为 `mac`；改为点击 Windows 后 shell 变为 `windows`，切运行中提示联动更新，菜单点击触发原型拦截。
 - 从 `#tray` 返回 `#overview` 后桌面壳恢复显示。
 - 无页面 JS / console 错误；`node --check` 与 `git diff --check` 通过。
+
+## 2026-09-13 · 侧边导航扩展入口命名
+
+### 修法
+
+- 将侧边导航「扩展管理」文案改为「拓展」，保留拼图图标与路由行为。
+- 设置页「扩展管理」Tab 名称保持不变，不影响 Tab 与锚点跳转。
+
+### 实测
+
+- Playwright 验证侧边导航文案为「拓展」，设置 Tab 文案仍为「扩展管理」。
+- 无页面 JS / console 错误；`node --check` 与 `git diff --check` 通过。
