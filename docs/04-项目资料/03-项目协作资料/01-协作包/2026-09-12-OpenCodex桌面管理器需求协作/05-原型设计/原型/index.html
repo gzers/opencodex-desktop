@@ -565,6 +565,10 @@ html[data-theme="dark"] .prototype-side ul{color:#b9bfca}
 .prototype-side .scenarios button:hover{border-color:#b9bcc5;color:#111}
 .prototype-side .scenarios button.active{background:#0d0d0d;border-color:#0d0d0d;color:#fff}
 .prototype-side .proto-hint{margin:8px 0 0;color:#737a85;font-size:11px;line-height:1.45}
+.prototype-side .proto-link{display:inline-flex;align-items:center;width:fit-content;margin:-6px 0 10px;padding:5px 9px;border:1px solid #b9bcc5;border-radius:8px;color:#111;font-size:12px;font-weight:600;text-decoration:none;background:#fff;transition:border-color var(--motion-fast),background var(--motion-fast),color var(--motion-fast)}
+.prototype-side .proto-link:hover{border-color:#0d0d0d;background:#0d0d0d;color:#fff}
+html[data-theme="dark"] .prototype-side .proto-link{border-color:#4b4f58;color:#f3f4f6;background:#ffffff0a}
+html[data-theme="dark"] .prototype-side .proto-link:hover{border-color:#8f9bff;color:#fff}
 .prototype-side .size-readout{display:flex;align-items:baseline;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
 .prototype-side .size-readout b{font-size:14px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .prototype-side .size-readout span{color:#737a85;font-size:10px;line-height:1.4}
@@ -977,6 +981,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
     </div>
     <nav class="nav">
       <button data-route="overview" id="overviewNavBtn" class="active" title="概览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">概览</span></button>
+      <button data-route="tray" id="trayNavBtn" title="托盘原型"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16"/><path d="M7 8v10a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8"/><path d="M12 5v3"/></svg><span class="nav-label">托盘</span></button>
       <button data-route="panel" id="panelNavBtn" title="面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg><span class="nav-label">面板</span></button>
       <button data-route="extensions" title="Skills & MCP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5a2.5 2.5 0 0 1 4 0V5h3A1.5 1.5 0 0 1 18.5 6.5V10h1.5a2.5 2.5 0 0 1 0 4h-1.5v3.5A1.5 1.5 0 0 1 17 19h-3v-1.5a2.5 2.5 0 0 0-5 0V19H6.5A1.5 1.5 0 0 1 5 17.5V14H3.5a2.5 2.5 0 0 1 0-4H5V6.5A1.5 1.5 0 0 1 6.5 5H10V3.5Z"/></svg><span class="nav-label">拓展</span></button>
       <button data-route="logs" title="日志"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg><span class="nav-label">日志</span></button>
@@ -2330,6 +2335,7 @@ ocx update</code></pre>
       </div>
       <span class="tag">Mock</span>
     </div>
+    <a class="proto-link" href="#tray">打开托盘原型 →</a>
 
     <div class="proto-card">
       <div class="proto-note-title">窗口尺寸预览</div>
