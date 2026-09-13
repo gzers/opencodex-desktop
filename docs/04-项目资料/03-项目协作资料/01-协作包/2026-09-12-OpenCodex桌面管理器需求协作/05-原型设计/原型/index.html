@@ -244,7 +244,11 @@ button{font:inherit}
 .scenarios button.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .footer-note{margin-top:18px;color:var(--muted);font-size:var(--text-label)}
 .modal-mask{position:absolute;inset:0;background:color-mix(in srgb,var(--text) 22%,transparent);display:none;align-items:center;justify-content:center;padding:20px;z-index:30;border-radius:inherit}
-.modal{width:min(520px,100%);background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:0 18px 48px #00000029}
+.modal{width:min(520px,100%);max-height:70vh;overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:0 18px 48px #00000029}
+.modal.modal-wide{width:min(760px,100%)}
+.modal-body{margin-bottom:14px}
+.modal-lead{margin-bottom:10px}
+.modal-code{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:10px}
 .modal h3{margin:0 0 8px;font-size:var(--text-title)}
 .modal p{color:var(--muted);margin:0 0 15px;font-size:var(--text-body)}
 .modal-actions{display:flex;justify-content:flex-end;gap:8px}
@@ -340,6 +344,14 @@ html[data-route="overview"] #statePill{display:none}
 .cli-preview p{margin:8px 0 0;color:var(--muted);font-size:var(--text-caption)}
 .cli-preview.official{border-color:color-mix(in srgb,var(--text) 14%,transparent)}
 .cli-preview.official h4{color:var(--text)}
+.cli-help-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.cli-help-grid b,.cli-help-note b{display:block;margin-bottom:6px;font-size:var(--text-caption);font-weight:650;color:var(--muted)}
+.cli-help-grid pre,.cli-help-note pre{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text)}
+.cli-help-grid pre,.cli-help-note pre{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:10px}
+.cli-help-note{margin-top:12px}
+.cli-help-note.official{border:1px solid color-mix(in srgb,var(--text) 14%,transparent);border-radius:var(--radius-sm);padding:10px}
+.cli-help-note p{margin:7px 0 0;color:var(--muted);font-size:var(--text-caption)}
+@media(max-width:680px){.cli-help-grid{grid-template-columns:1fr}}
 /* 最近事件：只在详情展开时承载高窗口余量；不重复展示完整日志。
    状态来源沿用 actionsByState 的同一份 mock，不做第二个状态机。 */
 .recent-events{display:none}
@@ -1186,7 +1198,7 @@ body.panel-mode .panel-shell{height:100%}
                 <div class="setting-title">Agent 提示</div>
                 <div class="setting-desc">管理器用 <code>ocxd</code>；OpenCodex 自身配置仍用官方 <code>ocx</code>。命令能力先 <code>ocxd --help</code>。</div>
               </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="cli-copy-agent">复制 Agent 提示</button></div>
+              <div class="controls"><button class="btn ghost" data-prototype-action="cli-help">查看完整说明</button><button class="btn ghost" data-prototype-action="cli-copy-agent">复制 Agent 提示</button></div>
             </div>
 
           </div>
@@ -1377,9 +1389,9 @@ ocx update</code></pre>
   </aside>
 
   <div class="modal-mask" id="modalMask">
-    <div class="modal">
+    <div class="modal" id="modal">
       <h3 id="modalTitle"></h3>
-      <p id="modalBody"></p>
+      <div id="modalBody"></div>
       <div class="modal-actions">
         <button class="btn ghost" id="modalDelete" hidden>删除</button>
         <button class="btn ghost" id="modalCancel">取消</button>
@@ -1756,6 +1768,38 @@ function showSettingsSection(section){
   });
 }
 
+const cliHelpHtml = `
+  <p>先运行 <code>ocxd --help</code> 自发现当前版本支持的命令与参数；下面是当前设计域的说明，命令集待 IMP 冻结。</p>
+  <div class="cli-help-grid">
+    <div><b>命令入口</b><pre><code>ocxd --help
+ocxd status --json</code></pre></div>
+    <div><b>管理器自有域</b><pre><code>ocxd status --json
+ocxd start --json
+ocxd stop --json
+ocxd restart --json
+ocxd backup create --json
+ocxd export --confirm --json
+ocxd import --confirm --json
+ocxd sync run --json</code></pre></div>
+  </div>
+  <div class="cli-help-note">
+    <b>运行规则</b>
+    <p>CLI 是运行中管理器实例的客户端；GUI 在线才接受变更，实例未运行时只读命令明确报错，不做旁路写入。变更层命令需显式确认，破坏性操作必须带确认标志。</p>
+  </div>
+  <div class="cli-help-note official">
+    <b>OpenCodex 配置 · 官方 CLI</b>
+    <pre><code>ocx --help
+ocx status --json
+ocx restore
+ocx update</code></pre>
+    <p>provider、路由与模型映射不属于 <code>ocxd</code>；桌面壳只展示入口，不代理或包装官方写入动作。</p>
+  </div>
+  <div class="cli-help-note">
+    <b>错误与退出码</b>
+    <p>输出用 <code>--json</code> 校验；错误摘要、错误码与退出码约定待 IMP 冻结。</p>
+  </div>
+`;
+
 document.addEventListener('click',event=>{
   const settingsTarget=event.target.closest('[data-settings-section]');
   if(settingsTarget){
@@ -1791,8 +1835,24 @@ document.addEventListener('click',event=>{
     });
   }else if(action==='cli-copy'){
     toast('原型拦截：不会写入 PATH 或剪贴板。');
+  }else if(action==='cli-help'){
+    openModal(
+      'ocxd CLI 完整说明',
+      cliHelpHtml,
+      '',
+      null,
+      {hideConfirm:true, cancelLabel:'关闭'}
+    );
+    document.querySelector('#modal').classList.add('modal-wide');
   }else if(action==='cli-copy-agent'){
-    toast('原型提示：真实实现会复制简洁 Agent 提示。');
+    const prompt=document.querySelector('#cliAgentPrompt code').textContent.trim();
+    openModal(
+      'Agent 提示',
+      '<p class="modal-lead">以下内容与显示的提示片段逐字一致；真实实现会写入剪贴板。</p><pre class="modal-code"><code>'+prompt.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</code></pre>',
+      '',
+      null,
+      {hideConfirm:true, cancelLabel:'关闭'}
+    );
   }else if(action==='check-app-update'){
     toast('原型提示：不会访问真实更新服务；此处演示「已是 / 有可用更新」。');
   }else if(action==='install-app-update'){
@@ -1931,6 +1991,7 @@ function openModal(title,body,confirmText,handler,opts){
 }
 function closeModal(){
   modalMask.style.display='none';
+  modal.classList.remove('modal-wide');
   confirmHandler=null;
   deleteHandler=null;
   modalConfirm.hidden=false;
