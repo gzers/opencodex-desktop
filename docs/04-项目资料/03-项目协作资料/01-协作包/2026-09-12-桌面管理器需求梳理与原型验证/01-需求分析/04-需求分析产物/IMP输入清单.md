@@ -3,7 +3,7 @@ id: IMP输入清单
 object_kind: collaboration.derived
 state: draft
 title: OpenCodeX-Desktop IMP 输入清单
-summary: Gate A~E 的现状检查与进入 IMP 所需的契约输入清单，用于判断是否可以创建 IMP，以及 IMP 必须冻结哪些契约。本文件是派生分析，稳定需求仍以 DMD 为唯一权威。
+summary: Gate A~E 的现状检查与进入 IMP 所需的契约输入清单；46 项契约已由 IMP-OPENCODEX-DESKTOP-01 冻结。本文件是派生分析，稳定需求以 DMD 为唯一权威，实施契约以 IMP 为准。
 source_refs:
   - DMD-OPENCODEX-DESKTOP-MANAGER
   - 01-需求分析/04-需求分析产物/需求基线.md
@@ -16,8 +16,8 @@ source_refs:
 
 ## 1. 目的
 
-- 回答两个问题：**现在能不能建 IMP**、**IMP 必须冻结什么**。
-- 本文件是 Gate E（移交门）的产物；创建 IMP 仍需用户确认。
+- 回答两个问题：**IMP 必须冻结什么**、**契约现在冻结到哪一步**。
+- 本文件是 Gate E（移交门）的派生产物；实施契约已由 `IMP-OPENCODEX-DESKTOP-01` 冻结，稳定需求仍以 DMD 为唯一权威。
 
 ## 2. Gate A ~ E 现状检查
 
