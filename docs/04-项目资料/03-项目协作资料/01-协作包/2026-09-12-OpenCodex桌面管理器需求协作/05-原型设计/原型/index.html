@@ -307,13 +307,28 @@ body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(10
 @media(max-width:900px){.mock-row{grid-template-columns:1fr}.mock-content{grid-template-columns:1fr}}
 @media(max-width:1100px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:1120px){.install-row{grid-template-columns:1fr}}
-/* Prototype panel zoom tester stays compact and anchored to the frame. */
-.panel-scale-tools{position:absolute;right:104px;bottom:14px;z-index:41;display:flex;align-items:center;gap:8px}
-.panel-scale-tools .panel-scale-label{display:inline-flex;align-items:center;justify-content:center;min-width:56px;min-height:24px;white-space:nowrap;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);color:var(--muted);font-size:var(--text-caption);font-weight:600;box-shadow:var(--shadow-sm);pointer-events:none;transition:transform .14s ease}
-.panel-scale-tools .panel-scale-label[hidden]{display:none}
-.panel-scale-tools .panel-actions{position:static;display:flex;align-items:center;gap:0;padding:3px;border:1px solid var(--border);border-radius:var(--radius-pill);background:color-mix(in srgb,var(--panel) 92%,transparent);box-shadow:var(--shadow-sm);height:30px}
-.panel-scale-tools .panel-actions button{min-width:24px;min-height:22px;padding:2px 6px}
-.panel-scale-tools .panel-actions span{display:grid;place-items:center;min-width:36px;min-height:22px;padding:0 6px;border-radius:var(--radius-pill);background:var(--rail);font-size:var(--text-caption);font-weight:600;color:var(--muted)}
+/* Panel actions collapse into one draggable brand hub. */
+.panel-hub{position:absolute;left:24px;bottom:18px;z-index:42;width:38px;height:38px}
+.panel-hub.open{width:auto;height:auto}
+.panel-hub-toggle{width:38px;height:38px;display:grid;place-items:center;padding:0;border:1px solid var(--border);border-radius:50%;background:color-mix(in srgb,var(--panel) 94%,transparent);box-shadow:0 10px 28px #1018281f;cursor:grab;backdrop-filter:blur(18px) saturate(1.2)}
+.panel-hub.open .panel-hub-toggle{cursor:default;border-radius:14px}
+.panel-hub-toggle:active{cursor:grabbing}
+.panel-hub-logo{display:block;filter:drop-shadow(0 1px 2px color-mix(in srgb,var(--brand) 15%,transparent))}
+.panel-hub-badge{position:absolute;top:-7px;right:-7px;min-width:25px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:9px;font-weight:800;line-height:18px;text-align:center;box-shadow:0 3px 10px #3941ff33;pointer-events:none}
+.panel-hub-menu{display:none;width:172px;margin-top:8px;padding:8px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,var(--panel) 96%,transparent);box-shadow:0 20px 48px #10182824;backdrop-filter:blur(20px)}
+.panel-hub.open .panel-hub-menu{display:block}
+.panel-hub-title{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px}
+.panel-hub-title b{font-size:13px;font-variant-numeric:tabular-nums}
+.panel-hub-title span{color:var(--muted);font-size:10px}
+.panel-hub-zoom{display:grid;grid-template-columns:30px minmax(0,1fr) 30px;align-items:center;gap:4px;margin-bottom:7px}
+.panel-hub-zoom button{min-width:30px;min-height:27px;border:1px solid var(--border);border-radius:8px;background:var(--rail);color:var(--text);font:inherit;font-size:14px;cursor:pointer}
+.panel-hub-zoom span{display:grid;place-items:center;min-height:27px;border-radius:8px;background:var(--rail);color:var(--text);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
+.panel-hub-sep{height:1px;margin:5px 0;background:var(--border)}
+.panel-hub-menu > button{display:flex;width:100%;min-height:29px;align-items:center;padding:5px 9px;border:0;border-radius:8px;background:transparent;color:var(--text);font:inherit;font-size:12px;cursor:pointer;text-align:left}
+.panel-hub-menu > button:hover{background:var(--hover)}
+html[data-theme="dark"] .panel-hub-toggle{background:#212226f2;border-color:#4b4f58;box-shadow:0 10px 28px #00000066}
+html[data-theme="dark"] .panel-hub-menu{background:#202227f2;border-color:#4b4f58;box-shadow:0 20px 48px #00000088}
+html[data-theme="dark"] .panel-hub-zoom button,html[data-theme="dark"] .panel-hub-zoom span{background:#2a2d33;border-color:#4b4f58}
 /* Tray prototype: system-specific menu shell with state-driven actions. */
 .route-section.active.tray-route{display:grid;gap:16px}
 .tray-controls{display:flex;flex-wrap:wrap;gap:8px}
@@ -1072,18 +1087,23 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             </div>
           </div>
           <iframe id="panelReal" data-proxy="./官方页面快照/rendered-dom.html?v=zh-CN-2" title="OpenCodex 面板真实页面预览" referrerpolicy="no-referrer"></iframe>
-          <div class="panel-scale-tools" id="panelScaleTools">
-            <span class="panel-scale-label" id="panelScaleLabel" hidden><span id="panelScaleText">界面 100%</span></span>
-            <span class="panel-actions panel-actions-stack">
-              <button id="panelScaleUp" type="button" title="放大界面缩放">+</button>
-              <span id="panelScaleReadout" aria-live="polite">100%</span>
-              <button id="panelScaleDown" type="button" title="缩小界面缩放">−</button>
-            </span>
-          </div>
-          <div class="panel-actions">
-            <button id="panelOverviewBtn" title="返回概览">概览</button>
-            <button id="panelReloadBtn" title="重新加载面板">重载</button>
-            <button id="panelBrowserBtn" title="在浏览器打开">浏览器</button>
+          <div class="panel-hub" id="panelHub" aria-label="面板快捷操作">
+            <button class="panel-hub-toggle" id="panelHubToggle" type="button" aria-haspopup="menu" aria-expanded="false" title="面板快捷操作">
+              <svg class="panel-hub-logo" width="22" height="22" aria-hidden="true"><use href="#tray-logo"/></svg>
+              <span class="panel-hub-badge" id="panelScaleBadge" aria-live="polite">100%</span>
+            </button>
+            <div class="panel-hub-menu" id="panelHubMenu" role="menu" aria-label="面板快捷操作菜单">
+              <div class="panel-hub-title"><b id="panelScaleText">界面 100%</b><span>缩放</span></div>
+              <div class="panel-hub-zoom" role="group" aria-label="界面缩放">
+                <button id="panelScaleDown" type="button" title="缩小界面缩放">−</button>
+                <span id="panelScaleReadout" aria-live="polite">100%</span>
+                <button id="panelScaleUp" type="button" title="放大界面缩放">+</button>
+              </div>
+              <div class="panel-hub-sep"></div>
+              <button id="panelOverviewBtn" type="button" role="menuitem">概览</button>
+              <button id="panelReloadBtn" type="button" role="menuitem">重载</button>
+              <button id="panelBrowserBtn" type="button" role="menuitem">浏览器</button>
+            </div>
           </div>
         </div>
       </div>
@@ -3906,6 +3926,46 @@ document.querySelectorAll('[data-act="panel"]').forEach(button=>{button.onclick=
 document.querySelectorAll('[data-act="logs"]').forEach(button=>{button.onclick=()=>setRoute('logs')});
 document.querySelectorAll('[data-act="advice"]').forEach(button=>{button.onclick=()=>openRestoreConfirm(currentState)});
 
+// 面板快捷操作：单一品牌悬浮球，悬停/点击展开，可在面板内拖拽。
+let panelHubOpen=false;
+function setPanelHubOpen(next){
+  panelHubOpen=next;
+  document.getElementById('panelHub')?.classList.toggle('open',next);
+  document.getElementById('panelHubToggle')?.setAttribute('aria-expanded',next?'true':'false');
+}
+document.getElementById('panelHubToggle')?.addEventListener('click',()=>{
+  setPanelHubOpen(!panelHubOpen);
+});
+document.addEventListener('click',event=>{
+  if(panelHubOpen&&!event.target.closest('#panelHub')) setPanelHubOpen(false);
+});
+(function initPanelHubDrag(){
+  const hub=document.getElementById('panelHub');
+  const handle=document.getElementById('panelHubToggle');
+  if(!hub||!handle) return;
+  let dragging=false,moved=false,startX=0,startY=0,originX=0,originY=0;
+  handle.addEventListener('pointerdown',event=>{
+    if(panelHubOpen) return;
+    event.preventDefault();
+    handle.setPointerCapture(event.pointerId);
+    dragging=true;moved=false;
+    const rect=hub.getBoundingClientRect();const parent=hub.parentElement.getBoundingClientRect();
+    originX=rect.left-parent.left;originY=rect.top-parent.top;
+    startX=event.clientX;startY=event.clientY;
+  });
+  handle.addEventListener('pointermove',event=>{
+    if(!dragging) return;
+    const dx=event.clientX-startX,dy=event.clientY-startY;
+    if(Math.abs(dx)>2||Math.abs(dy)>2) moved=true;
+    if(!moved) return;
+    const parent=hub.parentElement.getBoundingClientRect();
+    const rect=hub.getBoundingClientRect();
+    const x=Math.min(Math.max(12,originX+dx),parent.width-rect.width-12);
+    const y=Math.min(Math.max(12,originY+dy),parent.height-rect.height-12);
+    hub.style.left=x+'px';hub.style.top=y+'px';hub.style.bottom='auto';hub.style.right='auto';
+  });
+  handle.addEventListener('pointerup',()=>{dragging=false;});
+})();
 function showPanel(show, fromRoute=false){
   const next=show;
   // 面板内的注释条已移到 App 窗口外，这里保持引用安全。
@@ -3943,7 +4003,7 @@ function showPanel(show, fromRoute=false){
   document.querySelectorAll('.nav button[data-route]').forEach(button=>{
     button.classList.toggle('active',next?button.dataset.route==='panel':button.dataset.route===currentRoute);
   });
-  if(next) toast(previewProxy?'原型预览：加载真实官方页面。':'原型模式：仅展示嵌入面板占位。');
+  if(next){setPanelHubOpen(false);toast(previewProxy?'原型预览：加载真实官方页面。':'原型模式：仅展示嵌入面板占位。');}
 }
 document.getElementById('panelOverviewBtn').onclick=()=>setRoute('overview');
 document.getElementById('panelReloadBtn').onclick=()=>{
@@ -4185,6 +4245,8 @@ function applyInterfaceScale(scale){
   }
   const panelReadout=document.getElementById('panelScaleReadout');
   if(panelReadout) panelReadout.textContent=value+'%';
+  const panelBadge=document.getElementById('panelScaleBadge');
+  if(panelBadge) panelBadge.textContent=value+'%';
   const slider=document.getElementById('interfaceScaleRange');
   if(slider && slider.value!==String(value)) slider.value=String(value);
   const settingReadout=document.getElementById('interfaceScaleReadout');
