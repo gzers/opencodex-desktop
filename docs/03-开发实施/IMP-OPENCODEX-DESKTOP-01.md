@@ -17,7 +17,7 @@ source_refs: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 | Field | Value |
 |---|---|
 | 状态 | `planned` |
-| 授权链 | `DMD-OPENCODEX-DESKTOP-MANAGER` revision 3 → 项目核心 2026-09-14 定稿 → 本 IMP |
+| 授权链 | `DMD-OPENCODEX-DESKTOP-MANAGER` revision 3/4（需求主体 revision 3；revision 4 仅同步 IMP 对齐口径） → 项目核心 2026-09-14 定稿 → 本 IMP |
 | 任务授权 | **0 个**；必须先确认本 IMP，再拆分 `TASK-*` |
 | 冻结范围 | 9 类契约 + `FZ-01` ~ `FZ-46` + 建议 `S-2` ~ `S-7` |
 | 时间基准 | ISO 8601 / RFC 3339，UTC 存储，界面本地化展示 |
@@ -780,4 +780,5 @@ ocxd --help
 |---|---|
 | 2026-09-14 | 创建 IMP，冻结 46 项技术契约。 |
 | 2026-09-14 | 补充前端工程选型：原生 CSS Token + TypeScript + Vite + Pinia，不引入 UI 组件库。 |
+| 2026-09-14 | 项目核心同步 IMP 对齐；`R-17` 生产面板承载方式保持发布前门禁，本轮不指定。 |
 | 2026-09-14 | 补充平台目标矩阵：macOS arm64 正式支持；macOS x86_64 与 Windows x64 计划支持；Windows ARM64 本轮不生成。 |

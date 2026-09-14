@@ -4,7 +4,7 @@
 
 面向开发实施评审的**单页 HTML 报告**：一个长页，左侧固定目录负责章节跳转，滚动时自动高亮当前位置。
 
-- 派生产物，**不作为事实源**；有冲突时以 DMD `revision 3`、`docs/02-项目核心` 与 `IMP-OPENCODEX-DESKTOP-01` 为准。
+- 派生产物，**不作为事实源**；有冲突时以 DMD `revision 4`、`docs/02-项目核心` 与 `IMP-OPENCODEX-DESKTOP-01` 为准。
 - 不构成开工授权；`IMP-OPENCODEX-DESKTOP-01` 仍待用户确认。
 
 ## 生成方式
