@@ -1,11 +1,11 @@
 ---
 id: IMP-OPENCODEX-DESKTOP-01
 object_kind: implementation.change
-state: planned
+state: in_progress
 title: OpenCodex 桌面管理器实施契约
-summary: 冻结项目核心 46 项 FZ 与 9 类契约输入，建立数据根、状态、进程、日志、加密、扩展、同步、CLI 和验收的可实现基线；本文件确认前不创建 TASK。
+summary: 用户已确认冻结项目核心 46 项 FZ 与 9 类契约输入，建立数据根、状态、进程、日志、加密、扩展、同步、CLI 和验收的可实现基线；首批工程任务已授权进入实现。
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
-task_ids: []
+task_ids: ["TASK-OPENCODEX-DESKTOP-01", "TASK-OPENCODEX-DESKTOP-02", "TASK-OPENCODEX-DESKTOP-03", "TASK-OPENCODEX-DESKTOP-04", "TASK-OPENCODEX-DESKTOP-05"]
 completion_summary: null
 source_refs: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 ---
@@ -16,9 +16,9 @@ source_refs: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 
 | Field | Value |
 |---|---|
-| 状态 | `planned` |
+| 状态 | `in_progress` |
 | 授权链 | `DMD-OPENCODEX-DESKTOP-MANAGER` revision 3/4（需求主体 revision 3；revision 4 仅同步 IMP 对齐口径） → 项目核心 2026-09-14 定稿 → 本 IMP |
-| 任务授权 | **0 个**；必须先确认本 IMP，再拆分 `TASK-*` |
+| 任务授权 | **5 个**；`TASK-OPENCODEX-DESKTOP-01` ~ `-05` 已授权进入工程初始化与底座实现 |
 | 冻结范围 | 9 类契约 + `FZ-01` ~ `FZ-46` + 建议 `S-2` ~ `S-7` |
 | 时间基准 | ISO 8601 / RFC 3339，UTC 存储，界面本地化展示 |
 | 编码与路径 | UTF-8；内部路径用绝对路径或以数据根为基准的相对路径，不解释 `~` 为存储值 |
@@ -765,9 +765,17 @@ ocxd --help
 
 ## 8. 派生引用回写
 
-本节只记录本轮同步的派生产物，不作为事实源：
+本节只记录本轮同步的派生产物，不作为事实源。2026-09-14 用户确认 IMP 后，已按首批范围创建五个执行任务：
 
-| 对象 | 调整 |
+| TASK | 范围 | 当前状态 |
+|---|---|---|
+| `TASK-OPENCODEX-DESKTOP-01` | 工程底座（WP-01） | `in_progress` |
+| `TASK-OPENCODEX-DESKTOP-02` | 测试基线最小集（WP-21A） | `in_progress` |
+| `TASK-OPENCODEX-DESKTOP-03` | 构建基线（WP-22A） | `in_progress` |
+| `TASK-OPENCODEX-DESKTOP-04` | 写入原语（WP-17A） | `in_progress` |
+| `TASK-OPENCODEX-DESKTOP-05` | 实例约束基础（WP-18A） | `in_progress` |
+
+| 历史派生对象 | 调整 |
 |---|---|
 | `IMP输入清单.md` | 开头指向本 IMP，后续稳定契约以本文件为实施权威 |
 | `docs/README.md` | 实施行改为「IMP 已创建，`planned`」 |
@@ -782,3 +790,4 @@ ocxd --help
 | 2026-09-14 | 补充前端工程选型：原生 CSS Token + TypeScript + Vite + Pinia，不引入 UI 组件库。 |
 | 2026-09-14 | 项目核心同步 IMP 对齐；`R-17` 生产面板承载方式保持发布前门禁，本轮不指定。 |
 | 2026-09-14 | 补充平台目标矩阵：macOS arm64 正式支持；macOS x86_64 与 Windows x64 计划支持；Windows ARM64 本轮不生成。 |
+| 2026-09-14 | 用户确认 IMP 与首批 C-01 ~ C-05；创建并授权 `TASK-OPENCODEX-DESKTOP-01` ~ `-05`，进入工程初始化。 |

@@ -3,7 +3,7 @@ id: 首批TASK候选
 object_kind: collaboration.derived
 state: draft
 title: OpenCodeX-Desktop 首批 TASK 候选
-summary: IMP 确认后的第一批工程底座任务范围、检查、证据和授权边界；本文件不是正式 TASK。
+summary: IMP 确认后的第一批工程底座任务范围、检查、证据和授权边界；C-01 ~ C-05 已确认并转为正式 TASK。
 source_refs:
   - IMP-OPENCODEX-DESKTOP-01
   - 工作包追踪与依赖
@@ -23,7 +23,7 @@ source_refs:
 → 工程初始化
 ```
 
-本文件只列候选，不创建正式 `TASK-*`。
+本文件保留当时的候选口径。C-01 ~ C-05 已于 2026-09-14 转为正式 `TASK-*`。
 
 ## 2. 候选清单
 
@@ -97,3 +97,15 @@ source_refs:
 2. 首批范围接受 C-01 ~ C-05；
 3. 工程前端使用 Vue 3 / TypeScript / Vite / Pinia；
 4. 不在本批执行签名、发布、真实环境验证。
+
+## 5. 确认记录
+
+2026-09-14，用户确认 `IMP-OPENCODEX-DESKTOP-01` 与首批 C-01 ~ C-05，并同意进入工程初始化。治理机制已创建以下任务，当前保持 `in_progress`，待阶段证据与回执齐备后收口：
+
+| 候选 | 正式 TASK | 当前状态 |
+|---|---|---|
+| C-01 工程底座 | `TASK-OPENCODEX-DESKTOP-01` | `in_progress` |
+| C-02 测试基线 | `TASK-OPENCODEX-DESKTOP-02` | `in_progress` |
+| C-03 构建基线 | `TASK-OPENCODEX-DESKTOP-03` | `in_progress` |
+| C-04 写入原语 | `TASK-OPENCODEX-DESKTOP-04` | `in_progress` |
+| C-05 实例约束 | `TASK-OPENCODEX-DESKTOP-05` | `in_progress` |

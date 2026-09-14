@@ -33,7 +33,7 @@
 <div class="hero" id="overview" data-nav="01 · 概览">
 <div class="hero-badge">开发实施包 · 2026-09-14</div>
 <h1>OpenCodeX-Desktop <span>实施与工作包报告</span></h1>
-<p>这一页按阅读顺序回答五件事：项目现在停在哪；契约和数据已经定到什么程度；代码该怎么规划；工作包怎么拆成任务；下一步等谁确认。现在的位置很明确：<b>IMP 已冻结 46 项契约，但还没有确认成实施基线，TASK 一个都没建</b>。</p>
+<p>这一页按阅读顺序回答五件事：项目现在停在哪；契约和数据已经定到什么程度；代码该怎么规划；工作包怎么拆成任务；下一步执行什么。现在的位置很明确：<b>IMP 已确认，首批 5 个底座 TASK 已授权进入工程初始化</b>。</p>
 <div class="hero-meta">左侧目录可跳转到任意章节，滚动时自动高亮当前位置</div>
 </div>
 
@@ -42,15 +42,15 @@
 <div class="metric" style="border-top:3px solid #188038"><div class="metric-num" style="color:#188038">46</div><div class="metric-label">项冻结</div><div class="metric-sub">FZ-01 ~ FZ-46</div></div>
 <div class="metric" style="border-top:3px solid #7c3aed"><div class="metric-num" style="color:#7c3aed">22</div><div class="metric-label">个工作包</div><div class="metric-sub">实施规划草案</div></div>
 <div class="metric" style="border-top:3px solid #007b83"><div class="metric-num" style="color:#007b83">27</div><div class="metric-label">条需求</div><div class="metric-sub">全部有承接</div></div>
-<div class="metric" style="border-top:3px solid #c5221f"><div class="metric-num" style="color:#c5221f">0</div><div class="metric-label">个 TASK</div><div class="metric-sub">等待 IMP 确认</div></div>
+<div class="metric" style="border-top:3px solid #188038"><div class="metric-num" style="color:#188038">5</div><div class="metric-label">个首批 TASK</div><div class="metric-sub">已授权，未提前收口</div></div>
 <div class="metric" style="border-top:3px solid #e37400"><div class="metric-num" style="color:#e37400">13</div><div class="metric-label">个实现模块</div><div class="metric-sub">MOD-01 ~ MOD-13</div></div>
 </div>
 
 <div class="summary-box">
-<strong>一句话看完这份报告：</strong>项目核心已经定稿，实施契约已经冻结到字段级；开发实施协作包不是再写一份 IMP，而是把「准备开工」要看的材料放在一起。<span class="hl-blue hl">现在能做实施前核对、工作包拆分草案、测试基线和打包准备，不能直接开工写业务实现。</span>
+<strong>一句话看完这份报告：</strong>项目核心已经定稿，实施契约已经冻结到字段级；开发实施协作包不是再写一份 IMP，而是把「准备开工」要看的材料放在一起。<span class="hl-blue hl">现在能做工程底座、测试基线、构建基线、写入原语和实例约束；签名、发布、真实环境验证和 Windows ARM64 构建仍不进入本批。</span>
 </div>
 
-<div class="callout callout-info"><strong>现在的门：</strong>IMP 只是创建，还没有用户确认。确认之后才拆 TASK；拆完 TASK 才能开工。所有「已定」的判断都以 <code>IMP-OPENCODEX-DESKTOP-01</code> 和项目核心为准。</div>
+<div class="callout callout-info"><strong>现在的门：</strong>IMP 已确认，首批范围已确认；首批 TASK 已创建并保持执行态。所有「已定」的判断仍以 <code>IMP-OPENCODEX-DESKTOP-01</code> 和项目核心为准，任务收口以真实回执为准。</div>
 
 <h2 id="purpose">02 · 开发实施协作包是干什么的</h2>
 <p>开发实施包不是把 <code>docs/03-开发实施</code> 复制一份，也不是再写一份技术契约。它是<strong>给你看的准备材料</strong>：把实施前置条件、工作包、测试口径和打包准备收拢成一份能读的东西。</p>
@@ -90,7 +90,7 @@
 <h3>看实施包</h3>
 <ul>
 <li>一眼看清「现在能开工什么、还不能开工什么」</li>
-<li>把 WP-01 ~ WP-22 转成可执行的 TASK 草案</li>
+<li>把 WP-01 ~ WP-22 继续拆成带检查和证据的 TASK</li>
 <li>把 46 项冻结按工作包对上，确认没有漏项</li>
 <li>准备测试 fixture 与打包脚手架</li>
 </ul>
@@ -98,7 +98,7 @@
 </div>
 
 <h2 id="status">03 · 现在停在哪一步</h2>
-<p>开发实施阶段已经越过「项目核心定稿」，也越过「IMP 创建」，但还没过「用户确认 IMP」这道门。</p>
+<p>开发实施阶段已越过「项目核心定稿」「IMP 创建」和「IMP 确认」三道门；当前进入首批底座任务的工程初始化。</p>
 <table>
 <thead>
 <tr>
@@ -125,8 +125,8 @@
 </tr>
 <tr>
 <td>IMP 确认</td>
-<td>⏳ 待用户确认</td>
-<td><strong>当前门禁</strong></td>
+<td>✅ 已完成</td>
+<td>2026-09-14 用户确认；当前门禁已解除</td>
 </tr>
 <tr>
 <td>项目核心对齐</td>
@@ -135,13 +135,13 @@
 </tr>
 <tr>
 <td>TASK 拆分</td>
-<td>⛔ 未开始</td>
-<td>必须在 IMP 确认后做</td>
+<td>🔄 首批已建</td>
+<td><code>TASK-OPENCODEX-DESKTOP-01</code> ~ <code>-05</code>；后续工作包逐批拆分</td>
 </tr>
 <tr>
 <td>工程底座</td>
-<td>⛔ 未开始</td>
-<td>属于 WP-01，不能提前授权</td>
+<td>🔄 已授权</td>
+<td>对应 <code>TASK-OPENCODEX-DESKTOP-01</code>，尚未提交实现</td>
 </tr>
 <tr>
 <td>业务实现</td>
@@ -150,7 +150,7 @@
 </tr>
 </tbody>
 </table>
-<div class="callout callout-warn"><strong>现在的正确顺序：</strong>先读这份报告和 IMP，确认没有不理解或不同意的技术取值；确认后把 22 个工作包拆成 TASK；每个 TASK 必须带验收检查和证据要求，不能只写「完成某模块」。</div>
+<div class="callout callout-warn"><strong>现在的正确顺序：</strong>先完成 C-01 工程底座与公共接口，再推进 C-02 ~ C-05；每个 TASK 都要保留检查命令、隔离证据和回执，不能只写「完成某模块」。</div>
 
 <h2 id="contracts">04 · 契约已经锁住了什么</h2>
 <p>IMP 不只是方向，已经把字段、参数和阈值定死。这里只挑影响开工顺序最大的部分：</p>
@@ -1258,8 +1258,8 @@ src-ui/
 <td><code>02-实施核对记录/</code></td>
 </tr>
 <tr>
-<td>TASK 拆分草案</td>
-<td>22 个 WP → TASK 候选，不创建正式 TASK</td>
+<td>TASK 拆分记录</td>
+<td>首批 C-01 ~ C-05 已确认并转为正式 TASK；后续候选继续单独授权</td>
 <td><code>01-方案资料/</code></td>
 </tr>
 <tr>
@@ -1279,7 +1279,7 @@ src-ui/
 </tr>
 </tbody>
 </table>
-<div class="callout callout-warn"><strong>这些准备也不等于开工授权。</strong>它们只是把「确认后要执行什么」提前想清楚，避免拿到授权后才开始补文档。</div>
+<div class="callout callout-warn"><strong>已授权不等于提前收口。</strong>首批 5 个 TASK 仍要执行检查、留存证据并生成回执；签名、发布、真实环境验证和 Windows ARM64 构建继续单独授权。</div>
 
 <h2 id="structure">09 · 建议的目录结构</h2>
 <p>现在协作包已有槽位，建议按下面方式填充。每个目录只放一类资料，别混。</p>
@@ -1295,12 +1295,12 @@ src-ui/
 <tr>
 <td><code>01-方案资料/</code></td>
 <td>开发写代码前实施计划、实施方案草案、工作包拆分草案、打包与签名准备</td>
-<td>已创建实施计划</td>
+<td>实施计划与首批候选已创建，候选已确认</td>
 </tr>
 <tr>
 <td><code>02-实施核对记录/</code></td>
 <td>FZ 到 WP 的对照、字段语义核对、测试基线、验收场景</td>
-<td>待创建</td>
+<td>已创建追踪、验证、工程准备与授权核对记录</td>
 </tr>
 <tr>
 <td><code>输出/实施与工作包报告/</code></td>
@@ -1309,7 +1309,7 @@ src-ui/
 </tr>
 </tbody>
 </table>
-<p>开工前的具体准备顺序见<a href="../../01-方案资料/开发写代码前实施计划.md">开发写代码前实施计划</a>。其中追踪表和依赖是待复核建议，不能当作 IMP 已获确认的证据。</p>
+<p>开工前的具体准备顺序见<a href="../../01-方案资料/开发写代码前实施计划.md">开发写代码前实施计划</a>。追踪表和依赖是实施阅读材料；正式状态以 IMP、治理运行对象与回执为准。</p>
 <h2 id="next">10 · 下一步顺序</h2>
 <table>
 <thead>
@@ -1322,23 +1322,23 @@ src-ui/
 <tbody>
 <tr>
 <td>1</td>
-<td>核对契约差异，细化 FZ/WP 追踪、测试设计和首批 TASK 候选</td>
-<td>本报告 + IMP + 写代码前计划；<code>PREP-01</code> ~ <code>PREP-06</code> 已完成，<code>DEC-01</code> ~ <code>DEC-07</code> 已确认</td>
+<td>执行 <code>C-01 / TASK-OPENCODEX-DESKTOP-01</code>：初始化 Tauri + Rust + Vue 3 / TypeScript / Vite / Pinia 底座</td>
+<td>IMP 与首批范围已确认</td>
 </tr>
 <tr>
 <td>2</td>
-<td>用户确认相关 IMP 修订和首批范围</td>
-<td>准备材料齐备；阻塞与后续范围已说明</td>
+<td>建立公共命令、错误、类型和平台抽象边界，跑通 lint / typecheck / test / build</td>
+<td>C-01 授权</td>
 </tr>
 <tr>
 <td>3</td>
-<td>创建首批正式 TASK，同时登记验收检查、证据和写入范围</td>
-<td>IMP 与首批范围确认</td>
+<td>推进 C-02 测试基线、C-03 构建基线、C-04 写入原语、C-05 实例约束</td>
+<td>C-01 公共结构可用</td>
 </tr>
 <tr>
 <td>4</td>
-<td>从 <code>WP-01</code> 开始工程底座</td>
-<td>TASK 授权</td>
+<td>保存检查证据、生成治理回执，再逐项收口首批 TASK</td>
+<td>required checks 全部通过</td>
 </tr>
 <tr>
 <td>5</td>
