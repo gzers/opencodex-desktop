@@ -18,11 +18,12 @@
 <a href="#status"><span class="n">03</span>现在停在哪一步</a>
 <a href="#contracts"><span class="n">04</span>契约已经锁住了什么</a>
 <a href="#data-model"><span class="n">05</span>数据字段与对象关系</a>
-<a href="#workpackages"><span class="n">06</span>22 个工作包怎么用</a>
-<a href="#prepare"><span class="n">07</span>开工前要准备什么</a>
-<a href="#structure"><span class="n">08</span>建议的目录结构</a>
-<a href="#next"><span class="n">09</span>下一步顺序</a>
-<a href="#sources"><span class="n">10</span>依据索引</a>
+<a href="#code-structure"><span class="n">06</span>代码规划结构</a>
+<a href="#workpackages"><span class="n">07</span>22 个工作包怎么用</a>
+<a href="#prepare"><span class="n">08</span>开工前要准备什么</a>
+<a href="#structure"><span class="n">09</span>建议的目录结构</a>
+<a href="#next"><span class="n">10</span>下一步顺序</a>
+<a href="#sources"><span class="n">11</span>依据索引</a>
 <div class="side-foot">依据 <code>COL-LOCAL-20260912-01</code>、<code>docs/02-项目核心</code> 与 <code>IMP-OPENCODEX-DESKTOP-01</code> 整理。<br>派生产物，不作为事实源；由 <code>实施与工作包报告.md</code> 重建。</div>
 </nav>
 
@@ -32,8 +33,7 @@
 <div class="hero" id="overview" data-nav="01 · 概览">
 <div class="hero-badge">开发实施包 · 2026-09-14</div>
 <h1>OpenCodeX-Desktop <span>实施与工作包报告</span></h1>
-<p>这一页回答三件事：现在实施停在哪儿；开发实施协作包里应该放什么；22 个工作包怎么转成可执行任务。
-现在的位置很明确：<b>IMP 已冻结 46 项契约，但还没有确认成实施基线，TASK 一个都没建</b>。</p>
+<p>这一页按阅读顺序回答五件事：项目现在停在哪；契约和数据已经定到什么程度；代码该怎么规划；工作包怎么拆成任务；下一步等谁确认。现在的位置很明确：<b>IMP 已冻结 46 项契约，但还没有确认成实施基线，TASK 一个都没建</b>。</p>
 <div class="hero-meta">左侧目录可跳转到任意章节，滚动时自动高亮当前位置</div>
 </div>
 
@@ -43,7 +43,7 @@
 <div class="metric" style="border-top:3px solid #7c3aed"><div class="metric-num" style="color:#7c3aed">22</div><div class="metric-label">个工作包</div><div class="metric-sub">实施规划草案</div></div>
 <div class="metric" style="border-top:3px solid #007b83"><div class="metric-num" style="color:#007b83">27</div><div class="metric-label">条需求</div><div class="metric-sub">全部有承接</div></div>
 <div class="metric" style="border-top:3px solid #c5221f"><div class="metric-num" style="color:#c5221f">0</div><div class="metric-label">个 TASK</div><div class="metric-sub">等待 IMP 确认</div></div>
-<div class="metric" style="border-top:3px solid #e37400"><div class="metric-num" style="color:#e37400">22</div><div class="metric-label">条 P0 需求</div><div class="metric-sub">运行管理主线</div></div>
+<div class="metric" style="border-top:3px solid #e37400"><div class="metric-num" style="color:#e37400">13</div><div class="metric-label">个实现模块</div><div class="metric-sub">MOD-01 ~ MOD-13</div></div>
 </div>
 
 <div class="summary-box">
@@ -206,7 +206,7 @@
 <div class="callout callout-success"><strong>核对结果：</strong>IMP 覆盖项目核心 46 个 ⏳ 项，编号连续无缺号。`docs/03-开发实施/IMP-OPENCODEX-DESKTOP-01.md` 现在是唯一实施契约入口。</div>
 
 <h2 id="data-model">05 · 数据字段与对象关系</h2>
-<p>这一章只回答两个问题：实现时数据长什么样；对象之间怎么连。字段是精简版，完整定义仍以 <code>docs/02-项目核心/领域模型.md</code> 为权威。</p>
+<p>这一章回答两个问题：实现时数据长什么样；对象之间怎么连。字段是精简版，完整定义仍以 <code>docs/02-项目核心/领域模型.md</code> 为权威，不影响阅读。</p>
 <div class="summary-box">
 <strong>先记住整体链路：</strong><code>EnvironmentGate</code> 和 <code>Installation</code> 负责入口判断；<code>AgentProcess</code> / <code>RuntimeFacts</code> 看运行；<code>DataRoot</code> 是数据和备份的底座；<code>SyncEndpoint</code> / <code>SyncRun</code> / <code>Conflict</code> 处理同步；<code>ExtensionConfig</code> / <code>Skill</code> / <code>McpServer</code> / <code>McpServerProjection</code> / <code>ClientTarget</code> / <code>WriteTransaction</code> 处理扩展写入；<code>UpdateTarget</code> / <code>Notification</code> / <code>IpcEndpoint</code> 是外围通道。
 </div>
@@ -493,8 +493,330 @@
 </tr>
 </tbody>
 </table>
-<h2 id="workpackages">06 · 22 个工作包怎么用</h2>
-<p>工作包不是为了「看起来工作量很大」，而是为了把需求、验收、依赖和安全控制拆到能建 TASK 的粒度。</p>
+<h2 id="code-structure">06 · 代码规划结构</h2>
+<p>这一章是给实现者的阅读地图：先看分层，再看目录，最后看模块怎么接起来。目前只有规划，还没有代码；目录名是实现约定，不是本轮已创建的工程结构。</p>
+<h3 id="layering">6.1 分层与调用规则</h3>
+<p>代码按四层组织，外层只能调用相邻内层。这样做的好处是：界面只管状态展示，后端才碰外部资源，公共能力不会被业务模块重复实现。</p>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>职责</th>
+<th>禁止</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI / WebView 层</td>
+<td>概览、面板、拓展、日志诊断、设置、托盘的界面状态与动作入口</td>
+<td>不直接读写文件、网络、钥匙串</td>
+</tr>
+<tr>
+<td>应用编排层</td>
+<td>Tauri command、命令参数校验、状态序列化、路由到后端模块</td>
+<td>不绕过后端模块直接执行业务</td>
+</tr>
+<tr>
+<td>后端模块层</td>
+<td>13 个实现模块；模块只收命令、返回领域状态</td>
+<td>模块之间不做循环调用</td>
+</tr>
+<tr>
+<td>公共基建层</td>
+<td>数据根、锁、备份、写入引擎、日志脱敏、错误、通知、加密、同步客户端</td>
+<td>只提供能力，不记录业务结论</td>
+</tr>
+</tbody>
+</table>
+<div class="summary-box">
+<strong>一条硬边界：</strong>前端只发命令和渲染结果；文件、网络、钥匙串都由 Rust 后端访问。<code>ocxd</code> 也只连运行中实例的 IPC，不变成第二个写入者。
+</div>
+
+<h3 id="recommended-tree">6.2 建议目录结构</h3>
+<p>目录名按「先看模块归属，再看平台差异」拆开。前端不按功能拆成小仓库，后端按模块收拢，避免六客户端适配器散在各处。</p>
+<pre><code class="language-text">src-tauri/
+  src/
+    commands/            # Tauri command 编排与入参校验
+      discovery.rs
+      process.rs
+      status.rs
+      data_root.rs
+      diagnostics.rs
+      migration.rs
+      sync.rs
+      extensions.rs
+      updates.rs
+      settings.rs
+    modules/             # 后端业务模块，按 MOD 编号聚合
+      discovery/
+      process/
+      status/
+      diagnostics/
+      panel/
+      data_root/
+      migration/
+      sync/
+      extensions/
+      updates/
+      notifications/
+      control_plane/
+      tray_menu/
+    infrastructure/      # 模块可复用的公共能力
+      data_store/
+      backup/
+      locking/
+      atomic_write/
+      journaling/
+      crypto/
+      keychain/
+      http_client/
+      process_runner/
+    errors/              # AppError、错误码、错误摘要、脱敏
+    types/               # 领域实体、契约 DTO、状态枚举
+    state.rs
+    lib.rs
+  tests/                 # 后端集成测试与 fixture
+src-ui/
+  src/
+    routes/              # 概览 / 面板 / 拓展 / 日志诊断 / 设置 / 关于
+    components/          # 状态卡、动作条、表单、日志视图
+    stores/              # 前端状态：runtime / connection / operation / gate
+    commands/            # Tauri command 封装
+    styles/
+  tests/
+  public/
+</code></pre>
+<div class="callout callout-info"><strong>目录规则：</strong><code>modules/</code> 只写模块内实现；跨模块共用的锁、备份、写入、脱敏、加密进 <code>infrastructure/</code>；DTO 放 <code>types/</code>，不把前端结构体当成领域模型。</div>
+
+<h3 id="backend-modules">6.3 后端模块与归属</h3>
+<p>模块不新增能力，只承接项目核心的 <code>MOD-01</code> ~ <code>MOD-13</code>。公共逻辑沉到基建层，避免重复实现。</p>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>代码目录</th>
+<th>负责什么</th>
+<th>不负责什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MOD-01</code> 发现</td>
+<td><code>modules/discovery/</code></td>
+<td>环境门禁、安装发现、可执行校验</td>
+<td>不安装 npm 包</td>
+</tr>
+<tr>
+<td><code>MOD-02</code> 进程托管</td>
+<td><code>modules/process/</code></td>
+<td>启停、超时、取消、退出码</td>
+<td>不管理 launchd / shim</td>
+</tr>
+<tr>
+<td><code>MOD-03</code> 状态</td>
+<td><code>modules/status/</code></td>
+<td>官方输出映射、三维状态、刷新</td>
+<td>不自己造运行状态</td>
+</tr>
+<tr>
+<td><code>MOD-04</code> 日志诊断</td>
+<td><code>modules/diagnostics/</code></td>
+<td>日志读取、Doctor、通知数据</td>
+<td>不做写入型修复</td>
+</tr>
+<tr>
+<td><code>MOD-05</code> 面板</td>
+<td><code>modules/panel/</code></td>
+<td>官方面板承载与失败回退</td>
+<td>不重绘或注入官方面板</td>
+</tr>
+<tr>
+<td><code>MOD-06</code> 数据根</td>
+<td><code>modules/data_root/</code></td>
+<td>目录初始化、切换、检查</td>
+<td>不直接搬动 <code>OPENCODEX_HOME</code></td>
+</tr>
+<tr>
+<td><code>MOD-07</code> 迁移</td>
+<td><code>modules/migration/</code></td>
+<td>加密导出、导入校验、回滚</td>
+<td>不处理部分写入</td>
+</tr>
+<tr>
+<td><code>MOD-08</code> 同步</td>
+<td><code>modules/sync/</code></td>
+<td>WebDAV、manifest、冲突、备份</td>
+<td>不把远端当可信数据</td>
+</tr>
+<tr>
+<td><code>MOD-09</code> 扩展管理</td>
+<td><code>modules/extensions/</code></td>
+<td>Skills、MCP、投影、冲突</td>
+<td>不写核心运行配置</td>
+</tr>
+<tr>
+<td><code>MOD-10</code> 更新</td>
+<td><code>modules/updates/</code></td>
+<td>本体升级引导、套壳自更新</td>
+<td>不混用两条更新通道</td>
+</tr>
+<tr>
+<td><code>MOD-11</code> 通知</td>
+<td><code>modules/notifications/</code></td>
+<td>通知生成、存储、清理</td>
+<td>不复制业务事件详情</td>
+</tr>
+<tr>
+<td><code>MOD-12</code> CLI / IPC</td>
+<td><code>modules/control_plane/</code></td>
+<td><code>ocxd</code> 命令、IPC、审计</td>
+<td>不绕过实例写状态</td>
+</tr>
+<tr>
+<td><code>MOD-13</code> 托盘菜单</td>
+<td><code>modules/tray_menu/</code></td>
+<td>托盘与原生菜单</td>
+<td>不做业务逻辑入口</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warn"><strong>模块依赖原则：</strong>业务模块只调用基建层；需要另一个模块的数据时，先通过编排层组合，或沉淀成基建服务。特别要避免 <code>extensions</code> 直接依赖 <code>sync</code>，它们共用备份、锁和写入，但不共用业务状态。</div>
+
+<h3 id="frontend-structure">6.4 前端结构与状态流</h3>
+<p>前端按页面和状态切片组织，不按每个按钮拆文件。页面只渲染状态、触发命令，不解释业务细节。</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>放什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>routes/overview/</code></td>
+<td>概览状态卡、动作区、运行详情折叠区</td>
+</tr>
+<tr>
+<td><code>routes/panel/</code></td>
+<td>官方面板承载、失败回退</td>
+</tr>
+<tr>
+<td><code>routes/extensions/</code></td>
+<td>Skills 与 MCP 的统一视图、客户端开关</td>
+</tr>
+<tr>
+<td><code>routes/diagnostics/</code></td>
+<td>日志、诊断、通知历史</td>
+</tr>
+<tr>
+<td><code>routes/settings/</code></td>
+<td>数据目录、扩展写入开关、CLI / IPC</td>
+</tr>
+<tr>
+<td><code>stores/runtime.ts</code></td>
+<td><code>runtime</code> / <code>connection</code> / <code>operation</code> / <code>gate</code></td>
+</tr>
+<tr>
+<td><code>stores/notifications.ts</code></td>
+<td>通知中心与通知历史共用数据</td>
+</tr>
+<tr>
+<td><code>commands/</code></td>
+<td>类型化 command 封装与错误转换</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-text">用户动作 → Tauri command → 后端编排 → 模块 / 基建
+       ↑                                    ↓
+界面状态 ← ActionState / 状态快照 ← 领域事实 / 操作结果
+</code></pre>
+<div class="callout callout-success"><strong>界面约束：</strong>动作按状态渲染；禁止无解释的灰按钮。状态显示最多两项，溢出聚合成「更多状态」。阶段编号 <code>P0</code> / <code>P1</code> / <code>P2</code> 不进界面。</div>
+
+<h3 id="naming-organization">6.5 命名与类型组织</h3>
+<p>命名已在术语与 IMP 里定住，代码不要另起一套。</p>
+<table>
+<thead>
+<tr>
+<th>对象</th>
+<th>代码写法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rust 字段</td>
+<td><code>snake_case</code>，与 <code>--json</code> 字段同名</td>
+</tr>
+<tr>
+<td>状态枚举</td>
+<td><code>runtime</code> / <code>connection</code> / <code>operation</code> / <code>gate</code> 各自独立类型</td>
+</tr>
+<tr>
+<td>错误</td>
+<td><code>AppError { source, code, message, hint }</code>；错误码用 <code>AppErrorCode</code></td>
+</tr>
+<tr>
+<td>领域实体</td>
+<td><code>types/domain/</code></td>
+</tr>
+<tr>
+<td>契约 DTO</td>
+<td><code>types/contract/</code></td>
+</tr>
+<tr>
+<td>客户端标识</td>
+<td><code>ClientId</code> enum：<code>codex</code> / <code>claude</code> / <code>gemini</code> / <code>grok</code> / <code>opencode</code> / <code>hermes</code></td>
+</tr>
+<tr>
+<td>数据分区</td>
+<td>引用分区键，不引用物理目录名</td>
+</tr>
+<tr>
+<td>时间</td>
+<td>UTC 存储，前端本地化展示</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-rules">6.6 错误、测试与依赖边界</h3>
+<pre><code class="language-text">AppError
+  ├─ source        # 错误来源：ocx / fs / webdav / keychain / ipc / import / extension
+  ├─ code          # AppErrorCode，对齐退出码 0 ~ 12
+  ├─ message       # 用户可读摘要，最多 280 字符
+  └─ hint          # 建议动作；可为空
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>规则</th>
+<th>怎么做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>统一错误出口</td>
+<td>模块只返回 <code>Result&lt;T, AppError&gt;</code>；不散落 <code>anyhow</code> / <code>unwrap</code></td>
+</tr>
+<tr>
+<td>脱敏在出口</td>
+<td>日志、错误摘要、<code>--json</code>、通知统一走脱敏器</td>
+</tr>
+<tr>
+<td>测试分层</td>
+<td>单元测模块内逻辑；集成测命令 + fixture；验收测 AC-01 ~ AC-13</td>
+</tr>
+<tr>
+<td>不用真实数据</td>
+<td>测试走临时路径与 mock；不碰家目录真实配置</td>
+</tr>
+<tr>
+<td>依赖隔离</td>
+<td><code>process_runner</code>、<code>http_client</code>、<code>keychain</code> 抽成 trait，正式实现只放后端</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-info"><strong>还缺一步：</strong>本节是实施规划。正式工程结构应在 <code>WP-01</code> 授权后初始化；如果落地时发现某个目录不合理，先回写本报告和 TASK，再改代码。</div>
+
+<h2 id="workpackages">07 · 22 个工作包怎么用</h2>
+<p>工作包不是把工作量堆成一大张表，而是把需求、验收、依赖和安全控制拆到能建 TASK 的粒度。</p>
 <div class="card-grid">
 <div class="card"><h4>先拆横切底座</h4><p><code>WP-01</code> 工程底座、<code>WP-03</code> 数据根与备份、<code>WP-17</code> 写入引擎、<code>WP-21</code> 测试基线、<code>WP-22</code> 打包签名。这些不做稳，后面的业务模块会反复返工。</p></div>
 <div class="card"><h4>P0 先打通主线</h4><p><code>WP-02</code> 发现 → <code>WP-04</code> 启停 → <code>WP-05</code> 状态 → <code>WP-06</code> 日志诊断通知 → <code>WP-07</code> 面板 → <code>WP-08</code> 风险恢复 → <code>WP-09</code> 升级引导 → <code>WP-10</code> 托盘 → <code>WP-11</code> 关于。</p></div>
@@ -786,7 +1108,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="prepare">07 · 开工前要准备什么</h2>
+<h2 id="prepare">08 · 开工前要准备什么</h2>
 <p>不是所有准备都要等 TASK。以下 5 类材料可以现在做，做的时候不写业务代码、不碰真实数据。</p>
 <table>
 <thead>
@@ -826,7 +1148,7 @@
 </table>
 <div class="callout callout-warn"><strong>这些准备也不等于开工授权。</strong>它们只是把「确认后要执行什么」提前想清楚，避免拿到授权后才开始补文档。</div>
 
-<h2 id="structure">08 · 建议的目录结构</h2>
+<h2 id="structure">09 · 建议的目录结构</h2>
 <p>现在协作包已有槽位，建议按下面方式填充。每个目录只放一类资料，别混。</p>
 <table>
 <thead>
@@ -854,7 +1176,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="next">09 · 下一步顺序</h2>
+<h2 id="next">10 · 下一步顺序</h2>
 <table>
 <thead>
 <tr>
@@ -896,7 +1218,7 @@
 </tr>
 </tbody>
 </table>
-<h2 id="sources">10 · 依据索引</h2>
+<h2 id="sources">11 · 依据索引</h2>
 <table>
 <thead>
 <tr>
