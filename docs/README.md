@@ -42,4 +42,5 @@
 - 上一轮独立审计指出的项目核心结构性问题已逐条复核：官方写入者规则、MCP 投影、双切换流程、凭据引用、manifest 防回放、项目级作用域、更新与写入事务终态、契约对象、能力级追踪、官方面板生产边界均已对齐。
 - `IMP-OPENCODEX-DESKTOP-01` **已确认**（2026-09-14）；46 项技术契约与实施边界保持冻结。
 - 开发实施准备：`PREP-01` ~ `PREP-06` 已完成；`DEC-01` ~ `DEC-07` 已确认，IMP 与首批 C-01 ~ C-05 已确认。
-- 首批任务：`TASK-OPENCODEX-DESKTOP-01` ~ `-05` 已创建并授权；代码实现隔离在 `codex/implementation-base`，`docs/governance-main` 不承载产品源码。签名、公证、发布、真实环境验证和 Windows ARM64 构建不纳入本批。
+- 首批任务：`TASK-OPENCODEX-DESKTOP-01` ~ `-05` 已创建并授权；代码实现隔离在 `codex/implementation-base`，`docs/governance-main` 不承载产品源码。
+- 性能与资源基线：用户已确认启动、响应、CPU、内存、空间和前端体积预算；详见 DMD §2.5，验证口径见验证设计与交接。
