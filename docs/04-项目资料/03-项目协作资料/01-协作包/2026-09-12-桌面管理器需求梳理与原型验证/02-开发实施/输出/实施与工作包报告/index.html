@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenCodeX-Desktop 实施与工作包报告</title>
+<meta name="generator" content="build.py（由实施与工作包报告.md 重建）">
+<link rel="stylesheet" href="assets/shared-style.css">
+<link rel="stylesheet" href="assets/side-nav.css">
+</head>
+<body>
+
+<nav class="side-nav">
+<div class="side-brand">OpenCodeX-Desktop<small>开发实施 · 2026-09-14</small></div>
+<div class="side-group">目录</div>
+<a href="#overview"><span class="n">01</span>概览</a>
+<a href="#purpose"><span class="n">02</span>开发实施协作包是干什么的</a>
+<a href="#status"><span class="n">03</span>现在停在哪一步</a>
+<a href="#contracts"><span class="n">04</span>契约已经锁住了什么</a>
+<a href="#workpackages"><span class="n">05</span>22 个工作包怎么用</a>
+<a href="#prepare"><span class="n">06</span>开工前要准备什么</a>
+<a href="#structure"><span class="n">07</span>建议的目录结构</a>
+<a href="#next"><span class="n">08</span>下一步顺序</a>
+<a href="#sources"><span class="n">09</span>依据索引</a>
+<div class="side-foot">依据 <code>COL-LOCAL-20260912-01</code>、<code>docs/02-项目核心</code> 与 <code>IMP-OPENCODEX-DESKTOP-01</code> 整理。<br>派生产物，不作为事实源；由 <code>实施与工作包报告.md</code> 重建。</div>
+</nav>
+
+<div class="page-shell">
+<div class="page-wrap">
+
+<div class="hero" id="overview" data-nav="01 · 概览">
+<div class="hero-badge">开发实施包 · 2026-09-14</div>
+<h1>OpenCodeX-Desktop <span>实施与工作包报告</span></h1>
+<p>这一页回答三件事：现在实施停在哪儿；开发实施协作包里应该放什么；22 个工作包怎么转成可执行任务。
+现在的位置很明确：<b>IMP 已冻结 46 项契约，但还没有确认成实施基线，TASK 一个都没建</b>。</p>
+<div class="hero-meta">左侧目录可跳转到任意章节，滚动时自动高亮当前位置</div>
+</div>
+
+<div class="metrics">
+<div class="metric" style="border-top:3px solid #1a73e8"><div class="metric-num" style="color:#1a73e8">9</div><div class="metric-label">类契约</div><div class="metric-sub">IMP 已覆盖</div></div>
+<div class="metric" style="border-top:3px solid #188038"><div class="metric-num" style="color:#188038">46</div><div class="metric-label">项冻结</div><div class="metric-sub">FZ-01 ~ FZ-46</div></div>
+<div class="metric" style="border-top:3px solid #7c3aed"><div class="metric-num" style="color:#7c3aed">22</div><div class="metric-label">个工作包</div><div class="metric-sub">实施规划草案</div></div>
+<div class="metric" style="border-top:3px solid #007b83"><div class="metric-num" style="color:#007b83">27</div><div class="metric-label">条需求</div><div class="metric-sub">全部有承接</div></div>
+<div class="metric" style="border-top:3px solid #c5221f"><div class="metric-num" style="color:#c5221f">0</div><div class="metric-label">个 TASK</div><div class="metric-sub">等待 IMP 确认</div></div>
+<div class="metric" style="border-top:3px solid #e37400"><div class="metric-num" style="color:#e37400">P0</div><div class="metric-label">首段开工</div><div class="metric-sub">WP-01 起步</div></div>
+</div>
+
+<div class="summary-box">
+<strong>一句话看完这份报告：</strong>项目核心已经定稿，实施契约已经冻结到字段级；开发实施协作包不是再写一份 IMP，而是把「准备开工」要看的材料放在一起。<span class="hl-blue hl">现在能做实施前核对、工作包拆分草案、测试基线和打包准备，不能直接开工写业务实现。</span>
+</div>
+
+<div class="callout callout-info"><strong>现在的门：</strong>IMP 只是创建，还没有用户确认。确认之后才拆 TASK；拆完 TASK 才能开工。所有「已定」的判断都以 <code>IMP-OPENCODEX-DESKTOP-01</code> 和项目核心为准。</div>
+
+<h2 id="purpose">02 · 开发实施协作包是干什么的</h2>
+<p>开发实施包不是把 <code>docs/03-开发实施</code> 复制一份，也不是再写一份技术契约。它是<strong>给你看的准备材料</strong>：把实施前置条件、工作包、测试口径和打包准备收拢成一份能读的东西。</p>
+<div class="card-grid">
+<div class="card">
+<h4>它应该放什么</h4>
+<ul>
+<li>实施前核对清单：确认 IMP、验收口径、开工授权</li>
+<li>工作包拆分草案：22 个 WP 的依赖、产出物、验收点</li>
+<li>实施核对记录：目录、状态、加密、扩展、同步、CLI 与 IMP 的对照</li>
+<li>测试基线：AC-01 ~ AC-13 的正常 / 失败 / 取消 / 恢复场景</li>
+<li>打包与签名准备：Tauri、macOS 签名、更新通道</li>
+<li>可读报告：HTML 单页，方便你不用翻一堆 Markdown</li>
+</ul>
+</div>
+<div class="card">
+<h4>它不应该放什么</h4>
+<ul>
+<li>不复制 <code>IMP-OPENCODEX-DESKTOP-01</code> 的全部字段，避免出现第二个契约源</li>
+<li>不写代码实现结论；没跑过的东西不能标「已通过」</li>
+<li>不把确认讨论当成正式事实；确认后要回写 <code>docs/03-开发实施</code></li>
+<li>不放真实凭据、真实路径里的敏感内容</li>
+</ul>
+</div>
+</div>
+
+<div class="ba-grid">
+<div class="ba-box ba-before">
+<h3>看权威事实</h3>
+<ul>
+<li><code>docs/02-项目核心</code>：项目是什么、边界在哪</li>
+<li><code>docs/03-开发实施/IMP-OPENCODEX-DESKTOP-01.md</code>：技术怎么做、参数是什么</li>
+<li><code>DMD-OPENCODEX-DESKTOP-MANAGER</code>：需求与验收权威</li>
+</ul>
+</div>
+<div class="ba-box ba-after">
+<h3>看实施包</h3>
+<ul>
+<li>一眼看清「现在能开工什么、还不能开工什么」</li>
+<li>把 WP-01 ~ WP-22 转成可执行的 TASK 草案</li>
+<li>把 46 项冻结按工作包对上，确认没有漏项</li>
+<li>准备测试 fixture 与打包脚手架</li>
+</ul>
+</div>
+</div>
+
+<h2 id="status">03 · 现在停在哪一步</h2>
+<p>开发实施阶段已经越过「项目核心定稿」，也越过「IMP 创建」，但还没过「用户确认 IMP」这道门。</p>
+<table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>状态</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>需求定稿</td>
+<td>✅ 已完成</td>
+<td>DMD <code>revision 3</code>，27 条需求，13 条验收标准</td>
+</tr>
+<tr>
+<td>项目核心定稿</td>
+<td>✅ 已完成</td>
+<td>8 份字段级事实，19 个领域实体</td>
+</tr>
+<tr>
+<td>IMP 创建</td>
+<td>✅ 已完成</td>
+<td><code>IMP-OPENCODEX-DESKTOP-01</code>，9 类契约，46 项冻结</td>
+</tr>
+<tr>
+<td>IMP 确认</td>
+<td>⏳ 待用户确认</td>
+<td><strong>当前门禁</strong></td>
+</tr>
+<tr>
+<td>TASK 拆分</td>
+<td>⛔ 未开始</td>
+<td>必须在 IMP 确认后做</td>
+</tr>
+<tr>
+<td>工程底座</td>
+<td>⛔ 未开始</td>
+<td>属于 WP-01，不能提前授权</td>
+</tr>
+<tr>
+<td>业务实现</td>
+<td>⛔ 未开始</td>
+<td>全部实现都必须有 TASK 授权</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warn"><strong>现在的正确顺序：</strong>先读这份报告和 IMP，确认没有不理解或不同意的技术取值；确认后把 22 个工作包拆成 TASK；每个 TASK 必须带验收检查和证据要求，不能只写「完成某模块」。</div>
+
+<h2 id="contracts">04 · 契约已经锁住了什么</h2>
+<p>IMP 不只是方向，已经把字段、参数和阈值定死。这里只挑影响开工顺序最大的部分：</p>
+<table>
+<thead>
+<tr>
+<th>契约域</th>
+<th>已冻结的关键点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据根</td>
+<td>七个物理目录：<code>manager-state</code> / <code>opencodex-home</code> / <code>backups</code> / <code>logs</code> / <code>exports</code> / <code>cache</code> / <code>sync-state</code>；结构版本 <code>1</code></td>
+</tr>
+<tr>
+<td>备份</td>
+<td>每类最近 20 份、保留 30 天；备份清单含 SHA-256、字节数、文件数、可恢复标记</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>内部与 <code>--json</code> 都用 <code>runtime</code> / <code>connection</code> / <code>operation</code> / <code>gate</code>；轮询 3 秒 / 15 秒，失败指数退避</td>
+</tr>
+<tr>
+<td>进程</td>
+<td>启动 20 秒、停止 10 秒；pending 判定 3 秒 ×10；取消不发 SIGKILL</td>
+</tr>
+<tr>
+<td>加密</td>
+<td>Argon2id：256 MiB、迭代 3、并行 2、盐 16 字节；AES-256-GCM：12 字节 nonce</td>
+</tr>
+<tr>
+<td>导入</td>
+<td>明文 128 MiB、密文 512 MiB、数组 20,000 条；失败不部分写入</td>
+</tr>
+<tr>
+<td>扩展</td>
+<td>六客户端默认可写；用户可逐个关闭；未安装跳过且不落盘</td>
+</tr>
+<tr>
+<td>写入</td>
+<td>目标文件锁 3 秒；单一状态锁；SHA-256 比对；备份失败阻断</td>
+</tr>
+<tr>
+<td>同步</td>
+<td>manifest 独立 AEAD；AAD 绑定格式、版本、设备名；旧快照进冲突</td>
+</tr>
+<tr>
+<td>CLI</td>
+<td>命令固定为 <code>ocxd</code>；<code>schema_version=1</code>；IPC socket 权限 <code>0600</code></td>
+</tr>
+<tr>
+<td>审计</td>
+<td>保留 90 天 / 5,000 条；只记参数键，不记值</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-success"><strong>核对结果：</strong>IMP 覆盖项目核心 46 个 ⏳ 项，编号连续无缺号。`docs/03-开发实施/IMP-OPENCODEX-DESKTOP-01.md` 现在是唯一实施契约入口。</div>
+
+<h2 id="workpackages">05 · 22 个工作包怎么用</h2>
+<p>工作包不是为了「看起来工作量很大」，而是为了把需求、验收、依赖和安全控制拆到能建 TASK 的粒度。</p>
+<div class="card-grid">
+<div class="card"><h4>先拆横切底座</h4><p><code>WP-01</code> 工程底座、<code>WP-03</code> 数据根与备份、<code>WP-17</code> 写入引擎、<code>WP-21</code> 测试基线、<code>WP-22</code> 打包签名。这些不做稳，后面的业务模块会反复返工。</p></div>
+<div class="card"><h4>P0 先打通主线</h4><p><code>WP-02</code> 发现 → <code>WP-04</code> 启停 → <code>WP-05</code> 状态 → <code>WP-06</code> 日志诊断通知 → <code>WP-07</code> 面板 → <code>WP-08</code> 风险恢复 → <code>WP-09</code> 升级引导 → <code>WP-10</code> 托盘 → <code>WP-11</code> 关于。</p></div>
+<div class="card"><h4>P1 处理写入与更新</h4><p><code>WP-12</code> 自更新、<code>WP-13</code> / <code>WP-14</code> 加密导出导入、<code>WP-15</code> Skills、<code>WP-16</code> MCP、<code>WP-17</code> 写入引擎、<code>WP-18</code> CLI / IPC。</p></div>
+<div class="card"><h4>P2 最后做同步</h4><p><code>WP-19</code> WebDAV。它依赖加密、备份和写入引擎，不能提前抢跑。</p></div>
+</div>
+
+<h3>工作包到 TASK 的拆法</h3>
+<table>
+<thead>
+<tr>
+<th>工作包</th>
+<th>建议拆分</th>
+<th>TASK 数量估计</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WP-01 工程底座</td>
+<td>工程初始化 / IPC 骨架 / 日志脱敏 / 打包运行</td>
+<td>3 ~ 4</td>
+</tr>
+<tr>
+<td>WP-02 安装发现</td>
+<td>前置门禁 / 安装发现 / 提示文案</td>
+<td>2</td>
+</tr>
+<tr>
+<td>WP-03 数据根与备份</td>
+<td>目录初始化 / 切换状态机 / 备份与恢复</td>
+<td>3</td>
+</tr>
+<tr>
+<td>WP-04 进程托管</td>
+<td>启动 / 停止 / 重启 / 错误处理</td>
+<td>2 ~ 3</td>
+</tr>
+<tr>
+<td>WP-05 状态采集</td>
+<td>官方输出映射 / 三维状态 / 刷新策略</td>
+<td>3</td>
+</tr>
+<tr>
+<td>WP-06 日志诊断通知</td>
+<td>日志读取 / Doctor / 通知中心</td>
+<td>3</td>
+</tr>
+<tr>
+<td>WP-07 面板承载</td>
+<td>原型承载 / 生产承载</td>
+<td>1 ~ 2</td>
+</tr>
+<tr>
+<td>WP-08 风险与恢复</td>
+<td>at-risk / 外部接管 / restore</td>
+<td>2</td>
+</tr>
+<tr>
+<td>WP-09 官方升级</td>
+<td>备份 / 引导 / 结果展示</td>
+<td>1 ~ 2</td>
+</tr>
+<tr>
+<td>WP-10 托盘菜单</td>
+<td>托盘 / 原生菜单</td>
+<td>1 ~ 2</td>
+</tr>
+<tr>
+<td>WP-11 关于归属</td>
+<td>关于页 / 许可链接</td>
+<td>1</td>
+</tr>
+<tr>
+<td>WP-12 自更新</td>
+<td>检查 / 下载校验 / 安装回滚</td>
+<td>3</td>
+</tr>
+<tr>
+<td>WP-13 加密导出</td>
+<td>容器头 / 加密 / 导出</td>
+<td>2</td>
+</tr>
+<tr>
+<td>WP-14 加密导入</td>
+<td>解密 / 白名单 / 备份回滚</td>
+<td>3</td>
+</tr>
+<tr>
+<td>WP-15 Skills 管理</td>
+<td>源存储 / 分发 / 卸载恢复</td>
+<td>2 ~ 3</td>
+</tr>
+<tr>
+<td>WP-16 MCP 适配</td>
+<td>六客户端 / 投影 / 冲突</td>
+<td>4 ~ 6</td>
+</tr>
+<tr>
+<td>WP-17 写入引擎</td>
+<td>锁 / 备份 / 原子替换 / 回滚</td>
+<td>3 ~ 4</td>
+</tr>
+<tr>
+<td>WP-18 CLI IPC</td>
+<td>命令 / JSON / IPC / 访问控制 / 审计</td>
+<td>4</td>
+</tr>
+<tr>
+<td>WP-19 WebDAV</td>
+<td>端点 / 加密 / manifest / 冲突 / 备份</td>
+<td>5</td>
+</tr>
+<tr>
+<td>WP-20 安全闭环</td>
+<td>控制措施与验证清单</td>
+<td>1 ~ 2</td>
+</tr>
+<tr>
+<td>WP-21 测试基线</td>
+<td>AC 场景 / mock / 回归</td>
+<td>4 ~ 6</td>
+</tr>
+<tr>
+<td>WP-22 打包签名</td>
+<td>打包 / 签名 / 通道</td>
+<td>2 ~ 3</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-info"><strong>数量只是估计：</strong>正式 TASK 不能按这个表直接生成。每个 TASK 都要再带验收标准、检查命令、证据要求和回写目标。</div>
+
+<h3>需求覆盖核对</h3>
+<table>
+<thead>
+<tr>
+<th>需求</th>
+<th>工作包</th>
+<th>验收</th>
+<th>需求</th>
+<th>工作包</th>
+<th>验收</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>REQ-01</code></td>
+<td><code>WP-02</code></td>
+<td><code>AC-01</code></td>
+<td><code>REQ-15</code></td>
+<td><code>WP-19</code></td>
+<td><code>AC-07</code></td>
+</tr>
+<tr>
+<td><code>REQ-02</code></td>
+<td><code>WP-03</code></td>
+<td><code>AC-02</code></td>
+<td><code>REQ-16</code></td>
+<td><code>WP-09</code></td>
+<td><code>AC-08</code></td>
+</tr>
+<tr>
+<td><code>REQ-03</code></td>
+<td><code>WP-03</code></td>
+<td><code>AC-02</code></td>
+<td><code>REQ-17</code></td>
+<td><code>WP-12</code></td>
+<td><code>AC-09</code></td>
+</tr>
+<tr>
+<td><code>REQ-04</code></td>
+<td><code>WP-03</code></td>
+<td><code>AC-02</code></td>
+<td><code>REQ-18</code></td>
+<td><code>WP-18</code></td>
+<td><code>AC-10</code></td>
+</tr>
+<tr>
+<td><code>REQ-05</code></td>
+<td><code>WP-04</code></td>
+<td><code>AC-03</code></td>
+<td><code>REQ-19</code></td>
+<td><code>WP-10</code></td>
+<td><code>AC-12</code></td>
+</tr>
+<tr>
+<td><code>REQ-06</code></td>
+<td><code>WP-05</code></td>
+<td><code>AC-03</code> / <code>AC-05</code></td>
+<td><code>REQ-20</code></td>
+<td><code>WP-10</code></td>
+<td><code>AC-12</code></td>
+</tr>
+<tr>
+<td><code>REQ-07</code></td>
+<td><code>WP-06</code></td>
+<td><code>AC-04</code></td>
+<td><code>REQ-21</code></td>
+<td><code>WP-11</code></td>
+<td><code>AC-13</code></td>
+</tr>
+<tr>
+<td><code>REQ-08</code></td>
+<td><code>WP-07</code></td>
+<td><code>AC-04</code></td>
+<td><code>REQ-22</code></td>
+<td><code>WP-15</code></td>
+<td><code>AC-11</code></td>
+</tr>
+<tr>
+<td><code>REQ-09</code></td>
+<td><code>WP-08</code></td>
+<td><code>AC-05</code></td>
+<td><code>REQ-23</code></td>
+<td><code>WP-16</code></td>
+<td><code>AC-11</code></td>
+</tr>
+<tr>
+<td><code>REQ-10</code></td>
+<td><code>WP-08</code></td>
+<td><code>AC-05</code></td>
+<td><code>REQ-24</code></td>
+<td><code>WP-16</code></td>
+<td><code>AC-11</code></td>
+</tr>
+<tr>
+<td><code>REQ-11</code></td>
+<td><code>WP-06</code></td>
+<td><code>AC-04</code></td>
+<td><code>REQ-25</code></td>
+<td><code>WP-18</code></td>
+<td><code>AC-10</code></td>
+</tr>
+<tr>
+<td><code>REQ-12</code></td>
+<td><code>WP-06</code></td>
+<td>随 <code>AC-04</code></td>
+<td><code>REQ-26</code></td>
+<td><code>WP-17</code></td>
+<td><code>AC-11</code></td>
+</tr>
+<tr>
+<td><code>REQ-13</code></td>
+<td><code>WP-13</code></td>
+<td><code>AC-06</code></td>
+<td><code>REQ-27</code></td>
+<td><code>WP-17</code></td>
+<td><code>AC-11</code></td>
+</tr>
+<tr>
+<td><code>REQ-14</code></td>
+<td><code>WP-14</code></td>
+<td><code>AC-06</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="prepare">06 · 开工前要准备什么</h2>
+<p>不是所有准备都要等 TASK。以下 5 类材料可以现在做，做的时候不写业务代码、不碰真实数据。</p>
+<table>
+<thead>
+<tr>
+<th>准备项</th>
+<th>现在能做什么</th>
+<th>产出位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实施前核对</td>
+<td>把 46 项 FZ 分配到工作包，标记「确认 / 有疑问」</td>
+<td><code>02-实施核对记录/</code></td>
+</tr>
+<tr>
+<td>TASK 拆分草案</td>
+<td>22 个 WP → TASK 候选，不创建正式 TASK</td>
+<td><code>01-方案资料/</code></td>
+</tr>
+<tr>
+<td>测试基线</td>
+<td>AC-01 ~ AC-13 的 fixture 和四路径矩阵</td>
+<td><code>02-实施核对记录/</code></td>
+</tr>
+<tr>
+<td>打包脚手架</td>
+<td>Tauri 目录、macOS 签名清单、更新通道占位</td>
+<td><code>01-方案资料/</code></td>
+</tr>
+<tr>
+<td>实施报告</td>
+<td>本页 HTML，给评审和日常翻阅用</td>
+<td><code>输出/实施与工作包报告/</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-warn"><strong>这些准备也不等于开工授权。</strong>它们只是把「确认后要执行什么」提前想清楚，避免拿到授权后才开始补文档。</div>
+
+<h2 id="structure">07 · 建议的目录结构</h2>
+<p>现在协作包已有槽位，建议按下面方式填充。每个目录只放一类资料，别混。</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>放什么</th>
+<th>当前状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>01-方案资料/</code></td>
+<td>实施方案草案、工作包拆分草案、打包与签名准备</td>
+<td>待创建</td>
+</tr>
+<tr>
+<td><code>02-实施核对记录/</code></td>
+<td>FZ 到 WP 的对照、字段语义核对、测试基线、验收场景</td>
+<td>待创建</td>
+</tr>
+<tr>
+<td><code>输出/实施与工作包报告/</code></td>
+<td>单页 HTML 报告与构建脚本</td>
+<td>本轮创建</td>
+</tr>
+</tbody>
+</table>
+<h2 id="next">08 · 下一步顺序</h2>
+<table>
+<thead>
+<tr>
+<th>顺序</th>
+<th>动作</th>
+<th>前置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>用户阅读 IMP，确认 46 项取值</td>
+<td>本报告 + IMP</td>
+</tr>
+<tr>
+<td>2</td>
+<td>把 22 个 WP 拆成正式 TASK</td>
+<td>IMP 确认</td>
+</tr>
+<tr>
+<td>3</td>
+<td>创建 TASK 的验收检查和证据要求</td>
+<td>TASK 拆分</td>
+</tr>
+<tr>
+<td>4</td>
+<td>从 <code>WP-01</code> 开始工程底座</td>
+<td>TASK 授权</td>
+</tr>
+<tr>
+<td>5</td>
+<td>P0 主线走通后再进入 P1</td>
+<td>P0 验收通过</td>
+</tr>
+<tr>
+<td>6</td>
+<td>P1 完成后再进入 <code>WP-19</code></td>
+<td>P1 验收通过</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sources">09 · 依据索引</h2>
+<table>
+<thead>
+<tr>
+<th>依据</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DMD-OPENCODEX-DESKTOP-MANAGER</code></td>
+<td>需求、验收与范围权威</td>
+</tr>
+<tr>
+<td><code>docs/02-项目核心/</code></td>
+<td>产品、架构、状态、领域模型与安全边界</td>
+</tr>
+<tr>
+<td><code>docs/03-开发实施/IMP-OPENCODEX-DESKTOP-01.md</code></td>
+<td>实施契约与 46 项冻结</td>
+</tr>
+<tr>
+<td><code>01-需求分析/输出/需求分析报告/</code></td>
+<td>22 个工作包的原始规划草案</td>
+</tr>
+<tr>
+<td><code>01-需求分析/04-需求分析产物/IMP输入清单.md</code></td>
+<td>FZ 登记与契约域归属</td>
+</tr>
+</tbody>
+</table>
+<div class="footer">
+<strong>OpenCodeX-Desktop 实施与工作包报告</strong> · 生成于 2026-09-14 · 依据协作包 <code>COL-LOCAL-20260912-01</code>、<code>docs/02-项目核心</code> 与 <code>IMP-OPENCODEX-DESKTOP-01</code> 整理。<br>
+本报告是派生产物，不作为事实源；有冲突时以 DMD <code>revision 3</code>、<code>docs/02-项目核心</code> 与 <code>docs/03-开发实施/IMP-OPENCODEX-DESKTOP-01.md</code> 为准。<br>
+与 OpenCodex 官方项目不存在隶属、授权或背书关系；本项目采用 MIT License。
+</div>
+
+</div>
+</div>
+<script src="assets/side-nav.js"></script>
+</body>
+</html>
