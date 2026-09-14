@@ -713,7 +713,36 @@ ocxd --help
 | S-6 | §3.8 审计与 `--json` 已冻结 |
 | S-7 | §3.6 fingerprint 已冻结 |
 
-## 5. 验收环境与 mock 数据
+## 5. 平台目标矩阵
+
+本节记录平台支持口径与实施边界，作为 `WP-01` 工程底座和 `WP-22` 打包签名的约束。
+
+| 目标 | 类别 | 构建方式 | 验证要求 | 发布口径 |
+|---|---|---|---|---|
+| `aarch64-apple-darwin` | 正式支持 | 本机 / CI | 功能、验收与打包冒烟全覆盖 | 可承诺 |
+| `x86_64-apple-darwin` | 计划支持 | CI 交叉构建；必要时出 universal 包 | 自动化测试 + Apple Silicon Rosetta 启动冒烟；真实 Intel Mac 冒烟待补 | 未完成 Intel 真机验证前不承诺完全支持 |
+| `x86_64-pc-windows-msvc` | 计划支持 | Windows CI runner | 编译、单元 / 集成测试、CLI 与核心文件路径自动化冒烟 | 自动化通过后可承诺基础支持；GUI 完整冒烟待真实环境确认 |
+| `aarch64-pc-windows-msvc` | 实验支持 | 可选 CI 实验 | 不作为验收目标；不承诺原生兼容 | 本轮不生成；如后续产出只标注 experimental，不进正式通道 |
+
+平台差异必须隔离在基建层，不得散在业务模块里：
+
+| 能力 | macOS | Windows 计划支持 | 边界 |
+|---|---|---|---|
+| 凭据存储 | Keychain | Windows Credential Manager / DPAPI | `CredentialRef` 语义不变，后端按平台选择实现 |
+| 文件权限 | Unix `0600` / `0700` | ACL | 语义等价于「当前用户最小权限」；不做 1:1 权限位映射 |
+| IPC | Unix domain socket + `getpeereid` | Named pipe + 等价调用方校验 | 对上保持同一 `IpcEndpoint` 契约 |
+| 文件锁 | `flock` | `LockFileEx` | 锁超时、返回码和串行化语义一致 |
+| 进程控制 | Unix 进程等待与信号 | Windows Job Object / 终止语义 | 禁止 SIGKILL 等价语义；保留取消与等待规则 |
+| 打包签名 | macOS 签名与公证 | Authenticode + 安装器 | 各平台签名失败都终止安装 |
+
+实施规则：
+
+1. 本轮正式验证目标只有 `aarch64-apple-darwin`。
+2. `x86_64-apple-darwin` 与 `x86_64-pc-windows-msvc` 可以在 CI 生成和测试，但未完成对应验证前不得写入正式支持。
+3. `aarch64-pc-windows-msvc` 本轮不生成构建产物。
+4. 平台差异测试要记录平台、构建方式、验证范围和未覆盖项。
+
+## 6. 验收环境与 mock 数据
 
 - macOS 首期；不连接真实 CLI / 文件系统 / WebDAV / 钥匙串。
 - 所有 fixture 在仓库内使用临时路径，不引用真实家目录内容。
@@ -721,7 +750,7 @@ ocxd --help
 - 用场景驱动替代真实外设；同一 fixture 可重建。
 - 回归必须覆盖 AC-01 ~ AC-13 的正常 / 失败 / 取消 / 恢复路径。
 
-## 6. 派生引用回写
+## 7. 派生引用回写
 
 本节只记录本轮同步的派生产物，不作为事实源：
 
@@ -732,8 +761,9 @@ ocxd --help
 | 协作包 `02-开发实施/README.md` | 前置说明改为 `FZ-01` ~ `FZ-46` |
 | 协作包确认与评审 | 下一步改为「确认 IMP → 拆 TASK」 |
 
-## 7. 变更记录
+## 8. 变更记录
 
 | 日期 | 变更 |
 |---|---|
 | 2026-09-14 | 创建 IMP，冻结 46 项技术契约。 |
+| 2026-09-14 | 补充平台目标矩阵：macOS arm64 正式支持；macOS x86_64 与 Windows x64 计划支持；Windows ARM64 本轮不生成。 |

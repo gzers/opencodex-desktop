@@ -815,6 +815,87 @@ src-ui/
 </table>
 <div class="callout callout-info"><strong>还缺一步：</strong>本节是实施规划。正式工程结构应在 <code>WP-01</code> 授权后初始化；如果落地时发现某个目录不合理，先回写本报告和 TASK，再改代码。</div>
 
+<h3 id="platform-matrix">6.7 平台目标矩阵</h3>
+<p>平台适配不是换一个编译目标就结束。这里先分清「能构建」「能验证」和「能承诺支持」：</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>当前口径</th>
+<th>验证与发布</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aarch64-apple-darwin</code></td>
+<td>正式支持</td>
+<td>本机 / CI 全量验证；可承诺</td>
+</tr>
+<tr>
+<td><code>x86_64-apple-darwin</code></td>
+<td>计划支持</td>
+<td>CI 构建或出 universal 包；Apple Silicon + Rosetta 只做基础冒烟，Intel 真机待补</td>
+</tr>
+<tr>
+<td><code>x86_64-pc-windows-msvc</code></td>
+<td>计划支持</td>
+<td>Windows CI runner 做编译与自动化测试；GUI 完整冒烟待真实环境确认</td>
+</tr>
+<tr>
+<td><code>aarch64-pc-windows-msvc</code></td>
+<td>实验支持，本轮不生成</td>
+<td>不进入验收目标，不进正式发布通道</td>
+</tr>
+</tbody>
+</table>
+<div class="summary-box">
+<strong>平台结论：</strong>本轮只承诺 <code>macOS arm64</code>。<code>macOS x86_64</code> 和 <code>Windows x64</code> 先走 CI 构建与自动化验证；<code>Windows ARM64</code> 本轮不生成。平台差异必须隔离在基建层，不能散到业务模块。
+</div>
+
+<p>Windows 适配至少要抽象这些能力：</p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>macOS</th>
+<th>Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>凭据存储</td>
+<td>Keychain</td>
+<td>Credential Manager / DPAPI</td>
+</tr>
+<tr>
+<td>文件权限</td>
+<td>Unix <code>0600</code> / <code>0700</code></td>
+<td>ACL，等价于当前用户最小权限</td>
+</tr>
+<tr>
+<td>IPC</td>
+<td>Unix domain socket + <code>getpeereid</code></td>
+<td>Named pipe + 等价校验</td>
+</tr>
+<tr>
+<td>文件锁</td>
+<td><code>flock</code></td>
+<td><code>LockFileEx</code></td>
+</tr>
+<tr>
+<td>进程控制</td>
+<td>Unix 进程等待与信号</td>
+<td>Job Object / 终止语义</td>
+</tr>
+<tr>
+<td>打包签名</td>
+<td>macOS 签名与公证</td>
+<td>Authenticode + 安装器</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-info"><strong>执行规则：</strong>未完成对应平台验证前，报告、包名和发布页都不得写「官方支持」。实验包必须标 <code>experimental</code>，Windows ARM64 本轮不产出。</div>
+
 <h2 id="workpackages">07 · 22 个工作包怎么用</h2>
 <p>工作包不是把工作量堆成一大张表，而是把需求、验收、依赖和安全控制拆到能建 TASK 的粒度。</p>
 <div class="card-grid">
@@ -974,12 +1055,14 @@ src-ui/
 </tr>
 <tr>
 <td>WP-22 打包签名</td>
-<td>打包 / 签名 / 通道</td>
-<td>2 ~ 3</td>
+<td>打包 / 签名 / 通道 / 平台矩阵</td>
+<td>3 ~ 4</td>
 </tr>
 </tbody>
 </table>
 <div class="callout callout-info"><strong>数量只是估计：</strong>正式 TASK 不能按这个表直接生成。每个 TASK 都要再带验收标准、检查命令、证据要求和回写目标。</div>
+
+<div class="callout callout-warn"><strong>平台矩阵前置约束：</strong><code>WP-01</code> 初始化工程时要预留凭据、权限、IPC、文件锁、进程控制、打包签名的平台抽象。<code>WP-22</code> 只产出 <code>macOS arm64</code> 正式包；<code>macOS x86_64</code> 与 <code>Windows x64</code> 按 CI 验证结果推进；<code>Windows ARM64</code> 本轮不生成。</div>
 
 <h3>需求覆盖核对</h3>
 <table>
@@ -1136,7 +1219,7 @@ src-ui/
 </tr>
 <tr>
 <td>打包脚手架</td>
-<td>Tauri 目录、macOS 签名清单、更新通道占位</td>
+<td>Tauri 目录、平台目标矩阵、macOS 签名与 CI 打包清单、更新通道占位</td>
 <td><code>01-方案资料/</code></td>
 </tr>
 <tr>
