@@ -3927,10 +3927,12 @@ document.querySelectorAll('[data-act="panel"]').forEach(button=>{button.onclick=
 document.querySelectorAll('[data-act="logs"]').forEach(button=>{button.onclick=()=>setRoute('logs')});
 document.querySelectorAll('[data-act="advice"]').forEach(button=>{button.onclick=()=>openRestoreConfirm(currentState)});
 
-// 面板快捷操作：单一品牌悬浮球，悬停/点击展开，可在面板内拖拽。
+// 面板快捷操作：单一品牌悬浮球，鼠标悬浮展开，键盘或触屏可点击展开，可在面板内拖拽。
 let panelHubOpen=false;
+let panelHubHoverTimer=0;
 function setPanelHubOpen(next){
   panelHubOpen=next;
+  window.clearTimeout(panelHubHoverTimer);
   document.getElementById('panelHub')?.classList.toggle('open',next);
   document.getElementById('panelHubToggle')?.setAttribute('aria-expanded',next?'true':'false');
   if(next) requestAnimationFrame(positionPanelHubMenu);
@@ -3959,8 +3961,24 @@ function positionPanelHubMenu(){
   menu.style.top=`${top}px`;
   menu.style.visibility='';
 }
+const panelHub=document.getElementById('panelHub');
+panelHub?.addEventListener('pointerenter',()=>{
+  if(event.pointerType==='touch') return;
+  window.clearTimeout(panelHubHoverTimer);
+  setPanelHubOpen(true);
+});
+panelHub?.addEventListener('pointerleave',event=>{
+  if(event.pointerType==='touch') return;
+  window.clearTimeout(panelHubHoverTimer);
+  panelHubHoverTimer=window.setTimeout(()=>{
+    if(!panelHub.matches(':hover')) setPanelHubOpen(false);
+  },120);
+});
 document.getElementById('panelHubToggle')?.addEventListener('click',()=>{
   setPanelHubOpen(!panelHubOpen);
+});
+document.addEventListener('keydown',event=>{
+  if(panelHubOpen&&event.key==='Escape'){setPanelHubOpen(false);document.getElementById('panelHubToggle')?.focus();}
 });
 document.addEventListener('click',event=>{
   if(panelHubOpen&&!event.target.closest('#panelHub')) setPanelHubOpen(false);
@@ -3972,6 +3990,7 @@ document.addEventListener('click',event=>{
   let dragging=false,moved=false,startX=0,startY=0,originX=0,originY=0;
   handle.addEventListener('pointerdown',event=>{
     if(panelHubOpen) return;
+    if(event.pointerType==='mouse') return;
     event.preventDefault();
     handle.setPointerCapture(event.pointerId);
     dragging=true;moved=false;
