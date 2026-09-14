@@ -1,6 +1,7 @@
 /* 左侧固定侧栏：标题跳转。视觉沿用参考项目 shared-style.css 的语言
    （同一套 color token、卡片底色、圆角与 active 胶囊），只补布局。 */
 :root{ --side-w: 248px; }
+html{ scroll-behavior: smooth; }
 
 .side-nav{
   position:fixed; top:0; left:0; bottom:0; width:var(--side-w); z-index:100;
