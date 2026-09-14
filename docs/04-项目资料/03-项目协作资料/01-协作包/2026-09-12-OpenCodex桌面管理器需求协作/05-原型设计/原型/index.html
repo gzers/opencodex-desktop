@@ -314,8 +314,9 @@ body.panel-mode #panelReal{width:calc(100% / var(--panel-zoom,1));height:calc(10
 .panel-hub.open .panel-hub-toggle{cursor:default;border-radius:50%}
 .panel-hub-toggle:active{cursor:grabbing}
 .panel-hub-logo{display:block;filter:drop-shadow(0 1px 2px color-mix(in srgb,var(--brand) 15%,transparent))}
-.panel-hub-badge{position:absolute;top:-7px;right:-7px;min-width:25px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-size:9px;font-weight:800;line-height:18px;text-align:center;box-shadow:0 3px 10px #3941ff33;pointer-events:none}
-.panel-hub-menu{display:none;width:172px;margin-top:8px;padding:8px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,var(--panel) 96%,transparent);box-shadow:0 20px 48px #10182824;backdrop-filter:blur(20px)}
+.panel-hub .sr-only{display:none}
+.panel-hub-menu{display:none;width:172px;padding:8px;border:1px solid var(--border);border-radius:14px;background:color-mix(in srgb,var(--panel) 96%,transparent);box-shadow:0 20px 48px #10182824;backdrop-filter:blur(20px)}
+.panel-hub.open .panel-hub-menu{position:fixed;z-index:60;visibility:visible}
 .panel-hub.open .panel-hub-menu{display:block}
 .panel-hub-title{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:7px}
 .panel-hub-title b{font-size:13px;font-variant-numeric:tabular-nums}
@@ -1090,7 +1091,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="panel-hub" id="panelHub" aria-label="面板快捷操作">
             <button class="panel-hub-toggle" id="panelHubToggle" type="button" aria-haspopup="menu" aria-expanded="false" title="面板快捷操作">
               <svg class="panel-hub-logo" width="22" height="22" aria-hidden="true"><use href="#tray-logo"/></svg>
-              <span class="panel-hub-badge" id="panelScaleBadge" aria-live="polite">100%</span>
+              <span class="sr-only" id="panelScaleBadge" aria-live="polite">100%</span>
             </button>
             <div class="panel-hub-menu" id="panelHubMenu" role="menu" aria-label="面板快捷操作菜单">
               <div class="panel-hub-title"><b id="panelScaleText">界面 100%</b><span>缩放</span></div>
@@ -3932,6 +3933,31 @@ function setPanelHubOpen(next){
   panelHubOpen=next;
   document.getElementById('panelHub')?.classList.toggle('open',next);
   document.getElementById('panelHubToggle')?.setAttribute('aria-expanded',next?'true':'false');
+  if(next) requestAnimationFrame(positionPanelHubMenu);
+}
+function positionPanelHubMenu(){
+  const hub=document.getElementById('panelHub');
+  const menu=document.getElementById('panelHubMenu');
+  if(!hub||!menu) return;
+  const frame=hub.closest('.panel-frame')||hub.parentElement;
+  const hubRect=hub.getBoundingClientRect();
+  const frameRect=frame.getBoundingClientRect();
+  const margin=12;
+  menu.style.left='auto';menu.style.right='auto';menu.style.top='auto';menu.style.bottom='auto';
+  menu.style.maxWidth='';menu.style.maxHeight='';
+  menu.style.visibility='hidden';menu.style.display='block';
+  const rect=menu.getBoundingClientRect();
+  let left=hubRect.left+hubRect.width/2-rect.width/2;
+  let top=hubRect.bottom+8;
+  if(top+rect.height>frameRect.bottom-margin) top=hubRect.top-rect.height-8;
+  if(top<frameRect.top+margin) top=frameRect.top+margin;
+  if(left<frameRect.left+margin) left=frameRect.left+margin;
+  if(left+rect.width>frameRect.right-margin) left=frameRect.right-rect.width-margin;
+  left=Math.max(frameRect.left+margin,Math.min(left,frameRect.right-margin-rect.width));
+  top=Math.max(frameRect.top+margin,Math.min(top,frameRect.bottom-margin-rect.height));
+  menu.style.left=`${left}px`;
+  menu.style.top=`${top}px`;
+  menu.style.visibility='';
 }
 document.getElementById('panelHubToggle')?.addEventListener('click',()=>{
   setPanelHubOpen(!panelHubOpen);
@@ -4246,7 +4272,10 @@ function applyInterfaceScale(scale){
   const panelReadout=document.getElementById('panelScaleReadout');
   if(panelReadout) panelReadout.textContent=value+'%';
   const panelBadge=document.getElementById('panelScaleBadge');
-  if(panelBadge) panelBadge.textContent=value+'%';
+  if(panelBadge){
+    panelBadge.textContent=value+'%';
+    if(panelHubOpen) positionPanelHubMenu();
+  }
   const slider=document.getElementById('interfaceScaleRange');
   if(slider && slider.value!==String(value)) slider.value=String(value);
   const settingReadout=document.getElementById('interfaceScaleReadout');
