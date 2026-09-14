@@ -10,10 +10,13 @@
 | `starting` | 正在启动 | 取消观察（仅原型示意） |
 | `pending` | 代理端口可达但未通过 ready | 刷新状态 |
 | `running` | 代理运行且 ready 通过 | 停止、重启、打开面板、查看日志 |
+| `stopping` | 正在停止 | 无（只显示状态说明） |
 | `starting_failed` | 启动失败 | 查看错误、重试启动 |
 | `at_risk` | 官方 status 报告 startup at-risk | 先查看建议；restore 需确认 |
 | `external_takeover` | 外部 provider 接管 Codex 配置 | 查看；restore 需确认 |
 | `unreachable` | 进程或端口不可达 | 刷新状态、查看日志 |
+
+> **已核对的原型缺口（2026-09-14）**：状态测试器实际只有 **10** 个按钮（`at_risk` `external_takeover` `loading` `not_found` `pending` `running` `starting` `starting_failed` `stopped` `unreachable`），**缺 `stopping`**。事实口径是 11 态（`docs/02-项目核心/数据与状态.md` §2.1）。原型补齐 `stopping` 属实施范围（见 `风险与开放问题.md` `R-16`），当前不阻塞需求与验收设计。
 
 环境前置条件是安装发现的门禁，按 `node` → `npm` → `ocx` 顺序短路检查。检查中的状态为 `checking`；`missing_node`、`missing_npm`、`missing_ocx` 分别表示对应前置缺失并阻塞后续检查；全部通过后隐藏门禁并进入常规运行状态机。缺失态展示当前缺失项、状态与最短可复制命令；应用只做检测与引导，不执行 `brew`、`npm` 或 `ocx` 安装。
 
@@ -222,9 +225,11 @@
 
 | 维度 | 取值 | 说明 |
 |---|---|---|
-| 运行状态 | `not_found` / `stopped` / `starting` / `pending` / `running` / `stopping` / `starting_failed` / `at_risk` / `external_takeover` / `unreachable` | 代理进程观测，见 §1。 |
-| 连接状态 | `unconfigured` / `disconnected` / `connecting` / `synced` / `syncing` / `conflict` / `failed` | WebDAV 等外部依赖，见 §2.17。 |
-| 操作状态 | `idle` / `validating` / `backing_up` / `applying` / `rolling_back` / `cancelled` / `succeeded` / `failed` | 单次动作执行阶段。 |
+| 运行状态（11 态） | `not_found` / `loading` / `stopped` / `starting` / `pending` / `running` / `stopping` / `starting_failed` / `at_risk` / `external_takeover` / `unreachable` | 代理进程观测，见 §1。 |
+| 连接状态（7 态） | `unconfigured` / `disconnected` / `connecting` / `syncing` / `synced` / `conflict` / `failed` | WebDAV 等外部依赖，见 §2.17。 |
+| 操作状态（8 态） | `idle` / `validating` / `backing_up` / `applying` / `rolling_back` / `cancelled` / `succeeded` / `failed` | 单次动作执行阶段。 |
+
+> **枚举口径**：以 `docs/02-项目核心/数据与状态.md` 为准——运行 **11** 态、连接 **7** 态、操作 **8** 态，另有 4 个环境前置门禁态。本文件与 §1 的枚举必须与之一致；发现不一致先改项目核心，再同步本文件。
 
 - 必须能同时表达，例如「`running` + `syncing` + `backing_up`」。
 - 渲染规则仍按「动作按状态渲染」执行，不渲染无解释的禁用按钮；用状态说明文字替代灰按钮传达原因。
@@ -235,6 +240,7 @@
 | 状态 | 标签 | 动作区 |
 |---|---|---|
 | 未配置（默认） | 未配置 | 配置 WebDAV（单颗整行） |
+| 连接中 | 正在连接 | 取消 / 测试连接 |
 | 未连接 | 未连接 | 立即同步 / 测试连接 |
 | 同步中 | 同步中 | 取消同步 / 测试连接 |
 | 已同步 | 已同步 | 立即同步 / 测试连接 |
@@ -353,7 +359,7 @@
 | `unreachable` | 刷新状态、查看日志 |
 
    不再渲染无解释的禁用按钮；`starting_failed` 下启动按钮文案变为「重试启动」。
-2. 状态区显示一句状态说明（10 个状态各有文案），替代灰按钮传达原因。
+2. 状态区显示一句状态说明（11 个状态各有文案），替代灰按钮传达原因。
 3. 快捷动作卡压缩为状态文本行 + 横排按钮；标签只表达状态（「规划中 / 可用」），不在应用界面里出现阶段编号（P0 / P1 / P2），也不显示实时连接值。
 
 ### WebDAV 卡片的状态（按状态渲染，不渲染无解释的禁用态）
