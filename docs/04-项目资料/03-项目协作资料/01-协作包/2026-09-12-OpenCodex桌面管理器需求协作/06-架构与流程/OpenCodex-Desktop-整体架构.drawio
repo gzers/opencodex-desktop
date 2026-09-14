@@ -1,115 +1,115 @@
 <mxfile host="app.diagrams.net" type="device">
   <diagram id="arch" name="整体架构">
-    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1560" pageHeight="1160" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="1000" grid="0" gridSize="10" guides="0" tooltips="1" connect="1" arrows="1" fold="1" background="#FBFBFC" page="1" pageScale="1" pageWidth="1560" pageHeight="1160" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
-        <mxCell id="t" value="OpenCodeX-Desktop 整体架构（分层 / 模块 / 外部依赖 / 写入边界）" style="html=1;whiteSpace=wrap;align=left;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+        <mxCell id="t" value="OpenCodeX-Desktop 整体架构（分层 / 模块 / 外部依赖 / 写入边界）" style="html=1;whiteSpace=wrap;align=left;fontSize=22;fontStyle=1;fontColor=#0D0D0D;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="60" y="16" width="1440" height="34" as="geometry"/>
         </mxCell>
-        <mxCell id="L1" value="前端界面层（渲染在 Tauri v2 WebView 内）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#dae8fc;strokeColor=#6c8ebf" vertex="1" parent="1">
+        <mxCell id="L1" value="前端界面层（渲染在 Tauri v2 WebView 内）" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=15;fontStyle=1;fontColor=#0D0D0D;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fillColor=#F8FAFE;strokeColor=#CFDAF4;strokeWidth=1;shadow=0;spacingLeft=14;spacingTop=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="70" width="1400" height="122" as="geometry"/>
         </mxCell>
-        <mxCell id="f0" value="概览" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="f0" value="概览" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="78" y="110" width="214" height="66" as="geometry"/>
         </mxCell>
-        <mxCell id="f1" value="面板" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="f1" value="面板" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="304" y="110" width="214" height="66" as="geometry"/>
         </mxCell>
-        <mxCell id="f2" value="拓展" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="f2" value="拓展" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="530" y="110" width="214" height="66" as="geometry"/>
         </mxCell>
-        <mxCell id="f3" value="日志与诊断" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="f3" value="日志与诊断" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="756" y="110" width="214" height="66" as="geometry"/>
         </mxCell>
-        <mxCell id="f4" value="设置" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="f4" value="设置" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="982" y="110" width="214" height="66" as="geometry"/>
         </mxCell>
-        <mxCell id="f5" value="托盘与原生菜单" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
+        <mxCell id="f5" value="托盘与原生菜单" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="1208" y="110" width="214" height="66" as="geometry"/>
         </mxCell>
-        <mxCell id="L2" value="管理器后端（Rust）：全部业务逻辑与外部交互的唯一入口" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#d5e8d4;strokeColor=#82b366" vertex="1" parent="1">
+        <mxCell id="L2" value="管理器后端（Rust）：全部业务逻辑与外部交互的唯一入口" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=15;fontStyle=1;fontColor=#0D0D0D;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fillColor=#F6FBF9;strokeColor=#C6E2D8;strokeWidth=1;shadow=0;spacingLeft=14;spacingTop=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="262" width="1400" height="306" as="geometry"/>
         </mxCell>
-        <mxCell id="m0" value="发现模块&lt;br&gt;安装发现 / 路径 / 版本 / 可执行校验 / 前置门禁" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m0" value="发现模块&lt;br&gt;安装发现 / 路径 / 版本 / 可执行校验 / 前置门禁" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="78" y="300" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m1" value="进程托管模块&lt;br&gt;ocx start · stop · restart 子进程与超时 / 退出码" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m1" value="进程托管模块&lt;br&gt;ocx start · stop · restart 子进程与超时 / 退出码" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="353" y="300" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m2" value="状态模块&lt;br&gt;官方 status 采集、映射与三维状态维护" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m2" value="状态模块&lt;br&gt;官方 status 采集、映射与三维状态维护" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="628" y="300" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m3" value="日志与诊断模块&lt;br&gt;日志读取 / 脱敏 / 目录打开 / Doctor 只读摘要" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m3" value="日志与诊断模块&lt;br&gt;日志读取 / 脱敏 / 目录打开 / Doctor 只读摘要" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="903" y="300" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m4" value="面板模块&lt;br&gt;官方 Web 面板源码级快照承载与失败回退" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m4" value="面板模块&lt;br&gt;官方 Web 面板源码级快照承载与失败回退" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="1178" y="300" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m5" value="数据根模块&lt;br&gt;数据根选择、检查、引用或迁移、备份" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m5" value="数据根模块&lt;br&gt;数据根选择、检查、引用或迁移、备份" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="78" y="384" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m6" value="迁移模块&lt;br&gt;加密容器导出、校验、导入与回滚" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m6" value="迁移模块&lt;br&gt;加密容器导出、校验、导入与回滚" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="353" y="384" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m7" value="同步模块&lt;br&gt;WebDAV 加密、清单、冲突与覆盖前备份" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m7" value="同步模块&lt;br&gt;WebDAV 加密、清单、冲突与覆盖前备份" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="628" y="384" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m8" value="扩展管理模块&lt;br&gt;Skills 与 MCP 读取、投影与受控写入" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m8" value="扩展管理模块&lt;br&gt;Skills 与 MCP 读取、投影与受控写入" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="903" y="384" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m9" value="更新模块&lt;br&gt;官方升级引导 + 应用自更新（两条独立通道）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m9" value="更新模块&lt;br&gt;官方升级引导 + 应用自更新（两条独立通道）" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="1178" y="384" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m10" value="通知模块&lt;br&gt;通知产生、存储、聚合与清理" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m10" value="通知模块&lt;br&gt;通知产生、存储、聚合与清理" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="78" y="468" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m11" value="CLI / IPC 模块&lt;br&gt;命令解析、本机 IPC 委托、机读输出与访问控制" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m11" value="CLI / IPC 模块&lt;br&gt;命令解析、本机 IPC 委托、机读输出与访问控制" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="353" y="468" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="m12" value="托盘与菜单模块&lt;br&gt;托盘菜单与 macOS 原生菜单入口" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="m12" value="托盘与菜单模块&lt;br&gt;托盘菜单与 macOS 原生菜单入口" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="628" y="468" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="L3" value="外部依赖（权威归属各不相同）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#ffe6cc;strokeColor=#d79b00" vertex="1" parent="1">
+        <mxCell id="L3" value="外部依赖（权威归属各不相同）" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=15;fontStyle=1;fontColor=#0D0D0D;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fillColor=#FDF9F4;strokeColor=#F0DBBF;strokeWidth=1;shadow=0;spacingLeft=14;spacingTop=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="616" width="1400" height="180" as="geometry"/>
         </mxCell>
-        <mxCell id="x0" value="官方 ocx CLI&lt;br&gt;启停 / 状态 / 诊断 / 升级｜权威：官方" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="x0" value="官方 ocx CLI&lt;br&gt;启停 / 状态 / 诊断 / 升级｜权威：官方" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="78" y="656" width="263" height="118" as="geometry"/>
         </mxCell>
-        <mxCell id="x1" value="官方 Web 面板&lt;br&gt;只承载视图，不重绘不注入" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="x1" value="官方 Web 面板&lt;br&gt;只承载视图，不重绘不注入" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="353" y="656" width="263" height="118" as="geometry"/>
         </mxCell>
-        <mxCell id="x2" value="各客户端配置文件&lt;br&gt;MCP / Skills 落点｜共享节点" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="x2" value="各客户端配置文件&lt;br&gt;MCP / Skills 落点｜共享节点" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="628" y="656" width="263" height="118" as="geometry"/>
         </mxCell>
-        <mxCell id="x3" value="WebDAV 远端&lt;br&gt;视为不可信｜上传前客户端加密" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="x3" value="WebDAV 远端&lt;br&gt;视为不可信｜上传前客户端加密" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="903" y="656" width="263" height="118" as="geometry"/>
         </mxCell>
-        <mxCell id="x4" value="应用自身更新通道&lt;br&gt;本产品自有｜签名校验后安装" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
+        <mxCell id="x4" value="应用自身更新通道&lt;br&gt;本产品自有｜签名校验后安装" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;" vertex="1" parent="1">
           <mxGeometry x="1178" y="656" width="263" height="118" as="geometry"/>
         </mxCell>
-        <mxCell id="L4" value="数据根（用户可自定义）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#fff2cc;strokeColor=#d6b656" vertex="1" parent="1">
+        <mxCell id="L4" value="数据根（用户可自定义）" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=15;fontStyle=1;fontColor=#0D0D0D;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fillColor=#F9FAFC;strokeColor=#D7DCE6;strokeWidth=1;shadow=0;spacingLeft=14;spacingTop=10;" vertex="1" parent="1">
           <mxGeometry x="60" y="856" width="690" height="200" as="geometry"/>
         </mxCell>
-        <mxCell id="d4" value="manager state｜桌面壳设置、数据根元信息、UI 偏好&lt;br&gt;opencodex home｜可选承载 OPENCODEX_HOME&lt;br&gt;backups｜升级 / 导入 / 同步覆盖前备份&lt;br&gt;logs｜桌面壳操作日志与旋转日志&lt;br&gt;exports｜加密配置导出容器&lt;br&gt;cache｜可丢弃缓存&lt;br&gt;sync state｜WebDAV 冲突记录、远端索引与历史摘要" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;verticalAlign=top" vertex="1" parent="1">
+        <mxCell id="d4" value="manager state｜桌面壳设置、数据根元信息、UI 偏好&lt;br&gt;opencodex home｜可选承载 OPENCODEX_HOME&lt;br&gt;backups｜升级 / 导入 / 同步覆盖前备份&lt;br&gt;logs｜桌面壳操作日志与旋转日志&lt;br&gt;exports｜加密配置导出容器&lt;br&gt;cache｜可丢弃缓存&lt;br&gt;sync state｜WebDAV 冲突记录、远端索引与历史摘要" style="rounded=1;arcSize=8;whiteSpace=wrap;html=1;shadow=0;fillColor=#FAFAFB;strokeColor=#E6E6E8;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="78" y="896" width="654" height="142" as="geometry"/>
         </mxCell>
-        <mxCell id="L5" value="写入边界与架构级约束" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#f8cecc;strokeColor=#b85450" vertex="1" parent="1">
+        <mxCell id="L5" value="写入边界与架构级约束" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;align=left;fontSize=15;fontStyle=1;fontColor=#0D0D0D;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;fillColor=#FDF7F7;strokeColor=#EFD0CF;strokeWidth=1;shadow=0;spacingLeft=14;spacingTop=10;" vertex="1" parent="1">
           <mxGeometry x="790" y="856" width="670" height="200" as="geometry"/>
         </mxCell>
-        <mxCell id="b1" value="允许写入&lt;br&gt;Skills 目录同步；各客户端 MCP 服务器节点（唯一例外）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#d5e8d4;strokeColor=#82b366;verticalAlign=top" vertex="1" parent="1">
+        <mxCell id="b1" value="允许写入&lt;br&gt;Skills 目录同步；各客户端 MCP 服务器节点（唯一例外）" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;shadow=0;fillColor=#E8F4EF;strokeColor=#ABD7C7;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="806" y="896" width="638" height="58" as="geometry"/>
         </mxCell>
-        <mxCell id="b2" value="禁止写入&lt;br&gt;provider、路由、模型映射与 OpenCodex 核心运行配置&lt;br&gt;（一律走官方 CLI，本产品不提供写入通道）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#f8cecc;strokeColor=#b85450;verticalAlign=top" vertex="1" parent="1">
+        <mxCell id="b2" value="禁止写入&lt;br&gt;provider、路由、模型映射与 OpenCodex 核心运行配置&lt;br&gt;（一律走官方 CLI，本产品不提供写入通道）" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;shadow=0;fillColor=#FBECEC;strokeColor=#E4B1B0;strokeWidth=1;fontColor=#262626;fontSize=12;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="806" y="964" width="638" height="74" as="geometry"/>
         </mxCell>
-        <mxCell id="src" value="单一真相源 + 投影：管理器维护统一事实，客户端配置是投影；&lt;br&gt;原子写（同目录临时文件 + 原子替换）、备份先行、跨进程文件锁、凭据不出域。&lt;br&gt;来源：docs/02-项目核心/系统架构.md、集成与安全边界.md、数据与状态.md —— 本图为派生示意，不作为事实源。" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=11;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;verticalAlign=top" vertex="1" parent="1">
+        <mxCell id="src" value="单一真相源 + 投影：管理器维护统一事实，客户端配置是投影；&lt;br&gt;原子写（同目录临时文件 + 原子替换）、备份先行、跨进程文件锁、凭据不出域。&lt;br&gt;来源：docs/02-项目核心/系统架构.md、集成与安全边界.md、数据与状态.md —— 本图为派生示意，不作为事实源。" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;shadow=0;fillColor=#F6F6F7;strokeColor=#D9D9DB;strokeWidth=1;fontColor=#6E6E6E;fontSize=11;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;dashed=1;align=left;verticalAlign=top;" vertex="1" parent="1">
           <mxGeometry x="60" y="1076" width="1400" height="46" as="geometry"/>
         </mxCell>
-        <mxCell id="e_ipc" value="命令调用（Tauri IPC）· 前端不直接访问文件系统与网络" style="edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L1" target="L2">
+        <mxCell id="e_ipc" value="命令调用（Tauri IPC）· 前端不直接访问文件系统与网络" style="edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;strokeColor=#8A8A8E;strokeWidth=1.4;fontSize=11;fontColor=#6E6E6E;labelBackgroundColor=#FBFBFC;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L1" target="L2">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
-        <mxCell id="e_ext" value="子进程 / 文件 / 网络" style="edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L2" target="L3">
+        <mxCell id="e_ext" value="子进程 / 文件 / 网络" style="edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;strokeColor=#8A8A8E;strokeWidth=1.4;fontSize=11;fontColor=#6E6E6E;labelBackgroundColor=#FBFBFC;fontFamily=PingFang SC,Helvetica Neue,Arial,sans-serif;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L2" target="L3">
           <mxGeometry relative="1" as="geometry"/>
         </mxCell>
       </root>

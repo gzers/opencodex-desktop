@@ -18,20 +18,68 @@ from xml.sax.saxutils import escape
 HERE = os.path.dirname(os.path.abspath(__file__))
 PKG = os.path.dirname(HERE)
 
-BORDER = "html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=%d;%s"
-PAL = {
-    "front":   "fillColor=#dae8fc;strokeColor=#6c8ebf",
-    "backend": "fillColor=#d5e8d4;strokeColor=#82b366",
-    "ext":     "fillColor=#ffe6cc;strokeColor=#d79b00",
-    "data":    "fillColor=#fff2cc;strokeColor=#d6b656",
-    "state":   "fillColor=#e1d5e7;strokeColor=#9673a6",
-    "ok":      "fillColor=#d5e8d4;strokeColor=#82b366",
-    "danger":  "fillColor=#f8cecc;strokeColor=#b85450",
-    "note":    "fillColor=#f5f5f5;strokeColor=#999999;dashed=1",
-    "plain":   "fillColor=#ffffff;strokeColor=#666666",
+BG = "#FBFBFC"           # 画布底色（不用纯白）
+INK = "#262626"          # 正文（不用纯黑）
+INK_STRONG = "#0D0D0D"   # 标题 / 强调（官方 accent 近黑）
+MUTED = "#6E6E6E"        # 次要文字
+EDGE_C = "#8A8A8E"       # 连线
+FONT = "PingFang SC,Helvetica Neue,Arial,sans-serif"
+
+# kind -> (填充, 描边, 字色, 圆角)
+BOX_THEME = {
+    "proc":    ("#FAFAFB", "#DEDEE1", INK, 10),
+    "dec":     ("#F3F4F7", "#CFD3DA", INK, 10),
+    "state":   ("#F1F3F7", "#C7CDD9", INK, 24),
+    "plain":   ("#FAFAFB", "#E6E6E8", INK, 8),
+    "ok":      ("#E8F4EF", "#ABD7C7", INK, 10),
+    "danger":  ("#FBECEC", "#E4B1B0", INK, 10),
+    "note":    ("#F6F6F7", "#D9D9DB", MUTED, 10),
+    "front":   ("#EDF1FD", "#B7C6EE", INK, 10),
+    "backend": ("#E8F4EF", "#ABD7C7", INK, 10),
+    "ext":     ("#FBF2E8", "#E8C89E", INK, 10),
+    "data":    ("#F1F3F7", "#C7CDD9", INK, 10),
+    "chip_front":   ("#F3F6FE", "#DCE4F8", INK, 8),
+    "chip_backend": ("#F1F8F5", "#D6EAE1", INK, 8),
+    "chip_ext":     ("#FDF6EF", "#F2E2CE", INK, 8),
+    "start":   ("#2E2E2E", "#232323", "#F4F4F5", 40),
+    "end":     ("#2E2E2E", "#232323", "#F4F4F5", 40),
 }
-CONTAINER = ("html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;"
-             "fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;")
+CONTAINER_THEME = {
+    "front":   ("#F8FAFE", "#CFDAF4"),
+    "backend": ("#F6FBF9", "#C6E2D8"),
+    "ext":     ("#FDF9F4", "#F0DBBF"),
+    "data":    ("#F9FAFC", "#D7DCE6"),
+    "state":   ("#F9FAFC", "#D7DCE6"),
+    "danger":  ("#FDF7F7", "#EFD0CF"),
+    "ok":      ("#F6FBF9", "#C6E2D8"),
+    "plain":   ("#FAFAFB", "#E6E6E8"),
+}
+EDGE_STYLE = ("edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;"
+              "strokeColor=" + EDGE_C + ";strokeWidth=1.4;fontSize=11;fontColor=" + MUTED + ";"
+              "labelBackgroundColor=" + BG + ";fontFamily=" + FONT + ";")
+
+
+def _box_style(kind, fs, bold, valign):
+    f, st, fc, arc = BOX_THEME.get(kind, BOX_THEME["plain"])
+    style = (f"rounded=1;arcSize={arc};whiteSpace=wrap;html=1;shadow=0;"
+             f"fillColor={f};strokeColor={st};strokeWidth=1;fontColor={fc};"
+             f"fontSize={fs};fontFamily={FONT};")
+    if kind == "note":
+        style += "dashed=1;align=left;"
+    if bold:
+        style += "fontStyle=1;"
+    if valign != "middle":
+        style += f"verticalAlign={valign};"
+    return style
+
+
+def _container_style(kind):
+    f, st = CONTAINER_THEME.get(kind, CONTAINER_THEME["plain"])
+    return (f"rounded=1;arcSize=3;whiteSpace=wrap;html=1;verticalAlign=top;align=left;"
+            f"fontSize=15;fontStyle=1;fontColor={INK_STRONG};fontFamily={FONT};"
+            f"fillColor={f};strokeColor={st};strokeWidth=1;shadow=0;"
+            f"spacingLeft=14;spacingTop=10;")
+
 
 DIM = {
     "start": (260, 46), "end": (280, 46), "proc": (320, 58),
@@ -179,11 +227,7 @@ class Page:
 
     def box(self, cid, label, x, y, w, h, kind="proc", fs=12, bold=False,
             valign="middle", routable=True):
-        style = BORDER % (fs, PAL.get(kind, PAL["plain"]))
-        if bold:
-            style += ";fontStyle=1"
-        if valign != "middle":
-            style += f";verticalAlign={valign}"
+        style = _box_style(kind, fs, bold, valign)
         label = escape(label).replace("\n", "&lt;br&gt;")
         self.cells.append(
             f'        <mxCell id="{cid}" value="{label}" style="{style}" vertex="1" parent="1">\n'
@@ -194,13 +238,14 @@ class Page:
     def container(self, cid, label, x, y, w, h, kind="front"):
         label = escape(label).replace("\n", "&lt;br&gt;")
         self.cells.append(
-            f'        <mxCell id="{cid}" value="{label}" style="{CONTAINER + PAL[kind]}" vertex="1" parent="1">\n'
+            f'        <mxCell id="{cid}" value="{label}" style="{_container_style(kind)}" vertex="1" parent="1">\n'
             f'          <mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" as="geometry"/>\n'
             f'        </mxCell>')
         self._reg(cid, x, y, w, h, True)
 
     def title(self, cid, text, x, y, w, fs=22):
-        style = f"html=1;whiteSpace=wrap;align=left;fontSize={fs};fontStyle=1;"
+        style = (f"html=1;whiteSpace=wrap;align=left;fontSize={fs};fontStyle=1;"
+                 f"fontColor={INK_STRONG};fontFamily={FONT};")
         self.cells.append(
             f'        <mxCell id="{cid}" value="{escape(text)}" style="{style}" vertex="1" parent="1">\n'
             f'          <mxGeometry x="{x}" y="{y}" width="{w}" height="34" as="geometry"/>\n'
@@ -232,7 +277,7 @@ class Page:
             ss, ts, a_s, a_t = direct
             ex, ey = ANCHOR[ss]
             nx_, ny_ = ANCHOR[ts]
-            style = (f"edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;"
+            style = (f"{EDGE_STYLE}"
                      f"exitX={ex};exitY={ey};exitDx=0;exitDy=0;"
                      f"entryX={nx_};entryY={ny_};entryDx=0;entryDy=0;")
             if dashed:
@@ -253,13 +298,13 @@ class Page:
                 if best is None or cost < best[0]:
                     best = (cost, ss, ts, pts)
             if best is None:
-                style = "edgeStyle=none;html=1;endArrow=block;endFill=1;"
+                style = EDGE_STYLE
                 body = '          <mxGeometry relative="1" as="geometry"/>\n'
             else:
                 _, ss, ts, pts = best
                 ex, ey = ANCHOR[ss]
                 nx_, ny_ = ANCHOR[ts]
-                style = (f"edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;"
+                style = (f"{EDGE_STYLE}"
                          f"exitX={ex};exitY={ey};exitDx=0;exitDy=0;"
                          f"entryX={nx_};entryY={ny_};entryDx=0;entryDy=0;")
                 if dashed:
@@ -278,8 +323,8 @@ class Page:
             self._emit_edge(*spec)
         return "\n".join([
             f'  <diagram id="{self.did}" name="{escape(self.name)}">',
-            f'    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" '
-            f'connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="{self.w}" '
+            f'    <mxGraphModel dx="1400" dy="1000" grid="0" gridSize="10" guides="0" tooltips="1" '
+            f'connect="1" arrows="1" fold="1" background="{BG}" page="1" pageScale="1" pageWidth="{self.w}" '
             f'pageHeight="{self.h}" math="0" shadow="0">',
             '      <root>',
             '        <mxCell id="0"/>',
@@ -416,7 +461,7 @@ def state_page():
     for cid, label, kind, x, items in cols:
         p.container(cid, label, x, 70, 320, 60 + len(items) * 46 + 10, kind)
         for i, it in enumerate(items):
-            p.box(f"{cid}_{i}", it, x + 14, 110 + i * 46, 292, 38, kind="plain", fs=11)
+            p.box(f"{cid}_{i}", it, x + 14, 110 + i * 46, 292, 38, kind=f"chip_{kind}", fs=11)
     p.container("C4", "环境前置门禁（安装发现的前置条件，按 node → npm → ocx 短路）", 60, 668, 1200, 120, "state")
     for i, it in enumerate(["checking 检查中", "missing_node 缺 Node.js",
                             "missing_npm 缺 npm", "missing_ocx 缺 ocx"]):
