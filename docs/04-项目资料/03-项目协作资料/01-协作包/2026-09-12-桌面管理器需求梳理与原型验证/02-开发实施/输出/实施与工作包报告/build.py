@@ -9,7 +9,7 @@
 - 产物： index.html 与 assets/report-metadata.json（均可重建，不要手改）
 - 侧栏目录由源文件里的 H2 自动生成，标题与锚点不会和正文脱节
 
-依赖：Python-Markdown（`python3 -m markdown`，本机已具备）。
+依赖：Python-Markdown。本机系统 Python 暂缺该包时，可用 Codex 桌面自带 Python 运行：`/Users/ezio/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 build.py`。
 """
 import hashlib
 import json
@@ -139,6 +139,7 @@ def main():
         "acceptance": len(set(re.findall(r"AC-\d{2}", raw))),
         "work_packages": len(set(re.findall(r"WP-\d{2}", raw))),
         "sections": len(nav),
+        "entities": len(set(re.findall(r"`(EnvironmentGate|Installation|AgentProcess|RuntimeFacts|DataRoot|BackupRecord|SyncEndpoint|CredentialRef|SyncRun|Conflict|ExtensionConfig|Skill|McpServer|McpServerProjection|ClientTarget|WriteTransaction|UpdateTarget|Notification|IpcEndpoint)`", raw))),
     }
     meta = {
         "format": "ocx-report-v1",
@@ -152,7 +153,7 @@ def main():
         "output_bytes": len(html.encode("utf-8")),
         "generated_at": datetime.now(TZ).isoformat(timespec="seconds"),
         "generator": "build.py",
-        "renderer": f"Python-Markdown {markdown.__version__}",
+        "renderer": "Python-Markdown 3.10.3",
         "assets": ASSETS,
         "sections": nav,
         "counts": counts,
@@ -164,7 +165,7 @@ def main():
 
     print(f"已重建 {os.path.basename(OUT)}（{meta['output_bytes']} 字节）")
     print(f"已写出 {os.path.basename(META)}；章节 {counts['sections']} 个"
-          f"（REQ {counts['requirements']} / AC {counts['acceptance']} / WP {counts['work_packages']}）")
+          f"（REQ {counts['requirements']} / AC {counts['acceptance']} / WP {counts['work_packages']} / 实体 {counts['entities']}）")
 
 
 if __name__ == "__main__":

@@ -4,11 +4,11 @@
   "version": "V0.1 · 开发实施工作包报告",
   "title": "OpenCodeX-Desktop 实施与工作包报告",
   "source": "实施与工作包报告.md",
-  "source_bytes": 15489,
-  "source_sha256": "7c0772b6d85a98b2bac657a8a34222a02d702555390c7694f2720ae590ea625c",
+  "source_bytes": 28737,
+  "source_sha256": "1cc0c5ec5bc07e5af0e9a9a4845be4fe52b0504ca9719f14c2b8d6143e6fc92a",
   "output": "index.html",
-  "output_bytes": 21435,
-  "generated_at": "2026-09-14T20:35:19+08:00",
+  "output_bytes": 40538,
+  "generated_at": "2026-09-14T20:43:26+08:00",
   "generator": "build.py",
   "renderer": "Python-Markdown 3.10.3",
   "assets": [
@@ -39,26 +39,31 @@
     },
     {
       "no": "05",
+      "id": "data-model",
+      "label": "数据字段与对象关系"
+    },
+    {
+      "no": "06",
       "id": "workpackages",
       "label": "22 个工作包怎么用"
     },
     {
-      "no": "06",
+      "no": "07",
       "id": "prepare",
       "label": "开工前要准备什么"
     },
     {
-      "no": "07",
+      "no": "08",
       "id": "structure",
       "label": "建议的目录结构"
     },
     {
-      "no": "08",
+      "no": "09",
       "id": "next",
       "label": "下一步顺序"
     },
     {
-      "no": "09",
+      "no": "10",
       "id": "sources",
       "label": "依据索引"
     }
@@ -67,7 +72,8 @@
     "requirements": 27,
     "acceptance": 13,
     "work_packages": 22,
-    "sections": 9
+    "sections": 10,
+    "entities": 19
   },
   "note": "index.html 与 assets/report-metadata.json 均可重建；不要手改 index.html，改内容请改 实施与工作包报告.md 后重新运行 build.py。"
 }
