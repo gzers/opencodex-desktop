@@ -3927,9 +3927,10 @@ document.querySelectorAll('[data-act="panel"]').forEach(button=>{button.onclick=
 document.querySelectorAll('[data-act="logs"]').forEach(button=>{button.onclick=()=>setRoute('logs')});
 document.querySelectorAll('[data-act="advice"]').forEach(button=>{button.onclick=()=>openRestoreConfirm(currentState)});
 
-// 面板快捷操作：单一品牌悬浮球，鼠标悬浮展开，键盘或触屏可点击展开，可在面板内拖拽。
+// 面板快捷操作：单一品牌悬浮球，鼠标悬浮展开；按住后进入拖拽模式，键盘仍可切换。
 let panelHubOpen=false;
 let panelHubHoverTimer=0;
+let panelHubSuppressHover=false;
 function setPanelHubOpen(next){
   panelHubOpen=next;
   window.clearTimeout(panelHubHoverTimer);
@@ -3962,19 +3963,20 @@ function positionPanelHubMenu(){
   menu.style.visibility='';
 }
 const panelHub=document.getElementById('panelHub');
-panelHub?.addEventListener('pointerenter',()=>{
-  if(event.pointerType==='touch') return;
+panelHub?.addEventListener('pointerenter',event=>{
+  if(panelHubSuppressHover||event.pointerType==='touch') return;
   window.clearTimeout(panelHubHoverTimer);
   setPanelHubOpen(true);
 });
 panelHub?.addEventListener('pointerleave',event=>{
-  if(event.pointerType==='touch') return;
+  if(panelHubSuppressHover||event.pointerType==='touch') return;
   window.clearTimeout(panelHubHoverTimer);
   panelHubHoverTimer=window.setTimeout(()=>{
     if(!panelHub.matches(':hover')) setPanelHubOpen(false);
   },120);
 });
-document.getElementById('panelHubToggle')?.addEventListener('click',()=>{
+document.getElementById('panelHubToggle')?.addEventListener('click',event=>{
+  if(event.detail>0) return;
   setPanelHubOpen(!panelHubOpen);
 });
 document.addEventListener('keydown',event=>{
@@ -3989,8 +3991,10 @@ document.addEventListener('click',event=>{
   if(!hub||!handle) return;
   let dragging=false,moved=false,startX=0,startY=0,originX=0,originY=0;
   handle.addEventListener('pointerdown',event=>{
-    if(panelHubOpen) return;
-    if(event.pointerType==='mouse') return;
+    if(event.pointerType!=='mouse') return;
+    window.clearTimeout(panelHubHoverTimer);
+    setPanelHubOpen(false);
+    panelHubSuppressHover=true;
     event.preventDefault();
     handle.setPointerCapture(event.pointerId);
     dragging=true;moved=false;
@@ -4009,7 +4013,11 @@ document.addEventListener('click',event=>{
     const y=Math.min(Math.max(12,originY+dy),parent.height-rect.height-12);
     hub.style.left=x+'px';hub.style.top=y+'px';hub.style.bottom='auto';hub.style.right='auto';
   });
-  handle.addEventListener('pointerup',()=>{dragging=false;});
+  handle.addEventListener('pointerup',event=>{
+    dragging=false;
+    if(event.pointerType!=='mouse') return;
+    window.setTimeout(()=>{panelHubSuppressHover=false;},0);
+  });
 })();
 function showPanel(show, fromRoute=false){
   const next=show;
