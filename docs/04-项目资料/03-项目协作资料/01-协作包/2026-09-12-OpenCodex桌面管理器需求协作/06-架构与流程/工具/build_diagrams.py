@@ -6,9 +6,10 @@
 输出： 上级目录（06-架构与流程/）下的三个 .drawio 文件。
 
 连线规则（本脚本强制）：
-  · 只走水平 / 竖直段（正交），不使用斜线或自动绕线飞线；
-  · 连线把节点与注释框当作障碍物，用 A* 在正交网格上绕开，
-    不会穿过任何节点或注释框。
+  1. 每条连线只用**一条直线段**：要么水平、要么竖直，没有折角、没有斜线；
+     因此端点节点必须在同一水平线（E→W / W→E）或同一竖直线（S→N / N→S）上。
+  2. 直线段不得穿过任何节点 / 注释框；不满足时不画折线，而是调整版面使直连成立。
+  3. 只有极少数无法直连的情况才会退回正交折线，并在生成时打印 WARN 提示。
 """
 import os
 import heapq
@@ -38,19 +39,16 @@ DIM = {
     "danger": (340, 72), "note": (360, 80),
 }
 
-INFLATE = 8      # 障碍物外扩，保证连线与节点留出间距
-STUB = 14        # 连接点向外引出的短段长度
-TURN = 22        # 每个拐弯的附加代价，鼓励直线
-SIDES = [("S", "N"), ("E", "W"), ("N", "S"), ("W", "E"),
-         ("E", "N"), ("N", "E"), ("W", "S"), ("S", "W"),
-         ("E", "S"), ("S", "E"), ("W", "N"), ("N", "W"),
-         ("E", "E"), ("W", "W"), ("S", "S"), ("N", "N")]
-SIDE_PEN = {("S", "N"): 0, ("E", "W"): 0, ("N", "S"): 10, ("W", "E"): 10}
+INFLATE = 8       # 障碍物外扩，保证直线段与节点留出间距
+TURN = 22         # 折线回退时的拐弯代价
+STUB = 14         # 折线回退时端点引出的短段
 ANCHOR = {"E": (1, 0.5), "W": (0, 0.5), "S": (0.5, 1), "N": (0.5, 0)}
+STRAIGHT = [("E", "W"), ("S", "N"), ("W", "E"), ("N", "S")]
+WARNINGS = []
 
 
-# ---------------------------------------------------------------- 正交路由
-def _anchor(rect, side, stub=STUB):
+# ---------------------------------------------------------------- 几何工具
+def _anchor(rect, side, stub=0):
     x, y, w, h = rect
     if side == "E":
         return (x + w, y + h / 2), (x + w + stub, y + h / 2)
@@ -61,27 +59,25 @@ def _anchor(rect, side, stub=STUB):
     return (x + w / 2, y), (x + w / 2, y - stub)
 
 
-def _inside(p, obs):
-    x, y = p
-    for (rx, ry, rw, rh) in obs:
-        if rx < x < rx + rw and ry < y < ry + rh:
-            return True
-    return False
-
-
 def _clear(p1, p2, obs):
     (x1, y1), (x2, y2) = p1, p2
-    if abs(y1 - y2) < 1e-6:                      # 水平段
+    if abs(y1 - y2) < 1e-6:
         lo, hi = sorted((x1, x2))
         for (rx, ry, rw, rh) in obs:
             if ry < y1 < ry + rh and max(lo, rx) < min(hi, rx + rw) - 1e-6:
                 return False
         return True
-    lo, hi = sorted((y1, y2))                    # 竖直段
+    lo, hi = sorted((y1, y2))
     for (rx, ry, rw, rh) in obs:
         if rx < x1 < rx + rw and max(lo, ry) < min(hi, ry + rh) - 1e-6:
             return False
     return True
+
+
+# 折线回退用（仅当无法直连时）
+def _inside(p, obs):
+    x, y = p
+    return any(rx < x < rx + rw and ry < y < ry + rh for (rx, ry, rw, rh) in obs)
 
 
 def _compress(pts):
@@ -105,9 +101,7 @@ def _turns(pts):
     n = 0
     for i in range(1, len(pts) - 1):
         a, b, c = pts[i - 1], pts[i], pts[i + 1]
-        d1 = (b[0] - a[0] != 0)
-        d2 = (c[0] - b[0] != 0)
-        if d1 != d2:
+        if (b[0] - a[0] != 0) != (c[0] - b[0] != 0):
             n += 1
     return n
 
@@ -118,7 +112,6 @@ def _plen(pts):
 
 
 def _route(start, end, rects, page_w, page_h, inflate=INFLATE):
-    """在正交网格上做 A*；返回从 start 到 end 的折线（含端点），失败返回 None。"""
     obs = [(x - inflate, y - inflate, w + 2 * inflate, h + 2 * inflate)
            for (x, y, w, h) in rects]
     xs = {start[0], end[0], 20.0, float(page_w - 20)}
@@ -126,18 +119,15 @@ def _route(start, end, rects, page_w, page_h, inflate=INFLATE):
     for (rx, ry, rw, rh) in obs:
         xs.update((rx, rx + rw))
         ys.update((ry, ry + rh))
-    xs = sorted(xs)
-    ys = sorted(ys)
+    xs, ys = sorted(xs), sorted(ys)
     xi = {v: i for i, v in enumerate(xs)}
     yi = {v: i for i, v in enumerate(ys)}
     nx, ny = len(xs), len(ys)
-
     free = [[not _inside((xs[i], ys[j]), obs) for j in range(ny)] for i in range(nx)]
     si, sj = xi[start[0]], yi[start[1]]
     ei, ej = xi[end[0]], yi[end[1]]
     if not free[si][sj] or not free[ei][ej]:
         return None
-
     INF = float("inf")
     dist = {(si, sj, 0): 0.0}
     prev = {}
@@ -165,11 +155,9 @@ def _route(start, end, rects, page_w, page_h, inflate=INFLATE):
                 heapq.heappush(pq, (cost, ni, nj, nd))
     if goal is None:
         return None
-    path = []
-    cur = goal
+    path, cur = [], goal
     while cur is not None:
-        i, j, _ = cur
-        path.append((xs[i], ys[j]))
+        path.append((xs[cur[0]], ys[cur[1]]))
         cur = prev.get(cur)
     path.reverse()
     return _compress(path)
@@ -179,13 +167,13 @@ class Page:
     def __init__(self, did, name, w, h):
         self.did, self.name, self.w, self.h = did, name, w, h
         self.cells = []
-        self.rects = []          # 障碍物（节点 / 容器 / 注释 / 标题）
-        self.specs = []          # 待布线的连线
-        self.node_rect = {}      # 连线端点对应的矩形
+        self.rects = []        # [(cid, x, y, w, h)]
+        self.specs = []
+        self.node_rect = {}
         self._n = 0
 
     def _reg(self, cid, x, y, w, h, routable=True):
-        self.rects.append((x, y, w, h))
+        self.rects.append((cid, x, y, w, h))
         if routable:
             self.node_rect[cid] = (x, y, w, h)
 
@@ -204,10 +192,9 @@ class Page:
         self._reg(cid, x, y, w, h, routable)
 
     def container(self, cid, label, x, y, w, h, kind="front"):
-        style = CONTAINER + PAL[kind]
         label = escape(label).replace("\n", "&lt;br&gt;")
         self.cells.append(
-            f'        <mxCell id="{cid}" value="{label}" style="{style}" vertex="1" parent="1">\n'
+            f'        <mxCell id="{cid}" value="{label}" style="{CONTAINER + PAL[kind]}" vertex="1" parent="1">\n'
             f'          <mxGeometry x="{x}" y="{y}" width="{w}" height="{h}" as="geometry"/>\n'
             f'        </mxCell>')
         self._reg(cid, x, y, w, h, True)
@@ -225,21 +212,24 @@ class Page:
 
     def _emit_edge(self, cid, src, tgt, label, dashed):
         rs, rt = self.node_rect[src], self.node_rect[tgt]
-        best = None
-        for ss, ts in SIDES:
-            a_s, s_s = _anchor(rs, ss)
-            a_t, s_t = _anchor(rt, ts)
-            pts = _route(s_s, s_t, self.rects, self.w, self.h)
-            if pts is None:
-                continue
-            cost = _plen(pts) + 2 * STUB + TURN * _turns(pts) + SIDE_PEN.get((ss, ts), 45)
-            if best is None or cost < best[0]:
-                best = (cost, ss, ts, pts)
-        if best is None:
-            style = "edgeStyle=none;html=1;endArrow=block;endFill=1;"
-            body = '          <mxGeometry relative="1" as="geometry"/>\n'
-        else:
-            _, ss, ts, pts = best
+        obs = [(x - INFLATE, y - INFLATE, w + 2 * INFLATE, h + 2 * INFLATE)
+               for (rid, x, y, w, h) in self.rects if rid not in (src, tgt)]
+        direct = None
+        for ss, ts in STRAIGHT:
+            a_s, _ = _anchor(rs, ss)
+            a_t, _ = _anchor(rt, ts)
+            if ss in ("E", "W"):
+                if abs(a_s[1] - a_t[1]) > 0.6:
+                    continue
+            else:
+                if abs(a_s[0] - a_t[0]) > 0.6:
+                    continue
+            if _clear(a_s, a_t, obs):
+                direct = (ss, ts, a_s, a_t)
+                break
+
+        if direct is not None:
+            ss, ts, a_s, a_t = direct
             ex, ey = ANCHOR[ss]
             nx_, ny_ = ANCHOR[ts]
             style = (f"edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;"
@@ -247,20 +237,41 @@ class Page:
                      f"entryX={nx_};entryY={ny_};entryDx=0;entryDy=0;")
             if dashed:
                 style += "dashed=1;"
-            pts_xml = "".join(
-                f'            <mxPoint x="{round(px, 1)}" y="{round(py, 1)}"/>\n' for px, py in pts)
-            body = ('          <mxGeometry relative="1" as="geometry">\n'
-                    '            <Array as="points">\n'
-                    f'{pts_xml}'
-                    '            </Array>\n'
-                    '          </mxGeometry>\n')
-        if dashed and best is None:
-            style += "dashed=1;"
+            body = '          <mxGeometry relative="1" as="geometry"/>\n'
+        else:
+            WARNINGS.append(f"[{self.name}] {cid}: {src}->{tgt} 无法直连，退回正交折线")
+            best = None
+            for ss, ts in STRAIGHT + [("E", "N"), ("N", "E"), ("W", "S"), ("S", "W"),
+                                      ("E", "S"), ("S", "E"), ("W", "N"), ("N", "W"),
+                                      ("E", "E"), ("W", "W"), ("S", "S"), ("N", "N")]:
+                a_s, s_s = _anchor(rs, ss, STUB)
+                a_t, s_t = _anchor(rt, ts, STUB)
+                pts = _route(s_s, s_t, [r[1:] for r in self.rects], self.w, self.h)
+                if pts is None:
+                    continue
+                cost = _plen(pts) + TURN * _turns(pts)
+                if best is None or cost < best[0]:
+                    best = (cost, ss, ts, pts)
+            if best is None:
+                style = "edgeStyle=none;html=1;endArrow=block;endFill=1;"
+                body = '          <mxGeometry relative="1" as="geometry"/>\n'
+            else:
+                _, ss, ts, pts = best
+                ex, ey = ANCHOR[ss]
+                nx_, ny_ = ANCHOR[ts]
+                style = (f"edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;"
+                         f"exitX={ex};exitY={ey};exitDx=0;exitDy=0;"
+                         f"entryX={nx_};entryY={ny_};entryDx=0;entryDy=0;")
+                if dashed:
+                    style += "dashed=1;"
+                pts_xml = "".join(f'            <mxPoint x="{round(px, 1)}" y="{round(py, 1)}"/>\n'
+                                  for px, py in pts)
+                body = ('          <mxGeometry relative="1" as="geometry">\n'
+                        '            <Array as="points">\n' + pts_xml + '            </Array>\n'
+                        '          </mxGeometry>\n')
         self.cells.append(
             f'        <mxCell id="{cid}" value="{escape(label)}" style="{style}" edge="1" parent="1" '
-            f'source="{src}" target="{tgt}">\n'
-            f'{body}'
-            f'        </mxCell>')
+            f'source="{src}" target="{tgt}">\n{body}        </mxCell>')
 
     def xml(self):
         for spec in self.specs:
@@ -284,12 +295,12 @@ def write_mxfile(path, pages):
     body = "\n".join(p.xml() for p in pages)
     with open(path, "w", encoding="utf-8") as fh:
         fh.write('<mxfile host="app.diagrams.net" type="device">\n'
-                 f'{body}\n'
-                 '</mxfile>\n')
+                 f'{body}\n</mxfile>\n')
     print("written:", os.path.relpath(path, PKG))
 
 
 def vchain(page, specs, cx=420, y0=96, gap=46, prefix="m"):
+    """主链：所有节点共用同一中心 x，保证相邻节点可用一条竖直直线连接。"""
     pos, y = {}, y0
     for sid, label, kind in specs:
         w, h = DIM[kind]
@@ -302,9 +313,12 @@ def vchain(page, specs, cx=420, y0=96, gap=46, prefix="m"):
     return pos, y
 
 
-def _b(page, cid, label, y, kind="danger", cx=980, w=None, h=None):
+def _side(page, cid, label, anchor, kind="danger", cx=980, w=None, h=None):
+    """右侧结果框：垂直中心与 anchor 节点严格对齐，保证一条水平直线连接。"""
+    ax, ay, aw, ah = anchor
     w = w or DIM[kind][0]
     h = h or DIM[kind][1]
+    y = ay + (ah - h) / 2
     page.box(cid, label, cx - w // 2, y, w, h, kind=kind)
     return cid
 
@@ -319,10 +333,8 @@ def arch_page():
     p.title("t", "OpenCodeX-Desktop 整体架构（分层 / 模块 / 外部依赖 / 写入边界）", 60, 16, 1440)
 
     p.container("L1", "前端界面层（渲染在 Tauri v2 WebView 内）", 60, 70, 1400, 122, "front")
-    fronts = ["概览", "面板", "拓展", "日志与诊断", "设置", "托盘与原生菜单"]
-    fw, fg = 214, 12
-    for i, name in enumerate(fronts):
-        p.box(f"f{i}", name, 78 + i * (fw + fg), 110, fw, 66, kind="plain", bold=True)
+    for i, name in enumerate(["概览", "面板", "拓展", "日志与诊断", "设置", "托盘与原生菜单"]):
+        p.box(f"f{i}", name, 78 + i * (214 + 12), 110, 214, 66, kind="plain", bold=True)
 
     p.edge("e_ipc", "L1", "L2", "命令调用（Tauri IPC）· 前端不直接访问文件系统与网络")
 
@@ -388,7 +400,6 @@ def arch_page():
 def state_page():
     p = Page("state", "状态模型", 1320, 990)
     p.title("t", "三维状态模型（互相独立、可同时成立）", 60, 16, 1200)
-
     cols = [
         ("C1", "运行状态（代理进程）", "front", 60,
          ["not_found 未发现安装", "loading 正在探测", "stopped 已发现未运行", "starting 正在启动",
@@ -406,12 +417,10 @@ def state_page():
         p.container(cid, label, x, 70, 320, 60 + len(items) * 46 + 10, kind)
         for i, it in enumerate(items):
             p.box(f"{cid}_{i}", it, x + 14, 110 + i * 46, 292, 38, kind="plain", fs=11)
-
     p.container("C4", "环境前置门禁（安装发现的前置条件，按 node → npm → ocx 短路）", 60, 668, 1200, 120, "state")
-    pre = ["checking 检查中", "missing_node 缺 Node.js", "missing_npm 缺 npm", "missing_ocx 缺 ocx"]
-    for i, it in enumerate(pre):
+    for i, it in enumerate(["checking 检查中", "missing_node 缺 Node.js",
+                            "missing_npm 缺 npm", "missing_ocx 缺 ocx"]):
         p.box(f"G{i}", it, 78 + i * 300, 708, 280, 60, kind="plain", fs=11)
-
     p.box("cx", "可同时成立的组合示例\nrunning ＋ syncing ＋ backing_up\n\n"
                 "渲染规则：动作按状态渲染，不渲染无解释的禁用按钮；用状态说明文字替代灰按钮传达原因。\n"
                 "阶段编号（P0/P1/P2）不出现在应用界面，界面只用功能名与状态（规划中 / 可用）。\n"
@@ -434,10 +443,10 @@ def flow_discovery():
         ("d4", "发现安装?", "dec"),
         ("e1", "stopped：进入运行状态机", "end"),
     ], cx=430, prefix="a")
-    _b(p, "n1", "missing_node：展示缺失项与最短命令\n有 Homebrew → brew install node\n否则 → Node.js LTS 官方安装渠道", pos["d1"][1], cx=980, w=360, h=96)
-    _b(p, "n2", "missing_npm：提示重装 Node.js LTS\n或检查 PATH", pos["d2"][1], cx=980, w=360, h=76)
-    _b(p, "n3", "missing_ocx：展示官方 npm 包安装命令\n（示例命令非最终契约）", pos["d3"][1], cx=980, w=360, h=76)
-    _b(p, "n4", "not_found：只读说明，不引导 npm 安装", pos["d4"][1], cx=980, w=360, h=60)
+    _side(p, "n1", "missing_node：展示缺失项与最短命令\n有 Homebrew → brew install node\n否则 → Node.js LTS 官方安装渠道", pos["d1"], w=360, h=96)
+    _side(p, "n2", "missing_npm：提示重装 Node.js LTS 或检查 PATH", pos["d2"], w=360, h=76)
+    _side(p, "n3", "missing_ocx：展示官方 npm 包安装命令\n（示例命令非最终契约）", pos["d3"], w=360, h=76)
+    _side(p, "n4", "not_found：只读说明，不引导 npm 安装", pos["d4"], w=360, h=60)
     p.edge("b_e1", "a_d1", "n1", "否")
     p.edge("b_e2", "a_d2", "n2", "否")
     p.edge("b_e3", "a_d3", "n3", "否")
@@ -451,7 +460,7 @@ def flow_discovery():
 
 # ---------------------------------------------------------------- 流程 02
 def flow_run():
-    p = Page("f02", "02-正常启停", 1320, 1220)
+    p = Page("f02", "02-正常启停", 1320, 1180)
     p.title("t", "流程 02｜正常启停与运行状态迁移", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "stopped（已发现未运行）", "start"),
@@ -460,22 +469,18 @@ def flow_run():
         ("st", "starting", "state"),
         ("pd", "pending（端口可达未 ready）", "state"),
         ("d", "ready 通过?", "dec"),
-        ("ok", "running（健康 / 端口 / PID / 日志入口）", "ok"),
+        ("ok", "running（健康 / 端口 / PID / 日志入口）\n可用动作：打开面板 / 查看日志", "ok"),
         ("p3", "停止（需确认）", "proc"),
         ("p4", "stopping", "state"),
         ("e1", "stopped", "end"),
     ], cx=430, prefix="a")
-    _b(p, "fail", "starting_failed\n查看错误 / 重试启动", pos["d"][1], cx=980, w=340, h=86)
-    _b(p, "rst", "重启（需确认）", pos["ok"][1], cx=980, w=300, h=58, kind="proc")
-    _b(p, "act", "打开面板 / 查看日志\n（面板不可用时回退概览）", pos["ok"][1] + 120, cx=980, w=300, h=76, kind="note")
+    _side(p, "fail", "starting_failed\n查看错误 / 重试启动", pos["d"], w=340, h=86)
+    _side(p, "rst", "重启（需确认）", pos["ok"], kind="proc", w=300, h=58)
     p.edge("b_e1", "a_d", "fail", "否")
     p.edge("b_e2", "a_ok", "rst", "重启")
-    p.edge("b_e3", "rst", "a_st")
-    p.edge("b_e4", "a_ok", "act", "查看")
-    p.edge("b_e5", "fail", "a_st", "重试启动")
-    _note(p, "nt", "状态源优先使用官方 ocx status --json / health / ready / doctor；停止、重启前均需确认；\n"
-                   "动作按状态渲染，不渲染无解释的禁用按钮。",
-          60, y + 10, 1200, 58)
+    _note(p, "nt", "状态源优先使用官方 ocx status --json / health / ready / doctor；停止、重启前均需确认；动作按状态渲染，不渲染无解释的禁用按钮。\n"
+                   "分支语义：启动失败可查看错误并「重试启动」（回到 starting）；重启（需确认）后回到 starting；面板不可用时回退概览。",
+          60, y + 10, 1200, 74)
     p.h = int(y) + 130
     return p
 
@@ -501,7 +506,7 @@ def flow_collect():
 
 # ---------------------------------------------------------------- 流程 04
 def flow_write():
-    p = Page("f04", "04-受控写入", 1320, 1180)
+    p = Page("f04", "04-受控写入", 1320, 1120)
     p.title("t", "流程 04｜受控写入（扩展配置：Skills / MCP）", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "用户动作（扩展管理 / 迁移 / 同步）", "start"),
@@ -512,30 +517,28 @@ def flow_write():
         ("d", "成功?", "dec"),
         ("ok", "succeeded", "ok"),
     ], cx=430, prefix="a")
-    _b(p, "bf", "备份失败 → 阻断，不写入", pos["p2"][1], cx=980, w=320, h=58)
-    _b(p, "rb", "rolling_back → failed\n保留备份，可定位 / 可校验 / 可恢复", pos["d"][1], cx=980, w=360, h=76)
+    _side(p, "bf", "备份失败 → 阻断，不写入", pos["p2"], w=320, h=58)
+    _side(p, "rb", "rolling_back → failed\n保留备份，可定位 / 可校验 / 可恢复", pos["d"], w=360, h=76)
     p.edge("b_e1", "a_p2", "bf", "失败")
     p.edge("b_e2", "a_d", "rb", "否")
-    p.edge("b_e3", "bf", "a_s", "修好后重来")
     _note(p, "nt", "· 只改目标节点，保留未知字段与注释；解析失败即拒绝，不做「尽力而为」的部分写回\n"
-                   "· 不改写同目录的凭据、认证等非目标文件\n"
-                   "· 检测到外部改写或客户端间不一致进入待处理，不静默覆盖\n"
-                   "· 卸载 Skills、删除 MCP 等删除类操作进入回收区，可恢复\n"
-                   "· 扩展配置写入由单一状态锁串行化，避免并发动作互相覆盖",
-          60, y + 10, 1200, 118)
-    p.h = int(y) + 190
+                   "· 不改写同目录的凭据、认证等非目标文件；检测到外部改写或客户端间不一致进入待处理，不静默覆盖\n"
+                   "· 卸载 Skills、删除 MCP 等删除类操作进入回收区，可恢复；写入由单一状态锁串行化\n"
+                   "· 分支语义：备份失败即阻断、不写入；写入失败自动回滚，条件修好后可重新发起动作",
+          60, y + 10, 1200, 100)
+    p.h = int(y) + 160
     return p
 
 
 # ---------------------------------------------------------------- 流程 05
 def flow_dataroot():
-    p = Page("f05", "05-数据目录切换", 1320, 1320)
+    p = Page("f05", "05-数据目录切换", 1320, 1260)
     p.title("t", "流程 05｜数据目录切换（引用优先、迁移可选）", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "选择目录", "start"),
         ("p1", "检查目录（可写 / 空间 / 是否已有数据）", "proc"),
         ("d1", "检查通过?", "dec"),
-        ("p2", "检测已有数据 → 选择「引用」或「迁移」", "proc"),
+        ("p2", "检测已有数据 → 选择「引用」或「迁移」\n引用：不搬动数据，直接更新配置并恢复代理", "proc"),
         ("p3", "运行前备份", "proc"),
         ("p4", "停止代理", "proc"),
         ("p5", "执行迁移", "proc"),
@@ -544,23 +547,21 @@ def flow_dataroot():
         ("p7", "更新配置 → 恢复代理", "proc"),
         ("ok", "成功", "ok"),
     ], cx=430, prefix="a")
-    _b(p, "blk", "目录不可写 / 空间不足 / 数据结构异常\n→ 检查阶段阻断，保持原数据目录", pos["d1"][1], cx=980, w=360, h=86)
-    _b(p, "rbk", "回滚到原数据目录\n备份可定位 / 可校验 / 可恢复", pos["d2"][1], cx=980, w=360, h=76)
+    _side(p, "blk", "目录不可写 / 空间不足 / 数据结构异常\n→ 检查阶段阻断，保持原数据目录", pos["d1"], w=360, h=86)
+    _side(p, "rbk", "回滚到原数据目录\n备份可定位 / 可校验 / 可恢复", pos["d2"], w=360, h=76)
     p.edge("b_e1", "a_d1", "blk", "否")
     p.edge("b_e2", "a_d2", "rbk", "否")
-    p.edge("b_e3", "blk", "a_s", "保持原数据目录")
-    p.edge("b_e4", "rbk", "a_s", "保持原数据目录")
-    p.edge("b_e5", "a_p2", "a_p7", "引用（默认，不搬动数据）")
-    _note(p, "nt", "失败分支：目录不可写 / 空间不足 / 迁移中断 / 校验失败（自动回滚并保留原数据目录）。\n"
-                   "取消分支：确认阶段取消，保持原数据目录。关联：REQ-04，OQ-02。",
-          60, y + 10, 1200, 60)
-    p.h = int(y) + 130
+    _note(p, "nt", "· 失败分支：目录不可写 / 空间不足 / 迁移中断 / 校验失败（自动回滚并保留原数据目录，保持原数据目录）\n"
+                   "· 取消分支：确认阶段取消，保持原数据目录；引用分支不搬动数据\n"
+                   "· 关联：REQ-04，OQ-02",
+          60, y + 10, 1200, 84)
+    p.h = int(y) + 140
     return p
 
 
 # ---------------------------------------------------------------- 流程 06
 def flow_restore():
-    p = Page("f06", "06-Restore 引导", 1320, 1040)
+    p = Page("f06", "06-Restore 引导", 1320, 1020)
     p.title("t", "流程 06｜Restore 引导（外部接管 / at-risk）", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "风险状态：at_risk / external_takeover", "start"),
@@ -572,22 +573,20 @@ def flow_restore():
         ("d", "结果?", "dec"),
         ("ok", "成功", "ok"),
     ], cx=430, prefix="a")
-    _b(p, "fail", "失败 / 取消\n展示恢复建议", pos["d"][1], cx=980, w=340, h=76)
-    _b(p, "rf", "刷新状态", pos["d"][1] + 130, cx=980, w=300, h=58, kind="proc")
+    _side(p, "fail", "失败 / 取消\n展示恢复建议", pos["d"], w=340, h=76)
+    _side(p, "rf", "刷新状态", pos["ok"], kind="proc", w=300, h=58)
     p.edge("b_e1", "a_d", "fail", "否")
     p.edge("b_e2", "a_ok", "rf", "刷新")
-    p.edge("b_e3", "fail", "rf")
-    p.edge("b_e4", "rf", "a_s", "回到风险观测")
-    _note(p, "nt", "restore 一律走官方路径，桌面壳不自动修改配置、不做私有覆盖逻辑；\n"
-                   "过程展示前置备份、执行中与结果状态。关联：REQ-10，OQ-03。",
-          60, y + 10, 1200, 58)
+    _note(p, "nt", "restore 一律走官方路径，桌面壳不自动修改配置、不做私有覆盖逻辑；过程展示前置备份、执行中与结果状态。\n"
+                   "分支语义：成功、失败或取消后均可「刷新状态」，回到风险观测。关联：REQ-10，OQ-03。",
+          60, y + 10, 1200, 68)
     p.h = int(y) + 130
     return p
 
 
 # ---------------------------------------------------------------- 流程 07
 def flow_import():
-    p = Page("f07", "07-导入配置", 1320, 1380)
+    p = Page("f07", "07-导入配置", 1320, 1340)
     p.title("t", "流程 07｜导入加密配置（含异常分支）", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "选择加密容器", "start"),
@@ -601,24 +600,23 @@ def flow_import():
         ("d3", "写入成功?", "dec"),
         ("ok", "succeeded", "ok"),
     ], cx=430, prefix="a")
-    _b(p, "rej", "口令错误 / 容器损坏 / 版本不兼容\n→ 拒绝并说明支持范围，不部分写入", pos["d1"][1], cx=980, w=360, h=86)
-    _b(p, "bf", "备份失败 → 阻断", pos["d2"][1], cx=980, w=320, h=58)
-    _b(p, "rb", "自动回滚\n回滚失败 → 保留上一版本 + 原因", pos["d3"][1], cx=980, w=340, h=76)
+    _side(p, "rej", "口令错误 / 容器损坏 / 版本不兼容\n→ 拒绝并说明支持范围，不部分写入", pos["d1"], w=360, h=86)
+    _side(p, "bf", "备份失败 → 阻断", pos["d2"], w=320, h=58)
+    _side(p, "rb", "自动回滚\n回滚失败 → 保留上一版本 + 原因", pos["d3"], w=340, h=76)
     p.edge("b_e1", "a_d1", "rej", "否")
     p.edge("b_e2", "a_d2", "bf", "否")
     p.edge("b_e3", "a_d3", "rb", "否")
-    p.edge("b_e4", "rej", "a_s", "用户取消 / 重新选择容器")
-    _note(p, "nt", "· 认证加密自带完整性校验；解密或校验失败即拒绝，不部分导入\n"
-                   "· 只接受白名单字段与合法路径，拒绝未知字段与越界路径\n"
-                   "· 导出为全量内容（含敏感内容），必须进入口令保护的加密容器；容器含格式版本与派生参数",
-          60, y + 10, 1200, 92)
-    p.h = int(y) + 150
+    _note(p, "nt", "· 认证加密自带完整性校验；解密或校验失败即拒绝，不部分导入；只接受白名单字段与合法路径，拒绝未知字段与越界路径\n"
+                   "· 导出为全量内容（含敏感内容），必须进入口令保护的加密容器；容器含格式版本与派生参数\n"
+                   "· 分支语义：口令错误 / 容器损坏 / 版本不兼容即拒绝；备份失败即阻断；用户取消或校验失败后重新选择容器",
+          60, y + 10, 1200, 100)
+    p.h = int(y) + 160
     return p
 
 
 # ---------------------------------------------------------------- 流程 08
 def flow_sync():
-    p = Page("f08", "08-WebDAV 同步", 1320, 1140)
+    p = Page("f08", "08-WebDAV 同步", 1320, 1120)
     p.title("t", "流程 08｜WebDAV 加密同步与冲突处理", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "未配置", "start"),
@@ -631,22 +629,20 @@ def flow_sync():
         ("p4", "覆盖前生成备份 → 上传", "proc"),
         ("ok", "synced 已同步", "ok"),
     ], cx=430, prefix="a")
-    _b(p, "cf", "conflict 冲突待处理\n不静默覆盖，先入待处理", pos["d"][1], cx=980, w=340, h=76)
-    _b(p, "fl", "failed 连接或同步失败\n重试连接", pos["d"][1] + 130, cx=980, w=340, h=76)
-    p.edge("b_e1", "a_d", "cf", "是")
-    p.edge("b_e2", "cf", "a_p4", "用户处理后")
-    p.edge("b_e3", "a_c2", "fl", "失败")
-    p.edge("b_e4", "fl", "a_p2", "重试")
-    _note(p, "nt", "冷同步；上传前客户端加密；证书校验失败默认拒绝，且不提供「忽略证书」选项。\n"
-                   "哈希只用于检测传输损坏与回放，真实性由认证加密覆盖；与官方 ocx connect remote hub 是并列能力，不自建、不替代官方 hub。",
-          60, y + 10, 1200, 66)
-    p.h = int(y) + 130
+    _side(p, "fl", "failed 连接或同步失败\n重试连接", pos["c2"], w=340, h=76)
+    _side(p, "cf", "conflict 冲突待处理\n不静默覆盖，先入待处理", pos["d"], w=340, h=76)
+    p.edge("b_e1", "a_c2", "fl", "失败")
+    p.edge("b_e2", "a_d", "cf", "是")
+    _note(p, "nt", "冷同步；上传前客户端加密；证书校验失败默认拒绝，且不提供「忽略证书」选项。哈希只用于检测传输损坏与回放，真实性由认证加密覆盖。\n"
+                   "分支语义：连接失败可「重试连接」；冲突先入待处理，用户处理后重新发起同步。与官方 ocx connect remote hub 是并列能力，不自建、不替代官方 hub。",
+          60, y + 10, 1200, 80)
+    p.h = int(y) + 140
     return p
 
 
 # ---------------------------------------------------------------- 流程 09
 def flow_selfupdate():
-    p = Page("f09", "09-应用自身更新", 1320, 1260)
+    p = Page("f09", "09-应用自身更新", 1320, 1220)
     p.title("t", "流程 09｜应用自身更新（套壳应用自更新）", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "检查中", "start"),
@@ -660,16 +656,14 @@ def flow_selfupdate():
         ("d2", "成功?", "dec"),
         ("ok", "成功", "ok"),
     ], cx=430, prefix="a")
-    _b(p, "sig", "保留上一版本 + 原因", pos["d1"][1], cx=980, w=320, h=58)
-    _b(p, "rb", "回滚到上一版本", pos["d2"][1], cx=980, w=320, h=58)
+    _side(p, "sig", "保留上一版本 + 原因", pos["d1"], w=320, h=58)
+    _side(p, "rb", "回滚到上一版本", pos["d2"], w=320, h=58)
     p.edge("b_e1", "a_d1", "sig", "否")
     p.edge("b_e2", "a_d2", "rb", "否")
-    p.edge("b_e3", "sig", "a_s", "重新检查")
-    p.edge("b_e4", "rb", "a_s", "重新检查")
     _note(p, "nt", "· 必须签名校验通过后才安装；失败保留可回滚的上一版本\n"
                    "· 重启应用会重启应用本体，但不得停止由桌面壳托管的 OpenCodex 代理；重启后重新接管并恢复状态展示\n"
                    "· 检查结果以非阻塞通知呈现；外部提示只走通知中心，不打断当前操作；通道（stable / beta）与官方 npm 通道彼此独立\n"
-                   "· 关联：REQ-17，OQ-05",
+                   "· 分支语义：校验失败或回滚后可「重新检查」。关联：REQ-17，OQ-05",
           60, y + 10, 1200, 118)
     p.h = int(y) + 140
     return p
@@ -677,7 +671,7 @@ def flow_selfupdate():
 
 # ---------------------------------------------------------------- 流程 10
 def flow_upgrade():
-    p = Page("f10", "10-官方升级引导", 1320, 1040)
+    p = Page("f10", "10-官方升级引导", 1320, 1020)
     p.title("t", "流程 10｜OpenCodex 本体升级引导（不接管官方事务）", 60, 16, 1200)
     pos, y = vchain(p, [
         ("s", "检查版本偏差", "start"),
@@ -689,14 +683,13 @@ def flow_upgrade():
         ("p4", "结果展示：成功 / 失败 / 备份位置 / 恢复建议", "proc"),
         ("ok", "结束", "end"),
     ], cx=430, prefix="a")
-    _b(p, "none", "已是最新 → 结束", pos["d"][1], cx=980, w=300, h=58, kind="note")
-    _b(p, "blk", "备份失败 → 阻断升级引导", pos["d2"][1], cx=980, w=320, h=58)
+    _side(p, "none", "已是最新 → 结束", pos["d"], kind="note", w=300, h=58)
+    _side(p, "blk", "备份失败 → 阻断升级引导", pos["d2"], w=320, h=58)
     p.edge("b_e1", "a_d", "none", "否")
     p.edge("b_e2", "a_d2", "blk", "否")
-    p.edge("b_e3", "blk", "a_s", "先修复备份，再重新检查")
-    _note(p, "nt", "版本对象不得混用：本流程只针对 OpenCodex 本体（例如 v2.50.0，npm @bitkyc08/opencodex）；\n"
-                   "套壳应用自身的更新见流程 09，两者按钮与文案必须能区分当前更新对象。",
-          60, y + 10, 1200, 60)
+    _note(p, "nt", "版本对象不得混用：本流程只针对 OpenCodex 本体（例如 v2.50.0，npm @bitkyc08/opencodex）；套壳应用自身的更新见流程 09。\n"
+                   "分支语义：无可用更新即结束；升级前备份失败则先修复备份，再重新检查。",
+          60, y + 10, 1200, 68)
     p.h = int(y) + 130
     return p
 
@@ -709,6 +702,12 @@ def main():
         flow_discovery(), flow_run(), flow_collect(), flow_write(), flow_dataroot(),
         flow_restore(), flow_import(), flow_sync(), flow_selfupdate(), flow_upgrade(),
     ])
+    if WARNINGS:
+        print("\nWARN 无法直连（已退回折线）：")
+        for w in WARNINGS:
+            print("  -", w)
+    else:
+        print("\nOK 所有连线均为单条直线段（无折角、无斜线）")
 
 
 if __name__ == "__main__":
