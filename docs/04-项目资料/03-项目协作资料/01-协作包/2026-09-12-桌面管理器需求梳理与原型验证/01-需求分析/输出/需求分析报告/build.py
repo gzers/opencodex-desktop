@@ -6,7 +6,7 @@
     python3 build.py
 
 - 源：   需求分析报告.md
-- 产物： index.html（可重建，不要手改）与 report-metadata.json
+- 产物： index.html 与 assets/report-metadata.json（均可重建，不要手改）
 - 侧栏目录由源文件里的 H2 自动生成，标题与锚点不会和正文脱节
 
 依赖：Python-Markdown（`python3 -m markdown`，本机已具备）。
@@ -23,9 +23,13 @@ import markdown
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "需求分析报告.md")
 OUT = os.path.join(HERE, "index.html")
-META = os.path.join(HERE, "report-metadata.json")
+META = os.path.join(HERE, "assets", "report-metadata.json")
 ASSETS = ["assets/shared-style.css", "assets/side-nav.css", "assets/side-nav.js"]
 TZ = timezone(timedelta(hours=8))
+
+# 报告自身的编号与版本，跟 06-版本记录 的版本线对齐
+REPORT_ID = "RPT-LOCAL-20260914-01"
+REPORT_VERSION = "V0.9 · Markdown 源 + 构建管线版"
 
 
 def split_front_matter(text):
@@ -138,6 +142,8 @@ def main():
     }
     meta = {
         "format": "ocx-report-v1",
+        "report_id": REPORT_ID,
+        "version": REPORT_VERSION,
         "title": fm.get("title"),
         "source": os.path.basename(SRC),
         "source_bytes": len(raw.encode("utf-8")),
@@ -150,7 +156,7 @@ def main():
         "assets": ASSETS,
         "sections": nav,
         "counts": counts,
-        "note": "index.html 与 report-metadata.json 均可重建；不要手改 index.html，改内容请改 需求分析报告.md 后重新运行 build.py。",
+        "note": "index.html 与 assets/report-metadata.json 均可重建；不要手改 index.html，改内容请改 需求分析报告.md 后重新运行 build.py。",
     }
     with open(META, "w", encoding="utf-8") as fh:
         json.dump(meta, fh, ensure_ascii=False, indent=2)

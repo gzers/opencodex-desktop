@@ -1,12 +1,14 @@
 {
   "format": "ocx-report-v1",
+  "report_id": "RPT-LOCAL-20260914-01",
+  "version": "V0.9 · Markdown 源 + 构建管线版",
   "title": "OpenCodeX-Desktop 项目报告",
   "source": "需求分析报告.md",
   "source_bytes": 78166,
   "source_sha256": "6fd2c8e3796dddc3c7642b55306c0e8f6a4629821d8b5428f40c9d0f8951de9e",
   "output": "index.html",
   "output_bytes": 92411,
-  "generated_at": "2026-09-14T15:32:13+08:00",
+  "generated_at": "2026-09-14T15:36:19+08:00",
   "generator": "build.py",
   "renderer": "Python-Markdown 3.10.3",
   "assets": [
@@ -92,5 +94,5 @@
     "work_packages": 22,
     "sections": 14
   },
-  "note": "index.html 与 report-metadata.json 均可重建；不要手改 index.html，改内容请改 需求分析报告.md 后重新运行 build.py。"
+  "note": "index.html 与 assets/report-metadata.json 均可重建；不要手改 index.html，改内容请改 需求分析报告.md 后重新运行 build.py。"
 }

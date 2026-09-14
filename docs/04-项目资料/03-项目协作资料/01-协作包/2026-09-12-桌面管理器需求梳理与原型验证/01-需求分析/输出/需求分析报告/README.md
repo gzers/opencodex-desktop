@@ -12,7 +12,7 @@
 正文用 Markdown 写，跑一个脚本生成 HTML。**改内容改 `.md`，不要手改 `index.html`**（它是构建产物，下次构建会被覆盖）。
 
 ```
-需求分析报告.md  ──build.py──▶  index.html（+ report-metadata.json）
+需求分析报告.md  ──build.py──▶  index.html（+ assets/report-metadata.json）
                                     ▲
 assets/shared-style.css             │
 assets/side-nav.css                 │
@@ -27,19 +27,19 @@ python3 build.py
 - 依赖：Python-Markdown（`python3 -m markdown`）。
 - 侧栏目录不是手写的：脚本从正文的 `## NN · 标题 {: #anchor }` 自动收集，标题或锚点改了目录跟着变，不会和正文脱节。
 - 标题、品牌名、页脚取自 Markdown 文件顶部的 front matter（`title` / `brand` / `brand_sub` / `footer`）。
-- 构建会写出 `report-metadata.json`：记录源文件 sha256、生成时间、章节列表与 REQ / AC / WP 数量，方便核对这次 HTML 是从哪一版正文来的。
+- 构建会写出 `assets/report-metadata.json`：记录报告编号 `RPT-LOCAL-20260914-01`、版本、源文件 sha256、生成时间、章节列表与 REQ / AC / WP 数量，方便核对这次 HTML 是从哪一版正文来的。
 
 ## 文件
 
 | 文件 | 用途 |
 |---|---|
 | `需求分析报告.md` | **正文源文件**，14 个章节，改内容改这里 |
-| `build.py` | 构建脚本：Markdown → `index.html` + `report-metadata.json` |
+| `build.py` | 构建脚本：Markdown → `index.html` + `assets/report-metadata.json` |
 | `index.html` | 构建产物，报告本体（首页即全文，14 个章节），不要手改 |
-| `report-metadata.json` | 构建产物，记录源文件指纹与章节索引 |
 | `assets/shared-style.css` | 样式方案，取自已确认的参考项目 HTML 报告（`guoguocorp.com` 的 `html-report/shared-style.css`），原样使用 |
 | `assets/side-nav.css` | 左侧固定目录的布局补充，沿用同一套颜色 token、圆角与选中胶囊 |
 | `assets/side-nav.js` | 滚动高亮；脚本不可用时锚点跳转仍可用 |
+| `assets/report-metadata.json` | 构建产物，记录报告编号 / 版本 / 源文件指纹 / 章节索引 |
 
 ## 章节
 
