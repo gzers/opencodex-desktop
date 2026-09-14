@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" type="device">
   <diagram id="arch" name="整体架构">
-    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1560" pageHeight="1120" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1560" pageHeight="1160" math="0" shadow="0">
       <root>
         <mxCell id="0"/>
         <mxCell id="1" parent="0"/>
@@ -27,9 +27,6 @@
         </mxCell>
         <mxCell id="f5" value="托盘与原生菜单" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666;fontStyle=1" vertex="1" parent="1">
           <mxGeometry x="1208" y="110" width="214" height="66" as="geometry"/>
-        </mxCell>
-        <mxCell id="e_ipc" value="命令调用（Tauri IPC）· 前端不直接访问文件系统与网络" style="html=1;endArrow=block;endFill=1;rounded=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L1" target="L2">
-          <mxGeometry relative="1" as="geometry"/>
         </mxCell>
         <mxCell id="L2" value="管理器后端（Rust）：全部业务逻辑与外部交互的唯一入口" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#d5e8d4;strokeColor=#82b366" vertex="1" parent="1">
           <mxGeometry x="60" y="262" width="1400" height="306" as="geometry"/>
@@ -73,9 +70,6 @@
         <mxCell id="m12" value="托盘与菜单模块&lt;br&gt;托盘菜单与 macOS 原生菜单入口" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=12;fillColor=#ffffff;strokeColor=#666666" vertex="1" parent="1">
           <mxGeometry x="628" y="468" width="263" height="72" as="geometry"/>
         </mxCell>
-        <mxCell id="e_ext" value="子进程 / 文件 / 网络" style="html=1;endArrow=block;endFill=1;rounded=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L2" target="L3">
-          <mxGeometry relative="1" as="geometry"/>
-        </mxCell>
         <mxCell id="L3" value="外部依赖（权威归属各不相同）" style="html=1;whiteSpace=wrap;rounded=1;arcSize=3;verticalAlign=top;align=left;fontSize=15;fontStyle=1;spacingLeft=12;spacingTop=8;fillColor=#ffe6cc;strokeColor=#d79b00" vertex="1" parent="1">
           <mxGeometry x="60" y="616" width="1400" height="180" as="geometry"/>
         </mxCell>
@@ -110,7 +104,23 @@
           <mxGeometry x="806" y="964" width="638" height="74" as="geometry"/>
         </mxCell>
         <mxCell id="src" value="单一真相源 + 投影：管理器维护统一事实，客户端配置是投影；&lt;br&gt;原子写（同目录临时文件 + 原子替换）、备份先行、跨进程文件锁、凭据不出域。&lt;br&gt;来源：docs/02-项目核心/系统架构.md、集成与安全边界.md、数据与状态.md —— 本图为派生示意，不作为事实源。" style="html=1;whiteSpace=wrap;rounded=1;arcSize=8;fontSize=11;fillColor=#f5f5f5;strokeColor=#999999;dashed=1;verticalAlign=top" vertex="1" parent="1">
-          <mxGeometry x="60" y="1070" width="1400" height="40" as="geometry"/>
+          <mxGeometry x="60" y="1076" width="1400" height="46" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ipc" value="命令调用（Tauri IPC）· 前端不直接访问文件系统与网络" style="edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L1" target="L2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+            <mxPoint x="760.0" y="206"/>
+            <mxPoint x="760.0" y="248"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_ext" value="子进程 / 文件 / 网络" style="edgeStyle=none;html=1;rounded=0;endArrow=block;endFill=1;fontSize=11;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="L2" target="L3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+            <mxPoint x="760.0" y="582"/>
+            <mxPoint x="760.0" y="602"/>
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
