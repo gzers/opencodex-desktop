@@ -46,7 +46,7 @@
 | 对象 | 许可与声明 |
 |---|---|
 | OpenCodex 官方项目 | 以官方仓库中的 `LICENSE`、`NOTICE` 和服务条款为准。 |
-| 本应用 OpenCodeX-Desktop | 按本项目仓库声明的许可发布。 |
+| 本应用 OpenCodeX-Desktop | 采用 **MIT License**，见仓库根 `LICENSE`（Copyright (c) 2026 gzers）。 |
 | 第三方素材 | 在「第三方声明」入口集中登记。 |
 
 - 两套许可**彼此独立**，不得互相引用为授权依据。
