@@ -42,7 +42,7 @@
 <div class="metric" style="border-top:3px solid #7c3aed"><div class="metric-num" style="color:#7c3aed">22</div><div class="metric-label">个工作包</div><div class="metric-sub">实施规划草案</div></div>
 <div class="metric" style="border-top:3px solid #007b83"><div class="metric-num" style="color:#007b83">27</div><div class="metric-label">条需求</div><div class="metric-sub">全部有承接</div></div>
 <div class="metric" style="border-top:3px solid #c5221f"><div class="metric-num" style="color:#c5221f">0</div><div class="metric-label">个 TASK</div><div class="metric-sub">等待 IMP 确认</div></div>
-<div class="metric" style="border-top:3px solid #e37400"><div class="metric-num" style="color:#e37400">P0</div><div class="metric-label">首段开工</div><div class="metric-sub">WP-01 起步</div></div>
+<div class="metric" style="border-top:3px solid #e37400"><div class="metric-num" style="color:#e37400">22</div><div class="metric-label">条 P0 需求</div><div class="metric-sub">运行管理主线</div></div>
 </div>
 
 <div class="summary-box">
@@ -213,6 +213,39 @@
 <div class="card"><h4>P2 最后做同步</h4><p><code>WP-19</code> WebDAV。它依赖加密、备份和写入引擎，不能提前抢跑。</p></div>
 </div>
 
+<h3>先看懂 P0 / P1 / P2</h3>
+<p>P0 / P1 / P2 不是「重要 / 不重要」，而是<strong>交付顺序和前置依赖</strong>。原型里出现的所有功能都要实现，只是先做谁、后做谁不同。</p>
+<table>
+<thead>
+<tr>
+<th>分段</th>
+<th>它解决什么</th>
+<th>覆盖需求</th>
+<th>为什么放这里</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>P0 · 运行管理主线</strong></td>
+<td>让 OpenCodex 在桌面壳里可用：发现安装、管理数据目录、启停进程、看状态日志、打开面板、识别风险、引导升级、托盘菜单和关于页</td>
+<td>REQ-01 ~ REQ-12、REQ-16、REQ-19 ~ REQ-21</td>
+<td>这是最低可用的日常入口；不先打通它，后面的安全能力和同步都没有稳定宿主</td>
+</tr>
+<tr>
+<td><strong>P1 · 写入、迁移与更新</strong></td>
+<td>开始碰真实文件和系统边界：加密导出导入、应用自更新、Skills / MCP 管理、受控写入、CLI / IPC</td>
+<td>REQ-13、REQ-14、REQ-17、REQ-18、REQ-22 ~ REQ-27</td>
+<td>这些能力会写文件、碰凭据或开本地端口，需要复用 P0 的底座和备份机制</td>
+</tr>
+<tr>
+<td><strong>P2 · 跨机同步</strong></td>
+<td>WebDAV 加密同步与冲突处理</td>
+<td>REQ-15</td>
+<td>它同时依赖加密容器、备份、写入引擎和冲突模型，必须排在前面稳定之后</td>
+</tr>
+</tbody>
+</table>
+<p>一句话：<b>P0 是“桌面壳能日常用”；P1 是“敢写文件、能迁移、能自更新”；P2 是“敢跨机器同步”。</b></p>
 <h3>工作包到 TASK 的拆法</h3>
 <table>
 <thead>
