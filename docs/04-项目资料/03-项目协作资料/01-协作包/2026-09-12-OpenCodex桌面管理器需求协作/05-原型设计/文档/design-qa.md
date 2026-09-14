@@ -1507,7 +1507,7 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 ### 实测
 
 - 两张表实测宽度均为 856px。
-- 分区首行为 `/Users/ezio/OpenCodexData/manager-state`；其余分区同样展示完整路径。
+- 分区首行为 `~/OpenCodexData/manager-state`；其余分区同样展示完整路径。
 - `node --check` 通过；浏览器零 console/page error。
 
 ## 2026-09-13 · 设置页可编辑控件全覆盖
@@ -2347,7 +2347,7 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 ### 实测
 
 - Playwright 验证四卡顺序为 `Skills 管理 → Skills 路径 → MCP 管理 → MCP 路径`；两组路径各 6 行。
-- 点击第一条路径后剪贴板读取值为 `/Users/ezio/.claude/skills`，控件出现「已复制」状态。
+- 点击第一条路径后剪贴板读取值为 `~/.claude/skills`，控件出现「已复制」状态。
 - 无页面 JS / console 错误，视口无横向溢出。
 - `node --check` 与 `git diff --check` 通过。
 
@@ -2361,7 +2361,7 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 ### 实测
 
 - Playwright 验证四卡顺序为 `Skills 管理 → MCP 管理 → MCP 路径 → Skills 路径`；两组路径各 6 行。
-- 路径字号实测 11px，控件高度 29px；点击复制剪贴板读取值为 `/Users/ezio/.claude/skills`。
+- 路径字号实测 11px，控件高度 29px；点击复制剪贴板读取值为 `~/.claude/skills`。
 - 无页面 JS / console 错误，视口无横向溢出。
 - `node --check` 与 `git diff --check` 通过。
 
@@ -2374,7 +2374,7 @@ CLI 控制面本轮反馈已全部收口：开启流程、运行实例、Agent �
 ### 实测
 
 - Playwright 验证四卡顺序；`Skills 路径` 与 `MCP 路径` 各 6 行，路径字号均为 11px。
-- 点击 Skills 路径后剪贴板读取值为 `/Users/ezio/.claude/skills`。
+- 点击 Skills 路径后剪贴板读取值为 `~/.claude/skills`。
 - 无页面 JS / console 错误，视口无横向溢出。
 - `node --check` 与 `git diff --check` 通过。
 

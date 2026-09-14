@@ -203,7 +203,7 @@
 
 | 文件 | SHA-256 |
 |---|---|
-| `opencodex-desktop-routing.svg` | `3ab647bf86a42ddd1f511d04b30eda2a4ccd8a26d55ed050d7b1769ec11c104f` |
+| `opencodex-desktop-routing.svg` | `a2c54f2f83f06c481faca2fd3a5ce867b06fa12cb94f572e59cf4f60d9906540`（2026-09-14 更新：移除注释中的本机路径） |
 | `opencodex-desktop-aggregation-knockout.svg` | `bd6e561e73b243b9a999cce066dd329493057bcc07c03f64ae4cae899207c8b8` |
 
 ### 03-平台交付 / macOS AppIcon
