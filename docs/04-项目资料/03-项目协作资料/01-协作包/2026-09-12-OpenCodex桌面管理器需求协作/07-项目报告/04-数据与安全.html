@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>数据与安全 · OpenCodeX-Desktop 项目报告</title>
+<link rel="stylesheet" href="assets/report.css">
+</head>
+<body>
+<header id="topbar"></header>
+<aside id="side"></aside>
+
+<div class="shell"><div class="wrap">
+  <div class="hero">
+    <div class="crumb"><a href="index.html">首页</a> / 04 数据与安全</div>
+    <h1 style="font-size:30px;font-weight:800;letter-spacing:-.8px;color:var(--head);margin:6px 0 12px">数据与安全边界</h1>
+    <p class="s-desc">这个产品大半的复杂度都在这里：它要改别人机器上的配置文件，还要搬运凭据。原则是能不动就不动，非要动就先备份、可回滚、留证据。</p>
+  </div>
+
+  <section id="root" data-title="数据根分区">
+    <div class="s-label">Data root</div>
+    <h2>数据根分区</h2>
+    <p class="s-desc">用户可以选一个自定义数据根，管理器按用途划分产物。<code>OPENCODEX_HOME</code> 可以放在数据根里，也可以由你指定成独立路径。</p>
+    <div class="tw"><table>
+      <thead><tr><th>分区</th><th>放什么</th><th>约束</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">manager state</td><td>桌面壳设置、数据根元信息、界面偏好</td><td>不含真实凭据明文</td></tr>
+        <tr><td class="mono">opencodex home</td><td>可选承载 <code>OPENCODEX_HOME</code></td><td>引用或迁移，尊重既有数据</td></tr>
+        <tr><td class="mono">backups</td><td>升级、导入、同步覆盖前的备份</td><td>必须可定位、可校验、可恢复</td></tr>
+        <tr><td class="mono">logs</td><td>桌面壳操作日志与旋转后的日志</td><td>只读、脱敏、可轮转</td></tr>
+        <tr><td class="mono">exports</td><td>加密配置导出容器</td><td>口令保护，按凭据文件处理，权限 <code>0600</code></td></tr>
+        <tr><td class="mono">cache</td><td>可丢弃缓存</td><td>可随时清空</td></tr>
+        <tr><td class="mono">sync state</td><td>WebDAV 冲突记录、远端索引摘要、同步历史摘要</td><td>用于变更检测，不作权威</td></tr>
+      </tbody>
+    </table></div>
+    <h3>切换语义：引用优先、迁移可选</h3>
+    <div class="flow">
+      <div class="step">选择目录</div><span class="arw">→</span>
+      <div class="step">检查<small>可写 / 空间 / 已有数据</small></div><span class="arw">→</span>
+      <div class="step">引用 或 迁移</div><span class="arw">→</span>
+      <div class="step">运行前备份</div><span class="arw">→</span>
+      <div class="step">停止代理</div><span class="arw">→</span>
+      <div class="step">执行迁移</div><span class="arw">→</span>
+      <div class="step">校验</div><span class="arw">→</span>
+      <div class="step">更新配置 → 恢复代理</div>
+    </div>
+    <div class="note">默认只「引用」已有位置，不搬动数据。迁移前强制备份，失败自动回滚并保留原数据目录。</div>
+  </section>
+
+  <section id="grades" data-title="数据分级 S0~S3">
+    <div class="s-label">Classification</div>
+    <h2>数据分级</h2>
+    <div class="tw"><table>
+      <thead><tr><th>级别</th><th>数据</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag t-slate">S0 公开</span></td><td>应用版本、官方项目信息</td></tr>
+        <tr><td><span class="tag t-blue">S1 内部</span></td><td>安装路径、版本、运行状态、端口、进程标识、数据根路径</td></tr>
+        <tr><td><span class="tag t-amber">S2 敏感</span></td><td>日志正文、备份内容、同步索引摘要、Skills 文件内容、MCP 配置结构</td></tr>
+        <tr><td><span class="tag t-red">S3 凭据</span></td><td>API key、token、Authorization、WebDAV 账号口令、加密口令、MCP 环境变量值</td></tr>
+      </tbody>
+    </table></div>
+    <h3>处理规则</h3>
+    <ul class="plain">
+      <li>S3 <b>不得</b>进入仓库、Markdown、日志、命令行参数或未加密文件。</li>
+      <li>敏感值范围<b>包含</b> <code>env</code>、<code>args</code>、<code>headers</code>，三者一律按潜在敏感值处理，默认掩码。</li>
+      <li>掩码在<b>取值之前</b>完成，不是「先明文取回来，再在界面上打码」；编辑场景按字段短暂显示。</li>
+      <li>涉及凭据的配置文件按凭据文件处理，Unix 权限 <code>0600</code>。</li>
+      <li>MCP 的 <code>command</code> / <code>args</code> / <code>env</code> 具备执行本地程序的能力，必须展示执行边界并经用户显式确认，不得静默执行任意本地程序。</li>
+    </ul>
+  </section>
+
+  <section id="clients" data-title="扩展配置落在哪">
+    <div class="s-label">Placements</div>
+    <h2>扩展配置落在哪</h2>
+    <p class="s-desc">六家客户端的 MCP 节点位置、容器结构和文件格式都不一样，所以必须一家一个适配器，不能假设有统一 schema。这是实施阶段最容易低估的一块工作量。</p>
+    <div class="tw"><table>
+      <thead><tr><th>客户端</th><th>MCP 配置落点</th><th>格式</th><th>MCP 键与形状</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Codex</strong></td><td class="mono">$CODEX_HOME/config.toml（默认 ~/.codex/config.toml）</td><td>TOML</td><td><code>[mcp_servers]</code> 表；<code>command</code> + <code>args</code></td></tr>
+        <tr><td><strong>Claude Code</strong></td><td class="mono">~/.claude.json；项目级 &lt;project&gt;/.mcp.json</td><td>JSON</td><td><code>mcpServers</code> 映射；另有 disabled / enabled 列表</td></tr>
+        <tr><td><strong>Gemini CLI</strong></td><td class="mono">~/.gemini/settings.json；工作区同名文件</td><td>JSON</td><td>顶层 <code>mcpServers</code>（定义）+ <code>mcp</code>（全局规则）</td></tr>
+        <tr><td><strong>Grok CLI</strong></td><td class="mono">~/.grok/user-settings.json；项目级同名文件</td><td>JSON</td><td><code>mcp.servers</code>，是<b>数组</b></td></tr>
+        <tr><td><strong>OpenCode</strong></td><td class="mono">~/.config/opencode/opencode.json[c]（XDG，可覆盖）</td><td>JSON / JSONC</td><td><code>mcp.servers</code>；标签联合 local / remote，环境变量键为 <code>environment</code></td></tr>
+        <tr><td><strong>Hermes Agent</strong></td><td class="mono">&lt;HERMES_HOME&gt;/config.yaml（默认 ~/.hermes/config.yaml）</td><td>YAML</td><td><code>mcp_servers</code> 映射；<code>type</code> 归一化为 <code>transport</code></td></tr>
+      </tbody>
+    </table></div>
+    <h3>Skills 目录</h3>
+    <div class="tw"><table>
+      <thead><tr><th>客户端</th><th>Skills 落点</th></tr></thead>
+      <tbody>
+        <tr><td>Claude Code</td><td class="mono">~/.claude/skills/</td></tr>
+        <tr><td>Codex</td><td class="mono">~/.codex/skills/</td></tr>
+        <tr><td>Gemini CLI</td><td class="mono">~/.gemini/skills/</td></tr>
+        <tr><td>OpenCode</td><td class="mono">~/.config/opencode/skills/</td></tr>
+        <tr><td>Hermes Agent</td><td class="mono">~/.hermes/skills/</td></tr>
+        <tr><td>Grok CLI</td><td class="mono">项目级 .agents/skills/</td></tr>
+      </tbody>
+    </table></div>
+    <p>另有社区共享目录约定 <code>~/.agents/skills/</code>，可以作为 Skills 的源存储位置。</p>
+  </section>
+
+  <section id="ssot" data-title="单一真相源与投影">
+    <div class="s-label">SSOT</div>
+    <h2>单一真相源 + 投影</h2>
+    <div class="flow">
+      <div class="step">管理器统一扩展配置<small>含每个能力项的启用矩阵</small></div><span class="arw">→</span>
+      <div class="step">逐客户端投影</div><span class="arw">→</span>
+      <div class="step">各客户端 live 配置文件</div>
+    </div>
+    <ul class="plain">
+      <li>管理器维护统一事实；客户端配置是<b>投影</b>，不是权威。</li>
+      <li>每个能力项记录它在哪些客户端启用，启停以投影方式同步到对应文件。</li>
+      <li>导入方向相反：从客户端 live 配置读回并合并进统一结构，<b>不覆盖</b>其他客户端的启用状态。</li>
+    </ul>
+  </section>
+
+  <section id="write" data-title="写入边界与规则">
+    <div class="s-label">Write boundary</div>
+    <h2>写入边界与写入规则</h2>
+    <div class="grid g2">
+      <div class="card" style="border-color:var(--green-line);background:var(--green-soft)">
+        <h4 style="color:var(--green)">允许写入</h4>
+        <ul class="plain" style="margin-top:8px">
+          <li>Skills 目录同步</li>
+          <li>各客户端的 MCP 服务器节点</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:var(--red-line);background:var(--red-soft)">
+        <h4 style="color:var(--red)">禁止写入</h4>
+        <ul class="plain" style="margin-top:8px">
+          <li>provider、路由、模型映射</li>
+          <li>OpenCodex 核心运行配置</li>
+          <li>这些一律走官方 CLI，本产品不提供写入通道</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>规则</th><th>要求</th></tr></thead>
+      <tbody>
+        <tr><td><strong>目标校验</strong></td><td>目标必须是普通文件；符号链接、FIFO、设备文件或越出预期根目录的路径一律拒绝写入</td></tr>
+        <tr><td><strong>前置备份</strong></td><td>任何写入前生成可恢复备份；备份失败即阻断</td></tr>
+        <tr><td><strong>原子替换</strong></td><td>同目录临时文件写入后原子替换；替换后保留原文件权限</td></tr>
+        <tr><td><strong>节点级写回</strong></td><td>只改目标节点，保留未知字段与注释；解析失败即拒绝，不做部分写回</td></tr>
+        <tr><td><strong>非目标文件</strong></td><td>不改写同目录的凭据、认证等非目标文件</td></tr>
+        <tr><td><strong>并发互斥</strong></td><td>写入持有跨进程文件锁，并在写入前比对目标内容摘要</td></tr>
+        <tr><td><strong>冲突处理</strong></td><td>检测到外部改写或客户端间不一致时进入待处理，不静默覆盖</td></tr>
+        <tr><td><strong>可恢复删除</strong></td><td>卸载 Skills、删除 MCP 等删除类操作进入回收区，可恢复</td></tr>
+        <tr><td><strong>串行化</strong></td><td>扩展配置写入由单一状态锁串行化，避免并发动作互相覆盖</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="trust" data-title="信任模型">
+    <div class="s-label">Trust</div>
+    <h2>信任模型</h2>
+    <div class="tw"><table>
+      <thead><tr><th>对象</th><th>信任假设</th><th>结论</th></tr></thead>
+      <tbody>
+        <tr><td><strong>WebDAV 远端</strong></td><td>不可信</td><td>上传前客户端加密；哈希只用于发现传输损坏与回放，真实性由认证加密覆盖，不能拿哈希当防恶意远端的措施</td></tr>
+        <tr><td><strong>WebDAV 连接</strong></td><td>需要证书校验</td><td>证书校验失败默认拒绝，且不提供「忽略证书」选项</td></tr>
+        <tr><td><strong>外部客户端配置</strong></td><td>可能被第三方改写</td><td>写入前比对内容摘要，冲突进入待处理</td></tr>
+        <tr><td><strong>官方 CLI</strong></td><td>权威写入者</td><td>不与其争夺 provider / 路由 / 模型映射的写入权</td></tr>
+      </tbody>
+    </table></div>
+    <h3>加密导出容器</h3>
+    <div class="tw"><table>
+      <thead><tr><th>项</th><th>取值</th></tr></thead>
+      <tbody>
+        <tr><td><strong>内容范围</strong></td><td>全量配置，包含敏感内容</td></tr>
+        <tr><td><strong>保护方式</strong></td><td>用户口令保护；推荐 Argon2id 派生 + AES-256-GCM 认证加密</td></tr>
+        <tr><td><strong>完整性</strong></td><td>认证加密自带完整性校验；解密或校验失败即拒绝，不部分导入</td></tr>
+        <tr><td><strong>版本策略</strong></td><td>容器头含格式版本与派生参数；不兼容即拒绝并说明支持范围</td></tr>
+        <tr><td><strong>结构约束</strong></td><td>只接受白名单字段与合法路径；拒绝未知字段与越界路径</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note danger"><b>几条「明确不做」也写在这里：</b>不重写 OpenCodex 核心、不绕过官方 API；不管 npm；不替代官方 <code>ocx update</code>；不接管 <code>codex-shim</code>、不装 launchd；不写核心运行配置；不自动覆盖外部 provider 配置；不明文迁移或同步凭据。</div>
+    <div class="pager"><a href="03-关键流程.html">← 上一册：关键流程</a><a href="05-原型与设计.html">下一册：原型与设计 →</a></div>
+  </section>
+
+  <div class="site-foot">
+    <b>OpenCodeX-Desktop 项目报告</b> · 04 数据与安全 · 来源：<span class="mono">docs/02-项目核心/数据与状态.md</span>、<span class="mono">集成与安全边界.md</span>。派生产物，不作为事实源。
+  </div>
+</div></div>
+<script src="assets/report.js"></script>
+</body>
+</html>

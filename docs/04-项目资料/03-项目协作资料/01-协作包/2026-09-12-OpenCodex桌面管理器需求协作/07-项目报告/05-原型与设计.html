@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>原型与设计 · OpenCodeX-Desktop 项目报告</title>
+<link rel="stylesheet" href="assets/report.css">
+</head>
+<body>
+<header id="topbar"></header>
+<aside id="side"></aside>
+
+<div class="shell"><div class="wrap">
+  <div class="hero">
+    <div class="crumb"><a href="index.html">首页</a> / 05 原型与设计</div>
+    <h1 style="font-size:30px;font-weight:800;letter-spacing:-.8px;color:var(--head);margin:6px 0 12px">原型与设计</h1>
+    <p class="s-desc">原型的作用是定界面结构和状态分支，不是定实现。用的全是 mock 数据：不调用真实 <code>ocx</code>，不读真实配置，也不会真的启停或备份。</p>
+    <div class="note warn"><b>怎么打开：</b>入口是 <span class="mono">05-原型设计/原型/index.html</span>，用 hash 路由串起各页面。「面板」那一屏依赖官方页面快照，而官方素材不随仓库分发，克隆后需本地自备，缺快照时该路由不可用。</div>
+  </div>
+
+  <section id="map" data-title="页面地图">
+    <div class="s-label">Page map</div>
+    <h2>页面地图</h2>
+    <p class="s-desc">原型按 1180 × 760 的 macOS 应用窗口表达，最小 900 × 600。</p>
+    <div class="tw"><table>
+      <thead><tr><th>路由</th><th>页面</th><th>承载内容</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">#overview</td><td><strong>概览</strong></td><td>运行状态卡、运行详情折叠、快捷动作卡（版本升级 / 配置迁移 / WebDAV 同步）、最近事件</td></tr>
+        <tr><td class="mono">#panel</td><td><strong>面板</strong></td><td>官方 GUI 源码级快照，方案 B：保留标题栏与 64px 图标栏</td></tr>
+        <tr><td class="mono">#extensions</td><td><strong>拓展</strong></td><td>Skills 管理、MCP 服务器管理</td></tr>
+        <tr><td class="mono">#logs</td><td><strong>日志 / 诊断中心</strong></td><td>日志查看、运行环境诊断（<code>ocx doctor</code> 只读摘要）、通知历史</td></tr>
+        <tr><td class="mono">#settings</td><td><strong>设置</strong></td><td>通用、安装配置、数据与备份、扩展管理、配置迁移、WebDAV 同步、日志与通知、CLI 控制面、版本升级、关于</td></tr>
+        <tr><td class="mono">#tray</td><td><strong>托盘</strong></td><td>macOS / Windows 托盘状态菜单原型</td></tr>
+      </tbody>
+    </table></div>
+    <p>设置分区的锚点是 <code>general</code> / <code>installation</code> / <code>backup</code> / <code>extensions</code> / <code>migration</code> / <code>sync</code> / <code>cleanup</code> / <code>cli</code> / <code>upgrade</code> / <code>about</code>。</p>
+  </section>
+
+  <section id="shots" data-title="界面截图">
+    <div class="s-label">Screens</div>
+    <h2>界面截图</h2>
+    <div class="shots">
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-overview-light.png" alt="概览 亮色"><figcaption>概览（亮色）：运行摘要 + 运行详情折叠 + 快捷动作卡</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-overview-dark.png" alt="概览 暗色"><figcaption>概览（暗色）：外壳与内嵌面板由同一份主题 token 派生</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-overview-expanded-light.png" alt="运行详情展开"><figcaption>运行详情展开：健康、PID / 进程、Runtime、可执行文件、数据目录</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-settings-light.png" alt="设置"><figcaption>设置：十个分区，参数和边界都在这里</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-logs-light.png" alt="日志与诊断中心"><figcaption>日志 / 诊断中心：只读日志 + Doctor 只读摘要 + 通知历史</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-notifications-light.png" alt="通知中心"><figcaption>通知中心：与诊断中心的「通知历史」共用同一份数据</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-settings-cli-light.png" alt="CLI 控制面设置"><figcaption>CLI 控制面：默认关闭，开启前说明开放的能力范围</figcaption></figure>
+      <figure><img src="../05-原型设计/文档/截图/现行/prototype-panel-light.png" alt="官方 Web 面板"><figcaption>官方面板：全幅承载官方 GUI，保留标题栏与图标栏，不重绘不注入</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="rules" data-title="界面口径">
+    <div class="s-label">Rules</div>
+    <h2>几条必须守住的界面口径</h2>
+    <ul class="plain">
+      <li><b>动作按状态渲染，不渲染没有解释的灰色禁用按钮。</b>用状态说明文字说清为什么现在不能点。比如 <code>starting_failed</code> 下，启动按钮的文案变成「重试启动」。</li>
+      <li><b>界面里不出现 P0 / P1 / P2。</b>设置分区、卡片标签、面板标题都只用功能名和「规划中 / 可用」，阶段编号只留在文档里。</li>
+      <li><b>两个版本对象分开。</b>概览「版本升级」卡和设置第一块是 OpenCodex 本体（官方 <code>ocx update</code> 引导）；设置第二块是桌面管理器自身（应用自更新）。按钮和文案必须让用户分清当前更新的是哪一个。</li>
+      <li><b>主题只有一份取值。</b><code>ocx-theme</code>（light / dark / system）由外壳和内嵌官方面板共同派生，面板不保存自己的主题，切换时用 <code>postMessage</code> 实时同步。</li>
+      <li><b>WebDAV 卡按连接状态渲染。</b>未配置时不置灰，只把动作区换成一颗「配置 WebDAV」直达设置；其余状态各自的动作组合不同。</li>
+      <li><b>概览定稿为 B+ 合并版：</b>一行运行摘要 + 页内折叠的「运行详情」+ 压缩后的快捷动作卡。</li>
+      <li><b>敏感值永远掩码</b>，按钮用明确动词（启动、停止、重启、刷新状态、打开面板、查看日志），涉及 restore / 停止 / 重启 / 切换数据目录时必须解释后果。</li>
+    </ul>
+    <div class="note"><b>视觉来源：</b>颜色体系从官方 GUI 构建产物的设计 token 提取，再向官方面板对齐，避免嵌入面板后割裂。截图只作为视觉 QA 证据，不用来反推样式。</div>
+    <div class="pager"><a href="04-数据与安全.html">← 上一册：数据与安全</a><a href="06-进度与治理.html">下一册：进度与治理 →</a></div>
+  </section>
+
+  <div class="site-foot">
+    <b>OpenCodeX-Desktop 项目报告</b> · 05 原型与设计 · 来源：协作包 <span class="mono">05-原型设计/</span>。派生产物，不作为事实源。
+  </div>
+</div></div>
+<script src="assets/report.js"></script>
+</body>
+</html>

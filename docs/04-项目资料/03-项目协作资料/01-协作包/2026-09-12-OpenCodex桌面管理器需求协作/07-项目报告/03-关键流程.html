@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>关键流程 · OpenCodeX-Desktop 项目报告</title>
+<link rel="stylesheet" href="assets/report.css">
+</head>
+<body>
+<header id="topbar"></header>
+<aside id="side"></aside>
+
+<div class="shell"><div class="wrap">
+  <div class="hero">
+    <div class="crumb"><a href="index.html">首页</a> / 03 关键流程</div>
+    <h1 style="font-size:30px;font-weight:800;letter-spacing:-.8px;color:var(--head);margin:6px 0 12px">10 张关键流程</h1>
+    <p class="s-desc">挑的都是有分支、有失败、有回滚的地方。图上所有连线只有横竖两个方向、单条直线段，不穿节点，可以直接照着读。需要回环的关系（比如失败后重试）写在图下方的注释里，不画折线。</p>
+    <div class="note">源文件在协作包 <span class="mono">06-架构与流程/OpenCodex-Desktop-核心流程.drawio</span>，用 draw.io 打开可以逐页编辑。</div>
+  </div>
+
+  <section id="overview" data-title="流程总览">
+    <div class="s-label">Overview</div>
+    <h2>先把这 10 张的名字记住</h2>
+    <div class="grid g3">
+      <div class="card"><h4>01 首次发现与前置门禁</h4><p><code>node → npm → ocx</code> 短路检查，缺什么给什么命令。</p></div>
+      <div class="card"><h4>02 正常启停</h4><p>未运行 → 启动中 → 待就绪 → 运行中；失败、停止、重启各自成支。</p></div>
+      <div class="card"><h4>03 状态采集数据流</h4><p>官方状态源 → 后端映射 → 三维状态 → 前端渲染。</p></div>
+      <div class="card"><h4>04 受控写入</h4><p>校验 → 备份 → 原子替换 → 重新校验 → 成功或回滚。</p></div>
+      <div class="card"><h4>05 数据目录切换</h4><p>引用优先、迁移可选；检查不过就阻断，迁移失败自动回滚。</p></div>
+      <div class="card"><h4>06 Restore 引导</h4><p>看风险 → 备份 → 用户确认 → 走官方 restore → 刷新状态。</p></div>
+      <div class="card"><h4>07 导入配置</h4><p>口令、完整性、版本三重校验；失败一律拒绝，不做部分写入。</p></div>
+      <div class="card"><h4>08 WebDAV 同步</h4><p>客户端加密 → 清单比对 → 有冲突先入待处理，不静默覆盖。</p></div>
+      <div class="card"><h4>09 应用自身更新</h4><p>下载 → 签名校验 → 安装 → 重启接管；失败保留上一版本。</p></div>
+      <div class="card"><h4>10 官方升级引导</h4><p>升级前必须备份成功，再引导官方 <code>ocx update</code>。</p></div>
+    </div>
+  </section>
+
+  <section id="flow-01" data-title="01 首次发现与前置门禁">
+    <div class="s-label">Flow 01</div>
+    <h2>首次发现与前置门禁</h2>
+    <p class="s-desc">应用一开始就检查环境。顺序固定为 node → npm → ocx，前面一项没过不查后面一项。缺什么给什么命令，有 Homebrew 给 <code>brew install node</code>，没有就给官方 LTS 渠道。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-01.png" alt="流程 01 首次发现与前置门禁"><figcaption>缺失项由用户在「设置 → 安装配置」按指引装好后手动重新检查，应用不代装、也不监听系统变化。</figcaption></figure>
+  </section>
+
+  <section id="flow-02" data-title="02 正常启停">
+    <div class="s-label">Flow 02</div>
+    <h2>正常启停</h2>
+    <p class="s-desc">状态从「已发现未运行」走到「运行中」，中间要经过启动中和待就绪。停止和重启都要先确认，并且说明后果。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-02.png" alt="流程 02 正常启停"><figcaption>启动失败可以查看错误并重试；面板不可用时回退概览。</figcaption></figure>
+  </section>
+
+  <section id="flow-03" data-title="03 状态采集数据流">
+    <div class="s-label">Flow 03</div>
+    <h2>状态采集数据流</h2>
+    <p class="s-desc">后端从托管子进程和官方状态命令取数，映射成三维状态，前端据此决定显示哪些动作。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-03.png" alt="流程 03 状态采集数据流"><figcaption>状态源优先用官方 <code>ocx status --json</code> / <code>health</code> / <code>ready</code> / <code>doctor</code>。</figcaption></figure>
+  </section>
+
+  <section id="flow-04" data-title="04 受控写入">
+    <div class="s-label">Flow 04</div>
+    <h2>受控写入（扩展配置）</h2>
+    <p class="s-desc">这是唯一允许写真实文件的路径。顺序不能变：先校验目标和冲突，再备份，然后临时区写入加原子替换，最后重新校验。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-04.png" alt="流程 04 受控写入"><figcaption>只改目标节点，保留未知字段与注释；解析失败直接拒绝，不做「尽力而为」的部分写回。</figcaption></figure>
+  </section>
+
+  <section id="flow-05" data-title="05 数据目录切换">
+    <div class="s-label">Flow 05</div>
+    <h2>数据目录切换</h2>
+    <p class="s-desc">默认「引用」已有位置，不搬数据；只有你显式选「迁移」才会移动。检查阶段就阻断不可写、空间不足、结构异常这三种情况。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-05.png" alt="流程 05 数据目录切换"><figcaption>迁移前强制备份，中断或校验失败自动回滚并保留原数据目录；确认阶段取消则保持原目录。</figcaption></figure>
+  </section>
+
+  <section id="flow-06" data-title="06 Restore 引导">
+    <div class="s-label">Flow 06</div>
+    <h2>Restore 引导</h2>
+    <p class="s-desc">检测到外部 provider 接管或 startup at-risk 时，先解释影响，不动手改配置。用户显式确认后才走官方 restore。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-06.png" alt="流程 06 Restore 引导"><figcaption>restore 一律走官方路径，桌面壳不做私有覆盖逻辑；成功、失败、取消后都可以刷新状态。</figcaption></figure>
+  </section>
+
+  <section id="flow-07" data-title="07 导入配置">
+    <div class="s-label">Flow 07</div>
+    <h2>导入配置</h2>
+    <p class="s-desc">异常分支最多的一张：口令错误、容器损坏、版本不兼容、备份失败、写入失败、自动回滚、回滚失败、用户取消，都要有明确出路。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-07.png" alt="流程 07 导入配置"><figcaption>校验失败一律中断，不做部分写入；写入前必须先自动备份当前配置。</figcaption></figure>
+  </section>
+
+  <section id="flow-08" data-title="08 WebDAV 同步">
+    <div class="s-label">Flow 08</div>
+    <h2>WebDAV 同步</h2>
+    <p class="s-desc">远端一律视为不可信，上传前在客户端加密。采用冷同步，覆盖前生成可恢复备份，检测到冲突先入待处理。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-08.png" alt="流程 08 WebDAV 同步"><figcaption>证书校验失败默认拒绝，不提供「忽略证书」；哈希只用于发现传输损坏与回放。</figcaption></figure>
+  </section>
+
+  <section id="flow-09" data-title="09 应用自身更新">
+    <div class="s-label">Flow 09</div>
+    <h2>应用自身更新</h2>
+    <p class="s-desc">套壳应用自己的更新链：检查 → 下载 → 签名校验 → 安装 → 重启接管。每一步都有失败出路。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-09.png" alt="流程 09 应用自身更新"><figcaption>重启会重启应用本体，但不停止托管的 OpenCodex 代理；失败保留可回滚的上一版本。</figcaption></figure>
+  </section>
+
+  <section id="flow-10" data-title="10 官方升级引导">
+    <div class="s-label">Flow 10</div>
+    <h2>官方升级引导</h2>
+    <p class="s-desc">这条线针对 OpenCodex 本体（比如 <code>v2.50.0</code>），和上一条是两回事。桌面壳不接管更新事务，只做升级前备份和引导。</p>
+    <figure><img src="../06-架构与流程/导出图片/流程-10.png" alt="流程 10 官方升级引导"><figcaption>升级前备份失败就不引导升级；两个版本对象的按钮和文案必须能分清。</figcaption></figure>
+    <div class="pager"><a href="02-架构与状态.html">← 上一册：架构与状态</a><a href="04-数据与安全.html">下一册：数据与安全 →</a></div>
+  </section>
+
+  <div class="site-foot">
+    <b>OpenCodeX-Desktop 项目报告</b> · 03 关键流程 · 来源：协作包 <span class="mono">06-架构与流程</span> 与 <span class="mono">05-原型设计/文档/state-and-flows.md</span>。派生产物，不作为事实源。
+  </div>
+</div></div>
+<script src="assets/report.js"></script>
+</body>
+</html>
