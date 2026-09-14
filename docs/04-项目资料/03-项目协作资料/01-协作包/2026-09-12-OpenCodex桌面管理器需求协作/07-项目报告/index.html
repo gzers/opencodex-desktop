@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OpenCodeX-Desktop 项目报告</title>
+<style>
+:root{
+  --bg:#F4F5F8; --card:#FCFCFD; --sunk:#EFF1F5;
+  --text:#262626; --text2:#5C5F66; --text3:#8A8D94;
+  --head:#0D0D0D;
+  --line:#E4E5E9; --line2:#EDEEF1;
+  --blue:#3A5FBD; --blue-soft:#EDF1FD; --blue-line:#C9D5F0;
+  --green:#2E7D63; --green-soft:#E8F4EF; --green-line:#BEDCCF;
+  --amber:#9A6A1E; --amber-soft:#FBF2E8; --amber-line:#E8D2B0;
+  --red:#B4453F;  --red-soft:#FBECEC;  --red-line:#E7BDBB;
+  --slate:#5B6472; --slate-soft:#EFF1F5; --slate-line:#D6DAE1;
+  --r:12px; --r-sm:8px;
+  --font:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",-apple-system,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px;line-height:1.85;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:960px;margin:0 auto;padding:0 32px}
+code{font-family:var(--mono);font-size:.9em;background:var(--sunk);border:1px solid var(--line2);border-radius:4px;padding:1px 5px;color:#3A3D44}
+
+/* 顶部导航 */
+.nav{position:sticky;top:0;z-index:50;background:rgba(252,252,253,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.nav-in{max-width:960px;margin:0 auto;padding:0 32px;height:56px;display:flex;align-items:center;gap:4px;overflow-x:auto}
+.nav-logo{font-weight:700;font-size:13px;color:var(--head);margin-right:auto;white-space:nowrap;letter-spacing:-.2px}
+.nav-logo i{display:inline-block;width:7px;height:7px;border-radius:2px;background:var(--blue);margin-right:8px;vertical-align:middle}
+.nav a{font-size:12.5px;color:var(--text2);text-decoration:none;padding:5px 11px;border-radius:999px;white-space:nowrap;transition:.16s}
+.nav a:hover{background:var(--blue-soft);color:var(--blue)}
+.nav a.on{background:var(--head);color:#F4F5F7}
+
+/* 头图 */
+.hero{padding:60px 0 34px}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);border:1px solid var(--blue-line);padding:5px 14px;border-radius:999px}
+.hero h1{font-size:clamp(26px,4.4vw,40px);font-weight:800;letter-spacing:-1px;line-height:1.22;color:var(--head);margin:18px 0 14px}
+.hero h1 em{font-style:normal;color:var(--blue)}
+.hero .lead{font-size:16px;color:var(--text2);max-width:660px}
+.hero .lead b{color:var(--text);font-weight:600}
+
+/* 数据卡 */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin:30px 0 8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;transition:.18s}
+.stat:hover{box-shadow:0 6px 20px rgba(24,28,40,.07);transform:translateY(-1px)}
+.stat .n{font-size:26px;font-weight:800;letter-spacing:-.6px;color:var(--head);line-height:1.3}
+.stat .l{font-size:13px;color:var(--text2);margin-top:2px}
+.stat .s{font-size:11.5px;color:var(--text3);margin-top:2px}
+.stat.k-blue{border-top:3px solid var(--blue)} .stat.k-blue .n{color:var(--blue)}
+.stat.k-green{border-top:3px solid var(--green)} .stat.k-green .n{color:var(--green)}
+.stat.k-amber{border-top:3px solid var(--amber)} .stat.k-amber .n{color:var(--amber)}
+.stat.k-red{border-top:3px solid var(--red)} .stat.k-red .n{color:var(--red)}
+.stat.k-slate{border-top:3px solid var(--slate)}
+
+/* 区块 */
+section{padding:34px 0;scroll-margin-top:72px}
+.s-label{font-size:10.5px;font-weight:700;letter-spacing:2.6px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+h2{font-size:23px;font-weight:750;color:var(--head);letter-spacing:-.4px;line-height:1.35;margin-bottom:10px}
+.s-desc{font-size:15px;color:var(--text2);max-width:680px;margin-bottom:18px}
+h3{font-size:16px;font-weight:700;color:var(--head);margin:22px 0 8px}
+p{margin-bottom:12px}
+ul.plain{list-style:none}
+ul.plain li{position:relative;padding-left:18px;margin-bottom:6px;font-size:14.5px;color:var(--text2)}
+ul.plain li::before{content:'';position:absolute;left:4px;top:.72em;width:5px;height:5px;border-radius:50%;background:var(--slate-line)}
+
+/* 卡片 */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.card h4{font-size:15px;font-weight:700;color:var(--head);margin-bottom:6px}
+.card p{font-size:14px;color:var(--text2);margin:0}
+.card .kick{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+
+/* 对比两栏 */
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:780px){.ba{grid-template-columns:1fr}}
+.ba .col{border-radius:var(--r);padding:22px;border:1px solid}
+.ba .before{background:var(--red-soft);border-color:var(--red-line)}
+.ba .after{background:var(--green-soft);border-color:var(--green-line)}
+.ba h4{font-size:15px;font-weight:700;margin-bottom:12px}
+.ba .before h4{color:var(--red)} .ba .after h4{color:var(--green)}
+.ba ul{list-style:none}
+.ba li{font-size:14px;padding:6px 0 6px 20px;position:relative;line-height:1.7;color:var(--text)}
+.ba li::before{position:absolute;left:0;font-weight:700;font-size:12px;top:6px}
+.ba .before li::before{content:'×';color:var(--red)}
+.ba .after li::before{content:'✓';color:var(--green)}
+
+/* 表格 */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card);margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:var(--sunk);color:var(--head);text-align:left;font-weight:700;font-size:12.5px;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--line2);color:var(--text2);vertical-align:top}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#F8F9FB}
+td strong{color:var(--text);font-weight:600}
+td .mono{font-family:var(--mono);font-size:12px;color:#3A3D44}
+
+/* 提示块 */
+.note{border-left:3px solid var(--blue);background:var(--blue-soft);border-radius:0 var(--r-sm) var(--r-sm) 0;padding:14px 18px;font-size:14px;color:#2A3A5C;margin:16px 0}
+.note.warn{border-color:var(--amber);background:var(--amber-soft);color:#5E4415}
+.note.danger{border-color:var(--red);background:var(--red-soft);color:#5C2A26}
+.note.ok{border-color:var(--green);background:var(--green-soft);color:#22453A}
+.note b{color:inherit}
+
+/* 标签 */
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid}
+.t-blue{background:var(--blue-soft);border-color:var(--blue-line);color:var(--blue)}
+.t-green{background:var(--green-soft);border-color:var(--green-line);color:var(--green)}
+.t-amber{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber)}
+.t-red{background:var(--red-soft);border-color:var(--red-line);color:var(--red)}
+.t-slate{background:var(--slate-soft);border-color:var(--slate-line);color:var(--slate)}
+
+/* 流程条 */
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0}
+.step{background:var(--sunk);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 15px;font-size:13px;font-weight:600;color:var(--head);line-height:1.5}
+.step small{display:block;font-weight:400;font-size:11px;color:var(--text3);margin-top:2px}
+.arw{color:var(--text3);font-size:14px}
+
+/* 时间线 */
+.tl{position:relative;padding:6px 0 0}
+.tl::before{content:'';position:absolute;left:9px;top:10px;bottom:6px;width:2px;background:var(--line)}
+.tl-item{position:relative;padding-left:38px;margin-bottom:20px}
+.tl-item::before{content:'';position:absolute;left:3px;top:6px;width:14px;height:14px;border-radius:50%;background:var(--card);border:2.5px solid var(--line)}
+.tl-item.done::before{border-color:var(--green);background:var(--green-soft)}
+.tl-item.now::before{border-color:var(--blue);background:var(--blue-soft);box-shadow:0 0 0 4px var(--blue-soft)}
+.tl-item h4{font-size:15px;font-weight:700;color:var(--head);margin-bottom:3px}
+.tl-item p{font-size:14px;color:var(--text2);margin:0}
+.tl-when{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+
+/* 图片 */
+figure{margin:18px 0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card)}
+figure img{display:block;width:100%;height:auto}
+figcaption{font-size:12.5px;color:var(--text3);padding:10px 16px;border-top:1px solid var(--line2)}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:780px){.shots{grid-template-columns:1fr}}
+
+/* 页脚 */
+footer{margin-top:44px;border-top:1px solid var(--line);padding:26px 0 44px;font-size:13px;color:var(--text3)}
+footer b{color:var(--text2);font-weight:600}
+@media print{.nav{display:none}body{background:#FCFCFD}.stat,.card,figure{box-shadow:none;break-inside:avoid}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in">
+  <div class="nav-logo"><i></i>OpenCodeX-Desktop 项目报告</div>
+  <a href="#what" class="on">是什么</a>
+  <a href="#why">解决什么问题</a>
+  <a href="#scope">做与不做</a>
+  <a href="#caps">能力</a>
+  <a href="#arch">架构</a>
+  <a href="#states">状态</a>
+  <a href="#flows">流程</a>
+  <a href="#data">数据与安全</a>
+  <a href="#progress">进度</a>
+  <a href="#proto">原型</a>
+  <a href="#next">下一步</a>
+</div></nav>
+
+<div class="wrap">
+
+<div class="hero">
+  <span class="badge">协作包报告 · 2026-09-14</span>
+  <h1>OpenCodeX-Desktop<br><em>把命令行操作收进一个窗口</em></h1>
+  <p class="lead">它是给 <b>OpenCodex</b>（一个命令行工具）做的独立桌面管理器：安装发现、进程启停、状态观测、日志诊断、配置迁移、跨机同步、Skills 与 MCP 管理，全放到图形界面里。
+  现在的位置是<b>需求已经定稿、原型能点、架构和流程图画完了，但一行实现代码都还没写</b>。</p>
+</div>
+
+<div class="stats">
+  <div class="stat k-blue"><div class="n">27</div><div class="l">条需求</div><div class="s">REQ-01 ~ REQ-27</div></div>
+  <div class="stat k-green"><div class="n">13</div><div class="l">项验收标准</div><div class="s">AC-01 ~ AC-13</div></div>
+  <div class="stat k-slate"><div class="n">13</div><div class="l">个能力域</div><div class="s">每域对应一条 AC</div></div>
+  <div class="stat k-green"><div class="n">9</div><div class="l">个开放问题</div><div class="s">OQ-01 ~ OQ-09，全部关闭</div></div>
+  <div class="stat k-red"><div class="n">15</div><div class="l">条风险</div><div class="s">其中 6 条仍属阻塞项</div></div>
+  <div class="stat k-amber"><div class="n">0</div><div class="l">行实现代码</div><div class="s">尚未进入实施</div></div>
+</div>
+
+<section id="what">
+  <div class="s-label">What it is</div>
+  <h2>这个项目是什么</h2>
+  <p class="s-desc">一句话：把 OpenCodex 日常要敲的命令、要另开终端看的状态，收进一个 macOS 桌面应用，同时<b>不改变 OpenCodex 自己的行为和权威</b>。</p>
+  <div class="grid g3">
+    <div class="card"><div class="kick">产品身份</div><h4>独立产品</h4><p>仓库标识 <code>opencodex-desktop</code>，界面展示名 <code>OpenCodeX-Desktop</code>。与 OpenCodex 官方项目没有隶属、授权或背书关系。</p></div>
+    <div class="card"><div class="kick">技术选型</div><h4>Tauri v2 + Rust</h4><p>桌面壳用 Tauri v2，后端 Rust，前端是渲染在 WebView 里的 Web 界面。第一阶段以 macOS 优先，跨平台只做抽象预留，不算首期验收范围。</p></div>
+    <div class="card"><div class="kick">许可</div><h4>MIT</h4><p>本项目代码与素材用 MIT。官方素材（页面快照、界面截图、标识）不随仓库分发，只在本地保留。</p></div>
+  </div>
+  <div class="note"><b>为什么强调“不改变官方权威”：</b>更新、provider、路由这些 OpenCodex 已经有官方通道的能力，本产品只做引导和展示，不自己再实现一套。</div>
+</section>
+
+<section id="why">
+  <div class="s-label">Problem</div>
+  <h2>它解决什么问题</h2>
+  <p class="s-desc">OpenCodex 的日常使用全靠命令行。麻烦的地方不在单条命令，而在于这些事散落在终端、配置文件和多个客户端之间。</p>
+  <div class="ba">
+    <div class="col before">
+      <h4>现在</h4>
+      <ul>
+        <li>启停要敲 <code>ocx start / stop / restart</code></li>
+        <li>状态和日志得另开一个终端看</li>
+        <li>配置导出、跨机同步没有图形入口</li>
+        <li>Skills 和 MCP 要手工改好几份客户端配置</li>
+        <li>出问题只能自己翻日志、翻环境</li>
+      </ul>
+    </div>
+    <div class="col after">
+      <h4>装了它之后</h4>
+      <ul>
+        <li>一个窗口里点启停，直接看到健康、端口、PID</li>
+        <li>日志和诊断中心并排看，敏感值自动打码</li>
+        <li>配置导成加密容器，走 WebDAV 同步，覆盖前先备份</li>
+        <li>Skills / MCP 统一管一次，再分发到六个客户端</li>
+        <li>出问题给原因和建议动作，不甩一个红点</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="scope">
+  <div class="s-label">Scope</div>
+  <h2>做哪些、明确不做哪些</h2>
+  <p class="s-desc">先说清边界，后面才不会返工。范围原则只有一句：<b>原型里出现的功能都要实现</b>，P0 / P1 / P2 只表示先做后做，不表示可以不做。</p>
+  <div class="grid g2">
+    <div class="card">
+      <h4>做</h4>
+      <ul class="plain">
+        <li>发现并校验本机已有的 OpenCodex 安装（npm 形态）</li>
+        <li>托管官方 <code>ocx start / stop / restart</code> 子进程，展示健康、端口、进程标识、最近错误</li>
+        <li>日志只读脱敏、运行环境诊断、内嵌官方 Web 面板</li>
+        <li>加密的配置导出 / 导入，以及经 WebDAV 的加密同步</li>
+        <li>Skills 与 MCP 统一管理，并分发到多个客户端</li>
+        <li>两条独立更新通道：OpenCodex 本体升级引导、应用自身更新</li>
+        <li>托盘、macOS 原生菜单，以及默认关闭的可选 CLI 控制面</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>不做</h4>
+      <ul class="plain">
+        <li>不重写 OpenCodex 核心，不绕过官方 API</li>
+        <li>不管 npm（安装、卸载、依赖解析）</li>
+        <li>不替代官方 <code>ocx update</code> 的更新事务</li>
+        <li>不安装或管理 launchd，不接管 <code>codex-shim</code></li>
+        <li>不写入 provider、路由、模型映射等核心运行配置</li>
+        <li>不自动覆盖外部 provider 托管的配置，只检测、解释、引导官方 <code>restore</code></li>
+        <li>不明文迁移或同步凭据</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note warn"><b>唯一的例外：</b>扩展配置可以写。具体是 Skills 目录同步和各客户端的 MCP 服务器节点，除此之外的一切 OpenCodex 配置仍然不可写。这也是安全评审里被反复盯住的边界。</div>
+</section>
+
+<section id="caps">
+  <div class="s-label">Capabilities</div>
+  <h2>13 个能力域，对应 13 条验收标准</h2>
+  <p class="s-desc">每一条都能追到验收标准和原型落点，避免“文档里写了、原型里没有”或者反过来。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>#</th><th>能力域</th><th>能力项</th><th>验收</th><th>原型落点</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>安装发现</strong></td><td>发现、展示、校验既有安装；不管理 npm</td><td><span class="tag t-blue">AC-01</span></td><td>概览 · 安装与数据目录</td></tr>
+      <tr><td>2</td><td><strong>数据目录</strong></td><td>选择 / 切换 <code>OPENCODEX_HOME</code>；管理器产物按结构分区</td><td><span class="tag t-blue">AC-02</span></td><td>设置 · 安装配置</td></tr>
+      <tr><td>3</td><td><strong>运行托管</strong></td><td>托管启停子进程；展示健康、端口、进程与最近错误</td><td><span class="tag t-blue">AC-03</span></td><td>概览 · 运行状态卡</td></tr>
+      <tr><td>4</td><td><strong>观测</strong></td><td>日志只读脱敏；诊断中心；官方 Web 面板</td><td><span class="tag t-blue">AC-04</span></td><td>日志 / 诊断中心 / 面板</td></tr>
+      <tr><td>5</td><td><strong>风险识别</strong></td><td>外部 provider 接管与 startup at-risk 的识别与 restore 引导</td><td><span class="tag t-blue">AC-05</span></td><td>概览 · 运行状态卡</td></tr>
+      <tr><td>6</td><td><strong>配置迁移</strong></td><td>全量加密导出；导入校验、备份、确认与回滚</td><td><span class="tag t-blue">AC-06</span></td><td>设置 · 配置迁移</td></tr>
+      <tr><td>7</td><td><strong>WebDAV 同步</strong></td><td>全量客户端加密同步；冲突提示；覆盖前备份</td><td><span class="tag t-blue">AC-07</span></td><td>设置 · WebDAV 同步</td></tr>
+      <tr><td>8</td><td><strong>官方升级</strong></td><td>升级前备份；引导官方 <code>ocx update</code></td><td><span class="tag t-blue">AC-08</span></td><td>设置 · 版本升级（第一块）</td></tr>
+      <tr><td>9</td><td><strong>应用自更新</strong></td><td>自身版本检查与更新；签名校验；失败可回滚</td><td><span class="tag t-blue">AC-09</span></td><td>设置 · 版本升级（第二块）</td></tr>
+      <tr><td>10</td><td><strong>CLI 控制面</strong></td><td>可选、默认关闭；经本机 IPC 委托运行实例</td><td><span class="tag t-blue">AC-10</span></td><td>设置 · CLI 控制面</td></tr>
+      <tr><td>11</td><td><strong>扩展管理</strong></td><td>Skills 与 MCP 的发现、增删改与多客户端分发</td><td><span class="tag t-blue">AC-11</span></td><td>拓展 + 设置 · 扩展管理</td></tr>
+      <tr><td>12</td><td><strong>托盘与菜单</strong></td><td>托盘菜单与 macOS 原生菜单入口</td><td><span class="tag t-blue">AC-12</span></td><td>托盘 + 应用菜单</td></tr>
+      <tr><td>13</td><td><strong>关于与归属</strong></td><td>官方项目 / 本应用 / 许可与归属的区分</td><td><span class="tag t-blue">AC-13</span></td><td>设置 · 关于</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>通知中心和「诊断中心 → 通知历史」共用同一份数据，算在观测能力里，跟着 AC-04 一起验收。</p>
+</section>
+
+<section id="arch">
+  <div class="s-label">Architecture</div>
+  <h2>架构：前端只管画，后端独占外部访问</h2>
+  <p class="s-desc">三层结构。前端不直接碰文件系统和网络，所有外部交互都收在 Rust 后端里，模块划分和能力域一一对应，方便从能力追到实现。</p>
+  <figure>
+    <img src="../06-架构与流程/导出图片/整体架构.png" alt="OpenCodeX-Desktop 整体架构图">
+    <figcaption>整体架构：前端界面层 → 管理器后端（13 个模块）→ 外部依赖；下方是数据根分区与写入边界。</figcaption>
+  </figure>
+  <div class="flow">
+    <div class="step">前端界面层<small>概览 / 面板 / 拓展 / 日志 / 设置 / 托盘</small></div>
+    <span class="arw">→</span>
+    <div class="step">管理器后端<small>Rust · 全部业务逻辑</small></div>
+    <span class="arw">→</span>
+    <div class="step">外部依赖<small>ocx CLI / 官方面板 / 客户端配置 / WebDAV / 更新通道</small></div>
+  </div>
+  <h3>几条硬约束</h3>
+  <ul class="plain">
+    <li>单一真相源 + 投影：管理器维护统一事实，各客户端配置是投影，不是权威。</li>
+    <li>原子写：同目录临时文件写好后原子替换，替换后保留原文件权限。</li>
+    <li>备份先行：任何可能覆盖数据的写入，前面必须先有一份能恢复的备份。</li>
+    <li>跨进程互斥：和官方 CLI、编辑器共享同一批配置文件，写入要拿跨进程文件锁并比对内容摘要。</li>
+    <li>凭据不出域：凭据不进日志、不进命令行参数、不进错误信息、不进未加密文件。</li>
+    <li>进程模型：应用自更新会重启应用本体，但<b>不会停掉</b>正在托管的 OpenCodex 代理，重启后重新接管。</li>
+  </ul>
+</section>
+
+<section id="states">
+  <div class="s-label">State model</div>
+  <h2>状态：三个维度，可以同时成立</h2>
+  <p class="s-desc">最早文档只有一个“代理运行状态”，但原型里已经出现“正在同步”“正在备份”这类并行情况。压成单一状态机必然打架，所以拆成三个互相独立的维度：</p>
+  <figure>
+    <img src="../06-架构与流程/导出图片/状态模型.png" alt="三维状态模型">
+    <figcaption>三维状态模型：运行状态（11 态）、连接状态（7 态）、操作状态（8 态），另有 4 个环境前置门禁态。</figcaption>
+  </figure>
+  <div class="grid g3">
+    <div class="card"><div class="kick">运行状态 · 11 态</div><h4>代理进程</h4><p>未发现 / 正在探测 / 已发现未运行 / 启动中 / 待就绪 / 运行中 / 停止中 / 启动失败 / at-risk / 外部接管 / 不可达。</p></div>
+    <div class="card"><div class="kick">连接状态 · 7 态</div><h4>外部依赖</h4><p>未配置 / 未连接 / 连接中 / 同步中 / 已同步 / 冲突待处理 / 失败。</p></div>
+    <div class="card"><div class="kick">操作状态 · 8 态</div><h4>单次动作</h4><p>空闲 / 校验中 / 备份中 / 应用中 / 回滚中 / 已取消 / 成功 / 失败。</p></div>
+  </div>
+  <div class="note"><b>能同时表达</b>「运行中 + 同步中 + 备份中」。<b>渲染规则</b>：动作按状态渲染，不渲染没有解释的灰色禁用按钮，用一句状态说明说清为什么不能点。</div>
+</section>
+
+<section id="flows">
+  <div class="s-label">Flows</div>
+  <h2>10 张关键流程图</h2>
+  <p class="s-desc">挑的是有分支、有失败、有回滚的地方。图上所有连线只有横竖两个方向、单条直线段，不穿节点，方便直接读。</p>
+  <div class="grid g3">
+    <div class="card"><h4>01 首次发现与前置门禁</h4><p><code>node → npm → ocx</code> 短路检查，缺什么给什么命令。</p></div>
+    <div class="card"><h4>02 正常启停</h4><p>未运行 → 启动中 → 待就绪 → 运行中；失败、停止、重启各自成支。</p></div>
+    <div class="card"><h4>03 状态采集数据流</h4><p>官方状态源 → 后端映射 → 三维状态 → 前端渲染。</p></div>
+    <div class="card"><h4>04 受控写入</h4><p>校验 → 备份 → 原子替换 → 重新校验 → 成功或回滚。</p></div>
+    <div class="card"><h4>05 数据目录切换</h4><p>引用优先、迁移可选；检查不过就阻断，迁移失败自动回滚。</p></div>
+    <div class="card"><h4>06 Restore 引导</h4><p>看风险 → 备份 → 用户确认 → 走官方 restore → 刷新状态。</p></div>
+    <div class="card"><h4>07 导入配置</h4><p>口令、完整性、版本三重校验；失败一律拒绝，不做部分写入。</p></div>
+    <div class="card"><h4>08 WebDAV 同步</h4><p>客户端加密 → 清单比对 → 有冲突先入待处理，不静默覆盖。</p></div>
+    <div class="card"><h4>09 应用自身更新</h4><p>下载 → 签名校验 → 安装 → 重启接管；失败保留上一版本。</p></div>
+    <div class="card"><h4>10 官方升级引导</h4><p>升级前必须备份成功，再引导官方 <code>ocx update</code>。</p></div>
+  </div>
+  <div class="shots" style="margin-top:16px">
+    <figure><img src="../06-架构与流程/导出图片/流程-05.png" alt="流程 05 数据目录切换"><figcaption>流程 05 · 数据目录切换</figcaption></figure>
+    <figure><img src="../06-架构与流程/导出图片/流程-08.png" alt="流程 08 WebDAV 同步"><figcaption>流程 08 · WebDAV 同步与冲突处理</figcaption></figure>
+  </div>
+</section>
+
+<section id="data">
+  <div class="s-label">Data &amp; safety</div>
+  <h2>数据与安全边界</h2>
+  <p class="s-desc">这个产品大半的复杂度都在这里：它要改别人机器上的配置文件，还要搬运凭据。原则是能不动就不动，非要动就先备份、可回滚、留证据。</p>
+
+  <h3>数据根分区</h3>
+  <div class="tw"><table>
+    <thead><tr><th>分区</th><th>放什么</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">manager state</td><td>桌面壳设置、数据根元信息、界面偏好</td></tr>
+      <tr><td class="mono">opencodex home</td><td>可选承载 <code>OPENCODEX_HOME</code></td></tr>
+      <tr><td class="mono">backups</td><td>升级、导入、同步覆盖前的备份</td></tr>
+      <tr><td class="mono">logs</td><td>桌面壳操作日志与旋转后的日志</td></tr>
+      <tr><td class="mono">exports</td><td>加密配置导出容器（按凭据文件处理，权限 0600）</td></tr>
+      <tr><td class="mono">cache</td><td>可丢弃缓存</td></tr>
+      <tr><td class="mono">sync state</td><td>WebDAV 冲突记录、远端索引摘要、同步历史摘要</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>数据分级</h3>
+  <div class="grid g2">
+    <div class="card"><h4>S0 公开 / S1 内部</h4><p>应用版本、官方项目信息；安装路径、版本、运行状态、端口、进程标识、数据根路径。</p></div>
+    <div class="card"><h4>S2 敏感 / S3 凭据</h4><p>日志正文、备份内容、Skills 文件内容、MCP 配置结构；API key、token、WebDAV 账号口令、加密口令、MCP 环境变量值。<b>S3 不得</b>进仓库、Markdown、日志、命令行参数或未加密文件。</p></div>
+  </div>
+  <div class="note danger"><b>掩码在取值之前完成</b>，不是“先明文取回来，再在界面上打码”。<code>env</code>、<code>args</code>、<code>headers</code> 一律按潜在敏感值处理。</div>
+
+  <h3>扩展配置落在哪</h3>
+  <p>六家客户端的 MCP 节点位置、容器结构和文件格式都不一样，所以必须一家一个适配器，不能假设有统一 schema。</p>
+  <div class="tw"><table>
+    <thead><tr><th>客户端</th><th>MCP 配置落点</th><th>格式</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Codex</strong></td><td class="mono">$CODEX_HOME/config.toml</td><td>TOML</td></tr>
+      <tr><td><strong>Claude Code</strong></td><td class="mono">~/.claude.json；项目级 .mcp.json</td><td>JSON</td></tr>
+      <tr><td><strong>Gemini CLI</strong></td><td class="mono">~/.gemini/settings.json</td><td>JSON</td></tr>
+      <tr><td><strong>Grok CLI</strong></td><td class="mono">~/.grok/user-settings.json</td><td>JSON（数组）</td></tr>
+      <tr><td><strong>OpenCode</strong></td><td class="mono">~/.config/opencode/opencode.json[c]</td><td>JSON / JSONC</td></tr>
+      <tr><td><strong>Hermes Agent</strong></td><td class="mono">~/.hermes/config.yaml</td><td>YAML</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>WebDAV 的信任假设</h3>
+  <ul class="plain">
+    <li>远端一律视为<b>不可信</b>，上传前在客户端加密。</li>
+    <li>证书校验失败<b>默认拒绝</b>，并且不提供「忽略证书」选项。</li>
+    <li>哈希只用来发现传输损坏和回放，真实性由认证加密负责，不能拿哈希当防恶意远端的措施。</li>
+    <li>和官方 <code>ocx connect</code> 的 remote hub 是并列能力：不自建 hub，也不替代官方 hub，只同步用户自己指定的端点。</li>
+  </ul>
+</section>
+
+<section id="progress">
+  <div class="s-label">Progress</div>
+  <h2>走到哪一步了</h2>
+  <p class="s-desc">需求阶段已经收尾：9 个开放问题全部关闭，五个评审门都过了。下一步不是写代码，而是先把项目核心定稿，再建实施契约。</p>
+  <div class="tl">
+    <div class="tl-item done">
+      <div class="tl-when">2026-09-12 · 已完成</div>
+      <h4>需求输入与协作包建立</h4>
+      <p>原始诉求、生态调研、本机现状观察整理进协作包；需求范围和技术选型确认。</p>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">2026-09-13 · 已完成</div>
+      <h4>P0 原型 + 状态流程</h4>
+      <p>可点击原型跑通概览、面板、拓展、日志、设置、托盘；状态维度、页面地图与流程分支补齐。</p>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">2026-09-14 · 已完成</div>
+      <h4>需求 revision 3 回写</h4>
+      <p>OQ-01 ~ OQ-09 全部关闭并逐项落地；新增 AC-11 / AC-12 / AC-13；确认「原型全部功能都要实现」。</p>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">2026-09-14 · 已完成</div>
+      <h4>项目核心事实建立 + 图集产出</h4>
+      <p>产品定义、能力地图、系统架构、数据与状态、集成与安全边界五份当前事实；整体架构、三维状态模型和 10 张流程图完成。</p>
+    </div>
+    <div class="tl-item now">
+      <div class="tl-when">现在 · 进行中</div>
+      <h4>项目核心定稿</h4>
+      <p>这五份事实需要你过一遍并确认，确认后才进入实施契约。</p>
+    </div>
+    <div class="tl-item">
+      <div class="tl-when">下一步 · 未开始</div>
+      <h4>创建 IMP，冻结 9 类契约</h4>
+      <p>目录布局与数据根、状态协议、进程模型、发现/日志/升级、加密格式、扩展管理、WebDAV 同步、CLI 控制面、验收环境与 mock 数据。</p>
+    </div>
+  </div>
+  <div class="grid g3" style="margin-top:8px">
+    <div class="card"><h4>Gate A 基线与范围</h4><p><span class="tag t-green">已通过</span></p></div>
+    <div class="card"><h4>Gate B 场景与流程</h4><p><span class="tag t-green">已通过</span></p></div>
+    <div class="card"><h4>Gate C 安全评审</h4><p><span class="tag t-green">已通过</span></p></div>
+    <div class="card"><h4>Gate D 领域与契约</h4><p><span class="tag t-green">已通过</span></p></div>
+    <div class="card"><h4>Gate E 评审与移交</h4><p><span class="tag t-green">产物已补齐</span></p></div>
+    <div class="card"><h4>IMP / TASK</h4><p><span class="tag t-slate">未创建</span></p></div>
+  </div>
+</section>
+
+<section id="proto">
+  <div class="s-label">Prototype</div>
+  <h2>原型长什么样</h2>
+  <p class="s-desc">原型是为了定界面结构和状态分支，用的全是 mock 数据：不调用真实 <code>ocx</code>，不读真实配置，也不会真的启停或备份。官方面板那一屏是官方 GUI 的源码级快照，用来做视觉对照。</p>
+  <div class="shots">
+    <figure><img src="../05-原型设计/文档/截图/现行/prototype-overview-light.png" alt="概览 · 亮色"><figcaption>概览（亮色）：运行摘要 + 运行详情折叠 + 快捷动作卡</figcaption></figure>
+    <figure><img src="../05-原型设计/文档/截图/现行/prototype-overview-dark.png" alt="概览 · 暗色"><figcaption>概览（暗色）：同一份配色 token 派生出外壳与面板主题</figcaption></figure>
+    <figure><img src="../05-原型设计/文档/截图/现行/prototype-settings-light.png" alt="设置"><figcaption>设置：通用 / 安装配置 / 数据与备份 / 扩展管理 / 迁移 / 同步 / CLI / 升级 / 关于</figcaption></figure>
+    <figure><img src="../05-原型设计/文档/截图/现行/prototype-notifications-light.png" alt="通知中心"><figcaption>通知中心：与「诊断中心 → 通知历史」共用同一份数据</figcaption></figure>
+  </div>
+  <div class="note">原型按 1180 × 760 的 macOS 应用窗口表达，最小 900 × 600。界面里<b>不出现 P0 / P1 / P2</b>，只用功能名和「规划中 / 可用」。</div>
+</section>
+
+<section id="next">
+  <div class="s-label">Next</div>
+  <h2>下一步要你定的事</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h4>1. 确认项目核心这五份事实</h4>
+      <p>产品定义、能力地图、系统架构、数据与状态、集成与安全边界。它们现在写的是“已确认的设计事实”，你点头之后才允许更新成“实际架构事实”。</p>
+    </div>
+    <div class="card">
+      <h4>2. 确认后再建 IMP</h4>
+      <p>IMP 会把 9 类契约冻结下来：目录布局、状态协议、进程模型、加密格式、扩展管理写入边界、WebDAV 冲突策略、CLI 与 IPC 契约、验收环境与 mock 数据。</p>
+    </div>
+    <div class="card">
+      <h4>3. 安全评审的收尾项</h4>
+      <p>15 条风险里有 6 条仍标为阻塞项，集中在扩展管理的真实写入、MCP 命令执行边界、删除可恢复性和未决项被绕过。这些必须在对应能力开工前处理完。</p>
+    </div>
+    <div class="card">
+      <h4>4. 一句话提醒</h4>
+      <p>现在没有任何实现代码，所以这一步改需求、改契约的成本最低。等 IMP 冻结、TASK 开出去之后再改，代价会明显上来。</p>
+    </div>
+  </div>
+</section>
+
+<section id="index">
+  <div class="s-label">Index</div>
+  <h2>这份报告的依据在哪</h2>
+  <div class="tw"><table>
+    <thead><tr><th>产物</th><th>在哪</th></tr></thead>
+    <tbody>
+      <tr><td><strong>需求权威</strong></td><td class="mono">docs/01-需求管理/需求/DMD-OPENCODEX-DESKTOP-MANAGER.md（revision 3）</td></tr>
+      <tr><td><strong>项目核心事实</strong></td><td class="mono">docs/02-项目核心/（产品定义 / 能力地图 / 系统架构 / 数据与状态 / 集成与安全边界）</td></tr>
+      <tr><td><strong>需求基线</strong></td><td class="mono">协作包 / 04-需求分析计划/需求基线.md（REQ-01 ~ REQ-27）</td></tr>
+      <tr><td><strong>场景与验收矩阵</strong></td><td class="mono">协作包 / 04-需求分析计划/场景与验收矩阵.md（AC-01 ~ AC-13）</td></tr>
+      <tr><td><strong>风险与开放问题</strong></td><td class="mono">协作包 / 04-需求分析计划/风险与开放问题.md（OQ-01 ~ OQ-09、R-01 ~ R-15）</td></tr>
+      <tr><td><strong>安全评审输入</strong></td><td class="mono">协作包 / 04-需求分析计划/安全评审输入.md</td></tr>
+      <tr><td><strong>IMP 输入清单</strong></td><td class="mono">协作包 / 04-需求分析计划/IMP输入清单.md</td></tr>
+      <tr><td><strong>原型与状态流程</strong></td><td class="mono">协作包 / 05-原型设计/</td></tr>
+      <tr><td><strong>架构与流程图</strong></td><td class="mono">协作包 / 06-架构与流程/</td></tr>
+      <tr><td><strong>本报告</strong></td><td class="mono">协作包 / 07-项目报告/index.html</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn"><b>图片说明：</b>报告里的图用相对路径引用仓库内的 PNG，请用浏览器直接打开本文件查看；单独把 html 拷走会看不到图。</div>
+</section>
+
+<footer>
+  <b>OpenCodeX-Desktop 项目报告</b> · 生成于 2026-09-14 · 依据协作包 <span class="mono">COL-LOCAL-20260912-01</span> 与 <span class="mono">docs/</span> 下的当前事实整理。<br>
+  本报告是派生产物，不作为事实源；有冲突时以 DMD <span class="mono">revision 3</span> 和 <span class="mono">docs/02-项目核心</span> 为准。<br>
+  与 OpenCodex 官方项目不存在隶属、授权或背书关系；本项目采用 MIT License。
+</footer>
+
+</div>
+
+<script>
+// 滚动时高亮当前分区，纯前端，不影响内容
+(function(){
+  var links = [].slice.call(document.querySelectorAll('.nav a'));
+  var map = {};
+  links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+  var secs = [].slice.call(document.querySelectorAll('section[id]'));
+  function sync(){
+    var y = window.scrollY + 110, cur = secs[0] && secs[0].id;
+    secs.forEach(function(s){ if(s.offsetTop <= y) cur = s.id; });
+    links.forEach(function(a){ a.classList.remove('on'); });
+    if(map[cur]) map[cur].classList.add('on');
+  }
+  window.addEventListener('scroll', sync, {passive:true});
+  sync();
+})();
+</script>
+</body>
+</html>
