@@ -95,3 +95,4 @@ Implementation has not started, so there are no build steps, environment require
 - The OpenCodex name, version, and links are used only as needed for compatibility descriptions; its source code, build artifacts, icons, UI assets, and trademarks are **not copied or redistributed**.
 - The OpenCodex source code, name, trademarks, and other rights remain with their rights holders; when using the official software, refer to the `LICENSE`, `NOTICE`, and terms of service in the official repository.
 - This project's own code and assets are released under the **MIT License** (see [`LICENSE`](LICENSE)). The two licenses are **independent** of each other.
+- This repository **does not distribute official source assets** (such as official page snapshots, official UI screenshots, or official brand marks); those are kept locally only, consistent with the statement above.
