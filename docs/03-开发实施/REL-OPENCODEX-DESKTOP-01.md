@@ -139,12 +139,33 @@ source_refs:
 
 ### 仍未完成（属单独门禁，未通过前不构成 Windows 可发布）
 
-1. **未产出 Windows 安装包**：矩阵已就绪，但需要一次真实 CI 运行（推 tag 或 `workflow_dispatch`）
-   才能验证 nsis/msi 实际产出；本机无法产出 Windows 安装器（缺 MSVC/WiX）。
+1. **未产出 Windows 安装包**：矩阵已就绪，首次真实 CI 运行因 **token 权限**而非代码失败（见下节）。
 2. **Windows 运行期测试覆盖**：目前只保证编译，Unix 专属用例未在 Windows 上等价重写。
 3. **Windows 实机核验**：安装/启动、WebView2 渲染、overlay 标题栏与拖拽区、托盘、
    字体回退（`Segoe UI` / 微软雅黑）与玻璃观感均未核对。
 4. **Windows 代码签名**与**自动更新**（`tauri.conf.json` 的 `updater.endpoints` 仍是占位）未接通。
+
+### 追加验证（2026-10-03 首次真实 CI，main `44f433d9`）
+
+推送 `main` 与 tag `v0.1.0` 后的真实 GitHub Actions 结果（经公开 API 读取）：
+
+| 运行 | Job | 结果 |
+| --- | --- | --- |
+| CI（main） | `frontend` | 通过 |
+| CI（main） | **`backend-windows`（windows-latest，`cargo check --workspace --all-targets`）** | **通过** |
+| CI（main） | `backend`（macOS） | `fmt` / `clippy -D warnings` 通过；`cargo test` 失败 |
+| CI（main） | `build` | 因 `needs: backend` 被跳过 |
+| Release（`v0.1.0`） | `macos-14`、`windows-latest` | 均在 `tauri-action` 步骤失败 |
+
+- **Windows 编译门禁已在真实 MSVC 上通过**：这是对「`x86_64-pc-windows-msvc` 下 `cargo check` 通过」
+  的权威证据，强于上文基于本地 cc/ar shim 的交叉检查。
+- `backend` 的 `cargo test` 失败与本地一致，是既有环境性用例（`local_documents_are_frozen` 依赖
+  `docs/`，而 CI 检出 `main` 不含 `docs/`）；`fmt`/`clippy` 均通过。
+- **Release 失败原因是非代码的权限问题**：两个平台都报
+  `Resource not accessible by integration`（创建 Release 的 REST 调用被拒）。
+  工作流本身已声明 `permissions: contents: write`，仍被拒，说明仓库的
+  Settings → Actions → General → **Workflow permissions** 是只读默认，需要改成
+  **Read and write permissions** 后再重跑；若仍不行，则改用 PAT secret 替代 `GITHUB_TOKEN`。
 
 ### 本地复现 Windows 编译门禁（macOS，无 MSVC）
 
