@@ -109,3 +109,39 @@ source_refs:
 `commands/panel.rs`、`commands/workspace.rs`、`lib.rs` 已做平台 cfg，不阻塞。
 因此 Windows 打通不是「补两个 cfg」，而是：凭据存储抽象 + 文件锁/权限/日志/符号链接的平台分支
 （Windows 权限位退化为 no-op、文件锁换 `LockFileEx`、symlink 退化复制/junction、`ocxd` 先 Gate 到 unix）。
+
+## 追加（2026-10-03）：Windows 跨平台改造完成
+
+上文第 4 节与「Windows 阻塞点补充」列出的阻塞点已全部处理；`main` 侧改动如下（逐阶段提交）：
+
+- `346f3c16` 凭据存储改用 `keyring`（macOS `apple-native` / Windows `windows-native`），
+  `security-framework` 与 `reqwest` 的 `macos-system-configuration` 收口到 `cfg(target_os = "macos")`。
+- `03b064a8` 新增 `infrastructure::platform`（权限位、OpenOptions 创建模式、符号链接、权限复制）；
+  文件锁改用 `std::fs::File` 的 `lock/try_lock/unlock`（Rust **1.89** 起稳定，MSRV 由 1.85 提到 1.89，
+  不再依赖 `libc::flock`）；`ocxd`、`ipc::endpoint` 等 Unix socket 代码在本机 IPC 实现 Windows 化之前
+  先 Gate 到 unix，Windows 侧提供明确报错的 `main`。
+- `5ae44855` CI 增加 `backend-windows`（`windows-latest` + `cargo check --workspace --all-targets`）；
+  release 矩阵放开 `windows-latest` 条目（未签名 nsis/msi）。
+
+### 验证证据
+
+- **本地 Windows 交叉编译门禁**：`cargo check --target x86_64-pc-windows-msvc --all-targets` 通过。
+  本机无 MSVC，故用一次性 cc/ar shim（放在 `/tmp`，不入库、不改主机 PATH）绕开原生 C 依赖
+  （`ring` 等）的构建脚本，从而拿到真实的 Rust 层错误；shim 不参与链接，因此只证明**可编译**，
+  不证明可链接/可打包。
+- **macOS 门禁**：`cargo fmt --check`、`cargo clippy --all-targets -- -D warnings` 通过；
+  `cargo test --workspace --features integration-test` 406 passed / 1 failed / 2 ignored。
+- 唯一失败 `commands::workspace::tests::local_documents_are_frozen` 是**分支拆分带来的环境性失败**：
+  该用例断言仓库根下存在 `docs/04-项目资料/.../LICENSE`，而 `main` 分支不含 `docs/`
+  （该文件在 `docs` 分支）。用例代码本身未被本次改动触碰，属既有问题。
+- Windows 目标上，依赖 Unix 语义（chmod 权限位、`#!/bin/sh` fixture）的测试模块已用
+  `#[cfg(all(test, unix))]` / `#![cfg(unix)]` Gate 掉，因此 `--all-targets` 可编译。
+
+### 仍未完成（属单独门禁，未通过前不构成 Windows 可发布）
+
+1. **未产出 Windows 安装包**：矩阵已就绪，但需要一次真实 CI 运行（推 tag 或 `workflow_dispatch`）
+   才能验证 nsis/msi 实际产出；本机无法产出 Windows 安装器（缺 MSVC/WiX）。
+2. **Windows 运行期测试覆盖**：目前只保证编译，Unix 专属用例未在 Windows 上等价重写。
+3. **Windows 实机核验**：安装/启动、WebView2 渲染、overlay 标题栏与拖拽区、托盘、
+   字体回退（`Segoe UI` / 微软雅黑）与玻璃观感均未核对。
+4. **Windows 代码签名**与**自动更新**（`tauri.conf.json` 的 `updater.endpoints` 仍是占位）未接通。
