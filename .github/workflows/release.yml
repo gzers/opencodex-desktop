@@ -30,16 +30,12 @@ jobs:
           #   rust_targets: x86_64-apple-darwin
           #   args: '--target x86_64-apple-darwin'
           #
-          # Windows：流水线已就位，但代码侧还有前置改造（见 docs/03-开发实施 中的发布说明）：
-          #   1) `infrastructure/keychain.rs` 直接依赖 macOS 的 `security-framework`，需要抽成
-          #      「密钥存储」抽象并补 Windows（凭据管理器 / wincred）实现；
-          #   2) `Cargo.toml` 里 `security-framework` 与 `reqwest` 的 `macos-system-configuration`
-          #      需要按平台 cfg 收口；
-          #   3) `tauri.conf.json` 的 `bundle.targets` 需要包含 `nsis`（本文件已改为 "all"）。
-          # 前置改造完成后再取消注释即可出 Windows 安装包。
-          # - platform: windows-latest
-          #   rust_targets: ''
-          #   args: ''
+          # Windows（x64）：未签名 nsis/msi 测试包。代码侧跨平台改造已完成
+          # （keyring 后端、按 cfg 收口、Unix 专属代码平台分支），见
+          # docs/03-开发实施/REL-OPENCODEX-DESKTOP-01.md 的版本说明约定一节。
+          - platform: windows-latest
+            rust_targets: x86_64-pc-windows-msvc
+            args: ''
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
@@ -82,7 +78,8 @@ jobs:
             echo ""
             echo "### 安装"
             echo "- macOS（Apple Silicon）：下载 \`.dmg\`，拖入「应用程序」。"
-            echo "- 未签名测试包；首次打开如被 Gatekeeper 拦截，右键 →「打开」。"
+            echo "- Windows（x64）：下载 \`*-setup.exe\`（NSIS）安装包。"
+            echo "- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。"
             echo "CHANGELOG_EOF"
           } >> "$GITHUB_OUTPUT"
 

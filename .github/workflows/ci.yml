@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, docs/governance-main]
+    branches: [main, docs]
   pull_request:
 
 jobs:
@@ -33,6 +33,18 @@ jobs:
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test --workspace --features integration-test
+
+  # Windows 构建门禁：验证跨平台改造没有回退（不需要 shim，GitHub 的
+  # windows-latest 自带 MSVC 工具链）。运行期测试覆盖仍在补齐，暂以编译门禁为准。
+  backend-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: apps/desktop/tauri
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo check --workspace --all-targets
 
   build:
     needs: [frontend, backend]
