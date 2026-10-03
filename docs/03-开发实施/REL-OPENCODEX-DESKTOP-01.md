@@ -145,3 +145,27 @@ source_refs:
 3. **Windows 实机核验**：安装/启动、WebView2 渲染、overlay 标题栏与拖拽区、托盘、
    字体回退（`Segoe UI` / 微软雅黑）与玻璃观感均未核对。
 4. **Windows 代码签名**与**自动更新**（`tauri.conf.json` 的 `updater.endpoints` 仍是占位）未接通。
+
+### 本地复现 Windows 编译门禁（macOS，无 MSVC）
+
+```bash
+rustup target add x86_64-pc-windows-msvc
+cd apps/desktop/tauri
+CC_x86_64_pc_windows_msvc=<shim>/cc AR_x86_64_pc_windows_msvc=<shim>/ar \
+  cargo check --workspace --all-targets --target x86_64-pc-windows-msvc
+```
+
+`<shim>` 是一个临时目录里的 `cc`/`ar` 脚本，只把 `-o` / `/OUT:` 指定的产物建成空文件并退出 0。
+原因：`ring` 等原生 C 依赖在 macOS 上无法为 MSVC 目标编译构建脚本，shim 让它们「通过」以便暴露
+Rust 层错误。**shim 不参与链接，因此只证明可编译，不证明可链接/可打包**；权威门禁是 CI 的
+`windows-latest` 任务。该 shim 属一次性本地手段，不入库。
+
+### 回归核对
+
+- 上文唯一的 macOS 测试失败已确认为环境性：在 worktree 内补齐 `docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE`
+  后，`cargo test --lib local_documents_are_frozen` 通过；失败原因是 `main` 分支不含 `docs/`，与本次改造无关。
+
+### 备注
+
+- `apps/desktop/tauri/.gitignore` 忽略 `Cargo.lock`，依赖版本未固定，`gen/schemas/*` 会随解析漂移
+  （每次本地构建都会让这几个已跟踪文件出现改动）。是否固定 `Cargo.lock` 属独立决策。
