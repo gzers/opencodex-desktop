@@ -83,10 +83,39 @@ jobs:
             echo "CHANGELOG_EOF"
           } >> "$GITHUB_OUTPUT"
 
+      # 临时诊断：打印本次运行里 GITHUB_TOKEN 的实际仓库权限，以及创建 Release 的返回码。
+      # 仅用于排查发布权限问题，定位后删除。若返回 201 会立即把探针 Release/tag 删掉。
+      - name: 诊断 Release 权限
+        shell: bash
+        run: |
+          set -uo pipefail
+          token="${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}"
+          api="https://api.github.com/repos/gzers/opencodex-desktop"
+          list_code=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer $token" -H 'Accept: application/vnd.github+json' \
+            "$api/releases?per_page=1")
+          echo "::error::DIAG_LIST=$list_code"
+          perms=$(curl -s -H "Authorization: Bearer $token" -H 'Accept: application/vnd.github+json' \
+            "$api" | python3 -c 'import sys,json;print(json.load(sys.stdin).get("permissions"))')
+          echo "::error::DIAG_PERMS=$perms"
+          code=$(curl -s -o /tmp/diag.json -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer $token" -H 'Accept: application/vnd.github+json' \
+            "$api/releases" \
+            -d '{"tag_name":"diag-probe","name":"diag-probe","draft":true,"prerelease":true}')
+          echo "::error::DIAG_CREATE=$code"
+          echo "::error::DIAG_BODY=$(head -c 180 /tmp/diag.json | tr -d '\n')"
+          if [ "$code" = "201" ]; then
+            rid=$(python3 -c 'import json;print(json.load(open("/tmp/diag.json"))["id"])')
+            curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $token" "$api/releases/$rid"
+            curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $token" "$api/git/refs/tags/diag-probe"
+            echo "::error::DIAG_CLEANUP=done"
+          fi
+
       - name: 打 tag 与出包（tauri-action）
         uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 允许用 PAT 覆盖：仓库若无法给 GITHUB_TOKEN 写权限，配置 secret RELEASE_TOKEN 即可。
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
         with:
           projectPath: apps/desktop/tauri
           tagName: ${{ steps.notes.outputs.tag }}
