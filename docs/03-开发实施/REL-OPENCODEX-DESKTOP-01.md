@@ -80,3 +80,32 @@ source_refs:
 - 产出前复跑：`vue-tsc`、`vitest`、`vite build`、`cargo test`、`qa/audit.browser.mjs` 全绿；
 - 实机（WKWebView）复核通过；
 - 证书/签名/公证、Windows 实机、安装升级回退仍属**单独门禁**，未完成前不构成公开发布决定。
+
+## 追加（2026-10-03）：版本说明与 Release 文案约定
+
+- **事实源**：`main` 仓库根的 `CHANGELOG.md`（Keep a Changelog 风格）。一个版本一个
+  `## [X.Y.Z] - 日期` 段落，标题里的版本号**不带 `v`**。
+- **流水线取用**：`.github/workflows/release.yml` 按 tag（`vX.Y.Z` → `X.Y.Z`）从 `CHANGELOG.md`
+  抽取同名段落作为 GitHub Release body；抽不到对应段落即让 job 失败，避免发出没有说明的包。
+  `tauri-action` 没有 `releaseBodyPath` 入参，所以用一步读入 `$GITHUB_OUTPUT` 再传给 `releaseBody`。
+- **分工**：`CHANGELOG.md` = 给用户看的版本说明事实源（在 `main`）；本文件与其它 `REL-*` / `IMP-*`
+  = 给治理看的门禁与验证长文（在 `docs`）。同一段版本说明不两处维护，changelog 里链接到本目录。
+- **暂不自动化**：当前提交信息前缀不统一，`git-cliff` / `release-please` 生成质量差；提交规范稳定后再引入
+  `git-cliff`，届时 `CHANGELOG.md` 仍是事实源。
+
+### Windows 阻塞点补充（复核代码后）
+
+上文第 4 节只列了 keychain 与 Cargo cfg；复核**非测试**代码后，Windows 编译还受一批 Unix 专属调用阻塞：
+
+| 文件 | 阻塞点 |
+| --- | --- |
+| `src/infrastructure/atomic_write.rs` | `std::os::unix::fs::OpenOptionsExt` / `PermissionsExt`（`.mode()`） |
+| `src/infrastructure/locking.rs` | `std::os::unix::io::AsRawFd`（flock） |
+| `src/infrastructure/runtime_log.rs` | unix `.mode(0o600)` |
+| `src/modules/extensions/projection.rs` | unix 权限位 + `std::os::unix::fs::symlink` |
+| `src/modules/data_root/mod.rs` | `set_private_directory` 使用 unix 权限 |
+| `src/bin/ocxd.rs` | `std::os::unix::net::UnixStream`（`ocxd` CLI） |
+
+`commands/panel.rs`、`commands/workspace.rs`、`lib.rs` 已做平台 cfg，不阻塞。
+因此 Windows 打通不是「补两个 cfg」，而是：凭据存储抽象 + 文件锁/权限/日志/符号链接的平台分支
+（Windows 权限位退化为 no-op、文件锁换 `LockFileEx`、symlink 退化复制/junction、`ocxd` 先 Gate 到 unix）。
