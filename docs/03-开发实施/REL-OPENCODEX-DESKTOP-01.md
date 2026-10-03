@@ -204,3 +204,16 @@ Rust 层错误。**shim 不参与链接，因此只证明可编译，不证明�
 - **workflow 收尾**：临时诊断步骤已移除；保留
   `secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN` 覆盖机制，便于日后改用 PAT。
 - **仍未完成**：Windows 实机核验、代码签名/公证、自动更新、Windows 运行期测试覆盖。
+
+### 追加（2026-10-03 收尾）：tag 对齐 main + action 升级
+
+- `actions/checkout`、`actions/setup-node` 由 `v4` 升到 `v5`（Node 24），
+  消除 Actions 日志里的 `Node.js 20 is deprecated` 告警。
+- tag `v0.1.0` 重打到当时 `main`（`ed35cba8`），两者完全一致；
+  重跑 Release（run `37125993621`）**macOS 与 Windows 两 job 再次成功，且无弃用告警**
+  （仅剩 macOS arm64 排队偏慢的提示）。
+- CI（`ed35cba8`）：`frontend` ✅、`backend-windows` ✅、`backend` ❌、`build` 因
+  `needs: backend` 被跳过。`backend` 仍只败在既有环境性用例
+  `commands::workspace::tests::local_documents_are_frozen`——该用例断言仓库根存在
+  `docs/04-项目资料/.../LICENSE`，而 `main` 分支不含 `docs/`。属分支拆分带来的既有问题，
+  修法（让该断言按文件是否存在分支）待定，尚未改动。
