@@ -190,3 +190,17 @@ Rust 层错误。**shim 不参与链接，因此只证明可编译，不证明�
 
 - `apps/desktop/tauri/.gitignore` 忽略 `Cargo.lock`，依赖版本未固定，`gen/schemas/*` 会随解析漂移
   （每次本地构建都会让这几个已跟踪文件出现改动）。是否固定 `Cargo.lock` 属独立决策。
+
+### 追加验证（2026-10-03 发布流水线打通，tag `v0.1.0` @ `9e91c0e9`）
+
+- **根因（非代码）**：首次 Release 运行两个平台都报 `Resource not accessible by integration`
+  （创建 Release 的 REST 调用被拒）。原因是仓库 Settings → Actions → General → **Workflow permissions**
+  为只读默认；改为 **Read and write permissions** 并保存后，`GITHUB_TOKEN` 恢复建 Release 权限
+  （诊断步骤用同一 token 调 `POST /releases` 返回 `201` 佐证，随后探针已清理）。
+- **结果**：`macos-14` 与 `windows-latest` 两个 job **全部成功**，`tauri-action` 完成
+  「构建 → 创建（草稿 + 预发布）Release → 上传制品」；`提取 CHANGELOG 版本说明` 步骤两平台均通过。
+- **产物**：未签名 macOS `.app`/`.dmg` 与 Windows NSIS/MSI，挂在该草稿 Release 下
+  （草稿 + 预发布，未登录仓库不可见）。
+- **workflow 收尾**：临时诊断步骤已移除；保留
+  `secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN` 覆盖机制，便于日后改用 PAT。
+- **仍未完成**：Windows 实机核验、代码签名/公证、自动更新、Windows 运行期测试覆盖。
