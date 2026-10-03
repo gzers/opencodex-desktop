@@ -212,8 +212,11 @@ Rust 层错误。**shim 不参与链接，因此只证明可编译，不证明�
 - tag `v0.1.0` 重打到当时 `main`（`ed35cba8`），两者完全一致；
   重跑 Release（run `37125993621`）**macOS 与 Windows 两 job 再次成功，且无弃用告警**
   （仅剩 macOS arm64 排队偏慢的提示）。
-- CI（`ed35cba8`）：`frontend` ✅、`backend-windows` ✅、`backend` ❌、`build` 因
-  `needs: backend` 被跳过。`backend` 仍只败在既有环境性用例
-  `commands::workspace::tests::local_documents_are_frozen`——该用例断言仓库根存在
-  `docs/04-项目资料/.../LICENSE`，而 `main` 分支不含 `docs/`。属分支拆分带来的既有问题，
-  修法（让该断言按文件是否存在分支）待定，尚未改动。
+- **CI 修复（既有环境性失败）**：`commands::workspace::tests::local_documents_are_frozen`
+  原先断言仓库根存在 `docs/04-项目资料/.../LICENSE`，而 `main` 分支不含 `docs/`（该文件在
+  docs 分支），导致 `main` 上的 `cargo test` 必然失败。已改为按该文件是否存在分支断言：
+  存在 → 要求 `opened=true` 且记录路径含两份文档；不存在 → 要求 `opened=false` 且只记录 LICENSE。
+  语义不变，只是承认两个分支的目录差异。
+- 修复后 CI（`ab0e6fc0`，run `37126924257`）**四个 job 全绿**：`frontend` ✅、
+  `backend` ✅（`530 passed / 0 failed`）、`backend-windows` ✅、`build` ✅（macOS 打包，
+  此前因 `needs: backend` 被跳过）。
