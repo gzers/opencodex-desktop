@@ -478,16 +478,23 @@ mod tests {
             open_local_document_with_id("unknown"),
             Err(AppError::NotFound { entity }) if entity == "local document"
         ));
-        let result = open_local_document_with_id("license").expect("license");
-        assert!(result.opened);
-        let result = open_local_document_with_id("third-party").expect("third-party");
-        assert!(result.opened);
-        assert_eq!(
-            recorded_open_paths(),
-            vec![
-                project_document(&["LICENSE"]),
-                project_document(&["docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE"]),
-            ]
-        );
+        let license = open_local_document_with_id("license").expect("license");
+        assert!(license.opened);
+
+        // 「第三方许可」指向 docs 分支里的官方素材 LICENSE。在只含代码的 `main` 检出里
+        // 该文件不存在，此时必须显式返回 opened=false，而不是当作错误。
+        let third_party_path =
+            project_document(&["docs/04-项目资料/04-品牌与图标素材/01-原始素材/LICENSE"]);
+        let third_party = open_local_document_with_id("third-party").expect("third-party");
+        if third_party_path.exists() {
+            assert!(third_party.opened);
+            assert_eq!(
+                recorded_open_paths(),
+                vec![project_document(&["LICENSE"]), third_party_path]
+            );
+        } else {
+            assert!(!third_party.opened);
+            assert_eq!(recorded_open_paths(), vec![project_document(&["LICENSE"])]);
+        }
     }
 }
