@@ -7,7 +7,7 @@
 本文件是**用户可见版本说明的事实源**：发布流水线按 tag（`vX.Y.Z`）从这里抽取同名版本段落，
 作为 GitHub Release 的说明正文。因此每个版本都必须有且只有一个 `## [X.Y.Z] - 日期` 段落，
 且标题里的版本号不带 `v` 前缀。详细的门禁与验证记录放在 `docs` 分支
-（[`docs/03-开发实施/REL-*.md`](https://github.com/gzers/opencodex-desktop/tree/docs/docs/03-开发实施)），不在本文件重复。
+（[`docs/03-开发实施/REL-*.md`](https://github.com/gzers/opencodex-desktop/tree/docs/governance-main/docs/03-开发实施)），不在本文件重复。
 
 ## [Unreleased]
 
