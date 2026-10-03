@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-effects="high">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>通知与反馈体系 · 演示台</title>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f9f9f9; --glow-1:#a4c4ff6b; --glow-2:#a8e2c561; --glow-3:#ffe0c24d;
+  --glass-rail:#f9f9f9a8; --glass-blur:saturate(1.6) blur(22px);
+  --panel:#fff; --rail:#f9f9f9; --raised:#f4f4f4; --raised-hover:#ececec;
+  --border:#e6e6e6; --border-soft:#f0f0f0; --hover:#0d0d0d08;
+  --text:#0d0d0d; --muted:#6e6e6e; --faint:#707070;
+  --accent:#0d0d0d; --accent-hover:#3d3d3d; --accent-ink:#fff; --accent-soft:#0d0d0d0f; --accent-ring:#00000080;
+  --green:#0a7d5c; --green-soft:#10a37f1a;
+  --red:#b91c1c; --red-soft:#b91c1c17;
+  --amber:#9a4a08; --amber-soft:#b453091a;
+  --blue:#1d4ed8; --blue-soft:#1d4ed81a;
+  --violet:#6d28d9; --violet-soft:#6d28d917;
+  --radius-2xs:4px; --radius-xs:6px; --radius-sm:8px; --radius:12px; --radius-lg:16px; --radius-pill:999px;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px; --space-6:24px; --space-8:32px;
+  --text-micro:10px; --text-caption:11px; --text-label:12px; --text-control:13px; --text-body:14px; --text-subtitle:16px; --text-title:20px;
+  --control-sm:28px; --control-md:34px; --control-lg:40px;
+  --motion-fast:.12s; --motion-normal:.18s;
+  --shadow:0 1px 2px #1018280f, 0 10px 28px #10182812; --shadow-sm:0 1px 2px #1018280f;
+  --font-ui:"OpenAI Sans","Pretendard Variable",Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+  --font-code:ui-monospace,"SFMono-Regular","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+  font-synthesis:none;
+}
+html[data-theme="dark"]{
+  --bg:#212121; --glow-1:#6082c829; --glow-2:#58a08221; --glow-3:#b48c6414;
+  --glass-rail:#1717179e;
+  --panel:#262626; --rail:#171717; --raised:#303030; --raised-hover:#3a3a3a;
+  --border:#3d3d3d; --border-soft:#333; --hover:#ffffff08;
+  --text:#ececec; --muted:#a6a6a6; --faint:#9a9a9a;
+  --accent:#ececec; --accent-hover:#fff; --accent-ink:#0d0d0d; --accent-soft:#ffffff17; --accent-ring:#ffffff61;
+  --green:#4ecb9d; --green-soft:#4ecb9d21;
+  --red:#f87171; --red-soft:#f8717121;
+  --amber:#fbbf24; --amber-soft:#fbbf2421;
+  --blue:#7aa2ff; --blue-soft:#7aa2ff29;
+  --violet:#a78bfa; --violet-soft:#a78bfa21;
+  --shadow:0 1px 2px #00000080, 0 10px 28px #0000004d; --shadow-sm:0 1px 2px #0006;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:var(--text-body);line-height:1.5;-webkit-font-smoothing:antialiased;overflow:hidden}
+code,.mono{font-family:var(--font-code);font-size:.92em}
+button{font:inherit;color:inherit}
+
+/* 顶栏 */
+.topbar{display:flex;align-items:center;gap:var(--space-4);padding:10px var(--space-5);border-bottom:1px solid var(--border);height:56px}
+.topbar h1{margin:0;font-size:var(--text-body);font-weight:650;white-space:nowrap}
+.topbar .spacer{flex:1}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.badge.amber{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 36%,transparent);background:var(--amber-soft)}
+.tbtn{height:var(--control-md);padding:0 13px;border:1px solid var(--pctl-bd);border-radius:999px;background:var(--pctl-bg);color:var(--pctl-fg);cursor:pointer;font-size:var(--text-control);white-space:nowrap;transition:border-color .12s ease,color .12s ease}
+.tbtn:hover{border-color:var(--pctl-bd-h);color:var(--pctl-fg-h)}
+
+/* 演示台三栏 */
+.stage-wrap{display:grid;grid-template-columns:264px minmax(0,1fr) 292px;flex:1;min-height:0}
+.pane{overflow:auto;min-height:0}
+.pane.left{border-right:1px solid var(--border);padding:12px 0}
+.pane.right{border-left:1px solid var(--border);padding:14px}
+.pane-label{padding:0 14px;margin:0 0 8px}
+.pane-note{padding:12px 14px 4px;margin:0}
+.search{margin:0 12px 10px;width:calc(100% - 24px);height:32px;padding:0 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--text);font-size:var(--text-control)}
+.search::placeholder{color:var(--faint)}
+.grp-title{display:flex;align-items:center;gap:7px;padding:10px 14px 5px;color:var(--muted);font-size:var(--text-micro);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.grp-title .dot{width:8px;height:8px;border-radius:50%;background:var(--cat)}
+.sc-btn{display:block;width:100%;text-align:left;appearance:none;border:0;background:transparent;padding:7px 14px 7px 28px;cursor:pointer;color:var(--text);font-size:var(--text-control);line-height:1.35;border-left:2px solid transparent}
+.sc-btn:hover{background:var(--hover)}
+.sc-btn.active{background:var(--accent-soft);border-left-color:var(--accent);font-weight:600}
+.sc-btn .sub{display:block;color:var(--muted);font-size:var(--text-caption);margin-top:1px}
+
+/* 舞台 */
+.stage{position:relative;overflow:auto;padding:22px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.stage-inner{position:relative}
+.window{position:absolute;top:0;left:0;width:1180px;height:760px;transform-origin:top center;
+  display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+  background:var(--bg);box-shadow:var(--shadow)}
+.window::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(600px 300px at 12% -6%,var(--glow-1),transparent 60%),
+    radial-gradient(520px 300px at 88% 4%,var(--glow-2),transparent 62%),
+    radial-gradient(520px 320px at 60% 108%,var(--glow-3),transparent 60%)}
+.titlebar{position:relative;z-index:3;height:44px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--border);background:var(--glass-rail);backdrop-filter:var(--glass-blur)}
+.lights{display:flex;gap:7px}
+.lights i{width:12px;height:12px;border-radius:50%;display:block}
+.lights i:nth-child(1){background:#ff5f57}.lights i:nth-child(2){background:#febc2e}.lights i:nth-child(3){background:#28c840}
+.titlebar .wt{color:var(--muted);font-size:var(--text-label);font-weight:600}
+.titlebar .spacer{flex:1}
+.bell{position:relative;width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--muted);cursor:pointer}
+.bell svg{width:17px;height:17px}
+.bell .dot{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--amber);color:#fff;font-size:10px;font-weight:700;line-height:16px;text-align:center}
+.bell .dot.danger{background:var(--red)}
+.wbody{position:relative;z-index:2;flex:1;display:flex;min-height:0}
+.rail{width:196px;flex:none;border-right:1px solid var(--border);background:var(--glass-rail);backdrop-filter:var(--glass-blur);padding:10px;display:flex;flex-direction:column;gap:2px}
+/* 特效档：公共规则在 ../../glass-effects.css（原型层唯一真源）。 */
+/* 演示台内的特效档小开关（放标题栏，避免与 #rail 的路由选中态冲突） */
+.fx-seg{display:flex;gap:4px;align-items:center}
+.fx-seg button{font-size:11px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;background:var(--panel);color:var(--muted);cursor:pointer}
+.fx-seg button.active{border-color:var(--accent);color:var(--text);font-weight:600;background:var(--accent-soft)}
+.rail button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;appearance:none;border:0;background:transparent;color:var(--muted);padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;font-size:var(--text-control)}
+.rail button:hover{background:var(--hover);color:var(--text)}
+.rail button.active{background:var(--accent-soft);color:var(--text);font-weight:600}
+.rail .ri{width:16px;height:16px;flex:none}
+.content{position:relative;flex:1;min-width:0;overflow:auto;padding:20px}
+.page-title{margin:0 0 4px;font-size:var(--text-title);font-weight:650}
+.page-sub{margin:0 0 16px;color:var(--muted);font-size:var(--text-control)}
+
+/* 通用卡片 */
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm)}
+.card+.card{margin-top:12px}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-head h3{margin:0;font-size:var(--text-subtitle)}
+.state-row{display:flex;align-items:center;gap:10px}
+.state-badge{display:inline-flex;align-items:center;gap:7px;padding:4px 11px;border-radius:var(--radius-pill);font-size:var(--text-label);font-weight:600;background:var(--green-soft);color:var(--green)}
+.state-badge.warn{background:var(--amber-soft);color:var(--amber)}
+.state-badge.err{background:var(--red-soft);color:var(--red)}
+.state-badge.idle{background:var(--rail);color:var(--muted)}
+.state-badge .d{width:7px;height:7px;border-radius:50%;background:currentColor}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 18px;margin-top:14px}
+.kv div{font-size:var(--text-control)}
+.kv b{display:block;color:var(--muted);font-weight:500;font-size:var(--text-caption);margin-bottom:2px}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{height:32px;padding:0 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);cursor:pointer;font-size:var(--text-control)}
+.btn:hover{background:var(--hover)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:var(--accent-hover)}
+.btn.ghost{background:transparent}
+.btn.sm{height:28px;padding:0 10px;font-size:var(--text-label)}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.qcard{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:12px}
+.qcard h4{margin:0;font-size:var(--text-control)}
+.qcard p{margin:4px 0 10px;color:var(--muted);font-size:var(--text-caption);line-height:1.5}
+.tagline{display:inline-block;padding:1px 8px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--panel);color:var(--muted);font-size:var(--text-micro)}
+.tabs2{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:14px}
+.tabs2 button{appearance:none;border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);padding:8px 12px;margin-bottom:-1px;cursor:pointer;font-size:var(--text-control)}
+.tabs2 button.active{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+.entry{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);margin-bottom:8px}
+.entry .sev{width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:6px}
+.entry.warning .sev{background:var(--amber)}.entry.danger .sev{background:var(--red)}.entry.muted .sev{background:var(--faint)}
+.entry strong{display:block;font-size:var(--text-control)}
+.entry span{display:block;color:var(--muted);font-size:var(--text-caption);margin-top:3px;line-height:1.45}
+.entry time{color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.logline{font-family:var(--font-code);font-size:var(--text-caption);color:var(--muted);padding:7px 10px;border-bottom:1px solid var(--border-soft);display:flex;gap:12px}
+.logline .t{color:var(--faint);flex:none}
+.logline .lvl{flex:none;font-weight:700}
+.logline .lvl.info{color:var(--blue)}.logline .lvl.warn{color:var(--amber)}.logline .lvl.err{color:var(--red)}
+.fieldrow{display:grid;grid-template-columns:180px minmax(0,1fr);gap:14px;padding:10px 0;border-bottom:1px solid var(--border-soft);align-items:start}
+.fieldrow:last-child{border-bottom:0}
+.fieldrow .fl{color:var(--muted);font-size:var(--text-control)}
+.input{width:100%;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--text);font-size:var(--text-control);font-family:var(--font-code)}
+.input.invalid{border-color:var(--red);background:var(--red-soft)}
+.field-err{color:var(--red);font-size:var(--text-caption);margin-top:5px}
+
+/* 页面内状态 */
+.inline{display:grid;place-items:center;text-align:center;padding:52px 24px;color:var(--muted)}
+.inline .ic{width:44px;height:44px;margin-bottom:12px;color:var(--faint)}
+.inline h3{margin:0 0 6px;color:var(--text);font-size:var(--text-subtitle)}
+.inline p{margin:0 0 14px;font-size:var(--text-control);max-width:420px;line-height:1.6}
+.inline .cmd{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-code);font-size:var(--text-label);background:var(--raised);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 12px;color:var(--text)}
+.spinner{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty-list{padding:40px;text-align:center;color:var(--muted);font-size:var(--text-control)}
+
+/* 浮层宿主（窗口内） */
+.hosts{position:absolute;top:54px;right:16px;width:352px;display:flex;flex-direction:column;gap:10px;z-index:40;pointer-events:none}
+.hosts>*{pointer-events:auto}
+.toast{display:flex;gap:10px;padding:11px 13px;border-radius:var(--radius);border:1px solid var(--border);background:var(--panel);box-shadow:var(--shadow);animation:pop .18s ease-out}
+.toast .bar{width:3px;border-radius:2px;background:var(--green);flex:none}
+.toast.error .bar{background:var(--red)}.toast.info .bar{background:var(--blue)}
+.toast .txt{flex:1;min-width:0}
+.toast strong{display:block;font-size:var(--text-control)}
+.toast span{display:block;color:var(--muted);font-size:var(--text-caption);margin-top:2px;line-height:1.45}
+.toast .act{appearance:none;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-xs);padding:4px 9px;font-size:var(--text-caption);cursor:pointer;white-space:nowrap;align-self:center}
+@keyframes pop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.taskcard{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);padding:13px;animation:pop .18s ease-out}
+.taskcard .th{display:flex;align-items:center;gap:9px}
+.taskcard .sp{width:15px;height:15px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--violet);animation:spin .8s linear infinite;flex:none}
+.taskcard h4{margin:0;font-size:var(--text-control);flex:1}
+.taskcard .ph{color:var(--muted);font-size:var(--text-caption);margin:7px 0 0}
+.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.steps li{display:flex;align-items:center;gap:8px;font-size:var(--text-caption);color:var(--muted)}
+.steps .mk{width:14px;height:14px;border-radius:50%;border:1.5px solid var(--border);flex:none;display:grid;place-items:center}
+.steps li.done .mk{background:var(--green);border-color:var(--green);color:#fff}
+.steps li.done{color:var(--text)}
+.steps li.active .mk{border-color:var(--violet);border-top-color:transparent;animation:spin .8s linear infinite}
+.steps li.active{color:var(--text);font-weight:600}
+.taskcard .ta{display:flex;gap:8px;margin-top:12px}
+.npanel{position:absolute;top:50px;right:16px;width:392px;max-height:520px;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);overflow:hidden;z-index:46;animation:pop .18s ease-out}
+.npanel .nh{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.npanel .nh h3{margin:0;font-size:var(--text-body);flex:1}
+.npanel .nh button{appearance:none;border:0;background:transparent;color:var(--muted);font-size:var(--text-caption);padding:4px 7px;border-radius:5px;cursor:pointer}
+.npanel .nh button:hover{background:var(--hover);color:var(--text)}
+.ncats{display:flex;gap:6px;padding:10px 14px 4px;flex-wrap:wrap}
+.ncats span{font-size:var(--text-caption);padding:3px 10px;border:1px solid var(--border);border-radius:var(--radius-pill);color:var(--muted);background:var(--rail)}
+.ncats span.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.nlist{padding:10px 12px 12px;overflow:auto;display:grid;gap:7px}
+.nitem{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:9px;align-items:start;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);cursor:pointer}
+.nitem.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.nitem .sev{width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:6px}
+.nitem.warning .sev{background:var(--amber)}.nitem.danger .sev{background:var(--red)}
+.nitem strong{display:block;font-size:var(--text-control)}
+.nitem span{display:block;color:var(--muted);font-size:var(--text-caption);margin-top:2px;line-height:1.4}
+.nitem time{color:var(--muted);font-size:var(--text-caption);white-space:nowrap}
+.nitem .x{color:var(--muted);font-size:15px;line-height:1;align-self:center}
+.modal-mask{position:absolute;inset:0;z-index:50;display:none;place-items:center;background:#00000059;backdrop-filter:blur(2px)}
+.modal-mask.show{display:grid}
+.modal{width:480px;max-height:640px;overflow:auto;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--panel);box-shadow:var(--shadow);padding:20px;animation:pop .18s ease-out}
+.modal.wide{width:700px}
+.modal h3{margin:0 0 10px;font-size:var(--text-subtitle)}
+.modal .lead{color:var(--muted);font-size:var(--text-control);line-height:1.6;margin:0 0 12px}
+.modal .warn{display:flex;gap:9px;padding:11px 13px;border:1px solid color-mix(in srgb,var(--red) 32%,transparent);background:var(--red-soft);border-radius:var(--radius-sm);font-size:var(--text-control);margin-bottom:12px}
+.modal .warn b{color:var(--red)}
+.facts{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:12px;font-size:var(--text-control);display:grid;gap:7px;margin-bottom:12px}
+.facts div{display:flex;justify-content:space-between;gap:12px}
+.facts b{color:var(--muted);font-weight:500}
+.modal .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.modal .note{margin:14px 0 0;color:var(--faint);font-size:var(--text-caption);border-top:1px dashed var(--border);padding-top:10px}
+
+/* 右栏注译 */
+.ann h2{margin:0 0 4px;font-size:var(--text-subtitle)}
+.ann .cat{display:inline-flex;align-items:center;gap:7px;padding:3px 10px;border-radius:var(--radius-pill);font-size:var(--text-caption);background:var(--rail);border:1px solid var(--border);margin-bottom:12px}
+.ann .cat .dot{width:8px;height:8px;border-radius:50%;background:var(--cat)}
+.ann dl{margin:0;display:grid;gap:11px}
+.ann dt{color:var(--muted);font-size:var(--text-caption);font-weight:600;letter-spacing:.03em;text-transform:uppercase}
+.ann dd{margin:3px 0 0;font-size:var(--text-control);line-height:1.55}
+.ann .no{color:var(--red)}
+.ann .yes{color:var(--green)}
+.ann .surfaces{display:flex;flex-wrap:wrap;gap:5px;margin-top:3px}
+.ann .surfaces span{font-size:var(--text-micro);padding:2px 8px;border-radius:var(--radius-pill);border:1px solid var(--border);background:var(--panel);color:var(--muted)}
+.ann .surfaces span.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+/* 清单视图 */
+.list-wrap{flex:1;min-height:0;overflow:auto;padding:20px}
+.stage-wrap[hidden],.list-wrap[hidden]{display:none}
+.list-inner{max-width:1240px;margin:0 auto}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{display:inline-flex;align-items:center;gap:7px;min-height:30px;padding:4px 12px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);color:var(--muted);font-size:var(--text-label);cursor:pointer}
+.chip.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--cat)}
+.chip.active .dot{background:currentColor}
+.tbl-wrap{border:1px solid var(--border);border-radius:var(--radius);overflow:auto;background:var(--panel);max-height:calc(100vh - 200px)}
+table.matrix{border-collapse:separate;border-spacing:0;width:100%;min-width:1080px;font-size:var(--text-label)}
+.matrix thead th{position:sticky;top:0;z-index:2;background:var(--rail);text-align:left;font-weight:600;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--border);font-size:var(--text-caption);white-space:nowrap}
+.matrix tbody td{padding:10px 12px;border-bottom:1px solid var(--border-soft);vertical-align:top;line-height:1.55}
+.matrix tbody tr:hover td{background:var(--hover)}
+.matrix tr.grp td{position:sticky;top:31px;z-index:1;background:color-mix(in srgb,var(--cat) 9%,var(--panel));border-bottom:1px solid var(--border);font-weight:650}
+.matrix tr.grp td .gdot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--cat);margin-right:8px}
+.matrix td.ev{font-weight:600;min-width:190px}
+.matrix td.trigger,.matrix td.aux,.matrix td.close,.matrix td.note{color:var(--muted);min-width:140px}
+.matrix td.primary{min-width:150px}
+.matrix td.avoid{color:var(--red);min-width:150px}
+.matrix td.note{min-width:220px}
+</style>
+<link rel="stylesheet" href="../../glass-effects.css">
+<link rel="stylesheet" href="../../topic-header.css">
+<link rel="stylesheet" href="../../proto-controls.css">
+</head>
+<body class="pctl">
+<header class="topic-bar">
+  <div>
+    <div class="eyebrow">NOTIFICATIONS · PROTOTYPE</div>
+    <h1>通知与反馈体系 · 演示台</h1>
+    <p>六类渠道（操作反馈 Toast / 操作任务卡 / 操作性通知 / 日志型记录 / 阻断式确认 / 页面内状态）跑在真实软件界面上演出，便于来回跳转核对。</p>
+  </div>
+  <div class="tools">
+    <div class="tabs pctl-seg">
+      <button data-view="demo" class="active">演示台</button>
+      <button data-view="list">全场景清单</button>
+    </div>
+    <span class="badge amber">方案草案 · 待确认</span>
+    <button class="tbtn" id="themeBtn">暗色</button>
+    <a class="topic-back" href="../2026-09-28-Logo本体形变/overview.html">← 返回软件原型</a>
+  </div>
+</header>
+
+<div class="stage-wrap" id="demoView">
+  <aside class="pane left">
+    <p class="pctl-sub pane-label">场景清单 · 六类渠道</p>
+    <input class="search" id="search" placeholder="搜索场景…">
+    <div id="scList"></div>
+    <p class="pctl-hint pane-note">左＝场景清单；中＝在真实软件界面上的演出；右＝该场景的注释与验收点（主展示 / 辅助记录 / 不应出现 / 终态）。</p>
+  </aside>
+
+  <section class="stage" id="stage">
+    <div class="stage-inner" id="stageInner">
+      <div class="window" id="win">
+        <div class="titlebar">
+          <div class="lights"><i></i><i></i><i></i></div>
+          <span class="wt" id="winTitle">OpenCodeX-Desktop</span>
+          <div class="spacer"></div>
+          <div class="fx-seg" id="fxSeg" role="group" aria-label="特效档">
+            <button type="button" data-effects="high" class="active" title="高 · 动态光场＋玻璃">高</button>
+            <button type="button" data-effects="mid" title="中 · 光场静止＋玻璃">中</button>
+            <button type="button" data-effects="low" title="低 · 无光场＋无玻璃（实底）">低</button>
+          </div>
+          <button class="bell" id="bell" title="通知中心">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span class="dot" id="bellDot">3</span>
+          </button>
+        </div>
+        <div class="wbody">
+          <nav class="rail" id="rail">
+            <button data-route="overview" class="active">概览</button>
+            <button data-route="panel">面板</button>
+            <button data-route="extensions">拓展</button>
+            <button data-route="logs">日志 / 诊断中心</button>
+            <button data-route="settings">设置</button>
+            <button data-route="tray">托盘</button>
+          </nav>
+          <div class="content" id="content"></div>
+        </div>
+        <div class="hosts" id="hosts"></div>
+        <div id="npanelHolder"></div>
+        <div class="modal-mask" id="modalMask"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="pane right ann" id="ann"></aside>
+</div>
+
+<div class="list-wrap" id="listView" hidden>
+  <div class="list-inner">
+    <h2 style="margin:0 0 4px;font-size:var(--text-title)">全场景矩阵</h2>
+    <p style="margin:0 0 14px;color:var(--muted);font-size:var(--text-control)">六类渠道穷举；「主展示 / 辅助 / 不应出现」定义每个事件该走哪条渠道。</p>
+    <div class="filters" id="filters"></div>
+    <div class="tbl-wrap">
+      <table class="matrix">
+        <thead><tr><th>事件 / 场景</th><th>触发</th><th>主展示</th><th>辅助记录</th><th>不应出现</th><th>关闭 / 终态</th><th>说明</th></tr></thead>
+        <tbody id="matrixBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+const CATS={
+  feedback:{name:'操作反馈',color:'var(--blue)'},
+  task:{name:'操作任务',color:'var(--violet)'},
+  attention:{name:'操作性通知',color:'var(--amber)'},
+  log:{name:'日志型记录',color:'var(--faint)'},
+  confirm:{name:'阻断式确认',color:'var(--red)'},
+  inline:{name:'页面内状态',color:'var(--green)'}
+};
+const ORDER=['feedback','task','attention','log','confirm','inline'];
+
+const NOTIFS=[
+  {id:'sync-conflict',k:'danger',cat:'同步',t:'WebDAV 同步发现冲突',d:'本地与远端在 providers 段不一致。已暂停覆盖，等待手动选择保留哪一侧。',time:'10:22'},
+  {id:'external-takeover',k:'warning',cat:'运行',t:'外部 provider 已接管 Codex 配置',d:'外部应用托管了 ~/.codex/config.toml。该边界属于 OpenCodex CLI 本身；桌面壳只解释影响。',time:'10:24'},
+  {id:'at-risk',k:'warning',cat:'运行',t:'startup at-risk',d:'官方 status 报告启动存在风险。桌面壳不自动修复。',time:'10:21'},
+  {id:'start-failed',k:'danger',cat:'运行',t:'OpenCodex 启动失败',d:'端口 10100 被占用。建议查看日志或重试启动；未自动重试。',time:'10:02'},
+  {id:'upgrade-available',k:'warning',cat:'更新',t:'OpenCodex 有可用更新',d:'当前 2.50.0，最新 2.51.0。升级前先生成备份，只引导官方 ocx update。',time:'10:18'},
+  {id:'app-update-available',k:'info',cat:'更新',t:'桌面管理器有可用更新',d:'当前 v0.1.0，最新 v0.1.1。下载校验后重启生效，不影响代理。',time:'10:16'},
+  {id:'app-update-failed',k:'danger',cat:'更新',t:'应用更新失败，已回滚',d:'签名校验未通过，已保留上一版本 v0.1.0。',time:'10:05'},
+  {id:'sync-failed',k:'warning',cat:'同步',t:'WebDAV 连接失败',d:'无法连接端点；已保留本地状态，未上传。',time:'10:20'},
+  {id:'sync-done',k:'info',cat:'同步',t:'WebDAV 同步完成',d:'今天 10:24 完成，未发现冲突。',time:'10:24'},
+  {id:'need-restart',k:'warning',cat:'系统',t:'数据目录已切换，需要重启',d:'重启后桌面壳重新接管代理；不会停止 OpenCodex 本身。',time:'10:10'},
+  {id:'ext-changed',k:'warning',cat:'系统',t:'扩展写入发现外部文件变更',d:'检测到客户端 MCP 配置在管理器之外被修改；未覆盖。',time:'10:08'},
+  {id:'policy',k:'info',cat:'系统',t:'通知保留策略已变更',d:'已读通知保留期调整为 30 天。',time:'09:40'}
+];
+const LOGS=[
+  ['10:24:12','info','[start] 收到启动指令 op=op_7f3a；托管 ocx start'],
+  ['10:24:12','info','[status] starting → pending（端口 10100 可达，未 ready）'],
+  ['10:24:15','info','[status] pending → running；health ok=True'],
+  ['10:22:41','warn','[sync] 冲突判定命中：providers 段本地/远端不一致；已暂停覆盖'],
+  ['10:22:40','info','[sync] 阶段 backup 完成，快照 snap_5c11'],
+  ['10:20:02','err ','[sync] 端点不可达；错误分类 network.timeout；log_id=lg_91b2'],
+  ['10:02:33','err ','[start] 退出码 1；端口 10100 被占用；op=op_2a90'],
+  ['09:58:07','info','[doctor] 只读诊断完成：paths ok · WSL n/a · proxy env 未设置']
+];
+
+const SCEN=[
+ // 操作反馈
+ {cat:'feedback',ev:'保存偏好成功',trigger:'设置里切换开关 / 选择项',primary:'操作反馈 Toast（成功）',aux:'日志（可选）',avoid:'通知中心未读',close:'3–4s 自动关闭',note:'不产生未读；仅失败才延长或手动关闭。',
+  surface:['toast'],demo:{toast:{k:'success',t:'已保存偏好',d:'面板自动打开：开启'}}},
+ {cat:'feedback',ev:'复制成功（路径 / 命令 / Agent 提示）',trigger:'点击复制',primary:'操作反馈 Toast（成功）',aux:'—',avoid:'通知中心',close:'3–4s 自动关闭',note:'真实实现写剪贴板；原型只演示复制态。',
+  surface:['toast'],demo:{toast:{k:'success',t:'已复制命令',d:'ocx status --json'}}},
+ {cat:'feedback',ev:'剪贴板未授权',trigger:'复制被宿主拒绝',primary:'操作反馈 Toast（失败）',aux:'日志',avoid:'通知中心',close:'6s / 手动关闭',note:'失败应给一个轻量动作（如「改用文本框」）。',
+  surface:['toast'],demo:{toast:{k:'error',t:'无法写入剪贴板',d:'宿主未授权；请手动选择文本复制。',act:'改用文本框'}}},
+ {cat:'feedback',ev:'清理动作完成（日志 / 通知 / 已读）',trigger:'确认后执行完成',primary:'操作反馈 Toast（成功）',aux:'日志',avoid:'持久未读通知',close:'3–4s 自动关闭',note:'破坏性动作结果只报一次，不落通知中心。',
+  surface:['toast'],demo:{toast:{k:'success',t:'已清理 12 条已读通知'}}},
+ {cat:'feedback',ev:'删除单条通知完成',trigger:'点删除',primary:'操作反馈 Toast（成功）',aux:'日志',avoid:'通知中心未读',close:'3–4s 自动关闭',note:'删除即时生效，Toast 只做确认。',
+  surface:['toast'],demo:{toast:{k:'success',t:'已删除通知「OpenCodex 有可用更新」'}}},
+ {cat:'feedback',ev:'打开日志目录 / 数据目录失败',trigger:'系统调用失败',primary:'操作反馈 Toast（失败）+ 动作',aux:'日志',avoid:'阻断 Modal',close:'6s / 手动关闭',note:'提供「改用浏览器或终端打开」兜底。',
+  surface:['toast'],demo:{toast:{k:'error',t:'无法打开日志目录',d:'目标路径不存在或无权限。',act:'用终端打开'}}},
+ {cat:'feedback',ev:'锚点定位成功（原型特有）',trigger:'点击锚点图标',primary:'操作反馈 Toast（成功）',aux:'—',avoid:'—',close:'3–4s 自动关闭',note:'仅原型演示用，不进入正式需求。',
+  surface:['toast'],demo:{toast:{k:'success',t:'已定位到「日志与通知」',d:'原型演示'}}},
+
+ // 操作任务
+ {cat:'task',ev:'启动 OpenCodex',trigger:'点启动',primary:'任务进度卡（阶段 / 状态）',aux:'日志',avoid:'阻断 Modal / 持久通知',close:'终态：成功 Toast；失败保留摘要',note:'每业务域默认只允许一个活动任务。',
+  surface:['task'],demo:{task:{t:'正在启动 OpenCodex',ph:'等待代理 ready',steps:[['下发起始指令','done'],['等待端口 10100','done'],['等待 ready','active']],acts:['后台运行','取消观察']}}},
+ {cat:'task',ev:'停止 OpenCodex',trigger:'确认后执行',primary:'任务进度卡',aux:'日志',avoid:'阻断 Modal',close:'终态：Toast',note:'停止前必须确认；请求可能中断。',
+  surface:['task'],demo:{task:{t:'正在停止 OpenCodex',ph:'结束代理子进程',steps:[['发送停止','active'],['等待进程退出','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'重启 OpenCodex',trigger:'确认后执行',primary:'任务进度卡',aux:'日志',avoid:'阻断 Modal',close:'终态：Toast',note:'串行「停 → 启」，阶段对用户可见。',
+  surface:['task'],demo:{task:{t:'正在重启 OpenCodex',ph:'步骤 1 / 2 · 停止',steps:[['停止代理','active'],['重新启动','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'WebDAV 同步',trigger:'点立即同步',primary:'任务进度卡（同步中）',aux:'日志',avoid:'普通 Toast',close:'成功→已同步；失败→操作性通知',note:'连接状态与操作状态可并行表达。',
+  surface:['task'],demo:{task:{t:'正在同步 WebDAV',ph:'上传 3 / 7 个文件',steps:[['比对清单','done'],['上传变更','active'],['写入同步状态','pending']],acts:['后台运行','取消同步']}}},
+ {cat:'task',ev:'配置导出',trigger:'点导出',primary:'任务进度卡',aux:'日志',avoid:'通知中心',close:'终态：成功 Toast',note:'口令与目标目录先确认。',
+  surface:['task'],demo:{task:{t:'正在导出配置',ph:'生成加密导出容器',steps:[['收集配置','done'],['校验口令','active'],['写入导出目录','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'配置导入',trigger:'确认后执行',primary:'任务进度卡（校验→备份→应用→回滚）',aux:'日志',avoid:'通知中心（成功）',close:'终态：Toast；失败→通知',note:'校验失败一律中断，不部分写入。',
+  surface:['task'],demo:{task:{t:'正在导入配置',ph:'已备份当前配置',steps:[['校验容器','done'],['备份当前配置','done'],['应用配置','active'],['失败回滚','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'应用自更新',trigger:'点下载并重启',primary:'任务进度卡（下载→校验→安装→重启）',aux:'日志',avoid:'概览新增卡片',close:'成功重启 / 校验失败保留上一版',note:'明确「不停止 OpenCodex 代理」。',
+  surface:['task'],demo:{task:{t:'正在更新 OpenCodeX-Desktop',ph:'校验签名',steps:[['下载 v0.1.1','done'],['校验签名','active'],['安装','pending'],['重启应用','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'数据目录迁移',trigger:'确认「迁移」',primary:'任务进度卡（检查→备份→停→迁移→校验→恢复）',aux:'日志',avoid:'通知中心',close:'成功 / 回滚',note:'失败回到原目录，备份可定位可恢复。',
+  surface:['task'],demo:{task:{t:'正在迁移数据目录',ph:'步骤 4 / 5 · 执行迁移',steps:[['检查目录','done'],['运行前备份','done'],['停止代理','done'],['执行迁移','active'],['校验并恢复','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'官方 restore',trigger:'确认后进入官方路径',primary:'任务进度卡',aux:'日志',avoid:'通知中心',close:'成功 / 失败 / 取消',note:'一律走官方路径，桌面壳不做私有覆盖。',
+  surface:['task'],demo:{task:{t:'正在执行官方 restore',ph:'通过 ocx 官方路径',steps:[['生成备份','done'],['官方 restore','active'],['刷新状态','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'Skills 导入 / ZIP 安装',trigger:'确认后执行',primary:'任务进度卡',aux:'日志',avoid:'通知中心',close:'终态：成功 Toast',note:'复制快照进受管源目录，原目录只读。',
+  surface:['task'],demo:{task:{t:'正在安装 Skill',ph:'design-studio',steps:[['校验 ZIP / SKILL.md','done'],['复制快照到受管源目录','active'],['按目标开关同步','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'Skills 批量更新',trigger:'点全部更新',primary:'任务进度卡',aux:'日志',avoid:'通知中心',close:'终态：成功 Toast',note:'按各客户端目标开关写入。',
+  surface:['task'],demo:{task:{t:'正在更新 3 个 Skill',ph:'project-management · skill-audit · development-knowledge',steps:[['计算内容哈希','done'],['下载差异','active'],['写入源目录','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'从备份恢复 Skills',trigger:'确认后执行',primary:'任务进度卡',aux:'日志',avoid:'—',close:'终态：成功 Toast',note:'覆盖前先备份当前目标目录。',
+  surface:['task'],demo:{task:{t:'正在从备份恢复 Skills',ph:'备份快照 2026-09-17 22:10',steps:[['备份当前目录','done'],['应用快照','active'],['校验差异','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'MCP 写入多客户端',trigger:'点保存',primary:'任务进度卡',aux:'日志',avoid:'—',close:'终态：成功 Toast',note:'写入前备份 + 临时区原子替换。',
+  surface:['task'],demo:{task:{t:'正在写入 MCP 配置',ph:'2 个客户端',steps:[['备份目标节点','done'],['临时区写入','active'],['原子替换','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'升级前备份生成',trigger:'点生成备份',primary:'任务进度卡',aux:'日志',avoid:'通知中心',close:'终态：成功 Toast',note:'生成完整性摘要。',
+  surface:['task'],demo:{task:{t:'正在生成升级前备份',ph:'写入 backups 分区',steps:[['打包配置','active'],['生成完整性摘要','pending']],acts:['后台运行']}}},
+ {cat:'task',ev:'完整性校验',trigger:'点校验',primary:'任务进度卡（校验中）',aux:'日志',avoid:'通知中心',close:'结果 Toast / 通知',note:'校验结果决定是否放行后续动作。',
+  surface:['task'],demo:{task:{t:'正在校验完整性',ph:'逐项比对摘要',steps:[['读取备份清单','done'],['比对哈希','active']],acts:['后台运行']}}},
+
+ // 操作性通知
+ {cat:'attention',ev:'启动失败且可重试',trigger:'任务进入失败终态',primary:'通知中心（danger）',aux:'错误 Toast + 日志',avoid:'阻断 Modal',close:'处理成功→已解决',note:'同 operation_id 只留一条，避免堆叠。',
+  surface:['toast','notif'],demo:{toast:{k:'error',t:'启动失败',d:'端口 10100 被占用。'},notif:{active:'start-failed'}}},
+ {cat:'attention',ev:'WebDAV 冲突',trigger:'冲突判定成立',primary:'通知中心（danger）',aux:'日志',avoid:'自动消失 Toast',close:'处理成功→已解决',note:'未处理前不自动删除，保留在中心。',
+  surface:['notif'],demo:{notif:{active:'sync-conflict'}}},
+ {cat:'attention',ev:'WebDAV 连接失败',trigger:'连接失败',primary:'通知中心（warning）',aux:'页面内状态 + 日志',avoid:'持续 Toast',close:'恢复→已解决',note:'与卡片状态互斥，不重复打扰。',
+  surface:['notif','inline'],demo:{notif:{active:'sync-failed'},inline:{k:'status',label:'连接失败',badge:'err'}}},
+ {cat:'attention',ev:'检测到外部 provider 接管',trigger:'状态探测命中',primary:'通知中心（warning）',aux:'页面内状态 + 日志',avoid:'阻断 Modal',close:'已读→已解决',note:'桌面壳不改写外部配置，只解释影响。',
+  surface:['notif','inline'],demo:{notif:{active:'external-takeover'},inline:{k:'status',label:'外部接管',badge:'warn'}}},
+ {cat:'attention',ev:'官方 status 报告 startup at-risk',trigger:'状态探测命中',primary:'通知中心（warning）',aux:'页面内状态',avoid:'阻断 Modal',close:'已读→已解决',note:'restore 需显式确认。',
+  surface:['notif','inline'],demo:{notif:{active:'at-risk'},inline:{k:'status',label:'at-risk',badge:'warn'}}},
+ {cat:'attention',ev:'OpenCodex 有可用更新',trigger:'检查更新',primary:'通知中心（info / warning）',aux:'日志',avoid:'概览重复卡片',close:'安装后→已解决',note:'升级入口只保留一处，不重复出现。',
+  surface:['notif'],demo:{notif:{active:'upgrade-available'}}},
+ {cat:'attention',ev:'桌面管理器有可用更新',trigger:'更新服务返回',primary:'通知中心（info）',aux:'日志',avoid:'概览新增卡片',close:'安装后→已解决',note:'外部提示只走通知中心，不打断操作。',
+  surface:['notif'],demo:{notif:{active:'app-update-available'}}},
+ {cat:'attention',ev:'数据目录切换需要重启',trigger:'切换完成后',primary:'通知中心',aux:'日志',avoid:'阻断 Modal',close:'重启接管后→已解决',note:'说明重启不停止代理。',
+  surface:['notif'],demo:{notif:{active:'need-restart'}}},
+ {cat:'attention',ev:'扩展写入发现外部文件变更',trigger:'写入前比对命中',primary:'通知中心（warning）',aux:'日志',avoid:'静默覆盖',close:'处理后→已解决',note:'冲突必须提示，不得静默覆盖。',
+  surface:['notif'],demo:{notif:{active:'ext-changed'}}},
+ {cat:'attention',ev:'应用更新失败可回滚',trigger:'更新链路失败',primary:'通知中心（danger）',aux:'任务卡错误摘要 + 日志',avoid:'静默失败',close:'回滚后→已解决',note:'保留上一版本与失败原因。',
+  surface:['notif'],demo:{notif:{active:'app-update-failed'}}},
+ {cat:'attention',ev:'同步完成（可选）',trigger:'同步成功',primary:'通知中心 或 仅状态',aux:'日志',avoid:'持续 Toast',close:'已读',note:'是否进中心待确认（OQ-2 相关）。',
+  surface:['notif'],demo:{notif:{active:'sync-done'}}},
+ {cat:'attention',ev:'通知保留策略变更',trigger:'策略切换',primary:'通知中心（info）',aux:'日志',avoid:'—',close:'已读 / 过期清理',note:'仅低优先级、可过期类信息。',
+  surface:['notif'],demo:{notif:{active:'policy'}}},
+
+ // 日志型记录
+ {cat:'log',ev:'start / stop / restart 指令开始、返回与终态',trigger:'—',primary:'日志历史',aux:'—',avoid:'Toast / 未读',close:'按保留策略清理',note:'事实记录，不可通过「已读」改变。',surface:['log'],route:'logs',demo:{log:{}}},
+ {cat:'log',ev:'状态迁移 starting→pending→running / 失败',trigger:'状态机推进',primary:'日志历史',aux:'—',avoid:'通知未读',close:'按保留策略清理',note:'关联 operation_id，便于详情跳转。',surface:['log'],route:'logs',demo:{log:{}}},
+ {cat:'log',ev:'同步阶段、冲突判定、备份与恢复结果',trigger:'—',primary:'日志历史',aux:'—',avoid:'—',close:'按保留策略清理',note:'只追加，不参与用户提醒计数。',surface:['log'],route:'logs',demo:{log:{}}},
+ {cat:'log',ev:'外部命令退出码、错误分类、日志 ID',trigger:'—',primary:'日志历史',aux:'—',avoid:'—',close:'按保留策略清理',note:'敏感字段统一脱敏。',surface:['log'],route:'logs',demo:{log:{}}},
+ {cat:'log',ev:'通知生成时的关联事件',trigger:'通知落库',primary:'日志历史',aux:'—',avoid:'—',close:'按保留策略清理',note:'记录通知来源，支撑审计与追踪。',surface:['log'],route:'logs',demo:{log:{}}},
+ {cat:'log',ev:'ocx doctor 只读摘要',trigger:'运行环境诊断',primary:'诊断中心（日志路由）',aux:'—',avoid:'—',close:'只读',note:'只展示只读摘要，不提供写入型修复参数。',surface:['log'],route:'logs',demo:{log:{},tab:'doctor'}},
+
+ // 阻断式确认
+ {cat:'confirm',ev:'删除扩展（卸载 Skill / 删除 MCP）',trigger:'点删除',primary:'居中 Modal（480px）',aux:'日志',avoid:'直接执行',close:'确认 / 取消后关闭',note:'Escape 可取消；不可点空白确认。',
+  surface:['modal'],demo:{modal:{t:'卸载 Skill',warn:'将从已同步客户端移除，并在源目录先自动备份',lead:'卸载 design-studio 会移除当前已选中的目标副本；备份保留最近 20 份，可用于恢复。',confirm:'卸载'}}},
+ {cat:'confirm',ev:'清理日志 / 全部通知 / 已读',trigger:'点清理',primary:'居中 Modal（480px）',aux:'—',avoid:'直接执行',close:'确认 / 取消后关闭',note:'说明清理范围与不可逆性。',
+  surface:['modal'],demo:{modal:{t:'清理全部通知',lead:'将清空通知中心与通知历史；未确认的动作摘要不会删除。',confirm:'清理'}}},
+ {cat:'confirm',ev:'导入配置',trigger:'点导入',primary:'居中 Modal（680–720px）',aux:'—',avoid:'直接执行',close:'确认 / 取消后关闭',note:'先展示容器校验与敏感值掩码摘要。',
+  surface:['modal'],demo:{modal:{t:'导入配置',wide:true,lead:'导入前校验容器格式与完整性，自动备份当前配置。',facts:[['容器','ocx-export-2026-09-15.ocxenc'],['来源口令','••••••'],['将覆盖','provider / 路由 / 模型映射'],['自动备份','是']],confirm:'继续导入'}}},
+ {cat:'confirm',ev:'覆盖同步',trigger:'冲突时选覆盖',primary:'居中 Modal（680–720px）',aux:'—',avoid:'静默覆盖',close:'确认 / 取消后关闭',note:'覆盖前必须生成可恢复备份。',
+  surface:['modal'],demo:{modal:{t:'覆盖同步',wide:true,warn:'覆盖前会生成可恢复备份；此操作不可撤销',lead:'覆盖会丢弃本地该段的改动，保留远端版本。',facts:[['冲突项','providers 段'],['保留','远端版本'],['覆盖','本地版本'],['覆盖前备份','是']],confirm:'覆盖并同步'}}},
+ {cat:'confirm',ev:'restore 前确认',trigger:'点继续',primary:'居中 Modal（680–720px）',aux:'—',avoid:'直接 restore',close:'确认 / 取消后关闭',note:'展示影响摘要 + 前置备份说明。',
+  surface:['modal'],demo:{modal:{t:'官方 restore 前置确认',wide:true,lead:'桌面壳不直接改写配置；只有显式确认后才进入官方引导，可随时取消。',facts:[['触发','外部 provider 接管'],['影响','codex 配置所有权'],['执行方','官方 ocx restore'],['前置备份','是']],confirm:'进入官方引导'}}},
+ {cat:'confirm',ev:'数据目录切换 / 修改 OPENCODEX_HOME',trigger:'点修改',primary:'居中 Modal',aux:'—',avoid:'直接切换',close:'确认 / 取消后关闭',note:'运行中禁止，先停代理；两目录不可互相嵌套。',
+  surface:['modal'],demo:{modal:{t:'修改数据目录',warn:'变更前自动备份，失败可回滚；两个目录不允许互相嵌套',lead:'运行中禁止直接切换；真实实现会先停止代理。目录检查后展示已有数据摘要，并选择「仅切换引用」或「迁移数据」。',confirm:'继续'}}},
+ {cat:'confirm',ev:'停止 / 重启确认',trigger:'点停止 / 重启',primary:'居中 Modal（480px）',aux:'—',avoid:'直接执行',close:'确认 / 取消后关闭',note:'说明正在执行的请求可能中断。',
+  surface:['modal'],demo:{modal:{t:'确认停止 OpenCodex？',lead:'停止会结束当前代理子进程。正在执行的请求可能中断。',confirm:'停止'}}},
+ {cat:'confirm',ev:'开启 CLI 控制面',trigger:'打开开关',primary:'居中 Modal（480px）',aux:'—',avoid:'直接开启',close:'确认 / 取消后关闭',note:'说明本机 IPC、实例委托与自有域边界。',
+  surface:['modal'],demo:{modal:{t:'开启 CLI 控制面',lead:'开启后本机可通过 ocxd 调用管理器自有域命令；运行中实例会被委托。不开放 provider / 路由 / 模型映射。',confirm:'开启'}}},
+ {cat:'confirm',ev:'安装应用更新确认',trigger:'点下载并重启',primary:'居中 Modal',aux:'—',avoid:'直接重启',close:'确认 / 取消后关闭',note:'写明不停止 OpenCodex 代理。',
+  surface:['modal'],demo:{modal:{t:'更新 OpenCodeX-Desktop',lead:'将下载 v0.1.1、校验签名后重启应用。',facts:[['重启应用','是'],['停止 OpenCodex 代理','否'],['更新通道','stable']],confirm:'下载并重启'}}},
+ {cat:'confirm',ev:'恢复 Skills 覆盖确认',trigger:'点恢复',primary:'居中 Modal',aux:'—',avoid:'直接覆盖',close:'确认 / 取消后关闭',note:'同名 Skill 需显式确认覆盖。',
+  surface:['modal'],demo:{modal:{t:'从备份中恢复 Skills',warn:'同名 Skill 将被备份中的版本覆盖',lead:'恢复前自动备份当前目标目录；已存在的同名 Skill 需要显式确认覆盖。',confirm:'恢复'}}},
+ {cat:'confirm',ev:'MCP 命令执行边界确认',trigger:'保存含 command / args',primary:'居中 Modal（680–720px）',aux:'日志',avoid:'静默执行',close:'确认 / 取消后关闭',note:'不得静默执行任意本地程序。',
+  surface:['modal'],demo:{modal:{t:'确认 MCP 执行边界',wide:true,warn:'该命令会在客户端启动时执行本地程序，请确认来源可信',lead:'保存后写入 $CODEX_HOME/config.toml → mcp_servers。',facts:[['服务器','node_repl'],['command','node'],['args','--input-type=module …'],['env','2 项（默认掩码）']],confirm:'保存并写入'}}},
+
+ // 页面内状态
+ {cat:'inline',ev:'环境检查中',trigger:'进入应用自动执行',primary:'门禁区（inline）',aux:'—',avoid:'通知中心',close:'检查完成即结束',note:'检查顺序固定 node → npm → ocx。',
+  demo:{inline:{k:'loading',t:'正在检查运行环境',d:'node → npm → ocx'}}},
+ {cat:'inline',ev:'缺少 Node.js / npm / ocx',trigger:'前置检查失败',primary:'门禁区 + 可复制命令',aux:'日志（可选）',avoid:'通知中心未读',close:'安装后重新检查即恢复',note:'只检测与引导，不代装、不监听系统变化。',
+  demo:{inline:{k:'error',t:'未检测到 Node.js',d:'OpenCodex 运行依赖 Node.js；安装后重新检查。应用不会代你安装。',cmd:'brew install node',acts:['重新检查','复制命令']}}},
+ {cat:'inline',ev:'面板加载中',trigger:'进入面板路由',primary:'全幅区域 loading',aux:'—',avoid:'Toast',close:'加载完成即结束',note:'—',route:'panel',
+  demo:{inline:{k:'loading',t:'正在加载官方面板…'}}},
+ {cat:'inline',ev:'面板不可达 / 加载超时',trigger:'加载失败',primary:'全幅错误 + 重试 / 浏览器打开',aux:'日志',avoid:'重复 Toast 堆叠',close:'重试成功或离开页面',note:'失败时自动回退概览，避免空白。',route:'panel',
+  demo:{inline:{k:'error',t:'官方面板不可达',d:'代理可能未就绪或端口未开放。',acts:['重试','在浏览器打开']}}},
+ {cat:'inline',ev:'日志读取失败',trigger:'读取日志失败',primary:'日志区 inline 错误',aux:'日志',avoid:'Toast',close:'条件恢复后消失',note:'提供重试与打开日志目录。',route:'logs',
+  demo:{inline:{k:'error',t:'日志读取失败',d:'无法读取日志分区。',acts:['重试','打开日志目录']}}},
+ {cat:'inline',ev:'设置字段校验失败',trigger:'输入非法',primary:'字段 inline 错误',aux:'—',avoid:'阻断 Modal',close:'修正后消失',note:'校验失败不弹 Modal。',route:'settings',
+  demo:{inline:{k:'field',field:'代理端口',value:'1010a',err:'端口必须是 1–65535 之间的整数'}}},
+ {cat:'inline',ev:'运行状态 starting / pending / unreachable',trigger:'状态轮询',primary:'概览状态区',aux:'日志',avoid:'通知中心',close:'状态变化即更新',note:'轮询不得生成重复提醒（dedupe_key）。',
+  demo:{inline:{k:'status',label:'起始中…',badge:'idle'}}},
+ {cat:'inline',ev:'WebDAV 未配置 / 未连接 / 连接中 / 同步中',trigger:'状态变化',primary:'卡片状态区',aux:'—',avoid:'通知中心',close:'状态变化即更新',note:'按状态渲染动作，不渲染无解释的禁用按钮。',
+  demo:{inline:{k:'status',label:'同步中…',badge:'warn'}}},
+ {cat:'inline',ev:'空态（无通知 / 日志 / 技能）',trigger:'数据为空',primary:'列表空态',aux:'—',avoid:'Toast',close:'有数据即结束',note:'空态只说明，不触发提醒。',route:'logs',
+  demo:{inline:{k:'empty',t:'暂无通知历史',d:'产生通知后会在这里汇总。'}}},
+ {cat:'inline',ev:'剪贴板 / 权限未授权',trigger:'操作被拒',primary:'inline 提示',aux:'—',avoid:'—',close:'授权后消失',note:'也可降级为失败 Toast，二选一不重复。',
+  demo:{inline:{k:'warn',t:'未授权剪贴板',d:'可改用文本框手动复制。'}}}
+];
+
+const el=(t,c,h)=>{const n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n;};
+const q=s=>document.querySelector(s);
+let cur=-1, curRoute='overview';
+
+/* ---------- 场景列表 ---------- */
+function buildList(filter){
+  filter=(filter||'').trim();
+  const box=q('#scList'); box.innerHTML='';
+  ORDER.forEach(cat=>{
+    const items=SCEN.map((s,i)=>({s,i})).filter(({s})=>s.cat===cat&&(!filter||(s.ev+s.trigger+s.note).toLowerCase().includes(filter.toLowerCase())));
+    if(!items.length)return;
+    const gt=el('div','grp-title');gt.style.setProperty('--cat',CATS[cat].color);
+    gt.innerHTML='<span class="dot"></span>'+CATS[cat].name+' · '+items.length;
+    box.appendChild(gt);
+    items.forEach(({s,i})=>{
+      const b=el('button','sc-btn'+(i===cur?' active':''),s.ev+'<span class="sub">'+s.surfacesText+'</span>');
+      b.onclick=()=>select(i);
+      box.appendChild(b);
+    });
+  });
+  if(!box.children.length) box.innerHTML='<div style="padding:24px 14px;color:var(--muted);font-size:12px">没有匹配的场景。</div>';
+}
+
+/* ---------- 内容渲染 ---------- */
+function stateBadge(label,cls){
+  return '<span class="state-badge '+(cls||'')+'"><span class="d"></span>'+label+'</span>';
+}
+function overviewHTML(inline){
+  let badge=stateBadge('运行中',''), sub='代理运行且 ready 通过';
+  if(inline&&inline.k==='status'){badge=stateBadge(inline.label,inline.badge==='err'?'err':inline.badge==='warn'?'warn':'idle');sub='状态由轮询更新；不生成重复提醒';}
+  return '<div class="page-title">概览</div><div class="page-sub">运行摘要与高频动作</div>'+
+   '<div class="card"><div class="state-row">'+badge+'<span style="color:var(--muted);font-size:12px">'+sub+'</span></div>'+
+   '<div class="kv"><div><b>健康</b>ok=True</div><div><b>端口 / PID</b>10100 · 48213</div><div><b>数据目录</b>~/OpenCodexData</div></div>'+
+   '<div class="acts"><button class="btn primary">打开面板</button><button class="btn">停止</button><button class="btn">重启</button><button class="btn ghost">查看日志</button></div></div>'+
+   '<div class="quick">'+
+     '<div class="qcard"><h4>版本升级</h4><p>OpenCodex v2.50.0 · 2.51.0 可用</p><span class="tagline">可升级</span></div>'+
+     '<div class="qcard"><h4>配置迁移</h4><p>导出 / 导入加密容器</p><span class="tagline">可用</span></div>'+
+     '<div class="qcard"><h4>WebDAV 同步</h4><p>端点已配置 · 最近 10:24</p><span class="tagline">已同步</span></div>'+
+   '</div>';
+}
+function logsHTML(inline,tab){
+  const t=tab||'logs';
+  if(inline&&inline.k==='empty'){return '<div class="page-title">日志 / 诊断中心</div><div class="page-sub">日志历史与通知历史分 Tab 管理</div>'+tabs2HTML('notif')+'<div class="empty-list">'+inline.t+'<div style="font-size:12px;margin-top:6px">'+(inline.d||'')+'</div></div>';}
+  if(inline&&inline.k==='error'){return '<div class="page-title">日志 / 诊断中心</div><div class="page-sub">日志历史与通知历史分 Tab 管理</div>'+tabs2HTML('logs')+inlineHTML(inline,false);}
+  return '<div class="page-title">日志 / 诊断中心</div><div class="page-sub">日志历史与通知历史分 Tab 管理</div>'+tabs2HTML(t)+
+    (t==='logs'?logLinesHTML():t==='notif'?notifHistoryHTML():doctorHTML());
+}
+function tabs2HTML(active){
+  return '<div class="tabs2">'+
+    '<button class="'+(active==='logs'?'active':'')+'">日志历史</button>'+
+    '<button class="'+(active==='notif'?'active':'')+'">通知历史</button>'+
+    '<button class="'+(active==='doctor'?'active':'')+'">运行环境诊断</button></div>';
+}
+function logLinesHTML(){return '<div class="card" style="padding:6px 0">'+LOGS.map(l=>'<div class="logline"><span class="t">'+l[0]+'</span><span class="lvl '+l[1].trim()+'">'+l[1].toUpperCase()+'</span><span>'+l[2]+'</span></div>').join('')+'</div>';}
+function notifHistoryHTML(){return NOTIFS.map(n=>'<div class="entry '+(n.k==='warning'?'warning':n.k==='danger'?'danger':'')+'"><span class="sev"></span><div><strong>'+n.t+'</strong><span>'+n.d+'</span></div><time>'+n.time+'</time></div>').join('');}
+function doctorHTML(){return '<div class="card"><div class="kv"><div><b>paths</b>ok</div><div><b>WSL /mnt</b>n/a</div><div><b>代理环境变量</b>未设置</div><div><b>ChatGPT 可达</b>ok</div><div><b>Codex runtime / shim</b>ok</div><div><b>coordinator</b>running</div></div><p style="margin:12px 0 0;color:var(--muted);font-size:12px">只读摘要，不提供 --reclaim-response-temps 等写入型修复参数。</p></div>';}
+function settingsHTML(inline){
+  const bad=inline&&inline.k==='field';
+  return '<div class="page-title">设置</div><div class="page-sub">参数与边界（mock）</div><div class="card">'+
+    '<div class="fieldrow"><div class="fl">面板自动打开</div><div><div class="input" style="display:flex;align-items:center">开启</div></div></div>'+
+    '<div class="fieldrow"><div class="fl">代理端口</div><div><input class="input'+(bad?' invalid':'')+'" value="'+(bad?inline.value:'10100')+'">'+(bad?'<div class="field-err">'+inline.err+'</div>':'')+'</div></div>'+
+    '<div class="fieldrow"><div class="fl">关闭窗口后保持代理</div><div><div class="input" style="display:flex;align-items:center">开启</div></div></div>'+
+  '</div>';
+}
+function panelHTML(inline){
+  if(inline&&(inline.k==='loading'||inline.k==='error'))return '<div class="page-title">面板</div><div class="page-sub">官方 GUI 源码级快照（方案 B）</div>'+inlineHTML(inline,false);
+  return '<div class="page-title">面板</div><div class="page-sub">官方 GUI 源码级快照（方案 B）</div><div class="card" style="height:420px;display:grid;place-items:center;color:var(--muted);font-size:12px">官方 GUI 内嵌区（不重绘、不插入管理器控件）</div>';
+}
+function inlineHTML(inf,compact){
+  if(inf.k==='loading')return '<div class="inline"><div class="spinner"></div><h3>'+inf.t+'</h3>'+(inf.d?'<p>'+inf.d+'</p>':'')+'</div>';
+  if(inf.k==='empty')return '<div class="empty-list">'+inf.t+'</div>';
+  if(inf.k==='error')return '<div class="inline"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><h3>'+inf.t+'</h3><p>'+inf.d+'</p>'+(inf.cmd?'<div class="cmd">'+inf.cmd+'</div>':'')+(inf.acts?'<div class="acts" style="justify-content:center">'+inf.acts.map((a,i)=>'<button class="btn '+(i?'ghost':'primary')+'">'+a+'</button>').join('')+'</div>':'')+'</div>';
+  if(inf.k==='warn')return '<div class="warn" style="display:flex;gap:9px;padding:11px 13px;border:1px solid color-mix(in srgb,var(--amber) 32%,transparent);background:var(--amber-soft);border-radius:8px;font-size:13px;margin-bottom:12px"><b style="color:var(--amber)">提示</b><span>'+inf.t+' · '+inf.d+'</span></div>';
+  return '';
+}
+function renderContent(route,inline){
+  const c=q('#content');
+  let html='';
+  if(route==='logs')html=logsHTML(inline);
+  else if(route==='settings')html=settingsHTML(inline);
+  else if(route==='panel')html=panelHTML(inline);
+  else if(route==='extensions')html='<div class="page-title">拓展</div><div class="page-sub">Skills 与 MCP 服务器管理</div><div class="card"><div class="kv"><div><b>Skills</b>3 个可更新</div><div><b>MCP</b>2 个已启用</div><div><b>目标客户端</b>Codex · Claude</div></div></div>';
+  else if(route==='tray')html='<div class="page-title">托盘</div><div class="page-sub">macOS / Windows 状态菜单</div><div class="card" style="height:300px;display:grid;place-items:center;color:var(--muted);font-size:12px">托盘菜单原型区</div>';
+  else html=overviewHTML(inline);
+  if(inline&&inline.k==='warn'&&route!=='logs'&&route!=='settings'&&route!=='panel')html=inlineHTML(inline)+html;
+  c.innerHTML=html;
+  document.querySelectorAll('#rail button').forEach(b=>b.classList.toggle('active',b.dataset.route===route));
+  q('#winTitle').textContent='OpenCodeX-Desktop'+(route==='overview'?'':' · '+({panel:'面板',extensions:'拓展',logs:'日志 / 诊断中心',settings:'设置',tray:'托盘'}[route]||''));
+  curRoute=route;
+}
+
+/* ---------- 浮层 ---------- */
+function renderHosts(surface,demo){
+  const h=q('#hosts');h.innerHTML='';
+  if(!surface||!surface.includes('toast'))return;
+  const t=demo.toast; if(!t)return;
+  h.appendChild(el('div','toast '+(t.k==='error'?'error':t.k==='info'?'info':''),
+    '<span class="bar"></span><div class="txt"><strong>'+t.t+'</strong>'+(t.d?'<span>'+t.d+'</span>':'')+'</div>'+(t.act?'<button class="act">'+t.act+'</button>':'')));
+}
+function renderTask(surface,demo){
+  if(!surface||!surface.includes('task')||!demo.task)return;
+  const t=demo.task;
+  const steps='<ul class="steps">'+t.steps.map(s=>'<li class="'+s[1]+'"><span class="mk">'+(s[1]==='done'?'✓':'')+'</span>'+s[0]+'</li>').join('')+'</ul>';
+  q('#hosts').appendChild(el('div','taskcard','<div class="th"><span class="sp"></span><h4>'+t.t+'</h4></div><p class="ph">'+t.ph+'</p>'+steps+'<div class="ta">'+t.acts.map((a,i)=>'<button class="btn sm '+(i?'ghost':'')+'">'+a+'</button>').join('')+'</div>'));
+}
+function renderNotif(surface,demo){
+  const holder=q('#npanelHolder');holder.innerHTML='';
+  if(!surface||!surface.includes('notif')||!demo.notif)return;
+  const active=demo.notif.active;
+  const items=NOTIFS.map(n=>'<div class="nitem '+(n.k==='warning'?'warning':n.k==='danger'?'danger':'')+(n.id===active?' hl':'')+'"><span class="sev"></span><div><strong>'+n.t+'</strong><span>'+n.d+'</span></div><time>'+n.time+'</time></div>').join('');
+  holder.appendChild(el('div','npanel','<div class="nh"><h3>通知中心</h3><button>历史</button><button>全部已读</button></div>'+
+    '<div class="ncats"><span class="on">全部</span><span>运行</span><span>同步</span><span>更新</span><span>系统</span></div>'+
+    '<div class="nlist">'+items+'</div>'));
+}
+function renderModal(surface,demo){
+  const m=q('#modalMask');m.className='modal-mask';m.innerHTML='';
+  if(!surface||!surface.includes('modal')||!demo.modal)return;
+  const d=demo.modal;
+  m.innerHTML='<div class="modal'+(d.wide?' wide':'')+'"><h3>'+d.t+'</h3>'+
+    (d.warn?'<div class="warn"><b>警告</b><span>'+d.warn+'</span></div>':'')+
+    (d.lead?'<p class="lead">'+d.lead+'</p>':'')+
+    (d.facts?'<div class="facts">'+d.facts.map(f=>'<div><b>'+f[0]+'</b><span>'+f[1]+'</span></div>').join('')+'</div>':'')+
+    '<div class="foot"><button class="btn ghost">取消</button><button class="btn primary">'+d.confirm+'</button></div>'+
+    '<p class="note">当前为原型演示；真实实现尚未启用。</p></div>';
+  m.classList.add('show');
+  q('#bell').style.opacity='.4';
+}
+
+/* ---------- 注译 ---------- */
+function renderAnn(s){
+  const surfaces=[['toast','Toast'],['task','任务卡'],['notif','通知中心'],['modal','Modal'],['inline','页面内状态'],['log','日志']];
+  const on=(s.surface||[]).concat(s.cat==='log'?['log']:[]);
+  const a=q('#ann');
+  a.innerHTML='<h2>'+s.ev+'</h2><span class="cat" style="--cat:'+CATS[s.cat].color+'"><span class="dot"></span>'+CATS[s.cat].name+'</span>'+
+    '<div class="surfaces">'+surfaces.map(x=>'<span class="'+(on.includes(x[0])?'on':'')+'">'+x[1]+'</span>').join('')+'</div>'+
+    '<dl style="margin-top:14px">'+
+    '<div><dt>触发</dt><dd>'+(s.trigger||'—')+'</dd></div>'+
+    '<div><dt>主展示</dt><dd class="yes">'+s.primary+'</dd></div>'+
+    '<div><dt>辅助记录</dt><dd>'+(s.aux||'—')+'</dd></div>'+
+    '<div><dt>不应出现</dt><dd class="no">'+(s.avoid||'—')+'</dd></div>'+
+    '<div><dt>关闭 / 终态</dt><dd>'+(s.close||'—')+'</dd></div>'+
+    '<div><dt>说明</dt><dd>'+(s.note||'—')+'</dd></div>'+
+    '</dl>';
+}
+
+/* ---------- 选择场景 ---------- */
+function select(i){
+  cur=i;const s=SCEN[i];
+  buildList(q('#search').value);
+  renderContent(s.route||'overview',s.demo.inline);
+  const h=q('#hosts');h.innerHTML='';
+  renderHosts(s.surface,s.demo);
+  renderTask(s.surface,s.demo);
+  renderNotif(s.surface,s.demo);
+  renderModal(s.surface,s.demo);
+  if(!(s.surface&&s.surface.includes('modal')))q('#bell').style.opacity='';
+  renderAnn(s);
+  // 铃铛未读
+  const unread=NOTIFS.filter(n=>n.k!=='info').length;
+  const dot=q('#bellDot');dot.textContent=String(unread);dot.className='dot'+(NOTIFS.some(n=>n.k==='danger')?' danger':'');
+}
+
+/* ---------- 缩放 ---------- */
+function fit(){
+  const stage=q('#stage');
+  const avail=stage.clientWidth-44;
+  const scale=Math.min(1,avail/1180);
+  const inner=q('#stageInner');
+  inner.style.width=(1180*scale)+'px';
+  inner.style.height=(760*scale)+'px';
+  q('#win').style.transform='scale('+scale+')';
+  q('#win').style.left='0px';
+}
+window.addEventListener('resize',fit);
+
+/* ---------- 交互 ---------- */
+q('#search').addEventListener('input',e=>buildList(e.target.value));
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('active',x===b));
+  const demo=b.dataset.view==='demo';
+  q('#demoView').hidden=!demo;q('#listView').hidden=demo;
+  if(demo)fit();
+  // 锚点：切到哪个视图就回到该视图顶部。
+  (demo?q('#demoView'):q('#listView')).scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.querySelectorAll('#rail button').forEach(b=>b.onclick=()=>{
+  const s=SCEN[cur]; if(s)renderContent(b.dataset.route, b.dataset.route===(s.route||'overview')?s.demo.inline:undefined);
+});
+q('#bell').onclick=()=>{
+  const holder=q('#npanelHolder');
+  if(holder.children.length){holder.innerHTML='';q('#bell').style.opacity='';}
+  else{const s=SCEN[cur];renderNotif(['notif'],{notif:{active:(s&&s.demo.notif&&s.demo.notif.active)||NOTIFS[0].id}});q('#bell').style.opacity='.85';}
+};
+const btn=q('#themeBtn');
+const qp=new URLSearchParams(location.search);
+if(qp.get('theme')==='dark'){document.documentElement.dataset.theme='dark';btn.textContent='亮色';}
+btn.onclick=()=>{const dark=document.documentElement.dataset.theme==='dark';document.documentElement.dataset.theme=dark?'light':'dark';btn.textContent=dark?'暗色':'亮色';};
+
+/* 特效档（总开关）：高=动态光场+玻璃 / 中=光场静止+玻璃 / 低=无光场+无玻璃（应用原本黑白实底风格）。 */
+const EFFECTS_DEFAULT='high';
+function setEffects(mode){
+  mode=['high','mid','low'].includes(mode)?mode:EFFECTS_DEFAULT;
+  document.documentElement.setAttribute('data-effects',mode);
+  document.querySelectorAll('#fxSeg button').forEach(b=>b.classList.toggle('active',b.dataset.effects===mode));
+}
+document.querySelectorAll('#fxSeg button').forEach(b=>{b.onclick=()=>setEffects(b.dataset.effects);});
+setEffects(qp.get('effects')||EFFECTS_DEFAULT);
+
+/* ---------- 清单视图 ---------- */
+let activeF='all';
+function buildFilters(){
+  const f=q('#filters');f.innerHTML='';
+  const all=el('button','chip'+(activeF==='all'?' active':''),'全部 6 类');all.onclick=()=>{activeF='all';renderMatrix();};f.appendChild(all);
+  ORDER.forEach(k=>{const b=el('button','chip'+(activeF===k?' active':''),'<span class="dot" style="--cat:'+CATS[k].color+'"></span>'+CATS[k].name);b.onclick=()=>{activeF=k;renderMatrix();};f.appendChild(b);});
+}
+function renderMatrix(){
+  buildFilters();
+  const tb=q('#matrixBody');tb.innerHTML='';
+  ORDER.forEach(k=>{
+    if(activeF!=='all'&&activeF!==k)return;
+    const rows=SCEN.filter(s=>s.cat===k);if(!rows.length)return;
+    const g=el('tr','grp');g.style.setProperty('--cat',CATS[k].color);
+    g.innerHTML='<td colspan="7"><span class="gdot"></span>'+CATS[k].name+' · '+rows.length+' 个场景</td>';tb.appendChild(g);
+    rows.forEach(s=>{const tr=el('tr');tr.style.setProperty('--cat',CATS[k].color);
+      tr.innerHTML='<td class="ev">'+s.ev+'</td><td class="trigger">'+(s.trigger||'—')+'</td><td class="primary">'+s.primary+'</td><td class="aux">'+(s.aux||'—')+'</td><td class="avoid">'+(s.avoid||'—')+'</td><td class="close">'+(s.close||'—')+'</td><td class="note">'+(s.note||'—')+'</td>';
+      tb.appendChild(tr);});
+  });
+}
+
+/* ---------- 初始化 ---------- */
+SCEN.forEach(s=>{const m={toast:'Toast',task:'任务卡',notif:'通知中心',modal:'Modal',inline:'页面内状态'};s.surfacesText=(s.surface||['inline']).map(x=>m[x]||x).join(' + ');});
+buildList('');renderMatrix();fit();
+const sp=parseInt(qp.get('scene'),10);select(Number.isFinite(sp)&&sp>=0&&sp<SCEN.length?sp:0);
+</script>
+</body>
+</html>

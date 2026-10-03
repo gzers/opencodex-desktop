@@ -12,6 +12,16 @@
 # 本地 IDE 配置
 .idea/
 
+# 本地测试凭据（真实 WebDAV 端点账号口令）；只在本机使用，绝不随仓库分发
+.env
+.env.*
+
+# 本机验收测试（test/）：脚本与源码保留入库；软件副本、隔离运行时与生成物不入库
+test/smoke/bin/
+test/software/
+test/runtime/
+test/out/
+
 # Python 构建脚本的字节码缓存（如协作包报告的 build.py）
 __pycache__/
 *.pyc
@@ -21,5 +31,7 @@ __pycache__/
 # 影响：原型「面板」路由依赖官方页面快照，克隆后需本地自备该快照，否则该路由不可用。
 # 用 ** 形式匹配，避免协作包/素材目录调整后规则失效（失效会导致官方素材被误提交）
 docs/04-项目资料/**/01-原始素材/codex-official.svg
+docs/04-项目资料/**/01-原始素材/opencodex-icon.svg
+docs/04-项目资料/**/01-原始素材/opencodex-mark-*.svg
 docs/04-项目资料/**/官方页面快照/
 docs/04-项目资料/**/截图/官方/

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>状态形象动画 · 候选</title>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f9f9f9; --panel:#fff; --rail:#f9f9f9; --raised:#f4f4f4;
+  --border:#e6e6e6; --border-soft:#f0f0f0; --hover:#0d0d0d08;
+  --text:#0d0d0d; --muted:#6e6e6e;
+  --accent:#0d0d0d; --accent-ink:#fff;
+  --green:#0a7d5c; --green-soft:#10a37f1a;
+  --red:#b91c1c; --red-soft:#b91c1c17;
+  --amber:#9a4a08; --amber-soft:#b453091a;
+  --blue:#1d4ed8; --blue-soft:#1d4ed81a;
+  --radius-sm:8px; --radius:12px; --radius-lg:16px; --radius-pill:999px;
+  --text-micro:10px; --text-caption:11px; --text-label:12px; --text-control:13px; --text-body:14px; --text-subtitle:16px; --text-title:20px;
+  --motion-fast:.12s; --motion-normal:.18s;
+  --shadow:0 1px 2px #1018280f,0 10px 28px #10182812; --shadow-sm:0 1px 2px #1018280f;
+  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,"Noto Sans SC",sans-serif;
+  --font-code:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --bg:#161616; --panel:#1e1e1e; --rail:#242424; --raised:#262626;
+  --border:#333; --border-soft:#2a2a2a; --hover:#ffffff10;
+  --text:#f3f4f6; --muted:#a1a1aa; --accent:#f3f4f6; --accent-ink:#111;
+  --green:#3ecf9a; --green-soft:#10a37f2e; --red:#f87171; --red-soft:#f8717126;
+  --amber:#fbbf24; --amber-soft:#fbbf2426; --blue:#7aa2ff; --blue-soft:#7aa2ff26;
+  --shadow:0 1px 2px #00000040,0 10px 28px #0000004d; --shadow-sm:0 1px 2px #00000040;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:var(--text-body);line-height:1.5}
+a{color:var(--text)}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 22px 60px}
+.page-title{font-size:var(--text-title);font-weight:700;margin:0 0 4px}
+.page-sub{margin:0 0 20px;color:var(--muted);font-size:var(--text-control)}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}
+.card h2{margin:0 0 12px;font-size:var(--text-subtitle)}
+
+/* ── 摘要卡（复用新规范：主线一行 + 支线一行） ── */
+.summary{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--rail)}
+.summary .text{min-width:0}
+.summary .mainline{display:flex;align-items:center;gap:9px;font-weight:650;font-size:var(--text-control)}
+.summary .tag{display:inline-flex;align-items:center;min-height:20px;padding:1px 8px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);color:var(--muted);font-size:var(--text-micro);font-weight:600}
+.summary .sub{color:var(--muted);font-size:var(--text-label);margin-top:4px}
+.summary .actions{margin-left:auto;display:flex;gap:6px;flex:none}
+.mini-btn{min-height:30px;padding:5px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--text);font:inherit;font-size:var(--text-label);cursor:pointer}
+
+/* ── 形象：内联 SVG + CSS 动画，状态由 data-state 单一属性驱动 ── */
+.mascot{width:92px;height:92px;flex:none;overflow:visible}
+.mascot .ring-track{fill:none;stroke:var(--border);stroke-width:2.4}
+.mascot .ring-arc{fill:none;stroke:var(--muted);stroke-width:2.4;stroke-linecap:round;stroke-dasharray:104;stroke-dashoffset:104;transform-origin:24px 26px;transition:stroke var(--motion-normal),stroke-dashoffset var(--motion-normal)}
+.mascot .body{fill:var(--panel);stroke:var(--border);stroke-width:2;transition:fill var(--motion-normal),stroke var(--motion-normal)}
+.mascot .eye{fill:var(--text);transition:transform var(--motion-normal),opacity var(--motion-normal)}
+.mascot .brow{stroke:var(--text);stroke-width:1.8;stroke-linecap:round;opacity:0;transition:opacity var(--motion-normal),transform var(--motion-normal)}
+.mascot .antenna-line{stroke:var(--border);stroke-width:2}
+.mascot .ant-dot{fill:var(--muted);transition:fill var(--motion-normal)}
+.mascot .badge{opacity:0;transform-origin:24px 26px;transition:opacity var(--motion-fast)}
+.mascot .badge circle{fill:var(--panel);stroke:var(--muted);stroke-width:2}
+.mascot .badge text{font:700 12px var(--font-ui);fill:var(--muted);text-anchor:middle}
+
+/* 正在确认：扫描环 + 眼睛左右探看 */
+.mascot[data-state="confirming"] .ring-arc{stroke:var(--blue);stroke-dashoffset:78;animation:sweep 1.3s linear infinite}
+.mascot[data-state="confirming"] .ant-dot{fill:var(--blue);animation:pulse 1.3s ease-in-out infinite}
+.mascot[data-state="confirming"] .eye{animation:scan 1.6s ease-in-out infinite}
+
+/* 待接入：灰、虚线、身体偏暗、眼睛一条线 */
+.mascot[data-state="not_ready"] .ring-arc{stroke:var(--border);stroke-dashoffset:0;animation:none}
+.mascot[data-state="not_ready"] .body{opacity:.72}
+.mascot[data-state="not_ready"] .eye{transform:scaleY(.18)}
+.mascot[data-state="not_ready"] .brow{opacity:1;transform:translateY(2px) scaleX(.9)}
+
+/* 未运行：灰、呼吸、眼睛半睁 */
+.mascot[data-state="stopped"] .ring-arc{stroke:var(--muted);stroke-dashoffset:88;animation:none}
+.mascot[data-state="stopped"] .body{animation:breathe 3.4s ease-in-out infinite}
+.mascot[data-state="stopped"] .eye{transform:scaleY(.55)}
+
+/* 运行中：绿环、轻微浮动、偶发眨眼 */
+.mascot[data-state="running"] .ring-arc{stroke:var(--green);stroke-dashoffset:16;animation:none}
+.mascot[data-state="running"] .ant-dot{fill:var(--green)}
+.mascot[data-state="running"] .body{animation:bob 2.6s ease-in-out infinite}
+.mascot[data-state="running"] .eye{animation:blink 4.4s ease-in-out infinite}
+
+/* 支线进行中：环旋转 + 工作抖动 */
+.mascot[data-state="progress"] .ring-arc{stroke:var(--blue);stroke-dashoffset:78;animation:sweep .9s linear infinite}
+.mascot[data-state="progress"] .ant-dot{fill:var(--blue);animation:pulse .9s ease-in-out infinite}
+.mascot[data-state="progress"] .body{animation:work .7s ease-in-out infinite}
+.mascot[data-state="progress"] .eye{transform:scaleY(.85)}
+
+/* 失败：红、一次性抖动、随后稳定 */
+.mascot[data-state="failed"] .ring-arc{stroke:var(--red);stroke-dashoffset:20;animation:none}
+.mascot[data-state="failed"] .body{animation:shake .5s ease-in-out 1}
+.mascot[data-state="failed"] .brow{opacity:1;transform:rotate(0)}
+.mascot[data-state="failed"] .brow.left{transform:rotate(18deg)}
+.mascot[data-state="failed"] .brow.right{transform:rotate(-18deg)}
+.mascot[data-state="failed"] .badge{opacity:1}
+.mascot[data-state="failed"] .badge circle{stroke:var(--red)}
+.mascot[data-state="failed"] .badge text{fill:var(--red)}
+
+/* 持续问题：琥珀、慢脉冲、担忧眼神 */
+.mascot[data-state="problem"] .ring-arc{stroke:var(--amber);stroke-dashoffset:30;animation:pulseRing 2.4s ease-in-out infinite}
+.mascot[data-state="problem"] .ant-dot{fill:var(--amber);animation:pulse 2.4s ease-in-out infinite}
+.mascot[data-state="problem"] .eye{transform:scaleY(.9)}
+.mascot[data-state="problem"] .brow{opacity:1}
+.mascot[data-state="problem"] .brow.left{transform:rotate(16deg)}
+.mascot[data-state="problem"] .brow.right{transform:rotate(-16deg)}
+
+/* 结果微动画 */
+.mascot[data-state="ok"] .ring-arc{stroke:var(--green);stroke-dashoffset:0}
+.mascot[data-state="ok"] .badge{opacity:1;animation:pop .5s ease-out 1}
+.mascot[data-state="ok"] .badge circle{stroke:var(--green)}.mascot[data-state="ok"] .badge text{fill:var(--green)}
+.mascot[data-state="partial"] .ring-arc{stroke:var(--amber);stroke-dashoffset:52}
+.mascot[data-state="partial"] .badge{opacity:1}.mascot[data-state="partial"] .badge circle{stroke:var(--amber)}.mascot[data-state="partial"] .badge text{fill:var(--amber)}
+.mascot[data-state="cancelled"] .ring-arc{stroke:var(--muted);stroke-dashoffset:104}
+.mascot[data-state="cancelled"] .body{opacity:.7}
+.mascot[data-state="cancelled"] .badge{opacity:1}.mascot[data-state="cancelled"] .badge text{fill:var(--muted)}
+.mascot[data-state="unconfirmed"] .ring-arc{stroke:var(--blue);stroke-dashoffset:60;animation:pulseRing 1.8s ease-in-out infinite}
+.mascot[data-state="unconfirmed"] .badge{opacity:1;animation:bobSmall 1.8s ease-in-out infinite}
+.mascot[data-state="unconfirmed"] .badge circle{stroke:var(--blue)}.mascot[data-state="unconfirmed"] .badge text{fill:var(--blue)}
+.mascot[data-state="restart"] .ring-arc{stroke:var(--green);stroke-dashoffset:40;animation:sweep 1.6s linear infinite}
+.mascot[data-state="restart"] .badge{opacity:1}.mascot[data-state="restart"] .badge circle{stroke:var(--green)}.mascot[data-state="restart"] .badge text{fill:var(--green)}
+
+/* 过期/陈旧：不冒充实时 */
+.mascot.is-stale{filter:saturate(.35)}
+.mascot.is-stale .ring-track{stroke-dasharray:3 4}
+.mascot.is-stale::after{content:""}
+.stale-note{color:var(--amber);font-size:var(--text-caption)}
+
+@keyframes sweep{to{transform:rotate(360deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes pulseRing{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes scan{0%,100%{transform:translateX(0)}30%{transform:translateX(-1.6px)}70%{transform:translateX(1.6px)}}
+@keyframes breathe{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(0) scale(1.02)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.4px)}}
+@keyframes bobSmall{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes work{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-1px) rotate(-1.5deg)}75%{transform:translateY(-1px) rotate(1.5deg)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.12)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-2.5px)}40%{transform:translateX(2.5px)}60%{transform:translateX(-1.6px)}80%{transform:translateX(1.6px)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+.mascot .body,.mascot .eye,.mascot .ant-dot,.mascot .ring-arc{will-change:transform}
+@media(prefers-reduced-motion:reduce){
+  .mascot *{animation:none !important}
+  .mascot .ring-arc{transition:none}
+}
+
+/* ── 控制区 ── */
+.ctl-group{margin-top:12px}
+.ctl-group:first-of-type{margin-top:0}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-soft);color:var(--muted);font-size:var(--text-label)}
+.switch{display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.tagline{margin-top:16px;padding:12px;border:1px dashed var(--border);border-radius:var(--radius-sm);color:var(--muted);font-size:var(--text-caption)}
+.badge-candidate{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:var(--radius-pill);background:var(--amber-soft);color:var(--amber);font-size:var(--text-micro);font-weight:700}
+</style>
+<link rel="stylesheet" href="../../topic-header.css">
+<link rel="stylesheet" href="../../proto-controls.css">
+</head>
+<body>
+<header class="topic-bar"><div><div class="eyebrow">STATE MASCOT · CANDIDATE</div><h1>状态形象动画 · 设计候选</h1><p>用一个内联 SVG 形象表达运行主线 / 节支线 / 持续问题 / 操作结果，替代占用较大的状态色块；状态由单一属性驱动，可实时响应。仅为视觉候选，不改现行原型。</p></div><span class="badge-candidate">候选 · 未定稿</span><a class="topic-back" href="../2026-09-28-Logo本体形变/overview.html">← 返回软件原型</a></header>
+<div class="wrap">
+  
+
+  <div class="grid">
+    <section class="card">
+      <h2>摘要卡（形象嵌入示意）</h2>
+      <div class="summary">
+        <svg class="mascot" id="mascot" viewBox="0 0 48 52" role="img" aria-label="正在确认运行状态">
+          <g class="ring">
+            <circle class="ring-track" cx="24" cy="27" r="17"/>
+            <circle class="ring-arc" cx="24" cy="27" r="17"/>
+          </g>
+          <g class="antenna">
+            <line class="antenna-line" x1="24" y1="15" x2="24" y2="9"/>
+            <circle class="ant-dot" cx="24" cy="7" r="2.6"/>
+          </g>
+          <g class="head">
+            <rect class="body" x="12" y="15" width="24" height="21" rx="8"/>
+            <g class="brows">
+              <line class="brow left" x1="16" y1="21" x2="20" y2="21"/>
+              <line class="brow right" x1="28" y1="21" x2="32" y2="21"/>
+            </g>
+            <circle class="eye eye-l" cx="19" cy="25.5" r="2.1"/>
+            <circle class="eye eye-r" cx="29" cy="25.5" r="2.1"/>
+          </g>
+          <g class="badge"><circle cx="34" cy="38" r="7.5"/><text id="badgeText" x="34" y="42">!</text></g>
+        </svg>
+        <div class="text">
+          <div class="mainline"><span id="mlLabel">正在确认</span><span class="tag" id="mlTag">运行事实</span></div>
+          <div class="sub" id="mlHint">首次采集进行中</div>
+        </div>
+        <div class="actions"><button class="mini-btn">详情</button><button class="mini-btn">更多</button></div>
+      </div>
+      <p class="pctl-hint">形象与右侧文字同源：形象 = 同一份状态投影的另一种表达，不新增状态、不新增真源。</p>
+
+      <h2 style="margin-top:20px">进度 / 结果支线（形象同样承接）</h2>
+      <div class="summary">
+        <svg class="mascot" id="mascot2" viewBox="0 0 48 52" role="img" aria-label="操作结果">
+          <g class="ring"><circle class="ring-track" cx="24" cy="27" r="17"/><circle class="ring-arc" cx="24" cy="27" r="17"/></g>
+          <g class="antenna"><line class="antenna-line" x1="24" y1="15" x2="24" y2="9"/><circle class="ant-dot" cx="24" cy="7" r="2.6"/></g>
+          <g class="head"><rect class="body" x="12" y="15" width="24" height="21" rx="8"/>
+            <g class="brows"><line class="brow left" x1="16" y1="21" x2="20" y2="21"/><line class="brow right" x1="28" y1="21" x2="32" y2="21"/></g>
+            <circle class="eye eye-l" cx="19" cy="25.5" r="2.1"/><circle class="eye eye-r" cx="29" cy="25.5" r="2.1"/></g>
+          <g class="badge"><circle cx="34" cy="38" r="7.5"/><text x="34" y="42">?</text></g>
+        </svg>
+        <div class="text">
+          <div class="mainline"><span id="l2Label">未运行</span><span class="tag" id="l2Tag">支线</span></div>
+          <div class="sub" id="l2Hint">操作结果待确认</div>
+        </div>
+        <div class="actions"><button class="mini-btn">重试</button></div>
+      </div>
+      <p class="pctl-hint">失败只做一次性抖动后稳定，不做常驻警示；过期事实用降饱和 + 虚线环表达，绝不冒充实时。</p>
+    </section>
+
+    <section class="card pctl">
+      <h2>状态与实时驱动</h2>
+      <div class="ctl-group">
+        <p class="pctl-sub">运行主线</p>
+        <div class="btns pctl-chips" id="g-main">
+          <button data-state="confirming">正在确认</button>
+          <button data-state="not_ready">待接入</button>
+          <button data-state="stopped">未运行</button>
+          <button data-state="running">运行中</button>
+        </div>
+      </div>
+      <div class="ctl-group">
+        <p class="pctl-sub">支线 · 进度 / 结果</p>
+        <div class="btns pctl-chips" id="g-branch">
+          <button data-state="progress">进行中</button>
+          <button data-state="ok">成功</button>
+          <button data-state="partial">部分完成</button>
+          <button data-state="failed">失败</button>
+          <button data-state="cancelled">已取消</button>
+          <button data-state="unconfirmed">待确认</button>
+          <button data-state="restart">待重启</button>
+        </div>
+      </div>
+      <div class="ctl-group">
+        <p class="pctl-sub">持续问题</p>
+        <div class="btns pctl-chips" id="g-problem"><button data-state="problem">有持续问题</button></div>
+      </div>
+
+      <p class="pctl-sub">演示开关 · 只影响本页预览</p>
+      <div class="tools">
+        <label class="switch"><input type="checkbox" id="drive"> 实时驱动（模拟状态流）</label>
+        <label class="switch"><input type="checkbox" id="stale"> 事实过期</label>
+        <button class="mini-btn" id="rmBtn">reduced-motion：跟随系统</button>
+      </div>
+      <p class="pctl-hint">实时驱动按一条典型状态流推进（确认 → 待接入 → 未运行 → 启动中 → 待就绪 → 运行中 → 持续问题 → 恢复），用来验证形象对状态变化的响应与去抖动。</p>
+
+      <div class="tagline" id="tagline">选一个状态，或打开「实时驱动」看形象随状态实时变化。</div>
+      <div class="pctl-hint">同源说明：形象只消费与摘要卡、托盘一致的运行事实 / 支线 / 问题投影（项目核心 §2.7、§5.8），不新建状态机。</div>
+    </section>
+  </div>
+</div>
+
+<script>
+const MASCOTS=[document.getElementById('mascot'),document.getElementById('mascot2')];
+const MODEL={
+  confirming:{main:'正在确认',tag:'运行事实',hint:'首次采集进行中',badge:'',aria:'正在确认运行状态'},
+  not_ready:{main:'待接入',tag:'运行事实',hint:'安装或指定来源后可启动',badge:'',aria:'待接入'},
+  stopped:{main:'未运行',tag:'运行事实',hint:'可启动',badge:'',aria:'未运行'},
+  running:{main:'运行中',tag:'运行事实',hint:'运行正常',badge:'',aria:'运行中'},
+  progress:{main:'未运行',tag:'支线',hint:'启动中 · 等待核验',badge:'',aria:'支线进行中'},
+  ok:{main:'未运行',tag:'结果',hint:'操作成功',badge:'\u2713',aria:'操作成功'},
+  partial:{main:'未运行',tag:'结果',hint:'部分完成 · 有未生效项',badge:'\u00bd',aria:'部分完成'},
+  failed:{main:'未运行',tag:'结果',hint:'启动失败：端口被占用',badge:'!',aria:'操作失败'},
+  cancelled:{main:'未运行',tag:'结果',hint:'已取消 · 非故障',badge:'\u2715',aria:'已取消'},
+  unconfirmed:{main:'未运行',tag:'结果',hint:'结果待确认 · 继续核验',badge:'?',aria:'结果待确认'},
+  restart:{main:'未运行',tag:'结果',hint:'待重启生效',badge:'\u21bb',aria:'待重启生效'},
+  problem:{main:'运行中',tag:'问题',hint:'存在持续问题 · 进待处理摘要',badge:'!',aria:'存在持续问题'}
+};
+const FLOW=['confirming','not_ready','stopped','progress','running','problem','running'];
+let driveTimer=null, flowIndex=0;
+
+function apply(state){
+  const m=MODEL[state]||MODEL.confirming;
+  MASCOTS.forEach(svg=>{svg.setAttribute('data-state',state);svg.setAttribute('aria-label',m.aria);
+    const t=svg.querySelector('.badge text'); if(t) t.textContent=m.badge;});
+  document.getElementById('mlLabel').textContent=m.main;
+  document.getElementById('mlTag').textContent=m.tag;
+  document.getElementById('mlHint').textContent=m.hint;
+  document.getElementById('l2Label').textContent=m.main;
+  document.getElementById('l2Tag').textContent=m.tag;
+  document.getElementById('l2Hint').textContent=m.hint;
+  document.querySelectorAll('.btns button').forEach(b=>b.classList.toggle('active',b.dataset.state===state));
+  document.querySelector(('#g-problem button'));
+}
+const badgelabels={ok:'\u2713',partial:'\u00bd',failed:'!',cancelled:'\u2715',unconfirmed:'?',restart:'\u21bb',problem:'!'};
+document.querySelectorAll('.btns button').forEach(b=>{
+  b.addEventListener('click',()=>{ stopDrive(); apply(b.dataset.state); });
+});
+function step(){ apply(FLOW[flowIndex%FLOW.length]); flowIndex++; }
+function startDrive(){ if(driveTimer) return; step(); driveTimer=setInterval(step,1500); }
+function stopDrive(){ if(driveTimer){clearInterval(driveTimer);driveTimer=null;} document.getElementById('drive').checked=false; }
+document.getElementById('drive').addEventListener('change',e=>{ e.target.checked?startDrive():stopDrive(); });
+document.getElementById('stale').addEventListener('change',e=>{ MASCOTS.forEach(s=>s.classList.toggle('is-stale',e.target.checked)); });
+document.getElementById('rmBtn').addEventListener('click',()=>{
+  // 演示：临时把 reduced-motion 视作开启（生产用 prefers-reduced-motion 媒体查询）
+  const on=document.documentElement.toggleAttribute('data-rm');
+  document.getElementById('rmBtn').textContent=on?'reduced-motion：开（静态帧）':'reduced-motion：跟随系统';
+});
+apply('confirming');
+</script>
+</body>
+</html>

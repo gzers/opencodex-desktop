@@ -4,7 +4,7 @@
 
 > 面向 OpenCodex 的独立桌面管理器：把命令行里的发现、启停、状态观测、配置迁移、同步与扩展管理，收进一个图形界面。
 
-**状态：需求阶段已完成，尚无实现。** 本仓库当前只包含需求、原型与治理文档。实施契约（IMP）尚未创建，没有可运行的程序，也没有可安装的构建产物。
+**状态：需求阶段已完成，工程底座与测试/构建基线已开始实施。** 本仓库已包含可运行的桌面壳骨架；UI 原型还原尚未开始，当前构建产物只是未签名实验包，不代表可发布版本。
 
 ---
 
@@ -80,12 +80,30 @@ OpenCodex 目前主要通过命令行启动和观察。**OpenCodeX-Desktop** 是
 | 需求范围与技术选型 | 已确认 |
 | 需求分析阶段 | 已完成（含需求基线、场景与验收矩阵、风险清单、安全评审、IMP 输入清单） |
 | 评审门 | Gate A / B / C / D 通过，Gate E 产物已补齐 |
-| 实施契约（IMP） | 未创建 |
-| 实现与构建产物 | **无** |
+| 实施契约（IMP） | 已创建并确认（IMP-OPENCODEX-DESKTOP-01） |
+| 实现与构建产物 | 桌面壳骨架与未签名 macOS arm64 实验包 |
 
-## 开发
+## 开发与验证
 
-尚未开始实现，因此没有构建步骤、开发环境要求或运行说明。创建 IMP 并冻结技术契约后，本节会补齐安装、构建、测试与发布方式。
+```bash
+# 前端类型检查与测试
+cd apps/desktop/ui
+npm ci
+npm run typecheck
+npm test -- --run
+
+# Rust 格式、静态检查与测试
+cd ../tauri
+cargo fmt --all -- --check
+cargo clippy --all-targets -- -D warnings
+cargo test
+
+# macOS arm64 Release 构建
+cd ../../..
+cargo tauri build --target aarch64-apple-darwin
+```
+
+测试只使用仓库内合成 fixture 和系统临时目录；不读取真实用户配置、真实 Keychain、真实 WebDAV 或发布私钥。当前测试基线包含 FIX-01 三维状态矩阵与 FIX-03 虚拟进程。
 
 ## 归属与许可
 

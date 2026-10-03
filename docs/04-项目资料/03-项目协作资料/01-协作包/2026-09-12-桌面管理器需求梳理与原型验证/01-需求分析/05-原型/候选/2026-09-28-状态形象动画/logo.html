@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>状态形象动画（基于图标 logo）· 候选</title>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#f9f9f9; --panel:#fff; --rail:#f9f9f9;
+  --border:#e6e6e6; --border-soft:#f0f0f0;
+  --text:#0d0d0d; --muted:#6e6e6e;
+  --accent:#0d0d0d; --accent-ink:#fff;
+  --green:#0a7d5c; --green-soft:#10a37f22;
+  --red:#b91c1c; --red-soft:#b91c1c20;
+  --amber:#9a4a08; --amber-soft:#b4530922;
+  --blue:#1d4ed8; --blue-soft:#1d4ed822;
+  --radius-sm:8px; --radius:12px; --radius-pill:999px;
+  --text-micro:10px; --text-caption:11px; --text-label:12px; --text-control:13px; --text-body:14px; --text-subtitle:16px; --text-title:20px;
+  --motion-normal:.18s; --shadow-sm:0 1px 2px #1018280f;
+  --font-ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,"Noto Sans SC",sans-serif;
+}
+html[data-theme="dark"]{
+  --bg:#161616; --panel:#1e1e1e; --rail:#242424; --border:#333; --border-soft:#2a2a2a;
+  --text:#f3f4f6; --muted:#a1a1aa; --accent:#f3f4f6; --accent-ink:#111;
+  --green:#3ecf9a; --green-soft:#10a37f33; --red:#f87171; --red-soft:#f871712e;
+  --amber:#fbbf24; --amber-soft:#fbbf2433; --blue:#7aa2ff; --blue-soft:#7aa2ff2e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:var(--text-body);line-height:1.5}
+.wrap{max-width:1060px;margin:0 auto;padding:28px 22px 60px}
+.page-title{font-size:var(--text-title);font-weight:700;margin:0}
+.page-sub{margin:6px 0 20px;color:var(--muted);font-size:var(--text-control)}
+.badge-candidate{display:inline-flex;align-items:center;gap:6px;padding:2px 9px;border-radius:var(--radius-pill);background:var(--amber-soft);color:var(--amber);font-size:var(--text-micro);font-weight:700}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-sm)}
+.card h2{margin:0 0 14px;font-size:var(--text-subtitle)}
+
+/* 上下布局：logo 在上，文字在下 */
+.stack{display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--rail);text-align:center}
+.stack .label{display:flex;align-items:center;gap:8px;font-weight:650;font-size:var(--text-control)}
+.stack .sub{color:var(--muted);font-size:var(--text-label);max-width:260px}
+.stack .tag{display:inline-flex;align-items:center;min-height:20px;padding:1px 8px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);color:var(--muted);font-size:var(--text-micro);font-weight:600}
+.logo-wrap{width:112px;height:112px;position:relative}
+.logo{width:112px;height:112px;overflow:visible;display:block}
+.samples-title{font-size:var(--text-micro);font-weight:700;letter-spacing:.02em;color:var(--muted);margin:18px 0 10px}
+.samples{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.sample{padding:12px 10px;background:var(--panel)}
+.sample .logo-wrap{width:64px;height:64px}
+.sample .logo{width:64px;height:64px}
+.sample .label{font-size:var(--text-label)}
+.sample .sub{font-size:var(--text-micro);max-width:120px}
+
+.ring-track{fill:none;stroke:var(--border);stroke-width:2.4}
+.ring-arc{fill:none;stroke:var(--muted);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:258;stroke-dashoffset:258;transform-origin:48px 48px;transition:stroke var(--motion-normal),stroke-dashoffset var(--motion-normal)}
+.glow{fill:transparent;transition:fill .3s}
+.mark{transform-origin:48px 48px;transition:opacity var(--motion-normal),filter var(--motion-normal)}
+.orbit{opacity:0;transform-origin:48px 48px;transition:opacity var(--motion-normal)}
+.orbit-dot{fill:var(--blue)}
+.badge{opacity:0;transform-origin:78px 78px;transition:opacity .12s}
+.badge circle{fill:var(--panel);stroke:var(--muted);stroke-width:2}
+.badge text{font:700 13px var(--font-ui);fill:var(--muted);text-anchor:middle}
+
+.stack[data-state="confirming"] .ring-arc{stroke:var(--blue);stroke-dashoffset:186;animation:sweep 1.3s linear infinite}
+.stack[data-state="confirming"] .glow{fill:var(--blue-soft);animation:pulse 1.3s ease-in-out infinite}
+.stack[data-state="confirming"] .orbit{opacity:1;animation:orbit 2.4s linear infinite}
+.stack[data-state="not_ready"] .ring-arc{stroke:var(--border);stroke-dashoffset:0;animation:none}
+.stack[data-state="not_ready"] .mark{opacity:.42;filter:saturate(.25)}
+.stack[data-state="stopped"] .ring-arc{stroke:var(--muted);stroke-dashoffset:214}
+.stack[data-state="stopped"] .mark{animation:breathe 3.4s ease-in-out infinite}
+.stack[data-state="running"] .ring-arc{stroke:var(--green);stroke-dashoffset:26}
+.stack[data-state="running"] .glow{fill:var(--green-soft);animation:pulse 3.2s ease-in-out infinite}
+.stack[data-state="running"] .mark{animation:breathe 3.2s ease-in-out infinite}
+.stack[data-state="progress"] .ring-arc{stroke:var(--blue);stroke-dashoffset:186;animation:sweep .9s linear infinite}
+.stack[data-state="progress"] .glow{fill:var(--blue-soft);animation:pulse .9s ease-in-out infinite}
+.stack[data-state="progress"] .orbit{opacity:1;animation:orbit 1.3s linear infinite}
+.stack[data-state="progress"] .mark{animation:work .8s ease-in-out infinite}
+.stack[data-state="ok"] .ring-arc{stroke:var(--green);stroke-dashoffset:0}
+.stack[data-state="ok"] .badge{opacity:1;animation:pop .5s ease-out 1}
+.stack[data-state="ok"] .badge circle{stroke:var(--green)}.stack[data-state="ok"] .badge text{fill:var(--green)}
+.stack[data-state="partial"] .ring-arc{stroke:var(--amber);stroke-dashoffset:120}
+.stack[data-state="partial"] .badge{opacity:1}.stack[data-state="partial"] .badge circle{stroke:var(--amber)}.stack[data-state="partial"] .badge text{fill:var(--amber)}
+.stack[data-state="failed"] .ring-arc{stroke:var(--red);stroke-dashoffset:44}
+.stack[data-state="failed"] .mark{animation:shake .5s ease-in-out 1;filter:saturate(1.3)}
+.stack[data-state="failed"] .badge{opacity:1}.stack[data-state="failed"] .badge circle{stroke:var(--red)}.stack[data-state="failed"] .badge text{fill:var(--red)}
+.stack[data-state="cancelled"] .ring-arc{stroke:var(--muted);stroke-dashoffset:258}
+.stack[data-state="cancelled"] .mark{opacity:.5;filter:saturate(.35)}
+.stack[data-state="cancelled"] .badge{opacity:1}.stack[data-state="cancelled"] .badge circle{stroke:var(--muted)}
+.stack[data-state="unconfirmed"] .ring-arc{stroke:var(--blue);stroke-dashoffset:140;animation:pulseRing 1.8s ease-in-out infinite}
+.stack[data-state="unconfirmed"] .badge{opacity:1;animation:bobSmall 1.8s ease-in-out infinite}
+.stack[data-state="unconfirmed"] .badge circle{stroke:var(--blue)}.stack[data-state="unconfirmed"] .badge text{fill:var(--blue)}
+.stack[data-state="restart"] .ring-arc{stroke:var(--green);stroke-dashoffset:96;animation:sweep 1.6s linear infinite}
+.stack[data-state="restart"] .badge{opacity:1}.stack[data-state="restart"] .badge circle{stroke:var(--green)}.stack[data-state="restart"] .badge text{fill:var(--green)}
+.stack[data-state="problem"] .ring-arc{stroke:var(--amber);stroke-dashoffset:64;animation:pulseRing 2.4s ease-in-out infinite}
+.stack[data-state="problem"] .glow{fill:var(--amber-soft);animation:pulse 2.4s ease-in-out infinite}
+.stack[data-state="problem"] .mark{filter:saturate(.9)}
+.stack.is-stale .mark{opacity:.5;filter:saturate(.3)}
+.stack.is-stale .ring-track{stroke-dasharray:3 4}
+@keyframes sweep{to{transform:rotate(360deg)}}
+@keyframes orbit{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes pulseRing{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes work{0%,100%{transform:rotate(0)}30%{transform:rotate(-2deg)}70%{transform:rotate(2deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-1.8px)}80%{transform:translateX(1.8px)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.14);opacity:1}100%{transform:scale(1)}}
+@keyframes bobSmall{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.mark,.ring-arc,.glow,.orbit{will-change:transform,opacity}
+@media(prefers-reduced-motion:reduce){.stack *{animation:none !important}}
+
+.ctl-group{margin-top:12px}.ctl-group:first-of-type{margin-top:0}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--border-soft);color:var(--muted);font-size:var(--text-label)}
+.switch{display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.tagline{margin-top:16px;padding:12px;border:1px dashed var(--border);border-radius:var(--radius-sm);color:var(--muted);font-size:var(--text-caption)}
+</style>
+<link rel="stylesheet" href="../../topic-header.css">
+<link rel="stylesheet" href="../../proto-controls.css">
+</head>
+<body>
+<header class="topic-bar"><div><div class="eyebrow">STATE MASCOT · LOGO</div><h1>状态形象动画 · 基于当前图标 logo</h1><p>沿用现有品牌 logo（内联 SVG，含品牌渐变与中间镂空），由单一 <code>data-state</code> 驱动动画；<b>上下布局</b>（logo 在上、状态文字在下）。先做模拟效果，不改现行原型与生产代码。</p></div><span class="badge-candidate">候选 · 未定稿</span><a class="topic-back" href="../2026-09-28-Logo本体形变/overview.html">← 返回软件原型</a></header>
+<div class="wrap">
+  
+
+  <div class="grid">
+    <section class="card">
+      <h2>摘要卡内（上下布局）</h2>
+      <div class="stack" id="stackA" data-state="confirming">
+        <div class="logo-wrap"><svg class="logo" viewBox="0 0 96 96" role="img" aria-label="运行状态"><defs><linearGradient id="trayBrandGradient" gradientUnits="userSpaceOnUse" x1="12" y1="3" x2="12" y2="21"><stop stop-color="#B1A7FF"/><stop offset=".5" stop-color="#7A9DFF"/><stop offset="1" stop-color="#3941FF"/></linearGradient><mask id="trayBrandKnockout" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff"/><svg x="7.5" y="7.5" width="9" height="9" viewBox="0 0 1024 1024" fill="#000"><path d="M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/><path d="M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/><path d="M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z"/><path d="M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z"/><path d="M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z"/></svg></mask></defs><circle class="glow" cx="48" cy="48" r="30"/><circle class="ring-track" cx="48" cy="48" r="41"/><circle class="ring-arc" cx="48" cy="48" r="41"/><g class="orbit"><circle class="orbit-dot" cx="48" cy="7" r="3.2"/></g><g class="mark" transform="translate(20 20) scale(2.3333)"><path class="mark-path" mask="url(#trayBrandKnockout)" fill="url(#trayBrandGradient)" d="M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z"/></g><g class="badge"><circle cx="78" cy="78" r="10"/><text x="78" y="82">!</text></g></svg></div>
+        <div class="label"><span id="aLabel">正在确认</span><span class="tag" id="aTag">运行事实</span></div>
+        <div class="sub" id="aHint">首次采集进行中</div>
+      </div>
+      <p class="samples-title">全部状态一览（静态）</p>
+      <div class="samples" id="samples"></div>
+      <p class="pctl-hint">品牌渐变与中间镂空保留（识别度）；状态由外圈颜色/弧度、光晕、轨道点与徽标表达，logo 本体只做呼吸 / 抖动 / 降饱和。</p>
+    </section>
+
+    <section class="card pctl">
+      <h2>状态与实时驱动</h2>
+      <div class="ctl-group">
+        <p class="pctl-sub">运行主线</p>
+        <div class="btns pctl-chips" id="g-main">
+          <button data-state="confirming">正在确认</button>
+          <button data-state="not_ready">待接入</button>
+          <button data-state="stopped">未运行</button>
+          <button data-state="running">运行中</button>
+        </div>
+      </div>
+      <div class="ctl-group">
+        <p class="pctl-sub">支线 · 进度 / 结果</p>
+        <div class="btns pctl-chips" id="g-branch">
+          <button data-state="progress">进行中</button>
+          <button data-state="ok">成功</button>
+          <button data-state="partial">部分完成</button>
+          <button data-state="failed">失败</button>
+          <button data-state="cancelled">已取消</button>
+          <button data-state="unconfirmed">待确认</button>
+          <button data-state="restart">待重启</button>
+        </div>
+      </div>
+      <div class="ctl-group">
+        <p class="pctl-sub">持续问题</p>
+        <div class="btns pctl-chips" id="g-problem"><button data-state="problem">有持续问题</button></div>
+      </div>
+      <p class="pctl-sub">演示开关 · 只影响本页预览</p>
+      <div class="tools">
+        <label class="switch"><input type="checkbox" id="drive"> 实时驱动（模拟状态流）</label>
+        <label class="switch"><input type="checkbox" id="stale"> 事实过期</label>
+        <label class="switch"><input type="checkbox" id="theme"> 深色</label>
+      </div>
+      <p class="pctl-hint">实时驱动按典型状态流推进（确认 → 待接入 → 未运行 → 进行中 → 运行中 → 持续问题 → 恢复），验证对状态变化的响应与去抖动。</p>
+      <div class="tagline" id="tagline">选一个状态，或打开「实时驱动」看 logo 随状态实时变化。</div>
+    </section>
+  </div>
+</div>
+
+<script>
+const MODEL={
+  confirming:{main:'正在确认',tag:'运行事实',hint:'首次采集进行中',badge:''},
+  not_ready:{main:'待接入',tag:'运行事实',hint:'安装或指定来源后可启动',badge:''},
+  stopped:{main:'未运行',tag:'运行事实',hint:'可启动',badge:''},
+  running:{main:'运行中',tag:'运行事实',hint:'运行正常',badge:''},
+  progress:{main:'未运行',tag:'支线',hint:'启动中 · 等待核验',badge:''},
+  ok:{main:'未运行',tag:'结果',hint:'操作成功',badge:'\u2713'},
+  partial:{main:'未运行',tag:'结果',hint:'部分完成 · 有未生效项',badge:'\u00bd'},
+  failed:{main:'未运行',tag:'结果',hint:'启动失败：端口被占用',badge:'!'},
+  cancelled:{main:'未运行',tag:'结果',hint:'已取消 · 非故障',badge:'\u2715'},
+  unconfirmed:{main:'未运行',tag:'结果',hint:'结果待确认 · 继续核验',badge:'?'},
+  restart:{main:'未运行',tag:'结果',hint:'待重启生效',badge:'\u21bb'},
+  problem:{main:'运行中',tag:'问题',hint:'存在持续问题 · 进待处理摘要',badge:'!'}
+};
+const FLOW=['confirming','not_ready','stopped','progress','running','problem','running'];
+const stackA=document.getElementById('stackA');
+let timer=null,i=0;
+function apply(state){
+  const m=MODEL[state]||MODEL.confirming;
+  stackA.setAttribute('data-state',state);
+  stackA.querySelector('.badge text').textContent=m.badge;
+  document.getElementById('aLabel').textContent=m.main;
+  document.getElementById('aTag').textContent=m.tag;
+  document.getElementById('aHint').textContent=m.hint;
+  document.querySelectorAll('.btns button').forEach(b=>b.classList.toggle('active',b.dataset.state===state));
+}
+document.querySelectorAll('.btns button').forEach(b=>b.addEventListener('click',()=>{stop();apply(b.dataset.state)}));
+function step(){apply(FLOW[i%FLOW.length]);i++;}
+function start(){if(timer)return;step();timer=setInterval(step,1500);}
+function stop(){if(timer){clearInterval(timer);timer=null;}document.getElementById('drive').checked=false;}
+document.getElementById('drive').addEventListener('change',e=>{e.target.checked?start():stop()});
+document.getElementById('stale').addEventListener('change',e=>{document.querySelectorAll('.stack').forEach(s=>s.classList.toggle('is-stale',e.target.checked))});
+document.getElementById('theme').addEventListener('change',e=>{document.documentElement.setAttribute('data-theme',e.target.checked?'dark':'light')});
+(function buildSamples(){
+  const wrap=document.getElementById('samples');
+  const tpl=stackA.querySelector('.logo').cloneNode(true);
+  ['confirming','not_ready','stopped','running','progress','ok','partial','failed','cancelled','unconfirmed','restart','problem'].forEach(k=>{
+    const m=MODEL[k];const box=document.createElement('div');box.className='stack sample';box.setAttribute('data-state',k);
+    const lw=document.createElement('div');lw.className='logo-wrap';const svg=tpl.cloneNode(true);
+    const bt=svg.querySelector('.badge text');if(bt)bt.textContent=m.badge;lw.appendChild(svg);
+    const lb=document.createElement('div');lb.className='label';lb.textContent=m.main;
+    const hb=document.createElement('div');hb.className='sub';hb.textContent=m.hint;
+    box.append(lw,lb,hb);wrap.appendChild(box);
+  });
+})();
+apply('confirming');
+</script>
+</body>
+</html>

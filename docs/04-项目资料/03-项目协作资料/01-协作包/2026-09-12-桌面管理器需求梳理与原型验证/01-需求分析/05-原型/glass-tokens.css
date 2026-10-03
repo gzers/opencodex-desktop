@@ -1,0 +1,53 @@
+/* 玻璃表面令牌——原型层**唯一真源**（light + dark）。
+   被 overview.html / 原型/index.html 等 <link>；改玻璃填充 / 滤镜 / 通知内控件取值只改这里。
+   body.notif-material-clear / body.notif-no-tint 等**状态规则**仍留在各页（它们只重指向这些令牌）。 */
+:root{
+  --notif-card-bg:rgba(255,255,255,.72);
+  --notif-card-hover:rgba(255,255,255,.88);
+  --notif-card-bd:rgba(13,13,13,.12);
+  --notif-card-shadow:0 1px 2px rgba(16,24,40,.05);
+  --notif-mark:#e0a53c;
+  --notif-mark-ink:#3a2a06;
+  --notif-ctl-h:24px;
+  --notif-ctl-pad:2px 9px;
+  --notif-btn-bg:rgba(13,13,13,.06);
+  --notif-btn-bg-hover:rgba(13,13,13,.13);
+  --notif-btn-bd:rgba(13,13,13,.14);
+  --notif-cancel-bg:rgba(185,28,28,.10);
+  --notif-cancel-bg-hover:rgba(185,28,28,.19);
+  --notif-cancel-bd:rgba(185,28,28,.32);
+  --page-fill-glass:rgba(255,255,255,.62);
+  --page-fill-mid:rgba(255,255,255,.40);
+  --page-fill-clear:rgba(255,255,255,.18);
+  --notif-tint-a:#7aa2ff42;
+  --notif-tint-b:#a8e2c534;
+  --glass-fill-glass:rgba(244,245,249,.52);
+  --glass-fill-clear:rgba(244,248,255,.16);
+  --glass-blur-glass:saturate(1.5) blur(8px);
+  --glass-blur-clear:none;
+  --glass-fill:var(--glass-fill-glass);
+  --glass-blur-notif:var(--glass-blur-glass);
+  --notif-count-bg:rgba(13,13,13,.09);
+}
+html[data-theme="dark"]{
+  --notif-card-bg:rgba(255,255,255,.12);
+  --notif-card-hover:rgba(255,255,255,.18);
+  --notif-card-bd:rgba(255,255,255,.12);
+  --notif-card-shadow:0 1px 2px rgba(0,0,0,.35);
+  --notif-mark:#fbbf24;
+  --notif-mark-ink:#3a2a06;
+  --notif-btn-bg:rgba(255,255,255,.10);
+  --notif-btn-bg-hover:rgba(255,255,255,.20);
+  --notif-btn-bd:rgba(255,255,255,.18);
+  --notif-cancel-bg:rgba(248,113,113,.16);
+  --notif-cancel-bg-hover:rgba(248,113,113,.26);
+  --notif-cancel-bd:rgba(248,113,113,.38);
+  --page-fill-glass:rgba(38,38,38,.62);
+  --page-fill-mid:rgba(38,38,38,.40);
+  --page-fill-clear:rgba(38,38,38,.18);
+  --notif-tint-a:#6082c855;
+  --notif-tint-b:#58a08242;
+  --glass-fill-glass:rgba(34,36,42,.56);
+  --glass-fill-clear:rgba(42,45,52,.20);
+  --notif-count-bg:rgba(255,255,255,.16);
+}

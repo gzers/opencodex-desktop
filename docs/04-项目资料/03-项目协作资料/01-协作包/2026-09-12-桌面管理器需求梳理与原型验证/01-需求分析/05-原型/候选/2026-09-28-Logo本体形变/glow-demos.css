@@ -1,0 +1,162 @@
+/* 背景光 / 动态渐变方案对照：左列表（缩略动效）+ 右详情（模拟概览，单屏）。
+   外部方案均为「按其公开思路自绘复现」，不内联其源码。 */
+
+/* 单屏容器：高度由 glow-demos.js 按视口算出 */
+.glow-lab{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:420px}
+.glow-lab-head{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--line);flex:none}
+.glow-lab-title{display:flex;align-items:baseline;gap:9px;min-width:0}
+.glow-lab-title b{font-size:13px;font-weight:650;white-space:nowrap}
+.glow-lab-tools{display:flex;gap:7px;align-items:center;flex:none}
+.glow-count{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.glow-body{flex:1;display:grid;grid-template-columns:300px minmax(0,1fr);min-height:0}
+.glow-list{border-right:1px solid var(--line);overflow-y:auto;overscroll-behavior:contain;padding:8px;display:flex;flex-direction:column;gap:6px;min-height:0}
+.glow-group{font-size:10px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:6px 4px 0;position:sticky;top:0;background:var(--card);padding:4px 0;z-index:1}
+.glow-item{display:grid;grid-template-columns:104px minmax(0,1fr);gap:4px 10px;align-items:start;padding:7px;width:100%;text-align:left;
+  border:1px solid var(--line);border-radius:11px;background:var(--card);color:inherit;font:inherit;cursor:pointer;
+  transition:border-color .12s ease,background .12s ease}
+.glow-item:hover{border-color:var(--accent)}
+.glow-item[aria-selected="true"]{background:var(--soft);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.glow-thumb{position:relative;width:104px;height:66px;border-radius:8px;overflow:hidden;background:#17181c;border:1px solid var(--line)}
+.glow-thumb iframe,.glow-thumb canvas,.glow-thumb .demo-layer{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+.glow-item b{font-size:12.5px;font-weight:600;line-height:1.35;display:block}
+.glow-item em{font-style:normal;color:var(--muted);font-size:11px;line-height:1.4;display:block;margin-top:2px}
+.glow-src{font-size:10.5px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.glow-src a{color:var(--accent);text-decoration:none}
+.glow-src a:hover{text-decoration:underline}
+.glow-tag{font-size:9.5px;padding:1px 6px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+
+/* ── 右详情：模拟概览 + 说明，单屏 ── */
+.glow-detail{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-height:0;overflow:hidden}
+.detail-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line)}
+.detail-head b{font-size:13.5px;font-weight:650}
+.detail-head .glow-src{margin-top:0;font-size:11px}
+.detail-fps{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.detail-stage{position:relative;min-height:0;background:var(--bg);overflow:hidden}
+/* 模拟概览：按当前原型「概览」窗口（1180×900）等比缩小 */
+.ov-fit{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.ov-mock{width:920px;height:704px;position:absolute;left:0;top:0;overflow:hidden;display:flex;flex-direction:column;
+  border-radius:16px;background:#17181c;color:#eeeef4;box-shadow:0 14px 44px #0005;transform-origin:top left}
+.ov-mock.is-light{background:#f4f3f0;color:#24262c;box-shadow:0 14px 44px #00000014}
+
+/* 光场容器＝正文列 889 宽居中；logo 中心落在容器 y=173 → 窗口 y=248 */
+.ov-glow{position:absolute;left:50%;top:66px;width:884px;height:620px;margin-left:-442px;z-index:0;pointer-events:none}
+/* 光场层必须用与真实原型相同的坐标：容器上方 -75px、总高 660px。
+   否则最亮的那一带会整块露在卡片里，暗色下直接过曝成白色。
+   color-scheme:normal 必须显式声明：暗色下页面会把 dark 传给 iframe，内嵌画布
+   被当成白底，screen 叠加的光场直接把 hero 冲成白色（正式原型的 .motion-backdrop 同样有此声明）。 */
+.ov-glow iframe,.ov-glow canvas,.ov-glow .demo-layer,.ov-glow .glow-orbit{position:absolute;left:0;top:-75px;width:100%;height:660px;display:block;border:0;background:transparent;color-scheme:normal}
+
+/* 窗口顶栏 */
+.ov-topbar{position:relative;z-index:3;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:16px 18px 4px}
+.ov-topbar h1{margin:0;font-size:23px;font-weight:700;letter-spacing:-.02em}
+.ov-topbar p{margin:5px 0 0;font-size:12px;color:#a0a1ad}
+.ov-mock.is-light .ov-topbar p{color:#797b84}
+.ov-wactions{display:flex;align-items:center;gap:10px}
+.ov-seg{display:inline-flex;gap:3px;padding:3px;border-radius:999px;background:#ffffff12;border:1px solid #ffffff1f}
+.ov-seg i{width:32px;height:26px;border-radius:999px}
+.ov-seg i.on{background:#f2f2f5}
+.ov-icons{display:inline-flex;align-items:center;gap:10px}
+.ov-icons i{width:36px;height:32px;border-radius:10px;background:#ffffff12;border:1px solid #ffffff1f;position:relative}
+.ov-icons i.bell::after{content:"5";position:absolute;top:-6px;right:-6px;width:17px;height:17px;border-radius:999px;
+  background:#f0526b;color:#fff;font-size:10px;line-height:17px;text-align:center}
+.ov-mock.is-light .ov-seg,.ov-mock.is-light .ov-icons i{background:#ffffffcc;border-color:#00000012}
+
+/* 主区 */
+.ov-body{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column;padding:0 18px 18px}
+/* -15px：让占位块与 iframe 画出的 Logo 对齐（iframe top:-75 + 内部 padding 103 - body 顶部 109） */
+.ov-hero{display:flex;flex-direction:column;align-items:center;padding-top:0;margin-top:-15px;padding-bottom:34px}
+.ov-mark{width:140px;height:140px}
+.ov-state{display:flex;align-items:center;gap:6px;margin-top:14px;font-size:22px;font-weight:700;letter-spacing:-.01em}
+.ov-state span{opacity:.55;font-size:17px}
+.ov-cta{margin-top:18px;padding:10px 22px;border-radius:11px;border:1px solid #ffffff2e;background:#ffffff1c;font-size:14px;font-weight:600}
+.ov-mock.is-light .ov-cta{background:#fff;border-color:#00000012;box-shadow:0 1px 3px #0000000f}
+
+/* 三张模块卡 */
+.ov-mods{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.ov-card{border-radius:13px;padding:13px 14px 14px;background:rgba(32,34,42,.62);border:1px solid #ffffff1c;
+  backdrop-filter:blur(10px) saturate(1.4);-webkit-backdrop-filter:blur(10px) saturate(1.4)}
+.ov-mock.is-light .ov-card{background:rgba(255,255,255,.72);border-color:#00000012}
+.ov-card-head{display:flex;align-items:center;gap:9px}
+.ov-card-head h3{margin:0;font-size:14px;font-weight:650}
+.ov-pill{margin-left:auto;font-size:11px;padding:2px 9px;border-radius:999px;background:#ffffff14;border:1px solid #ffffff24;color:#c9cad4}
+.ov-mock.is-light .ov-pill{background:#0000000a;border-color:#00000014;color:#5f6368}
+.ov-dots{color:#8b8d99;letter-spacing:2px;font-size:12px}
+.ov-rows{margin:12px 0 13px;display:flex;flex-direction:column;gap:10px}
+.ov-row{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:#a0a1ad}
+.ov-mock.is-light .ov-row{color:#797b84}
+.ov-row b{color:#eeeef4;font-weight:650}
+.ov-mock.is-light .ov-row b{color:#24262c}
+.ov-row b.warn{color:#f0b357}
+.ov-btns{display:flex;gap:9px}
+.ov-btns span{flex:1;text-align:center;padding:9px 6px;border-radius:8px;font-size:11.5px;font-weight:600;
+  background:#ffffff14;border:1px solid #ffffff1f}
+.ov-mock.is-light .ov-btns span{background:#fff;border-color:#00000014}
+.ov-btns span.primary{background:#f2f2f5;border-color:#f2f2f5;color:#17181c}
+
+/* 最近事件 */
+.ov-events{margin-top:13px;border-radius:13px;padding:13px 14px 14px;background:rgba(32,34,42,.62);border:1px solid #ffffff1c;
+  backdrop-filter:blur(10px) saturate(1.4);-webkit-backdrop-filter:blur(10px) saturate(1.4)}
+.ov-mock.is-light .ov-events{background:rgba(255,255,255,.72);border-color:#00000012}
+.ov-events-head{display:flex;align-items:center;justify-content:space-between}
+.ov-events-head h3{margin:0;font-size:14px;font-weight:650}
+.ov-events-head span{font-size:12px;padding:8px 13px;border-radius:9px;background:#ffffff14;border:1px solid #ffffff1f}
+.ov-mock.is-light .ov-events-head span{background:#fff;border-color:#00000014}
+.ov-event{display:flex;gap:22px;font-size:12px;margin-top:10px;color:#a0a1ad}
+.ov-event time{font-variant-numeric:tabular-nums}
+.ov-mock.is-light .ov-event{color:#797b84}
+
+.detail-info{border-top:1px solid var(--line);padding:14px 18px 16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 22px;overflow:visible}
+.detail-info h4{margin:0 0 5px;font-size:10px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.detail-info p{margin:0;font-size:12px;line-height:1.62;color:var(--muted)}
+.detail-info p+p{margin-top:6px}
+.detail-info p b{color:var(--text,inherit);font-weight:600}
+.detail-info code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;padding:0 3px;border-radius:4px;background:color-mix(in srgb,currentcolor 8%,transparent)}
+@media(max-width:900px){
+  .glow-body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .glow-list{border-right:0;border-bottom:1px solid var(--line);max-height:190px;flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden}
+  .glow-item{grid-template-columns:96px minmax(0,1fr);width:250px;flex:none}
+  .glow-group{display:none}
+  .detail-info{grid-template-columns:1fr}
+}
+
+/* ── 演示层 ───────────────────────────────────────────────
+   外部方案的「运动」一律沿用概览光场模型（morph.js `ambientTarget`）：
+   三团光源相隔 120° 绕中心 logo 公转（运行态约 12s/圈），各自按 SPIN=[42,-33,54] 自旋，
+   缩放按 120° 时差先后涨缩；能量束围绕中心自转。
+   各方案只替换「材质/画质」。 */
+
+/* 共用的公转/自旋载体：位置与尺寸照抄概览 hero（正文列 889×660，logo 中心 y=173） */
+.glow-orbit{position:absolute;overflow:hidden;z-index:0}
+.glow-thumb .glow-orbit{inset:0}
+.orbit-cloud{position:absolute;left:50%;top:calc(173px*var(--k,1));width:calc(820px*var(--k,1));height:calc(540px*var(--k,1));margin-left:calc(-410px*var(--k,1));margin-top:calc(-270px*var(--k,1));border-radius:50%;will-change:transform}
+.orbit-beam{position:absolute;left:50%;top:calc(173px*var(--k,1));width:calc(1280px*var(--k,1));height:calc(840px*var(--k,1));margin-left:calc(-640px*var(--k,1));margin-top:calc(-420px*var(--k,1));border-radius:50%;will-change:transform}
+.orbit-cloud,.orbit-beam{pointer-events:none}
+
+/* LunarLogic/auroral 材质：多层径向渐变 screen 相加 + 大 blur */
+.orbit-cloud.aurora{filter:blur(calc(40px*var(--k,1))) saturate(1.1);background-blend-mode:screen}
+.orbit-cloud.aurora.c0{background-image:radial-gradient(ellipse 62% 100% at 45% 45%,rgba(126,86,255,.92),transparent 74%)}
+.orbit-cloud.aurora.c1{background-image:radial-gradient(ellipse 100% 46% at 55% 55%,rgba(0,224,205,.82),transparent 74%)}
+.orbit-cloud.aurora.c2{background-image:radial-gradient(ellipse 58% 100% at 50% 60%,rgba(255,88,184,.78),transparent 73%)}
+.orbit-beam.aurora{filter:blur(calc(30px*var(--k,1)));background-image:
+  radial-gradient(ellipse 44% 30% at 30% 40%,rgba(58,132,255,.6),transparent 70%),
+  radial-gradient(ellipse 40% 26% at 68% 62%,rgba(180,120,255,.55),transparent 70%);background-blend-mode:screen}
+
+/* DavidHDev/react-bits · Aurora 材质：复写其公开的两层 100° repeating-linear-gradient */
+.orbit-cloud.bits{filter:blur(calc(10px*var(--k,1)));background-color:transparent;mix-blend-mode:screen;
+  background-image:
+    repeating-linear-gradient(100deg,#fff 0%,#fff 7%,transparent 10%,transparent 12%,#fff 16%),
+    repeating-linear-gradient(100deg,#3b82f6 10%,#a5b4fc 15%,#93c5fd 20%,#ddd6fe 25%,#60a5fa 30%);
+  background-size:300%,200%}
+.ov-mock.is-light .orbit-cloud.bits{filter:blur(calc(10px*var(--k,1))) saturate(.9);mix-blend-mode:multiply;opacity:.5}
+/* 暗色下 react-bits 材质含白色条纹，若继续 screen 相加会把 hero 冲白；改用 normal 低透明度叠加，
+   保留「斜向条纹极光」观感同时读得出暗底。 */
+.ov-mock.is-dark .orbit-cloud.bits{mix-blend-mode:normal;opacity:.35;filter:blur(calc(10px*var(--k,1))) saturate(1.1)}
+.ov-mock.is-dark .orbit-beam.bits{opacity:.22}
+.orbit-beam.bits{filter:blur(calc(14px*var(--k,1)));background-image:repeating-linear-gradient(100deg,#a5b4fc 0%,#ddd6fe 8%,transparent 14%,#93c5fd 22%);background-size:200% 100%;opacity:.5}
+
+.demo-legend{position:absolute;left:8px;bottom:6px;font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#fff9;text-shadow:0 1px 2px #0006;pointer-events:none;z-index:3}
+.glow-thumb .demo-legend{display:none}
+
+/* 单屏锁定：对照 tab 打开时整页不滚，只有左列表滚 */
+html.glow-lock,html.glow-lock body{overflow:hidden;height:100%}

@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-layout="d" data-environment="ready" data-size="standard">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>概览 · 双态布局与三案对照</title>
+<style>
+
+:root {
+  color-scheme:light; --desk:#e7e9ed; --shell:#f3f5f7; --page:rgba(255,255,255,.60);
+  --ink:#20262d; --muted:#6b737e; --line:rgba(21,32,48,.12); --fill:rgba(244,245,249,.52);
+  --hover:rgba(255,255,255,.65); --soft:rgba(24,40,64,.055); --solid:#24313d; --on-solid:#fff;
+  --green:#317963; --amber:#966116; --blue:#4e689a; --shadow:0 1px 2px #14243805,0 8px 24px #14243808;
+  --blur:saturate(1.5) blur(8px); --preview-w:1180px; --preview-h:760px; --sidebar-w:220px;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; font-synthesis:none;
+}
+html[data-theme="dark"] {
+  color-scheme:dark; --desk:#15181d; --shell:#252930; --page:rgba(29,33,39,.56); --ink:#ecedf0;
+  --muted:#a3acb8; --line:rgba(255,255,255,.13); --fill:rgba(34,36,42,.56); --hover:rgba(67,75,88,.34);
+  --soft:rgba(255,255,255,.06); --solid:#e5e9ef; --on-solid:#20262d; --green:#89c6ad; --amber:#dfb06c;
+  --blue:#a6b7db; --shadow:0 1px 2px #0003,0 8px 24px #0002;
+}
+html[data-size="compact"] { --preview-w:900px; --preview-h:600px; --sidebar-w:180px; }
+* { box-sizing:border-box; }
+html,body { margin:0; min-height:100%; }
+body { color:var(--ink); background:var(--desk); font-size:13px; line-height:1.5; padding:24px;
+  display:flex; flex-direction:column; align-items:center; gap:16px; }
+button,select { font:inherit; } button { cursor:pointer; }
+button:focus-visible,select:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
+button:disabled { cursor:default; } [hidden] { display:none!important; } h1,h2,h3,p { margin:0; }
+.icon { width:17px; height:17px; stroke:currentColor; stroke-width:1.65; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+.icon.small { width:14px; height:14px; }
+/* The application size is independent of the browser viewport. It is never scaled. */
+.review-bar,.review-foot { width:var(--preview-w); flex:none; }
+.review-bar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; min-height:42px; }
+.review-brand { font-size:12px; font-weight:650; width:100%; }
+.variant-tabs { display:flex; gap:3px; padding:3px; border:1px solid var(--line); border-radius:9px; background:var(--soft); }
+.variant-tab { background:transparent; color:var(--muted); border:0; border-radius:6px; padding:7px 10px; white-space:nowrap; font-size:12px; }
+.variant-tab span { font-size:10px; margin-right:5px; opacity:.7; }
+.variant-tab[aria-selected="true"] { background:var(--shell); color:var(--ink); box-shadow:0 1px 4px #00000012; }
+.variant-tab[data-layout="d"] { font-weight:600; }
+.review-controls { display:flex; align-items:center; gap:9px; margin-left:auto; }
+.review-controls label { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:11px; }
+.review-controls select { background:var(--shell); border:1px solid var(--line); border-radius:6px; padding:5px 6px; color:var(--ink); height:32px; }
+.theme-button { width:32px; height:32px; display:grid; place-items:center; border:1px solid var(--line); background:var(--shell); border-radius:6px; color:var(--muted); }
+.review-foot { font-size:11px; color:var(--muted); display:flex; align-items:flex-start; gap:16px; }
+.review-foot #layoutNote { flex:1; } .fit-report { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.fit-report[data-fit="yes"] { color:var(--green); } .fit-report[data-fit="no"] { color:var(--amber); }
+.window { width:var(--preview-w); height:var(--preview-h); flex:none; position:relative; isolation:isolate; display:grid;
+  grid-template-columns:var(--sidebar-w) minmax(0,1fr); grid-template-rows:28px minmax(0,1fr); background:var(--shell);
+  border:1px solid var(--line); border-radius:12px; box-shadow:0 20px 64px #17233518; }
+.titlebar { grid-column:1/-1; grid-row:1; display:flex; align-items:center; gap:7px; padding:0 13px; z-index:1; }
+.traffic { width:10px; height:10px; border-radius:50%; box-shadow:inset 0 0 0 1px #00000016; }
+.red { background:#fa6863; } .yellow { background:#efbf50; } .green { background:#57be77; }
+.sidebar { grid-column:1; grid-row:2; padding:20px 13px 18px; display:flex; flex-direction:column; gap:26px; min-height:0; }
+.brand { display:flex; align-items:center; gap:10px; padding-inline:9px; } .brand img { width:34px; height:34px; }
+.brand strong { display:block; font-size:15px; font-weight:650; } .brand small { display:block; color:var(--muted); font-size:10px; letter-spacing:.02em; }
+.nav { display:grid; gap:4px; }
+.nav button { border:0; background:transparent; border-radius:6px; display:flex; align-items:center; gap:11px;
+  padding:10px 12px; color:var(--muted); text-align:left; font-size:13px; min-height:40px; }
+.nav button:hover,.nav button.active { color:var(--ink); background:var(--soft); } .nav button.active { font-weight:600; }
+.sidebar-bottom { margin-top:auto; border-top:1px solid var(--line); padding:12px 11px 0; display:flex; gap:8px; align-items:center; font-size:11px; color:var(--muted); }
+.status-dot { width:6px; height:6px; background:var(--muted); border-radius:50%; flex:none; }
+.main { grid-column:2; grid-row:2; min-width:0; min-height:0; border-top:1px solid var(--line); border-left:1px solid var(--line);
+  border-radius:11px 0 11px 0; background:radial-gradient(ellipse 65% 40% at 55% 5%,#c0d8ef25,transparent 85%),var(--page);
+  padding:20px 24px; display:grid; grid-template-rows:44px minmax(300px,1fr) 160px 82px; gap:16px; overflow:auto; scrollbar-width:thin; }
+.page-head { display:flex; align-items:center; justify-content:space-between; position:relative; z-index:3; }
+.page-head h1 { font-size:20px; font-weight:650; letter-spacing:-.02em; }
+.page-head p { color:var(--muted); font-size:12px; margin-top:3px; }
+.head-actions { display:flex; gap:10px; align-items:center; }
+.utility { border:0; background:transparent; color:var(--muted); padding:5px 4px; font-size:11px; display:flex; gap:5px; align-items:center; }
+.utility:hover { color:var(--ink); } .icon-button { width:30px; height:30px; display:grid; place-items:center; border:0; border-radius:6px; color:var(--muted); background:transparent; }
+.icon-button:hover { background:var(--soft); color:var(--ink); }
+.stage { min-height:0; display:flex; flex-direction:column; position:relative; }
+.hero { position:relative; isolation:isolate; flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; text-align:center; }
+.halo { position:absolute; z-index:-1; inset:0 7%; pointer-events:none;
+  background:radial-gradient(ellipse 30% 45% at 43% 36%,#6bacd038,transparent 76%),radial-gradient(ellipse 32% 42% at 61% 36%,#a9a0f335,transparent 77%);
+  filter:blur(26px); animation:field 12s ease-in-out infinite alternate; }
+.logo-space { height:154px; width:154px; display:grid; place-items:center; flex:none; }
+.hero-logo { width:140px; height:140px; filter:drop-shadow(0 10px 18px #7f82b01c); animation:float 5.8s ease-in-out infinite; }
+.hero-content { display:flex; flex-direction:column; align-items:center; gap:15px; }
+.hero-status button { font-size:25px; font-weight:620; line-height:1.3; letter-spacing:-.035em; border:0; border-radius:5px;
+  background:transparent; color:var(--ink); padding:0; display:flex; align-items:center; gap:6px; }
+.hero-status .icon { color:var(--muted); width:13px; height:13px; }
+.hero-caption { color:var(--muted); font-size:12px; margin-top:5px; line-height:18px; }
+.hero-actions { display:flex; gap:7px; align-items:center; }
+.button { min-height:34px; display:inline-flex; justify-content:center; align-items:center; gap:6px; padding:6px 12px;
+  border:1px solid var(--line); border-radius:6px; background:var(--fill); color:var(--ink); font-size:12px; white-space:nowrap; line-height:20px; }
+.button:hover:not(:disabled) { background:var(--hover); }
+.button.primary { background:var(--solid); color:var(--on-solid); border-color:var(--solid); font-weight:550; box-shadow:0 2px 4px #00000008; }
+.button:disabled { opacity:.55; } .button.quiet { border-color:transparent; background:transparent; color:var(--muted); }
+.button.quiet:hover { background:var(--soft); color:var(--ink); }
+.glass { background:var(--fill); -webkit-backdrop-filter:var(--blur); backdrop-filter:var(--blur);
+  border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); }
+.env-link { font-size:11px; color:var(--muted); border:1px solid transparent; border-radius:6px; padding:3px 7px;
+  background:transparent; display:flex; align-items:center; gap:6px; min-height:26px; }
+.env-link:hover { background:var(--soft); border-color:var(--line); color:var(--ink); }
+.modules { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; min-height:0; }
+.module { min-width:0; padding:16px; display:flex; flex-direction:column; gap:12px; }
+.module header { display:flex; align-items:center; gap:7px; } .module header .icon { color:var(--muted); width:16px; height:16px; }
+.module h2 { font-size:13px; font-weight:600; white-space:nowrap; } .module .tag { margin-left:auto; font-size:10px; color:var(--muted); white-space:nowrap; }
+.module dl { display:grid; gap:5px; margin:0; font-size:12px; } .module dl div { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.module dt { color:var(--muted); } .module dd { margin:0; font-variant-numeric:tabular-nums; }
+.module-actions { margin-top:auto; display:flex; align-items:center; gap:7px; } .module-actions .button { min-height:29px; font-size:11px; padding:3px 9px; }
+.module-actions .text-button { margin-left:auto; }
+.text-button { background:transparent; border:0; padding:3px 0; display:inline-flex; align-items:center; gap:3px; color:var(--muted); font-size:11px; white-space:nowrap; line-height:20px; }
+.text-button:hover { color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+.card-summary { display:none; font-size:12px; line-height:18px; color:var(--muted); } .env-card { display:none; } .env-card .card-summary { display:block; }
+.events { display:flex; align-items:center; gap:20px; padding:16px 18px; min-width:0; }
+.events-heading { display:flex; gap:8px; align-items:center; flex:none; } .events-heading .icon { color:var(--muted); }
+.events h2 { font-size:13px; font-weight:600; white-space:nowrap; } .events p { color:var(--muted); font-size:12px; flex:1; }
+/* Prior normal-state alternatives remain available for comparison. */
+html[data-layout="b"] .logo-space { height:136px; } html[data-layout="b"] .hero-logo { width:124px; height:124px; }
+html[data-layout="b"] .hero-content { gap:11px; }
+html[data-layout="c"][data-environment="ready"] .main { grid-template-rows:44px 168px minmax(290px,1fr) 82px; }
+html[data-layout="c"][data-environment="ready"] .hero { flex-direction:row; gap:32px; text-align:left; }
+html[data-layout="c"][data-environment="ready"] .hero-content { align-items:flex-start; }
+html[data-layout="c"] .modules { grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); }
+html[data-layout="c"] .env-card { display:flex; } html[data-layout="c"] .module dl { display:none; }
+html[data-layout="c"] .card-summary { display:block; } html[data-layout="c"] .module { padding:14px 18px; gap:8px; }
+/* Not ready is a setup view: the full-width card uses the space released by the modules. */
+html[data-environment]:not([data-environment="ready"]) .main { grid-template-rows:44px 148px minmax(340px,1fr); }
+html[data-environment]:not([data-environment="ready"]) .hero { flex-direction:row; gap:25px; text-align:left; }
+html[data-environment]:not([data-environment="ready"]) .hero-content { align-items:flex-start; gap:10px; }
+html[data-environment]:not([data-environment="ready"]) .logo-space { width:114px; height:114px; }
+html[data-environment]:not([data-environment="ready"]) .hero-logo { width:108px; height:108px; }
+html[data-environment]:not([data-environment="ready"]) .hero-status button { font-size:27px; }
+html[data-environment]:not([data-environment="ready"]) .hero-status .icon { display:none; }
+.gate { min-height:0; padding:24px 26px; display:flex; flex-direction:column; justify-content:center; gap:24px; }
+.gate-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+.gate-kicker { display:flex; align-items:center; gap:6px; color:var(--muted); font-size:11px; margin-bottom:6px; }
+.gate-head h2 { font-size:20px; font-weight:600; line-height:28px; letter-spacing:-.02em; }
+.gate-head p { font-size:13px; color:var(--muted); line-height:20px; margin-top:4px; }
+.gate-progress { font-size:11px; color:var(--muted); white-space:nowrap; padding-top:5px; }
+.gate-body { display:grid; grid-template-columns:1fr 1.04fr; gap:30px; align-items:start; }
+.setup-checks { list-style:none; padding:0; margin:0; }
+.setup-checks li { display:grid; grid-template-columns:22px 1fr auto; gap:12px; align-items:center; min-height:64px;
+  border-bottom:1px solid var(--line); padding:10px 0; }
+.setup-checks li:last-child { border-bottom:0; } .check-number { color:var(--muted); font-size:11px; }
+.check-name { font-size:13px; font-weight:550; } .check-description { display:block; font-size:11px; color:var(--muted); font-weight:400; margin-top:3px; }
+.check-value { font-size:11px; color:var(--muted); display:flex; align-items:center; gap:5px; white-space:nowrap; }
+.check-value[data-tone="ok"] { color:var(--green); } .check-value[data-tone="warn"] { color:var(--amber); }
+.setup-next { border-left:1px solid var(--line); padding:7px 0 3px 27px; min-height:188px; display:flex; flex-direction:column; gap:14px; }
+.setup-next h3 { font-size:14px; font-weight:600; } .setup-next p { font-size:13px; color:var(--muted); line-height:1.75; }
+.setup-note { font-size:11px; line-height:1.7; color:var(--muted); }
+.setup-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; }
+.gate-footer { padding-top:14px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; gap:14px;
+  color:var(--muted); font-size:11px; }
+html[data-size="compact"] .sidebar { padding-inline:9px; } html[data-size="compact"] .brand { gap:7px; padding-inline:4px; }
+html[data-size="compact"] .brand strong { font-size:14px; }
+html[data-size="compact"] .main { padding:16px 18px; gap:12px; grid-template-rows:38px minmax(230px,1fr) 136px 68px; }
+html[data-size="compact"] .page-head h1 { font-size:18px; } html[data-size="compact"] .hero { gap:9px; }
+html[data-size="compact"] .logo-space { width:116px; height:116px; } html[data-size="compact"] .hero-logo { width:108px; height:108px; }
+html[data-size="compact"] .hero-content { gap:12px; } html[data-size="compact"] .hero-status button { font-size:23px; }
+html[data-size="compact"] .modules { gap:10px; } html[data-size="compact"] .module { padding:12px; gap:8px; }
+html[data-size="compact"] .module header { gap:5px; } html[data-size="compact"] .module header>.icon { display:none; }
+html[data-size="compact"] .module dl { font-size:11px; } html[data-size="compact"] .module-actions { gap:4px; }
+html[data-size="compact"] .events { padding:12px 14px; gap:15px; }
+html[data-size="compact"][data-layout="b"] .logo-space { height:96px; }
+html[data-size="compact"][data-layout="b"] .hero-logo { width:92px; height:92px; }
+html[data-size="compact"][data-layout="b"] .hero-content { gap:7px; }
+html[data-size="compact"][data-layout="c"][data-environment="ready"] .main { grid-template-rows:38px 118px minmax(250px,1fr) 68px; }
+html[data-size="compact"][data-layout="c"] .module { gap:5px; }
+html[data-size="compact"][data-environment]:not([data-environment="ready"]) .main { grid-template-rows:38px 106px minmax(330px,1fr); }
+html[data-size="compact"][data-environment]:not([data-environment="ready"]) .hero { gap:20px; }
+html[data-size="compact"][data-environment]:not([data-environment="ready"]) .logo-space { width:88px; height:88px; }
+html[data-size="compact"][data-environment]:not([data-environment="ready"]) .hero-logo { width:84px; height:84px; }
+html[data-size="compact"][data-environment]:not([data-environment="ready"]) .hero-status button { font-size:24px; }
+html[data-size="compact"] .gate { padding:18px 21px; gap:16px; }
+html[data-size="compact"] .gate-head h2 { font-size:18px; } html[data-size="compact"] .gate-head p { font-size:12px; }
+html[data-size="compact"] .gate-body { gap:21px; grid-template-columns:1fr 1fr; }
+html[data-size="compact"] .setup-checks li { min-height:51px; gap:8px; padding:7px 0; }
+html[data-size="compact"] .setup-next { padding-left:20px; min-height:153px; gap:9px; }
+html[data-size="compact"] .setup-next p { font-size:12px; } html[data-size="compact"] .setup-actions { gap:5px; }
+html[data-size="compact"] .setup-actions .button { font-size:11px; padding-inline:9px; }
+html[data-size="compact"] .gate-footer { padding-top:10px; }
+@keyframes float { 50% { transform:translateY(-7px); } }
+@keyframes field { to { transform:translateX(10px); opacity:.62; } }
+@media(prefers-reduced-motion:reduce) { .hero-logo,.halo { animation:none; } }
+.dialog { color:var(--ink); padding:0; background:var(--shell); border:1px solid var(--line); border-radius:12px;
+  box-shadow:0 24px 80px #0003; width:min(520px,calc(100vw - 36px)); max-height:calc(100dvh - 50px); }
+.dialog::backdrop { background:#1a233348; backdrop-filter:blur(3px); }
+.dialog header { padding:16px 22px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); }
+.dialog h2 { font-size:17px; } .dialog-body { padding:18px 22px; }
+.dialog-intro { color:var(--muted); font-size:12px; line-height:1.7; } .dialog-section { font-size:12px; font-weight:600; margin-top:18px; }
+.check-list { margin:10px 0; padding:0; list-style:none; } .check-list li { padding:10px 0; display:flex; justify-content:space-between;
+  align-items:center; border-bottom:1px solid var(--line); font-size:13px; }
+.check-list li span:last-child { color:var(--muted); } .check-list li span.warn { color:var(--amber); }
+.next-step { padding-top:2px; } .next-step strong { font-size:12px; } .next-step p { font-size:12px; margin-top:5px; color:var(--muted); }
+.dialog footer { border-top:1px solid var(--line); padding:13px 22px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.dialog footer small { font-size:10px; color:var(--muted); } .dialog-actions { display:flex; gap:7px; }
+.toast { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); padding:12px 18px; max-width:calc(100vw - 36px); z-index:20; font-size:12px; }
+.dialog-body .preview-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+</style>
+</head>
+<body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="m12 3 8 4.5-8 4.5-8-4.5L12 3ZM4 7.5v9l8 4.5 8-4.5v-9M12 12v9"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h4m4 0h8M4 12h10m4 0h2M4 18h3m4 0h9M8 3v6m6 0v6M7 15v6"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10h.01"/></symbol>
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="m12 3 10 18H2L12 3ZM12 9v5m0 3h.01"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-upgrade" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+<symbol id="i-transfer" viewBox="0 0 24 24"><path d="M3 7h17m-4-4 4 4-4 4M21 17H4m4-4-4 4 4 4"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6 18a4 4 0 0 1-1-7.87A7 7 0 0 1 18.8 9a4.5 4.5 0 0 1-.3 9H6Z"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 13A9 9 0 0 1 11 3 9 9 0 1 0 21 13Z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1"/></symbol>
+</svg>
+<header class="review-bar">
+<strong class="review-brand">概览 / 布局比较</strong>
+<div class="variant-tabs" role="tablist" aria-label="新方案与原三案对照">
+<button class="variant-tab" id="tab-d" role="tab" aria-selected="true" aria-controls="preview" data-layout="d"><span>推荐</span> 双态概览</button>
+<button class="variant-tab" id="tab-a" role="tab" aria-selected="false" tabindex="-1" aria-controls="preview" data-layout="a"><span>A</span> 页头入口</button>
+<button class="variant-tab" id="tab-b" role="tab" aria-selected="false" aria-controls="preview" data-layout="b" tabindex="-1"><span>B</span> 状态入口</button>
+<button class="variant-tab" id="tab-c" role="tab" aria-selected="false" aria-controls="preview" data-layout="c" tabindex="-1"><span>C</span> 四卡栅格</button>
+</div>
+<div class="review-controls">
+<label for="size"><span>窗口</span><select id="size"><option value="standard">1180 × 760</option><option value="compact">900 × 600</option></select></label>
+<label for="scenario"><span>环境</span><select id="scenario"><option value="ready">已就绪</option><option value="node">缺少 Node.js</option><option value="npm">缺少 npm</option><option value="ocx">缺少 OpenCodex</option><option value="checking">正在检查</option></select></label>
+<button class="theme-button" id="theme" aria-label="切换为深色主题" title="切换深浅主题"><svg class="icon"><use href="#i-moon"/></svg></button>
+</div>
+</header>
+<div class="window" id="preview" role="tabpanel" aria-labelledby="tab-d">
+<div class="titlebar" aria-hidden="true"><span class="traffic red"></span><span class="traffic yellow"></span><span class="traffic green"></span></div>
+<aside class="sidebar">
+<div class="brand"><img src="brand.svg" alt=""><div><strong>OpenCodex</strong><small>桌面管理器</small></div></div>
+<nav class="nav" aria-label="主导航">
+<button class="active" aria-current="page" aria-label="概览"><svg class="icon"><use href="#i-grid"/></svg><span>概览</span></button>
+<button data-preview="扩展管理" aria-label="扩展管理"><svg class="icon"><use href="#i-box"/></svg><span>扩展管理</span></button>
+<button data-preview="诊断中心" aria-label="诊断中心"><svg class="icon"><use href="#i-pulse"/></svg><span>诊断中心</span></button>
+<button data-preview="设置" aria-label="设置"><svg class="icon"><use href="#i-sliders"/></svg><span>设置</span></button>
+</nav>
+<div class="sidebar-bottom"><span class="status-dot"></span><span>代理未运行</span></div>
+</aside>
+<main class="main" id="main">
+<header class="page-head"><div><h1>概览</h1><p id="pageSubtitle">运行状态与常用操作</p></div><div class="head-actions"><button class="utility" data-environment-open id="headerEnvironment">运行环境<svg class="icon small"><use href="#i-arrow"/></svg></button><button class="icon-button" data-preview="通知" aria-label="通知"><svg class="icon"><use href="#i-bell"/></svg></button></div></header>
+<section class="stage" aria-label="运行状态与启动条件">
+<div class="hero"><div class="halo" aria-hidden="true"></div><div class="logo-space"><img src="brand.svg" class="hero-logo" alt=""></div><div class="hero-content">
+<div class="hero-copy"><h2 class="hero-status"><button id="runtime" aria-label="查看运行详情"><span id="status">未运行</span><svg class="icon"><use href="#i-arrow"/></svg></button></h2><p class="hero-caption" id="caption">代理未运行，可随时启动。</p></div>
+<div class="hero-actions" id="heroActions"><button class="button primary" id="primary">启动 OpenCodex</button><button class="button quiet" id="refresh">刷新状态</button></div>
+<button class="env-link" id="inlineEnvironment" data-environment-open hidden><span class="status-dot"></span><span id="inlineLabel">环境就绪</span><svg class="icon small"><use href="#i-arrow"/></svg></button>
+</div></div>
+
+</section>
+<section class="gate glass" id="gate" aria-labelledby="gateTitle" hidden>
+  <header class="gate-head"><div><div class="gate-kicker"><svg class="icon small"><use href="#i-pulse"/></svg>启动前检查</div><h2 id="gateTitle">缺少 Node.js</h2><p id="gateMessage">完成环境后即可启动。</p></div><span class="gate-progress" id="gateProgress">0 / 3 项通过</span></header>
+  <div class="gate-body"><ol class="setup-checks" id="setupChecks" aria-label="环境检查结果"></ol>
+    <section class="setup-next" aria-labelledby="nextTitle"><h3 id="nextTitle">下一步</h3><p id="setupGuide"></p><div class="setup-note" id="setupNote"></div><div class="setup-actions" id="setupActions"></div></section>
+  </div>
+  <footer class="gate-footer"><span>检查顺序 · Node.js → npm → OpenCodex</span><button class="text-button" data-preview="查看安装设置">安装设置<svg class="icon small"><use href="#i-arrow"/></svg></button></footer>
+</section>
+
+<section class="modules" id="modules" aria-label="常用功能">
+<article class="module glass env-card" id="environmentCard"><header><svg class="icon"><use href="#i-pulse"/></svg><h2>运行环境</h2><span class="tag" id="envCardTag">已就绪</span></header><p class="card-summary" id="envCardSummary">启动所需的前置条件均已通过。</p><div class="module-actions"><button class="button" data-environment-open id="envCardAction">查看环境</button><button class="text-button" id="envCardRefresh">重新检查</button></div></article>
+<article class="module glass" id="upgradeCard"><header><svg class="icon"><use href="#i-upgrade"/></svg><h2>版本升级</h2><span class="tag" id="upgradeTag">待检查</span></header><dl><div><dt>更新状态</dt><dd>尚未检查</dd></div><div><dt>更新对象</dt><dd>OpenCodex</dd></div></dl><p class="card-summary">检查 OpenCodex 可用更新。</p><div class="module-actions"><button class="button" id="upgradeAction" data-preview="检查更新">检查更新</button><button class="text-button" data-preview="升级设置">设置<svg class="icon small"><use href="#i-arrow"/></svg></button></div></article>
+<article class="module glass"><header><svg class="icon"><use href="#i-transfer"/></svg><h2>配置迁移</h2><span class="tag">可用</span></header><dl><div><dt>最近导出</dt><dd>暂无记录</dd></div><div><dt>导入状态</dt><dd>待命</dd></div></dl><p class="card-summary">导出管理器配置，或从备份导入。</p><div class="module-actions"><button class="button" data-preview="导出配置">导出配置</button><button class="text-button" data-preview="导入配置">导入<svg class="icon small"><use href="#i-arrow"/></svg></button></div></article>
+<article class="module glass"><header><svg class="icon"><use href="#i-cloud"/></svg><h2>WebDAV 同步</h2><span class="tag">未配置</span></header><dl><div><dt>连接状态</dt><dd>未配置</dd></div><div><dt>最近同步</dt><dd>暂无记录</dd></div></dl><p class="card-summary">连接远端，同步管理器配置。</p><div class="module-actions"><button class="button" data-preview="配置 WebDAV">配置连接</button><button class="text-button" data-preview="同步设置">设置<svg class="icon small"><use href="#i-arrow"/></svg></button></div></article>
+</section>
+<section class="events glass" id="events"><div class="events-heading"><svg class="icon"><use href="#i-clock"/></svg><h2>最近事件</h2></div><p>暂无最近事件</p><button class="text-button" data-preview="诊断中心">诊断中心<svg class="icon small"><use href="#i-arrow"/></svg></button></section>
+</main>
+</div>
+<footer class="review-foot"><span id="layoutNote">推荐 · 环境就绪时并入运行详情，未就绪时展示完整接入卡。</span><span class="fit-report" id="fitReport">交互效果稿 · 不连接本机</span></footer>
+<dialog class="dialog" id="dialog" aria-labelledby="dialogTitle"><header><h2 id="dialogTitle">运行环境</h2><button class="icon-button" id="closeDialog" aria-label="关闭"><svg class="icon"><use href="#i-close"/></svg></button></header><div class="dialog-body" id="dialogBody"></div><footer><small>演示数据 · 不执行本机操作</small><div class="dialog-actions"><button class="button" id="dialogCheck">重新检查</button><button class="button" id="doneDialog">关闭</button></div></footer></dialog>
+<div class="toast glass" id="toast" role="status" hidden></div>
+<script>
+
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const root = document.documentElement;
+  const variants = {
+    d: '推荐 · 环境就绪时并入运行详情，未就绪时展示完整接入卡；常规概览与接入引导各用自己的空间。',
+    a: '原 A 对照 · 正常态保留页头环境入口。未就绪态统一改为完整接入卡。',
+    b: '原 B 对照 · 正常态保留状态区环境入口。未就绪态统一改为完整接入卡。',
+    c: '原 C 对照 · 正常态环境常驻四卡栅格。未就绪态统一改为完整接入卡。'
+  };
+  const states = {
+    ready: { status: '未运行', caption: '代理未运行，可随时启动。', primary: '启动 OpenCodex', title: '环境已就绪', brief: '启动所需的前置条件均已通过。', inline: '环境就绪 · 查看', checks: ['已发现', '已发现', '运行来源 · 通过'], next: '运行环境已就绪，可以启动 OpenCodex。' },
+    node: { status: '未运行', caption: '启动前需要补全运行环境。', primary: '处理环境', title: '缺少 Node.js', brief: '安装 Node.js 后重新检查，即可继续。', inline: '缺少 Node.js · 查看', checks: ['未发现', '待检查', '待检查'], next: '先安装 Node.js，再重新检查。npm 与 OpenCodex 尚未检查，不代表它们缺失。' },
+    npm: { status: '未运行', caption: '启动前需要补全运行环境。', primary: '处理环境', title: '缺少 npm', brief: 'Node.js 已发现，请检查 npm 的安装与路径。', inline: '缺少 npm · 查看', checks: ['已发现', '未发现', '待检查'], next: '检查 Node.js 安装及 npm 的可执行路径，然后重新检查。OpenCodex 尚未检查。' },
+    ocx: { status: '未接入', caption: '尚未接入可用的 OpenCodex。', primary: '接入 OpenCodex', title: '尚未发现 OpenCodex', brief: 'Node.js 与 npm 已就绪，可安装或导入离线包。', inline: '待接入 OpenCodex · 查看', checks: ['已发现', '已发现', '未发现'], next: '可通过托管安装或导入离线包接入 OpenCodex。' },
+    checking: { status: '状态待确认', caption: '正在检查启动前置条件。', primary: '检查中…', title: '正在检查运行环境', brief: '正在检查 Node.js，后续项目依次进行。', inline: '正在检查环境 · 查看', checks: ['检查中', '待检查', '待检查'], next: '检查完成后显示可用的下一步。' }
+  };
+
+  const setup = {
+    node: { title:'先安装 Node.js', guide:'请先完成 Node.js 安装，然后重新检查运行环境。', note:'npm 与 OpenCodex 尚未检查，后续结果将在 Node.js 通过后更新。', action:'查看安装指引' },
+    npm: { title:'检查 npm 的安装与路径', guide:'Node.js 已发现，请确认 npm 已安装且能够被管理器找到。', note:'修复后重新检查。OpenCodex 尚未检查。', action:'查看修复指引' },
+    ocx: { title:'接入 OpenCodex', guide:'基础环境已就绪。可由管理器安装 OpenCodex，或导入已有的离线安装包。', note:'如果已经安装，可在安装设置中指定运行来源。', action:'安装 OpenCodex' },
+    checking: { title:'正在确认启动条件', guide:'首先检查 Node.js，再依次检查 npm 与 OpenCodex。', note:'未执行的项目显示“待检查”，不会提前判为缺失。', action:'检查中…' }
+  };
+  let variant = 'd', state = 'ready', size = 'standard', dialogKind = 'runtime', returnFocus = null, toastTimer = 0;
+  const tabs = [...document.querySelectorAll('.variant-tab')];
+  const names = ['Node.js','npm','OpenCodex'];
+  const descriptions = ['运行 OpenCodex 所需的环境','安装与维护所需的包工具','当前可用的运行来源'];
+  function notify(message) {
+    if ($('dialog').open) {
+      let feedback = $('dialogFeedback');
+      if (!feedback) {
+        feedback = document.createElement('p'); feedback.id = 'dialogFeedback'; feedback.className = 'dialog-intro';
+        feedback.setAttribute('role','status'); feedback.style.marginTop = '14px'; $('dialogBody').append(feedback);
+      }
+      feedback.textContent = message; return;
+    }
+    $('toast').textContent = message; $('toast').hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { $('toast').hidden = true; },2500);
+  }
+  function isPass(value) { return value === '已发现' || value === '运行来源 · 通过'; }
+  function renderSetup() {
+    const data = states[state], guide = setup[state];
+    $('gateTitle').textContent = data.title;
+    $('gateMessage').textContent = state === 'checking' ? '检查完成后，显示可以继续的下一步。' : '完成下方前置条件后，即可启动 OpenCodex。';
+    $('gateProgress').textContent = state === 'checking' ? '检查中' : data.checks.filter(isPass).length + ' / 3 项通过';
+    $('setupChecks').innerHTML = names.map((name,i) => {
+      const value = data.checks[i], tone = isPass(value) ? 'ok' : value === '未发现' ? 'warn' : 'neutral';
+      return '<li><span class="check-number">0' + (i+1) + '</span><span class="check-name">' + name + '<span class="check-description">' + descriptions[i] + '</span></span><span class="check-value" data-tone="' + tone + '">' + (isPass(value) ? '<svg class="icon small"><use href="#i-check"/></svg>' : '') + value + '</span></li>';
+    }).join('');
+    $('nextTitle').textContent = guide.title;
+    $('setupGuide').textContent = guide.guide;
+    $('setupNote').textContent = guide.note;
+    const primary = state === 'checking' ? '<button class="button primary" disabled>检查中…</button>' : '<button class="button primary" ' + (state === 'ocx' ? 'data-preview="安装 OpenCodex"' : 'data-guide') + '>' + guide.action + '</button>';
+    const offline = state === 'ocx' ? '<button class="button" data-preview="导入离线包">导入离线包</button>' : '';
+    const recheck = state === 'checking' ? '' : '<button class="button quiet" data-recheck>重新检查</button>';
+    $('setupActions').innerHTML = primary + offline + recheck;
+  }
+  function render() {
+    const data = states[state], blocked = state !== 'ready';
+    root.dataset.layout = variant; root.dataset.environment = state; root.dataset.size = size;
+    tabs.forEach((tab) => { const active = tab.dataset.layout === variant; tab.setAttribute('aria-selected',String(active)); tab.tabIndex = active ? 0 : -1; });
+    $('preview').setAttribute('aria-labelledby','tab-' + variant);
+    $('layoutNote').textContent = variants[variant];
+    $('pageSubtitle').textContent = blocked ? '完成启动前的环境准备' : '运行状态与常用操作';
+    $('status').textContent = blocked ? state === 'checking' ? '正在检查环境' : '准备运行环境' : data.status;
+    $('caption').textContent = blocked ? state === 'checking' ? '依次确认启动条件，请稍候。' : '按下方指引补全环境，再开始使用。' : data.caption;
+    $('runtime').disabled = blocked;
+    $('runtime').setAttribute('aria-label',blocked ? '运行环境准备' : '查看运行详情，包含运行环境');
+    $('heroActions').hidden = blocked;
+    $('primary').textContent = data.primary;
+    $('gate').hidden = !blocked;
+    $('modules').hidden = blocked; $('events').hidden = blocked;
+    $('inlineEnvironment').hidden = blocked || variant !== 'b';
+    $('inlineLabel').textContent = data.inline;
+    $('headerEnvironment').hidden = blocked || variant !== 'a';
+    $('environmentCard').hidden = blocked || variant !== 'c';
+    $('envCardTag').textContent = '已就绪';
+    $('envCardSummary').textContent = states.ready.brief;
+    $('envCardAction').textContent = '查看环境';
+    $('upgradeAction').disabled = blocked;
+    if (blocked) renderSetup();
+    $('toast').hidden = true; $('main').scrollTop = 0;
+    if ($('dialog').open) renderDialog();
+    requestAnimationFrame(measureFit);
+  }
+  function environmentRows() {
+    const data = states[state];
+    return names.map((name,i) => '<li><span>' + name + '</span><span class="' + (data.checks[i] === '未发现' ? 'warn' : '') + '">' + data.checks[i] + '</span></li>').join('');
+  }
+  function renderDialog() {
+    const data = states[state];
+    $('dialogCheck').hidden = false; $('dialogCheck').disabled = state === 'checking';
+    if (dialogKind === 'runtime') {
+      $('dialogTitle').textContent = '运行详情';
+      $('dialogBody').innerHTML = '<p class="dialog-intro">' + data.status + ' · 当前演示状态</p><h3 class="dialog-section">进程与就绪</h3><ul class="check-list"><li><span>运行状态</span><span>' + data.status + '</span></li><li><span>当前操作</span><span>无</span></li></ul><h3 class="dialog-section" id="runtimeEnvTitle">运行环境</h3><ul class="check-list" aria-labelledby="runtimeEnvTitle">' + environmentRows() + '</ul><p class="dialog-intro">启动前置条件已满足。完整路径与来源管理可在安装设置中查看。</p>';
+      $('dialogCheck').textContent = '重新检查环境';
+    } else {
+      $('dialogTitle').textContent = '运行环境';
+      $('dialogCheck').textContent = '重新检查';
+      $('dialogBody').innerHTML = '<p class="dialog-intro">检查按顺序执行；未检查项不会提前判为缺失。</p><ul class="check-list">' + environmentRows() + '</ul><div class="next-step"><strong>下一步</strong><p>' + data.next + '</p></div>';
+    }
+  }
+  function openDialog(kind) { dialogKind = kind; returnFocus = document.activeElement; renderDialog(); $('dialog').showModal(); $('closeDialog').focus(); }
+  function closeDialog() { $('dialog').close(); }
+  $('dialog').addEventListener('close',() => { if (returnFocus && returnFocus.isConnected && returnFocus.getClientRects().length) returnFocus.focus(); });
+  $('dialog').addEventListener('click',(event) => { if (event.target === $('dialog')) { const box = $('dialog').getBoundingClientRect(); if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) closeDialog(); } });
+  $('closeDialog').addEventListener('click',closeDialog); $('doneDialog').addEventListener('click',closeDialog);
+  tabs.forEach((tab) => tab.addEventListener('click',() => { variant = tab.dataset.layout; render(); }));
+  document.querySelector('.variant-tabs').addEventListener('keydown',(event) => {
+    if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault(); const index = tabs.findIndex((tab) => tab.dataset.layout === variant), count = tabs.length;
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? count-1 : (index + (event.key === 'ArrowRight' ? 1 : count-1)) % count;
+    tabs[next].click(); tabs[next].focus();
+  });
+  $('scenario').addEventListener('change',() => { state = $('scenario').value; render(); });
+  $('size').addEventListener('change',() => { size = $('size').value; render(); });
+  $('theme').addEventListener('click',() => { const dark = root.dataset.theme !== 'dark'; root.dataset.theme = dark ? 'dark' : 'light'; $('theme').innerHTML = '<svg class="icon"><use href="#i-' + (dark ? 'sun' : 'moon') + '"/></svg>'; $('theme').setAttribute('aria-label',dark ? '切换为浅色主题' : '切换为深色主题'); });
+  $('runtime').addEventListener('click',() => openDialog('runtime'));
+  document.querySelectorAll('[data-environment-open]').forEach((button) => button.addEventListener('click',() => openDialog('environment')));
+  $('primary').addEventListener('click',() => notify('原型演示：未执行启动操作。'));
+  const recheck = () => notify('原型演示：请用窗口上方的环境选择器切换检查结果。');
+  $('refresh').addEventListener('click',recheck); $('envCardRefresh').addEventListener('click',recheck); $('dialogCheck').addEventListener('click',recheck);
+  document.addEventListener('click',(event) => {
+    const target = event.target.closest('button'); if (!target || target.disabled) return;
+    if (target.hasAttribute('data-guide')) openDialog('environment');
+    if (target.hasAttribute('data-recheck')) recheck();
+    if (target.dataset.preview) notify('原型演示：' + target.dataset.preview + '，未执行操作。');
+  });
+  function measureFit() {
+    const main = $('main'), box = main.getBoundingClientRect(), last = $(state === 'ready' ? 'events' : 'gate').getBoundingClientRect(), app = $('preview').getBoundingClientRect();
+    if (!app.width || !app.height) return;
+    const sectionsFit = [...main.querySelectorAll('.module,.hero,.gate,.events,.setup-next')].filter((el) => el.getClientRects().length).every((el) => el.scrollHeight <= el.clientHeight+1 && el.scrollWidth <= el.clientWidth+1);
+    const fits = sectionsFit && main.scrollHeight <= main.clientHeight+1 && main.scrollWidth <= main.clientWidth+1 && last.bottom <= box.bottom+1;
+    const label = Math.round(app.width) + ' × ' + Math.round(app.height);
+    $('fitReport').dataset.fit = fits ? 'yes' : 'no';
+    $('fitReport').textContent = label + (fits ? ' · 应用内容无滚动' : ' · 应用内容有溢出');
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(measureFit).observe($('main'));
+  window.addEventListener('resize',measureFit); window.addEventListener('load',measureFit);
+  const params = new URLSearchParams(location.search);
+  if (Object.hasOwn(variants,params.get('layout'))) variant = params.get('layout');
+  if (Object.hasOwn(states,params.get('state'))) { state = params.get('state'); $('scenario').value = state; }
+  if (['standard','compact'].includes(params.get('size'))) { size = params.get('size'); $('size').value = size; }
+  if (params.get('theme') === 'dark') $('theme').click();
+  render();
+})();
+</script>
+</body>
+</html>

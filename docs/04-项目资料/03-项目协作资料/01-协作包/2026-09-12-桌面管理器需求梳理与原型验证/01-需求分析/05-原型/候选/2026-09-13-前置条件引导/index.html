@@ -20,15 +20,11 @@
 .review-head h1{font-size:22px;margin:0}
 .review-head p{margin:6px 0 0;color:var(--muted);max-width:760px}
 .review-badge{white-space:nowrap;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:var(--panel);color:var(--muted);font-size:12px;font-weight:600}
-.candidates{display:flex;gap:8px;margin:18px 0 14px;flex-wrap:wrap}
-.candidates button{min-height:34px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:999px;padding:6px 14px;font:inherit;font-size:13px;cursor:pointer}
-.candidates button.active{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.candidates{margin:8px 0 0}
 .mockbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;color:var(--muted);font-size:12px}
 .mockbar b{color:var(--text)}
-.states{display:inline-flex;gap:6px;flex-wrap:wrap}
+.candidate[id]{scroll-margin-top:16px}
 .tag{padding:3px 8px;border:1px solid var(--border);border-radius:999px;background:var(--panel);color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap}
-.mockbar button{min-height:28px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:999px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
-.mockbar button.active{background:var(--raised);color:var(--text);font-weight:600}
 .candidate{display:none}
 .candidate.active{display:block}
 .candidate-note{margin:0 0 14px;color:var(--muted);font-size:13px}
@@ -101,25 +97,33 @@
 .toast.show{opacity:1;transform:translateY(0)}
 @media(max-width:1000px){.grid,.ready-strip{grid-template-columns:1fr}.check{grid-template-columns:1fr;gap:6px}.shell{grid-template-columns:1fr}.side{display:none}}
 </style>
+<link rel="stylesheet" href="../../topic-header.css">
+<link rel="stylesheet" href="../../proto-controls.css">
 </head>
-<body>
-<div class="page">
-  <div class="review-head">
-    <div>
-      <h1>候选预览 · 安装前置条件引导</h1>
-      <p>这是独立评审稿，不改动正式原型。三种方向都覆盖首次打开、检测顺序、缺失提示、可复制命令和不代装边界；请先看交互与信息层级，再决定是否合并。</p>
-    </div>
-    <div class="review-badge">仅评审 · mock only</div>
+<body class="pctl">
+<header class="topic-bar">
+  <div>
+    <div class="eyebrow">PRECONDITION GUIDE · CANDIDATE</div>
+    <h1>候选预览 · 安装前置条件引导</h1>
+    <p>独立评审稿，不改动正式原型；三种方向都覆盖首次打开、检测顺序、缺失提示、可复制命令和不代装边界。</p>
   </div>
-  <div class="candidates" role="tablist" aria-label="候选方案">
+  <div class="tools">
+    <span class="badge-candidate">仅评审 · mock only</span>
+    <a class="topic-back" href="../2026-09-28-Logo本体形变/overview.html">← 返回软件原型</a>
+  </div>
+</header>
+<div class="page">
+  <p class="pctl-sub">候选方向 · 三选一</p>
+  <div class="candidates pctl-chips" role="tablist" aria-label="候选方案">
     <button class="active" data-candidate="a">方案 A · 概览环境门禁卡</button>
     <button data-candidate="b">方案 B · 首屏就绪引导卡</button>
     <button data-candidate="c">方案 C · 顶部横幅 + 常规概览</button>
   </div>
+  <p class="pctl-hint">三个方向都覆盖首次打开 / 检测顺序 / 缺失提示 / 可复制命令与「不代装」边界。<b>切换方向后会滚动到对应方案</b>，右侧状态一并更新。仅为评审稿，不改现行原型。</p>
 
   <section class="candidate active" id="candidate-a">
     <p class="candidate-note"><b>定位：</b>首次打开时，环境门禁取代概览状态卡，给出最短修复动作；常规概览仍可见但明确被阻塞。</p>
-    <div class="mockbar"><b>状态：</b><div id="statesA" class="states"></div></div>
+    <div class="mockbar"><b>Mock 状态 · 同时驱动三个方向</b><div id="statesA" class="states pctl-chips"></div></div>
     <div class="desktop">
       <div class="titlebar"><div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div><div class="window-title">OpenCodeX-Desktop</div><div class="window-meta">本地环境</div></div>
       <div class="shell">
@@ -131,7 +135,7 @@
 
   <section class="candidate" id="candidate-b">
     <p class="candidate-note"><b>定位：</b>环境未就绪时进入更强的首屏引导，暂时收起常规概览；适合全新机器，但相比 A 更打断。</p>
-    <div class="mockbar"><b>状态：</b><div id="statesB" class="states"></div></div>
+    <div class="mockbar"><b>Mock 状态 · 同时驱动三个方向</b><div id="statesB" class="states pctl-chips"></div></div>
     <div class="desktop">
       <div class="titlebar"><div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div><div class="window-title">OpenCodeX-Desktop</div><div class="window-meta">本地环境</div></div>
       <div class="shell">
@@ -143,7 +147,7 @@
 
   <section class="candidate" id="candidate-c">
     <p class="candidate-note"><b>定位：</b>保持常规概览，不替换原状态卡；用顶部横幅提示阻断原因，完整前置状态仍进设置。侵入性最低，但修复动作较分散。</p>
-    <div class="mockbar"><b>状态：</b><div id="statesC" class="states"></div></div>
+    <div class="mockbar"><b>Mock 状态 · 同时驱动三个方向</b><div id="statesC" class="states pctl-chips"></div></div>
     <div class="desktop">
       <div class="titlebar"><div class="traffic"><span class="close"></span><span class="minimize"></span><span class="zoom"></span></div><div class="window-title">OpenCodeX-Desktop</div><div class="window-meta">本地环境</div></div>
       <div class="shell">
@@ -192,7 +196,10 @@ function renderC(){const s=states[current];document.getElementById('pillC').text
 function renderAll(){['A','B','C'].forEach(v=>{stateButtons(document.getElementById('states'+v))});renderA();renderB();renderC()}
 document.querySelectorAll('.candidates button').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('.candidates button').forEach(b=>b.classList.toggle('active',b===btn));
-  document.querySelectorAll('.candidate').forEach(s=>s.classList.toggle('active',s.id==='candidate-'+btn.dataset.candidate));
+  const sec=document.getElementById('candidate-'+btn.dataset.candidate);
+  document.querySelectorAll('.candidate').forEach(s=>s.classList.toggle('active',s===sec));
+  // 锚点：切到哪个方向就滚到哪个方向。
+  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
 }));
 document.addEventListener('click',e=>{
   const sb=e.target.closest('[data-state]');if(sb){current=sb.dataset.state;renderAll();return}

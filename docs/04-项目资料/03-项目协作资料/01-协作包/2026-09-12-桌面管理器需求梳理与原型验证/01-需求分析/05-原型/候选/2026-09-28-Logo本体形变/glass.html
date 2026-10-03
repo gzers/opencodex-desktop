@@ -1,0 +1,618 @@
+<!-- OpenCodeX-Desktop 原型 · 玻璃组件专题页（专题件，与 overview.html 同源令牌） -->
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenCodeX-Desktop · 玻璃组件专题</title>
+<style>
+/* ===== 令牌：与 overview.html 完全一致（只摘取本页所需） ===== */
+:root{
+  color-scheme:light dark;
+  --bg:#f9f9f9;
+  --glow-1:#a4c4ff6b; --glow-2:#a8e2c561; --glow-3:#ffe0c24d;
+  --panel:#fff; --border:#e6e6e6;
+  --text:#0d0d0d; --muted:#6e6e6e;
+  /* on-glass 次级 ink：实色，专用于玻璃表面，保证彩底上仍达 AA */
+  --ink-2:#333333;
+  --accent:#0d0d0d; --accent-ink:#ffffff;
+  --green:#0a7d5c; --red:#b91c1c; --amber:#9a4a08; --blue:#1d4ed8;
+  --brand:#3941ff;   /* 品牌色：强调玻璃可选色相 */
+  --glow-a:#B1A7FF; --glow-b:#7A9DFF; --glow-c:#3941FF;   /* 多光源背景三色（同研究页 BRAND） */
+  --radius:12px; --radius-lg:16px; --radius-pill:999px;
+  --text-micro:10px; --text-caption:11px; --text-label:12px; --text-control:13px;
+  --text-body:14px; --text-subtitle:16px; --text-title:20px;
+  --control-sm:28px; --control-md:34px; --control-lg:40px;
+  --motion-fast:.12s;
+  --shadow-sm:0 1px 2px #1018280f;
+  /* ——— 通知玻璃（唯一真源，取自 overview.html 通知表面材质） ——— */
+  --notif-tint-a:#7aa2ff42;
+  --notif-tint-b:#a8e2c534;
+  --glass-fill-glass:rgba(244,245,249,.52);
+  --glass-fill-clear:rgba(244,248,255,.16);
+  --glass-blur-glass:saturate(1.5) blur(8px);
+  --glass-blur-clear:none;
+  --glass-fill:var(--glass-fill-glass);
+  --glass-blur-notif:var(--glass-blur-glass);
+  /* 通知内文字动作按钮 */
+  --notif-btn-bg:rgba(13,13,13,.06); --notif-btn-bg-hover:rgba(13,13,13,.13); --notif-btn-bd:rgba(13,13,13,.14);
+  --notif-cancel-bg:rgba(185,28,28,.10); --notif-cancel-bg-hover:rgba(185,28,28,.19); --notif-cancel-bd:rgba(185,28,28,.32);
+  --gl-border:color-mix(in srgb,var(--text) 13%,transparent);
+  --gl-shadow:0 18px 44px #10182814,0 2px 6px #1018280f;        /* 面板/卡片：与通知表面一致 */
+  --gl-btn-shadow:0 8px 22px #10182814; /* 按钮/标签：**扁平无顶部棱线**（按规范去掉高光） */
+  --gl-sheen:linear-gradient(180deg,#ffffff3d,#0000 60%);       /* 玻璃高光 */
+  /* 强调＝**可透视的着色玻璃**：低不透明度色相 + 同色描边 + 与玻璃底相符的实色 ink。
+     色相可切「品牌 / 中性」（见顶栏控件）；不是不透明色块，背衬会透出来。 */
+  --accent-hue:var(--brand);
+  --accent-veil:color-mix(in srgb,var(--accent-hue) 34%,transparent);      /* 叠在 --glass-fill 上的色相薄纱 */
+  --accent-glass-ink:color-mix(in srgb,var(--accent-hue) 18%,#0d0d0d);     /* 亮色玻璃上：近黑带一点色相 */
+  --accent-pct:60;   /* 强调浓度（%）：顶栏滑杆可调；越低越透明 */
+  --accent-sheen:var(--gl-sheen);
+  --accent-shadow:var(--gl-btn-shadow);
+  --accent-blur:var(--glass-blur-notif);
+  --accent-veil-hover:color-mix(in srgb,var(--accent-hue) 46%,transparent);
+  --accent-glass-border:color-mix(in srgb,var(--accent-hue) 52%,transparent);
+  font-synthesis:none;
+}
+html[data-theme="dark"]{
+  --bg:#212121;
+  --glow-1:#6082c829; --glow-2:#58a08221; --glow-3:#b48c6414;
+  --panel:#262626; --border:#3d3d3d;
+  --text:#ececec; --muted:#a6a6a6;
+  --ink-2:#c6c6c6;
+  --accent:#ececec; --accent-ink:#0d0d0d;
+  --green:#4ecb9d; --red:#f87171; --amber:#fbbf24; --blue:#7aa2ff;
+  --shadow-sm:0 1px 2px #0006;
+  --notif-tint-a:#6082c855; --notif-tint-b:#58a08242;
+  --glass-fill-glass:rgba(34,36,42,.56);
+  --glass-fill-clear:rgba(42,45,52,.20);
+  --notif-btn-bg:rgba(255,255,255,.10); --notif-btn-bg-hover:rgba(255,255,255,.20); --notif-btn-bd:rgba(255,255,255,.18);
+  --notif-cancel-bg:rgba(248,113,113,.16); --notif-cancel-bg-hover:rgba(248,113,113,.26); --notif-cancel-bd:rgba(248,113,113,.38);
+  --gl-shadow:0 18px 44px #00000066,0 2px 6px #0006;
+  --gl-btn-shadow:0 8px 22px #0000004d;
+  --gl-sheen:linear-gradient(180deg,#ffffff26,#0000 60%);
+  --accent-veil:color-mix(in srgb,var(--accent-hue) 42%,transparent);
+  --accent-glass-ink:color-mix(in srgb,var(--accent-hue) 26%,#ffffff);     /* 暗色玻璃上：近白带一点色相 */
+  --accent-glass-border:color-mix(in srgb,var(--accent-hue) 58%,transparent);
+}
+body.notif-no-tint{--notif-tint-a:#0000;--notif-tint-b:#0000}
+body[data-accenthue="brand"]{--accent-hue:var(--brand)}
+/* 强调质感（决定「深度」从哪来）：
+   frost＝与通知同一套模糊，深度靠叠色纱；
+   clear＝几乎不糊 + 提饱和，背衬结构最「看得穿」；
+   smoked＝压暗背衬（brightness）＋提饱和，深度来自背衬被压暗而非色纱 → 低浓度也能「既深又透」。 */
+body[data-accentglass="clear"]{--accent-blur:saturate(2.4) blur(1.5px)}
+body[data-accentglass="smoked"]{--accent-blur:brightness(.66) saturate(1.9) blur(9px)}
+body[data-accenthue="neutral"]{
+  /* 中性强调＝应用原黑白配色：更深、更平（无顶部高光、无棱线），只保留玻璃体 + 模糊 + 描边。 */
+  --accent-hue:var(--accent);
+  /* 偏黑但明显可透视：深色只盖 60%（背衬有 40% 透出），配高光已去掉的扁平处理。
+     注：这是「白字 + 深色底」的透明上限——再淡（<~55%）白字对比度就会掉到 AA 以下。 */
+  --accent-veil:color-mix(in srgb,var(--accent) calc(var(--accent-pct)*1%),transparent);
+  --accent-veil-hover:color-mix(in srgb,var(--accent) calc(min(100,var(--accent-pct) + 10)*1%),transparent);
+  --accent-glass-ink:var(--accent-ink);
+  --accent-glass-border:color-mix(in srgb,var(--accent) 42%,transparent);
+  --accent-sheen:linear-gradient(#0000,#0000);
+  --accent-shadow:0 8px 22px #10182814;
+}
+html[data-theme="dark"] body[data-accenthue="neutral"]{--accent-shadow:0 8px 22px #0000004d}
+body[data-mat="clear"]{--glass-fill:var(--glass-fill-clear); --glass-blur-notif:var(--glass-blur-clear)}
+/* solid 对照档：退回实底、无模糊 */
+body[data-mat="solid"] .gl{box-shadow:none!important;background:var(--panel)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-color:var(--border)!important}
+body[data-mat="solid"] .notif-mock{box-shadow:none}
+/* 特效档（全局总开关，原型/生产同一语义；三档：高/中/低）：
+   high（高）＝动态光场 + 玻璃（默认，完整观感）；
+   mid （中）＝光场**静止** + 玻璃（省电；等价系统「减少动态效果」）；
+   low （低）＝**无光场 + 无玻璃**，退回「应用原本黑白实底风格」（含通知）。 */
+body[data-effects="mid"] .lightfield .cloud,
+body[data-effects="mid"] .lightfield .energy,
+body[data-effects="mid"] .lightfield .light-floor{animation-play-state:paused}
+body[data-effects="low"] .lightfield{display:none!important}
+body[data-effects="low"]{--notif-tint-a:#0000;--notif-tint-b:#0000;--gl-sheen:linear-gradient(#0000,#0000)}
+body[data-effects="low"] .gl{
+  background:var(--panel)!important;border-color:var(--border)!important;color:var(--text);
+  box-shadow:var(--shadow-sm)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body[data-effects="low"] .ctl,body[data-effects="low"] .btn.ghost{
+  background:color-mix(in srgb,var(--text) 6%,transparent);-webkit-backdrop-filter:none;backdrop-filter:none}
+body[data-effects="low"] .btn.primary.gl{background:var(--accent)!important;color:var(--accent-ink)!important;border-color:var(--accent)!important}
+body[data-effects="low"] .tag.accent.gl{background:color-mix(in srgb,var(--text) 6%,transparent)!important;color:var(--text)!important;border-color:var(--border)!important}
+
+/* ===== 唯一玻璃配方：通知玻璃 ===== */
+.gl{
+  background:
+    linear-gradient(158deg,var(--notif-tint-a),#0000 62%),
+    linear-gradient(24deg,var(--notif-tint-b),#0000 58%),
+    var(--glass-fill);
+  -webkit-backdrop-filter:var(--glass-blur-notif);
+  backdrop-filter:var(--glass-blur-notif);
+  border:1px solid var(--gl-border);
+  box-shadow:var(--gl-shadow);
+  color:var(--text);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font:var(--text-body)/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC",system-ui,sans-serif;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
+a{color:var(--blue)}
+
+/* ===== 背衬（衬托玻璃，三种对照） ===== */
+.backdrop{position:fixed;inset:0;z-index:0;background:var(--bg)}
+/* 光效：纯色底 + 概览页那套动态光场（三团公转/自旋/涨缩的光 + 能量束 + 近地光）。
+   几何与节奏取自 index.html / morph.js 的 ambientTarget（ORBIT .5、SPIN[42,-33,54]、涨缩时差 120°）。 */
+.lightfield{position:absolute;inset:0;overflow:hidden;display:none;
+  -webkit-mask-image:radial-gradient(ellipse 88% 82% at 50% 40%,#000 22%,#0000 76%);
+  mask-image:radial-gradient(ellipse 88% 82% at 50% 40%,#000 22%,#0000 76%)}
+body[data-backdrop="light"] .lightfield{display:block}
+.lightfield .cloud{position:absolute;display:block;border-radius:50%;will-change:transform;
+  width:min(92vw,820px);height:540px;left:calc(50% - min(46vw,410px));top:24%;
+  filter:blur(46px);opacity:.30;
+  background:radial-gradient(ellipse 44% 98% at 46% 44%,var(--glow-a),#0000 74%)}
+.lightfield .cloud-b{width:min(86vw,760px);height:620px;left:calc(50% - min(24vw,190px));top:14%;
+  background:radial-gradient(ellipse 98% 44% at 54% 56%,var(--glow-b),#0000 74%)}
+.lightfield .cloud-c{width:min(88vw,780px);height:480px;left:calc(50% - min(44vw,390px));top:6%;
+  filter:blur(30px);opacity:.24;
+  background:radial-gradient(ellipse 58% 100% at 50% 62%,var(--glow-c),#0000 73%)}
+.lightfield .energy{position:absolute;left:calc(50% - min(75vw,640px));top:2%;width:min(150vw,1280px);height:840px;
+  border-radius:50%;filter:blur(38px);will-change:transform;opacity:.18;
+  background:conic-gradient(from 0deg,#0000 0deg,var(--glow-a) 38deg,#0000 88deg,#0000 120deg,var(--glow-b) 158deg,#0000 208deg,#0000 240deg,var(--glow-c) 278deg,#0000 328deg);
+  -webkit-mask-image:radial-gradient(ellipse,#0000 24%,#000 45%,#0000 72%);
+  mask-image:radial-gradient(ellipse,#0000 24%,#000 45%,#0000 72%)}
+.lightfield .light-floor{position:absolute;width:min(60vw,470px);height:36px;left:calc(50% - min(30vw,235px));top:56%;
+  background:radial-gradient(ellipse,var(--glow-b),#0000 68%);filter:blur(18px);opacity:.24}
+html[data-theme="dark"] .lightfield .cloud{opacity:.46}
+html[data-theme="dark"] .lightfield .cloud-c{opacity:.36}
+html[data-theme="dark"] .lightfield .energy{opacity:.26}
+html[data-theme="dark"] .lightfield .light-floor{opacity:.32}
+body[data-backdrop="vivid"] .backdrop{
+  background:
+    radial-gradient(1100px 620px at 8% 4%,#ff5fa2,#0000 60%),
+    radial-gradient(900px 640px at 94% 10%,#ffc857,#0000 58%),
+    radial-gradient(1000px 720px at 84% 98%,#22d3a6,#0000 62%),
+    radial-gradient(820px 640px at 10% 96%,#4aa8ff,#0000 62%),
+    linear-gradient(135deg,#7b2ff7,#1f2a8a);
+}
+html[data-theme="dark"] body[data-backdrop="vivid"] .backdrop{
+  background:
+    radial-gradient(1100px 620px at 8% 4%,#a8266f,#0000 60%),
+    radial-gradient(900px 640px at 94% 10%,#b8862a,#0000 58%),
+    radial-gradient(1000px 720px at 84% 98%,#12705c,#0000 62%),
+    radial-gradient(820px 640px at 10% 96%,#23508f,#0000 62%),
+    linear-gradient(135deg,#2a1150,#0b1030);
+}
+
+/* ===== 顶栏 ===== */
+.bar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:14px 22px;border-radius:0;border-left:0;border-right:0;border-top:0}
+.bar h1{margin:0;font-size:var(--text-title);letter-spacing:-.01em}
+.bar .kicker{font-size:var(--text-caption);font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2)}
+.bar p{margin:3px 0 0;font-size:var(--text-label);color:var(--ink-2);max-width:640px}
+.bar-controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.ctl-item{display:inline-flex;align-items:center;gap:7px;min-width:0}
+.ctl-name{font-size:var(--text-caption);font-weight:600;color:var(--ink-2);white-space:nowrap}
+.bar-controls .back{text-decoration:none;gap:5px}
+.ctl-range-item{cursor:default}
+.bar-controls .ctl-range{gap:9px;padding:3px 11px}
+.bar-controls .ctl-range input[type=range]{width:104px;height:16px;accent-color:var(--accent);cursor:pointer;border:0;background:transparent}
+.bar-controls .ctl-range output{min-width:40px;text-align:right;font:650 var(--text-caption)/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text);font-variant-numeric:tabular-nums}
+.bar-controls .ctl-range.warn output{color:var(--amber)}
+.bar-controls .ctl-range.off{opacity:.45;pointer-events:none}
+.glass-nav{position:relative;z-index:1;padding:0 0 16px}
+.group[id]{scroll-margin-top:16px}
+.ctl-doc{padding:15px 17px;border-radius:var(--radius-lg);display:grid;gap:10px;margin:0}
+.ctl-doc>div{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:baseline}
+.ctl-doc dt{font-size:var(--text-label);font-weight:650}
+.ctl-doc dd{margin:0;font-size:var(--text-label);color:var(--ink-2);line-height:1.65}
+@media(max-width:560px){.ctl-doc>div{grid-template-columns:1fr;gap:3px}}
+
+/* ===== 内容 ===== */
+main{position:relative;z-index:1;padding:26px 22px 60px;max-width:1240px;margin:0 auto}
+.group{margin:0 0 34px}
+.gtitle{display:inline-flex;align-items:baseline;gap:9px;margin:0 0 14px;padding:6px 13px;border-radius:var(--radius-pill);font-size:var(--text-subtitle);font-weight:700}
+.gtitle em{font-style:normal;font-size:var(--text-caption);font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.note{display:inline-block;margin:-6px 0 14px;padding:7px 12px;border-radius:10px;font-size:var(--text-label);color:var(--ink-2);max-width:760px}
+.note.after-cards{margin-top:16px}
+.fx-list{margin:8px 0 0;padding-left:16px;font-size:var(--text-caption);line-height:1.7;color:var(--ink-2)}
+.fx-list li{margin:2px 0}
+.fx-list b{color:var(--text)}
+.row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+
+/* ===== 卡片 ===== */
+.card{border-radius:var(--radius-lg);padding:17px 18px;min-width:0}
+.card h3{margin:0 0 7px;font-size:var(--text-subtitle)}
+.card p{margin:0;color:var(--ink-2);font-size:var(--text-label)}
+.card .metric{font-size:30px;font-weight:750;letter-spacing:-.02em;line-height:1.1}
+.card .metric small{display:block;font-size:var(--text-caption);font-weight:600;color:var(--ink-2);letter-spacing:.02em;margin-top:5px}
+.card.interactive{cursor:pointer;transition:transform var(--motion-fast),box-shadow var(--motion-fast)}
+.card.interactive:hover{transform:translateY(-2px)}
+
+/* ===== 按钮 ===== */
+.btn{box-shadow:var(--gl-btn-shadow);display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:var(--control-md);padding:0 15px;border-radius:10px;font:600 var(--text-control)/1 inherit;cursor:pointer;color:var(--text);border:1px solid var(--gl-border);background:transparent;transition:background var(--motion-fast),border-color var(--motion-fast),color var(--motion-fast)}
+.btn svg{width:15px;height:15px}
+.btn.primary{border-color:var(--accent-glass-border);color:var(--accent-glass-ink)}
+.btn.danger{border-color:color-mix(in srgb,var(--red) 38%,transparent);color:var(--red)}
+.btn.ghost{background:color-mix(in srgb,var(--text) 6%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border-color:color-mix(in srgb,var(--text) 10%,transparent)}
+.btn[disabled],.btn.disabled{opacity:.45;cursor:default}
+/* hover 行：静态呈现，便于对照 */
+.btn.hovered{background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--text) 8%,var(--glass-fill));border-color:color-mix(in srgb,var(--text) 15%,transparent)}
+.btn.primary.hovered{background-color:var(--glass-fill);background-image:var(--accent-sheen),linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),linear-gradient(var(--accent-veil-hover),var(--accent-veil-hover))}
+.btn.danger.hovered{background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--red) 22%,var(--glass-fill));border-color:color-mix(in srgb,var(--red) 46%,transparent)}
+.btn.primary.gl{
+  -webkit-backdrop-filter:var(--accent-blur);backdrop-filter:var(--accent-blur);
+  box-shadow:var(--accent-shadow);
+  background-color:var(--glass-fill);
+  background-image:var(--accent-sheen),linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),linear-gradient(var(--accent-veil),var(--accent-veil));border-color:var(--accent-glass-border)}
+.btn.danger.gl{background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--red) 16%,var(--glass-fill))}
+
+/* ===== 弹窗（三段式：头 / 内容 / 脚）=====
+   表面＝通知玻璃（同一套 --glass-fill + 双色滤镜 + 模糊 + 描边 + 投影）。 */
+.modal{display:flex;flex-direction:column;width:min(440px,100%);max-height:62vh;border-radius:var(--radius-lg);overflow:hidden;padding:0}
+.modal-head{flex:none;display:flex;align-items:center;gap:10px;padding:16px 16px 6px}
+.modal-head h3{flex:1 1 auto;min-width:0;margin:0;font-size:var(--text-subtitle)}
+.modal-head-actions{flex:none;display:flex;gap:6px}
+.modal-body{flex:1 1 auto;min-height:0;overflow:auto;padding:0 16px 14px;color:var(--ink-2);font-size:var(--text-label);line-height:1.75}
+.modal-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:color-mix(in srgb,var(--text) 8%,transparent);padding:1px 5px;border-radius:5px;font-size:var(--text-caption)}
+.modal-foot{flex:none;display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:12px 16px;border-top:1px solid var(--gl-border)}
+.mfield{margin-top:10px}
+.mfield label{display:block;font-size:var(--text-caption);color:var(--ink-2);margin-bottom:4px}
+.mfield input{width:100%;min-height:var(--control-md);border:1px solid var(--gl-border);border-radius:var(--radius-sm);background:var(--glass-fill);color:var(--text);padding:7px 11px;font:inherit}
+
+/* ===== 标签 ===== */
+.tag{box-shadow:var(--gl-btn-shadow);display:inline-flex;align-items:center;gap:6px;min-height:22px;padding:0 10px;border-radius:var(--radius-pill);font:650 var(--text-caption)/1 inherit;color:var(--text)}
+.tag .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.tag.accent{color:var(--accent-glass-ink);box-shadow:var(--accent-shadow);-webkit-backdrop-filter:var(--accent-blur);backdrop-filter:var(--accent-blur);
+  background-color:var(--glass-fill);
+  background-image:var(--accent-sheen),linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),linear-gradient(var(--accent-veil),var(--accent-veil));border-color:var(--accent-glass-border)}
+.tag.success{color:var(--green)}
+.tag.warn{color:var(--amber)}
+.tag.danger{color:var(--red)}
+.tag.count{min-width:22px;justify-content:center;padding:0 7px;font-variant-numeric:tabular-nums}
+
+/* ===== 图标按钮 ===== */
+.iconbtn{box-shadow:var(--gl-btn-shadow);width:var(--control-md);height:var(--control-md);display:grid;place-items:center;padding:0;border-radius:10px;color:var(--text);cursor:pointer;position:relative}
+.iconbtn.round{border-radius:var(--radius-pill)}
+.iconbtn svg{width:16px;height:16px}
+.iconbtn .badge{position:absolute;top:-5px;right:-5px;min-width:16px;height:16px;padding:0 4px;border-radius:var(--radius-pill);background:var(--red);color:#fff;font:700 9px/16px inherit;text-align:center}
+.swatches{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tint{width:56px;height:var(--control-md);border-radius:10px;display:grid;place-items:center;font-size:9px;color:var(--muted)}
+
+/* ===== 文字 ===== */
+.tpanel{border-radius:var(--radius-lg);padding:20px 22px;max-width:640px}
+.tpanel h2{margin:0 0 8px;font-size:var(--text-title);letter-spacing:-.01em}
+.tpanel .lead{margin:0 0 12px;font-size:var(--text-body)}
+.tpanel .sub{margin:0 0 12px;font-size:var(--text-label);color:var(--ink-2)}
+.tpanel .mono{font:var(--text-label)/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;background:color-mix(in srgb,var(--text) 7%,transparent);border-radius:8px;padding:2px 7px}
+.tpanel .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+/* ===== 通知参考档 ===== */
+.notif-mock{border-radius:var(--radius-lg);padding:14px 16px;max-width:420px}
+.notif-mock .nm-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.notif-mock .nm-head b{font-size:var(--text-control)}
+.notif-mock .nm-x{min-height:24px;padding:2px 9px;border-radius:6px;border:1px solid var(--notif-btn-bd);background:var(--notif-btn-bg);color:var(--ink-2);font:600 var(--text-caption)/1 inherit}
+.notif-mock .nm-item{display:flex;gap:10px;padding:9px 0;border-top:1px solid color-mix(in srgb,var(--text) 9%,transparent);font-size:var(--text-label)}
+.notif-mock .nm-item .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);margin-top:6px;flex:none}
+.notif-mock .nm-item span{color:var(--ink-2)}
+.notif-mock .nm-actions{display:flex;gap:8px;margin-top:10px}
+.notif-mock .nm-actions button{min-height:24px;padding:2px 9px;border-radius:6px;border:1px solid var(--notif-btn-bd);background:var(--notif-btn-bg);color:var(--text);font:600 var(--text-caption)/1 inherit;cursor:pointer}
+.notif-mock .nm-actions button.cancel{background:var(--notif-cancel-bg);border-color:var(--notif-cancel-bd);color:var(--red)}
+
+/* ===== 配方说明 ===== */
+.code{border-radius:var(--radius-lg);padding:16px 18px;font:12px/1.65 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre;overflow:auto;max-width:760px;color:var(--text)}
+.foot{display:inline-block;margin-top:20px;padding:7px 12px;border-radius:10px;font-size:var(--text-caption);color:var(--ink-2)}
+@media (max-width:640px){
+  main{padding:18px 14px 48px}
+  .bar{padding:12px 14px}
+  .bar p{display:none}
+}
+</style>
+<link rel="stylesheet" href="../../proto-controls.css">
+</head>
+<body class="pctl" data-backdrop="light" data-mat="glass">
+
+<div class="backdrop" aria-hidden="true"><div class="lightfield"><i class="energy"></i><i class="cloud cloud-a"></i><i class="cloud cloud-b"></i><i class="cloud cloud-c"></i><i class="light-floor"></i></div></div>
+
+<header class="bar gl">
+  <div>
+    <div class="kicker">Glass Components · Prototype</div>
+    <h1>玻璃组件专题</h1>
+    <p>全部对齐「通知玻璃」：同一套半透明填充 + 双色滤镜 + 模糊 + 1px 描边 + 投影。文字一律走实色 ink，保证在彩色背衬上依然清晰。</p>
+  </div>
+  <div class="bar-controls">
+    <a class="btn gl back" href="./overview.html">← 返回软件原型</a>
+    <div class="ctl-item"><span class="ctl-name">主题</span><div class="pctl-seg" role="group" aria-label="主题"><button data-theme-btn="light" class="active">亮</button><button data-theme-btn="dark">暗</button></div></div>
+    <div class="ctl-item"><span class="ctl-name">特效档</span><div class="pctl-seg" role="group" aria-label="特效档"><button data-effects-btn="high" class="active" title="特效档·高：动态光场 + 玻璃（默认，完整观感）">高</button><button data-effects-btn="mid" title="特效档·中：光场静止 + 玻璃（省电；等价系统「减少动态效果」）">中</button><button data-effects-btn="low" title="特效档·低：无光场 + 无玻璃，退回应用原本黑白实底风格">低</button></div></div>
+    <div class="ctl-item"><span class="ctl-name">背衬</span><div class="pctl-seg" role="group" aria-label="背衬"><button data-backdrop-btn="light" class="active">光效</button><button data-backdrop-btn="plain">素底</button><button data-backdrop-btn="vivid">彩底</button></div></div>
+    <div class="ctl-item"><span class="ctl-name">滤镜</span><div class="pctl-seg" role="group" aria-label="滤镜"><button data-tint-btn="on">冷色滤镜</button><button data-tint-btn="off" class="active">无色</button></div></div>
+    <div class="ctl-item"><span class="ctl-name">强调色</span><div class="pctl-seg" role="group" aria-label="强调色"><button data-accent-btn="brand">品牌</button><button data-accent-btn="neutral" class="active">中性</button></div></div>
+    <div class="ctl-item"><span class="ctl-name">强调质感</span><div class="pctl-seg" role="group" aria-label="强调质感"><button data-accentglass-btn="frost">磨砂</button><button data-accentglass-btn="clear" class="active">清透</button><button data-accentglass-btn="smoked">烟熏</button></div></div>
+    <label class="ctl-item ctl-range-item" id="accentRangeCtl" title="强调玻璃的浓度：越低越透明（低于 ~55% 白字可能达不到 AA）">
+      <span class="ctl-name">强调浓度</span><span class="pctl-seg ctl-range"><input id="accentRange" type="range" min="0" max="100" step="2" value="80" aria-label="强调浓度"><output id="accentOut">80%</output></span>
+    </label>
+    <div class="ctl-item"><span class="ctl-name">材质</span><div class="pctl-seg" role="group" aria-label="材质"><button data-mat-btn="glass" class="active">轻磨砂</button><button data-mat-btn="clear">纯透明</button><button data-mat-btn="solid">实底</button></div></div>
+  </div>
+</header>
+
+
+
+<main>
+
+  <!-- 控制器分区锚点：切到哪一段就跳到哪一段（滚动由 proto-controls.js 负责）。 -->
+  <nav class="pctl-bar glass-nav" aria-label="专题分区">
+    <a href="#controls-doc">控制说明</a>
+    <a href="#fx">特效档</a>
+    <a href="#cards">卡片</a>
+    <a href="#buttons">按钮</a>
+    <a href="#tags">标签</a>
+    <a href="#icons">图标按钮</a>
+    <a href="#type">文字</a>
+    <a href="#composed">组合</a>
+    <a href="#modal">弹窗</a>
+    <a href="#recipe">配方</a>
+  </nav>
+
+  <section class="group" id="controls-doc">
+    <h2 class="gtitle gl"><span>控制说明</span><em>What each control does</em></h2>
+    <p class="note gl">顶栏是<b>评审用控制器</b>：全部只切换本页的观察条件，不写配置、不影响其他原型页。生产里只有「主题」与「特效档」会作为真实设置暴露，其余仅用于评审玻璃配方。</p>
+    <dl class="ctl-doc gl">
+      <div><dt>主题</dt><dd>亮 / 暗两套令牌，用来验证同一块玻璃在两种底色下的填充、描边与文字对比度。</dd></div>
+      <div><dt>特效档</dt><dd>全局开关。<b>高</b>＝动态光场＋玻璃（默认）；<b>中</b>＝光场静止＋玻璃（省电，等价系统「减少动态效果」）；<b>低</b>＝无光场＋无玻璃，退回应用原本黑白实底。</dd></div>
+      <div><dt>背衬</dt><dd>玻璃后面的衬托物。<b>光效</b>＝纯色底＋概览页那套动态光场；<b>素底</b>＝纯色；<b>彩底</b>＝高饱和渐变，用来压测极端底色。</dd></div>
+      <div><dt>滤镜</dt><dd>玻璃上的双色滤镜。<b>冷色</b>＝通知默认之外的冷色调；<b>无色</b>＝中性（当前基准）。</dd></div>
+      <div><dt>强调色</dt><dd>主按钮与强调标签的取色：<b>品牌</b>＝品牌紫蓝；<b>中性</b>＝黑白（当前基准）。</dd></div>
+      <div><dt>强调质感</dt><dd>强调件的玻璃配方：<b>磨砂</b>／<b>清透</b>／<b>烟熏</b>。只改强调件，不影响普通卡片。</dd></div>
+      <div><dt>强调浓度</dt><dd>强调玻璃的填充浓度。越低越透明；低于约 55% 时白字可能达不到 AA 对比度，读数会转黄提醒。</dd></div>
+      <div><dt>材质</dt><dd>整体表面档：<b>轻磨砂</b>（默认）／<b>纯透明</b>（无模糊）／<b>实底</b>（退回不透明面板）。</dd></div>
+    </dl>
+  </section>
+
+  <section class="group" id="fx">
+    <h2 class="gtitle gl"><span>特效档</span><em>Effects · 高 / 中 / 低</em></h2>
+    <p class="note gl">一个旋钮三档，只动两个杠杆：<b>光场动不动</b> 与 <b>是不是玻璃</b>。第三档「低」＝关掉特效，退回应用原本的黑白实底风格。用顶栏「高 / 中 / 低」实时切换。</p>
+    <div class="grid3">
+      <article class="card gl">
+        <h3>高 · 默认</h3>
+        <p><b>会动的光场 + 玻璃。</b></p>
+        <ul class="fx-list">
+          <li>光场：三团光公转 + 自旋 + 涨缩（动）</li>
+          <li>表面：磨砂玻璃（半透明 + 模糊 + 1px 描边 + 投影）</li>
+          <li>通知：玻璃</li>
+          <li>定位：完整观感</li>
+        </ul>
+      </article>
+      <article class="card gl">
+        <h3>中</h3>
+        <p><b>光场静止 + 玻璃。</b></p>
+        <ul class="fx-list">
+          <li>光场：仍在、仍是柔光底，但<b>不再动</b></li>
+          <li>表面：与「高」<b>完全一致</b>（仍是玻璃）</li>
+          <li>通知：玻璃</li>
+          <li>定位：省电 / 系统「减少动态效果」；观感几乎不变，只是不晃</li>
+        </ul>
+      </article>
+      <article class="card gl">
+        <h3>低 · 关特效</h3>
+        <p><b>无光场 + 无玻璃。</b></p>
+        <ul class="fx-list">
+          <li>光场：<b>完全没有</b>，背景就是纯色底</li>
+          <li>表面：全部<b>实底</b>（卡片白 / 按钮黑底白字；无模糊、无半透明、无双色滤镜）</li>
+          <li>通知：实底</li>
+          <li>定位：退回应用原本黑白实底风格；开销最低</li>
+        </ul>
+      </article>
+    </div>
+    <p class="note after-cards gl">两句话记牢：<b>高 → 中</b> 只去掉「动」，其它一模一样；<b>中 → 低</b> 去掉「光场」和「玻璃」两样，回到实底。</p>
+  </section>
+
+  <section class="group">
+    <h2 class="gtitle gl"><span>参考 · 通知玻璃</span><em>Source of truth</em></h2>
+    <p class="note gl">下面就是通知面板本身；本页其余所有玻璃都与它同一套配方（见页尾「配方」）。</p>
+    <div class="row">
+      <div class="notif-mock gl">
+        <div class="nm-head"><b>通知与反馈</b><span class="nm-x">收起</span></div>
+        <div class="nm-item"><i class="dot"></i><div>OpenCodex 已启动<br><span>运行中 · 端口 8787</span></div></div>
+        <div class="nm-item"><i class="dot"></i><div>WebDAV 同步完成<br><span>3 个文件已更新</span></div></div>
+        <div class="nm-actions"><button>全部已读</button><button class="cancel">取消观察</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="group" id="cards">
+    <h2 class="gtitle gl"><span>卡片</span><em>Card</em></h2>
+    <div class="grid3">
+      <article class="card gl"><h3>基础卡片</h3><p>承载说明与次要信息，圆角 16，玻璃材质与通知一致。</p></article>
+      <article class="card gl"><div class="metric">42.6 MB<small>本次同步体积</small></div></article>
+      <article class="card gl interactive"><h3>交互卡片 ↗</h3><p>悬停上浮 2px；这是静态预览态。</p></article>
+    </div>
+  </section>
+
+  <section class="group" id="buttons">
+    <h2 class="gtitle gl"><span>按钮</span><em>Button</em></h2>
+    <p class="note gl">普通 / 强调 / 警告 / 幽灵 / 禁用。强调与警告在玻璃底上叠一层品牌色或危险色。</p>
+    <div class="row" style="margin-bottom:12px">
+      <button class="btn gl">普通</button>
+      <button class="btn primary gl">强调动作</button>
+      <button class="btn danger gl">危险动作</button>
+      <button class="btn ghost">幽灵</button>
+      <button class="btn gl" disabled>禁用</button>
+      <button class="btn primary gl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 4 20 12 6 20 6 4"/></svg>带图标</button>
+    </div>
+    <p class="note gl">悬停态（静态呈现）：</p>
+    <div class="row">
+      <button class="btn gl hovered">普通 hover</button>
+      <button class="btn primary gl hovered">强调 hover</button>
+      <button class="btn danger gl hovered">危险 hover</button>
+    </div>
+  </section>
+
+  <section class="group" id="tags">
+    <h2 class="gtitle gl"><span>标签</span><em>Tag</em></h2>
+    <div class="row">
+      <span class="tag gl">中性</span>
+      <span class="tag accent gl">强调</span>
+      <span class="tag success gl"><i class="dot"></i>成功</span>
+      <span class="tag warn gl"><i class="dot"></i>警告</span>
+      <span class="tag danger gl"><i class="dot"></i>危险</span>
+      <span class="tag count gl">7</span>
+    </div>
+  </section>
+
+  <section class="group" id="icons">
+    <h2 class="gtitle gl"><span>图标按钮</span><em>Icon button</em></h2>
+    <div class="row">
+      <button class="iconbtn gl" aria-label="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.2v2.4M12 18.4v2.4M4.8 12H2.4M21.6 12h-2.4M6.7 6.7 5 5M19 19l-1.7-1.7M17.3 6.7 19 5M5 19l1.7-1.7"/></svg></button>
+      <button class="iconbtn round gl" aria-label="刷新"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg></button>
+      <button class="iconbtn gl" aria-label="通知"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.5 21h3"/></svg><i class="badge">3</i></button>
+      <button class="iconbtn round gl" aria-label="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+  </section>
+
+  <section class="group" id="type">
+    <h2 class="gtitle gl"><span>文字</span><em>Type on glass</em></h2>
+    <div class="tpanel gl">
+      <h2>玻璃上的文字</h2>
+      <p class="lead">正文走 --text，始终是实色 ink，不随背衬漂移；即使底下的彩底再花，字仍清楚。</p>
+      <p class="sub">次要说明走 --muted，用于时间、来源等辅助信息。</p>
+      <p>行内代码 <span class="mono">--glass-blur-notif</span> 与<a href="#recipe">链接色</a>保持可读。</p>
+      <div class="actions"><button class="btn primary gl">主要</button><button class="btn gl">次要</button></div>
+    </div>
+  </section>
+
+  <section class="group" id="composed">
+    <h2 class="gtitle gl"><span>组合示例</span><em>Composed</em></h2>
+    <div class="row">
+      <article class="card gl" style="max-width:440px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px">
+          <h3 style="margin:0">版本升级</h3>
+          <span class="tag accent gl">可用</span>
+        </div>
+        <p style="margin-bottom:12px">最新版本 <b style="color:var(--text)">2.51.0</b>；升级前会自动备份当前配置。</p>
+        <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+          <button class="btn primary gl">检查更新</button>
+          <button class="btn gl">升级前备份</button>
+          <span class="tag count gl" style="margin-left:auto">2</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="group" id="modal">
+    <h2 class="gtitle gl"><span>弹窗</span><em>Modal</em></h2>
+    <p class="note gl">统一<b>三段式</b>：<b>头</b>（标题 + 右上动作）／<b>内容</b>（唯一滚动区）／<b>脚</b>（发丝线 + 右下动作）。表面＝<b>通知玻璃</b>，与通知面板同源；「特效档 低」时随令牌退实底。</p>
+    <div class="row">
+      <div class="modal gl" role="dialog" aria-modal="true" aria-label="升级前备份">
+        <div class="modal-head">
+          <h3>升级前备份</h3>
+          <div class="modal-head-actions"><button class="iconbtn gl" aria-label="关闭"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        </div>
+        <div class="modal-body">
+          <p>将在升级前把当前配置与数据打包备份到数据根下的 <code>backups/</code>。完成后可一键回滚。</p>
+          <div class="mfield"><label>保留数量</label><input value="5"></div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn gl">取消</button>
+          <button class="btn primary gl">开始备份</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="group" id="recipe">
+    <h2 class="gtitle gl"><span>配方</span><em>Recipe</em></h2>
+    <pre class="code gl">/* 唯一玻璃配方 —— 与通知表面同源 */
+background:
+  linear-gradient(158deg, var(--notif-tint-a), #0000 62%),
+  linear-gradient(24deg,  var(--notif-tint-b), #0000 58%),
+  var(--glass-fill);              /* glass: rgba(244,245,249,.52) / dark rgba(34,36,42,.56) */
+-webkit-backdrop-filter: var(--glass-blur-notif);   /* saturate(1.5) blur(8px) */
+backdrop-filter: var(--glass-blur-notif);
+border: 1px solid color-mix(in srgb, var(--text) 13%, transparent);
+box-shadow: 0 18px 44px #10182814, 0 2px 6px #1018280f;</pre>
+    <p class="foot gl">本页为原型专题件，仅用于评审玻璃材质；不写配置、不调用真实命令、不引入模拟数据。生产落地待单独确认。</p>
+  </section>
+
+</main>
+
+<script>
+(function(){
+  const q=new URLSearchParams(location.search);
+  const body=document.body, root=document.documentElement;
+  function pick(group,def){
+    const v=q.get(group);
+    return v||def;
+  }
+  let theme=pick('theme','light');
+  if(theme==='system') theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  root.setAttribute('data-theme',theme);
+  body.dataset.backdrop=pick('backdrop','light');
+  body.dataset.mat=pick('mat','glass');
+  // 特效总开关：high（默认）/ mid / off。系统「减少动态效果」且未显式指定时，自动降到 mid。
+  body.dataset.effects=pick('effects','high');
+  if(!q.get('effects') && matchMedia('(prefers-reduced-motion: reduce)').matches) body.dataset.effects='mid';
+  // 与通知专题默认一致：通知默认「无色」（NOTIF_TINT_DEFAULT='off'），冷色滤镜为可选档。
+  if(pick('tint','off')!=='on') body.classList.add('notif-no-tint');
+  body.dataset.accenthue=pick('accent','neutral');
+  // 冻结标准（2026-09-30 用户确认）：磨砂 + 80% 中性黑白。
+  body.dataset.accentglass=pick('accentGlass','frost');
+  const pct0=Math.max(0,Math.min(100,Number(pick('accentPct','80'))||0));
+  body.style.setProperty('--accent-pct',String(pct0));
+  function sync(){
+    const map=(sel,val,attr)=>document.querySelectorAll(sel).forEach(b=>b.classList.toggle('active',b.dataset[attr]===val));
+    map('[data-theme-btn]',root.getAttribute('data-theme'),'themeBtn');
+    map('[data-backdrop-btn]',body.dataset.backdrop,'backdropBtn');
+    map('[data-effects-btn]',body.dataset.effects,'effectsBtn');
+    map('[data-tint-btn]',body.classList.contains('notif-no-tint')?'off':'on','tintBtn');
+    map('[data-mat-btn]',body.dataset.mat,'matBtn');
+    map('[data-accent-btn]',body.dataset.accenthue,'accentBtn');
+    map('[data-accentglass-btn]',body.dataset.accentglass,'accentglassBtn');
+  }
+  document.querySelectorAll('[data-theme-btn]').forEach(b=>b.onclick=()=>{root.setAttribute('data-theme',b.dataset.themeBtn);sync()});
+  document.querySelectorAll('[data-backdrop-btn]').forEach(b=>b.onclick=()=>{body.dataset.backdrop=b.dataset.backdropBtn;sync()});
+  document.querySelectorAll('[data-effects-btn]').forEach(b=>b.onclick=()=>{body.dataset.effects=b.dataset.effectsBtn;sync()});
+  document.querySelectorAll('[data-tint-btn]').forEach(b=>b.onclick=()=>{body.classList.toggle('notif-no-tint',b.dataset.tintBtn==='off');sync()});
+  document.querySelectorAll('[data-mat-btn]').forEach(b=>b.onclick=()=>{body.dataset.mat=b.dataset.matBtn;sync()});
+  document.querySelectorAll('[data-accentglass-btn]').forEach(b=>b.onclick=()=>{body.dataset.accentglass=b.dataset.accentglassBtn;sync()});
+  document.querySelectorAll('[data-accent-btn]').forEach(b=>b.onclick=()=>{body.dataset.accenthue=b.dataset.accentBtn;sync();window.__accentPaint&&window.__accentPaint()});
+  // 强调浓度滑杆（只作用于「中性」档）
+  const range=document.getElementById('accentRange'),out=document.getElementById('accentOut'),ctl=document.getElementById('accentRangeCtl');
+  if(range){
+    range.value=String(pct0);
+    const paint=()=>{
+      body.style.setProperty('--accent-pct',range.value);
+      out.textContent=range.value+'%';
+      ctl.classList.toggle('warn',Number(range.value)<55);
+      ctl.classList.toggle('off',body.dataset.accenthue!=='neutral');
+    };
+    range.addEventListener('input',paint);
+    window.__accentPaint=paint;
+    paint();
+  }
+  // 动态光场：与研究页同一套节奏（公转 12s/圈 · 各自自旋 · 涨缩时差 120°）
+  const field=document.querySelectorAll('.lightfield .cloud');
+  if(field.length){
+    const beam=document.querySelector('.lightfield .energy'),floor=document.querySelector('.lightfield .light-floor');
+    const RATE=.5,SPIN=[42,-33,54],LAG=Math.PI*2/3,reduce=matchMedia('(prefers-reduced-motion: reduce)');
+    let ph=0,last=0,ba=0;
+    const isDark=()=>root.getAttribute('data-theme')==='dark';
+    function step(now){
+      const dt=last?Math.min(now-last,50)/1000:0;last=now;
+      if(body.dataset.backdrop==='light'&&!reduce.matches){
+        ph+=dt*(Math.PI*2/12);
+        const energy=.72+Math.sin(ph*.5)*.12;
+        field.forEach((c,i)=>{
+          const orbit=ph*RATE+i*LAG,rx=50+energy*70,ry=34+energy*48,lag=ph+i*LAG;
+          c.style.transform='translate('+(Math.cos(orbit)*rx)+'px,'+(Math.sin(orbit)*ry)+'px) scale('+(1+Math.sin(lag)*.22)+') rotate('+(ph*SPIN[i])+'deg)';
+          c.style.opacity=String((isDark()?.46:.30)+Math.sin(lag)*.08);
+        });
+        if(beam){ba+=dt*9;beam.style.transform='rotate('+ba+'deg) scale('+(.9+energy*.2+Math.sin(ph)*.08)+')';
+          beam.style.opacity=String((.10+energy*.20)*(1+Math.sin(ph)*.14))}
+        if(floor)floor.style.opacity=String(.22+Math.sin(ph*.7)*.04);
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  sync();
+})();
+</script>
+<script src="../../proto-controls.js"></script>
+</body>
+</html>
