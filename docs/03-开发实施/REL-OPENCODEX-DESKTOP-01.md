@@ -89,7 +89,7 @@ source_refs:
   抽取同名段落作为 GitHub Release body；抽不到对应段落即让 job 失败，避免发出没有说明的包。
   `tauri-action` 没有 `releaseBodyPath` 入参，所以用一步读入 `$GITHUB_OUTPUT` 再传给 `releaseBody`。
 - **分工**：`CHANGELOG.md` = 给用户看的版本说明事实源（在 `main`）；本文件与其它 `REL-*` / `IMP-*`
-  = 给治理看的门禁与验证长文（在 `docs`）。同一段版本说明不两处维护，changelog 里链接到本目录。
+  = 给治理看的门禁与验证长文（在 `docs/governance-main`）。同一段版本说明不两处维护，changelog 里链接到本目录。
 - **暂不自动化**：当前提交信息前缀不统一，`git-cliff` / `release-please` 生成质量差；提交规范稳定后再引入
   `git-cliff`，届时 `CHANGELOG.md` 仍是事实源。
 
@@ -133,7 +133,7 @@ source_refs:
   `cargo test --workspace --features integration-test` 406 passed / 1 failed / 2 ignored。
 - 唯一失败 `commands::workspace::tests::local_documents_are_frozen` 是**分支拆分带来的环境性失败**：
   该用例断言仓库根下存在 `docs/04-项目资料/.../LICENSE`，而 `main` 分支不含 `docs/`
-  （该文件在 `docs` 分支）。用例代码本身未被本次改动触碰，属既有问题。
+  （该文件在 `docs/governance-main` 分支）。用例代码本身未被本次改动触碰，属既有问题。
 - Windows 目标上，依赖 Unix 语义（chmod 权限位、`#!/bin/sh` fixture）的测试模块已用
   `#[cfg(all(test, unix))]` / `#![cfg(unix)]` Gate 掉，因此 `--all-targets` 可编译。
 
