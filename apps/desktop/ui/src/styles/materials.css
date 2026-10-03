@@ -1,0 +1,130 @@
+/* 表面配方层（UI规范 §26.3 / IMP-05 §3）。
+ *
+ * 这一层是「表面分类」的唯一真源，规定各类表面的填充、描边、模糊与投影。
+ * 分类：shell（外壳） / page（页面） / panel（面板卡片） / control（控件） /
+ * emphasis（强调） / overlay（浮层：通知、Toast、任务卡、弹窗、快捷浮层）。
+ *
+ * 档位只通过 `effects.css` 覆盖这些变量，不复制高／中／低三套页面。
+ * 现状：既有多数表面仍直接消费 `--panel` / `--glass-fill` 等既有 token；
+ * 本节先把分类固定下来，并让已玻璃化的表面随档位翻转（见 effects.css）。
+ * 逐页迁移到这些语义变量在 IMP-05 阶段 C/D 进行。
+ */
+:root {
+  /* shell：窗口外壳与侧栏，不透明、不模糊。 */
+  --surface-shell-bg: var(--glass-rail);
+  --surface-shell-border: color-mix(in srgb, var(--text) 10%, transparent);
+
+  /* page：内容页这一层，半透明磨砂（不用 backdrop-filter，见 base.css 说明）。 */
+  --surface-page-bg: var(--page-fill);
+  --surface-page-border: var(--border);
+
+  /* panel：卡片 / 设置行等普通内容面。高／中档用通知玻璃配方（UI规范 §26.2）。 */
+  --surface-panel-bg: var(--glass-fill);
+  --surface-panel-border: color-mix(in srgb, var(--text) 13%, transparent);
+  --surface-panel-blur: var(--glass-blur-notif);
+  --surface-panel-shadow: 0 18px 44px #10182814, 0 2px 6px #1018280f;
+  --surface-panel-radius: var(--radius);
+
+  /* control：按钮、标签、选择器等可交互控件（同一玻璃配方，独立投影）。 */
+  --surface-control-bg: var(--glass-fill);
+  --surface-control-border: color-mix(in srgb, var(--text) 13%, transparent);
+  --surface-control-blur: var(--glass-blur-notif);
+  --surface-control-bg-hover: color-mix(in srgb, var(--text) 8%, var(--glass-fill));
+  --surface-control-shadow: 0 8px 22px #10182814;
+  --surface-control-radius: var(--radius-sm);
+
+  /* emphasis：主操作 / 危险操作。 */
+  --surface-emphasis-bg: var(--accent);
+  --surface-emphasis-ink: var(--accent-ink);
+  --surface-danger-bg: var(--panel);
+  --surface-danger-border: color-mix(in srgb, var(--red) 40%, transparent);
+
+  /* overlay：通知中心 / Toast / 任务卡 / 弹窗 / 快捷浮层，高／中档共享玻璃。 */
+  --surface-overlay-bg: var(--glass-fill);
+  --surface-overlay-border: var(--border);
+  --surface-overlay-blur: var(--glass-blur-notif);
+  --surface-overlay-shadow: var(--shadow);
+
+  /* 档位相关：环境光与连续装饰是否允许（低档关闭）。 */
+  --surface-ambient-display: block;
+}
+
+html[data-theme="dark"] {
+  --surface-panel-shadow: 0 18px 44px #00000066, 0 2px 6px #0006;
+  --surface-control-shadow: 0 8px 22px #0000004d;
+}
+
+/* —— 配方应用：把组件类接到上面的表面分类（布局仍归各组件自己的规则）。
+   高／中档共享玻璃；低档由 effects.css 翻转上面的变量统一退实底，不需要逐页重写。
+   顺序：本文件排在 base.css 之后；`.btn.primary` / `.btn.danger` 等更高优先级规则不受影响。 —— */
+.card, .setting-row, .install-row, .agent-path-row, .skill-row, .repo-item, .backup-item,
+.about-hero, .about-panel, .mcp-form-card, .choice, .modal, .select-menu, .notice, .menu-hint, .ui-fault {
+  background: var(--surface-panel-bg);
+  border-color: var(--surface-panel-border);
+  -webkit-backdrop-filter: var(--surface-panel-blur);
+  backdrop-filter: var(--surface-panel-blur);
+}
+.card, .setting-row, .install-row, .agent-path-row, .skill-row, .repo-item, .backup-item,
+.about-hero, .about-panel, .mcp-form-card, .choice, .modal, .select-menu {
+  box-shadow: var(--surface-panel-shadow);
+}
+.btn:not(.primary):not(.danger):not(.ghost), .tag, .select-trigger {
+  background: var(--surface-control-bg);
+  border-color: var(--surface-control-border);
+  -webkit-backdrop-filter: var(--surface-control-blur);
+  backdrop-filter: var(--surface-control-blur);
+  box-shadow: var(--surface-control-shadow);
+}
+.btn:not(.primary):not(.danger):not(.ghost):hover, .select-trigger:hover {
+  background: var(--surface-control-bg-hover);
+}
+
+/* 概览动作按钮＝通知同款玻璃观感（IMP-07，对齐原型 `BTN_MATERIAL_DEFAULT='glass'`）：
+   原型把玻璃铺满整行（`.ovb-actions>.btn`，不只默认档），这里同样统一到行内**所有**按钮；
+   半透明分层填充 + 非透明边框 + 分层阴影（含 inset 顶部内高光）＝高阶层级。
+   刻意**不做**实时 `backdrop-filter`：概览形象背后有持续动画层，模糊会每帧重算，
+   把高档帧率从 ~41fps 压到 ~29fps（撞 IMP-05 §7 的 p95 ≤ 2B 预算），故用等效填充/阴影表达。
+   选择器对齐上面的 `.btn:not(...)` 配方特异性，确保默认档也被覆盖。 */
+.motion-actions > .btn:not(.primary):not(.danger):not(.ghost) {
+  background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), var(--glass-fill);
+  border-color: color-mix(in srgb, var(--text) 15%, transparent);
+  color: var(--text);
+  box-shadow: 0 8px 22px #10182814, inset 0 1px 0 #ffffff59;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.motion-actions > .btn:not(.primary):not(.danger):not(.ghost):hover {
+  background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), color-mix(in srgb, var(--text) 8%, var(--glass-fill));
+  color: var(--text);
+}
+.motion-actions > .btn.primary {
+  background-color: var(--glass-fill);
+  background-image: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), linear-gradient(color-mix(in srgb, var(--accent) 80%, transparent), color-mix(in srgb, var(--accent) 80%, transparent));
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
+  color: var(--accent-ink);
+  box-shadow: 0 8px 22px #10182814;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.motion-actions > .btn.danger {
+  background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), color-mix(in srgb, var(--red) 16%, var(--glass-fill));
+  border-color: color-mix(in srgb, var(--red) 38%, transparent);
+  color: var(--red);
+  box-shadow: 0 8px 22px #10182814, inset 0 1px 0 #ffffff59;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+.motion-actions > .btn.ghost {
+  background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), var(--glass-fill);
+  border-color: color-mix(in srgb, var(--text) 15%, transparent);
+  color: var(--text);
+  box-shadow: 0 8px 22px #10182814, inset 0 1px 0 #ffffff59;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+}
+/* 后台安全基线：`.main` 不叠 backdrop-filter；这里只给子层。 */
+
+/* 下拉展开时把所在表面抬到同级其它表面之上。
+   玻璃配方（backdrop-filter）会让每个卡片 / 设置行各自成为层叠上下文，若不抬起，
+   后面的兄弟表面会按 DOM 顺序盖住绝对定位的下拉菜单（真实点击被拦截）。 */
+.setting-row:has(.select.open), .install-row:has(.select.open), .agent-path-row:has(.select.open),
+.skill-row:has(.select.open), .card:has(.select.open) {
+  position: relative;
+  z-index: var(--z-popover);
+}

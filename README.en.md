@@ -65,7 +65,15 @@ Every write is backed up first and applied with a temp file plus atomic replace,
 
 ## Documentation map
 
-The requirements, prototype, and governance documents are **not published in this repository yet**; they are maintained on a separate documentation branch. This repository contains only the outward-facing description and the license.
+| Entry | Contents |
+|---|---|
+| [`docs/README.md`](docs/README.md) | Project fact entry point and current progress |
+| [`docs/01-需求管理/需求/`](docs/01-需求管理/需求/) | **Authoritative requirements**: `DMD-OPENCODEX-DESKTOP-MANAGER` (revision 3, `AC-01` – `AC-13`) |
+| [`docs/04-项目资料/.../04-需求分析计划/`](docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-OpenCodex桌面管理器需求协作/04-需求分析计划/) | Requirements baseline, scenario and acceptance matrix, risks and open questions, security review input, IMP input checklist |
+| [`docs/04-项目资料/.../05-原型设计/`](docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-OpenCodex桌面管理器需求协作/05-原型设计/) | Interactive prototype, state and flow documentation, design QA and screenshot evidence |
+| [`docs/03-开发实施/`](docs/03-开发实施/) | Implementation contract (`IMP-*`): **not created yet** |
+
+> Most requirement and design documents are written in Chinese. The authoritative source is the DMD file above.
 
 ## Project status
 

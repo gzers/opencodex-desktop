@@ -1,0 +1,193 @@
+/* OpenCodeX Desktop design tokens.
+   Light and dark values are aligned with the frozen prototype token sheet. */
+:root {
+  color-scheme: light dark;
+
+  /* 界面缩放因子（50%–200% → 0.5–2）。由 `src/scale.ts` 在启动与偏好变更时写到根元素；
+     主壳 `.app-window` 以 CSS `zoom` 消费它，视口单位按本值折算（见 base.css）。 */
+  --ui-zoom: 1;
+
+  --bg: #f9f9f9;
+  --glow-1: #a4c4ff6b;
+  --glow-2: #a8e2c561;
+  --glow-3: #ffe0c24d;
+  --glass-rail: #f9f9f9a8;
+  --glass-blur: saturate(1.6) blur(22px);
+  --panel: #ffffff;
+  --rail: #f9f9f9;
+  /* 内容页表面材质：半透明磨砂（已确认「中透」，见 UI规范 §21）。
+     页面自己的颜色盖在「窗口底面 + 环境光」上，alpha 就是「盖住多少」；外壳仍不透明。
+     与桌面/系统级透明无关——所以**不能用 backdrop-filter**：WKWebView 里它会去采样窗口背后的桌面。
+     页面下面那层环境光本来就被 `.app-window::before` 的 filter 柔化过，"磨砂"的柔和感由它提供。 */
+  --page-fill: rgba(255, 255, 255, .40);
+  --raised: #f4f4f4;
+  --raised-hover: #ececec;
+  --border: #e6e6e6;
+  --border-soft: #f0f0f0;
+  --hover: #0d0d0d08;
+  --text: #0d0d0d;
+  --muted: #6e6e6e;
+  --faint: #707070;
+
+  --accent: #0d0d0d;
+  --accent-hover: #3d3d3d;
+  --accent-ink: #ffffff;
+  --accent-soft: #0d0d0d0f;
+  --accent-ring: #00000080;
+
+  --green: #0a7d5c;
+  --green-soft: #10a37f1a;
+  --red: #b91c1c;
+  --red-soft: #b91c1c17;
+  --amber: #9a4a08;
+  --amber-soft: #b453091a;
+  --blue: #1d4ed8;
+  --blue-soft: #1d4ed81a;
+
+  --brand: #3941ff;
+
+  --radius-2xs: 4px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --text-micro: 10px;
+  --text-caption: 11px;
+  --text-label: 12px;
+  --text-control: 13px;
+  --text-body: 14px;
+  --text-subtitle: 16px;
+  --text-title: 20px;
+  --text-display: 24px;
+  --leading-tight: 1.2;
+  --leading-ui: 1.35;
+  --leading-body: 1.5;
+  --leading-relaxed: 1.6;
+  --tracking-normal: 0;
+  --tracking-wide: .04em;
+
+  --control-sm: 28px;
+  --control-md: 34px;
+  --control-lg: 40px;
+  --control-touch: 44px;
+  --icon-sm: 14px;
+  --icon-md: 16px;
+  --icon-lg: 20px;
+  --toggle-w: 38px;
+  --toggle-h: 22px;
+  --toggle-dot: 16px;
+
+  --motion-fast: .12s;
+  --motion-normal: .18s;
+  --z-sticky: 20;
+  --z-overlay: 30;
+  --z-popover: 40;
+  --z-modal: 50;
+
+  --shadow: 0 1px 2px #1018280f, 0 10px 28px #10182812;
+  --shadow-sm: 0 1px 2px #1018280f;
+  --shadow-md: 0 1px 2px #1018280f, 0 10px 28px #10182812;
+  --shadow-card: 0 1px 2px #1018280f;
+
+  /* 通知表面：纯 rgba()，不依赖 color-mix；中性轻磨砂（已确认，见 UI规范 §2.2）。 */
+  --notif-tint-a: transparent;
+  --notif-tint-b: transparent;
+  --glass-fill-glass: rgba(244, 245, 249, .52);
+  --glass-blur-glass: saturate(1.5) blur(8px);
+  --glass-fill: var(--glass-fill-glass);
+  --glass-blur-notif: var(--glass-blur-glass);
+  --notif-card-bg: rgba(255, 255, 255, .72);
+  --notif-card-hover: rgba(255, 255, 255, .88);
+  --notif-card-bd: rgba(13, 13, 13, .12);
+  --notif-card-shadow: 0 1px 2px rgba(16, 24, 40, .05);
+  --notif-mark: #e0a53c;
+  --notif-mark-ink: #3a2a06;
+  --notif-count-bg: rgba(13, 13, 13, .09);
+  --notif-btn-bg: rgba(13, 13, 13, .06);
+  --notif-btn-bg-hover: rgba(13, 13, 13, .13);
+  --notif-btn-bd: rgba(13, 13, 13, .14);
+  --notif-cancel-bg: rgba(185, 28, 28, .10);
+  --notif-cancel-bg-hover: rgba(185, 28, 28, .19);
+  --notif-cancel-bd: rgba(185, 28, 28, .32);
+  --notif-ctl-h: 24px;
+  --notif-ctl-pad: 2px 9px;
+  --font-ui: "OpenAI Sans", "Pretendard Variable", Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-code: ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", "Noto Sans Mono CJK KR", Menlo, Consolas, monospace;
+
+  font-synthesis: none;
+}
+
+html[data-theme="dark"] {
+  --bg: #212121;
+  --glow-1: #6082c829;
+  --glow-2: #58a08221;
+  --glow-3: #b48c6414;
+  --glass-rail: #1717179e;
+  --panel: #262626;
+  --rail: #171717;
+  --page-fill: rgba(38, 38, 38, .40);
+  --raised: #303030;
+  --raised-hover: #3a3a3a;
+  --border: #3d3d3d;
+  --border-soft: #333333;
+  --hover: #ffffff08;
+  --text: #ececec;
+  --muted: #a6a6a6;
+  --faint: #9a9a9a;
+
+  --accent: #ececec;
+  --accent-hover: #ffffff;
+  --accent-ink: #0d0d0d;
+  --accent-soft: #ffffff17;
+  --accent-ring: #ffffff61;
+
+  --green: #4ecb9d;
+  --green-soft: #4ecb9d21;
+  --red: #f87171;
+  --red-soft: #f8717121;
+  --amber: #fbbf24;
+  --amber-soft: #fbbf2421;
+  --blue: #7aa2ff;
+  --blue-soft: #7aa2ff29;
+
+  --shadow: 0 1px 2px #00000080, 0 10px 28px #0000004d;
+  --shadow-sm: 0 1px 2px #0006;
+  --shadow-md: 0 1px 2px #00000080, 0 10px 28px #0000004d;
+  --shadow-card: 0 1px 2px #0006;
+
+  --notif-tint-a: transparent;
+  --notif-tint-b: transparent;
+  --glass-fill-glass: rgba(34, 36, 42, .56);
+  --notif-card-bg: rgba(255, 255, 255, .12);
+  --notif-card-hover: rgba(255, 255, 255, .18);
+  --notif-card-bd: rgba(255, 255, 255, .12);
+  --notif-card-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  --notif-mark: #fbbf24;
+  --notif-count-bg: rgba(255, 255, 255, .16);
+  --notif-btn-bg: rgba(255, 255, 255, .10);
+  --notif-btn-bg-hover: rgba(255, 255, 255, .20);
+  --notif-btn-bd: rgba(255, 255, 255, .18);
+  --notif-cancel-bg: rgba(248, 113, 113, .16);
+  --notif-cancel-bg-hover: rgba(248, 113, 113, .26);
+  --notif-cancel-bd: rgba(248, 113, 113, .38);
+}
+
+/* 减少动态效果：收起与浮层直接生效，不播放动画。 */
+@media (prefers-reduced-motion: reduce) {
+  :root { --motion-fast: 0s; --motion-normal: 0s; }
+}

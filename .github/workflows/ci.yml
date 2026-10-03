@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main, docs/governance-main]
+  pull_request:
+
+jobs:
+  frontend:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm --prefix apps/desktop/ui ci
+      - run: npm --prefix apps/desktop/ui run typecheck
+      - run: npm --prefix apps/desktop/ui run test -- --run
+      - run: npm --prefix apps/desktop/ui run build
+
+  backend:
+    runs-on: macos-14
+    # Cargo 清单在 apps/desktop/tauri/Cargo.toml（仓库根无 Cargo.toml）；cargo 命令必须在
+    # apps/desktop/tauri 下执行，否则根目录会以「could not find Cargo.toml」立即失败（DEF-01）。
+    defaults:
+      run:
+        working-directory: apps/desktop/tauri
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace --features integration-test
+
+  build:
+    needs: [frontend, backend]
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+      - name: Install pinned Tauri CLI
+        run: npm install --global @tauri-apps/cli@2.11.4
+      - name: Install frontend deps (build job installs its own, not relying on frontend job)
+        run: npm --prefix apps/desktop/ui ci
+      - name: Build macOS arm64 bundle
+        # tauri.conf.json 在 apps/desktop/tauri（仓库根没有），必须在应用目录里执行 CLI，
+        # 否则根目录直接以「could not find tauri.conf.json」失败（IMP-03 目录迁移后遗留）。
+        working-directory: apps/desktop/tauri
+        run: tauri build --target aarch64-apple-darwin

@@ -1,0 +1,15 @@
+// 平台相关实现入口。平台差异隔离在这一层，业务模块不得直接依赖具体平台 API。
+
+pub mod atomic_write;
+pub mod codex_shim_source;
+pub mod hash;
+pub mod keychain;
+pub mod locking;
+pub mod official_cli_source;
+pub mod official_version_source;
+pub mod process_runner;
+pub mod runtime_executable;
+pub mod runtime_log;
+pub mod status_source;
+pub mod tray_controller;
+pub mod webdav_client;

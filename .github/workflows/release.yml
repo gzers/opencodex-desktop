@@ -1,0 +1,74 @@
+name: Release
+
+# 打 tag（v*）即出包：先建 Release（默认草稿 + 预发布），再由各平台 job 上传制品。
+# 也可以手动触发：Actions → Release → Run workflow，填一个已存在的 tag。
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '已存在的 tag（如 v0.1.0）'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # macOS（Apple Silicon）
+          - platform: macos-14
+            rust_targets: aarch64-apple-darwin
+            args: '--target aarch64-apple-darwin'
+          # macOS（Intel）——需要时取消注释
+          # - platform: macos-13
+          #   rust_targets: x86_64-apple-darwin
+          #   args: '--target x86_64-apple-darwin'
+          #
+          # Windows：流水线已就位，但代码侧还有前置改造（见 docs/03-开发实施 中的发布说明）：
+          #   1) `infrastructure/keychain.rs` 直接依赖 macOS 的 `security-framework`，需要抽成
+          #      「密钥存储」抽象并补 Windows（凭据管理器 / wincred）实现；
+          #   2) `Cargo.toml` 里 `security-framework` 与 `reqwest` 的 `macos-system-configuration`
+          #      需要按平台 cfg 收口；
+          #   3) `tauri.conf.json` 的 `bundle.targets` 需要包含 `nsis`（本文件已改为 "all"）。
+          # 前置改造完成后再取消注释即可出 Windows 安装包。
+          # - platform: windows-latest
+          #   rust_targets: ''
+          #   args: ''
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_targets }}
+
+      - name: 安装前端依赖
+        run: npm --prefix apps/desktop/ui ci
+
+      - name: 打 tag 与出包（tauri-action）
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: apps/desktop/tauri
+          tagName: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          releaseName: 'OpenCodeX Desktop ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}'
+          releaseBody: |
+            测试版本 / Test build。
+
+            - 平台：macOS（Apple Silicon）
+            - 安装：下载 `.dmg` 拖入「应用程序」即可。
+            - 该版本为未签名测试包；首次打开如被 Gatekeeper 拦截，右键 →「打开」。
+          releaseDraft: true
+          prerelease: true
+          args: ${{ matrix.args }}

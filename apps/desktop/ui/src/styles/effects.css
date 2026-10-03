@@ -1,0 +1,63 @@
+/* 档位覆盖层（UI规范 §26.2 / IMP-05 §3）。
+ *
+ * 只改变**有效 token 与运动策略**，不复制三套页面。
+ * - `high`（默认）：通知玻璃配方与原型投影，允许动态光场。
+ * - `mid`：与高档同样的玻璃，静态光场；状态改变仍及时重绘静态形象。
+ * - `low`：全部受控表面统一实底、无 backdrop-filter；环境光关闭；保留静态状态形象。
+ *
+ * `data-effects` 由 `app/appearance/effects.ts` 的唯一外观策略写入；系统减少动态会把
+ * 高档有效表现降为中档（`high` → `data-effects="mid"`），低档仍为低档。
+ *
+ * 顺序：本文件必须排在 base.css 之后；只覆盖变量与少量硬编码表面。
+ */
+
+/* —— 中档：玻璃不变，仅关闭跨帧装饰动画（静态光场由动效组件呈现静态目标）—— */
+html[data-effects="mid"] {
+  --motion-ambient-speed: 0;
+}
+
+/* —— 低档：统一实底、无模糊、无光场 —— */
+html[data-effects="low"] {
+  /* 既有玻璃 token 一并翻转：已消费这些 token 的表面（通知 / Toast / 任务卡 / 浮层）
+     自动退实底，无需逐页重写。 */
+  --glass-fill: var(--panel);
+  --glass-blur-notif: none;
+  --glass-blur: none;
+  --notif-tint-a: transparent;
+  --notif-tint-b: transparent;
+
+  /* 语义配方同步退实底。 */
+  --surface-page-bg: var(--panel);
+  --surface-panel-bg: var(--panel);
+  --surface-panel-blur: none;
+  --surface-control-bg: var(--raised);
+  --surface-control-blur: none;
+  --surface-control-bg-hover: var(--raised-hover);
+  --surface-overlay-bg: var(--panel);
+  --surface-overlay-blur: none;
+  --surface-ambient-display: none;
+}
+
+/* 环境光关闭（两处：窗口底面环境光与状态形象的多光源背景）。 */
+html[data-effects="low"] .app-window::before { display: none; }
+/* 低档是实底风格：没有环境光也就没有色带，抖动层一并撤掉。 */
+html[data-effects="low"] .app-window::after { display: none; }
+html[data-effects="low"] .motion-ambient { display: none; }
+html[data-effects="low"] .motion-mesh-host { display: none; }
+
+/* 硬编码了描边 / 投影 / 模糊的表面：低档补回实底样式（其余由 token 翻转自动处理）。 */
+html[data-effects="low"] .notification-panel,
+html[data-effects="low"] .toast,
+html[data-effects="low"] .process-progress,
+html[data-effects="low"] .panel-hub-toggle,
+html[data-effects="low"] .panel-hub-menu,
+html[data-effects="low"] .select-menu {
+  background: var(--panel) !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  border-color: var(--border) !important;
+}
+html[data-effects="low"] .modal { background: var(--panel); }
+html[data-effects="low"] .modal-mask { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+
+/* 低档不改变区域尺寸、文字或状态：仅去除玻璃与光场。 */

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>组件预览 · 开发态</title>
+  </head>
+  <body>
+    <!--
+      开发态组件预览入口（IMP-04 §7.3）。
+      仅由 Vite 开发服务器按 /gallery.html 提供；正式构建只打包 index.html，不包含本页。
+      预览直接引用生产组件，不另写一套演示 DOM。
+    -->
+    <div id="gallery"></div>
+    <script type="module" src="/src/dev/component-gallery/main.ts"></script>
+  </body>
+</html>

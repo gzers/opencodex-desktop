@@ -1,0 +1,35 @@
+{
+  "name": "opencodex-desktop-ui",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest",
+    "audit:browser": "node qa/audit.browser.mjs"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "2.11.1",
+    "@tauri-apps/plugin-dialog": "^2.7.3",
+    "@tauri-apps/plugin-process": "^2.3.1",
+    "@tauri-apps/plugin-updater": "^2.11.0",
+    "pinia": "4.0.3",
+    "vue": "3.5.42"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.4",
+    "@vitejs/plugin-vue": "6.0.9",
+    "@vue/test-utils": "2.5.0",
+    "jsdom": "27.3.0",
+    "typescript": "5.9.3",
+    "vite": "8.3.0",
+    "vitest": "5.0.0",
+    "vue-tsc": "3.3.11"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "OpenCodeX Desktop",
+  "version": "0.1.0",
+  "identifier": "com.gzers.opencodex.desktop",
+  "build": {
+    "beforeDevCommand": "npm --prefix ui run dev",
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "npm --prefix ui run build",
+    "frontendDist": "../ui/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "",
+        "width": 1180,
+        "height": 760,
+        "minWidth": 960,
+        "minHeight": 640,
+        "resizable": true,
+        "center": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src 'self' http://127.0.0.1:*; frame-src http://127.0.0.1:*; img-src 'self' data:; style-src 'self' 'unsafe-inline'"
+    },
+    "trayIcon": {
+      "id": "opencodex-main",
+      "iconPath": "icons/tray-16.png",
+      "iconAsTemplate": true,
+      "showMenuOnLeftClick": false,
+      "tooltip": "OpenCodeX Desktop"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/64x64.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/256x256.png",
+      "icons/512x512.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "dangerousInsecureTransportProtocol": false,
+      "dangerousAcceptInvalidCerts": false,
+      "dangerousAcceptInvalidHostnames": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpLWNsaQo",
+      "endpoints": [
+        "https://updates.example.invalid/opencodex-desktop/stable.json",
+        "https://updates.example.invalid/opencodex-desktop/beta.json"
+      ]
+    }
+  }
+}
