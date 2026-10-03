@@ -21,7 +21,7 @@
 > [!IMPORTANT]
 > 本项目是**独立第三方桌面管理器**，不是 OpenCodex 官方项目，与官方及其权利人不存在隶属、授权或背书关系。它只做图形化托管，**不重写 OpenCodex 核心、不绕过官方 API**。详见[归属与许可](#归属与许可)。
 >
-> 当前版本是 **未签名测试包（macOS Apple Silicon 为主）**，仅用于体验与内测，不构成正式公开发布。
+> 项目仍处于**测试阶段，尚未发布正式版本**；现有产物是 **未签名测试包（macOS Apple Silicon 为主）**，仅用于体验与内测，不构成正式公开发布。
 
 ---
 
@@ -57,7 +57,14 @@
 
 ### 下载
 
-- **最新版本（推荐）**：<https://github.com/gzers/opencodex-desktop/releases/latest>
+> [!NOTE]
+> 本项目仍在**测试阶段，尚无正式版本**，所以这里不写死任何版本号。下面用的是**永远指向最新发布**的链接：一旦发布正式版本，它会自动跳到最新版；在此之前它会落到 Releases 列表页。
+
+<p align="center">
+  <a href="https://github.com/gzers/opencodex-desktop/releases/latest"><b>⬇ 前往最新版本下载</b></a>
+</p>
+
+- **最新版本（永远指向最新）**：<https://github.com/gzers/opencodex-desktop/releases/latest>
 - 全部版本与历史：<https://github.com/gzers/opencodex-desktop/releases>
 
 发布包由 GitHub Actions 在打 tag 后自动产出：
@@ -332,7 +339,7 @@ git push origin vX.Y.Z
 
 ## 项目状态与已知限制
 
-- **当前版本 `0.1.0`**，macOS Apple Silicon 未签名测试包；Windows x64 为未签名测试构建。
+- **仍处于测试阶段，尚未发布正式版本**。`0.1.0` 为未签名测试包：macOS Apple Silicon 为主，Windows x64 为未签名测试构建。
 - 需求、原型与实施契约已定稿并通过评审门；13 个能力域均已实现，多轮桌面端真机验收已完成。
 - **已知限制**：无代码签名与公证；无自动更新；Windows 运行期测试与实机核验未完成；Intel macOS 构建未开启；非 macOS-arm64 平台按授权边界另行处理。
 
