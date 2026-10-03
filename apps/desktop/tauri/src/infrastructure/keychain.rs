@@ -1,8 +1,10 @@
-//! macOS Keychain 受控凭据引用。
+//! 受控凭据引用（跨平台）。
 //!
 //! 只存储随机 `ref_id` 对应的密钥值；配置、日志与 DTO 只保留引用。
+//! 后端由 `keyring` 提供：macOS 走系统钥匙串（`apple-native`），
+//! Windows 走凭据管理器（`windows-native`）。服务名与账户位在两平台一致，
+//! 因此既有 macOS 钥匙串条目无需迁移即可继续读取。
 
-use security_framework::passwords::{delete_generic_password, set_generic_password};
 use uuid::Uuid;
 
 use crate::errors::AppError;
@@ -38,13 +40,19 @@ pub fn new_ref_id() -> String {
     format!("cred_{}", Uuid::new_v4())
 }
 
+/// 平台无关的凭据条目句柄；具体后端由编译目标决定。
+fn credential_entry(account: &str) -> Result<keyring::Entry, AppError> {
+    keyring::Entry::new(KEYCHAIN_SERVICE_NAME, account).map_err(|_| AppError::NotConfigured)
+}
+
 /// 按 purpose 写入独立账户位；不同 purpose 落在不同 keychain 账户。
 fn store_keychain_password(purpose: &str, ref_id: &str, password: &str) -> Result<(), AppError> {
     if password.is_empty() {
         return Err(AppError::NotConfigured);
     }
     let account = account_key(purpose, ref_id)?;
-    set_generic_password(KEYCHAIN_SERVICE_NAME, &account, password.as_bytes())
+    credential_entry(&account)?
+        .set_password(password)
         .map_err(|_| AppError::NotConfigured)
 }
 
@@ -69,19 +77,23 @@ pub fn load_encryption_password(ref_id: &str) -> Result<String, AppError> {
 
 pub fn load_keychain_password(purpose: &str, ref_id: &str) -> Result<String, AppError> {
     let account = account_key(purpose, ref_id)?;
-    security_framework::passwords::get_generic_password(KEYCHAIN_SERVICE_NAME, &account)
+    credential_entry(&account)?
+        .get_password()
         .map_err(|_| AppError::NotConfigured)
-        .map(|value| String::from_utf8_lossy(&value).to_string())
 }
 
 pub fn delete_webdav_password(ref_id: &str) -> Result<(), AppError> {
     let account = account_key(WEBDAV_CREDENTIAL_PURPOSE, ref_id)?;
-    delete_generic_password(KEYCHAIN_SERVICE_NAME, &account).map_err(|_| AppError::NotConfigured)
+    credential_entry(&account)?
+        .delete_credential()
+        .map_err(|_| AppError::NotConfigured)
 }
 
 pub fn delete_encryption_password(ref_id: &str) -> Result<(), AppError> {
     let account = account_key(ENCRYPTION_PASSWORD_PURPOSE, ref_id)?;
-    delete_generic_password(KEYCHAIN_SERVICE_NAME, &account).map_err(|_| AppError::NotConfigured)
+    credential_entry(&account)?
+        .delete_credential()
+        .map_err(|_| AppError::NotConfigured)
 }
 
 #[cfg(test)]
