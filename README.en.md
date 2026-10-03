@@ -21,7 +21,7 @@
 > [!IMPORTANT]
 > This is an **independent, third-party desktop manager**. It is not part of the official OpenCodex project and has **no affiliation, authorization, or endorsement** relationship with it or its rights holders. It is a graphical host only — it **does not rewrite the OpenCodex core and does not bypass the official API**. See [Attribution and license](#attribution-and-license).
 >
-> Current builds are **unsigned test packages (macOS Apple Silicon first)**, intended for evaluation and internal testing only — not a public release.
+> The project is still in **testing, with no official release published yet**; current builds are **unsigned test packages (macOS Apple Silicon first)**, intended for evaluation and internal testing only — not a public release.
 
 ---
 
@@ -57,8 +57,15 @@
 
 ### Download
 
-- **Latest (recommended)**: <https://github.com/gzers/opencodex-desktop/releases/latest>
-- All releases: <https://github.com/gzers/opencodex-desktop/releases>
+> [!NOTE]
+> The project is still in **testing and has no official release yet**, so no version number is hard-coded here. The links below **always point to the latest release**: once an official version is published they jump straight to it; until then they land on the Releases list.
+
+<p align="center">
+  <a href="https://github.com/gzers/opencodex-desktop/releases/latest"><b>⬇ Get the latest version</b></a>
+</p>
+
+- **Latest (always the newest)**: <https://github.com/gzers/opencodex-desktop/releases/latest>
+- All releases and history: <https://github.com/gzers/opencodex-desktop/releases>
 
 Artifacts are produced by GitHub Actions when a tag is pushed:
 
@@ -332,7 +339,7 @@ When documenting implementation status, only reference the implementation branch
 
 ## Project status and known limitations
 
-- **Current version `0.1.0`**: unsigned macOS Apple Silicon test package; Windows x64 unsigned test build.
+- **Still in testing, with no official release yet.** `0.1.0` is an unsigned test package: macOS Apple Silicon first, with an unsigned Windows x64 test build.
 - Requirements, prototype, and implementation contracts are finalized and passed the review gates; all 13 capability domains are implemented, with multiple rounds of real-device acceptance on macOS.
 - **Known limitations**: no code signing or notarization; no auto-update; Windows runtime tests and real-device verification are incomplete; Intel macOS builds are disabled; non-macOS-arm64 platforms are handled separately per the authorization boundary.
 
