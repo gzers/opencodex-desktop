@@ -83,22 +83,6 @@ jobs:
             echo "CHANGELOG_EOF"
           } >> "$GITHUB_OUTPUT"
 
-      # 临时步骤：清理上一轮诊断创建的 diag-probe Release/tag（幂等；失败不影响发布）。
-      # 权限问题定位后连同本步骤一起删除。
-      - name: 清理诊断残留
-        continue-on-error: true
-        shell: bash
-        run: |
-          set +e
-          token="${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}"
-          api="https://api.github.com/repos/gzers/opencodex-desktop"
-          ids=$(curl -s -H "Authorization: Bearer $token" -H 'Accept: application/vnd.github+json' "$api/releases?per_page=100" | python3 -c "import sys,json;[print(r['id']) for r in json.load(sys.stdin) if r.get('tag_name')=='diag-probe']")
-          for id in $ids; do
-            curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $token" "$api/releases/$id"
-          done
-          curl -s -o /dev/null -X DELETE -H "Authorization: Bearer $token" "$api/git/refs/tags/diag-probe"
-          echo "diag cleanup finished"
-
       - name: 打 tag 与出包（tauri-action）
         uses: tauri-apps/tauri-action@v0
         env:
