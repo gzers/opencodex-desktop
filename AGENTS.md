@@ -18,14 +18,14 @@
 |---|---|---|
 | 代码产物 | `main` | `apps/**`、`.github/**`、`test/**` 及仓库根构建配置。开发期间可在 `codex/*` 特性分支上进行，最终并入 `main` |
 | 文档与治理产物 | 以 `docs/` 开头的分支（当前 `docs/governance-main`） | `docs/**`、`.adg/**` |
-| **全分支共享文件** | **每个分支都必须存在，且内容保持一致** | `AGENTS.md`、`README.md`、`README.en.md`、`LICENSE` |
+| **全分支共享文件** | **每个分支都必须存在，且内容保持一致** | `AGENTS.md`、`README.md`、`README.en.md`、`LICENSE`、`.gitignore` |
 | 仅 `main` | `main` | `CHANGELOG.md`（用户可见发布说明的事实源） |
 
 规则：
 
 - 文档治理产物只在 `docs/` 开头的分支产生与提交；代码产物只在 `main` 产生与提交（特性分支完成后并入 `main`）。
 - **禁止**在 `docs/` 分支提交 `apps/**`、`.github/workflows/**` 等实现产物；**禁止**在 `main` 提交 `docs/**`、`.adg/**`。
-- **全分支共享文件**（`AGENTS.md`、`README.md`、`README.en.md`、`LICENSE`）不属于任何单一分支：在任一分支修改后，必须同步到其它分支并保持内容一致，任何分支的使用者读到的都是同一份规则与说明。
+- **全分支共享文件**（`AGENTS.md`、`README.md`、`README.en.md`、`LICENSE`、`.gitignore`）不属于任何单一分支：在任一分支修改后，必须同步到其它分支并保持内容一致，任何分支的使用者读到的都是同一份规则与说明。
 - 用户可见的 README 以 `main`（默认分支）为准呈现；文档分支保留同一份副本，不允许两处内容漂移。
 - README 引用的截图等文档素材存放在 `docs/` 分支（`docs/04-项目资料/05-README素材/`）。由于 `main` 不含 `docs/`，README 使用指向 `docs/governance-main` 的**绝对链接**引用素材，使两个分支都能正确渲染图片。
 - 文档记录实现状态时只引用实现分支与真实证据，不复制源码，不建第二份事实源。

@@ -25,3 +25,6 @@ test/out/
 # Python 构建脚本的字节码缓存（如协作包报告的 build.py）
 __pycache__/
 *.pyc
+
+# 本地一次性脚本（如 AiMaMi→OpenCodex 迁移），不入库
+tmp/
