@@ -5,11 +5,10 @@
 use std::fs::OpenOptions;
 use std::io;
 use std::io::Write;
-use std::os::unix::fs::OpenOptionsExt;
-use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 
 use crate::errors::AppError;
+use crate::infrastructure::platform::OpenOptionsModeExt;
 
 /// 将数据写入目标同目录的临时文件，fsync 后原子替换目标。
 pub fn atomic_write(target: &Path, data: &[u8], permissions: u32) -> Result<(), AppError> {
@@ -53,7 +52,7 @@ fn create_temp_sibling(target: &Path, permissions: u32) -> Result<PathBuf, AppEr
         match OpenOptions::new()
             .create_new(true)
             .write(true)
-            .mode(permissions)
+            .create_mode(permissions)
             .open(&candidate)
         {
             Ok(_) => return Ok(candidate),
@@ -79,7 +78,7 @@ fn write_and_replace(
     {
         let mut file = OpenOptions::new()
             .write(true)
-            .mode(permissions)
+            .create_mode(permissions)
             .open(temp_path)
             .map_err(|error| AppError::AtomicWrite {
                 reason: format!("open temporary file: {error}"),
@@ -102,12 +101,7 @@ fn write_and_replace(
 }
 
 fn set_permissions(path: &Path, mode: u32) -> Result<(), AppError> {
-    let metadata = std::fs::metadata(path).map_err(|error| AppError::AtomicWrite {
-        reason: format!("read temporary permissions: {error}"),
-    })?;
-    let mut permissions = metadata.permissions();
-    permissions.set_mode(mode);
-    std::fs::set_permissions(path, permissions).map_err(|error| AppError::AtomicWrite {
+    crate::infrastructure::platform::set_mode(path, mode).map_err(|error| AppError::AtomicWrite {
         reason: format!("set temporary permissions: {error}"),
     })
 }
@@ -115,8 +109,8 @@ fn set_permissions(path: &Path, mode: u32) -> Result<(), AppError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[cfg(unix)]
     use crate::infrastructure::hash::sha256_hex;
-    use std::os::unix::fs::PermissionsExt;
 
     #[test]
     fn atomic_write_replaces_target_and_preserves_permissions() {
@@ -127,12 +121,15 @@ mod tests {
         atomic_write(&target, b"after", 0o600).expect("write after");
 
         assert_eq!(std::fs::read(&target).expect("read target"), b"after");
-        let mode = std::fs::metadata(&target)
-            .map(|metadata| metadata.permissions().mode())
-            .expect("read metadata");
-        assert_eq!(mode & 0o777, 0o600);
+        #[cfg(unix)]
+        assert_eq!(
+            crate::infrastructure::platform::mode_of(&target).expect("read metadata"),
+            0o600
+        );
     }
 
+    /// 该用例靠 Unix 权限位（0o040）让写入失败；Windows 无权限位语义，跳过。
+    #[cfg(unix)]
     #[test]
     fn failed_write_leaves_original_target_unchanged() {
         let temp = tempfile::tempdir().expect("create temporary directory");

@@ -288,7 +288,7 @@ pub fn verified_at(now: DateTime<Utc>) -> String {
     now.to_rfc3339_opts(SecondsFormat::Secs, true)
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::extensions::ExtensionConfig;

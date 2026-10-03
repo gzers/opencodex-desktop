@@ -4,10 +4,10 @@
 //! 文件超过 5 MB 时滚动到 `.1`，旧 `.1` 删除。
 
 use std::io::Write;
-use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
 
 use crate::errors::AppError;
+use crate::infrastructure::platform::OpenOptionsModeExt;
 use crate::modules::logs::{sanitize_line, APP_LOG_FILE_NAME};
 
 pub const RUNTIME_LOG_MAX_BYTES: u64 = 5 * 1024 * 1024;
@@ -52,7 +52,7 @@ impl RuntimeLog {
         let mut file = std::fs::OpenOptions::new()
             .create(true)
             .append(true)
-            .mode(0o600)
+            .create_mode(0o600)
             .open(&self.path)
             .map_err(|error| AppError::FileSystem {
                 operation: "open runtime log".to_string(),
@@ -114,7 +114,6 @@ impl RuntimeLog {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::os::unix::fs::PermissionsExt;
 
     #[test]
     fn appends_sanitized_private_events_and_rotates() {
@@ -129,10 +128,10 @@ mod tests {
         assert!(payload.contains("https://example.com/v1"));
         assert!(!payload.contains("api_key=secret"));
         assert_eq!(payload.lines().count(), 2);
-        let mode = std::fs::metadata(logger.path())
-            .unwrap()
-            .permissions()
-            .mode();
-        assert_eq!(mode & 0o777, 0o600);
+        #[cfg(unix)]
+        assert_eq!(
+            crate::infrastructure::platform::mode_of(logger.path()).unwrap(),
+            0o600
+        );
     }
 }

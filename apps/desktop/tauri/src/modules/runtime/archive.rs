@@ -279,11 +279,7 @@ fn scan(
                 std::fs::write(&target, &payload).map_err(|_| ArchiveRejection::Read)?;
                 // tar 保留权限位；补一次显式设置，避免解包后入口不可执行。
                 if let Ok(mode) = entry.header().mode() {
-                    use std::os::unix::fs::PermissionsExt;
-                    let _ = std::fs::set_permissions(
-                        &target,
-                        std::fs::Permissions::from_mode(mode & 0o777),
-                    );
+                    let _ = crate::infrastructure::platform::set_mode(&target, mode & 0o777);
                 }
             }
         }
@@ -344,7 +340,7 @@ fn scan(
     ))
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use flate2::write::GzEncoder;

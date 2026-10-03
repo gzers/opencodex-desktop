@@ -498,21 +498,13 @@ fn rollback_partitions(root: &Path) {
 }
 
 fn set_private_directory(path: &Path) -> Result<(), AppError> {
-    use std::os::unix::fs::PermissionsExt;
-    let mut permissions = std::fs::metadata(path)
-        .map_err(|error| AppError::FileSystem {
-            operation: "inspect partition permissions".to_string(),
-            detail: error.to_string(),
-        })?
-        .permissions();
-    permissions.set_mode(0o700);
-    std::fs::set_permissions(path, permissions).map_err(|error| AppError::FileSystem {
+    crate::infrastructure::platform::set_mode(path, 0o700).map_err(|error| AppError::FileSystem {
         operation: "set partition permissions".to_string(),
         detail: error.to_string(),
     })
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use std::fs::Permissions;

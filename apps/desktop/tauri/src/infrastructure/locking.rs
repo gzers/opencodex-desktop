@@ -1,11 +1,11 @@
 //! 受控目标文件的跨进程写锁。
 //!
 //! 该实现只作用于调用方提供的工程内目标路径；测试使用系统临时目录，
-//! 不访问真实用户配置或数据根。锁语义为 `flock(LOCK_EX)`，超时 3 秒。
+//! 不访问真实用户配置或数据根。锁语义为独占文件锁（Unix `flock` /
+//! Windows `LockFileEx`），超时 3 秒。
 
 use std::fs::OpenOptions;
 use std::io;
-use std::os::unix::io::AsRawFd;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
@@ -40,14 +40,13 @@ impl TargetFileLock {
 
         let started = Instant::now();
         loop {
-            let result = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) };
-            if result == 0 {
-                let _ = lock_path;
-                return Ok(Self { _file: file });
-            }
-            let error = io::Error::last_os_error();
-            if error.raw_os_error() != Some(libc::EWOULDBLOCK) {
-                return Err(fs_error(error));
+            match file.try_lock() {
+                Ok(()) => {
+                    let _ = lock_path;
+                    return Ok(Self { _file: file });
+                }
+                Err(std::fs::TryLockError::WouldBlock) => {}
+                Err(std::fs::TryLockError::Error(error)) => return Err(fs_error(error)),
             }
             if started.elapsed() >= timeout {
                 return Err(AppError::TargetLockTimeout {
@@ -61,9 +60,7 @@ impl TargetFileLock {
 
 impl Drop for TargetFileLock {
     fn drop(&mut self) {
-        unsafe {
-            libc::flock(self._file.as_raw_fd(), libc::LOCK_UN);
-        }
+        let _ = self._file.unlock();
     }
 }
 

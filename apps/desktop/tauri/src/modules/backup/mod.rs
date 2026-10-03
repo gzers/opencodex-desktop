@@ -332,7 +332,7 @@ fn read_dirs(path: &Path) -> Result<Vec<PathBuf>, AppError> {
     Ok(directories)
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use chrono::TimeZone;

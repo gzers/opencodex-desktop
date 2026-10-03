@@ -170,7 +170,7 @@ pub fn validate_install_target(
     Ok(path.to_path_buf())
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use std::fs::Permissions;

@@ -164,6 +164,7 @@ pub fn run() {
                     },
                     current_version: app.package_info().version.to_string().leak(),
                 };
+                #[cfg(unix)]
                 tauri::async_runtime::spawn(async move {
                     let endpoint =
                         crate::modules::ipc::endpoint::IpcEndpoint::bind(&ipc_cache_root);
@@ -181,6 +182,9 @@ pub fn run() {
                         }
                     }
                 });
+                // Windows 暂无本机 IPC 端点实现；显式消费这些值，避免未使用告警。
+                #[cfg(not(unix))]
+                let _ = (ipc_cache_root, ipc_collector, ipc_runner, ipc_dependencies);
             }
 
             let tray_menu = crate::infrastructure::tray_controller::TauriTrayController::build_menu(app.handle())?;
@@ -469,19 +473,24 @@ pub fn run() {
         .run(|app_handle, event| {
             // 关闭窗口只是隐藏（见上）。此时点击 Dock 图标必须能把窗口找回来，
             // 否则用户会以为应用「卡住」了——macOS 用 Reopen 事件表达这一意图。
-            if let tauri::RunEvent::Reopen {
-                has_visible_windows,
-                ..
-            } = event
+            #[cfg(target_os = "macos")]
             {
-                if !has_visible_windows {
-                    if let Some(window) = app_handle.get_window("main") {
-                        let _ = window.show();
-                        let _ = window.set_focus();
-                        apply_dock_visibility(app_handle, true);
+                if let tauri::RunEvent::Reopen {
+                    has_visible_windows,
+                    ..
+                } = event
+                {
+                    if !has_visible_windows {
+                        if let Some(window) = app_handle.get_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                            apply_dock_visibility(app_handle, true);
+                        }
                     }
                 }
             }
+            #[cfg(not(target_os = "macos"))]
+            let _ = (&app_handle, &event);
         });
 }
 

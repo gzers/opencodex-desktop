@@ -1,3 +1,4 @@
+#![cfg(unix)]
 use opencodex_desktop_lib::infrastructure::runtime_executable::FixedRuntimeExecutable;
 use opencodex_desktop_lib::infrastructure::status_source::OfficialStatusSource;
 use opencodex_desktop_lib::modules::data_root::{validate_structure, StructureValidation};

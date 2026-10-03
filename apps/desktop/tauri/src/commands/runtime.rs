@@ -516,7 +516,7 @@ pub fn official_uninstall_observation(
 /// 供命令层测试直接使用的取消标志类型别名，避免测试引入内核实现细节。
 pub type RuntimeCancelFlag = CancelFlag;
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::runtime::install::InstallSourceKind;

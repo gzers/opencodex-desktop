@@ -1706,7 +1706,7 @@ fn sibling_with_tag(target: &Path, tag: &str) -> Result<PathBuf, InstallError> {
     Ok(target.with_file_name(file_name))
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::runtime::archive::{self, ArchiveRejection};

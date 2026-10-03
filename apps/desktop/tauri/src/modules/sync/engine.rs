@@ -782,7 +782,7 @@ pub fn sha256_hex(payload: &[u8]) -> String {
         .collect()
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::sync::{generate_snapshot_id, SyncArtifact};

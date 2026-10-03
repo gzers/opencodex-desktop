@@ -1,3 +1,4 @@
+#![cfg(unix)]
 use opencodex_desktop_lib::commands::preferences::{
     load_preferences_with_path, restore_preferences_with_path, save_preferences_with_path,
 };

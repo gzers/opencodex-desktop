@@ -4,10 +4,10 @@
 //! 凭据或响应数据。日志写入数据根下的 `audit.log`。
 
 use std::io::Write;
-use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
 
 use crate::errors::AppError;
+use crate::infrastructure::platform::OpenOptionsModeExt;
 use crate::modules::ipc::{
     AuditRecord, AUDIT_LOG_MAX_BYTES, AUDIT_LOG_ROTATIONS, AUDIT_MAX_RECORDS, AUDIT_RETENTION_DAYS,
 };
@@ -62,7 +62,7 @@ impl AuditStore {
         let mut file = std::fs::OpenOptions::new()
             .create(true)
             .append(true)
-            .mode(0o600)
+            .create_mode(0o600)
             .open(&self.path)
             .map_err(|error| AppError::FileSystem {
                 operation: "open audit log".to_string(),
@@ -214,7 +214,6 @@ mod tests {
     use super::*;
     use crate::modules::ipc::{AuditRecord, AuditResult, AuditSource, IpcCommand, IpcRequest};
     use std::collections::BTreeMap;
-    use std::os::unix::fs::PermissionsExt;
 
     fn request() -> IpcRequest {
         IpcRequest {
@@ -252,11 +251,11 @@ mod tests {
         let payload = std::fs::read_to_string(store.path()).expect("read audit");
         assert!(payload.contains("\"arg_keys\":[\"target\"]"));
         assert!(!payload.contains("/private/fixture"));
-        let mode = std::fs::metadata(store.path())
-            .expect("audit metadata")
-            .permissions()
-            .mode();
-        assert_eq!(mode & 0o777, 0o600);
+        #[cfg(unix)]
+        assert_eq!(
+            crate::infrastructure::platform::mode_of(store.path()).expect("audit metadata"),
+            0o600
+        );
     }
 
     #[test]

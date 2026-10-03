@@ -1252,7 +1252,7 @@ fn remove_external_package_dir(package_dir: &Path, entry: &Path) -> Result<(), U
     })
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::runtime::install::{

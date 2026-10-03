@@ -40,13 +40,15 @@ pub fn register(binary_path: &Path, target: &Path) -> Result<PathRegistrationRes
         }
         Ok(_) => Ok(PathRegistrationResult::Conflict),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-            std::os::unix::fs::symlink(binary_path, target).map_err(|error| AppError::FileSystem {
-                operation: "register CLI PATH symlink".to_string(),
-                detail: if error.kind() == std::io::ErrorKind::PermissionDenied {
-                    "run: sudo mkdir -p /usr/local/bin && sudo ln -sf <binary> /usr/local/bin/ocxd".to_string()
-                } else {
-                    error.to_string()
-                },
+            crate::infrastructure::platform::symlink_file(binary_path, target).map_err(|error| {
+                AppError::FileSystem {
+                    operation: "register CLI PATH symlink".to_string(),
+                    detail: if error.kind() == std::io::ErrorKind::PermissionDenied {
+                        "run: sudo mkdir -p /usr/local/bin && sudo ln -sf <binary> /usr/local/bin/ocxd".to_string()
+                    } else {
+                        error.to_string()
+                    },
+                }
             })?;
             Ok(PathRegistrationResult::Created)
         }
@@ -88,7 +90,7 @@ pub fn unregister(binary_path: &Path, target: &Path) -> Result<PathRegistrationR
     }
 }
 
-#[cfg(test)]
+#[cfg(all(unix, test))]
 mod tests {
     use super::*;
     use std::os::unix::fs::PermissionsExt;

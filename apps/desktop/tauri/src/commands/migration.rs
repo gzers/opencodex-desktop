@@ -48,7 +48,7 @@ pub fn import_migration_with_root(
     migration::import_with_paths(data_root, home, passphrase)
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::preferences::{Preferences, PreferencesStore};

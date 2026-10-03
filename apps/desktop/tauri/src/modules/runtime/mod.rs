@@ -429,7 +429,7 @@ impl crate::infrastructure::runtime_executable::RuntimeExecutableProvider for Ru
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use std::fs::Permissions;

@@ -2,21 +2,32 @@
 //!
 //! 只连接运行中 GUI 冻结的本机 Unix socket；凭据通过 stdin 输入，
 //! 不出现在 argv、日志或审计记录中。
+//!
+//! 本机 IPC 目前只有 Unix socket 实现，因此本 CLI 仅随 Unix 目标编译；
+//! Windows 目标提供一个明确报错的桩 `main`。
 
+#[cfg(unix)]
 use std::collections::BTreeMap;
+#[cfg(unix)]
 use std::io::{Read, Write};
+#[cfg(unix)]
 use std::os::unix::net::UnixStream;
+#[cfg(unix)]
 use std::path::PathBuf;
 use std::process::ExitCode;
+#[cfg(unix)]
 use zeroize::Zeroize;
 
+#[cfg(unix)]
 use opencodex_desktop_lib::modules::ipc::{
     cli_json, parse_cli, CommandParseError, IpcCommand, IpcError, IpcErrorCode, IpcRequest,
     IpcResponse, CLI_SOCKET_RELATIVE_PATH, CONTRACT_VERSION,
 };
 
+#[cfg(unix)]
 const HELP: &str = "Usage: ocxd <command> [options]\n\nCommands:\n  status\n  start --confirm\n  stop --confirm\n  restart --confirm\n  data-root show\n  data-root switch --target <path> [--migrate] --confirm\n  backup create --confirm\n  backup list\n  export --output <path> --confirm\n  import --input <path> [--password-stdin] --confirm\n  sync run --confirm\n  update check\n\nOptions:\n  --json              Emit schema-v1 JSON\n  --password-stdin    Read the legacy container passphrase from stdin (only for v1 containers)\n  --help              Show this help\n";
 
+#[cfg(unix)]
 #[derive(Debug)]
 enum CliOutcome {
     Help,
@@ -24,6 +35,7 @@ enum CliOutcome {
     Error(IpcErrorCode),
 }
 
+#[cfg(unix)]
 fn build_request(
     command: IpcCommand,
     args: &[String],
@@ -73,6 +85,7 @@ fn build_request(
     })
 }
 
+#[cfg(unix)]
 fn parse(argv: &[String], request_id: String) -> CliOutcome {
     if argv.iter().any(|value| value == "--help") {
         return CliOutcome::Help;
@@ -90,11 +103,13 @@ fn parse(argv: &[String], request_id: String) -> CliOutcome {
     }
 }
 
+#[cfg(unix)]
 fn socket_path() -> Option<PathBuf> {
     let home = std::env::var_os("HOME").map(PathBuf::from)?;
     Some(home.join(CLI_SOCKET_RELATIVE_PATH))
 }
 
+#[cfg(unix)]
 fn send_request(
     path: &PathBuf,
     mut request: IpcRequest,
@@ -140,6 +155,7 @@ fn send_request(
     serde_json::from_slice(&response_bytes).map_err(|_| IpcErrorCode::InternalError)
 }
 
+#[cfg(unix)]
 fn main() -> ExitCode {
     let argv: Vec<String> = std::env::args().skip(1).collect();
     let request_id = format!("req_{}", uuid::Uuid::new_v4());
@@ -202,7 +218,14 @@ fn main() -> ExitCode {
     }
 }
 
-#[cfg(test)]
+/// Windows 目标：本机 IPC（Unix socket）尚未实现，明确报错而不是静默失败。
+#[cfg(not(unix))]
+fn main() -> ExitCode {
+    eprintln!("ocxd 仅支持 Unix 平台；Windows 控制面尚未实现。");
+    ExitCode::from(2)
+}
+
+#[cfg(all(unix, test))]
 mod tests {
     use super::*;
 

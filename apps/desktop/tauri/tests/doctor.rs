@@ -1,3 +1,4 @@
+#![cfg(unix)]
 //! Doctor 只读契约集成测试：来源契约、脱敏、截断、失败保留和命令投影。
 
 use std::sync::{Arc, Mutex};

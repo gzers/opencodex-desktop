@@ -20,7 +20,6 @@ use crate::modules::extensions::{
     ClientId, ClientTarget, ConfigFormat, ContainerShape, ExtensionConfig, ProjectionFingerprint,
     CLIENT_IDS,
 };
-use std::os::unix::fs::PermissionsExt;
 
 pub const CONFIG_RELATIVE_PATH: &str = "manager-state/extension-config.json";
 pub const CONFIG_MAX_BYTES: u64 = 16 * 1024 * 1024;
@@ -654,7 +653,9 @@ pub fn apply_skill_links(
                 Err(_) => return Err(ProjectionError::AtomicWrite),
             }
 
-            if !prefer_copy && std::os::unix::fs::symlink(&source, &destination).is_ok() {
+            if !prefer_copy
+                && crate::infrastructure::platform::symlink_file(&source, &destination).is_ok()
+            {
                 linked.push(format!("{}/{}", client_label(target.client_id), name));
                 continue;
             }
@@ -692,8 +693,7 @@ fn copy_skill_tree(source: &Path, destination: &Path) -> Result<(), ProjectionEr
                 stack.push((path, next, depth + 1));
             } else if metadata.is_file() {
                 std::fs::copy(&path, &next).map_err(|_| ProjectionError::AtomicWrite)?;
-                let mode = metadata.permissions().mode();
-                let _ = std::fs::set_permissions(&next, std::fs::Permissions::from_mode(mode));
+                let _ = crate::infrastructure::platform::copy_mode(&path, &next);
             }
         }
     }

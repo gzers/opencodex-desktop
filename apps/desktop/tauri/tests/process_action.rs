@@ -1,3 +1,4 @@
+#![cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
 
 use opencodex_desktop_lib::commands::process_action_with_runner;

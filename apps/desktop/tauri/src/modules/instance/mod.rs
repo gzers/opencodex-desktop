@@ -1,12 +1,10 @@
 //! 单实例约束。
 //!
-//! 使用 FZ-39 冻结的 `app.lock` 机制：`flock(LOCK_EX)`，非阻塞获取，
-//! 进程退出或崩溃时由操作系统释放。
+//! 使用 FZ-39 冻结的 `app.lock` 机制：独占文件锁（Unix `flock` /
+//! Windows `LockFileEx`），非阻塞获取，进程退出或崩溃时由操作系统释放。
 
 use std::fs::OpenOptions;
-use std::io;
 use std::io::Write;
-use std::os::unix::io::AsRawFd;
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
@@ -42,16 +40,17 @@ impl AppInstanceLock {
                 detail: error.to_string(),
             })?;
 
-        let result = unsafe { libc::flock(file.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) };
-        if result != 0 {
-            let error = io::Error::last_os_error();
-            if error.raw_os_error() == Some(libc::EWOULDBLOCK) {
+        match file.try_lock() {
+            Ok(()) => {}
+            Err(std::fs::TryLockError::WouldBlock) => {
                 return Err(AppError::InstanceLockConflict);
             }
-            return Err(AppError::FileSystem {
-                operation: "acquire instance lock".to_string(),
-                detail: error.to_string(),
-            });
+            Err(std::fs::TryLockError::Error(error)) => {
+                return Err(AppError::FileSystem {
+                    operation: "acquire instance lock".to_string(),
+                    detail: error.to_string(),
+                });
+            }
         }
 
         let pid = std::process::id();
@@ -79,9 +78,7 @@ impl AppInstanceLock {
 
 impl Drop for AppInstanceLock {
     fn drop(&mut self) {
-        unsafe {
-            libc::flock(self._file.as_raw_fd(), libc::LOCK_UN);
-        }
+        let _ = self._file.unlock();
     }
 }
 

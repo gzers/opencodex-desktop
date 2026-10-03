@@ -7,6 +7,7 @@ pub mod keychain;
 pub mod locking;
 pub mod official_cli_source;
 pub mod official_version_source;
+pub mod platform;
 pub mod process_runner;
 pub mod runtime_executable;
 pub mod runtime_log;

@@ -107,6 +107,8 @@ impl ControlledProcessRunner {
     }
 
     #[cfg(test)]
+    /// 目前只有 Unix 目标上的单测读取该计数；Windows 侧先保留实现避免死代码告警。
+    #[cfg_attr(not(unix), allow(dead_code))]
     pub(crate) fn failure_epoch(&self) -> u64 {
         self.failure_epoch.load(Ordering::SeqCst)
     }
@@ -409,7 +411,7 @@ impl ProcessRunner for ControlledProcessRunner {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use std::os::unix::fs::PermissionsExt;
     use std::path::PathBuf;

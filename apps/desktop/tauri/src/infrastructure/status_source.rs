@@ -123,7 +123,7 @@ impl StatusSource for OfficialStatusSource {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::process::{EnvironmentPolicy, LifecycleAction, ProcessCommand};

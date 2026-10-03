@@ -169,7 +169,7 @@ fn is_executable(_metadata: &std::fs::Metadata) -> bool {
     true
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use std::fs::Permissions;

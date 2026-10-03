@@ -87,7 +87,7 @@ pub fn create_upgrade_backup_with_root(
     })
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::backup::{self};

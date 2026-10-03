@@ -91,7 +91,7 @@ pub fn save_notifications(
         .map_err(|_| NotificationsError::Io)
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests {
     use super::*;
     use crate::modules::notifications::{

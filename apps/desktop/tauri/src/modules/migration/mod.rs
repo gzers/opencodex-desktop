@@ -907,5 +907,5 @@ pub fn import_with_container_file(
     import_with_parsed(data_root, home, parsed, passphrase)
 }
 
-#[cfg(test)]
+#[cfg(all(test, unix))]
 mod tests;

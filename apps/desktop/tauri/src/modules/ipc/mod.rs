@@ -8,6 +8,9 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 pub mod audit;
+// 本机 IPC 端点目前只有 Unix socket 实现；Windows 控制面尚未实现，
+// 因此在非 Unix 目标上不参与编译（见 apps/desktop/tauri 的跨平台说明）。
+#[cfg(unix)]
 pub mod endpoint;
 pub mod path_registration;
 pub mod service;
