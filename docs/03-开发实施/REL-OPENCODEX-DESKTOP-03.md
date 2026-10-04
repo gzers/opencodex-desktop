@@ -92,3 +92,20 @@ CI run [37183755672](https://github.com/gzers/opencodex-desktop/actions/runs/371
 CI（main `54de4bf2`）run [37186315036](https://github.com/gzers/opencodex-desktop/actions/runs/37186315036) 四 job 全绿。
 
 **仍未完成：** 真实自更新端点与签名公钥（U-01/U-02）仍为占位；C 阶段存储迁移与 U-03/U-04 未实施。
+
+## 追加（2026-10-04）：线上打包与草稿 Release 验证
+
+用户 2026-10-04 单独授权「按现有流程打包」。发布前置已核对：合并提交 `f14e061a`（= `v0.1.2` 指向提交）、版本号 0.1.2 四处一致、`CHANGELOG.md` 唯一 `[0.1.2] - 2026-10-04` 段落、main CI 四 job 全绿。
+
+- 新建并推送 tag `v0.1.2` → `f14e061a`，触发既有 Release 工作流 [37187916962](https://github.com/gzers/opencodex-desktop/actions/runs/37187916962)（两个平台 job，均 success）。
+- 结果为**草稿 + 预发布** Release：`isDraft=true` / `isPrerelease=true`，`tagName=v0.1.2`（与 0.1.0/0.1.1 同口径）。
+- 制品验证（无本机凭据，经一次性诊断工作流读取并写入公开 `ci-logs` 分支）：4 个资产 `state=uploaded`：
+  - `OpenCodeX.Desktop_0.1.2_aarch64.dmg`（3,861,301 bytes，sha256 52e93edc…）
+  - `OpenCodeX.Desktop_0.1.2_x64-setup.exe`（2,814,172 bytes，sha256 5f79497e…）
+  - `OpenCodeX.Desktop_0.1.2_x64_en-US.msi`（3,895,296 bytes，sha256 58a2f2bd…）
+  - `OpenCodeX.Desktop_aarch64.app.tar.gz`（3,739,169 bytes，sha256 d5f284e7…）
+- 对照：公开可见的 `v0.1.1` 仍为 Latest；`v0.1.2` 草稿对匿名访问 404（`releases/latest` 仍指向 `v0.1.1`）。
+- 一次性诊断工作流与临时分支 `ci/verify-draft-012` 已删除；`main` 仍为 `f14e061a`。
+
+**公开发布（取消草稿）尚未执行：** 需用户另行确认；现有 `publish-release.yml` 由 `publish/v0.1.2` tag 触发，仅切换可见性、不重建制品。
+
