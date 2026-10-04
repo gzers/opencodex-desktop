@@ -71,7 +71,10 @@ def validate_manifest(manifest, release, tag):
             raise PublishError(f"Invalid artifact URL: {platform}")
         asset = assets.get(urllib.parse.unquote(url))
         if not asset or asset.get("size", 0) <= 0 or asset.get("state") != "uploaded":
-            raise PublishError(f"Artifact is not uploaded to the target release: {platform}")
+            uploaded = [{key: item.get(key) for key in ("name", "browser_download_url", "size", "state")}
+                        for item in release["assets"]]
+            raise PublishError(f"Artifact is not uploaded to the target release: {platform}; "
+                               f"manifest URL={url!r}; release assets={uploaded!r}")
         if not isinstance(signature, str) or not signature.strip():
             raise PublishError(f"Missing updater signature: {platform}")
 
