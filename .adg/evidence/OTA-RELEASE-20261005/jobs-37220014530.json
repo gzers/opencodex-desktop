@@ -1,0 +1,221 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 111488271916,
+      "run_id": 37220014530,
+      "workflow_name": "Release",
+      "head_branch": "v0.1.6",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37220014530",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9TgGLA",
+      "head_sha": "806c0479d4d7b1fc55549bd1926bf5756365ebfd",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111488271916",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37220014530/job/111488271916",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T17:18:38Z",
+      "started_at": "2026-10-04T17:18:43Z",
+      "completed_at": "2026-10-04T17:24:10Z",
+      "name": "release (macos-14, aarch64-apple-darwin, --target aarch64-apple-darwin)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:18:44Z",
+          "completed_at": "2026-10-04T17:18:46Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:18:46Z",
+          "completed_at": "2026-10-04T17:18:48Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:18:48Z",
+          "completed_at": "2026-10-04T17:18:49Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:18:49Z",
+          "completed_at": "2026-10-04T17:18:58Z"
+        },
+        {
+          "name": "\u5b89\u88c5\u524d\u7aef\u4f9d\u8d56",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T17:18:58Z",
+          "completed_at": "2026-10-04T17:19:02Z"
+        },
+        {
+          "name": "\u63d0\u53d6 CHANGELOG \u7248\u672c\u8bf4\u660e",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T17:19:02Z",
+          "completed_at": "2026-10-04T17:19:02Z"
+        },
+        {
+          "name": "\u6253 tag \u4e0e\u51fa\u5305\uff08tauri-action\uff09",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T17:19:02Z",
+          "completed_at": "2026-10-04T17:24:07Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-04T17:24:07Z",
+          "completed_at": "2026-10-04T17:24:07Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T17:24:07Z",
+          "completed_at": "2026-10-04T17:24:08Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T17:24:08Z",
+          "completed_at": "2026-10-04T17:24:08Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111488271916",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000000372,
+      "runner_name": "GitHub Actions 1000000372",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 111488272051,
+      "run_id": 37220014530,
+      "workflow_name": "Release",
+      "head_branch": "v0.1.6",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37220014530",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9TgGsw",
+      "head_sha": "806c0479d4d7b1fc55549bd1926bf5756365ebfd",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111488272051",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37220014530/job/111488272051",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T17:18:38Z",
+      "started_at": "2026-10-04T17:18:40Z",
+      "completed_at": "2026-10-04T17:28:18Z",
+      "name": "release (windows-latest, x86_64-pc-windows-msvc)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:18:41Z",
+          "completed_at": "2026-10-04T17:18:42Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:18:42Z",
+          "completed_at": "2026-10-04T17:18:50Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:18:50Z",
+          "completed_at": "2026-10-04T17:18:54Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:18:54Z",
+          "completed_at": "2026-10-04T17:19:14Z"
+        },
+        {
+          "name": "\u5b89\u88c5\u524d\u7aef\u4f9d\u8d56",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T17:19:14Z",
+          "completed_at": "2026-10-04T17:19:23Z"
+        },
+        {
+          "name": "\u63d0\u53d6 CHANGELOG \u7248\u672c\u8bf4\u660e",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T17:19:23Z",
+          "completed_at": "2026-10-04T17:19:23Z"
+        },
+        {
+          "name": "\u6253 tag \u4e0e\u51fa\u5305\uff08tauri-action\uff09",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T17:19:23Z",
+          "completed_at": "2026-10-04T17:28:14Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-04T17:28:14Z",
+          "completed_at": "2026-10-04T17:28:14Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T17:28:14Z",
+          "completed_at": "2026-10-04T17:28:16Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T17:28:16Z",
+          "completed_at": "2026-10-04T17:28:16Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111488272051",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000373,
+      "runner_name": "GitHub Actions 1000000373",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

@@ -1,0 +1,457 @@
+{
+  "total_count": 5,
+  "jobs": [
+    {
+      "id": 111492408466,
+      "run_id": 37221433173,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37221433173",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9Xckkg",
+      "head_sha": "4c5afb5189c02cba6a84b7e0faebbdbf3153d66d",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111492408466",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37221433173/job/111492408466",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T17:40:53Z",
+      "started_at": "2026-10-04T17:40:56Z",
+      "completed_at": "2026-10-04T17:41:12Z",
+      "name": "release-tools",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:40:57Z",
+          "completed_at": "2026-10-04T17:40:57Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:40:57Z",
+          "completed_at": "2026-10-04T17:40:58Z"
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:40:58Z",
+          "completed_at": "2026-10-04T17:41:10Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:41:10Z",
+          "completed_at": "2026-10-04T17:41:11Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T17:41:11Z",
+          "completed_at": "2026-10-04T17:41:11Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-04T17:41:11Z",
+          "completed_at": "2026-10-04T17:41:11Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111492408466",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000387,
+      "runner_name": "GitHub Actions 1000000387",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 111492408588,
+      "run_id": 37221433173,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37221433173",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9XclDA",
+      "head_sha": "4c5afb5189c02cba6a84b7e0faebbdbf3153d66d",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111492408588",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37221433173/job/111492408588",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T17:40:53Z",
+      "started_at": "2026-10-04T17:41:00Z",
+      "completed_at": "2026-10-04T17:45:29Z",
+      "name": "backend",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:41:00Z",
+          "completed_at": "2026-10-04T17:41:01Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:41:01Z",
+          "completed_at": "2026-10-04T17:41:03Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:41:03Z",
+          "completed_at": "2026-10-04T17:41:11Z"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:41:11Z",
+          "completed_at": "2026-10-04T17:41:12Z"
+        },
+        {
+          "name": "Run cargo clippy --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T17:41:12Z",
+          "completed_at": "2026-10-04T17:42:25Z"
+        },
+        {
+          "name": "Run cargo test --workspace --features integration-test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T17:42:25Z",
+          "completed_at": "2026-10-04T17:45:25Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-04T17:45:25Z",
+          "completed_at": "2026-10-04T17:45:26Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-04T17:45:26Z",
+          "completed_at": "2026-10-04T17:45:28Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111492408588",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000000388,
+      "runner_name": "GitHub Actions 1000000388",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 111492408767,
+      "run_id": 37221433173,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37221433173",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9Xclvw",
+      "head_sha": "4c5afb5189c02cba6a84b7e0faebbdbf3153d66d",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111492408767",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37221433173/job/111492408767",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T17:40:53Z",
+      "started_at": "2026-10-04T17:41:01Z",
+      "completed_at": "2026-10-04T17:41:41Z",
+      "name": "frontend",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:41:01Z",
+          "completed_at": "2026-10-04T17:41:02Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:41:02Z",
+          "completed_at": "2026-10-04T17:41:04Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:41:04Z",
+          "completed_at": "2026-10-04T17:41:04Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:41:04Z",
+          "completed_at": "2026-10-04T17:41:06Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run typecheck",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T17:41:06Z",
+          "completed_at": "2026-10-04T17:41:11Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-04T17:41:11Z",
+          "completed_at": "2026-10-04T17:41:33Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-04T17:41:33Z",
+          "completed_at": "2026-10-04T17:41:38Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-04T17:41:38Z",
+          "completed_at": "2026-10-04T17:41:39Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-04T17:41:39Z",
+          "completed_at": "2026-10-04T17:41:39Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-04T17:41:39Z",
+          "completed_at": "2026-10-04T17:41:39Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111492408767",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000000390,
+      "runner_name": "GitHub Actions 1000000390",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 111492408774,
+      "run_id": 37221433173,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37221433173",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9Xclxg",
+      "head_sha": "4c5afb5189c02cba6a84b7e0faebbdbf3153d66d",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111492408774",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37221433173/job/111492408774",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T17:40:53Z",
+      "started_at": "2026-10-04T17:40:56Z",
+      "completed_at": "2026-10-04T17:44:34Z",
+      "name": "backend-windows",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:40:57Z",
+          "completed_at": "2026-10-04T17:40:58Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:40:58Z",
+          "completed_at": "2026-10-04T17:41:04Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:41:04Z",
+          "completed_at": "2026-10-04T17:41:32Z"
+        },
+        {
+          "name": "Run cargo check --workspace --all-targets",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:41:32Z",
+          "completed_at": "2026-10-04T17:44:31Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-04T17:44:31Z",
+          "completed_at": "2026-10-04T17:44:33Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-04T17:44:33Z",
+          "completed_at": "2026-10-04T17:44:33Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111492408774",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000000389,
+      "runner_name": "GitHub Actions 1000000389",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 111493249276,
+      "run_id": 37221433173,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37221433173",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9YP4_A",
+      "head_sha": "4c5afb5189c02cba6a84b7e0faebbdbf3153d66d",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111493249276",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37221433173/job/111493249276",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-10-04T17:45:30Z",
+      "started_at": "2026-10-04T17:45:36Z",
+      "completed_at": null,
+      "name": "build",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T17:45:36Z",
+          "completed_at": "2026-10-04T17:45:38Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T17:45:38Z",
+          "completed_at": "2026-10-04T17:45:39Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T17:45:39Z",
+          "completed_at": "2026-10-04T17:45:40Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T17:45:40Z",
+          "completed_at": "2026-10-04T17:45:49Z"
+        },
+        {
+          "name": "Install pinned Tauri CLI",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 5,
+          "started_at": "2026-10-04T17:45:49Z",
+          "completed_at": null
+        },
+        {
+          "name": "Install frontend deps (build job installs its own, not relying on frontend job)",
+          "status": "pending",
+          "conclusion": null,
+          "number": 6,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Build macOS arm64 bundle",
+          "status": "pending",
+          "conclusion": null,
+          "number": 7,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 13,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14,
+          "started_at": null,
+          "completed_at": null
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111493249276",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000000393,
+      "runner_name": "GitHub Actions 1000000393",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

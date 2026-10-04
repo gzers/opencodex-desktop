@@ -1,0 +1,111 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 概览, Value: 1
+					14 text 概览
+				15 text 运行状态与常用操作；环境明细收进运行详情。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 button 刷新状态
+				21 button (collapsed) 2, Help: 通知, Secondary Actions: Expand
+				22 button 查看运行详情，包含运行环境, Help: 查看运行详情（含运行环境）
+				23 button 打开面板
+				24 button 停止
+				25 button 重启
+				26 button 查看日志
+				27 container 版本升级
+					28 heading 版本升级, Value: 3
+						29 text 版本升级
+					30 text 已发现
+					31 button 进入「版本升级」设置
+					32 text 当前版本 v2.69.0 安装形态 未发现
+					33 button 检查更新
+					34 button 升级前备份
+				35 container 配置迁移
+					36 heading 配置迁移, Value: 3
+						37 text 配置迁移
+					38 text 已接入
+					39 button 进入「配置迁移」设置
+					40 text 导出配置 加密容器 导入校验 备份后替换
+					41 button 导出配置
+					42 button 导入配置
+				43 container WebDAV 同步
+					44 heading WebDAV 同步, Value: 3
+						45 text WebDAV 同步
+					46 text 未连接
+					47 button 进入「WebDAV 同步」设置
+					48 text 连接状态 未连接 冲突策略 每次询问
+					49 button 立即同步
+					50 button 测试连接
+				51 container 最近事件
+					52 heading 最近事件, Value: 2
+						53 text 最近事件
+					54 button 诊断中心
+					55 container
+						56 text 01:49:40 运行状态：运行中
+				57 container 运行详情
+					58 heading 运行详情, Value: 3
+						59 text 运行详情
+					60 button 关闭
+					61 container 进程与就绪
+						62 heading 进程与就绪, Value: 4
+							63 text 进程与就绪
+						64 description list
+							65 text 运行状态
+							66 text 运行中
+							67 text 健康
+							68 text 正常
+							69 text PID / 进程
+							70 text 18504
+							71 text 端口
+							72 text 10100
+							73 text 当前操作
+							74 text 无
+					75 container 运行环境
+						76 heading 运行环境, Value: 4
+							77 text 运行环境
+						78 container
+							79 text 1 Node.js 已发现 2 npm 已发现 3 OpenCodex 运行来源
+					80 container 来源与目录
+						81 heading 来源与目录, Value: 4
+							82 text 来源与目录
+						83 description list
+							84 text 版本
+							85 text 2.69.0
+							86 text 运行时
+							87 text Codex 运行时（内置）
+						88 description list
+							89 text 数据目录
+							90 container
+								91 text $HOME/Library/Application Support/com.gzers.opencodex.desktop
+								92 button 复制数据目录
+							93 text OPENCODEX_HOME
+							94 container
+								95 text $HOME/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home
+								96 button 复制 OPENCODEX_HOME
+					97 button 打开数据目录
+					98 button 打开 OPENCODEX_HOME
+					99 button 关闭
+	100 close button
+	101 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	102 minimize button
+103 menu bar
+	104 OpenCodeX Desktop
+	105 编辑
+	106 视图
+	107 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview

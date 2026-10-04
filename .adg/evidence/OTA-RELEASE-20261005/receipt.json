@@ -1,0 +1,110 @@
+{
+  "updated_at": "2026-10-05T02:00:14.795892+08:00",
+  "authorization": "User: 同意。授权 — push/tag/signed release/stable promotion. User subsequently explicitly confirmed actual local GUI OTA installation: 允许安装并重启.",
+  "source_commit": "806c0479d4d7b1fc55549bd1926bf5756365ebfd",
+  "tag": "v0.1.6",
+  "code_branch": "main",
+  "docs_branch": "docs/governance-main",
+  "checks": [
+    {
+      "name": "review:release-signature-regressions",
+      "result": "passed",
+      "tests": 29,
+      "evidence": "publish-tests-final.log"
+    },
+    {
+      "name": "review:old-client-key-compatibility",
+      "result": "passed",
+      "evidence": "updater-key-compatibility.json"
+    },
+    {
+      "name": "review:ci-source-tag",
+      "result": "passed",
+      "run": 37220011919,
+      "evidence": "jobs-37220011919.json"
+    },
+    {
+      "name": "review:signed-release-build",
+      "result": "passed",
+      "run": 37220014530,
+      "evidence": "jobs-37220014530.json"
+    },
+    {
+      "name": "review:stable-publication",
+      "result": "passed",
+      "run": 37221452456,
+      "evidence": "publish-success.txt"
+    },
+    {
+      "name": "review:anonymous-endpoints-and-old-key-verification",
+      "result": "passed",
+      "evidence": "public-verification.json"
+    },
+    {
+      "name": "review:publisher-ci",
+      "result": "passed",
+      "run": 37221433173,
+      "evidence": "publisher-ci-final.json",
+      "observation": "All five jobs successful in final public Actions HTML; earlier API snapshot retained unchanged."
+    },
+    {
+      "name": "review:installed-013-to-016-ota",
+      "result": "passed",
+      "observation": "macOS arm64 installed app updated from 0.1.3 to 0.1.6 and automatically restarted (PID 17819 -> 44788). Installed binary exactly matches the old-key-verified public release archive. Post-restart UI reports latest version; no stale failure remains.",
+      "evidence": [
+        "installed-before.json",
+        "installed-after.json",
+        "ota-after-ui.txt",
+        "ota-success.png"
+      ]
+    },
+    {
+      "name": "review:managed-runtime-and-preferences-continuity",
+      "result": "passed",
+      "observation": "Managed runtime 2.69.0 PID 18504, PPID 18502, start 2026-10-04 21:51:26 +08:00 unchanged; UI healthy on port 10100. Preferences byte hash unchanged.",
+      "evidence": [
+        "runtime-before.json",
+        "runtime-after.json",
+        "runtime-after-ui.txt"
+      ]
+    }
+  ],
+  "publication_status": "published_stable",
+  "release_id": 403126668,
+  "published_at": "2026-10-04T17:41:33Z",
+  "publisher_commit": "4c5afb5189c02cba6a84b7e0faebbdbf3153d66d",
+  "source_tag_unchanged": true,
+  "promotion_trigger": "promote-stable/v0.1.6 (operational trigger retargeted for retries; v0.1.6 unchanged)",
+  "publication_retries": [
+    {
+      "run": 37220705481,
+      "result": "failed-before-publication",
+      "evidence": "publish-first-failure.txt",
+      "cause": "Draft release not found by REST tag lookup"
+    },
+    {
+      "run": 37221134313,
+      "result": "failed-before-publication",
+      "evidence": "publish-second-failure.txt",
+      "cause": "Draft asset temporary URL did not match final manifest URL"
+    },
+    {
+      "run": 37221278273,
+      "result": "failed-before-publication",
+      "evidence": "publish-third-failure.txt",
+      "cause": "Same URL mismatch; diagnostic run established untagged URL identity"
+    }
+  ],
+  "installed_ota_status": "passed_macos_013_to_016",
+  "installed_binary_sha256": "0455a1771c6b28d7f95143551941414647445a3ff9990bcce8238b27a162fffb",
+  "limitations": [
+    "Windows actual installation/restart not exercised.",
+    "0.1.4 key/config compatibility checked; actual installation not exercised.",
+    "0.1.6 failure/retry and cancellation covered by frontend regression tests, without manual failure injection on the installed application.",
+    "OTA minisign verification is separate from Apple notarization and Windows Authenticode, which are not in this release scope."
+  ],
+  "evidence_redactions": [
+    "runtime-after-ui.txt: local user home path replaced with $HOME; original UI evidence retained only in the local temporary folder.",
+    "No preference file contents, secrets, or official-panel usage screenshot included."
+  ]
+}

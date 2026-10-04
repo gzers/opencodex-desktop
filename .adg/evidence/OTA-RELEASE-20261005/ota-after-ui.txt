@@ -1,0 +1,86 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=upgrade
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 设置, Value: 1
+					14 text 设置
+				15 text 集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 text 运行中
+				21 button 刷新状态
+				22 button (collapsed) 2, Help: 通知, Secondary Actions: Expand
+				23 tab group (selectable) 通用
+安装配置
+数据与备份
+扩展管理
+配置迁移
+WebDAV 同步
+日志与通知
+CLI 控制面
+版本升级
+关于
+				24 container OpenCodex 版本
+					25 heading OpenCodex 版本, Value: 2
+						26 text OpenCodex 版本
+					27 text 官方 npm 包与官方面板；桌面管理器不接管更新事务，只做升级前备份与官方引导。
+					28 text 当前版本
+					29 text v2.69.0 · 未发现 npm 全局安装
+					30 button 检查更新
+					31 text 远端最新版本
+					32 text 尚未查询 · 尚未查询远端版本。
+					33 text 未比较
+					34 button (disabled) 应用官方更新
+					35 text 升级前备份
+					36 text 最近备份 bk_20261004175133_7f468a1b
+					37 button 生成备份
+					38 text 官方升级引导
+					39 container
+						40 text 只展示并引导 ocx update；不重写更新事务。
+					41 button 打开引导
+					42 text 失败后建议
+					43 text 展示备份位置、错误摘要和建议恢复动作。
+					44 button 查看建议
+				45 container 桌面管理器版本
+					46 heading 桌面管理器版本, Value: 2
+						47 text 桌面管理器版本
+					48 text OpenCodeX-Desktop 自身的应用更新；签名校验通过后才会安装，失败保留当前版本。
+					49 text 当前版本
+					50 text v0.1.6 · 稳定通道
+					51 button 检查应用更新
+					52 text 更新结果
+					53 text 已是最新版本；未发现可安装更新。
+					54 text 已检查
+					55 button (disabled) 安装更新
+					56 text 安装完成后
+					57 text 签名校验通过后由桌面壳接管重启；不会停止托管代理。
+					58 button (disabled) 重新安装
+					59 text 更新通道
+					60 text 稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。
+					61 pop up button 应用更新通道
+					62 text 网络连接
+					63 text 检查更新失败多为网络问题；可在此跳转配置代理。
+					64 button 配置网络
+					65 text 自动检查更新
+					66 text 开启后按通道后台检查；关闭后不影响手动检查。
+					67 switch (settable, boolean) on
+	68 close button
+	69 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	70 minimize button
+71 menu bar
+	72 OpenCodeX Desktop
+	73 编辑
+	74 视图
+	75 诊断
