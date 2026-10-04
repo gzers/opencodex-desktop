@@ -1,6 +1,8 @@
 """Offline publication regressions: no credentials or GitHub mutations."""
 
 import copy
+import base64
+import hashlib
 import importlib.util
 import io
 import json
@@ -79,6 +81,7 @@ class PublishTests(unittest.TestCase):
         self.addCleanup(patch.stopall)
         self.gh = patch.object(publisher, "gh", side_effect=self.api).start()
         self.verify = patch.object(publisher, "verify_public_manifest").start()
+        self.crypto = patch.object(publisher, "verify_artifacts").start()
         patch("sys.stdout", new_callable=io.StringIO).start()
         patch("sys.stderr", new_callable=io.StringIO).start()
 
@@ -114,6 +117,12 @@ class PublishTests(unittest.TestCase):
         self.assertEqual(len(self.api.edits), 1)
         self.verify.assert_not_called()
         self.assertNotIn("Verified public release", sys.stdout.getvalue())
+
+    def test_invalid_signature_blocks_all_publication(self):
+        self.crypto.side_effect = subprocess.CalledProcessError(1, ["minisign"], stderr="Signature verification failed")
+        self.assertEqual(self.run_main("stable"), 1)
+        self.assertEqual(self.api.edits, [])
+        self.verify.assert_not_called()
 
     def test_restore_latest_failure_is_nonzero(self):
         self.api.fail_edit = "v0.1.3"
@@ -215,7 +224,7 @@ class WorkflowExitTests(unittest.TestCase):
             stub.write_text(f"#!{sys.executable}\n" + textwrap.dedent(f"""\
                 import json, sys
                 args = sys.argv[1:]
-                if args[:2] == ['release', 'edit']:
+                if args[:2] == ['release', 'edit'] or (args[0] == 'api' and '/contents/' in args[1]):
                     print('simulated publish failure', file=sys.stderr)
                     sys.exit(17)
                 elif args[:2] == ['release', 'download']:
@@ -235,6 +244,84 @@ class WorkflowExitTests(unittest.TestCase):
             self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
             self.assertIn("simulated publish failure", (temp / "diagnostic.txt").read_text())
             self.assertNotIn("Verified public release", result.stdout)
+
+
+class ArtifactSignatureTests(unittest.TestCase):
+    """Real minisign verification, with local ephemeral test keys and fake downloads."""
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name)
+        self.payload = b"signed updater fixture for release verification"
+        self.public = self.root / "test.pub"
+        self.secret = self.root / "test.key"
+        subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+                       check=True, capture_output=True)
+        artifact = self.root / "artifact"
+        artifact.write_bytes(self.payload)
+        subprocess.run(["minisign", "-S", "-m", str(artifact), "-s", str(self.secret)],
+                       check=True, capture_output=True)
+        signature = base64.b64encode((self.root / "artifact.minisig").read_bytes()).decode()
+        self.manifest = copy.deepcopy(MANIFEST)
+        for entry in self.manifest["platforms"].values():
+            entry["signature"] = signature
+        self.release = copy.deepcopy(RELEASE)
+        for asset in self.release["assets"]:
+            asset.update(name=asset["browser_download_url"].rsplit("/", 1)[1],
+                         size=len(self.payload), digest="sha256:" + hashlib.sha256(self.payload).hexdigest())
+        self.config = {"version": TAG[1:], "plugins": {"updater": {
+            "pubkey": base64.b64encode(self.public.read_bytes()).decode()}}}
+        self.real_run = subprocess.run
+        self.downloaded = []
+
+    def run_verify(self):
+        def run(args, **kwargs):
+            if args[0] != "gh":
+                return self.real_run(args, **kwargs)
+            self.downloaded.append(args)
+            Path(args[args.index("--output") + 1]).write_bytes(self.payload)
+            return subprocess.CompletedProcess(args, 0, "", "")
+        response = json.dumps({"content": base64.b64encode(json.dumps(self.config).encode()).decode()})
+        with patch.object(publisher, "gh", return_value=response), \
+                patch.object(publisher.subprocess, "run", side_effect=run), \
+                patch("sys.stdout", new_callable=io.StringIO):
+            publisher.verify_artifacts(REPO, TAG, self.manifest, self.release)
+
+    def test_all_real_signatures_verified_and_duplicate_assets_downloaded_once(self):
+        self.run_verify()
+        self.assertEqual(len(self.downloaded), 3)
+
+    def test_same_size_tampering_rejected_even_without_server_digest(self):
+        self.payload = b"X" + self.payload[1:]
+        for asset in self.release["assets"]:
+            asset.pop("digest")
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.run_verify()
+
+    def test_server_digest_mismatch_rejected(self):
+        self.release["assets"][0]["digest"] = "sha256:" + "0" * 64
+        with self.assertRaisesRegex(publisher.PublishError, "digest mismatch"):
+            self.run_verify()
+
+    def test_wrong_tagged_version_rejected_before_download(self):
+        self.config["version"] = "0.1.5"
+        with self.assertRaisesRegex(publisher.PublishError, "Tagged app version"):
+            self.run_verify()
+        self.assertEqual(self.downloaded, [])
+
+    def test_truncated_download_rejected(self):
+        self.payload = self.payload[:-1]
+        with self.assertRaisesRegex(publisher.PublishError, "size mismatch"):
+            self.run_verify()
+
+    def test_signature_for_another_key_rejected(self):
+        other_public, other_secret = self.root / "other.pub", self.root / "other.key"
+        subprocess.run(["minisign", "-G", "-W", "-p", str(other_public), "-s", str(other_secret)],
+                       check=True, capture_output=True)
+        self.config["plugins"]["updater"]["pubkey"] = base64.b64encode(other_public.read_bytes()).decode()
+        with self.assertRaises(subprocess.CalledProcessError):
+            self.run_verify()
 
 
 if __name__ == "__main__":

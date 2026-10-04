@@ -1,10 +1,10 @@
 name: Publish Release
 
-# publish/v* 仅公开已有制品并保留 Latest；稳定通道晋升须手动明确选择 stable。
+# publish/v* 保留 Latest；promote-stable/v* 或手动 stable 明确晋升稳定通道。
 # 不重新构建、不修改历史 tag，不把发布凭据放到本机。
 on:
   push:
-    tags: ['publish/v*']
+    tags: ['publish/v*', 'promote-stable/v*']
   workflow_dispatch:
     inputs:
       tag:
@@ -30,15 +30,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - name: 安装签名验证工具
+        run: sudo apt-get update && sudo apt-get install -y minisign
 
       - name: 公开版本并验证所选通道
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
           INPUT_TAG: ${{ inputs.tag }}
-          PUBLISH_MODE: ${{ inputs.mode || 'preserve-latest' }}
+          PUBLISH_MODE: ${{ inputs.mode || (startsWith(github.ref_name, 'promote-stable/') && 'stable' || 'preserve-latest') }}
         run: |
           set -euo pipefail
-          tag="${INPUT_TAG:-${GITHUB_REF_NAME#publish/}}"
+          tag="${INPUT_TAG:-${GITHUB_REF_NAME#*/}}"
           python3 .github/scripts/publish_release.py "$tag" \
             --repo "$GITHUB_REPOSITORY" --mode "$PUBLISH_MODE" 2>&1 | tee /tmp/publish-diag.txt
 

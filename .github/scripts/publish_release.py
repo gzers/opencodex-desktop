@@ -2,10 +2,14 @@
 """Publish existing release assets; stable promotion must be explicitly selected."""
 
 import argparse
+import base64
+import hashlib
 import json
+from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.parse
@@ -58,7 +62,42 @@ def validate_manifest(manifest, release, tag):
             raise PublishError(f"Artifact is not uploaded to the target release: {platform}")
         if not isinstance(signature, str) or not signature.strip():
             raise PublishError(f"Missing updater signature: {platform}")
-    # Metadata checks do not replace cryptographic verification by the updater.
+
+
+def verify_artifacts(repo, tag, manifest, release):
+    """Verify the actual uploaded bytes with the public key embedded in the tag."""
+    config_response = json.loads(gh("api", f"repos/{repo}/contents/apps/desktop/tauri/tauri.conf.json?ref={tag}"))
+    config = json.loads(base64.b64decode(config_response["content"]))
+    if config.get("version") != tag[1:]:
+        raise PublishError("Tagged app version does not match the release")
+    public_key = base64.b64decode(config["plugins"]["updater"]["pubkey"], validate=True)
+    assets = {urllib.parse.unquote(a["browser_download_url"]): a for a in release["assets"]}
+    verified = set()
+    with tempfile.TemporaryDirectory(prefix="opencodex-release-") as directory:
+        root = Path(directory)
+        key_file = root / "updater.pub"
+        key_file.write_bytes(public_key)
+        for platform, entry in manifest["platforms"].items():
+            identity = (entry["url"], entry["signature"])
+            if identity in verified:
+                continue
+            asset = assets[urllib.parse.unquote(entry["url"])]
+            archive = root / "artifact"
+            signature = root / "artifact.minisig"
+            signature.write_bytes(base64.b64decode(entry["signature"], validate=True))
+            subprocess.run(["gh", "release", "download", tag, "--repo", repo,
+                            "--pattern", asset["name"], "--output", str(archive), "--clobber"],
+                           check=True, text=True, capture_output=True)
+            if archive.stat().st_size != asset["size"]:
+                raise PublishError(f"Artifact size mismatch: {platform}")
+            digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+            if asset.get("digest") and asset["digest"] != f"sha256:{digest}":
+                raise PublishError(f"Artifact digest mismatch: {platform}")
+            subprocess.run(["minisign", "-V", "-m", str(archive), "-p", str(key_file),
+                            "-x", str(signature)], check=True, text=True, capture_output=True)
+            verified.add(identity)
+            print(f"Cryptographically verified {platform}: {asset['name']}; "
+                  f"size={asset['size']}; sha256={digest}", flush=True)
 
 
 def verify_public_manifest(url, expected):
@@ -96,6 +135,7 @@ def publish(repo, tag, mode):
         raise PublishError("No existing Latest to preserve; explicitly select stable for the first release")
     if mode == "stable" and before and version(tag) < version(before):
         raise PublishError(f"Refusing stable downgrade: {before} -> {tag}")
+    verify_artifacts(repo, tag, manifest, release)
 
     print(f"Target: {tag}; mode: {mode}; previous Latest: {before}", flush=True)
     expected_latest = tag if mode == "stable" else before
@@ -127,7 +167,7 @@ def main():
     except subprocess.CalledProcessError as error:
         print(f"Release operation failed (exit {error.returncode}): {error.stderr}", file=sys.stderr)
         return error.returncode if error.returncode > 0 else 1
-    except (PublishError, ValueError, KeyError, TypeError) as error:
+    except (PublishError, ValueError, KeyError, TypeError, OSError) as error:
         print(f"Release verification failed: {error}", file=sys.stderr)
         return 1
     return 0
