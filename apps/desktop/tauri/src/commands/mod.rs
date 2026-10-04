@@ -9,6 +9,7 @@ pub mod doctor;
 pub mod extensions;
 pub mod logs;
 pub mod migration;
+pub mod network;
 pub mod notifications;
 pub mod panel;
 pub mod preferences;

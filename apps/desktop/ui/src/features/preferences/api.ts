@@ -56,3 +56,14 @@ export async function restoreDefaultPreferences(): Promise<PreferencesDto> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
   return invoke<PreferencesDto>('restore_default_preferences')
 }
+
+/** 网络连通性检查结果（U-05）；只回报成功/失败，不改写任何状态。 */
+export interface NetworkProbeDto {
+  ok: boolean
+  detail: string
+}
+
+export async function checkNetworkProxy(): Promise<NetworkProbeDto> {
+  const invoke = (await import('@tauri-apps/api/core')).invoke
+  return invoke<NetworkProbeDto>('check_network_proxy')
+}

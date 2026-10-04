@@ -503,6 +503,7 @@ pub fn run() {
             commands::preferences::get_preferences,
             commands::preferences::save_preferences,
             commands::preferences::restore_default_preferences,
+            commands::network::check_network_proxy,
             commands::sync::get_sync_config,
             commands::sync::save_sync_endpoint,
             commands::sync::delete_sync_endpoint,

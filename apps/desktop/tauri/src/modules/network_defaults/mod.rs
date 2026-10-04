@@ -14,6 +14,7 @@ struct NetworkDefaults {
     timeout: Timeouts,
     retry: Retry,
     user_agent: String,
+    probe_url: String,
     tls_verify: bool,
     allow_proxy: bool,
 }
@@ -56,6 +57,10 @@ pub fn retry_backoff() -> Duration {
 pub fn user_agent() -> &'static str {
     defaults().user_agent.as_str()
 }
+/// 连通性探测的固定、受控地址（U-05「检查连接」使用；不改写任何状态）。
+pub fn probe_url() -> &'static str {
+    defaults().probe_url.as_str()
+}
 /// TLS 证书校验永远为 true；此处只暴露事实供诊断展示，不提供关闭入口。
 pub fn tls_verify() -> bool {
     defaults().tls_verify
@@ -76,6 +81,7 @@ mod tests {
         assert_eq!(max_attempts(), 2);
         assert_eq!(retry_backoff(), Duration::from_secs(1));
         assert!(user_agent().contains("OpenCodeX"));
+        assert!(probe_url().starts_with("https://"));
         assert!(tls_verify());
         assert!(proxy_allowed());
     }

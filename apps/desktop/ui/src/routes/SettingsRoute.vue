@@ -10,7 +10,7 @@ import { useRuntimeStore } from '@/features/runtime/store'
 import { buildEnvironmentPresentation } from '@/features/environment/presentation'
 import { useRouteStore } from '@/stores/routes'
 import { settingsSections } from '@/navigation'
-import type { PreferencesDto } from '@/features/preferences/api'
+import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
 import { checkForUpdate, getUpdateStatus, type UpdateStatusDto } from '@/features/updates/update'
 import { hasNewerVersion } from '@/features/updates/version'
@@ -677,6 +677,26 @@ function goToNetwork() {
   routes.go('settings', { section: 'general' })
 }
 
+// 网络连通性检查（U-05）：带超时、不改写任何状态；结果如实展示。
+const proxyProbeBusy = ref(false)
+const proxyProbeResult = ref('')
+const proxyProbeOk = ref(false)
+async function runProxyProbe() {
+  if (proxyProbeBusy.value) return
+  proxyProbeBusy.value = true
+  proxyProbeResult.value = ''
+  try {
+    const result = await checkNetworkProxy()
+    proxyProbeOk.value = result.ok
+    proxyProbeResult.value = result.detail
+  } catch {
+    proxyProbeOk.value = false
+    proxyProbeResult.value = '检查失败；未改写任何设置。'
+  } finally {
+    proxyProbeBusy.value = false
+  }
+}
+
 function toggleSelect(key: string) {
   openSelect.value = openSelect.value === key ? '' : key
 }
@@ -1168,6 +1188,7 @@ function restoreGeneralDefaults() {
           <div v-if="preferences.networkProxyMode === 'manual'" class="setting-row" data-testid="setting-proxy-host"><div><div class="setting-title">主机名与端口</div><div class="setting-desc">例如 127.0.0.1:7890；不接受含空白、@ 或凭据的地址。</div></div><div class="controls"><input class="text-input" type="text" :value="preferences.networkProxyHost" aria-label="代理主机名与端口" placeholder="127.0.0.1:7890" @change="preferences.networkProxyHost = ($event.target as HTMLInputElement).value; saveProxyHost()"></div></div>
           <div v-if="preferences.networkProxyMode === 'manual'" class="setting-row" data-testid="setting-proxy-no-proxy"><div><div class="setting-title">不使用代理的地址</div><div class="setting-desc">逗号分隔的例外，例如 localhost,127.0.0.1,192.168.*。</div></div><div class="controls"><input class="text-input" type="text" :value="preferences.networkNoProxy" aria-label="不使用代理的地址" placeholder="localhost,127.0.0.1" @change="preferences.networkNoProxy = ($event.target as HTMLInputElement).value; saveProxyHost()"></div></div>
           <div class="setting-row"><div><div class="setting-title">应用范围</div><div class="setting-desc">应用自更新、官方版本查询与托管安装共用此代理；TLS 证书校验不可关闭。WebDAV 同步使用其端点自带代理。</div></div><div class="controls"><span class="setting-readonly">本版不含代理鉴权</span></div></div>
+          <div class="setting-row" data-testid="setting-network-probe"><div><div class="setting-title">检查连接</div><div class="setting-desc">{{ proxyProbeResult || '用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。' }}</div></div><div class="controls"><span v-if="proxyProbeResult" class="tag" :class="{ danger: !proxyProbeOk, ok: proxyProbeOk }">{{ proxyProbeOk ? '可用' : '不可用' }}</span><button class="btn ghost" type="button" :disabled="proxyProbeBusy" @click="runProxyProbe()">{{ proxyProbeBusy ? '检查中' : '检查连接' }}</button></div></div>
         </div>
       </UiCard>
       
