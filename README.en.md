@@ -131,6 +131,29 @@ open "/Applications/OpenCodeX Desktop.app"
 9. **Tray and menus**: status is expressed through tray icon and colour, plus native macOS menu entries.
 10. **Optional CLI control plane**: enabling it registers `ocxd`, which delegates to the running instance over local IPC; **off by default**.
 
+
+### Configuration files and settings
+
+Version-frozen defaults and user choices are stored separately so upgrades never overwrite user preferences:
+
+| File | Purpose | Location |
+|---|---|---|
+| `preferences.defaults.json` | Version-frozen default preferences (validated and embedded at build time) | Ships with the app; not edited by users |
+| `runtime.defaults.json` | Version-frozen runtime policies (timeouts, retention, discovery paths, update endpoints) | Ships with the app; not edited by users |
+| `manager-state/preferences.json` | User preferences (channel, scale, theme, effects changed in the UI) | Inside the data root, mode `0600` |
+| `manager-state/data-root.json` | Local data-root location and structure version | Inside the data root |
+| `manager-state/config-migrations/` | Original backups and migration records for automatic format conversion | Inside the data root; only present after a conversion |
+
+Precedence and effect: user preferences take priority over version defaults; missing new fields fall back to defaults, while invalid or corrupted preferences fail explicitly and keep the original file instead of being silently reset or overwritten. UI fields take effect immediately or are marked pending restart; export/sync transmit only the migratable preference projection — machine paths, credentials, and run state stay local.
+
+Theme: the backend preference is the source of truth. On early startup a local cache renders the first frame, then the preference read-back takes over; the old cache never overrides a newer choice.
+
+Update channel: the stable/beta channel is decoupled from "check automatically"; checks, installs, and background scheduling share one channel source, and switching the channel invalidates stale candidates. The real endpoint and signing for app self-update remain on the later release plan and are not wired yet.
+
+Automatic format conversion: the app version and the configuration schema version are managed separately. Reading an old format runs the published migration chain automatically and keeps a backup of the original; a version newer than the app supports is refused and the original is preserved — restore from the pre-migration backup if needed (this discards changes made after the migration).
+
+Test isolation: development and automated tests run under a separate sandbox identity (own data root, credential service, and instance identity) and never write to the daily-use directory; if the sandbox root is missing, startup stops rather than falling back to daily configuration.
+
 ---
 
 ## Features

@@ -24,6 +24,14 @@ source_refs:
 | 正式运行事实 | 实施与发布结果以 `docs/03-开发实施/RUN-\*` 为准，本记录不预写执行结果 |
 
 
+## 实施结果（2026-10-04）
+
+A/B 最小闭环已实施并入 main：特性分支 feature/0.1.2-update-channel-config-layers 从 main@aec115d0 新建，fast-forward 并入（aec115d0..cb02a45b）。实现更新通道解耦与消费、固化默认配置、appearance.theme 入偏好、通用配置迁移引擎骨架、测试沙箱隔离与中英文 README。
+
+门禁：vue-tsc 通过、vitest 355 passed、vite build 通过、cargo fmt/clippy -D warnings 通过、cargo test --workspace --features integration-test 全绿、macOS aarch64 制品构建成功、沙箱隔离冒烟验证日常根哨兵未变、CI 四 job 全绿（run 37183755672）。
+
+**未完成（延期）：** U-01/U-02 真实自更新端点与签名、U-03/U-04 官方版本卡片远端查询与代跑、C 阶段磁盘存储迁移；待用户裁决与单独授权。**仅合并代码，未打包 Release；公开发布另行确认。** 详见 [REL-OPENCODEX-DESKTOP-03](https://github.com/gzers/opencodex-desktop/blob/main/docs/03-开发实施/REL-OPENCODEX-DESKTOP-03.md)。
+
 ## 范围推进（2026-10-04）
 
 2026-10-04 登记 [0.1.2 范围冻结与待裁决](分析/06-0.1.2-范围冻结与待裁决.md)：0.1.2 拟冻结为 A/B 最小闭环（更新通道解耦与消费、固化默认配置、类型收敛、`appearance.theme` 入偏好、配置迁移服务骨架、测试沙箱隔离、随实现更新中英文 README），C 阶段存储迁移与真实自更新端点/签名延期；U-01～U-04 的实质产品/安全选择集中列为 D-1～D-4 待用户裁决。实施计划登记为 [IMP-OPENCODEX-DESKTOP-15](https://github.com/gzers/opencodex-desktop/blob/main/docs/03-开发实施/IMP-OPENCODEX-DESKTOP-15.md)。**登记范围不等于已实施、已验收或已发布。**

@@ -43,4 +43,10 @@ source_refs: ["MNT-OPENCODEX-DESKTOP-20261004-02", "IMP-OPENCODEX-DESKTOP-01", "
 
 ## 5. 执行结果
 
-（待实施后回写；未实施前不写结论。）
+**已完成并入 main（2026-10-04）。** 分支 `feature/0.1.2-update-channel-config-layers` 从 `main@aec115d0` 新建，实现 A/B 最小闭环后 fast-forward 并入 `main`（`aec115d0..cb02a45b`）。
+
+实施事实、门禁证据与延期项见 [REL-OPENCODEX-DESKTOP-03](REL-OPENCODEX-DESKTOP-03.md)。要点：更新通道解耦并接通消费；固化默认配置 `config/preferences.defaults.json`、`config/runtime.defaults.json` 由 build.rs 校验并嵌入；`appearance.theme` 入偏好；`config_migration` 引擎骨架含 schema 识别/迁移链/过新拒绝/锁内备份原子提交；测试沙箱身份与隔离验收；中英文 README 配置说明。
+
+门禁：`vue-tsc` 通过、`vitest` 355 passed、`vite build` 通过、`cargo fmt`/`clippy -D warnings` 通过、`cargo test --workspace --features integration-test` 全绿（414 lib passed）、macOS aarch64 制品构建成功、沙箱隔离冒烟验证日常根哨兵未变、CI 四 job 全绿。
+
+**未完成（延期，见 REL-03）：** U-01/U-02 真实自更新端点与签名、U-03/U-04 官方版本卡片远端查询与代跑、C 阶段存储迁移。上述均未实施、未验收，不因本版发布而视为完成。
