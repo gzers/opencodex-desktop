@@ -8,12 +8,12 @@ import {
   unreadNotifications as selectUnreadNotifications,
 } from '@/features/notifications/model'
 import { notificationConfirmLabel } from '@/features/notifications/actions'
-import { drainTrayRequests } from '@/features/tray/api'
+import { drainTrayRequests, onTrayRequestsAvailable } from '@/features/tray/api'
 import { useDiagnosticsController } from '@/features/diagnostics/useDiagnosticsController'
 import { useLifecycleController } from '@/app/useLifecycleController'
 import { usePanelStore } from '@/features/panel/store'
 import { useLifecycleStore } from '@/app/lifecycle/store'
-import { TRAY_POLL_MS } from '@/config/runtimeDefaults'
+import { TRAY_FALLBACK_MS, TRAY_BACKOFF_MS } from '@/config/runtimeDefaults'
 import type { NotificationItem } from '@/types/ui'
 
 // 组合根（IMP-04 §19.4 E）：把诊断与生命周期控制器组合起来，并向调用方暴露与拆分前一致的字段。
@@ -143,6 +143,10 @@ export function useAppController(initialize = false) {
   let stopRuntimeSourceEventStream: (() => void) | null = null
   let trayRequestTimer: number | null = null
   let trayBridgeFailing = false
+  let stopTrayEvents: (() => void) | null = null
+  let trayDraining = false
+  let trayPending = false
+  let trayDelay = TRAY_FALLBACK_MS
   let disposed = false
 
   onMounted(() => {
@@ -167,26 +171,36 @@ export function useAppController(initialize = false) {
     // 各功能初始数据由 app 启动装配统一编排（IMP-04 §13.7）。
     primeAppData(app)
 
-    const pollTrayRequests = () => {
-      // F-07：托盘命令经前端轮询派发。失败不再静默——按一次可见提示，恢复后登记事件；
-      // 菜单能展开与命令真正执行是两件事，不能把 IPC 故障显示成已执行。
-      void drainTrayRequests()
-        .then(actions => {
-          if (trayBridgeFailing) {
-            trayBridgeFailing = false
-            app.recordEvent('托盘命令通道已恢复。')
-          }
-          handleTrayRequests(actions)
-        })
-        .catch(() => {
-          if (!trayBridgeFailing) {
-            trayBridgeFailing = true
-            app.showToast('托盘命令通道暂不可用；可改用应用内按钮。')
-          }
-        })
+    const pollTrayRequests = async () => {
+      if (disposed) return
+      if (trayDraining) { trayPending = true; return }
+      trayDraining = true
+      if (trayRequestTimer !== null) window.clearTimeout(trayRequestTimer)
+      try {
+        const actions = await drainTrayRequests()
+        if (disposed) return
+        if (trayBridgeFailing) { trayBridgeFailing = false; app.recordEvent('托盘命令通道已恢复。') }
+        trayDelay = TRAY_FALLBACK_MS
+        handleTrayRequests(actions)
+      } catch {
+        trayDelay = Math.min(TRAY_BACKOFF_MS, trayDelay * 2)
+        if (!trayBridgeFailing && !disposed) {
+          trayBridgeFailing = true
+          app.showToast('托盘命令通道暂不可用；可改用应用内按钮。')
+        }
+      } finally {
+        trayDraining = false
+        if (!disposed) {
+          if (trayPending) { trayPending = false; void pollTrayRequests() }
+          else trayRequestTimer = window.setTimeout(() => { void pollTrayRequests() }, trayDelay)
+        }
+      }
     }
-    pollTrayRequests()
-    trayRequestTimer = window.setInterval(pollTrayRequests, TRAY_POLL_MS)
+    // Subscribe first, then drain: clicks during startup cannot fall between both.
+    void onTrayRequestsAvailable(() => { void pollTrayRequests() }).then(stop => {
+      if (disposed) stop()
+      else { stopTrayEvents = stop; void pollTrayRequests() }
+    }).catch(() => { void pollTrayRequests() })
   })
 
   if (initialize) {
@@ -198,7 +212,8 @@ export function useAppController(initialize = false) {
 
   onUnmounted(() => {
     disposed = true
-    if (trayRequestTimer !== null) window.clearInterval(trayRequestTimer)
+    if (trayRequestTimer !== null) window.clearTimeout(trayRequestTimer)
+    stopTrayEvents?.()
     stopStatusEventStream?.()
     stopStatusEventStream = null
     stopNotificationEventStream?.()

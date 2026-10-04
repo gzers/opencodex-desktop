@@ -50,10 +50,37 @@ fn collector_request_debounces_one_second() {
             "startup": {"protection": "none", "rebootSafe": false}
         }))),
     );
-    collector.refresh().expect("first refresh");
+    let first = collector.refresh().expect("first refresh");
+    let shared = collector.refresh().expect("debounced result is shared");
+    assert_eq!(shared.runtime, first.runtime);
+    assert_eq!(collector.failure_count(), 0);
+}
+
+#[test]
+fn manual_refresh_does_not_share_a_light_cached_result() {
+    use opencodex_desktop_lib::modules::status::StatusSource;
+    struct DistinctSource;
+    impl StatusSource for DistinctSource {
+        fn fetch(&self) -> Result<serde_json::Value, CollectError> {
+            Ok(serde_json::json!({"status":"stopped", "dataRoot":"/tmp/full"}))
+        }
+        fn fetch_light(&self) -> Result<serde_json::Value, CollectError> {
+            Ok(serde_json::json!({"status":"running", "ready":true, "dataRoot":"/tmp/light"}))
+        }
+    }
+    let mut collector = StatusCollector::new(DistinctSource);
+    let now = std::time::Instant::now();
     assert_eq!(
-        collector.refresh().unwrap_err(),
-        CollectError::Timeout,
-        "same-second requests must be debounced"
+        collector.refresh_light_at(now).unwrap().runtime,
+        RuntimeState::Running
+    );
+    assert_eq!(
+        collector.refresh_at(now).unwrap().runtime,
+        RuntimeState::Stopped
+    );
+    collector.invalidate();
+    assert_eq!(
+        collector.refresh_light_at(now).unwrap().runtime,
+        RuntimeState::Running
     );
 }

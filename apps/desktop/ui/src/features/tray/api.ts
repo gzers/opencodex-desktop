@@ -17,3 +17,8 @@ export async function drainTrayRequests(): Promise<TrayAction[]> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
   return invoke<TrayAction[]>('drain_tray_requests')
 }
+
+export async function onTrayRequestsAvailable(handler: () => void): Promise<() => void> {
+  const { listen } = await import('@tauri-apps/api/event')
+  return listen('tray-requests-available', handler)
+}

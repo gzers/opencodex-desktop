@@ -25,6 +25,49 @@ fn track_frozen_defaults() {
         };
         let value: serde_json::Value = serde_json::from_slice(&bytes)
             .unwrap_or_else(|error| panic!("固化默认配置不是合法 JSON: {name}: {error}"));
+        if name == "runtime.defaults.json" {
+            for section in ["process", "status", "ui", "diagnostics"] {
+                let object = value[section]
+                    .as_object()
+                    .unwrap_or_else(|| panic!("missing runtime section {section}"));
+                for (key, value) in object {
+                    let number = value
+                        .as_u64()
+                        .unwrap_or_else(|| panic!("invalid {section}.{key}"));
+                    if number == 0 || number > 86_400_000 {
+                        panic!("runtime default out of range: {section}.{key}");
+                    }
+                }
+            }
+            for key in [
+                "startup_snapshot_wait_ms",
+                "startup_preferences_wait_ms",
+                "lifecycle_fallback_ms",
+                "lifecycle_notice_stop_ms",
+                "lifecycle_notice_start_ms",
+                "lifecycle_late_observe_ms",
+                "panel_load_notice_ms",
+                "tray_fallback_ms",
+                "tray_backoff_ms",
+                "panel_idle_ms",
+            ] {
+                if value["ui"][key].as_u64().is_none() {
+                    panic!("missing runtime ui.{key}");
+                }
+            }
+            if value["status"]["health_timeout_ms"].as_u64() > value["status"]["sample_ms"].as_u64()
+            {
+                panic!("health timeout must fit diagnostic timeout");
+            }
+            if value["status"]["full_diagnostic_ms"].as_u64()
+                < value["status"]["background_ms"].as_u64()
+            {
+                panic!("full diagnostic interval must cover background interval");
+            }
+            if value["ui"]["tray_backoff_ms"].as_u64() < value["ui"]["tray_fallback_ms"].as_u64() {
+                panic!("tray backoff must cover fallback");
+            }
+        }
         if !value.is_object() {
             panic!("固化默认配置必须是对象: {name}");
         }

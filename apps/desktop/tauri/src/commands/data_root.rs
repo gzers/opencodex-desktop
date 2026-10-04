@@ -173,6 +173,7 @@ pub fn reload_process_environment(
     if runtime_active {
         let mut guard = collector.lock().map_err(|_| AppError::NotConfigured)?;
         guard.source.set_environment(opencodex_home.clone());
+        guard.invalidate();
     }
     let updated = crate::state::ProcessContext {
         opencodex_home,

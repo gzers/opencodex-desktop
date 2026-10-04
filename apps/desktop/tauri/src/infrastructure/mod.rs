@@ -14,3 +14,5 @@ pub mod runtime_log;
 pub mod status_source;
 pub mod tray_controller;
 pub mod webdav_client;
+
+pub mod app_activity;

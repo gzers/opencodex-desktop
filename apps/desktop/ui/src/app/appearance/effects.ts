@@ -80,8 +80,9 @@ export const useEffectsStore = defineStore('effects', () => {
   const setting = ref<VisualEffectsSetting>(DEFAULT_VISUAL_EFFECTS)
   const reducedMotion = ref(false)
   const visible = ref(true)
+  const foreground = ref(true)
 
-  const strategy = computed(() => effectsStrategy(setting.value, reducedMotion.value, visible.value))
+  const strategy = computed(() => effectsStrategy(setting.value, reducedMotion.value, visible.value && foreground.value))
   const effective = computed(() => strategy.value.effective)
 
   function sync() {
@@ -103,10 +104,14 @@ export const useEffectsStore = defineStore('effects', () => {
     sync()
   }
 
+  function setForeground(next: boolean) { foreground.value = next }
+
   return {
     setting,
     reducedMotion,
     visible,
+    foreground,
+    setForeground,
     strategy,
     effective,
     setSetting,
@@ -132,4 +137,26 @@ export function installEffectsRuntime(): void {
   media.addEventListener('change', (event) => store.setReducedMotion(event.matches))
   document.addEventListener('visibilitychange', () => store.setVisible(document.visibilityState !== 'hidden'))
   store.sync()
+  // Native activation covers switching apps and hidden/minimized windows; document
+  // visibility alone remains "visible" in WKWebView when another app is in front.
+  if ('__TAURI_INTERNALS__' in window) {
+    store.setForeground(false)
+    void (async () => {
+      const { listen } = await import('@tauri-apps/api/event')
+      const { invoke } = await import('@tauri-apps/api/core')
+      let revision = 0
+      await listen<boolean>('app-foreground-changed', event => {
+        revision++
+        store.setForeground(event.payload)
+      })
+      const before = revision
+      const current = await invoke<boolean>('app_foreground')
+      if (before === revision) store.setForeground(current)
+    })().catch(() => {
+      const syncFocus = () => store.setForeground(document.hasFocus())
+      window.addEventListener('focus', syncFocus)
+      window.addEventListener('blur', syncFocus)
+      syncFocus()
+    })
+  }
 }

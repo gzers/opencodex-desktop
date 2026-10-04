@@ -28,6 +28,7 @@ pub struct TauriTrayController<R: tauri::Runtime> {
     /// 顶部应用菜单（进程/视图/日志）。它和托盘菜单是两份独立资源，
     /// 必须一并门控，否则应用菜单里的进程项会永远停在创建时的禁用态。
     native_menu: Option<tauri::menu::Menu<R>>,
+    last: std::sync::Mutex<Option<(String, [bool; 3])>>,
 }
 
 impl<R: tauri::Runtime> TauriTrayController<R> {
@@ -40,6 +41,7 @@ impl<R: tauri::Runtime> TauriTrayController<R> {
             app,
             menu,
             native_menu,
+            last: std::sync::Mutex::new(None),
         }
     }
 
@@ -124,30 +126,44 @@ impl<R: tauri::Runtime> TrayPresenter for TauriTrayController<R> {
             || label.to_string(),
             |address| format!("{label} · {address}"),
         );
+        let semantic = (
+            headline.clone(),
+            process_menu_gates(state).map(|(_, _, enabled)| enabled),
+        );
+        let Ok(mut last) = self.last.lock() else {
+            return;
+        };
+        if last.as_ref() == Some(&semantic) {
+            return;
+        }
+        let mut succeeded = true;
         // 托盘只放「运行标签 · 地址」这一小段：风险结论与成因说明留在应用内
         // （概览 / 通知中心）。此前把说明句拼进头部与 tooltip，托盘菜单项被撑得很宽。
         let header_text = headline;
         let tooltip = format!("OpenCodeX Desktop · {header_text}");
 
         if let Some(tray) = self.app.tray_by_id(TRAY_ID) {
-            let _ = tray.set_tooltip(Some(tooltip));
+            succeeded &= tray.set_tooltip(Some(tooltip)).is_ok();
         }
 
         if let Some(tauri::menu::MenuItemKind::MenuItem(header)) = self.menu.get(TRAY_STATUS_HEADER)
         {
-            let _ = header.set_text(header_text);
+            succeeded &= header.set_text(header_text).is_ok();
         }
         for (tray_id, native_id, enabled) in process_menu_gates(state) {
             if let Some(tauri::menu::MenuItemKind::MenuItem(item)) = self.menu.get(tray_id) {
-                let _ = item.set_enabled(enabled);
+                succeeded &= item.set_enabled(enabled).is_ok();
             }
             if let Some(native_menu) = self.native_menu.as_ref() {
                 // 进程项在「进程」子菜单里，`Menu::get` 只查直接子项取不到，
                 // 必须下钻一层；否则应用菜单里的进程项会永远停在创建时的禁用态。
                 if let Some(item) = native_process_item(native_menu, native_id) {
-                    let _ = item.set_enabled(enabled);
+                    succeeded &= item.set_enabled(enabled).is_ok();
                 }
             }
+        }
+        if succeeded {
+            *last = Some(semantic);
         }
     }
 }

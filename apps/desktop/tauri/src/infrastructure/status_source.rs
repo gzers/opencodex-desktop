@@ -5,7 +5,9 @@
 
 use std::path::PathBuf;
 use std::process::Stdio;
-use std::time::Duration;
+use std::sync::Mutex;
+use std::time::{Duration, Instant};
+use tokio::io::AsyncReadExt;
 
 use tokio::process::Command;
 
@@ -22,6 +24,14 @@ pub struct OfficialStatusSource {
     runtime: crate::infrastructure::runtime_executable::SharedRuntimeExecutable,
     working_directory: PathBuf,
     environment: crate::modules::process::EnvironmentPolicy,
+    cache: Mutex<Option<CachedStatus>>,
+}
+#[derive(Debug, Clone)]
+struct CachedStatus {
+    executable: PathBuf,
+    at: Instant,
+    payload: serde_json::Value,
+    uptime: Option<f64>,
 }
 
 impl OfficialStatusSource {
@@ -35,11 +45,13 @@ impl OfficialStatusSource {
             runtime,
             working_directory: working_directory.into(),
             environment,
+            cache: Mutex::new(None),
         }
     }
 
     pub fn set_environment(&mut self, opencodex_home: PathBuf) {
         self.environment.opencodex_home = opencodex_home;
+        *self.cache.get_mut().expect("status cache") = None;
     }
 
     /// 每次采集都重新向共享句柄取当前来源，安装 / 卸载后无需重建来源对象。
@@ -55,7 +67,7 @@ impl OfficialStatusSource {
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
-            .kill_on_drop(false);
+            .kill_on_drop(true);
         for (key, value) in [
             ("LANG", &self.environment.lang),
             ("LC_ALL", &self.environment.lc_all),
@@ -91,23 +103,172 @@ impl OfficialStatusSource {
             return Err(CollectError::Unreachable);
         }
 
-        let child = self
-            .command(&executable)
-            .spawn()
-            .map_err(|_| CollectError::Unreachable)?;
-        let output = tokio::time::timeout(status_collect_timeout(), child.wait_with_output())
-            .await
-            .map_err(|_| CollectError::Timeout)?
-            .map_err(|_| CollectError::Unreachable)?;
-
-        if !output.status.success() {
-            return Err(CollectError::Unreachable);
+        let mut command = self.command(&executable);
+        #[cfg(unix)]
+        command.process_group(0);
+        let mut child = command.spawn().map_err(|_| CollectError::Unreachable)?;
+        #[cfg(unix)]
+        let diagnostic_group = child.id();
+        let mut stdout = child.stdout.take().ok_or(CollectError::Unreachable)?;
+        let limit = crate::modules::runtime_defaults::status_output_max_bytes();
+        let mut bytes = Vec::new();
+        let result = tokio::time::timeout(status_collect_timeout(), async {
+            (&mut stdout)
+                .take(limit + 1)
+                .read_to_end(&mut bytes)
+                .await
+                .map_err(|_| CollectError::Unreachable)?;
+            if bytes.len() as u64 > limit {
+                return Err(CollectError::Parse);
+            }
+            let status = child.wait().await.map_err(|_| CollectError::Unreachable)?;
+            if !status.success() {
+                return Err(CollectError::Unreachable);
+            }
+            serde_json::from_slice(&bytes).map_err(|_| CollectError::Parse)
+        })
+        .await
+        .unwrap_or(Err(CollectError::Timeout));
+        if result.is_err() {
+            // Only this diagnostic's isolated process group; never the proxy PID.
+            #[cfg(unix)]
+            if let Some(pid) = diagnostic_group {
+                unsafe {
+                    libc::kill(-(pid as i32), libc::SIGKILL);
+                }
+            }
+            let _ = child.kill().await;
+            let _ = child.wait().await;
         }
-        serde_json::from_slice(&output.stdout).map_err(|_| CollectError::Parse)
+        let payload: serde_json::Value = result?;
+        *self.cache.lock().map_err(|_| CollectError::Unreachable)? = Some(CachedStatus {
+            executable,
+            at: Instant::now(),
+            payload: payload.clone(),
+            uptime: None,
+        });
+        Ok(payload)
+    }
+
+    async fn light_inner(&self) -> Result<serde_json::Value, CollectError> {
+        let cached = self
+            .cache
+            .lock()
+            .map_err(|_| CollectError::Unreachable)?
+            .clone();
+        if let Some(cached) = cached.filter(|cached| {
+            self.runtime.executable().as_ref() == Some(&cached.executable)
+                && cached.executable.is_file()
+                && cached.at.elapsed()
+                    < crate::modules::runtime_defaults::status_full_diagnostic_interval()
+        }) {
+            // Accept only the official identity at the cached port AND PID. /healthz
+            // alone is liveness, not readiness. Unknown/old contracts use full CLI.
+            let report =
+                crate::modules::status::OfficialStatusReport::from_value(cached.payload.clone());
+            let mapped = crate::modules::status::map_official_output(
+                &report,
+                None,
+                crate::types::status::ConnectionState::Unconfigured,
+                crate::types::status::OperationState::Idle,
+            );
+            if let (Some(port), Some(pid)) = (
+                mapped.port,
+                mapped
+                    .pid
+                    .as_deref()
+                    .and_then(|pid| pid.parse::<u64>().ok()),
+            ) {
+                if let Ok((health, ready)) = probe_local(port).await {
+                    let identity = |value: &serde_json::Value| {
+                        value["service"] == "opencodex"
+                            && value["pid"].as_u64() == Some(pid)
+                            && value["port"].as_u64() == Some(port as u64)
+                    };
+                    let uptime = health["uptime"].as_f64();
+                    let continuous = uptime.is_some_and(|uptime| {
+                        uptime.is_finite()
+                            && uptime >= 0.0
+                            && cached.uptime.is_none_or(|previous| uptime >= previous)
+                    });
+                    let ready_now = ready["status"] == "ready";
+                    if identity(&health)
+                        && identity(&ready)
+                        && health["status"] == "ok"
+                        && continuous
+                        && (mapped.runtime == crate::types::status::RuntimeState::Running)
+                            == ready_now
+                        && health["version"]
+                            .as_str()
+                            .is_some_and(|version| !version.is_empty())
+                        && health["version"] == ready["version"]
+                        && matches!(
+                            ready["status"].as_str(),
+                            Some("ready" | "pending" | "failed")
+                        )
+                    {
+                        if let Ok(mut guard) = self.cache.lock() {
+                            if let Some(cache) = guard.as_mut() {
+                                cache.uptime = uptime;
+                            }
+                        }
+                        return Ok(cached.payload);
+                    }
+                }
+            }
+        }
+        self.fetch_inner().await
     }
 }
 
+async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value), CollectError> {
+    static CLIENT: std::sync::OnceLock<reqwest::Client> = std::sync::OnceLock::new();
+    let client = CLIENT.get_or_init(|| {
+        reqwest::Client::builder()
+            .no_proxy()
+            .redirect(reqwest::redirect::Policy::none())
+            .timeout(crate::modules::runtime_defaults::status_health_timeout())
+            .build()
+            .expect("loopback client")
+    });
+    async fn read(
+        client: &reqwest::Client,
+        port: u16,
+        path: &str,
+    ) -> Result<serde_json::Value, CollectError> {
+        let mut response = client
+            .get(format!("http://127.0.0.1:{port}/{path}"))
+            .send()
+            .await
+            .map_err(|_| CollectError::Unreachable)?;
+        if !matches!(response.status().as_u16(), 200 | 503) {
+            return Err(CollectError::Unreachable);
+        }
+        let limit = crate::modules::runtime_defaults::status_output_max_bytes() as usize;
+        let mut bytes = Vec::new();
+        while let Some(chunk) = response
+            .chunk()
+            .await
+            .map_err(|_| CollectError::Unreachable)?
+        {
+            if chunk.len() > limit.saturating_sub(bytes.len()) {
+                return Err(CollectError::Parse);
+            }
+            bytes.extend_from_slice(&chunk);
+        }
+        serde_json::from_slice(&bytes).map_err(|_| CollectError::Parse)
+    }
+    tokio::try_join!(read(client, port, "healthz"), read(client, port, "readyz"))
+}
+
 impl StatusSource for OfficialStatusSource {
+    fn fetch_light(&self) -> Result<serde_json::Value, CollectError> {
+        tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
+        tokio::task::block_in_place(|| {
+            tokio::runtime::Handle::current().block_on(self.light_inner())
+        })
+    }
+
     fn fetch(&self) -> Result<serde_json::Value, CollectError> {
         tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
         let _guard = tokio::runtime::Handle::current().enter();
@@ -250,5 +411,134 @@ mod tests {
         let mut collector = crate::modules::status::StatusCollector::new(source);
         let error = collector.refresh().expect_err("unreachable expected");
         assert_eq!(error, CollectError::Unreachable);
+    }
+    fn script_source(root: &Path, script: &str) -> OfficialStatusSource {
+        let executable = root.join("ocx-fixture");
+        std::fs::write(&executable, script).unwrap();
+        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755)).unwrap();
+        OfficialStatusSource::new(
+            crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(executable),
+            root,
+            EnvironmentPolicy {
+                opencodex_home: root.join("data"),
+                ..Default::default()
+            },
+        )
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn steady_probe_avoids_cli_but_identity_restart_expiry_and_environment_refresh_it() {
+        use std::io::{Read, Write};
+        use std::sync::atomic::{AtomicBool, Ordering};
+        use std::sync::Arc;
+        let root = tempfile::tempdir().unwrap();
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        listener.set_nonblocking(true).unwrap();
+        let identity = Arc::new(Mutex::new(
+            serde_json::json!({"status":"ok","service":"opencodex","pid":42,"port":port,"version":"2.69.0","uptime":100.0}),
+        ));
+        let stop = Arc::new(AtomicBool::new(false));
+        let server_identity = identity.clone();
+        let server_stop = stop.clone();
+        let server = std::thread::spawn(move || {
+            while !server_stop.load(Ordering::SeqCst) {
+                let Ok((mut stream, _)) = listener.accept() else {
+                    std::thread::sleep(Duration::from_millis(2));
+                    continue;
+                };
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(1)))
+                    .unwrap();
+                let mut request = [0; 2048];
+                let count = stream.read(&mut request).unwrap_or(0);
+                let ready = String::from_utf8_lossy(&request[..count]).contains("/readyz");
+                let mut payload = server_identity.lock().unwrap().clone();
+                if ready {
+                    payload["status"] = serde_json::json!("ready");
+                }
+                let body = payload.to_string();
+                let response = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                    body.len(),
+                    body
+                );
+                let _ = stream.write_all(response.as_bytes());
+            }
+        });
+        let script = format!("#!/bin/sh\necho call >> calls\necho '{{\"status\":\"running\",\"ready\":true,\"port\":{},\"pid\":\"42\",\"dataRoot\":\"/tmp/fixture\"}}'\n",port);
+        let mut source = script_source(root.path(), &script);
+        let calls = || {
+            std::fs::read_to_string(root.path().join("calls"))
+                .unwrap()
+                .lines()
+                .count()
+        };
+        source.fetch().unwrap();
+        source.fetch_light().unwrap();
+        source.fetch_light().unwrap();
+        assert_eq!(
+            calls(),
+            1,
+            "steady health and readiness reuse full diagnostic"
+        );
+        identity.lock().unwrap()["pid"] = serde_json::json!(43);
+        source.fetch_light().unwrap();
+        assert_eq!(calls(), 2);
+        identity.lock().unwrap()["pid"] = serde_json::json!(42);
+        source.fetch_light().unwrap();
+        identity.lock().unwrap()["uptime"] = serde_json::json!(1.0);
+        source.fetch_light().unwrap();
+        assert_eq!(calls(), 3, "restart loses continuity");
+        source.cache.lock().unwrap().as_mut().unwrap().at =
+            Instant::now() - crate::modules::runtime_defaults::status_full_diagnostic_interval();
+        source.fetch_light().unwrap();
+        assert_eq!(calls(), 4);
+        source.set_environment(root.path().join("new-data"));
+        source.fetch_light().unwrap();
+        assert_eq!(calls(), 5);
+        identity.lock().unwrap()["service"] = serde_json::json!("foreign-service");
+        source.fetch_light().unwrap();
+        assert_eq!(calls(), 6);
+        stop.store(true, Ordering::SeqCst);
+        server.join().unwrap();
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn oversized_diagnostic_is_bounded_and_does_not_seed_cache() {
+        let root = tempfile::tempdir().unwrap();
+        let source = script_source(
+            root.path(),
+            "#!/bin/sh\n/usr/bin/head -c 1048576 /dev/zero\n",
+        );
+        assert_eq!(source.fetch().unwrap_err(), CollectError::Parse);
+        assert!(source.cache.lock().unwrap().is_none());
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn timeout_reaps_only_its_diagnostic_group() {
+        let root = tempfile::tempdir().unwrap();
+        let source = script_source(
+            root.path(),
+            "#!/bin/sh\necho $$ > diagnostic.pid\nsleep 60 &\necho $! > child.pid\nwait\n",
+        );
+        let mut unrelated = std::process::Command::new("/bin/sleep")
+            .arg("60")
+            .spawn()
+            .unwrap();
+        assert_eq!(source.fetch().unwrap_err(), CollectError::Timeout);
+        let pid: i32 = std::fs::read_to_string(root.path().join("diagnostic.pid"))
+            .unwrap()
+            .trim()
+            .parse()
+            .unwrap();
+        assert_ne!(
+            unsafe { libc::kill(pid, 0) },
+            0,
+            "diagnostic process reaped"
+        );
+        assert!(
+            unrelated.try_wait().unwrap().is_none(),
+            "independent process survives"
+        );
+        unrelated.kill().unwrap();
+        unrelated.wait().unwrap();
     }
 }

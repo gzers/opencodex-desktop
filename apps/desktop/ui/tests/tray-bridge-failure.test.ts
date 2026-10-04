@@ -51,7 +51,7 @@ describe('tray command channel failures are not silent (F-07)', () => {
 
     // 恢复：后续排空成功，通道恢复登记一次，不再重复告警。
     failing = false
-    await vi.advanceTimersByTimeAsync(1100)
+    await vi.advanceTimersByTimeAsync(60_000)
     expect(app.recentEvents.some(event => event.message.includes('托盘命令通道已恢复'))).toBe(true)
     wrapper.unmount()
   })

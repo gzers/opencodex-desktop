@@ -111,13 +111,18 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     if (!shader) return null
     gl.shaderSource(shader, source)
     gl.compileShader(shader)
-    return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null
+    if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader
+    gl.deleteShader(shader)
+    return null
   }
 
   const program = gl.createProgram()
   const vertex = compile(gl.VERTEX_SHADER, VERT)
   const fragment = compile(gl.FRAGMENT_SHADER, FRAG)
   if (!program || !vertex || !fragment) {
+    if (vertex) gl.deleteShader(vertex)
+    if (fragment) gl.deleteShader(fragment)
+    if (program) gl.deleteProgram(program)
     canvas.remove()
     return null
   }
@@ -125,9 +130,14 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   gl.attachShader(program, fragment)
   gl.linkProgram(program)
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    gl.deleteShader(vertex)
+    gl.deleteShader(fragment)
+    gl.deleteProgram(program)
     canvas.remove()
     return null
   }
+  gl.deleteShader(vertex)
+  gl.deleteShader(fragment)
   gl.useProgram(program)
 
   const buffer = gl.createBuffer()
@@ -152,11 +162,17 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   let colors: readonly string[] = ['#B1A7FF', '#7A9DFF', '#3941FF']
   let reduced = false
   let frame = 0
-  let start = performance.now()
-  let frozen = 0
+  let lastTime: number | null = null
+  let elapsed = 0
+  let active = true
+  let destroyed = false
+  let lastLook = ''
 
   function applyLook(): void {
     const dark = options.getDark()
+    const key = colors.join('|') + dark
+    if (key === lastLook) return
+    lastLook = key
     const [a, b, c] = [rgbFloats(colors[0]), rgbFloats(colors[1]), rgbFloats(colors[2])]
     gl.uniform3fv(loc.ca, a)
     gl.uniform3fv(loc.cb, b)
@@ -169,8 +185,11 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   function resize(): void {
     const rect = host.getBoundingClientRect()
     const dpr = Math.min(1.6, window.devicePixelRatio || 1)
-    canvas.width = Math.max(1, Math.round(rect.width * dpr))
-    canvas.height = Math.max(1, Math.round(rect.height * dpr))
+    const width = Math.max(1, Math.round(rect.width * dpr))
+    const height = Math.max(1, Math.round(rect.height * dpr))
+    if (canvas.width !== width) canvas.width = width
+    if (canvas.height !== height) canvas.height = height
+    gl.uniform2f(loc.res, width, height)
     gl.viewport(0, 0, canvas.width, canvas.height)
     gl.uniform1f(loc.cy, centerFraction(rect))
   }
@@ -189,46 +208,57 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   }
 
   function loop(now: number): void {
-    gl.uniform2f(loc.res, canvas.width, canvas.height)
-    gl.uniform1f(loc.time, reduced ? frozen : (now - start) / 1000)
+    frame = 0
+    if (destroyed || !active) return
+    if (!reduced && lastTime !== null) elapsed += Math.min(now - lastTime, 50) / 1000
+    lastTime = now
+    gl.uniform1f(loc.time, elapsed)
     gl.drawArrays(gl.TRIANGLES, 0, 3)
-    frame = requestAnimationFrame(loop)
+    if (!reduced) frame = requestAnimationFrame(loop)
   }
 
   function stop(): void {
     if (frame) cancelAnimationFrame(frame)
     frame = 0
+    lastTime = null
+  }
+
+  function wake(): void {
+    if (!destroyed && active && !frame) frame = requestAnimationFrame(loop)
   }
 
   applyLook()
   resize()
   frame = requestAnimationFrame(loop)
-  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => resize())
+  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => { resize(); if (reduced) wake() })
   observer?.observe(host)
 
   return {
     setColors(next) {
       if (!Array.isArray(next) || next.length < 3) return
-      colors = next.slice(0, 3)
+      colors = next
+      const previous = lastLook
       applyLook()
+      if (reduced && previous !== lastLook) wake()
     },
     setReduced(value) {
-      if (value && !reduced) frozen = (performance.now() - start) / 1000
+      if (reduced === value) return
       reduced = value
+      stop()
+      wake()
     },
     setActive(value) {
-      if (value) {
-        if (!frame) {
-          start = performance.now() - (reduced ? frozen : 0) * 1000
-          frame = requestAnimationFrame(loop)
-        }
-      } else {
-        stop()
-      }
+      if (active === value) return
+      active = value
+      if (value) wake()
+      else stop()
     },
     destroy() {
+      destroyed = true
       stop()
       observer?.disconnect()
+      gl.deleteBuffer(buffer)
+      gl.deleteProgram(program)
       const lose = gl.getExtension('WEBGL_lose_context')
       lose?.loseContext()
       canvas.remove()

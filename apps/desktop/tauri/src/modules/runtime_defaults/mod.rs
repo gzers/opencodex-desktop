@@ -19,6 +19,7 @@ struct RuntimeDefaults {
     install: InstallDefaults,
     extensions: ExtensionsDefaults,
     updates: UpdatesDefaults,
+    ui: UiDefaults,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -40,6 +41,9 @@ struct StatusDefaults {
     sample_ms: u64,
     backoff_ms: u64,
     max_events_per_second: u32,
+    full_diagnostic_ms: u64,
+    health_timeout_ms: u64,
+    output_max_bytes: u64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -60,6 +64,7 @@ struct DiagnosticsDefaults {
     doctor_seconds: u64,
     shim_seconds: u64,
     recent_log_lines: usize,
+    recent_log_max_bytes: usize,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -248,4 +253,24 @@ mod tests {
             desktop_update_endpoint("stable")
         );
     }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct UiDefaults {
+    panel_idle_ms: u64,
+}
+pub fn panel_idle_timeout() -> Duration {
+    Duration::from_millis(defaults().ui.panel_idle_ms)
+}
+pub fn status_full_diagnostic_interval() -> Duration {
+    Duration::from_millis(defaults().status.full_diagnostic_ms)
+}
+pub fn status_health_timeout() -> Duration {
+    Duration::from_millis(defaults().status.health_timeout_ms)
+}
+pub fn status_output_max_bytes() -> u64 {
+    defaults().status.output_max_bytes
+}
+pub fn recent_log_max_bytes() -> usize {
+    defaults().diagnostics.recent_log_max_bytes
 }

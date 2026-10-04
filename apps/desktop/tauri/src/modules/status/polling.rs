@@ -105,13 +105,9 @@ where
             let refresh_result = self
                 .collector
                 .lock()
-                .map(|mut collector| collector.refresh_at(now))
+                .map(|mut collector| collector.refresh_light_at(now))
                 .unwrap_or(Err(crate::modules::status::CollectError::Unreachable));
-            if refresh_result.is_err() {
-                if let Ok(mut collector) = self.collector.lock() {
-                    collector.record_failure();
-                }
-            }
+            let _ = refresh_result;
             self.emit_current();
             if runtime_due {
                 self.runtime_at = Some(now);
@@ -122,43 +118,35 @@ where
         }
     }
 
-    /// 执行 FZ-08 周期循环；调用方负责运行时与停机信号。
+    pub fn invalidate_schedule(&mut self) {
+        self.runtime_at = None;
+        self.connection_at = None;
+    }
+
+    pub fn next_wait(&self) -> Duration {
+        let now = Instant::now();
+        let backgrounded = self.background_state.backgrounded();
+        let collector = self.collector.lock().expect("status collector lock");
+        let wait = |at: Option<Instant>, dimension| {
+            at.map(|at| {
+                collector
+                    .next_interval(dimension, backgrounded)
+                    .saturating_sub(now.duration_since(at))
+            })
+            .unwrap_or(Duration::ZERO)
+        };
+        wait(self.runtime_at, StatusDimension::Runtime)
+            .min(wait(self.connection_at, StatusDimension::Connection))
+    }
+
+    /// Wait for the actual deadline instead of waking on a fixed foreground ticker.
     pub async fn run_until(&mut self, mut should_stop: impl FnMut() -> bool) {
         loop {
             self.poll_once().await;
-            let now = Instant::now();
-            let backgrounded = self.background_state.backgrounded();
-            let runtime_interval = {
-                let guard = self.collector.lock().expect("status collector lock");
-                guard.next_interval(StatusDimension::Runtime, backgrounded)
-            };
-            let connection_interval = {
-                let guard = self.collector.lock().expect("status collector lock");
-                guard.next_interval(StatusDimension::Connection, backgrounded)
-            };
-            let runtime_wait = self
-                .runtime_at
-                .map(|at| {
-                    runtime_interval
-                        .checked_sub(now.duration_since(at))
-                        .unwrap_or(Duration::ZERO)
-                })
-                .unwrap_or(Duration::ZERO);
-            let connection_wait = self
-                .connection_at
-                .map(|at| {
-                    connection_interval
-                        .checked_sub(now.duration_since(at))
-                        .unwrap_or(Duration::ZERO)
-                })
-                .unwrap_or(Duration::ZERO);
-            let wait = runtime_wait
-                .min(connection_wait)
-                .max(Duration::from_millis(20));
-            tokio::time::sleep(wait).await;
             if should_stop() {
                 break;
             }
+            tokio::time::sleep(self.next_wait()).await;
         }
     }
 }
@@ -276,5 +264,35 @@ mod tests {
             RefreshPolicy::next_interval(StatusDimension::Connection, 0, true),
             crate::modules::status::background_connection_interval()
         );
+    }
+    struct BackgroundFixture;
+    impl BackgroundStateProvider for BackgroundFixture {
+        fn backgrounded(&self) -> bool {
+            true
+        }
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn deadline_wait_and_failure_backoff_are_applied_once() {
+        let collector = Arc::new(Mutex::new(StatusCollector::new(SequenceSource::new())));
+        let mut service = StatusPollingService::new(
+            collector.clone(),
+            Arc::new(RecordingEmitter::default()),
+            BackgroundFixture,
+        );
+        service.poll_once().await;
+        assert!(
+            service.next_wait() > Duration::from_secs(9),
+            "no foreground ticker while backgrounded"
+        );
+        service.runtime_at = Some(Instant::now() - Duration::from_secs(100));
+        collector.lock().unwrap().last_request = None;
+        service.poll_once().await;
+        assert_eq!(collector.lock().unwrap().failure_count(), 1);
+        assert!(
+            service.next_wait() > Duration::from_secs(19),
+            "single failure doubles interval once"
+        );
+        service.invalidate_schedule();
+        assert_eq!(service.next_wait(), Duration::ZERO);
     }
 }

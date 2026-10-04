@@ -80,44 +80,30 @@ pub fn read_recent(path: impl AsRef<Path>, max_lines: usize) -> Result<ReadRecen
         operation: "open log".to_string(),
         detail: error.to_string(),
     })?;
+    // Read at most one bounded tail, including one byte to identify a partial
+    // first record. Never return a cut fragment that could bypass redaction.
+    let limit = crate::modules::runtime_defaults::recent_log_max_bytes() as u64;
+    let start = metadata.len().saturating_sub(limit);
+    let offset = start.saturating_sub(1);
+    file.seek(SeekFrom::Start(offset))
+        .map_err(|error| AppError::FileSystem {
+            operation: "seek log".into(),
+            detail: error.to_string(),
+        })?;
     let mut buffer = Vec::new();
-    let mut start = metadata.len();
-    let mut has_incomplete_head = false;
-
-    while buffer.iter().filter(|byte| **byte == b'\n').count() < max_lines && start > 0 {
-        let chunk_size = start.min(64 * 1024);
-        start -= chunk_size;
-        let mut chunk = vec![0_u8; chunk_size as usize];
-        file.seek(SeekFrom::Start(start))
-            .map_err(|error| AppError::FileSystem {
-                operation: "seek log".to_string(),
-                detail: error.to_string(),
-            })?;
-        file.read_exact(&mut chunk)
-            .map_err(|error| AppError::FileSystem {
-                operation: "read log chunk".to_string(),
-                detail: error.to_string(),
-            })?;
-
-        // 起点在文件中间时，首个片段可能是不完整记录，必须丢弃。
-        let search_from = if start == 0 { 0 } else { 1 };
-        let confirmed_chunk = &chunk[search_from..];
-        if search_from == 1 && !confirmed_chunk.starts_with(b"\n") {
-            has_incomplete_head = true;
-        }
-
-        let mut combined = Vec::with_capacity(confirmed_chunk.len() + buffer.len());
-        combined.extend_from_slice(confirmed_chunk);
-        combined.extend_from_slice(&buffer);
-        buffer = combined;
-
-        let newline_count = buffer.iter().filter(|byte| **byte == b'\n').count();
-        if newline_count >= max_lines {
-            break;
-        }
-    }
-
-    let raw = String::from_utf8_lossy(&buffer);
+    file.take(metadata.len() - offset)
+        .read_to_end(&mut buffer)
+        .map_err(|error| AppError::FileSystem {
+            operation: "read log tail".into(),
+            detail: error.to_string(),
+        })?;
+    let has_incomplete_head = start > 0 && buffer.first() != Some(&b'\n');
+    let tail = if start > 0 {
+        &buffer[buffer.len().min(1)..]
+    } else {
+        &buffer[..]
+    };
+    let raw = String::from_utf8_lossy(tail);
     let mut parsed_lines: Vec<&str> = if has_incomplete_head {
         raw.lines().skip(1).collect()
     } else {
@@ -142,7 +128,7 @@ pub fn read_recent(path: impl AsRef<Path>, max_lines: usize) -> Result<ReadRecen
     Ok(ReadRecentResult {
         lines,
         redacted_line_count,
-        truncated: has_incomplete_head || dropped_old_lines > 0,
+        truncated: start > 0 || dropped_old_lines > 0,
         file_missing: false,
     })
 }
@@ -281,6 +267,30 @@ mod tests {
         assert_eq!(
             sanitize_line("normal log line").as_deref(),
             Some("normal log line")
+        );
+    }
+    #[test]
+    fn bounded_tail_drops_partial_sensitive_and_utf8_records() {
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("large.log");
+        let limit = crate::modules::runtime_defaults::recent_log_max_bytes();
+        std::fs::write(
+            &path,
+            format!("secret={}\n完整记录\nlast record\n", "x".repeat(limit + 13)),
+        )
+        .unwrap();
+        let result = read_recent(&path, 100).unwrap();
+        assert!(result.truncated);
+        assert_eq!(result.lines, vec!["完整记录", "last record"]);
+        std::fs::write(&path, "x".repeat(limit + 1)).unwrap();
+        let result = read_recent(&path, 100).unwrap();
+        assert!(result.truncated);
+        assert!(result.lines.is_empty());
+        std::fs::write(&path, format!("old\n{}", "a".repeat(limit))).unwrap();
+        assert_eq!(
+            read_recent(&path, 100).unwrap().lines[0].len(),
+            limit,
+            "newline boundary keeps full record"
         );
     }
 }

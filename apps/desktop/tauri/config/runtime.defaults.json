@@ -1,15 +1,85 @@
 {
   "schema_version": 1,
-  "process": { "start_seconds": 20, "stop_seconds": 10, "restart_seconds": 30, "runner_start_seconds": 30, "reap_grace_seconds": 5 },
-  "status": { "foreground_ms": 3000, "foreground_backoff_ms": 15000, "background_ms": 10000, "background_backoff_ms": 30000, "debounce_ms": 1000, "sample_ms": 5000, "backoff_ms": 60000, "max_events_per_second": 2 },
-  "sync": { "connect_seconds": 15, "item_seconds": 600, "total_seconds": 1800, "retry_backoff_seconds": [2, 4, 8] },
-  "install": { "default_tag": "latest", "idle_notice_seconds": 120, "post_install_probe_seconds": 30 },
-  "retention": { "backup_recent_count": 10, "backup_max_age_days": 30 },
-  "cleanup": { "logs_days": 30, "logs_max_lines": 10000, "notification_days": 30 },
-  "diagnostics": { "version_probe_seconds": 2, "doctor_seconds": 5, "shim_seconds": 30, "recent_log_lines": 200 },
-  "ui": { "startup_snapshot_wait_ms": 1500, "startup_preferences_wait_ms": 1500, "lifecycle_fallback_ms": 1500, "lifecycle_notice_stop_ms": 15000, "lifecycle_notice_start_ms": 35000, "lifecycle_late_observe_ms": 180000, "panel_load_notice_ms": 8000, "tray_poll_ms": 1000 },
-  "extensions": { "default_sync_method": "symlink", "default_client_enablement": true },
-  "updates": { "desktop": { "channels": { "stable": "https://github.com/gzers/opencodex-desktop/releases/latest/download/latest.json", "beta": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json" } } },
-  "update_check": { "default_interval_seconds": 86400, "manual_interval_seconds": 0 },
-  "product": { "links": {} }
+  "process": {
+    "start_seconds": 20,
+    "stop_seconds": 10,
+    "restart_seconds": 30,
+    "runner_start_seconds": 30,
+    "reap_grace_seconds": 5
+  },
+  "status": {
+    "foreground_ms": 3000,
+    "foreground_backoff_ms": 15000,
+    "background_ms": 10000,
+    "background_backoff_ms": 30000,
+    "debounce_ms": 1000,
+    "sample_ms": 5000,
+    "backoff_ms": 60000,
+    "max_events_per_second": 2,
+    "full_diagnostic_ms": 60000,
+    "health_timeout_ms": 1500,
+    "output_max_bytes": 262144
+  },
+  "sync": {
+    "connect_seconds": 15,
+    "item_seconds": 600,
+    "total_seconds": 1800,
+    "retry_backoff_seconds": [
+      2,
+      4,
+      8
+    ]
+  },
+  "install": {
+    "default_tag": "latest",
+    "idle_notice_seconds": 120,
+    "post_install_probe_seconds": 30
+  },
+  "retention": {
+    "backup_recent_count": 10,
+    "backup_max_age_days": 30
+  },
+  "cleanup": {
+    "logs_days": 30,
+    "logs_max_lines": 10000,
+    "notification_days": 30
+  },
+  "diagnostics": {
+    "version_probe_seconds": 2,
+    "doctor_seconds": 5,
+    "shim_seconds": 30,
+    "recent_log_lines": 200,
+    "recent_log_max_bytes": 1048576
+  },
+  "ui": {
+    "startup_snapshot_wait_ms": 1500,
+    "startup_preferences_wait_ms": 1500,
+    "lifecycle_fallback_ms": 1500,
+    "lifecycle_notice_stop_ms": 15000,
+    "lifecycle_notice_start_ms": 35000,
+    "lifecycle_late_observe_ms": 180000,
+    "panel_load_notice_ms": 8000,
+    "tray_fallback_ms": 30000,
+    "tray_backoff_ms": 120000,
+    "panel_idle_ms": 300000
+  },
+  "extensions": {
+    "default_sync_method": "symlink",
+    "default_client_enablement": true
+  },
+  "updates": {
+    "desktop": {
+      "channels": {
+        "stable": "https://github.com/gzers/opencodex-desktop/releases/latest/download/latest.json",
+        "beta": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json"
+      }
+    }
+  },
+  "update_check": {
+    "default_interval_seconds": 86400,
+    "manual_interval_seconds": 0
+  },
+  "product": {
+    "links": {}
+  }
 }

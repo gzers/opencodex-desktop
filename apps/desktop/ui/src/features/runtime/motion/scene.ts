@@ -90,7 +90,7 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
   let clock = 0
   let lastTime = 0
   let frame = 0
-  let paused = false
+  let disposed = false
   let active = true
   let reduced = false
   const strength = STRUCTURE_AMPLITUDE
@@ -111,15 +111,24 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
   let transitionStart = 0
 
   const tracks = new Map<string, Vec>()
-  let ambientState: Vec = ambientTarget()
+  const palettes = new Map(MOTION_STATES.map(state => [state.id, paletteRgb(state.id)]))
+  const shapeTarget: Vec = [0, 0, 0, 0]
+  const ambientBuffer: Vec = Array(14).fill(0)
+  const normalAppearance: Vec = [1, 1]
+  const staleAppearance: Vec = [0.15, 0.62]
+  let lastGlow = ''
+  let lastGeometry = ''
+  let ambientState: Vec = [...ambientTarget()]
 
   function reducedMotion(): boolean {
     return reduced
   }
 
   function liveShape(id: MotionStateId, shape: readonly number[]): Vec {
-    if (id === 'stale') return [...staleShape]
-    const next = [...shape]
+    const next = shapeTarget
+    const source = id === 'stale' ? staleShape : shape
+    for (let i = 0; i < 4; i++) next[i] = source[i]
+    if (id === 'stale') return next
     if (reducedMotion() || id === 'running') return next
     if (id === 'starting') {
       next[0] += 0.1 * (1 + Math.sin(motionPhase))
@@ -186,38 +195,47 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
       velocity = values.map(() => 0)
       tracks.set(key, velocity)
     }
-    return values.map((value, index) => {
-      const offset = value - target[index]
-      const j = velocity![index] + omega * offset
-      const decay = Math.exp(-omega * dt)
+    const decay = Math.exp(-omega * dt)
+    for (let index = 0; index < values.length; index++) {
+      const offset = values[index] - target[index]
+      const j = velocity[index] + omega * offset
       const next = target[index] + (offset + j * dt) * decay
-      velocity![index] = (velocity![index] - omega * j * dt) * decay
-      if (Math.abs(next - target[index]) < 1e-7 && Math.abs(velocity![index]) < 1e-6) {
-        velocity![index] = 0
-        return target[index]
-      }
-      return next
-    })
+      velocity[index] = (velocity[index] - omega * j * dt) * decay
+      if (Math.abs(next - target[index]) < 1e-7 && Math.abs(velocity[index]) < 1e-6) {
+        velocity[index] = 0
+        values[index] = target[index]
+      } else values[index] = next
+    }
+    return values
   }
 
   function ambientTarget(): Vec {
     const effect = EFFECTS[MOTION_STATES[selected].id]
     const phase = motionPhase
-    const cloudsTarget = Array.from({ length: 3 }, (_, index) => [
-      Math.sin(phase * (1 + index * 0.17) + index * 2) * (20 + effect.energy * 32),
-      Math.cos(phase * (0.83 + index * 0.13) + index * 1.4) * (12 + effect.energy * 19),
-      1 + Math.sin(phase + index) * 0.18,
-      0.32 + Math.sin(phase + index) * 0.08,
-    ]).flat()
-    return [...cloudsTarget, 0.88 + effect.energy * 0.2 + Math.sin(phase) * 0.1, (0.1 + effect.energy * 0.2) * (1 + Math.sin(phase) * 0.18)]
+    const target = ambientBuffer
+    for (let index = 0; index < 3; index++) {
+      const offset = index * 4
+      target[offset] = Math.sin(phase * (1 + index * 0.17) + index * 2) * (20 + effect.energy * 32)
+      target[offset + 1] = Math.cos(phase * (0.83 + index * 0.13) + index * 1.4) * (12 + effect.energy * 19)
+      target[offset + 2] = 1 + Math.sin(phase + index) * 0.18
+      target[offset + 3] = 0.32 + Math.sin(phase + index) * 0.08
+    }
+    target[12] = 0.88 + effect.energy * 0.2 + Math.sin(phase) * 0.1
+    target[13] = (0.1 + effect.energy * 0.2) * (1 + Math.sin(phase) * 0.18)
+    return target
   }
 
   function draw(): void {
     const time = clock / 1000
     const colors = currentColors
     const glowText = colors.map((color) => colorText(color))
-    ;['a', 'b', 'c'].forEach((key, index) => ambient.style.setProperty(`--glow-${key}`, glowText[index]))
-    onGlow?.(glowText)
+    const glowKey = glowText.join('|')
+    if (glowKey !== lastGlow) {
+      lastGlow = glowKey
+      ;['a', 'b', 'c'].forEach((key, index) => ambient.style.setProperty(`--glow-${key}`, glowText[index]))
+      onGlow?.(glowText)
+      mark.stops.forEach((stop, index) => stop.setAttribute('stop-color', glowText[index]))
+    }
     if (beam) {
       beam.style.transform = `rotate(${beamAngle}deg) scale(${ambientState[12]})`
       beam.style.opacity = String(ambientState[13])
@@ -228,21 +246,25 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
       floor.style.opacity = String(0.2 + height * 0.06)
     }
     clouds.forEach((cloud, index) => {
-      const [x, y, scale, opacity] = ambientState.slice(index * 4, index * 4 + 4)
+      const offset = index * 4
+      const x = ambientState[offset], y = ambientState[offset + 1], scale = ambientState[offset + 2], opacity = ambientState[offset + 3]
       cloud.style.transform = `translate(${x}px,${y}px) scale(${scale})`
       cloud.style.opacity = String(opacity)
     })
 
-    const geometry = computeGeometry(current as unknown as readonly [number, number, number, number], strength)
-    geometry.nodes.forEach((node, index) => {
-      mark.nodes[index].setAttribute('cx', String(node.x))
-      mark.nodes[index].setAttribute('cy', String(node.y))
+    const geometryKey = current.join('|')
+    if (geometryKey !== lastGeometry) {
+      lastGeometry = geometryKey
+      const geometry = computeGeometry(current as unknown as readonly [number, number, number, number], strength)
+      geometry.nodes.forEach((node, index) => {
+        mark.nodes[index].setAttribute('cx', String(node.x))
+        mark.nodes[index].setAttribute('cy', String(node.y))
     })
     geometry.links.forEach((d, index) => {
       mark.links[index].setAttribute('d', d)
       mark.links[index].setAttribute('opacity', String(geometry.connection))
     })
-    mark.stops.forEach((stop, index) => stop.setAttribute('stop-color', colorText(colors[index])))
+    }
     const shift = Math.sin(time * 0.65) * 3
     mark.gradient.setAttribute('x1', String(8 + shift))
     mark.gradient.setAttribute('x2', String(16 - shift))
@@ -257,7 +279,7 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
 
   function tick(now: number): void {
     frame = 0
-    if (paused || !active) return
+    if (disposed || !active) return
     const dt = lastTime ? Math.min(now - lastTime, 50) / 1000 : 0
     clock += dt * 1000
     lastTime = now
@@ -271,8 +293,8 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
       if (state.id === 'stopping' && age < 1) target[2] += 0.12 * Math.sin(Math.PI * age) ** 2
       current = track('shape', current, target, dt)
       floatPose = track('float', floatPose, floatTarget(state.id, age), dt, 8)
-      currentColors = currentColors.map((color, index) => track(`color${index}`, color, paletteRgb(state.id)[index], dt, 8))
-      appearance = track('appearance', appearance, state.id === 'stale' ? [0.15, 0.62] : [1, 1], dt, 8)
+      for (let index = 0; index < currentColors.length; index++) track(`color${index}`, currentColors[index], palettes.get(state.id)![index], dt, 8)
+      appearance = track('appearance', appearance, state.id === 'stale' ? staleAppearance : normalAppearance, dt, 8)
       ambientState = track('ambient', ambientState, ambientTarget(), dt, 7)
       const targetVelocity = state.id === 'confirming' ? 65 * phaseSpeed * Math.cos(motionPhase) : innerVelocity * 0.55
       beamVelocity += (targetVelocity - beamVelocity) * (1 - Math.exp(-dt * 5))
@@ -284,7 +306,7 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
   }
 
   function schedule(): void {
-    if (!frame && !paused && active && typeof requestAnimationFrame === 'function') {
+    if (!frame && !disposed && active && typeof requestAnimationFrame === 'function') {
       frame = requestAnimationFrame(tick)
     }
   }
@@ -305,7 +327,7 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
       current = MOTION_STATES[next].id === 'stale' ? [...staleShape] : [...MOTION_STATES[next].shape]
       currentColors = paletteRgb(MOTION_STATES[next].id)
       appearance = MOTION_STATES[next].id === 'stale' ? [0.15, 0.62] : [1, 1]
-      ambientState = ambientTarget()
+      ambientState = [...ambientTarget()]
       tracks.clear()
       draw()
     }
@@ -344,6 +366,8 @@ export function createMotionScene({ ambient, markHost, onGlow }: MotionSceneOpti
       }
     },
     destroy() {
+      disposed = true
+      active = false
       if (frame) cancelAnimationFrame(frame)
       frame = 0
       mark.svg.remove()

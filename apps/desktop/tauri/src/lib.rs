@@ -266,6 +266,7 @@ pub fn run() {
             if !launch_main(&data_root) {
                 if let Some(window) = app.get_window("main") {
                     let _ = window.hide();
+                    if let Some(activity) = window.app_handle().try_state::<crate::infrastructure::app_activity::AppActivity>() { activity.publish(window.app_handle(), false); }
                     // 启动就不显示窗口 = 只留托盘：此时不该占着 Dock 图标。
                     apply_dock_visibility(app.handle(), false);
                 }
@@ -324,6 +325,9 @@ pub fn run() {
                 opencodex_home,
             });
 
+            app.manage(crate::infrastructure::app_activity::AppActivity::default());
+            app.manage(crate::commands::panel::PanelLifetime::default());
+            crate::infrastructure::app_activity::install(app.handle());
             // FZ-08 后台周期轮询；Tauri 事件只推送同一快照，前端不再自建定时器。
             let app_handle = app.handle().clone();
             let polling_collector = collector.clone();
@@ -394,7 +398,7 @@ pub fn run() {
                 impl crate::modules::status::polling::BackgroundStateProvider for TauriBackgroundState {
                     fn backgrounded(&self) -> bool {
                         use tauri::Manager;
-                        self.0.windows().is_empty()
+                        !self.0.state::<crate::infrastructure::app_activity::AppActivity>().foreground()
                     }
                 }
 
@@ -411,7 +415,12 @@ pub fn run() {
                 );
                 loop {
                     service.poll_once().await;
-                    tokio::time::sleep(crate::modules::status::run_interval()).await;
+                    let wait = service.next_wait();
+                    let activity = app_handle.state::<crate::infrastructure::app_activity::AppActivity>();
+                    tokio::select! {
+                        _ = tokio::time::sleep(wait) => {},
+                        _ = activity.wake.notified() => { service.invalidate_schedule(); }
+                    }
                 }
             });
             Ok(())
@@ -447,6 +456,7 @@ pub fn run() {
                     let data_root = app.state::<crate::state::SharedDataRoot>();
                     reveal_main_window(app, "tray/menu", &data_root.0);
                     app.state::<crate::state::SharedTrayRequests>().push(action);
+                    { use tauri::Emitter; let _ = app.emit("tray-requests-available", ()); }
                 }
                 // 原生「重载主界面」（F-06）：直接重载主 WebView，不入前端请求队列。
                 TrayAction::ReloadMain => {
@@ -456,6 +466,7 @@ pub fn run() {
                 }
                 TrayAction::Start | TrayAction::Stop | TrayAction::Restart => {
                     app.state::<crate::state::SharedTrayRequests>().push(action);
+                    { use tauri::Emitter; let _ = app.emit("tray-requests-available", ()); }
                 }
             }
         })
@@ -516,6 +527,7 @@ pub fn run() {
             commands::workspace::open_local_document,
             commands::migration::export_migration,
             commands::migration::import_migration,
+            crate::infrastructure::app_activity::app_foreground,
             commands::drain_tray_requests,
             commands::runtime::runtime_source,
             commands::runtime::set_runtime_source,
@@ -532,6 +544,15 @@ pub fn run() {
             commands::tray::tray_state
         ])
         .on_window_event(|window, event| {
+            if window.label() == "main" {
+                if let Some(activity) = window.app_handle().try_state::<crate::infrastructure::app_activity::AppActivity>() {
+                    match event {
+                        tauri::WindowEvent::Focused(focused) => activity.publish(window.app_handle(), *focused),
+                        tauri::WindowEvent::Resized(_) => activity.publish(window.app_handle(), window.is_focused().unwrap_or(false)),
+                        _ => {},
+                    }
+                }
+            }
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 if window.label() != "main" {
                     return;
@@ -542,6 +563,7 @@ pub fn run() {
                 if close_action(keep_proxy_on_close(window.app_handle())) == CloseAction::Hide {
                     api.prevent_close();
                     let _ = window.hide();
+                    if let Some(activity) = window.app_handle().try_state::<crate::infrastructure::app_activity::AppActivity>() { activity.publish(window.app_handle(), false); }
                     // 只隐藏窗口：Dock 图标随之消失（托盘仍在），再打开窗口时恢复。
                     apply_dock_visibility(window.app_handle(), false);
                 }

@@ -13,7 +13,8 @@ const ui = defaults.ui as {
   lifecycle_notice_start_ms: number
   lifecycle_late_observe_ms: number
   panel_load_notice_ms: number
-  tray_poll_ms: number
+  tray_fallback_ms: number
+  tray_backoff_ms: number
 }
 
 export const STARTUP_SNAPSHOT_WAIT_MS = ui.startup_snapshot_wait_ms
@@ -23,5 +24,6 @@ export const LIFECYCLE_NOTICE_STOP_MS = ui.lifecycle_notice_stop_ms
 export const LIFECYCLE_NOTICE_START_MS = ui.lifecycle_notice_start_ms
 export const LIFECYCLE_LATE_OBSERVE_MS = ui.lifecycle_late_observe_ms
 export const PANEL_LOAD_NOTICE_MS = ui.panel_load_notice_ms
-export const TRAY_POLL_MS = ui.tray_poll_ms
+export const TRAY_FALLBACK_MS = ui.tray_fallback_ms
+export const TRAY_BACKOFF_MS = ui.tray_backoff_ms
 

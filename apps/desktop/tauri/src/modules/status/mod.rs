@@ -110,6 +110,9 @@ pub enum CollectError {
 /// 官方采集器边界。真实实现必须在 5 秒内返回或转换为 Timeout。
 pub trait StatusSource {
     fn fetch(&self) -> Result<Value, CollectError>;
+    fn fetch_light(&self) -> Result<Value, CollectError> {
+        self.fetch()
+    }
 
     /// 当前运行来源是否已解析到可用入口。
     ///
@@ -713,6 +716,8 @@ where
     pid: Option<String>,
     failure_count: u32,
     last_request: Option<Instant>,
+    last_result: Option<Result<MappedOfficialStatus, CollectError>>,
+    last_was_light: bool,
 }
 
 impl<S> StatusCollector<S>
@@ -732,6 +737,8 @@ where
             pid: None,
             failure_count: 0,
             last_request: None,
+            last_result: None,
+            last_was_light: false,
         }
     }
 
@@ -763,6 +770,11 @@ where
         !RefreshPolicy::is_debounced(self.last_request, now)
     }
 
+    pub fn invalidate(&mut self) {
+        self.last_request = None;
+        self.last_result = None;
+    }
+
     pub fn record_failure(&mut self) {
         self.failure_count = self.failure_count.saturating_add(1);
     }
@@ -771,13 +783,39 @@ where
         self.refresh_at(Instant::now())
     }
 
-    /// 使用注入时钟刷新；去抖期内返回 Timeout，不调用来源。
+    /// 使用注入时钟刷新；去抖期内共享上次结果，不额外调用来源。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        if !self.request_allowed(now) {
-            return Err(CollectError::Timeout);
+        if !self.request_allowed(now) && !self.last_was_light && self.source.resolved() {
+            return self
+                .last_result
+                .clone()
+                .unwrap_or(Err(CollectError::Timeout));
         }
+        self.refresh_with(now, false)
+    }
+
+    pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
+        if !self.request_allowed(now) {
+            return self
+                .last_result
+                .clone()
+                .unwrap_or(Err(CollectError::Timeout));
+        }
+        self.refresh_with(now, true)
+    }
+
+    fn refresh_with(
+        &mut self,
+        now: Instant,
+        light: bool,
+    ) -> Result<MappedOfficialStatus, CollectError> {
         self.last_request = Some(now);
-        let payload = match self.source.fetch() {
+        self.last_was_light = light;
+        let payload = match if light {
+            self.source.fetch_light()
+        } else {
+            self.source.fetch()
+        } {
             Ok(payload) => payload,
             Err(error) => {
                 self.record_failure();
@@ -794,6 +832,7 @@ where
                     self.port = None;
                     self.pid = None;
                 }
+                self.last_result = Some(Err(error));
                 return Err(error);
             }
         };
@@ -813,6 +852,7 @@ where
         self.port = mapped.port;
         self.pid = mapped.pid.clone();
         self.failure_count = 0;
+        self.last_result = Some(Ok(mapped.clone()));
         Ok(mapped)
     }
 }

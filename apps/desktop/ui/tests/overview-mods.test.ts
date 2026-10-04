@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { mount } from '@vue/test-utils'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '@/App.vue'
 import { useRouteStore } from '@/stores/routes'
 
@@ -19,9 +19,14 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
+const mounted: ReturnType<typeof mount>[] = []
+afterEach(() => { for (const wrapper of mounted.splice(0)) wrapper.unmount() })
+
 function mountOverview() {
-  const wrapper = mount(App, { global: { plugins: [createPinia()] } })
-  useRouteStore().go('overview')
+  const pinia = createPinia()
+  const wrapper = mount(App, { global: { plugins: [pinia] } })
+  mounted.push(wrapper)
+  useRouteStore(pinia).go('overview')
   return wrapper
 }
 
@@ -67,7 +72,7 @@ describe('overview module cards', () => {
     await new Promise(resolve => setTimeout(resolve, 0))
     await wrapper.vm.$nextTick()
 
-    const routes = useRouteStore()
+    const routes = useRouteStore(wrapper.vm.$pinia)
     const upgrade = wrapper.findAll('.mods .mod')[0]
     expect(upgrade.find('.mod-head h3').text()).toBe('版本升级')
 

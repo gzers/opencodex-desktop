@@ -14,6 +14,77 @@ const PANEL_TITLEBAR_HEIGHT: f64 = 28.0;
 const PANEL_CORNER_RADIUS: f64 = 12.0;
 const HUB_SCRIPT: &str = include_str!("../../assets/panel-hub.js");
 
+#[derive(Default)]
+pub struct PanelLifetime(pub std::sync::Mutex<PanelIdle>);
+#[derive(Default)]
+pub struct PanelIdle {
+    generation: u64,
+    hidden: bool,
+    since: Option<std::time::Instant>,
+    origin: String,
+    path: String,
+    fragment: String,
+    scroll: f64,
+}
+impl PanelIdle {
+    fn accepts(&self, generation: u64) -> bool {
+        self.hidden
+            && self.generation == generation
+            && self.since.is_some_and(|at| {
+                at.elapsed() >= crate::modules::runtime_defaults::panel_idle_timeout()
+            })
+    }
+}
+const IDLE_GUARD_SCRIPT: &str = include_str!("../../assets/panel-idle.js");
+
+fn reclaim_if_idle(app: &tauri::AppHandle, target: &tauri::Url) {
+    let query: std::collections::HashMap<_, _> = target.query_pairs().collect();
+    let Some(generation) = query
+        .get("generation")
+        .and_then(|value| value.parse::<u64>().ok())
+    else {
+        return;
+    };
+    let fragment = query
+        .get("fragment")
+        .map(|value| value.to_string())
+        .unwrap_or_default();
+    let path = query
+        .get("path")
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "/web".into());
+    if path.len() > 2048 || !(path == "/web" || path.starts_with("/web/")) {
+        return;
+    }
+    let scroll = query
+        .get("scroll")
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or_default();
+    if fragment.len() > 2048 {
+        return;
+    }
+    let app = app.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        // Serialize Show/Hide/reclaim with the same lock: a stale timer cannot
+        // destroy a panel just reopened by the user.
+        let lifetime = app.state::<PanelLifetime>();
+        let Ok(mut idle) = lifetime.0.lock() else {
+            return;
+        };
+        if !idle.accepts(generation) {
+            return;
+        }
+        if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) {
+            if view.close().is_ok() {
+                idle.path = path;
+                idle.fragment = fragment;
+                idle.scroll = scroll;
+            }
+        }
+    });
+}
+
 #[derive(Debug, Clone, Copy, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum PanelAction {
@@ -228,8 +299,25 @@ pub async fn sync_embedded_panel(
     let collector = collector.inner().clone();
     // add_child waits for the native event loop: never call it from that loop.
     tauri::async_runtime::spawn_blocking(move || {
+        let lifetime = app.state::<PanelLifetime>();
+        let mut idle = lifetime.0.lock().map_err(|_| AppError::NotConfigured)?;
         if request.action == PanelAction::Hide {
             if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) { view.hide()?; }
+            if !idle.hidden {
+                idle.hidden = true;
+                idle.generation = idle.generation.wrapping_add(1);
+                idle.since = Some(std::time::Instant::now());
+                let generation = idle.generation;
+                let timer_app = app.clone();
+                tauri::async_runtime::spawn(async move {
+                    tokio::time::sleep(crate::modules::runtime_defaults::panel_idle_timeout()).await;
+                    let lifetime = timer_app.state::<PanelLifetime>();
+                    if !lifetime.0.lock().is_ok_and(|idle| idle.accepts(generation)) { return; }
+                    if let Some(view) = timer_app.get_webview(PANEL_VIEW_LABEL) {
+                        let _ = view.eval(format!("window.__ocxdTryReclaim?.({generation})"));
+                    }
+                });
+            }
             return Ok(PanelResult { visible: false, panel_url: None });
         }
         let window = app.get_window("main").ok_or(AppError::NotConfigured)?;
@@ -243,25 +331,42 @@ pub async fn sync_embedded_panel(
             return Ok(PanelResult { visible: false, panel_url: None });
         }
 
+        if request.action == PanelAction::Show {
+            idle.hidden = false;
+            idle.since = None;
+            idle.generation = idle.generation.wrapping_add(1);
+        }
         let url = if request.action == PanelAction::Show {
             let guard = collector.lock().map_err(|_| AppError::NotConfigured)?;
             if guard.matrix().runtime != RuntimeState::Running { return Err(AppError::NotConfigured); }
             Some(validate_panel_url(&format!("http://127.0.0.1:{}/web", guard.port().ok_or(AppError::NotConfigured)?))?)
         } else { None };
 
+        if let Some(url) = url.as_ref() {
+            let origin = url.origin().ascii_serialization();
+            if idle.origin != origin { idle.origin = origin; idle.path.clear(); idle.fragment.clear(); idle.scroll = 0.0; }
+        }
         if let (Some(existing), Some(url)) = (app.get_webview(PANEL_VIEW_LABEL), url.as_ref()) {
             if existing.url()?.origin() != url.origin() { existing.close()?; }
         }
         let view = if let Some(view) = app.get_webview(PANEL_VIEW_LABEL) { view } else {
-            let url = url.clone().ok_or(AppError::NotConfigured)?;
+            let mut url = url.clone().ok_or(AppError::NotConfigured)?;
+            if !request.reload {
+                if !idle.path.is_empty() { url.set_path(&idle.path); }
+                if !idle.fragment.is_empty() { url.set_fragment(Some(&idle.fragment)); }
+            }
+            let resume_scroll = if request.reload { 0.0 } else { idle.scroll };
+            let restore_once = std::sync::atomic::AtomicBool::new(true);
             let origin = url.clone();
             let navigation_app = app.clone();
             let load_app = app.clone();
             let builder = tauri::webview::WebviewBuilder::new(PANEL_VIEW_LABEL, tauri::WebviewUrl::External(url))
                 .focused(false)
                 .initialization_script(panel_initialization_script(theme_setting))
+                .initialization_script(IDLE_GUARD_SCRIPT)
                 .on_navigation(move |target| {
                     if target.scheme() == "ocxd-panel" {
+                        if target.host_str() == Some("reclaim") { reclaim_if_idle(&navigation_app, target); return false; }
                         if let Some(action @ ("reload" | "browser" | "zoom-in" | "zoom-out")) = target.host_str() {
                             notify_main(&navigation_app, "action", action);
                         }
@@ -270,7 +375,8 @@ pub async fn sync_embedded_panel(
                     navigation_allowed(target, &origin)
                 })
                 .on_new_window(|_, _| tauri::webview::NewWindowResponse::Deny)
-                .on_page_load(move |_view, payload| {
+                .on_page_load(move |view, payload| {
+                    if matches!(payload.event(), tauri::webview::PageLoadEvent::Finished) && restore_once.swap(false, std::sync::atomic::Ordering::AcqRel) { let _ = view.eval(format!("requestAnimationFrame(() => window.scrollTo(0, {resume_scroll}))")); }
                     let status = match payload.event() {
                         tauri::webview::PageLoadEvent::Started => "loading",
                         tauri::webview::PageLoadEvent::Finished => "ready",
@@ -458,5 +564,22 @@ mod tests {
         assert!(PanelBounds { x: 95., ..at_150 }
             .validate(1180., 760., 1.5)
             .is_err());
+    }
+    #[test]
+    fn idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline() {
+        let mut idle = PanelIdle {
+            hidden: true,
+            generation: 3,
+            since: Some(std::time::Instant::now()),
+            ..Default::default()
+        };
+        assert!(!idle.accepts(3));
+        idle.since = Some(
+            std::time::Instant::now() - crate::modules::runtime_defaults::panel_idle_timeout(),
+        );
+        assert!(idle.accepts(3));
+        assert!(!idle.accepts(2));
+        idle.hidden = false;
+        assert!(!idle.accepts(3));
     }
 }
