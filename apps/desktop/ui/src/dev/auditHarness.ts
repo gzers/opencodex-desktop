@@ -103,6 +103,10 @@ const AUDIT_PREFERENCES: PreferencesDto = {
   appUpdateAutoCheck: true,
   appUpdateCheckIntervalSeconds: 86400,
   theme: 'system',
+  networkProxyMode: 'none',
+  networkProxyScheme: 'http',
+  networkProxyHost: '',
+  networkNoProxy: '',
   visualEffects: 'high',
   glowRender: 'mesh',
 }

@@ -33,6 +33,10 @@ export interface PreferencesDto {
   appUpdateAutoCheck: boolean
   appUpdateCheckIntervalSeconds: number
   theme: 'light' | 'dark' | 'system'
+  networkProxyMode: 'none' | 'system' | 'manual'
+  networkProxyScheme: 'http' | 'socks5h'
+  networkProxyHost: string
+  networkNoProxy: string
   visualEffects: 'high' | 'mid' | 'low'
   /** 背景光渲染方式：WEBGL 网格渐变＋颗粒着色器（默认）/ 纯 CSS 极光（兜底）。 */
   glowRender: 'mesh' | 'css'

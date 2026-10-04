@@ -14,11 +14,23 @@ fn updater_for_status(
     let Ok(url) = endpoint.parse() else {
         return app.updater().map_err(|_error| AppError::NotConfigured);
     };
-    app.updater_builder()
+    let mut builder = app
+        .updater_builder()
         .endpoints(vec![url])
-        .map_err(|_error| AppError::NotConfigured)?
-        .build()
-        .map_err(|_error| AppError::NotConfigured)
+        .map_err(|_error| AppError::NotConfigured)?;
+    // 网络代理（U-05）：应用自更新请求按用户代理偏好走代理；TLS 校验不受影响。
+    match crate::modules::preferences::proxy_policy_for_app(app) {
+        crate::modules::preferences::ProxyPolicy::None => {
+            builder = builder.no_proxy();
+        }
+        crate::modules::preferences::ProxyPolicy::System => {}
+        crate::modules::preferences::ProxyPolicy::Manual(url) => {
+            if let Ok(proxy) = url.parse() {
+                builder = builder.proxy(proxy);
+            }
+        }
+    }
+    builder.build().map_err(|_error| AppError::NotConfigured)
 }
 
 use crate::errors::{AppError, AppResult};

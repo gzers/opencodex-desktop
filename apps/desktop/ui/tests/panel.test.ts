@@ -50,6 +50,10 @@ function preferences(panelMode: PreferencesDto['panelMode']): PreferencesDto {
   return {
     schemaVersion: 1,
     themeNeedsImport: false,
+    networkProxyMode: 'none',
+    networkProxyScheme: 'http',
+    networkProxyHost: '',
+    networkNoProxy: '',
     interfaceScale: 100,
     launchMain: true,
     autoPanel: true,

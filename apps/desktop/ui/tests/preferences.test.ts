@@ -12,6 +12,10 @@ function dto(overrides: Partial<PreferencesDto> = {}): PreferencesDto {
   return {
     schemaVersion: 1,
     themeNeedsImport: false,
+    networkProxyMode: 'none',
+    networkProxyScheme: 'http',
+    networkProxyHost: '',
+    networkNoProxy: '',
     interfaceScale: 100,
     launchMain: true,
     autoPanel: true,
@@ -142,4 +146,16 @@ describe('interface scale application through the preference lifecycle', () => {
     })
     expect(document.documentElement.style.getPropertyValue('--ui-zoom')).toBe('1.3')
   })
+
+  it('round-trips the network proxy preference without credentials', async () => {
+    const app = useAppStore()
+    invoke.mockResolvedValue(dto())
+    await app.loadPreferences()
+    const manual = dto({ networkProxyMode: 'manual', networkProxyScheme: 'socks5h', networkProxyHost: '127.0.0.1:1080', networkNoProxy: 'localhost' })
+    invoke.mockResolvedValueOnce(manual)
+    await app.savePreferences(manual)
+    expect(invoke).toHaveBeenLastCalledWith('save_preferences', { preferences: manual })
+    expect(app.preferences?.networkProxyHost).toBe('127.0.0.1:1080')
+  })
+
 })

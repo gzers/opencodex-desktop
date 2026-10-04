@@ -230,10 +230,23 @@ pub async fn install_runtime(
         .version
         .clone()
         .unwrap_or_else(|| default_version().to_string());
+    // 网络代理（U-05）：本次安装未显式指定代理时，继承用户网络偏好里的手动 HTTP 代理。
+    let proxy = request.proxy().or_else(
+        || match crate::modules::preferences::proxy_policy_for_app(&app) {
+            crate::modules::preferences::ProxyPolicy::Manual(url) => {
+                let (scheme, host) = url.split_once("://")?;
+                let scheme = crate::modules::runtime::install::ProxyScheme::parse(scheme)?;
+                Some(crate::modules::runtime::install::ProxyConfig::new(
+                    scheme, host,
+                ))
+            }
+            _ => None,
+        },
+    );
     let source = match source_kind {
         crate::modules::runtime::install::InstallSourceKind::Registry => InstallSource::Registry {
             version: requested_version.clone(),
-            proxy: request.proxy(),
+            proxy,
         },
         crate::modules::runtime::install::InstallSourceKind::Offline => InstallSource::Offline {
             archive: request.offline_archive().ok_or(AppError::RuntimeManaged {

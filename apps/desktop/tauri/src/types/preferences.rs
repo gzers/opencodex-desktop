@@ -48,6 +48,10 @@ pub struct PreferencesDto {
     pub app_update_auto_check: bool,
     pub app_update_check_interval_seconds: i64,
     pub theme: String,
+    pub network_proxy_mode: String,
+    pub network_proxy_scheme: String,
+    pub network_proxy_host: String,
+    pub network_no_proxy: String,
     pub visual_effects: String,
     pub glow_render: String,
 }
@@ -88,6 +92,10 @@ impl From<Preferences> for PreferencesDto {
             app_update_auto_check: value.app_update_auto_check,
             app_update_check_interval_seconds: value.app_update_check_interval_seconds,
             theme: value.theme,
+            network_proxy_mode: value.network_proxy_mode,
+            network_proxy_scheme: value.network_proxy_scheme,
+            network_proxy_host: value.network_proxy_host,
+            network_no_proxy: value.network_no_proxy,
             visual_effects: value.visual_effects,
             glow_render: value.glow_render,
         }
@@ -133,6 +141,10 @@ impl From<PreferencesDto> for Preferences {
             app_update_auto_check: value.app_update_auto_check,
             app_update_check_interval_seconds: value.app_update_check_interval_seconds,
             theme: value.theme,
+            network_proxy_mode: value.network_proxy_mode,
+            network_proxy_scheme: value.network_proxy_scheme,
+            network_proxy_host: value.network_proxy_host,
+            network_no_proxy: value.network_no_proxy,
             visual_effects: value.visual_effects,
             glow_render: value.glow_render,
         }
@@ -179,6 +191,10 @@ mod tests {
             app_update_auto_check: true,
             app_update_check_interval_seconds: 86400,
             theme: "system".into(),
+            network_proxy_mode: "none".into(),
+            network_proxy_scheme: "http".into(),
+            network_proxy_host: String::new(),
+            network_no_proxy: String::new(),
             visual_effects: "high".into(),
             glow_render: "mesh".into(),
         };
@@ -231,6 +247,10 @@ mod tests {
             "appUpdateAutoCheck": false,
             "appUpdateCheckIntervalSeconds": 21600,
             "theme": "dark",
+            "networkProxyMode": "manual",
+            "networkProxyScheme": "socks5h",
+            "networkProxyHost": "127.0.0.1:1080",
+            "networkNoProxy": "localhost",
             "visualEffects": "low",
             "glowRender": "css"
         }))
@@ -246,6 +266,9 @@ mod tests {
         assert!(!domain.app_update_auto_check);
         assert_eq!(domain.app_update_check_interval_seconds, 21600);
         assert_eq!(domain.theme, "dark");
+        assert_eq!(domain.network_proxy_mode, "manual");
+        assert_eq!(domain.network_proxy_scheme, "socks5h");
+        assert_eq!(domain.network_proxy_host, "127.0.0.1:1080");
         assert_eq!(domain.visual_effects, "low");
         assert_eq!(domain.glow_render, "css");
     }

@@ -115,6 +115,10 @@ mod tests {
             app_update_auto_check: false,
             app_update_check_interval_seconds: 21600,
             theme: "dark".into(),
+            network_proxy_mode: "manual".into(),
+            network_proxy_scheme: "socks5h".into(),
+            network_proxy_host: "127.0.0.1:1080".into(),
+            network_no_proxy: "localhost,127.0.0.1".into(),
             visual_effects: "mid".into(),
             glow_render: "css".into(),
         };

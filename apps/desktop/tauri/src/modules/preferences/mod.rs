@@ -42,6 +42,12 @@ pub const APP_UPDATE_CHANNEL_BETA: &str = "beta";
 pub const THEME_LIGHT: &str = "light";
 pub const THEME_DARK: &str = "dark";
 pub const THEME_SYSTEM: &str = "system";
+// 网络代理（U-05）：模式 none/system/manual；协议 http/socks5h；无凭据。
+pub const PROXY_MODE_NONE: &str = "none";
+pub const PROXY_MODE_SYSTEM: &str = "system";
+pub const PROXY_MODE_MANUAL: &str = "manual";
+pub const PROXY_SCHEME_HTTP: &str = "http";
+pub const PROXY_SCHEME_SOCKS5H: &str = "socks5h";
 // 界面特效档位（UI规范 §26.2 / 契约字段 §9）：用户选择；高=默认。
 pub const VISUAL_EFFECTS_HIGH: &str = "high";
 pub const VISUAL_EFFECTS_MID: &str = "mid";
@@ -88,6 +94,11 @@ pub struct Preferences {
     pub app_update_check_interval_seconds: i64,
     // 主题事实源（H-15）：后端为事实源，前端 localStorage 仅作首屏缓存。
     pub theme: String,
+    // 网络代理（U-05）：模式 + 手动模式的协议/地址/例外；不含凭据（不用钥匙串）。
+    pub network_proxy_mode: String,
+    pub network_proxy_scheme: String,
+    pub network_proxy_host: String,
+    pub network_no_proxy: String,
     // `#[serde(default)]`：旧偏好缺该字段时按默认高档读取，不判损坏。
     pub visual_effects: String,
     // 同理：旧偏好缺该字段时按默认 WEBGL 读取。
@@ -130,6 +141,10 @@ struct FrozenPreferences {
     app_update_auto_check: bool,
     app_update_check_interval_seconds: i64,
     theme: String,
+    network_proxy_mode: String,
+    network_proxy_scheme: String,
+    network_proxy_host: String,
+    network_no_proxy: String,
     visual_effects: String,
     glow_render: String,
 }
@@ -177,6 +192,10 @@ impl Default for Preferences {
             app_update_auto_check: frozen.app_update_auto_check,
             app_update_check_interval_seconds: frozen.app_update_check_interval_seconds,
             theme: frozen.theme,
+            network_proxy_mode: frozen.network_proxy_mode,
+            network_proxy_scheme: frozen.network_proxy_scheme,
+            network_proxy_host: frozen.network_proxy_host,
+            network_no_proxy: frozen.network_no_proxy,
             visual_effects: frozen.visual_effects,
             glow_render: frozen.glow_render,
         }
@@ -188,6 +207,42 @@ pub enum PreferencesError {
     NotConfigured,
     Corrupted,
     Io,
+}
+
+/// 出站代理策略（U-05）：由偏好决定，不含凭据；System 表示沿用系统代理。
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProxyPolicy {
+    None,
+    System,
+    Manual(String),
+}
+
+/// 由偏好解析出代理策略；无凭据、非法地址一律视为不指定代理。
+pub fn proxy_policy(value: &Preferences) -> ProxyPolicy {
+    match value.network_proxy_mode.as_str() {
+        PROXY_MODE_SYSTEM => ProxyPolicy::System,
+        PROXY_MODE_MANUAL => {
+            let host = value.network_proxy_host.trim();
+            if host.is_empty() || host.contains('@') || host.chars().any(char::is_whitespace) {
+                ProxyPolicy::None
+            } else {
+                ProxyPolicy::Manual(format!("{}://{}", value.network_proxy_scheme, host))
+            }
+        }
+        _ => ProxyPolicy::None,
+    }
+}
+
+/// 便捷读取：从数据根读偏好并解析代理策略；读不到按不指定代理。
+pub fn proxy_policy_for_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> ProxyPolicy {
+    use tauri::Manager;
+    let Some(root) = app.try_state::<crate::state::SharedDataRoot>() else {
+        return ProxyPolicy::None;
+    };
+    PreferencesStore::new(&root.0)
+        .load()
+        .map(|value| proxy_policy(&value))
+        .unwrap_or(ProxyPolicy::None)
 }
 
 pub struct PreferencesStore {
@@ -302,6 +357,14 @@ pub fn validate(value: &Preferences) -> Result<(), PreferencesError> {
         )
         || !(0..=30 * 24 * 60 * 60).contains(&value.app_update_check_interval_seconds)
         || !allowed(&value.theme, &[THEME_LIGHT, THEME_DARK, THEME_SYSTEM])
+        || !allowed(
+            &value.network_proxy_mode,
+            &[PROXY_MODE_NONE, PROXY_MODE_SYSTEM, PROXY_MODE_MANUAL],
+        )
+        || !allowed(
+            &value.network_proxy_scheme,
+            &[PROXY_SCHEME_HTTP, PROXY_SCHEME_SOCKS5H],
+        )
         || !allowed(
             &value.visual_effects,
             &[VISUAL_EFFECTS_HIGH, VISUAL_EFFECTS_MID, VISUAL_EFFECTS_LOW],

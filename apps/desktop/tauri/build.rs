@@ -11,7 +11,11 @@ fn main() {
 /// 固化默认配置（H-01/H-06~H-13）：构建期校验并嵌入，消费者从同一来源读取，
 /// 不再各写 fallback。字段缺失或非法在编译期失败，避免默认值悄悄漂移。
 fn track_frozen_defaults() {
-    for name in ["preferences.defaults.json", "runtime.defaults.json"] {
+    for name in [
+        "preferences.defaults.json",
+        "runtime.defaults.json",
+        "network.defaults.json",
+    ] {
         let path = Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("config")
             .join(name);
