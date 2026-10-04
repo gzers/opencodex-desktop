@@ -49,24 +49,32 @@ jobs:
             gh release view "$TAG" 2>&1 || true
           } >> "$diag" 2>&1
           status=0
-          # 先同时清掉 draft 与 prerelease：`--latest` 不允许指向草稿或预发布。
-          # 两步都记进诊断；任何一步失败都保留非零退出，但继续尝试下一步。
-          echo "== gh release edit $TAG --draft=false --prerelease=false ==" >> "$diag"
-          if gh release edit "$TAG" --draft=false --prerelease=false >> "$diag" 2>&1; then
+          # 取消草稿但**不改变 Latest**：GitHub 的更新端点默认 make_latest=true，
+          # 若只取消草稿会把旧版本顶成 Latest。这里显式 --latest=false，
+          # 并在完成后把之前那个 Latest 重新标记回去，保证 Latest 归属不变。
+          echo "== latest before ==" >> "$diag"
+          before_latest="$(gh release view --json tagName -q .tagName 2>>"$diag" || true)"
+          echo "before latest: $before_latest" >> "$diag"
+
+          echo "== gh release edit $TAG --draft=false --prerelease=false --latest=false ==" >> "$diag"
+          if gh release edit "$TAG" --draft=false --prerelease=false --latest=false >> "$diag" 2>&1; then
             echo "undraft: ok" >> "$diag"
           else
             status=$?
             echo "undraft: failed ($status)" >> "$diag"
           fi
-          echo "== gh release edit $TAG --latest ==" >> "$diag"
-          if gh release edit "$TAG" --latest >> "$diag" 2>&1; then
-            echo "latest: ok" >> "$diag"
-          else
-            status=$?
-            echo "latest: failed ($status)" >> "$diag"
+
+          if [ -n "$before_latest" ] && [ "$before_latest" != "$TAG" ]; then
+            echo "== restore latest: gh release edit $before_latest --latest ==" >> "$diag"
+            if gh release edit "$before_latest" --latest >> "$diag" 2>&1; then
+              echo "restore latest: ok ($before_latest)" >> "$diag"
+            else
+              status=$?
+              echo "restore latest: failed ($status)" >> "$diag"
+            fi
           fi
           echo "== after ==" >> "$diag"
-          gh release view "$TAG" --json tagName,isDraft,isPrerelease,url >> "$diag" 2>&1 || true
+          gh release view "$TAG" --json tagName,isDraft,isPrerelease,isLatest,url >> "$diag" 2>&1 || true
           cat "$diag"
 
       # 诊断公开化：把结果写到 ci-logs 分支（公开可读），便于无凭据环境核对。
