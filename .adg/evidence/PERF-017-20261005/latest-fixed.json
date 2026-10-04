@@ -1,0 +1,27 @@
+{
+  "version": "0.1.7",
+  "notes": "- 概览装饰动画随页面与应用前后台暂停，回到前台从原位置继续，保留完整前台效果。\n- 缓存稳定图形与配色，减少重复 SVG 写入和 WebGL 参数上传；修复光场暂停恢复后相位重置。\n- 日常状态检查使用官方健康及就绪接口，完整诊断降低频率；后台调度、托盘事件与重试周期集中配置。\n- 闲置且未编辑的官方面板回收 WebView，再打开恢复位置；官方代理与连接持续运行。\n- 诊断超时回收对应子进程，限制诊断输出和日志尾部读取大小。\n\n---\n\n### 安装\n- macOS（Apple Silicon）：下载 `.dmg`，拖入「应用程序」。\n- Windows（x64）：下载 `*-setup.exe`（NSIS）安装包。\n- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。",
+  "pub_date": "2026-10-04T19:42:32.360Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRURnSjJFTmdvSElzaWhjSzlYQnk0YzVZSW1aRzNOdGwrNWpDeEl2ZUFVd2xFWXk1WnBSdnEvbkFEVUdMQ0RMQjh0K1EramVrZ2wxOU9pVldwdk94UkFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTQyNzMwCWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negl2ZXJzaW9uOjAuMS43CjR2cFY3TWxNVVY0SkNBRVZ0VVp3YlRUK2pKaHdZUmJxY2lEQUtUR1dGOFBsV0pRK3k2cnE5QlZCUkd1SnpUeS9lUlVTVVpmQnhlZVJCU0M3SGY3aUF3PT0K",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.7/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "darwin-aarch64-app": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRURnSjJFTmdvSElzaWhjSzlYQnk0YzVZSW1aRzNOdGwrNWpDeEl2ZUFVd2xFWXk1WnBSdnEvbkFEVUdMQ0RMQjh0K1EramVrZ2wxOU9pVldwdk94UkFZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTQyNzMwCWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negl2ZXJzaW9uOjAuMS43CjR2cFY3TWxNVVY0SkNBRVZ0VVp3YlRUK2pKaHdZUmJxY2lEQUtUR1dGOFBsV0pRK3k2cnE5QlZCUkd1SnpUeS9lUlVTVVpmQnhlZVJCU0M3SGY3aUF3PT0K",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.7/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUFoMEoxcmpUUS8wTnR3U3Y3ZHZnbE5WUnRjcGZFc3BVMTh3M1M0NnFDT3ZsVmhqTlg3dUVlSUxya0ZjRHFCOGpsRUNWMnpybjAySXhkbnZ0K0svendzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTQyOTQ5CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4xLjdfeDY0X2VuLVVTLm1zaQl2ZXJzaW9uOjAuMS43CjRxRlBpeWtxNWt0dUtZRlJBbUNadWJyN3BoU3BxMWJZNmR1YXZvY1k5M0RCY0gwSE9GaURmSGpBd24zdzdwWmRCTU9kR0RpbTlXMlZJWFFiNms3ZkRRPT0K",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.7/OpenCodeX.Desktop_0.1.7_x64_en-US.msi"
+    },
+    "windows-x86_64-msi": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUFoMEoxcmpUUS8wTnR3U3Y3ZHZnbE5WUnRjcGZFc3BVMTh3M1M0NnFDT3ZsVmhqTlg3dUVlSUxya0ZjRHFCOGpsRUNWMnpybjAySXhkbnZ0K0svendzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTQyOTQ5CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4xLjdfeDY0X2VuLVVTLm1zaQl2ZXJzaW9uOjAuMS43CjRxRlBpeWtxNWt0dUtZRlJBbUNadWJyN3BoU3BxMWJZNmR1YXZvY1k5M0RCY0gwSE9GaURmSGpBd24zdzdwWmRCTU9kR0RpbTlXMlZJWFFiNms3ZkRRPT0K",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.7/OpenCodeX.Desktop_0.1.7_x64_en-US.msi"
+    },
+    "windows-x86_64-nsis": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUpTS2VlTzQ5VXBvYzE0U2hHZmRZTFVLeGx1R1cwYi9lWDVqMVd4anNkSWVXTk1BaEhXT1F2bXBEeTZPdjFQVlVwMDJZODhHb1cvc0kzQkxQY3IrYmdJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxMTQyOTQ5CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4xLjdfeDY0LXNldHVwLmV4ZQl2ZXJzaW9uOjAuMS43Cmp3RzAybVBCdjl4YUZJV3RJazQyNWQ1WXZ6bnJrOW9TeEMyZDVHajdONGJham9ZaG55a3puS1lDUXlvUFVBZ2FSU0VVVG5qdGZEeXdMemFLbTViWEJnPT0K",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.7/OpenCodeX.Desktop_0.1.7_x64-setup.exe"
+    }
+  }
+}

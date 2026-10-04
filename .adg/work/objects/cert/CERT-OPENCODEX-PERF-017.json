@@ -1,0 +1,65 @@
+{
+  "acceptance_results": [
+    {
+      "acceptance_id": "AC-PERF-017-01",
+      "evidence": "373 frontend tests including 9-state golden frames, pause/phase, native false-event and stale-query race; isolated GUI hidden/minimized near-idle observations; no controlled app-switch CPU capture",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-PERF-017-02",
+      "evidence": "Backend regressions cover health/ready identity, TTL and explicit collection, config validation, bounded output and Unix isolated diagnostic termination; stopped/no-PID still uses CLI and Windows descendants are unverified",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-PERF-017-03",
+      "evidence": "Tray event/fallback and panel generation/edit guards regression; GUI synthetic panel reclaimed after 300s and path/scroll restored; edits retained >413s; fixture server alive and daily official runtime identity continuous; no fixed production-traffic matrix",
+      "status": "passed"
+    },
+    {
+      "acceptance_id": "AC-PERF-017-04",
+      "evidence": "main CI, signed macOS/Windows builds, public stable release 403177453, independently downloaded three assets size/hash/old-key signature checks; REL-07 and result report explicitly record all verification boundaries",
+      "status": "passed"
+    }
+  ],
+  "checks": [
+    {
+      "evidence": ".adg/evidence/PERF-017-20261005/backend-tests.log; 566 passed, 5 ignored, 0 failed; clippy.log; integration-checks.json; main-ci-jobs.json (including Windows)",
+      "name": "backend",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/PERF-017-20261005/frontend-tests.log; 78 files / 373 passed; typecheck.log; frontend-build.log; main-ci-jobs.json",
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/PERF-017-20261005/release-build-jobs.json; publish-run.json; public-release-verification.json; publish-diag.txt; public stable 0.1.7 and three old-key signatures verified",
+      "name": "release",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/PERF-017-20261005/performance-review.json (integration review with explicit remaining limits)",
+      "name": "review:performance",
+      "status": "passed"
+    },
+    {
+      "evidence": ".adg/evidence/PERF-017-20261005/cpu-summary.json; panel-reclaim-restore.txt; panel-edit-protection.json; local-source-identity.json; daily-runtime-continuity.json; short fixture scope, no claimed foreground/wattage/long-term leak benefit",
+      "name": "runtime-performance",
+      "status": "passed"
+    }
+  ],
+  "closed_task_summary_digest": "c937e2e6ab88e0b5833e8b8b990b781c6703106c97ce2d86291c5f09b668c154",
+  "content_digest": "3b2a6d681db8a198a247abba49cb2badbfe899fa76b16a6e47d067bb7edf8b14",
+  "fact_impacts": [],
+  "id": "CERT-OPENCODEX-PERF-017",
+  "kind": "CERT",
+  "receipt_digest": "627e0c42bc387c3872d8180edc3b9f678938470d63fbb8543d50982ca13b1234",
+  "receipt_id": "RCP-OPENCODEX-PERF-017",
+  "result": "succeeded",
+  "revision": 1,
+  "summary_digest": "0bca3ce958971e8b6c02c2851634815b8d9248ec23a54dd8967363ec88f3580a",
+  "task_digest_before_close": "b8c3e5a7c855bfea7e2c490ebbfb8583f967ea0dc5bbe21045f668a22e133dfd",
+  "task_id": "TASK-OPENCODEX-PERF-017",
+  "task_summary_digest": "9817b3bd0caef1953b57ae29f7f1a28faad6fd3b29cc9e24059ca4d5e12e06aa",
+  "verified_at": "2026-10-04T19:55:29.613355+00:00"
+}

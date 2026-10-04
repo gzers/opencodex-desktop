@@ -1,0 +1,69 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-PERF-017-01",
+      "criterion_digest": "04ba8d9f07e53c69e3f55b30094dce400c5fb7951944424a279b7d1cfcc38f98",
+      "demand_id": "DMD-OPENCODEX-PERF-017"
+    },
+    {
+      "acceptance_id": "AC-PERF-017-02",
+      "criterion_digest": "c93a8cb1588905da57a78dc314110384e1152f8db7e3e2e5c4bab7541171876b",
+      "demand_id": "DMD-OPENCODEX-PERF-017"
+    },
+    {
+      "acceptance_id": "AC-PERF-017-03",
+      "criterion_digest": "5d8f6a0d1be4afb9c0cd5de90d193a03fb4fe46ad487dd07a214df00bf3e7a2c",
+      "demand_id": "DMD-OPENCODEX-PERF-017"
+    },
+    {
+      "acceptance_id": "AC-PERF-017-04",
+      "criterion_digest": "d0c9ce352cf35543b044eda80c0abcf1e065870e3658862ea1f92047ffe1f442",
+      "demand_id": "DMD-OPENCODEX-PERF-017"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-PERF-017-01",
+    "AC-PERF-017-02",
+    "AC-PERF-017-03",
+    "AC-PERF-017-04"
+  ],
+  "baseline_digest": "bc0ea38ddeeefc1db82cc30a6cef10a29c317398d4a353b8be5138c9b425d239",
+  "certificate_digest": "3b2a6d681db8a198a247abba49cb2badbfe899fa76b16a6e47d067bb7edf8b14",
+  "content_digest": "1b6da1297493ad327c24cc45b3f5de371af202b99b94d26932f66a909eba5b77",
+  "demand_ids": [
+    "DMD-OPENCODEX-PERF-017"
+  ],
+  "fact_writeback": {
+    "mode": "none",
+    "targets": []
+  },
+  "id": "TASK-OPENCODEX-PERF-017",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-17",
+  "imported_receipt_digest": "627e0c42bc387c3872d8180edc3b9f678938470d63fbb8543d50982ca13b1234",
+  "kind": "TASK",
+  "owner": "codex",
+  "required_checks": [
+    "backend",
+    "frontend",
+    "release",
+    "review:performance",
+    "runtime-performance"
+  ],
+  "result": "succeeded",
+  "revision": 3,
+  "state": "completed",
+  "summary": "按已确认范围开发、测量、发布并回写。",
+  "summary_digest": "c937e2e6ab88e0b5833e8b8b990b781c6703106c97ce2d86291c5f09b668c154",
+  "title": "0.1.7 性能优化开发测试发版",
+  "write_scope": [
+    ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/**",
+    ".adg/evidence/PERF-017-20261005/**",
+    ".github/**",
+    "CHANGELOG.md",
+    "apps/**",
+    "docs/01-需求管理/需求/DMD-OPENCODEX-PERF-017.md",
+    "docs/03-开发实施/**",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/**",
+    "test/**"
+  ]
+}

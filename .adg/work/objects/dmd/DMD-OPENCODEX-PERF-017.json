@@ -1,0 +1,36 @@
+{
+  "acceptance_criteria": [
+    {
+      "id": "AC-PERF-017-01",
+      "text": "概览在应用前台保留完整效果；切页、切应用、隐藏、最小化停止连续绘制，恢复相位连续。"
+    },
+    {
+      "id": "AC-PERF-017-02",
+      "text": "检查周期与超时集中配置；轻量检查核验官方身份及就绪，完整诊断有缓存、输出上限和超时回收。"
+    },
+    {
+      "id": "AC-PERF-017-03",
+      "text": "托盘事件驱动且有低频兜底；闲置未编辑面板可回收恢复，代理和既有连接保持运行。"
+    },
+    {
+      "id": "AC-PERF-017-04",
+      "text": "完成前后端回归及真实制品验证，发布签名校验通过的 0.1.7，并回写事实与限制。"
+    }
+  ],
+  "content_digest": "97028905b56359bff15be489697cdc3eaaeee89081560cb04dc349a35d9fd2d9",
+  "id": "DMD-OPENCODEX-PERF-017",
+  "implementation_ids": [
+    "IMP-OPENCODEX-DESKTOP-17"
+  ],
+  "kind": "DMD",
+  "next_action": null,
+  "resolution": "已通过 IMP-17 / TASK-OPENCODEX-PERF-017 实施并稳定发布 0.1.7；验收与短测边界见 REL-07，未承诺前台降幅、真实功率或长期泄漏排除。",
+  "revision": 3,
+  "source_digest": "81803f01702eeee8ff6369e5d0717a8b7cb52d20bd3a7128dbad5820cac32e57",
+  "source_path": "docs/01-需求管理/需求/DMD-OPENCODEX-PERF-017.md",
+  "source_revision": 3,
+  "state": "completed",
+  "summary": "用户要求按文档治理开发、测试并发布 0.1.7，完整前台效果与持续代理为约束。",
+  "summary_digest": "0dba7d5fae30b862e81e597455ec46d84231bc6fc960b5a41a863df7140f1933",
+  "title": "0.1.7 能耗与内存优化"
+}

@@ -1,0 +1,33 @@
+{
+  "observed_at_utc": "2026-10-04T19:39:56.446711+00:00",
+  "installed_desktop_version": "0.1.6",
+  "identities": [
+    {
+      "pid": 44788,
+      "process_identity": "44788     1 Mon Oct  5 01:49:39 2026     /Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 18504,
+      "process_identity": "18504 18502 Sun Oct  4 21:51:26 2026     $HOME/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/bun/bin/bun.exe"
+    }
+  ],
+  "health_endpoint_fields": {
+    "healthz": {
+      "service": "opencodex",
+      "pid": 18504,
+      "port": 10100,
+      "status": "ok",
+      "version": "2.69.0",
+      "uptime": 20910.129974292
+    },
+    "readyz": {
+      "service": "opencodex",
+      "pid": 18504,
+      "port": 10100,
+      "status": "ready",
+      "version": "2.69.0",
+      "uptime": 20910.132095209
+    }
+  },
+  "operation": "read-only; no install, stop or restart; same desktop PID 44788 and proxy PID 18504 as before this task"
+}

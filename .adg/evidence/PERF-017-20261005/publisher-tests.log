@@ -1,0 +1,34 @@
+test_all_real_signatures_verified_and_duplicate_assets_downloaded_once (test_publish_release.ArtifactSignatureTests) ... ok
+test_draft_asset_bytes_verified_with_original_manifest_signatures (test_publish_release.ArtifactSignatureTests) ... ok
+test_same_size_tampering_rejected_even_without_server_digest (test_publish_release.ArtifactSignatureTests) ... ok
+test_server_digest_mismatch_rejected (test_publish_release.ArtifactSignatureTests) ... ok
+test_signature_for_another_key_rejected (test_publish_release.ArtifactSignatureTests) ... ok
+test_truncated_download_rejected (test_publish_release.ArtifactSignatureTests) ... ok
+test_wrong_tagged_version_rejected_before_download (test_publish_release.ArtifactSignatureTests) ... ok
+test_anonymous_verification_retries_until_expected_manifest (test_publish_release.PublicEndpointTests) ... ok
+test_persistent_404_or_wrong_content_fails (test_publish_release.PublicEndpointTests) ... ok
+test_already_latest_is_idempotent_and_verifies_stable_alias (test_publish_release.PublishTests) ... ok
+test_anonymous_verification_failure_is_nonzero (test_publish_release.PublishTests) ... ok
+test_auth_error_does_not_become_missing_latest (test_publish_release.PublishTests) ... ok
+test_draft_resolution_does_not_use_public_tag_lookup (test_publish_release.PublishTests) ... ok
+test_draft_untagged_urls_match_final_manifest_urls (test_publish_release.PublishTests) ... ok
+test_draft_urls_still_require_matching_repo_tag_and_filename (test_publish_release.PublishTests) ... ok
+test_duplicate_asset_names_are_rejected (test_publish_release.PublishTests) ... ok
+test_edit_failure_is_nonzero_and_does_not_restore_or_report_success (test_publish_release.PublishTests) ... ok
+test_first_release_requires_explicit_stable_mode (test_publish_release.PublishTests) ... ok
+test_invalid_manifests_fail_before_any_edit (test_publish_release.PublishTests) ... ok
+test_invalid_signature_blocks_all_publication (test_publish_release.PublishTests) ... ok
+test_latest_mismatch_is_not_success (test_publish_release.PublishTests) ... ok
+test_missing_empty_or_unfinished_asset_fails_before_edit (test_publish_release.PublishTests) ... ok
+test_preserves_existing_latest (test_publish_release.PublishTests) ... ok
+test_public_release_cannot_use_draft_urls (test_publish_release.PublishTests) ... ok
+test_release_lookup_rejects_wrong_identity_before_edit (test_publish_release.PublishTests) ... ok
+test_restore_latest_failure_is_nonzero (test_publish_release.PublishTests) ... ok
+test_stable_downgrade_uses_numeric_version_order (test_publish_release.PublishTests) ... ok
+test_stable_promotes_target_and_verifies_both_endpoints (test_publish_release.PublishTests) ... ok
+test_real_workflow_shell_propagates_script_failure_through_tee (test_publish_release.WorkflowExitTests) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.604s
+
+OK

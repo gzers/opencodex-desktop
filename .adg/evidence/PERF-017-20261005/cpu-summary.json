@@ -1,0 +1,57 @@
+{
+  "016/foreground-top": {
+    "samples": 14,
+    "mean_cpu_single_core_percent": 34.329,
+    "min": 15.9,
+    "max": 39.6,
+    "final": 33.8
+  },
+  "016/hidden-top": {
+    "samples": 11,
+    "mean_cpu_single_core_percent": 0.2,
+    "min": 0.0,
+    "max": 0.7,
+    "final": 0.7
+  },
+  "017/foreground-top": {
+    "samples": 14,
+    "mean_cpu_single_core_percent": 36.057,
+    "min": 15.7,
+    "max": 40.1,
+    "final": 36.7
+  },
+  "017/settings-top": {
+    "samples": 11,
+    "mean_cpu_single_core_percent": 0.373,
+    "min": 0.0,
+    "max": 2.1,
+    "final": 0.0
+  },
+  "017/hidden-top": {
+    "samples": 9,
+    "mean_cpu_single_core_percent": 0.022,
+    "min": 0.0,
+    "max": 0.2,
+    "final": 0.0
+  },
+  "method": {
+    "source": "macOS top, test app process families only",
+    "effect": "dark/high/mesh, same DPR and shader",
+    "exclude_first_sample": true,
+    "invalid_attempts_excluded": [
+      "background-top",
+      "background-confirmed-top",
+      "minimized-top",
+      "minimized-key-top"
+    ],
+    "limits": "Short one-device observations on a busy workstation. No wattage or battery-runtime measurement. CPU of WebKit GPU process is not hardware GPU utilization. OS already suspends the hidden 0.1.6 view in this sample; no controlled significant reduction attributable to 0.1.7 demonstrated."
+  },
+  "017/minimized-no-snapshot-top": {
+    "samples": 11,
+    "mean_cpu_single_core_percent": 0.018,
+    "min": 0.0,
+    "max": 0.2,
+    "final": 0.0,
+    "condition": "native minimize button; no accessibility snapshot during sampling; other sandbox final-build smoke started during sampling so not a controlled baseline"
+  }
+}

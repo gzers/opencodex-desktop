@@ -1,0 +1,89 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 111515613088,
+      "run_id": 37229374830,
+      "workflow_name": "Publish Release",
+      "head_branch": "promote-stable/v0.1.7",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/37229374830",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAZ9tk3oA",
+      "head_sha": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/111515613088",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/37229374830/job/111515613088",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-04T19:43:38Z",
+      "started_at": "2026-10-04T19:43:40Z",
+      "completed_at": "2026-10-04T19:44:01Z",
+      "name": "publish",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-04T19:43:41Z",
+          "completed_at": "2026-10-04T19:43:41Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-04T19:43:41Z",
+          "completed_at": "2026-10-04T19:43:42Z"
+        },
+        {
+          "name": "安装签名验证工具",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-04T19:43:42Z",
+          "completed_at": "2026-10-04T19:43:51Z"
+        },
+        {
+          "name": "公开版本并验证所选通道",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-04T19:43:51Z",
+          "completed_at": "2026-10-04T19:43:59Z"
+        },
+        {
+          "name": "公开诊断结果",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-04T19:43:59Z",
+          "completed_at": "2026-10-04T19:44:00Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-04T19:44:00Z",
+          "completed_at": "2026-10-04T19:44:00Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-04T19:44:00Z",
+          "completed_at": "2026-10-04T19:44:00Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/111515613088",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000401,
+      "runner_name": "GitHub Actions 1000000401",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

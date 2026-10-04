@@ -1,0 +1,423 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-04",
+  "desktop_source": {
+    "repository": "gzers/opencodex-desktop",
+    "tag": "v0.1.3",
+    "peeled_commit": "bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028",
+    "tag_object": "58494112b113ae1c4dc5b971d989489ab9cd761e",
+    "review_mode": "Read-only archived source; no code worktree or implementation mutation"
+  },
+  "official_source": {
+    "package": "@bitkyc08/opencodex",
+    "version": "2.69.0",
+    "review_mode": "Read-only installed package source; upstream commit not verified"
+  },
+  "entries": [
+    {
+      "id": "E01",
+      "path": "apps/desktop/ui/src/app/appearance/effects.ts",
+      "sha256": "9b7a19bcd38f45d50fa0882c2df3ab072394dfa78964714dd05e06d8bd07f944",
+      "line_ranges": [
+        [
+          18,
+          18
+        ],
+        [
+          63,
+          64
+        ],
+        [
+          125,
+          133
+        ]
+      ],
+      "review_conclusion": "Default high; DOM visibility and reduced-motion gates",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/app/appearance/effects.ts"
+    },
+    {
+      "id": "E02",
+      "path": "apps/desktop/ui/src/features/runtime/motion/scene.ts",
+      "sha256": "38b61bac1dc487641ef167f1af5f106dee4b54eaee097d0a2c8227093702de62",
+      "line_ranges": [
+        [
+          203,
+          289
+        ]
+      ],
+      "review_conclusion": "Per-frame geometry, colors, attributes and ambient motion; uncapped recurring rAF while high/active",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/features/runtime/motion/scene.ts"
+    },
+    {
+      "id": "E03",
+      "path": "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts",
+      "sha256": "77451174eb091a31b54418c52684e07d91ba2519d391a7d23d5ce7399055cbdb",
+      "line_ranges": [
+        [
+          10,
+          65
+        ],
+        [
+          171,
+          175
+        ],
+        [
+          191,
+          234
+        ]
+      ],
+      "review_conclusion": "Separate WebGL rAF; DPR capped; setActive(false) stops loop; destroy cleans context. Fragment shader repeats time-dependent orbit/rotation/scale expressions for light contributions; per-frame uniform precomputation is an unmeasured optimization candidate requiring visual equivalence and GPU profiling.",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/features/runtime/motion/meshGlow.ts"
+    },
+    {
+      "id": "E04",
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue",
+      "sha256": "b98bad7bd938ecbb6df1af1d0edd1e7c3e284a9256d49aac1f0c7b194e088e8c",
+      "line_ranges": [
+        [
+          31,
+          49
+        ],
+        [
+          81,
+          102
+        ]
+      ],
+      "review_conclusion": "Mid/reduced strategy sets animation inactive; component has cleanup",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue"
+    },
+    {
+      "id": "E05",
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "sha256": "260505e0861eeb41a2e9e0cd08dbd27ce00854e2f49118c8f0960c75dd451035",
+      "line_ranges": [
+        [
+          34,
+          35
+        ],
+        [
+          60,
+          72
+        ]
+      ],
+      "review_conclusion": "Route visibility hooks and cleanup exist",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/routes/OverviewRoute.vue"
+    },
+    {
+      "id": "E06",
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "25c2dde0856318df269684a9cfda806921310eb295edc6beadd2dd246d5ced9c",
+      "line_ranges": [
+        [
+          342,
+          349
+        ],
+        [
+          393,
+          398
+        ],
+        [
+          412,
+          415
+        ],
+        [
+          534,
+          546
+        ]
+      ],
+      "review_conclusion": "Background detection checks registered window count; hide keeps main; fixed sleep loop; repeated tray/status emits",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/lib.rs"
+    },
+    {
+      "id": "E07",
+      "path": "apps/desktop/tauri/config/runtime.defaults.json",
+      "sha256": "a0ff0559de43f46a68d08bed5f93788eac0e87379dcf48f8e5c31a2399bc91fd",
+      "line_ranges": [
+        [
+          4,
+          4
+        ],
+        [
+          10,
+          10
+        ]
+      ],
+      "review_conclusion": "Configured running/connection checks: foreground 3/15 seconds, background 10/30 seconds; tray fallback 1 second. foreground_backoff_ms and background_backoff_ms feed connection interval accessors rather than failure backoff.",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/config/runtime.defaults.json"
+    },
+    {
+      "id": "E08",
+      "path": "apps/desktop/tauri/src/modules/status/polling.rs",
+      "sha256": "85c81083638f7643bc5c336fca9c39926f9021b7171198b11027154f8d507f17",
+      "line_ranges": [
+        [
+          87,
+          158
+        ]
+      ],
+      "review_conclusion": "Either due dimension causes full refresh; adaptive run_until exists but bootstrap does not use it",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/modules/status/polling.rs"
+    },
+    {
+      "id": "E09",
+      "path": "apps/desktop/tauri/src/modules/status/mod.rs",
+      "sha256": "cd40abff27b7108d779f0a6a08f13d9bd045769e27763c796d24ada926ff3594",
+      "line_ranges": [
+        [
+          636,
+          660
+        ],
+        [
+          775,
+          823
+        ]
+      ],
+      "review_conclusion": "Failure backoff exists; full source fetch; debounce is not cached response",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/modules/status/mod.rs"
+    },
+    {
+      "id": "E10",
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "sha256": "77841514ac4451acb6e022f9c9c63fb66c96a50fb4968d4de873c4adba282422",
+      "line_ranges": [
+        [
+          46,
+          58
+        ],
+        [
+          94,
+          116
+        ]
+      ],
+      "review_conclusion": "Spawns status --json; synchronous bridge; five-second timeout and kill_on_drop(false) create cleanup risk",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/infrastructure/status_source.rs"
+    },
+    {
+      "id": "E11",
+      "path": "apps/desktop/ui/src/composables/useAppController.ts",
+      "sha256": "c5c2fd5675233d4dfbf27be246f4bf725e02d04c04c91dde765058dac2ec0b3a",
+      "line_ranges": [
+        [
+          170,
+          207
+        ]
+      ],
+      "review_conclusion": "Fixed tray timer; clears on root unmount, no local visibility/backoff/inflight guard",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/composables/useAppController.ts"
+    },
+    {
+      "id": "E12",
+      "path": "apps/desktop/tauri/src/infrastructure/tray_controller.rs",
+      "sha256": "a2c7ea1a395ce2b0c9f2ba099366722f103deee67c981dca61454f4fa0ad8095",
+      "line_ranges": [
+        [
+          120,
+          142
+        ]
+      ],
+      "review_conclusion": "Repeated native tooltip/header/enabled setters",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/infrastructure/tray_controller.rs"
+    },
+    {
+      "id": "E13",
+      "path": "apps/desktop/tauri/src/commands/panel.rs",
+      "sha256": "6c784254be4ca1146228b9562c5787ff0280ba3975fb3a05e60001e61e67b773",
+      "line_ranges": [
+        [
+          230,
+          256
+        ]
+      ],
+      "review_conclusion": "Hide and reuse embedded WebView; close only for origin change in this route",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/commands/panel.rs"
+    },
+    {
+      "id": "E14",
+      "path": "apps/desktop/ui/src/routes/PanelRoute.vue",
+      "sha256": "25ece866b04397b417e79aafd821599900bec999038b57de8faa183c142c563e",
+      "line_ranges": [
+        [
+          251,
+          257
+        ]
+      ],
+      "review_conclusion": "Own timers/observer cleaned; child WebView hidden on unmount",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/ui/src/routes/PanelRoute.vue"
+    },
+    {
+      "id": "E15",
+      "path": "apps/desktop/tauri/src/modules/logs/mod.rs",
+      "sha256": "44297c831e7766c08a6febe44879aabb8612c5d8a3cec33a5a2555f73389b76a",
+      "line_ranges": [
+        [
+          87,
+          130
+        ]
+      ],
+      "review_conclusion": "Chunked tail read already present; long-line byte bound absent in this loop",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/modules/logs/mod.rs"
+    },
+    {
+      "id": "E16",
+      "path": "apps/desktop/tauri/src/infrastructure/runtime_log.rs",
+      "sha256": "ef2e3954b29a1f68ff3a507fd19847e1d2e471325c63cffdc7a812e664eef759",
+      "line_ranges": [
+        [
+          13,
+          14
+        ],
+        [
+          61,
+          74
+        ],
+        [
+          88,
+          97
+        ]
+      ],
+      "review_conclusion": "5 MiB rotation; sync_all per event",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/infrastructure/runtime_log.rs"
+    },
+    {
+      "id": "E17",
+      "path": "apps/desktop/tauri/src/modules/runtime_defaults/mod.rs",
+      "sha256": "73f2559db1ee807df593b61ae3513bfa5b7a37b31fd55ceb8797db0ec738e923",
+      "line_ranges": [
+        [
+          1,
+          5
+        ],
+        [
+          33,
+          42
+        ],
+        [
+          88,
+          96
+        ],
+        [
+          119,
+          142
+        ]
+      ],
+      "review_conclusion": "Build-time embedded runtime.defaults.json parsed once through OnceLock; typed accessors expose foreground/background running and connection intervals, sample timeout and maximum failure backoff. The bundled defaults are not a directly editable runtime file.",
+      "source": "desktop v0.1.3 tag source",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028/apps/desktop/tauri/src/modules/runtime_defaults/mod.rs"
+    },
+    {
+      "id": "O01",
+      "path": "src/cli/status.ts",
+      "sha256": "cd383dea15fd730b7dbf15f600273701a7526f51f320e8cb155585b4309e393f",
+      "line_ranges": [
+        [
+          686,
+          765
+        ]
+      ],
+      "review_conclusion": "Status gathers runtime, connection, liveness, startup, service, shim, plugin and home diagnostics",
+      "source": "installed @bitkyc08/opencodex 2.69.0"
+    },
+    {
+      "id": "O02",
+      "path": "src/server/memory-watchdog.ts",
+      "sha256": "d2f7f5cd03316cdfb0bd23abd77b4c28d87986a9a1cb9e0f53e3890695f07f4c",
+      "line_ranges": [
+        [
+          53,
+          55
+        ],
+        [
+          123,
+          148
+        ]
+      ],
+      "review_conclusion": "60-second sampling, bounded 360-item ring, timer cleanup; not unbounded history",
+      "source": "installed @bitkyc08/opencodex 2.69.0"
+    },
+    {
+      "id": "O03",
+      "path": "gui/dist/assets/App-DDbgOTh6.js",
+      "sha256": "c0bfffe3b799ae72b591657f03637aabebab53cdef614e0554a63b27034880ea",
+      "line_ranges": [
+        [
+          1,
+          1
+        ]
+      ],
+      "review_conclusion": "Bundled GUI includes document and host visibility gates; hidden native WebView behavior still needs real verification",
+      "source": "installed @bitkyc08/opencodex 2.69.0",
+      "utf8_token": "__OPENCODEX_HOST_VISIBLE__",
+      "utf8_byte_offset": 1054,
+      "host_visibility_event_utf8_byte_offset": 1372
+    }
+  ],
+  "external_metric_references": [
+    {
+      "title": "Apple Activity Monitor: View energy consumption",
+      "url": "https://support.apple.com/guide/activity-monitor/view-energy-consumption-actmntr43697/mac"
+    },
+    {
+      "title": "Apple WWDC18: iOS Memory Deep Dive (physical footprint vs resident memory)",
+      "url": "https://developer.apple.com/videos/play/wwdc2018/416/"
+    },
+    {
+      "title": "Local macOS top manual",
+      "reference": "man top; first logged sample has invalid percent CPU",
+      "checked": true
+    }
+  ],
+  "external_api_references": [
+    {
+      "title": "Apple AppKit NSApplication didBecomeActiveNotification",
+      "url": "https://developer.apple.com/documentation/appkit/nsapplication/didbecomeactivenotification",
+      "checked_at": "2026-10-05T00:09:43+08:00",
+      "review_mode": "Official Apple DocC JSON retrieved directly over HTTPS; abstract and API identifier checked",
+      "verified_capability": "Application-level notification immediately after activation.",
+      "verification_url": "https://developer.apple.com/tutorials/data/documentation/appkit/nsapplication/didbecomeactivenotification.json"
+    },
+    {
+      "title": "Apple AppKit NSApplication didResignActiveNotification",
+      "url": "https://developer.apple.com/documentation/appkit/nsapplication/didresignactivenotification",
+      "checked_at": "2026-10-05T00:09:43+08:00",
+      "review_mode": "Official Apple DocC JSON retrieved directly over HTTPS; abstract and API identifier checked",
+      "verified_capability": "Application-level notification immediately after giving active status to another application.",
+      "verification_url": "https://developer.apple.com/tutorials/data/documentation/appkit/nsapplication/didresignactivenotification.json"
+    },
+    {
+      "title": "Tauri v2 Calling the Frontend from Rust",
+      "url": "https://v2.tauri.app/develop/calling-frontend/",
+      "checked_at": "2026-10-05T00:09:43+08:00",
+      "review_mode": "Primary API documentation HTML retrieved directly over HTTPS; relevant API passages checked",
+      "verified_capability": "Rust emit and frontend listen/unlisten support low-volume application-state events; component scopes require listener cleanup."
+    },
+    {
+      "title": "MDN Window cancelAnimationFrame",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelAnimationFrame",
+      "checked_at": "2026-10-05T00:09:43+08:00",
+      "review_mode": "Primary API documentation HTML retrieved directly over HTTPS; relevant API passages checked",
+      "verified_capability": "Cancels a previously requested animation frame using the last returned request ID."
+    },
+    {
+      "title": "MDN WebGLRenderingContext uniform",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/uniform",
+      "checked_at": "2026-10-05T00:09:43+08:00",
+      "review_mode": "Primary API documentation HTML retrieved directly over HTTPS; relevant API passages checked",
+      "verified_capability": "Uniform setters update shader parameters; values persist until the next successful program link."
+    }
+  ]
+}

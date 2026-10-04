@@ -1,0 +1,200 @@
+{
+  "task_id": "TASK-OPENCODEX-PERF-017",
+  "source_sha": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+  "version": "0.1.7",
+  "generated_at_utc": "2026-10-04T20:05:32.933549+00:00",
+  "retention": "Keep with 0.1.7 delivery evidence; downloaded packages remain outside Git in /tmp, released signed assets remain on GitHub.",
+  "method_limits": "Single-device short synthetic-fixture observations; no controlled foreground CPU improvement, wattage, long-term leakage or Windows GUI installation conclusion.",
+  "files": [
+    {
+      "path": ".adg/evidence/PERF-017-20261005/016-foreground-top.txt",
+      "bytes": 10893,
+      "sha256": "67049caca5a9e2164d123ef43ea620177665edd57843bfd5be95d2b44785b673"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/016-hidden-top.txt",
+      "bytes": 8716,
+      "sha256": "0fe2ed3c445a7c1c2754ff8bff2f8e3809ebe63f86cfc0af849ad2cb26c11f8f"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/017-foreground-top.txt",
+      "bytes": 10845,
+      "sha256": "a8456925c498bc41198e669fc8eaf6c777847bd540e8082e01cd6d402c2d8259"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/017-hidden-top.txt",
+      "bytes": 6926,
+      "sha256": "a773c5edd376639d39888cfb679dceacf3ac0dda3e91a8086937743f74550675"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/017-minimized-no-snapshot-top.txt",
+      "bytes": 8326,
+      "sha256": "8364b6d8a6e4e26dac69832a9daafd1319ddb85a9672596619196e30951aed2f"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/017-settings-top.txt",
+      "bytes": 8337,
+      "sha256": "592d4811da6d83f4b4476b1b63035d31a820ac6dbebbb0532bc886f4f40ade15"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/backend-tests.log",
+      "bytes": 52441,
+      "sha256": "4c6defaa46ee7911d895296ae446c830535d87bd7d6377261b4d28f39c61eed0"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/clippy.log",
+      "bytes": 190,
+      "sha256": "01aabc4a51a63aaafdcddecbc374fd9fa0bbfc8f8ce3738c7e1f5f7a3672280a"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/cpu-summary.json",
+      "bytes": 1648,
+      "sha256": "3be6576fab3363ebbf5796ef94c6816407aa8ba7b4c04d81fb576b3751b1e0e0"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/daily-runtime-continuity.json",
+      "bytes": 1013,
+      "sha256": "4ec57c6f48500a12baacc2ee12af32f03d8fc3d0cf80a07c4725f55a92621f29"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/documentation-checks.json",
+      "bytes": 1113,
+      "sha256": "88f217b46ca65e048f0b5f93b304e9d4e60bcf293ed31881bbe19c929457803a"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/final-local-startup.txt",
+      "bytes": 105,
+      "sha256": "b19778a9cc8b7e61b3bc2d6d2f44469f78c52c58ae07796b1c6b00b83005b3a4"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/final-local-ui.txt",
+      "bytes": 351,
+      "sha256": "7413244b0fab58f78b1a660770120d524ebec321f64847d5c47f90b907359ecd"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/frontend-build.log",
+      "bytes": 1667,
+      "sha256": "6f16768bd44e74ef7280bac1d154e54c0e705999792313775f51fed6923e4ed9"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/frontend-tests.log",
+      "bytes": 797,
+      "sha256": "44a1dae2ef978ed5bb9ef338bcf901bec964008cac6573b507f993368236b097"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/governance-closure.json",
+      "bytes": 737,
+      "sha256": "c54ba35f4f7baceb43d3a9700bffa4e7f089b76b369fe2a43f9d1919bd85f410"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/integration-checks.json",
+      "bytes": 463,
+      "sha256": "b730b94d564de1e6aef2264b1785411cbabf6eafee18f62b9b747f599bb3fe5d"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/latest-fixed.json",
+      "bytes": 4112,
+      "sha256": "9486ae38b116728039eefe37e4daba5f1478774c163d96a37b1fc99fa9f01bc4"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/latest-stable.json",
+      "bytes": 4112,
+      "sha256": "9486ae38b116728039eefe37e4daba5f1478774c163d96a37b1fc99fa9f01bc4"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/local-source-identity.json",
+      "bytes": 234,
+      "sha256": "cb217bbb5a4065615c8895a38307191d658de89d5f6aad72a2e35c301148e31f"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/macos-local-build.log",
+      "bytes": 2638,
+      "sha256": "354b35e38a949c77ab846ead54ee1d78075a31cbb0ef10d11e45c4f8820be347"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/main-ci-jobs.json",
+      "bytes": 16016,
+      "sha256": "d0768fd38318638e139e9777a99a9eba6f14e83b745bd601e6d91ee85d1a141a"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/main-ci.json",
+      "bytes": 14048,
+      "sha256": "beea7cc4e1c0a2a3954be4600b38fdfbcdbc14b3ba7c101d22342288cdfbfa7b"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/memory-snapshot.txt",
+      "bytes": 524,
+      "sha256": "822672bedd29d941c6bdab6781d6a9d69f52bbb8f675c7c41b0d238640b25376"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/panel-edit-protection.json",
+      "bytes": 354,
+      "sha256": "2f901c1d6120b11cd282e51abeb2fe774f2a5a5c22ce75537936e8a2fc9412c2"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/panel-reclaim-restore.txt",
+      "bytes": 403,
+      "sha256": "40fdfcb3c72d77add65e48118bb4dabe6563e343a638f74c8166efb1440effa2"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/performance-review.json",
+      "bytes": 1842,
+      "sha256": "2fbb138216f4ae44ca7124fc029fd06e7628c44a14ef226141c7710d67b758a0"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/public-latest-release.json",
+      "bytes": 19037,
+      "sha256": "cc5a708d8a290fac01035051e68d5c2da3d0980a17a2757da0f1c7d873f596a0"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/public-release-verification.json",
+      "bytes": 2640,
+      "sha256": "47c727fe0e7e864b32e97f953d766314e5f9445e97791502c634e6befb97eba6"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/public-release.json",
+      "bytes": 19037,
+      "sha256": "cc5a708d8a290fac01035051e68d5c2da3d0980a17a2757da0f1c7d873f596a0"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/publish-diag.txt",
+      "bytes": 731,
+      "sha256": "7f88365f498be5358a970fc5aa952ce7df0353a170570f3d01a54b21c2071017"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/publish-jobs.json",
+      "bytes": 2944,
+      "sha256": "dc15fc8abdbccaf06aa702be55ccb6da86fcf313f3465d49ef1aa9bd065ab03b"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/publish-run.json",
+      "bytes": 13851,
+      "sha256": "9e543f3353e51ac8682ff682baf9a2d65f6b30097378bc1129669c72ff1913e3"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/publisher-tests.log",
+      "bytes": 2891,
+      "sha256": "4371b2e9ae52ad18d187452d4071234c254f7791192de513cc8058a933b80cea"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/release-build-jobs.json",
+      "bytes": 7482,
+      "sha256": "8bfe39b3d6137eb59c660558b2783701e2aa0a992dea52a4094925e8b3cdf0ab"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/release-build.json",
+      "bytes": 13820,
+      "sha256": "2a6bf36b687cc141338aaf61004eb9aacb854551e493fc0d7f7ca96f5e4f251c"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/sandbox-cleanup.json",
+      "bytes": 575,
+      "sha256": "5e315c99281ea0b9fffd3b825af8201871ccc3c4eb2209e8640604d0daf0173e"
+    },
+    {
+      "path": ".adg/evidence/PERF-017-20261005/typecheck.log",
+      "bytes": 60,
+      "sha256": "9bee3a8586d7772b2ac923b34beed9ec630b73f89e7dc26d30c5a0506dc7610c"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-04",
+  "checked_at": "2026-10-05T00:09:43+08:00",
+  "scope": "Six new topic markdown files, copied screenshot, their evidence files and the appended maintenance-index row; unrelated dirty files excluded",
+  "result": "pass",
+  "branch": "docs/governance-main",
+  "checks": {
+    "documentation_file_count": 6,
+    "local_link_count": 27,
+    "local_links_resolve": true,
+    "pinned_source_link_count": 24,
+    "pinned_source_paths_and_line_anchors_valid": true,
+    "source_hashes_checked": 20,
+    "source_hashes_match": true,
+    "csv_row_count": 448,
+    "cpu_rows_used": 420,
+    "cpu_sample_count_per_pid_per_condition": 15,
+    "csv_matches_original_top_inputs": true,
+    "all_cpu_summary_statistics_recomputed": true,
+    "raw_memory_counter_hashes_and_retained_fields_match": true,
+    "attachment_byte_identity_verified": true,
+    "new_markdown_whitespace_and_placeholders": "pass",
+    "maintenance_index_git_diff_check": "pass",
+    "implementation_paths_have_no_worktree_changes": true,
+    "maintenance_index_entry_count_for_record": 1,
+    "original_ui_preferences_restored_recorded": true
+  },
+  "aggregate_cpu_means": {
+    "settings-high": 0.686667,
+    "overview-high": 46.246667,
+    "overview-mid": 0.266667,
+    "overview-high-repeat": 44.893333
+  },
+  "local_links": [
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "target": "问题来源记录/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "target": "分析/01-运行观测与指标口径.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "target": "分析/02-原因分析与源码证据.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "target": "分析/03-优化建议与验证方案.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "target": "../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/manifest.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "target": "分析/03-优化建议与验证方案.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/observations.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/source-review.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/process-samples.csv"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/measurement-summary.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/memory-counter-excerpts.txt"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "target": "03-优化建议与验证方案.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/02-原因分析与源码证据.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/source-review.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/02-原因分析与源码证据.md",
+      "target": "../../20261004-白屏与托盘左键菜单/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/03-优化建议与验证方案.md",
+      "target": "02-原因分析与源码证据.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/03-优化建议与验证方案.md",
+      "target": "../../20261004-更新通道与配置分层/分析/02-配置分层规划建议.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/README.md",
+      "target": "../README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/README.md",
+      "target": "01-运行观测与指标口径.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/README.md",
+      "target": "02-原因分析与源码证据.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/README.md",
+      "target": "03-优化建议与验证方案.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/问题来源记录/README.md",
+      "target": "macos-使用大量能耗-用户截图.png"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/问题来源记录/README.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/manifest.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "20261004-白屏与托盘左键菜单/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "20261004-更新通道与配置分层/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "../../2026-10-04-更新通道自更新与官方更新代跑/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "20261004-能耗与内存性能分析/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261004-01.md"
+    }
+  ],
+  "limitations": [
+    "Documentation/evidence integrity checks only; no implementation or performance fix was delivered.",
+    "External source URLs were verified against the read-only archived files and pinned commit, not by a fresh network request.",
+    "Memory trend, watts, hidden-window behavior and complete WebKit ownership remain outside the completed measurements."
+  ]
+}

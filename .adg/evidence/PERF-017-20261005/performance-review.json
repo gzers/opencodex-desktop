@@ -1,0 +1,41 @@
+{
+  "observed_at_utc": "2026-10-04T19:41:00.126801+00:00",
+  "source_sha": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+  "review_gate": "review:performance",
+  "result": "passed",
+  "reviewer": "Codex integration review; not an independent human review",
+  "coverage": [
+    "native activation, visibility and minimize gating plus foreground-query event race",
+    "same SVG golden frames and original shader/DPR retained; cached writes and GL cleanup",
+    "light/full CLI cache identity, readiness, TTL, explicit refresh and shared collection",
+    "bounded CLI and log buffers, isolated Unix diagnostic process group and wait",
+    "tray subscribe-before-drain, single-flight fallback and setter cache commit",
+    "panel hidden TTL generation race, origin/position behavior and conservative edit protection"
+  ],
+  "evidence": [
+    "frontend-tests.log",
+    "backend-tests.log",
+    "panel-reclaim-restore.txt",
+    "panel-edit-protection.json",
+    "daily-runtime-continuity.json",
+    "local-source-identity.json"
+  ],
+  "known_limits": [
+    "No controlled front-facing CPU reduction demonstrated; no wattage or long-term leakage conclusion",
+    "macOS single-device synthetic panel/CLI fixture; no Windows native GUI installation acceptance",
+    "Windows timeout termination covers direct child only; descendants unverified",
+    "Stopped/no-PID status uses full CLI each tick; cached connection metadata can be 60 seconds old",
+    "Edited panel is conservatively retained even if edits later saved; no all-official-page workflow acceptance",
+    "Shader precomputation, one shared SVG/WebGL scheduler and batched fsync are not delivered"
+  ],
+  "backend_test_totals": {
+    "passed": 566,
+    "failed": 0,
+    "ignored": 5
+  },
+  "frontend_test_totals": {
+    "files": 78,
+    "passed": 373
+  },
+  "publisher_tests_passed": 29
+}

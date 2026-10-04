@@ -1,0 +1,66 @@
+{
+  "verified_at_utc": "2026-10-04T19:46:55.062009+00:00",
+  "result": "passed",
+  "release_id": 403177453,
+  "tag": "v0.1.7",
+  "source_sha": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+  "published_at": "2026-10-04T19:43:57Z",
+  "draft": false,
+  "prerelease": false,
+  "latest_release_id_matched": true,
+  "fixed_and_stable_manifests_equal": true,
+  "old_key_source": "v0.1.3",
+  "old_key_version": "0.1.3",
+  "public_key_sha256": "30190687026fdc7b7e223884315baa52f6d42c1c37d447b8631e9597c1ecdfee",
+  "public_key_unchanged": true,
+  "verified_artifacts": [
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "platforms": [
+        "darwin-aarch64",
+        "darwin-aarch64-app"
+      ],
+      "bytes": 3911087,
+      "sha256": "dee09c460c62d11dd5c1481868438c8a4050ec7b264746bee6b123b18f4b1d4c",
+      "github_digest_matched": true,
+      "old_public_key_verification": "passed",
+      "verification_output": "Signature and comment signature verified\nTrusted comment: timestamp:1791142730\tfile:OpenCodeX Desktop.app.tar.gz\tversion:0.1.7"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.1.7_x64_en-US.msi",
+      "platforms": [
+        "windows-x86_64",
+        "windows-x86_64-msi"
+      ],
+      "bytes": 3940352,
+      "sha256": "647d5753cf9e7c4e3c1b16297e93ef21614fd7ff5945d0df2c9af9e26863b994",
+      "github_digest_matched": true,
+      "old_public_key_verification": "passed",
+      "verification_output": "Signature and comment signature verified\nTrusted comment: timestamp:1791142949\tfile:OpenCodeX Desktop_0.1.7_x64_en-US.msi\tversion:0.1.7"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.1.7_x64-setup.exe",
+      "platforms": [
+        "windows-x86_64-nsis"
+      ],
+      "bytes": 2844720,
+      "sha256": "e41965cbe2647ad0d1ffe9402de7db31758ed2fe5c613d837b7d6c06a95c7511",
+      "github_digest_matched": true,
+      "old_public_key_verification": "passed",
+      "verification_output": "Signature and comment signature verified\nTrusted comment: timestamp:1791142949\tfile:OpenCodeX Desktop_0.1.7_x64-setup.exe\tversion:0.1.7"
+    }
+  ],
+  "macos_bundle_identity": {
+    "version": "0.1.7",
+    "build_version": "0.1.7",
+    "binary_sha256": "9a13f20faf20d51103d185fbf82a220812fe7d8e5fe7b119f2690643a4b23ed7",
+    "embedded_source_sha": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+    "source_sha_present_in_binary": true,
+    "method": "archive read only; never installed or executed"
+  },
+  "limits": [
+    "No installation or restart of the daily application",
+    "No Windows native GUI acceptance",
+    "Updater minisign verification is not Apple signing/notarization or Windows Authenticode"
+  ]
+}

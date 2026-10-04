@@ -1,0 +1,183 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-04",
+  "registered_date": "2026-10-04",
+  "kind": "Analysis observations; not an implementation, release or incident-closure receipt",
+  "host": {
+    "os": "macOS 27.0.1",
+    "build": "26A434",
+    "cpu": "Apple M5 Pro",
+    "model": "Mac17,8",
+    "ram_bytes": 68719476736
+  },
+  "installed_desktop": {
+    "version": "0.1.3",
+    "bundle_id": "com.gzers.opencodex.desktop",
+    "path": "/Applications/OpenCodeX Desktop.app"
+  },
+  "installed_official": {
+    "package": "@bitkyc08/opencodex",
+    "version": "2.69.0"
+  },
+  "processes": [
+    {
+      "pid": 17819,
+      "role": "Desktop Rust/Tauri",
+      "ppid": 1,
+      "launch_time": "2026-10-04 21:50:05 +08:00",
+      "rss_kib": 118064,
+      "rss_mib": 115.297,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    },
+    {
+      "pid": 17821,
+      "role": "WebKit GPU (high-confidence association)",
+      "ppid": 1,
+      "launch_time": "2026-10-04 21:50:05 +08:00",
+      "rss_kib": 76784,
+      "rss_mib": 74.984,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    },
+    {
+      "pid": 17822,
+      "role": "WebKit shell WebContent (high-confidence association)",
+      "ppid": 1,
+      "launch_time": "2026-10-04 21:50:05 +08:00",
+      "rss_kib": 97952,
+      "rss_mib": 95.656,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    },
+    {
+      "pid": 17823,
+      "role": "WebKit Networking (same-launch-time association)",
+      "ppid": 1,
+      "launch_time": "2026-10-04 21:50:05 +08:00",
+      "rss_kib": 42832,
+      "rss_mib": 41.828,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    },
+    {
+      "pid": 18502,
+      "role": "Official Node launcher (child of desktop)",
+      "ppid": 17819,
+      "launch_time": "2026-10-04 21:51:26 +08:00",
+      "rss_kib": 46800,
+      "rss_mib": 45.703,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    },
+    {
+      "pid": 18504,
+      "role": "Official Bun service (child of Node)",
+      "ppid": 18502,
+      "launch_time": "2026-10-04 21:51:26 +08:00",
+      "rss_kib": 1303808,
+      "rss_mib": 1273.25,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    },
+    {
+      "pid": 19088,
+      "role": "Additional WebContent (panel candidate; ownership unproven)",
+      "ppid": 1,
+      "launch_time": "2026-10-04 21:54:59 +08:00",
+      "rss_kib": 247968,
+      "rss_mib": 242.156,
+      "rss_observed_at": "2026-10-04T22:57:08+08:00"
+    }
+  ],
+  "footprint_observations": [
+    {
+      "source": "bun-vmmap.txt",
+      "source_sha256": "0339600fd4f10869fa822702eff22a990fe0fdede2aa1bafe2290290950fbd5e",
+      "retained_fields": [
+        "Process:         bun.exe [18504]",
+        "Parent Process:  node [18502]",
+        "Date/Time:       2026-10-04 22:31:13.160 +0800",
+        "Launch Time:     2026-10-04 21:51:26.197 +0800",
+        "OS Version:      macOS 27.0.1 (26A434)",
+        "Analysis Tool:   /usr/bin/vmmap",
+        "Physical footprint:         255.0M",
+        "Physical footprint (peak):  560.2M"
+      ]
+    },
+    {
+      "source": "bun-vmmap-final.txt",
+      "source_sha256": "6105d65d47da5c48e7aed061011689a8ddfe3b43c544f50269373eb4a22db20a",
+      "retained_fields": [
+        "Process:         bun.exe [18504]",
+        "Parent Process:  node [18502]",
+        "Date/Time:       2026-10-04 22:58:52.764 +0800",
+        "Launch Time:     2026-10-04 21:51:26.197 +0800",
+        "OS Version:      macOS 27.0.1 (26A434)",
+        "Analysis Tool:   /usr/bin/vmmap",
+        "Physical footprint:         251.5M",
+        "Physical footprint (peak):  560.2M"
+      ]
+    },
+    {
+      "source": "bun-sample.txt",
+      "source_sha256": "2e91f8d59054117971d7e75a60c3b194360bc93a673d65ed59d280fe66d6b913",
+      "retained_fields": [
+        "Process:         bun.exe [18504]",
+        "Parent Process:  node [18502]",
+        "Date/Time:       2026-10-04 22:31:13.193 +0800",
+        "Launch Time:     2026-10-04 21:51:26.197 +0800",
+        "OS Version:      macOS 27.0.1 (26A434)",
+        "Analysis Tool:   /usr/bin/sample",
+        "Physical footprint:         255.1M",
+        "Physical footprint (peak):  560.2M"
+      ]
+    },
+    {
+      "source": "shell-webview-sample.txt",
+      "source_sha256": "c96f7dd0b892b201f5c5f3b125c41f294746b6221ad0edd0f762602552bfb061",
+      "retained_fields": [
+        "Process:         com.apple.WebKit.WebContent [17822]",
+        "Parent Process:  launchd [1]",
+        "Date/Time:       2026-10-04 22:31:13.195 +0800",
+        "Launch Time:     2026-10-04 21:50:05.859 +0800",
+        "OS Version:      macOS 27.0.1 (26A434)",
+        "Analysis Tool:   /usr/bin/sample",
+        "Physical footprint:         144.2M",
+        "Physical footprint (peak):  389.5M"
+      ]
+    },
+    {
+      "source": "panel-webview-sample.txt",
+      "source_sha256": "c031d5ddde30933a67271233c736d762807b218fee3a3e602a1c05fe7ea84ed1",
+      "retained_fields": [
+        "Process:         com.apple.WebKit.WebContent [19088]",
+        "Parent Process:  launchd [1]",
+        "Date/Time:       2026-10-04 22:31:13.195 +0800",
+        "Launch Time:     2026-10-04 21:54:59.054 +0800",
+        "OS Version:      macOS 27.0.1 (26A434)",
+        "Analysis Tool:   /usr/bin/sample",
+        "Physical footprint:         109.3M",
+        "Physical footprint (peak):  407.3M"
+      ]
+    }
+  ],
+  "user_attachment": {
+    "file": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/问题来源记录/macos-使用大量能耗-用户截图.png",
+    "sha256": "822bb65b90c729c3837c2f93abb8794cee5229004707869ed3855815670e39fa",
+    "observed_content": "macOS battery menu; power adapter; charged to 80 percent limit; OpenCodeX Desktop.app listed as using significant energy",
+    "numeric_energy_cpu_memory_values_present": false,
+    "capture_time_unknown": true
+  },
+  "ui_comparison": {
+    "original_effects": "high",
+    "temporary_effects": "mid",
+    "final_effects": "high",
+    "renderer": "webgl",
+    "ui_scale_percent": 100,
+    "original_page": "settings/general",
+    "final_page": "settings/general",
+    "original_preference_restored": true,
+    "proxy_service_left_running": true,
+    "service_lifecycle_actions_performed": false
+  },
+  "memory_api": {
+    "attempted": true,
+    "result": "401 Unauthorized; no authenticated heap/trend collected"
+  },
+  "memory_leak_proven": false,
+  "source_of_process_snapshot": "Read-only ps fields pid, ppid, rss, lstart, comm; argv and environment not retained"
+}

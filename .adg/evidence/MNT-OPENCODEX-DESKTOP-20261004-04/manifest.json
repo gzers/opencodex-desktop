@@ -1,0 +1,119 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-04",
+  "registered_date": "2026-10-04",
+  "timezone": "Asia/Shanghai",
+  "assembled_at": "2026-10-05T00:09:43+08:00",
+  "kind": "Analysis evidence inventory; not an implementation, release or closure certificate",
+  "branch": "docs/governance-main",
+  "topic_readme": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+  "desktop_version": "0.1.3",
+  "desktop_source_commit": "bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028",
+  "official_package_version": "2.69.0",
+  "provenance": {
+    "process_samples": "Four read-only top windows; all selected process rows retained; first CPU sample per window excluded from averages",
+    "memory_counters": "Whitelisted vmmap/sample identity and footprint excerpts; original input SHA-256 retained",
+    "source_review": "Read-only desktop tag archive and installed official package; per-file hashes and line ranges",
+    "attachment": "Original user-supplied screenshot copied byte-for-byte",
+    "scope": "Documentation and observations; implementation untouched; original UI effects restored"
+  },
+  "privacy": "No full configuration, credential, environment, argv or business request content retained",
+  "files": [
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/documentation-checks.json",
+      "bytes": 9557,
+      "sha256": "177ad5617e3e2b815c213cc3c749cf97d1f8be380cf565fb61bb565da1d1790e"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/measurement-summary.json",
+      "bytes": 13446,
+      "sha256": "f71172136303f9ab97d61cc319ee86360a9e2cc44746f65387606e1338a15051"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/memory-counter-excerpts.txt",
+      "bytes": 2074,
+      "sha256": "c9d366e2261f1a99f4774ac89702ba820a5a8c21d10c26a1d9cd8705a57093a9"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/observations.json",
+      "bytes": 6579,
+      "sha256": "cc63f348e62d6b0fa0f6c1d9beff33020887ee73ac01cee37f89a294bd62b59f"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/process-samples.csv",
+      "bytes": 38970,
+      "sha256": "0e877c5412e69eba3cbdd52c8d62fb770bd2bf87a4cafeec8f6b4d0d1c235b71"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261004-04/source-review.json",
+      "bytes": 16153,
+      "sha256": "c008ceeced0f9f7f84475104012c0e9893c40f638ff12288a066328307ea30ed"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+      "bytes": 5242,
+      "sha256": "7f0e2bc41f6578bf1aa3f1628ee6b2d15b441a468b406f28255533717b4dff91"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/01-运行观测与指标口径.md",
+      "bytes": 7672,
+      "sha256": "3d418111f58f61a67097276aa0c28078f65e5a6241bc4f639a8c0aff45c03169"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/02-原因分析与源码证据.md",
+      "bytes": 11086,
+      "sha256": "a84442fb9ad92e4a4ccf6f8ccb0530cbdfa180e49d8ff6bcbb9443457fb49a70"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/03-优化建议与验证方案.md",
+      "bytes": 14127,
+      "sha256": "75c88b347d84a0a8b3256ba4793c16a693f382e533de93af37057a5857874e7d"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/README.md",
+      "bytes": 861,
+      "sha256": "8f72659ef8d160201d426d905870b10564f61f2e49edfcc3409c597512c56cf7"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/问题来源记录/README.md",
+      "bytes": 2622,
+      "sha256": "19d1ce68e1f23a4db5d29965be52b8865a0ee615be082eef64e317e57eac9642"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/问题来源记录/macos-使用大量能耗-用户截图.png",
+      "bytes": 56710,
+      "sha256": "822bb65b90c729c3837c2f93abb8794cee5229004707869ed3855815670e39fa"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "bytes": 3202,
+      "sha256": "f735028aa22f8c800bc32375a82c06fa836de339f1814aaed0f664e50dfaeadf"
+    }
+  ],
+  "self_hash_excluded": true,
+  "document_inventory_update": {
+    "updated_at_utc": "2026-10-04T20:05:32.931993+00:00",
+    "reason": "Topic documentation was updated for 0.1.7 delivery; document entries now describe the final committed files. The original 0.1.3 observation evidence, copied screenshot and initial analysis checks remain byte-for-byte unchanged.",
+    "previous_document_entries": [
+      {
+        "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/README.md",
+        "bytes": 4556,
+        "sha256": "1544df4670aab2314783193b249013b8d74a4f43c8a1feb398a601df3e963d8b"
+      },
+      {
+        "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/03-优化建议与验证方案.md",
+        "bytes": 13571,
+        "sha256": "1d2251d51e4a82d7bd9c062267212977a41305809ff6143d35cd72f5f70d49a5"
+      },
+      {
+        "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-能耗与内存性能分析/分析/README.md",
+        "bytes": 725,
+        "sha256": "617a9c530d048816c9dee452b108c2b64a2037efe01ea969d740342aa2d2a18e"
+      },
+      {
+        "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+        "bytes": 3139,
+        "sha256": "332ea78ecd9720a5be596e4b25fa533d3b218ed5e62506644f7d13edf0981a01"
+      }
+    ]
+  }
+}
