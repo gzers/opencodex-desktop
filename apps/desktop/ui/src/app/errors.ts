@@ -80,3 +80,40 @@ export function installErrorHandlers(appInstance: App, store: AppStore): void {
     .__ocxFaultRejectionHandler = handler
   window.addEventListener('unhandledrejection', handler)
 }
+
+/// 启动早期兜底（F-05）：Vue 实例挂载前也可能抛 window 级错误，先于首帧登记，
+/// 让「界面起来了但功能异常」这类故障不留下空白。记录不抛异常，避免二次故障。
+export function installEarlyFaultCapture(store: AppStore): void {
+  window.addEventListener('error', (event: ErrorEvent) => {
+    const detail = event.error instanceof Error ? event.error : event.message
+    store.reportUiFault(describeFault('界面异常', detail))
+  })
+}
+
+/// 最小恢复入口（F-05）：Vue 未能挂载时的兜底提示，纯 DOM + 原生刷新，
+/// 不依赖 Vue、样式表或任何管理器模块。文案只说出发生了什么与可做的动作。
+export function mountMinimalFaultNotice(
+  message: string,
+  root: HTMLElement | null = typeof document === 'undefined' ? null : document.getElementById('app'),
+): void {
+  if (!root) return
+  root.replaceChildren()
+  const box = document.createElement('div')
+  box.setAttribute('role', 'alertdialog')
+  box.style.cssText =
+    'position:fixed;inset:0;display:flex;flex-direction:column;gap:16px;align-items:center;' +
+    'justify-content:center;padding:40px;font-family:system-ui,-apple-system,sans-serif;' +
+    'color:#1c1c1e;background:#f5f5f7;text-align:center;'
+  const text = document.createElement('p')
+  text.textContent = message
+  text.style.cssText = 'margin:0;max-width:520px;line-height:1.6;'
+  const button = document.createElement('button')
+  button.type = 'button'
+  button.textContent = '重新加载界面'
+  button.style.cssText =
+    'padding:8px 20px;border-radius:8px;border:none;background:#1c1c1e;color:#fff;' +
+    'font-size:14px;cursor:pointer;'
+  button.addEventListener('click', () => window.location.reload())
+  box.append(text, button)
+  root.append(box)
+}

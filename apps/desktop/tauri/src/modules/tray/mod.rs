@@ -22,6 +22,8 @@ pub enum TrayAction {
     OpenDataDir,
     RunDoctor,
     OpenSettings,
+    /// 原生应用菜单专用：直接重载主 WebView，不经前端轮询（F-06）。
+    ReloadMain,
     Quit,
 }
 
@@ -41,6 +43,7 @@ pub const NATIVE_MENU_PROCESS_START: &str = "menu-process-start";
 pub const NATIVE_MENU_PROCESS_STOP: &str = "menu-process-stop";
 pub const NATIVE_MENU_PROCESS_RESTART: &str = "menu-process-restart";
 pub const NATIVE_MENU_VIEW_MAIN: &str = "menu-view-main";
+pub const NATIVE_MENU_VIEW_RELOAD: &str = "menu-view-reload";
 pub const NATIVE_MENU_VIEW_PANEL: &str = "menu-view-panel";
 pub const NATIVE_MENU_VIEW_SETTINGS: &str = "menu-view-settings";
 pub const NATIVE_MENU_LOGS_OPEN: &str = "menu-logs-open";

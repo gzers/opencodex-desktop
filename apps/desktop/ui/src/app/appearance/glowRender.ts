@@ -70,10 +70,32 @@ export const useGlowRenderStore = defineStore('glowRender', () => {
 
 let installed = false
 
+// 运行中 WEBGL 上下文丢失（F-04）：主页面存活但合成异常时，背景光不应继续空转。
+// 丢失即把 WEBGL 能力收回为不支持，由同一 `mode` 派生自动回退纯 CSS 极光；
+// 恢复后重新探测并交回用户选择，重建着色器层在组件侧完成（不再复用旧上下文）。
+export function installGlowRenderContextGuard(): void {
+  if (typeof document === 'undefined') return
+  document.addEventListener(
+    'webglcontextlost',
+    () => {
+      // 只有当前确实在用 WEBGL 时才回退，避免用户显式选 CSS 时被误判。
+      const store = useGlowRenderStore()
+      if (store.mode === 'mesh') store.setWebglSupported(false)
+    },
+    true,
+  )
+  document.addEventListener(
+    'webglcontextrestored',
+    () => useGlowRenderStore().setWebglSupported(detectWebglSupport()),
+    true,
+  )
+}
+
 /** 装配设备能力探测与首次落属性；在应用启动（`src/main.ts`）调用一次。 */
 export function installGlowRenderRuntime(): void {
   if (installed || typeof window === 'undefined') return
   installed = true
+  installGlowRenderContextGuard()
   const store = useGlowRenderStore()
   store.setWebglSupported(detectWebglSupport())
 }

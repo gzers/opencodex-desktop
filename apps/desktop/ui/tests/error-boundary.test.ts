@@ -2,6 +2,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { App } from 'vue'
 import { describeFault, installErrorHandlers, readableFaultInfo, sanitizeFaultText } from '@/app/errors'
+import { installEarlyFaultCapture, mountMinimalFaultNotice } from '@/app/errors'
 import { useAppStore } from '@/stores/app'
 
 // IMP-04 §14.3：运行期异常兜底必须有责任位置与恢复方式，且捕获不能只 console.log、不能吞异常变绿。
@@ -78,5 +79,21 @@ describe('runtime fault fallback', () => {
     installErrorHandlers(appInstance, store)
     expect(removeSpy).toHaveBeenCalledWith('unhandledrejection', expect.any(Function))
     removeSpy.mockRestore()
+  })
+
+  // 回归（F-05）：挂载前的 window 级错误此前无记录点；最小恢复入口不依赖 Vue。
+  it('captures pre-mount window errors and offers a Vue-free recovery entry', () => {
+    const store = useAppStore()
+    installEarlyFaultCapture(store)
+    window.dispatchEvent(
+      Object.assign(new Event('error'), { error: new Error('bootstrap broke'), message: 'bootstrap broke' }),
+    )
+    expect(store.uiFault).toContain('bootstrap broke')
+
+    const root = document.createElement('div')
+    mountMinimalFaultNotice('启动异常：bootstrap broke', root)
+    const button = root.querySelector('button')
+    expect(button?.textContent).toBe('重新加载界面')
+    expect(root.textContent).toContain('bootstrap broke')
   })
 })

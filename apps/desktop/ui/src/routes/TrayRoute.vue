@@ -111,7 +111,7 @@ onBeforeUnmount(close)
             {{ toggleItem.label }}<span class="toggle-mark">{{ toggleItem.checked ? '开启' : '关闭' }}</span>
           </button>
           <div class="tray-sep"></div>
-          <button class="tray-item danger" @click="app.exitApp()">退出桌面壳<span class="hint">⌘Q</span></button>
+          <button class="tray-item danger" @click="app.exitApp()">完全退出桌面壳<span class="hint">⌘Q</span></button>
         </div>
       </div>
     </article>
