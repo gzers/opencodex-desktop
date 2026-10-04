@@ -53,3 +53,25 @@ CI run [37183755672](https://github.com/gzers/opencodex-desktop/actions/runs/371
 - U-03/U-04：官方版本卡片远端查询、外部代跑官方更新未实现，待产品裁决。
 - C 阶段：磁盘嵌套化、容器/同步 schema 迁移、中断恢复正式启用未执行。
 - 签名与公证、Intel macOS、Windows 实机核验仍属单独门禁。
+
+
+## 追加（2026-10-04）：A/B 范围剩余项实施事实
+
+首轮合并（cb02a45b）后继续完成 A/B 范围的剩余固化项，仍未接通真实自更新端点：
+
+| 编号 | 追加实现 |
+|---|---|
+| U-06a（runtime.defaults 消费） | 新增 `modules/runtime_defaults`：进程动作/runner 窗口、状态轮询、WebDAV 超时、备份保留天数、日志读取行数、版本/Doctor/shim 探针窗口、安装 tag/闲置/探测窗口、扩展初始策略、桌面更新端点均从固化 `runtime.defaults.json` 读取；数值与此前冻结常量一一对应 |
+| U-05（端点收敛落地） | 删除 `UpdateChannel::endpoint()` 内联假地址，改读固化 `updates.desktop.channels`；命令层检查/安装用当前通道端点构建 updater，检查与安装共用同一来源 |
+| H-24/H-25/H-26（前端窗口） | 新增 `src/config/runtimeDefaults.ts`（构建期内联 ui.* 只读子集）；首屏快照/偏好等待、动作兜底轮询、启停提示窗口与迟到观察、面板加载提示、托盘轮询改读固化值 |
+| H-29（扩展初始策略） | 扩展默认分发方式与客户端启用缺省读取固化策略 |
+
+追加提交：`6b9d4441`（runtime.defaults 消费者）、`1aac784a`（前端窗口）、`9f2a9d2d`（扩展初始策略与更新端点）。以上均 fast-forward 并入 `main`。
+
+追加门禁：`cargo test --workspace --features integration-test` **415 lib passed / 0 failed / 2 ignored**，`clippy -D warnings` 通过；`vue-tsc` 通过、`vitest` 355 passed、`vite build` 通过；macOS aarch64 重建制品并在沙箱身份冒烟，日志 `startup version=0.1.2 commit=9f2a9d2d...`，日常根哨兵未变。
+
+**仍未完成：** 真实自更新端点与签名公钥（U-01/U-02）仍为占位，C 阶段存储迁移与 U-03/U-04 未实施。
+
+## 追加 CI 结果（main 9f2a9d2d）
+
+追加提交合并后的 main 提交 `9f2a9d2d` CI run [37185334531](https://github.com/gzers/opencodex-desktop/actions/runs/37185334531) 四 job 全绿：frontend success、backend success、backend-windows success、build success。
