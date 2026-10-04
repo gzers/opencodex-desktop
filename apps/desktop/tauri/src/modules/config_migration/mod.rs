@@ -465,6 +465,40 @@ pub fn recover(
     })
 }
 
+/// 启动迁移入口（§5）：对某个已知文档按需转换。缺文件或已是当前 schema 时不写盘。
+pub fn migrate_document_on_startup(
+    data_root: &Path,
+    kind: DocumentKind,
+    target: &Path,
+) -> Result<Option<CommittedMigration>, AppError> {
+    let bytes = match std::fs::read(target) {
+        Ok(bytes) => bytes,
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+        Err(error) => {
+            return Err(AppError::ConfigMigration {
+                detail: format!("读取待迁移文档失败: {error}"),
+            })
+        }
+    };
+    let (report, migrated) = prepare(kind, &bytes)?;
+    if !report.needs_commit() {
+        return Ok(None);
+    }
+    let migrated = migrated.ok_or_else(|| AppError::ConfigMigration {
+        detail: "Migrated 结果缺少候选字节".to_string(),
+    })?;
+    commit(data_root, target, &bytes, &report, &migrated).map(Some)
+}
+
+/// 启动时处理偏好文档：先完成未提交事务，再按需迁移旧 schema。
+pub fn migrate_preferences_on_startup(
+    data_root: &Path,
+) -> Result<Option<CommittedMigration>, AppError> {
+    let target = data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+    let _ = recover(data_root, &target, DocumentKind::Preferences)?;
+    migrate_document_on_startup(data_root, DocumentKind::Preferences, &target)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -619,5 +653,44 @@ mod tests {
 
         let recovered = recover(root.path(), &target, DocumentKind::Preferences).expect("recover");
         assert_eq!(recovered.action, RecoveryAction::ExternalChange);
+    }
+
+    #[test]
+    fn startup_migration_skips_when_current_schema() {
+        let root = tempfile::tempdir().expect("temp root");
+        let target = root.path().join("manager-state/preferences.json");
+        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
+        let current = serde_json::to_vec(&serde_json::json!({
+            "schema_version": PREFERENCES_CURRENT_SCHEMA,
+            "interface_scale": 100,
+        }))
+        .unwrap();
+        std::fs::write(&target, &current).unwrap();
+        let before = std::fs::read(&target).unwrap();
+        let uploaded = migrate_preferences_on_startup(root.path()).expect("startup migration");
+        assert!(uploaded.is_none());
+        assert_eq!(std::fs::read(&target).unwrap(), before);
+        assert!(!root.path().join("manager-state/config-migrations").exists());
+    }
+
+    #[test]
+    fn startup_migration_converts_legacy_preferences() {
+        let root = tempfile::tempdir().expect("temp root");
+        let target = root.path().join("manager-state/preferences.json");
+        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
+        std::fs::write(
+            &target,
+            br#"{"interface_scale":120,"app_update_channel":"beta-6h"}"#,
+        )
+        .unwrap();
+        let committed = migrate_preferences_on_startup(root.path())
+            .expect("startup migration")
+            .expect("committed");
+        assert_eq!(committed.from_schema, 0);
+        let written: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&target).unwrap()).unwrap();
+        assert_eq!(written["schema_version"], PREFERENCES_CURRENT_SCHEMA);
+        assert_eq!(written["app_update_channel"], "beta");
+        assert!(committed.backup_dir.join("original.json").exists());
     }
 }

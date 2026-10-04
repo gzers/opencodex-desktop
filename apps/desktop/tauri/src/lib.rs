@@ -96,6 +96,12 @@ pub fn run() {
             // FZ-02 首次启动先初始化或引用当前版本的数据根；失败阻断启动。
             crate::modules::data_root::initialize(&data_root)
                 .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
+            // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
+            // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。
+            if let Err(error) = crate::modules::config_migration::migrate_preferences_on_startup(&data_root)
+            {
+                record_window_event(&data_root, &format!("config migration: {error}"));
+            }
             let _lock = crate::modules::instance::AppInstanceLock::acquire(&data_root)
                 .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
             app.manage(crate::state::InstanceState { _lock });
