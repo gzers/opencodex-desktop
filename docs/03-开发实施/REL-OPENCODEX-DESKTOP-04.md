@@ -24,12 +24,20 @@ source_refs:
 
 | 编号 | 实现 | 提交 |
 |---|---|---|
+| U-02 | minisign 公钥写入 `tauri.conf.json`（编译期常量）；新增 app 目录增量配置 `tauri.updater.conf.json`（`bundle.createUpdaterArtifacts=true`），`release.yml` 以 `--config` 合并并注入 `TAURI_SIGNING_PRIVATE_KEY`/`_PASSWORD`，产出 `.sig` 与 `latest.json` | `bd2b1b26` |
 | U-01 | 端点真实化：`config/runtime.defaults.json` 与 `tauri.conf.json` 改指本仓库 Releases（stable=`releases/latest/download/latest.json`，beta=`releases/download/beta/latest.json`） | `5dfbd161` |
 | U-03 | `official_remote_latest`（受控 `npm view` + tag 白名单 + 固化超时）与前端语义化版本比较、官方卡片「远端最新版本」行 | `5dfbd161` |
 | U-04 / U-04b | `install_official_update`：先解析远端确定版本，再复用受控 `install_runtime`（registry + 确定版本 + 当前登记前缀，不浮动 `latest`） | `5dfbd161` |
 | U-05 / U-05b | 代理偏好（无凭据）、`config/network.defaults.json` + `modules/network_defaults`、网络卡片、升级 tab 快捷跳转、自更新/托管安装/官方查询共用代理、「检查连接」命令 | `c9eeff3b`、`a509ddbb` |
 | C | 偏好磁盘结构升级为分域（schema v2）；统一识别分域/扁平；迁移引擎落盘分域；容器与 WebDAV 同步走分域投影、接收端按 schema 迁移、过新拒绝 | `feeb1c9a` |
 | 版本 | 0.1.2 → 0.1.3：`tauri.conf.json`、`Cargo.toml`、`ui/package.json`、`ui/package-lock.json`；`CHANGELOG.md` 新增 `[0.1.3] - 2026-10-04` | `feeb1c9a` |
+
+### U-02 签名（2026-10-04 用户授权后实施）
+
+- 授权：用户 2026-10-04 明确「授权 U-02，都按照你的做」。
+- **已实施**：生成 minisign 公私钥；公钥（`RWRnU7wW/HWbEIgjSudpn+6H0F2dFiqg6hwT5NwKPpfy71jZFkGmk40t` 所在 base64 块）写入 `tauri.conf.json` 的 `pubkey`；新增 `tauri.updater.conf.json` 打开 `createUpdaterArtifacts`；`release.yml` 注入签名 secret 并以 `--config` 生成签名制品。私钥不进仓库、不进日志。
+- **本机验证（构建级）**：`TAURI_SIGNING_PRIVATE_KEY=… tauri build --config tauri.updater.conf.json --target aarch64-apple-darwin` 产出 `OpenCodeX Desktop.app.tar.gz` 与 **`.sig`**（header 为 `signature from tauri secret key`，公钥块与 `tauri.conf.json` 一致）。
+- **仍待完成（写 secret 属发布安全操作）**：GitHub 仓库 secret `TAURI_SIGNING_PRIVATE_KEY` 尚未写入——本机无 `gh` 与可用 GitHub admin token，无法以编程方式写入。**在该 secret 写入前触发 tag/Release，发布 job 会在签名一步失败**，因此合并/打 tag/出草稿 Release 保持等待。
 
 ## 门禁与证据（构建/测试级）
 
@@ -57,5 +65,5 @@ source_refs:
 
 ## 待用户裁决
 
-1. 是否现在单独授权执行 U-02（生成签名公私钥 → 写入 GitHub secret → 打开签名制品与工作流注入）。
-2. 合并 `main`、打 tag 与出 Draft Release 的时机：先合 U-01/U-03/U-04/U-05/C（CHANGELOG 已注明签名待补），还是待 U-02 就绪后一并合并发布。
+1. **（已授权，部分待执行）U-02**：代码侧已完成（`bd2b1b26`）。剩余唯一动作是把私钥写入 GitHub secret `TAURI_SIGNING_PRIVATE_KEY`——本机无 `gh` 与 admin token，无法代写。请提供可写 secret 的 token（我来写），或在 GitHub 上手动粘贴私钥（值仅存在于用户机器 `~/.tauri/opencodex-desktop.key`，不含口令）。
+2. **合并与发布时机**：在 secret 写入前，发布 job 会在签名步骤失败；待 secret 就绪后再合并 `main`、打 `v0.1.3` tag、出草稿 Release 并验证签名制品。
