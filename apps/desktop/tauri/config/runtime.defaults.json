@@ -7,7 +7,7 @@
   "retention": { "backup_recent_count": 10, "backup_max_age_days": 30 },
   "cleanup": { "logs_days": 30, "logs_max_lines": 10000, "notification_days": 30 },
   "diagnostics": { "version_probe_seconds": 2, "doctor_seconds": 5, "shim_seconds": 30, "recent_log_lines": 200 },
-  "ui": { "startup_snapshot_wait_ms": 1500, "startup_preferences_wait_ms": 1500, "lifecycle_fallback_ms": 1500, "panel_load_notice_ms": 8000, "tray_poll_ms": 1000 },
+  "ui": { "startup_snapshot_wait_ms": 1500, "startup_preferences_wait_ms": 1500, "lifecycle_fallback_ms": 1500, "lifecycle_notice_stop_ms": 15000, "lifecycle_notice_start_ms": 35000, "lifecycle_late_observe_ms": 180000, "panel_load_notice_ms": 8000, "tray_poll_ms": 1000 },
   "extensions": { "default_sync_method": "symlink", "default_client_enablement": true },
   "updates": { "desktop": { "channels": { "stable": "https://updates.example.invalid/opencodex-desktop/stable.json", "beta": "https://updates.example.invalid/opencodex-desktop/beta.json" } } },
   "update_check": { "default_interval_seconds": 86400, "manual_interval_seconds": 0 },

@@ -6,6 +6,7 @@ import { usePanelStore } from '@/features/panel/store'
 import { useThemeStore } from '@/app/appearance/theme'
 import { clampScale } from '@/app/appearance/scale'
 import { useOverlaySurfaces } from '@/app/surfaces'
+import { LIFECYCLE_FALLBACK_MS, PANEL_LOAD_NOTICE_MS } from '@/config/runtimeDefaults'
 
 const app = useAppStore()
 const theme = useThemeStore()
@@ -60,7 +61,7 @@ function startStatusWait() {
       return
     }
     void app.loadStatusSnapshot()
-  }, 1500)
+  }, LIFECYCLE_FALLBACK_MS)
 }
 
 function scheduleLoadTimeout() {
@@ -70,7 +71,7 @@ function scheduleLoadTimeout() {
       panelLoading.value = false
       panelError.value = '官方面板加载超时；主界面仍可继续操作，请重试或在浏览器打开。'
     }
-  }, 8000)
+  }, PANEL_LOAD_NOTICE_MS)
 }
 
 function getBounds(): PanelBounds | null {

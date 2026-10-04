@@ -13,6 +13,7 @@ import { useDiagnosticsController } from '@/features/diagnostics/useDiagnosticsC
 import { useLifecycleController } from '@/app/useLifecycleController'
 import { usePanelStore } from '@/features/panel/store'
 import { useLifecycleStore } from '@/app/lifecycle/store'
+import { TRAY_POLL_MS } from '@/config/runtimeDefaults'
 import type { NotificationItem } from '@/types/ui'
 
 // 组合根（IMP-04 §19.4 E）：把诊断与生命周期控制器组合起来，并向调用方暴露与拆分前一致的字段。
@@ -185,7 +186,7 @@ export function useAppController(initialize = false) {
         })
     }
     pollTrayRequests()
-    trayRequestTimer = window.setInterval(pollTrayRequests, 1000)
+    trayRequestTimer = window.setInterval(pollTrayRequests, TRAY_POLL_MS)
   })
 
   if (initialize) {

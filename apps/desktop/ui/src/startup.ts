@@ -7,6 +7,10 @@
 //
 // 判定放在应用挂载**之前**：状态快照是异步取回的，若等它返回再跳页，首屏会先渲染概览再跳面板。
 import type { RuntimeState, StatusSnapshot } from '@/contracts/runtimeStatus'
+import {
+  STARTUP_PREFERENCES_WAIT_MS,
+  STARTUP_SNAPSHOT_WAIT_MS,
+} from '@/config/runtimeDefaults'
 
 export type StartupRoute = '#panel' | '#overview'
 
@@ -91,7 +95,7 @@ async function withinDeadline(promise: Promise<unknown>, ms: number): Promise<'d
 export async function waitForSettledSnapshot(
   deps: SettledSnapshotDeps,
 ): Promise<StatusSnapshot | null> {
-  const timeoutMs = deps.timeoutMs ?? 1500
+  const timeoutMs = deps.timeoutMs ?? STARTUP_SNAPSHOT_WAIT_MS
   const intervalMs = deps.intervalMs ?? 60
   const delay = deps.delay ?? ((ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms)))
   const deadline = Date.now() + timeoutMs
@@ -112,7 +116,7 @@ export async function waitForSettledSnapshot(
  */
 export async function waitForPreferences(
   load: () => Promise<unknown>,
-  timeoutMs = 1500,
+  timeoutMs = STARTUP_PREFERENCES_WAIT_MS,
 ): Promise<boolean> {
   return (await withinDeadline(Promise.resolve(load()).catch(() => {}), timeoutMs)) === 'done'
 }

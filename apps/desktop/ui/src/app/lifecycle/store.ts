@@ -12,6 +12,12 @@ import type {
   ProcessLifecycleState,
   RuntimeState,
 } from "@/types/ui"
+import {
+  LIFECYCLE_FALLBACK_MS,
+  LIFECYCLE_LATE_OBSERVE_MS,
+  LIFECYCLE_NOTICE_START_MS,
+  LIFECYCLE_NOTICE_STOP_MS,
+} from "@/config/runtimeDefaults"
 
 /**
  * 运行生命周期与状态域（IMP-04 §19.4 E 切片十五）。
@@ -100,7 +106,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
       // 任务卡也能在真实状态迁移后收口，而不是一直停在「等待官方状态确认」。
       this.processActionPoll = window.setInterval(() => {
         void this.loadStatusSnapshot()
-      }, 1500)
+      }, LIFECYCLE_FALLBACK_MS)
     },
     stopProcessActionPoll() {
       if (this.processActionPoll !== null) {
@@ -207,8 +213,8 @@ export const useLifecycleStore = defineStore("lifecycle", {
           // 迟到的完成也等不到时，才彻底收口并保留超时提示。
           this.processProgressGiveUpTimer = null
           if (this.processAction === action) this.finishProcessAction()
-        }, 180_000)
-      }, action === "stop" ? 15_000 : 35_000)
+        }, LIFECYCLE_LATE_OBSERVE_MS)
+      }, action === "stop" ? LIFECYCLE_NOTICE_STOP_MS : LIFECYCLE_NOTICE_START_MS)
       try {
         const result = await runProcessAction(action)
         this.lifecycleState = result.lifecycleState
