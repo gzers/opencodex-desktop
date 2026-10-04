@@ -41,6 +41,18 @@ def latest(repo):
         raise
 
 
+def get_release(repo, tag):
+    # gh release view resolves drafts too; the REST tag endpoint can return 404
+    # for an unpublished release. Fetch its full asset metadata by numeric ID.
+    view = json.loads(gh("release", "view", tag, "--repo", repo, "--json", "apiUrl,tagName"))
+    api_url = view.get("apiUrl", "")
+    prefix = f"https://api.github.com/repos/{repo}/releases/"
+    if view.get("tagName") != tag or not isinstance(api_url, str) or not api_url.startswith(prefix) \
+            or not api_url[len(prefix):].isdigit():
+        raise PublishError("GitHub returned an unexpected release identity")
+    return json.loads(gh("api", api_url))
+
+
 def validate_manifest(manifest, release, tag):
     if not isinstance(manifest, dict):
         raise PublishError("latest.json must be a JSON object")
@@ -66,6 +78,7 @@ def validate_manifest(manifest, release, tag):
 
 def verify_artifacts(repo, tag, manifest, release):
     """Verify the actual uploaded bytes with the public key embedded in the tag."""
+    print(f"Reading tagged updater public key for {tag}", flush=True)
     config_response = json.loads(gh("api", f"repos/{repo}/contents/apps/desktop/tauri/tauri.conf.json?ref={tag}"))
     config = json.loads(base64.b64decode(config_response["content"]))
     if config.get("version") != tag[1:]:
@@ -124,9 +137,11 @@ def publish(repo, tag, mode):
         raise PublishError("Expected an owner/repository name")
     if mode not in ("preserve-latest", "stable"):
         raise PublishError("Unknown publication mode")
-    release = json.loads(gh("api", f"repos/{repo}/releases/tags/{tag}"))
+    print(f"Reading release metadata for {tag}", flush=True)
+    release = get_release(repo, tag)
     if release.get("tag_name") != tag:
         raise PublishError("GitHub returned a different target release")
+    print(f"Downloading candidate manifest for {tag}", flush=True)
     manifest = json.loads(gh("release", "download", tag, "--repo", repo,
                              "--pattern", "latest.json", "--output", "-"))
     validate_manifest(manifest, release, tag)
@@ -144,7 +159,7 @@ def publish(repo, tag, mode):
     if mode == "preserve-latest" and before != tag:
         gh("release", "edit", before, "--repo", repo, "--latest=true")
 
-    after = json.loads(gh("api", f"repos/{repo}/releases/tags/{tag}"))
+    after = get_release(repo, tag)
     if after.get("tag_name") != tag or after.get("draft") is not False or after.get("prerelease") is not False:
         raise PublishError("Target release did not become public and non-prerelease")
     if latest(repo) != expected_latest:

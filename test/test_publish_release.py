@@ -59,7 +59,9 @@ class FakeGitHub:
             if self.latest is None:
                 raise subprocess.CalledProcessError(1, args, stderr="gh: Not Found (HTTP 404)")
             return json.dumps({"tag_name": self.latest})
-        if args == ("api", f"repos/{REPO}/releases/tags/{TAG}"):
+        if args == ("release", "view", TAG, "--repo", REPO, "--json", "apiUrl,tagName"):
+            return json.dumps({"tagName": TAG, "apiUrl": f"https://api.github.com/repos/{REPO}/releases/123"})
+        if args == ("api", f"https://api.github.com/repos/{REPO}/releases/123"):
             return json.dumps(self.release)
         if args == ("release", "download", TAG, "--repo", REPO, "--pattern", "latest.json", "--output", "-"):
             return json.dumps(self.manifest)
@@ -110,6 +112,19 @@ class PublishTests(unittest.TestCase):
         self.assertEqual(self.verify.call_count, 2)
         self.verify.assert_any_call(f"{BASE}/download/{TAG}/latest.json", MANIFEST)
         self.verify.assert_any_call(f"{BASE}/latest/download/latest.json", MANIFEST)
+
+    def test_draft_resolution_does_not_use_public_tag_lookup(self):
+        self.assertEqual(self.run_main("stable"), 0)
+        self.gh.assert_any_call("release", "view", TAG, "--repo", REPO, "--json", "apiUrl,tagName")
+        self.assertNotIn(unittest.mock.call("api", f"repos/{REPO}/releases/tags/{TAG}"), self.gh.call_args_list)
+
+    def test_release_lookup_rejects_wrong_identity_before_edit(self):
+        for view in ({"tagName": "v9.0.0", "apiUrl": f"https://api.github.com/repos/{REPO}/releases/123"},
+                     {"tagName": TAG, "apiUrl": "https://example.invalid/releases/123"}):
+            with self.subTest(view=view):
+                self.gh.side_effect = lambda *args: json.dumps(view)
+                self.assertEqual(self.run_main(), 1)
+                self.assertEqual(self.api.edits, [])
 
     def test_edit_failure_is_nonzero_and_does_not_restore_or_report_success(self):
         self.api.fail_edit = TAG
@@ -229,6 +244,8 @@ class WorkflowExitTests(unittest.TestCase):
                     sys.exit(17)
                 elif args[:2] == ['release', 'download']:
                     print(json.dumps({MANIFEST!r}))
+                elif args[:2] == ['release', 'view']:
+                    print(json.dumps({{'tagName': {TAG!r}, 'apiUrl': 'https://api.github.com/repos/{REPO}/releases/123'}}))
                 elif args[0] == 'api' and args[1].endswith('/latest'):
                     print(json.dumps({{'tag_name': 'v0.1.3'}}))
                 elif args[0] == 'api':
