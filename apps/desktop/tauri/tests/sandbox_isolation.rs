@@ -10,7 +10,10 @@ use std::time::SystemTime;
 fn snapshot(path: &Path) -> (Vec<u8>, SystemTime) {
     (
         std::fs::read(path).expect("read sentinel"),
-        std::fs::metadata(path).expect("sentinel metadata").modified().expect("mtime"),
+        std::fs::metadata(path)
+            .expect("sentinel metadata")
+            .modified()
+            .expect("mtime"),
     )
 }
 
@@ -18,8 +21,11 @@ fn write_daily_root(root: &Path) -> (PathBuf, PathBuf) {
     std::fs::create_dir_all(root.join("manager-state")).expect("daily manager-state");
     let prefs = root.join("manager-state/preferences.json");
     let meta = root.join("manager-state/data-root.json");
-    std::fs::write(&prefs, br#"{"interface_scale":123,"app_update_channel":"beta-6h"}"#)
-        .expect("seed preferences");
+    std::fs::write(
+        &prefs,
+        br#"{"interface_scale":123,"app_update_channel":"beta-6h"}"#,
+    )
+    .expect("seed preferences");
     std::fs::write(&meta, br#"{"structure_version":"1"}"#).expect("seed data-root");
     (prefs, meta)
 }
@@ -52,15 +58,23 @@ fn sandbox_writes_never_touch_daily_root_and_missing_root_fails_closed() {
 
     // 1) 偏好保存：写入沙箱 manager-state，而不是日常根。
     let store = opencodex_desktop_lib::modules::preferences::PreferencesStore::new(&resolved);
-    let mut value = opencodex_desktop_lib::modules::preferences::Preferences::default();
-    value.interface_scale = 175;
+    let value = opencodex_desktop_lib::modules::preferences::Preferences {
+        interface_scale: 175,
+        ..Default::default()
+    };
     store.save(&value).expect("save into sandbox");
-    assert!(sandbox.path().join("manager-state/preferences.json").exists());
+    assert!(sandbox
+        .path()
+        .join("manager-state/preferences.json")
+        .exists());
 
     // 2) 配置迁移：对沙箱内的 legacy 文件执行迁移提交。
     let sandbox_prefs = sandbox.path().join("manager-state/preferences.json");
-    std::fs::write(&sandbox_prefs, br#"{"interface_scale":140,"app_update_channel":"manual"}"#)
-        .expect("seed sandbox legacy");
+    std::fs::write(
+        &sandbox_prefs,
+        br#"{"interface_scale":140,"app_update_channel":"manual"}"#,
+    )
+    .expect("seed sandbox legacy");
     let legacy = std::fs::read(&sandbox_prefs).unwrap();
     let kind = opencodex_desktop_lib::modules::config_migration::DocumentKind::Preferences;
     let (report, migrated) =
@@ -75,10 +89,17 @@ fn sandbox_writes_never_touch_daily_root_and_missing_root_fails_closed() {
     .expect("commit into sandbox");
 
     // 3) 日常根哨兵：内容与 mtime 均未改变。
-    assert_eq!(snapshot(&daily_prefs), before_prefs, "daily preferences changed");
-    assert_eq!(snapshot(&daily_meta), before_meta, "daily data-root changed");
+    assert_eq!(
+        snapshot(&daily_prefs),
+        before_prefs,
+        "daily preferences changed"
+    );
+    assert_eq!(
+        snapshot(&daily_meta),
+        before_meta,
+        "daily data-root changed"
+    );
 
     std::env::remove_var("OPENCODEX_SANDBOX_ROOT");
     std::env::remove_var("OPENCODEX_SANDBOX");
 }
-
