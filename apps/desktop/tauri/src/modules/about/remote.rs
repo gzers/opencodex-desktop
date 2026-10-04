@@ -188,4 +188,25 @@ mod tests {
             Some("sha512-abc")
         );
     }
+
+    /// 真实远端查询（U-03）：默认忽略，按需 `cargo test -- --ignored` 运行，
+    /// 走生产函数解析 `@bitkyc08/opencodex@latest` 的版本与 integrity。
+    #[test]
+    #[ignore = "hits the npm registry; run explicitly"]
+    fn live_remote_query_returns_version_and_integrity() {
+        let npm = discovered_npm().expect("npm must be discoverable");
+        let working = std::env::temp_dir();
+        // 受控子进程会 `env_clear()`；npm 是脚本，必须显式注入 PATH 才能找到 node。
+        let environment = EnvironmentPolicy {
+            home: std::env::var_os("HOME"),
+            path: std::env::var_os("PATH"),
+            opencodex_home: std::env::temp_dir(),
+            ..Default::default()
+        };
+        let result =
+            query_remote_latest(&npm, &working, &environment, "latest").expect("live remote query");
+        assert_eq!(result.tag, "latest");
+        assert!(!result.version.is_empty());
+        assert!(result.version.chars().next().unwrap().is_ascii_digit());
+    }
 }

@@ -100,4 +100,13 @@ mod tests {
         assert!(!result.ok);
         assert!(!result.detail.is_empty());
     }
+
+    /// 真实出网运行检查（U-05）：默认忽略，按需 `cargo test -- --ignored` 运行，
+    /// 用生产 HTTP 客户端走一次带超时的受控探测，验证 TLS 与连通性链路。
+    #[test]
+    #[ignore = "hits the network; run explicitly"]
+    fn live_no_proxy_probe_reaches_controlled_url() {
+        let result = probe(ProxyPolicy::None);
+        assert!(result.ok, "probe failed: {}", result.detail);
+    }
 }
