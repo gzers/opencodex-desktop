@@ -305,12 +305,15 @@ pub fn commit(
             detail: format!("备份原件失败: {error}"),
         }
     })?;
+    // prepared 记录带原件与候选摘要：中断后据此判断目标是否已被替换（§6 步骤 6）。
     let manifest = serde_json::json!({
         "document_kind": report.document_kind,
         "from_schema": report.from_schema,
         "to_schema": report.to_schema,
         "steps": report.steps,
         "status": "prepared",
+        "original_digest": crate::infrastructure::hash::sha256_hex(original),
+        "candidate_digest": crate::infrastructure::hash::sha256_hex(migrated),
     });
     std::fs::write(
         dir.join("manifest.json"),
@@ -330,6 +333,8 @@ pub fn commit(
         "to_schema": report.to_schema,
         "steps": report.steps,
         "status": "committed",
+        "original_digest": crate::infrastructure::hash::sha256_hex(original),
+        "candidate_digest": crate::infrastructure::hash::sha256_hex(migrated),
     });
     let _ = std::fs::write(
         dir.join("manifest.json"),
@@ -342,6 +347,121 @@ pub fn commit(
         to_schema: report.to_schema,
         steps: report.steps.clone(),
         backup_dir: dir,
+    })
+}
+
+/// 单个迁移事务的恢复判定结果（迁移机制 §6 步骤 6）。
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RecoveryAction {
+    /// 目标仍是原件摘要：prepared 未提交，可重新准备/提交。
+    ReapplyPrepared,
+    /// 目标已是候选摘要：提交已完成，补写 committed 记录即可。
+    CompleteRecord,
+    /// 两者都不等：视为外部变更，保留文件和证据，停止自动恢复。
+    ExternalChange,
+    /// 没有待恢复的事务。
+    NoPendingTransaction,
+}
+
+/// 一个待核对的迁移事务与其判定。
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct RecoveryReport {
+    pub document_kind: DocumentKind,
+    pub transaction_dir: PathBuf,
+    pub from_schema: u32,
+    pub to_schema: u32,
+    pub action: RecoveryAction,
+}
+
+fn read_manifest(dir: &Path) -> Option<serde_json::Value> {
+    let bytes = std::fs::read(dir.join("manifest.json")).ok()?;
+    serde_json::from_slice(&bytes).ok()
+}
+
+/// 找出最后一个尚未 committed 的事务；按目录名（含时间近似）稳定排序取最新的一个。
+fn pending_transaction(data_root: &Path, kind: DocumentKind) -> Option<PathBuf> {
+    let root = data_root
+        .join("manager-state/config-migrations")
+        .join(kind.as_str());
+    let mut dirs: Vec<PathBuf> = std::fs::read_dir(&root)
+        .ok()?
+        .filter_map(|entry| entry.ok().map(|entry| entry.path()))
+        .filter(|path| path.is_dir())
+        .collect();
+    dirs.sort();
+    for dir in dirs.into_iter().rev() {
+        let Some(manifest) = read_manifest(&dir) else {
+            continue;
+        };
+        if manifest.get("status").and_then(|value| value.as_str()) != Some("committed") {
+            return Some(dir);
+        }
+    }
+    None
+}
+
+/// 重启恢复入口：核对 prepared 事务与目标摘要，决定重做、补记录还是停止（不盲目覆盖）。
+pub fn recover(
+    data_root: &Path,
+    target: &Path,
+    kind: DocumentKind,
+) -> Result<RecoveryReport, AppError> {
+    let Some(dir) = pending_transaction(data_root, kind) else {
+        return Ok(RecoveryReport {
+            document_kind: kind,
+            transaction_dir: PathBuf::new(),
+            from_schema: kind.current_schema(),
+            to_schema: kind.current_schema(),
+            action: RecoveryAction::NoPendingTransaction,
+        });
+    };
+    let manifest = read_manifest(&dir).ok_or_else(|| AppError::ConfigMigration {
+        detail: "迁移事务缺少可读记录".to_string(),
+    })?;
+    let from_schema = manifest
+        .get("from_schema")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(0) as u32;
+    let to_schema = manifest
+        .get("to_schema")
+        .and_then(|v| v.as_u64())
+        .unwrap_or(kind.current_schema() as u64) as u32;
+    let original_digest = manifest.get("original_digest").and_then(|v| v.as_str());
+    let candidate_digest = manifest.get("candidate_digest").and_then(|v| v.as_str());
+
+    let current = std::fs::read(target).map_err(|error| AppError::ConfigMigration {
+        detail: format!("读取迁移目标失败: {error}"),
+    })?;
+    let current_digest = crate::infrastructure::hash::sha256_hex(&current);
+    let action = if Some(current_digest.as_str()) == candidate_digest {
+        RecoveryAction::CompleteRecord
+    } else if Some(current_digest.as_str()) == original_digest {
+        RecoveryAction::ReapplyPrepared
+    } else {
+        RecoveryAction::ExternalChange
+    };
+    if action == RecoveryAction::CompleteRecord {
+        let committed = serde_json::json!({
+            "document_kind": kind,
+            "from_schema": from_schema,
+            "to_schema": to_schema,
+            "steps": manifest.get("steps").cloned().unwrap_or_default(),
+            "status": "committed",
+            "original_digest": original_digest,
+            "candidate_digest": candidate_digest,
+        });
+        let _ = std::fs::write(
+            dir.join("manifest.json"),
+            serde_json::to_vec_pretty(&committed).unwrap_or_default(),
+        );
+    }
+    Ok(RecoveryReport {
+        document_kind: kind,
+        transaction_dir: dir,
+        from_schema,
+        to_schema,
+        action,
     })
 }
 
@@ -418,5 +538,86 @@ mod tests {
         assert_eq!(written["schema_version"], PREFERENCES_CURRENT_SCHEMA);
         assert_eq!(written["app_update_channel"], "stable");
         assert_eq!(written["app_update_auto_check"], false);
+    }
+
+    #[test]
+    fn recovery_completes_record_when_target_is_candidate() {
+        let root = tempfile::tempdir().expect("temp root");
+        let target = root.path().join("manager-state/preferences.json");
+        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
+        let legacy = br#"{"interface_scale":120,"app_update_channel":"manual"}"#.to_vec();
+        std::fs::write(&target, &legacy).unwrap();
+        let (report, migrated) = prepare(DocumentKind::Preferences, &legacy).expect("prepare");
+        let migrated = migrated.expect("migrated bytes");
+        let committed = commit(root.path(), &target, &legacy, &report, &migrated).expect("commit");
+
+        // 手动回退 manifest 到 prepared，模拟提交后崩溃前未写 committed。
+        let mut manifest: serde_json::Value = serde_json::from_slice(
+            &std::fs::read(committed.backup_dir.join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        manifest["status"] = serde_json::json!("prepared");
+        std::fs::write(
+            committed.backup_dir.join("manifest.json"),
+            serde_json::to_vec_pretty(&manifest).unwrap(),
+        )
+        .unwrap();
+
+        let recovered = recover(root.path(), &target, DocumentKind::Preferences).expect("recover");
+        assert_eq!(recovered.action, RecoveryAction::CompleteRecord);
+    }
+
+    #[test]
+    fn recovery_reapplies_when_target_is_still_original() {
+        let root = tempfile::tempdir().expect("temp root");
+        let target = root.path().join("manager-state/preferences.json");
+        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
+        let legacy = br#"{"interface_scale":120,"app_update_channel":"manual"}"#.to_vec();
+        std::fs::write(&target, &legacy).unwrap();
+        let (report, migrated) = prepare(DocumentKind::Preferences, &legacy).expect("prepare");
+        let migrated = migrated.expect("migrated bytes");
+        let committed = commit(root.path(), &target, &legacy, &report, &migrated).expect("commit");
+
+        // 目标回到原件字节，manifest 保持 prepared：应判定可重做。
+        std::fs::write(&target, &legacy).unwrap();
+        let mut manifest: serde_json::Value = serde_json::from_slice(
+            &std::fs::read(committed.backup_dir.join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        manifest["status"] = serde_json::json!("prepared");
+        std::fs::write(
+            committed.backup_dir.join("manifest.json"),
+            serde_json::to_vec_pretty(&manifest).unwrap(),
+        )
+        .unwrap();
+
+        let recovered = recover(root.path(), &target, DocumentKind::Preferences).expect("recover");
+        assert_eq!(recovered.action, RecoveryAction::ReapplyPrepared);
+    }
+
+    #[test]
+    fn recovery_stops_on_external_change() {
+        let root = tempfile::tempdir().expect("temp root");
+        let target = root.path().join("manager-state/preferences.json");
+        std::fs::create_dir_all(target.parent().unwrap()).unwrap();
+        let legacy = br#"{"interface_scale":120,"app_update_channel":"manual"}"#.to_vec();
+        std::fs::write(&target, &legacy).unwrap();
+        let (report, migrated) = prepare(DocumentKind::Preferences, &legacy).expect("prepare");
+        let migrated = migrated.expect("migrated bytes");
+        let committed = commit(root.path(), &target, &legacy, &report, &migrated).expect("commit");
+        let mut manifest: serde_json::Value = serde_json::from_slice(
+            &std::fs::read(committed.backup_dir.join("manifest.json")).unwrap(),
+        )
+        .unwrap();
+        manifest["status"] = serde_json::json!("prepared");
+        std::fs::write(
+            committed.backup_dir.join("manifest.json"),
+            serde_json::to_vec_pretty(&manifest).unwrap(),
+        )
+        .unwrap();
+        std::fs::write(&target, r#"{"interface_scale":99}"#.as_bytes()).unwrap();
+
+        let recovered = recover(root.path(), &target, DocumentKind::Preferences).expect("recover");
+        assert_eq!(recovered.action, RecoveryAction::ExternalChange);
     }
 }
