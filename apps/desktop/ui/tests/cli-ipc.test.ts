@@ -11,6 +11,7 @@ vi.mock('@tauri-apps/api/core', () => ({
 function dto(overrides: Partial<PreferencesDto> = {}): PreferencesDto {
   return {
     schemaVersion: 1,
+    themeNeedsImport: false,
     interfaceScale: 100, launchMain: true, autoPanel: true, panelMode: 'embedded',
     keepProxyOnClose: true, lifecycleNotifications: true, syncConflictAlerts: true,
     launchWithCodex: true, autoBackupUpgrade: true, autoBackupImport: true,

@@ -13,6 +13,10 @@ fn default_preferences_schema() -> u32 {
 pub struct PreferencesDto {
     #[serde(default = "default_preferences_schema")]
     pub schema_version: u32,
+    /// 一次性主题导入信号（H-15/§7）：不含 theme 字段的旧偏好为 true，前端据此把历史
+    /// localStorage 主题提交一次；不是持久化字段，保存后即为 false。
+    #[serde(default)]
+    pub theme_needs_import: bool,
     pub interface_scale: i32,
     pub launch_main: bool,
     pub auto_panel: bool,
@@ -52,6 +56,7 @@ impl From<Preferences> for PreferencesDto {
     fn from(value: Preferences) -> Self {
         Self {
             schema_version: value.schema_version,
+            theme_needs_import: false,
             interface_scale: value.interface_scale,
             launch_main: value.launch_main,
             auto_panel: value.auto_panel,
@@ -142,6 +147,7 @@ mod tests {
     fn preferences_dto_uses_camel_case() {
         let value = PreferencesDto {
             schema_version: 1,
+            theme_needs_import: false,
             interface_scale: 110,
             launch_main: false,
             auto_panel: true,
@@ -179,6 +185,7 @@ mod tests {
         let payload = serde_json::to_value(&value).expect("serialize DTO");
         assert_eq!(payload["interfaceScale"], 110);
         assert_eq!(payload["schemaVersion"], 1);
+        assert_eq!(payload["themeNeedsImport"], false);
         assert_eq!(payload["launchMain"], false);
         assert_eq!(payload["backupRetention"], "10");
         assert_eq!(payload["appUpdateChannel"], "stable");

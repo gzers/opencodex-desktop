@@ -33,6 +33,7 @@ const switchInput = ref('')
 const externalHomeInput = ref('')
 const defaultPreferences: PreferencesDto = {
   schemaVersion: 1,
+  themeNeedsImport: false,
   interfaceScale: 100,
   launchMain: true,
   autoPanel: true,

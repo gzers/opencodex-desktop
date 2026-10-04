@@ -1,5 +1,7 @@
 export interface PreferencesDto {
   schemaVersion: number
+  /** 一次性历史主题导入信号；不是持久化字段。 */
+  themeNeedsImport: boolean
   interfaceScale: number
   launchMain: boolean
   autoPanel: boolean

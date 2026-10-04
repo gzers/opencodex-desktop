@@ -49,6 +49,7 @@ const snapshot: StatusSnapshot = {
 function preferences(panelMode: PreferencesDto['panelMode']): PreferencesDto {
   return {
     schemaVersion: 1,
+    themeNeedsImport: false,
     interfaceScale: 100,
     launchMain: true,
     autoPanel: true,

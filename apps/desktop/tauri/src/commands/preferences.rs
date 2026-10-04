@@ -7,7 +7,23 @@ use crate::types::preferences::PreferencesDto;
 
 #[tauri::command]
 pub fn get_preferences(data_root: tauri::State<'_, SharedDataRoot>) -> AppResult<PreferencesDto> {
-    load_preferences_with_path(&data_root.0).map(Into::into)
+    let mut dto: PreferencesDto = load_preferences_with_path(&data_root.0)?.into();
+    // 旧偏好文件缺 theme 字段时给前端一次性导入信号（H-15）：让历史 localStorage
+    // 主题被提交一次，之后本机缓存跟随后端值。
+    dto.theme_needs_import = !preferences_file_has_theme(&data_root.0);
+    Ok(dto)
+}
+
+/// 判断偏好文件是否已显式包含 theme 字段；缺文件按需要处理（更保守）。
+fn preferences_file_has_theme(data_root: &std::path::Path) -> bool {
+    let path = data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+    match std::fs::read(&path) {
+        Ok(bytes) => serde_json::from_slice::<serde_json::Value>(&bytes)
+            .ok()
+            .and_then(|value| value.get("theme").cloned())
+            .is_some(),
+        Err(_) => false,
+    }
 }
 
 #[tauri::command]
@@ -67,6 +83,7 @@ mod tests {
 
         let dto = PreferencesDto {
             schema_version: 1,
+            theme_needs_import: false,
             interface_scale: 175,
             launch_main: false,
             auto_panel: false,

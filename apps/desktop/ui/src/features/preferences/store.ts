@@ -4,7 +4,7 @@ import { defineStore } from 'pinia'
 import { applyInterfaceScale, clampScale } from '@/app/appearance/scale'
 import { clampVisualEffects, useEffectsStore } from '@/app/appearance/effects'
 import { clampGlowRender, useGlowRenderStore } from '@/app/appearance/glowRender'
-import { useThemeStore } from '@/app/appearance/theme'
+import { hasStoredThemeCache, readThemeCache, useThemeStore } from '@/app/appearance/theme'
 import {
   getPreferences,
   restoreDefaultPreferences,
@@ -29,8 +29,13 @@ export const usePreferencesStore = defineStore('preferences', {
         // 档位同理：读完偏好立即落到 `data-effects`，由外观策略折算系统减少动态。
         useEffectsStore().setSetting(this.data.visualEffects)
         useGlowRenderStore().setSetting(this.data.glowRender)
-        // 主题以后端偏好为事实源：仅在偏好有值且与当前投影不同时写入缓存缓存，避免旧缓存反向覆盖。
+        // 主题以后端偏好为事实源：仅在偏好有值且与当前投影不同时写缓存，避免旧缓存反向覆盖。
         useThemeStore().apply(this.data.theme)
+        // 一次性历史主题导入（H-15）：仅当旧偏好没有 theme 且本机确实缓存过历史选择时提交一次。
+        if (this.data.themeNeedsImport && hasStoredThemeCache()) {
+          const imported = readThemeCache()
+          await this.save({ ...this.data, theme: imported })
+        }
         this.error = false
       } catch {
         // IPC 失败时保留上次偏好；不臆造或重置用户配置。

@@ -33,6 +33,15 @@ export function readThemeCache(): ThemeSetting {
   }
 }
 
+/// 本机是否曾经写过主题缓存（用于一次性历史导入判定，不臆造默认值）。
+export function hasStoredThemeCache(): boolean {
+  try {
+    return window.localStorage.getItem(THEME_CACHE_KEY) !== null
+  } catch {
+    return false
+  }
+}
+
 export function writeThemeCache(value: ThemeSetting) {
   try { window.localStorage.setItem(THEME_CACHE_KEY, value) } catch {}
 }
