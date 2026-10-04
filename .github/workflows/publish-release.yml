@@ -2,7 +2,7 @@ name: Publish Release
 
 # 显式公开发布：把 Release 工作流创建的「草稿 + 预发布」包取消草稿，使其对公众可见。
 # 触发靠专用 tag（publish/vX.Y.Z），不修改既有 vX.Y.Z 历史，也不需要把发布凭据放到本机。
-# 说明：本工作流只做可见性切换，不重新构建、不改动制品与说明正文。
+# 只做可见性切换，不重新构建、不改动制品与说明正文。
 on:
   push:
     tags: ['publish/v*']
@@ -19,7 +19,7 @@ jobs:
         run: |
           set -euo pipefail
           tag="${GITHUB_REF_NAME#publish/}"
-          if [[ ! "$tag" =~ ^v[0-9]+.[0-9]+.[0-9]+$ ]]; then
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::发布 tag 形如 publish/vX.Y.Z，收到 $GITHUB_REF_NAME"
             exit 1
           fi
@@ -27,11 +27,42 @@ jobs:
           echo "目标版本：$tag"
 
       - name: 取消草稿并标记为最新
+        id: publish
         env:
           # 与 Release 工作流同口径：优先 PAT，缺省用 GITHUB_TOKEN。
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.target.outputs.tag }}
         run: |
-          set -euo pipefail
-          gh release edit "${{ steps.target.outputs.tag }}" --draft=false --latest
-          gh release view "${{ steps.target.outputs.tag }}" --json tagName,isDraft,isPrerelease,url \
-            --template '{{.tagName}} draft={{.isDraft}} prerelease={{.isPrerelease}} {{.url}}{{"\n"}}'
+          set -uo pipefail
+          diag=/tmp/publish-diag.txt
+          {
+            echo "tag=$TAG"
+            echo "gh version: $(gh --version | head -1)"
+            echo "== gh auth status =="
+            gh auth status 2>&1 || true
+            echo "== release list =="
+            gh release list --limit 30 2>&1 || true
+            echo "== release view $TAG =="
+            gh release view "$TAG" 2>&1 || true
+          } >> "$diag" 2>&1
+
+          status=0
+          echo "== gh release edit $TAG --draft=false --latest ==" >> "$diag"
+          if gh release edit "$TAG" --draft=false --latest >> "$diag" 2>&1; then
+            status=0
+          else
+            status=$?
+            echo "gh release edit failed with $status" >> "$diag"
+          fi
+
+          echo "== after ==" >> "$diag"
+          gh release view "$TAG" --json tagName,isDraft,isPrerelease,url 2>&1 >> "$diag" || true
+          cat "$diag"
+          exit $status
+
+      - name: 上传诊断
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-diag
+          path: /tmp/publish-diag.txt
