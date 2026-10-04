@@ -45,8 +45,9 @@ source_refs:
 - **启动构建来源**：启动日志 `startup version=0.1.3`（`a509ddbb`）。
 - **C 阶段分域迁移（真实制品）**：沙箱内预置 legacy 扁平偏好（含旧枚举 `beta-6h`），启动后自动迁移为 schema v2 分域结构（`appearance`/`shell`/`backup`/`extensions`/`maintenance`/`sync`/`updates`/`network`/`cli`），通道迁移为 `beta` + 自动检查 + 21600 秒；迁移事务目录保留 `original.json` 与 `manifest.json`（`from_schema:0`、`to_schema:2`、步骤含 `preferences.v0.legacy_update_channel` 与 `preferences.v2.sectioned_disk_layout`）；受控「模拟日常根」哨兵 SHA-256 整轮未变（`mnt013-migration-smoke.sh`：PASS）。
 - **受控出网运行检查**：`cargo test --lib modules::about::remote -- --include-ignored` 经生产函数真实拉取 `@bitkyc08/opencodex@latest` 版本成功；`cargo test --lib commands::network -- --include-ignored` 经生产 HTTP 客户端真实探测受控地址成功。
+- **U-04 复用的受控安装真实链路**：`OCX_TEST_RUNTIME_REAL=1 cargo test --test runtime_managed_real` 走完整真实链路——真实 npm 把 `@bitkyc08/opencodex@2.77.0` 装到托管前缀（`--ignore-scripts` 安全默认即可运行）、入口可执行并输出 `opencodex 2.77.0`、运行来源 `managed`、一级卸载往返、离线 tarball 导入、系统保护目录与坏包拒绝均通过。该路径即 U-04 `install_official_update` 复用的 `install_managed_runtime` 核心；「先解析远端确定版本 → 再复用该安装」的组合由单测覆盖，但**经打包 UI 的整条点击链路未执行**。
 - **UI 运行冒烟**：沙箱启动后设置页可交互，概览/设置/画质与官方共享配置卡片渲染正常（截图 `test/out/0.1.3-overview.png`、`013-02-settings.png`）。
-- **已知限制（如实记录）**：应用内「桌面管理器版本」显示的**当前版本**在沙箱首屏读状态快照时可能早于 `get_update_status` 返回，显示为构建期兜底文本而非 0.1.3；这是既有首屏时序表现，不影响 U-01 端点与自更新的实现结论，尚未单独修复。
+- **已知限制（如实记录）**：其一，应用内「桌面管理器版本」显示的**当前版本**在沙箱首屏读状态快照时可能早于 `get_update_status` 返回，显示为构建期兜底文本而非 0.1.3，属既有首屏时序表现，未单独修复；其二，U-01 端点虽指向真实地址，但远端当前稳定的 `latest.json` 解析到旧 `v0.1.2` Release、尚无该资产（beta 同样 404），故自更新端到端生效以 U-02 产出签名清单为准；其三，U-04 经打包 UI 的整条点击链路未执行。
 
 ## 未完成 / 另行确认
 
