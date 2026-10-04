@@ -49,12 +49,21 @@ jobs:
             gh release view "$TAG" 2>&1 || true
           } >> "$diag" 2>&1
           status=0
-          echo "== gh release edit $TAG --draft=false --latest ==" >> "$diag"
-          if gh release edit "$TAG" --draft=false --latest >> "$diag" 2>&1; then
-            echo "edit: ok" >> "$diag"
+          # 先同时清掉 draft 与 prerelease：`--latest` 不允许指向草稿或预发布。
+          # 两步都记进诊断；任何一步失败都保留非零退出，但继续尝试下一步。
+          echo "== gh release edit $TAG --draft=false --prerelease=false ==" >> "$diag"
+          if gh release edit "$TAG" --draft=false --prerelease=false >> "$diag" 2>&1; then
+            echo "undraft: ok" >> "$diag"
           else
             status=$?
-            echo "edit: failed ($status)" >> "$diag"
+            echo "undraft: failed ($status)" >> "$diag"
+          fi
+          echo "== gh release edit $TAG --latest ==" >> "$diag"
+          if gh release edit "$TAG" --latest >> "$diag" 2>&1; then
+            echo "latest: ok" >> "$diag"
+          else
+            status=$?
+            echo "latest: failed ($status)" >> "$diag"
           fi
           echo "== after ==" >> "$diag"
           gh release view "$TAG" --json tagName,isDraft,isPrerelease,url >> "$diag" 2>&1 || true
