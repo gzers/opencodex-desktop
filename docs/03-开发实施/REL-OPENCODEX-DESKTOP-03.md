@@ -75,3 +75,20 @@ CI run [37183755672](https://github.com/gzers/opencodex-desktop/actions/runs/371
 ## 追加 CI 结果（main 9f2a9d2d）
 
 追加提交合并后的 main 提交 `9f2a9d2d` CI run [37185334531](https://github.com/gzers/opencodex-desktop/actions/runs/37185334531) 四 job 全绿：frontend success、backend success、backend-windows success、build success。
+
+## 追加（2026-10-04）：配置迁移引擎完善与 CI 结果
+
+在 A/B 范围之外的通用迁移引擎（U-09a）继续补完，使「配置格式自动转换」具备可运行的最小闭环：
+
+- 中断恢复判定 `recover`：manifest 记录原件/候选 SHA-256；重启时目标为候选则补 committed 记录、为原件则可重做、皆不等则判定外部变更并保留证据。
+- 启动自动迁移 `migrate_preferences_on_startup`：缺文件或当前 schema 不写盘；旧 schema 自动转换并保留原件备份；接入启动 setup，失败只记日志不阻断启动。
+
+追加提交：`be5f2c63`（恢复判定）、`54de4bf2`（启动自动迁移）。均 fast-forward 并入 main。
+
+追加门禁：`cargo test --workspace --features integration-test` **420 lib passed / 0 failed / 2 ignored**，`clippy -D warnings` 通过（含迁移引擎 10 项单测）。
+
+真机沙箱冒烟（macOS 0.1.2 制品）：沙箱内放置 legacy 偏好（旧枚举 manual），启动后自动迁移为 schema_version=1 / channel=stable / auto_check=false，并生成 config-migrations/preferences/txn-* 原件备份；受控模拟日常根哨兵未变。
+
+CI（main `54de4bf2`）run [37186315036](https://github.com/gzers/opencodex-desktop/actions/runs/37186315036) 四 job 全绿。
+
+**仍未完成：** 真实自更新端点与签名公钥（U-01/U-02）仍为占位；C 阶段存储迁移与 U-03/U-04 未实施。
