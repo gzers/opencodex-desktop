@@ -39,6 +39,24 @@ source_refs:
 - **本机验证（构建级）**：`TAURI_SIGNING_PRIVATE_KEY=… tauri build --config tauri.updater.conf.json --target aarch64-apple-darwin` 产出 `OpenCodeX Desktop.app.tar.gz` 与 **`.sig`**（header 为 `signature from tauri secret key`，公钥块与 `tauri.conf.json` 一致）。
 - **仍待完成（写 secret 属发布安全操作）**：GitHub 仓库 secret `TAURI_SIGNING_PRIVATE_KEY` 尚未写入——本机无 `gh` 与可用 GitHub admin token，无法以编程方式写入。**在该 secret 写入前触发 tag/Release，发布 job 会在签名一步失败**，因此合并/打 tag/出草稿 Release 保持等待。
 
+## 合并、签名与草稿 Release（2026-10-04 用户授权后完成）
+
+用户 2026-10-04 授权「U-02 与后续发布操作，都按你的做法」，并手动把 `TAURI_SIGNING_PRIVATE_KEY` 写入仓库 secret。执行结果：
+
+- **合并入 main**：`feature/0.1.3-update-channel-network`（`bd2b1b26`）快进并入 `main`；`main` 现为 `bd2b1b26`。
+- **签名 secret 纠正**：CI 内一次性诊断确认 secret 前后三次写入分别为「末尾多一个 `%`（349 字节）」「非本品私钥（1988 字节 / 解码 1490 字节）」「正确值（348 字节 / 解码 259 字节，`tauri signer sign` 成功）」。最终值可签名，`keyid=6753bc16fc759b10` 与 `tauri.conf.json` 公钥一致。私钥只存本机 `~/.tauri/opencodex-desktop.key`（及本机 `tmp/local-signing/keys/`，均 gitignore），不入仓库。
+- **打 tag 与草稿 Release**：tag `v0.1.3` → `bd2b1b26`；Release 工作流 [37204186426](https://github.com/gzers/opencodex-desktop/actions/runs/37204186426) 两平台 job **success**，产出 **草稿 + 预发布** Release（release id 403026741）。
+- **制品验证（经一次性诊断工作流读取草稿资产）**：8 个资产 `state=uploaded`：
+  - `latest.json`（5811 字节，静态更新清单）
+  - `OpenCodeX.Desktop_0.1.3_aarch64.dmg`（3,896,389 字节）
+  - `OpenCodeX.Desktop_0.1.3_x64-setup.exe`（2,829,948 字节）与 `.sig`（448 字节）
+  - `OpenCodeX.Desktop_0.1.3_x64_en-US.msi`（3,919,872 字节）与 `.sig`（448 字节）
+  - `OpenCodeX.Desktop_aarch64.app.tar.gz`（3,889,685 字节）与 `.sig`（436 字节）
+- **`latest.json` 校验**：`platforms` 键 `darwin-aarch64, darwin-aarch64-app, windows-x86_64, windows-x86_64-msi, windows-x86_64-nsis`；各平台签名块解码后 `keyid=6753bc16fc759b10`，**与编译期公钥一致**（签名可被应用验证）。
+- **一次性诊断分支与工作流已删除**（`ci/diag-secret`/`ci/diag2`/`ci/diag3`/`ci/diag4`/`ci/verify-draft`，本地与远端均无残留）。
+
+**公开发布（取消草稿）未执行**：草稿对匿名访问仍不可见，`releases/latest` 仍指向 `v0.1.2`，稳定通道 `latest.json` 别名仍 404；需用户另行确认后再切换可见性。
+
 ## 门禁与证据（构建/测试级）
 
 - 合并 `origin/main` 后后端 `cargo test --workspace --features integration-test` 无失败（合并前为 **431 lib passed / 0 failed / 2 ignored**）；`cargo fmt --all -- --check`、`cargo clippy --workspace --all-targets -- -D warnings` 通过。
