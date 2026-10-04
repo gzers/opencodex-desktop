@@ -9,7 +9,7 @@ use opencodex_desktop_lib::errors::AppError;
 use opencodex_desktop_lib::infrastructure::official_cli_source::OfficialDoctorSource;
 use opencodex_desktop_lib::infrastructure::runtime_executable::FixedRuntimeExecutable;
 use opencodex_desktop_lib::modules::doctor::{
-    DoctorError, DoctorOutput, DoctorReport, DoctorSource, DOCTOR_MAX_LINES, DOCTOR_TIMEOUT,
+    doctor_timeout, DoctorError, DoctorOutput, DoctorReport, DoctorSource, DOCTOR_MAX_LINES,
 };
 use opencodex_desktop_lib::modules::process::EnvironmentPolicy;
 use opencodex_desktop_lib::types::doctor::{DoctorDto, DoctorModeDto};
@@ -135,7 +135,7 @@ fn official_source_enforces_frozen_timeout() {
     let executable = root.path().join("sleeping-ocx");
     std::fs::write(
         &executable,
-        format!("#!/bin/sh\nsleep {}\n", DOCTOR_TIMEOUT.as_secs() + 1),
+        format!("#!/bin/sh\nsleep {}\n", doctor_timeout().as_secs() + 1),
     )
     .expect("fixture");
     use std::os::unix::fs::PermissionsExt;
@@ -158,8 +158,8 @@ fn official_source_enforces_frozen_timeout() {
         .expect("source thread should not panic")
         .expect_err("timeout expected");
     assert_eq!(error, DoctorError::Timeout);
-    assert!(started.elapsed() >= DOCTOR_TIMEOUT);
-    assert!(started.elapsed() < DOCTOR_TIMEOUT + Duration::from_secs(2));
+    assert!(started.elapsed() >= doctor_timeout());
+    assert!(started.elapsed() < doctor_timeout() + Duration::from_secs(2));
 }
 
 #[test]
@@ -187,6 +187,6 @@ fn official_source_rejects_non_executable_file() {
 #[test]
 fn frozen_timeout_has_no_writable_repair_flags() {
     // 防回归：只读来源只允许 doctor 子命令；写入型修复参数不存在。
-    assert_eq!(DOCTOR_TIMEOUT, Duration::from_secs(5));
+    assert_eq!(doctor_timeout(), Duration::from_secs(5));
     assert_eq!(DOCTOR_MAX_LINES, 400);
 }

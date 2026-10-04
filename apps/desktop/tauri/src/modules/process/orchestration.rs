@@ -9,12 +9,14 @@ use std::time::Duration;
 use super::{LifecycleAction, LifecycleResult, LifecycleStateMachine, ProcessLifecycleState};
 use crate::errors::AppError;
 
-/// FZ-10 冻结动作窗口；重启是停止与启动的组合上限。
-pub const ACTION_TIMEOUTS: [(LifecycleAction, Duration); 3] = [
-    (LifecycleAction::Start, Duration::from_secs(20)),
-    (LifecycleAction::Stop, Duration::from_secs(10)),
-    (LifecycleAction::Restart, Duration::from_secs(30)),
-];
+/// FZ-10 冻结动作窗口（H-04）；重启是停止与启动的组合上限。数值来自固化运行策略。
+pub fn action_timeouts() -> [(LifecycleAction, Duration); 3] {
+    [
+        (LifecycleAction::Start, super::start_timeout()),
+        (LifecycleAction::Stop, super::stop_timeout()),
+        (LifecycleAction::Restart, super::restart_limit()),
+    ]
+}
 
 /// FZ-11 官方退出码不改写，包装层只登记冻结的错误分类。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -188,11 +190,11 @@ pub fn official_command(action: LifecycleAction) -> &'static str {
 
 /// 冻结超时查询；未知动作不可能出现在当前生命周期契约里。
 pub fn action_timeout(action: LifecycleAction) -> Duration {
-    ACTION_TIMEOUTS
+    action_timeouts()
         .iter()
         .find(|(candidate, _)| *candidate == action)
         .map(|(_, timeout)| *timeout)
-        .unwrap_or(Duration::from_secs(30))
+        .unwrap_or_else(super::restart_limit)
 }
 
 /// 编排一次已受控的生命周期动作；运行器负责校验显式路径。

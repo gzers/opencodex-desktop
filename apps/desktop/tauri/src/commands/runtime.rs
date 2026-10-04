@@ -10,8 +10,8 @@ use tauri::Emitter;
 use crate::errors::{AppError, AppResult};
 use crate::modules::runtime::archive::{self, ArchiveRejection};
 use crate::modules::runtime::install::{
-    CancelFlag, InstallProgress, InstallProgressSink, InstallRequest, InstallSource,
-    RuntimeInstaller, DEFAULT_VERSION,
+    default_version, CancelFlag, InstallProgress, InstallProgressSink, InstallRequest,
+    InstallSource, RuntimeInstaller,
 };
 use crate::modules::runtime::uninstall::{self, UninstallScope};
 use crate::modules::runtime::{now_rfc3339, InstallHistoryEntry, RuntimeHandle, RuntimeSourceKind};
@@ -229,7 +229,7 @@ pub async fn install_runtime(
     let requested_version = request
         .version
         .clone()
-        .unwrap_or_else(|| DEFAULT_VERSION.to_string());
+        .unwrap_or_else(|| default_version().to_string());
     let source = match source_kind {
         crate::modules::runtime::install::InstallSourceKind::Registry => InstallSource::Registry {
             version: requested_version.clone(),
@@ -429,7 +429,7 @@ pub async fn uninstall_runtime(
             .store()
             .load()
             .resolved_version
-            .unwrap_or_else(|| DEFAULT_VERSION.to_string());
+            .unwrap_or_else(|| default_version().to_string());
         let _ = handle_ref.record_history(uninstall::history_entry(
             if failed { "failed" } else { "succeeded" },
             &version,

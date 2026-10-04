@@ -18,7 +18,7 @@ use async_trait::async_trait;
 use reqwest::{Client, Method, StatusCode};
 use std::time::Duration;
 
-use crate::modules::sync::{TlsFailureStage, CONNECT_TIMEOUT, ITEM_TIMEOUT};
+use crate::modules::sync::{connect_timeout, item_timeout, TlsFailureStage};
 
 pub const MANIFEST_FILE_NAME: &str = "manifest.ocxd";
 pub const LATEST_FILE_NAME: &str = "latest.txt";
@@ -217,8 +217,8 @@ impl ReqwestWebDavTransport {
     pub fn new() -> Self {
         Self {
             client: Client::builder()
-                .connect_timeout(CONNECT_TIMEOUT)
-                .timeout(ITEM_TIMEOUT)
+                .connect_timeout(connect_timeout())
+                .timeout(item_timeout())
                 .build()
                 .expect("WebDAV client should use frozen timeouts"),
         }
@@ -314,7 +314,7 @@ where
     pub fn new(transport: T) -> Self {
         Self {
             transport,
-            total_timeout: crate::modules::sync::TOTAL_TIMEOUT,
+            total_timeout: crate::modules::sync::total_timeout(),
         }
     }
 

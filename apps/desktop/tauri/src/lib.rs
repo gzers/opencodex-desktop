@@ -405,7 +405,7 @@ pub fn run() {
                 );
                 loop {
                     service.poll_once().await;
-                    tokio::time::sleep(crate::modules::status::RUN_INTERVAL).await;
+                    tokio::time::sleep(crate::modules::status::run_interval()).await;
                 }
             });
             Ok(())

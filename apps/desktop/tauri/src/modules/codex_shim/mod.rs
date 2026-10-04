@@ -10,7 +10,9 @@ use serde::{Deserialize, Serialize};
 use crate::errors::AppError;
 
 /// 单次读写窗口；shim 安装会改写 Codex 启动包装，给足余量。
-pub const CODEX_SHIM_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(30);
+pub fn codex_shim_timeout() -> std::time::Duration {
+    crate::modules::runtime_defaults::shim_timeout()
+}
 
 /// 摘要行长度上限：状态原文含包装 / 备份绝对路径，界面只需要一个可读结论。
 pub const CODEX_SHIM_SUMMARY_MAX: usize = 240;

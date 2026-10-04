@@ -80,7 +80,7 @@ impl DoctorSource for OfficialDoctorSource {
                 .spawn()
                 .map_err(|_| DoctorError::Unreachable)?;
             let output = tokio::time::timeout(
-                crate::modules::doctor::DOCTOR_TIMEOUT,
+                crate::modules::doctor::doctor_timeout(),
                 child.wait_with_output(),
             )
             .await

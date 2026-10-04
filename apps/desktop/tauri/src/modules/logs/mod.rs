@@ -10,7 +10,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::errors::AppError;
 
-pub const DEFAULT_RECENT_LINES: usize = 200;
+pub fn default_recent_lines() -> usize {
+    crate::modules::runtime_defaults::recent_log_lines()
+}
 pub const APP_LOG_FILE_NAME: &str = "app.log";
 pub const AGENT_LOG_FILE_NAME: &str = "agent.log";
 pub const AUDIT_LOG_FILE_NAME: &str = "audit.log";

@@ -1,7 +1,7 @@
 //! Tauri 日志命令层。只校验请求并调用模块，不访问文件系统。
 
 use crate::errors::{AppError, AppResult};
-use crate::modules::logs::{self, LogFileKind, AUDIT_LOG_FILE_NAME, DEFAULT_RECENT_LINES};
+use crate::modules::logs::{self, LogFileKind, AUDIT_LOG_FILE_NAME};
 use crate::state::SharedDataRoot;
 use crate::types::logs::{LogKind, LogsDto};
 use std::path::{Path, PathBuf};
@@ -51,7 +51,7 @@ fn read_kind(data_root: &std::path::Path, kind: LogFileKind) -> AppResult<logs::
     } else {
         data_root.join("logs").join(kind.file_name())
     };
-    logs::read_recent(path, DEFAULT_RECENT_LINES).map_err(|_error| AppError::FileSystem {
+    logs::read_recent(path, logs::default_recent_lines()).map_err(|_error| AppError::FileSystem {
         operation: "read log".to_string(),
         detail: "log is not readable".to_string(),
     })

@@ -12,8 +12,8 @@ use std::process::Stdio;
 use tokio::process::Command;
 
 use crate::modules::codex_shim::{
-    parse_state, CodexShimError, CodexShimOutput, CodexShimSource, CodexShimState,
-    CODEX_SHIM_TIMEOUT,
+    codex_shim_timeout, parse_state, CodexShimError, CodexShimOutput, CodexShimSource,
+    CodexShimState,
 };
 use crate::modules::process::EnvironmentPolicy;
 
@@ -127,7 +127,7 @@ impl OfficialCodexShimSource {
                 .command(&executable, args)
                 .spawn()
                 .map_err(|_| CodexShimError::Unreachable)?;
-            let output = tokio::time::timeout(CODEX_SHIM_TIMEOUT, child.wait_with_output())
+            let output = tokio::time::timeout(codex_shim_timeout(), child.wait_with_output())
                 .await
                 .map_err(|_| CodexShimError::Timeout)?
                 .map_err(|_| CodexShimError::Unreachable)?;

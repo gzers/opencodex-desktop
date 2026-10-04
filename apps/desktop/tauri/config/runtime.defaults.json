@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "process": { "start_seconds": 30, "stop_seconds": 10, "restart_seconds": 30 },
+  "process": { "start_seconds": 20, "stop_seconds": 10, "restart_seconds": 30, "runner_start_seconds": 30, "reap_grace_seconds": 5 },
   "status": { "foreground_ms": 3000, "foreground_backoff_ms": 15000, "background_ms": 10000, "background_backoff_ms": 30000, "debounce_ms": 1000, "sample_ms": 5000, "backoff_ms": 60000, "max_events_per_second": 2 },
   "sync": { "connect_seconds": 15, "item_seconds": 600, "total_seconds": 1800, "retry_backoff_seconds": [2, 4, 8] },
   "install": { "default_tag": "latest", "idle_notice_seconds": 120, "post_install_probe_seconds": 30 },

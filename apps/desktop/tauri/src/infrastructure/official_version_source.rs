@@ -79,7 +79,7 @@ impl OfficialVersionSource for OfficialCliVersionSource {
                 .spawn()
                 .map_err(|_| OfficialVersionError::Unreachable)?;
             let output = tokio::time::timeout(
-                crate::modules::about::OFFICIAL_VERSION_TIMEOUT,
+                crate::modules::about::official_version_timeout(),
                 child.wait_with_output(),
             )
             .await

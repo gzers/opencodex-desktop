@@ -12,7 +12,9 @@ use tokio::process::Command;
 use crate::modules::status::{CollectError, StatusSource};
 
 /// 官方状态采集单次冻结窗口；与 FZ-08 保持同一常量。
-pub const STATUS_COLLECT_TIMEOUT: Duration = crate::modules::status::COLLECT_TIMEOUT;
+pub fn status_collect_timeout() -> Duration {
+    crate::modules::status::collect_timeout()
+}
 
 /// 显式路径官方状态来源。
 #[derive(Debug)]
@@ -93,7 +95,7 @@ impl OfficialStatusSource {
             .command(&executable)
             .spawn()
             .map_err(|_| CollectError::Unreachable)?;
-        let output = tokio::time::timeout(STATUS_COLLECT_TIMEOUT, child.wait_with_output())
+        let output = tokio::time::timeout(status_collect_timeout(), child.wait_with_output())
             .await
             .map_err(|_| CollectError::Timeout)?
             .map_err(|_| CollectError::Unreachable)?;
@@ -173,7 +175,7 @@ mod tests {
             &executable,
             format!(
                 "#!/bin/sh\nsleep {}\n",
-                STATUS_COLLECT_TIMEOUT.as_secs() + 1
+                status_collect_timeout().as_secs() + 1
             ),
         )
         .expect("write sleep fixture");

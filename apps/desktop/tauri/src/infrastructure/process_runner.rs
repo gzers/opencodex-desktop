@@ -14,16 +14,17 @@ use tokio::process::Command;
 use tokio::sync::{mpsc, watch, Notify};
 
 use crate::errors::AppError;
-use crate::modules::process::{
-    LifecycleAction, LifecycleResult, ProcessCommand, ProcessRunner, RESTART_LIMIT, STOP_TIMEOUT,
-};
+use crate::modules::process::{runner_start_timeout, stop_timeout};
+use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessCommand, ProcessRunner};
 
 #[cfg(unix)]
 /// 正常等待结束后发出的温和信号。
 const TERM_SIGNAL: i32 = libc::SIGTERM;
 
 /// 发出 SIGTERM 之后，仍需在固定窗口内收口的等待上限。
-const REAP_GRACE: Duration = Duration::from_secs(5);
+fn reap_grace() -> Duration {
+    crate::modules::runtime_defaults::process_reap_grace()
+}
 
 /// 统一标记取消请求；只能等待已发出的系统调用结束，不强制终止。
 #[derive(Debug)]
@@ -115,8 +116,8 @@ impl ControlledProcessRunner {
 
     pub(crate) fn timeout_for(action: LifecycleAction) -> Duration {
         match action {
-            LifecycleAction::Start | LifecycleAction::Restart => RESTART_LIMIT,
-            LifecycleAction::Stop => STOP_TIMEOUT,
+            LifecycleAction::Start | LifecycleAction::Restart => runner_start_timeout(),
+            LifecycleAction::Stop => stop_timeout(),
         }
     }
 
@@ -210,7 +211,7 @@ impl ControlledProcessRunner {
         // 必须在固定窗口内收口：此前这里无限 `await`，当子进程忽略 SIGTERM
         // 时会把 `ocxd stop` 永久挂死。
         if !child_exited {
-            if let Ok(code) = tokio::time::timeout(REAP_GRACE, exit_observer.recv()).await {
+            if let Ok(code) = tokio::time::timeout(reap_grace(), exit_observer.recv()).await {
                 exit_status = code.flatten();
                 child_exited = true;
             }

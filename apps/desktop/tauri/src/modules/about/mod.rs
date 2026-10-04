@@ -8,7 +8,9 @@ use serde::{Deserialize, Serialize};
 use crate::errors::AppError;
 
 /// 单次官方版本查询超时；低于 Doctor 的长诊断窗口。
-pub const OFFICIAL_VERSION_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(2);
+pub fn official_version_timeout() -> std::time::Duration {
+    crate::modules::runtime_defaults::version_probe_timeout()
+}
 
 /// 官方版本第一行输出上限；防止失控输出拖慢 WebView 或膨胀 DTO。
 pub const OFFICIAL_VERSION_MAX_CHARS: usize = 240;

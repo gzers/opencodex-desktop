@@ -8,8 +8,8 @@ use opencodex_desktop_lib::errors::AppError;
 use opencodex_desktop_lib::infrastructure::official_version_source::OfficialCliVersionSource;
 use opencodex_desktop_lib::infrastructure::runtime_executable::FixedRuntimeExecutable;
 use opencodex_desktop_lib::modules::about::{
-    OfficialProjectFacts, OfficialVersionError, OfficialVersionOutput, OfficialVersionSource,
-    OFFICIAL_VERSION_MAX_CHARS, OFFICIAL_VERSION_TIMEOUT,
+    official_version_timeout, OfficialProjectFacts, OfficialVersionError, OfficialVersionOutput,
+    OfficialVersionSource, OFFICIAL_VERSION_MAX_CHARS,
 };
 use opencodex_desktop_lib::modules::process::EnvironmentPolicy;
 use opencodex_desktop_lib::types::about::OfficialProjectDto;
@@ -100,7 +100,7 @@ fn official_cli_source_enforces_frozen_timeout() {
         &executable,
         format!(
             "#!/bin/sh\nsleep {}\n",
-            OFFICIAL_VERSION_TIMEOUT.as_secs() + 1
+            official_version_timeout().as_secs() + 1
         ),
     )
     .expect("fixture");
@@ -124,12 +124,15 @@ fn official_cli_source_enforces_frozen_timeout() {
         .expect("source thread should not panic")
         .expect_err("timeout expected");
     assert_eq!(error, OfficialVersionError::Timeout);
-    assert!(started.elapsed() >= OFFICIAL_VERSION_TIMEOUT);
-    assert!(started.elapsed() < OFFICIAL_VERSION_TIMEOUT + std::time::Duration::from_secs(2));
+    assert!(started.elapsed() >= official_version_timeout());
+    assert!(started.elapsed() < official_version_timeout() + std::time::Duration::from_secs(2));
 }
 
 #[test]
 fn frozen_version_contract_has_no_writable_flags() {
-    assert_eq!(OFFICIAL_VERSION_TIMEOUT, std::time::Duration::from_secs(2));
+    assert_eq!(
+        official_version_timeout(),
+        std::time::Duration::from_secs(2)
+    );
     assert_eq!(OFFICIAL_VERSION_MAX_CHARS, 240);
 }

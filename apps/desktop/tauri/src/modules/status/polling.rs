@@ -274,7 +274,7 @@ mod tests {
     async fn background_interval_uses_frozen_thirty_seconds() {
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Connection, 0, true),
-            crate::modules::status::BACKGROUND_CONNECTION_INTERVAL
+            crate::modules::status::background_connection_interval()
         );
     }
 }

@@ -8,7 +8,9 @@ use serde::{Deserialize, Serialize};
 use crate::errors::AppError;
 
 /// FZ-08 冻结的单次采集窗口；Doctor 与状态采集保持同一只读语义。
-pub const DOCTOR_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(5);
+pub fn doctor_timeout() -> std::time::Duration {
+    crate::modules::runtime_defaults::doctor_timeout()
+}
 
 /// 输出行数上限；防止失控输出拖慢 WebView 或膨胀 DTO。
 pub const DOCTOR_MAX_LINES: usize = 400;

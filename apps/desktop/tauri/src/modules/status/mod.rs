@@ -14,17 +14,33 @@ use serde_json::Value;
 
 use crate::types::status::{ConnectionState, OperationState, RuntimeState, StatusMatrix};
 
-/// FZ-08 冻结的常态、后台与安全阈值。
-pub const RUN_INTERVAL: Duration = Duration::from_secs(3);
-pub const CONNECTION_INTERVAL: Duration = Duration::from_secs(15);
-pub const BACKGROUND_RUN_INTERVAL: Duration = Duration::from_secs(10);
-pub const BACKGROUND_CONNECTION_INTERVAL: Duration = Duration::from_secs(30);
-pub const REFRESH_DEBOUNCE: Duration = Duration::from_secs(1);
-pub const COLLECT_TIMEOUT: Duration = Duration::from_secs(5);
-pub const MAX_BACKOFF: Duration = Duration::from_secs(60);
+/// FZ-08 冻结的常态、后台与安全阈值（H-08）：数值来自固化运行策略，消费者不再各写常量。
+pub fn run_interval() -> Duration {
+    crate::modules::runtime_defaults::status_foreground()
+}
+pub fn connection_interval() -> Duration {
+    crate::modules::runtime_defaults::status_connection_foreground()
+}
+pub fn background_run_interval() -> Duration {
+    crate::modules::runtime_defaults::status_background()
+}
+pub fn background_connection_interval() -> Duration {
+    crate::modules::runtime_defaults::status_connection_background()
+}
+pub fn refresh_debounce() -> Duration {
+    crate::modules::runtime_defaults::status_debounce()
+}
+pub fn collect_timeout() -> Duration {
+    crate::modules::runtime_defaults::status_sample_timeout()
+}
+pub fn max_backoff() -> Duration {
+    crate::modules::runtime_defaults::status_max_backoff()
+}
 pub mod polling;
 
-pub const MAX_EMISSIONS_PER_SECOND: u32 = 2;
+pub fn max_emissions_per_second() -> u32 {
+    crate::modules::runtime_defaults::status_max_events_per_second()
+}
 
 /// FZ-07 健康值；无法解析时固定为 unknown。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -623,29 +639,30 @@ impl RefreshPolicy {
         backgrounded: bool,
     ) -> Duration {
         let base = match (dimension, backgrounded) {
-            (StatusDimension::Runtime, false) => RUN_INTERVAL,
-            (StatusDimension::Runtime, true) => BACKGROUND_RUN_INTERVAL,
-            (StatusDimension::Connection, false) => CONNECTION_INTERVAL,
-            (StatusDimension::Connection, true) => BACKGROUND_CONNECTION_INTERVAL,
+            (StatusDimension::Runtime, false) => run_interval(),
+            (StatusDimension::Runtime, true) => background_run_interval(),
+            (StatusDimension::Connection, false) => connection_interval(),
+            (StatusDimension::Connection, true) => background_connection_interval(),
         };
         let mut interval = base;
+        let max_backoff = max_backoff();
         for _ in 0..failure_count.min(8) {
             interval = interval.saturating_mul(2);
-            if interval >= MAX_BACKOFF {
-                return MAX_BACKOFF;
+            if interval >= max_backoff {
+                return max_backoff;
             }
         }
-        interval.min(MAX_BACKOFF)
+        interval.min(max_backoff)
     }
 
     /// 同一维度 1 秒内只触发一次。
     pub fn is_debounced(last_request: Option<Instant>, now: Instant) -> bool {
-        last_request.is_some_and(|at| now.duration_since(at) < REFRESH_DEBOUNCE)
+        last_request.is_some_and(|at| now.duration_since(at) < refresh_debounce())
     }
 
     /// 单次采集契约超时；不真实启动进程，只提供冻结阈值。
     pub fn collect_timeout() -> Duration {
-        COLLECT_TIMEOUT
+        crate::modules::runtime_defaults::status_sample_timeout()
     }
 }
 
@@ -675,7 +692,7 @@ impl EmissionGate {
             self.window_start = now;
             self.emissions = 0;
         }
-        if self.emissions >= MAX_EMISSIONS_PER_SECOND {
+        if self.emissions >= max_emissions_per_second() {
             return false;
         }
         self.emissions += 1;
@@ -981,7 +998,7 @@ mod tests {
     fn fz08_backoff_doubles_and_caps_at_sixty_seconds() {
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Runtime, 0, false),
-            RUN_INTERVAL
+            run_interval()
         );
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Runtime, 1, false),
@@ -993,11 +1010,11 @@ mod tests {
         );
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Runtime, 5, false),
-            MAX_BACKOFF
+            max_backoff()
         );
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Connection, 0, false),
-            CONNECTION_INTERVAL
+            connection_interval()
         );
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Connection, 1, false),
@@ -1009,11 +1026,11 @@ mod tests {
     fn fz08_background_intervals_are_frozen() {
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Runtime, 0, true),
-            BACKGROUND_RUN_INTERVAL
+            background_run_interval()
         );
         assert_eq!(
             RefreshPolicy::next_interval(StatusDimension::Connection, 0, true),
-            BACKGROUND_CONNECTION_INTERVAL
+            background_connection_interval()
         );
     }
 

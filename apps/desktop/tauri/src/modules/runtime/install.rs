@@ -40,10 +40,14 @@ pub const PACKAGE_SUBPATH: &str = "node_modules/@bitkyc08/opencodex";
 pub const PROJECT_PACKAGE_FILENAME: &str = "package.json";
 
 /// 默认版本通道（`FZ-50`：版本默认 `latest`，可显式指定具体版本）。
-pub const DEFAULT_VERSION: &str = "latest";
+pub fn default_version() -> &'static str {
+    crate::modules::runtime_defaults::install_default_tag()
+}
 
 /// 空闲多久没有输出就提示「可能卡住」（`FZ-50`）。
-pub const IDLE_HINT: Duration = Duration::from_secs(120);
+pub fn idle_hint() -> Duration {
+    crate::modules::runtime_defaults::install_idle_notice()
+}
 
 /// 受控 npm 调用的最小 PATH 兜底；不继承调用方的 PATH。
 const FALLBACK_PATH: &str = "/usr/bin:/bin:/usr/sbin:/sbin";
@@ -635,7 +639,7 @@ pub struct RealVersionProbe {
 impl Default for RealVersionProbe {
     fn default() -> Self {
         Self {
-            timeout: Duration::from_secs(30),
+            timeout: crate::modules::runtime_defaults::install_probe_timeout(),
         }
     }
 }
@@ -1013,7 +1017,7 @@ fn run_streaming(
                 });
             }
             Err(RecvTimeoutError::Timeout) => {
-                if last_output.elapsed() >= IDLE_HINT {
+                if last_output.elapsed() >= idle_hint() {
                     last_output = Instant::now();
                     sink.emit(InstallProgress {
                         phase,
@@ -1247,7 +1251,7 @@ impl<'a> RuntimeInstaller<'a> {
         self.check_cancel()?;
 
         let expected = match &request.source {
-            InstallSource::Registry { version, .. } if version != DEFAULT_VERSION => {
+            InstallSource::Registry { version, .. } if version != default_version() => {
                 Some(version.as_str())
             }
             _ => None,
@@ -1534,7 +1538,7 @@ fn verify_package(
         .to_string();
     if version.is_empty() {
         return Err(InstallError::VersionMismatch {
-            expected: expected.unwrap_or(DEFAULT_VERSION).to_string(),
+            expected: expected.unwrap_or(default_version()).to_string(),
             found: "(缺失)".to_string(),
         });
     }
@@ -1709,6 +1713,8 @@ fn sibling_with_tag(target: &Path, tag: &str) -> Result<PathBuf, InstallError> {
 #[cfg(all(test, unix))]
 mod tests {
     use super::*;
+    /// 测试沿用旧常量名以保持断言可读；取值来自固化默认。
+    const DEFAULT_VERSION: &str = "latest";
     use crate::modules::runtime::archive::{self, ArchiveRejection};
     use flate2::write::GzEncoder;
     use flate2::Compression;

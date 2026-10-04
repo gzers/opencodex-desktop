@@ -14,7 +14,9 @@ use crate::infrastructure::hash::{sha256_file, sha256_hex};
 pub const MANIFEST_NAME: &str = "backup-manifest.json";
 pub const SCHEMA_VERSION: u32 = 1;
 pub const MAX_PER_ACTION: usize = 20;
-pub const RETENTION_DAYS: i64 = 30;
+pub fn retention_days() -> i64 {
+    crate::modules::runtime_defaults::backup_max_age_days()
+}
 
 pub const ACTIONS: [&str; 5] = [
     "upgrade",
@@ -194,7 +196,7 @@ pub fn cleanup_retention(
                     detail: record.manifest.backup_id.clone(),
                 })?
                 .with_timezone(&Utc);
-            let within_days = now.signed_duration_since(created).num_days() < RETENTION_DAYS;
+            let within_days = now.signed_duration_since(created).num_days() < retention_days();
             if index < max_per_action || within_days {
                 continue;
             }

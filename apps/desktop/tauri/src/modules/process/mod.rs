@@ -13,10 +13,20 @@ use std::time::Duration;
 
 use crate::errors::AppError;
 
-/// FZ-10 冻结生命周期超时。
-pub const START_TIMEOUT: Duration = Duration::from_secs(20);
-pub const STOP_TIMEOUT: Duration = Duration::from_secs(10);
-pub const RESTART_LIMIT: Duration = Duration::from_secs(30);
+/// FZ-10 冻结生命周期超时（H-04）：从固化运行策略读取，消费者不再各写常量。
+pub fn start_timeout() -> Duration {
+    crate::modules::runtime_defaults::process_start()
+}
+pub fn stop_timeout() -> Duration {
+    crate::modules::runtime_defaults::process_stop()
+}
+pub fn restart_limit() -> Duration {
+    crate::modules::runtime_defaults::process_restart()
+}
+/// 实际子进程等待窗口（H-04）：runner 对 Start/Restart 取 30 秒，与编排动作窗口不同义。
+pub fn runner_start_timeout() -> Duration {
+    crate::modules::runtime_defaults::process_runner_start()
+}
 
 /// FZ-11 管理器包装层退出码；官方子进程退出码不改写。
 pub const EXIT_PARAMETER_ERROR: i32 = 2;
@@ -264,9 +274,9 @@ mod tests {
 
     #[test]
     fn frozen_timeouts_match_contract() {
-        assert_eq!(START_TIMEOUT, Duration::from_secs(20));
-        assert_eq!(STOP_TIMEOUT, Duration::from_secs(10));
-        assert_eq!(RESTART_LIMIT, Duration::from_secs(30));
+        assert_eq!(start_timeout(), Duration::from_secs(20));
+        assert_eq!(stop_timeout(), Duration::from_secs(10));
+        assert_eq!(restart_limit(), Duration::from_secs(30));
     }
 
     #[test]

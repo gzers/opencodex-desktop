@@ -25,9 +25,15 @@ pub const MANIFEST_MAX_BYTES: u64 = 16 * 1024 * 1024;
 pub const PAYLOAD_MAX_BYTES: u64 = 256 * 1024 * 1024;
 pub const SNAPSHOT_MAX_ITEMS: usize = 10_000;
 pub const SNAPSHOT_MAX_BYTES: u64 = 1024 * 1024 * 1024;
-pub const CONNECT_TIMEOUT: Duration = Duration::from_secs(15);
-pub const ITEM_TIMEOUT: Duration = Duration::from_secs(10 * 60);
-pub const TOTAL_TIMEOUT: Duration = Duration::from_secs(30 * 60);
+pub fn connect_timeout() -> Duration {
+    crate::modules::runtime_defaults::sync_connect()
+}
+pub fn item_timeout() -> Duration {
+    crate::modules::runtime_defaults::sync_item()
+}
+pub fn total_timeout() -> Duration {
+    crate::modules::runtime_defaults::sync_total()
+}
 pub const RETRY_DELAYS: [Duration; 3] = [
     Duration::from_secs(2),
     Duration::from_secs(4),
@@ -446,9 +452,9 @@ mod tests {
 
     #[test]
     fn frozen_timeouts_and_limits_match_contract() {
-        assert_eq!(CONNECT_TIMEOUT, Duration::from_secs(15));
-        assert_eq!(ITEM_TIMEOUT, Duration::from_secs(600));
-        assert_eq!(TOTAL_TIMEOUT, Duration::from_secs(1800));
+        assert_eq!(connect_timeout(), Duration::from_secs(15));
+        assert_eq!(item_timeout(), Duration::from_secs(600));
+        assert_eq!(total_timeout(), Duration::from_secs(1800));
         assert_eq!(MANIFEST_MAX_BYTES, 16 * 1024 * 1024);
         assert_eq!(PAYLOAD_MAX_BYTES, 256 * 1024 * 1024);
         assert_eq!(SNAPSHOT_MAX_ITEMS, 10_000);
