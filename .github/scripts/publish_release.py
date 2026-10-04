@@ -53,7 +53,26 @@ def get_release(repo, tag):
     return json.loads(gh("api", api_url))
 
 
-def validate_manifest(manifest, release, tag):
+def release_assets(repo, tag, release):
+    """Map assets to their final URLs while accepting GitHub's draft-only URLs."""
+    prefix = f"https://github.com/{repo}/releases/download/"
+    assets = {}
+    for asset in release["assets"]:
+        name = asset["name"]
+        if not isinstance(name, str) or not name or "/" in name or "\\" in name:
+            raise PublishError("Invalid release asset name")
+        expected = f"{prefix}{tag}/{name}"
+        actual = urllib.parse.unquote(asset["browser_download_url"])
+        draft_url = re.fullmatch(re.escape(prefix) + r"untagged-[A-Za-z0-9]+/" + re.escape(name), actual)
+        if actual != expected and not (release.get("draft") is True and draft_url):
+            raise PublishError(f"Unexpected uploaded artifact URL: {actual!r}")
+        if expected in assets:
+            raise PublishError(f"Duplicate release asset: {name}")
+        assets[expected] = asset
+    return assets
+
+
+def validate_manifest(manifest, release, tag, repo):
     if not isinstance(manifest, dict):
         raise PublishError("latest.json must be a JSON object")
     if manifest.get("version") != tag[1:]:
@@ -62,7 +81,7 @@ def validate_manifest(manifest, release, tag):
     required = {"darwin-aarch64", "windows-x86_64", "windows-x86_64-msi", "windows-x86_64-nsis"}
     if not isinstance(platforms, dict) or not required.issubset(platforms):
         raise PublishError("latest.json is missing required macOS/Windows platforms")
-    assets = {urllib.parse.unquote(a["browser_download_url"]): a for a in release["assets"]}
+    assets = release_assets(repo, tag, release)
     for platform, entry in platforms.items():
         if not isinstance(entry, dict):
             raise PublishError(f"Invalid platform entry: {platform}")
@@ -87,7 +106,7 @@ def verify_artifacts(repo, tag, manifest, release):
     if config.get("version") != tag[1:]:
         raise PublishError("Tagged app version does not match the release")
     public_key = base64.b64decode(config["plugins"]["updater"]["pubkey"], validate=True)
-    assets = {urllib.parse.unquote(a["browser_download_url"]): a for a in release["assets"]}
+    assets = release_assets(repo, tag, release)
     verified = set()
     with tempfile.TemporaryDirectory(prefix="opencodex-release-") as directory:
         root = Path(directory)
@@ -147,7 +166,7 @@ def publish(repo, tag, mode):
     print(f"Downloading candidate manifest for {tag}", flush=True)
     manifest = json.loads(gh("release", "download", tag, "--repo", repo,
                              "--pattern", "latest.json", "--output", "-"))
-    validate_manifest(manifest, release, tag)
+    validate_manifest(manifest, release, tag, repo)
     before = latest(repo)
     if mode == "preserve-latest" and before is None:
         raise PublishError("No existing Latest to preserve; explicitly select stable for the first release")

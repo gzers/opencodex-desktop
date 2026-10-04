@@ -39,8 +39,8 @@ MANIFEST = {
 RELEASE = {
     "tag_name": TAG, "draft": True, "prerelease": True,
     "assets": [
-        {"browser_download_url": entry["url"], "size": 100, "state": "uploaded"}
-        for entry in MANIFEST["platforms"].values()
+        {"name": url.rsplit("/", 1)[1], "browser_download_url": url, "size": 100, "state": "uploaded"}
+        for url in dict.fromkeys(entry["url"] for entry in MANIFEST["platforms"].values())
     ],
 }
 
@@ -117,6 +117,32 @@ class PublishTests(unittest.TestCase):
         self.assertEqual(self.run_main("stable"), 0)
         self.gh.assert_any_call("release", "view", TAG, "--repo", REPO, "--json", "apiUrl,tagName")
         self.assertNotIn(unittest.mock.call("api", f"repos/{REPO}/releases/tags/{TAG}"), self.gh.call_args_list)
+
+    def test_draft_untagged_urls_match_final_manifest_urls(self):
+        for asset in self.api.release["assets"]:
+            asset["browser_download_url"] = asset["browser_download_url"].replace(TAG, "untagged-25955b20eb61985d71ae")
+        self.assertEqual(self.run_main("stable"), 0)
+        self.assertEqual(self.api.latest, TAG)
+
+    def test_public_release_cannot_use_draft_urls(self):
+        self.api.release["draft"] = False
+        self.api.release["assets"][0]["browser_download_url"] = f"{BASE}/download/untagged-abcd/Desktop.app.tar.gz"
+        self.assertEqual(self.run_main("stable"), 1)
+        self.assertEqual(self.api.edits, [])
+
+    def test_draft_urls_still_require_matching_repo_tag_and_filename(self):
+        for url in (f"{BASE}/download/v0.1.5/Desktop.app.tar.gz",
+                    f"{BASE}/download/untagged-abcd/wrong.app.tar.gz",
+                    "https://github.com/other/repo/releases/download/untagged-abcd/Desktop.app.tar.gz"):
+            with self.subTest(url=url):
+                self.api.release["assets"][0]["browser_download_url"] = url
+                self.assertEqual(self.run_main("stable"), 1)
+                self.assertEqual(self.api.edits, [])
+
+    def test_duplicate_asset_names_are_rejected(self):
+        self.api.release["assets"].append(copy.deepcopy(self.api.release["assets"][0]))
+        self.assertEqual(self.run_main("stable"), 1)
+        self.assertEqual(self.api.edits, [])
 
     def test_release_lookup_rejects_wrong_identity_before_edit(self):
         for view in ({"tagName": "v9.0.0", "apiUrl": f"https://api.github.com/repos/{REPO}/releases/123"},
@@ -306,6 +332,12 @@ class ArtifactSignatureTests(unittest.TestCase):
             publisher.verify_artifacts(REPO, TAG, self.manifest, self.release)
 
     def test_all_real_signatures_verified_and_duplicate_assets_downloaded_once(self):
+        self.run_verify()
+        self.assertEqual(len(self.downloaded), 3)
+
+    def test_draft_asset_bytes_verified_with_original_manifest_signatures(self):
+        for asset in self.release["assets"]:
+            asset["browser_download_url"] = asset["browser_download_url"].replace(TAG, "untagged-25955b20eb61985d71ae")
         self.run_verify()
         self.assertEqual(len(self.downloaded), 3)
 
