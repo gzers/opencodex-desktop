@@ -75,7 +75,7 @@ function preferences(panelMode: PreferencesDto['panelMode']): PreferencesDto {
     syncConflictPolicy: 'ask',
     coldSync: true,
     backupBeforeOverwrite: true,
-    appUpdateChannel: 'manual',
+    appUpdateChannel: 'stable', appUpdateAutoCheck: true, appUpdateCheckIntervalSeconds: 86400, theme: 'system',
     visualEffects: 'high',
     glowRender: 'mesh',
   }

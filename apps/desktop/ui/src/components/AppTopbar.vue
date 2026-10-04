@@ -33,6 +33,15 @@ const themeOptions = [
   { value: 'system', label: '跟随系统' },
 ] as const
 
+// 主题以后端偏好为事实源（H-15）：顶栏切换先即时投影，再落盘；失败由偏好 store 负责回滚提示。
+async function chooseTheme(value: (typeof themeOptions)[number]['value']) {
+  const { usePreferencesStore } = await import('@/features/preferences/store')
+  const preferences = usePreferencesStore()
+  theme.apply(value)
+  if (!preferences.data) return
+  await preferences.save({ ...preferences.data, theme: value })
+}
+
 const pillClass = computed(() => controller.scenario.value.pillClass)
 const unread = computed(() => controller.unreadNotifications.value.length)
 const hasDanger = computed(() => controller.unreadList.value.some((n: NotificationItem) => !n.read && n.kind === 'danger'))
@@ -78,7 +87,7 @@ onBeforeUnmount(() => {
           :class="{ active: theme.setting === option.value }"
           :title="option.label"
           :aria-label="option.label"
-          @click="theme.apply(option.value)"
+          @click="chooseTheme(option.value)"
         >
           <svg v-if="option.value === 'light'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
           <svg v-else-if="option.value === 'dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>

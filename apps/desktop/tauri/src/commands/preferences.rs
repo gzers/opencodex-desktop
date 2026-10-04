@@ -93,7 +93,10 @@ mod tests {
             sync_conflict_policy: "keep-remote".into(),
             cold_sync: false,
             backup_before_overwrite: false,
-            app_update_channel: "manual".into(),
+            app_update_channel: "beta".into(),
+            app_update_auto_check: false,
+            app_update_check_interval_seconds: 21600,
+            theme: "dark".into(),
             visual_effects: "mid".into(),
             glow_render: "css".into(),
         };
@@ -112,7 +115,10 @@ mod tests {
         assert_eq!(reloaded.panel_mode, "browser");
         assert_eq!(reloaded.backup_retention, "20");
         assert!(reloaded.cli_enabled);
-        assert_eq!(reloaded.app_update_channel, "manual");
+        assert_eq!(reloaded.app_update_channel, "beta");
+        assert!(!reloaded.app_update_auto_check);
+        assert_eq!(reloaded.app_update_check_interval_seconds, 21600);
+        assert_eq!(reloaded.theme, "dark");
         assert_eq!(reloaded.visual_effects, "mid");
         assert_eq!(reloaded.glow_render, "css");
     }

@@ -59,7 +59,10 @@ const defaultPreferences: PreferencesDto = {
   syncConflictPolicy: 'ask',
   coldSync: true,
   backupBeforeOverwrite: true,
-  appUpdateChannel: 'stable-24h',
+  appUpdateChannel: 'stable',
+  appUpdateAutoCheck: true,
+  appUpdateCheckIntervalSeconds: 86400,
+  theme: 'system',
   visualEffects: 'high',
   glowRender: 'mesh',
 }
@@ -283,16 +286,19 @@ async function runUpdateCheck() {
   }
 }
 
+// 更新通道（U-07）：偏好是唯一事实源，不再另起内存通道事务；保存后由偏好回读驱动状态。
 async function chooseUpdateChannel(value: PreferencesDto['appUpdateChannel'], label: string) {
   openSelect.value = ''
   await chooseOption('appUpdateChannel', value, label)
-  const channel = value.startsWith('beta') ? 'beta' : 'stable'
-  try {
-    const { setUpdateChannel } = await import('@/features/updates/update')
-    updateStatus.value = await setUpdateChannel(channel)
-  } catch {
-    updateError.value = '更新通道切换失败；已保留当前通道。'
-  }
+}
+
+// 「自动检查」开关：关闭后通道仍有效，手动检查仍可执行。
+async function toggleUpdateAutoCheck() {
+  const next = !preferences.value.appUpdateAutoCheck
+  await persist(
+    { ...preferences.value, appUpdateAutoCheck: next },
+    next ? '已开启自动检查更新。' : '已关闭自动检查更新；仍可手动检查。',
+  )
 }
 
 async function saveDataRoot() {
@@ -1305,7 +1311,8 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <div class="setting-row"><div><div class="setting-title">当前版本</div><div class="setting-desc">v{{ updateStatus?.currentVersion ?? '0.1.0' }} · {{ updateStatus?.channel === 'beta' ? '测试' : '稳定' }}通道</div></div><div class="controls"><button class="btn ghost" :disabled="updateChecking" @click="runUpdateCheck">{{ updateChecking ? '检查中' : '检查应用更新' }}</button></div></div>
           <div class="setting-row"><div><div class="setting-title">更新结果</div><div class="setting-desc">{{ updateResultText }}</div></div><div class="controls"><span class="tag" :class="{ danger: updateStatus?.error }">{{ updateStatus?.error ? '失败' : updateStatus?.availableVersion ? '有更新' : '已检查' }}</span><button class="btn" :disabled="!updateStatus?.availableVersion || updateStatus.signatureVerified === true || app.appUpdateBusy" @click="installUpdate">{{ app.appUpdateBusy ? '安装中' : '安装更新' }}</button></div></div>
           <div class="setting-row"><div><div class="setting-title">安装完成后</div><div class="setting-desc">{{ app.appUpdateError || '签名校验通过后由桌面壳接管重启；不会停止托管代理。' }}</div></div><div class="controls"><button class="btn ghost" :disabled="!updateStatus?.availableVersion || updateStatus.signatureVerified === true" @click="installUpdate">重新安装</button></div></div>
-        <div class="setting-row"><div><div class="setting-title">更新通道与频率</div><div class="setting-desc">稳定通道每 24 小时，测试通道每 6 小时，或手动检查。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道与频率" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta-6h' ? '测试通道 · 每 6 小时' : preferences.appUpdateChannel === 'manual' ? '手动检查' : '稳定通道 · 每 24 小时' }}</span></button><div class="select-menu" role="listbox" aria-label="应用更新通道与频率"><button v-for="option in [['stable-24h','稳定通道 · 每 24 小时'],['beta-6h','测试通道 · 每 6 小时'],['manual','手动检查']]" :key="option[0]" class="select-option" :class="{ selected: preferences.appUpdateChannel === option[0] }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === option[0] ? 'true' : 'false'" @click="chooseUpdateChannel(option[0] as PreferencesDto['appUpdateChannel'], option[1])">{{ option[1] }}</button></div></div></div></div>
+<div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><div class="select-menu" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></div></div></div></div>
+<div class="setting-row"><div><div class="setting-title">自动检查更新</div><div class="setting-desc">开启后按通道后台检查；关闭后不影响手动检查。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.appUpdateAutoCheck" @click="toggleUpdateAutoCheck()"></button></div></div>
         </div>
       </article>
     </section>

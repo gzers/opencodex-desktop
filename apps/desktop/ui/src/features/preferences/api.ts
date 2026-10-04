@@ -26,7 +26,10 @@ export interface PreferencesDto {
   syncConflictPolicy: 'ask' | 'keep-local' | 'keep-remote' | 'keep-both'
   coldSync: boolean
   backupBeforeOverwrite: boolean
-  appUpdateChannel: 'stable-24h' | 'beta-6h' | 'manual'
+  appUpdateChannel: 'stable' | 'beta'
+  appUpdateAutoCheck: boolean
+  appUpdateCheckIntervalSeconds: number
+  theme: 'light' | 'dark' | 'system'
   visualEffects: 'high' | 'mid' | 'low'
   /** 背景光渲染方式：WEBGL 网格渐变＋颗粒着色器（默认）/ 纯 CSS 极光（兜底）。 */
   glowRender: 'mesh' | 'css'

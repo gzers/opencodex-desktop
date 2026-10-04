@@ -19,7 +19,7 @@ function dto(overrides: Partial<PreferencesDto> = {}): PreferencesDto {
     exportIncludeMcp: true, logRetention: '30d-10000', notificationRetention: '30',
     startupCleanup: true, cleanupBackupSummary: true, cliEnabled: false,
     syncConflictPolicy: 'ask', coldSync: true,
-    backupBeforeOverwrite: true, appUpdateChannel: 'stable-24h', visualEffects: 'high',
+    backupBeforeOverwrite: true, appUpdateChannel: 'stable', appUpdateAutoCheck: true, appUpdateCheckIntervalSeconds: 86400, theme: 'system', visualEffects: 'high',
     glowRender: 'mesh', ...overrides,
   }
 }

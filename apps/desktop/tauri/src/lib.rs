@@ -619,13 +619,13 @@ fn launch_main(data_root: &std::path::Path) -> bool {
         .unwrap_or(true)
 }
 
-/// 「更新通道与频率」；`beta-6h` 落在测试通道，其余（含 `manual`）落在稳定通道。
+/// 更新通道（U-07）：偏好里已是解耦后的稳定/测试通道，检查/安装/调度共用同一解析。
 fn update_channel(data_root: &std::path::Path) -> crate::modules::update::UpdateChannel {
     let value = crate::modules::preferences::PreferencesStore::new(data_root)
         .load()
         .map(|preferences| preferences.app_update_channel)
-        .unwrap_or_else(|_| crate::modules::preferences::APP_UPDATE_STABLE_24H.to_string());
-    if value == crate::modules::preferences::APP_UPDATE_BETA_6H {
+        .unwrap_or_else(|_| crate::modules::preferences::APP_UPDATE_CHANNEL_STABLE.to_string());
+    if value == crate::modules::preferences::APP_UPDATE_CHANNEL_BETA {
         crate::modules::update::UpdateChannel::Beta
     } else {
         crate::modules::update::UpdateChannel::Stable
@@ -647,24 +647,46 @@ mod tests {
         root
     }
 
-    // 回归：「更新通道与频率」在启动时真正决定更新状态里的通道，而不是永远停在稳定通道。
+    // 回归：解耦后的更新通道在启动时真正决定更新状态里的通道。
     #[test]
     fn update_channel_preference_seeds_update_status_channel() {
         let beta = seeded(Preferences {
-            app_update_channel: "beta-6h".to_string(),
+            app_update_channel: "beta".to_string(),
             ..Default::default()
         });
         assert_eq!(update_channel(beta.path()), UpdateChannel::Beta);
         let stable = seeded(Preferences {
-            app_update_channel: "stable-24h".to_string(),
+            app_update_channel: "stable".to_string(),
             ..Default::default()
         });
         assert_eq!(update_channel(stable.path()), UpdateChannel::Stable);
-        let manual = seeded(Preferences {
-            app_update_channel: "manual".to_string(),
-            ..Default::default()
-        });
-        assert_eq!(update_channel(manual.path()), UpdateChannel::Stable);
+    }
+
+    // 回归：旧复合枚举（stable-24h / beta-6h / manual）加载时迁移到通道/自动检查/间隔。
+    // 直接写旧格式文件（保存路径会先校验，无法写回非法旧值）。
+    #[test]
+    fn legacy_update_channel_enum_migrates_on_load() {
+        for (legacy, channel, auto, interval) in [
+            ("beta-6h", "beta", true, 21600),
+            ("manual", "stable", false, 86400),
+        ] {
+            let root = tempfile::tempdir().expect("temp root");
+            crate::modules::data_root::initialize(root.path()).expect("initialize");
+            let path = crate::modules::preferences::PreferencesStore::new(root.path()).path();
+            std::fs::create_dir_all(path.parent().expect("parent")).expect("mkdir");
+            std::fs::write(
+                &path,
+                format!(
+                    r#"{{"interface_scale":120,"launch_main":true,"auto_panel":true,"panel_mode":"embedded","keep_proxy_on_close":true,"lifecycle_notifications":true,"sync_conflict_alerts":true,"launch_with_codex":true,"auto_backup_upgrade":true,"auto_backup_import":true,"auto_backup_sync":true,"backup_retention":"10","backup_integrity":"sha-256","backup_include_skills":true,"export_include_skills":true,"mcp_conflict_policy":"ask","mcp_mask":true,"backup_include_mcp":true,"export_include_mcp":true,"log_retention":"30d-10000","notification_retention":"30","startup_cleanup":true,"cleanup_backup_summary":true,"cli_enabled":false,"sync_conflict_policy":"ask","cold_sync":true,"backup_before_overwrite":true,"app_update_channel":"{legacy}"}}"#
+                ),
+            )
+            .expect("write legacy fixture");
+
+            let loaded = PreferencesStore::new(root.path()).load().expect("reload");
+            assert_eq!(loaded.app_update_channel, channel);
+            assert_eq!(loaded.app_update_auto_check, auto);
+            assert_eq!(loaded.app_update_check_interval_seconds, interval);
+        }
     }
 
     // 回归：「启动时打开主界面」在启动阶段被真实读取。

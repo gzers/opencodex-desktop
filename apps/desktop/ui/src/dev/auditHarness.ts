@@ -97,7 +97,10 @@ const AUDIT_PREFERENCES: PreferencesDto = {
   syncConflictPolicy: 'ask',
   coldSync: true,
   backupBeforeOverwrite: true,
-  appUpdateChannel: 'stable-24h',
+  appUpdateChannel: 'stable',
+  appUpdateAutoCheck: true,
+  appUpdateCheckIntervalSeconds: 86400,
+  theme: 'system',
   visualEffects: 'high',
   glowRender: 'mesh',
 }

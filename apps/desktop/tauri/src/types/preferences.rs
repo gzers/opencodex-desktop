@@ -35,6 +35,9 @@ pub struct PreferencesDto {
     pub cold_sync: bool,
     pub backup_before_overwrite: bool,
     pub app_update_channel: String,
+    pub app_update_auto_check: bool,
+    pub app_update_check_interval_seconds: i64,
+    pub theme: String,
     pub visual_effects: String,
     pub glow_render: String,
 }
@@ -70,6 +73,9 @@ impl From<Preferences> for PreferencesDto {
             cold_sync: value.cold_sync,
             backup_before_overwrite: value.backup_before_overwrite,
             app_update_channel: value.app_update_channel,
+            app_update_auto_check: value.app_update_auto_check,
+            app_update_check_interval_seconds: value.app_update_check_interval_seconds,
+            theme: value.theme,
             visual_effects: value.visual_effects,
             glow_render: value.glow_render,
         }
@@ -111,6 +117,9 @@ impl From<PreferencesDto> for Preferences {
             cold_sync: value.cold_sync,
             backup_before_overwrite: value.backup_before_overwrite,
             app_update_channel: value.app_update_channel,
+            app_update_auto_check: value.app_update_auto_check,
+            app_update_check_interval_seconds: value.app_update_check_interval_seconds,
+            theme: value.theme,
             visual_effects: value.visual_effects,
             glow_render: value.glow_render,
         }
@@ -151,7 +160,10 @@ mod tests {
             sync_conflict_policy: "ask".into(),
             cold_sync: true,
             backup_before_overwrite: true,
-            app_update_channel: "stable-24h".into(),
+            app_update_channel: "stable".into(),
+            app_update_auto_check: true,
+            app_update_check_interval_seconds: 86400,
+            theme: "system".into(),
             visual_effects: "high".into(),
             glow_render: "mesh".into(),
         };
@@ -159,7 +171,9 @@ mod tests {
         assert_eq!(payload["interfaceScale"], 110);
         assert_eq!(payload["launchMain"], false);
         assert_eq!(payload["backupRetention"], "10");
-        assert_eq!(payload["appUpdateChannel"], "stable-24h");
+        assert_eq!(payload["appUpdateChannel"], "stable");
+        assert_eq!(payload["appUpdateAutoCheck"], true);
+        assert_eq!(payload["theme"], "system");
         assert_eq!(payload["visualEffects"], "high");
         assert_eq!(payload["glowRender"], "mesh");
     }
@@ -196,7 +210,10 @@ mod tests {
             "syncConflictPolicy": "keep-remote",
             "coldSync": false,
             "backupBeforeOverwrite": false,
-            "appUpdateChannel": "manual",
+            "appUpdateChannel": "beta",
+            "appUpdateAutoCheck": false,
+            "appUpdateCheckIntervalSeconds": 21600,
+            "theme": "dark",
             "visualEffects": "low",
             "glowRender": "css"
         }))
@@ -208,7 +225,10 @@ mod tests {
         assert_eq!(domain.backup_retention, "20");
         assert_eq!(domain.backup_integrity, "blake3");
         assert!(domain.cli_enabled);
-        assert_eq!(domain.app_update_channel, "manual");
+        assert_eq!(domain.app_update_channel, "beta");
+        assert!(!domain.app_update_auto_check);
+        assert_eq!(domain.app_update_check_interval_seconds, 21600);
+        assert_eq!(domain.theme, "dark");
         assert_eq!(domain.visual_effects, "low");
         assert_eq!(domain.glow_render, "css");
     }

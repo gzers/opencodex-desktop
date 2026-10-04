@@ -37,6 +37,11 @@ pub const SYNC_POLICY_KEEP_BOTH: &str = "keep-both";
 pub const APP_UPDATE_STABLE_24H: &str = "stable-24h";
 pub const APP_UPDATE_BETA_6H: &str = "beta-6h";
 pub const APP_UPDATE_MANUAL: &str = "manual";
+pub const APP_UPDATE_CHANNEL_STABLE: &str = "stable";
+pub const APP_UPDATE_CHANNEL_BETA: &str = "beta";
+pub const THEME_LIGHT: &str = "light";
+pub const THEME_DARK: &str = "dark";
+pub const THEME_SYSTEM: &str = "system";
 // 界面特效档位（UI规范 §26.2 / 契约字段 §9）：用户选择；高=默认。
 pub const VISUAL_EFFECTS_HIGH: &str = "high";
 pub const VISUAL_EFFECTS_MID: &str = "mid";
@@ -75,7 +80,12 @@ pub struct Preferences {
     pub sync_conflict_policy: String,
     pub cold_sync: bool,
     pub backup_before_overwrite: bool,
+    // 更新通道/自动检查/间隔解耦（U-07）：旧 `app_update_channel` 复合枚举在加载时迁移。
     pub app_update_channel: String,
+    pub app_update_auto_check: bool,
+    pub app_update_check_interval_seconds: i64,
+    // 主题事实源（H-15）：后端为事实源，前端 localStorage 仅作首屏缓存。
+    pub theme: String,
     // `#[serde(default)]`：旧偏好缺该字段时按默认高档读取，不判损坏。
     pub visual_effects: String,
     // 同理：旧偏好缺该字段时按默认 WEBGL 读取。
@@ -112,7 +122,10 @@ impl Default for Preferences {
             sync_conflict_policy: SYNC_POLICY_ASK.to_string(),
             cold_sync: true,
             backup_before_overwrite: true,
-            app_update_channel: APP_UPDATE_STABLE_24H.to_string(),
+            app_update_channel: APP_UPDATE_CHANNEL_STABLE.to_string(),
+            app_update_auto_check: true,
+            app_update_check_interval_seconds: 86400,
+            theme: THEME_SYSTEM.to_string(),
             visual_effects: VISUAL_EFFECTS_HIGH.to_string(),
             glow_render: GLOW_RENDER_MESH.to_string(),
         }
@@ -161,7 +174,12 @@ pub fn load_preferences(path: &Path) -> Result<Preferences, PreferencesError> {
         }
         Err(_) => return Err(PreferencesError::Io),
     };
-    serde_json::from_slice::<Preferences>(&bytes).map_err(|_| PreferencesError::Corrupted)
+    let mut value =
+        serde_json::from_slice::<Preferences>(&bytes).map_err(|_| PreferencesError::Corrupted)?;
+    // 读取即迁移旧复合枚举并校验（U-08/H-22）：非法值不静默放行，也不覆盖原件。
+    migrate_legacy_update_fields(&mut value);
+    validate(&value)?;
+    Ok(value)
 }
 
 pub fn save_preferences(path: &Path, value: &Preferences) -> Result<Preferences, PreferencesError> {
@@ -228,8 +246,10 @@ pub fn validate(value: &Preferences) -> Result<(), PreferencesError> {
         )
         || !allowed(
             &value.app_update_channel,
-            &[APP_UPDATE_STABLE_24H, APP_UPDATE_BETA_6H, APP_UPDATE_MANUAL],
+            &[APP_UPDATE_CHANNEL_STABLE, APP_UPDATE_CHANNEL_BETA],
         )
+        || !(0..=30 * 24 * 60 * 60).contains(&value.app_update_check_interval_seconds)
+        || !allowed(&value.theme, &[THEME_LIGHT, THEME_DARK, THEME_SYSTEM])
         || !allowed(
             &value.visual_effects,
             &[VISUAL_EFFECTS_HIGH, VISUAL_EFFECTS_MID, VISUAL_EFFECTS_LOW],
@@ -239,6 +259,31 @@ pub fn validate(value: &Preferences) -> Result<(), PreferencesError> {
         return Err(PreferencesError::Corrupted);
     }
     Ok(())
+}
+
+/// 旧复合枚举 → 通道/自动检查/间隔（U-07）。
+///
+/// `stable-24h` → stable/true/86400；`beta-6h` → beta/true/21600；
+/// `manual` → stable/false/86400。已迁移的新值原样返回。
+fn migrate_legacy_update_fields(value: &mut Preferences) {
+    match value.app_update_channel.as_str() {
+        APP_UPDATE_STABLE_24H => {
+            value.app_update_channel = APP_UPDATE_CHANNEL_STABLE.to_string();
+            value.app_update_auto_check = true;
+            value.app_update_check_interval_seconds = 86400;
+        }
+        APP_UPDATE_BETA_6H => {
+            value.app_update_channel = APP_UPDATE_CHANNEL_BETA.to_string();
+            value.app_update_auto_check = true;
+            value.app_update_check_interval_seconds = 21600;
+        }
+        APP_UPDATE_MANUAL => {
+            value.app_update_channel = APP_UPDATE_CHANNEL_STABLE.to_string();
+            value.app_update_auto_check = false;
+            value.app_update_check_interval_seconds = 86400;
+        }
+        _ => {}
+    }
 }
 
 fn allowed(field: &str, values: &[&str]) -> bool {
@@ -272,8 +317,12 @@ impl TryFrom<std::collections::BTreeMap<String, crate::modules::container::Prefe
             };
             serialized.insert(key, converted);
         }
-        serde_json::from_value(serde_json::Value::Object(serialized))
-            .map_err(|_| PreferencesError::Corrupted)
+        let mut value =
+            serde_json::from_value::<Preferences>(serde_json::Value::Object(serialized))
+                .map_err(|_| PreferencesError::Corrupted)?;
+        migrate_legacy_update_fields(&mut value);
+        validate(&value)?;
+        Ok(value)
     }
 }
 
