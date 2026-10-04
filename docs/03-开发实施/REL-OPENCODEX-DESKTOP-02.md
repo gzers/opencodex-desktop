@@ -51,6 +51,7 @@ source_refs:
 - 公开发布结果：Release `v0.1.1` 现为 `draft=false`、`prerelease=false`，地址 <https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.1>；四个制品 uploaded：macOS `.dmg`、Windows `_x64-setup.exe`（NSIS）、Windows `.msi`、`.app.tar.gz`。
 - 发布诊断以公开可读的 `ci-logs` 分支留存（`publish-diag.txt`），本次记录 `tag=v0.1.1 / undraft: ok / latest: ok`。0.1.0 的 Release 未触碰，仍为草稿 + 预发布。
 - 配套代码提交：`9df1248`（发布工作流）、`be362d8a`（安装核验脚本）、`aea0338`/`8b36414`/`dad00725`（发布诊断与本机核对）。
+- 发布相关 `main` 提交的 CI（run `37173484167`）四 job（frontend/backend/backend-windows/build）同样全绿。
 
 ## 未完成（独立门禁）
 
