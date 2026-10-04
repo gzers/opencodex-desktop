@@ -6,7 +6,9 @@
 
 ## 实施计划入口
 
-- [0.1.4/0.1.5 更新检查修复记录](REL-OPENCODEX-DESKTOP-05.md)：**candidate-passed**；0.1.4 修复官方远端查询 `env_clear` 后缺 `PATH`；0.1.5 修复「检查应用更新」成功后仍显示上一次失败（成功分支未清 `error`）并把自更新代理注入改为按偏好显式三分支。均已并入 `main`、打 tag 并出草稿 Release，签名与 `latest.json` 校验通过；**公开发布另行确认**。
+- [OTA 修复实施与 0.1.6 本地候选验收](2026-10-05-OTA修复实施与候选验收.md)：本地 `main@0547f68` 修复安装重试、发布失败传播与 stable 显式晋升；前端 364、后端 559、发布 15 项通过，macOS 免签候选包构建成功。**尚未发布，真实旧版 OTA 未验收**。
+- [0.1.3 / 0.1.4 / 0.1.5 OTA 修复有效性审计](2026-10-05-OTA修复有效性审计.md)：历史审计，PATH 与旧错误清理有效；安装重试、发布失败传播和 stable 投递问题已进入上述 0.1.6 修复。纠正“手动代理首次补上”及“key ID 一致等于制品验签”的旧表述。
+- [0.1.4/0.1.5 更新检查修复记录](REL-OPENCODEX-DESKTOP-05.md)：**candidate-passed（仅原构建级门禁）**；0.1.4 修复官方 npm 查询缺 PATH，0.1.5 修复成功检查残留旧错误；已并入 `main`、打 tag，原记录为草稿 Release。2026-10-05 已补正审计结论；**公开发布与 stable 晋升另行确认**。
 - [0.1.3 更新候选记录](REL-OPENCODEX-DESKTOP-04.md)：**candidate-passed**；记录 U-01/U-03/U-04/U-05/U-05b/C 在 `feature/0.1.3-update-channel-network` 的实施与构建级门禁证据、本机 0.1.3 制品。**已合并 main、打 tag `v0.1.3` 并通过 `publish/v0.1.3` 公开发布（v0.1.3 为 Latest）；草稿 Release、签名制品与 `latest.json` keyid 均验证通过。**
 - [0.1.3 更新通道自更新、官方更新代跑与网络代理](IMP-OPENCODEX-DESKTOP-16.md)：**in_progress**；承接 MNT-OPENCODEX-DESKTOP-20261004-03（COL-LOCAL-20261004-03）。冻结范围 U-01～U-04（自更新真实端点/签名、官方卡片远端查询、代跑官方更新）+ U-05/U-05b（网络代理，不涉及钥匙串）+ C 阶段存储迁移。**U-01/U-03/U-04/U-05/U-05b/C 已在 `feature/0.1.3-update-channel-network` 实施并通过构建级门禁；U-02（签名公钥与 CI 签名制品）因属发布安全操作待单独确认，未做；未合并 main、未打包、未发布。**
 - [0.1.2 更新通道与配置分层](IMP-OPENCODEX-DESKTOP-15.md)：**已实施并入 main（2026-10-04）**；承接 MNT-OPENCODEX-DESKTOP-20261004-02 的 A/B 最小闭环（更新通道解耦与消费、固化默认配置、类型收敛、迁移服务骨架、测试沙箱隔离、中英文 README）；详见 [REL-OPENCODEX-DESKTOP-03](REL-OPENCODEX-DESKTOP-03.md)。C 阶段存储迁移与真实自更新端点/签名延期，U-01～U-04 待用户裁决。

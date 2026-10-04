@@ -1,0 +1,56 @@
+{
+  "checked_at": "2026-10-05T01:05:00.480494+08:00",
+  "code_branch": "main",
+  "commit": "0547f68aedfae9488a839a437e9792cba5ad661c",
+  "source_sha256": {
+    ".github/scripts/publish_release.py": "c9e77bbfa3d491f7246340b492c9497ae484f8e81e6cdaecdeace4a08fb61fa6",
+    ".github/workflows/ci.yml": "4ceddae295f4d0b6e63c88d6d6e76fefb5da39d37c21da36e1671cdf9a108fb2",
+    ".github/workflows/publish-release.yml": "bec0a3ca5824a16f0078b028cf6b775db87d8dc6b38b17eff8e5def5cfae9374",
+    "CHANGELOG.md": "ba022a71396bdd75ee97ae0309610ac5de0ca7234160b9ae9669b4ea7563ad5a",
+    "apps/desktop/tauri/Cargo.toml": "960cd9db2a1720613636247df3bb02034bb39eaa0adfcead4a837c7c6ec978f3",
+    "apps/desktop/tauri/src/commands/update.rs": "24bbdb3dce280c087a78d9e8a0f8b71809f9b7336d72a3e6f8ca7c7a832b410f",
+    "apps/desktop/tauri/tauri.conf.json": "2c1116af56ccd82de8444b422f5237bad24b9360e58c01da77eeaf06b14ae172",
+    "apps/desktop/ui/package-lock.json": "ca059f8506c0bc5d52810e85668ec37cec609c4b08adc4d25afd8390057468f7",
+    "apps/desktop/ui/package.json": "3898b3b2fc44febcdfbec89d6ff1bcc8b7ba6e87a784bb18ea96db25438ccad8",
+    "apps/desktop/ui/src/routes/SettingsRoute.vue": "72b899547879a48a6a351e028b25245201f70be35f0d7efb0f7f78adee4646e0",
+    "apps/desktop/ui/tests/settings-update-retry.test.ts": "6fb3114c4c271f94b82477fc7c0bdd81259884a186b0939b2a6d1ffda8a5caba",
+    "test/test_publish_release.py": "6f59003d8254aea55fb04805d0b5ade9a1b8cd8cf8a551f1b80935cdcebf9508"
+  },
+  "frontend": {
+    "passed": 364,
+    "files": 73,
+    "typecheck": "passed",
+    "build": "passed"
+  },
+  "backend": {
+    "passed": 559,
+    "failed": 0,
+    "ignored": 5
+  },
+  "backend_format": "passed",
+  "backend_clippy_warnings_denied": "passed",
+  "publish_regressions": {
+    "passed": 15,
+    "network": "mocked; real workflow publish shell executed with local gh stub"
+  },
+  "macos_candidate": {
+    "version": "0.1.6",
+    "build_version": "0.1.6",
+    "command": "CARGO_NET_OFFLINE=true tauri build --target aarch64-apple-darwin --no-sign --ci",
+    "exit_code": 0,
+    "dmg": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop-win/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/OpenCodeX Desktop_0.1.6_aarch64.dmg",
+    "dmg_size": 3923071,
+    "dmg_sha256": "c24987840f57d52280223effda0fb12776a3dd8e0eae165e8e768eecfb2a9809",
+    "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop-win/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app",
+    "binary_sha256": "5900d8b22ce5eafef29982f4409a6b19d4ecb72de1aca9d5a1b752c550fa3f29",
+    "ota_signed": false,
+    "installed_over_user_app": false
+  },
+  "not_performed": [
+    "remote push/tag/release/channel mutation",
+    "GitHub-hosted CI run",
+    "Windows candidate build/runtime upgrade",
+    "signed v0.1.6 artifact cryptographic verification",
+    "installed old app -> v0.1.6 replacement/restart and managed proxy survival"
+  ]
+}
