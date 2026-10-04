@@ -56,6 +56,141 @@ pub const VISUAL_EFFECTS_LOW: &str = "low";
 pub const GLOW_RENDER_MESH: &str = "mesh";
 pub const GLOW_RENDER_CSS: &str = "css";
 
+/// C 阶段磁盘分域（schema v2）：偏好磁盘结构按域分组。
+///
+/// 内存 `Preferences` 与前端 DTO 保持扁平；分域只作用于**磁盘落盘**与
+/// 容器 / 同步的兼容投影。每个域包含的扁平键固定在此表，`load` / `save`
+/// 据此在扁平与嵌套之间转换，避免两处各写一份字段清单。
+const DISK_SECTIONS: [(&str, &[&str]); 9] = [
+    (
+        "appearance",
+        &["interface_scale", "theme", "visual_effects", "glow_render"],
+    ),
+    (
+        "shell",
+        &[
+            "launch_main",
+            "auto_panel",
+            "panel_mode",
+            "keep_proxy_on_close",
+            "lifecycle_notifications",
+            "launch_with_codex",
+        ],
+    ),
+    (
+        "backup",
+        &[
+            "auto_backup_upgrade",
+            "auto_backup_import",
+            "auto_backup_sync",
+            "backup_retention",
+            "backup_integrity",
+            "backup_include_skills",
+            "export_include_skills",
+            "backup_include_mcp",
+            "export_include_mcp",
+            "backup_before_overwrite",
+        ],
+    ),
+    ("extensions", &["mcp_conflict_policy", "mcp_mask"]),
+    (
+        "maintenance",
+        &[
+            "log_retention",
+            "notification_retention",
+            "startup_cleanup",
+            "cleanup_backup_summary",
+        ],
+    ),
+    (
+        "sync",
+        &["sync_conflict_alerts", "sync_conflict_policy", "cold_sync"],
+    ),
+    (
+        "updates",
+        &[
+            "app_update_channel",
+            "app_update_auto_check",
+            "app_update_check_interval_seconds",
+        ],
+    ),
+    (
+        "network",
+        &[
+            "network_proxy_mode",
+            "network_proxy_scheme",
+            "network_proxy_host",
+            "network_no_proxy",
+        ],
+    ),
+    ("cli", &["cli_enabled"]),
+];
+
+/// 扁平偏好 → 分域磁盘文档（schema v2）。
+pub fn document_from_preferences(value: &Preferences) -> serde_json::Value {
+    let flat = serde_json::to_value(value).unwrap_or_else(|_| serde_json::json!({}));
+    let flat = flat.as_object().cloned().unwrap_or_default();
+    let mut document = serde_json::Map::new();
+    document.insert(
+        "schema_version".to_string(),
+        serde_json::json!(crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA),
+    );
+    for (section, keys) in DISK_SECTIONS {
+        let mut group = serde_json::Map::new();
+        for key in keys {
+            if let Some(field) = flat.get(*key) {
+                group.insert((*key).to_string(), field.clone());
+            }
+        }
+        document.insert(section.to_string(), serde_json::Value::Object(group));
+    }
+    serde_json::Value::Object(document)
+}
+
+/// 磁盘文档 → 扁平偏好：同时接受 schema v2 分域与 legacy 扁平（v0/v1）。
+///
+/// 过新 schema（高于当前应用）显式失败，不静默重置；损坏字段显式失败。
+pub fn preferences_from_document(
+    value: &serde_json::Value,
+) -> Result<Preferences, PreferencesError> {
+    let Some(object) = value.as_object() else {
+        return Err(PreferencesError::Corrupted);
+    };
+    let declared = object
+        .get("schema_version")
+        .and_then(serde_json::Value::as_u64)
+        .unwrap_or(0) as u32;
+    if declared > crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA {
+        // 混合版本：过新的磁盘结构不写入、不猜测，返回明确失败。
+        return Err(PreferencesError::Corrupted);
+    }
+    let nested = DISK_SECTIONS.iter().any(|(section, _)| {
+        object
+            .get(*section)
+            .is_some_and(serde_json::Value::is_object)
+    });
+    let flat = if nested {
+        let mut merged = object.clone();
+        for (section, _) in DISK_SECTIONS {
+            if let Some(group) = object.get(section).and_then(serde_json::Value::as_object) {
+                for (key, field) in group {
+                    merged.insert(key.clone(), field.clone());
+                }
+            }
+            merged.remove(section);
+        }
+        serde_json::Value::Object(merged)
+    } else {
+        value.clone()
+    };
+    let mut preferences: Preferences =
+        serde_json::from_value(flat).map_err(|_| PreferencesError::Corrupted)?;
+    migrate_legacy_update_fields(&mut preferences);
+    preferences.schema_version = crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA;
+    validate(&preferences)?;
+    Ok(preferences)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default, rename_all = "snake_case")]
 pub struct Preferences {
@@ -159,8 +294,12 @@ impl Default for Preferences {
         ));
         let frozen: FrozenPreferences =
             serde_json::from_str(raw).expect("frozen preferences defaults must parse");
+        // 固化文件里的 schema_version 仅作历史记录，默认值始终按当前 schema 生成。
+        debug_assert!(
+            frozen.schema_version <= crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA
+        );
         Self {
-            schema_version: frozen.schema_version,
+            schema_version: crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA,
             interface_scale: frozen.interface_scale,
             launch_main: frozen.launch_main,
             auto_panel: frozen.auto_panel,
@@ -305,13 +444,11 @@ pub fn load_preferences(path: &Path) -> Result<Preferences, PreferencesError> {
         }
         Err(_) => return Err(PreferencesError::Io),
     };
-    let mut value =
-        serde_json::from_slice::<Preferences>(&bytes).map_err(|_| PreferencesError::Corrupted)?;
-    // 读取即迁移旧复合枚举并校验（U-08/H-22）：非法值不静默放行，也不覆盖原件。
-    migrate_legacy_update_fields(&mut value);
-    value.schema_version = crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA;
-    validate(&value)?;
-    Ok(value)
+    // 读取即按 schema 识别分域/扁平结构并迁移旧复合枚举（C 阶段 / U-08 / H-22）：
+    // 非法或过新结构显式失败，不静默放行，也不覆盖原件。
+    let document: serde_json::Value =
+        serde_json::from_slice(&bytes).map_err(|_| PreferencesError::Corrupted)?;
+    preferences_from_document(&document)
 }
 
 pub fn save_preferences(path: &Path, value: &Preferences) -> Result<Preferences, PreferencesError> {
@@ -319,7 +456,9 @@ pub fn save_preferences(path: &Path, value: &Preferences) -> Result<Preferences,
     if !path.is_absolute() {
         return Err(PreferencesError::NotConfigured);
     }
-    let payload = serde_json::to_vec_pretty(value).map_err(|_| PreferencesError::Io)?;
+    // C 阶段：磁盘落盘为分域结构（schema v2）；内存与 DTO 保持扁平。
+    let document = document_from_preferences(value);
+    let payload = serde_json::to_vec_pretty(&document).map_err(|_| PreferencesError::Io)?;
     crate::infrastructure::atomic_write::atomic_write(path, &payload, 0o600)
         .map_err(|_| PreferencesError::Io)?;
     Ok(value.clone())
@@ -452,14 +591,18 @@ impl TryFrom<std::collections::BTreeMap<String, crate::modules::container::Prefe
                     serde_json::Value::Number(value.into())
                 }
                 crate::modules::container::PreferenceValue::Text(value) => {
-                    serde_json::Value::String(value)
+                    // C 阶段：容器里的分域段以 JSON 文本承载；能解析成对象就还原为嵌套，
+                    // 否则按普通文本字符串处理（旧容器的扁平文本值不受影响）。
+                    match serde_json::from_str::<serde_json::Value>(&value) {
+                        Ok(parsed) if parsed.is_object() => parsed,
+                        _ => serde_json::Value::String(value),
+                    }
                 }
             };
             serialized.insert(key, converted);
         }
-        let mut value =
-            serde_json::from_value::<Preferences>(serde_json::Value::Object(serialized))
-                .map_err(|_| PreferencesError::Corrupted)?;
+        // 同时接受分域与 legacy 扁平：复用统一结构识别；过新结构显式失败。
+        let mut value = preferences_from_document(&serde_json::Value::Object(serialized))?;
         migrate_legacy_update_fields(&mut value);
         validate(&value)?;
         Ok(value)
@@ -639,5 +782,77 @@ mod tests {
         let error = load_preferences(Path::new("")).expect_err("unconfigured load");
         assert_eq!(error, PreferencesError::NotConfigured);
         assert!(save_preferences(Path::new(""), &Preferences::default()).is_err());
+    }
+
+    // C 阶段：磁盘分域结构（schema v2）。
+    #[test]
+    fn save_writes_sectioned_disk_layout_at_current_schema() {
+        let temp = tempfile::tempdir().expect("tempdir");
+        let store = PreferencesStore::new(temp.path());
+        let value = Preferences {
+            interface_scale: 150,
+            theme: THEME_DARK.to_string(),
+            app_update_channel: APP_UPDATE_CHANNEL_BETA.to_string(),
+            network_proxy_mode: PROXY_MODE_MANUAL.to_string(),
+            ..Default::default()
+        };
+        store.save(&value).expect("save sectioned");
+
+        let document: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(store.path()).unwrap()).unwrap();
+        assert_eq!(
+            document["schema_version"],
+            crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA
+        );
+        assert_eq!(document["appearance"]["interface_scale"], 150);
+        assert_eq!(document["appearance"]["theme"], "dark");
+        assert_eq!(document["updates"]["app_update_channel"], "beta");
+        assert_eq!(document["network"]["network_proxy_mode"], "manual");
+        // 扁平字段不再出现在顶层。
+        assert!(document.get("interface_scale").is_none());
+        // 分域磁盘结构可被读回为同一份扁平偏好。
+        assert_eq!(store.load().expect("reload sectioned"), value);
+    }
+
+    #[test]
+    fn legacy_flat_document_loads_and_upgrades_in_memory() {
+        let temp = tempfile::tempdir().expect("tempdir");
+        let store = PreferencesStore::new(temp.path());
+        std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+        std::fs::write(
+            store.path(),
+            br#"{"interface_scale":120,"theme":"dark","app_update_channel":"beta-6h"}"#,
+        )
+        .unwrap();
+        let loaded = store.load().expect("legacy flat load");
+        assert_eq!(loaded.interface_scale, 120);
+        assert_eq!(loaded.theme, THEME_DARK);
+        // 旧复合枚举在读取时迁移为通道 + 自动检查 + 间隔。
+        assert_eq!(loaded.app_update_channel, APP_UPDATE_CHANNEL_BETA);
+        assert!(loaded.app_update_auto_check);
+        assert_eq!(loaded.app_update_check_interval_seconds, 21600);
+    }
+
+    #[test]
+    fn future_disk_schema_is_rejected_without_guessing() {
+        let temp = tempfile::tempdir().expect("tempdir");
+        let store = PreferencesStore::new(temp.path());
+        std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+        let future = serde_json::json!({
+            "schema_version": crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA + 1,
+            "appearance": { "interface_scale": 120 },
+        });
+        std::fs::write(store.path(), serde_json::to_vec(&future).unwrap()).unwrap();
+        assert_eq!(
+            store.load().expect_err("future"),
+            PreferencesError::Corrupted
+        );
+        // 过新文件保留在原位，不被改写。
+        let observed: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(store.path()).unwrap()).unwrap();
+        assert_eq!(
+            observed["schema_version"],
+            crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA + 1
+        );
     }
 }

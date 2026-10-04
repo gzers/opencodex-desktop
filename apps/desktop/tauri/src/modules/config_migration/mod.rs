@@ -13,8 +13,11 @@ use crate::errors::AppError;
 use crate::infrastructure::atomic_write::atomic_write;
 use crate::infrastructure::locking::TargetFileLock;
 
-/// 偏好文档当前 schema（无 schema_version 的旧文件视为 legacy v0）。
-pub const PREFERENCES_CURRENT_SCHEMA: u32 = 1;
+/// 偏好文档当前 schema。
+/// - v0：无 `schema_version` 的扁平文件，含旧复合更新枚举。
+/// - v1：扁平文件 + `schema_version=1`（通道/自动检查/间隔已解耦）。
+/// - v2：C 阶段分域结构（appearance/shell/backup/extensions/maintenance/sync/updates/network/cli）。
+pub const PREFERENCES_CURRENT_SCHEMA: u32 = 2;
 
 /// 配置文档种类；每种独立登记 schema 与迁移步骤。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -174,9 +177,9 @@ fn prepare_preferences(
     value: serde_json::Value,
 ) -> Result<(MigrationReport, Option<Vec<u8>>), AppError> {
     let kind = DocumentKind::Preferences;
-    // 无论哪个版本，最终都必须能落到当前类型并通过校验。
+    // 无论哪个版本，最终都必须能落到当前类型并通过校验；同时兼容 v2 分域与 v0/v1 扁平结构。
     let mut preferences: crate::modules::preferences::Preferences =
-        match serde_json::from_value(value.clone()) {
+        match crate::modules::preferences::preferences_from_document(&value) {
             Ok(value) => value,
             Err(_) => {
                 return Ok((
@@ -210,10 +213,11 @@ fn prepare_preferences(
         return Ok((report, None));
     }
 
-    // legacy v0 → 当前：旧复合更新枚举迁移 + 补 schema 版本。
+    // legacy v0/v1 → 当前：旧复合更新枚举迁移 + 分域磁盘结构 + 补 schema 版本。
     let mut steps = Vec::new();
     crate::modules::preferences::migrate_legacy_update_fields(&mut preferences);
     steps.push("preferences.v0.legacy_update_channel".to_string());
+    steps.push("preferences.v2.sectioned_disk_layout".to_string());
     preferences.schema_version = to_schema;
 
     if crate::modules::preferences::validate(&preferences).is_err() {
@@ -230,7 +234,9 @@ fn prepare_preferences(
         ));
     }
 
-    let bytes = match serde_json::to_vec_pretty(&preferences) {
+    // 落盘内容为分域结构（C 阶段），schema 与内存值一致。
+    let document = crate::modules::preferences::document_from_preferences(&preferences);
+    let bytes = match serde_json::to_vec_pretty(&document) {
         Ok(bytes) => bytes,
         Err(error) => {
             return Ok((
@@ -511,12 +517,20 @@ mod tests {
         assert_eq!(report.outcome, MigrationOutcome::Migrated);
         assert_eq!(report.from_schema, 0);
         assert_eq!(report.to_schema, PREFERENCES_CURRENT_SCHEMA);
-        assert_eq!(report.steps, vec!["preferences.v0.legacy_update_channel"]);
+        assert_eq!(
+            report.steps,
+            vec![
+                "preferences.v0.legacy_update_channel",
+                "preferences.v2.sectioned_disk_layout"
+            ]
+        );
         let value: serde_json::Value = serde_json::from_slice(&bytes.expect("bytes")).unwrap();
         assert_eq!(value["schema_version"], PREFERENCES_CURRENT_SCHEMA);
-        assert_eq!(value["app_update_channel"], "beta");
-        assert_eq!(value["app_update_auto_check"], true);
-        assert_eq!(value["app_update_check_interval_seconds"], 21600);
+        // C 阶段：磁盘为分域结构，更新域键在 `updates` 段内。
+        assert_eq!(value["updates"]["app_update_channel"], "beta");
+        assert_eq!(value["updates"]["app_update_auto_check"], true);
+        assert_eq!(value["updates"]["app_update_check_interval_seconds"], 21600);
+        assert_eq!(value["appearance"]["interface_scale"], 120);
     }
 
     #[test]
@@ -570,8 +584,8 @@ mod tests {
         let written: serde_json::Value =
             serde_json::from_slice(&std::fs::read(&target).unwrap()).unwrap();
         assert_eq!(written["schema_version"], PREFERENCES_CURRENT_SCHEMA);
-        assert_eq!(written["app_update_channel"], "stable");
-        assert_eq!(written["app_update_auto_check"], false);
+        assert_eq!(written["updates"]["app_update_channel"], "stable");
+        assert_eq!(written["updates"]["app_update_auto_check"], false);
     }
 
     #[test]
@@ -690,7 +704,7 @@ mod tests {
         let written: serde_json::Value =
             serde_json::from_slice(&std::fs::read(&target).unwrap()).unwrap();
         assert_eq!(written["schema_version"], PREFERENCES_CURRENT_SCHEMA);
-        assert_eq!(written["app_update_channel"], "beta");
+        assert_eq!(written["updates"]["app_update_channel"], "beta");
         assert!(committed.backup_dir.join("original.json").exists());
     }
 }

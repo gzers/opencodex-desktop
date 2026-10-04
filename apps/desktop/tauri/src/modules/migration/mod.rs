@@ -274,27 +274,37 @@ fn read_preferences_map(
     ),
     MigrationError,
 > {
-    let preference_bytes = std::fs::read(data_root.join(PREFERENCES_RELATIVE_PATH))
+    // C 阶段：磁盘可能已是分域结构；容器 preferences 段按分域结构导出（含 schema_version），
+    // 同时返回扁平视图供范围开关读取。
+    let preferences = crate::modules::preferences::PreferencesStore::new(data_root)
+        .load()
         .map_err(|_| MigrationError::Preferences)?;
-    let payload: serde_json::Value =
-        serde_json::from_slice(&preference_bytes).map_err(|_| MigrationError::Preferences)?;
+    let flat: serde_json::Value =
+        serde_json::to_value(&preferences).map_err(|_| MigrationError::Preferences)?;
+    let payload = crate::modules::preferences::document_from_preferences(&preferences);
     let map = payload
         .as_object()
         .ok_or(MigrationError::Preferences)?
         .iter()
         .map(|(key, value)| {
             let value = match value {
+                // schema_version 是整数；分域段是嵌套对象，按 JSON 文本承载，导入端再解析。
                 serde_json::Value::Bool(value) => container::PreferenceValue::Boolean(*value),
                 serde_json::Value::Number(value) => container::PreferenceValue::Integer(
                     value.as_i64().ok_or(MigrationError::Preferences)?,
                 ),
                 serde_json::Value::String(value) => container::PreferenceValue::Text(value.clone()),
+                serde_json::Value::Object(_) => {
+                    let text =
+                        serde_json::to_string(value).map_err(|_| MigrationError::Preferences)?;
+                    container::PreferenceValue::Text(text)
+                }
                 _ => return Err(MigrationError::Preferences),
             };
             Ok((key.clone(), value))
         })
         .collect::<Result<_, MigrationError>>()?;
-    Ok((map, payload))
+    Ok((map, flat))
 }
 
 fn preference_flag(payload: &serde_json::Value, key: &str, default: bool) -> bool {
@@ -626,10 +636,11 @@ fn import_preferences(
         Preferences::try_from(preference_values).map_err(|_| MigrationError::CorruptedDocument)?;
     crate::modules::preferences::validate(&preferences)
         .map_err(|_| MigrationError::CorruptedDocument)?;
+    // C 阶段：导入落盘为分域结构（与偏好存储一致），而不是写回 legacy 扁平文件。
+    let document = crate::modules::preferences::document_from_preferences(&preferences);
     Ok(AppliedSection {
         changed_paths: vec![data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)],
-        document: serde_json::to_vec_pretty(&preferences)
-            .map_err(|_| MigrationError::Preferences)?,
+        document: serde_json::to_vec_pretty(&document).map_err(|_| MigrationError::Preferences)?,
     })
 }
 

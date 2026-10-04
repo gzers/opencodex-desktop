@@ -26,6 +26,41 @@ pub const SYNCED_ARTIFACTS: [&str; 2] = [
     crate::modules::extensions::projection::CONFIG_RELATIVE_PATH,
 ];
 
+/// 一个待应用的远端文件：目标路径、可选的迁移后偏好字节（仅偏好需要迁移时）与将要写入的字节。
+type StagedArtifact = (std::path::PathBuf, Option<Vec<u8>>, Vec<u8>, String);
+
+/// C 阶段：接收端按偏好 schema 校验/迁移远端载荷。
+///
+/// 仅对偏好文件生效；已是最新 schema 返回 `None`（原样写入），需要迁移返回分域字节，
+/// 过新或损坏则显式失败（不得写入本地）。
+fn migrate_incoming_preferences(
+    name: &str,
+    payload: &[u8],
+) -> Result<Option<Vec<u8>>, SyncRunFailure> {
+    if name != crate::modules::preferences::PREFERENCES_RELATIVE_PATH {
+        return Ok(None);
+    }
+    let value: serde_json::Value =
+        serde_json::from_slice(payload).map_err(|_| SyncRunFailure::NotConfigured)?;
+    let declared = value
+        .get("schema_version")
+        .and_then(serde_json::Value::as_u64)
+        .unwrap_or(0) as u32;
+    if declared > crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA {
+        // 混合版本客户端：过新载荷不写入。
+        return Err(SyncRunFailure::NotConfigured);
+    }
+    let preferences = crate::modules::preferences::preferences_from_document(&value)
+        .map_err(|_| SyncRunFailure::NotConfigured)?;
+    if declared == crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA {
+        // 已当前 schema：原样写入，不改变远端字节。
+        return Ok(None);
+    }
+    let document = crate::modules::preferences::document_from_preferences(&preferences);
+    let bytes = serde_json::to_vec_pretty(&document).map_err(|_| SyncRunFailure::NotConfigured)?;
+    Ok(Some(bytes))
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SyncOutcome {
     pub snapshot_id: String,
@@ -229,17 +264,26 @@ pub async fn run_sync(
             &serde_json::to_vec(&remote_decoded).map_err(|_| SyncRunFailure::NotConfigured)?,
         );
         // 先把整批内容校验完，再一次性应用：回放判定只做一次，写入失败整体回滚。
-        let mut staged: Vec<(std::path::PathBuf, &Vec<u8>, String)> = Vec::new();
+        // C 阶段：远端分域偏好先按 schema 校验/迁移；过新载荷不得写入本地。
+        let mut staged: Vec<StagedArtifact> = Vec::new();
         for (name, payload) in &downloaded {
             if !payload_is_json(payload) {
                 return Err(SyncRunFailure::NotConfigured);
             }
-            staged.push((target_path(data_root, name)?, payload, name.clone()));
+            let migrated = migrate_incoming_preferences(name, payload)?;
+            let write_bytes = migrated.clone().unwrap_or_else(|| payload.clone());
+            staged.push((
+                target_path(data_root, name)?,
+                migrated,
+                write_bytes,
+                name.clone(),
+            ));
         }
         let batch: Vec<(&std::path::Path, &[u8])> = staged
             .iter()
-            .map(|(path, payload, _)| (path.as_path(), payload.as_slice()))
+            .map(|(path, _, bytes, _)| (path.as_path(), bytes.as_slice()))
             .collect();
+        // 整批应用：回放判定只做一次，写入失败整体回滚。
         let decision = apply_remote_snapshot_batch(
             &mut sync_state,
             data_root,
@@ -250,11 +294,20 @@ pub async fn run_sync(
             now,
         )
         .map_err(|_| SyncRunFailure::NotConfigured)?;
+        // 偏好需要迁移时，用与偏好存储一致的分域结构追写，使本地落盘即当前 schema。
+        if matches!(decision, SyncDecision::Applied { .. }) {
+            for (path, migrated, _, _) in &staged {
+                if let Some(bytes) = migrated {
+                    crate::infrastructure::atomic_write::atomic_write(path, bytes, 0o600)
+                        .map_err(|_| SyncRunFailure::NotConfigured)?;
+                }
+            }
+        }
         // 只有真的写入本地时才声称「已应用」；回放/旧快照只登记冲突，不改动本地。
         if matches!(decision, SyncDecision::Applied { .. }) {
             applied_paths = staged
                 .iter()
-                .map(|(_, _, name)| name.clone())
+                .map(|(_, _, _, name)| name.clone())
                 .collect::<Vec<_>>();
         } else if matches!(decision, SyncDecision::Conflict) {
             conflicted = true;
@@ -356,5 +409,47 @@ mod tests {
             ..outcome
         };
         assert!(!quiet.message().contains("冲突"));
+    }
+
+    // C 阶段：接收端按偏好 schema 校验/迁移远端载荷。
+    #[test]
+    fn incoming_current_preferences_are_written_verbatim() {
+        let current = crate::modules::preferences::document_from_preferences(
+            &crate::modules::preferences::Preferences::default(),
+        );
+        let bytes = serde_json::to_vec(&current).unwrap();
+        let migrated =
+            migrate_incoming_preferences(SYNCED_ARTIFACTS[0], &bytes).expect("current incoming");
+        assert!(migrated.is_none(), "当前 schema 原样写入，不做二次转换");
+    }
+
+    #[test]
+    fn incoming_legacy_preferences_are_upgraded_to_sectioned_layout() {
+        let legacy = br#"{"interface_scale":130,"app_update_channel":"beta-6h"}"#;
+        let migrated =
+            migrate_incoming_preferences(SYNCED_ARTIFACTS[0], legacy).expect("legacy incoming");
+        let bytes = migrated.expect("legacy 需要迁移为分域结构");
+        let document: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+        assert_eq!(
+            document["schema_version"],
+            crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA
+        );
+        assert_eq!(document["appearance"]["interface_scale"], 130);
+        assert_eq!(document["updates"]["app_update_channel"], "beta");
+    }
+
+    #[test]
+    fn incoming_future_preferences_and_non_preferences_are_handled() {
+        // 过新载荷：显式失败，不得写入本地。
+        let future = serde_json::json!({
+            "schema_version": crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA + 1,
+            "appearance": { "interface_scale": 130 },
+        });
+        let bytes = serde_json::to_vec(&future).unwrap();
+        assert!(migrate_incoming_preferences(SYNCED_ARTIFACTS[0], &bytes).is_err());
+        // 非偏好文件：不参与偏好迁移，原样交给整批应用。
+        assert!(migrate_incoming_preferences(SYNCED_ARTIFACTS[1], b"{}")
+            .expect("non-preferences")
+            .is_none());
     }
 }

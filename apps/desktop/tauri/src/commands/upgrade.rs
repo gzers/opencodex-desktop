@@ -119,7 +119,11 @@ mod tests {
 
         let stored =
             std::fs::read(directory.join("preferences.json")).expect("read stored payload");
-        let restored: Preferences = serde_json::from_slice(&stored).expect("restore preferences");
+        // C 阶段：备份的是分域磁盘结构，按统一读取规则还原为扁平偏好。
+        let stored_document: serde_json::Value =
+            serde_json::from_slice(&stored).expect("restore preferences document");
+        let restored = crate::modules::preferences::preferences_from_document(&stored_document)
+            .expect("restore preferences");
         assert_eq!(restored, preferences);
         let mode = std::fs::metadata(directory.join("preferences.json"))
             .expect("stored metadata")

@@ -82,7 +82,7 @@ mod tests {
         crate::modules::data_root::initialize(root.path()).expect("initialize");
 
         let dto = PreferencesDto {
-            schema_version: 1,
+            schema_version: crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA,
             theme_needs_import: false,
             interface_scale: 175,
             launch_main: false,
