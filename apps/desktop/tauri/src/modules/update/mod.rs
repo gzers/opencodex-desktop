@@ -99,9 +99,14 @@ mod tests {
         assert_eq!(UpdateChannel::parse("stable"), Some(UpdateChannel::Stable));
         assert_eq!(UpdateChannel::parse("beta"), Some(UpdateChannel::Beta));
         assert_eq!(UpdateChannel::parse("nightly"), None);
+        // U-01：stable 走 GitHub Releases 的 latest 下载别名；beta 走固定 beta tag。
         assert!(UpdateChannel::Stable.endpoint().starts_with("https://"));
-        assert!(UpdateChannel::Stable.endpoint().contains("stable"));
-        assert!(UpdateChannel::Beta.endpoint().contains("beta"));
+        assert!(UpdateChannel::Stable
+            .endpoint()
+            .ends_with("/latest/download/latest.json"));
+        assert!(UpdateChannel::Beta
+            .endpoint()
+            .ends_with("/download/beta/latest.json"));
     }
 
     #[test]

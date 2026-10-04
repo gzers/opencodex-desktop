@@ -1,6 +1,7 @@
 import { defineStore } from "pinia"
 import {
   installRuntime as installRuntimeCommand,
+  installOfficialUpdate as installOfficialUpdateCommand,
   uninstallRuntime as uninstallRuntimeCommand,
   type InstallSourceKind,
   type RuntimeInstallRequest,
@@ -137,6 +138,11 @@ export const useAppStore = defineStore("app", {
     officialProject: () => useUpdatesStore().officialProject,
     officialProjectError: () => useUpdatesStore().officialProjectError,
     officialProjectLoading: () => useUpdatesStore().officialProjectLoading,
+    officialRemote: () => useUpdatesStore().officialRemote,
+    officialRemoteError: () => useUpdatesStore().officialRemoteError,
+    officialRemoteLoading: () => useUpdatesStore().officialRemoteLoading,
+    officialUpdateBusy: () => useUpdatesStore().officialUpdateBusy,
+    officialUpdateError: () => useUpdatesStore().officialUpdateError,
     upgradeBackupBusy: () => useUpdatesStore().upgradeBackupBusy,
     upgradeLastBackup: () => useUpdatesStore().upgradeLastBackup,
     upgradeBackupError: () => useUpdatesStore().upgradeBackupError,
@@ -402,6 +408,36 @@ export const useAppStore = defineStore("app", {
       // 卡片「版本」才不会停在「未知」（真机：启动时的版本检查与来源读取是并发的）。
       if (!useUpdatesStore().officialProjectError && useUpdatesStore().officialProject?.version) {
         await this.loadRuntimeSource()
+      }
+    },
+    /** 只读远端最新版本（U-03）：单独动作，不与本地事实检查互相覆盖。 */
+    async loadOfficialRemoteLatest() {
+      await useUpdatesStore().loadRemoteLatest()
+    },
+    /** 代跑官方更新（U-04）：确认后解析远端确定版本并复用受控安装；装完刷新来源与版本事实。 */
+    async applyOfficialUpdate() {
+      const updates = useUpdatesStore()
+      if (updates.officialUpdateBusy) return false
+      updates.beginOfficialUpdate()
+      try {
+        const outcome = await installOfficialUpdateCommand()
+        await this.loadRuntimeSource()
+        if (useRuntimeStore().source?.kind !== 'managed') {
+          updates.failOfficialUpdate()
+          this.showToast('官方更新命令已返回，但运行来源没有切换到托管安装；请刷新运行来源。')
+          return false
+        }
+        await this.loadOfficialProject()
+        await this.refreshEnvironment()
+        await this.loadStatusSnapshot()
+        this.showToast(`已更新 OpenCodex ${outcome.version}。`)
+        return true
+      } catch {
+        updates.failOfficialUpdate()
+        this.showToast('官方更新安装失败；已保留当前版本。')
+        return false
+      } finally {
+        updates.finishOfficialUpdate()
       }
     },
     /**

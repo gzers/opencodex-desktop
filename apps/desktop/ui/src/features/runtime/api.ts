@@ -171,6 +171,11 @@ export async function installRuntime(request: RuntimeInstallRequest): Promise<Ru
   return invoke<RuntimeInstallOutcomeDto>('install_runtime', { request })
 }
 
+/** 代跑官方更新（U-04）：后端先解析远端确定版本，再复用受控安装；前端需先显式确认。 */
+export async function installOfficialUpdate(): Promise<RuntimeInstallOutcomeDto> {
+  return invoke<RuntimeInstallOutcomeDto>('install_official_update')
+}
+
 export async function cancelRuntimeInstall(): Promise<boolean> {
   return invoke<boolean>('cancel_runtime_install')
 }

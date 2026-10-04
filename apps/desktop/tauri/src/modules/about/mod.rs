@@ -7,6 +7,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::errors::AppError;
 
+pub mod remote;
+
 /// 单次官方版本查询超时；低于 Doctor 的长诊断窗口。
 pub fn official_version_timeout() -> std::time::Duration {
     crate::modules::runtime_defaults::version_probe_timeout()

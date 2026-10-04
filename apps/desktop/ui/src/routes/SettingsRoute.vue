@@ -13,6 +13,7 @@ import { settingsSections } from '@/navigation'
 import type { PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
 import { checkForUpdate, getUpdateStatus, type UpdateStatusDto } from '@/features/updates/update'
+import { hasNewerVersion } from '@/features/updates/version'
 import type { SyncConflictPolicy } from '@/features/sync/api'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
@@ -382,6 +383,39 @@ const officialProjectState = computed(() => {
   if (app.officialProjectError) return app.officialProject ? '上次结果' : '未发现'
   return app.officialProject?.truncated ? '已截断' : '外部项目'
 })
+// U-03：远端最新版本只读展示；查询失败如实标注，不显示假结果。
+const officialRemoteText = computed(() => {
+  if (app.officialRemoteLoading) return '查询中…'
+  if (app.officialRemoteError) return '远端查询不可用'
+  const version = app.officialRemote?.version
+  return version ? `v${version}` : '尚未查询'
+})
+const officialUpdateAvailable = computed(() => {
+  if (app.officialRemoteError) return null
+  return hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null)
+})
+const officialUpdateText = computed(() => {
+  if (app.officialRemoteError) return '远端不可用，无法比较版本。'
+  if (app.officialRemoteLoading) return '正在查询远端最新版本…'
+  if (officialUpdateAvailable.value === true) return '有可用更新；可在下方确认后由管理器代跑。'
+  if (officialUpdateAvailable.value === false) return '已是最新版本。'
+  return '尚未查询远端版本。'
+})
+async function runOfficialCheck() {
+  await app.loadOfficialProject()
+  await app.loadOfficialRemoteLatest()
+}
+function confirmOfficialUpdate() {
+  const version = app.officialRemote?.version ?? '当前最新'
+  app.openModal({
+    title: '应用官方更新',
+    body: `<p class="modal-lead">将联网把官方包 <code>@bitkyc08/opencodex@${version}</code> 安装到当前登记的托管前缀。</p><p>走受控 <code>install_runtime</code>：写 <code>.runtime-manifest.json</code>、不落全局 npm 前缀；如代理正在运行，完成后按提示重启生效。</p>`,
+    confirmLabel: '安装并应用',
+    onConfirm: () => {
+      void app.applyOfficialUpdate()
+    },
+  })
+}
 const appVersion = computed(() => app.aboutApp ? `v${app.aboutApp.version}` : 'v0.1.0')
 const installRows = computed(() => {
   const report = app.environment
@@ -1333,7 +1367,9 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
     <section v-else-if="section === 'upgrade'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>OpenCodex 版本</h2><p>官方 npm 包与官方面板；桌面管理器不接管更新事务，只做升级前备份与官方引导。</p></div></div>
         <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">当前版本</div><div class="setting-desc">{{ officialVersion }} · {{ officialInstallLabel }}</div></div><div class="controls"><button class="btn ghost" :disabled="app.officialProjectLoading" @click="app.loadOfficialProject()">{{ app.officialProjectLoading ? '检查中' : '检查更新' }}</button></div></div>
+          <div class="setting-row"><div><div class="setting-title">当前版本</div><div class="setting-desc">{{ officialVersion }} · {{ officialInstallLabel }}</div></div><div class="controls"><button class="btn ghost" :disabled="app.officialProjectLoading || app.officialRemoteLoading" @click="runOfficialCheck()">{{ app.officialProjectLoading || app.officialRemoteLoading ? '检查中' : '检查更新' }}</button></div></div>
+          <div class="setting-row" data-testid="official-remote-latest"><div><div class="setting-title">远端最新版本</div><div class="setting-desc">{{ officialRemoteText }} · {{ officialUpdateText }}</div></div><div class="controls"><span class="tag" :class="{ danger: app.officialRemoteError, ok: officialUpdateAvailable === false }">{{ app.officialRemoteError ? '不可用' : officialUpdateAvailable === true ? '有更新' : officialUpdateAvailable === false ? '已最新' : '未比较' }}</span><button class="btn" :disabled="app.officialUpdateBusy || officialUpdateAvailable !== true || app.runtimeInstalling" @click="confirmOfficialUpdate()">{{ app.officialUpdateBusy ? '更新中' : '应用官方更新' }}</button></div></div>
+          <div v-if="app.officialUpdateError" class="setting-row"><div><div class="setting-title">更新失败</div><div class="setting-desc">{{ app.officialUpdateError }}</div></div><div class="controls"><span class="tag danger">失败</span></div></div>
           <div class="setting-row"><div><div class="setting-title">升级前备份</div><div class="setting-desc">{{ app.upgradeLastBackup ? `最近备份 ${app.upgradeLastBackup.backupId}` : '先备份当前配置，再进入官方升级引导。' }}</div></div><div class="controls"><button class="btn" :disabled="app.upgradeBackupBusy" @click="app.createUpgradeBackup()">{{ app.upgradeBackupBusy ? '备份中' : '生成备份' }}</button></div></div>
           <div class="setting-row"><div><div class="setting-title">官方升级引导</div><div class="setting-desc">只展示并引导 <code>ocx update</code>；不重写更新事务。</div></div><div class="controls"><button class="btn ghost" @click="openUpgradeGuide">打开引导</button></div></div>
           <div class="setting-row"><div><div class="setting-title">失败后建议</div><div class="setting-desc">展示备份位置、错误摘要和建议恢复动作。</div></div><div class="controls"><button class="btn ghost" @click="openUpgradeAdvice">查看建议</button></div></div>

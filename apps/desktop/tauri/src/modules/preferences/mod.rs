@@ -233,6 +233,31 @@ pub fn proxy_policy(value: &Preferences) -> ProxyPolicy {
     }
 }
 
+/// 统一网络环境策略（U-05）：把用户代理偏好落到子进程的 HTTP(S)_PROXY/NO_PROXY，供官方 CLI 与 npm 查询复用。
+pub fn network_environment_for_app<R: tauri::Runtime>(
+    app: &tauri::AppHandle<R>,
+    home: std::path::PathBuf,
+) -> crate::modules::process::EnvironmentPolicy {
+    use tauri::Manager;
+    let mut environment = crate::modules::process::EnvironmentPolicy {
+        home: Some(home.into_os_string()),
+        ..Default::default()
+    };
+    if let Some(root) = app.try_state::<crate::state::SharedDataRoot>() {
+        if let Ok(value) = PreferencesStore::new(&root.0).load() {
+            if let ProxyPolicy::Manual(url) = proxy_policy(&value) {
+                environment.http_proxy = Some(url.clone().into());
+                environment.https_proxy = Some(url.into());
+            }
+            let no_proxy = value.network_no_proxy.trim();
+            if !no_proxy.is_empty() {
+                environment.no_proxy = Some(no_proxy.into());
+            }
+        }
+    }
+    environment
+}
+
 /// 便捷读取：从数据根读偏好并解析代理策略；读不到按不指定代理。
 pub fn proxy_policy_for_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> ProxyPolicy {
     use tauri::Manager;

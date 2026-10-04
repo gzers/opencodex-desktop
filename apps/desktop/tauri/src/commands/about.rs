@@ -47,3 +47,23 @@ pub fn official_project_facts_with_source<S: OfficialVersionSource + ?Sized>(
     let guard = source.lock().map_err(|_poisoned| AppError::NotConfigured)?;
     Ok(OfficialProjectFacts::run(&*guard)?.into())
 }
+
+/// 只读远端最新版本查询（U-03）：不安装、不写盘；失败返回明确错误。
+#[tauri::command]
+pub async fn official_remote_latest(
+    app: tauri::AppHandle,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
+    use tauri::Manager;
+    let Some(home) = app.try_state::<crate::state::SharedHomeDir>() else {
+        return Err(AppError::NotConfigured);
+    };
+    let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
+    let environment =
+        crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
+    let working = home.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")
+    })
+    .await
+    .map_err(|_| AppError::NotConfigured)?
+}

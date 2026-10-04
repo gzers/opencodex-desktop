@@ -218,6 +218,28 @@ pub async fn install_runtime(
     collector: tauri::State<'_, SharedStatusCollector>,
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<RuntimeInstallOutcomeDto> {
+    install_managed_runtime(
+        request,
+        app,
+        handle.inner().clone(),
+        data_root.0.clone(),
+        home.0.clone(),
+        collector.inner().clone(),
+        install.inner(),
+    )
+    .await
+}
+
+/// 受控安装核心（供 install_runtime 与代跑官方更新共用）；不直接接触 Tauri State。
+pub(crate) async fn install_managed_runtime(
+    request: RuntimeInstallRequestDto,
+    app: tauri::AppHandle,
+    handle: std::sync::Arc<RuntimeHandle>,
+    data_root_path: PathBuf,
+    home_path: PathBuf,
+    collector: SharedStatusCollector,
+    install: &SharedRuntimeInstall,
+) -> AppResult<RuntimeInstallOutcomeDto> {
     let source_kind = request.source_kind().ok_or(AppError::RuntimeManaged {
         code: "bad_source".to_string(),
         detail: "安装源必须是 registry 或 offline".to_string(),
@@ -225,7 +247,7 @@ pub async fn install_runtime(
     let prefix = request
         .prefix_path()
         // 缺省沿用安装记录登记的前缀（自定义前缀安装后不要悄悄回到默认位置）。
-        .unwrap_or_else(|| handle.store().load().installed_prefix(&data_root.0));
+        .unwrap_or_else(|| handle.store().load().installed_prefix(&data_root_path));
     let requested_version = request
         .version
         .clone()
@@ -269,10 +291,8 @@ pub async fn install_runtime(
         detail: "已有安装正在进行".to_string(),
     })?;
     let proxy_running = proxy_is_running(&collector);
-    let data_root_path = data_root.0.clone();
-    let home_path = home.0.clone();
     let sink = EventProgressSink { app: app.clone() };
-    let handle_ref = handle.inner().clone();
+    let handle_ref = handle.clone();
 
     let result = crate::commands::run_blocking("install managed runtime", move || {
         let npm = crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()));
@@ -337,6 +357,60 @@ pub async fn install_runtime(
 #[tauri::command]
 pub fn cancel_runtime_install(install: tauri::State<'_, SharedRuntimeInstall>) -> AppResult<bool> {
     Ok(install.cancel())
+}
+
+/// 代跑官方更新（U-04）：先只读解析远端确定版本，再复用受控安装把该版本装到当前登记前缀。
+///
+/// 不浮动 `latest`：查询与安装绑定同一确定版本与来源策略；不写全局 npm 前缀，不调用官方更新器。
+/// 安装属写操作，前端需显式确认；本命令沿用 `install_runtime` 的离线包 / 代理 / 清单 / 重启提示路径。
+#[tauri::command]
+pub async fn install_official_update(
+    app: tauri::AppHandle,
+    handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, SharedHomeDir>,
+    collector: tauri::State<'_, SharedStatusCollector>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+) -> AppResult<RuntimeInstallOutcomeDto> {
+    // 1. 只读远端查询：与官方版本卡片（U-03）共用同一来源与代理策略，解析出确定版本。
+    let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
+    let environment =
+        crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
+    let working = home.0.clone();
+    let remote = tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")
+    })
+    .await
+    .map_err(|_| AppError::NotConfigured)??;
+
+    // 2. 复用受控安装，把查询到的确定版本装到当前登记前缀（`prefix: None` 取安装记录登记值）。
+    let request = official_update_request(remote.version);
+    install_managed_runtime(
+        request,
+        app,
+        handle.inner().clone(),
+        data_root.0.clone(),
+        home.0.clone(),
+        collector.inner().clone(),
+        install.inner(),
+    )
+    .await
+}
+
+/// 组装代跑官方更新的受控安装请求（U-04/U-04b）：绑定查询到的**确定版本**，
+/// 来源固定 `registry`，前缀留空以取当前登记前缀，脚本默认不执行。
+pub(crate) fn official_update_request(version: String) -> RuntimeInstallRequestDto {
+    RuntimeInstallRequestDto {
+        prefix: None,
+        source: "registry".to_string(),
+        version: Some(version),
+        offline_path: None,
+        proxy_scheme: None,
+        proxy_host: None,
+        proxy_username: None,
+        proxy_secret: None,
+        allow_scripts: false,
+    }
 }
 
 /// 卸载方案（只读）：界面先拿它渲染「将移除的对象」与备份检测，再决定是否执行。
@@ -605,5 +679,17 @@ mod tests {
             allow_scripts: false,
         };
         assert_eq!(request.source_kind(), Some(InstallSourceKind::Offline));
+    }
+
+    #[test]
+    fn official_update_binds_registry_version_and_current_prefix() {
+        let request = official_update_request("2.66.0".to_string());
+        assert_eq!(request.source_kind(), Some(InstallSourceKind::Registry));
+        // U-04b：绑定到查询到的确定版本，不浮动 `latest`。
+        assert_eq!(request.version.as_deref(), Some("2.66.0"));
+        // 前缀留空：安装时取当前登记前缀，不写全局 npm 前缀。
+        assert!(request.prefix_path().is_none());
+        assert!(!request.allow_scripts);
+        assert!(request.offline_archive().is_none());
     }
 }

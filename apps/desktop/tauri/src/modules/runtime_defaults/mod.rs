@@ -234,8 +234,15 @@ mod tests {
         assert_eq!(install_probe_timeout(), Duration::from_secs(30));
         assert_eq!(extensions_default_sync_method(), "symlink");
         assert!(extensions_default_client_enablement());
-        assert!(desktop_update_endpoint("stable").contains("stable"));
-        assert!(desktop_update_endpoint("beta").contains("beta"));
+        // U-01：真实端点为本仓库 GitHub Releases 资产；stable 走 latest 下载别名，beta 走固定 beta tag。
+        assert_eq!(
+            desktop_update_endpoint("stable"),
+            "https://github.com/gzers/opencodex-desktop/releases/latest/download/latest.json"
+        );
+        assert_eq!(
+            desktop_update_endpoint("beta"),
+            "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json"
+        );
         assert_eq!(
             desktop_update_endpoint("nightly"),
             desktop_update_endpoint("stable")
