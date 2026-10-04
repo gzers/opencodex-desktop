@@ -88,6 +88,13 @@ jobs:
         env:
           # 允许用 PAT 覆盖：仓库若无法给 GITHUB_TOKEN 写权限，配置 secret RELEASE_TOKEN 即可。
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          # U-02 自更新签名：私钥只经 secret 注入，不进仓库、不进日志。
+          # 无口令私钥只设 TAURI_SIGNING_PRIVATE_KEY；若给私钥设了口令，再加
+          # TAURI_SIGNING_PRIVATE_KEY_PASSWORD。创建更新制品由 app 目录的
+          # tauri.updater.conf.json 增量配置打开（`--config` 合并），只作用于发布/签名构建，
+          # 不影响普通 `tauri build` 与本地免签构建。
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop/tauri
           tagName: ${{ steps.notes.outputs.tag }}
@@ -95,4 +102,4 @@ jobs:
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: true
-          args: ${{ matrix.args }}
+          args: --config tauri.updater.conf.json ${{ matrix.args }}
