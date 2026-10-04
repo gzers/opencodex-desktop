@@ -1,0 +1,134 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-01",
+  "kind": "read-only lifecycle observations; not execution receipt",
+  "collected_at": "2026-10-04T10:15:10.173377+08:00",
+  "timezone": "Asia/Shanghai",
+  "installed_identity": {
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleShortVersionString": "0.1.0",
+    "CFBundleVersion": "0.1.0"
+  },
+  "official_package": {
+    "name": "@bitkyc08/opencodex",
+    "version": "2.69.0"
+  },
+  "lifecycle_preferences": {
+    "launch_main": true,
+    "keep_proxy_on_close": true,
+    "cli_enabled": false
+  },
+  "processes_comm_only": [
+    {
+      "pid": 51714,
+      "ppid": 1,
+      "started_local": "Sun Oct 4 09:28:06 2026",
+      "executable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 51882,
+      "ppid": 51714,
+      "started_local": "Sun Oct 4 09:28:48 2026",
+      "executable": "/Users/ezio/.local/bin/node"
+    },
+    {
+      "pid": 51884,
+      "ppid": 51882,
+      "started_local": "Sun Oct 4 09:28:48 2026",
+      "executable": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/bun/bin/bun.exe"
+    }
+  ],
+  "local_v0_1_tags": [
+    "v0.1.0"
+  ],
+  "user_confirmed": "After reopening manager, overview showed proxy stopped and Start was required. Exact feedback time not retained.",
+  "source_review": {
+    "main_commit": "9ca7a9458d951ba313e8ea46c51c99cc14f8cd44",
+    "files": [
+      {
+        "path": "apps/desktop/tauri/src/lib.rs",
+        "sha256": "6ebf35d07257c0952e357681d54ab1812ea295cd674f0bda6aad81274f5ddbfc",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+        "sha256": "bc7c8ad88115937e68342991e3e26c069b549270644bd0c1afcdcc0db83f8a6c",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/preferences/mod.rs",
+        "sha256": "c67d7408aab2f72a438fc21a20f8d793b95690c36bd0af44e55f904d65a71821",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      },
+      {
+        "path": "apps/desktop/ui/src/main.ts",
+        "sha256": "790ce64b78da2dc399cf86ded4dda08679140bb2ed2b179a95612f666412b69f",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      },
+      {
+        "path": "apps/desktop/ui/src/startup.ts",
+        "sha256": "65d65d3b44dd40f4598057414c4830f9b2c7b316135e063462e06ca0f73e6698",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      },
+      {
+        "path": "apps/desktop/ui/src/stores/app.ts",
+        "sha256": "c149cbff8a1247cd0e05bacc9c88d3f5648413d1c2805c14de754bb1220ca0fe",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      },
+      {
+        "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+        "sha256": "b9c74c062ca90dcf6bae28da8ae7bc5637ecb215b7e0ef7bc152dac8e866d566",
+        "matches_main_commit": true,
+        "matches_v0_1_0": true
+      }
+    ],
+    "official_installed_files": [
+      {
+        "relative_to_official_package": "bin/ocx.mjs",
+        "sha256": "7b97ee4ad2ea2ad97897e2dea9a1adf35f51f29e19fd86a125d34a7c256efc73"
+      },
+      {
+        "relative_to_official_package": "src/cli/index.ts",
+        "sha256": "3e827e732981310027b9a8053267bd7a1492da08691843711bc5702fa2c8d6fa"
+      },
+      {
+        "relative_to_official_package": "package.json",
+        "sha256": "f71174acea17f3ab619924708ed35e812e7e96ffd8b623321194eee144860e27"
+      }
+    ]
+  },
+  "launchd_query": {
+    "start_local": "2026-10-04 09:27:30",
+    "end_local": "2026-10-04 09:28:49",
+    "process_filter": [
+      "launchd",
+      "runningboardd"
+    ],
+    "message_filter": [
+      "com.gzers.opencodex.desktop",
+      "65237"
+    ],
+    "retained_file": "lifecycle-launchd.log",
+    "limit": "Confirms manager application service removed; no proxy signal or exit code in retained rows."
+  },
+  "limits": [
+    "No stop/start/restart performed by this analysis task.",
+    "No continuous proxy health measurements across original quit; exact termination mechanism unverified.",
+    "Official source is installed package 2.69.0, not copied to docs branch.",
+    "Local repository tags are not remote release verification.",
+    "Installed manager artifact-to-source build mapping remains unverified."
+  ],
+  "status": {
+    "fix_implemented": false,
+    "regression_executed": false,
+    "release_performed": false,
+    "affected_manager_version": "0.1.0",
+    "proposed_fix_version": "0.1.1",
+    "version_0_1_2_scheduled": false
+  }
+}

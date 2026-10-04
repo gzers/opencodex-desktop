@@ -1,0 +1,76 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-01",
+  "observed_date": "2026-10-04",
+  "timezone": "Asia/Shanghai",
+  "thread_id": "01a1047b-e13d-7241-acc1-279626511d94",
+  "installed": {
+    "path": "/Applications/OpenCodeX Desktop.app",
+    "bundle_id": "com.gzers.opencodex.desktop",
+    "version": "0.1.0",
+    "binary_bytes": 6771472,
+    "binary_mtime": "2026-10-03T21:29:19+08:00",
+    "binary_sha256": "8d5ba8c0b000de5847f2f6e9792e29691ba3008f69497d8eb04bc1db36357239",
+    "os": "macOS 27.0.1 (26A434)",
+    "architecture": "ARM64",
+    "source_mapping_verified": false
+  },
+  "incident": {
+    "desktop_pid": 65237,
+    "launch_time": "2026-10-03T22:55:51.929+08:00",
+    "gpu_pid": 65239,
+    "main_webcontent_pid": 65240,
+    "main_page_id": 8,
+    "network_pid": 65241,
+    "panel_webcontent_pid": 65274,
+    "panel_page_id": 38,
+    "hosted_runtime_version": "2.69.0",
+    "preferences_subset": {
+      "keep_proxy_on_close": true,
+      "visual_effects": "high",
+      "glow_render": "mesh",
+      "panel_mode": "embedded"
+    },
+    "ui_observation": "AX tree readable; settings upgrade to overview route changed; user confirmed actual window remained white",
+    "user_menu_confirmation": "仍白屏；右键能弹菜单",
+    "user_recovery_confirmation": "是的右键完全退出是再打开是可以的。那么是什么问题呢？",
+    "recovery_operator": "user",
+    "first_trigger_unknown": true
+  },
+  "post_recovery": {
+    "desktop_pid": 51714,
+    "launch_time": "2026-10-04T09:28:06+08:00",
+    "app_log_start_confirmed": "2026-10-04T01:28:48.120Z",
+    "visual_recovery_source": "user confirmation",
+    "regression_executed": false,
+    "hosted_process_continuity_verified": false
+  },
+  "review": {
+    "branch": "main",
+    "commit": "9ca7a9458d951ba313e8ea46c51c99cc14f8cd44",
+    "tag": "v0.1.0",
+    "tag_commit": "ed35cba89fbdf2e440ff788f6015dc4c2bb82c40",
+    "reviewed_paths_tag_head_diff": "empty",
+    "local_dependency_resolution": {
+      "tauri-runtime-wry": "2.12.1",
+      "wry": "0.57.0",
+      "tray-icon": "0.25.1"
+    },
+    "installed_dependency_resolution_verified": false
+  },
+  "retention": {
+    "sample_original_path": "/tmp/opencodex-desktop-65237.sample.txt",
+    "sample_original_sha256": "660cc9ef4cca14d5dc51e0066ad54aae8285851a89d7cb3f03349d88a1f16e28",
+    "sample_retained": "first 90 lines only",
+    "system_log_retained": "filtered time windows, not full unified log",
+    "screenshots_retained": false,
+    "source": "read-only investigation tool outputs and user messages",
+    "sensitive_configs_copied": false
+  },
+  "work": {
+    "analysis_recorded": true,
+    "code_modified": false,
+    "version_bumped": false,
+    "release_performed": false,
+    "fix_verified": false
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261004-01",
+  "registered_date": "2026-10-04",
+  "timezone": "Asia/Shanghai",
+  "kind": "retained incident evidence index, not execution receipt",
+  "entries": [
+    {
+      "file": "documentation-checks.json",
+      "bytes": 2664,
+      "sha256": "586a0d05833bd7f1cc94bf7eedbc199704170275280200431cb87afaa3a39154"
+    },
+    {
+      "file": "lifecycle-documentation-checks.json",
+      "bytes": 627,
+      "sha256": "4b2b1a64d3a7d8b051dabf7c96d7e026e267735655034473f8d1412cf7b278f6"
+    },
+    {
+      "file": "lifecycle-launchd.log",
+      "bytes": 559,
+      "sha256": "95f3e383b00e4a3411ceaeb2f9219a909e31f9f9d002be1d6d3fa46557007ae9"
+    },
+    {
+      "file": "lifecycle-observations.json",
+      "bytes": 4656,
+      "sha256": "eed1a9f4e06fe268a1ab41cfccb222a69c82a361badb6934f5aa2d76a5d549df"
+    },
+    {
+      "file": "native-thread-sample-excerpt.txt",
+      "bytes": 11634,
+      "sha256": "729203d7216358fbc35b050e276c881896ba13bb46a729a2d5552c0e35fdeaf2"
+    },
+    {
+      "file": "observations.json",
+      "bytes": 2755,
+      "sha256": "134ac8f29d8250e49be01accbe2e89a88755c66482893d31675dbfbdb706318a"
+    },
+    {
+      "file": "source-review.json",
+      "bytes": 2348,
+      "sha256": "b87a5ca2124677e049a02c3b7f0bb80ecfcab98d83c9b074473cd50fecee357a"
+    },
+    {
+      "file": "webkit-javascript.log",
+      "bytes": 2234,
+      "sha256": "dd189afaa09579385b614395f028abfe529e58d127daf0a8a0bf3eee27f0839a"
+    },
+    {
+      "file": "webkit-layers.log",
+      "bytes": 11177,
+      "sha256": "f2e5dd8d2c82a1622b6e15e53f9aa98da24cf7f4742f04d581cf48e636e88f56"
+    }
+  ],
+  "provenance": {
+    "webkit-layers.log": "Previously captured unified log tool output: local 2026-10-04 09:15:40-09:15:48, associated desktop 65237 and GPU 65239; preserves filtering window only.",
+    "webkit-javascript.log": "Previously captured unified log tool output: local 2026-10-04 09:19:00-09:19:08; desktop process 65237 emits proxy messages concerning WebContent 65240/page 8.",
+    "native-thread-sample-excerpt.txt": "Previously captured first 90 lines from sample 65237 3 1; original file SHA-256 separately recorded in observations.json.",
+    "observations.json": "Derived non-sensitive identity and incident observations from read-only checks and user messages; not a copy of preferences or process argv.",
+    "source-review.json": "Read-only review source identities and digest at pinned main commit; not proof of installed artifact dependency resolution.",
+    "documentation-checks.json": "Documentation links, whitespace, evidence digests and branch/write-scope validation only; no application regression or incident closure.",
+    "lifecycle-launchd.log": "Read-only unified log query of launchd/runningboardd for app identity and prior desktop PID, local 2026-10-04 09:27:30-09:28:49; only filtered retained rows, no proxy signal evidence.",
+    "lifecycle-observations.json": "Supplemental read-only version/preferences whitelist, comm-only process identities, installed official package metadata and reviewed source digests; user confirms stopped proxy.",
+    "lifecycle-documentation-checks.json": "Supplemental markdown links, whitespace, prior evidence digest and main cleanliness checks; no application regression."
+  },
+  "retention": {
+    "full_unified_log_retained": false,
+    "full_sample_retained": false,
+    "screenshots_retained": false,
+    "secrets_retained": false,
+    "keep_with_maintenance_record": true
+  },
+  "status": {
+    "regression_executed": false,
+    "fix_verified": false,
+    "release_performed": false
+  }
+}

@@ -1,0 +1,90 @@
+Analysis of sampling opencodex-desktop (pid 65237) every 1 millisecond
+Process:         opencodex-desktop [65237]
+Path:            /Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop
+Load Address:    0x104a2c000
+Identifier:      com.gzers.opencodex.desktop
+Version:         0.1.0 (0.1.0)
+Code Type:       ARM64
+Platform:        macOS
+Parent Process:  launchd [1]
+Target Type:     live task
+
+Date/Time:       2026-10-04 09:18:06.252 +0800
+Launch Time:     2026-10-03 22:55:51.929 +0800
+OS Version:      macOS 27.0.1 (26A434)
+Report Version:  7
+Analysis Tool:   /usr/bin/sample
+
+Physical footprint:         50.0M
+Physical footprint (peak):  51.1M
+Idle exit:                  untracked
+----
+
+Call graph:
+    1831 Thread_27494620   DispatchQueue_1: com.apple.main-thread  (serial)
+    + 1831 start  (in dyld) + 6688  [0x196e9be80]
+    +   1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x33c8  [0x104a2f3c8]
+    +     1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x308c  [0x104a2f08c]
+    +       1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x30a0  [0x104a2f0a0]
+    +         1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x327a00  [0x104d53a00]
+    +           1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x2fdf2c  [0x104d29f2c]
+    +             1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x2fdfa4  [0x104d29fa4]
+    +               1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x2fb694  [0x104d27694]
+    +                 1831 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x2f7578  [0x104d23578]
+    +                   1831 -[NSApplication run]  (in AppKit) + 396  [0x19b8db90c]
+    +                     1831 -[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]  (in AppKit) + 292  [0x19c16026c]
+    +                       1831 -[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]  (in AppKit) + 780  [0x19c160748]
+    +                         1831 _DPSNextEvent  (in AppKit) + 580  [0x19b8e84fc]
+    +                           1831 _DPSBlockUntilNextEventMatchingListInMode  (in AppKit) + 292  [0x19bc2b29c]
+    +                             1831 _BlockUntilNextEventMatchingListInMode  (in HIToolbox) + 48  [0x1a48ea380]
+    +                               1831 ReceiveNextEventCommon  (in HIToolbox) + 492  [0x1a476791c]
+    +                                 1831 RunCurrentEventLoopInMode  (in HIToolbox) + 320  [0x1a4764590]
+    +                                   1831 _CFRunLoopRunSpecificWithOptions  (in CoreFoundation) + 536  [0x19740b82c]
+    +                                     1826 __CFRunLoopRun  (in CoreFoundation) + 1172  [0x197331334]
+    +                                     ! 1826 __CFRunLoopServiceMachPort  (in CoreFoundation) + 160  [0x197332aec]
+    +                                     !   1826 mach_msg  (in libsystem_kernel.dylib) + 24  [0x19722cfac]
+    +                                     !     1826 mach_msg_overwrite  (in libsystem_kernel.dylib) + 480  [0x197235a28]
+    +                                     !       1826 mach_msg2_internal  (in libsystem_kernel.dylib) + 76  [0x19723f8e0]
+    +                                     !         1826 mach_msg2_trap  (in libsystem_kernel.dylib) + 8  [0x19722cc20]
+    +                                     3 __CFRunLoopRun  (in CoreFoundation) + 1620  [0x1973314f4]
+    +                                     ! 1 __CFRunLoopDoObservers  (in CoreFoundation) + 612  [0x197331b98]
+    +                                     ! : 1 _CFAutoreleasePoolPush  (in CoreFoundation) + 20  [0x1972bb3e4]
+    +                                     ! :   1 objc_autoreleasePoolPush  (in libobjc.A.dylib) + 140  [0x196df25a4]
+    +                                     ! 1 __CFRunLoopDoObservers  (in CoreFoundation) + 760  [0x197331c2c]
+    +                                     ! : 1 CFRelease  (in CoreFoundation) + 284  [0x1972bb394]
+    +                                     ! 1 __CFRunLoopDoObservers  (in CoreFoundation) + 268  [0x197331a40]
+    +                                     2 __CFRunLoopRun  (in CoreFoundation) + 832  [0x1973311e0]
+    +                                       2 __CFRunLoopDoSources0  (in CoreFoundation) + 232  [0x197332610]
+    +                                         2 __CFRunLoopDoSource0  (in CoreFoundation) + 224  [0x1973328d8]
+    +                                           2 __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__  (in CoreFoundation) + 28  [0x197332944]
+    +                                             2 WTF::RunLoop::performWork(void*)  (in JavaScriptCore) + 336  [0x1bb24b5a0]
+    +                                               1 IPC::Connection::dispatchIncomingMessages()  (in WebKit) + 584  [0x1c4695eac]
+    +                                               : 1 IPC::Connection::dispatchMessage(WTF::UniqueRef<IPC::Decoder>)  (in WebKit) + 364  [0x1c5a6ecf0]
+    +                                               :   1 WebKit::WebProcessProxy::didReceiveMessage(IPC::Connection&, IPC::Decoder&)  (in WebKit) + 3116  [0x1c4696c78]
+    +                                               :     1 WebKit::WebProcessProxy::didPostMessage(WTF::ObjectIdentifierGeneric<WebKit::WebPageProxyIdentifierType, WTF::ObjectIdentifierMainThreadAccessTraits<unsigned long long>, unsigned long long>, WTF::ObjectIdentifierGeneric<WebKit::UserContentControllerIdentifierType, WTF::ObjectIdentifierMainThreadAccessTraits<unsigned long long>, unsigned long long>, WebKit::FrameInfoData&&, WTF::ObjectIdentifierGeneric<WebKit::ScriptMessageHandlerIdentifierType, WTF::ObjectIdentifierMainThreadAccessTraits<unsigned long long>, unsigned long long>, WebKit::JavaScriptEvaluationResult&&, WTF::CompletionHandler<void (std::experimental::fundamentals_v3::expected<WebKit::JavaScriptEvaluationResult, WTF::String>&&)>&&)  (in WebKit) + 180  [0x1c546b02c]
+    +                                               :       1 WebKit::WebUserContentControllerProxy::didPostMessage(WebKit::WebPageProxy&, WebKit::FrameInfoData&&, WTF::ObjectIdentifierGeneric<WebKit::ScriptMessageHandlerIdentifierType, WTF::ObjectIdentifierMainThreadAccessTraits<unsigned long long>, unsigned long long>, WebKit::JavaScriptEvaluationResult&&, WTF::CompletionHandler<void (std::experimental::fundamentals_v3::expected<WebKit::JavaScriptEvaluationResult, WTF::String>&&)>&&) const  (in WebKit) + 212  [0x1c5568200]
+    +                                               :         1 ScriptMessageHandlerDelegate::didPostMessage(WebKit::WebPageProxy&, WebKit::FrameInfoData&&, API::ContentWorld&, WebKit::JavaScriptEvaluationResult&&, WTF::CompletionHandler<void (std::experimental::fundamentals_v3::expected<WebKit::JavaScriptEvaluationResult, WTF::String>&&)>&&)  (in WebKit) + 724  [0x1c4dfa094]
+    +                                               :           1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x4d5de4  [0x104f01de4]
+    +                                               :             1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x4d5fa8  [0x104f01fa8]
+    +                                               :               1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0xa3754  [0x104acf754]
+    +                                               :                 1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x113404  [0x104b3f404]
+    +                                               :                   1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x1145c0  [0x104b405c0]
+    +                                               :                     1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x115408  [0x104b41408]
+    +                                               :                       1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x300e84  [0x104d2ce84]
+    +                                               :                         1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x30a610  [0x104d36610]
+    +                                               :                           1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x89490  [0x104ab5490]
+    +                                               :                             1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x89648  [0x104ab5648]
+    +                                               :                               1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x115a80  [0x104b41a80]
+    +                                               :                                 1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x89648  [0x104ab5648]
+    +                                               :                                   1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x115c88  [0x104b41c88]
+    +                                               :                                     1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x115df0  [0x104b41df0]
+    +                                               :                                       1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x10c1b0  [0x104b381b0]
+    +                                               :                                         1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x4503d4  [0x104e7c3d4]
+    +                                               :                                           1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x435ac4  [0x104e61ac4]
+    +                                               :                                             1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x4c78ec  [0x104ef38ec]
+    +                                               :                                               1 ???  (in opencodex-desktop)  load address 0x104a2c000 + 0x84134  [0x104ab0134]
+    +                                               :                                                 1 -[WKWebView evaluateJavaScript:completionHandler:]  (in WebKit) + 116  [0x1c4dcda78]
+    +                                               :                                                   1 -[WKWebView _evaluateJavaScript:asAsyncFunction:withSourceURL:withArguments:forceUserGesture:inFrame:inWorld:completionHandler:]  (in WebKit) + 1420  [0x1c4dcedec]
+    +                                               :                                                     1 WebKit::WebPageProxy::runJavaScriptInFrameInScriptWorld(WebKit::RunJavaScriptParameters&&, std::optional<WTF::ObjectIdentifierGeneric<WebCore::FrameIdentifierType, WTF::ObjectIdentifierMainThreadAccessTraits<unsigned long long>, unsigned long long>>, API::ContentWorld&, bool, WTF::CompletionHandler<void (std::experimental::fundamentals_v3::expected<WebKit::JavaScriptEvaluationResult, std::optional<WebCore::ExceptionDetails>>)>&&)  (in WebKit) + 556  [0x1c53a633c]
+    +                                               :                                                       1 WebKit::ProcessThrottlerActivity::create(WebKit::ProcessThrottler&, WTF::ASCIILiteral, WebKit::ProcessThrottlerActivityType, WebKit::IsQuietActivity)  (in WebKit) + 88  [0x1c5338f94]
+    +                                               :                                                         1 WebKit::ProcessThrottlerActivity::ProcessThrottlerActivity(WebKit::ProcessThrottler&, WTF::ASCIILiteral, WebKit::ProcessThrottlerActivityType, WebKit::IsQuietActivity)  (in WebKit) + 596  [0x1c533bf74]
