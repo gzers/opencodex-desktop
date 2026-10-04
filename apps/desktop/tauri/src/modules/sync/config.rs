@@ -125,7 +125,7 @@ impl SyncConfigStore {
         let credential = CredentialRef {
             ref_id: ref_id.clone(),
             backend: "keychain".to_string(),
-            service_name: keychain::KEYCHAIN_SERVICE_NAME.to_string(),
+            service_name: keychain::keychain_service_name().to_string(),
             account_key: keychain::account_key(WEBDAV_CREDENTIAL_PURPOSE, &ref_id)?,
             purpose: WEBDAV_CREDENTIAL_PURPOSE.to_string(),
             created_at: config
@@ -200,7 +200,7 @@ pub fn validate_config(config: &SyncConfig) -> Result<(), AppError> {
         }
         let credential = &endpoint.credential_ref;
         if credential.backend != "keychain"
-            || credential.service_name != keychain::KEYCHAIN_SERVICE_NAME
+            || credential.service_name != keychain::keychain_service_name()
             || credential.purpose != WEBDAV_CREDENTIAL_PURPOSE
         {
             return Err(AppError::NotConfigured);

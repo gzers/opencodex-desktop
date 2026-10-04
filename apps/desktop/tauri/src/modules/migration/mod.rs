@@ -693,7 +693,7 @@ fn prepare_sync_endpoints(
                 crate::modules::sync::config::CredentialRef {
                     ref_id,
                     backend: "keychain".to_string(),
-                    service_name: crate::infrastructure::keychain::KEYCHAIN_SERVICE_NAME
+                    service_name: crate::infrastructure::keychain::keychain_service_name()
                         .to_string(),
                     account_key,
                     purpose: crate::infrastructure::keychain::WEBDAV_CREDENTIAL_PURPOSE.to_string(),

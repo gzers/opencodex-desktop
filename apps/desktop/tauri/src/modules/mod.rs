@@ -20,6 +20,7 @@ pub mod runtime;
 pub mod skills;
 pub mod status;
 pub mod sync;
+pub mod test_sandbox;
 pub mod tray;
 pub mod update;
 pub mod write;

@@ -78,12 +78,21 @@ pub fn run() {
         .setup(|app| {
             use tauri::Manager;
 
-            let data_root = app.path().app_data_dir().map_err(|error| {
+            let default_root = app.path().app_data_dir().map_err(|error| {
                 Box::new(crate::errors::AppError::FileSystem {
                     operation: "resolve app data directory".to_string(),
                     detail: error.to_string(),
                 }) as Box<dyn std::error::Error>
             })?;
+            // 测试沙箱身份（配置规划§10）：启用时强制使用独立沙箱根；根缺失/非法即停止，
+            // 绝不回退到日常目录。未启用时行为与此前一致。
+            let data_root = crate::modules::test_sandbox::resolve_data_root(&default_root)
+                .map_err(|detail| {
+                    Box::new(crate::errors::AppError::FileSystem {
+                        operation: "resolve sandbox data root".to_string(),
+                        detail,
+                    }) as Box<dyn std::error::Error>
+                })?;
             // FZ-02 首次启动先初始化或引用当前版本的数据根；失败阻断启动。
             crate::modules::data_root::initialize(&data_root)
                 .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;

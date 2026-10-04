@@ -10,6 +10,17 @@ use uuid::Uuid;
 use crate::errors::AppError;
 
 pub const KEYCHAIN_SERVICE_NAME: &str = "OpenCodex Desktop";
+/// 沙箱（开发/测试）专用的钥匙串服务名：与日常使用身份分离，错误身份不回退到日常服务。
+pub const KEYCHAIN_SANDBOX_SERVICE_NAME: &str = "OpenCodex Desktop Sandbox";
+
+/// 运行时钥匙串服务名：经沙箱开关决定，构建期与日常保持兼容。
+pub fn keychain_service_name() -> &'static str {
+    if crate::modules::test_sandbox::enabled() {
+        KEYCHAIN_SANDBOX_SERVICE_NAME
+    } else {
+        KEYCHAIN_SERVICE_NAME
+    }
+}
 pub const WEBDAV_CREDENTIAL_PURPOSE: &str = "webdav_credential";
 pub const ENCRYPTION_PASSWORD_PURPOSE: &str = "encryption_password";
 
@@ -42,7 +53,7 @@ pub fn new_ref_id() -> String {
 
 /// 平台无关的凭据条目句柄；具体后端由编译目标决定。
 fn credential_entry(account: &str) -> Result<keyring::Entry, AppError> {
-    keyring::Entry::new(KEYCHAIN_SERVICE_NAME, account).map_err(|_| AppError::NotConfigured)
+    keyring::Entry::new(keychain_service_name(), account).map_err(|_| AppError::NotConfigured)
 }
 
 /// 按 purpose 写入独立账户位；不同 purpose 落在不同 keychain 账户。
