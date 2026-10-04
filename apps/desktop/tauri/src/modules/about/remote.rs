@@ -116,8 +116,11 @@ fn run_npm_view(
         command.env("HOME", home);
     }
     command.env("OPENCODEX_HOME", &environment.opencodex_home);
+    // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
+    // 至少包含 npm 自身所在目录（node 与它同目录），并补系统最小 PATH 兜底，
+    // 不依赖调用方环境的 PATH（与受控安装 `SystemNpmRunner` 同一策略）。
+    command.env("PATH", npm_path(npm, environment.path.as_deref()));
     for (key, value) in [
-        ("PATH", &environment.path),
         ("HTTP_PROXY", &environment.http_proxy),
         ("HTTPS_PROXY", &environment.https_proxy),
         ("NO_PROXY", &environment.no_proxy),
@@ -157,6 +160,22 @@ fn run_npm_view(
     Ok(Some(text.chars().take(512).collect()))
 }
 
+/// 受控 npm 查询的最小 PATH：npm 自身目录 → 调用方注入的 PATH（若有）→ 系统最小兜底。
+fn npm_path(npm: &std::path::Path, injected: Option<&std::ffi::OsStr>) -> std::ffi::OsString {
+    const FALLBACK: &str = "/usr/bin:/bin:/usr/sbin:/sbin";
+    let mut path = std::ffi::OsString::new();
+    if let Some(dir) = npm.parent() {
+        path.push(dir);
+        path.push(":");
+    }
+    if let Some(injected) = injected {
+        path.push(injected);
+        path.push(":");
+    }
+    path.push(FALLBACK);
+    path
+}
+
 /// 便捷：解析受控发现路径下的 npm。
 pub fn discovered_npm() -> Option<PathBuf> {
     let paths = crate::types::discovery_paths::macos_default_paths();
@@ -187,6 +206,25 @@ mod tests {
             parse_integrity("\"sha512-abc\"").as_deref(),
             Some("sha512-abc")
         );
+    }
+
+    #[test]
+    fn npm_path_includes_npm_dir_and_fallback() {
+        let p = npm_path(std::path::Path::new("/Users/x/.local/bin/npm"), None);
+        let p = p.to_string_lossy();
+        assert!(
+            p.starts_with("/Users/x/.local/bin:"),
+            "npm dir must lead PATH: {p}"
+        );
+        assert!(p.contains("/usr/bin"), "fallback must be present: {p}");
+    }
+
+    #[test]
+    fn npm_path_appends_injected_before_fallback() {
+        let injected = std::ffi::OsString::from("/opt/tools");
+        let p = npm_path(std::path::Path::new("/a/b/npm"), Some(&injected));
+        let p = p.to_string_lossy();
+        assert!(p.starts_with("/a/b:/opt/tools:"), "order wrong: {p}");
     }
 
     /// 真实远端查询（U-03）：默认忽略，按需 `cargo test -- --ignored` 运行，
