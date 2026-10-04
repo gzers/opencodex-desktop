@@ -10,6 +10,62 @@ pub mod modules;
 pub mod state;
 pub mod types;
 
+/// 构建时注入的源码提交（由 `build.rs` 写入 `OPENCODEX_BUILD_COMMIT`）。
+/// 取不到时返回空串，调用方如实说明为「未知」，不伪造来源（F-09）。
+pub fn build_commit() -> &'static str {
+    option_env!("OPENCODEX_BUILD_COMMIT").unwrap_or("")
+}
+
+/// 把入口名写成一条非敏感运行日志；失败不阻断导航，也不携带窗口/凭据细节。
+fn record_window_event(data_root: &std::path::Path, message: &str) {
+    let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(message);
+}
+
+/// 统一的主窗口重开路径（F-03）：Dock reopen / 托盘 / 原生菜单走同一处，
+/// 记录入口与每个原生调用的成败，避免各处各自 show/focus 且结果被静默忽略。
+fn reveal_main_window<R: tauri::Runtime>(
+    app: &tauri::AppHandle<R>,
+    entry: &str,
+    data_root: &std::path::Path,
+) {
+    use tauri::Manager;
+    let Some(window) = app.get_window("main") else {
+        record_window_event(data_root, &format!("window {entry}: main window missing"));
+        return;
+    };
+    let show = window.show().is_ok();
+    let focus = window.set_focus().is_ok();
+    apply_dock_visibility(app, true);
+    record_window_event(
+        data_root,
+        &format!("window {entry}: show={show} focus={focus} dock=regular"),
+    );
+}
+
+/// 原生「重载主界面」（F-06）：直接调用主 WebView 的重载，不依赖前端轮询。
+/// 与官方面板刷新、运行时启停区分；只记录成功与否，不宣称已修复绘制异常。
+fn reload_main_webview<R: tauri::Runtime>(app: &tauri::AppHandle<R>, data_root: &std::path::Path) {
+    use tauri::Manager;
+    let Some(webview) = app.get_webview("main") else {
+        record_window_event(data_root, "reload main: webview missing");
+        return;
+    };
+    match webview.reload() {
+        Ok(()) => record_window_event(data_root, "reload main: requested"),
+        Err(error) => record_window_event(data_root, &format!("reload main: failed ({error})")),
+    }
+}
+
+/// 启动事件里附构建来源；提交缺失时如实标注「未知」。
+fn record_startup_event(data_root: &std::path::Path, version: &str) {
+    let commit = build_commit();
+    let commit = if commit.is_empty() { "unknown" } else { commit };
+    record_window_event(
+        data_root,
+        &format!("startup version={version} commit={commit}"),
+    );
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     use tauri::Manager;
@@ -35,6 +91,8 @@ pub fn run() {
                 .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
             app.manage(crate::state::InstanceState { _lock });
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
+            // 启动事件附构建来源：维护事故可把本机安装映射回提交（F-09）。
+            record_startup_event(&data_root, &app.package_info().version.to_string());
             app.manage(std::sync::Mutex::new(
                 crate::modules::sync::SyncRun {
                     run_id: "sync-initial".to_string(),
@@ -370,13 +428,16 @@ pub fn run() {
                 | TrayAction::OpenDataDir
                 | TrayAction::RunDoctor
                 | TrayAction::OpenSettings => {
-                    if let Some(window) = app.get_window("main") {
-                        let _ = window.show();
-                        let _ = window.set_focus();
-                        // 窗口回来了，Dock 图标（与菜单栏）也要跟着回来。
-                        apply_dock_visibility(app, true);
-                    }
+                    // 统一重开路径并记录入口与结果（F-03）；窗口回来后 Dock 图标也恢复。
+                    let data_root = app.state::<crate::state::SharedDataRoot>();
+                    reveal_main_window(app, "tray/menu", &data_root.0);
                     app.state::<crate::state::SharedTrayRequests>().push(action);
+                }
+                // 原生「重载主界面」（F-06）：直接重载主 WebView，不入前端请求队列。
+                TrayAction::ReloadMain => {
+                    let data_root = app.state::<crate::state::SharedDataRoot>();
+                    reveal_main_window(app, "app-menu:reload", &data_root.0);
+                    reload_main_webview(app, &data_root.0);
                 }
                 TrayAction::Start | TrayAction::Stop | TrayAction::Restart => {
                     app.state::<crate::state::SharedTrayRequests>().push(action);
@@ -481,13 +542,10 @@ pub fn run() {
                 } = event
                 {
                     if !has_visible_windows {
-                        if let Some(window) = app_handle.get_window("main") {
-                            let _ = window.show();
-                            let _ = window.set_focus();
-                            apply_dock_visibility(app_handle, true);
-                        }
+                        let data_root = app_handle.state::<crate::state::SharedDataRoot>();
+                        reveal_main_window(app_handle, "dock:reopen", &data_root.0);
                     }
-                }
+                    }
             }
             #[cfg(not(target_os = "macos"))]
             let _ = (&app_handle, &event);
@@ -514,7 +572,7 @@ pub fn dock_visibility(window_visible: bool) -> DockVisibility {
 
 /// 按窗口可见性切换 macOS 激活策略；非 macOS 平台是空实现（由托盘与窗口本身表达状态）。
 #[cfg(target_os = "macos")]
-fn apply_dock_visibility(app: &tauri::AppHandle, window_visible: bool) {
+fn apply_dock_visibility<R: tauri::Runtime>(app: &tauri::AppHandle<R>, window_visible: bool) {
     let policy = match dock_visibility(window_visible) {
         DockVisibility::Regular => tauri::ActivationPolicy::Regular,
         DockVisibility::Accessory => tauri::ActivationPolicy::Accessory,
@@ -523,7 +581,7 @@ fn apply_dock_visibility(app: &tauri::AppHandle, window_visible: bool) {
 }
 
 #[cfg(not(target_os = "macos"))]
-fn apply_dock_visibility(_app: &tauri::AppHandle, _window_visible: bool) {}
+fn apply_dock_visibility<R: tauri::Runtime>(_app: &tauri::AppHandle<R>, _window_visible: bool) {}
 
 /// 关闭主窗口时的处置。
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

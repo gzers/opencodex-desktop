@@ -4,6 +4,10 @@ import App from './App.vue'
 import { useAppStore } from '@/stores/app'
 import { applyStartupRoute, waitForPreferences, waitForSettledSnapshot } from '@/startup'
 import { describeFault, installErrorHandlers } from '@/app/errors'
+import {
+  installEarlyFaultCapture,
+  mountMinimalFaultNotice,
+} from '@/app/errors'
 import { installEffectsRuntime } from '@/app/appearance/effects'
 import { installGlowRenderRuntime } from '@/app/appearance/glowRender'
 import './styles/tokens.css'
@@ -13,6 +17,10 @@ import './styles/effects.css'
 
 const pinia = createPinia()
 setActivePinia(pinia)
+
+// 启动早期兜底必须先于任何业务代码装配（F-05）：偏好探针、外观装配或首帧之前的
+// 异常此前没有任何记录点。这里的 store 未挂载也能记录故障事实。
+installEarlyFaultCapture(useAppStore())
 
 // 首次落地页要先于首帧决定：偏好与状态快照都是异步的，等它们返回再跳页会先闪一下概览。
 // 落地页判定依赖「面板是否已启动」，因此必须先等到第一份「运行时已定档」的状态快照；
@@ -41,7 +49,10 @@ async function bootstrap() {
   appInstance.use(pinia).mount('#app')
 }
 
-void bootstrap()
+void bootstrap().catch(error => {
+  // 连 Vue 都没起来时的最小恢复入口（F-05）：不依赖样式/模块，直接提供刷新动作。
+  mountMinimalFaultNotice(describeFault('启动异常', error))
+})
 
 // 审计夹具只在开发环境按显式 `?__audit=1` 安装；正式构建不含入口。
 if (import.meta.env.DEV) {

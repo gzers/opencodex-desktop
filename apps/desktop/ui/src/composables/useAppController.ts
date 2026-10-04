@@ -141,6 +141,7 @@ export function useAppController(initialize = false) {
   let stopNotificationEventStream: (() => void) | null = null
   let stopRuntimeSourceEventStream: (() => void) | null = null
   let trayRequestTimer: number | null = null
+  let trayBridgeFailing = false
   let disposed = false
 
   onMounted(() => {
@@ -166,7 +167,22 @@ export function useAppController(initialize = false) {
     primeAppData(app)
 
     const pollTrayRequests = () => {
-      void drainTrayRequests().then(handleTrayRequests).catch(() => {})
+      // F-07：托盘命令经前端轮询派发。失败不再静默——按一次可见提示，恢复后登记事件；
+      // 菜单能展开与命令真正执行是两件事，不能把 IPC 故障显示成已执行。
+      void drainTrayRequests()
+        .then(actions => {
+          if (trayBridgeFailing) {
+            trayBridgeFailing = false
+            app.recordEvent('托盘命令通道已恢复。')
+          }
+          handleTrayRequests(actions)
+        })
+        .catch(() => {
+          if (!trayBridgeFailing) {
+            trayBridgeFailing = true
+            app.showToast('托盘命令通道暂不可用；可改用应用内按钮。')
+          }
+        })
     }
     pollTrayRequests()
     trayRequestTimer = window.setInterval(pollTrayRequests, 1000)

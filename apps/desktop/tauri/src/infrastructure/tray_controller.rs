@@ -7,10 +7,10 @@ use crate::modules::tray::{
     enabled_actions, runtime_address, runtime_label, TrayAction, TrayState,
     NATIVE_MENU_LOGS_DATA_DIR, NATIVE_MENU_LOGS_OPEN, NATIVE_MENU_PROCESS_RESTART,
     NATIVE_MENU_PROCESS_START, NATIVE_MENU_PROCESS_STOP, NATIVE_MENU_PROCESS_SUBMENU,
-    NATIVE_MENU_VIEW_MAIN, NATIVE_MENU_VIEW_PANEL, NATIVE_MENU_VIEW_SETTINGS, TRAY_ID,
-    TRAY_MENU_DOCTOR, TRAY_MENU_OPEN_DATA_DIR, TRAY_MENU_OPEN_LOGS, TRAY_MENU_OPEN_MAIN,
-    TRAY_MENU_OPEN_PANEL, TRAY_MENU_OPEN_SETTINGS, TRAY_MENU_QUIT, TRAY_MENU_RESTART,
-    TRAY_MENU_START, TRAY_MENU_STOP, TRAY_STATUS_HEADER,
+    NATIVE_MENU_VIEW_MAIN, NATIVE_MENU_VIEW_PANEL, NATIVE_MENU_VIEW_RELOAD,
+    NATIVE_MENU_VIEW_SETTINGS, TRAY_ID, TRAY_MENU_DOCTOR, TRAY_MENU_OPEN_DATA_DIR,
+    TRAY_MENU_OPEN_LOGS, TRAY_MENU_OPEN_MAIN, TRAY_MENU_OPEN_PANEL, TRAY_MENU_OPEN_SETTINGS,
+    TRAY_MENU_QUIT, TRAY_MENU_RESTART, TRAY_MENU_START, TRAY_MENU_STOP, TRAY_STATUS_HEADER,
 };
 use tauri::menu::{Menu, MenuItem, PredefinedMenuItem, Submenu};
 
@@ -269,6 +269,13 @@ pub fn build_app_menu<R: tauri::Runtime>(
             )?,
             &MenuItem::with_id(
                 app,
+                NATIVE_MENU_VIEW_RELOAD,
+                "重载主界面",
+                true,
+                None::<String>,
+            )?,
+            &MenuItem::with_id(
+                app,
                 NATIVE_MENU_VIEW_PANEL,
                 "打开扩展面板",
                 true,
@@ -334,6 +341,7 @@ pub fn native_menu_action(id: &str) -> Option<TrayAction> {
         NATIVE_MENU_PROCESS_STOP => Some(TrayAction::Stop),
         NATIVE_MENU_PROCESS_RESTART => Some(TrayAction::Restart),
         NATIVE_MENU_VIEW_MAIN => Some(TrayAction::OpenMain),
+        NATIVE_MENU_VIEW_RELOAD => Some(TrayAction::ReloadMain),
         NATIVE_MENU_VIEW_PANEL => Some(TrayAction::OpenPanel),
         NATIVE_MENU_VIEW_SETTINGS => Some(TrayAction::OpenSettings),
         NATIVE_MENU_LOGS_OPEN => Some(TrayAction::OpenLogs),
@@ -373,6 +381,12 @@ mod tests {
             native_menu_action(NATIVE_MENU_LOGS_DATA_DIR),
             Some(TrayAction::OpenDataDir)
         );
+        // 回归（F-06）：原生「重载主界面」必须映射为独立动作，且不进入前端请求域。
+        assert_eq!(
+            native_menu_action(NATIVE_MENU_VIEW_RELOAD),
+            Some(TrayAction::ReloadMain)
+        );
+        assert!(!TRAY_ACTIONS.contains(&TrayAction::ReloadMain));
     }
 
     // 回归：应用菜单的进程项与托盘菜单是两份资源。若门控只覆盖托盘菜单，
