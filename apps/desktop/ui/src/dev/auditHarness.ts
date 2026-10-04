@@ -70,6 +70,7 @@ type AppStore = ReturnType<typeof useAppStore>
  * 让「保存成功」分支可重复观察。它只改内存状态，不连接真实端点，也不写磁盘。
  */
 const AUDIT_PREFERENCES: PreferencesDto = {
+  schemaVersion: 1,
   interfaceScale: 100,
   launchMain: true,
   autoPanel: true,

@@ -3,6 +3,7 @@
 pub mod about;
 pub mod backup;
 pub mod codex_shim;
+pub mod config_migration;
 pub mod container;
 pub mod data_root;
 pub mod discovery;

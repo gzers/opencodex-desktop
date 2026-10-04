@@ -1,4 +1,5 @@
 export interface PreferencesDto {
+  schemaVersion: number
   interfaceScale: number
   launchMain: boolean
   autoPanel: boolean

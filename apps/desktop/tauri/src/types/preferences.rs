@@ -4,9 +4,15 @@ use serde::{Deserialize, Serialize};
 
 use crate::modules::preferences::Preferences;
 
+fn default_preferences_schema() -> u32 {
+    crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PreferencesDto {
+    #[serde(default = "default_preferences_schema")]
+    pub schema_version: u32,
     pub interface_scale: i32,
     pub launch_main: bool,
     pub auto_panel: bool,
@@ -45,6 +51,7 @@ pub struct PreferencesDto {
 impl From<Preferences> for PreferencesDto {
     fn from(value: Preferences) -> Self {
         Self {
+            schema_version: value.schema_version,
             interface_scale: value.interface_scale,
             launch_main: value.launch_main,
             auto_panel: value.auto_panel,
@@ -89,6 +96,7 @@ impl From<Preferences> for PreferencesDto {
 impl From<PreferencesDto> for Preferences {
     fn from(value: PreferencesDto) -> Self {
         Self {
+            schema_version: value.schema_version,
             interface_scale: value.interface_scale,
             launch_main: value.launch_main,
             auto_panel: value.auto_panel,
@@ -133,6 +141,7 @@ mod tests {
     #[test]
     fn preferences_dto_uses_camel_case() {
         let value = PreferencesDto {
+            schema_version: 1,
             interface_scale: 110,
             launch_main: false,
             auto_panel: true,
@@ -169,6 +178,7 @@ mod tests {
         };
         let payload = serde_json::to_value(&value).expect("serialize DTO");
         assert_eq!(payload["interfaceScale"], 110);
+        assert_eq!(payload["schemaVersion"], 1);
         assert_eq!(payload["launchMain"], false);
         assert_eq!(payload["backupRetention"], "10");
         assert_eq!(payload["appUpdateChannel"], "stable");

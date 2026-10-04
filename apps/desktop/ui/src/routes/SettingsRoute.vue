@@ -32,6 +32,7 @@ const dataRootInput = ref('')
 const switchInput = ref('')
 const externalHomeInput = ref('')
 const defaultPreferences: PreferencesDto = {
+  schemaVersion: 1,
   interfaceScale: 100,
   launchMain: true,
   autoPanel: true,

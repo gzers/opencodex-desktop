@@ -57,6 +57,7 @@ impl ProcessExitCode {
             AppError::NotFound { .. } => Self::TARGET_NOT_FOUND,
             AppError::PassphraseRequired => Self::VALIDATION_FAILED,
             AppError::RuntimeManaged { .. } => Self::EXECUTION_FAILED,
+            AppError::ConfigMigration { .. } => Self::INTERNAL_ERROR,
             AppError::FileSystem { .. } | AppError::LogSanitization | AppError::Tauri(_) => {
                 Self::EXECUTION_FAILED
             }
@@ -157,6 +158,7 @@ impl ErrorSummary {
             AppError::NotFound { .. } => ("ipc", "目标不存在"),
             AppError::PassphraseRequired => ("ipc", "需要旧容器口令"),
             AppError::RuntimeManaged { .. } => ("ocx", "托管安装失败"),
+            AppError::ConfigMigration { .. } => ("fs", "配置迁移失败"),
             AppError::Timeout => ("ocx", "命令等待超时"),
             AppError::Tauri(_) => ("ipc", "桌面壳通信失败"),
         };

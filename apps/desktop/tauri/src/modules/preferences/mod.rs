@@ -53,6 +53,8 @@ pub const GLOW_RENDER_CSS: &str = "css";
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(default, rename_all = "snake_case")]
 pub struct Preferences {
+    /// 配置 schema 版本（文档级，非应用版本）；缺失按 legacy v0 识别后由迁移引擎补齐。
+    pub schema_version: u32,
     pub interface_scale: i32,
     pub launch_main: bool,
     pub auto_panel: bool,
@@ -95,6 +97,7 @@ pub struct Preferences {
 impl Default for Preferences {
     fn default() -> Self {
         Self {
+            schema_version: crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA,
             interface_scale: 100,
             launch_main: true,
             auto_panel: true,
@@ -178,6 +181,7 @@ pub fn load_preferences(path: &Path) -> Result<Preferences, PreferencesError> {
         serde_json::from_slice::<Preferences>(&bytes).map_err(|_| PreferencesError::Corrupted)?;
     // 读取即迁移旧复合枚举并校验（U-08/H-22）：非法值不静默放行，也不覆盖原件。
     migrate_legacy_update_fields(&mut value);
+    value.schema_version = crate::modules::config_migration::PREFERENCES_CURRENT_SCHEMA;
     validate(&value)?;
     Ok(value)
 }
@@ -265,7 +269,7 @@ pub fn validate(value: &Preferences) -> Result<(), PreferencesError> {
 ///
 /// `stable-24h` → stable/true/86400；`beta-6h` → beta/true/21600；
 /// `manual` → stable/false/86400。已迁移的新值原样返回。
-fn migrate_legacy_update_fields(value: &mut Preferences) {
+pub fn migrate_legacy_update_fields(value: &mut Preferences) {
     match value.app_update_channel.as_str() {
         APP_UPDATE_STABLE_24H => {
             value.app_update_channel = APP_UPDATE_CHANNEL_STABLE.to_string();

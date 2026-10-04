@@ -35,6 +35,7 @@ Object.defineProperty(window, 'matchMedia', {
 
 function dto(overrides: Partial<PreferencesDto> = {}): PreferencesDto {
   return {
+    schemaVersion: 1,
     interfaceScale: 100,
     launchMain: true,
     autoPanel: true,

@@ -469,6 +469,7 @@ fn failure_text(error: &AppError) -> String {
         AppError::RuntimeManaged { code, detail } => {
             format!("runtime install failed: {code}; {detail}")
         }
+        AppError::ConfigMigration { detail } => format!("config migration failed: {detail}"),
         AppError::Tauri(error) => format!("shell error: {error}"),
         AppError::Timeout => "request timed out".to_string(),
     }

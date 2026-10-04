@@ -26,6 +26,9 @@ pub enum AppError {
     RuntimeManaged { code: String, detail: String },
     #[error("{entity} not found")]
     NotFound { entity: String },
+    /// 配置文档迁移失败（识别、转换、备份或提交）；`detail` 已脱敏。
+    #[error("config migration failed: {detail}")]
+    ConfigMigration { detail: String },
     #[error("Tauri error: {0}")]
     Tauri(#[from] tauri::Error),
 }
@@ -59,6 +62,7 @@ impl From<&AppError> for AppErrorPayload {
             AppError::NotFound { .. } => 6,
             AppError::PassphraseRequired => 13,
             AppError::RuntimeManaged { .. } => 14,
+            AppError::ConfigMigration { .. } => 15,
         };
         Self {
             code,
@@ -94,6 +98,9 @@ impl Clone for AppError {
             Self::NotFound { entity } => Self::NotFound {
                 entity: entity.clone(),
             },
+            Self::ConfigMigration { detail } => Self::ConfigMigration {
+                detail: detail.clone(),
+            },
             Self::Tauri(error) => {
                 Self::Tauri(tauri::Error::Io(std::io::Error::other(error.to_string())))
             }
@@ -122,6 +129,7 @@ impl AppError {
             Self::NotFound { .. } => "not-found",
             Self::PassphraseRequired => "passphrase-required",
             Self::RuntimeManaged { .. } => "runtime-managed",
+            Self::ConfigMigration { .. } => "config-migration",
             Self::Tauri(_) => "tauri",
         }
     }
