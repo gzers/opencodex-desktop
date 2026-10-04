@@ -30,11 +30,10 @@ impl UpdateChannel {
         }
     }
 
+    /// 通道端点（U-05）：单一来源是固化运行策略的 updates.desktop.channels，
+    /// 领域层不再另写一份假地址。检查、安装与后台调度都从这里取。
     pub fn endpoint(&self) -> &'static str {
-        match self {
-            Self::Stable => "https://updates.example.invalid/opencodex-desktop/stable.json",
-            Self::Beta => "https://updates.example.invalid/opencodex-desktop/beta.json",
-        }
+        crate::modules::runtime_defaults::desktop_update_endpoint(self.as_str())
     }
 }
 
@@ -101,6 +100,8 @@ mod tests {
         assert_eq!(UpdateChannel::parse("beta"), Some(UpdateChannel::Beta));
         assert_eq!(UpdateChannel::parse("nightly"), None);
         assert!(UpdateChannel::Stable.endpoint().starts_with("https://"));
+        assert!(UpdateChannel::Stable.endpoint().contains("stable"));
+        assert!(UpdateChannel::Beta.endpoint().contains("beta"));
     }
 
     #[test]

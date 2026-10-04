@@ -260,7 +260,7 @@ pub struct ExtensionConfig {
 }
 
 fn default_sync_method() -> String {
-    SYNC_METHOD_SYMLINK.to_string()
+    crate::modules::runtime_defaults::extensions_default_sync_method().to_string()
 }
 
 impl Default for ExtensionConfig {
@@ -269,7 +269,12 @@ impl Default for ExtensionConfig {
             skills: Vec::new(),
             servers: Vec::new(),
             enablement: CLIENT_IDS
-                .map(|client| (client, true))
+                .map(|client| {
+                    (
+                        client,
+                        crate::modules::runtime_defaults::extensions_default_client_enablement(),
+                    )
+                })
                 .into_iter()
                 .collect(),
             skill_targets: BTreeMap::new(),

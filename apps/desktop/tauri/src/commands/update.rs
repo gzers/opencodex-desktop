@@ -4,6 +4,23 @@ use std::sync::{Arc, Mutex};
 
 use tauri_plugin_updater::UpdaterExt;
 
+/// 用有效通道解析出的端点构建 updater（U-05）：检查、安装与后台调度共用同一来源，
+/// 不再各自读 tauri.conf.json 的静态占位端点。端点解析失败时回退插件默认配置。
+fn updater_for_status(
+    app: &tauri::AppHandle,
+    status: &UpdateStatus,
+) -> AppResult<tauri_plugin_updater::Updater> {
+    let endpoint = status.channel.endpoint();
+    let Ok(url) = endpoint.parse() else {
+        return app.updater().map_err(|_error| AppError::NotConfigured);
+    };
+    app.updater_builder()
+        .endpoints(vec![url])
+        .map_err(|_error| AppError::NotConfigured)?
+        .build()
+        .map_err(|_error| AppError::NotConfigured)
+}
+
 use crate::errors::{AppError, AppResult};
 use crate::modules::update::{UpdateChannel, UpdateFailureClass, UpdateStatus};
 use crate::types::update::{CheckUpdateResultDto, UpdateStatusDto};
@@ -38,7 +55,10 @@ pub async fn check_for_update(
     status: tauri::State<'_, SharedUpdateStatus>,
     app: tauri::AppHandle,
 ) -> AppResult<CheckUpdateResultDto> {
-    let updater = app.updater().map_err(|_error| AppError::NotConfigured)?;
+    let updater = {
+        let guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+        updater_for_status(&app, &guard)?
+    };
     let update = match updater.check().await {
         Ok(value) => value,
         Err(_error) => {
@@ -80,7 +100,10 @@ pub async fn install_update(
     status: tauri::State<'_, SharedUpdateStatus>,
     app: tauri::AppHandle,
 ) -> AppResult<()> {
-    let updater = app.updater().map_err(|_error| AppError::NotConfigured)?;
+    let updater = {
+        let guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+        updater_for_status(&app, &guard)?
+    };
     let update = match updater.check().await {
         Ok(Some(value)) => value,
         Ok(None) => {

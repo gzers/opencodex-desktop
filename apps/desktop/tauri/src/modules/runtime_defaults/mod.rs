@@ -17,6 +17,8 @@ struct RuntimeDefaults {
     retention: RetentionDefaults,
     diagnostics: DiagnosticsDefaults,
     install: InstallDefaults,
+    extensions: ExtensionsDefaults,
+    updates: UpdatesDefaults,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -58,6 +60,22 @@ struct DiagnosticsDefaults {
     doctor_seconds: u64,
     shim_seconds: u64,
     recent_log_lines: usize,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct UpdatesDefaults {
+    desktop: DesktopUpdates,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct DesktopUpdates {
+    channels: std::collections::BTreeMap<String, String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct ExtensionsDefaults {
+    default_sync_method: String,
+    default_client_enablement: bool,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -165,6 +183,25 @@ pub fn install_probe_timeout() -> Duration {
     Duration::from_secs(defaults().install.post_install_probe_seconds)
 }
 
+// —— 扩展初始策略（H-29）——
+pub fn extensions_default_sync_method() -> &'static str {
+    defaults().extensions.default_sync_method.as_str()
+}
+pub fn extensions_default_client_enablement() -> bool {
+    defaults().extensions.default_client_enablement
+}
+
+// -- 桌面更新端点（U-05） --
+/// 返回指定通道的端点；未知通道回退 stable，与领域层 parse 的收敛一致。
+pub fn desktop_update_endpoint(channel: &str) -> &'static str {
+    let channels = &defaults().updates.desktop.channels;
+    channels
+        .get(channel)
+        .or_else(|| channels.get("stable"))
+        .map(String::as_str)
+        .unwrap_or("")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -195,5 +232,13 @@ mod tests {
         assert_eq!(install_default_tag(), "latest");
         assert_eq!(install_idle_notice(), Duration::from_secs(120));
         assert_eq!(install_probe_timeout(), Duration::from_secs(30));
+        assert_eq!(extensions_default_sync_method(), "symlink");
+        assert!(extensions_default_client_enablement());
+        assert!(desktop_update_endpoint("stable").contains("stable"));
+        assert!(desktop_update_endpoint("beta").contains("beta"));
+        assert_eq!(
+            desktop_update_endpoint("nightly"),
+            desktop_update_endpoint("stable")
+        );
     }
 }
