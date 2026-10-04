@@ -6,6 +6,12 @@ on:
   pull_request:
 
 jobs:
+  release-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v
+
   frontend:
     runs-on: macos-14
     steps:
@@ -47,7 +53,7 @@ jobs:
       - run: cargo check --workspace --all-targets
 
   build:
-    needs: [frontend, backend]
+    needs: [frontend, backend, release-tools]
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v5

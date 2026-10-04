@@ -27,13 +27,10 @@ fn updater_for_status(
 
 /// 应用自更新请求按用户代理偏好走代理（U-05）。
 ///
-/// 关键：tauri-plugin-updater 的 UpdaterBuilder::build() 在**没有**显式
-/// .proxy()/.no_proxy() 时会回退到 reqwest 的「系统代理」探测；只识别环境变量
-/// （HTTP(S)_PROXY / ALL_PROXY），不读 macOS 的 scutil 系统代理设置。因此：
+/// 沿用已有的三分支策略；不把底层库的系统代理能力固化成平台假设。
 /// - None：显式 .no_proxy()，尊重「无代理」，避免被意外的环境变量带偏；
-/// - Manual：显式注入代理（HTTP CONNECT），这是「我在应用里配了代理但自更新
-///   仍然连接失败」的根因修复；
-/// - System：不注入，交给 reqwest 探测（但注意它只认环境变量，不认 scutil）。
+/// - Manual：显式注入用户配置的代理，地址无效时不回退到系统代理；
+/// - System：不注入，交给当前 updater/reqwest 的系统代理实现探测。
 fn apply_proxy_policy(
     builder: tauri_plugin_updater::UpdaterBuilder,
     policy: crate::modules::preferences::ProxyPolicy,

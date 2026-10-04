@@ -155,8 +155,13 @@ const codexShimNotice = computed(() => {
 const openSelect = ref('')
 const updateStatus = ref<UpdateStatusDto | null>(null)
 const updateChecking = ref(true)
-const updateInstalling = ref(false)
 const installRequested = ref(false)
+const updateInstallDisabled = computed(() =>
+  !updateStatus.value?.availableVersion
+  || updateStatus.value.signatureVerified === true
+  || installRequested.value
+  || app.appUpdateBusy,
+)
 const updateError = ref('')
 const SYNC_CONFLICT_POLICY_ASK: SyncConflictPolicy = 'ask'
 const syncEndpointInput = ref({
@@ -261,18 +266,22 @@ if (typeof window !== 'undefined') {
 }
 
 async function installUpdate() {
-  if (updateInstalling.value || installRequested.value) return
-  updateInstalling.value = true
+  if (installRequested.value || app.appUpdateBusy) return
   installRequested.value = true
   app.openModal({
     title: '安装应用更新',
     body: '<p>更新包将重新下载并在本地完成签名校验，通过后才会安装并重启桌面壳。</p><p>托管中的 OpenCodex 代理不会被手动停止。</p>',
     confirmLabel: '安装并重启',
-    onConfirm: () => {
-      app.installAppUpdate().catch(() => {})
+    onConfirm: async () => {
+      try {
+        await app.installAppUpdate()
+      } catch {
+        // 更新 store 展示失败原因；异常路径也必须允许再次安装。
+      } finally {
+        installRequested.value = false
+      }
     },
     onCancel: () => {
-      updateInstalling.value = false
       installRequested.value = false
     },
   })
@@ -1399,8 +1408,8 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
       <article class="card"><div class="card-head"><div><h2>桌面管理器版本</h2><p>OpenCodeX-Desktop 自身的应用更新；签名校验通过后才会安装，失败保留当前版本。</p></div></div>
         <div class="setting-list">
         <div class="setting-row"><div><div class="setting-title">当前版本</div><div class="setting-desc">v{{ updateStatus?.currentVersion ?? '0.1.0' }} · {{ updateStatus?.channel === 'beta' ? '测试' : '稳定' }}通道</div></div><div class="controls"><button class="btn ghost" :disabled="updateChecking" @click="runUpdateCheck">{{ updateChecking ? '检查中' : '检查应用更新' }}</button></div></div>
-          <div class="setting-row"><div><div class="setting-title">更新结果</div><div class="setting-desc">{{ updateResultText }}</div></div><div class="controls"><span class="tag" :class="{ danger: updateStatus?.error }">{{ updateStatus?.error ? '失败' : updateStatus?.availableVersion ? '有更新' : '已检查' }}</span><button class="btn" :disabled="!updateStatus?.availableVersion || updateStatus.signatureVerified === true || app.appUpdateBusy" @click="installUpdate">{{ app.appUpdateBusy ? '安装中' : '安装更新' }}</button></div></div>
-          <div class="setting-row"><div><div class="setting-title">安装完成后</div><div class="setting-desc">{{ app.appUpdateError || '签名校验通过后由桌面壳接管重启；不会停止托管代理。' }}</div></div><div class="controls"><button class="btn ghost" :disabled="!updateStatus?.availableVersion || updateStatus.signatureVerified === true" @click="installUpdate">重新安装</button></div></div>
+          <div class="setting-row"><div><div class="setting-title">更新结果</div><div class="setting-desc">{{ updateResultText }}</div></div><div class="controls"><span class="tag" :class="{ danger: updateStatus?.error }">{{ updateStatus?.error ? '失败' : updateStatus?.availableVersion ? '有更新' : '已检查' }}</span><button class="btn" :disabled="updateInstallDisabled" @click="installUpdate">{{ app.appUpdateBusy ? '安装中' : '安装更新' }}</button></div></div>
+          <div class="setting-row"><div><div class="setting-title">安装完成后</div><div class="setting-desc">{{ app.appUpdateError || '签名校验通过后由桌面壳接管重启；不会停止托管代理。' }}</div></div><div class="controls"><button class="btn ghost" :disabled="updateInstallDisabled" @click="installUpdate">重新安装</button></div></div>
 <div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><div class="select-menu" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></div></div></div></div><div class="setting-row" data-testid="setting-network-shortcut"><div><div class="setting-title">网络连接</div><div class="setting-desc">检查更新失败多为网络问题；可在此跳转配置代理。</div></div><div class="controls"><button class="btn ghost" @click="goToNetwork">配置网络</button></div></div>
 <div class="setting-row"><div><div class="setting-title">自动检查更新</div><div class="setting-desc">开启后按通道后台检查；关闭后不影响手动检查。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.appUpdateAutoCheck" @click="toggleUpdateAutoCheck()"></button></div></div>
         </div>

@@ -1,14 +1,29 @@
 name: Publish Release
 
-# 显式公开发布：把 Release 工作流创建的「草稿 + 预发布」包取消草稿，使其对公众可见。
-# 触发靠专用 tag（publish/vX.Y.Z），不修改既有 vX.Y.Z 历史，也不需要把发布凭据放到本机。
-# 只做可见性切换，不重新构建、不改动制品与说明正文。
+# publish/v* 仅公开已有制品并保留 Latest；稳定通道晋升须手动明确选择 stable。
+# 不重新构建、不修改历史 tag，不把发布凭据放到本机。
 on:
   push:
     tags: ['publish/v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '已存在的版本 tag（如 v0.1.6）'
+        required: true
+        type: string
+      mode:
+        description: '仅公开并保留 Latest，或将目标版本投递到稳定通道'
+        required: true
+        type: choice
+        default: preserve-latest
+        options: [preserve-latest, stable]
 
 permissions:
   contents: write
+
+concurrency:
+  group: publish-release-channel
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -16,68 +31,18 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: 解析目标 tag
-        id: target
+      - name: 公开版本并验证所选通道
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag }}
+          PUBLISH_MODE: ${{ inputs.mode || 'preserve-latest' }}
         run: |
           set -euo pipefail
-          tag="${GITHUB_REF_NAME#publish/}"
-          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::发布 tag 形如 publish/vX.Y.Z，收到 $GITHUB_REF_NAME"
-            exit 1
-          fi
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "目标版本：$tag"
+          tag="${INPUT_TAG:-${GITHUB_REF_NAME#publish/}}"
+          python3 .github/scripts/publish_release.py "$tag" \
+            --repo "$GITHUB_REPOSITORY" --mode "$PUBLISH_MODE" 2>&1 | tee /tmp/publish-diag.txt
 
-      - name: 取消草稿并标记为最新
-        id: publish
-        env:
-          # 与 Release 工作流同口径：优先 PAT，缺省用 GITHUB_TOKEN。
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
-          TAG: ${{ steps.target.outputs.tag }}
-        run: |
-          set -uo pipefail
-          diag=/tmp/publish-diag.txt
-          {
-            echo "tag=$TAG"
-            echo "gh version: $(gh --version 2>&1 | head -1)"
-            echo "run url: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
-            echo "== gh auth status =="
-            gh auth status 2>&1 || true
-            echo "== release list =="
-            gh release list --limit 30 2>&1 || true
-            echo "== release view $TAG =="
-            gh release view "$TAG" 2>&1 || true
-          } >> "$diag" 2>&1
-          status=0
-          # 取消草稿但**不改变 Latest**：GitHub 的更新端点默认 make_latest=true，
-          # 若只取消草稿会把旧版本顶成 Latest。这里显式 --latest=false，
-          # 并在完成后把之前那个 Latest 重新标记回去，保证 Latest 归属不变。
-          echo "== latest before ==" >> "$diag"
-          before_latest="$(gh release view --json tagName -q .tagName 2>>"$diag" || true)"
-          echo "before latest: $before_latest" >> "$diag"
-
-          echo "== gh release edit $TAG --draft=false --prerelease=false --latest=false ==" >> "$diag"
-          if gh release edit "$TAG" --draft=false --prerelease=false --latest=false >> "$diag" 2>&1; then
-            echo "undraft: ok" >> "$diag"
-          else
-            status=$?
-            echo "undraft: failed ($status)" >> "$diag"
-          fi
-
-          if [ -n "$before_latest" ] && [ "$before_latest" != "$TAG" ]; then
-            echo "== restore latest: gh release edit $before_latest --latest ==" >> "$diag"
-            if gh release edit "$before_latest" --latest >> "$diag" 2>&1; then
-              echo "restore latest: ok ($before_latest)" >> "$diag"
-            else
-              status=$?
-              echo "restore latest: failed ($status)" >> "$diag"
-            fi
-          fi
-          echo "== after ==" >> "$diag"
-          gh release view "$TAG" --json tagName,isDraft,isPrerelease,url >> "$diag" 2>&1 || true
-          cat "$diag"
-
-      # 诊断公开化：把结果写到 ci-logs 分支（公开可读），便于无凭据环境核对。
+      # 失败也公开诊断，但不掩盖上一发布步骤的退出码。
       - name: 公开诊断结果
         if: always()
         run: |
@@ -88,5 +53,5 @@ jobs:
           git checkout --orphan ci-logs
           git rm -rf --cached . >/dev/null 2>&1 || true
           git add -f publish-diag.txt
-          git commit -m "ci: publish 诊断 ${{ steps.target.outputs.tag }} (${{ github.run_id }})" >/dev/null
+          git commit -m "ci: publish 诊断 (${{ github.run_id }})" >/dev/null
           git push --force origin ci-logs
