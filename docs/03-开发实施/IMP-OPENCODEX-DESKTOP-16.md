@@ -1,7 +1,7 @@
 ---
 id: IMP-OPENCODEX-DESKTOP-16
 object_kind: implementation.change
-state: planned
+state: in_progress
 title: "0.1.3 更新通道自更新、官方更新代跑与网络代理"
 summary: "承接 MNT-OPENCODEX-DESKTOP-20261004-03（COL-LOCAL-20261004-03）。0.1.3 冻结范围：U-01 桌面自更新真实端点（本仓库 GitHub Releases）、U-02 签名公私钥与 CI 签名制品、U-03 官方版本卡片只读远端查询、U-04 复用受控 install_runtime 代跑官方更新、U-05 网络代理配置（通用网络卡片 + 版本升级 tab 快捷跳转，不涉及钥匙串、含开发规定的网络行为配置文件）、C 阶段存储迁移。发布安全操作（生成签名私钥、写入 CI secrets、打包发布）另行单独确认。"
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
@@ -49,4 +49,26 @@ source_refs: ["MNT-OPENCODEX-DESKTOP-20261004-03", "MNT-OPENCODEX-DESKTOP-202610
 
 ## 5. 执行结果
 
-（待实施后回写；未实施前不写结论。）
+2026-10-04。开发分支 `feature/0.1.3-update-channel-network`（基于 `main@f14e061a`）。本节只记录已执行事实；**未做运行验收、未合并 main、未打包、未发布**。
+
+### 已实施
+
+| 编号 | 实施事实 | 提交 |
+|---|---|---|
+| U-01 | `config/runtime.defaults.json` 的 `updates.desktop.channels` 与 `tauri.conf.json` 的 `endpoints` 改指本仓库 Releases（stable=`releases/latest/download/latest.json`，beta=`releases/download/beta/latest.json`）；命令层检查/安装/调度共用通道端点 | `5dfbd161` |
+| U-03 | 新增 `modules/about/remote.rs`（受控 `npm view @bitkyc08/opencodex@<tag>` + tag 白名单 + `network_defaults` 超时收口）与命令 `official_remote_latest`；前端新增 `features/updates/version.ts` 语义化比较与官方卡片「远端最新版本」行，失败如实标注不可用、不改写本地状态 | `5dfbd161` |
+| U-04 / U-04b | 新增命令 `install_official_update`：先只读解析远端**确定版本**，再复用受控 `install_runtime`（`source=registry`、`version=<解析版本>`、`prefix=None` 取当前登记前缀、`allow_scripts=false`）；前端确认弹窗 + 终态来源复核，装完刷新来源与版本事实 | `5dfbd161` |
+| U-05 / U-05b | 偏好新增 `network_proxy_mode/scheme/host/no_proxy`（不带凭据）；`config/network.defaults.json` + `modules/network_defaults`（超时/重试/UA/探测地址/TLS 约束，构建只读）；通用设置「网络」卡片、版本升级 tab「配置网络」快捷跳转；应用自更新按代理偏好注入 updater，托管安装未显式指定代理时继承手动代理，官方远端查询经 `network_environment_for_app` 走同一代理；「检查连接」命令 `check_network_proxy`（带超时、显式 no_proxy、不改状态） | `c9eeff3b`、`a509ddbb` |
+| C | 偏好磁盘结构升级为按域分组（schema v2：`appearance`/`shell`/`backup`/`extensions`/`maintenance`/`sync`/`updates`/`network`/`cli`）；`preferences_from_document` 统一识别分域与 legacy 扁平、过新 schema 显式失败；迁移引擎 legacy v0/v1 → v2 落盘分域结构；容器导出/导入走分域投影，接收端按 schema 校验迁移、过新载荷拒绝写入；WebDAV 同步接收端迁移远端偏好为当前 schema；内存与前端 DTO 保持扁平 | `feeb1c9a` |
+| 版本 | 0.1.2 → 0.1.3：`tauri.conf.json`、`Cargo.toml`、`ui/package.json`、`ui/package-lock.json` 同步；`CHANGELOG.md` 新增 `[0.1.3] - 2026-10-04` | `feeb1c9a` |
+
+### 门禁（构建/测试级，非运行验收）
+
+- 后端：`cargo fmt --all -- --check` 通过；`cargo clippy --workspace --all-targets -- -D warnings` 通过；`cargo test --workspace --features integration-test` **431 lib passed / 0 failed / 2 ignored** 及各集成测试全绿。
+- 前端：`vue-tsc --noEmit` 通过；`vitest --run` **360 passed / 0 failed**（72 文件）；新增版本比较与分域迁移用例。
+
+### 未完成 / 另行确认
+
+- **U-02（签名公钥与 CI 签名制品）未实施**：`tauri.conf.json` 的 `pubkey` 仍为占位串，`bundle.createUpdaterArtifacts` 未打开，CI 未注入 `TAURI_SIGNING_PRIVATE_KEY`。生成 minisign 私钥、写入 GitHub secret 属发布安全操作，**需用户单独确认后再执行**。在 U-02 完成前，U-01 的真实端点尚无签名 `latest.json` 可拉取，自更新端到端生效以 U-02 完成为准。
+- **运行验收未做**：以上均为构建/测试门禁结果，不等于真机自更新、官方代跑与代理链路的运行验收通过。
+- **合并与发布未做**：尚未合并 `main`、未打 tag、未出 Draft Release；公开发布另行确认。
