@@ -96,7 +96,8 @@ source_refs:
 
 - 新增 `.github/workflows/publish-release.yml`，由 tag `publish/v0.1.1` 触发，仅把 Release 草稿/预发布切换为公开，不重建制品。
 - 首次运行因 GitHub 拒绝 `--draft=false --latest`（HTTP 422：latest 不能是草稿/预发布）失败；改为先清 prerelease 再标 latest 后成功（run `37173494511`）。
-- 结果：`v0.1.1` Release `draft=false / prerelease=false`，制品 4 个已上传；0.1.0 的 Release 未动。诊断留存于公开 `ci-logs` 分支的 `publish-diag.txt`。
+- 结果：`v0.1.1` Release `draft=false / prerelease=false`，制品 4 个已上传。诊断留存于公开 `ci-logs` 分支的 `publish-diag.txt`。
+- 2026-10-04 追加：用户授权公开 0.1.0 并明确其**不是 Latest**。工作流以 `--latest=false` 取消草稿，再把原 Latest（v0.1.1）重新标记回去；诊断记录 `before latest: v0.1.1 / undraft: ok / restore latest: ok`。结果公开 Release 两个（`v0.1.0` 非 Latest、`v0.1.1` 为 Latest），`releases/latest` 仍指向 `v0.1.1`。
 
 ### 仍未闭合
 

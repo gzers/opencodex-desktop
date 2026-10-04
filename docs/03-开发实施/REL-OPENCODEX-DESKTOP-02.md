@@ -49,8 +49,11 @@ source_refs:
 - **已按用户 2026-10-04 明确授权公开发布**：新增 `.github/workflows/publish-release.yml`，由专用 tag `publish/v0.1.1` 触发；只切换可见性，不重建制品、不改说明正文。
 - 第一次发布运行因 `gh release edit --draft=false --latest` 被 GitHub 拒绝（`Latest release cannot be draft or prerelease`，HTTP 422）而失败；改为先 `--draft=false --prerelease=false` 再 `--latest` 后，publish 工作流成功（run `37173494511`）。
 - 公开发布结果：Release `v0.1.1` 现为 `draft=false`、`prerelease=false`，地址 <https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.1>；四个制品 uploaded：macOS `.dmg`、Windows `_x64-setup.exe`（NSIS）、Windows `.msi`、`.app.tar.gz`。
-- 发布诊断以公开可读的 `ci-logs` 分支留存（`publish-diag.txt`），本次记录 `tag=v0.1.1 / undraft: ok / latest: ok`。0.1.0 的 Release 未触碰，仍为草稿 + 预发布。
+- 发布诊断以公开可读的 `ci-logs` 分支留存（`publish-diag.txt`），本次记录 `tag=v0.1.1 / undraft: ok / latest: ok`。
 - 配套代码提交：`9df1248`（发布工作流）、`be362d8a`（安装核验脚本）、`aea0338`/`8b36414`/`dad00725`（发布诊断与本机核对）。
+- **2026-10-04 追加：0.1.0 亦公开发布（不改变 Latest）**。用户授权公开 0.1.0 并明确其**不是 Latest**。发布工作流改为 `gh release edit --draft=false --prerelease=false --latest=false`，先记录处理前的 Latest，取消草稿后把该 Latest 重新标记回去；本次诊断记录 `before latest: v0.1.1 / undraft: ok / restore latest: ok (v0.1.1)`。
+- 结果：公开 Release 共两个——`v0.1.1`（Latest）与 `v0.1.0`（`draft=false / prerelease=false`，非 Latest）；`releases/latest` 仍重定向到 `v0.1.1`。两版的 macOS `.dmg`、Windows `.exe`/`.msi` 均可匿名下载。
+- 追加代码提交：`1fde1b1a`（发布不改 Latest 归属）、`aec115d0`（诊断字段修正）。
 - 发布相关 `main` 提交的 CI（run `37173484167`）四 job（frontend/backend/backend-windows/build）同样全绿。
 
 ## 未完成（独立门禁）
