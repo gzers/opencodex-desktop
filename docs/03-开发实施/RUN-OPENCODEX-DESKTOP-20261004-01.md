@@ -92,6 +92,12 @@ source_refs:
 - 真实安装验证：把 0.1.0 安装实例移入 `~/Library/Application Support/OpenCodeX Desktop backups/0.1.0-20261004105248` 备份，再安装 0.1.1 到 `/Applications/OpenCodeX Desktop.app`；`Info.plist` 为 0.1.1，主二进制 SHA-256 `ef82a9880d999e76c5db9d9db54f24cfcbdef58098891374149404dbf3455576`。
 - 制品冒烟（隔离 HOME，`test/smoke/mnt011-ui-recovery-smoke.sh`）：启动日志 `startup version=0.1.1 commit=22dbbba6...`；「视图」菜单项为「打开主界面, 重载主界面, 打开扩展面板, 快速设置」；点击后日志 `reload main: requested`，窗口仍可见。
 
+### 公开发布（2026-10-04 用户授权）
+
+- 新增 `.github/workflows/publish-release.yml`，由 tag `publish/v0.1.1` 触发，仅把 Release 草稿/预发布切换为公开，不重建制品。
+- 首次运行因 GitHub 拒绝 `--draft=false --latest`（HTTP 422：latest 不能是草稿/预发布）失败；改为先清 prerelease 再标 latest 后成功（run `37173494511`）。
+- 结果：`v0.1.1` Release `draft=false / prerelease=false`，制品 4 个已上传；0.1.0 的 Release 未动。诊断留存于公开 `ci-logs` 分支的 `publish-diag.txt`。
+
 ### 仍未闭合
 
 首次触发的原因仍未锁定，本节记录的是恢复能力与可观测性，不是根因修复。F-08（原生面板并发）、F-10（更新通道）、F-11/F-12（代理退出信号链与自动恢复运行）按冻结计划排除于 0.1.1，未实施也未验收。原始 0.1.0 观察保持原样，0.1.1 不替换其证据。

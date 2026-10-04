@@ -45,7 +45,12 @@ source_refs:
 ## 发布产物与状态
 
 - tag `v0.1.1` → `22dbbba6`（已推送 `origin`）。
-- GitHub Release 由流水线创建为**草稿 + 预发布**（`releaseDraft: true` / `prerelease: true`），与 0.1.0 同口径；正式取消草稿、公开发布仍需单独确认。
+- GitHub Release 由流水线创建为草稿 + 预发布（`releaseDraft: true` / `prerelease: true`），与 0.1.0 同口径。
+- **已按用户 2026-10-04 明确授权公开发布**：新增 `.github/workflows/publish-release.yml`，由专用 tag `publish/v0.1.1` 触发；只切换可见性，不重建制品、不改说明正文。
+- 第一次发布运行因 `gh release edit --draft=false --latest` 被 GitHub 拒绝（`Latest release cannot be draft or prerelease`，HTTP 422）而失败；改为先 `--draft=false --prerelease=false` 再 `--latest` 后，publish 工作流成功（run `37173494511`）。
+- 公开发布结果：Release `v0.1.1` 现为 `draft=false`、`prerelease=false`，地址 <https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.1>；四个制品 uploaded：macOS `.dmg`、Windows `_x64-setup.exe`（NSIS）、Windows `.msi`、`.app.tar.gz`。
+- 发布诊断以公开可读的 `ci-logs` 分支留存（`publish-diag.txt`），本次记录 `tag=v0.1.1 / undraft: ok / latest: ok`。0.1.0 的 Release 未触碰，仍为草稿 + 预发布。
+- 配套代码提交：`9df1248`（发布工作流）、`be362d8a`（安装核验脚本）、`aea0338`/`8b36414`/`dad00725`（发布诊断与本机核对）。
 
 ## 未完成（独立门禁）
 
