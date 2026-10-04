@@ -6,7 +6,8 @@
 
 ## 实施计划入口
 
-- [0.1.3 更新候选记录](REL-OPENCODEX-DESKTOP-04.md)：**candidate-passed**；记录 U-01/U-03/U-04/U-05/U-05b/C 在 `feature/0.1.3-update-channel-network` 的实施与构建级门禁证据、本机 0.1.3 制品。**U-02（签名公钥与 CI 签名制品）未实施、待单独确认；未合并 main、未打 tag、未发布。**
+- [0.1.4/0.1.5 更新检查修复记录](REL-OPENCODEX-DESKTOP-05.md)：**candidate-passed**；0.1.4 修复官方远端查询 `env_clear` 后缺 `PATH`；0.1.5 修复「检查应用更新」成功后仍显示上一次失败（成功分支未清 `error`）并把自更新代理注入改为按偏好显式三分支。均已并入 `main`、打 tag 并出草稿 Release，签名与 `latest.json` 校验通过；**公开发布另行确认**。
+- [0.1.3 更新候选记录](REL-OPENCODEX-DESKTOP-04.md)：**candidate-passed**；记录 U-01/U-03/U-04/U-05/U-05b/C 在 `feature/0.1.3-update-channel-network` 的实施与构建级门禁证据、本机 0.1.3 制品。**已合并 main、打 tag `v0.1.3` 并通过 `publish/v0.1.3` 公开发布（v0.1.3 为 Latest）；草稿 Release、签名制品与 `latest.json` keyid 均验证通过。**
 - [0.1.3 更新通道自更新、官方更新代跑与网络代理](IMP-OPENCODEX-DESKTOP-16.md)：**in_progress**；承接 MNT-OPENCODEX-DESKTOP-20261004-03（COL-LOCAL-20261004-03）。冻结范围 U-01～U-04（自更新真实端点/签名、官方卡片远端查询、代跑官方更新）+ U-05/U-05b（网络代理，不涉及钥匙串）+ C 阶段存储迁移。**U-01/U-03/U-04/U-05/U-05b/C 已在 `feature/0.1.3-update-channel-network` 实施并通过构建级门禁；U-02（签名公钥与 CI 签名制品）因属发布安全操作待单独确认，未做；未合并 main、未打包、未发布。**
 - [0.1.2 更新通道与配置分层](IMP-OPENCODEX-DESKTOP-15.md)：**已实施并入 main（2026-10-04）**；承接 MNT-OPENCODEX-DESKTOP-20261004-02 的 A/B 最小闭环（更新通道解耦与消费、固化默认配置、类型收敛、迁移服务骨架、测试沙箱隔离、中英文 README）；详见 [REL-OPENCODEX-DESKTOP-03](REL-OPENCODEX-DESKTOP-03.md)。C 阶段存储迁移与真实自更新端点/签名延期，U-01～U-04 待用户裁决。
 - [0.1.2 更新通道与配置分层发布记录](REL-OPENCODEX-DESKTOP-03.md)：**已合并 main 并通过 CI 四 job**；记录 A/B 实施事实、门禁证据与延期项。**仅合并代码，未在 GitHub 打包 Release，公开发布另行确认。**
