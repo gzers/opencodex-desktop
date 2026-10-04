@@ -30,7 +30,11 @@ A/B 最小闭环已实施并入 main：特性分支 feature/0.1.2-update-channel
 
 门禁：vue-tsc 通过、vitest 355 passed、vite build 通过、cargo fmt/clippy -D warnings 通过、cargo test --workspace --features integration-test 全绿、macOS aarch64 制品构建成功、沙箱隔离冒烟验证日常根哨兵未变、CI 四 job 全绿（run 37183755672）。
 
-**未完成（延期）：** U-01/U-02 真实自更新端点与签名、U-03/U-04 官方版本卡片远端查询与代跑、C 阶段磁盘存储迁移；待用户裁决与单独授权。**仅合并代码，未打包 Release；公开发布另行确认。** 详见 [REL-OPENCODEX-DESKTOP-03](https://github.com/gzers/opencodex-desktop/blob/main/docs/03-开发实施/REL-OPENCODEX-DESKTOP-03.md)。
+**已公开发布：** `v0.1.2` 为 Latest，四个制品可下载。**延期项已转交：** U-01/U-02 真实自更新端点与签名、U-03/U-04 官方版本卡片远端查询与代跑、C 阶段磁盘存储迁移，用户已确认 D-1～D-4 并登记到新的运行维护协作包 [MNT-OPENCODEX-DESKTOP-20261004-03](../../2026-10-04-更新通道自更新与官方更新代跑/README.md)，拟修复 0.1.3。详见 [REL-OPENCODEX-DESKTOP-03](https://github.com/gzers/opencodex-desktop/blob/docs/governance-main/docs/03-开发实施/REL-OPENCODEX-DESKTOP-03.md)。
+
+## 关闭（2026-10-04）
+
+本记录原定范围（A/B 最小闭环）已实施并公开发布，延后项已转交 [MNT-OPENCODEX-DESKTOP-20261004-03](../../2026-10-04-更新通道自更新与官方更新代跑/README.md)。**本记录不再承接 0.1.3**，保留分析边界与证据引用。
 
 ## 范围推进（2026-10-04）
 
@@ -155,3 +159,5 @@ A/B 最小闭环已实施并入 main：特性分支 feature/0.1.2-update-channel
 ## 运行边界与外部关联
 
 本记录只承载分析、证据与规划，不复制源码事实、不预写执行结果。实施后真实结果回写 `docs/03-开发实施/` 的 `RUN-\*` 与 `REL-\*`；本记录保留分析与冻结边界。为减小引用风险，源码证据以路径 + 行号描述，不内联长段源码。相关长期事实见 `docs/02-项目核心/`、`DMD-OPENCODEX-DESKTOP-MANAGER` 与 `IMP-OPENCODEX-DESKTOP-05`。
+
+
