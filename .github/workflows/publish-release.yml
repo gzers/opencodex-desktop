@@ -74,7 +74,7 @@ jobs:
             fi
           fi
           echo "== after ==" >> "$diag"
-          gh release view "$TAG" --json tagName,isDraft,isPrerelease,isLatest,url >> "$diag" 2>&1 || true
+          gh release view "$TAG" --json tagName,isDraft,isPrerelease,url >> "$diag" 2>&1 || true
           cat "$diag"
 
       # 诊断公开化：把结果写到 ci-logs 分支（公开可读），便于无凭据环境核对。
