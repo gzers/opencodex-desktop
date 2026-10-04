@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/05-README%E7%B4%A0%E6%9D%90/logo.png" width="120" alt="OpenCodeX Desktop" />
+  <img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/04-%E5%93%81%E7%89%8C%E4%B8%8E%E5%9B%BE%E6%A0%87%E7%B4%A0%E6%9D%90/05-README%E7%B4%A0%E6%9D%90/logo.png" width="120" alt="OpenCodeX Desktop" />
 </p>
 
 <h1 align="center">OpenCodeX Desktop</h1>
@@ -28,13 +28,13 @@
 ## Screenshots
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/05-README%E7%B4%A0%E6%9D%90/overview-light.jpg" width="82%" alt="Overview (light)">
+  <img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/04-%E5%93%81%E7%89%8C%E4%B8%8E%E5%9B%BE%E6%A0%87%E7%B4%A0%E6%9D%90/05-README%E7%B4%A0%E6%9D%90/overview-light.jpg" width="82%" alt="Overview (light)">
 </p>
 
 <table>
   <tr>
-    <td width="50%"><img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/05-README%E7%B4%A0%E6%9D%90/overview-dark.jpg" alt="Overview (dark)"></td>
-    <td width="50%"><img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/05-README%E7%B4%A0%E6%9D%90/panel-dark.jpg" alt="Panel (dark)"></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/04-%E5%93%81%E7%89%8C%E4%B8%8E%E5%9B%BE%E6%A0%87%E7%B4%A0%E6%9D%90/05-README%E7%B4%A0%E6%9D%90/overview-dark.jpg" alt="Overview (dark)"></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/gzers/opencodex-desktop/docs/governance-main/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/04-%E5%93%81%E7%89%8C%E4%B8%8E%E5%9B%BE%E6%A0%87%E7%B4%A0%E6%9D%90/05-README%E7%B4%A0%E6%9D%90/panel-dark.jpg" alt="Panel (dark)"></td>
   </tr>
   <tr>
     <td align="center"><sub>Overview · dark</sub></td>

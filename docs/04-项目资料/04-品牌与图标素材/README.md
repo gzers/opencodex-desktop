@@ -67,10 +67,16 @@
 │   ├── logo.svg
 │   ├── logo-light.svg
 │   └── logo-dark.svg
-└── Favicon/
-    ├── favicon.svg
-    ├── favicon.png
-    └── favicon.ico
+├── Favicon/
+│   ├── favicon.svg
+│   ├── favicon.png
+│   └── favicon.ico
+└── 05-README素材/
+    ├── logo.png
+    ├── overview-light.jpg
+    ├── overview-dark.jpg
+    ├── panel-light.jpg
+    └── panel-dark.jpg
 ```
 
 ## 完整规划目录
@@ -134,6 +140,12 @@
 │   │   ├── favicon.svg
 │   │   ├── favicon.png
 │   │   └── favicon.ico
+│   ├── 05-README素材/
+│   │   ├── logo.png
+│   │   ├── overview-light.jpg
+│   │   ├── overview-dark.jpg
+│   │   ├── panel-light.jpg
+│   │   └── panel-dark.jpg
 │   └── README.md
 └── 05-归档/
     ├── 旧设计基准/
@@ -174,6 +186,7 @@
 
 - `Logo/` 保存不带平台背景的品牌 Logo 及亮暗版本。
 - `Favicon/` 保存网页和文档场景使用的小尺寸图标。
+- `05-README素材/` 保存 README 与文档页引用的软件截图和展示图（Logo、概览 / 面板亮暗截图）；正文用指向 `docs/governance-main` 的绝对链接引用。
 - 品牌组件应从最终确认的设计基准派生，不从历史候选派生。
 
 ## 命名规则
@@ -190,6 +203,7 @@
 - `02-设计基准/`：候选或已确认的 SVG 方案。
 - `03-平台交付/`：由确认设计基准生成的可消费文件。
 - `04-品牌组件/`：跨平台 Logo 和 Favicon。
+- `04-品牌组件/05-README素材/`：README 与文档展示用的软件截图（2026-10-04 由 `docs/04-项目资料/05-README素材/` 迁入）。
 - `05-归档/`：被替换但需要保留追溯关系的历史版本。
 
 设计基准确认后，新增最终文件 `opencodex-desktop-final.svg`，再生成各平台交付物；生成日期、输入基准、工具版本和 SHA-256 校验值应记录在后续素材清单中。
