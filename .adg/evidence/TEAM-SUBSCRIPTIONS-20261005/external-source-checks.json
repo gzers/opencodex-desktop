@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "kind": "documentation.source_access_record",
+  "collaboration_id": "COL-LOCAL-20261005-02",
+  "document_date": "2026-10-05",
+  "timezone": "Asia/Shanghai",
+  "generated_at": "2026-10-05T10:56:58.361222+08:00",
+  "method": "Direct HTTPS reads from official documentation; records contain metadata and hashes, not third-party full text.",
+  "limitations": [
+    "References inform the candidate design only; availability and marker checks do not verify production compatibility.",
+    "No claim that these references describe every client or the latest supported release."
+  ],
+  "sources": [
+    {
+      "id": "mihomo-proxy-providers",
+      "url": "https://wiki.metacubex.one/config/proxy-providers/",
+      "purpose": "更新地址、周期、范围与覆盖的交互参考；不作为 Clash 格式兼容承诺",
+      "retrieved_at": "2026-10-05T10:56:57.454666+08:00",
+      "status": "retrieved",
+      "http_status": 200,
+      "final_url": "https://wiki.metacubex.one/config/proxy-providers/",
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 94973,
+      "body_sha256": "ed04b770f07b1693e3ea542abdf1d2a36b61cdc2e2fa6e7cf3f33ff16fabe195",
+      "reference_markers": {
+        "interval": true,
+        "filter": true,
+        "override": true
+      }
+    },
+    {
+      "id": "agent-skills-specification",
+      "url": "https://agentskills.io/specification",
+      "purpose": "Skill 为包含 SKILL.md 及可选脚本、引用和素材的目录内容",
+      "retrieved_at": "2026-10-05T10:56:57.455512+08:00",
+      "status": "retrieved",
+      "http_status": 200,
+      "final_url": "https://agentskills.io/specification",
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 443564,
+      "body_sha256": "82d348e8e9c1b61e28034d7bf8ca6561532abf055d2a8bc97b306f1c15531644",
+      "reference_markers": {
+        "SKILL.md": true,
+        "scripts": true,
+        "references": true,
+        "assets": true
+      }
+    },
+    {
+      "id": "mcp-registry-about",
+      "url": "https://modelcontextprotocol.io/registry/about",
+      "purpose": "服务元数据与可安装制品、远端服务分别建模",
+      "retrieved_at": "2026-10-05T10:56:57.455613+08:00",
+      "status": "retrieved",
+      "http_status": 200,
+      "final_url": "https://modelcontextprotocol.io/registry/about",
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 312109,
+      "body_sha256": "60d67ffc678a4fdd39dc1fb5a5ad66fe602679a84ab58e92acf052e8b4b5019f",
+      "reference_markers": {
+        "metadata": true,
+        "package": true,
+        "remote": true
+      }
+    },
+    {
+      "id": "mcp-authorization-2025-11-25",
+      "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
+      "purpose": "目标 MCP 资源授权与订阅平台认证分开；固定版本参考",
+      "retrieved_at": "2026-10-05T10:56:57.455319+08:00",
+      "status": "retrieved",
+      "http_status": 200,
+      "final_url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 618224,
+      "body_sha256": "0f60dc78ce0f17053b9774d38d5015d75894de8202aa2bfa1927d128ef627722",
+      "reference_markers": {
+        "resource": true,
+        "token": true
+      }
+    }
+  ]
+}

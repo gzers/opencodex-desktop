@@ -1,0 +1,361 @@
+{
+  "schema_version": 1,
+  "kind": "documentation.check_record",
+  "collaboration_id": "COL-LOCAL-20261005-02",
+  "generated_at": "2026-10-05T11:03:27.545584+08:00",
+  "branch": "docs/governance-main",
+  "baseline_commit": "25b262c3650921487c8527755cb05d6ce297cd3f",
+  "status": "passed",
+  "scope": {
+    "new_package": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合",
+    "existing_files_checked": [
+      "docs/04-项目资料/03-项目协作资料/README.md",
+      "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/README.md",
+      "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/README.md",
+      "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/桌面交互与服务端扩展.md"
+    ],
+    "existing_file_scope": "Only links newly pointing to this package; preserve other concurrent work."
+  },
+  "counts": {
+    "markdown_files": 14,
+    "local_links": 43,
+    "json_examples": 1,
+    "mermaid_blocks_not_rendered": 2,
+    "requirements": 8,
+    "decisions": 12,
+    "technical_gates": 7,
+    "work_packages": 8,
+    "acceptance_scenarios": 38
+  },
+  "checks": [
+    "Local Markdown targets exist",
+    "New Markdown has balanced fences, no control characters or trailing whitespace, and final newlines",
+    "JSON examples parse",
+    "Five stage README files exist",
+    "COL filename is unique",
+    "Requirement, decision, gate, work-package and acceptance IDs are sequential",
+    "Content-source API namespace is distinct from usage-source namespace",
+    "Four official HTTPS source access records are successful",
+    "Scoped git diff --check passes"
+  ],
+  "errors": [],
+  "new_document_hashes": [
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/01-原始输入/需求输入.md",
+      "sha256": "1a2676a4915c472b539c23d3d5953f6bf1e10236a931f995f0c0a30ea90a052d"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "sha256": "546b9583cee7712e19488fbfb6a6b8a4c1e2cb0291e3e0e56f0742bbb1f3f2c6"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/发布与订阅契约.md",
+      "sha256": "03e31438843db25b8a358b495a253bfc5050894f03d1a0b3d8de425441987752"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/客户端流程与本地共存.md",
+      "sha256": "746bc97e0a1f15be0b77037dfc8bd16a878dda78c72d6d1a726b4a575b266cd3"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/总体方案.md",
+      "sha256": "aaa795a8d8f4b7d55db68460f609ed4c5ddf3a9db9db7e08313e45143478e828"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/03-确认与评审/README.md",
+      "sha256": "74f4c71f6ba7a6bb4b80882c09fc78b6dd76476a58dbe763ed4cf37b7b69a286"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/06-版本记录/README.md",
+      "sha256": "0f8e99c7eb57710789353a52c01b5400da0b347f0d5bba00047f5d3771b8e453"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "sha256": "eaa88852fe08913ccab9fe3c14e5e1c34be9109ae4753266ac4cb1c3d3e9c623"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/02-开发实施/README.md",
+      "sha256": "a2e180e0889b5bdcdc5f71f346043139a22b570e69715ffe0ce060224c9e63df"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/03-测试验收/README.md",
+      "sha256": "3ba5f75409dc94d0995ae8669d992992c74d052fdca4677710986534e4c58165"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/04-发布交付/README.md",
+      "sha256": "66ab35bba464a0ec7a0005483243a072b8d51095d6914a40b19aefe0eaedeb8f"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/05-运行维护/README.md",
+      "sha256": "76a452e1606cc402c460b2bd9af9cf1a2d38bf3184f1ad6c77b6ba083c3112c5"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/COL-LOCAL-20261005-02.md",
+      "sha256": "2c36fda22fedad253cc435daadf3816611d0a08f308c54e1939edfbb8b492865"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "sha256": "1bf07843bdaa272ecd5595028a5c8aa2e68031bb731163ad546579b9c78eaa4e"
+    }
+  ],
+  "cross_reference_file_hashes": [
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/README.md",
+      "sha256": "e122a07cdf603d27b146ef1fe7cb28bb455d8e96f9797595f4e57eaeb254feac"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/README.md",
+      "sha256": "caf9ad89e861465a0fc8792925f46b2ed0470f5f0de84256840cf90fc3dd03ff"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/README.md",
+      "sha256": "7eb16c6ade51dab9016a39e892383722f707a2c23ad46ab23d83f0803e923691"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/桌面交互与服务端扩展.md",
+      "sha256": "9103aefa748d95f5e3a0362bc66589bc8068130e88f4487dfb651ab190139eea"
+    }
+  ],
+  "basis_file_hashes": [
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/02-方案草案/模型配置管理方案.md",
+      "sha256": "f7d779b31154324d9c21d11a44e57267aabb7a196997e9da03942c274f3cc221"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/02-方案草案/模型模版与匹配规则方案.md",
+      "sha256": "127dae50c2042ef850efdecf807050aa33041dc8d4919a094b04a465590b9e42"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/总体方案.md",
+      "sha256": "706513df44454f1a9bba0faea8b268e8d35f189b8b8e6d6779665d639fa8476c"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/团队与数据权限模型.md",
+      "sha256": "77944332dd0a26f9a43fbfd1b6ddef63badb8dddda299d5e77f3f5d84ec6d4e1"
+    }
+  ],
+  "external_source_record_sha256": "343595b0c3845063e33f30eaf7fbefc18a82985132633e453099dfd91b8c92ac",
+  "local_links": [
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/01-原始输入/需求输入.md",
+      "target": "../03-确认与评审/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "target": "../../../2026-10-04-模型配置管理与同步-v0.2.0/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "target": "../../../2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/02-方案草案/模型配置管理方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "target": "../../../2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/02-方案草案/模型模版与匹配规则方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "target": "../../../2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/总体方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "target": "../../../2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/团队与数据权限模型.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/依据与边界.md",
+      "target": "../../../2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/桌面交互与服务端扩展.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/发布与订阅契约.md",
+      "target": "总体方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/发布与订阅契约.md",
+      "target": "客户端流程与本地共存.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/发布与订阅契约.md",
+      "target": "../../../2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/团队与数据权限模型.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/客户端流程与本地共存.md",
+      "target": "发布与订阅契约.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/02-方案草案/总体方案.md",
+      "target": "../../../2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/团队与数据权限模型.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "01-原始输入/需求输入.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "02-方案草案/总体方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "02-方案草案/发布与订阅契约.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "02-方案草案/客户端流程与本地共存.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "02-方案草案/依据与边界.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "03-确认与评审/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/01-需求分析/README.md",
+      "target": "../03-测试验收/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/03-测试验收/README.md",
+      "target": "../01-需求分析/03-确认与评审/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/COL-LOCAL-20261005-02.md",
+      "target": "01-需求分析/01-原始输入/需求输入.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/COL-LOCAL-20261005-02.md",
+      "target": "01-需求分析/02-方案草案/依据与边界.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/COL-LOCAL-20261005-02.md",
+      "target": "01-需求分析/02-方案草案/总体方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/COL-LOCAL-20261005-02.md",
+      "target": "01-需求分析/02-方案草案/发布与订阅契约.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/COL-LOCAL-20261005-02.md",
+      "target": "01-需求分析/02-方案草案/客户端流程与本地共存.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "COL-LOCAL-20261005-02.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/01-原始输入/需求输入.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/02-方案草案/总体方案.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/02-方案草案/发布与订阅契约.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/02-方案草案/客户端流程与本地共存.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/02-方案草案/依据与边界.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/03-确认与评审/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "02-开发实施/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "03-测试验收/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "04-发布交付/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "05-运行维护/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "01-需求分析/06-版本记录/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "../2026-10-04-模型配置管理与同步-v0.2.0/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "target": "../2026-10-05-多用户多设备用量与服务端协作/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/README.md",
+      "target": "01-协作包/2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/README.md",
+      "target": "../2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/README.md",
+      "target": "../2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "exists": true
+    },
+    {
+      "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/桌面交互与服务端扩展.md",
+      "target": "../../../2026-10-05-团队配置发布订阅与模块组合/README.md",
+      "exists": true
+    }
+  ],
+  "not_executed": [
+    "Production code inspection or implementation",
+    "The 38 candidate functional acceptance scenarios",
+    "Mermaid rendering or interactive prototype tests",
+    "Cross-device, team authorization or runtime application tests"
+  ],
+  "conclusion": "Document material checks only; no functional acceptance or release certification."
+}
