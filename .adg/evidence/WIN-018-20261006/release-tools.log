@@ -1,0 +1,166 @@
+test_all_real_signatures_verified_and_duplicate_assets_downloaded_once (test_publish_release.ArtifactSignatureTests.test_all_real_signatures_verified_and_duplicate_assets_downloaded_once) ... ERROR
+test_draft_asset_bytes_verified_with_original_manifest_signatures (test_publish_release.ArtifactSignatureTests.test_draft_asset_bytes_verified_with_original_manifest_signatures) ... ERROR
+test_same_size_tampering_rejected_even_without_server_digest (test_publish_release.ArtifactSignatureTests.test_same_size_tampering_rejected_even_without_server_digest) ... ERROR
+test_server_digest_mismatch_rejected (test_publish_release.ArtifactSignatureTests.test_server_digest_mismatch_rejected) ... ERROR
+test_signature_for_another_key_rejected (test_publish_release.ArtifactSignatureTests.test_signature_for_another_key_rejected) ... ERROR
+test_truncated_download_rejected (test_publish_release.ArtifactSignatureTests.test_truncated_download_rejected) ... ERROR
+test_wrong_tagged_version_rejected_before_download (test_publish_release.ArtifactSignatureTests.test_wrong_tagged_version_rejected_before_download) ... ERROR
+test_anonymous_verification_retries_until_expected_manifest (test_publish_release.PublicEndpointTests.test_anonymous_verification_retries_until_expected_manifest) ... ok
+test_persistent_404_or_wrong_content_fails (test_publish_release.PublicEndpointTests.test_persistent_404_or_wrong_content_fails) ... ok
+test_already_latest_is_idempotent_and_verifies_stable_alias (test_publish_release.PublishTests.test_already_latest_is_idempotent_and_verifies_stable_alias) ... ok
+test_anonymous_verification_failure_is_nonzero (test_publish_release.PublishTests.test_anonymous_verification_failure_is_nonzero) ... ok
+test_auth_error_does_not_become_missing_latest (test_publish_release.PublishTests.test_auth_error_does_not_become_missing_latest) ... ok
+test_draft_resolution_does_not_use_public_tag_lookup (test_publish_release.PublishTests.test_draft_resolution_does_not_use_public_tag_lookup) ... ok
+test_draft_untagged_urls_match_final_manifest_urls (test_publish_release.PublishTests.test_draft_untagged_urls_match_final_manifest_urls) ... ok
+test_draft_urls_still_require_matching_repo_tag_and_filename (test_publish_release.PublishTests.test_draft_urls_still_require_matching_repo_tag_and_filename) ... ok
+test_duplicate_asset_names_are_rejected (test_publish_release.PublishTests.test_duplicate_asset_names_are_rejected) ... ok
+test_edit_failure_is_nonzero_and_does_not_restore_or_report_success (test_publish_release.PublishTests.test_edit_failure_is_nonzero_and_does_not_restore_or_report_success) ... ok
+test_first_release_requires_explicit_stable_mode (test_publish_release.PublishTests.test_first_release_requires_explicit_stable_mode) ... ok
+test_invalid_manifests_fail_before_any_edit (test_publish_release.PublishTests.test_invalid_manifests_fail_before_any_edit) ... ok
+test_invalid_signature_blocks_all_publication (test_publish_release.PublishTests.test_invalid_signature_blocks_all_publication) ... ok
+test_latest_mismatch_is_not_success (test_publish_release.PublishTests.test_latest_mismatch_is_not_success) ... ok
+test_missing_empty_or_unfinished_asset_fails_before_edit (test_publish_release.PublishTests.test_missing_empty_or_unfinished_asset_fails_before_edit) ... ok
+test_preserves_existing_latest (test_publish_release.PublishTests.test_preserves_existing_latest) ... ok
+test_public_release_cannot_use_draft_urls (test_publish_release.PublishTests.test_public_release_cannot_use_draft_urls) ... ok
+test_release_lookup_rejects_wrong_identity_before_edit (test_publish_release.PublishTests.test_release_lookup_rejects_wrong_identity_before_edit) ... ok
+test_restore_latest_failure_is_nonzero (test_publish_release.PublishTests.test_restore_latest_failure_is_nonzero) ... ok
+test_stable_downgrade_uses_numeric_version_order (test_publish_release.PublishTests.test_stable_downgrade_uses_numeric_version_order) ... ok
+test_stable_promotes_target_and_verifies_both_endpoints (test_publish_release.PublishTests.test_stable_promotes_target_and_verifies_both_endpoints) ... ok
+test_real_workflow_shell_propagates_script_failure_through_tee (test_publish_release.WorkflowExitTests.test_real_workflow_shell_propagates_script_failure_through_tee) ... Exception in thread Thread-1 (_readerthread):
+Traceback (most recent call last):
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1599, in _readerthread
+    buffer.append(fh.read())
+                  ^^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x90 in position 1: invalid start byte
+ERROR
+
+======================================================================
+ERROR: test_all_real_signatures_verified_and_duplicate_assets_downloaded_once (test_publish_release.ArtifactSignatureTests.test_all_real_signatures_verified_and_duplicate_assets_downloaded_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_draft_asset_bytes_verified_with_original_manifest_signatures (test_publish_release.ArtifactSignatureTests.test_draft_asset_bytes_verified_with_original_manifest_signatures)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_same_size_tampering_rejected_even_without_server_digest (test_publish_release.ArtifactSignatureTests.test_same_size_tampering_rejected_even_without_server_digest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_server_digest_mismatch_rejected (test_publish_release.ArtifactSignatureTests.test_server_digest_mismatch_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_signature_for_another_key_rejected (test_publish_release.ArtifactSignatureTests.test_signature_for_another_key_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_truncated_download_rejected (test_publish_release.ArtifactSignatureTests.test_truncated_download_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_wrong_tagged_version_rejected_before_download (test_publish_release.ArtifactSignatureTests.test_wrong_tagged_version_rejected_before_download)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 302, in setUp
+    subprocess.run(["minisign", "-G", "-W", "-p", str(self.public), "-s", str(self.secret)],
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+
+======================================================================
+ERROR: test_real_workflow_shell_propagates_script_failure_through_tee (test_publish_release.WorkflowExitTests.test_real_workflow_shell_propagates_script_failure_through_tee)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\018-windows-fixes\opencodex-desktop\test\test_publish_release.py", line 287, in test_real_workflow_shell_propagates_script_failure_through_tee
+    self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
+                                            ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for +: 'NoneType' and 'str'
+
+----------------------------------------------------------------------
+Ran 29 tests in 0.190s
+
+FAILED (errors=8)

@@ -1,0 +1,107 @@
+{
+  "record_id": "WIN-018-20261006",
+  "checked_at": "2026-10-06T03:23:46+08:00",
+  "authority_ref": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-18.md",
+  "scope": "User-authorized development, local verification and commit; merge, installer production and release excluded",
+  "code_commit": "785e80dada6928c9643ee69f16056d414cd7304e",
+  "checks": [
+    {
+      "name": "review:windows",
+      "result": "passed",
+      "evidence": [
+        "source-identity.json",
+        "backend.log",
+        "runtime-real.log",
+        "final-exe-icons.json",
+        "build-provenance.log"
+      ],
+      "findings_resolved": [
+        "Windows HOME-only setup abort",
+        "oversized ICO padding",
+        "Unicode CMD decoding",
+        "Windows stop exit observer stub",
+        "short-lived directory rename sharing conflict",
+        "instance metadata truncated before lock acquisition",
+        "Windows unsupported IPC incorrectly presentable as enabled",
+        "Stale build commit in a symbolic-ref worktree"
+      ]
+    },
+    {
+      "name": "frontend",
+      "result": "passed",
+      "files": 79,
+      "tests": 375,
+      "evidence": [
+        "frontend.log",
+        "frontend-build.log"
+      ],
+      "typecheck": "passed"
+    },
+    {
+      "name": "backend:windows",
+      "result": "passed",
+      "tests": 331,
+      "ignored": 5,
+      "evidence": [
+        "backend.log",
+        "clippy.log",
+        "discovery-host-independent.log"
+      ],
+      "format_check": "passed",
+      "limits": "Unix-only tests not executed; optional existing live-service tests may return without testing when environment flags are absent",
+      "final_delta": "Full suite passed before a test-only host-independence correction and build provenance check; both affected discovery tests reran, final clippy and final EXE provenance passed"
+    },
+    {
+      "name": "runtime:windows",
+      "result": "passed",
+      "official_package_version": "2.78.0",
+      "evidence": [
+        "runtime-real.log",
+        "backend.log"
+      ],
+      "actions": "Isolated registry install, entry version, managed source, backup/uninstall, offline import, rejection and cleanup; no daily official proxy start/stop"
+    },
+    {
+      "name": "final-exe:windows",
+      "result": "passed",
+      "home_removed": true,
+      "observed_seconds": 30,
+      "ui_rendered": true,
+      "tauri_commands_succeeded": true,
+      "evidence": [
+        "final-startup.json",
+        "final-webview.json",
+        "final-startup-source.log",
+        "final-exe-icons.json",
+        "build-provenance.log"
+      ],
+      "source_commit_matches": true
+    },
+    {
+      "name": "regression:macos",
+      "result": "not_run",
+      "reason": "No macOS executor on this device and GitHub authentication blocked remote CI; required before subsequent integration"
+    },
+    {
+      "name": "release-tools",
+      "result": "not_completed",
+      "evidence": [
+        "release-tools.log"
+      ],
+      "reason": "Local Windows lacks minisign and Unix shell preconditions; no release-tool implementation changed; Linux CI remains a later gate"
+    }
+  ],
+  "boundaries": {
+    "merged_main": false,
+    "installer_built": false,
+    "tag_created": false,
+    "release_published": false,
+    "daily_installed_app_replaced": false,
+    "global_HOME_modified": false,
+    "github_push_succeeded": false,
+    "remote_ci_run": false
+  },
+  "push_failure": "Git Credential Manager waited for authentication; noninteractive retry: Cannot prompt because user interactivity has been disabled / unable to get password from user",
+  "handoff": "Committed branches will be delivered in an incremental Git bundle; transport hash and refs recorded in the external handoff receipt, preventing circular self-hashes",
+  "is_closure_or_release_certificate": false
+}
