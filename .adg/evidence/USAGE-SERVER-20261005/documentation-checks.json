@@ -1,0 +1,96 @@
+{
+  "format": "collaboration-document-check-v1",
+  "collaboration_id": "COL-LOCAL-20261005-01",
+  "checked_at": "2026-10-05T10:49:10+08:00",
+  "status": "passed",
+  "branch": "docs/governance-main",
+  "scope": "Documentation/source-identity checks only; no production implementation or functional acceptance",
+  "counts": {
+    "markdown_files": 15,
+    "relative_links": 48,
+    "tables": 31,
+    "mermaid_blocks": 3,
+    "source_hashes_verified": 16,
+    "public_tag_exact_matches": 3,
+    "acceptance_conditions_proposed": 58,
+    "technical_gates_proposed": 10,
+    "candidate_decisions": 16
+  },
+  "checks": {
+    "collaboration_id_unique": true,
+    "phase_indexes_present": true,
+    "scoped_git_diff_check": true,
+    "production_tests_executed": false,
+    "mermaid_rendering_executed": false,
+    "runtime_changed": false,
+    "source_ledger_read": false
+  },
+  "changed_path_scope": [
+    "docs/04-项目资料/03-项目协作资料/README.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作",
+    ".adg/evidence/USAGE-SERVER-20261005"
+  ],
+  "documents": [
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/01-原始输入/需求输入.md",
+      "sha256": "26133915988e76fbdea184d832db3e8b3446eec002ced5125a6308ab49bfff10"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/团队与数据权限模型.md",
+      "sha256": "77944332dd0a26f9a43fbfd1b6ddef63badb8dddda299d5e77f3f5d84ec6d4e1"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/总体方案.md",
+      "sha256": "706513df44454f1a9bba0faea8b268e8d35f189b8b8e6d6779665d639fa8476c"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/数据与同步契约.md",
+      "sha256": "287e76e3607442440c69d10e8918149c456942dd90043fe51bcae6cf5529afa5"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/桌面交互与服务端扩展.md",
+      "sha256": "034f3b9db1718c8b3cc8294a2cdf40547e1f679936847950b9d2a0a5dcca8c49"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/02-方案草案/现有能力与调研依据.md",
+      "sha256": "85ab8043ef5360cf75828d64fc40b8ad07280c7740ebb425b2ce8d501023877a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/03-确认与评审/README.md",
+      "sha256": "37627466a664f30a457ec8ad441e3d8d5e097f3df96a7d80c74d4350471521e2"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/06-版本记录/README.md",
+      "sha256": "77fff859fac485d55e773dee2268206b2ab32ce3508be52543e642ca781b7177"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/01-需求分析/README.md",
+      "sha256": "e82a985293a01beb4dab6636d2c79f22ab17804cfbc5a82181e4772e9b684795"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/02-开发实施/README.md",
+      "sha256": "7bbffa393b3003dfebe8ffdfa47bb41960e92dd96781fda385654c49691f94e7"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/03-测试验收/README.md",
+      "sha256": "dbf0ada66e65d4272a986cd12c02926101e6cecb53739b891a82b79e26689f00"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/04-发布交付/README.md",
+      "sha256": "3afe5d0037c791e336af76cf5302a113597d7684d43c1e1c1145a367a648e488"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/05-运行维护/README.md",
+      "sha256": "70f131ec2949ec999e8252b16a568db539bfdb8da1d935b0896d927731103a3a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/COL-LOCAL-20261005-01.md",
+      "sha256": "ee0cc9872b70928284ac5e226193e7624ee5f9fcbf67964bdfd8d197ecceac15"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-05-多用户多设备用量与服务端协作/README.md",
+      "sha256": "642d5c2c88c473abb4ad0f745b3c5b57a9025bd66eb3a2a2b01844a25055442f"
+    }
+  ],
+  "errors": []
+}

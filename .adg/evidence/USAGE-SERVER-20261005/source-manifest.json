@@ -1,0 +1,139 @@
+{
+  "format": "collaboration-source-manifest-v1",
+  "collaboration_id": "COL-LOCAL-20261005-01",
+  "observed_at": "2026-10-05T10:17:27+08:00",
+  "status": "source-research-only",
+  "upstream": {
+    "package": "@bitkyc08/opencodex",
+    "installed_version": "2.77.0",
+    "root_locator": "macOS managed runtime: ~/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex",
+    "files": [
+      {
+        "path": "package.json",
+        "sha256": "56713da90a2d66d1c627eab27967c9c57d15f8d7cd7c642e95917405a6d93fda",
+        "size_bytes": 4339
+      },
+      {
+        "path": "src/usage/log.ts",
+        "sha256": "df57fe8330e7fec79fade92b619a0006347e995f8ca70099d270ba0d858e0de8",
+        "size_bytes": 87963
+      },
+      {
+        "path": "src/usage/summary.ts",
+        "sha256": "b0cdc5392c4715131db2373b0b5c175a3d37a4b2f4778eafa65a19a381fb8b48",
+        "size_bytes": 72828
+      },
+      {
+        "path": "src/usage/totals.ts",
+        "sha256": "491e89fb39d06dc33b305d5d130bf956841106a13a7ee200fdc35365d860882e",
+        "size_bytes": 752
+      },
+      {
+        "path": "src/usage/cost.ts",
+        "sha256": "c475548065d7765633eacea7ae5acb482417d0c944588aa765ec4ff9e5478b12",
+        "size_bytes": 29372
+      },
+      {
+        "path": "src/usage/timeline.ts",
+        "sha256": "383d7e26c78d77241032da73d1a5370ed382ba81caa7ff9ebaf667d430b94559",
+        "size_bytes": 10827
+      },
+      {
+        "path": "src/usage/time-range.ts",
+        "sha256": "77155f4bd28faca0d53ec68e78c4d281e2a1ebf05297fba145bf5f8da04d65c1",
+        "size_bytes": 2279
+      },
+      {
+        "path": "src/server/management/request-history-routes.ts",
+        "sha256": "8f6bd12fc8da4dc70d04b13e01c99b44432be17c3ceee8dce26c9042b171f726",
+        "size_bytes": 8960
+      },
+      {
+        "path": "src/server/management/logs-usage-routes.ts",
+        "sha256": "f491959dc9b3131050712bcda93354b153961e84f21123dda932d60f8742f1c2",
+        "size_bytes": 28438
+      },
+      {
+        "path": "src/server/management/usage-timeline-routes.ts",
+        "sha256": "88b392a0b4e355ec1718ebd4738ae9bdf578adae51f56366a30ec964bd1ccf08",
+        "size_bytes": 2137
+      },
+      {
+        "path": "src/server/hub-usage.ts",
+        "sha256": "15e1ba83765eef62d075aa57463e21d93bd20ea57da2590878b7e12810702992",
+        "size_bytes": 3965
+      },
+      {
+        "path": "src/remote/hub-usage.ts",
+        "sha256": "ba410765d5ff205436d3b0e54e585d9c841d658fb1c478f5f51f068ee08aa19d",
+        "size_bytes": 1698
+      },
+      {
+        "path": "src/client/hub-client.ts",
+        "sha256": "39125a7b92f9bf33200a2003ed95f246ceb3dd33c6ba59cfb4c32d1115c7d3fc",
+        "size_bytes": 30267
+      },
+      {
+        "path": "src/cli/observe.ts",
+        "sha256": "28dc5b93119fbcda6b61ee5e3d7ea6fdb1e64821960ec3af0d700a200227db50",
+        "size_bytes": 14141
+      },
+      {
+        "path": "src/server/usage-ledger-retention.ts",
+        "sha256": "ee5e0cefb0c1da84d324b933451ea51fab578394bb2a83e1c81a5248d93cf22e",
+        "size_bytes": 3537
+      },
+      {
+        "path": "src/server/index/serve-options.ts",
+        "sha256": "c19e839c8c67c43524f60cc12bc4fe71b52e7b27d66e829a754f9c7f91f33e4e",
+        "size_bytes": 100818
+      }
+    ],
+    "public_tag_checks": [
+      {
+        "path": "src/server/hub-usage.ts",
+        "url": "https://raw.githubusercontent.com/lidge-jun/opencodex/v2.77.0/src/server/hub-usage.ts",
+        "sha256": "15e1ba83765eef62d075aa57463e21d93bd20ea57da2590878b7e12810702992",
+        "matches_installed_file": true
+      },
+      {
+        "path": "src/usage/summary.ts",
+        "url": "https://raw.githubusercontent.com/lidge-jun/opencodex/v2.77.0/src/usage/summary.ts",
+        "sha256": "b0cdc5392c4715131db2373b0b5c175a3d37a4b2f4778eafa65a19a381fb8b48",
+        "matches_installed_file": true
+      },
+      {
+        "path": "src/remote/hub-usage.ts",
+        "url": "https://raw.githubusercontent.com/lidge-jun/opencodex/v2.77.0/src/remote/hub-usage.ts",
+        "sha256": "ba410765d5ff205436d3b0e54e585d9c841d658fb1c478f5f51f068ee08aa19d",
+        "matches_installed_file": true
+      }
+    ],
+    "latest_version_asserted": false
+  },
+  "desktop": {
+    "branch": "main",
+    "commit": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+    "files": [
+      {
+        "path": "apps/desktop/tauri/src/modules/sync/config.rs",
+        "git_ref": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+        "sha256": "c017a15bf647ece3abeeb4143e212fdb3dc0f5b1f975ba1c7ed89ec3346dd97d"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/keychain.rs",
+        "git_ref": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+        "sha256": "e3a931c48140cebba3bc357b563133e5b0918de02823525416842ab42d5f102d"
+      }
+    ]
+  },
+  "inspection_boundary": {
+    "source_only": true,
+    "actual_usage_ledger_read": false,
+    "credentials_or_user_configuration_read": false,
+    "runtime_management_api_called": false,
+    "runtime_mutated": false,
+    "source_copied_into_docs": false
+  },
+  "validation_scope": "Read-only source facts, not end-to-end functionality verification"
+}
