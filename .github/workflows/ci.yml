@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, docs/governance-main]
+    branches: [main, docs/governance-main, 'feature/**']
   pull_request:
 
 jobs:
@@ -41,8 +41,8 @@ jobs:
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test --workspace --features integration-test
 
-  # Windows 构建门禁：验证跨平台改造没有回退（不需要 shim，GitHub 的
-  # windows-latest 自带 MSVC 工具链）。运行期测试覆盖仍在补齐，暂以编译门禁为准。
+  # Windows 不仅编译：运行后端回归，并启动最终 EXE 检查无 HOME 环境、
+  # 隔离数据初始化和 WebView 首屏。该 job 不生成安装器或发布制品。
   backend-windows:
     runs-on: windows-latest
     defaults:
@@ -50,11 +50,35 @@ jobs:
         working-directory: apps/desktop/tauri
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo check --workspace --all-targets
+        with:
+          components: rustfmt, clippy
+      - run: npm --prefix ../ui ci
+      - run: npm --prefix ../ui run build
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Windows backend regression
+        shell: pwsh
+        run: |
+          $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
+          cargo test --workspace --features integration-test
+      - run: cargo build --release --features custom-protocol --bins
+      - name: Windows final EXE smoke
+        shell: pwsh
+        run: |
+          & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-startup-evidence
+          path: test/out/windows-startup
 
   build:
-    needs: [frontend, backend, release-tools]
+    if: github.ref == 'refs/heads/main'
+    needs: [frontend, backend, backend-windows, release-tools]
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v5

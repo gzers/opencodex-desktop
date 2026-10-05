@@ -114,10 +114,13 @@ mod tests {
         assert!(paths.node.is_absolute());
         assert!(paths.npm.is_absolute());
         assert!(paths.ocx.is_absolute());
-        assert_eq!(
-            paths.node.parent(),
-            Some(root.path().join(".local/bin").as_path())
-        );
+        // Windows runner may also have an allowed system-wide Node installation.
+        // Exercise the missing-candidate fallback against an explicit empty set
+        // rather than depending on the host's Program Files contents.
+        let empty_directory = root.path().join(".local/bin");
+        let missing = select_tool(std::slice::from_ref(&empty_directory), tool_names("node"));
+        assert_eq!(missing.parent(), Some(empty_directory.as_path()));
+        assert!(!missing.exists());
     }
 
     #[cfg(windows)]

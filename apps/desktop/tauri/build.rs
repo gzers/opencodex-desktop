@@ -2,10 +2,20 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 fn main() {
+    track_windows_test_manifest();
     track_frontend_dist();
     track_build_commit();
     track_frozen_defaults();
     tauri_build::build();
+}
+
+/// 使用 Tauri mock/context 的 Windows 测试也会链接 TaskDialogIndirect。
+/// 测试 EXE 不经过应用资源嵌入，需显式选择 Common Controls v6。
+fn track_windows_test_manifest() {
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
+        println!("cargo:rustc-link-arg-tests=/MANIFEST:EMBED");
+        println!("cargo:rustc-link-arg-tests=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'");
+    }
 }
 
 /// 固化默认配置（H-01/H-06~H-13）：构建期校验并嵌入，消费者从同一来源读取，
@@ -78,13 +88,22 @@ fn track_frozen_defaults() {
 /// 否则维护事故无法把本机安装映射回提交。
 ///
 /// 工作树的 `.git` 可能是文件（linked worktree），所以用
-/// `git rev-parse --git-path HEAD` 解析真实 HEAD 路径再声明依赖；
+/// `git rev-parse --git-path` 解析真实 HEAD 与符号分支引用再声明依赖；
 /// 取不到提交时留空，运行时如实说成「未知」，不伪造提交号。
 fn track_build_commit() {
-    if let Some(head) = git_output(&["rev-parse", "--git-path", "HEAD"]) {
-        let head = PathBuf::from(head);
-        if head.exists() {
-            println!("cargo:rerun-if-changed={}", head.display());
+    let mut references = vec!["HEAD".to_string(), "packed-refs".to_string()];
+    if let Some(branch) = git_output(&["symbolic-ref", "--quiet", "HEAD"]) {
+        references.push(branch);
+    }
+    for reference in references {
+        if let Some(path) = git_output(&["rev-parse", "--git-path", &reference]) {
+            let path = PathBuf::from(path);
+            if path.exists() {
+                println!("cargo:rerun-if-changed={}", path.display());
+            } else if let Some(parent) = path.parent().filter(|parent| parent.exists()) {
+                // 打包的引用可能在下次提交时重新成为 loose ref。
+                println!("cargo:rerun-if-changed={}", parent.display());
+            }
         }
     }
     let commit = git_output(&["rev-parse", "HEAD"]).unwrap_or_default();
