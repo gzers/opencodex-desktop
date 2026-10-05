@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 原型「短文本不许断行」真实浏览器（无头 Chromium）检查。
 // 运行：node "<本文件>"   （可选 PLAYWRIGHT_CORE=<playwright-core 目录>）
 //
@@ -51,7 +52,7 @@ if(!pwPath||!exe){
 const require=createRequire(pwPath+'/');
 const { chromium }=require('playwright-core');
 
-const proto=path.join(here,'..','index.html');
+const proto=sharedPrototype;
 const url=hash=>pathToFileURL(proto).href+'?theme=light'+hash;
 const results=[];
 const check=(c,m)=>results.push((c?'PASS':'FAIL')+' '+m);

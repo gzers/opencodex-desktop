@@ -1,4 +1,3 @@
-<!-- 2026-09-28 现行原型只读快照的融合候选；请勿将本文件作为新的主原型。 -->
 <!doctype html>
 <html lang="zh-CN" data-route="overview" data-theme="light" data-effects="high" data-glow-render="mesh">
 <head>
@@ -284,7 +283,7 @@ button{font:inherit}
 .modal-mask{position:absolute;inset:0;background:color-mix(in srgb,var(--text) 22%,transparent);display:none;align-items:center;justify-content:center;padding:20px;z-index:30;border-radius:inherit}
 .modal{width:min(520px,100%);max-height:min(70vh,calc(100% - 40px));display:flex;flex-direction:column;overflow:hidden;background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:var(--radius-lg);padding:0;box-shadow:0 18px 48px #00000029}
 .modal.modal-wide{width:min(86%,720px);max-height:78%}
-.modal.modal-uninstall{max-height:min(92vh,calc(100% - 16px))}
+.modal.modal-uninstall{max-height:min(92vh,calc(100% - 8px))}
 /* 阅读型弹窗（Skills 详情）：内容较长，给到更高的上限，尽量一次呈现、不出现内部滚动条。 */
 .modal.modal-wide.modal-tall{max-height:min(92%,calc(100% - 20px))}
 /* 弹窗三段式：标题与底部操作固定在框内，只有正文滚动——长内容（体检表、CLI 清单）不会把标题和按钮顶走。 */
@@ -413,47 +412,17 @@ button{font:inherit}
 .task-steps li.active{color:var(--text);font-weight:600}
 .task-steps li.active .mk{border-color:var(--brand);border-top-color:transparent;animation:tcSpin .8s linear infinite}
 .task-card .tc-acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.about-head{justify-content:flex-start}
-.about-head>.tag{margin-left:auto}
-.about-logo{flex:none;display:block}
-.about-logo svg,.about-logo img,.about-logo iframe{width:40px;height:40px;display:block;border:0;background:transparent}
-.about-logo .official-mark{width:40px;height:40px;display:block}
-.about-mark-svg{width:40px;height:40px;display:block;overflow:visible}
-.about-logo .mark-for-dark{display:none}
-html[data-theme="dark"] .about-logo .mark-for-light{display:none}
-html[data-theme="dark"] .about-logo .mark-for-dark{display:block}
-.about-logo iframe{overflow:hidden}
-.about-logo.official-missing{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:1px dashed var(--border);border-radius:8px}
-.about-logo.official-missing::after{content:"官方图标";font-size:9px;color:var(--muted);letter-spacing:.02em}
-
-/* 原型小形象：与动效研究页同一套三结构；生产由 RuntimeMotionMark 承担，这里只为演示。 */
-.pmark{width:20px;height:20px;flex:none;display:block;overflow:visible}
-.pmark-core{transform-box:fill-box;transform-origin:center}
-.task-card .pmark{width:22px;height:22px}
-.btn .pmark{width:15px;height:15px;margin-right:2px}
-.btn.is-busy{display:inline-flex;align-items:center;gap:6px}
-.notification-item .pmark,.history-item .pmark{width:18px;height:18px;margin-top:2px}
-.pmark[data-kind="starting"]{animation:pm-rise 1.1s ease-in-out infinite alternate}
-.pmark[data-kind="starting"] .pmark-core{animation:pm-spin 1.3s linear infinite}
-.pmark[data-kind="running"] .pmark-core{animation:pm-spin 3.4s linear infinite}
-.pmark[data-kind="problem"] .pmark-core{animation:pm-spin 4.2s linear infinite}
-.pmark[data-kind="confirming"] .pmark-core{animation:pm-scan 3.2s ease-in-out infinite}
-.pmark[data-kind="stopping"]{animation:pm-sink 1.5s ease-in-out infinite alternate}
-@keyframes pm-spin{to{transform:rotate(360deg)}}
-@keyframes pm-scan{0%,100%{transform:rotate(-26deg)}50%{transform:rotate(26deg)}}
-@keyframes pm-rise{from{transform:translateY(2px)}to{transform:translateY(-3px)}}
-@keyframes pm-sink{from{transform:translateY(-3px)}to{transform:translateY(4px)}}
-@media(prefers-reduced-motion:reduce){.pmark,.pmark-core{animation:none!important}}
 
 /* 专题命中的通知项高亮；反馈与任务共存时任务下移。 */
 .notification-item.hl,.history-item.hl{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
 
 /* 软件外多入口菜单：路由直达 + 通知专题场景列表。 */
-/* 通知与反馈是独立菜单：未进入专题时只显示原型导航与常规卡片，进入后只显示专题。 */
+/* 通知与反馈是独立菜单：未进入专题时只显示原型菜单与常规卡片，进入后只显示专题。 */
 .proto-std{display:contents}
 #notifDemoCard{display:none}
 body.notif-mode #notifDemoCard{display:block}
 body.notif-mode #protoStdCards{display:none}
+body.notif-mode .pctl-back{display:none}
 .notif-scn{display:grid;gap:3px}
 .notif-scn .ns-cat{margin:8px 0 2px;font-size:10px;font-weight:700;letter-spacing:.05em;color:#737a85}
 .notif-scn .ns-cat:first-child{margin-top:0}
@@ -667,8 +636,13 @@ html[data-route="overview"] #statePill{display:none}
 .ovb-branch .ob-hint{color:var(--muted)}
 .ob-chip{display:inline-flex;align-items:center;gap:6px;min-height:20px;padding:1px 8px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);font-size:var(--text-micro);font-weight:600;color:var(--muted)}
 .ob-spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:uninstall-spin .7s linear infinite;flex:none}
+.ovb-more{position:relative}
+.ovb-more>summary{list-style:none;cursor:pointer}
+.ovb-more>summary::-webkit-details-marker{display:none}
+.ovb-more-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;min-width:172px;display:grid;gap:4px;padding:8px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:0 10px 30px #00000024}
+.ovb-more-panel .btn{justify-content:flex-start;width:100%}
 /* 以上控件用 display 覆盖了 UA 的 [hidden]，这里补回隐藏语义，避免空的支线/结果块占位。 */
-.ovb-problem[hidden],.ovb-branch[hidden],.ovb-result[hidden],.ob-spin[hidden],.ob-chip[hidden]{display:none}
+.ovb-problem[hidden],.ovb-branch[hidden],.ovb-result[hidden],.ob-spin[hidden],.ob-chip[hidden],.ovb-more[hidden]{display:none}
 /* 统一操作结果：同一结果只在一个承载处，取消/部分完成/待确认/待重启各有真实结论（数据与状态 §5.8）。 */
 .ovb-result{display:grid;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-label)}
 .ovb-result[data-tone="bad"]{border-color:color-mix(in srgb,var(--red) 30%,transparent)}
@@ -844,15 +818,14 @@ html[data-theme="dark"] .prototype-side .proto-note{color:#b9bfca}
 .prototype-side ul{margin:0;padding-left:18px;color:#4b5563;font-size:12px;line-height:1.5}
 html[data-theme="dark"] .prototype-side ul{color:#b9bfca}
 .prototype-side li+li{margin-top:5px}
-
-/* 面板控件统一词汇表见 ../../../../../../03-共享原型/proto-controls.css（.pctl-*）。
-   这里只留本页特有的面板外壳：吸顶工具条。 */
+/* 面板控件统一词汇表见 ../proto-controls.css（.pctl-*）。这里只留本页外壳：吸顶工具条。 */
 .prototype-side .proto-rail{
   position:sticky;top:0;z-index:6;margin:0 -14px;padding:14px 14px 10px;
   background:linear-gradient(180deg,#fffffff5,#f6f6f8f5);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--pctl-line)}
 html[data-theme="dark"] .prototype-side .proto-rail{background:linear-gradient(180deg,#242424f5,#1e1e1ef5)}
+.prototype-side .pctl-back{margin:8px 0 0}
 .prototype-side .size-readout{display:flex;align-items:baseline;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
 .prototype-side .size-readout b{font-size:14px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .prototype-side .size-readout span{color:#737a85;font-size:10px;line-height:1.4}
@@ -1048,43 +1021,6 @@ body.notif-no-tint{--notif-tint-a:#0000;--notif-tint-b:#0000}
 body[data-page-material="glass"] .main{background:var(--page-fill-glass)}
 body[data-page-material="mid"] .main{background:var(--page-fill-mid)}
 body[data-page-material="clear"] .main{background:var(--page-fill-clear)}
-/* 操作按钮 / 底部功能卡材质（打样）：glass＝**与通知同一套**玻璃（半透明填充 + 颜色滤镜 + 模糊）。
-   文字统一走 --text / --accent-ink / --red，保证在玻璃上仍清晰。
-   注意：#card-overview-status 下的非主按钮原本是「无壳」文本按钮（integration css 里 id 选择器更「重」），
-   这里用带 body 前缀的同等强度选择器覆盖，才能真的变成玻璃按钮。 */
-body[data-btn-material="glass"] #card-overview-status .ovb-actions>.btn{
-  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),var(--glass-fill);
-  -webkit-backdrop-filter:var(--glass-blur-notif);backdrop-filter:var(--glass-blur-notif);
-  border-color:color-mix(in srgb,var(--text) 15%,transparent);color:var(--text);
-  box-shadow:0 8px 22px #10182814,inset 0 1px 0 #ffffff59;
-}
-body[data-btn-material="glass"] #card-overview-status .ovb-actions>.btn:hover{background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--text) 8%,var(--glass-fill));color:var(--text)}
-body[data-btn-material="glass"] #card-overview-status .ovb-actions>.btn.primary{
-  /* 冻结标准（2026-09-30）：磨砂 + 80% 中性黑白——色纱**叠在玻璃体上**（而非替换玻璃体），与 glass.html 一致。 */
-  background-color:var(--glass-fill);
-  background-image:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),linear-gradient(color-mix(in srgb,var(--accent) 80%,transparent),color-mix(in srgb,var(--accent) 80%,transparent));
-  border-color:color-mix(in srgb,var(--accent) 42%,transparent);color:var(--accent-ink);
-  /* 与 glass.html 强调玻璃一致：**扁平无棱线**（去掉 .btn 继承来的顶部 inset 高光）。 */
-  box-shadow:0 8px 22px #10182814;
-}
-body[data-btn-material="glass"] #card-overview-status .ovb-actions>.btn.danger{
-  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--red) 16%,var(--glass-fill));
-  border-color:color-mix(in srgb,var(--red) 38%,transparent);color:var(--red);
-}
-/* 底部三张功能卡：同一套通知玻璃。 */
-body[data-btn-material="glass"] #mods .card.mod{
-  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),var(--glass-fill);
-  -webkit-backdrop-filter:var(--glass-blur-notif);backdrop-filter:var(--glass-blur-notif);
-  border-color:color-mix(in srgb,var(--text) 13%,transparent);
-  box-shadow:0 18px 44px #10182814,0 2px 6px #1018280f;
-}
-html[data-theme="dark"] body[data-btn-material="glass"] #mods .card.mod{box-shadow:0 18px 44px #00000066,0 2px 6px #0006}
-
-/* 特效档：公共规则在 ../../../../../../03-共享原型/glass-effects.css（原型层唯一真源）；此处只补本页专有件。
-   低档**不隐藏** .motion-backdrop：光场由 iframe 自身关闭（?effects=low），形象保留为「静态多状态 logo」。 */
-html[data-effects="low"] #mods .card.mod{
-  background:var(--panel)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-  border-color:var(--border)!important;box-shadow:var(--shadow-sm)!important}
 
 
 
@@ -1149,6 +1085,7 @@ body.notif-solid .notification-panel,body.notif-solid .toast.k-card,body.notif-s
 }
 
 
+
 .notification-list{display:grid;gap:8px}
 .notification-item{
   display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:10px;align-items:center;
@@ -1201,13 +1138,13 @@ body.notif-solid .notification-panel,body.notif-solid .toast.k-card,body.notif-s
 .settings-panel.active{display:grid;gap:16px}
 .setting-list{display:grid;gap:8px;margin-top:14px}
 .setting-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel)}
+.setting-row[hidden]{display:none}
 /* 分段控件：设置行内的档位选择（如「视觉特效」高/中/低）。 */
 .seg{display:inline-flex;padding:2px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail)}
 .seg button{min-height:26px;padding:0 12px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:12px;font-weight:650;cursor:pointer;transition:background var(--motion-fast),color var(--motion-fast)}
 .seg button:hover{color:var(--text)}
 .seg button.active{background:var(--panel);color:var(--text);box-shadow:var(--shadow-sm)}
 html[data-theme="dark"] .seg button.active{background:#3a3a3a}
-.setting-row[hidden]{display:none}
 .setting-title{font-weight:600;font-size:var(--text-body)}
 .setting-desc{color:var(--muted);font-size:var(--text-label);margin-top:3px;line-height:1.45}
 .setting-row .controls{justify-content:flex-end;flex-wrap:wrap}
@@ -1220,6 +1157,7 @@ html[data-theme="dark"] .seg button.active{background:#3a3a3a}
 .field label{color:var(--muted);font-size:var(--text-caption)}
 .input{min-height:var(--control-md);width:100%;border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--rail);color:var(--text);padding:7px 10px;font-size:var(--text-label)}
 .input:read-only{opacity:.88}
+.setting-readonly{color:var(--muted);font-size:var(--text-label)}
 @media(max-width:1100px){.field-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.setting-row{grid-template-columns:1fr}.setting-row .controls{justify-content:flex-start}}
 
@@ -1448,20 +1386,6 @@ body.panel-mode .panel-shell{height:100%}
 .range-value{width:66px;min-height:var(--control-md);border:1px solid var(--border);border-radius:var(--radius-xs);background:var(--rail);color:var(--text);padding:0 8px;text-align:right;font:inherit;font-size:var(--text-label);font-variant-numeric:tabular-nums}
 .range-value:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .range-value:read-only{opacity:.88}
-.select{position:relative;display:inline-flex;min-width:150px;max-width:100%}
-.select-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:34px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:7px 11px;font:inherit;font-size:var(--text-label);line-height:1.2;cursor:pointer;transition:background var(--motion-fast),border-color var(--motion-fast)}
-.select-trigger::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);flex:none;opacity:.62}
-.select-trigger:hover{background:var(--hover)}
-.select-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.select-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.select-menu{position:absolute;z-index:24;top:calc(100% + 6px);right:0;width:max-content;min-width:100%;max-width:max(100%,min(320px,calc(100vw - 24px)));max-height:min(260px,52vh);overflow:auto;display:none;padding:4px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);box-shadow:var(--shadow-md)}
-.select.open .select-menu{display:block}
-.select.up .select-menu{top:auto;bottom:calc(100% + 6px)}
-.select-option{display:flex;align-items:center;width:100%;min-height:30px;border:0;border-radius:var(--radius-xs);background:transparent;color:var(--text);padding:6px 9px;font:inherit;font-size:var(--text-label);text-align:left;cursor:pointer}
-.select-option:hover{background:var(--hover)}
-.select-option.selected{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:600}
-.select-option:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-.field .select{width:100%}
 input.input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .range-ticks{position:absolute;top:calc(100% + 3px);left:0;right:0;height:19px;margin:0}
@@ -1544,12 +1468,12 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 .mcp-format{margin-top:8px}
 .icon-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-width:32px;min-height:32px;border:1px solid var(--border);background:var(--panel);color:var(--muted);border-radius:var(--radius-sm);padding:5px 7px;cursor:pointer;transition:background var(--motion-fast),border-color var(--motion-fast),color var(--motion-fast)}
 .icon-btn svg{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.icon-btn:hover{border-color:var(--border);background:var(--hover);color:var(--text)}
-.icon-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 #globalRefreshBtn svg{transform-origin:50% 50%}
 #globalRefreshBtn.is-busy svg{animation:tb-spin .9s linear infinite}
 @keyframes tb-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){#globalRefreshBtn.is-busy svg{animation:none}}
+.icon-btn:hover{border-color:var(--border);background:var(--hover);color:var(--text)}
+.icon-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .icon-btn.danger:hover{border-color:color-mix(in srgb,var(--red) 34%,transparent);background:color-mix(in srgb,var(--red) 8%,transparent);color:var(--red)}
 .icon-btn[aria-disabled="true"]{opacity:.4;pointer-events:none}
 .row-actions{display:flex;align-items:center;justify-content:center;gap:6px}
@@ -1713,12 +1637,13 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
 
 </style>
-
-<link rel="stylesheet" href="../../../../../../03-共享原型/glass-tokens.css">
-<link rel="stylesheet" href="../../../../../../03-共享原型/glass-components.css">
-<link rel="stylesheet" href="../../../../../../03-共享原型/glass-effects.css">
-<link rel="stylesheet" href="../../../../../../03-共享原型/overview-dual.css">
-<link rel="stylesheet" href="../../../../../../03-共享原型/proto-controls.css">
+<link rel="stylesheet" href="../glass-tokens.css">
+<link rel="stylesheet" href="select-component.css">
+<link rel="stylesheet" href="../glass-components.css">
+<link rel="stylesheet" href="../glass-effects.css">
+<link rel="stylesheet" href="../overview-dual.css">
+<link rel="stylesheet" href="../proto-controls.css">
+<link rel="stylesheet" href="model-config.css">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -1743,6 +1668,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
     <nav class="nav">
       <button data-route="overview" id="overviewNavBtn" class="active" title="概览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">概览</span></button>
       <button data-route="panel" id="panelNavBtn" title="面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg><span class="nav-label">面板</span></button>
+      <button data-route="models" title="模型"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg><span class="nav-label">模型</span></button>
       <button data-route="extensions" title="Skills & MCP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5a2.5 2.5 0 0 1 4 0V5h3A1.5 1.5 0 0 1 18.5 6.5V10h1.5a2.5 2.5 0 0 1 0 4h-1.5v3.5A1.5 1.5 0 0 1 17 19h-3v-1.5a2.5 2.5 0 0 0-5 0V19H6.5A1.5 1.5 0 0 1 5 17.5V14H3.5a2.5 2.5 0 0 1 0-4H5V6.5A1.5 1.5 0 0 1 6.5 5H10V3.5Z"/></svg><span class="nav-label">拓展</span></button>
       <button data-route="logs" title="诊断"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg><span class="nav-label">诊断</span></button>
       <button data-route="settings" title="设置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="nav-label">设置</span></button>
@@ -1788,7 +1714,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
               <div class="mock-content"><div></div><div></div><div></div></div>
             </div>
           </div>
-          <iframe id="panelReal" data-proxy="./官方页面快照/rendered-dom.html?v=zh-CN-2" title="OpenCodex 面板真实页面预览" referrerpolicy="no-referrer"></iframe>
+          <iframe id="panelReal" data-proxy="../../01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/原型/官方页面快照/rendered-dom.html?v=zh-CN-2" title="OpenCodex 面板真实页面预览" referrerpolicy="no-referrer"></iframe>
           <div class="panel-hub" id="panelHub" aria-label="面板快捷操作">
             <button class="panel-hub-toggle" id="panelHubToggle" type="button" aria-haspopup="menu" aria-expanded="false" title="面板快捷操作">
               <svg class="panel-hub-logo" width="22" height="22" aria-hidden="true"><use href="#tray-logo"/></svg>
@@ -1836,8 +1762,14 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <button class="btn primary" data-act="panel">打开面板</button>
             <button class="btn danger" data-control="stop" data-act="stop">停止</button>
             <button class="btn" data-control="restart" data-act="restart">重启</button>
-            <button class="btn ghost" data-act="advice">查看建议</button>
             <button class="btn ghost" data-act="logs">查看日志</button>
+            <details class="ovb-more" data-b="morewrap">
+              <summary class="btn ghost">更多</summary>
+              <div class="ovb-more-panel">
+                <button class="btn ghost" data-act="refresh">刷新状态</button>
+                <button class="btn ghost" data-act="advice">查看建议</button>
+              </div>
+            </details>
           </div>
         </div>
         <details class="ovb-detail" id="card-overview-details">
@@ -1921,6 +1853,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       </div>
     </section>
 
+    <section class="route-section mp-page" id="route-models"><div id="mpContent"></div></section>
       <section class="route-section" id="route-extensions">
         <div class="ext-tabs" role="tablist" aria-label="扩展分区">
           <button type="button" data-ext-tab="skills" class="active" data-anchor="skills" aria-label="Skills，查看锚点">Skills<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -2246,6 +2179,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
         <button type="button" data-settings-section="backup" data-anchor="backup" aria-label="数据与备份，查看锚点">数据与备份<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="extensions" data-anchor="extensions" aria-label="扩展管理，查看锚点">扩展管理<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="migration" data-anchor="migration" aria-label="配置迁移，查看锚点">配置迁移<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
+        <button type="button" data-settings-section="models" data-anchor="models">模型配置</button>
         <button type="button" data-settings-section="sync" data-anchor="sync" aria-label="WebDAV 同步，查看锚点">WebDAV 同步<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="cleanup" data-anchor="cleanup" aria-label="日志与通知，查看锚点">日志与通知<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="cli" data-anchor="cli" aria-label="CLI 控制面，查看锚点">CLI 控制面<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -2627,14 +2561,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
                 <div class="setting-title">同名冲突策略</div>
                 <div class="setting-desc">目标客户端已有同名 MCP 时暂停写入，展示差异并要求确认。</div>
               </div>
-              <div class="controls"><div class="select" data-select>
-                <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="MCP 同名冲突策略"><span class="select-value">每次询问</span></button>
-                <div class="select-menu" role="listbox" aria-label="MCP 同名冲突策略">
-                  <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">每次询问</button>
-                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留目标</button>
-                  <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
-                </div>
-              </div></div>
+              <div class="controls"><span class="setting-readonly">每次询问</span></div>
             </div>
             <div class="setting-row">
               <div>
@@ -2810,7 +2737,9 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
         </article>
       </section>
 
+      <section class="settings-panel mp-page" id="settings-models"><article class="card" id="mpSettingsContent"></article></section>
       <section class="settings-panel" id="settings-sync">
+        <article class="card"><h2>模型配置同步范围</h2><p>复用下方 WebDAV 连接，下载先进入待审候选；模板与策略分别选择。</p><div class="controls"><label class="mp-label"><input type="checkbox" id="mpSyncTemplates">族模版</label><label class="mp-label"><input type="checkbox" id="mpSyncPolicy">渠道模型策略（需要精确依赖）</label></div><div class="controls"><button class="btn ghost" data-mp="sync-incoming">演示下载候选</button><button class="btn ghost" data-mp="go-channels">查看本机草稿</button></div><p class="mp-muted">只演示接收与待审，不连接 WebDAV；本机绑定、详细会话及失败记录不上传。</p></article>
         <article class="card" id="card-sync">
           <div class="card-head">
             <div>
@@ -2824,15 +2753,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
             <div class="field"><label>账号</label><input class="input" value="mock-user"></div>
             <div class="field"><label>应用密码</label><input class="input" type="password" value="mock-password"></div>
             <div class="field"><label>加密口令</label><input class="input" type="password" value="mock-passphrase"></div>
-            <div class="field"><label>冲突策略</label><div class="select" data-select>
-              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="冲突策略"><span class="select-value">每次询问</span></button>
-              <div class="select-menu" role="listbox" aria-label="冲突策略">
-          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">每次询问</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留本地</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留远端</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">保留双份</button>
-              </div>
-            </div></div>
+            <div class="field"><label>冲突策略</label><input class="input" readonly aria-readonly="true" aria-label="冲突策略" value="每次询问" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
           </div>
           <div class="setting-list">
             <div class="setting-row">
@@ -3034,7 +2955,6 @@ ocx update</code></pre>
         <article class="card about-card" id="card-about">
           <article class="about-hero">
             <div class="about-head">
-              <span class="about-logo" id="aboutOfficialLogo"></span>
               <div>
                 <span class="about-kicker">官方项目</span>
                 <h2>OpenCodex</h2>
@@ -3057,7 +2977,6 @@ ocx update</code></pre>
 
           <article class="about-panel">
             <div class="about-head">
-              <span class="about-logo" id="aboutAppLogo"></span>
               <div>
                 <span class="about-kicker">本应用</span>
                 <h3>OpenCodeX-Desktop</h3>
@@ -3109,6 +3028,7 @@ ocx update</code></pre>
       </div>
     </div>
   </div>
+  <div id="mpAssistantHost"></div>
   <div class="modal-mask" id="modalMask">
     <div class="modal" id="modal">
       <div class="modal-head">
@@ -3258,26 +3178,21 @@ ocx update</code></pre>
       <a href="#ctl-tools">工具</a>
       <a href="#ctl-mock">状态投影</a>
     </nav>
+    <a class="pctl-back" id="prototypeRouteLink" href="#tray">打开托盘原型 →</a>
     </header>
+
     <div class="pctl-sec is-first" id="ctl-nav">导航</div>
-    <nav class="proto-card proto-launcher" aria-label="原型导航">
+    <nav class="proto-card proto-launcher" aria-label="原型菜单">
       <div class="pctl-tiles" id="launchGrid">
-        <div class="pctl-sub pctl-span">菜单 · 软件窗口外的统一菜单</div>
-        <button type="button" data-launch="tray">托盘</button>
-        <button type="button" data-launch="notify">通知与反馈</button>
-        <div class="pctl-sub pctl-span">专题 · 非软件的专题页</div>
-        <a href="./index.html">动效研究页</a>
-        <a href="./layout-options.html">布局草图</a>
-        <a href="./glass.html">玻璃组件</a>
-        <a href="../2026-09-28-状态形象动画/index.html">状态形象动画</a>
-        <div class="pctl-sub pctl-span">窗口内页面</div>
         <button type="button" data-launch="overview">概览</button>
         <button type="button" data-launch="panel">面板</button>
         <button type="button" data-launch="extensions">拓展</button>
         <button type="button" data-launch="logs">诊断</button>
         <button type="button" data-launch="settings">设置</button>
+        <button type="button" data-launch="tray">托盘</button>
+        <button type="button" data-launch="notify" class="pctl-span">通知与反馈</button>
       </div>
-      <p class="pctl-hint"><b>菜单</b>＝软件窗口外的统一菜单（托盘 / 通知与反馈）；<b>专题</b>＝非软件的专题页（动效研究页 / 布局草图 / 玻璃组件 / 状态形象动画），页头统一为玻璃条 + 「返回软件原型」；其余为软件<b>窗口内页面</b>。托盘原型就是「托盘」，不再单列入口。</p>
+      <p class="pctl-hint">软件窗口外的统一菜单：前六个直接跳转路由；「通知与反馈」是独立菜单，打开后只显示通知专题，不与概览混排。</p>
     </nav>
 
     <div class="proto-card" id="notifDemoCard">
@@ -3302,7 +3217,7 @@ ocx update</code></pre>
       </div>
       <div class="pctl-grid" style="margin-top:8px">
         <button type="button" id="notifReset">复位界面</button>
-        <button type="button" id="notifExit">返回原型导航</button>
+        <button type="button" id="notifExit">返回原型菜单</button>
       </div>
     </div>
 
@@ -3320,22 +3235,13 @@ ocx update</code></pre>
     </div>
 
     <div class="proto-card">
-      <div class="proto-note-title">操作按钮材质（打样）</div>
-      <div class="pctl-chips" id="btnMaterialChips" role="group" aria-label="操作按钮材质">
-        <button type="button" data-btn-material="solid">实底（现状）</button>
-        <button type="button" data-btn-material="glass">玻璃</button>
-      </div>
-      <p class="pctl-hint">作用于概览顶部「主要操作」按钮 <b>和底部三张功能卡</b>。玻璃＝<b>与通知同一套</b>材质（半透明填充＋颜色滤镜＋模糊），文字保持清晰。全部状态都是同一排按钮，不再有「更多」折叠。</p>
-    </div>
-
-    <div class="proto-card">
       <div class="proto-note-title">特效档（总开关 · 打样）</div>
       <div class="pctl-chips" id="effectsChips" role="group" aria-label="特效档">
         <button type="button" data-effects="high">高 · 动态光场＋玻璃</button>
         <button type="button" data-effects="mid">中 · 光场静止＋玻璃</button>
         <button type="button" data-effects="low">低 · 无光场＋无玻璃</button>
       </div>
-      <p class="pctl-hint"><b>全局总开关</b>：<b>高</b>=会动的光场＋玻璃（默认）；<b>中</b>=光场静止＋玻璃（省电，等价系统「减少动态效果」）；<b>低</b>=无光场＋无玻璃，退回<b>应用原本黑白实底风格</b>。低档对通知同样生效。</p>
+      <p class="pctl-hint"><b>全局总开关</b>：<b>高</b>=会动的光场＋玻璃（默认）；<b>中</b>=光场静止＋玻璃（省电）；<b>低</b>=无光场＋无玻璃，退回<b>应用原本黑白实底风格</b>。低档对通知同样生效。本页环境光为静态，暂无动画，故「高 / 中」此处观感相同。</p>
     </div>
 
     <div class="proto-card">
@@ -3344,7 +3250,7 @@ ocx update</code></pre>
         <button type="button" data-glow-render="mesh">WEBGL · 网格渐变＋颗粒</button>
         <button type="button" data-glow-render="css">CSS · 纯极光</button>
       </div>
-      <p class="pctl-hint"><b>默认 WEBGL</b>：概览背景光用网格渐变＋颗粒着色器，过渡最平滑、色带最少；<b>CSS</b> 为纯 CSS 极光兜底，不依赖 GPU。环境不支持 WEBGL 时自动回退 CSS。与设置页「画质 · 背景光渲染」同一开关。</p>
+      <p class="pctl-hint"><b>默认 WEBGL</b>：概览背景光用网格渐变＋颗粒着色器，过渡最平滑、色带最少；<b>CSS</b> 为纯 CSS 极光兜底，不依赖 GPU。环境不支持 WEBGL 时自动回退 CSS。与「背景光渲染」设置项同一开关。</p>
     </div>
 
     <div class="pctl-sec" id="ctl-tools">工具</div>
@@ -3450,6 +3356,7 @@ ocx update</code></pre>
       </div>
       <p class="pctl-hint">只切「卸载」弹窗里备份检测的 mock：影响提示文案与「卸载前自动备份」默认勾选。<b>无备份只提醒、不阻断卸载</b>；只切 mock，不写盘、不删任何文件。</p>
     </div>
+<details class="proto-card" id="mpDemoCard"><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">待重启＋草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">部分写入</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button></div><p class="pctl-hint">只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。</p></details>
     <div class="proto-card" id="logDemoCard">
       <div class="proto-note-title">日志分类演示（mock 状态）</div>
       <div class="pctl-grid" id="logScenarios">
@@ -3519,7 +3426,6 @@ ocx update</code></pre>
     <div class="task-host" id="taskHost"></div>
   </div>
 
-<script src="./logo-geometry.js"></script>
 <script>
 const statePill=document.getElementById('statePill');
 const installArea=document.getElementById('installArea');
@@ -3540,6 +3446,7 @@ let confirmHandler=null;
 let confirmKeepsOpen=false;
 
 const routes={
+  models:{title:'模型配置',subtitle:'管理渠道模型、族模版与选择器顺序。'},
   overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
   tray:{title:'托盘',subtitle:'系统托盘状态菜单的跨平台原型；控制动作走管理器自有域。'},
   panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
@@ -3548,6 +3455,7 @@ const routes={
   settings:{title:'设置',subtitle:'集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。'}
 };
 const routeNotes={
+  models:{title:'模型配置 · 0.2.0 候选',note:'复用 Desktop 视觉系统，目录与能力均为 fixture。保存、生成、同步仅演示状态。',items:[['渠道模型','完整发现＋白名单；渠道顺序与内部模型顺序组成完整投影。'],['模型模版','独立字段继承、不可变版本与精确引用；生成结果进入候选。'],['保存','全域预算、冻结确认、备份与读回；成功后待重启 Codex。']]},
   overview:{
     title:'概览 · 运行控制台',
     note:'主屏一行读运行摘要，运行详情页内折叠；进程按钮按状态渲染，参数与诊断分别落在设置页和诊断中心。',
@@ -3696,7 +3604,7 @@ const routeNotes={
     title:'设置 · WebDAV 同步',
     note:'端点与凭据在卡片主体维护；策略、加密与备份控制同步安全。',
     items:[
-      ['冲突策略','每次询问 / 保留本地 / 保留远端 / 保留双份。'],
+      ['冲突策略','固定「每次询问」：冲突时暂停覆盖、保留双方历史并要求确认；不提供静默保留策略。'],
       ['冷同步与加密','冷同步开关；客户端加密强制开启。'],
       ['覆盖前备份','远端覆盖前自动备份。'],
       ['动作','立即同步、测试连接、查看同步历史。']
@@ -3742,6 +3650,12 @@ const routeNotes={
 const prototypeNoteFallback=routeNotes.overview;
 function renderPrototypeNote(route){
   const note=routeNotes[route]||routeNotes[route.startsWith('settings-')?'settings':route.startsWith('ext-')?'ext-skills':'overview']||prototypeNoteFallback;
+  const prototypeRouteLink=document.getElementById('prototypeRouteLink');
+  if(prototypeRouteLink){
+    const isTray=route==='tray';
+    prototypeRouteLink.href=isTray?'#overview':'#tray';
+    prototypeRouteLink.textContent=isTray?'打开主界面 →':'打开托盘原型 →';
+  }
   const title=document.getElementById('protoNoteTitle');
   const body=document.getElementById('protoNote');
   const list=document.getElementById('protoButtonNotes');
@@ -4783,6 +4697,7 @@ function setInstall(){
 }
 
 function setRoute(route, replace=false){
+  window.prototypeSelect?.close();
   const legacyRoutes={process:'overview',config:'settings',webdav:'settings',upgrade:'settings',about:'settings'};
   const {route:hashRoute}=parseRouteHash(route);
   hashParams=parseRouteHash(route).params;
@@ -4948,31 +4863,36 @@ function render(){
   // 端口只在有运行观测时展示；未运行不得暗示正在监听。
   document.querySelectorAll('[data-fact="port"]').forEach(el=>{el.hidden=model.main!=='running'});
   renderOpResult();
-  // 动作按同源能力渲染：全部直接露出为按钮（不再有「更多」折叠），不渲染无解释的禁用按钮。
-  // 刷新是**全局**能力（顶栏右上角的刷新图标），不再挂在某个状态的动作里，
-  // 也不再进「更多」——避免出现「更多里只有刷新」这种空壳菜单。
+  // 动作按同源能力渲染：主要操作直接露出，低频操作进「更多」，不渲染无解释的禁用按钮。
   const actionsByState={
     loading:[],
-    not_found:[],
-    stopped:['start'],
-    starting:[],
-    pending:[],
+    not_found:['refresh'],
+    stopped:['start','refresh'],
+    starting:['refresh'],
+    pending:['refresh'],
     running:['panel','stop','restart','logs'],
     starting_failed:['start','logs'],
-    /* at_risk 的进程事实就是「未运行」：概览动作与 stopped 一致（2026-10-03 用户确认），
-       不再单给「查看建议」；成因走通知中心/诊断。 */
-    at_risk:['start'],
-    external_takeover:['advice'],
-    unreachable:['logs']
+    /* at_risk 的进程事实就是「未运行」：概览动作与 stopped 一致（2026-10-03 用户确认）。 */
+    at_risk:['start','refresh'],
+    external_takeover:['advice','refresh'],
+    unreachable:['refresh','logs']
   };
+  /* 「查看日志」已提到主行（与软件运行中动作一致：打开面板 / 停止 / 重启 / 查看日志），
+     折叠层只留刷新、查看建议；避免出现「更多」里只有被隐藏项的空中折。 */
+  const SECONDARY=['refresh','advice'];
   const envBlocked=envGateActive&&envState!=='ready';
-  const allowedActions=envBlocked?[]:(actionsByState[currentState]||[]);
+  const allowedActions=envBlocked?['refresh']:(actionsByState[currentState]||[]);
   document.querySelectorAll('[data-act]').forEach(el=>{el.hidden=!allowedActions.includes(el.dataset.act)});
+  const more=document.querySelector('[data-b="morewrap"]');
+  if(more){
+    const hasSecondary=allowedActions.some(a=>SECONDARY.includes(a));
+    more.hidden=!hasSecondary;
+    if(!hasSecondary) more.open=false;
+  }
   document.querySelector('.ovb-detail')?.toggleAttribute('hidden',envBlocked);
   document.getElementById('mods')?.classList.toggle('view-hidden',envBlocked);
   document.getElementById('recentEventsSection')?.toggleAttribute('hidden',envBlocked);
   document.querySelectorAll('[data-act="start"]').forEach(el=>{
-    if(el.classList.contains('is-busy'))return;
     el.textContent=currentState==='starting_failed'?'重试启动':'启动 OpenCodex';
   });
 
@@ -5267,7 +5187,7 @@ function openSettingsSection(section){
 }
 window.openSettingsSection=openSettingsSection;
 function showSettingsSection(section){
-  const allowed=['general','installation','backup','extensions','migration','sync','cleanup','cli','upgrade','about'];
+  const allowed=['general','installation','backup','extensions','migration','models','sync','cleanup','cli','upgrade','about'];
   const requested=allowed.includes(section)?section:(section?undefined:hashParams?.get('section'))||parseRouteHash(location.hash).params.get('section')||'general';
   const next=allowed.includes(requested)?requested:'general';
   document.querySelectorAll('#settingsTabs button').forEach(button=>{
@@ -5429,65 +5349,6 @@ const cliHelpHtml = `
   <p class="cli-help-footnote">以下为示例命令，非最终契约；变更先确认，破坏性操作必须带确认标志，错误码与退出码约定待 IMP 冻结。</p>
 `;
 
-const closeAllSelects=(except)=>{
-  document.querySelectorAll('.select.open').forEach(item=>{
-    if(item===except) return;
-    item.classList.remove('open','up');
-    item.querySelector('.select-trigger')?.setAttribute('aria-expanded','false');
-  });
-};
-document.addEventListener('click',event=>{
-  const trigger=event.target.closest('.select-trigger');
-  if(trigger){
-    const root=trigger.closest('.select');
-    const willOpen=!root.classList.contains('open');
-    closeAllSelects(root);
-    root.classList.toggle('open',willOpen);
-    trigger.setAttribute('aria-expanded',String(willOpen));
-    if(willOpen){
-      const menu=root.querySelector('.select-menu');
-      root.classList.remove('up');
-      if(menu.getBoundingClientRect().bottom>window.innerHeight-8) root.classList.add('up');
-    }
-    return;
-  }
-  const option=event.target.closest('.select-option');
-  if(option){
-    const root=option.closest('.select');
-    root.querySelectorAll('.select-option').forEach(item=>{
-      const selected=item===option;
-      item.classList.toggle('selected',selected);
-      item.setAttribute('aria-selected',String(selected));
-    });
-    root.querySelector('.select-value').textContent=option.textContent.trim();
-    root.classList.remove('open','up');
-    root.querySelector('.select-trigger')?.setAttribute('aria-expanded','false');
-    return;
-  }
-  closeAllSelects();
-});
-document.addEventListener('keydown',event=>{
-  const root=event.target.closest('.select');
-  if(!root){
-    if(event.key==='Escape') closeAllSelects();
-    return;
-  }
-  const trigger=root.querySelector('.select-trigger');
-  if((event.key==='Enter'||event.key===' ')&&event.target===trigger){
-    event.preventDefault();trigger.click();
-  }else if(event.key==='Escape'&&root.classList.contains('open')){
-    root.classList.remove('open','up');trigger.setAttribute('aria-expanded','false');trigger.focus();
-  }else if(root.classList.contains('open')&&(event.key==='ArrowDown'||event.key==='ArrowUp')){
-    event.preventDefault();
-    const options=[...root.querySelectorAll('.select-option')];
-    const index=options.indexOf(document.activeElement);
-    const next=event.key==='ArrowDown'?(index+1)%options.length:(index-1+options.length)%options.length;
-    options[next].focus();
-  }else if(event.key==='Enter'&&event.target.classList.contains('select-option')){
-    event.preventDefault();event.target.click();trigger.focus();
-  }
-});
-
 function applyExtTabs(){
   const active=document.querySelector('.ext-tabs button.active');
   const next=active?.dataset.extTab||'skills';
@@ -5547,10 +5408,8 @@ function bindExtensionPagination(kind){
     else applyMcpFilters();
   });
   const pageSizeRoot=document.querySelector(`[data-page-size="${kind}"] [data-page-size-select]`);
-  pageSizeRoot?.addEventListener('click',event=>{
-    const option=event.target.closest('.select-option');
-    if(!option) return;
-    const value=parseInt(option.textContent,10);
+  pageSizeRoot?.addEventListener('selectchange',event=>{
+    const value=parseInt(event.detail.value,10);
     if(Number.isFinite(value)) extensionPagination[kind].size=value;
     const trigger=pageSizeRoot.querySelector('.select-trigger .select-value');
     if(trigger) trigger.textContent=`${value} 条`;
@@ -6275,6 +6134,7 @@ document.addEventListener('click',event=>{
 });
 
 function openModal(title,body,confirmText,handler,opts){
+  window.prototypeSelect?.close();
   opts=opts||{};
   modalTitle.textContent=title;
   // opts.hideNote：只读信息类弹窗不显示「原型演示」脚注（详情内容本身就是演示数据，脚注反而占高度）。
@@ -6300,6 +6160,7 @@ function openModal(title,body,confirmText,handler,opts){
   requestAnimationFrame(()=>{(!modalConfirm.hidden?modalConfirm:modalCancel).focus();});
 }
 function closeModal(){
+  window.prototypeSelect?.close();
   modalMask.style.display='none';
   modal.classList.remove('modal-wide');
   modal.classList.remove('modal-tall');
@@ -6489,7 +6350,7 @@ function refreshState(){
   setTimeout(()=>setState(prev==='loading'?'stopped':prev),550);
 }
 
-// 概览的状态驱动动作。
+// 顶栏全局刷新（与候选原型 overview.html 同款）：转圈并刷新运行状态。
 const globalRefreshBtn=document.getElementById('globalRefreshBtn');
 globalRefreshBtn.onclick=()=>{
   if(globalRefreshBtn.classList.contains('is-busy'))return;
@@ -6498,6 +6359,9 @@ globalRefreshBtn.onclick=()=>{
   refreshState();
   setTimeout(()=>{globalRefreshBtn.classList.remove('is-busy');globalRefreshBtn.removeAttribute('aria-busy')},620);
 };
+
+// 概览的状态驱动动作。
+document.querySelectorAll('[data-act="refresh"]').forEach(button=>{button.onclick=refreshState});
 document.querySelectorAll('[data-act="panel"]').forEach(button=>{button.onclick=()=>showPanel(true)});
 document.querySelectorAll('[data-act="logs"]').forEach(button=>{button.onclick=()=>setRoute('logs')});
 document.querySelectorAll('[data-act="advice"]').forEach(button=>{button.onclick=()=>openRestoreConfirm(currentState)});
@@ -7192,112 +7056,6 @@ function toast(msg,opts){
    通知与反馈专题 · 原型专用演示驱动
    在真实软件界面上演出六类渠道；不写配置、不调用真实命令，仅切 mock 投影。
    ========================================================================== */
-/* 原型内的小形象：与动效研究页同一套「三结构 + 配色」。 */
-const PROTO_MARK={
-  not_ready:{shape:[.55,0,0,0],colors:['#CCD3EA','#A4B3D6','#778CB7']},
-  stopped:{shape:[.20,0,0,0],colors:['#C7B5F4','#929ADF','#6473BB']},
-  starting:{shape:[.16,.65,.16,0],colors:['#E0A0FF','#8775F5','#398AF2']},
-  running:{shape:[0,1,0,0],colors:['#80E9CD','#3BAED1','#5861E8']},
-  stopping:{shape:[.20,0,0,0],colors:['#B7CAEF','#9494DC','#7675B3']},
-  failed:{shape:[.30,0,0,0],colors:['#FFC39E','#F08093','#B35BB4']},
-  problem:{shape:[0,1,.22,0],colors:['#FFE0A0','#ECAF68','#8A83D9']},
-  confirming:{shape:[.35,0,0,0],colors:['#B2DCF8','#8EAAF2','#9F80E7']},
-  stale:{shape:[0,1,0,0],colors:['#CFD4DF','#A2ABBE','#828DA4']}
-};
-// 官方项目图标＝OpenCodex 官方标记（取自官方仓库 desktop/src-tauri/icons/icon.svg 的 mark，去掉不透明底板）。
-// 官方素材按品牌规范归档在 01-原始素材（.gitignore，仅本地保留），这里以**本地引用**显示，不把官方图标复制进仓库。
-// 缺失时退回中性占位，不冒充官方素材。
-const OFFICIAL_DIR="../../../../../../../04-品牌与图标素材/01-原始素材/";
-function officialMarkHtml(){
- const miss='onerror="this.closest(\'.about-logo\').classList.add(\'official-missing\');this.remove()"'
- return '<img class="official-mark mark-for-light" alt="OpenCodex 官方图标" src="'+OFFICIAL_DIR+'opencodex-mark-light.svg" '+miss+'>'
-      + '<img class="official-mark mark-for-dark" alt="" aria-hidden="true" src="'+OFFICIAL_DIR+'opencodex-mark-dark.svg" '+miss+'>';
-}
-/* 「关于」页「本应用」图标：**内联**渲染同一套形象（云形 + 三节点镂空 + 内核自转），循环 9 态、平滑过渡。
-   刻意不再用 iframe：file:// 下嵌套帧会白底/加载不稳定；形变、取色与自转沿用与研究页同一份定义，不是另做一套。 */
-const ABOUT_MARK_SEQ=['stopped','starting','running','stopping','failed','problem','confirming','stale','not_ready'];
-// [内核自转角速度(°/s), 摆动幅度, 摆动周期(s)] —— 与研究页 EFFECTS 同值。
-const ABOUT_MARK_SPIN={not_ready:[0,18,7],stopped:[0,7,6],starting:[-120,0,3.2],running:[60,0,6],stopping:[0,6,5],failed:[0,18,5],problem:[34,0,5],confirming:[0,65,4.5],stale:[0,0,9]};
-function initAboutMark(host){
- const NS='http://www.w3.org/2000/svg',uid='abm'+(protoMarkSeq++);
- host.innerHTML='<svg class="about-mark-svg" viewBox="0 0 24 24" aria-hidden="true"><defs>'+
-  '<linearGradient id="'+uid+'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0"/><stop offset=".5"/><stop offset="1"/></linearGradient>'+
-  '<mask id="'+uid+'m" maskUnits="userSpaceOnUse" x="-4" y="-4" width="32" height="32"><rect x="-4" y="-4" width="32" height="32" fill="#ffffff"/>'+
-  '<g class="am-core" fill="#000000" stroke="#000000" stroke-linecap="round" stroke-linejoin="round">'+
-  '<path class="am-link" fill="none" stroke="#000000" stroke-width=".78"/><path class="am-link" fill="none" stroke="#000000" stroke-width=".78"/><path class="am-link" fill="none" stroke="#000000" stroke-width=".78"/>'+
-  '<circle class="am-node" r="1.18" stroke="none"/><circle class="am-node" r="1.18" stroke="none"/><circle class="am-node" r="1.18" stroke="none"/>'+
-  '</g></mask></defs><path class="am-body" d="'+LOGO_GEOMETRY.body+'" fill="url(#'+uid+'g)" mask="url(#'+uid+'m)"/></svg>';
- const svg=host.firstChild,grad=svg.querySelector('linearGradient'),stops=[...grad.children];
- const core=svg.querySelector('.am-core'),links=[...svg.querySelectorAll('.am-link')],nodes=[...svg.querySelectorAll('.am-node')];
- const rgb=h=>h.match(/[a-f\d]{2}/gi).map(v=>parseInt(v,16)),txt=c=>'rgb('+c.map(v=>Math.round(v)).join(',')+')';
- const tracks=new Map();
- function track(key,vals,target,dt,omega){let v=tracks.get(key);if(!v){v=vals.map(()=>0);tracks.set(key,v)}return vals.map((x,i)=>{const o=x-target[i],j=v[i]+omega*o,d=Math.exp(-omega*dt),nn=target[i]+(o+j*dt)*d;v[i]=(v[i]-omega*j*dt)*d;if(Math.abs(nn-target[i])<1e-7&&Math.abs(v[i])<1e-6){v[i]=0;return target[i]}return nn})}
- function paint(shape){const sp=shape[0],conn=shape[1],bs=shape[2],bc=shape[3],r=3.5+sp;
-  const pts=[0,1,2].map(i=>{const a=-Math.PI/2+i*Math.PI*2/3;return{a,x:12+r*Math.cos(a),y:12+r*Math.sin(a)}});
-  const tan=4/3*Math.tan(Math.PI/6)*r;
-  pts.forEach((p,i)=>{nodes[i].setAttribute('cx',p.x);nodes[i].setAttribute('cy',p.y);
-   const q=pts[(i+1)%3],bend=bs*Math.cos(i*Math.PI*2/3)+bc*Math.sin(i*Math.PI*2/3),mid=p.a+Math.PI/3,bx=Math.cos(mid)*bend,by=Math.sin(mid)*bend;
-   // 与研究页（morph.js）**完全同款**：等宽细弧线（fill:none + stroke .78），延伸至球心并被圆节点覆盖。
-   //   不再用「外侧弧+内侧直弦」的填充带——那种带子在弦向中间最厚，40px 下看起来就是“鼓起来”。
-   links[i].setAttribute('d','M'+p.x+' '+p.y+' C'+(p.x-Math.sin(p.a)*tan+bx)+' '+(p.y+Math.cos(p.a)*tan+by)+' '+(q.x+Math.sin(q.a)*tan+bx)+' '+(q.y-Math.cos(q.a)*tan+by)+' '+q.x+' '+q.y);
-   links[i].setAttribute('opacity',String(Math.max(0,Math.min(1,conn))));});
- }
- const c0=PROTO_MARK[ABOUT_MARK_SEQ[0]];
- let cur=[...c0.shape],col=c0.colors.map(rgb),angle=0,phase=0,last=0,idx=0,raf=0;
- const reduce=matchMedia('(prefers-reduced-motion: reduce)');
- const render=()=>{paint(cur);stops.forEach((st,i)=>st.setAttribute('stop-color',txt(col[i])));core.setAttribute('transform','rotate('+angle+' 12 12)')};
- render();
- function step(now){const dt=last?Math.min(now-last,50)/1000:0;last=now;
-  if(reduce.matches||document.hidden){raf=requestAnimationFrame(step);return}
-  const id=ABOUT_MARK_SEQ[idx],m=PROTO_MARK[id],spin=ABOUT_MARK_SPIN[id];
-  phase+=dt*(Math.PI*2/6);
-  // 过期态：保留上一结构（不换 shape），但仍平滑过渡到雾灰取色（与研究页同口径，只是不做整体淡出）。
-  if(id!=='stale')cur=track('s',cur,m.shape,dt,8);
-  col=col.map((c,i)=>track('c'+i,c,rgb(m.colors[i]),dt,8));
-  angle+=(spin[0]+spin[1]*(Math.PI*2/spin[2])*Math.cos(phase))*dt;
-  render();raf=requestAnimationFrame(step);
- }
- raf=requestAnimationFrame(step);
- setInterval(()=>{if(!reduce.matches)idx=(idx+1)%ABOUT_MARK_SEQ.length},2600);
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){last=0}});
-}
-function renderAboutLogos(){
- // 官方项目＝官方标记（无背景）；本应用＝本项目聚合形象，循环全部 9 个动效状态并平滑过渡（同一套形变、无背景光）。
- const official=document.getElementById('aboutOfficialLogo'); if(official) official.innerHTML=officialMarkHtml();
- const app=document.getElementById('aboutAppLogo'); if(app) initAboutMark(app);
-}
-// 延后到脚本解析完再渲染：protoMark 依赖下面的 let 声明（TDZ）。
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',renderAboutLogos); else renderAboutLogos();
-let protoMarkSeq=0;
-function protoMark(kind){
-  const m=PROTO_MARK[kind]||PROTO_MARK.stopped, uid='pm'+(protoMarkSeq++);
-  const shape=m.shape,r=3.5+shape[0],cx=12,cy=12,connection=shape[1],bendSin=shape[2],bendCos=shape[3];
-  const pts=[0,1,2].map(i=>{const a=-Math.PI/2+i*Math.PI*2/3;return {a,x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)}});
-  const tan=4/3*Math.tan(Math.PI/6)*r;
-  const links=pts.map((pt,i)=>{const q=pts[(i+1)%3];
-    const bend=bendSin*Math.cos(i*Math.PI*2/3)+bendCos*Math.sin(i*Math.PI*2/3);
-    const mid=pt.a+Math.PI/3,bx=Math.cos(mid)*bend,by=Math.sin(mid)*bend;
-    return '<path d="M'+pt.x.toFixed(2)+' '+pt.y.toFixed(2)+' C'+(pt.x-Math.sin(pt.a)*tan+bx).toFixed(2)+' '+(pt.y+Math.cos(pt.a)*tan+by).toFixed(2)+' '+(q.x+Math.sin(q.a)*tan+bx).toFixed(2)+' '+(q.y-Math.cos(q.a)*tan+by).toFixed(2)+' '+q.x.toFixed(2)+' '+q.y.toFixed(2)+'" fill="none" stroke="'+m.colors[2]+'" stroke-width=".85" stroke-linecap="round" opacity="'+connection+'"/>'}).join('');
-  const nodes=pts.map(pt=>'<circle cx="'+pt.x.toFixed(2)+'" cy="'+pt.y.toFixed(2)+'" r="1.18" fill="'+m.colors[2]+'"/>').join('');
-  return '<svg class="pmark" data-kind="'+kind+'" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+m.colors[0]+'"/><stop offset=".5" stop-color="'+m.colors[1]+'"/><stop offset="1" stop-color="'+m.colors[2]+'"/></linearGradient></defs><path d="'+LOGO_GEOMETRY.body+'" fill="url(#'+uid+')" fill-opacity=".16" stroke="'+m.colors[1]+'" stroke-width="1.05" stroke-linejoin="round"/><g class="pmark-core">'+links+nodes+'</g></svg>';
-}
-// 启停按钮忙碌态：忙碌期间按钮里放同一套小形象（启动中＝轻跃聚合，停止中＝下沉）。
-const TASK_BUSY_MAP={op_start:['start','启动中…','starting'],op_stop:['stop','停止中…','stopping'],op_restart:['restart','重启中…','stopping']};
-function syncTaskBusy(){
-  const entry=TASK_BUSY_MAP[document.body.dataset.taskop||''];
-  document.querySelectorAll('.ovb-actions > [data-act]').forEach(btn=>{
-    const on=!!entry&&btn.dataset.act===entry[0];
-    if(on&&!btn.classList.contains('is-busy')){
-      btn.dataset.idleLabel=btn.textContent;
-      btn.innerHTML=protoMark(entry[2])+'<span>'+entry[1]+'</span>';
-      btn.classList.add('is-busy');btn.disabled=true;
-    }else if(!on&&btn.classList.contains('is-busy')){
-      btn.classList.remove('is-busy');btn.disabled=false;
-      btn.textContent=btn.dataset.idleLabel||btn.textContent;
-      delete btn.dataset.idleLabel;
-    }
-  });
-}
 function showTask(cfg){
   const host=document.getElementById('taskHost');
   const steps=cfg.steps.map(s=>'<li class="'+s[1]+'"><span class="mk">'+(s[1]==='done'?'✓':'')+'</span>'+s[0]+'</li>').join('');
@@ -7308,17 +7066,15 @@ function showTask(cfg){
     if(!behavior||behavior==='generic') behavior=/取消/.test(arr[0])?'cancel':(/后台/.test(arr[0])?'background':'generic');
     return [arr[0],behavior];
   });
-  const opState=cfg.op==='op_start'?'starting':(cfg.op==='op_stop'||cfg.op==='op_restart')?'stopping':'confirming';
-  host.innerHTML='<div class="task-card"><div class="tc-head">'+protoMark(opState)+'<h4>'+cfg.title+'</h4>'+
+  host.innerHTML='<div class="task-card"><div class="tc-head"><span class="tc-spin"></span><h4>'+cfg.title+'</h4>'+
     '<button type="button" class="notify-min" data-collapse="task" title="收起到铃铛" aria-label="收起到铃铛">'+MIN_ICON+'</button></div>'+
     '<p class="tc-phase">'+cfg.phase+'</p><ul class="task-steps">'+steps+'</ul>'+
     '<div class="tc-acts">'+acts.map((a,i)=>'<button type="button" class="btn'+(a[1]==='cancel'?' cancel':(i?' ghost':''))+'" data-task-act="'+a[1]+'" data-task-label="'+a[0]+'">'+a[0]+'</button>').join('')+'</div></div>';
   host.dataset.op=cfg.op||'';
-  document.body.dataset.taskop=cfg.op||'';syncTaskBusy();document.dispatchEvent(new CustomEvent('proto-task-op'));
   host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
   syncNotifHost();
 }
-function clearTask(){const h=document.getElementById('taskHost');if(h)h.innerHTML='';delete document.body.dataset.taskop;syncTaskBusy();document.dispatchEvent(new CustomEvent('proto-task-op'));syncNotifHost();}
+function clearTask(){const h=document.getElementById('taskHost');if(h)h.innerHTML='';syncNotifHost();}
 // 任务卡动作：原型只做 mock 反馈，不执行真实副作用。
 document.getElementById('taskHost').addEventListener('click',event=>{
   const btn=event.target.closest('[data-task-act]');
@@ -7405,48 +7161,25 @@ function setPageMaterial(mode){
 }
 document.querySelectorAll('#pageMaterialChips button').forEach(b=>{b.onclick=()=>setPageMaterial(b.dataset.pageMaterial);});
 
-/* 操作按钮材质（打样）：solid=实底（现状）/ glass=半透明磨砂。 */
-const BTN_MATERIAL_DEFAULT='glass';
-function setBtnMaterial(mode){
-  mode=['solid','glass'].includes(mode)?mode:BTN_MATERIAL_DEFAULT;
-  if(mode==='solid') delete document.body.dataset.btnMaterial;
-  else document.body.dataset.btnMaterial=mode;
-  document.querySelectorAll('#btnMaterialChips button').forEach(b=>b.classList.toggle('active',b.dataset.btnMaterial===mode));
-}
-document.querySelectorAll('#btnMaterialChips button').forEach(b=>{b.onclick=()=>setBtnMaterial(b.dataset.btnMaterial);});
-setBtnMaterial(BTN_MATERIAL_DEFAULT);
-
 /* 特效档（总开关 · 打样）：high=动态光场+玻璃 / mid=光场静止+玻璃 / low=无光场+无玻璃（应用原本黑白实底风格）。
-   低档在父层直接生效（CSS）；中/低档另把 ?effects= 传给光场 iframe 让它静止 / 关闭自身光场。 */
+   全部在父层 CSS 生效；本官方原型暂无动画光场，故 mid 与 high 观感相同（保留语义，便于后续引入动态光场）。 */
 const EFFECTS_DEFAULT='high';
-let frameModeApplied=null;
-function syncEffectsFrame(){
-  const frame=document.querySelector('.motion-backdrop');
-  if(!frame) return false;
-  const mode=document.documentElement.getAttribute('data-effects')||EFFECTS_DEFAULT;
-  if(frameModeApplied===mode) return true;
-  frameModeApplied=mode;
-  const u=new URL(frame.getAttribute('src')||'./index.html',location.href);
-  u.searchParams.set('effects',mode);
-  frame.setAttribute('src',u.href);
-  return true;
-}
 function setEffects(mode){
   mode=['high','mid','low'].includes(mode)?mode:EFFECTS_DEFAULT;
   document.documentElement.setAttribute('data-effects',mode);
-  frameModeApplied=null;syncEffectsFrame();
   document.querySelectorAll('#effectsChips button,#effectsSeg button').forEach(b=>b.classList.toggle('active',b.dataset.effects===mode));
 }
 document.querySelectorAll('#effectsChips button,#effectsSeg button').forEach(b=>{b.onclick=()=>setEffects(b.dataset.effects);});
 setEffects(new URLSearchParams(location.search).get('effects')||EFFECTS_DEFAULT);
 
 /* 画质 · 背景光渲染：默认 WEBGL（网格渐变＋颗粒着色器），环境不支持时自动回退纯 CSS 极光。
-   只写 data-glow-render；概览适配层 overview-dual.js 监听该属性重建光场 iframe 并带上 render 参数。 */
+   只写 data-glow-render；overview-dual.js 会把它拼进 hero 光场 iframe 的 render 参数。 */
 const GLOW_RENDER_DEFAULT='mesh';
 const WEBGL_OK=(()=>{try{const c=document.createElement('canvas');return !!(c.getContext('webgl')||c.getContext('experimental-webgl'));}catch(e){return false;}})();
 function setGlowRender(mode){
   mode=['mesh','css'].includes(mode)?mode:GLOW_RENDER_DEFAULT;
-  if(mode==='mesh'&&!WEBGL_OK)mode='css';
+  const fallback=mode==='mesh'&&!WEBGL_OK;
+  if(fallback)mode='css';
   document.documentElement.setAttribute('data-glow-render',mode);
   document.querySelectorAll('#glowRenderChips button,#glowRenderSeg button').forEach(b=>{
     const isMesh=b.dataset.glowRender==='mesh';
@@ -7459,8 +7192,6 @@ function setGlowRender(mode){
 }
 document.querySelectorAll('#glowRenderChips button,#glowRenderSeg button').forEach(b=>{b.onclick=()=>setGlowRender(b.dataset.glowRender);});
 setGlowRender(new URLSearchParams(location.search).get('glowRender')||GLOW_RENDER_DEFAULT);
-// .motion-backdrop 由 overview-integration.js 稍后插入：出现后把 effects 参数补上。
-let fxTries=0;(function waitFrame(){ if(syncEffectsFrame()||fxTries++>25) return; setTimeout(waitFrame,100); })();
 window.addEventListener('resize',syncNotifHost);
 try{new MutationObserver(syncNotifHost).observe(document.documentElement,{attributes:true,attributeFilter:['style']});}catch(e){}
 
@@ -7740,7 +7471,9 @@ document.addEventListener('scroll',event=>{
   window.__scrollQuietTimer=setTimeout(()=>el.classList.remove('is-scrolling'),900);
 },true);
 </script>
-<script src="../../../../../../03-共享原型/overview-dual.js"></script>
-<script src="../../../../../../03-共享原型/proto-controls.js"></script>
+<script src="../overview-dual.js"></script>
+<script src="../proto-controls.js"></script>
+<script src="select-component.js"></script>
+<script src="model-config.js"></script>
 </body>
 </html>

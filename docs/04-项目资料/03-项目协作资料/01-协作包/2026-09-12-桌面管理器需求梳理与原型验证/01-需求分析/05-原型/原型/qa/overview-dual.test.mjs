@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 双形态概览行为回归。jsdom 不验证排版、像素尺寸或动效画面。
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -11,16 +12,17 @@ while (!fs.existsSync(path.join(repo,'.git'))) {
   const parent = path.dirname(repo); if (parent === repo) throw Error('未找到仓库'); repo = parent;
 }
 const {JSDOM,VirtualConsole} = createRequire(path.join(repo,'apps/desktop/ui/package.json'))('jsdom');
-const integration = fs.readFileSync(path.join(base,'overview-dual.js'),'utf8');
+const integration = fs.readFileSync(path.join(sharedRoot,'overview-dual.js'),'utf8');
 const geometry = fs.readFileSync(path.join(base,'候选/2026-09-28-Logo本体形变/logo-geometry.js'),'utf8');
 let combinations = 0;
 for (const entry of ['原型/index.html','候选/2026-09-28-Logo本体形变/overview.html']) {
   const errors = [];
   const virtualConsole = new VirtualConsole();
   virtualConsole.on('jsdomError',error => { if (!error.message.startsWith('Not implemented:')) errors.push(error.message); });
-  let html = fs.readFileSync(path.join(base,entry),'utf8');
+  const entryPath=entry==='原型/index.html'?sharedPrototype:path.join(base,entry);
+  let html = fs.readFileSync(entryPath,'utf8');
   html = html.replace('<script src="./logo-geometry.js"></script>','<script>' + geometry + '</script>');
-  const dom = new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:pathToFileURL(path.join(base,entry)).href,virtualConsole,beforeParse(window) {
+  const dom = new JSDOM(html,{runScripts:'dangerously',pretendToBeVisual:true,url:pathToFileURL(entryPath).href,virtualConsole,beforeParse(window) {
     window.matchMedia = () => ({matches:false,addEventListener(){},removeEventListener(){},addListener(){},removeListener(){}});
     for (const key of ['replaceState','pushState']) {
       const original = window.history[key].bind(window.history);
@@ -30,7 +32,7 @@ for (const entry of ['原型/index.html','候选/2026-09-28-Logo本体形变/ove
   }});
   const {window} = dom;
   const document = window.document;
-  const script = document.createElement('script'); script.src = pathToFileURL(path.join(base,'overview-dual.js')).href;
+  const script = document.createElement('script'); script.src = pathToFileURL(path.join(sharedRoot,'overview-dual.js')).href;
   document.body.append(script);
   Object.defineProperty(document,'currentScript',{configurable:true,value:script});
   window.eval(integration);

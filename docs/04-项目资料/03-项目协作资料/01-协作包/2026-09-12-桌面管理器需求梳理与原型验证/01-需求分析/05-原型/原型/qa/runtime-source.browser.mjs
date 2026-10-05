@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 原型「OpenCodex 运行来源 / 托管安装 / 离线导入 / 两级卸载」真实浏览器（无头 Chromium）检查与截图。
 // 运行：node "<本文件>"   （可选 PLAYWRIGHT_CORE=<playwright-core 目录>）
 // 覆盖 2026-09-24 用户决定：只允许官方包；网络不通可导入 file.tgz（提供下载地址 + 拖拽）；
@@ -49,7 +50,7 @@ if(!pwPath||!exe){
 const require=createRequire(pwPath+'/');
 const { chromium }=require('playwright-core');
 
-const proto=path.join(here,'..','index.html');
+const proto=sharedPrototype;
 const outDir=path.join(here,'..','..','文档','截图','原型-托管安装-20260924');
 fs.mkdirSync(outDir,{recursive:true});
 const url=hash=>pathToFileURL(proto).href+'?theme=light'+hash;

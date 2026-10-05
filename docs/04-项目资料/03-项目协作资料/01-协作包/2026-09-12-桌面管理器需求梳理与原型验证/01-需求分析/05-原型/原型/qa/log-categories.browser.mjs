@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 原型「日志历史」两分类 + 官方面板入口：真实浏览器（无头 Chromium）检查与截图。
 // 运行：node "<本文件>"   （可选 PLAYWRIGHT_CORE=<playwright-core 目录>）
 // 环境缺失时以退出码 2 报告 BLOCKED，不把「没跑」当成通过。
@@ -59,7 +60,7 @@ const require=createRequire(pwPath+'/');
 const { chromium }=require('playwright-core');
 
 const protoDir=path.join(here,'..');          // 05-原型/原型
-const proto=path.join(protoDir,'index.html');
+const proto=sharedPrototype;
 const outDir=path.join(protoDir,'..','文档','截图','原型-日志两分类-20260922');
 fs.mkdirSync(outDir,{recursive:true});
 

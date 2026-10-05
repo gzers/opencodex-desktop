@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 原型「设置 → 官方共享配置 → 随 Codex 启动 OpenCodex」写入进行态：行为测试（jsdom）。
 // 运行：node "<本文件>"
 // 覆盖：点开关后先「准备」延迟 → 再走不确定进度（不编百分比）→ 完成才改开关；
@@ -20,7 +21,7 @@ function findRepo(start){
 const here=path.dirname(fileURLToPath(import.meta.url));
 const repo=findRepo(here);
 if(!repo){ console.log('BLOCKED: 未找到仓库根（.git）。'); process.exit(2); }
-const proto=path.join(here,'..','index.html');
+const proto=sharedPrototype;
 const require=createRequire(path.join(repo,'apps/desktop/ui/'));
 let JSDOM;
 try{ ({ JSDOM }=require('jsdom')); }

@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 原型「主线＋节点支线＋统一报错」行为测试（jsdom）。
 // 运行：node "<本文件>"
 // 覆盖 DMD Revision 12（REQ-31 / AC-15）与状态专题 §6：一个运行主线组织节点支线；
@@ -25,7 +26,7 @@ function findRepo(start){
 const here=path.dirname(fileURLToPath(import.meta.url));
 const repo=findRepo(here);
 if(!repo){ console.log('BLOCKED: 未找到仓库根（.git）。'); process.exit(2); }
-const proto=path.join(here,'..','index.html');
+const proto=sharedPrototype;
 const require=createRequire(path.join(repo,'apps/desktop/ui/'));
 const { JSDOM }=require('jsdom');
 
@@ -136,11 +137,16 @@ assert(/待重启/.test(resultEl.textContent),'待重启生效显示为明确后
 setOp('none');
 assert(resultEl.hidden,'清空后不常驻结果块');
 
-// 7. 动作同源：运行中直接露出主要操作，低频动作进「更多」
+// 7. 动作同源：运行中四颗主操作全部内联（打开面板 / 停止 / 重启 / 查看日志，对齐软件实际效果）；
+//    刷新 / 查看建议只在允许它们的状态进入「更多」，运行中不出现空壳折叠。
 setState('running');
 const moreWrap=doc.querySelector('[data-b="morewrap"]');
-assert(!moreWrap.hidden,'运行中存在「更多」入口');
-assert(!doc.querySelector('[data-act="panel"]').hidden && !doc.querySelector('[data-act="stop"]').hidden,'运行中直接露出主要操作');
+assert(moreWrap.hidden,'运行中不出现空壳「更多」');
+for(const act of ['panel','stop','restart','logs']){
+  assert(!doc.querySelector(`[data-act="${act}"]`).hidden,`运行中直接露出 ${act}`);
+}
+setState('stopped');
+assert(!moreWrap.hidden,'未运行存在「更多」入口');
 assert(doc.querySelector('[data-act="refresh"]').closest('.ovb-more-panel'),'刷新等低频动作收进「更多」');
 
 // 8. 启停结果 Toast 不叠加机械说明句

@@ -1,3 +1,4 @@
+import {sharedRoot,sharedPrototype} from './prototype-location.mjs';
 // 原型「日志历史」两分类 + 官方面板入口 行为测试（jsdom）。
 // 运行：node "<本文件>"
 // 覆盖产品方案要求的原型场景：两类切换、刷新、审计详情展开、长行、截断、加载、
@@ -22,7 +23,7 @@ const here=path.dirname(fileURLToPath(import.meta.url));
 const repo=findRepo(here);
 if(!repo){ console.log('BLOCKED: 未找到仓库根（.git）。'); process.exit(2); }
 const protoDir=path.join(here,'..');
-const proto=path.join(protoDir,'index.html');
+const proto=sharedPrototype;
 // jsdom 装在 apps/desktop/ui 下；ESM 的 NODE_PATH 不生效，故显式从该目录解析。
 const require=createRequire(path.join(repo,'apps/desktop/ui/'));
 const { JSDOM }=require('jsdom');
