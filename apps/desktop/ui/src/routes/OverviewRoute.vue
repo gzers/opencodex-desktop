@@ -114,7 +114,7 @@ const home = computed(() => managerHome.value || app.statusSnapshot?.facts.openc
 
 // 环境结论（就绪态并入运行详情；准备态由准备卡承载）。
 const environment = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null),
+  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform),
 )
 // 按检查顺序呈现：检查中只亮当前项，其后为「待检查」。
 const envChecks = computed(() =>

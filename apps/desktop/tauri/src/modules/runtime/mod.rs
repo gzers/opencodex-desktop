@@ -30,7 +30,10 @@ pub const MAX_HISTORY: usize = 50;
 pub const MANAGED_PREFIX_RELATIVE: &str = "runtime/opencodex";
 
 /// 托管安装的稳定入口相对数据根的位置（`FZ-47`）。
+#[cfg(not(windows))]
 pub const MANAGED_ENTRY_RELATIVE: &str = "runtime/bin/ocx";
+#[cfg(windows)]
+pub const MANAGED_ENTRY_RELATIVE: &str = "runtime/bin/ocx.cmd";
 
 /// 前缀内的落地清单文件名（`FZ-47`）。
 pub const MANIFEST_FILENAME: &str = ".runtime-manifest.json";

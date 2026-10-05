@@ -58,7 +58,6 @@ impl From<EnvironmentReport> for EnvironmentReportDto {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::types::discovery_paths::macos_default_paths;
 
     #[test]
     fn all_paths_together_are_accepted() {
@@ -85,14 +84,18 @@ mod tests {
 
     #[test]
     fn default_paths_are_resolved_outside_the_discovery_module() {
-        let paths = macos_default_paths();
-        let local_bin = std::path::PathBuf::from(std::env::var_os("HOME").unwrap_or_default())
-            .join(".local/bin");
-        assert!(paths.node.ends_with("node"));
-        assert!(paths.npm.ends_with("npm"));
-        assert!(paths.ocx.ends_with("ocx"));
-        assert_eq!(paths.node.parent(), Some(local_bin.as_path()));
-        assert_eq!(paths.npm.parent(), Some(local_bin.as_path()));
-        assert_eq!(paths.ocx.parent(), Some(local_bin.as_path()));
+        let paths = crate::types::discovery_paths::default_paths().expect("platform user home");
+        assert!(paths.node.is_absolute());
+        assert!(paths.npm.is_absolute());
+        assert!(paths.ocx.is_absolute());
+        #[cfg(unix)]
+        {
+            let local_bin = crate::infrastructure::platform::home_dir()
+                .unwrap()
+                .join(".local/bin");
+            assert_eq!(paths.node.parent(), Some(local_bin.as_path()));
+            assert_eq!(paths.npm.parent(), Some(local_bin.as_path()));
+            assert_eq!(paths.ocx.parent(), Some(local_bin.as_path()));
+        }
     }
 }

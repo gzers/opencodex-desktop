@@ -102,6 +102,7 @@ export function buildEnvironmentPresentation(
   report: EnvironmentReport | null,
   loading = false,
   runtimeKind: RuntimeSourceKind | null = null,
+  platform: string | null = null,
 ): EnvironmentPresentation {
   if (loading || !report) {
     return {
@@ -135,7 +136,9 @@ export function buildEnvironmentPresentation(
       ...base,
       state: report.brewFound ? 'missing_node_brew' : 'missing_node_nobrew',
       title: '缺少 Node.js，OpenCodex 发现已暂停',
-      description: report.brewFound
+      description: platform === 'Windows'
+        ? '请安装 Windows 版 Node.js LTS（包含 npm），或使用受支持的 NVM 安装目录，完成后重新检查。'
+        : report.brewFound
         ? '检测到 Homebrew。可以先安装 Node.js LTS，安装完成后再回来重新检查。'
         : '未检测到 Homebrew。请从 Node.js LTS 官方渠道安装；应用不会代装，也不会写入系统环境。',
       checks: [
@@ -144,8 +147,8 @@ export function buildEnvironmentPresentation(
         notChecked('OpenCodex'),
       ],
       commands: [
-        ...(report.brewFound ? [{ label: '安装 Node.js', command: 'brew install node' }] : []),
-        { label: '安装后校验', command: 'node -v && npm -v' },
+        ...(report.brewFound && platform !== 'Windows' ? [{ label: '安装 Node.js', command: 'brew install node' }] : []),
+        { label: '安装后校验', command: platform === 'Windows' ? 'node -v; npm -v' : 'node -v && npm -v' },
       ],
       link: report.brewFound
         ? undefined
@@ -160,7 +163,7 @@ export function buildEnvironmentPresentation(
       title: 'Node.js 已发现，但 npm 不可用',
       description: 'npm 通常随 Node.js 提供。建议重新安装 Node.js LTS，或检查 PATH 与 Node 安装完整性。',
       checks: [checkToPresentation('Node.js', report.node), checkToPresentation('npm', report.npm), notChecked('OpenCodex')],
-      commands: [{ label: '安装后校验', command: 'node -v && npm -v' }],
+      commands: [{ label: '安装后校验', command: platform === 'Windows' ? 'node -v; npm -v' : 'node -v && npm -v' }],
     }
   }
 

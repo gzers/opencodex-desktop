@@ -431,19 +431,18 @@ mod tests {
     fn user_paths_match_fz22() {
         let root = home();
         let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, &root, true, true));
-        let paths = targets
-            .clone()
-            .map(|target| target.mcp_config_path.display().to_string());
+        let paths = targets.clone().map(|target| target.mcp_config_path);
         assert_eq!(
             paths,
             [
-                "/fixtures/opencodex-home/.codex/config.toml",
-                "/fixtures/opencodex-home/.claude.json",
-                "/fixtures/opencodex-home/.gemini/settings.json",
-                "/fixtures/opencodex-home/.grok/user-settings.json",
-                "/fixtures/opencodex-home/.config/opencode/opencode.json",
-                "/fixtures/opencodex-home/.hermes/config.yaml",
+                ".codex/config.toml",
+                ".claude.json",
+                ".gemini/settings.json",
+                ".grok/user-settings.json",
+                ".config/opencode/opencode.json",
+                ".hermes/config.yaml",
             ]
+            .map(|path| root.join(path))
         );
         assert!(targets
             .iter()

@@ -466,9 +466,6 @@ pub const RESIDUE_PREFIX_NAMES: &[&str] = &[
     "config.json.pre-",
 ];
 
-/// 受控命令的最小 PATH（不继承宿主 PATH，`FZ-50` 同源）。
-const UNINSTALL_FALLBACK_PATH: &str = "/usr/bin:/bin:/usr/sbin:/sbin";
-
 /// 卸载方案（只读）：界面据此展示「将移除的对象」与残留候选。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UninstallPlan {
@@ -763,21 +760,18 @@ pub struct SystemUninstallCommands {
 impl SystemUninstallCommands {
     fn harden(&self, command: &mut Command, bin_dir: Option<&Path>) {
         command.env_clear();
-        let path = match bin_dir {
-            Some(dir) if dir.is_absolute() => {
-                format!("{}:{UNINSTALL_FALLBACK_PATH}", dir.to_string_lossy())
-            }
-            _ => UNINSTALL_FALLBACK_PATH.to_string(),
-        };
+        let path =
+            crate::infrastructure::platform::controlled_path(bin_dir.map(Path::to_path_buf), None);
         command.env("PATH", path);
         command.env("LANG", "C.UTF-8");
         command.env("LC_ALL", "C.UTF-8");
         command.env("npm_config_update_notifier", "false");
         command.env("npm_config_fund", "false");
         command.env("npm_config_audit", "false");
-        if let Some(home) = self.home.as_ref() {
-            command.env("HOME", home);
-        }
+        crate::infrastructure::platform::apply_user_environment(
+            command,
+            self.home.as_ref().map(|home| home.as_os_str()),
+        );
         command
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -983,7 +977,7 @@ pub fn residue_check(data_root: &Path, plan: &UninstallPlan, full: bool) -> Vec<
         BodyOwner::External(ExternalRemoval::Unsupported { .. }) => {}
     }
     if full {
-        if let Some(home) = std::env::var_os("HOME").map(PathBuf::from) {
+        if let Some(home) = crate::infrastructure::platform::home_dir() {
             targets.push(
                 home.join("Library")
                     .join("LaunchAgents")

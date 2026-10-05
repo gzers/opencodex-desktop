@@ -340,19 +340,29 @@ mod tests {
             std::path::PathBuf::from("/fixture"),
         );
         assert_eq!(process.pid, None);
-        assert_eq!(
-            process.env_injected_keys,
-            vec![
-                "HOME",
-                "LANG",
-                "LC_ALL",
-                "HTTP_PROXY",
-                "HTTPS_PROXY",
-                "NO_PROXY",
-                "PATH",
-                "OPENCODEX_HOME"
-            ]
-        );
+        let mut expected = vec![
+            "HOME",
+            "LANG",
+            "LC_ALL",
+            "HTTP_PROXY",
+            "HTTPS_PROXY",
+            "NO_PROXY",
+            "PATH",
+            "OPENCODEX_HOME",
+        ];
+        if cfg!(windows) {
+            expected.extend([
+                "USERPROFILE",
+                "APPDATA",
+                "LOCALAPPDATA",
+                "SystemRoot",
+                "WINDIR",
+                "COMSPEC",
+                "TEMP",
+                "TMP",
+            ]);
+        }
+        assert_eq!(process.env_injected_keys, expected);
         process.mark_started(42, 10100, "2026-09-15T00:00:00Z".to_string());
         assert_eq!(process.pid, Some(42));
         assert_eq!(process.port, Some(10100));

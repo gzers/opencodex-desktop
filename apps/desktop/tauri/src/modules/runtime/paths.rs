@@ -46,21 +46,46 @@ impl PathRejection {
 /// 只用于写入判定。读取（发现 / 显式指定运行来源）不受此限，
 /// 否则 Homebrew 与 npm 全局前缀下的正常安装会被误伤。
 pub fn is_system_protected(path: &Path) -> bool {
-    const PROTECTED: &[&str] = &[
-        "/",
-        "/bin",
-        "/sbin",
-        "/usr",
-        "/etc",
-        "/System",
-        "/Library",
-        "/private",
-        "/Applications",
-    ];
-    PROTECTED.iter().any(|root| path == Path::new(root))
-        || PROTECTED
-            .iter()
-            .any(|root| *root != "/" && path.starts_with(root))
+    #[cfg(windows)]
+    {
+        if path.is_absolute() && path.parent().is_none() {
+            return true;
+        }
+        let candidate = path.to_string_lossy().replace('/', "\\").to_lowercase();
+        [
+            "SystemRoot",
+            "ProgramFiles",
+            "ProgramFiles(x86)",
+            "ProgramData",
+        ]
+        .into_iter()
+        .filter_map(std::env::var_os)
+        .map(|root| {
+            root.to_string_lossy()
+                .replace('/', "\\")
+                .trim_end_matches('\\')
+                .to_lowercase()
+        })
+        .any(|root| candidate == root || candidate.starts_with(&(root + "\\")))
+    }
+    #[cfg(not(windows))]
+    {
+        const PROTECTED: &[&str] = &[
+            "/",
+            "/bin",
+            "/sbin",
+            "/usr",
+            "/etc",
+            "/System",
+            "/Library",
+            "/private",
+            "/Applications",
+        ];
+        PROTECTED.iter().any(|root| path == Path::new(root))
+            || PROTECTED
+                .iter()
+                .any(|root| *root != "/" && path.starts_with(root))
+    }
 }
 
 fn is_symlink(path: &Path) -> bool {
@@ -105,8 +130,53 @@ fn is_executable(path: &Path) -> bool {
 #[cfg(not(unix))]
 fn is_executable(path: &Path) -> bool {
     std::fs::metadata(path)
-        .map(|meta| meta.is_file())
+        .map(|meta| {
+            meta.is_file()
+                && path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .is_some_and(|ext| {
+                        ["exe", "com", "cmd", "bat"].contains(&ext.to_ascii_lowercase().as_str())
+                    })
+        })
         .unwrap_or(false)
+}
+
+#[cfg(all(test, windows))]
+mod windows_tests {
+    use super::*;
+
+    #[test]
+    fn windows_only_accepts_supported_command_entries() {
+        let root = tempfile::tempdir().unwrap();
+        for name in ["ocx.exe", "ocx.cmd", "ocx.bat"] {
+            let path = root.path().join(name);
+            std::fs::write(&path, b"fixture").unwrap();
+            assert_eq!(validate_executable(&path), Ok(path));
+        }
+        let path = root.path().join("ocx");
+        std::fs::write(&path, b"#!/bin/sh").unwrap();
+        assert_eq!(
+            validate_executable(&path),
+            Err(PathRejection::NotExecutable)
+        );
+    }
+
+    #[test]
+    fn windows_install_rejects_system_and_drive_roots() {
+        assert!(is_system_protected(Path::new(r"C:\")));
+        let system = std::env::var_os("SystemRoot").unwrap();
+        let path = PathBuf::from(system).join("OpenCodex");
+        assert_eq!(
+            validate_install_target(&path, None),
+            Err(PathRejection::SystemProtected)
+        );
+        assert!(is_system_protected(Path::new(
+            &path.to_string_lossy().to_uppercase()
+        )));
+        let root = tempfile::tempdir().unwrap();
+        assert!(!is_system_protected(root.path()));
+    }
 }
 
 /// 读路径校验：候选 `ocx` 是否为**可执行的普通文件**（跟随符号链接）。

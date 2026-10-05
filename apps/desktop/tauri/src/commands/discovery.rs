@@ -9,7 +9,9 @@ pub async fn discover_environment(
     request: Option<DiscoveryRequest>,
 ) -> AppResult<EnvironmentReportDto> {
     let explicit_paths = request.and_then(|request| request.to_environment_paths());
-    let paths = explicit_paths.unwrap_or_else(crate::types::discovery_paths::macos_default_paths);
+    let paths = explicit_paths
+        .or_else(crate::types::discovery_paths::default_paths)
+        .ok_or(crate::errors::AppError::NotConfigured)?;
 
     tauri::async_runtime::spawn_blocking(move || {
         Ok(EnvironmentDiscovery::new(paths).discover().into())

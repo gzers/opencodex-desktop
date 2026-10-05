@@ -13,7 +13,7 @@ pub fn app_about(app: tauri::AppHandle) -> AppResult<AboutAppDto> {
         name: app.package_info().name.clone(),
         version: app.package_info().version.to_string(),
         identifier: app.config().identifier.clone(),
-        platform: "macOS".into(),
+        platform: crate::infrastructure::platform::platform_label().into(),
         framework: "Tauri v2".into(),
         license: "MIT License".into(),
     })

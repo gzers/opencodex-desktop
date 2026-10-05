@@ -11,6 +11,9 @@ pub fn get_preferences(data_root: tauri::State<'_, SharedDataRoot>) -> AppResult
     // 旧偏好文件缺 theme 字段时给前端一次性导入信号（H-15）：让历史 localStorage
     // 主题被提交一次，之后本机缓存跟随后端值。
     dto.theme_needs_import = !preferences_file_has_theme(&data_root.0);
+    if cfg!(windows) {
+        dto.cli_enabled = false;
+    }
     Ok(dto)
 }
 
@@ -34,6 +37,12 @@ pub fn save_preferences(
     // 命令边界收到的是 WebView 的 camelCase DTO；显式转换为领域结构后再落盘，
     // 避免 camelCase 字段被丢弃、保存被静默改写为默认值。
     let domain: Preferences = preferences.into();
+    if cfg!(windows) && domain.cli_enabled {
+        return Err(AppError::RuntimeManaged {
+            code: "cli_not_supported".to_string(),
+            detail: "Windows 暂不支持 CLI 控制面；本机 IPC 未实现".to_string(),
+        });
+    }
     save_preferences_with_path(&data_root.0, &domain).map(Into::into)
 }
 

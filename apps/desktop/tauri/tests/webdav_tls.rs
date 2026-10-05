@@ -24,20 +24,47 @@ fn tls_backend_is_compiled_in() {
 
 /// 行为护栏：`https://` 必须能走到传输层。
 /// 缺少 TLS 后端时 reqwest 会在构造请求时直接报 `invalid URL, scheme is not http`
-/// （历史上就是这么坏的）；带 TLS 时同一请求只是连不上（本机 1 端口未监听）。
-/// 该断言不依赖外网，也不依赖证书，离线可跑。
+/// （历史上就是这么坏的）。本机临时 TCP 端点只记录 TLS 握手首字节再关闭，
+/// 不依赖 Windows 对关闭端口的超时行为或本地化错误文本，也不访问外网。
 #[tokio::test]
 async fn https_scheme_reaches_the_transport_layer() {
+    use std::io::Read;
+    let listener = std::net::TcpListener::bind(("127.0.0.1", 0)).unwrap();
+    let address = listener.local_addr().unwrap();
+    listener.set_nonblocking(true).unwrap();
+    let server = std::thread::spawn(move || {
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(3);
+        loop {
+            match listener.accept() {
+                Ok((mut stream, _)) => {
+                    stream
+                        .set_read_timeout(Some(std::time::Duration::from_secs(1)))
+                        .unwrap();
+                    let mut first = [0; 1];
+                    stream.read_exact(&mut first).ok()?;
+                    return Some(first[0]);
+                }
+                Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                    if std::time::Instant::now() >= deadline {
+                        return None;
+                    }
+                    std::thread::sleep(std::time::Duration::from_millis(10));
+                }
+                Err(_) => return None,
+            }
+        }
+    });
     let client = reqwest::Client::builder()
+        .no_proxy()
         .connect_timeout(std::time::Duration::from_millis(800))
         .timeout(std::time::Duration::from_millis(1500))
         .build()
         .expect("build client");
     let error = client
-        .get("https://127.0.0.1:1/")
+        .get(format!("https://{address}/"))
         .send()
         .await
-        .expect_err("closed port must not answer");
+        .expect_err("endpoint closes before completing TLS");
     let chain = error_chain(&error);
     assert!(
         !chain
@@ -45,10 +72,9 @@ async fn https_scheme_reaches_the_transport_layer() {
             .any(|message| message.contains("scheme is not http")),
         "reqwest 没有可用的 TLS 后端，https 请求在 scheme 阶段就被拒绝：{chain:?}"
     );
-    assert!(
-        chain
-            .iter()
-            .any(|message| message.contains("onnection refused")),
-        "预期本机 1 端口拒绝连接，实际错误链：{chain:?}"
+    assert_eq!(
+        server.join().unwrap(),
+        Some(0x16),
+        "TLS handshake must reach loopback transport"
     );
 }

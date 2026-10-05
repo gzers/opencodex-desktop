@@ -57,6 +57,13 @@ describe('environment presentation', () => {
     expect(withoutBrew.link?.text).toBe('Node.js LTS 官方安装渠道')
   })
 
+  it('Windows guidance uses its installer and PowerShell validation without Homebrew', () => {
+    const presentation = buildEnvironmentPresentation(report({ brewFound: false }), false, null, 'Windows')
+    expect(presentation.description).toContain('Windows 版 Node.js LTS')
+    expect(presentation.description).not.toContain('Homebrew')
+    expect(presentation.commands).toEqual([{ label: '安装后校验', command: 'node -v; npm -v' }])
+  })
+
   it('marks unchecked dependencies and blocked installation area', () => {
     const app = useAppStore()
     app.setEnvironment(report({ gate: 'missing_npm' }))

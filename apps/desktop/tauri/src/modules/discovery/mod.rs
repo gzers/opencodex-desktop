@@ -144,10 +144,15 @@ impl EnvironmentDiscovery {
 
     /// 缺 Node.js 时才读取 Homebrew 固定探测点；不搜索 PATH。
     fn is_brew_available(&self) -> bool {
-        std::env::var_os("HOME")
-            .filter(|home| !home.is_empty())
-            .map(|home| Path::new(&home).join(".brew/bin/brew").is_file())
-            .unwrap_or(false)
+        #[cfg(target_os = "macos")]
+        {
+            std::env::var_os("HOME")
+                .filter(|home| !home.is_empty())
+                .map(|home| Path::new(&home).join(".brew/bin/brew").is_file())
+                .unwrap_or(false)
+        }
+        #[cfg(not(target_os = "macos"))]
+        false
     }
 
     fn is_executable_file(&self, path: &Path) -> bool {

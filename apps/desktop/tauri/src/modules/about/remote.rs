@@ -113,7 +113,9 @@ fn run_npm_view(
         .stdin(Stdio::null())
         .stderr(Stdio::null());
     if let Some(home) = environment.home.as_ref() {
-        command.env("HOME", home);
+        crate::infrastructure::platform::apply_user_environment(&mut command, Some(home));
+    } else {
+        crate::infrastructure::platform::apply_user_environment(&mut command, None);
     }
     command.env("OPENCODEX_HOME", &environment.opencodex_home);
     // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
@@ -162,23 +164,15 @@ fn run_npm_view(
 
 /// 受控 npm 查询的最小 PATH：npm 自身目录 → 调用方注入的 PATH（若有）→ 系统最小兜底。
 fn npm_path(npm: &std::path::Path, injected: Option<&std::ffi::OsStr>) -> std::ffi::OsString {
-    const FALLBACK: &str = "/usr/bin:/bin:/usr/sbin:/sbin";
-    let mut path = std::ffi::OsString::new();
-    if let Some(dir) = npm.parent() {
-        path.push(dir);
-        path.push(":");
-    }
-    if let Some(injected) = injected {
-        path.push(injected);
-        path.push(":");
-    }
-    path.push(FALLBACK);
-    path
+    crate::infrastructure::platform::controlled_path(
+        npm.parent().map(std::path::Path::to_path_buf),
+        injected,
+    )
 }
 
 /// 便捷：解析受控发现路径下的 npm。
 pub fn discovered_npm() -> Option<PathBuf> {
-    let paths = crate::types::discovery_paths::macos_default_paths();
+    let paths = crate::types::discovery_paths::default_paths()?;
     crate::modules::runtime::paths::validate_executable(&paths.npm).ok()
 }
 
@@ -208,6 +202,7 @@ mod tests {
         );
     }
 
+    #[cfg(unix)]
     #[test]
     fn npm_path_includes_npm_dir_and_fallback() {
         let p = npm_path(std::path::Path::new("/Users/x/.local/bin/npm"), None);
@@ -219,6 +214,7 @@ mod tests {
         assert!(p.contains("/usr/bin"), "fallback must be present: {p}");
     }
 
+    #[cfg(unix)]
     #[test]
     fn npm_path_appends_injected_before_fallback() {
         let injected = std::ffi::OsString::from("/opt/tools");
@@ -236,7 +232,7 @@ mod tests {
         let working = std::env::temp_dir();
         // 受控子进程会 `env_clear()`；npm 是脚本，必须显式注入 PATH 才能找到 node。
         let environment = EnvironmentPolicy {
-            home: std::env::var_os("HOME"),
+            home: crate::infrastructure::platform::home_dir().map(|home| home.into_os_string()),
             path: std::env::var_os("PATH"),
             opencodex_home: std::env::temp_dir(),
             ..Default::default()

@@ -49,9 +49,6 @@ pub fn idle_hint() -> Duration {
     crate::modules::runtime_defaults::install_idle_notice()
 }
 
-/// 受控 npm 调用的最小 PATH 兜底；不继承调用方的 PATH。
-const FALLBACK_PATH: &str = "/usr/bin:/bin:/usr/sbin:/sbin";
-
 // ---------------------------------------------------------------------------
 // 代理（`FZ-50`）
 // ---------------------------------------------------------------------------
@@ -654,6 +651,19 @@ impl VersionProbe for RealVersionProbe {
             }
             None => Command::new(script),
         };
+        command.env_clear();
+        let home = crate::infrastructure::platform::home_dir();
+        crate::infrastructure::platform::apply_user_environment(
+            &mut command,
+            home.as_ref().map(|home| home.as_os_str()),
+        );
+        command.env(
+            "PATH",
+            crate::infrastructure::platform::controlled_path(
+                node.and_then(Path::parent).map(Path::to_path_buf),
+                None,
+            ),
+        );
         command
             .arg("--version")
             .stdin(Stdio::null())
@@ -681,6 +691,44 @@ impl VersionProbe for RealVersionProbe {
         child.stdout.take()?.read_to_end(&mut output).ok()?;
         let text = String::from_utf8_lossy(&output);
         extract_semver(&text)
+    }
+}
+
+#[cfg(all(test, windows))]
+mod windows_launcher_tests {
+    use super::*;
+
+    #[test]
+    fn generated_launcher_executes_exact_node_and_script_with_literal_special_paths() {
+        let root = tempfile::Builder::new()
+            .prefix("ocx 中文 space & %literal% ! ")
+            .tempdir()
+            .unwrap();
+        let node = std::env::var_os("OPENCODEX_TEST_NODE")
+            .map(PathBuf::from)
+            .expect("OPENCODEX_TEST_NODE must name the absolute test Node");
+        let script = root.path().join("script 中文 %name%.js");
+        std::fs::write(
+            &script,
+            "console.log(JSON.stringify(process.argv.slice(2)));",
+        )
+        .unwrap();
+        let entry = root.path().join("ocx.cmd");
+        write_entry(&entry, Some(&node), &script).unwrap();
+        let output = Command::new(&entry)
+            .args(["status", "--json"])
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let args: Vec<String> = serde_json::from_slice(&output.stdout).unwrap();
+        assert_eq!(args, ["status", "--json"]);
+        assert!(std::fs::read_to_string(entry)
+            .unwrap()
+            .contains("DisableDelayedExpansion"));
     }
 }
 
@@ -742,12 +790,11 @@ impl SystemNpmRunner {
     fn base_command(&self, npm_path: &Path, node_dir: Option<&Path>) -> Command {
         let mut command = Command::new(npm_path);
         command.env_clear();
-        let path = match node_dir {
-            Some(dir) if dir.is_absolute() => {
-                format!("{}:{FALLBACK_PATH}", dir.to_string_lossy())
-            }
-            _ => FALLBACK_PATH.to_string(),
-        };
+        let directories = node_dir
+            .into_iter()
+            .chain(npm_path.parent())
+            .map(Path::to_path_buf);
+        let path = crate::infrastructure::platform::controlled_path(directories, None);
         command.env("PATH", path);
         command.env("LANG", "C.UTF-8");
         command.env("LC_ALL", "C.UTF-8");
@@ -755,8 +802,11 @@ impl SystemNpmRunner {
         command.env("npm_config_fund", "false");
         command.env("npm_config_audit", "false");
         command.env("npm_config_progress", "false");
+        crate::infrastructure::platform::apply_user_environment(
+            &mut command,
+            self.home.as_ref().map(|home| home.as_os_str()),
+        );
         if let Some(home) = self.home.as_ref() {
-            command.env("HOME", home);
             command.env("npm_config_cache", home.join(".npm"));
         }
         command
@@ -1639,6 +1689,7 @@ fn write_entry(entry: &Path, node: Option<&Path>, script: &Path) -> Result<(), I
     atomic_write(entry, content.as_bytes(), 0o755).map_err(InstallError::from)
 }
 
+#[cfg(not(windows))]
 fn entry_script(node: Option<&Path>, script: &Path) -> String {
     let script = shell_quote(script);
     match node {
@@ -1654,31 +1705,48 @@ fn entry_script(node: Option<&Path>, script: &Path) -> String {
     }
 }
 
+#[cfg(not(windows))]
 fn shell_quote(path: &Path) -> String {
     format!("'{}'", path.to_string_lossy().replace('\'', "'\\''"))
+}
+
+#[cfg(windows)]
+fn entry_script(node: Option<&Path>, script: &Path) -> String {
+    // 路径始终引用，禁用 ! 展开，%% 保留路径中的字面百分号；参数由 Rust
+    // Command 的 batch 转义处理，禁止手拼 cmd.exe 参数。
+    let quote = |path: &Path| format!("\"{}\"", path.to_string_lossy().replace('%', "%%"));
+    let node = node.map(quote).unwrap_or_else(|| "node.exe".to_string());
+    format!(
+        "@echo off\r\n\"%SystemRoot%\\System32\\chcp.com\" 65001 >nul\r\nsetlocal DisableDelayedExpansion\r\n{node} {} %*\r\nexit /b %errorlevel%\r\n",
+        quote(script),
+    )
 }
 
 /// 原子落位：现有前缀先改名让位，新前缀就位后再删旧；失败则把旧前缀改回来。
 fn atomic_replace_prefix(temp: &Path, prefix: &Path) -> Result<(), InstallError> {
     if !prefix.exists() {
-        return std::fs::rename(temp, prefix).map_err(|error| InstallError::FileSystem {
-            operation: "activate temporary prefix".to_string(),
-            detail: error.to_string(),
+        return crate::infrastructure::platform::rename(temp, prefix).map_err(|error| {
+            InstallError::FileSystem {
+                operation: "activate temporary prefix".to_string(),
+                detail: error.to_string(),
+            }
         });
     }
     let retired = sibling_with_tag(prefix, "old")?;
-    std::fs::rename(prefix, &retired).map_err(|error| InstallError::FileSystem {
-        operation: "retire existing prefix".to_string(),
-        detail: error.to_string(),
+    crate::infrastructure::platform::rename(prefix, &retired).map_err(|error| {
+        InstallError::FileSystem {
+            operation: "retire existing prefix".to_string(),
+            detail: error.to_string(),
+        }
     })?;
-    match std::fs::rename(temp, prefix) {
+    match crate::infrastructure::platform::rename(temp, prefix) {
         Ok(()) => {
             let _ = std::fs::remove_dir_all(&retired);
             Ok(())
         }
         Err(error) => {
             // 回滚：旧前缀必须回到原位，否则用户会「装了个空的」。
-            let _ = std::fs::rename(&retired, prefix);
+            let _ = crate::infrastructure::platform::rename(&retired, prefix);
             Err(InstallError::FileSystem {
                 operation: "activate temporary prefix".to_string(),
                 detail: error.to_string(),

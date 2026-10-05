@@ -139,30 +139,16 @@ pub fn sanitize_line(line: &str) -> Option<String> {
 }
 
 fn sanitize_urls_and_home(line: &str) -> String {
-    let home = std::env::var_os("HOME")
-        .filter(|value| !value.is_empty())
-        .map(std::path::PathBuf::from);
+    let home = crate::infrastructure::platform::home_dir();
+    let redacted = home
+        .as_deref()
+        .map(|home| redact_home_path(line, home))
+        .unwrap_or_else(|| line.to_string());
     let mut output = String::with_capacity(line.len());
-    let mut rest = line;
+    let mut rest = redacted.as_str();
 
     while let Some(position) = rest.find('h') {
         let candidate = &rest[position..];
-        if let Some(home_path) = home.as_ref() {
-            let home_text = home_path.to_string_lossy();
-            if candidate.starts_with(home_text.as_ref())
-                && rest[..position].ends_with(|character: char| {
-                    character.is_whitespace()
-                        || character == '"'
-                        || character == '\''
-                        || character == '['
-                })
-            {
-                output.push('~');
-                rest = &rest[home_text.len()..];
-                continue;
-            }
-        }
-
         if candidate.starts_with("http://") || candidate.starts_with("https://") {
             let scheme_len = if candidate.starts_with("http://") {
                 "http://".len()
@@ -196,6 +182,36 @@ fn sanitize_urls_and_home(line: &str) -> String {
 
         output.push_str(&rest[..=position]);
         rest = &rest[position + 1..];
+    }
+    output.push_str(rest);
+    output
+}
+
+fn redact_home_path(line: &str, home: &Path) -> String {
+    let home = home.to_string_lossy();
+    if home.is_empty() {
+        return line.to_string();
+    }
+    let mut output = String::with_capacity(line.len());
+    let mut rest = line;
+    while let Some(position) = rest.find(home.as_ref()) {
+        let before = &rest[..position];
+        let after = &rest[position + home.len()..];
+        let boundary_before = before.is_empty()
+            || before.ends_with(|ch: char| {
+                ch.is_whitespace() || matches!(ch, '=' | '"' | '\'' | '[' | '(')
+            });
+        let boundary_after = after.is_empty()
+            || after.starts_with(|ch: char| {
+                ch.is_whitespace() || matches!(ch, '/' | '\\' | '"' | '\'' | ']' | ')' | ',')
+            });
+        output.push_str(before);
+        output.push_str(if boundary_before && boundary_after {
+            "~"
+        } else {
+            home.as_ref()
+        });
+        rest = after;
     }
     output.push_str(rest);
     output
@@ -240,6 +256,23 @@ fn find_case_insensitive(haystack: &str, needle: &str) -> Option<usize> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn user_home_redaction_handles_windows_paths_and_keeps_other_users() {
+        let home = Path::new(r"C:\Users\tester");
+        assert_eq!(
+            redact_home_path(r"cwd=C:\Users\tester\AppData file", home),
+            r"cwd=~\AppData file"
+        );
+        assert_eq!(
+            redact_home_path(r"[C:\Users\tester] C:\Users\tester2\file", home),
+            r"[~] C:\Users\tester2\file"
+        );
+        assert_eq!(
+            redact_home_path("home=/Users/tester/config", Path::new("/Users/tester")),
+            "home=~/config"
+        );
+    }
 
     #[test]
     fn redacts_s3_uri_and_bucket_values() {

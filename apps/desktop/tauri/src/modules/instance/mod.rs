@@ -32,8 +32,9 @@ impl AppInstanceLock {
         let lock_path = state_dir.join("app.lock");
         let mut file = OpenOptions::new()
             .create(true)
+            .read(true)
             .write(true)
-            .truncate(true)
+            .truncate(false)
             .open(&lock_path)
             .map_err(|error| AppError::FileSystem {
                 operation: "open instance lock".to_string(),
@@ -53,6 +54,11 @@ impl AppInstanceLock {
             }
         }
 
+        // 获得锁之后才改写；竞争失败的实例不能清空正在运行实例的身份。
+        file.set_len(0).map_err(|error| AppError::FileSystem {
+            operation: "truncate acquired instance lock".to_string(),
+            detail: error.to_string(),
+        })?;
         let pid = std::process::id();
         let started_at = SystemTime::now()
             .duration_since(UNIX_EPOCH)
@@ -123,9 +129,30 @@ mod tests {
         let temp = tempfile::tempdir().expect("create temporary directory");
         let data_root = temp.path().join("data-root");
 
-        let _lock = AppInstanceLock::acquire(&data_root).expect("acquire lock");
+        let lock = AppInstanceLock::acquire(&data_root).expect("acquire lock");
+        // Windows 的强制文件锁禁止通过另一句柄读锁定区域，释放后核对持久内容。
+        drop(lock);
         let content =
             std::fs::read_to_string(data_root.join("manager-state/app.lock")).expect("read lock");
         assert!(content.contains(&format!("\"pid\":{}", std::process::id())));
+    }
+
+    #[test]
+    fn losing_instance_does_not_truncate_running_instance_identity() {
+        let temp = tempfile::tempdir().unwrap();
+        let first = AppInstanceLock::acquire(temp.path()).unwrap();
+        let size = first._file.metadata().unwrap().len();
+        assert!(size > 0);
+        assert!(matches!(
+            AppInstanceLock::acquire(temp.path()),
+            Err(AppError::InstanceLockConflict)
+        ));
+        assert_eq!(first._file.metadata().unwrap().len(), size);
+        drop(first);
+        assert!(
+            std::fs::read_to_string(temp.path().join("manager-state/app.lock"))
+                .unwrap()
+                .contains(&format!("\"pid\":{}", std::process::id()))
+        );
     }
 }

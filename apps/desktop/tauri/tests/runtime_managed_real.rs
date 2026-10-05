@@ -27,7 +27,7 @@ use opencodex_desktop_lib::modules::runtime::install::{
 use opencodex_desktop_lib::modules::runtime::paths::validate_executable;
 use opencodex_desktop_lib::modules::runtime::uninstall::{self, UninstallError};
 use opencodex_desktop_lib::modules::runtime::{RuntimeHandle, RuntimeSourceKind, OFFICIAL_PACKAGE};
-use opencodex_desktop_lib::types::discovery_paths::macos_default_paths;
+use opencodex_desktop_lib::types::discovery_paths::default_paths;
 
 fn enabled() -> bool {
     std::env::var("OCX_TEST_RUNTIME_REAL").ok().as_deref() == Some("1")
@@ -46,14 +46,20 @@ struct Env {
 }
 
 fn environment() -> Option<Env> {
-    let paths = macos_default_paths();
-    let node = validate_executable(&paths.node).ok()?;
-    let npm = validate_executable(&paths.npm).ok()?;
+    let paths = default_paths().expect("platform user home");
+    let node = std::env::var_os("OCX_TEST_RUNTIME_NODE")
+        .map(PathBuf::from)
+        .unwrap_or(paths.node);
+    let npm = std::env::var_os("OCX_TEST_RUNTIME_NPM")
+        .map(PathBuf::from)
+        .unwrap_or(paths.npm);
+    let node = validate_executable(&node).ok()?;
+    let npm = validate_executable(&npm).ok()?;
     // 默认复用本机 HOME 的 npm 缓存；设置 `OCX_TEST_RUNTIME_HOME` 可用一个
     // 全新的 HOME（冷缓存）复现「首次下载」路径——真实 GUI 安装就是冷缓存。
     let home = std::env::var_os("OCX_TEST_RUNTIME_HOME")
         .map(PathBuf::from)
-        .or_else(|| std::env::var_os("HOME").map(PathBuf::from))?;
+        .or_else(opencodex_desktop_lib::infrastructure::platform::home_dir)?;
     // `OCX_TEST_RUNTIME_DATA_ROOT` 指定时直接用给定数据根（用于「先装好，再用打包
     // 制品真机观察运行来源与状态采集是否跟随」）；否则用临时数据根。
     let root = tempfile::tempdir().ok()?;
@@ -91,7 +97,14 @@ fn run_entry(entry: &Path) -> Option<String> {
         "  入口文件：\n{}",
         std::fs::read_to_string(entry).unwrap_or_else(|_| "(unreadable)".to_string())
     );
-    let output = std::process::Command::new(entry)
+    let mut command = std::process::Command::new(entry);
+    command.env_clear();
+    let home = opencodex_desktop_lib::infrastructure::platform::home_dir();
+    opencodex_desktop_lib::infrastructure::platform::apply_user_environment(
+        &mut command,
+        home.as_ref().map(|home| home.as_os_str()),
+    );
+    let output = command
         .arg("--version")
         .stdin(std::process::Stdio::null())
         .output()
@@ -269,7 +282,11 @@ fn real_managed_runtime_round_trip() {
     println!("-- 4. 系统保护目录 / 坏包拒绝");
     let protected = installer
         .install(&InstallRequest {
-            prefix: PathBuf::from("/usr/lib/opencodex"),
+            prefix: if cfg!(windows) {
+                PathBuf::from(std::env::var_os("SystemRoot").unwrap()).join("opencodex")
+            } else {
+                PathBuf::from("/usr/lib/opencodex")
+            },
             source: InstallSource::Offline {
                 archive: tarball.clone(),
             },

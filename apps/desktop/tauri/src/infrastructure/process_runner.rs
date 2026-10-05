@@ -162,7 +162,7 @@ impl ControlledProcessRunner {
             self.clear_running();
             // 后台独立线程负责回收，避免 start/stop 的子进程变成僵尸。
             // 此前这里依赖 `Child::wait()`，而它在本环境下永不就绪。
-            let _exit_observer = spawn_reaper(pid);
+            let _exit_observer = observe_child_exit(child);
             return Ok(LifecycleResult::Started);
         }
 
@@ -175,7 +175,7 @@ impl ControlledProcessRunner {
         let mut child_exited = false;
         let mut exit_status = None;
         // 子进程退出由独立线程用 `waitpid` 观测；不再依赖 tokio 的 wait。
-        let mut exit_observer = spawn_reaper(pid);
+        let mut exit_observer = observe_child_exit(child);
 
         while !child_exited {
             let elapsed = started.elapsed();
@@ -247,20 +247,31 @@ impl ControlledProcessRunner {
             .arg(official_subcommand(command.action))
             .current_dir(&command.working_directory)
             .env_clear()
-            .env("HOME", self.home.clone())
             .env("OPENCODEX_HOME", &command.environment.opencodex_home)
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .stdin(Stdio::null())
             .kill_on_drop(false);
 
-        if let Some(home) = command.environment.home.as_ref() {
-            process.env("HOME", home);
-        }
+        crate::infrastructure::platform::apply_user_environment(
+            process.as_std_mut(),
+            Some(
+                command
+                    .environment
+                    .home
+                    .as_deref()
+                    .unwrap_or(self.home.as_os_str()),
+            ),
+        );
         process.env(
             "PATH",
             command.environment.path.as_ref().map_or_else(
-                || self.home.join(".local/bin").into_os_string(),
+                || {
+                    crate::infrastructure::discovery_paths::process_path(
+                        &self.home,
+                        &crate::infrastructure::discovery_paths::paths_for_home(&self.home),
+                    )
+                },
                 |path| path.clone(),
             ),
         );
@@ -340,11 +351,21 @@ fn spawn_reaper(pid: Option<u32>) -> mpsc::Receiver<Option<i32>> {
     receiver
 }
 
-#[cfg(not(unix))]
-fn spawn_reaper(_pid: Option<u32>) -> mpsc::Receiver<Option<i32>> {
-    let (sender, receiver) = mpsc::channel(1);
-    let _ = sender.try_send(None);
-    receiver
+fn observe_child_exit(child: tokio::process::Child) -> mpsc::Receiver<Option<i32>> {
+    #[cfg(unix)]
+    {
+        spawn_reaper(child.id())
+    }
+    #[cfg(not(unix))]
+    {
+        let (sender, receiver) = mpsc::channel(1);
+        tauri::async_runtime::spawn(async move {
+            let mut child = child;
+            let code = child.wait().await.ok().and_then(|status| status.code());
+            let _ = sender.send(code).await;
+        });
+        receiver
+    }
 }
 
 #[cfg(not(unix))]

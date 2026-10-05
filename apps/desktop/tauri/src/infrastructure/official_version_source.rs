@@ -38,12 +38,15 @@ impl OfficialCliVersionSource {
             .arg("--version")
             .current_dir(&self.working_directory)
             .env_clear()
-            .env("HOME", self.environment.home.clone().unwrap_or_default())
             .env("OPENCODEX_HOME", &self.environment.opencodex_home)
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
             .kill_on_drop(false);
+        crate::infrastructure::platform::apply_user_environment(
+            process.as_std_mut(),
+            self.environment.home.as_deref(),
+        );
         for (key, value) in [
             ("LANG", &self.environment.lang),
             ("LC_ALL", &self.environment.lc_all),

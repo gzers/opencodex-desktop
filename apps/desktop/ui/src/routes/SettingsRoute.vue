@@ -374,7 +374,7 @@ function openUpgradeAdvice() {
 
 // 同 EnvironmentGate：运行来源已解析时不再把「未发现 npm 全局安装」当成待处理的阻断项。
 const environment = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null),
+  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform),
 )
 const officialProject = computed(() => app.officialProject)
 const officialVersion = computed(() => {
@@ -724,7 +724,10 @@ onBeforeUnmount(() => {
     void persistScale(pendingScale)
   }
 })
+const cliSupported = computed(() => app.aboutApp?.platform !== 'Windows')
+
 function toggleCli() {
+  if (!cliSupported.value) return
   void persist(
     { ...preferences.value, cliEnabled: !preferences.value.cliEnabled },
     preferences.value.cliEnabled ? 'CLI 控制面已关闭；socket 将移除。' : 'CLI 控制面已启用；本机 IPC 已启动。',
@@ -1200,7 +1203,7 @@ function restoreGeneralDefaults() {
           <div class="setting-row" data-testid="setting-network-probe"><div><div class="setting-title">检查连接</div><div class="setting-desc">{{ proxyProbeResult || '用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。' }}</div></div><div class="controls"><span v-if="proxyProbeResult" class="tag" :class="{ danger: !proxyProbeOk, ok: proxyProbeOk }">{{ proxyProbeOk ? '可用' : '不可用' }}</span><button class="btn ghost" type="button" :disabled="proxyProbeBusy" @click="runProxyProbe()">{{ proxyProbeBusy ? '检查中' : '检查连接' }}</button></div></div>
         </div>
       </UiCard>
-      
+
 <article class="card"><div class="card-head"><div><h2>官方共享配置</h2><p>与官方 OpenCodex 使用同一配置源；模型、路由与提供方仍由官方面板或官方 CLI 管理。</p></div></div><div class="setting-list"><div class="setting-row"><div><div class="setting-title">随 Codex 启动 OpenCodex <span class="tag">官方共享</span></div><div class="setting-desc">与官方面板同一配置；开关的读写都经官方 shim <code>ocx codex-shim</code>，管理器不旁路改写官方配置。</div><div v-if="codexShimNotice" class="setting-note" data-testid="codex-shim-notice">{{ codexShimNotice }}</div></div><div class="controls"><span v-if="codexShimUnreachable" class="setting-readonly">官方 CLI 未就绪</span><button v-else class="toggle" role="switch" :aria-checked="codexShimInstalled" :disabled="codexShimLoading || codexShimBusy" aria-label="随 Codex 启动 OpenCodex" @click="toggleCodexShim()"></button></div><div v-if="codexShimPhase !== 'idle'" class="shim-panel" :class="{ 'is-close': codexShimClosing, 'is-done': codexShimPhase === 'done', 'is-error': !codexShimResultOk }" data-testid="codex-shim-panel"><div class="shim-panel-head"><span class="shim-panel-spinner" aria-hidden="true"></span><b data-testid="codex-shim-panel-title">{{ codexShimPanelTitle }}</b><span class="shim-panel-meta">{{ codexShimElapsedText }}</span></div><div v-if="!codexShimClosing" class="shim-panel-bar" role="progressbar" aria-label="官方 shim 写入进度"><div class="shim-panel-fill"></div></div><div v-if="codexShimPanelHint" class="shim-panel-hint">{{ codexShimPanelHint }}</div><div v-if="codexShimResult" class="shim-panel-result" :class="{ error: !codexShimResultOk }" data-testid="codex-shim-result">{{ codexShimResult }}</div><button class="shim-details-toggle" type="button" :aria-expanded="codexShimShowDetails" @click="codexShimShowDetails = !codexShimShowDetails"><span class="chev" :class="{ open: codexShimShowDetails }" aria-hidden="true">▸</span> 查看执行的具体指令</button><div v-if="codexShimShowDetails" class="shim-details" data-testid="codex-shim-details"><ol class="shim-cmds"><li v-for="(c, i) in codexShimPlan.commands" :key="i" :data-cmd-state="codexShimPhase === 'done' && codexShimResultOk ? 'done' : 'todo'"><code>{{ c.cmd }}</code><span>{{ c.note }}</span></li></ol><p class="shim-details-note">写入严格经官方 CLI 转发，管理器不直接改写官方配置或启动器二进制。</p></div></div></div></div></article>
       <div class="section-actions"><button class="btn ghost" @click="restoreGeneralDefaults">还原通用默认</button></div>
     </section>
@@ -1359,15 +1362,15 @@ function restoreGeneralDefaults() {
     <section v-else-if="section === 'cli'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>CLI 控制面</h2><p>让终端、脚本或 AI 代理控制本应用的自有域；不提供改写 OpenCodex 配置的通道。</p></div></div>
         <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">启用 CLI 控制面</div><div class="setting-desc">默认关闭；开启后注册本机命令入口。CLI 仅作为运行中实例的客户端，经本地 IPC 委托执行。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.cliEnabled" @click="toggleCli()"></button></div></div>
-          <template v-if="preferences.cliEnabled">
+          <div class="setting-row"><div><div class="setting-title">启用 CLI 控制面</div><div class="setting-desc">{{ cliSupported ? '默认关闭；开启后注册本机命令入口。CLI 仅作为运行中实例的客户端，经本地 IPC 委托执行。' : 'Windows 暂不支持 CLI 控制面；本机 IPC 未实现。' }}</div></div><div class="controls"><button class="toggle" role="switch" :disabled="!cliSupported" :aria-checked="cliSupported && preferences.cliEnabled" @click="toggleCli()"></button></div></div>
+          <template v-if="cliSupported && preferences.cliEnabled">
             <div class="setting-row"><div><div class="setting-title">本机 IPC 端点</div><div class="setting-desc"><code>~/Library/Caches/OpenCodex Desktop/ipc/opencodex.ipc</code>；目录 0700，socket 0600，仅限当前用户 UID。</div></div><div class="controls"><span class="cli-badge ok">在线</span></div></div>
             <div class="setting-row"><div><div class="setting-title">PATH 注册</div><div class="setting-desc">默认关闭；注册为指向应用内 <code>ocxd</code> 的 symlink，不会覆盖他人目标。</div></div><div class="controls"><span class="cli-badge">未注册</span></div></div>
             <div class="setting-row"><div><div class="setting-title">调用日志</div><div class="setting-desc">记录命令、参数键、请求 ID 与结果；保留 90 天 / 5,000 条，单文件 5 MB × 5 份。在「诊断中心 → 日志历史 → 调用日志」中查看。</div></div><div class="controls"><span class="cli-badge">已启用</span></div></div>
             <div class="setting-row"><div><div class="setting-title">Agent 提示</div><div class="setting-desc">管理器用 <code>ocxd</code>；OpenCodex 自身配置仍用官方 <code>ocx</code>。命令能力先 <code>ocxd --help</code>。</div></div><div class="controls"><button class="btn ghost" @click="copyAgentPrompt()">复制 Agent 提示</button></div></div>
           </template>
         </div>
-        <template v-if="preferences.cliEnabled">
+        <template v-if="cliSupported && preferences.cliEnabled">
           <div class="cli-rules"><h3>开放能力</h3><p>发现与只读状态、启停、数据目录、备份、加密导出 / 导入、WebDAV 同步、自更新检查。</p><h3>明确不开放</h3><p>提供方、路由、模型映射等 OpenCodex 配置仍走官方 CLI（<code>ocx</code>）；管理器 CLI 不做第二个写入者。常用入口见下方「OpenCodex 配置 · 官方 CLI」。</p></div>
           <div class="cli-preview"><h4>先看帮助</h4><pre><code>ocxd --help
 ocxd status --json</code></pre><p><code>--help</code> 列出当前版本实际支持的命令与参数；脚本和 Agent 用它自发现能力，不硬编码命令集。</p></div>
@@ -1453,7 +1456,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
           <dl class="about-facts">
             <div><dt>应用版本</dt><dd><span class="mono">{{ appVersion }}</span></dd></div>
             <div><dt>项目作者</dt><dd><strong>gzers</strong></dd></div>
-            <div><dt>运行平台</dt><dd>{{ app.aboutApp?.platform ?? 'macOS' }} · {{ app.aboutApp?.framework ?? 'Tauri v2' }}</dd></div>
+            <div><dt>运行平台</dt><dd>{{ app.aboutApp?.platform ?? '检测中' }} · {{ app.aboutApp?.framework ?? 'Tauri v2' }}</dd></div>
             <div><dt>开源许可</dt><dd>{{ app.aboutApp?.license ?? 'MIT License' }}</dd></div>
           </dl>
           <div class="about-links">

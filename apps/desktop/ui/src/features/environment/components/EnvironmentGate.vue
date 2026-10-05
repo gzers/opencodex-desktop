@@ -17,7 +17,7 @@ const routes = useRouteStore()
 // 门禁要读运行来源：托管安装落在数据根内、不在发现候选里，只按「自动发现」
 // 判断会误报「未发现 OpenCodex」（`UI规范` §18.5）。
 const presentation = computed(() =>
-  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null),
+  buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform),
 )
 const checks = computed(() =>
   environmentChecksOrdered(presentation.value.checks, presentation.value.state === 'checking'),

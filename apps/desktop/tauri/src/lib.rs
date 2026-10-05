@@ -155,24 +155,21 @@ pub fn run() {
             )) as crate::commands::update::SharedUpdateStatus);
 
             // 状态采集仍只使用受控发现路径；不搜索 PATH，也不执行真实 ocx。
-            let discovery_paths = crate::types::discovery_paths::macos_default_paths();
-            let home = std::env::var_os("HOME")
-                .filter(|value| !value.is_empty())
-                .map(std::path::PathBuf::from)
+            let home = crate::infrastructure::platform::home_dir()
                 .ok_or_else(|| {
-                    Box::new(crate::errors::AppError::NotConfigured) as Box<dyn std::error::Error>
+                    Box::new(crate::errors::AppError::FileSystem {
+                        operation: "resolve user home directory".to_string(),
+                        detail: "no absolute user profile directory is available".to_string(),
+                    }) as Box<dyn std::error::Error>
                 })?;
+            let discovery_paths = crate::infrastructure::discovery_paths::paths_for_home(&home);
             app.manage(crate::state::SharedHomeDir(home.clone()));
             // 运行来源解析层（FZ-48）：显式指定 > 托管安装 > 自动发现候选，不读 PATH。
             // 发现候选按文档口径给出（受控默认目录 + Homebrew 两个固定前缀），
             // 逐个做可执行校验，缺失即跳过。
             let runtime = crate::modules::runtime::RuntimeHandle::initialize(
                 &data_root,
-                vec![
-                    discovery_paths.ocx.clone(),
-                    std::path::PathBuf::from("/opt/homebrew/bin/ocx"),
-                    std::path::PathBuf::from("/usr/local/bin/ocx"),
-                ],
+                crate::infrastructure::discovery_paths::runtime_candidates(&home),
             );
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
@@ -182,12 +179,7 @@ pub fn run() {
             let runtime_config = crate::modules::data_root::load_runtime_config(&data_root)?;
             let active_data_root = runtime_config.active_data_root.clone();
             let opencodex_home = crate::modules::data_root::resolve_opencodex_home(&runtime_config);
-            let process_path = discovery_paths
-                .node
-                .parent()
-                .map(|parent| parent.to_path_buf())
-                .unwrap_or_else(|| home.join(".local/bin"))
-                .into_os_string();
+            let process_path = crate::infrastructure::discovery_paths::process_path(&home, &discovery_paths);
             let status_environment = crate::modules::process::EnvironmentPolicy {
                 opencodex_home: opencodex_home.clone(),
                 home: Some(home.clone().into_os_string()),
@@ -208,7 +200,7 @@ pub fn run() {
                 .path()
                 .app_cache_dir()
                 .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
-            let cli_enabled = crate::modules::preferences::PreferencesStore::new(&data_root)
+            let cli_enabled = cfg!(unix) && crate::modules::preferences::PreferencesStore::new(&data_root)
                 .load()
                 .map(|value| value.cli_enabled)
                 .unwrap_or(false);
@@ -272,6 +264,12 @@ pub fn run() {
                 }
             }
             if let Some(tray) = app.tray_by_id(crate::modules::tray::TRAY_ID) {
+                // Windows 托盘不会像 macOS 模板图标那样按主题反色，使用应用彩色图标。
+                #[cfg(windows)]
+                if let Some(icon) = app.default_window_icon() {
+                    tray.set_icon(Some(icon.clone()))?;
+                    tray.set_icon_as_template(false)?;
+                }
                 tray.set_menu(Some(tray_menu.clone()))?;
             }
             let native_menu = crate::infrastructure::tray_controller::build_app_menu(app.handle())?;

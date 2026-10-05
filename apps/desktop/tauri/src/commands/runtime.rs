@@ -32,7 +32,9 @@ pub const RUNTIME_SOURCE_CHANGED_EVENT: &str = "runtime-source-changed";
 
 /// 已发现的 node / npm 绝对路径（**不读 PATH**，`FZ-13` / `FZ-50`）。
 fn discovered_executables() -> (Option<PathBuf>, Option<PathBuf>) {
-    let paths = crate::types::discovery_paths::macos_default_paths();
+    let Some(paths) = crate::types::discovery_paths::default_paths() else {
+        return (None, None);
+    };
     let validated = |path: &Path| crate::modules::runtime::paths::validate_executable(path).ok();
     (validated(&paths.node), validated(&paths.npm))
 }

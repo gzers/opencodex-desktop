@@ -81,7 +81,7 @@ pub struct EnvironmentPolicy {
 
 impl EnvironmentPolicy {
     pub fn allowed_keys(&self) -> Vec<&'static str> {
-        vec![
+        let keys = vec![
             "HOME",
             "LANG",
             "LC_ALL",
@@ -90,7 +90,24 @@ impl EnvironmentPolicy {
             "NO_PROXY",
             "PATH",
             "OPENCODEX_HOME",
-        ]
+        ];
+        #[cfg(windows)]
+        {
+            let mut keys = keys;
+            keys.extend([
+                "USERPROFILE",
+                "APPDATA",
+                "LOCALAPPDATA",
+                "SystemRoot",
+                "WINDIR",
+                "COMSPEC",
+                "TEMP",
+                "TMP",
+            ]);
+            keys
+        }
+        #[cfg(not(windows))]
+        keys
     }
 
     /// 返回按冻结顺序排列的环境键；值不输出，满足“键可记录、值不记录”。
@@ -290,19 +307,29 @@ mod tests {
     #[test]
     fn environment_policy_only_exposes_frozen_keys() {
         let (_temp, command) = valid_command(LifecycleAction::Start);
-        assert_eq!(
-            command.environment.allowed_key_list(),
-            vec![
-                "HOME",
-                "LANG",
-                "LC_ALL",
-                "HTTP_PROXY",
-                "HTTPS_PROXY",
-                "NO_PROXY",
-                "PATH",
-                "OPENCODEX_HOME"
-            ]
-        );
+        let mut expected = vec![
+            "HOME",
+            "LANG",
+            "LC_ALL",
+            "HTTP_PROXY",
+            "HTTPS_PROXY",
+            "NO_PROXY",
+            "PATH",
+            "OPENCODEX_HOME",
+        ];
+        if cfg!(windows) {
+            expected.extend([
+                "USERPROFILE",
+                "APPDATA",
+                "LOCALAPPDATA",
+                "SystemRoot",
+                "WINDIR",
+                "COMSPEC",
+                "TEMP",
+                "TMP",
+            ]);
+        }
+        assert_eq!(command.environment.allowed_key_list(), expected);
         assert!(command
             .environment
             .opencodex_home
