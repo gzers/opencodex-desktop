@@ -16,7 +16,7 @@
 
 | 类别 | 归属分支 | 内容 |
 |---|---|---|
-| 代码产物 | `main` | `apps/**`、`.github/**`、`test/**` 及仓库根构建配置。开发期间可在 `codex/*` 特性分支上进行，最终并入 `main` |
+| 代码产物 | `main` | `apps/**`、`.github/**`、`test/**` 及仓库根构建配置。开发期间可在 `feature/*` 特性分支上进行，最终并入 `main` |
 | 文档与治理产物 | 以 `docs/` 开头的分支（当前 `docs/governance-main`） | `docs/**`、`.adg/**` |
 | **全分支共享文件** | **每个分支都必须存在，且内容保持一致** | `AGENTS.md`、`README.md`、`README.en.md`、`LICENSE`、`.gitignore` |
 | 仅 `main` | `main` | `CHANGELOG.md`（用户可见发布说明的事实源） |
