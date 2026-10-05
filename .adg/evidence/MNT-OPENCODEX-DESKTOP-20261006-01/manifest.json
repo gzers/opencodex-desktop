@@ -1,0 +1,144 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261006-01",
+  "registered_date": "2026-10-06",
+  "timezone": "Asia/Shanghai",
+  "assembled_at": "2026-10-06T02:01:04+08:00",
+  "kind": "Maintenance analysis evidence inventory; not an implementation, acceptance, release, or closure certificate",
+  "branch": "docs/governance-main",
+  "topic_readme": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+  "run_record": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+  "desktop_version": "0.1.7",
+  "desktop_source_commit": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+  "proposed_fix_version": "0.1.8",
+  "proposal_status": "tentative",
+  "provenance": {
+    "startup": "Previously executed installed EXE runs; default environment failed, child HOME override remained alive at observation",
+    "source": "Fixed v0.1.7 Git blobs; paths/hashes/line ranges only, no implementation-source duplication",
+    "icons": "Read-only installed PE icon extraction and decoded pixel comparison",
+    "attachment": "Original screenshot retained byte-for-byte in topic",
+    "documentation": "User-authorized maintenance package and tentative version archival",
+    "branch_preference": "User correction before commit: use feature/0.1.8-windows-fixes for implementation",
+    "precommit_snapshot": "Refresh current documentation indexes and feature branch plan before archival commit; preserve prior committed content and raw diagnostic evidence"
+  },
+  "operational_limit": "Diagnostic launches used daily app data root and application initialization/log writes; no global environment/installation/shortcut edits, no official proxy lifecycle actions or upgrade acceptance",
+  "retention": "Keep with maintenance incident pending fix/validation; no deletions performed",
+  "files": [
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/app-startup-excerpt.log",
+      "bytes": 318,
+      "sha256": "49c9da655d57d9b5ee9e216363fc8f4a7f5b55671a987612e18a8a629e85c234"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/documentation-checks.json",
+      "bytes": 17332,
+      "sha256": "71f492b1792b7ce606d7f7f2ffc626fa417bd5fa2272c5255a954c63fb9bcf8c"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/icon-metrics.json",
+      "bytes": 2625,
+      "sha256": "d4a70405c81c58d5b9ba5a65b39cf4388db080ab91c07f922bccda86478e38da"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/installed-icon-32512.ico",
+      "bytes": 9568,
+      "sha256": "70b9df83231be2eb5e80f78a33f7c77c95e3827366730e96c2bcd8285c8c2ee9"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/observations.json",
+      "bytes": 4819,
+      "sha256": "83d971dfb6dcbf1741c14e326135a821b4048220135df0f036a7abe40c03e10d"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/scope-record.json",
+      "bytes": 2406,
+      "sha256": "8bfa0d1086bf6b86f1d4ec786ecb8ffa8bfc5ef1e590cbafbad3b338399b844d"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/source-icon.ico",
+      "bytes": 9568,
+      "sha256": "9e66134cada279adade3a0f9bc9f0197455ecc9bac32f0d2e4505287d79b075f"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/source-review.json",
+      "bytes": 7173,
+      "sha256": "c2b8b420637027284f45685ad1a205ee4580f14069bfee94f345ad9928e177f6"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/startup-stderr.log",
+      "bytes": 312,
+      "sha256": "854d3a4073a6e86251dce358c648d5562a4850a875553338f0f639fc0de13bea"
+    },
+    {
+      "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/startup-stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/03-开发实施/README.md",
+      "bytes": 6633,
+      "sha256": "b9b28423f61b441a5ff2ea3c37bd3b973491106ce3a83878e569a4b3c69c42f1"
+    },
+    {
+      "path": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "bytes": 5238,
+      "sha256": "9998df1f0bf381d7ff75b036cf2d05595cde312e1cbea2c7d1618e58bc296d9a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "bytes": 3570,
+      "sha256": "16f43217d21e0d6c3f80293a40a2586d480bd926781a34d4e861f6c32b4ca06b"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/01-本机诊断与证据边界.md",
+      "bytes": 4331,
+      "sha256": "2d1af0eef072a2c01dff375df6f889f8723eed403b35257a92127a145a056a1b"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "bytes": 6985,
+      "sha256": "2b69af25d2066b7a129e08ee433adf375662680b39c580efbf653d5b847f6e41"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/03-0.1.8拟修复范围与验证方案.md",
+      "bytes": 5395,
+      "sha256": "27fdeed53b0f5a921dd715ffcb327048a5f33c385bb64a87144c6820e61a3fc9"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "bytes": 817,
+      "sha256": "98133fa7913b3f21d2b62aab5fe6a0327c273f452698a98b375689c7793fe8a9"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/Windows图标资源对比.png",
+      "bytes": 9113,
+      "sha256": "334cda0fb9e7581ae288b5bbb6667acd4c3e3f3f25614aa62950f079b61defaf"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/README.md",
+      "bytes": 2281,
+      "sha256": "e0c37e64ac1567de22fa95d8237bfa89d3eb02dd37ae2992237c8aba387225c3"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/Windows快捷方式图标偏小-用户截图.png",
+      "bytes": 5828,
+      "sha256": "2418883efd8753cdf4935f558eb5fae6f170c9986beffe82f3650369785f41b2"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "bytes": 3715,
+      "sha256": "13c96e3c3c22d726b3265e84be30d0eb0ba67dec3ed5926d68acf2a347b6f466"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/COL-LOCAL-20260912-01.md",
+      "bytes": 16268,
+      "sha256": "1a0e1d5a5627ec30b30895f0183b541094e04bb2e62d993c0f4c65a228bbb26a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/README.md",
+      "bytes": 5236,
+      "sha256": "6aab730d7c100ad30a398a8bb4dc19f9e59e53089c3716eebe18f3b69b27f9bc"
+    }
+  ],
+  "self_hash_excluded": true,
+  "hash_basis": "Bytes of files committed by this archival change; validate using Git blobs when working-tree line endings differ"
+}

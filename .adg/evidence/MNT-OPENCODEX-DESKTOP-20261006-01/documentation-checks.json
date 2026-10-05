@@ -1,0 +1,238 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261006-01",
+  "checked_at": "2026-10-06T02:01:04+08:00",
+  "result": "pass",
+  "branch": "docs/governance-main",
+  "scope": "Seven new Markdown documents, two images, four changed index/ledger documents, and this maintenance record evidence only; historical unrelated links/receipts are not revalidated",
+  "checks": {
+    "new_markdown_files": 7,
+    "updated_index_or_ledger_files": 4,
+    "local_link_count": 36,
+    "local_links_resolve": true,
+    "pinned_source_link_count": 15,
+    "pinned_source_paths_and_line_anchors_valid": true,
+    "source_hashes_checked": 13,
+    "source_hashes_match": true,
+    "original_screenshot_byte_identity": true,
+    "archived_logs_and_icon_byte_identity": true,
+    "icon_frame_count": 7,
+    "icon_decoded_pixel_match": true,
+    "maintenance_row_count": 1,
+    "COL_lifecycle_unchanged": true,
+    "implementation_and_shared_root_paths_unchanged": true,
+    "markdown_whitespace_and_final_newlines": "pass",
+    "git_diff_check": "pass; retain original CRLF diagnostic logs using cr-at-eol whitespace rule",
+    "version_status": "0.1.8 tentative; no implementation/acceptance/release performed",
+    "development_branch_preference": "feature/0.1.8-windows-fixes, from main; explicitly confirmed by user",
+    "current_documentation_index_snapshot": "Refreshed before commit against current docs branch; existing committed index content preserved",
+    "staged_file_hashes_match": true
+  },
+  "local_links": [
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "问题来源记录/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "分析/01-本机诊断与证据边界.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "分析/02-原因分析与Windows适配缺口.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "分析/03-0.1.8拟修复范围与验证方案.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "../../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/manifest.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "target": "../../COL-LOCAL-20260912-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/01-本机诊断与证据边界.md",
+      "target": "../../../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/01-本机诊断与证据边界.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/observations.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/01-本机诊断与证据边界.md",
+      "target": "Windows图标资源对比.png"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/01-本机诊断与证据边界.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/icon-metrics.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/01-本机诊断与证据边界.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/manifest.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/source-review.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "target": "../README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "target": "01-本机诊断与证据边界.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "target": "02-原因分析与Windows适配缺口.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "target": "03-0.1.8拟修复范围与验证方案.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "target": "../../../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/README.md",
+      "target": "../README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/README.md",
+      "target": "Windows快捷方式图标偏小-用户截图.png"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/README.md",
+      "target": "../../../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/README.md",
+      "target": "../../../../../../../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/manifest.json"
+    },
+    {
+      "document": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "target": "../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md"
+    },
+    {
+      "document": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "target": "REL-OPENCODEX-DESKTOP-07.md"
+    },
+    {
+      "document": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "target": "../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/observations.json"
+    },
+    {
+      "document": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "target": "../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/startup-stderr.log"
+    },
+    {
+      "document": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "target": "../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/03-0.1.8拟修复范围与验证方案.md"
+    },
+    {
+      "document": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "target": "../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/manifest.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "20261006-Windows启动崩溃与图标适配/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261004-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "target": "../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/README.md",
+      "target": "05-运行维护/20261006-Windows启动崩溃与图标适配/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/COL-LOCAL-20260912-01.md",
+      "target": "05-运行维护/20261006-Windows启动崩溃与图标适配/README.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/COL-LOCAL-20260912-01.md",
+      "target": "../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/COL-LOCAL-20260912-01.md",
+      "target": "05-运行维护/README.md"
+    },
+    {
+      "document": "docs/03-开发实施/README.md",
+      "target": "RUN-OPENCODEX-DESKTOP-20261006-01.md"
+    }
+  ],
+  "pinned_source_links": [
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/lib.rs#L158"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/Cargo.toml#L71"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/tauri.conf.json"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/icons/icon.ico"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/tests/tray_icon.rs"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/.github/workflows/ci.yml#L44"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/tests/app_startup_wiring.rs#L1"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/types/discovery_paths.rs#L4"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/lib.rs#L169"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/commands/runtime.rs#L34"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/runtime/install.rs#L1642"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/runtime/install.rs#L742"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/runtime/install.rs#L53"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/ipc/mod.rs#L11"
+    },
+    {
+      "document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/02-原因分析与Windows适配缺口.md",
+      "target": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/lib.rs#L258"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261006-01",
+  "repository": "gzers/opencodex-desktop",
+  "tag": "v0.1.7",
+  "commit": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+  "review_mode": "Read-only git show; implementation source is referenced by commit/path/hash, not copied into docs",
+  "entries": [
+    {
+      "id": "S01",
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "bytes": 38286,
+      "sha256": "ce692a4a3faa7619ebd666a8d6d195501e47fe0161f9a090865976679b373055",
+      "line_ranges": [
+        [
+          157,
+          176
+        ],
+        [
+          258,
+          260
+        ]
+      ],
+      "conclusion": "HOME-only startup precondition, macOS discovery candidates, and no Windows IPC service",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/lib.rs"
+    },
+    {
+      "id": "S02",
+      "path": "apps/desktop/tauri/src/types/discovery_paths.rs",
+      "bytes": 512,
+      "sha256": "2026af24c1e7bdac23e98d72a4fff467cc2b077d049629b63313ace320c76575",
+      "line_ranges": [
+        [
+          1,
+          12
+        ]
+      ],
+      "conclusion": "HOME/.local/bin node, npm, ocx paths",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/types/discovery_paths.rs"
+    },
+    {
+      "id": "S03",
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "bytes": 2534,
+      "sha256": "d6be5849cda7f0f7430f3ef58d709e4127779a6a6a614fe4f0f5f0b97860044b",
+      "line_ranges": [
+        [
+          71,
+          76
+        ]
+      ],
+      "conclusion": "Release panic=abort",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/Cargo.toml"
+    },
+    {
+      "id": "S04",
+      "path": ".github/workflows/ci.yml",
+      "bytes": 2697,
+      "sha256": "b4aec5f6de877c7ea17ef373b111d7e5d9f2eddd65adc45f5b9694793b2ebe59",
+      "line_ranges": [
+        [
+          44,
+          54
+        ]
+      ],
+      "conclusion": "Windows cargo check only",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/.github/workflows/ci.yml"
+    },
+    {
+      "id": "S05",
+      "path": "apps/desktop/tauri/tests/app_startup_wiring.rs",
+      "bytes": 2583,
+      "sha256": "ec763e57f127787cf2194954c86b537ff8449f749981f2f3dfcc65d85e609973",
+      "line_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "conclusion": "Unix-only startup wiring integration test",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/tests/app_startup_wiring.rs"
+    },
+    {
+      "id": "S06",
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "bytes": 97255,
+      "sha256": "8672eb0203ac91cdcba6b2dbd12f12ccec9cc6f1d5bd4b9e209b4dc90212379b",
+      "line_ranges": [
+        [
+          53,
+          53
+        ],
+        [
+          742,
+          760
+        ],
+        [
+          1642,
+          1655
+        ]
+      ],
+      "conclusion": "Unix fallback PATH, colon separator, and sh entry script",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/runtime/install.rs"
+    },
+    {
+      "id": "S07",
+      "path": "apps/desktop/tauri/src/modules/ipc/mod.rs",
+      "bytes": 18721,
+      "sha256": "8cd5ac87441cbb1e97c74551628f76e84350f7932e4a7e8c2346e117d84205a2",
+      "line_ranges": [
+        [
+          11,
+          15
+        ]
+      ],
+      "conclusion": "Unix-only IPC endpoint",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/ipc/mod.rs"
+    },
+    {
+      "id": "S08",
+      "path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "bytes": 27944,
+      "sha256": "189b704f1ba588f32b9c1bcca973ca9e534fc52d9f9fabd8465c05fa8dc2c90c",
+      "line_ranges": [
+        [
+          33,
+          38
+        ]
+      ],
+      "conclusion": "Installer consumes macos_default_paths",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/commands/runtime.rs"
+    },
+    {
+      "id": "S09",
+      "path": "apps/desktop/tauri/tests/tray_icon.rs",
+      "bytes": 2831,
+      "sha256": "cfb5df9bc97c380362577f3892a3d6b5a17657913e3d1498bcf6e2613e4da9d1",
+      "line_ranges": [],
+      "conclusion": "Icon coverage check applies only to tray PNG files",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/tests/tray_icon.rs"
+    },
+    {
+      "id": "S10",
+      "path": "apps/desktop/tauri/tauri.conf.json",
+      "bytes": 1905,
+      "sha256": "57672610071fa2d6630180656e437d87ee8a9ade97aaf2bd80e313f533369584",
+      "line_ranges": [],
+      "conclusion": "Bundle lists PNG, ICNS and Windows ICO",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/tauri.conf.json"
+    },
+    {
+      "id": "S11",
+      "path": "apps/desktop/tauri/icons/icon.ico",
+      "bytes": 9568,
+      "sha256": "9e66134cada279adade3a0f9bc9f0197455ecc9bac32f0d2e4505287d79b075f",
+      "line_ranges": [],
+      "conclusion": "Same decoded pixels as installed EXE ICO; retain source asset only, no implementation source copy",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/icons/icon.ico"
+    },
+    {
+      "id": "S12",
+      "path": "apps/desktop/tauri/icons/32x32.png",
+      "bytes": 853,
+      "sha256": "22dc59c4fb7539e68c71a6b92411132bf94f8843681e48b376e692024cdceaa2",
+      "line_ranges": [],
+      "conclusion": "App PNG differs from ICO in visible size and background",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/icons/32x32.png"
+    },
+    {
+      "id": "S13",
+      "path": "apps/desktop/tauri/src/modules/test_sandbox/mod.rs",
+      "bytes": 3471,
+      "sha256": "6142d4de4107083959a1f81a424378dfd0785a0a3e6a561573cb07434c11325a",
+      "line_ranges": [
+        [
+          13,
+          16
+        ],
+        [
+          42,
+          58
+        ]
+      ],
+      "conclusion": "Existing explicit sandbox environment contract for future smoke validation",
+      "source": "fixed v0.1.7 Git blob",
+      "url": "https://github.com/gzers/opencodex-desktop/blob/ed99a59af25e49dbed21820d3300ebdf3273e86a/apps/desktop/tauri/src/modules/test_sandbox/mod.rs"
+    }
+  ]
+}

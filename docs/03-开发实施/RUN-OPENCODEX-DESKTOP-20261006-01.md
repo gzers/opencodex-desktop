@@ -1,0 +1,65 @@
+---
+id: RUN-OPENCODEX-DESKTOP-20261006-01
+title: 0.1.7 Windows 启动崩溃与图标诊断
+source_refs:
+  - MNT-OPENCODEX-DESKTOP-20261006-01
+  - REL-OPENCODEX-DESKTOP-07
+  - CODEX-THREAD:01a10cec-a70b-7fd3-883b-2bf716d9f539
+---
+
+# RUN-OPENCODEX-DESKTOP-20261006-01 运行观察
+
+## 状态与范围
+
+诊断与登记日：**2026-10-06**，Asia/Shanghai。受影响对象为本机安装的 **0.1.7 / Windows x64**。已复现缺少 HOME 的启动崩溃，并完成补 HOME 的进程级对照；已提取安装 EXE 的图标，确认有效图形偏小。**正式修复未实施、未验收，事故未闭合；拟修复与发版版本暂定 0.1.8**。
+
+本记录保存实际运行观察，原因、方案和附件见 [MNT-OPENCODEX-DESKTOP-20261006-01](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md)。0.1.7 的历史发布事实继续引用 [REL-07](REL-OPENCODEX-DESKTOP-07.md)，本次不改写该版本发布时的检查结果；Windows 真机缺口以本记录追加。
+
+## 环境与安装身份
+
+| 项目 | 核对值 |
+|---|---|
+| 系统 | Microsoft Windows Server 2025 Datacenter，10.0.26100，64 位 |
+| 安装 EXE | `D:\Software\Develop\OpenCodeX Desktop\opencodex-desktop.exe` |
+| FileVersion / ProductVersion | 0.1.7 / 0.1.7 |
+| EXE 大小 / SHA-256 | 7,551,488 bytes / `058d924f762b8c1f7b1909e4b63ffb79ed5a4009663a80e5bc9825829798afba` |
+| 日志构建来源 | `ed99a59af25e49dbed21820d3300ebdf3273e86a`，与本地 v0.1.7 一致 |
+| 用户家目录变量 | HOME 未设置；USERPROFILE=`C:\Users\15119` |
+| WebView2 Runtime | 154.0.4258.53，已安装 |
+| 日常应用数据根 | `C:\Users\15119\AppData\Roaming\com.gzers.opencodex.desktop` |
+| 快捷方式 | 目标与工作目录正确，无参数；IconLocation 原值为 `,0` |
+
+安装器和快捷方式的 SHA-256、版本字段及数据来源见 [observations.json](../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/observations.json)。本次未执行完整制品验签或可复现构建核对。
+
+## 实际观察
+
+| 本地时间 / 顺序 | 结果 | 证据与限制 |
+|---|---|---|
+| 2026-10-05 20:39:05 | 历史应用日志与 Windows Application Error 可见同一 EXE 异常退出 | 该条日志来自此前启动，非本次新执行；未重建用户当时点击过程 |
+| 2026-10-06 00:37:47 | 默认环境启动同一安装 EXE，PID=53904，进程退出 | ExitCode=-1073740791（0xC0000409）；stderr 为 Tauri setup 返回 `application is not configured yet`；Windows Event ID=1000 |
+| 2026-10-06 00:38:54 | 给诊断进程设置 HOME=USERPROFILE，另启用 RUST_BACKTRACE | PID=19216；12 秒后仍存活，主窗口句柄=2493916，Responding=True；后续诊断检查仍存活。完整渲染与业务流程未验收 |
+| 随后只读图标核对 | EXE 的 RT_GROUP_ICON=32512 含七档图标，逐档像素与固定源码 ICO 相同 | 32×32 档有效图形 10×10；截图与量化一致；未修改 EXE、ICO 或系统图标缓存 |
+
+时间来自应用 UTC 日志及 Windows 事件，按 UTC+08:00 转换。日志记录：
+
+```text
+2026-10-05T12:39:05.592Z [manager] startup version=0.1.7 commit=ed99a59af25e49dbed21820d3300ebdf3273e86a
+2026-10-05T16:37:47.286Z [manager] startup version=0.1.7 commit=ed99a59af25e49dbed21820d3300ebdf3273e86a
+2026-10-05T16:38:54.636Z [manager] startup version=0.1.7 commit=ed99a59af25e49dbed21820d3300ebdf3273e86a
+```
+
+启动日志写在后续家目录解析之前，不能单独当作完整初始化成功证据。标准错误原文保存在 [startup-stderr.log](../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/startup-stderr.log)。
+
+## 已确认与未覆盖
+
+默认启动失败与仅补 HOME 后不再退出，结合固定源码 HOME 缺失即返回错误的路径，确认本次直接启动阻断是 Windows 家目录解析缺口。ICO 资源的图形占比与源码一致，确认快捷方式图标偏小有发布资源自身的原因。
+
+没有修改系统或用户级环境变量、安装文件、快捷方式或正式版本；HOME 仅注入诊断子进程。诊断启动使用日常数据根，应用会初始化结构并写日志，不能描述为沙箱验收或全程无数据写入。未执行官方代理启动、停止、重启、联网安装、更新或恢复流程。
+
+诊断时曾保留补 HOME 的进程继续运行；该事实是当时快照，不保证后续仍存活。原快捷方式仍没有兼容变量补充，本轮没有让其正常启动。
+
+Windows 10/11、完整首屏渲染、不同 DPI 下图标外观、托管安装、运行来源、代理生命周期、CLI/IPC 和 OTA 仍待验证。本记录不包含 0.1.8 修复或验收通过回执。
+
+## 后续
+
+按维护专题的 [0.1.8 拟修复范围与验证方案](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/03-0.1.8拟修复范围与验证方案.md) 准备后续实现。新观察以追加方式记录，不把本次兼容启动改写为正式修复成功。机器证据入口为 [manifest.json](../../.adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/manifest.json)。

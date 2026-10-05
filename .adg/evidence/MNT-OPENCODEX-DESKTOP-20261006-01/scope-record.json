@@ -1,0 +1,55 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261006-01",
+  "branch": "docs/governance-main",
+  "binding": "successor-bound, .adg/project.json",
+  "skill": "project-governance",
+  "selected_routes": [
+    "project-materials",
+    "project-delivery"
+  ],
+  "resolved_project_capabilities": [
+    {
+      "capability_id": "CAP-VNEXT-DELIVERY-RUN",
+      "execution_boundary": "human-readable RUN fact only; does not operate production systems or claim automated observation",
+      "implementation_status": "implemented",
+      "name": "按需 RUN 运行观察与事故结论",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-delivery.md",
+      "verification_ids": [
+        "VER-RUNTIME-RUN"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-EVIDENCE",
+      "execution_boundary": "create and maintain durable EVD Markdown only when human-readable support value exists",
+      "implementation_status": "implemented",
+      "name": "项目支撑证据",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-EVD"
+      ]
+    },
+    {
+      "capability_id": "CAP-VNEXT-MAT-COLLABORATION",
+      "execution_boundary": "create COL packages for explicit participants, inputs, outputs, originals, disposition, and retention; ordinary conversations are excluded",
+      "implementation_status": "implemented",
+      "name": "项目协作资料",
+      "owner_unit_id": "UNIT-SM-PG",
+      "provider_ref": "references/capabilities/project-materials.md",
+      "verification_ids": [
+        "VER-MATERIAL-COLLABORATION"
+      ]
+    }
+  ],
+  "capability_registry_ref": ".adg/registries/capability-registry.json",
+  "scope": "Maintenance attachment, durable RUN incident observation, supporting evidence, and existing indexes",
+  "human_authority_refs": [
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+    "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md"
+  ],
+  "runtime_status_or_closure_mutated": false,
+  "certificate_generated": false,
+  "implementation_or_release_execution_authorized_by_this_record": false,
+  "retention": "Preserve with maintenance incident pending fix/validation; no deletion executed"
+}

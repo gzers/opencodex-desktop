@@ -1,0 +1,112 @@
+{
+  "record_id": "MNT-OPENCODEX-DESKTOP-20261006-01",
+  "observed_date": "2026-10-06",
+  "timezone": "Asia/Shanghai",
+  "provenance": "Structured transcription of tool observations in CODEX-THREAD:01a10cec-a70b-7fd3-883b-2bf716d9f539; file hashes checked again during archival. This is not a new startup execution or acceptance receipt.",
+  "platform": {
+    "caption": "Microsoft Windows Server 2025 Datacenter",
+    "version": "10.0.26100",
+    "architecture": "64 bit",
+    "webview2_runtime_version": "154.0.4258.53",
+    "source": "Win32_OperatingSystem and EdgeUpdate Clients registry read"
+  },
+  "installed_executable": {
+    "path": "D:\\Software\\Develop\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "bytes": 7551488,
+    "sha256": "058d924f762b8c1f7b1909e4b63ffb79ed5a4009663a80e5bc9825829798afba",
+    "file_version": "0.1.7",
+    "product_version": "0.1.7",
+    "log_declared_build_commit": "ed99a59af25e49dbed21820d3300ebdf3273e86a",
+    "source_identity_limit": "Commit comes from embedded build provenance written to startup log; no reproducible build or release-signature verification performed"
+  },
+  "installer": {
+    "path": "D:\\Users\\Public\\Temp\\安装包\\OpenCodeX.Desktop_0.1.7_x64-setup.exe",
+    "bytes": 2844720,
+    "sha256": "e41965cbe2647ad0d1ffe9402de7db31758ed2fe5c613d837b7d6c06a95c7511"
+  },
+  "shortcut": {
+    "path": "D:\\Users\\Public\\Temp\\安装包\\OpenCodeX Desktop.lnk",
+    "bytes": 1139,
+    "sha256": "7dcc93d965940ae16c37041f68f4042af7f5143e9e0cc9dae12997573d373e6a",
+    "target_path": "D:\\Software\\Develop\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "working_directory": "D:\\Software\\Develop\\OpenCodeX Desktop",
+    "arguments": "",
+    "icon_location": ",0",
+    "window_style": 1
+  },
+  "environment_snapshot": {
+    "HOME": null,
+    "USERPROFILE": "C:\\Users\\15119",
+    "HOMEDRIVE": "C:",
+    "HOMEPATH": "\\Users\\15119"
+  },
+  "startup_comparison": [
+    {
+      "id": "default-environment",
+      "local_time": "2026-10-06T00:37:47+08:00",
+      "pid": 53904,
+      "exited": true,
+      "exit_code_signed": -1073740791,
+      "exit_code_hex": "0xc0000409",
+      "stderr_ref": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261006-01/startup-stderr.log",
+      "setup_error": "application is not configured yet",
+      "windows_event": {
+        "event_id": 1000,
+        "provider": "Application Error",
+        "faulting_application": "opencodex-desktop.exe",
+        "exception_code": "0xc0000409",
+        "source": "Read-only Application event log tool output"
+      }
+    },
+    {
+      "id": "child-HOME-override",
+      "local_time": "2026-10-06T00:38:54+08:00",
+      "pid": 19216,
+      "child_environment_overrides": {
+        "HOME": "C:\\Users\\15119",
+        "RUST_BACKTRACE": "1"
+      },
+      "wait_seconds": 12,
+      "exited_at_wait_end": false,
+      "main_window_handle": 2493916,
+      "responding": true,
+      "followup_checks": "Same PID remained running in later diagnostic checks; these are historical snapshots, not current liveness claims",
+      "acceptance_limit": "No complete rendering or business-flow validation"
+    }
+  ],
+  "historical_startup": {
+    "local_time": "2026-10-05T20:39:05+08:00",
+    "source": "Previously existing startup log and Windows Application Error event; not a newly executed startup"
+  },
+  "node_location_check": {
+    "default_candidate": "C:\\Users\\15119\\.local\\bin\\node",
+    "default_candidate_exists": false,
+    "actual_node_command": "C:\\Users\\15119\\.nvmd\\bin\\node.exe",
+    "npm_default_candidate_exists": false
+  },
+  "operational_boundary": {
+    "diagnostic_data_root": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+    "sandbox_used": false,
+    "normal_application_initialization_and_logs_may_write_data": true,
+    "global_or_user_environment_changed": false,
+    "installed_exe_changed": false,
+    "shortcut_changed": false,
+    "official_proxy_lifecycle_actions_executed": false,
+    "complete_windows_acceptance": false
+  },
+  "raw_attachment": {
+    "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\codex-clipboard-59185fcc-e718-412c-a9cf-a3ead0ed6a56.png",
+    "bytes": 5828,
+    "sha256": "2418883efd8753cdf4935f558eb5fae6f170c9986beffe82f3650369785f41b2",
+    "retained_path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/Windows快捷方式图标偏小-用户截图.png"
+  },
+  "planning": {
+    "affected_version": "0.1.7",
+    "proposed_fix_version": "0.1.8",
+    "proposal_status": "tentative",
+    "implementation": "not_started",
+    "acceptance": "not_completed",
+    "release": "not_performed",
+    "authorization": "Maintenance package archival and tentative version only"
+  }
+}
