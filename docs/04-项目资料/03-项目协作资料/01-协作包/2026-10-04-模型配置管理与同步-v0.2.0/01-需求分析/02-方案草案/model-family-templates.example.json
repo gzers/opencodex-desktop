@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "templates": [
+    {
+      "id": "family-gpt-responses-balanced",
+      "revision": 1,
+      "label": "示例 GPT Responses 均衡模板",
+      "protocol": {
+        "mode": "custom",
+        "value": "openai-responses"
+      },
+      "reasoning": {
+        "ladder": {
+          "mode": "custom",
+          "values": [
+            "low",
+            "medium",
+            "high",
+            "xhigh"
+          ]
+        },
+        "default": {
+          "mode": "custom",
+          "value": "medium"
+        }
+      },
+      "fast": {
+        "serviceTier": {
+          "mode": "inherit"
+        }
+      },
+      "description": "起始示例；实际协议、推理和 Fast 需按目标渠道验证。",
+      "match": {
+        "include": [
+          {
+            "type": "prefix",
+            "value": "gpt-"
+          }
+        ],
+        "exclude": [
+          {
+            "type": "glob",
+            "value": "*-embedding"
+          }
+        ],
+        "caseSensitive": false,
+        "channels": [],
+        "priority": 0,
+        "channelMode": "all"
+      },
+      "contextWindow": {
+        "mode": "inherit"
+      },
+      "inputModalities": {
+        "mode": "inherit"
+      },
+      "sources": [
+        {
+          "kind": "illustrative",
+          "note": "设计示例，非经过检索或请求验证的能力声明",
+          "recordedAt": "2026-10-04"
+        }
+      ]
+    },
+    {
+      "id": "family-gpt-responses-balanced",
+      "revision": 3,
+      "label": "示例 GPT Responses 均衡模板",
+      "protocol": {
+        "mode": "custom",
+        "value": "openai-responses"
+      },
+      "reasoning": {
+        "ladder": {
+          "mode": "custom",
+          "values": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "default": {
+          "mode": "custom",
+          "value": "high"
+        }
+      },
+      "fast": {
+        "serviceTier": {
+          "mode": "inherit"
+        }
+      },
+      "description": "起始示例；实际协议、推理和 Fast 需按目标渠道验证。",
+      "match": {
+        "include": [
+          {
+            "type": "prefix",
+            "value": "gpt-"
+          }
+        ],
+        "exclude": [
+          {
+            "type": "glob",
+            "value": "*-embedding"
+          }
+        ],
+        "caseSensitive": false,
+        "channels": [],
+        "priority": 0,
+        "channelMode": "all"
+      },
+      "contextWindow": {
+        "mode": "inherit"
+      },
+      "inputModalities": {
+        "mode": "inherit"
+      },
+      "sources": [
+        {
+          "kind": "illustrative",
+          "note": "设计示例，含字面后缀的具体型号覆盖；非经过检索或请求验证的能力声明，结构由 WP-01 冻结",
+          "recordedAt": "2026-10-04"
+        }
+      ],
+      "variants": [
+        {
+          "id": "mini",
+          "name": "轻量型号",
+          "suffix": "gpt-5.4-mini",
+          "rules": {
+            "reasoning": {
+              "default": {
+                "mode": "custom",
+                "value": "low"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "family-claude-anthropic-standard",
+      "revision": 1,
+      "label": "示例 Claude Anthropic 标准模板",
+      "protocol": {
+        "mode": "custom",
+        "value": "anthropic"
+      },
+      "reasoning": {
+        "ladder": {
+          "mode": "custom",
+          "values": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "default": {
+          "mode": "custom",
+          "value": "high"
+        }
+      },
+      "description": "起始示例；实际协议、推理和 Fast 需按目标渠道验证。",
+      "match": {
+        "include": [
+          {
+            "type": "prefix",
+            "value": "claude-"
+          }
+        ],
+        "exclude": [
+          {
+            "type": "glob",
+            "value": "*-embedding"
+          }
+        ],
+        "caseSensitive": false,
+        "channels": [
+          "channel-demo-responses-b"
+        ],
+        "priority": 0,
+        "channelMode": "blacklist"
+      },
+      "contextWindow": {
+        "mode": "inherit"
+      },
+      "inputModalities": {
+        "mode": "inherit"
+      },
+      "fast": {
+        "serviceTier": {
+          "mode": "inherit"
+        }
+      },
+      "sources": [
+        {
+          "kind": "illustrative",
+          "note": "设计示例，非经过检索或请求验证的能力声明",
+          "recordedAt": "2026-10-04"
+        }
+      ]
+    },
+    {
+      "id": "enterprise-coding",
+      "revision": 1,
+      "label": "企业编码模型",
+      "description": "自由创建的模型族示例；不限于软件预设厂商。",
+      "match": {
+        "include": [
+          {
+            "type": "prefix",
+            "value": "company-"
+          },
+          {
+            "type": "exact",
+            "value": "internal-code-v2"
+          }
+        ],
+        "exclude": [
+          {
+            "type": "glob",
+            "value": "*-embedding"
+          }
+        ],
+        "caseSensitive": false,
+        "channels": [
+          "channel-demo-responses"
+        ],
+        "priority": 10,
+        "channelMode": "whitelist"
+      },
+      "protocol": {
+        "mode": "inherit"
+      },
+      "contextWindow": {
+        "mode": "inherit"
+      },
+      "inputModalities": {
+        "mode": "inherit"
+      },
+      "reasoning": {
+        "ladder": {
+          "mode": "inherit"
+        },
+        "default": {
+          "mode": "inherit"
+        }
+      },
+      "fast": {
+        "serviceTier": {
+          "mode": "inherit"
+        }
+      },
+      "sources": [
+        {
+          "kind": "operator-declared",
+          "note": "示例匹配规则，能力保持继承",
+          "recordedAt": "2026-10-04"
+        }
+      ]
+    }
+  ]
+}

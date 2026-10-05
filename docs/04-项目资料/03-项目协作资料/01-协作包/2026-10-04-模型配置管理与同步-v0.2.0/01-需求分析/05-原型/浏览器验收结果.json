@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-04",
+  "runtime": {
+    "playwright": "/Users/ezio/.npm/_npx/2334a3ea0ef73d73/node_modules/playwright-core",
+    "chromium": "/Users/ezio/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+  },
+  "boundary": "静态 mock；不是生产验收",
+  "results": [
+    {
+      "name": "P01 新菜单与双 Tab、全渠道 fixture 89/100",
+      "status": "PASS"
+    },
+    {
+      "name": "查看渠道与配置范围独立",
+      "status": "PASS"
+    },
+    {
+      "name": "白名单、筛选不改变目录顺序",
+      "status": "PASS"
+    },
+    {
+      "name": "模型上下移和 Fast 跟随父项",
+      "status": "PASS"
+    },
+    {
+      "name": "取消选择后重选保留顺序位置",
+      "status": "PASS"
+    },
+    {
+      "name": "渠道整组顺序与预览一致",
+      "status": "PASS"
+    },
+    {
+      "name": "默认档独立覆盖，不必覆盖档位列表",
+      "status": "PASS"
+    },
+    {
+      "name": "上下文非法值就地阻止确定，取消保留原草稿",
+      "status": "PASS"
+    },
+    {
+      "name": "批量配置全部自定义渠道，保留单模型例外",
+      "status": "PASS"
+    },
+    {
+      "name": "101+ 阻止写入，草稿及发现清单保留",
+      "status": "PASS"
+    },
+    {
+      "name": "100 与 101 的边界口径含隐藏项",
+      "status": "PASS"
+    },
+    {
+      "name": "all 取消单项转 whitelist，none 确认与取消",
+      "status": "PASS"
+    },
+    {
+      "name": "发现失败与空清单保留选择",
+      "status": "PASS"
+    },
+    {
+      "name": "冻结确认与保存成功待重启，进度可收起",
+      "status": "PASS"
+    },
+    {
+      "name": "待重启＋另有草稿，丢弃不清待重启",
+      "status": "PASS"
+    },
+    {
+      "name": "用户目视确认单列证据来源",
+      "status": "PASS"
+    },
+    {
+      "name": "备份失败 / 部分失败 / 超时不发布成功快照",
+      "status": "PASS"
+    },
+    {
+      "name": "写入前取消，写入后停止不误报成功",
+      "status": "PASS"
+    },
+    {
+      "name": "基准漂移阻止旧确认",
+      "status": "PASS"
+    },
+    {
+      "name": "模板不可变新版本，不自动切主指针",
+      "status": "PASS"
+    },
+    {
+      "name": "主版本更新，已有渠道精确引用保持",
+      "status": "PASS"
+    },
+    {
+      "name": "NewApi 采用 v3，A6api 仍 v1",
+      "status": "PASS"
+    },
+    {
+      "name": "自动生成及纠偏先比较，晚结果不覆盖人工字段",
+      "status": "PASS"
+    },
+    {
+      "name": "任务包携带上下文、锁字段、基准与结果约定",
+      "status": "PASS"
+    },
+    {
+      "name": "导入校验与候选冲突保持本机，显式采用再写草稿",
+      "status": "PASS"
+    },
+    {
+      "name": "导出默认成功策略，局部范围不带全局 Fast",
+      "status": "PASS"
+    },
+    {
+      "name": "族局部导出回导保留渠道默认与其他族，顺序回导",
+      "status": "PASS"
+    },
+    {
+      "name": "原生模型详情只读",
+      "status": "PASS"
+    },
+    {
+      "name": "恢复产生草稿，成功策略保持",
+      "status": "PASS"
+    },
+    {
+      "name": "设置 Fast 请求与独立行分别控制，同步先候选",
+      "status": "PASS"
+    },
+    {
+      "name": "历史入口重定向保留 query 与 hash",
+      "status": "PASS"
+    },
+    {
+      "name": "视觉矩阵：两主题三材质、两尺寸及 50%–200% 容器",
+      "status": "PASS"
+    },
+    {
+      "name": "关键浮层、设置与旧路由加载",
+      "status": "PASS"
+    },
+    {
+      "name": "键盘配置与弹窗焦点返回",
+      "status": "PASS"
+    },
+    {
+      "name": "无浏览器脚本或资源错误",
+      "status": "PASS"
+    }
+  ],
+  "consoleErrors": []
+}

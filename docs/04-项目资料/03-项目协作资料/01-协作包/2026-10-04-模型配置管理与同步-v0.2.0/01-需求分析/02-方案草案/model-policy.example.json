@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "templateRefs": [
+    {
+      "templateId": "family-gpt-responses-balanced",
+      "revision": 1
+    },
+    {
+      "templateId": "family-claude-anthropic-standard",
+      "revision": 1
+    }
+  ],
+  "channels": [
+    {
+      "id": "channel-demo-responses",
+      "label": "示例多协议渠道",
+      "bindingHint": {
+        "adapter": "openai-responses"
+      },
+      "selection": {
+        "mode": "whitelist",
+        "selectedModels": [
+          "gpt-5.5",
+          "gpt-5.4",
+          "claude-demo-text"
+        ]
+      },
+      "templateRefs": [
+        {
+          "templateId": "family-gpt-responses-balanced",
+          "revision": 3
+        }
+      ],
+      "modelOrder": [
+        "gpt-demo-unselected",
+        "gpt-5.4",
+        "gpt-5.5",
+        "claude-demo-text"
+      ],
+      "defaults": {
+        "reasoning": {
+          "ladder": {
+            "mode": "inherit"
+          },
+          "default": {
+            "mode": "inherit"
+          }
+        },
+        "fast": {
+          "enabled": "inherit",
+          "serviceTier": {
+            "mode": "inherit"
+          }
+        }
+      },
+      "familyOverrides": [
+        {
+          "protocol": {
+            "mode": "inherit"
+          },
+          "reasoning": {
+            "default": {
+              "mode": "custom",
+              "value": "high"
+            }
+          },
+          "templateId": "family-gpt-responses-balanced"
+        }
+      ],
+      "modelOverrides": [
+        {
+          "modelId": "gpt-5.5",
+          "reasoning": {
+            "ladder": {
+              "mode": "custom",
+              "values": [
+                "low",
+                "medium",
+                "high",
+                "xhigh"
+              ]
+            },
+            "default": {
+              "mode": "custom",
+              "value": "high"
+            }
+          },
+          "fast": {
+            "serviceTier": {
+              "mode": "custom",
+              "value": true,
+              "source": "operator-declared"
+            }
+          }
+        },
+        {
+          "modelId": "gpt-5.4",
+          "templateRef": {
+            "templateId": "family-gpt-responses-balanced",
+            "revision": 1
+          },
+          "reasoning": {
+            "ladder": {
+              "mode": "inherit"
+            },
+            "default": {
+              "mode": "inherit"
+            }
+          },
+          "fast": {
+            "serviceTier": {
+              "mode": "inherit"
+            }
+          },
+          "protocol": {
+            "mode": "custom",
+            "value": "openai-chat"
+          },
+          "endpointId": "chat",
+          "naming": {
+            "alias": "gpt54",
+            "displayName": "GPT 5.4（示例显示名）"
+          }
+        },
+        {
+          "modelId": "claude-demo-text",
+          "templateRef": {
+            "templateId": "family-claude-anthropic-standard",
+            "revision": 1
+          },
+          "protocol": {
+            "mode": "inherit"
+          },
+          "endpointId": "anthropic",
+          "reasoning": {
+            "ladder": {
+              "mode": "inherit"
+            },
+            "default": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ],
+      "defaultProtocol": "openai-responses",
+      "protocolEndpoints": [
+        {
+          "id": "primary",
+          "protocol": "openai-responses"
+        },
+        {
+          "id": "chat",
+          "protocol": "openai-chat"
+        },
+        {
+          "id": "anthropic",
+          "protocol": "anthropic"
+        }
+      ]
+    },
+    {
+      "id": "channel-demo-responses-b",
+      "label": "示例 Responses 渠道 B",
+      "bindingHint": {
+        "adapter": "openai-responses"
+      },
+      "templateRefs": [
+        {
+          "templateId": "family-gpt-responses-balanced",
+          "revision": 1
+        }
+      ],
+      "selection": {
+        "mode": "whitelist",
+        "selectedModels": [
+          "gpt-5.5"
+        ]
+      },
+      "modelOrder": [
+        "gpt-5.5"
+      ],
+      "defaults": {},
+      "familyOverrides": [],
+      "modelOverrides": [],
+      "defaultProtocol": "openai-responses",
+      "protocolEndpoints": [
+        {
+          "id": "primary",
+          "protocol": "openai-responses"
+        }
+      ]
+    },
+    {
+      "id": "channel-demo-anthropic",
+      "label": "示例 Anthropic 渠道",
+      "bindingHint": {
+        "adapter": "anthropic"
+      },
+      "selection": {
+        "mode": "whitelist",
+        "selectedModels": [
+          "claude-demo-text"
+        ]
+      },
+      "modelOrder": [
+        "claude-demo-text"
+      ],
+      "defaults": {
+        "fast": {
+          "enabled": "inherit"
+        }
+      },
+      "familyOverrides": [],
+      "modelOverrides": [
+        {
+          "modelId": "claude-demo-text",
+          "reasoning": {
+            "ladder": {
+              "mode": "inherit"
+            },
+            "default": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ],
+      "defaultProtocol": "anthropic",
+      "protocolEndpoints": [
+        {
+          "id": "primary",
+          "protocol": "anthropic"
+        }
+      ]
+    }
+  ],
+  "pickerOrder": {
+    "mode": "full",
+    "sourceOrder": [
+      {
+        "kind": "native"
+      },
+      {
+        "kind": "channel",
+        "channelId": "channel-demo-responses"
+      },
+      {
+        "kind": "channel",
+        "channelId": "channel-demo-responses-b"
+      },
+      {
+        "kind": "channel",
+        "channelId": "channel-demo-anthropic"
+      }
+    ],
+    "nativeModelOrder": [
+      {
+        "nativeModelId": "gpt-5.5"
+      }
+    ],
+    "unlisted": "append-in-source",
+    "fastPlacement": "after-parent"
+  },
+  "globalSettings": {
+    "fastRows": {
+      "mode": "custom",
+      "value": true
+    },
+    "fastMode": "inherit"
+  }
+}
