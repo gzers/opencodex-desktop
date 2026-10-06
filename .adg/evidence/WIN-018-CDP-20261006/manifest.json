@@ -1,0 +1,88 @@
+{
+  "record_id": "WIN-018-CDP-20261006",
+  "registered_date": "2026-10-06",
+  "timezone": "Asia/Shanghai",
+  "assembled_at": "2026-10-06T10:20:57+08:00",
+  "kind": "Incremental development and macOS validation evidence; Windows native retest pending",
+  "branch": "docs/governance-main",
+  "code_branch": "feature/0.1.8-windows-fixes",
+  "code_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+  "code_commits": [
+    "d2c380104e6f91dfe73ce001aa104689247e1a55",
+    "9262a5bedbb1a5f454f32afb7418b959fa8c721f"
+  ],
+  "authority_ref": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-18.md",
+  "remote_code_push_succeeded": true,
+  "ci_run": 37403376481,
+  "ci_observed_status": "in_progress",
+  "ci_observed_conclusion": "",
+  "original_failed_ci_run": 37397271349,
+  "native_windows_local_execution": false,
+  "hash_basis": "Source hashes are committed Git blob bytes; documentation hashes are current UTF-8 bytes at registration",
+  "source_blobs": [
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "bytes": 39053,
+      "sha256": "e0e9b2cd795f093273be79fdd57c6a4fd43fe38bbac02bdac77ba07111240a6a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 541,
+      "sha256": "5678f549db400e98176d137e2bd7d6d4e93b85af0dbc394018f25861a1ddd1d1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 5499,
+      "sha256": "73ff5d20ca94fd1076ee891f5becc25685343cd22dfdaffaca49b0b4e067c8ba"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 3800,
+      "sha256": "6dfa3df2de6217e545257c3237b223751038f76f118700d590a27261802e829c"
+    },
+    {
+      "path": "test/smoke/windows-startup.ps1",
+      "bytes": 7825,
+      "sha256": "8e483786ed74d456bdf47e4e677278553e09ac4894572a1a7ae461529aef392a"
+    },
+    {
+      "path": "test/smoke/windows-webview.mjs",
+      "bytes": 5253,
+      "sha256": "e3f931c83fd631996a8a67702997ba75231b26843f7e598d8347ece2f3229e22"
+    },
+    {
+      "path": "test/smoke/windows-cdp.mjs",
+      "bytes": 3419,
+      "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd"
+    },
+    {
+      "path": "test/smoke/windows-cdp.test.mjs",
+      "bytes": 3938,
+      "sha256": "9e1018e15ef17c3b6d6ab0266210823d71065a501c69efe588e1a3ff75ad9967"
+    }
+  ],
+  "files": [
+    {
+      "path": ".adg/evidence/WIN-018-CDP-20261006/ci-snapshot.json",
+      "bytes": 11514,
+      "sha256": "dd8396362972e87b7c76f12aee5a4395ca7288706ecdc17b55a8e7b2c62d46c3"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-20261006/verification.json",
+      "bytes": 1539,
+      "sha256": "56f692b02ca3c776f99a67b1112b10725d91c815da09fbe9bd6fa8dc078a3d38"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-18.md",
+      "bytes": 7051,
+      "sha256": "27f997f86aad5a2e49a96ce761caa030f4bdf04865d8caedb869e4725aa62900"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/05-Windows-CI首屏门禁复核与修正.md",
+      "bytes": 8339,
+      "sha256": "4b68735cdaaf51a5f0c2ab5b39239cd3ea1bb79ef9eabede6af151e2f92c4b79"
+    }
+  ],
+  "self_hash_excluded": true,
+  "retention": "Preserve alongside original WIN-018-20261006 evidence; do not replace original Windows verification"
+}

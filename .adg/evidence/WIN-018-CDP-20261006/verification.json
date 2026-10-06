@@ -1,0 +1,50 @@
+{
+  "observedAt": "2026-10-06T10:20:57+08:00",
+  "codeCommit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+  "platform": "macOS",
+  "node": "26.8.1",
+  "rust": {
+    "platform": "macOS",
+    "result": "pass",
+    "fmt": "pass",
+    "clippy": "pass",
+    "cargoTest": "pass",
+    "listedTests": 579,
+    "ignoredTests": 5,
+    "passedTests": 574,
+    "commands": [
+      "cargo fmt --all -- --check",
+      "cargo clippy --offline --workspace --all-targets -- -D warnings",
+      "cargo test --offline --workspace --features integration-test"
+    ],
+    "countSource": "cached --list and --ignored --list; test execution session 87596 exited 0"
+  },
+  "powershell": "7.6.6 (temporary portable parser only)",
+  "frontend": {
+    "typecheck": "pass",
+    "testsPassed": 375,
+    "productionBuild": "pass"
+  },
+  "cdpProtocol": {
+    "result": "pass",
+    "testsPassed": 7,
+    "command": "node --test test/smoke/windows-cdp.test.mjs"
+  },
+  "nodeSyntax": "pass",
+  "powershellParser": "pass",
+  "diffCheck": "pass",
+  "windowsNativeLocalExecution": false,
+  "dependencyResolution": {
+    "trackedCargoLock": false,
+    "tauri": "2.12.1",
+    "tauri-utils": "2.10.1",
+    "tauri-runtime-wry": "2.12.1",
+    "wry": "0.57.0"
+  },
+  "limitations": [
+    "macOS Rust validation does not compile all Windows-only native paths",
+    "PowerShell parsing does not execute Windows API calls",
+    "No local Windows final EXE smoke; ordinary and elevated token comparison remains pending",
+    "No installer, main merge, tag or release performed"
+  ]
+}

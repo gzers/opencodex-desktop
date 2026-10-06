@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: completed
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.8 Windows 启动与运行适配修复
-summary: 原始 Windows 适配开发与真机测试已完成并推送；远端 Windows 首屏 smoke 的 CDP 连接失败，已授权本机续修并交 Windows 复验。
+summary: 原始 Windows 适配开发与真机测试已完成；首屏 CDP 续修已在 Mac 验证并推送至 9262a5b，修正后的 Windows CI 和两种权限真机复验待完成。
 completion_summary: "原始 feature 开发、Windows 本机测试及提交完成；远端前端、macOS 后端与 Linux 发布工具通过，Windows final EXE smoke 在 CDP target 获取阶段失败。原始完成状态不代表续修或发布门禁通过。"
 ---
 
@@ -40,6 +40,8 @@ completion_summary: "原始 feature 开发、Windows 本机测试及提交完成
 完成状态仅指原始 Windows 设备上用户授权的开发、测试和提交。初始交接时 GitHub 认证阻断推送，因此提供 Git bundle；随后用户已推送特性分支。2026-10-06 核实 CI run `37397271349`：前端、macOS 后端、Linux 发布工具通过；Windows 编译与后端回归通过，但 final EXE smoke 无法取得主 WebView CDP target。macOS 原生 UI/安装回归仍未由后端 CI 替代。
 
 用户随后授权“回写文档、目标模式开发、提交推送、交 Windows 测试”。续作保持首屏渲染门禁，在 Mac 修改与验证通用部分，在 Windows 复验原生行为；复核、实施与交接结果见 [05-Windows CI 首屏门禁复核与修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/05-Windows-CI首屏门禁复核与修正.md)。本记录的原始 `completed` 状态不宣称续作已经通过 Windows 门禁。
+
+续修提交 `d2c3801` 显式配置 smoke WebView2 浏览器参数及隔离数据目录；`9262a5bedbb1a5f454f32afb7418b959fa8c721f` 保留首屏门禁并补齐 CDP 与进程诊断，两笔均已推送特性分支。本机前端 375 项、Rust 574 项通过（另 5 项原有忽略），CDP 协议 7 项及 PowerShell 语法检查通过；未执行 Windows 原生 smoke。新 CI run `37403376481` 已启动，当前证据不声明 Windows 门禁通过。续修机器记录见 [.adg/evidence/WIN-018-CDP-20261006](../../.adg/evidence/WIN-018-CDP-20261006/manifest.json)。
 
 实际检查、制品身份、提交和边界见维护专题的 [04-0.1.8开发测试与交接](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/04-0.1.8开发测试与交接.md)。机器证据保存在 [.adg/evidence/WIN-018-20261006](../../.adg/evidence/WIN-018-20261006/manifest.json)。
 
