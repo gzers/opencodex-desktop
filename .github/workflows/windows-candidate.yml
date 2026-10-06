@@ -30,6 +30,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+      - name: Verify strict bundle identity checks
+        run: |
+          node --test ../../../test/smoke/windows-bundle-identity.test.mjs
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: apps/desktop/tauri -> target

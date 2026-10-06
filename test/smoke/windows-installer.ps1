@@ -48,8 +48,14 @@ try {
         }
         try {
             if (!(Test-Path -LiteralPath $installed)) { throw 'Installed main EXE missing' }
-            $entry.installedExecutableSha256 = (Get-FileHash -LiteralPath $installed -Algorithm SHA256).Hash.ToLower()
-            if ($entry.installedExecutableSha256 -ne $taskHash) { throw 'Installed EXE differs from bundled source EXE' }
+            $identityJson = & $Node (Join-Path $PSScriptRoot 'windows-bundle-identity.mjs') $taskBuilt $installed $kind
+            if ($LASTEXITCODE -ne 0) { throw 'Installed EXE failed exact bundle identity verification' }
+            $identity = $identityJson | ConvertFrom-Json
+            if ($identity.builtSha256 -ne $taskHash) { throw 'Built EXE changed during installer verification' }
+            $entry.installedExecutableSha256 = $identity.installedSha256
+            $entry.expectedInstalledExecutableSha256 = $identity.expectedSha256
+            $entry.bundleMarker = $identity.bundleMarker
+            $entry.bundleMarkerOffset = $identity.bundleMarkerOffset
             $version = (Get-Item -LiteralPath $installed).VersionInfo.ProductVersion
             $entry.productVersion = $version
             if ($version -notmatch '^0[.]1[.]8($|[.+-])') { throw "Unexpected version $version" }
