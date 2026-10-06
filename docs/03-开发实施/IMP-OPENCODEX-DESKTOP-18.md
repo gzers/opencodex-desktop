@@ -4,8 +4,8 @@ object_kind: implementation.change
 state: completed
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.8 Windows 启动与运行适配修复
-summary: 承接 Windows 0.1.7 启动与图标维护专题，完成开发、测试与分支提交；合并、安装包构建与发布由用户在另一设备继续。
-completion_summary: "feature 分支开发、本机测试及提交已完成；主界面无 HOME 启动、实际渲染和内嵌图标核对通过。未合并、未生成安装器、未发布；GitHub 推送受本机认证阻断，提供 Git bundle 交接。"
+summary: 原始 Windows 适配开发与真机测试已完成并推送；远端 Windows 首屏 smoke 的 CDP 连接失败，已授权本机续修并交 Windows 复验。
+completion_summary: "原始 feature 开发、Windows 本机测试及提交完成；远端前端、macOS 后端与 Linux 发布工具通过，Windows final EXE smoke 在 CDP target 获取阶段失败。原始完成状态不代表续修或发布门禁通过。"
 ---
 
 # 0.1.8 Windows 启动与运行适配修复
@@ -37,7 +37,9 @@ completion_summary: "feature 分支开发、本机测试及提交已完成；主
 
 代码提交为 `536a791`（运行适配）、`d3b86a7`（ICO）和 `785e80dada6928c9643ee69f16056d414cd7304e`（测试门禁）。前端 375 项、Windows 后端 331 项通过；格式、clippy、前端类型与生产构建通过；真实官方 2.78.0 联网安装与离线导入往返通过。最终 EXE 的无 HOME 隔离首屏与 Tauri 命令检查通过，启动日志对应 `785e80d`，七档嵌入 ICO 均与来源像素一致。
 
-完成状态仅指本轮用户授权的开发、测试和提交。GitHub 推送因本机缺少可用认证未成功，远端双平台 CI 尚未执行；macOS 原生回归仍列为另一设备集成门禁。Git bundle 提供已提交分支的替代交接，不代表远端已建立分支或发布。
+完成状态仅指原始 Windows 设备上用户授权的开发、测试和提交。初始交接时 GitHub 认证阻断推送，因此提供 Git bundle；随后用户已推送特性分支。2026-10-06 核实 CI run `37397271349`：前端、macOS 后端、Linux 发布工具通过；Windows 编译与后端回归通过，但 final EXE smoke 无法取得主 WebView CDP target。macOS 原生 UI/安装回归仍未由后端 CI 替代。
+
+用户随后授权“回写文档、目标模式开发、提交推送、交 Windows 测试”。续作保持首屏渲染门禁，在 Mac 修改与验证通用部分，在 Windows 复验原生行为；复核、实施与交接结果见 [05-Windows CI 首屏门禁复核与修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/05-Windows-CI首屏门禁复核与修正.md)。本记录的原始 `completed` 状态不宣称续作已经通过 Windows 门禁。
 
 实际检查、制品身份、提交和边界见维护专题的 [04-0.1.8开发测试与交接](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/04-0.1.8开发测试与交接.md)。机器证据保存在 [.adg/evidence/WIN-018-20261006](../../.adg/evidence/WIN-018-20261006/manifest.json)。
 
