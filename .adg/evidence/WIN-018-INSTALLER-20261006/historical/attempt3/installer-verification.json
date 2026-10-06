@@ -1,0 +1,40 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "7a00b125261e41e966cc257182ca4f443341eef9",
+  "builtExecutableSha256": "370b6e8eec10b3c4b522250b7a8f2c87c236d23ba39710b56b1c1f4994db072c",
+  "version": "0.1.8",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "fail",
+  "installers": [
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.8_x64-setup.exe",
+      "bytes": 2880790,
+      "sha256": "a0af5d568b3579babf030f7039cfdbddf386e2a36cc1875ec242ee81ac1b6832",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-78ed848efca34bcc87543007aab33520",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "37518c4569f4e8d8de8dad22ce7d13be57926a35bdf681689d3076e57d076dda",
+      "expectedInstalledExecutableSha256": "37518c4569f4e8d8de8dad22ce7d13be57926a35bdf681689d3076e57d076dda",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 6959957,
+      "productVersion": "0.1.8",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    },
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.1.8_x64_en-US.msi",
+      "bytes": 4026368,
+      "sha256": "2b1fbd69b67f44b0846d30f7693b2105791dbf5499744ba3c6366522d416824c",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-3a9816a4716c408c8646d13c462af8d7",
+      "result": "fail",
+      "installExitCode": 0,
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ],
+  "error": "Installed main EXE missing"
+}

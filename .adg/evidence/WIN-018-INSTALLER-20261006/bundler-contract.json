@@ -1,0 +1,11 @@
+{
+  "bundlerVersion": "2.9.4",
+  "cliVersion": "2.11.4",
+  "expectedChange": "one __TAURI_BUNDLE_TYPE_VAR_UNK marker replaced with NSS or MSI; all other bytes exact",
+  "pathOrderReason": "MSI registry search overrides INSTALLDIR; NSIS retains install location unless app data deletion is selected",
+  "localRegistrySourceDigests": {
+    "bundle.rs": "a4622ce32d88b99e8a785d57cfd96ebc2aa99d066a3c7bb17c0634a8a943aa3d",
+    "bundle/windows/msi/main.wxs": "e371a01628a06730828f9bd24111feacb8bec53c250ccec4b46df756fe0a0198",
+    "bundle/windows/nsis/installer.nsi": "20f4ecc730defb71f1342eaeaec4021df13be3d843abba0effe88ea5835fa079"
+  }
+}

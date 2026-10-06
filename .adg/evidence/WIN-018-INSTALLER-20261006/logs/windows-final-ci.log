@@ -1,0 +1,2264 @@
+2026-10-06T04:18:24.6442526Z Current runner version: '2.337.0'
+2026-10-06T04:18:24.6464775Z ##[group]Runner Image Provisioner
+2026-10-06T04:18:24.6465427Z Hosted Compute Agent
+2026-10-06T04:18:24.6465890Z Version: 20260901.588
+2026-10-06T04:18:24.6466365Z Commit: f88ec8081b781fac6c440065ac7ff9e710ce3d0b
+2026-10-06T04:18:24.6466937Z Build Date: 2026-09-01T19:56:44Z
+2026-10-06T04:18:24.6467458Z Worker ID: {7d4a4203-28a6-4d61-b1af-1b7b2f3fb2ad}
+2026-10-06T04:18:24.6468063Z Azure Region: westus3
+2026-10-06T04:18:24.6468517Z ##[endgroup]
+2026-10-06T04:18:24.6469574Z ##[group]Operating System
+2026-10-06T04:18:24.6470069Z Microsoft Windows Server 2025
+2026-10-06T04:18:24.6470589Z 10.0.26100
+2026-10-06T04:18:24.6470977Z Datacenter
+2026-10-06T04:18:24.6471353Z ##[endgroup]
+2026-10-06T04:18:24.6471790Z ##[group]Runner Image
+2026-10-06T04:18:24.6472354Z Image: windows-2025-vs2026
+2026-10-06T04:18:24.6472825Z Version: 20260925.250.1
+2026-10-06T04:18:24.6474019Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260925.250/images/windows/Windows2025-VS2026-Readme.md
+2026-10-06T04:18:24.6475294Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260925.250
+2026-10-06T04:18:24.6476070Z ##[endgroup]
+2026-10-06T04:18:24.6478554Z ##[group]GITHUB_TOKEN Permissions
+2026-10-06T04:18:24.6480310Z Actions: write
+2026-10-06T04:18:24.6480798Z ArtifactMetadata: write
+2026-10-06T04:18:24.6481349Z Attestations: write
+2026-10-06T04:18:24.6481783Z Checks: write
+2026-10-06T04:18:24.6482184Z CodeQuality: write
+2026-10-06T04:18:24.6482605Z Contents: write
+2026-10-06T04:18:24.6483034Z CopilotRequests: write
+2026-10-06T04:18:24.6483462Z Deployments: write
+2026-10-06T04:18:24.6483862Z Discussions: write
+2026-10-06T04:18:24.6484780Z Drives: write
+2026-10-06T04:18:24.6485210Z Issues: write
+2026-10-06T04:18:24.6485617Z Metadata: read
+2026-10-06T04:18:24.6486108Z Models: read
+2026-10-06T04:18:24.6486498Z Packages: write
+2026-10-06T04:18:24.6486998Z Pages: write
+2026-10-06T04:18:24.6487423Z PullRequests: write
+2026-10-06T04:18:24.6487907Z RepositoryProjects: write
+2026-10-06T04:18:24.6488406Z SecurityEvents: write
+2026-10-06T04:18:24.6488815Z Statuses: write
+2026-10-06T04:18:24.6489337Z VulnerabilityAlerts: read
+2026-10-06T04:18:24.6489869Z ##[endgroup]
+2026-10-06T04:18:24.6491740Z Secret source: Actions
+2026-10-06T04:18:24.6492394Z Cache mode: write
+2026-10-06T04:18:24.6493033Z Prepare workflow directory
+2026-10-06T04:18:24.6827017Z Prepare all required actions
+2026-10-06T04:18:24.6866401Z Getting action download info
+2026-10-06T04:18:24.9877753Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-06T04:18:25.0965182Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-10-06T04:18:25.2328040Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:89b12181fb390509a0842a86cc55eeb8eb928c1d)
+2026-10-06T04:18:25.4864461Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-06T04:18:25.8243805Z Complete job name: backend-windows
+2026-10-06T04:18:25.9590846Z ##[group]Run actions/checkout@v5
+2026-10-06T04:18:25.9591667Z with:
+2026-10-06T04:18:25.9591992Z   repository: gzers/opencodex-desktop
+2026-10-06T04:18:25.9595357Z   token: ***
+2026-10-06T04:18:25.9595670Z   ssh-strict: true
+2026-10-06T04:18:25.9595975Z   ssh-user: git
+2026-10-06T04:18:25.9596283Z   persist-credentials: true
+2026-10-06T04:18:25.9596621Z   clean: true
+2026-10-06T04:18:25.9596941Z   sparse-checkout-cone-mode: true
+2026-10-06T04:18:25.9597303Z   fetch-depth: 1
+2026-10-06T04:18:25.9597604Z   fetch-tags: false
+2026-10-06T04:18:25.9597912Z   show-progress: true
+2026-10-06T04:18:25.9598221Z   lfs: false
+2026-10-06T04:18:25.9598501Z   submodules: false
+2026-10-06T04:18:25.9598811Z   set-safe-directory: true
+2026-10-06T04:18:25.9599171Z   allow-unsafe-pr-checkout: false
+2026-10-06T04:18:25.9599722Z ##[endgroup]
+2026-10-06T04:18:26.0771049Z Syncing repository: gzers/opencodex-desktop
+2026-10-06T04:18:26.0772485Z ##[group]Getting Git version info
+2026-10-06T04:18:26.0833397Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-10-06T04:18:26.1549486Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-06T04:18:26.7213011Z git version 2.55.0.windows.5
+2026-10-06T04:18:26.7253640Z ##[endgroup]
+2026-10-06T04:18:26.7270510Z Temporarily overriding HOME='D:\a\_temp\62626227-6d73-4eb9-ba1e-9ab7c6f1db38' before making global git config changes
+2026-10-06T04:18:26.7273630Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-06T04:18:26.7280179Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-06T04:18:26.7902134Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-10-06T04:18:26.7907018Z ##[group]Initializing the repository
+2026-10-06T04:18:26.7914201Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-10-06T04:18:26.8691582Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-10-06T04:18:26.8731083Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-10-06T04:18:26.9316531Z ##[endgroup]
+2026-10-06T04:18:26.9317819Z ##[group]Disabling automatic garbage collection
+2026-10-06T04:18:26.9324225Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-06T04:18:26.9579883Z ##[endgroup]
+2026-10-06T04:18:26.9581270Z ##[group]Setting up auth
+2026-10-06T04:18:26.9591318Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-06T04:18:26.9836059Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-06T04:18:28.5340782Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-06T04:18:28.5594298Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-06T04:18:29.0081722Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-06T04:18:29.0332485Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-06T04:18:29.5116290Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-06T04:18:29.5378593Z ##[endgroup]
+2026-10-06T04:18:29.5379175Z ##[group]Fetching the repository
+2026-10-06T04:18:29.5391326Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +cffca3afc29b8b251f3f14535f997b5d08560cb2:refs/remotes/origin/feature/0.1.8-windows-package
+2026-10-06T04:18:31.1095396Z From https://github.com/gzers/opencodex-desktop
+2026-10-06T04:18:31.1096110Z  * [new ref]         cffca3afc29b8b251f3f14535f997b5d08560cb2 -> origin/feature/0.1.8-windows-package
+2026-10-06T04:18:31.1128605Z ##[endgroup]
+2026-10-06T04:18:31.1128958Z ##[group]Determining the checkout info
+2026-10-06T04:18:31.1130155Z ##[endgroup]
+2026-10-06T04:18:31.1137527Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-06T04:18:31.1671229Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-06T04:18:31.1922989Z ##[group]Checking out the ref
+2026-10-06T04:18:31.1931668Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/0.1.8-windows-package refs/remotes/origin/feature/0.1.8-windows-package
+2026-10-06T04:18:31.3645659Z Switched to a new branch 'feature/0.1.8-windows-package'
+2026-10-06T04:18:31.3708439Z branch 'feature/0.1.8-windows-package' set up to track 'origin/feature/0.1.8-windows-package'.
+2026-10-06T04:18:31.3748607Z ##[endgroup]
+2026-10-06T04:18:31.4110063Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-06T04:18:31.4321575Z cffca3afc29b8b251f3f14535f997b5d08560cb2
+2026-10-06T04:18:31.4702226Z ##[group]Run actions/setup-node@v5
+2026-10-06T04:18:31.4702526Z with:
+2026-10-06T04:18:31.4702687Z   node-version: 24
+2026-10-06T04:18:31.4702856Z   always-auth: false
+2026-10-06T04:18:31.4703024Z   check-latest: false
+2026-10-06T04:18:31.4704962Z   token: ***
+2026-10-06T04:18:31.4705132Z   package-manager-cache: true
+2026-10-06T04:18:31.4705327Z ##[endgroup]
+2026-10-06T04:18:31.6237949Z Found in cache @ C:\hostedtoolcache\windows\node\24.21.0\x64
+2026-10-06T04:18:31.6244054Z (node:8868) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T04:18:31.6244681Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T04:18:31.6246737Z ##[group]Environment details
+2026-10-06T04:18:37.8507699Z node: v24.21.0
+2026-10-06T04:18:37.8508009Z npm: 11.19.0
+2026-10-06T04:18:37.8508222Z yarn: 1.22.22
+2026-10-06T04:18:37.8508977Z ##[endgroup]
+2026-10-06T04:18:37.8965548Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-10-06T04:18:37.8965841Z with:
+2026-10-06T04:18:37.8966006Z   components: rustfmt, clippy
+2026-10-06T04:18:37.8966197Z   toolchain: stable
+2026-10-06T04:18:37.8966352Z ##[endgroup]
+2026-10-06T04:18:37.9023880Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-10-06T04:18:37.9159314Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-10-06T04:18:37.9159638Z if [[ -z $toolchain ]]; then
+2026-10-06T04:18:37.9160053Z   # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070
+2026-10-06T04:18:37.9160509Z   echo "'toolchain' is a required input" >&2
+2026-10-06T04:18:37.9160730Z   exit 1
+2026-10-06T04:18:37.9160982Z elif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then
+2026-10-06T04:18:37.9161297Z   if [[ Windows == macOS ]]; then
+2026-10-06T04:18:37.9161744Z     echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-10-06T04:18:37.9162122Z   else
+2026-10-06T04:18:37.9162420Z     echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT
+2026-10-06T04:18:37.9162775Z   fi
+2026-10-06T04:18:37.9162994Z elif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then
+2026-10-06T04:18:37.9163393Z   echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT
+2026-10-06T04:18:37.9163731Z elif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then
+2026-10-06T04:18:37.9164116Z   echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT
+2026-10-06T04:18:37.9164469Z else
+2026-10-06T04:18:37.9164653Z   echo "toolchain=$toolchain" >> $GITHUB_OUTPUT
+2026-10-06T04:18:37.9164873Z fi
+2026-10-06T04:18:37.9183922Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:37.9184246Z env:
+2026-10-06T04:18:37.9184398Z   toolchain: stable
+2026-10-06T04:18:37.9184559Z ##[endgroup]
+2026-10-06T04:18:38.0974231Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=194]
+2026-10-06T04:18:38.0980571Z ##[start-action display=Construct rustup command line;id=__dtolnay_rust-toolchain.flags]
+2026-10-06T04:18:38.1085567Z ##[group]Run echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-10-06T04:18:38.1086224Z echo "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT
+2026-10-06T04:18:38.1086682Z echo "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT
+2026-10-06T04:18:38.1087062Z echo "downgrade=" >> $GITHUB_OUTPUT
+2026-10-06T04:18:38.1098390Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:38.1098697Z env:
+2026-10-06T04:18:38.1098836Z   targets:
+2026-10-06T04:18:38.1098985Z   components: rustfmt, clippy
+2026-10-06T04:18:38.1099168Z ##[endgroup]
+2026-10-06T04:18:38.1610363Z ##[end-action id=__dtolnay_rust-toolchain.flags;outcome=success;conclusion=success;duration_ms=62]
+2026-10-06T04:18:38.1612623Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-10-06T04:18:38.1738425Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-10-06T04:18:38.1738859Z echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-10-06T04:18:38.1749815Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:38.1750128Z ##[endgroup]
+2026-10-06T04:18:38.2066518Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=45]
+2026-10-06T04:18:38.2068599Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-10-06T04:18:38.2075578Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-06T04:18:38.2077182Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-10-06T04:18:38.2176230Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-10-06T04:18:38.2176526Z if ! command -v rustup &>/dev/null; then
+2026-10-06T04:18:38.2177133Z   curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'
+2026-10-06T04:18:38.2177813Z   'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y
+2026-10-06T04:18:38.2178157Z   echo "$CARGO_HOME\bin" >> $GITHUB_PATH
+2026-10-06T04:18:38.2178364Z fi
+2026-10-06T04:18:38.2189306Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:38.2189619Z env:
+2026-10-06T04:18:38.2189782Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:38.2189988Z ##[endgroup]
+2026-10-06T04:18:38.2599504Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=52]
+2026-10-06T04:18:38.2610306Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+2026-10-06T04:18:38.2720552Z ##[group]Run log=$(mktemp)
+2026-10-06T04:18:38.2720776Z log=$(mktemp)
+2026-10-06T04:18:38.2720974Z trap 'rm -f "$log"' EXIT
+2026-10-06T04:18:38.2721175Z for attempt in 1 2 3 4 5; do
+2026-10-06T04:18:38.2721669Z   if rustup toolchain install stable --component rustfmt --component clippy --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then
+2026-10-06T04:18:38.2722148Z     break
+2026-10-06T04:18:38.2722307Z   else
+2026-10-06T04:18:38.2722448Z     status=$?
+2026-10-06T04:18:38.2722601Z   fi
+2026-10-06T04:18:38.2722823Z   if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \
+2026-10-06T04:18:38.2723244Z       || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then
+2026-10-06T04:18:38.2723579Z     exit "$status"
+2026-10-06T04:18:38.2723743Z   fi
+2026-10-06T04:18:38.2724004Z   echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2
+2026-10-06T04:18:38.2724493Z   sleep 30
+2026-10-06T04:18:38.2724644Z done
+2026-10-06T04:18:38.2735148Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:38.2735453Z env:
+2026-10-06T04:18:38.2735615Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:38.2735824Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-10-06T04:18:38.2736002Z ##[endgroup]
+2026-10-06T04:18:41.6323536Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+2026-10-06T04:18:42.2015203Z info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+2026-10-06T04:18:42.2169956Z info: removing previous version of component rustfmt
+2026-10-06T04:18:42.2349148Z info: removing previous version of component clippy
+2026-10-06T04:18:42.2644218Z info: removing previous version of component rust-std for target x86_64-pc-windows-gnu
+2026-10-06T04:18:42.3595355Z info: removing previous version of component rust-std for target i686-pc-windows-msvc
+2026-10-06T04:18:42.4227614Z info: removing previous version of component cargo
+2026-10-06T04:18:42.5016936Z info: removing previous version of component rust-std
+2026-10-06T04:18:42.5807694Z info: removing previous version of component rustc
+2026-10-06T04:18:42.6914127Z info: downloading 7 components
+2026-10-06T04:18:53.5581798Z
+2026-10-06T04:18:55.4565485Z   stable-x86_64-pc-windows-msvc updated - rustc 1.99.0 (b940084d7 2026-09-28) (from rustc 1.98.1 (48a229cea 2026-09-01))
+2026-10-06T04:18:55.4566115Z
+2026-10-06T04:18:55.4853620Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=17224]
+2026-10-06T04:18:55.4859797Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+2026-10-06T04:18:55.4959202Z ##[group]Run rustup default stable --force-non-host
+2026-10-06T04:18:55.4959485Z rustup default stable --force-non-host
+2026-10-06T04:18:55.4969815Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:55.4970132Z env:
+2026-10-06T04:18:55.4970285Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:55.4970485Z ##[endgroup]
+2026-10-06T04:18:55.5552920Z info: using existing install for stable-x86_64-pc-windows-msvc
+2026-10-06T04:18:55.7659160Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+2026-10-06T04:18:55.7700907Z
+2026-10-06T04:18:55.7874975Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-06T04:18:55.7875312Z
+2026-10-06T04:18:55.7939035Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=307]
+2026-10-06T04:18:55.7941310Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-10-06T04:18:55.8043267Z ##[group]Run DATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-10-06T04:18:55.8044286Z DATE=$(rustc +stable --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-10-06T04:18:55.8044813Z HASH=$(rustc +stable --version --verbose | sed -ne 's/^commit-hash: //p')
+2026-10-06T04:18:55.8045189Z echo "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT
+2026-10-06T04:18:55.8055820Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:55.8056134Z env:
+2026-10-06T04:18:55.8056300Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:55.8056502Z ##[endgroup]
+2026-10-06T04:18:56.6088761Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=814]
+2026-10-06T04:18:56.6091117Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-10-06T04:18:56.6192337Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-10-06T04:18:56.6192913Z if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-10-06T04:18:56.6193159Z   echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV
+2026-10-06T04:18:56.6194062Z fi
+2026-10-06T04:18:56.6204410Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:56.6204712Z env:
+2026-10-06T04:18:56.6204874Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:56.6205080Z ##[endgroup]
+2026-10-06T04:18:56.6536879Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=44]
+2026-10-06T04:18:56.6538918Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-10-06T04:18:56.6639721Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-10-06T04:18:56.6640139Z if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-10-06T04:18:56.6640461Z   echo CARGO_TERM_COLOR=always >> $GITHUB_ENV
+2026-10-06T04:18:56.6640745Z fi
+2026-10-06T04:18:56.6671576Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:56.6672063Z env:
+2026-10-06T04:18:56.6672319Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:56.6672771Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:18:56.6673015Z ##[endgroup]
+2026-10-06T04:18:56.7003668Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=46]
+2026-10-06T04:18:56.7006072Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-10-06T04:18:56.7110664Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-10-06T04:18:56.7111125Z # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-10-06T04:18:56.7111621Z if [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then
+2026-10-06T04:18:56.7112120Z   if rustc +stable --version --verbose | grep -q '^release: 1\.6[89]\.'; then
+2026-10-06T04:18:56.7112797Z     touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-10-06T04:18:56.7113189Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV
+2026-10-06T04:18:56.7113566Z   elif rustc +stable --version --verbose | grep -q '^release: 1\.6[67]\.'; then
+2026-10-06T04:18:56.7113948Z     touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true
+2026-10-06T04:18:56.7114297Z     echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV
+2026-10-06T04:18:56.7114561Z   fi
+2026-10-06T04:18:56.7114705Z fi
+2026-10-06T04:18:56.7125242Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:56.7125547Z env:
+2026-10-06T04:18:56.7125711Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:56.7125926Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:18:56.7126091Z   CARGO_TERM_COLOR: always
+2026-10-06T04:18:56.7126260Z ##[endgroup]
+2026-10-06T04:18:56.8636247Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=162]
+2026-10-06T04:18:56.8639230Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-10-06T04:18:56.8754970Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-10-06T04:18:56.8755568Z # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-10-06T04:18:56.8756023Z if rustc +stable --version --verbose | grep -q '^release: 1\.7[01]\.'; then
+2026-10-06T04:18:56.8756372Z   echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV
+2026-10-06T04:18:56.8756608Z fi
+2026-10-06T04:18:56.8767070Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:56.8767380Z env:
+2026-10-06T04:18:56.8767548Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:56.8767760Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:18:56.8767930Z   CARGO_TERM_COLOR: always
+2026-10-06T04:18:56.8768293Z ##[endgroup]
+2026-10-06T04:18:56.9582946Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=94]
+2026-10-06T04:18:56.9586728Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-10-06T04:18:56.9687385Z ##[group]Run rustc +stable --version --verbose
+2026-10-06T04:18:56.9687656Z rustc +stable --version --verbose
+2026-10-06T04:18:56.9697656Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-06T04:18:56.9697977Z env:
+2026-10-06T04:18:56.9698140Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:56.9698349Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:18:56.9698531Z   CARGO_TERM_COLOR: always
+2026-10-06T04:18:56.9698697Z ##[endgroup]
+2026-10-06T04:18:57.0360507Z rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-06T04:18:57.0361039Z binary: rustc
+2026-10-06T04:18:57.0361415Z commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+2026-10-06T04:18:57.0361721Z commit-date: 2026-09-28
+2026-10-06T04:18:57.0361937Z host: x86_64-pc-windows-msvc
+2026-10-06T04:18:57.0362199Z release: 1.99.0
+2026-10-06T04:18:57.0362570Z LLVM version: 23.1.1
+2026-10-06T04:18:57.0459125Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=87]
+2026-10-06T04:18:57.0584994Z ##[group]Run npm --prefix ../ui ci
+2026-10-06T04:18:57.0585304Z npm --prefix ../ui ci
+2026-10-06T04:18:57.1041316Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:18:57.1041609Z env:
+2026-10-06T04:18:57.1041781Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:18:57.1041995Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:18:57.1042313Z   CARGO_TERM_COLOR: always
+2026-10-06T04:18:57.1042564Z ##[endgroup]
+2026-10-06T04:19:16.4977587Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-06T04:19:20.1589986Z
+2026-10-06T04:19:20.1590700Z added 146 packages, and audited 147 packages in 22s
+2026-10-06T04:19:20.1591079Z
+2026-10-06T04:19:20.1591241Z 27 packages are looking for funding
+2026-10-06T04:19:20.1592099Z   run `npm fund` for details
+2026-10-06T04:19:20.1611207Z
+2026-10-06T04:19:20.1611438Z 2 high severity vulnerabilities
+2026-10-06T04:19:20.1611671Z
+2026-10-06T04:19:20.1611767Z To address all issues, run:
+2026-10-06T04:19:20.1611986Z   npm audit fix
+2026-10-06T04:19:20.1612086Z
+2026-10-06T04:19:20.1612184Z Run `npm audit` for details.
+2026-10-06T04:19:21.8928232Z ##[group]Run npm --prefix ../ui run build
+2026-10-06T04:19:21.8928671Z npm --prefix ../ui run build
+2026-10-06T04:19:21.9012008Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:19:21.9012448Z env:
+2026-10-06T04:19:21.9012689Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:19:21.9013023Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:19:21.9013287Z   CARGO_TERM_COLOR: always
+2026-10-06T04:19:21.9013551Z ##[endgroup]
+2026-10-06T04:19:22.5110227Z
+2026-10-06T04:19:22.5110993Z > opencodex-desktop-ui@0.1.8 build
+2026-10-06T04:19:22.5111614Z > vue-tsc --noEmit && vite build
+2026-10-06T04:19:22.5111912Z
+2026-10-06T04:19:27.2199043Z vite v8.3.0 building client environment for production...
+2026-10-06T04:19:27.2284058Z transforming...
+2026-10-06T04:19:27.7762004Z ✓ 148 modules transformed.
+2026-10-06T04:19:27.8160445Z rendering chunks...
+2026-10-06T04:19:27.8758688Z computing gzip size...
+2026-10-06T04:19:27.8811958Z dist/index.html                   0.41 kB │ gzip:   0.28 kB
+2026-10-06T04:19:27.8812660Z dist/assets/index-DX-5RTBs.css   86.05 kB │ gzip:  15.88 kB
+2026-10-06T04:19:27.8813235Z dist/assets/event-DSevx5Bn.js     1.03 kB │ gzip:   0.54 kB
+2026-10-06T04:19:27.8813762Z dist/assets/index-BZljhCnD.js   388.83 kB │ gzip: 129.66 kB
+2026-10-06T04:19:27.8814021Z
+2026-10-06T04:19:27.8822151Z [INEFFECTIVE_DYNAMIC_IMPORT] src/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+2026-10-06T04:19:27.8825144Z
+2026-10-06T04:19:27.8828445Z [INEFFECTIVE_DYNAMIC_IMPORT] node_modules/@tauri-apps/api/core.js is dynamically imported by src/app/appearance/effects.ts, src/contracts/runtimeStatus.ts, src/features/about/api.ts, src/features/codex-shim/api.ts, src/features/data-root/api.ts, ... but also statically imported by node_modules/@tauri-apps/api/event.js, node_modules/@tauri-apps/plugin-dialog/dist-js/index.js, node_modules/@tauri-apps/plugin-process/dist-js/index.js, src/features/updates/update.ts, dynamic import will not move module into another chunk.
+2026-10-06T04:19:27.8830203Z
+2026-10-06T04:19:27.8831535Z [INEFFECTIVE_DYNAMIC_IMPORT] src/features/updates/update.ts is dynamically imported by src/features/updates/store.ts, src/routes/SettingsRoute.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/routes/SettingsRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+2026-10-06T04:19:27.8832554Z
+2026-10-06T04:19:27.8832845Z ✓ built in 662ms
+2026-10-06T04:19:28.4489726Z ##[group]Run cargo fmt --all -- --check
+2026-10-06T04:19:28.4490046Z cargo fmt --all -- --check
+2026-10-06T04:19:28.4543869Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:19:28.4555005Z env:
+2026-10-06T04:19:28.4555208Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:19:28.4555428Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:19:28.4555672Z   CARGO_TERM_COLOR: always
+2026-10-06T04:19:28.4555935Z ##[endgroup]
+2026-10-06T04:19:30.6675944Z ##[group]Run cargo clippy --workspace --all-targets -- -D warnings
+2026-10-06T04:19:30.6676398Z cargo clippy --workspace --all-targets -- -D warnings
+2026-10-06T04:19:30.6730014Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:19:30.6730311Z env:
+2026-10-06T04:19:30.6730474Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:19:30.6730698Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:19:30.6730873Z   CARGO_TERM_COLOR: always
+2026-10-06T04:19:30.6731042Z ##[endgroup]
+2026-10-06T04:19:31.5631099Z     Updating crates.io index
+2026-10-06T04:19:33.2012373Z      Locking 521 packages to highest compatible versions
+2026-10-06T04:19:33.2016612Z       Adding aes-gcm v0.10.3 (available: v0.11.1)
+2026-10-06T04:19:33.2024210Z       Adding argon2 v0.5.3 (available: v0.6.0)
+2026-10-06T04:19:33.2030741Z       Adding base64 v0.22.1 (available: v0.23.1)
+2026-10-06T04:19:33.2102570Z       Adding dirs v6.0.0 (available: v7.0.0)
+2026-10-06T04:19:33.2132760Z       Adding generic-array v0.14.7 (available: v0.14.9)
+2026-10-06T04:19:33.2270010Z       Adding keyring v3.6.3 (available: v4.2.0)
+2026-10-06T04:19:33.2329729Z       Adding png v0.17.16 (available: v0.18.1)
+2026-10-06T04:19:33.2359464Z       Adding rand v0.9.5 (available: v0.10.3)
+2026-10-06T04:19:33.2403966Z       Adding reqwest v0.12.28 (available: v0.13.5)
+2026-10-06T04:19:33.2586473Z       Adding sha2 v0.10.9 (available: v0.11.0)
+2026-10-06T04:19:33.2891635Z       Adding toml v0.8.2 (available: v0.8.23)
+2026-10-06T04:19:33.2893143Z       Adding toml v0.9.12+spec-1.1.0 (available: v1.1.6+spec-1.1.0)
+2026-10-06T04:19:33.2897112Z       Adding toml_datetime v0.6.3 (available: v0.6.11)
+2026-10-06T04:19:33.2910883Z       Adding toml_edit v0.20.2 (available: v0.20.7)
+2026-10-06T04:19:33.3072810Z       Adding zip v4.6.1 (available: v8.6.0)
+2026-10-06T04:19:33.3401986Z  Downloading crates ...
+2026-10-06T04:19:33.5116807Z   Downloaded futures-task v0.3.34
+2026-10-06T04:19:33.5272467Z   Downloaded adler2 v2.0.1
+2026-10-06T04:19:33.5373151Z   Downloaded hex v0.4.3
+2026-10-06T04:19:33.5566444Z   Downloaded dtoa-short v0.3.5
+2026-10-06T04:19:33.6309437Z   Downloaded tokio-macros v2.7.2
+2026-10-06T04:19:33.6873910Z   Downloaded windows-targets v0.53.5
+2026-10-06T04:19:33.6944492Z   Downloaded dirs-sys v0.5.0
+2026-10-06T04:19:33.7039853Z   Downloaded form_urlencoded v1.2.2
+2026-10-06T04:19:33.7119807Z   Downloaded darling_macro v0.24.1
+2026-10-06T04:19:33.7180732Z   Downloaded defmt-parser v1.0.0
+2026-10-06T04:19:33.7286608Z   Downloaded dyn-clone v1.0.20
+2026-10-06T04:19:33.8103192Z   Downloaded dunce v1.0.5
+2026-10-06T04:19:33.8183849Z   Downloaded generic-array v0.14.7
+2026-10-06T04:19:33.8337482Z   Downloaded itoa v1.0.18
+2026-10-06T04:19:33.8434989Z   Downloaded want v0.3.2
+2026-10-06T04:19:33.9207365Z   Downloaded futures-io v0.3.34
+2026-10-06T04:19:33.9270308Z   Downloaded windows-collections v0.3.2
+2026-10-06T04:19:33.9570831Z   Downloaded fnv v1.0.7
+2026-10-06T04:19:33.9639182Z   Downloaded idna_adapter v1.2.2
+2026-10-06T04:19:33.9719608Z   Downloaded futures-core v0.3.34
+2026-10-06T04:19:33.9813036Z   Downloaded num-conv v0.2.2
+2026-10-06T04:19:33.9875702Z   Downloaded tower-service v0.3.3
+2026-10-06T04:19:33.9978926Z   Downloaded utf8_iter v1.0.4
+2026-10-06T04:19:34.0052064Z   Downloaded zerofrom v0.1.8
+2026-10-06T04:19:34.0115896Z   Downloaded derive_more-impl v2.1.1
+2026-10-06T04:19:35.0215200Z   Downloaded ctr v0.9.2
+2026-10-06T04:19:35.0386771Z   Downloaded winapi-util v0.1.11
+2026-10-06T04:19:35.2233012Z   Downloaded toml_parser v1.1.3+spec-1.1.0
+2026-10-06T04:19:35.2524989Z   Downloaded unicode-ident v1.0.26
+2026-10-06T04:19:35.4745195Z   Downloaded webview2-com v0.39.1
+2026-10-06T04:19:35.4923513Z   Downloaded windows-registry v0.6.1
+2026-10-06T04:19:35.6945060Z   Downloaded yoke-derive v0.8.4
+2026-10-06T04:19:35.7309445Z   Downloaded inout v0.1.4
+2026-10-06T04:19:35.7679437Z   Downloaded new_debug_unreachable v1.0.6
+2026-10-06T04:19:35.8619685Z   Downloaded mime v0.3.17
+2026-10-06T04:19:35.9403090Z   Downloaded try-lock v0.2.5
+2026-10-06T04:19:36.0429341Z   Downloaded typeid v1.0.3
+2026-10-06T04:19:36.0951621Z   Downloaded vswhom-sys v0.1.3
+2026-10-06T04:19:36.2282000Z   Downloaded windows-link v0.2.1
+2026-10-06T04:19:36.2345943Z   Downloaded windows-result v0.4.1
+2026-10-06T04:19:36.3024555Z   Downloaded windows-version v0.1.7
+2026-10-06T04:19:36.3676344Z   Downloaded futures-sink v0.3.34
+2026-10-06T04:19:36.4245092Z   Downloaded universal-hash v0.5.1
+2026-10-06T04:19:36.5244765Z   Downloaded vswhom v0.1.0
+2026-10-06T04:19:36.5617855Z   Downloaded webview2-com-macros v0.8.1
+2026-10-06T04:19:36.6326436Z   Downloaded windows-numerics v0.3.1
+2026-10-06T04:19:36.6670299Z   Downloaded windows-strings v0.5.1
+2026-10-06T04:19:36.7166960Z   Downloaded windows-targets v0.52.6
+2026-10-06T04:19:36.7595466Z   Downloaded zerofrom-derive v0.1.8
+2026-10-06T04:19:36.8036483Z   Downloaded aead v0.5.2
+2026-10-06T04:19:36.8704924Z   Downloaded windows-implement v0.60.2
+2026-10-06T04:19:36.8863675Z   Downloaded windows-threading v0.2.1
+2026-10-06T04:19:36.9371710Z   Downloaded version_check v0.9.5
+2026-10-06T04:19:36.9528984Z   Downloaded windows-interface v0.59.3
+2026-10-06T04:19:36.9964140Z   Downloaded tower-layer v0.3.3
+2026-10-06T04:19:37.0054597Z   Downloaded time-core v0.1.9
+2026-10-06T04:19:37.1685426Z   Downloaded tokio-rustls v0.26.6
+2026-10-06T04:19:37.2658436Z   Downloaded tauri-winres v0.3.6
+2026-10-06T04:19:37.3794163Z   Downloaded thiserror-impl v2.0.21
+2026-10-06T04:19:37.5279379Z   Downloaded tinystr v0.8.4
+2026-10-06T04:19:37.6212452Z   Downloaded toml_datetime v1.1.1+spec-1.1.0
+2026-10-06T04:19:37.7259944Z   Downloaded winreg v0.55.0
+2026-10-06T04:19:37.9300614Z   Downloaded heck v0.5.0
+2026-10-06T04:19:38.0019682Z   Downloaded serialize-to-javascript v0.1.2
+2026-10-06T04:19:38.0496683Z   Downloaded serialize-to-javascript-impl v0.1.2
+2026-10-06T04:19:38.0637130Z   Downloaded walkdir v2.5.0
+2026-10-06T04:19:38.0799012Z   Downloaded equivalent v1.0.2
+2026-10-06T04:19:38.0877809Z   Downloaded windows-future v0.3.2
+2026-10-06T04:19:38.2625585Z   Downloaded toml_datetime v0.7.5+spec-1.1.0
+2026-10-06T04:19:38.2710735Z   Downloaded writeable v0.6.4
+2026-10-06T04:19:38.2873742Z   Downloaded zeroize v1.9.0
+2026-10-06T04:19:38.3012635Z   Downloaded zerovec-derive v0.11.6
+2026-10-06T04:19:38.3218046Z   Downloaded zmij v1.0.23
+2026-10-06T04:19:38.3364632Z   Downloaded toml_writer v1.1.2+spec-1.1.0
+2026-10-06T04:19:38.3446338Z   Downloaded web_atoms v0.2.6
+2026-10-06T04:19:38.3565449Z   Downloaded byteorder-lite v0.1.0
+2026-10-06T04:19:38.3676109Z   Downloaded tauri-plugin-process v2.4.0
+2026-10-06T04:19:38.3820168Z   Downloaded untrusted v0.9.0
+2026-10-06T04:19:39.6030608Z   Downloaded tauri-runtime v2.12.1
+2026-10-06T04:19:39.6235120Z   Downloaded tempfile v3.27.0
+2026-10-06T04:19:39.6513075Z   Downloaded thiserror v2.0.21
+2026-10-06T04:19:39.7309023Z   Downloaded time-macros v0.2.32
+2026-10-06T04:19:39.7520643Z   Downloaded toml v1.1.6+spec-1.1.0
+2026-10-06T04:19:39.7946003Z   Downloaded urlpattern v0.6.0
+2026-10-06T04:19:39.8095925Z   Downloaded windows-core v0.62.2
+2026-10-06T04:19:39.9521727Z   Downloaded tendril v0.5.1
+2026-10-06T04:19:40.0595406Z   Downloaded tinyvec v1.13.3
+2026-10-06T04:19:40.0811801Z   Downloaded toml v0.9.12+spec-1.1.0
+2026-10-06T04:19:40.1170419Z   Downloaded tracing-core v0.1.36
+2026-10-06T04:19:40.1409175Z   Downloaded unsafe-libyaml v0.2.11
+2026-10-06T04:19:40.1620515Z   Downloaded web-time v1.1.0
+2026-10-06T04:19:40.1745359Z   Downloaded yoke v0.8.3
+2026-10-06T04:19:40.1951851Z   Downloaded cipher v0.4.4
+2026-10-06T04:19:40.2054805Z   Downloaded ident_case v1.0.1
+2026-10-06T04:19:40.2230007Z   Downloaded password-hash v0.5.0
+2026-10-06T04:19:40.2402099Z   Downloaded tauri-plugin-dialog v2.8.1
+2026-10-06T04:19:40.2751787Z   Downloaded tauri-runtime-wry v2.12.1
+2026-10-06T04:19:40.2951782Z   Downloaded tray-icon v0.25.1
+2026-10-06T04:19:40.3194085Z   Downloaded uuid v1.27.0
+2026-10-06T04:19:40.3498063Z   Downloaded cookie v0.18.2
+2026-10-06T04:19:40.3659441Z   Downloaded potential_utf v0.1.6
+2026-10-06T04:19:40.3729213Z   Downloaded tauri-plugin-updater v2.13.1
+2026-10-06T04:19:40.3882866Z   Downloaded bitflags v2.13.2
+2026-10-06T04:19:40.4323397Z   Downloaded rand_core v0.10.1
+2026-10-06T04:19:40.4444279Z   Downloaded ref-cast-impl v1.0.27
+2026-10-06T04:19:40.4500787Z   Downloaded tauri-plugin-fs v2.6.0
+2026-10-06T04:19:40.5107981Z   Downloaded typenum v1.20.1
+2026-10-06T04:19:40.5265592Z   Downloaded url v2.5.8
+2026-10-06T04:19:40.5454956Z   Downloaded zerotrie v0.2.5
+2026-10-06T04:19:40.5734812Z   Downloaded dirs v6.0.0
+2026-10-06T04:19:40.5827703Z   Downloaded tower v0.5.3
+2026-10-06T04:19:40.6612595Z   Downloaded unicode-segmentation v1.13.3
+2026-10-06T04:19:40.6736424Z   Downloaded zip v4.6.1
+2026-10-06T04:19:40.6998749Z   Downloaded futures-macro v0.3.34
+2026-10-06T04:19:40.7140576Z   Downloaded quote v1.0.47
+2026-10-06T04:19:40.7392901Z   Downloaded schannel v0.1.29
+2026-10-06T04:19:40.7528533Z   Downloaded zerovec v0.11.8
+2026-10-06T04:19:40.7916615Z   Downloaded proc-macro2 v1.0.107
+2026-10-06T04:19:40.8118025Z   Downloaded sync_wrapper v1.0.2
+2026-10-06T04:19:40.8167316Z   Downloaded http-body v1.1.0
+2026-10-06T04:19:40.8231152Z   Downloaded tauri-utils v2.10.1
+2026-10-06T04:19:40.8429398Z   Downloaded tower-http v0.6.11
+2026-10-06T04:19:40.9115201Z   Downloaded cssparser-macros v0.7.1
+2026-10-06T04:19:40.9163940Z   Downloaded phf_codegen v0.13.1
+2026-10-06T04:19:40.9219845Z   Downloaded schemars v0.9.0
+2026-10-06T04:19:41.0320732Z   Downloaded scopeguard v1.2.0
+2026-10-06T04:19:41.0391995Z   Downloaded ghash v0.5.1
+2026-10-06T04:19:41.0459729Z   Downloaded jiff-tzdb-platform v0.1.3
+2026-10-06T04:19:41.0511898Z   Downloaded aes v0.8.4
+2026-10-06T04:19:41.0710895Z   Downloaded serde-untagged v0.1.9
+2026-10-06T04:19:41.0805713Z   Downloaded ref-cast v1.0.27
+2026-10-06T04:19:41.1016607Z   Downloaded atomic-waker v1.1.2
+2026-10-06T04:19:41.1113571Z   Downloaded selectors v0.38.0
+2026-10-06T04:19:41.1244171Z   Downloaded tar v0.4.46
+2026-10-06T04:19:41.1396130Z   Downloaded alloc-no-stdlib v3.0.0
+2026-10-06T04:19:41.1508538Z   Downloaded cargo-platform v0.1.9
+2026-10-06T04:19:41.1579167Z   Downloaded percent-encoding v2.3.2
+2026-10-06T04:19:41.1631845Z   Downloaded precomputed-hash v0.1.1
+2026-10-06T04:19:41.1671601Z   Downloaded stable_deref_trait v1.2.1
+2026-10-06T04:19:41.1732135Z   Downloaded string_cache v0.9.0
+2026-10-06T04:19:41.1960000Z   Downloaded synstructure v0.14.0
+2026-10-06T04:19:41.2018321Z   Downloaded tauri-build v2.7.1
+2026-10-06T04:19:41.2117306Z   Downloaded tokio-util v0.7.19
+2026-10-06T04:19:41.2670311Z   Downloaded aes-gcm v0.10.3
+2026-10-06T04:19:41.2808382Z   Downloaded argon2 v0.5.3
+2026-10-06T04:19:41.2907590Z   Downloaded autocfg v1.5.1
+2026-10-06T04:19:41.3016948Z   Downloaded block-buffer v0.10.4
+2026-10-06T04:19:41.3078826Z   Downloaded crypto-common v0.1.7
+2026-10-06T04:19:41.3151664Z   Downloaded raw-window-handle v0.6.2
+2026-10-06T04:19:41.3270229Z   Downloaded string_cache_codegen v0.6.1
+2026-10-06T04:19:41.3314498Z   Downloaded bit-set v0.8.0
+2026-10-06T04:19:41.3388544Z   Downloaded bitflags v1.3.2
+2026-10-06T04:19:42.1225319Z   Downloaded powerfmt v0.2.1
+2026-10-06T04:19:42.1331448Z   Downloaded ppv-lite86 v0.2.21
+2026-10-06T04:19:42.1416923Z   Downloaded simd-adler32 v0.3.10
+2026-10-06T04:19:42.1552148Z   Downloaded cpufeatures v0.2.17
+2026-10-06T04:19:42.1637262Z   Downloaded option-ext v0.2.0
+2026-10-06T04:19:42.1690162Z   Downloaded quinn-udp v0.5.16
+2026-10-06T04:19:42.1783417Z   Downloaded rand_chacha v0.9.0
+2026-10-06T04:19:42.1854613Z   Downloaded async-trait v0.1.92
+2026-10-06T04:19:42.2122922Z   Downloaded bit-vec v0.8.0
+2026-10-06T04:19:42.2206761Z   Downloaded opaque-debug v0.3.1
+2026-10-06T04:19:42.2265308Z   Downloaded parking_lot_core v0.9.12
+2026-10-06T04:19:42.2427537Z   Downloaded tauri-plugin v2.7.1
+2026-10-06T04:19:42.2490555Z   Downloaded camino v1.2.6
+2026-10-06T04:19:42.2574466Z   Downloaded winnow v0.7.15
+2026-10-06T04:19:42.3154466Z   Downloaded aho-corasick v1.1.5
+2026-10-06T04:19:42.3428546Z   Downloaded schemars v0.8.22
+2026-10-06T04:19:42.4426395Z   Downloaded slab v0.4.12
+2026-10-06T04:19:42.4501920Z   Downloaded serde_core v1.0.229
+2026-10-06T04:19:42.4677399Z   Downloaded serde_derive v1.0.229
+2026-10-06T04:19:42.4872425Z   Downloaded shlex v2.0.1
+2026-10-06T04:19:42.4946016Z   Downloaded blake2 v0.10.6
+2026-10-06T04:19:42.5978228Z   Downloaded cssparser v0.37.0
+2026-10-06T04:19:42.6112423Z   Downloaded phf_shared v0.13.1
+2026-10-06T04:19:42.6166513Z   Downloaded tauri-macros v2.7.1
+2026-10-06T04:19:42.6248627Z   Downloaded bs58 v0.5.1
+2026-10-06T04:19:42.6373743Z   Downloaded cfg-if v1.0.5
+2026-10-06T04:19:42.6451482Z   Downloaded servo_arc v0.4.3
+2026-10-06T04:19:42.6501408Z   Downloaded once_cell v1.21.4
+2026-10-06T04:19:42.6689970Z   Downloaded phf v0.13.1
+2026-10-06T04:19:42.6767503Z   Downloaded softbuffer v0.4.8
+2026-10-06T04:19:43.1690048Z   Downloaded base64 v0.22.1
+2026-10-06T04:19:43.1904191Z   Downloaded crossbeam-utils v0.8.23
+2026-10-06T04:19:43.2132544Z   Downloaded phf_macros v0.13.1
+2026-10-06T04:19:43.2192124Z   Downloaded rand_core v0.9.5
+2026-10-06T04:19:43.2274307Z   Downloaded schemars v1.2.2
+2026-10-06T04:19:43.3636077Z   Downloaded serde_with_macros v3.24.0
+2026-10-06T04:19:43.3756247Z   Downloaded wry v0.57.0
+2026-10-06T04:19:43.5001848Z   Downloaded zlib-rs v0.6.8
+2026-10-06T04:19:43.5311538Z   Downloaded base64 v0.23.1
+2026-10-06T04:19:43.5541910Z   Downloaded cfg_aliases v0.2.2
+2026-10-06T04:19:43.5602517Z   Downloaded cpufeatures v0.3.1
+2026-10-06T04:19:43.5685086Z   Downloaded defmt-macros v1.1.1
+2026-10-06T04:19:43.6001324Z   Downloaded rand_pcg v0.10.2
+2026-10-06T04:19:43.6112600Z   Downloaded rustls-native-certs v0.8.4
+2026-10-06T04:19:43.6207215Z   Downloaded rustls-platform-verifier v0.7.1
+2026-10-06T04:19:43.6467548Z   Downloaded time v0.3.55
+2026-10-06T04:19:43.8207034Z   Downloaded byteorder v1.5.0
+2026-10-06T04:19:43.8296979Z   Downloaded bytes v1.12.1
+2026-10-06T04:19:43.8509009Z   Downloaded cfb v0.14.0
+2026-10-06T04:19:43.8779542Z   Downloaded crc32fast v1.5.2
+2026-10-06T04:19:43.8888700Z   Downloaded dpi v0.1.2
+2026-10-06T04:19:44.0239166Z   Downloaded foldhash v0.2.0
+2026-10-06T04:19:44.0310473Z   Downloaded parking_lot v0.12.5
+2026-10-06T04:19:44.0459896Z   Downloaded quinn v0.11.12
+2026-10-06T04:19:44.0680402Z   Downloaded rand v0.10.3
+2026-10-06T04:19:44.0898222Z   Downloaded ryu v1.0.23
+2026-10-06T04:19:44.7021692Z   Downloaded serde_repr v0.1.21
+2026-10-06T04:19:44.7182956Z   Downloaded serde_yaml v0.9.34+deprecated
+2026-10-06T04:19:44.7498870Z   Downloaded winnow v1.0.4
+2026-10-06T04:19:44.8228099Z   Downloaded cc v1.6.0
+2026-10-06T04:19:44.8415553Z   Downloaded crossbeam-channel v0.5.17
+2026-10-06T04:19:44.9053116Z   Downloaded deranged v0.5.8
+2026-10-06T04:19:44.9126998Z   Downloaded fdeflate v0.3.7
+2026-10-06T04:19:44.9267320Z   Downloaded lru-slab v0.1.3
+2026-10-06T04:19:44.9320269Z   Downloaded png v0.17.16
+2026-10-06T04:19:44.9531543Z   Downloaded rand v0.9.5
+2026-10-06T04:19:44.9754420Z   Downloaded rand_core v0.6.4
+2026-10-06T04:19:44.9835564Z   Downloaded rustls-webpki v0.103.15
+2026-10-06T04:19:45.0103743Z   Downloaded chrono v0.4.45
+2026-10-06T04:19:45.0428565Z   Downloaded png v0.18.1
+2026-10-06T04:19:45.0693474Z   Downloaded rfd v0.16.0
+2026-10-06T04:19:45.1050406Z   Downloaded rustc-hash v2.1.3
+2026-10-06T04:19:45.1137236Z   Downloaded zerocopy v0.8.60
+2026-10-06T04:19:45.2767382Z   Downloaded bytemuck v1.25.2
+2026-10-06T04:19:45.2980930Z   Downloaded defmt v1.1.1
+2026-10-06T04:19:45.3364640Z   Downloaded futures-channel v0.3.34
+2026-10-06T04:19:45.3481071Z   Downloaded json-patch v4.2.0
+2026-10-06T04:19:45.3539329Z   Downloaded quick-xml v0.42.0
+2026-10-06T04:19:45.3815074Z   Downloaded serde_urlencoded v0.7.1
+2026-10-06T04:19:45.3913242Z   Downloaded strsim v0.11.1
+2026-10-06T04:19:45.4004546Z   Downloaded subtle v2.6.1
+2026-10-06T04:19:45.4094196Z   Downloaded serde_json v1.0.151
+2026-10-06T04:19:45.4648982Z   Downloaded regex v1.13.1
+2026-10-06T04:19:45.5426736Z   Downloaded serde_with v3.24.0
+2026-10-06T04:19:46.6667931Z   Downloaded alloc-stdlib v0.3.0
+2026-10-06T04:19:46.6754053Z   Downloaded quinn-proto v0.11.19
+2026-10-06T04:19:46.7107290Z   Downloaded syn v2.0.119
+2026-10-06T04:19:46.9011434Z   Downloaded syn v3.0.6
+2026-10-06T04:19:47.0065295Z   Downloaded tao v0.37.1
+2026-10-06T04:19:47.3673745Z   Downloaded tauri v2.12.1
+2026-10-06T04:19:47.5930185Z   Downloaded phf_generator v0.13.1
+2026-10-06T04:19:47.6003821Z   Downloaded tracing v0.1.44
+2026-10-06T04:19:47.7094618Z   Downloaded rustls v0.23.45
+2026-10-06T04:19:48.0122297Z   Downloaded same-file v1.0.6
+2026-10-06T04:19:48.0347497Z   Downloaded siphasher v1.0.4
+2026-10-06T04:19:48.0479274Z   Downloaded regex-syntax v0.8.11
+2026-10-06T04:19:48.1391224Z   Downloaded rustc_version v0.4.1
+2026-10-06T04:19:48.1626396Z   Downloaded dirs v7.0.0
+2026-10-06T04:19:48.1832251Z   Downloaded displaydoc v0.2.7
+2026-10-06T04:19:48.2012955Z   Downloaded hyper-rustls v0.27.10
+2026-10-06T04:19:48.2332808Z   Downloaded markup5ever v0.39.0
+2026-10-06T04:19:48.2577798Z   Downloaded minisign-verify v0.2.5
+2026-10-06T04:19:48.2692751Z   Downloaded ipnet v2.12.2
+2026-10-06T04:19:48.2815212Z   Downloaded http-body-util v0.1.5
+2026-10-06T04:19:48.3197984Z   Downloaded windows_x86_64_msvc v0.52.6
+2026-10-06T04:19:48.3377083Z   Downloaded windows_x86_64_msvc v0.53.1
+2026-10-06T04:19:48.3606462Z   Downloaded filetime v0.2.29
+2026-10-06T04:19:48.3833820Z   Downloaded pxfm v0.1.30
+2026-10-06T04:19:49.5580584Z   Downloaded regex-automata v0.4.18
+2026-10-06T04:19:49.6651808Z   Downloaded tokio v1.53.2
+2026-10-06T04:19:50.7440537Z   Downloaded brotli v9.0.0
+2026-10-06T04:19:50.8339118Z   Downloaded erased-serde v0.4.10
+2026-10-06T04:19:50.8514897Z   Downloaded dtoa v1.0.11
+2026-10-06T04:19:50.8618043Z   Downloaded infer v0.22.0
+2026-10-06T04:19:50.8773008Z   Downloaded embed-resource v3.0.11
+2026-10-06T04:19:50.9383292Z   Downloaded digest v0.10.7
+2026-10-06T04:19:50.9508065Z   Downloaded find-msvc-tools v0.1.14
+2026-10-06T04:19:50.9614678Z   Downloaded window-vibrancy v0.8.1
+2026-10-06T04:19:52.1642739Z   Downloaded ring v0.17.14
+2026-10-06T04:19:52.5574822Z   Downloaded glob v0.3.4
+2026-10-06T04:19:52.5657961Z   Downloaded schemars_derive v0.8.22
+2026-10-06T04:19:52.5762598Z   Downloaded serde_derive_internals v0.29.1
+2026-10-06T04:19:52.5862698Z   Downloaded serde_spanned v1.1.1
+2026-10-06T04:19:52.5927132Z   Downloaded fastrand v2.5.0
+2026-10-06T04:19:52.6011450Z   Downloaded windows-sys v0.59.0
+2026-10-06T04:19:53.2690835Z   Downloaded windows-sys v0.61.2
+2026-10-06T04:19:53.5213594Z   Downloaded windows-sys v0.60.2
+2026-10-06T04:19:53.7921847Z   Downloaded cargo_metadata v0.19.2
+2026-10-06T04:19:53.8081631Z   Downloaded litemap v0.8.3
+2026-10-06T04:19:53.8240315Z   Downloaded lock_api v0.4.14
+2026-10-06T04:19:53.8304853Z   Downloaded ctor v1.0.13
+2026-10-06T04:19:53.8469179Z   Downloaded getrandom v0.2.17
+2026-10-06T04:19:55.3432334Z   Downloaded webview2-com-sys v0.39.1
+2026-10-06T04:19:55.4254073Z   Downloaded httparse v1.10.1
+2026-10-06T04:19:55.9456279Z   Downloaded darling v0.24.1
+2026-10-06T04:19:56.0866231Z   Downloaded getrandom v0.4.3
+2026-10-06T04:19:56.1181188Z   Downloaded pin-project-lite v0.2.17
+2026-10-06T04:19:56.3956271Z   Downloaded polyval v0.6.2
+2026-10-06T04:19:56.4063898Z   Downloaded smallvec v1.16.2
+2026-10-06T04:19:56.4132475Z   Downloaded tauri-codegen v2.7.1
+2026-10-06T04:19:56.4208747Z   Downloaded base64ct v1.8.3
+2026-10-06T04:19:56.4378432Z   Downloaded anyhow v1.0.104
+2026-10-06T04:19:56.4684654Z   Downloaded chacha20 v0.10.2
+2026-10-06T04:19:56.4823800Z   Downloaded cargo_toml v1.0.1
+2026-10-06T04:19:56.4901899Z   Downloaded windows v0.62.2
+2026-10-06T04:19:58.4472236Z   Downloaded indexmap v1.9.3
+2026-10-06T04:19:58.9077399Z   Downloaded jiff-tzdb v0.1.8
+2026-10-06T04:19:58.9154901Z   Downloaded icu_provider v2.3.1
+2026-10-06T04:19:58.9337723Z   Downloaded semver v1.0.28
+2026-10-06T04:19:58.9492590Z   Downloaded sha2 v0.10.9
+2026-10-06T04:19:58.9694225Z   Downloaded socket2 v0.6.5
+2026-10-06T04:19:58.9775159Z   Downloaded getrandom v0.3.4
+2026-10-06T04:19:59.0272847Z   Downloaded html5ever v0.39.0
+2026-10-06T04:19:59.0577707Z   Downloaded jsonptr v0.7.1
+2026-10-06T04:19:59.0758328Z   Downloaded log v0.4.34
+2026-10-06T04:19:59.0927965Z   Downloaded rustls-pki-types v1.15.1
+2026-10-06T04:19:59.1117092Z   Downloaded miniz_oxide v0.8.9
+2026-10-06T04:19:59.1443197Z   Downloaded flate2 v1.1.10
+2026-10-06T04:19:59.1807971Z   Downloaded keyring v3.6.3
+2026-10-06T04:19:59.1952742Z   Downloaded miniz_oxide v0.9.1
+2026-10-06T04:19:59.2079712Z   Downloaded ico v0.5.0
+2026-10-06T04:19:59.2270854Z   Downloaded icu_normalizer_data v2.3.0
+2026-10-06T04:19:59.2402116Z   Downloaded num-traits v0.2.19
+2026-10-06T04:19:59.2567856Z   Downloaded darling_core v0.24.1
+2026-10-06T04:19:59.3010130Z   Downloaded icu_collections v2.3.0
+2026-10-06T04:19:59.3431751Z   Downloaded plist v1.10.1
+2026-10-06T04:19:59.3737595Z   Downloaded dom_query v0.28.0
+2026-10-06T04:19:59.4090950Z   Downloaded icu_locale_core v2.3.0
+2026-10-06T04:19:59.4581400Z   Downloaded serde v1.0.229
+2026-10-06T04:19:59.4792347Z   Downloaded indexmap v2.14.2
+2026-10-06T04:19:59.5078148Z   Downloaded http v1.5.0
+2026-10-06T04:19:59.5297049Z   Downloaded keyboard-types v0.8.3
+2026-10-06T04:19:59.5519912Z   Downloaded memchr v2.8.3
+2026-10-06T04:19:59.5828657Z   Downloaded derive_more v2.1.1
+2026-10-06T04:19:59.7059495Z   Downloaded jiff-core v0.1.1
+2026-10-06T04:19:59.7239827Z   Downloaded icu_properties v2.3.0
+2026-10-06T04:19:59.7381514Z   Downloaded hashbrown v0.12.3
+2026-10-06T04:19:59.7590901Z   Downloaded mio v1.2.4
+2026-10-06T04:19:59.7954796Z   Downloaded hyper-util v0.1.21
+2026-10-06T04:19:59.8272939Z   Downloaded idna v1.1.0
+2026-10-06T04:20:00.3138625Z   Downloaded muda v0.20.0
+2026-10-06T04:20:00.3599439Z   Downloaded hyper v1.11.1
+2026-10-06T04:20:00.4001659Z   Downloaded hashbrown v0.17.1
+2026-10-06T04:20:00.4285464Z   Downloaded reqwest v0.12.28
+2026-10-06T04:20:00.4566426Z   Downloaded futures-util v0.3.34
+2026-10-06T04:20:00.5732423Z   Downloaded reqwest v0.13.5
+2026-10-06T04:20:00.6185305Z   Downloaded icu_properties_data v2.3.0
+2026-10-06T04:20:00.7117873Z   Downloaded moxcms v0.8.1
+2026-10-06T04:20:00.7947213Z   Downloaded brotli-decompressor v6.0.1
+2026-10-06T04:20:00.8219694Z   Downloaded image v0.25.10
+2026-10-06T04:20:01.0332109Z   Downloaded icu_normalizer v2.3.0
+2026-10-06T04:20:01.0624931Z   Downloaded jiff v0.2.37
+2026-10-06T04:20:01.6302141Z   Downloaded libc v0.2.190
+2026-10-06T04:20:02.2381479Z    Compiling proc-macro2 v1.0.107
+2026-10-06T04:20:02.2382134Z    Compiling unicode-ident v1.0.26
+2026-10-06T04:20:02.2382583Z    Compiling quote v1.0.47
+2026-10-06T04:20:02.2385114Z     Checking cfg-if v1.0.5
+2026-10-06T04:20:02.2821674Z     Checking windows-link v0.2.1
+2026-10-06T04:20:02.3196103Z    Compiling serde_core v1.0.229
+2026-10-06T04:20:05.6386382Z    Compiling siphasher v1.0.4
+2026-10-06T04:20:05.8749629Z    Compiling icu_properties_data v2.3.0
+2026-10-06T04:20:06.1156944Z    Compiling icu_normalizer_data v2.3.0
+2026-10-06T04:20:06.7214978Z    Compiling syn v3.0.6
+2026-10-06T04:20:06.8488228Z    Compiling syn v2.0.119
+2026-10-06T04:20:08.1526680Z    Compiling phf_shared v0.13.1
+2026-10-06T04:20:08.3694223Z    Compiling fastrand v2.5.0
+2026-10-06T04:20:08.3949199Z    Compiling stable_deref_trait v1.2.1
+2026-10-06T04:20:08.4536624Z    Compiling zmij v1.0.23
+2026-10-06T04:20:08.5065480Z    Compiling phf_generator v0.13.1
+2026-10-06T04:20:08.6927059Z    Compiling thiserror v2.0.21
+2026-10-06T04:20:08.7568633Z    Compiling smallvec v1.16.2
+2026-10-06T04:20:08.9523948Z    Compiling version_check v0.9.5
+2026-10-06T04:20:09.1191050Z    Compiling getrandom v0.4.3
+2026-10-06T04:20:09.3089597Z     Checking windows-sys v0.61.2
+2026-10-06T04:20:09.3521961Z    Compiling serde v1.0.229
+2026-10-06T04:20:09.6652094Z    Compiling parking_lot_core v0.9.12
+2026-10-06T04:20:09.9290704Z    Compiling memchr v2.8.3
+2026-10-06T04:20:10.6368309Z    Compiling time-core v0.1.9
+2026-10-06T04:20:10.8654857Z    Compiling synstructure v0.14.0
+2026-10-06T04:20:11.5169409Z    Compiling num-conv v0.2.2
+2026-10-06T04:20:11.6524201Z    Compiling shlex v2.0.1
+2026-10-06T04:20:11.8413938Z    Compiling find-msvc-tools v0.1.14
+2026-10-06T04:20:12.7417831Z    Compiling phf_macros v0.13.1
+2026-10-06T04:20:12.7735190Z    Compiling typeid v1.0.3
+2026-10-06T04:20:13.0605052Z    Compiling autocfg v1.5.1
+2026-10-06T04:20:13.1723265Z    Compiling zerofrom-derive v0.1.8
+2026-10-06T04:20:13.4846693Z    Compiling yoke-derive v0.8.4
+2026-10-06T04:20:13.9154359Z    Compiling serde_derive v1.0.229
+2026-10-06T04:20:14.7329787Z    Compiling zerovec-derive v0.11.6
+2026-10-06T04:20:14.7506262Z    Compiling displaydoc v0.2.7
+2026-10-06T04:20:15.5255924Z    Compiling zerofrom v0.1.8
+2026-10-06T04:20:15.6532481Z    Compiling thiserror-impl v2.0.21
+2026-10-06T04:20:16.0015754Z    Compiling yoke v0.8.3
+2026-10-06T04:20:16.2165157Z    Compiling zerovec v0.11.8
+2026-10-06T04:20:16.8498651Z    Compiling tinystr v0.8.4
+2026-10-06T04:20:17.0797100Z    Compiling cc v1.6.0
+2026-10-06T04:20:17.2020837Z    Compiling phf_codegen v0.13.1
+2026-10-06T04:20:17.3111437Z    Compiling writeable v0.6.4
+2026-10-06T04:20:17.5489770Z    Compiling itoa v1.0.18
+2026-10-06T04:20:17.7001747Z    Compiling ident_case v1.0.1
+2026-10-06T04:20:17.7796683Z    Compiling strsim v0.11.1
+2026-10-06T04:20:18.0897945Z    Compiling litemap v0.8.3
+2026-10-06T04:20:18.2132776Z    Compiling darling_core v0.24.1
+2026-10-06T04:20:18.2666406Z    Compiling icu_locale_core v2.3.0
+2026-10-06T04:20:18.5674017Z    Compiling potential_utf v0.1.6
+2026-10-06T04:20:18.6883145Z    Compiling zerotrie v0.2.5
+2026-10-06T04:20:18.9563993Z    Compiling utf8_iter v1.0.4
+2026-10-06T04:20:19.0158520Z    Compiling erased-serde v0.4.10
+2026-10-06T04:20:19.0676936Z    Compiling icu_collections v2.3.0
+2026-10-06T04:20:19.4098864Z    Compiling icu_provider v2.3.1
+2026-10-06T04:20:19.5507334Z    Compiling generic-array v0.14.7
+2026-10-06T04:20:19.6705191Z    Compiling new_debug_unreachable v1.0.6
+2026-10-06T04:20:19.7132539Z    Compiling scopeguard v1.2.0
+2026-10-06T04:20:19.7356955Z    Compiling phf v0.13.1
+2026-10-06T04:20:19.7746044Z    Compiling lock_api v0.4.14
+2026-10-06T04:20:19.8988970Z    Compiling string_cache_codegen v0.6.1
+2026-10-06T04:20:20.1498060Z    Compiling serde_json v1.0.151
+2026-10-06T04:20:20.1883394Z    Compiling precomputed-hash v0.1.1
+2026-10-06T04:20:20.2444157Z    Compiling anyhow v1.0.104
+2026-10-06T04:20:20.3664461Z    Compiling web_atoms v0.2.6
+2026-10-06T04:20:20.7125079Z    Compiling icu_properties v2.3.0
+2026-10-06T04:20:20.7696895Z    Compiling icu_normalizer v2.3.0
+2026-10-06T04:20:20.9115785Z    Compiling parking_lot v0.12.5
+2026-10-06T04:20:21.7016278Z    Compiling semver v1.0.28
+2026-10-06T04:20:21.9780934Z    Compiling darling_macro v0.24.1
+2026-10-06T04:20:22.0118534Z    Compiling libc v0.2.190
+2026-10-06T04:20:22.2597705Z    Compiling winnow v1.0.4
+2026-10-06T04:20:22.4613214Z    Compiling darling v0.24.1
+2026-10-06T04:20:22.4961733Z    Compiling idna_adapter v1.2.2
+2026-10-06T04:20:22.5192760Z    Compiling serde_with_macros v3.24.0
+2026-10-06T04:20:22.5989847Z    Compiling toml_parser v1.1.3+spec-1.1.0
+2026-10-06T04:20:23.3463969Z    Compiling string_cache v0.9.0
+2026-10-06T04:20:24.0011086Z    Compiling toml_datetime v1.1.1+spec-1.1.0
+2026-10-06T04:20:24.0214781Z    Compiling serde_spanned v1.1.1
+2026-10-06T04:20:24.0971219Z    Compiling toml_writer v1.1.2+spec-1.1.0
+2026-10-06T04:20:24.1347206Z    Compiling log v0.4.34
+2026-10-06T04:20:24.2416660Z    Compiling dtoa v1.0.11
+2026-10-06T04:20:24.2760736Z    Compiling percent-encoding v2.3.2
+2026-10-06T04:20:24.3025086Z    Compiling toml v1.1.6+spec-1.1.0
+2026-10-06T04:20:24.3683797Z    Compiling dtoa-short v0.3.5
+2026-10-06T04:20:24.4579600Z    Compiling form_urlencoded v1.2.2
+2026-10-06T04:20:24.4851011Z    Compiling uuid v1.27.0
+2026-10-06T04:20:24.5906713Z    Compiling idna v1.1.0
+2026-10-06T04:20:24.9622837Z    Compiling tendril v0.5.1
+2026-10-06T04:20:25.2713456Z    Compiling selectors v0.38.0
+2026-10-06T04:20:25.3269692Z    Compiling indexmap v1.9.3
+2026-10-06T04:20:25.4679184Z    Compiling cssparser-macros v0.7.1
+2026-10-06T04:20:25.5786296Z    Compiling derive_more-impl v2.1.1
+2026-10-06T04:20:25.6411960Z    Compiling aho-corasick v1.1.5
+2026-10-06T04:20:25.8884427Z    Compiling regex-syntax v0.8.11
+2026-10-06T04:20:25.9687449Z    Compiling camino v1.2.6
+2026-10-06T04:20:26.3666156Z    Compiling alloc-no-stdlib v3.0.0
+2026-10-06T04:20:26.4481243Z    Compiling bitflags v2.13.2
+2026-10-06T04:20:26.6419694Z    Compiling alloc-stdlib v0.3.0
+2026-10-06T04:20:26.7451864Z    Compiling cssparser v0.37.0
+2026-10-06T04:20:26.7671105Z    Compiling derive_more v2.1.1
+2026-10-06T04:20:26.9843470Z    Compiling markup5ever v0.39.0
+2026-10-06T04:20:27.2234872Z    Compiling url v2.5.8
+2026-10-06T04:20:27.6744676Z    Compiling winapi-util v0.1.11
+2026-10-06T04:20:27.7792835Z    Compiling serde_derive_internals v0.29.1
+2026-10-06T04:20:27.8650592Z    Compiling servo_arc v0.4.3
+2026-10-06T04:20:27.9979282Z    Compiling regex-automata v0.4.18
+2026-10-06T04:20:28.1106655Z     Checking getrandom v0.2.17
+2026-10-06T04:20:28.1965534Z    Compiling web-time v1.1.0
+2026-10-06T04:20:28.2615857Z    Compiling rustc-hash v2.1.3
+2026-10-06T04:20:28.3597945Z    Compiling schemars v0.8.22
+2026-10-06T04:20:28.5502117Z    Compiling powerfmt v0.2.1
+2026-10-06T04:20:28.8156228Z    Compiling bit-vec v0.8.0
+2026-10-06T04:20:28.8219222Z    Compiling deranged v0.5.8
+2026-10-06T04:20:29.0298429Z    Compiling equivalent v1.0.2
+2026-10-06T04:20:29.0799924Z    Compiling fnv v1.0.7
+2026-10-06T04:20:29.1004440Z    Compiling hashbrown v0.17.1
+2026-10-06T04:20:29.1413644Z    Compiling hashbrown v0.12.3
+2026-10-06T04:20:29.6715937Z    Compiling indexmap v2.14.2
+2026-10-06T04:20:30.0582677Z    Compiling time v0.3.55
+2026-10-06T04:20:30.1516865Z    Compiling cfb v0.14.0
+2026-10-06T04:20:30.3776812Z    Compiling regex v1.13.1
+2026-10-06T04:20:30.8973177Z    Compiling bit-set v0.8.0
+2026-10-06T04:20:30.9159952Z    Compiling schemars_derive v0.8.22
+2026-10-06T04:20:31.8783901Z    Compiling same-file v1.0.6
+2026-10-06T04:20:32.2109536Z    Compiling html5ever v0.39.0
+2026-10-06T04:20:32.5770262Z    Compiling brotli-decompressor v6.0.1
+2026-10-06T04:20:32.6736193Z    Compiling jsonptr v0.7.1
+2026-10-06T04:20:33.1371359Z    Compiling cargo-platform v0.1.9
+2026-10-06T04:20:33.1828066Z    Compiling quick-xml v0.42.0
+2026-10-06T04:20:33.2803855Z    Compiling foldhash v0.2.0
+2026-10-06T04:20:33.3581604Z    Compiling dyn-clone v1.0.20
+2026-10-06T04:20:33.4364380Z    Compiling dunce v1.0.5
+2026-10-06T04:20:33.4515189Z    Compiling bytes v1.12.1
+2026-10-06T04:20:33.5709559Z    Compiling base64 v0.23.1
+2026-10-06T04:20:33.9970004Z    Compiling http v1.5.0
+2026-10-06T04:20:34.0098746Z    Compiling plist v1.10.1
+2026-10-06T04:20:34.1515553Z    Compiling brotli v9.0.0
+2026-10-06T04:20:34.9836930Z    Compiling dom_query v0.28.0
+2026-10-06T04:20:35.0573215Z    Compiling cargo_metadata v0.19.2
+2026-10-06T04:20:35.9897344Z    Compiling json-patch v4.2.0
+2026-10-06T04:20:36.4249565Z    Compiling serde-untagged v0.1.9
+2026-10-06T04:20:36.6548603Z    Compiling walkdir v2.5.0
+2026-10-06T04:20:36.6658937Z    Compiling infer v0.22.0
+2026-10-06T04:20:36.7954309Z    Compiling urlpattern v0.6.0
+2026-10-06T04:20:36.9780046Z    Compiling serde_with v3.24.0
+2026-10-06T04:20:37.8899332Z    Compiling glob v0.3.4
+2026-10-06T04:20:37.9993634Z    Compiling ctor v1.0.13
+2026-10-06T04:20:38.0803565Z     Checking windows-result v0.4.1
+2026-10-06T04:20:38.1402587Z     Checking windows-strings v0.5.1
+2026-10-06T04:20:38.2664503Z    Compiling windows_x86_64_msvc v0.52.6
+2026-10-06T04:20:38.4375173Z     Checking pin-project-lite v0.2.17
+2026-10-06T04:20:38.4682171Z     Checking once_cell v1.21.4
+2026-10-06T04:20:38.7615697Z    Compiling vswhom-sys v0.1.3
+2026-10-06T04:20:39.0154664Z    Compiling tauri-utils v2.10.1
+2026-10-06T04:20:39.0316167Z    Compiling crc32fast v1.5.2
+2026-10-06T04:20:39.3620109Z    Compiling windows-targets v0.52.6
+2026-10-06T04:20:39.5917401Z    Compiling windows-sys v0.59.0
+2026-10-06T04:20:41.6846394Z    Compiling rustc_version v0.4.1
+2026-10-06T04:20:41.9312229Z    Compiling windows-interface v0.59.3
+2026-10-06T04:20:42.6379436Z    Compiling windows-implement v0.60.2
+2026-10-06T04:20:42.8667572Z    Compiling winreg v0.55.0
+2026-10-06T04:20:43.2214719Z     Checking typenum v1.20.1
+2026-10-06T04:20:43.2758722Z    Compiling option-ext v0.2.0
+2026-10-06T04:20:43.3253873Z     Checking subtle v2.6.1
+2026-10-06T04:20:43.4139299Z    Compiling dirs-sys v0.5.0
+2026-10-06T04:20:43.4891727Z     Checking windows-core v0.62.2
+2026-10-06T04:20:43.8342984Z    Compiling vswhom v0.1.0
+2026-10-06T04:20:43.9238416Z    Compiling embed-resource v3.0.11
+2026-10-06T04:20:43.9417460Z     Checking socket2 v0.6.5
+2026-10-06T04:20:44.2065013Z     Checking mio v1.2.4
+2026-10-06T04:20:44.2073671Z    Compiling tokio-macros v2.7.2
+2026-10-06T04:20:44.5914295Z    Compiling heck v0.5.0
+2026-10-06T04:20:44.8041666Z    Compiling tauri-winres v0.3.6
+2026-10-06T04:20:44.8910255Z     Checking tokio v1.53.2
+2026-10-06T04:20:45.1236254Z    Compiling dirs v7.0.0
+2026-10-06T04:20:45.1328728Z     Checking rand_core v0.6.4
+2026-10-06T04:20:45.1938228Z    Compiling cargo_toml v1.0.1
+2026-10-06T04:20:45.5207106Z    Compiling simd-adler32 v0.3.10
+2026-10-06T04:20:46.6816520Z    Compiling tauri-build v2.7.1
+2026-10-06T04:20:48.1704988Z    Compiling tauri-plugin v2.7.1
+2026-10-06T04:20:48.6512556Z    Compiling time-macros v0.2.32
+2026-10-06T04:20:48.7457121Z     Checking windows-threading v0.2.1
+2026-10-06T04:20:49.0836032Z    Compiling adler2 v2.0.1
+2026-10-06T04:20:49.0874275Z     Checking zeroize v1.9.0
+2026-10-06T04:20:49.3316393Z     Checking futures-core v0.3.34
+2026-10-06T04:20:49.5405593Z     Checking windows-future v0.3.2
+2026-10-06T04:20:50.0601245Z     Checking crypto-common v0.1.7
+2026-10-06T04:20:50.1478867Z     Checking windows-collections v0.3.2
+2026-10-06T04:20:50.2053177Z     Checking windows-numerics v0.3.1
+2026-10-06T04:20:50.3363172Z     Checking tracing-core v0.1.36
+2026-10-06T04:20:50.7304536Z    Compiling crossbeam-utils v0.8.23
+2026-10-06T04:20:51.0811735Z     Checking raw-window-handle v0.6.2
+2026-10-06T04:20:51.9514502Z     Checking tracing v0.1.44
+2026-10-06T04:20:52.1117876Z     Checking windows v0.62.2
+2026-10-06T04:20:52.6211227Z    Compiling miniz_oxide v0.9.1
+2026-10-06T04:20:53.3172156Z     Checking dpi v0.1.2
+2026-10-06T04:20:53.7220902Z    Compiling ring v0.17.14
+2026-10-06T04:20:53.7896234Z    Compiling webview2-com-sys v0.39.1
+2026-10-06T04:20:57.1468441Z    Compiling tauri v2.12.1
+2026-10-06T04:20:57.4826124Z    Compiling flate2 v1.1.10
+2026-10-06T04:20:58.4748291Z    Compiling miniz_oxide v0.8.9
+2026-10-06T04:20:58.5922297Z    Compiling fdeflate v0.3.7
+2026-10-06T04:20:58.9232375Z    Compiling num-traits v0.2.19
+2026-10-06T04:20:59.0305342Z    Compiling cookie v0.18.2
+2026-10-06T04:20:59.2150197Z    Compiling getrandom v0.3.4
+2026-10-06T04:20:59.2953859Z     Checking zlib-rs v0.6.8
+2026-10-06T04:21:00.2042786Z     Checking crossbeam-channel v0.5.17
+2026-10-06T04:21:00.6578473Z    Compiling block-buffer v0.10.4
+2026-10-06T04:21:00.7214255Z     Checking rustls-pki-types v1.15.1
+2026-10-06T04:21:01.0360092Z    Compiling webview2-com-macros v0.8.1
+2026-10-06T04:21:01.5142797Z     Checking windows-version v0.1.7
+2026-10-06T04:21:01.6074106Z     Checking untrusted v0.9.0
+2026-10-06T04:21:01.6430769Z    Compiling bitflags v1.3.2
+2026-10-06T04:21:01.6909318Z    Compiling png v0.17.16
+2026-10-06T04:21:03.1483843Z    Compiling digest v0.10.7
+2026-10-06T04:21:04.6525225Z     Checking http-body v1.1.0
+2026-10-06T04:21:05.0861228Z    Compiling futures-macro v0.3.34
+2026-10-06T04:21:06.1492213Z     Checking slab v0.4.12
+2026-10-06T04:21:06.2732366Z    Compiling muda v0.20.0
+2026-10-06T04:21:06.3789300Z    Compiling httparse v1.10.1
+2026-10-06T04:21:06.4456632Z    Compiling tauri-runtime v2.12.1
+2026-10-06T04:21:06.6167754Z    Compiling cpufeatures v0.2.17
+2026-10-06T04:21:06.6360368Z     Checking futures-task v0.3.34
+2026-10-06T04:21:06.6817697Z    Compiling wry v0.57.0
+2026-10-06T04:21:06.6883760Z    Compiling byteorder v1.5.0
+2026-10-06T04:21:06.8941022Z    Compiling rustls v0.23.45
+2026-10-06T04:21:07.0317074Z    Compiling ico v0.5.0
+2026-10-06T04:21:07.2531564Z     Checking futures-util v0.3.34
+2026-10-06T04:21:07.6680474Z    Compiling sha2 v0.10.9
+2026-10-06T04:21:08.3544883Z     Checking rustls-webpki v0.103.15
+2026-10-06T04:21:08.7785173Z    Compiling png v0.18.1
+2026-10-06T04:21:09.0811936Z     Checking keyboard-types v0.8.3
+2026-10-06T04:21:09.9414886Z     Checking unicode-segmentation v1.13.3
+2026-10-06T04:21:10.1360460Z    Compiling base64 v0.22.1
+2026-10-06T04:21:10.3103926Z     Checking try-lock v0.2.5
+2026-10-06T04:21:10.3713962Z    Compiling tray-icon v0.25.1
+2026-10-06T04:21:10.4587540Z    Compiling tauri-runtime-wry v2.12.1
+2026-10-06T04:21:10.5603934Z     Checking pxfm v0.1.30
+2026-10-06T04:21:10.7583403Z    Compiling windows_x86_64_msvc v0.53.1
+2026-10-06T04:21:10.9454807Z     Checking tower-service v0.3.3
+2026-10-06T04:21:11.0420804Z     Checking want v0.3.2
+2026-10-06T04:21:11.1258013Z    Compiling tauri-codegen v2.7.1
+2026-10-06T04:21:12.9526357Z     Checking moxcms v0.8.1
+2026-10-06T04:21:14.1411116Z     Checking softbuffer v0.4.8
+2026-10-06T04:21:14.3330904Z     Checking futures-channel v0.3.34
+2026-10-06T04:21:14.5197479Z    Compiling serialize-to-javascript-impl v0.1.2
+2026-10-06T04:21:14.8907531Z     Checking byteorder-lite v0.1.0
+2026-10-06T04:21:15.1877004Z     Checking atomic-waker v1.1.2
+2026-10-06T04:21:15.2449389Z     Checking bytemuck v1.25.2
+2026-10-06T04:21:15.3028739Z     Checking hyper v1.11.1
+2026-10-06T04:21:15.4764415Z     Checking serialize-to-javascript v0.1.2
+2026-10-06T04:21:15.5578727Z    Compiling tauri-macros v2.7.1
+2026-10-06T04:21:16.1554628Z     Checking image v0.25.10
+2026-10-06T04:21:16.4499329Z     Checking window-vibrancy v0.8.1
+2026-10-06T04:21:16.5911658Z    Compiling tauri-plugin-fs v2.6.0
+2026-10-06T04:21:17.4217635Z     Checking sync_wrapper v1.0.2
+2026-10-06T04:21:17.4920740Z     Checking windows-registry v0.6.1
+2026-10-06T04:21:17.6885931Z     Checking schannel v0.1.29
+2026-10-06T04:21:17.7077227Z    Compiling serde_repr v0.1.21
+2026-10-06T04:21:17.7662959Z     Checking tower-layer v0.3.3
+2026-10-06T04:21:17.9023987Z     Checking mime v0.3.17
+2026-10-06T04:21:17.9880335Z     Checking ipnet v2.12.2
+2026-10-06T04:21:18.1481550Z    Compiling zerocopy v0.8.60
+2026-10-06T04:21:18.1585114Z     Checking rustls-native-certs v0.8.4
+2026-10-06T04:21:18.2302575Z     Checking hyper-util v0.1.21
+2026-10-06T04:21:18.2589080Z     Checking tower v0.5.3
+2026-10-06T04:21:18.6908765Z     Checking windows-targets v0.53.5
+2026-10-06T04:21:18.7294352Z     Checking tokio-rustls v0.26.6
+2026-10-06T04:21:18.7308712Z     Checking inout v0.1.4
+2026-10-06T04:21:18.9491258Z     Checking cipher v0.4.4
+2026-10-06T04:21:19.0875335Z     Checking windows-sys v0.60.2
+2026-10-06T04:21:19.1178612Z     Checking tower-http v0.6.11
+2026-10-06T04:21:19.2203948Z     Checking hyper-rustls v0.27.10
+2026-10-06T04:21:19.4379048Z     Checking http-body-util v0.1.5
+2026-10-06T04:21:19.6585235Z    Compiling tauri-plugin-updater v2.13.1
+2026-10-06T04:21:20.4725356Z    Compiling tauri-plugin-dialog v2.8.1
+2026-10-06T04:21:21.2697696Z    Compiling tauri-plugin-process v2.4.0
+2026-10-06T04:21:21.9321059Z     Checking universal-hash v0.5.1
+2026-10-06T04:21:22.0726589Z     Checking ryu v1.0.23
+2026-10-06T04:21:22.1545759Z    Compiling rfd v0.16.0
+2026-10-06T04:21:22.1828488Z     Checking opaque-debug v0.3.1
+2026-10-06T04:21:22.2254369Z     Checking futures-sink v0.3.34
+2026-10-06T04:21:22.2982289Z     Checking tokio-util v0.7.19
+2026-10-06T04:21:22.4075318Z     Checking polyval v0.6.2
+2026-10-06T04:21:22.6074733Z     Checking rustls-platform-verifier v0.7.1
+2026-10-06T04:21:22.6135976Z     Checking rand_core v0.9.5
+2026-10-06T04:21:22.7466118Z     Checking base64ct v1.8.3
+2026-10-06T04:21:22.9538590Z     Checking password-hash v0.5.0
+2026-10-06T04:21:23.1152779Z     Checking tao v0.37.1
+2026-10-06T04:21:23.1646026Z     Checking tempfile v3.27.0
+2026-10-06T04:21:23.3498583Z     Checking reqwest v0.13.5
+2026-10-06T04:21:23.5114919Z     Checking ppv-lite86 v0.2.21
+2026-10-06T04:21:23.8451466Z     Checking rand_chacha v0.9.0
+2026-10-06T04:21:24.0117227Z     Checking ghash v0.5.1
+2026-10-06T04:21:24.0997070Z     Checking serde_urlencoded v0.7.1
+2026-10-06T04:21:24.2938045Z     Checking ctr v0.9.2
+2026-10-06T04:21:24.3086282Z     Checking aes v0.8.4
+2026-10-06T04:21:24.4222447Z     Checking blake2 v0.10.6
+2026-10-06T04:21:24.4587175Z     Checking zip v4.6.1
+2026-10-06T04:21:24.6183641Z    Compiling opencodex-desktop v0.1.8 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+2026-10-06T04:21:24.7076225Z     Checking aead v0.5.2
+2026-10-06T04:21:24.8111227Z     Checking toml_datetime v0.7.5+spec-1.1.0
+2026-10-06T04:21:24.9786848Z     Checking filetime v0.2.29
+2026-10-06T04:21:25.0610663Z     Checking winnow v0.7.15
+2026-10-06T04:21:25.1162708Z     Checking unsafe-libyaml v0.2.11
+2026-10-06T04:21:25.8385724Z     Checking minisign-verify v0.2.5
+2026-10-06T04:21:26.0507646Z     Checking keyring v3.6.3
+2026-10-06T04:21:26.2230709Z     Checking serde_yaml v0.9.34+deprecated
+2026-10-06T04:21:26.3451523Z     Checking webview2-com v0.39.1
+2026-10-06T04:21:26.6136105Z     Checking toml v0.9.12+spec-1.1.0
+2026-10-06T04:21:27.0109896Z     Checking tar v0.4.46
+2026-10-06T04:21:27.0785196Z     Checking aes-gcm v0.10.3
+2026-10-06T04:21:27.2012846Z     Checking argon2 v0.5.3
+2026-10-06T04:21:27.2829908Z     Checking reqwest v0.12.28
+2026-10-06T04:21:27.3936836Z     Checking rand v0.9.5
+2026-10-06T04:21:27.7611230Z     Checking dirs v6.0.0
+2026-10-06T04:21:27.8298418Z     Checking chrono v0.4.45
+2026-10-06T04:21:27.9134389Z    Compiling async-trait v0.1.92
+2026-10-06T04:21:43.0102266Z     Finished `dev` profile [unoptimized + debuginfo] target(s) in 2m 11s
+2026-10-06T04:21:43.2657840Z ##[group]Run $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
+2026-10-06T04:21:43.2658339Z $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
+2026-10-06T04:21:43.2658683Z cargo test --workspace --features integration-test
+2026-10-06T04:21:43.2720248Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:21:43.2720525Z env:
+2026-10-06T04:21:43.2720702Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:21:43.2720910Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:21:43.2721080Z   CARGO_TERM_COLOR: always
+2026-10-06T04:21:43.2721255Z ##[endgroup]
+2026-10-06T04:21:44.0327310Z    Compiling cfg-if v1.0.5
+2026-10-06T04:21:44.0329031Z    Compiling windows-link v0.2.1
+2026-10-06T04:21:44.0339992Z    Compiling zerofrom v0.1.8
+2026-10-06T04:21:44.0343562Z    Compiling itoa v1.0.18
+2026-10-06T04:21:44.1139531Z    Compiling writeable v0.6.4
+2026-10-06T04:21:44.1183552Z    Compiling litemap v0.8.3
+2026-10-06T04:21:44.1272763Z    Compiling memchr v2.8.3
+2026-10-06T04:21:44.2118020Z    Compiling utf8_iter v1.0.4
+2026-10-06T04:21:44.2982277Z    Compiling siphasher v1.0.4
+2026-10-06T04:21:44.3318616Z    Compiling serde_core v1.0.229
+2026-10-06T04:21:44.3662979Z    Compiling icu_normalizer_data v2.3.0
+2026-10-06T04:21:44.4202804Z    Compiling icu_properties_data v2.3.0
+2026-10-06T04:21:44.4866817Z    Compiling phf_shared v0.13.1
+2026-10-06T04:21:44.5853832Z    Compiling bytes v1.12.1
+2026-10-06T04:21:44.7253478Z    Compiling phf_generator v0.13.1
+2026-10-06T04:21:44.9049659Z    Compiling zmij v1.0.23
+2026-10-06T04:21:45.0096869Z    Compiling yoke v0.8.3
+2026-10-06T04:21:45.2295446Z    Compiling thiserror v2.0.21
+2026-10-06T04:21:45.2504399Z    Compiling log v0.4.34
+2026-10-06T04:21:45.3014908Z    Compiling zerovec v0.11.8
+2026-10-06T04:21:45.4280472Z    Compiling http v1.5.0
+2026-10-06T04:21:45.4296264Z    Compiling windows-sys v0.61.2
+2026-10-06T04:21:45.9329629Z    Compiling getrandom v0.4.3
+2026-10-06T04:21:46.0462538Z    Compiling phf_macros v0.13.1
+2026-10-06T04:21:46.8207388Z    Compiling time-core v0.1.9
+2026-10-06T04:21:46.8762991Z    Compiling num-conv v0.2.2
+2026-10-06T04:21:47.0050236Z    Compiling deranged v0.5.8
+2026-10-06T04:21:47.0102462Z    Compiling scopeguard v1.2.0
+2026-10-06T04:21:47.0166978Z    Compiling winnow v1.0.4
+2026-10-06T04:21:47.0722109Z    Compiling powerfmt v0.2.1
+2026-10-06T04:21:47.2043406Z    Compiling lock_api v0.4.14
+2026-10-06T04:21:47.4061778Z    Compiling toml_parser v1.1.3+spec-1.1.0
+2026-10-06T04:21:47.4450850Z    Compiling tinystr v0.8.4
+2026-10-06T04:21:47.6388121Z    Compiling phf_codegen v0.13.1
+2026-10-06T04:21:47.7399518Z    Compiling base64 v0.23.1
+2026-10-06T04:21:48.2139011Z    Compiling toml_writer v1.1.2+spec-1.1.0
+2026-10-06T04:21:48.2749903Z    Compiling icu_locale_core v2.3.0
+2026-10-06T04:21:48.3710998Z    Compiling potential_utf v0.1.6
+2026-10-06T04:21:48.3953694Z    Compiling zerotrie v0.2.5
+2026-10-06T04:21:48.5320671Z    Compiling equivalent v1.0.2
+2026-10-06T04:21:48.5897465Z    Compiling hashbrown v0.17.1
+2026-10-06T04:21:48.7252798Z    Compiling icu_collections v2.3.0
+2026-10-06T04:21:49.2429304Z    Compiling icu_provider v2.3.1
+2026-10-06T04:21:49.4015397Z    Compiling indexmap v2.14.2
+2026-10-06T04:21:49.6200257Z    Compiling typeid v1.0.3
+2026-10-06T04:21:49.6906851Z    Compiling aho-corasick v1.1.5
+2026-10-06T04:21:49.9048557Z    Compiling web-time v1.1.0
+2026-10-06T04:21:49.9572066Z    Compiling regex-syntax v0.8.11
+2026-10-06T04:21:50.1464628Z    Compiling fnv v1.0.7
+2026-10-06T04:21:50.2142362Z    Compiling phf v0.13.1
+2026-10-06T04:21:50.3555289Z    Compiling parking_lot_core v0.9.12
+2026-10-06T04:21:50.7120203Z    Compiling string_cache_codegen v0.6.1
+2026-10-06T04:21:51.1727744Z    Compiling alloc-no-stdlib v3.0.0
+2026-10-06T04:21:51.2536796Z    Compiling alloc-stdlib v0.3.0
+2026-10-06T04:21:51.3480462Z    Compiling web_atoms v0.2.6
+2026-10-06T04:21:51.9058936Z    Compiling parking_lot v0.12.5
+2026-10-06T04:21:52.4678517Z    Compiling regex-automata v0.4.18
+2026-10-06T04:21:52.8634641Z    Compiling icu_properties v2.3.0
+2026-10-06T04:21:54.2247362Z    Compiling icu_normalizer v2.3.0
+2026-10-06T04:21:54.7000068Z    Compiling regex v1.13.1
+2026-10-06T04:21:55.1101274Z    Compiling quick-xml v0.42.0
+2026-10-06T04:21:55.2436972Z    Compiling semver v1.0.28
+2026-10-06T04:21:56.5688713Z    Compiling dunce v1.0.5
+2026-10-06T04:21:56.7540875Z    Compiling idna_adapter v1.2.2
+2026-10-06T04:21:56.8644238Z    Compiling string_cache v0.9.0
+2026-10-06T04:21:57.4047706Z    Compiling brotli-decompressor v6.0.1
+2026-10-06T04:21:57.6148357Z    Compiling serde v1.0.229
+2026-10-06T04:21:58.1279534Z    Compiling serde_json v1.0.151
+2026-10-06T04:21:58.2551006Z    Compiling toml_datetime v1.1.1+spec-1.1.0
+2026-10-06T04:21:58.2707218Z    Compiling serde_spanned v1.1.1
+2026-10-06T04:21:58.3872339Z    Compiling stable_deref_trait v1.2.1
+2026-10-06T04:21:58.4366007Z    Compiling typenum v1.20.1
+2026-10-06T04:21:58.6063325Z    Compiling toml v1.1.6+spec-1.1.0
+2026-10-06T04:21:59.3579886Z    Compiling generic-array v0.14.7
+2026-10-06T04:21:59.3960801Z    Compiling brotli v9.0.0
+2026-10-06T04:21:59.9832516Z    Compiling idna v1.1.0
+2026-10-06T04:22:00.4103684Z    Compiling anyhow v1.0.104
+2026-10-06T04:22:00.9167082Z    Compiling selectors v0.38.0
+2026-10-06T04:22:00.9456651Z    Compiling uuid v1.27.0
+2026-10-06T04:22:01.0851224Z    Compiling glob v0.3.4
+2026-10-06T04:22:01.3238646Z    Compiling ctor v1.0.13
+2026-10-06T04:22:01.4488304Z    Compiling cssparser v0.37.0
+2026-10-06T04:22:01.4932547Z    Compiling markup5ever v0.39.0
+2026-10-06T04:22:01.6694433Z    Compiling url v2.5.8
+2026-10-06T04:22:01.7210929Z    Compiling libc v0.2.190
+2026-10-06T04:22:01.8932466Z    Compiling winapi-util v0.1.11
+2026-10-06T04:22:02.1479609Z    Compiling getrandom v0.2.17
+2026-10-06T04:22:02.3137673Z    Compiling same-file v1.0.6
+2026-10-06T04:22:02.4451947Z    Compiling html5ever v0.39.0
+2026-10-06T04:22:02.9172730Z    Compiling cfb v0.14.0
+2026-10-06T04:22:03.4320451Z    Compiling jsonptr v0.7.1
+2026-10-06T04:22:03.4781988Z    Compiling erased-serde v0.4.10
+2026-10-06T04:22:03.8693179Z    Compiling time v0.3.55
+2026-10-06T04:22:04.0341832Z    Compiling schemars v0.8.22
+2026-10-06T04:22:04.1271234Z    Compiling dom_query v0.28.0
+2026-10-06T04:22:04.2571223Z    Compiling cargo_metadata v0.19.2
+2026-10-06T04:22:05.7352039Z    Compiling serde-untagged v0.1.9
+2026-10-06T04:22:06.0016586Z    Compiling json-patch v4.2.0
+2026-10-06T04:22:06.0258600Z    Compiling infer v0.22.0
+2026-10-06T04:22:06.0390909Z    Compiling walkdir v2.5.0
+2026-10-06T04:22:06.4913866Z    Compiling plist v1.10.1
+2026-10-06T04:22:06.5126423Z    Compiling urlpattern v0.6.0
+2026-10-06T04:22:06.6083576Z    Compiling serde_with v3.24.0
+2026-10-06T04:22:06.7697090Z    Compiling smallvec v1.16.2
+2026-10-06T04:22:06.9607698Z    Compiling windows-result v0.4.1
+2026-10-06T04:22:07.2724419Z    Compiling windows-strings v0.5.1
+2026-10-06T04:22:07.7607705Z    Compiling once_cell v1.21.4
+2026-10-06T04:22:07.7722082Z    Compiling pin-project-lite v0.2.17
+2026-10-06T04:22:07.9720677Z    Compiling simd-adler32 v0.3.10
+2026-10-06T04:22:08.1990814Z    Compiling option-ext v0.2.0
+2026-10-06T04:22:08.2870368Z    Compiling adler2 v2.0.1
+2026-10-06T04:22:08.3890805Z    Compiling percent-encoding v2.3.2
+2026-10-06T04:22:08.5943313Z    Compiling tauri-utils v2.10.1
+2026-10-06T04:22:08.7196660Z    Compiling vswhom-sys v0.1.3
+2026-10-06T04:22:08.7895412Z    Compiling vswhom v0.1.0
+2026-10-06T04:22:08.9554469Z    Compiling winreg v0.55.0
+2026-10-06T04:22:09.6083112Z    Compiling crc32fast v1.5.2
+2026-10-06T04:22:09.8310920Z    Compiling miniz_oxide v0.9.1
+2026-10-06T04:22:10.0632606Z    Compiling rustc_version v0.4.1
+2026-10-06T04:22:10.3334788Z    Compiling subtle v2.6.1
+2026-10-06T04:22:10.4567217Z    Compiling windows-core v0.62.2
+2026-10-06T04:22:10.8722534Z    Compiling embed-resource v3.0.11
+2026-10-06T04:22:11.0231876Z    Compiling form_urlencoded v1.2.2
+2026-10-06T04:22:11.0916828Z    Compiling dirs-sys v0.5.0
+2026-10-06T04:22:11.1412018Z    Compiling socket2 v0.6.5
+2026-10-06T04:22:11.1798746Z    Compiling mio v1.2.4
+2026-10-06T04:22:11.1912506Z    Compiling bitflags v2.13.2
+2026-10-06T04:22:11.4241386Z    Compiling heck v0.5.0
+2026-10-06T04:22:11.7716577Z    Compiling tokio v1.53.2
+2026-10-06T04:22:11.8069129Z    Compiling dirs v7.0.0
+2026-10-06T04:22:11.8827111Z    Compiling tauri-winres v0.3.6
+2026-10-06T04:22:12.2931024Z    Compiling rand_core v0.6.4
+2026-10-06T04:22:12.5162081Z    Compiling cargo_toml v1.0.1
+2026-10-06T04:22:13.3727075Z    Compiling cpufeatures v0.2.17
+2026-10-06T04:22:16.2150846Z    Compiling miniz_oxide v0.8.9
+2026-10-06T04:22:16.4897132Z    Compiling fdeflate v0.3.7
+2026-10-06T04:22:17.0321415Z    Compiling tauri-plugin v2.7.1
+2026-10-06T04:22:17.1273701Z    Compiling tauri-build v2.7.1
+2026-10-06T04:22:17.4907663Z    Compiling block-buffer v0.10.4
+2026-10-06T04:22:17.6005506Z    Compiling time-macros v0.2.32
+2026-10-06T04:22:18.5699738Z    Compiling windows-threading v0.2.1
+2026-10-06T04:22:18.6968324Z    Compiling futures-core v0.3.34
+2026-10-06T04:22:18.8248678Z    Compiling zeroize v1.9.0
+2026-10-06T04:22:18.9932842Z    Compiling windows-future v0.3.2
+2026-10-06T04:22:19.7763452Z    Compiling crypto-common v0.1.7
+2026-10-06T04:22:19.8683514Z    Compiling windows-collections v0.3.2
+2026-10-06T04:22:20.3642871Z    Compiling windows-numerics v0.3.1
+2026-10-06T04:22:20.5398957Z    Compiling tracing-core v0.1.36
+2026-10-06T04:22:20.5882388Z    Compiling raw-window-handle v0.6.2
+2026-10-06T04:22:20.8327074Z    Compiling windows v0.62.2
+2026-10-06T04:22:21.3263173Z    Compiling tracing v0.1.44
+2026-10-06T04:22:21.5921438Z    Compiling dpi v0.1.2
+2026-10-06T04:22:21.9594708Z    Compiling webview2-com-sys v0.39.1
+2026-10-06T04:22:22.0449002Z    Compiling crossbeam-utils v0.8.23
+2026-10-06T04:22:22.2329885Z    Compiling flate2 v1.1.10
+2026-10-06T04:22:23.0845475Z    Compiling bitflags v1.3.2
+2026-10-06T04:22:23.1337232Z    Compiling zlib-rs v0.6.8
+2026-10-06T04:22:24.3961496Z    Compiling crossbeam-channel v0.5.17
+2026-10-06T04:22:24.9440412Z    Compiling rustls-pki-types v1.15.1
+2026-10-06T04:22:27.2990806Z    Compiling tauri v2.12.1
+2026-10-06T04:22:27.8810866Z    Compiling windows-version v0.1.7
+2026-10-06T04:22:27.9855735Z    Compiling byteorder v1.5.0
+2026-10-06T04:22:28.0443127Z    Compiling untrusted v0.9.0
+2026-10-06T04:22:28.2022768Z    Compiling ring v0.17.14
+2026-10-06T04:22:29.2456769Z    Compiling digest v0.10.7
+2026-10-06T04:22:30.0403534Z    Compiling num-traits v0.2.19
+2026-10-06T04:22:31.2252397Z    Compiling cookie v0.18.2
+2026-10-06T04:22:31.2901052Z    Compiling getrandom v0.3.4
+2026-10-06T04:22:31.4463420Z    Compiling png v0.17.16
+2026-10-06T04:22:33.6267984Z    Compiling http-body v1.1.0
+2026-10-06T04:22:33.7497799Z    Compiling base64 v0.22.1
+2026-10-06T04:22:33.8297780Z    Compiling slab v0.4.12
+2026-10-06T04:22:33.9807148Z    Compiling futures-task v0.3.34
+2026-10-06T04:22:34.1486152Z    Compiling futures-util v0.3.34
+2026-10-06T04:22:34.7333176Z    Compiling ico v0.5.0
+2026-10-06T04:22:35.3432825Z    Compiling rustls-webpki v0.103.15
+2026-10-06T04:22:36.3820721Z    Compiling sha2 v0.10.9
+2026-10-06T04:22:36.8301569Z    Compiling png v0.18.1
+2026-10-06T04:22:36.8892874Z    Compiling keyboard-types v0.8.3
+2026-10-06T04:22:38.1572137Z    Compiling pxfm v0.1.30
+2026-10-06T04:22:38.5697092Z    Compiling unicode-segmentation v1.13.3
+2026-10-06T04:22:39.0678046Z    Compiling tower-service v0.3.3
+2026-10-06T04:22:39.1349032Z    Compiling try-lock v0.2.5
+2026-10-06T04:22:39.2107715Z    Compiling want v0.3.2
+2026-10-06T04:22:39.3617654Z    Compiling muda v0.20.0
+2026-10-06T04:22:42.3098665Z    Compiling moxcms v0.8.1
+2026-10-06T04:22:42.7459945Z    Compiling tauri-codegen v2.7.1
+2026-10-06T04:22:44.9820489Z    Compiling rustls v0.23.45
+2026-10-06T04:22:51.2362173Z    Compiling httparse v1.10.1
+2026-10-06T04:22:53.3309190Z    Compiling softbuffer v0.4.8
+2026-10-06T04:22:54.0743825Z    Compiling futures-channel v0.3.34
+2026-10-06T04:22:54.1882207Z    Compiling byteorder-lite v0.1.0
+2026-10-06T04:22:54.2994898Z    Compiling atomic-waker v1.1.2
+2026-10-06T04:22:54.3933931Z    Compiling bytemuck v1.25.2
+2026-10-06T04:22:54.4332006Z    Compiling hyper v1.11.1
+2026-10-06T04:22:54.8755319Z    Compiling tao v0.37.1
+2026-10-06T04:22:56.2148568Z    Compiling image v0.25.10
+2026-10-06T04:22:58.9933829Z    Compiling webview2-com v0.39.1
+2026-10-06T04:23:00.0889672Z    Compiling serialize-to-javascript v0.1.2
+2026-10-06T04:23:00.2187156Z    Compiling tauri-macros v2.7.1
+2026-10-06T04:23:02.3467490Z    Compiling wry v0.57.0
+2026-10-06T04:23:03.6139139Z    Compiling tauri-runtime v2.12.1
+2026-10-06T04:23:03.9371683Z    Compiling tray-icon v0.25.1
+2026-10-06T04:23:04.1386096Z    Compiling tauri-runtime-wry v2.12.1
+2026-10-06T04:23:04.7764661Z    Compiling windows_x86_64_msvc v0.53.1
+2026-10-06T04:23:04.8705929Z    Compiling window-vibrancy v0.8.1
+2026-10-06T04:23:04.9110534Z    Compiling tauri-plugin-fs v2.6.0
+2026-10-06T04:23:05.0392345Z    Compiling sync_wrapper v1.0.2
+2026-10-06T04:23:05.1021192Z    Compiling windows-registry v0.6.1
+2026-10-06T04:23:05.4084889Z    Compiling schannel v0.1.29
+2026-10-06T04:23:05.4803308Z    Compiling tower-layer v0.3.3
+2026-10-06T04:23:05.6479648Z    Compiling mime v0.3.17
+2026-10-06T04:23:05.8587680Z    Compiling ipnet v2.12.2
+2026-10-06T04:23:06.4141727Z    Compiling hyper-util v0.1.21
+2026-10-06T04:23:06.5496518Z    Compiling rustls-native-certs v0.8.4
+2026-10-06T04:23:06.6847124Z    Compiling tower v0.5.3
+2026-10-06T04:23:07.0237301Z    Compiling windows-targets v0.53.5
+2026-10-06T04:23:07.0725083Z    Compiling tokio-rustls v0.26.6
+2026-10-06T04:23:07.2462022Z    Compiling inout v0.1.4
+2026-10-06T04:23:07.3371455Z    Compiling cipher v0.4.4
+2026-10-06T04:23:07.3445755Z    Compiling tower-http v0.6.11
+2026-10-06T04:23:07.5333274Z    Compiling hyper-rustls v0.27.10
+2026-10-06T04:23:07.8374403Z    Compiling windows-sys v0.60.2
+2026-10-06T04:23:07.8598470Z    Compiling zerocopy v0.8.60
+2026-10-06T04:23:08.5582221Z    Compiling http-body-util v0.1.5
+2026-10-06T04:23:08.8182367Z    Compiling tauri-plugin-process v2.4.0
+2026-10-06T04:23:09.9268166Z    Compiling tauri-plugin-dialog v2.8.1
+2026-10-06T04:23:11.0185895Z    Compiling tauri-plugin-updater v2.13.1
+2026-10-06T04:23:11.4032268Z    Compiling universal-hash v0.5.1
+2026-10-06T04:23:11.7871722Z    Compiling futures-sink v0.3.34
+2026-10-06T04:23:11.8892008Z    Compiling opaque-debug v0.3.1
+2026-10-06T04:23:12.1504970Z    Compiling ryu v1.0.23
+2026-10-06T04:23:12.2545345Z    Compiling polyval v0.6.2
+2026-10-06T04:23:12.3231763Z    Compiling tokio-util v0.7.19
+2026-10-06T04:23:12.4752035Z    Compiling ppv-lite86 v0.2.21
+2026-10-06T04:23:12.6835557Z    Compiling rustls-platform-verifier v0.7.1
+2026-10-06T04:23:12.8406218Z    Compiling rand_core v0.9.5
+2026-10-06T04:23:12.9166024Z    Compiling fastrand v2.5.0
+2026-10-06T04:23:13.0504482Z    Compiling base64ct v1.8.3
+2026-10-06T04:23:13.0966468Z    Compiling tempfile v3.27.0
+2026-10-06T04:23:13.1683008Z    Compiling rand_chacha v0.9.0
+2026-10-06T04:23:13.5507166Z    Compiling password-hash v0.5.0
+2026-10-06T04:23:13.8773322Z    Compiling reqwest v0.13.5
+2026-10-06T04:23:13.9218812Z    Compiling ghash v0.5.1
+2026-10-06T04:23:14.1625045Z    Compiling rfd v0.16.0
+2026-10-06T04:23:15.1791748Z    Compiling serde_urlencoded v0.7.1
+2026-10-06T04:23:15.2720531Z    Compiling blake2 v0.10.6
+2026-10-06T04:23:15.4216600Z    Compiling aes v0.8.4
+2026-10-06T04:23:15.9004986Z    Compiling ctr v0.9.2
+2026-10-06T04:23:16.0415251Z    Compiling zip v4.6.1
+2026-10-06T04:23:16.1663815Z    Compiling opencodex-desktop v0.1.8 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+2026-10-06T04:23:17.5290374Z    Compiling aead v0.5.2
+2026-10-06T04:23:17.6766686Z    Compiling toml_datetime v0.7.5+spec-1.1.0
+2026-10-06T04:23:17.7326241Z    Compiling filetime v0.2.29
+2026-10-06T04:23:17.8614782Z    Compiling unsafe-libyaml v0.2.11
+2026-10-06T04:23:18.0232360Z    Compiling minisign-verify v0.2.5
+2026-10-06T04:23:18.9483493Z    Compiling winnow v0.7.15
+2026-10-06T04:23:20.9297258Z    Compiling toml v0.9.12+spec-1.1.0
+2026-10-06T04:23:21.0410633Z    Compiling serde_yaml v0.9.34+deprecated
+2026-10-06T04:23:21.2447232Z    Compiling tar v0.4.46
+2026-10-06T04:23:22.8115815Z    Compiling aes-gcm v0.10.3
+2026-10-06T04:23:23.3542813Z    Compiling argon2 v0.5.3
+2026-10-06T04:23:23.3874752Z    Compiling reqwest v0.12.28
+2026-10-06T04:23:24.2408375Z    Compiling rand v0.9.5
+2026-10-06T04:23:24.7877145Z    Compiling keyring v3.6.3
+2026-10-06T04:23:24.9703755Z    Compiling dirs v6.0.0
+2026-10-06T04:23:25.0759380Z    Compiling chrono v0.4.45
+2026-10-06T04:24:38.7067755Z     Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 55s
+2026-10-06T04:24:40.9347689Z      Running unittests src\lib.rs (target\debug\deps\opencodex_desktop_lib-96a552c896b22b04.exe)
+2026-10-06T04:24:40.9493869Z
+2026-10-06T04:24:40.9494072Z running 279 tests
+2026-10-06T04:24:40.9501685Z test commands::cleanup::tests::parses_retention_policies_and_falls_back ... ok
+2026-10-06T04:24:43.0884354Z test commands::cleanup::tests::cleanup_handles_missing_logs ... ok
+2026-10-06T04:24:43.0940229Z test commands::cleanup::tests::cleanup_clears_only_log_partition_files ... ok
+2026-10-06T04:24:43.6901055Z test commands::cleanup::tests::startup_cleanup_drops_lines_older_than_retention_window ... ok
+2026-10-06T04:24:45.5880723Z test commands::cleanup::tests::startup_cleanup_is_skipped_when_disabled ... ok
+2026-10-06T04:24:45.5888265Z test commands::extensions::tests::leaves_ordinary_args_untouched ... ok
+2026-10-06T04:24:45.5891396Z test commands::extensions::tests::masks_key_value_args_and_description ... ok
+2026-10-06T04:24:45.5893500Z test commands::extensions::tests::masks_value_following_sensitive_flag ... ok
+2026-10-06T04:24:45.5900580Z test commands::network::tests::invalid_manual_proxy_is_reported_without_panicking ... ok
+2026-10-06T04:24:45.5901653Z test commands::network::tests::live_no_proxy_probe_reaches_controlled_url ... ignored, hits the network; run explicitly
+2026-10-06T04:24:45.6062786Z test commands::cleanup::tests::startup_cleanup_prunes_read_notifications_past_retention ... ok
+2026-10-06T04:24:46.5038207Z test commands::notifications::tests::failed_persist_does_not_report_success_or_change_memory ... ok
+2026-10-06T04:24:46.5054518Z test commands::notifications::tests::production_store_starts_without_demo_seed ... ok
+2026-10-06T04:24:46.5506721Z test commands::cleanup::tests::startup_cleanup_trims_logs_by_line_budget_and_keeps_audit_log ... ok
+2026-10-06T04:24:46.5541249Z test commands::notifications::tests::unknown_notification_is_explicit_not_silent ... ok
+2026-10-06T04:24:46.5964239Z test commands::notifications::tests::unreadable_store_starts_empty_and_reports_a_real_failure ... ok
+2026-10-06T04:24:46.5967231Z test commands::panel::tests::bounds_follow_shell_zoom_instead_of_fixed_sidebar_width ... ok
+2026-10-06T04:24:46.5971079Z test commands::panel::tests::bounds_never_cover_shell_controls_or_escape_window ... ok
+2026-10-06T04:24:46.5974621Z test commands::panel::tests::corner_radius_follows_interface_scale ... ok
+2026-10-06T04:24:46.5979054Z test commands::panel::tests::idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline ... ok
+2026-10-06T04:24:46.5983023Z test commands::panel::tests::navigation_cannot_escape_the_panel_origin ... ok
+2026-10-06T04:24:46.5985693Z test commands::panel::tests::only_runtime_local_panel_urls_are_accepted ... ok
+2026-10-06T04:24:46.5987730Z test commands::panel::tests::panel_state_detail_normalizes_theme_and_keeps_scale ... ok
+2026-10-06T04:24:46.5990062Z test commands::panel::tests::theme_setting_syncs_through_the_official_storage_key ... ok
+2026-10-06T04:24:46.6052950Z test commands::notifications::tests::mutations_persist_so_state_survives_restart ... ok
+2026-10-06T04:24:46.6055961Z test commands::notifications::tests::resolving_and_clearing_only_affect_requested_items ... ok
+2026-10-06T04:24:46.6057509Z test commands::runtime_state_notification_tests::attention_states_carry_level_category_and_action ... ok
+2026-10-06T04:24:46.6059631Z test commands::runtime_state_notification_tests::lifecycle_preference_only_gates_lifecycle_outcomes ... ok
+2026-10-06T04:24:46.8185994Z test commands::runtime_state_notification_tests::disabled_preference_skips_lifecycle_outcomes_only ... ok
+2026-10-06T04:24:46.8190818Z test commands::runtime_state_notification_tests::restore_notifications_map_to_their_own_target ... ok
+2026-10-06T04:24:46.8192047Z test commands::runtime_state_notification_tests::stable_and_transitional_states_do_not_notify ... ok
+2026-10-06T04:24:46.8194401Z test commands::runtime_state_notification_tests::start_failure_merges_with_command_failure ... ok
+2026-10-06T04:24:46.8197093Z test commands::sync::tests::config_dto_is_camel_case_and_masks_password ... ok
+2026-10-06T04:24:46.8515698Z test commands::runtime_state_notification_tests::repeated_observation_updates_one_entry_and_resets_read ... ok
+2026-10-06T04:24:46.8519694Z test commands::sync::tests::state_names_are_frozen_snake_case ... ok
+2026-10-06T04:24:47.4083220Z test commands::preferences::tests::camel_case_preferences_round_trip_through_disk ... ok
+2026-10-06T04:24:47.4084992Z test commands::update::tests::channel_switch_clears_stale_check_result ... ok
+2026-10-06T04:24:47.4087209Z test commands::update::tests::install_marks_signature_only_after_plugin_download_and_install ... ok
+2026-10-06T04:24:47.4089221Z test commands::update::tests::successful_check_clears_stale_failure_and_records_result ... ok
+2026-10-06T04:24:47.4091696Z test commands::workspace::tests::external_links_are_frozen_allowlist ... ok
+2026-10-06T04:24:47.4094996Z test commands::workspace::tests::local_documents_are_frozen ... ok
+2026-10-06T04:24:47.4096933Z test commands::workspace::tests::local_panel_browser_fallback_is_runtime_port_allowlist ... ok
+2026-10-06T04:24:48.6144701Z test commands::workspace::tests::managed_targets_use_frozen_partitions_and_extension_paths ... ok
+2026-10-06T04:24:48.6854355Z test commands::sync::tests::sync_conflict_alerts_preference_is_consumed ... ok
+2026-10-06T04:24:48.7389242Z test commands::workspace::tests::open_data_root_and_opencodex_home_are_allowed ... ok
+2026-10-06T04:24:49.3395388Z test commands::workspace::tests::open_path_rejects_non_whitelisted_value ... ok
+2026-10-06T04:24:49.4099123Z test infrastructure::atomic_write::tests::atomic_write_replaces_target_and_preserves_permissions ... ok
+2026-10-06T04:24:49.5831262Z test commands::workspace::tests::open_path_reports_missing_allowed_target_without_platform_call ... ok
+2026-10-06T04:24:49.5962528Z test infrastructure::discovery_paths::tests::discovery_uses_controlled_user_tools_and_returns_missing_candidates ... ok
+2026-10-06T04:24:49.6032722Z test commands::cleanup::tests::startup_cleanup_honors_backup_retention_and_writes_redacted_summary ... ok
+2026-10-06T04:24:49.6034491Z test commands::sync::tests::conflict_alert_writes_one_deduplicated_notification ... ok
+2026-10-06T04:24:49.6035806Z test infrastructure::hash::tests::sha256_file_matches_memory_digest ... ok
+2026-10-06T04:24:49.6037273Z test infrastructure::hash::tests::sha256_matches_known_vectors ... ok
+2026-10-06T04:24:49.6038214Z test infrastructure::keychain::tests::keychain_round_trip_keeps_both_secrets_separate ... ignored
+2026-10-06T04:24:49.6039559Z test infrastructure::keychain::tests::account_key_matches_frozen_shape ... ok
+2026-10-06T04:24:49.6042680Z test infrastructure::keychain::tests::new_ref_id_is_valid ... ok
+2026-10-06T04:24:49.6043856Z test infrastructure::keychain::tests::webdav_and_encryption_purposes_use_different_accounts ... ok
+2026-10-06T04:24:49.6044720Z test infrastructure::locking::tests::lock_path_uses_frozen_suffix ... ok
+2026-10-06T04:24:49.6045375Z test infrastructure::tray_controller::tests::action_contract_covers_all_menu_targets ... ok
+2026-10-06T04:24:49.6047131Z test infrastructure::tray_controller::tests::process_gates_cover_both_the_tray_and_the_app_menu ... ok
+2026-10-06T04:24:49.6049197Z test infrastructure::tray_controller::tests::projects_runtime_address_and_running_state ... ok
+2026-10-06T04:24:49.6056047Z test infrastructure::webdav_client::tests::invalid_remote_path_is_rejected_before_network ... ok
+2026-10-06T04:24:49.6057543Z test infrastructure::webdav_client::tests::missing_parent_collection_is_reported_as_not_found ... ok
+2026-10-06T04:24:49.6061306Z test infrastructure::webdav_client::tests::payload_file_name_follows_manifest_digest_not_transport_bytes ... ok
+2026-10-06T04:24:49.6134237Z test infrastructure::discovery_paths::tests::windows_finds_nvmd_and_global_npm_wrappers_without_path_search ... ok
+2026-10-06T04:24:49.6137428Z test infrastructure::webdav_client::tests::remote_layout_has_no_intermediate_collections ... ok
+2026-10-06T04:24:49.6140081Z test infrastructure::webdav_client::tests::remote_path_rejects_escape_and_empty_segments ... ok
+2026-10-06T04:24:49.6143956Z test infrastructure::webdav_client::tests::test_connection_uses_propfind_with_basic_auth ... ok
+2026-10-06T04:24:49.6146214Z test infrastructure::webdav_client::tests::tls_error_has_frozen_message ... ok
+2026-10-06T04:24:49.6151517Z test infrastructure::webdav_client::tests::upload_puts_payloads_before_manifest ... ok
+2026-10-06T04:24:49.6166530Z test infrastructure::windows_smoke::tests::preserves_existing_browser_options_and_rejects_missing_main ... ok
+2026-10-06T04:24:49.6169682Z test infrastructure::windows_smoke::tests::sandbox_without_smoke_port_keeps_normal_window ... ok
+2026-10-06T04:24:49.6180481Z test infrastructure::windows_smoke::tests::smoke_configures_only_main_before_automatic_creation ... ok
+2026-10-06T04:24:49.6193936Z test infrastructure::windows_smoke::tests::smoke_requires_valid_port_and_isolated_root ... ok
+2026-10-06T04:24:49.6196067Z test modules::about::remote::tests::live_remote_query_returns_version_and_integrity ... ignored, hits the npm registry; run explicitly
+2026-10-06T04:24:49.6197187Z test modules::about::remote::tests::parses_version_and_integrity_shapes ... ok
+2026-10-06T04:24:49.6198856Z test modules::about::remote::tests::tag_validation_rejects_arbitrary_input ... ok
+2026-10-06T04:24:49.6202949Z test modules::about::tests::bounds_unbounded_output ... ok
+2026-10-06T04:24:49.6205627Z test modules::about::tests::maps_source_errors ... ok
+2026-10-06T04:24:49.6208374Z test modules::about::tests::parses_name_and_version ... ok
+2026-10-06T04:24:49.6211473Z test modules::about::tests::rejects_empty_and_control_only_output ... ok
+2026-10-06T04:24:49.6215764Z test modules::codex_shim::tests::parses_installed_summary_and_corrupt_state ... ok
+2026-10-06T04:24:49.6219680Z test modules::codex_shim::tests::parses_not_installed_before_installed ... ok
+2026-10-06T04:24:49.6225046Z test modules::codex_shim::tests::report_keeps_first_line_and_truncates_tail ... ok
+2026-10-06T04:24:49.6227238Z test modules::codex_shim::tests::unrecognized_output_is_unreachable_not_guessed ... ok
+2026-10-06T04:24:49.6467189Z test infrastructure::locking::tests::target_lock_serializes_writers ... ok
+2026-10-06T04:24:49.6471961Z test modules::config_migration::tests::corrupted_bytes_are_invalid ... ok
+2026-10-06T04:24:49.6475013Z test infrastructure::runtime_log::tests::appends_sanitized_private_events_and_rotates ... ok
+2026-10-06T04:24:49.6479363Z test modules::config_migration::tests::future_schema_is_rejected_without_transform ... ok
+2026-10-06T04:24:49.6481104Z test modules::config_migration::tests::current_schema_is_not_rewritten ... ok
+2026-10-06T04:24:49.6492634Z test modules::config_migration::tests::legacy_preferences_migrate_to_current_schema ... ok
+2026-10-06T04:24:50.0423182Z test modules::config_migration::tests::commit_backs_up_original_and_writes_current_schema ... ok
+2026-10-06T04:24:50.1335898Z test modules::config_migration::tests::recovery_reapplies_when_target_is_still_original ... ok
+2026-10-06T04:24:50.1613869Z test modules::config_migration::tests::recovery_completes_record_when_target_is_candidate ... ok
+2026-10-06T04:24:50.2621553Z test modules::config_migration::tests::startup_migration_skips_when_current_schema ... ok
+2026-10-06T04:24:50.2625124Z test modules::container::tests::array_limits_are_frozen ... ok
+2026-10-06T04:24:50.2628006Z test modules::config_migration::tests::recovery_stops_on_external_change ... ok
+2026-10-06T04:24:50.2629290Z test modules::container::tests::document_shape_matches_fz19 ... ok
+2026-10-06T04:24:50.2631304Z test modules::container::tests::extension_types_are_reusable_not_duplicated ... ok
+2026-10-06T04:24:50.2632751Z test modules::container::tests::header_fields_match_fz16_17_18 ... ok
+2026-10-06T04:24:50.2634197Z test modules::container::tests::header_rejects_future_or_invalid_contract ... ok
+2026-10-06T04:24:50.2635036Z test modules::container::tests::path_and_secret_references_are_restricted ... ok
+2026-10-06T04:24:50.2637553Z test modules::container::tests::unknown_top_level_fields_are_rejected ... ok
+2026-10-06T04:24:50.2638274Z test modules::doctor::tests::parses_and_limits_output ... ok
+2026-10-06T04:24:50.2639838Z test modules::doctor::tests::read_only_is_serialized ... ok
+2026-10-06T04:24:50.2642671Z test modules::extensions::discovery::tests::parses_jsonc_comments_and_extracts_server_entries ... ok
+2026-10-06T04:24:50.2644673Z test modules::extensions::discovery::tests::sanitize_description_removes_query_and_userinfo ... ok
+2026-10-06T04:24:50.2646720Z test modules::extensions::tests::client_disabled_does_not_delete_projection ... ok
+2026-10-06T04:24:50.2649939Z test modules::extensions::tests::conflict_detection_matches_expected_or_flags_external_change ... ok
+2026-10-06T04:24:50.2652788Z test modules::extensions::tests::fingerprint_changes_with_enablement_and_content ... ok
+2026-10-06T04:24:50.2655538Z test modules::extensions::tests::fingerprint_shape_and_source_are_frozen ... ok
+2026-10-06T04:24:50.2657535Z test modules::extensions::tests::legacy_schema_version_is_readable_but_flagged_for_migration ... ok
+2026-10-06T04:24:50.2659920Z test modules::extensions::tests::no_real_user_home_is_implicitly_read ... ok
+2026-10-06T04:24:50.2661836Z test modules::extensions::tests::serialization_uses_frozen_snake_case ... ok
+2026-10-06T04:24:50.2663879Z test modules::extensions::tests::six_clients_are_frozen_with_default_enabled_matrix ... ok
+2026-10-06T04:24:50.2667327Z test modules::extensions::tests::source_store_and_sync_method_participate_in_fingerprint ... ok
+2026-10-06T04:24:50.2669545Z test modules::extensions::tests::user_paths_match_fz22 ... ok
+2026-10-06T04:24:50.2672099Z test modules::extensions::tests::writable_requires_installed_and_enabled ... ok
+2026-10-06T04:24:50.2695298Z test modules::doctor::tests::truncates_unbounded_output_after_frozen_limit ... ok
+2026-10-06T04:24:50.2698732Z test modules::config_migration::tests::startup_migration_converts_legacy_preferences ... ok
+2026-10-06T04:24:50.2759982Z test modules::instance::tests::first_instance_acquires_lock ... ok
+2026-10-06T04:24:50.2824044Z test modules::instance::tests::lock_metadata_contains_pid ... ok
+2026-10-06T04:24:50.2832343Z test modules::instance::tests::lock_is_released_after_drop ... ok
+2026-10-06T04:24:50.2833874Z test modules::instance::tests::losing_instance_does_not_truncate_running_instance_identity ... ok
+2026-10-06T04:24:50.2938251Z test modules::instance::tests::second_instance_is_blocked_with_conflict_error ... ok
+2026-10-06T04:24:50.7701515Z test modules::ipc::audit::tests::rotates_five_megabyte_logs_five_times ... ok
+2026-10-06T04:24:50.7703369Z test modules::ipc::service::tests::passphrase_required_is_reported_distinctly ... ok
+2026-10-06T04:24:50.7723170Z test modules::ipc::audit::tests::writes_sanitized_record_as_jsonl ... ok
+2026-10-06T04:24:50.7731170Z test modules::ipc::service::tests::sync_run_without_endpoint_reports_failure_instead_of_fake_success ... ok
+2026-10-06T04:24:50.7733789Z test modules::ipc::tests::audit_record_never_captures_argument_values ... ok
+2026-10-06T04:24:50.7736165Z test modules::ipc::tests::audit_retention_matches_fz40 ... ok
+2026-10-06T04:24:50.7738941Z test modules::ipc::tests::cli_json_has_no_extra_top_level_fields ... ok
+2026-10-06T04:24:50.7741005Z test modules::ipc::tests::cli_parser_only_accepts_frozen_commands ... ok
+2026-10-06T04:24:50.7742874Z test modules::ipc::tests::confirm_false_is_rejected_with_exit_code_four ... ok
+2026-10-06T04:24:50.7744552Z test modules::ipc::tests::contract_version_must_match_one ... ok
+2026-10-06T04:24:50.7746417Z test modules::ipc::tests::failed_response_keeps_sanitized_error_and_exit_code ... ok
+2026-10-06T04:24:50.7747877Z test modules::ipc::tests::frozen_command_set_matches_fz34 ... ok
+2026-10-06T04:24:50.7750707Z test modules::ipc::tests::ipc_response_shape_is_frozen ... ok
+2026-10-06T04:24:50.9551771Z test modules::logs::tests::bounded_tail_drops_partial_sensitive_and_utf8_records ... ok
+2026-10-06T04:24:50.9553743Z test modules::logs::tests::preserves_safe_text ... ok
+2026-10-06T04:24:50.9556290Z test modules::logs::tests::redacts_s3_uri_and_bucket_values ... ok
+2026-10-06T04:24:50.9558713Z test modules::logs::tests::redacts_url_query_and_userinfo ... ok
+2026-10-06T04:24:50.9560865Z test modules::logs::tests::user_home_redaction_handles_windows_paths_and_keeps_other_users ... ok
+2026-10-06T04:24:50.9562568Z test modules::network_defaults::tests::frozen_network_defaults_match_contract ... ok
+2026-10-06T04:24:50.9564588Z test modules::notifications::tests::action_refs_use_frozen_targets ... ok
+2026-10-06T04:24:50.9566613Z test modules::notifications::tests::aggregation_counts_unread_and_danger ... ok
+2026-10-06T04:24:50.9568743Z test modules::notifications::tests::batch_operations_only_change_requested_subset ... ok
+2026-10-06T04:24:50.9571058Z test modules::notifications::tests::clear_resolved_only_touches_resolved_items ... ok
+2026-10-06T04:24:50.9573138Z test modules::notifications::tests::delete_is_soft_and_preserves_history ... ok
+2026-10-06T04:24:50.9574945Z test modules::notifications::tests::duplicate_dedupe_key_updates_instead_of_appending ... ok
+2026-10-06T04:24:50.9576596Z test modules::notifications::tests::levels_match_fz43 ... ok
+2026-10-06T04:24:50.9578615Z test modules::notifications::tests::notification_body_rejects_raw_secret_assignment ... ok
+2026-10-06T04:24:50.9580380Z test modules::notifications::tests::notification_category_by_category_filters_correctly ... ok
+2026-10-06T04:24:50.9582484Z test modules::notifications::tests::notification_requires_core_fields ... ok
+2026-10-06T04:24:50.9584330Z test modules::notifications::tests::read_and_resolved_are_independent_dimensions ... ok
+2026-10-06T04:24:50.9586385Z test modules::notifications::tests::single_delete_updates_same_store ... ok
+2026-10-06T04:24:50.9588127Z test modules::notifications::tests::source_and_expiry_are_independent_dimensions ... ok
+2026-10-06T04:24:50.9590052Z test modules::process::fixtures::tests::virtual_runner_records_start_and_stop_without_real_processes ... ok
+2026-10-06T04:24:50.9592107Z test modules::process::orchestration::tests::agent_process_tracks_not_attached_and_exit ... ok
+2026-10-06T04:24:50.9594389Z test modules::process::orchestration::tests::error_summary_is_fz12_shape_and_capped ... ok
+2026-10-06T04:24:50.9597120Z test modules::process::orchestration::tests::failed_stop_preserves_running_observation ... ok
+2026-10-06T04:24:50.9598670Z test modules::process::orchestration::tests::frozen_action_timeouts_match_fz10 ... ok
+2026-10-06T04:24:50.9600419Z test modules::process::orchestration::tests::log_id_is_sixteen_hex_characters ... ok
+2026-10-06T04:24:50.9602366Z test modules::process::orchestration::tests::official_commands_are_frozen ... ok
+2026-10-06T04:24:50.9604823Z test modules::process::orchestration::tests::unconfigured_runner_preserves_last_observation ... ok
+2026-10-06T04:24:50.9606391Z test modules::process::orchestration::tests::wrapper_exit_codes_match_fz11 ... ok
+2026-10-06T04:24:50.9608474Z test modules::process::tests::cancel_pending_moves_to_last_stable_observation_without_kill ... ok
+2026-10-06T04:24:50.9775474Z test modules::process::tests::controlled_runner_never_searches_path ... ok
+2026-10-06T04:24:50.9999926Z test modules::process::tests::environment_policy_only_exposes_frozen_keys ... ok
+2026-10-06T04:24:51.0003018Z test modules::process::tests::failure_and_unreachable_states_are_explicit ... ok
+2026-10-06T04:24:51.0005050Z test modules::process::tests::frozen_timeouts_match_contract ... ok
+2026-10-06T04:24:51.0007475Z test modules::process::tests::invalid_transitions_are_blocked ... ok
+2026-10-06T04:24:51.0009794Z test modules::process::tests::lifecycle_transitions_follow_frozen_flow ... ok
+2026-10-06T04:24:51.0231370Z test modules::process::tests::opencodex_home_must_be_a_directory ... ok
+2026-10-06T04:24:51.6826957Z test infrastructure::webdav_client::tests::refused_connection_is_network_not_tls ... ok
+2026-10-06T04:24:51.7632909Z test modules::process::tests::validates_explicit_paths_and_absolute_home ... ok
+2026-10-06T04:24:51.9640806Z test modules::runtime::paths::windows_tests::windows_install_rejects_system_and_drive_roots ... ok
+2026-10-06T04:24:51.9810428Z test modules::runtime::paths::windows_tests::windows_only_accepts_supported_command_entries ... ok
+2026-10-06T04:24:51.9814080Z test modules::runtime_defaults::tests::frozen_values_match_declared_contract ... ok
+2026-10-06T04:24:51.9820355Z test modules::status::polling::tests::background_interval_uses_frozen_thirty_seconds ... ok
+2026-10-06T04:24:51.9827345Z test modules::status::polling::tests::deadline_wait_and_failure_backoff_are_applied_once ... ok
+2026-10-06T04:24:51.9834334Z test modules::status::polling::tests::refreshes_once_within_debounce_and_gates_emissions ... ok
+2026-10-06T04:24:51.9836356Z test modules::status::tests::at_risk_facts_are_filled_from_startup ... ok
+2026-10-06T04:24:51.9839077Z test modules::status::tests::fz07_health_parse_failure_preserves_previous_state ... ok
+2026-10-06T04:24:51.9841153Z test modules::status::tests::fz07_keeps_previous_state_for_unknown_output ... ok
+2026-10-06T04:24:51.9843962Z test modules::status::tests::fz07_maps_the_frozen_eleven_rows ... ok
+2026-10-06T04:24:51.9846096Z test modules::status::tests::fz07_missing_fields_are_degraded_not_invented ... ok
+2026-10-06T04:24:51.9847952Z test modules::status::tests::fz08_background_intervals_are_frozen ... ok
+2026-10-06T04:24:51.9849859Z test modules::status::tests::fz08_backoff_doubles_and_caps_at_sixty_seconds ... ok
+2026-10-06T04:24:51.9851833Z test modules::status::tests::fz08_debounces_the_same_dimension_for_one_second ... ok
+2026-10-06T04:24:51.9853539Z test modules::status::tests::ipc_gate_allows_at_most_two_emissions_per_second ... ok
+2026-10-06T04:24:51.9856970Z test modules::status::tests::official_2_50_running_report_overrides_startup_risk ... ok
+2026-10-06T04:24:51.9859443Z test modules::status::tests::official_schema_derives_running_and_not_found ... ok
+2026-10-06T04:24:51.9861683Z test modules::status::tests::official_schema_maps_startup_status_and_facts ... ok
+2026-10-06T04:24:51.9863552Z test modules::status::tests::source_timeout_is_a_frozen_contract_value ... ok
+2026-10-06T04:24:51.9865642Z test modules::status::tests::stopped_proxy_does_not_keep_stale_running_state ... ok
+2026-10-06T04:24:51.9883029Z test modules::status::tests::timeout_preserves_previous_state_and_increments_backoff ... ok
+2026-10-06T04:24:51.9885089Z test modules::status::tests::transient_failure_preserves_last_state ... ok
+2026-10-06T04:24:51.9887025Z test modules::status::tests::unresolved_source_falls_back_to_not_found ... ok
+2026-10-06T04:24:51.9888830Z test modules::sync::config::tests::config_accepts_legacy_encryption_field_and_rejects_tls_override ... ok
+2026-10-06T04:24:51.9890634Z test modules::sync::config::tests::input_requires_https_and_passwords ... ok
+2026-10-06T04:24:51.9893517Z test modules::sync::config::tests::legacy_encryption_field_is_read_and_not_written ... ok
+2026-10-06T04:24:51.9894542Z test modules::sync::config::tests::save_endpoint_stores_only_the_webdav_secret ... ignored
+2026-10-06T04:24:51.9895688Z test modules::sync::runner::tests::conflicted_outcome_reports_paused_overwrite ... ok
+2026-10-06T04:24:51.9897655Z test modules::sync::runner::tests::failure_messages_are_user_facing ... ok
+2026-10-06T04:24:51.9903073Z test modules::sync::runner::tests::incoming_current_preferences_are_written_verbatim ... ok
+2026-10-06T04:24:51.9905159Z test modules::sync::runner::tests::incoming_future_preferences_and_non_preferences_are_handled ... ok
+2026-10-06T04:24:51.9909139Z test modules::sync::runner::tests::incoming_legacy_preferences_are_upgraded_to_sectioned_layout ... ok
+2026-10-06T04:24:51.9910930Z test modules::sync::runner::tests::synced_artifacts_are_whitelisted ... ok
+2026-10-06T04:24:51.9914058Z test modules::sync::tests::aad_is_bound_to_format_version_device_and_schema ... ok
+2026-10-06T04:24:51.9917518Z test modules::sync::tests::download_rejects_missing_duplicate_or_bad_payloads ... ok
+2026-10-06T04:24:51.9919235Z test modules::sync::tests::frozen_timeouts_and_limits_match_contract ... ok
+2026-10-06T04:24:51.9922348Z test modules::sync::tests::manifest_validates_frozen_fields_and_limits ... ok
+2026-10-06T04:24:51.9923868Z test modules::sync::tests::only_network_failures_retry ... ok
+2026-10-06T04:24:51.9926593Z test modules::sync::tests::replay_older_snapshot_enters_conflict ... ok
+2026-10-06T04:24:51.9928901Z test modules::sync::tests::snapshot_id_matches_frozen_shape ... ok
+2026-10-06T04:24:51.9930749Z test modules::sync::tests::sync_run_tracks_progress_and_failure ... ok
+2026-10-06T04:24:51.9932277Z test modules::sync::tests::tls_messages_do_not_leak_endpoint_details ... ok
+2026-10-06T04:24:52.2046965Z test modules::test_sandbox::tests::sandbox_identity_and_root_contract ... ok
+2026-10-06T04:24:52.2048559Z test modules::tray::tests::action_gates_allow_start_when_at_risk ... ok
+2026-10-06T04:24:52.2050480Z test modules::tray::tests::action_gates_follow_frozen_matrix ... ok
+2026-10-06T04:24:52.2053561Z test modules::tray::tests::address_is_only_visible_when_running_with_port ... ok
+2026-10-06T04:24:52.2055243Z test modules::tray::tests::labels_cover_all_frozen_runtime_states ... ok
+2026-10-06T04:24:52.2057219Z test modules::tray::tests::menu_ids_are_frozen ... ok
+2026-10-06T04:24:52.2059534Z test modules::tray::tests::tray_labels_never_carry_the_risk_verdict ... ok
+2026-10-06T04:24:52.2061565Z test modules::update::tests::channels_match_frozen_contract ... ok
+2026-10-06T04:24:52.2063598Z test modules::update::tests::failures_never_replace_current_version ... ok
+2026-10-06T04:24:52.2244377Z test modules::write::tests::backup_failure_blocks_write_and_preserves_target ... ok
+2026-10-06T04:24:52.2376356Z test modules::write::tests::cancel_has_no_side_effect ... ok
+2026-10-06T04:24:52.2562971Z test modules::write::tests::digest_mismatch_rejects_external_change_without_writing ... ok
+2026-10-06T04:24:53.2525585Z test modules::write::tests::rollback_restores_previous_payload_and_marks_recovered ... ok
+2026-10-06T04:24:53.2529259Z test modules::write::tests::scopes_and_states_are_frozen_serialized_values ... ok
+2026-10-06T04:24:53.3311343Z test modules::ipc::service::tests::switch_data_root_records_reference_in_the_fixed_app_data_root ... ok
+2026-10-06T04:24:53.3312880Z test modules::write::tests::target_must_have_parent_and_utf8_filename ... ok
+2026-10-06T04:24:53.4215215Z test modules::write::tests::successful_write_follows_frozen_state_chain ... ok
+2026-10-06T04:24:56.2789379Z test tests::legacy_update_channel_enum_migrates_on_load ... ok
+2026-10-06T04:24:56.6232912Z test tests::launch_main_preference_is_consumed ... ok
+2026-10-06T04:24:56.6234605Z test types::about::tests::app_dto_is_camel_case ... ok
+2026-10-06T04:24:56.6237487Z test types::about::tests::official_dto_is_camel_case ... ok
+2026-10-06T04:24:56.6239113Z test types::cleanup::tests::cleanup_result_uses_camel_case ... ok
+2026-10-06T04:24:56.6242528Z test types::codex_shim::tests::dto_uses_camel_case_and_maps_installed_flag ... ok
+2026-10-06T04:24:56.6244903Z test types::codex_shim::tests::readable_dto_has_no_reason_code ... ok
+2026-10-06T04:24:56.6246986Z test types::codex_shim::tests::unreachable_dto_is_honest_and_empty ... ok
+2026-10-06T04:24:56.6249682Z test types::discovery::tests::all_paths_together_are_accepted ... ok
+2026-10-06T04:24:56.6260883Z test types::discovery::tests::default_paths_are_resolved_outside_the_discovery_module ... ok
+2026-10-06T04:24:56.6262543Z test types::discovery::tests::partial_paths_are_rejected_as_a_contract_guard ... ok
+2026-10-06T04:24:56.6264694Z test types::doctor::tests::doctor_dto_uses_camel_case_and_read_only_mode ... ok
+2026-10-06T04:24:56.6267119Z test types::extensions::tests::discovers_from_module_shapes ... ok
+2026-10-06T04:24:56.6269966Z test types::extensions::tests::extension_config_dto_uses_camel_case_and_no_paths ... ok
+2026-10-06T04:24:56.6271885Z test types::extensions::tests::extensions_dto_uses_camel_case ... ok
+2026-10-06T04:24:56.6273857Z test types::migration::tests::import_request_passphrase_is_optional ... ok
+2026-10-06T04:24:56.6275922Z test types::migration::tests::migration_dtos_use_camel_case ... ok
+2026-10-06T04:24:56.6277853Z test types::migration::tests::module_results_project_without_extra_fields ... ok
+2026-10-06T04:24:56.6280209Z test types::notifications::tests::aggregate_dto_uses_camel_case_counts ... ok
+2026-10-06T04:24:56.6282407Z test types::notifications::tests::notification_dto_uses_camel_case_and_frozen_action_refs ... ok
+2026-10-06T04:24:56.6284575Z test types::preferences::tests::preferences_dto_uses_camel_case ... ok
+2026-10-06T04:24:56.6288239Z test types::preferences::tests::webview_camel_case_payload_survives_command_boundary ... ok
+2026-10-06T04:24:56.6289625Z test types::process_action::tests::requires_confirm_for_every_action ... ok
+2026-10-06T04:24:56.6291856Z test types::process_action::tests::result_exposes_frozen_action_gates ... ok
+2026-10-06T04:24:56.6293455Z test types::process_action::tests::serializes_camel_case_frontend_contract ... ok
+2026-10-06T04:24:56.6295018Z test types::runtime::tests::blank_offline_path_is_not_an_archive ... ok
+2026-10-06T04:24:56.6296718Z test types::runtime::tests::proxy_is_absent_without_a_scheme ... ok
+2026-10-06T04:24:56.6298562Z test types::runtime::tests::proxy_with_credentials_carries_them_only_into_the_config_form ... ok
+2026-10-06T04:24:56.6300094Z test types::runtime::tests::proxy_without_credentials_stays_credential_free ... ok
+2026-10-06T04:24:56.6301851Z test types::runtime::tests::source_and_scope_parsing_is_closed_world ... ok
+2026-10-06T04:24:56.6303727Z test types::runtime_status::tests::action_flags_follow_frozen_matrix ... ok
+2026-10-06T04:24:56.6305292Z test types::runtime_status::tests::health_label_matches_frozen_values ... ok
+2026-10-06T04:24:56.6307356Z test types::runtime_status::tests::snapshot_matches_fz06_state_names ... ok
+2026-10-06T04:24:56.6308917Z test types::runtime_status::tests::source_failure_is_frozen ... ok
+2026-10-06T04:24:56.6310624Z test types::status::tests::at_risk_can_start_and_is_not_blocked_by_risk ... ok
+2026-10-06T04:24:56.6312078Z test types::status::tests::runtime_gates_cover_every_frozen_state ... ok
+2026-10-06T04:24:56.6313843Z test types::update::tests::update_status_dto_is_camel_case_and_masks_raw_metadata ... ok
+2026-10-06T04:24:56.6315641Z test types::upgrade::tests::restore_risk_summary_dto_uses_camel_case ... ok
+2026-10-06T04:24:56.6317236Z test types::upgrade::tests::upgrade_backup_dto_uses_camel_case ... ok
+2026-10-06T04:24:56.6318894Z test types::workspace::tests::managed_path_dto_uses_camel_case ... ok
+2026-10-06T04:24:56.6320624Z test types::workspace::tests::open_result_is_explicit ... ok
+2026-10-06T04:24:58.7096374Z test tests::update_channel_preference_seeds_update_status_channel ... ok
+2026-10-06T04:25:31.5727230Z test modules::runtime::install::windows_launcher_tests::generated_launcher_executes_exact_node_and_script_with_literal_special_paths ... ok
+2026-10-06T04:25:50.2841382Z test modules::ipc::audit::tests::retention_keeps_ninety_days_and_max_records has been running for over 60 seconds
+2026-10-06T04:26:00.2302494Z test modules::ipc::audit::tests::retention_keeps_ninety_days_and_max_records ... ok
+2026-10-06T04:26:00.2303017Z
+2026-10-06T04:26:00.2303593Z test result: ok. 275 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 79.28s
+2026-10-06T04:26:00.2304082Z
+2026-10-06T04:26:00.2345378Z      Running unittests src\bin\ocxd.rs (target\debug\deps\ocxd-10931c201e14091b.exe)
+2026-10-06T04:26:00.2445940Z
+2026-10-06T04:26:00.2446293Z running 0 tests
+2026-10-06T04:26:00.2446519Z
+2026-10-06T04:26:00.2447038Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.2447502Z
+2026-10-06T04:26:00.2459485Z      Running unittests src\main.rs (target\debug\deps\opencodex_desktop-eaa22389ff699243.exe)
+2026-10-06T04:26:00.2551572Z
+2026-10-06T04:26:00.2551801Z running 0 tests
+2026-10-06T04:26:00.2552040Z
+2026-10-06T04:26:00.2552429Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.2552719Z
+2026-10-06T04:26:00.2564650Z      Running tests\about.rs (target\debug\deps\about-27baef057e4a56f9.exe)
+2026-10-06T04:26:00.2649852Z
+2026-10-06T04:26:00.2650089Z running 0 tests
+2026-10-06T04:26:00.2650310Z
+2026-10-06T04:26:00.2650743Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.2651219Z
+2026-10-06T04:26:00.2663543Z      Running tests\app_icon.rs (target\debug\deps\app_icon-081abd5087f04557.exe)
+2026-10-06T04:26:00.2748626Z
+2026-10-06T04:26:00.2748912Z running 1 test
+2026-10-06T04:26:00.2872210Z test windows_ico_has_all_sizes_and_visible_artwork_fills_each_frame ... ok
+2026-10-06T04:26:00.2872525Z
+2026-10-06T04:26:00.2872850Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-06T04:26:00.2873146Z
+2026-10-06T04:26:00.2885890Z      Running tests\app_startup_wiring.rs (target\debug\deps\app_startup_wiring-01c3eb7617237cf2.exe)
+2026-10-06T04:26:00.2974606Z
+2026-10-06T04:26:00.2975011Z running 0 tests
+2026-10-06T04:26:00.2975239Z
+2026-10-06T04:26:00.2975662Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.2975978Z
+2026-10-06T04:26:00.2987462Z      Running tests\app_status.rs (target\debug\deps\app_status-0cf1f967e0c38ce7.exe)
+2026-10-06T04:26:00.3086017Z
+2026-10-06T04:26:00.3086298Z running 1 test
+2026-10-06T04:26:00.3088471Z test app_status_reports_shell_ready ... ok
+2026-10-06T04:26:00.3088763Z
+2026-10-06T04:26:00.3089055Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.3089379Z
+2026-10-06T04:26:00.3102872Z      Running tests\cli_ipc.rs (target\debug\deps\cli_ipc-5fc7233348139c60.exe)
+2026-10-06T04:26:00.3188672Z
+2026-10-06T04:26:00.3188938Z running 1 test
+2026-10-06T04:26:00.3191649Z test frozen_ipc_request_rejects_unknown_contract_and_missing_confirmation ... ok
+2026-10-06T04:26:00.3191976Z
+2026-10-06T04:26:00.3192289Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.3192830Z
+2026-10-06T04:26:00.3204227Z      Running tests\codex_shim.rs (target\debug\deps\codex_shim-81951c956af4af3a.exe)
+2026-10-06T04:26:00.3289251Z
+2026-10-06T04:26:00.3289526Z running 0 tests
+2026-10-06T04:26:00.3289741Z
+2026-10-06T04:26:00.3290076Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.3290386Z
+2026-10-06T04:26:00.3302220Z      Running tests\doctor.rs (target\debug\deps\doctor-6d115c9a1bc2259a.exe)
+2026-10-06T04:26:00.3386805Z
+2026-10-06T04:26:00.3387100Z running 0 tests
+2026-10-06T04:26:00.3387346Z
+2026-10-06T04:26:00.3387814Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.3388610Z
+2026-10-06T04:26:00.3400445Z      Running tests\extensions.rs (target\debug\deps\extensions-3654bd836e4d026f.exe)
+2026-10-06T04:26:00.3490433Z
+2026-10-06T04:26:00.3490719Z running 0 tests
+2026-10-06T04:26:00.3490901Z
+2026-10-06T04:26:00.3491542Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.3491910Z
+2026-10-06T04:26:00.3503392Z      Running tests\layer_boundaries.rs (target\debug\deps\layer_boundaries-46e53aa96615d762.exe)
+2026-10-06T04:26:00.3592360Z
+2026-10-06T04:26:00.3592630Z running 1 test
+2026-10-06T04:26:00.3595059Z test public_layers_are_available ... ok
+2026-10-06T04:26:00.3595756Z
+2026-10-06T04:26:00.3596152Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.3596561Z
+2026-10-06T04:26:00.3608213Z      Running tests\logs.rs (target\debug\deps\logs-8444e21dbeb7c529.exe)
+2026-10-06T04:26:00.3731008Z
+2026-10-06T04:26:00.3731315Z running 6 tests
+2026-10-06T04:26:00.3786480Z test fallback_keeps_missing_state_when_no_log_file_exists ... ok
+2026-10-06T04:26:00.3787393Z test missing_call_log_does_not_fall_back_to_application_log ... ok
+2026-10-06T04:26:00.3807973Z test missing_log_file_is_explicit_not_an_error ... ok
+2026-10-06T04:26:00.4361777Z test missing_agent_log_falls_back_to_the_app_log ... ok
+2026-10-06T04:26:00.4363546Z test read_recent_returns_200_tail_and_sanitizes_frozen_rules ... ok
+2026-10-06T04:26:00.4568422Z test call_log_is_read_from_the_active_data_root_not_the_logs_partition ... ok
+2026-10-06T04:26:00.4568865Z
+2026-10-06T04:26:00.4569198Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.08s
+2026-10-06T04:26:00.4569518Z
+2026-10-06T04:26:00.4596677Z      Running tests\notifications.rs (target\debug\deps\notifications-dff063962a9d2195.exe)
+2026-10-06T04:26:00.4705071Z
+2026-10-06T04:26:00.4705362Z running 5 tests
+2026-10-06T04:26:00.4713991Z test fixture_contract_keeps_camel_case_aggregate_and_action_mapping ... ok
+2026-10-06T04:26:00.4715254Z test command_contract_does_not_create_raw_secret_payloads ... ok
+2026-10-06T04:26:00.4747112Z test unknown_id_returns_explicit_not_found_without_mutating_store ... ok
+2026-10-06T04:26:00.6594098Z test startup_never_seeds_and_uses_the_persisted_file ... ok
+2026-10-06T04:26:00.6845496Z test command_operations_share_one_backend_model_and_persist ... ok
+2026-10-06T04:26:00.6845918Z
+2026-10-06T04:26:00.6846685Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+2026-10-06T04:26:00.6847209Z
+2026-10-06T04:26:00.6868447Z      Running tests\official_status_source.rs (target\debug\deps\official_status_source-fa5b934a75a1ae31.exe)
+2026-10-06T04:26:00.6966974Z
+2026-10-06T04:26:00.6967214Z running 4 tests
+2026-10-06T04:26:00.6974295Z test collector_refresh_success_maps_official_output_and_resets_backoff ... ok
+2026-10-06T04:26:00.6975232Z test collector_refresh_failure_preserves_state_and_increments_backoff ... ok
+2026-10-06T04:26:00.6975685Z test collector_request_debounces_one_second ... ok
+2026-10-06T04:26:00.6976080Z test manual_refresh_does_not_share_a_light_cached_result ... ok
+2026-10-06T04:26:00.6976330Z
+2026-10-06T04:26:00.6976638Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.6976907Z
+2026-10-06T04:26:00.6989197Z      Running tests\preferences.rs (target\debug\deps\preferences-49e878edcdc977e6.exe)
+2026-10-06T04:26:00.7075864Z
+2026-10-06T04:26:00.7076220Z running 0 tests
+2026-10-06T04:26:00.7076861Z
+2026-10-06T04:26:00.7077317Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.7077790Z
+2026-10-06T04:26:00.7089176Z      Running tests\process_action.rs (target\debug\deps\process_action-22784936c247c9f0.exe)
+2026-10-06T04:26:00.7174014Z
+2026-10-06T04:26:00.7174528Z running 0 tests
+2026-10-06T04:26:00.7174782Z
+2026-10-06T04:26:00.7175203Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.7175522Z
+2026-10-06T04:26:00.7186986Z      Running tests\runtime_managed_real.rs (target\debug\deps\runtime_managed_real-62262dc07be12ec0.exe)
+2026-10-06T04:26:00.7311020Z
+2026-10-06T04:26:00.7311354Z running 1 test
+2026-10-06T04:26:00.7313749Z test real_managed_runtime_round_trip ... ok
+2026-10-06T04:26:00.7314519Z
+2026-10-06T04:26:00.7314905Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.7315207Z
+2026-10-06T04:26:00.7334993Z      Running tests\sandbox_isolation.rs (target\debug\deps\sandbox_isolation-c5a2c816405a431d.exe)
+2026-10-06T04:26:00.7432809Z
+2026-10-06T04:26:00.7433118Z running 1 test
+2026-10-06T04:26:00.8112987Z test sandbox_writes_never_touch_daily_root_and_missing_root_fails_closed ... ok
+2026-10-06T04:26:00.8113332Z
+2026-10-06T04:26:00.8113654Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.07s
+2026-10-06T04:26:00.8113982Z
+2026-10-06T04:26:00.8132940Z      Running tests\status_matrix.rs (target\debug\deps\status_matrix-f7e65d5f283f3797.exe)
+2026-10-06T04:26:00.8227611Z
+2026-10-06T04:26:00.8227832Z running 2 tests
+2026-10-06T04:26:00.8230912Z test status_enums_cover_the_contracted_matrix ... ok
+2026-10-06T04:26:00.8254817Z test status_matrix_guards_start_and_stop_actions ... ok
+2026-10-06T04:26:00.8255194Z
+2026-10-06T04:26:00.8255705Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.8256174Z
+2026-10-06T04:26:00.8256845Z      Running tests\status_snapshot.rs (target\debug\deps\status_snapshot-60d945dbb8b99db1.exe)
+2026-10-06T04:26:00.8467574Z
+2026-10-06T04:26:00.8467867Z running 4 tests
+2026-10-06T04:26:00.8470410Z test ipc::managed_collector_is_injected_into_status_command ... ignored, Tauri tray setup requires the native main thread
+2026-10-06T04:26:00.8472627Z test status_snapshot_reports_unconfigured_without_guessing_live_state ... ok
+2026-10-06T04:26:00.8477565Z test injected_collector_projects_frozen_running_snapshot ... ok
+2026-10-06T04:26:00.8480900Z test injected_collector_preserves_previous_snapshot_on_failure ... ok
+2026-10-06T04:26:00.8481257Z
+2026-10-06T04:26:00.8481536Z test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:00.8481842Z
+2026-10-06T04:26:00.8501055Z      Running tests\sync_plaintext.rs (target\debug\deps\sync_plaintext-ef177c8bdac16927.exe)
+2026-10-06T04:26:00.8602255Z
+2026-10-06T04:26:00.8602529Z running 3 tests
+2026-10-06T04:26:00.8623379Z test tampered_payload_and_manifest_are_rejected ... ok
+2026-10-06T04:26:00.9319734Z test two_isolated_clients_sync_without_any_extra_passphrase ... ok
+2026-10-06T04:26:02.8680758Z test legacy_transport_packages_need_the_original_passphrase ... ok
+2026-10-06T04:26:02.8681082Z
+2026-10-06T04:26:02.8681402Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.01s
+2026-10-06T04:26:02.8681689Z
+2026-10-06T04:26:02.8704282Z      Running tests\tray.rs (target\debug\deps\tray-c0a894549e4294ce.exe)
+2026-10-06T04:26:02.8811301Z
+2026-10-06T04:26:02.8811579Z running 4 tests
+2026-10-06T04:26:02.8820659Z test tray_state_uses_frozen_labels_for_failure_states ... ok
+2026-10-06T04:26:02.8821356Z test tray_state_hides_address_until_live_running_port_exists ... ok
+2026-10-06T04:26:02.8821867Z test tray_state_reports_running_address_and_action_gates ... ok
+2026-10-06T04:26:02.8822376Z test tray_state_allows_start_at_risk_without_writing_the_risk_verdict_to_the_tray ... ok
+2026-10-06T04:26:02.8822680Z
+2026-10-06T04:26:02.8822956Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:02.8823735Z
+2026-10-06T04:26:02.8836566Z      Running tests\tray_icon.rs (target\debug\deps\tray_icon-c8782e7ef81f8ac8.exe)
+2026-10-06T04:26:02.8922885Z
+2026-10-06T04:26:02.8923182Z running 1 test
+2026-10-06T04:26:02.8933737Z test tray_icons_fill_their_canvas ... ok
+2026-10-06T04:26:02.8934049Z
+2026-10-06T04:26:02.8934343Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:02.8934654Z
+2026-10-06T04:26:02.8946342Z      Running tests\tray_left_click.rs (target\debug\deps\tray_left_click-607a9ab017762a8a.exe)
+2026-10-06T04:26:02.9033541Z
+2026-10-06T04:26:02.9033850Z running 1 test
+2026-10-06T04:26:02.9038442Z test tray_shows_its_menu_on_left_click ... ok
+2026-10-06T04:26:02.9038691Z
+2026-10-06T04:26:02.9038984Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:02.9039309Z
+2026-10-06T04:26:02.9050651Z      Running tests\webdav_legacy_real.rs (target\debug\deps\webdav_legacy_real-9476e50aac08e59e.exe)
+2026-10-06T04:26:02.9156805Z
+2026-10-06T04:26:02.9157085Z running 1 test
+2026-10-06T04:26:02.9164070Z test legacy_encrypted_remote_is_read_with_the_original_passphrase ... ok
+2026-10-06T04:26:02.9164447Z
+2026-10-06T04:26:02.9164731Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:02.9165048Z
+2026-10-06T04:26:02.9177281Z      Running tests\webdav_real.rs (target\debug\deps\webdav_real-55f8e25f7a7d7785.exe)
+2026-10-06T04:26:02.9280550Z
+2026-10-06T04:26:02.9280860Z running 6 tests
+2026-10-06T04:26:02.9297024Z test probe_reaches_real_server ... ok
+2026-10-06T04:26:02.9298029Z test missing_snapshot_is_not_found ... ok
+2026-10-06T04:26:02.9301528Z test upload_then_download_round_trip ... ok
+2026-10-06T04:26:02.9302065Z test wrong_password_is_unauthorized ... ok
+2026-10-06T04:26:04.9760275Z test closed_port_is_reported_as_failure ... ok
+2026-10-06T04:26:17.9675075Z test black_hole_endpoint_times_out_instead_of_hanging ... ok
+2026-10-06T04:26:17.9675431Z
+2026-10-06T04:26:17.9675874Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.04s
+2026-10-06T04:26:17.9676325Z
+2026-10-06T04:26:17.9703964Z      Running tests\webdav_sync_real.rs (target\debug\deps\webdav_sync_real-29b22f987462fc63.exe)
+2026-10-06T04:26:17.9843807Z
+2026-10-06T04:26:17.9844171Z running 4 tests
+2026-10-06T04:26:17.9861678Z test wrong_password_over_real_server_is_unauthorized ... ok
+2026-10-06T04:26:17.9862380Z test concurrent_sync_is_blocked_by_endpoint_lock ... ok
+2026-10-06T04:26:17.9863142Z test missing_payload_on_a_valid_manifest_fails_without_touching_local ... ok
+2026-10-06T04:26:17.9863877Z test two_isolated_roots_sync_through_a_real_server ... ok
+2026-10-06T04:26:17.9864230Z
+2026-10-06T04:26:17.9865102Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:17.9865507Z
+2026-10-06T04:26:17.9881269Z      Running tests\webdav_tls.rs (target\debug\deps\webdav_tls-2f2b6dc47e6f468e.exe)
+2026-10-06T04:26:17.9991047Z
+2026-10-06T04:26:17.9991325Z running 2 tests
+2026-10-06T04:26:17.9997105Z test tls_backend_is_compiled_in ... ok
+2026-10-06T04:26:18.0323342Z test https_scheme_reaches_the_transport_layer ... ok
+2026-10-06T04:26:18.0323612Z
+2026-10-06T04:26:18.0323923Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+2026-10-06T04:26:18.0324202Z
+2026-10-06T04:26:18.0342886Z      Running tests\window_close.rs (target\debug\deps\window_close-f4f419116aa75d66.exe)
+2026-10-06T04:26:18.0435670Z
+2026-10-06T04:26:18.0435923Z running 6 tests
+2026-10-06T04:26:18.0439653Z test hidden_window_releases_the_dock_icon_and_showing_it_restores_it ... ok
+2026-10-06T04:26:18.0442412Z test unreadable_preferences_never_quit_the_shell ... ok
+2026-10-06T04:26:18.0444203Z test default_preference_is_keep_proxy_on_close ... ok
+2026-10-06T04:26:18.0445029Z test window_close_only_hides_the_shell_when_keep_proxy_on_close_is_enabled ... ok
+2026-10-06T04:26:18.0450034Z test notification_publisher_is_absent_when_lifecycle_notifications_are_off ... ok
+2026-10-06T04:26:18.0504947Z test lifecycle_notifications_preference_is_consumed ... ok
+2026-10-06T04:26:18.0505334Z
+2026-10-06T04:26:18.0505647Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-06T04:26:18.0505961Z
+2026-10-06T04:26:18.0518937Z      Running tests\windows_runtime.rs (target\debug\deps\windows_runtime-378bd465dbc2ca5c.exe)
+2026-10-06T04:26:18.0692393Z
+2026-10-06T04:26:18.0692646Z running 6 tests
+2026-10-06T04:26:18.1621338Z test windows_npm_cmd_runner_passes_paths_and_controlled_environment ... ok
+2026-10-06T04:26:18.2240953Z test windows_activation_waits_for_a_short_lived_directory_handle ... ok
+2026-10-06T04:26:18.3051765Z test windows_stop_observes_actual_zero_and_nonzero_exit_codes ... ok
+2026-10-06T04:26:18.3201015Z test windows_user_environment_is_explicit_and_does_not_inherit_credentials ... ok
+2026-10-06T04:26:18.3769991Z test windows_cmd_sources_support_spaces_unicode_and_official_output ... ok
+2026-10-06T04:26:18.4093453Z test windows_version_probe_executes_node_script_in_a_spaced_path ... ok
+2026-10-06T04:26:18.4093967Z
+2026-10-06T04:26:18.4094460Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+2026-10-06T04:26:18.4094915Z
+2026-10-06T04:26:18.4123653Z    Doc-tests opencodex_desktop_lib
+2026-10-06T04:26:20.0784639Z
+2026-10-06T04:26:20.0785130Z running 0 tests
+2026-10-06T04:26:20.0785348Z
+2026-10-06T04:26:20.0785696Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+2026-10-06T04:26:20.0786014Z
+2026-10-06T04:26:20.1922648Z ##[group]Run cargo build --release --features custom-protocol --bins
+2026-10-06T04:26:20.1923188Z cargo build --release --features custom-protocol --bins
+2026-10-06T04:26:20.1983736Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:26:20.1984018Z env:
+2026-10-06T04:26:20.1984182Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:26:20.1984402Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:26:20.1984573Z   CARGO_TERM_COLOR: always
+2026-10-06T04:26:20.1984756Z ##[endgroup]
+2026-10-06T04:26:21.1086788Z    Compiling proc-macro2 v1.0.107
+2026-10-06T04:26:21.1087425Z    Compiling unicode-ident v1.0.26
+2026-10-06T04:26:21.1087929Z    Compiling quote v1.0.47
+2026-10-06T04:26:21.1088395Z    Compiling windows-link v0.2.1
+2026-10-06T04:26:21.1885997Z    Compiling cfg-if v1.0.5
+2026-10-06T04:26:21.3490611Z    Compiling serde_core v1.0.229
+2026-10-06T04:26:21.4371536Z    Compiling icu_properties_data v2.3.0
+2026-10-06T04:26:21.5935211Z    Compiling icu_normalizer_data v2.3.0
+2026-10-06T04:26:21.8144544Z    Compiling siphasher v1.0.4
+2026-10-06T04:26:22.0147837Z    Compiling phf_shared v0.13.1
+2026-10-06T04:26:22.4957226Z    Compiling syn v3.0.6
+2026-10-06T04:26:22.5251230Z    Compiling syn v2.0.119
+2026-10-06T04:26:24.3522594Z    Compiling fastrand v2.5.0
+2026-10-06T04:26:24.4788460Z    Compiling phf_generator v0.13.1
+2026-10-06T04:26:24.6072852Z    Compiling stable_deref_trait v1.2.1
+2026-10-06T04:26:24.6623286Z    Compiling zmij v1.0.23
+2026-10-06T04:26:24.6638860Z    Compiling thiserror v2.0.21
+2026-10-06T04:26:24.9010481Z    Compiling smallvec v1.16.2
+2026-10-06T04:26:24.9635219Z    Compiling version_check v0.9.5
+2026-10-06T04:26:25.0941692Z    Compiling getrandom v0.4.3
+2026-10-06T04:26:25.2950820Z    Compiling parking_lot_core v0.9.12
+2026-10-06T04:26:25.3124280Z    Compiling windows-sys v0.61.2
+2026-10-06T04:26:25.5102043Z    Compiling serde v1.0.229
+2026-10-06T04:26:25.8267331Z    Compiling time-core v0.1.9
+2026-10-06T04:26:26.0213666Z    Compiling typeid v1.0.3
+2026-10-06T04:26:26.2626828Z    Compiling num-conv v0.2.2
+2026-10-06T04:26:26.3965088Z    Compiling memchr v2.8.3
+2026-10-06T04:26:27.0461970Z    Compiling synstructure v0.14.0
+2026-10-06T04:26:27.7708356Z    Compiling shlex v2.0.1
+2026-10-06T04:26:27.9518445Z    Compiling autocfg v1.5.1
+2026-10-06T04:26:28.1776740Z    Compiling phf_macros v0.13.1
+2026-10-06T04:26:28.3309281Z    Compiling find-msvc-tools v0.1.14
+2026-10-06T04:26:28.7334408Z    Compiling zerofrom-derive v0.1.8
+2026-10-06T04:26:29.0286753Z    Compiling yoke-derive v0.8.4
+2026-10-06T04:26:29.2513298Z    Compiling serde_derive v1.0.229
+2026-10-06T04:26:30.3376423Z    Compiling zerovec-derive v0.11.6
+2026-10-06T04:26:30.3390153Z    Compiling displaydoc v0.2.7
+2026-10-06T04:26:31.0880171Z    Compiling zerofrom v0.1.8
+2026-10-06T04:26:31.2176223Z    Compiling thiserror-impl v2.0.21
+2026-10-06T04:26:31.5457064Z    Compiling yoke v0.8.3
+2026-10-06T04:26:31.7354326Z    Compiling zerovec v0.11.8
+2026-10-06T04:26:32.4170689Z    Compiling tinystr v0.8.4
+2026-10-06T04:26:32.6045054Z    Compiling cc v1.6.0
+2026-10-06T04:26:32.6990336Z    Compiling phf_codegen v0.13.1
+2026-10-06T04:26:32.8443558Z    Compiling writeable v0.6.4
+2026-10-06T04:26:33.0628748Z    Compiling itoa v1.0.18
+2026-10-06T04:26:33.2129368Z    Compiling strsim v0.11.1
+2026-10-06T04:26:33.3945257Z    Compiling ident_case v1.0.1
+2026-10-06T04:26:33.4729449Z    Compiling erased-serde v0.4.10
+2026-10-06T04:26:33.5395424Z    Compiling litemap v0.8.3
+2026-10-06T04:26:33.6960326Z    Compiling darling_core v0.24.1
+2026-10-06T04:26:33.7230348Z    Compiling icu_locale_core v2.3.0
+2026-10-06T04:26:34.4946367Z    Compiling potential_utf v0.1.6
+2026-10-06T04:26:34.6139882Z    Compiling zerotrie v0.2.5
+2026-10-06T04:26:34.8958851Z    Compiling generic-array v0.14.7
+2026-10-06T04:26:34.9919798Z    Compiling utf8_iter v1.0.4
+2026-10-06T04:26:35.0767587Z    Compiling icu_provider v2.3.1
+2026-10-06T04:26:35.1658727Z    Compiling icu_collections v2.3.0
+2026-10-06T04:26:35.6279752Z    Compiling anyhow v1.0.104
+2026-10-06T04:26:35.7254428Z    Compiling new_debug_unreachable v1.0.6
+2026-10-06T04:26:35.8095166Z    Compiling scopeguard v1.2.0
+2026-10-06T04:26:35.8827408Z    Compiling lock_api v0.4.14
+2026-10-06T04:26:36.0982628Z    Compiling phf v0.13.1
+2026-10-06T04:26:36.2934246Z    Compiling string_cache_codegen v0.6.1
+2026-10-06T04:26:36.3382460Z    Compiling libc v0.2.190
+2026-10-06T04:26:36.7093451Z    Compiling precomputed-hash v0.1.1
+2026-10-06T04:26:36.7599848Z    Compiling serde_json v1.0.151
+2026-10-06T04:26:36.9771773Z    Compiling web_atoms v0.2.6
+2026-10-06T04:26:37.2306708Z    Compiling parking_lot v0.12.5
+2026-10-06T04:26:37.3236918Z    Compiling icu_normalizer v2.3.0
+2026-10-06T04:26:37.5391601Z    Compiling icu_properties v2.3.0
+2026-10-06T04:26:37.5543942Z    Compiling darling_macro v0.24.1
+2026-10-06T04:26:37.8952541Z    Compiling semver v1.0.28
+2026-10-06T04:26:38.0554669Z    Compiling darling v0.24.1
+2026-10-06T04:26:38.1149642Z    Compiling serde_with_macros v3.24.0
+2026-10-06T04:26:38.1779745Z    Compiling winnow v1.0.4
+2026-10-06T04:26:38.5568542Z    Compiling toml_parser v1.1.3+spec-1.1.0
+2026-10-06T04:26:39.1141230Z    Compiling idna_adapter v1.2.2
+2026-10-06T04:26:39.2705857Z    Compiling string_cache v0.9.0
+2026-10-06T04:26:39.7964720Z    Compiling serde_spanned v1.1.1
+2026-10-06T04:26:39.9025067Z    Compiling toml_datetime v1.1.1+spec-1.1.0
+2026-10-06T04:26:40.1571753Z    Compiling toml_writer v1.1.2+spec-1.1.0
+2026-10-06T04:26:40.2543368Z    Compiling log v0.4.34
+2026-10-06T04:26:40.3189518Z    Compiling percent-encoding v2.3.2
+2026-10-06T04:26:40.3858826Z    Compiling dtoa v1.0.11
+2026-10-06T04:26:40.4612695Z    Compiling form_urlencoded v1.2.2
+2026-10-06T04:26:40.4676887Z    Compiling toml v1.1.6+spec-1.1.0
+2026-10-06T04:26:40.5036815Z    Compiling dtoa-short v0.3.5
+2026-10-06T04:26:40.5937333Z    Compiling uuid v1.27.0
+2026-10-06T04:26:40.6210425Z    Compiling idna v1.1.0
+2026-10-06T04:26:41.0277846Z    Compiling tendril v0.5.1
+2026-10-06T04:26:41.2999694Z    Compiling selectors v0.38.0
+2026-10-06T04:26:41.3334251Z    Compiling cssparser-macros v0.7.1
+2026-10-06T04:26:41.5423361Z    Compiling indexmap v1.9.3
+2026-10-06T04:26:41.6533193Z    Compiling derive_more-impl v2.1.1
+2026-10-06T04:26:41.7175141Z    Compiling aho-corasick v1.1.5
+2026-10-06T04:26:41.7842285Z    Compiling bitflags v2.13.2
+2026-10-06T04:26:41.9675887Z    Compiling regex-syntax v0.8.11
+2026-10-06T04:26:42.0687049Z    Compiling camino v1.2.6
+2026-10-06T04:26:42.3538907Z    Compiling alloc-no-stdlib v3.0.0
+2026-10-06T04:26:42.4332500Z    Compiling alloc-stdlib v0.3.0
+2026-10-06T04:26:42.6358577Z    Compiling cssparser v0.37.0
+2026-10-06T04:26:42.6915970Z    Compiling derive_more v2.1.1
+2026-10-06T04:26:42.9226266Z    Compiling markup5ever v0.39.0
+2026-10-06T04:26:43.1300290Z    Compiling url v2.5.8
+2026-10-06T04:26:43.4784218Z    Compiling winapi-util v0.1.11
+2026-10-06T04:26:43.6650526Z    Compiling serde_derive_internals v0.29.1
+2026-10-06T04:26:43.6780247Z    Compiling servo_arc v0.4.3
+2026-10-06T04:26:43.8076495Z    Compiling getrandom v0.2.17
+2026-10-06T04:26:43.9704714Z    Compiling regex-automata v0.4.18
+2026-10-06T04:26:44.0266605Z    Compiling schemars v0.8.22
+2026-10-06T04:26:44.2157509Z    Compiling powerfmt v0.2.1
+2026-10-06T04:26:44.3569682Z    Compiling web-time v1.1.0
+2026-10-06T04:26:44.6456405Z    Compiling rustc-hash v2.1.3
+2026-10-06T04:26:44.7088129Z    Compiling hashbrown v0.17.1
+2026-10-06T04:26:44.7291917Z    Compiling fnv v1.0.7
+2026-10-06T04:26:44.7897304Z    Compiling hashbrown v0.12.3
+2026-10-06T04:26:45.0598633Z    Compiling deranged v0.5.8
+2026-10-06T04:26:45.3202608Z    Compiling equivalent v1.0.2
+2026-10-06T04:26:45.3224259Z    Compiling bit-vec v0.8.0
+2026-10-06T04:26:45.3730513Z    Compiling indexmap v2.14.2
+2026-10-06T04:26:45.5465918Z    Compiling bit-set v0.8.0
+2026-10-06T04:26:46.1361296Z    Compiling cfb v0.14.0
+2026-10-06T04:26:46.3573513Z    Compiling regex v1.13.1
+2026-10-06T04:26:46.8193240Z    Compiling time v0.3.55
+2026-10-06T04:26:46.8941028Z    Compiling schemars_derive v0.8.22
+2026-10-06T04:26:47.8919460Z    Compiling same-file v1.0.6
+2026-10-06T04:26:47.9399781Z    Compiling html5ever v0.39.0
+2026-10-06T04:26:48.3211926Z    Compiling brotli-decompressor v6.0.1
+2026-10-06T04:26:48.8356238Z    Compiling jsonptr v0.7.1
+2026-10-06T04:26:49.1776750Z    Compiling cargo-platform v0.1.9
+2026-10-06T04:26:49.3197369Z    Compiling quick-xml v0.42.0
+2026-10-06T04:26:49.3862433Z    Compiling dyn-clone v1.0.20
+2026-10-06T04:26:49.3864861Z    Compiling foldhash v0.2.0
+2026-10-06T04:26:49.4777771Z    Compiling bytes v1.12.1
+2026-10-06T04:26:49.5433781Z    Compiling base64 v0.23.1
+2026-10-06T04:26:49.6893927Z    Compiling dunce v1.0.5
+2026-10-06T04:26:49.8144445Z    Compiling dom_query v0.28.0
+2026-10-06T04:26:50.1557078Z    Compiling plist v1.10.1
+2026-10-06T04:26:50.4134073Z    Compiling http v1.5.0
+2026-10-06T04:26:51.1144170Z    Compiling cargo_metadata v0.19.2
+2026-10-06T04:26:51.5279373Z    Compiling brotli v9.0.0
+2026-10-06T04:26:51.6412609Z    Compiling json-patch v4.2.0
+2026-10-06T04:26:51.9226954Z    Compiling walkdir v2.5.0
+2026-10-06T04:26:52.0777457Z    Compiling serde-untagged v0.1.9
+2026-10-06T04:26:52.2103168Z    Compiling infer v0.22.0
+2026-10-06T04:26:52.3255402Z    Compiling urlpattern v0.6.0
+2026-10-06T04:26:52.7225891Z    Compiling serde_with v3.24.0
+2026-10-06T04:26:52.7509677Z    Compiling ctor v1.0.13
+2026-10-06T04:26:53.0842617Z    Compiling glob v0.3.4
+2026-10-06T04:26:53.4503350Z    Compiling windows-strings v0.5.1
+2026-10-06T04:26:54.0230578Z    Compiling windows-result v0.4.1
+2026-10-06T04:26:54.2674632Z    Compiling windows_x86_64_msvc v0.52.6
+2026-10-06T04:26:54.8042301Z    Compiling once_cell v1.21.4
+2026-10-06T04:26:55.0109615Z    Compiling pin-project-lite v0.2.17
+2026-10-06T04:26:55.0998151Z    Compiling tauri-utils v2.10.1
+2026-10-06T04:26:55.7597178Z    Compiling vswhom-sys v0.1.3
+2026-10-06T04:26:56.0194228Z    Compiling crc32fast v1.5.2
+2026-10-06T04:26:57.1866860Z    Compiling windows-targets v0.52.6
+2026-10-06T04:26:57.5403603Z    Compiling windows-sys v0.59.0
+2026-10-06T04:27:00.2465560Z    Compiling vswhom v0.1.0
+2026-10-06T04:27:00.3512774Z    Compiling rustc_version v0.4.1
+2026-10-06T04:27:00.6624917Z    Compiling windows-interface v0.59.3
+2026-10-06T04:27:01.0012733Z    Compiling windows-implement v0.60.2
+2026-10-06T04:27:01.3343381Z    Compiling winreg v0.55.0
+2026-10-06T04:27:01.3758295Z    Compiling subtle v2.6.1
+2026-10-06T04:27:01.5208022Z    Compiling option-ext v0.2.0
+2026-10-06T04:27:01.5939645Z    Compiling typenum v1.20.1
+2026-10-06T04:27:01.6178074Z    Compiling dirs-sys v0.5.0
+2026-10-06T04:27:01.7112165Z    Compiling embed-resource v3.0.11
+2026-10-06T04:27:01.7358310Z    Compiling windows-core v0.62.2
+2026-10-06T04:27:02.3043819Z    Compiling socket2 v0.6.5
+2026-10-06T04:27:02.5658840Z    Compiling mio v1.2.4
+2026-10-06T04:27:03.1858302Z    Compiling tokio-macros v2.7.2
+2026-10-06T04:27:03.8534335Z    Compiling heck v0.5.0
+2026-10-06T04:27:03.8876809Z    Compiling tokio v1.53.2
+2026-10-06T04:27:04.3066655Z    Compiling tauri-winres v0.3.6
+2026-10-06T04:27:04.6037891Z    Compiling dirs v7.0.0
+2026-10-06T04:27:04.6767771Z    Compiling rand_core v0.6.4
+2026-10-06T04:27:04.9172294Z    Compiling cargo_toml v1.0.1
+2026-10-06T04:27:06.2207199Z    Compiling simd-adler32 v0.3.10
+2026-10-06T04:27:06.6735770Z    Compiling tauri-build v2.7.1
+2026-10-06T04:27:10.4459792Z    Compiling tauri-plugin v2.7.1
+2026-10-06T04:27:10.8618475Z    Compiling time-macros v0.2.32
+2026-10-06T04:27:11.6013757Z    Compiling windows-threading v0.2.1
+2026-10-06T04:27:12.6274854Z    Compiling zeroize v1.9.0
+2026-10-06T04:27:12.7967490Z    Compiling adler2 v2.0.1
+2026-10-06T04:27:13.3707786Z    Compiling futures-core v0.3.34
+2026-10-06T04:27:13.5560083Z    Compiling windows-future v0.3.2
+2026-10-06T04:27:14.4029662Z    Compiling crypto-common v0.1.7
+2026-10-06T04:27:14.4375587Z    Compiling windows-collections v0.3.2
+2026-10-06T04:27:14.5112227Z    Compiling windows-numerics v0.3.1
+2026-10-06T04:27:14.9660014Z    Compiling tracing-core v0.1.36
+2026-10-06T04:27:15.0138705Z    Compiling raw-window-handle v0.6.2
+2026-10-06T04:27:15.3082168Z    Compiling crossbeam-utils v0.8.23
+2026-10-06T04:27:16.0307048Z    Compiling tracing v0.1.44
+2026-10-06T04:27:16.6473897Z    Compiling windows v0.62.2
+2026-10-06T04:27:16.6672165Z    Compiling tauri v2.12.1
+2026-10-06T04:27:17.1819732Z    Compiling miniz_oxide v0.9.1
+2026-10-06T04:27:17.6647766Z    Compiling dpi v0.1.2
+2026-10-06T04:27:17.8533016Z    Compiling ring v0.17.14
+2026-10-06T04:27:18.0332601Z    Compiling webview2-com-sys v0.39.1
+2026-10-06T04:27:25.4584433Z    Compiling flate2 v1.1.10
+2026-10-06T04:27:26.4581782Z    Compiling miniz_oxide v0.8.9
+2026-10-06T04:27:26.6481759Z    Compiling fdeflate v0.3.7
+2026-10-06T04:27:27.1393330Z    Compiling num-traits v0.2.19
+2026-10-06T04:27:27.3327229Z    Compiling cookie v0.18.2
+2026-10-06T04:27:27.7147410Z    Compiling getrandom v0.3.4
+2026-10-06T04:27:29.4335657Z    Compiling crossbeam-channel v0.5.17
+2026-10-06T04:27:31.9154835Z    Compiling block-buffer v0.10.4
+2026-10-06T04:27:31.9745683Z    Compiling rustls-pki-types v1.15.1
+2026-10-06T04:27:33.3923958Z    Compiling webview2-com-macros v0.8.1
+2026-10-06T04:27:34.3902247Z    Compiling windows-version v0.1.7
+2026-10-06T04:27:34.6576085Z    Compiling bitflags v1.3.2
+2026-10-06T04:27:34.7076497Z    Compiling untrusted v0.9.0
+2026-10-06T04:27:34.7905175Z    Compiling zlib-rs v0.6.8
+2026-10-06T04:27:35.3143183Z    Compiling png v0.17.16
+2026-10-06T04:27:40.8063099Z    Compiling digest v0.10.7
+2026-10-06T04:27:44.8897106Z    Compiling http-body v1.1.0
+2026-10-06T04:27:46.4862998Z    Compiling futures-macro v0.3.34
+2026-10-06T04:27:47.3685402Z    Compiling byteorder v1.5.0
+2026-10-06T04:27:47.4708331Z    Compiling cpufeatures v0.2.17
+2026-10-06T04:27:47.5192167Z    Compiling futures-task v0.3.34
+2026-10-06T04:27:47.6439886Z    Compiling rustls v0.23.45
+2026-10-06T04:27:47.6751472Z    Compiling httparse v1.10.1
+2026-10-06T04:27:47.8122595Z    Compiling slab v0.4.12
+2026-10-06T04:27:47.9928509Z    Compiling wry v0.57.0
+2026-10-06T04:27:47.9940443Z    Compiling muda v0.20.0
+2026-10-06T04:27:48.2044251Z    Compiling tauri-runtime v2.12.1
+2026-10-06T04:27:48.4395359Z    Compiling futures-util v0.3.34
+2026-10-06T04:27:49.0866164Z    Compiling ico v0.5.0
+2026-10-06T04:27:49.6679113Z    Compiling sha2 v0.10.9
+2026-10-06T04:27:50.8204682Z    Compiling rustls-webpki v0.103.15
+2026-10-06T04:27:51.1342075Z    Compiling png v0.18.1
+2026-10-06T04:27:55.0343518Z    Compiling keyboard-types v0.8.3
+2026-10-06T04:27:56.7559209Z    Compiling tower-service v0.3.3
+2026-10-06T04:27:56.9198375Z    Compiling pxfm v0.1.30
+2026-10-06T04:27:59.7083543Z    Compiling webview2-com v0.39.1
+2026-10-06T04:28:05.9296371Z    Compiling tray-icon v0.25.1
+2026-10-06T04:28:06.1068282Z    Compiling tauri-runtime-wry v2.12.1
+2026-10-06T04:28:06.3489239Z    Compiling try-lock v0.2.5
+2026-10-06T04:28:06.4190629Z    Compiling base64 v0.22.1
+2026-10-06T04:28:06.5928645Z    Compiling windows_x86_64_msvc v0.53.1
+2026-10-06T04:28:06.7362175Z    Compiling unicode-segmentation v1.13.3
+2026-10-06T04:28:06.8016574Z    Compiling tauri-codegen v2.7.1
+2026-10-06T04:28:07.4321587Z    Compiling tao v0.37.1
+2026-10-06T04:28:08.3629557Z    Compiling want v0.3.2
+2026-10-06T04:28:09.1389711Z    Compiling moxcms v0.8.1
+2026-10-06T04:28:16.1433506Z    Compiling softbuffer v0.4.8
+2026-10-06T04:28:17.4754120Z    Compiling futures-channel v0.3.34
+2026-10-06T04:28:17.6852058Z    Compiling serialize-to-javascript-impl v0.1.2
+2026-10-06T04:28:18.0922643Z    Compiling bytemuck v1.25.2
+2026-10-06T04:28:18.2291053Z    Compiling atomic-waker v1.1.2
+2026-10-06T04:28:18.3261736Z    Compiling byteorder-lite v0.1.0
+2026-10-06T04:28:18.3509935Z    Compiling hyper v1.11.1
+2026-10-06T04:28:18.5809291Z    Compiling image v0.25.10
+2026-10-06T04:28:20.9985320Z    Compiling serialize-to-javascript v0.1.2
+2026-10-06T04:28:23.9501623Z    Compiling tauri-macros v2.7.1
+2026-10-06T04:28:25.8613181Z    Compiling window-vibrancy v0.8.1
+2026-10-06T04:28:26.0808253Z    Compiling tauri-plugin-fs v2.6.0
+2026-10-06T04:28:27.2545344Z    Compiling sync_wrapper v1.0.2
+2026-10-06T04:28:27.3297269Z    Compiling windows-registry v0.6.1
+2026-10-06T04:28:27.7333200Z    Compiling schannel v0.1.29
+2026-10-06T04:28:28.7412344Z    Compiling serde_repr v0.1.21
+2026-10-06T04:28:29.2019218Z    Compiling tower-layer v0.3.3
+2026-10-06T04:28:29.3402791Z    Compiling ipnet v2.12.2
+2026-10-06T04:28:29.6371936Z    Compiling zerocopy v0.8.60
+2026-10-06T04:28:30.6781704Z    Compiling mime v0.3.17
+2026-10-06T04:28:31.1794542Z    Compiling hyper-util v0.1.21
+2026-10-06T04:28:31.1946841Z    Compiling tower v0.5.3
+2026-10-06T04:28:31.8122236Z    Compiling rustls-native-certs v0.8.4
+2026-10-06T04:28:32.5417753Z    Compiling windows-targets v0.53.5
+2026-10-06T04:28:32.5874367Z    Compiling tokio-rustls v0.26.6
+2026-10-06T04:28:32.9629216Z    Compiling inout v0.1.4
+2026-10-06T04:28:33.0694514Z    Compiling cipher v0.4.4
+2026-10-06T04:28:33.4774915Z    Compiling hyper-rustls v0.27.10
+2026-10-06T04:28:33.8687917Z    Compiling windows-sys v0.60.2
+2026-10-06T04:28:33.9665538Z    Compiling tower-http v0.6.11
+2026-10-06T04:28:35.5453225Z    Compiling http-body-util v0.1.5
+2026-10-06T04:28:35.8131860Z    Compiling universal-hash v0.5.1
+2026-10-06T04:28:35.9024688Z    Compiling tauri-plugin-dialog v2.8.1
+2026-10-06T04:28:36.7273896Z    Compiling tauri-plugin-updater v2.13.1
+2026-10-06T04:28:37.1144043Z    Compiling tauri-plugin-process v2.4.0
+2026-10-06T04:28:37.5415068Z    Compiling futures-sink v0.3.34
+2026-10-06T04:28:37.6405263Z    Compiling opaque-debug v0.3.1
+2026-10-06T04:28:37.7009680Z    Compiling rfd v0.16.0
+2026-10-06T04:28:37.9018547Z    Compiling ryu v1.0.23
+2026-10-06T04:28:38.0080543Z    Compiling polyval v0.6.2
+2026-10-06T04:28:38.2218568Z    Compiling tokio-util v0.7.19
+2026-10-06T04:28:38.2969873Z    Compiling rustls-platform-verifier v0.7.1
+2026-10-06T04:28:38.7865216Z    Compiling rand_core v0.9.5
+2026-10-06T04:28:39.0138437Z    Compiling ppv-lite86 v0.2.21
+2026-10-06T04:28:39.3989415Z    Compiling base64ct v1.8.3
+2026-10-06T04:28:39.5028376Z    Compiling rand_chacha v0.9.0
+2026-10-06T04:28:39.5263323Z    Compiling tempfile v3.27.0
+2026-10-06T04:28:39.8218190Z    Compiling password-hash v0.5.0
+2026-10-06T04:28:40.3295350Z    Compiling reqwest v0.13.5
+2026-10-06T04:28:40.3565483Z    Compiling ghash v0.5.1
+2026-10-06T04:28:40.4448141Z    Compiling serde_urlencoded v0.7.1
+2026-10-06T04:28:42.1549565Z    Compiling blake2 v0.10.6
+2026-10-06T04:28:42.1601513Z    Compiling aes v0.8.4
+2026-10-06T04:28:42.8889478Z    Compiling ctr v0.9.2
+2026-10-06T04:28:43.0465295Z    Compiling zip v4.6.1
+2026-10-06T04:28:43.1554194Z    Compiling aead v0.5.2
+2026-10-06T04:28:43.3057114Z    Compiling opencodex-desktop v0.1.8 (D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri)
+2026-10-06T04:28:44.4296361Z    Compiling toml_datetime v0.7.5+spec-1.1.0
+2026-10-06T04:28:44.9138230Z    Compiling filetime v0.2.29
+2026-10-06T04:28:45.0532333Z    Compiling minisign-verify v0.2.5
+2026-10-06T04:28:45.1837623Z    Compiling winnow v0.7.15
+2026-10-06T04:28:46.5995481Z    Compiling unsafe-libyaml v0.2.11
+2026-10-06T04:28:46.7987112Z    Compiling keyring v3.6.3
+2026-10-06T04:28:47.3568448Z    Compiling serde_yaml v0.9.34+deprecated
+2026-10-06T04:28:47.8148602Z    Compiling toml v0.9.12+spec-1.1.0
+2026-10-06T04:28:50.0306785Z    Compiling tar v0.4.46
+2026-10-06T04:28:51.3980776Z    Compiling aes-gcm v0.10.3
+2026-10-06T04:28:51.4515179Z    Compiling argon2 v0.5.3
+2026-10-06T04:28:51.6143118Z    Compiling reqwest v0.12.28
+2026-10-06T04:28:52.2062174Z    Compiling rand v0.9.5
+2026-10-06T04:28:52.5365704Z    Compiling dirs v6.0.0
+2026-10-06T04:28:52.6293203Z    Compiling chrono v0.4.45
+2026-10-06T04:28:52.9881575Z    Compiling async-trait v0.1.92
+2026-10-06T04:32:01.4907589Z     Finished `release` profile [optimized] target(s) in 5m 41s
+2026-10-06T04:32:01.7489207Z ##[group]Run & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+2026-10-06T04:32:01.7490413Z & ../../../test/smoke/windows-startup.ps1 -Executable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-startup
+2026-10-06T04:32:01.7555929Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-06T04:32:01.7556263Z env:
+2026-10-06T04:32:01.7556477Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:32:01.7557066Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:32:01.7557323Z   CARGO_TERM_COLOR: always
+2026-10-06T04:32:01.7557548Z ##[endgroup]
+2026-10-06T04:32:33.1378160Z PASS: Windows 0.1.8 rendered, Tauri commands succeeded, sandbox initialized.
+2026-10-06T04:32:45.0419653Z ##[group]Run actions/upload-artifact@v4
+2026-10-06T04:32:45.0420012Z with:
+2026-10-06T04:32:45.0420245Z   name: windows-startup-evidence
+2026-10-06T04:32:45.0420522Z   path: test/out/windows-startup
+2026-10-06T04:32:45.0420774Z   if-no-files-found: warn
+2026-10-06T04:32:45.0421004Z   compression-level: 6
+2026-10-06T04:32:45.0421221Z   overwrite: false
+2026-10-06T04:32:45.0421439Z   include-hidden-files: false
+2026-10-06T04:32:45.0421694Z env:
+2026-10-06T04:32:45.0421898Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-06T04:32:45.0422154Z   CARGO_INCREMENTAL: 0
+2026-10-06T04:32:45.0422369Z   CARGO_TERM_COLOR: always
+2026-10-06T04:32:45.0422589Z ##[endgroup]
+2026-10-06T04:32:50.5088999Z (node:1200) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T04:32:50.5089684Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T04:32:50.6863948Z With the provided path, there will be 177 files uploaded
+2026-10-06T04:32:50.6868736Z Artifact name is valid!
+2026-10-06T04:32:50.6869981Z Root directory input is valid!
+2026-10-06T04:32:51.5053629Z Beginning upload of artifact content to blob storage
+2026-10-06T04:32:51.8566437Z (node:1200) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-06T04:32:52.4129080Z Uploaded bytes 566066
+2026-10-06T04:32:52.4757339Z Finished uploading artifact content to blob storage!
+2026-10-06T04:32:52.4758138Z SHA256 digest of uploaded artifact zip is fbd69932005397edca4f8a906aebb127d286f08980e594bc6b9dc89a999d1fe0
+2026-10-06T04:32:52.4760073Z Finalizing artifact upload
+2026-10-06T04:32:52.7110659Z Artifact windows-startup-evidence.zip successfully finalized. Artifact ID 11390482136
+2026-10-06T04:32:52.7111548Z Artifact windows-startup-evidence has been successfully uploaded! Final size is 566066 bytes. Artifact ID is 11390482136
+2026-10-06T04:32:52.7141350Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/37412506075/artifacts/11390482136
+2026-10-06T04:32:52.7978688Z Post job cleanup.
+2026-10-06T04:32:52.9619747Z (node:9180) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T04:32:52.9620437Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T04:32:53.0177576Z Post job cleanup.
+2026-10-06T04:32:53.1860169Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-06T04:32:53.2243018Z git version 2.55.0.windows.5
+2026-10-06T04:32:53.2295271Z Temporarily overriding HOME='D:\a\_temp\58b0fdca-4e01-4d6b-9576-0255dbed44d3' before making global git config changes
+2026-10-06T04:32:53.2296060Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-06T04:32:53.2304109Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-06T04:32:53.3807846Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-06T04:32:53.4138512Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-06T04:32:55.3185698Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-06T04:32:55.3392037Z http.https://github.com/.extraheader
+2026-10-06T04:32:55.3424237Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-06T04:32:55.3693673Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-06T04:32:55.7645859Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-06T04:32:55.7879634Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-06T04:32:56.2580895Z Cleaning up orphan processes
+2026-10-06T04:32:56.3755465Z Terminate orphan process: pid (4204) (vctip)
+2026-10-06T04:32:57.2973852Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

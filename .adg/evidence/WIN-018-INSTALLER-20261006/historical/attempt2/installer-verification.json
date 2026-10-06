@@ -1,0 +1,24 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "0f8ea8eb09b360e27b242f96ae364ccfd8558ce4",
+  "builtExecutableSha256": "ec613ce238801da0aa92825534785f317857da5777c8e1c38708b1a8c34b901d",
+  "version": "0.1.8",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "fail",
+  "installers": [
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.8_x64-setup.exe",
+      "bytes": 2880651,
+      "sha256": "280f6be13019f379a2a5f3189b6b220a62a2ae1f513ae8145a17f94f31bba402",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-db425b0dca934f73b4554617e5140f85",
+      "result": "fail",
+      "installExitCode": 0,
+      "installedExecutableSha256": "8a5dec370dbf24269752fdd09b042e142019aa6876c6214f683746e3f6efc7ba",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ],
+  "error": "Installed EXE differs from bundled source EXE"
+}

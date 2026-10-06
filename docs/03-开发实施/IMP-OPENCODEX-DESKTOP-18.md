@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: completed
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.8 Windows 启动与运行适配修复
-summary: 9262a5b 的 CI、Windows 双权限首屏与 macOS 原生首屏、隔离副本升级和真实安装往返通过；正式安装器、完整生命周期和签名 OTA 门禁保持，未合并或发布。
+summary: 9262a5b 的 CI、Windows 双权限首屏与 macOS 原生首屏、隔离副本升级和真实安装往返通过；Windows NSIS/MSI 候选包新装、首屏与卸载通过；用户升级、完整生命周期和签名 OTA 门禁保持，未合并或正式发布。
 completion_summary: "原始 feature 开发、Windows 本机测试及提交完成；远端前端、macOS 后端与 Linux 发布工具通过，Windows final EXE smoke 在 CDP target 获取阶段失败。原始完成状态不代表续修或发布门禁通过。"
 ---
 
@@ -52,3 +52,7 @@ completion_summary: "原始 feature 开发、Windows 本机测试及提交完成
 CHANGELOG 依仓库归属仅在 main 维护；用户合并时补写 `[0.1.8]` 的实际发布范围与未覆盖项，再完成出包和版本交付。0.1.7 已安装实例保持原样，本轮不替换日常应用或停止其代理。
 
 2026-10-06 Mac 接续追加：接收已有的 Windows 文档提交 0075a81，在独立工作树固定 9262a5b 构建本地 .app。原生 WKWebView 首屏与 Tauri 关于/数据根回读、110% 缩放重启恢复、安装确认与原生离线选择器、UI 异常重载恢复通过；隔离 0.1.7→0.1.8 副本升级保留 125% 缩放、浅色主题、偏好及三个合成数据文件。冷 HOME 下官方 2.78.0 的联网安装、离线导入、卸载往返测试 1 项通过，无跳过。正式包、托盘/代理/CLI 完整生命周期、签名 OTA 和发布门禁仍开放，不改变原始 completed 的边界。详见 [07-macOS 原生 UI 与安装回归及合并打包门禁](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/07-macOS原生UI与安装回归及合并打包门禁.md)，机器证据见 [MAC-018-20261006](../../.adg/evidence/MAC-018-20261006/manifest.json)。日常 Mac 0.1.7 的应用摘要、PID/启动时间保持；本轮只回写文档/证据，不改代码/main、不替换日常应用或发布。
+
+2026-10-06 Windows 候选安装交付追加：用户请求“给我发行我在 windows 安装”，发行授权已收到。为继续补齐门禁，feature/0.1.8-windows-package@cffca3afc29b8b251f3f14535f997b5d08560cb2 仅增加出包工作流和安装验证，应用实现仍为 9262a5b。候选任务 37412506074 已成功上传未签名 x64 NSIS/MSI，锁定依赖的 Windows 后端 335 项通过（5 原有忽略），精确包身份 5 项通过。临时 runner 实际新装两种包，安装后 EXE 的完整 SHA-256 与唯一 Tauri bundle 标记变换后的预期一致；无 HOME 的 Vue 首屏、Tauri 回读、0.1.8 版本、来源提交及卸载均通过。正式门禁仍要求用户设备升级/最终包双权限/DPI、完整代理生命周期、签名 OTA 等验收；未合并 main、创建版本发行标签或正式 Release，Latest 保持 v0.1.7，日常 Mac 0.1.7 保持。下载入口、完整摘要、失败保留与验收交接见 [08-Windows 安装候选包与验收交接](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/08-Windows安装候选包与验收交接.md)，机器证据见 [WIN-018-INSTALLER-20261006](../../.adg/evidence/WIN-018-INSTALLER-20261006/manifest.json)。
+
+候选提交的完整 CI 37412506075 首次执行出现 TLS 首字节断言失败（None / Some(22)）；保留失败证据并只重跑失败 job，未改测试或绕过断言。第二次执行 Windows 335 项、最终 EXE 无 HOME 首屏通过；其余前端 375、CDP 7、macOS 574、发布工具 29 项通过，任务整体 success。TLS 首次失败原因仍未确认，不将重跑通过记为根因修复。
