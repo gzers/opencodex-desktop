@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: completed
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.8 Windows 启动与运行适配修复
-summary: Windows 适配与 CDP 续修已推送至 9262a5b；对应 CI 和普通/管理员 PowerShell 7 首屏复验通过。未合并、未制作安装器或发布，后续集成门禁保留。
+summary: 9262a5b 的 CI、Windows 双权限首屏与 macOS 原生首屏、隔离副本升级和真实安装往返通过；正式安装器、完整生命周期和签名 OTA 门禁保持，未合并或发布。
 completion_summary: "原始 feature 开发、Windows 本机测试及提交完成；远端前端、macOS 后端与 Linux 发布工具通过，Windows final EXE smoke 在 CDP target 获取阶段失败。原始完成状态不代表续修或发布门禁通过。"
 ---
 
@@ -50,3 +50,5 @@ completion_summary: "原始 feature 开发、Windows 本机测试及提交完成
 本机是 Windows Server 2025 x64，不推导为全部 Windows 10/11 的安装验收。安装器升级、桌面快捷方式缓存、多种 DPI、真实官方代理服务生命周期和 OTA 仍由后续集成阶段执行。macOS 原生验证不能用 Windows 本机通过结果替代。
 
 CHANGELOG 依仓库归属仅在 main 维护；用户合并时补写 `[0.1.8]` 的实际发布范围与未覆盖项，再完成出包和版本交付。0.1.7 已安装实例保持原样，本轮不替换日常应用或停止其代理。
+
+2026-10-06 Mac 接续追加：接收已有的 Windows 文档提交 0075a81，在独立工作树固定 9262a5b 构建本地 .app。原生 WKWebView 首屏与 Tauri 关于/数据根回读、110% 缩放重启恢复、安装确认与原生离线选择器、UI 异常重载恢复通过；隔离 0.1.7→0.1.8 副本升级保留 125% 缩放、浅色主题、偏好及三个合成数据文件。冷 HOME 下官方 2.78.0 的联网安装、离线导入、卸载往返测试 1 项通过，无跳过。正式包、托盘/代理/CLI 完整生命周期、签名 OTA 和发布门禁仍开放，不改变原始 completed 的边界。详见 [07-macOS 原生 UI 与安装回归及合并打包门禁](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/07-macOS原生UI与安装回归及合并打包门禁.md)，机器证据见 [MAC-018-20261006](../../.adg/evidence/MAC-018-20261006/manifest.json)。日常 Mac 0.1.7 的应用摘要、PID/启动时间保持；本轮只回写文档/证据，不改代码/main、不替换日常应用或发布。

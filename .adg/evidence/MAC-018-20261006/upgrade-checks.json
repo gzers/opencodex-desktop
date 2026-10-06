@@ -1,0 +1,139 @@
+{
+  "pid_017": 58131,
+  "app": "/tmp/ocxd018-macos-20261006/install-upgrade/OpenCodeX Upgrade Test.app",
+  "root": "/tmp/ocxd018-macos-20261006/upgrade-data",
+  "home": "/tmp/ocxd018-macos-20261006/upgrade-home",
+  "old_version": "0.1.7",
+  "method": "isolated app-copy replacement; unique bundle id and ad-hoc re-sign; no DMG/OTA",
+  "before_sha256": {
+    "manager-state/preferences.json": "f240c663871c34690e6cd368f698d6a744e3fe2f362c8c5bd979c1be8bd7626d",
+    "backups/upgrade-sentinel.json": "04ae479dd2881aeda32aa4af9b8d8f4f407d0f6c34060148f3e342490bab4fde",
+    "exports/upgrade-sentinel.json": "04ae479dd2881aeda32aa4af9b8d8f4f407d0f6c34060148f3e342490bab4fde",
+    "opencodex-home/upgrade-sentinel.json": "04ae479dd2881aeda32aa4af9b8d8f4f407d0f6c34060148f3e342490bab4fde"
+  },
+  "preferences_before": {
+    "appearance": {
+      "glow_render": "mesh",
+      "interface_scale": 125,
+      "theme": "light",
+      "visual_effects": "high"
+    },
+    "backup": {
+      "auto_backup_import": true,
+      "auto_backup_sync": true,
+      "auto_backup_upgrade": true,
+      "backup_before_overwrite": true,
+      "backup_include_mcp": true,
+      "backup_include_skills": true,
+      "backup_integrity": "sha-256",
+      "backup_retention": "10",
+      "export_include_mcp": true,
+      "export_include_skills": true
+    },
+    "cli": {
+      "cli_enabled": false
+    },
+    "extensions": {
+      "mcp_conflict_policy": "ask",
+      "mcp_mask": true
+    },
+    "maintenance": {
+      "cleanup_backup_summary": true,
+      "log_retention": "30d-10000",
+      "notification_retention": "30",
+      "startup_cleanup": false
+    },
+    "network": {
+      "network_no_proxy": "",
+      "network_proxy_host": "",
+      "network_proxy_mode": "none",
+      "network_proxy_scheme": "http"
+    },
+    "schema_version": 2,
+    "shell": {
+      "auto_panel": false,
+      "keep_proxy_on_close": true,
+      "launch_main": true,
+      "launch_with_codex": true,
+      "lifecycle_notifications": true,
+      "panel_mode": "embedded"
+    },
+    "sync": {
+      "cold_sync": true,
+      "sync_conflict_alerts": true,
+      "sync_conflict_policy": "ask"
+    },
+    "updates": {
+      "app_update_auto_check": false,
+      "app_update_channel": "stable",
+      "app_update_check_interval_seconds": 86400
+    }
+  },
+  "pid_018": 58265,
+  "new_version": "0.1.8",
+  "after_sha256": {
+    "manager-state/preferences.json": "f240c663871c34690e6cd368f698d6a744e3fe2f362c8c5bd979c1be8bd7626d",
+    "backups/upgrade-sentinel.json": "04ae479dd2881aeda32aa4af9b8d8f4f407d0f6c34060148f3e342490bab4fde",
+    "exports/upgrade-sentinel.json": "04ae479dd2881aeda32aa4af9b8d8f4f407d0f6c34060148f3e342490bab4fde",
+    "opencodex-home/upgrade-sentinel.json": "04ae479dd2881aeda32aa4af9b8d8f4f407d0f6c34060148f3e342490bab4fde"
+  },
+  "preserved_all_selected_files": true,
+  "preferences_after": {
+    "appearance": {
+      "glow_render": "mesh",
+      "interface_scale": 125,
+      "theme": "light",
+      "visual_effects": "high"
+    },
+    "backup": {
+      "auto_backup_import": true,
+      "auto_backup_sync": true,
+      "auto_backup_upgrade": true,
+      "backup_before_overwrite": true,
+      "backup_include_mcp": true,
+      "backup_include_skills": true,
+      "backup_integrity": "sha-256",
+      "backup_retention": "10",
+      "export_include_mcp": true,
+      "export_include_skills": true
+    },
+    "cli": {
+      "cli_enabled": false
+    },
+    "extensions": {
+      "mcp_conflict_policy": "ask",
+      "mcp_mask": true
+    },
+    "maintenance": {
+      "cleanup_backup_summary": true,
+      "log_retention": "30d-10000",
+      "notification_retention": "30",
+      "startup_cleanup": false
+    },
+    "network": {
+      "network_no_proxy": "",
+      "network_proxy_host": "",
+      "network_proxy_mode": "none",
+      "network_proxy_scheme": "http"
+    },
+    "schema_version": 2,
+    "shell": {
+      "auto_panel": false,
+      "keep_proxy_on_close": true,
+      "launch_main": true,
+      "launch_with_codex": true,
+      "lifecycle_notifications": true,
+      "panel_mode": "embedded"
+    },
+    "sync": {
+      "cold_sync": true,
+      "sync_conflict_alerts": true,
+      "sync_conflict_policy": "ask"
+    },
+    "updates": {
+      "app_update_auto_check": false,
+      "app_update_channel": "stable",
+      "app_update_check_interval_seconds": 86400
+    }
+  }
+}

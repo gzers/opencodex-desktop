@@ -1,0 +1,56 @@
+Window: "", App: OpenCodeX 018 Test.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 概览, Value: 1
+					14 text 概览
+				15 text 完成启动前的环境准备，再继续运行操作。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 button 刷新状态
+				21 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				22 button (disabled) 待接入，环境准备中, Help: 当前运行状态；请先完成环境准备
+				23 container 启动条件未满足 · 请按下方指引处理
+					24 text 启动条件未满足 · 请按下方指引处理
+				25 heading 尚未接入 OpenCodex, Value: 2
+					26 text 尚未接入 OpenCodex
+				27 text 补全启动条件后，即可继续使用 OpenCodex。 2 / 3 项通过
+				28 container 环境检查结果
+					29 container
+						30 text 01 Node.js 已发现
+					31 container
+						32 text 02 npm 已发现
+					33 container
+						34 text 03 OpenCodex 未发现
+				35 heading 接入 OpenCodex, Value: 3
+					36 text 接入 OpenCodex
+				37 text 可以把官方包装进数据根内的私有前缀（联网安装，或导入官方离线包）；安装完成后由应用重新解析运行来源。 官方 npm 命令（终端备选）
+				38 button npm install -g @bitkyc08/opencodex 复制
+				39 button 安装 OpenCodex
+				40 button 导入离线包
+				41 button 重新检查
+				42 text 安装仅写管理器数据目录；已有安装可在设置中指定来源。
+				43 button 完整指引 ›
+				44 text 应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。
+	45 close button
+	46 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	47 minimize button
+48 menu bar
+	49 OpenCodeX 018 Test
+	50 编辑
+	51 视图
+	52 诊断
+
+The focused UI element is 0 standard window Secondary Actions: Raise

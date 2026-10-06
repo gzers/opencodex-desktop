@@ -1,0 +1,81 @@
+{
+  "result": "passed within explicit local scope; release gates remain open",
+  "code_source_unchanged": true,
+  "commands": {
+    "frontend": "npm --prefix apps/desktop/ui ci; npm --prefix apps/desktop/ui run build",
+    "app": "cargo tauri build --bundles app -- --locked",
+    "real_runtime": "OCX_TEST_RUNTIME_REAL=1 OCX_TEST_RUNTIME_NODE=<USER_HOME>/.local/bin/node OCX_TEST_RUNTIME_NPM=<USER_HOME>/.local/bin/npm OCX_TEST_RUNTIME_HOME=/tmp/ocxd018-macos-20261006/runtime-cold-home cargo test --locked --test runtime_managed_real -- --test-threads=1 --nocapture"
+  },
+  "checks": {
+    "original_app_startup": {
+      "status": "pass",
+      "alive_seconds": 76.57,
+      "commit_matches": true,
+      "evidence": "exact-process.json"
+    },
+    "native_render_and_bridge": {
+      "status": "pass",
+      "observations": [
+        "WKWebView Vue overview",
+        "Node/npm found and OpenCodex missing",
+        "about v0.1.8 / macOS Tauri v2",
+        "isolated data-root returned",
+        "settings scale changed to 110 and persisted across process restart",
+        "extension and diagnosis routes",
+        "controlled UI error and reload recovery"
+      ],
+      "evidence": [
+        "native-first-screen.ax.txt",
+        "native-about.ax.txt",
+        "native-restart-preferences.ax.txt",
+        "native-error-recovery.ax.txt"
+      ]
+    },
+    "native_installer_ui": {
+      "status": "pass within wizard/chooser/cancel scope",
+      "confirmation_required": true,
+      "no_gui_install_executed": true,
+      "evidence": [
+        "native-install-confirmation.ax.txt",
+        "native-file-dialog.json"
+      ]
+    },
+    "app_copy_upgrade": {
+      "status": "pass",
+      "from": "0.1.7",
+      "to": "0.1.8",
+      "preserved_files": 4,
+      "gui_scale": 125,
+      "theme": "light",
+      "evidence": "upgrade-checks.json"
+    },
+    "real_runtime": {
+      "status": "pass",
+      "tests": 1,
+      "failed": 0,
+      "ignored": 0,
+      "official_version": "2.78.0",
+      "cold_home": true,
+      "full_roundtrip": true,
+      "retained_install_mode": false,
+      "evidence": "runtime-real.log"
+    },
+    "daily_017": {
+      "status": "pass",
+      "app_identity_and_process_start_unchanged": true,
+      "evidence": "postcheck.json"
+    }
+  },
+  "limitations": [
+    "native UI app wrappers change bundle metadata and ad-hoc signatures; file-backed Mach-O sections equal source app",
+    "unsigned candidate original liveness alone is not native UI pass; native UI comes from wrapper observations",
+    "window close/tray reopen did not yield independently decisive evidence and remains open",
+    "synthetic data preservation checks do not prove all production config or signed OTA behavior",
+    "no DMG/NSIS/MSI install, Gatekeeper/notarization, proxy lifecycle, channel promotion or publication executed",
+    "full backend suite not rerun this round; historical and CI results stay separate"
+  ],
+  "build_warnings": [
+    "STATIC_VCRUNTIME deprecated warning remains",
+    "sandbox_extension_issue_file_to_process warning seen in local native launch logs; rendering and bridge verified despite warning"
+  ]
+}

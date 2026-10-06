@@ -93,3 +93,5 @@ Windows 后端数量不包含 Unix 专属测试；既有真实外部服务测试
 本轮复验结果与证据已在 `docs/governance-main` 本地提交。推送尝试被本机 GitHub 认证阻断：Git Credential Manager 的 GitHub 账号列表为空，非交互 `git push` 返回 `Cannot prompt because user interactivity has been disabled` 与 `unable to get password from user`。已检查可用连接通道，未取得可代替本机 Git 认证的已连接写入工具；没有要求或保存凭据值。
 
 推送检查时，远端文档分支仍为 `df5cb8efa5ef930f9554ada6b71e64fcb9ee8432`，代码分支为固定 `9262a5b`，main 未变。此处不宣称本轮文档已推送；认证完成后只需推送已有 `docs/governance-main` 提交，无需重跑已通过测试。实际错误及远端快照见 [push-attempt.json](../../../../../../../../.adg/evidence/WIN-018-CDP-WINDOWS-20261006/push-attempt.json)。
+
+2026-10-06 Mac 接续核对：fetch 发现 origin/docs/governance-main 已包含 0075a81c9498a097bdee7e2e6b2b6d006bd4236e，本机 fast-forward 接收成功。上文认证错误保留为 Windows 当时历史状态；该文档提交现已在远端并转入 Mac。接续回归和后续门禁见 [07-macOS 原生 UI 与安装回归](07-macOS原生UI与安装回归及合并打包门禁.md)。

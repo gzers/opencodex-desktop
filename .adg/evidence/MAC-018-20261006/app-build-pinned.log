@@ -1,0 +1,75 @@
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+
+> opencodex-desktop-ui@0.1.8 build
+> vue-tsc --noEmit && vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 148 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.40 kB │ gzip:   0.27 kB
+dist/assets/index-DX-5RTBs.css   86.05 kB │ gzip:  15.88 kB
+dist/assets/event-DSevx5Bn.js     1.03 kB │ gzip:   0.54 kB
+dist/assets/index-BZljhCnD.js   388.83 kB │ gzip: 129.66 kB
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/core.js is dynamically imported by src/app/appearance/effects.ts, src/contracts/runtimeStatus.ts, src/features/about/api.ts, src/features/codex-shim/api.ts, src/features/data-root/api.ts, ... but also statically imported by node_modules/@tauri-apps/api/event.js, node_modules/@tauri-apps/plugin-dialog/dist-js/index.js, node_modules/@tauri-apps/plugin-process/dist-js/index.js, src/features/updates/update.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts, src/routes/SettingsRoute.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/routes/SettingsRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+
+✓ built in 199ms
+   Compiling objc2 v0.6.4
+   Compiling powerfmt v0.2.0
+   Compiling want v0.3.1
+   Compiling zerocopy v0.8.59
+   Compiling time v0.3.55
+   Compiling hyper v1.11.1
+   Compiling hyper-util v0.1.21
+   Compiling block2 v0.6.2
+   Compiling objc2-core-foundation v0.3.2
+   Compiling objc2-foundation v0.3.2
+   Compiling dispatch2 v0.3.1
+   Compiling wry v0.57.0
+   Compiling plist v1.10.1
+   Compiling cookie v0.18.2
+   Compiling zip v4.6.1
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.13.5
+   Compiling reqwest v0.12.28
+   Compiling tauri-utils v2.10.1
+   Compiling objc2-core-graphics v0.3.2
+   Compiling ppv-lite86 v0.2.21
+   Compiling rand_chacha v0.9.0
+   Compiling rand v0.9.5
+   Compiling tauri-plugin v2.7.1
+   Compiling tauri-build v2.7.1
+   Compiling tauri-codegen v2.7.1
+   Compiling tauri v2.12.1
+   Compiling tauri-macros v2.7.1
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+   Compiling opencodex-desktop v0.1.8 (<USER_HOME>/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+warning: opencodex-desktop@0.1.8: STATIC_VCRUNTIME is deprecated; use build.windows.staticVCRuntime in tauri.conf.json or tauri_build::WindowsAttributes::static_vc_runtime instead.
+   Compiling objc2-quartz-core v0.3.2
+   Compiling objc2-app-kit v0.3.2
+   Compiling objc2-web-kit v0.3.2
+   Compiling muda v0.20.0
+   Compiling tao v0.37.1
+   Compiling window-vibrancy v0.8.1
+   Compiling objc2-osa-kit v0.3.2
+   Compiling rfd v0.16.0
+   Compiling osakit v0.3.1
+   Compiling tauri-runtime v2.12.1
+   Compiling tray-icon v0.25.1
+   Compiling tauri-runtime-wry v2.12.1
+    Finished `release` profile [optimized] target(s) in 2m 09s
+       Built application at: <USER_HOME>/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri/target/release/opencodex-desktop
+    Bundling OpenCodeX Desktop.app (<USER_HOME>/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app)
+    Finished 1 bundle at:
+        <USER_HOME>/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app
+

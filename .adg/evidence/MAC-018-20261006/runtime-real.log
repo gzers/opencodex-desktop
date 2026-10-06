@@ -1,0 +1,45 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.1.8 (<USER_HOME>/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.72s
+     Running tests/runtime_managed_real.rs (target/debug/deps/runtime_managed_real-369ce804756b9878)
+
+running 1 test
+test real_managed_runtime_round_trip ... == 真实链路：node="<USER_HOME>/.local/bin/node" npm="<USER_HOME>/.local/bin/npm"
+-- 1. 联网安装 @@bitkyc08/opencodex@latest
+  已安装 @bitkyc08/opencodex 2.78.0（scripts=false sha256=550424a9836d…）
+  注：安全默认档（--ignore-scripts）即可运行
+  入口文件：
+#!/bin/sh
+# OpenCodex 托管入口：由 OpenCodeX 桌面管理器生成，卸载托管包体时一并移除。
+exec '<USER_HOME>/.local/bin/node' '/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpClnLHf/data-root/runtime/opencodex/node_modules/@bitkyc08/opencodex/bin/ocx.mjs' "$@"
+
+  入口退出码 = Some(0)
+  入口 stdout：opencodex 2.78.0
+  运行来源 = managed
+-- 2. 一级卸载
+  卸载后来源 = unresolved
+-- 3. 离线导入（npm pack 得到的真实 tarball）
+  tarball = Some("bitkyc08-opencodex-2.78.0.tgz")
+  注：本机缓存已能让未确认安装直接可用
+  离线导入成功：@bitkyc08/opencodex 2.78.0（source=offline）
+  入口文件：
+#!/bin/sh
+# OpenCodex 托管入口：由 OpenCodeX 桌面管理器生成，卸载托管包体时一并移除。
+exec '<USER_HOME>/.local/bin/node' '/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpClnLHf/data-root/runtime/opencodex/node_modules/@bitkyc08/opencodex/bin/ocx.mjs' "$@"
+
+  入口退出码 = Some(0)
+  入口 stdout：opencodex 2.78.0
+-- 4. 系统保护目录 / 坏包拒绝
+  系统目录拒绝 = system_protected
+  坏包拒绝 = not_gzip
+-- 6. 外部改写后拒绝一级卸载
+  冲突拒绝 = uninstall_externally_modified
+== 真实链路全部通过
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.01s
+

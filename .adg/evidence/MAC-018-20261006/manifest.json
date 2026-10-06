@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "evidence_id": "MAC-018-20261006",
+  "project_id": "opencodex-desktop",
+  "date": "2026-10-06",
+  "code_branch": "feature/0.1.8-windows-fixes",
+  "code_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+  "document_base": "0075a81c9498a097bdee7e2e6b2b6d006bd4236e",
+  "scope": "local macOS native UI, isolated app-copy fresh install/upgrade, real managed-runtime registry/offline/uninstall regression",
+  "release_status": "not merged, not released; installer/signing/OTA and remaining native/runtime gates open",
+  "recording": "PNG bytes unchanged; copied text user-home paths redacted to <USER_HOME>; dialog JSON is curated observation; no binaries, packages, credentials, caches or source copied",
+  "input_sha256_before_path_redaction": {
+    "app-build-pinned.log": "75a5aaa0e95ad9996a41ed720799dcad64d21d93819e9d2d9d20b50df8193ad3",
+    "frontend-build.log": "a68c9713c18ec47445c09fc8c0292b3192dbbc72c0e162bd49371bbaa802baba",
+    "runtime-real.log": "f6279a23b7bb7ada7123f76f99a9d865f307974d2e02232e14d3c9ae7f3c5acb",
+    "dependencies.json": "d01c5f5f99d85d7a106b1a3a70e366f63f75d468b8953c25a4e51d9b7b94b3a2",
+    "candidate-identity.json": "e5ddf07b80951e921998c58c767333e0be8574e5d162a72a38595e416c3e9a97",
+    "candidate-section-identity.json": "9a88845915d2dd6ab6616510699fb27f943bf5d09e03fd6917d16ec3a819290b",
+    "daily-baseline.json": "bb493799fed3d99f2b17d3695aa03465296121f9647df81c3cd980e71ea95b59",
+    "postcheck.json": "b10ea91fd1594ed62a8f68b34113d3d9e8c07a4fcd5d32e71154d6c4631563ce",
+    "exact-process.json": "5e24de590c22d2828348e449c0b22cc14320c08e80fc7a415aeac809f24469ac",
+    "upgrade-checks.json": "95bee40a979f53262a3a69e15b128161a52d76e3039ddabf0b124b2b72ed6f15",
+    "native-fresh.log": "68384f0d80301a9d9ba076be8949d2b40f63fac5c13ed22132bfa26e7dd95a84",
+    "native-restart.log": "90cb868bd5702416e0c36b80af00c8eb6cb60e047703bd205a3e477cec468a57",
+    "native-exact.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-startup.log": "4ad19c159b5909ea26c64929b11c18377a7d460b5396243d8ae757c7ec82e8c8",
+    "upgrade-startup.log": "5686740e31b92659abff81ac28b6a111f5921878355975759b52a252e630225f",
+    "upgrade-017.log": "217911176d8b34edba7b691dfe92d005d6be56fcfb388c9b39b159f6bb546d35",
+    "upgrade-018.log": "217911176d8b34edba7b691dfe92d005d6be56fcfb388c9b39b159f6bb546d35",
+    "native-first-screen.ax.txt": "276d81dce082f0a8f30cc25bc50be42b1dd0605958be014670cc02cf3359c4f2",
+    "native-first-screen.png": "a15f763bf2e631a7f26e29627b09535737bd9e758a3bffbb58c2fee00a3d9b79",
+    "native-about.ax.txt": "c1b0d0faefe3362d581ea3618ede8bd6fed1778844f26889d85c276033a72e69",
+    "native-about.png": "e25b73b9f60945d7bb9d324dd22e70d5af0ec2be17aa5935c93a7964f2e2e14e",
+    "native-install-confirmation.ax.txt": "60353a18496f596c634ea77b592ba92e17a29ea6d6e7b995bdbf4b1f95257b68",
+    "native-install-confirmation.png": "2cafbbad74a9a1b82cdd35b50e79f5838119a9d3b6f8aa49eb08cad065ddcc73",
+    "native-extensions.ax.txt": "201666c4d2ffc6ca0b26b6a6c5f9342b19b96344030dca825fcbcc2faa758b28",
+    "native-error-recovery.ax.txt": "80363844638197d19f5f0196d8392d07762c91d2084f2d6df68b3b7cc4978da3",
+    "native-restart-preferences.ax.txt": "155eb7583f13d28980216de2b9ddd5c662f7d1e3b9790e2edb61e27254518ea2",
+    "upgrade-before-preferences.ax.txt": "53c74660cd1df5d5edeeb72fb6283fe763d6f9bb9fa4596054a5a707d1f4f445",
+    "upgrade-before-about.ax.txt": "d4587bb3bf628be724de46dd32e51bbd35f3f07392f749de6755c1d9c6deeb9c",
+    "upgrade-before-about.png": "ab39d161a853027f3763389922356d7d4e444c46ee3b0433b9bae289c25fbc79",
+    "upgrade-after-preferences.ax.txt": "155eb7583f13d28980216de2b9ddd5c662f7d1e3b9790e2edb61e27254518ea2",
+    "upgrade-after-preferences.png": "d3ebbd37d133788000f408dc928b602cef315f394f0db4253bb5547714a8befe",
+    "upgrade-after-about.ax.txt": "280827293cee388fe9dca24c0ef368c2ce39e4c32c27199f64df938f17c98f16",
+    "upgrade-after-about.png": "7f4690e9e873ce0b782553077621244ccb0674eade779323216f320212525f76"
+  },
+  "files": [
+    {
+      "path": "app-build-pinned.log",
+      "sha256": "21d182dab6d557ca7001231f4a602a4f7cbece1e35e9dba76eeaef266d731d19",
+      "bytes": 4083
+    },
+    {
+      "path": "candidate-identity.json",
+      "sha256": "49afe5609e6aea3f2ecfff5d16b16f0c066ce7ee0074e06362c645b2f03ac43a",
+      "bytes": 863
+    },
+    {
+      "path": "candidate-section-identity.json",
+      "sha256": "9a88845915d2dd6ab6616510699fb27f943bf5d09e03fd6917d16ec3a819290b",
+      "bytes": 3453
+    },
+    {
+      "path": "daily-baseline.json",
+      "sha256": "bb493799fed3d99f2b17d3695aa03465296121f9647df81c3cd980e71ea95b59",
+      "bytes": 371
+    },
+    {
+      "path": "dependencies.json",
+      "sha256": "d01c5f5f99d85d7a106b1a3a70e366f63f75d468b8953c25a4e51d9b7b94b3a2",
+      "bytes": 801
+    },
+    {
+      "path": "environment.json",
+      "sha256": "1cdea02b3b05ac2565faddbcd8b73b2a11a5a5dab51dbf01a91aae8d761ae7a7",
+      "bytes": 427
+    },
+    {
+      "path": "exact-process.json",
+      "sha256": "5e24de590c22d2828348e449c0b22cc14320c08e80fc7a415aeac809f24469ac",
+      "bytes": 384
+    },
+    {
+      "path": "frontend-build.log",
+      "sha256": "a68c9713c18ec47445c09fc8c0292b3192dbbc72c0e162bd49371bbaa802baba",
+      "bytes": 1667
+    },
+    {
+      "path": "native-about.ax.txt",
+      "sha256": "c1b0d0faefe3362d581ea3618ede8bd6fed1778844f26889d85c276033a72e69",
+      "bytes": 3160
+    },
+    {
+      "path": "native-about.png",
+      "sha256": "e25b73b9f60945d7bb9d324dd22e70d5af0ec2be17aa5935c93a7964f2e2e14e",
+      "bytes": 403020
+    },
+    {
+      "path": "native-error-recovery.ax.txt",
+      "sha256": "80363844638197d19f5f0196d8392d07762c91d2084f2d6df68b3b7cc4978da3",
+      "bytes": 169
+    },
+    {
+      "path": "native-exact.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "native-extensions.ax.txt",
+      "sha256": "201666c4d2ffc6ca0b26b6a6c5f9342b19b96344030dca825fcbcc2faa758b28",
+      "bytes": 175
+    },
+    {
+      "path": "native-file-dialog.json",
+      "sha256": "73323fe366c6c85ce9a7bd2eac9a465e087c2aae37d23685849a984346f0812f",
+      "bytes": 577
+    },
+    {
+      "path": "native-first-screen.ax.txt",
+      "sha256": "276d81dce082f0a8f30cc25bc50be42b1dd0605958be014670cc02cf3359c4f2",
+      "bytes": 2341
+    },
+    {
+      "path": "native-first-screen.png",
+      "sha256": "a15f763bf2e631a7f26e29627b09535737bd9e758a3bffbb58c2fee00a3d9b79",
+      "bytes": 441893
+    },
+    {
+      "path": "native-fresh.log",
+      "sha256": "68384f0d80301a9d9ba076be8949d2b40f63fac5c13ed22132bfa26e7dd95a84",
+      "bytes": 293
+    },
+    {
+      "path": "native-install-confirmation.ax.txt",
+      "sha256": "60353a18496f596c634ea77b592ba92e17a29ea6d6e7b995bdbf4b1f95257b68",
+      "bytes": 5817
+    },
+    {
+      "path": "native-install-confirmation.png",
+      "sha256": "2cafbbad74a9a1b82cdd35b50e79f5838119a9d3b6f8aa49eb08cad065ddcc73",
+      "bytes": 367062
+    },
+    {
+      "path": "native-restart-preferences.ax.txt",
+      "sha256": "155eb7583f13d28980216de2b9ddd5c662f7d1e3b9790e2edb61e27254518ea2",
+      "bytes": 172
+    },
+    {
+      "path": "native-restart.log",
+      "sha256": "90cb868bd5702416e0c36b80af00c8eb6cb60e047703bd205a3e477cec468a57",
+      "bytes": 145
+    },
+    {
+      "path": "native-startup.log",
+      "sha256": "4ad19c159b5909ea26c64929b11c18377a7d460b5396243d8ae757c7ec82e8c8",
+      "bytes": 299
+    },
+    {
+      "path": "postcheck.json",
+      "sha256": "b10ea91fd1594ed62a8f68b34113d3d9e8c07a4fcd5d32e71154d6c4631563ce",
+      "bytes": 534
+    },
+    {
+      "path": "runtime-real.log",
+      "sha256": "92ef67a3e242032dc7d20220e1c5fa86cf18d04f5af1f319e6139ba14ccb9253",
+      "bytes": 2189
+    },
+    {
+      "path": "upgrade-017.log",
+      "sha256": "217911176d8b34edba7b691dfe92d005d6be56fcfb388c9b39b159f6bb546d35",
+      "bytes": 151
+    },
+    {
+      "path": "upgrade-018.log",
+      "sha256": "217911176d8b34edba7b691dfe92d005d6be56fcfb388c9b39b159f6bb546d35",
+      "bytes": 151
+    },
+    {
+      "path": "upgrade-after-about.ax.txt",
+      "sha256": "280827293cee388fe9dca24c0ef368c2ce39e4c32c27199f64df938f17c98f16",
+      "bytes": 109
+    },
+    {
+      "path": "upgrade-after-about.png",
+      "sha256": "7f4690e9e873ce0b782553077621244ccb0674eade779323216f320212525f76",
+      "bytes": 352830
+    },
+    {
+      "path": "upgrade-after-preferences.ax.txt",
+      "sha256": "155eb7583f13d28980216de2b9ddd5c662f7d1e3b9790e2edb61e27254518ea2",
+      "bytes": 172
+    },
+    {
+      "path": "upgrade-after-preferences.png",
+      "sha256": "d3ebbd37d133788000f408dc928b602cef315f394f0db4253bb5547714a8befe",
+      "bytes": 396523
+    },
+    {
+      "path": "upgrade-before-about.ax.txt",
+      "sha256": "d4587bb3bf628be724de46dd32e51bbd35f3f07392f749de6755c1d9c6deeb9c",
+      "bytes": 110
+    },
+    {
+      "path": "upgrade-before-about.png",
+      "sha256": "ab39d161a853027f3763389922356d7d4e444c46ee3b0433b9bae289c25fbc79",
+      "bytes": 352144
+    },
+    {
+      "path": "upgrade-before-preferences.ax.txt",
+      "sha256": "53c74660cd1df5d5edeeb72fb6283fe763d6f9bb9fa4596054a5a707d1f4f445",
+      "bytes": 171
+    },
+    {
+      "path": "upgrade-checks.json",
+      "sha256": "95bee40a979f53262a3a69e15b128161a52d76e3039ddabf0b124b2b72ed6f15",
+      "bytes": 4349
+    },
+    {
+      "path": "upgrade-startup.log",
+      "sha256": "5686740e31b92659abff81ac28b6a111f5921878355975759b52a252e630225f",
+      "bytes": 210
+    },
+    {
+      "path": "verification.json",
+      "sha256": "4abdfa853916217647f6c74a361dbd08fa127aa0570839c84d1b9008a613cc9d",
+      "bytes": 3147
+    }
+  ]
+}

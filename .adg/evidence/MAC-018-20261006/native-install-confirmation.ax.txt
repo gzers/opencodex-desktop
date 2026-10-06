@@ -1,0 +1,146 @@
+Window: "", App: OpenCodeX 018 Test.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=installation
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 设置, Value: 1
+					14 text 设置
+				15 text 集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 text 未发现
+				21 button 刷新状态
+				22 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				23 tab group (selectable) 通用
+安装配置
+数据与备份
+扩展管理
+配置迁移
+WebDAV 同步
+日志与通知
+CLI 控制面
+版本升级
+关于
+				24 container 运行环境与安装发现
+					25 heading 运行环境与安装发现, Value: 2
+						26 text 运行环境与安装发现
+					27 text 只发现 / 展示 / 校验现有环境与安装。
+					28 button 重新发现
+					29 text 已按前置条件暂停 OpenCodex 发现；请先处理概览中的环境门禁。
+				30 container OpenCodex 运行来源
+					31 heading OpenCodex 运行来源, Value: 2
+						32 text OpenCodex 运行来源
+					33 text 应用不读取 PATH；来源只来自这里的记录与候选目录，并与发现、启停、版本检查共用同一份结果。
+					34 button 刷新
+					35 text 来源类型
+					36 container
+						37 text 未解析  数据根外
+					38 text 路径
+					39 text 未解析
+					40 text 版本
+					41 text 未知
+					42 button 安装 OpenCodex
+					43 button 导入离线包
+					44 button 更换运行来源…
+					45 button (disabled) 恢复自动发现
+					46 text 应用不读取 PATH；来源只来自这里的记录与候选目录。未解析时请从上面的两个出口入手。
+				47 container 数据目录与 OPENCODEX_HOME
+					48 heading 数据目录与 OPENCODEX_HOME, Value: 2
+						49 text 数据目录与 OPENCODEX_HOME
+					50 text 自动发现当前路径，可在同一处统一修改。
+					51 table
+						52 row (selectable) 路径
+用途
+操作
+						53 row (selectable)
+							54 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data 复制
+							55 cell (selectable) 数据目录
+							56 cell (selectable) 打开
+						57 row (selectable)
+							58 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/opencodex-home 复制
+							59 cell (selectable) OPENCODEX_HOME · 数据目录内
+							60 cell (selectable) 打开
+					61 text 外部 OPENCODEX_HOME
+					62 text field (settable) 外部 OPENCODEX_HOME, Placeholder: /absolute/path/to/OpenCodexHome
+					63 button 使用外部路径
+					64 button 回到数据目录内
+				65 container 初始化或切换数据目录
+					66 heading 初始化或切换数据目录, Value: 2
+						67 text 初始化或切换数据目录
+					68 text 使用显式绝对路径；先校验结构，成功后才初始化冻结分区。
+					69 text 数据目录路径
+					70 text field (settable) 数据目录路径, Placeholder: /absolute/path/to/OpenCodexData
+					71 text 切换目标路径
+					72 text field (settable) 切换目标路径, Placeholder: /absolute/path/to/ExistingOpenCodexData
+					73 button 校验并初始化
+					74 button 仅切换引用
+					75 button 迁移数据
+				76 container 数据目录分区
+					77 heading 数据目录分区, Value: 2
+						78 text 数据目录分区
+					79 text 分区名已按 IMP 冻结；点击路径可复制，右侧可直接打开。
+					80 table
+						81 row (selectable) 路径
+用途
+操作
+						82 row (selectable)
+							83 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/manager-state 复制
+							84 cell (selectable) 管理器设置目录
+							85 cell (selectable) 打开
+						86 row (selectable)
+							87 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/backups 复制
+							88 cell (selectable) 备份目录
+							89 cell (selectable) 打开
+						90 row (selectable)
+							91 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/logs 复制
+							92 cell (selectable) 日志目录
+							93 cell (selectable) 打开
+						94 row (selectable)
+							95 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/exports 复制
+							96 cell (selectable) 导出目录
+							97 cell (selectable) 打开
+						98 row (selectable)
+							99 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/cache 复制
+							100 cell (selectable) 缓存目录
+							101 cell (selectable) 打开
+						102 row (selectable)
+							103 cell (selectable) /tmp/ocxd018-macos-20261006/fresh-data/sync-state 复制
+							104 cell (selectable) 同步状态目录
+							105 cell (selectable) 打开
+				106 container 安装 OpenCodex
+					107 heading 安装 OpenCodex, Value: 3
+						108 text 安装 OpenCodex
+					109 container
+						110 text 1 2 3 4
+					111 container
+						112 checkbox 指定版本, Value: 0
+						113 text 指定版本
+					114 text 安装最新版（latest）。
+					115 container
+						116 checkbox 我已确认安装位置与安装源, Value: 0
+						117 text 我已确认安装位置与安装源
+					118 summary 说明 / 安全边界, Value: off
+						119 text 说明 / 安全边界
+					120 button 取消
+					121 button (disabled) 下一步
+	122 close button
+	123 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	124 minimize button
+125 menu bar
+	126 OpenCodeX 018 Test
+	127 编辑
+	128 视图
+	129 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=installation

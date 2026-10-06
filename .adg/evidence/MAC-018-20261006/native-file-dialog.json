@@ -1,0 +1,17 @@
+{
+  "kind": "curated CUA observation; original GUI tool snapshot retained in task history",
+  "observed": {
+    "sheet_id": "open-panel",
+    "title": "选择 OpenCodex 离线包",
+    "where": "ocxd018-macos-20261006",
+    "cancel_button": "CancelButton enabled",
+    "open_button": "OKButton disabled; no tgz selected"
+  },
+  "actions": [
+    "open native file chooser",
+    "Go To test directory",
+    "cancel chooser",
+    "cancel offline wizard"
+  ],
+  "scope": "chooser and cancellation only; package import roundtrip is independently verified by runtime_managed_real"
+}
