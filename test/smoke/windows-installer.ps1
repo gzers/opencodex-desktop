@@ -27,7 +27,9 @@ function Invoke-Installer([string]$File, [string]$Arguments) {
     return $process.ExitCode
 }
 try {
-    foreach ($kind in @('nsis', 'msi')) {
+    # MSI reads the shared remembered InstallDir even after NSIS uninstall.
+    # Test MSI on the fresh runner first; NSIS /D explicitly chooses its own root.
+    foreach ($kind in @('msi', 'nsis')) {
         $pattern = if ($kind -eq 'nsis') { '*-setup.exe' } else { '*.msi' }
         $packages = @(Get-ChildItem -LiteralPath (Join-Path $taskBundle $kind) -Filter $pattern -File)
         if ($packages.Count -ne 1) { throw "Expected one $kind package, found $($packages.Count)" }
