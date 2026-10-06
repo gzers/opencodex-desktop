@@ -69,14 +69,28 @@ fn record_startup_event(data_root: &std::path::Path, version: &str) {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     use tauri::Manager;
+    let context = tauri::generate_context!();
+    #[cfg(windows)]
+    let (context, smoke_window) = {
+        let mut context = context;
+        let smoke = crate::infrastructure::windows_smoke::from_environment(context.config_mut())
+            .expect("invalid Windows smoke configuration");
+        (context, smoke)
+    };
 
     tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         // 目录选择交给系统原生对话框（FZ-23「自定义源目录」），不自造浏览器。
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
-        .setup(|app| {
+        .setup(move |app| {
             use tauri::Manager;
+            #[cfg(windows)]
+            if let Some(smoke) = smoke_window {
+                tauri::WebviewWindowBuilder::from_config(app, &smoke.config)?
+                    .data_directory(smoke.data_directory)
+                    .build()?;
+            }
 
             let default_root = app.path().app_data_dir().map_err(|error| {
                 Box::new(crate::errors::AppError::FileSystem {
@@ -567,7 +581,7 @@ pub fn run() {
                 }
             }
         })
-        .build(tauri::generate_context!())
+        .build(context)
         .expect("failed to build OpenCodeX Desktop")
         .run(|app_handle, event| {
             // 关闭窗口只是隐藏（见上）。此时点击 Dock 图标必须能把窗口找回来，
