@@ -1,0 +1,51 @@
+{
+  "code_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+  "code_branch": "feature/0.1.8-windows-fixes",
+  "blobs": [
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "bytes": 39053,
+      "sha256": "e0e9b2cd795f093273be79fdd57c6a4fd43fe38bbac02bdac77ba07111240a6a",
+      "git_blob": "8a86f030995520e53bc19ff4362c36f1aa965a6d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 5499,
+      "sha256": "73ff5d20ca94fd1076ee891f5becc25685343cd22dfdaffaca49b0b4e067c8ba",
+      "git_blob": "fd67dfe7c8415eef46b6ffcdd3926f0e9cbc1777"
+    },
+    {
+      "path": "test/smoke/windows-startup.ps1",
+      "bytes": 7825,
+      "sha256": "8e483786ed74d456bdf47e4e677278553e09ac4894572a1a7ae461529aef392a",
+      "git_blob": "c07ac34d14916ff1a51c59d0a45c4e7d13572015"
+    },
+    {
+      "path": "test/smoke/windows-webview.mjs",
+      "bytes": 5253,
+      "sha256": "e3f931c83fd631996a8a67702997ba75231b26843f7e598d8347ece2f3229e22",
+      "git_blob": "e35d8aa2eba3bb1d945eb1d92a673eec09a38285"
+    },
+    {
+      "path": "test/smoke/windows-cdp.mjs",
+      "bytes": 3419,
+      "sha256": "a4cde3cb25455b2627f238ea3678c40c42191b9af47c464491f4f2f311caf7dd",
+      "git_blob": "bed166b3d95748a7e6393bd2bb645613dba0b819"
+    },
+    {
+      "path": "test/smoke/windows-cdp.test.mjs",
+      "bytes": 3938,
+      "sha256": "9e1018e15ef17c3b6d6ab0266210823d71065a501c69efe588e1a3ff75ad9967",
+      "git_blob": "c10359d2e092b593148c97e9943babfd411462c8"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 3800,
+      "sha256": "6dfa3df2de6217e545257c3237b223751038f76f118700d590a27261802e829c",
+      "git_blob": "015b0a7e5486f65d6bc3fb74e8e74ad1bf8b6c04"
+    }
+  ],
+  "smoke_scripts_unmodified": true,
+  "working_tree_Eol_normalized_by_git": true,
+  "source_copy_policy": "References and hashes only; implementation source and EXE not copied"
+}

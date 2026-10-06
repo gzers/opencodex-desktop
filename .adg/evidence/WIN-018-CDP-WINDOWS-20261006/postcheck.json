@@ -1,0 +1,53 @@
+{
+  "capturedAt": "2026-10-06T10:39:34.8269550+08:00",
+  "installedExeSha256": "058d924f762b8c1f7b1909e4b63ffb79ed5a4009663a80e5bc9825829798afba",
+  "installedExeVersion": "0.1.7",
+  "shortcutSha256": "7dcc93d965940ae16c37041f68f4042af7f5143e9e0cc9dae12997573d373e6a",
+  "dailyProcesses": [
+    {
+      "Id": 19216,
+      "Path": "D:\\Software\\Develop\\OpenCodeX Desktop\\opencodex-desktop.exe",
+      "StartTime": "2026-10-06T00:38:53.8623231+08:00"
+    }
+  ],
+  "mainRef": "5a0859ad2e6d44f4ca5751eedfb5a1b7eb8c5d09",
+  "candidateExeSha256": "d02e2d373043a113aa56989c45a7557e3f232fa1228eec3cd1b7acfd73e8c30c",
+  "groups": [
+    {
+      "mode": "ordinary",
+      "testPids": [
+        73464,
+        67556,
+        74056,
+        69260,
+        61852,
+        55780,
+        34920
+      ],
+      "remainingProcesses": [],
+      "remainingListeners": []
+    },
+    {
+      "mode": "administrator",
+      "testPids": [
+        62712,
+        51472,
+        49760,
+        75892,
+        27700,
+        76296,
+        45220
+      ],
+      "remainingProcesses": [],
+      "remainingListeners": []
+    }
+  ],
+  "checks": {
+    "daily_exe_unchanged": true,
+    "daily_shortcut_unchanged": true,
+    "daily_instance_pid_and_start_time_unchanged": true,
+    "main_ref_unchanged": true,
+    "owned_test_processes_and_CDP_listeners_released": true,
+    "time_comparison": "ISO strings in stored JSON; avoids PowerShell automatic DateTime conversion"
+  }
+}

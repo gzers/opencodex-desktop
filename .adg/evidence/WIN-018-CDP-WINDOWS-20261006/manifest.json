@@ -1,0 +1,267 @@
+{
+  "record_id": "WIN-018-CDP-WINDOWS-20261006",
+  "registered_date": "2026-10-06",
+  "timezone": "Asia/Shanghai",
+  "assembled_at": "2026-10-06T10:47:34+08:00",
+  "kind": "Fixed-commit Windows ordinary/admin first-screen verification evidence; not an installer or release certificate",
+  "branch": "docs/governance-main",
+  "documentation_baseline": "df5cb8efa5ef930f9554ada6b71e64fcb9ee8432",
+  "code_branch": "feature/0.1.8-windows-fixes",
+  "code_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+  "authority_ref": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-18.md",
+  "topic_document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/06-Windows普通与管理员首屏复验.md",
+  "native_windows_local_execution": true,
+  "ordinary_smoke": "pass",
+  "administrator_smoke": "pass",
+  "EXE_sha256": "d02e2d373043a113aa56989c45a7557e3f232fa1228eec3cd1b7acfd73e8c30c",
+  "ci_run": 37403376481,
+  "ci_observed_conclusion": "success",
+  "first_screen_assertions_preserved": true,
+  "hash_basis": "Committed Git blob bytes; raw copied diagnostics/logs/screenshots retained byte-for-byte",
+  "privacy": "Only owned test process-tree command lines and allowlisted installation identity; no user config, credentials, full WebView cache or EXE copied",
+  "retention": "Preserve with maintenance first-screen validation; original temp outputs retained",
+  "files": [
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/admin-launch.json",
+      "bytes": 247,
+      "sha256": "0029b4e0322f06316604b51c32c60e6dee78cb8a9f7ab735669acbc3f6eecfef"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/app.log",
+      "bytes": 105,
+      "sha256": "a6b93ed17160c04c7f666bac3d459e34042e30e97665638844ae0a4d459cf81d"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/cdp-diagnostics.json",
+      "bytes": 1745,
+      "sha256": "e2d5cef6e81d7b0549ad6bb399551a4a3d223d38d4331de12e07cf10c278ab24"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/execution.log",
+      "bytes": 78,
+      "sha256": "25f0cd9be0501f2e6a5bb6b9c8a21289fe86e43916a68f9e93eb3606cb065d51"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/launcher-context.json",
+      "bytes": 903,
+      "sha256": "5ad5d5c41ca8220385e023b417ec8b25df0b1aa091fef844537216d690ad023b"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/launcher-result.json",
+      "bytes": 216,
+      "sha256": "038721b175d68719633df05a63da08adbcd030a634abe6bb09977d5e329fa949"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/main-window.png",
+      "bytes": 2075827,
+      "sha256": "b96da2a4a4c5f5128f1cd77e33fc9bf75c4ba2f5d151c247cb663e12bc28db49"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/startup-diagnostics.json",
+      "bytes": 8933,
+      "sha256": "ca53b0e410c5ae3fc097a2cebaec6a8b00726e82517d163b9d588a68cc9d10f3"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/startup.json",
+      "bytes": 690,
+      "sha256": "fb42f8e49102859e27496e409ea9aaf107641ea9eb760f373a4f97ac4cc111aa"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator/webview.json",
+      "bytes": 764,
+      "sha256": "d50c9a2d74044818f2ccb2af0823ed35afe408d380a6d363616fddceb1d5da78"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/backend.log",
+      "bytes": 89164,
+      "sha256": "12d77040fd15e618078bfbbdebc67210d53df90a7a61efc2b0ae8957a794c6b6"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/cdp-protocol.log",
+      "bytes": 669,
+      "sha256": "92c02646ec3bfefeabd43fd1eb6600dbd04b1a012f36773363ef7fa0535ea3df"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ci-jobs.json",
+      "bytes": 16593,
+      "sha256": "5d56dd18e8400e2ec0d08559835eb6b5a9c55c5d97718d012b0680852c7f2587"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ci-run.json",
+      "bytes": 14289,
+      "sha256": "2b60edcc5cb293b2fb4ddde13764ea9a725ec080dbf9b4d773f8d059a2c1d17c"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/clippy.log",
+      "bytes": 201,
+      "sha256": "cf514b54ae74f18d1a6ceaf52a6fb50146c971d8789241a5728c32c6a906dce8"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/daily-baseline.json",
+      "bytes": 882,
+      "sha256": "8df6702bd10e44dc3fec35230b509e20c7467ad692ca065be5bd21f8e8010b7b"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/documentation-checks.json",
+      "bytes": 23712,
+      "sha256": "d2a7a1751cc4b2c1bba67b4ba12e85856eff1dc9dfc8d814439e5971b6546063"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/exe-identity.json",
+      "bytes": 967,
+      "sha256": "ee457e40bf3542dcfc6bd111c17ad0580951a5eb6bba96fb0b6158cf3bea6de0"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/exe-subsystem.txt",
+      "bytes": 110,
+      "sha256": "0e6d2a4b861aad16174c6c9b563a1f014b7e29c5443db0c642f0598cff1a074f"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/frontend-build.log",
+      "bytes": 1587,
+      "sha256": "87df3709148b8d0a2f94d85739666d8fc7b6217312a424a1f7e5bf3cc2c72107"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/frontend-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/app.log",
+      "bytes": 105,
+      "sha256": "d3efd1622e8b0b4ad57046889dd0c6428d2edab16a33cdf5f19967b34a2bfdb7"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/cdp-diagnostics.json",
+      "bytes": 1745,
+      "sha256": "b7ec84e8d0ddc48e33012400fd0647172864df8f6df40e86f87207306fe6b727"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/execution.log",
+      "bytes": 78,
+      "sha256": "25f0cd9be0501f2e6a5bb6b9c8a21289fe86e43916a68f9e93eb3606cb065d51"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/launcher-context.json",
+      "bytes": 894,
+      "sha256": "19d88608258cf580af8ebf6bd7d089a76e99fa555f778ba9618ed83202af96b2"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/launcher-result.json",
+      "bytes": 212,
+      "sha256": "c50693eb8cb0342e44c615ac971ace8b31bcafae7c3eb8cc7c71e42eeeee6393"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/main-window.png",
+      "bytes": 2075827,
+      "sha256": "b96da2a4a4c5f5128f1cd77e33fc9bf75c4ba2f5d151c247cb663e12bc28db49"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/startup-diagnostics.json",
+      "bytes": 8897,
+      "sha256": "e85a868a6b78806d38b137cf6b9c4f0394a4c455169399e5d9d2087c64d37774"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/startup.json",
+      "bytes": 685,
+      "sha256": "5ed84fc502baa56b18bb1d92b740b5e19ecf784167f509da81750130ceb5aba4"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary/webview.json",
+      "bytes": 764,
+      "sha256": "d50c9a2d74044818f2ccb2af0823ed35afe408d380a6d363616fddceb1d5da78"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/postcheck.json",
+      "bytes": 1447,
+      "sha256": "fea98070adb92557f81459b6f84d00bc250e1cab388bffd2921fda589e6b9f3f"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/push-attempt.json",
+      "bytes": 1220,
+      "sha256": "7b04a93420aa64c5d1353b4e929982c1f86790e00ebb067e2d611016bf0185f0"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/release-build.log",
+      "bytes": 39366,
+      "sha256": "abc04351391f8371ed1202f8624f02b3393466fced9ac3197c26e94317550e96"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/rustfmt.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/source-identity.json",
+      "bytes": 1911,
+      "sha256": "009d71d83f29262577929b87d035b55bfeccc10711676f670961658f5b75dc92"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/verification.json",
+      "bytes": 4170,
+      "sha256": "961e06b7f7d7730d857994e80dc623e98c7fa110f7cae0407b42feced66ce338"
+    },
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-18.md",
+      "bytes": 8223,
+      "sha256": "0ce6d78d027af9990bceb9873014ce8e8de24d0395eec506b2e135390279d3e7"
+    },
+    {
+      "path": "docs/03-开发实施/README.md",
+      "bytes": 7018,
+      "sha256": "d8aff88ecf06850d21b929763674e8e1867a9d9de308f8f161074a0222c53f71"
+    },
+    {
+      "path": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "bytes": 6869,
+      "sha256": "e85a72ce03f20774ed12719470fbb153db6eb9edd6e86e9bf90fb31af1adc7f1"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "bytes": 4220,
+      "sha256": "8a51dc96fb40d4f57127da825d7e6df15d086558fd49da43cef5a55d650c865f"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/05-Windows-CI首屏门禁复核与修正.md",
+      "bytes": 9107,
+      "sha256": "6367132bb930995f358214faa38f7daf8f9e13171ff5b4a2f7ef679fee902e8e"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/06-Windows普通与管理员首屏复验.md",
+      "bytes": 10449,
+      "sha256": "9603a4fc499fe94a0cdb6f82f6251f5705f8ebd27bdb14c07e019ee54a6c400d"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "bytes": 1323,
+      "sha256": "3bc60459104bf60dced18e1b9ae0401876df73a5bdf06378cbf32a55bb0b8ca5"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "bytes": 3734,
+      "sha256": "afa5fcbcd6563d7e37ec7f32e44cb6760f1e4ae3d497714e6a07e4c188cc84f1"
+    }
+  ],
+  "self_hash_excluded": true,
+  "remote_documentation_push": "authentication_blocked"
+}

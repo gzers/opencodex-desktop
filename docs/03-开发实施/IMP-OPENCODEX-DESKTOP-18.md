@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: completed
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.8 Windows 启动与运行适配修复
-summary: 原始 Windows 适配开发与真机测试已完成；首屏 CDP 续修已在 Mac 验证并推送至 9262a5b，修正后的 Windows CI 和两种权限真机复验待完成。
+summary: Windows 适配与 CDP 续修已推送至 9262a5b；对应 CI 和普通/管理员 PowerShell 7 首屏复验通过。未合并、未制作安装器或发布，后续集成门禁保留。
 completion_summary: "原始 feature 开发、Windows 本机测试及提交完成；远端前端、macOS 后端与 Linux 发布工具通过，Windows final EXE smoke 在 CDP target 获取阶段失败。原始完成状态不代表续修或发布门禁通过。"
 ---
 
@@ -42,6 +42,8 @@ completion_summary: "原始 feature 开发、Windows 本机测试及提交完成
 用户随后授权“回写文档、目标模式开发、提交推送、交 Windows 测试”。续作保持首屏渲染门禁，在 Mac 修改与验证通用部分，在 Windows 复验原生行为；复核、实施与交接结果见 [05-Windows CI 首屏门禁复核与修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/05-Windows-CI首屏门禁复核与修正.md)。本记录的原始 `completed` 状态不宣称续作已经通过 Windows 门禁。
 
 续修提交 `d2c3801` 显式配置 smoke WebView2 浏览器参数及隔离数据目录；`9262a5bedbb1a5f454f32afb7418b959fa8c721f` 保留首屏门禁并补齐 CDP 与进程诊断，两笔均已推送特性分支。本机前端 375 项、Rust 574 项通过（另 5 项原有忽略），CDP 协议 7 项及 PowerShell 语法检查通过；未执行 Windows 原生 smoke。新 CI run `37403376481` 已启动，当前证据不声明 Windows 门禁通过。续修机器记录见 [.adg/evidence/WIN-018-CDP-20261006](../../.adg/evidence/WIN-018-CDP-20261006/manifest.json)。
+
+2026-10-06 Windows 复验追加：保持代码为 `9262a5b`，重新编译 release EXE（SHA-256=`d02e2d373043a113aa56989c45a7557e3f232fa1228eec3cd1b7acfd73e8c30c`）。PowerShell 7.6.5 普通/管理员组的实际提升 token 分别为 false/true，两组均在无 HOME、独立沙箱中通过 Vue 首屏、Tauri invoke、构建来源和截图门禁；协议 7 项、Windows 后端 335 项通过（5 忽略），格式/Clippy 与前端构建通过。CI run `37403376481` 已完成为 success，Windows 首屏步骤明确通过。以上更新前段历史“待复验”快照，不改写原 CI 失败。细节见 [06-Windows 双权限首屏复验](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/06-Windows普通与管理员首屏复验.md)，机器证据见 [.adg/evidence/WIN-018-CDP-WINDOWS-20261006](../../.adg/evidence/WIN-018-CDP-WINDOWS-20261006/manifest.json)。本轮只测试和文档回写，日常 0.1.7、特性代码和 main 均未改动，未制作安装器或发布；安装升级与原生 UI 等后续门禁保持。
 
 实际检查、制品身份、提交和边界见维护专题的 [04-0.1.8开发测试与交接](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/04-0.1.8开发测试与交接.md)。机器证据保存在 [.adg/evidence/WIN-018-20261006](../../.adg/evidence/WIN-018-20261006/manifest.json)。
 

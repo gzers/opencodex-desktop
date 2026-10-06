@@ -1,6 +1,6 @@
 # 05-Windows CI 首屏门禁复核与修正
 
-2026-10-06，Asia/Shanghai。关联 [IMP-OPENCODEX-DESKTOP-18](../../../../../../../03-开发实施/IMP-OPENCODEX-DESKTOP-18.md)。用户明确授权回写复核结论、目标模式开发、本机验证、提交推送，并交给 Windows 设备复验。状态：**续修与本机验证已完成，代码已推送；修正后的 Windows CI 与真机复验待完成。**
+2026-10-06，Asia/Shanghai。关联 [IMP-OPENCODEX-DESKTOP-18](../../../../../../../03-开发实施/IMP-OPENCODEX-DESKTOP-18.md)。用户明确授权回写复核结论、目标模式开发、本机验证、提交推送，并交给 Windows 设备复验。状态更新：**续修已推送；修正后的 Windows CI 与 Windows 普通/管理员首屏复验均通过**。本节保留 Mac 续修及 10:20 的历史快照，实际 Windows 回执另见 [06-双权限首屏复验](06-Windows普通与管理员首屏复验.md)。
 
 ## 已确认的失败边界
 
@@ -64,6 +64,10 @@ pwsh -NoProfile -File test/smoke/windows-startup.ps1 -Executable apps/desktop/ta
 可直接交给 Windows 开发代理的提示词：
 
 > 同步 `feature/0.1.8-windows-fixes` 和 `docs/governance-main`，按分析文档 05 复验代码 `9262a5b`。从该提交重建 release EXE，在普通与管理员 PowerShell 7 下分别运行 `test/smoke/windows-startup.ps1`，使用两个独立输出目录。保留首屏断言及全部诊断、截图、日志和 EXE 身份，失败按证据定位，结果回写文档分支。不要替换日常 0.1.7，不合并、不发布。
+
+## Windows 本机复验回执（2026-10-06）
+
+2026-10-06 Windows 回写：从同一 `9262a5b` 重建 release EXE，PowerShell 7.6.5 的普通与管理员组均按实际 token 覆盖并通过原首屏断言；本轮 CDP 协议 7 项、Windows 后端 335 项及格式/Clippy 通过。CI run `37403376481` 已为 success，Windows 首屏步骤明确成功。详细诊断、两组截图、EXE 身份和边界见 [06-双权限首屏复验](06-Windows普通与管理员首屏复验.md)；未修改代码、未替换日常 0.1.7、未合并或发布。原失败的唯一根因仍不由本次新版本通过结果倒推。
 
 ## 官方依据
 

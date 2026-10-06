@@ -1,0 +1,103 @@
+{
+  "record_id": "WIN-018-CDP-WINDOWS-20261006",
+  "observed_at": "2026-10-06T10:40:49+08:00",
+  "source_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+  "same_EXE_used_for_both_groups": true,
+  "EXE_sha256": "d02e2d373043a113aa56989c45a7557e3f232fa1228eec3cd1b7acfd73e8c30c",
+  "scope": "Fixed-commit test only: release EXE rebuild, protocol/backend preflight and ordinary/admin PowerShell 7 first-screen smoke",
+  "groups": [
+    {
+      "mode": "ordinary",
+      "result": "pass",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-06T02:37:11.3413015Z",
+      "finished_at_utc": "2026-10-06T02:37:46.1596521Z",
+      "tokenElevated": false,
+      "effectiveAdministrator": false,
+      "tokenElevationType": 3,
+      "observedSeconds": 30,
+      "cdpPort": 58971,
+      "rootPid": 73464,
+      "CDP_listener_pid": 67556,
+      "WebView2_child_count": 6,
+      "Browser": "Edg/154.0.4258.53",
+      "target": "http://tauri.localhost/#overview",
+      "bodyTextLength": 452,
+      "EXE_sha256": "d02e2d373043a113aa56989c45a7557e3f232fa1228eec3cd1b7acfd73e8c30c",
+      "source_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+      "startup_log_line": "2026-10-06T02:37:12.486Z [manager] startup version=0.1.8 commit=9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\018-windows-fixes\\opencodex-desktop\\test\\out\\windows-cdp-9262a5b-20261006\\ordinary\\sandbox-b7b98ce472b54a45bd4b8f497dffc31b",
+      "evidence_directory": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/ordinary"
+    },
+    {
+      "mode": "administrator",
+      "result": "pass",
+      "exit_code": 0,
+      "started_at_utc": "2026-10-06T02:38:10.9329543Z",
+      "finished_at_utc": "2026-10-06T02:38:45.1872228Z",
+      "tokenElevated": true,
+      "effectiveAdministrator": true,
+      "tokenElevationType": 2,
+      "observedSeconds": 30,
+      "cdpPort": 65317,
+      "rootPid": 62712,
+      "CDP_listener_pid": 51472,
+      "WebView2_child_count": 6,
+      "Browser": "Edg/154.0.4258.53",
+      "target": "http://tauri.localhost/#overview",
+      "bodyTextLength": 452,
+      "EXE_sha256": "d02e2d373043a113aa56989c45a7557e3f232fa1228eec3cd1b7acfd73e8c30c",
+      "source_commit": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+      "startup_log_line": "2026-10-06T02:38:11.826Z [manager] startup version=0.1.8 commit=9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\018-windows-fixes\\opencodex-desktop\\test\\out\\windows-cdp-9262a5b-20261006\\administrator\\sandbox-568864aeef9b4bbaa19744b1cb3cacc9",
+      "evidence_directory": ".adg/evidence/WIN-018-CDP-WINDOWS-20261006/administrator"
+    }
+  ],
+  "checks": {
+    "cdp_protocol": {
+      "passed": 7,
+      "failed": 0
+    },
+    "windows_backend": {
+      "passed": 335,
+      "failed": 0,
+      "ignored": 5,
+      "limits": "Unix-only tests excluded and optional existing live-service tests retain their skip behavior"
+    },
+    "rustfmt": "pass",
+    "clippy": "pass",
+    "frontend_typecheck": "pass",
+    "frontend_production_build": "pass",
+    "first_screen_assertions_unchanged": true,
+    "daily_postcheck": "pass",
+    "cleanup": "pass"
+  },
+  "ci_snapshot": {
+    "id": 37403376481,
+    "head_sha": "9262a5bedbb1a5f454f32afb7418b959fa8c721f",
+    "status": "completed",
+    "conclusion": "success",
+    "finished_at_utc": "2026-10-06T02:31:29Z",
+    "Windows_final_EXE_smoke": "success",
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/37403376481"
+  },
+  "causal_limit": "Both modes pass with explicit code-supplied flags. No old-build permission A/B was run; this does not uniquely establish why prior CI failed.",
+  "not_covered": [
+    "installer production or upgrade",
+    "Windows 10/11 matrix",
+    "DPI/shell shortcut caches",
+    "official proxy lifecycle",
+    "OTA",
+    "macOS native UI installation"
+  ],
+  "boundaries": {
+    "code_changes": false,
+    "daily_017_replaced": false,
+    "daily_instance_restarted": false,
+    "main_merged": false,
+    "installer_built": false,
+    "tag_created": false,
+    "released": false
+  },
+  "documentation_push": "authentication_blocked"
+}

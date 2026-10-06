@@ -1,0 +1,22 @@
+{
+  "record_id": "WIN-018-CDP-WINDOWS-20261006",
+  "checked_at": "2026-10-06T10:49:37+08:00",
+  "branch": "docs/governance-main",
+  "command": "git -c credential.interactive=false push origin docs/governance-main",
+  "result": "authentication_blocked",
+  "observed_errors": [
+    "Cannot prompt because user interactivity has been disabled.",
+    "unable to get password from user"
+  ],
+  "credential_manager_github_accounts_list": "empty",
+  "connector_discovery": "Plugin management search failed with transport error; no connected GitHub write capability was available from discovered tools",
+  "remote_refs": [
+    "df5cb8efa5ef930f9554ada6b71e64fcb9ee8432\trefs/heads/docs/governance-main",
+    "9262a5bedbb1a5f454f32afb7418b959fa8c721f\trefs/heads/feature/0.1.8-windows-fixes",
+    "5a0859ad2e6d44f4ca5751eedfb5a1b7eb8c5d09\trefs/heads/main"
+  ],
+  "authority": "User authorized this documentation push, not a merge or publication",
+  "next_step": "Authenticate GitHub on this Windows device, then push the existing docs/governance-main commit. No secret value requested or retained.",
+  "exec_shell_exit_code": 1,
+  "native_git_exit_code": "Not separately captured; authentication errors are retained verbatim"
+}
