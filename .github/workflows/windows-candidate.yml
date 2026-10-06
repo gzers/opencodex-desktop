@@ -30,6 +30,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/desktop/tauri -> target
+          cache-on-failure: true
       - name: Install pinned CLI and frontend
         run: |
           npm install --global @tauri-apps/cli@2.11.4
@@ -58,7 +62,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build NSIS and MSI candidates
         run: |
-          tauri build --bundles nsis,msi -- --locked
+          # The npm PowerShell shim consumes the standalone -- separator.
+          # Invoke its JavaScript entry through the native node executable.
+          $taskTauriCli = Join-Path (npm root --global) '@tauri-apps/cli/tauri.js'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          node $taskTauriCli build --bundles nsis,msi -- --locked
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Install, verify final EXE and uninstall on isolated runner
         run: |
