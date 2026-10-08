@@ -37,9 +37,14 @@ test('retries until the main page appears; ignores embedded or unrelated pages',
 test('HTTP errors are preserved instead of being swallowed', async t => {
   const endpoint = await serve(t, (_request, response) => { response.writeHead(503); response.end('unavailable') })
   const diagnostics = {}
-  await assert.rejects(discoverMainTarget(endpoint, { ...fast, diagnostics }), /HTTP 503/)
+  // The final deadline can expire during a later request. Require the observed
+  // HTTP error in retained attempts rather than assuming it is the last error.
+  await assert.rejects(discoverMainTarget(endpoint, {
+    timeoutMs: 1000, requestTimeoutMs: 250, pollIntervalMs: 50, diagnostics,
+  }), /did not become available/)
   assert.equal(diagnostics.result, 'fail')
-  assert.equal(diagnostics.attempts[0].list.status, 503)
+  assert(diagnostics.attempts.some(attempt =>
+    attempt.list?.status === 503 && attempt.list.error?.includes('HTTP 503')))
 })
 
 test('malformed target JSON fails with parse evidence', async t => {
