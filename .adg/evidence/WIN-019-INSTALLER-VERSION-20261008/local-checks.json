@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "689a86e6261c9f48ea6c4f89f0991c6267735540",
+  "checks": [
+    {
+      "command": "cargo fmt --check",
+      "result": "pass"
+    },
+    {
+      "command": "cargo test --test webdav_tls",
+      "passed": 2,
+      "result": "pass"
+    },
+    {
+      "command": "cargo clippy --test webdav_tls -- -D warnings",
+      "result": "pass"
+    },
+    {
+      "command": "node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-bundle-identity.test.mjs",
+      "passed": 12,
+      "failed": 0,
+      "result": "pass"
+    }
+  ],
+  "scope": "TLS检查在0f4d0d5e执行，689a86e6仅改CDP测试；后续完整远端检查绑定最终提交",
+  "productionTimeoutsChanged": false,
+  "historicalTlsRepeats": {
+    "beforeFix": 20,
+    "result": "pass",
+    "interpretation": "本地正常请求未触发竞态；延迟首字节对照已单独复现"
+  }
+}

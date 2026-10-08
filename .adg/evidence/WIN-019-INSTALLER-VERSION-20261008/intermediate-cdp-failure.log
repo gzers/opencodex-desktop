@@ -1,0 +1,46 @@
+##[group]Run node --test test/smoke/windows-cdp.test.mjs
+2026-10-08T13:45:30.8410050Z node --test test/smoke/windows-cdp.test.mjs
+2026-10-08T13:45:30.8485980Z shell: /bin/bash -e {0}
+2026-10-08T13:45:30.8486360Z ##[endgroup]
+2026-10-08T13:45:31.0118870Z ✔ retries until the main page appears; ignores embedded or unrelated pages (38.131292ms)
+2026-10-08T13:45:31.1692130Z ✖ HTTP errors are preserved instead of being swallowed (155.82475ms)
+2026-10-08T13:45:31.3199320Z ✔ malformed target JSON fails with parse evidence (155.044333ms)
+2026-10-08T13:45:31.6240380Z ✔ non-array responses and empty target lists never count as rendered UI (304.418375ms)
+2026-10-08T13:45:31.7769940Z ✔ stalled responses are bounded by both request and discovery deadlines (152.687833ms)
+2026-10-08T13:45:31.9282330Z ✔ connection refusal retains the underlying network error (151.626083ms)
+2026-10-08T13:45:31.9283190Z ✔ refuses non-loopback endpoints before making a request (0.255583ms)
+2026-10-08T13:45:31.9358040Z ℹ tests 7
+2026-10-08T13:45:31.9358340Z ℹ suites 0
+2026-10-08T13:45:31.9358570Z ℹ pass 6
+2026-10-08T13:45:31.9358790Z ℹ fail 1
+2026-10-08T13:45:31.9359020Z ℹ cancelled 0
+2026-10-08T13:45:31.9359460Z ℹ skipped 0
+2026-10-08T13:45:31.9359840Z ℹ todo 0
+2026-10-08T13:45:31.9360100Z ℹ duration_ms 1018.028958
+2026-10-08T13:45:31.9365430Z
+2026-10-08T13:45:31.9365590Z ✖ failing tests:
+2026-10-08T13:45:31.9365740Z
+2026-10-08T13:45:31.9365940Z test at test/smoke/windows-cdp.test.mjs:37:1
+2026-10-08T13:45:31.9366940Z ✖ HTTP errors are preserved instead of being swallowed (155.82475ms)
+2026-10-08T13:45:31.9367570Z   AssertionError [ERR_ASSERTION]: The input did not match the regular expression /HTTP 503/. Input:
+2026-10-08T13:45:31.9368020Z
+2026-10-08T13:45:31.9368740Z   'Error: Main WebView CDP target did not become available: /json/list: The operation was aborted due to timeout'
+2026-10-08T13:45:31.9369320Z
+2026-10-08T13:45:31.9370080Z       at async TestContext.<anonymous> (file:///Users/runner/work/opencodex-desktop/opencodex-desktop/test/smoke/windows-cdp.test.mjs:40:3)
+2026-10-08T13:45:31.9371340Z       at async Test.run (node:internal/test_runner/test:1404:7)
+2026-10-08T13:45:31.9371860Z       at async Test.processPendingSubtests (node:internal/test_runner/test:969:7) {
+2026-10-08T13:45:31.9372270Z     generatedMessage: true,
+2026-10-08T13:45:31.9372500Z     code: 'ERR_ASSERTION',
+2026-10-08T13:45:31.9373070Z     actual: Error: Main WebView CDP target did not become available: /json/list: The operation was aborted due to timeout
+2026-10-08T13:45:31.9373970Z         at discoverMainTarget (file:///Users/runner/work/opencodex-desktop/opencodex-desktop/test/smoke/windows-cdp.mjs:70:17)
+2026-10-08T13:45:31.9375080Z         at async waitForActual (node:assert:646:5)
+2026-10-08T13:45:31.9375480Z         at async strict.rejects (node:assert:769:25)
+2026-10-08T13:45:31.9376310Z         at async TestContext.<anonymous> (file:///Users/runner/work/opencodex-desktop/opencodex-desktop/test/smoke/windows-cdp.test.mjs:40:3)
+2026-10-08T13:45:31.9377010Z         at async Test.run (node:internal/test_runner/test:1404:7)
+2026-10-08T13:45:31.9377700Z         at async Test.processPendingSubtests (node:internal/test_runner/test:969:7),
+2026-10-08T13:45:31.9378210Z     expected: /HTTP 503/,
+2026-10-08T13:45:31.9378500Z     operator: 'rejects',
+2026-10-08T13:45:31.9378760Z     diff: 'simple'
+2026-10-08T13:45:31.9378970Z   }
+2026-10-08T13:45:31.9405470Z ##[error]Process completed with exit code 1.
+2026-10-08T13:45:31.9578470Z

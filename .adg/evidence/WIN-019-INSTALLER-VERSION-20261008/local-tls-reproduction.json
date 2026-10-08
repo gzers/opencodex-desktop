@@ -1,0 +1,6 @@
+{
+  "platform": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+  "method": "loopback listener nonblocking; client delays byte 0x16 by 100ms; read timeout 1s; compare accepted stream before/after explicit blocking reset",
+  "output": "reset_blocking=false result=Err(Os { code: 35, kind: WouldBlock, message: \"Resource temporarily unavailable\" }) byte=[0]\nreset_blocking=true result=Ok(()) byte=[22]\n",
+  "result": "pass"
+}

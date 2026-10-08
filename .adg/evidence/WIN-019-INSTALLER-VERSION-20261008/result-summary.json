@@ -1,0 +1,43 @@
+{
+  "sourceCommit": "689a86e6261c9f48ea6c4f89f0991c6267735540",
+  "codeBranch": "feature/0.1.9-windows-appearance",
+  "docsBranch": "docs/governance-main",
+  "ci": {
+    "runId": 37796440853,
+    "result": "success",
+    "mainOnlyBuild": "skipped by branch rule"
+  },
+  "installer": {
+    "runId": 37796440954,
+    "result": "success",
+    "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+    "version": "0.1.9",
+    "installers": [
+      {
+        "kind": "msi",
+        "sha256": "1a5a894863904970e835ce7e425ccc74aa9ae0f0810c88ed1cd0b23080a8aa81",
+        "result": "pass"
+      },
+      {
+        "kind": "nsis",
+        "sha256": "c4428b3b1f8c6bc7a20540bf88a58b64aeefb39c3f4e4821a1c347508b93711b",
+        "result": "pass"
+      }
+    ]
+  },
+  "candidateArtifactId": 11559681487,
+  "candidateDownloadUrl": "https://github.com/gzers/opencodex-desktop/actions/runs/37796440954/artifacts/11559681487",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "outstanding": [
+    "Snap完整验收",
+    "Windows10/11物理DPI与多屏",
+    "人工读屏",
+    "真实代理与托盘生命周期",
+    "macOS原生UI与安装",
+    "用户升级往返"
+  ],
+  "daily017Replaced": false,
+  "mainMerged": false,
+  "formalReleasePublished": false
+}

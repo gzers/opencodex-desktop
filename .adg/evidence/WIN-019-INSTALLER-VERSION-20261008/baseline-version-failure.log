@@ -1,0 +1,15 @@
+package	Install, verify final EXE and uninstall on isolated runner	﻿2026-10-08T13:27:20.8245402Z ##[group]Run & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8247329Z ^[[36;1m& ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/windows-candidate^[[0m
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8346188Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8346631Z env:
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8346901Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8347426Z   CARGO_INCREMENTAL: 0
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8347707Z   CARGO_TERM_COLOR: always
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8347998Z   CACHE_ON_FAILURE: true
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:20.8348278Z ##[endgroup]
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:24.0798423Z ^[[31;1mException: ^[[0mD:\a\opencodex-desktop\opencodex-desktop\test\smoke\windows-installer.ps1:64^[[0m
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:24.0799946Z ^[[31;1m^[[0m^[[36;1mLine |^[[0m
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:24.0801546Z ^[[31;1m^[[0m^[[36;1m^[[36;1m  64 | ^[[0m … tmatch '^0[.]1[.]8($|[.+-])') { ^[[36;1mthrow "Unexpected version $version"^[[0m }^[[0m
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:24.0802693Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m     | ^[[31;1m                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^[[0m
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:24.0803714Z ^[[31;1m^[[0m^[[36;1m^[[36;1m^[[0m^[[36;1m^[[0m^[[36;1m^[[31;1m^[[31;1m^[[36;1m     | ^[[31;1mUnexpected version 0.1.9^[[0m
+package	Install, verify final EXE and uninstall on isolated runner	2026-10-08T13:27:24.2034953Z ##[error]Process completed with exit code 1.

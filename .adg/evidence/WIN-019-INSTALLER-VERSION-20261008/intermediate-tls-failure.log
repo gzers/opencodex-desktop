@@ -1,0 +1,32 @@
+Running tests/webdav_tls.rs (target/debug/deps/webdav_tls-4cc1619da04e96d1)
+2026-10-08T13:53:26.4133190Z test missing_payload_on_a_valid_manifest_fails_without_touching_local ... ok
+2026-10-08T13:53:26.4133760Z test two_isolated_roots_sync_through_a_real_server ... ok
+2026-10-08T13:53:26.4134260Z test concurrent_sync_is_blocked_by_endpoint_lock ... ok
+2026-10-08T13:53:26.4134690Z test wrong_password_over_real_server_is_unauthorized ... ok
+2026-10-08T13:53:26.4134940Z
+2026-10-08T13:53:26.4135140Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+2026-10-08T13:53:26.4135500Z
+2026-10-08T13:53:26.4286170Z
+2026-10-08T13:53:26.4286980Z running 2 tests
+2026-10-08T13:53:26.4370590Z test tls_backend_is_compiled_in ... ok
+2026-10-08T13:53:26.6216720Z test https_scheme_reaches_the_transport_layer ... FAILED
+2026-10-08T13:53:26.6219390Z
+2026-10-08T13:53:26.6219660Z failures:
+2026-10-08T13:53:26.6219780Z
+2026-10-08T13:53:26.6220070Z ---- https_scheme_reaches_the_transport_layer stdout ----
+2026-10-08T13:53:26.6220340Z
+2026-10-08T13:53:26.6220630Z thread 'https_scheme_reaches_the_transport_layer' (43523) panicked at tests/webdav_tls.rs:75:5:
+2026-10-08T13:53:26.6221130Z assertion `left == right` failed: TLS handshake must reach loopback transport
+2026-10-08T13:53:26.6221530Z   left: None
+2026-10-08T13:53:26.6221710Z  right: Some(22)
+2026-10-08T13:53:26.6222050Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+2026-10-08T13:53:26.6222480Z
+2026-10-08T13:53:26.6222480Z
+2026-10-08T13:53:26.6222610Z failures:
+2026-10-08T13:53:26.6222820Z     https_scheme_reaches_the_transport_layer
+2026-10-08T13:53:26.6223020Z
+2026-10-08T13:53:26.6223320Z test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.19s
+2026-10-08T13:53:26.6223600Z
+2026-10-08T13:53:26.6300980Z error: test failed, to rerun pass `--test webdav_tls`
+2026-10-08T13:53:26.6416160Z ##[error]Process completed with exit code 101.
+2026-10-08T13:53:26.6644400Z

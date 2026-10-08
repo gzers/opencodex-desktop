@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: in_progress
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.9 用户画质与 Windows 窗口外观和菜单适配
-summary: 接续 fb4fe172 后，Windows 单行原生标题栏、菜单行移除、Mica／实色回退和托盘恢复入口已本地提交；固定新制品双权限四档WebView DPR通过，原生两组各13/14通过，Snap及跨平台／显示器／生命周期／CI／安装门禁未闭合，整体仍 in_progress，保留日常安装，不推送。
+summary: Windows 原生适配已推送；双权限四档WebView DPR通过，原生两组各13/14通过。固定689a86e6的完整CI及Windows MSI／NSIS首次安装、首屏与卸载通过，候选包已上传；Snap及跨平台／显示器／生命周期等仍未闭合，整体保持in_progress，保留日常安装。
 ---
 
 # 0.1.9 用户画质与 Windows 窗口外观和菜单适配
@@ -90,3 +90,21 @@ summary: 接续 fb4fe172 后，Windows 单行原生标题栏、菜单行移除�
 固定新 EXE 的普通／管理员四档 WebView DPR 共 8 组画质矩阵全部通过，p95 最高31.9ms／回调p95最高0.5ms；管理员首轮125.8ms长帧的失败原件与未确定原因保留。原生真实DPI=192／DPR=2，各权限14项中13项通过，Snap独立自动识别失败；最终悬停截图可见系统布局，但Win+Z图未显示，不判完整Snap通过。MSAA证据不等于人工读屏，shell PID保留／API重开不等于真实代理／托盘入口生命周期通过。
 
 最终证据见 [result-summary.json](../../.adg/evidence/WIN-019-NATIVE-IMPLEMENTATION-20261008/result-summary.json)／[gate-matrix.json](../../.adg/evidence/WIN-019-NATIVE-IMPLEMENTATION-20261008/gate-matrix.json)／[manifest.json](../../.adg/evidence/WIN-019-NATIVE-IMPLEMENTATION-20261008/manifest.json)。完整设计门禁在回执03逐项保留，未完成项包括Snap、目标系统／物理多档DPI／多屏／人工读屏／真实代理与托盘往返／macOS／完整CI／新安装往返；**实施继续in_progress，不能进入全部验收完成或发布完成状态**。候选清理、日常EXE与偏好哈希／原进程身份／系统透明恢复已核对。
+
+## 候选安装版本门禁接续（2026-10-08）
+
+原生实现及上述本机回执写入后，代码 `15219bf0` 已推送。对应 [CI #41](https://github.com/gzers/opencodex-desktop/actions/runs/37782268133) 全部适用检查通过；特性分支的 main 专属 build job 按规则跳过。[Windows candidate installer #5](https://github.com/gzers/opencodex-desktop/actions/runs/37782267972) 的 NSIS／MSI 构建成功，但安装验收脚本仍写死 `^0.1.8`，在已安装 MSI 的 `ProductVersion=0.1.9` 检查处报 `Unexpected version 0.1.9`。候选安装包上传被跳过，不能将构建成功记为安装验收通过。上文“不推送／远端未执行”仅保留对应轮次的历史口径。
+
+用户同意接续修复后，在 `feature/0.1.9-windows-appearance` 提交并推送 `bc46da14be245364fe436a8b845f03a1da133d50`：从现有 `tauri.conf.json` 读取期望版本，版本缺失失败，安装后的 EXE `ProductVersion` 必须与期望值完全一致。制品逐字节身份检查、隔离 runner 限制、源码提交一致性、首屏与卸载检查均保留。
+
+随后该提交的 CI 前端步骤发现 CDP HTTP 503 回归的时序依赖：最后一次请求在发现截止时间前超时，最终错误是 timeout，而测试固定要求最终错误为 503。`70711ced11e64d5ced3323e2a1815f31d9263121` 单独修正测试：发现流程仍必须失败，诊断历史中必须有实际 503 状态和 HTTP 503 错误；该错误语义测试使用独立请求预算。生产发现超时与独立 stalled-response 时限断言未变，不忽略失败、不放宽安装验收。相关 Node 协议／制品身份 12 项通过，CDP 七项另连续三轮通过。
+
+`70711ced` 的 [候选安装器](https://github.com/gzers/opencodex-desktop/actions/runs/37787195944) 已通过：MSI／NSIS 均为 0.1.9，安装后的 EXE 包标记及逐字节身份一致，首屏通过，卸载返回 0 且 EXE 已移除；制品与证据已上传。其 [CI](https://github.com/gzers/opencodex-desktop/actions/runs/37787195941) 前端、发布工具和 Windows 后端通过，macOS 后端因 TLS 行为测试失败，整体未通过。
+
+macOS 的 TLS 行为测试使用非阻塞 listener，accepted stream 继承该模式；握手首字节未到达时 read_exact 返回 WouldBlock，原代码将其转为 None。已用本机延迟 100ms 写入 0x16 的独立 loopback 对照复现：未重置时 WouldBlock，显式恢复阻塞后成功读到 0x16。`0f4d0d5e3d5401b8d7a3d9859fb19fe2925d52d8` 在测试端点接受连接后设置阻塞读取，保留原 1 秒读取超时、3 秒接受截止及 0x16 断言；本地 TLS 两项、fmt 与对应 Clippy 通过。该提交的远端 macOS 后端已通过，但 [CI](https://github.com/gzers/opencodex-desktop/actions/runs/37795778611) 又在 CDP JSON 语义测试失败：150ms 发现预算耗尽前仅捕获 version 请求超时，没有进入 list 解析，不能算取得解析错误证据。
+
+`689a86e6261c9f48ea6c4f89f0991c6267735540` 将协议语义测试与短时限测试的预算分开；语义用例仍必须失败且保留真实 HTTP 503、200＋JSON 解析错误或 ECONNREFUSED，成功发现与重试仍严格断言。stalled-response 的 150ms／30ms 预算及总时限断言、生产发现参数均不变。Node CDP 七项与制品身份五项合计 12 项通过。
+
+固定最新提交的 [CI](https://github.com/gzers/opencodex-desktop/actions/runs/37796440853) 与 [候选安装器](https://github.com/gzers/opencodex-desktop/actions/runs/37796440954) **均已通过**。前端类型／单测／构建、CDP、发布工具、macOS 与 Windows 后端格式／Clippy／回归、Windows 最终 EXE 首屏全部通过；main 专属 build job 按特性分支规则跳过。MSI／NSIS 候选安装包及证据已上传，仍为未签名、未接受正式发布的测试候选。旧失败、复现、最终 run 身份与安装后的制品校验保留在 [.adg 证据目录](../../.adg/evidence/WIN-019-INSTALLER-VERSION-20261008/manifest.json)。
+
+本次代码仅调整候选安装验收、CDP协议回归与TLS行为测试，未合并 main、正式发布或替换日常安装。安装器 runner 的首次安装／首屏／卸载不能替代用户升级、Snap、物理 DPI／多屏、真实代理／托盘生命周期及 macOS 原生／安装验收，IMP-19 继续 `in_progress`。

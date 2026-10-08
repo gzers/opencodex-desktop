@@ -1,0 +1,97 @@
+{
+  "scope": "0.1.9候选门禁失败修复与固定提交远端复验；不关闭版本总体验收",
+  "sourceCommit": "689a86e6261c9f48ea6c4f89f0991c6267735540",
+  "files": [
+    {
+      "path": "baseline-ci.json",
+      "bytes": 8318,
+      "sha256": "546b31bcc69e96e5bedf29cc195cc72998a5060a173a7d38c2920e551643dacb"
+    },
+    {
+      "path": "baseline-installer.json",
+      "bytes": 3662,
+      "sha256": "428f138bdaf3612c405aa7b2b20d058709363f78d653fcbb009174e18c5a35fd"
+    },
+    {
+      "path": "baseline-version-failure.log",
+      "bytes": 2701,
+      "sha256": "3af2cc5b1db5a8fcf6c38946ab0a5b339e4077fa768418c7726fc77bb802eda3"
+    },
+    {
+      "path": "final-artifacts.json",
+      "bytes": 1849,
+      "sha256": "a624056f512df3a75aaf7ce10de3a074abfac5f642088ec5c7e264cd50a36cc2"
+    },
+    {
+      "path": "final-ci.json",
+      "bytes": 12385,
+      "sha256": "5e3d25d913c84629c4856c59656e5e3d19df35e7b10e65f0bc51409a16f7fad7"
+    },
+    {
+      "path": "final-installer-verification.json",
+      "bytes": 1920,
+      "sha256": "6900c9e8bed1f637d1e592f98d4708969f6719c902ef8a45a0919f59c871d51e"
+    },
+    {
+      "path": "final-installer.json",
+      "bytes": 5547,
+      "sha256": "f0c47525aafef033caa6bf9a4403f8acf51732d6982f4fc982627acd880b6ec0"
+    },
+    {
+      "path": "intermediate-cdp-failure.log",
+      "bytes": 3570,
+      "sha256": "dcef9b4f28d6583e8d9b95b5f77dd34fcd6f9d7c7fd5805dcc6771c570c2ed00"
+    },
+    {
+      "path": "intermediate-installer-verification.json",
+      "bytes": 1920,
+      "sha256": "8217c297ef2cecae99fd06053bff1b29509544864579c231b6e8a39f3a8fcd36"
+    },
+    {
+      "path": "intermediate-installer.json",
+      "bytes": 3724,
+      "sha256": "b6cb084cfabbbeaf717884ab866bfed60253c587e6b4413f5560e1ea417cdfcc"
+    },
+    {
+      "path": "intermediate-tls-ci.json",
+      "bytes": 8355,
+      "sha256": "48ef7a12fa9a4849cc4db511752e414d9f85b89b9174e9f677a61a1d93aced2f"
+    },
+    {
+      "path": "intermediate-tls-failure.log",
+      "bytes": 2036,
+      "sha256": "087603fda22eed605ac1efed22058080608b1c8f159e48d53152e95eeda88b7e"
+    },
+    {
+      "path": "latest-cdp-failure.log",
+      "bytes": 3557,
+      "sha256": "15a33ba67372456d76365ffa1c783760aaef566794553122abcd2fa33938d0ae"
+    },
+    {
+      "path": "local-checks.json",
+      "bytes": 869,
+      "sha256": "a27691348d66acece3650739d95f76f736cbe2f6a3a6b898545da557890db70b"
+    },
+    {
+      "path": "local-tls-reproduction.json",
+      "bytes": 459,
+      "sha256": "c18082cd89ce36d1398945cd93666f025d21f1554ea0c4049e1d789b4724e9fe"
+    },
+    {
+      "path": "result-summary.json",
+      "bytes": 1322,
+      "sha256": "f60b0a886c6999eacee7d78512692acc440db85406a0c63196c518c3cab03c0a"
+    },
+    {
+      "path": "tls-fix-ci.json",
+      "bytes": 11755,
+      "sha256": "ac2cb8264e35155d94b21aa704b6a42f6088e19387766275d75dda88ce5557c6"
+    },
+    {
+      "path": "tls-fix-installer.json",
+      "bytes": 5547,
+      "sha256": "9bbf0f060f2012dadfc1b1db5906acebf92476f9200c4676e98e9ee8fc808bd4"
+    }
+  ],
+  "normalization": "日志移除ANSI与行末空白；JSON统一LF；字段与测试结果保持原值；完整原件在关联GitHub Actions run中"
+}
