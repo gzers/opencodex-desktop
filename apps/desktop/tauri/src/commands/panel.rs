@@ -146,6 +146,7 @@ pub struct PanelRequest {
     /// 管理器的主题**设置**（`light` / `dark` / `system`）。官方面板自己也用
     /// `localStorage["ocx-theme"]` 决定明暗，这里按它的机制同步，不注入样式。
     pub theme_setting: Option<String>,
+    pub effects: Option<String>,
     pub toast: Option<String>,
 }
 #[derive(Debug, Serialize)]
@@ -395,6 +396,10 @@ pub async fn sync_embedded_panel(
             theme_setting,
             request.toast.as_deref(),
         );
+        let mut detail = detail;
+        detail["effects"] = serde_json::json!(match request.effects.as_deref() {
+            Some("mid") => "mid", Some("low") => "low", _ => "high",
+        });
         view.eval(format!("window.__ocxdPanelState = {detail}; window.dispatchEvent(new CustomEvent('ocxd-panel-state', {{detail:{detail}}}))"))?;
         if request.action == PanelAction::Show {
             if request.reload { view.reload()?; }

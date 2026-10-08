@@ -1,7 +1,7 @@
 // Smoke verification for the final Windows EXE, using WebView2's loopback CDP.
 // Requires Node >=24. No external browser/automation package is needed.
 import assert from 'node:assert/strict'
-import { writeFile } from 'node:fs/promises'
+import { writeFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { describeError, discoverMainTarget } from './windows-cdp.mjs'
 const [endpoint, output] = process.argv.slice(2)
@@ -84,7 +84,8 @@ try {
   assert(!invoke.exceptionDetails, JSON.stringify(invoke.exceptionDetails))
   const facts = invoke.result.value
   assert.equal(facts.about.platform, 'Windows')
-  assert.equal(facts.about.version, '0.1.8')
+  const config = JSON.parse(await readFile(new URL('../../apps/desktop/tauri/tauri.conf.json', import.meta.url), 'utf8'))
+  assert.equal(facts.about.version, config.version)
   assert.equal(facts.preferences.cliEnabled, false)
   assert(facts.dataRoot, 'Application data root did not initialize')
   diagnostics.phase = 'screenshot'
@@ -98,7 +99,7 @@ try {
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)
-  console.log('PASS: Windows 0.1.8 rendered, Tauri commands succeeded, sandbox initialized.')
+  console.log('PASS: Windows rendered, Tauri commands succeeded, sandbox initialized.')
 } catch (error) {
   diagnostics.result = 'fail'
   diagnostics.error = describeError(error)

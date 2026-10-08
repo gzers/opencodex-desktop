@@ -25,7 +25,7 @@ const SKILLS_SOURCE =
   '/Users/example/Library/Application Support/com.gzers.opencodex.desktop/manager-state/skills-store'
 
 function mountSettingsExtensions() {
-  const wrapper = mount(App, { global: { plugins: [createPinia()] } })
+  const wrapper = mount(App, { attachTo: document.body, global: { plugins: [createPinia()] } })
   useRouteStore().go('settings', { section: 'extensions' })
   return wrapper
 }
@@ -132,7 +132,9 @@ describe('settings · Skills 源目录 row', () => {
     expect(wrapper.text()).not.toContain('测试同步')
 
     // 选择「文件复制」走扩展写入命令，并带上扩展配置的快照。
-    await methodRow!.findAll('.select-option')[1].trigger('click')
+    await methodRow!.find('.select-trigger').trigger('click')
+    await flush(wrapper)
+    document.querySelectorAll<HTMLButtonElement>('.select-menu [role="option"]')[1].click()
     await flush(wrapper)
     const write = invoke.mock.calls.find((call) => call[0] === 'execute_extension_write')
     expect(write).toBeTruthy()

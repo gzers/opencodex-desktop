@@ -16,6 +16,7 @@ export interface PanelRequest {
   theme?: 'light' | 'dark'
   // 按官方面板自己的 `ocx-theme` 存储键同步明暗（light / dark / system）。
   themeSetting?: 'light' | 'dark' | 'system'
+  effects?: 'high' | 'mid' | 'low'
   toast?: string
 }
 

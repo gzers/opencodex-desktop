@@ -26,7 +26,7 @@ export const usePreferencesStore = defineStore('preferences', {
         this.data = await getPreferences()
         // 启动与重新加载偏好时立即把缩放应用到界面，不依赖用户打开设置页。
         applyInterfaceScale(this.data.interfaceScale)
-        // 档位同理：读完偏好立即落到 `data-effects`，由外观策略折算系统减少动态。
+        // 用户档位立即落到 `data-effects`；系统动画设置不改变选择。
         useEffectsStore().setSetting(this.data.visualEffects)
         useGlowRenderStore().setSetting(this.data.glowRender)
         // 主题以后端偏好为事实源：仅在偏好有值且与当前投影不同时写缓存，避免旧缓存反向覆盖。

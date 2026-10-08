@@ -61,7 +61,10 @@
     #${id} .hub-item:hover{background:var(--hub-press)}
     #${id} .hub-item:focus-visible,#${id} .hub-toggle:focus-visible,#${id} .hub-zoom button:focus-visible{
       outline:2px solid var(--hub-text);outline-offset:2px}
-    @media (prefers-reduced-motion: reduce){#${id} *{transition:none!important;animation:none!important}}
+    #${id}:not([data-effects="high"]) *{transition:none!important;animation:none!important}
+    #${id}[data-effects="low"] .hub-menu,#${id}[data-effects="low"] .hub-toggle{
+      background:#f4f5f9;backdrop-filter:none;-webkit-backdrop-filter:none}
+    #${id}[data-effects="low"][data-theme="dark"] .hub-menu,#${id}[data-effects="low"][data-theme="dark"] .hub-toggle{background:#22242a}
   `;
 
   const mount = () => {
@@ -69,6 +72,7 @@
     const root = document.createElement('div');
     root.id = rootId;
     root.setAttribute('data-theme', 'light');
+    root.setAttribute('data-effects', 'high');
     root.innerHTML = [
       '<button type="button" class="hub-toggle" aria-haspopup="menu" aria-expanded="false" title="面板快捷操作">',
       LOGO, '<span class="sr-only" aria-live="polite"></span>',
@@ -166,6 +170,7 @@
       if (state.theme === 'dark' || state.theme === 'light') {
         root.setAttribute('data-theme', state.theme);
       }
+      root.setAttribute('data-effects', ['high','mid','low'].includes(state.effects) ? state.effects : 'high');
       // 明暗同步：沿用官方面板自己的存储键与 `data-theme`，不注入样式。
       // `system` 表示交回系统外观，与官方页面的语义一致。
       if (state.themeSetting === 'light' || state.themeSetting === 'dark' || state.themeSetting === 'system') {

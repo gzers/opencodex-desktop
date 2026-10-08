@@ -12,9 +12,18 @@ impl AppActivity {
         self.foreground.load(Ordering::Acquire)
     }
     pub fn publish(&self, app: &tauri::AppHandle, active: bool) {
+        // Windows keyboard focus can remain in a WebView child, or be absent
+        // after restore. App activation must follow the foreground root HWND.
+        #[cfg(windows)]
+        let foreground = {
+            let _ = active;
+            windows_activity::foreground(app)
+        };
+        #[cfg(not(windows))]
         let visible = app.get_window("main").is_some_and(|window| {
             window.is_visible().unwrap_or(false) && !window.is_minimized().unwrap_or(true)
         });
+        #[cfg(not(windows))]
         let foreground = active && visible;
         if self.foreground.swap(foreground, Ordering::AcqRel) != foreground {
             let _ = app.emit("app-foreground-changed", foreground);
@@ -24,7 +33,115 @@ impl AppActivity {
 }
 #[tauri::command]
 pub fn app_foreground(app: tauri::AppHandle, webview: tauri::Webview) -> bool {
+    #[cfg(windows)]
+    app.state::<AppActivity>().publish(&app, true);
     webview.label() == "main" && app.state::<AppActivity>().foreground()
+}
+
+#[cfg(windows)]
+mod windows_activity {
+    use super::*;
+    use std::sync::OnceLock;
+    use windows_sys::Win32::{
+        Foundation::HWND,
+        UI::{
+            Accessibility::{SetWinEventHook, HWINEVENTHOOK},
+            WindowsAndMessaging::{
+                GetAncestor, GetForegroundWindow, IsIconic, IsWindowVisible, EVENT_OBJECT_HIDE,
+                EVENT_OBJECT_SHOW, EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_MINIMIZEEND,
+                EVENT_SYSTEM_MINIMIZESTART, GA_ROOT, OBJID_WINDOW, WINEVENT_OUTOFCONTEXT,
+            },
+        },
+    };
+    struct Context {
+        app: tauri::AppHandle,
+        window: usize,
+    }
+    static CONTEXT: OnceLock<Context> = OnceLock::new();
+
+    pub(super) fn foreground(app: &tauri::AppHandle) -> bool {
+        let Some(window) = app.get_window("main").and_then(|window| window.hwnd().ok()) else {
+            return false;
+        };
+        let hwnd = window.0 as HWND;
+        // These are read-only User32 queries, safe from event/command threads.
+        unsafe {
+            super::windows_foreground(
+                IsWindowVisible(hwnd) != 0,
+                IsIconic(hwnd) != 0,
+                GetAncestor(GetForegroundWindow(), GA_ROOT) == hwnd,
+            )
+        }
+    }
+    unsafe extern "system" fn changed(
+        _: HWINEVENTHOOK,
+        event: u32,
+        window: HWND,
+        object: i32,
+        _: i32,
+        _: u32,
+        _: u32,
+    ) {
+        if let Some(context) = CONTEXT.get() {
+            if event == EVENT_SYSTEM_FOREGROUND
+                || (window as usize == context.window && object == OBJID_WINDOW)
+            {
+                context
+                    .app
+                    .state::<AppActivity>()
+                    .publish(&context.app, true);
+            }
+        }
+    }
+    pub(super) fn install(app: &tauri::AppHandle) {
+        let Some(window) = app.get_window("main").and_then(|window| window.hwnd().ok()) else {
+            return;
+        };
+        if CONTEXT
+            .set(Context {
+                app: app.clone(),
+                window: window.0 as usize,
+            })
+            .is_err()
+        {
+            return;
+        }
+        // Setup is on the message-loop thread. Out-of-context hooks do not inject
+        // into other processes; three fixed hooks live until process exit.
+        for (first, last, process) in [
+            (EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, 0),
+            (
+                EVENT_SYSTEM_MINIMIZESTART,
+                EVENT_SYSTEM_MINIMIZEEND,
+                std::process::id(),
+            ),
+            (EVENT_OBJECT_SHOW, EVENT_OBJECT_HIDE, std::process::id()),
+        ] {
+            let hook = unsafe {
+                SetWinEventHook(
+                    first,
+                    last,
+                    std::ptr::null_mut(),
+                    Some(changed),
+                    process,
+                    0,
+                    WINEVENT_OUTOFCONTEXT,
+                )
+            };
+            if hook.is_null() {
+                eprintln!("Windows foreground hook installation failed");
+            }
+        }
+        app.state::<AppActivity>().publish(app, true);
+    }
+}
+#[cfg(any(windows, test))]
+fn windows_foreground(visible: bool, minimized: bool, matching_root: bool) -> bool {
+    visible && !minimized && matching_root
+}
+#[cfg(windows)]
+pub fn install(app: &tauri::AppHandle) {
+    windows_activity::install(app);
 }
 
 #[cfg(target_os = "macos")]
@@ -75,10 +192,23 @@ pub fn install(app: &tauri::AppHandle) {
         app.state::<AppActivity>().publish(app, active);
     }
 }
-#[cfg(not(target_os = "macos"))]
+#[cfg(not(any(target_os = "macos", windows)))]
 pub fn install(app: &tauri::AppHandle) {
     let active = app
         .get_window("main")
         .is_some_and(|window| window.is_focused().unwrap_or(false));
     app.state::<AppActivity>().publish(app, active);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::windows_foreground;
+
+    #[test]
+    fn windows_activation_tracks_root_visibility_without_keyboard_focus() {
+        assert!(windows_foreground(true, false, true));
+        assert!(!windows_foreground(true, true, true));
+        assert!(!windows_foreground(false, false, true));
+        assert!(!windows_foreground(true, false, false));
+    }
 }

@@ -120,11 +120,4 @@ html[data-theme="dark"] {
 }
 /* 后台安全基线：`.main` 不叠 backdrop-filter；这里只给子层。 */
 
-/* 下拉展开时把所在表面抬到同级其它表面之上。
-   玻璃配方（backdrop-filter）会让每个卡片 / 设置行各自成为层叠上下文，若不抬起，
-   后面的兄弟表面会按 DOM 顺序盖住绝对定位的下拉菜单（真实点击被拦截）。 */
-.setting-row:has(.select.open), .install-row:has(.select.open), .agent-path-row:has(.select.open),
-.skill-row:has(.select.open), .card:has(.select.open) {
-  position: relative;
-  z-index: var(--z-popover);
-}
+/* 下拉统一 Teleport 到主壳，无需把原卡片/行抬到浮层高度。 */

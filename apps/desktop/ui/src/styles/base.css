@@ -831,7 +831,7 @@ input.input:focus-visible, .select-trigger:focus-visible, .toggle:focus-visible 
 .topbar-refresh svg { transform-origin: 50% 50%; }
 .topbar-refresh.is-busy svg { animation: tb-spin .9s linear infinite; }
 @keyframes tb-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .topbar-refresh.is-busy svg { animation: none; } }
+html:not([data-effects="high"]) .topbar-refresh.is-busy svg { animation: none; }
 .row-actions { display: flex; align-items: center; justify-content: center; gap: 6px; }
 .skills-target-labels, .skill-targets { display: grid; grid-auto-columns: 62px; grid-auto-flow: column; gap: 8px; justify-content: end; }
 .skills-target-labels span, .skill-target span { text-align: center; color: var(--muted); font-size: var(--text-micro); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -921,7 +921,7 @@ input.input:focus-visible, .select-trigger:focus-visible, .toggle:focus-visible 
 .residue-list li span { margin-left: auto; color: var(--muted); }
 .residue-list li.present span { color: var(--red); }
 .residue-list li.unknown span { color: var(--amber); }
-@media (prefers-reduced-motion: reduce) { .wiz-spin, .wiz-ufill.run { animation: none; } }
+html:not([data-effects="high"]) .wiz-spin, html:not([data-effects="high"]) .wiz-ufill.run { animation: none; }
 
 /* 运行期异常兜底（IMP-04 §14.3）：界面顶部故障条 + 恢复动作。正常时不渲染。 */
 /* 界面故障提示 = 弹窗（2026-09-28 用户要求）：它带恢复动作，居中对话框容纳「原因 + 操作」，
@@ -988,8 +988,10 @@ html[data-overview-size="compact"] .ov[data-mode="setup"] .motion-mark { top: -2
   color-scheme: normal;
   opacity: 0.74;
   /* 上端留住 Logo 附近的光，往下改成一段长渐隐，一路铺到下方玻璃卡。 */
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 55%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 55%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 55%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 55%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
 }
 
 html[data-theme="dark"] .motion-ambient { opacity: 0.48; }
@@ -1015,12 +1017,13 @@ html[data-theme="dark"] .motion-mesh { opacity: var(--mesh-glow-alpha-dark, 0.52
    - 四个大光层各做一次模糊（合计约 2.4M 像素）在高档持续动画下把帧间隔 p95 顶到 ~51ms；
    - 收成容器一层（约 0.6M 像素）也只降到 ~31ms，仍然贴着 §7 的 `2B(33.4ms)` 预算；
    - 完全不模糊时 p95 ~26ms，而与「容器一层 20px 模糊」的成像差 ≤0.5/255（肉眼不可辨），
-     光场带内相邻像素跳变仍为 1~2（与原型同量级，无硬边/无波纹）。
-   所以这里不加模糊；下面能量束的径向遮罩才是防硬边的那一层，不能省。 */
-.motion-ambient .cloud { position: absolute; display: block; border-radius: 50%; will-change: transform; }
-.motion-ambient .cloud-a { width: min(92%, 820px); height: 540px; left: calc(50% - min(46%, 410px)); top: 30px; background: radial-gradient(ellipse 44% 98% at 46% 44%, var(--glow-a, transparent), transparent 74%); }
-.motion-ambient .cloud-b { width: min(86%, 760px); height: 660px; left: calc(50% - min(24%, 190px)); top: 100px; background: radial-gradient(ellipse 98% 44% at 54% 56%, var(--glow-b, transparent), transparent 74%); }
-.motion-ambient .cloud-c { width: min(88%, 780px); height: 480px; left: calc(50% - min(44%, 390px)); top: -20px; background: radial-gradient(ellipse 58% 100% at 50% 62%, var(--glow-c, transparent), transparent 73%); }
+     光场带内相邻像素跳变仍为 1~2（与原型同量级）；Windows 的边界裁切另由
+     closest-side 渐隐和容器软遮罩处理。能量束径向遮罩保留，不逐层加模糊。 */
+/* closest-side 保证到光团盒子边界前 alpha 已为 0；不依赖圆角硬切或多层 blur。 */
+.motion-ambient .cloud { position: absolute; display: block; will-change: transform; }
+.motion-ambient .cloud-a { width: min(92%, 820px); height: 540px; left: calc(50% - min(46%, 410px)); top: 30px; background: radial-gradient(ellipse closest-side at 46% 44%, var(--glow-a, transparent), transparent 94%); }
+.motion-ambient .cloud-b { width: min(86%, 760px); height: 660px; left: calc(50% - min(24%, 190px)); top: 100px; background: radial-gradient(ellipse closest-side at 54% 56%, var(--glow-b, transparent), transparent 94%); }
+.motion-ambient .cloud-c { width: min(88%, 780px); height: 480px; left: calc(50% - min(44%, 390px)); top: -20px; background: radial-gradient(ellipse closest-side at 50% 62%, var(--glow-c, transparent), transparent 94%); }
 .motion-ambient .energy {
   position: absolute;
   left: calc(50% - min(75%, 640px));
@@ -1190,8 +1193,4 @@ html[data-overview-size="compact"] .motion-runtime-source { margin-top: 12px; pa
   .motion-caption { max-width: 450px; }
   .overview-gate-body { grid-template-columns: minmax(160px, .8fr) minmax(0, 1.25fr); gap: 14px; }
   .overview-gate-footer p { max-width: 70%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .motion-ambient { opacity: 0.3; }
-  .motion-mesh { opacity: 0.3; }
 }

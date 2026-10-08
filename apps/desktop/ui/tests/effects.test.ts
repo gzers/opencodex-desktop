@@ -74,38 +74,23 @@ describe('三档特效 · 纯函数策略', () => {
     expect(clampVisualEffects(null)).toBe('high')
   })
 
-  it('系统减少动态把高档降为中档；低档仍为低档', () => {
-    expect(resolveEffectiveEffects('high', true)).toBe('mid')
-    expect(resolveEffectiveEffects('high', false)).toBe('high')
-    expect(resolveEffectiveEffects('mid', true)).toBe('mid')
-    expect(resolveEffectiveEffects('low', true)).toBe('low')
-    expect(resolveEffectiveEffects('low', false)).toBe('low')
-  })
-
-  it('策略分开用户保存值与有效表现，并区分可见性', () => {
-    const high = effectsStrategy('high', false, true)
-    expect(high.setting).toBe('high')
-    expect(high.effective).toBe('high')
-    expect(high.ambientAllowed).toBe(true)
-    expect(high.solid).toBe(false)
-
-    // 系统减少动态：有效降中档，连续动画关闭，但保留玻璃（非实底）。
-    const reduced = effectsStrategy('high', true, true)
-    expect(reduced.effective).toBe('mid')
-    expect(reduced.ambientAllowed).toBe(false)
-    expect(reduced.solid).toBe(false)
-
-    // 低档：实底，无动画。
-    const low = effectsStrategy('low', false, true)
-    expect(low.effective).toBe('low')
+  it('用户档位是有效档位；中档保留静态光场，后台只暂停调度', () => {
+    for (const tier of ['high', 'mid', 'low'] as const) expect(resolveEffectiveEffects(tier)).toBe(tier)
+    const high = effectsStrategy('high', true)
+    expect(high.animated).toBe(true)
+    expect(high.lightAllowed).toBe(true)
+    const mid = effectsStrategy('mid', true)
+    expect(mid.animated).toBe(false)
+    expect(mid.lightAllowed).toBe(true)
+    const low = effectsStrategy('low', true)
     expect(low.solid).toBe(true)
-    expect(low.animated).toBe(false)
-
-    // 高档但页面隐藏：暂停连续动画，但不改变有效档位（返回后恢复）。
-    const hidden = effectsStrategy('high', false, false)
+    expect(low.lightAllowed).toBe(false)
+    const hidden = effectsStrategy('high', false)
     expect(hidden.effective).toBe('high')
-    expect(hidden.ambientAllowed).toBe(false)
+    expect(hidden.animated).toBe(false)
+    expect(hidden.lightAllowed).toBe(false)
   })
+
 })
 
 describe('三档特效 · 外观 store 唯一写入 data-effects', () => {
@@ -122,23 +107,21 @@ describe('三档特效 · 外观 store 唯一写入 data-effects', () => {
     expect(effectsAttr()).toBe('high')
   })
 
-  it('系统减少动态把高档有效表现降为中档，但不改用户保存值', () => {
+  it('页面与原生前后台不能改写用户档位', () => {
     const store = useEffectsStore()
     store.setSetting('high')
-    store.setReducedMotion(true)
-    expect(effectsAttr()).toBe('mid')
-    expect(store.setting).toBe('high')
-    // 解除系统限制后恢复用户选择。
-    store.setReducedMotion(false)
+    store.setVisible(false)
+    store.setForeground(false)
     expect(effectsAttr()).toBe('high')
+    expect(store.strategy.animated).toBe(false)
+    store.setVisible(true)
+    store.setForeground(true)
+    expect(store.strategy.animated).toBe(true)
+    store.setSetting('mid')
+    expect(store.strategy.lightAllowed).toBe(true)
+    expect(store.strategy.animated).toBe(false)
   })
 
-  it('低档在系统减少动态下仍为低档', () => {
-    const store = useEffectsStore()
-    store.setSetting('low')
-    store.setReducedMotion(true)
-    expect(effectsAttr()).toBe('low')
-  })
 })
 
 describe('三档特效 · 偏好接线', () => {
@@ -193,13 +176,16 @@ describe('三档特效 · 偏好接线', () => {
       if (command === 'get_preferences') return Promise.resolve(dto())
       return Promise.resolve(undefined)
     })
-    const wrapper = mount(App, { global: { plugins: [createPinia()] } })
+    const wrapper = mount(App, { attachTo: document.body, global: { plugins: [createPinia()] } })
     useRouteStore().go('settings', { section: 'general' })
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
     const row = wrapper.find('[data-testid="setting-visual-effects"]')
     expect(row.exists()).toBe(true)
-    const options = row.findAll('.select-option').map(o => o.text())
+    await row.find('.select-trigger').trigger('click')
+    await wrapper.vm.$nextTick()
+    const options = [...document.querySelectorAll('.select-menu [role=option]')].map(o => o.textContent)
     expect(options).toEqual(['高（默认）', '中', '低'])
+    wrapper.unmount()
   })
 })

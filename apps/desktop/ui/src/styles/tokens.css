@@ -187,7 +187,7 @@ html[data-theme="dark"] {
   --notif-cancel-bd: rgba(248, 113, 113, .38);
 }
 
-/* 减少动态效果：收起与浮层直接生效，不播放动画。 */
-@media (prefers-reduced-motion: reduce) {
-  :root { --motion-fast: 0s; --motion-normal: 0s; }
+/* 用户中/低档不持续装饰动画；系统媒体设置不覆盖画质。 */
+html:not([data-effects="high"]) {
+  --motion-fast: 0s; --motion-normal: 0s;
 }

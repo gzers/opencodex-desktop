@@ -5,8 +5,7 @@
  * - `mid`：与高档同样的玻璃，静态光场；状态改变仍及时重绘静态形象。
  * - `low`：全部受控表面统一实底、无 backdrop-filter；环境光关闭；保留静态状态形象。
  *
- * `data-effects` 由 `app/appearance/effects.ts` 的唯一外观策略写入；系统减少动态会把
- * 高档有效表现降为中档（`high` → `data-effects="mid"`），低档仍为低档。
+ * `data-effects` 只按用户三档写入；系统减少动态不参与。
  *
  * 顺序：本文件必须排在 base.css 之后；只覆盖变量与少量硬编码表面。
  */
@@ -14,6 +13,14 @@
 /* —— 中档：玻璃不变，仅关闭跨帧装饰动画（静态光场由动效组件呈现静态目标）—— */
 html[data-effects="mid"] {
   --motion-ambient-speed: 0;
+}
+
+.select-menu-portal {
+  position: fixed;
+  display: block;
+  right: auto;
+  width: max-content;
+  min-width: 0;
 }
 
 /* —— 低档：统一实底、无模糊、无光场 —— */

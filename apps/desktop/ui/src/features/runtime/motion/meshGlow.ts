@@ -50,7 +50,8 @@ const FRAG = `precision highp float;uniform vec2 u_res;uniform float u_time;
     /* 仍是线性加法：screen 在中等重叠处天生比加法暗（两团各 0.4：加法 0.8、screen 只有 0.64），
        整片光会跟着变弱。去圈靠的是下面的软拐点，不是换叠加方式。 */
     vec3 col = l1 + l2 + l3;
-    col *= fade(uv.y) * u_gain;
+    float sideFade = smoothstep(0.0,0.12,uv.x) * (1.0-smoothstep(0.88,1.0,uv.x));
+    col *= fade(uv.y) * sideFade * u_gain;
     /* 加法叠加在重叠处趋近白；按亮度回补饱和度，避免整片发灰。 */
     float lum = dot(col, vec3(0.2126,0.7152,0.0722));
     col = mix(vec3(lum), col, u_sat);
@@ -230,7 +231,8 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   applyLook()
   resize()
   frame = requestAnimationFrame(loop)
-  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => { resize(); if (reduced) wake() })
+  // resize 会清空 drawing buffer，高/中档都必须重新画；后台 wake 仍受 active 限制。
+  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => { resize(); wake() })
   observer?.observe(host)
 
   return {

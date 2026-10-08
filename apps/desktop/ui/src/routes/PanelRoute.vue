@@ -4,12 +4,14 @@ import { syncEmbeddedPanel, type PanelBounds } from '@/features/panel/api'
 import { useAppStore } from '@/stores/app'
 import { usePanelStore } from '@/features/panel/store'
 import { useThemeStore } from '@/app/appearance/theme'
+import { useEffectsStore } from '@/app/appearance/effects'
 import { clampScale } from '@/app/appearance/scale'
 import { useOverlaySurfaces } from '@/app/surfaces'
 import { LIFECYCLE_FALLBACK_MS, PANEL_LOAD_NOTICE_MS } from '@/config/runtimeDefaults'
 
 const app = useAppStore()
 const theme = useThemeStore()
+const effects = useEffectsStore()
 const panel = usePanelStore()
 // 覆盖表面规则集中在 app（IMP-04 §13.5）：面板只消费派生值，不逐字段判断。
 const { requiredOverlays } = useOverlaySurfaces()
@@ -113,6 +115,7 @@ async function syncPanel(action: 'show' | 'layout' | 'hide', reload = false) {
       // `ocx-theme` 存储键同步明暗，两者都不改写官方页面样式。
       theme: theme.resolved === 'dark' ? 'dark' : 'light',
       themeSetting: theme.setting,
+      effects: effects.setting,
     })
     if (action === 'show') {
       panelError.value = ''
@@ -287,6 +290,7 @@ watch(
     else void syncPanel('layout')
   },
 )
+watch(() => effects.setting, () => { if (panelReady.value) void syncPanel('layout') })
 
 // 协调显示：表面出现/消失时收敛面板子视图的可见性。
 watch(requiredOverlays, visible => {

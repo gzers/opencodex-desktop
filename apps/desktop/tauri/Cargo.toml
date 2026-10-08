@@ -1,6 +1,6 @@
 [package]
 name = "opencodex-desktop"
-version = "0.1.8"
+version = "0.1.9"
 description = "OpenCodeX Desktop manager shell"
 license = "MIT"
 edition = "2021"
@@ -57,6 +57,7 @@ keyring = { version = "3", default-features = false, features = ["apple-native"]
 
 [target.'cfg(target_os = "windows")'.dependencies]
 keyring = { version = "3", default-features = false, features = ["windows-native"] }
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_UI_Accessibility", "Win32_UI_WindowsAndMessaging"] }
 
 [dev-dependencies]
 http = "1"

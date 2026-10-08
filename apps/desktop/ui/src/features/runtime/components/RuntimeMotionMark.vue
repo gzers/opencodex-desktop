@@ -2,7 +2,7 @@
 // 概览状态形象：云形轮廓 + 内部聚合结构（A 完整内核 / B 分离三球 / C 柔性连接）+ 多光源背景。
 // 纯装饰层（aria-hidden），主线文字在父页；只消费投影状态，不采集状态、不推定操作成功。
 //
-// 档位与减少动态只经由 `app/appearance/effects.ts` 的**唯一外观策略**消费；
+// 档位与生命周期只经由 `app/appearance/effects.ts` 的**唯一外观策略**消费；
 // 背景光渲染方式（WEBGL 网格渐变＋颗粒 / 纯 CSS 极光）只经由 `app/appearance/glowRender.ts`。
 // - 高档且可见 → 连续动画；中档 → 静态目标（状态改变重绘）；低档 → 静态目标且光场由 CSS 关闭。
 // - 选 WEBGL 且设备支持 → 网格着色器层；否则回退纯 CSS 极光（同一套投影配色与运动模型）。
@@ -30,6 +30,7 @@ let lastGlowColors: readonly string[] = []
 // 中/低档为静态目标；自由运行只在高档且可见时开启。
 const reduced = computed(() => effects.strategy.effective !== 'high')
 const animating = computed(() => effects.strategy.animated && (props.active ?? true))
+const lightActive = computed(() => effects.strategy.lightAllowed && (props.active ?? true))
 // 低档无光场，不创建着色器层（与 CSS 侧 `html[data-effects="low"] .motion-ambient{display:none}` 对齐）。
 const meshEnabled = computed(() => glowRender.mode === 'mesh' && effects.strategy.effective !== 'low')
 
@@ -46,7 +47,7 @@ function mountMesh(): void {
   mesh = handle
   if (lastGlowColors.length) mesh.setColors(lastGlowColors)
   mesh.setReduced(reduced.value)
-  mesh.setActive(animating.value)
+  mesh.setActive(lightActive.value)
 }
 
 function unmountMesh(): void {
@@ -86,7 +87,7 @@ watch(
   },
 )
 watch(
-  animating,
+  lightActive,
   (value) => mesh?.setActive(value),
 )
 watch(meshEnabled, (enabled) => (enabled ? mountMesh() : unmountMesh()))

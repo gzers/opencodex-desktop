@@ -17,12 +17,38 @@ pub(crate) struct SmokeWindow {
 pub(crate) fn from_environment(config: &mut Config) -> Result<Option<SmokeWindow>, String> {
     let port = std::env::var_os(PORT_ENV);
     let sandbox = crate::modules::test_sandbox::sandbox_root();
-    configure(
+    let smoke = configure(
         config,
         port.as_deref(),
         crate::modules::test_sandbox::enabled(),
         sandbox.as_deref(),
+    )?;
+    apply_scale(
+        smoke,
+        std::env::var_os("OPENCODEX_WINDOWS_SMOKE_SCALE").as_deref(),
     )
+}
+
+fn apply_scale(
+    mut smoke: Option<SmokeWindow>,
+    scale: Option<&OsStr>,
+) -> Result<Option<SmokeWindow>, String> {
+    if let Some(scale) = scale {
+        let value = scale
+            .to_str()
+            .filter(|value| ["1", "1.5", "2"].contains(value))
+            .ok_or_else(|| "smoke scale must be 1, 1.5 or 2".to_string())?;
+        let window = smoke
+            .as_mut()
+            .ok_or_else(|| "smoke scale requires the sandbox CDP configuration".to_string())?;
+        let args = window
+            .config
+            .additional_browser_args
+            .as_mut()
+            .expect("validated smoke arguments");
+        args.push_str(&format!(" --force-device-scale-factor={value}"));
+    }
+    Ok(smoke)
 }
 
 // 纯配置入口可在 Mac 回归：不修改共享进程环境，也不启动原生 WebView。
@@ -70,6 +96,29 @@ fn configure(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn diagnostic_dpi_is_bounded_and_requires_smoke() {
+        let root = tempfile::tempdir().unwrap();
+        for scale in ["1", "1.5", "2"] {
+            let smoke = configure(
+                &mut config(),
+                Some(OsStr::new("1234")),
+                true,
+                Some(root.path()),
+            )
+            .unwrap();
+            assert!(apply_scale(smoke, Some(OsStr::new(scale)))
+                .unwrap()
+                .unwrap()
+                .config
+                .additional_browser_args
+                .unwrap()
+                .contains(&format!("--force-device-scale-factor={scale}")));
+        }
+        assert!(apply_scale(None, Some(OsStr::new("1"))).is_err());
+        assert!(apply_scale(None, Some(OsStr::new("1 --disable-gpu"))).is_err());
+    }
 
     fn config() -> Config {
         let mut config = Config::default();
