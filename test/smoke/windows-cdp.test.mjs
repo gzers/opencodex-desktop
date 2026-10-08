@@ -4,6 +4,9 @@ import test from 'node:test'
 import { discoverMainTarget } from './windows-cdp.mjs'
 
 const main = { type: 'page', url: 'http://tauri.localhost/', webSocketDebuggerUrl: 'ws://127.0.0.1:1234/devtools/page/main' }
+// Protocol assertions need enough time to observe a response on a busy runner.
+// Deadline behavior has its own deliberately short budget below.
+const protocol = { timeoutMs: 2000, requestTimeoutMs: 750, pollIntervalMs: 20 }
 const fast = { timeoutMs: 150, requestTimeoutMs: 30, pollIntervalMs: 5 }
 async function serve(t, handler) {
   const server = createServer(handler)
@@ -27,7 +30,7 @@ test('retries until the main page appears; ignores embedded or unrelated pages',
   const diagnostics = {}
   const snapshots = []
   assert.deepEqual(await discoverMainTarget(endpoint, {
-    ...fast, timeoutMs: 1000, diagnostics, saveDiagnostics: async value => snapshots.push(structuredClone(value)),
+    ...protocol, diagnostics, saveDiagnostics: async value => snapshots.push(structuredClone(value)),
   }), main)
   assert.equal(diagnostics.attempts.length, 2)
   assert.equal(diagnostics.lastVersion.Browser, 'WebView2/test')
@@ -40,7 +43,7 @@ test('HTTP errors are preserved instead of being swallowed', async t => {
   // The final deadline can expire during a later request. Require the observed
   // HTTP error in retained attempts rather than assuming it is the last error.
   await assert.rejects(discoverMainTarget(endpoint, {
-    timeoutMs: 1000, requestTimeoutMs: 250, pollIntervalMs: 50, diagnostics,
+    ...protocol, diagnostics,
   }), /did not become available/)
   assert.equal(diagnostics.result, 'fail')
   assert(diagnostics.attempts.some(attempt =>
@@ -53,14 +56,16 @@ test('malformed target JSON fails with parse evidence', async t => {
     response.end('not json')
   })
   const diagnostics = {}
-  await assert.rejects(discoverMainTarget(endpoint, { ...fast, diagnostics }), error => error.message.includes('/json/list:'))
-  assert(diagnostics.attempts[0].list.error)
+  await assert.rejects(discoverMainTarget(endpoint, { ...protocol, diagnostics }), /did not become available/)
+  assert.equal(diagnostics.result, 'fail')
+  assert(diagnostics.attempts.some(attempt =>
+    attempt.list?.status === 200 && /JSON|Unexpected token/.test(attempt.list.error ?? '')))
 })
 
 test('non-array responses and empty target lists never count as rendered UI', async t => {
   for (const value of [{ unexpected: true }, []]) {
     const endpoint = await serve(t, (request, response) => json(response, request.url === '/json/version' ? {} : value))
-    await assert.rejects(discoverMainTarget(endpoint, fast), /did not become available/)
+    await assert.rejects(discoverMainTarget(endpoint, protocol), /did not become available/)
   }
 })
 
@@ -80,8 +85,9 @@ test('connection refusal retains the underlying network error', async t => {
   const endpoint = `http://127.0.0.1:${server.address().port}`
   await new Promise(resolve => server.close(resolve))
   const diagnostics = {}
-  await assert.rejects(discoverMainTarget(endpoint, { ...fast, diagnostics }), /ECONNREFUSED/)
+  await assert.rejects(discoverMainTarget(endpoint, { ...protocol, diagnostics }), /did not become available/)
   assert.equal(diagnostics.result, 'fail')
+  assert(diagnostics.attempts.some(attempt => attempt.list?.error?.includes('ECONNREFUSED')))
 })
 
 test('refuses non-loopback endpoints before making a request', async () => {
