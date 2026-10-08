@@ -130,8 +130,9 @@ try{
  $taskInfo.WorkingDirectory=Split-Path -Parent $taskExe
  $taskInfo.Environment['OPENCODEX_SANDBOX']='1';$taskInfo.Environment['OPENCODEX_SANDBOX_ROOT']=$taskSandbox
  $taskInfo.Environment['OPENCODEX_WINDOWS_SMOKE_CDP_PORT']=[string]$taskPort
- $taskInfo.Environment['OPENCODEX_WINDOWS_SMOKE_SCALE']='1'
- foreach($taskVariable in @('HOME','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS','WEBVIEW2_USER_DATA_FOLDER')){[void]$taskInfo.Environment.Remove($taskVariable)}
+ # Native-caption acceptance uses the monitor's real scale. Device-scale forcing
+ # belongs only to the separate WebView quality matrix, never native DPI claims.
+ foreach($taskVariable in @('HOME','OPENCODEX_WINDOWS_SMOKE_SCALE','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS','WEBVIEW2_USER_DATA_FOLDER')){[void]$taskInfo.Environment.Remove($taskVariable)}
  $taskProcess=[Diagnostics.Process]::Start($taskInfo);$taskSummary.pid=$taskProcess.Id;$taskSummary.port=$taskPort
  Start-Sleep -Seconds 2;$taskProcess.Refresh();if($taskProcess.HasExited){throw 'Candidate exited before native checks'}
  $taskWindow=$taskProcess.MainWindowHandle;if(!$taskWindow){throw 'Native HWND missing'}
@@ -251,6 +252,10 @@ try{
   $taskMenu=[NativeCaption]::GetSystemMenu($taskWindow,$false)
   if([NativeCaption]::GetMenuItemCount($taskMenu) -lt 6){throw 'Alt+Space system menu unavailable'}
   [NativeCaption]::Key(0x1b);[NativeCaption]::Key(0x1b,$true)
+  [void][NativeCaption]::SendMessageW($taskWindow,0x1f,[IntPtr]::Zero,[IntPtr]::Zero)
+  $taskBounds=[NativeCaption]::Bounds($taskWindow)
+  [NativeCaption]::Click($taskBounds.Left+700,$taskBounds.Top+300)
+  Start-Sleep -Milliseconds 200
   @{items=[NativeCaption]::GetMenuItemCount($taskMenu)}
  }
  Test-Native 'standard-editing-shortcuts-without-application-menu' {
