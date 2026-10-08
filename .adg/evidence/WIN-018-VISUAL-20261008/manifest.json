@@ -1,0 +1,278 @@
+{
+  "record_id": "WIN-018-VISUAL-20261008",
+  "registered_date": "2026-10-08",
+  "timezone": "Asia/Shanghai",
+  "assembled_at": "2026-10-08T11:50:59+08:00",
+  "kind": "Local animation/halo diagnosis and cross-device analysis input; no implementation, acceptance or release certificate",
+  "branch": "docs/governance-main",
+  "documentation_baseline": "11ffbeb2c2d372a22789e89d41e880f0d2c899ed",
+  "code_commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "authority_ref": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+  "topic_document": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/10-Windows动效与光场本机诊断及综合分析交接.md",
+  "confirmed": [
+    "System reduced-motion maps saved high to mid",
+    "Static WebGL first frame cancelled",
+    "CSS cloud-a clipped before transparent edge"
+  ],
+  "unresolved": [
+    "Dropdown glass",
+    "All-state WebGL/prototype equivalence",
+    "Performance acceptance of any blur repair"
+  ],
+  "hash_basis": "Committed Git blobs; copied diagnostic artifacts retain original bytes",
+  "privacy": "Appearance/rendering fields only; no complete daily preferences, credentials, implementation source, EXE or WebView cache retained",
+  "retention": "Keep until cross-device analysis and visual issue disposition; local raw inputs and original user screenshots preserved",
+  "files": [
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/documentation-checks.json",
+      "bytes": 24871,
+      "sha256": "1a60f141ec8064fc53efdded9f5b69380849da067779d40412338ecb587f96e0"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/all-css-layers.png",
+      "bytes": 2263888,
+      "sha256": "64ff4d6fd1ee0bb5b6b04ec5a82758d57921da156e5c33a2365698e7c95c7f21"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/blur20-state.json",
+      "bytes": 114,
+      "sha256": "1237b1b440a17bfef27c7029a2310afd2122a630f813c386eb106e5a5609dd20"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/blur20-state.png",
+      "bytes": 2230977,
+      "sha256": "6f36ffcf33de33ab644b2be44ac80e0f262c10db5af2a1a4e34812f949a20858"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/cloud-a-only.json",
+      "bytes": 682,
+      "sha256": "043e6843073d0bb43ff1746847f27cca761116ece6ffe569de1edbb28d72e42a"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/cloud-a-only.png",
+      "bytes": 2183534,
+      "sha256": "9c5f3ce48a727b854eb7154726fef4784b9f0406720e8eb45a5dae06de9cad8c"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/cloud-b-only.json",
+      "bytes": 682,
+      "sha256": "3825b2d4449ff07555e526c7376351a297dfe910c26bb6e73daeaa828113d7d7"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/cloud-b-only.png",
+      "bytes": 2093543,
+      "sha256": "9336606f0bde16f1fd5935714e90f2e08c4f5eb17bac2d8b30b53bbad1583676"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/cloud-c-only.json",
+      "bytes": 682,
+      "sha256": "1a95c41bf415fe2fb10e58cf69e1b52dfba35679f8149c207303908b2ee18496"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/cloud-c-only.png",
+      "bytes": 2229451,
+      "sha256": "39a9b2198d2dbc6a9c05067e312398b1236459e624c8eeffa0d92f1945bba245"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/diagnostic-instance.json",
+      "bytes": 317,
+      "sha256": "72ad58d4cbfb03bfea4d880869494d5d0c8ccb83bbee235d7adede68b2b4ca12"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/energy-only.json",
+      "bytes": 681,
+      "sha256": "202eb1b86b9c26e365e089e24393c905ccf4723c07557370e994ed1ab4527626"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/energy-only.png",
+      "bytes": 2131803,
+      "sha256": "e426fce646e0dae0ec680e165746ae121286e5aca36646bb1ddb2b6fd486ff93"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/layer-isolation.png",
+      "bytes": 223936,
+      "sha256": "ce8b447dbfabb796ffe264610f66886d29cd1565c745f62ea9aa8e9de589a669"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/layer-styles.json",
+      "bytes": 3352,
+      "sha256": "c46396313ea4760d96d78fc87aeda63b3ced86139a46ba0cd9f00dfec3f80669"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/no-radius-state.json",
+      "bytes": 111,
+      "sha256": "845e6a9fe550d3ee7dea1d6150d59e402d8374749a060a815bb2dad0e075e7b5"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/no-radius-state.png",
+      "bytes": 2264734,
+      "sha256": "7473f6e21ef6d96f08297b9f1b417d1299d624f1638a1e030838d7508aee1987"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/none-only.json",
+      "bytes": 678,
+      "sha256": "63dd95dae5f23f3ab390d545ac8437fba14eaa787a39516d2092f8f189aa7077"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/none-only.png",
+      "bytes": 2075827,
+      "sha256": "b96da2a4a4c5f5128f1cd77e33fc9bf75c4ba2f5d151c247cb663e12bc28db49"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/original-state.json",
+      "bytes": 110,
+      "sha256": "82a0d86c0f147e6d5084b757f88a80ab90cf31e18078432788e7d476ed955fd9"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/original-state.png",
+      "bytes": 2263838,
+      "sha256": "1f530757a4e80a7d62e7c5d82154192d1ba4540c6fa17f5854053e2ed7eb697b"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/restored.json",
+      "bytes": 82,
+      "sha256": "965f70c1eefe92605d24b04dbb617733a5bab9619aceffbdadaa28e8f72deadc"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/soft-edge-control.png",
+      "bytes": 140570,
+      "sha256": "333c3b11a6142d74c6ef436265a636332cf940c5010a2fa7ad47a7b90fe46384"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/startup-source.log",
+      "bytes": 105,
+      "sha256": "559c349aa937181afab00e0f4d91f2025a11c547dc9745133ed9e99876eec5f4"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/halo/verification.json",
+      "bytes": 968,
+      "sha256": "ec24b02548e3b0b90075bc636c6f4886bc4443ceac535b4770cd909b975f8014"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/inputs.json",
+      "bytes": 13975,
+      "sha256": "1aec2ea33b62478b29faba48cb99b6d30597e00bfe68869ca3c26e7cb8e5ceaa"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/appearance-observations.json",
+      "bytes": 3011,
+      "sha256": "e6d8a93731452702142687178f92e0665a9b97b4ea2fd82ffd81b1e74da24235"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/comparison.png",
+      "bytes": 256449,
+      "sha256": "4444f95dbe878e3398cc34acc3a2cb60b90bebffb558a58d4b48bc5830dfda28"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/css-reduced-state.json",
+      "bytes": 562,
+      "sha256": "6381e8129a10948f5f094e406c3f58a5295e9fb8a9928d8c097780618ff4a170"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/css-reduced.png",
+      "bytes": 2237689,
+      "sha256": "520755934f09674a1a9b881f685358986a5d6bbb20124713dcbc25ecd1447c56"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/diagnostic-instance.json",
+      "bytes": 309,
+      "sha256": "1fb166382e9e6e9526a56cba3021a15f2fee5470060e8ac1b7143b36ae3fec32"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/focus-control.json",
+      "bytes": 109,
+      "sha256": "85ef8edac349e4e21fb487568c1837422da3ef72b835873fbe1425e1474b27dc"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/native-baseline.json",
+      "bytes": 667,
+      "sha256": "fd77c554ebd9d68a2a441e36d7d3abf45c58257bd0a503ea8ee64a8058df9d2a"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/postcheck.json",
+      "bytes": 554,
+      "sha256": "6a106f69b0fec4a888be6cec01364b2eeead2b0e0773e7f3984e50e00e1056be"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/reduced-samples.json",
+      "bytes": 23862,
+      "sha256": "b1415fecf91174e9ea7c73f1485893488a7ed49de50b8eb5870222304f5d0875"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/reduced.png",
+      "bytes": 2075824,
+      "sha256": "bfe83dc8ec1c987c62855ac0c071562702eea9bc1f09aee60fc6374b01580f35"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/restored-state.json",
+      "bytes": 208,
+      "sha256": "119a060f78ba589bfec41e0522df7a6b7aed645920a4c17496f100ef7c45da90"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/startup-source.log",
+      "bytes": 105,
+      "sha256": "b5ecde06279c9bae8f330f06b229f2e03748edd9e4173640cdbd24b942bb41a9"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/unreduced-samples.json",
+      "bytes": 26647,
+      "sha256": "b3271b085b8efafaa57119d892f8a600dfdd3169e0f3a40863e4c9e50d0a8c7d"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/unreduced.png",
+      "bytes": 2314191,
+      "sha256": "5985d69a40fb853de5d486577c9c68489249190924ca3484e584a5bdbad39cee"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/motion/webview-browser-version.json",
+      "bytes": 426,
+      "sha256": "0a864d33bc7c7158e2ee9cd416259211fd6996d2485ff3fefba0c6e9860fdab4"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/source-review.json",
+      "bytes": 3611,
+      "sha256": "54b02812ae7e7b02269ad05f9a37ce603250a41d3f397126046fa635e44ffba3"
+    },
+    {
+      "path": ".adg/evidence/WIN-018-VISUAL-20261008/verification.json",
+      "bytes": 2994,
+      "sha256": "e13096d73710e88c7d53bbe8e36a46b87d02445c687c8a0cafaffc107a1b1248"
+    },
+    {
+      "path": "docs/03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md",
+      "bytes": 8174,
+      "sha256": "f9ce009f07b1baa668976322d9d35b1d67400d0de6b462477d44e07640318626"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/README.md",
+      "bytes": 5780,
+      "sha256": "584b485137f6e2a27808de8d174be50c880396297e7b82d3daf6da7472e2427e"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/09-Windows高档动效与下拉玻璃待查.md",
+      "bytes": 6239,
+      "sha256": "e7760fa3eadf00713332f2768b81a8ccc695d69355fb2714eaefe2aa81acd293"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/10-Windows动效与光场本机诊断及综合分析交接.md",
+      "bytes": 11574,
+      "sha256": "95c4fb0a0917122f65c344c01392d16fafc3a8801ba2f5f03c77ee748ca9c718"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/分析/README.md",
+      "bytes": 2434,
+      "sha256": "c7351dc249bba2ab4e3bdff9aa37596da0472dad525317a115298350355ff0f6"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261006-Windows启动崩溃与图标适配/问题来源记录/README.md",
+      "bytes": 4808,
+      "sha256": "3642b475c7489b03bde56e7ce7f72cfb2a1e042a64aafd42d01798ddb835fe0a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "bytes": 3797,
+      "sha256": "e88db605e76ca31792f6bcbce221f886fb52fb1f3c2479cc6140af27f90aaac4"
+    }
+  ],
+  "self_hash_excluded": true
+}

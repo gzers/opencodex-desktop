@@ -1,0 +1,71 @@
+{
+  "record_id": "WIN-018-VISUAL-20261008",
+  "registered_at": "2026-10-08T11:49:01+08:00",
+  "source_commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "documentation_baseline": "11ffbeb2c2d372a22789e89d41e880f0d2c899ed",
+  "scope": "Cause diagnosis and cross-device analysis input; no implementation or release",
+  "confirmed": {
+    "WIN-UI-01": {
+      "summary": "System client-area animation off and reduced media=true cause saved high to be effective mid",
+      "evidence": [
+        "motion/native-baseline.json",
+        "motion/appearance-observations.json",
+        "motion/reduced-samples.json",
+        "motion/unreduced-samples.json"
+      ],
+      "status": "diagnosed existing policy; effective-tier communication improvement suggested"
+    },
+    "WIN-UI-03": {
+      "summary": "Static WebGL first frame cancelled by active=animated gating; CSS hidden in mesh mode",
+      "reduced_mesh_draws": 0,
+      "unreduced_mesh_draws": 174,
+      "GPU_supported": true,
+      "status": "diagnosed implementation gap; not fixed"
+    },
+    "WIN-UI-04": {
+      "summary": "CSS cloud-a still colored at elliptical border, hard clipped without unified softening",
+      "evidence": [
+        "halo/layer-styles.json",
+        "halo/layer-isolation.png",
+        "halo/soft-edge-control.png"
+      ],
+      "alpha_at_boundary": "Analytical estimate ~0.381 before layer opacity, not a pixel measurement",
+      "status": "diagnosed CSS artifact; no WebGL all-state equivalence claim"
+    }
+  },
+  "unresolved": {
+    "WIN-UI-02": "Dropdown glass not investigated in this local run"
+  },
+  "control_methods": {
+    "no_preference": "CDP media emulation on isolated page only; reset after sample",
+    "css_switch": "Isolated in-memory store; preferences save not invoked",
+    "layer_styles": "Isolated page styles, restored after visual control",
+    "draw_count": "Temporary drawArrays wrapper restored",
+    "first_case_focus_limit": "First 3 of 5 samples foreground=true, last 2 foreground=false; foreground stopped shape verified in first segment",
+    "second_case_focus": "All five samples foreground=true"
+  },
+  "boundaries": {
+    "same_installed_EXE_used": true,
+    "daily_version_observed": "0.1.8",
+    "daily_executable_and_preferences_hashes_unchanged": true,
+    "daily_process_continuity": true,
+    "system_animation_setting_changed": false,
+    "diagnostic_processes_terminated": true,
+    "source_modified": false,
+    "application_fixed": false,
+    "menus_validated": false,
+    "formal_acceptance": false,
+    "merged": false,
+    "released": false
+  },
+  "not_covered": [
+    "daily page cache debugging",
+    "Windows 10/11 matrix",
+    "complete administrator and DPI matrix",
+    "all WebGL phases/prototype pixel equality",
+    "continuous video",
+    "long-term performance or frame-budget acceptance"
+  ],
+  "retention": "Retain with maintenance issue pending cross-device analysis/fix; raw local inputs not deleted",
+  "is_closure_certificate": false
+}

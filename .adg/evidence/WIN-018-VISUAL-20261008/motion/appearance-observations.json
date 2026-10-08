@@ -1,0 +1,115 @@
+{
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.1.8",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "appForeground": false,
+  "domFocus": false,
+  "visibility": "visible",
+  "reducedMotion": true,
+  "rootAttributes": [
+    [
+      "lang",
+      "zh-CN"
+    ],
+    [
+      "data-effects",
+      "mid"
+    ],
+    [
+      "data-glow-render",
+      "mesh"
+    ],
+    [
+      "data-theme",
+      "dark"
+    ],
+    [
+      "data-route",
+      "overview"
+    ],
+    [
+      "data-overview-size",
+      "standard"
+    ],
+    [
+      "style",
+      "--ui-zoom: 1;"
+    ]
+  ],
+  "effects": {
+    "setting": "high",
+    "effective": "mid",
+    "reducedMotion": true,
+    "visible": true,
+    "foreground": false,
+    "strategy": {
+      "setting": "high",
+      "effective": "mid",
+      "reducedMotion": true,
+      "visible": false,
+      "ambientAllowed": false,
+      "animated": false,
+      "solid": false
+    }
+  },
+  "glow": {
+    "setting": "mesh",
+    "webglSupported": true,
+    "mode": "mesh",
+    "fellBack": false
+  },
+  "motion": {
+    "meshCanvas": true,
+    "ambient": {
+      "display": "none",
+      "visibility": "visible",
+      "opacity": "0.48",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "filter": "none",
+      "zIndex": "auto",
+      "width": 0,
+      "height": 0
+    },
+    "mesh": {
+      "display": "block",
+      "visibility": "visible",
+      "opacity": "1",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "filter": "none",
+      "zIndex": "auto",
+      "width": 889,
+      "height": 520
+    },
+    "hero": {
+      "display": "flex",
+      "visibility": "visible",
+      "opacity": "1",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "filter": "none",
+      "zIndex": "auto",
+      "width": 889,
+      "height": 520
+    },
+    "bodyText": "OpenCodeX-Desktop\nDesktop Manager\n概览\n面板\n拓展\n诊断\n设置\n概览\n\n完成启动前的环境准备，再继续运行操作。\n\n1\n待接入\n\n启动条件未满足 · 请按下方指引处理\n\n尚未接入 OpenCodex\n\n补全启动条件后，即可继续使用 OpenCodex。\n\n2 / 3 项通过\n01\nNode.js\n已发现\n02\nnpm\n已发现\n03\nOpenCodex\n未发现\n接入 "
+  },
+  "gpu": {
+    "vendor": "Google Inc. (Intel)",
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "version": "WebGL 1.0 (OpenGL ES 2.0 Chromium)"
+  },
+  "saved_appearance": {
+    "visualEffects": "high",
+    "glowRender": "mesh",
+    "theme": "system",
+    "interfaceScale": 100
+  },
+  "provenance": {
+    "original_input_sha256": "8b406d6c9e7abc65c3db6f673f447ef8e9498489a5faaee83f8ff28a9b937544",
+    "projection": "Only appearance and rendering fields retained; full temporary preferences DTO omitted"
+  }
+}

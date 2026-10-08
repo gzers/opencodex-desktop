@@ -1,0 +1,106 @@
+{
+  "record_id": "WIN-018-VISUAL-20261008",
+  "code_commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "documentation_commit": "11ffbeb2c2d372a22789e89d41e880f0d2c899ed",
+  "entries": [
+    {
+      "commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+      "path": "apps/desktop/ui/src/app/appearance/effects.ts",
+      "bytes": 5566,
+      "sha256": "6f46b41ec479f9b33b97ee33beccb49b2480254b5ba081964ca1da2cdc3dda4b",
+      "line_references": [
+        32,
+        44,
+        63,
+        134
+      ],
+      "source_role": "implementation",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    },
+    {
+      "commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue",
+      "bytes": 4249,
+      "sha256": "b98bad7bd938ecbb6df1af1d0edd1e7c3e284a9256d49aac1f0c7b194e088e8c",
+      "line_references": [
+        31,
+        32,
+        34,
+        49,
+        90
+      ],
+      "source_role": "implementation",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    },
+    {
+      "commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+      "path": "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts",
+      "bytes": 10467,
+      "sha256": "ee54bdf7788899fadca9d03d40c75d6f4e40c2597e1e6684d9288c0a4c41182f",
+      "line_references": [
+        212,
+        217,
+        227,
+        244,
+        250
+      ],
+      "source_role": "implementation",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    },
+    {
+      "commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "bytes": 99489,
+      "sha256": "b9f81593cc0eb491c6e7eb6f7326105a9afc382386f287e1ab26ed4c8ec0b498",
+      "line_references": [
+        984,
+        995,
+        1001,
+        1019,
+        1020,
+        1021,
+        1195
+      ],
+      "source_role": "implementation",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    },
+    {
+      "commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+      "path": "apps/desktop/ui/src/styles/effects.css",
+      "bytes": 2911,
+      "sha256": "c33faabde9204a28e33c48b6c78e2cafa8563e8692ebed458cd822f1f86f6c6a",
+      "line_references": [
+        14
+      ],
+      "source_role": "implementation",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    },
+    {
+      "commit": "11ffbeb2c2d372a22789e89d41e880f0d2c899ed",
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/候选/2026-09-28-Logo本体形变/index.html",
+      "bytes": 33783,
+      "sha256": "c7da17a2042c5904ea9c09b54e6378d7c80baee22dcc9c366df495e447a47e65",
+      "line_references": [
+        41,
+        86,
+        91,
+        92
+      ],
+      "source_role": "document/prototype",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    },
+    {
+      "commit": "11ffbeb2c2d372a22789e89d41e880f0d2c899ed",
+      "path": "docs/02-项目核心/UI规范.md",
+      "bytes": 86335,
+      "sha256": "567e32c687d3f136546cc00dc4f219d1b6dd1116ab8c31947c8d7b631515cfde",
+      "line_references": [
+        738,
+        740
+      ],
+      "source_role": "document/prototype",
+      "scope": "Fixed-source reference/hash only; source content not copied"
+    }
+  ],
+  "prototype_performance_limit": "Existing UI performance constraints and prototype default CSS differ; temporary blur is diagnostic, not accepted implementation"
+}

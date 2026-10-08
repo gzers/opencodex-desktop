@@ -1,0 +1,28 @@
+{
+  "source_commit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "gradient_at_border_top_center": {
+    "gradient_radius_fraction": 0.45809075159382795,
+    "remaining_alpha_before_element_opacity": 0.3809584437921244,
+    "after_cloud_and_parent_opacity": 0.0585152169664703
+  },
+  "verified_isolated_layers": [
+    "cloud-a-only",
+    "cloud-b-only",
+    "cloud-c-only",
+    "energy-only",
+    "none-only"
+  ],
+  "edge_owner": "cloud-a circular-border clipping",
+  "observed_style": {
+    "borderRadius": "50%",
+    "filter": "none",
+    "background": "radial-gradient(44% 98% at 46% 44%, rgb(204, 211, 234), rgba(0, 0, 0, 0) 74%)"
+  },
+  "controls": {
+    "remove_border_radius": "Arc becomes straight box edge; not a correct visual fix",
+    "container_blur_20px": "Arc softened into diffuse light; visual test only, no performance acceptance"
+  },
+  "application_source_changed": false,
+  "daily_settings_changed": false,
+  "diagnostic_process_cleaned": true
+}
