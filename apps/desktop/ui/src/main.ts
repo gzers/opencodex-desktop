@@ -10,6 +10,7 @@ import {
 } from '@/app/errors'
 import { installEffectsRuntime } from '@/app/appearance/effects'
 import { installGlowRenderRuntime } from '@/app/appearance/glowRender'
+import { installNativeAppearance } from '@/app/appearance/nativeWindow'
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/materials.css'
@@ -27,14 +28,14 @@ installEarlyFaultCapture(useAppStore())
 // 等待有上限（1500 ms），取不到就按概览落地，不无限阻塞启动。
 async function bootstrap() {
   const store = useAppStore()
-  // 外观策略先于首帧装配：系统减少动态与可见性只有一个监听来源，
-  // 用户档位随后由偏好读取落到 `data-effects`。
+  // 唯一用户三档策略先于首帧装配；系统减少动态不参与。
   installEffectsRuntime()
   // 背景光渲染方式同样先于首帧装配：设备能力只探测一次，用户选择随后由偏好落到 `data-glow-render`。
   installGlowRenderRuntime()
   try {
     // 偏好读取有上限：偏好端挂起时不阻塞首帧，按未读到继续（IMP-04 §13.3 A04）。
     await waitForPreferences(() => store.loadPreferences())
+    void installNativeAppearance()
     const snapshot = await waitForSettledSnapshot({
       read: () => store.statusSnapshot,
       refresh: () => store.loadStatusSnapshot(),

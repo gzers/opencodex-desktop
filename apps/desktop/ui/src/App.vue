@@ -35,6 +35,7 @@ onMounted(() => window.addEventListener('keydown', onFaultKeydown))
 onBeforeUnmount(() => window.removeEventListener('keydown', onFaultKeydown))
 // Overlay keeps the native macOS window buttons above the web content.
 const isMacOS = /^Mac/.test(navigator.platform)
+const isWindows = /^Win/.test(navigator.platform)
 const component = computed(() => {
   switch (routes.current) {
     case 'panel': return PanelRoute
@@ -48,7 +49,7 @@ const component = computed(() => {
 </script>
 
 <template>
-  <div class="app-window" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS }">
+  <div class="app-window" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS, 'is-windows': isWindows }">
     <div v-if="app.uiFault" class="ui-fault-modal" role="alertdialog" aria-modal="true" aria-label="界面出现异常">
       <div class="ui-fault-mask" @click="app.clearUiFault()"></div>
       <div class="ui-fault">
@@ -64,7 +65,7 @@ const component = computed(() => {
       <!-- macOS（titleBarStyle: Overlay）没有原生标题栏可拖：这块 28px 条带就是唯一拖拽区。
            data-tauri-drag-region 由 Tauri 注入脚本接管（mousedown → startDragging），
            所以它必须可命中（.titlebar 不能 pointer-events:none），否则窗口拖不动。 -->
-      <header class="titlebar" aria-label="窗口控制区" data-tauri-drag-region></header>
+      <header v-if="!isWindows" class="titlebar" aria-label="窗口控制区" data-tauri-drag-region></header>
       <div class="app-shell" :class="{ 'panel-mode': routes.current === 'panel' }">
         <AppSidebar />
         <main class="main">

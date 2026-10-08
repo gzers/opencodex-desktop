@@ -10,9 +10,10 @@ const css = readFileSync(resolve(__dirname, '../src/styles/base.css'), 'utf8')
 
 describe('窗口拖拽区', () => {
   it('标题栏带 data-tauri-drag-region', () => {
-    const m = app.match(/<header class="titlebar"[^>]*>/)
+    const m = app.match(/<header[^>]*class="titlebar"[^>]*>/)
     expect(m, 'App.vue 里应存在 .titlebar 头部').not.toBeNull()
     expect(m![0]).toContain('data-tauri-drag-region')
+    expect(m![0]).toContain('v-if="!isWindows"')
   })
 
   it('标题栏可命中（不能 pointer-events:none）', () => {

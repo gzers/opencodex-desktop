@@ -36,8 +36,8 @@ fn apply_scale(
     if let Some(scale) = scale {
         let value = scale
             .to_str()
-            .filter(|value| ["1", "1.5", "2"].contains(value))
-            .ok_or_else(|| "smoke scale must be 1, 1.5 or 2".to_string())?;
+            .filter(|value| ["1", "1.25", "1.5", "2"].contains(value))
+            .ok_or_else(|| "smoke scale must be 1, 1.25, 1.5 or 2".to_string())?;
         let window = smoke
             .as_mut()
             .ok_or_else(|| "smoke scale requires the sandbox CDP configuration".to_string())?;
@@ -100,7 +100,7 @@ mod tests {
     #[test]
     fn diagnostic_dpi_is_bounded_and_requires_smoke() {
         let root = tempfile::tempdir().unwrap();
-        for scale in ["1", "1.5", "2"] {
+        for scale in ["1", "1.25", "1.5", "2"] {
             let smoke = configure(
                 &mut config(),
                 Some(OsStr::new("1234")),

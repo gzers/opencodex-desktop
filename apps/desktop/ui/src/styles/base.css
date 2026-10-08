@@ -48,6 +48,13 @@ a { color: inherit; }
   /* 原生窗口按钮不跟随网页内容缩放：标题栏保持物理高度，避免按钮错位。 */
   --window-controls-height: calc(28px / var(--ui-zoom));
 }
+/* Windows uses the system-drawn caption and buttons: native hit testing, Snap,
+   accessibility and close requests stay with User32. There is no second DOM row. */
+.app-window.is-windows { background: transparent; border: none; }
+.app-window.is-windows::before, .app-window.is-windows::after { display: none; }
+html[data-native-material="mica"], html[data-native-material="mica"] body { background: transparent; }
+html[data-native-material="solid"] body { background: #e8edf5; }
+html[data-native-material="solid"][data-theme="dark"] body { background: #20242c; }
 .desktop-stage {
   --side-w: 244px;
   --titlebar-height: var(--window-controls-height);

@@ -17,5 +17,6 @@ pub mod tray_controller;
 pub mod webdav_client;
 
 pub mod app_activity;
+pub mod window_appearance;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_smoke;

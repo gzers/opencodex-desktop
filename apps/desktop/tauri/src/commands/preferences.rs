@@ -33,6 +33,7 @@ fn preferences_file_has_theme(data_root: &std::path::Path) -> bool {
 pub fn save_preferences(
     preferences: PreferencesDto,
     data_root: tauri::State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
 ) -> AppResult<PreferencesDto> {
     // 命令边界收到的是 WebView 的 camelCase DTO；显式转换为领域结构后再落盘，
     // 避免 camelCase 字段被丢弃、保存被静默改写为默认值。
@@ -43,14 +44,19 @@ pub fn save_preferences(
             detail: "Windows 暂不支持 CLI 控制面；本机 IPC 未实现".to_string(),
         });
     }
-    save_preferences_with_path(&data_root.0, &domain).map(Into::into)
+    let saved = save_preferences_with_path(&data_root.0, &domain)?;
+    crate::infrastructure::window_appearance::refresh(&app);
+    Ok(saved.into())
 }
 
 #[tauri::command]
 pub fn restore_default_preferences(
     data_root: tauri::State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
 ) -> AppResult<PreferencesDto> {
-    restore_preferences_with_path(&data_root.0).map(Into::into)
+    let restored = restore_preferences_with_path(&data_root.0)?;
+    crate::infrastructure::window_appearance::refresh(&app);
+    Ok(restored.into())
 }
 
 pub fn load_preferences_with_path(data_root: &std::path::Path) -> AppResult<Preferences> {

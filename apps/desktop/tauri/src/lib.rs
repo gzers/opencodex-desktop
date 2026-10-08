@@ -286,13 +286,22 @@ pub fn run() {
                 }
                 tray.set_menu(Some(tray_menu.clone()))?;
             }
-            let native_menu = crate::infrastructure::tray_controller::build_app_menu(app.handle())?;
-            app.set_menu(native_menu.clone())?;
+            // Windows keeps one system caption row. Product actions stay in the
+            // overview/sidebar/tray; WebView editing retains standard shortcuts.
+            // macOS must retain Edit's responder-chain keyboard equivalents.
+            #[cfg(windows)]
+            let native_menu = None;
+            #[cfg(not(windows))]
+            let native_menu = {
+                let menu = crate::infrastructure::tray_controller::build_app_menu(app.handle())?;
+                app.set_menu(menu.clone())?;
+                Some(menu)
+            };
             // 托盘菜单与应用菜单是两个独立资源，控制器需要同时持有两者才能一起门控。
             let tray_controller = crate::infrastructure::tray_controller::TauriTrayController::new(
                 app.handle().clone(),
                 tray_menu,
-                Some(native_menu),
+                native_menu,
             );
             app.manage(std::sync::Arc::new(tray_controller) as crate::infrastructure::tray_controller::SharedTrayPresenter);
 
@@ -340,6 +349,7 @@ pub fn run() {
             app.manage(crate::infrastructure::app_activity::AppActivity::default());
             app.manage(crate::commands::panel::PanelLifetime::default());
             crate::infrastructure::app_activity::install(app.handle());
+            crate::infrastructure::window_appearance::install(app.handle());
             // FZ-08 后台周期轮询；Tauri 事件只推送同一快照，前端不再自建定时器。
             let app_handle = app.handle().clone();
             let polling_collector = collector.clone();
@@ -491,6 +501,7 @@ pub fn run() {
             commands::upgrade::create_restore_backup,
             commands::upgrade::restore_risk_summary,
             commands::about::app_about,
+            commands::window::window_appearance,
             commands::about::official_project_facts,
             commands::about::official_remote_latest,
             commands::app_status,
