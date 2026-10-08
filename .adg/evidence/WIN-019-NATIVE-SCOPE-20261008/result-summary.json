@@ -1,0 +1,105 @@
+{
+  "recordedAt": "2026-10-08T19:03:03.1965939+08:00",
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "24ea68223d9e4eecc64218ad6f5cf1b025c80bcdbbccbe83c49449015a504657",
+  "scopeDocsCommit": "d6b309043227a2180343496e48b8b4036a0a2296",
+  "overallVersionState": "in_progress",
+  "nativeAppearanceAndMenu": "not-implemented",
+  "nativeAppearanceAcceptance": "not-run",
+  "qualityOrdinary": "pass; original evidence WIN-019-APPEARANCE-20261008/ordinary",
+  "qualityAdministrator": "pass; session reconnected, complete 1/1.5/2 DPR matrix",
+  "powershell": "7.6.5",
+  "tokenElevated": true,
+  "tokenElevationType": 2,
+  "matrix": [
+    {
+      "scale": "1",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator-v4\\scale-1\\sandbox-5e67c2b873374fb39a5069a4912191c7",
+      "port": 52037,
+      "result": "pass",
+      "pid": 34452,
+      "foregroundWindow": 7607178
+    },
+    {
+      "scale": "1.5",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator-v4\\scale-1.5\\sandbox-276911f13ccc4550a1f3d963440e6478",
+      "port": 57173,
+      "result": "pass",
+      "pid": 22548,
+      "foregroundWindow": 7479022
+    },
+    {
+      "scale": "2",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator-v4\\scale-2\\sandbox-f8100429d8884315ba0edb15212a0361",
+      "port": 52131,
+      "result": "pass",
+      "pid": 31900,
+      "foregroundWindow": 10819300
+    }
+  ],
+  "performance": [
+    {
+      "dpr": 1.0,
+      "scriptP95": 0.2999999523162842,
+      "foreground": true,
+      "over6B": 0,
+      "p95": 16.19999999999709,
+      "renderer": "mesh",
+      "max": 16.900000000001455
+    },
+    {
+      "dpr": 1.0,
+      "scriptP95": 0.3000001907348633,
+      "foreground": true,
+      "over6B": 0,
+      "p95": 16.20000000001164,
+      "renderer": "css",
+      "max": 17.19999999999709
+    },
+    {
+      "dpr": 1.5,
+      "scriptP95": 0.40000009536743164,
+      "foreground": true,
+      "over6B": 0,
+      "p95": 16.200000000004366,
+      "renderer": "mesh",
+      "max": 16.900000000001455
+    },
+    {
+      "dpr": 1.5,
+      "scriptP95": 0.5,
+      "foreground": true,
+      "over6B": 0,
+      "p95": 16.19999999999709,
+      "renderer": "css",
+      "max": 17.09999999999127
+    },
+    {
+      "dpr": 2.0,
+      "scriptP95": 0.5,
+      "foreground": true,
+      "over6B": 0,
+      "p95": 16.30000000000291,
+      "renderer": "mesh",
+      "max": 32.099999999998545
+    },
+    {
+      "dpr": 2.0,
+      "scriptP95": 0.5,
+      "foreground": true,
+      "over6B": 0,
+      "p95": 31.70000000001164,
+      "renderer": "css",
+      "max": 62.69999999999709
+    }
+  ],
+  "priorFailureRetained": "reconnected v3 had 3 unexplained CSS long frames, no LongTask, stable repeat passed; old disconnected-session evidence retained at original path",
+  "limits": [
+    "No source changes in this follow-up",
+    "DPR is WebView rendering-scale simulation, not physical native-window DPI switching",
+    "Tests cover page dropdowns and quality; do not validate native menu bars or window appearance",
+    "Original native-appearance topic text remains unavailable in reviewed commits"
+  ],
+  "dailyPreserved": true,
+  "pushed": false
+}

@@ -1,0 +1,28 @@
+{
+  "recordedAt": "2026-10-08T18:57:55.4987070+08:00",
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "sourceBaseline": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "scopeDocsCommit": "d6b309043227a2180343496e48b8b4036a0a2296",
+  "userConfirmedVersion": "0.1.9",
+  "nativeAppearanceImplementation": "not-implemented",
+  "originalTopicText": "not-available-in-reviewed-local-or-remote-commit",
+  "topic": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配",
+  "reviewedLocalDocs": "a4b062198c0bb75c327bd61259d8942f9c685aee",
+  "reviewedRemoteDocs": "bc6561acac5075bce76babfc367ff18067b17efe",
+  "nativeSource": [
+    {
+      "unchanged": true,
+      "baselineBlob": "8a86f030995520e53bc19ff4362c36f1aa965a6d",
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "candidateBlob": "8a86f030995520e53bc19ff4362c36f1aa965a6d"
+    },
+    {
+      "unchanged": true,
+      "baselineBlob": "1412f67becca3a904c9c488863449f430f66a3bd",
+      "path": "apps/desktop/tauri/src/infrastructure/tray_controller.rs",
+      "candidateBlob": "1412f67becca3a904c9c488863449f430f66a3bd"
+    }
+  ],
+  "windowConfigDiff": "diff --git a/apps/desktop/tauri/tauri.conf.json b/apps/desktop/tauri/tauri.conf.json\nindex f508789..74eb557 100644\n--- a/apps/desktop/tauri/tauri.conf.json\n+++ b/apps/desktop/tauri/tauri.conf.json\n@@ -1,7 +1,7 @@\n {\n   \"$schema\": \"https://schema.tauri.app/config/2\",\n   \"productName\": \"OpenCodeX Desktop\",\n-  \"version\": \"0.1.8\",\n+  \"version\": \"0.1.9\",\n   \"identifier\": \"com.gzers.opencodex.desktop\",\n   \"build\": {\n     \"beforeDevCommand\": \"npm --prefix ui run dev\",",
+  "meaning": "Menu pixel/keyboard assertions cover WebView DOM selects, not native menu bars; activation recovery does not implement native appearance."
+}

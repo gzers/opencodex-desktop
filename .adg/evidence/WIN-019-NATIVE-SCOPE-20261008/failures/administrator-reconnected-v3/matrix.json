@@ -1,0 +1,46 @@
+{
+  "mode": "administrator",
+  "tokenElevated": true,
+  "tokenElevationType": 2,
+  "powershell": "7.6.5",
+  "expectedCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "24ea68223d9e4eecc64218ad6f5cf1b025c80bcdbbccbe83c49449015a504657",
+  "startedAtUtc": "2026-10-08T10:53:01.3090963Z",
+  "result": "fail",
+  "scales": [
+    {
+      "scale": "1",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator-v3\\scale-1\\sandbox-c4680e4df0714156b6d3849783cb495c",
+      "port": 54092,
+      "result": "fail",
+      "pid": 56164,
+      "foregroundWindow": 4266660,
+      "error": "Appearance phase failed: performance (1)"
+    }
+  ],
+  "display": [
+    {
+      "Name": "Parsec Virtual Display Adapter",
+      "DriverVersion": "0.45.0.0",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Microsoft Remote Display Adapter",
+      "DriverVersion": "10.0.26100.7309",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Intel(R) UHD Graphics 770",
+      "DriverVersion": "32.0.101.5972",
+      "CurrentRefreshRate": 60,
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080
+    }
+  ],
+  "error": "Appearance phase failed: performance (1)",
+  "finishedAtUtc": "2026-10-08T10:54:37.4766716Z"
+}
