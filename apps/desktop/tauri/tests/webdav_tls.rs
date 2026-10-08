@@ -37,6 +37,9 @@ async fn https_scheme_reaches_the_transport_layer() {
         loop {
             match listener.accept() {
                 Ok((mut stream, _)) => {
+                    // macOS 的 accepted socket 会继承 listener 的非阻塞模式；
+                    // 显式恢复阻塞，确保 read_timeout 能等待尚未到达的握手字节。
+                    stream.set_nonblocking(false).unwrap();
                     stream
                         .set_read_timeout(Some(std::time::Duration::from_secs(1)))
                         .unwrap();
