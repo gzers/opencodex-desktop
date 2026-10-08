@@ -1,0 +1,79 @@
+{
+  "testedAt": "2026-10-08T11:41:52.729Z",
+  "scope": "browser mock only; no native Mica, drag, Snap, DPI or installer verification",
+  "results": [
+    {
+      "name": "常规入口保持红绿灯，Windows 控件不外泄",
+      "status": "PASS"
+    },
+    {
+      "name": "右侧专题入口复用主内容且无原生菜单行",
+      "status": "PASS"
+    },
+    {
+      "name": "Win11 云母示意与 Win10、透明关闭实色回退",
+      "status": "PASS"
+    },
+    {
+      "name": "深色主题与非活动回退",
+      "status": "PASS"
+    },
+    {
+      "name": "现有双栏对照与单行布局",
+      "status": "PASS"
+    },
+    {
+      "name": "最大化、还原按钮与标题双击",
+      "status": "PASS"
+    },
+    {
+      "name": "最小化与重新打开保留代理 mock",
+      "status": "PASS"
+    },
+    {
+      "name": "关闭留托盘与键盘焦点恢复，代理 mock 保留",
+      "status": "PASS"
+    },
+    {
+      "name": "关闭偏好关闭时退出，再打开停止态",
+      "status": "PASS"
+    },
+    {
+      "name": "产品导航保留 Windows 顶栏与专题入口选中",
+      "status": "PASS"
+    },
+    {
+      "name": "两主题、两系统、两尺寸无标题内容重叠",
+      "status": "PASS"
+    },
+    {
+      "name": "返回常规原型恢复主题、红绿灯和尺寸",
+      "status": "PASS"
+    },
+    {
+      "name": "通知专题与常规导航仍可进入",
+      "status": "PASS"
+    },
+    {
+      "name": "深链接保留模型路由并只加载一份模型内容",
+      "status": "PASS"
+    },
+    {
+      "name": "深色深链接与产品内主题切换同步专题",
+      "status": "PASS"
+    },
+    {
+      "name": "尺寸控件与真实 mock 窗口宽度一致",
+      "status": "PASS"
+    },
+    {
+      "name": "1280 评审视口控件可见且标题可读",
+      "status": "PASS"
+    },
+    {
+      "name": "浏览器无脚本或控制台错误",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

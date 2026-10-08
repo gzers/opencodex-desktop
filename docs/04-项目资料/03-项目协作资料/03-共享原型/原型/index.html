@@ -1644,6 +1644,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../overview-dual.css">
 <link rel="stylesheet" href="../proto-controls.css">
 <link rel="stylesheet" href="model-config.css">
+<link rel="stylesheet" href="windows-window.css">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -3191,8 +3192,9 @@ ocx update</code></pre>
         <button type="button" data-launch="settings">设置</button>
         <button type="button" data-launch="tray">托盘</button>
         <button type="button" data-launch="notify" class="pctl-span">通知与反馈</button>
+        <button type="button" data-launch="windows" class="pctl-span">Windows 窗口</button>
       </div>
-      <p class="pctl-hint">软件窗口外的统一菜单：前六个直接跳转路由；「通知与反馈」是独立菜单，打开后只显示通知专题，不与概览混排。</p>
+      <p class="pctl-hint">软件窗口外的统一菜单：前六个直接跳转路由；「通知与反馈」和「Windows 窗口」分别打开专题测试器，复用同一产品窗口。</p>
     </nav>
 
     <div class="proto-card" id="notifDemoCard">
@@ -7401,15 +7403,18 @@ function resetNotifDemo(){
 
 function syncLaunchActive(){
   const inNotif=document.body.classList.contains('notif-mode');
+  const inWindows=document.body.classList.contains('windows-mode');
   const map={overview:'overview',panel:'panel',extensions:'extensions',logs:'logs',settings:'settings',tray:'tray'};
   document.querySelectorAll('#launchGrid button').forEach(b=>{
-    const on=b.dataset.launch==='notify'?inNotif:(!inNotif&&map[currentRoute]===b.dataset.launch);
+    const on=b.dataset.launch==='windows'?inWindows:(b.dataset.launch==='notify'?inNotif&&!inWindows:(!inNotif&&!inWindows&&map[currentRoute]===b.dataset.launch));
     b.classList.toggle('active',on);
   });
 }
 
 document.getElementById('launchGrid').querySelectorAll('button').forEach(b=>{
   b.onclick=()=>{
+    if(b.dataset.launch==='windows'){window.windowsPrototype.enter();return;}
+    window.windowsPrototype?.exit();
     if(b.dataset.launch==='notify'){openNotifMenu();return;}
     exitNotifMode();setRoute(b.dataset.launch);syncLaunchActive();
   };
@@ -7475,5 +7480,6 @@ document.addEventListener('scroll',event=>{
 <script src="../proto-controls.js"></script>
 <script src="select-component.js"></script>
 <script src="model-config.js"></script>
+<script src="windows-window.js"></script>
 </body>
 </html>

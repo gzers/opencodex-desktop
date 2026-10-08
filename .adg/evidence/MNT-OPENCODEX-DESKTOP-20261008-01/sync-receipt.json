@@ -1,0 +1,143 @@
+{
+  "id": "MNT-OPENCODEX-DESKTOP-20261008-01-source-sync",
+  "date": "2026-10-08",
+  "docsBase": "fee8f4c89b6f2774f3a35f2a7a2020bbeb2059e6",
+  "codeBase": "feature/0.1.9-windows-appearance@8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "scope": "original Windows topic source and bounded tracked shared-prototype delta; no native implementation",
+  "version": "0.1.9",
+  "implementationState": "in_progress",
+  "checks": {
+    "browserMock": {
+      "passed": 18,
+      "failed": 0,
+      "report": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261008-01/replay/browser-results.json"
+    },
+    "syncLinks": {
+      "passed": 35,
+      "failed": 0
+    },
+    "originalImageHashes": {
+      "passed": 6,
+      "failed": 0
+    },
+    "javascriptSyntax": {
+      "passed": 2,
+      "failed": 0,
+      "runtime": "Node.js v26.8.1"
+    },
+    "visualInspection": {
+      "passed": 2,
+      "scope": "Win11 light and Win10 solid 960; browser mock only"
+    }
+  },
+  "pending": [
+    "native Windows titlebar, Mica, menus and close lifecycle",
+    "Snap, system menu, physical DPI and multiple monitors",
+    "macOS native regression",
+    "CI on final implementation, installer install/upgrade/uninstall",
+    "release confirmation"
+  ],
+  "excluded": "uncommitted prototype relocation, model/config-sync drafts, untracked apps, original backup metadata",
+  "files": [
+    {
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-19.md",
+      "bytes": 12017,
+      "sha256": "1ea0584bcae72afa2a6ecb147f0b39155d691b594ecc43e80bdb54fb96082a84"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md",
+      "bytes": 4170,
+      "sha256": "0d14f24378698cb04822582462090ff38cf7e072d33f506303f9a5f0df79db5a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/03-共享原型/README.md",
+      "bytes": 11217,
+      "sha256": "607ed247b4357b2b5aa07799cad50930c1e0db9e19997ab86b5f4ef0b832f74c"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/03-共享原型/版本索引.md",
+      "bytes": 9043,
+      "sha256": "9417702fd6fda1688002c53611f26d6685072d7b4555c4324485682b390f4e7c"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/03-共享原型/原型/index.html",
+      "bytes": 569011,
+      "sha256": "1c9b449d6b5fa1235a278f59bdbbf4b112b1b3fb42eb7be62c414de272a7cb2c"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/03-共享原型/原型/windows-window.js",
+      "bytes": 9914,
+      "sha256": "ce64ea0eb08b0d0962d11729ad12d35ba151259b10c8ca32387ffc140562f2e8"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/03-共享原型/原型/windows-window.css",
+      "bytes": 3471,
+      "sha256": "fefb2660d50a8bb85e10f4b1d698d1c252e92e16ade63635a5eb54cf643db0b5"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/README.md",
+      "bytes": 4006,
+      "sha256": "dc0cb03dc446ea39fcf1dae40e795a5494656e28c8c1c05b79839603f9510782"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/分析/01-实施遗漏与0.1.9范围补齐.md",
+      "bytes": 3463,
+      "sha256": "1503a16e8fbf8d483779aaefea1994431e7c6a3ba894303475943582bcbf8476"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/分析/01-设计与实现交接.md",
+      "bytes": 5367,
+      "sha256": "d4f90b5f50916b2cfc70fc95030ba86b25332bc5d8c798532b1e922648816955"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/分析/02-原型验证与证据.md",
+      "bytes": 3562,
+      "sha256": "df08a6c70f761c635f27f4d499e830f175a81aac02729e6fd41d7fab6d23f33a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/原型QA/windows-window.browser.mjs",
+      "bytes": 10228,
+      "sha256": "a3a8452cd26b28a189107296dec58cb23b7b8591b25d0e27527fbd58187cb85a"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/原型QA/截图/01-Windows11单行浅色.png",
+      "bytes": 768917,
+      "sha256": "90ac996cda7f9cbee891b4d3b5607096b317defcf1055b87418670614dfa6256"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/原型QA/截图/02-Windows11深色.png",
+      "bytes": 772440,
+      "sha256": "8f857d93b73aa6ce86517d4e5f39dc9c8e8efbd8baae410d0924b20ce1017c06"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/原型QA/截图/03-现有双栏对照.png",
+      "bytes": 669984,
+      "sha256": "507b4732c252471756b7cc0ecb830adcf801b437dbe151603455ca37c2e07515"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/原型QA/截图/04-关闭到托盘.png",
+      "bytes": 160248,
+      "sha256": "1d5cfbe3d3fbb40fb37d6f34d419a2cc4002bca8e3c81dcc57eba4bec9b2d928"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/原型QA/截图/05-Windows10实色960.png",
+      "bytes": 528972,
+      "sha256": "f4135ed2a7f7bf432cc20f298685246bbb9aefc7e89f664959e12955e707c5c2"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/问题来源记录/01-Windows标题栏与原生菜单.png",
+      "bytes": 35345,
+      "sha256": "1ea1b7e9c807841bccf7242458b3c7c5cd02986a11a75c50a98fc39181dd6b2e"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/问题来源记录/README.md",
+      "bytes": 1653,
+      "sha256": "25a1e88eaecf960523478413fb7c22c7ecaa008d201f2b635541e6fe06bdd628"
+    }
+  ],
+  "historicalPatch": {
+    "path": ".adg/evidence/MNT-OPENCODEX-DESKTOP-20261008-01/bounded-existing-files.patch.json",
+    "sha256": "93971bfb8770a6c2a2c585611085c5ebc8327187fb69f81a31812b07ee94fe73",
+    "lossless": true
+  }
+}
