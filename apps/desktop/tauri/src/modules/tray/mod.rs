@@ -22,7 +22,8 @@ pub enum TrayAction {
     OpenDataDir,
     RunDoctor,
     OpenSettings,
-    /// 原生应用菜单专用：直接重载主 WebView，不经前端轮询（F-06）。
+    /// 原生恢复入口：macOS 应用菜单／Windows 托盘直接重载主 WebView，
+    /// 不经前端轮询（F-06）。
     ReloadMain,
     Quit,
 }

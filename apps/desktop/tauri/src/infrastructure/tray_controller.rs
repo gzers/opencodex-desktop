@@ -96,7 +96,7 @@ impl<R: tauri::Runtime> TauriTrayController<R> {
             None::<String>,
         )?;
         let quit = MenuItem::with_id(app, TRAY_MENU_QUIT, "退出", true, None::<String>)?;
-        Menu::with_items(
+        let menu = Menu::with_items(
             app,
             &[
                 &header,
@@ -114,7 +114,22 @@ impl<R: tauri::Runtime> TauriTrayController<R> {
                 &PredefinedMenuItem::separator(app)?,
                 &quit,
             ],
-        )
+        )?;
+        // F-06 must remain reachable without a functioning WebView after the
+        // Windows application menu row is removed. Reuse its existing native
+        // action ID and direct reload path; do not add a new proxy action.
+        #[cfg(windows)]
+        menu.insert(
+            &MenuItem::with_id(
+                app,
+                NATIVE_MENU_VIEW_RELOAD,
+                "重载主界面",
+                true,
+                None::<String>,
+            )?,
+            7,
+        )?;
+        Ok(menu)
     }
 }
 
