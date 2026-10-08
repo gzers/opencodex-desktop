@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: in_progress
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.9 用户画质与 Windows 窗口外观和菜单适配
-summary: 玻璃、画质、光场与激活改动已本地提交，普通／管理员三档 DPR 的既有矩阵已通过，会话受阻与复跑失败保留历史证据；原生窗口外观与菜单专题同属 0.1.9，该部分尚未实施，整体仍 in_progress，保留日常安装，不推送。
+summary: 接续 fb4fe172 后，Windows 单行原生标题栏、菜单行移除、Mica／实色回退和托盘恢复入口已本地提交；固定新制品双权限四档WebView DPR通过，原生两组各13/14通过，Snap及跨平台／显示器／生命周期／CI／安装门禁未闭合，整体仍 in_progress，保留日常安装，不推送。
 ---
 
 # 0.1.9 用户画质与 Windows 窗口外观和菜单适配
@@ -78,3 +78,15 @@ summary: 玻璃、画质、光场与激活改动已本地提交，普通／管�
 接续 docs/governance-main@fee8f4c8 后，原 [设计与实现交接](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/分析/01-设计与实现交接.md)、来源截图与浏览器材料已补齐，Windows 右侧专题入口已接入跟踪的共享原型。此前“未取得原文”是 Windows 当时的信息缺口，现已解除；代码仍为 8a8397a，本次未改应用代码。
 
 后续实施单行标题栏、Win11 原生 Mica／实色回退、移除 Windows 原生菜单行及无损功能入口、关闭偏好与 macOS 保留路径。按专题完整门禁采集新提交／制品的窗口、Snap、系统菜单、物理 DPI、多屏、材质、双权限和关闭生命周期证据，再接续 macOS 原生与安装器回归。既有 DPR 矩阵及浏览器 mock 不能替代上述验收。**仅移除材料同步阻塞，IMP-19 继续 in_progress，0.1.9 整体未完成。**
+
+## fb4fe172 后的原生实施
+
+用户授权接续后，在原 `feature/0.1.9-windows-appearance` 实施 Windows 专属原生适配。实现 `d4d7164`、原生测试 `965c314 / 94f3f29`、独立托盘重载补充 `2ec3812`、候选出包门禁 `15219bf` 均为本地提交，最终源码 **`15219bf08ceaaef86ae471772d27e04fdbf5ff1d`**。先前“原生尚未实施”保留材料交接时的历史口径，当前实施／测试／未通过项以 [原生回执 03](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/分析/03-原生实施与本机门禁回执.md) 为准。
+
+采用系统 caption 和按钮，保留 User32 拖拽／缩放／系统菜单／Snap 命中及 CloseRequested，只移除 Windows 原生应用菜单行；非 Windows 原菜单不变。Mica 用 DWM 真实属性与回读，主题／透明可用性／非活动触发原生更新和实色回退，不改用户三档、不读取系统减少动态。移除菜单后的独立原生重载入口迁到 Windows 托盘，继续不依赖页面。精确原生 DPI 与 WebView DPR 分开复验，新增 125% WebView 模拟入口。
+
+按新源码重建的 EXE 0.1.9，7,625,728 bytes，SHA-256=`b48c30667116b59aab5cefdb2c9617456d073427cde54ac2ba425e9109252992`。前端 378、Windows 后端 integration-test 338（5 项既有忽略）、CDP／制品身份 12 项通过，类型／构建／fmt／Clippy 通过。发布工具全套在本机有 Linux／minisign 环境错误，未判通过；远端 CI、Win10/11 物理 DPI／多屏、macOS 与新制品安装往返仍需适用环境接续，本轮不推送或发布。
+
+固定新 EXE 的普通／管理员四档 WebView DPR 共 8 组画质矩阵全部通过，p95 最高31.9ms／回调p95最高0.5ms；管理员首轮125.8ms长帧的失败原件与未确定原因保留。原生真实DPI=192／DPR=2，各权限14项中13项通过，Snap独立自动识别失败；最终悬停截图可见系统布局，但Win+Z图未显示，不判完整Snap通过。MSAA证据不等于人工读屏，shell PID保留／API重开不等于真实代理／托盘入口生命周期通过。
+
+最终证据见 [result-summary.json](../../.adg/evidence/WIN-019-NATIVE-IMPLEMENTATION-20261008/result-summary.json)／[gate-matrix.json](../../.adg/evidence/WIN-019-NATIVE-IMPLEMENTATION-20261008/gate-matrix.json)／[manifest.json](../../.adg/evidence/WIN-019-NATIVE-IMPLEMENTATION-20261008/manifest.json)。完整设计门禁在回执03逐项保留，未完成项包括Snap、目标系统／物理多档DPI／多屏／人工读屏／真实代理与托盘往返／macOS／完整CI／新安装往返；**实施继续in_progress，不能进入全部验收完成或发布完成状态**。候选清理、日常EXE与偏好哈希／原进程身份／系统透明恢复已核对。

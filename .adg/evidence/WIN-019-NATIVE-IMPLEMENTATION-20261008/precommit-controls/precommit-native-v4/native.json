@@ -1,0 +1,106 @@
+{
+  "mode": "ordinary",
+  "elevated": false,
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "11095b8a8847b547088d94664137b28369fa06c0015a5e3c63e488a1bca9f62e",
+  "startedAt": "2026-10-08T20:15:41.5905168+08:00",
+  "checks": [
+    {
+      "detail": null,
+      "name": "first-screen-source-identity",
+      "result": "pass"
+    },
+    {
+      "detail": {
+        "nativeDpi": 192,
+        "title": "OpenCodeX Desktop",
+        "screens": [
+          {
+            "bounds": {
+              "Location": {
+                "IsEmpty": true,
+                "X": 0,
+                "Y": 0
+              },
+              "Size": {
+                "IsEmpty": false,
+                "Width": 6400,
+                "Height": 2384
+              },
+              "X": 0,
+              "Y": 0,
+              "Width": 6400,
+              "Height": 2384,
+              "Left": 0,
+              "Top": 0,
+              "Right": 6400,
+              "Bottom": 2384,
+              "IsEmpty": false
+            },
+            "primary": true
+          }
+        ],
+        "systemMenuItems": 7
+      },
+      "name": "single-system-caption-no-application-menu",
+      "result": "pass"
+    },
+    {
+      "detail": {
+        "darkMode": 1,
+        "backdrop": 2
+      },
+      "name": "native-theme-and-dwm-material",
+      "result": "pass"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "inactive-solid-and-foreground-mica",
+      "result": "fail"
+    },
+    {
+      "detail": null,
+      "name": "system-transparency-solid-fallback-and-restoration",
+      "result": "pass"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "caption-hit-targets-and-accessibility",
+      "result": "fail"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "double-click-maximize-restore",
+      "result": "fail"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "system-button-minimize-and-restore",
+      "result": "fail"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "native-caption-drag-and-edge-resize",
+      "result": "fail"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "snap-hover-and-win-z",
+      "result": "fail"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "close-preference-keeps-shell-and-tray",
+      "result": "fail"
+    },
+    {
+      "error": "Native candidate is not foreground",
+      "name": "close-preference-exits-through-close-request",
+      "result": "fail"
+    }
+  ],
+  "result": "fail",
+  "pid": 51816,
+  "port": 56727,
+  "finishedAt": "2026-10-08T20:15:57.3329640+08:00"
+}

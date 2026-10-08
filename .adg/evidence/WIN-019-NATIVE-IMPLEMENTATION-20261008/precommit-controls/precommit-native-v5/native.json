@@ -1,0 +1,132 @@
+{
+  "mode": "ordinary",
+  "elevated": false,
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "11095b8a8847b547088d94664137b28369fa06c0015a5e3c63e488a1bca9f62e",
+  "startedAt": "2026-10-08T20:17:00.0357934+08:00",
+  "checks": [
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "first-screen-source-identity"
+    },
+    {
+      "detail": {
+        "systemMenuItems": 7,
+        "screens": [
+          {
+            "bounds": {
+              "Location": {
+                "IsEmpty": true,
+                "X": 0,
+                "Y": 0
+              },
+              "Size": {
+                "IsEmpty": false,
+                "Width": 6400,
+                "Height": 2384
+              },
+              "X": 0,
+              "Y": 0,
+              "Width": 6400,
+              "Height": 2384,
+              "Left": 0,
+              "Top": 0,
+              "Right": 6400,
+              "Bottom": 2384,
+              "IsEmpty": false
+            },
+            "primary": true
+          }
+        ],
+        "title": "OpenCodeX Desktop",
+        "nativeDpi": 192
+      },
+      "result": "pass",
+      "name": "single-system-caption-no-application-menu"
+    },
+    {
+      "detail": {
+        "darkMode": 1,
+        "backdrop": 2
+      },
+      "result": "pass",
+      "name": "native-theme-and-dwm-material"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "inactive-solid-and-foreground-mica"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "system-transparency-solid-fallback-and-restoration"
+    },
+    {
+      "result": "fail",
+      "name": "caption-hit-targets-and-accessibility",
+      "error": "Native caption hit targets differ: 2 9 20"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "double-click-maximize-restore"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "system-button-minimize-and-restore"
+    },
+    {
+      "detail": {
+        "resizeHit": 11,
+        "moved": {
+          "Left": 2067,
+          "Top": 395,
+          "Right": 4453,
+          "Bottom": 1986
+        },
+        "resized": {
+          "Left": 2007,
+          "Top": 355,
+          "Right": 4333,
+          "Bottom": 1946
+        },
+        "captionHit": 2,
+        "original": {
+          "Left": 2007,
+          "Top": 355,
+          "Right": 4393,
+          "Bottom": 1946
+        }
+      },
+      "result": "pass",
+      "name": "native-caption-drag-and-edge-resize"
+    },
+    {
+      "result": "fail",
+      "name": "snap-hover-and-win-z",
+      "error": "Snap layout popup not independently detected; native Win11 acceptance remains open"
+    },
+    {
+      "detail": {
+        "restored": true,
+        "pidPreserved": 54848
+      },
+      "result": "pass",
+      "name": "close-preference-keeps-shell-and-tray"
+    },
+    {
+      "detail": {
+        "exitCode": 0
+      },
+      "result": "pass",
+      "name": "close-preference-exits-through-close-request"
+    }
+  ],
+  "result": "fail",
+  "pid": 54848,
+  "port": 63246,
+  "finishedAt": "2026-10-08T20:17:16.0724036+08:00"
+}

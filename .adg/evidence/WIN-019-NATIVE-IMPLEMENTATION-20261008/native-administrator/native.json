@@ -1,0 +1,212 @@
+{
+  "mode": "administrator",
+  "elevated": true,
+  "sourceCommit": "15219bf08ceaaef86ae471772d27e04fdbf5ff1d",
+  "exeSha256": "b48c30667116b59aab5cefdb2c9617456d073427cde54ac2ba425e9109252992",
+  "startedAt": "2026-10-08T20:48:32.4767568+08:00",
+  "checks": [
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "first-screen-source-identity"
+    },
+    {
+      "detail": {
+        "systemMenuItems": 7,
+        "screens": [
+          {
+            "bounds": {
+              "Location": {
+                "IsEmpty": true,
+                "X": 0,
+                "Y": 0
+              },
+              "Size": {
+                "IsEmpty": false,
+                "Width": 6400,
+                "Height": 2384
+              },
+              "X": 0,
+              "Y": 0,
+              "Width": 6400,
+              "Height": 2384,
+              "Left": 0,
+              "Top": 0,
+              "Right": 6400,
+              "Bottom": 2384,
+              "IsEmpty": false
+            },
+            "primary": true
+          }
+        ],
+        "title": "OpenCodeX Desktop",
+        "nativeDpi": 192
+      },
+      "result": "pass",
+      "name": "single-system-caption-no-application-menu"
+    },
+    {
+      "detail": {
+        "backdrop": 2,
+        "darkMode": 1
+      },
+      "result": "pass",
+      "name": "native-theme-and-dwm-material"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "inactive-solid-and-foreground-mica"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "system-transparency-solid-fallback-and-restoration"
+    },
+    {
+      "detail": {
+        "titlebar": {
+          "Size": 140,
+          "Bar": {
+            "Left": 2052,
+            "Top": 358,
+            "Right": 4380,
+            "Bottom": 413
+          },
+          "States": [
+            1048576,
+            32768,
+            0,
+            0,
+            32768,
+            0
+          ],
+          "Rectangles": [
+            {
+              "Left": 0,
+              "Top": 0,
+              "Right": 0,
+              "Bottom": 0
+            },
+            {
+              "Left": 0,
+              "Top": 0,
+              "Right": 0,
+              "Bottom": 0
+            },
+            {
+              "Left": 4101,
+              "Top": 356,
+              "Right": 4195,
+              "Bottom": 413
+            },
+            {
+              "Left": 4195,
+              "Top": 356,
+              "Right": 4287,
+              "Bottom": 413
+            },
+            {
+              "Left": 0,
+              "Top": 0,
+              "Right": 0,
+              "Bottom": 0
+            },
+            {
+              "Left": 4287,
+              "Top": 356,
+              "Right": 4381,
+              "Bottom": 413
+            }
+          ]
+        },
+        "buttons": {
+          "Left": 2082,
+          "Top": 0,
+          "Right": 2374,
+          "Bottom": 57
+        },
+        "buttonNames": [],
+        "hitTargets": [
+          2,
+          9,
+          20
+        ]
+      },
+      "result": "pass",
+      "name": "caption-hit-targets-and-accessibility"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "double-click-maximize-restore"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "system-button-minimize-and-restore"
+    },
+    {
+      "detail": {
+        "moved": {
+          "Left": 2067,
+          "Top": 395,
+          "Right": 4453,
+          "Bottom": 1986
+        },
+        "resized": {
+          "Left": 2007,
+          "Top": 355,
+          "Right": 4333,
+          "Bottom": 1946
+        },
+        "original": {
+          "Left": 2007,
+          "Top": 355,
+          "Right": 4393,
+          "Bottom": 1946
+        },
+        "captionHit": 2,
+        "resizeHit": 11
+      },
+      "result": "pass",
+      "name": "native-caption-drag-and-edge-resize"
+    },
+    {
+      "detail": {
+        "items": 7
+      },
+      "result": "pass",
+      "name": "native-system-menu-alt-space"
+    },
+    {
+      "detail": null,
+      "result": "pass",
+      "name": "standard-editing-shortcuts-without-application-menu"
+    },
+    {
+      "result": "fail",
+      "name": "snap-hover-and-win-z",
+      "error": "Snap layout popup not independently detected; native Win11 acceptance remains open"
+    },
+    {
+      "detail": {
+        "restored": true,
+        "pidPreserved": 48760
+      },
+      "result": "pass",
+      "name": "close-preference-keeps-shell-and-tray"
+    },
+    {
+      "detail": {
+        "exitCode": 0
+      },
+      "result": "pass",
+      "name": "close-preference-exits-through-close-request"
+    }
+  ],
+  "result": "fail",
+  "pid": 48760,
+  "port": 52480,
+  "finishedAt": "2026-10-08T20:48:52.4210182+08:00"
+}

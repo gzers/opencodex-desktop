@@ -1,0 +1,117 @@
+{
+  "recordedAt": "2026-10-08T21:03:42.2666989+08:00",
+  "sourceCommit": "15219bf08ceaaef86ae471772d27e04fdbf5ff1d",
+  "docsBaseline": "fb4fe1722300d4c361b9364a81c3b35d9042eef1",
+  "authority": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-19.md",
+  "fullAcceptance": "incomplete",
+  "checks": [
+    {
+      "id": "platform-isolation",
+      "evidence": "build-inputs.json",
+      "remaining": "macOS native menu, editing, titlebar and lifecycle",
+      "result": "partial"
+    },
+    {
+      "id": "native-caption-controls",
+      "scope": "Windows Server 2025/RDP nativeDpi=192 only",
+      "evidence": [
+        "native-ordinary/native.json",
+        "native-administrator/native.json"
+      ],
+      "result": "passed-local"
+    },
+    {
+      "id": "native-snap",
+      "evidence": [
+        "native-ordinary/native.json",
+        "native-ordinary/snap-hover.png",
+        "native-ordinary/snap-keyboard.png",
+        "native-administrator/native.json",
+        "native-administrator/snap-keyboard.png"
+      ],
+      "remaining": "Independent popup detection, final Win+Z, selection, keyboard return, target Win11 and multimonitor",
+      "result": "failed"
+    },
+    {
+      "id": "native-material",
+      "evidence": [
+        "native-ordinary/native-theme.json",
+        "native-administrator/native-theme.json",
+        "native-ordinary/transparency-off.json",
+        "native-ordinary/transparency-restored.json"
+      ],
+      "remaining": "Win10/initial Win11 and real high-contrast/composition failure cases",
+      "result": "partial"
+    },
+    {
+      "id": "native-physical-dpi",
+      "scope": "One current monitor with nativeDpi=192, WebView nativeDPR=2",
+      "evidence": "environment.json",
+      "remaining": "Physical 100/125/150/200%, multiple monitors, 1180/960 window layout combinations",
+      "result": "partial"
+    },
+    {
+      "id": "native-accessibility-and-editing",
+      "evidence": [
+        "native-ordinary/titlebar-accessibility.json",
+        "native-ordinary/native-editing.json",
+        "native-administrator/native-editing.json"
+      ],
+      "remaining": "Human screen reader and full context-menu/keyboard actions",
+      "result": "partial"
+    },
+    {
+      "id": "native-lifecycle",
+      "evidence": [
+        "native-ordinary/close-tray.json",
+        "native-ordinary/close-exit.json",
+        "native-administrator/native.json"
+      ],
+      "remaining": "Real official proxy continuity, actual tray/taskbar entry restoration",
+      "result": "partial"
+    },
+    {
+      "id": "windows-firstscreen-and-quality",
+      "scope": "Same EXE and source, ordinary/administrator, no HOME, DPR1/1.25/1.5/2 device-rendering simulation",
+      "evidence": [
+        "quality-ordinary/matrix.json",
+        "quality-administrator/matrix.json"
+      ],
+      "result": "passed-local"
+    },
+    {
+      "id": "local-regression",
+      "evidence": [
+        "checks/ui-tests.log",
+        "checks/backend-final-recovery.log",
+        "checks/clippy-final-recovery.log",
+        "checks/protocol-tools.log"
+      ],
+      "result": "passed"
+    },
+    {
+      "id": "release-tools-complete",
+      "evidence": "checks/publish-tools-utf8.log",
+      "remaining": "Linux/minisign test environment; 29 run, 8 errors",
+      "result": "failed-environment"
+    },
+    {
+      "id": "fixed-commit-ci",
+      "evidence": "build-inputs.json",
+      "remaining": "No push authorized; run complete CI on exact final source",
+      "result": "not-run"
+    },
+    {
+      "id": "native-install-roundtrip",
+      "evidence": "build-inputs.json",
+      "remaining": "New NSIS/MSI fresh install, upgrade, startup, uninstall on isolated runner; macOS native/install regression",
+      "result": "not-run"
+    },
+    {
+      "id": "release",
+      "remaining": "Separate explicit release decision, integration/CHANGELOG/signing/updater gates",
+      "result": "not-authorized"
+    }
+  ],
+  "closureAllowed": false
+}

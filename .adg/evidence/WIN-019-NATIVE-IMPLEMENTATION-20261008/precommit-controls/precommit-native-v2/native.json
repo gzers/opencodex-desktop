@@ -1,0 +1,132 @@
+{
+  "mode": "ordinary",
+  "elevated": false,
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "11095b8a8847b547088d94664137b28369fa06c0015a5e3c63e488a1bca9f62e",
+  "startedAt": "2026-10-08T20:12:47.9324126+08:00",
+  "checks": [
+    {
+      "result": "pass",
+      "detail": null,
+      "name": "first-screen-source-identity"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "title": "OpenCodeX Desktop",
+        "systemMenuItems": 7,
+        "nativeDpi": 192,
+        "screens": [
+          {
+            "bounds": {
+              "Location": {
+                "IsEmpty": true,
+                "X": 0,
+                "Y": 0
+              },
+              "Size": {
+                "IsEmpty": false,
+                "Width": 6400,
+                "Height": 2384
+              },
+              "X": 0,
+              "Y": 0,
+              "Width": 6400,
+              "Height": 2384,
+              "Left": 0,
+              "Top": 0,
+              "Right": 6400,
+              "Bottom": 2384,
+              "IsEmpty": false
+            },
+            "primary": true
+          }
+        ]
+      },
+      "name": "single-system-caption-no-application-menu"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "backdrop": 2,
+        "darkMode": 1
+      },
+      "name": "native-theme-and-dwm-material"
+    },
+    {
+      "result": "fail",
+      "name": "inactive-solid-and-foreground-mica",
+      "error": "Native candidate is not foreground"
+    },
+    {
+      "result": "pass",
+      "detail": null,
+      "name": "system-transparency-solid-fallback-and-restoration"
+    },
+    {
+      "result": "fail",
+      "name": "caption-hit-targets-and-accessibility",
+      "error": "Native caption hit targets differ: 2 8 20"
+    },
+    {
+      "result": "fail",
+      "name": "double-click-maximize-restore",
+      "error": "Double click did not maximize"
+    },
+    {
+      "result": "fail",
+      "name": "system-button-minimize-and-restore",
+      "error": "System minimize button did not minimize"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "resizeHit": 11,
+        "moved": {
+          "Left": 2067,
+          "Top": 395,
+          "Right": 4453,
+          "Bottom": 1986
+        },
+        "captionHit": 2,
+        "resized": {
+          "Left": 2007,
+          "Top": 355,
+          "Right": 4333,
+          "Bottom": 1946
+        },
+        "original": {
+          "Left": 2007,
+          "Top": 355,
+          "Right": 4393,
+          "Bottom": 1946
+        }
+      },
+      "name": "native-caption-drag-and-edge-resize"
+    },
+    {
+      "result": "fail",
+      "name": "snap-hover-and-win-z",
+      "error": "Snap layout popup not independently detected; native Win11 acceptance remains open"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "pidPreserved": 60856,
+        "restored": true
+      },
+      "name": "close-preference-keeps-shell-and-tray"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "exitCode": 0
+      },
+      "name": "close-preference-exits-through-close-request"
+    }
+  ],
+  "result": "fail",
+  "pid": 60856,
+  "port": 52133,
+  "finishedAt": "2026-10-08T20:13:02.8714853+08:00"
+}

@@ -1,0 +1,154 @@
+{
+  "inputs": [
+    {
+      "bytes": 134964,
+      "path": "apps/desktop/tauri/Cargo.lock",
+      "sha256": "b11de69e4f9c8b298184a6a9e923072408766209e6f79ae1f4f65b985fadda45"
+    },
+    {
+      "bytes": 85255,
+      "path": "apps/desktop/ui/package-lock.json",
+      "sha256": "f6ebbe63f7dac70306590a82fde817b0f7938c0f8e997aaa26f397050f749d0f"
+    },
+    {
+      "bytes": 4796,
+      "path": ".github/workflows/windows-candidate.yml",
+      "gitBlob": "fcdd0b6e1bbadc64e227d4e045ca30e52b465b92",
+      "sha256": "f57b5d24d7ec54d63f806711044493d95ef0df3ce44c1c3630820cfab2fe3930"
+    },
+    {
+      "bytes": 2757,
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "gitBlob": "a1d09307eb3307d8ce0f8d08f6276604957df8b4",
+      "sha256": "3cb971b4e6ff8fc34d3ef08be299e5468904941864e2a456377d47a05553437c"
+    },
+    {
+      "bytes": 23091,
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "gitBlob": "2787cece5b618f0485491c0ec1b7d4ee60df8e73",
+      "sha256": "c16880f626602a0c566ad2403afa2fe156e365cc6caee0ef0e59fe9ac1b93fc8"
+    },
+    {
+      "bytes": 6359,
+      "path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "gitBlob": "1d5939f98ff2b9b7dd7022b12b6ee59633167525",
+      "sha256": "a57cd3b92eaadf96582b6f0cd7ed669b5f18bd17282f6b16fc0f74b1401b5b96"
+    },
+    {
+      "bytes": 453,
+      "path": "apps/desktop/tauri/src/commands/window.rs",
+      "gitBlob": "ebe978aa82fbc4639a54be1a554834def4dde1b9",
+      "sha256": "972b2f2e71e09a03d7d19917cf5bdaeb6e2d48c57712ab7d6ec9a8b4904bd1af"
+    },
+    {
+      "bytes": 568,
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "gitBlob": "b4f1d8296e3dbbf84dc5084fb25ef60efbbc8221",
+      "sha256": "8757d0ca86f9c012102584ac1897f9c31777d89464fa93aef47be4a9a1f8a088"
+    },
+    {
+      "bytes": 16943,
+      "path": "apps/desktop/tauri/src/infrastructure/tray_controller.rs",
+      "gitBlob": "969fcded12718114c3032b51a2a074e66e65b119",
+      "sha256": "2d93c3a365817f9c0f3a273f157c8b6537a7bf745080243c5e1269364e696d45"
+    },
+    {
+      "bytes": 13923,
+      "path": "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+      "gitBlob": "82649995628d2c908830922368720a18dbacc5bf",
+      "sha256": "5ab8de044c7b3c334deb3b15872374cdae11e051a2dd20eae81874f9b0b8f18f"
+    },
+    {
+      "bytes": 7191,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "gitBlob": "12f7184e7e6c9c385b316ebed22f1e3ff64abd10",
+      "sha256": "61ba6589b8561d047c456a2bc0a5d2ff1642eebb0e6fb6363b6956f16ee9291e"
+    },
+    {
+      "bytes": 39579,
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "gitBlob": "bff711b332dd353251769e95a85bd09f1de9d5f5",
+      "sha256": "a3756f5d15711c95aafbf1aaa26ed38a86c8159df90cf8cac3156e6c2278c1d5"
+    },
+    {
+      "bytes": 9362,
+      "path": "apps/desktop/tauri/src/modules/tray/mod.rs",
+      "gitBlob": "5a28f303081ecb5b740d24023a7e98f67923965f",
+      "sha256": "7baef7a6729850f82054bfc62914d350b0a1750be28adb4e6a5cca7dea2b5273"
+    },
+    {
+      "bytes": 4397,
+      "path": "apps/desktop/ui/src/App.vue",
+      "gitBlob": "02494e7eeb811f5d322acd3e1967c0134fda269d",
+      "sha256": "d447cb99542910ca4684924f6e7be9d5ba8211042f8dd9c5fa0d883d08589e8d"
+    },
+    {
+      "bytes": 1435,
+      "path": "apps/desktop/ui/src/app/appearance/nativeWindow.ts",
+      "gitBlob": "55a7f42724cfe98720e0b437c845a6be0de41515",
+      "sha256": "10143880f49bfe257818fb06c2ed1a36cd69966815601077c415918576acaaab"
+    },
+    {
+      "bytes": 3497,
+      "path": "apps/desktop/ui/src/main.ts",
+      "gitBlob": "b1a6611ea757c1ff5fa19fd868670d3050638953",
+      "sha256": "f9d86a1fde60605fa2f60b40c8adb444ae7fe64b354f3a7bf1199b5cbf036603"
+    },
+    {
+      "bytes": 100261,
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "gitBlob": "6b82fec4a5d857ff13ee04551f6d0b1f04a5c68f",
+      "sha256": "3345ef181587a97f1e831d7b529cd8bb82d3ce83d81c5e424a32ae377e8480dd"
+    },
+    {
+      "bytes": 1613,
+      "path": "apps/desktop/ui/tests/native-window.test.ts",
+      "gitBlob": "7e33ffe23eb3d3e0288bad29404328e67bd82de7",
+      "sha256": "fe4f75e329d8b96763fdfe3a3aceddcb328074b7a6e38f41da44538a681d2856"
+    },
+    {
+      "bytes": 1999,
+      "path": "apps/desktop/ui/tests/window-drag.test.ts",
+      "gitBlob": "ee25eb54ff42a3bb46081cb099df906bc8fff716",
+      "sha256": "ab51cd82bd4b8f7c75e09ca2e3d6e20b0d2dd18fe5fe6fd060674bb0b930c314"
+    },
+    {
+      "bytes": 24498,
+      "path": "test/smoke/windows-appearance.mjs",
+      "gitBlob": "2431aa73c2acfc98e5380ae9812e6765d50d3f81",
+      "sha256": "2f575d1d3fefdb3b1294bf5842eb6c07dc57512af6e34896bbd7ee2cc0a49c57"
+    },
+    {
+      "bytes": 9915,
+      "path": "test/smoke/windows-appearance.ps1",
+      "gitBlob": "169d37fd2a746d9cdaf20b82b102f7bbf163061e",
+      "sha256": "bdff7189655b5d4273fa30b8e4fc2db59ed95f7eb4a2fce6deae594c9687f07f"
+    },
+    {
+      "bytes": 5445,
+      "path": "test/smoke/windows-installer.ps1",
+      "gitBlob": "b31b32d8b3c843bdde7a35e58c5f8e2d8a4516d5",
+      "sha256": "66f04fdd3f4bc1022d55cf2169bfb7f081f378029a75d95bfd18ec8aa2c26d75"
+    },
+    {
+      "bytes": 23400,
+      "path": "test/smoke/windows-native.ps1",
+      "gitBlob": "9f62f7472ca041d57ed4df4aef834cf57d548c0b",
+      "sha256": "ba8382656efbfe6edd957961b658eee3de08edec263fe962367aa511b2386d27"
+    }
+  ],
+  "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "docsBaseline": "fb4fe1722300d4c361b9364a81c3b35d9042eef1",
+  "sourceCommit": "15219bf08ceaaef86ae471772d27e04fdbf5ff1d",
+  "releaseCommand": "cargo build --manifest-path apps/desktop/tauri/Cargo.toml --release --features custom-protocol --bins -j 2",
+  "node": "v24.19.0",
+  "sourceBaseline": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+  "commits": [
+    "15219bf08ceaaef86ae471772d27e04fdbf5ff1d ci(windows): 让0.1.9候选沿用隔离安装门禁与真实版本名",
+    "2ec38124f2de24748e9445465192dec4d2eeef28 fix(windows): 将独立原生重载入口保留到托盘",
+    "94f3f29a61e663b0683c5fb19f5874aacbb1118d test(windows): 分离真实DPI并关闭原生菜单后复验编辑",
+    "965c314d72e2872ebacc8355558711b5aa242e1d test(windows): 增加原生窗口与125%渲染比例复验",
+    "d4d7164554fc4cf87b85cfc839f943b7cbbeb3d5 fix(windows): 接入原生单行标题栏与 Mica 实色回退"
+  ]
+}

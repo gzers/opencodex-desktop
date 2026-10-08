@@ -1,0 +1,122 @@
+{
+  "mode": "ordinary",
+  "elevated": false,
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "11095b8a8847b547088d94664137b28369fa06c0015a5e3c63e488a1bca9f62e",
+  "startedAt": "2026-10-08T20:10:56.9063830+08:00",
+  "checks": [
+    {
+      "result": "pass",
+      "detail": null,
+      "name": "first-screen-source-identity"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "title": "OpenCodeX Desktop",
+        "nativeDpi": 192,
+        "systemMenuItems": 7,
+        "screens": [
+          {
+            "bounds": {
+              "Location": {
+                "IsEmpty": true,
+                "X": 0,
+                "Y": 0
+              },
+              "Size": {
+                "IsEmpty": false,
+                "Width": 3200,
+                "Height": 1192
+              },
+              "X": 0,
+              "Y": 0,
+              "Width": 3200,
+              "Height": 1192,
+              "Left": 0,
+              "Top": 0,
+              "Right": 3200,
+              "Bottom": 1192,
+              "IsEmpty": false
+            },
+            "primary": true
+          }
+        ]
+      },
+      "name": "single-system-caption-no-application-menu"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "darkMode": 1,
+        "backdrop": 2
+      },
+      "name": "native-theme-and-dwm-material"
+    },
+    {
+      "result": "fail",
+      "name": "caption-hit-targets-and-accessibility",
+      "error": "Native caption hit targets differ: 0 0 0"
+    },
+    {
+      "result": "pass",
+      "detail": null,
+      "name": "double-click-maximize-restore"
+    },
+    {
+      "result": "fail",
+      "name": "system-button-minimize-and-restore",
+      "error": "System minimize button did not minimize"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "captionHit": 2,
+        "moved": {
+          "Left": 1064,
+          "Top": 218,
+          "Right": 2257,
+          "Bottom": 1014
+        },
+        "resized": {
+          "Left": 1004,
+          "Top": 178,
+          "Right": 2137,
+          "Bottom": 974
+        },
+        "original": {
+          "Left": 1004,
+          "Top": 178,
+          "Right": 2197,
+          "Bottom": 974
+        },
+        "resizeHit": 11
+      },
+      "name": "native-caption-drag-and-edge-resize"
+    },
+    {
+      "result": "fail",
+      "name": "snap-hover-and-win-z",
+      "error": "Snap layout popup not independently detected; native Win11 acceptance remains open"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "restored": true,
+        "pidPreserved": 62556
+      },
+      "name": "close-preference-keeps-shell-and-tray"
+    },
+    {
+      "result": "pass",
+      "detail": {
+        "exitCode": 0
+      },
+      "name": "close-preference-exits-through-close-request"
+    }
+  ],
+  "result": "fail",
+  "pid": 62556,
+  "port": 64377,
+  "finishedAt": "2026-10-08T20:11:10.2323113+08:00"
+}

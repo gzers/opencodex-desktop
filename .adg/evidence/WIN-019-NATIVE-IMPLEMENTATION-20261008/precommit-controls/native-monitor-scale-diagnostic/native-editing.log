@@ -1,0 +1,9 @@
+file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-cdp.mjs:70
+  const error = Error(`Main WebView CDP target did not become available: ${diagnostics.lastError ?? 'discovery deadline expired'}`)
+                ^
+
+Error: Main WebView CDP target did not become available: /json/list: The operation was aborted due to timeout
+    at discoverMainTarget (file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-cdp.mjs:70:17)
+    at async file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-appearance.mjs:12:16
+
+Node.js v24.19.0

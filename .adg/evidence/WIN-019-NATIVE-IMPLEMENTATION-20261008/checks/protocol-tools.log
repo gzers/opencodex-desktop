@@ -1,0 +1,20 @@
+✔ accepts exact NSIS and MSI package bytes (4.7064ms)
+✔ rejects changed application payload (0.5146ms)
+✔ rejects wrong package marker or unchanged EXE (0.2736ms)
+✔ rejects missing or ambiguous original marker (0.174ms)
+✔ rejects unsupported bundle kind (0.1189ms)
+✔ retries until the main page appears; ignores embedded or unrelated pages (84.548ms)
+✔ HTTP errors are preserved instead of being swallowed (154.4696ms)
+✔ malformed target JSON fails with parse evidence (155.1568ms)
+✔ non-array responses and empty target lists never count as rendered UI (309.2805ms)
+✔ stalled responses are bounded by both request and discovery deadlines (154.6043ms)
+✔ connection refusal retains the underlying network error (152.8148ms)
+✔ refuses non-loopback endpoints before making a request (0.8845ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1170.5021

@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-10-08T21:03:42.2878044+08:00",
+  "codeBranch": "feature/0.1.9-windows-appearance",
+  "sourceCommit": "15219bf08ceaaef86ae471772d27e04fdbf5ff1d",
+  "sourceBaseline": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "docsBranch": "docs/governance-main",
+  "docsBaseline": "fb4fe1722300d4c361b9364a81c3b35d9042eef1",
+  "implementation": "committed-locally",
+  "completeAcceptance": "not-achieved",
+  "closureAllowed": false,
+  "exe": {
+    "version": "0.1.9",
+    "bytes": 7625728,
+    "sha256": "b48c30667116b59aab5cefdb2c9617456d073427cde54ac2ba425e9109252992"
+  },
+  "unitChecks": {
+    "fmt": "pass",
+    "typecheck": "pass",
+    "cdpAndIdentityPassed": 12,
+    "frontendFiles": 82,
+    "clippy": "pass",
+    "frontendPassed": 378,
+    "backendIgnored": 5,
+    "backendPassed": 338,
+    "build": "pass"
+  },
+  "native": {
+    "administrator": {
+      "total": 14,
+      "passed": 13,
+      "result": "fail-snap"
+    },
+    "ordinary": {
+      "total": 14,
+      "passed": 13,
+      "result": "fail-snap"
+    },
+    "nativeDpi": 192,
+    "nativeDpr": 2,
+    "forceScale": false
+  },
+  "quality": {
+    "administrator": "pass-after-independent-repeat",
+    "stableRepeatOver6B": 0,
+    "groupCount": 8,
+    "priorFailure": "one WebGL interval125.8ms retained; cause not determined",
+    "scales": [
+      1,
+      1.25,
+      1.5,
+      2
+    ],
+    "ordinary": "pass",
+    "scriptP95Max": 0.5,
+    "performanceP95Max": 31.90000000000873
+  },
+  "limits": [
+    "Server2025/RDP/current one monitor, not target Win10/11 or physical DPI matrix",
+    "Snap hover visible in final ordinary capture but final Win+Z captures do not show popup; automated gate fails",
+    "MSAA evidence does not equal human screen-reader validation",
+    "No real official proxy started; API window restore is not actual tray/taskbar restore",
+    "No remote CI/installer/macOS full acceptance or publication",
+    "Selected PNGs retained; no videos and not all temporary screenshot files archived"
+  ],
+  "dailyPreserved": true,
+  "systemTransparencyRestored": true,
+  "candidateCleanup": "pass",
+  "pushed": false,
+  "merged": false,
+  "published": false,
+  "gateMatrix": "gate-matrix.json"
+}
