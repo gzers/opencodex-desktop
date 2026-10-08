@@ -1,0 +1,15 @@
+✔ retries until the main page appears; ignores embedded or unrelated pages (60.644ms)
+✔ HTTP errors are preserved instead of being swallowed (165.4554ms)
+✔ malformed target JSON fails with parse evidence (153.3993ms)
+✔ non-array responses and empty target lists never count as rendered UI (322.0363ms)
+✔ stalled responses are bounded by both request and discovery deadlines (153.543ms)
+✔ connection refusal retains the underlying network error (151.3713ms)
+✔ refuses non-loopback endpoints before making a request (0.4472ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1118.6959

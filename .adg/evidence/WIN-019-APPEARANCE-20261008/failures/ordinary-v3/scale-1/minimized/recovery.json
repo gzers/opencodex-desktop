@@ -1,0 +1,40 @@
+{
+  "phase": "recovery",
+  "cases": [
+    {
+      "tier": "high",
+      "effective": "high",
+      "foreground": false,
+      "docFocus": false,
+      "visible": "visible",
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": false,
+        "lightAllowed": false,
+        "ambientAllowed": false,
+        "animated": false,
+        "solid": false
+      },
+      "reducedMedia": true,
+      "svgFrames": 1,
+      "draws": 0,
+      "alpha": 0,
+      "canvas": true,
+      "rafP95": 16.099999999998545,
+      "frameSamples": 42,
+      "DPR": 1,
+      "svgTransform": "translate(0.0530794%, 1.22749%) rotate(0deg)"
+    }
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.1.9",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "result": "fail",
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(result.foreground)\n\n    at file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-appearance.mjs:145:7"
+}

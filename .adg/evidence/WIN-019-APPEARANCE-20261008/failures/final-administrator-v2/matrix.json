@@ -1,0 +1,38 @@
+{
+  "mode": "administrator",
+  "tokenElevated": true,
+  "tokenElevationType": 2,
+  "powershell": "7.6.5",
+  "expectedCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "24ea68223d9e4eecc64218ad6f5cf1b025c80bcdbbccbe83c49449015a504657",
+  "startedAtUtc": "2026-10-08T09:42:35.5694190Z",
+  "result": "fail",
+  "scales": [
+    {
+      "scale": "1",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator-v2\\scale-1\\sandbox-f1edc7bdf38140d8824f97972ac34484",
+      "port": 54985,
+      "result": "fail",
+      "pid": 70340,
+      "error": "Candidate could not acquire the native foreground window"
+    }
+  ],
+  "display": [
+    {
+      "Name": "Parsec Virtual Display Adapter",
+      "DriverVersion": "0.45.0.0",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Intel(R) UHD Graphics 770",
+      "DriverVersion": "32.0.101.5972",
+      "CurrentRefreshRate": 60,
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080
+    }
+  ],
+  "error": "Candidate could not acquire the native foreground window",
+  "finishedAtUtc": "2026-10-08T09:42:38.8976882Z"
+}

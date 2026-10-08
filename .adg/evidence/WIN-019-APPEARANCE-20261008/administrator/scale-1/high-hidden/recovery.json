@@ -1,0 +1,51 @@
+{
+  "phase": "recovery",
+  "cases": [
+    {
+      "tier": "high",
+      "effective": "high",
+      "foreground": true,
+      "docFocus": true,
+      "visible": "visible",
+      "strategy": {
+        "setting": "high",
+        "effective": "high",
+        "visible": true,
+        "lightAllowed": true,
+        "ambientAllowed": true,
+        "animated": true,
+        "solid": false
+      },
+      "reducedMedia": true,
+      "svgFrames": 5,
+      "draws": 39,
+      "alpha": 228,
+      "canvas": true,
+      "rafP95": 17.59999999999127,
+      "frameSamples": 38,
+      "DPR": 1,
+      "svgTransform": "translate(2.18428%, -2.52652%) rotate(0deg)"
+    }
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.1.9",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+    "DPR": 1,
+    "viewport": {
+      "width": 2360,
+      "height": 1481
+    },
+    "hardwareConcurrency": 20,
+    "webgl": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)"
+  },
+  "result": "pass"
+}

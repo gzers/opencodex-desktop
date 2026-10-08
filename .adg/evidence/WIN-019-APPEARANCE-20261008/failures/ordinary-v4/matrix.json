@@ -1,0 +1,46 @@
+{
+  "mode": "ordinary",
+  "tokenElevated": false,
+  "tokenElevationType": 3,
+  "powershell": "7.6.5",
+  "expectedCommit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "exeSha256": "3b57d99b1c7a04860521182bc6654dc22ed962e98978539e96507583dbdaa28b",
+  "startedAtUtc": "2026-10-08T08:57:14.1042513Z",
+  "result": "fail",
+  "scales": [
+    {
+      "scale": "1",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\ordinary-v4\\scale-1\\sandbox-a8eb08792f4e4a08bef090c17b8f7d01",
+      "port": 64781,
+      "result": "fail",
+      "pid": 72872,
+      "foregroundWindow": 1247286,
+      "error": "Performance budget failed: 1"
+    }
+  ],
+  "display": [
+    {
+      "Name": "Parsec Virtual Display Adapter",
+      "DriverVersion": "0.45.0.0",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Microsoft Remote Display Adapter",
+      "DriverVersion": "10.0.26100.7309",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Intel(R) UHD Graphics 770",
+      "DriverVersion": "32.0.101.5972",
+      "CurrentRefreshRate": 60,
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080
+    }
+  ],
+  "error": "Performance budget failed: 1",
+  "finishedAtUtc": "2026-10-08T08:58:03.3546195Z"
+}

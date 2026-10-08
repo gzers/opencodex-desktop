@@ -1,0 +1,30 @@
+{
+  "phase": "prepare-high",
+  "cases": [
+    {
+      "tier": "high",
+      "renderer": "mesh"
+    }
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.1.9",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+    "DPR": 1.5,
+    "viewport": {
+      "width": 1574,
+      "height": 988
+    },
+    "hardwareConcurrency": 20,
+    "webgl": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)"
+  },
+  "result": "pass"
+}

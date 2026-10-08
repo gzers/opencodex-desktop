@@ -1,0 +1,54 @@
+{
+  "mode": "administrator",
+  "tokenElevated": true,
+  "tokenElevationType": 2,
+  "powershell": "7.6.5",
+  "expectedCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "exeSha256": "24ea68223d9e4eecc64218ad6f5cf1b025c80bcdbbccbe83c49449015a504657",
+  "startedAtUtc": "2026-10-08T09:35:29.7835068Z",
+  "result": "fail",
+  "scales": [
+    {
+      "scale": "1",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator\\scale-1\\sandbox-c14673c5a3ca4bcba71531c9f3501758",
+      "port": 51699,
+      "result": "pass",
+      "pid": 37020,
+      "foregroundWindow": 3802040
+    },
+    {
+      "scale": "1.5",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\final-administrator\\scale-1.5\\sandbox-e49409cbfed740558578b7ab72c955d6",
+      "port": 60152,
+      "result": "fail",
+      "pid": 12480,
+      "foregroundWindow": 1966842,
+      "error": "Appearance phase failed: performance (1)"
+    }
+  ],
+  "display": [
+    {
+      "Name": "Parsec Virtual Display Adapter",
+      "DriverVersion": "0.45.0.0",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Microsoft Remote Display Adapter",
+      "DriverVersion": "10.0.26100.7309",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Intel(R) UHD Graphics 770",
+      "DriverVersion": "32.0.101.5972",
+      "CurrentRefreshRate": 60,
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080
+    }
+  ],
+  "error": "Appearance phase failed: performance (1)",
+  "finishedAtUtc": "2026-10-08T09:39:11.7067812Z"
+}

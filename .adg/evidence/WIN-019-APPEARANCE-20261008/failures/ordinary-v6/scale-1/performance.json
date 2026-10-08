@@ -1,0 +1,55 @@
+{
+  "phase": "performance",
+  "cases": [
+    {
+      "renderer": "mesh",
+      "durationMs": 30000,
+      "refreshHz": 60,
+      "B": 16.666666666666668,
+      "samples": 1767,
+      "p50": 17,
+      "p95": 17.69999999999709,
+      "max": 23.599999999998545,
+      "over6B": 0,
+      "scriptP95": 0.2999999523162842,
+      "scriptMax": 0.7000000476837158,
+      "foreground": true
+    },
+    {
+      "renderer": "css",
+      "durationMs": 30000,
+      "refreshHz": 60,
+      "B": 16.666666666666668,
+      "samples": 1716,
+      "p50": 17,
+      "p95": 18.90000000000873,
+      "max": 199.10000000000582,
+      "over6B": 3,
+      "scriptP95": 1.2000000476837158,
+      "scriptMax": 16.700000047683716,
+      "foreground": true
+    }
+  ],
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.1.9",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0",
+    "DPR": 1,
+    "viewport": {
+      "width": 2360,
+      "height": 1481
+    },
+    "hardwareConcurrency": 20,
+    "webgl": true,
+    "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "vendor": "Google Inc. (Intel)"
+  },
+  "result": "fail",
+  "error": "AssertionError [ERR_ASSERTION]: Long frame requires analysis\n\n3 !== 0\n\n    at file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-appearance.mjs:174:14"
+}

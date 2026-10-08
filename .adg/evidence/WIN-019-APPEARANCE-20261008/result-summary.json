@@ -1,0 +1,82 @@
+{
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "codeBranch": "feature/0.1.9-windows-appearance",
+  "docsBranch": "docs/governance-main",
+  "docsBaseline": "bc6561acac5075bce76babfc367ff18067b17efe",
+  "overall": "blocked",
+  "development": "committed",
+  "requiredNativeAcceptance": "incomplete",
+  "exeVersion": "0.1.9",
+  "exeSha256": "24ea68223d9e4eecc64218ad6f5cf1b025c80bcdbbccbe83c49449015a504657",
+  "unitChecks": {
+    "frontendPassed": 376,
+    "cdpPassed": 7,
+    "clippy": "pass",
+    "frontendFiles": 81,
+    "build": "pass",
+    "fmt": "pass",
+    "backendPassed": 337,
+    "typecheck": "pass",
+    "backendIgnored": 4
+  },
+  "matrix": [
+    {
+      "evidence": "ordinary/scale-1",
+      "mode": "ordinary",
+      "result": "pass",
+      "dpr": 1
+    },
+    {
+      "evidence": "ordinary/scale-1.5",
+      "mode": "ordinary",
+      "result": "pass",
+      "dpr": 1.5
+    },
+    {
+      "evidence": "ordinary/scale-2",
+      "mode": "ordinary",
+      "result": "pass",
+      "dpr": 2
+    },
+    {
+      "evidence": "administrator/scale-1",
+      "mode": "administrator",
+      "result": "pass",
+      "dpr": 1
+    },
+    {
+      "performance": "fail-session-stall",
+      "mode": "administrator",
+      "dpr": 1.5,
+      "menu": "pass",
+      "reload": "not-run",
+      "evidence": "administrator/scale-1.5",
+      "visual": "pass",
+      "firstscreen": "pass",
+      "lifecycle": "not-run"
+    },
+    {
+      "mode": "administrator",
+      "result": "not-run",
+      "dpr": 2
+    }
+  ],
+  "blocker": {
+    "sessionId": 2,
+    "resume": "Reconnect Windows user 15119 to its existing session, then rerun the complete administrator matrix with a new output directory and the same EXE; retain all assertions.",
+    "kind": "interactive-windows-session-disconnected",
+    "evidence": "session-block/focus-and-session.json",
+    "focusAttemptsFailed": 3,
+    "foregroundHwnd": 0
+  },
+  "limits": [
+    "DPR is WebView2 device rendering scale, not physical monitor DPI switching",
+    "Windows Server 2025 only; Windows 10/11 and macOS native not covered",
+    "Real first-screen is environment setup; nine states are decoration-input probes, not real proxy lifecycle",
+    "Selected original PNGs retained; no continuous video; remaining raw screenshots are in ignored local test outputs"
+  ],
+  "dailyPreserved": true,
+  "pushed": false,
+  "merged": false,
+  "released": false
+}

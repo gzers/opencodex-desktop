@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise) Error: motion component missing","lineNumber":0,"columnNumber":0,"exception":{"type":"object","subtype":"error","className":"Error","description":"Error: motion component missing\n    at <anonymous>:5:31\n    at <anonymous>:12:11","objectId":"-4214786265449648082.2.1"}}
+    at evaluate (file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-appearance.mjs:31:3)
+    at async file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-appearance.mjs:112:24 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

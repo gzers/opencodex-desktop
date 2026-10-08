@@ -1,0 +1,46 @@
+{
+  "mode": "ordinary",
+  "tokenElevated": false,
+  "tokenElevationType": 3,
+  "powershell": "7.6.5",
+  "expectedCommit": "cffca3afc29b8b251f3f14535f997b5d08560cb2",
+  "exeSha256": "3b57d99b1c7a04860521182bc6654dc22ed962e98978539e96507583dbdaa28b",
+  "startedAtUtc": "2026-10-08T09:11:18.4272299Z",
+  "result": "fail",
+  "scales": [
+    {
+      "scale": "1",
+      "sandbox": "C:\\Users\\15119\\.codex\\worktrees\\019-windows-appearance\\opencodex-desktop\\test\\out\\appearance-019\\ordinary-v8\\scale-1\\sandbox-ec612389c6ab4982be0a85a0e6ab3e92",
+      "port": 63465,
+      "result": "fail",
+      "pid": 28608,
+      "foregroundWindow": 5571516,
+      "error": "Candidate could not acquire the native foreground window"
+    }
+  ],
+  "display": [
+    {
+      "Name": "Parsec Virtual Display Adapter",
+      "DriverVersion": "0.45.0.0",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Microsoft Remote Display Adapter",
+      "DriverVersion": "10.0.26100.7309",
+      "CurrentRefreshRate": null,
+      "CurrentHorizontalResolution": null,
+      "CurrentVerticalResolution": null
+    },
+    {
+      "Name": "Intel(R) UHD Graphics 770",
+      "DriverVersion": "32.0.101.5972",
+      "CurrentRefreshRate": 60,
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080
+    }
+  ],
+  "error": "Candidate could not acquire the native foreground window",
+  "finishedAtUtc": "2026-10-08T09:13:02.3069762Z"
+}

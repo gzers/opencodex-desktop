@@ -140,6 +140,7 @@ Version-frozen defaults and user choices are stored separately so upgrades never
 |---|---|---|
 | `preferences.defaults.json` | Version-frozen default preferences (validated and embedded at build time) | Ships with the app; not edited by users |
 | `runtime.defaults.json` | Version-frozen runtime policies (timeouts, retention, discovery paths, update endpoints) | Ships with the app; not edited by users |
+| `network.defaults.json` | Version-frozen network behaviour policies (timeouts, retries, UA, TLS constraints) | Ships with the app; not edited by users |
 | `manager-state/preferences.json` | User preferences (channel, scale, theme, effects changed in the UI) | Inside the data root, mode `0600` |
 | `manager-state/data-root.json` | Local data-root location and structure version | Inside the data root |
 | `manager-state/config-migrations/` | Original backups and migration records for automatic format conversion | Inside the data root; only present after a conversion |
@@ -148,9 +149,11 @@ Precedence and effect: user preferences take priority over version defaults; mis
 
 Theme: the backend preference is the source of truth. On early startup a local cache renders the first frame, then the preference read-back takes over; the old cache never overrides a newer choice.
 
-Update channel: the stable/beta channel is decoupled from "check automatically"; checks, installs, and background scheduling share one channel source, and switching the channel invalidates stale candidates. The real endpoint and signing for app self-update remain on the later release plan and are not wired yet.
+Update channel: the stable/beta channel is decoupled from "check automatically"; checks, installs, and background scheduling share one channel source, and switching the channel invalidates stale candidates. App self-update now points at this repository's real release manifest endpoints (stable reads `latest.json`, beta reads a fixed `beta` tag); installs happen only after signature verification, and a failure keeps the current version.
 
-Automatic format conversion: the app version and the configuration schema version are managed separately. Reading an old format runs the published migration chain automatically and keeps a backup of the original; a version newer than the app supports is refused and the original is preserved — restore from the pre-migration backup if needed (this discards changes made after the migration).
+Network proxy: General settings offer no proxy / automatic (system proxy) / manual HTTP or SOCKS5 with an exception list; app self-update, official remote queries, and managed installs share it. This version has no proxy authentication and does not use the system keychain.
+
+Automatic format conversion: the app version and the configuration schema version are managed separately. The preferences file is grouped by domain (`appearance` / `shell` / `backup` / `extensions` / `maintenance` / `sync` / `updates` / `network` / `cli`); reading an old flat format runs the published migration chain automatically and keeps a backup of the original; a version newer than the app supports is refused and the original is preserved — restore from the pre-migration backup if needed (this discards changes made after the migration).
 
 Test isolation: development and automated tests run under a separate sandbox identity (own data root, credential service, and instance identity) and never write to the daily-use directory; if the sandbox root is missing, startup stops rather than falling back to daily configuration.
 

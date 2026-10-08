@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: High-tier frame interval exceeded 2B
+    at file:///C:/Users/15119/.codex/worktrees/019-windows-appearance/opencodex-desktop/test/smoke/windows-appearance.mjs:176:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
+

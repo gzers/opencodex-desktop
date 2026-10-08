@@ -1,0 +1,166 @@
+{
+  "commands": [
+    "npm --prefix apps/desktop/ui run build",
+    "cargo build --manifest-path apps/desktop/tauri/Cargo.toml --release --features custom-protocol --bins -j 2"
+  ],
+  "compiler": {
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "node": "v24.19.0",
+    "lld": "LLD 23.1.2 (https://github.com/llvm/llvm-project 85ac560262434c9ccfc0c183ec22d4138ed647fb)"
+  },
+  "codeBranch": "feature/0.1.9-windows-appearance",
+  "sourceCommit": "8a8397a61eee676d6b5166bd67a43930eb5e8d44",
+  "inputs": [
+    {
+      "sha256": "fab0671965564fe564a56b6907fba81f4063a7646b77cc167724570730a95a79",
+      "path": "apps/desktop/tauri/assets/panel-hub.js",
+      "length": 13855
+    },
+    {
+      "sha256": "b11de69e4f9c8b298184a6a9e923072408766209e6f79ae1f4f65b985fadda45",
+      "path": "apps/desktop/tauri/Cargo.lock",
+      "length": 134964
+    },
+    {
+      "sha256": "d62656e97614d514f61974d4cdb4df105893bfe6104fa527513ace5d8e869ef6",
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "length": 2671
+    },
+    {
+      "sha256": "f8146155ccffc070d9e68547c20136bdb08a789911df42161adb3fc75d4c1d1c",
+      "path": "apps/desktop/tauri/src/commands/panel.rs",
+      "length": 24005
+    },
+    {
+      "sha256": "b4031a5ff0c6b639b1bc09d8f21666ee0648f0a476424d43eae1102a92e6b0bb",
+      "path": "apps/desktop/tauri/src/infrastructure/app_activity.rs",
+      "length": 8075
+    },
+    {
+      "sha256": "6c93adc89dda0b3f10b36484e5e2c73c615f8f1e5e03aa37898ecd7110be86d7",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "length": 7169
+    },
+    {
+      "sha256": "a3917577193e0e2e99809b9b5b9dea5b88e2ff29744c84edd40246fb89f10ebd",
+      "path": "apps/desktop/tauri/tauri.conf.json",
+      "length": 1905
+    },
+    {
+      "sha256": "f6ebbe63f7dac70306590a82fde817b0f7938c0f8e997aaa26f397050f749d0f",
+      "path": "apps/desktop/ui/package-lock.json",
+      "length": 85255
+    },
+    {
+      "sha256": "6cb49b3b98ea231074c9a5fd6a155cd876e617d4ddea2680dd251deb0b8a9cd0",
+      "path": "apps/desktop/ui/package.json",
+      "length": 895
+    },
+    {
+      "sha256": "f9aedbd6f3be18d8c05c552cad45f5f335b390ee8462dde8edaabc4eb079b1fb",
+      "path": "apps/desktop/ui/src/app/appearance/effects.ts",
+      "length": 5116
+    },
+    {
+      "sha256": "b1888115bb77994e6197cbc615cccc384e7eac9a56879038828d3ebf58582ea4",
+      "path": "apps/desktop/ui/src/components/ui/UiSelectMenu.vue",
+      "length": 5127
+    },
+    {
+      "sha256": "aec16dcaa61f95a19db33de3d390fea16fc05c925466bf444b7c9ccc2abc38a9",
+      "path": "apps/desktop/ui/src/features/panel/api.ts",
+      "length": 852
+    },
+    {
+      "sha256": "bb8bf0edde9f4bab6f00cb7834ddd1339f6b25bf77d27c56d34e4e11cabf145c",
+      "path": "apps/desktop/ui/src/features/preferences/store.ts",
+      "length": 4735
+    },
+    {
+      "sha256": "eddbacdc6a286f753a3476a06d3667b167e33a7d541005cc033cc95814acb881",
+      "path": "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue",
+      "length": 4345
+    },
+    {
+      "sha256": "1af5ee287f21e0bbf1c2e6d9c0510bb1f5164570bb184e8a835e456997bc49c1",
+      "path": "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts",
+      "length": 10653
+    },
+    {
+      "sha256": "f2e90de36c22f428288058db49fbe23a1144c2f38142672ff421590d24d5a49f",
+      "path": "apps/desktop/ui/src/routes/PanelRoute.vue",
+      "length": 12036
+    },
+    {
+      "sha256": "7c1224150df30f588110acd180225cdf26ced822b08e04d889bb9a901b8fdbc0",
+      "path": "apps/desktop/ui/src/routes/SettingsRoute.vue",
+      "length": 125383
+    },
+    {
+      "sha256": "2b6658088442cf76aae73281b121b26397690438d28609874fbb7b035dba59c6",
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "length": 99697
+    },
+    {
+      "sha256": "73760b8451fc33604b8e76f3df3a2110f589521bc9f22fc9fb32dcfe1ce47549",
+      "path": "apps/desktop/ui/src/styles/effects.css",
+      "length": 2902
+    },
+    {
+      "sha256": "bc4f2f4a3c0cdd1d37735a1ac005ddebbc98eea29c0710983a6dfbcca11540c3",
+      "path": "apps/desktop/ui/src/styles/materials.css",
+      "length": 6983
+    },
+    {
+      "sha256": "cdd71f465a63b424157e2298627cd5dbf444e51b8788da5bc2e84944052277de",
+      "path": "apps/desktop/ui/src/styles/tokens.css",
+      "length": 5896
+    },
+    {
+      "sha256": "3db6b072028cebcb55b62062647023476defddc150bf3ddc90df78def1411527",
+      "path": "apps/desktop/ui/tests/effects-runtime.test.ts",
+      "length": 713
+    },
+    {
+      "sha256": "110161a38195be595454048522d548836a8049a9cb502ad03ed2c20a6d64752b",
+      "path": "apps/desktop/ui/tests/effects.test.ts",
+      "length": 7006
+    },
+    {
+      "sha256": "776232d28d49e42419b39423f9bf0cc6d3c3faed5da70383fbe3ea953ab86398",
+      "path": "apps/desktop/ui/tests/mesh-performance.test.ts",
+      "length": 4697
+    },
+    {
+      "sha256": "7b91c96e337173c080a712ef1491c019b03c8d537bf959e85b5125bcd01d16e4",
+      "path": "apps/desktop/ui/tests/select-menu.test.ts",
+      "length": 2631
+    },
+    {
+      "sha256": "52d8da618b9d5dae1842c11ca7900b89c5696d8cc545e619415e403092e8ea6e",
+      "path": "apps/desktop/ui/tests/settings-skills-source.test.ts",
+      "length": 8752
+    },
+    {
+      "sha256": "c422ecb4e2d9a25e7dcac86f5bc35d20630ce601f9a72425a298fad612e6d2a5",
+      "path": "test/smoke/windows-appearance.mjs",
+      "length": 20027
+    },
+    {
+      "sha256": "694fdd3884b4d7e0809641395ea0fe31e9940faf5a5e13ab5b9081f80252aebf",
+      "path": "test/smoke/windows-appearance.ps1",
+      "length": 9908
+    },
+    {
+      "sha256": "9344418c53e2bdac42f2fcf779070b301bea91d305516b87e8709494a5a06c21",
+      "path": "test/smoke/windows-png.mjs",
+      "length": 2317
+    },
+    {
+      "sha256": "58951de41ca392e811a50e31793a925ec0d7c492b5471927cd06cfc570da8c9b",
+      "path": "test/smoke/windows-webview.mjs",
+      "length": 5386
+    }
+  ]
+}
