@@ -42,6 +42,7 @@ async function configure(tier, renderer, theme = 'dark') {
     const prefs=p._s.get('preferences');
     if(!await prefs.setVisualEffects(${JSON.stringify(tier)}))throw Error('tier save failed');
     if(!await prefs.setGlowRender(${JSON.stringify(renderer)}))throw Error('renderer save failed');
+    if(!await prefs.save({...prefs.data,theme:${JSON.stringify(theme)}}))throw Error('theme save failed');
     p._s.get('theme').apply(${JSON.stringify(theme)});
     p._s.get('routes').go('overview');
     await new Promise(r=>setTimeout(r,180));
@@ -110,7 +111,75 @@ try {
       vendor:debug?gl.getParameter(debug.UNMASKED_VENDOR_WEBGL):null};
     gl?.getExtension('WEBGL_lose_context')?.loseContext();return result;
   })()`)
-  if (phase === 'visual') {
+  if (phase === 'native-theme') {
+    for (const theme of ['light', 'dark']) {
+      await configure('high', 'mesh', theme)
+      const result = await evaluate(`(async()=>({
+        domMaterial:document.documentElement.dataset.nativeMaterial,
+        native:await window.__TAURI_INTERNALS__.invoke('window_appearance'),
+        titlebar:!!document.querySelector('.titlebar'),windows:document.querySelector('.app-window').classList.contains('is-windows'),
+        body:getComputedStyle(document.body).backgroundColor,
+        main:document.querySelector('.main').getBoundingClientRect().toJSON(),
+        theme:document.documentElement.dataset.theme}))()`)
+      results.cases.push(result)
+      assert(result.windows && !result.titlebar, 'Windows must have only its native caption')
+      assert.equal(result.native.theme, theme)
+      assert.equal(result.theme, theme)
+      assert.equal(result.domMaterial, result.native.material)
+      if (result.native.material === 'mica' && result.native.build >= 22621) assert.equal(result.native.backdropAttribute, 2)
+      await capture(`native-${theme}-client`)
+    }
+  } else if (phase === 'native-state' || phase === 'native-light' || phase === 'native-dark') {
+    if (phase !== 'native-state') await configure('high', 'mesh', phase.slice(7))
+    const result = await evaluate(`(async()=>({
+      domMaterial:document.documentElement.dataset.nativeMaterial,
+      native:await window.__TAURI_INTERNALS__.invoke('window_appearance'),
+      body:getComputedStyle(document.body).backgroundColor,
+      theme:document.documentElement.dataset.theme,
+      effects:document.documentElement.dataset.effects,
+      focus:document.hasFocus(),visible:document.visibilityState}))()`)
+    results.cases.push(result)
+  } else if (phase === 'native-editing') {
+    await evaluate(`(async()=>{
+      const p=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia;
+      p._s.get('routes').go('extensions');await new Promise(r=>setTimeout(r,300));
+      const input=document.querySelector('.skills-search');
+      if(!input)throw Error('Real Skills search input missing');
+      window._nativeEditInput=input;window._nativeEditOriginal=input.value;
+      input.focus();input.select();
+    })()`)
+    const shortcut = async (key, code, number) => {
+      await call('Input.dispatchKeyEvent', { type: 'keyDown', key, code, modifiers: 2, windowsVirtualKeyCode: number })
+      await call('Input.dispatchKeyEvent', { type: 'keyUp', key, code, modifiers: 2, windowsVirtualKeyCode: number })
+    }
+    try {
+      await call('Input.insertText', { text: 'native-edit-check' })
+      await shortcut('a', 'KeyA', 65)
+      await shortcut('c', 'KeyC', 67)
+      await shortcut('x', 'KeyX', 88)
+      const cut = await evaluate(`window._nativeEditInput.value`)
+      await shortcut('v', 'KeyV', 86)
+      const pasted = await evaluate(`window._nativeEditInput.value`)
+      results.cases.push({ cut, pasted })
+      assert.equal(cut, '')
+      assert.equal(pasted, 'native-edit-check')
+      // Actual WebView input context menu, independent of removed app menu.
+      const point = await evaluate(`(()=>{const r=window._nativeEditInput.getBoundingClientRect();return {x:r.x+r.width*.5,y:r.y+r.height*.5}})()`)
+      await call('Input.dispatchMouseEvent', { type: 'mousePressed', button: 'right', buttons: 2, clickCount: 1, ...point })
+      await call('Input.dispatchMouseEvent', { type: 'mouseReleased', button: 'right', clickCount: 1, ...point })
+      await new Promise(resolve => setTimeout(resolve, 150))
+    } finally {
+      await call('Input.dispatchKeyEvent', { type: 'keyDown', key: 'Escape', windowsVirtualKeyCode: 27 }).catch(() => {})
+      await evaluate(`window._nativeEditInput.value=window._nativeEditOriginal;window._nativeEditInput.dispatchEvent(new Event('input',{bubbles:true}));`)
+    }
+  } else if (phase === 'close-tray' || phase === 'close-exit') {
+    results.cases.push(await evaluate(`(async()=>{
+      const p=document.querySelector('#app').__vue_app__.config.globalProperties.$pinia,prefs=p._s.get('preferences');
+      const ok=await prefs.save({...prefs.data,keepProxyOnClose:${phase === 'close-tray'}});
+      if(!ok)throw Error('close preference save failed');
+      return {keepProxyOnClose:(await window.__TAURI_INTERNALS__.invoke('get_preferences')).keepProxyOnClose};
+    })()`))
+  } else if (phase === 'visual') {
     for (const media of ['reduce', 'no-preference']) {
       await call('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: media }] })
       for (const renderer of ['mesh', 'css']) {

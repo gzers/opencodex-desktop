@@ -95,7 +95,7 @@ $taskSummary=[ordered]@{
 }
 $taskFailure=$null
 try {
- foreach($taskScale in @('1','1.5','2')){
+ foreach($taskScale in @('1','1.25','1.5','2')){
   $taskGroup=Join-Path $taskOutput ('scale-'+$taskScale)
   New-Item -ItemType Directory -Path $taskGroup -Force|Out-Null
   $taskSandbox=Join-Path $taskGroup ('sandbox-'+[guid]::NewGuid().ToString('N'))

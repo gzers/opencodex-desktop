@@ -14,11 +14,12 @@ $taskOutput = [System.IO.Path]::GetFullPath($OutputDirectory)
 $taskSource = (& git rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0 -or $taskSource -notmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
 $taskHash = (Get-FileHash -LiteralPath $taskBuilt -Algorithm SHA256).Hash.ToLower()
+$taskVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
 New-Item -ItemType Directory -Force $taskOutput | Out-Null
 $taskResult = [ordered]@{
     scope = 'ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance'
     sourceCommit = $taskSource; builtExecutableSha256 = $taskHash
-    version = '0.1.8'; codeSigned = $false; releaseAccepted = $false
+    version = $taskVersion; codeSigned = $false; releaseAccepted = $false
     result = 'fail'; installers = @()
 }
 function Invoke-Installer([string]$File, [string]$Arguments) {
