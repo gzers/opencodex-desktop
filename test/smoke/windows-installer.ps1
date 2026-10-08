@@ -15,6 +15,7 @@ $taskSource = (& git rev-parse HEAD).Trim()
 if ($LASTEXITCODE -ne 0 -or $taskSource -notmatch '^[0-9a-f]{40}$') { throw 'Source commit missing' }
 $taskHash = (Get-FileHash -LiteralPath $taskBuilt -Algorithm SHA256).Hash.ToLower()
 $taskVersion = (Get-Content -LiteralPath (Join-Path $PSScriptRoot '../../apps/desktop/tauri/tauri.conf.json') -Raw | ConvertFrom-Json).version
+if ([string]::IsNullOrWhiteSpace($taskVersion)) { throw 'Expected version missing from tauri.conf.json' }
 New-Item -ItemType Directory -Force $taskOutput | Out-Null
 $taskResult = [ordered]@{
     scope = 'ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance'
@@ -61,7 +62,7 @@ try {
             $entry.bundleMarkerOffset = $identity.bundleMarkerOffset
             $version = (Get-Item -LiteralPath $installed).VersionInfo.ProductVersion
             $entry.productVersion = $version
-            if ($version -notmatch '^0[.]1[.]8($|[.+-])') { throw "Unexpected version $version" }
+            if ($version -cne $taskVersion) { throw "Unexpected version $version; expected $taskVersion from tauri.conf.json" }
             & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind + '-startup')) -ExpectedCommit $taskSource
             $entry.firstScreen = 'pass'
         } finally {
