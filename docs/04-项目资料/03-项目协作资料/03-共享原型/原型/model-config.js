@@ -237,7 +237,8 @@
   const order=projection(policy).filter(x=>x.p!=='system').map(x=>{const parent=picker.find(y=>y.key===(x.type==='fast'?x.key.slice(0,-6):x.key));return {...x,...(parent?{providerId:parent.providerId,protocol:parent.protocol}:{} )};});
   return {groups,errors,reviews,order};
  }
- function routePlanHTML(policy=draft){const plan=routePlan(policy);return '<p>一个逻辑渠道可包含多种协议。当前计划 '+plan.groups.length+' 个托管渠道分组；实际路由 ID 需由运行目录读回。</p>'+diffHTML(plan.groups.map(g=>g.logicalId+' → '+g.id+' · '+g.adapter+' · '+g.selectedModels.length+' 个基础模型'+(Object.keys(g.modelAdapters).length?' · 单模型协议覆盖 '+JSON.stringify(g.modelAdapters):'')))+(plan.errors.length?'<div class="mp-alert">'+diffHTML(plan.errors)+'</div>':'')+(plan.reviews.length?'<details class="mp-details"><summary>协议切换后的能力核对</summary>'+diffHTML(plan.reviews)+'</details>':'')+'<p class="mp-muted">原型仅演示编译计划。真实凭据、硬绑定、推理和 Fast wire 校验仍是实现交付门。</p>';}
+ function routePlanHTML(policy=draft){
+  if(window.ProtoNotes&&ProtoNotes.hasGroup('modal-note-plan'))ProtoNotes.patch('mp-plan-boundary',{body:'原型仅演示编译计划；真实凭据、硬绑定、推理与 Fast wire 校验仍是实现交付门。'});const plan=routePlan(policy);return '<p>一个逻辑渠道可包含多种协议。当前计划 '+plan.groups.length+' 个托管渠道分组；实际路由 ID 需由运行目录读回。</p>'+diffHTML(plan.groups.map(g=>g.logicalId+' → '+g.id+' · '+g.adapter+' · '+g.selectedModels.length+' 个基础模型'+(Object.keys(g.modelAdapters).length?' · 单模型协议覆盖 '+JSON.stringify(g.modelAdapters):'')))+(plan.errors.length?'<div class="mp-alert">'+diffHTML(plan.errors)+'</div>':'')+(plan.reviews.length?'<details class="mp-details"><summary>协议切换后的能力核对</summary>'+diffHTML(plan.reviews)+'</details>':'')+'<p class="mp-muted">原型仅演示编译计划。真实凭据、硬绑定、推理和 Fast wire 校验仍是实现交付门。</p>';}
  function projection(policy=draft){
   const rows=[];policy.providers.filter(p=>p.enabled).forEach(p=>selected(p).forEach(m=>{
    rows.push({p:p.id,name:p.name,id:m.id,key:m.key,type:'base'});

@@ -17,7 +17,7 @@
   stage.append(hidden);
   const card=document.createElement('section');card.id='windowsDemoCard';card.className='proto-card';
   card.setAttribute('aria-label','Windows 窗口专题测试器');
-  card.innerHTML='<div class="proto-note-title">Windows 窗口专题</div><p class="pctl-hint">独立平台专题，复用当前产品内容。所有窗口行为均为浏览器模拟。</p>'+[
+  card.innerHTML='<div class="proto-note-title">Windows 窗口专题</div>'+[
     ['layout','顶部方案',[['integrated','单行整合'],['legacy','现有双栏']]],
     ['platform','系统兼容',[['win11','Windows 11'],['win10','Windows 10']]],
     ['theme','主题',[['light','浅色'],['dark','深色']]],
@@ -26,8 +26,15 @@
     ['close','关闭窗口后保持代理运行',[['tray','开启 · 留托盘'],['exit','关闭 · 退出']]],
     ['size','窗口尺寸',[['1180','1180 × 760'],['960','960 × 640']]]
   ].map(([key,label,values])=>'<div class="pctl-sub">'+label+'</div><div class="pctl-chips" role="group" aria-label="'+label+'">'+values.map(([value,text])=>'<button type="button" data-win-key="'+key+'" data-win-value="'+value+'">'+text+'</button>').join('')+'</div>').join('')+
-  '<p class="pctl-hint" id="winMaterialHint"></p><div class="pctl-sub">窗口状态</div><p class="pctl-hint" id="winStatus" role="status" aria-live="polite"></p><div class="pctl-grid"><button type="button" data-win-action="reopen">重新打开</button><button type="button" data-win-action="reset">复位场景</button></div><div class="pctl-sub">菜单功能去向</div><p class="pctl-hint">进程启停 → 概览 / 托盘；编辑 → 标准快捷键与输入框上下文菜单；缩放 → 应用内缩放入口；诊断 → 左侧诊断。本轮只展示窗口，生产接线待实施。</p><div class="pctl-sub">原生验收仍需执行</div><p class="pctl-hint">拖拽、边缘缩放、双击最大化、Snap 布局、Alt+F4、DPI 与应用缩放、关闭到托盘及恢复，均须在 Windows 实机验收。网页不能证明这些行为或真实 Mica。</p><button class="pctl-back" type="button" data-win-action="leave">返回常规原型</button>';
+  '<p class="pctl-hint" id="winMaterialHint"></p><div class="pctl-sub">窗口状态</div><p class="pctl-hint" id="winStatus" role="status" aria-live="polite"></p><div class="pctl-grid"><button type="button" data-win-action="reopen">重新打开</button><button type="button" data-win-action="reset">复位场景</button></div><button class="pctl-back" type="button" data-win-action="leave">返回常规原型</button>';
   document.getElementById('protoStdCards').before(card);
+  if(window.ProtoNotes){
+    ProtoNotes.register('windows',[
+      {id:'win-topic',title:'Windows 窗口专题',body:'独立平台专题，复用当前产品内容。所有窗口行为均为浏览器模拟，不调用 Tauri 或系统 API。',anchor:'#windowsDemoCard'},
+      {id:'win-menu',title:'菜单功能去向',body:'进程启停 → 概览 / 托盘；编辑 → 标准快捷键与输入框上下文菜单；缩放 → 应用内缩放入口；诊断 → 左侧诊断。本轮只展示窗口，生产接线待实施。',anchor:'#windowsDemoCard',dx:4,dy:30},
+      {id:'win-acceptance',title:'原生验收仍需执行',body:'拖拽、边缘缩放、双击最大化、Snap 布局、Alt+F4、DPI 与应用缩放、关闭到托盘及恢复，均须在 Windows 实机验收。网页不能证明这些行为或真实 Mica。',anchor:'#windowsDemoCard',dx:8,dy:60}
+    ]);
+  }
 
   function topicURL(on){const url=new URL(location.href);if(on)url.searchParams.set('topic','windows');else url.searchParams.delete('topic');history.replaceState(null,'',url);}
   function render(message){
@@ -72,6 +79,7 @@
     root.dataset.theme=previous.theme;
     for(const [key,value] of [['--win-w',previous.w],['--win-h',previous.h]]){if(value)root.style.setProperty(key,value);else root.style.removeProperty(key);}
     previous=null;topicURL(false);syncLaunchActive();updateSizeReadout();
+    if(window.ProtoNotes&&typeof window.prototypeGroupKey==='function')ProtoNotes.setGroups(['side',window.prototypeGroupKey(currentRoute)]);
   }
   card.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.winKey){state[b.dataset.winKey]=b.dataset.winValue;render();}else action(b.dataset.winAction);});
   caption.addEventListener('click',e=>{const b=e.target.closest('button');if(b)action(b.dataset.winAction);});

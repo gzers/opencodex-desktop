@@ -304,6 +304,9 @@ button{font:inherit}
 .modal-facts .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);color:var(--text)}
 .modal-facts+.reset-table{margin-top:12px}
 .modal-prototype-note{margin:12px 0 0;color:var(--muted);font-size:var(--text-caption)}
+/* 汇总面板常驻：notif / windows 模式下 #protoStdCards 隐藏时仍可见 */
+.pn-panel-hint{display:none}
+body.notif-mode .pn-panel-hint,body.windows-mode .pn-panel-hint{display:block}
 .modal-code{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:10px}
 .modal h3{margin:0 0 8px;font-size:var(--text-title)}
 .modal p{color:var(--muted);margin:0 0 15px;font-size:var(--text-body)}
@@ -421,7 +424,8 @@ button{font:inherit}
 .proto-std{display:contents}
 #notifDemoCard{display:none}
 body.notif-mode #notifDemoCard{display:block}
-body.notif-mode #protoStdCards{display:none}
+body.notif-mode #protoStdCards>*{display:none}
+body.notif-mode #protoNotesPanel{display:block}
 body.notif-mode .pctl-back{display:none}
 .notif-scn{display:grid;gap:3px}
 .notif-scn .ns-cat{margin:8px 0 2px;font-size:10px;font-weight:700;letter-spacing:.05em;color:#737a85}
@@ -1643,6 +1647,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../glass-effects.css">
 <link rel="stylesheet" href="../overview-dual.css">
 <link rel="stylesheet" href="../proto-controls.css">
+<link rel="stylesheet" href="../proto-notes.css">
 <link rel="stylesheet" href="model-config.css">
 <link rel="stylesheet" href="windows-window.css">
 </head>
@@ -3172,7 +3177,7 @@ ocx update</code></pre>
       </div>
       <span class="tag">Mock</span>
     </div>
-    <p class="pctl-hint" style="margin:0 0 8px">本页为原型演示，真实实现尚未启用；右侧开关只切 mock 投影，不写配置、不调用真实命令。</p>
+    <p class="pctl-hint pn-panel-hint" style="margin:0 0 8px">本页为原型演示，真实实现尚未启用；右侧开关只切 mock 投影，不写配置、不调用真实命令。页面与弹窗中的 <b>ⓘ</b> 小标记是注释便签，点开即看、收起不占正文空间。</p>
     <nav class="pctl-bar" aria-label="控制器分区">
       <a href="#ctl-nav">导航</a>
       <a href="#ctl-look">外观</a>
@@ -3194,7 +3199,6 @@ ocx update</code></pre>
         <button type="button" data-launch="notify" class="pctl-span">通知与反馈</button>
         <button type="button" data-launch="windows" class="pctl-span">Windows 窗口</button>
       </div>
-      <p class="pctl-hint">软件窗口外的统一菜单：前六个直接跳转路由；「通知与反馈」和「Windows 窗口」分别打开专题测试器，复用同一产品窗口。</p>
     </nav>
 
     <div class="proto-card" id="notifDemoCard">
@@ -3233,7 +3237,6 @@ ocx update</code></pre>
         <button type="button" data-page-material="mid">中透（已定稿）</button>
         <button type="button" data-page-material="clear">更透</button>
       </div>
-      <p class="pctl-hint"><b>只作用于内容页这一层</b>：窗口底面、菜单、标题栏保持不透明。页面是盖在「软件自己的底 + 环境光」上的磨砂玻璃，参照物在软件内部，跟桌面无关；卡片、按钮、表格仍是实底，正文与长表照旧可读。</p>
     </div>
 
     <div class="proto-card">
@@ -3243,7 +3246,6 @@ ocx update</code></pre>
         <button type="button" data-effects="mid">中 · 光场静止＋玻璃</button>
         <button type="button" data-effects="low">低 · 无光场＋无玻璃</button>
       </div>
-      <p class="pctl-hint"><b>全局总开关</b>：<b>高</b>=会动的光场＋玻璃（默认）；<b>中</b>=光场静止＋玻璃（省电）；<b>低</b>=无光场＋无玻璃，退回<b>应用原本黑白实底风格</b>。低档对通知同样生效。本页环境光为静态，暂无动画，故「高 / 中」此处观感相同。</p>
     </div>
 
     <div class="proto-card">
@@ -3252,7 +3254,6 @@ ocx update</code></pre>
         <button type="button" data-glow-render="mesh">WEBGL · 网格渐变＋颗粒</button>
         <button type="button" data-glow-render="css">CSS · 纯极光</button>
       </div>
-      <p class="pctl-hint"><b>默认 WEBGL</b>：概览背景光用网格渐变＋颗粒着色器，过渡最平滑、色带最少；<b>CSS</b> 为纯 CSS 极光兜底，不依赖 GPU。环境不支持 WEBGL 时自动回退 CSS。与「背景光渲染」设置项同一开关。</p>
     </div>
 
     <div class="pctl-sec" id="ctl-tools">工具</div>
@@ -3267,13 +3268,12 @@ ocx update</code></pre>
         <button type="button" data-size="2560x1440">超宽 2560×1440</button>
         <button type="button" data-size="fit">适配视口</button>
       </div>
-      <p class="pctl-hint">只切换评审用窗口尺寸：<b>最小 900×600</b> 验证窄窗不溢出，<b>默认 1180×760</b> 是设计基准，其余用于宽屏对照；「适配视口」按当前浏览器高度反推。不写任何持久化设置。</p>
     </div>
 
-    <div class="proto-card">
-      <div class="proto-note-title" id="protoNoteTitle">概览</div>
-      <div class="proto-note" id="protoNote">正在加载原型说明。</div>
-      <ul id="protoButtonNotes"></ul>
+    <div class="proto-card" id="protoNotesPanel">
+      <div class="proto-note-title">本页注释<span class="pn-count" id="protoNotesCount">0 条</span></div>
+      <input type="search" class="pn-search" id="protoNotesSearch" placeholder="搜索注释" aria-label="搜索本页注释">
+      <div class="pn-list" id="protoNotesList" role="list" aria-label="本页注释列表"></div>
     </div>
 
     <div class="pctl-sec" id="ctl-mock">状态投影 · mock</div>
@@ -3293,7 +3293,6 @@ ocx update</code></pre>
           <button type="button" data-tray-state="external_takeover">外部接管</button>
         </div>
       </div>
-      <p class="pctl-hint">状态切换只驱动托盘图标点、菜单标题与可用提示；不写入真实偏好。托盘只讲进程事实：<b>存在风险 / 外部接管</b> 在托盘标题里显示为「未运行」，结论与说明句留在概览 / 通知中心，不写进托盘。</p>
     </div>
 
     <div class="proto-card">
@@ -3312,7 +3311,6 @@ ocx update</code></pre>
           <button type="button" data-webdav="conflict">冲突待处理</button>
         </div>
       </div>
-      <p class="pctl-hint">连接测试通过只证明可连接，不证明已同步；存在未处理冲突时<b>不写「已同步」</b>。未配置时卡片主体说明未配置，动作区只留一颗「配置 WebDAV」；只驱动 mock 投影。</p>
     </div>
     <div class="proto-card">
       <div class="proto-note-title">环境前置条件（mock 投影）</div>
@@ -3333,22 +3331,18 @@ ocx update</code></pre>
           <button type="button" data-env="ready" class="active">环境通过</button>
         </div>
       </div>
-      <p class="pctl-hint">检测按 Node.js → npm → OpenCodex 顺序短路；缺前置时 OpenCodex 发现被阻塞。通过后不常驻大门禁卡，检查明细收进概览详情。所有检测均为 mock。</p>
     </div>
-    <div class="proto-card">
-      <div class="proto-note-title">OpenCodex 运行来源（mock 投影）</div>
+    <div class="proto-card" id="runtimeSourceCard">
       <div class="pctl-grid" id="runtimeStates">
         <button type="button" data-runtime="auto" class="active">自动发现</button>
         <button type="button" data-runtime="managed">托管安装</button>
         <button type="button" data-runtime="user">用户指定</button>
         <button type="button" data-runtime="missing">未解析</button>
       </div>
-      <p class="pctl-hint">来源优先级：用户指定 &gt; 托管安装 &gt; 自动发现候选；应用不读取 PATH。安装 / 卸载 / 离线导入按钮由本测试器驱动 mock。</p>
       <div class="pctl-grid" id="installDemo">
         <button type="button" data-prototype-action="drop-demo-good">演示：导入合法包</button>
         <button type="button" data-prototype-action="drop-demo-bad">演示：导入非官方包</button>
       </div>
-      <p class="pctl-hint">先打开「安装 OpenCodex」并切到「导入离线包」，上面两个开关才生效；只切 mock，不下载、不解包、不写配置。</p>
     </div>
     <div class="proto-card">
       <div class="proto-note-title">卸载 · 备份检测（mock 投影）</div>
@@ -3356,9 +3350,8 @@ ocx update</code></pre>
         <button type="button" data-uninstall-backup="none" class="active">未检测到备份</button>
         <button type="button" data-uninstall-backup="exists">已检测到备份</button>
       </div>
-      <p class="pctl-hint">只切「卸载」弹窗里备份检测的 mock：影响提示文案与「卸载前自动备份」默认勾选。<b>无备份只提醒、不阻断卸载</b>；只切 mock，不写盘、不删任何文件。</p>
     </div>
-<details class="proto-card" id="mpDemoCard"><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">待重启＋草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">部分写入</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button></div><p class="pctl-hint">只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。</p></details>
+<details class="proto-card" id="mpDemoCard"><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">待重启＋草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">部分写入</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button></div></details>
     <div class="proto-card" id="logDemoCard">
       <div class="proto-note-title">日志分类演示（mock 状态）</div>
       <div class="pctl-grid" id="logScenarios">
@@ -3381,12 +3374,11 @@ ocx update</code></pre>
         <button type="button" data-log-panel="ok" class="active">正常加载</button>
         <button type="button" data-log-panel="fail">加载失败</button>
       </div>
-      <p class="pctl-hint">演示状态只作用于「诊断中心 → 日志历史」，记录全部虚构、已脱敏。运行状态只影响右侧「在官方面板查看请求日志」入口：代理运行时可进入应用内官方面板（未验证直达能力前提示选择「日志与调试」），代理未运行时只提示原因、不自动启动，也不切走当前分类。两类本地日志（应用日志 / 调用日志）始终可查看。</p>
     </div>
 
     <div class="proto-card">
       <div class="proto-note-title">运行状态测试器（主线＋支线＋问题）</div>
-      <div id="scenarios">
+      <div id="scenarioGrid">
         <div class="pctl-sub">主线节点 · 一个运行主线</div>
         <div class="pctl-grid">
           <button data-state="not_found">待接入</button>
@@ -3417,7 +3409,6 @@ ocx update</code></pre>
         <button type="button" data-op-result="unconfirmed">结果待确认</button>
         <button type="button" data-op-result="restart">待重启生效</button>
       </div>
-      <p class="pctl-hint">状态只驱动 mock 投影：主线只表达运行事实，操作归当前支线，持续问题进待处理摘要。旧 raw 枚举已按主线/支线/问题归组做减法，不再平铺。</p>
     </div>
     </div>
   </aside>
@@ -3456,215 +3447,118 @@ const routes={
   extensions:{title:'扩展管理',subtitle:'集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。'},
   settings:{title:'设置',subtitle:'集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。'}
 };
-const routeNotes={
-  models:{title:'模型配置 · 0.2.0 候选',note:'复用 Desktop 视觉系统，目录与能力均为 fixture。保存、生成、同步仅演示状态。',items:[['渠道模型','完整发现＋白名单；渠道顺序与内部模型顺序组成完整投影。'],['模型模版','独立字段继承、不可变版本与精确引用；生成结果进入候选。'],['保存','全域预算、冻结确认、备份与读回；成功后待重启 Codex。']]},
-  overview:{
-    title:'概览 · 运行控制台',
-    note:'主屏一行读运行摘要，运行详情页内折叠；进程按钮按状态渲染，参数与诊断分别落在设置页和诊断中心。',
-    items:[
-      ['运行摘要','状态、端口、版本、数据目录一行讲完；短路径用 ~ 缩写。'],
-      ['运行详情（折叠）','健康、PID、Runtime、可执行文件、数据目录与 OPENCODEX_HOME 默认收起，折叠条自带关键事实。'],
-      ['进程按钮','按状态渲染：未运行只有「启动 / 刷新状态」，运行中有「打开面板 / 停止 / 重启 / 查看日志」，不画无解释的灰按钮。'],
-      ['查看建议','仅 at-risk / 外部 provider 接管时出现，进入官方 restore 引导前需要确认。'],
-      ['快捷动作','配置迁移 / WebDAV 同步 / 版本升级三张卡；按钮撑满内容宽度，存在建议动作时高亮（当前「检查更新」）。'],
-      ['Doctor','官方只读环境诊断，位于「诊断中心」，不在概览动作行。'],
-      ['最近事件','仅运行详情展开时显示 3 条状态相关摘要；完整排障仍进「诊断中心」。'],
-      ['环境门禁','首次打开先按 Node.js → npm → OpenCodex 顺序短路检查；缺前置时只给当前缺失项和最短修复命令，完整指引仍收敛到设置。']
-    ]
-  },
-  tray:{
-    title:'托盘 · 跨平台状态菜单',
-    note:'托盘是最短控制入口，不是第二个管理面板；macOS 与 Windows 样式和交互保持系统差异。',
-    items:[
-      ['状态摘要','未运行 / 启动中 / 运行中 / 启动失败 / 外部接管，图标点与菜单标题联动。'],
-      ['核心控制','启动、停止、重启；不可用项显示原因，不画无解释禁用态。'],
-      ['界面入口','打开主界面；官方面板仅在代理可用时开放。'],
-      ['诊断','打开诊断中心；异常状态优先建议运行 Doctor。'],
-      ['平台差异','macOS 在菜单栏点击展开；Windows 在通知区点击展开，视觉与 hover 分别适配。'],
-      ['边界','不放 Skills / MCP、备份、WebDAV、升级和配置还原；命令仅委托管理器自有域。']
-    ]
-  },
-  panel:{
-    title:'面板 · 内嵌对照',
-    note:'内容区使用离线复刻的官方中文页面；窄图标栏保持路由上下文，不额外弹出新窗口。',
-    items:[
-      ['概览','返回单屏控制台。'],
-      ['重载','重新加载静态快照。'],
-      ['浏览器','仅表达真实实现的浏览器兜底入口。']
-    ]
-  },
-  installation:{
-    title:'设置 · 安装配置',
-    note:'安装发现、数据目录和 OPENCODEX_HOME 已集成到设置；这里只维护环境参数，不做安装动作。',
-    items:[
-      ['前置条件','按 Node.js → npm → OpenCodex 顺序检查；缺前置时展示可复制修复命令，应用不代装。'],
-      ['重新发现','重新执行安装探测 mock。'],
-      ['选择数据目录','仅表达目录选择，不访问真实文件。'],
-      ['选择 OPENCODEX_HOME','保持 home 可自定义，但不改真实配置。']
-    ]
-  },
-  logs:{
-    title:'诊断中心 · 日志与Doctor',
-    note:'先看环境诊断，再按需查日志或通知历史；历史数据与运行诊断同处一个 Tab 组，避免把完整排障堆进概览。',
-    items:[
-      ['环境诊断','诊断中心第一个 Tab；调用官方 ocx doctor 的只读摘要，解释路径、WSL 挂载、代理环境变量、ChatGPT 可达性、Codex runtime 与 shim 状态。'],
-      ['日志历史','当前 mock 100 行；本地滚动截断，清理前应保留关键摘要。'],
-      ['通知历史','保留最近决策与状态变化，可清空全部或仅清理已读。'],
-      ['清理动作','清理日志 / 清理通知 / 清理已读均为破坏性动作，真实实现需二次确认。'],
-      ['打开日志目录','真实实现会打开本机目录，原型只拦截。']
-    ]
-  },
-  settings:{
-    title:'设置 · 集中维护',
-    note:'按“桌面壳自有 → 官方共享 → 数据安全 → 扩展维护 → 升级归属”分 Tab；每张卡可锚点直达。',
-    items:[
-      ['通用','界面缩放、启动与面板行为、后台运行、通知边界；共享项只有「随 Codex 启动 OpenCodex」，写入要 ~20 秒且官方不分步，故先给准备延迟、再给不确定进度条 + 已用时间，框内可展开看具体指令；并支持还原默认。'],
-      ['安装配置','运行环境发现、数据目录、OPENCODEX_HOME 与数据分区；路径可复制。'],
-      ['数据与备份','升级 / 导入 / 同步前自动备份，保留策略与完整性校验。'],
-      ['扩展管理','Skills 与 MCP 的同步、备份、导出、脱敏、冲突策略，以及各客户端路径。'],
-      ['配置迁移','导出范围、加密方式、导入校验；敏感凭据只进入加密容器。'],
-      ['WebDAV 同步','端点、冲突策略、冷同步、客户端加密与覆盖前备份。'],
-      ['日志与通知','自动清理范围、启动清理与清理前摘要。'],
-      ['CLI 控制面','默认关闭；开启后仅委托运行中实例，并提供 Agent 提示。'],
-      ['版本升级','OpenCodex 走检查、备份与官方引导；桌面管理器走应用自更新。'],
-      ['关于','官方项目、本应用、版权归属、许可与第三方声明。']
-    ]
-  },
-  'ext-skills':{
-    title:'扩展管理 · Skills',
-    note:'本机 Skills 库按客户端同步；列表承载筛选、版本、分页与行内维护。',
-    items:[
-      ['统计与筛选','已安装数量和 Claude / Codex / Gemini / Grok / OpenCode / Hermes 视图。'],
-      ['搜索与分页','按名称或说明过滤，支持每页 10 / 20 / 50 / 100 条。'],
-      ['目标开关','每个客户端用图标按钮表示是否同步。'],
-      ['行内操作','检查 / 更新、卸载；版本与更新日期直接展示。'],
-      ['设置入口','顶部「设置」回到设置页扩展管理。']
-    ]
-  },
-  'ext-mcp':{
-    title:'扩展管理 · MCP',
-    note:'本机 MCP 服务器按客户端同步；列表承载筛选、版本、分页与行内维护。',
-    items:[
-      ['统计与筛选','已配置数量和各客户端视图。'],
-      ['搜索与分页','按名称或说明过滤，支持每页 10 / 20 / 50 / 100 条。'],
-      ['添加 / 导入','工具栏新增 MCP 或导入外部定义。'],
-      ['目标开关','每个客户端用图标按钮表示是否同步。'],
-      ['行内操作','编辑与删除；stdio / HTTP 等类型直接标识。'],
-      ['设置入口','顶部「设置」回到设置页扩展管理。']
-    ]
-  },
-  'settings-general':{
-    title:'设置 · 通用',
-    note:'桌面壳自有偏好集中在这里；官方共享项单独成卡，避免把外部配置混入管理器设置。',
-    items:[
-      ['界面缩放','50%–200% 滑块加整数刻点，数值输入与滑块双向联动。'],
-      ['启动与面板','主界面、自动面板、内嵌优先 / 浏览器兜底。'],
-      ['后台与通知','关闭窗口后保持代理运行，启停结果与同步冲突提醒。'],
-      ['官方共享配置','随 Codex 启动 OpenCodex；仅同步官方同源开关。'],
-      ['还原通用默认','弹窗列出原值 → 默认值，确认后仅还原本组偏好。']
-    ]
-  },
-  'settings-installation':{
-    title:'设置 · 安装配置',
-    note:'先发现运行环境，再维护数据目录与分区；不代装依赖、不改写官方配置。',
-    items:[
-      ['运行环境与安装发现','按 Node.js → npm → OpenCodex 检查；重新发现只更新 mock。'],
-      ['数据目录与 OPENCODEX_HOME','路径可复制；修改涉及迁移前备份。'],
-      ['数据目录分区','桌面壳状态、备份、日志、导出、缓存与同步摘要分区展示。']
-    ]
-  },
-  'settings-backup':{
-    title:'设置 · 数据与备份',
-    note:'破坏性变更前自动备份；保留策略与校验算法集中维护。',
-    items:[
-      ['自动备份','升级、导入、同步覆盖前自动备份。'],
-      ['保留策略','最近 5 / 10 / 20 份。'],
-      ['完整性校验','SHA-256 / SHA-512 / BLAKE3。']
-    ]
-  },
-  'settings-extensions':{
-    title:'设置 · 扩展管理',
-    note:'先配置同步策略，再按类型查看路径；路径卡集中放在最后，便于扫读与复制。',
-    items:[
-      ['Skills 管理','源目录、软链接 / 复制、备份与导出范围。'],
-      ['MCP 管理','同名冲突、落点、敏感值脱敏、备份与导出范围。'],
-      ['Skills 路径','6 个客户端 Skills 目录，点击复制完整路径。'],
-      ['MCP 路径','6 个客户端 MCP 配置文件，点击复制完整路径。']
-    ]
-  },
-  'settings-migration':{
-    title:'设置 · 配置迁移',
-    note:'导出与导入都以校验为先；敏感凭据只进入加密容器。',
-    items:[
-      ['导出范围','全量 / 仅配置 / 仅凭据。'],
-      ['导出加密','口令保护或密钥保护。'],
-      ['导入流程','严格校验优先；导入前自动备份。'],
-      ['导出目录','真实实现会打开本机目录，原型只拦截。']
-    ]
-  },
-  'settings-sync':{
-    title:'设置 · WebDAV 同步',
-    note:'端点与凭据在卡片主体维护；策略、加密与备份控制同步安全。',
-    items:[
-      ['冲突策略','固定「每次询问」：冲突时暂停覆盖、保留双方历史并要求确认；不提供静默保留策略。'],
-      ['冷同步与加密','冷同步开关；客户端加密强制开启。'],
-      ['覆盖前备份','远端覆盖前自动备份。'],
-      ['动作','立即同步、测试连接、查看同步历史。']
-    ]
-  },
-  'settings-cleanup':{
-    title:'设置 · 日志与通知',
-    note:'清理策略用于控制本地历史规模；真实清理需二次确认。',
-    items:[
-      ['日志自动清理','按天数和行数组合限制。'],
-      ['通知自动清理','按天数限制。'],
-      ['启动清理','启动时执行清理，清理前保留摘要。']
-    ]
-  },
-  'settings-cli':{
-    title:'设置 · CLI 控制面',
-    note:'默认关闭；开启后只委托运行中实例执行管理器自有域命令。',
-    items:[
-      ['启用 CLI 控制面','开关控制能力入口。'],
-      ['运行中实例','显示当前委托目标。'],
-      ['Agent 提示','查看完整说明或复制 Agent 提示。']
-    ]
-  },
-  'settings-upgrade':{
-    title:'设置 · 版本升级',
-    note:'官方升级保持官方引导，桌面管理器自更新独立处理。',
-    items:[
-      ['OpenCodex 版本','检查更新、升级前备份、官方升级引导、失败建议。'],
-      ['桌面管理器版本','检查更新、下载并重启、通道与频率。']
-    ]
-  },
-  'settings-about':{
-    title:'设置 · 关于',
-    note:'先说明官方项目与本应用归属，再集中展示版权、许可与第三方声明。',
-    items:[
-      ['官方项目','OpenCodex 官网、GitHub、Issues 与版本信息。'],
-      ['本应用','OpenCodeX-Desktop 独立桌面壳，仓库与 Issues 入口。'],
-      ['版权与归属','查看官方许可与第三方声明。']
-    ]
-  }
-};
-
-const prototypeNoteFallback=routeNotes.overview;
+// 页面级注释只声明「内容 + 锚点」；小标记、浮层与汇总面板由 proto-notes.js 通用组件统一实现。
+function registerNotes(){
+  const P=window.ProtoNotes; if(!P) return;
+  P.register('side',[
+    {id:'side-note-overview',title:'关于本面板',body:'本页为<b>原型演示</b>，真实实现尚未启用；右侧开关只切 mock 投影，不写配置、不调用真实命令。页面里的 <b>ⓘ</b> 小标记都是注释便签：点开即看、收起不占正文空间、不改变软件布局。',anchor:'#protoNotesPanel'},
+    {id:'side-note-launch',title:'统一菜单（软件窗口外）',body:'前六个入口直接跳转路由；「通知与反馈」和「Windows 窗口」分别打开专题测试器，复用同一产品窗口。',anchor:'#launchGrid'},
+    {id:'side-note-notif',title:'通知与反馈专题',body:'选择一条场景，界面会切到对应路由并演出该渠道的真实效果；「软件内位置」「表面材质」「颜色滤镜」等开关只作用于原型通知演出，不写配置。',anchor:'#notifDemoCard'},
+    {id:'side-note-page-material',title:'内容页表面（打样）',body:'<b>只作用于内容页这一层</b>：窗口底面、菜单、标题栏保持不透明。页面是盖在「软件自己的底 + 环境光」上的磨砂玻璃，参照物在软件内部，跟桌面无关；卡片、按钮、表格仍是实底，正文与长表照旧可读。',anchor:'#pageMaterialChips'},
+    {id:'side-note-effects',title:'特效档（全局总开关）',body:'<b>高</b>=会动的光场＋玻璃（默认）；<b>中</b>=光场静止＋玻璃（省电）；<b>低</b>=无光场＋无玻璃，退回<b>应用原本黑白实底风格</b>。低档对通知同样生效。本页环境光为静态，暂无动画，故「高 / 中」此处观感相同。',anchor:'#effectsChips'},
+    {id:'side-note-glow',title:'背景光渲染（画质）',body:'<b>默认 WEBGL</b>：概览背景光用网格渐变＋颗粒着色器，过渡最平滑、色带最少；<b>CSS</b> 为纯 CSS 极光兜底，不依赖 GPU。环境不支持 WEBGL 时自动回退 CSS。与「背景光渲染」设置项同一开关。',anchor:'#glowRenderChips'},
+    {id:'side-note-size',title:'窗口尺寸预览',body:'只切换评审用窗口尺寸：<b>最小 900×600</b> 验证窄窗不溢出，<b>默认 1180×760</b> 是设计基准，其余用于宽屏对照；「适配视口」按当前浏览器高度反推。不写任何持久化设置。',anchor:'#sizePresets'},
+    {id:'side-note-tray',title:'托盘状态切换（mock）',body:'状态切换只驱动托盘图标点、菜单标题与可用提示，不写入真实偏好。托盘只讲进程事实：<b>存在风险 / 外部接管</b> 在托盘标题里显示为「未运行」，结论与说明句留在概览 / 通知中心，不写进托盘。',anchor:'#trayStateTester'},
+    {id:'side-note-webdav',title:'WebDAV 状态（mock）',body:'连接测试通过只证明可连接，不证明已同步；存在未处理冲突时<b>不写「已同步」</b>。未配置时卡片主体说明未配置，动作区只留一颗「配置 WebDAV」；只驱动 mock 投影。',anchor:'#webdavStates'},
+    {id:'side-note-env',title:'环境前置条件（mock）',body:'检测按 Node.js → npm → OpenCodex 顺序短路；缺前置时 OpenCodex 发现被阻塞。通过后不常驻大门禁卡，检查明细收进概览详情。所有检测均为 mock。',anchor:'#envStates'},
+    {id:'side-note-runtime',title:'运行来源（mock）',body:'来源优先级：用户指定 &gt; 托管安装 &gt; 自动发现候选；应用不读取 PATH。安装 / 卸载 / 离线导入按钮由本测试器驱动 mock。',anchor:'#runtimeSourceCard'},
+    {id:'side-note-offline',title:'离线包演示开关',body:'先打开「安装 OpenCodex」并切到「导入离线包」，这两个开关才生效；只切 mock，不下载、不解包、不写配置。',anchor:'#installDemo',dy:26},
+    {id:'side-note-uninstall',title:'卸载 · 备份检测（mock）',body:'只切「卸载」弹窗里备份检测的 mock：影响提示文案与「卸载前自动备份」默认勾选。<b>无备份只提醒、不阻断卸载</b>；只切 mock，不写盘、不删任何文件。',anchor:'#uninstallDemo'},
+    {id:'side-note-mp',title:'模型配置演示场景',body:'只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。',anchor:'#mpDemoCard'},
+    {id:'side-note-log',title:'日志分类演示（mock）',body:'演示状态只作用于「诊断中心 → 日志历史」，记录全部虚构、已脱敏。运行状态只影响「在官方面板查看请求日志」入口：代理运行时可进入应用内官方面板（未验证直达能力前提示选择「日志与调试」），代理未运行时只提示原因、不自动启动，也不切走当前分类。两类本地日志（应用日志 / 调用日志）始终可查看。',anchor:'#logDemoCard'},
+    {id:'side-note-scenarios',title:'运行状态测试器',body:'状态只驱动 mock 投影：主线只表达运行事实，操作归当前支线，持续问题进待处理摘要。旧 raw 枚举已按主线/支线/问题归组做减法，不再平铺。',anchor:'#scenarioGrid'}
+  ]);
+  P.register('models',[
+    {id:'rn-models',title:'模型配置 · 0.2.0 候选',body:'复用 Desktop 视觉系统，目录与能力均为 fixture。保存、生成、同步仅演示状态。<ul><li><b>渠道模型</b>：完整发现＋白名单；渠道顺序与内部模型顺序组成完整投影。</li><li><b>模型模版</b>：独立字段继承、不可变版本与精确引用；生成结果进入候选。</li><li><b>保存</b>：全域预算、冻结确认、备份与读回；成功后待重启 Codex。</li></ul>',anchor:'#route-models'},
+    {id:'rn-models-plan',title:'路由编译边界',body:'原型仅演示编译计划；真实凭据、硬绑定、推理与 Fast wire 校验仍是实现交付门。',anchor:'#mpContent'}
+  ]);
+  P.register('modal-note-plan',[{id:'mp-plan-boundary',title:'路由编译边界',body:'原型仅演示编译计划；真实凭据、硬绑定、推理与 Fast wire 校验仍是实现交付门。',anchor:'#modalTitle'}]);
+  P.register('overview',[
+    {id:'rn-ov-summary',title:'运行摘要',body:'状态、端口、版本、数据目录一行讲完；短路径用 ~ 缩写。',anchor:'#card-overview-status'},
+    {id:'rn-ov-detail',title:'运行详情（折叠）',body:'健康、PID、Runtime、可执行文件、数据目录与 OPENCODEX_HOME 默认收起，折叠条自带关键事实。',anchor:'#card-overview-details'},
+    {id:'rn-ov-buttons',title:'进程按钮',body:'按状态渲染：未运行只有「启动 / 刷新状态」，运行中有「打开面板 / 停止 / 重启 / 查看日志」，不画无解释的灰按钮。',anchor:'#card-overview-status',dx:6,dy:24},
+    {id:'rn-ov-suggest',title:'查看建议',body:'仅 at-risk / 外部 provider 接管时出现，进入官方 restore 引导前需要确认。',anchor:'#card-overview-details',dx:6,dy:24},
+    {id:'rn-ov-actions',title:'快捷动作',body:'配置迁移 / WebDAV 同步 / 版本升级三张卡；按钮撑满内容宽度，存在建议动作时高亮（当前「检查更新」）。',anchor:'#card-overview-migration'},
+    {id:'rn-ov-upgrade',title:'版本升级入口',body:'OpenCodex 走检查、备份与官方引导；桌面管理器走应用自更新。',anchor:'#card-overview-upgrade'},
+    {id:'rn-ov-sync',title:'WebDAV 同步入口',body:'端点、冲突策略、冷同步、客户端加密与覆盖前备份的入口卡；完整配置在设置页。',anchor:'#card-overview-sync'},
+    {id:'rn-ov-doctor',title:'Doctor',body:'官方只读环境诊断，位于「诊断中心」，不在概览动作行。',anchor:'#route-overview',dx:-8,dy:8},
+    {id:'rn-ov-events',title:'最近事件',body:'仅运行详情展开时显示 3 条状态相关摘要；完整排障仍进「诊断中心」。',anchor:'#card-overview-events'},
+    {id:'rn-ov-gate',title:'环境门禁',body:'首次打开先按 Node.js → npm → OpenCodex 顺序短路检查；缺前置时只给当前缺失项和最短修复命令，完整指引仍收敛到设置。',anchor:'#card-overview-status',dx:12,dy:48}
+  ]);
+  P.register('tray',[
+    {id:'rn-tray',title:'托盘 · 跨平台状态菜单',body:'托盘是最短控制入口，不是第二个管理面板；macOS 与 Windows 样式和交互保持系统差异。<ul><li><b>状态摘要</b>：未运行 / 启动中 / 运行中 / 启动失败 / 外部接管，图标点与菜单标题联动。</li><li><b>核心控制</b>：启动、停止、重启；不可用项显示原因，不画无解释禁用态。</li><li><b>界面入口</b>：打开主界面；官方面板仅在代理可用时开放。</li><li><b>诊断</b>：打开诊断中心；异常状态优先建议运行 Doctor。</li><li><b>平台差异</b>：macOS 在菜单栏点击展开；Windows 在通知区点击展开，视觉与 hover 分别适配。</li><li><b>边界</b>：不放 Skills / MCP、备份、WebDAV、升级和配置还原；命令仅委托管理器自有域。</li></ul>',anchor:'#card-tray-prototype'}
+  ]);
+  P.register('panel',[
+    {id:'rn-panel',title:'面板 · 内嵌对照',body:'内容区使用离线复刻的官方中文页面；窄图标栏保持路由上下文，不额外弹出新窗口。<ul><li><b>概览</b>：返回单屏控制台。</li><li><b>重载</b>：重新加载静态快照。</li><li><b>浏览器</b>：仅表达真实实现的浏览器兜底入口。</li></ul>',anchor:'#panelSection'}
+  ]);
+  P.register('logs',[
+    {id:'rn-logs',title:'诊断中心 · 日志与 Doctor',body:'先看环境诊断，再按需查日志或通知历史；历史数据与运行诊断同处一个 Tab 组，避免把完整排障堆进概览。<ul><li><b>环境诊断</b>：调用官方 ocx doctor 的只读摘要，解释路径、WSL 挂载、代理环境变量、ChatGPT 可达性、Codex runtime 与 shim 状态。</li><li><b>日志历史</b>：当前 mock 100 行；本地滚动截断，清理前应保留关键摘要。</li><li><b>通知历史</b>：保留最近决策与状态变化，可清空全部或仅清理已读。</li><li><b>清理动作</b>：均为破坏性动作，真实实现需二次确认。</li><li><b>打开日志目录</b>：真实实现会打开本机目录，原型只拦截。</li></ul>',anchor:'#card-diag-history'}
+  ]);
+  P.register('ext-skills',[
+    {id:'rn-ext-skills',title:'扩展管理 · Skills',body:'本机 Skills 库按客户端同步；列表承载筛选、版本、分页与行内维护。<ul><li><b>统计与筛选</b>：已安装数量和 Claude / Codex / Gemini / Grok / OpenCode / Hermes 视图。</li><li><b>搜索与分页</b>：按名称或说明过滤，支持每页 10 / 20 / 50 / 100 条。</li><li><b>目标开关</b>：每个客户端用图标按钮表示是否同步。</li><li><b>行内操作</b>：检查 / 更新、卸载；版本与更新日期直接展示。</li><li><b>设置入口</b>：顶部「设置」回到设置页扩展管理。</li></ul>',anchor:'#card-ext-skills'}
+  ]);
+  P.register('ext-mcp',[
+    {id:'rn-ext-mcp',title:'扩展管理 · MCP',body:'本机 MCP 服务器按客户端同步；列表承载筛选、版本、分页与行内维护。<ul><li><b>统计与筛选</b>：已配置数量和各客户端视图。</li><li><b>搜索与分页</b>：按名称或说明过滤，支持每页 10 / 20 / 50 / 100 条。</li><li><b>添加 / 导入</b>：工具栏新增 MCP 或导入外部定义。</li><li><b>目标开关</b>：每个客户端用图标按钮表示是否同步。</li><li><b>行内操作</b>：编辑与删除；stdio / HTTP 等类型直接标识。</li><li><b>设置入口</b>：顶部「设置」回到设置页扩展管理。</li></ul>',anchor:'#card-ext-mcp'}
+  ]);
+  P.register('settings-general',[
+    {id:'rn-set-general',title:'设置 · 通用',body:'桌面壳自有偏好集中在这里；官方共享项单独成卡，避免把外部配置混入管理器设置。<ul><li><b>界面缩放</b>：50%–200% 滑块加整数刻点，数值输入与滑块双向联动。</li><li><b>启动与面板</b>：主界面、自动面板、内嵌优先 / 浏览器兜底。</li><li><b>后台与通知</b>：关闭窗口后保持代理运行，启停结果与同步冲突提醒。</li><li><b>还原通用默认</b>：弹窗列出原值 → 默认值，确认后仅还原本组偏好。</li></ul>',anchor:'#card-general-prefs'},
+    {id:'rn-set-quality',title:'外观与画质',body:'内容页表面、特效档与背景光渲染的正式设置项；与右侧原型测试器同一开关。',anchor:'#card-general-quality'},
+    {id:'rn-set-shared',title:'官方共享配置',body:'「随 Codex 启动 OpenCodex」是唯一共享项：写入要 ~20 秒且官方不分步，故先给准备延迟、再给不确定进度条 + 已用时间，框内可展开看具体指令；支持还原默认。',anchor:'#card-general-shared'}
+  ]);
+  P.register('settings-installation',[
+    {id:'rn-set-install',title:'运行环境与安装发现',body:'按 Node.js → npm → OpenCodex 顺序检查；缺前置时展示可复制修复命令，应用不代装。重新发现只更新 mock。',anchor:'#card-install-runtime'},
+    {id:'rn-set-runtime',title:'运行来源',body:'来源优先级：用户指定 &gt; 托管安装 &gt; 自动发现候选；应用不读取 PATH。',anchor:'#card-runtime-source'},
+    {id:'rn-set-paths',title:'数据目录与 OPENCODEX_HOME',body:'路径可复制；修改涉及迁移前备份。这里只表达目录选择，不访问真实文件、不改真实配置。',anchor:'#card-install-paths'},
+    {id:'rn-set-partitions',title:'数据目录分区',body:'桌面壳状态、备份、日志、导出、缓存与同步摘要分区展示。',anchor:'#card-install-partitions'}
+  ]);
+  P.register('settings-backup',[
+    {id:'rn-set-backup',title:'设置 · 数据与备份',body:'破坏性变更前自动备份；保留策略与校验算法集中维护。<ul><li><b>自动备份</b>：升级、导入、同步覆盖前自动备份。</li><li><b>保留策略</b>：最近 5 / 10 / 20 份。</li><li><b>完整性校验</b>：SHA-256 / SHA-512 / BLAKE3。</li></ul>',anchor:'#card-backup-data'}
+  ]);
+  P.register('settings-extensions',[
+    {id:'rn-set-ext',title:'Skills 管理',body:'源目录、软链接 / 复制、备份与导出范围；先配置同步策略，再按类型查看路径。',anchor:'#card-settings-skills'},
+    {id:'rn-set-ext-mcp',title:'MCP 管理',body:'同名冲突、落点、敏感值脱敏、备份与导出范围。',anchor:'#card-settings-mcp'},
+    {id:'rn-set-skills-paths',title:'Skills 路径',body:'6 个客户端 Skills 目录，点击复制完整路径。',anchor:'#card-skills-paths'},
+    {id:'rn-set-mcp-paths',title:'MCP 路径',body:'6 个客户端 MCP 配置文件，点击复制完整路径。',anchor:'#card-mcp-paths'}
+  ]);
+  P.register('settings-migration',[
+    {id:'rn-set-migration',title:'设置 · 配置迁移',body:'导出与导入都以校验为先；敏感凭据只进入加密容器。<ul><li><b>导出范围</b>：全量 / 仅配置 / 仅凭据。</li><li><b>导出加密</b>：口令保护或密钥保护。</li><li><b>导入流程</b>：严格校验优先；导入前自动备份。</li><li><b>导出目录</b>：真实实现会打开本机目录，原型只拦截。</li></ul>',anchor:'#card-migration'}
+  ]);
+  P.register('settings-sync',[
+    {id:'rn-set-sync',title:'设置 · WebDAV 同步',body:'端点与凭据在卡片主体维护；策略、加密与备份控制同步安全。<ul><li><b>冲突策略</b>：固定「每次询问」，冲突时暂停覆盖、保留双方历史并要求确认；不提供静默保留策略。</li><li><b>冷同步与加密</b>：冷同步开关；客户端加密强制开启。</li><li><b>覆盖前备份</b>：远端覆盖前自动备份。</li><li><b>动作</b>：立即同步、测试连接、查看同步历史。</li></ul>',anchor:'#card-sync'}
+  ]);
+  P.register('settings-cleanup',[
+    {id:'rn-set-cleanup',title:'设置 · 日志与通知',body:'清理策略用于控制本地历史规模；真实清理需二次确认。<ul><li><b>日志自动清理</b>：按天数和行数组合限制。</li><li><b>通知自动清理</b>：按天数限制。</li><li><b>启动清理</b>：启动时执行清理，清理前保留摘要。</li></ul>',anchor:'#card-cleanup'}
+  ]);
+  P.register('settings-cli',[
+    {id:'rn-set-cli',title:'设置 · CLI 控制面',body:'默认关闭；开启后只委托运行中实例执行管理器自有域命令。<ul><li><b>启用 CLI 控制面</b>：开关控制能力入口。</li><li><b>运行中实例</b>：显示当前委托目标。</li><li><b>Agent 提示</b>：查看完整说明或复制 Agent 提示。</li></ul>',anchor:'#card-cli'}
+  ]);
+  P.register('settings-upgrade',[
+    {id:'rn-set-upgrade-official',title:'OpenCodex 版本升级',body:'检查更新、升级前备份、官方升级引导、失败建议；真实实现只引导官方 ocx update。',anchor:'#card-upgrade-official'},
+    {id:'rn-set-upgrade-manager',title:'桌面管理器版本',body:'检查更新、下载并重启、通道与频率；应用自更新独立处理。',anchor:'#card-upgrade-manager'}
+  ]);
+  P.register('settings-about',[
+    {id:'rn-set-about',title:'设置 · 关于',body:'先说明官方项目与本应用归属，再集中展示版权、许可与第三方声明。<ul><li><b>官方项目</b>：OpenCodex 官网、GitHub、Issues 与版本信息。</li><li><b>本应用</b>：OpenCodeX-Desktop 独立桌面壳，仓库与 Issues 入口。</li><li><b>版权与归属</b>：查看官方许可与第三方声明。</li></ul>',anchor:'#card-about'}
+  ]);
+}
+function prototypeGroupKey(route){
+  if(route.startsWith('settings-')) return route;
+  if(route.startsWith('ext-')) return route;
+  return route;
+}
 function renderPrototypeNote(route){
-  const note=routeNotes[route]||routeNotes[route.startsWith('settings-')?'settings':route.startsWith('ext-')?'ext-skills':'overview']||prototypeNoteFallback;
   const prototypeRouteLink=document.getElementById('prototypeRouteLink');
   if(prototypeRouteLink){
     const isTray=route==='tray';
     prototypeRouteLink.href=isTray?'#overview':'#tray';
     prototypeRouteLink.textContent=isTray?'打开主界面 →':'打开托盘原型 →';
   }
-  const title=document.getElementById('protoNoteTitle');
-  const body=document.getElementById('protoNote');
-  const list=document.getElementById('protoButtonNotes');
-  if(!title||!body||!list) return;
-  title.textContent=note.title;
-  body.textContent=note.note;
-  list.innerHTML=(note.items||[]).map(([name,desc])=>`<li><strong>${name}</strong> · ${desc}</li>`).join('');
+  if(!window.ProtoNotes) return;
+  const groups=['side'];
+  if(document.body.classList.contains('notif-mode')) groups.push('notif');
+  if(document.body.classList.contains('windows-mode')) groups.push('windows');
+  const key=prototypeGroupKey(route);
+  if(ProtoNotes.hasGroup(key)) groups.push(key);
+  ProtoNotes.setGroups(groups);
 }
 let currentRoute='overview';
 let hashParams=new URLSearchParams();
@@ -5811,11 +5705,12 @@ document.addEventListener('click',event=>{
     ].map(item=>'<button class="target-icon" type="button" aria-checked="'+item.checked+'" data-prototype-action="mock-setting" title="'+item.label+'" aria-label="新增后同步到 '+item.label+'"><svg class="target-svg" aria-hidden="true"><use href="#ext-icon-'+item.id+'"/></svg></button>').join('');
     openModal(
       '新增 MCP',
-      '<div class="mcp-form-card"><div class="mcp-form-label">选择 MCP 类型</div><div class="chip-row" role="group" aria-label="MCP 预设"><button class="preset-chip active" type="button" data-prototype-action="mcp-preset">自定义</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="fetch">fetch</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="time">time</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="memory">memory</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="sequential-thinking">sequential-thinking</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="context7">context7</button></div><div class="form-grid mcp-form-grid"><div class="field span-2"><label>MCP 标题（唯一） <i>*</i></label><input class="input mono" placeholder="my-mcp-server"></div><div class="field span-2"><label>显示名称</label><input class="input" placeholder="例如 @modelcontextprotocol/server-time"></div></div><div class="mcp-form-label">启用到应用</div><div class="mcp-targets">'+appTargets+'</div><p class="mcp-note">默认不选中任何目标；保存后再用行内图标精确同步。</p></div><div class="mcp-form-card"><div class="mcp-editor-head"><div><label>完整的 JSON 配置</label></div><button class="link-chip" type="button" data-prototype-action="mcp-wizard">配置向导</button></div><textarea class="mcp-editor" rows="8" spellcheck="false" placeholder="{\n  &quot;type&quot;: &quot;stdio&quot;,\n  &quot;command&quot;: &quot;uvx&quot;,\n  &quot;args&quot;: [&quot;mcp-server-fetch&quot;]\n}"></textarea><button class="icon-btn mcp-format" type="button" data-prototype-action="mcp-format"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14"/><path d="M5 12h9"/><path d="M5 20h14"/><path d="m17 9 3 3-3 3"/></svg>格式化</button><p class="modal-prototype-note">校验 stdio 命令或 HTTP / SSE URL；TOML 可切换编辑，保存前通过解析。</p></div>',
+      '<div class="mcp-form-card"><div class="mcp-form-label">选择 MCP 类型</div><div class="chip-row" role="group" aria-label="MCP 预设"><button class="preset-chip active" type="button" data-prototype-action="mcp-preset">自定义</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="fetch">fetch</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="time">time</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="memory">memory</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="sequential-thinking">sequential-thinking</button><button class="preset-chip" type="button" data-prototype-action="mcp-preset" data-preset="context7">context7</button></div><div class="form-grid mcp-form-grid"><div class="field span-2"><label>MCP 标题（唯一） <i>*</i></label><input class="input mono" placeholder="my-mcp-server"></div><div class="field span-2"><label>显示名称</label><input class="input" placeholder="例如 @modelcontextprotocol/server-time"></div></div><div class="mcp-form-label">启用到应用</div><div class="mcp-targets">'+appTargets+'</div><p class="mcp-note">默认不选中任何目标；保存后再用行内图标精确同步。</p></div><div class="mcp-form-card"><div class="mcp-editor-head"><div><label>完整的 JSON 配置</label></div><button class="link-chip" type="button" data-prototype-action="mcp-wizard">配置向导</button></div><textarea class="mcp-editor" rows="8" spellcheck="false" placeholder="{\n  &quot;type&quot;: &quot;stdio&quot;,\n  &quot;command&quot;: &quot;uvx&quot;,\n  &quot;args&quot;: [&quot;mcp-server-fetch&quot;]\n}"></textarea><button class="icon-btn mcp-format" type="button" data-prototype-action="mcp-format"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14"/><path d="M5 12h9"/><path d="M5 20h14"/><path d="m17 9 3 3-3 3"/></svg>格式化</button></div>',
       '添加',
       ()=>toast('原型拦截：不会写入真实 MCP 配置。'),
       {cancelLabel:'返回'}
     );
+    if(window.ProtoNotes)ProtoNotes.setModalNote('校验 stdio 命令或 HTTP / SSE URL；TOML 可切换编辑，保存前通过解析。');
     modal.classList.add('modal-wide');
   }else if(action==='mcp-preset'){
     const chip=actionTarget;
@@ -6139,8 +6034,10 @@ function openModal(title,body,confirmText,handler,opts){
   window.prototypeSelect?.close();
   opts=opts||{};
   modalTitle.textContent=title;
-  // opts.hideNote：只读信息类弹窗不显示「原型演示」脚注（详情内容本身就是演示数据，脚注反而占高度）。
-  modalBody.innerHTML=body+(opts.hideNote?'':'<p class="modal-prototype-note">当前为原型演示；真实实现尚未启用。</p>');
+  // 注释便签方案：弹窗「原型演示」脚注改为标题旁的瞬态注释（锚 #modalTitle，不占弹窗正文高度）。
+  // opts.hideNote：只读信息类弹窗不显示该注释（详情内容本身就是演示数据）。
+  if(window.ProtoNotes) ProtoNotes.setModalNote(opts.hideNote?null:'当前为原型演示；真实实现尚未启用。');
+  modalBody.innerHTML=body;
   modalConfirm.textContent=confirmText||'关闭';
   modalConfirm.hidden=!!opts.hideConfirm;
   modalCancel.textContent=opts.cancelLabel||'取消';
@@ -6163,6 +6060,7 @@ function openModal(title,body,confirmText,handler,opts){
 }
 function closeModal(){
   window.prototypeSelect?.close();
+  if(window.ProtoNotes) ProtoNotes.setModalNote(null);
   modalMask.style.display='none';
   modal.classList.remove('modal-wide');
   modal.classList.remove('modal-tall');
@@ -7330,6 +7228,14 @@ function renderNotifLauncher(){
 
 function renderNotifHint(entry){
   const hint=document.getElementById('notifHint');
+  if(window.ProtoNotes){
+    if(!entry){
+      ProtoNotes.patch('notif-scenario',{title:'通知专题场景',body:'选择一条场景，界面会切到对应路由并演出该渠道的真实效果；「软件内位置」「通知表面材质」「颜色滤镜」只作用于原型通知演出，不写配置。'});
+    }else{
+      const s=entry.s;
+      ProtoNotes.patch('notif-scenario',{title:'场景：'+s[2],body:'<b>'+s[2]+'</b> · 主展示：'+s[3]+'<br>辅助：'+(s[4]||'—')+' · 默认不自动出现：<span style="color:#b91c1c">'+(s[5]||'—')+'</span><br>终态：'+(s[6]||'—')+'<br>'+(s[7]||'')});
+    }
+  }
   if(!entry){hint.textContent='选择一条场景，界面会切到对应路由并演出该渠道的真实效果。';return;}
   const s=entry.s;
   hint.innerHTML='<b>'+s[2]+'</b> · 主展示：'+s[3]+'<br>辅助：'+(s[4]||'—')+' · 默认不自动出现：<span style="color:#b91c1c">'+(s[5]||'—')+'</span><br>终态：'+(s[6]||'—')+'<br>'+(s[7]||'');
@@ -7399,6 +7305,7 @@ function resetNotifDemo(){
   document.getElementById('toastEl').classList.remove('show');
   setEnv('ready'); setState('stopped'); setRoute('overview',true);
   renderNotifLauncher(); renderNotifHint(null);
+  if(window.ProtoNotes){ ProtoNotes.patch('notif-scenario',{title:'通知专题场景',body:'选择一条场景，界面会切到对应路由并演出该渠道的真实效果；「软件内位置」「表面材质」「颜色滤镜」只作用于原型通知演出，不写配置。'}); }
 }
 
 function syncLaunchActive(){
@@ -7428,6 +7335,12 @@ document.addEventListener('click',event=>{
   setTimeout(syncLaunchActive,0);
 });
 renderNotifLauncher();renderNotifHint(null);
+// 通知专题注释组：默认说明 + 场景运行后由 renderNotifHint 动态 patch。
+if(window.ProtoNotes){
+  ProtoNotes.register('notif',[
+    {id:'notif-scenario',title:'通知专题场景',body:'选择一条场景，界面会切到对应路由并演出该渠道的真实效果；「软件内位置」「通知表面材质」「颜色滤镜」只作用于原型通知演出，不写配置。',anchor:'#notifDemoCard'}
+  ]);
+}
 setNotifPos(NOTIF_POS_DEFAULT);
 setNotifMaterial(new URLSearchParams(location.search).get('notifMaterial')||NOTIF_MATERIAL_DEFAULT);
 setNotifTint(new URLSearchParams(location.search).get('notifTint')||NOTIF_TINT_DEFAULT);
@@ -7452,6 +7365,8 @@ try{const tq=new URLSearchParams(location.search).get('theme');if(tq&&['light','
 applyTheme(storedTheme);
 
 renderWebdav('unconfigured');
+registerNotes();
+if(window.ProtoNotes)ProtoNotes.bindPanel({root:'#protoNotesPanel',search:'#protoNotesSearch',list:'#protoNotesList',count:'#protoNotesCount'});
 createAnchorTitles();
 setRoute(location.hash.slice(1)||'overview',true);
 if(currentRoute==='settings') showSettingsSection(parseRouteHash(location.hash).params.get('section')||'general');
@@ -7478,6 +7393,18 @@ document.addEventListener('scroll',event=>{
 </script>
 <script src="../overview-dual.js"></script>
 <script src="../proto-controls.js"></script>
+<script src="../proto-notes.js"></script>
+<script>
+// ProtoNotes 以 defer 语义挂在主脚本之后：registerNotes 等初始化统一延后到组件就绪后执行，
+// 避免 overview-dual.js 等外部脚本在组件未就绪时触碰注释状态。
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof registerNotes === 'function') registerNotes();
+    if (window.ProtoNotes) window.ProtoNotes.bindPanel({root:'#protoNotesPanel',search:'#protoNotesSearch',list:'#protoNotesList',count:'#protoNotesCount'});
+    if (typeof setRoute === 'function') setRoute(location.hash.slice(1) || 'overview', true);
+  });
+}
+</script>
 <script src="select-component.js"></script>
 <script src="model-config.js"></script>
 <script src="windows-window.js"></script>
