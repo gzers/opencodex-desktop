@@ -138,16 +138,14 @@ setOp('none');
 assert(resultEl.hidden,'清空后不常驻结果块');
 
 // 7. 动作同源：运行中四颗主操作全部内联（打开面板 / 停止 / 重启 / 查看日志，对齐软件实际效果）；
-//    刷新 / 查看建议只在允许它们的状态进入「更多」，运行中不出现空壳折叠。
+//    2026-10-09 软件实证：软件已无「更多」折叠层与内联「刷新状态」，低频动作一并移除。
 setState('running');
-const moreWrap=doc.querySelector('[data-b="morewrap"]');
-assert(moreWrap.hidden,'运行中不出现空壳「更多」');
 for(const act of ['panel','stop','restart','logs']){
   assert(!doc.querySelector(`[data-act="${act}"]`).hidden,`运行中直接露出 ${act}`);
 }
 setState('stopped');
-assert(!moreWrap.hidden,'未运行存在「更多」入口');
-assert(doc.querySelector('[data-act="refresh"]').closest('.ovb-more-panel'),'刷新等低频动作收进「更多」');
+assert(!doc.querySelector('[data-b="morewrap"]'),'未运行也不存在「更多」折叠层');
+assert(!doc.querySelector('#card-overview-status [data-act="refresh"]'),'动作区无内联「刷新状态」入口');
 
 // 8. 启停结果 Toast 不叠加机械说明句
 await sleep(3800);

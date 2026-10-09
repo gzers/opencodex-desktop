@@ -646,13 +646,8 @@ html[data-route="overview"] #statePill{display:none}
 .ovb-branch .ob-hint{color:var(--muted)}
 .ob-chip{display:inline-flex;align-items:center;gap:6px;min-height:20px;padding:1px 8px;border:1px solid var(--border);border-radius:var(--radius-pill);background:var(--panel);font-size:var(--text-micro);font-weight:600;color:var(--muted)}
 .ob-spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:uninstall-spin .7s linear infinite;flex:none}
-.ovb-more{position:relative}
-.ovb-more>summary{list-style:none;cursor:pointer}
-.ovb-more>summary::-webkit-details-marker{display:none}
-.ovb-more-panel{position:absolute;right:0;top:calc(100% + 6px);z-index:20;min-width:172px;display:grid;gap:4px;padding:8px;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:0 10px 30px #00000024}
-.ovb-more-panel .btn{justify-content:flex-start;width:100%}
 /* 以上控件用 display 覆盖了 UA 的 [hidden]，这里补回隐藏语义，避免空的支线/结果块占位。 */
-.ovb-problem[hidden],.ovb-branch[hidden],.ovb-result[hidden],.ob-spin[hidden],.ob-chip[hidden],.ovb-more[hidden]{display:none}
+.ovb-problem[hidden],.ovb-branch[hidden],.ovb-result[hidden],.ob-spin[hidden],.ob-chip[hidden]{display:none}
 /* 统一操作结果：同一结果只在一个承载处，取消/部分完成/待确认/待重启各有真实结论（数据与状态 §5.8）。 */
 .ovb-result{display:grid;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);font-size:var(--text-label)}
 .ovb-result[data-tone="bad"]{border-color:color-mix(in srgb,var(--red) 30%,transparent)}
@@ -1810,13 +1805,8 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <button class="btn danger" data-control="stop" data-act="stop">停止</button>
             <button class="btn" data-control="restart" data-act="restart">重启</button>
             <button class="btn ghost" data-act="logs">查看日志</button>
-            <details class="ovb-more" data-b="morewrap">
-              <summary class="btn ghost">更多</summary>
-              <div class="ovb-more-panel">
-                <button class="btn ghost" data-act="refresh">刷新状态</button>
-                <button class="btn ghost" data-act="advice">查看建议</button>
-              </div>
-            </details>
+            <!-- 2026-10-09 软件实证：真实软件概览无「更多 / 刷新状态」入口（刷新只保留在顶栏与门禁态），
+                 原型删除该折叠层与 .ovb-more 组件，与软件动作集合保持一致。 -->
           </div>
         </div>
         <details class="ovb-detail" id="card-overview-details">
@@ -4966,18 +4956,11 @@ function render(){
     external_takeover:['advice','refresh'],
     unreachable:['refresh','logs']
   };
-  /* 「查看日志」已提到主行（与软件运行中动作一致：打开面板 / 停止 / 重启 / 查看日志），
-     折叠层只留刷新、查看建议；避免出现「更多」里只有被隐藏项的空中折。 */
-  const SECONDARY=['refresh','advice'];
+  /* 「查看日志」已提到主行；真实软件概览没有「更多」折叠层（刷新只在顶栏 / 门禁态），
+     2026-10-09 软件实证后原型删除 .ovb-more 组件，动作集合与软件一致。 */
   const envBlocked=envGateActive&&envState!=='ready';
   const allowedActions=envBlocked?['refresh']:(actionsByState[currentState]||[]);
   document.querySelectorAll('[data-act]').forEach(el=>{el.hidden=!allowedActions.includes(el.dataset.act)});
-  const more=document.querySelector('[data-b="morewrap"]');
-  if(more){
-    const hasSecondary=allowedActions.some(a=>SECONDARY.includes(a));
-    more.hidden=!hasSecondary;
-    if(!hasSecondary) more.open=false;
-  }
   document.querySelector('.ovb-detail')?.toggleAttribute('hidden',envBlocked);
   document.getElementById('mods')?.classList.toggle('view-hidden',envBlocked);
   document.getElementById('recentEventsSection')?.toggleAttribute('hidden',envBlocked);

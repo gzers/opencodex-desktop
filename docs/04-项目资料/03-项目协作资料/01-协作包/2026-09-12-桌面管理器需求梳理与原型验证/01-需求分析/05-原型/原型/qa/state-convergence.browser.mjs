@@ -92,12 +92,6 @@ const probe=`()=>{
     docOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+2
   };
 }`;
-const overflowProbe=`()=>{
-  const win=document.querySelector('.window');
-  const r=win?win.getBoundingClientRect():{left:0,top:0,right:innerWidth,bottom:innerHeight};
-  return {left:r.left,top:r.top,right:r.right,bottom:r.bottom};
-}`;
-
 const resetScroll=async(page)=>{
   await page.evaluate(()=>{
     document.querySelectorAll('.main,.window,.content,.route-section').forEach(el=>{el.scrollTop=0;el.scrollLeft=0;});
@@ -122,6 +116,7 @@ for(const size of SIZES){
   page.on('pageerror',e=>consoleErrors.push('pageerror: '+e.message));
   await page.goto(url);
   await page.waitForTimeout(1000);
+  await page.evaluate(()=>{ document.getElementById('protoCommon').open=true; });
   await page.click(`#sizePresets button[data-size="${size.preset}"]`).catch(()=>{});
   await page.waitForTimeout(300);
 
@@ -165,23 +160,15 @@ for(const size of SIZES){
   // 运行中四颗主操作全部内联（打开面板 / 停止 / 重启 / 查看日志），不再出现「更多」空壳折叠。
   await page.click('#scenarios button[data-state="running"]').catch(()=>{});
   await page.waitForTimeout(150);
-  const runningActs=await page.evaluate(()=>[...document.querySelectorAll('#card-overview-status .ovb-actions > *')]
+  const runningActs=await page.evaluate(()=>[...document.querySelectorAll('#card-overview-status .ovb-actions > .btn')]
     .filter(el=>!el.hidden&&el.offsetParent!==null).map(el=>(el.textContent||'').trim().replace(/\s+/g,' ')));
   check(JSON.stringify(runningActs)===JSON.stringify(['打开面板','停止','重启','查看日志']), `${size.name}：运行中动作=${JSON.stringify(runningActs)}`);
 
-  // 「更多」弹出层不越出模拟窗口：用仍保留低频动作的未运行态取证。
+  // 2026-10-09 软件实证：软件无「更多」折叠层，原型同步移除，不再做弹出层取证。
   await page.click('#scenarios button[data-state="stopped"]').catch(()=>{});
   await page.waitForTimeout(150);
-  const win=await page.evaluate(eval('('+overflowProbe+')'));
-  await page.click('#card-overview-status .ovb-more > summary');
-  await page.waitForTimeout(200);
-  const panel=await page.evaluate(()=>{
-    const p=document.querySelector('#card-overview-status .ovb-more-panel');
-    const r=p.getBoundingClientRect();
-    return {hidden:p.closest('details').hidden,left:r.left,right:r.right,top:r.top,bottom:r.bottom};
-  });
-  check(!panel.hidden, `${size.name}：未运行存在「更多」入口`);
-  check(panel.left>=win.left-1 && panel.right<=win.right+1 && panel.top>=win.top-1 && panel.bottom<=win.bottom+1, `${size.name}：「更多」弹出层不越出模拟窗口`);
+  const moreGone=await page.evaluate(()=>!document.querySelector('#card-overview-status .ovb-more'));
+  check(moreGone, `${size.name}：未运行也不存在「更多」折叠层`);
   await page.click('#scenarios button[data-state="running"]').catch(()=>{});
   await page.waitForTimeout(150);
   await page.click('#card-overview-status .motion-detail-icon');
