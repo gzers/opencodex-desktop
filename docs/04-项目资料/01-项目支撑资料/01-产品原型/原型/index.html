@@ -1681,7 +1681,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="sync-config.css?v=4">
 <link rel="stylesheet" href="windows-window.css">
 <link rel="stylesheet" href="annotation-cards.css?v=31">
-<link rel="stylesheet" href="maintenance-ui.css?v=1">
+<link rel="stylesheet" href="maintenance-ui.css?v=2">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -1850,7 +1850,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="mod-head">
             <div class="proto-annotation" id="ann-ov-upgrade" data-annotation-number="03" data-annotation-title="0.1.10 共享升级流程（原型）" data-annotation-category="实现边界 · 概览">
               <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 03：0.1.10 共享升级流程（原型）"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">03</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p>0.1.10 候选：概览与设置共用检查、版本与事务状态，管理器和运行时分开确认。全部为内存示例，不读取更新源或执行真实更新。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+              <div class="annotation-source" hidden><p>0.1.10 候选：概览与设置共用检查、版本与事务状态，管理器和面板分开查看与确认；检查后点击各状态行，升级前备份在确认步骤中选择。事件支持启动、概览切入、定时与恢复等多个触发源，缓存与互斥合并请求。全部为内存示例，不读取更新源或执行真实更新。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>版本升级</h3>
             <span class="tag">可用</span>
@@ -1858,12 +1858,10 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           </div>
           <div class="mod-status">
             <span>管理器 <b>尚未检查</b></span>
-            <span>运行时 <b>尚未检查</b></span>
+            <span>面板 <b>尚未检查</b></span>
           </div>
           <div class="mod-actions">
             <button class="btn primary" data-prototype-action="check-update">检查更新</button>
-            <button class="btn" data-prototype-action="preupdate-backup">升级前备份</button>
-            <button class="btn ghost" data-settings-section="upgrade">升级设置</button>
           </div>
         </article>
 
@@ -5945,7 +5943,7 @@ let notifications=[
 window.maintenanceNotificationBridge=(items, registry)=>{
   items.forEach(entry=>{
     const spec=registry.find(item=>item.id===entry.id);
-    if(!spec?.delivery.includes('center')) return;
+    if(!entry.delivery?.includes('center')) return;
     const id='maintenance:'+entry.uid;
     const old=notifications.find(item=>item.id===id);
     if(old){old.resolved=old.resolved||entry.resolved;old.detail=spec.trigger+' · 累计 '+entry.occurrences+' 次（内存示例）';return;}
@@ -7443,7 +7441,8 @@ document.addEventListener('scroll',event=>{
 <script src="windows-window.js"></script>
 <script src="prototype-panel.js"></script>
 <script src="annotation-cards.js?v=18"></script>
-<script src="maintenance-state.js?v=1"></script>
-<script src="maintenance-ui.js?v=1"></script>
+<script src="maintenance-events.js?v=1"></script>
+<script src="maintenance-state.js?v=2"></script>
+<script src="maintenance-ui.js?v=2"></script>
 </body>
 </html>

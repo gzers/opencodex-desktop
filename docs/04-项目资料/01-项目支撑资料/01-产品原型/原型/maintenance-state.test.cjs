@@ -90,3 +90,107 @@ test('每次创建独立内存，刷新重新创建不沿用策略或版本',()=
   const a=M.create(now),b=M.create(now);a.setPolicy(1,1,'after-create');a.setScenario('manager','available');a.backup();
   assert.equal(b.state.policy.count,10);assert.equal(b.state.updates.manager.phase,'idle');assert.equal(b.state.backups.length,14);
 });
+test('注册配置的触发源、任务与解除引用有效，未注册来源被拒绝',()=>{
+  const ids=new Set(M.registry.map(e=>e.id));
+  for(const spec of M.registry){
+    assert.ok(spec.triggers.length);
+    for(const origin of spec.triggers)assert.ok(Object.hasOwn(M.config.triggers,origin));
+    for(const recovery of spec.recovery)assert.ok(ids.has(recovery.split(':')[0]));
+    assert.ok(['prototype','planned'].includes(spec.implemented));
+  }
+  for(const job of M.config.jobs)for(const origin of job.triggers)assert.ok(Object.hasOwn(M.config.triggers,origin));
+  const m=M.create(now);
+  assert.throws(()=>m.requestChecks('unknown',now),/未注册/);
+  assert.throws(()=>m.emit('update.available','manager',now,{origin:'data.changed'}),/未注册/);
+  assert.equal(m.begin('manager','checking','unknown'),null);
+  assert.equal(m.state.notifications.length,0);
+});
+test('启动延迟、多来源合并与成功缓存；不发生自动安装',()=>{
+  const m=M.create(now);
+  assert.equal(m.requestChecks('app.ready',now+14999).length,0);
+  const batch=m.requestChecks('app.ready',now+15000);assert.equal(batch.length,2);
+  assert.equal(m.requestChecks('route.overview.enter',now+15000).length,0);
+  assert.equal(m.requestChecks('network.online',now+15000).length,0);
+  for(const r of batch)m.finish(r.target,r.generation,'available',now+15000);
+  assert.equal(m.requestChecks('route.overview.enter',now+day-1).length,0);
+  assert.equal(m.requestChecks('schedule.due',now+day+15000).length,2);
+  assert.equal(m.state.updates.manager.current,'0.1.9');
+});
+test('手动检查跳过缓存；beta 的面板周期不随管理器缩短',()=>{
+  const m=M.create(now);m.setUpdatePolicy('beta',now);
+  const batch=m.requestChecks('policy.changed',now);
+  for(const r of batch)m.finish(r.target,r.generation,'latest',now);
+  const auto=m.requestChecks('schedule.due',now+6*3600000);assert.deepEqual(auto.map(r=>r.target),['manager']);
+  m.finish('manager',auto[0].generation,'latest',now+6*3600000);
+  assert.equal(m.requestChecks('user.action',now+6*3600000+1).length,2);
+});
+test('手动策略禁止全部自动源；切通道取消旧结果',()=>{
+  const m=M.create(now),old=m.requestChecks('user.action',now);
+  m.setUpdatePolicy('manual',now+1);
+  for(const r of old)assert.equal(m.finish(r.target,r.generation,'available',now+2),false);
+  for(const origin of ['app.ready','route.overview.enter','schedule.due','window.resume','network.online','retry.due','policy.changed'])assert.equal(m.requestChecks(origin,now+day*100).length,0);
+  assert.equal(m.requestChecks('user.action',now+day).length,2);
+});
+test('失败按5m、30m、2h退避，耗尽后回到正常周期；网络恢复不绕过退避',()=>{
+  const m=M.create(now);let at=now;
+  for(const delay of [300000,1800000,7200000,day]){
+    const token=m.begin('manager');m.finish('manager',token,'failed',at);
+    assert.equal(m.state.updates.manager.lastChecked,null);
+    assert.equal(m.state.updates.manager.nextDue,at+delay);
+    assert.equal(m.requestChecks('network.online',at+delay-1).filter(r=>r.target==='manager').length,0);
+    at+=delay;
+  }
+  const batch=m.requestChecks('retry.due',at);
+  assert.equal(batch.filter(r=>r.target==='manager').length,1);
+});
+test('恢复后只执行一次到期检查，不补跑错过周期',()=>{
+  const m=M.create(now),batch=m.requestChecks('window.resume',now+day*100);
+  assert.equal(batch.length,2);
+  assert.equal(m.requestChecks('schedule.due',now+day*100).length,0);
+  for(const r of batch)m.finish(r.target,r.generation,'latest',now+day*100);
+  assert.equal(m.requestChecks('route.overview.enter',now+day*100+1).length,0);
+});
+test('后台已最新静默，手动检查有toast；可用更新按版本与通道去重',()=>{
+  const m=M.create(now);let batch=m.requestChecks('app.ready',now+15000);
+  for(const r of batch)m.finish(r.target,r.generation,'latest',now+15000);
+  assert.deepEqual(m.state.deliveries[0].delivery,['log']);
+  const token=m.begin('manager');m.finish('manager',token,'latest',now+15001);
+  assert.ok(m.state.deliveries[0].delivery.includes('toast'));
+  const context={revision:'0.1.10',channel:'stable',origin:'app.ready'};
+  assert.ok(m.emit('update.available','manager',now+15002,context));
+  assert.equal(m.emit('update.available','manager',now+15003,{...context,origin:'route.overview.enter'}),null);
+  assert.ok(m.emit('update.available','manager',now+15004,{...context,revision:'0.1.11'}));
+  assert.ok(m.emit('update.available','manager',now+15005,{...context,channel:'beta'}));
+});
+test('检查成功只解除检查失败，不误解应用失败；完成更新解除可用版本通知',()=>{
+  const m=M.create(now);
+  m.emit('update.failed','manager',now,{stage:'applying'});
+  m.emit('update.failed','manager',now,{stage:'checking'});
+  m.emit('update.available','manager',now+1);
+  assert.equal(m.state.notifications.find(n=>n.id==='update.failed'&&n.stage==='applying').resolved,false);
+  assert.equal(m.state.notifications.find(n=>n.id==='update.failed'&&n.stage==='checking').resolved,true);
+  m.emit('update.complete','manager',now+2);
+  assert.equal(m.state.notifications.find(n=>n.id==='update.available').resolved,true);
+});
+test('备份是更新确认选项；取消勾选不创建，失败阻断，过期确认无副作用',()=>{
+  const m=M.create(now);m.setScenario('manager','available');let u=m.state.updates.manager;
+  const count=m.state.backups.length;
+  assert.equal(m.confirmApply('manager',u.generation,u.candidate,true,now,false),null);
+  assert.equal(m.state.backups.length,count);assert.equal(u.phase,'available');
+  assert.notEqual(m.confirmApply('manager',u.generation,u.candidate,false,now,false),null);
+  assert.equal(m.state.backups.length,count);m.cancel('manager',now);
+  const stale=u.generation;m.setScenario('manager','available');
+  assert.equal(m.confirmApply('manager',stale,u.candidate,true,now),null);
+  assert.equal(m.state.backups.length,count);
+  assert.notEqual(m.confirmApply('manager',u.generation,u.candidate,true,now),null);
+  assert.equal(m.state.backups.length,count+1);
+  assert.equal(m.state.backups[0].reason,'升级前');
+});
+test('一次性不同事务分别投递；冻结配置不可写，未知任务没有副作用',()=>{
+  const m=M.create(now);
+  m.emit('sync.complete','object',now,{operationId:'a'});
+  m.emit('sync.complete','object',now+1,{operationId:'b'});
+  assert.equal(m.state.deliveries.length,2);
+  assert.ok(Object.isFrozen(M.config.events[0].triggers));
+  assert.equal(m.requestChecks('data.changed',now+day).length,0);
+});

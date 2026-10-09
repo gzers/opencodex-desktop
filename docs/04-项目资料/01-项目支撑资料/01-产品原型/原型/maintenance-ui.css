@@ -1,6 +1,10 @@
 /* 0.1.10 增量只布局维护内容，材质和按钮消费现有组件令牌。 */
 .mnt-status { margin-left:auto; font-size:var(--text-label); color:var(--muted); white-space:normal; }
-#card-overview-upgrade .mod-status>span { display:flex; gap:6px; flex-wrap:wrap; align-items:baseline; }
+.mnt-version-row { display:flex; width:100%; gap:6px; flex-wrap:wrap; align-items:baseline; border:0; padding:4px 0; background:transparent; color:inherit; font:inherit; text-align:left; cursor:pointer; }
+.mnt-version-row:hover:not(:disabled) { color:var(--accent); }
+.mnt-version-row:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+.mnt-version-row:disabled { cursor:default; }
+.mnt-backup-option { display:flex; align-items:center; gap:8px; margin-top:18px; }
 #card-overview-upgrade .mod-actions { flex-wrap:wrap; }
 .mnt-policy { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:16px 0 10px; }
 .mnt-policy label { display:flex; flex:1 1 130px; flex-direction:column; gap:6px; font-size:var(--text-label); }
