@@ -102,8 +102,8 @@
   if(renderedTab){scrolls[renderedTab].list=$('.sx-table',host)?.scrollTop||0;scrolls[renderedTab].secrets=$('.sx-secrets',host)?.scrollTop||0;}
   if(resetList)scrolls[tab].list=0;
   const selected=closure().ids.size,dirty=signature(scopes.webdav)!==savedScope;
-  host.innerHTML='<div class="sx-tabs" role="tablist" aria-label="同步方式">' +
-   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'">' +
+  host.innerHTML='<div class="sx-tabs" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
+   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'本机范围同时用于上传与接收；下载的变化先预览，再应用。')+'</p></div><div class="sx-actions">'+(tab==='file'?btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):btn('保存本机范围','save-scope',dirty?'':'disabled')+btn('同步配置','check',dirty?'disabled title="请先保存本机范围"':'',true))+'</div></header>'+
    (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong> <span class="sx-mark">'+(connection.connected?'演示连接':'未连接')+'</span> <span class="sx-muted">本机：MacBook</span></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','连接信息为演示数据','连接名称、地址与状态均为演示数据；测试连接、保存与同步仅切换演示状态，不发起真实网络请求。'):'') +
    '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
    (result&&result.tab===tab?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span></div>':'') +

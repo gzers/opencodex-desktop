@@ -10,18 +10,10 @@ html[data-route=sync] .main>.topbar{flex:none}
 .sx-page p,.sx-dialog p{margin:6px 0 0;line-height:1.6}
 .sx-muted{color:var(--muted);font-size:var(--text-caption,12px);line-height:1.6}
 .sx-tabs{display:flex;flex:none;gap:24px;border-bottom:1px solid var(--border);margin-bottom:12px}
-.sx-tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:0 2px 12px;cursor:pointer;font:inherit}
-.sx-tabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
-/* 同步页 Tab 按钮样式只应命中真 Tab；sxPanel 整体留在 .sx-tabs 内，
-   面板里的通用控件（.btn、.select-trigger 等）会被上面的规则污染，
-   这里按组件契约还原，一处生效，不逐个页面修补。 */
-.sx-tabs .btn{padding:7px 12px;border:1px solid var(--border);border-bottom:1px solid var(--border);color:var(--text);background:var(--panel)}
-.sx-tabs .btn.ghost{border-color:transparent} /* 底色走组件层 --raised-ghost，禁止重复定义 */
-.sx-tabs .btn:hover{border-color:var(--border);background:var(--hover)}
-.sx-tabs .btn:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
-.sx-tabs .select-trigger{padding:var(--space-2) var(--space-3);border:1px solid var(--border);color:var(--text)}
-.sx-tabs .select-trigger:hover:not(:disabled){background:var(--hover)}
-.sx-tabs .sx-group-title,.sx-tabs .sx-object-name{padding:0;border:0;border-bottom:0;background:none;color:inherit;text-align:left}
+/* Tab 条与 sxPanel 为兄弟节点，只给真正的 Tab 设置下划线样式。
+   面板动作和下拉继续复用通用组件，不再用补丁覆盖其材质。 */
+.sx-tabs>[role=tab]{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:0 2px 12px;cursor:pointer;font:inherit}
+.sx-tabs>[role=tab][aria-selected=true]{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
 .sx-top,.sx-toolbar,.sx-actions,.sx-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .sx-top{justify-content:space-between;flex:none}
 .sx-top{align-items:flex-start}
