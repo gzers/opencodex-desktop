@@ -3,7 +3,7 @@
   const preview = document.getElementById('route-annotations');
   const main = document.querySelector('.main');
   const group = document.getElementById('protoAnnotations');
-  if (!preview || !main || !group) return;
+  if (!main || !group) return;
   const escape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const icon = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg>';
   function card(id, number, title, content, category) {
