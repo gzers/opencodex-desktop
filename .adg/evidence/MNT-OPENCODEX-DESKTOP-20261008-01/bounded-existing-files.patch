@@ -1,0 +1,87 @@
+--- before/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html
++++ after/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html
+@@ -1644,6 +1644,7 @@
+ <link rel="stylesheet" href="../overview-dual.css">
+ <link rel="stylesheet" href="../proto-controls.css">
+ <link rel="stylesheet" href="model-config.css">
++<link rel="stylesheet" href="windows-window.css">
+ </head>
+ <body>
+ <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
+@@ -3191,8 +3192,9 @@
+         <button type="button" data-launch="settings">设置</button>
+         <button type="button" data-launch="tray">托盘</button>
+         <button type="button" data-launch="notify" class="pctl-span">通知与反馈</button>
++        <button type="button" data-launch="windows" class="pctl-span">Windows 窗口</button>
+       </div>
+-      <p class="pctl-hint">软件窗口外的统一菜单：前六个直接跳转路由；「通知与反馈」是独立菜单，打开后只显示通知专题，不与概览混排。</p>
++      <p class="pctl-hint">软件窗口外的统一菜单：前六个直接跳转路由；「通知与反馈」和「Windows 窗口」分别打开专题测试器，复用同一产品窗口。</p>
+     </nav>
+ 
+     <div class="proto-card" id="notifDemoCard">
+@@ -7401,15 +7403,18 @@
+ 
+ function syncLaunchActive(){
+   const inNotif=document.body.classList.contains('notif-mode');
++  const inWindows=document.body.classList.contains('windows-mode');
+   const map={overview:'overview',panel:'panel',extensions:'extensions',logs:'logs',settings:'settings',tray:'tray'};
+   document.querySelectorAll('#launchGrid button').forEach(b=>{
+-    const on=b.dataset.launch==='notify'?inNotif:(!inNotif&&map[currentRoute]===b.dataset.launch);
++    const on=b.dataset.launch==='windows'?inWindows:(b.dataset.launch==='notify'?inNotif&&!inWindows:(!inNotif&&!inWindows&&map[currentRoute]===b.dataset.launch));
+     b.classList.toggle('active',on);
+   });
+ }
+ 
+ document.getElementById('launchGrid').querySelectorAll('button').forEach(b=>{
+   b.onclick=()=>{
++    if(b.dataset.launch==='windows'){window.windowsPrototype.enter();return;}
++    window.windowsPrototype?.exit();
+     if(b.dataset.launch==='notify'){openNotifMenu();return;}
+     exitNotifMode();setRoute(b.dataset.launch);syncLaunchActive();
+   };
+@@ -7475,5 +7480,6 @@
+ <script src="../proto-controls.js"></script>
+ <script src="select-component.js"></script>
+ <script src="model-config.js"></script>
++<script src="windows-window.js"></script>
+ </body>
+ </html>
+--- before/docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md
++++ after/docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md
+@@ -58,3 +58,7 @@
+ 前序[模型列表编辑与批量配置](../../03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/06-版本记录/20261004-模型列表编辑与批量配置.md)：走查“渠道模型 → 管理 → 行内别名 / 独立启停 → 展开编辑 → 加入草稿 → 编辑明细 → 勾选或选择筛选结果 / 当前渠道全部 → 批量启停 / 编辑 / 恢复字段继承 → 查看草稿 → 保存”。复选框只选批量对象，表头不改启停；隐藏勾选保留并提示。展开编辑协议、上下文预设 / 自定义、推理多选 / 默认档、Fast 能力和端点，完整高级配置仍在明细。未确认行编辑先加入草稿或还原，所有有效更改统一页级保存；批量校验失败整批不改、成功只需一次撤销。五组源码 189 PASS、两份 JS 语法通过；浏览器访问受阻，实屏 / 焦点和生产编译待验，刷新重置。
+ 
+ 最新[列表操作与渠道详情分区](../../03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/06-版本记录/20261005-列表操作与渠道详情分区.md)：走查“渠道模型 → 管理 → 左侧四区锚点 / 收起导航 → 内联渠道配置 → 确认连接与模型 → 取消保留输入或确认加入草稿 → 左侧查看草稿 / 保存”。快捷按钮和全局草稿 / 已保存 / 待确认 / 预算集中侧栏底部；标题贴顶，长 ID 和能力摘要多行、单元格垂直居中。模型批量栏仅有勾选时显示，删除范围下拉 / 重复全选按钮 / 零项占位；表头选择当前结果并保留隐藏勾选，清除过滤后选全量，工具栏增加全部展开收起 / 七种排序。未确认连接和行编辑阻止保存，切换 / 返回 / 重绘保留连接缓冲，不存密钥值。六组源码 221 PASS、三个脚本语法通过，浏览器文件访问被拒，视觉 / 焦点及生产写入仍待验；刷新重置内存 mock。
++
++## Windows 平台专题（2026-10-08）
++
++右侧菜单新增“Windows 窗口”，或打开 [同一主原型的专题入口](原型/index.html?topic=windows)。专题只展示 Windows 标题栏、Mica 外观示意、实色回退和窗口行为模拟，与模型 0.2.0 草稿分开记账。方案与 QA 归 [独立维护记录](../../03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/README.md)。新增 windows-window.js / windows-window.css 不调用原生接口；返回常规原型恢复原外壳。
+--- before/docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md
++++ after/docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md
+@@ -42,3 +42,7 @@
+ 前序增量：[模型列表编辑与批量配置](../../03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/06-版本记录/20261004-模型列表编辑与批量配置.md)（2026-10-04 UTC；Asia/Shanghai 为 2026-10-05）。列表直接编辑别名 / 独立启停，展开常用字段并保留完整明细；复选框只选批量目标，勾选 / 筛选 / 当前渠道全量三范围支持启停、按字段编辑与恢复继承。统一草稿、基准 / 原子校验、单次撤销和待确认行缓冲保存阻止。五组源码 189 PASS、两份 JS 语法通过；94 项生产条件 / 11 门及新版实屏待验，仍引用同一未提交主原型。
+ 
+ 最新增量：[列表操作与渠道详情分区](../../03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步-v0.2.0/01-需求分析/06-版本记录/20261005-列表操作与渠道详情分区.md)（2026-10-05，Asia/Shanghai）。模型勾选后才显示批量栏，表头选当前结果、清除过滤后全量，增加全部展开收起和七排序；渠道详情标题贴顶，四区连续 / 左侧锚点、侧栏快捷与底部草稿状态 / 激活数 / 保存，连接内联确认且取消保留缓冲，未确认输入阻止保存。模型身份 / 摘要多行并垂直居中。六组源码 221 PASS、三个脚本语法通过；浏览器文件访问受阻、实屏 / 焦点及 94 项生产条件 / 11 门待验，仍引用同一未提交主原型。
++
++## Windows 平台外壳专题
++
++2026-10-08：[Windows 窗口外观与菜单适配](../../03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261008-Windows窗口外观与菜单适配/README.md)，MNT-OPENCODEX-DESKTOP-20261008-01。右侧入口或 [专题深链接](原型/index.html?topic=windows)，含单行标题栏 / 旧双栏对照 / Mica 示意 / 回退 / 关闭留托盘。18 项浏览器场景通过；0.1.8 候选的外壳设计增量单独评审，不改变模型 0.2.0 范围，不登记固定提交或原生完成。
+--- before/docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md
++++ after/docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/README.md
+@@ -2,7 +2,7 @@
+ 
+ ## 状态
+ 
+-**已登记维护分析（更新至 2026-10-06）。** 本目录原则上承接协作包关闭后的运行维护附件；按用户明确授权，在仍为 open 的原包承接事故与维护专题。各条记录分别保留分析、实施与发布状态；新增维护记录不改变原协作包、需求或实施对象状态。
++**已登记维护分析（更新至 2026-10-08）。** 本目录原则上承接协作包关闭后的运行维护附件；按用户明确授权，在仍为 open 的原包承接事故与维护专题。各条记录分别保留分析、实施与发布状态；新增维护记录不改变原协作包、需求或实施对象状态。
+ 
+ ## 维护记录
+ 
+@@ -13,6 +13,7 @@
+ | [MNT-OPENCODEX-DESKTOP-20261004-03 桌面自更新端点与签名、官方版本卡片远端查询、代跑官方更新](../../2026-10-04-更新通道自更新与官方更新代跑/README.md) | 0.1.2 | **0.1.3** | 分析已登记；用户已确认 D-1～D-4（自更新端点指向本仓库 Releases、CI 签名、官方卡片只读远端查询、复用受控安装代跑官方更新）；未实施、未验证、未发布 |
+ | [MNT-OPENCODEX-DESKTOP-20261004-04 能耗与内存性能分析](20261004-能耗与内存性能分析/README.md) | 0.1.3 | **0.1.7** | 已实施、回归并稳定发布；后台绘制停止与闲置面板回收有验证；前台完整效果短测无明确降幅，真实功率和长期内存趋势待验证 |
+ | [MNT-OPENCODEX-DESKTOP-20261006-01 Windows 启动崩溃与图标适配](20261006-Windows启动崩溃与图标适配/README.md) | 0.1.7（Windows x64） | **0.1.8 候选** | feature 与首屏续修已推送；9262a5b 的 CI、Windows 普通/管理员首屏复验通过，本轮协议 7、后端 335 项通过；未替换日常 0.1.7，未合并、未生成安装器、未发布 |
++| [MNT-OPENCODEX-DESKTOP-20261008-01 Windows 窗口外观与菜单适配](20261008-Windows窗口外观与菜单适配/README.md) | Windows 顶部界面（截图版本待核实） | **0.1.8 候选独立增量** | 已补专题及右侧入口，浏览器 mock 18 项通过；原生实现、合并、安装与发布待执行 |
+ 
+ 正式运行事实分别见 [0.1.0 macOS 事故观察](../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261004-01.md) 与 [0.1.7 Windows 启动与图标诊断](../../../../../03-开发实施/RUN-OPENCODEX-DESKTOP-20261006-01.md)。版本为软件测试版版本，非原型 V0.1～V0.9。
+ 
