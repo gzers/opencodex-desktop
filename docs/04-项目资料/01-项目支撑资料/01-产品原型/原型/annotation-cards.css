@@ -62,6 +62,9 @@ html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--ann
 .ap-sync-row .proto-annotation{right:12px}
 /* 打样页导航卡的标记挂在卡片自身：卡头较窄，挂 section-head 会越出正文滚出视口。 */
 .ap-navigation>.proto-annotation{right:16px;top:16px}
+.ap-form-row.annotation-anchor{margin-top:44px}
+.ap-form-row>.proto-annotation{right:12px;top:-36px}
+.ap-action-anchor>.proto-annotation{top:-34px}
 .ap-footnote{margin:0;font-size:11px;color:var(--muted);line-height:1.6}
 .annotation-search{display:flex;flex-direction:column;gap:7px;color:var(--pctl-sub);font-size:11px}
 .annotation-search input{width:100%;min-height:34px;padding:7px 10px;border:1px solid var(--pctl-bd);border-radius:8px;background:var(--pctl-bg);color:var(--text);font:inherit;font-size:12px}
@@ -95,4 +98,17 @@ html[data-route="logs"] .route-section>.proto-annotation{z-index:32}
 .mp-toolbar .settings-tabs{position:relative}
 .mp-toolbar>.settings-tabs>.proto-annotation{right:4px;top:-26px}
 .sx-connection>.proto-annotation{right:8px}
+.sx-scope>.proto-annotation{right:96px;top:-24px}
 .sx-secrets>.proto-annotation{left:0;right:auto}
+.ovb-actions>.proto-annotation{top:-30px}
+/* 组件防御：部分页面把标记挂进了自己的 tab 容器（如 sync 页 #sxPanel 位于 .sx-tabs 内），
+   容器的 button 样式与 .annotation-marker 同为单类特异性，会反向覆盖标记。这里以
+   button.annotation-marker（同为 (0,1,1) 且本表更晚加载）整体重申标记样式，一处生效全站。 */
+button.annotation-marker{display:flex;align-items:center;gap:5px;height:24px;margin:0;padding:0 7px;border:1px solid var(--annotation-line);border-radius:7px;background:color-mix(in srgb,var(--annotation-wash) 36%,transparent);color:var(--annotation-ink);font:inherit;font-size:10px;line-height:normal;cursor:pointer;box-shadow:0 2px 6px #18102c08}
+button.annotation-marker[aria-expanded="true"]{background:color-mix(in srgb,var(--annotation-wash) 48%,transparent);border-color:var(--annotation-ring);box-shadow:0 0 0 3px color-mix(in srgb,var(--annotation-ring) 14%,transparent)}
+button.annotation-marker[aria-expanded="true"] .annotation-marker-plus{transform:rotate(45deg)}
+button.annotation-marker:hover{border-color:var(--annotation-ring)}
+button.annotation-marker:focus-visible{outline:2px solid var(--annotation-ring);outline-offset:2px}
+button.annotation-marker .annotation-number{font-size:10px;font-weight:550}
+button.annotation-marker .annotation-marker-plus{font-size:12px;opacity:.7}
+.proto-annotation.is-located button.annotation-marker{border-color:var(--annotation-ring)}
