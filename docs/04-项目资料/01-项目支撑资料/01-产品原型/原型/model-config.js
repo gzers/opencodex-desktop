@@ -1,0 +1,928 @@
+/* COL-LOCAL-20261004-01: 内存 mock；不连接 API、CLI、WebDAV 或运行文件。 */
+(() => {
+ 'use strict';
+ const $=(q,r=document)=>r.querySelector(q), $$=(q,r=document)=>[...r.querySelectorAll(q)];
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const clone=v=>v===undefined?undefined:JSON.parse(JSON.stringify(v));
+ const levels=['none','minimal','low','medium','high','xhigh','max'];
+ const labels={none:'无',minimal:'最低',low:'低',medium:'中',high:'高',xhigh:'极高',max:'最高'};
+ const protocols=['Responses','Chat','Anthropic','Google','Ollama'];
+ const adapterCatalog=['codebuddy','command-code','openai-chat','ollama-native','anthropic','openai-responses','google','kiro','azure','azure-openai','cursor','devin','mimo-free','qoder','claude-cli'];
+ const adapters={Responses:'openai-responses',Chat:'openai-chat',Anthropic:'anthropic',Google:'google',Ollama:'ollama-native'};
+ const legacyFamilies={GPT:'gpt',Claude:'claude',Gemini:'gemini',Qwen:'qwen',DeepSeek:'deepseek',Grok:'grok'};
+ const families=()=>templates.filter(t=>t.versions.length).map(t=>[t.id,t.name]);
+ const protocolOptions=v=>opts(protocols.map(x=>[x,adapters[x]]),v)+'<optgroup label="专用适配器 · 需专用连接配置">'+adapterCatalog.filter(x=>!Object.values(adapters).includes(x)).map(x=>'<option disabled>'+x+' · 专用连接待接入</option>').join('')+'</optgroup>';
+ const button=(name,action,attrs='',primary=false,danger=false)=>'<button class="btn '+(danger?'danger':primary?'primary':'ghost')+'" data-mp="'+action+'" '+attrs+'>'+name+'</button>';
+ const icons={preview:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',compare:'<path d="M12 3v18M8 6H3v12h5M16 6h5v12h-5"/>',more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',collapse:'<path d="m6 9 6 6 6-6"/>',maximize:'<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',restore:'<path d="M9 3v6H3m18 0h-6V3M3 15h6v6m6 0v-6h6"/>',send:'<path d="M12 20V4m-6 6 6-6 6 6"/>',export:'<path d="M12 16V3m-5 5 5-5 5 5M4 14v6h16v-6"/>'};
+ Object.assign(icons,{menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',back:'<path d="m14 6-6 6 6 6"/>',agent:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/>',settings:'<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3"/><circle cx="15" cy="17" r="3"/>',edit:'<path d="m15 4 5 5M4 20l4-1L20 7l-5-5L3 14l-1 5Z"/>'});
+ Object.assign(icons,{refresh:'<path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 14 6M18 18a8 8 0 0 1-14-6"/>',save:'<path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-7h10v7"/>',draft:'<path d="M7 3h10l4 4v14H3V3h4ZM7 12h10M7 16h7"/>',undo:'<path d="M9 4 3 10l6 6M3 10h10a7 7 0 0 1 7 7"/>',redo:'<path d="m15 4 6 6-6 6M21 10H11a7 7 0 0 0-7 7"/>',reset:'<path d="M3 4v6h6M3 10a9 9 0 1 1 2 8"/>',budget:'<path d="M5 21V11h4v10M11 21V3h4v18M17 21V7h4v14"/>'});
+ const icon=name=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">'+icons[name]+'</svg>';
+ const iconButton=(name,action,mark,attrs='')=>'<button class="icon-btn" data-mp="'+action+'" title="'+esc(name)+'" aria-label="'+esc(name)+'" '+attrs+'>'+icon(mark)+'</button>';
+ function templateActions(inNav=false){
+  const actions=inNav?[['Agent 自动填充','generate','agent'],['模版工具','template-more','more']]:[['匹配预览','match-preview','preview'],['与主版本比较','compare','compare'],['模版工具','template-more','more']];
+  return actions.map(([name,action,mark])=>{
+   const disabled=action==='compare'&&!template().main,title=disabled?'尚无主版本可比较':name;
+   const attrs=action==='generate'?'id="mpTemplateAgentAction" aria-controls="mpAssistantPanel" aria-expanded="'+assistantOpen+'"':'';
+   return inNav?'<button class="btn ghost mp-nav-action" data-mp="'+action+'" title="'+title+'" aria-label="'+name+'" '+attrs+' '+(disabled?'disabled':'')+'>'+icon(mark)+'<span class="mp-nav-action-label">'+name+'</span></button>':disabled?'':button(name,action);
+  }).join('');
+ }
+ const opts=(items,value)=>items.map(x=>{const [v,n]=Array.isArray(x)?x:[x,x];return '<option value="'+esc(v)+'" '+(String(v)===String(value)?'selected':'')+'>'+esc(n)+'</option>';}).join('');
+ const names=['gpt-5.4','gpt-5.4-mini','gpt-5.3-codex','gpt-5.2','gpt-5.2-codex','gpt-5-mini','claude-opus-4-6','claude-sonnet-4-6','claude-haiku-4-5','gemini-3.1-pro-preview','gemini-3-flash-preview','qwen3-coder','qwen3-max','deepseek-v3.2','deepseek-r1','grok-4','grok-4-fast'];
+ function makeProvider(id,name,total,n,protocol='Responses'){
+  const models=Array.from({length:total},(_,i)=>{
+   const k=i%names.length,modelId=names[k]+(i>=names.length?'--demo-'+Math.floor(i/names.length):'');
+   const family=k<6?'GPT':k<9?'Claude':k<11?'Gemini':k<13?'Qwen':k<15?'DeepSeek':'Grok';
+   return {key:id+'::'+i,id:modelId,family,selected:i<n,official:{context:family==='GPT'?128000:null,modalities:['text','image'],efforts:['low','medium','high','xhigh'],default:'medium',fast:k<4?'supported':'unknown'},overrides:{}};
+  });
+  return {id,name,protocol,enabled:true,mode:id==='native'?'native':'whitelist',models,defaults:{},familyOverrides:{},refs:{gpt:'gpt:1'},fastEnabled:'inherit',refresh:'idle',refreshToken:0,updated:'10:24',...(id==='native'?{}:{connection:{baseUrl:'https://'+id+'.example.com/v1',auth:'apikey',keyConfigured:true}})};
+ }
+ const initial={providers:[makeProvider('newapi','NewApi',30,17),makeProvider('a6api','A6api',104,32),makeProvider('aimami','Aimami',12,8),makeProvider('native','官方 / 原生',6,6,'原生')],fastMode:'on',fastRows:true,globalRefs:{gpt:'gpt:1'},hidden:2};
+ initial.providers[3].models.forEach(m=>m.official.fast='unsupported');
+ initial.providers[1].availability={kind:'no-credit',source:'manual'};
+ const templates=[{id:'gpt',name:'GPT · Responses',family:'GPT',protocol:'Responses',main:1,versions:[
+  {n:1,status:'人工',date:'10-03 16:20',rules:{protocol:'Responses',efforts:['low','medium','high','xhigh'],default:'medium',fast:'supported'}},
+  {n:2,status:'历史',date:'10-03 18:42',rules:{protocol:'Responses',efforts:['low','medium','high'],default:'high',fast:'supported'}},
+  {n:3,status:'候选',date:'10-04 10:30',rules:{protocol:'Responses',efforts:['low','medium','high','xhigh'],default:'high',fast:'supported'}}
+ ]},{id:'claude',name:'Claude · Anthropic',family:'Claude',protocol:'Anthropic',main:1,versions:[{n:1,status:'人工',date:'10-03 16:30',rules:{protocol:'Anthropic'}}]},
+ {id:'gemini',name:'Gemini · Google',family:'Gemini',protocol:'Google',main:1,versions:[{n:1,status:'人工',date:'10-03 16:40',rules:{protocol:'Google'}}]}];
+ templates.forEach(t=>{t.versions.forEach(v=>{v.match={...defaultMatch(),include:[{type:'prefix',value:t.id+'-'}]};v.description='示例预设，可自行修改';v.source='演示 fixture / 未核对';});delete t.family;delete t.protocol;});
+ for(const [id,name,prefix] of [['qwen','Qwen','qwen'],['deepseek','DeepSeek','deepseek'],['grok','Grok','grok']])templates.push({id,name,main:1,versions:[{n:1,status:'预设',date:'10-04',match:{...defaultMatch(),include:[{type:'prefix',value:prefix}]},description:'示例预设，能力继承',rules:{}}]});
+ let draft=clone(initial),saved=clone(initial),pending=false,client='目录已核对 · 客户端待验证';
+ let channelDetail=false,templateDetail=false,templateSearch='',correctionDraft='',generationTarget='',generationSources='provided';
+ let agent={providerId:'',modelId:'',effort:'inherit',fast:false};
+ let tab='channels',current='newapi',search='',family='',onlySelected=false,channelSearch='',scope=new Set(),previewSaved=false;
+ let templateScratch=null,templateSelection=new Set(),externalTask=null,externalBatch=null,externalPrompt='';
+ let templateId='gpt',versionN=3,buffers={},conversation=[],proposal=null,generationToken=0,editorDigest=0,generating=false;
+ let editorSection='basic',editorNavCollapsed=false,editorViewId=null,assistantOpen=false,assistantMaximized=false,assistantInputs={},assistantLock=true,generationOwner='';
+ let operation=null,operationId=0,progressOpen=true,scenario='normal',incoming=null,undo=[],redo=[];
+ let channelWizard=null,wizardToken=0;
+ let channelSection='models',channelNavCollapsed=false,channelViewId=null,channelConnections={};
+ const records=[{id:0,time:'10-03 16:20',status:'成功',policy:clone(initial),before:clone(initial),client:'用户已确认（示例）'}];
+ const host=$('#mpContent'), provider=()=>draft.providers.find(p=>p.id===current), template=()=>templateScratch?.id===templateId?templateScratch:templates.find(t=>t.id===templateId);
+ const version=(id,n)=>templates.find(t=>t.id===id)?.versions.find(v=>v.n===Number(n));
+ const buffer=()=>buffers[templateId], dirty=()=>JSON.stringify(draft)!==JSON.stringify(saved), busy=()=>operation?.status==='running';
+ function defaultMatch(){return {include:[],exclude:[],caseSensitive:false,channelMode:'all',channels:[],priority:0};}
+ const channelMode=match=>match.channelMode||(match.channels?.length?'whitelist':'all');
+ function variantFor(content,modelId){const normalize=x=>content.match?.caseSensitive?x:x.toLowerCase();return (content.variants||[]).filter(v=>v.suffix&&normalize(modelId).endsWith(normalize(v.suffix))).sort((a,b)=>b.suffix.length-a.suffix.length)[0];}
+ function templateLayers(ref,m){const [id,n]=String(ref||'').split(':'),v=version(id,n),variant=v&&variantFor(v,m.id);return [['模版 '+(ref||'未引用'),v?.rules||{}],...(variant?[['版本或后缀 '+variant.name+' · 后缀 '+variant.suffix,variant.rules]]:[])];}
+ const canonicalKeys=obj=>Object.fromEntries(Object.entries(obj||{}).map(([k,v])=>[legacyFamilies[k]||k,clone(v)]));
+ function matchLines(rows=[]){return rows.map(r=>r.type+':'+r.value).join('\n');}
+ function parseMatchLines(text){return text.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map(x=>{const parts=x.match(/^(exact|prefix|glob):(.*)$/);return parts?{type:parts[1],value:parts[2]}:{type:'glob',value:x};});}
+ function matchPattern(rule,id,sensitive){const normalize=x=>sensitive?x:x.toLowerCase(),v=normalize(rule.value),text=normalize(id);if(rule.type==='exact')return text===v;if(rule.type==='prefix')return text.startsWith(v);if(rule.type==='glob'){const parts=v.split('*').map(x=>x.split('?').map(y=>y.replace(/[.*+?^{}()|[\]\\]/g,'\\$&').replaceAll('$','\\$')).join('.'));return new RegExp('^'+parts.join('.*')+'$').test(text);}return false;}
+ function matchResult(match,m,p){const mode=channelMode(match),listed=match.channels?.includes(p.id);if(mode==='whitelist'&&!listed||mode==='blacklist'&&listed)return 'scope';if(!match.include.some(r=>matchPattern(r,m.id,match.caseSensitive)))return 'unmatched';return match.exclude.some(r=>matchPattern(r,m.id,match.caseSensitive))?'excluded':'matched';}
+ function templateMatches(t,m,p,v=null){return !!t&&matchResult((v||version(t.id,t.main)||t.versions[0])?.match||defaultMatch(),m,p)==='matched';}
+ function templateResolution(p,m,policy=draft){
+  if(m.templateRef){const [id,n]=m.templateRef.split(':');return version(id,n)?{ref:m.templateRef,id,error:''}:{ref:m.templateRef,id,error:'精确模版版本不存在'};}
+  const refs={...canonicalKeys(policy.globalRefs),...canonicalKeys(p.refs)},hits=[];
+  for(const [tid,ref] of Object.entries(refs)){const [id,n]=String(ref).split(':'),v=version(id,n);if(!v)return {ref,id,error:'已采用模版版本不存在：'+ref};if(id!==tid)return {ref,id,error:'模版引用 ID 不一致'};const t=templates.find(t=>t.id===id);if(templateMatches(t,m,p,v))hits.push({ref,id,priority:v.match?.priority||0});}
+  hits.sort((a,b)=>b.priority-a.priority);if(hits.length>1&&hits[0].priority===hits[1].priority)return {ref:null,id:null,error:'模版匹配冲突：'+hits.filter(x=>x.priority===hits[0].priority).map(x=>x.ref).join(' / ')};return {...(hits[0]||{ref:null,id:null}),error:''};
+ }
+ function templateLabel(p,m){const names=templates.filter(t=>templateMatches(t,m,p)).map(t=>t.name);return names.join(' / ')||'未匹配模版';}
+ function familyOverride(p,m,policy=draft){const chosen=templateResolution(p,m,policy);return canonicalKeys(p.familyOverrides)[chosen.id]||{};}
+ function templateContent(){const t=template(),v=version(t.id,versionN);return clone(buffer()||{name:t.name,description:v?.description||'',match:v?.match||defaultMatch(),rules:v?.rules||{},...(v?.variants?.length?{variants:v.variants}:{})});}
+ const editorSections=[['basic','基本信息'],['match','匹配范围'],['common','族通用配置'],['variants','版本或后缀'],['sources','来源与版本']];
+ function templateForm(b){
+  const mode=channelMode(b.match),rows=b.variants||[];
+  const content={};
+  content.basic='<h3>基本信息</h3><p class="mp-muted">一个模版就是一个自定义模型族。名称可在顶部直接修改。</p><div class="mp-template-form"><label>说明<input id="mpTemplateDescription" data-template-meta="description" class="input" value="'+esc(b.description)+'"></label></div>';
+  content.match='<div class="mp-section-heading"><h3>匹配范围</h3>'+button('匹配预览','match-preview')+'</div><div class="mp-template-scope"><label class="mp-label">渠道范围<select id="mpMatchChannelMode" class="mp-select" data-template-match="channelMode">'+opts([['all','全部渠道'],['whitelist','白名单 · 仅所选渠道'],['blacklist','黑名单 · 排除所选渠道']],mode)+'</select></label>'+(mode==='all'?'<p class="mp-muted">所有现有和以后新增渠道都可参与匹配。</p>':'<div class="mp-checks" role="group" aria-label="'+(mode==='whitelist'?'允许':'排除')+'的渠道">'+draft.providers.map(p=>'<label><input id="mpMatchChannel-'+esc(p.id)+'" type="checkbox" data-template-channel="'+esc(p.id)+'" '+(b.match.channels.includes(p.id)?'checked':'')+'>'+esc(p.name)+'</label>').join('')+'</div><p class="mp-muted">'+(mode==='whitelist'?'未选渠道不参与；空白名单不匹配任何渠道。':'所选渠道被排除；空黑名单允许全部渠道，包括以后新增渠道。')+'</p>')+'</div><div class="mp-template-form"><label>包含规则<textarea id="mpMatchInclude" data-template-match="include" placeholder="prefix:gpt-">'+esc(matchLines(b.match.include))+'</textarea></label><label>排除规则<textarea id="mpMatchExclude" data-template-match="exclude" placeholder="glob:*-embedding*">'+esc(matchLines(b.match.exclude))+'</textarea></label><label>匹配优先级<input id="mpMatchPriority" class="input" type="number" data-template-match="priority" value="'+b.match.priority+'"></label><label class="mp-label"><input id="mpMatchCase" type="checkbox" data-template-match="caseSensitive" '+(b.match.caseSensitive?'checked':'')+'>区分大小写</label></div><p class="mp-muted">匹配上游模型 ID；每行 exact:精确 ID、prefix:前缀、glob:通配符。排除优先，同级冲突需明确选择。匹配不自动勾选模型。</p>';
+  content.common='<h3>族通用配置</h3><p class="mp-muted">先定义共同配置。版本或后缀只覆盖自定义字段，其余继续继承。</p>'+fieldEditor(b.rules,null,false);
+  content.variants='<div class="mp-toolbar"><h3>版本或后缀 <span class="mp-badge">'+rows.length+'</span></h3>'+button('添加版本或后缀','add-variant')+'</div><p class="mp-muted">按上游 ID 的字面后缀识别，例如 5.6、5.5、luna。可自行添加版本号或文字后缀；多个命中取最长后缀，只应用一个条目的配置。</p>'+rows.map(v=>'<div class="mp-variant-row"><div><strong>'+esc(v.name)+'</strong><code>后缀 '+esc(v.suffix)+'</code><small>'+Object.keys(v.rules).length+' 项自定义 · 其余继承族通用配置</small></div><div class="mp-actions">'+button('配置','edit-variant','data-id="'+esc(v.id)+'"')+button('删除','delete-variant','data-id="'+esc(v.id)+'"',false,true)+'</div></div>').join('')+(rows.length?'':'<div class="mp-empty">暂未添加版本或后缀，全部使用族通用配置。需要时可自行添加任意数量。</div>');
+  const v=version(templateId,b.base);content.sources='<h3>来源与版本</h3><p>'+esc(v?.source||'人工新建候选；能力待核对')+'</p><p class="mp-muted">保存后新增候选版本；设置主版本和采用到渠道是独立动作。</p>'+draft.providers.filter(p=>Object.values(p.refs).some(x=>x.startsWith(templateId+':'))).map(p=>'<p>'+esc(p.name)+' · '+esc(p.refs[templateId])+'</p>').join('');
+  const nav=editorSections.map(([id,name],i)=>'<button class="mp-nav-item" data-mp="editor-section" data-id="'+id+'" title="'+name+'" aria-controls="mpTemplateSection-'+id+'" aria-current="'+(editorSection===id?'location':'false')+'"><span>'+String(i+1).padStart(2,'0')+'</span><span class="mp-nav-label">'+name+'</span></button>').join('');
+  const sections=editorSections.map(([id,name])=>'<section id="mpTemplateSection-'+id+'" class="mp-template-section" data-template-section="'+id+'" aria-label="'+name+'">'+content[id]+'</section>').join('');
+  return '<div id="mpTemplateWorkspace" class="mp-template-workspace '+(editorNavCollapsed?'nav-collapsed':'')+'"><nav class="mp-template-nav" aria-label="模版设置分区">'+button(icon('menu'),'toggle-editor-nav','id="mpTemplateNavToggle" title="'+(editorNavCollapsed?'展开':'收起')+'设置导航" aria-label="'+(editorNavCollapsed?'展开':'收起')+'设置导航" aria-expanded="'+!editorNavCollapsed+'"')+nav+'<div class="mp-template-tools" role="group" aria-label="模版操作">'+templateActions(true)+'</div>'+templateSaveStatus()+'</nav><div class="mp-template-sections">'+sections+'</div></div><div id="mpTemplateError" class="mp-alert" role="alert"></div>';
+ }
+ function editorNodes(){return editorSections.map(([id])=>$('#mpTemplateSection-'+id,host)).filter(Boolean);}
+ function setEditorSection(id){
+  if(!editorSections.some(([key])=>key===id))return;editorSection=id;
+  $$('.mp-nav-item',host).forEach(node=>node.setAttribute('aria-current',node.dataset.id===id?'location':'false'));
+ }
+ function editorOffset(scroller=host.closest('.main')){
+  const height=$('#mpTemplateHeader',host)?.getBoundingClientRect().height||0;
+  const inset=scroller?Math.max(0,parseFloat(window.getComputedStyle?.(scroller)?.paddingTop)||0):0;
+  const offset=height+(scroller?.clientTop||0)+12;
+  host.style?.setProperty?.('--mp-editor-top',-inset+'px');
+  host.style?.setProperty?.('--mp-editor-offset',offset+'px');
+  host.style?.setProperty?.('--mp-editor-nav-top',height+12-inset+'px');
+  if(scroller)host.style?.setProperty?.('--mp-editor-nav-height',Math.max(0,scroller.clientHeight-height-24)+'px');
+  return offset;
+ }
+ function editorScrollPosition(scroller){
+  if(!scroller)return null;const top=scroller.getBoundingClientRect().top,sections=editorNodes();
+  const offset=editorOffset(scroller),anchor=sections.find(node=>node.getBoundingClientRect().bottom>top+offset)||sections.at(-1);
+  return {top:scroller.scrollTop,id:anchor?.id,offset:anchor?anchor.getBoundingClientRect().top-top:0};
+ }
+ function restoreEditorScroll(scroller,position,measure=editorOffset){
+  if(!scroller||!position)return;measure(scroller);const anchor=position.id&&$('#'+position.id,host);
+  scroller.scrollTop=anchor?scroller.scrollTop+anchor.getBoundingClientRect().top-scroller.getBoundingClientRect().top-position.offset:position.top;
+ }
+ function syncEditorSection(){
+  const route=document.documentElement?.dataset.route;
+  if(tab!=='templates'||!templateDetail||route&&route!=='models')return;
+  const scroller=host.closest('.main');if(!scroller)return;const offset=editorOffset(scroller);
+  const sections=editorNodes();if(!buffer()||!sections.length)return;
+  const top=scroller.getBoundingClientRect().top+offset+12;let active=sections[0];
+  for(const section of sections)if(section.getBoundingClientRect().top<=top)active=section;
+  if(scroller.scrollHeight>scroller.clientHeight&&scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-2)active=sections.at(-1);
+  setEditorSection(active.dataset.templateSection);
+ }
+ function scrollEditorSection(id){
+  if(tab!=='templates'||!templateDetail||!buffer()||!editorSections.some(([key])=>key===id))return;
+  const section=$('#mpTemplateSection-'+id,host),scroller=host.closest('.main');if(!section)return;
+  setEditorSection(id);if(!scroller)return;
+  const top=scroller.scrollTop+section.getBoundingClientRect().top-scroller.getBoundingClientRect().top-editorOffset(scroller);
+  scroller.scrollTo({top,behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'});
+ }
+ function toggleEditorNav(){
+  const workspace=$('#mpTemplateWorkspace',host),toggle=$('#mpTemplateNavToggle',host);if(!workspace||!toggle)return;
+  const scroller=host.closest('.main'),position=editorScrollPosition(scroller);editorNavCollapsed=!editorNavCollapsed;
+  workspace.classList.toggle('nav-collapsed',editorNavCollapsed);
+  toggle.setAttribute('aria-expanded',String(!editorNavCollapsed));toggle.setAttribute('aria-label',(editorNavCollapsed?'展开':'收起')+'设置导航');toggle.setAttribute('title',(editorNavCollapsed?'展开':'收起')+'设置导航');
+  restoreEditorScroll(scroller,position);syncEditorSection();
+ }
+ function editVariant(id=''){
+  const b=buffer();if(!b)return;const original=b.variants?.find(v=>v.id===id),item=clone(original||{id:'variant-'+Date.now()+'-'+(++editorDigest),name:'',suffix:'',rules:{}});
+  modal(original?'配置版本或后缀':'添加版本或后缀','<div class="mp-template-form"><label>条目名称<input id="mpVariantName" class="input" value="'+esc(item.name)+'" placeholder="例如 5.6、5.5 或 luna"></label><label>匹配后缀<input id="mpVariantSuffix" class="input" value="'+esc(item.suffix)+'" placeholder="例如 5.6、5.5 或 luna"></label></div><p class="mp-muted">按后缀匹配，仅自定义字段覆盖族通用配置。未填字段继承；条目名称仅用于显示，不会改写上游 ID。</p>'+fieldEditor(item.rules,{values:b.rules,sources:Object.fromEntries(Object.keys(b.rules).map(k=>[k,'族通用配置']))},false)+'<div id="mpVariantError" class="mp-alert" role="alert"></div>','加入候选',()=>{
+   item.name=$('#mpVariantName').value.trim();item.suffix=$('#mpVariantSuffix').value.trim();const next=clone(b);next.variants=(next.variants||[]).filter(v=>v.id!==item.id).concat([item]);const error=templateError(next);if(error){$('#mpVariantError').textContent=error;return;}b.variants=next.variants;editorDigest++;closeModal();render();
+  },{confirmKeepsOpen:true});bindFields($('[data-field-editor]',$('#modalBody')),item.rules,{values:b.rules,sources:Object.fromEntries(Object.keys(b.rules).map(k=>[k,'族通用配置']))},(rules,valid)=>{item.rules=rules;$('#modalConfirm').disabled=!valid;});
+ }
+ function templateRulesError(r){
+  const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+  if(!object(r)||Object.keys(r).some(k=>!['protocol','context','modalities','efforts','default','fast','force','omit','authority'].includes(k)))return '模型配置字段无效';
+  if(Object.hasOwn(r,'protocol')&&!protocols.includes(r.protocol))return '模版输出协议无效';
+  if(Object.hasOwn(r,'efforts')&&(!Array.isArray(r.efforts)||r.efforts.some(x=>!levels.includes(x))))return '推理档位无效';
+  if(Object.hasOwn(r,'default')&&(!levels.includes(r.default)||r.efforts&&!r.efforts.includes(r.default)))return '默认档位不在可选档位中';
+  if(Object.hasOwn(r,'context')&&(!Number.isSafeInteger(r.context)||r.context<=0))return '上下文窗口须为正整数';
+  if(Object.hasOwn(r,'modalities')&&(!Array.isArray(r.modalities)||!r.modalities.length||r.modalities.some(x=>!['text','image','audio'].includes(x))))return '输入模态无效';
+  if(Object.hasOwn(r,'fast')&&!['unknown','supported','unsupported'].includes(r.fast))return 'Fast 声明无效';
+  if(Object.hasOwn(r,'omit')&&typeof r.omit!=='boolean')return '不传参数须为布尔值';
+  if(Object.hasOwn(r,'authority')&&r.authority!=='force')return '声明模式无效';
+  if(Object.hasOwn(r,'force')&&(!levels.includes(r.force)||r.efforts&&!r.efforts.includes(r.force)))return '强制档不在可选列表';
+  if(r.force&&r.omit)return '强制档与不传参数冲突';return '';
+ }
+ function templateError(c){
+  const object=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+  if(!object(c)||typeof c.name!=='string'||!c.name.trim())return '请填写模版名称';
+  if(typeof c.description!=='string'||!object(c.match)||!Array.isArray(c.match.include)||!Array.isArray(c.match.exclude)||!Array.isArray(c.match.channels)||typeof c.match.caseSensitive!=='boolean')return '匹配规则结构无效';
+  if(!c.match.include.length)return '请至少填写一条包含规则';
+  if(!Number.isSafeInteger(c.match.priority))return '匹配优先级须为整数';
+  if(!['all','whitelist','blacklist'].includes(channelMode(c.match)))return '渠道范围模式无效';
+  if(c.match.channels.some(id=>typeof id!=='string'||!draft.providers.some(p=>p.id===id)))return '匹配渠道范围无效';
+  for(const r of [...c.match.include,...c.match.exclude])if(!object(r)||Object.keys(r).some(k=>!['type','value'].includes(k))||!['exact','prefix','glob'].includes(r.type)||typeof r.value!=='string'||!r.value.trim()||r.value.length>256)return '匹配规则无效或过长';
+  const error=templateRulesError(c.rules);if(error)return error;
+  if(c.variants!==undefined&&!Array.isArray(c.variants))return '版本或后缀条目须为数组';
+  const ids=new Set(),suffixes=new Set();
+  for(const v of c.variants||[]){
+   if(!object(v)||Object.keys(v).some(k=>!['id','name','suffix','rules'].includes(k))||typeof v.id!=='string'||!v.id||ids.has(v.id))return '条目 ID 无效或重复';ids.add(v.id);
+   if(typeof v.name!=='string'||!v.name.trim()||typeof v.suffix!=='string'||!v.suffix.trim()||v.suffix.length>256)return '请填写条目名称和匹配后缀（最多 256 字符）';
+   const suffix=c.match.caseSensitive?v.suffix:v.suffix.toLowerCase();if(suffixes.has(suffix))return '匹配后缀重复，请合并规则';suffixes.add(suffix);
+   const e=templateRulesError(v.rules)||templateRulesError({...c.rules,...v.rules});if(e)return v.name+'：'+e;
+  }return '';
+ }
+ function updateTemplateInput(el){const b=buffer();if(!b)return;if(el.dataset.templateMeta)b[el.dataset.templateMeta]=el.value;else {const k=el.dataset.templateMatch;if(k==='include'||k==='exclude')b.match[k]=parseMatchLines(el.value);else if(k==='channels'){b.match.channels=el.value?[el.value]:[];if(!b.match.channelMode||b.match.channelMode==='all')b.match.channelMode='whitelist';}else if(k==='channelMode'){b.match.channelMode=el.value;render();}else if(k==='priority')b.match.priority=Number(el.value);else if(k==='caseSensitive')b.match.caseSensitive=el.checked;}editorDigest++;updateTemplateSaveStatus();}
+ function matchPreview(){const t=template(),c=templateContent(),error=templateError(c);if(error){modal('匹配预览','<p class="mp-alert">'+esc(error)+'</p>','返回编辑');return;}const rows=draft.providers.flatMap(p=>p.models.map(m=>({p,m,result:matchResult(c.match,m,p)}))),hits=rows.filter(x=>x.result==='matched'),other=rows.filter(x=>x.result!=='matched');
+  const table=items=>'<div class="mp-match-results"><table><thead><tr><th>渠道 / 模型</th><th>匹配结果与原因</th><th>当前状态</th></tr></thead><tbody>'+items.map(({p,m,result})=>{let reason=result==='scope'?(channelMode(c.match)==='blacklist'?'范围外：渠道在黑名单中':'范围外：渠道未列入白名单'):result==='unmatched'?'未命中任何包含规则':result==='excluded'?'排除优先：':'命中：';const rule=(result==='excluded'?c.match.exclude:c.match.include).find(r=>matchPattern(r,m.id,c.match.caseSensitive));if(['matched','excluded'].includes(result)&&rule)reason+=rule.type+':'+rule.value;const overlap=result==='matched'?templates.filter(x=>x.id!==t.id&&templateMatches(x,m,p)&&version(x.id,x.main)?.match.priority===c.match.priority):[];if(result==='matched'){const variant=variantFor(c,m.id);reason+=' · '+(variant?'版本或后缀 '+variant.name+' / 后缀 '+variant.suffix:'族通用配置');}if(overlap.length)reason+=' · 同级重叠 '+overlap.map(t=>t.name).join('、')+'（仅已采用集合产生运行冲突）';return '<tr><td>'+esc(p.name)+'<br><code>'+esc(m.id)+'</code></td><td>'+esc(reason)+'</td><td>'+esc((p.enabled?'启用':'停用')+' · '+(selected(p).some(x=>x.id===m.id)?'已选':'未选')+(Object.keys(m.overrides).length?' · 保留自定义':''))+'</td></tr>';}).join('')+'</tbody></table></div>';
+  modal('匹配预览 · '+c.name,'<p>命中 '+hits.length+' · 排除 '+rows.filter(x=>x.result==='excluded').length+' · 未匹配 '+rows.filter(x=>x.result==='unmatched').length+' · 范围外 '+rows.filter(x=>x.result==='scope').length+'</p>'+(!hits.length?'<p class="mp-alert">零命中，请检查模型 ID、规则和渠道范围。</p>':table(hits))+(other.length?'<details class="mp-details"><summary>查看排除、未匹配与范围外（'+other.length+'）</summary>'+table(other)+'</details>':'')+'<p class="mp-muted">预览读取 mock 清单，含停用和未勾选模型；仅已采用版本参与实际解析，不自动勾选或写入。</p>','返回编辑');
+ }
+
+ function portablePolicy(policy){const p=clone(policy);p.providers.forEach(x=>{delete x.connection;(x.endpoints||[]).forEach(e=>delete e.connection);delete x.addedInPrototype;delete x.availability;});return p;}
+ const policyDigest=()=>JSON.stringify(draft),baseDigest=()=>JSON.stringify(portablePolicy(saved));
+ const selected=p=>p.mode==='none'?[]:p.models.filter(m=>p.mode==='all'||p.mode==='native'||m.selected);
+ function resolve(p,m,policy=draft,skipLocal=false){
+  const ref=p.id==='native'?null:templateResolution(p,m,policy).ref, [id,n]=String(ref||'').split(':');
+  const layers=[['官方声明',m.official],...templateLayers(ref,m),['渠道默认',p.defaults],['渠道族覆盖',familyOverride(p,m,policy)]];
+  if(!skipLocal)layers.push(['单模型例外',m.overrides]);
+  const values={},sources={};for(const [source,rules] of layers)for(const [k,v] of Object.entries(rules||{})){values[k]=v;sources[k]=source;}
+  const route=resolveRoute(p,m,policy,skipLocal);values.protocol=route.protocol;sources.protocol=route.source;return {values,sources,ref,route};
+ }
+ // 协议独立解析，不以最终协议反过来重新匹配模版。
+ function endpoints(p){return !p.id||p.id==='native'?[]:[{id:'primary',protocol:p.protocol,connection:p.connection},...(p.endpoints||[])];}
+ function connectionBound(e){const c=e?.connection;return !!c?.baseUrl&&['apikey','none'].includes(c.auth)&&(c.auth!=='apikey'||!!c.keyConfigured);}
+ function resolveRoute(p,m,policy=draft,skipLocal=false){
+  if(p.id==='native')return {protocol:'原生',source:'官方管理',endpointId:null,error:'',needsReview:false};
+  const ref=templateResolution(p,m,policy).ref,[id,n]=String(ref||'').split(':'),rules=version(id,n)?.rules||{};
+  let protocol=p.defaults.protocol||p.protocol,source='渠道默认';
+  for(const [label,layer] of [...templateLayers(ref,m),['渠道族覆盖',familyOverride(p,m,policy)],...(!skipLocal?[['单模型例外',m.overrides]]:[])])if(Object.hasOwn(layer,'protocol')){protocol=layer.protocol;source=label;}
+  const pool=endpoints(p).filter(e=>e.protocol===protocol),chosen=!skipLocal?m.endpointId:null;
+  const endpoint=chosen?endpoints(p).find(e=>e.id===chosen):pool.length===1?pool[0]:null;
+  let error=templateResolution(p,m,policy).error||(!protocols.includes(protocol)?'协议未支持':chosen&&!endpoint?'指定端点不存在':endpoint&&endpoint.protocol!==protocol?'指定端点与最终协议冲突':!endpoint?(pool.length?'多个同协议端点，请指定':'缺少 '+protocol+' 端点'):'');
+  if(!error&&!connectionBound(endpoint))error='端点尚未完成本机连接绑定';
+  return {protocol,source,endpointId:endpoint?.id||null,error,needsReview:protocol!==p.protocol};
+ }
+ function routePlan(policy=draft){
+  const groups=[],errors=[],picker=[],reviews=[];
+  for(const p of policy.providers.filter(p=>p.enabled&&p.id!=='native')){
+   const routes=selected(p).map(m=>({m,r:resolveRoute(p,m,policy)}));
+   for(const {m,r} of routes){if(r.error)errors.push(p.name+' / '+m.id+'：'+r.error);if(r.needsReview)reviews.push(p.name+' / '+m.id+'：切换协议后推理 / Fast 待核对');}
+   // mock 以连接元数据演示分组；真实凭据引用及 hard pin 校验待实现。
+   const buckets=new Map();
+   for(const {m,r} of routes.filter(x=>!x.r.error)){
+    const e=endpoints(p).find(e=>e.id===r.endpointId),key=JSON.stringify(e.connection);
+    if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push({m,r,e});
+   }
+   for(const bucket of buckets.values()){
+    const native=[...new Set(bucket.map(x=>x.r.protocol).filter(x=>!['Chat','Responses'].includes(x)))];
+    const sets=native.length<=1?[bucket]:native.map(w=>bucket.filter(x=>x.r.protocol===w)).concat([bucket.filter(x=>['Chat','Responses'].includes(x.r.protocol))]).filter(x=>x.length);
+    for(const entries of sets){
+     const ids=[...new Set(entries.map(x=>x.e.id))].sort(),primary=entries.find(x=>x.e.id==='primary');
+     const wire=native.length===1?native[0]:primary?.r.protocol||entries.map(x=>x.r.protocol).sort()[0];
+     const effectiveWire=entries.some(x=>x.r.protocol===wire)?wire:entries[0].r.protocol;
+     const modelAdapters=Object.fromEntries(entries.filter(x=>x.r.protocol!==effectiveWire&&['Chat','Responses'].includes(x.r.protocol)).map(x=>[x.m.id,adapters[x.r.protocol]]));
+     const group={logicalId:p.id,id:p.id+'__'+ids.join('_'),adapter:adapters[effectiveWire],endpointIds:ids,selectedModels:entries.map(x=>x.m.id),modelAdapters};groups.push(group);
+     for(const {m,r} of entries)picker.push({logicalId:p.id,key:m.key,modelId:m.id,protocol:r.protocol,endpointId:r.endpointId,providerId:group.id});
+    }
+   }
+  }
+  const order=projection(policy).filter(x=>x.p!=='system').map(x=>{const parent=picker.find(y=>y.key===(x.type==='fast'?x.key.slice(0,-6):x.key));return {...x,...(parent?{providerId:parent.providerId,protocol:parent.protocol}:{} )};});
+  return {groups,errors,reviews,order};
+ }
+ function routePlanHTML(policy=draft){const plan=routePlan(policy);return '<p>一个逻辑渠道可包含多种协议。当前计划 '+plan.groups.length+' 个托管渠道分组；实际路由 ID 需由运行目录读回。</p>'+diffHTML(plan.groups.map(g=>g.logicalId+' → '+g.id+' · '+g.adapter+' · '+g.selectedModels.length+' 个基础模型'+(Object.keys(g.modelAdapters).length?' · 单模型协议覆盖 '+JSON.stringify(g.modelAdapters):'')))+(plan.errors.length?'<div class="mp-alert">'+diffHTML(plan.errors)+'</div>':'')+(plan.reviews.length?'<details class="mp-details"><summary>协议切换后的能力核对</summary>'+diffHTML(plan.reviews)+'</details>':'')+'<p class="mp-muted">原型仅演示编译计划。真实凭据、硬绑定、推理和 Fast wire 校验仍是实现交付门。</p>';}
+ function projection(policy=draft){
+  const rows=[];policy.providers.filter(p=>p.enabled).forEach(p=>selected(p).forEach(m=>{
+   rows.push({p:p.id,name:p.name,id:m.id,key:m.key,type:'base'});
+   if(p.id!=='native'&&policy.fastRows&&p.fastEnabled!=='off'&&resolve(p,m,policy).values.fast==='supported')rows.push({p:p.id,name:p.name,id:m.id+'--fast',key:m.key+'::fast',type:'fast'});
+  }));for(let i=0;i<policy.hidden;i++)rows.push({p:'system',name:'系统占用',id:'隐藏目录条目 '+(i+1),key:'hidden:'+i,type:'hidden'});return rows;
+ }
+ const count=()=>projection().length;
+ function change(fn){if(busy())return;undo.push(clone(draft));redo=[];fn();render();}
+ const notice=text=>toast(esc(text),{kind:'info'});
+ function modal(title,body,confirm='确定',fn=null,extra={}){
+  delete $('#modalBody').dataset.mpConversation;
+  openModal(title,'<div class="mp-dialog">'+body+'</div>',confirm,fn,{hideNote:true,...extra});
+  $('#modal').classList.add('mp-modal');$('#modalConfirm').disabled=false;
+  window.__modalOnClose=()=>{delete $('#modalBody').dataset.mpConversation;$('#modal').classList.remove('mp-modal');$('#modalConfirm').disabled=false;extra.onClose?.();};
+ }
+ function ruleText(k,v){if(v==null)return '未知';if(k==='protocol')return adapters[v]||v;if(k==='efforts')return v.map(x=>labels[x]).join(' / ')||'不显示档位';if(k==='default')return labels[v]||v;if(k==='context')return v.toLocaleString()+' tokens';if(k==='modalities')return v.join(' / ');if(k==='fast')return {supported:'支持',unsupported:'不支持',unknown:'未知'}[v]||v;return v;}
+ function fieldEditor(rules,inherited=null,readonly=false){
+  const effective=inherited?.values||{efforts:levels,default:'medium'}, disabled=readonly?'disabled':'';
+  function field(key,label,body){const custom=Object.hasOwn(rules,key),v=custom?rules[key]:effective[key];
+   return '<div class="mp-field" data-field="'+key+'"><div class="mp-field-label">'+label+'</div><select class="mp-select" data-field-mode="'+key+'" aria-label="'+label+'设置方式" '+disabled+'>'+opts([['inherit','继承'],['custom','自定义']],custom?'custom':'inherit')+'</select><div class="mp-field-control" '+(!custom?'hidden':'')+'>'+body(v)+'</div><div class="mp-field-source">'+(inherited?'解析值：'+esc(ruleText(key,v))+' · 来源：'+esc(custom?'本层自定义':inherited.sources[key]||'未知'):'规则：'+(custom?esc(ruleText(key,v)):'继承目标声明；未选目标时不推测最终能力'))+'</div></div>';
+  }
+  const checks=(key,items,v)=>'<div class="mp-checks">'+items.map(x=>'<label><input type="checkbox" data-field-check="'+key+'" value="'+x+'" '+((v||[]).includes(x)?'checked':'')+' '+disabled+'>'+esc(labels[x]||x)+'</label>').join('')+'</div>';
+  return '<div class="mp-editor" data-field-editor><div class="mp-section"><h3>协议与基本能力</h3>'+field('protocol','模型协议',v=>'<select class="mp-select" data-field-value="protocol" aria-label="模型协议" '+disabled+'>'+protocolOptions(v||'Responses')+'</select><span class="mp-muted">模版可决定协议；模型自定义优先，恢复继承回到父层</span>')+field('context','上下文窗口',v=>'<input class="input" type="number" min="1" step="1" data-field-value="context" aria-label="上下文窗口 tokens" placeholder="填写 tokens" value="'+(v??'')+'" '+disabled+'><span class="mp-muted">tokens · 声明不会扩容</span>')+field('modalities','输入模态',v=>checks('modalities',['text','image','audio'],v))+'</div><div class="mp-section"><h3>推理</h3>'+field('efforts','可选推理档位',v=>checks('efforts',levels,v))+field('default','默认推理档位',v=>'<select class="mp-select" data-field-value="default" aria-label="默认推理档位" '+disabled+'>'+opts((rules.efforts??effective.efforts??levels).map(x=>[x,labels[x]]),v)+'</select><span class="mp-muted">可独立设置，不必覆盖可选列表</span>')+'</div><div class="mp-section"><h3>快速模式</h3>'+field('fast','Fast 能力声明',v=>'<select class="mp-select" data-field-value="fast" aria-label="Fast 能力声明" '+disabled+'>'+opts([['unknown','未知'],['supported','支持（需依据）'],['unsupported','不支持']],v||'unknown')+'</select><span class="mp-muted">声明能力不会自动开启 Fast 策略</span>')+'</div><details class="mp-details"><summary>高级推理设置</summary><p>“无”是档位。隐藏档位、强制档、不传参数和标签映射是不同规则，不能由多选自动开启。</p><label class="mp-label"><input type="checkbox" data-field-hide '+(rules.efforts?.length===0?'checked':'')+' '+disabled+'>不显示推理档位（显式清空列表）</label><div class="mp-row" style="margin-top:12px"><label class="mp-label">请求强制档 <select class="mp-select" data-field-force '+disabled+'>'+opts([['','继承 / 不强制'],...levels.map(x=>[x,labels[x]])],rules.force||'')+'</select></label></div><div class="mp-row" style="margin-top:12px"><label class="mp-label"><input type="checkbox" data-field-omit '+(rules.omit?'checked':'')+' '+disabled+'>请求不传推理参数</label></div><label class="mp-label">声明模式 <select class="mp-select" data-field-authority '+disabled+'>'+opts([['','继承'],['force','强制使用本层声明']],rules.authority||'')+'</select></label><p>协议标签映射由适配器核对；权威声明、强制档与不传参数相互独立。恢复继承不会清除父层。</p></details><div class="mp-alert" data-field-error role="alert"></div></div>';
+ }
+ function readFields(root,rules){const next=clone(rules);
+  $$('[data-field-mode]',root).forEach(el=>{const k=el.dataset.fieldMode;if(el.value==='inherit'){delete next[k];return;}if(k==='context')next[k]=Number($('[data-field-value="context"]',root).value);else if(k==='efforts'||k==='modalities')next[k]=$$('[data-field-check="'+k+'"]:checked',root).map(x=>x.value);else next[k]=$('[data-field-value="'+k+'"]',root).value;});
+  if($('[data-field-hide]',root).checked)next.efforts=[];
+  const force=$('[data-field-force]',root).value;if(force)next.force=force;else delete next.force;if($('[data-field-omit]',root).checked)next.omit=true;else delete next.omit;const authority=$('[data-field-authority]',root).value;if(authority)next.authority=authority;else delete next.authority;return next;
+ }
+ function validate(root,rules,inherited){let error='';const final=rules.efforts??inherited?.values.efforts??levels;
+  if(rules.protocol&&!protocols.includes(rules.protocol))error='协议无效。';
+  if(Object.hasOwn(rules,'context')&&(!Number.isSafeInteger(rules.context)||rules.context<=0))error='上下文窗口须为正整数 tokens。';
+  if(rules.modalities&&!rules.modalities.length)error='输入模态至少选择一项，或恢复继承。';
+  if(rules.efforts?.length===0&&!$('[data-field-hide]',root).checked)error='请恢复继承，或在高级区明确选择“不显示推理档位”。';
+  if(rules.default&&!final.includes(rules.default))error='默认档位不在最终可选列表中，请调整或恢复继承。';
+  if(rules.force&&!final.includes(rules.force))error='强制档不在最终可选列表中。';if(rules.force&&rules.omit)error='不传参数与请求强制档冲突，请只保留一个。';
+  $('[data-field-error]',root).textContent=error;return !error;
+ }
+ function bindFields(root,rules,inherited,callback){
+  function edited(e){
+   if(e.target.matches('[data-field-mode]')){const field=e.target.closest('[data-field]');$('.mp-field-control',field).hidden=e.target.value==='inherit';if(e.target.value==='custom'&&e.target.dataset.fieldMode==='modalities'&&!$$('[data-field-check]:checked',field).length)$('[data-field-check]',field).checked=true;}
+   if(e.target.matches('[data-field-check="efforts"],[data-field-mode="efforts"],[data-field-hide]')){
+    const choice=$('[data-field-value="default"]',root),old=choice.value,next=readFields(root,rules),final=next.efforts??inherited?.values.efforts??levels;
+    choice.innerHTML=opts(final.map(x=>[x,labels[x]]),old);
+    if(!final.includes(old))choice.insertAdjacentHTML('afterbegin','<option selected value="'+esc(old)+'">原默认 '+esc(labels[old]||'未知')+'（需调整）</option>');
+   }
+   const next=readFields(root,rules);callback(next,validate(root,next,inherited));
+  }
+  root.addEventListener('change',edited);root.addEventListener('input',e=>{if(e.target.type==='number')edited(e);});
+ }
+ function editFields(title,rules,inherited,commit,extra=''){
+  let next=clone(rules);modal(title,extra+fieldEditor(next,inherited)+'<p class="mp-muted">确定只加入工作区草稿，渠道模型页保存后才写入。</p>','确定',()=>{
+   const root=$('[data-field-editor]',$('#modalBody'));next=readFields(root,next);if(!validate(root,next,inherited))return;const endpoint=$('#mpChannelModelEndpoint')?.value;closeModal();commit(next,endpoint);
+  },{confirmKeepsOpen:true,extraLabel:'恢复继承',onExtra:()=>{next={};const endpoint=$('#mpChannelModelEndpoint');if(endpoint)endpoint.value='';const root=$('[data-field-editor]',$('#modalBody'));root.outerHTML=fieldEditor({},inherited);bindFields($('[data-field-editor]',$('#modalBody')),next,inherited,(v,ok)=>{next=v;$('#modalConfirm').disabled=!ok;});$('#modalConfirm').disabled=false;}});
+  bindFields($('[data-field-editor]',$('#modalBody')),next,inherited,(v,ok)=>{next=v;$('#modalConfirm').disabled=!ok;});
+ }
+ function availabilityText(p){const kind=p.availability?.kind||'unknown';return {unknown:'未验证',available:'连接检查通过','no-credit':'无额度'+(p.availability?.source==='manual'?'（手工）':''),'auth-failed':'认证失败','connection-failed':'连接失败',unavailable:'上游不可用'}[kind]||'未验证';}
+ function providerSwitch(p){
+  if(p.id==='native')return '<div class="mp-channel-state mp-muted" title="官方 / 原生来源由官方管理，此处只读">官方管理</div>';
+  return '<div class="mp-channel-state"><div class="mp-channel-toggle"><button class="toggle" type="button" role="switch" aria-checked="'+p.enabled+'" aria-label="'+esc(p.name)+' 启用状态" data-mp="toggle-provider" data-id="'+esc(p.id)+'" title="切换只加入草稿，保存后提示重启；停用保留白名单与顺序" '+(busy()?'disabled':'')+'></button><span>'+ (p.enabled?'启用':'停用')+'</span></div></div>';
+ }
+ const visibleProviders=()=>draft.providers.filter(p=>p.name.toLowerCase().includes(channelSearch.toLowerCase()));
+ const scopeProviders=()=>draft.providers.filter(p=>p.id!=='native'&&scope.has(p.id));
+ function scopeState(){const rows=visibleProviders().filter(p=>p.id!=='native'),n=rows.filter(p=>scope.has(p.id)).length;return {rows,checked:rows.length>0&&n===rows.length,mixed:n>0&&n<rows.length};}
+ function channels(){const selection=scopeState(),rows=visibleProviders();return '<div class="mp-provider-table" role="table" aria-label="渠道列表"><div class="mp-provider-heading" role="row"><div class="mp-row"><input type="checkbox" data-scope-all aria-label="全选当前结果中的自定义渠道" title="全选当前搜索结果；保留搜索外已选渠道，官方 / 原生除外" aria-checked="'+(selection.mixed?'mixed':selection.checked)+'" '+(selection.checked?'checked ':'')+(busy()||!selection.rows.length?'disabled':'')+'></div><span>渠道</span><span>模型</span><span>启用</span><span>操作</span></div>'+rows.map(p=>{
+  const i=draft.providers.indexOf(p),locked=channelSearch||busy(),hint=p.id==='native'?'只读':availabilityText(p),discovery={loading:'获取中',failed:'获取失败',empty:'清单为空'}[p.refresh];
+  return '<div class="mp-provider" role="row" data-provider="'+esc(p.id)+'" '+(!locked?'draggable="true"':'')+'><div class="mp-row"><input type="checkbox" data-scope="'+esc(p.id)+'" aria-label="将 '+esc(p.name)+' 加入配置范围" '+(scope.has(p.id)?'checked':'')+' '+(p.id==='native'?'disabled title="原生目录只读"':busy()?'disabled':'')+'><span class="mp-grip" title="拖动渠道排序">⠿</span></div><button class="mp-provider-name" data-mp="view-provider" data-id="'+esc(p.id)+'"><strong>'+esc(p.name)+'</strong><small>'+esc(endpoints(p).length>1?'多协议 · '+endpoints(p).length+' 端点':p.protocol)+' · '+esc(hint)+(discovery?' · '+discovery:'')+'</small></button><div class="mp-cell">'+selected(p).length+' / '+p.models.length+'<small>已选 / 发现</small></div>'+providerSwitch(p)+'<div class="mp-row mp-provider-actions">'+button(p.id==='native'?'查看':'管理','view-provider','data-id="'+esc(p.id)+'" aria-label="'+esc(p.name)+' '+(p.id==='native'?'查看':'管理渠道与模型')+'"')+(p.id==='native'?'':button('删除','delete-provider','data-id="'+esc(p.id)+'" aria-label="删除 '+esc(p.name)+' 渠道" '+(busy()?'disabled':''),false,true))+'<div class="mp-mini-pair">'+mini('↑','move-provider','data-id="'+esc(p.id)+'" data-direction="-1" aria-label="上移 '+esc(p.name)+'" '+(i===0||locked?'disabled':''))+mini('↓','move-provider','data-id="'+esc(p.id)+'" data-direction="1" aria-label="下移 '+esc(p.name)+'" '+(i===draft.providers.length-1||locked?'disabled':''))+'</div></div></div>';
+ }).join('')+(rows.length?'':'<div class="mp-empty">没有匹配渠道，搜索外的已选范围保留。</div>')+'</div>'; }
+ function setProvidersEnabled(enabled){const targets=scopeProviders().filter(p=>p.enabled!==enabled);if(targets.length)change(()=>targets.forEach(p=>p.enabled=enabled));}
+ function deleteProviders(targetIds=null){const targets=targetIds?draft.providers.filter(p=>p.id!=='native'&&targetIds.includes(p.id)):scopeProviders();if(!targets.length||busy())return;const ids=new Set(targets.map(p=>p.id)),digest=policyDigest(),hidden=targets.filter(p=>!visibleProviders().includes(p)).length;
+  modal(targetIds?'删除 '+targets[0].name+' 渠道？':'删除 '+targets.length+' 个渠道？','<p>'+(!targetIds&&hidden?'包含搜索外的 '+hidden+' 个已选渠道。':'')+'将移除以下渠道及其模型策略，族模版库保留。</p>'+diffHTML(targets.map(p=>p.name+' · 已选 '+selected(p).length+' / 发现 '+p.models.length))+(ids.has(agent.providerId)?'<p class="mp-alert">包含 Agent 执行渠道；保存后自动生成将不可用，执行偏好保留，请重新选择。</p>':'')+'<p class="mp-muted">删除先加入草稿，可撤销或丢弃；页面保存后才写入并提示重启。保存后可由应用记录生成恢复草稿。</p>','删除并加入草稿',()=>{if(busy()||digest!==policyDigest()){notice('渠道配置已变化，请重新确认删除范围');closeModal();return;}closeModal();change(()=>draft.providers=draft.providers.filter(p=>p.id==='native'||!ids.has(p.id)));},{confirmKeepsOpen:true});
+ }
+ function mini(name,action,attrs){return '<button class="mp-mini" data-mp="'+action+'" '+attrs+'>'+name+'</button>';}
+ function toolbar(){const editing=tab==='channels'&&channelDetail||tab==='templates'&&templateDetail&&!!buffer();return '<div class="mp-toolbar"><div class="settings-tabs" role="tablist" aria-label="模型配置分区">'+['channels','templates'].map(x=>'<button role="tab" aria-selected="'+(tab===x)+'" class="'+(tab===x?'active':'')+'" data-mp="tab" data-tab="'+x+'">'+(x==='channels'?'渠道模型':'模型模版')+'</button>').join('')+'</div>'+(editing?'':'<div class="mp-actions">'+button('设置','settings')+button('配置工具','more','title="导入、导出、应用记录与草稿操作"')+'</div>')+'</div>'; }
+ function channelAction(name,action,mark,attrs='',primary=false){const title=/\btitle=/.test(attrs)?'':' title="'+esc(name)+'"';return '<button class="btn '+(primary?'primary':'ghost')+' mp-nav-action" data-mp="'+action+'" '+attrs+title+' aria-label="'+esc(name)+'">'+icon(mark)+'<span class="mp-nav-action-label">'+esc(name)+'</span></button>';}
+ // 状态与保存合并；辅助处理用图标，撤销 / 丢弃收进配置工具。
+ function saveStateButton(action,label,state,disabled=false,attrs=''){
+  return '<button class="btn primary mp-state-save" data-mp="'+action+'" title="'+esc(label+' · '+state)+'" aria-label="'+esc(label+' · '+state)+'" '+attrs+' '+(disabled?'disabled':'')+'>'+icon('save')+'<span class="mp-nav-action-label"><strong>'+esc(label)+'</strong><small role="status">'+esc(state)+'</small></span></button>';
+ }
+ function status(){
+  const over=count()>100,staged=stagedModelEdits().length,connections=stagedChannelConnections().length,local=staged||connections,sidebar=tab==='channels'&&channelDetail;
+  const stateText=busy()?'正在保存':local?'有待确认编辑':over?'超出激活预算':dirty()?(pending?'待重启 · 另有草稿':'有未保存修改'):pending?'已保存 · 待重启':'已保存';
+  const helper=(name,a,mark)=>iconButton(name,a,mark,busy()?'disabled':'');
+  const helpers=(staged?helper('处理 '+staged+' 行待确认编辑','review-model-rows','edit'):'')+(connections?helper('处理 '+connections+' 个待确认连接','review-channel-connection','settings'):'')+(incoming?helper('查看收到的待审候选','incoming','draft'):'')+(pending?helper('重启后重新检查','client-check','refresh'):'');
+  const save=saveStateButton('save','保存',stateText,!!(local||over||busy()||!dirty()),'data-save-scope="all-channels"');
+  const budget=sidebar?channelAction('模型激活数 '+count()+'/100','budget','budget','id="mpBudget"'): '<button class="mp-budget '+(over?'mp-alert':'')+'" id="mpBudget" data-mp="budget">模型激活数 '+count()+'/100</button>';
+  return '<div id="mpPolicyStatus" class="'+(sidebar?'mp-channel-status':'mp-policy-status')+(over?' over-budget':'')+'">'+save+budget+(helpers?'<div class="mp-rail-helpers" role="group" aria-label="需要处理的配置">'+helpers+'</div>':'')+'</div>';
+ }
+ function templateSaveStatus(){
+  const b=buffer();if(!b)return '';
+  const changed=templateSaveChanges(b).some(g=>g.rows.length),state=templateScratch?'新模版 · 未保存':changed?'有未保存修改':'未修改 · 基于 v'+b.base;
+  return '<div id="mpTemplateSaveStatus" class="mp-template-save-status">'+saveStateButton('save-template','保存候选',state,!b.valid)+'</div>';
+ }
+ function updateTemplateSaveStatus(){const node=$('#mpTemplateSaveStatus',host);if(node)node.outerHTML=templateSaveStatus();}
+ function progress(){if(!operation)return '';const phases=['校验','备份','写入','核对目录','发布成功快照'];return '<div class="mp-progress"><div class="mp-toolbar"><strong>'+esc(operation.message)+'</strong>'+button(progressOpen?'收起进度':'查看进度','progress')+'</div>'+(progressOpen?'<ol>'+phases.map((x,i)=>'<li class="'+(i<operation.step?'done':i===operation.step&&busy()?'active':'')+'">'+x+'</li>').join('')+'</ol><div class="mp-row">'+(busy()?button(operation.step<2?'取消保存':'停止后续步骤','stop'):'')+(operation.status==='timeout'?button('核对实际结果','verify'):'')+(['failed','stopped'].includes(operation.status)?button('核对并保留草稿','verify'):'')+'</div>':'')+'</div>';}
+ function preview(){const policy=previewSaved?saved:draft,rows=projection(policy);let n=0;return '<details class="mp-order"><summary>完整选择器顺序 <span class="mp-badge">'+rows.length+' 条</span></summary><div class="mp-preview-mode"><label class="mp-label">来源 <select class="mp-select" data-preview>'+opts([['draft','草稿计划'],['saved','已写入']],previewSaved?'saved':'draft')+'</select></label><span class="mp-muted">渠道顺序 × 内部模型顺序 · Fast 跟随父项</span></div>'+[...policy.providers,{id:'system',name:'系统占用'}].map(p=>'<div class="mp-preview-group"><h3>'+esc(p.name)+'</h3><div class="mp-preview-items">'+rows.filter(r=>r.p===p.id).map(r=>'<div class="mp-preview-item '+(r.type==='fast'?'fast':r.type==='hidden'?'hidden-item':'')+'" title="'+esc(r.id)+'"><em>'+String(++n).padStart(2,'0')+'</em><span>'+esc(r.id)+'</span></div>').join('')+'</div></div>').join('')+'<p class="mp-muted">隐藏目录条目占用读页名额。未选模型保留位置，重选回原位；未发布项不编号。</p></details>';}
+ const visibleModels=()=>provider().models.filter(m=>(!onlySelected||selected(provider()).includes(m))&&(!family||templateMatches(templates.find(t=>t.id===family),m,provider()))&&(m.id+' '+(m.naming?.alias||'')+' '+(m.naming?.displayName||'')).toLowerCase().includes(search.toLowerCase()));
+ function batchToolbar(){const targets=scopeProviders();if(!targets.length)return '';const hidden=targets.filter(p=>!visibleProviders().includes(p)).length;return '<div class="mp-batch"><span>已选 '+targets.length+' 个渠道'+(hidden?'（含搜索外 '+hidden+' 个）':'')+'</span><div class="mp-actions">'+button('启用','enable-channels',busy()||targets.every(p=>p.enabled)?'disabled':'')+button('停用','disable-channels',busy()||targets.every(p=>!p.enabled)?'disabled':'')+button('删除','delete-channels',busy()?'disabled':'',false,true)+button('按族批量配置','batch',busy()?'disabled':'')+button('套用模版','adopt',busy()?'disabled':'')+'</div></div>';}
+
+ // 复选与展开仅属于界面；批量操作冻结勾选项，快捷排序进入草稿。
+ let modelSelection=new Set(),modelExpanded=new Set(),modelEdits={};
+ const modelActive=(p,m)=>selected(p).includes(m);
+ const pickedModels=(p=provider())=>p.models.filter(m=>modelSelection.has(m.key));
+ const modelTargets=(p=provider())=>p.id==='native'?[]:pickedModels(p);
+ const modelSelectionState=()=>{const rows=provider().id==='native'?[]:visibleModels(),n=rows.filter(m=>modelSelection.has(m.key)).length;return {rows,checked:rows.length>0&&n===rows.length,mixed:n>0&&n<rows.length};};
+ const editBaseline=m=>JSON.stringify({overrides:m.overrides,endpointId:m.endpointId});
+ const stagedModelEdits=()=>Object.entries(modelEdits).filter(([key,e])=>JSON.stringify({overrides:e.rules,endpointId:e.endpointId||undefined})!==e.baseline);
+ const contextPresets=[32000,64000,128000,200000,256000,1000000];
+ function namingError(p){
+  const seen=new Set();
+  for(const m of p.models){const alias=m.naming?.alias;if(m.naming!=null&&(typeof m.naming!=='object'||Array.isArray(m.naming)||Object.entries(m.naming).some(([k,v])=>!['alias','displayName'].includes(k)||typeof v!=='string')))return m.id+'：别名和显示名称须为文本。';if(!alias)continue;
+   if(!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(alias))return m.id+'：别名仅允许字母、数字、点、下划线和连字符，首字符须为字母或数字。';
+   if(/^(gpt-|o1-|o3-|o4-|codex-)/i.test(alias))return m.id+'：别名不可使用保留前缀 gpt- / o1- / o3- / o4- / codex-。';
+   const value=alias.toLowerCase();if(seen.has(value)||p.models.some(x=>x.key!==m.key&&x.id.toLowerCase()===value))return m.id+'：别名重复或与渠道内其他上游 ID 冲突（不区分大小写）。';seen.add(value);
+  }return '';
+ }
+ function modelRuleError(p,m,policy){
+  const r=m.overrides,v=resolve(p,m,policy).values;
+  if(r.protocol&&!protocols.includes(r.protocol))return '协议无效。';
+  if(Object.hasOwn(r,'context')&&(!Number.isSafeInteger(r.context)||r.context<=0))return '上下文须为正整数 tokens。';
+  if(Object.hasOwn(r,'efforts')&&(!Array.isArray(r.efforts)||r.efforts.some(x=>!levels.includes(x))||new Set(r.efforts).size!==r.efforts.length))return '推理档位无效。';
+  if((r.default||r.efforts)&&(v.efforts||[]).length&&v.default&&!(v.efforts||[]).includes(v.default))return '默认推理档位不在最终多选列表中，请一并修改默认档位。';
+  if(r.default&&!(v.efforts||[]).includes(r.default))return '默认推理档位不在最终多选列表中。';
+  if(v.force&&!(v.efforts||[]).includes(v.force))return '强制档位不在最终多选列表中。';
+  if(v.force&&v.omit)return '强制档位和不传参数冲突。';
+  if(Object.hasOwn(r,'fast')&&!['supported','unsupported','unknown'].includes(r.fast))return '快速模式能力声明无效。';
+  return '';
+ }
+ function commitModelPatches(pid,updates){
+  const p=draft.providers.find(p=>p.id===pid);if(busy()||!p||p.id==='native')return '当前渠道不可编辑。';
+  if(!updates.length)return '没有可编辑的模型。';
+  const next=clone(draft),target=next.providers.find(p=>p.id===pid),active=new Set(selected(target).map(m=>m.key));
+  for(const update of updates){const m=target.models.find(m=>m.key===update.key);if(!m)return '模型清单已变化，请重新选择。';
+   if(update.baseline&&update.baseline!==editBaseline(p.models.find(x=>x.key===update.key)))return '该模型的配置已变化，请还原本行后重新编辑。';
+   if(update.rules)m.overrides=clone(update.rules);
+   if(Object.hasOwn(update,'endpointId')){if(update.endpointId)m.endpointId=update.endpointId;else delete m.endpointId;}
+   if(Object.hasOwn(update,'naming')){const naming=Object.fromEntries(Object.entries(update.naming||{}).map(([k,v])=>[k,String(v).trim()]).filter(([,v])=>v));if(Object.keys(naming).length)m.naming=naming;else delete m.naming;}
+   if(Object.hasOwn(update,'enabled')){update.enabled?active.add(m.key):active.delete(m.key);}
+  }
+  if(updates.some(u=>Object.hasOwn(u,'enabled')&&u.enabled!==modelActive(p,p.models.find(m=>m.key===u.key)))){target.models.forEach(m=>m.selected=active.has(m.key));target.mode=active.size?'whitelist':'none';}
+  const aliasError=namingError(target);if(aliasError)return aliasError;
+  for(const u of updates){const m=target.models.find(m=>m.key===u.key),error=u.rules?modelRuleError(target,m,next):'';if(error)return m.id+'：'+error;}
+  if(JSON.stringify(next)!==JSON.stringify(draft))change(()=>{draft=next;updates.filter(u=>u.rules||Object.hasOwn(u,'endpointId')).forEach(u=>delete modelEdits[u.key]);});else {updates.filter(u=>u.rules||Object.hasOwn(u,'endpointId')).forEach(u=>delete modelEdits[u.key]);render();}
+  return '';
+ }
+ function modelError(key,error){const node=$('[data-model-error="'+key+'"]',host);if(node)node.textContent=error;else notice(error);}
+ function startModelEdit(m){return modelEdits[m.key]||(modelEdits[m.key]={rules:clone(m.overrides),endpointId:m.endpointId||'',baseline:editBaseline(m)});}
+ function quickConfig(rules,inherited,prefix,bulk=false){
+  const effective=inherited?.values||{},mode=key=>Object.hasOwn(rules,key)?'custom':bulk?'keep':'inherit',modes=key=>opts([...(bulk?[['keep','不修改']]:[]),['inherit','继承'],['custom','自定义']],mode(key));
+  const val=key=>rules[key]??effective[key],control=(key,title,content)=>'<div class="mp-quick-field" data-quick-group="'+key+'"><div class="mp-quick-label"><span>'+title+'</span><select id="'+prefix+'Mode-'+key+'" class="mp-select" data-quick-mode="'+key+'" aria-label="'+title+'设置方式">'+modes(key)+'</select></div><div data-quick-control="'+key+'" '+(mode(key)!=='custom'?'hidden':'')+'>'+content+'</div>'+(bulk?'':'<small class="mp-muted">当前 '+esc(ruleText(key,val(key)))+' · '+esc(Object.hasOwn(rules,key)?'单模型自定义':inherited?.sources[key]||'未声明')+'</small>')+'</div>';
+  const context=val('context'),preset=contextPresets.includes(context)?String(context):'custom',efforts=val('efforts')||[];
+  return '<div class="mp-quick-grid">'+control('protocol','协议','<select id="'+prefix+'Protocol" class="mp-select" data-quick-value="protocol" aria-label="模型协议">'+protocolOptions(val('protocol')||'Responses')+'</select>')+
+   control('context','上下文窗口','<select id="'+prefix+'ContextPreset" class="mp-select" data-quick-preset aria-label="上下文大小选择">'+opts([...contextPresets.map(n=>[n,(n/1000)+'k tokens']),['custom','自定义 tokens']],preset)+'</select><input id="'+prefix+'Context" class="input" type="number" min="1" step="1" data-quick-value="context" aria-label="自定义上下文 tokens" value="'+(context??'')+'" '+(preset!=='custom'?'hidden':'')+'>')+
+   control('efforts','推理等级','<select id="'+prefix+'Efforts" class="mp-select" multiple data-quick-value="efforts" aria-label="可选推理等级（多选）">'+levels.map(x=>'<option value="'+x+'" '+(efforts.includes(x)?'selected':'')+'>'+labels[x]+'</option>').join('')+'</select><small class="mp-muted">多选至少保留一项；不显示档位请在编辑明细中设置。</small>')+
+   control('default','默认推理等级','<select id="'+prefix+'Default" class="mp-select" data-quick-value="default" aria-label="默认推理等级">'+opts(levels.map(x=>[x,labels[x]]),val('default')||'medium')+'</select>')+
+   control('fast','支持快速模式','<select id="'+prefix+'Fast" class="mp-select" data-quick-value="fast" aria-label="快速模式能力">'+opts([['unknown','未知'],['supported','支持'],['unsupported','不支持']],val('fast')||'unknown')+'</select><small class="mp-muted">能力声明；实际启用遵循快速模式策略。</small>')+'</div>';
+ }
+ function quickRuleError(rules,original={}){return rules.efforts?.length===0&&original.efforts?.length!==0?'请至少选择一个推理等级，或恢复继承；如需不显示档位，请在“编辑明细”的高级区明确设置。':'';}
+ function readQuick(root,original={}){
+  const rules=clone(original);$$('[data-quick-mode]',root).forEach(el=>{const k=el.dataset.quickMode;if(el.value==='keep')return;if(el.value==='inherit'){delete rules[k];return;}
+   const field=$('[data-quick-value="'+k+'"]',root);rules[k]=k==='efforts'?[...field.selectedOptions].map(x=>x.value):k==='context'?Number($('[data-quick-preset]',root).value==='custom'?field.value:$('[data-quick-preset]',root).value):field.value;
+  });return rules;
+ }
+ function quickChanged(el){if(busy())return;const root=el.closest('[data-model-quick],[data-model-batch]');if(!root)return;
+  if(el.dataset.quickMode){$('[data-quick-control="'+el.dataset.quickMode+'"]',root).hidden=el.value!=='custom';}
+  if(el.matches('[data-quick-preset]'))$('[data-quick-value="context"]',root).hidden=el.value!=='custom';
+  if(root.dataset.modelQuick){const m=provider().models.find(m=>m.key===root.dataset.modelQuick);if(!m)return;const edit=startModelEdit(m);edit.rules=readQuick(root,edit.rules);edit.endpointId=$('[data-quick-endpoint]',root).value;const error=quickRuleError(edit.rules,m.overrides)||modelRuleError(provider(),{...m,overrides:edit.rules},draft);$('[data-model-quick-error]',root).textContent=error;$('[data-model-pending]',root).textContent='本行待确认 · 加入草稿后统一保存';const statusNode=$('#mpPolicyStatus',host);if(statusNode)statusNode.outerHTML=status();}
+ }
+ function modelQuick(p,m){const edit=startModelEdit(m),prefix='mpQuick-'+m.key.replace(/[^A-Za-z0-9_-]/g,'-'),inherited=resolve(p,m,draft,true);
+  return '<div id="'+prefix+'" class="mp-model-quick" data-model-quick="'+esc(m.key)+'">'+quickConfig(edit.rules,inherited,prefix)+'<label class="mp-label">协议端点<select id="'+prefix+'Endpoint" class="mp-select" data-quick-endpoint aria-label="模型协议端点">'+opts([['','按最终协议自动匹配'],...endpoints(p).map(e=>[e.id,e.id+' · '+e.protocol])],edit.endpointId)+'</select></label><p class="mp-muted">未修改的字段保持继承；上下文声明不会扩容。切换协议后需核对推理和快速模式，缺少端点时可保留草稿，保存前须补齐。</p><div class="mp-alert" data-model-quick-error="'+esc(m.key)+'" role="alert"></div><div class="mp-quick-footer"><span class="mp-muted" data-model-pending>本行编辑后加入草稿，再统一保存</span><div class="mp-actions">'+button('还原本行','reset-model-row','data-id="'+esc(m.key)+'"')+button('加入草稿','apply-model-row','data-id="'+esc(m.key)+'"',true)+'</div></div></div>';
+ }
+ function modelRow(p,m,filtered){const r=resolve(p,m),i=p.models.indexOf(m),readonly=p.id==='native',locked=busy()||readonly,expanded=modelExpanded.has(m.key),enabled=modelActive(p,m);
+  return '<div class="mp-model-item"><div class="mp-model-row" data-model="'+esc(m.key)+'" '+(!filtered&&!locked?'draggable="true"':'')+'><div class="mp-row"><input type="checkbox" data-model-pick="'+esc(m.key)+'" aria-label="批量选择 '+esc(m.id)+'" '+(modelSelection.has(m.key)?'checked ':'')+(locked?'disabled':'')+'><span class="mp-grip" title="拖动排序">⠿</span></div><div class="mp-model-identity"><strong title="'+esc(m.id)+'">'+esc(m.id)+'</strong><input class="input mp-model-alias" data-model-alias="'+esc(m.key)+'" aria-label="'+esc(m.id)+' 别名" placeholder="别名（可选）" value="'+esc(m.naming?.alias||'')+'" '+(locked?'disabled':'')+'><span class="mp-model-meta" title="'+esc(templateLabel(p,m))+' · '+esc(r.sources.protocol)+'"><span class="mp-model-meta-line"><span>'+esc(ruleText('protocol',r.values.protocol))+'</span><span>'+esc(r.values.context?ruleText('context',r.values.context):'上下文未知')+'</span></span><span class="mp-model-meta-line"><span>推理 '+esc(ruleText('efforts',r.values.efforts))+'</span><span>快速 '+esc(ruleText('fast',r.values.fast))+'</span></span>'+(r.route.error?'<span class="mp-alert">需配置端点</span>':'')+'</span><span class="mp-alert" data-model-error="'+esc(m.key)+'" role="alert"></span></div><div class="mp-model-enabled">'+(readonly?'<span class="mp-muted">官方管理</span>':'<button class="toggle" role="switch" type="button" data-mp="toggle-model" data-id="'+esc(m.key)+'" aria-label="'+esc(m.id)+' 启用状态" aria-checked="'+enabled+'" '+(busy()?'disabled':'')+'></button><small>'+ (enabled?'启用':'停用')+'</small>')+'</div><div class="mp-model-actions">'+(readonly?'':button((expanded?'收起':'展开')+'编辑','expand-model','data-id="'+esc(m.key)+'" aria-expanded="'+expanded+'" aria-controls="mpQuick-'+m.key.replace(/[^A-Za-z0-9_-]/g,'-')+'" '+(busy()?'disabled':'')))+button(readonly?'查看明细':'编辑明细','model-config','data-id="'+esc(m.key)+'" '+(busy()?'disabled':''))+'<div class="mp-mini-pair">'+mini('↑','move-model','data-id="'+esc(m.key)+'" data-direction="-1" aria-label="上移 '+esc(m.id)+'" '+(i===0||filtered||locked?'disabled':''))+mini('↓','move-model','data-id="'+esc(m.key)+'" data-direction="1" aria-label="下移 '+esc(m.id)+'" '+(i===p.models.length-1||filtered||locked?'disabled':''))+'</div></div></div>'+(expanded&&!readonly?modelQuick(p,m):'')+'</div>';
+ }
+ const modelSortOptions=[['name-asc','名称 A → Z'],['name-desc','名称 Z → A'],['alias-asc','别名 A → Z'],['protocol','协议分组'],['context-desc','上下文 大 → 小'],['context-asc','上下文 小 → 大'],['enabled','启用优先']];
+ function sortModels(rule){
+  const p=provider();if(busy()||p.id==='native'||search||family||onlySelected||!modelSortOptions.some(([key])=>key===rule))return;
+  const compareText=(a,b)=>String(a).localeCompare(String(b),'zh-CN',{numeric:true,sensitivity:'base'}),rows=p.models.map((m,index)=>({m,index,values:resolve(p,m).values,enabled:modelActive(p,m)}));
+  const compareContext=(a,b)=>{const av=a.values.context,bv=b.values.context,knownA=Number.isSafeInteger(av)&&av>0,knownB=Number.isSafeInteger(bv)&&bv>0;return knownA!==knownB?(knownA?-1:1):!knownA?0:rule==='context-desc'?bv-av:av-bv;};
+  const compare=(a,b)=>rule==='name-asc'?compareText(a.m.id,b.m.id):rule==='name-desc'?compareText(b.m.id,a.m.id):rule==='alias-asc'?compareText(a.m.naming?.alias||a.m.id,b.m.naming?.alias||b.m.id):rule==='protocol'?compareText(adapters[a.values.protocol]||a.values.protocol||'',adapters[b.values.protocol]||b.values.protocol||''):rule.startsWith('context-')?compareContext(a,b):Number(b.enabled)-Number(a.enabled);
+  const next=rows.sort((a,b)=>compare(a,b)||a.index-b.index).map(row=>row.m);
+  if(next.every((m,index)=>m.key===p.models[index].key)){render();notice('模型顺序已符合所选规则');return;}
+  change(()=>p.models=next);notice('模型顺序已加入草稿，可撤销');
+ }
+ function modelBatchToolbar(){const p=provider(),rows=visibleModels(),picked=pickedModels(p),hidden=picked.filter(m=>!rows.includes(m)).length,locked=busy()||p.id==='native',filtered=search||family||onlySelected;
+  const tools='<div class="mp-model-tools"><div class="mp-actions">'+button('全部展开','expand-all-models','title="展开当前显示的模型" '+(locked||!rows.length||rows.every(m=>modelExpanded.has(m.key))?'disabled':''))+button('全部收起','collapse-all-models','title="收起当前渠道全部模型，保留待确认的编辑" '+(locked||!p.models.some(m=>modelExpanded.has(m.key))?'disabled':''))+'</div><div class="mp-actions"><select id="mpModelSort" class="mp-select" data-model-sort aria-label="快捷排序" title="'+(filtered?'清除筛选后可调整整个渠道的模型顺序':'调整当前渠道完整顺序；名称按模型 ID，别名为空使用 ID，未知上下文排最后；可撤销')+'" '+(locked||filtered||rows.length<2?'disabled':'')+'>'+opts([['','快捷排序'],...modelSortOptions],'')+'</select>'+(filtered?button('清除筛选后排序','clear-filters'):'')+'</div></div>';
+  return tools+(!picked.length||p.id==='native'?'':'<div class="mp-model-bulk" role="region" aria-label="已勾选模型的批量操作"><span class="mp-muted">已选 '+picked.length+(hidden?'（含筛选外 '+hidden+' 项）':'')+'</span><div class="mp-actions">'+button('批量启用','enable-models',locked?'disabled':'')+button('批量停用','disable-models',locked?'disabled':'')+button('批量编辑','edit-models',locked?'disabled':'')+button('恢复字段继承','reset-models',locked?'disabled':'')+button('清除选择','clear-model-picks',locked?'disabled':'')+'</div></div>');
+ }
+ function bulkModelDialog(action){const p=provider(),targets=modelTargets().map(m=>clone(m));if(busy()||p.id==='native'||!targets.length)return;
+  const digest=policyDigest(),pid=p.id,scopeLabel='勾选模型',hidden=targets.filter(m=>!visibleModels().some(x=>x.key===m.key)).length;
+  if(targets.some(m=>stagedModelEdits().some(([key])=>key===m.key))){notice('勾选项内有未加入草稿的行编辑，请先确认或还原本行。');return;}
+  const summary='<p>'+esc(p.name)+' · '+scopeLabel+' · '+targets.length+' 项'+(hidden?'（包含筛选外 '+hidden+' 项）':'')+'</p><details class="mp-details"><summary>查看完整操作范围</summary>'+diffHTML(targets.map(m=>m.id))+'</details>';
+  const editing=action==='edit',reset=action==='reset';
+  const body=editing?'<div data-model-batch>'+quickConfig({},null,'mpBulk',true)+'<div class="mp-bulk-extra"><label>启停<select id="mpBulkEnabled" class="mp-select">'+opts([['keep','不修改'],['on','启用'],['off','停用']],'keep')+'</select></label><label>别名<select id="mpBulkAliasMode" class="mp-select">'+opts([['keep','不修改'],['clear','清空别名'],['pattern','按规则生成']],'keep')+'</select></label><label>别名规则<input id="mpBulkAliasPattern" class="input" placeholder="例如 model-{n}"><small class="mp-muted">{id} = 原始 ID，{n} = 范围内序号；先校验重复与合法性。</small></label></div></div>':reset?'<p>清除单模型的字段覆盖和指定端点，继续继承父层。别名、启停、精确模版引用和顺序保留。</p>':'<p>仅修改模型启停，保留别名、配置与顺序。'+(action==='disable'?'停用后从计划选择器移除。':'渠道本身停用时，这些模型在启用渠道后才出现。')+'</p>';
+  modal(editing?'批量编辑模型':reset?'恢复模型字段继承':action==='enable'?'批量启用模型':'批量停用模型',summary+body+'<div id="mpModelBatchError" class="mp-alert" role="alert"></div><p class="mp-muted">确认后一次加入草稿，可整批撤销；统一保存后提示重启。</p>','加入草稿',()=>{
+   const errorNode=$('#mpModelBatchError');if(busy()||digest!==policyDigest()){errorNode.textContent='配置已变化，请重新打开并确认范围。';return;}
+   const root=$('[data-model-batch]',$('#modalBody')),enabled=editing?$('#mpBulkEnabled').value:action==='enable'?'on':action==='disable'?'off':'keep',aliasMode=editing?$('#mpBulkAliasMode').value:'keep',pattern=editing?$('#mpBulkAliasPattern').value.trim():'';
+   if(aliasMode==='pattern'&&!pattern){errorNode.textContent='请填写别名规则。';return;}
+   const updates=targets.map((m,i)=>({key:m.key,...(editing?{rules:readQuick(root,m.overrides)}:reset?{rules:{},endpointId:''}:{}),...(enabled!=='keep'?{enabled:enabled==='on'}:{}),...(aliasMode!=='keep'?{naming:{...m.naming,alias:aliasMode==='clear'?'':pattern.replaceAll('{id}',m.id).replaceAll('{n}',String(i+1))}}:{})}));
+   const empty=editing&&updates.find((u,i)=>quickRuleError(u.rules,targets[i].overrides));const error=empty?empty.key+'：'+quickRuleError(empty.rules,targets.find(m=>m.key===empty.key).overrides):commitModelPatches(pid,updates);if(error){errorNode.textContent=error;return;}closeModal();notice(targets.length+' 个模型已加入草稿');
+  },{confirmKeepsOpen:true});
+ }
+
+ const channelSections=[['models','模型列表'],['connection','渠道配置'],['endpoints','协议端点'],['defaults','模型默认']];
+ const connectionValue=p=>({name:p.name,protocol:p.protocol,connection:clone(p.connection||{baseUrl:'',auth:'apikey',keyConfigured:false})});
+ const connectionBaseline=p=>JSON.stringify(connectionValue(p));
+ function channelConnectionBuffer(p=provider()){
+  if(!p||p.id==='native')return null;
+  return channelConnections[p.id]||=({...connectionValue(p),baseline:connectionBaseline(p),retainedKeyConfigured:!!p.connection?.keyConfigured,keyChanged:0});
+ }
+ const stagedChannelConnections=()=>Object.entries(channelConnections).filter(([id,b])=>draft.providers.some(p=>p.id===id)&&(b.keyChanged||JSON.stringify({name:b.name,protocol:b.protocol,connection:b.connection})!==b.baseline));
+ function updateChannelConnection(el){
+  if(busy()||provider()?.id==='native')return;const b=channelConnectionBuffer(),key=el.dataset.channelConfig;
+  if(key==='key'){if(el.value){b.keyChanged++;b.retainedKeyConfigured=true;}b.connection.keyConfigured=b.connection.auth==='apikey'&&b.retainedKeyConfigured;}
+  else if(key==='name'||key==='protocol')b[key]=el.value;
+  else if(key==='baseUrl')b.connection.baseUrl=el.value;
+  else if(key==='auth'){b.connection.auth=el.value;b.connection.keyConfigured=el.value==='apikey'&&b.retainedKeyConfigured;}
+  if(key==='auth')render();else {const node=$('#mpPolicyStatus',host);if(node)node.outerHTML=status();const changed=stagedChannelConnections().some(([id])=>id===provider().id),stale=b.baseline!==connectionBaseline(provider()),reset=$('#mpChannelReset',host),pendingLabel=$('#mpChannelConnectionPending',host),keyStatus=$('#mpChannelKeyStatus',host);if(reset)reset.disabled=!changed&&!stale;if(pendingLabel)pendingLabel.textContent=changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致';if(keyStatus)keyStatus.textContent=b.keyChanged?'已记录替换意图，不保存输入值。':'仅记录已配置状态，不保存输入值。';}
+ }
+ function inlineConnection(p){
+  if(p.id==='native')return '<h3>渠道配置</h3><p class="mp-muted">官方 / 原生连接由 Codex 管理，这里仅展示模型信息。</p>';
+  const b=channelConnectionBuffer(p),locked=busy()?'disabled':'',changed=stagedChannelConnections().some(([id])=>id===p.id),stale=b.baseline!==connectionBaseline(p);
+  const input=(key,value,extra='')=>'<input id="mpChannelInline-'+key+'" class="input" data-channel-config="'+key+'" value="'+esc(value)+'" '+extra+' '+locked+'>';
+  return '<h3>渠道配置</h3><div class="mp-channel-form"><label>渠道名称'+input('name',b.name,'maxlength="80"')+'</label><label>渠道标识<input class="input" value="'+esc(p.id)+'" readonly aria-label="渠道标识"><span class="mp-muted">标识固定，名称可修改。</span></label><label>默认接口协议<select id="mpChannelInline-protocol" class="mp-select" data-channel-config="protocol" '+locked+'>'+protocolOptions(b.protocol)+'</select></label><label>Base URL'+input('baseUrl',b.connection.baseUrl,'type="url" placeholder="https://newapi.example.com/v1"')+'</label><label>认证方式<select id="mpChannelInline-auth" class="mp-select" data-channel-config="auth" '+locked+'>'+opts([['apikey','API Key'],['none','无需认证']],b.connection.auth)+'</select></label>'+(b.connection.auth==='apikey'?'<label>API Key'+input('key','','type="password" autocomplete="off" placeholder="'+(b.connection.keyConfigured?'已配置（不回显）；留空保留':'仅填演示值，请勿输入真实密钥')+'"')+'<span id="mpChannelKeyStatus" class="mp-muted">'+(b.keyChanged?'已记录替换意图，不保存输入值。':'仅记录已配置状态，不保存输入值。')+'</span></label>':'')+'</div><p class="mp-muted">更换协议、地址或认证后，确认模型清单再加入草稿。静态演示，不连接上游；请勿输入真实密钥。</p>'+(stale?'<p class="mp-alert">连接基准已变化，请还原配置后重新编辑。</p>':'')+'<div class="mp-quick-footer"><span id="mpChannelConnectionPending" class="mp-muted">'+(changed?'有连接修改，尚未加入草稿':'连接配置与草稿一致')+'</span><div class="mp-actions">'+button('还原配置','reset-channel-connection','id="mpChannelReset" '+(locked||!changed&&!stale?'disabled':''))+button('确认连接与模型','apply-channel-connection',locked||stale?'disabled':'',true)+'</div></div>';
+ }
+ function channelEndpoints(p){return '<div class="mp-toolbar"><h3>协议端点</h3>'+(p.id!=='native'?button('新增端点','add-endpoint',busy()?'disabled':''):'')+'</div><p class="mp-muted">模型按最终协议使用端点；同协议有多个端点时需在模型编辑中指定。</p>'+endpoints(p).map(e=>'<div class="mp-endpoint-row"><div><strong>'+esc(e.id)+' · '+esc(e.protocol)+'</strong><small>'+esc(e.connection?.baseUrl||'尚未绑定')+'</small></div><div class="mp-actions">'+(e.id==='primary'?button('定位默认连接','channel-section','data-id="connection"'):button('编辑','edit-endpoint','data-id="'+esc(e.id)+'" '+(busy()?'disabled':''))+button('删除','delete-endpoint','data-id="'+esc(e.id)+'" '+(busy()?'disabled':''),false,true))+'</div></div>').join('')+(p.id==='native'?'<p class="mp-muted">官方端点由 Codex 管理。</p>':'')+'<details class="mp-details"><summary>协议写入计划</summary>'+routePlanHTML()+'</details>';}
+ function channelDefaults(p){return '<div class="mp-toolbar"><h3>模型默认</h3>'+button('编辑默认配置','provider-config',p.id==='native'||busy()?'disabled':'')+'</div><p class="mp-muted">作用于本渠道全部模型。未覆盖字段继续使用模版或模型声明。</p><div class="mp-rule-summary">'+[['protocol','协议'],['context','上下文窗口'],['efforts','推理等级'],['default','默认档位'],['fast','快速模式']].map(([key,name])=>'<div><span>'+name+'</span><strong>'+esc(Object.hasOwn(p.defaults,key)?ruleText(key,p.defaults[key]):'继承')+'</strong></div>').join('')+'</div>';}
+ function channelNodes(){return channelSections.map(([id])=>$('#mpChannelSection-'+id,host)).filter(Boolean);}
+ function channelOffset(scroller=host.closest('.main')){
+  const height=$('#mpChannelHeader',host)?.getBoundingClientRect().height||0,inset=Math.max(0,parseFloat(window.getComputedStyle?.(scroller)?.paddingTop)||0),offset=height+(scroller?.clientTop||0)+12;
+  host.style?.setProperty?.('--mp-editor-top',-inset+'px');host.style?.setProperty?.('--mp-editor-offset',offset+'px');host.style?.setProperty?.('--mp-editor-nav-top',height+12-inset+'px');
+  if(scroller)host.style?.setProperty?.('--mp-editor-nav-height',Math.max(0,scroller.clientHeight-height-24)+'px');return offset;
+ }
+ function channelScrollPosition(scroller){if(!scroller)return null;const top=scroller.getBoundingClientRect().top,offset=channelOffset(scroller),sections=channelNodes(),anchor=sections.find(node=>node.getBoundingClientRect().bottom>top+offset)||sections.at(-1);return {top:scroller.scrollTop,id:anchor?.id,offset:anchor?anchor.getBoundingClientRect().top-top:0};}
+ function setChannelSection(id){if(!channelSections.some(([key])=>key===id))return;channelSection=id;$$('[data-mp="channel-section"]',host).forEach(node=>{if(node.classList.contains('mp-nav-item'))node.setAttribute('aria-current',node.dataset.id===id?'location':'false');});}
+ function syncChannelSection(){const route=document.documentElement?.dataset.route;if(tab!=='channels'||!channelDetail||route&&route!=='models')return;const scroller=host.closest('.main');if(!scroller)return;const sections=channelNodes();if(!sections.length)return;const top=scroller.getBoundingClientRect().top+channelOffset(scroller)+12;let active=sections[0];for(const section of sections)if(section.getBoundingClientRect().top<=top)active=section;if(scroller.scrollHeight>scroller.clientHeight&&scroller.scrollTop+scroller.clientHeight>=scroller.scrollHeight-2)active=sections.at(-1);setChannelSection(active.dataset.channelSection);}
+ function scrollChannelSection(id){if(tab!=='channels'||!channelDetail||!channelSections.some(([key])=>key===id))return;const section=$('#mpChannelSection-'+id,host),scroller=host.closest('.main');if(!section)return;setChannelSection(id);if(scroller)scroller.scrollTo({top:scroller.scrollTop+section.getBoundingClientRect().top-scroller.getBoundingClientRect().top-channelOffset(scroller),behavior:window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches?'auto':'smooth'});}
+ function toggleChannelNav(){const workspace=$('#mpChannelWorkspace',host),toggle=$('#mpChannelNavToggle',host);if(!workspace||!toggle)return;const scroller=host.closest('.main'),position=channelScrollPosition(scroller);channelNavCollapsed=!channelNavCollapsed;workspace.classList.toggle('nav-collapsed',channelNavCollapsed);toggle.setAttribute('aria-expanded',String(!channelNavCollapsed));toggle.setAttribute('aria-label',(channelNavCollapsed?'展开':'收起')+'渠道导航');toggle.setAttribute('title',(channelNavCollapsed?'展开':'收起')+'渠道导航');restoreEditorScroll(scroller,position,channelOffset);syncChannelSection();}
+ function syncDetailSection(){syncEditorSection();syncChannelSection();}
+
+ function channelPage(){
+  if(!channelDetail)return status()+progress()+'<div class="mp-list-toolbar"><input class="input" data-channel-search aria-label="搜索渠道" placeholder="搜索渠道" value="'+esc(channelSearch)+'"><div class="mp-actions">'+button('新增渠道','new-channel',busy()?'disabled':'',true)+(scope.size?button('清除选择','clear-channels',busy()?'disabled':''):'')+button('预览选择器','order-preview')+'</div></div>'+batchToolbar()+channels()+'<p class="mp-footer-note">启用开关修改草稿，保存后提示重启；停用保留已选模型与配置。拖动渠道调整整组顺序。</p>';
+  const p=provider(),rows=visibleModels(),filtered=search||family||onlySelected,locked=busy();
+  const models='<div class="mp-section-heading"><h3>模型列表 <span class="mp-badge">'+rows.length+'</span></h3><div class="mp-actions">'+(p.id==='native'?'':button(p.refresh==='loading'?'取消等待':'获取模型列表',p.refresh==='loading'?'cancel-refresh':'refresh',locked?'disabled':''))+button('预览选择器','order-preview','title="预览最终模型顺序，不保存配置"')+'</div></div>'+(['loading','failed','empty'].includes(p.refresh)?'<div class="mp-inline-notice">'+(p.refresh==='loading'?'正在获取清单…':p.refresh==='failed'?'获取失败，旧清单与选择保留':'上游返回空清单，原选择保留')+'</div>':'')+'<div class="mp-filter"><input class="input" data-model-search aria-label="搜索模型 ID 或别名" placeholder="搜索 ID、别名或显示名称" value="'+esc(search)+'"><select class="mp-select" data-family aria-label="筛选模型族">'+opts([['','全部族'],...families()],family)+'</select><label class="mp-label"><input type="checkbox" data-only-selected '+(onlySelected?'checked':'')+'>仅启用</label></div>'+modelBatchToolbar()+'<div class="mp-table" aria-label="模型管理列表"><div class="mp-table-head"><input type="checkbox" data-model-pick-all aria-label="批量选择当前筛选结果" aria-checked="'+(modelSelectionState().mixed?'mixed':modelSelectionState().checked)+'" '+(modelSelectionState().checked?'checked ':'')+(p.id==='native'||locked||!rows.length?'disabled':'')+'><span>模型标识 / 别名与配置</span><span>启停</span><span>编辑与排序</span></div>'+rows.map(m=>modelRow(p,m,filtered)).join('')+(rows.length?'':'<div class="mp-empty">没有匹配项，启停与批量选择保留。</div>')+'</div><p class="mp-footer-note">'+(!p.enabled?'渠道已停用，模型配置仍可编辑；启用渠道后恢复计划选择器。':'复选框仅用于批量选择；启停独立控制。别名不改变上游 ID，行编辑加入草稿后统一保存。')+'</p>';
+  const header='<header id="mpChannelHeader" class="mp-editor-head">'+iconButton('返回渠道列表','back-channels','back')+'<div class="mp-editor-heading"><h2>'+esc(p.name)+'</h2><div class="mp-muted">'+esc(p.protocol)+' · '+(p.id==='native'?'官方管理 · 只读':(p.enabled?'启用':'停用')+' · '+esc(availabilityText(p)))+' · 启用 '+selected(p).length+' / 发现 '+p.models.length+'</div></div><select class="mp-select" data-current aria-label="当前渠道">'+opts(draft.providers.map(p=>[p.id,p.name]),current)+'</select></header>';
+  const nav=channelSections.map(([id,name],i)=>'<button class="mp-nav-item" data-mp="channel-section" data-id="'+id+'" title="'+name+'" aria-controls="mpChannelSection-'+id+'" aria-current="'+(channelSection===id?'location':'false')+'"><span>'+String(i+1).padStart(2,'0')+'</span><span class="mp-nav-label">'+name+'</span></button>').join('');
+  const content={models,connection:inlineConnection(p),endpoints:channelEndpoints(p),defaults:channelDefaults(p)};
+  return header+'<div id="mpChannelWorkspace" class="mp-channel-workspace '+(channelNavCollapsed?'nav-collapsed':'')+'"><nav class="mp-template-nav mp-channel-nav" aria-label="渠道管理分区">'+button(icon('menu'),'toggle-channel-nav','id="mpChannelNavToggle" title="'+(channelNavCollapsed?'展开':'收起')+'渠道导航" aria-label="'+(channelNavCollapsed?'展开':'收起')+'渠道导航" aria-expanded="'+!channelNavCollapsed+'"')+nav+'<div class="mp-template-tools mp-channel-tools" role="group" aria-label="渠道快捷操作">'+channelAction('配置工具','more','more','title="导入、导出、应用记录与草稿操作"')+iconButton('设置','settings','settings')+'</div>'+status()+'</nav><div class="mp-channel-content">'+progress()+channelSections.map(([id,name])=>'<section id="mpChannelSection-'+id+'" class="mp-template-section" data-channel-section="'+id+'" aria-label="'+name+'">'+content[id]+'</section>').join('')+'</div></div>';
+ }
+
+
+ function templatePage(){
+  if(!templateDetail)return (templateScratch?'<div class="mp-inline-notice"><span>有未保存的新模版</span>'+button('继续编辑','new-template')+'</div>':'')+'<div class="mp-list-toolbar"><input class="input" data-template-search aria-label="搜索模版" placeholder="搜索模版或协议" value="'+esc(templateSearch)+'"><div class="mp-actions">'+button('新建模版','new-template','',true)+button('外部 Agent 配置','external-agent')+'</div></div><div class="mp-template-table"><div class="mp-template-heading"><span>模版 / 自定义模型族</span><span>主版本</span><span>版本</span><span>操作</span></div>'+templates.filter(t=>(t.name+' '+(version(t.id,t.main)?.rules.protocol||'')).toLowerCase().includes(templateSearch.toLowerCase())).map(t=>'<div class="mp-template-row"><div class="mp-row"><input type="checkbox" data-template-select="'+esc(t.id)+'" aria-label="选择 '+esc(t.name)+'" '+(templateSelection.has(t.id)?'checked':'')+'><button class="mp-template-name" data-mp="view-template" data-id="'+esc(t.id)+'"><strong>'+esc(t.name)+'</strong><small>'+esc(t.id)+' · '+esc(version(t.id,t.main)?.rules.protocol||'协议继承')+'</small></button></div><span class="mp-badge">'+(t.main?'v'+t.main:'未设定')+'</span><span class="mp-muted">'+t.versions.length+' 个'+(buffers[t.id]?' · 草稿':'')+'</span>'+button('编辑','open-template-editor','data-id="'+esc(t.id)+'"')+'</div>').join('')+'</div><p class="mp-footer-note">模版本身就是模型族，可自由创建。预设只是起点；自动填充在新建 / 编辑内，保存候选后再设主版本或采用。</p>';
+  const t=template(),v=version(t.id,versionN),b=buffer(),content=b||{name:t.name,description:v?.description||'',match:v?.match||defaultMatch(),rules:v?.rules||{},...(v?.variants?.length?{variants:v.variants}:{})},rules=content.rules;
+  const fields=[['protocol','输出协议'],['context','上下文窗口'],['modalities','输入模态'],['efforts','可选推理档位'],['default','默认档位'],['fast','Fast 能力']];
+  const title=b?'<input id="mpTemplateName" data-template-meta="name" class="mp-editor-name" aria-label="模版名称" title="直接编辑模版名称" value="'+esc(b.name)+'" placeholder="自由命名模型族">':'<button class="mp-editor-title-button" data-mp="edit-template-name" aria-label="编辑模版名称：'+esc(content.name)+'" title="编辑模版名称"><span>'+esc(content.name)+'</span>'+icon('edit')+'</button>';
+  const subtitle=(b?'未保存候选':'v'+v.n+' · '+v.status)+' · '+(t.main?'主版本 v'+t.main:'尚无主版本');
+  const header='<header id="mpTemplateHeader" class="mp-editor-head">'+iconButton('返回模版列表','back-templates','back')+'<div class="mp-editor-heading" title="'+esc(t.id)+' · 模版即模型族"><h2>'+title+'</h2><div class="mp-muted" title="'+esc(b?'保存或取消后可切换版本':subtitle)+'">'+esc(subtitle)+'</div></div><div class="mp-actions mp-editor-versions">'+(t.versions.length?'<select class="mp-select" data-version aria-label="模版版本" '+(b?'disabled title="先保存或取消候选，再查看版本"':'')+'>'+opts(t.versions.map(v=>[v.n,'v'+v.n+' · '+v.status+(v.n===t.main?' · 主版本':'')]),versionN)+'</select>'+button('版本操作','version-menu',b?'disabled':''):'')+'</div></header>';
+  return header+(b?templateForm(b):'<div class="mp-rule-summary">'+fields.map(([k,n])=>'<div><span>'+n+'</span><strong>'+esc(Object.hasOwn(rules,k)?ruleText(k,rules[k]):'继承 / 未声明')+'</strong></div>').join('')+'</div><p class="mp-footer-note">'+esc(content.description||'暂无说明')+' · 匹配 '+esc(matchLines(content.match.include))+'</p>')+(b?'':'<div class="mp-detail-actions">'+templateActions()+'</div>')+(b?'':'<details class="mp-details"><summary>来源与使用情况</summary><p>'+esc(v?.source||'演示资料；真实能力待核对。')+'</p><div class="mp-diff">'+draft.providers.filter(p=>Object.values(p.refs).some(x=>x.startsWith(t.id+':'))).map(p=>'<div class="mp-diff-row"><span>'+esc(p.name)+'</span><span>引用 '+esc(p.refs[t.id])+'</span></div>').join('')+'</div></details>')+(proposal&&proposal.id===t.id?'<div class="mp-inline-notice"><span>生成结果待比较</span>'+button('查看差异与纠偏','conversation')+'</div>':'')+(b?'':'<div class="mp-editor-footer">'+button('编辑为新候选','edit-template')+button('采用此版本','adopt-version','',true)+'</div>'); }
+
+ function render(){
+  const scroller=host.closest('.main'),channelEditing=tab==='channels'&&channelDetail,sameChannel=channelEditing&&channelViewId===current,channelPosition=sameChannel?channelScrollPosition(scroller):null,editing=tab==='templates'&&templateDetail&&!!buffer(),sameEditor=editing&&editorViewId===templateId,position=sameEditor?editorScrollPosition(scroller):null;
+  if(editing&&!sameEditor)editorSection='basic';if(channelEditing&&!sameChannel)channelSection='models';
+  for(const id of Object.keys(channelConnections))if(!draft.providers.some(p=>p.id===id))delete channelConnections[id];
+  const validKeys=new Set(draft.providers.flatMap(p=>p.models.map(m=>m.key)));modelSelection=new Set([...modelSelection].filter(k=>validKeys.has(k)));modelExpanded=new Set([...modelExpanded].filter(k=>validKeys.has(k)));for(const key of Object.keys(modelEdits))if(!validKeys.has(key))delete modelEdits[key];
+  if(!provider()){current=draft.providers[0]?.id;channelDetail=false;}scope=new Set([...scope].filter(id=>draft.providers.some(p=>p.id===id&&id!=='native')));const active=document.activeElement,focus=active?.matches('[data-model-search]')?'[data-model-search]':active?.matches('[data-channel-search]')?'[data-channel-search]':active?.matches('[data-template-search]')?'[data-template-search]':active?.matches('[data-model-alias]')?'[data-model-alias="'+active.dataset.modelAlias+'"]':null,caret=active?.selectionStart,fieldId=active?.id&&host.querySelector('#'+active.id)?active.id:null;host.innerHTML=toolbar()+(tab==='channels'?channelPage():templatePage());
+  $$('[data-model-quick] input,[data-model-quick] select,[data-model-quick] button',host).forEach(el=>el.disabled=busy());
+  const selection=scopeState();$$('[data-scope-all]').forEach(el=>el.indeterminate=selection.mixed);$$('[data-model-pick-all]',host).forEach(el=>el.indeterminate=modelSelectionState().mixed);
+  if(tab==='templates'&&templateDetail&&buffer())bindFields($('[data-field-editor]',host),buffer().rules,null,(rules,valid)=>{buffer().rules=rules;buffer().valid=valid;editorDigest++;updateTemplateSaveStatus();});
+  if(focus||fieldId){const el=$(focus||'#'+fieldId);if(el){el.focus({preventScroll:true});if(caret!=null&&el.setSelectionRange)el.setSelectionRange(caret,active.selectionEnd??caret);}}else if(active?.matches('[data-scope-all]'))$('[data-scope-all]',host)?.focus();else if(active?.matches('[data-scope]'))$$('[data-scope]',host).find(el=>el.dataset.scope===active.dataset.scope)?.focus();if(active?.matches('[data-model-pick-all]'))$('[data-model-pick-all]',host)?.focus({preventScroll:true});else if(active?.matches('[data-model-pick]'))$$('[data-model-pick]',host).find(el=>el.dataset.modelPick===active.dataset.modelPick)?.focus({preventScroll:true});renderSettings();renderAssistant();
+  channelViewId=tab==='channels'&&channelDetail?current:null;if(channelViewId&&scroller){channelOffset(scroller);if(sameChannel)restoreEditorScroll(scroller,channelPosition,channelOffset);else scroller.scrollTop=0;channelOffset(scroller);syncChannelSection();}
+  editorViewId=editing?templateId:null;if(tab==='templates'&&templateDetail&&scroller)editorOffset(scroller);if(editing&&scroller){if(sameEditor)restoreEditorScroll(scroller,position);else scroller.scrollTop=0;syncEditorSection();}
+ }
+ function agentProvider(){return saved.providers.find(p=>p.id===agent.providerId&&p.id!=='native');}
+ function agentModel(){return agentProvider()?.models.find(m=>m.id===agent.modelId);}
+ function agentBlocked(p){return !p?.enabled||['no-credit','auth-failed','connection-failed','unavailable'].includes(p.availability?.kind);}
+ function agentReady(){return !!agentModel()&&!agentBlocked(agentProvider());}
+ function agentSummary(){if(agent.providerId&&!agentProvider())return '执行渠道已删除或不存在 · 请重新选择';if(agent.providerId&&agentProvider()&&!agentProvider().enabled)return '执行渠道已停用 · '+agentProvider().name+' / '+agent.modelId;return agentReady()?agentProvider().name+' / '+agent.modelId+' · '+(labels[agent.effort]||'默认推理')+(agent.fast?' · Fast':''):'未配置执行模型';}
+ function agentSettings(returnTo=''){
+  let next=clone(agent);
+  modal('配置制模 Agent','<p class="mp-muted">复用已有渠道连接；只用于自动生成与纠偏。</p><div class="mp-agent-form"><label>执行渠道<select class="mp-select" id="mpAgentProvider"><option value="">请选择渠道</option>'+saved.providers.filter(p=>p.id!=='native').map(p=>'<option value="'+p.id+'" '+(next.providerId===p.id?'selected':'')+' '+(agentBlocked(p)?'disabled':'')+'>'+esc(p.name)+(!p.enabled?' · 已停用':agentBlocked(p)?' · '+esc(availabilityText(p)):'')+'</option>').join('')+'</select></label><label>执行模型<select class="mp-select" id="mpAgentModel" aria-label="Agent 执行模型"></select></label><label>推理档位<select class="mp-select" id="mpAgentEffort"></select></label><label class="mp-label"><input type="checkbox" id="mpAgentFast">使用 Fast</label></div><p class="mp-muted" id="mpAgentCapability"></p><p class="mp-muted">原型仅保存在内存。外部 Codex / CLI 使用自己的模型设置；搜索能力仍需单独接入。</p>','保存设置',()=>{next.providerId=$('#mpAgentProvider').value;next.modelId=$('#mpAgentModel').value;next.effort=$('#mpAgentEffort').value;next.fast=$('#mpAgentFast').checked;const chosen=saved.providers.find(p=>p.id===next.providerId);if(agentBlocked(chosen)||!chosen.models.some(m=>m.id===next.modelId))return;agent=next;closeModal();render();if(returnTo==='generate')generateDialog();else if(returnTo==='conversation')conversationDialog();notice('演示 Agent 设置已保存，执行服务尚未接入');},{confirmKeepsOpen:true});
+  const capabilities=()=>{const p=saved.providers.find(p=>p.id===$('#mpAgentProvider').value),m=p?.models.find(m=>m.id===$('#mpAgentModel').value),efforts=m?.official.efforts||[];$('#mpAgentEffort').innerHTML=opts([['inherit','模型默认'],...efforts.map(x=>[x,labels[x]])],next.effort);$('#mpAgentFast').disabled=m?.official.fast!=='supported';$('#mpAgentFast').checked=!$('#mpAgentFast').disabled&&next.fast;$('#mpAgentCapability').textContent=m?'推理 / Fast 来自示例声明，实际参数支持待接入核对。模型不需进入 Codex 白名单。':'先选择渠道和模型。';$('#modalConfirm').disabled=!m||agentBlocked(p);};
+  const fill=()=>{const p=saved.providers.find(p=>p.id===$('#mpAgentProvider').value);$('#mpAgentModel').innerHTML=opts([['','请选择模型'],...(p?.models||[]).map(m=>[m.id,m.id])],next.providerId===p?.id?next.modelId:'');capabilities();};
+  $('#mpAgentProvider').onchange=fill;$('#mpAgentModel').onchange=capabilities;fill();
+ }
+ function renderSettings(){const node=$('#mpSettingsContent');if(!node)return;node.innerHTML='<h2>模型配置</h2><div class="mp-settings-card"><div class="mp-settings-title"><div><h3>自动生成模版</h3><p class="mp-muted">'+esc(agentSummary())+'</p></div>'+button(agentReady()?'调整 Agent':'配置 Agent','agent-settings')+'</div><p class="mp-muted">用于生成与纠偏。外部 Codex / CLI 自行配置模型。</p></div><div class="mp-settings-card"><h3>快速模式</h3><label class="mp-label">Fast 请求策略 <select class="mp-select" data-fast-mode '+(busy()?'disabled':'')+'>'+opts([['inherit','继承运行配置'],['on','开启'],['off','关闭']],draft.fastMode)+'</select></label><label class="mp-label"><input type="checkbox" data-fast-rows '+(draft.fastRows?'checked':'')+' '+(busy()?'disabled':'')+'>在选择器中显示独立 Fast 项</label><p class="mp-muted">跟随支持的模型，占用激活数量。保存后需重启 Codex。</p>'+button('前往模型页保存','go-channels')+'</div><details class="mp-details"><summary>配置文件与状态</summary><p>族模版：<code>manager-state/model-family-templates.json</code><br>渠道模型策略：<code>manager-state/model-policy.json</code><br>本机绑定：<code>manager-state/model-policy-bindings.json</code></p><p>Agent 执行偏好拟复用 <code>manager-state/preferences.json</code> 的本机专用分区，不进入模型双文件导出或默认同步。字段与同步过滤待实现。</p><p>兼容预算 100 · '+esc(client)+'</p></details>'; }
+
+ function diff(a,b){const changes=[];if(a.fastMode!==b.fastMode)changes.push('全局 Fast：'+a.fastMode+' → '+b.fastMode);if(a.fastRows!==b.fastRows)changes.push('独立 Fast 项：'+a.fastRows+' → '+b.fastRows);if(JSON.stringify(a.globalRefs)!==JSON.stringify(b.globalRefs))changes.push('全局族来源发生变更');if(a.providers.map(p=>p.id).join()!==b.providers.map(p=>p.id).join())changes.push('渠道顺序发生变更');a.providers.filter(p=>!b.providers.some(x=>x.id===p.id)).forEach(p=>changes.push(p.name+' 移除'));b.providers.forEach(p=>{const old=a.providers.find(x=>x.id===p.id);if(!old){changes.push(p.name+' 新增');return;}if(old.enabled!==p.enabled)changes.push(p.name+'：'+(old.enabled?'启用':'停用')+' → '+(p.enabled?'启用':'停用')+'（保留白名单、顺序和设置）');const before=clone(old),after=clone(p);delete before.enabled;delete after.enabled;if(JSON.stringify(before)!==JSON.stringify(after)){const add=selected(p).filter(m=>!selected(old).some(x=>x.key===m.key)).length,remove=selected(old).filter(m=>!selected(p).some(x=>x.key===m.key)).length;changes.push(p.name+'：白名单 +'+add+' / −'+remove+'；模式 '+old.mode+' → '+p.mode+'；字段 / 顺序将逐项核对');}});return changes;}
+ const diffHTML=items=>'<div class="mp-diff">'+(items.length?items:['没有策略差异']).map(x=>'<div class="mp-diff-row">'+esc(x)+'</div>').join('')+'</div>';
+ function policyChanges(a,b){
+  const groups=[],same=(x,y)=>JSON.stringify(x)===JSON.stringify(y),list=xs=>xs.map((x,i)=>(i+1)+'. '+x).join('\n')||'无',rulesLabels={protocol:'模型协议',context:'上下文窗口',modalities:'输入模态',efforts:'可选推理档位',default:'默认推理档位',fast:'Fast 能力',force:'请求强制档',omit:'不传推理参数',authority:'声明模式'};
+  const mode=v=>({whitelist:'指定模型',all:'全部模型',none:'全部隐藏',native:'官方管理'}[v]||'无'),fast=v=>({on:'开启',off:'关闭',inherit:'继承'}[v]||'无');
+  function group(id,name){const g={id,name,rows:[]};groups.push(g);return g;}
+  function add(g,label,x,y,format=v=>v==null?'继承':String(v)){if(!same(x,y))g.rows.push({label,before:format(x),after:format(y)});}
+  function rules(g,prefix,x={},y={}){for(const key of new Set([...Object.keys(x),...Object.keys(y)]))add(g,prefix+(rulesLabels[key]||key),x[key],y[key],v=>v===undefined?'继承':key==='force'?(labels[v]||v):key==='omit'?(v?'是':'否'):key==='authority'?(v==='force'?'强制使用本层声明':v):ruleText(key,v));}
+  function refs(g,prefix,x={},y={}){for(const f of new Set([...Object.keys(x),...Object.keys(y)]))add(g,prefix+f,x[f],y[f]);}
+  const global=group('global','全局设置');
+  add(global,'Fast 请求策略',a.fastMode,b.fastMode,fast);add(global,'独立 Fast 项',a.fastRows,b.fastRows,v=>v?'显示':'隐藏');add(global,'系统占用',a.hidden,b.hidden);
+  refs(global,'族模版 · ',a.globalRefs,b.globalRefs);
+  add(global,'渠道顺序',a.providers.map(p=>p.id),b.providers.map(p=>p.id),list);
+  for(const id of new Set([...a.providers.map(p=>p.id),...b.providers.map(p=>p.id)])){
+   const old=a.providers.find(p=>p.id===id),next=b.providers.find(p=>p.id===id),g=group(id,(next||old).name+' · '+id),x=old||{},y=next||{};
+   add(g,'渠道对象',!!old,!!next,v=>v?'存在':'不存在');
+   add(g,'名称',x.name,y.name,v=>v||'无');add(g,'接口协议',x.protocol,y.protocol,v=>v||'无');add(g,'启用',x.enabled,y.enabled,v=>v==null?'无':v?'启用':'停用');
+   add(g,'协议端点',endpoints(x).map(e=>({id:e.id,protocol:e.protocol,connection:e.connection})),endpoints(y).map(e=>({id:e.id,protocol:e.protocol,connection:e.connection})),v=>v.map(e=>e.id+' · '+e.protocol+' · '+(e.connection?.baseUrl||'未绑定')+' · '+(e.connection?.auth||'未绑定')+' · '+(e.connection?.keyConfigured?'密钥已配置（不显示密钥）':'未配置')).join('\n')||'无');
+   const xc=x.connection||{},yc=y.connection||{};
+   add(g,'Base URL',xc.baseUrl,yc.baseUrl,v=>v||'无');add(g,'认证方式',xc.auth,yc.auth,v=>v==='apikey'?'API Key':v==='none'?'无需认证':'无');
+   add(g,'密钥配置状态',xc.keyConfigured,yc.keyConfigured,v=>v?'已配置（不显示密钥）':'未配置');
+   add(g,'模型选择模式',x.mode,y.mode,mode);add(g,'渠道 Fast 策略',x.fastEnabled,y.fastEnabled,fast);
+   add(g,'白名单 / 有效选择',old?selected(old).map(m=>m.id):[],next?selected(next).map(m=>m.id):[],list);
+   const xm=x.models||[],ym=y.models||[];
+   add(g,'发现清单',xm.map(m=>m.id).sort(),ym.map(m=>m.id).sort(),list);
+   if(old&&next){add(g,'内部模型顺序',xm.map(m=>m.id),ym.map(m=>m.id),list);add(g,'发现更新时间',x.updated,y.updated,v=>v||'未获取');}
+   rules(g,'渠道默认 · ',x.defaults,y.defaults);refs(g,'渠道族模版 · ',x.refs,y.refs);
+   for(const f of new Set([...Object.keys(x.familyOverrides||{}),...Object.keys(y.familyOverrides||{})]))rules(g,f+' 族覆盖 · ',x.familyOverrides?.[f],y.familyOverrides?.[f]);
+   for(const key of new Set([...xm.map(m=>m.key),...ym.map(m=>m.key)])){
+    const before=xm.find(m=>m.key===key)||{},after=ym.find(m=>m.key===key)||{},prefix=(after.id||before.id)+' · ';
+    if(before.id&&after.id)add(g,prefix+'模型族',before.family,after.family);add(g,prefix+'模版版本',before.templateRef,after.templateRef);
+    add(g,prefix+'别名',before.naming?.alias,after.naming?.alias,v=>v||'未设置');add(g,prefix+'显示名称',before.naming?.displayName,after.naming?.displayName,v=>v||'上游 ID');
+    if(old&&next&&before.id&&after.id)add(g,prefix+'启停',modelActive(old,before),modelActive(next,after),v=>v?'启用':'停用');
+    add(g,prefix+'指定端点',before.endpointId,after.endpointId,v=>v||'自动匹配');
+    if(old&&next&&before.id&&after.id){add(g,prefix+'最终协议',resolveRoute(old,before,a).protocol,resolveRoute(next,after,b).protocol);add(g,prefix+'协议来源',resolveRoute(old,before,a).source,resolveRoute(next,after,b).source);}
+    rules(g,prefix+'模型例外 · ',before.overrides,after.overrides);
+    if(old&&next&&before.id&&after.id)rules(g,prefix+'上游声明 · ',before.official,after.official);
+   }
+   // 清单获取会更新本机记录；不把它伪装成推理 / Fast 能力改变。
+   if(!g.rows.length&&!same(x,y))g.rows.push({label:'发现记录',before:'已保存记录',after:'已更新记录（配置字段未变化）'});
+  }
+  return groups.filter(g=>g.rows.length);
+ }
+ function changeValueHTML(value){const text=String(value),n=text.split('\n').length;return n>4?'<details class="mp-change-values"><summary>'+n+' 项 · 展开查看</summary><div>'+esc(text)+'</div></details>':esc(text);}
+ function policyDiffHTML(a,b,locate=false,allOpen=false){const groups=policyChanges(a,b);return '<div class="mp-changes">'+groups.map((g,i)=>'<details class="mp-details mp-draft-group" '+(allOpen||i===0?'open':'')+'><summary>'+esc(g.name)+'<span class="mp-badge">'+g.rows.length+' 项变化</span></summary>'+(locate&&b.providers.some(p=>p.id===g.id)?'<div class="mp-change-actions">'+button(g.id==='native'?'查看':'管理','view-provider','data-id="'+esc(g.id)+'"')+'</div>':'')+'<div class="mp-change-head"><span>配置项</span><span>已保存</span><span>当前草稿</span></div>'+g.rows.map(r=>'<div class="mp-change-row"><strong>'+esc(r.label)+'</strong><span><small>已保存</small>'+changeValueHTML(r.before)+'</span><span><small>当前草稿</small>'+changeValueHTML(r.after)+'</span></div>').join('')+'</details>').join('')+'</div>';}
+ function draftDialog(){const groups=policyChanges(saved,draft),over=count()>100;
+  modal('查看草稿',dirty()?'<p>当前页面展示的就是未保存草稿。相对最近成功保存，'+groups.length+' 个分组发生变化；不受搜索或勾选范围限制。</p><p>模型激活数：已保存 '+projection(saved).length+'/100 → 当前草稿 '+count()+'/100。</p>'+policyDiffHTML(saved,draft,true)+(over?'<p class="mp-alert">超出兼容预算，请返回编辑收窄；完整草稿保留。</p>':''):'<div class="mp-empty">暂无未保存改动</div>'+(pending?'<p>最近保存仍待重启 Codex；查看草稿不会改变重启状态。</p>':''),
+   '继续编辑',null,{cancelLabel:'关闭',...(dirty()&&!busy()&&!over?{extraLabel:'去保存',onExtra:()=>{closeModal();saveDialog();}}:{})});
+ }
+ function setSelection(models,value){const p=provider();if(p.mode==='all'){p.models.forEach(m=>m.selected=true);p.mode='whitelist';}models.forEach(m=>m.selected=value);if(!p.models.some(m=>m.selected))p.mode='none';else if(p.mode==='none')p.mode='whitelist';}
+ function selectModels(models,value){const p=provider(),remaining=selected(p).filter(m=>!models.includes(m)).length;if(!value&&remaining===0)modal('隐藏本渠道全部模型？','<p>将使用明确的“全部隐藏”模式，保留已发现清单和顺序；不会以空 selectedModels 冒充隐藏。</p>','加入草稿',()=>change(()=>setSelection(models,value)));else change(()=>setSelection(models,value));}
+ function move(list,id,direction,key='id'){const i=list.findIndex(x=>x[key]===id),j=i+direction;if(i<0||j<0||j>=list.length)return;[list[i],list[j]]=[list[j],list[i]];}
+ function discoveredModel(pid,id,source='upstream'){
+  const family=/^gpt-/i.test(id)?'GPT':/^claude-/i.test(id)?'Claude':/^gemini-/i.test(id)?'Gemini':/^qwen/i.test(id)?'Qwen':/^deepseek/i.test(id)?'DeepSeek':/^grok/i.test(id)?'Grok':'未归族';
+  return {key:pid+'::'+id,id,family,selected:false,source,official:{context:null,modalities:[],efforts:[],default:null,fast:'unknown'},overrides:{}};
+ }
+ function discoveryFixture(pid){return ['gpt-5.4','gpt-5.4-mini','gpt-5.3-codex','claude-sonnet-4-6','gemini-3-flash-preview','qwen3-coder','deepseek-v3.2','upstream-custom-demo'].map(id=>discoveredModel(pid,id));}
+ function mergeDiscovered(old,found){const ids=new Set(found.map(m=>m.id));return [...old.map(m=>({...m,discovered:ids.has(m.id)})),...found.filter(m=>!old.some(x=>x.id===m.id))];}
+ function refresh(){const p=provider(),token=++p.refreshToken;p.refresh='loading';render();setTimeout(()=>{if(p.refreshToken!==token||!draft.providers.includes(p))return;p.refresh=scenario==='discovery-fail'?'failed':scenario==='discovery-empty'?'empty':'idle';if(p.refresh==='idle'&&p.addedInPrototype)p.models=mergeDiscovered(p.models,[...discoveryFixture(p.id),discoveredModel(p.id,'upstream-added-demo')]);p.updated='刚刚（演示）';render();notice(p.refresh==='idle'?'模拟刷新完成，新增项未勾选；原白名单和位置保留':'未覆盖原清单或白名单');},650);}
+ function channelConnection(edit=false,inline=false){
+  const p=edit?provider():null;if(p?.id==='native'||busy())return;
+  if(p&&stagedModelEdits().some(([key])=>p.models.some(m=>m.key===key))){notice('请先确认或还原本渠道的行编辑，再调整连接');return;}
+  const b=p&&channelConnections[p.id];if(b&&b.baseline!==connectionBaseline(p)){notice('连接基准已变化，请还原配置后重新编辑');return;}
+  channelWizard={editId:p?.id||'',id:p?.id||'',name:p?.name||'',protocol:p?.protocol||'Responses',connection:clone(p?.connection||{baseUrl:'',auth:'apikey',keyConfigured:false}),models:clone(p?.models||[]),step:1,status:'idle',filter:'',only:false,keyChanged:0,previewKeyVersion:0,retainedKeyConfigured:p?.connection?.keyConfigured||false,error:'',retrieved:false};
+  if(p){const chosen=new Set(selected(p).map(m=>m.id));channelWizard.models.forEach(m=>m.selected=chosen.has(m.id));}
+  channelWizard.previous=p?JSON.stringify({protocol:p.protocol,connection:p.connection}):'';
+  channelWizard.providerDigest=p?JSON.stringify(p):'';channelWizard.bufferDigest=b?JSON.stringify(b):'';
+  if(b){Object.assign(channelWizard,{name:b.name.trim(),protocol:b.protocol,connection:clone(b.connection),keyChanged:b.keyChanged,retainedKeyConfigured:b.retainedKeyConfigured});channelWizard.connection.baseUrl=channelWizard.connection.baseUrl.trim().replace(/\/+$/,'');}
+  if(inline){channelWizard.error=validateConnection();if(channelWizard.error){notice(channelWizard.error);channelWizard=null;return;}const same=channelWizard.previous===JSON.stringify({protocol:channelWizard.protocol,connection:channelWizard.connection})&&!channelWizard.keyChanged;if(!same){channelWizard.models=[];channelWizard.retrieved=false;channelWizard.status='idle';}channelWizard.previous=JSON.stringify({protocol:channelWizard.protocol,connection:channelWizard.connection});channelWizard.previewKeyVersion=channelWizard.keyChanged;channelWizard.step=2;}
+  wizardToken++;drawChannelWizard();
+ }
+ function captureConnection(){const w=channelWizard;if(!w||w.step!==1)return;w.name=$('#mpChannelName').value.trim();w.id=$('#mpChannelId').value.trim();w.protocol=$('#mpChannelProtocol').value;w.connection.baseUrl=$('#mpChannelURL').value.trim().replace(/\/+$/,'');w.connection.auth=$('#mpChannelAuth').value;w.connection.keyConfigured=w.connection.auth==='apikey'&&(w.retainedKeyConfigured||$('#mpChannelKey').value.length>0);}
+ function validateConnection(){
+  const w=channelWizard;if(!w.name)return '请填写渠道名称。';
+  if(!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(w.id)||['native','openai','system','constructor','prototype','__proto__'].includes(w.id.toLowerCase()))return '渠道标识使用字母、数字、点、下划线或连字符；不能使用保留标识。';
+  if(draft.providers.some(p=>p.id!==w.editId&&(p.id.toLowerCase()===w.id.toLowerCase()||p.name.toLowerCase()===w.name.toLowerCase())))return '渠道名称或标识已存在，请换一个。';
+  try{const url=new URL(w.connection.baseUrl);if(!['https:','http:'].includes(url.protocol)||url.username||url.password||url.search||url.hash)throw Error();}catch{return '请填写完整 HTTP(S) Base URL，不附密钥、查询参数或模型接口路径。';}
+  if(/\/(models|responses|chat\/completions)\/?$/i.test(w.connection.baseUrl))return '请填写 Base URL，不填写 /models 或生成接口。';
+  if(w.connection.auth==='apikey'&&!w.connection.keyConfigured)return '请填写演示 API Key，或选择无需认证。';return '';
+ }
+ function drawChannelWizard(){
+  const w=channelWizard;if(!w)return;const first=w.step===1,loading=w.status==='loading',title=(w.editId?'编辑渠道连接':'新增渠道')+' · '+(first?'连接配置':'选择模型');
+  const steps='<ol class="mp-wizard-steps" aria-label="新增渠道步骤"><li '+(first?'aria-current="step"':'')+'>1 连接配置</li><li '+(!first?'aria-current="step"':'')+'>2 选择模型</li></ol>';
+  const help=w.protocol==='Ollama'?'Ollama：例如 http://localhost:11434；使用原生适配器。':w.protocol==='Anthropic'?'Anthropic：使用服务根地址或 /v1。':w.protocol==='Google'?'Google AI Studio：使用服务根地址，不附 /v1beta/models。':'OpenAI 兼容：例如 https://newapi.example.com/v1，系统按适配器获取模型。';
+  const form='<div class="mp-agent-form"><label>渠道名称<input class="input" id="mpChannelName" maxlength="80" value="'+esc(w.name)+'" placeholder="例如：NewApi 备用"></label><label>渠道标识<input class="input" id="mpChannelId" maxlength="64" value="'+esc(w.id)+'" placeholder="例如：newapi-backup" '+(w.editId?'readonly':'')+'><span class="mp-muted">保存后保持稳定，用来绑定模型策略。</span></label><label>默认接口协议<select class="mp-select" id="mpChannelProtocol">'+protocolOptions(w.protocol)+'</select></label><label>Base URL<input class="input" id="mpChannelURL" type="url" value="'+esc(w.connection.baseUrl)+'" placeholder="https://newapi.example.com/v1"><span class="mp-muted">'+help+'</span></label><label>认证方式<select class="mp-select" id="mpChannelAuth">'+opts([['apikey','API Key'],['none','无需认证']],w.connection.auth)+'</select></label>'+(w.connection.auth==='apikey'?'<label>API Key<input class="input" id="mpChannelKey" type="password" autocomplete="off" placeholder="'+(w.connection.keyConfigured?'已配置（不回显）；留空保留':'仅填演示值，请勿输入真实密钥')+'"><span class="mp-muted">本原型只记录是否已配置，不保存或发出输入值。</span></label>':'<input id="mpChannelKey" type="hidden" value="">')+'</div>';
+  const shown=w.models.filter(m=>(!w.only||m.selected)&&m.id.toLowerCase().includes(w.filter.toLowerCase())),selectedCount=w.models.filter(m=>m.selected).length;
+  const messages={idle:'先获取模型列表，或手动添加模型 ID。',loading:'正在模拟获取上游清单…',ready:'已获取 '+w.models.filter(m=>m.source!=='manual').length+' 个模型；新发现项默认不勾选。',failed:'获取失败（演示网络错误）。可以重试、检查连接，或手动添加 ID。',empty:'上游返回空清单（演示）；原选择保留，可重试或手动添加。',unauthorized:'认证失败（演示 401）。返回检查 API Key；不会发推理请求。',unsupported:'该服务未提供可用的模型清单接口（演示），请手动添加 ID。'};
+  const list='<div class="mp-inline-notice"><span>'+esc(w.name)+' · '+esc(w.protocol)+'</span>'+button('返回连接配置','channel-back',loading?'disabled':'')+'</div><div class="mp-row">'+button(loading?'取消等待':w.retrieved?'重新获取':'获取模型列表',loading?'channel-cancel-fetch':'channel-fetch','',true)+'<span class="mp-muted" role="status">'+messages[w.status]+'</span></div><div class="mp-filter"><input class="input" id="mpChannelSearch" value="'+esc(w.filter)+'" placeholder="搜索模型 ID" aria-label="搜索待加入模型"><label class="mp-label"><input id="mpChannelOnly" type="checkbox" '+(w.only?'checked':'')+'>仅已选</label></div><div class="mp-row"><span id="mpChannelCount">已选 '+selectedCount+' / 清单 '+w.models.length+'</span>'+button('选择结果 '+shown.length+' 项','channel-select',loading?'disabled':'')+button('取消结果','channel-unselect',loading?'disabled':'')+'</div><div class="mp-discovery-list">'+shown.map(m=>'<label class="mp-discovery-item"><input type="checkbox" data-channel-model="'+esc(m.id)+'" '+(m.selected?'checked':'')+' '+(loading?'disabled':'')+'><span>'+esc(m.id)+'<small>'+esc(templateLabel({id:channelWizard.id},m))+' · '+(m.source==='manual'?'手动添加 / 能力未知':'上游清单（演示） / 能力待核对')+(m.discovered===false?' · 本次未发现':'')+'</small></span></label>').join('')+(shown.length?'':'<div class="mp-empty">没有匹配的模型</div>')+'</div><details class="mp-details"><summary>手动添加模型</summary><p>每行一个精确模型 ID，不按逗号拆分；去重后仍需勾选，能力保持未知。</p><textarea id="mpChannelManual" aria-label="手动模型 ID" placeholder="例如：gpt-5.4"></textarea>'+button('添加到清单','channel-manual',loading?'disabled':'')+'</details><p class="mp-muted">加入后在渠道详情调整族规则和顺序。发现继续开启；本次只是列表获取，不验证推理或 Fast。</p>';
+  modal(title,steps+'<p class="mp-muted">静态演示表单，请勿输入真实密钥；不会连接上游。</p>'+(first?form+(w.editId?'<p class="mp-muted">更换协议、地址或认证后，重新获取并选择模型；原策略在页级保存前保持。</p>':''):list)+'<div class="mp-alert" id="mpChannelError" role="alert">'+esc(w.error)+'</div>',first?'下一步':'加入草稿',()=>{
+   if(first){captureConnection();w.error=validateConnection();if(w.error){$('#mpChannelError').textContent=w.error;return;}w.retainedKeyConfigured=w.connection.keyConfigured;$('#mpChannelKey').value='';const same=w.previous===JSON.stringify({protocol:w.protocol,connection:w.connection})&&w.previewKeyVersion===w.keyChanged;if(!same){w.models=[];w.retrieved=false;w.status='idle';}w.previous=JSON.stringify({protocol:w.protocol,connection:w.connection});w.previewKeyVersion=w.keyChanged;w.step=2;drawChannelWizard();return;}
+   if(w.status==='loading'||!w.models.some(m=>m.selected))return;
+   const old=draft.providers.find(p=>p.id===w.editId);
+   if(busy()||w.editId&&(JSON.stringify(old)!==w.providerDigest||JSON.stringify(channelConnections[w.editId]||'')!== (w.bufferDigest||JSON.stringify(''))||stagedModelEdits().some(([key])=>old?.models.some(m=>m.key===key)))){$('#mpChannelError').textContent='渠道或连接编辑已变化，请关闭后重新确认。';return;}
+   const next=old?clone(old):{id:w.id,name:w.name,protocol:w.protocol,enabled:true,mode:'whitelist',models:[],defaults:{},familyOverrides:{},refs:{},fastEnabled:'inherit',refresh:'idle',refreshToken:0,updated:'刚刚（演示）',addedInPrototype:true};
+   Object.assign(next,{name:w.name,protocol:w.protocol,connection:clone(w.connection),models:clone(w.models),mode:'whitelist'});if(w.editId)delete channelConnections[w.editId];closeModal();change(()=>{if(old)draft.providers[draft.providers.indexOf(old)]=next;else draft.providers.push(next);current=next.id;channelDetail=true;search='';family='';onlySelected=false;channelSearch='';});notice('渠道和白名单已加入草稿；页级保存后才写入，随后重启 Codex');
+  },{confirmKeepsOpen:true,onClose:()=>{const key=$('#mpChannelKey');if(key)key.value='';wizardToken++;channelWizard=null;}});
+  $('#modalConfirm').disabled=!first&&(loading||!selectedCount);
+  if(first){
+   const invalidate=()=>{captureConnection();wizardToken++;w.retrieved=false;w.status='idle';w.error='';};
+   $('#mpChannelName').oninput=()=>captureConnection();$('#mpChannelId').oninput=()=>captureConnection();$('#mpChannelURL').oninput=invalidate;
+   $('#mpChannelKey').oninput=()=>{w.keyChanged++;invalidate();};
+   $('#mpChannelProtocol').onchange=()=>{invalidate();w.retainedKeyConfigured=w.connection.keyConfigured;drawChannelWizard();};$('#mpChannelAuth').onchange=()=>{invalidate();w.retainedKeyConfigured=w.connection.keyConfigured;drawChannelWizard();};
+  }else{
+   $('#mpChannelSearch').oninput=()=>{w.filter=$('#mpChannelSearch').value;drawChannelWizard();const input=$('#mpChannelSearch');input.focus();input.setSelectionRange(w.filter.length,w.filter.length);};
+   $('#mpChannelOnly').onchange=()=>{w.only=$('#mpChannelOnly').checked;drawChannelWizard();};
+  }
+ }
+ function fetchChannelModels(){const w=channelWizard;if(!w||w.status==='loading')return;const token=++wizardToken;w.status='loading';w.error='';drawChannelWizard();setTimeout(()=>{if(channelWizard!==w||wizardToken!==token)return;w.status={'discovery-fail':'failed','discovery-empty':'empty','discovery-unauthorized':'unauthorized','discovery-unsupported':'unsupported'}[scenario]||'ready';if(w.status==='ready'){w.models=mergeDiscovered(w.models,discoveryFixture(w.id));w.retrieved=true;}drawChannelWizard();},650);}
+ function wizardSelection(value){const w=channelWizard;if(!w||w.status==='loading')return;w.models.filter(m=>(!w.only||m.selected)&&m.id.toLowerCase().includes(w.filter.toLowerCase())).forEach(m=>m.selected=value);drawChannelWizard();}
+ function wizardManual(){const w=channelWizard;if(!w||w.status==='loading')return;const ids=$('#mpChannelManual').value.split(/\r?\n/).map(id=>id.trim()).filter(Boolean);if(!ids.length)return;
+  if(ids.some(id=>id.length>200||/[\s\x00-\x1f]/.test(id))){$('#mpChannelError').textContent='模型 ID 不能含空白 / 控制字符，且须不超过 200 字符。';return;}
+  [...new Set(ids)].forEach(id=>{if(!w.models.some(m=>m.id===id))w.models.push(discoveredModel(w.id,id,'manual'));});w.error='';drawChannelWizard();
+ }
+ function protocolEndpoints(){const p=provider();if(!p||p.id==='native')return;
+  modal(p.name+' · 协议端点','<p>模型模版输出协议后，使用这里配置的端点。同一协议存在多个端点时，模型需指定其中一个。</p>'+endpoints(p).map(e=>'<div class="mp-endpoint-row"><div><strong>'+esc(e.id)+' · '+esc(e.protocol)+'</strong><small>'+esc(e.connection?.baseUrl||'尚未绑定')+'</small></div><div class="mp-actions">'+(e.id==='primary'?button('编辑默认连接','channel-connection'):button('编辑','edit-endpoint','data-id="'+esc(e.id)+'"')+button('删除','delete-endpoint','data-id="'+esc(e.id)+'"',false,true))+'</div></div>').join('')+button('新增端点','add-endpoint')+'<details class="mp-details"><summary>查看协议写入计划</summary>'+routePlanHTML()+'</details>','关闭');
+ }
+ function editEndpoint(id=''){const p=provider(),old=p.endpoints?.find(e=>e.id===id);if(!p||p.id==='native')return;
+  modal(old?'编辑协议端点':'新增协议端点','<div class="mp-agent-form"><label>端点标识<input class="input" id="mpChannelEndpointId" value="'+esc(old?.id||'')+'" placeholder="例如：anthropic" '+(old?'readonly':'')+'></label><label>协议<select class="mp-select" id="mpChannelEndpointProtocol">'+protocolOptions(old?.protocol||'Anthropic')+'</select></label><label>Base URL<input class="input" id="mpChannelEndpointURL" value="'+esc(old?.connection?.baseUrl||'')+'" placeholder="https://relay.example.com/v1"></label><label>认证方式<select class="mp-select" id="mpChannelEndpointAuth">'+opts([['apikey','API Key'],['none','无需认证']],old?.connection?.auth||'apikey')+'</select></label><label>API Key<input class="input" id="mpChannelEndpointKey" type="password" autocomplete="off" placeholder="'+(old?.connection?.keyConfigured?'留空保留已配置状态':'仅填演示值，请勿输入真实密钥')+'"></label></div><p class="mp-muted">只记录是否配置密钥，不保存输入值。清单仍从默认发现连接获取；清单本身不证明协议支持。</p><div class="mp-alert" id="mpChannelEndpointError"></div>','加入草稿',()=>{
+   const eid=$('#mpChannelEndpointId').value.trim(),protocol=$('#mpChannelEndpointProtocol').value,baseUrl=$('#mpChannelEndpointURL').value.trim().replace(/\/+$/,''),auth=$('#mpChannelEndpointAuth').value,keyConfigured=auth==='apikey'&&(old?.connection?.keyConfigured||!!$('#mpChannelEndpointKey').value);
+   let error='';if(!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,63}$/.test(eid)||['primary','constructor','prototype','__proto__'].includes(eid.toLowerCase())||p.endpoints?.some(e=>e!==old&&e.id.toLowerCase()===eid.toLowerCase()))error='端点标识无效或重复。';
+   try{const u=new URL(baseUrl);if(!['https:','http:'].includes(u.protocol)||u.username||u.password||u.search||u.hash||/\/(models|messages|responses|chat\/completions)$/.test(u.pathname))throw Error();}catch{error='请填写无密钥的 HTTP(S) 服务根地址或协议前缀，不填写模型接口。';}
+   if(!protocols.includes(protocol))error='请选择支持的协议。';if(auth==='apikey'&&!keyConfigured)error='请配置演示密钥，或选择无需认证。';
+   if(error){$('#mpChannelEndpointError').textContent=error;return;}$('#mpChannelEndpointKey').value='';const entry={id:eid,protocol,connection:{baseUrl,auth,keyConfigured}};closeModal();change(()=>{p.endpoints||=[];if(old)p.endpoints[p.endpoints.indexOf(old)]=entry;else p.endpoints.push(entry);});protocolEndpoints();
+  },{confirmKeepsOpen:true,onClose:()=>{const key=$('#mpChannelEndpointKey');if(key)key.value='';}});
+ }
+ function deleteEndpoint(id){const p=provider(),entry=p.endpoints?.find(e=>e.id===id),digest=policyDigest();if(!entry)return;modal('删除协议端点？','<p>移除 '+esc(id)+'。模型的协议规则和指定端点保留；受影响的已选模型必须补齐端点才能保存。</p>','加入草稿',()=>{if(busy()||digest!==policyDigest()){closeModal();notice('草稿已变化，请重新确认删除端点');return;}closeModal();change(()=>p.endpoints=p.endpoints.filter(e=>e.id!==id));protocolEndpoints();});}
+ function editModel(p,m){
+  const edit=modelEdits[m.key],initialRules=clone(edit?.rules||m.overrides),inherited=resolve(p,m,draft,true),digest=policyDigest();let next=initialRules;
+  const currentResolved=resolve(p,m),extra='<p>上游 ID：<code>'+esc(m.id)+'</code>。别名仅用于选择和识别；请求、模版匹配与排序保留上游 ID。</p><p class="mp-muted">当前协议 '+esc(currentResolved.values.protocol)+'，来源 '+esc(currentResolved.sources.protocol)+'</p><div class="mp-model-detail-naming"><label class="mp-label">别名<input id="mpModelAlias" class="input" value="'+esc(m.naming?.alias||'')+'" placeholder="可选"></label><label class="mp-label">显示名称<input id="mpModelDisplayName" class="input" value="'+esc(m.naming?.displayName||'')+'" placeholder="默认上游 ID"></label><label class="mp-label"><input type="checkbox" id="mpModelEnabled" '+(modelActive(p,m)?'checked':'')+'>启用此模型</label></div><label class="mp-label">协议端点<select class="mp-select" id="mpChannelModelEndpoint">'+opts([['','按最终协议自动匹配'],...endpoints(p).map(e=>[e.id,e.id+' · '+e.protocol])],edit?.endpointId??m.endpointId??'')+'</select></label><p class="mp-muted">协议更改后核对推理和快速模式；缺少端点可保留草稿，保存前须补齐。</p>';
+  const bind=()=>bindFields($('[data-field-editor]',$('#modalBody')),next,inherited,(v,ok)=>{next=v;$('#modalConfirm').disabled=!ok;});
+  modal('编辑明细 — '+m.id,extra+fieldEditor(next,inherited)+'<div id="mpModelDetailError" class="mp-alert" role="alert"></div><p class="mp-muted">确认后加入草稿，统一保存后提示重启。</p>','加入草稿',()=>{
+   const errorNode=$('#mpModelDetailError');if(busy()||digest!==policyDigest()){errorNode.textContent='配置已变化，请重新打开明细。';return;}const root=$('[data-field-editor]',$('#modalBody'));next=readFields(root,next);if(!validate(root,next,inherited))return;
+   const error=commitModelPatches(p.id,[{key:m.key,rules:next,endpointId:$('#mpChannelModelEndpoint').value,naming:{alias:$('#mpModelAlias').value,displayName:$('#mpModelDisplayName').value},enabled:$('#mpModelEnabled').checked,...(edit?{baseline:edit.baseline}:{})}]);if(error){errorNode.textContent=error;return;}closeModal();
+  },{confirmKeepsOpen:true,extraLabel:'恢复字段继承',onExtra:()=>{next={};$('#mpChannelModelEndpoint').value='';const root=$('[data-field-editor]',$('#modalBody'));root.outerHTML=fieldEditor({},inherited);bind();$('#modalConfirm').disabled=false;}});bind();
+ }
+ function providerConfig(){const p=provider();editFields(p.name+' · 渠道默认',p.defaults,{values:{},sources:{}},rules=>change(()=>p.defaults=rules),'<p>作用于渠道内所有模型；未覆盖字段继续沿各自模板或声明解析。</p>');}
+ function batch(){const targets=draft.providers.filter(p=>scope.has(p.id)&&p.id!=='native');if(!targets.length){notice('请选择可配置的自定义渠道');return;}modal('按族批量配置','<p>范围：'+targets.map(p=>esc(p.name)).join('、')+'。按已采用精确版本匹配；先采用模版，再设置该族覆盖。白名单不因此改变。</p><label class="mp-label">模型族 / 模版<select id="mpBatchFamily" class="mp-select">'+opts(families(),'gpt')+'</select></label><div id="mpBatchError" class="mp-alert"></div>','下一步',()=>{const f=$('#mpBatchFamily').value,hits=targets.flatMap(p=>p.models.filter(m=>templateResolution(p,m).id===f));if(!hits.length){$('#mpBatchError').textContent='该范围没有采用并匹配此模版的模型，请先采用精确版本';return;}closeModal();editFields(f+' · '+targets.length+' 个渠道',{},null,rules=>change(()=>targets.forEach(p=>p.familyOverrides[f]=clone(rules))),'<p>匹配 '+hits.length+' 个模型，覆盖位置为渠道族；保留单模型例外。</p>');},{confirmKeepsOpen:true});}
+ function adopt(exact=false){const t=template(),v=version(t.id,versionN),chosen=exact?t.id:'gpt',targetIds=new Set(scope);modal('采用模版精确版本','<label class="mp-label">模版 <select id="mpAdoptTemplate" class="mp-select">'+opts(templates.map(x=>[x.id,x.name]),chosen)+'</select></label><label class="mp-label">精确版本 <select id="mpAdoptVersion" class="mp-select"></select></label><label class="mp-label">范围 <select id="mpAdoptScope" class="mp-select">'+opts([['channels','所选渠道的该模型族'],['global','全部渠道的全局族默认']],'channels')+'</select></label><div class="mp-checks" id="mpAdoptChannels">'+draft.providers.filter(p=>p.id!=='native').map(p=>'<label><input type="checkbox" id="mpAdoptChannel-'+esc(p.id)+'" '+(targetIds.has(p.id)?'checked':'')+'>'+esc(p.name)+(p.enabled?'':' · 停用')+'</label>').join('')+'</div><p id="mpAdoptInfo"></p><label class="mp-label"><input id="mpAdoptClear" type="checkbox">明确清除目标单模型例外（含指定端点）</label><label class="mp-label"><input id="mpAdoptMain" type="checkbox">设为以后默认（独立主指针动作）</label><div id="mpAdoptError" class="mp-alert"></div>','采用到草稿',()=>{const id=$('#mpAdoptTemplate').value,n=Number($('#mpAdoptVersion').value),type=$('#mpAdoptScope').value,tt=templates.find(x=>x.id===id),vv=version(id,n),targets=draft.providers.filter(p=>targetIds.has(p.id)&&p.id!=='native');if(!vv||vv.archived){$('#mpAdoptError').textContent='请选非归档精确版本';return;}if(type==='channels'&&!targets.length){$('#mpAdoptError').textContent='请勾选要采用的渠道；仅浏览渠道不自动加入范围';return;}const clear=$('#mpAdoptClear').checked,main=$('#mpAdoptMain').checked;closeModal();change(()=>{if(type==='global')draft.globalRefs[tt.id]=id+':'+n;else targets.forEach(p=>{p.refs[tt.id]=id+':'+n;if(clear)p.models.filter(m=>templateMatches(tt,m,p,vv)).forEach(m=>{m.overrides={};delete m.endpointId;});});});if(main)tt.main=n;tab='channels';render();notice('精确版本已加入草稿；已有覆盖保留，保存后才写入'+(main?'。主指针已更新':''));},{confirmKeepsOpen:true});const fill=()=>{const tt=templates.find(x=>x.id===$('#mpAdoptTemplate').value);$('#mpAdoptVersion').innerHTML=opts(tt.versions.filter(v=>!v.archived).map(v=>[v.n,'v'+v.n+' · '+v.status]),exact&&tt.id===t.id?v.n:tt.main);$('#mpAdoptInfo').textContent='主版本仅影响以后默认。模板来源选择一份；输出协议覆盖渠道默认，已有族 / 单模型例外保留。缺少端点请在保存前补齐。当前所选：'+[...targetIds].join('、');};fill();$('#mpAdoptTemplate').onchange=fill;draft.providers.filter(p=>p.id!=='native').forEach(p=>{const el=$('#mpAdoptChannel-'+p.id);el.onchange=()=>{el.checked?targetIds.add(p.id):targetIds.delete(p.id);fill();};});$('#mpAdoptScope').onchange=()=>{$('#mpAdoptChannels').hidden=$('#mpAdoptScope').value==='global';};}
+ function saveDialog(){if(stagedChannelConnections().length){notice('请先确认或还原未加入草稿的连接配置');return;}if(stagedModelEdits().length){notice('请先处理未加入草稿的行编辑');return;}if(busy()||count()>100||!dirty())return;const namingErrors=draft.providers.filter(p=>p.id!=='native').map(namingError).filter(Boolean);if(namingErrors.length){modal('模型别名需要修正',diffHTML(namingErrors),'返回编辑');return;}const routeErrors=routePlan().errors;if(routeErrors.length){modal('协议配置尚未完成',diffHTML(routeErrors)+'<p>补齐端点或恢复协议继承后再保存；草稿保留。</p>','返回编辑');return;}const frozen=clone(draft),digest=policyDigest(),baseline=baseDigest(),items=diff(saved,frozen);modal('保存渠道模型配置','<p>以下修改将保存到全渠道配置；取消会保留草稿。</p>'+diffHTML(items)+policyDiffHTML(saved,frozen,false,true)+'<details class="mp-details"><summary>协议写入计划</summary>'+routePlanHTML(frozen)+'</details><p>完整投影 '+projection(frozen).length+'/100。默认提交全部草稿；冻结白名单、顺序、字段、Fast 与精确依赖。</p><p>先备份，再写入并核对目录，最后发布成功快照。保存后需要重启 Codex。</p><div id="mpSaveError" class="mp-alert"></div>','确认保存',()=>{if(stagedChannelConnections().length||stagedModelEdits().length||scenario==='drift'||digest!==policyDigest()||baseline!==baseDigest()){$('#mpSaveError').textContent='基准已变化，请关闭并重新预览。旧确认不会写入。';return;}closeModal();startSave(frozen);},{confirmKeepsOpen:true});}
+ function startSave(plan){if(busy())return;const id=++operationId;operation={id,status:'running',step:0,plan,before:clone(saved),message:'校验冻结计划…'};progressOpen=true;render();function step(){if(operation.id!==id||operation.status!=='running')return;operation.step++;if(operation.step===1&&scenario==='backup-fail'){operation.status='failed';operation.message='备份失败 · 未写入，草稿保留';render();return;}if(operation.step===3&&['partial','timeout'].includes(scenario)){operation.status=scenario==='timeout'?'timeout':'failed';operation.message=scenario==='timeout'?'写入响应超时 · 先核对，不重复提交':'部分写入失败 · 实际结果待核对，未发布成功快照';records.push({id,time:'刚刚',status:'部分 / 待核对',policy:clone(plan),before:clone(saved)});render();return;}if(operation.step>=5){saved=clone(plan);pending=true;client='运行目录已核对 · 客户端待重启';records.push({id,time:'刚刚',status:'成功',policy:clone(plan),before:clone(operation.before),client});operation.status='success';operation.message='保存成功 · 待重启 Codex';undo=[];redo=[];render();return;}operation.message=['校验','备份','写入','核对目录','发布成功快照'][operation.step]+'…';render();setTimeout(step,350);}setTimeout(step,350);}
+ function verify(){if(!operation)return;const partial=operation.step>=2;modal('核对实际结果','<p>'+ (partial?'演示核对：部分运行字段已有变化，但 Desktop 成功快照未发布。根据 journal 生成安全补偿，保留本次草稿。外部变化先比较，不能覆盖。':'演示核对：未发生运行写入，本次草稿保留。')+'</p>','完成核对',()=>{operation.status='verified';operation.message=partial?'已核对并模拟安全补偿 · 草稿保留，需重新保存':'已核对 · 未写入，草稿保留';render();});}
+ function templateEdit(){if(buffer())return;const t=template(),v=version(templateId,versionN)||t.versions[0];buffers[templateId]={name:t.name,description:v.description||'',match:clone(v.match),rules:clone(v.rules),...(v.variants?.length?{variants:clone(v.variants)}:{}),base:v.n,valid:true};editorDigest++;render();}
+ function templateSaveChanges(b){
+  const t=template(),v=version(t.id,b.base),before=v?{name:t.name,description:v.description||'',match:v.match,rules:v.rules,variants:v.variants||[]}:{name:'',description:'',match:defaultMatch(),rules:{},variants:[]};
+  const groups=[{name:'基本信息',rows:[]},{name:'匹配范围',rows:[]},{name:'族通用配置',rows:[]},{name:'版本或后缀',rows:[]}];
+  const same=(x,y)=>JSON.stringify(x)===JSON.stringify(y),add=(g,label,x,y,format=v=>v==null||v===''?'未设置':String(v))=>{if(!same(x,y))g.rows.push({label,before:format(x),after:format(y)});};
+  if(!v)groups[0].rows.push({label:'模版',before:'不存在',after:'新建自定义模型族'});
+  add(groups[0],'名称',before.name,b.name.trim());add(groups[0],'说明',before.description,b.description);
+  const mode=v=>({all:'全部渠道',whitelist:'白名单',blacklist:'黑名单'}[v]||v);
+  const channels=xs=>xs.map(id=>(draft.providers.find(p=>p.id===id)?.name||id)+' · '+id).join('\n')||'无';
+  add(groups[1],'渠道范围',channelMode(before.match),channelMode(b.match),mode);
+  add(groups[1],'所选渠道',before.match.channels,b.match.channels,channels);
+  for(const [key,label] of [['include','包含规则'],['exclude','排除规则']])add(groups[1],label,before.match[key],b.match[key],v=>matchLines(v)||'无');
+  add(groups[1],'匹配优先级',before.match.priority,b.match.priority);
+  add(groups[1],'区分大小写',before.match.caseSensitive,b.match.caseSensitive,v=>v?'是':'否');
+  const names={protocol:'模型协议',context:'上下文窗口',modalities:'输入模态',efforts:'可选推理档位',default:'默认推理档位',fast:'Fast 能力',force:'请求强制档',omit:'不传推理参数',authority:'声明模式'};
+  const rules=(g,prefix,x={},y={})=>{for(const k of new Set([...Object.keys(x),...Object.keys(y)]))add(g,prefix+(names[k]||k),x[k],y[k],v=>v===undefined?'继承 / 未声明':k==='force'?(labels[v]||v):k==='omit'?(v?'是':'否'):k==='authority'?(v==='force'?'强制使用本层声明':v):ruleText(k,v));};
+  rules(groups[2],'',before.rules,b.rules);
+  const old=before.variants,next=b.variants||[];
+  for(const id of new Set([...old.map(v=>v.id),...next.map(v=>v.id)])){
+   const x=old.find(v=>v.id===id),y=next.find(v=>v.id===id),prefix=(y?.name||x?.name)+' · ';
+   add(groups[3],prefix+'条目',!!x,!!y,v=>v?'存在':'不存在');add(groups[3],prefix+'名称',x?.name,y?.name);add(groups[3],prefix+'后缀',x?.suffix,y?.suffix);rules(groups[3],prefix,x?.rules,y?.rules);
+  }
+  return groups.filter(g=>g.rows.length);
+ }
+ function templateSaveDiffHTML(groups){return groups.length?'<div class="mp-changes">'+groups.map(g=>'<section class="mp-template-change-group"><h3>'+esc(g.name)+' <span class="mp-badge">'+g.rows.length+' 项变化</span></h3><div class="mp-change-head"><span>配置项</span><span>基于版本</span><span>当前候选</span></div>'+g.rows.map(r=>'<div class="mp-change-row"><strong>'+esc(r.label)+'</strong><span><small>基于版本</small>'+changeValueHTML(r.before)+'</span><span><small>当前候选</small>'+changeValueHTML(r.after)+'</span></div>').join('')+'</section>').join('')+'</div>':'<p class="mp-inline-notice">内容与基于版本相同；确认后仍新增一个候选版本。</p>';}
+ function saveTemplate(){
+  const b=buffer();if(!b)return;const error=templateError(b);if(error){$('#mpTemplateError').textContent=error;return;}
+  const t=template(),id=templateId,frozen=clone(b),digest=JSON.stringify(b),baseline=JSON.stringify(t),revision=editorDigest,n=Math.max(0,...t.versions.map(v=>v.n))+1,groups=templateSaveChanges(frozen);
+  modal('保存模版候选版本','<p>'+esc(frozen.base?'基于 v'+frozen.base:'新建模版')+' → 候选 v'+n+'。核对以下修改，取消会保留编辑内容。</p>'+templateSaveDiffHTML(groups)+'<p class="mp-muted">仅保存候选；主版本与渠道配置保持当前状态。</p><div id="mpTemplateSaveError" class="mp-alert" role="alert"></div>','确认保存候选',()=>{
+   if(templateId!==id||revision!==editorDigest||digest!==JSON.stringify(buffer())||baseline!==JSON.stringify(template())){$('#mpTemplateSaveError').textContent='候选或基于版本已变化，请关闭并重新核对。';return;}
+   closeModal();t.name=frozen.name.trim();t.versions.push({n,status:'候选',date:'刚刚',description:frozen.description,match:clone(frozen.match),rules:clone(frozen.rules),...(frozen.variants?.length?{variants:clone(frozen.variants)}:{}),source:'人工 / 演示候选；待核对'});
+   if(templateScratch){templates.push(t);templateScratch=null;}versionN=n;templateDetail=true;delete buffers[id];editorDigest++;render();notice('已保存 v'+n+' 候选；可查看匹配、版本操作和采用范围');
+  },{confirmKeepsOpen:true});
+ }
+ function versionMenu(){const t=template(),v=version(t.id,versionN),ref=t.id+':'+v.n,uses=[saved,draft,...records.map(r=>r.policy),...(incoming?.policy?[incoming.policy]:[])].some(p=>JSON.stringify(p).includes(ref)),main=t.main===v.n;modal('v'+v.n+' · 版本操作','<p>精确引用 '+ref+'。'+(uses?'已有策略 / 草稿 / 历史依赖，保留规则可解析。':'没有策略依赖。')+'</p><div class="mp-actions">'+button('设为以后默认','set-main','data-id="'+ref+'" '+(v.archived?'disabled':''))+button(v.archived?'取消归档':'归档','archive-version','data-id="'+ref+'" '+(main?'disabled title="先移动主指针"':''))+button('删除版本','delete-version','data-id="'+ref+'" '+(uses||main?'disabled title="有引用或主指针，不能删除"':''))+'</div><p class="mp-muted">主指针改变不升级现有渠道。归档主版本前先移动主指针。</p>','关闭');}
+ function newTemplate(copy=false){if(templateScratch){templateId=templateScratch.id;templateDetail=true;tab='templates';render();notice('已返回未保存的新模版');return;}const source=copy?templateContent():null,id='custom-'+Date.now()+'-'+(++editorDigest);templateScratch={id,name:source?source.name+' 副本':'新模型模版',main:0,versions:[]};templateId=id;versionN=0;buffers[id]={name:templateScratch.name,description:source?.description||'',match:source?clone(source.match):defaultMatch(),rules:source?clone(source.rules):{},...(source?.variants?.length?{variants:clone(source.variants)}:{}),base:0,valid:true};tab='templates';templateDetail=true;editorSection='basic';assistantOpen=false;generationTarget='';proposal=null;render();}
+ function generateDialog(){if(!buffer())templateEdit();assistantOpen=true;renderAssistant();}
+ function conversationDialog(){generateDialog();}
+ function assistantHTML(){
+  const messages=conversation.filter(m=>m.templateId===templateId),running=generating&&generationOwner===templateId;
+  const model=agent.modelId||'选择执行模型',summary=agentSummary();
+  const header='<header><div class="mp-assistant-heading"><strong>Agent 助手</strong><button class="mp-assistant-model" data-mp="agent-settings" title="'+esc(summary)+'" aria-label="配置执行模型：'+esc(summary)+'"><span>'+esc(model)+'</span>'+icon('collapse')+'</button></div><div class="mp-assistant-window-actions">'+iconButton(assistantMaximized?'还原 Agent 对话':'放大 Agent 对话','assistant-size',assistantMaximized?'restore':'maximize','id="mpAssistantSizeToggle" aria-pressed="'+assistantMaximized+'"')+iconButton('收起 Agent 对话','assistant-close','collapse')+'</div></header>';
+  const log='<div class="mp-conversation-log" role="log" aria-live="polite" aria-relevant="additions text" aria-label="Agent 对话">'+(messages.length?messages.map(m=>'<div class="mp-message '+m.role+'"><span class="mp-message-role">'+(m.role==='user'?'你':'Agent')+'</span>'+esc(m.text)+'</div>').join(''):'<div class="mp-empty">描述模型族、匹配规则和配置要求，发送后可继续对话微调。</div>')+'</div>';
+  const body='<div id="mpAssistantConversation" class="mp-assistant-body">'+log+(running?'<div class="mp-row"><span role="status">正在生成演示结果…</span>'+button('停止生成','stop-generation')+'</div>':'')+(proposal?.id===templateId?'<div class="mp-message"><strong>结果待比较</strong><p>'+esc(proposal.summary)+'</p><div class="mp-row">'+button('查看并接受','accept-proposal')+button('保留当前','reject-proposal')+'</div></div>':'')+'</div>';
+  const context='<div class="mp-assistant-context"><label class="mp-label mp-assistant-sources">资料<select class="mp-select" id="mpGenerationSources" data-assistant-sources aria-label="参考资料" title="当前资料包含当前配置与提供的资料">'+opts([['provided','当前资料'],['search','公开检索 · 待接入']],generationSources)+'</select></label><label class="mp-label" title="锁定人工上下文窗口，生成建议须保留人工值"><input id="mpAssistantLock" data-lock-field type="checkbox" '+(assistantLock?'checked':'')+'>锁定上下文</label>'+iconButton('导出上下文','task-pack','export')+'</div>';
+  const composer='<div class="mp-assistant-composer"><textarea id="mpGenerationTarget" data-assistant-input rows="2" aria-label="对话输入" placeholder="描述要求，或继续纠偏…">'+esc(assistantInputs[templateId]||'')+'</textarea>'+button(icon('send')+'<span>发送</span>','generate-run','aria-label="发送对话" '+(!agentReady()||generating?'disabled':''),true)+'</div>';
+  return '<section id="mpAssistantPanel" class="mp-assistant-panel" role="dialog" aria-modal="false" aria-label="模版 Agent 助手">'+header+body+'<footer>'+context+composer+'</footer></section>';
+ }
+
+ function syncAssistantSize(){
+  const node=$('#mpAssistantHost'),panel=$('#mpAssistantPanel'),control=$('#mpAssistantSizeToggle'),expanded=assistantOpen&&assistantMaximized&&!!panel;
+  node?.classList.toggle('assistant-maximized',expanded);panel?.classList.toggle('is-maximized',expanded);
+  if(control){const label=expanded?'还原 Agent 对话':'放大 Agent 对话';control.setAttribute('title',label);control.setAttribute('aria-label',label);control.setAttribute('aria-pressed',String(expanded));control.innerHTML=icon(expanded?'restore':'maximize');}
+ }
+ function renderAssistant(){const node=$('#mpAssistantHost');if(!node)return;
+  const visible=tab==='templates'&&templateDetail&&!!buffer();
+  const active=document.activeElement,id=active?.id,focused=id&&node.querySelector('#'+id),start=active?.selectionStart,end=active?.selectionEnd,scroll=node.querySelector('#mpAssistantConversation')?.scrollTop||0;
+  node.innerHTML=visible&&assistantOpen?assistantHTML():'';
+  $('#mpTemplateAgentAction',host)?.setAttribute('aria-expanded',String(visible&&assistantOpen));
+  syncAssistantSize();
+  const body=node.querySelector('#mpAssistantConversation');if(body)body.scrollTop=scroll;if(focused){const field=node.querySelector('#'+id);field?.focus({preventScroll:true});if(start!=null&&field?.setSelectionRange)field.setSelectionRange(start,end??start);}
+ }
+ function refreshConversation(){renderAssistant();}
+ function runGeneration(message,correction){
+  if(generating||!agentReady())return;if(!buffer())templateEdit();
+  const token=++generationToken,id=templateId,digest=editorDigest,baseContent=templateContent(),base=baseContent.rules,locked=assistantLock,executor=agentSummary(),sources=generationSources;
+  generationOwner=id;conversation.push({templateId:id,role:'user',text:message});generating=true;assistantInputs[id]='';correctionDraft='';render();
+  setTimeout(()=>{if(token!==generationToken)return;generating=false;
+   const rules=clone(base),match=clone(baseContent.match),variants=clone(baseContent.variants||[]),suffix=message.match(/后缀\s*([a-zA-Z0-9_./-]+)/)?.[1];
+   const effort=/高/.test(message)?'high':/低/.test(message)?'low':'medium';
+   if(suffix){const item=variants.find(v=>v.suffix===suffix);if(item)item.rules={...item.rules,default:effort};else variants.push({id:'agent-variant-'+token,name:suffix,suffix,rules:{default:effort}});}
+   else if(/默认|档/.test(message))rules.default=effort;
+   const pattern=message.match(/匹配\s*([a-zA-Z0-9_.*?/-]+)/)?.[1];if(pattern)match.include=[{type:'glob',value:pattern}];
+   if(/继承.*窗口|窗口.*继承/.test(message)&&!locked)delete rules.context;
+   if(locked&&Object.hasOwn(base,'context'))rules.context=base.context;
+   proposal={id,baseDigest:digest,baseContent,rules,match,variants,locked,summary:(digest!==editorDigest||id!==templateId?'基准已变化，保留为待比较结果；':'')+'执行 '+executor+'（演示）。匹配 '+matchLines(match.include)+'；'+(suffix?'版本或后缀 '+suffix:'默认 '+(labels[rules.default]||'继承'))+'；来源 '+(sources==='search'?'检索未接入':'已有资料未核对')+'。'};
+   conversation.push({templateId:id,role:'agent',text:executor+'：配置差异已生成，尚未入库或采用。'});render();
+  },scenario==='late-generation'?1400:650);
+ }
+ function proposalReview(){if(!proposal||proposal.id!==templateId){notice('结果属于另一模版，请切回原目标比较');return;}if(!buffer())templateEdit();const p=clone(proposal),local=templateContent(),base=p.baseContent||local,proposed={...base,rules:p.rules,match:p.match||base.match},merged=clone(local),conflicts=[],changes=[];for(const section of ['rules','match'])for(const k of new Set([...Object.keys(base[section]),...Object.keys(proposed[section])])){const a=base[section][k],b=proposed[section][k],now=local[section][k];if(JSON.stringify(a)===JSON.stringify(b))continue;changes.push(section+'.'+k+'：'+JSON.stringify(now)+' → '+JSON.stringify(b));if(k==='context'&&p.locked!==false&&Object.hasOwn(local.rules,'context'))continue;if(JSON.stringify(now)!==JSON.stringify(a)&&JSON.stringify(now)!==JSON.stringify(b)){conflicts.push(section+'.'+k);continue;}if(b===undefined)delete merged[section][k];else merged[section][k]=clone(b);}if(p.variants){if(JSON.stringify(base.variants||[])!==JSON.stringify(p.variants)){changes.push('版本或后缀：'+JSON.stringify(local.variants||[])+' → '+JSON.stringify(p.variants));if(JSON.stringify(local.variants||[])!==JSON.stringify(base.variants||[])&&JSON.stringify(local.variants||[])!==JSON.stringify(p.variants))conflicts.push('版本或后缀（保留人工配置）');else if(p.variants.length)merged.variants=clone(p.variants);else delete merged.variants;}}
+  if(p.locked!==false)for(const item of local.variants||[]){if(!Object.hasOwn(item.rules,'context'))continue;const next=merged.variants?.find(v=>v.id===item.id);if(!next){merged.variants=clone(local.variants);conflicts.push('版本或后缀删除涉及已锁定人工上下文（保留人工配置）');break;}if(next.rules.context!==item.rules.context){next.rules.context=item.rules.context;conflicts.push('版本或后缀 '+item.name+' 的人工上下文已锁定');}}
+  modal('接受本轮差异',diffHTML(changes)+(conflicts.length?'<p class="mp-alert">人工修改冲突：'+esc(conflicts.join('、'))+'；默认保留当前字段。</p>':'')+'<p>只更新候选缓冲，保存前仍可人工修改。</p>','接受到候选',()=>{if(JSON.stringify(local)!==JSON.stringify(templateContent())){notice('候选再次变化，请重新比较');closeModal();return;}const error=templateError(merged);if(error){notice(error);return;}buffers[templateId]={...buffer(),...merged};editorDigest++;proposal=null;closeModal();render();},{confirmKeepsOpen:true}); }
+
+ function externalFieldContract(){return {
+  identity:{idPattern:"^[a-z][a-z0-9_-]{1,79}$",operations:"1–100 项；每批每个 ID 只出现一次",revision:"安全正整数，大于该 ID 的所有现有版本；可使用目标 nextRevision",create:"使用全新 ID，baseDigest 留空字符串",revisionBaseline:"只能修改 targets 中的 ID，baseDigest 原样回填；库或人工缓冲变化须重新生成任务",sources:"可选字符串数组，记录实际资料与未知项"},
+  content:{required:["name","description","match","rules"],optional:['variants'],variants:{items:{required:['id','name','suffix','rules'],additionalFields:false,id:'版本内唯一稳定字符串',name:'非空条目名称',suffix:'完整上游 ID 的字面后缀，1–256 字符；最长命中，重复拒绝',rules:'与族通用 rules 同字段，缺省继承族通用；合并后须合法'},empty:'省略或空数组只使用族通用'},additionalFields:false,name:"非空字符串，自由命名模型族",description:"字符串，可为空",match:{required:["include","exclude","caseSensitive","channels","priority"],additionalFields:false,include:"至少一条规则",exclude:"规则数组，可为空",rule:{required:["type","value"],additionalFields:false,type:["exact","prefix","glob"],value:"非空字符串，最多 256 字符"},caseSensitive:"布尔值，默认 false；同样作用于型号后缀",channelMode:{enum:["all","whitelist","blacklist"],legacy:"省略时，channels 空视为 all，非空视为 whitelist"},channels:"渠道 ID 数组；all 忽略列表，空白名单不匹配，空黑名单匹配全部",priority:"安全整数，较大优先"},
+   rules:{additionalFields:false,inheritance:"以下字段均可省略；缺省表示继承，不能用 null 代替。提交完整预期内容，不提交局部补丁",protocol:{enum:protocols,encoding:"本原型使用显示值，由 protocolCatalog.generic 映射适配器 ID"},context:"正的安全整数，单位 tokens；目标已有锁定值必须原样保留",modalities:{type:"非空数组",items:["text","image","audio"]},efforts:{type:"数组",items:levels,empty:"隐藏可选档位，不等同强制默认、不传参数或 none"},default:{enum:levels,constraint:"独立默认值；同时设置 efforts 时须属于列表，不能与空列表同用"},fast:{enum:["unknown","supported","unsupported"],constraint:"仅为能力声明，不授予实际能力，不改变 Fast 总开关"},force:{enum:levels,constraint:"设置 efforts 时须属于列表；不能与 omit=true 同用"},omit:"可选布尔值，true 表示不传推理参数",authority:{enum:["force"]}}}
+ };}
+ function externalMatchingContract(){return {variants:'先族通用再最长字面后缀型号；不累加多个型号；匹配原始上游 ID，别名和显示名称不参与',channelScope:'all 忽略列表；whitelist 空=无；blacklist 空=全部；兼容旧版缺失 mode',include:"多条包含规则任一命中即可",exclude:"排除优先于包含",wildcards:"glob 中 * 匹配任意长度，? 匹配一个字符，其余按字面处理",caseSensitivity:"默认不敏感，不改写模型 ID",participation:"仅已采用的精确版本参与运行；候选和主指针改变不自动采用",references:"显式单模型引用优先；否则渠道同 ID 引用替换全局，其余全局 ID 保留",priority:"最高整数优先；最高同分多个命中报告冲突，不按列表顺序选取",effects:"预览匹配不加入白名单、不启用模型；协议与能力采用到渠道后仍须校验"};}
+ function taskPack(){externalAgentDialog();}
+ function templateCompare(){const t=template(),v=version(t.id,t.main)||t.versions[0],c=templateContent();modal('与主版本比较',diffHTML(['名称：'+t.name+' → '+c.name,'说明：'+(v?.description||'')+' → '+c.description,'匹配：'+JSON.stringify(v?.match)+' → '+JSON.stringify(c.match),'版本或后缀：'+JSON.stringify(v?.variants||[])+' → '+JSON.stringify(c.variants||[]),...Object.keys({...v?.rules,...c.rules}).filter(k=>JSON.stringify(v?.rules[k])!==JSON.stringify(c.rules[k])).map(k=>k+'：'+ruleText(k,v?.rules[k])+' → '+ruleText(k,c.rules[k]))])+'<p>候选、主版本和已采用精确版本分别保存；来源待核对。</p>','关闭');}
+ function externalAgentDialog(){modal('外部 Agent 配置','<p>复制包含上下文的提示词给 Codex / 其他外部 Agent，支持单个、多个模版新增和新版本。外部工具使用自己的执行模型。</p><div class="mp-agent-form"><label>配置范围<select id="mpExternalScope" class="mp-select">'+opts([['current','当前模版'],['selected','勾选的模版'],['all','全部模版'],['create','仅新建模版']],templateSelection.size?'selected':templateDetail?'current':'all')+'</select></label><label>配置要求<textarea id="mpExternalRequest" placeholder="例如：给选中的模版增加均衡版本，并新建企业私有编码模版">'+esc(externalPrompt||'保留未知能力的继承，检查匹配规则；新增候选版本，不切主版本。')+'</textarea></label></div><details class="mp-details" open><summary>涉及文件</summary><p><code>manager-state/model-family-templates.json</code>：模版身份、版本、匹配规则与配置。<br><code>manager-state/model-policy.json</code>：渠道顺序、白名单、精确引用与覆盖；本任务只读上下文，采用另走渠道草稿。<br><code>manager-state/model-policy-bindings.json</code>：本机端点绑定，只提供可用性摘要。</p></details><p class="mp-muted">任务包包含当前配置、规则、纠偏摘要、锁定字段、版本基准和结果格式；无需读取此前聊天。正式 CLI / 文件写入接口待实现。</p><div id="mpExternalError" class="mp-alert"></div>','生成提示词',()=>{const range=$('#mpExternalScope').value,targets=range==='all'?templates:range==='selected'?templates.filter(t=>templateSelection.has(t.id)):range==='current'?[template()]:[];if(range==='current'&&templateScratch?.id===templateId){$('#mpExternalError').textContent='先保存新模版为候选，或选择仅新建模版；未保存编辑保留';return;}if(range==='selected'&&!targets.length){$('#mpExternalError').textContent='请先勾选模版';return;}externalPrompt=$('#mpExternalRequest').value;const snapshots=targets.map(t=>{const n=buffers[t.id]?.base||(t.id===templateId?versionN:t.main||t.versions[0]?.n||0),v=version(t.id,n),c=buffers[t.id]?clone(buffers[t.id]):{name:t.name,description:v.description||'',match:v.match,rules:v.rules,...(v.variants?.length?{variants:v.variants}:{})};return {id:t.id,version:n,libraryDigest:contentDigest(t),bufferDigest:contentDigest(buffers[t.id]||null),nextRevision:Math.max(0,...t.versions.map(v=>v.n))+1,exists:templates.some(x=>x.id===t.id),baseDigest:contentDigest({name:c.name,description:c.description,match:c.match,rules:c.rules,...(c.variants?.length?{variants:c.variants}:{})}),content:clone({name:c.name,description:c.description,match:c.match,rules:c.rules,...(c.variants?.length?{variants:c.variants}:{})})};});externalTask={kind:'template-task-batch',schema:'0.2.0-mock',taskId:'external-'+Date.now()+'-'+(++editorDigest),intent:externalPrompt,targets:snapshots,files:{writeCandidate:'manager-state/model-family-templates.json',policyReadOnly:'manager-state/model-policy.json',localBindingSummaryOnly:'manager-state/model-policy-bindings.json'},fieldContract:externalFieldContract(),matchingContract:externalMatchingContract(),protocolCatalog:{generic:adapters,registered:adapterCatalog,specialBinding:'专用适配器需对应连接配置，未接入时不生成通用 API 绑定'},context:{protocolPriority:['channelDefault','template','templateVariant','channelFamilyOverride','modelOverride'],conversationSummary:conversation.filter(m=>m.role==='user'&&snapshots.some(x=>x.id===m.templateId)).map(m=>({templateId:m.templateId,text:m.text})),lockedFields:['rules.context','variants[*].rules.context'],channels:draft.providers.filter(p=>p.id!=='native').map(p=>({id:p.id,enabled:p.enabled,endpoints:endpoints(p).map(e=>({id:e.id,protocol:e.protocol,bound:connectionBound(e)})),models:p.models.map(m=>({id:m.id,selected:m.selected,templateRef:resolve(p,m).ref,manual:clone(m.overrides)}))}))},resultContract:{kind:'template-batch-result',taskId:'回填原 taskId',operations:[{action:'create | revision',id:'稳定模版 ID',revision:'新版本正整数，不复用已有号',baseDigest:'revision 原样回填目标基准；create 留空',content:{name:'模版名称',description:'说明',match:{...defaultMatch(),include:[{type:'prefix',value:'company-'}]},rules:{}},sources:['实际资料与未知项']}],mainPointers:'禁止修改',adoption:'禁止自动采用'}};closeModal();externalContext();},{confirmKeepsOpen:true});}
+ function contentDigest(v){let h=2166136261;for(const c of JSON.stringify(v))h=Math.imul(h^c.charCodeAt(0),16777619);return 'mock-fnv1a-'+(h>>>0).toString(16);}
+ function externalText(){return '请按以下任务配置模型模版。模版本身是用户自定义模型族；协议与匹配规则分别配置。只输出 template-batch-result JSON，支持 create / revision 多操作，版本号必须唯一。以下文件路径仅用于说明配置归属，结果通过候选导入入口校验，禁止直接覆盖模板库。未知能力保持继承，返回实际资料来源。禁止写主版本、运行配置、渠道绑定或凭据。\n\n'+JSON.stringify(externalTask,null,2);}
+ function externalContext(){if(!externalTask){externalAgentDialog();return;}modal('外部 Agent · 提示词与上下文','<textarea id="mpExternalPrompt" class="mp-json" aria-label="可复制的完整提示词" readonly>'+esc(externalText())+'</textarea><div class="mp-row">'+button('复制提示词','external-copy')+button('粘贴返回结果','external-result')+button('演示返回结果','external-demo')+'</div><p id="mpCopyStatus" role="status" class="mp-muted">复制到外部工具后，粘贴结果校验 → 逐项差异 → 保存候选 → 版本操作 → 采用到渠道。</p>','关闭');}
+ async function copyExternalPrompt(){const field=$('#mpExternalPrompt');field.select();try{if(!navigator.clipboard?.writeText)throw Error('unavailable');await navigator.clipboard.writeText(field.value);if($('#mpCopyStatus'))$('#mpCopyStatus').textContent='提示词已复制';}catch{if($('#mpCopyStatus'))$('#mpCopyStatus').textContent='内容已选中，请按 Cmd/Ctrl+C 复制';}}
+ function externalSample(){const operations=externalTask.targets.map(t=>({action:t.exists?'revision':'create',id:t.id,revision:t.nextRevision,baseDigest:t.exists?t.baseDigest:'',content:{...clone(t.content),description:'外部 Agent 演示候选 · 能力未核对',rules:{...t.content.rules,default:'medium'}},sources:['演示 fixture；未检索']}));if(!operations.length||externalTask.targets.length>1)operations.push({action:'create',id:'private-coder-'+Date.now(),revision:1,baseDigest:'',content:{name:'企业私有编码模型',description:'外部 Agent 新建示例',match:{...defaultMatch(),include:[{type:'glob',value:'private-coder-*'}]},rules:{}},sources:['演示 fixture；能力继承']});return {kind:'template-batch-result',taskId:externalTask.taskId,operations};}
+ function externalDemo(){externalResultDialog(externalSample());}
+ function externalResultDialog(sample=null){if(!externalTask){externalAgentDialog();return;}modal('外部 Agent · 返回结果','<p>粘贴返回 JSON。所有操作先校验；任一错误均不写入模版库。</p><textarea id="mpExternalJSON" class="mp-json" aria-label="外部 Agent 批量结果">'+esc(JSON.stringify(sample||{kind:'template-batch-result',taskId:externalTask.taskId,operations:[]},null,2))+'</textarea><div id="mpExternalResultError" class="mp-alert" role="alert"></div>','校验并查看差异',()=>{try{const data=JSON.parse($('#mpExternalJSON').value);externalBatch=validateExternalBatch(data);closeModal();externalBatchPreview();}catch(e){$('#mpExternalResultError').textContent=e.message;}},{confirmKeepsOpen:true});}
+ function validateExternalBatch(data){if(data.kind!=='template-batch-result'||data.taskId!==externalTask?.taskId)throw Error('结果类型或 taskId 不匹配，请重新导出任务');if(!Array.isArray(data.operations)||!data.operations.length||data.operations.length>100)throw Error('需要 1–100 个模版操作');if(Object.keys(data).some(k=>!['kind','taskId','operations'].includes(k)))throw Error('结果不得修改主指针或策略');const ids=new Set();return data.operations.map(op=>{if(!op||typeof op!=='object'||Array.isArray(op)||Object.keys(op).some(k=>!['action','id','revision','baseDigest','content','sources'].includes(k)))throw Error('操作字段无效');if(!/^[a-z][a-z0-9_-]{1,79}$/.test(op.id)||ids.has(op.id))throw Error('模版 ID 无效或一批重复');ids.add(op.id);const t=templates.find(t=>t.id===op.id),target=externalTask.targets.find(t=>t.id===op.id);if(!['create','revision'].includes(op.action))throw Error('只支持新增或新版本');if(op.action==='create'&&(t||templateScratch?.id===op.id))throw Error('新增 ID 已存在');if(op.action==='revision'&&(!t||!target||op.baseDigest!==target.baseDigest))throw Error('新版本目标或基准不匹配');if(target&&(target.libraryDigest!==contentDigest(t)||target.bufferDigest!==contentDigest(buffers[op.id]||null)))throw Error('任务基准已变化，请保留结果并重新导出任务');if(op.action==='create'&&op.baseDigest)throw Error('新增模版不携旧版本基准');if(!Number.isSafeInteger(op.revision)||op.revision<=Math.max(0,...(t?.versions||[]).map(v=>v.n)))throw Error('版本号须为未使用的递增正整数');const c=op.content;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).some(k=>!['name','description','match','rules','variants'].includes(k)))throw Error('模版内容字段无效');if(typeof c.name!=='string'||typeof c.description!=='string'||!c.match||!Array.isArray(c.match.include)||!Array.isArray(c.match.exclude)||!Array.isArray(c.match.channels)||typeof c.match.caseSensitive!=='boolean'||c.match.channels.some(id=>!draft.providers.some(p=>p.id===id)))throw Error('名称、说明或匹配规则结构无效');if(Object.keys(c.match).some(k=>!['include','exclude','channels','channelMode','caseSensitive','priority'].includes(k)))throw Error('匹配字段无效');if(!c.rules||typeof c.rules!=='object'||Array.isArray(c.rules)||Object.keys(c.rules).some(k=>!['protocol','context','modalities','efforts','default','fast','force','omit','authority'].includes(k)))throw Error('模型配置字段无效');if(c.rules.fast&&!['unknown','supported','unsupported'].includes(c.rules.fast)||c.rules.modalities&&(!Array.isArray(c.rules.modalities)||!c.rules.modalities.length||c.rules.modalities.some(x=>!['text','image','audio'].includes(x)))||c.rules.force&&!levels.includes(c.rules.force))throw Error('能力或推理配置无效');for(const v of target?.content.variants||[]){if(Object.hasOwn(v.rules,'context')&&c.variants?.find(x=>x.id===v.id)?.rules.context!==v.rules.context)throw Error('锁定的版本或后缀人工上下文不可修改或删除');}if(target&&Object.hasOwn(target.content.rules,'context')&&c.rules.context!==target.content.rules.context)throw Error('锁定的人工上下文不可修改，请保留原值');const error=templateError(c);if(error)throw Error(error);if(op.sources!==undefined&&(!Array.isArray(op.sources)||op.sources.some(x=>typeof x!=='string')))throw Error('来源格式无效');return {action:op.action,id:op.id,revision:op.revision,baseDigest:op.baseDigest,content:clone(c),sources:clone(op.sources||[]),libraryDigest:JSON.stringify(t||null),bufferDigest:JSON.stringify(buffers[op.id]||null)};});}
+ function externalBatchPreview(){const batch=externalBatch;modal('批量候选 · 差异预览',batch.map(op=>{const target=externalTask.targets.find(t=>t.id===op.id),before=target?.content;return '<details class="mp-details" open><summary>'+esc(op.content.name)+' · '+(op.action==='create'?'新增模版':'新增版本')+' v'+op.revision+'</summary>'+diffHTML(['ID：'+op.id,'名称：'+(before?.name||'未创建')+' → '+op.content.name,'说明：'+(before?.description||'无')+' → '+op.content.description,'匹配：'+JSON.stringify(before?.match||null)+' → '+JSON.stringify(op.content.match),'配置：'+JSON.stringify(before?.rules||{})+' → '+JSON.stringify(op.content.rules),'版本或后缀：'+JSON.stringify(before?.variants||[])+' → '+JSON.stringify(op.content.variants||[]),'来源：'+op.sources.join('；')])+'</details>';}).join('')+'<p>本次 '+batch.length+' 项只保存候选版本，不改主版本和渠道引用。已有编辑缓冲保留；名称调整影响列表显示，不改变稳定 ID、已采用规则或主版本。取消可返回修改 JSON。</p><div id="mpExternalCommitError" class="mp-alert"></div>','保存候选版本',()=>{for(const op of batch){const t=templates.find(t=>t.id===op.id);if(op.libraryDigest!==JSON.stringify(t||null)||op.bufferDigest!==JSON.stringify(buffers[op.id]||null)){$('#mpExternalCommitError').textContent='模版库或人工缓冲已变化，请重新导出任务和比较';return;}}for(const op of batch){let t=templates.find(t=>t.id===op.id);if(!t){t={id:op.id,name:op.content.name,main:0,versions:[]};templates.push(t);}t.name=op.content.name.trim();t.versions.push({n:op.revision,status:'外部候选',date:'刚刚',description:op.content.description,match:clone(op.content.match),rules:clone(op.content.rules),...(op.content.variants?.length?{variants:clone(op.content.variants)}:{}),source:op.sources.join('；')||'外部来源未提供'});}externalBatch=null;const first=batch[0];closeModal();tab='templates';templateId=first.id;versionN=buffers[first.id]?.base??first.revision;templateDetail=true;render();notice('候选版本已保存，可预览匹配、编辑、设主版本或采用');},{confirmKeepsOpen:true});}
+
+ function jsonPreview(title,data,note=''){modal(title,'<p>'+esc(note)+'</p><textarea class="mp-json" id="mpJSON" aria-label="JSON 内容">'+esc(JSON.stringify(data,null,2))+'</textarea><p class="mp-muted">原型用预览和复制模拟文件导出，不写入任何运行配置。</p>','选中内容',()=>{$('#mpJSON').select();},{confirmKeepsOpen:true});}
+ function syncEntry(action){
+  const ids=tab==='templates'?(templateSelection.size?[...templateSelection]:templateDetail?[templateId]:templates.map(t=>t.id)).map(id=>'template:'+id):(scope.size?[...scope]:channelDetail?[current]:saved.providers.filter(p=>p.id!=='native').map(p=>p.id)).map(id=>'channel:'+id);
+  closeModal();window.syncPrototype?.open({tab:'file',scope:ids,action});
+ }
+ function exportDialog(){syncEntry('export');}
+ function importDialog(){syncEntry('import');}
+ function mergePolicy(base,part){const next=clone(base);function reorder(list,order,key){if(!Array.isArray(order))return;const wanted=order.map(id=>list.find(x=>x[key]===id)).filter(Boolean),ids=new Set(wanted.map(x=>x[key]));let i=0;for(let n=0;n<list.length;n++)if(ids.has(list[n][key]))list[n]=wanted[i++];}for(const key of ['fastMode','fastRows'])if(Object.hasOwn(part,key))next[key]=clone(part[key]);if(part.globalRefs)next.globalRefs={...next.globalRefs,...canonicalKeys(part.globalRefs)};if(part.providers)part.providers.forEach(p=>{const target=next.providers.find(x=>x.id===p.id);if(!target||target.id==='native')return;for(const key of ['enabled','mode','defaults','fastEnabled','protocol'])if(Object.hasOwn(p,key))target[key]=clone(p[key]);for(const key of ['refs','familyOverrides'])if(Object.hasOwn(p,key))target[key]={...target[key],...canonicalKeys(p[key])};if(p.endpoints)target.endpoints=p.endpoints.map(e=>({id:e.id,protocol:e.protocol,connection:clone(target.endpoints?.find(x=>x.id===e.id)?.connection)}));if(p.models)p.models.forEach(m=>{const targetModel=target.models.find(x=>x.id===m.id);if(targetModel)for(const key of ['selected','overrides','templateRef','endpointId','naming'])if(Object.hasOwn(m,key))targetModel[key]=clone(m[key]);});reorder(target.models,p.modelOrder,'id');});reorder(next.providers,part.providerOrder,'id');return next;}
+ function incomingDialog(){if(!incoming)return;const proposed=mergePolicy(saved,incoming.policy),overlap=dirty();modal('待审候选 · '+incoming.source,diffHTML(diff(saved,proposed))+'<p>来源 '+esc(incoming.kind)+'；基准 '+(incoming.baseDigest===baseDigest()?'一致':'过期 / 不可得，手动比较')+'。'+(overlap?'本机另有草稿，重叠字段需选择。':'当前没有未提交草稿。')+'</p><label class="mp-label">冲突处理 <select id="mpConflict" class="mp-select">'+opts([['local','保留本机草稿'],['incoming','采用候选涉及字段']],'local')+'</select></label><p>采用仅进入草稿；主指针保持。取消保留候选。</p>','采用到草稿',()=>{const choice=$('#mpConflict').value;if(!overlap||choice==='incoming'){const candidate=mergePolicy(draft,incoming.policy),error=candidate.providers.filter(p=>p.id!=='native').map(namingError).find(Boolean);if(error){notice(error);return;}}closeModal();if(!overlap||choice==='incoming')change(()=>draft=mergePolicy(draft,incoming.policy));else notice('保留本机草稿，候选仍待审');if(!overlap||choice==='incoming'){incoming=null;render();}},{confirmKeepsOpen:true});}
+ function history(){modal('应用记录',records.slice().reverse().map(r=>'<div class="mp-section"><h3>'+r.time+' · '+r.status+'</h3>'+diffHTML(diff(r.before,r.policy))+'<p class="mp-muted">客户端：'+esc(r.client||'未验证')+'</p>'+button(r.status==='成功'?'生成恢复草稿':'核对实际结果',r.status==='成功'?'restore':'verify','data-id="'+r.id+'"')+'</div>').join(''),'关闭');}
+ function restore(id){const record=records.find(r=>r.id===Number(id));if(!record||record.status!=='成功')return;closeModal();modal('恢复配置','<p>将成功记录的策略生成新草稿，仍需预算校验、保存与重启。模版主指针、无关新候选保持。现有草稿先暂存到撤销记录。</p><label class="mp-label">恢复范围 <select id="mpRestoreScope" class="mp-select"><option value="impact">撤回该次提交影响字段</option><option value="full">完整策略回到该记录之前</option></select></label>','生成恢复草稿',()=>{const full=$('#mpRestoreScope').value==='full';closeModal();change(()=>{if(full){draft=clone(record.before);return;}for(const key of ['fastMode','fastRows','globalRefs'])if(JSON.stringify(record.policy[key])!==JSON.stringify(record.before[key]))draft[key]=clone(record.before[key]);record.policy.providers.forEach(p=>{const before=record.before.providers.find(x=>x.id===p.id);if(JSON.stringify(p)!==JSON.stringify(before)){const i=draft.providers.findIndex(x=>x.id===p.id);if(before){if(i>=0)draft.providers[i]=clone(before);else draft.providers.push(clone(before));}else if(i>=0)draft.providers.splice(i,1);}});record.before.providers.forEach((p,index)=>{if(p.id==='native'||record.policy.providers.some(x=>x.id===p.id)||draft.providers.some(x=>x.id===p.id))return;const anchor=record.before.providers.slice(index+1).find(x=>draft.providers.some(y=>y.id===x.id)),at=anchor?draft.providers.findIndex(x=>x.id===anchor.id):draft.providers.length;draft.providers.splice(at,0,clone(p));});});},{confirmKeepsOpen:true});}
+ function scene(name){channelConnections={};channelViewId=null;channelSection='models';modelSelection.clear();modelExpanded.clear();modelEdits={};if(channelWizard)closeModal();wizardToken++;channelWizard=null;scenario=name;operationId++;operation=null;generationToken++;generating=false;draft=clone(initial);saved=clone(initial);pending=false;client='目录已核对 · 客户端待验证';scope=new Set();current='newapi';tab='channels';channelDetail=false;templateDetail=false;search='';family='';onlySelected=false;undo=[];redo=[];incoming=null;proposal=null;
+  if(name==='over-budget'){draft.providers[1].mode='all';}
+  if(name==='pending-draft'){pending=true;draft.providers[0].models[1].selected=false;}
+  if(name==='incoming'){draft.fastMode='inherit';incoming={kind:'policy',source:'WebDAV 演示下载',scope:'fields',baseDigest:baseDigest(),policy:{fastMode:'off'}};}
+  if(['backup-fail','partial','timeout','drift'].includes(name))draft.providers[0].models[1].selected=false;
+  if(name==='late-generation'){tab='templates';templateDetail=true;templateId='gpt';versionN=3;templateEdit();}
+  setRoute('models');render();notice('已切换演示场景：'+name);}
+ document.addEventListener('click',e=>{const el=e.target.closest('[data-mp]');if(!el||el.disabled)return;const a=el.dataset.mp,id=el.dataset.id;
+  if(busy()&&['apply-channel-connection','reset-channel-connection','batch','adopt','model-config','provider-config','new-channel','channel-connection','protocol-endpoints','add-endpoint','edit-endpoint','delete-endpoint','undo','redo','discard','save','clear-channels','enable-channels','disable-channels','delete-channels','delete-provider','toggle-model','expand-model','apply-model-row','reset-model-row','enable-models','disable-models','edit-models','reset-models','expand-all-models','collapse-all-models','clear-model-picks'].includes(a))return;
+  if(a==='tab'){tab=el.dataset.tab;render();}
+  else if(a==='view-provider'){closeModal();current=id;channelDetail=true;search='';family='';render();}
+  else if(a==='channel-section')scrollChannelSection(id);
+  else if(a==='toggle-channel-nav')toggleChannelNav();
+  else if(a==='apply-channel-connection')channelConnection(true,true);
+  else if(a==='reset-channel-connection'){delete channelConnections[current];render();}
+  else if(a==='review-channel-connection'){const item=stagedChannelConnections()[0];if(item){current=item[0];tab='channels';channelDetail=true;setRoute('models');render();scrollChannelSection('connection');}}
+  else if(a==='back-channels'){channelDetail=false;render();}
+  else if(a==='back-templates'){templateDetail=false;render();}
+  else if(a==='order-preview')modal('完整选择器顺序',preview().replace('class="mp-order"','class="mp-order" open'),'关闭');
+  else if(a==='more')modal('配置工具','<p class="mp-muted">导入 / 导出统一前往“同步 → 文件同步”，自动带入当前范围。</p><h3>配置与记录</h3><div class="mp-actions">'+button('导入配置','import')+button('导出配置','export')+button('应用记录','history')+'</div><h3>草稿操作</h3><div class="mp-actions">'+button('撤销','undo',undo.length&&!busy()?'':'disabled')+button('重做','redo',redo.length&&!busy()?'':'disabled')+button('丢弃草稿','discard',(dirty()||stagedModelEdits().length||stagedChannelConnections().length)&&!busy()?'':'disabled',false,true)+'</div>','关闭');
+  else if(a==='template-more')modal('模版工具','<div class="mp-actions">'+button('与主版本比较','compare',template().main?'':'disabled title="尚无主版本可比较"')+button('复制模版','copy-template')+button('外部 Agent 配置','external-agent')+button('同步配置','open-sync')+button('设置','settings')+(buffer()?button('取消候选编辑','cancel-template','',false,true):'')+'</div>','关闭');
+  else if(a==='agent-settings'){const field=$('#mpGenerationTarget');if(field)assistantInputs[templateId]=field.value;agentSettings(assistantOpen?'conversation':'');}
+  else if(a==='conversation')conversationDialog();
+  else if(a==='view-template'){templateId=id;versionN=template().main||template().versions[0]?.n||0;templateDetail=true;render();}
+  else if(a==='open-template-editor'){const t=templates.find(t=>t.id===id);if(!t)return;templateId=id;versionN=buffers[id]?.base||t.main||t.versions[0]?.n||0;templateDetail=true;if(buffer())render();else templateEdit();}
+  else if(a==='clear-channels'){scope.clear();render();}
+  else if(a==='enable-channels'||a==='disable-channels')setProvidersEnabled(a==='enable-channels');
+  else if(a==='delete-channels')deleteProviders();
+  else if(a==='delete-provider')deleteProviders([id]);
+  else if(a==='toggle-provider'){const p=draft.providers.find(p=>p.id===id);if(p&&p.id!=='native'){change(()=>p.enabled=!p.enabled);$$('[data-mp="toggle-provider"]',host).find(x=>x.dataset.id===id)?.focus();}}
+  else if(a==='channels'||a==='template-list'){modal(a==='channels'?'渠道列表':'模版列表',a==='channels'?channels():templates.map(t=>button(t.name,'compact-template','data-id="'+t.id+'"')).join(''),'关闭');}
+  else if(a==='compact-template'){closeModal();templateId=id;versionN=template().main||template().versions[0]?.n||0;templateDetail=true;render();}
+  else if(a==='move-provider'){change(()=>move(draft.providers,id,Number(el.dataset.direction)));}
+  else if(a==='move-model'){change(()=>move(provider().models,id,Number(el.dataset.direction),'key'));}
+  else if(a==='clear-filters'){search='';family='';onlySelected=false;render();}
+  else if(a==='expand-all-models'){if(provider().id!=='native'){visibleModels().forEach(m=>modelExpanded.add(m.key));render();}}
+  else if(a==='collapse-all-models'){if(provider().id!=='native'){provider().models.forEach(m=>modelExpanded.delete(m.key));render();}}
+  else if(a==='clear-model-picks'){provider().models.forEach(m=>modelSelection.delete(m.key));render();}
+  else if(a==='expand-model'){const m=provider().models.find(m=>m.key===id);if(!m||provider().id==='native')return;modelExpanded.has(id)?modelExpanded.delete(id):modelExpanded.add(id);render();}
+  else if(a==='reset-model-row'){delete modelEdits[id];render();}
+  else if(a==='apply-model-row'){const edit=modelEdits[id];if(!edit)return;const error=quickRuleError(edit.rules,provider().models.find(m=>m.key===id).overrides)||commitModelPatches(current,[{key:id,rules:edit.rules,endpointId:edit.endpointId,baseline:edit.baseline}]);if(error){const node=$('[data-model-quick-error="'+id+'"]',host);if(node)node.textContent=error;else modelError(id,error);}}
+  else if(a==='toggle-model'){const m=provider().models.find(m=>m.key===id);if(!m)return;const error=commitModelPatches(current,[{key:id,enabled:!modelActive(provider(),m)}]);if(error)modelError(id,error);$$('[data-mp="toggle-model"]',host).find(x=>x.dataset.id===id)?.focus({preventScroll:true});}
+  else if(['enable-models','disable-models','edit-models','reset-models'].includes(a))bulkModelDialog({'enable-models':'enable','disable-models':'disable','edit-models':'edit','reset-models':'reset'}[a]);
+  else if(a==='review-model-rows'){const [key]=stagedModelEdits()[0]||[];const p=draft.providers.find(p=>p.models.some(m=>m.key===key));if(p){tab='channels';current=p.id;channelDetail=true;search='';family='';onlySelected=false;modelExpanded.add(key);render();$('[data-model-quick="'+key+'"]',host)?.scrollIntoView({block:'center'});}}
+  else if(a==='select-result'||a==='unselect-result')selectModels(visibleModels(),a==='select-result');
+  else if(a==='new-channel')channelConnection();
+  else if(a==='channel-connection')channelConnection(true);
+  else if(a==='protocol-endpoints')protocolEndpoints();
+  else if(a==='add-endpoint')editEndpoint();
+  else if(a==='edit-endpoint')editEndpoint(id);
+  else if(a==='delete-endpoint')deleteEndpoint(id);
+  else if(a==='channel-fetch')fetchChannelModels();
+  else if(a==='channel-cancel-fetch'&&channelWizard){wizardToken++;channelWizard.status='idle';drawChannelWizard();}
+  else if(a==='channel-back'&&channelWizard&&channelWizard.status!=='loading'){channelWizard.step=1;drawChannelWizard();}
+  else if(a==='channel-select'||a==='channel-unselect')wizardSelection(a==='channel-select');
+  else if(a==='channel-manual')wizardManual();
+  else if(a==='refresh')refresh();
+  else if(a==='cancel-refresh'){provider().refreshToken++;provider().refresh='idle';render();}
+  else if(a==='provider-config')providerConfig();
+  else if(a==='batch')batch();
+  else if(a==='model-config'){const p=draft.providers.find(p=>p.models.some(m=>m.key===id)),m=p.models.find(m=>m.key===id);if(p.id==='native'){modal('模型详情 · 只读',fieldEditor({},resolve(p,m),true)+'<p>原生目录由官方管理，此处仅查看声明。</p>','关闭');return;}editModel(p,m);}
+  else if(a==='adopt'||a==='adopt-version')adopt(a==='adopt-version');
+  else if(a==='budget')modal('全渠道目录预算',draft.providers.map(p=>'<p>'+esc(p.name)+'：基础 '+(p.enabled?selected(p).length:0)+' + Fast '+projection().filter(r=>r.p===p.id&&r.type==='fast').length+(!p.enabled?'；停用，保留已选 '+selected(p).length:'')+'</p>').join('')+'<p>系统隐藏项 '+draft.hidden+'；合计 '+count()+'/100。这里全部为 mock 投影；100 为未识别客户端版本的兼容阈值。真实上限、分页与目录投影待技术核验。</p>','关闭');
+  else if(a==='view-draft')draftDialog();
+  else if(a==='save')saveDialog();
+  else if(a==='progress'){progressOpen=!progressOpen;render();}
+  else if(a==='stop'){operation.status='stopped';operation.message=operation.step<2?'已取消 · 未写入，草稿保留':'已停止后续步骤 · 可能已有写入，先核对';render();}
+  else if(a==='verify')verify();
+  else if(a==='client-check')modal('重新检查 Codex 客户端','<p>演示目录核对通过；原型无法获取客户端加载证据。请目视确认模型顺序 / 选项后记录用户确认。</p>','我已目视确认',()=>{pending=false;client='用户已确认 · 非自动加载证据';render();});
+  else if(a==='discard')modal('丢弃未保存草稿？','<p>回到最近成功策略；待重启标记、模板主指针与待审候选保持。</p>','丢弃草稿',()=>{draft=clone(saved);modelEdits={};channelConnections={};undo=[];redo=[];render();});
+  else if(a==='undo'&&undo.length&&!busy()){closeModal();redo.push(clone(draft));draft=undo.pop();render();}
+  else if(a==='redo'&&redo.length&&!busy()){closeModal();undo.push(clone(draft));draft=redo.pop();render();}
+  else if(a==='settings'){closeModal();setRoute('settings');showSettingsSection('models');}
+  else if(a==='go-channels'){tab='channels';setRoute('models');render();}
+  else if(a==='editor-section')scrollEditorSection(id);
+  else if(a==='toggle-editor-nav')toggleEditorNav();
+  else if(a==='add-variant')editVariant();
+  else if(a==='edit-variant')editVariant(id);
+  else if(a==='delete-variant'){const b=buffer(),v=b?.variants?.find(v=>v.id===id);if(v)modal('删除版本或后缀','<p>删除 '+esc(v.name)+' 的候选配置，命中模型恢复族通用配置。已保存版本保留。</p>','删除',()=>{b.variants=b.variants.filter(v=>v.id!==id);if(!b.variants.length)delete b.variants;editorDigest++;render();});}
+  else if(a==='edit-template')templateEdit();
+  else if(a==='edit-template-name'){templateEdit();const field=$('#mpTemplateName',host);field?.focus({preventScroll:true});field?.select();}
+  else if(a==='cancel-template'){closeModal();generationToken++;generating=false;proposal=null;delete buffers[templateId];if(templateScratch){templateScratch=null;templateId='gpt';versionN=1;templateDetail=false;}editorDigest++;render();}
+  else if(a==='save-template')saveTemplate();
+  else if(a==='compare')templateCompare();
+  else if(a==='version-menu')versionMenu();
+  else if(a==='set-main'){const [tid,n]=id.split(':');closeModal();modal('设为以后默认','<p>主指针改为 v'+n+'；已有精确渠道引用不升级。这是独立的模板库动作。</p>','设为主版本',()=>{templates.find(t=>t.id===tid).main=Number(n);render();});}
+  else if(a==='archive-version'){const [tid,n]=id.split(':');version(tid,n).archived=!version(tid,n).archived;closeModal();render();}
+  else if(a==='delete-version'){const [tid,n]=id.split(':'),t=templates.find(t=>t.id===tid);if(!t||t.main===Number(n)||[saved,draft,...records.map(r=>r.policy),...(incoming?.policy?[incoming.policy]:[])].some(p=>JSON.stringify(p).includes(id)))return;t.versions=t.versions.filter(v=>v.n!==Number(n));if(t.versions.length)versionN=t.main||t.versions[0].n;else{templates.splice(templates.indexOf(t),1);templateSelection.delete(tid);delete buffers[tid];templateId='gpt';versionN=template().main||1;templateDetail=false;}closeModal();render();}
+  else if(a==='new-template'||a==='copy-template')newTemplate(a==='copy-template');
+  else if(a==='generate')generateDialog();
+
+  else if(a==='assistant-size'){if(!assistantOpen||!$('#mpAssistantPanel'))return;assistantMaximized=!assistantMaximized;syncAssistantSize();$('#mpAssistantSizeToggle')?.focus({preventScroll:true});}
+  else if(a==='assistant-close'){assistantOpen=false;renderAssistant();$('#mpTemplateAgentAction',host)?.focus({preventScroll:true});}
+  else if(a==='generate-run'){const field=$('#mpGenerationTarget'),message=field?.value.trim();if(message){assistantInputs[templateId]=message;generationSources=$('#mpGenerationSources').value;assistantLock=$('#mpAssistantLock').checked;runGeneration(message,conversation.some(m=>m.templateId===templateId));}}
+  else if(a==='correct'){const message=$('[data-correction]').value.trim();if(message)runGeneration(message,true);}
+  else if(a==='stop-generation'){generationToken++;generating=false;conversation.push({templateId:generationOwner||templateId,role:'agent',text:'已停止；当前候选和上下文保留。'});render();refreshConversation();}
+  else if(a==='accept-proposal')proposalReview();
+  else if(a==='reject-proposal'){proposal=null;render();refreshConversation();}
+  else if(a==='task-pack')taskPack();
+  else if(a==='match-preview')matchPreview();
+  else if(a==='external-agent')externalAgentDialog();
+  else if(a==='external-context')externalContext();
+  else if(a==='external-copy')copyExternalPrompt();
+  else if(a==='external-result')externalResultDialog();
+  else if(a==='external-demo')externalDemo();
+  else if(a==='open-sync')syncEntry();
+  else if(a==='import')importDialog();
+  else if(a==='export')exportDialog();
+  else if(a==='incoming')incomingDialog();
+  else if(a==='history')history();
+  else if(a==='restore')restore(id);
+  else if(a==='sync-incoming'){closeModal();window.syncPrototype?.open({tab:'webdav'});}
+  else if(a==='scene')scene(el.dataset.scene);
+ });
+ document.addEventListener('change',e=>{const el=e.target;if(el.matches('[data-template-select]')){el.checked?templateSelection.add(el.dataset.templateSelect):templateSelection.delete(el.dataset.templateSelect);}
+  else if(el.matches('[data-assistant-sources]'))generationSources=el.value;
+  else if(el.matches('[data-lock-field]'))assistantLock=el.checked;
+  else if(el.matches('[data-template-match]'))updateTemplateInput(el);
+  else if(el.matches('[data-template-channel]')){const b=buffer();if(!b)return;const id=el.dataset.templateChannel;if(!draft.providers.some(p=>p.id===id)||channelMode(b.match)==='all')return;b.match.channels=el.checked?[...new Set([...b.match.channels,id])]:b.match.channels.filter(x=>x!==id);editorDigest++;updateTemplateSaveStatus();}
+  else if(el.matches('[data-channel-model]')&&channelWizard&&channelWizard.status!=='loading'){const m=channelWizard.models.find(m=>m.id===el.dataset.channelModel);if(m)m.selected=el.checked;drawChannelWizard();}
+  else if(el.matches('[data-scope-all]')){if(busy()||el.disabled)return;scopeState().rows.forEach(p=>el.checked?scope.add(p.id):scope.delete(p.id));render();}
+  else if(el.matches('[data-scope]')){if(busy()||el.disabled||!draft.providers.some(p=>p.id===el.dataset.scope&&p.id!=='native'))return;el.checked?scope.add(el.dataset.scope):scope.delete(el.dataset.scope);render();}
+  else if(el.matches('[data-model-pick]')){if(busy()||el.disabled||provider().id==='native'||!provider().models.some(m=>m.key===el.dataset.modelPick))return;el.checked?modelSelection.add(el.dataset.modelPick):modelSelection.delete(el.dataset.modelPick);render();}
+  else if(el.matches('[data-model-pick-all]')){if(busy()||el.disabled||provider().id==='native')return;visibleModels().forEach(m=>el.checked?modelSelection.add(m.key):modelSelection.delete(m.key));render();}
+  else if(el.matches('[data-channel-config]'))updateChannelConnection(el);
+  else if(el.matches('[data-model-sort]')){const rule=el.value;el.value='';if(!el.disabled)sortModels(rule);}
+  else if(el.matches('[data-model-alias]')){if(busy()||provider().id==='native')return;const m=provider().models.find(m=>m.key===el.dataset.modelAlias);if(!m)return;const error=commitModelPatches(current,[{key:m.key,naming:{...m.naming,alias:el.value}}]);if(error){el.value=m.naming?.alias||'';el.removeAttribute('aria-invalid');modelError(m.key,'别名未加入草稿：'+error);}else el.removeAttribute('aria-invalid');}
+  else if(el.matches('[data-quick-mode],[data-quick-value],[data-quick-preset],[data-quick-endpoint]'))quickChanged(el);
+  else if(el.matches('[data-mode]')){const p=provider(),value=el.value;if(value==='none')modal('隐藏本渠道全部模型？','<p>保留发现和顺序；选择模式明确为全部隐藏。</p>','加入草稿',()=>change(()=>p.mode=value),{onClose:render});else change(()=>p.mode=value);}
+  else if(el.matches('[data-family]')){family=el.value;render();}
+  else if(el.matches('[data-only-selected]')){onlySelected=el.checked;render();}
+  else if(el.matches('[data-preview]')){previewSaved=el.value==='saved';if(el.closest('#modalBody'))modal('完整选择器顺序',preview().replace('class="mp-order"','class="mp-order" open'),'关闭');else render();}
+  else if(el.matches('[data-current]')){current=el.value;search='';family='';render();}
+  else if(el.matches('[data-template-current]')){templateId=el.value;versionN=template().main||template().versions[0]?.n||0;render();}
+  else if(el.matches('[data-version]')){if(buffer()){notice('先保存或取消候选，再查看版本');render();return;}versionN=Number(el.value);render();}
+  else if(el.matches('[data-fast-mode]'))change(()=>draft.fastMode=el.value);
+  else if(el.matches('[data-fast-rows]'))change(()=>draft.fastRows=el.checked);
+ });
+ document.addEventListener('input',e=>{if(e.target.matches('[data-channel-config]'))updateChannelConnection(e.target);else if(e.target.matches('[data-quick-value="context"]'))quickChanged(e.target);else if(e.target.matches('[data-assistant-input]'))assistantInputs[templateId]=e.target.value;else if(e.target.matches('[data-template-meta],[data-template-match]'))updateTemplateInput(e.target);else if(e.target.matches('[data-template-prompt]'))generationTarget=e.target.value;else if(e.target.matches('[data-model-search]')){search=e.target.value;render();}else if(e.target.matches('[data-channel-search]')){channelSearch=e.target.value;render();}else if(e.target.matches('[data-template-search]')){templateSearch=e.target.value;render();}else if(e.target.matches('[data-correction]')){correctionDraft=e.target.value;}});
+ document.addEventListener('scroll',e=>{if(e.target===host.closest('.main'))syncDetailSection();},{capture:true,passive:true});
+ window.addEventListener?.('resize',syncDetailSection,{passive:true});
+ if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(syncDetailSection);observer.observe(host);const scroller=host.closest('.main');if(scroller)observer.observe(scroller);}
+ let drag=null;document.addEventListener('dragstart',e=>{if(e.target.closest('input,button,select,.select')){e.preventDefault();return;}const el=e.target.closest('[draggable="true"]');if(!el||!el.closest('#route-models'))return;drag=el.dataset.provider?{type:'provider',id:el.dataset.provider}:{type:'model',id:el.dataset.model};e.dataTransfer.setData('text/plain',drag.id);});document.addEventListener('dragover',e=>{if(drag&&e.target.closest('[draggable="true"]'))e.preventDefault();});document.addEventListener('drop',e=>{const el=e.target.closest('[draggable="true"]');if(!el||!drag)return;e.preventDefault();const target=drag.type==='provider'?el.dataset.provider:el.dataset.model;if(target){const list=drag.type==='provider'?draft.providers:provider().models,key=drag.type==='provider'?'id':'key';change(()=>{const from=list.findIndex(x=>x[key]===drag.id),to=list.findIndex(x=>x[key]===target);if(from>=0&&to>=0)list.splice(to,0,list.splice(from,1)[0]);});}drag=null;});document.addEventListener('dragend',()=>drag=null);
+ window.modelPrototype={state:()=>clone({draft,saved,pending,client,operation,templates,scope:[...scope],buffers,proposal,incoming,records,scenario,agent,modelSelection:[...modelSelection],modelExpanded:[...modelExpanded],modelEdits,channelDetail,templateDetail,templateScratch,templateSelection:[...templateSelection],externalTask,externalBatch,editorSection,editorNavCollapsed,channelSection,channelNavCollapsed,channelConnections,assistantOpen,assistantMaximized,assistantInputs,conversation}),scene,commitModelPatches,modelTargets:()=>modelTargets().map(m=>m.key),readQuick,stagedModelEdits,quickConfig,stagedChannelConnections,projection:()=>projection(),routePlan,resolveRoute:(pid,key,policy=draft)=>{const p=policy.providers.find(p=>p.id===pid);return resolveRoute(p,p.models.find(m=>m.key===key),policy);},resolve:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return resolve(p,p.models.find(m=>m.key===key));},templateMatches:(tid,modelId,pid='newapi',n)=>{const p=draft.providers.find(p=>p.id===pid);return templateMatches(templates.find(t=>t.id===tid),{id:modelId},p,n?version(tid,n):null);},templateResolution:(pid,key)=>{const p=draft.providers.find(p=>p.id===pid);return templateResolution(p,p.models.find(m=>m.key===key));},render};
+ if(typeof MutationObserver!=='undefined'){new MutationObserver(()=>{const route=document.documentElement.dataset.route;if(route&&route!=='models')$('#mpAssistantHost').hidden=true;else {$('#mpAssistantHost').hidden=false;renderAssistant();}}).observe(document.documentElement,{attributes:true,attributeFilter:['data-route','data-effects','data-theme']});}
+ render();
+})();

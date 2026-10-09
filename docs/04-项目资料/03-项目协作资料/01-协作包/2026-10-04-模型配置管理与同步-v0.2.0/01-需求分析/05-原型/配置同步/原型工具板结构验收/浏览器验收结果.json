@@ -1,0 +1,186 @@
+{
+  "date": "2026-10-08",
+  "runtime": {
+    "playwright": "/Users/ezio/.npm/_npx/2334a3ea0ef73d73/node_modules/playwright-core",
+    "chromium": "/Users/ezio/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+  },
+  "boundary": "静态交互原型；不读取真实凭据、不生成加密文件、不连接 WebDAV、不等于生产验收",
+  "results": [
+    {
+      "name": "S-P01 独立同步菜单、两个 Tab 与账户登录状态默认联动",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P02 旧迁移 / WebDAV 路由归并，设置仍有模型项",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P03 双 Tab 键盘与各自的选择范围",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P04 搜索保留隐藏勾选，分组半选",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P05 所选渠道补齐精确模版依赖，不带凭据",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P06 对象详情与设备绑定登录态说明",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P07 分享预设后另选 Key，含凭据强制加密 / 口令校验",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P08 换设备预设排除设备绑定登录态，取消对象清理凭据选择",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P09 损坏包 / 解密错误不创建应用结果",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P10 无 Key 导入、依赖、同名异端点与冲突预览",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P11 导入账户默认恢复检查，详情可排除登录状态",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P12 旧版包范围有限，不冒充完整 Skill / MCP",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P13 WebDAV 范围变更先保存，清空不意味着远端删除",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P14 WebDAV 只比较所选项，凭据关闭不出现登录态冲突",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P15 登录态自动核对，冲突选择与独立加密口令仍必需",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P16 连接配置校验与按钮文案，密码不进入状态",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P17 备份失败 / 部分失败不报告同步成功",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P18 取消导入与 Escape 不应用，焦点回到入口",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P19 右栏样例键盘选择、弹窗 Tab 循环",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'encrypted'\n- 'keyless'\n"
+    },
+    {
+      "name": "S-P20 渠道快捷导出转入同步，保留草稿",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P21 模版快捷导入转入同步并预选模版范围",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P22 浅深色与 1180 / 900 窗口内独立滚动",
+      "status": "FAIL",
+      "error": "locator.click: Timeout 6000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-sx=\"save-scope\"]:visible').first()\u001b[22m\n\u001b[2m    - locator resolved to <button disabled type=\"button\" class=\"btn ghost\" data-sx=\"save-scope\">保存本机范围</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    11 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not enabled\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n"
+    },
+    {
+      "name": "S-P23 与 Windows 窗口专题共存",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P25 Skills / MCP 独立勾选，展开不改变范围与凭据",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P26 搜索自动展开且可收起，清除后恢复普通折叠状态",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P27 无摘要与独立 Tab 滚动位置保留",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P28 账户详情仅信息、加密要求与取消重选",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P29 失效导入需重新登录，失效远端不能采用",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P30 WebDAV 仅账户信息须保存，无令牌冲突或假恢复",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P31 导入账户取消后不恢复，重选回到默认",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P32 WebDAV 配置默认带密码，详情排除与取消重选",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P33 WebDAV 密码随导入配置采用，连接保持待启用",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P34 无密码包只采用配置，两个 Tab 无底部原型说明",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P35 上部公共设置、下部当前页面与 Tab Mock",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P36 公共设置和 Mock 一起滚动，锚点保持产品路由",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P37 导入文件选择、解密字段与已选文件快照",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P38 比较树默认收起、分类半选与明确删除",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P39 顶层分类选择、精确依赖与凭据个别覆盖",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n9 !== 0\n"
+    },
+    {
+      "name": "S-P40 七类只读详情、独立滚动与 Escape 返回比较",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P41 WebDAV 同步配置按钮、同构树与勾选应用",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P42 WebDAV 重绘与只读详情保留方向和口令",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P43 比较与第二层详情在浅深色短窗内可达",
+      "status": "PASS"
+    },
+    {
+      "name": "S-P24 浏览器脚本与资源无错误",
+      "status": "PASS"
+    }
+  ],
+  "consoleErrors": []
+}

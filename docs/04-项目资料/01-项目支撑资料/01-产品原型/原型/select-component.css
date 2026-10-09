@@ -1,0 +1,30 @@
+/* 全主原型共用 Select。玻璃材质由后载的 glass-components / effects 统一控制。 */
+:root{
+  /* body portal 的兼容层高于现有通知 / 系统对话 / 日志提示；支持时优先进入 top layer。 */
+  --z-select:7000;
+  --select-min-width:150px;
+  --select-menu-max-width:320px;
+  --select-menu-max-height:260px;
+}
+.select{position:relative;display:inline-flex;min-width:min(var(--select-min-width),100%);max-width:100%;vertical-align:middle}
+.select-native{min-width:0}
+.select-trigger{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);width:100%;min-width:0;min-height:var(--control-md);border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:var(--space-2) var(--space-3);font:inherit;font-size:var(--text-control);line-height:1.2;cursor:pointer;transition:background var(--motion-fast),border-color var(--motion-fast)}
+.select-trigger::after{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-1px);flex:none;opacity:.62}
+.select-trigger:hover:not(:disabled){background:var(--hover)}
+.select-trigger:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.select-trigger[aria-invalid="true"]{border-color:var(--red)}
+.select-trigger:disabled{opacity:.5;cursor:not-allowed}
+.select-value{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.select-menu{position:fixed;inset:auto;margin:0;z-index:var(--z-select);display:none;box-sizing:border-box;min-width:0;max-width:none;overflow:auto;overscroll-behavior:contain;padding:var(--space-1);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--panel);color:var(--text);box-shadow:var(--shadow-md);transform-origin:top left;font:inherit;font-size:var(--text-control)}
+.select-menu[data-floating="true"]{display:block}
+.select-menu::backdrop{background:transparent;pointer-events:none}
+.select-option{display:flex;align-items:center;width:100%;min-height:var(--control-sm);border:0;border-radius:var(--radius-xs);background:transparent;color:var(--text);padding:var(--space-2);font:inherit;font-size:var(--text-control);line-height:1.4;text-align:left;white-space:normal;overflow-wrap:anywhere;cursor:pointer}
+.select-option:hover:not(:disabled){background:var(--hover)}
+.select-option.selected{background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);font-weight:600}
+.select-menu[aria-multiselectable="true"] .select-option::before{content:"";width:14px;height:14px;border:1px solid var(--border);border-radius:var(--radius-xs);margin-inline-end:var(--space-2);flex:none;box-sizing:border-box}
+.select-menu[aria-multiselectable="true"] .select-option.selected::before{content:"✓";display:grid;place-items:center;font-size:11px;line-height:1;border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.select-option:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.select-option:disabled{opacity:.5;cursor:not-allowed}
+.select-group-label{padding:var(--space-2);font-size:var(--text-caption);color:var(--muted)}
+.select-backing[hidden]{display:none!important}
+.field .select{width:100%}

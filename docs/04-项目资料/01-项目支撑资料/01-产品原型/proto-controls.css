@@ -1,0 +1,118 @@
+/* 原型控制器统一词汇表（所有评审页共用）
+   ─────────────────────────────────────────────────────────────
+   参照「概览」页右侧的原型注释与测试器。自包含：不依赖所在页是否定义令牌。
+
+   用法
+     容器        .pctl               （令牌宿主；概览面板同时命中 .prototype-side）
+     分区标题    .pctl-sec           （可加 .is-first 去掉顶部分隔线）
+     分组小标题  .pctl-sub
+     说明        .pctl-hint          （正文里 <b> 会加粗）
+     控件排布    .pctl-chips（换行） / .pctl-grid（两列） / .pctl-tiles（三列）
+     分段控件    .pctl-seg           （紧凑工具栏用，弱化外框、融合成一段）
+     锚点栏      .pctl-bar           （tab 式跳转；由 proto-controls.js 驱动滚动）
+
+   选中态只有一套实现：浅色＝近黑，深色＝品牌蓝。
+   同时接受 .active 与 [aria-pressed="true"] 两种写法。 */
+
+.pctl,.prototype-side{
+  --pctl-line:color-mix(in srgb,currentcolor 12%,transparent);
+  --pctl-bd:#d8dae0;--pctl-bg:#fff;--pctl-fg:#5f6368;
+  --pctl-bd-h:#b9bcc5;--pctl-fg-h:#111;
+  --pctl-on-bg:#0d0d0d;--pctl-on-bd:#0d0d0d;--pctl-on-fg:#fff;
+  --pctl-sub:#737a85;--pctl-tick:#0d0d0d;
+}
+html[data-theme="dark"] :is(.pctl,.prototype-side),
+.dark :is(.pctl,.prototype-side){
+  --pctl-line:#ffffff1f;
+  --pctl-bd:#4b4f58;--pctl-bg:#ffffff0a;--pctl-fg:#e4e4e7;
+  --pctl-bd-h:#8f9bff;--pctl-fg-h:#fff;
+  --pctl-on-bg:#8f9bff;--pctl-on-bd:#8f9bff;--pctl-on-fg:#12131a;
+  --pctl-sub:#9aa2ae;--pctl-tick:#8f9bff;
+}
+
+/* ── 分区标题：区分「导航 / 外观 / 工具 / 状态投影」等大块 ── */
+.pctl-sec{
+  display:flex;align-items:center;gap:8px;
+  margin:4px 0 0;padding-top:12px;border-top:1px solid var(--pctl-line);
+  font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--pctl-sub)}
+.pctl-sec.is-first{margin-top:0;padding-top:0;border-top:0}
+.pctl-sec::before{content:"";width:3px;height:11px;border-radius:2px;background:var(--pctl-tick)}
+.pctl-sec small{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--pctl-sub);opacity:.85}
+
+/* ── 分组小标题 ── */
+.pctl-sub{margin:12px 0 6px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--pctl-sub)}
+.pctl-sub:first-child{margin-top:0}
+
+/* ── 说明 ── */
+.pctl-hint{margin:8px 0 0;color:var(--pctl-sub);font-size:11px;line-height:1.5}
+.pctl-hint b{font-weight:650}
+
+/* ── 控件本体：尺寸 / 圆角 / 描边 / 悬停 全页一致 ── */
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a),
+.pctl-bar :is(button,a),
+.pctl-back{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  min-height:30px;padding:5px 12px;border-radius:999px;
+  border:1px solid var(--pctl-bd);background:var(--pctl-bg);color:var(--pctl-fg);
+  font:inherit;font-size:12px;font-weight:500;line-height:1.2;white-space:nowrap;
+  text-decoration:none;cursor:pointer;
+  transition:background .12s ease,border-color .12s ease,color .12s ease}
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a):hover,
+.pctl-bar :is(button,a):hover,
+.pctl-back:hover{border-color:var(--pctl-bd-h);color:var(--pctl-fg-h)}
+
+/* 选中态：唯一实现 */
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a).active,
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a)[aria-pressed="true"],
+.pctl-bar :is(button,a).active,
+.pctl-seg button.active,
+.pctl-seg button[aria-pressed="true"]{
+  background:var(--pctl-on-bg);border-color:var(--pctl-on-bd);color:var(--pctl-on-fg);font-weight:600}
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a).active:hover,
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a)[aria-pressed="true"]:hover{
+  border-color:var(--pctl-on-bd);color:var(--pctl-on-fg)}
+
+/* 主操作 chip：同一套配色里的“实心”档（播放/主按钮用） */
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a).pctl-primary{
+  background:var(--pctl-on-bg);border-color:var(--pctl-on-bd);color:var(--pctl-on-fg);font-weight:650}
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) :is(button,a).pctl-primary:hover{
+  border-color:var(--pctl-on-bd);color:var(--pctl-on-fg)}
+
+/* 图标瓦片（保留各自排布，只统一配色与选中态） */
+.pctl .pctl-tile{
+  border:1px solid var(--pctl-bd);background:var(--pctl-bg);color:var(--pctl-fg);
+  cursor:pointer;transition:background .12s ease,border-color .12s ease,color .12s ease}
+.pctl .pctl-tile:hover{border-color:var(--pctl-bd-h);color:var(--pctl-fg-h)}
+.pctl .pctl-tile.active,.pctl .pctl-tile[aria-pressed="true"]{
+  background:var(--pctl-on-bg);border-color:var(--pctl-on-bd);color:var(--pctl-on-fg)}
+.pctl .pctl-tile.active :is(span,b),.pctl .pctl-tile[aria-pressed="true"] :is(span,b){color:var(--pctl-on-fg)}
+.pctl .pctl-tile.active span,.pctl .pctl-tile[aria-pressed="true"] span{opacity:.72}
+
+/* 不可用 */
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) button:disabled{opacity:.45;cursor:default;color:var(--pctl-fg)}
+.pctl :is(.pctl-chips,.pctl-grid,.pctl-tiles) button:disabled.active{background:transparent;border-color:var(--pctl-bd);color:var(--pctl-sub)}
+
+/* ── 排布 ── */
+.pctl-chips{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+.pctl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:0}
+.pctl-tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0}
+.pctl-span{grid-column:1/-1}
+.pctl-grid>*,.pctl-tiles>*{min-width:0}
+
+/* ── 分段控件：紧凑工具栏用（玻璃专题顶栏等），形状不同、配色同一套 ── */
+.pctl-seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;
+  border:1px solid var(--pctl-bd);background:color-mix(in srgb,currentcolor 5%,transparent)}
+.pctl-seg button{min-height:26px;padding:0 11px;border:0;border-radius:999px;background:transparent;
+  color:var(--pctl-fg);font:inherit;font-size:12px;font-weight:600;cursor:pointer;
+  transition:background .12s ease,color .12s ease}
+.pctl-seg button:hover{color:var(--pctl-fg-h)}
+
+/* ── 锚点栏：tab 式跳转（滚动交给 proto-controls.js） ── */
+.pctl-bar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 2px}
+.pctl-bar :is(button,a){min-height:26px;padding:3px 11px;font-size:11px;font-weight:600}
+
+/* ── 回跳链接 ── */
+.pctl-back{min-height:28px;padding:4px 11px;font-size:12px;font-weight:600}
+
+/* 锚点落点：被 -js 跳到时留出吸顶余量 */
+[data-pctl-anchor]{scroll-margin-top:14px}

@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-08",
+  "source": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js",
+  "sha256": "890c9a75789a31f939fe81884424e313b2129c402162e82c617adc69f971dd9b",
+  "boundary": "Node VM 执行实际同步模块与最小 DOM 替身；验证内存状态、生成标记及应用结果，不包含浏览器布局、真实焦点、加密、账户适配或 WebDAV 网络验收。",
+  "results": [
+    {
+      "name": "默认账户含登录状态，设备绑定不带令牌，右侧无重复开关",
+      "status": "PASS"
+    },
+    {
+      "name": "对象取消清理登录状态，重新勾选恢复默认",
+      "status": "PASS"
+    },
+    {
+      "name": "账户组及表头选择默认联动，展开不改选择",
+      "status": "PASS"
+    },
+    {
+      "name": "展开信息选项控制凭据，自定义预设保留选择",
+      "status": "PASS"
+    },
+    {
+      "name": "分享预设无凭据，全部与换设备范围准确",
+      "status": "PASS"
+    },
+    {
+      "name": "账户包含时导出强制加密，口令错误无导出",
+      "status": "PASS"
+    },
+    {
+      "name": "仅账户信息 导出无账户凭据与强制加密，保留设备说明",
+      "status": "PASS"
+    },
+    {
+      "name": "导入选账户自动恢复检查，设备绑定显示需重新登录",
+      "status": "PASS"
+    },
+    {
+      "name": "导入仅账户信息 选项重绘保留展开、Key 选择不改变账户",
+      "status": "PASS"
+    },
+    {
+      "name": "导入取消账户不恢复登录，重新勾选回到默认",
+      "status": "PASS"
+    },
+    {
+      "name": "失效账户需重新登录，备份或部分失败不报告恢复",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 信息选项改变保存状态，两个 Tab 账户选择独立",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 自动检查和恢复，无手动核对入口，冲突与口令仍校验",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 失效远端阻止采用，保留本机或跳过可继续",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 仅账户信息无令牌冲突与口令，不冒充恢复",
+      "status": "PASS"
+    },
+    {
+      "name": "精确依赖、搜索隐藏选择、折叠与滚动状态保持",
+      "status": "PASS"
+    },
+    {
+      "name": "文件同步默认勾选 WebDAV 配置及密码，WebDAV 同步排除自覆盖",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 配置取消清理密码选项，重新勾选恢复带密码默认",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 组与表头选择联动，已选对象的仅配置选项保留",
+      "status": "PASS"
+    },
+    {
+      "name": "分享含 WebDAV 配置不带密码，全部和换设备带密码，自定义保留",
+      "status": "PASS"
+    },
+    {
+      "name": "仅 WebDAV 密码也强制加密，清单只列凭据对象且无同步口令",
+      "status": "PASS"
+    },
+    {
+      "name": "仅 WebDAV 配置导出可不加密，不带连接密码",
+      "status": "PASS"
+    },
+    {
+      "name": "加密导入 WebDAV 默认带密码且待启用，不改变当前连接",
+      "status": "PASS"
+    },
+    {
+      "name": "导入 WebDAV 仅配置选项保留展开，取消再选恢复默认",
+      "status": "PASS"
+    },
+    {
+      "name": "无密码 WebDAV 示例不解密且不能选不存在的密码",
+      "status": "PASS"
+    },
+    {
+      "name": "取消导入、备份失败或部分失败均不报告密码已导入",
+      "status": "PASS"
+    },
+    {
+      "name": "错误口令与损坏配置包不创建 WebDAV 导入结果",
+      "status": "PASS"
+    },
+    {
+      "name": "两个同步 Tab 均无底部演示说明，WebDAV 连接按钮文案简洁",
+      "status": "PASS"
+    }
+  ]
+}

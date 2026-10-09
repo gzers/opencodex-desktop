@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-08",
+  "source": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js",
+  "sha256": "1ca1a321da5526d27c5befd026eff796b7e4f190972facdbb44d04d634aba797",
+  "boundary": "Node VM 执行真实同步模块，最小 DOM 接口替身；覆盖内存状态、生成标记与滚动值恢复，不含浏览器布局、滚动高度或真实绘制验收。",
+  "results": [
+    {
+      "name": "文件与 WebDAV 初始分组收起、Skills/MCP 分开",
+      "status": "PASS"
+    },
+    {
+      "name": "折叠不改变范围或凭据，两个 Tab 记忆独立",
+      "status": "PASS"
+    },
+    {
+      "name": "Skills/MCP 独立选择，取消 MCP 清理所选凭据",
+      "status": "PASS"
+    },
+    {
+      "name": "搜索不改变隐藏选择，匹配可收起，清除恢复折叠",
+      "status": "PASS"
+    },
+    {
+      "name": "收起时选择仍补齐精确依赖，不夹带凭据",
+      "status": "PASS"
+    },
+    {
+      "name": "顶部摘要随勾选更新，清空禁用导出",
+      "status": "PASS"
+    },
+    {
+      "name": "WebDAV 顶部保存范围后才能检查、取消不删除远端",
+      "status": "PASS"
+    },
+    {
+      "name": "重绘保留内区滚动，两 Tab 滚动独立，搜索复位列表",
+      "status": "PASS"
+    },
+    {
+      "name": "不含凭据导出仍只包含选择和必要依赖",
+      "status": "PASS"
+    },
+    {
+      "name": "换设备预设与独立分组兼容，设备绑定账户不自动带登录态",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+/* 仅 Windows 评审专题生效；Mica 为低对比染色示意，不用网页模糊冒充系统材质。 */
+.windows-caption,.windows-legacy-menu,#windowsDemoCard{display:none}
+.windows-hidden[hidden]{display:none!important}
+body.windows-mode .window{grid-template-rows:40px minmax(0,1fr);border-radius:8px;background:#e8edf5;font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif}
+html[data-theme="dark"] body.windows-mode .window{background:#20242c}
+body.windows-mode[data-win-material="mica"] .window{background:linear-gradient(110deg,#e5eaf6,#eef0f5 50%,#e9edea)}
+html[data-theme="dark"] body.windows-mode[data-win-material="mica"] .window{background:linear-gradient(110deg,#252938,#26282e 50%,#272c2c)}
+body.windows-mode .window::before,body.windows-mode .window::after{display:none}
+body.windows-mode .app{grid-template-rows:40px minmax(0,1fr)}
+body.windows-mode .side{padding-top:58px}
+body.windows-mode .titlebar{height:40px;padding:0;display:block}
+body.windows-mode .traffic{display:none}
+body.windows-mode .windows-caption{display:flex;height:40px;align-items:center;justify-content:space-between}
+.windows-drag{display:flex;align-items:center;gap:8px;padding-left:12px;height:100%;flex:1;min-width:0;user-select:none;font-size:12px}
+.windows-drag svg{width:20px;height:20px;flex:none}
+.windows-drag span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.windows-buttons{display:flex;align-self:stretch}
+.windows-buttons button{width:46px;height:40px;padding:0;border:0;border-radius:0;background:transparent;color:var(--text);display:grid;place-items:center;cursor:default}
+.windows-buttons svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1}
+.windows-buttons button:hover{background:color-mix(in srgb,var(--text) 9%,transparent)}
+.windows-buttons button[data-win-action="close"]:hover{background:#c42b1c;color:#fff}
+.windows-buttons button:focus-visible{outline:2px solid var(--text);outline-offset:-3px}
+body.windows-mode[data-win-focus="inactive"] .windows-drag{color:var(--muted)}
+body.windows-mode[data-win-layout="legacy"] .window,body.windows-mode[data-win-layout="legacy"] .app{grid-template-rows:72px minmax(0,1fr)}
+body.windows-mode[data-win-layout="legacy"] .titlebar{height:72px}
+body.windows-mode[data-win-layout="legacy"] .side{padding-top:90px}
+body.windows-mode[data-win-layout="legacy"] .windows-legacy-menu{display:flex;align-items:center;height:32px;padding-left:12px;background:var(--raised);font-size:13px}
+body.windows-mode .window.windows-maximized{border-radius:0}
+body.windows-mode .window[hidden]{display:none!important}
+.windows-hidden{width:100%;min-height:640px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:32px;background:var(--panel);border:1px solid var(--border);border-radius:8px}
+.windows-hidden svg{width:48px;height:48px}
+.windows-hidden p{color:var(--muted);margin:0 0 8px;max-width:420px}
+body.windows-mode #windowsDemoCard{display:block}
+body.windows-mode .prototype-side .motion-review{display:none}
+body.windows-mode #notifDemoCard,body.windows-mode .pctl-back#prototypeRouteLink,body.windows-mode .proto-rail .pctl-bar,body.windows-mode .proto-context-note{display:none}
+body.windows-mode .desktop{background:radial-gradient(ellipse at 25% 20%,#c2d1ee55,transparent 60%),#e5e8ee}
+html[data-theme="dark"] body.windows-mode .desktop{background:radial-gradient(ellipse at 25% 20%,#414b6633,transparent 60%),#14171c}

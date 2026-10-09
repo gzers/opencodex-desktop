@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-08",
+  "sources": [
+    {
+      "file": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js",
+      "sha256": "a909bfe3c93a9cd355c777622e485c307d3f982be63825d964ce56b0662e0991"
+    },
+    {
+      "file": "docs/04-项目资料/01-项目支撑资料/01-产品原型/proto-controls.js",
+      "sha256": "827b9ba4cb33110deb42cd1e7e76270c2d85647855c4a93a5b0bca26920d1498"
+    },
+    {
+      "file": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "sha256": "4c4a039fdf266d184ab4dbbf3a896c2700e39e374373b2554a0eaffb12cb3742"
+    }
+  ],
+  "boundary": "Node VM 执行实际工具分区及锚点脚本，读取主原型侧栏标记，最小 DOM 提供事件与几何替身；验证上下文、选择器联动和滚动目标，不验证 CSS 绘制、真实焦点或滚动高度。",
+  "results": [
+    {
+      "name": "文件同步只展示当前文件与应用场景，公共设置保留",
+      "status": "PASS"
+    },
+    {
+      "name": "Tab 与主内容重绘更新 Mock，往返保留场景",
+      "status": "PASS"
+    },
+    {
+      "name": "渠道和模版场景按当前模型 Tab 展示",
+      "status": "PASS"
+    },
+    {
+      "name": "诊断日志与检查、设置安装等上下文独立",
+      "status": "PASS"
+    },
+    {
+      "name": "通知专题仍有公共设置，退出恢复当前页",
+      "status": "PASS"
+    },
+    {
+      "name": "Windows 动态工具移入下半区，公共区同在一个滚动容器",
+      "status": "PASS"
+    },
+    {
+      "name": "工具锚点只滚动右侧，不覆盖产品路由",
+      "status": "PASS"
+    },
+    {
+      "name": "两个顶层折叠段命名等长，默认全局收起 / 本页展开",
+      "status": "PASS"
+    },
+    {
+      "name": "面板 / 拓展 / 通知历史 / 设置各 Tab 都有专属 Mock 卡片",
+      "status": "PASS"
+    }
+  ]
+}

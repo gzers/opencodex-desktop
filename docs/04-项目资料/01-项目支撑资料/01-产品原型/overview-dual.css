@@ -1,0 +1,185 @@
+/* 正式概览与 Logo 对照页共用。只消费既有状态和通知玻璃令牌。 */
+html[data-overview-size] .window { height:var(--win-h); }
+html[data-route="overview"] .main { padding:18px 22px 20px; }
+html[data-route="overview"] .topbar { margin-bottom:14px; }
+#route-overview.active { display:grid; grid-template-columns:minmax(0,1fr); gap:14px; }
+#route-overview > [hidden] { display:none!important; }
+#card-overview-status { order:0; position:relative; isolation:isolate; padding:0; border:0; border-radius:0; background:transparent; box-shadow:none; }
+#card-overview-status .ovb-summary { display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:168px 66px 66px; height:300px; min-height:300px; padding:0; gap:0; align-items:center; justify-items:center; }
+#card-overview-status .ovb-main,#card-overview-details { display:none!important; }
+/* 背景光要越过状态区底部、一直铺到下方卡片（三卡与最近事件）后面，让玻璃卡「透光」。
+   高度按「够到路线区底部」给：状态区 300 + 间距 + 三卡 164 + 间距 + 事件卡 ≈ 660（标准就绪）。
+   与软件 `.motion-mark` 用同一组值，原型/实现逐像素同源。 */
+.motion-backdrop { position:absolute; z-index:-1; top:-75px; left:0; width:100%; height:660px; border:0; pointer-events:none; background:transparent; color-scheme:normal; }
+/* 显式占满整行再靠 text-align 居中：WebKit（Safari / WKWebView）下 justify-items:center 给出的
+   fit-content 宽度会让该块整体右移（实测中心偏 ~84px），这里去掉对网格项尺寸的依赖。 */
+.motion-identity { grid-row:2; grid-column:1; align-self:start; width:100%; text-align:center; min-width:0; max-width:100%; }
+.motion-heading { display:flex; align-items:center; justify-content:center; }
+.motion-detail-icon { display:inline-flex; align-items:center; justify-content:center; gap:6px; border:0; border-radius:6px; padding:2px 5px; background:transparent; color:var(--text); font:inherit; cursor:pointer; }
+.motion-mainline { font-size:23px; line-height:1.4; font-weight:650; }
+.motion-detail-icon svg { color:var(--muted); width:14px; height:14px; opacity:.7; }
+.motion-detail-icon:hover svg { opacity:1; color:var(--text); }
+.motion-detail-icon:disabled { cursor:default; opacity:1; }
+.motion-detail-icon:disabled svg { display:none; }
+.motion-detail-icon:focus-visible { outline:2px solid var(--blue); outline-offset:4px; }
+/* margin 左右 auto：形象块改为整行宽后，副标题仍要相对正文列居中（与软件 `.motion-caption` 的 `margin:5px auto 0` 一致）。 */
+.motion-caption { margin:5px auto 0; min-height:20px; line-height:20px; padding:0 12px; font-size:var(--text-label); color:var(--muted); max-width:600px; }
+#card-overview-status .ovb-actions { grid-row:3; grid-column:1; width:100%; justify-content:center; align-items:center; align-self:start; gap:9px; padding-top:9px; min-height:36px; flex-wrap:nowrap; }
+/* 概览动作按钮：与软件实际效果一致的四颗玻璃实心按钮（半透明分层填充 + 非透明边框 + 分层投影，
+   含顶部内高光）；主操作＝强调玻璃、扁平无棱线，停止＝红纱玻璃。
+   2026-10-04 用户对照软件截图（打开面板 / 停止 / 重启 / 查看日志）后要求原型对齐：
+   原「非主按钮＝无壳文字按钮」的做法作废，避免原型比软件少一层按钮体。 */
+/* 「更多」入口保持无壳文本按钮（与软件 .motion-more > summary 一致），只有四颗动作按钮上玻璃体。 */
+#card-overview-status .ovb-more>summary { background:transparent; border-color:transparent; box-shadow:none; color:var(--muted); }
+#card-overview-status .ovb-more>summary:hover { background:var(--hover); color:var(--text); }
+#card-overview-status .ovb-actions>.btn {
+  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),var(--glass-fill);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  border-color:color-mix(in srgb,var(--text) 15%,transparent);color:var(--text);
+  box-shadow:0 8px 22px #10182814,inset 0 1px 0 #ffffff59;
+}
+#card-overview-status .ovb-actions>.btn:hover {
+  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--text) 8%,var(--glass-fill));
+  color:var(--text);
+}
+#card-overview-status .ovb-actions>.btn.primary {
+  background-color:var(--glass-fill);
+  background-image:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),linear-gradient(color-mix(in srgb,var(--accent) 80%,transparent),color-mix(in srgb,var(--accent) 80%,transparent));
+  border-color:color-mix(in srgb,var(--accent) 42%,transparent);color:var(--accent-ink);
+  box-shadow:0 8px 22px #10182814;
+}
+#card-overview-status .ovb-actions>.btn.danger {
+  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--red) 16%,var(--glass-fill));
+  border-color:color-mix(in srgb,var(--red) 38%,transparent);color:var(--red);
+}
+#card-overview-status .ovb-actions [hidden] { display:none!important; }
+#route-overview #mods { order:2; gap:12px; }
+#route-overview #mods .mod { min-height:162px; padding:15px; gap:11px; }
+#route-overview #mods .mod-status { gap:5px; }
+#route-overview #mods .mod-actions { padding-top:11px; gap:8px; }
+#route-overview #mods .mod-actions .btn { min-height:32px; padding:6px 8px; }
+#route-overview #card-overview-events { order:3; display:block; padding:12px 15px; }
+#route-overview .recent-events-head { margin-bottom:6px; }
+#route-overview .recent-events-head h2 { font-size:var(--text-control); }
+#route-overview .recent-events-head .btn { min-height:26px; padding:3px 8px; font-size:var(--text-caption); }
+#route-overview .recent-events-list { gap:0; font-family:inherit; font-size:var(--text-caption); line-height:1.5; }
+#route-overview .recent-events-list li { padding:4px 0; background:transparent; border:0; border-radius:0; }
+#route-overview .recent-events-list li:nth-child(n+3) { display:none; }
+#route-overview .recent-events-list time { width:62px; }
+/* 门禁独占下部空间，内容自然定高，避免复制探索稿的大块留白。 */
+#route-overview #envGate { order:1; display:block; padding:20px 22px; border:1px solid color-mix(in srgb,var(--text) 13%,transparent); border-radius:var(--radius); background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),var(--glass-fill); -webkit-backdrop-filter:var(--glass-blur-notif); backdrop-filter:var(--glass-blur-notif); box-shadow:0 18px 44px #10182814,0 2px 6px #1018280f; }
+html[data-theme="dark"] #route-overview #envGate { box-shadow:0 18px 44px #00000066,0 2px 6px #0006; }
+#route-overview #envGate[hidden] { display:none!important; }
+.overview-gate-head { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:18px; }
+.overview-gate-head h2 { margin:0; font-size:var(--text-subtitle); line-height:24px; font-weight:650; }
+.overview-gate-head p { margin:4px 0 0; font-size:var(--text-label); color:var(--muted); line-height:1.6; }
+.overview-gate-count { color:var(--muted); font-size:var(--text-caption); white-space:nowrap; padding-top:3px; }
+.overview-gate-body { display:grid; grid-template-columns:minmax(185px,.82fr) minmax(0,1.28fr); gap:24px; align-items:start; }
+.overview-checks { padding:0; margin:0; list-style:none; }
+.overview-checks li { display:grid; grid-template-columns:17px minmax(0,1fr) auto; gap:9px; align-items:center; min-height:48px; padding:9px 0; border-bottom:1px solid var(--border); font-size:var(--text-label); }
+.overview-checks li:last-child { border-bottom:0; }
+.overview-check-index { color:var(--muted); font-size:var(--text-caption); }
+.overview-checks b { font-weight:550; white-space:nowrap; }
+.overview-check-value { display:flex; align-items:center; gap:5px; font-size:var(--text-caption); color:var(--muted); white-space:nowrap; }
+.overview-check-value[data-tone="ok"] { color:var(--green); }
+.overview-check-value[data-tone="bad"] { color:var(--amber); }
+.overview-check-value[data-tone="busy"] { color:var(--blue); }
+.overview-check-value svg { width:12px; height:12px; }
+.overview-repair { padding-left:24px; border-left:1px solid var(--border); min-width:0; }
+.overview-repair h3 { margin:0 0 5px; font-size:var(--text-control); font-weight:600; }
+.overview-repair p { margin:0; font-size:var(--text-label); color:var(--muted); line-height:1.7; }
+.overview-repair .env-command { margin:13px 0 0; }
+.overview-repair .cli-copy-btn { padding:9px 10px; min-height:36px; }
+.overview-repair code { font-size:var(--text-caption); white-space:normal; overflow-wrap:anywhere; }
+.overview-repair-actions { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:16px; }
+.overview-repair-actions .btn { min-height:32px; font-size:var(--text-label); padding:6px 10px; }
+.overview-gate-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid var(--border); padding-top:12px; margin-top:18px; color:var(--muted); font-size:var(--text-caption); }
+.overview-gate-footer p { margin:0; }
+.overview-gate-footer button { background:transparent; border:0; padding:3px 0; color:var(--muted); font:inherit; white-space:nowrap; cursor:pointer; }
+.overview-gate-footer button:hover { color:var(--text); }
+#route-overview[data-mode="setup"] #card-overview-status .ovb-summary { height:174px; min-height:174px; grid-template-rows:114px 60px; }
+#route-overview[data-mode="setup"] .motion-backdrop { top:-35px; height:520px; }
+#route-overview[data-mode="setup"] #card-overview-status .ovb-actions { display:none; }
+#route-overview[data-mode="setup"] #mods,#route-overview[data-mode="setup"] #card-overview-events { display:none!important; }
+/* 弹窗仍沿用正式原型的三段式，只将环境事实并入运行详情。 */
+#modal.motion-standard-modal { width:min(580px,calc(100% - 32px)); max-height:calc(100% - 40px); }
+.motion-standard-modal .modal-head { padding:17px 22px 12px; align-items:center; border-bottom:1px solid var(--border); }
+.motion-standard-modal .modal-head h3 { font-size:18px; margin:0; }
+.motion-standard-modal #modalBody { padding:0 22px 18px; }
+.motion-standard-modal .modal-actions { padding:12px 22px; display:flex; justify-content:flex-end; }
+.motion-modal-sub { color:var(--muted); font-size:var(--text-label); margin:14px 0 8px; }
+.motion-section-title { font-size:var(--text-label); font-weight:600; color:var(--muted); margin:16px 0 5px; }
+.motion-facts { margin:0; }
+.motion-facts>div { display:grid; grid-template-columns:106px minmax(0,1fr); gap:14px; padding:7px 0; font-size:var(--text-label); }
+.motion-facts dt { color:var(--muted); } .motion-facts dd { margin:0; overflow-wrap:anywhere; }
+.motion-check-list { list-style:none; padding:0; margin:0; }
+.motion-check-list li { display:flex; align-items:center; gap:12px; padding:9px 0; font-size:var(--text-label); }
+.motion-check-list b { font-weight:550; } .motion-step { width:16px; color:var(--muted); }
+.motion-check-value { margin-left:auto; color:var(--muted); }
+.motion-check-value[data-tone="bad"] { color:var(--amber); }
+.motion-modal-copy,.motion-operation-detail { font-size:var(--text-label); line-height:1.7; }
+.motion-modal-copy { color:var(--muted); } .motion-command { margin-top:12px; }
+.motion-command>span { display:block; font-size:var(--text-caption); color:var(--muted); margin-bottom:5px; }
+.motion-modal-next { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+/* 运行详情：短事实左右对齐，长值整宽承载，不给每个分区叠一层卡片。 */
+#modal.motion-runtime-modal { width:min(660px,calc(100% - 32px)); }
+.motion-runtime-modal #modalBody { padding:17px 22px 18px; }
+.motion-runtime-modal .motion-section-title { margin:0 0 8px; font-size:var(--text-label); }
+.motion-runtime-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; }
+.motion-runtime-grid>section { min-width:0; }
+.motion-runtime-environment { border-left:1px solid var(--border); padding-left:24px; }
+.motion-runtime-modal .motion-facts>div { grid-template-columns:86px minmax(0,1fr); gap:10px; padding:5px 0; line-height:18px; }
+.motion-runtime-modal dt { white-space:nowrap; }
+.motion-runtime-modal .motion-check-list li { padding:9px 0; line-height:18px; gap:8px; }
+.motion-runtime-modal .motion-step { width:12px; font-size:var(--text-caption); }
+.motion-runtime-source { margin-top:15px; padding-top:13px; border-top:1px solid var(--border); }
+.motion-runtime-meta { display:grid; grid-template-columns:136px minmax(0,1fr); column-gap:24px; margin:0 0 3px; }
+.motion-runtime-meta>div { display:grid; grid-template-columns:46px minmax(0,1fr); gap:8px; padding:5px 0; font-size:var(--text-label); line-height:18px; }
+.motion-runtime-paths { margin:0; }
+.motion-runtime-paths>div { display:grid; grid-template-columns:124px minmax(0,1fr); gap:10px; padding:5px 0; font-size:var(--text-label); line-height:18px; }
+.motion-runtime-meta dt,.motion-runtime-paths dt { color:var(--muted); }
+.motion-runtime-meta dd,.motion-runtime-paths dd { min-width:0; margin:0; }
+.motion-runtime-value { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.motion-runtime-result { margin-top:13px; padding-top:12px; border-top:1px solid var(--border); }
+.motion-runtime-result .motion-operation-detail { line-height:1.55; }
+.motion-runtime-result .ovb-result-head { margin-bottom:5px; }
+.motion-runtime-result ul { margin:3px 0; padding-left:18px; }
+html[data-overview-size="compact"] .motion-runtime-modal #modalBody { padding:14px 20px 15px; }
+html[data-overview-size="compact"] .motion-runtime-grid { gap:20px; }
+html[data-overview-size="compact"] .motion-runtime-environment { padding-left:20px; }
+html[data-overview-size="compact"] .motion-runtime-source { margin-top:12px; padding-top:11px; }
+.motion-review { padding:14px; margin-bottom:12px; border:1px solid #a5a5ca; border-radius:10px; font-size:12px; line-height:1.7; }
+.motion-review strong { font-size:14px; } .motion-review p { color:var(--muted); margin:5px 0 0; }
+/* 按实际应用窗口高度切紧凑版，不依赖外部浏览器尺寸。 */
+html[data-overview-size="compact"][data-route="overview"] .main { padding:14px 18px 16px; }
+html[data-overview-size="compact"][data-route="overview"] .topbar { margin-bottom:10px; }
+html[data-overview-size="compact"] #route-overview.active { gap:10px; }
+html[data-overview-size="compact"] #card-overview-status .ovb-summary { height:222px; min-height:222px; grid-template-rows:128px 50px 44px; }
+html[data-overview-size="compact"] .motion-backdrop { top:-66px; height:640px; }
+html[data-overview-size="compact"] .motion-mainline { font-size:21px; }
+html[data-overview-size="compact"] .motion-caption { margin-top:2px; font-size:var(--text-caption); }
+html[data-overview-size="compact"] #card-overview-status .ovb-actions { padding-top:5px; gap:6px; }
+html[data-overview-size="compact"] #card-overview-status .ovb-actions>.btn { min-height:32px; font-size:var(--text-label); }
+html[data-overview-size="compact"] #route-overview #mods { gap:8px; }
+html[data-overview-size="compact"] #route-overview #mods .mod { padding:12px; min-height:142px; gap:8px; }
+html[data-overview-size="compact"] #route-overview .mod-head { gap:6px; }
+html[data-overview-size="compact"] #route-overview .mod-head h3 { font-size:var(--text-label); }
+html[data-overview-size="compact"] #route-overview .mod-status { font-size:var(--text-caption); }
+html[data-overview-size="compact"] #route-overview #mods .mod-actions { gap:6px; padding-top:9px; }
+html[data-overview-size="compact"] #route-overview #mods .mod-actions .btn { min-height:30px; padding:5px 7px; font-size:var(--text-caption); }
+html[data-overview-size="compact"] #route-overview #card-overview-events { padding:9px 12px; }
+html[data-overview-size="compact"] #route-overview .recent-events-head { margin-bottom:3px; }
+html[data-overview-size="compact"] #route-overview .recent-events-list li { padding:3px 0; }
+html[data-overview-size="compact"] #route-overview .recent-events-list li:nth-child(n+2) { display:none; }
+html[data-overview-size="compact"] #route-overview[data-mode="setup"] #card-overview-status .ovb-summary { height:142px; min-height:142px; grid-template-rows:88px 54px; }
+html[data-overview-size="compact"] #route-overview[data-mode="setup"] .motion-backdrop { top:-27px; height:480px; }
+html[data-overview-size="compact"] #route-overview #envGate { padding:16px 18px; }
+html[data-overview-size="compact"] .overview-gate-head { margin-bottom:13px; }
+html[data-overview-size="compact"] .overview-gate-head h2 { font-size:var(--text-body); }
+html[data-overview-size="compact"] .overview-gate-body { grid-template-columns:minmax(160px,.8fr) minmax(0,1.25fr); gap:18px; }
+html[data-overview-size="compact"] .overview-checks li { min-height:45px; gap:7px; }
+html[data-overview-size="compact"] .overview-repair { padding-left:18px; }
+html[data-overview-size="compact"] .overview-repair-actions { margin-top:12px; gap:6px; }
+html[data-overview-size="compact"] .overview-repair-actions .btn { min-height:30px; font-size:var(--text-caption); padding:5px 8px; }
+html[data-overview-size="compact"] .overview-gate-footer { margin-top:13px; padding-top:9px; }
+@container(max-width:600px) { .overview-gate-body { gap:14px; } .overview-gate-footer p { max-width:70%; } }
