@@ -1,0 +1,24 @@
+/* 0.1.10 增量只布局维护内容，材质和按钮消费现有组件令牌。 */
+.mnt-status { margin-left:auto; font-size:var(--text-label); color:var(--muted); white-space:normal; }
+#card-overview-upgrade .mod-status>span { display:flex; gap:6px; flex-wrap:wrap; align-items:baseline; }
+#card-overview-upgrade .mod-actions { flex-wrap:wrap; }
+.mnt-policy { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin:16px 0 10px; }
+.mnt-policy label { display:flex; flex:1 1 130px; flex-direction:column; gap:6px; font-size:var(--text-label); }
+.mnt-policy input,.mnt-policy select { width:100%; min-width:0; }
+.mnt-policy [role="alert"] { flex-basis:100%; color:var(--red); }
+.mnt-path { font-size:var(--text-label); overflow-wrap:anywhere; color:var(--muted); }
+.mnt-note { font-size:var(--text-label); line-height:1.65; color:var(--muted); margin:12px 0; }
+.mnt-note.danger,.mnt-status.danger { color:var(--red); }
+.mnt-backup-list { list-style:none; padding:0; margin:18px 0 0; }
+.mnt-backup-list li { display:flex; gap:12px; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:12px 0; border-top:1px solid var(--border); }
+.mnt-backup-list li>div:first-child { min-width:0; flex:1 1 180px; }
+.mnt-backup-list span { display:block; font-size:var(--text-label); color:var(--muted); margin-top:5px; }
+.mnt-update-options { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+.mnt-update-option p { color:var(--muted); font-size:var(--text-label); }
+.mnt-registry details { padding:12px 0; border-top:1px solid var(--border); }
+.mnt-registry summary { display:flex; flex-wrap:wrap; gap:8px; cursor:pointer; }
+.mnt-registry summary span { color:var(--muted); font-size:var(--text-label); }
+.mnt-registry dl { display:grid; grid-template-columns:minmax(90px,120px) minmax(0,1fr); gap:8px 12px; font-size:var(--text-label); line-height:1.6; }
+.mnt-registry dt { color:var(--muted); }.mnt-registry dd { margin:0; overflow-wrap:anywhere; }
+.mnt-sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); }
+@media(max-width:700px) {.mnt-update-options {grid-template-columns:1fr;} .mnt-registry dl {grid-template-columns:1fr;} }

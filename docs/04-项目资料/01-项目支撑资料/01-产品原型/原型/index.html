@@ -1681,6 +1681,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="sync-config.css?v=3">
 <link rel="stylesheet" href="windows-window.css">
 <link rel="stylesheet" href="annotation-cards.css?v=31">
+<link rel="stylesheet" href="maintenance-ui.css?v=1">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -1847,17 +1848,17 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       <div class="mods" id="mods">
         <article class="card mod" data-mod-section="upgrade" id="card-overview-upgrade">
           <div class="mod-head">
-            <div class="proto-annotation" id="ann-ov-upgrade" data-annotation-number="03" data-annotation-title="升级入口未接真实更新源" data-annotation-category="实现边界 · 概览">
-              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 03：升级入口未接真实更新源"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">03</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p>检查更新、升级前备份与升级设置均为演示交互；版本号是写死的示例数据，真实升级走官方发布引导，不在管理器内静默更新。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+            <div class="proto-annotation" id="ann-ov-upgrade" data-annotation-number="03" data-annotation-title="0.1.10 共享升级流程（原型）" data-annotation-category="实现边界 · 概览">
+              <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 03：0.1.10 共享升级流程（原型）"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">03</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
+              <div class="annotation-source" hidden><p>0.1.10 候选：概览与设置共用检查、版本与事务状态，管理器和运行时分开确认。全部为内存示例，不读取更新源或执行真实更新。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>版本升级</h3>
             <span class="tag">可用</span>
             <span class="mod-go" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></span>
           </div>
           <div class="mod-status">
-            <span>升级状态 <b class="warning">可升级</b></span>
-            <span>最新版本 <b>2.51.0</b></span>
+            <span>管理器 <b>尚未检查</b></span>
+            <span>运行时 <b>尚未检查</b></span>
           </div>
           <div class="mod-actions">
             <button class="btn primary" data-prototype-action="check-update">检查更新</button>
@@ -2464,67 +2465,11 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
       <section class="settings-panel" id="settings-backup">
         <div class="proto-annotation" id="ann-settings-backup" data-annotation-number="01" data-annotation-title="备份触发与保留" data-annotation-category="行为约定 · 设置 · 数据与备份">
           <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：备份触发与保留"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-          <div class="annotation-source" hidden><p>升级、导入、同步覆盖前自动备份；保留份数与校验算法在此集中选择。超出的备份只能由用户显式清理，不自动删除。</p><div class="annotation-footer">行为约定 · 设置 · 数据与备份</div></div>
+          <div class="annotation-source" hidden><p>0.1.10 候选：本页明确管理器偏好备份范围。数量与天数取保留并集，固定项不参与轮换计数。默认手动清理，可演示新备份成功后自动轮换；方案待评审，未实现生产恢复与固定保留。</p><div class="annotation-footer">行为约定 · 设置 · 数据与备份</div></div>
         </div>
         <article class="card" id="card-backup-data">
-          <div class="card-head">
-            <div>
-              <h2>数据与备份</h2>
-              <p>备份边界基于安装配置里的数据目录。</p>
-            </div>
-            <button class="btn ghost" data-settings-section="installation">打开安装配置</button>
-          </div>
-          <div class="setting-list">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">升级前自动备份</div>
-                <div class="setting-desc">进入官方升级引导前先生成可定位备份。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="升级前自动备份"></button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">导入前自动备份</div>
-                <div class="setting-desc">导入校验通过后先备份当前配置，再进入最终确认。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="导入前自动备份"></button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">同步覆盖前自动备份</div>
-                <div class="setting-desc">任何覆盖动作都保留被覆盖侧的可恢复历史。</div>
-              </div>
-              <div class="controls"><button class="toggle" type="button" role="switch" aria-checked="true" data-prototype-action="mock-setting" aria-label="同步覆盖前自动备份"></button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">备份保留策略</div>
-                <div class="setting-desc">保留最近 10 份；超出的备份必须由用户显式清理。</div>
-              </div>
-              <div class="controls"><div class="select" data-select>
-              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="备份保留策略"><span class="select-value">最近 10 份</span></button>
-              <div class="select-menu" role="listbox" aria-label="备份保留策略">
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">最近 5 份</button>
-          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">最近 10 份</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">最近 20 份</button>
-              </div>
-            </div></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">备份完整性校验</div>
-                <div class="setting-desc">生成备份后写入校验摘要；恢复前先校验。</div>
-              </div>
-              <div class="controls"><div class="select" data-select>
-              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="备份完整性校验"><span class="select-value">SHA-256</span></button>
-              <div class="select-menu" role="listbox" aria-label="备份完整性校验">
-          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">SHA-256</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">SHA-512</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">BLAKE3</button>
-              </div>
-            </div></div>
-            </div>
-          </div>
+          <div class="card-head"><h2>数据与备份</h2></div>
+          <p class="mnt-note">0.1.10 维护原型加载中；本页需启用 JavaScript。</p>
         </article>
       </section>
 
@@ -2864,84 +2809,16 @@ ocx update</code></pre>
       <section class="settings-panel" id="settings-upgrade">
         <div class="proto-annotation" id="ann-settings-upgrade" data-annotation-number="01" data-annotation-title="两条升级链路" data-annotation-category="行为约定 · 设置 · 版本升级">
           <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：两条升级链路"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-          <div class="annotation-source" hidden><p>OpenCodex 走检查 → 备份 → 官方引导，失败只给建议；桌面管理器自更新独立走下载校验后重启，不停止 OpenCodex 代理。</p><div class="annotation-footer">行为约定 · 设置 · 版本升级</div></div>
+          <div class="annotation-source" hidden><p>0.1.10 候选：两类更新分别检查、查看候选及来源、确认后演示备份与受控更新。失败保留当前版本，取消不会继续执行；版本、路径与进度均为示例。</p><div class="annotation-footer">行为约定 · 设置 · 版本升级</div></div>
         </div>
         <article class="card" id="card-upgrade-official">
-          <div class="card-head">
-            <div>
-              <h2>OpenCodex 版本</h2>
-              <p>官方 npm 包与官方面板；桌面管理器不接管更新事务，只做升级前备份与官方引导。</p>
-            </div>
-          </div>
-          <div class="setting-list">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">当前版本</div>
-                <div class="setting-desc">v2.50.0 · npm global · @bitkyc08/opencodex</div>
-              </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="check-update">检查更新</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">升级前备份</div>
-                <div class="setting-desc">先备份当前配置与数据目录状态，再进入官方升级引导。</div>
-              </div>
-              <div class="controls"><button class="btn" data-prototype-action="preupdate-backup">生成备份</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">官方升级引导</div>
-                <div class="setting-desc">只展示并引导 <code>ocx update</code>；不重写更新事务。</div>
-              </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="official-update">打开引导</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">失败后建议</div>
-                <div class="setting-desc">展示备份位置、错误摘要和建议恢复动作。</div>
-              </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="update-failure-help">查看建议</button></div>
-            </div>
-          </div>
+          <div class="card-head"><h2>OpenCodex 运行时</h2></div>
+          <p class="mnt-note">0.1.10 维护原型加载中；本页需启用 JavaScript。</p>
         </article>
 
         <article class="card" id="card-upgrade-manager">
-          <div class="card-head">
-            <div>
-              <h2>桌面管理器版本</h2>
-              <p>OpenCodeX-Desktop 自身的应用更新；下载校验后重启应用生效，不停止 OpenCodex 代理。</p>
-            </div>
-          </div>
-          <div class="setting-list">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">当前版本</div>
-                <div class="setting-desc">v0.1.0 · macOS · 发布于 2026-09-08</div>
-              </div>
-              <div class="controls"><button class="btn ghost" data-prototype-action="check-app-update">检查应用更新</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">可用更新</div>
-                <div class="setting-desc">v0.1.1 · 面板主题跟随外壳、通知已读态修复 · 2026-09-12</div>
-              </div>
-              <div class="controls"><button class="btn primary" data-prototype-action="install-app-update">下载并重启</button></div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">更新通道与频率</div>
-                <div class="setting-desc">stable · 每 24 小时自动检查；发现更新只发通知，不打断当前操作。</div>
-              </div>
-              <div class="controls"><div class="select" data-select>
-              <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="应用更新通道与频率"><span class="select-value">stable · 每 24 小时</span></button>
-              <div class="select-menu" role="listbox" aria-label="应用更新通道与频率">
-          <button class="select-option selected" type="button" role="option" tabindex="-1" aria-selected="true">stable · 每 24 小时</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">beta · 每 6 小时</button>
-          <button class="select-option" type="button" role="option" tabindex="-1" aria-selected="false">手动检查</button>
-              </div>
-            </div></div>
-            </div>
-          </div>
+          <div class="card-head"><h2>桌面管理器版本</h2></div>
+          <p class="mnt-note">0.1.10 维护原型加载中；本页需启用 JavaScript。</p>
         </article>
       </section>
 
@@ -5948,13 +5825,13 @@ document.addEventListener('click',event=>{
   }else if(action==='open-sync-settings'){
     setRoute('settings');showSettingsSection('sync');
   }else if(action==='check-update'){
-    toast('原型提示：不会访问 npm registry，也不执行更新。');
+    window.maintenancePrototype?.check('runtime');
   }else if(action==='preupdate-backup'){
-    openModal('生成升级前备份','备份会写入数据目录的 backups 分区，并生成完整性摘要。','继续',()=>toast('原型拦截：不会生成真实备份。'));
+    window.maintenancePrototype?.backupDialog();
   }else if(action==='official-update'){
-    toast('原型提示：真实实现只引导官方 ocx update。');
+    window.maintenancePrototype?.updates();
   }else if(action==='update-failure-help'){
-    toast('原型提示：会展示备份位置、错误摘要和建议恢复动作。');
+    window.maintenancePrototype?.updates();
   }else if(action==='cli-toggle'){
     const cliSwitch=actionTarget;
     const setCli=(enabled)=>{
@@ -6064,6 +5941,21 @@ let notifications=[
   {id:'env-node-missing',kind:'warning',cat:'system',title:'未检测到 Node.js',detail:'OpenCodex 运行依赖 Node.js；请安装后重新探测。',time:'09:58',action:'settings-installation',read:false,resolved:false,deleted:false,dedupe:'env:node-missing'},
   {id:'auto-clean',kind:'info',cat:'system',title:'通知自动清理已保留 30 天',detail:'已读通知按保留期自动归档；未读与 danger 通知不会被自动删除。',time:'09:40',action:'settings-cleanup',read:true,resolved:true,resolvedAt:'09:40',deleted:false,dedupe:'policy:auto-clean'}
 ];
+// 维护原型事件投影到既有通知中心；已读 / 解决 / 软删除保持原有语义。
+window.maintenanceNotificationBridge=(items, registry)=>{
+  items.forEach(entry=>{
+    const spec=registry.find(item=>item.id===entry.id);
+    if(!spec?.delivery.includes('center')) return;
+    const id='maintenance:'+entry.uid;
+    const old=notifications.find(item=>item.id===id);
+    if(old){old.resolved=old.resolved||entry.resolved;old.detail=spec.trigger+' · 累计 '+entry.occurrences+' 次（内存示例）';return;}
+    notifications.unshift({id,kind:entry.severity,cat:entry.category,title:spec.trigger,
+      detail:spec.id+' · '+entry.object+' · 内存示例；无真实投递',time:'刚刚',
+      action:entry.category==='update'?'upgrade':entry.id.startsWith('backup.')?'settings-backup':'logs',
+      read:false,resolved:entry.resolved,deleted:false,dedupe:entry.key});
+  });
+  renderNotifications();renderNotificationHistory();
+};
 // 通知中心不再提供「未读 / 未解决 / 全部历史」筛选行（用户 2026-09-19 决定取消）；默认展示全部，
 // 三态本身仍保留在数据层与条目标签上（已读 ≠ 已解决）。
 let notificationState='all'; // unread | unresolved | all
@@ -6162,6 +6054,7 @@ function notificationJump(item){
   // 跳转日志必须同时激活「日志历史」Tab，避免落在通知历史里。
   if(item.action==='logs') return ()=>{setRoute('logs');activateDiagTab('logs');};
   if(item.action==='settings-installation') return ()=>openSettingsSection('installation');
+  if(item.action==='settings-backup') return ()=>openSettingsSection('backup');
   if(item.action==='settings-cleanup') return ()=>openSettingsSection('cleanup');
   return null;
 }
@@ -6205,7 +6098,7 @@ function openModal(title,body,confirmText,handler,opts){
   modalTitle.textContent=title;
   // opts.hideNote：只读信息类弹窗不显示「原型演示」脚注（详情内容本身就是演示数据，脚注反而占高度）。
   // 注释便签始终注入：弹窗是原型演示的一部分，所有弹窗（含同步 / 模型配置弹窗）都统一挂通用注释组件，不逐弹窗重复实现。
-  const modalNote='<div class="modal-note-anchor"><div class="proto-annotation" id="ann-modal-demo" data-annotation-number="01" data-annotation-title="弹窗均为演示交互" data-annotation-category="行为约定 · 弹窗"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：弹窗均为演示交互"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>卸载、删除、标记解决等确认动作只演示流程与文案；原型不执行真实卸载或数据删除，确认后立即回置状态。同步与模型配置弹窗同样适用本条说明。</p><div class="annotation-footer">行为约定 · 弹窗</div></div></div></div>';
+  const modalNote='<div class="modal-note-anchor"><div class="proto-annotation" id="ann-modal-demo" data-annotation-number="01" data-annotation-title="弹窗均为演示交互" data-annotation-category="行为约定 · 弹窗"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：弹窗均为演示交互"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>确认动作只演示流程与文案；原型不执行真实命令、文件删除或设置写入。各专题按自身规则保留本页内存状态，刷新后重置。</p><div class="annotation-footer">行为约定 · 弹窗</div></div></div></div>';
   modalBody.innerHTML=body+modalNote+(opts.hideNote?'':'<p class="modal-prototype-note">当前为原型演示；真实实现尚未启用。</p>');
   modalConfirm.textContent=confirmText||'关闭';
   modalConfirm.hidden=!!opts.hideConfirm;
@@ -7550,5 +7443,7 @@ document.addEventListener('scroll',event=>{
 <script src="windows-window.js"></script>
 <script src="prototype-panel.js"></script>
 <script src="annotation-cards.js?v=18"></script>
+<script src="maintenance-state.js?v=1"></script>
+<script src="maintenance-ui.js?v=1"></script>
 </body>
 </html>
