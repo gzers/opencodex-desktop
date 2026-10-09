@@ -1,6 +1,6 @@
 /* 标记与浮层仅底色半透明，文字保留清晰度；不模糊底下内容，不增加布局高度。 */
-:root{--annotation-ink:#6555a4;--annotation-line:#d9d2ed;--annotation-wash:#f6f3fc;--annotation-body:#575263;--annotation-ring:#a695d1;--annotation-glass:rgba(250,248,255,.48)}
-html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--annotation-wash:#2d2935;--annotation-body:#d2cbdd;--annotation-ring:#9982ca;--annotation-glass:rgba(39,35,48,.48)}
+:root{--annotation-ink:#6555a4;--annotation-line:#d9d2ed;--annotation-wash:#f6f3fc;--annotation-body:#575263;--annotation-ring:#a695d1;--annotation-glass:rgba(244,240,252,.82)}
+html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--annotation-wash:#2d2935;--annotation-body:#d2cbdd;--annotation-ring:#9982ca;--annotation-glass:rgba(33,29,42,.84)}
 .annotation-anchor{position:relative}
 .proto-annotation{position:absolute;right:0;top:-12px;z-index:5;width:max-content;height:24px}
 .annotation-marker{display:flex;align-items:center;gap:5px;height:24px;padding:0 7px;border:1px solid var(--annotation-line);border-radius:7px;background:color-mix(in srgb,var(--annotation-wash) 36%,transparent);color:var(--annotation-ink);font:inherit;font-size:10px;cursor:pointer;box-shadow:0 2px 6px #18102c08}
