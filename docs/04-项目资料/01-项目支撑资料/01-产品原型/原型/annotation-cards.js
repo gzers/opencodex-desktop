@@ -63,11 +63,15 @@
   function position() {
     if (!active || popover.hidden) return;
     const rect = active.getBoundingClientRect();
-    const host = active.closest('#modalBody') || main;
-    const bounds = host.getBoundingClientRect();
+    // 托盘等路由 .main 会整体隐藏（rect 归零），此时退回视口作为横向/纵向边界。
+    const hostEl = active.closest('#modalBody') || main;
+    const host = hostEl.getClientRects().length > 0 ? hostEl : null;
+    const bounds = host ? host.getBoundingClientRect() : {left: 0, right: innerWidth, top: 0, bottom: innerHeight};
+    // 横向仍贴正文容器；纵向以视口为准，标记在窗口外壳上缘被裁剪时浮层仍可显示。
     const left = Math.max(10, bounds.left + 12), right = Math.min(innerWidth - 10, bounds.right - 12);
-    const top = Math.max(10, bounds.top + 12), bottom = Math.min(innerHeight - 10, bounds.bottom - 12);
-    if (rect.bottom < top || rect.top > bottom || rect.right < left || rect.left > right) {
+    const top = 10, bottom = innerHeight - 10;
+    // 标记只要与可视区仍有交集就显示浮层（浮层贴容器边缘夹取），完全出界才隐藏。
+    if (!(rect.bottom > top && rect.top < bottom && rect.right > left && rect.left < right)) {
       popover.style.visibility = 'hidden';
       return;
     }
@@ -75,8 +79,9 @@
     popover.style.width = Math.min(356, right-left)+'px';
     popover.style.maxHeight = Math.max(80, bottom-top)+'px';
     const height = popover.getBoundingClientRect().height;
-    const below = bottom-rect.bottom-10, above = rect.top-top-10;
-    const y = below >= height || below >= above ? rect.bottom+10 : rect.top-height-10;
+    const visibleRect = { top: Math.max(rect.top, top), bottom: Math.min(rect.bottom, bottom) };
+    const below = bottom-visibleRect.bottom-10, above = visibleRect.top-top-10;
+    const y = below >= height || below >= above ? Math.min(visibleRect.bottom+10, bottom-height) : visibleRect.top-height-10;
     popover.style.left = Math.max(left, Math.min(rect.right-popover.offsetWidth, right-popover.offsetWidth))+'px';
     popover.style.top = Math.max(top, Math.min(y, bottom-height))+'px';
   }
@@ -152,16 +157,30 @@
     }
     open(node);
     node.classList.add('is-located');
-    // 只滚动正文容器。scrollIntoView 会连 overflow:hidden 的窗口外壳一起滚走。
-    let scroller=node.parentElement;
-    while (scroller && scroller!==document.body) {
-      if (/(auto|scroll)/.test(getComputedStyle(scroller).overflowY)) break;
-      scroller=scroller.parentElement;
+    // 逐层选择真正能覆盖目标位置的滚动容器：scrollIntoView 会连 overflow:hidden 的窗口外壳一起滚走，
+    // 单一容器又可能滚不出标记（如工具条标记在 .main 顶上方，需 window 配合）。
+    const candidates=[];
+    for (let p=node.parentElement; p && p!==document.body; p=p.parentElement) {
+      const cs=getComputedStyle(p);
+      if (/(auto|scroll)/.test(cs.overflowY) && p.scrollHeight>p.clientHeight) candidates.push(p);
     }
-    if (scroller && scroller!==document.body) {
+    candidates.push(document.scrollingElement||document.documentElement);
+    const targetRect0=node.getBoundingClientRect();
+    const goal = (() => {
+      const mTop = Math.max(24, Math.min(innerHeight-48, (innerHeight-targetRect0.height)/2));
+      return targetRect0.top - mTop; // 需要向回滚的像素（正数向下滚视口，负数向上）
+    })();
+    let scroller=null, best={cost:Infinity, delta:0};
+    for (const c of candidates) {
+      const maxScroll=Math.max(0, c.scrollHeight-c.clientHeight);
+      const delta=Math.max(-c.scrollTop, Math.min(goal, maxScroll-c.scrollTop));
+      const cost=Math.abs(goal-delta);
+      if (cost<best.cost) {best={cost, delta}; scroller=c;}
+      if (cost===0) break;
+    }
+    if (scroller) {
       const targetRect=node.getBoundingClientRect(), hostRect=scroller.getBoundingClientRect();
-      const top=scroller.scrollTop+targetRect.top-hostRect.top-Math.max(24,(scroller.clientHeight-targetRect.height)/2);
-      scroller.scrollTo({top:Math.max(0,top),behavior:'instant'});
+      scroller.scrollTo({top: scroller.scrollTop + best.delta, behavior: 'instant'});
     }
     position();
     popover.focus({preventScroll:true});

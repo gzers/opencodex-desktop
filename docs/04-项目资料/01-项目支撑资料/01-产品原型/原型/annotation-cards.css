@@ -2,7 +2,8 @@
 :root{--annotation-ink:#6555a4;--annotation-line:#d9d2ed;--annotation-wash:#f6f3fc;--annotation-body:#575263;--annotation-ring:#a695d1;--annotation-glass:rgba(255,255,255,.94)}
 html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--annotation-wash:#2d2935;--annotation-body:#d2cbdd;--annotation-ring:#9982ca;--annotation-glass:rgba(30,26,38,.94)}
 .annotation-anchor{position:relative}
-.proto-annotation{position:absolute;right:0;top:-12px;z-index:5;width:max-content;height:24px}
+/* 标记顶层展示：高于页内覆盖层（更多菜单 z-20、详情层 z-3 等），与弹窗遮罩同级；系统对话框 / toast 保持在其上。 */
+.proto-annotation{position:absolute;right:0;top:-12px;z-index:30;width:max-content;height:24px}
 .annotation-marker{display:flex;align-items:center;gap:5px;height:24px;padding:0 7px;border:1px solid var(--annotation-line);border-radius:7px;background:color-mix(in srgb,var(--annotation-wash) 36%,transparent);color:var(--annotation-ink);font:inherit;font-size:10px;cursor:pointer;box-shadow:0 2px 6px #18102c08}
 .annotation-marker svg,.annotation-label svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .annotation-number{font-size:10px;font-weight:550;color:var(--annotation-ink);font-variant-numeric:tabular-nums;opacity:.8}
@@ -59,7 +60,8 @@ html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--ann
 .ap-sync-row strong{font-size:12px;font-weight:600}
 .ap-sync-row p{margin:5px 0 0;font-size:11px;color:var(--muted);line-height:1.6}
 .ap-sync-row .proto-annotation{right:12px}
-.ap-navigation .proto-annotation{top:-2px}
+/* 打样页导航卡的标记挂在卡片自身：卡头较窄，挂 section-head 会越出正文滚出视口。 */
+.ap-navigation>.proto-annotation{right:16px;top:16px}
 .ap-footnote{margin:0;font-size:11px;color:var(--muted);line-height:1.6}
 .annotation-search{display:flex;flex-direction:column;gap:7px;color:var(--pctl-sub);font-size:11px}
 .annotation-search input{width:100%;min-height:34px;padding:7px 10px;border:1px solid var(--pctl-bd);border-radius:8px;background:var(--pctl-bg);color:var(--text);font:inherit;font-size:12px}
@@ -83,8 +85,11 @@ html[data-route="annotations"] #protoStdCards{display:none}
 .route-section>.settings-tabs>.proto-annotation,.route-section>.diag-tabs>.proto-annotation,.route-section>.ext-tabs>.proto-annotation,.mp-toolbar>.settings-tabs>.proto-annotation{right:4px;top:-26px}
 .ovb-actions,.recent-events-head,.mod-head,.sx-connection,.sx-scope,.sx-secrets{position:relative}
 .annotation-anchor{position:relative}
-#modalBody>.modal-note-anchor{position:sticky;top:0;z-index:5;height:0}
+#modalBody>.modal-note-anchor{position:sticky;top:0;z-index:30;height:0}
 #modalBody>.modal-note-anchor>.proto-annotation{right:0;top:-30px}
+/* 卡内标记（Doctor 等）与 Tab 行标记同位叠放时，卡内标记属于更具体对象，抬到其上保证可点。 */
+.card .proto-annotation{z-index:31}
+html[data-route="logs"] .route-section>.proto-annotation{z-index:32}
 @media(max-width:700px){.ap-specimen{padding:16px}.ap-intro h2{font-size:21px}.ap-form-row{grid-template-columns:100px minmax(0,1fr);gap:10px}.ap-sync-row{align-items:flex-start}.ap-section-head{align-items:flex-start}.ap-section-head>span{text-align:right}}
 /* 正式页面注释标记：模型配置工具条与同步页侧栏挂载点。 */
 .mp-toolbar .settings-tabs{position:relative}
