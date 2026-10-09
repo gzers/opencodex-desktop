@@ -1,3 +1,4 @@
+import {prototypeEntry} from '../../../01-需求分析/05-原型/原型/qa/prototype-location.mjs';
 // 静态 mock QA；使用已有 Playwright/Chromium，不安装依赖、不调用原生接口。
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
@@ -15,7 +16,7 @@ const {chromium}=createRequire(pw+'/')('playwright-core');
 const browser=await chromium.launch({executablePath:exe});
 const page=await browser.newPage({viewport:{width:1692,height:916}});
 const errors=[],results=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});page.setDefaultTimeout(5000);
-const entry=pathToFileURL(process.env.PROTOTYPE_ENTRY||path.join(root,'docs/04-项目资料/03-项目协作资料/03-共享原型/原型/index.html')).href;
+const entry=pathToFileURL(process.env.PROTOTYPE_ENTRY||prototypeEntry).href;
 const evidence=process.env.EVIDENCE_DIR||path.join(root,'.adg/evidence/MNT-OPENCODEX-DESKTOP-20261008-01/replay');fs.mkdirSync(evidence,{recursive:true});
 const shots=process.env.SHOTS_DIR||path.join(evidence,'截图');fs.mkdirSync(shots,{recursive:true});
 const choose=(key,value)=>page.locator('[data-win-key="'+key+'"][data-win-value="'+value+'"]').click();

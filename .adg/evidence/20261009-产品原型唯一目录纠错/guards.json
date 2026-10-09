@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-09",
+  "boundary": "只读默认行为、已有报告防覆盖及临时目录负向复验；不在实际仓库重建旧目录",
+  "results": [
+    {
+      "name": "资产检查拒绝覆盖已有报告",
+      "status": "PASS",
+      "detail": {
+        "exitCode": 2,
+        "stderr": "usage: verify_assets.py [-h] [--date DATE] [--report REPORT]\nverify_assets.py: error: 已有报告拒绝覆盖，请指定新的报告路径\n"
+      }
+    },
+    {
+      "name": "默认资产检查只读并通过",
+      "status": "PASS",
+      "detail": {
+        "exitCode": 0,
+        "summary": "TOTAL 62 / FAIL 0",
+        "baselineChanges": []
+      }
+    },
+    {
+      "name": "临时正常目录允许定位",
+      "status": "PASS",
+      "detail": {
+        "exitCode": 0,
+        "stderr": ""
+      }
+    },
+    {
+      "name": "临时双目录被定位模块拒绝",
+      "status": "PASS",
+      "detail": {
+        "exitCode": 1,
+        "stderr": "file:///private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/opencodex-location-guard-d3_8_buf/qa/prototype-location.mjs:9\nif(fs.existsSync(retiredRoot))throw Error('产品原型目录必须唯一：请清理旧共享原型目录');\n                                    ^\n\nError: 产品原型目录必须唯一：请清理旧共享原型目录\n    at file:///private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/opencodex-location-guard-d3_8_buf/qa/prototype-location.mjs:9:37\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v26.8.1\n"
+      }
+    },
+    {
+      "name": "临时缺失主入口被定位模块拒绝",
+      "status": "PASS",
+      "detail": {
+        "exitCode": 1,
+        "stderr": "file:///private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/opencodex-location-guard-d3_8_buf/qa/prototype-location.mjs:11\nif(!fs.existsSync(prototypeEntry))throw Error('产品原型主入口不存在');\n                                        ^\n\nError: 产品原型主入口不存在\n    at file:///private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/opencodex-location-guard-d3_8_buf/qa/prototype-location.mjs:11:41\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v26.8.1\n"
+      }
+    }
+  ]
+}

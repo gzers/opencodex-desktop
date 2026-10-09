@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-09",
+  "prototypeRoot": "docs/04-项目资料/01-项目支撑资料/01-产品原型",
+  "runtime": {
+    "playwright": "/Users/ezio/.npm/_npx/2334a3ea0ef73d73/node_modules/playwright-core",
+    "chromium": "/Users/ezio/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell"
+  },
+  "boundary": "目录与入口静态浏览器复验；无生产 API / 配置写入；Windows 仅网页模拟，不是原生验收；不覆盖历史证据",
+  "results": [
+    {
+      "name": "产品入口概览及工具板可用，共用 CSS / JS 已加载",
+      "status": "PASS"
+    },
+    {
+      "name": "模型渠道列表及模型模版 Tab 可达",
+      "status": "PASS"
+    },
+    {
+      "name": "文件同步及 WebDAV Tab 可达，工具板随上下文切换",
+      "status": "PASS"
+    },
+    {
+      "name": "设置入口可达",
+      "status": "PASS"
+    },
+    {
+      "name": "托盘入口可达",
+      "status": "PASS"
+    },
+    {
+      "name": "Windows 专题、模拟最大化与退出可用",
+      "status": "PASS"
+    },
+    {
+      "name": "来源兼容跳转保留 query / hash ?theme=dark&probe=directory#models",
+      "status": "PASS"
+    },
+    {
+      "name": "来源兼容跳转保留 query / hash ?topic=windows&probe=directory#models",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-13-前置条件引导/index.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-18-通知与反馈专题/index.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-28-Logo本体形变/glass.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-28-Logo本体形变/index.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-28-Logo本体形变/layout-options.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-28-Logo本体形变/overview.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-28-状态形象动画/index.html",
+      "status": "PASS"
+    },
+    {
+      "name": "历史候选共用样式可加载 2026-09-28-状态形象动画/logo.html",
+      "status": "PASS"
+    },
+    {
+      "name": "无脚本 / 资源错误、旧目录请求或外部网络请求",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "retiredRequests": [],
+  "externalRequests": []
+}

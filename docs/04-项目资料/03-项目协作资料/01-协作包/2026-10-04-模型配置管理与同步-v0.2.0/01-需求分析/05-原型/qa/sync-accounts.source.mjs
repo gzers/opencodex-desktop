@@ -1,3 +1,4 @@
+import {repoRoot as root, prototypeRoot} from '../../../../2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/原型/qa/prototype-location.mjs';
 // 实际同步模块的内存流程检查。最小 DOM 替身，无浏览器、网络或真实凭据。
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,8 +7,7 @@ import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 const here=path.dirname(fileURLToPath(import.meta.url));
-let root=here;while(!fs.existsSync(path.join(root,'.git')))root=path.dirname(root);
-const source=path.join(root,'docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js');
+const source=path.join(prototypeRoot,'原型/sync-config.js');
 const code=fs.readFileSync(source,'utf8');
 function make(){
  const events={},hostEvents={};let handler=null,context;

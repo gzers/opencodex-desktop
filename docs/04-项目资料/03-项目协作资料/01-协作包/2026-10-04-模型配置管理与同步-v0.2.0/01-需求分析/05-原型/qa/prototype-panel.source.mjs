@@ -1,3 +1,4 @@
+import {repoRoot as root, prototypeRoot} from '../../../../2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/原型/qa/prototype-location.mjs';
 // 执行实际工具分区与锚点脚本，使用主原型侧栏标记和最小 DOM；不启动浏览器。
 import fs from 'node:fs';
 import path from 'node:path';
@@ -6,8 +7,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 const here=path.dirname(fileURLToPath(import.meta.url));
-let root=here;while(!fs.existsSync(path.join(root,'.git')))root=path.dirname(root);
-const base=path.join(root,'docs/04-项目资料/01-项目支撑资料/01-产品原型');
+const base=prototypeRoot;
 const files=['原型/prototype-panel.js','proto-controls.js','原型/index.html'];
 const [panel,anchors,html]=files.map(file=>fs.readFileSync(path.join(base,file),'utf8'));
 function make(){

@@ -3100,7 +3100,6 @@ ocx update</code></pre>
       <a href="#ctl-tools">工具</a>
       <a href="#ctl-mock">本页演示</a>
     </nav>
-    <a class="pctl-back" id="prototypeRouteLink" href="#tray">打开托盘原型 →</a>
     </header>
 
     <details id="protoCommon" class="proto-group" aria-label="全局评审条件">
@@ -3862,12 +3861,6 @@ const routeNotes={
 const prototypeNoteFallback=routeNotes.overview;
 function renderPrototypeNote(route){
   const note=routeNotes[route]||routeNotes[route.startsWith('settings-')?'settings':route.startsWith('ext-')?'ext-skills':'overview']||prototypeNoteFallback;
-  const prototypeRouteLink=document.getElementById('prototypeRouteLink');
-  if(prototypeRouteLink){
-    const isTray=route==='tray';
-    prototypeRouteLink.href=isTray?'#overview':'#tray';
-    prototypeRouteLink.textContent=isTray?'打开主界面 →':'打开托盘原型 →';
-  }
   const title=document.getElementById('protoNoteTitle');
   const body=document.getElementById('protoNote');
   const list=document.getElementById('protoButtonNotes');

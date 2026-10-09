@@ -1,3 +1,4 @@
+import {repoRoot as root, prototypeRoot} from '../../../../2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/原型/qa/prototype-location.mjs';
 /* Node VM + 最小 DOM 行为 stub；无浏览器 / CSS 引擎 / 网络，不作视觉或真实焦点验收。 */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -5,8 +6,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
 const here=path.dirname(fileURLToPath(import.meta.url));
-const root=path.resolve(here,'../../../../../../../../');
-const dir=path.join(root,'docs/04-项目资料/03-项目协作资料/03-共享原型/原型');
+const dir=path.join(prototypeRoot,'原型');
 const hooks={},windowHooks={},pending=[];
 let observer;
 class FakeEvent{

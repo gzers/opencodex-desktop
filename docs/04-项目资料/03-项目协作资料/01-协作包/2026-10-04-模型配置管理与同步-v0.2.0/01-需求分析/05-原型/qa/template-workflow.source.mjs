@@ -1,3 +1,4 @@
+import {repoRoot as root, prototypeRoot} from '../../../../2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/原型/qa/prototype-location.mjs';
 /* 源码级渲染/状态核对。无浏览器、布局引擎、网络或运行文件写入；不替代视觉 QA。 */
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -5,8 +6,7 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const here=path.dirname(fileURLToPath(import.meta.url));
-const root=path.resolve(here,'../../../../../../../../');
-const source=path.join(root,'docs/04-项目资料/03-项目协作资料/03-共享原型/原型/model-config.js');
+const source=path.join(prototypeRoot,'原型/model-config.js');
 const sectionNames=['basic','match','common','variants','sources'];
 function make(){
 const nodes=new Map(), listeners={}, timers=[];

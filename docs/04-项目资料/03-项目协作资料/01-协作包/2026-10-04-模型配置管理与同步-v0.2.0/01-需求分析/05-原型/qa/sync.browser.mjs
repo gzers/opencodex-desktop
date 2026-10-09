@@ -1,3 +1,4 @@
+import {repoRoot as root, prototypeRoot} from '../../../../2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型/原型/qa/prototype-location.mjs';
 // 原型 QA：只访问静态本机 HTML，mock 不连接渠道或写入运行配置。
 // node 本文件；可用 PLAYWRIGHT_CORE / CHROMIUM_EXECUTABLE 指定既有运行环境。
 import { createRequire } from 'node:module';
@@ -7,8 +8,7 @@ import os from 'node:os';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
 const here=path.dirname(fileURLToPath(import.meta.url));
-let root=here;while(!fs.existsSync(path.join(root,'.git'))){const up=path.dirname(root);if(up===root)throw Error('仓库根不存在');root=up;}
-const shared=path.join(root,'docs/04-项目资料/01-项目支撑资料/01-产品原型');
+const shared=prototypeRoot;
 const old=path.join(root,'docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/01-需求分析/05-原型');
 const npx=path.join(os.homedir(),'.npm/_npx'),cache=path.join(os.homedir(),'Library/Caches/ms-playwright');
 const pw=[process.env.PLAYWRIGHT_CORE,...(fs.existsSync(npx)?fs.readdirSync(npx).map(d=>path.join(npx,d,'node_modules/playwright-core')):[])].find(p=>p&&fs.existsSync(path.join(p,'package.json')));
