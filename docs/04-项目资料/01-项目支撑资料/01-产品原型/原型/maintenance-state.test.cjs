@@ -194,3 +194,34 @@ test('一次性不同事务分别投递；冻结配置不可写，未知任务�
   assert.ok(Object.isFrozen(M.config.events[0].triggers));
   assert.equal(m.requestChecks('data.changed',now+day).length,0);
 });
+test('进度按事务版本保护，拒绝倒退与非法百分比；写入阶段不能取消',()=>{
+  const model=M.create(now);model.setScenario('runtime','available');
+  const u=model.state.updates.runtime, token=model.confirmApply('runtime',u.generation,u.candidate,false,now);
+  assert.equal(model.progress('runtime',token-1,'downloading',20),false);
+  assert.equal(model.progress('runtime',token,'downloading',20),true);
+  assert.equal(model.progress('runtime',token,'downloading',19),false);
+  assert.equal(model.progress('runtime',token,'downloading',101),false);
+  assert.equal(model.progress('runtime',token,'verifying'),true);
+  assert.equal(model.progress('runtime',token,'downloading',100),false);
+  assert.equal(model.progress('runtime',token,'installing'),true);
+  assert.equal(model.cancel('runtime',now),false);
+  assert.equal(model.setUpdatePolicy('beta',now),false);
+  assert.equal(u.phase,'applying');
+  assert.equal(model.finish('runtime',token,'complete',now),true);
+  assert.equal(u.progress.stage,'complete');
+  assert.equal(model.progress('runtime',token,'installing'),false);
+});
+test('管理器安装就绪不改运行版本；待重启不重复查装，重启回读才完成并解除提醒',()=>{
+  const model=M.create(now);model.setScenario('manager','available');
+  const u=model.state.updates.manager,token=model.confirmApply('manager',u.generation,u.candidate,false,now);
+  assert.equal(model.finish('manager',token,'restart-required',now),true);
+  assert.equal(u.current,'0.1.9');
+  assert.equal(model.begin('manager'),null);
+  assert.equal(model.confirmApply('manager',token,u.candidate,false,now),null);
+  assert.ok(model.state.notifications.some(n=>n.id==='update.restart.required'&&!n.resolved));
+  assert.equal(model.restart('runtime',now),false);
+  assert.equal(model.restart('manager',now),true);
+  assert.equal(u.current,'0.1.10');
+  assert.ok(model.state.notifications.filter(n=>n.id==='update.restart.required').every(n=>n.resolved));
+  assert.equal(model.restart('manager',now),false);
+});

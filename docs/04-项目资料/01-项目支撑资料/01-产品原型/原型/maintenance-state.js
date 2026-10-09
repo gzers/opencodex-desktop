@@ -52,15 +52,19 @@
       if (!config.jobs.find(job=>job.target===target)?.triggers.includes(origin)) return null;
       if (!u || ['checking','applying'].includes(u.phase)) return null;
       if (phase==='applying' && u.phase!=='available') return null;
+      if (u.phase==='restart-required') return null;
       u.origin=origin; u.before=u.phase; u.phase=phase; u.generation++;
+      u.progress={stage:phase==='checking'?'checking':'preparing',percent:null};
       return u.generation;
     }
     function finish(target, generation, outcome, time = Date.now()) {
       const u=state.updates[target];
       if (!u || u.generation!==generation || !['checking','applying'].includes(u.phase)) return false;
       const applying=u.phase==='applying';
-      if (!(applying?['complete','failed']:['available','latest','failed']).includes(outcome)) return false;
+      if (!(applying?['complete','failed',...(target==='manager'?['restart-required']:[])]:['available','latest','failed']).includes(outcome)) return false;
       u.phase=outcome;
+      if(outcome==='restart-required') {u.progress={stage:'restart-required',percent:null};emit('update.restart.required',target,time,{origin:'operation.result',revision:u.candidate,channel:state.updatePolicy.channel});return true;}
+      u.progress={stage:outcome,percent:null};
       if (!applying) {
         const job=config.jobs.find(item=>item.target===target), interval=job.intervals[state.updatePolicy.channel]||day;
         if (outcome==='failed') {u.failures++;u.nextDue=time+(job.retryDelays[u.failures-1]||interval);}
@@ -72,7 +76,23 @@
     }
     function cancel(target, time=Date.now()) {
       const u=state.updates[target];
-      if (u && ['checking','applying'].includes(u.phase)) {u.phase=u.before||'idle'; u.generation++;u.nextDue=time+300000;emit('update.cancelled',target,time,{operationId:target+':'+u.generation});}
+      if(u?.phase==='applying'&&u.progress?.stage==='installing')return false;
+      if (u && ['checking','applying'].includes(u.phase)) {u.phase=u.before||'idle';u.progress={stage:'cancelled',percent:null}; u.generation++;u.nextDue=time+300000;emit('update.cancelled',target,time,{operationId:target+':'+u.generation});}
+    }
+    function progress(target,generation,stage,percent=null) {
+      const u=state.updates[target], stages=['preparing','downloading','verifying','installing'];
+      if(!u||u.phase!=='applying'||u.generation!==generation||!stages.includes(stage))return false;
+      if(stages.indexOf(stage)<stages.indexOf(u.progress?.stage))return false;
+      if(percent!==null&&(!Number.isFinite(percent)||percent<0||percent>100))return false;
+      if(stage==='downloading'&&u.progress.stage===stage&&percent!==null&&u.progress.percent!==null&&percent<u.progress.percent)return false;
+      u.progress={stage,percent:stage==='downloading'?percent:null};return true;
+    }
+    function restart(target,time=Date.now()) {
+      const u=state.updates[target];
+      if(target!=='manager'||u.phase!=='restart-required')return false;
+      // 仅模拟重启后的版本回读；等待重启时不能提前改当前版本。
+      u.current=u.candidate;u.phase='complete';u.progress={stage:'complete',percent:null};
+      emit('update.complete',target,time,{origin:'operation.result',revision:u.candidate,operationId:target+':'+u.generation});return true;
     }
     function requestChecks(origin, time=Date.now()) {
       if (!Object.hasOwn(config.triggers,origin)) throw new Error('未注册触发源：'+origin);
@@ -87,6 +107,7 @@
     }
     function setUpdatePolicy(channel,time=Date.now()) {
       if (!['stable','beta','manual'].includes(channel)) return false;
+      if(Object.values(state.updates).some(u=>u.phase==='restart-required'||(u.phase==='applying'&&u.progress?.stage==='installing')))return false;
       state.updatePolicy={channel,checkHours:channel==='stable'?24:channel==='beta'?6:0};
       for(const [target,u] of Object.entries(state.updates)) {
         cancel(target,time);u.generation++;u.phase='idle';u.lastChecked=null;u.failures=0;u.nextDue=time;
@@ -136,7 +157,7 @@
       item.pinned=wasPinned;
       emit('backup.restored', 'preferences', time); return true;
     }
-    return {state, emit, resolve, begin, finish, cancel, requestChecks, setUpdatePolicy, confirmApply, setScenario, setPolicy, clean, backup, pin, restore};
+    return {state, emit, resolve, begin, finish, cancel, progress, restart, requestChecks, setUpdatePolicy, confirmApply, setScenario, setPolicy, clean, backup, pin, restore};
   }
   return {create, registry, config, definitions, cleanupCandidates};
 });
