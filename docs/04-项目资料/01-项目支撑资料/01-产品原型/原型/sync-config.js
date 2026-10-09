@@ -36,7 +36,6 @@
   importFile={kind:importSample,...importSamples[importSample]};
   setText('#sxImportFileName',importFile.file);
   $('#sxUnlockField').hidden=!importFile.encrypted;
-  setText('#sxImportHint',importFile.encrypted?'解密口令是导出配置包时设置的加密口令。当前文件口令：demo-sync。与账户密码、WebDAV 连接密码相互独立。':'读取后先比较配置，再确认应用。');
   $('#sxUnlock').value='';setText('#sxError','');$('#modalConfirm').disabled=false;
   if(importFile.encrypted)$('#sxUnlock').focus();
  }
@@ -88,7 +87,7 @@
     return '<div class="sx-object"><input type="checkbox" data-sx-object="'+esc(x.id)+'" aria-label="选择 '+esc(x.name)+'" '+(ids.has(x.id)?'checked':'')+(dependent?' disabled title="所选渠道需要此精确版本"':'')+'><div><button class="sx-object-name" data-sx="detail" data-id="'+esc(x.id)+'">'+esc(x.name)+'</button><small>'+esc(dependent?'仅精确版本 v'+[...deps.get(x.id)].join(' / v'):x.password?(s.endpointConfigOnly.has(x.id)?'仅配置 · 不含连接密码':'密码随配置同步 · 导入后待启用'):x.summary)+'</small></div><span class="sx-mark '+(included?'secret':x.group==='accounts'&&!x.login?'warn':'')+'">'+mark+'</span></div>';
    }).join(''):'')+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>全部配置</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table" role="region" aria-label="配置对象列表" aria-describedby="sxScopeHelp" tabindex="0"><div class="sx-table-head"><input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.length&&visible.every(x=>ids.has(x.id))?'checked':'')+'><span>配置对象</span><span>范围与凭据</span></div>'+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div><p class="sx-note sx-scope-help" id="sxScopeHelp">勾选账户默认含可迁移登录状态'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。未保存草稿不参与。'+(query?' 搜索仅改变显示，隐藏勾选保留。':'')+'</p>'+sxAnn('01','同步范围为内存演示','范围预设、勾选与搜索均为内存演示；导入 / 导出走确认流程，不读写真实文件。');
+  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>全部配置</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table" role="region" aria-label="配置对象列表" tabindex="0"><div class="sx-table-head"><input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.length&&visible.every(x=>ids.has(x.id))?'checked':'')+'><span>配置对象</span><span>范围与凭据</span></div>'+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','勾选账户默认含可迁移登录状态'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。未保存草稿不参与。搜索仅改变显示，隐藏勾选保留。范围预设、勾选与搜索均为内存演示；导入 / 导出走确认流程，不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
@@ -96,7 +95,7 @@
    const items=catalog.filter(x=>ids.has(x.id)&&match(x)),active=items.some(x=>s[key].has(x.id));
    return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
   }).join('');
-  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户登录状态随账户选择'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据必须加密传输。加密口令独立于 WebDAV 密码，不随包或远端数据保存。':'当前不携带凭据。导入同一身份时保留本机已有凭据，不用空值覆盖。')+'</p>'+sxAnn('02','凭据勾选为演示','凭据选择只演示勾选与加密要求，不读取真实密钥；加密口令只描述规则，不做真实加密。')+'</aside>';
+  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户登录状态随账户选择'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据需加密':'当前不携带凭据')+'</p>'+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。凭据选择只演示勾选与加密要求，不读取真实密钥；加密口令只描述规则，不做真实加密。')+'</aside>';
  }
  function render(resetList=false){
   if(renderedTab){scrolls[renderedTab].list=$('.sx-table',host)?.scrollTop||0;scrolls[renderedTab].secrets=$('.sx-secrets',host)?.scrollTop||0;}
@@ -117,6 +116,8 @@
   if(!dialogKind)originFocus=document.activeElement;
   dialogKind=kind;
   openModal(title,'<div class="sx-dialog">'+body+'<div class="sx-error" id="sxError" role="alert"></div></div>',confirm,handler,{confirmKeepsOpen:true,hideNote:true,...opts});
+  const annotation=$('#ann-modal-demo .annotation-source p');
+  if(opts.annotationText&&annotation)annotation.textContent+=' '+opts.annotationText;
   $('#modal').classList.remove('sx-comparison');$('#modal').classList.add('modal-wide');$('#modalConfirm').disabled=false;
   window.__modalOnClose=()=>{for(const el of [$('.modal-head'),$('.modal-actions')])if(el)el.inert=false;detailOpen=false;detailReturnFocus=null;$('#modal').classList.remove('sx-comparison');dialogKind='';$('#modalBody').innerHTML='';$('#modalConfirm').disabled=false;if(originFocus?.isConnected)originFocus.focus();originFocus=null;};
  }
@@ -259,7 +260,7 @@
  function importStart(context={}){
   importFile=null;
   importPlan={rows:importRows(),selected:new Set(importRows().map(x=>x.id)),choices:{},secrets:false,accountInfoOnly:new Set(),endpointConfigOnly:new Set(),source:'encrypted',modelScope:context.scope||null};
-  showDialog('import','导入配置','<p class="sx-steps"><strong>读取配置包</strong> → 选择与比较 → 应用结果</p><div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">尚未选择文件</span></div></div><label class="sx-field" id="sxUnlockField" hidden><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" aria-describedby="sxImportHint" placeholder="请输入配置包的加密口令"></label><p class="sx-muted" id="sxImportHint">读取后先比较配置，再确认应用。</p>','读取并比较',()=>{
+  showDialog('import','导入配置','<p class="sx-steps"><strong>读取配置包</strong> → 选择与比较 → 应用结果</p><div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">尚未选择文件</span></div></div><label class="sx-field" id="sxUnlockField" hidden><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" aria-describedby="sxError" placeholder="请输入配置包的加密口令"></label>','读取并比较',()=>{
    if(!importFile){setText('#sxError','请先选择配置文件。');return;}
    const kind=importFile.kind;if(kind==='corrupt'){setText('#sxError','容器完整性校验失败。未创建候选、未修改本机配置。');return;}
    if(importFile.encrypted&&$('#sxUnlock').value!=='demo-sync'){setText('#sxError','解密口令不正确，尚未读取内容。');return;}
@@ -270,7 +271,7 @@
    importPlan.selected=new Set(importPlan.rows.filter(x=>!x.removal).map(x=>x.id));
    if(context.scope?.length){const wanted=new Set(context.scope);importPlan.selected=new Set(importPlan.rows.filter(x=>wanted.has(x.id)||x.kind==='template'&&context.scope.some(id=>id.startsWith('channel:'))).map(x=>x.id));}
    comparisonInit(importPlan,'import');importPreview();
-  });
+  },{annotationText:'解密口令是导出配置包时设置的加密口令，与账户密码、WebDAV 连接密码相互独立。加密示例文件的测试口令为 demo-sync；非加密示例无需口令。读取后先比较配置，再确认应用。'});
   $('#modalConfirm').disabled=true;
  }
  function importPreview(){
@@ -286,10 +287,10 @@
   });mountComparison(p);
  }
  function connectionDialog(){
-  showDialog('connection','WebDAV 连接','<p class="sx-muted">WebDAV 配置可通过文件同步迁移，导入后需另行启用。当前示例不发起任何网络请求，请勿填写真实凭据。</p><label class="sx-field"><span>服务地址</span><input class="input" id="sxDavURL" value="'+esc(connection.url)+'"></label><label class="sx-field"><span>独立配置同步目录</span><input class="input" id="sxDavPath" value="'+esc(connection.path)+'"></label><div class="sx-grid"><label class="sx-field"><span>用户名</span><input class="input" id="sxDavUser" value="'+esc(connection.user)+'"></label><label class="sx-field"><span>连接密码（演示占位）</span><input class="input" id="sxDavPassword" type="password" placeholder="本机已保存 · 留空保留"></label></div><div class="sx-info">同步加密口令与连接密码分开。同步包不会覆盖正在使用的连接、定时规则或本机范围。</div><div class="sx-actions">'+btn('测试连接','test-connection')+'</div><p class="sx-muted" id="sxConnectionTest" role="status"></p>','保存连接',()=>{
+  showDialog('connection','WebDAV 连接','<label class="sx-field"><span>服务地址</span><input class="input" id="sxDavURL" value="'+esc(connection.url)+'"></label><label class="sx-field"><span>独立配置同步目录</span><input class="input" id="sxDavPath" value="'+esc(connection.path)+'"></label><div class="sx-grid"><label class="sx-field"><span>用户名</span><input class="input" id="sxDavUser" value="'+esc(connection.user)+'"></label><label class="sx-field"><span>连接密码</span><input class="input" id="sxDavPassword" type="password" placeholder="本机已保存 · 留空保留"></label></div><div class="sx-actions">'+btn('测试连接','test-connection')+'</div><p class="sx-muted" id="sxConnectionTest" role="status"></p>','保存连接',()=>{
    if(!validateConnection())return;
    connection={...connection,url:$('#sxDavURL').value.trim().replace(/\/$/,''),path:$('#sxDavPath').value.trim(),user:$('#sxDavUser').value.trim(),connected:true};closeModal();render();
-  });
+  },{annotationText:'WebDAV 配置可通过文件同步迁移，导入后需另行启用。当前示例不发起任何网络请求，请勿填写真实凭据。同步加密口令与连接密码分开；同步包不会覆盖正在使用的连接、定时规则或本机范围。'});
  }
  function validateConnection(){
   try{const u=new URL($('#sxDavURL').value.trim());if(u.protocol!=='https:'||u.username||u.password||u.search||u.hash)throw Error();if(!$('#sxDavPath').value.startsWith('/')||!$('#sxDavUser').value.trim())throw Error();return true;}catch{setText('#sxError','请填写不含内嵌凭据的 HTTPS 地址、以 / 开头的目录和用户名。');return false;}
