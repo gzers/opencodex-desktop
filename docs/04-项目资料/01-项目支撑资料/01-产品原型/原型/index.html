@@ -220,6 +220,8 @@ button{font:inherit}
 .state-muted::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
 .toolbar{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .btn{min-height:var(--control-md);border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:var(--radius-sm);padding:7px 12px;cursor:pointer;white-space:nowrap;transition:background var(--motion-fast),border-color var(--motion-fast),color var(--motion-fast)}
+/* 组件契约：.btn 统一按钮盒模型（inline-flex 居中）；summary/a 复用 .btn 时覆盖 UA 默认 display，一处修改全站生效 */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;vertical-align:middle;text-align:center;-webkit-appearance:none;appearance:none}
 .btn:hover{border-color:var(--border);background:var(--hover)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.danger{background:var(--panel);border-color:color-mix(in srgb,var(--red) 40%,transparent);color:var(--red)}
