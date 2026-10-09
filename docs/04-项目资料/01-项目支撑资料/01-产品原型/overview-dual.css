@@ -25,33 +25,32 @@ html[data-route="overview"] .topbar { margin-bottom:14px; }
 /* margin 左右 auto：形象块改为整行宽后，副标题仍要相对正文列居中（与软件 `.motion-caption` 的 `margin:5px auto 0` 一致）。 */
 .motion-caption { margin:5px auto 0; min-height:20px; line-height:20px; padding:0 12px; font-size:var(--text-label); color:var(--muted); max-width:600px; }
 #card-overview-status .ovb-actions { grid-row:3; grid-column:1; width:100%; justify-content:center; align-items:center; align-self:start; gap:9px; padding-top:9px; min-height:36px; flex-wrap:nowrap; }
-/* 概览动作按钮：与软件实际效果一致的四颗玻璃实心按钮（半透明分层填充 + 非透明边框 + 分层投影，
-   含顶部内高光）；主操作＝强调玻璃、扁平无棱线，停止＝红纱玻璃。
-   2026-10-04 用户对照软件截图（打开面板 / 停止 / 重启 / 查看日志）后要求原型对齐：
-   原「非主按钮＝无壳文字按钮」的做法作废，避免原型比软件少一层按钮体。 */
+/* 0.1.10：动作按钮统一取消渐变高光和顶部内棱线。
+   常规 / 强调 / 危险保持各自语义色，只保留填充、边框和轻外投影。 */
 /* 「更多」入口保持无壳文本按钮（与软件 .motion-more > summary 一致），只有四颗动作按钮上玻璃体。 */
 #card-overview-status .ovb-more>summary { background:transparent; border-color:transparent; box-shadow:none; color:var(--muted); }
 #card-overview-status .ovb-more>summary:hover { background:var(--hover); color:var(--text); }
 #card-overview-status .ovb-actions>.btn {
-  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),var(--glass-fill);
+  background:var(--glass-fill);
   -webkit-backdrop-filter:none;backdrop-filter:none;
   border-color:color-mix(in srgb,var(--text) 15%,transparent);color:var(--text);
-  box-shadow:0 8px 22px #10182814,inset 0 1px 0 #ffffff59;
+  box-shadow:0 8px 22px #10182814;
 }
 #card-overview-status .ovb-actions>.btn:hover {
-  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--text) 8%,var(--glass-fill));
+  background:color-mix(in srgb,var(--text) 8%,var(--glass-fill));
   color:var(--text);
 }
 #card-overview-status .ovb-actions>.btn.primary {
-  background-color:var(--glass-fill);
-  background-image:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),linear-gradient(color-mix(in srgb,var(--accent) 80%,transparent),color-mix(in srgb,var(--accent) 80%,transparent));
-  border-color:color-mix(in srgb,var(--accent) 42%,transparent);color:var(--accent-ink);
+  background:var(--accent);
+  border-color:var(--accent);color:var(--accent-ink);
   box-shadow:0 8px 22px #10182814;
 }
+#card-overview-status .ovb-actions>.btn.primary:hover { background:color-mix(in srgb,var(--accent) 92%,var(--text)); color:var(--accent-ink); }
 #card-overview-status .ovb-actions>.btn.danger {
-  background:linear-gradient(158deg,var(--notif-tint-a),#0000 62%),linear-gradient(24deg,var(--notif-tint-b),#0000 58%),color-mix(in srgb,var(--red) 16%,var(--glass-fill));
+  background:color-mix(in srgb,var(--red) 16%,var(--glass-fill));
   border-color:color-mix(in srgb,var(--red) 38%,transparent);color:var(--red);
 }
+#card-overview-status .ovb-actions>.btn.danger:hover { background:color-mix(in srgb,var(--red) 22%,var(--glass-fill)); }
 #card-overview-status .ovb-actions [hidden] { display:none!important; }
 #route-overview #mods { order:2; gap:12px; }
 #route-overview #mods .mod { min-height:162px; padding:15px; gap:11px; }

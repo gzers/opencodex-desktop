@@ -21,8 +21,8 @@ html[data-theme="dark"] .card,html[data-theme="dark"] .choice,html[data-theme="d
 html[data-theme="dark"] .mcp-form-card,html[data-theme="dark"] .about-hero,html[data-theme="dark"] .about-panel,
 html[data-theme="dark"] .modal,html[data-theme="dark"] .select-menu{box-shadow:0 18px 44px #00000066,0 2px 6px #0006}
 
-/* —— 控件：用按钮投影（含顶部棱线，与 glass.html 的 .btn 一致）—— */
-.btn,.tag,.icon-btn,.state-pill,.runtime-pill,.cli-badge,.link-chip,.env-chip,
+/* —— 非按钮控件：延续玻璃色纱；按钮采用下方统一无高光配方 —— */
+.tag,.state-pill,.runtime-pill,.cli-badge,.link-chip,.env-chip,
 .preset-chip,.skills-chip,.ob-chip,.log-tip,.scenarios button,.seg-tabs button,
 .select-trigger,.nav .tag,.theme-seg,.toggle,.seg,.log-table .t-tag{
   background:
@@ -32,6 +32,18 @@ html[data-theme="dark"] .modal,html[data-theme="dark"] .select-menu{box-shadow:0
   -webkit-backdrop-filter:var(--glass-blur-notif);backdrop-filter:var(--glass-blur-notif);
   border-color:color-mix(in srgb,var(--text) 13%,transparent);
 }
+/* 标准按钮 / 图标按钮：取消色纱渐变和 inset 高光，保留玻璃底与轻外投影。
+   ghost 沿既有实底令牌，强调 / 危险保留语义色；三档与主题不另设材质开关。 */
+.btn,.icon-btn { background:var(--glass-fill); background-image:none;
+  -webkit-backdrop-filter:var(--glass-blur-notif);backdrop-filter:var(--glass-blur-notif);
+  border-color:color-mix(in srgb,var(--text) 13%,transparent); }
+.btn.primary { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+.btn.primary:hover { background:color-mix(in srgb,var(--accent) 92%,var(--text)); }
+.btn.danger,.icon-btn.danger { background:color-mix(in srgb,var(--red) 16%,var(--glass-fill)); border-color:color-mix(in srgb,var(--red) 38%,transparent); color:var(--red); }
+.btn.danger:hover,.icon-btn.danger:hover { background:color-mix(in srgb,var(--red) 22%,var(--glass-fill)); }
+.btn.ghost { background:var(--raised-ghost); border-color:transparent; }
+.btn.ghost:hover { background:var(--raised-ghost-hover); }
+.btn:focus-visible,.icon-btn:focus-visible { outline:2px solid var(--blue); outline-offset:3px; }
 /* 控件：**扁平无顶部棱线**（与规范一致——按钮不带高光），只保留一层轻外投影。 */
 .btn,.tag,.icon-btn,.state-pill,.runtime-pill,.cli-badge,.link-chip,.env-chip,
 .preset-chip,.skills-chip,.ob-chip,.log-tip,.scenarios button,.seg-tabs button,.select-trigger{
