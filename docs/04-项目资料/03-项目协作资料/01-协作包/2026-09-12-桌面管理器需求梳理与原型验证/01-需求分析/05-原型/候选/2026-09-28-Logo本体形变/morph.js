@@ -318,7 +318,8 @@ if(embedParams.has('embed')){
   if(msg.presentation&&typeof msg.presentation==='object'){
    const {size,padding}=msg.presentation;
    if(Number.isFinite(size))document.documentElement.style.setProperty('--embedded-mark-size',Math.max(64,Math.min(140,size))+'px');
-   if(Number.isFinite(padding))document.documentElement.style.setProperty('--embedded-padding',Math.max(24,Math.min(120,padding))+'px');
+   // 概览向上扩展光层时同步补偿 Logo；旧 120px 上限会让 Logo 随 iframe 上移。
+   if(Number.isFinite(padding))document.documentElement.style.setProperty('--embedded-padding',Math.max(24,Math.min(Math.max(120,innerHeight-140),padding))+'px');
   }
   document.body.classList.toggle('dark',msg.theme==='dark');
   if(meshGlow)meshGlow.setTheme(msg.theme==='dark');

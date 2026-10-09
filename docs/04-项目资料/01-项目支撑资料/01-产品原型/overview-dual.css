@@ -10,8 +10,9 @@ html[data-route="overview"] .topbar { margin-bottom:14px; }
 /* 背景光要越过状态区底部、一直铺到下方卡片（三卡与最近事件）后面，让玻璃卡「透光」。
    高度按「够到路线区底部」给：状态区 300 + 间距 + 三卡 164 + 间距 + 事件卡 ≈ 660（标准就绪）。
    0.1.10 原型：左右覆盖 main 的正文边距，最终由 main 的滚动与圆角边界裁剪。
-   对称扩宽保持 Logo 中心不变；高度与纵向渐隐沿用原值，生产实现待同步。 */
-.motion-backdrop { position:absolute; z-index:-1; top:-75px; left:calc(0px - var(--overview-gutter)); width:calc(100% + var(--overview-gutter) + var(--overview-gutter)); height:660px; border:0; pointer-events:none; background:transparent; color-scheme:normal; }
+   顶部按 main 实际内边界增加覆盖，Logo padding 与 iframe 高度补回同一增量。
+   正文布局、Logo 位置和光层底部保持；窗口标题栏仍属外壳，生产实现待同步。 */
+.motion-backdrop { --motion-overhang:75px; --motion-height:660px; position:absolute; z-index:-1; top:calc(0px - var(--motion-overhang) - var(--motion-top-extra,0px)); left:calc(0px - var(--overview-gutter)); width:calc(100% + var(--overview-gutter) + var(--overview-gutter)); height:calc(var(--motion-height) + var(--motion-top-extra,0px)); border:0; pointer-events:none; background:transparent; color-scheme:normal; }
 /* 显式占满整行再靠 text-align 居中：WebKit（Safari / WKWebView）下 justify-items:center 给出的
    fit-content 宽度会让该块整体右移（实测中心偏 ~84px），这里去掉对网格项尺寸的依赖。 */
 .motion-identity { grid-row:2; grid-column:1; align-self:start; width:100%; text-align:center; min-width:0; max-width:100%; }
@@ -98,7 +99,7 @@ html[data-theme="dark"] #route-overview #envGate { box-shadow:0 18px 44px #00000
 .overview-gate-footer button { background:transparent; border:0; padding:3px 0; color:var(--muted); font:inherit; white-space:nowrap; cursor:pointer; }
 .overview-gate-footer button:hover { color:var(--text); }
 #route-overview[data-mode="setup"] #card-overview-status .ovb-summary { height:174px; min-height:174px; grid-template-rows:114px 60px; }
-#route-overview[data-mode="setup"] .motion-backdrop { top:-35px; height:520px; }
+#route-overview[data-mode="setup"] .motion-backdrop { --motion-overhang:35px; --motion-height:520px; }
 #route-overview[data-mode="setup"] #card-overview-status .ovb-actions { display:none; }
 #route-overview[data-mode="setup"] #mods,#route-overview[data-mode="setup"] #card-overview-events { display:none!important; }
 /* 弹窗仍沿用正式原型的三段式，只将环境事实并入运行详情。 */
@@ -155,7 +156,7 @@ html[data-overview-size="compact"][data-route="overview"] .main { --overview-gut
 html[data-overview-size="compact"][data-route="overview"] .topbar { margin-bottom:10px; }
 html[data-overview-size="compact"] #route-overview.active { gap:10px; }
 html[data-overview-size="compact"] #card-overview-status .ovb-summary { height:222px; min-height:222px; grid-template-rows:128px 50px 44px; }
-html[data-overview-size="compact"] .motion-backdrop { top:-66px; height:640px; }
+html[data-overview-size="compact"] .motion-backdrop { --motion-overhang:66px; --motion-height:640px; }
 html[data-overview-size="compact"] .motion-mainline { font-size:21px; }
 html[data-overview-size="compact"] .motion-caption { margin-top:2px; font-size:var(--text-caption); }
 html[data-overview-size="compact"] #card-overview-status .ovb-actions { padding-top:5px; gap:6px; }
@@ -172,7 +173,7 @@ html[data-overview-size="compact"] #route-overview .recent-events-head { margin-
 html[data-overview-size="compact"] #route-overview .recent-events-list li { padding:3px 0; }
 html[data-overview-size="compact"] #route-overview .recent-events-list li:nth-child(n+2) { display:none; }
 html[data-overview-size="compact"] #route-overview[data-mode="setup"] #card-overview-status .ovb-summary { height:142px; min-height:142px; grid-template-rows:88px 54px; }
-html[data-overview-size="compact"] #route-overview[data-mode="setup"] .motion-backdrop { top:-27px; height:480px; }
+html[data-overview-size="compact"] #route-overview[data-mode="setup"] .motion-backdrop { --motion-overhang:27px; --motion-height:480px; }
 html[data-overview-size="compact"] #route-overview #envGate { padding:16px 18px; }
 html[data-overview-size="compact"] .overview-gate-head { margin-bottom:13px; }
 html[data-overview-size="compact"] .overview-gate-head h2 { font-size:var(--text-body); }

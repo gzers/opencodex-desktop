@@ -22,6 +22,24 @@
   const frame = document.createElement('iframe');
   frame.className = 'motion-backdrop'; frame.title = '运行状态形象'; frame.tabIndex = -1; frame.setAttribute('aria-hidden','true');
   card.prepend(frame);
+  const main = card.closest('.main');
+  function updateBackdrop() {
+    if (currentRoute !== 'overview' || !main || !main.offsetHeight) return 0;
+    const panel = main.getBoundingClientRect();
+    // 原型窗口可整体缩放；换算回 CSS 像素，滚动距离补回后得到固定的内容坐标。
+    const scale = panel.height / main.offsetHeight;
+    if (!scale) return 0;
+    const distance = (card.getBoundingClientRect().top - panel.top) / scale + main.scrollTop - main.clientTop;
+    const style = getComputedStyle(frame);
+    const overhang = parseFloat(style.getPropertyValue('--motion-overhang'));
+    const height = parseFloat(style.getPropertyValue('--motion-height'));
+    if (![distance,overhang,height].every(Number.isFinite)) return 0;
+    // 嵌入 CSS 光层顶部 6% 渐隐、20px 柔化：将这段过渡放到面板裁剪区之外。
+    const guard = Math.max(64,Math.ceil((.06 * (height + distance - overhang) + 20) / .94));
+    const extra = Math.max(0,distance + guard - overhang);
+    frame.style.setProperty('--motion-top-extra',extra + 'px');
+    return extra;
+  }
   details.hidden = true; details.dataset.retired = 'true'; details.open = false;
   // 原详情节点仅作为原有渲染的数据宿主，环境项不再另占摘要行。
   card.querySelector('.motion-env-row')?.remove();
@@ -166,8 +184,9 @@
     const task = document.body.dataset.taskop || '';
     const taskMark = task === 'op_start' ? 'starting' : task === 'op_stop' || task === 'op_restart' ? 'stopping' : '';
     const envMark = blocked ? envState === 'checking' ? 'confirming' : 'not_ready' : '';
-    const payload = {type:'opencodex-motion-preview',state:taskMark || envMark || map[currentState] || 'confirming',palette:currentState === 'at_risk' ? 'at_risk' : '',theme:root.dataset.theme,active:currentRoute === 'overview' && !document.hidden,
-      presentation:blocked ? compact ? {size:74,padding:40} : {size:90,padding:52} : compact ? {size:100,padding:85} : {size:140,padding:103}};
+    const presentation = blocked ? compact ? {size:74,padding:40} : {size:90,padding:52} : compact ? {size:100,padding:85} : {size:140,padding:103};
+    presentation.padding += updateBackdrop();
+    const payload = {type:'opencodex-motion-preview',state:taskMark || envMark || map[currentState] || 'confirming',palette:currentState === 'at_risk' ? 'at_risk' : '',theme:root.dataset.theme,active:currentRoute === 'overview' && !document.hidden,presentation};
     const key = JSON.stringify(payload);
     if (ready && key !== previous) { frame.contentWindow.postMessage(payload,location.protocol === 'file:' ? '*' : location.origin); previous = key; }
   }
@@ -188,10 +207,16 @@
     const mode = height < 680 ? 'compact' : 'standard';
     if (root.dataset.overviewSize !== mode) { root.dataset.overviewSize = mode; sync(); }
   }
-  if ('ResizeObserver' in window) new ResizeObserver(updateSize).observe(document.querySelector('.window'));
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(updateSize).observe(document.querySelector('.window'));
+    const layoutObserver = new ResizeObserver(sync);
+    if (main) layoutObserver.observe(main);
+    const topbar = main?.querySelector('.topbar');
+    if (topbar) layoutObserver.observe(topbar);
+  }
   const originalSize = setWinSize;
   setWinSize = function (...args) { const result = originalSize.apply(this,args); updateSize(); return result; };
-  addEventListener('resize',updateSize);
+  addEventListener('resize',() => { updateSize(); sync(); });
   addEventListener('message',event => { if (event.source === frame.contentWindow && event.data?.type === 'opencodex-motion-ready') { ready = true; previous = ''; sync(); } });
   frame.addEventListener('load',() => { ready = true; previous = ''; sync(); });
   new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-theme','data-route','data-effects','data-glow-render']});
