@@ -16,7 +16,7 @@
     const target = document.getElementById(link.getAttribute('href').slice(1));
     if (target && commonGroup.contains(target) && !commonGroup.open) commonGroup.open = true;
   }, true);
-  const labels = {overview:'概览', panel:'面板', models:'模型', extensions:'拓展', sync:'同步', logs:'诊断', settings:'设置', tray:'托盘', notify:'通知与反馈', windows:'Windows 窗口'};
+  const labels = {annotations:'注释卡片', overview:'概览', panel:'面板', models:'模型', extensions:'拓展', sync:'同步', logs:'诊断', settings:'设置', tray:'托盘', notify:'通知与反馈', windows:'Windows 窗口'};
   const tabs = {file:'文件同步', webdav:'WebDAV 同步', channels:'渠道模型', templates:'模型模版', doctor:'诊断检查', logs:'日志历史', notifications:'通知历史', skills:'Skills', mcp:'MCP'};
   function currentContext() {
     if (document.body.classList.contains('windows-mode')) return {page:'windows', tab:''};
@@ -41,7 +41,7 @@
     side.querySelectorAll('[data-proto-contexts]').forEach(card => {
       card.hidden = !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
     });
-    $('.proto-context-note').hidden = ['windows', 'notify'].includes(context.page);
+    $('.proto-context-note').hidden = ['windows', 'notify', 'annotations'].includes(context.page);
     if (context.page === 'sync') {
       const state = window.syncPrototype?.state();
       $('#sxImportSample').value = state?.importSample || 'encrypted';

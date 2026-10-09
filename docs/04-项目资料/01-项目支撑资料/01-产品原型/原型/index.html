@@ -1675,6 +1675,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="model-config.css">
 <link rel="stylesheet" href="sync-config.css">
 <link rel="stylesheet" href="windows-window.css">
+<link rel="stylesheet" href="annotation-cards.css?v=3">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -1887,6 +1888,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
     <section class="route-section sx-page" id="route-sync"><div id="syncContent"></div></section>
     <section class="route-section mp-page" id="route-models"><div id="mpContent"></div></section>
+    <section class="route-section annotation-preview" id="route-annotations" aria-label="原型注释卡片打样"></section>
       <section class="route-section" id="route-extensions">
         <div class="ext-tabs" role="tablist" aria-label="扩展分区">
           <button type="button" data-ext-tab="skills" class="active" data-anchor="skills" aria-label="Skills，查看锚点">Skills<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -3128,6 +3130,7 @@ ocx update</code></pre>
           <button type="button" data-launch="tray">托盘</button>
           <button type="button" data-launch="notify">通知与反馈</button>
           <button type="button" data-launch="windows">Windows 窗口</button>
+          <button type="button" data-launch="annotations">注释卡片</button>
         </div>
         <p class="pctl-hint">打开托盘原型、交互反馈与平台外观专题测试器。</p>
       </section>
@@ -3179,6 +3182,19 @@ ocx update</code></pre>
       <p class="pctl-hint">只切换评审用窗口尺寸：<b>最小 900×600</b> 验证窄窗不溢出，<b>默认 1180×760</b> 是设计基准，其余用于宽屏对照；「适配视口」按当前浏览器高度反推。不写任何持久化设置。</p>
     </div>
     </div>
+    </details>
+
+    <details id="protoAnnotations" class="proto-group" open aria-labelledby="ctl-annotations" hidden>
+      <summary class="proto-group-summary">
+        <span class="proto-group-name" id="ctl-annotations">本页注释</span>
+        <span class="proto-group-meta" id="protoAnnotationCount">0 条</span>
+      </summary>
+      <div class="proto-group-body">
+        <label class="annotation-search"><span>查找注释</span><input id="protoAnnotationSearch" type="search" placeholder="搜索标题或正文…" autocomplete="off"></label>
+        <nav id="protoAnnotationList" class="annotation-index" aria-label="当页注释目录"></nav>
+        <p id="protoAnnotationEmpty" class="pctl-hint" hidden>没有匹配的注释。</p>
+        <p class="pctl-hint">点击条目，展开并定位到页面中的对应注释。</p>
+      </div>
     </details>
 
     <details id="protoStdCards" class="proto-group" open aria-labelledby="ctl-mock">
@@ -3639,6 +3655,7 @@ let confirmHandler=null;
 let confirmKeepsOpen=false;
 
 const routes={
+  annotations:{title:'原型注释',subtitle:'组件打样 · 02　悬浮卡片与页内定位'},
   sync:{title:'同步',subtitle:'按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。'},
   models:{title:'模型配置',subtitle:'管理渠道模型、族模版与选择器顺序。'},
   overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
@@ -7598,7 +7615,7 @@ function resetNotifDemo(){
 function syncLaunchActive(){
   const inNotif=document.body.classList.contains('notif-mode');
   const inWindows=document.body.classList.contains('windows-mode');
-  const map={overview:'overview',panel:'panel',models:'models',extensions:'extensions',logs:'logs',settings:'settings',sync:'sync',tray:'tray'};
+  const map={overview:'overview',panel:'panel',models:'models',extensions:'extensions',logs:'logs',settings:'settings',sync:'sync',tray:'tray',annotations:'annotations'};
   document.querySelectorAll('#launchGrid button').forEach(b=>{
     const on=b.dataset.launch==='windows'?inWindows:(b.dataset.launch==='notify'?inNotif&&!inWindows:(!inNotif&&!inWindows&&map[currentRoute]===b.dataset.launch));
     b.classList.toggle('active',on);
@@ -7677,5 +7694,6 @@ document.addEventListener('scroll',event=>{
 <script src="sync-config.js"></script>
 <script src="windows-window.js"></script>
 <script src="prototype-panel.js"></script>
+<script src="annotation-cards.js?v=3"></script>
 </body>
 </html>
