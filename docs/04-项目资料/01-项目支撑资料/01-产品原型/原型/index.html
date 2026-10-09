@@ -19,6 +19,8 @@
   --panel:#fff;
   --rail:#f9f9f9;
   --raised:#f4f4f4;
+  --raised-ghost:#e3e8ea;
+  --raised-ghost-hover:#dadfe2;
   --raised-hover:#ececec;
   --border:#e6e6e6;
   --border-soft:#f0f0f0;
@@ -91,6 +93,8 @@ html[data-theme="dark"]{
   --panel:#262626;
   --rail:#171717;
   --raised:#303030;
+  --raised-ghost:#3a3a3a;
+  --raised-ghost-hover:#444444;
   --raised-hover:#3a3a3a;
   --border:#3d3d3d;
   --border-soft:#333333;
@@ -225,7 +229,10 @@ button{font:inherit}
 .btn:hover{border-color:var(--border);background:var(--hover)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 .btn.danger{background:var(--panel);border-color:color-mix(in srgb,var(--red) 40%,transparent);color:var(--red)}
-.btn.ghost{border-color:transparent;background:var(--raised)}
+/* 组件契约：ghost 底色单点定义（对应真实软件淡青灰 #dbe9ed，原型无同强度环境光取 #e3e8ea）；
+   hover 需显式声明——.btn.ghost 与 .btn:hover 同优先级且在其后，否则 hover 底色不生效 */
+.btn.ghost{border-color:transparent;background:var(--raised-ghost)}
+.btn.ghost:hover{background:var(--raised-ghost-hover)}
 .btn:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
 .notice{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;margin-bottom:16px;display:flex;gap:11px;align-items:flex-start}
 .notice .dot{width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:6px;flex:none}

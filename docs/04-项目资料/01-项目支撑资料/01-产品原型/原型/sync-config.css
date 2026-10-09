@@ -16,7 +16,7 @@ html[data-route=sync] .main>.topbar{flex:none}
    面板里的通用控件（.btn、.select-trigger 等）会被上面的规则污染，
    这里按组件契约还原，一处生效，不逐个页面修补。 */
 .sx-tabs .btn{padding:7px 12px;border:1px solid var(--border);border-bottom:1px solid var(--border);color:var(--text);background:var(--panel)}
-.sx-tabs .btn.ghost{border-color:transparent;background:var(--raised)}
+.sx-tabs .btn.ghost{border-color:transparent} /* 底色走组件层 --raised-ghost，禁止重复定义 */
 .sx-tabs .btn:hover{border-color:var(--border);background:var(--hover)}
 .sx-tabs .btn:disabled{opacity:.42;cursor:not-allowed;pointer-events:none}
 .sx-tabs .select-trigger{padding:var(--space-2) var(--space-3);border:1px solid var(--border);color:var(--text)}
