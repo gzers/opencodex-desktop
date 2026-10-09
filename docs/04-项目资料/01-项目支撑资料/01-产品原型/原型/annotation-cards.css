@@ -100,6 +100,10 @@ html[data-route="logs"] .route-section>.proto-annotation{z-index:32}
 .sx-connection>.proto-annotation{right:8px}
 .sx-scope>.proto-annotation{right:96px;top:-24px}
 .sx-secrets>.proto-annotation{left:0;right:auto}
+.sx-secrets>.proto-annotation{top:auto;bottom:8px}
+/* 托盘页卡片没有定位上下文，默认 top:-12px 会相对视口定位（标记滚出视口顶部）。
+   给卡片建立 containing block，标记回到卡片标题行上缘，一处生效。 */
+.tray-stage .card{position:relative}
 .ovb-actions>.proto-annotation{top:-30px}
 /* 组件防御：部分页面把标记挂进了自己的 tab 容器（如 sync 页 #sxPanel 位于 .sx-tabs 内），
    容器的 button 样式与 .annotation-marker 同为单类特异性，会反向覆盖标记。这里以

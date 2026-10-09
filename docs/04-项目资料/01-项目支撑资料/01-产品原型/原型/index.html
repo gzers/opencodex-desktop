@@ -1674,9 +1674,9 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../overview-dual.css">
 <link rel="stylesheet" href="../proto-controls.css">
 <link rel="stylesheet" href="model-config.css?v=1">
-<link rel="stylesheet" href="sync-config.css?v=1">
+<link rel="stylesheet" href="sync-config.css?v=3">
 <link rel="stylesheet" href="windows-window.css">
-<link rel="stylesheet" href="annotation-cards.css?v=28">
+<link rel="stylesheet" href="annotation-cards.css?v=31">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -6212,7 +6212,8 @@ function openModal(title,body,confirmText,handler,opts){
   opts=opts||{};
   modalTitle.textContent=title;
   // opts.hideNote：只读信息类弹窗不显示「原型演示」脚注（详情内容本身就是演示数据，脚注反而占高度）。
-  const modalNote=opts.hideNote?'':'<div class="modal-note-anchor"><div class="proto-annotation" id="ann-modal-demo" data-annotation-number="01" data-annotation-title="弹窗均为演示交互" data-annotation-category="行为约定 · 弹窗"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：弹窗均为演示交互"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>卸载、删除、标记解决等确认动作只演示流程与文案；原型不执行真实卸载或数据删除，确认后立即回置状态。同步与模型配置弹窗自带说明，不重复挂注释。</p><div class="annotation-footer">行为约定 · 弹窗</div></div></div></div>';
+  // 注释便签始终注入：弹窗是原型演示的一部分，所有弹窗（含同步 / 模型配置弹窗）都统一挂通用注释组件，不逐弹窗重复实现。
+  const modalNote='<div class="modal-note-anchor"><div class="proto-annotation" id="ann-modal-demo" data-annotation-number="01" data-annotation-title="弹窗均为演示交互" data-annotation-category="行为约定 · 弹窗"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：弹窗均为演示交互"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>卸载、删除、标记解决等确认动作只演示流程与文案；原型不执行真实卸载或数据删除，确认后立即回置状态。同步与模型配置弹窗同样适用本条说明。</p><div class="annotation-footer">行为约定 · 弹窗</div></div></div></div>';
   modalBody.innerHTML=body+modalNote+(opts.hideNote?'':'<p class="modal-prototype-note">当前为原型演示；真实实现尚未启用。</p>');
   modalConfirm.textContent=confirmText||'关闭';
   modalConfirm.hidden=!!opts.hideConfirm;
