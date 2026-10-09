@@ -197,18 +197,5 @@
   new MutationObserver(sync).observe(root,{attributes:true,attributeFilter:['data-theme','data-route','data-effects','data-glow-render']});
   document.addEventListener('proto-task-op',sync); document.addEventListener('visibilitychange',sync);
   routes.overview.subtitle = '运行状态与常用操作；环境明细收进运行详情。';
-  Object.assign(routeNotes.overview,{
-    title:'概览 · 运行 / 环境准备',
-    note:'就绪时以无框状态区控制运行；前置未就绪时，检查结果和修复动作直接呈现在下方门禁卡。',
-    items:[
-      ['运行状态','Logo、主线文字和操作居中；状态文字可打开运行详情。'],
-      ['运行详情','进程、环境检查与来源目录按组展示，技术信息不另占常驻摘要行。'],
-      ['环境准备','检查中和缺失态隐藏三卡及最近事件，纵向检查列表与当前指引并列展示。'],
-      ['常用动作','版本升级、配置迁移、WebDAV 同步保留一行三卡及各自的设置入口。'],
-      ['最近事件','标准窗口显示最近两项，紧凑窗口显示最近一项；完整排障进诊断中心。'],
-      ['窗口尺寸','沿用 1180×760 / 900×600 应用预设；紧凑版按应用高度切换。']
-    ]
-  });
-  renderPrototypeNote(currentRoute);
   root.dataset.overviewSize = 'standard'; updateSize(); sync();
 })();

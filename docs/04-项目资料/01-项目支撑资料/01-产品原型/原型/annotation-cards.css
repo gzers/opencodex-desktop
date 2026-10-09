@@ -75,4 +75,19 @@ html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--ann
 .annotation-index .annotation-arrow{font-size:14px;color:var(--pctl-sub);line-height:1.5}
 html[data-route="annotations"] #statePill{display:none}
 html[data-route="annotations"] #protoStdCards{display:none}
+
+/* 正式页面锚点：卡片没有自带定位上下文，统一由容器类补 position:relative。
+   设置页注释挂在 Tab 行上，右对齐且上移避开下边框；弹窗注释用 sticky 挂在正文顶部。 */
+.card>.proto-annotation,.install-card>.proto-annotation,.tray-os{position:relative}
+.diag-tabs,.settings-tabs,.ext-tabs{position:relative}
+.route-section>.settings-tabs>.proto-annotation,.route-section>.diag-tabs>.proto-annotation,.route-section>.ext-tabs>.proto-annotation,.mp-toolbar>.settings-tabs>.proto-annotation{right:4px;top:-26px}
+.ovb-actions,.recent-events-head,.mod-head,.sx-connection,.sx-scope,.sx-secrets{position:relative}
+.annotation-anchor{position:relative}
+#modalBody>.modal-note-anchor{position:sticky;top:0;z-index:5;height:0}
+#modalBody>.modal-note-anchor>.proto-annotation{right:0;top:-30px}
 @media(max-width:700px){.ap-specimen{padding:16px}.ap-intro h2{font-size:21px}.ap-form-row{grid-template-columns:100px minmax(0,1fr);gap:10px}.ap-sync-row{align-items:flex-start}.ap-section-head{align-items:flex-start}.ap-section-head>span{text-align:right}}
+/* 正式页面注释标记：模型配置工具条与同步页侧栏挂载点。 */
+.mp-toolbar .settings-tabs{position:relative}
+.mp-toolbar>.settings-tabs>.proto-annotation{right:4px;top:-26px}
+.sx-connection>.proto-annotation{right:8px}
+.sx-secrets>.proto-annotation{left:0;right:auto}

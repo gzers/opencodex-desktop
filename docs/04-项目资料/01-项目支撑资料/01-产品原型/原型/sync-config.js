@@ -74,6 +74,9 @@
   if(checked){if(!s.selected.has(id)){s.accountInfoOnly.delete(id);s.endpointConfigOnly.delete(id);}s.selected.add(id);}
   else{s.selected.delete(id);s.accountInfoOnly.delete(id);s.endpointConfigOnly.delete(id);}
  }
+ function sxAnn(num,title,body){
+  return '<div class="proto-annotation" id="ann-sx-'+num+'" data-annotation-number="'+num+'" data-annotation-title="'+title+'" data-annotation-category="实现边界 · 同步"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 '+num+'：'+title+'"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">'+num+'</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>'+body+'</p><div class="annotation-footer">实现边界 · 同步</div></div></div>';
+ }
  function scopeHTML(){
   const s=state(),{ids,deps}=closure(),visible=catalog.filter(x=>(tab==='file'||x.group!=='endpoints')&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase()));
   const rows=groups.map(([id,label])=>{
@@ -85,7 +88,7 @@
     return '<div class="sx-object"><input type="checkbox" data-sx-object="'+esc(x.id)+'" aria-label="选择 '+esc(x.name)+'" '+(ids.has(x.id)?'checked':'')+(dependent?' disabled title="所选渠道需要此精确版本"':'')+'><div><button class="sx-object-name" data-sx="detail" data-id="'+esc(x.id)+'">'+esc(x.name)+'</button><small>'+esc(dependent?'仅精确版本 v'+[...deps.get(x.id)].join(' / v'):x.password?(s.endpointConfigOnly.has(x.id)?'仅配置 · 不含连接密码':'密码随配置同步 · 导入后待启用'):x.summary)+'</small></div><span class="sx-mark '+(included?'secret':x.group==='accounts'&&!x.login?'warn':'')+'">'+mark+'</span></div>';
    }).join(''):'')+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>全部配置</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table" role="region" aria-label="配置对象列表" aria-describedby="sxScopeHelp" tabindex="0"><div class="sx-table-head"><input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.length&&visible.every(x=>ids.has(x.id))?'checked':'')+'><span>配置对象</span><span>范围与凭据</span></div>'+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div><p class="sx-note sx-scope-help" id="sxScopeHelp">勾选账户默认含可迁移登录状态'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。未保存草稿不参与。'+(query?' 搜索仅改变显示，隐藏勾选保留。':'')+'</p>';
+  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>全部配置</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table" role="region" aria-label="配置对象列表" aria-describedby="sxScopeHelp" tabindex="0"><div class="sx-table-head"><input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.length&&visible.every(x=>ids.has(x.id))?'checked':'')+'><span>配置对象</span><span>范围与凭据</span></div>'+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div><p class="sx-note sx-scope-help" id="sxScopeHelp">勾选账户默认含可迁移登录状态'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。未保存草稿不参与。'+(query?' 搜索仅改变显示，隐藏勾选保留。':'')+'</p>'+sxAnn('01','同步范围为内存演示','范围预设、勾选与搜索均为内存演示；导入 / 导出走确认流程，不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
@@ -93,17 +96,17 @@
    const items=catalog.filter(x=>ids.has(x.id)&&match(x)),active=items.some(x=>s[key].has(x.id));
    return '<section class="sx-secret-block">'+check('data-sx-secret="'+key+'"',title,active,!items.length)+'<p class="sx-muted">'+note+'</p>'+(active?'<div class="sx-subpicks">'+items.map(x=>check('data-sx-secret-object="'+x.id+'" data-kind="'+key+'"',esc(x.name),s[key].has(x.id))).join('')+'</div>':'')+'</section>';
   }).join('');
-  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户登录状态随账户选择'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据必须加密传输。加密口令独立于 WebDAV 密码，不随包或远端数据保存。':'当前不携带凭据。导入同一身份时保留本机已有凭据，不用空值覆盖。')+'</p></aside>';
+  return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户登录状态随账户选择'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据必须加密传输。加密口令独立于 WebDAV 密码，不随包或远端数据保存。':'当前不携带凭据。导入同一身份时保留本机已有凭据，不用空值覆盖。')+'</p>'+sxAnn('02','凭据勾选为演示','凭据选择只演示勾选与加密要求，不读取真实密钥；加密口令只描述规则，不做真实加密。')+'</aside>';
  }
  function render(resetList=false){
   if(renderedTab){scrolls[renderedTab].list=$('.sx-table',host)?.scrollTop||0;scrolls[renderedTab].secrets=$('.sx-secrets',host)?.scrollTop||0;}
   if(resetList)scrolls[tab].list=0;
   const selected=closure().ids.size,dirty=signature(scopes.webdav)!==savedScope;
-  host.innerHTML='<div class="sx-tabs" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
-   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'本机范围同时用于上传与接收；下载的变化先预览，再应用。')+'</p></div><div class="sx-actions">'+(tab==='file'?btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):btn('保存本机范围','save-scope',dirty?'':'disabled')+btn('同步配置','check',dirty?'disabled title="请先保存本机范围"':'',true))+'</div></header>'+
-   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong> <span class="sx-mark">'+(connection.connected?'演示连接':'未连接')+'</span> <span class="sx-muted">本机：MacBook</span></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>':'')+
-   '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>'+
-   (result&&result.tab===tab?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span></div>':'')+
+  host.innerHTML='<div class="sx-tabs" role="tablist" aria-label="同步方式">' +
+   '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'">' +
+   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong> <span class="sx-mark">'+(connection.connected?'演示连接':'未连接')+'</span> <span class="sx-muted">本机：MacBook</span></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','连接信息为演示数据','连接名称、地址与状态均为演示数据；测试连接、保存与同步仅切换演示状态，不发起真实网络请求。'):'') +
+   '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
+   (result&&result.tab===tab?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span></div>':'') +
    '</div>';
   $('.sx-table',host).scrollTop=scrolls[tab].list;$('.sx-secrets',host).scrollTop=scrolls[tab].secrets;renderedTab=tab;
   for(const el of $$('[data-sx-group]',host)){const items=catalog.filter(x=>x.group===el.dataset.sxGroup&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase())),n=items.filter(x=>closure().ids.has(x.id)).length;el.indeterminate=n>0&&n<items.length;}

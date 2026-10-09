@@ -41,7 +41,8 @@
     side.querySelectorAll('[data-proto-contexts]').forEach(card => {
       card.hidden = !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
     });
-    $('.proto-context-note').hidden = ['windows', 'notify', 'annotations'].includes(context.page);
+    const contextNote = $('.proto-context-note');
+    if (contextNote) contextNote.hidden = ['windows', 'notify', 'annotations'].includes(context.page);
     if (context.page === 'sync') {
       const state = window.syncPrototype?.state();
       $('#sxImportSample').value = state?.importSample || 'encrypted';

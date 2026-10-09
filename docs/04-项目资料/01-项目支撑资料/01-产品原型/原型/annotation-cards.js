@@ -128,7 +128,8 @@
     const key = nextContext ? nextContext.page+':'+nextContext.tab : document.documentElement.dataset.route;
     const changed = key !== context;
     if (changed) {context=key; search.value=''; close();}
-    entries = [...document.querySelectorAll('.main .proto-annotation, #modalBody .proto-annotation')].filter(visible).sort((a,b) => Number(a.dataset.annotationNumber)-Number(b.dataset.annotationNumber));
+    // 托盘 section 在 .main 之外（#trayStage），单独纳入扫描。
+    entries = [...document.querySelectorAll('.main .proto-annotation, #modalBody .proto-annotation, #trayStage .proto-annotation')].filter(visible).sort((a,b) => Number(a.dataset.annotationNumber)-Number(b.dataset.annotationNumber));
     // 专题覆盖层不属于底下仍保留的产品路由。
     if (['windows','notify'].includes(nextContext?.page)) entries=[];
     if (active && !entries.includes(active)) close();
@@ -177,6 +178,8 @@
   if (modal) observer.observe(modal,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','style']});
   observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-route']});
   observer.observe(document.body,{attributes:true,attributeFilter:['class']});
+  const trayStage = document.getElementById('trayStage');
+  if (trayStage) observer.observe(trayStage,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
   window.addEventListener('hashchange',schedule);
   window.prototypeAnnotations={refresh,locate,entries:()=>entries.map(node=>({id:node.id,title:node.dataset.annotationTitle}))};
   refresh();
