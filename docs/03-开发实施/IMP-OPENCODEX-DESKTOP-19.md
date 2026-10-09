@@ -4,7 +4,7 @@ object_kind: implementation.change
 state: in_progress
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
 title: 0.1.9 用户画质与 Windows 窗口外观和菜单适配
-summary: Windows 原生适配已推送；双权限四档WebView DPR通过，原生两组各13/14通过。固定689a86e6的完整CI及Windows MSI／NSIS首次安装、首屏与卸载通过，候选包已上传；Snap及跨平台／显示器／生命周期等仍未闭合，整体保持in_progress，保留日常安装。
+summary: Windows 原生适配及固定689a86e6的CI、候选MSI／NSIS门禁通过；用户试用确认后已合入main，0.1.9公开并晋升稳定Latest，完整main CI与发布验签通过。发布结果以REL-09为准；Snap及跨平台／显示器／生命周期等专项仍保留in_progress，保留日常安装。
 ---
 
 # 0.1.9 用户画质与 Windows 窗口外观和菜单适配
@@ -108,3 +108,9 @@ macOS 的 TLS 行为测试使用非阻塞 listener，accepted stream 继承该�
 固定最新提交的 [CI](https://github.com/gzers/opencodex-desktop/actions/runs/37796440853) 与 [候选安装器](https://github.com/gzers/opencodex-desktop/actions/runs/37796440954) **均已通过**。前端类型／单测／构建、CDP、发布工具、macOS 与 Windows 后端格式／Clippy／回归、Windows 最终 EXE 首屏全部通过；main 专属 build job 按特性分支规则跳过。MSI／NSIS 候选安装包及证据已上传，仍为未签名、未接受正式发布的测试候选。旧失败、复现、最终 run 身份与安装后的制品校验保留在 [.adg 证据目录](../../.adg/evidence/WIN-019-INSTALLER-VERSION-20261008/manifest.json)。
 
 本次代码仅调整候选安装验收、CDP协议回归与TLS行为测试，未合并 main、正式发布或替换日常安装。安装器 runner 的首次安装／首屏／卸载不能替代用户升级、Snap、物理 DPI／多屏、真实代理／托盘生命周期及 macOS 原生／安装验收，IMP-19 继续 `in_progress`。
+
+## 用户试用确认与发布接续（2026-10-09）
+
+用户明确表示“我看了下0.1.9基本没有问题了。可以发布。”，据此快进合入 main，补写 main 专属 CHANGELOG，固定 `v0.1.9@de6862d40389d527527b9db8ef52e186a58b625f` 并执行既有双平台发布和稳定通道校验。发布身份、验签、公开状态和回退结论统一记录于 [REL-09](REL-OPENCODEX-DESKTOP-09.md)。此前“不发布”的描述是各历史执行轮次范围，本次发布由新授权接续。
+
+用户试用确认与发布完成不将未执行专项变为通过：Snap、物理 DPI／多屏、目标系统、人工读屏、真实代理／托盘往返、macOS 原生 UI／安装和旧客户端升级专项继续保留原证据与待补测状态。IMP-19 不据此改成全部验收完成；本次未替换本机日常 0.1.7。
