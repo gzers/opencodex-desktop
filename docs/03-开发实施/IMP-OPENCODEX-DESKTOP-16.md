@@ -11,7 +11,7 @@ source_refs: ["MNT-OPENCODEX-DESKTOP-20261004-03", "MNT-OPENCODEX-DESKTOP-202610
 
 # IMP-OPENCODEX-DESKTOP-16 0.1.3 更新通道自更新、官方更新代跑与网络代理
 
-2026-10-04。承接运行维护协作包 [COL-LOCAL-20261004-03](https://github.com/gzers/opencodex-desktop/tree/docs/governance-main/docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-更新通道自更新与官方更新代跑) 与其维护记录 MNT-OPENCODEX-DESKTOP-20261004-03。
+2026-10-04。承接运行维护协作包 [COL-LOCAL-20261004-03](https://github.com/gzers/opencodex-desktop/tree/docs/governance-main/docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261004-更新通道自更新与官方更新代跑) 与其维护记录 MNT-OPENCODEX-DESKTOP-20261004-03。
 
 ## 1. 范围（已冻结）
 

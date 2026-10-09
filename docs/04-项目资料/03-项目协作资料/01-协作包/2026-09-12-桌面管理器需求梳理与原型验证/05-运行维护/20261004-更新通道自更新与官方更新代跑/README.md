@@ -4,7 +4,7 @@ object_kind: maintenance.record
 state: analysis-registered
 title: 更新通道自更新与官方更新代跑（0.1.3）
 col: COL-LOCAL-20261004-03
-summary: 承接 MNT-OPENCODEX-DESKTOP-20261004-02 的延后项 U-01～U-04 与 C 阶段存储迁移；用户已确认自更新端点/公钥来源、CI 签名、官方卡片只读远端查询，并要求桌面管理器复用既有受控安装代跑官方更新。拟修复版本 0.1.3，未实施、未验证、未发布。
+summary: 0.1.3 更新通道与官方更新代跑维护专题，承接 0.1.2 延后项；已实施并公开发布。2026-10-09 归入主协作包的 05-运行维护，历史分析与验证边界保留。
 source_refs:
   - MNT-OPENCODEX-DESKTOP-20261004-02
   - DMD-OPENCODEX-DESKTOP-MANAGER
@@ -13,6 +13,14 @@ source_refs:
 ---
 
 # MNT-OPENCODEX-DESKTOP-20261004-03 桌面自更新端点与签名、官方版本卡片远端查询、代跑官方更新
+
+## 当前归属与状态（2026-10-09）
+
+本专题归入 `COL-LOCAL-20260912-01` 的 `05-运行维护`；保留原 `COL-LOCAL-20261004-03` / `MNT-OPENCODEX-DESKTOP-20261004-03` ID 及来源，不新建平行专题。关联软件维护版本 **0.1.3**，承接受影响版本 0.1.2；不归入 0.1.10。
+
+实施见 [IMP-16](../../../../../../03-开发实施/IMP-OPENCODEX-DESKTOP-16.md)，发布过程见 [REL-04](../../../../../../03-开发实施/REL-OPENCODEX-DESKTOP-04.md)。2026-10-09 通过 GitHub Release API 核验：[`v0.1.3`](https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.3) 已公开（isDraft=false），发布于 2026-10-04T14:05:11Z，目标提交 `bd2b1b26cc7c2ade5cb243cd7c8f94560ebc9028`。公开发布不代表所有历史验收项自动通过。
+
+下文及分析、问题来源中的“未实施／未发布”、当时 Latest 与待裁决表述保留为 **2026-10-04 阶段快照**，当前状态以本节及对应实施、发布证据为准。迁移不改变原协作包 open 状态，不重开已结束版本，也不改变历史授权边界。
 
 ## 登记与版本
 
@@ -80,7 +88,7 @@ source_refs:
 
 ## 实施计划
 
-- [IMP-OPENCODEX-DESKTOP-16](https://github.com/gzers/opencodex-desktop/blob/main/docs/03-开发实施/IMP-OPENCODEX-DESKTOP-16.md)：0.1.3 实施计划（冻结范围 U-01～U-05b + C）。
+- [IMP-OPENCODEX-DESKTOP-16](https://github.com/gzers/opencodex-desktop/blob/docs/governance-main/docs/03-开发实施/IMP-OPENCODEX-DESKTOP-16.md)：0.1.3 实施计划（冻结范围 U-01～U-05b + C）。
 
 ## 文件索引
 
