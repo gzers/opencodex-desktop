@@ -1,0 +1,68 @@
+{
+  "source_sha": "f1a0e00342c461b6d17287314195fbf701c520b0",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "platform": "macOS",
+  "focused": {
+    "passed": 25,
+    "failed": 0,
+    "ignored": 0
+  },
+  "full": {
+    "groups": 34,
+    "passed": 829,
+    "failed": 0,
+    "ignored": 5
+  },
+  "commands": [
+    {
+      "log": "focused-initial.log",
+      "command": "cargo test modules::ipc::service::tests",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "focused.log",
+      "command": "cargo test modules::ipc::service::tests",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "full.log",
+      "command": "cargo test",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --check",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --check",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    }
+  ],
+  "staged_diff_check_exit_code": 0,
+  "production_modified": true,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": false,
+  "task_state": "in_progress",
+  "limits": [
+    "public lock tests use same-process real collector/preferences locks and isolated shell fixture; no native runtime or performance proof",
+    "query/binding terminal matrix injects success/error/panic; public test also verifies actual fixed-root reference persistence",
+    "CLI UpdateCheck still returns not_checked/pending stub; true updater not covered",
+    "initial successful 23-test log has unused audit warning; final field removal plus two public-entry tests verified by full run"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-CLI查询与切根所有权"
+}
