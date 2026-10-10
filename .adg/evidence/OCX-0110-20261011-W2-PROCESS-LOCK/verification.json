@@ -1,0 +1,56 @@
+{
+  "source_sha": "904a1323cf60b301869c67a1f9f013fa3a0d5400",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "platform": "macOS",
+  "focused": {
+    "passed": 2,
+    "failed": 0,
+    "ignored": 1,
+    "helper_executed_by_parents": true
+  },
+  "commands": [
+    {
+      "log": "focused.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --test backup_process_lock",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --cached --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    }
+  ],
+  "rust_full_current_rerun": false,
+  "previous_full_baseline": {
+    "source_sha": "bc43e46023cde9781460962b054eb3d19ba027b5",
+    "groups": 33,
+    "passed": 815,
+    "failed": 0,
+    "ignored": 4
+  },
+  "production_modified": false,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "task_state": "in_progress",
+  "limits": [
+    "cooperating subprocess APIs only",
+    "150ms observation after pre-API started marker; no internal acquisition barrier",
+    "not Windows/non-cooperating writer/native performance proof"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-W2跨进程锁"
+}
