@@ -1,0 +1,61 @@
+{
+  "source_sha": "40f19871c75d3b7d8332a2cfbbce8831cf9307e9",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "platform": "macOS",
+  "focused": {
+    "passed": 16,
+    "failed": 0,
+    "ignored": 0
+  },
+  "full": {
+    "groups": 34,
+    "passed": 820,
+    "failed": 0,
+    "ignored": 5
+  },
+  "commands": [
+    {
+      "log": "focused.log",
+      "command": "cargo test modules::ipc::service::tests",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "full.log",
+      "command": "cargo test",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --check",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --check",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    }
+  ],
+  "staged_diff_check_exit_code": 0,
+  "production_modified": true,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": false,
+  "task_state": "in_progress",
+  "limits": [
+    "same-process real lock responsiveness; not cross-process or native performance proof",
+    "extension configuration persistence only; no actual client Skills/MCP asset projection",
+    "no migration registry terminals added"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-CLI导入导出所有权"
+}
