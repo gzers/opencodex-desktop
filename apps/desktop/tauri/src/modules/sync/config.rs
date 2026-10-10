@@ -82,6 +82,25 @@ pub struct SyncConfigStore {
     data_root: PathBuf,
 }
 
+/// Testable credential boundary. Missing and unavailable are distinct facts.
+trait EndpointCredentials {
+    fn store(&self, ref_id: &str, password: &str) -> Result<(), AppError>;
+    fn load(&self, purpose: &str, ref_id: &str) -> Result<Option<String>, AppError>;
+    fn remove(&self, purpose: &str, ref_id: &str) -> Result<(), AppError>;
+}
+struct SystemCredentials;
+impl EndpointCredentials for SystemCredentials {
+    fn store(&self, ref_id: &str, password: &str) -> Result<(), AppError> {
+        keychain::store_webdav_password(ref_id, password)
+    }
+    fn load(&self, purpose: &str, ref_id: &str) -> Result<Option<String>, AppError> {
+        keychain::load_optional_keychain_password(purpose, ref_id)
+    }
+    fn remove(&self, purpose: &str, ref_id: &str) -> Result<(), AppError> {
+        keychain::remove_keychain_password(purpose, ref_id)
+    }
+}
+
 impl SyncConfigStore {
     pub fn new(data_root: &Path) -> Self {
         Self {
@@ -110,18 +129,32 @@ impl SyncConfigStore {
     }
 
     pub fn save_endpoint(&self, input: &SyncEndpointInput) -> Result<SyncEndpointConfig, AppError> {
+        self.save_endpoint_observed(input, |_, _| {})
+    }
+
+    /// Caller holds storage/sync admission through write, verification and callback.
+    /// Validation and unreadable existing configuration are preflight refusals.
+    pub(crate) fn save_endpoint_observed(
+        &self,
+        input: &SyncEndpointInput,
+        observer: impl FnOnce(&[u8], bool),
+    ) -> Result<SyncEndpointConfig, AppError> {
+        self.save_endpoint_with_credentials(input, &SystemCredentials, observer)
+    }
+
+    fn save_endpoint_with_credentials(
+        &self,
+        input: &SyncEndpointInput,
+        credentials: &impl EndpointCredentials,
+        observer: impl FnOnce(&[u8], bool),
+    ) -> Result<SyncEndpointConfig, AppError> {
         validate_input(input)?;
         let mut config = self.load()?;
         let now = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
-        let endpoint_id = "default".to_string();
         let ref_id = config
             .active()
             .map(|endpoint| endpoint.credential_ref.ref_id.clone())
             .unwrap_or_else(keychain::new_ref_id);
-
-        // 只保存 WebDAV 服务端认证口令；同步载荷不再使用额外加密口令。
-        keychain::store_webdav_password(&ref_id, &input.password)?;
-
         let credential = CredentialRef {
             ref_id: ref_id.clone(),
             backend: "keychain".to_string(),
@@ -135,7 +168,7 @@ impl SyncConfigStore {
             updated_at: now,
         };
         let endpoint = SyncEndpointConfig {
-            endpoint_id,
+            endpoint_id: "default".to_string(),
             url: input.base_url.trim().trim_end_matches('/').to_string(),
             remote_path: input.remote_path.trim().trim_matches('/').to_string(),
             username: input.username.trim().to_string(),
@@ -144,25 +177,84 @@ impl SyncConfigStore {
             legacy_encryption: String::new(),
             conflict_policy: input.conflict_policy.clone(),
         };
-        config.endpoints.clear();
-        config.endpoints.push(endpoint.clone());
+        // Full requested values, without random refs/timestamps, define retries.
+        // Secret-bearing bytes stay local; event delivery persists only a digest.
+        let candidate = serde_json::to_vec(&(
+            &endpoint.url,
+            &endpoint.remote_path,
+            &endpoint.username,
+            &input.password,
+            &endpoint.conflict_policy,
+        ))
+        .map_err(|_| AppError::NotConfigured)?;
+        config.endpoints = vec![endpoint.clone()];
+        validate_config(&config)?;
         let bytes = serde_json::to_vec_pretty(&config).map_err(|_| AppError::NotConfigured)?;
-        crate::infrastructure::atomic_write::atomic_write(&self.path(), &bytes, 0o600)?;
-        Ok(endpoint)
+        let result = (|| {
+            credentials.store(&ref_id, &input.password)?;
+            crate::infrastructure::atomic_write::atomic_write(&self.path(), &bytes, 0o600)?;
+            if self.load()? != config
+                || credentials
+                    .load(WEBDAV_CREDENTIAL_PURPOSE, &ref_id)?
+                    .as_deref()
+                    != Some(input.password.as_str())
+            {
+                return Err(AppError::NotConfigured);
+            }
+            Ok(endpoint)
+        })();
+        observer(&candidate, result.is_ok());
+        result
     }
 
     pub fn delete_endpoint(&self, delete_credentials: bool) -> Result<(), AppError> {
+        self.delete_endpoint_observed(delete_credentials, |_, _| {})
+    }
+
+    pub(crate) fn delete_endpoint_observed(
+        &self,
+        delete_credentials: bool,
+        observer: impl FnOnce(&[u8], bool),
+    ) -> Result<(), AppError> {
+        self.delete_endpoint_with_credentials(delete_credentials, &SystemCredentials, observer)
+    }
+
+    fn delete_endpoint_with_credentials(
+        &self,
+        delete_credentials: bool,
+        credentials: &impl EndpointCredentials,
+        observer: impl FnOnce(&[u8], bool),
+    ) -> Result<(), AppError> {
         let config = self.load()?;
-        if let Some(endpoint) = config.active() {
-            if delete_credentials {
-                let _ = keychain::delete_webdav_password(&endpoint.credential_ref.ref_id);
-                // 旧版本可能存有同步加密口令；不存在时删除会返回错误，这里按「尽力清理」处理。
-                let _ = keychain::delete_encryption_password(&endpoint.credential_ref.ref_id);
-            }
-        }
-        let bytes = serde_json::to_vec_pretty(&SyncConfig::default())
+        // Keep the old reference on any credential failure, so a partial cleanup
+        // can be retried. Keeping credentials and removing them are distinct intents.
+        let candidate = serde_json::to_vec(&(&config, delete_credentials))
             .map_err(|_| AppError::NotConfigured)?;
-        crate::infrastructure::atomic_write::atomic_write(&self.path(), &bytes, 0o600)
+        let empty = SyncConfig::default();
+        let bytes = serde_json::to_vec_pretty(&empty).map_err(|_| AppError::NotConfigured)?;
+        let result = (|| {
+            if let Some(endpoint) = config.active() {
+                if delete_credentials {
+                    let ref_id = &endpoint.credential_ref.ref_id;
+                    for purpose in [
+                        WEBDAV_CREDENTIAL_PURPOSE,
+                        keychain::ENCRYPTION_PASSWORD_PURPOSE,
+                    ] {
+                        credentials.remove(purpose, ref_id)?;
+                        if credentials.load(purpose, ref_id)?.is_some() {
+                            return Err(AppError::NotConfigured);
+                        }
+                    }
+                }
+            }
+            crate::infrastructure::atomic_write::atomic_write(&self.path(), &bytes, 0o600)?;
+            if self.load()? != empty {
+                return Err(AppError::NotConfigured);
+            }
+            Ok(())
+        })();
+        observer(&candidate, result.is_ok());
+        result
     }
 
     /// 用外部提供的整份配置替换本机端点配置（配置迁移导入路径）。
@@ -337,5 +429,349 @@ mod tests {
         // 新写出不再包含该字段。
         let written = serde_json::to_string(&parsed).expect("serialize");
         assert!(!written.contains("forced"));
+    }
+}
+
+#[cfg(test)]
+mod endpoint_mutation_tests {
+    use super::*;
+    use std::cell::{Cell, RefCell};
+    use std::collections::HashMap;
+
+    #[derive(Clone, Copy, PartialEq, Eq, Default)]
+    enum Fault {
+        #[default]
+        None,
+        StoreError,
+        StoreNoop,
+        ReadError,
+        WrongRead,
+        DeleteError,
+        DeleteNoop,
+        LegacyDeleteError,
+    }
+    #[derive(Default)]
+    struct Credentials {
+        values: RefCell<HashMap<(String, String), String>>,
+        calls: RefCell<Vec<String>>,
+        fault: Cell<Fault>,
+        after_store: RefCell<Option<Box<dyn FnOnce()>>>,
+        after_remove: RefCell<Option<Box<dyn FnOnce()>>>,
+    }
+    impl EndpointCredentials for Credentials {
+        fn store(&self, ref_id: &str, password: &str) -> Result<(), AppError> {
+            self.calls.borrow_mut().push("store".into());
+            if self.fault.get() == Fault::StoreError {
+                return Err(AppError::NotConfigured);
+            }
+            if self.fault.get() != Fault::StoreNoop {
+                self.values.borrow_mut().insert(
+                    (WEBDAV_CREDENTIAL_PURPOSE.into(), ref_id.into()),
+                    password.into(),
+                );
+            }
+            if let Some(hook) = self.after_store.borrow_mut().take() {
+                hook();
+            }
+            Ok(())
+        }
+        fn load(&self, purpose: &str, ref_id: &str) -> Result<Option<String>, AppError> {
+            self.calls.borrow_mut().push(format!("read:{purpose}"));
+            match self.fault.get() {
+                Fault::ReadError => Err(AppError::NotConfigured),
+                Fault::WrongRead => Ok(Some("different-secret".into())),
+                _ => Ok(self
+                    .values
+                    .borrow()
+                    .get(&(purpose.into(), ref_id.into()))
+                    .cloned()),
+            }
+        }
+        fn remove(&self, purpose: &str, ref_id: &str) -> Result<(), AppError> {
+            self.calls.borrow_mut().push(format!("delete:{purpose}"));
+            if self.fault.get() == Fault::DeleteError
+                || (self.fault.get() == Fault::LegacyDeleteError
+                    && purpose == keychain::ENCRYPTION_PASSWORD_PURPOSE)
+            {
+                return Err(AppError::NotConfigured);
+            }
+            if self.fault.get() != Fault::DeleteNoop {
+                self.values
+                    .borrow_mut()
+                    .remove(&(purpose.into(), ref_id.into()));
+            }
+            if let Some(hook) = self.after_remove.borrow_mut().take() {
+                hook();
+            }
+            Ok(())
+        }
+    }
+    fn input() -> SyncEndpointInput {
+        SyncEndpointInput {
+            base_url: "https://dav.example.test/".into(),
+            remote_path: "/desktop-sync/current/".into(),
+            username: " user ".into(),
+            password: "private-password".into(),
+            conflict_policy: CONFLICT_POLICY_ASK.into(),
+        }
+    }
+    fn save(store: &SyncConfigStore, credentials: &Credentials) -> SyncEndpointConfig {
+        store
+            .save_endpoint_with_credentials(&input(), credentials, |_, ok| assert!(ok))
+            .unwrap()
+    }
+
+    #[test]
+    fn save_requires_exact_config_and_secret_readback() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        let endpoint = save(&store, &credentials);
+        assert_eq!(store.load().unwrap().active(), Some(&endpoint));
+        assert_eq!(endpoint.url, "https://dav.example.test");
+        assert_eq!(endpoint.remote_path, "desktop-sync/current");
+        assert_eq!(endpoint.username, "user");
+        assert_eq!(
+            *credentials.calls.borrow(),
+            ["store", "read:webdav_credential"]
+        );
+        assert!(!std::fs::read_to_string(store.path())
+            .unwrap()
+            .contains("private-password"));
+    }
+
+    #[test]
+    fn save_retry_keeps_full_intent_and_observes_real_error() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        let original = save(&store, &credentials);
+        let mut changed = input();
+        changed.password = "changed-password".into();
+        credentials.fault.set(Fault::StoreError);
+        let mut failed = Vec::new();
+        assert!(store
+            .save_endpoint_with_credentials(&changed, &credentials, |candidate, ok| {
+                assert!(!ok);
+                failed = candidate.to_vec();
+            })
+            .is_err());
+        assert_eq!(store.load().unwrap().active(), Some(&original));
+        credentials.fault.set(Fault::None);
+        let retried = store
+            .save_endpoint_with_credentials(&changed, &credentials, |candidate, ok| {
+                assert!(ok);
+                assert_eq!(candidate, failed);
+            })
+            .unwrap();
+        assert_eq!(
+            retried.credential_ref.ref_id,
+            original.credential_ref.ref_id
+        );
+        store
+            .save_endpoint_with_credentials(&input(), &credentials, |candidate, ok| {
+                assert!(ok);
+                assert_ne!(candidate, failed);
+            })
+            .unwrap();
+    }
+
+    #[test]
+    fn save_missing_wrong_or_unavailable_readback_cannot_succeed() {
+        for fault in [Fault::StoreNoop, Fault::WrongRead, Fault::ReadError] {
+            let root = tempfile::tempdir().unwrap();
+            let store = SyncConfigStore::new(root.path());
+            let credentials = Credentials::default();
+            credentials.fault.set(fault);
+            let mut observed = false;
+            assert!(store
+                .save_endpoint_with_credentials(&input(), &credentials, |_, ok| {
+                    observed = true;
+                    assert!(!ok);
+                })
+                .is_err());
+            assert!(observed);
+            assert!(
+                store.load().unwrap().active().is_some(),
+                "config commit is not rolled back"
+            );
+        }
+    }
+
+    #[test]
+    fn save_partial_credential_write_reports_failure() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        let blocked = store.path();
+        credentials.after_store.replace(Some(Box::new(move || {
+            std::fs::create_dir_all(blocked).unwrap();
+        })));
+        let mut observed = false;
+        assert!(store
+            .save_endpoint_with_credentials(&input(), &credentials, |_, ok| {
+                observed = true;
+                assert!(!ok);
+            })
+            .is_err());
+        assert!(observed);
+        assert_eq!(
+            credentials.values.borrow().len(),
+            1,
+            "partial secret commit is not hidden"
+        );
+    }
+
+    #[test]
+    fn preflight_refusals_do_not_write_or_observe_terminals() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        for invalid in ["", "/"] {
+            let mut value = input();
+            value.remote_path = invalid.into();
+            assert!(store
+                .save_endpoint_with_credentials(&value, &credentials, |_, _| panic!("preflight"))
+                .is_err());
+        }
+        std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+        std::fs::write(store.path(), b"corrupt").unwrap();
+        assert!(store
+            .save_endpoint_with_credentials(&input(), &credentials, |_, _| panic!("preflight"))
+            .is_err());
+        assert!(store
+            .delete_endpoint_with_credentials(true, &credentials, |_, _| panic!("preflight"))
+            .is_err());
+        assert!(credentials.calls.borrow().is_empty());
+        assert_eq!(std::fs::read(store.path()).unwrap(), b"corrupt");
+    }
+
+    #[test]
+    fn delete_verifies_both_purposes_and_accepts_explicit_absence() {
+        for legacy in [false, true] {
+            let root = tempfile::tempdir().unwrap();
+            let store = SyncConfigStore::new(root.path());
+            let credentials = Credentials::default();
+            let endpoint = save(&store, &credentials);
+            if legacy {
+                credentials.values.borrow_mut().insert(
+                    (
+                        keychain::ENCRYPTION_PASSWORD_PURPOSE.into(),
+                        endpoint.credential_ref.ref_id.clone(),
+                    ),
+                    "legacy-secret".into(),
+                );
+            }
+            credentials.calls.borrow_mut().clear();
+            store
+                .delete_endpoint_with_credentials(true, &credentials, |_, ok| assert!(ok))
+                .unwrap();
+            assert_eq!(store.load().unwrap(), SyncConfig::default());
+            assert!(credentials.values.borrow().is_empty());
+            assert_eq!(
+                *credentials.calls.borrow(),
+                [
+                    "delete:webdav_credential",
+                    "read:webdav_credential",
+                    "delete:encryption_password",
+                    "read:encryption_password"
+                ]
+            );
+            credentials.calls.borrow_mut().clear();
+            store
+                .delete_endpoint_with_credentials(true, &credentials, |_, ok| assert!(ok))
+                .unwrap();
+            assert!(credentials.calls.borrow().is_empty());
+        }
+    }
+
+    #[test]
+    fn failed_or_unverified_deletion_retains_reference_for_exact_retry() {
+        for fault in [
+            Fault::DeleteError,
+            Fault::DeleteNoop,
+            Fault::LegacyDeleteError,
+            Fault::ReadError,
+        ] {
+            let root = tempfile::tempdir().unwrap();
+            let store = SyncConfigStore::new(root.path());
+            let credentials = Credentials::default();
+            let endpoint = save(&store, &credentials);
+            let before = std::fs::read(store.path()).unwrap();
+            credentials.fault.set(fault);
+            let mut failed = Vec::new();
+            assert!(store
+                .delete_endpoint_with_credentials(true, &credentials, |candidate, ok| {
+                    assert!(!ok);
+                    failed = candidate.to_vec();
+                })
+                .is_err());
+            assert_eq!(std::fs::read(store.path()).unwrap(), before);
+            assert_eq!(store.load().unwrap().active(), Some(&endpoint));
+            credentials.fault.set(Fault::None);
+            store
+                .delete_endpoint_with_credentials(true, &credentials, |candidate, ok| {
+                    assert!(ok);
+                    assert_eq!(candidate, failed);
+                })
+                .unwrap();
+        }
+    }
+
+    #[test]
+    fn keeping_credentials_is_a_distinct_intent_and_never_accesses_them() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        save(&store, &credentials);
+        credentials.fault.set(Fault::DeleteError);
+        let mut deleting = Vec::new();
+        assert!(store
+            .delete_endpoint_with_credentials(true, &credentials, |candidate, ok| {
+                assert!(!ok);
+                deleting = candidate.to_vec();
+            })
+            .is_err());
+        credentials.calls.borrow_mut().clear();
+        store
+            .delete_endpoint_with_credentials(false, &credentials, |candidate, ok| {
+                assert!(ok);
+                assert_ne!(candidate, deleting);
+            })
+            .unwrap();
+        assert!(credentials.calls.borrow().is_empty());
+        assert_eq!(credentials.values.borrow().len(), 1);
+        assert_eq!(store.load().unwrap(), SyncConfig::default());
+    }
+
+    #[test]
+    fn delete_partial_disk_failure_keeps_reference_and_retry_is_idempotent() {
+        let root = tempfile::tempdir().unwrap();
+        let store = SyncConfigStore::new(root.path());
+        let credentials = Credentials::default();
+        save(&store, &credentials);
+        let before = std::fs::read(store.path()).unwrap();
+        let path = store.path();
+        credentials.after_remove.replace(Some(Box::new(move || {
+            std::fs::remove_file(&path).unwrap();
+            std::fs::create_dir(&path).unwrap();
+        })));
+        let mut failed = Vec::new();
+        assert!(store
+            .delete_endpoint_with_credentials(true, &credentials, |candidate, ok| {
+                assert!(!ok);
+                failed = candidate.to_vec();
+            })
+            .is_err());
+        assert!(credentials.values.borrow().is_empty());
+        // Restore only the injected filesystem fault, not the already removed secrets.
+        std::fs::remove_dir(store.path()).unwrap();
+        std::fs::write(store.path(), before).unwrap();
+        store
+            .delete_endpoint_with_credentials(true, &credentials, |candidate, ok| {
+                assert!(ok);
+                assert_eq!(candidate, failed);
+            })
+            .unwrap();
     }
 }

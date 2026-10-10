@@ -48,6 +48,8 @@ pub enum Job {
     Sync,
     SyncConflict,
     SyncProbe,
+    SyncEndpointSave,
+    SyncEndpointDelete,
     Backup,
     Migration,
     PreferencesBackup,
@@ -109,7 +111,8 @@ dimension!(Action {
     Pin,
     Reconcile,
     Save,
-    Reset
+    Reset,
+    Delete
 });
 dimension!(Phase {
     Execution,
@@ -194,6 +197,8 @@ pub enum PolicyId {
     LocalCleanupFailure,
     SyncConflict,
     SyncConnectionFailure,
+    SyncEndpointSaveFailure,
+    SyncEndpointDeleteFailure,
 }
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -611,6 +616,14 @@ enum SupportedEvent {
     SyncConnectionFailed,
     #[serde(rename = "sync-connection-succeeded")]
     SyncConnectionSucceeded,
+    #[serde(rename = "sync-endpoint-save-failed")]
+    SyncEndpointSaveFailed,
+    #[serde(rename = "sync-endpoint-save-succeeded")]
+    SyncEndpointSaveSucceeded,
+    #[serde(rename = "sync-endpoint-delete-failed")]
+    SyncEndpointDeleteFailed,
+    #[serde(rename = "sync-endpoint-delete-succeeded")]
+    SyncEndpointDeleteSucceeded,
     #[serde(rename = "backup-completed")]
     BackupCompleted,
     #[serde(rename = "migration-completed")]

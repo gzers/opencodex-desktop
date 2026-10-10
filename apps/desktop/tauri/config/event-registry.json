@@ -261,6 +261,20 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "sync_endpoint_save",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "sync_endpoint_delete",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1254,6 +1268,66 @@
       "resolves": [
         "sync-connection-failed"
       ]
+    },
+    {
+      "id": "sync-endpoint-save-failed",
+      "job": "sync_endpoint_save",
+      "object": "sync",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "sync_endpoint_save_failure",
+      "resolves": []
+    },
+    {
+      "id": "sync-endpoint-save-succeeded",
+      "job": "sync_endpoint_save",
+      "object": "sync",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "sync-endpoint-save-failed"
+      ]
+    },
+    {
+      "id": "sync-endpoint-delete-failed",
+      "job": "sync_endpoint_delete",
+      "object": "sync",
+      "action": "delete",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "sync_endpoint_delete_failure",
+      "resolves": []
+    },
+    {
+      "id": "sync-endpoint-delete-succeeded",
+      "job": "sync_endpoint_delete",
+      "object": "sync",
+      "action": "delete",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "sync-endpoint-delete-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1506,6 +1580,30 @@
       "body": "连接测试未通过；请检查连接设置后重试。",
       "action": "logs",
       "dedupe": "sync-connection:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "sync_endpoint_save_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 端点保存未完成",
+      "body": "配置或凭据未完成核验，可能已有部分写入；请检查连接设置后重试。",
+      "action": "logs",
+      "dedupe": "sync-endpoint-save:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "sync_endpoint_delete_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 端点删除未完成",
+      "body": "配置或凭据清理未完成核验；请检查连接设置后重试。",
+      "action": "logs",
+      "dedupe": "sync-endpoint-delete:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -1879,6 +1977,26 @@
     {
       "event": "sync-connection-succeeded",
       "source": "commands/sync.rs::test_sync_connection owned bounded probe + endpoint/credential readback under sync gate",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-endpoint-save-failed",
+      "source": "commands/sync.rs::save_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-endpoint-save-succeeded",
+      "source": "commands/sync.rs::save_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-endpoint-delete-failed",
+      "source": "commands/sync.rs::delete_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-endpoint-delete-succeeded",
+      "source": "commands/sync.rs::delete_sync_endpoint owned credential/config mutation + exact readback under sync gate",
       "wiring": "scoped_terminal"
     }
   ],

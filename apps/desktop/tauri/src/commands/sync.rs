@@ -172,6 +172,7 @@ async fn probe_connection_observed<T: WebDavTransport>(
 pub async fn save_sync_endpoint(
     request: SaveSyncEndpointRequest,
     data_root: State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
 ) -> AppResult<SyncConfigDto> {
     let input = SyncEndpointInput {
         base_url: request.base_url,
@@ -183,7 +184,9 @@ pub async fn save_sync_endpoint(
     let root = data_root.inner().0.clone();
     let endpoint = run_owned_sync("save sync endpoint", move || {
         let store = SyncConfigStore::new(&root);
-        store.save_endpoint(&input)
+        store.save_endpoint_observed(&input, |candidate, succeeded| {
+            publish_endpoint_result(&app, &root, "sync-endpoint-save", candidate, succeeded);
+        })
     })
     .await?;
     Ok(SyncConfigDto {
@@ -195,15 +198,42 @@ pub async fn save_sync_endpoint(
 pub async fn delete_sync_endpoint(
     delete_credentials: bool,
     data_root: State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
 ) -> AppResult<SyncConfigDto> {
     {
         let root = data_root.inner().0.clone();
         run_owned_sync("delete sync endpoint", move || {
-            SyncConfigStore::new(&root).delete_endpoint(delete_credentials)
+            SyncConfigStore::new(&root).delete_endpoint_observed(
+                delete_credentials,
+                |candidate, succeeded| {
+                    publish_endpoint_result(
+                        &app,
+                        &root,
+                        "sync-endpoint-delete",
+                        candidate,
+                        succeeded,
+                    );
+                },
+            )
         })
         .await?;
     }
     Ok(project_config(&SyncConfig::default()))
+}
+
+fn publish_endpoint_result(
+    app: &tauri::AppHandle,
+    root: &std::path::Path,
+    stem: &str,
+    candidate: &[u8],
+    succeeded: bool,
+) {
+    use crate::modules::notifications::registry::{Channel, Trigger};
+    let failed = format!("{stem}-failed");
+    let identity =
+        crate::commands::event_delivery::prepare(root, &failed, Channel::Local, candidate);
+    let event = format!("{stem}-{}", if succeeded { "succeeded" } else { "failed" });
+    crate::commands::event_delivery::publish(app, root, &event, identity, Trigger::User);
 }
 
 fn webdav_config(config: &SyncEndpointConfig) -> AppResult<WebDavConfig> {

@@ -87,10 +87,38 @@ pub fn load_encryption_password(ref_id: &str) -> Result<String, AppError> {
 }
 
 pub fn load_keychain_password(purpose: &str, ref_id: &str) -> Result<String, AppError> {
+    load_optional_keychain_password(purpose, ref_id)?.ok_or(AppError::NotConfigured)
+}
+
+/// Only the platform's explicit NoEntry means absent. Locked, ambiguous or
+/// unreadable credentials must never serve as evidence of successful deletion.
+pub fn load_optional_keychain_password(
+    purpose: &str,
+    ref_id: &str,
+) -> Result<Option<String>, AppError> {
     let account = account_key(purpose, ref_id)?;
-    credential_entry(&account)?
-        .get_password()
-        .map_err(|_| AppError::NotConfigured)
+    optional_password_result(credential_entry(&account)?.get_password())
+}
+
+fn optional_password_result(result: keyring::Result<String>) -> Result<Option<String>, AppError> {
+    match result {
+        Ok(password) => Ok(Some(password)),
+        Err(keyring::Error::NoEntry) => Ok(None),
+        Err(_) => Err(AppError::NotConfigured),
+    }
+}
+
+/// Idempotent removal still requires a subsequent absence readback by its owner.
+pub fn remove_keychain_password(purpose: &str, ref_id: &str) -> Result<(), AppError> {
+    let account = account_key(purpose, ref_id)?;
+    removal_result(credential_entry(&account)?.delete_credential())
+}
+
+fn removal_result(result: keyring::Result<()>) -> Result<(), AppError> {
+    match result {
+        Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
+        Err(_) => Err(AppError::NotConfigured),
+    }
 }
 
 pub fn delete_webdav_password(ref_id: &str) -> Result<(), AppError> {
@@ -110,6 +138,34 @@ pub fn delete_encryption_password(ref_id: &str) -> Result<(), AppError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn only_explicit_absence_is_benign_for_load_and_removal() {
+        assert_eq!(
+            optional_password_result(Err(keyring::Error::NoEntry)).unwrap(),
+            None
+        );
+        assert_eq!(
+            optional_password_result(Ok("secret".into())).unwrap(),
+            Some("secret".into())
+        );
+        assert!(removal_result(Err(keyring::Error::NoEntry)).is_ok());
+        assert!(removal_result(Ok(())).is_ok());
+        let faults = || {
+            vec![
+                keyring::Error::NoStorageAccess(Box::new(std::io::Error::other("locked"))),
+                keyring::Error::PlatformFailure(Box::new(std::io::Error::other("unavailable"))),
+                keyring::Error::Ambiguous(Vec::new()),
+                keyring::Error::BadEncoding(vec![255]),
+            ]
+        };
+        for error in faults() {
+            assert!(optional_password_result(Err(error)).is_err());
+        }
+        for error in faults() {
+            assert!(removal_result(Err(error)).is_err());
+        }
+    }
 
     #[test]
     fn account_key_matches_frozen_shape() {
