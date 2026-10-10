@@ -1,0 +1,35 @@
+{
+  "evidence_id": "OCX-0110-20261011-LOCAL-VALIDATION",
+  "verification": "local source regression",
+  "tree_table_fix": {
+    "component": "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+    "commit": "8f5a76f867272730ee22ba672934fdd82807d218",
+    "behavior": [
+      "移除原生 checkbox 的 margin 基线补偿",
+      "复选框、箭头占位、图标与文字统一 flex 对齐和 22px 行高",
+      "不改变选择、展开、备份范围或树表数据语义",
+      "生产树表继续通过 UiTreeTable.vue / treeTable.ts 复用统一布局合同"
+    ]
+  },
+  "rust": {
+    "passed": 690,
+    "failed": 0,
+    "ignored": 4,
+    "exit_code": 0
+  },
+  "ui": {
+    "test_files_passed": 94,
+    "tests_passed": 459,
+    "failed": 0,
+    "typecheck": "passed",
+    "build": "passed",
+    "modules_transformed": 170,
+    "exit_code": 0
+  },
+  "gates": {
+    "source_regression": "passed",
+    "native_platform_acceptance": "open",
+    "release_authorization": "not_granted"
+  },
+  "interpretation": "本证据只证明当前源码的本地回归和共享树表组件修复，不构成 0.1.10 完成证书或发布授权。"
+}

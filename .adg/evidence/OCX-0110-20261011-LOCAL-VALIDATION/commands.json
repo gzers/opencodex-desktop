@@ -1,0 +1,63 @@
+{
+  "evidence_id": "OCX-0110-20261011-LOCAL-VALIDATION",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "8f5a76f867272730ee22ba672934fdd82807d218",
+  "document_branch": "docs/governance-main",
+  "commands": [
+    {
+      "cwd": "repository root",
+      "command": "cargo metadata --locked --no-deps --format-version 1",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "repository root",
+      "command": "cargo fmt --all -- --check",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "repository root",
+      "command": "cargo check --locked --workspace --all-targets",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "repository root",
+      "command": "cargo clippy --locked --workspace --all-targets -- -D warnings",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "repository root",
+      "command": "cargo test --locked --workspace --features integration-test",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "690 passed / 0 failed / 4 ignored"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm test -- --run",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "94 test files / 459 tests passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm run build",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "170 modules transformed"
+    }
+  ],
+  "non_blocking_output": [
+    "Vite reported the existing INEFFECTIVE_DYNAMIC_IMPORT warning; build still exited 0.",
+    "Existing jsdom HTMLCanvasElement.getContext() notices occurred in tests and did not fail the run."
+  ]
+}

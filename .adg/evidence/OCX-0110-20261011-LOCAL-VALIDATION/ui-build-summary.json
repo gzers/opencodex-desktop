@@ -1,0 +1,20 @@
+{
+  "evidence_id": "OCX-0110-20261011-LOCAL-VALIDATION",
+  "component": "UiTreeTable.vue",
+  "test_files_passed": 94,
+  "tests_passed": 459,
+  "typecheck": {
+    "status": "passed",
+    "exit_code": 0
+  },
+  "production_build": {
+    "status": "passed",
+    "exit_code": 0,
+    "modules_transformed": 170
+  },
+  "warnings": [
+    "INEFFECTIVE_DYNAMIC_IMPORT (既有、非阻断)",
+    "jsdom HTMLCanvasElement.getContext() notice (既有、非阻断)"
+  ],
+  "visual_scope": "未执行双平台原生实屏视觉验收；本文件不能证明 Windows 云母、标题栏、动效、透明下拉框或 macOS 安装表现。"
+}

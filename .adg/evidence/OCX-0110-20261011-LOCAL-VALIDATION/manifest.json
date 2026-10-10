@@ -1,0 +1,25 @@
+{
+  "evidence_id": "OCX-0110-20261011-LOCAL-VALIDATION",
+  "created_at": "2026-10-11",
+  "kind": "local-source-regression",
+  "status": "passed_with_scope_limits",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "8f5a76f867272730ee22ba672934fdd82807d218",
+  "document_branch": "docs/governance-main",
+  "document_head_at_capture": "7533e1b8",
+  "subject": "共享生产树表组件垂直对齐修复及本地全量源码回归",
+  "scope": [
+    "UiTreeTable.vue 的复选框、箭头占位、图标与文字统一 22px 对齐基线",
+    "Rust 工作区全量源码检查与集成测试",
+    "UI 测试、类型检查和生产构建"
+  ],
+  "limitations": [
+    "不替代 macOS 原生 UI 与安装回归",
+    "不替代 Windows 普通权限、DPI、云母、原生标题栏、动效和透明下拉框验收",
+    "不替代 Windows 安装路径与自定义路径验收",
+    "不替代真实更新、重启、自动检查性能和缓存行为验收",
+    "不替代 stable 24h / beta 6h 周期、签名、发布资产、更新端点和真实用户迁移门禁",
+    "不替代全域事件覆盖审阅"
+  ],
+  "release_authorization": false
+}
