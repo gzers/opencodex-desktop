@@ -105,6 +105,7 @@ pub async fn list_preferences_backups(
     )
     .map_err(|_| AppError::NotConfigured)?;
     let root = root.0.clone();
+    // Even reads may create the cooperative transaction lock on disk.
     crate::commands::run_blocking("list preferences backups", move || manager::list(&root)).await
 }
 

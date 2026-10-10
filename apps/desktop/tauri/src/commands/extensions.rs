@@ -19,7 +19,7 @@ pub async fn extension_config(
 ) -> AppResult<ExtensionConfigDto> {
     let root = data_root.0.clone();
     let home = home.0.clone();
-    crate::commands::run_blocking("read extension config", move || {
+    crate::commands::run_readonly("read extension config", move || {
         extension_config_with_paths(&root, &home)
     })
     .await
@@ -32,7 +32,7 @@ pub async fn list_extensions(
 ) -> AppResult<ExtensionsDto> {
     let root = data_root.0.clone();
     let home = home.0.clone();
-    crate::commands::run_blocking("discover extensions", move || {
+    crate::commands::run_readonly("discover extensions", move || {
         list_extensions_with_paths(&root, &home)
     })
     .await
@@ -269,7 +269,7 @@ pub async fn read_skill_detail(
 ) -> AppResult<SkillDetailDto> {
     let root = data_root.0.clone();
     let home = home.0.clone();
-    crate::commands::run_blocking("read skill detail", move || {
+    crate::commands::run_readonly("read skill detail", move || {
         read_skill_detail_with_paths(&name, &root, &home)
     })
     .await
@@ -343,7 +343,7 @@ pub async fn read_mcp_detail(
 ) -> AppResult<McpDetailDto> {
     let root = data_root.0.clone();
     let home = home.0.clone();
-    crate::commands::run_blocking("read mcp detail", move || {
+    crate::commands::run_readonly("read mcp detail", move || {
         read_mcp_detail_with_paths(&name, &root, &home)
     })
     .await
@@ -370,6 +370,7 @@ pub fn set_extension_client_enabled(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, SharedHomeDir>,
 ) -> AppResult<ExtensionConfigDto> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     set_extension_client_enabled_with_paths(&data_root.0, &home.0, request.client, request.enabled)
 }
 

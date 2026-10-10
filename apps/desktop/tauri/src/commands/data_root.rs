@@ -83,7 +83,7 @@ pub async fn initialize_data_root(request: DataRootRequest) -> AppResult<DataRoo
 
 #[tauri::command]
 pub async fn validate_data_root_structure(root_path: String) -> AppResult<StructureValidation> {
-    crate::commands::run_blocking("validate data root", move || {
+    crate::commands::run_readonly("validate data root", move || {
         validate_structure(std::path::Path::new(&root_path))
     })
     .await
@@ -107,7 +107,7 @@ pub async fn switch_data_root(
     let root = anchor.0.clone();
     let target = std::path::PathBuf::from(&request.target_path);
     let mode = request.mode;
-    let result = crate::commands::run_blocking("switch data root", move || {
+    let result = crate::commands::run_readonly("switch data root", move || {
         change_binding(&app, || switch_data_root_with_paths(&root, &target, mode))
     })
     .await?;
@@ -123,7 +123,7 @@ pub async fn set_opencodex_home_config(
     let root = anchor.0.clone();
     let external_path = request.external_path.map(std::path::PathBuf::from);
     let mode = request.mode;
-    crate::commands::run_blocking("set opencodex home", move || {
+    crate::commands::run_readonly("set opencodex home", move || {
         change_binding(&app, || {
             set_opencodex_home_with_paths(&root, mode, external_path.as_deref())
         })
@@ -182,12 +182,16 @@ pub fn set_opencodex_home_with_paths(
     )
 }
 
-// Excludes lifecycle/install operations while saving. This is not the full
-// storage-writer quiescence required for migration or live rebinding.
+// Busy work is refused, not cancelled/drained. Saved bindings latch writers
+// closed until restart; immutable startup services are never rebound in place.
 fn change_binding(
     app: &tauri::AppHandle,
     change: impl FnOnce() -> AppResult<DataRootSwitchResult>,
 ) -> AppResult<DataRootSwitchResult> {
+    let gate = crate::infrastructure::storage_writers::global();
+    let Some(binding) = gate.freeze()? else {
+        return Ok(blocked_running());
+    };
     let mutation = app.state::<crate::state::SharedRuntimeInstall>();
     let Some(_lease) = mutation.acquire() else {
         return Ok(blocked_running());
@@ -214,6 +218,9 @@ fn change_binding(
         config.current_opencodex_home = context.opencodex_home.display().to_string();
         config.runtime_active = config.active_data_root == config.current_data_root
             && config.opencodex_home == config.current_opencodex_home;
+        if !config.runtime_active {
+            binding.commit();
+        }
     }
     Ok(result)
 }

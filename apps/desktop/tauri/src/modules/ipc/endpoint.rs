@@ -106,6 +106,8 @@ pub struct IpcEndpoint {
 impl IpcEndpoint {
     /// 在缓存根目录创建私有 socket。已有可用端点会阻断第二次创建。
     pub fn bind(cache_root: &Path) -> Result<Self, AppError> {
+        // Startup task may be dispatched late, after a GUI binding save.
+        let _storage = crate::infrastructure::storage_writers::global().admit()?;
         let path = socket_path(cache_root);
         if let Some(parent) = path.parent() {
             std::fs::create_dir_all(parent).map_err(|error| AppError::FileSystem {

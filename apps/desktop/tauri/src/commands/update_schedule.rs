@@ -21,6 +21,7 @@ pub fn active_root(app: &tauri::AppHandle) -> AppResult<std::path::PathBuf> {
     Ok(root.0.clone())
 }
 pub fn reserve(app: &tauri::AppHandle, target: Target) -> AppResult<std::path::PathBuf> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let binding = app.state::<SharedSchedule>();
     let _lock = binding.0.lock().map_err(|_| AppError::NotConfigured)?;
     let root = active_root(app)?;
@@ -35,6 +36,7 @@ pub fn complete<T: serde::Serialize>(
     target: Target,
     value: Option<&T>,
 ) -> AppResult<()> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let binding = app.state::<SharedSchedule>();
     let _lock = binding.0.lock().map_err(|_| AppError::NotConfigured)?;
     let mut state = Schedule::load(root)?;
@@ -52,7 +54,8 @@ pub fn update_schedule_plan(app: tauri::AppHandle) -> AppResult<Plan> {
         .map_err(AppError::from)?;
     let status = app.state::<crate::commands::update::SharedUpdateStatus>();
     let status = status.lock().map_err(|_| AppError::NotConfigured)?;
-    let busy = status.installing
+    let busy = crate::infrastructure::storage_writers::global().frozen()
+        || status.installing
         || status.checking
         || app
             .state::<crate::state::SharedRuntimeInstall>()

@@ -221,7 +221,7 @@ async fn change_runtime_source(
 /// 离线包预检：只校验不展开，让拖拽区能立刻给出「已选 / 校验失败 / 拒绝」。
 #[tauri::command]
 pub async fn preview_offline_package(path: String) -> AppResult<OfflinePackagePreviewDto> {
-    crate::commands::run_blocking("preview offline package", move || {
+    crate::commands::run_readonly("preview offline package", move || {
         let archive_path = PathBuf::from(&path);
         let file_name = archive_path
             .file_name()
@@ -324,6 +324,7 @@ async fn install_managed_runtime(
     protect_update: bool,
     on_progress: Option<tauri::ipc::Channel<PanelUpdateProgress>>,
 ) -> AppResult<RuntimeInstallOutcomeDto> {
+    let _storage = crate::infrastructure::storage_writers::global().admit()?;
     let RuntimeInstallContext {
         handle,
         data_root_path,
@@ -533,11 +534,11 @@ pub async fn install_official_update(
     let environment =
         crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
     let working = home.0.clone();
-    let remote = tauri::async_runtime::spawn_blocking(move || {
+    // npm view may write its cache; the blocking worker must own admission.
+    let remote = super::run_blocking("official update metadata", move || {
         crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")
     })
-    .await
-    .map_err(|_| AppError::NotConfigured)??;
+    .await?;
 
     if remote.version != candidate_version {
         return Err(AppError::NotConfigured);
@@ -587,7 +588,7 @@ pub async fn plan_runtime_uninstall(
     let ocx = context.executable().ok();
     let data_root_path = data_root.0.clone();
     let home = context.opencodex_home.clone();
-    let plan = crate::commands::run_blocking("plan runtime uninstall", move || {
+    let plan = crate::commands::run_readonly("plan runtime uninstall", move || {
         Ok(uninstall::plan_uninstall(
             &data_root_path,
             &home,

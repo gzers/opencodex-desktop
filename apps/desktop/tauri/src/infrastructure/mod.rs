@@ -13,6 +13,7 @@ pub mod process_runner;
 pub mod runtime_executable;
 pub mod runtime_log;
 pub mod status_source;
+pub(crate) mod storage_writers;
 pub mod tray_controller;
 pub mod webdav_client;
 

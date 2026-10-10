@@ -51,6 +51,38 @@ where
     F: FnOnce() -> AppResult<T> + Send + 'static,
     T: Send + 'static,
 {
+    run_blocking_with_gate(
+        crate::infrastructure::storage_writers::global(),
+        operation,
+        task,
+    )
+    .await
+}
+
+async fn run_blocking_with_gate<T, F>(
+    gate: std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
+    operation: &'static str,
+    task: F,
+) -> AppResult<T>
+where
+    F: FnOnce() -> AppResult<T> + Send + 'static,
+    T: Send + 'static,
+{
+    // Admit before dispatch; the actual worker owns it, not the IPC observer.
+    let admission = gate.admit()?;
+    run_readonly(operation, move || {
+        let _admission = admission;
+        task()
+    })
+    .await
+}
+
+/// Read-only work and the binding-save transaction must not count as writers.
+pub(crate) async fn run_readonly<T, F>(operation: &'static str, task: F) -> AppResult<T>
+where
+    F: FnOnce() -> AppResult<T> + Send + 'static,
+    T: Send + 'static,
+{
     tauri::async_runtime::spawn_blocking(task)
         .await
         .map_err(|error| AppError::FileSystem {
@@ -77,6 +109,7 @@ pub fn process_action(
     app: tauri::AppHandle,
 ) -> AppResult<ProcessActionResult> {
     use tauri::Manager;
+    let _storage = crate::infrastructure::storage_writers::global().admit()?;
     let mutation = app.state::<crate::state::SharedRuntimeInstall>();
     let _lease = mutation.acquire().ok_or(AppError::NotConfigured)?;
     let runtime_log = crate::infrastructure::runtime_log::RuntimeLog::new(&data_root.0);
@@ -591,5 +624,46 @@ mod runtime_state_notification_tests {
             crate::types::notifications::NotificationDto::from_domain(&takeover).target,
             Some(RuntimeState::ExternalTakeover)
         );
+    }
+}
+
+#[cfg(test)]
+mod writer_dispatch_tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn cancelled_observer_does_not_release_blocking_worker_admission() {
+        let gate =
+            std::sync::Arc::new(crate::infrastructure::storage_writers::WriterGate::default());
+        let (started_tx, started_rx) = tokio::sync::oneshot::channel();
+        let (release_tx, release_rx) = std::sync::mpsc::channel();
+        let worker_gate = gate.clone();
+        let observer = tokio::spawn(async move {
+            run_blocking_with_gate(worker_gate, "fixture worker", move || {
+                let _ = started_tx.send(());
+                release_rx.recv().unwrap();
+                Ok(())
+            })
+            .await
+        });
+        started_rx.await.unwrap();
+        observer.abort();
+        assert!(observer.await.unwrap_err().is_cancelled());
+        assert!(
+            gate.freeze().unwrap().is_none(),
+            "worker remains admitted after observer cancellation"
+        );
+        release_tx.send(()).unwrap();
+        tokio::time::timeout(std::time::Duration::from_secs(3), async {
+            loop {
+                if let Some(binding) = gate.freeze().unwrap() {
+                    drop(binding);
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .expect("actual worker releases admission on completion");
     }
 }

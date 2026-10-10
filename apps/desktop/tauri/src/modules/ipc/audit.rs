@@ -38,12 +38,21 @@ fn write_retained(path: &Path, records: &[AuditRecord]) -> Result<(), AppError> 
 
 pub struct AuditStore {
     path: PathBuf,
+    writers: std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
 }
 
 impl AuditStore {
     pub fn new(data_root: &Path) -> Self {
+        Self::with_writers(data_root, crate::infrastructure::storage_writers::global())
+    }
+
+    pub(crate) fn with_writers(
+        data_root: &Path,
+        writers: std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
+    ) -> Self {
         Self {
             path: data_root.join(AUDIT_LOG_FILE_NAME),
+            writers,
         }
     }
 
@@ -53,7 +62,23 @@ impl AuditStore {
 
     /// 追加一条审计记录；每次写入前执行保留与轮转。
     pub fn record(&self, value: &AuditRecord) -> Result<(), AppError> {
-        self.rotate_if_needed()?;
+        let _storage = self.writers.admit()?;
+        self.record_inner(value)
+    }
+
+    pub(crate) fn record_during_binding(
+        &self,
+        value: &AuditRecord,
+        binding: &crate::infrastructure::storage_writers::BindingSave,
+    ) -> Result<(), AppError> {
+        if !binding.permits(&self.writers) {
+            return Err(AppError::NotConfigured);
+        }
+        self.record_inner(value)
+    }
+
+    fn record_inner(&self, value: &AuditRecord) -> Result<(), AppError> {
+        self.rotate_inner()?;
         self.enforce_count_limit()?;
         let payload = serde_json::to_vec(value).map_err(|error| AppError::FileSystem {
             operation: "serialize audit record".to_string(),
@@ -86,6 +111,7 @@ impl AuditStore {
 
     /// 超过保留期或最大记录数的旧行会被整行移除。
     pub fn retire(&self, now: chrono::DateTime<chrono::Utc>) -> Result<(), AppError> {
+        let _storage = self.writers.admit()?;
         let mut records = self.read_records()?;
         if records.is_empty() {
             return Ok(());
@@ -136,6 +162,11 @@ impl AuditStore {
 
     /// `audit.log` 超过 5 MB 时滚动为 `.1`，最旧 `.5` 删除。
     pub fn rotate_if_needed(&self) -> Result<bool, AppError> {
+        let _storage = self.writers.admit()?;
+        self.rotate_inner()
+    }
+
+    fn rotate_inner(&self) -> Result<bool, AppError> {
         let metadata = match std::fs::metadata(&self.path) {
             Ok(value) => value,
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(false),

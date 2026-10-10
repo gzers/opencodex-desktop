@@ -30,6 +30,7 @@ impl RuntimeLog {
     }
 
     pub fn append_event(&self, message: &str) -> Result<(), AppError> {
+        let _admission = crate::infrastructure::storage_writers::global().admit()?;
         self.rotate_if_needed()?;
         let timestamp = chrono::Utc::now().to_rfc3339_opts(chrono::SecondsFormat::Millis, true);
         self.append_line(&format!("{timestamp} [manager] {message}"))

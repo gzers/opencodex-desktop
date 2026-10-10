@@ -130,6 +130,7 @@ pub async fn check_for_update(
     status: tauri::State<'_, SharedUpdateStatus>,
     app: tauri::AppHandle,
 ) -> AppResult<CheckUpdateResultDto> {
+    let _storage = crate::infrastructure::storage_writers::global().admit()?;
     let (updater, generation, target, channel) = {
         let mut guard = status.lock().map_err(|_| AppError::NotConfigured)?;
         let updater = updater_for_status(&app, &guard)?;
@@ -244,15 +245,12 @@ pub async fn install_update(
     app: tauri::AppHandle,
 ) -> AppResult<()> {
     // Spawn owns the mutation: cancelling an IPC observer does not cancel a write.
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
     let state = status.inner().clone();
-    tauri::async_runtime::spawn(install_update_owned(
-        candidate_version,
-        channel,
-        backup,
-        progress,
-        state,
-        app,
-    ))
+    tauri::async_runtime::spawn(async move {
+        let _admission = admission;
+        install_update_owned(candidate_version, channel, backup, progress, state, app).await
+    })
     .await
     .map_err(|_| AppError::NotConfigured)?
 }
@@ -365,7 +363,9 @@ async fn install_update_owned(
             // Persist before OS replacement: an abrupt exit cannot lose the receipt.
             let install_root = event_root.clone();
             let receipt = handoff.clone();
+            let admission = crate::infrastructure::storage_writers::global().admit()?;
             tauri::async_runtime::spawn_blocking(move || {
+                let _admission = admission;
                 receipt.arm(&install_root)?;
                 update.install(bytes).map_err(|_| AppError::NotConfigured)
             })
@@ -415,9 +415,14 @@ pub async fn restart_after_update(
     app: tauri::AppHandle,
 ) -> AppResult<()> {
     // The owned task outlives a closed IPC observer during native handoff.
-    tauri::async_runtime::spawn(restart_owned(status.inner().clone(), app))
-        .await
-        .map_err(|_| AppError::NotConfigured)?
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    let status = status.inner().clone();
+    tauri::async_runtime::spawn(async move {
+        let _admission = admission;
+        restart_owned(status, app).await
+    })
+    .await
+    .map_err(|_| AppError::NotConfigured)?
 }
 
 async fn restart_owned(status: SharedUpdateStatus, app: tauri::AppHandle) -> AppResult<()> {
@@ -454,7 +459,9 @@ async fn restart_owned(status: SharedUpdateStatus, app: tauri::AppHandle) -> App
                 .ok_or(AppError::NotConfigured)?;
             let install_root = root.clone();
             let install_receipt = receipt.clone();
+            let admission = crate::infrastructure::storage_writers::global().admit()?;
             tauri::async_runtime::spawn_blocking(move || {
+                let _admission = admission;
                 // Windows download is never armed by an ordinary app exit.
                 install_receipt.arm(&install_root)?;
                 artifact

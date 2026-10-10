@@ -26,7 +26,7 @@ pub async fn official_project_facts(
 ) -> AppResult<OfficialProjectDto> {
     let source = source.inner().clone();
     let runtime = runtime.inner().clone();
-    tauri::async_runtime::spawn_blocking(move || {
+    super::run_blocking("record official project version", move || {
         let facts = official_project_facts_with_source(&source)?;
         // `FZ-48` / B1 口径：版本检查读成功后把版本回填到运行来源记录，
         // 这样 `runtime.json` 与卡片的「版本」对显式 / 发现来源也有事实可依。
@@ -38,7 +38,6 @@ pub async fn official_project_facts(
         Ok(facts)
     })
     .await
-    .map_err(|_| AppError::NotConfigured)?
 }
 
 pub fn official_project_facts_with_source<S: OfficialVersionSource + ?Sized>(
@@ -54,6 +53,7 @@ pub async fn official_remote_latest(
     trigger: Option<crate::commands::event_delivery::QueryTrigger>,
     app: tauri::AppHandle,
 ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
+    let _storage = crate::infrastructure::storage_writers::global().admit()?;
     use crate::commands::update_schedule::{self, SharedPanelQuery};
     use crate::modules::update::schedule::Target;
     use std::sync::atomic::Ordering;
@@ -118,9 +118,8 @@ async fn query_panel_metadata(
     let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
     let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
     let working = home.0.clone();
-    tauri::async_runtime::spawn_blocking(move || {
+    crate::commands::run_blocking("query panel metadata", move || {
         crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")
     })
     .await
-    .map_err(|_| AppError::NotConfigured)?
 }

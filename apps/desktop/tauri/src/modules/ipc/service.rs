@@ -108,6 +108,7 @@ pub struct IpcService {
     runner: Arc<Mutex<crate::modules::process::ControlledProcessRunner>>,
     dependencies: IpcDependencies,
     audit: super::audit::AuditStore,
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
 }
 
 impl IpcService {
@@ -122,12 +123,15 @@ impl IpcService {
         runner: Arc<Mutex<crate::modules::process::ControlledProcessRunner>>,
         dependencies: IpcDependencies,
     ) -> Self {
-        let audit = super::audit::AuditStore::new(&dependencies.active_data_root);
+        let writers = crate::infrastructure::storage_writers::global();
+        let audit =
+            super::audit::AuditStore::with_writers(&dependencies.active_data_root, writers.clone());
         Self {
             collector,
             runner,
             dependencies,
             audit,
+            writers,
         }
     }
 
@@ -156,7 +160,7 @@ impl IpcService {
                 },
             ),
         )));
-        Self::new(
+        let mut service = Self::new(
             collector,
             Arc::new(Mutex::new(
                 crate::modules::process::ControlledProcessRunner::new(std::path::PathBuf::from(
@@ -180,7 +184,13 @@ impl IpcService {
                 external_home: None,
                 current_version: "0.1.0",
             },
-        )
+        );
+        service.writers = Arc::new(crate::infrastructure::storage_writers::WriterGate::default());
+        service.audit = super::audit::AuditStore::with_writers(
+            &service.dependencies.active_data_root,
+            service.writers.clone(),
+        );
+        service
     }
 
     pub async fn execute(&mut self, request: IpcRequest) -> IpcResponse<serde_json::Value> {
@@ -195,24 +205,51 @@ impl IpcService {
         } else {
             format!("req_{request_id}")
         };
-        let result: Result<serde_json::Value, IpcErrorCode> = match request.command {
-            IpcCommand::Status => self.read_status(),
-            IpcCommand::DataRootShow => self.read_data_root(),
-            IpcCommand::BackupList => self.list_backups(),
-            IpcCommand::UpdateCheck => self.update_check(),
-            IpcCommand::Start | IpcCommand::Stop | IpcCommand::Restart => {
-                let action = match request.command {
-                    IpcCommand::Start => LifecycleAction::Start,
-                    IpcCommand::Stop => LifecycleAction::Stop,
-                    _ => LifecycleAction::Restart,
-                };
-                self.run_lifecycle(action, request.args.clone())
+        let is_binding = request.command == IpcCommand::DataRootSwitch;
+        let read_only = matches!(
+            request.command,
+            IpcCommand::Status
+                | IpcCommand::DataRootShow
+                | IpcCommand::BackupList
+                | IpcCommand::UpdateCheck
+        );
+        let binding = if is_binding {
+            self.writers.freeze().ok().flatten()
+        } else {
+            None
+        };
+        let admission = if is_binding {
+            None
+        } else {
+            self.writers.admit().ok()
+        };
+        let blocked =
+            (is_binding && binding.is_none()) || (!is_binding && !read_only && admission.is_none());
+        let mut saved_pending = false;
+        let result: Result<serde_json::Value, IpcErrorCode> = if blocked {
+            Err(IpcErrorCode::TargetStateConflict)
+        } else {
+            match request.command {
+                IpcCommand::Status => self.read_status(),
+                IpcCommand::DataRootShow => self.read_data_root(),
+                IpcCommand::BackupList => self.list_backups(),
+                IpcCommand::UpdateCheck => self.update_check(),
+                IpcCommand::Start | IpcCommand::Stop | IpcCommand::Restart => {
+                    let action = match request.command {
+                        IpcCommand::Start => LifecycleAction::Start,
+                        IpcCommand::Stop => LifecycleAction::Stop,
+                        _ => LifecycleAction::Restart,
+                    };
+                    self.run_lifecycle(action, request.args.clone())
+                }
+                IpcCommand::DataRootSwitch => {
+                    self.switch_data_root(&request.args, &mut saved_pending)
+                }
+                IpcCommand::BackupCreate => self.create_backup(),
+                IpcCommand::Export => self.export_config(&request.args),
+                IpcCommand::Import => self.import_config(&request.args, request.secret.as_deref()),
+                IpcCommand::SyncRun => self.sync_run().await,
             }
-            IpcCommand::DataRootSwitch => self.switch_data_root(&request.args),
-            IpcCommand::BackupCreate => self.create_backup(),
-            IpcCommand::Export => self.export_config(&request.args),
-            IpcCommand::Import => self.import_config(&request.args, request.secret.as_deref()),
-            IpcCommand::SyncRun => self.sync_run().await,
         };
         let (result, error_code) = match result {
             Ok(data) => (Some(data), None),
@@ -231,8 +268,15 @@ impl IpcService {
             },
             error_code,
         );
-        if let Err(_error) = self.audit.record(&audit) {
-            // 审计失败不能改变命令结果，也不把敏感内容追加到响应。
+        if let Some(binding) = binding {
+            // Audit is the final old-root write within the exclusive binding transaction.
+            let _ = self.audit.record_during_binding(&audit, &binding);
+            if saved_pending {
+                binding.commit();
+            }
+        } else if admission.is_some() {
+            // Read-only requests remain usable after save, without writing old-root audit.
+            let _ = self.audit.record(&audit);
         }
 
         match result {
@@ -324,6 +368,7 @@ impl IpcService {
     fn switch_data_root(
         &self,
         args: &BTreeMap<String, String>,
+        saved_pending: &mut bool,
     ) -> Result<serde_json::Value, IpcErrorCode> {
         let target = args.get("target").ok_or(IpcErrorCode::ValidationFailed)?;
         let mode = match args.get("migrate").map(String::as_str) {
@@ -331,14 +376,37 @@ impl IpcService {
             Some("false") | None => crate::modules::data_root::DataRootSwitchMode::ReferenceOnly,
             Some(_) => crate::modules::data_root::DataRootSwitchMode::MigrateData,
         };
+        {
+            let mut collector = self
+                .collector
+                .lock()
+                .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+            collector
+                .refresh()
+                .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+            if !matches!(
+                collector.matrix().runtime,
+                crate::types::status::RuntimeState::Stopped
+                    | crate::types::status::RuntimeState::NotFound
+            ) {
+                return Err(IpcErrorCode::TargetStateConflict);
+            }
+        }
+        let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(
+            &self.dependencies.active_data_root,
+        )
+        .map_err(map_app_error)?;
         // 与 GUI 命令保持一致：把引用写回固定的应用数据目录。
         // 写到「当前活动根」会让第二次切换落在旧目标里，重启后按单跳读取就丢失。
-        crate::modules::data_root::switch_reference(
+        let config = crate::modules::data_root::switch_reference(
             &self.dependencies.app_data_root,
             std::path::Path::new(target),
             mode,
         )
         .map_err(map_app_error)?;
+        *saved_pending = config.active_data_root != self.dependencies.active_data_root
+            || crate::modules::data_root::resolve_opencodex_home(&config)
+                != self.dependencies.opencodex_home;
         serde_json::to_value(IpcMessageData {
             status: "switched".to_string(),
             message: if matches!(
@@ -626,7 +694,8 @@ mod tests {
     ///
     /// 此前写的是「当前活动根」，于是第二次切换会落在旧目标里；
     /// 启动只从应用数据目录单跳读取，重启后第二次切换就丢了。
-    #[tokio::test]
+    #[cfg(unix)]
+    #[tokio::test(flavor = "multi_thread")]
     async fn switch_data_root_records_reference_in_the_fixed_app_data_root() {
         let temp = tempfile::tempdir().expect("temp");
         let app_root = temp.path().join("app-data");
@@ -637,6 +706,26 @@ mod tests {
         }
         // 模拟「已经切过一次」的运行实例：活动根是 first。
         let mut service = IpcService::for_tests_with(first.clone(), app_root.clone());
+        use std::os::unix::fs::PermissionsExt;
+        let executable = temp.path().join("stopped-ocx");
+        std::fs::write(
+            &executable,
+            b"#!/bin/sh\necho '{\"status\":\"stopped\",\"dataRoot\":\"/tmp/fixture\"}'\n",
+        )
+        .unwrap();
+        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755)).unwrap();
+        service.collector = Arc::new(Mutex::new(crate::modules::status::StatusCollector::new(
+            crate::infrastructure::status_source::OfficialStatusSource::new(
+                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
+                    executable,
+                ),
+                temp.path(),
+                crate::modules::process::EnvironmentPolicy {
+                    opencodex_home: temp.path().join("opencodex-home"),
+                    ..Default::default()
+                },
+            ),
+        )));
         let mut args = std::collections::BTreeMap::new();
         args.insert("target".to_string(), second.display().to_string());
         let request = IpcRequest {
@@ -649,6 +738,40 @@ mod tests {
         };
         let response = service.execute(request).await;
         assert!(response.ok, "切换应成功：{:?}", response.error);
+
+        assert!(service.writers.frozen());
+        let audit_before = std::fs::read(service.audit.path()).expect("binding audit retained");
+        let mut read = IpcRequest {
+            request_id: "req_00000000-0000-0000-0000-0000000000fc".into(),
+            command: IpcCommand::DataRootShow,
+            args: BTreeMap::new(),
+            confirm: false,
+            contract_version: 1,
+            secret: None,
+        };
+        read.request_id = "req_00000000-0000-0000-0000-0000000000fd".into();
+        assert!(
+            service.execute(read).await.ok,
+            "pending binding remains readable"
+        );
+        let mut write = IpcRequest {
+            request_id: "req_00000000-0000-0000-0000-0000000000fb".into(),
+            command: IpcCommand::BackupCreate,
+            args: BTreeMap::new(),
+            confirm: false,
+            contract_version: 1,
+            secret: None,
+        };
+        write.confirm = true;
+        assert_eq!(
+            service.execute(write).await.error.unwrap().code,
+            IpcErrorCode::TargetStateConflict
+        );
+        assert_eq!(
+            std::fs::read(service.audit.path()).unwrap(),
+            audit_before,
+            "no post-save old-root audit writes"
+        );
 
         let config = crate::modules::data_root::load_runtime_config(&app_root)
             .expect("app data root config");
@@ -663,6 +786,48 @@ mod tests {
             "不得把引用写进旧的活动根"
         );
     }
+    #[tokio::test(flavor = "multi_thread")]
+    async fn binding_refuses_busy_writer_and_validation_failure_reopens_admission() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("root");
+        let target = temp.path().join("target");
+        for path in [&root, &target] {
+            crate::modules::data_root::initialize(path).unwrap();
+        }
+        let mut service = IpcService::for_tests_with(root.clone(), root.clone());
+        let request = |target: &std::path::Path| IpcRequest {
+            request_id: "req_00000000-0000-0000-0000-0000000000fa".into(),
+            command: IpcCommand::DataRootSwitch,
+            args: BTreeMap::from([("target".into(), target.display().to_string())]),
+            confirm: true,
+            contract_version: 1,
+            secret: None,
+        };
+        let active = service.writers.admit().unwrap();
+        assert_eq!(
+            service.execute(request(&target)).await.error.unwrap().code,
+            IpcErrorCode::TargetStateConflict
+        );
+        assert!(!service.writers.frozen());
+        assert_eq!(
+            crate::modules::data_root::load_runtime_config(&root)
+                .unwrap()
+                .active_data_root,
+            root
+        );
+        drop(active);
+        assert!(
+            !service
+                .execute(request(&temp.path().join("missing")))
+                .await
+                .ok
+        );
+        assert!(
+            service.writers.admit().is_ok(),
+            "failed validation reopens writers"
+        );
+    }
+
     /// 回归：旧版容器缺口令是「可以让用户补口令」的状态，不是普通执行失败。
     ///
     /// 修复前 `map_app_error` 把任何 AppError 一律压成 ExecutionFailed，

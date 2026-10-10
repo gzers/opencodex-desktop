@@ -167,6 +167,9 @@ pub async fn run_sync(
     endpoint: &SyncEndpointConfig,
     webdav: &WebDavConfig,
 ) -> Result<SyncOutcome, SyncRunFailure> {
+    let _admission = crate::infrastructure::storage_writers::global()
+        .admit()
+        .map_err(|_| SyncRunFailure::TargetLocked)?;
     // 每 endpoint 的进程级互斥：并发同步必须被挡住，而不是各自跑到一半互相覆盖。
     let _locks = SyncEndpointLocks::global()
         .acquire(&endpoint.endpoint_id)

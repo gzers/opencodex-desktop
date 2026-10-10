@@ -16,7 +16,7 @@ pub async fn codex_shim_status(
     source: tauri::State<'_, SharedCodexShimSource>,
 ) -> AppResult<CodexShimDto> {
     let source = Arc::clone(&source);
-    crate::commands::run_blocking("read codex shim status", move || {
+    crate::commands::run_readonly("read codex shim status", move || {
         Ok(status_with_source(&source))
     })
     .await

@@ -97,12 +97,11 @@ pub async fn save_sync_endpoint(
         conflict_policy: request.conflict_policy,
     };
     let root = data_root.inner().0.clone();
-    let endpoint = tauri::async_runtime::spawn_blocking(move || {
+    let endpoint = crate::commands::run_blocking("save sync endpoint", move || {
         let store = SyncConfigStore::new(&root);
         store.save_endpoint(&input)
     })
-    .await
-    .map_err(|_| AppError::NotConfigured)??;
+    .await?;
     Ok(SyncConfigDto {
         endpoint: Some(project_endpoint(&endpoint)),
     })
@@ -115,11 +114,10 @@ pub async fn delete_sync_endpoint(
 ) -> AppResult<SyncConfigDto> {
     {
         let root = data_root.inner().0.clone();
-        tauri::async_runtime::spawn_blocking(move || {
+        crate::commands::run_blocking("delete sync endpoint", move || {
             SyncConfigStore::new(&root).delete_endpoint(delete_credentials)
         })
-        .await
-        .map_err(|_| AppError::NotConfigured)??;
+        .await?;
     }
     Ok(project_config(&SyncConfig::default()))
 }

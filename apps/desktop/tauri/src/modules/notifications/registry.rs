@@ -1061,6 +1061,9 @@ fn with_scope<T>(
     root: &std::path::Path,
     task: impl FnOnce(&mut ScopeFile) -> Result<T, RegistryError>,
 ) -> Result<T, RegistryError> {
+    let _storage = crate::infrastructure::storage_writers::global()
+        .admit()
+        .map_err(|_| RegistryError::ScopeUnavailable)?;
     use std::io::Read;
     if !root.is_absolute() {
         return Err(RegistryError::ScopeUnavailable);

@@ -10,7 +10,7 @@ use crate::types::doctor::DoctorDto;
 #[tauri::command]
 pub async fn run_doctor(source: tauri::State<'_, SharedDoctorSource>) -> AppResult<DoctorDto> {
     let source = Arc::clone(&source);
-    crate::commands::run_blocking("run doctor", move || run_doctor_with_source(&source)).await
+    crate::commands::run_readonly("run doctor", move || run_doctor_with_source(&source)).await
 }
 
 pub fn run_doctor_with_source<S: DoctorSource + ?Sized>(

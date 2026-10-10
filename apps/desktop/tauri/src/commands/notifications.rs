@@ -81,6 +81,7 @@ fn mutate_and_persist<T>(
     data_root: &Path,
     operation: impl FnOnce(&mut NotificationStore) -> Result<T, AppError>,
 ) -> AppResult<T> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let mut guard = store.lock().map_err(|_poisoned| AppError::NotConfigured)?;
     let mut next = guard.clone();
     let outcome = operation(&mut next)?;

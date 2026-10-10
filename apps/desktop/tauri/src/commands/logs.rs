@@ -12,7 +12,7 @@ pub async fn read_logs(
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> AppResult<LogsDto> {
     let root = data_root.0.clone();
-    crate::commands::run_blocking("read logs", move || read_logs_with_root(kind, &root)).await
+    crate::commands::run_readonly("read logs", move || read_logs_with_root(kind, &root)).await
 }
 
 pub fn read_logs_with_root(kind: LogKind, data_root: &std::path::Path) -> AppResult<LogsDto> {
