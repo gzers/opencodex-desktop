@@ -5,6 +5,9 @@
 
 use chrono::{DateTime, SecondsFormat, Utc};
 pub mod browser;
+pub mod manager;
+pub mod policy;
+pub(crate) mod safety;
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -14,18 +17,21 @@ use crate::infrastructure::hash::{sha256_file, sha256_hex};
 
 pub const MANIFEST_NAME: &str = "backup-manifest.json";
 pub const SCHEMA_VERSION: u32 = 1;
-pub const MAX_PER_ACTION: usize = 20;
+pub const MAX_PER_ACTION: usize = 10;
 pub fn retention_days() -> i64 {
-    crate::modules::runtime_defaults::backup_max_age_days()
+    30
 }
 
-pub const ACTIONS: [&str; 6] = [
+pub const ACTIONS: [&str; 9] = [
     "upgrade",
     "import",
     "sync-overwrite",
     "data-root-move",
     "extension-write",
     "runtime-uninstall",
+    "manual-preferences",
+    "restore-protection",
+    "preferences-protection",
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -38,6 +44,9 @@ pub enum BackupAction {
     ExtensionWrite,
     /// 托管卸载前的备份（IMP `FZ-51`）。
     RuntimeUninstall,
+    ManualPreferences,
+    RestoreProtection,
+    PreferencesProtection,
 }
 
 impl BackupAction {
@@ -49,6 +58,9 @@ impl BackupAction {
             Self::DataRootMove => "data-root-move",
             Self::ExtensionWrite => "extension-write",
             Self::RuntimeUninstall => "runtime-uninstall",
+            Self::ManualPreferences => "manual-preferences",
+            Self::RestoreProtection => "restore-protection",
+            Self::PreferencesProtection => "preferences-protection",
         }
     }
 
@@ -60,6 +72,9 @@ impl BackupAction {
             "data-root-move" => Some(Self::DataRootMove),
             "extension-write" => Some(Self::ExtensionWrite),
             "runtime-uninstall" => Some(Self::RuntimeUninstall),
+            "manual-preferences" => Some(Self::ManualPreferences),
+            "restore-protection" => Some(Self::RestoreProtection),
+            "preferences-protection" => Some(Self::PreferencesProtection),
             _ => None,
         }
     }
@@ -79,6 +94,9 @@ pub struct BackupManifest {
     pub file_count: u64,
     pub restorable: bool,
     pub note: Option<String>,
+    /// Absent on legacy records: never infer transaction ownership from note/path.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub management: Option<manager::Management>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -118,8 +136,17 @@ pub fn backup_file(
         .join(now.format("%m").to_string())
         .join(action.as_str())
         .join(&backup_id);
-    std::fs::create_dir_all(&directory).map_err(|error| AppError::FileSystem {
-        operation: "create backup directory".to_string(),
+    safety::check_path(data_root, &directory, true)?;
+    std::fs::create_dir_all(directory.parent().expect("backup parent")).map_err(|error| {
+        AppError::FileSystem {
+            operation: "create backup directory".to_string(),
+            detail: error.to_string(),
+        }
+    })?;
+
+    safety::check_path(data_root, directory.parent().expect("backup parent"), false)?;
+    std::fs::create_dir(&directory).map_err(|error| AppError::FileSystem {
+        operation: "reserve backup id".into(),
         detail: error.to_string(),
     })?;
 
@@ -154,8 +181,10 @@ pub fn backup_file(
         file_count: 1,
         restorable: true,
         note,
+        management: None,
     };
     write_manifest(&directory, &manifest)?;
+    safety::sync_directories(data_root, &directory)?;
     Ok(BackupRecord {
         manifest,
         directory,
@@ -164,118 +193,38 @@ pub fn backup_file(
 
 /// 校验备份仍可通过 SHA-256 与清单复验。
 pub fn verify_backup(record: &BackupRecord) -> Result<bool, AppError> {
+    safety::validate_record(record)?;
     let stored_path = find_stored_payload(&record.directory)?;
-    let actual = sha256_file(&stored_path).map_err(|error| AppError::FileSystem {
-        operation: "verify backup payload".to_string(),
-        detail: error.to_string(),
-    })?;
+    let actual = sha256_hex(&safety::read_file(&stored_path, safety::MAX_PAYLOAD_BYTES)?);
     Ok(actual == record.manifest.sha256
         && stored_path.metadata().map(|m| m.len()).unwrap_or(0) == record.manifest.bytes)
 }
 
-/// 保留每类最近 `max_per_action` 份与 30 天内记录；只删除目录，不输出内容摘要。
-///
-/// `max_per_action` 由调用方传入（当前来自「备份保留策略」偏好）；传 `MAX_PER_ACTION`
-/// 即保持历史默认行为。
+/// Compatibility entry point for explicit cleanup. Legacy transaction records are
+/// protected; only explicitly managed standalone preferences backups are eligible.
 pub fn cleanup_retention(
     data_root: &Path,
     now: DateTime<Utc>,
     max_per_action: usize,
 ) -> Result<Vec<String>, AppError> {
-    let backups = data_root.join("backups");
-    let mut removed = Vec::new();
-    if !backups.is_dir() {
-        return Ok(removed);
-    }
-
-    for action in ACTIONS {
-        let mut records = list_action_records(&backups, action)?;
-        records.sort_by(|a, b| b.manifest.created_at.cmp(&a.manifest.created_at));
-        for (index, record) in records.into_iter().enumerate() {
-            let created = DateTime::parse_from_rfc3339(&record.manifest.created_at)
-                .map_err(|_| AppError::FileSystem {
-                    operation: "parse backup timestamp".to_string(),
-                    detail: record.manifest.backup_id.clone(),
-                })?
-                .with_timezone(&Utc);
-            let within_days = now.signed_duration_since(created).num_days() < retention_days();
-            if index < max_per_action || within_days {
-                continue;
-            }
-            std::fs::remove_dir_all(&record.directory).map_err(|error| AppError::FileSystem {
-                operation: "cleanup expired backup".to_string(),
-                detail: error.to_string(),
-            })?;
-            removed.push(record.manifest.backup_id);
-        }
-    }
-    Ok(removed)
+    manager::cleanup_with_count(data_root, now, max_per_action)
 }
 
+/// Bounded metadata-only listing; restorable is a claim, not an integrity verdict.
 pub fn list_action_records(
     backups_root: &Path,
     action: &str,
 ) -> Result<Vec<BackupRecord>, AppError> {
-    let mut records = Vec::new();
-    for year in read_dirs(backups_root)? {
-        for month in read_dirs(&year)? {
-            let action_dir = month.join(action);
-            if !action_dir.is_dir() {
-                continue;
-            }
-            for directory in read_dirs(&action_dir)? {
-                let manifest_path = directory.join(MANIFEST_NAME);
-                if !manifest_path.is_file() {
-                    continue;
-                }
-                let bytes =
-                    std::fs::read(&manifest_path).map_err(|error| AppError::FileSystem {
-                        operation: "read backup manifest".to_string(),
-                        detail: error.to_string(),
-                    })?;
-                let manifest: BackupManifest =
-                    serde_json::from_slice(&bytes).map_err(|_| AppError::FileSystem {
-                        operation: "parse backup manifest".to_string(),
-                        detail: manifest_path.display().to_string(),
-                    })?;
-                let mut record = BackupRecord {
-                    manifest,
-                    directory,
-                };
-                // 清单里的 `restorable` 是创建时写下的乐观值。列表必须按当前
-                // 内容复验，否则被改坏的备份仍会显示「可恢复」（实测如此）。
-                record.manifest.restorable = verify_backup(&record).unwrap_or(false);
-                records.push(record);
-            }
-        }
-    }
-    Ok(records)
+    safety::scan(backups_root).map(|records| {
+        records
+            .into_iter()
+            .filter(|record| record.manifest.action.as_str() == action)
+            .collect()
+    })
 }
 
 fn find_stored_payload(directory: &Path) -> Result<PathBuf, AppError> {
-    for entry in std::fs::read_dir(directory).map_err(|error| AppError::FileSystem {
-        operation: "read backup directory".to_string(),
-        detail: error.to_string(),
-    })? {
-        let path = entry
-            .map_err(|error| AppError::FileSystem {
-                operation: "read backup entry".to_string(),
-                detail: error.to_string(),
-            })?
-            .path();
-        if path.is_file()
-            && path
-                .file_name()
-                .map(|name| name != MANIFEST_NAME)
-                .unwrap_or(false)
-        {
-            return Ok(path);
-        }
-    }
-    Err(AppError::FileSystem {
-        operation: "verify backup payload".to_string(),
-        detail: "backup payload is missing".to_string(),
-    })
+    safety::payload_path(directory)
 }
 
 fn write_manifest(directory: &Path, manifest: &BackupManifest) -> Result<(), AppError> {
@@ -305,35 +254,14 @@ fn write_and_verify(path: &Path, payload: &[u8], permissions: u32) -> Result<(),
 }
 
 fn validate_target(target: &Path) -> Result<(), AppError> {
-    if target.as_os_str().is_empty() {
+    if target.as_os_str().is_empty() || target.file_name().is_some_and(|name| name == MANIFEST_NAME)
+    {
         return Err(AppError::FileSystem {
             operation: "validate backup target".to_string(),
-            detail: "target is empty".to_string(),
+            detail: "target is empty or uses reserved manifest name".to_string(),
         });
     }
     Ok(())
-}
-
-fn read_dirs(path: &Path) -> Result<Vec<PathBuf>, AppError> {
-    let mut directories = Vec::new();
-    if !path.is_dir() {
-        return Ok(directories);
-    }
-    for entry in std::fs::read_dir(path).map_err(|error| AppError::FileSystem {
-        operation: "read backup tree".to_string(),
-        detail: error.to_string(),
-    })? {
-        let path = entry
-            .map_err(|error| AppError::FileSystem {
-                operation: "read backup entry".to_string(),
-                detail: error.to_string(),
-            })?
-            .path();
-        if path.is_dir() {
-            directories.push(path);
-        }
-    }
-    Ok(directories)
 }
 
 #[cfg(all(test, unix))]
@@ -348,16 +276,6 @@ mod tests {
 
     fn old(days: i64) -> DateTime<Utc> {
         Utc.with_ymd_and_hms(2026, 9, 15, 0, 0, 0).unwrap() - chrono::Duration::days(days)
-    }
-
-    fn create_backup(
-        data_root: &Path,
-        action: BackupAction,
-        created: DateTime<Utc>,
-        content: &[u8],
-    ) -> BackupRecord {
-        let target = data_root.join("target.txt");
-        backup_file(data_root, action, &target, content, created, None).expect("create backup")
     }
 
     #[test]
@@ -422,94 +340,50 @@ mod tests {
         assert!(!record.manifest.restorable);
     }
 
-    /// 回归：列表必须按当前内容复验 `restorable`。
-    /// 此前它直接回传清单里的乐观值，被改坏的备份仍显示「可恢复」。
     #[test]
-    fn listing_reports_corrupted_backups_as_not_restorable() {
-        let temp = tempfile::tempdir().expect("temporary data root");
-        let target = temp.path().join("config.json");
-        std::fs::write(&target, b"payload").expect("write target");
-        backup_file(
+    fn listing_reads_metadata_and_explicit_verification_detects_same_size_corruption() {
+        let temp = tempfile::tempdir().unwrap();
+        let record = backup_file(
             temp.path(),
             BackupAction::Upgrade,
-            &target,
+            &temp.path().join("config.json"),
             b"payload",
             now(),
             None,
         )
-        .expect("create backup");
-
-        let listed = list_action_records(&temp.path().join("backups"), "upgrade").expect("list");
+        .unwrap();
+        std::fs::write(record.directory.join("config.json"), b"changed").unwrap();
+        let listed = list_action_records(&temp.path().join("backups"), "upgrade").unwrap();
         assert_eq!(listed.len(), 1);
-        assert!(listed[0].manifest.restorable, "未损坏的备份应仍显示可恢复");
-
-        let payload = find_stored_payload(&listed[0].directory).expect("payload");
-        std::fs::write(payload, b"changed").expect("corrupt payload");
-
-        let listed = list_action_records(&temp.path().join("backups"), "upgrade").expect("list");
-        assert_eq!(listed.len(), 1);
-        assert!(!listed[0].manifest.restorable, "损坏的备份不得再显示可恢复");
+        assert!(listed[0].manifest.restorable); // creation claim, no payload hash on list
+        assert!(!verify_backup(&listed[0]).unwrap());
     }
 
     #[test]
-    fn cleanup_keeps_recent_20_and_30_days() {
-        let temp = tempfile::tempdir().expect("temporary data root");
-        for i in 0..24 {
-            // 20 records inside the day window; 4 only survive by recent-count.
-            let age = if i < 20 { i } else { i + 11 };
-            let record = create_backup(
-                temp.path(),
-                BackupAction::Upgrade,
-                old(age),
-                format!("payload-{i}").as_bytes(),
-            );
-            assert!(record.directory.exists());
+    fn legacy_transactions_are_retained_even_without_known_links() {
+        let temp = tempfile::tempdir().unwrap();
+        for action in [
+            BackupAction::Upgrade,
+            BackupAction::Import,
+            BackupAction::RuntimeUninstall,
+        ] {
+            for i in 0..22 {
+                backup_file(
+                    temp.path(),
+                    action,
+                    &temp.path().join("target.txt"),
+                    b"before",
+                    old(60 + i),
+                    Some("unstructured transaction reference".into()),
+                )
+                .unwrap();
+            }
         }
-
-        let removed = cleanup_retention(temp.path(), now(), MAX_PER_ACTION).expect("cleanup");
-        assert_eq!(removed.len(), 4);
-        let records = list_action_records(&temp.path().join("backups"), "upgrade").expect("list");
-        assert_eq!(records.len(), 20);
-        assert!(records.iter().all(|record| record.manifest.created_at
-            >= old(20).to_rfc3339_opts(SecondsFormat::Secs, true)));
-    }
-
-    #[test]
-    fn cleanup_applies_each_action_independently() {
-        let temp = tempfile::tempdir().expect("temporary data root");
-        for i in 0..22 {
-            create_backup(temp.path(), BackupAction::Upgrade, old(i + 31), b"upgrade");
-            create_backup(temp.path(), BackupAction::Import, old(i), b"import");
-        }
-
-        let removed = cleanup_retention(temp.path(), now(), MAX_PER_ACTION).expect("cleanup");
-        let upgrades =
-            list_action_records(&temp.path().join("backups"), "upgrade").expect("list upgrades");
-        let imports =
-            list_action_records(&temp.path().join("backups"), "import").expect("list imports");
-        assert_eq!(upgrades.len(), 20);
-        // Imports are entirely inside the 30-day window, so count alone does not limit them.
-        assert_eq!(imports.len(), 22);
-        assert_eq!(removed.len(), 2);
-    }
-
-    // 回归：「备份保留策略」偏好会覆盖默认保留份数，而不是被写死在模块常量里。
-    #[test]
-    fn cleanup_honors_caller_supplied_retention_count() {
-        let temp = tempfile::tempdir().expect("temporary data root");
-        for i in 0..8 {
-            create_backup(
-                temp.path(),
-                BackupAction::Upgrade,
-                old(i + 31),
-                format!("payload-{i}").as_bytes(),
-            );
-        }
-
-        let removed = cleanup_retention(temp.path(), now(), 5).expect("cleanup");
-        assert_eq!(removed.len(), 3);
-        let records = list_action_records(&temp.path().join("backups"), "upgrade").expect("list");
-        assert_eq!(records.len(), 5);
+        assert!(cleanup_retention(temp.path(), now(), 5).unwrap().is_empty());
+        assert_eq!(
+            safety::scan(&temp.path().join("backups")).unwrap().len(),
+            66
+        );
     }
 
     #[test]
