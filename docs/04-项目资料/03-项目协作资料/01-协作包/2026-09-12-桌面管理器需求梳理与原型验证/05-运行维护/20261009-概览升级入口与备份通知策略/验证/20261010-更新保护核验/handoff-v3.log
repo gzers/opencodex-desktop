@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.62s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 7 tests
+test modules::update::handoff::tests::new_running_version_required_and_exact_original_channel_preserved ... ok
+test modules::update::handoff::tests::invalid_oversized_or_linked_receipt_rejected_without_following_it ... ok
+test modules::update::handoff::tests::different_root_or_newer_candidate_never_resolved_or_overwritten ... ok
+test modules::update::handoff::tests::invalid_association_remains_retryable_and_another_candidate_never_releases_it ... ok
+test modules::update::handoff::tests::persisted_verification_survives_rotation_before_notification_delivery ... ok
+test modules::update::handoff::tests::exact_running_candidate_releases_associated_backup_only_and_preserves_user_pin ... ok
+test modules::update::handoff::tests::stale_same_candidate_receipt_cannot_overwrite_a_new_backup_association ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 576 filtered out; finished in 0.35s
+

@@ -1,0 +1,46 @@
+
+> opencodex-desktop-ui@0.1.9 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/runtime-source.test.ts (19 tests | 2 failed) 107ms
+   ❯ runtime source store (17)
+     × refreshes the installed source and reports protection pending=false separately 6ms
+     × refreshes the installed source and reports protection pending=true separately 2ms
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/runtime-source.test.ts > runtime source store > refreshes the installed source and reports protection pending=false separately
+ FAIL  tests/runtime-source.test.ts > runtime source store > refreshes the installed source and reports protection pending=true separately
+AssertionError: expected '' to be null
+
+- Expected:
+null
+
++ Received:
+""
+
+ ❯ tests/runtime-source.test.ts:137:37
+    135|     expect(app.toast).toContain('重启后生效')
+    136|     expect(app.toast.includes('保护备份仍保留')).toBe(protectionReconciliatio…
+    137|     expect(app.runtimeInstallError).toBeNull()
+       |                                     ^
+    138|   })
+    139|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed | 92 passed (93)
+      Tests  2 failed | 430 passed (432)
+   Start at  20:56:00
+   Duration  5.57s (environment 56%, transform 18%, tests 15%, import 10%)
+
+Environment  jsdom was created 93 times · 44.96s total, 56% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
