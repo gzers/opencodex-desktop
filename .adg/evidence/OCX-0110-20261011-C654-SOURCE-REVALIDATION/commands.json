@@ -1,0 +1,60 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-SOURCE-REVALIDATION",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "c654287c06da3e621091c1051ebc19ce1c0b1077",
+  "commands": [
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo metadata --locked --format-version 1",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo fmt --all -- --check",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo clippy --locked --all-targets --all-features -- -D warnings",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo test --locked",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "861 passed / 0 failed / 5 ignored across 34 test groups"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm test -- --run",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "94 test files / 459 tests passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm run build",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "170 modules transformed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "node --test test/smoke/windows-bundle-identity.test.mjs",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "5 passed / 0 failed"
+    }
+  ],
+  "interpretation": "仅为 c654287c 的源码回归证据；不构成版本完成、合并、发布或 stable 授权。"
+}

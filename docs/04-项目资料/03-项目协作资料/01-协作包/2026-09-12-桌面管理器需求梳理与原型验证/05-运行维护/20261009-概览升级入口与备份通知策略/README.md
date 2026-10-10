@@ -116,3 +116,12 @@ source_refs:
 当前注册表为 8 triggers / 39 jobs / 81 events，其中 79 active、2 planned；另有 27 notification policies、87 emission sites、8 scheduling sites、8 UI feedback sites、12 paths、4 cleanup policies。生产直接 app.emit / app.emit_to 集中在 event_delivery.rs，其余生产发出点经过统一 event_delivery 边界。process-cancel-signal、process-observation-signal、process-exit-signal、runtime-stdout-signal 四项明确登记为 internal_only 进程内部信号，不进入通知持久化、不提供前端订阅、不计为用户通知投递缺口。完整矩阵和盘点方法见 [树表与事件注册审阅证据](验证/20261011-树表与事件注册审阅/README.md) 与 .adg/evidence/OCX-0110-20261011-TREE-EVENT-AUDIT。
 
 定向 event_registry 测试为 33 passed / 0 failed / 0 ignored；既有 Rust 694 passed / 0 failed / 4 ignored、UI 94 个测试文件 459 项通过、类型检查和生产构建通过的源码证据保持有效。本轮只闭合静态审阅与定向测试。macOS / Windows 原生 UI、安装、DPI、云母、标题栏、动效、透明下拉框、自动检查性能、真实更新 / 重启、签名、发布资产、更新端点和真实用户迁移仍未闭合；releaseAccepted: false，不构成完成证书、合并授权、公开发布或 stable 晋升。
+
+
+### 2026-10-11 c654287c 最新源码全量复核
+
+代码分支 `feature/0.1.10-maintenance` 的最新提交 `c654287c06da3e621091c1051ebc19ce1c0b1077` 已完成独立源码门禁复核。Rust metadata、fmt、Clippy `-D warnings` 均通过；`cargo test --locked` 为 34 个测试组共 `861 passed / 0 failed / 5 ignored`，其中 library `694 passed / 0 failed / 4 ignored`、binary `2 passed / 0 failed`。UI 全量为 94 个测试文件、459 项通过，类型检查与生产构建通过（170 modules transformed）；Windows bundle identity smoke 为 5/5 通过。
+
+本轮继续绑定运行态观测异常与启停执行异常的隔离规则：只有可执行文件、工作目录、`OPENCODEX_HOME`、对象、动作、阶段、通道和候选身份全部匹配时才解除对应观测异常；不能解除 start / stop / restart 的 execution 生命周期失败。注册表快照为 8 triggers / 39 jobs / 81 events / 27 notification policies / 87 emission sites / 8 scheduling sites / 8 UI feedback sites / 12 paths / 4 cleanup policies。
+
+详细命令、结果和限制见 [c654287c 源码复核](验证/20261011-c654源码复核/README.md) 与 `.adg/evidence/OCX-0110-20261011-C654-SOURCE-REVALIDATION/`。本轮只证明源码级回归；macOS / Windows 原生、安装、性能、真实更新 / 重启、签名、发布资产、真实迁移及发布门禁仍未闭合。协作包与 IMP 保持 `in_progress`，`release_authorization: false`，不构成完成证书、合并或发布授权。

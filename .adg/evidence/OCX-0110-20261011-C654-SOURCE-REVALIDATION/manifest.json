@@ -1,0 +1,39 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-SOURCE-REVALIDATION",
+  "created_at": "2026-10-11",
+  "kind": "local-source-regression-revalidation",
+  "status": "passed_with_scope_limits",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "c654287c06da3e621091c1051ebc19ce1c0b1077",
+  "document_branch": "docs/governance-main",
+  "document_head_at_capture": "0de81efeddf0c40d678a902ef76ba6e544531871",
+  "subject": "c654287c 最新源码全量回归与运行态观测异常隔离复核",
+  "scope": [
+    "Rust metadata、格式化、Clippy -D warnings 与全量测试",
+    "UI 全量测试、类型检查与生产构建",
+    "Windows bundle identity smoke",
+    "运行态观测异常与启停执行异常的源码回归绑定"
+  ],
+  "results": {
+    "rust_library": "694 passed / 0 failed / 4 ignored",
+    "rust_binary": "2 passed / 0 failed",
+    "rust_all_groups": "861 passed / 0 failed / 5 ignored",
+    "ui": "94 test files / 459 tests passed / 0 failed",
+    "ui_typecheck": "passed",
+    "ui_build": "passed; 170 modules transformed",
+    "windows_bundle_identity_smoke": "5 passed / 0 failed"
+  },
+  "non_blocking_output": [
+    "Vite reported the existing INEFFECTIVE_DYNAMIC_IMPORT warning.",
+    "jsdom reported existing HTMLCanvasElement.getContext() notices."
+  ],
+  "limitations": [
+    "不替代 macOS 原生 UI、安装、更新与重启交接验收",
+    "不替代 Windows 普通权限、安装盘与带空格路径、DPI、云母、原生标题栏、动效和透明下拉框验收",
+    "不替代真实自动检查性能、stable 24 小时 / beta 6 小时周期、休眠恢复与跨启动验收",
+    "不替代真实安装器、签名、更新端点、制品身份和发布门禁",
+    "不替代真实用户迁移、卸载保留数据和全量设备事件投递验收"
+  ],
+  "task_state": "in_progress",
+  "release_authorization": false
+}

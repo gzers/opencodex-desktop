@@ -1,0 +1,55 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-SOURCE-REVALIDATION",
+  "verification": "latest source revalidation",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "c654287c06da3e621091c1051ebc19ce1c0b1077",
+  "runtime_observation_isolation": {
+    "status": "source_regression_bound",
+    "recovery_match_fields": [
+      "executable",
+      "working_directory",
+      "OPENCODEX_HOME",
+      "object",
+      "action",
+      "stage",
+      "channel",
+      "candidate_identity"
+    ],
+    "recoverable_observations": [
+      "runtime-starting-failed",
+      "run-unreachable",
+      "run-at-risk",
+      "external-takeover"
+    ],
+    "execution_failures_are_not_cleared": true
+  },
+  "source_gates": {
+    "cargo_metadata": "passed",
+    "cargo_fmt": "passed",
+    "cargo_clippy": "passed",
+    "cargo_test": "passed",
+    "ui_tests": "passed",
+    "ui_typecheck": "passed",
+    "ui_build": "passed",
+    "windows_bundle_identity_smoke": "passed"
+  },
+  "registry_snapshot": {
+    "triggers": 8,
+    "jobs": 39,
+    "events": 81,
+    "notification_policies": 27,
+    "emission_sites": 87,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "gates": {
+    "source_regression": "passed",
+    "native_platform_acceptance": "open",
+    "installer_and_signed_artifacts": "open",
+    "performance_and_real_cycles": "open",
+    "release_authorization": "not_granted"
+  },
+  "interpretation": "c654287c 的源码检查与测试通过，但 0.1.10 仍为候选实施，不能把旧 0.1.9 Windows 候选包当作本版本制品，也不能据此合并 main 或发布。"
+}
