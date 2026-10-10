@@ -1,0 +1,27 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.23s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 1 test
+test infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status ... FAILED
+
+failures:
+
+---- infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status stdout ----
+
+thread 'tokio-rt-worker' (106136269) panicked at src/infrastructure/process_runner.rs:498:21:
+assertion `left == right` failed: lost exit status at worker 1, attempt 1
+  left: Cancelled
+ right: Failed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status' (106136267) panicked at src/infrastructure/process_runner.rs:507:20:
+join rapid exits: JoinError::Panic(Id(4), "assertion `left == right` failed: lost exit status at worker 1, attempt 1\n  left: Cancelled\n right: Failed", ...)
+
+
+failures:
+    infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 609 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,96 @@
+{
+  "schema": "local-validation-evidence-v1",
+  "task_ref": "TASK-OPENCODEX-DESKTOP-182",
+  "imp_ref": "IMP-OPENCODEX-DESKTOP-20",
+  "source": {
+    "branch": "feature/0.1.10-maintenance",
+    "sha": "56c8462c2f306d4531c1c2e9dfc6687cb52b2e0c",
+    "version": "0.1.9",
+    "commits": [
+      "b974e61a",
+      "0be9d8b3",
+      "56c8462c"
+    ]
+  },
+  "platform": {
+    "os": "macOS 27.0.1 (26A434)",
+    "arch": "arm64",
+    "native": false
+  },
+  "checks": [
+    {
+      "command": "cargo test",
+      "exit_code": 0,
+      "log": "ocx-0110-protection-reaper-rust-full.log",
+      "groups": 33,
+      "passed": 765,
+      "failed": 0,
+      "ignored": 4
+    },
+    {
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "exit_code": 0,
+      "log": "ocx-0110-protection-reaper-clippy.log"
+    },
+    {
+      "command": "cargo fmt --check",
+      "exit_code": 0,
+      "log": "fmt.log"
+    },
+    {
+      "command": "npm test -- --run",
+      "exit_code": 0,
+      "files": 94,
+      "passed": 447,
+      "log": "ocx-0110-protection-retry-ui-full-final.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "log": "ocx-0110-protection-retry-typecheck.log"
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 0,
+      "log": "ocx-0110-protection-retry-build.log"
+    },
+    {
+      "command": "cargo test rapid_stop_exits_preserve_the_nonzero_status -- --nocapture",
+      "exit_code": 0,
+      "passed": 1,
+      "fixture_exits": 512,
+      "log": "ocx-0110-process-reaper-eight-after.log"
+    }
+  ],
+  "preserved_failures": {
+    "ocx-0110-protection-retry-rust-full-final.log": "process_action shell exit3 was classified Cancelled instead of Failed; exit101",
+    "ocx-0110-process-reaper-eight-before.log": "8 workers reproduce old double-reaper race; exit101",
+    "ui": "initial target/full logs contain hoist-time mock failures; retained with corrected runs"
+  },
+  "evidence_limits": [
+    "process-reaper-concurrent-before.log still ran the single-worker test and is NOT concurrent evidence",
+    "UI logs precede Rust-only final changes; UI tree is identical",
+    "full Rust and Clippy completed on exact committed source contents before semantic commits",
+    "not native UI, not Windows validation, not installer/update validation, not performance gate",
+    "corrupt receipt controlled recovery still missing; no release/core writeback/task closure"
+  ],
+  "logs": [
+    "ocx-0110-protection-retry-ui-target.log",
+    "ocx-0110-protection-retry-ui-diagnostic.log",
+    "ocx-0110-protection-retry-ui-full.log",
+    "ocx-0110-protection-retry-ui-full-final.log",
+    "ocx-0110-protection-retry-ui-target-final.log",
+    "ocx-0110-protection-retry-typecheck.log",
+    "ocx-0110-protection-retry-build.log",
+    "ocx-0110-protection-retry-rust-target.log",
+    "ocx-0110-protection-retry-rust-target-final.log",
+    "ocx-0110-protection-retry-rust-full-final.log",
+    "ocx-0110-process-action-reproduce.log",
+    "ocx-0110-process-reaper-before.log",
+    "ocx-0110-process-reaper-concurrent-before.log",
+    "ocx-0110-process-reaper-eight-before.log",
+    "ocx-0110-process-reaper-eight-after.log",
+    "ocx-0110-protection-reaper-rust-full.log",
+    "ocx-0110-protection-reaper-clippy.log"
+  ]
+}

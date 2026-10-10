@@ -1,0 +1,146 @@
+
+> opencodex-desktop-ui@0.1.9 test
+> vitest --run tests/runtime-protection.test.ts tests/runtime-source.test.ts tests/settings-uninstall.test.ts tests/settings-data-root-migration.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/settings-data-root-migration.test.ts (5 tests | 4 failed) 84ms
+   ❯ data root migration confirmation and restart boundary (5)
+     × renders an escaped captured target and cancellation never starts migration 17ms
+     × uses the confirmed target, shows real pending feedback and freezes actions until restart 15ms
+     × presents uncertain binding as pending reconciliation instead of saved 10ms
+     × keeps old paths and exposes quarantine warning when copying fails 7ms
+ ❯ tests/settings-uninstall.test.ts (8 tests | 1 failed) 137ms
+   ❯ 统一卸载弹窗（Revision 11） (8)
+     × 按来源渲染方案、备份只提醒，且未确认前主行动禁用并给出原因 39ms
+ ❯ tests/runtime-protection.test.ts (9 tests | 2 failed) 5089ms
+   ❯ local panel protection status and retry (9)
+     × ignores a stale read that finishes after successful retry 5004ms
+     × deduplicates simultaneous reads without opening a mutation 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/runtime-protection.test.ts > local panel protection status and retry > ignores a stale read that finishes after successful retry
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/runtime-protection.test.ts:107:3
+    105|   })
+    106|
+    107|   it('ignores a stale read that finishes after successful retry', asyn…
+       |   ^
+    108|     const runtime = useRuntimeStore()
+    109|     const read = deferred<RuntimeProtectionStatus>()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  tests/runtime-protection.test.ts > local panel protection status and retry > deduplicates simultaneous reads without opening a mutation
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/runtime-protection.test.ts:126:20
+    124|     const loading = runtime.loadProtection()
+    125|     await runtime.loadProtection()
+    126|     expect(invoke).toHaveBeenCalledTimes(1)
+       |                    ^
+    127|     expect(invoke).toHaveBeenCalledWith('runtime_protection_status', u…
+    128|     read.resolve(none)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > renders an escaped captured target and cancellation never starts migration
+Error: Unable to get .modal-body code within: <!--v-if-->
+ ❯ VueWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/settings-data-root-migration.test.ts:62:18
+     60|     await page.get('[data-testid="data-root-migrate"]').trigger('click…
+     61|     expect(switches()).toHaveLength(0)
+     62|     expect(modal.get('.modal-body code').text()).toBe(target)
+       |                  ^
+     63|     expect(modal.find('img').exists()).toBe(false)
+     64|     expect(modal.text()).toContain('外部 OPENCODEX_HOME 保持原位')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > uses the confirmed target, shows real pending feedback and freezes actions until restart
+AssertionError: expected [] to deeply equal [ [ 'switch_data_root', …(1) ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "switch_data_root",
+-     {
+-       "request": {
+-         "mode": "migrate_data",
+-         "targetPath": "/fixtures/confirmed",
+-       },
+-     },
+-   ],
+- ]
++ []
+
+ ❯ tests/settings-data-root-migration.test.ts:83:24
+     81|     app.resolveModal('confirm')
+     82|     await flushPromises()
+     83|     expect(switches()).toEqual([['switch_data_root', { request: { targ…
+       |                        ^
+     84|     const progress = page.get('[data-testid="data-root-progress"]')
+     85|     expect(progress.attributes('aria-busy')).toBe('true')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > presents uncertain binding as pending reconciliation instead of saved
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ tests/settings-data-root-migration.test.ts:112:23
+    110|     await flushPromises()
+    111|     const pendingRow = page.findAll('tr').find(row => row.text().inclu…
+    112|     expect(pendingRow.text()).toContain('待核对')
+       |                       ^
+    113|     expect(pendingRow.text()).not.toContain('已保存')
+    114|     expect(page.findAll('[role="alert"]').some(node => node.text().inc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > keeps old paths and exposes quarantine warning when copying fails
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/settings-data-root-migration.test.ts:129:91
+    127|     await flushPromises()
+    128|     expect(app.dataRootConfig).toEqual(current)
+    129|     expect(page.findAll('[role="alert"]').some(node => node.text().inc…
+       |                                                                                           ^
+    130|     expect(page.get('[data-testid="data-root-migrate"]').attributes('d…
+    131|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  tests/settings-uninstall.test.ts > 统一卸载弹窗（Revision 11） > 按来源渲染方案、备份只提醒，且未确认前主行动禁用并给出原因
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/settings-uninstall.test.ts:113:28
+    111|
+    112|     const modal = wrapper.find('[data-testid="runtime-uninstall-modal"…
+    113|     expect(modal.exists()).toBe(true)
+       |                            ^
+    114|     // 范围两级
+    115|     expect(modal.find('[data-testid="uninstall-scope-full"]').exists()…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  3 failed | 1 passed (4)
+      Tests  7 failed | 34 passed (41)
+   Start at  22:31:58
+   Duration  6.28s (tests 55%, transform 24%, environment 17%, import 4%)
+

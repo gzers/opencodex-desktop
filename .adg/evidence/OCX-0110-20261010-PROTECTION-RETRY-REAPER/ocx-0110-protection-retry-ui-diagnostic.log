@@ -1,0 +1,101 @@
+
+> opencodex-desktop-ui@0.1.9 test
+> vitest --run tests/runtime-protection.test.ts tests/settings-data-root-migration.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/settings-data-root-migration.test.ts (5 tests | 4 failed) 89ms
+   ❯ data root migration confirmation and restart boundary (5)
+     × renders an escaped captured target and cancellation never starts migration 18ms
+     × uses the confirmed target, shows real pending feedback and freezes actions until restart 17ms
+     × presents uncertain binding as pending reconciliation instead of saved 9ms
+     × keeps old paths and exposes quarantine warning when copying fails 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > renders an escaped captured target and cancellation never starts migration
+AssertionError: 设置集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。加载中0通用安装配置数据与备份扩展管理配置迁移WebDAV 同步日志与通知CLI 控制面版本升级关于运行环境与安装发现只发现 / 展示 / 校验现有环境与安装。重新发现正在探测本机 OpenCodex 安装…OpenCodex 运行来源应用不读取 PATH；来源只来自这里的记录与候选目录，并与发现、启停、版本检查共用同一份结果。刷新面板更新保护核对Cannot read properties of undefined (reading 'invoke')重试本地核对查看诊断正在读取运行来源…数据目录与 OPENCODEX_HOME自动发现当前路径，可在同一处统一修改。路径用途操作/fixtures/source数据目录 · 当前使用打开/fixtures/external-homeOPENCODEX_HOME · 当前使用打开外部 OPENCODEX_HOME使用外部路径回到数据目录内初始化或切换数据目录使用显式绝对路径；先校验结构，成功后才初始化冻结分区。数据目录路径切换目标路径校验并初始化仅切换引用迁移数据…数据目录分区分区名已按 IMP 冻结；点击路径可复制，右侧可直接打开。路径用途操作: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/settings-data-root-migration.test.ts:62:66
+     60|     await page.get('[data-testid="data-root-migrate"]').trigger('click…
+     61|     expect(switches()).toHaveLength(0)
+     62|     expect(modal.find('.modal-body code').exists(), page.text()).toBe(…
+       |                                                                  ^
+     63|     expect(modal.get('.modal-body code').text()).toBe(target)
+     64|     expect(modal.find('img').exists()).toBe(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > uses the confirmed target, shows real pending feedback and freezes actions until restart
+AssertionError: expected [] to deeply equal [ [ 'switch_data_root', …(1) ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "switch_data_root",
+-     {
+-       "request": {
+-         "mode": "migrate_data",
+-         "targetPath": "/fixtures/confirmed",
+-       },
+-     },
+-   ],
+- ]
++ []
+
+ ❯ tests/settings-data-root-migration.test.ts:84:24
+     82|     app.resolveModal('confirm')
+     83|     await flushPromises()
+     84|     expect(switches()).toEqual([['switch_data_root', { request: { targ…
+       |                        ^
+     85|     const progress = page.get('[data-testid="data-root-progress"]')
+     86|     expect(progress.attributes('aria-busy')).toBe('true')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > presents uncertain binding as pending reconciliation instead of saved
+TypeError: Cannot read properties of undefined (reading 'text')
+ ❯ tests/settings-data-root-migration.test.ts:113:23
+    111|     await flushPromises()
+    112|     const pendingRow = page.findAll('tr').find(row => row.text().inclu…
+    113|     expect(pendingRow.text()).toContain('待核对')
+       |                       ^
+    114|     expect(pendingRow.text()).not.toContain('已保存')
+    115|     expect(page.findAll('[role="alert"]').some(node => node.text().inc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/settings-data-root-migration.test.ts > data root migration confirmation and restart boundary > keeps old paths and exposes quarantine warning when copying fails
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/settings-data-root-migration.test.ts:130:91
+    128|     await flushPromises()
+    129|     expect(app.dataRootConfig).toEqual(current)
+    130|     expect(page.findAll('[role="alert"]').some(node => node.text().inc…
+       |                                                                                           ^
+    131|     expect(page.get('[data-testid="data-root-migrate"]').attributes('d…
+    132|   })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  4 failed | 10 passed (14)
+   Start at  22:33:02
+   Duration  1.01s (transform 58%, environment 23%, tests 10%, import 9%)
+

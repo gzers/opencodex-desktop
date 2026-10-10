@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running tests/process_action.rs (target/debug/deps/process_action-8b4c04adbcfc2023)
+
+running 8 tests
+test process_action_requires_explicit_confirm ... ok
+test process_action_preserves_observation_when_context_is_unavailable ... ok
+test process_action_uses_controlled_context ... ok
+test run_success_publishes_no_notification ... ok
+test spawn_failure_also_publishes_a_danger_notification ... ok
+test stop_reaps_the_child_and_returns_within_the_window ... ok
+test run_failure_publishes_one_deduped_danger_notification ... ok
+test stop_returns_within_a_bounded_window_when_sigterm_is_ignored ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.03s
+

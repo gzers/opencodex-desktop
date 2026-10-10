@@ -1,0 +1,40 @@
+
+> opencodex-desktop-ui@0.1.9 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+ ❯ tests/workspace.test.ts (0 test)
+ ❯ tests/tray-bridge.test.ts (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/tray-bridge.test.ts [ tests/tray-bridge.test.ts ]
+ FAIL  tests/workspace.test.ts [ tests/workspace.test.ts ]
+Error: [vitest] There was an error when mocking a module. If you are using "vi.mock" factory, make sure there are no top level variables inside, since this call is hoisted to top of the file. Read more: https://vitest.dev/api/vi.html#vi-mock
+ ❯ src/features/runtime/api.ts:4:1
+      2| //
+      3| // 只做 invoke 包装与类型声明；掩码、校验与真实副作用都在后端。
+      4| import { invoke as invokeProtection } from '@tauri-apps/api/core'
+       | ^
+      5|
+      6| export type RuntimeSourceKind = 'explicit' | 'managed' | 'discovered' …
+
+Caused by: ReferenceError: Cannot access 'invoke' before initialization
+ ❯ tests/tray-bridge.test.ts:6:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  2 failed | 92 passed (94)
+      Tests  440 passed (440)
+   Start at  22:33:56
+   Duration  6.09s (environment 56%, transform 17%, tests 16%, import 10%, worker 1%)
+
+Environment  jsdom was created 94 times · 49.22s total, 56% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
