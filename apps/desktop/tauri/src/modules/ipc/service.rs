@@ -449,6 +449,7 @@ impl IpcService {
         started: chrono::DateTime<chrono::Utc>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
         let dependencies = self.dependencies.clone();
+        let app = self.app.clone();
         let worker_request = request.clone();
         let operation = match request.command {
             IpcCommand::Export => "CLI config export",
@@ -462,7 +463,9 @@ impl IpcService {
             started,
             operation,
             move || match worker_request.command {
-                IpcCommand::Export => Self::export_config(&dependencies, &worker_request.args),
+                IpcCommand::Export => {
+                    Self::export_config(&dependencies, &worker_request.args, app.as_ref())
+                }
                 IpcCommand::Import => Self::import_config(
                     &dependencies,
                     &worker_request.args,
@@ -477,16 +480,18 @@ impl IpcService {
     fn export_config(
         dependencies: &IpcDependencies,
         args: &BTreeMap<String, String>,
+        app: Option<&tauri::AppHandle>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
         if args.contains_key("password") {
             return Err(IpcErrorCode::ValidationFailed);
         }
         let output = args.get("output").ok_or(IpcErrorCode::ValidationFailed)?;
         // 新版明文容器不需要口令；不再读取标准输入内容。
-        let result = crate::modules::migration::export_with_container_file(
+        let result = crate::commands::migration::export_container_registered(
             &dependencies.active_data_root,
             std::path::Path::new(output),
             dependencies.current_version,
+            app,
         )
         .map_err(map_app_error)?;
         Ok(serde_json::to_value(IpcExportData {

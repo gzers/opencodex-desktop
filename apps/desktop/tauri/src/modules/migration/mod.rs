@@ -549,10 +549,42 @@ fn open_legacy_document(
     open_document_for_test(payload_b64, header, &key)
 }
 
+/// Captured export ownership, separate from the planned generic migration job.
+/// Begin runs after the target lock is acquired; completed runs before it drops.
+pub trait ExportObserver {
+    fn begin(&mut self, document_sha256: &str, target: &Path);
+    fn completed(&mut self, succeeded: bool);
+}
+struct NoExportObserver;
+impl ExportObserver for NoExportObserver {
+    fn begin(&mut self, _: &str, _: &Path) {}
+    fn completed(&mut self, _: bool) {}
+}
+
+fn verify_export_file(target: &Path, expected: &[u8]) -> Result<(), AppError> {
+    let actual = read_file_limited(target, container::CIPHERTEXT_MAX_BYTES)
+        .map_err(|_| MigrationError::Preferences)?;
+    if actual != expected {
+        return Err(MigrationError::CorruptedDocument.into());
+    }
+    Ok(())
+}
+
 fn write_export(
     data_root: &Path,
     target: &Path,
     app_version: &str,
+    observer: &mut dyn ExportObserver,
+) -> Result<ExportResult, AppError> {
+    write_export_verified(data_root, target, app_version, observer, verify_export_file)
+}
+
+fn write_export_verified(
+    data_root: &Path,
+    target: &Path,
+    app_version: &str,
+    observer: &mut dyn ExportObserver,
+    verify: impl FnOnce(&Path, &[u8]) -> Result<(), AppError>,
 ) -> Result<ExportResult, AppError> {
     let built = build_document(data_root)?;
     let container_bytes = build_container_file(&built.document, app_version)?;
@@ -564,35 +596,44 @@ fn write_export(
             detail: error.to_string(),
         })?;
     }
-    let backup_id = if target.exists() {
-        let previous = read_file_limited(target, container::CIPHERTEXT_MAX_BYTES)
-            .map_err(|_| MigrationError::Preferences)?;
-        let record = backup::backup_file(
-            data_root,
-            backup::BackupAction::Upgrade,
-            target,
-            &previous,
-            chrono::Utc::now(),
-            Some("pre-export".to_string()),
-        )?;
-        Some(record.manifest.backup_id)
-    } else {
-        None
-    };
-    let lock = TargetFileLock::lock(target).map_err(|_| MigrationError::AtomicWrite)?;
-    crate::infrastructure::atomic_write::atomic_write(target, &container_bytes, 0o600)?;
-    drop(lock);
-    Ok(ExportResult {
-        path: target.to_path_buf(),
-        backup_id,
-        document_sha256: sha256_hex(&document_bytes),
-        format_version: CONTAINER_FILE_FORMAT_VERSION,
-        sections: built.sections,
-        excluded: container::EXPORT_EXCLUSIONS
-            .iter()
-            .map(|value| value.to_string())
-            .collect(),
-    })
+    // Serialize capture of the previous export with replacement and readback.
+    // Admission/lock rejection is not an executed export terminal.
+    let _lock = TargetFileLock::lock(target).map_err(|_| MigrationError::AtomicWrite)?;
+    let document_sha256 = sha256_hex(&document_bytes);
+    observer.begin(&document_sha256, target);
+    let result = (|| {
+        let backup_id = if target.exists() {
+            let previous = read_file_limited(target, container::CIPHERTEXT_MAX_BYTES)
+                .map_err(|_| MigrationError::Preferences)?;
+            let record = backup::backup_file(
+                data_root,
+                backup::BackupAction::Upgrade,
+                target,
+                &previous,
+                chrono::Utc::now(),
+                Some("pre-export".to_string()),
+            )?;
+            Some(record.manifest.backup_id)
+        } else {
+            None
+        };
+        crate::infrastructure::atomic_write::atomic_write(target, &container_bytes, 0o600)?;
+        verify(target, &container_bytes)?;
+        Ok(ExportResult {
+            path: target.to_path_buf(),
+            backup_id,
+            document_sha256,
+            format_version: CONTAINER_FILE_FORMAT_VERSION,
+            sections: built.sections,
+            excluded: container::EXPORT_EXCLUSIONS
+                .iter()
+                .map(|value| value.to_string())
+                .collect(),
+        })
+    })();
+    // A failed readback may leave a changed file. Never claim atomic rollback.
+    observer.completed(result.is_ok());
+    result
 }
 
 pub fn export_with_paths(data_root: &Path, app_version: &str) -> Result<ExportResult, AppError> {
@@ -602,7 +643,7 @@ pub fn export_with_paths(data_root: &Path, app_version: &str) -> Result<ExportRe
         return Err(MigrationError::Preferences.into());
     }
     let target = export_path(data_root);
-    write_export(data_root, &target, app_version)
+    write_export(data_root, &target, app_version, &mut NoExportObserver)
 }
 
 pub fn export_with_container_file(
@@ -610,12 +651,21 @@ pub fn export_with_container_file(
     output_path: &Path,
     app_version: &str,
 ) -> Result<ExportResult, AppError> {
+    export_with_container_file_observed(data_root, output_path, app_version, &mut NoExportObserver)
+}
+
+pub fn export_with_container_file_observed(
+    data_root: &Path,
+    output_path: &Path,
+    app_version: &str,
+    observer: &mut dyn ExportObserver,
+) -> Result<ExportResult, AppError> {
     validate_data_root(data_root)?;
     validate_structure(data_root)?;
     if !data_root.join("manager-state").is_dir() {
         return Err(MigrationError::Preferences.into());
     }
-    write_export(data_root, output_path, app_version)
+    write_export(data_root, output_path, app_version, observer)
 }
 
 /// 准备写入的一个文件（用于受控提交与回滚）。

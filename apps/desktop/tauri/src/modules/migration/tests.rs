@@ -454,3 +454,243 @@ fn import_creates_backup_before_overwriting_preferences() {
         130
     );
 }
+
+/// Real delivery store with the same candidate adapter as GUI/IPC. It also
+/// verifies terminal publication still owns the export's target lock.
+struct RegisteredExportObserver<'a> {
+    root: &'a Path,
+    target: std::path::PathBuf,
+    store: std::sync::Arc<std::sync::Mutex<crate::modules::notifications::NotificationStore>>,
+    identity: Option<crate::modules::notifications::registry::EventIdentity>,
+    terminals: Vec<bool>,
+    resolved: Vec<usize>,
+}
+impl<'a> RegisteredExportObserver<'a> {
+    fn new(root: &'a Path, target: &Path) -> Self {
+        Self {
+            root,
+            target: target.to_path_buf(),
+            store: std::sync::Arc::new(std::sync::Mutex::new(
+                crate::modules::notifications::NotificationStore::new(),
+            )),
+            identity: None,
+            terminals: Vec::new(),
+            resolved: Vec::new(),
+        }
+    }
+}
+impl ExportObserver for RegisteredExportObserver<'_> {
+    fn begin(&mut self, digest: &str, target: &Path) {
+        assert_eq!(target, self.target);
+        assert!(self.identity.is_none());
+        self.identity = crate::commands::event_delivery::prepare(
+            self.root,
+            "config-export-failed",
+            crate::modules::notifications::registry::Channel::Local,
+            &crate::commands::migration::export_candidate(digest, target),
+        );
+        assert!(self.identity.is_some());
+    }
+    fn completed(&mut self, succeeded: bool) {
+        use crate::modules::notifications::registry::{terminal_delivery, Evidence, Trigger};
+        assert!(
+            TargetFileLock::try_lock_with_timeout(&self.target, std::time::Duration::ZERO,)
+                .is_err(),
+            "terminal must precede target lock release"
+        );
+        let identity = self.identity.take().unwrap();
+        let evidence = if succeeded {
+            Evidence::Success {
+                candidate: identity.candidate.clone(),
+                verified: true,
+            }
+        } else {
+            Evidence::Failure
+        };
+        let delivery = terminal_delivery(
+            if succeeded {
+                "config-export-succeeded"
+            } else {
+                "config-export-failed"
+            },
+            Trigger::User,
+            identity,
+            evidence,
+            chrono::Utc::now(),
+        )
+        .unwrap();
+        let outcome = crate::commands::notifications::NotificationPublisher {
+            store: &self.store,
+            data_root: self.root,
+        }
+        .publish_event(&delivery)
+        .unwrap();
+        self.terminals.push(succeeded);
+        self.resolved.push(outcome.resolved);
+    }
+}
+
+#[test]
+fn export_terminal_requires_exact_readback_under_lock_default_and_explicit_destination() {
+    let root = data_root();
+    let output = tempfile::tempdir().unwrap();
+    for target in [
+        export_path(root.path()),
+        output.path().join("chosen.ocxdconf"),
+    ] {
+        let mut observer = RegisteredExportObserver::new(root.path(), &target);
+        let result =
+            export_with_container_file_observed(root.path(), &target, "0.1.10", &mut observer)
+                .unwrap();
+        let bytes = std::fs::read(&target).unwrap();
+        let document = read_plaintext_document(&bytes);
+        assert_eq!(
+            result.document_sha256,
+            document_integrity(&document).unwrap()
+        );
+        verify_export_file(&target, &bytes).unwrap();
+        assert_eq!(observer.terminals, [true]);
+        assert!(observer.store.lock().unwrap().all().is_empty());
+        TargetFileLock::try_lock_with_timeout(&target, std::time::Duration::ZERO).unwrap();
+    }
+}
+
+#[test]
+fn export_readback_corruption_emits_only_failure_then_exact_retry_recovers_after_reload() {
+    let root = data_root();
+    let target = export_path(root.path());
+    let mut observer = RegisteredExportObserver::new(root.path(), &target);
+    let result = write_export_verified(
+        root.path(),
+        &target,
+        "0.1.10",
+        &mut observer,
+        |path, bytes| {
+            std::fs::write(path, b"corrupted after atomic replacement").unwrap();
+            verify_export_file(path, bytes)
+        },
+    );
+    assert!(result.is_err());
+    assert_eq!(
+        std::fs::read(&target).unwrap(),
+        b"corrupted after atomic replacement"
+    );
+    assert_eq!(observer.terminals, [false]);
+    use crate::modules::notifications::persistence::{load_notifications, notifications_path};
+    let saved = load_notifications(&notifications_path(root.path())).unwrap();
+    assert_eq!(saved.all().len(), 1);
+    assert!(!saved.all()[0].resolved);
+    observer.store = std::sync::Arc::new(std::sync::Mutex::new(saved));
+    export_with_container_file_observed(root.path(), &target, "0.1.10", &mut observer).unwrap();
+    assert_eq!(observer.terminals, [false, true]);
+    assert_eq!(observer.resolved, [0, 1]);
+    let saved = load_notifications(&notifications_path(root.path())).unwrap();
+    assert!(saved.all()[0].resolved && !saved.all()[0].read);
+    let history = std::fs::read_to_string(notifications_path(root.path())).unwrap();
+    let scopes =
+        std::fs::read_to_string(root.path().join("manager-state/event-scope.json")).unwrap();
+    for secret in [
+        target.to_str().unwrap(),
+        root.path().to_str().unwrap(),
+        "interface_scale",
+        "0.1.10",
+    ] {
+        assert!(!history.contains(secret));
+        assert!(!scopes.contains(secret));
+    }
+}
+
+#[test]
+fn export_previous_target_read_failure_publishes_failure_without_replacement() {
+    let root = data_root();
+    let target = root.path().join("exports/directory-target");
+    std::fs::create_dir_all(&target).unwrap();
+    let mut observer = RegisteredExportObserver::new(root.path(), &target);
+    assert!(
+        export_with_container_file_observed(root.path(), &target, "0.1.10", &mut observer).is_err()
+    );
+    assert!(target.is_dir());
+    assert_eq!(observer.terminals, [false]);
+    assert_eq!(observer.store.lock().unwrap().all().len(), 1);
+}
+
+#[test]
+fn export_preexecution_source_root_and_lock_rejections_publish_nothing() {
+    let root = data_root();
+    let target = export_path(root.path());
+    std::fs::write(&target, b"unchanged target").unwrap();
+    let mut observer = RegisteredExportObserver::new(root.path(), &target);
+    let bad_root = tempfile::tempdir().unwrap();
+    assert!(
+        export_with_container_file_observed(bad_root.path(), &target, "0.1.10", &mut observer)
+            .is_err()
+    );
+    let source = root.path().join("manager-state/preferences.json");
+    std::fs::write(&source, b"not json").unwrap();
+    assert!(
+        export_with_container_file_observed(root.path(), &target, "0.1.10", &mut observer).is_err()
+    );
+    std::fs::remove_file(source).unwrap();
+    let held = TargetFileLock::lock(&target).unwrap();
+    assert!(
+        export_with_container_file_observed(root.path(), &target, "0.1.10", &mut observer).is_err()
+    );
+    drop(held);
+    assert!(observer.terminals.is_empty() && observer.identity.is_none());
+    assert_eq!(std::fs::read(&target).unwrap(), b"unchanged target");
+}
+
+#[test]
+fn export_different_content_or_destination_cannot_resolve_prior_failure() {
+    for change_content in [false, true] {
+        let root = data_root();
+        let target = export_path(root.path());
+        let mut observer = RegisteredExportObserver::new(root.path(), &target);
+        assert!(write_export_verified(
+            root.path(),
+            &target,
+            "0.1.10",
+            &mut observer,
+            |path, bytes| {
+                std::fs::write(path, b"corrupt").unwrap();
+                verify_export_file(path, bytes)
+            }
+        )
+        .is_err());
+        if change_content {
+            PreferencesStore::new(root.path())
+                .save(&Preferences {
+                    interface_scale: 175,
+                    ..Default::default()
+                })
+                .unwrap();
+        } else {
+            observer.target = root.path().join("exports/another.ocxdconf");
+        }
+        let next_target = observer.target.clone();
+        export_with_container_file_observed(root.path(), &next_target, "0.1.10", &mut observer)
+            .unwrap();
+        assert_eq!(observer.resolved, [0, 0]);
+        assert!(!observer.store.lock().unwrap().all()[0].resolved);
+    }
+}
+
+#[test]
+fn export_previous_backup_failure_does_not_replace_destination() {
+    let root = data_root();
+    let target = export_path(root.path());
+    std::fs::write(&target, b"previous export").unwrap();
+    // A real non-directory blocks the pre-export backup without injecting a
+    // successful backup or touching user files.
+    std::fs::remove_dir_all(root.path().join("backups")).unwrap();
+    std::fs::write(root.path().join("backups"), b"blocked backup directory").unwrap();
+    let mut observer = RegisteredExportObserver::new(root.path(), &target);
+    assert!(
+        write_export_verified(root.path(), &target, "0.1.10", &mut observer, |_, _| {
+            panic!("verification cannot run after backup failure")
+        })
+        .is_err()
+    );
+    assert_eq!(std::fs::read(&target).unwrap(), b"previous export");
+    assert_eq!(observer.terminals, [false]);
+}

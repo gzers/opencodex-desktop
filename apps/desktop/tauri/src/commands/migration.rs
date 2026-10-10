@@ -14,9 +14,73 @@ pub async fn export_migration(
     let root = data_root.0.clone();
     let version = app.package_info().version.to_string();
     crate::commands::run_blocking("export migration container", move || {
-        export_migration_with_root(&root, version).map(Into::into)
+        let target = root
+            .join(migration::EXPORTS_RELATIVE_PATH)
+            .join(migration::EXPORT_FILE_NAME);
+        export_container_registered(&root, &target, &version, Some(&app)).map(Into::into)
     })
     .await
+}
+
+/// Both GUI and CLI use this export terminal adapter in their owned workers.
+/// No AppHandle (isolated library/test use) does not fabricate persistent delivery.
+pub(crate) fn export_container_registered(
+    root: &std::path::Path,
+    target: &std::path::Path,
+    version: &str,
+    app: Option<&tauri::AppHandle>,
+) -> crate::errors::AppResult<migration::ExportResult> {
+    match app {
+        Some(app) => migration::export_with_container_file_observed(
+            root,
+            target,
+            version,
+            &mut ExportEvents {
+                app,
+                root,
+                identity: None,
+            },
+        ),
+        None => migration::export_with_container_file(root, target, version),
+    }
+}
+
+/// Lossless path bytes are transient hash input, never notification fields.
+pub(crate) fn export_candidate(document_sha256: &str, target: &std::path::Path) -> Vec<u8> {
+    [
+        document_sha256.as_bytes(),
+        b"\0",
+        target.as_os_str().as_encoded_bytes(),
+    ]
+    .concat()
+}
+struct ExportEvents<'a> {
+    app: &'a tauri::AppHandle,
+    root: &'a std::path::Path,
+    identity: Option<crate::modules::notifications::registry::EventIdentity>,
+}
+impl migration::ExportObserver for ExportEvents<'_> {
+    fn begin(&mut self, document_sha256: &str, target: &std::path::Path) {
+        self.identity = crate::commands::event_delivery::prepare(
+            self.root,
+            "config-export-failed",
+            crate::modules::notifications::registry::Channel::Local,
+            &export_candidate(document_sha256, target),
+        );
+    }
+    fn completed(&mut self, succeeded: bool) {
+        crate::commands::event_delivery::publish(
+            self.app,
+            self.root,
+            if succeeded {
+                "config-export-succeeded"
+            } else {
+                "config-export-failed"
+            },
+            self.identity.take(),
+            crate::modules::notifications::registry::Trigger::User,
+        );
+    }
 }
 
 #[tauri::command]

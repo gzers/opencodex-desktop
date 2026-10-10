@@ -282,6 +282,13 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "config_export",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1365,6 +1372,36 @@
       "resolves": [
         "sync-run-failed"
       ]
+    },
+    {
+      "id": "config-export-failed",
+      "job": "config_export",
+      "object": "configuration",
+      "action": "export",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "config_export_failure",
+      "resolves": []
+    },
+    {
+      "id": "config-export-succeeded",
+      "job": "config_export",
+      "object": "configuration",
+      "action": "export",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "config-export-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1653,6 +1690,18 @@
       "body": "同步执行或结果核验未完成，可能已应用或上传部分内容；请检查同步状态后重试。",
       "action": "logs",
       "dedupe": "sync-run:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "config_export_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "配置导出未完成",
+      "body": "配置包写入或回读核验失败。目标文件可能已改变，请检查导出文件后再重试。",
+      "action": "logs",
+      "dedupe": "config-export:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -2056,6 +2105,16 @@
     {
       "event": "sync-run-succeeded",
       "source": "commands/sync.rs::run_sync_now captured execution terminal; conflicts/admission cannot recover",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-export-failed",
+      "source": "commands/migration::export_container_registered (GUI / IPC owned export worker; captured document + destination; terminal after write/readback before target lock release)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "config-export-succeeded",
+      "source": "commands/migration::export_container_registered (GUI / IPC owned export worker; captured document + destination; terminal after write/readback before target lock release)",
       "wiring": "scoped_terminal"
     }
   ],
