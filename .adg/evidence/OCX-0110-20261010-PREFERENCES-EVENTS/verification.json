@@ -1,0 +1,39 @@
+{
+  "source_sha": "d4f4dc29eaef36700bb132f5a215f83102eb27e4",
+  "code_branch": "feature/0.1.10-maintenance",
+  "rust_full": {
+    "groups": 33,
+    "passed": 769,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "preferences": 7,
+    "registry": 31
+  },
+  "checks_passed": [
+    "clippy-all-targets-D-warnings",
+    "fmt-check",
+    "diff-check"
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 31,
+    "events": 62,
+    "notification_policies": 18,
+    "emission_sites": 68,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "ui_rerun": false,
+  "native_rerun": false,
+  "historical_failure": "focused initial run: initialized manager-state is not empty; corrected to compare initialized file/content snapshots",
+  "limits": [
+    "no AppHandle native emission validation",
+    "Windows not run",
+    "full-domain terminal/admission matrix incomplete",
+    "full required_checks pending"
+  ]
+}

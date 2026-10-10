@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.32s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 7 tests
+test commands::preferences::tests::preflight_refusals_do_not_deliver_or_create_event_files ... ok
+test commands::preferences::tests::camel_case_preferences_round_trip_through_disk ... ok
+test commands::preferences::tests::channel_save_invalidates_old_checks_only_after_success ... ok
+test commands::preferences::tests::prepared_update_refuses_channel_change_before_writing_disk ... ok
+test commands::preferences::tests::failed_notification_persistence_does_not_fail_committed_preferences ... ok
+test commands::preferences::tests::changed_channel_candidate_cannot_clear_save_failure ... ok
+test commands::preferences::tests::real_save_failures_recover_exact_contents_and_keep_reset_independent ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 608 filtered out; finished in 0.13s
+
