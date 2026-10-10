@@ -51,6 +51,8 @@ pub enum Job {
     Migration,
     PreferencesBackup,
     PreferencesRestore,
+    PreferencesSave,
+    PreferencesReset,
     BackupCleanup,
     BackupList,
     BackupPin,
@@ -103,7 +105,9 @@ dimension!(Action {
     Restore,
     Cleanup,
     Pin,
-    Reconcile
+    Reconcile,
+    Save,
+    Reset
 });
 dimension!(Phase {
     Execution,
@@ -180,6 +184,8 @@ pub enum PolicyId {
     RuntimeProtectionReconcileFailure,
     PreferencesBackupFailure,
     PreferencesRestoreFailure,
+    PreferencesSaveFailure,
+    PreferencesResetFailure,
     BackupCleanupFailure,
     LocalCleanupFailure,
     SyncConflict,
@@ -658,6 +664,14 @@ enum SupportedEvent {
     RuntimeProtectionReconcileSucceeded,
     #[serde(rename = "preferences-restored")]
     PreferencesRestored,
+    #[serde(rename = "preferences-save-failed")]
+    PreferencesSaveFailed,
+    #[serde(rename = "preferences-save-succeeded")]
+    PreferencesSaveSucceeded,
+    #[serde(rename = "preferences-reset-failed")]
+    PreferencesResetFailed,
+    #[serde(rename = "preferences-reset-succeeded")]
+    PreferencesResetSucceeded,
 }
 
 dimension!(PathId {

@@ -233,6 +233,20 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "preferences_save",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "preferences_reset",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1076,6 +1090,66 @@
       "resolves": [
         "runtime-protection-reconcile-failed"
       ]
+    },
+    {
+      "id": "preferences-save-failed",
+      "job": "preferences_save",
+      "object": "configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "preferences_save_failure",
+      "resolves": []
+    },
+    {
+      "id": "preferences-save-succeeded",
+      "job": "preferences_save",
+      "object": "configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "preferences-save-failed"
+      ]
+    },
+    {
+      "id": "preferences-reset-failed",
+      "job": "preferences_reset",
+      "object": "configuration",
+      "action": "reset",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "preferences_reset_failure",
+      "resolves": []
+    },
+    {
+      "id": "preferences-reset-succeeded",
+      "job": "preferences_reset",
+      "object": "configuration",
+      "action": "reset",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "preferences-reset-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1268,6 +1342,30 @@
       "body": "本地核验尚未确认完成，保护备份已保留；请在设置中重试核验或查看诊断记录。",
       "action": "logs",
       "dedupe": "runtime:protection-reconcile-failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "preferences_save_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "设置保存失败",
+      "body": "设置未成功保存；请查看诊断记录后重试。",
+      "action": "logs",
+      "dedupe": "preferences-save:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "preferences_reset_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "默认设置恢复失败",
+      "body": "默认设置未成功恢复；请查看诊断记录后重试。",
+      "action": "logs",
+      "dedupe": "preferences-reset:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -1591,6 +1689,26 @@
     {
       "event": "runtime-protection-reconcile-succeeded",
       "source": "commands/runtime.rs::retry_runtime_protection",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-save-failed",
+      "source": "commands/preferences.rs::save_preferences owned worker transaction result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-save-succeeded",
+      "source": "commands/preferences.rs::save_preferences owned worker transaction result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-reset-failed",
+      "source": "commands/preferences.rs::restore_default_preferences owned worker transaction result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-reset-succeeded",
+      "source": "commands/preferences.rs::restore_default_preferences owned worker transaction result",
       "wiring": "scoped_terminal"
     }
   ],

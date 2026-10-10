@@ -792,6 +792,8 @@ fn new_terminal_pairs_persist_and_only_exact_verified_success_recovers() {
         "manager-install",
         "preferences-backup",
         "preferences-restore",
+        "preferences-save",
+        "preferences-reset",
         "preferences-backup-cleanup",
         "local-cleanup",
     ] {

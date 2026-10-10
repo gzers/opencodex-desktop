@@ -50,11 +50,14 @@ pub async fn save_preferences(
         .state::<crate::commands::update::SharedUpdateStatus>()
         .inner()
         .clone();
+    let event_app = app.clone();
     let saved = crate::commands::run_blocking("save preferences", move || {
         // All writers take the filesystem lock before the query-state lock.
         let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(&root)?;
         let mut status = state.lock().map_err(|_| AppError::NotConfigured)?;
-        save_preferences_transaction(&root, &domain, &mut status)
+        save_preferences_observed(&root, &domain, &mut status, |candidate, succeeded| {
+            publish_preferences_result(&event_app, &root, "preferences-save", candidate, succeeded);
+        })
     })
     .await?;
     crate::infrastructure::window_appearance::refresh(&app);
@@ -71,10 +74,24 @@ pub async fn restore_default_preferences(
         .state::<crate::commands::update::SharedUpdateStatus>()
         .inner()
         .clone();
+    let event_app = app.clone();
     let restored = crate::commands::run_blocking("restore default preferences", move || {
         let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(&root)?;
         let mut status = state.lock().map_err(|_| AppError::NotConfigured)?;
-        save_preferences_transaction(&root, &Preferences::default(), &mut status)
+        save_preferences_observed(
+            &root,
+            &Preferences::default(),
+            &mut status,
+            |candidate, succeeded| {
+                publish_preferences_result(
+                    &event_app,
+                    &root,
+                    "preferences-reset",
+                    candidate,
+                    succeeded,
+                );
+            },
+        )
     })
     .await?;
     crate::infrastructure::window_appearance::refresh(&app);
@@ -93,11 +110,62 @@ pub(crate) fn save_preferences_transaction(
     value: &Preferences,
     status: &mut crate::modules::update::UpdateStatus,
 ) -> AppResult<Preferences> {
+    let channel = preflight_preferences(value, status)?;
+    commit_preferences(root, value, status, channel)
+}
+
+fn preflight_preferences(
+    value: &Preferences,
+    status: &crate::modules::update::UpdateStatus,
+) -> AppResult<crate::modules::update::UpdateChannel> {
+    crate::modules::preferences::validate(value)?;
     let channel = crate::modules::update::UpdateChannel::parse(&value.app_update_channel)
         .ok_or(AppError::NotConfigured)?;
     if (status.installing || status.pending_restart.is_some()) && status.channel != channel {
         return Err(AppError::NotConfigured);
     }
+    Ok(channel)
+}
+
+/// Called under the admitted worker and filesystem/query locks. Validation and
+/// ownership refusals do not write event scopes or persistent history. The
+/// observer owns only delivery, never the result of the preference mutation.
+fn save_preferences_observed(
+    root: &std::path::Path,
+    value: &Preferences,
+    status: &mut crate::modules::update::UpdateStatus,
+    observer: impl FnOnce(&[u8], bool),
+) -> AppResult<Preferences> {
+    let channel = preflight_preferences(value, status)?;
+    // Struct field order is deterministic; candidates include all settings,
+    // including the update channel. Only the hash leaves this owned callback.
+    let candidate = serde_json::to_vec(value).map_err(|_| AppError::NotConfigured)?;
+    let result = commit_preferences(root, value, status, channel);
+    observer(&candidate, result.is_ok());
+    result
+}
+
+fn publish_preferences_result(
+    app: &tauri::AppHandle,
+    root: &std::path::Path,
+    stem: &str,
+    candidate: &[u8],
+    succeeded: bool,
+) {
+    use crate::modules::notifications::registry::{Channel, Trigger};
+    let failed = format!("{stem}-failed");
+    let identity =
+        crate::commands::event_delivery::prepare(root, &failed, Channel::Local, candidate);
+    let event = format!("{stem}-{}", if succeeded { "succeeded" } else { "failed" });
+    crate::commands::event_delivery::publish(app, root, &event, identity, Trigger::User);
+}
+
+fn commit_preferences(
+    root: &std::path::Path,
+    value: &Preferences,
+    status: &mut crate::modules::update::UpdateStatus,
+    channel: crate::modules::update::UpdateChannel,
+) -> AppResult<Preferences> {
     let saved = save_preferences_with_path(root, value)?;
     status.switch_channel(channel);
     Ok(saved)
@@ -125,7 +193,231 @@ impl From<crate::modules::preferences::PreferencesError> for AppError {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::modules::notifications::{
+        persistence::{load_notifications, notifications_path},
+        registry::{self, Channel, Delivery, Evidence, Trigger},
+        NotificationStore,
+    };
     use crate::types::preferences::PreferencesDto;
+    use std::sync::{Arc, Mutex};
+
+    fn observed_save(
+        root: &std::path::Path,
+        value: &Preferences,
+        status: &mut crate::modules::update::UpdateStatus,
+        store: &Arc<Mutex<NotificationStore>>,
+        stem: &str,
+    ) -> AppResult<Preferences> {
+        let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(root)?;
+        save_preferences_observed(root, value, status, |bytes, succeeded| {
+            let failed = format!("{stem}-failed");
+            let identity =
+                crate::commands::event_delivery::prepare(root, &failed, Channel::Local, bytes)
+                    .unwrap();
+            let event = format!("{stem}-{}", if succeeded { "succeeded" } else { "failed" });
+            let evidence = if succeeded {
+                Evidence::Success {
+                    candidate: identity.candidate.clone(),
+                    verified: true,
+                }
+            } else {
+                Evidence::Failure
+            };
+            let delivery = Delivery {
+                event: &event,
+                job: registry::lookup(&event).unwrap().job,
+                trigger: Trigger::User,
+                identity,
+                evidence,
+                occurred_at: chrono::Utc::now(),
+            };
+            // Delivery errors deliberately do not change the save result.
+            let _ = crate::commands::notifications::NotificationPublisher {
+                store,
+                data_root: root,
+            }
+            .publish_event(&delivery);
+        })
+    }
+
+    #[test]
+    fn real_save_failures_recover_exact_contents_and_keep_reset_independent() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let path = root
+            .path()
+            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+        std::fs::create_dir_all(&path).unwrap();
+        let value = Preferences {
+            theme: "dark".into(),
+            ..Preferences::default()
+        };
+        let mut status = crate::modules::update::UpdateStatus::pending("0.1.9");
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        assert!(
+            observed_save(root.path(), &value, &mut status, &store, "preferences-save").is_err()
+        );
+        assert!(observed_save(
+            root.path(),
+            &Preferences::default(),
+            &mut status,
+            &store,
+            "preferences-reset"
+        )
+        .is_err());
+        let restarted = Arc::new(Mutex::new(
+            load_notifications(&notifications_path(root.path())).unwrap(),
+        ));
+        assert_eq!(restarted.lock().unwrap().all().len(), 2);
+        std::fs::remove_dir(&path).unwrap();
+        observed_save(
+            root.path(),
+            &value,
+            &mut status,
+            &restarted,
+            "preferences-save",
+        )
+        .unwrap();
+        let loaded = load_notifications(&notifications_path(root.path())).unwrap();
+        assert!(loaded.all()[0].resolved && !loaded.all()[0].read);
+        assert!(!loaded.all()[1].resolved);
+        observed_save(
+            root.path(),
+            &Preferences::default(),
+            &mut status,
+            &restarted,
+            "preferences-reset",
+        )
+        .unwrap();
+        let loaded = load_notifications(&notifications_path(root.path())).unwrap();
+        assert_eq!(loaded.all().len(), 2);
+        assert!(loaded.all().iter().all(|n| n.resolved && !n.read));
+        let history = std::fs::read_to_string(notifications_path(root.path())).unwrap();
+        assert!(!history.contains(root.path().to_str().unwrap()));
+        assert!(!history.contains("dark"));
+        assert_eq!(
+            load_preferences_with_path(root.path()).unwrap(),
+            Preferences::default()
+        );
+    }
+
+    #[test]
+    fn changed_channel_candidate_cannot_clear_save_failure() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let path = root
+            .path()
+            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+        std::fs::create_dir_all(&path).unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        let mut status = crate::modules::update::UpdateStatus::pending("0.1.9");
+        assert!(observed_save(
+            root.path(),
+            &Preferences::default(),
+            &mut status,
+            &store,
+            "preferences-save"
+        )
+        .is_err());
+        std::fs::remove_dir(&path).unwrap();
+        let beta = Preferences {
+            app_update_channel: "beta".into(),
+            ..Preferences::default()
+        };
+        observed_save(root.path(), &beta, &mut status, &store, "preferences-save").unwrap();
+        assert!(
+            !load_notifications(&notifications_path(root.path()))
+                .unwrap()
+                .all()[0]
+                .resolved
+        );
+        assert_eq!(status.channel.as_str(), "beta");
+    }
+
+    #[test]
+    fn preflight_refusals_do_not_deliver_or_create_event_files() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let snapshot = || {
+            std::fs::read_dir(root.path().join("manager-state"))
+                .unwrap()
+                .map(|entry| {
+                    let entry = entry.unwrap();
+                    (entry.file_name(), std::fs::read(entry.path()).unwrap())
+                })
+                .collect::<std::collections::BTreeMap<_, _>>()
+        };
+        let before = snapshot();
+        let mut status = crate::modules::update::UpdateStatus::pending("0.1.9");
+        let invalid = Preferences {
+            interface_scale: -1,
+            ..Preferences::default()
+        };
+        let beta = Preferences {
+            app_update_channel: "beta".into(),
+            ..Preferences::default()
+        };
+        assert!(
+            save_preferences_observed(root.path(), &invalid, &mut status, |_, _| panic!(
+                "invalid value delivered"
+            ))
+            .is_err()
+        );
+        status.installing = true;
+        assert!(
+            save_preferences_observed(root.path(), &beta, &mut status, |_, _| panic!(
+                "busy change delivered"
+            ))
+            .is_err()
+        );
+        status.installing = false;
+        status.pending_restart = Some("0.1.10".into());
+        assert!(
+            save_preferences_observed(root.path(), &beta, &mut status, |_, _| panic!(
+                "pending restart change delivered"
+            ))
+            .is_err()
+        );
+        assert!(!notifications_path(root.path()).exists());
+        assert_eq!(snapshot(), before);
+    }
+
+    #[test]
+    fn failed_notification_persistence_does_not_fail_committed_preferences() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let path = root
+            .path()
+            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+        std::fs::create_dir_all(&path).unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        let mut status = crate::modules::update::UpdateStatus::pending("0.1.9");
+        assert!(observed_save(
+            root.path(),
+            &Preferences::default(),
+            &mut status,
+            &store,
+            "preferences-save"
+        )
+        .is_err());
+        std::fs::remove_dir(&path).unwrap();
+        let notifications = notifications_path(root.path());
+        std::fs::remove_file(&notifications).unwrap();
+        std::fs::create_dir(&notifications).unwrap();
+        observed_save(
+            root.path(),
+            &Preferences::default(),
+            &mut status,
+            &store,
+            "preferences-save",
+        )
+        .unwrap();
+        assert_eq!(
+            load_preferences_with_path(root.path()).unwrap(),
+            Preferences::default()
+        );
+        assert!(!store.lock().unwrap().all()[0].resolved);
+    }
 
     #[test]
     fn channel_save_invalidates_old_checks_only_after_success() {
