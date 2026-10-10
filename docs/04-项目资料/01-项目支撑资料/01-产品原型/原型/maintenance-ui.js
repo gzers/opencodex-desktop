@@ -203,15 +203,13 @@
     return '<svg class="mnt-file-icon proto-tree-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">'+shape+'</svg>';
   }
   function backupFilesMarkup() {
-    const rows=backupNodes.filter(node=>{
-      let parent=node.parent;
-      while(parent){if(collapsedBackupNodes.has(parent))return false;parent=backupNodes.find(item=>item.id===parent)?.parent;}
-      return true;
-    }).map(node=>{
+    const rows=window.PrototypeTreeTable.rows(window.PrototypeTreeTable.visible(backupNodes,collapsedBackupNodes),node=>{
       const folder=node.type==='folder', expanded=!collapsedBackupNodes.has(node.id);
-      const toggle=folder?'<button type="button" class="mnt-tree-toggle proto-tree-toggle" data-maint-action="backup-tree-toggle" data-target="'+node.id+'" aria-expanded="'+expanded+'" aria-label="'+(expanded?'收起':'展开')+' '+esc(node.name)+'"><span class="proto-tree-chevron" aria-hidden="true"></span></button>':'<span class="mnt-tree-spacer proto-tree-spacer" aria-hidden="true"></span>';
-      return '<tr class="proto-tree-row" id="maintenanceFileRow-'+node.id+'"><th scope="row"><div class="mnt-tree-name proto-tree-label" style="--tree-level:'+node.level+'">'+toggle+backupFileIcon(node.type)+'<span title="'+esc(node.name)+'">'+esc(node.name)+'</span></div></th><td>'+esc(node.description)+'</td><td>'+btn('backup-node-open',folder?'打开目录':'打开文件',node.id,'ghost')+'</td></tr>';
-    }).join('');
+      return {table:true,attrs:'id="maintenanceFileRow-'+node.id+'"',depth:node.level,label:node.name,
+        toggleAttrs:folder?'data-maint-action="backup-tree-toggle" data-target="'+node.id+'"':null,
+        toggleClass:'mnt-tree-toggle',expanded,icon:backupFileIcon(node.type),
+        cells:[esc(node.description),btn('backup-node-open',folder?'打开目录':'打开文件',node.id,'ghost')]};
+    });
     return '<section id="maintenanceBackupFiles" class="mnt-backup-files" aria-labelledby="maintenanceBackupFilesTitle"><h3 id="maintenanceBackupFilesTitle">备份文件与目录</h3><p class="mnt-note">管理器偏好备份 · 不包含面板完整配置或运行数据</p><p class="mnt-path">保存位置：'+backupPath()+'</p><div class="mnt-tree-scroll proto-tree" tabindex="0" role="region" aria-label="备份文件树表"><table class="mnt-backup-tree"><caption class="mnt-sr">备份目录层级、文件用途与打开操作</caption><thead><tr><th scope="col">名称</th><th scope="col">用途</th><th scope="col">操作</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="mnt-note">两个文件应整组保留。恢复前重新校验快照与清单；没有单独的校验摘要文件。其他事务按各自清单列明。</p></section>';
   }
   function openBackupNode(id) {

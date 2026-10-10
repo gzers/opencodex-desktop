@@ -18,7 +18,7 @@
   scrollbar-color:color-mix(in srgb,var(--text) 20%,transparent) transparent;
   scrollbar-gutter:stable;
 }
-.proto-tree-row{align-items:center;gap:var(--tree-gap);padding:var(--tree-padding-y) var(--tree-padding-x);line-height:var(--tree-line-height)}
+.proto-tree-row{align-items:start;gap:var(--tree-gap);padding:var(--tree-padding-y) var(--tree-padding-x);line-height:var(--tree-line-height)}
 .proto-tree-row>input[type=checkbox]{width:var(--tree-control-size);height:var(--tree-control-size);margin:0;align-self:center;flex:none;accent-color:var(--accent)}
 .proto-tree-row:hover{background:var(--rail)}
 .proto-tree-row:focus-within{background:var(--rail)}
@@ -35,7 +35,7 @@
 
 /* 原生 table 与 grid 树表消费相同行距；多行名称 / 描述随内容增高。 */
 .proto-tree table{font:inherit}
-.proto-tree table th,.proto-tree table td{padding:var(--tree-padding-y) var(--tree-padding-x);vertical-align:middle}
+.proto-tree table th,.proto-tree table td{padding:var(--tree-padding-y) var(--tree-padding-x);vertical-align:top}
 
 /* 保存配置的分组变更表：原生 details 提供展开语义，不需要图标或选择列。 */
 .mp-changes .mp-draft-group{padding:0}
@@ -47,3 +47,25 @@
 @container (min-width:521px){.mp-changes .mp-change-head,.mp-changes .mp-change-row{grid-template-columns:160px minmax(0,1fr) minmax(0,1fr)}}
 .mp-changes .mp-change-row:hover{background:var(--rail)}
 .mp-changes summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* 共享渲染器：所有控制件对齐名称第一行中心，不随说明换行下移。 */
+.proto-tree-cell{display:flex;align-items:flex-start;gap:var(--tree-gap);min-width:0;padding-inline-start:calc(var(--tree-level,0) * var(--tree-indent));flex:1}
+.proto-tree-cell>input[type=checkbox]{flex:0 0 var(--tree-control-size);width:var(--tree-control-size);height:var(--tree-control-size);margin:calc((var(--tree-line-height) - var(--tree-control-size)) / 2) 0!important;align-self:flex-start;accent-color:var(--accent)}
+.proto-tree-text{flex:1;min-width:0;overflow-wrap:anywhere;line-height:var(--tree-line-height)}
+.proto-tree-cell>.proto-tree-toggle,.proto-tree-cell>.proto-tree-spacer{flex:0 0 var(--tree-control-size);width:var(--tree-control-size);height:var(--tree-line-height)}
+.proto-tree-cell .proto-tree-icon{height:var(--tree-line-height)}
+.proto-tree-text>button,.proto-tree-text>strong{line-height:var(--tree-line-height)}
+.sx-table-head,.sx-group-head,.sx-object{display:grid;grid-template-columns:minmax(0,1fr) auto}
+.sx-compare-head,.sx-compare-group-head,.sx-compare-item{grid-template-columns:minmax(0,1fr) minmax(96px,auto) minmax(170px,230px)}
+.sx-compare-item .proto-tree-text small{display:block;color:var(--muted);font-size:12px;line-height:1.6;margin-top:4px}
+.mp-changes .mp-change-row>.proto-tree-cell{font-weight:550}
+.mp-changes .mp-draft-group>summary .proto-tree-spacer{display:none}
+.mp-changes .mp-draft-group>summary .proto-tree-text{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--tree-gap)}
+@container (max-width:760px){.sx-object{grid-template-columns:minmax(0,1fr);padding-left:var(--tree-padding-x)}.sx-object .sx-mark{grid-column:1;margin-inline-start:calc(var(--tree-indent) + var(--tree-control-size) * 2 + var(--tree-gap) * 2)}}
+@container (max-width:680px){
+  .sx-compare-head,.sx-compare-group-head,.sx-compare-item{grid-template-columns:minmax(0,1fr) minmax(120px,160px)}
+  .sx-compare-head>span{display:none}
+  .sx-compare-head>.sx-compare-ops,.sx-compare-group-head>.sx-compare-ops,.sx-compare-item>.sx-compare-ops{grid-column:2;grid-row:1 / span 2}
+  .sx-compare-group-head>.sx-change-list,.sx-compare-item>.sx-change-list{grid-column:1;grid-row:2}
+}
+@container (max-width:520px){.mp-changes .mp-change-row>.proto-tree-cell{grid-column:1/-1}}

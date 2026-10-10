@@ -18,7 +18,7 @@ function harness(){
     addEventListener(type,fn){(handlers[type]??=[]).push(fn);}};
   node('#modalMask').style.display='none';
   const windowHandlers={};
-  const win={MaintenanceModel:M,prototypeSelect:{enhance(){}},prototypePanel:{refresh(){}},
+  const win={MaintenanceModel:M,PrototypeTreeTable:require('./tree-table.js'),prototypeSelect:{enhance(){}},prototypePanel:{refresh(){}},
     addEventListener(type,fn){(windowHandlers[type]??=[]).push(fn);},
     dispatchEvent(event){(windowHandlers[event.type]||[]).forEach(fn=>fn(event));},toast(message){messages.push(message);}};
   let currentModal=null;
