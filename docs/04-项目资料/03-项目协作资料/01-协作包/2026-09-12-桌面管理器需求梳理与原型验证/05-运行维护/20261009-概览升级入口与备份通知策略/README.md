@@ -56,3 +56,13 @@ source_refs:
 本地 Rust 全量为 690 passed / 0 failed / 4 ignored，fmt、Clippy 与 diff 检查通过。局部通过只覆盖 MCP 配置终态，不等于 0.1.10 完成；Skills / MCP 客户端资产投射、原生 / 安装器、Windows 双权限与安装位置、实际更新 / 重启、配对性能、真实 stable 24h / beta 6h 周期和全域事件仍按 IMP-20 保持待验。统一树表组件合同、复选框 / 箭头 / 文字对齐要求继续适用于所有树表入口。
 
 对应证据与 CI 状态见 [20261011-MCP 配置终态](验证/20261011-MCP配置终态/README.md)。旧 CI `38076431305` 与新 CI `38077500332` attempt 2 的 Windows job 均在测试执行前因 `STATUS_ENTRYPOINT_NOT_FOUND`（`0xc0000139`）失败，不能计为 Windows 通过；release build 与 final EXE smoke 未执行。本文不回写稳定核心事实，不颁发完成证书，不构成发布授权。
+
+### 2026-10-11 Windows 构建与候选安装补充
+
+代码分支 feature/0.1.10-maintenance 的 0b402c154be65760092b6817b3027a2d0a1dc6dc 已修复 Windows 构建时 Tauri 默认 manifest 与项目 Common Controls v6 manifest 重复链接问题，改用 WindowsAttributes::new_without_app_manifest()。
+
+普通 CI 38083572209 与候选打包 CI 38083572237 均已完成并成功。Windows backend regression、release build、final EXE smoke，以及 MSI / NSIS 隔离安装、首屏、卸载均通过；两种安装器卸载后 EXE 均已移除。MSI SHA256 为 b7c20061e97b47156c9c5a4693786843f01bb9b949d0825eea2c23c6d3599116，NSIS SHA256 为 9711d86321ac77d8723d1dfcae8d3e9c0a282debf6da20c738a953de89445438。
+
+候选包 artifact 11682205024，候选证据 11681514176，普通 CI 启动证据 11682320162；大小与 ZIP SHA256 见对应 .adg/evidence 记录和验证 README。候选环境为 win25-vs2026 / 20260925.250.1 / Rust 1.99.0 / Node v24.21.0 / Tauri CLI 2.11.4。管理员权限启动证据已通过，但普通权限、DPI / 外观人工验收仍待完成。
+
+本次候选版本仍为 0.1.9，不能作为 0.1.10 发布资产；codeSigned: false、releaseAccepted: false。macOS 原生安装、真实更新 / 重启、双平台自动检查性能、真实 stable 24h / beta 6h 周期、真实用户迁移、签名与发布门禁仍未闭合。历史 CI 38077500332 的失败记录继续保留，不被本次成功证据覆盖。协作包与 IMP 继续 in_progress，不构成发布授权。

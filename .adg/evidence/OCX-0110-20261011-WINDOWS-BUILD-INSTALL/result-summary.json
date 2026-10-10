@@ -1,0 +1,61 @@
+{
+  "source_commit": "0b402c154be65760092b6817b3027a2d0a1dc6dc",
+  "candidate_version": "0.1.9",
+  "result": "partial",
+  "passed": [
+    "Windows manifest/build regression",
+    "Windows release build",
+    "Windows final EXE smoke",
+    "MSI isolated install",
+    "MSI startup/first-screen smoke",
+    "MSI uninstall and EXE removal",
+    "NSIS isolated install",
+    "NSIS startup/first-screen smoke",
+    "NSIS uninstall and EXE removal"
+  ],
+  "installer_results": {
+    "msi": {
+      "file": "OpenCodeX Desktop_0.1.9_x64_en-US.msi",
+      "size_bytes": 4415488,
+      "sha256": "b7c20061e97b47156c9c5a4693786843f01bb9b949d0825eea2c23c6d3599116",
+      "install": "pass",
+      "first_screen": "pass",
+      "uninstall": "pass",
+      "exe_removed": true
+    },
+    "nsis": {
+      "file": "OpenCodeX Desktop_0.1.9_x64-setup.exe",
+      "size_bytes": 3163827,
+      "sha256": "9711d86321ac77d8723d1dfcae8d3e9c0a282debf6da20c738a953de89445438",
+      "install": "pass",
+      "first_screen": "pass",
+      "uninstall": "pass",
+      "exe_removed": true
+    }
+  },
+  "startup_evidence": {
+    "result": "pass",
+    "observed_seconds": 30,
+    "main_window_present": true,
+    "responding": true,
+    "source_commit_matched": true,
+    "effective_administrator": true,
+    "token_elevated": true,
+    "webview2": "153.0.4234.48",
+    "cdp_http_status": 200,
+    "page": "http://tauri.localhost/#overview"
+  },
+  "code_signed": false,
+  "release_accepted": false,
+  "release_authorized": false,
+  "open_gates": [
+    "macOS native installation regression",
+    "real update/restart path",
+    "dual-platform automatic-check performance measurement",
+    "stable 24h and beta 6h real-cycle evidence",
+    "Windows ordinary-permission manual verification",
+    "Windows install-path/custom-path and DPI/appearance manual acceptance",
+    "real user-data migration",
+    "signing and public release asset acceptance"
+  ]
+}

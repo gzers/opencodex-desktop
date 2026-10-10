@@ -1,0 +1,58 @@
+{
+  "source_commit": "0b402c154be65760092b6817b3027a2d0a1dc6dc",
+  "runs": [
+    {
+      "run_id": "38083572209",
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38083572209",
+      "kind": "ordinary-ci",
+      "status": "completed / success",
+      "jobs": [
+        "frontend",
+        "release-tools",
+        "backend",
+        "backend-windows",
+        "Windows backend regression",
+        "Windows release build",
+        "Windows final EXE smoke",
+        "Windows startup evidence upload"
+      ],
+      "notes": "The build job was conditionally skipped; it was not a failure."
+    },
+    {
+      "run_id": "38083572237",
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38083572237",
+      "kind": "Windows candidate packaging",
+      "status": "completed / success",
+      "runner": "win25-vs2026",
+      "image": "20260925.250.1",
+      "toolchain": {
+        "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+        "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+        "node": "v24.21.0",
+        "npm": "11.19.0",
+        "tauri_cli": "2.11.4"
+      },
+      "candidate_version": "0.1.9"
+    }
+  ],
+  "artifacts": [
+    {
+      "run_id": "38083572209",
+      "artifact_id": "11682320162",
+      "name": "windows-startup-evidence",
+      "size_bytes": 9152150
+    },
+    {
+      "run_id": "38083572237",
+      "artifact_id": "11682205024",
+      "name": "opencodex-desktop-0.1.9-windows-x64-candidate",
+      "size_bytes": 7370689
+    },
+    {
+      "run_id": "38083572237",
+      "artifact_id": "11681514176",
+      "name": "windows-candidate-evidence",
+      "size_bytes": 1648485
+    }
+  ]
+}

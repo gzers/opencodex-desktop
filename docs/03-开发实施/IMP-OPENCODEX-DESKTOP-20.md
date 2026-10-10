@@ -388,3 +388,15 @@ MCP 配置发现、读取和写入统一使用有界、拒绝符号链接与非�
 本地 `cargo test --workspace --features integration-test` 为 690 passed / 0 failed / 4 ignored；`cargo fmt --all -- --check`、`cargo clippy --workspace --all-targets -- -D warnings` 与 `git diff --check` 通过。CI 的 frontend、backend、release-tools 通过；Windows backend regression 在测试进程启动前再次以 `STATUS_ENTRYPOINT_NOT_FOUND`（`0xc0000139`）失败，Windows release build 与 final EXE smoke 跳过。证据见 [MCP 配置终态证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-MCP配置终态/README.md)。
 
 Windows CI 运行 `38077500332` 的 attempt 2 仍在测试执行前出现 `STATUS_ENTRYPOINT_NOT_FOUND`（`0xc0000139`），不能作为 Windows 回归通过证据；Windows 门禁保持未闭合。TASK-182 / IMP-20 继续 `in_progress`，不颁发完成证书，不回写稳定核心，不发布。
+
+### 0b402c15 Windows 构建与候选安装门禁回写（2026-10-11）
+
+代码分支 feature/0.1.10-maintenance 的提交 0b402c154be65760092b6817b3027a2d0a1dc6dc 修复 Windows 构建时 Tauri 默认 manifest 与项目 Common Controls v6 manifest 重复链接导致的资源构建失败，使用 WindowsAttributes::new_without_app_manifest() 保留项目 manifest。
+
+普通 CI 38083572209 已完成并成功：frontend、release-tools、backend、backend-windows、Windows backend regression、Windows release build、Windows final EXE smoke 和 Windows 启动证据上传通过；build job 为条件跳过，不是失败。候选打包 CI 38083572237 已完成并成功，环境为 win25-vs2026 / 20260925.250.1，Rust 1.99.0、Cargo 1.99.0、Node v24.21.0、npm 11.19.0、Tauri CLI 2.11.4。
+
+MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1.9_x64_en-US.msi，SHA256 b7c20061e97b47156c9c5a4693786843f01bb9b949d0825eea2c23c6d3599116；NSIS OpenCodeX Desktop_0.1.9_x64-setup.exe，SHA256 9711d86321ac77d8723d1dfcae8d3e9c0a282debf6da20c738a953de89445438。两者卸载后 EXE 均已移除。候选 artifact 为 11682205024，候选证据为 11681514176，Windows 启动证据为 11682320162；ZIP SHA256 见 .adg/evidence/OCX-0110-20261011-WINDOWS-BUILD-INSTALL/artifact-sha256.json。
+
+启动证据通过管理员权限路径：观察 30 秒，主窗口存在且响应，source commit 匹配，CDP HTTP 200，WebView2 153.0.4234.48，页面为 http://tauri.localhost/#overview。该证据不替代 Windows 普通权限人工复验、DPI / 外观验收。
+
+本轮候选实际版本仍为 0.1.9，不能作为 0.1.10 发布资产；codeSigned 为 false，releaseAccepted 为 false，未产生发布授权。macOS 原生安装、真实更新 / 重启、双平台自动检查性能、stable 24h / beta 6h 周期、Windows 普通权限与安装路径 / 自定义路径 / DPI / 外观、真实用户迁移、签名发布仍未闭合。TASK / IMP 保持 in_progress，不回写稳定核心，不合并 main，不发布。

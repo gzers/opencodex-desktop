@@ -1,0 +1,23 @@
+{
+  "evidence_id": "OCX-0110-20261011-WINDOWS-BUILD-INSTALL",
+  "kind": "implementation.validation",
+  "recorded_at": "2026-10-11T04:49:24+08:00",
+  "project_id": "opencodex-desktop",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "0b402c154be65760092b6817b3027a2d0a1dc6dc",
+  "document_branch": "docs/governance-main",
+  "status": "partial",
+  "release_authorized": false,
+  "release_accepted": false,
+  "scope": [
+    "Windows manifest/build regression",
+    "Windows release build and final EXE smoke",
+    "MSI isolated install, startup, and uninstall",
+    "NSIS isolated install, startup, and uninstall"
+  ],
+  "boundaries": [
+    "The candidate installers report version 0.1.9 and are not 0.1.10 release assets.",
+    "This evidence does not close macOS native installation, real update/restart, performance, ordinary-user manual verification, DPI/appearance, signing, or publication gates.",
+    "The evidence covers an administrator startup path; it does not replace ordinary-permission manual verification."
+  ]
+}
