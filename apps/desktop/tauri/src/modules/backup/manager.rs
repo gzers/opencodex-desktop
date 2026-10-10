@@ -707,6 +707,14 @@ fn candidate(record: &BackupRecord) -> bool {
             .is_some_and(|p| p.file_name().is_some_and(|n| n == "preferences.json"))
         && record.manifest.restorable
 }
+/// Complete bounded metadata snapshot for the CLI's existing snake-case DTO.
+/// Like GUI listing this may create the cooperative lock, so callers must own
+/// storage admission. No hash verification or cleanup happens during listing.
+pub(crate) fn list_records(root: &Path) -> AppResult<Vec<BackupRecord>> {
+    let _lock = lock(root)?;
+    records(root)
+}
+
 pub fn list(root: &Path) -> AppResult<Vec<PreferencesBackupDto>> {
     let _lock = lock(root)?;
     let mut records = records(root)?;

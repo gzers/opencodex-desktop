@@ -52,45 +52,59 @@ pub async fn create_preferences_backup(
 ) -> AppResult<PreferencesBackupResultDto> {
     let root = root.0.clone();
     crate::commands::run_blocking("create preferences backup", move || {
-        manager::create_with_saved_policy_and_observers(
-            &root,
-            chrono::Utc::now(),
-            |payload| {
-                event_delivery::prepare(
-                    &root,
-                    "preferences-backup-failed",
-                    Channel::Local,
-                    &[
-                        crate::modules::backup::BackupAction::ManualPreferences
-                            .as_str()
-                            .as_bytes(),
-                        b"\0",
-                        payload,
-                    ]
-                    .concat(),
-                )
-            },
-            |identity, result| {
-                event_delivery::publish(
-                    &app,
-                    &root,
-                    if result.is_ok() {
-                        "preferences-backup-succeeded"
-                    } else {
-                        "preferences-backup-failed"
-                    },
-                    identity,
-                    Trigger::User,
-                )
-            },
-            &mut event_delivery::BackupEvents {
-                app: &app,
-                root: &root,
-                trigger: Trigger::User,
-            },
-        )
+        execute_preferences_backup(Some(&app), &root, chrono::Utc::now())
     })
     .await
+}
+
+/// GUI and CLI share the exact source capture, verification, saved policy and
+/// terminal delivery. Production callers bind the running GUI's AppHandle;
+/// isolated filesystem tests may omit native notification transport.
+pub(crate) fn execute_preferences_backup(
+    app: Option<&tauri::AppHandle>,
+    root: &std::path::Path,
+    now: chrono::DateTime<chrono::Utc>,
+) -> AppResult<PreferencesBackupResultDto> {
+    let Some(app) = app else {
+        return manager::create_with_saved_policy(root, now);
+    };
+    manager::create_with_saved_policy_and_observers(
+        root,
+        now,
+        |payload| {
+            event_delivery::prepare(
+                root,
+                "preferences-backup-failed",
+                Channel::Local,
+                &[
+                    crate::modules::backup::BackupAction::ManualPreferences
+                        .as_str()
+                        .as_bytes(),
+                    b"\0",
+                    payload,
+                ]
+                .concat(),
+            )
+        },
+        |identity, result| {
+            event_delivery::publish(
+                app,
+                root,
+                if result.is_ok() {
+                    "preferences-backup-succeeded"
+                } else {
+                    "preferences-backup-failed"
+                },
+                identity,
+                Trigger::User,
+            )
+        },
+        &mut event_delivery::BackupEvents {
+            app,
+            root,
+            trigger: Trigger::User,
+        },
+    )
 }
 
 #[tauri::command]

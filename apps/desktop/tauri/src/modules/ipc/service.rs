@@ -212,11 +212,15 @@ impl IpcService {
             Ok(value) => value,
             Err(response) => return response,
         };
-        // A disconnected/cancelled observer must not cancel an admitted sync or
+        // A disconnected/cancelled observer must not cancel an admitted mutation or
         // release its old-root admission before terminal feedback and audit.
         if request.command == IpcCommand::SyncRun {
             let request_id = request.request_id.clone();
-            return sync_response(request_id, self.sync_run(request, started).await);
+            return owned_response(request_id, self.sync_run(request, started).await);
+        }
+        if request.command == IpcCommand::BackupCreate {
+            let request_id = request.request_id.clone();
+            return owned_response(request_id, self.create_backup(request, started).await);
         }
         let request_id = request.request_id.clone();
         let request_id = if request_id.starts_with("req_") {
@@ -251,7 +255,7 @@ impl IpcService {
             match request.command {
                 IpcCommand::Status => self.read_status(),
                 IpcCommand::DataRootShow => self.read_data_root(),
-                IpcCommand::BackupList => self.list_backups(),
+                IpcCommand::BackupList => self.list_backups().await,
                 IpcCommand::UpdateCheck => self.update_check(),
                 IpcCommand::Start | IpcCommand::Stop | IpcCommand::Restart => {
                     let action = match request.command {
@@ -264,7 +268,7 @@ impl IpcService {
                 IpcCommand::DataRootSwitch => {
                     self.switch_data_root(&request.args, &mut saved_pending)
                 }
-                IpcCommand::BackupCreate => self.create_backup(),
+                IpcCommand::BackupCreate => unreachable!("backup uses its owned execution path"),
                 IpcCommand::Export => self.export_config(&request.args),
                 IpcCommand::Import => self.import_config(&request.args, request.secret.as_deref()),
                 IpcCommand::SyncRun => unreachable!("sync uses its owned execution path"),
@@ -352,12 +356,18 @@ impl IpcService {
         .map_err(|_| IpcErrorCode::InternalError)
     }
 
-    fn list_backups(&self) -> Result<serde_json::Value, IpcErrorCode> {
-        let records = crate::modules::backup::list_action_records(
-            &self.dependencies.active_data_root.join("backups"),
-            crate::modules::backup::BackupAction::Upgrade.as_str(),
+    async fn list_backups(&self) -> Result<serde_json::Value, IpcErrorCode> {
+        // Creating the cooperative lock is a write even for this metadata query.
+        // Lock waits and the bounded manifest scan stay off the async executor.
+        // The worker owns admission even when its query observer disconnects.
+        let root = self.dependencies.active_data_root.clone();
+        let records = crate::commands::run_blocking_with_gate(
+            self.writers.clone(),
+            "CLI backup list",
+            move || crate::modules::backup::manager::list_records(&root),
         )
-        .map_err(map_app_error)?;
+        .await
+        .map_err(map_backup_worker_error)?;
         let items: Vec<serde_json::Value> = records
             .iter()
             .map(|record| {
@@ -443,26 +453,30 @@ impl IpcService {
         .map_err(|_| IpcErrorCode::InternalError)
     }
 
-    fn create_backup(&self) -> Result<serde_json::Value, IpcErrorCode> {
-        let target = self
-            .dependencies
-            .active_data_root
-            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
-        let payload = std::fs::read(&target).map_err(|_| IpcErrorCode::TargetNotFound)?;
-        let record = crate::modules::backup::backup_file(
-            &self.dependencies.active_data_root,
-            crate::modules::backup::BackupAction::Upgrade,
-            &target,
-            &payload,
-            chrono::Utc::now(),
-            Some("cli-requested".to_string()),
-        )
-        .map_err(map_app_error)?;
-        serde_json::to_value(IpcMessageData {
-            status: "backed_up".to_string(),
-            message: record.manifest.backup_id,
+    async fn create_backup(
+        &self,
+        request: IpcRequest,
+        started: chrono::DateTime<chrono::Utc>,
+    ) -> Result<serde_json::Value, IpcErrorCode> {
+        let root = self.dependencies.active_data_root.clone();
+        let worker_root = root.clone();
+        let app = self.app.clone();
+        run_ipc_backup_owned(self.writers.clone(), root, request, started, move || {
+            let outcome = crate::commands::backup::execute_preferences_backup(
+                app.as_ref(),
+                &worker_root,
+                chrono::Utc::now(),
+            )
+            .map_err(map_app_error)?;
+            // Preserve the existing CLI output; cleanup failure is diagnostic,
+            // not a rewrite of the verified backup's success.
+            serde_json::to_value(IpcMessageData {
+                status: "backed_up".to_string(),
+                message: outcome.backup.backup_id,
+            })
+            .map_err(|_| IpcErrorCode::InternalError)
         })
-        .map_err(|_| IpcErrorCode::InternalError)
+        .await
     }
 
     fn export_config(
@@ -624,6 +638,15 @@ fn map_app_error(error: crate::errors::AppError) -> IpcErrorCode {
     }
 }
 
+fn map_backup_worker_error(error: crate::errors::AppError) -> IpcErrorCode {
+    match error {
+        crate::errors::AppError::FileSystem { operation, .. } if operation == "storage binding" => {
+            IpcErrorCode::TargetStateConflict
+        }
+        other => map_app_error(other),
+    }
+}
+
 /// 同步失败按「原因」映射退出码，而不是一律 `ExecutionFailed`。
 fn map_sync_run_failure(failure: crate::modules::sync::runner::SyncRunFailure) -> IpcErrorCode {
     use crate::infrastructure::webdav_client::WebDavError;
@@ -653,28 +676,7 @@ async fn run_ipc_sync_owned(
         writers,
         operations,
         "CLI sync run",
-        move || {
-            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(task))
-                .unwrap_or(Err(IpcErrorCode::InternalError));
-            let error = result.as_ref().err().copied();
-            let record = super::AuditRecord::from_request(
-                &request,
-                super::AuditSource::Cli,
-                started,
-                chrono::Utc::now(),
-                if error.is_some() {
-                    super::AuditResult::Failed
-                } else {
-                    super::AuditResult::Succeeded
-                },
-                error,
-            );
-            if audit.record(&record).is_err() {
-                let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&root)
-                    .append_event("CLI sync audit persistence failed");
-            }
-            Ok(result)
-        },
+        move || Ok(execute_and_audit(&audit, &root, &request, started, task)),
     )
     .await
     .map_err(|error| match error {
@@ -684,6 +686,54 @@ async fn run_ipc_sync_owned(
         }
         _ => IpcErrorCode::ExecutionFailed,
     })?
+}
+
+/// Backup creation has no independent sync admission. The W2 cooperative lock
+/// serializes filesystem transactions; storage admission survives observer drop.
+async fn run_ipc_backup_owned(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let audit = super::audit::AuditStore::with_writers(&root, writers.clone());
+    crate::commands::run_blocking_with_gate(writers, "CLI backup create", move || {
+        Ok(execute_and_audit(&audit, &root, &request, started, task))
+    })
+    .await
+    .map_err(map_backup_worker_error)?
+}
+
+/// Called inside an admitted worker after its domain executor has projected the
+/// terminal fact. Audit errors never invalidate the committed domain result.
+fn execute_and_audit(
+    audit: &super::audit::AuditStore,
+    root: &std::path::Path,
+    request: &IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode>,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(task))
+        .unwrap_or(Err(IpcErrorCode::InternalError));
+    let error = result.as_ref().err().copied();
+    let record = super::AuditRecord::from_request(
+        request,
+        super::AuditSource::Cli,
+        started,
+        chrono::Utc::now(),
+        if error.is_some() {
+            super::AuditResult::Failed
+        } else {
+            super::AuditResult::Succeeded
+        },
+        error,
+    );
+    if audit.record(&record).is_err() {
+        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(root)
+            .append_event("CLI mutation audit persistence failed");
+    }
+    result
 }
 
 fn project_ipc_sync(
@@ -715,7 +765,7 @@ fn project_ipc_sync(
     .map_err(|_| IpcErrorCode::InternalError)
 }
 
-fn sync_response(
+fn owned_response(
     request_id: String,
     result: Result<serde_json::Value, IpcErrorCode>,
 ) -> IpcResponse<serde_json::Value> {
@@ -869,7 +919,8 @@ mod tests {
                 IpcErrorCode::ExecutionFailed,
             ),
         ] {
-            let response = sync_response("caller-id".into(), project_ipc_sync(Err(failure.into())));
+            let response =
+                owned_response("caller-id".into(), project_ipc_sync(Err(failure.into())));
             assert!(!response.ok);
             assert!(response.data.is_none());
             assert_eq!(response.request_id, "req_caller-id");
@@ -1026,6 +1077,369 @@ mod tests {
         assert!(!response.ok);
         assert_eq!(response.error.unwrap().code, IpcErrorCode::RequireConfirm);
         assert!(!root.path().join("audit.log").exists());
+    }
+
+    fn backup_request(command: IpcCommand) -> IpcRequest {
+        let mut request = sync_request();
+        request.command = command;
+        request
+    }
+
+    fn preferences_fixture(root: &std::path::Path) {
+        crate::modules::preferences::PreferencesStore::new(root)
+            .save(&crate::modules::preferences::Preferences::default())
+            .unwrap();
+    }
+
+    fn audit_records(root: &std::path::Path) -> Vec<super::super::AuditRecord> {
+        std::fs::read_to_string(root.join("audit.log"))
+            .unwrap()
+            .lines()
+            .map(|line| serde_json::from_str(line).unwrap())
+            .collect()
+    }
+
+    #[tokio::test]
+    async fn cli_backup_uses_manual_scope_verified_source_and_complete_metadata_listing() {
+        use crate::modules::backup::{self, manager, BackupAction};
+        let root = tempfile::tempdir().unwrap();
+        preferences_fixture(root.path());
+        let payload = std::fs::read(
+            root.path()
+                .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+        )
+        .unwrap();
+        let legacy = backup::backup_file(
+            root.path(),
+            BackupAction::Upgrade,
+            &root
+                .path()
+                .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+            &payload,
+            chrono::Utc::now(),
+            None,
+        )
+        .unwrap();
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let response = service
+            .execute(backup_request(IpcCommand::BackupCreate))
+            .await;
+        assert!(response.ok, "{:?}", response.error);
+        let data = response.data.unwrap();
+        assert_eq!(data["status"], "backed_up");
+        assert_eq!(
+            data.as_object().unwrap().len(),
+            2,
+            "preserve existing CLI DTO"
+        );
+        let id = data["message"].as_str().unwrap();
+        let records = manager::list_records(root.path()).unwrap();
+        let record = records.iter().find(|r| r.manifest.backup_id == id).unwrap();
+        assert_eq!(record.manifest.action, BackupAction::ManualPreferences);
+        assert_eq!(
+            record.manifest.management.as_ref().unwrap().kind,
+            "standalone"
+        );
+        assert_eq!(
+            std::fs::read(record.directory.join("preferences.json")).unwrap(),
+            payload
+        );
+        assert_eq!(
+            record.manifest.sha256,
+            crate::infrastructure::hash::sha256_hex(&payload)
+        );
+        let listed = service
+            .execute(backup_request(IpcCommand::BackupList))
+            .await;
+        assert!(listed.ok);
+        let items = listed.data.unwrap()["items"].as_array().unwrap().clone();
+        assert_eq!(items.len(), 2);
+        for id in [id, legacy.manifest.backup_id.as_str()] {
+            assert!(items.iter().any(|r| r["backup_id"] == id));
+        }
+        let log = audit_records(root.path());
+        assert_eq!(log.len(), 2);
+        assert_eq!(log[0].command, IpcCommand::BackupCreate);
+        assert_eq!(log[0].result, super::super::AuditResult::Succeeded);
+        assert!(!std::fs::read_to_string(root.path().join("audit.log"))
+            .unwrap()
+            .contains(&root.path().display().to_string()));
+    }
+
+    #[tokio::test]
+    async fn cli_backup_honours_saved_cleanup_mode_and_retains_pins_and_legacy_transactions() {
+        use crate::modules::backup::{
+            self, manager,
+            policy::{CleanupMode, CleanupPolicy},
+            BackupAction,
+        };
+        for mode in [CleanupMode::Manual, CleanupMode::Automatic] {
+            let root = tempfile::tempdir().unwrap();
+            preferences_fixture(root.path());
+            let now = chrono::Utc::now();
+            for days in 60..72 {
+                crate::commands::backup::execute_preferences_backup(
+                    None,
+                    root.path(),
+                    now - chrono::Duration::days(days),
+                )
+                .unwrap();
+            }
+            let pinned = crate::commands::backup::execute_preferences_backup(
+                None,
+                root.path(),
+                now - chrono::Duration::days(200),
+            )
+            .unwrap();
+            manager::set_pinned(root.path(), &pinned.backup.backup_id, true).unwrap();
+            let payload = std::fs::read(
+                root.path()
+                    .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+            )
+            .unwrap();
+            let legacy = backup::backup_file(
+                root.path(),
+                BackupAction::Upgrade,
+                &root
+                    .path()
+                    .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+                &payload,
+                now - chrono::Duration::days(365),
+                None,
+            )
+            .unwrap();
+            manager::save_policy(
+                root.path(),
+                &CleanupPolicy {
+                    mode,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+            let response = service
+                .execute(backup_request(IpcCommand::BackupCreate))
+                .await;
+            assert!(response.ok, "{:?}", response.error);
+            let records = manager::list(root.path()).unwrap();
+            assert_eq!(
+                records.len(),
+                if mode == CleanupMode::Manual { 15 } else { 12 }
+            );
+            for id in [&pinned.backup.backup_id, &legacy.manifest.backup_id] {
+                assert!(records.iter().any(|r| &r.id == id && r.protected));
+            }
+            assert_eq!(
+                audit_records(root.path())[0].result,
+                super::super::AuditResult::Succeeded
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn cli_backup_rejects_missing_corrupt_source_or_policy_without_fake_success_or_cleanup() {
+        use crate::modules::backup::{
+            manager,
+            policy::{CleanupMode, CleanupPolicy, POLICY_RELATIVE_PATH},
+        };
+        for case in 0..3 {
+            let root = tempfile::tempdir().unwrap();
+            preferences_fixture(root.path());
+            let now = chrono::Utc::now();
+            for days in 60..72 {
+                crate::commands::backup::execute_preferences_backup(
+                    None,
+                    root.path(),
+                    now - chrono::Duration::days(days),
+                )
+                .unwrap();
+            }
+            manager::save_policy(
+                root.path(),
+                &CleanupPolicy {
+                    mode: CleanupMode::Automatic,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            let target = root
+                .path()
+                .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+            match case {
+                0 => std::fs::remove_file(&target).unwrap(),
+                1 => std::fs::write(&target, b"{invalid source}").unwrap(),
+                _ => std::fs::write(root.path().join(POLICY_RELATIVE_PATH), b"{invalid policy}")
+                    .unwrap(),
+            }
+            let before = manager::list(root.path()).unwrap();
+            let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+            let response = service
+                .execute(backup_request(IpcCommand::BackupCreate))
+                .await;
+            assert!(!response.ok);
+            assert!(response.data.is_none());
+            assert_eq!(response.error.unwrap().code, IpcErrorCode::ExecutionFailed);
+            assert_eq!(manager::list(root.path()).unwrap(), before);
+            assert_eq!(
+                audit_records(root.path())[0].result,
+                super::super::AuditResult::Failed
+            );
+        }
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::Duration;
+        // Real source/manager callbacks/gate/audit, no native GUI transport.
+        for case in 0..3 {
+            let root = tempfile::tempdir().unwrap();
+            preferences_fixture(root.path());
+            if case == 1 {
+                std::fs::write(
+                    root.path()
+                        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+                    b"invalid",
+                )
+                .unwrap();
+            }
+            let writers = Arc::new(WriterGate::default());
+            let entered = Arc::new(tokio::sync::Notify::new());
+            let release = Arc::new(tokio::sync::Notify::new());
+            let worker_writers = writers.clone();
+            let worker_root = root.path().to_path_buf();
+            let worker_entered = entered.clone();
+            let worker_release = release.clone();
+            let observer = tokio::spawn(async move {
+                run_ipc_backup_owned(
+                    worker_writers,
+                    worker_root.clone(),
+                    backup_request(IpcCommand::BackupCreate),
+                    chrono::Utc::now(),
+                    move || {
+                        crate::modules::backup::manager::create_with_saved_policy_observed(
+                            &worker_root,
+                            chrono::Utc::now(),
+                            |_| {
+                                worker_entered.notify_one();
+                                tauri::async_runtime::block_on(worker_release.notified());
+                                if case == 2 {
+                                    panic!("injected backup panic");
+                                }
+                            },
+                            |(), result| {
+                                std::fs::write(
+                                    worker_root.join("terminal"),
+                                    if result.is_ok() {
+                                        b"ok".as_slice()
+                                    } else {
+                                        b"failed".as_slice()
+                                    },
+                                )
+                                .unwrap()
+                            },
+                        )
+                        .map(|v| serde_json::json!({"backup_id": v.backup.backup_id}))
+                        .map_err(map_app_error)
+                    },
+                )
+                .await
+            });
+            tokio::time::timeout(Duration::from_secs(2), entered.notified())
+                .await
+                .unwrap();
+            observer.abort();
+            assert!(observer.await.unwrap_err().is_cancelled());
+            assert!(writers.freeze().unwrap().is_none());
+            assert!(!root.path().join("audit.log").exists());
+            release.notify_one();
+            tokio::time::timeout(Duration::from_secs(2), async {
+                loop {
+                    if writers.freeze().unwrap().is_some() {
+                        break;
+                    }
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .unwrap();
+            let records = crate::modules::backup::manager::list(root.path()).unwrap();
+            assert_eq!(records.len(), usize::from(case == 0));
+            let audit = audit_records(root.path());
+            assert_eq!(audit.len(), 1);
+            assert_eq!(audit[0].command, IpcCommand::BackupCreate);
+            assert_eq!(
+                audit[0].error_code,
+                match case {
+                    0 => None,
+                    1 => Some(IpcErrorCode::ExecutionFailed),
+                    _ => Some(IpcErrorCode::InternalError),
+                }
+            );
+            assert_eq!(root.path().join("terminal").exists(), case != 2);
+        }
+    }
+
+    #[tokio::test]
+    async fn frozen_and_unconfirmed_cli_backup_do_not_execute_or_write_audit() {
+        let root = tempfile::tempdir().unwrap();
+        preferences_fixture(root.path());
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let mut request = backup_request(IpcCommand::BackupCreate);
+        request.confirm = false;
+        let response = service.execute(request).await;
+        assert_eq!(response.error.unwrap().code, IpcErrorCode::RequireConfirm);
+        let binding = service.writers.freeze().unwrap().unwrap();
+        for command in [IpcCommand::BackupCreate, IpcCommand::BackupList] {
+            let response = service.execute(backup_request(command)).await;
+            assert_eq!(
+                response.error.unwrap().code,
+                IpcErrorCode::TargetStateConflict
+            );
+        }
+        assert!(!root.path().join("audit.log").exists());
+        assert!(!root.path().join(".backup-w2.lock").exists());
+        assert!(!root.path().join("backups").exists());
+        drop(binding);
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop() {
+        use std::time::{Duration, Instant};
+        let root = tempfile::tempdir().unwrap();
+        let lock = std::fs::File::create(root.path().join(".backup-w2.lock")).unwrap();
+        lock.lock().unwrap();
+        let (release, released) = std::sync::mpsc::channel();
+        // A watchdog releases the real lock even if a regression blocks this
+        // single-thread async executor; this is not a native performance budget.
+        let holder = std::thread::spawn(move || {
+            let _ = released.recv_timeout(Duration::from_secs(2));
+            drop(lock);
+        });
+        let service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let writers = service.writers.clone();
+        let started = Instant::now();
+        let observer = tokio::spawn(async move { service.list_backups().await });
+        tokio::time::sleep(Duration::from_millis(20)).await;
+        assert!(started.elapsed() < Duration::from_secs(1));
+        assert!(!observer.is_finished());
+        observer.abort();
+        assert!(observer.await.unwrap_err().is_cancelled());
+        assert!(writers.freeze().unwrap().is_none());
+        release.send(()).unwrap();
+        holder.join().unwrap();
+        tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                if writers.freeze().unwrap().is_some() {
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert!(!root.path().join("audit.log").exists());
+        assert!(!root.path().join("backups").exists());
     }
 
     /// 回归：CLI 切换数据根必须把引用写回固定的应用数据目录。

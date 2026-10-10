@@ -59,7 +59,7 @@ where
     .await
 }
 
-async fn run_blocking_with_gate<T, F>(
+pub(crate) async fn run_blocking_with_gate<T, F>(
     gate: std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
     operation: &'static str,
     task: F,
