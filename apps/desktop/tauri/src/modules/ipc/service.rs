@@ -5,14 +5,13 @@
 
 use serde::Serialize;
 use std::collections::BTreeMap;
-use std::ops::DerefMut;
 use std::sync::Arc;
 use std::sync::Mutex;
 
 use crate::modules::ipc::{
     validate_request, IpcCommand, IpcError, IpcErrorCode, IpcRequest, IpcResponse,
 };
-use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessCommand, ProcessRunner};
+use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessRunner};
 use crate::types::runtime_status::StatusSnapshotDto;
 
 #[derive(Debug, Clone, Serialize)]
@@ -110,6 +109,7 @@ pub struct IpcService {
     audit: super::audit::AuditStore,
     writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
     sync_operations: Arc<tokio::sync::Mutex<()>>,
+    runtime_mutations: crate::state::SharedRuntimeInstall,
     app: Option<tauri::AppHandle>,
 }
 
@@ -135,6 +135,7 @@ impl IpcService {
             audit,
             writers,
             sync_operations: crate::commands::sync::sync_operation_gate(),
+            runtime_mutations: crate::state::SharedRuntimeInstall::default(),
             app: None,
         }
     }
@@ -143,6 +144,11 @@ impl IpcService {
     /// never instantiate its own GUI state or a second notification publisher.
     #[cfg(unix)]
     pub(crate) fn with_app_handle(mut self, app: tauri::AppHandle) -> Self {
+        use tauri::Manager;
+        self.runtime_mutations = app
+            .state::<crate::state::SharedRuntimeInstall>()
+            .inner()
+            .clone();
         self.app = Some(app);
         self
     }
@@ -226,6 +232,13 @@ impl IpcService {
             let request_id = request.request_id.clone();
             return owned_response(request_id, self.migrate_config(request, started).await);
         }
+        if matches!(
+            request.command,
+            IpcCommand::Start | IpcCommand::Stop | IpcCommand::Restart
+        ) {
+            let request_id = request.request_id.clone();
+            return owned_response(request_id, self.run_lifecycle(request, started).await);
+        }
         let request_id = request.request_id.clone();
         let request_id = if request_id.starts_with("req_") {
             request_id
@@ -262,12 +275,7 @@ impl IpcService {
                 IpcCommand::BackupList => self.list_backups().await,
                 IpcCommand::UpdateCheck => self.update_check(),
                 IpcCommand::Start | IpcCommand::Stop | IpcCommand::Restart => {
-                    let action = match request.command {
-                        IpcCommand::Start => LifecycleAction::Start,
-                        IpcCommand::Stop => LifecycleAction::Stop,
-                        _ => LifecycleAction::Restart,
-                    };
-                    self.run_lifecycle(action, request.args.clone())
+                    unreachable!("lifecycle uses its owned execution path")
                 }
                 IpcCommand::DataRootSwitch => {
                     self.switch_data_root(&request.args, &mut saved_pending)
@@ -601,54 +609,61 @@ impl IpcService {
         .await
     }
 
-    fn run_lifecycle(
+    async fn run_lifecycle(
         &self,
-        action: LifecycleAction,
-        args: BTreeMap<String, String>,
+        request: IpcRequest,
+        started: chrono::DateTime<chrono::Utc>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
-        if args.contains_key("force") || args.contains_key("skip_backup") {
-            return Err(IpcErrorCode::ValidationFailed);
-        }
-        let mut guard = self
-            .runner
-            .lock()
-            .map_err(|_| IpcErrorCode::InternalError)?;
-        let runner = guard.deref_mut();
-        let command = ProcessCommand::new(
-            action,
-            self.dependencies
-                .process_context
-                .executable()
-                .map_err(|_| IpcErrorCode::InternalError)?,
-            self.dependencies.process_context.working_directory.clone(),
-            self.dependencies.process_context.opencodex_home.clone(),
-        );
-        let started_at = std::time::Instant::now();
-        let outcome = runner.execute(&command);
-        let duration_ms = started_at.elapsed().as_millis();
-        let log_result = match &outcome {
-            Ok(LifecycleResult::Started) => Ok("started"),
-            Ok(LifecycleResult::Stopped) => Ok("stop completed"),
-            Ok(LifecycleResult::Cancelled) => Err("cancelled".to_string()),
-            Ok(LifecycleResult::Failed) => Err("failed".to_string()),
-            Err(error) => Err(error.to_string()),
-        };
-        let _ = self.dependencies.runtime_log.append_result(
-            action_log_label(action),
-            log_result.map_err(|error| format!("{error}; duration_ms={duration_ms}")),
-        );
-        // 只有真正完成才回成功。取消/失败此前也被当成 ok:true，
-        // 说明「CLI 退出码与结构化输出可信」并未成立。
-        match outcome {
-            Ok(LifecycleResult::Started) | Ok(LifecycleResult::Stopped) => {
-                Ok(serde_json::to_value(IpcMessageData {
-                    status: action_to_status(action).to_string(),
-                    message: "Lifecycle command delegated to the running manager.".to_string(),
-                })
-                .unwrap_or(serde_json::Value::Null))
-            }
-            Ok(_) | Err(_) => Err(IpcErrorCode::ExecutionFailed),
-        }
+        let runner = self.runner.clone();
+        let dependencies = self.dependencies.clone();
+        let app = self.app.clone();
+        let worker_request = request.clone();
+        run_ipc_lifecycle_owned(
+            self.writers.clone(),
+            self.runtime_mutations.clone(),
+            dependencies.active_data_root.clone(),
+            request,
+            started,
+            move || {
+                use tauri::Manager;
+                let notifications = app.as_ref().map(|app| {
+                    app.state::<crate::state::SharedNotificationStore>()
+                        .inner()
+                        .clone()
+                });
+                let before = notifications
+                    .as_ref()
+                    .and_then(|store| store.lock().ok().map(|store| store.clone()));
+                let publisher = notifications.as_ref().map(|store| {
+                    crate::commands::notifications::NotificationPublisher {
+                        store,
+                        data_root: &dependencies.active_data_root,
+                    }
+                });
+                let result = execute_ipc_lifecycle(
+                    runner.as_ref(),
+                    &dependencies,
+                    &worker_request,
+                    publisher,
+                );
+                if let (Some(app), Some(store), Some(before)) =
+                    (app.as_ref(), notifications.as_ref(), before)
+                {
+                    if store.lock().is_ok_and(|after| *after != before) {
+                        let _ = crate::commands::event_delivery::emit_signal(
+                            app,
+                            crate::commands::notifications::NOTIFICATIONS_CHANGED_EVENT,
+                            crate::modules::notifications::registry::Job::NotificationMutation,
+                            crate::modules::notifications::registry::Trigger::Commit,
+                            crate::modules::notifications::registry::Channel::Local,
+                            (),
+                        );
+                    }
+                }
+                result
+            },
+        )
+        .await
     }
 }
 
@@ -733,6 +748,72 @@ async fn run_ipc_backup_owned(
     task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
 ) -> Result<serde_json::Value, IpcErrorCode> {
     run_ipc_storage_owned(writers, root, request, started, "CLI backup create", task).await
+}
+
+/// The shared GUI runtime lease and storage admission belong to the worker
+/// through terminal projection and audit, not to the connected CLI observer.
+async fn run_ipc_lifecycle_owned(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    mutations: crate::state::SharedRuntimeInstall,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let lease = mutations
+        .acquire()
+        .ok_or(IpcErrorCode::TargetStateConflict)?;
+    let audit = super::audit::AuditStore::with_writers(&root, writers.clone());
+    crate::commands::run_blocking_with_gate(writers, "CLI lifecycle", move || {
+        let _lease = lease;
+        Ok(execute_and_audit(&audit, &root, &request, started, task))
+    })
+    .await
+    .map_err(map_backup_worker_error)?
+}
+
+/// Reuse the GUI lifecycle verifier and registered notifications. CLI success
+/// must match the requested action; a stopped result cannot satisfy Start.
+fn execute_ipc_lifecycle<R: ProcessRunner + ?Sized>(
+    runner: &Mutex<R>,
+    dependencies: &IpcDependencies,
+    request: &IpcRequest,
+    publisher: Option<crate::commands::notifications::NotificationPublisher<'_>>,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    if request.args.contains_key("force") || request.args.contains_key("skip_backup") {
+        return Err(IpcErrorCode::ValidationFailed);
+    }
+    let action = match request.command {
+        IpcCommand::Start => LifecycleAction::Start,
+        IpcCommand::Stop => LifecycleAction::Stop,
+        IpcCommand::Restart => LifecycleAction::Restart,
+        _ => return Err(IpcErrorCode::ValidationFailed),
+    };
+    let result = crate::commands::process_action_with_runner(
+        crate::types::process_action::ProcessActionRequest {
+            action,
+            confirm: request.confirm,
+        },
+        runner,
+        &dependencies.process_context,
+        &dependencies.runtime_log,
+        publisher,
+    )
+    .map_err(|_| IpcErrorCode::InternalError)?;
+    if !matches!(
+        (action, result.result),
+        (
+            LifecycleAction::Start | LifecycleAction::Restart,
+            Some(LifecycleResult::Started)
+        ) | (LifecycleAction::Stop, Some(LifecycleResult::Stopped))
+    ) {
+        return Err(IpcErrorCode::ExecutionFailed);
+    }
+    serde_json::to_value(IpcMessageData {
+        status: action_to_status(action).to_string(),
+        message: "Lifecycle command delegated to the running manager.".to_string(),
+    })
+    .map_err(|_| IpcErrorCode::InternalError)
 }
 
 /// Filesystem work and its final audit share worker-owned admission. Dropping
@@ -838,14 +919,6 @@ fn owned_response(
                 message: crate::modules::ipc::error_message(code).to_string(),
             }),
         },
-    }
-}
-
-fn action_log_label(action: LifecycleAction) -> &'static str {
-    match action {
-        LifecycleAction::Start => "start",
-        LifecycleAction::Stop => "stop",
-        LifecycleAction::Restart => "restart",
     }
 }
 
@@ -1145,6 +1218,358 @@ mod tests {
             .lines()
             .map(|line| serde_json::from_str(line).unwrap())
             .collect()
+    }
+
+    struct LifecycleFixtureRunner<F>(F);
+
+    impl<F> ProcessRunner for LifecycleFixtureRunner<F>
+    where
+        F: Fn(
+            &crate::modules::process::ProcessCommand,
+        ) -> Result<LifecycleResult, crate::errors::AppError>,
+    {
+        fn execute(
+            &self,
+            command: &crate::modules::process::ProcessCommand,
+        ) -> Result<LifecycleResult, crate::errors::AppError> {
+            (self.0)(command)
+        }
+        fn cancel_pending(&self) -> Result<(), crate::errors::AppError> {
+            Ok(())
+        }
+    }
+
+    fn lifecycle_dependencies(root: &std::path::Path) -> IpcDependencies {
+        let mut dependencies = IpcService::for_tests_with(root.into(), root.into()).dependencies;
+        let executable = root.join("fixture-runtime");
+        std::fs::write(&executable, b"isolated runtime candidate").unwrap();
+        dependencies.process_context.runtime =
+            crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(executable);
+        dependencies.process_context.working_directory = root.into();
+        dependencies.process_context.opencodex_home = root.join("runtime-home");
+        dependencies
+    }
+
+    #[test]
+    fn cli_lifecycle_projects_only_matching_terminal_and_preserves_context_and_wire_contract() {
+        for command in [IpcCommand::Start, IpcCommand::Stop, IpcCommand::Restart] {
+            let root = tempfile::tempdir().unwrap();
+            let dependencies = lifecycle_dependencies(root.path());
+            let request = backup_request(command);
+            let expected_action = match command {
+                IpcCommand::Start => LifecycleAction::Start,
+                IpcCommand::Stop => LifecycleAction::Stop,
+                _ => LifecycleAction::Restart,
+            };
+            for terminal in [
+                Some(LifecycleResult::Started),
+                Some(LifecycleResult::Stopped),
+                Some(LifecycleResult::Cancelled),
+                Some(LifecycleResult::Failed),
+                None,
+            ] {
+                let runner = Mutex::new(LifecycleFixtureRunner(
+                    |process: &crate::modules::process::ProcessCommand| {
+                        assert_eq!(process.action, expected_action);
+                        assert_eq!(
+                            process.executable,
+                            dependencies.process_context.executable().unwrap()
+                        );
+                        assert_eq!(
+                            process.working_directory,
+                            dependencies.process_context.working_directory
+                        );
+                        assert_eq!(
+                            process.environment.opencodex_home,
+                            dependencies.process_context.opencodex_home
+                        );
+                        terminal
+                            .clone()
+                            .ok_or(crate::errors::AppError::NotConfigured)
+                    },
+                ));
+                let result = execute_ipc_lifecycle(&runner, &dependencies, &request, None);
+                let expected = matches!(
+                    (expected_action, terminal),
+                    (
+                        LifecycleAction::Start | LifecycleAction::Restart,
+                        Some(LifecycleResult::Started)
+                    ) | (LifecycleAction::Stop, Some(LifecycleResult::Stopped))
+                );
+                let response = owned_response("lifecycle-id".into(), result);
+                assert_eq!(response.ok, expected);
+                assert_eq!(response.request_id, "req_lifecycle-id");
+                if expected {
+                    let data = response.data.unwrap();
+                    assert_eq!(data["status"], action_to_status(expected_action));
+                    assert_eq!(
+                        data["message"],
+                        "Lifecycle command delegated to the running manager."
+                    );
+                    assert_eq!(data.as_object().unwrap().len(), 2);
+                } else {
+                    assert!(response.data.is_none());
+                    assert_eq!(response.error.unwrap().code, IpcErrorCode::ExecutionFailed);
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn cli_lifecycle_reuses_registered_events_and_recovers_only_exact_action_and_candidate() {
+        use crate::commands::notifications::NotificationPublisher;
+        use crate::modules::notifications::NotificationStore;
+        use crate::modules::preferences::{Preferences, PreferencesStore};
+        let root = tempfile::tempdir().unwrap();
+        let dependencies = lifecycle_dependencies(root.path());
+        let notifications = Arc::new(Mutex::new(NotificationStore::new()));
+        let publisher = Some(NotificationPublisher {
+            store: &notifications,
+            data_root: root.path(),
+        });
+        let failed = Mutex::new(LifecycleFixtureRunner(
+            |_: &crate::modules::process::ProcessCommand| Ok(LifecycleResult::Failed),
+        ));
+        let started = Mutex::new(LifecycleFixtureRunner(
+            |_: &crate::modules::process::ProcessCommand| Ok(LifecycleResult::Started),
+        ));
+        let stopped = Mutex::new(LifecycleFixtureRunner(
+            |_: &crate::modules::process::ProcessCommand| Ok(LifecycleResult::Stopped),
+        ));
+        let start = backup_request(IpcCommand::Start);
+        let stop = backup_request(IpcCommand::Stop);
+        assert_eq!(
+            execute_ipc_lifecycle(&failed, &dependencies, &start, publisher),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        assert_eq!(
+            execute_ipc_lifecycle(&failed, &dependencies, &start, publisher),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        assert_eq!(notifications.lock().unwrap().live().len(), 1);
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 1);
+        // A different action and a mismatched terminal must not recover Start.
+        execute_ipc_lifecycle(&stopped, &dependencies, &stop, publisher).unwrap();
+        assert_eq!(
+            execute_ipc_lifecycle(&stopped, &dependencies, &start, publisher),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 1);
+        PreferencesStore::new(root.path())
+            .save(&Preferences {
+                lifecycle_notifications: false,
+                ..Default::default()
+            })
+            .unwrap();
+        // Preference suppresses new failures, not recovery of an existing one.
+        execute_ipc_lifecycle(&started, &dependencies, &start, publisher).unwrap();
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 0);
+        assert_eq!(notifications.lock().unwrap().live().len(), 1);
+        assert!(notifications.lock().unwrap().live()[0].resolved);
+        let persisted = crate::modules::notifications::persistence::load_notifications(
+            &crate::modules::notifications::persistence::notifications_path(root.path()),
+        )
+        .unwrap();
+        assert_eq!(persisted, *notifications.lock().unwrap());
+        assert_eq!(
+            execute_ipc_lifecycle(&failed, &dependencies, &stop, publisher),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        assert_eq!(notifications.lock().unwrap().live().len(), 1);
+        PreferencesStore::new(root.path())
+            .save(&Preferences::default())
+            .unwrap();
+        assert_eq!(
+            execute_ipc_lifecycle(&failed, &dependencies, &start, publisher),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        let executable = dependencies.process_context.executable().unwrap();
+        std::fs::write(&executable, b"different candidate").unwrap();
+        execute_ipc_lifecycle(&started, &dependencies, &start, publisher).unwrap();
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 1);
+        // Returning to old bytes is an ABA candidate generation, not a retry
+        // of the previous execution. Neither success may clear that old failure.
+        std::fs::write(&executable, b"isolated runtime candidate").unwrap();
+        execute_ipc_lifecycle(&started, &dependencies, &start, publisher).unwrap();
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 1);
+        assert_eq!(
+            execute_ipc_lifecycle(&failed, &dependencies, &start, publisher),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 2);
+        execute_ipc_lifecycle(&started, &dependencies, &start, publisher).unwrap();
+        assert_eq!(notifications.lock().unwrap().aggregate().unresolved, 1);
+        let persisted = crate::modules::notifications::persistence::load_notifications(
+            &crate::modules::notifications::persistence::notifications_path(root.path()),
+        )
+        .unwrap();
+        assert_eq!(persisted, *notifications.lock().unwrap());
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::Duration;
+        // Injected runner; real gates, terminal notification files and audit.
+        // This is not native runtime execution or a performance budget result.
+        for command in [IpcCommand::Start, IpcCommand::Stop, IpcCommand::Restart] {
+            for case in 0..3 {
+                let root = tempfile::tempdir().unwrap();
+                let dependencies = lifecycle_dependencies(root.path());
+                let writers = Arc::new(WriterGate::default());
+                let mutations = crate::state::SharedRuntimeInstall::default();
+                let entered = Arc::new(tokio::sync::Notify::new());
+                let release = Arc::new(tokio::sync::Notify::new());
+                let notifications = Arc::new(Mutex::new(
+                    crate::modules::notifications::NotificationStore::new(),
+                ));
+                let task_entered = entered.clone();
+                let task_release = release.clone();
+                let task_notifications = notifications.clone();
+                let task_writers = writers.clone();
+                let task_mutations = mutations.clone();
+                let worker_root = root.path().to_path_buf();
+                let request = backup_request(command);
+                let task_request = request.clone();
+                let observer = tokio::spawn(async move {
+                    run_ipc_lifecycle_owned(
+                        task_writers,
+                        task_mutations,
+                        worker_root,
+                        request,
+                        chrono::Utc::now(),
+                        move || {
+                            let runner = Mutex::new(LifecycleFixtureRunner(
+                                |_: &crate::modules::process::ProcessCommand| {
+                                    task_entered.notify_one();
+                                    tauri::async_runtime::block_on(task_release.notified());
+                                    match case {
+                                        0 => Ok(if command == IpcCommand::Stop {
+                                            LifecycleResult::Stopped
+                                        } else {
+                                            LifecycleResult::Started
+                                        }),
+                                        1 => Ok(LifecycleResult::Failed),
+                                        _ => panic!("isolated lifecycle worker panic"),
+                                    }
+                                },
+                            ));
+                            execute_ipc_lifecycle(
+                                &runner,
+                                &dependencies,
+                                &task_request,
+                                Some(crate::commands::notifications::NotificationPublisher {
+                                    store: &task_notifications,
+                                    data_root: &dependencies.active_data_root,
+                                }),
+                            )
+                        },
+                    )
+                    .await
+                });
+                tokio::time::timeout(Duration::from_secs(2), entered.notified())
+                    .await
+                    .unwrap();
+                // This timer must run while the synchronous runner is still blocked.
+                tokio::time::timeout(
+                    Duration::from_secs(2),
+                    tokio::time::sleep(Duration::from_millis(20)),
+                )
+                .await
+                .unwrap();
+                assert!(!observer.is_finished());
+                observer.abort();
+                assert!(observer.await.unwrap_err().is_cancelled());
+                assert!(writers.freeze().unwrap().is_none());
+                assert!(mutations.acquire().is_none());
+                assert!(!root.path().join("audit.log").exists());
+                release.notify_one();
+                tokio::time::timeout(Duration::from_secs(2), async {
+                    loop {
+                        if writers.freeze().unwrap().is_some() {
+                            break;
+                        }
+                        tokio::task::yield_now().await;
+                    }
+                })
+                .await
+                .unwrap();
+                assert!(mutations.acquire().is_some());
+                let audit = audit_records(root.path());
+                assert_eq!(audit.len(), 1);
+                assert_eq!(audit[0].command, command);
+                assert_eq!(
+                    audit[0].error_code,
+                    match case {
+                        0 => None,
+                        1 => Some(IpcErrorCode::ExecutionFailed),
+                        _ => Some(IpcErrorCode::InternalError),
+                    }
+                );
+                assert_eq!(
+                    notifications.lock().unwrap().aggregate().unresolved,
+                    usize::from(case == 1)
+                );
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn cli_lifecycle_rejects_busy_frozen_unconfirmed_and_unsafe_arguments() {
+        for command in [IpcCommand::Start, IpcCommand::Stop, IpcCommand::Restart] {
+            let root = tempfile::tempdir().unwrap();
+            let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+            let lease = service.runtime_mutations.acquire().unwrap();
+            let response = service.execute(backup_request(command)).await;
+            assert_eq!(
+                response.error.unwrap().code,
+                IpcErrorCode::TargetStateConflict
+            );
+            assert!(!root.path().join("audit.log").exists());
+            drop(lease);
+            let binding = service.writers.freeze().unwrap().unwrap();
+            let response = service.execute(backup_request(command)).await;
+            assert_eq!(
+                response.error.unwrap().code,
+                IpcErrorCode::TargetStateConflict
+            );
+            assert!(!service.runtime_mutations.is_running());
+            assert!(!root.path().join("audit.log").exists());
+            drop(binding);
+            let mut request = backup_request(command);
+            request.confirm = false;
+            assert_eq!(
+                service.execute(request).await.error.unwrap().code,
+                IpcErrorCode::RequireConfirm
+            );
+            assert!(!root.path().join("audit.log").exists());
+            for key in ["force", "skip_backup"] {
+                let mut request = backup_request(command);
+                request.args.insert(key.into(), "true".into());
+                assert_eq!(
+                    service.execute(request).await.error.unwrap().code,
+                    IpcErrorCode::ValidationFailed
+                );
+            }
+            assert!(!service.runtime_mutations.is_running());
+            let audit = audit_records(root.path());
+            assert_eq!(audit.len(), 2);
+            assert!(audit
+                .iter()
+                .all(|record| record.result == super::super::AuditResult::Failed));
+            service.dependencies.process_context.runtime =
+                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+            assert_eq!(
+                service
+                    .execute(backup_request(command))
+                    .await
+                    .error
+                    .unwrap()
+                    .code,
+                IpcErrorCode::InternalError
+            );
+            assert_eq!(audit_records(root.path()).len(), 3);
+        }
     }
 
     fn migration_request(command: IpcCommand, path: &std::path::Path) -> IpcRequest {
