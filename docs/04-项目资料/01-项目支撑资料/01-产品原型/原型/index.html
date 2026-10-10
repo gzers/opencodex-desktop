@@ -270,7 +270,7 @@ button{font:inherit}
 .data-root-table th{text-align:left;color:var(--muted);font-size:var(--text-caption);font-weight:600;padding:7px 9px;border-bottom:1px solid var(--border)}
 .data-root-table td{padding:10px 9px;border-bottom:1px solid var(--border-soft);font-size:var(--text-label)}
 .data-root-table tr:last-child td{border-bottom:0}
-.data-root-table code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
+.data-root-table code{overflow-wrap:anywhere;white-space:normal;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--text)}
 .data-root-table .btn{min-height:28px;padding:4px 9px;font-size:var(--text-caption)}
 .data-root-table .btn+.btn{margin-left:6px}
 /* 列宽分配（2026-09-24）：路径列吃掉剩余宽度并在单元格内截断；用途 / 操作列按内容宽度且不换行。 */
@@ -2415,7 +2415,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
             <div class="card-head">
               <div>
                 <h2>OpenCodex 运行来源</h2>
-                <p>应用实际使用的 ocx 来自哪里；可以指定路径，也可以由管理器代装到数据根内。</p>
+                <p>应用实际使用的 ocx 来自哪里；可以指定路径，也可以由管理器代装到数据目录内。</p>
               </div>
               <span class="tag" id="runtimeSourceTag">自动发现</span>
             </div>
@@ -2426,14 +2426,14 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
             <div class="card-head">
               <div>
                 <h2>数据目录与 OPENCODEX_HOME</h2>
-                <p>自动发现当前路径，可在同一处统一修改。</p>
+                <p>查看当前使用的位置；修改前检查权限与已有数据。</p>
               </div>
             </div>
             <table class="data-root-table">
               <thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead>
               <tbody>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData"><code>~/OpenCodexData</code></button></td><td>数据目录</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData">打开</button><button class="btn" data-prototype-action="choose-root">修改</button></td></tr>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/opencodex-home"><code>~/OpenCodexData/opencodex-home</code></button></td><td>OPENCODEX_HOME</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/opencodex-home">打开</button><button class="btn" data-prototype-action="choose-home">修改</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop"><code>~/Library/Application Support/com.gzers.opencodex.desktop</code></button></td><td>数据目录</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop">打开</button><button class="btn" data-prototype-action="choose-root">修改</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home"><code>~/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home</code></button></td><td>OPENCODEX_HOME</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/opencodex-home">打开</button><button class="btn" data-prototype-action="choose-home">修改</button></td></tr>
               </tbody>
             </table>
           </article>
@@ -2442,18 +2442,18 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
             <div class="card-head">
               <div>
                 <h2>数据目录分区</h2>
-                <p>分区名待 IMP 冻结；点击路径可复制，右侧可直接打开。</p>
+                <p>配置、备份、托管包体与运行数据分别存放；点击路径可复制。</p>
               </div>
             </div>
             <table class="data-root-table">
               <thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead>
               <tbody>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/manager-state"><code>~/OpenCodexData/manager-state</code></button></td><td>桌面壳设置与偏好</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/manager-state">打开</button></td></tr>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/backups"><code>~/OpenCodexData/backups</code></button></td><td>升级、导入、同步覆盖前备份</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/backups">打开</button></td></tr>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/logs"><code>~/OpenCodexData/logs</code></button></td><td>管理器与运行日志</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/logs">打开</button></td></tr>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/exports"><code>~/OpenCodexData/exports</code></button></td><td>加密导出容器</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/exports">打开</button></td></tr>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/cache"><code>~/OpenCodexData/cache</code></button></td><td>可丢弃缓存</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/cache">打开</button></td></tr>
-                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/OpenCodexData/sync-state"><code>~/OpenCodexData/sync-state</code></button></td><td>同步与冲突摘要</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/OpenCodexData/sync-state">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/manager-state"><code>~/Library/Application Support/com.gzers.opencodex.desktop/manager-state</code></button></td><td>桌面壳设置与偏好</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/manager-state">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/backups"><code>~/Library/Application Support/com.gzers.opencodex.desktop/backups</code></button></td><td>备份（范围按创建事务列明）</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/backups">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/logs"><code>~/Library/Application Support/com.gzers.opencodex.desktop/logs</code></button></td><td>管理器与运行日志</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/logs">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/exports"><code>~/Library/Application Support/com.gzers.opencodex.desktop/exports</code></button></td><td>导出文件</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/exports">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/cache"><code>~/Library/Application Support/com.gzers.opencodex.desktop/cache</code></button></td><td>可丢弃缓存</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/cache">打开</button></td></tr>
+                <tr><td><button class="cli-copy-btn" data-prototype-action="copy-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/sync-state"><code>~/Library/Application Support/com.gzers.opencodex.desktop/sync-state</code></button></td><td>同步与冲突摘要</td><td><button class="btn ghost" data-prototype-action="open-path" data-path="~/Library/Application Support/com.gzers.opencodex.desktop/sync-state">打开</button></td></tr>
               </tbody>
             </table>
           </article>
@@ -3582,6 +3582,7 @@ ocx update</code></pre>
     <div class="task-host" id="taskHost"></div>
   </div>
 
+<script src="data-paths.js"></script>
 <script>
 const statePill=document.getElementById('statePill');
 const installArea=document.getElementById('installArea');
@@ -3790,9 +3791,9 @@ const PKG_HOME='https://lidge-jun.github.io/opencodex/';
 const PKG_NPM_PAGE='https://www.npmjs.com/package/@bitkyc08/opencodex';
 const PKG_TARBALL='https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-'+PKG_VERSION+'.tgz';
 const OFFICIAL_TARBALL_NAME='opencodex-'+PKG_VERSION+'.tgz';
-const MANAGED_PREFIX='~/OpenCodexData/runtime/opencodex';
-const DEFAULT_MANAGED_PREFIX=MANAGED_PREFIX;
-const MANAGED_ENTRY='~/OpenCodexData/runtime/bin/ocx';
+let MANAGED_PREFIX=DataPaths.paths('macos').prefix;
+let DEFAULT_MANAGED_PREFIX=MANAGED_PREFIX;
+let MANAGED_ENTRY=DataPaths.paths('macos').entry;
 const runtimeSources={
   auto:{tag:'自动发现',pill:'auto',path:'~/.local/bin/ocx',version:'v'+PKG_VERSION,where:'数据根外 · npm 全局前缀',managed:false},
   managed:{tag:'托管安装',pill:'managed',path:MANAGED_ENTRY,version:'v'+PKG_VERSION,where:'数据根内 · 私有前缀',managed:true},
@@ -3892,8 +3893,8 @@ function installStepsHtml(){
 }
 function installConfigHtml(){
   const err=installPathError(installPath);
-  const inRoot=installPath.trim().startsWith('~/OpenCodexData/');
-  const entry=installPath.trim().replace(/\/+$/,'').replace(/(\/runtime)?(\/opencodex)?$/,'')+'/bin/ocx';
+  const inRoot=installPath.trim().startsWith((window.dataPathsPrototype?.current().root || DataPaths.paths('macos').root)+(window.dataPathsPrototype?.current().platform==='windows'?'\\':'/'));
+  const entry=installPath===DEFAULT_MANAGED_PREFIX?MANAGED_ENTRY:installPath.trim().replace(/\/+$/,'').replace(/(\/runtime)?(\/opencodex)?$/,'')+'/bin/ocx';
   return `
     <div class="wiz-block">
       <span class="wiz-label">安装位置</span>
@@ -4771,11 +4772,11 @@ function render(){
     pid:s.pid,
     version:installKnown?installFound.version.split('（')[0]:'—',
     runtime:installKnown?installFound.runtime:'—',
-    home:installKnown?'~/OpenCodexData/opencodex-home':'—',
-    root:installKnown?'~/OpenCodexData':'—',
-    rootshort:installKnown?'~/OpenCodexData':'—',
+    home:installKnown?(window.dataPathsPrototype?.current() || DataPaths.paths('macos')).home:'—',
+    root:installKnown?(window.dataPathsPrototype?.current() || DataPaths.paths('macos')).root:'—',
+    rootshort:installKnown?(window.dataPathsPrototype?.current() || DataPaths.paths('macos')).root:'—',
     detailfacts:installKnown
-      ?`v${installFound.version.split('（')[0]} · ${installFound.runtime.replace('ChatGPT Codex runtime ','Codex runtime ')} · ~/OpenCodexData`
+      ?`v${installFound.version.split('（')[0]} · ${installFound.runtime.replace('ChatGPT Codex runtime ','Codex runtime ')} · ${(window.dataPathsPrototype?.current() || DataPaths.paths('macos')).root}`
       :'尚未探测到安装'
   };
   Object.keys(values).forEach(key=>{
@@ -5707,9 +5708,9 @@ document.addEventListener('click',event=>{
   }else if(action==='open-path'){
     toast('原型拦截：不会打开真实 Finder / 文件资源管理器。');
   }else if(action==='choose-root'){
-    openModal('修改数据目录','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目录检查后展示已有数据摘要，并要求选择「仅切换引用」或「迁移数据」；迁移前自动备份，失败可回滚。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或迁移数据。'));
+    window.dataPathsPrototype.preview('root');
   }else if(action==='choose-home'){
-    openModal('修改 OPENCODEX_HOME','<p class="modal-lead">运行中禁止直接切换；真实实现会先停止代理。</p><p>目标已有数据时先展示摘要；变更前自动备份，失败可回滚。两个目录不允许互相嵌套。</p>','继续查看',()=>toast('原型拦截：不会访问本地文件或修改真实配置。'));
+    window.dataPathsPrototype.preview('home');
   }else if(action==='env-recheck'){
     toast('原型模拟：会重新检查 node / npm / ocx。');
   }else if(action==='env-guide'){
@@ -7433,6 +7434,16 @@ document.addEventListener('scroll',event=>{
   window.__scrollQuietTimer=setTimeout(()=>el.classList.remove('is-scrolling'),900);
 },true);
 </script>
+<script>
+window.addEventListener('prototype:data-paths',event=>{
+  const paths=event.detail, oldDefault=DEFAULT_MANAGED_PREFIX;
+  MANAGED_PREFIX=paths.prefix;DEFAULT_MANAGED_PREFIX=paths.prefix;MANAGED_ENTRY=paths.entry;
+  if(installPath===oldDefault)installPath=paths.prefix;
+  runtimeSources.managed.path=paths.entry;
+  UNINSTALL_BODY_PLANS.managed.pkg=paths.prefix;UNINSTALL_BODY_PLANS.managed.entry=paths.entry;
+  renderRuntimeSource();render();
+});
+</script>
 <script src="../overview-dual.js"></script>
 <script src="../proto-controls.js"></script>
 <script src="select-component.js"></script>
@@ -7444,5 +7455,6 @@ document.addEventListener('scroll',event=>{
 <script src="maintenance-events.js?v=1"></script>
 <script src="maintenance-state.js?v=2"></script>
 <script src="maintenance-ui.js?v=2"></script>
+<script src="data-paths-ui.js"></script>
 </body>
 </html>
