@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 
-const invoke = vi.fn()
+const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }))
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke }))
 
