@@ -403,6 +403,24 @@ pub fn resolve_opencodex_home(config: &DataRootRuntimeConfig) -> PathBuf {
     }
 }
 
+/// Compare resolved directory identities, not display spelling (for example
+/// macOS /tmp and /private/tmp). Resolution failure must not erase a pending
+/// binding change. This does not replace boundary validation or instance locks.
+pub fn runtime_binding_matches(
+    config: &DataRootRuntimeConfig,
+    runtime_root: &Path,
+    runtime_home: &Path,
+) -> bool {
+    same_runtime_directory(&config.active_data_root, runtime_root)
+        && same_runtime_directory(&resolve_opencodex_home(config), runtime_home)
+}
+
+pub fn same_runtime_directory(saved: &Path, current: &Path) -> bool {
+    saved == current
+        || matches!((saved.canonicalize(), current.canonicalize()),
+            (Ok(saved), Ok(current)) if saved == current)
+}
+
 fn is_nested(left: &Path, right: &Path) -> bool {
     let left = left.canonicalize().unwrap_or_else(|_| left.to_path_buf());
     let right = match right.canonicalize() {

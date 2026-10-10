@@ -195,7 +195,11 @@ fn project_config(
         opencodex_home: opencodex_home.display().to_string(),
         current_data_root: runtime_root.display().to_string(),
         current_opencodex_home: runtime_home.display().to_string(),
-        runtime_active: config.active_data_root == runtime_root && opencodex_home == runtime_home,
+        runtime_active: crate::modules::data_root::runtime_binding_matches(
+            config,
+            runtime_root,
+            runtime_home,
+        ),
     }
 }
 
@@ -262,8 +266,13 @@ fn change_binding(
     if let Some(config) = result.config.as_mut() {
         config.current_data_root = root.0.display().to_string();
         config.current_opencodex_home = context.opencodex_home.display().to_string();
-        config.runtime_active = config.active_data_root == config.current_data_root
-            && config.opencodex_home == config.current_opencodex_home;
+        config.runtime_active = crate::modules::data_root::same_runtime_directory(
+            std::path::Path::new(&config.active_data_root),
+            &root.0,
+        ) && crate::modules::data_root::same_runtime_directory(
+            std::path::Path::new(&config.opencodex_home),
+            &context.opencodex_home,
+        );
         if !config.runtime_active {
             if let Some(binding) = binding.take() {
                 binding.commit();
@@ -415,6 +424,53 @@ mod tests {
     use crate::modules::{data_root, instance::AppInstanceLock};
     use crate::types::status::RuntimeState;
     use std::{fs, path::PathBuf, sync::Arc};
+
+    #[cfg(unix)]
+    #[test]
+    fn startup_aliases_do_not_report_pending_restart_or_hide_real_changes() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("data");
+        initialize_module(&root).unwrap();
+        let alias = temp.path().join("alias");
+        std::os::unix::fs::symlink(&root, &alias).unwrap();
+        let canonical = root.canonicalize().unwrap();
+        let home = canonical.join("opencodex-home");
+        let metadata = root.join(data_root::METADATA_RELATIVE_PATH);
+        let before = fs::read(&metadata).unwrap();
+        let dto = data_root_config_with_paths(&alias, &canonical, &home).unwrap();
+        assert!(dto.runtime_active);
+        assert_eq!(fs::read(&metadata).unwrap(), before);
+
+        let external = temp.path().join("external");
+        fs::create_dir(&external).unwrap();
+        let external_alias = temp.path().join("external-alias");
+        std::os::unix::fs::symlink(&external, &external_alias).unwrap();
+        set_opencodex_home(&alias, OpenCodexHomeMode::External, Some(&external_alias)).unwrap();
+        let external = external.canonicalize().unwrap();
+        assert!(
+            data_root_config_with_paths(&alias, &canonical, &external)
+                .unwrap()
+                .runtime_active
+        );
+        assert!(
+            !data_root_config_with_paths(&alias, &canonical, &home)
+                .unwrap()
+                .runtime_active
+        );
+
+        let other = temp.path().join("other");
+        initialize_module(&other).unwrap();
+        switch_reference(&alias, &other, DataRootSwitchMode::ReferenceOnly).unwrap();
+        assert!(
+            !data_root_config_with_paths(&alias, &canonical, &external)
+                .unwrap()
+                .runtime_active
+        );
+        assert!(!data_root::same_runtime_directory(
+            &temp.path().join("missing"),
+            &canonical
+        ));
+    }
 
     struct MigrationFixture {
         _temp: tempfile::TempDir,

@@ -404,9 +404,11 @@ impl IpcService {
             mode,
         )
         .map_err(map_app_error)?;
-        *saved_pending = config.active_data_root != self.dependencies.active_data_root
-            || crate::modules::data_root::resolve_opencodex_home(&config)
-                != self.dependencies.opencodex_home;
+        *saved_pending = !crate::modules::data_root::runtime_binding_matches(
+            &config,
+            &self.dependencies.active_data_root,
+            &self.dependencies.opencodex_home,
+        );
         serde_json::to_value(IpcMessageData {
             status: "switched".to_string(),
             message: if matches!(
