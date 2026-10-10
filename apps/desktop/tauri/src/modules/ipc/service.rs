@@ -96,6 +96,7 @@ pub struct IpcDependencies {
     pub runtime_log: crate::infrastructure::runtime_log::RuntimeLog,
 }
 
+#[derive(Clone)]
 pub struct IpcService {
     collector: Arc<
         Mutex<
@@ -106,7 +107,6 @@ pub struct IpcService {
     >,
     runner: Arc<Mutex<crate::modules::process::ControlledProcessRunner>>,
     dependencies: IpcDependencies,
-    audit: super::audit::AuditStore,
     writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
     sync_operations: Arc<tokio::sync::Mutex<()>>,
     runtime_mutations: crate::state::SharedRuntimeInstall,
@@ -126,13 +126,10 @@ impl IpcService {
         dependencies: IpcDependencies,
     ) -> Self {
         let writers = crate::infrastructure::storage_writers::global();
-        let audit =
-            super::audit::AuditStore::with_writers(&dependencies.active_data_root, writers.clone());
         Self {
             collector,
             runner,
             dependencies,
-            audit,
             writers,
             sync_operations: crate::commands::sync::sync_operation_gate(),
             runtime_mutations: crate::state::SharedRuntimeInstall::default(),
@@ -205,10 +202,6 @@ impl IpcService {
         );
         service.writers = Arc::new(crate::infrastructure::storage_writers::WriterGate::default());
         service.sync_operations = Arc::new(tokio::sync::Mutex::new(()));
-        service.audit = super::audit::AuditStore::with_writers(
-            &service.dependencies.active_data_root,
-            service.writers.clone(),
-        );
         service
     }
 
@@ -240,100 +233,41 @@ impl IpcService {
             return owned_response(request_id, self.run_lifecycle(request, started).await);
         }
         let request_id = request.request_id.clone();
-        let request_id = if request_id.starts_with("req_") {
-            request_id
-        } else {
-            format!("req_{request_id}")
-        };
-        let is_binding = request.command == IpcCommand::DataRootSwitch;
-        let read_only = matches!(
-            request.command,
-            IpcCommand::Status
-                | IpcCommand::DataRootShow
-                | IpcCommand::BackupList
-                | IpcCommand::UpdateCheck
-        );
-        let binding = if is_binding {
-            self.writers.freeze().ok().flatten()
-        } else {
-            None
-        };
-        let admission = if is_binding {
-            None
-        } else {
-            self.writers.admit().ok()
-        };
-        let blocked =
-            (is_binding && binding.is_none()) || (!is_binding && !read_only && admission.is_none());
-        let mut saved_pending = false;
-        let result: Result<serde_json::Value, IpcErrorCode> = if blocked {
-            Err(IpcErrorCode::TargetStateConflict)
-        } else {
-            match request.command {
-                IpcCommand::Status => self.read_status(),
-                IpcCommand::DataRootShow => self.read_data_root(),
-                IpcCommand::BackupList => self.list_backups().await,
-                IpcCommand::UpdateCheck => self.update_check(),
-                IpcCommand::Start | IpcCommand::Stop | IpcCommand::Restart => {
-                    unreachable!("lifecycle uses its owned execution path")
-                }
-                IpcCommand::DataRootSwitch => {
-                    self.switch_data_root(&request.args, &mut saved_pending)
-                }
-                IpcCommand::BackupCreate => unreachable!("backup uses its owned execution path"),
-                IpcCommand::Export | IpcCommand::Import => {
-                    unreachable!("migration uses its owned execution path")
-                }
-                IpcCommand::SyncRun => unreachable!("sync uses its owned execution path"),
-            }
-        };
-        let (result, error_code) = match result {
-            Ok(data) => (Some(data), None),
-            Err(error_code) => (None, Some(error_code)),
-        };
-        let finished = chrono::Utc::now();
-        let audit = super::AuditRecord::from_request(
-            &request,
-            super::AuditSource::Cli,
-            started,
-            finished,
-            if error_code.is_some() {
-                super::AuditResult::Failed
-            } else {
-                super::AuditResult::Succeeded
-            },
-            error_code,
-        );
-        if let Some(binding) = binding {
-            // Audit is the final old-root write within the exclusive binding transaction.
-            let _ = self.audit.record_during_binding(&audit, &binding);
-            if saved_pending {
-                binding.commit();
-            }
-        } else if admission.is_some() {
-            // Read-only requests remain usable after save, without writing old-root audit.
-            let _ = self.audit.record(&audit);
-        }
+        owned_response(request_id, self.query_or_binding(request, started).await)
+    }
 
-        match result {
-            Some(data) => IpcResponse {
-                request_id,
-                ok: true,
-                data: Some(data),
-                error: None,
-            },
-            None => IpcResponse {
-                request_id,
-                ok: false,
-                data: None,
-                error: Some(IpcError {
-                    code: error_code.unwrap_or(IpcErrorCode::InternalError),
-                    message: crate::modules::ipc::error_message(
-                        error_code.unwrap_or(IpcErrorCode::InternalError),
-                    )
-                    .to_string(),
-                }),
-            },
+    async fn query_or_binding(
+        &self,
+        request: IpcRequest,
+        started: chrono::DateTime<chrono::Utc>,
+    ) -> Result<serde_json::Value, IpcErrorCode> {
+        let service = self.clone();
+        let worker_request = request.clone();
+        if request.command == IpcCommand::DataRootSwitch {
+            run_ipc_binding_owned(
+                self.writers.clone(),
+                self.runtime_mutations.clone(),
+                self.dependencies.active_data_root.clone(),
+                request,
+                started,
+                move |saved_pending| service.switch_data_root(&worker_request.args, saved_pending),
+            )
+            .await
+        } else {
+            run_ipc_query_owned(
+                self.writers.clone(),
+                self.dependencies.active_data_root.clone(),
+                request,
+                started,
+                move || match worker_request.command {
+                    IpcCommand::Status => service.read_status(),
+                    IpcCommand::DataRootShow => service.read_data_root(),
+                    IpcCommand::BackupList => service.list_backups(),
+                    IpcCommand::UpdateCheck => service.update_check(),
+                    _ => Err(IpcErrorCode::ValidationFailed),
+                },
+            )
+            .await
         }
     }
 
@@ -369,18 +303,12 @@ impl IpcService {
         .map_err(|_| IpcErrorCode::InternalError)
     }
 
-    async fn list_backups(&self) -> Result<serde_json::Value, IpcErrorCode> {
-        // Creating the cooperative lock is a write even for this metadata query.
-        // Lock waits and the bounded manifest scan stay off the async executor.
-        // The worker owns admission even when its query observer disconnects.
-        let root = self.dependencies.active_data_root.clone();
-        let records = crate::commands::run_blocking_with_gate(
-            self.writers.clone(),
-            "CLI backup list",
-            move || crate::modules::backup::manager::list_records(&root),
-        )
-        .await
-        .map_err(map_backup_worker_error)?;
+    // Called only inside the owned query worker: both cooperative lock writes
+    // and the bounded manifest scan remain admitted through the final audit.
+    fn list_backups(&self) -> Result<serde_json::Value, IpcErrorCode> {
+        let records =
+            crate::modules::backup::manager::list_records(&self.dependencies.active_data_root)
+                .map_err(map_app_error)?;
         let items: Vec<serde_json::Value> = records
             .iter()
             .map(|record| {
@@ -736,6 +664,87 @@ async fn run_ipc_sync_owned(
         }
         _ => IpcErrorCode::ExecutionFailed,
     })?
+}
+
+/// Metadata queries keep their optional old-root audit admission in the worker.
+/// Backup listing creates a cooperative lock file, so it must refuse frozen roots.
+/// The other read-only queries may still run after a pending binding save, without
+/// writing audit to the old root. No synchronous refresh runs on the executor.
+async fn run_ipc_query_owned(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let admission = writers.admit().ok();
+    if request.command == IpcCommand::BackupList && admission.is_none() {
+        return Err(IpcErrorCode::TargetStateConflict);
+    }
+    let audit = super::audit::AuditStore::with_writers(&root, writers);
+    crate::commands::run_readonly("CLI query", move || {
+        let admitted = admission.is_some();
+        let _admission = admission;
+        Ok(if admitted {
+            execute_and_audit(&audit, &root, &request, started, task)
+        } else {
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(task))
+                .unwrap_or(Err(IpcErrorCode::InternalError))
+        })
+    })
+    .await
+    .map_err(map_backup_worker_error)?
+}
+
+/// The exclusive old-root binding and runtime mutation leases live in the
+/// blocking worker through persistence and final audit. A disconnected observer
+/// cannot reopen writers after a saved reference. Even a later panic must retain
+/// a known pending binding until restart; validation failure reopens admission.
+async fn run_ipc_binding_owned(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    mutations: crate::state::SharedRuntimeInstall,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: impl FnOnce(&mut bool) -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let lease = mutations
+        .acquire()
+        .ok_or(IpcErrorCode::TargetStateConflict)?;
+    let binding = writers
+        .freeze()
+        .map_err(|_| IpcErrorCode::TargetStateConflict)?
+        .ok_or(IpcErrorCode::TargetStateConflict)?;
+    let audit = super::audit::AuditStore::with_writers(&root, writers);
+    crate::commands::run_readonly("CLI data root switch", move || {
+        let _lease = lease;
+        let mut saved_pending = false;
+        let result =
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| task(&mut saved_pending)))
+                .unwrap_or(Err(IpcErrorCode::InternalError));
+        let error = result.as_ref().err().copied();
+        let record = super::AuditRecord::from_request(
+            &request,
+            super::AuditSource::Cli,
+            started,
+            chrono::Utc::now(),
+            if error.is_some() {
+                super::AuditResult::Failed
+            } else {
+                super::AuditResult::Succeeded
+            },
+            error,
+        );
+        // The last old-root write uses the exclusive transaction, not admission.
+        // Audit failure cannot erase a persisted reference or rewrite its result.
+        let _ = audit.record_during_binding(&record, &binding);
+        if saved_pending {
+            binding.commit();
+        }
+        Ok(result)
+    })
+    .await
+    .map_err(map_backup_worker_error)?
 }
 
 /// Backup creation has no independent sync admission. The W2 cooperative lock
@@ -2098,10 +2107,14 @@ mod tests {
             let _ = released.recv_timeout(Duration::from_secs(2));
             drop(lock);
         });
-        let service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
         let writers = service.writers.clone();
         let started = Instant::now();
-        let observer = tokio::spawn(async move { service.list_backups().await });
+        let observer = tokio::spawn(async move {
+            service
+                .execute(backup_request(IpcCommand::BackupList))
+                .await
+        });
         tokio::time::sleep(Duration::from_millis(20)).await;
         assert!(started.elapsed() < Duration::from_secs(1));
         assert!(!observer.is_finished());
@@ -2120,8 +2133,375 @@ mod tests {
         })
         .await
         .unwrap();
-        assert!(!root.path().join("audit.log").exists());
+        let audit = audit_records(root.path());
+        assert_eq!(audit.len(), 1);
+        assert_eq!(audit[0].command, IpcCommand::BackupList);
+        assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
         assert!(!root.path().join("backups").exists());
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn public_status_lock_wait_keeps_executor_responsive_and_survives_disconnect() {
+        use std::time::{Duration, Instant};
+        let root = tempfile::tempdir().unwrap();
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let collector = service.collector.clone();
+        let writers = service.writers.clone();
+        let (entered, entry) = tokio::sync::oneshot::channel();
+        let (release, released) = std::sync::mpsc::channel();
+        let holder = std::thread::spawn(move || {
+            let _collector = collector.lock().unwrap();
+            entered.send(()).unwrap();
+            let _ = released.recv_timeout(Duration::from_secs(2));
+        });
+        tokio::time::timeout(Duration::from_secs(2), entry)
+            .await
+            .unwrap()
+            .unwrap();
+        let started = Instant::now();
+        let observer =
+            tokio::spawn(async move { service.execute(backup_request(IpcCommand::Status)).await });
+        tokio::time::sleep(Duration::from_millis(20)).await;
+        assert!(started.elapsed() < Duration::from_secs(1));
+        assert!(!observer.is_finished());
+        assert!(writers.freeze().unwrap().is_none());
+        observer.abort();
+        assert!(observer.await.unwrap_err().is_cancelled());
+        assert!(writers.freeze().unwrap().is_none());
+        assert!(!root.path().join("audit.log").exists());
+        release.send(()).unwrap();
+        holder.join().unwrap();
+        tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                if writers.freeze().unwrap().is_some() {
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        let records = audit_records(root.path());
+        assert_eq!(records.len(), 1);
+        assert_eq!(records[0].command, IpcCommand::Status);
+        assert_eq!(records[0].result, super::super::AuditResult::Succeeded);
+    }
+
+    #[cfg(unix)]
+    #[tokio::test(flavor = "current_thread")]
+    async fn public_binding_lock_wait_persists_reference_after_disconnect_and_keeps_root_frozen() {
+        use std::os::unix::fs::PermissionsExt;
+        use std::time::{Duration, Instant};
+        let temp = tempfile::tempdir().unwrap();
+        let app_root = temp.path().join("app-data");
+        let root = temp.path().join("active");
+        let target = temp.path().join("target");
+        for path in [&app_root, &root, &target] {
+            crate::modules::data_root::initialize(path).unwrap();
+        }
+        let mut service = IpcService::for_tests_with(root.clone(), app_root.clone());
+        let executable = temp.path().join("stopped-ocx");
+        std::fs::write(
+            &executable,
+            b"#!/bin/sh\necho '{\"status\":\"stopped\",\"dataRoot\":\"/tmp/fixture\"}'\n",
+        )
+        .unwrap();
+        std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o755)).unwrap();
+        service.collector = Arc::new(Mutex::new(crate::modules::status::StatusCollector::new(
+            crate::infrastructure::status_source::OfficialStatusSource::new(
+                crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
+                    executable,
+                ),
+                temp.path(),
+                crate::modules::process::EnvironmentPolicy {
+                    opencodex_home: temp.path().join("opencodex-home"),
+                    ..Default::default()
+                },
+            ),
+        )));
+        let before = crate::modules::data_root::load_runtime_config(&app_root).unwrap();
+        let writers = service.writers.clone();
+        let mutations = service.runtime_mutations.clone();
+        let lock = std::fs::File::create(root.join(".backup-w2.lock")).unwrap();
+        lock.lock().unwrap();
+        let (release, released) = std::sync::mpsc::channel();
+        let holder = std::thread::spawn(move || {
+            let _ = released.recv_timeout(Duration::from_secs(2));
+            drop(lock);
+        });
+        let mut request = backup_request(IpcCommand::DataRootSwitch);
+        request
+            .args
+            .insert("target".into(), target.display().to_string());
+        let started = Instant::now();
+        let observer = tokio::spawn(async move { service.execute(request).await });
+        tokio::time::sleep(Duration::from_millis(20)).await;
+        assert!(started.elapsed() < Duration::from_secs(1));
+        assert!(!observer.is_finished());
+        assert!(writers.frozen());
+        assert!(mutations.acquire().is_none());
+        observer.abort();
+        assert!(observer.await.unwrap_err().is_cancelled());
+        assert!(writers.admit().is_err());
+        assert!(mutations.acquire().is_none());
+        assert_eq!(
+            crate::modules::data_root::load_runtime_config(&app_root).unwrap(),
+            before
+        );
+        assert!(!root.join("audit.log").exists());
+        release.send(()).unwrap();
+        holder.join().unwrap();
+        tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                if mutations.acquire().is_some() {
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        let records = audit_records(&root);
+        assert_eq!(records.len(), 1);
+        assert_eq!(records[0].command, IpcCommand::DataRootSwitch);
+        assert_eq!(records[0].result, super::super::AuditResult::Succeeded);
+        assert!(writers.frozen());
+        assert!(writers.admit().is_err());
+        assert_eq!(
+            crate::modules::data_root::load_runtime_config(&app_root)
+                .unwrap()
+                .active_data_root,
+            target
+        );
+        assert_ne!(
+            crate::modules::data_root::load_runtime_config(&root)
+                .unwrap()
+                .active_data_root,
+            target
+        );
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn cli_queries_survive_disconnect_and_audit_only_admitted_roots() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::{Duration, Instant};
+        for command in [
+            IpcCommand::Status,
+            IpcCommand::DataRootShow,
+            IpcCommand::BackupList,
+            IpcCommand::UpdateCheck,
+        ] {
+            for terminal in [0, 1, 2] {
+                let root = tempfile::tempdir().unwrap();
+                let writers = Arc::new(WriterGate::default());
+                let (entered, entry) = tokio::sync::oneshot::channel();
+                let (release, released) = std::sync::mpsc::channel();
+                let worker_gate = writers.clone();
+                let worker_root = root.path().to_path_buf();
+                let observer = tokio::spawn(async move {
+                    run_ipc_query_owned(
+                        worker_gate,
+                        worker_root,
+                        backup_request(command),
+                        chrono::Utc::now(),
+                        move || {
+                            entered.send(()).unwrap();
+                            released.recv_timeout(Duration::from_secs(2)).unwrap();
+                            match terminal {
+                                0 => Ok(serde_json::json!({"status": "fixture"})),
+                                1 => Err(IpcErrorCode::ExecutionFailed),
+                                _ => panic!("isolated query panic"),
+                            }
+                        },
+                    )
+                    .await
+                });
+                tokio::time::timeout(Duration::from_secs(2), entry)
+                    .await
+                    .unwrap()
+                    .unwrap();
+                let timer = Instant::now();
+                tokio::time::sleep(Duration::from_millis(20)).await;
+                assert!(timer.elapsed() < Duration::from_secs(1));
+                observer.abort();
+                assert!(observer.await.unwrap_err().is_cancelled());
+                assert!(writers.freeze().unwrap().is_none());
+                release.send(()).unwrap();
+                tokio::time::timeout(Duration::from_secs(2), async {
+                    loop {
+                        if writers.freeze().unwrap().is_some() {
+                            break;
+                        }
+                        tokio::task::yield_now().await;
+                    }
+                })
+                .await
+                .unwrap();
+                let records = audit_records(root.path());
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].command, command);
+                assert_eq!(
+                    records[0].error_code,
+                    match terminal {
+                        0 => None,
+                        1 => Some(IpcErrorCode::ExecutionFailed),
+                        _ => Some(IpcErrorCode::InternalError),
+                    }
+                );
+            }
+        }
+        let root = tempfile::tempdir().unwrap();
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        service.writers.freeze().unwrap().unwrap().commit();
+        for command in [
+            IpcCommand::Status,
+            IpcCommand::DataRootShow,
+            IpcCommand::UpdateCheck,
+        ] {
+            assert!(service.execute(backup_request(command)).await.ok);
+        }
+        assert_eq!(
+            service
+                .execute(backup_request(IpcCommand::BackupList))
+                .await
+                .error
+                .unwrap()
+                .code,
+            IpcErrorCode::TargetStateConflict
+        );
+        assert!(!root.path().join("audit.log").exists());
+        assert!(!root.path().join(".backup-w2.lock").exists());
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::Duration;
+        // A saved pending reference must stay frozen even if projection later
+        // fails or panics. No-save success, failure and panic reopen writers.
+        for saved in [false, true] {
+            for terminal in [0, 1, 2] {
+                let root = tempfile::tempdir().unwrap();
+                let writers = Arc::new(WriterGate::default());
+                let mutations = crate::state::SharedRuntimeInstall::default();
+                let worker_gate = writers.clone();
+                let worker_mutations = mutations.clone();
+                let worker_root = root.path().to_path_buf();
+                let (entered, entry) = tokio::sync::oneshot::channel();
+                let (release, released) = std::sync::mpsc::channel();
+                let observer = tokio::spawn(async move {
+                    run_ipc_binding_owned(
+                        worker_gate,
+                        worker_mutations,
+                        worker_root,
+                        backup_request(IpcCommand::DataRootSwitch),
+                        chrono::Utc::now(),
+                        move |pending| {
+                            *pending = saved;
+                            entered.send(()).unwrap();
+                            released.recv_timeout(Duration::from_secs(2)).unwrap();
+                            match terminal {
+                                0 => Ok(serde_json::Value::Null),
+                                1 => Err(IpcErrorCode::ExecutionFailed),
+                                _ => panic!("isolated binding projection panic"),
+                            }
+                        },
+                    )
+                    .await
+                });
+                tokio::time::timeout(Duration::from_secs(2), entry)
+                    .await
+                    .unwrap()
+                    .unwrap();
+                observer.abort();
+                assert!(observer.await.unwrap_err().is_cancelled());
+                assert!(writers.admit().is_err());
+                assert!(writers.freeze().unwrap().is_none());
+                assert!(mutations.acquire().is_none());
+                release.send(()).unwrap();
+                tokio::time::timeout(Duration::from_secs(2), async {
+                    loop {
+                        if mutations.acquire().is_some() {
+                            break;
+                        }
+                        tokio::task::yield_now().await;
+                    }
+                })
+                .await
+                .unwrap();
+                assert_eq!(writers.frozen(), saved);
+                assert_eq!(writers.admit().is_err(), saved);
+                let records = audit_records(root.path());
+                assert_eq!(records.len(), 1);
+                assert_eq!(records[0].command, IpcCommand::DataRootSwitch);
+                assert_eq!(
+                    records[0].error_code,
+                    match terminal {
+                        0 => None,
+                        1 => Some(IpcErrorCode::ExecutionFailed),
+                        _ => Some(IpcErrorCode::InternalError),
+                    }
+                );
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn cli_binding_busy_frozen_and_unconfirmed_never_execute_or_audit() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        let root = tempfile::tempdir().unwrap();
+        let writers = Arc::new(WriterGate::default());
+        let mutations = crate::state::SharedRuntimeInstall::default();
+        let calls = Arc::new(AtomicUsize::new(0));
+        for blocked in 0..3 {
+            let runtime = if blocked == 0 {
+                mutations.acquire()
+            } else {
+                None
+            };
+            let storage = if blocked == 1 {
+                Some(writers.admit().unwrap())
+            } else {
+                None
+            };
+            let binding = if blocked == 2 {
+                writers.freeze().unwrap()
+            } else {
+                None
+            };
+            let counter = calls.clone();
+            assert_eq!(
+                run_ipc_binding_owned(
+                    writers.clone(),
+                    mutations.clone(),
+                    root.path().into(),
+                    backup_request(IpcCommand::DataRootSwitch),
+                    chrono::Utc::now(),
+                    move |_| {
+                        counter.fetch_add(1, Ordering::SeqCst);
+                        Ok(serde_json::Value::Null)
+                    },
+                )
+                .await,
+                Err(IpcErrorCode::TargetStateConflict)
+            );
+            drop((runtime, storage, binding));
+            assert!(mutations.acquire().is_some());
+            assert!(writers.admit().is_ok());
+        }
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let mut request = backup_request(IpcCommand::DataRootSwitch);
+        request
+            .args
+            .insert("target".into(), root.path().display().to_string());
+        request.confirm = false;
+        assert_eq!(
+            service.execute(request).await.error.unwrap().code,
+            IpcErrorCode::RequireConfirm
+        );
+        assert!(!root.path().join("audit.log").exists());
     }
 
     /// 回归：CLI 切换数据根必须把引用写回固定的应用数据目录。
@@ -2174,7 +2554,7 @@ mod tests {
         assert!(response.ok, "切换应成功：{:?}", response.error);
 
         assert!(service.writers.frozen());
-        let audit_before = std::fs::read(service.audit.path()).expect("binding audit retained");
+        let audit_before = std::fs::read(first.join("audit.log")).expect("binding audit retained");
         let mut read = IpcRequest {
             request_id: "req_00000000-0000-0000-0000-0000000000fc".into(),
             command: IpcCommand::DataRootShow,
@@ -2202,7 +2582,7 @@ mod tests {
             IpcErrorCode::TargetStateConflict
         );
         assert_eq!(
-            std::fs::read(service.audit.path()).unwrap(),
+            std::fs::read(first.join("audit.log")).unwrap(),
             audit_before,
             "no post-save old-root audit writes"
         );
