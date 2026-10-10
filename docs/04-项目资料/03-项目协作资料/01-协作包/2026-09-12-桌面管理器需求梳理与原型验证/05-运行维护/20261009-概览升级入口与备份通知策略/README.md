@@ -97,3 +97,13 @@ source_refs:
 本轮源码验证通过：`cargo metadata --locked --format-version 1`、`cargo fmt --all -- --check`、`cargo clippy --locked --workspace --all-targets -- -D warnings`、`cargo test --locked --workspace --features integration-test`、`git diff --check`；Rust 全量测试退出码为 0，库目标 691 项通过 / 0 失败 / 4 忽略，二进制目标 2 项通过，集成测试目标均通过。UI `npm test -- --run` 为 94 个测试文件、459 项通过；`npm run typecheck`、`npm run build` 通过，生产构建转换 170 个模块；Windows bundle identity smoke 5/5 通过。
 
 本轮只闭合源码版本身份和回归门禁。仍需重新生成 0.1.10 的 Windows / macOS 安装与签名制品，并完成普通权限、原生外观、自动检查性能、真实更新 / 重启、稳定 / beta 周期、全域事件调用点和发布门禁；`CHANGELOG.md` 只能在 `main` 集成阶段补写。协作包与 IMP 保持 `in_progress`，不构成合并、发布或 stable 晋升授权。
+
+### 2026-10-11 运行态观测异常隔离
+
+代码分支 feature/0.1.10-maintenance 的提交 c654287c06da3e621091c1051ebc19ce1c0b1077 完成运行态观测异常与启停执行异常的隔离。runtime-observation-recovered 只有在可执行文件、工作目录、OPENCODEX_HOME、对象、动作、阶段、通道和候选身份全部匹配时，才能解除同一运行上下文的观测异常；可解除的异常限定为 runtime-starting-failed、run-unreachable、run-at-risk、external-takeover。观测恢复不能解除 start / stop / restart 的 execution 生命周期失败。
+
+本提交后的生产注册表统计为 8 triggers、39 jobs、81 events、27 notification policies、87 emission sites、8 scheduling sites、8 UI feedback sites、12 paths、4 cleanup policies。准确的注册表定向命令为：
+
+    cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture
+
+结果为 33 passed、0 failed。该提交只闭合运行态观测恢复边界和对应源码定向回归，不表示全域事件调用点、双平台原生验收、安装制品或发布门禁已完成；协作包与 IMP 继续保持 in_progress。

@@ -425,3 +425,13 @@ MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1
 源码门禁均通过：`cargo metadata --locked --format-version 1`、`cargo fmt --all -- --check`、`cargo clippy --locked --workspace --all-targets -- -D warnings`、`cargo test --locked --workspace --features integration-test`、`git diff --check`。全量 Rust 命令退出码为 0，库目标 691 项通过 / 0 失败 / 4 忽略，二进制目标 2 项通过，集成测试目标均通过；UI 全量为 94 个测试文件、459 项通过，类型检查和生产构建通过（170 modules transformed）；Windows bundle identity smoke 5/5 通过。
 
 该提交只闭合版本身份与源码级回归，不替代 macOS 原生 UI / 安装、Windows 普通权限与安装路径 / DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、真实更新 / 重启、自动检查性能、stable 24 小时 / beta 6 小时、签名制品、更新端点、全域事件调用点和真实用户迁移。`CHANGELOG.md` 仍只能在 `main` 集成阶段补写；所有 required checks 通过前保持 `in_progress`，不颁发完成证书、不合并 main、不发布或晋升 stable。证据见协作包验证/20261011-目标执行检查点及 `.adg/evidence/OCX-0110-20261011-TARGET-EXECUTION/`。
+
+### c654287c：运行态观测异常隔离与精确解除
+
+代码分支 feature/0.1.10-maintenance 的提交 c654287c06da3e621091c1051ebc19ce1c0b1077 将运行态观测异常与启停执行异常分开处理，并补齐注册表定义、注册校验和发出点。runtime-observation-recovered 仅能在可执行文件、工作目录、OPENCODEX_HOME、对象、动作、阶段、通道、候选身份均与捕获异常一致时解除同一观测异常；允许解除的异常为 runtime-starting-failed、run-unreachable、run-at-risk、external-takeover。它不能解除 start / stop / restart 的 execution 生命周期失败。
+
+定向注册表命令：
+
+    cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture
+
+结果为 33 passed、0 failed。最新生产注册表统计为 8 triggers / 39 jobs / 81 events / 27 notification policies / 87 emission sites / 8 scheduling sites / 8 UI feedback sites / 12 paths / 4 cleanup policies。该结果属于局部源码证据，不替代全域调用点审阅、macOS / Windows 原生 UI 与安装验收、性能与真实周期、签名制品、更新端点、真实迁移和发布门禁；IMP 继续保持 in_progress。

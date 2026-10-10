@@ -59,3 +59,11 @@
 - Windows bundle identity smoke 5/5 通过，确认候选身份检查会接受 0.1.10 的包元数据。
 
 证据目录：`.adg/evidence/OCX-0110-20261011-TARGET-EXECUTION/`。该结果只闭合源码身份与源码回归；仍需在本提交上重新生成双平台候选，完成 macOS / Windows 原生安装、普通权限、路径、外观、性能、真实更新 / 重启、签名和发布门禁。`CHANGELOG.md` 属于 `main`，在集成阶段补写；当前仍为 `in_progress`，不构成发布授权。
+
+## 2026-10-11 运行态观测异常隔离检查点
+
+本次新增代码基线为 feature/0.1.10-maintenance@c654287c06da3e621091c1051ebc19ce1c0b1077，已推送且代码工作树干净。运行态观测异常与启停执行异常已隔离；runtime-observation-recovered 只对同一可执行文件、工作目录、OPENCODEX_HOME、对象、动作、阶段、通道和候选身份的观测异常生效，不能解除 start / stop / restart execution 生命周期失败。
+
+注册表定向命令：cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture；结果 33 passed / 0 failed。当前生产源码统计为 8 triggers、39 jobs、81 events、27 notification policies、87 emission sites、8 scheduling sites、8 UI feedback sites、12 paths、4 cleanup policies。
+
+该检查点只增加局部源码证据，不能替代全域事件调用点审阅、macOS / Windows 原生 UI 与安装、自动检查性能、真实更新 / 重启、稳定 / beta 周期、重新生成 0.1.10 制品、签名和发布确认；状态继续为 in_progress。
