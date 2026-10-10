@@ -1,0 +1,80 @@
+{
+  "source_sha": "bc43e46023cde9781460962b054eb3d19ba027b5",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "rust_full": {
+    "groups": 33,
+    "passed": 815,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "ipc_passed": 13,
+    "new_backup_tests": 6
+  },
+  "commands": [
+    {
+      "log": "rust-full.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "ipc-focused.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --lib modules::ipc::service::tests",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    }
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 36,
+    "events": 74,
+    "active_events": 72,
+    "planned_events": 2,
+    "policies": 24,
+    "emissions": 80,
+    "scheduling": 8,
+    "feedback": 8,
+    "paths": 12,
+    "cleanup": 4
+  },
+  "native_rerun": false,
+  "ui_rerun": false,
+  "superseded_rounds": [
+    "superseded-focused-r1.log",
+    "superseded-focused-r2.log"
+  ],
+  "failed_rounds": [
+    {
+      "log": "failed-focused.log",
+      "exit_code": 101,
+      "reason": "frozen async backup list returned ExecutionFailed; storage binding mapping corrected to TargetStateConflict"
+    }
+  ],
+  "task_state": "in_progress",
+  "limits": [
+    "Unix CLI production binding; no Windows IPC proof",
+    "same-process lock responsiveness is not cross-process or native performance proof",
+    "filesystem and owned-worker tests omit native notification transport",
+    "other CLI mutations/full-domain events/protection repair/installers/native updates/paired performance/real cycles pending"
+  ]
+}
