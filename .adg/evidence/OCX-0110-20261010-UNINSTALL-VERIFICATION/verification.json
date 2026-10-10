@@ -1,0 +1,68 @@
+{
+  "source_branch": "feature/0.1.10-maintenance",
+  "source_sha": "7d5b2e9d581a66ff18545a81d996b4edcd1a6aec",
+  "working_tree_clean": true,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "scope": "source regression; not native uninstall/installer acceptance",
+  "checks": [
+    {
+      "command": "cargo test",
+      "log": "ocx-0110-uninstall-rust-full.log",
+      "exit_code": 0,
+      "groups": 33,
+      "passed": 756,
+      "failed": 0,
+      "ignored": 4
+    },
+    {
+      "command": "cargo fmt --all --check",
+      "log": "ocx-0110-uninstall-fmt.log",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "log": "ocx-0110-uninstall-clippy.log",
+      "exit_code": 0
+    },
+    {
+      "command": "npm run build (vue-tsc --noEmit && vite build)",
+      "log": "ocx-0110-uninstall-ui-build.log",
+      "exit_code": 0
+    },
+    {
+      "command": "npm test -- --run",
+      "log": "ocx-0110-uninstall-ui-full.log",
+      "exit_code": 0,
+      "files": 93,
+      "passed": 438
+    },
+    {
+      "command": "npm test -- --run tests/settings-uninstall.test.ts",
+      "log": "ocx-0110-uninstall-ui-target.log",
+      "exit_code": 0,
+      "passed": 8
+    }
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 28,
+    "events": 56,
+    "active": 54,
+    "planned": 2,
+    "policies": 15,
+    "emission_sites": 62,
+    "scheduling_sites": 8,
+    "feedback_groups": 7,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "limitations": [
+    "pre-worker admission rejection does not persist domain notification",
+    "candidate identity hashes selected source/options, not package contents",
+    "Windows full uninstall residue and native permissions unverified",
+    "corrupt/unresolved panel protection repair pending",
+    "no stable core writeback or public release"
+  ],
+  "task_closed": false
+}
