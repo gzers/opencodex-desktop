@@ -47,8 +47,9 @@ pub fn resolve_locked_with_boundary(
     ),
     AppError,
 > {
-    migration::require_published(anchor)?;
+    let admission = migration::activation::admit_startup(anchor)?;
     let mut locks = vec![crate::modules::instance::AppInstanceLock::acquire(anchor)?];
+    migration::activation::complete_startup(anchor, &locks[0], admission)?;
     initialize(anchor)?;
     let boundary = boundary
         .map(Path::canonicalize)
@@ -108,7 +109,12 @@ pub fn resolve_locked_with_boundary(
             }
             return Ok((config, locks));
         }
-        if validate_structure(&target)? != StructureValidation::Valid {
+        // A committed, still-marked migration can be admitted before locking;
+        // it cannot be initialized until full locked inventory verification.
+        let admission = migration::activation::admit_startup(&target)?;
+        if read_and_validate_metadata(&target.join(METADATA_RELATIVE_PATH))?
+            != StructureValidation::Valid
+        {
             return Err(failure(
                 "referenced data root is corrupted or newer than supported",
             ));
@@ -117,6 +123,11 @@ pub fn resolve_locked_with_boundary(
             return Err(failure("data root binding cycle"));
         }
         locks.push(crate::modules::instance::AppInstanceLock::acquire(&target)?);
+        migration::activation::complete_startup(
+            &target,
+            locks.last().expect("target lock"),
+            admission,
+        )?;
         current = target;
     }
     Err(failure("data root binding exceeds depth limit"))

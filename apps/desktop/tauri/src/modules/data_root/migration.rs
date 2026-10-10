@@ -2,8 +2,10 @@
 //!
 //! The command layer must freeze every writer and own the source instance lock
 //! before calling this module. The returned target lock must survive until exit.
-//! Path-bearing runtime records and launchers still require a separate relocation
-//! step before this kernel can be exposed as a user-facing migration command.
+//! Activation remains separate from copying and requires runtime preparation,
+//! the startup anchor lock, and a writer freeze through process exit.
+
+pub mod activation;
 
 use super::{DataRootRuntimeConfig, OpenCodexHomeMode, PARTITIONS};
 use crate::errors::{AppError, AppResult};
@@ -243,6 +245,7 @@ fn excluded(path: &Path, external_home: bool) -> bool {
         ".backup-w2.lock",
         "cache/ipc/opencodex.ipc",
         RECEIPT_PATH,
+        activation::VERIFICATION_PATH,
         UNPUBLISHED_MARKER,
     ]
     .iter()
@@ -437,6 +440,7 @@ fn copy_with(
         ".backup-w2.lock",
         "cache/ipc/opencodex.ipc",
         RECEIPT_PATH,
+        activation::VERIFICATION_PATH,
         UNPUBLISHED_MARKER,
     ];
     if external_home {
