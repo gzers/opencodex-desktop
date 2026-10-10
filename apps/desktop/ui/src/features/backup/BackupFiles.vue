@@ -19,7 +19,10 @@ async function refresh() {
     const result = await getBackupFiles()
     nodes.value = result.nodes
     rootPath.value = result.rootPath
-    if (!initialized && result.nodes.length) {
+    // An empty backups directory still returns a root node. Wait for real
+    // children before freezing the initial expansion, so the first backup
+    // appears at the month level without resetting later user choices.
+    if (!initialized && result.nodes.some(node => node.children?.length)) {
       expanded.value = initialTreeExpansion(result.nodes, 2)
       initialized = true
     }
