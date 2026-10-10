@@ -47,6 +47,7 @@ pub enum Job {
     PanelCheck,
     Sync,
     SyncConflict,
+    SyncProbe,
     Backup,
     Migration,
     PreferencesBackup,
@@ -192,6 +193,7 @@ pub enum PolicyId {
     BackupCleanupFailure,
     LocalCleanupFailure,
     SyncConflict,
+    SyncConnectionFailure,
 }
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -605,6 +607,10 @@ enum SupportedEvent {
     PanelCheckFailed,
     #[serde(rename = "sync-conflict-detected")]
     SyncConflictDetected,
+    #[serde(rename = "sync-connection-failed")]
+    SyncConnectionFailed,
+    #[serde(rename = "sync-connection-succeeded")]
+    SyncConnectionSucceeded,
     #[serde(rename = "backup-completed")]
     BackupCompleted,
     #[serde(rename = "migration-completed")]

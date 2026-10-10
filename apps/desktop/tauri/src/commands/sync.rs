@@ -3,11 +3,13 @@
 //! 只投影端点配置、连接测试与同步执行结果；真实密钥不回传前端。
 
 use serde::{Deserialize, Serialize};
-use tauri::State;
+use tauri::{Manager, State};
 
 use crate::errors::{AppError, AppResult};
 use crate::infrastructure::keychain;
-use crate::infrastructure::webdav_client::{WebDavClient, WebDavConfig, WebDavOperation};
+use crate::infrastructure::webdav_client::{
+    WebDavClient, WebDavConfig, WebDavError, WebDavOperation, WebDavTransport,
+};
 use crate::modules::sync::config::{
     SyncConfig, SyncConfigStore, SyncEndpointConfig, SyncEndpointInput,
 };
@@ -84,6 +86,58 @@ pub fn get_sync_config(data_root: State<'_, SharedDataRoot>) -> AppResult<SyncCo
     Ok(project_config(&config))
 }
 
+/// A single admitted sync operation owns endpoint and status mutations. Busy
+/// commands fail admission; they do not queue or publish network failures.
+fn sync_operation_gate() -> std::sync::Arc<tokio::sync::Mutex<()>> {
+    static GATE: std::sync::OnceLock<std::sync::Arc<tokio::sync::Mutex<()>>> =
+        std::sync::OnceLock::new();
+    GATE.get_or_init(|| std::sync::Arc::new(tokio::sync::Mutex::new(())))
+        .clone()
+}
+
+fn admit_sync_operation() -> AppResult<tokio::sync::OwnedMutexGuard<()>> {
+    admit_sync_with_gate(sync_operation_gate())
+}
+
+fn admit_sync_with_gate(
+    gate: std::sync::Arc<tokio::sync::Mutex<()>>,
+) -> AppResult<tokio::sync::OwnedMutexGuard<()>> {
+    gate.try_lock_owned()
+        .map_err(|_| AppError::TargetLockTimeout { timeout_ms: 0 })
+}
+
+fn probe_candidate(endpoint: &SyncEndpointConfig, webdav: &WebDavConfig) -> AppResult<Vec<u8>> {
+    serde_json::to_vec(&(
+        endpoint,
+        &webdav.base_url,
+        &webdav.remote_path,
+        &webdav.username,
+        &webdav.password,
+    ))
+    .map_err(|_| AppError::NotConfigured)
+}
+
+/// Only an actual, bounded request followed by unchanged configuration is a
+/// terminal fact. The owner holds the sync gate through this callback. Secrets
+/// exist only in local candidate bytes; event delivery persists their digest.
+async fn probe_connection_observed<T: WebDavTransport>(
+    client: &WebDavClient<T>,
+    config: &WebDavConfig,
+    timeout: std::time::Duration,
+    current: impl FnOnce() -> AppResult<bool>,
+    observer: impl FnOnce(bool),
+) -> AppResult<Result<(), WebDavError>> {
+    config.validate().map_err(|_| AppError::NotConfigured)?;
+    let result = tokio::time::timeout(timeout, client.test_connection(config))
+        .await
+        .unwrap_or(Err(WebDavError::Network));
+    if !current()? {
+        return Err(AppError::NotConfigured);
+    }
+    observer(result.is_ok());
+    Ok(result)
+}
+
 #[tauri::command]
 pub async fn save_sync_endpoint(
     request: SaveSyncEndpointRequest,
@@ -98,6 +152,7 @@ pub async fn save_sync_endpoint(
     };
     let root = data_root.inner().0.clone();
     let endpoint = crate::commands::run_blocking("save sync endpoint", move || {
+        let _sync = admit_sync_operation()?;
         let store = SyncConfigStore::new(&root);
         store.save_endpoint(&input)
     })
@@ -115,6 +170,7 @@ pub async fn delete_sync_endpoint(
     {
         let root = data_root.inner().0.clone();
         crate::commands::run_blocking("delete sync endpoint", move || {
+            let _sync = admit_sync_operation()?;
             SyncConfigStore::new(&root).delete_endpoint(delete_credentials)
         })
         .await?;
@@ -140,56 +196,103 @@ fn status_guard<'a>(
 
 #[tauri::command]
 pub async fn test_sync_connection(
+    app: tauri::AppHandle,
     data_root: State<'_, SharedDataRoot>,
-    status: State<'_, SharedSyncStatus>,
 ) -> AppResult<SyncOperationResultDto> {
-    let config = config_store(&data_root).load()?;
-    let Some(endpoint) = config.active() else {
-        return Err(AppError::NotConfigured);
-    };
-    let webdav = webdav_config(endpoint)?;
-    {
+    let root = data_root.inner().0.clone();
+    crate::commands::run_blocking("test sync connection", move || {
+        let _sync = admit_sync_operation()?;
+        let store = SyncConfigStore::new(&root);
+        let config = store.load()?;
+        let endpoint = config.active().cloned().ok_or(AppError::NotConfigured)?;
+        let webdav = webdav_config(&endpoint)?;
+        webdav.validate().map_err(|_| AppError::NotConfigured)?;
+        let candidate = probe_candidate(&endpoint, &webdav)?;
+        let status = app.state::<SharedSyncStatus>();
+        {
+            let mut run = status_guard(&status);
+            run.run_id = uuid::Uuid::new_v4().to_string();
+            run.started_at = chrono::Utc::now();
+            run.connection_state = crate::types::status::ConnectionState::Connecting;
+            run.operation_state = crate::types::status::OperationState::Validating;
+            run.finished_at = None;
+            run.failure_reason = None;
+        }
+        let client = WebDavClient::production();
+        let result = tauri::async_runtime::block_on(probe_connection_observed(
+            &client,
+            &webdav,
+            client.total_timeout(),
+            || {
+                let current = store.load()?;
+                let Some(active) = current.active() else {
+                    return Ok(false);
+                };
+                Ok(active == &endpoint && webdav_config(active)? == webdav)
+            },
+            |succeeded| {
+                use crate::modules::notifications::registry::{Channel, Trigger};
+                let identity = crate::commands::event_delivery::prepare(
+                    &root,
+                    "sync-connection-failed",
+                    Channel::Local,
+                    &candidate,
+                );
+                crate::commands::event_delivery::publish(
+                    &app,
+                    &root,
+                    if succeeded {
+                        "sync-connection-succeeded"
+                    } else {
+                        "sync-connection-failed"
+                    },
+                    identity,
+                    Trigger::User,
+                );
+            },
+        ));
         let mut run = status_guard(&status);
-        run.connection_state = crate::types::status::ConnectionState::Connecting;
-        run.operation_state = crate::types::status::OperationState::Validating;
-        run.finished_at = None;
-        run.failure_reason = None;
-    }
-    let result = WebDavClient::production().test_connection(&webdav).await;
-    let mut run = status_guard(&status);
-    match result {
-        Ok(()) => {
-            run.connection_state = crate::types::status::ConnectionState::Synced;
-            run.operation_state = crate::types::status::OperationState::Succeeded;
-            run.finished_at = Some(chrono::Utc::now());
-            Ok(SyncOperationResultDto {
-                connection_state: "synced".to_string(),
-                operation_state: "succeeded".to_string(),
-                message: "WebDAV 连接成功。".to_string(),
-                snapshot_id: run.snapshot_id.clone(),
-                backup_id: None,
-                etag: None,
-            })
+        run.finished_at = Some(chrono::Utc::now());
+        let result = match result {
+            Ok(result) => result,
+            Err(error) => {
+                // External changes/readback failures are not a verified result.
+                run.operation_state = crate::types::status::OperationState::Cancelled;
+                run.connection_state = crate::types::status::ConnectionState::Unconfigured;
+                run.failure_reason = None;
+                return Err(error);
+            }
+        };
+        match result {
+            Ok(()) => {
+                run.connection_state = crate::types::status::ConnectionState::Synced;
+                run.operation_state = crate::types::status::OperationState::Succeeded;
+                Ok(SyncOperationResultDto {
+                    connection_state: "synced".to_string(),
+                    operation_state: "succeeded".to_string(),
+                    message: "WebDAV 连接成功。".to_string(),
+                    snapshot_id: run.snapshot_id.clone(),
+                    backup_id: None,
+                    etag: None,
+                })
+            }
+            Err(error) => {
+                run.connection_state = crate::types::status::ConnectionState::Failed;
+                run.operation_state = crate::types::status::OperationState::Failed;
+                let message = error.user_message(WebDavOperation::Probe).to_string();
+                run.failure_reason = Some(message.clone());
+                Ok(SyncOperationResultDto {
+                    connection_state: "failed".to_string(),
+                    operation_state: "failed".to_string(),
+                    message,
+                    snapshot_id: None,
+                    backup_id: None,
+                    etag: None,
+                })
+            }
         }
-        Err(error) => {
-            run.connection_state = crate::types::status::ConnectionState::Failed;
-            run.operation_state = crate::types::status::OperationState::Failed;
-            run.finished_at = Some(chrono::Utc::now());
-            run.failure_reason = Some(
-                error
-                    .user_message(crate::infrastructure::webdav_client::WebDavOperation::Probe)
-                    .to_string(),
-            );
-            Ok(SyncOperationResultDto {
-                connection_state: "failed".to_string(),
-                operation_state: "failed".to_string(),
-                message: run.failure_reason.clone().unwrap_or_default(),
-                snapshot_id: None,
-                backup_id: None,
-                etag: None,
-            })
-        }
-    }
+    })
+    .await
 }
 
 #[tauri::command]
@@ -200,6 +303,7 @@ pub async fn run_sync_now(
     status: State<'_, SharedSyncStatus>,
     notifications: State<'_, SharedNotificationStore>,
 ) -> AppResult<SyncOperationResultDto> {
+    let _sync = admit_sync_operation()?;
     let config = config_store(&data_root).load()?;
     let Some(endpoint) = config.active().cloned() else {
         return Err(AppError::NotConfigured);
@@ -374,7 +478,7 @@ mod tests {
     use super::*;
     use crate::modules::sync::config::{CredentialRef, SyncEndpointConfig};
 
-    fn endpoint() -> SyncEndpointConfig {
+    pub(super) fn endpoint() -> SyncEndpointConfig {
         SyncEndpointConfig {
             endpoint_id: "default".to_string(),
             url: "https://dav.example.test".to_string(),
@@ -484,5 +588,358 @@ mod tests {
         ));
         assert!(!publish_sync_conflict(false, &empty, quiet.path()));
         assert!(empty.lock().expect("lock").live().is_empty());
+    }
+}
+
+#[cfg(test)]
+mod probe_tests {
+    use super::*;
+    use crate::commands::notifications::NotificationPublisher;
+    use crate::infrastructure::webdav_client::{WebDavMethod, WebDavResponse};
+    use crate::modules::notifications::{
+        persistence::{load_notifications, notifications_path},
+        registry::{self, Channel, Evidence, Trigger},
+        NotificationStore,
+    };
+    use std::sync::{
+        atomic::{AtomicUsize, Ordering},
+        Arc, Mutex,
+    };
+    use std::time::Duration;
+
+    struct Transport {
+        result: Result<(), WebDavError>,
+        calls: Arc<AtomicUsize>,
+        entered: Option<Arc<tokio::sync::Notify>>,
+        release: Option<Arc<tokio::sync::Notify>>,
+    }
+    #[async_trait::async_trait]
+    impl WebDavTransport for Transport {
+        async fn request(
+            &self,
+            _: &WebDavConfig,
+            method: WebDavMethod,
+            path: &str,
+            body: Option<Vec<u8>>,
+        ) -> Result<WebDavResponse, WebDavError> {
+            assert_eq!(method, WebDavMethod::Propfind);
+            assert!(path.is_empty() && body.is_none());
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            if let Some(entered) = &self.entered {
+                entered.notify_one();
+            }
+            if let Some(release) = &self.release {
+                release.notified().await;
+            }
+            self.result?;
+            Ok(WebDavResponse {
+                status: 207,
+                body: vec![],
+                etag: None,
+            })
+        }
+    }
+    fn config() -> WebDavConfig {
+        WebDavConfig {
+            base_url: "https://dav.example.test".into(),
+            remote_path: "desktop-sync".into(),
+            username: "user".into(),
+            password: "secret-not-for-history".into(),
+        }
+    }
+    fn client(result: Result<(), WebDavError>) -> (WebDavClient<Transport>, Arc<AtomicUsize>) {
+        let calls = Arc::new(AtomicUsize::new(0));
+        (
+            WebDavClient::new(Transport {
+                result,
+                calls: calls.clone(),
+                entered: None,
+                release: None,
+            }),
+            calls,
+        )
+    }
+    fn publish(
+        root: &std::path::Path,
+        store: &Arc<Mutex<NotificationStore>>,
+        bytes: &[u8],
+        success: bool,
+    ) -> AppResult<registry::DeliveryOutcome> {
+        let identity = crate::commands::event_delivery::prepare(
+            root,
+            "sync-connection-failed",
+            Channel::Local,
+            bytes,
+        )
+        .ok_or(AppError::NotConfigured)?;
+        let evidence = if success {
+            Evidence::Success {
+                candidate: identity.candidate.clone(),
+                verified: true,
+            }
+        } else {
+            Evidence::Failure
+        };
+        let delivery = registry::terminal_delivery(
+            if success {
+                "sync-connection-succeeded"
+            } else {
+                "sync-connection-failed"
+            },
+            Trigger::User,
+            identity,
+            evidence,
+            chrono::Utc::now(),
+        )?;
+        NotificationPublisher {
+            store,
+            data_root: root,
+        }
+        .publish_event(&delivery)
+    }
+
+    #[tokio::test]
+    async fn invalid_probe_has_no_request_or_terminal() {
+        let (client, calls) = client(Ok(()));
+        let mut config = config();
+        config.base_url = "http://invalid.test".into();
+        let result = probe_connection_observed(
+            &client,
+            &config,
+            Duration::from_secs(1),
+            || panic!("not admitted"),
+            |_| panic!("no terminal"),
+        )
+        .await;
+        assert!(result.is_err());
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+    #[tokio::test]
+    async fn changed_endpoint_or_credential_and_failed_readback_do_not_publish() {
+        let (client, calls) = client(Ok(()));
+        let original = config();
+        for field in 0..3 {
+            let mut current = original.clone();
+            match field {
+                0 => current.remote_path = "different".into(),
+                1 => current.password = "rotated".into(),
+                _ => current.base_url = "https://other.test".into(),
+            }
+            assert!(probe_connection_observed(
+                &client,
+                &original,
+                Duration::from_secs(1),
+                || Ok(current == original),
+                |_| panic!("stale result")
+            )
+            .await
+            .is_err());
+        }
+        assert!(probe_connection_observed(
+            &client,
+            &original,
+            Duration::from_secs(1),
+            || Err(AppError::NotConfigured),
+            |_| panic!("readback failed")
+        )
+        .await
+        .is_err());
+        assert_eq!(calls.load(Ordering::SeqCst), 4);
+    }
+    #[tokio::test]
+    async fn bounded_probe_timeout_is_an_actual_failure() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let client = WebDavClient::new(Transport {
+            result: Ok(()),
+            calls: calls.clone(),
+            entered: None,
+            release: Some(Arc::new(tokio::sync::Notify::new())),
+        });
+        let mut observed = None;
+        let result = probe_connection_observed(
+            &client,
+            &config(),
+            Duration::from_millis(1),
+            || Ok(true),
+            |success| observed = Some(success),
+        )
+        .await
+        .unwrap();
+        assert_eq!(result, Err(WebDavError::Network));
+        assert_eq!(observed, Some(false));
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
+    #[tokio::test]
+    async fn actual_failure_persists_and_exact_verified_retry_resolves_after_reload() {
+        let root = tempfile::tempdir().unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        let config = config();
+        let bytes = probe_candidate(&super::tests::endpoint(), &config).unwrap();
+        let (bad, _) = client(Err(WebDavError::Unauthorized));
+        let result = probe_connection_observed(
+            &bad,
+            &config,
+            Duration::from_secs(1),
+            || Ok(true),
+            |success| {
+                assert!(publish(root.path(), &store, &bytes, success).unwrap().added);
+            },
+        )
+        .await
+        .unwrap();
+        assert_eq!(result, Err(WebDavError::Unauthorized)); // IPC can still return Ok failed DTO.
+        let store = Arc::new(Mutex::new(
+            load_notifications(&notifications_path(root.path())).unwrap(),
+        ));
+        let (good, _) = client(Ok(()));
+        assert!(probe_connection_observed(
+            &good,
+            &config,
+            Duration::from_secs(1),
+            || Ok(true),
+            |success| {
+                assert_eq!(
+                    publish(root.path(), &store, &bytes, success)
+                        .unwrap()
+                        .resolved,
+                    1
+                );
+            }
+        )
+        .await
+        .unwrap()
+        .is_ok());
+        let saved = load_notifications(&notifications_path(root.path())).unwrap();
+        assert!(saved.all()[0].resolved && !saved.all()[0].read);
+        let text = std::fs::read_to_string(notifications_path(root.path())).unwrap();
+        assert!(!text.contains(&config.password) && !text.contains(&config.base_url));
+        let scope = std::fs::read_to_string(
+            root.path().join(
+                registry::registry()
+                    .unwrap()
+                    .path(registry::PathId::EventScope),
+            ),
+        )
+        .unwrap();
+        assert!(!scope.contains(&config.password) && !scope.contains(&config.base_url));
+    }
+    #[test]
+    fn new_endpoint_credentials_or_root_cannot_clear_old_failure() {
+        let root = tempfile::tempdir().unwrap();
+        let other_root = tempfile::tempdir().unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        let endpoint = super::tests::endpoint();
+        let original = config();
+        let bytes = probe_candidate(&endpoint, &original).unwrap();
+        assert!(publish(root.path(), &store, &bytes, false).unwrap().added);
+        assert_eq!(
+            publish(other_root.path(), &store, &bytes, true)
+                .unwrap()
+                .resolved,
+            0
+        );
+        for field in 0..3 {
+            let mut changed = original.clone();
+            let mut endpoint = endpoint.clone();
+            match field {
+                0 => endpoint.endpoint_id = "different-endpoint".into(),
+                1 => changed.password = "rotated".into(),
+                _ => changed.remote_path = "another-folder".into(),
+            }
+            let changed_bytes = probe_candidate(&endpoint, &changed).unwrap();
+            assert_eq!(
+                publish(root.path(), &store, &changed_bytes, true)
+                    .unwrap()
+                    .resolved,
+                0
+            );
+        }
+        // Returning to old bytes creates a new candidate after scope rotation.
+        assert_eq!(
+            publish(root.path(), &store, &bytes, true).unwrap().resolved,
+            0
+        );
+        assert!(!store.lock().unwrap().all()[0].resolved);
+    }
+    #[tokio::test]
+    async fn notification_write_failure_does_not_change_network_success() {
+        let root = tempfile::tempdir().unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        let bytes = probe_candidate(&super::tests::endpoint(), &config()).unwrap();
+        assert!(publish(root.path(), &store, &bytes, false).unwrap().added);
+        std::fs::remove_file(notifications_path(root.path())).unwrap();
+        std::fs::create_dir(notifications_path(root.path())).unwrap();
+        let (good, _) = client(Ok(()));
+        assert!(probe_connection_observed(
+            &good,
+            &config(),
+            Duration::from_secs(1),
+            || Ok(true),
+            |success| {
+                assert!(publish(root.path(), &store, &bytes, success).is_err());
+            }
+        )
+        .await
+        .unwrap()
+        .is_ok());
+        assert!(!store.lock().unwrap().all()[0].resolved);
+    }
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn cancelled_ipc_observer_does_not_release_probe_or_storage_ownership() {
+        let entered = Arc::new(tokio::sync::Notify::new());
+        let release = Arc::new(tokio::sync::Notify::new());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let client = WebDavClient::new(Transport {
+            result: Ok(()),
+            calls: calls.clone(),
+            entered: Some(entered.clone()),
+            release: Some(release.clone()),
+        });
+        let writer_gate = Arc::new(crate::infrastructure::storage_writers::WriterGate::default());
+        let operation_gate = Arc::new(tokio::sync::Mutex::new(()));
+        let completed = Arc::new(AtomicUsize::new(0));
+        let worker_completed = completed.clone();
+        let worker_gate = operation_gate.clone();
+        let writers = writer_gate.clone();
+        let observer = tokio::spawn(async move {
+            crate::commands::run_blocking_with_gate(writers, "injected sync probe", move || {
+                let _sync = admit_sync_with_gate(worker_gate)?;
+                let result = tauri::async_runtime::block_on(probe_connection_observed(
+                    &client,
+                    &config(),
+                    Duration::from_secs(1),
+                    || Ok(true),
+                    |success| {
+                        assert!(success);
+                        worker_completed.fetch_add(1, Ordering::SeqCst);
+                    },
+                ))?;
+                assert!(result.is_ok());
+                Ok(())
+            })
+            .await
+        });
+        tokio::time::timeout(Duration::from_secs(2), entered.notified())
+            .await
+            .unwrap();
+        observer.abort();
+        assert!(observer.await.unwrap_err().is_cancelled());
+        assert!(admit_sync_with_gate(operation_gate.clone()).is_err());
+        assert!(writer_gate.freeze().unwrap().is_none());
+        assert_eq!(completed.load(Ordering::SeqCst), 0);
+        release.notify_one();
+        tokio::time::timeout(Duration::from_secs(2), async {
+            loop {
+                if completed.load(Ordering::SeqCst) == 1 && writer_gate.freeze().unwrap().is_some()
+                {
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert!(admit_sync_with_gate(operation_gate).is_ok());
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
 }

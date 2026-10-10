@@ -254,6 +254,13 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "sync_probe",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1217,6 +1224,36 @@
       "resolves": [
         "preferences-backup-pin-failed"
       ]
+    },
+    {
+      "id": "sync-connection-failed",
+      "job": "sync_probe",
+      "object": "sync",
+      "action": "check",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "sync_connection_failure",
+      "resolves": []
+    },
+    {
+      "id": "sync-connection-succeeded",
+      "job": "sync_probe",
+      "object": "sync",
+      "action": "check",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "sync-connection-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1457,6 +1494,18 @@
       "body": "备份固定状态未能核验保存；请查看诊断记录后重试。",
       "action": "logs",
       "dedupe": "preferences-backup-pin:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "sync_connection_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 连接测试失败",
+      "body": "连接测试未通过；请检查连接设置后重试。",
+      "action": "logs",
+      "dedupe": "sync-connection:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -1820,6 +1869,16 @@
     {
       "event": "preferences-backup-pin-succeeded",
       "source": "commands/backup.rs::set_preferences_backup_pinned admitted manifest write + readback under backup lock",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-connection-failed",
+      "source": "commands/sync.rs::test_sync_connection owned bounded probe + endpoint/credential readback under sync gate",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-connection-succeeded",
+      "source": "commands/sync.rs::test_sync_connection owned bounded probe + endpoint/credential readback under sync gate",
       "wiring": "scoped_terminal"
     }
   ],

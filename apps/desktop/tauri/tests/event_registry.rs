@@ -796,6 +796,7 @@ fn new_terminal_pairs_persist_and_only_exact_verified_success_recovers() {
         "preferences-reset",
         "preferences-backup-policy",
         "preferences-backup-pin",
+        "sync-connection",
         "preferences-backup-cleanup",
         "local-cleanup",
     ] {
