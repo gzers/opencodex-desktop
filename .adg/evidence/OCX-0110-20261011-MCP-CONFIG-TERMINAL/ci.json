@@ -1,0 +1,27 @@
+{
+  "run_id": "38077500332",
+  "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38077500332",
+  "head_sha": "a392afd9b6a81ea6d82eb5ba591600466765e0f4",
+  "attempt": 2,
+  "status_at_recording": "completed",
+  "conclusion_at_recording": "failure",
+  "jobs_at_recording": {
+    "frontend": "success",
+    "release-tools": "success",
+    "backend": "success",
+    "backend-windows": "failure",
+    "windows_backend_regression": "failure: STATUS_ENTRYPOINT_NOT_FOUND (0xc0000139) before test assertions",
+    "windows_release_build": "skipped",
+    "windows_final_exe_smoke": "skipped"
+  },
+  "windows_gate": {
+    "passed": false,
+    "reason": "The Windows test executable did not start; release build and final EXE smoke were skipped."
+  },
+  "prior_windows_failure": {
+    "run_id": "38076431305",
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38076431305",
+    "boundary": "Windows test executable failed to start before assertions: STATUS_ENTRYPOINT_NOT_FOUND / 0xc0000139",
+    "counts_as_windows_pass": false
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "code_commit": "a392afd9b6a81ea6d82eb5ba591600466765e0f4",
+  "local": {
+    "rust_tests": {"command": "cargo test --workspace --features integration-test", "passed": 690, "failed": 0, "ignored": 4},
+    "fmt": "passed",
+    "clippy": "passed",
+    "diff_check": "passed"
+  },
+  "implemented_guards": [
+    "MCP reads are capped at 16 MiB and reject symlinks/non-regular files",
+    "MCP write/remove/add/edit target paths are locked in sorted order",
+    "WriteMcp reuses the prepared original during merge, backup and write",
+    "post-write bytes must exactly match the expected output",
+    "home, Skills, MCP, lock and duplicate physical target checks run before execution"
+  ],
+  "not_proven": [
+    "Windows native and installer acceptance",
+    "actual update/restart flow",
+    "real user data migration",
+    "performance and real stable/beta periods",
+    "whole-product event coverage"
+  ]
+}

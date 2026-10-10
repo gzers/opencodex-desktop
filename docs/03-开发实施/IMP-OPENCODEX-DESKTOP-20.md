@@ -375,3 +375,16 @@ ToggleClient / SetSourceDir / SetSyncMethod 及独立 toggle 入口在合作锁�
 最终 Rust 34 组 / 857 通过 / 0 失败 / 5 忽略（扩展集成 39/39、注册表 33/33），fmt / Clippy / diff 通过。中间失败原件保留，final-* 绑定补丁。注册表 8 triggers / 39 jobs / 80 events（78 active / 2 planned）/ 27 policies / 86 emissions / 8 scheduling / 8 feedback / 12 paths / 4 cleanup，无新计时器 / 路径。未改 UI / 未重跑原生，未单独注入投射后回读破坏。
 
 见 验证/20261011-扩展配置核验与终态 与 .adg/evidence/OCX-0110-20261011-EXTENSION-CONFIG。十个现有资产命令独立终态、损坏保护受控修复、Windows / 安装器、真实更新 / 重启、配对性能和真实周期继续待验；generic Migration / Backup / Sync 保持 0.2.0 planned。TASK / IMP 保持 in_progress，不回写稳定核心、不关闭或发布。
+
+
+### a392afd9 MCP 配置写入安全终态
+
+MCP 配置发现、读取和写入统一使用有界、拒绝符号链接与非普通文件的安全读取；16 MiB 以上配置、读取异常和损坏内容显式失败，只有明确不存在才按无配置处理。`WriteMcp` 的准备读取结果贯穿合并、备份和原子写入，避免事务内重复读取不同文件版本。
+
+`WriteMcp`、`RemoveMcp`、`AddMcp`、`EditMcp` 对所有目标按稳定路径顺序加锁，锁覆盖源读取、合并、备份、原子写和写后核验；原子写完成后重新读取同一目标，只有字节完全一致才报告成功。目标 home、Skills / MCP / lock 路径、重复物理目标和越界路径均在执行前拒绝。
+
+代码提交为 `a392afd9b6a81ea6d82eb5ba591600466765e0f4`，位于 `feature/0.1.10-maintenance`，已推送。提交未改变 0.2.0 planned 的 generic Migration / Backup / Sync，也没有宣称 Skills / MCP 客户端资产投射、Windows 原生、安装器、实际更新 / 重启或性能门禁已通过。
+
+本地 `cargo test --workspace --features integration-test` 为 690 passed / 0 failed / 4 ignored；`cargo fmt --all -- --check`、`cargo clippy --workspace --all-targets -- -D warnings` 与 `git diff --check` 通过。CI 的 frontend、backend、release-tools 通过；Windows backend regression 在测试进程启动前再次以 `STATUS_ENTRYPOINT_NOT_FOUND`（`0xc0000139`）失败，Windows release build 与 final EXE smoke 跳过。证据见 [MCP 配置终态证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-MCP配置终态/README.md)。
+
+Windows CI 运行 `38077500332` 的 attempt 2 仍在测试执行前出现 `STATUS_ENTRYPOINT_NOT_FOUND`（`0xc0000139`），不能作为 Windows 回归通过证据；Windows 门禁保持未闭合。TASK-182 / IMP-20 继续 `in_progress`，不颁发完成证书，不回写稳定核心，不发布。

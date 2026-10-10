@@ -1,0 +1,10 @@
+{
+  "workspace": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+  "commit": "a392afd9b6a81ea6d82eb5ba591600466765e0f4",
+  "checks": [
+    {"command": "cargo test --workspace --features integration-test", "result": "690 passed / 0 failed / 4 ignored"},
+    {"command": "cargo fmt --all -- --check", "result": "passed"},
+    {"command": "cargo clippy --workspace --all-targets -- -D warnings", "result": "passed"},
+    {"command": "git diff --check", "result": "passed"}
+  ]
+}
