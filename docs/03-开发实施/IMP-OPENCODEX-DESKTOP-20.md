@@ -409,3 +409,11 @@ MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1
 本地 Rust 全量验证为 690 passed / 0 failed / 4 ignored；UI 为 94 个测试文件、459 个测试通过；类型检查和生产构建通过（170 modules transformed）。Vite 既有 `INEFFECTIVE_DYNAMIC_IMPORT` 警告与测试中的 jsdom canvas notice 均未阻断结果。证据见 `.adg/evidence/OCX-0110-20261011-LOCAL-VALIDATION/` 及协作包验证记录。
 
 该结果只证明源码级回归和共享组件对齐修复，不替代双平台原生、Windows 普通权限 / 外观 / DPI、macOS 安装、真实更新 / 重启、自动检查性能、真实周期、签名、发布资产、更新端点和全域事件覆盖审阅。IMP / TASK 保持 `in_progress`，不构成完成证书或发布授权。
+
+### 24ed093a 更新调度触发与周期合同
+
+`feature/0.1.10-maintenance` 的 `24ed093aea0758b5fdf542fa38fc98a0c1d6b1e9` 已推送。本轮将概览路由进入明确归类为 `foreground` 唤醒；持久化调度器到期仍使用 `deadline`，避免把路由触发和调度到期混成同一来源。旧偏好字段 `app_update_check_interval_seconds` 仅用于旧文档迁移与序列化往返，运行时不读取它，周期只有 native `Target::interval()` 一个事实源。
+
+周期合同固定为：manager stable 24 小时、panel 24 小时、manager beta 6 小时；本轮新增 Rust 5 项调度定向测试全部通过。UI 定向回归覆盖 update scheduler、查询 / 安装所有权、更新中心、树表与备份文件等 6 个测试文件，共 34 项通过；`npm run typecheck`、`npm run build`、Rust fmt、Clippy `-D warnings` 与 `git diff --check` 均通过。
+
+本轮只闭合调度来源与周期的源码级合同，不改变更新安装、重启、原生通知、双平台性能、真实 stable 24 小时 / beta 6 小时观察或发布门禁。macOS 原生、Windows 普通权限 / 外观 / 安装路径、真实更新 / 重启、签名制品、全域事件调用点和性能证据仍未闭合；IMP / TASK 保持 `in_progress`，不形成完成证书、合并授权或发布授权。

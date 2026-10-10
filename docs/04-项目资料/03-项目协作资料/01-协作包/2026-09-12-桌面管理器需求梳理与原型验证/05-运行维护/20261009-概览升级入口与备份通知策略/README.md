@@ -81,3 +81,11 @@ source_refs:
 已按用户确认进入 0.1.10 目标模式执行。代码基线为 feature/0.1.10-maintenance / 8f5a76f8；文档与证据继续归属 docs/governance-main。本轮复核共享树表定向回归 2 个测试文件、12 项通过，既有 Rust / UI 全量源码证据保持有效。剩余原生、安装、性能、真实更新、签名、制品、全域事件和发布门禁仍需真实证据闭合，不形成发布授权。
 
 详见 [20261011 目标执行检查点](验证/20261011-目标执行检查点/README.md)。
+
+### 2026-10-11 更新调度触发与周期合同补充
+
+代码分支 `feature/0.1.10-maintenance` 的 `24ed093aea0758b5fdf542fa38fc98a0c1d6b1e9` 已推送。概览进入使用 `foreground` 触发，持久化到期使用 `deadline`；旧 `app_update_check_interval_seconds` 只服务迁移与序列化，运行时周期不从该字段读取。manager stable / panel 固定 24 小时，manager beta 固定 6 小时。
+
+本轮 UI 定向 6 个测试文件、34 项通过；Rust 调度定向 5/5；类型检查、生产构建、fmt、Clippy `-D warnings` 与 diff 检查通过。该记录只更新源码级合同证据，原生 UI、双平台安装 / 更新 / 重启、性能、真实周期观察、签名、全域事件调用点和发布门禁继续待验，协作包与 IMP 保持 `in_progress`。
+
+详见 [20261011 目标执行检查点](验证/20261011-目标执行检查点/README.md) 与 [IMP-20](../../../../../../03-开发实施/IMP-OPENCODEX-DESKTOP-20.md)。

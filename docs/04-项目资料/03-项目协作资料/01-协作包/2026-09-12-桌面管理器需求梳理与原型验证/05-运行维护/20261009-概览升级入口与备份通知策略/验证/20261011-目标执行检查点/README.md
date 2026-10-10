@@ -9,7 +9,7 @@
 | 项目 | 结果 |
 |---|---|
 | 代码分支 | feature/0.1.10-maintenance |
-| 代码提交 | 8f5a76f867272730ee22ba672934fdd82807d218 |
+| 代码提交 | 24ed093aea0758b5fdf542fa38fc98a0c1d6b1e9 |
 | 文档分支 | docs/governance-main |
 | 检查开始时文档 HEAD | 1c2656f9168b2ffca20630cacae511b1c763e6a1 |
 | 统一树表组件 | apps/desktop/ui/src/components/ui/UiTreeTable.vue + treeTable.ts |
@@ -20,6 +20,8 @@
 - git diff --check 通过，代码工作树无未提交改动。
 - UI 定向回归：npm test -- --run tests/ui-tree-table.test.ts tests/backup-files.test.ts，2 个测试文件、12 项测试全部通过。
 - 共享组件统一复选框、箭头占位、图标与文字的垂直基线，使用 22px 行高和统一控制尺寸；不改变选择、展开、备份范围或树表数据语义。
+- `24ed093a` 将概览路由进入固定为 `foreground` 唤醒，`deadline` 仅用于持久化调度到期；旧 `app_update_check_interval_seconds` 仅保留迁移 / 序列化兼容，运行时周期由 native `Target::interval()` 唯一决定。
+- 更新调度定向 Rust 测试 5/5；UI 定向回归 6 个测试文件、34 项通过。
 - 既有本地全量证据仍有效：Rust 690 passed / 0 failed / 4 ignored；UI 94 个测试文件、459 项通过；类型检查和生产构建通过。完整记录见 [20261011 本地全量验证](../20261011-本地全量验证/README.md)。
 - 既有代码实现和范围冻结见 [IMP-20](../../../../../../../../03-开发实施/IMP-OPENCODEX-DESKTOP-20.md)。0.2.0 的同步原型可以继承统一树表组件合同，但不因此提前启用同步业务范围。
 
