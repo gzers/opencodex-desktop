@@ -1,0 +1,62 @@
+{
+  "source_theme": "system",
+  "target_theme_after_restart": "dark",
+  "anchor_binding": {
+    "active_data_root": "/private/tmp/ocx-0110-migration-20261010-6da3cc28/target",
+    "opencodex_home_mode": "inside",
+    "structure_version": "1"
+  },
+  "target_incomplete_marker_exists": false,
+  "backups": [
+    {
+      "id": "bk_20261010132219_713e1d24",
+      "payload_theme": "dark",
+      "payload_sha256": "2d458601c4a9eda04224a04219ec3c155803edf745c820f2653394dd29f9bbac",
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261010132219_713e1d24",
+        "action": "restore-protection",
+        "target_path": "/private/tmp/ocx-0110-migration-20261010-6da3cc28/source/manager-state/preferences.json",
+        "stored_at": "2026-10-10T13:22:19Z",
+        "created_at": "2026-10-10T13:22:19Z",
+        "sha256": "2d458601c4a9eda04224a04219ec3c155803edf745c820f2653394dd29f9bbac",
+        "bytes": 1369,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 2,
+          "kind": "restore-protection",
+          "pinned": false,
+          "related_backup_id": "bk_20261010131215_4f945a8e",
+          "transaction_state": "committed"
+        }
+      }
+    },
+    {
+      "id": "bk_20261010133918_46576fc9",
+      "payload_theme": "system",
+      "payload_sha256": "58e1c8cc33f43243cd1dee8db4a45da712106e44c29c1ad6a0f97288843e3c85",
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261010133918_46576fc9",
+        "action": "restore-protection",
+        "target_path": "/private/tmp/ocx-0110-migration-20261010-6da3cc28/target/manager-state/preferences.json",
+        "stored_at": "2026-10-10T13:39:18Z",
+        "created_at": "2026-10-10T13:39:18Z",
+        "sha256": "58e1c8cc33f43243cd1dee8db4a45da712106e44c29c1ad6a0f97288843e3c85",
+        "bytes": 1371,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 2,
+          "kind": "restore-protection",
+          "pinned": false,
+          "related_backup_id": "bk_20261010132219_713e1d24",
+          "transaction_state": "committed"
+        }
+      }
+    }
+  ]
+}

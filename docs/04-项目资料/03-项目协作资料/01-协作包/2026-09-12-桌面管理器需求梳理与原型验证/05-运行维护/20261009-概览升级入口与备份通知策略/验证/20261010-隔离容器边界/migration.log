@@ -1,0 +1,16 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.11s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 8 tests
+test commands::data_root::tests::explicit_sandbox_container_supports_migration_and_locked_restart ... ok
+test commands::data_root::tests::home_only_save_stays_pending_until_actual_startup_home_matches ... ok
+test commands::data_root::tests::migration_command_retains_locks_and_freeze_until_locked_restart ... ok
+test commands::data_root::tests::migration_requires_matching_freeze_and_both_startup_locks ... ok
+test commands::data_root::tests::only_observed_idle_runtime_allows_binding_save ... ok
+test commands::data_root::tests::preparation_failure_keeps_old_binding_and_quarantines_partial_copy ... ok
+test commands::data_root::tests::reference_switch_preserves_external_home_without_copying ... ok
+test commands::data_root::tests::sandbox_escape_is_denied_before_reserving_target ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 578 filtered out; finished in 0.60s
+
