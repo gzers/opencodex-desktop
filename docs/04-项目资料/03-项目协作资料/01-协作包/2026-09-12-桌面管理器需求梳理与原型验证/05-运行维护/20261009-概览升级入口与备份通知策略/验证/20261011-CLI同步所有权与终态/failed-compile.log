@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error[E0599]: no variant or associated item named `ConfirmationRequired` found for enum `modules::ipc::IpcErrorCode` in the current scope
+    --> src/modules/ipc/service.rs:1025:27
+     |
+1025 |             IpcErrorCode::ConfirmationRequired
+     |                           ^^^^^^^^^^^^^^^^^^^^ variant or associated item not found in `modules::ipc::IpcErrorCode`
+     |
+    ::: src/modules/ipc/mod.rs:91:1
+     |
+  91 | pub enum IpcErrorCode {
+     | --------------------- variant or associated item `ConfirmationRequired` not found for this enum
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

@@ -1,0 +1,91 @@
+{
+  "source_sha": "d1ab651c9bab783cae6f5268cbdbb208f4faa089",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "rust_full": {
+    "groups": 33,
+    "passed": 809,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "ipc_passed": 7,
+    "gui_passed": 7
+  },
+  "commands": [
+    {
+      "log": "rust-full.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "ipc-focused.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --lib modules::ipc::service::tests",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "gui-focused.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --lib commands::sync::tests",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    }
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 36,
+    "events": 74,
+    "active_events": 72,
+    "planned_events": 2,
+    "policies": 24,
+    "emissions": 80,
+    "scheduling": 8,
+    "feedback": 8,
+    "paths": 12,
+    "cleanup": 4
+  },
+  "native_rerun": false,
+  "ui_rerun": false,
+  "prior_ui_source_sha": "82c3479b0defb3a12d38a0c430102653e481415c",
+  "prior_ui": {
+    "files": 94,
+    "passed": 459
+  },
+  "superseded_rounds": [
+    "superseded-ipc-focused.log",
+    "superseded-rust-full.log"
+  ],
+  "failed_rounds": [
+    {
+      "log": "failed-compile.log",
+      "reason": "incorrect RequireConfirm variant name, corrected before final regression",
+      "exit_code": 101
+    }
+  ],
+  "task_state": "in_progress",
+  "limits": [
+    "Unix CLI service only; Windows IPC unsupported",
+    "cancellation ownership tests use injected executor with real filesystem/gates/audit; not live WebDAV/native transport proof",
+    "gates process-local; remote durability and atomic rollback not guaranteed",
+    "other CLI mutations/full-domain events, protection repair, Windows/installers/native updates, paired performance/real cycles pending"
+  ]
+}

@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.30s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 7 tests
+test commands::sync::tests::shared_sync_preserves_gui_setup_and_upload_failure_contracts ... ok
+test commands::sync::tests::sync_conflict_and_failed_readback_never_project_success ... ok
+test commands::sync::tests::state_names_are_frozen_snake_case ... ok
+test commands::sync::tests::sync_execution_recovers_only_exact_endpoint_and_credentials ... ok
+test commands::sync::tests::config_dto_is_camel_case_and_masks_password ... ok
+test commands::sync::tests::sync_conflict_alerts_preference_is_consumed ... ok
+test commands::sync::tests::conflict_alert_writes_one_deduplicated_notification ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 648 filtered out; finished in 0.05s
+
