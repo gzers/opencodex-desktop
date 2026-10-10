@@ -1,0 +1,49 @@
+/* 原型树表共用几何和状态；图标、选择列与业务操作由各页面按需提供。 */
+:where(.proto-tree,.mp-changes){
+  --tree-indent:24px;
+  --tree-gap:8px;
+  --tree-padding-x:12px;
+  --tree-padding-y:10px;
+  --tree-control-size:14px;
+  --tree-line-height:20px;
+  font-size:var(--text-label,13px);
+  line-height:var(--tree-line-height);
+}
+.proto-tree{
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm,8px);
+  overflow:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:color-mix(in srgb,var(--text) 20%,transparent) transparent;
+  scrollbar-gutter:stable;
+}
+.proto-tree-row{align-items:center;gap:var(--tree-gap);padding:var(--tree-padding-y) var(--tree-padding-x);line-height:var(--tree-line-height)}
+.proto-tree-row>input[type=checkbox]{width:var(--tree-control-size);height:var(--tree-control-size);margin:0;align-self:center;flex:none;accent-color:var(--accent)}
+.proto-tree-row:hover{background:var(--rail)}
+.proto-tree-row:focus-within{background:var(--rail)}
+.proto-tree-label{display:flex;align-items:center;gap:var(--tree-gap);min-width:0;padding-inline-start:calc(var(--tree-level,0) * var(--tree-indent) + var(--tree-leaf-offset,0px))}
+.proto-tree-leaf{--tree-level:1;--tree-leaf-offset:calc(var(--tree-control-size) + var(--tree-gap));min-width:0;padding-inline-start:calc(var(--tree-level) * var(--tree-indent) + var(--tree-leaf-offset));overflow-wrap:anywhere}
+.proto-tree .proto-tree-toggle{display:inline-flex;align-items:center;gap:var(--tree-gap);min-width:0;min-height:var(--tree-line-height);margin:0;padding:0;border:0;background:transparent;color:inherit;font:inherit;line-height:var(--tree-line-height);text-align:start;cursor:pointer}
+.proto-tree-chevron,.proto-tree-spacer{display:inline-flex;align-items:center;justify-content:center;flex:0 0 var(--tree-control-size);width:var(--tree-control-size);height:var(--tree-line-height)}
+.proto-tree-chevron{font-size:0;line-height:0;color:var(--muted);transform:rotate(-90deg)}
+.proto-tree-chevron::before{content:"";width:0;height:0;border-inline:4px solid transparent;border-top:5px solid currentColor}
+.proto-tree-toggle[aria-expanded=true] .proto-tree-chevron{transform:none}
+.proto-tree-icon{flex:none;width:18px;height:var(--tree-line-height);color:var(--muted)}
+.proto-tree-label>span:last-child{min-width:0;overflow-wrap:anywhere}
+.proto-tree:focus-visible,.proto-tree button:focus-visible,.proto-tree input:focus-visible,.proto-tree select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* 原生 table 与 grid 树表消费相同行距；多行名称 / 描述随内容增高。 */
+.proto-tree table{font:inherit}
+.proto-tree table th,.proto-tree table td{padding:var(--tree-padding-y) var(--tree-padding-x);vertical-align:middle}
+
+/* 保存配置的分组变更表：原生 details 提供展开语义，不需要图标或选择列。 */
+.mp-changes .mp-draft-group{padding:0}
+.mp-changes .mp-draft-group>summary{min-height:var(--tree-line-height);padding:var(--tree-padding-y) var(--tree-padding-x);gap:var(--tree-gap);line-height:var(--tree-line-height);background:var(--rail)}
+.mp-changes .mp-draft-group>summary::before{content:"";flex:0 0 var(--tree-control-size);width:var(--tree-control-size);height:var(--tree-line-height);background:var(--muted);clip-path:polygon(21% 38%,79% 38%,50% 63%);transform:rotate(-90deg)}
+.mp-changes .mp-draft-group[open]>summary::before{transform:none}
+.mp-changes .mp-change-head,.mp-changes .mp-change-row{align-items:center;gap:var(--tree-gap);padding:var(--tree-padding-y) var(--tree-padding-x);line-height:var(--tree-line-height)}
+.mp-changes .mp-change-row>strong{padding-inline-start:calc(var(--tree-indent) + var(--tree-control-size) + var(--tree-gap))}
+@container (min-width:521px){.mp-changes .mp-change-head,.mp-changes .mp-change-row{grid-template-columns:160px minmax(0,1fr) minmax(0,1fr)}}
+.mp-changes .mp-change-row:hover{background:var(--rail)}
+.mp-changes summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
