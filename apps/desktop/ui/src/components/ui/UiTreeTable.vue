@@ -136,12 +136,12 @@ th, td { padding: 10px 12px; vertical-align: top; border-bottom: 1px solid var(-
 thead th { color: var(--muted); font-weight: inherit; }
 tbody th { font-weight: inherit; }
 tbody tr:last-child > * { border-bottom: 0; }
-.tree-name { display: flex; align-items: flex-start; gap: 6px; padding-inline-start: calc(var(--tree-depth) * 16px); }
-.tree-check, .tree-check-placeholder { flex: 0 0 16px; width: 16px; height: 16px; margin: 3px 0; }
+.tree-name { display: flex; align-items: center; gap: 6px; min-height: 22px; padding-inline-start: calc(var(--tree-depth) * 16px); }
+.tree-check, .tree-check-placeholder { flex: 0 0 16px; width: 16px; height: 16px; margin: 0; }
 .tree-toggle { flex: 0 0 22px; width: 22px; height: 22px; padding: 3px; border: 0; background: transparent; color: inherit; border-radius: 4px; display: grid; place-items: center; cursor: pointer; }
 .tree-toggle:focus-visible, .tree-leaf:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-.tree-toggle-placeholder { flex: 0 0 22px; height: 22px; }
-.tree-leaf { text-align: left; border: 0; padding: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; border-radius: 4px; }
+.tree-toggle-placeholder { flex: 0 0 22px; width: 22px; height: 22px; }
+.tree-leaf { text-align: left; border: 0; padding: 0; background: transparent; color: inherit; font: inherit; line-height: 22px; cursor: pointer; border-radius: 4px; }
 .tree-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; }
 .tree-toggle svg.expanded { transform: rotate(90deg); }
 .tree-icon { flex: 0 0 18px; height: 22px; display: grid; place-items: center; }
