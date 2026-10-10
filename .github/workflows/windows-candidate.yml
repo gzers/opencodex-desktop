@@ -2,7 +2,7 @@ name: Windows candidate installer
 
 on:
   push:
-    branches: [feature/0.1.8-windows-package, feature/0.1.9-windows-appearance]
+    branches: [feature/0.1.8-windows-package, feature/0.1.9-windows-appearance, feature/0.1.10-maintenance]
   workflow_dispatch:
 
 permissions:
@@ -54,11 +54,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Freeze and record dependency resolution
         run: |
-          cargo generate-lockfile
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           New-Item -ItemType Directory -Force ../../../test/out/windows-candidate | Out-Null
           Copy-Item Cargo.lock ../../../test/out/windows-candidate/Cargo.lock
           cargo metadata --locked --format-version 1 > ../../../test/out/windows-candidate/cargo-metadata.json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo tree --locked > ../../../test/out/windows-candidate/cargo-tree.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           [ordered]@{ source = (git rev-parse HEAD); runner = $env:ImageOS; image = $env:ImageVersion; rust = (rustc --version); cargo = (cargo --version); node = (node --version); npm = (npm --version); tauri = (tauri --version) } | ConvertTo-Json | Set-Content ../../../test/out/windows-candidate/environment.json
       - name: Windows regression with the package lock
