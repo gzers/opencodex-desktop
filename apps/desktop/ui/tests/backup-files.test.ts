@@ -52,4 +52,28 @@ describe('actual backup file browser', () => {
     await flushPromises()
     expect(wrapper.findAll('tbody tr')).toHaveLength(3)
   })
+  it('keeps the refresh control focusable while suppressing duplicate reads', async () => {
+    const wrapper = mount(BackupFiles, { attachTo: document.body })
+    await flushPromises()
+    let finish!: (value: ReturnType<typeof result>) => void
+    query.mockReturnValueOnce(new Promise(resolve => { finish = resolve }))
+    const refresh = wrapper.get('.backup-files-head button')
+    ;(refresh.element as HTMLButtonElement).focus()
+    await refresh.trigger('click')
+    expect(refresh.attributes('aria-disabled')).toBe('true')
+    expect(refresh.attributes('aria-busy')).toBe('true')
+    // Native disabled drops focus in macOS WebView; aria-disabled keeps the
+    // same control while the request guard blocks mouse/keyboard re-entry.
+    expect((refresh.element as HTMLButtonElement).disabled).toBe(false)
+    expect(refresh.text()).toBe('正在读取…')
+    await refresh.trigger('click')
+    expect(query).toHaveBeenCalledTimes(2)
+    expect(document.activeElement).toBe(refresh.element)
+    finish(result())
+    await flushPromises()
+    expect(document.activeElement).toBe(refresh.element)
+    expect(refresh.text()).toBe('刷新')
+    expect(refresh.attributes('aria-disabled')).toBeUndefined()
+    wrapper.unmount()
+  })
 })

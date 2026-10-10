@@ -24,6 +24,8 @@ const rows = computed(() => treeTableRows(props.nodes, expanded.value))
 const controls = new Map<string, HTMLButtonElement>()
 const focusedId = ref<string>()
 let refreshFocusId: string | undefined
+const retryControl = ref<HTMLButtonElement>()
+let retryHadFocus = false
 function setControl(id: string, element: unknown) {
   if (element instanceof HTMLButtonElement) controls.set(id, element)
   else controls.delete(id)
@@ -61,24 +63,35 @@ function onKey(event: KeyboardEvent, row: TreeTableRow) {
   event.preventDefault()
   void focus(target)
 }
-watch(rows, (next, previous) => {
+watch(rows, async (next, previous) => {
   const id = focusedId.value
-  if (!id || next.some(row => row.node.id === id)) return
+  const active = document.activeElement
+  if (!id || controls.get(id) !== active || next.some(row => row.node.id === id)) return
   let old = previous.find(row => row.node.id === id)
   while (old?.parentId && !next.some(row => row.node.id === old?.parentId)) old = previous.find(row => row.node.id === old?.parentId)
-  void focus(old?.parentId ?? next[0]?.node.id)
+  await nextTick()
+  if (document.activeElement === document.body || document.activeElement === active) {
+    controls.get(old?.parentId ?? next[0]?.node.id ?? "")?.focus()
+  }
 })
 watch(() => props.loading, async loading => {
   if (loading) {
     refreshFocusId = [...controls].find(([, element]) => element === document.activeElement)?.[0]
+    retryHadFocus = retryControl.value === document.activeElement
     return
   }
   const id = refreshFocusId
+  const fromRetry = retryHadFocus
   refreshFocusId = undefined
+  retryHadFocus = false
   await nextTick()
   // Restore only focus lost when our rows were removed; never steal it from another control.
-  if (id && !props.error && document.activeElement === document.body) {
-    const target = controls.has(id) ? id : rows.value[0]?.node.id
+  if ((id || fromRetry) && document.activeElement === document.body) {
+    if (props.error) {
+      retryControl.value?.focus()
+      return
+    }
+    const target = id && controls.has(id) ? id : rows.value[0]?.node.id
     if (target) controls.get(target)?.focus()
   }
 }, { flush: "pre" })
@@ -91,7 +104,7 @@ watch(() => props.loading, async loading => {
       <tbody>
         <tr v-if="error || loading || !rows.length"><td :colspan="columns.length + 1" class="tree-message">
           <span :role="error ? 'alert' : 'status'">{{ error || (loading ? "正在读取…" : emptyLabel) }}</span>
-          <button v-if="error" type="button" class="btn ghost" @click="emit('retry')">重试</button>
+          <button v-if="error && !loading" ref="retryControl" type="button" class="btn ghost" @click="emit('retry')">重试</button>
         </td></tr>
         <template v-else>
           <tr v-for="row in rows" :key="row.node.id" :data-node-id="row.node.id">

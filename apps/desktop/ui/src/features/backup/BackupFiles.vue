@@ -39,7 +39,7 @@ onMounted(() => { void refresh() })
   <section class="backup-files" aria-labelledby="backup-files-title">
     <div class="backup-files-head">
       <h3 id="backup-files-title">备份文件与目录</h3>
-      <button class="btn ghost" type="button" :disabled="loading" @click="refresh">刷新</button>
+      <button class="btn ghost" type="button" :aria-disabled="loading || undefined" :aria-busy="loading || undefined" @click="refresh">{{ loading ? '正在读取…' : '刷新' }}</button>
     </div>
     <p v-if="rootPath" class="backup-root">{{ rootPath }}</p>
     <UiTreeTable v-model:expanded-ids="expanded" :nodes="nodes" :loading="loading" :error="error" label="备份文件与目录" empty-label="尚无备份文件" :columns="[{ key: 'purpose', label: '用途' }, { key: 'action', label: '操作' }]" @retry="refresh">
