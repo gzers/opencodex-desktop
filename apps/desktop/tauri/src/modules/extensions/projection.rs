@@ -375,6 +375,11 @@ pub fn execute_observed(
     let path = config_path(data_root);
     validate_config_paths(data_root)?;
     let _guard = TargetFileLock::lock(&path).map_err(|_| ProjectionError::LockFailed)?;
+    let _mcp_guards = if is_mcp_command(&command) {
+        lock_mcp_targets(targets)?
+    } else {
+        Vec::new()
+    };
     let observed = matches!(
         command,
         ProjectionCommand::ToggleClient { .. }
@@ -612,7 +617,7 @@ fn execute_locked(
             for target in mcp_targets(targets, &config, Some(client))? {
                 let output = project_server_to_target(&definition, target, Some(&name))
                     .ok_or(ProjectionError::UnsupportedTarget)?;
-                let original = std::fs::read(&target.mcp_config_path).ok();
+                let original = read_mcp_config(&target.mcp_config_path)?;
                 if !confirm {
                     let valid = original.as_deref().is_some_and(|bytes| {
                         parse_target_payload(target, bytes).is_ok_and(|payload| {
@@ -636,8 +641,7 @@ fn execute_locked(
                 })
                 .collect::<Result<Vec<_>, ProjectionError>>()?;
             let mut merged = Vec::new();
-            for (target, node) in payloads {
-                let original = std::fs::read(&target.mcp_config_path).ok();
+            for ((target, original, _), (_, node)) in prepared.into_iter().zip(payloads) {
                 let mut payload = match original.as_deref() {
                     Some(bytes) => parse_target_payload(&target, bytes)?,
                     None => serde_json::Map::new().into(),
@@ -678,7 +682,7 @@ fn execute_locked(
             validate_artifact_name(&name)?;
             let mut written = Vec::new();
             for target in mcp_targets(targets, &config, client)? {
-                let Some(original) = std::fs::read(&target.mcp_config_path).ok() else {
+                let Some(original) = read_mcp_config(&target.mcp_config_path)? else {
                     continue;
                 };
                 let mut payload = parse_target_payload(target, &original)?;
@@ -880,6 +884,32 @@ fn source_server_definition(
         }
     }
     Ok(None)
+}
+
+fn is_mcp_command(command: &ProjectionCommand) -> bool {
+    matches!(
+        command,
+        ProjectionCommand::WriteMcp { .. }
+            | ProjectionCommand::RemoveMcp { .. }
+            | ProjectionCommand::AddMcp { .. }
+            | ProjectionCommand::EditMcp { .. }
+    )
+}
+
+/// Lock all declared MCP targets in lexical order. Locking the complete target
+/// set also covers WriteMcp source reads, so a multi-client projection cannot
+/// merge one client from a different file revision than another.
+fn lock_mcp_targets(targets: &[ClientTarget]) -> Result<Vec<TargetFileLock>, ProjectionError> {
+    let mut paths = targets
+        .iter()
+        .map(|target| target.mcp_config_path.clone())
+        .collect::<Vec<_>>();
+    paths.sort();
+    paths.dedup();
+    paths
+        .iter()
+        .map(|path| TargetFileLock::lock(path).map_err(|_| ProjectionError::LockFailed))
+        .collect()
 }
 
 fn write_targets<'a>(
@@ -1192,9 +1222,6 @@ fn write_mcp_payload(
     original: Option<&[u8]>,
     output: &[u8],
 ) -> Result<(), ProjectionError> {
-    if target.mcp_config_path.is_symlink() {
-        return Err(ProjectionError::TargetType);
-    }
     let parent = target
         .mcp_config_path
         .parent()
@@ -1219,7 +1246,17 @@ fn write_mcp_payload(
     }
     std::fs::create_dir_all(parent).map_err(|_| ProjectionError::AtomicWrite)?;
     crate::infrastructure::atomic_write::atomic_write(&target.mcp_config_path, output, 0o600)
-        .map_err(|_| ProjectionError::AtomicWrite)
+        .map_err(|_| ProjectionError::AtomicWrite)?;
+    let actual = read_mcp_config(&target.mcp_config_path)?.ok_or(ProjectionError::AtomicWrite)?;
+    if actual != output {
+        return Err(ProjectionError::AtomicWrite);
+    }
+    Ok(())
+}
+
+fn read_mcp_config(path: &Path) -> Result<Option<Vec<u8>>, ProjectionError> {
+    crate::modules::extensions::discovery::read_mcp_config(path)
+        .map_err(|_| ProjectionError::Corrupted)
 }
 
 fn validate_zip_member_name(name: &str) -> Result<PathBuf, ProjectionError> {
@@ -1569,7 +1606,7 @@ fn write_server_definition(
     for target in write_targets(targets, config) {
         let output = project_server_to_target(definition, target, previous_name)
             .ok_or(ProjectionError::UnsupportedTarget)?;
-        let original = std::fs::read(&target.mcp_config_path).ok();
+        let original = read_mcp_config(&target.mcp_config_path)?;
         let mut payload = match original.as_deref() {
             Some(bytes) => parse_target_payload(target, bytes)?,
             None => serde_json::Map::new().into(),
@@ -1821,12 +1858,18 @@ fn save_locked(
 }
 
 fn validate_targets(targets: &[ClientTarget], home: &Path) -> Result<(), ProjectionError> {
-    if targets.is_empty() || !home.is_absolute() || !home.is_dir() {
+    if targets.is_empty() || !home.is_absolute() {
         return Err(ProjectionError::TargetInvalid);
     }
+    crate::modules::backup::safety::inspect(home).map_err(|_| ProjectionError::TargetInvalid)?;
     let mut seen = BTreeMap::new();
+    let mut seen_mcp_paths = BTreeMap::new();
     for target in targets {
-        if !target.installed || !target.mcp_config_path.is_absolute() {
+        if !target.installed
+            || target.home != home
+            || !target.mcp_config_path.is_absolute()
+            || !target.skills_dir.is_absolute()
+        {
             return Err(ProjectionError::TargetInvalid);
         }
         let context = target
@@ -1842,11 +1885,22 @@ fn validate_targets(targets: &[ClientTarget], home: &Path) -> Result<(), Project
                     .all(|component| !matches!(component, std::path::Component::ParentDir))
         };
         if !within(&target.skills_dir) || !within(context) {
-            eprintln!(
-                "escape: home={home:?} skills={:?} context={context:?}",
-                target.skills_dir
-            );
             return Err(ProjectionError::PathEscape);
+        }
+        for path in [
+            target.skills_dir.as_path(),
+            target.mcp_config_path.as_path(),
+            crate::infrastructure::locking::lock_path_for(&target.mcp_config_path).as_path(),
+        ] {
+            crate::modules::backup::safety::check_path(home, path, true)
+                .map_err(|_| ProjectionError::PathEscape)?;
+        }
+        let physical = target
+            .mcp_config_path
+            .canonicalize()
+            .unwrap_or_else(|_| target.mcp_config_path.clone());
+        if seen_mcp_paths.insert(physical, ()).is_some() {
+            return Err(ProjectionError::TargetInvalid);
         }
         if seen.insert(target.client_id, ()).is_some() {
             return Err(ProjectionError::TargetInvalid);

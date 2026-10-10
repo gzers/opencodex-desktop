@@ -19,6 +19,7 @@ const AGENTS_SKILLS_RELATIVE_PATH: &str = ".agents/skills";
 const SKILLS_STORE_RELATIVE_PATH: &str = "manager-state/skills-store";
 pub const SKILL_MANIFEST_FILE: &str = "SKILL.md";
 const SKILL_MANIFEST_MAX_BYTES: u64 = 256 * 1024;
+pub(crate) const MCP_CONFIG_MAX_BYTES: u64 = 16 * 1024 * 1024;
 
 /// 一个 Skill 是从哪个位置发现的。
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -90,6 +91,26 @@ pub struct RawServerDefinition {
 pub enum DiscoveryError {
     NotConfigured,
     FileSystem,
+}
+
+/// Read one client MCP configuration through the shared bounded, no-follow
+/// reader. A missing configuration is an empty client state; every other
+/// filesystem/type/size failure is surfaced to the caller.
+pub(crate) fn read_mcp_config(path: &Path) -> Result<Option<Vec<u8>>, DiscoveryError> {
+    let metadata = match std::fs::symlink_metadata(path) {
+        Ok(metadata) => metadata,
+        Err(error) if error.kind() == ErrorKind::NotFound => return Ok(None),
+        Err(_) => return Err(DiscoveryError::FileSystem),
+    };
+    if metadata.file_type().is_symlink() || !metadata.is_file() {
+        return Err(DiscoveryError::FileSystem);
+    }
+    if metadata.len() > MCP_CONFIG_MAX_BYTES {
+        return Err(DiscoveryError::FileSystem);
+    }
+    crate::modules::backup::safety::read_file(path, MCP_CONFIG_MAX_BYTES)
+        .map(Some)
+        .map_err(|_| DiscoveryError::FileSystem)
 }
 
 /// 发现扩展。`source_dir` 由调用方解析（默认源目录或用户自定义目录），
@@ -382,16 +403,9 @@ fn skill_directory_stats(root: &Path) -> (Option<u64>, Option<u64>, Option<Strin
 fn discover_servers(targets: &[ClientTarget]) -> Result<Vec<DiscoveredServer>, DiscoveryError> {
     let mut servers = BTreeMap::new();
     for target in targets {
-        let payload = match std::fs::read(&target.mcp_config_path) {
-            Ok(payload) => payload,
-            Err(error) if error.kind() == ErrorKind::NotFound => continue,
-            Err(_) => return Err(DiscoveryError::FileSystem),
+        let Some(payload) = read_mcp_config(&target.mcp_config_path)? else {
+            continue;
         };
-        let metadata = std::fs::symlink_metadata(&target.mcp_config_path)
-            .map_err(|_| DiscoveryError::FileSystem)?;
-        if !metadata.is_file() && !metadata.is_symlink() {
-            return Err(DiscoveryError::FileSystem);
-        }
         let updated_at = modified_at(&target.mcp_config_path);
         let text = String::from_utf8(payload).map_err(|_| DiscoveryError::FileSystem)?;
         let root = parse_config(&text, target.format)?;
@@ -421,16 +435,9 @@ pub fn read_server_definition(
     target: &ClientTarget,
     name: &str,
 ) -> Result<Option<RawServerDefinition>, DiscoveryError> {
-    let payload = match std::fs::read(&target.mcp_config_path) {
-        Ok(payload) => payload,
-        Err(error) if error.kind() == ErrorKind::NotFound => return Ok(None),
-        Err(_) => return Err(DiscoveryError::FileSystem),
+    let Some(payload) = read_mcp_config(&target.mcp_config_path)? else {
+        return Ok(None);
     };
-    let metadata = std::fs::symlink_metadata(&target.mcp_config_path)
-        .map_err(|_| DiscoveryError::FileSystem)?;
-    if !metadata.is_file() && !metadata.is_symlink() {
-        return Err(DiscoveryError::FileSystem);
-    }
     let text = String::from_utf8(payload).map_err(|_| DiscoveryError::FileSystem)?;
     let root = parse_config(&text, target.format)?;
     let container = root.get(&target.mcp_key);
