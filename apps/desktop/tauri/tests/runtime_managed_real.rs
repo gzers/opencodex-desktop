@@ -146,7 +146,7 @@ fn real_managed_runtime_round_trip() {
     };
     println!("== 真实链路：node={:?} npm={:?}", env.node, env.npm);
 
-    let npm_runner = SystemNpmRunner::new(Some(env.home.clone()));
+    let npm_runner = SystemNpmRunner::new(Some(env.home.clone()), env.home.join("cache/npm"));
     let probe = RealVersionProbe::default();
     let sink = NullProgressSink;
     let installer = installer(&env, &npm_runner, &probe, &sink);

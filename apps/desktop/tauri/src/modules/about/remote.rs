@@ -64,6 +64,7 @@ pub fn parse_integrity(raw: &str) -> Option<String> {
 pub fn query_remote_latest(
     npm: &std::path::Path,
     working_directory: &std::path::Path,
+    cache: &std::path::Path,
     environment: &EnvironmentPolicy,
     tag: &str,
 ) -> Result<OfficialRemoteLatest, AppError> {
@@ -72,7 +73,7 @@ pub fn query_remote_latest(
         return Err(AppError::NotConfigured);
     }
     let package = format!("{}@{tag}", crate::modules::runtime::OFFICIAL_PACKAGE);
-    let raw = run_npm_view(npm, working_directory, environment, &package)?;
+    let raw = run_npm_view(npm, working_directory, cache, environment, &package)?;
     let value: serde_json::Value =
         serde_json::from_str(&raw).map_err(|_| AppError::NotConfigured)?;
     let (version, integrity) = parse_metadata(&value).ok_or(AppError::NotConfigured)?;
@@ -103,12 +104,14 @@ fn parse_metadata(value: &serde_json::Value) -> Option<(String, Option<String>)>
 fn run_npm_view(
     npm: &std::path::Path,
     working_directory: &std::path::Path,
+    cache: &std::path::Path,
     environment: &EnvironmentPolicy,
     package: &str,
 ) -> Result<String, AppError> {
     run_npm_view_with_timeout(
         npm,
         working_directory,
+        cache,
         environment,
         package,
         crate::modules::network_defaults::request_timeout(),
@@ -118,6 +121,7 @@ fn run_npm_view(
 fn run_npm_view_with_timeout(
     npm: &std::path::Path,
     working_directory: &std::path::Path,
+    cache: &std::path::Path,
     environment: &EnvironmentPolicy,
     package: &str,
     timeout: std::time::Duration,
@@ -140,6 +144,8 @@ fn run_npm_view_with_timeout(
         crate::infrastructure::platform::apply_user_environment(command.as_std_mut(), None);
     }
     command.env("OPENCODEX_HOME", &environment.opencodex_home);
+    command.env("npm_config_cache", cache);
+    command.env("npm_config_update_notifier", "false");
     // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
     // 至少包含 npm 自身所在目录（node 与它同目录），并补系统最小 PATH 兜底，
     // 不依赖调用方环境的 PATH（与受控安装 `SystemNpmRunner` 同一策略）。
@@ -239,6 +245,35 @@ mod tests {
 
     #[cfg(unix)]
     #[test]
+    fn metadata_query_uses_managed_cache_and_preserves_user_home() {
+        use std::os::unix::fs::PermissionsExt;
+        let root = tempfile::tempdir().unwrap();
+        let npm = root.path().join("npm");
+        let script = r#"#!/bin/sh
+[ "$npm_config_cache" = "$OPENCODEX_HOME/cache/npm" ] || exit 11
+[ "$HOME" = "$OPENCODEX_HOME/user-home" ] || exit 12
+echo '{"version":"2.50.0","dist.integrity":"sha512-fixture"}'
+"#;
+        std::fs::write(&npm, script).unwrap();
+        std::fs::set_permissions(&npm, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let environment = EnvironmentPolicy {
+            opencodex_home: root.path().to_owned(),
+            home: Some(root.path().join("user-home").into_os_string()),
+            ..Default::default()
+        };
+        let result = query_remote_latest(
+            &npm,
+            root.path(),
+            &root.path().join("cache/npm"),
+            &environment,
+            "latest",
+        )
+        .unwrap();
+        assert_eq!(result.version, "2.50.0");
+    }
+
+    #[cfg(unix)]
+    #[test]
     fn metadata_query_rejects_oversize_and_kills_timed_out_process_group() {
         use std::os::unix::fs::PermissionsExt;
         let root = tempfile::tempdir().unwrap();
@@ -252,6 +287,7 @@ mod tests {
         assert!(run_npm_view_with_timeout(
             &npm,
             root.path(),
+            &root.path().join("cache/npm"),
             &environment,
             "test@latest",
             std::time::Duration::from_secs(2)
@@ -264,6 +300,7 @@ mod tests {
             run_npm_view_with_timeout(
                 &npm,
                 root.path(),
+                &root.path().join("cache/npm"),
                 &environment,
                 "test@latest",
                 std::time::Duration::from_millis(200)
@@ -345,8 +382,9 @@ mod tests {
             opencodex_home: std::env::temp_dir(),
             ..Default::default()
         };
-        let result =
-            query_remote_latest(&npm, &working, &environment, "latest").expect("live remote query");
+        let cache = tempfile::tempdir().expect("isolated npm cache");
+        let result = query_remote_latest(&npm, &working, cache.path(), &environment, "latest")
+            .expect("live remote query");
         assert_eq!(result.tag, "latest");
         assert!(!result.version.is_empty());
         assert!(result.version.chars().next().unwrap().is_ascii_digit());

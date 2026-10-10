@@ -189,7 +189,7 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
         serde_json::to_string(&evidence.to_string_lossy()).unwrap(),
     );
     let npm = write_launcher(root.path(), &script);
-    let runner = SystemNpmRunner::new(Some(root.path().to_owned()));
+    let runner = SystemNpmRunner::new(Some(root.path().to_owned()), root.path().join("cache/npm"));
     runner
         .install_package(
             &NpmInstallRequest {

@@ -774,15 +774,16 @@ pub fn extract_semver(text: &str) -> Option<String> {
 }
 
 /// 真实 npm 适配器：受控环境 + 可选代理 + 临时 `--userconfig`。
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct SystemNpmRunner {
-    /// npm 需要的 `HOME`（缓存与日志）；缺失时使用进程默认 HOME。
+    /// 真实用户 HOME；缓存目录独立指定，不通过替换 HOME 重定向。
     pub home: Option<PathBuf>,
+    cache: PathBuf,
 }
 
 impl SystemNpmRunner {
-    pub fn new(home: Option<PathBuf>) -> Self {
-        Self { home }
+    pub fn new(home: Option<PathBuf>, cache: PathBuf) -> Self {
+        Self { home, cache }
     }
 
     /// 受控命令：清空继承环境，只给 node / npm 目录与系统最小 PATH；
@@ -806,9 +807,7 @@ impl SystemNpmRunner {
             &mut command,
             self.home.as_ref().map(|home| home.as_os_str()),
         );
-        if let Some(home) = self.home.as_ref() {
-            command.env("npm_config_cache", home.join(".npm"));
-        }
+        command.env("npm_config_cache", &self.cache);
         command
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -2057,9 +2056,30 @@ mod tests {
     // ---- 临时 userconfig ----
 
     #[test]
+    fn npm_cache_is_explicit_and_does_not_replace_user_home() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("real-user-home");
+        let cache = root.path().join("custom-data/cache/npm");
+        let runner = SystemNpmRunner::new(Some(home.clone()), cache.clone());
+        let command = runner.base_command(Path::new("npm"), None);
+        let value = |key: &str| {
+            command
+                .get_envs()
+                .find(|(name, _)| *name == key)
+                .and_then(|(_, value)| value)
+                .map(std::ffi::OsStr::to_owned)
+        };
+        assert_eq!(value("npm_config_cache"), Some(cache.into_os_string()));
+        #[cfg(unix)]
+        assert_eq!(value("HOME"), Some(home.into_os_string()));
+        #[cfg(windows)]
+        assert_eq!(value("USERPROFILE"), Some(home.into_os_string()));
+    }
+
+    #[test]
     fn credential_proxy_never_reaches_the_command_line() {
         let dir = tempfile::tempdir().expect("temp");
-        let runner = SystemNpmRunner::new(None);
+        let runner = SystemNpmRunner::new(None, dir.path().join("cache/npm"));
 
         // 无凭据：argv 里是 `--proxy <scheme>://host:port>`，本来就不含凭据。
         let plain = ProxyConfig::new(ProxyScheme::Http, "host:8080");

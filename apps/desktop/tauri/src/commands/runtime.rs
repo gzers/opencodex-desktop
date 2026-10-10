@@ -434,8 +434,10 @@ async fn install_managed_runtime(
             } else {
                 crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?
             };
-            let npm =
-                crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()));
+            let npm = crate::modules::runtime::install::SystemNpmRunner::new(
+                Some(home_path.clone()),
+                data_root_path.join("cache/npm"),
+            );
             let probe = crate::modules::runtime::install::RealVersionProbe::default();
             let mut installer = RuntimeInstaller::new(
                 &data_root_path,
@@ -534,9 +536,16 @@ pub async fn install_official_update(
     let environment =
         crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
     let working = home.0.clone();
+    let cache = data_root.0.join("cache/npm");
     // npm view may write its cache; the blocking worker must own admission.
     let remote = super::run_blocking("official update metadata", move || {
-        crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")
+        crate::modules::about::remote::query_remote_latest(
+            &npm,
+            &working,
+            &cache,
+            &environment,
+            "latest",
+        )
     })
     .await?;
 

@@ -118,8 +118,18 @@ async fn query_panel_metadata(
     let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
     let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
     let working = home.0.clone();
+    let cache = app
+        .state::<crate::state::SharedDataRoot>()
+        .0
+        .join("cache/npm");
     crate::commands::run_blocking("query panel metadata", move || {
-        crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")
+        crate::modules::about::remote::query_remote_latest(
+            &npm,
+            &working,
+            &cache,
+            &environment,
+            "latest",
+        )
     })
     .await
 }
