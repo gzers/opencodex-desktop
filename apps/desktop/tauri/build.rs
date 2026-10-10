@@ -6,7 +6,11 @@ fn main() {
     track_frontend_dist();
     track_build_commit();
     track_frozen_defaults();
-    tauri_build::build();
+    tauri_build::try_build(
+        tauri_build::Attributes::new()
+            .windows_attributes(tauri_build::WindowsAttributes::new_without_app_manifest()),
+    )
+    .expect("failed to run tauri-build");
 }
 
 /// 使用 Tauri mock/context 的 Windows 测试也会链接 TaskDialogIndirect。
