@@ -13,6 +13,11 @@ use std::time::{Duration, Instant};
 use tokio::process::Command;
 use tokio::sync::{mpsc, watch, Notify};
 
+#[cfg(unix)]
+type ControlledChild = std::process::Child;
+#[cfg(not(unix))]
+type ControlledChild = tokio::process::Child;
+
 use crate::errors::AppError;
 use crate::modules::process::{runner_start_timeout, stop_timeout};
 use crate::modules::process::{LifecycleAction, LifecycleResult, ProcessCommand, ProcessRunner};
@@ -82,7 +87,7 @@ pub struct RunningProcess {
     pub cancel: Arc<CancelGuard>,
 }
 
-/// 基础设施层的 tokio 子进程适配器。
+/// 基础设施层的受控子进程适配器。
 ///
 /// 只接收 [`ProcessCommand`] 中显式给出的可执行文件；生命周期语义
 /// 由调用方状态机解释，runner 自身不把非零退出码重分类。
@@ -154,6 +159,9 @@ impl ControlledProcessRunner {
                 detail: error.to_string(),
             })?;
 
+        #[cfg(unix)]
+        let pid = Some(child.id());
+        #[cfg(not(unix))]
         let pid = child.id();
         if matches!(
             command.action,
@@ -161,7 +169,7 @@ impl ControlledProcessRunner {
         ) {
             self.clear_running();
             // 后台独立线程负责回收，避免 start/stop 的子进程变成僵尸。
-            // 此前这里依赖 `Child::wait()`，而它在本环境下永不就绪。
+            // Unix 子进程只交给该线程，不参与 Tokio 的孤儿回收队列。
             let _exit_observer = observe_child_exit(child);
             return Ok(LifecycleResult::Started);
         }
@@ -174,7 +182,7 @@ impl ControlledProcessRunner {
         let mut timed_out = false;
         let mut child_exited = false;
         let mut exit_status = None;
-        // 子进程退出由独立线程用 `waitpid` 观测；不再依赖 tokio 的 wait。
+        // 子进程由唯一持有 Child 的线程回收，保留真实退出码。
         let mut exit_observer = observe_child_exit(child);
 
         while !child_exited {
@@ -290,8 +298,16 @@ impl ControlledProcessRunner {
         process
     }
 
-    async fn spawn(&self, command: &ProcessCommand) -> std::io::Result<tokio::process::Child> {
+    #[cfg(not(unix))]
+    async fn spawn(&self, command: &ProcessCommand) -> std::io::Result<ControlledChild> {
         self.spawn_environment(command).spawn()
+    }
+
+    #[cfg(unix)]
+    async fn spawn(&self, command: &ProcessCommand) -> std::io::Result<ControlledChild> {
+        // Spawn without registering a Tokio child. Dropping a Tokio Child after
+        // extracting its PID would enqueue another reaper competing for waitpid.
+        self.spawn_environment(command).as_std_mut().spawn()
     }
 
     fn store_running(
@@ -327,34 +343,23 @@ fn terminate(pid: Option<u32>) {
 
 /// 用独立线程回收子进程，并把退出码送回调用方。
 ///
-/// 不使用 `tokio::process::Child::wait()`：实测在本环境（macOS + Tauri 事件循环）
-/// 该 future 可能永不就绪，导致 `ocxd stop` 永久挂起，且 `ocx start/stop`
-/// 的子进程全部残留为僵尸。`waitpid` 由专用线程阻塞调用，语义简单且必然收敛。
+/// Unix 使用 std Child，专用线程持有并 wait，避免 Tokio 孤儿队列
+/// 与裸 waitpid 竞争，导致快速退出的非零状态丢失。超时 / 取消后
+/// 线程仍回收其自有子进程，不额外发送强制终止信号。
 #[cfg(unix)]
-fn spawn_reaper(pid: Option<u32>) -> mpsc::Receiver<Option<i32>> {
+fn spawn_reaper(mut child: std::process::Child) -> mpsc::Receiver<Option<i32>> {
     let (sender, receiver) = mpsc::channel(1);
-    let Some(pid) = pid else {
-        // 没有 pid 说明已经被回收；直接给一个空结果，调用方不会永久等待。
-        let _ = sender.try_send(None);
-        return receiver;
-    };
     std::thread::spawn(move || {
-        let mut status: libc::c_int = 0;
-        let reaped = unsafe { libc::waitpid(pid as libc::pid_t, &mut status, 0) };
-        let code = if reaped == pid as libc::pid_t && libc::WIFEXITED(status) {
-            Some(libc::WEXITSTATUS(status))
-        } else {
-            None
-        };
+        let code = child.wait().ok().and_then(|status| status.code());
         let _ = sender.blocking_send(code);
     });
     receiver
 }
 
-fn observe_child_exit(child: tokio::process::Child) -> mpsc::Receiver<Option<i32>> {
+fn observe_child_exit(child: ControlledChild) -> mpsc::Receiver<Option<i32>> {
     #[cfg(unix)]
     {
-        spawn_reaper(child.id())
+        spawn_reaper(child)
     }
     #[cfg(not(unix))]
     {
@@ -484,6 +489,31 @@ mod tests {
             ControlledProcessRunner::timeout_for(LifecycleAction::Stop),
             Duration::from_secs(10)
         );
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn rapid_stop_exits_preserve_the_nonzero_status() {
+        let mut workers = tokio::task::JoinSet::new();
+        for worker in 0..8 {
+            workers.spawn(async move {
+                let context = context(LifecycleAction::Stop);
+                std::fs::write(&context.executable, b"#!/bin/sh\nexit 3\n").expect("write fixture");
+                let runner = runner(&context);
+                for attempt in 0..64 {
+                    assert_eq!(
+                        runner
+                            .execute_inner(&context.command)
+                            .await
+                            .expect("stop result"),
+                        LifecycleResult::Failed,
+                        "lost exit status at worker {worker}, attempt {attempt}"
+                    );
+                }
+            });
+        }
+        while let Some(result) = workers.join_next().await {
+            result.expect("join rapid exits");
+        }
     }
 
     #[tokio::test]
