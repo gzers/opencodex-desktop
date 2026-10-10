@@ -30,7 +30,9 @@ export function useUpdateScheduler() {
   const wake = () => scheduler.wake()
   const foregroundWake = () => scheduler.wake('foreground')
   const onlineWake = () => scheduler.wake('online')
-  watch(() => routes.current, route => { if (route === 'overview') wake() })
+  // Entering the overview is a foreground trigger; deadline is reserved for
+  // the persisted scheduler wake so the event contract keeps the source visible.
+  watch(() => routes.current, route => { if (route === 'overview') foregroundWake() })
   watch(() => [effects.visible, effects.foreground, roots.switching,
     updates.appUpdateBusy, updates.officialUpdateBusy], foregroundWake)
   watch(() => [preferences.data?.appUpdateChannel, preferences.data?.appUpdateAutoCheck], async () => {

@@ -259,6 +259,12 @@ mod tests {
         );
     }
     #[test]
+    fn channel_intervals_are_fixed_and_not_user_configurable() {
+        assert_eq!(Target::ManagerStable.interval(), DAY);
+        assert_eq!(Target::Panel.interval(), DAY);
+        assert_eq!(Target::ManagerBeta.interval(), 6 * 60 * 60);
+    }
+    #[test]
     fn malformed_state_is_not_silently_reset_and_crash_reservation_survives() {
         let root = tempfile::tempdir().unwrap();
         let mut s = Schedule::default();

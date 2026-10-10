@@ -226,6 +226,9 @@ pub struct Preferences {
     // 更新通道/自动检查/间隔解耦（U-07）：旧 `app_update_channel` 复合枚举在加载时迁移。
     pub app_update_channel: String,
     pub app_update_auto_check: bool,
+    /// Legacy migration/serialization field. Runtime scheduling uses the
+    /// channel contract in `modules::update::schedule::Target::interval`;
+    /// this value must not become a second user-configurable period.
     pub app_update_check_interval_seconds: i64,
     // 主题事实源（H-15）：后端为事实源，前端 localStorage 仅作首屏缓存。
     pub theme: String,
@@ -540,10 +543,14 @@ pub fn validate(value: &Preferences) -> Result<(), PreferencesError> {
     Ok(())
 }
 
-/// 旧复合枚举 → 通道/自动检查/间隔（U-07）。
+/// 旧复合枚举 → 通道/自动检查/兼容间隔（U-07）。
 ///
 /// `stable-24h` → stable/true/86400；`beta-6h` → beta/true/21600；
 /// `manual` → stable/false/86400。已迁移的新值原样返回。
+///
+/// The interval is retained only so old preference documents round-trip.
+/// Native scheduling deliberately ignores it and derives the period from the
+/// selected channel, keeping one source of truth for automatic checks.
 pub fn migrate_legacy_update_fields(value: &mut Preferences) {
     match value.app_update_channel.as_str() {
         APP_UPDATE_STABLE_24H => {
