@@ -47,6 +47,7 @@ pub fn resolve_locked_with_boundary(
     ),
     AppError,
 > {
+    migration::require_published(anchor)?;
     let mut locks = vec![crate::modules::instance::AppInstanceLock::acquire(anchor)?];
     initialize(anchor)?;
     let boundary = boundary

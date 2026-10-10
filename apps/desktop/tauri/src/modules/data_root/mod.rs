@@ -4,6 +4,7 @@
 //! 不扫描用户目录、不迁移数据、不启动代理、不访问 Keychain。
 
 pub mod bootstrap;
+pub mod migration;
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -89,6 +90,7 @@ impl DataRootPaths {
 
 /// 初始化或引用一个显式数据根；返回 true 表示本次实际创建。
 pub fn initialize(root: &Path) -> Result<bool, AppError> {
+    migration::require_published(root)?;
     std::fs::create_dir_all(root).map_err(|error| AppError::FileSystem {
         operation: "create data root".to_string(),
         detail: error.to_string(),
@@ -138,6 +140,7 @@ pub fn initialize(root: &Path) -> Result<bool, AppError> {
 
 /// 幂等补建既有数据根的缺失分区；不改动已有内容。
 pub fn ensure_partitions(root: &Path) -> Result<(), AppError> {
+    migration::require_published(root)?;
     for (_, name) in PARTITIONS {
         let path = root.join(name);
         if path.is_dir() {
@@ -159,6 +162,7 @@ pub fn ensure_partitions(root: &Path) -> Result<(), AppError> {
 }
 
 pub fn validate_structure(root: &Path) -> Result<StructureValidation, AppError> {
+    migration::require_published(root)?;
     if !root.is_dir() {
         return Err(AppError::FileSystem {
             operation: "validate data root".to_string(),
