@@ -60,6 +60,8 @@ pub type SharedProcessContext = ProcessContext;
 pub struct SharedDataRoot(pub std::path::PathBuf);
 /// Stable bootstrap location; active stores always use SharedDataRoot.
 pub struct SharedDataRootAnchor(pub std::path::PathBuf);
+/// Captured startup sandbox boundary; None in the daily identity.
+pub struct SharedSandboxBoundary(pub Option<std::path::PathBuf>);
 
 /// WebDAV 同步的共享运行状态；命令层与后续事件推送消费同一份状态。
 pub type SharedSyncStatus = std::sync::Mutex<crate::modules::sync::SyncRun>;

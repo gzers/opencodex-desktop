@@ -115,11 +115,14 @@ pub fn run() {
                     }) as Box<dyn std::error::Error>
                 })?;
             // FZ-02 首次启动先初始化或引用当前版本的数据根；失败阻断启动。
+            let sandbox_boundary = crate::modules::test_sandbox::resolve_boundary(&anchor)
+                .map_err(std::io::Error::other)?;
             let (runtime_config, locks) = crate::modules::data_root::bootstrap::resolve_locked_with_boundary(
-                &anchor, crate::modules::test_sandbox::enabled().then_some(anchor.as_path()),
+                &anchor, sandbox_boundary.as_deref(),
             )?;
             let data_root = runtime_config.active_data_root.clone();
             app.manage(crate::state::SharedDataRootAnchor(anchor));
+            app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
             app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
             // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
             // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。

@@ -71,9 +71,15 @@ pub enum DataRootSwitchStatus {
 }
 
 #[tauri::command]
-pub async fn initialize_data_root(request: DataRootRequest) -> AppResult<DataRootInitialization> {
+pub async fn initialize_data_root(
+    request: DataRootRequest,
+    app: tauri::AppHandle,
+) -> AppResult<DataRootInitialization> {
     let root = std::path::PathBuf::from(request.root_path);
     crate::commands::run_blocking("initialize data root", move || {
+        let sandbox = app.state::<crate::state::SharedSandboxBoundary>();
+        crate::modules::test_sandbox::check_boundary(sandbox.0.as_deref(), &root)
+            .map_err(|_| AppError::NotConfigured)?;
         let created = initialize_module(&root)?;
         Ok(DataRootInitialization {
             created,
@@ -111,6 +117,9 @@ pub async fn switch_data_root(
     let mode = request.mode;
     let result = crate::commands::run_readonly("switch data root", move || {
         change_binding(&app, |binding| {
+            let sandbox = app.state::<crate::state::SharedSandboxBoundary>();
+            crate::modules::test_sandbox::check_boundary(sandbox.0.as_deref(), &target)
+                .map_err(|_| AppError::NotConfigured)?;
             if mode != DataRootSwitchMode::MigrateData {
                 return switch_data_root_with_paths(&root, &target, mode);
             }
@@ -128,7 +137,7 @@ pub async fn switch_data_root(
                     source: &runtime.0,
                     home: &context.opencodex_home,
                     target: &target,
-                    boundary: crate::modules::test_sandbox::enabled().then_some(root.as_path()),
+                    boundary: sandbox.0.as_deref(),
                 },
                 &crate::infrastructure::storage_writers::global(),
                 binding,
@@ -151,6 +160,14 @@ pub async fn set_opencodex_home_config(
     let mode = request.mode;
     crate::commands::run_readonly("set opencodex home", move || {
         change_binding(&app, |_| {
+            if mode == OpenCodexHomeMode::External {
+                let sandbox = app.state::<crate::state::SharedSandboxBoundary>();
+                crate::modules::test_sandbox::check_boundary(
+                    sandbox.0.as_deref(),
+                    external_path.as_deref().ok_or(AppError::NotConfigured)?,
+                )
+                .map_err(|_| AppError::NotConfigured)?;
+            }
             set_opencodex_home_with_paths(&root, mode, external_path.as_deref())
         })
     })
@@ -509,6 +526,54 @@ mod tests {
                 );
                 assert!(!f.target.join("opencodex-home/private-config").exists());
             }
+        }
+    }
+
+    #[test]
+    fn explicit_sandbox_container_supports_migration_and_locked_restart() {
+        for external in [false, true] {
+            let mut f = MigrationFixture::new(external);
+            let boundary = f._temp.path().canonicalize().unwrap();
+            crate::modules::test_sandbox::check_boundary(Some(&boundary), &f.target).unwrap();
+            let mut binding = f.gate.freeze().unwrap();
+            let result = f.migrate(&mut binding, Some(&boundary)).unwrap();
+            assert_eq!(result.status, DataRootSwitchStatus::RestartRequired);
+            assert!(binding.is_none());
+            assert!(f.gate.admit().is_err());
+            assert!(matches!(
+                AppInstanceLock::acquire(&f.target),
+                Err(AppError::InstanceLockConflict)
+            ));
+            f.locks.clear();
+            let (restarted, locks) =
+                data_root::bootstrap::resolve_locked_with_boundary(&f.anchor, Some(&boundary))
+                    .unwrap();
+            assert_eq!(restarted.active_data_root, f.target);
+            assert_eq!(locks.len(), 2);
+            assert_eq!(
+                fs::read(f.target.join("manager-state/preferences.json")).unwrap(),
+                b"original"
+            );
+            assert_eq!(
+                resolve_opencodex_home(&restarted),
+                if external {
+                    f.home.clone()
+                } else {
+                    f.target.join("opencodex-home")
+                }
+            );
+            if external {
+                assert_eq!(
+                    fs::read(f.home.join("private-config")).unwrap(),
+                    b"external untouched"
+                );
+            }
+            let outside = tempfile::tempdir().unwrap();
+            let denied = outside.path().join("daily-root");
+            assert!(
+                crate::modules::test_sandbox::check_boundary(Some(&boundary), &denied).is_err()
+            );
+            assert!(!denied.exists());
         }
     }
 
