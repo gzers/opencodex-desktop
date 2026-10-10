@@ -470,6 +470,7 @@ impl IpcService {
                     &dependencies,
                     &worker_request.args,
                     worker_request.secret.as_deref(),
+                    app.as_ref(),
                 ),
                 _ => unreachable!("migration accepts only export/import"),
             },
@@ -508,6 +509,7 @@ impl IpcService {
         dependencies: &IpcDependencies,
         args: &BTreeMap<String, String>,
         secret: Option<&str>,
+        app: Option<&tauri::AppHandle>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
         if args.contains_key("password") {
             return Err(IpcErrorCode::ValidationFailed);
@@ -518,11 +520,12 @@ impl IpcService {
         let passphrase = secret
             .map(str::to_string)
             .or_else(|| std::env::var("OCXD_PASSPHRASE").ok());
-        let result = crate::modules::migration::import_with_container_file(
+        let result = crate::commands::migration::import_container_registered(
             &dependencies.active_data_root,
             std::path::Path::new(input),
             &dependencies.home,
             passphrase.as_deref(),
+            app,
         )
         .map_err(map_app_error)?;
         Ok(serde_json::to_value(IpcImportData {

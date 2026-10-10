@@ -54,6 +54,7 @@ pub enum Job {
     Backup,
     Migration,
     ConfigExport,
+    ConfigImport,
     PreferencesBackup,
     PreferencesRestore,
     PreferencesSave,
@@ -109,6 +110,7 @@ dimension!(Action {
     Backup,
     Migrate,
     Export,
+    Import,
     Restore,
     Cleanup,
     Pin,
@@ -204,6 +206,7 @@ pub enum PolicyId {
     SyncEndpointDeleteFailure,
     SyncRunFailure,
     ConfigExportFailure,
+    ConfigImportFailure,
 }
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -639,6 +642,10 @@ enum SupportedEvent {
     ConfigExportFailed,
     #[serde(rename = "config-export-succeeded")]
     ConfigExportSucceeded,
+    #[serde(rename = "config-import-failed")]
+    ConfigImportFailed,
+    #[serde(rename = "config-import-succeeded")]
+    ConfigImportSucceeded,
     #[serde(rename = "migration-completed")]
     MigrationCompleted,
     #[serde(rename = "manager-install-failed")]
@@ -835,7 +842,10 @@ impl RegistryConfig {
             if matches!(job.id, Job::Sync | Job::Backup | Job::Migration) {
                 config_assert(job.availability == Availability::Planned)?;
             }
-            if matches!(job.id, Job::SyncConflict | Job::ConfigExport) {
+            if matches!(
+                job.id,
+                Job::SyncConflict | Job::ConfigExport | Job::ConfigImport
+            ) {
                 config_assert(
                     job.availability == Availability::Active && job.triggers == [Trigger::User],
                 )?;

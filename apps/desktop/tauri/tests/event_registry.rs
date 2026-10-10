@@ -801,6 +801,7 @@ fn new_terminal_pairs_persist_and_only_exact_verified_success_recovers() {
         "sync-endpoint-delete",
         "sync-run",
         "config-export",
+        "config-import",
         "preferences-backup-cleanup",
         "local-cleanup",
     ] {
@@ -1535,6 +1536,55 @@ fn configuration_export_is_user_only_and_does_not_activate_generic_migration() {
         wrong.channel = channel;
         assert!(terminal_delivery(
             "config-export-succeeded",
+            Trigger::User,
+            wrong.clone(),
+            Evidence::Success {
+                candidate: wrong.candidate,
+                verified: true,
+            },
+            at(110)
+        )
+        .is_err());
+    }
+}
+
+#[test]
+fn configuration_import_is_user_only_and_does_not_activate_generic_migration() {
+    let e = lookup("config-import-failed").unwrap();
+    assert_eq!(e.job, Job::ConfigImport);
+    assert_eq!(e.action, Action::Import);
+    assert_eq!(e.channels, [Channel::Local]);
+    let (root, _) = setup();
+    let identity = operation_identity(root.path(), &e.id, 1);
+    for trigger in [
+        Trigger::Startup,
+        Trigger::Deadline,
+        Trigger::Foreground,
+        Trigger::Online,
+    ] {
+        assert!(
+            terminal_delivery(&e.id, trigger, identity.clone(), Evidence::Failure, at(100))
+                .is_err()
+        );
+    }
+    assert_eq!(
+        lookup("migration-completed").unwrap_err(),
+        RegistryError::Planned
+    );
+    assert_eq!(
+        lookup("backup-completed").unwrap_err(),
+        RegistryError::Planned
+    );
+    for (action, channel) in [
+        (Action::Migrate, Channel::Local),
+        (Action::Export, Channel::Local),
+        (Action::Import, Channel::Stable),
+    ] {
+        let mut wrong = identity.clone();
+        wrong.action = action;
+        wrong.channel = channel;
+        assert!(terminal_delivery(
+            "config-import-succeeded",
             Trigger::User,
             wrong.clone(),
             Evidence::Success {

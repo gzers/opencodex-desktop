@@ -262,6 +262,66 @@ pub fn save_with_config(
     save_locked(data_root, config, targets)
 }
 
+/// Import owns this lock from strict capture through its multi-file terminal.
+/// This saves only manager extension configuration, not live client assets.
+pub(crate) struct ConfigTransaction<'a> {
+    data_root: &'a Path,
+    targets: &'a [ClientTarget],
+    _guard: TargetFileLock,
+}
+impl<'a> ConfigTransaction<'a> {
+    pub(crate) fn acquire(
+        data_root: &'a Path,
+        targets: &'a [ClientTarget],
+    ) -> Result<Self, ProjectionError> {
+        validate_data_root(data_root)?;
+        validate_targets(targets, home_from_targets(targets)?)?;
+        let path = config_path(data_root);
+        crate::modules::backup::safety::check_path(data_root, &path, true)
+            .map_err(|_| ProjectionError::PathEscape)?;
+        crate::modules::backup::safety::check_path(
+            data_root,
+            &crate::infrastructure::locking::lock_path_for(&path),
+            true,
+        )
+        .map_err(|_| ProjectionError::PathEscape)?;
+        Ok(Self {
+            data_root,
+            targets,
+            _guard: TargetFileLock::lock(&path).map_err(|_| ProjectionError::LockFailed)?,
+        })
+    }
+
+    pub(crate) fn load(&self) -> Result<ExtensionConfig, ProjectionError> {
+        let path = config_path(self.data_root);
+        crate::modules::backup::safety::check_path(self.data_root, &path, true)
+            .map_err(|_| ProjectionError::PathEscape)?;
+        match std::fs::symlink_metadata(&path) {
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                Ok(ExtensionConfig::default())
+            }
+            Err(_) => Err(ProjectionError::Corrupted),
+            Ok(_) => {
+                let (config, _, conflict) = read_stored(&path, self.targets)?;
+                if conflict.is_some() {
+                    return Err(ProjectionError::ExternalModified);
+                }
+                Ok(config)
+            }
+        }
+    }
+
+    pub(crate) fn save(&self, config: &mut ExtensionConfig) -> Result<Vec<u8>, ProjectionError> {
+        self.load()?;
+        let saved = save_locked(self.data_root, config, self.targets)?;
+        serde_json::to_vec_pretty(&ExtensionProjectionFile {
+            config: saved.config,
+            fingerprint: saved.fingerprint,
+        })
+        .map_err(|_| ProjectionError::Corrupted)
+    }
+}
+
 pub fn set_client_enabled(
     data_root: &Path,
     targets: &[ClientTarget],
@@ -1573,6 +1633,16 @@ fn landed_clients(targets: &[ClientTarget], name: &str) -> Vec<ClientId> {
         .collect()
 }
 
+fn read_config_bounded(path: &Path) -> Result<Vec<u8>, ProjectionError> {
+    let metadata =
+        crate::modules::backup::safety::inspect(path).map_err(|_| ProjectionError::Corrupted)?;
+    if metadata.len() > CONFIG_MAX_BYTES {
+        return Err(ProjectionError::TooLarge);
+    }
+    crate::modules::backup::safety::read_file(path, CONFIG_MAX_BYTES)
+        .map_err(|_| ProjectionError::Corrupted)
+}
+
 fn read_stored(
     path: &Path,
     targets: &[ClientTarget],
@@ -1584,10 +1654,7 @@ fn read_stored(
     ),
     ProjectionError,
 > {
-    let bytes = std::fs::read(path).map_err(|_| ProjectionError::Corrupted)?;
-    if bytes.len() as u64 > CONFIG_MAX_BYTES {
-        return Err(ProjectionError::TooLarge);
-    }
+    let bytes = read_config_bounded(path)?;
     let payload: ExtensionProjectionFile =
         serde_json::from_slice(&bytes).map_err(|_| ProjectionError::Corrupted)?;
     payload
@@ -1622,7 +1689,7 @@ fn save_locked(
 ) -> Result<ProjectionWriteResult, ProjectionError> {
     let path = config_path(data_root);
     let previous = if path.exists() {
-        let bytes = std::fs::read(&path).map_err(|_| ProjectionError::Corrupted)?;
+        let bytes = read_config_bounded(&path)?;
         let payload: ExtensionProjectionFile =
             serde_json::from_slice(&bytes).map_err(|_| ProjectionError::Corrupted)?;
         payload
@@ -1669,7 +1736,12 @@ fn save_locked(
     }
     crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)
         .map_err(|_| ProjectionError::AtomicWrite)?;
-    let hash = sha256_file(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    let actual = crate::modules::backup::safety::read_file(&path, CONFIG_MAX_BYTES)
+        .map_err(|_| ProjectionError::AtomicWrite)?;
+    if actual != bytes {
+        return Err(ProjectionError::AtomicWrite);
+    }
+    let hash = crate::infrastructure::hash::sha256_hex(&bytes);
     Ok(ProjectionWriteResult {
         config: config.clone(),
         fingerprint,

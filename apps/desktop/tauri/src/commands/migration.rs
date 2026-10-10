@@ -85,6 +85,7 @@ impl migration::ExportObserver for ExportEvents<'_> {
 
 #[tauri::command]
 pub async fn import_migration(
+    app: tauri::AppHandle,
     request: MigrationImportRequest,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, SharedHomeDir>,
@@ -92,9 +93,80 @@ pub async fn import_migration(
     let root = data_root.0.clone();
     let home = home.0.clone();
     crate::commands::run_blocking("import migration container", move || {
-        import_migration_with_root(&root, &home, request.passphrase.as_deref()).map(Into::into)
+        let source = root
+            .join(migration::EXPORTS_RELATIVE_PATH)
+            .join(migration::EXPORT_FILE_NAME);
+        import_container_registered(
+            &root,
+            &source,
+            &home,
+            request.passphrase.as_deref(),
+            Some(&app),
+        )
+        .map(Into::into)
     })
     .await
+}
+
+/// GUI and IPC share the admitted import terminal; no AppHandle means library-only.
+pub(crate) fn import_container_registered(
+    root: &std::path::Path,
+    source: &std::path::Path,
+    home: &std::path::Path,
+    passphrase: Option<&str>,
+    app: Option<&tauri::AppHandle>,
+) -> crate::errors::AppResult<migration::ImportResult> {
+    match app {
+        Some(app) => migration::import_with_container_file_observed(
+            root,
+            source,
+            home,
+            passphrase,
+            &mut ImportEvents {
+                app,
+                root,
+                identity: None,
+            },
+        ),
+        None => migration::import_with_container_file(root, source, home, passphrase),
+    }
+}
+
+pub(crate) fn import_candidate(document_sha256: &str, home: &std::path::Path) -> Vec<u8> {
+    [
+        document_sha256.as_bytes(),
+        b"\0",
+        home.as_os_str().as_encoded_bytes(),
+    ]
+    .concat()
+}
+struct ImportEvents<'a> {
+    app: &'a tauri::AppHandle,
+    root: &'a std::path::Path,
+    identity: Option<crate::modules::notifications::registry::EventIdentity>,
+}
+impl migration::ImportObserver for ImportEvents<'_> {
+    fn begin(&mut self, document_sha256: &str, home: &std::path::Path) {
+        self.identity = crate::commands::event_delivery::prepare(
+            self.root,
+            "config-import-failed",
+            crate::modules::notifications::registry::Channel::Local,
+            &import_candidate(document_sha256, home),
+        );
+    }
+    fn completed(&mut self, succeeded: bool) {
+        crate::commands::event_delivery::publish(
+            self.app,
+            self.root,
+            if succeeded {
+                "config-import-succeeded"
+            } else {
+                "config-import-failed"
+            },
+            self.identity.take(),
+            crate::modules::notifications::registry::Trigger::User,
+        );
+    }
 }
 
 pub fn export_migration_with_root(

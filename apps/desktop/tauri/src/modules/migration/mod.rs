@@ -668,7 +668,74 @@ pub fn export_with_container_file_observed(
     write_export(data_root, output_path, app_version, observer)
 }
 
-/// 准备写入的一个文件（用于受控提交与回滚）。
+/// Import admission precedes begin; terminal runs under all mutation locks.
+pub trait ImportObserver {
+    fn begin(&mut self, document_sha256: &str, home: &Path);
+    fn completed(&mut self, succeeded: bool);
+}
+struct NoImportObserver;
+impl ImportObserver for NoImportObserver {
+    fn begin(&mut self, _: &str, _: &Path) {}
+    fn completed(&mut self, _: bool) {}
+}
+
+fn lock_import_target(root: &Path, path: &Path) -> Result<TargetFileLock, AppError> {
+    backup::safety::check_path(root, path, true)?;
+    backup::safety::check_path(
+        root,
+        &crate::infrastructure::locking::lock_path_for(path),
+        true,
+    )?;
+    TargetFileLock::lock(path)
+}
+fn previous_import_file(root: &Path, path: &Path) -> Result<Option<Vec<u8>>, AppError> {
+    backup::safety::check_path(root, path, true)?;
+    match std::fs::symlink_metadata(path) {
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(None),
+        Err(_) => Err(MigrationError::Preferences.into()),
+        Ok(_) => backup::safety::read_file(path, backup::safety::MAX_PAYLOAD_BYTES).map(Some),
+    }
+}
+fn verify_import_file(path: &Path, expected: &[u8]) -> Result<(), AppError> {
+    if backup::safety::read_file(path, backup::safety::MAX_PAYLOAD_BYTES)? != expected {
+        return Err(MigrationError::CorruptedDocument.into());
+    }
+    Ok(())
+}
+/// Best-effort restoration with explicit verification failure, not atomic rollback.
+fn restore_import_files(
+    root: &Path,
+    targets: &[(std::path::PathBuf, Option<Vec<u8>>)],
+) -> Result<(), AppError> {
+    let mut failed = false;
+    for (path, previous) in targets.iter().rev() {
+        let result = (|| {
+            backup::safety::check_path(root, path, true)?;
+            if let Some(bytes) = previous {
+                crate::infrastructure::atomic_write::atomic_write(path, bytes, 0o600)?;
+                verify_import_file(path, bytes)
+            } else {
+                match std::fs::remove_file(path) {
+                    Ok(()) => Ok(()),
+                    Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+                    Err(_) => Err(AppError::from(MigrationError::AtomicWrite)),
+                }?;
+                match std::fs::symlink_metadata(path) {
+                    Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+                    _ => Err(MigrationError::AtomicWrite.into()),
+                }
+            }
+        })();
+        failed |= result.is_err();
+    }
+    if failed {
+        Err(MigrationError::AtomicWrite.into())
+    } else {
+        Ok(())
+    }
+}
+
+/// 准备写入的一个文件（用于受控提交与恢复）。
 struct AppliedSection {
     changed_paths: Vec<std::path::PathBuf>,
     document: Vec<u8>,
@@ -696,13 +763,12 @@ fn import_preferences(
 
 /// 只做校验与目标配置构造，不写盘（写盘在受控提交阶段）。
 fn prepare_extension_config(
-    data_root: &Path,
+    mut current: crate::modules::extensions::ExtensionConfig,
     document: &ContainerDocument,
 ) -> Result<Option<crate::modules::extensions::ExtensionConfig>, MigrationError> {
     let Some(extension) = document.extension_config.as_ref() else {
         return Ok(None);
     };
-    let mut current = crate::modules::extensions::projection::load_config_lenient(data_root);
     let mut changed = false;
     if !extension.enablement.is_empty() && extension.enablement != current.enablement {
         current.enablement = extension.enablement.clone();
@@ -794,11 +860,13 @@ fn prepare_sync_endpoints(
     }))
 }
 
-fn import_with_parsed(
+fn import_with_parsed_verified(
     data_root: &Path,
     home: &Path,
     parsed: ParsedContainer,
     passphrase: Option<&str>,
+    observer: &mut dyn ImportObserver,
+    mut verify: impl FnMut(&Path, &[u8]) -> Result<(), AppError>,
 ) -> Result<ImportResult, AppError> {
     let (document, format_version) = match parsed {
         ParsedContainer::Legacy {
@@ -812,135 +880,183 @@ fn import_with_parsed(
     };
     container::validate_document(&document).map_err(map_container_error)?;
 
-    // 1) 全量验证与准备：任何一段不合法都在写盘之前返回。
+    // Incoming validation precedes admission. Existing-file capture, backup,
+    // mutation, readback and terminal share the same owned lock scope.
     let preferences_section = import_preferences(data_root, &document)?;
-    let extension_config = prepare_extension_config(data_root, &document)?;
-    let sync_section = prepare_sync_endpoints(data_root, &document)?;
-
-    let mut applied = vec!["preferences".to_string()];
-    let mut skipped: Vec<ImportSectionSkip> = Vec::new();
-    if extension_config.is_some() {
-        applied.push("extension_config".to_string());
-    } else if document.extension_config.is_some() {
-        skipped.push(ImportSectionSkip {
-            section: "extension_config".to_string(),
-            reason: "容器中的扩展配置与当前一致，无需写入。".to_string(),
-        });
+    if !home.is_absolute() || !home.is_dir() {
+        return Err(MigrationError::NotConfigured.into());
     }
-    if sync_section.is_some() {
-        applied.push("sync_endpoints".to_string());
-    } else if document
+    let document_bytes =
+        serde_json::to_vec(&document).map_err(|_| MigrationError::CorruptedDocument)?;
+    let document_sha256 = sha256_hex(&document_bytes);
+    let preferences_path = &preferences_section.changed_paths[0];
+    let sync_path = data_root.join(SYNC_ENDPOINTS_RELATIVE_PATH);
+    let extension_path = data_root.join(EXTENSION_CONFIG_RELATIVE_PATH);
+    let has_sync = document
         .sync_endpoints
         .as_ref()
-        .is_some_and(|items| !items.is_empty())
-    {
+        .and_then(|items| items.first())
+        .is_some_and(|item| item.url.is_some());
+    let _protection = backup::manager::acquire_preferences_transaction(data_root)?;
+    let _preferences_lock = lock_import_target(data_root, preferences_path)?;
+    let _sync_lock = if has_sync {
+        Some(lock_import_target(data_root, &sync_path)?)
+    } else {
+        None
+    };
+    let client_targets: Vec<ClientTarget> = CLIENT_IDS
+        .map(|client| ClientTarget::user_target(client, home, true, true))
+        .to_vec();
+    let extension_transaction = if document.extension_config.is_some() {
+        Some(
+            crate::modules::extensions::projection::ConfigTransaction::acquire(
+                data_root,
+                &client_targets,
+            )
+            .map_err(|error| error.as_app_error())?,
+        )
+    } else {
+        None
+    };
+    observer.begin(&document_sha256, home);
+    let result = (|| {
+        let previous_preferences = previous_import_file(data_root, preferences_path)?;
+        let previous_sync = if has_sync {
+            previous_import_file(data_root, &sync_path)?
+        } else {
+            None
+        };
+        let extension_config = match extension_transaction.as_ref() {
+            Some(transaction) => prepare_extension_config(
+                transaction.load().map_err(|error| error.as_app_error())?,
+                &document,
+            )?,
+            None => None,
+        };
+        let sync_section = prepare_sync_endpoints(data_root, &document)?;
+
+        let mut applied = vec!["preferences".to_string()];
+        let mut skipped: Vec<ImportSectionSkip> = Vec::new();
+        if extension_config.is_some() {
+            applied.push("extension_config".to_string());
+        } else if document.extension_config.is_some() {
+            skipped.push(ImportSectionSkip {
+                section: "extension_config".to_string(),
+                reason: "容器中的扩展配置与当前一致，无需写入。".to_string(),
+            });
+        }
+        if sync_section.is_some() {
+            applied.push("sync_endpoints".to_string());
+        } else if document
+            .sync_endpoints
+            .as_ref()
+            .is_some_and(|items| !items.is_empty())
+        {
+            skipped.push(ImportSectionSkip {
+                section: "sync_endpoints".to_string(),
+                reason: "旧版容器或缺少可用端点地址，未应用；请在设置里重新填写并认证。"
+                    .to_string(),
+            });
+        }
         skipped.push(ImportSectionSkip {
-            section: "sync_endpoints".to_string(),
-            reason: "旧版容器或缺少可用端点地址，未应用；请在设置里重新填写并认证。".to_string(),
-        });
-    }
-    skipped.push(ImportSectionSkip {
         section: "asset_files".to_string(),
         reason:
             "Skills 文件内容与 MCP 环境变量值不在容器内；导入后请在扩展管理中重新落盘或重新输入。"
                 .to_string(),
     });
 
-    // 2) 受控提交：先备份将被覆盖的文件，任一写入失败即回滚。
-    let preferences_path = data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
-    let mut targets: Vec<(std::path::PathBuf, Vec<u8>, bool)> = vec![(
-        preferences_path.clone(),
-        std::fs::read(&preferences_path).unwrap_or_default(),
-        preferences_path.exists(),
-    )];
-    if let Some(section) = sync_section.as_ref() {
-        let path = &section.changed_paths[0];
-        targets.push((
-            path.clone(),
-            std::fs::read(path).unwrap_or_default(),
-            path.exists(),
-        ));
-    }
-    let mut backup_id = "none".to_string();
-    for (index, (path, payload, existed)) in targets.iter().enumerate() {
-        if !existed {
-            continue;
+        // Only NotFound means absent; never back up failed reads as empty files.
+        let mut targets = vec![(preferences_path.to_path_buf(), previous_preferences)];
+        if sync_section.is_some() {
+            targets.push((sync_path.clone(), previous_sync));
         }
-        let record = backup::backup_file(
-            data_root,
-            backup::BackupAction::Import,
-            path,
-            payload,
-            chrono::Utc::now(),
-            Some("pre-import".to_string()),
-        )?;
-        if index == 0 {
-            backup_id = record.manifest.backup_id.clone();
-        }
-    }
-
-    let restore = |targets: &[(std::path::PathBuf, Vec<u8>, bool)], count: usize| {
-        for (path, payload, existed) in targets.iter().take(count) {
-            if *existed {
-                let _ = crate::infrastructure::atomic_write::atomic_write(path, payload, 0o600);
-            } else {
-                let _ = std::fs::remove_file(path);
+        let mut backup_id = "none".to_string();
+        for (index, (path, previous)) in targets.iter().enumerate() {
+            if let Some(payload) = previous {
+                let record = backup::backup_file(
+                    data_root,
+                    backup::BackupAction::Import,
+                    path,
+                    payload,
+                    chrono::Utc::now(),
+                    Some("pre-import".to_string()),
+                )?;
+                if index == 0 {
+                    backup_id = record.manifest.backup_id;
+                }
             }
         }
-    };
-
-    let mut committed = 0_usize;
-    let write = |path: &Path, bytes: &[u8]| -> Result<(), MigrationError> {
-        let lock = TargetFileLock::lock(path).map_err(|_| MigrationError::AtomicWrite)?;
-        let result = crate::infrastructure::atomic_write::atomic_write(path, bytes, 0o600)
-            .map_err(|_| MigrationError::AtomicWrite);
-        drop(lock);
-        result
-    };
-
-    if let Err(error) = write(&preferences_path, &preferences_section.document) {
-        restore(&targets, committed);
-        return Err(error.into());
-    }
-    committed += 1;
-    if let Some(section) = sync_section.as_ref() {
-        let path = &section.changed_paths[0];
-        if let Err(error) = write(path, &section.document) {
-            restore(&targets, committed);
-            return Err(error.into());
+        // Extension save provides its own mandatory pre-write backup.
+        if extension_config.is_some() {
+            targets.push((
+                extension_path.clone(),
+                previous_import_file(data_root, &extension_path)?,
+            ));
         }
-        committed += 1;
-    }
-    if let Some(mut config) = extension_config {
-        // 扩展统一配置走既有校验/备份/原子写路径（该路径自带备份）。
-        let client_targets: Vec<ClientTarget> = CLIENT_IDS
-            .map(|client| ClientTarget::user_target(client, home, true, true))
-            .to_vec();
-        if crate::modules::extensions::projection::save_with_config(
-            data_root,
-            &mut config,
-            &client_targets,
-        )
-        .is_err()
-        {
-            restore(&targets, committed);
-            return Err(MigrationError::Preferences.into());
+        let mut attempted = 0;
+        let mutation = (|| -> Result<(), AppError> {
+            attempted += 1;
+            crate::infrastructure::atomic_write::atomic_write(
+                preferences_path,
+                &preferences_section.document,
+                0o600,
+            )?;
+            verify(preferences_path, &preferences_section.document)?;
+            if let Some(section) = sync_section.as_ref() {
+                attempted += 1;
+                crate::infrastructure::atomic_write::atomic_write(
+                    &sync_path,
+                    &section.document,
+                    0o600,
+                )?;
+                verify(&sync_path, &section.document)?;
+            }
+            let extension_bytes = if let Some(mut config) = extension_config {
+                attempted += 1;
+                let bytes = extension_transaction
+                    .as_ref()
+                    .expect("extension transaction admitted")
+                    .save(&mut config)
+                    .map_err(|error| error.as_app_error())?;
+                verify(&extension_path, &bytes)?;
+                Some(bytes)
+            } else {
+                None
+            };
+            // Verify earlier writes again after the last mutation. This is verified
+            // completion, not a cross-file atomicity or crash-rollback guarantee.
+            verify(preferences_path, &preferences_section.document)?;
+            if let Some(section) = sync_section.as_ref() {
+                verify(&sync_path, &section.document)?;
+            }
+            if let Some(bytes) = extension_bytes.as_ref() {
+                verify(&extension_path, bytes)?;
+            }
+            Ok(())
+        })();
+        if let Err(error) = mutation {
+            if restore_import_files(data_root, &targets[..attempted]).is_err() {
+                return Err(AppError::FileSystem {
+                operation: "restore failed configuration import".to_string(),
+                detail: "previous files could not all be restored and verified; inspect backups before retry".to_string(),
+            });
+            }
+            return Err(error);
         }
-    }
-
-    let document_bytes =
-        serde_json::to_vec(&document).map_err(|_| MigrationError::CorruptedDocument)?;
-    Ok(ImportResult {
-        backup_id,
-        document_sha256: sha256_hex(&document_bytes),
-        format_version,
-        applied_sections: applied,
-        skipped_sections: skipped,
-        excluded: container::EXPORT_EXCLUSIONS
-            .iter()
-            .map(|value| value.to_string())
-            .collect(),
-    })
+        Ok(ImportResult {
+            backup_id,
+            document_sha256,
+            format_version,
+            applied_sections: applied,
+            skipped_sections: skipped,
+            excluded: container::EXPORT_EXCLUSIONS
+                .iter()
+                .map(|value| value.to_string())
+                .collect(),
+        })
+    })();
+    observer.completed(result.is_ok());
+    result
 }
 
 pub fn import_with_paths(
@@ -960,12 +1076,35 @@ pub fn import_with_container_file(
     home: &Path,
     passphrase: Option<&str>,
 ) -> Result<ImportResult, AppError> {
+    import_with_container_file_observed(
+        data_root,
+        container_path,
+        home,
+        passphrase,
+        &mut NoImportObserver,
+    )
+}
+
+pub fn import_with_container_file_observed(
+    data_root: &Path,
+    container_path: &Path,
+    home: &Path,
+    passphrase: Option<&str>,
+    observer: &mut dyn ImportObserver,
+) -> Result<ImportResult, AppError> {
     validate_data_root(data_root)?;
     validate_structure(data_root)?;
     let container_bytes = read_file_limited(container_path, container::CIPHERTEXT_MAX_BYTES)
         .map_err(|_| MigrationError::Preferences)?;
     let parsed = parse_container(&container_bytes)?;
-    import_with_parsed(data_root, home, parsed, passphrase)
+    import_with_parsed_verified(
+        data_root,
+        home,
+        parsed,
+        passphrase,
+        observer,
+        verify_import_file,
+    )
 }
 
 #[cfg(all(test, unix))]

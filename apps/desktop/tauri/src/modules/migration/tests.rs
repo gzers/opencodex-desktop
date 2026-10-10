@@ -694,3 +694,399 @@ fn export_previous_backup_failure_does_not_replace_destination() {
     assert_eq!(std::fs::read(&target).unwrap(), b"previous export");
     assert_eq!(observer.terminals, [false]);
 }
+
+/// Real filesystem + persistence; terminal delivery must still own every target
+/// and the W2 preferences guard, including when verified restoration failed.
+struct RegisteredImportObserver<'a> {
+    root: &'a Path,
+    home: std::path::PathBuf,
+    locks: Vec<std::path::PathBuf>,
+    store: std::sync::Arc<std::sync::Mutex<crate::modules::notifications::NotificationStore>>,
+    identity: Option<crate::modules::notifications::registry::EventIdentity>,
+    terminals: Vec<bool>,
+    resolved: Vec<usize>,
+}
+impl<'a> RegisteredImportObserver<'a> {
+    fn new(root: &'a Path, home: &Path) -> Self {
+        Self {
+            root,
+            home: home.to_path_buf(),
+            locks: vec![root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)],
+            store: std::sync::Arc::new(std::sync::Mutex::new(
+                crate::modules::notifications::NotificationStore::new(),
+            )),
+            identity: None,
+            terminals: Vec::new(),
+            resolved: Vec::new(),
+        }
+    }
+}
+impl ImportObserver for RegisteredImportObserver<'_> {
+    fn begin(&mut self, digest: &str, home: &Path) {
+        assert_eq!(home, self.home);
+        assert!(self.identity.is_none());
+        self.identity = crate::commands::event_delivery::prepare(
+            self.root,
+            "config-import-failed",
+            crate::modules::notifications::registry::Channel::Local,
+            &crate::commands::migration::import_candidate(digest, home),
+        );
+        assert!(self.identity.is_some());
+    }
+    fn completed(&mut self, succeeded: bool) {
+        use crate::modules::notifications::registry::{terminal_delivery, Evidence, Trigger};
+        for path in &self.locks {
+            assert!(
+                TargetFileLock::try_lock_with_timeout(path, std::time::Duration::ZERO).is_err(),
+                "terminal must precede target lock release: {path:?}"
+            );
+        }
+        let guard = backup::safety::open_file(&self.root.join(".backup-w2.lock"), false).unwrap();
+        assert!(
+            guard.try_lock().is_err(),
+            "terminal must precede W2 guard release"
+        );
+        let identity = self.identity.take().unwrap();
+        let evidence = if succeeded {
+            Evidence::Success {
+                candidate: identity.candidate.clone(),
+                verified: true,
+            }
+        } else {
+            Evidence::Failure
+        };
+        let delivery = terminal_delivery(
+            if succeeded {
+                "config-import-succeeded"
+            } else {
+                "config-import-failed"
+            },
+            Trigger::User,
+            identity,
+            evidence,
+            chrono::Utc::now(),
+        )
+        .unwrap();
+        let outcome = crate::commands::notifications::NotificationPublisher {
+            store: &self.store,
+            data_root: self.root,
+        }
+        .publish_event(&delivery)
+        .unwrap();
+        self.terminals.push(succeeded);
+        self.resolved.push(outcome.resolved);
+    }
+}
+fn import_document(source: &Path) -> ContainerDocument {
+    let result = export_with_paths(source, "0.1.10").unwrap();
+    read_plaintext_document(&std::fs::read(result.path).unwrap())
+}
+fn verified_import(
+    root: &Path,
+    home: &Path,
+    document: ContainerDocument,
+    observer: &mut dyn ImportObserver,
+) -> Result<ImportResult, AppError> {
+    import_with_parsed_verified(
+        root,
+        home,
+        ParsedContainer::Plaintext(document),
+        None,
+        observer,
+        verify_import_file,
+    )
+}
+
+#[test]
+fn import_multifile_readback_failure_restores_bytes_and_exact_retry_resolves_after_reload() {
+    let source = data_root();
+    let target = data_root();
+    let home = home_dir();
+    PreferencesStore::new(source.path())
+        .save(&Preferences {
+            interface_scale: 150,
+            ..Default::default()
+        })
+        .unwrap();
+    write_extension_projection(source.path(), &["source-skill"], &["source-mcp"], true);
+    write_sync_endpoint(source.path());
+    PreferencesStore::new(target.path())
+        .save(&Preferences::default())
+        .unwrap();
+    write_extension_projection(target.path(), &["keep-skill"], &["keep-mcp"], false);
+    write_sync_endpoint(target.path());
+    let document = import_document(source.path());
+    let paths = [
+        crate::modules::preferences::PREFERENCES_RELATIVE_PATH,
+        SYNC_ENDPOINTS_RELATIVE_PATH,
+        EXTENSION_CONFIG_RELATIVE_PATH,
+    ]
+    .map(|p| target.path().join(p));
+    let previous = paths.each_ref().map(|p| std::fs::read(p).unwrap());
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    observer.locks = paths.to_vec();
+    let failed = import_with_parsed_verified(
+        target.path(),
+        home.path(),
+        ParsedContainer::Plaintext(document.clone()),
+        None,
+        &mut observer,
+        |path, bytes| {
+            if path == paths[2] {
+                std::fs::write(path, b"corrupt extension after write").unwrap();
+            }
+            verify_import_file(path, bytes)
+        },
+    );
+    assert!(failed.is_err());
+    for (path, bytes) in paths.iter().zip(&previous) {
+        assert_eq!(std::fs::read(path).unwrap(), *bytes);
+    }
+    assert_eq!(observer.terminals, [false]);
+    use crate::modules::notifications::persistence::{load_notifications, notifications_path};
+    observer.store = std::sync::Arc::new(std::sync::Mutex::new(
+        load_notifications(&notifications_path(target.path())).unwrap(),
+    ));
+    verified_import(target.path(), home.path(), document, &mut observer).unwrap();
+    assert_eq!(observer.terminals, [false, true]);
+    assert_eq!(observer.resolved, [0, 1]);
+    let config = crate::modules::extensions::projection::load_config_lenient(target.path());
+    assert_eq!(config.skills, ["keep-skill"]);
+    assert_eq!(config.servers, ["keep-mcp"]);
+    assert!(!config.enablement[&ClientId::Claude]);
+    assert_eq!(
+        PreferencesStore::new(target.path())
+            .load()
+            .unwrap()
+            .interface_scale,
+        150
+    );
+    let stored = load_notifications(&notifications_path(target.path())).unwrap();
+    assert!(stored.all()[0].resolved && !stored.all()[0].read);
+    for state in [
+        notifications_path(target.path()),
+        target.path().join("manager-state/event-scope.json"),
+    ] {
+        let raw = std::fs::read_to_string(state).unwrap();
+        for secret in [
+            source.path().to_str().unwrap(),
+            target.path().to_str().unwrap(),
+            home.path().to_str().unwrap(),
+            "interface_scale",
+            "keep-skill",
+            "keep-mcp",
+        ] {
+            assert!(!raw.contains(secret));
+        }
+    }
+}
+
+#[test]
+fn import_failure_removes_previously_absent_files_after_verification() {
+    let source = data_root();
+    let target = data_root();
+    let home = home_dir();
+    write_extension_projection(source.path(), &[], &[], true);
+    write_sync_endpoint(source.path());
+    let paths = [
+        crate::modules::preferences::PREFERENCES_RELATIVE_PATH,
+        SYNC_ENDPOINTS_RELATIVE_PATH,
+        EXTENSION_CONFIG_RELATIVE_PATH,
+    ]
+    .map(|p| target.path().join(p));
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    observer.locks = paths.to_vec();
+    assert!(import_with_parsed_verified(
+        target.path(),
+        home.path(),
+        ParsedContainer::Plaintext(import_document(source.path())),
+        None,
+        &mut observer,
+        |path, bytes| {
+            if path == paths[2] {
+                std::fs::write(path, b"corrupt").unwrap();
+            }
+            verify_import_file(path, bytes)
+        }
+    )
+    .is_err());
+    assert_eq!(observer.terminals, [false]);
+    for path in paths {
+        assert!(std::fs::symlink_metadata(path).is_err());
+    }
+}
+
+#[test]
+fn import_restoration_failure_is_explicit_and_cannot_report_success() {
+    let source = data_root();
+    let target = data_root();
+    let home = home_dir();
+    PreferencesStore::new(target.path())
+        .save(&Preferences::default())
+        .unwrap();
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    let error = import_with_parsed_verified(
+        target.path(),
+        home.path(),
+        ParsedContainer::Plaintext(import_document(source.path())),
+        None,
+        &mut observer,
+        |path, bytes| {
+            std::fs::remove_file(path).unwrap();
+            std::fs::create_dir(path).unwrap();
+            verify_import_file(path, bytes)
+        },
+    )
+    .unwrap_err();
+    assert!(
+        matches!(error, AppError::FileSystem { operation, .. } if operation == "restore failed configuration import")
+    );
+    assert_eq!(observer.terminals, [false]);
+    assert!(!observer.store.lock().unwrap().all()[0].resolved);
+}
+
+#[test]
+fn import_existing_unreadable_or_corrupt_projection_is_not_an_empty_configuration() {
+    for corrupt_extension in [false, true] {
+        let source = data_root();
+        let target = data_root();
+        let home = home_dir();
+        write_extension_projection(source.path(), &[], &[], true);
+        let preferences = target
+            .path()
+            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+        if corrupt_extension {
+            PreferencesStore::new(target.path())
+                .save(&Preferences::default())
+                .unwrap();
+            std::fs::write(
+                target.path().join(EXTENSION_CONFIG_RELATIVE_PATH),
+                b"bad projection",
+            )
+            .unwrap();
+        } else {
+            std::fs::create_dir(&preferences).unwrap();
+        }
+        let before = std::fs::read(&preferences).ok();
+        let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+        assert!(verified_import(
+            target.path(),
+            home.path(),
+            import_document(source.path()),
+            &mut observer
+        )
+        .is_err());
+        assert_eq!(std::fs::read(&preferences).ok(), before);
+        assert_eq!(observer.terminals, [false]);
+    }
+}
+
+#[test]
+fn import_failed_prewrite_backup_does_not_replace_preferences() {
+    let source = data_root();
+    let target = data_root();
+    let home = home_dir();
+    PreferencesStore::new(target.path())
+        .save(&Preferences::default())
+        .unwrap();
+    let path = target
+        .path()
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+    let before = std::fs::read(&path).unwrap();
+    std::fs::remove_dir_all(target.path().join("backups")).unwrap();
+    std::fs::write(target.path().join("backups"), b"blocked backups").unwrap();
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    assert!(import_with_parsed_verified(
+        target.path(),
+        home.path(),
+        ParsedContainer::Plaintext(import_document(source.path())),
+        None,
+        &mut observer,
+        |_, _| panic!("backup failure precedes mutation")
+    )
+    .is_err());
+    assert_eq!(std::fs::read(path).unwrap(), before);
+    assert_eq!(observer.terminals, [false]);
+}
+
+#[test]
+fn import_different_document_or_home_cannot_resolve_previous_candidate_even_after_switch_back() {
+    for change_home in [false, true] {
+        let source = data_root();
+        let target = data_root();
+        let home = home_dir();
+        let next_home = home_dir();
+        let original = import_document(source.path());
+        let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+        assert!(import_with_parsed_verified(
+            target.path(),
+            home.path(),
+            ParsedContainer::Plaintext(original.clone()),
+            None,
+            &mut observer,
+            |path, bytes| {
+                std::fs::write(path, b"corrupt").unwrap();
+                verify_import_file(path, bytes)
+            }
+        )
+        .is_err());
+        let (next, selected_home) = if change_home {
+            (original.clone(), next_home.path())
+        } else {
+            PreferencesStore::new(source.path())
+                .save(&Preferences {
+                    interface_scale: 175,
+                    ..Default::default()
+                })
+                .unwrap();
+            (import_document(source.path()), home.path())
+        };
+        observer.home = selected_home.to_path_buf();
+        verified_import(target.path(), selected_home, next, &mut observer).unwrap();
+        observer.home = home.path().to_path_buf();
+        verified_import(target.path(), home.path(), original, &mut observer).unwrap();
+        assert_eq!(observer.resolved, [0, 0, 0]);
+        assert!(!observer.store.lock().unwrap().all()[0].resolved);
+    }
+}
+
+#[test]
+fn import_validation_and_lock_rejections_do_not_publish_execution_terminal() {
+    let source = data_root();
+    let target = data_root();
+    let home = home_dir();
+    let document = import_document(source.path());
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    assert!(verified_import(
+        target.path(),
+        Path::new("relative-home"),
+        document.clone(),
+        &mut observer
+    )
+    .is_err());
+    let invalid_root = tempfile::tempdir().unwrap();
+    let export = export_with_paths(source.path(), "0.1.10").unwrap();
+    assert!(import_with_container_file_observed(
+        invalid_root.path(),
+        &export.path,
+        home.path(),
+        None,
+        &mut observer
+    )
+    .is_err());
+    let legacy = legacy_container_bytes(&document, LEGACY_PASSPHRASE, "0.1.9");
+    let path = source.path().join("exports/legacy.ocxdconf");
+    std::fs::write(&path, legacy).unwrap();
+    let error =
+        import_with_container_file_observed(target.path(), &path, home.path(), None, &mut observer)
+            .unwrap_err();
+    assert!(matches!(error, AppError::PassphraseRequired));
+    assert_eq!(crate::errors::AppErrorPayload::from(&error).code, 13);
+    let preferences = target
+        .path()
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+    let held = TargetFileLock::lock(&preferences).unwrap();
+    assert!(verified_import(target.path(), home.path(), document, &mut observer).is_err());
+    drop(held);
+    assert!(observer.terminals.is_empty() && observer.identity.is_none());
+}
