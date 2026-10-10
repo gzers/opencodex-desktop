@@ -1,0 +1,37 @@
+{
+  "source_sha": "27e425bf2aaa9c889cd5212c4fab2d3d8b3166d4",
+  "code_branch": "feature/0.1.10-maintenance",
+  "ui_full": {
+    "files": 94,
+    "passed": 454
+  },
+  "checks_passed": [
+    "npm-ci",
+    "typecheck-production-build",
+    "custom-protocol-debug-build",
+    "diff-check"
+  ],
+  "rust_full_rerun": false,
+  "native": {
+    "os": "macOS 27.0.1 (26A434)",
+    "arch": "arm64",
+    "bundle_binary_sha256": "e7c6e6a44e65064e38399952c9131bf888a6688397d73e64a5fce572e09e29af",
+    "scope": "isolated custom-protocol debug app; keyboard refresh and retry; no installation or update",
+    "default_month_collapsed": true,
+    "keyboard_expand_collapse": true,
+    "refresh_focus_retained": true,
+    "retry_failure_focus_retained": true,
+    "retry_success_focus_returned_to_tree": true,
+    "expanded_month_preserved": true,
+    "four_backup_files_unchanged": true,
+    "failure_fixture": "one newly created symlink inside isolated backups; removed after failure test"
+  },
+  "historical_failure": "d3e4df32 keyboard refresh left focus on HTML content; original AX and screenshot retained",
+  "limits": [
+    "Windows not run",
+    "not all native tree themes/DPI/alignment",
+    "not installer or actual update/restart",
+    "removed-row external-focus check automated only",
+    "full required_checks remain pending"
+  ]
+}

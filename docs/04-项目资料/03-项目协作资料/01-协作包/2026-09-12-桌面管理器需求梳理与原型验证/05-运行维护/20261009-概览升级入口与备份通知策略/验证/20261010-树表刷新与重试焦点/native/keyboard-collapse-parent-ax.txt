@@ -1,0 +1,114 @@
+Window: "", App: OpenCodeX0110TreeFocusSandbox.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=backup
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 设置, Value: 1
+					14 text 设置
+				15 text 集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 text 未发现
+				21 button 刷新状态
+				22 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				23 tab group (selectable) 通用
+安装配置
+数据与备份
+扩展管理
+配置迁移
+WebDAV 同步
+日志与通知
+CLI 控制面
+版本升级
+关于
+				24 container 数据与备份
+					25 heading 数据与备份, Value: 2
+						26 text 数据与备份
+					27 text 备份边界基于安装配置里的数据目录。
+					28 button 打开安装配置
+					29 text 升级前备份
+					30 text 面板更新前必须备份，失败时阻断安装；管理器备份选项在更新详情中确认。
+					31 text 面板必需
+					32 text 导入前自动备份
+					33 text 导入校验通过后先备份当前配置，再进入最终确认。
+					34 switch (settable, boolean) on
+					35 text 同步覆盖前自动备份
+					36 text 任何覆盖动作都保留被覆盖侧的可恢复历史。
+					37 switch (settable, boolean) on
+					38 text 备份完整性校验
+					39 text 生成备份后写入 SHA-256 校验摘要，恢复前先校验；算法在备份契约中固定。
+					40 text SHA-256
+					41 container 管理器偏好备份
+						42 text 备份管理器偏好与清单；面板完整配置、会话及登录态由对应事务另行管理。
+						43 button 生成备份
+						44 container 备份文件与目录
+							45 heading 备份文件与目录, Value: 3
+								46 text 备份文件与目录
+							47 button 刷新
+							48 text /private/tmp/ocx-0110-tree-focus-native-27e425bf/data/backups
+							49 table 备份文件与目录
+								50 row (selectable) 名称
+用途
+操作
+								51 row (selectable)
+									52 cell (selectable) 收起 backups, Value: backups
+									53 cell (selectable) 按 UTC 年月与事务分类保存备份。
+									54 cell (selectable) 打开目录 backups
+								55 row (selectable)
+									56 cell (selectable) 收起 2026, Value: 2026
+									57 cell (selectable) UTC 年份。
+									58 cell (selectable) 打开目录 2026
+								59 row (selectable)
+									60 cell (selectable) 收起 10, Value: 10
+									61 cell (selectable) UTC 月份。
+									62 cell (selectable) 打开目录 10
+								63 row (selectable)
+									64 cell (selectable) 展开 manual-preferences, Value: manual-preferences
+									65 cell (selectable) 管理器偏好手动备份。
+									66 cell (selectable) 打开目录 manual-preferences
+								67 row (selectable)
+									68 cell (selectable) 展开 restore-protection, Value: restore-protection
+									69 cell (selectable) 恢复前保护备份。
+									70 cell (selectable) 打开目录 restore-protection
+						71 heading 保留与清理, Value: 3
+							72 text 保留与清理
+						73 text 按用途分别保留最近 10 份或 30 天内的备份；满足任一条件即保留。固定项与受保护项额外保留。
+						74 text 清理方式
+						75 pop up button (collapsed) 清理方式, Value: 手动确认（默认）, Secondary Actions: Expand
+						76 button (disabled) 保存策略
+						77 button 预览清理
+						78 heading 备份记录, Value: 3
+							79 text 备份记录
+						80 button 刷新记录
+						81 container
+							82 text 恢复前保护 · 2026/10/10 21:22:19
+							83 text bk_20261010132219_713e1d24
+							84 text 1.3 KB · 恢复前重新校验
+							85 button 固定保留
+							86 button 恢复
+							87 text 手动 · 2026/10/10 21:12:15
+							88 text bk_20261010131215_4f945a8e
+							89 text 1.3 KB · 恢复前重新校验
+							90 button 固定保留
+							91 button 恢复
+	92 close button
+	93 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	94 minimize button
+95 menu bar
+	96 OpenCodeX0110TreeFocusSandbox
+	97 编辑
+	98 视图
+	99 诊断
+
+The focused UI element is 100 button (collapsed) 展开 manual-preferences, Secondary Actions: Expand
