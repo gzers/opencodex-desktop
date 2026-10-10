@@ -497,7 +497,7 @@ pub fn deliver(
                 delivery.identity.candidate.0
             );
             item.notification_id = format!("{}:{scope}", event.id);
-            item.dedupe_key = Some(format!("{}:{scope}", &policy.dedupe));
+            item.dedupe_key = Some(format!("{}:{scope}", policy.dedupe));
             item.event_identity = Some(delivery.identity.clone());
             if let Some(existing) = store
                 .notifications
