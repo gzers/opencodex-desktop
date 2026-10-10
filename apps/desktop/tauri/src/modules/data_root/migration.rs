@@ -65,6 +65,66 @@ pub struct VerifiedCopy {
     pub target_lock: AppInstanceLock,
 }
 
+impl VerifiedCopy {
+    /// Prepare path-bearing runtime files without publishing the target. The
+    /// caller still owns the source lock and writer freeze throughout this step.
+    pub fn prepare_runtime(&mut self) -> AppResult<()> {
+        if self.receipt.phase != "verified_copy" {
+            return Err(failure(
+                "runtime preparation requires a fresh verified copy",
+            ));
+        }
+        let target = &self.receipt.target;
+        if !fs::symlink_metadata(target.join(UNPUBLISHED_MARKER))
+            .map_err(io)?
+            .is_file()
+        {
+            return Err(failure("unpublished marker must be a regular file"));
+        }
+        let external_home = self
+            .receipt
+            .excluded
+            .iter()
+            .any(|path| path.starts_with("opencodex-home"));
+        let original_receipt =
+            serde_json::to_vec_pretty(&self.receipt).map_err(|e| failure(e.to_string()))?;
+        if fs::read(target.join(RECEIPT_PATH)).map_err(io)? != original_receipt
+            || inventory(&self.receipt.source, external_home)? != self.receipt.entries
+            || inventory(target, external_home)? != self.receipt.prepared_entries
+        {
+            return Err(failure(
+                "copy receipt or inventory changed before runtime preparation",
+            ));
+        }
+        crate::modules::runtime::relocation::prepare(&self.receipt.source, target)?;
+        let prepared = inventory(target, external_home)?;
+        let unchanged = |entries: &[Entry]| {
+            entries
+                .iter()
+                .filter(|entry| {
+                    entry.path() != Path::new("manager-state/runtime.json")
+                        && entry.path()
+                            != Path::new(crate::modules::runtime::MANAGED_ENTRY_RELATIVE)
+                })
+                .cloned()
+                .collect::<Vec<_>>()
+        };
+        if inventory(&self.receipt.source, external_home)? != self.receipt.entries
+            || unchanged(&prepared) != unchanged(&self.receipt.prepared_entries)
+        {
+            return Err(failure("unexpected file change during runtime preparation"));
+        }
+        self.receipt.prepared_entries = prepared;
+        self.receipt.phase = "runtime_prepared";
+        let raw = serde_json::to_vec_pretty(&self.receipt).map_err(|e| failure(e.to_string()))?;
+        crate::infrastructure::atomic_write::atomic_write(&target.join(RECEIPT_PATH), &raw, 0o600)?;
+        if fs::read(target.join(RECEIPT_PATH)).map_err(io)? != raw {
+            return Err(failure("runtime preparation receipt failed readback"));
+        }
+        Ok(())
+    }
+}
+
 fn failure(message: impl Into<String>) -> AppError {
     AppError::FileSystem {
         operation: "copy data root".into(),

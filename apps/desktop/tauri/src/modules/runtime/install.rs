@@ -1689,7 +1689,7 @@ fn write_entry(entry: &Path, node: Option<&Path>, script: &Path) -> Result<(), I
 }
 
 #[cfg(not(windows))]
-fn entry_script(node: Option<&Path>, script: &Path) -> String {
+pub(super) fn entry_script(node: Option<&Path>, script: &Path) -> String {
     let script = shell_quote(script);
     match node {
         Some(node) => format!(
@@ -1710,7 +1710,7 @@ fn shell_quote(path: &Path) -> String {
 }
 
 #[cfg(windows)]
-fn entry_script(node: Option<&Path>, script: &Path) -> String {
+pub(super) fn entry_script(node: Option<&Path>, script: &Path) -> String {
     // 路径始终引用，禁用 ! 展开，%% 保留路径中的字面百分号；参数由 Rust
     // Command 的 batch 转义处理，禁止手拼 cmd.exe 参数。
     let quote = |path: &Path| format!("\"{}\"", path.to_string_lossy().replace('%', "%%"));
