@@ -3,6 +3,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import AppTopbar from '@/components/AppTopbar.vue'
 import UiCard from '@/components/ui/UiCard.vue'
+import BackupFiles from '@/features/backup/BackupFiles.vue'
+import { openBackupFile, type BackupFileNode } from '@/features/backup/api'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -30,6 +32,17 @@ import {
 
 const routes = useRouteStore()
 const app = useAppStore()
+function confirmBackupOpen(node: BackupFileNode) {
+  app.openModal({
+    title: node.directory ? '打开备份目录' : '打开备份文件',
+    body: '备份文件可能包含配置与敏感信息。请勿直接修改或删除文件，以免影响恢复。将在系统应用中打开所选项目。',
+    confirmLabel: '继续打开',
+    onConfirm: async () => {
+      try { await openBackupFile(node.id) }
+      catch { app.showToast('打开失败，请检查文件是否存在及目录权限。') }
+    },
+  })
+}
 const dataRootInput = ref('')
 const switchInput = ref('')
 const externalHomeInput = ref('')
@@ -1273,6 +1286,7 @@ function restoreGeneralDefaults() {
           <div class="setting-row"><div><div class="setting-title">备份保留策略</div><div class="setting-desc">保留最近 10 份；超出的备份必须由用户显式清理。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'backupRetention' }"><button class="select-trigger" :aria-expanded="openSelect === 'backupRetention' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="备份保留策略" @click="toggleSelect('backupRetention')"><span class="select-value">{{ preferences.backupRetention === '5' ? '最近 5 份' : preferences.backupRetention === '20' ? '最近 20 份' : '最近 10 份' }}</span></button><UiSelectMenu :open="openSelect === 'backupRetention'" @close="openSelect = ''" role="listbox" aria-label="备份保留策略"><button v-for="option in [['5','最近 5 份'],['10','最近 10 份'],['20','最近 20 份']]" :key="option[0]" class="select-option" :class="{ selected: preferences.backupRetention === option[0] }" type="button" role="option" :aria-selected="preferences.backupRetention === option[0] ? 'true' : 'false'" @click="chooseOption('backupRetention', option[0] as PreferencesDto['backupRetention'], option[1])">{{ option[1] }}</button></UiSelectMenu></div></div></div>
           <div class="setting-row"><div><div class="setting-title">备份完整性校验</div><div class="setting-desc">生成备份后写入 SHA-256 校验摘要，恢复前先校验；算法在备份契约中固定。</div></div><div class="controls"><span class="setting-readonly">SHA-256</span></div></div>
         </div>
+        <BackupFiles @open="confirmBackupOpen" />
       </article>
     </section>
 

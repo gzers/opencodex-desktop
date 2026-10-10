@@ -1,6 +1,7 @@
 //! Tauri 命令层。命令只做参数转换与模块编排，不直接访问平台 API。
 
 pub mod about;
+pub mod backup;
 pub mod cleanup;
 pub mod codex_shim;
 pub mod data_root;

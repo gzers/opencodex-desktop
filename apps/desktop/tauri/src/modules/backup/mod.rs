@@ -4,6 +4,7 @@
 //! 不访问真实用户备份、不连接远端、不访问 Keychain。
 
 use chrono::{DateTime, SecondsFormat, Utc};
+pub mod browser;
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -18,12 +19,13 @@ pub fn retention_days() -> i64 {
     crate::modules::runtime_defaults::backup_max_age_days()
 }
 
-pub const ACTIONS: [&str; 5] = [
+pub const ACTIONS: [&str; 6] = [
     "upgrade",
     "import",
     "sync-overwrite",
     "data-root-move",
     "extension-write",
+    "runtime-uninstall",
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

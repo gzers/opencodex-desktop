@@ -223,7 +223,7 @@ thread_local! {
 }
 
 #[cfg(test)]
-fn open_path(path: &Path) -> AppResult<()> {
+pub(crate) fn open_path(path: &Path) -> AppResult<()> {
     TEST_OPEN_PATHS.with(|calls| calls.borrow_mut().push(path.to_path_buf()));
     Ok(())
 }
@@ -245,7 +245,7 @@ fn recorded_open_urls() -> Vec<String> {
 }
 
 #[cfg(all(target_os = "macos", not(test)))]
-fn open_path(path: &Path) -> AppResult<()> {
+pub(crate) fn open_path(path: &Path) -> AppResult<()> {
     std::process::Command::new("/usr/bin/open")
         .arg(path)
         .spawn()
@@ -257,7 +257,7 @@ fn open_path(path: &Path) -> AppResult<()> {
 }
 
 #[cfg(all(target_os = "windows", not(test)))]
-fn open_path(path: &Path) -> AppResult<()> {
+pub(crate) fn open_path(path: &Path) -> AppResult<()> {
     std::process::Command::new("explorer")
         .arg(path)
         .spawn()
@@ -269,7 +269,7 @@ fn open_path(path: &Path) -> AppResult<()> {
 }
 
 #[cfg(all(unix, not(target_os = "macos"), not(target_os = "windows"), not(test)))]
-fn open_path(path: &Path) -> AppResult<()> {
+pub(crate) fn open_path(path: &Path) -> AppResult<()> {
     std::process::Command::new("xdg-open")
         .arg(path)
         .spawn()
@@ -285,7 +285,7 @@ fn open_path(path: &Path) -> AppResult<()> {
     not(all(unix, not(target_os = "macos"), not(target_os = "windows"))),
     not(test)
 ))]
-fn open_path(_path: &Path) -> AppResult<()> {
+pub(crate) fn open_path(_path: &Path) -> AppResult<()> {
     Err(AppError::NotConfigured)
 }
 

@@ -148,7 +148,7 @@ pub fn run() {
             ));
             app.manage(crate::state::SharedTrayRequests::new());
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
-            // 备份保留期），必须在通知集合载入前完成，保证内存与落盘一致；失败只记日志。
+            // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
             if let Ok(outcome) =
                 crate::commands::cleanup::run_startup_cleanup(&data_root, chrono::Utc::now())
             {
@@ -501,6 +501,8 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::backup::backup_files,
+            commands::backup::open_backup_file,
             commands::update::check_for_update,
             commands::update::install_update,
             commands::update::get_update_status,
