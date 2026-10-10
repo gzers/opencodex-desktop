@@ -1,6 +1,7 @@
 // 运行来源、托管安装与卸载的前端契约（IMP Track B · B3 / B4 / B5）。
 //
 // 只做 invoke 包装与类型声明；掩码、校验与真实副作用都在后端。
+import { invoke as invokeProtection } from '@tauri-apps/api/core'
 
 export type RuntimeSourceKind = 'explicit' | 'managed' | 'discovered' | 'unresolved'
 
@@ -154,6 +155,18 @@ async function invoke<T>(command: string, args?: Record<string, unknown>): Promi
 
 export async function getRuntimeSource(): Promise<RuntimeSourceDto> {
   return invoke<RuntimeSourceDto>('runtime_source')
+}
+
+export interface RuntimeProtectionStatus {
+  state: 'none' | 'pending' | 'verified_pending' | 'unreadable'
+  version: string | null
+  backupId: string | null
+}
+export async function getRuntimeProtectionStatus(): Promise<RuntimeProtectionStatus> {
+  return invokeProtection<RuntimeProtectionStatus>('runtime_protection_status')
+}
+export async function retryRuntimeProtection(): Promise<RuntimeProtectionStatus> {
+  return invokeProtection<RuntimeProtectionStatus>('retry_runtime_protection')
 }
 
 export async function setRuntimeSource(path: string | null): Promise<RuntimeSourceDto> {

@@ -187,6 +187,65 @@ pub fn runtime_source(
     Ok(source_dto(handle.inner(), &data_root.0))
 }
 
+#[tauri::command]
+pub async fn runtime_protection_status(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> AppResult<crate::modules::runtime::protection::ProtectionStatus> {
+    let root = data_root.0.clone();
+    crate::commands::run_readonly("read panel protection", move || {
+        Ok(crate::modules::runtime::protection::status(&root))
+    })
+    .await
+}
+
+/// Explicit local verification only. Worker ownership keeps all leases alive when
+/// the observer closes; there is no stop, reinstall, receipt deletion override or timer.
+fn reserve_protection_retry(
+    runtime: &SharedRuntimeInstall,
+    manager: &crate::commands::update::SharedUpdateStatus,
+) -> AppResult<crate::state::RuntimeMutationLease> {
+    let state = manager.lock().map_err(|_| AppError::NotConfigured)?;
+    if state.installing || state.pending_restart.is_some() {
+        return Err(AppError::NotConfigured);
+    }
+    runtime.acquire().ok_or(AppError::NotConfigured)
+}
+
+#[tauri::command]
+pub async fn retry_runtime_protection(
+    app: tauri::AppHandle,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    runtime: tauri::State<'_, SharedRuntimeInstall>,
+    manager: tauri::State<'_, crate::commands::update::SharedUpdateStatus>,
+) -> AppResult<crate::modules::runtime::protection::ProtectionStatus> {
+    let root = data_root.0.clone();
+    let runtime = runtime.inner().clone();
+    let manager = manager.inner().clone();
+    crate::commands::run_blocking("retry panel protection", move || {
+        let _reservation = reserve_protection_retry(&runtime, &manager)?;
+        crate::modules::runtime::protection::retry(&root, |candidate, succeeded| {
+            let identity = crate::commands::event_delivery::prepare(
+                &root,
+                "runtime-protection-reconcile-failed",
+                crate::modules::notifications::registry::Channel::Local,
+                candidate,
+            );
+            crate::commands::event_delivery::publish(
+                &app,
+                &root,
+                if succeeded {
+                    "runtime-protection-reconcile-succeeded"
+                } else {
+                    "runtime-protection-reconcile-failed"
+                },
+                identity,
+                crate::modules::notifications::registry::Trigger::User,
+            );
+        })
+    })
+    .await
+}
+
 /// Source mutation shares the installation reservation; dismissal never releases a worker.
 #[tauri::command]
 pub async fn set_runtime_source(
@@ -880,6 +939,38 @@ pub type RuntimeCancelFlag = CancelFlag;
 mod tests {
     use super::*;
     use crate::modules::runtime::install::InstallSourceKind;
+
+    #[test]
+    fn protection_retry_refuses_manager_handoff_and_installation_without_runtime_effects() {
+        let runtime = SharedRuntimeInstall::new();
+        let manager = std::sync::Arc::new(std::sync::Mutex::new(
+            crate::modules::update::UpdateStatus::pending("0.1.9"),
+        ));
+        manager.lock().unwrap().installing = true;
+        assert!(reserve_protection_retry(&runtime, &manager).is_err());
+        drop(runtime.acquire().expect("refusal must not reserve runtime"));
+        manager.lock().unwrap().installing = false;
+        manager.lock().unwrap().pending_restart = Some("0.1.10".into());
+        assert!(reserve_protection_retry(&runtime, &manager).is_err());
+        drop(
+            runtime
+                .acquire()
+                .expect("handoff refusal must not reserve runtime"),
+        );
+    }
+
+    #[test]
+    fn protection_retry_owns_runtime_exclusion_until_worker_lease_drops() {
+        let runtime = SharedRuntimeInstall::new();
+        let manager = std::sync::Arc::new(std::sync::Mutex::new(
+            crate::modules::update::UpdateStatus::pending("0.1.9"),
+        ));
+        let worker_lease = reserve_protection_retry(&runtime, &manager).unwrap();
+        assert!(runtime.acquire().is_none());
+        assert!(reserve_protection_retry(&runtime, &manager).is_err());
+        drop(worker_lease);
+        assert!(reserve_protection_retry(&runtime, &manager).is_ok());
+    }
 
     fn handle_for(root: &Path) -> std::sync::Arc<RuntimeHandle> {
         RuntimeHandle::initialize(root, Vec::new())

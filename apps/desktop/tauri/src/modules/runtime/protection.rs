@@ -299,6 +299,63 @@ pub(crate) fn reconcile_pending(root: &Path, guard: &PreferencesProtectionGuard)
     }
     Ok(())
 }
+/// A bounded read projection, never an assertion that activation has been verified.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProtectionStatus {
+    pub state: ProtectionState,
+    pub version: Option<String>,
+    pub backup_id: Option<String>,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ProtectionState {
+    None,
+    Pending,
+    VerifiedPending,
+    Unreadable,
+}
+pub(crate) fn status(root: &Path) -> ProtectionStatus {
+    match PanelProtection::load(root) {
+        Ok(Some(record)) => ProtectionStatus {
+            state: if record.verified.is_some() {
+                ProtectionState::VerifiedPending
+            } else {
+                ProtectionState::Pending
+            },
+            version: Some(record.version),
+            backup_id: Some(record.protection.backup_id),
+        },
+        result => ProtectionStatus {
+            state: if result.is_ok() {
+                ProtectionState::None
+            } else {
+                ProtectionState::Unreadable
+            },
+            version: None,
+            backup_id: None,
+        },
+    }
+}
+/// Caller owns storage admission and the runtime mutation lease. No package command
+/// or network request; malformed receipts are rejected before acquiring a write guard.
+pub(crate) fn retry(
+    root: &Path,
+    mut terminal: impl FnMut(&[u8], bool),
+) -> AppResult<ProtectionStatus> {
+    if let Some(mut record) = PanelProtection::load(root)? {
+        let guard = crate::modules::backup::manager::acquire_preferences_transaction(root)?;
+        // Stable across verification persistence and retries. No raw path or
+        // payload enters notification history; the event adapter hashes this.
+        let candidate =
+            serde_json::to_vec(&(&record.attempt_id, &record.version, &record.protection))
+                .map_err(|_| fail())?;
+        let result = record.reconcile(root, &guard);
+        terminal(&candidate, result.is_ok());
+        result?;
+    }
+    Ok(status(root))
+}
 /// Binding changes cannot carry an unresolved absolute installation association.
 /// This is read-only: startup/install retries perform reconciliation under their guard.
 pub(crate) fn ensure_binding_ready(root: &Path) -> AppResult<()> {
@@ -405,6 +462,87 @@ mod tests {
                 .as_deref(),
             Some("committed")
         );
+    }
+
+    #[test]
+    fn read_status_does_not_verify_or_release_valid_receipt() {
+        let (root, _guard, receipt) = fixture();
+        let original = std::fs::read(state_path(root.path())).unwrap();
+        let pending = status(root.path());
+        assert_eq!(pending.state, ProtectionState::Pending);
+        assert_eq!(pending.version.as_deref(), Some("0.3.1"));
+        assert_eq!(
+            pending.backup_id,
+            Some(receipt.protection.backup_id.clone())
+        );
+        assert_eq!(std::fs::read(state_path(root.path())).unwrap(), original);
+        assert_active(root.path(), &receipt);
+        let mut verified = receipt.clone();
+        activate(root.path(), &verified, &verified.attempt_id);
+        verified.verified = Some(verified.activation(root.path()).unwrap());
+        verified.save(root.path()).unwrap();
+        assert_eq!(status(root.path()).state, ProtectionState::VerifiedPending);
+        assert_active(root.path(), &receipt);
+    }
+
+    #[test]
+    fn corrupt_receipt_is_reported_without_exposing_fields_or_overwriting_bytes() {
+        let (root, guard, receipt) = fixture();
+        drop(guard);
+        let original = br#"{"version":"secret","prefix":"untrusted"}"#;
+        std::fs::write(state_path(root.path()), original).unwrap();
+        let reported = status(root.path());
+        assert_eq!(reported.state, ProtectionState::Unreadable);
+        assert!(reported.version.is_none() && reported.backup_id.is_none());
+        assert!(retry(root.path(), |_, _| panic!("corruption is pre-admission")).is_err());
+        assert_eq!(std::fs::read(state_path(root.path())).unwrap(), original);
+        assert_active(root.path(), &receipt);
+    }
+
+    #[test]
+    fn explicit_retry_retains_inconclusive_receipt_then_releases_only_after_activation() {
+        let (root, guard, receipt) = fixture();
+        drop(guard);
+        let original = std::fs::read(state_path(root.path())).unwrap();
+        let mut events = Vec::new();
+        assert!(retry(root.path(), |candidate, succeeded| {
+            events.push((candidate.to_vec(), succeeded));
+        })
+        .is_err());
+        assert_eq!(std::fs::read(state_path(root.path())).unwrap(), original);
+        assert_active(root.path(), &receipt);
+        activate(root.path(), &receipt, &receipt.attempt_id);
+        assert_eq!(
+            retry(root.path(), |candidate, succeeded| {
+                events.push((candidate.to_vec(), succeeded));
+            })
+            .unwrap()
+            .state,
+            ProtectionState::None
+        );
+        assert_committed(root.path(), &receipt);
+        assert_eq!(events.len(), 2);
+        assert!(!events[0].1 && events[1].1);
+        assert_eq!(events[0].0, events[1].0);
+        assert_eq!(
+            retry(root.path(), |_, _| panic!("no receipt has no event"))
+                .unwrap()
+                .state,
+            ProtectionState::None
+        );
+    }
+
+    #[test]
+    fn absent_receipt_retry_does_not_initialize_storage() {
+        let root = tempfile::tempdir().unwrap();
+        assert_eq!(status(root.path()).state, ProtectionState::None);
+        assert_eq!(
+            retry(root.path(), |_, _| panic!("no receipt has no event"))
+                .unwrap()
+                .state,
+            ProtectionState::None
+        );
+        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
     }
 
     #[test]
@@ -526,6 +664,15 @@ mod tests {
         assert_active(root.path(), &receipt);
         activate(root.path(), &receipt, &receipt.attempt_id);
         receipt.reconcile(root.path(), &guard).unwrap();
+    }
+
+    #[test]
+    fn disappeared_receipt_cannot_release_the_captured_backup() {
+        let (root, guard, mut receipt) = fixture();
+        activate(root.path(), &receipt, &receipt.attempt_id);
+        std::fs::remove_file(state_path(root.path())).unwrap();
+        assert!(receipt.reconcile(root.path(), &guard).is_err());
+        assert_active(root.path(), &receipt);
     }
 
     #[test]

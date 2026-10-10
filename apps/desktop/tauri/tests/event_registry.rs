@@ -1380,18 +1380,29 @@ fn validated_signal_site_cannot_be_assigned_a_persisted_terminal_fact() {
 
 #[test]
 fn uninstall_failure_persists_and_only_matching_verified_removal_resolves() {
+    verify_local_terminal_resolution("runtime-uninstall", Action::Uninstall);
+}
+
+#[test]
+fn protection_reconcile_failure_requires_matching_verified_retry() {
+    verify_local_terminal_resolution("runtime-protection-reconcile", Action::Reconcile);
+}
+
+fn verify_local_terminal_resolution(stem: &str, action: Action) {
+    let failure_event = format!("{stem}-failed");
+    let success_event = format!("{stem}-succeeded");
     let (root, store) = setup();
     let identity = candidate_identity(
         root.path(),
         ObjectKind::Runtime,
-        Action::Uninstall,
+        action,
         Phase::Execution,
         Channel::Local,
         [81; 32],
     )
     .unwrap();
     let failed = terminal_delivery(
-        "runtime-uninstall-failed",
+        &failure_event,
         Trigger::User,
         identity.clone(),
         Evidence::Failure,
@@ -1414,7 +1425,7 @@ fn uninstall_failure_persists_and_only_matching_verified_removal_resolves() {
     };
     assert!(!publisher.publish_event(&failed).unwrap().added);
     assert!(terminal_delivery(
-        "runtime-uninstall-succeeded",
+        &success_event,
         Trigger::User,
         identity.clone(),
         Evidence::Success {
@@ -1427,7 +1438,7 @@ fn uninstall_failure_persists_and_only_matching_verified_removal_resolves() {
     let mut wrong = identity.clone();
     wrong.candidate = opaque(999);
     let success = terminal_delivery(
-        "runtime-uninstall-succeeded",
+        &success_event,
         Trigger::User,
         wrong.clone(),
         Evidence::Success {
@@ -1460,7 +1471,7 @@ fn uninstall_failure_persists_and_only_matching_verified_removal_resolves() {
     .unwrap();
     assert_eq!(publisher.publish_event(&success).unwrap().resolved, 0);
     let success = terminal_delivery(
-        "runtime-uninstall-succeeded",
+        &success_event,
         Trigger::User,
         identity.clone(),
         Evidence::Success {

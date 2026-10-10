@@ -30,10 +30,26 @@ import {
 
 const routes = useRouteStore()
 const app = useAppStore()
+const runtimeProtection = useRuntimeStore()
+const protectionBlocked = computed(() => runtimeProtection.protectionRetrying
+  || !!runtimeProtection.protectionError
+  || (!!runtimeProtection.protection && runtimeProtection.protection.state !== 'none'))
+const protectionDescription = computed(() => {
+  switch (runtimeProtection.protection?.state) {
+    case 'pending': return '上次面板更新的安装证据尚未核验，关联备份继续保留。核对完成前无法安装、卸载或切换数据目录。'
+    case 'verified_pending': return '安装证据已持久核验，备份关联的完成记录仍待处理。重试只处理本地记录，不重新安装面板。'
+    case 'unreadable': return '保护记录无法安全读取或内容无效。记录与备份均保留；重试不会删除记录或强制解除保护，请结合诊断日志排查。'
+    default: return runtimeProtection.protectionLoading ? '正在读取本地保护记录…' : runtimeProtection.protectionFeedback
+  }
+})
+function refreshRuntimeSource() {
+  void app.loadRuntimeSource()
+  void runtimeProtection.loadProtection()
+}
 const dataRootInput = ref('')
 const switchInput = ref('')
 const externalHomeInput = ref('')
-const dataRootBindingDisabled = computed(() => app.dataRootSwitching || app.dataRootHomeSaving || app.dataRootSaving || app.dataRootPendingRestart || app.dataRootReconciliationRequired || app.dataRootConfig?.runtimeActive === false || !app.dataRootConfig)
+const dataRootBindingDisabled = computed(() => protectionBlocked.value || app.dataRootSwitching || app.dataRootHomeSaving || app.dataRootSaving || app.dataRootPendingRestart || app.dataRootReconciliationRequired || app.dataRootConfig?.runtimeActive === false || !app.dataRootConfig)
 const defaultPreferences: PreferencesDto = {
   schemaVersion: 1,
   themeNeedsImport: false,
@@ -1027,8 +1043,12 @@ watch(() => app.installModalRequest, value => {
 watch(() => routes.settingsSection, section => {
   if (section === 'installation') {
     if (!app.runtimeSource) void app.loadRuntimeSource()
+    void runtimeProtection.loadProtection()
     void app.loadOfficialUninstallObservation()
   }
+}, { immediate: true })
+watch(() => runtimeProtection.source, () => {
+  if (routes.settingsSection === 'installation') void runtimeProtection.loadProtection()
 })
 
 function restoreGeneralDefaults() {
@@ -1095,7 +1115,19 @@ function restoreGeneralDefaults() {
         <div v-else class="install-grid"><div v-for="row in installRows" :key="row[0]" class="install-row"><label>{{ row[0] }}</label><div :class="{ mono: row[0] === 'Node.js' || row[0] === 'npm' || row[0] === '可执行文件' }">{{ row[1] }}</div></div></div>
       </article>
       <article class="card" data-testid="runtime-source-card">
-        <div class="card-head"><div><h2>OpenCodex 运行来源</h2><p>应用不读取 PATH；来源只来自这里的记录与候选目录，并与发现、启停、版本检查共用同一份结果。</p></div><button class="btn ghost" :disabled="app.runtimeSourceLoading" @click="app.loadRuntimeSource()">刷新</button></div>
+        <div class="card-head"><div><h2>OpenCodex 运行来源</h2><p>应用不读取 PATH；来源只来自这里的记录与候选目录，并与发现、启停、版本检查共用同一份结果。</p></div><button class="btn ghost" :disabled="app.runtimeSourceLoading || runtimeProtection.protectionRetrying" @click="refreshRuntimeSource()">刷新</button></div>
+        <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
+          <div>
+            <div class="setting-title">面板更新保护核对</div>
+            <p class="setting-desc" role="status" aria-live="polite">{{ protectionDescription }}</p>
+            <p v-if="runtimeProtection.protection?.version" class="setting-desc">候选版本 {{ runtimeProtection.protection.version }} · 关联备份 {{ runtimeProtection.protection.backupId }}</p>
+            <p v-if="runtimeProtection.protectionError" role="alert" class="setting-note">{{ runtimeProtection.protectionError }}</p>
+          </div>
+          <div class="controls">
+            <button v-if="protectionBlocked" type="button" class="btn ghost" data-testid="runtime-protection-retry" :disabled="runtimeProtection.protectionRetrying || runtimeProtection.protectionLoading || app.runtimeInstalling || app.runtimeUninstallBusy || app.dataRootPendingRestart || app.dataRootReconciliationRequired" @click="runtimeProtection.retryProtection()">{{ runtimeProtection.protectionRetrying ? '核对中…' : '重试本地核对' }}</button>
+            <button v-if="protectionBlocked" type="button" class="btn ghost" @click="routes.go('logs', { tab: 'logs' })">查看诊断</button>
+          </div>
+        </div>
         <div v-if="app.runtimeSourceError" class="empty">{{ app.runtimeSourceError }}</div>
         <div v-else-if="!app.runtimeSource" class="empty">正在读取运行来源…</div>
         <template v-else>
@@ -1105,12 +1137,12 @@ function restoreGeneralDefaults() {
             <div class="runtime-fact"><label>版本</label><div>{{ app.runtimeSource.version ?? '未知' }}</div></div>
           </div>
           <div class="runtime-actions">
-            <button class="btn primary" type="button" data-testid="runtime-install" @click="openInstallModal('registry')">安装 OpenCodex</button>
-            <button class="btn ghost" type="button" data-testid="runtime-import-offline" @click="openInstallModal('offline')">导入离线包</button>
+            <button class="btn primary" type="button" data-testid="runtime-install" :disabled="protectionBlocked" @click="openInstallModal('registry')">安装 OpenCodex</button>
+            <button class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked" @click="openInstallModal('offline')">导入离线包</button>
             <button class="btn ghost" type="button" @click="chooseRuntimeSource">更换运行来源…</button>
             <button class="btn ghost" type="button" :disabled="!app.runtimeSource.explicitPath" @click="app.restoreDiscoveredRuntime()">恢复自动发现</button>
             <button v-if="app.runtimeSource.kind === 'managed'" class="btn ghost" type="button" @click="routes.go('settings', { section: 'upgrade' })">更新（官方 ocx update）</button>
-            <button v-if="app.runtimeSource.kind !== 'unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" @click="openUninstall()">卸载</button>
+            <button v-if="app.runtimeSource.kind !== 'unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked" @click="openUninstall()">卸载</button>
           </div>
           <p class="env-bound">应用不读取 PATH；来源只来自这里的记录与候选目录。未解析时请从上面的两个出口入手。</p>
         </template>

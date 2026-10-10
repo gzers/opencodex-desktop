@@ -35,6 +35,7 @@ pub enum Job {
     LoadHistory,
     Install,
     Uninstall,
+    ProtectionReconcile,
     Source,
     NotificationMutation,
     Tray,
@@ -101,7 +102,8 @@ dimension!(Action {
     Migrate,
     Restore,
     Cleanup,
-    Pin
+    Pin,
+    Reconcile
 });
 dimension!(Phase {
     Execution,
@@ -175,6 +177,7 @@ pub enum PolicyId {
     HistoryUnreadable,
     ManagerInstallFailure,
     RuntimeUninstallFailure,
+    RuntimeProtectionReconcileFailure,
     PreferencesBackupFailure,
     PreferencesRestoreFailure,
     BackupCleanupFailure,
@@ -649,6 +652,10 @@ enum SupportedEvent {
     RuntimeUninstallFailed,
     #[serde(rename = "runtime-uninstall-succeeded")]
     RuntimeUninstallSucceeded,
+    #[serde(rename = "runtime-protection-reconcile-failed")]
+    RuntimeProtectionReconcileFailed,
+    #[serde(rename = "runtime-protection-reconcile-succeeded")]
+    RuntimeProtectionReconcileSucceeded,
     #[serde(rename = "preferences-restored")]
     PreferencesRestored,
 }

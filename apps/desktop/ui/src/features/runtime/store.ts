@@ -8,6 +8,8 @@ import {
   cancelRuntimeInstall as cancelRuntimeInstallCommand,
   getOfficialUninstallObservation,
   getRuntimeSource,
+  getRuntimeProtectionStatus,
+  retryRuntimeProtection,
   planRuntimeUninstall as planRuntimeUninstallCommand,
   previewOfflinePackage as previewOfflinePackageCommand,
   restoreDiscoveredRuntime as restoreDiscoveredRuntimeCommand,
@@ -19,6 +21,7 @@ import {
   type RuntimeInstallOutcomeDto,
   type RuntimeInstallProgress,
   type RuntimeSourceDto,
+  type RuntimeProtectionStatus,
   type RuntimeUninstallPlanDto,
   type RuntimeUninstallResultDto,
 } from './api'
@@ -35,6 +38,12 @@ export const useRuntimeStore = defineStore('runtime', {
     source: null as RuntimeSourceDto | null,
     sourceLoading: false,
     sourceError: '',
+    protection: null as RuntimeProtectionStatus | null,
+    protectionLoading: false,
+    protectionRetrying: false,
+    protectionError: '',
+    protectionFeedback: '',
+    protectionGeneration: 0,
     installing: false,
     // 安装进度只存在内存里（后端也不落盘）；联网看命令行明细，离线看分包步骤。
     install: null as RuntimeInstallProgress | null,
@@ -55,6 +64,40 @@ export const useRuntimeStore = defineStore('runtime', {
     installModalRequest: null as InstallSourceKind | null,
   }),
   actions: {
+    async loadProtection() {
+      if (this.protectionLoading || this.protectionRetrying) return
+      const generation = ++this.protectionGeneration
+      this.protectionLoading = true
+      this.protectionError = ''
+      try {
+        const status = await getRuntimeProtectionStatus()
+        if (generation === this.protectionGeneration) this.protection = status
+      } catch (error) {
+        if (generation === this.protectionGeneration) this.protectionError = runtimeErrorText(error)
+      } finally {
+        if (generation === this.protectionGeneration) this.protectionLoading = false
+      }
+    },
+    async retryProtection() {
+      if (this.protectionRetrying) return
+      // A previous read may finish after verification; it must not resurrect a stale warning.
+      const generation = ++this.protectionGeneration
+      this.protectionLoading = false
+      this.protectionRetrying = true
+      this.protectionError = ''
+      this.protectionFeedback = ''
+      try {
+        this.protection = await retryRuntimeProtection()
+        this.protectionFeedback = this.protection.state === 'none'
+          ? '本地核对完成，当前没有待处理的面板保护关联。'
+          : '保护关联仍待核对，备份继续保留。'
+      } catch (error) {
+        this.protectionError = runtimeErrorText(error)
+        try { this.protection = await getRuntimeProtectionStatus() } catch { /* keep last known status */ }
+      } finally {
+        if (generation === this.protectionGeneration) this.protectionRetrying = false
+      }
+    },
     /**
      * 运行来源卡片的第一行事实；失败时保留上一次结果并标记错误，
      * 不把「读不到」显示成「未解析」（那是两件不同的事）。

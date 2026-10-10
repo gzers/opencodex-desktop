@@ -592,6 +592,8 @@ pub fn run() {
             crate::infrastructure::app_activity::app_foreground,
             commands::drain_tray_requests,
             commands::runtime::runtime_source,
+            commands::runtime::runtime_protection_status,
+            commands::runtime::retry_runtime_protection,
             commands::runtime::set_runtime_source,
             commands::runtime::restore_discovered_runtime,
             commands::runtime::preview_offline_package,
