@@ -146,7 +146,7 @@ pub fn run_startup_cleanup(
     if !preferences.startup_cleanup {
         return Ok(RetentionCleanupOutcome::default());
     }
-    run_retention_cleanup(data_root, &preferences, now)
+    retention_cleanup(data_root, &preferences, now, false)
 }
 
 /// 按给定偏好执行保留期清理（导出给测试与后台任务复用）。
@@ -155,12 +155,22 @@ pub fn run_retention_cleanup(
     preferences: &crate::modules::preferences::Preferences,
     now: DateTime<Utc>,
 ) -> Result<RetentionCleanupOutcome, AppError> {
+    retention_cleanup(data_root, preferences, now, true)
+}
+
+fn retention_cleanup(
+    data_root: &Path,
+    preferences: &crate::modules::preferences::Preferences,
+    now: DateTime<Utc>,
+    include_backups: bool,
+) -> Result<RetentionCleanupOutcome, AppError> {
     let (log_days, log_lines) = parse_log_retention(&preferences.log_retention);
     let (trimmed_files, trimmed_lines) =
         trim_logs_by_retention(data_root, now, log_days, log_lines)?;
     let backup_retention = parse_backup_retention(&preferences.backup_retention);
-    let removed_backups =
-        crate::modules::backup::cleanup_retention(data_root, now, backup_retention)?;
+    let removed_backups = if include_backups {
+        crate::modules::backup::cleanup_retention(data_root, now, backup_retention)?
+    } else { Vec::new() };
     let notification_days = parse_notification_retention(&preferences.notification_retention);
     let pruned_notifications = prune_notifications_by_retention(data_root, now, notification_days)?;
 
@@ -531,7 +541,7 @@ mod tests {
     }
 
     #[test]
-    fn startup_cleanup_honors_backup_retention_and_writes_redacted_summary() {
+    fn startup_keeps_backups_and_explicit_cleanup_honors_retention() {
         use crate::modules::backup::{self, BackupAction};
         let preferences = crate::modules::preferences::Preferences {
             backup_retention: "5".to_string(),
@@ -555,6 +565,12 @@ mod tests {
             .expect("backup");
         }
         let outcome = run_startup_cleanup(root.path(), now).expect("cleanup");
+        assert_eq!(outcome.removed_backups, 0);
+        assert!(outcome.summary_path.is_none());
+        let records = backup::list_action_records(&root.path().join("backups"), "upgrade").unwrap();
+        assert_eq!(records.len(), 8);
+        let prefs = crate::modules::preferences::PreferencesStore::new(root.path()).load().unwrap();
+        let outcome = run_retention_cleanup(root.path(), &prefs, now).expect("explicit cleanup");
         assert_eq!(outcome.removed_backups, 3);
         let summary = outcome.summary_path.expect("summary path");
         let raw = std::fs::read_to_string(&summary).expect("read summary");
@@ -563,5 +579,17 @@ mod tests {
         let records =
             backup::list_action_records(&root.path().join("backups"), "upgrade").expect("list");
         assert_eq!(records.len(), 5);
+    }
+
+    #[test]
+    fn startup_does_not_read_malformed_backup_manifests() {
+        let prefs = crate::modules::preferences::Preferences { startup_cleanup: true, ..Default::default() };
+        let root = seeded_root(prefs);
+        let backup = root.path().join("backups/2026/01/upgrade/bk_broken");
+        std::fs::create_dir_all(&backup).unwrap();
+        let manifest = backup.join(crate::modules::backup::MANIFEST_NAME);
+        std::fs::write(&manifest, b"{broken").unwrap();
+        assert!(run_startup_cleanup(root.path(), Utc::now()).is_ok());
+        assert_eq!(std::fs::read(manifest).unwrap(), b"{broken");
     }
 }
