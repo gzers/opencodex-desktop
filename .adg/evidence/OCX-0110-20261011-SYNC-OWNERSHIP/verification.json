@@ -1,0 +1,34 @@
+{
+  "source_sha": "153430bf517b8520255ef57e993c3d33e757e1e0",
+  "code_branch": "feature/0.1.10-maintenance",
+  "rust_full": {
+    "groups": 33,
+    "passed": 788,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "sync_commands": 14,
+    "owned_sync": 3,
+    "probe": 7,
+    "registry_in_full": 31
+  },
+  "checks_passed": [
+    "clippy-all-targets-D-warnings",
+    "fmt-check",
+    "diff-check"
+  ],
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": false,
+  "unsuccessful_rounds": [
+    "initial edit FileNotFoundError: no source mutation; subsequent old-source tests are not patch verification"
+  ],
+  "limits": [
+    "injected worker ownership tests; no native AppHandle manual sync validation",
+    "CLI/IPC runner cancellation ownership not covered",
+    "process-local gate only; endpoint/manual-sync terminals and full-domain coverage incomplete",
+    "Windows, installer, actual updates and native paired performance pending"
+  ],
+  "task_state": "in_progress"
+}
