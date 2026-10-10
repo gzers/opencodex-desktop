@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "evidence_id": "OCX-0110-20261011-CONFIG-IMPORT",
+  "source_branch": "feature/0.1.10-maintenance",
+  "source_commit": "8e54b7f5c01eb439659bfcadf2a2ae2402062658",
+  "platform": "macOS local isolated fixtures",
+  "results": {
+    "migration-final-2.log": {
+      "groups": 1,
+      "passed": 68,
+      "failed": 0,
+      "ignored": 0
+    },
+    "extensions.log": {
+      "groups": 1,
+      "passed": 22,
+      "failed": 0,
+      "ignored": 0
+    },
+    "registry.log": {
+      "groups": 1,
+      "passed": 33,
+      "failed": 0,
+      "ignored": 0
+    },
+    "ipc.log": {
+      "groups": 1,
+      "passed": 44,
+      "failed": 0,
+      "ignored": 0
+    },
+    "full.log": {
+      "groups": 34,
+      "passed": 852,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "commands": [
+    {
+      "log": "migration-final-2.log",
+      "command": "cargo test --lib modules::migration",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "extensions.log",
+      "command": "cargo test --lib modules::extensions",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "registry.log",
+      "command": "cargo test --test event_registry",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "ipc.log",
+      "command": "cargo test --lib modules::ipc",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "full.log",
+      "command": "cargo test",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --check",
+      "cwd": "apps/desktop/tauri",
+      "exit_code": 0
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --cached --check",
+      "cwd": "repository root",
+      "exit_code": 0
+    }
+  ],
+  "historical_logs": [
+    {
+      "log": "migration-initial.log",
+      "final_patch": false,
+      "note": "61 passing tests predating final helpers and added tests"
+    },
+    {
+      "log": "migration-final.log",
+      "final_patch": false,
+      "exit_code": 101,
+      "note": "E0599 test-only error.code() corrected to AppErrorPayload code 13"
+    }
+  ],
+  "production_modified": true,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": true,
+  "task_state": "in_progress",
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 38,
+    "events": 78,
+    "active_events": 76,
+    "planned_events": 2,
+    "policies": 26,
+    "emissions": 84,
+    "scheduling": 8,
+    "feedback": 8,
+    "paths": 12,
+    "cleanup": 4
+  },
+  "limits": [
+    "Cooperative locks and bounded final file reads; arbitrary noncooperative parent-path mutation not proven",
+    "Verified best-effort restoration, not cross-file atomicity or crash rollback",
+    "Only manager extension configuration imported, not live Skills/MCP client assets",
+    "No native AppHandle delivery, Windows or installer proof",
+    "Pre-admission errors have no execution terminal; notification failure does not replace domain result",
+    "External update/restart, paired performance and real stable24h/beta6h gates remain open"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-配置导入核验与终态"
+}

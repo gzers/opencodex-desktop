@@ -1,0 +1,29 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.20s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 22 tests
+test modules::extensions::discovery::tests::sanitize_description_removes_query_and_userinfo ... ok
+test modules::extensions::tests::serialization_uses_frozen_snake_case ... ok
+test modules::extensions::tests::no_real_user_home_is_implicitly_read ... ok
+test modules::extensions::tests::legacy_schema_version_is_readable_but_flagged_for_migration ... ok
+test modules::extensions::discovery::tests::parses_jsonc_comments_and_extracts_server_entries ... ok
+test modules::extensions::tests::six_clients_are_frozen_with_default_enabled_matrix ... ok
+test modules::extensions::tests::client_disabled_does_not_delete_projection ... ok
+test modules::extensions::tests::writable_requires_installed_and_enabled ... ok
+test modules::extensions::tests::user_paths_match_fz22 ... ok
+test modules::extensions::tests::conflict_detection_matches_expected_or_flags_external_change ... ok
+test modules::extensions::tests::fingerprint_shape_and_source_are_frozen ... ok
+test modules::extensions::tests::fingerprint_changes_with_enablement_and_content ... ok
+test modules::extensions::tests::source_store_and_sync_method_participate_in_fingerprint ... ok
+test modules::extensions::source_dir::tests::configured_source_dir_falls_back_to_default_when_unset ... ok
+test modules::extensions::source_dir::tests::default_source_dir_is_the_agents_standard_directory ... ok
+test modules::extensions::source_dir::tests::non_existent_candidate_reports_missing_before_overlap ... ok
+test modules::extensions::source_dir::tests::relative_and_missing_paths_are_rejected ... ok
+test modules::extensions::source_dir::tests::validate_or_default_reports_why_the_custom_dir_was_ignored ... ok
+test modules::extensions::source_dir::tests::missing_client_directory_does_not_hide_overlap ... ok
+test modules::extensions::source_dir::tests::custom_source_dir_is_accepted_when_it_is_a_plain_readable_directory ... ok
+test modules::extensions::source_dir::tests::symlink_entry_is_rejected ... ok
+test modules::extensions::source_dir::tests::overlapping_managed_roots_are_rejected ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 672 filtered out; finished in 0.05s
+

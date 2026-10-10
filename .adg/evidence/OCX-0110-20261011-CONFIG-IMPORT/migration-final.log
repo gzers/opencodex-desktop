@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error[E0599]: no method named `code` found for enum `errors::AppError` in the current scope
+    --> src/modules/migration/tests.rs:1083:22
+     |
+1083 |     assert_eq!(error.code(), "PASSPHRASE_REQUIRED");
+     |                      ^^^^ method not found in `errors::AppError`
+     |
+    ::: src/errors/mod.rs:6:1
+     |
+   6 | pub enum AppError {
+     | ----------------- method `code` not found for this enum
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

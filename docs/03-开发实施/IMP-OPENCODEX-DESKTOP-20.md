@@ -357,3 +357,12 @@ GUI / IPC 共用用户触发 ConfigExport、Action::Export 与 config-export-fai
 生产注册表更新为 8 triggers / 37 jobs / 76 events（74 active / 2 planned）/ 25 policies / 82 emissions / 8 scheduling / 8 feedback / 12 paths / 4 cleanup。真实临时文件腐败、备份拒绝、源 / 根 / 锁拒绝与持久异常重载重试验证通过，但不能代替原生 AppHandle 投递、跨存储一致快照或全事务原子保证。候选轮换后返回旧内容不复用旧 UUID。未改 UI / 未重跑原生。
 
 证据见协作包验证/20261011-配置导出核验与终态及 .adg/evidence/OCX-0110-20261011-CONFIG-EXPORT；源码 bd355e1c93f1d7f856ca72bb124f916ddb634ab1。导入核验 / 终态、全域事件、损坏保护受控修复、双平台 / 安装器、实际更新 / 重启、配对性能 / 真实周期仍待验。TASK / IMP 保持 in_progress，不回写稳定核心、不关闭或发布。
+
+
+### 8e54b7f5 配置导入核验与精确终态
+
+合作锁持有至终态；读取 / 保护备份失败阻止写入，逐文件及最终全目标回读一致才成功。失败逆序恢复旧文件或清除新文件并核验，恢复失败明确报错；不保证跨文件原子性或崩溃回滚。GUI / IPC 共用用户触发 ConfigImport / Import / local，文档摘要与无损 HOME 绑定候选；精确重试解除捕获异常，错误通道 / 动作 / 候选轮换拒绝。只导入管理器拓展配置，不投射客户端资产。
+
+最终 Rust 34 组 / 852 通过 / 0 失败 / 5 忽略，migration 68/68、extensions 22/22、IPC 44/44、注册表 33/33，fmt / Clippy / staged diff 通过。历史轮次与首次新增测试 E0599 编译失败原件保留。注册表为 8 triggers / 38 jobs / 78 events（76 active / 2 planned）/ 26 policies / 84 emissions / 8 scheduling / 8 feedback / 12 paths / 4 cleanup，无新计时器或路径。
+
+证据见协作包 `验证/20261011-配置导入核验与终态` 及 `.adg/evidence/OCX-0110-20261011-CONFIG-IMPORT`。本结论更新之前“导入核验 / 终态待验”项；全域事件、损坏保护受控修复、Windows / 安装器、真实更新 / 重启、配对性能及真实周期仍待验。未改 UI / 未重跑原生，TASK / IMP 保持 in_progress，不回写稳定核心、不关闭或发布。
