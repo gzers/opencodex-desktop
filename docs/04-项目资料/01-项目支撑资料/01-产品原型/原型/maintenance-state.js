@@ -17,7 +17,7 @@
     return normal.filter(item => !recent.has(item.id) && now - item.created > policy.days * day);
   }
   function create(now = Date.now()) {
-    let serial = 0, noticeSerial = 0;
+    let serial = 0, noticeSerial = 0, operationSerial = 0;
     const state = {
       updates: Object.fromEntries(Object.entries(definitions).map(([key, item]) => [key, {...item, phase:'idle', generation:0, lastChecked:null, nextDue:now+config.jobs.find(job=>job.target===key).startupDelay, failures:0, origin:'user.action'}])),
       policy: {count:10, days:30, cleanup:'manual'},
@@ -32,20 +32,20 @@
       if (!spec.triggers.includes(origin)) throw new Error('事件触发源未注册：'+origin);
       for (const recovery of spec.recovery) {
         const [eventId,stage]=recovery.split(':');
-        state.notifications.filter(item=>item.id===eventId && item.object===object && (!stage||!item.stage||item.stage===stage)).forEach(item=>{item.resolved=true;});
+        const fields=spec.recoveryMatch?.[eventId]||[];
+        state.notifications.filter(item=>item.id===eventId && item.object===object && (!stage||(item.stage===stage&&context.stage===stage)) && fields.every(field=>typeof context[field]==='string' && context[field].length>0 && item[field]===context[field])).forEach(item=>{item.resolved=true;});
       }
       const delivery=context.background && spec.backgroundDelivery ? spec.backgroundDelivery : spec.delivery;
-      const key=JSON.stringify([id,object,context.revision||'',context.channel||'',context.stage||'',spec.nature==='一次性'?context.operationId||'':'']);
+      const key=JSON.stringify([id,object,context.revision||'',context.channel||'',context.stage||'',context.action||'',context.errorCode||'',spec.dedupeFields?.map(field=>context[field]||'')||[],spec.nature==='一次性'?context.operationId||'':'']);
       const last = state.notifications.find(item => item.key === key && !item.resolved);
       if (last && time-last.lastAt < spec.cooldown) {last.occurrences++; return null;}
-      const item = last || {uid:++noticeSerial, key, id, object, severity:spec.severity, category:spec.category, delivery:delivery.slice(), stage:context.stage, read:false, resolved:false, occurrences:0};
+      const item = last || {uid:++noticeSerial, key, id, object, severity:spec.severity, category:spec.category, delivery:delivery.slice(), stage:context.stage, action:context.action, operationId:context.operationId, revision:context.revision, channel:context.channel, errorCode:context.errorCode, read:false, resolved:false, occurrences:0};
       item.lastAt=time; item.occurrences++;
       if (!last) state.notifications.unshift(item);
       state.deliveries.unshift({id, object, time, origin, delivery:delivery.slice()});
       state.deliveries.length=Math.min(state.deliveries.length, 30);
       return spec;
     }
-    function resolve(id, object) {state.notifications.filter(item => item.id===id && item.object===object).forEach(item => {item.resolved=true;});}
     function begin(target, phase = 'checking', origin = 'user.action') {
       const u=state.updates[target];
       if (!['checking','applying'].includes(phase)) return null;
@@ -92,7 +92,7 @@
       if(target!=='manager'||u.phase!=='restart-required')return false;
       // 仅模拟重启后的版本回读；等待重启时不能提前改当前版本。
       u.current=u.candidate;u.phase='complete';u.progress={stage:'complete',percent:null};
-      emit('update.complete',target,time,{origin:'operation.result',revision:u.candidate,operationId:target+':'+u.generation});return true;
+      emit('update.complete',target,time,{origin:'operation.result',revision:u.candidate,channel:state.updatePolicy.channel,stage:'applying',operationId:target+':'+u.generation});return true;
     }
     function requestChecks(origin, time=Date.now()) {
       if (!Object.hasOwn(config.triggers,origin)) throw new Error('未注册触发源：'+origin);
@@ -107,20 +107,21 @@
     }
     function setUpdatePolicy(channel,time=Date.now()) {
       if (!['stable','beta','manual'].includes(channel)) return false;
-      if(Object.values(state.updates).some(u=>u.phase==='restart-required'||(u.phase==='applying'&&u.progress?.stage==='installing')))return false;
+      const u=state.updates.manager;
+      if(channel===state.updatePolicy.channel || u.phase==='restart-required' || (u.phase==='applying'&&u.progress?.stage==='installing'))return false;
       state.updatePolicy={channel,checkHours:channel==='stable'?24:channel==='beta'?6:0};
-      for(const [target,u] of Object.entries(state.updates)) {
-        cancel(target,time);u.generation++;u.phase='idle';u.lastChecked=null;u.failures=0;u.nextDue=time;
-        if(target==='manager')u.source=(channel==='manual'?'stable':channel)+' · 签名更新源（示例）';
-      }
+      // 管理器通道不属于面板官方包；保留面板缓存、退避、确认与在途事务。
+      cancel('manager',time);u.generation++;u.phase='idle';u.lastChecked=null;u.failures=0;u.nextDue=time;
+      u.source=(channel==='manual'?'stable':channel)+' · 签名更新源（示例）';
       return true;
     }
     function confirmApply(target, generation, version, withBackup=true, time=Date.now(), backupValid=true) {
       const u=state.updates[target];
       if(!u||u.phase!=='available'||u.generation!==generation||u.candidate!==version)return null;
       if(withBackup) {
-        if(!backupValid){emit('backup.failed','preferences',time);return null;}
-        backup('升级前',time);
+        const context={action:'create',stage:'creating',operationId:'upgrade:'+target+':'+generation};
+        if(!backupValid){emit('backup.failed','preferences',time,{...context,errorCode:'creation.failed'});return null;}
+        backup('升级前',time,context.operationId);
       }
       return begin(target,'applying');
     }
@@ -141,23 +142,24 @@
       if (selected.size) emit('backup.cleaned', 'preferences', time);
       return selected.size;
     }
-    function backup(reason='手动', time=Date.now()) {
+    function backup(reason='手动', time=Date.now(), operationId='create:'+ ++operationSerial) {
       const item={id:'new-'+(++serial), name:'偏好备份 '+serial, created:time, pinned:false, integrity:'valid', reason, scope:'管理器偏好'};
-      state.backups.unshift(item); emit('backup.created', 'preferences', time, {operationId:item.id});
+      state.backups.unshift(item); emit('backup.created', 'preferences', time, {operationId,action:'create',stage:'creating'});
       if (state.policy.cleanup==='after-create') clean(cleanupCandidates(state.backups, state.policy, time).map(item => item.id), time);
       return item;
     }
     function pin(id) {const item=state.backups.find(item => item.id===id); if(item) item.pinned=!item.pinned;}
     function restore(id, time=Date.now()) {
       const item=state.backups.find(item => item.id===id);
-      if (!item || item.integrity!=='valid') {emit('backup.failed', 'preferences', time); return false;}
+      const context={action:'restore',stage:'restoring',operationId:'restore:'+ ++operationSerial};
+      if (!item || item.integrity!=='valid') {emit('backup.restore.failed', id, time, {...context,errorCode:item?'integrity.invalid':'source.missing'}); return false;}
       // 防止本次创建触发轮换后移除待恢复源；恢复事务期间保护源。
       const wasPinned=item.pinned; item.pinned=true;
       const safety=backup('恢复前', time); safety.pinned=true;
       item.pinned=wasPinned;
-      emit('backup.restored', 'preferences', time); return true;
+      emit('backup.restored', id, time, context); return true;
     }
-    return {state, emit, resolve, begin, finish, cancel, progress, restart, requestChecks, setUpdatePolicy, confirmApply, setScenario, setPolicy, clean, backup, pin, restore};
+    return {state, emit, begin, finish, cancel, progress, restart, requestChecks, setUpdatePolicy, confirmApply, setScenario, setPolicy, clean, backup, pin, restore};
   }
   return {create, registry, config, definitions, cleanupCandidates};
 });

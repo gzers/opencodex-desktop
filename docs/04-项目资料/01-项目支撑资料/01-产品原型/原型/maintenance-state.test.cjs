@@ -35,7 +35,7 @@ test('校验失败阻止恢复；恢复创建固定的当前偏好保护备份',
   m.setPolicy(1,1,'after-create');assert.equal(m.restore('sample-12',now),true);
   assert.ok(m.state.backups.find(i=>i.id==='sample-12'));
   assert.ok(m.state.backups.some(i=>i.reason==='恢复前'&&i.pinned));
-  assert.equal(m.state.notifications.find(i=>i.id==='backup.failed').resolved,true);
+  assert.equal(m.state.notifications.find(i=>i.id==='backup.restore.failed'&&i.object==='sample-11').resolved,false);
 });
 test('策略非法值不修改状态',()=>{
   const m=M.create(now), old=m.state.policy;
@@ -68,16 +68,16 @@ test('应用失败保留当前版本并允许重新检查',()=>{
   assert.notEqual(m.begin('runtime'),null);
 });
 test('重复失败去重、按冷却再次投递，恢复与已读独立',()=>{
-  const m=M.create(now);m.emit('update.failed','manager',now);
-  assert.equal(m.emit('update.failed','manager',now+1),null);
+  const m=M.create(now);m.emit('update.failed','manager',now,{stage:'checking',channel:'stable'});
+  assert.equal(m.emit('update.failed','manager',now+1,{stage:'checking',channel:'stable'}),null);
   assert.equal(m.state.deliveries.length,1);
   assert.equal(m.state.notifications[0].occurrences,2);
-  assert.ok(m.emit('update.failed','manager',now+day));
+  assert.ok(m.emit('update.failed','manager',now+day,{stage:'checking',channel:'stable'}));
   assert.equal(m.state.notifications.length,1);
-  m.emit('update.latest','manager',now+day+1);
+  m.emit('update.latest','manager',now+day+1,{stage:'checking',channel:'stable'});
   const failed=m.state.notifications.find(i=>i.id==='update.failed');
   assert.equal(failed.resolved,true);assert.equal(failed.read,false);
-  m.emit('update.failed','manager',now+day+2);
+  m.emit('update.failed','manager',now+day+2,{stage:'checking',channel:'stable'});
   assert.equal(m.state.notifications.filter(i=>i.id==='update.failed').length,2);
   assert.notEqual(m.state.notifications[0].uid,failed.uid);
 });
@@ -117,17 +117,19 @@ test('启动延迟、多来源合并与成功缓存；不发生自动安装',()=
   assert.equal(m.state.updates.manager.current,'0.1.9');
 });
 test('手动检查跳过缓存；beta 的面板周期不随管理器缩短',()=>{
-  const m=M.create(now);m.setUpdatePolicy('beta',now);
-  const batch=m.requestChecks('policy.changed',now);
+  const m=M.create(now);
+  for(const r of m.requestChecks('user.action',now))m.finish(r.target,r.generation,'latest',now);
+  m.setUpdatePolicy('beta',now);
+  const batch=m.requestChecks('policy.changed',now);assert.deepEqual(batch.map(r=>r.target),['manager']);
   for(const r of batch)m.finish(r.target,r.generation,'latest',now);
   const auto=m.requestChecks('schedule.due',now+6*3600000);assert.deepEqual(auto.map(r=>r.target),['manager']);
   m.finish('manager',auto[0].generation,'latest',now+6*3600000);
   assert.equal(m.requestChecks('user.action',now+6*3600000+1).length,2);
 });
-test('手动策略禁止全部自动源；切通道取消旧结果',()=>{
+test('手动策略禁止全部自动源；只取消管理器旧结果，面板在途检查继续',()=>{
   const m=M.create(now),old=m.requestChecks('user.action',now);
   m.setUpdatePolicy('manual',now+1);
-  for(const r of old)assert.equal(m.finish(r.target,r.generation,'available',now+2),false);
+  for(const r of old)assert.equal(m.finish(r.target,r.generation,'available',now+2),r.target==='runtime');
   for(const origin of ['app.ready','route.overview.enter','schedule.due','window.resume','network.online','retry.due','policy.changed'])assert.equal(m.requestChecks(origin,now+day*100).length,0);
   assert.equal(m.requestChecks('user.action',now+day).length,2);
 });
@@ -164,12 +166,12 @@ test('后台已最新静默，手动检查有toast；可用更新按版本与通
 });
 test('检查成功只解除检查失败，不误解应用失败；完成更新解除可用版本通知',()=>{
   const m=M.create(now);
-  m.emit('update.failed','manager',now,{stage:'applying'});
-  m.emit('update.failed','manager',now,{stage:'checking'});
-  m.emit('update.available','manager',now+1);
+  m.emit('update.failed','manager',now,{stage:'applying',channel:'stable',revision:'0.1.10'});
+  m.emit('update.failed','manager',now,{stage:'checking',channel:'stable'});
+  m.emit('update.available','manager',now+1,{stage:'checking',channel:'stable',revision:'0.1.10'});
   assert.equal(m.state.notifications.find(n=>n.id==='update.failed'&&n.stage==='applying').resolved,false);
   assert.equal(m.state.notifications.find(n=>n.id==='update.failed'&&n.stage==='checking').resolved,true);
-  m.emit('update.complete','manager',now+2);
+  m.emit('update.complete','manager',now+2,{stage:'applying',channel:'stable',revision:'0.1.10'});
   assert.equal(m.state.notifications.find(n=>n.id==='update.available').resolved,true);
 });
 test('备份是更新确认选项；取消勾选不创建，失败阻断，过期确认无副作用',()=>{
@@ -205,7 +207,7 @@ test('进度按事务版本保护，拒绝倒退与非法百分比；写入阶�
   assert.equal(model.progress('runtime',token,'downloading',100),false);
   assert.equal(model.progress('runtime',token,'installing'),true);
   assert.equal(model.cancel('runtime',now),false);
-  assert.equal(model.setUpdatePolicy('beta',now),false);
+  assert.equal(model.setUpdatePolicy('beta',now),true);
   assert.equal(u.phase,'applying');
   assert.equal(model.finish('runtime',token,'complete',now),true);
   assert.equal(u.progress.stage,'complete');
@@ -224,4 +226,79 @@ test('管理器安装就绪不改运行版本；待重启不重复查装，重�
   assert.equal(u.current,'0.1.10');
   assert.ok(model.state.notifications.filter(n=>n.id==='update.restart.required').every(n=>n.resolved));
   assert.equal(model.restart('manager',now),false);
+});
+
+test('坏恢复源不会因手动备份或其他源恢复成功解除；缺失源单独登记',()=>{
+  const m=M.create(now);m.restore('sample-11',now);m.restore('missing',now+1);
+  const invalid=m.state.notifications.find(n=>n.object==='sample-11'), missing=m.state.notifications.find(n=>n.object==='missing');
+  m.backup('手动',now+2);m.restore('sample-12',now+3);
+  assert.equal(invalid.resolved,false);assert.equal(missing.resolved,false);
+  assert.equal(invalid.errorCode,'integrity.invalid');assert.equal(missing.errorCode,'source.missing');
+  m.state.backups.find(b=>b.id==='sample-11').integrity='valid';
+  assert.equal(m.restore('sample-11',now+4),true);
+  assert.equal(invalid.resolved,true);assert.equal(invalid.read,false);assert.equal(missing.resolved,false);
+  m.state.backups.find(b=>b.id==='sample-11').integrity='invalid';m.restore('sample-11',now+5);
+  assert.equal(m.state.notifications.filter(n=>n.id==='backup.restore.failed'&&n.object==='sample-11'&&!n.resolved).length,1);
+});
+test('备份创建失败按确认事务隔离；只有同一确认重试成功解除',()=>{
+  const m=M.create(now);for(const target of ['manager','runtime']){
+    m.setScenario(target,'available');const u=m.state.updates[target];
+    m.confirmApply(target,u.generation,u.candidate,true,now,false);
+  }
+  const manager=m.state.notifications.find(n=>n.operationId.startsWith('upgrade:manager:'));
+  const panel=m.state.notifications.find(n=>n.operationId.startsWith('upgrade:runtime:'));
+  assert.notEqual(manager.key,panel.key);m.backup('手动',now+1);
+  assert.equal(manager.resolved,false);assert.equal(panel.resolved,false);
+  const u=m.state.updates.manager;
+  assert.notEqual(m.confirmApply('manager',u.generation,u.candidate,true,now+2),null);
+  assert.equal(manager.resolved,true);assert.equal(panel.resolved,false);
+});
+test('缺少解除上下文不能消除异常；错误动作和阶段不视为恢复',()=>{
+  const m=M.create(now),context={action:'create',stage:'creating',operationId:'attempt-a'};
+  m.emit('backup.failed','preferences',now,context);const failure=m.state.notifications[0];
+  for(const ctx of [{},{...context,action:'restore'},{...context,stage:'restoring'},{...context,operationId:'attempt-b'},{...context,operationId:''},{...context,operationId:null}]){
+    m.emit('backup.created','preferences',now+1,ctx);assert.equal(failure.resolved,false);
+  }
+  const invalid=M.create(now),empty={...context,operationId:null};
+  invalid.emit('backup.failed','preferences',now,empty);const invalidFailure=invalid.state.notifications[0];
+  invalid.emit('backup.created','preferences',now+1,empty);assert.equal(invalidFailure.resolved,false);
+  m.emit('backup.created','preferences',now+2,context);assert.equal(failure.resolved,true);
+});
+test('检查与完成只解除对应通道；完成还须匹配候选版本',()=>{
+  const m=M.create(now),failed={stage:'applying',channel:'stable',revision:'0.1.10'};
+  m.emit('update.failed','manager',now,failed);const failure=m.state.notifications[0];
+  m.emit('update.complete','manager',now+1,{...failed,channel:'beta'});assert.equal(failure.resolved,false);
+  m.emit('update.complete','manager',now+2,{...failed,revision:'0.1.11'});assert.equal(failure.resolved,false);
+  m.emit('update.complete','manager',now+3,failed);assert.equal(failure.resolved,true);
+  m.emit('update.failed','manager',now+4,{stage:'checking',channel:'stable'});const check=m.state.notifications[0];
+  m.emit('update.latest','manager',now+5,{stage:'checking',channel:'beta'});assert.equal(check.resolved,false);
+  m.emit('update.latest','manager',now+6,{channel:'stable'});assert.equal(check.resolved,false);
+  m.emit('update.latest','manager',now+7,{stage:'checking',channel:'stable'});assert.equal(check.resolved,true);
+});
+test('切通道保留面板成功缓存、已有确认和失败退避；策略触发仅查管理器',()=>{
+  for(const outcome of ['available','failed']){
+    const m=M.create(now),token=m.begin('runtime');m.finish('runtime',token,outcome,now);
+    const snapshot=JSON.stringify(m.state.updates.runtime);
+    assert.equal(m.setUpdatePolicy('beta',now+1),true);
+    assert.equal(JSON.stringify(m.state.updates.runtime),snapshot);
+    assert.deepEqual(m.requestChecks('policy.changed',now+day).map(r=>r.target),['manager']);
+    if(outcome==='available')assert.notEqual(m.confirmApply('runtime',token,'2.51.0',false,now+2),null);
+    else assert.equal(m.requestChecks('network.online',now+299999).length,0);
+  }
+});
+test('选择当前通道无副作用；管理器写入与待重启阻止切换',()=>{
+  const m=M.create(now);m.begin('manager');const snapshot=JSON.stringify(m.state);
+  assert.equal(m.setUpdatePolicy('stable',now+1),false);assert.equal(JSON.stringify(m.state),snapshot);
+  m.cancel('manager',now);m.setScenario('manager','available');const token=m.begin('manager','applying');
+  m.progress('manager',token,'installing');assert.equal(m.setUpdatePolicy('beta',now+2),false);
+  m.finish('manager',token,'restart-required',now+3);assert.equal(m.setUpdatePolicy('beta',now+4),false);
+});
+test('退出手动模式保留面板原到期时间，不绕过退避或补跑',()=>{
+  const m=M.create(now);m.finish('runtime',m.begin('runtime'),'failed',now);
+  const due=m.state.updates.runtime.nextDue;
+  m.setUpdatePolicy('manual',now+1);m.setUpdatePolicy('stable',now+2);
+  assert.equal(m.state.updates.runtime.nextDue,due);
+  assert.deepEqual(m.requestChecks('policy.changed',now+2).map(r=>r.target),['manager']);
+  assert.equal(m.requestChecks('network.online',due-1).length,0);
+  assert.deepEqual(m.requestChecks('retry.due',due).map(r=>r.target),['runtime']);
 });

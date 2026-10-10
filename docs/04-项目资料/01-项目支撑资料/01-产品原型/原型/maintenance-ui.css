@@ -11,6 +11,20 @@
 .mnt-policy input,.mnt-policy select { width:100%; min-width:0; }
 .mnt-policy [role="alert"] { flex-basis:100%; color:var(--red); }
 .mnt-path { font-size:var(--text-label); overflow-wrap:anywhere; color:var(--muted); }
+.mnt-backup-files { margin:16px 0; border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px 16px; min-width:0; }
+.mnt-backup-files h3 { margin:0; font-size:var(--text-control); font-weight:600; }
+.mnt-tree-scroll { max-height:400px; }
+.mnt-backup-tree { width:100%; min-width:800px; table-layout:fixed; border-collapse:separate; border-spacing:0; text-align:left; }
+.mnt-backup-tree th,.mnt-backup-tree td { border-bottom:1px solid var(--border-soft,var(--border)); }
+.mnt-backup-tree thead th { position:sticky; top:0; z-index:1; background:var(--rail); color:var(--muted); font-weight:500; }
+.mnt-backup-tree thead th:first-child { width:44%; }
+.mnt-backup-tree thead th:last-child { width:110px; }
+.mnt-backup-tree tbody th { font-weight:500; }
+.mnt-backup-tree tbody td:nth-child(2) { color:var(--muted); overflow-wrap:anywhere; }
+.mnt-backup-tree tbody tr:last-child>* { border-bottom:0; }
+.mnt-backup-tree .btn { white-space:nowrap; }
+.mnt-tree-toggle { flex:none; width:var(--tree-control-size); border-radius:4px; }
+.mnt-tree-toggle:hover { color:var(--accent); }
 .mnt-note { font-size:var(--text-label); line-height:1.65; color:var(--muted); margin:12px 0; }
 .mnt-note.danger,.mnt-status.danger { color:var(--red); }
 .mnt-backup-list { list-style:none; padding:0; margin:18px 0 0; }
