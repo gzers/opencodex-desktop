@@ -1,6 +1,6 @@
 //! One native foreground signal for decorative rendering and status scheduling.
 use std::sync::atomic::{AtomicBool, Ordering};
-use tauri::{Emitter, Manager};
+use tauri::Manager;
 
 #[derive(Default)]
 pub struct AppActivity {
@@ -26,7 +26,14 @@ impl AppActivity {
         #[cfg(not(windows))]
         let foreground = active && visible;
         if self.foreground.swap(foreground, Ordering::AcqRel) != foreground {
-            let _ = app.emit("app-foreground-changed", foreground);
+            let _ = crate::commands::event_delivery::emit_signal(
+                app,
+                "app-foreground-changed",
+                crate::modules::notifications::registry::Job::Activity,
+                crate::modules::notifications::registry::Trigger::NativeCallback,
+                crate::modules::notifications::registry::Channel::Local,
+                foreground,
+            );
             self.wake.notify_one();
         }
     }

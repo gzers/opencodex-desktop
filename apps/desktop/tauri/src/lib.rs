@@ -115,20 +115,18 @@ pub fn run() {
                     }) as Box<dyn std::error::Error>
                 })?;
             // FZ-02 首次启动先初始化或引用当前版本的数据根；失败阻断启动。
-            let runtime_config = crate::modules::data_root::bootstrap::resolve_with_boundary(
+            let (runtime_config, locks) = crate::modules::data_root::bootstrap::resolve_locked_with_boundary(
                 &anchor, crate::modules::test_sandbox::enabled().then_some(anchor.as_path()),
             )?;
             let data_root = runtime_config.active_data_root.clone();
             app.manage(crate::state::SharedDataRootAnchor(anchor));
+            app.manage(crate::state::InstanceState { _locks: locks });
             // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
             // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。
             if let Err(error) = crate::modules::config_migration::migrate_preferences_on_startup(&data_root)
             {
                 record_window_event(&data_root, &format!("config migration: {error}"));
             }
-            let _lock = crate::modules::instance::AppInstanceLock::acquire(&data_root)
-                .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
-            app.manage(crate::state::InstanceState { _lock });
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
             // 启动事件附构建来源：维护事故可把本机安装映射回提交（F-09）。
             record_startup_event(&data_root, &app.package_info().version.to_string());
@@ -149,23 +147,18 @@ pub fn run() {
             app.manage(crate::state::SharedTrayRequests::new());
             // 「启动时清理」：开启时按保留策略做一次有界的轻量清理（日志截断、通知与
             // 通知保留期），必须在通知集合载入前完成；启动不扫描、校验或删除备份。
-            if let Ok(outcome) =
-                crate::commands::cleanup::run_startup_cleanup(&data_root, chrono::Utc::now())
-            {
-                if outcome.ran
-                    && (outcome.trimmed_log_files > 0
-                        || outcome.removed_backups > 0
-                        || outcome.pruned_notifications > 0)
-                {
-                    let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&data_root)
-                        .append_event(&format!(
-                            "startup cleanup: logs={} lines={} backups={} notifications={}",
-                            outcome.trimmed_log_files,
-                            outcome.trimmed_log_lines,
-                            outcome.removed_backups,
-                            outcome.pruned_notifications,
+            let (startup_cleanup, cleanup_identity) =
+                crate::commands::cleanup::run_startup_cleanup_registered(&data_root, chrono::Utc::now());
+            match &startup_cleanup {
+                Ok(outcome) if outcome.ran
+                    && (outcome.trimmed_log_files > 0 || outcome.pruned_notifications > 0) => {
+                        record_window_event(&data_root, &format!(
+                            "startup cleanup: logs={} lines={} notifications={}",
+                            outcome.trimmed_log_files, outcome.trimmed_log_lines, outcome.pruned_notifications,
                         ));
                 }
+                Err(_) => record_window_event(&data_root, "startup cleanup failed; retained unreadable files"),
+                _ => {}
             }
             // 通知实体持久化在数据根的 `manager-state/notifications.json`，
             // 重启后按 read / resolved / deleted 原样恢复；正式运行不预置任何演示种子
@@ -173,6 +166,17 @@ pub fn run() {
             app.manage(std::sync::Arc::new(std::sync::Mutex::new(
                 crate::commands::notifications::startup_notification_store(&data_root),
             )));
+            // Terminal facts use the post-cleanup store, never an earlier in-memory copy.
+            if match &startup_cleanup { Ok(outcome) => outcome.ran, Err(_) => true } {
+                crate::commands::event_delivery::publish(
+                    app.handle(), &data_root,
+                    if startup_cleanup.is_ok() { "local-cleanup-succeeded" } else { "local-cleanup-failed" },
+                    cleanup_identity, crate::modules::notifications::registry::Trigger::Startup,
+                );
+            }
+            if crate::commands::update::reconcile_startup(app.handle(), &data_root).is_err() {
+                record_window_event(&data_root, "manager installation reconciliation failed; receipt retained");
+            }
             app.manage(std::sync::Arc::new(std::sync::Mutex::new(
                 crate::modules::update::UpdateStatus::pending(app.package_info().version.to_string())
                     .with_channel(update_channel(&data_root)),
@@ -200,6 +204,8 @@ pub fn run() {
             app.manage(runtime.clone());
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             app.manage(crate::state::SharedRuntimeInstall::new());
+            #[cfg(windows)]
+            app.manage(crate::commands::update::SharedPendingUpdate::new(None));
             app.manage(crate::commands::update_schedule::SharedSchedule::default());
             app.manage(crate::commands::update_schedule::SharedPanelQuery::default());
             let active_data_root = runtime_config.active_data_root.clone();
@@ -372,13 +378,16 @@ pub fn run() {
                 impl crate::modules::status::polling::StatusSnapshotEmitter for TauriStatusEmitter {
                     fn emit(&self, snapshot: &crate::types::runtime_status::StatusSnapshotDto) {
                         use tauri::Manager;
-                        use tauri::Emitter;
                         if let Some(tray) = self.0.try_state::<crate::infrastructure::tray_controller::SharedTrayPresenter>() {
                             let state = crate::infrastructure::tray_controller::tray_state_from_snapshot(snapshot, self.1.clone());
                             tray.update(&state);
                         }
-                        if let Err(_error) = self.0.emit(
+                        if let Err(_error) = crate::commands::event_delivery::emit_signal(
+                            &self.0,
                             crate::modules::status::polling::STATUS_SNAPSHOT_CHANGED_EVENT,
+                            crate::modules::notifications::registry::Job::Observe,
+                            crate::modules::notifications::registry::Trigger::StatusChange,
+                            crate::modules::notifications::registry::Channel::Local,
                             snapshot,
                         ) {}
                         // 概览状态卡不再承载说明句（UI规范 §19）：需要关注的运行状态
@@ -416,8 +425,12 @@ pub fn run() {
                         );
                         // 后端写入后必须广播，否则前端仍显示启动时那份旧列表。
                         if published {
-                            if let Err(_error) = self.0.emit(
+                            if let Err(_error) = crate::commands::event_delivery::emit_signal(
+                                &self.0,
                                 crate::commands::notifications::NOTIFICATIONS_CHANGED_EVENT,
+                                crate::modules::notifications::registry::Job::NotificationMutation,
+                                crate::modules::notifications::registry::Trigger::Commit,
+                                crate::modules::notifications::registry::Channel::Local,
                                 (),
                             ) {}
                         }
@@ -486,7 +499,7 @@ pub fn run() {
                     let data_root = app.state::<crate::state::SharedDataRoot>();
                     reveal_main_window(app, "tray/menu", &data_root.0);
                     app.state::<crate::state::SharedTrayRequests>().push(action);
-                    { use tauri::Emitter; let _ = app.emit("tray-requests-available", ()); }
+                    { let _ = crate::commands::event_delivery::emit_signal(app, "tray-requests-available", crate::modules::notifications::registry::Job::Tray, crate::modules::notifications::registry::Trigger::NativeCallback, crate::modules::notifications::registry::Channel::Local, ()); }
                 }
                 // 原生「重载主界面」（F-06）：直接重载主 WebView，不入前端请求队列。
                 TrayAction::ReloadMain => {
@@ -496,15 +509,24 @@ pub fn run() {
                 }
                 TrayAction::Start | TrayAction::Stop | TrayAction::Restart => {
                     app.state::<crate::state::SharedTrayRequests>().push(action);
-                    { use tauri::Emitter; let _ = app.emit("tray-requests-available", ()); }
+                    { let _ = crate::commands::event_delivery::emit_signal(app, "tray-requests-available", crate::modules::notifications::registry::Job::Tray, crate::modules::notifications::registry::Trigger::NativeCallback, crate::modules::notifications::registry::Channel::Local, ()); }
                 }
             }
         })
         .invoke_handler(tauri::generate_handler![
             commands::backup::backup_files,
             commands::backup::open_backup_file,
+            commands::backup::create_preferences_backup,
+            commands::backup::preferences_backup_policy,
+            commands::backup::save_preferences_backup_policy,
+            commands::backup::list_preferences_backups,
+            commands::backup::set_preferences_backup_pinned,
+            commands::backup::preview_preferences_backup_cleanup,
+            commands::backup::cleanup_preferences_backups,
+            commands::backup::restore_preferences_backup,
             commands::update::check_for_update,
             commands::update::install_update,
+            commands::update::restart_after_update,
             commands::update::get_update_status,
             commands::update::set_update_channel,
             commands::update_schedule::update_schedule_plan,

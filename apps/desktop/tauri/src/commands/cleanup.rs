@@ -25,11 +25,30 @@ const AUDIT_LOG_EXCLUDED_FROM_TRIM: &str = crate::modules::logs::AUDIT_LOG_FILE_
 
 #[tauri::command]
 pub async fn cleanup_local_logs(
+    app: tauri::AppHandle,
     data_root: State<'_, SharedDataRoot>,
 ) -> AppResult<LocalCleanupResultDto> {
     let root = data_root.0.clone();
     crate::commands::run_blocking("cleanup local logs", move || {
-        cleanup_local_logs_with_root(&root)
+        let identity = crate::commands::event_delivery::prepare(
+            &root,
+            "local-cleanup-failed",
+            crate::modules::notifications::registry::Channel::Local,
+            b"manual-local-logs",
+        );
+        let result = cleanup_local_logs_with_root(&root);
+        crate::commands::event_delivery::publish(
+            &app,
+            &root,
+            if result.is_ok() {
+                "local-cleanup-succeeded"
+            } else {
+                "local-cleanup-failed"
+            },
+            identity,
+            crate::modules::notifications::registry::Trigger::User,
+        );
+        result
     })
     .await
 }
@@ -46,7 +65,8 @@ pub fn cleanup_local_logs_with_root(
     data_root: &std::path::Path,
 ) -> AppResult<LocalCleanupResultDto> {
     let logs = data_root.join("logs");
-    if !logs.is_dir() {
+    crate::modules::backup::safety::check_path(data_root, &logs, true)?;
+    if !logs.exists() {
         return Ok(LocalCleanupResultDto {
             cleaned_logs: 0,
             summary: "没有本地日志文件；原始目录保持不变。".to_string(),
@@ -62,17 +82,23 @@ pub fn cleanup_local_logs_with_root(
             detail: error.to_string(),
         })?;
         let path = entry.path();
-        if path.is_file() {
-            let len = std::fs::metadata(&path)
-                .map(|value| value.len())
-                .unwrap_or(0);
-            if len == 0 {
-                continue;
-            }
-            std::fs::write(&path, b"").map_err(|error| AppError::FileSystem {
-                operation: "clear local log".to_string(),
+        crate::modules::backup::safety::check_path(data_root, &path, false)?;
+        if crate::modules::backup::safety::inspect(&path)?.is_file() {
+            let file = crate::modules::backup::safety::open_existing_writable(&path)?;
+            let metadata = file.metadata().map_err(|error| AppError::FileSystem {
+                operation: "inspect local log".into(),
                 detail: error.to_string(),
             })?;
+            crate::modules::backup::safety::require_single_link(&file)?;
+            if metadata.len() == 0 {
+                continue;
+            }
+            file.set_len(0)
+                .and_then(|()| file.sync_all())
+                .map_err(|error| AppError::FileSystem {
+                    operation: "clear local log".into(),
+                    detail: error.to_string(),
+                })?;
             cleaned += 1;
         }
     }
@@ -136,6 +162,7 @@ pub struct RetentionCleanupOutcome {
 ///
 /// 关闭「启动时清理」时**不做任何事**，如实返回 `ran=false`；
 /// 读取偏好失败按错误上报，不静默跳过。
+#[cfg(test)]
 pub fn run_startup_cleanup(
     data_root: &Path,
     now: DateTime<Utc>,
@@ -147,6 +174,31 @@ pub fn run_startup_cleanup(
         return Ok(RetentionCleanupOutcome::default());
     }
     retention_cleanup(data_root, &preferences, now, false)
+}
+
+/// Prepare one owned startup attempt before cleanup; disabled means no identity
+/// and no event. Delivery must wait until the post-cleanup history is managed.
+pub fn run_startup_cleanup_registered(
+    data_root: &Path,
+    now: DateTime<Utc>,
+) -> (
+    AppResult<RetentionCleanupOutcome>,
+    Option<crate::modules::notifications::registry::EventIdentity>,
+) {
+    let preferences = crate::modules::preferences::PreferencesStore::new(data_root).load();
+    if preferences.as_ref().is_ok_and(|p| !p.startup_cleanup) {
+        return (Ok(RetentionCleanupOutcome::default()), None);
+    }
+    let identity = crate::commands::event_delivery::prepare(
+        data_root,
+        "local-cleanup-failed",
+        crate::modules::notifications::registry::Channel::Local,
+        b"startup-local-retention",
+    );
+    let result = preferences
+        .map_err(|_| AppError::NotConfigured)
+        .and_then(|p| retention_cleanup(data_root, &p, now, false));
+    (result, identity)
 }
 
 /// 按给定偏好执行保留期清理（导出给测试与后台任务复用）。
@@ -170,7 +222,9 @@ fn retention_cleanup(
     let backup_retention = parse_backup_retention(&preferences.backup_retention);
     let removed_backups = if include_backups {
         crate::modules::backup::cleanup_retention(data_root, now, backup_retention)?
-    } else { Vec::new() };
+    } else {
+        Vec::new()
+    };
     let notification_days = parse_notification_retention(&preferences.notification_retention);
     let pruned_notifications = prune_notifications_by_retention(data_root, now, notification_days)?;
 
@@ -202,7 +256,8 @@ fn trim_logs_by_retention(
     max_lines: usize,
 ) -> Result<(usize, usize), AppError> {
     let logs = data_root.join("logs");
-    if !logs.is_dir() {
+    crate::modules::backup::safety::check_path(data_root, &logs, true)?;
+    if !logs.exists() {
         return Ok((0, 0));
     }
     let mut trimmed_files = 0_usize;
@@ -216,12 +271,20 @@ fn trim_logs_by_retention(
             detail: error.to_string(),
         })?;
         let path = entry.path();
-        if !path.is_file()
+        crate::modules::backup::safety::check_path(data_root, &path, false)?;
+        if !crate::modules::backup::safety::inspect(&path)?.is_file()
             || path.file_name().and_then(|name| name.to_str()) == Some(AUDIT_LOG_EXCLUDED_FROM_TRIM)
         {
             continue;
         }
-        let raw = std::fs::read_to_string(&path).unwrap_or_default();
+        let bytes = crate::modules::backup::safety::read_file(
+            &path,
+            crate::modules::backup::safety::MAX_PAYLOAD_BYTES,
+        )?;
+        let raw = String::from_utf8(bytes).map_err(|error| AppError::FileSystem {
+            operation: "read local log".into(),
+            detail: error.to_string(),
+        })?;
         let lines: Vec<&str> = raw.lines().collect();
         if lines.is_empty() {
             continue;
@@ -271,10 +334,8 @@ fn prune_notifications_by_retention(
     max_days: i64,
 ) -> Result<usize, AppError> {
     let path = crate::modules::notifications::persistence::notifications_path(data_root);
-    let mut store = match crate::modules::notifications::persistence::load_notifications(&path) {
-        Ok(store) => store,
-        Err(_) => return Ok(0),
-    };
+    crate::modules::backup::safety::check_path(data_root, &path, true)?;
+    let mut store = crate::modules::notifications::persistence::load_notifications(&path)?;
     let expired: Vec<String> = store
         .live()
         .into_iter()
@@ -371,6 +432,55 @@ mod tests {
         assert_eq!(result.cleaned_logs, 0);
     }
 
+    #[cfg(unix)]
+    #[test]
+    fn log_cleanup_rejects_linked_directory_and_preserves_external_log() {
+        let root = tempfile::tempdir().unwrap();
+        let external = tempfile::tempdir().unwrap();
+        let log = external.path().join("app.log");
+        std::fs::write(&log, b"external log").unwrap();
+        std::os::unix::fs::symlink(external.path(), root.path().join("logs")).unwrap();
+        assert!(cleanup_local_logs_with_root(root.path()).is_err());
+        assert!(trim_logs_by_retention(root.path(), Utc::now(), 1, 1).is_err());
+        assert_eq!(std::fs::read(&log).unwrap(), b"external log");
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn log_cleanup_rejects_linked_file_and_preserves_external_log() {
+        let root = tempfile::tempdir().unwrap();
+        let external = tempfile::tempdir().unwrap();
+        let log = external.path().join("app.log");
+        std::fs::write(&log, b"external log").unwrap();
+        std::fs::create_dir(root.path().join("logs")).unwrap();
+        std::os::unix::fs::symlink(&log, root.path().join("logs/app.log")).unwrap();
+        assert!(cleanup_local_logs_with_root(root.path()).is_err());
+        assert!(trim_logs_by_retention(root.path(), Utc::now(), 1, 1).is_err());
+        assert_eq!(std::fs::read(&log).unwrap(), b"external log");
+    }
+
+    #[test]
+    fn manual_log_cleanup_rejects_hard_link_and_preserves_external_log() {
+        let root = tempfile::tempdir().unwrap();
+        let external = tempfile::tempdir().unwrap();
+        let log = external.path().join("app.log");
+        std::fs::write(&log, b"external log").unwrap();
+        std::fs::create_dir(root.path().join("logs")).unwrap();
+        std::fs::hard_link(&log, root.path().join("logs/app.log")).unwrap();
+        assert!(cleanup_local_logs_with_root(root.path()).is_err());
+        assert_eq!(std::fs::read(&log).unwrap(), b"external log");
+    }
+
+    #[test]
+    fn retention_rejects_non_utf8_without_rewriting_log() {
+        let root = tempfile::tempdir().unwrap();
+        std::fs::create_dir(root.path().join("logs")).unwrap();
+        let log = root.path().join("logs/app.log");
+        std::fs::write(&log, [0xff, 0xfe]).unwrap();
+        assert!(trim_logs_by_retention(root.path(), Utc::now(), 1, 1).is_err());
+        assert_eq!(std::fs::read(&log).unwrap(), [0xff, 0xfe]);
+    }
+
     fn seeded_root(preferences: crate::modules::preferences::Preferences) -> tempfile::TempDir {
         let root = tempfile::tempdir().expect("temp root");
         crate::modules::data_root::initialize(root.path()).expect("initialize");
@@ -418,6 +528,91 @@ mod tests {
                 .count(),
             50
         );
+    }
+
+    #[test]
+    fn registered_startup_disabled_is_silent_and_corrupt_history_is_failure() {
+        use crate::modules::notifications::registry::{self, Channel, Trigger};
+        let disabled = seeded_root(crate::modules::preferences::Preferences {
+            startup_cleanup: false,
+            ..Default::default()
+        });
+        let (outcome, identity) = run_startup_cleanup_registered(disabled.path(), Utc::now());
+        assert!(!outcome.unwrap().ran);
+        assert!(identity.is_none());
+        assert!(!disabled
+            .path()
+            .join("manager-state/event-scope.json")
+            .exists());
+
+        let enabled = seeded_root(crate::modules::preferences::Preferences {
+            startup_cleanup: true,
+            ..Default::default()
+        });
+        let history = enabled.path().join("manager-state/notifications.json");
+        std::fs::write(&history, b"{broken").unwrap();
+        let (outcome, identity) = run_startup_cleanup_registered(enabled.path(), Utc::now());
+        assert!(outcome.is_err());
+        assert_eq!(std::fs::read(&history).unwrap(), b"{broken");
+        let original = identity.unwrap();
+        assert_eq!(original.channel, Channel::Local);
+        let delivery =
+            |event: &'static str, identity: registry::EventIdentity, evidence| registry::Delivery {
+                event,
+                job: registry::Job::Cleanup,
+                trigger: Trigger::Startup,
+                identity,
+                evidence,
+                occurred_at: Utc::now(),
+            };
+        let mut store = crate::modules::notifications::NotificationStore::new();
+        registry::deliver(
+            &mut store,
+            &delivery(
+                "local-cleanup-failed",
+                original.clone(),
+                registry::Evidence::Failure,
+            ),
+            registry::NotificationPreferences { lifecycle: true },
+        )
+        .unwrap();
+        // A later successful cleanup uses the exact original attempt, not a new scope.
+        std::fs::remove_file(history).unwrap();
+        let (outcome, success) = run_startup_cleanup_registered(enabled.path(), Utc::now());
+        assert!(outcome.unwrap().ran);
+        assert_eq!(success.as_ref(), Some(&original));
+        registry::deliver(
+            &mut store,
+            &delivery(
+                "local-cleanup-succeeded",
+                success.unwrap(),
+                registry::Evidence::Success {
+                    candidate: original.candidate.clone(),
+                    verified: true,
+                },
+            ),
+            registry::NotificationPreferences { lifecycle: true },
+        )
+        .unwrap();
+        assert!(
+            store
+                .all()
+                .iter()
+                .find(|n| n.notification_id.starts_with("local-cleanup-failed:"))
+                .unwrap()
+                .resolved
+        );
+    }
+
+    #[test]
+    fn registered_startup_policy_error_is_not_silent() {
+        let root = seeded_root(Default::default());
+        let path = root.path().join("manager-state/preferences.json");
+        std::fs::write(&path, b"{broken").unwrap();
+        let (outcome, identity) = run_startup_cleanup_registered(root.path(), Utc::now());
+        assert!(outcome.is_err());
+        assert!(identity.is_some());
+        assert_eq!(std::fs::read(path).unwrap(), b"{broken");
     }
 
     #[test]
@@ -543,6 +738,7 @@ mod tests {
     #[test]
     fn startup_keeps_backups_and_explicit_cleanup_honors_retention() {
         use crate::modules::backup::{self, BackupAction};
+        use crate::types::upgrade::BackupCleanupPolicy;
         let preferences = crate::modules::preferences::Preferences {
             backup_retention: "5".to_string(),
             log_retention: "90d-30000".to_string(),
@@ -554,36 +750,43 @@ mod tests {
         let now = Utc::now();
         for index in 0..8 {
             let created = now - chrono::Duration::days(60 + index);
-            backup::backup_file(
-                root.path(),
-                BackupAction::Upgrade,
-                &root.path().join("manager-state/preferences.json"),
-                format!("payload-{index}").as_bytes(),
-                created,
-                None,
-            )
-            .expect("backup");
+            // Legacy transaction records must remain protected. Exercise explicit
+            // retention with identifiable standalone manager preferences backups.
+            backup::manager::create(root.path(), created, BackupCleanupPolicy::Manual)
+                .expect("backup");
         }
         let outcome = run_startup_cleanup(root.path(), now).expect("cleanup");
         assert_eq!(outcome.removed_backups, 0);
         assert!(outcome.summary_path.is_none());
-        let records = backup::list_action_records(&root.path().join("backups"), "upgrade").unwrap();
+        let records = backup::list_action_records(
+            &root.path().join("backups"),
+            BackupAction::ManualPreferences.as_str(),
+        )
+        .unwrap();
         assert_eq!(records.len(), 8);
-        let prefs = crate::modules::preferences::PreferencesStore::new(root.path()).load().unwrap();
+        let prefs = crate::modules::preferences::PreferencesStore::new(root.path())
+            .load()
+            .unwrap();
         let outcome = run_retention_cleanup(root.path(), &prefs, now).expect("explicit cleanup");
         assert_eq!(outcome.removed_backups, 3);
         let summary = outcome.summary_path.expect("summary path");
         let raw = std::fs::read_to_string(&summary).expect("read summary");
         assert!(raw.contains("removed_backups"));
         assert!(!raw.contains("payload"));
-        let records =
-            backup::list_action_records(&root.path().join("backups"), "upgrade").expect("list");
+        let records = backup::list_action_records(
+            &root.path().join("backups"),
+            BackupAction::ManualPreferences.as_str(),
+        )
+        .expect("list");
         assert_eq!(records.len(), 5);
     }
 
     #[test]
     fn startup_does_not_read_malformed_backup_manifests() {
-        let prefs = crate::modules::preferences::Preferences { startup_cleanup: true, ..Default::default() };
+        let prefs = crate::modules::preferences::Preferences {
+            startup_cleanup: true,
+            ..Default::default()
+        };
         let root = seeded_root(prefs);
         let backup = root.path().join("backups/2026/01/upgrade/bk_broken");
         std::fs::create_dir_all(&backup).unwrap();

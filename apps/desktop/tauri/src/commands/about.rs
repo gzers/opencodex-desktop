@@ -51,6 +51,7 @@ pub fn official_project_facts_with_source<S: OfficialVersionSource + ?Sized>(
 /// 远端元数据查询：并发调用复用结果，落盘缓存与退避，不安装。
 #[tauri::command]
 pub async fn official_remote_latest(
+    trigger: Option<crate::commands::event_delivery::QueryTrigger>,
     app: tauri::AppHandle,
 ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
     use crate::commands::update_schedule::{self, SharedPanelQuery};
@@ -69,12 +70,41 @@ pub async fn official_remote_latest(
     {
         return Err(AppError::NotConfigured);
     }
-    let query_root = update_schedule::reserve(&app, Target::Panel)?;
+    let reserve_app = app.clone();
+    let (query_root, identity) = crate::commands::run_blocking("reserve panel query", move || {
+        let root = update_schedule::reserve(&reserve_app, Target::Panel)?;
+        let identity = crate::commands::event_delivery::prepare(
+            &root,
+            "panel-check-failed",
+            crate::modules::notifications::registry::Channel::Official,
+            crate::modules::runtime::OFFICIAL_PACKAGE.as_bytes(),
+        );
+        Ok((root, identity))
+    })
+    .await?;
     let result = query_panel_metadata(&app).await;
     query.sequence = query.sequence.wrapping_add(1);
     query.value = result.as_ref().ok().cloned();
     gate.1.store(query.sequence, Ordering::Release);
-    update_schedule::complete(&app, &query_root, Target::Panel, query.value.as_ref())?;
+    let value = query.value.clone();
+    let succeeded = result.is_ok();
+    let commit_app = app.clone();
+    crate::commands::run_blocking("commit panel query", move || {
+        update_schedule::complete(&commit_app, &query_root, Target::Panel, value.as_ref())?;
+        crate::commands::event_delivery::publish(
+            &commit_app,
+            &query_root,
+            if succeeded {
+                "panel-check-succeeded"
+            } else {
+                "panel-check-failed"
+            },
+            identity,
+            trigger.unwrap_or_default().into(),
+        );
+        Ok(())
+    })
+    .await?;
     result
 }
 
@@ -86,8 +116,7 @@ async fn query_panel_metadata(
         return Err(AppError::NotConfigured);
     };
     let npm = crate::modules::about::remote::discovered_npm().ok_or(AppError::NotConfigured)?;
-    let environment =
-        crate::modules::preferences::network_environment_for_app(&app, home.0.clone());
+    let environment = crate::modules::preferences::network_environment_for_app(app, home.0.clone());
     let working = home.0.clone();
     tauri::async_runtime::spawn_blocking(move || {
         crate::modules::about::remote::query_remote_latest(&npm, &working, &environment, "latest")

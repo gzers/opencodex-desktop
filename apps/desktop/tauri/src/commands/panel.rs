@@ -271,6 +271,16 @@ fn apply_panel_corner_radius<R: tauri::Runtime>(view: &tauri::Webview<R>, radius
 }
 
 fn notify_main<R: tauri::Runtime>(app: &tauri::AppHandle<R>, kind: &str, value: &str) {
+    if crate::modules::notifications::registry::validate_signal(
+        "ocxd-panel",
+        crate::modules::notifications::registry::Job::Panel,
+        crate::modules::notifications::registry::Trigger::NativeCallback,
+        crate::modules::notifications::registry::Channel::Local,
+    )
+    .is_err()
+    {
+        return;
+    }
     // Values are JSON encoded, never concatenated as executable HTML/JS.
     if let Some(main) = app.get_webview("main") {
         let detail = serde_json::json!({ "kind": kind, "value": value });
@@ -400,6 +410,7 @@ pub async fn sync_embedded_panel(
         detail["effects"] = serde_json::json!(match request.effects.as_deref() {
             Some("mid") => "mid", Some("low") => "low", _ => "high",
         });
+        crate::modules::notifications::registry::validate_signal("ocxd-panel-state", crate::modules::notifications::registry::Job::Panel, crate::modules::notifications::registry::Trigger::User, crate::modules::notifications::registry::Channel::Local).map_err(|_| AppError::NotConfigured)?;
         view.eval(format!("window.__ocxdPanelState = {detail}; window.dispatchEvent(new CustomEvent('ocxd-panel-state', {{detail:{detail}}}))"))?;
         if request.action == PanelAction::Show {
             if request.reload { view.reload()?; }

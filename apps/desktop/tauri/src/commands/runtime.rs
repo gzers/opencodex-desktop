@@ -5,7 +5,7 @@
 
 use std::path::{Path, PathBuf};
 
-use tauri::Emitter;
+use tauri::Manager;
 
 use crate::errors::{AppError, AppResult};
 use crate::modules::runtime::archive::{self, ArchiveRejection};
@@ -40,18 +40,69 @@ fn discovered_executables() -> (Option<PathBuf>, Option<PathBuf>) {
 }
 
 /// 把安装进度转发成 Tauri 事件；凭据已在内核里掩码。
+#[derive(Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PanelUpdateProgress {
+    operation_id: String,
+    candidate_version: String,
+    sequence: u64,
+    phase: crate::modules::runtime::install::InstallPhase,
+    line: Option<String>,
+}
 struct EventProgressSink {
     app: tauri::AppHandle,
+    channel: Option<tauri::ipc::Channel<PanelUpdateProgress>>,
+    operation_id: String,
+    candidate_version: String,
+    sequence: std::sync::atomic::AtomicU64,
 }
 
 impl InstallProgressSink for EventProgressSink {
     fn emit(&self, progress: InstallProgress) {
-        let _ = self.app.emit(RUNTIME_INSTALL_PROGRESS_EVENT, &progress);
+        if crate::modules::notifications::registry::validate_signal(
+            RUNTIME_INSTALL_PROGRESS_EVENT,
+            crate::modules::notifications::registry::Job::Install,
+            crate::modules::notifications::registry::Trigger::NativeCallback,
+            crate::modules::notifications::registry::Channel::Local,
+        )
+        .is_err()
+        {
+            return;
+        }
+        if let Some(channel) = &self.channel {
+            // npm stages have no trustworthy byte total; don't forward synthetic percentages.
+            let _ = channel.send(PanelUpdateProgress {
+                operation_id: self.operation_id.clone(),
+                candidate_version: self.candidate_version.clone(),
+                sequence: self
+                    .sequence
+                    .fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+                    + 1,
+                phase: progress.phase,
+                line: progress.line,
+            });
+        } else {
+            let _ = crate::commands::event_delivery::emit_signal(
+                &self.app,
+                RUNTIME_INSTALL_PROGRESS_EVENT,
+                crate::modules::notifications::registry::Job::Install,
+                crate::modules::notifications::registry::Trigger::NativeCallback,
+                crate::modules::notifications::registry::Channel::Local,
+                &progress,
+            );
+        }
     }
 }
 
 fn broadcast_source_changed(app: &tauri::AppHandle) {
-    let _ = app.emit(RUNTIME_SOURCE_CHANGED_EVENT, ());
+    let _ = crate::commands::event_delivery::emit_signal(
+        app,
+        RUNTIME_SOURCE_CHANGED_EVENT,
+        crate::modules::notifications::registry::Job::Source,
+        crate::modules::notifications::registry::Trigger::Commit,
+        crate::modules::notifications::registry::Channel::Local,
+        (),
+    );
 }
 
 fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
@@ -110,40 +161,61 @@ pub fn runtime_source(
     Ok(source_dto(handle.inner(), &data_root.0))
 }
 
-/// 用户显式指定运行来源；路径必须通过可执行校验，否则保持原选择。
+/// Source mutation shares the installation reservation; dismissal never releases a worker.
 #[tauri::command]
-pub fn set_runtime_source(
+pub async fn set_runtime_source(
     app: tauri::AppHandle,
     path: Option<String>,
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> AppResult<RuntimeSourceDto> {
-    let candidate = path
-        .filter(|value| !value.trim().is_empty())
-        .map(PathBuf::from);
-    if let Some(candidate) = candidate.as_ref() {
-        crate::modules::runtime::RuntimeResolver::validate_explicit(candidate).map_err(
-            |rejection| AppError::RuntimeManaged {
-                code: rejection.code().to_string(),
-                detail: format!("指定的运行来源不可用：{}", rejection.code()),
-            },
-        )?;
-    }
-    handle.set_explicit(candidate);
-    broadcast_source_changed(&app);
-    Ok(source_dto(handle.inner(), &data_root.0))
+    change_runtime_source(app, path, handle.inner().clone(), data_root.0.clone()).await
 }
 
-/// 恢复自动发现（清除显式指定）。
 #[tauri::command]
-pub fn restore_discovered_runtime(
+pub async fn restore_discovered_runtime(
     app: tauri::AppHandle,
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> AppResult<RuntimeSourceDto> {
-    handle.set_explicit(None);
-    broadcast_source_changed(&app);
-    Ok(source_dto(handle.inner(), &data_root.0))
+    change_runtime_source(app, None, handle.inner().clone(), data_root.0.clone()).await
+}
+
+async fn change_runtime_source(
+    app: tauri::AppHandle,
+    path: Option<String>,
+    handle: std::sync::Arc<RuntimeHandle>,
+    data_root: PathBuf,
+) -> AppResult<RuntimeSourceDto> {
+    let runtime = app.state::<SharedRuntimeInstall>().inner().clone();
+    let manager = app
+        .state::<crate::commands::update::SharedUpdateStatus>()
+        .inner()
+        .clone();
+    crate::commands::run_blocking("change runtime source", move || {
+        let _reservation = {
+            let state = manager.lock().map_err(|_| AppError::NotConfigured)?;
+            if state.installing || state.pending_restart.is_some() {
+                return Err(AppError::NotConfigured);
+            }
+            runtime.acquire().ok_or(AppError::NotConfigured)?
+        };
+        let candidate = path
+            .filter(|value| !value.trim().is_empty())
+            .map(PathBuf::from);
+        if let Some(candidate) = candidate.as_ref() {
+            crate::modules::runtime::RuntimeResolver::validate_explicit(candidate).map_err(
+                |rejection| AppError::RuntimeManaged {
+                    code: rejection.code().to_string(),
+                    detail: format!("指定的运行来源不可用：{}", rejection.code()),
+                },
+            )?;
+        }
+        handle.set_explicit(candidate);
+        broadcast_source_changed(&app);
+        Ok(source_dto(&handle, &data_root))
+    })
+    .await
 }
 
 /// 离线包预检：只校验不展开，让拖拽区能立刻给出「已选 / 校验失败 / 拒绝」。
@@ -223,25 +295,41 @@ pub async fn install_runtime(
     install_managed_runtime(
         request,
         app,
-        handle.inner().clone(),
-        data_root.0.clone(),
-        home.0.clone(),
-        collector.inner().clone(),
+        RuntimeInstallContext {
+            handle: handle.inner().clone(),
+            data_root_path: data_root.0.clone(),
+            home_path: home.0.clone(),
+            collector: collector.inner().clone(),
+        },
         install.inner(),
+        false,
+        None,
     )
     .await
 }
 
-/// 受控安装核心（供 install_runtime 与代跑官方更新共用）；不直接接触 Tauri State。
-pub(crate) async fn install_managed_runtime(
-    request: RuntimeInstallRequestDto,
-    app: tauri::AppHandle,
+struct RuntimeInstallContext {
     handle: std::sync::Arc<RuntimeHandle>,
     data_root_path: PathBuf,
     home_path: PathBuf,
     collector: SharedStatusCollector,
+}
+
+/// 受控安装核心（供 install_runtime 与代跑官方更新共用）；不直接接触 Tauri State。
+async fn install_managed_runtime(
+    request: RuntimeInstallRequestDto,
+    app: tauri::AppHandle,
+    context: RuntimeInstallContext,
     install: &SharedRuntimeInstall,
+    protect_update: bool,
+    on_progress: Option<tauri::ipc::Channel<PanelUpdateProgress>>,
 ) -> AppResult<RuntimeInstallOutcomeDto> {
+    let RuntimeInstallContext {
+        handle,
+        data_root_path,
+        home_path,
+        collector,
+    } = context;
     let source_kind = request.source_kind().ok_or(AppError::RuntimeManaged {
         code: "bad_source".to_string(),
         detail: "安装源必须是 registry 或 offline".to_string(),
@@ -288,57 +376,119 @@ pub(crate) async fn install_managed_runtime(
         node_path: node_path.clone(),
     };
 
-    let cancel = install.begin().ok_or(AppError::RuntimeManaged {
-        code: "install_in_progress".to_string(),
-        detail: "已有安装正在进行".to_string(),
-    })?;
+    let mutation = {
+        let manager = app.state::<crate::commands::update::SharedUpdateStatus>();
+        let guard = manager.lock().map_err(|_| AppError::NotConfigured)?;
+        if guard.installing || guard.pending_restart.is_some() {
+            return Err(AppError::NotConfigured);
+        }
+        install.acquire().ok_or(AppError::RuntimeManaged {
+            code: "install_in_progress".to_string(),
+            detail: "已有安装正在进行".to_string(),
+        })?
+    };
     let proxy_running = proxy_is_running(&collector);
-    let sink = EventProgressSink { app: app.clone() };
+    let sink = EventProgressSink {
+        app: app.clone(),
+        channel: on_progress,
+        operation_id: format!("panel-{}", uuid::Uuid::new_v4()),
+        candidate_version: requested_version.clone(),
+        sequence: std::sync::atomic::AtomicU64::new(0),
+    };
     let handle_ref = handle.clone();
 
+    // Select only candidate fields; proxy credentials never enter event state/logs.
+    let mut candidate = serde_json::json!({
+        "source": request.source,
+        "version": requested_version,
+        "prefix": prefix,
+        "offline": request.offline_path,
+        "scripts": request.allow_scripts,
+    });
+    let worker_app = app.clone();
     let result = crate::commands::run_blocking("install managed runtime", move || {
-        let npm = crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()));
-        let probe = crate::modules::runtime::install::RealVersionProbe::default();
-        let mut installer = RuntimeInstaller::new(
-            &data_root_path,
-            &npm,
-            Some(home_path),
-            &sink,
-            &probe,
-            node_path.clone(),
-        );
-        installer.cancel = cancel.clone();
-        match installer.install(&install_request) {
-            Ok(outcome) => {
-                handle_ref.refresh();
-                // 安装刚落地，版本是确定事实：回填到运行来源记录，卡片与
-                // `runtime.json` 的 `resolved_version` 才不会停在「未知」（`FZ-48`）。
-                handle_ref.record_resolved_version(&outcome.version);
-                let entry = outcome.history_entry("succeeded", None);
-                let _ = handle_ref.record_history(entry);
-                Ok(outcome)
-            }
-            Err(error) => {
-                // 终态失败：不改运行来源，但留一条可核对的历史（`FZ-48`）。
-                let _ = handle_ref.record_history(InstallHistoryEntry {
-                    action: "install".to_string(),
-                    result: "failed".to_string(),
-                    package: crate::modules::runtime::OFFICIAL_PACKAGE.to_string(),
-                    version: requested_version.clone(),
-                    target: prefix.to_string_lossy().into_owned(),
-                    at: now_rfc3339(),
-                    reason: Some(error.message()),
-                });
-                Err(error.into())
+        let mutation = mutation;
+        if let InstallSource::Offline { archive } = &install_request.source {
+            if let Ok(inspection) = archive::inspect(archive, None) {
+                candidate["offline_sha256"] = serde_json::json!(inspection.sha256);
             }
         }
+        let identity = crate::commands::event_delivery::prepare(
+            &data_root_path,
+            "runtime-install-failed",
+            crate::modules::notifications::registry::Channel::Official,
+            candidate.to_string().as_bytes(),
+        );
+        let result: AppResult<_> = (|| {
+            let _protection = if protect_update {
+                crate::modules::backup::manager::begin_preferences_protection_observed(
+                    &data_root_path,
+                    true,
+                    &mut crate::commands::event_delivery::BackupEvents {
+                        app: &worker_app,
+                        root: &data_root_path,
+                        trigger: crate::modules::notifications::registry::Trigger::User,
+                    },
+                )?
+            } else {
+                crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?
+            };
+            let npm =
+                crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()));
+            let probe = crate::modules::runtime::install::RealVersionProbe::default();
+            let mut installer = RuntimeInstaller::new(
+                &data_root_path,
+                &npm,
+                Some(home_path),
+                &sink,
+                &probe,
+                node_path.clone(),
+            );
+            installer.cancel = mutation.cancel.clone();
+            match installer.install(&install_request) {
+                Ok(outcome) => {
+                    handle_ref.refresh();
+                    // 安装刚落地，版本是确定事实：回填到运行来源记录，卡片与
+                    // `runtime.json` 的 `resolved_version` 才不会停在「未知」（`FZ-48`）。
+                    handle_ref.record_resolved_version(&outcome.version);
+                    let entry = outcome.history_entry("succeeded", None);
+                    let _ = handle_ref.record_history(entry);
+                    Ok(outcome)
+                }
+                Err(error) => {
+                    // 终态失败：不改运行来源，但留一条可核对的历史（`FZ-48`）。
+                    let _ = handle_ref.record_history(InstallHistoryEntry {
+                        action: "install".to_string(),
+                        result: "failed".to_string(),
+                        package: crate::modules::runtime::OFFICIAL_PACKAGE.to_string(),
+                        version: requested_version.clone(),
+                        target: prefix.to_string_lossy().into_owned(),
+                        at: now_rfc3339(),
+                        reason: Some(error.message()),
+                    });
+                    Err(error.into())
+                }
+            }
+        })();
+        crate::commands::event_delivery::publish(
+            &worker_app,
+            &data_root_path,
+            if result.is_ok() {
+                "runtime-install-succeeded"
+            } else {
+                "runtime-install-failed"
+            },
+            identity,
+            crate::modules::notifications::registry::Trigger::User,
+        );
+        if result.is_ok() {
+            broadcast_source_changed(&worker_app);
+        }
+        result
     })
     .await;
-    // 无论成败都要放掉进行态，否则后续安装会被自己挡住。
-    install.finish();
     let outcome = result?;
 
-    broadcast_source_changed(&app);
     let needs_restart = outcome.restart_required(proxy_running);
     Ok(RuntimeInstallOutcomeDto {
         package: outcome.package,
@@ -365,8 +515,12 @@ pub fn cancel_runtime_install(install: tauri::State<'_, SharedRuntimeInstall>) -
 ///
 /// 不浮动 `latest`：查询与安装绑定同一确定版本与来源策略；不写全局 npm 前缀，不调用官方更新器。
 /// 安装属写操作，前端需显式确认；本命令沿用 `install_runtime` 的离线包 / 代理 / 清单 / 重启提示路径。
+// Tauri injects application states as distinct command arguments.
+#[allow(clippy::too_many_arguments)]
 #[tauri::command]
 pub async fn install_official_update(
+    candidate_version: String,
+    on_progress: tauri::ipc::Channel<PanelUpdateProgress>,
     app: tauri::AppHandle,
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
     data_root: tauri::State<'_, SharedDataRoot>,
@@ -385,16 +539,23 @@ pub async fn install_official_update(
     .await
     .map_err(|_| AppError::NotConfigured)??;
 
+    if remote.version != candidate_version {
+        return Err(AppError::NotConfigured);
+    }
     // 2. 复用受控安装，把查询到的确定版本装到当前登记前缀（`prefix: None` 取安装记录登记值）。
     let request = official_update_request(remote.version);
     install_managed_runtime(
         request,
         app,
-        handle.inner().clone(),
-        data_root.0.clone(),
-        home.0.clone(),
-        collector.inner().clone(),
+        RuntimeInstallContext {
+            handle: handle.inner().clone(),
+            data_root_path: data_root.0.clone(),
+            home_path: home.0.clone(),
+            collector: collector.inner().clone(),
+        },
         install.inner(),
+        true,
+        Some(on_progress),
     )
     .await
 }
@@ -450,7 +611,6 @@ pub async fn uninstall_runtime(
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, SharedHomeDir>,
-    runner: tauri::State<'_, SharedProcessRunner>,
     context: tauri::State<'_, SharedProcessContext>,
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<RuntimeUninstallResultDto> {
@@ -458,22 +618,17 @@ pub async fn uninstall_runtime(
         code: "bad_scope".to_string(),
         detail: "卸载范围必须是 body 或 full".to_string(),
     })?;
-    let _guard = install.begin().ok_or(AppError::RuntimeManaged {
-        code: "install_in_progress".to_string(),
-        detail: "已有安装或卸载正在进行".to_string(),
-    })?;
-
-    // 停代理：本产品托管的子进程必须先停，未停则不进入删除步骤（与官方 §3008 同源）。
-    let _ = crate::commands::process_action_with_runner(
-        crate::types::process_action::ProcessActionRequest {
-            action: crate::modules::process::LifecycleAction::Stop,
-            confirm: true,
-        },
-        runner.inner(),
-        context.inner(),
-        &crate::infrastructure::runtime_log::RuntimeLog::new(&data_root.0),
-        None,
-    );
+    let reservation = {
+        let manager = app.state::<crate::commands::update::SharedUpdateStatus>();
+        let state = manager.lock().map_err(|_| AppError::NotConfigured)?;
+        if state.installing || state.pending_restart.is_some() {
+            return Err(AppError::NotConfigured);
+        }
+        install.acquire().ok_or(AppError::RuntimeManaged {
+            code: "install_in_progress".to_string(),
+            detail: "已有安装、卸载或恢复正在进行".to_string(),
+        })?
+    };
 
     let resolution = handle.current();
     let ocx = context.executable().ok();
@@ -498,7 +653,28 @@ pub async fn uninstall_runtime(
         home: Some(home_dir),
     };
     let handle_ref = handle.inner().clone();
+    let worker_app = app.clone();
+    let worker_context = context.inner().clone();
     let outcome = crate::commands::run_blocking("uninstall runtime", move || {
+        // Keep the reservation until the owned worker terminates, even if IPC is dropped.
+        let _reservation = reservation;
+        let runner = worker_app.state::<SharedProcessRunner>();
+        let stopped = crate::commands::process_action_with_runner(
+            crate::types::process_action::ProcessActionRequest {
+                action: crate::modules::process::LifecycleAction::Stop,
+                confirm: true,
+            },
+            runner.inner(),
+            &worker_context,
+            &crate::infrastructure::runtime_log::RuntimeLog::new(&data_root_path),
+            None,
+        )?;
+        if stopped.result != Some(crate::modules::process::LifecycleResult::Stopped) {
+            return Err(AppError::RuntimeManaged {
+                code: "stop_unconfirmed".to_string(),
+                detail: "代理停止尚未确认，未进入卸载步骤".to_string(),
+            });
+        }
         let outcome = uninstall::execute_uninstall(
             &data_root_path,
             &opencodex_home,
@@ -528,7 +704,6 @@ pub async fn uninstall_runtime(
         Ok((outcome, resolution_after))
     })
     .await;
-    install.finish();
     let (outcome, resolution_after) = outcome?;
     broadcast_source_changed(&app);
 

@@ -42,7 +42,7 @@ pub fn complete<T: serde::Serialize>(
         schedule::save_cache(root, target, value)?;
     }
     state.complete(target, chrono::Utc::now().timestamp(), value.is_some());
-    state.save(&root)
+    state.save(root)
 }
 #[tauri::command]
 pub fn update_schedule_plan(app: tauri::AppHandle) -> AppResult<Plan> {

@@ -7,6 +7,7 @@ pub mod codex_shim;
 pub mod data_root;
 pub mod discovery;
 pub mod doctor;
+pub(crate) mod event_delivery;
 pub mod extensions;
 pub mod logs;
 pub mod migration;
@@ -24,9 +25,9 @@ pub mod window;
 pub mod workspace;
 
 use crate::errors::{AppError, AppResult};
-use crate::modules::notifications::{
-    Notification, NotificationAction, NotificationCategory, NotificationLevel, NotificationSource,
-};
+use crate::modules::notifications::Notification;
+#[cfg(test)]
+use crate::modules::notifications::{NotificationAction, NotificationCategory, NotificationLevel};
 use crate::modules::process::{LifecycleAction, ProcessLifecycleState, ProcessRunner};
 use crate::modules::status::{StatusCollector, StatusSource as ModuleStatusSource};
 use std::sync::Mutex;
@@ -73,15 +74,33 @@ pub fn process_action(
     context: tauri::State<'_, SharedProcessContext>,
     data_root: tauri::State<'_, crate::state::SharedDataRoot>,
     notifications: tauri::State<'_, crate::state::SharedNotificationStore>,
+    app: tauri::AppHandle,
 ) -> AppResult<ProcessActionResult> {
+    use tauri::Manager;
+    let mutation = app.state::<crate::state::SharedRuntimeInstall>();
+    let _lease = mutation.acquire().ok_or(AppError::NotConfigured)?;
     let runtime_log = crate::infrastructure::runtime_log::RuntimeLog::new(&data_root.0);
-    // 「启停结果通知」关闭时不再产生持久通知；成功/取消本来就不写通知。
-    let publisher = publisher_if_enabled(
-        lifecycle_notifications_enabled(&data_root.0),
-        notifications.inner(),
-        &data_root.0,
-    );
-    process_action_with_runner(request, runner.inner(), &context, &runtime_log, publisher)
+    // 偏好只控制新增失败通知；真实成功仍需解除已有同 scope 失败。
+    let publisher = Some(notifications::NotificationPublisher {
+        store: notifications.inner(),
+        data_root: &data_root.0,
+    });
+    let before = notifications.lock().ok().map(|store| store.clone());
+    let result =
+        process_action_with_runner(request, runner.inner(), &context, &runtime_log, publisher);
+    let changed =
+        before.is_some_and(|before| notifications.lock().is_ok_and(|store| *store != before));
+    if changed {
+        let _ = crate::commands::event_delivery::emit_signal(
+            &app,
+            notifications::NOTIFICATIONS_CHANGED_EVENT,
+            crate::modules::notifications::registry::Job::NotificationMutation,
+            crate::modules::notifications::registry::Trigger::Commit,
+            crate::modules::notifications::registry::Channel::Local,
+            (),
+        );
+    }
+    result
 }
 
 /// 只有开启「启停结果通知」时才构造通知发布器；否则返回 `None`（不写任何持久通知）。
@@ -132,6 +151,20 @@ where
         context.working_directory.clone(),
         context.opencodex_home.clone(),
     );
+    let scope = notifications.and_then(|publisher| {
+        crate::modules::notifications::registry::lifecycle_identity(
+            publisher.data_root,
+            &command.executable,
+            &context.working_directory,
+            &context.opencodex_home,
+            registry_action(request.action),
+        )
+        .map_err(|error| {
+            let _ =
+                runtime_log.append_result(action_log_label(request.action), Err(error.to_string()));
+        })
+        .ok()
+    });
     let started_at = std::time::Instant::now();
     let outcome = runner.execute(&command);
     let duration_ms = started_at.elapsed().as_millis();
@@ -181,8 +214,64 @@ where
             Ok(ProcessActionResult::from_state(machine.current()))
         }
     };
-    if failed {
-        publish_run_failure(notifications, request.action, runtime_log);
+    let verified_success = matches!(
+        (&request.action, &outcome),
+        (
+            LifecycleAction::Start | LifecycleAction::Restart,
+            Ok(crate::modules::process::LifecycleResult::Started)
+        ) | (
+            LifecycleAction::Stop,
+            Ok(crate::modules::process::LifecycleResult::Stopped)
+        )
+    );
+    // 候选文件/运行上下文在执行中变化时，不把旧候选标成成功。
+    let verified_success = verified_success
+        && scope.as_ref().is_some_and(|before| {
+            notifications.is_some_and(|publisher| {
+                crate::modules::notifications::registry::lifecycle_identity(
+                    publisher.data_root,
+                    &command.executable,
+                    &context.working_directory,
+                    &context.opencodex_home,
+                    registry_action(request.action),
+                )
+                .is_ok_and(|after| after == *before)
+            })
+        });
+    if failed || verified_success {
+        if let (Some(publisher), Some(identity)) = (notifications, scope) {
+            use crate::modules::notifications::registry::{Delivery, Evidence, Trigger};
+            let event = match (request.action, failed) {
+                (LifecycleAction::Start, true) => "run-start-failed",
+                (LifecycleAction::Start, false) => "run-start-succeeded",
+                (LifecycleAction::Stop, true) => "run-stop-failed",
+                (LifecycleAction::Stop, false) => "run-stop-succeeded",
+                (LifecycleAction::Restart, true) => "run-restart-failed",
+                (LifecycleAction::Restart, false) => "run-restart-succeeded",
+            };
+            let evidence = if failed {
+                Evidence::Failure
+            } else {
+                Evidence::Success {
+                    candidate: identity.candidate.clone(),
+                    verified: true,
+                }
+            };
+            let delivery = Delivery {
+                event,
+                job: registry_job(request.action),
+                trigger: Trigger::User,
+                identity,
+                evidence,
+                occurred_at: chrono::Utc::now(),
+            };
+            if let Err(error) = publisher.publish_event(&delivery) {
+                let _ = runtime_log.append_result(
+                    action_log_label(request.action),
+                    Err(format!("notification publish failed: {error}")),
+                );
+            }
+        }
     }
     result
 }
@@ -199,47 +288,21 @@ pub fn lifecycle_notifications_enabled(data_root: &std::path::Path) -> bool {
         .unwrap_or(true)
 }
 
-/// 成功与用户取消**不写入**通知：低风险成功走 Toast，取消是用户主动行为，
-/// 都不应占用持久未读。失败按 `run:<action>-failed` 去重，重复失败只更新同一条，
-/// 不堆叠多条同类提醒。发布失败单独记入运行日志，不改变主流程的返回值。
-fn publish_run_failure(
-    notifications: Option<crate::commands::notifications::NotificationPublisher<'_>>,
-    action: LifecycleAction,
-    runtime_log: &crate::infrastructure::runtime_log::RuntimeLog,
-) {
-    let Some(publisher) = notifications else {
-        return;
-    };
-    let Some(notification) = run_failure_notification(action) else {
-        return;
-    };
-    if let Err(error) = publisher.publish(notification) {
-        let _ = runtime_log.append_result(
-            action_log_label(action),
-            Err(format!("notification publish failed: {error}")),
-        );
+fn registry_action(action: LifecycleAction) -> crate::modules::notifications::registry::Action {
+    use crate::modules::notifications::registry::Action;
+    match action {
+        LifecycleAction::Start => Action::Start,
+        LifecycleAction::Stop => Action::Stop,
+        LifecycleAction::Restart => Action::Restart,
     }
 }
-
-/// 失败通知只描述**已发生的事实**，不写固定延迟、示例端口或版本号。
-fn run_failure_notification(action: LifecycleAction) -> Option<Notification> {
-    let (label, title) = match action {
-        LifecycleAction::Start => ("start", "OpenCodex 启动失败"),
-        LifecycleAction::Stop => ("stop", "OpenCodex 停止失败"),
-        LifecycleAction::Restart => ("restart", "OpenCodex 重启失败"),
-    };
-    let notification = Notification::new(
-        format!("run-{label}-failed"),
-        NotificationLevel::Danger,
-        NotificationCategory::Run,
-        NotificationSource::Runtime,
-        title,
-        "官方命令未成功完成；具体原因以诊断中心日志中的同动作记录为准。",
-        chrono::Utc::now().to_rfc3339(),
-        Some(NotificationAction::Logs),
-    )
-    .ok()?;
-    Some(notification.with_dedupe_key(format!("run:{label}-failed")))
+fn registry_job(action: LifecycleAction) -> crate::modules::notifications::registry::Job {
+    use crate::modules::notifications::registry::Job;
+    match action {
+        LifecycleAction::Start => Job::Start,
+        LifecycleAction::Stop => Job::Stop,
+        LifecycleAction::Restart => Job::Restart,
+    }
 }
 
 fn action_log_label(action: LifecycleAction) -> &'static str {
@@ -268,72 +331,20 @@ fn is_lifecycle_outcome(runtime: crate::types::status::RuntimeState) -> bool {
 /// 由前端播报**一次** Toast，瞬时进度（`loading` / `starting` / `pending` / `stopping`）不写。
 /// 同一问题用固定 `dedupe_key`，重复出现只更新那一条（并恢复为未读未解决）。
 ///
-/// `run-start-failed` 与启停失败通知共用去重键 `run:start-failed`：同一次启动失败
-/// 只保留一条，不出现「命令失败」与「状态失败」两条并排。
+/// 观测仍是无 scope 的旧入口；仅同类观测去重，不能解除或覆盖命令 scoped 失败。
 pub fn runtime_state_notification(
     runtime: crate::types::status::RuntimeState,
 ) -> Option<Notification> {
     use crate::types::status::RuntimeState;
-    let (id, dedupe, level, category, title, body, action) = match runtime {
-        RuntimeState::NotFound => (
-            "runtime-not-found",
-            "runtime-not-found",
-            NotificationLevel::Warning,
-            NotificationCategory::System,
-            "未发现可运行的 OpenCodex",
-            "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
-            NotificationAction::SettingsInstallation,
-        ),
-        RuntimeState::StartingFailed => (
-            "run-start-failed",
-            "run:start-failed",
-            NotificationLevel::Danger,
-            NotificationCategory::Run,
-            "OpenCodex 启动失败",
-            "具体原因以诊断中心日志中的同动作记录为准；不会自动重试。",
-            NotificationAction::Logs,
-        ),
-        RuntimeState::Unreachable => (
-            "run-unreachable",
-            "run-unreachable",
-            NotificationLevel::Danger,
-            NotificationCategory::Run,
-            "进程或端口不可达",
-            "建议刷新状态或查看日志确认原因。",
-            NotificationAction::Logs,
-        ),
-        RuntimeState::AtRisk => (
-            "run-at-risk",
-            "run-at-risk",
-            NotificationLevel::Warning,
-            NotificationCategory::Run,
-            "官方状态报告启动存在风险",
-            "桌面壳不会自动修复；请先查看建议，再决定是否走官方恢复（restore）。",
-            NotificationAction::Restore,
-        ),
-        RuntimeState::ExternalTakeover => (
-            "external-takeover",
-            "external-takeover",
-            NotificationLevel::Warning,
-            NotificationCategory::Run,
-            "外部 provider 已接管 Codex 配置",
-            "该所有权边界属于 OpenCodex CLI 本身；桌面壳只解释影响，不会覆盖外部配置。",
-            NotificationAction::Restore,
-        ),
+    let id = match runtime {
+        RuntimeState::NotFound => "runtime-not-found",
+        RuntimeState::StartingFailed => "runtime-starting-failed",
+        RuntimeState::Unreachable => "run-unreachable",
+        RuntimeState::AtRisk => "run-at-risk",
+        RuntimeState::ExternalTakeover => "external-takeover",
         _ => return None,
     };
-    let notification = Notification::new(
-        id,
-        level,
-        category,
-        NotificationSource::Runtime,
-        title,
-        body,
-        chrono::Utc::now().to_rfc3339(),
-        Some(action),
-    )
-    .ok()?;
-    Some(notification.with_dedupe_key(dedupe))
+    crate::modules::notifications::registry::registered_notification(id, chrono::Utc::now()).ok()
 }
 
 /// 状态轮询观测到关注态时发布通知；发布失败只记运行日志，不影响轮询主流程。
@@ -501,13 +512,12 @@ mod runtime_state_notification_tests {
         assert!(!is_lifecycle_outcome(RuntimeState::NotFound));
     }
 
-    /// 同一次启动失败只保留一条：状态观测与命令失败共用同一条目与去重键。
     #[test]
-    fn start_failure_merges_with_command_failure() {
+    fn observed_start_failure_remains_legacy_without_recovery_scope() {
         let observed = runtime_state_notification(RuntimeState::StartingFailed).expect("通知");
-        let command = run_failure_notification(LifecycleAction::Start).expect("通知");
-        assert_eq!(observed.notification_id, command.notification_id);
-        assert_eq!(observed.dedupe_key, command.dedupe_key);
+        assert_eq!(observed.notification_id, "run-start-failed");
+        assert_eq!(observed.dedupe_key.as_deref(), Some("run:start-failed"));
+        assert!(observed.event_identity.is_none());
     }
 
     /// 关掉「启停结果通知」后启停结果类不再入通知中心，但风险类照旧写入。

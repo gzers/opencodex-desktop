@@ -443,31 +443,72 @@ mod tests {
         let stop = Arc::new(AtomicBool::new(false));
         let server_identity = identity.clone();
         let server_stop = stop.clone();
+        // A TCP read is not an HTTP request boundary. Serve both concurrent
+        // probes independently and read complete headers before selecting the
+        // response; otherwise fragmented /readyz requests can look like healthz.
+        struct ServerGuard {
+            stop: Arc<AtomicBool>,
+            thread: Option<std::thread::JoinHandle<()>>,
+        }
+        impl Drop for ServerGuard {
+            fn drop(&mut self) {
+                self.stop.store(true, Ordering::SeqCst);
+                if let Some(thread) = self.thread.take() {
+                    let _ = thread.join();
+                }
+            }
+        }
         let server = std::thread::spawn(move || {
+            let mut handlers = Vec::new();
             while !server_stop.load(Ordering::SeqCst) {
                 let Ok((mut stream, _)) = listener.accept() else {
                     std::thread::sleep(Duration::from_millis(2));
                     continue;
                 };
-                stream
-                    .set_read_timeout(Some(Duration::from_secs(1)))
-                    .unwrap();
-                let mut request = [0; 2048];
-                let count = stream.read(&mut request).unwrap_or(0);
-                let ready = String::from_utf8_lossy(&request[..count]).contains("/readyz");
-                let mut payload = server_identity.lock().unwrap().clone();
-                if ready {
-                    payload["status"] = serde_json::json!("ready");
-                }
-                let body = payload.to_string();
-                let response = format!(
-                    "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
-                    body.len(),
-                    body
-                );
-                let _ = stream.write_all(response.as_bytes());
+                let identity = server_identity.clone();
+                handlers.push(std::thread::spawn(move || {
+                    // macOS can inherit O_NONBLOCK from the listener; a complete
+                    // request may not be available at accept time under load.
+                    stream.set_nonblocking(false).unwrap();
+                    stream
+                        .set_read_timeout(Some(Duration::from_secs(1)))
+                        .unwrap();
+                    stream
+                        .set_write_timeout(Some(Duration::from_secs(1)))
+                        .unwrap();
+                    let mut request = Vec::new();
+                    let mut buffer = [0; 512];
+                    while !request.windows(4).any(|bytes| bytes == b"\r\n\r\n") {
+                        let count = stream.read(&mut buffer).unwrap_or(0);
+                        if count == 0 || request.len() + count > 8192 {
+                            return;
+                        }
+                        request.extend_from_slice(&buffer[..count]);
+                    }
+                    let path = request.split(|byte| *byte == b' ').nth(1);
+                    let mut payload = identity.lock().unwrap().clone();
+                    match path {
+                        Some(b"/readyz") => payload["status"] = serde_json::json!("ready"),
+                        Some(b"/healthz") => (),
+                        _ => panic!("unexpected probe request"),
+                    }
+                    let body = payload.to_string();
+                    let response = format!(
+                        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                        body.len(),
+                        body
+                    );
+                    stream.write_all(response.as_bytes()).unwrap();
+                }));
+            }
+            for handler in handlers {
+                handler.join().unwrap();
             }
         });
+        let _server = ServerGuard {
+            stop,
+            thread: Some(server),
+        };
         let script = format!("#!/bin/sh\necho call >> calls\necho '{{\"status\":\"running\",\"ready\":true,\"port\":{},\"pid\":\"42\",\"dataRoot\":\"/tmp/fixture\"}}'\n",port);
         let mut source = script_source(root.path(), &script);
         let calls = || {
@@ -502,8 +543,6 @@ mod tests {
         identity.lock().unwrap()["service"] = serde_json::json!("foreign-service");
         source.fetch_light().unwrap();
         assert_eq!(calls(), 6);
-        stop.store(true, Ordering::SeqCst);
-        server.join().unwrap();
     }
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
     async fn oversized_diagnostic_is_bounded_and_does_not_seed_cache() {

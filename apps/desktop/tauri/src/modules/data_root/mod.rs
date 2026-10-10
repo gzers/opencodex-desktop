@@ -114,15 +114,21 @@ pub fn initialize(root: &Path) -> Result<bool, AppError> {
         return Ok(false);
     }
 
-    let existing: Vec<_> = PARTITIONS.iter().filter_map(|(_, name)| {
-        let path = root.join(name); path.exists().then_some(path)
-    }).collect();
+    let existing: Vec<_> = PARTITIONS
+        .iter()
+        .filter_map(|(_, name)| {
+            let path = root.join(name);
+            path.exists().then_some(path)
+        })
+        .collect();
     create_partitions(root)?;
     if let Err(error) = write_metadata_and_lock(&paths) {
         // Only remove empty partitions created by this initialization.
         for (_, name) in PARTITIONS {
             let path = root.join(name);
-            if !existing.contains(&path) { let _ = std::fs::remove_dir(path); }
+            if !existing.contains(&path) {
+                let _ = std::fs::remove_dir(path);
+            }
         }
         return Err(error);
     }
@@ -185,11 +191,15 @@ pub fn load_runtime_config(data_root: &Path) -> Result<DataRootRuntimeConfig, Ap
         operation: "read data root runtime config".into(),
         detail: error.to_string(),
     })?;
-    file.take(65537).read_to_end(&mut bytes).map_err(|error| AppError::FileSystem {
-        operation: "read data root runtime config".to_string(),
-        detail: error.to_string(),
-    })?;
-    if bytes.len() > 65536 { return Err(AppError::NotConfigured); }
+    file.take(65537)
+        .read_to_end(&mut bytes)
+        .map_err(|error| AppError::FileSystem {
+            operation: "read data root runtime config".to_string(),
+            detail: error.to_string(),
+        })?;
+    if bytes.len() > 65536 {
+        return Err(AppError::NotConfigured);
+    }
     let payload: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|_| AppError::FileSystem {
             operation: "parse data root runtime config".to_string(),
@@ -472,11 +482,7 @@ fn write_metadata_and_lock(paths: &DataRootPaths) -> Result<(), AppError> {
     let payload = serde_json::to_vec_pretty(&metadata).map_err(|error| AppError::AtomicWrite {
         reason: error.to_string(),
     })?;
-    if let Err(error) =
-        crate::infrastructure::atomic_write::atomic_write(&paths.metadata, &payload, 0o600)
-    {
-        return Err(error);
-    }
+    crate::infrastructure::atomic_write::atomic_write(&paths.metadata, &payload, 0o600)?;
     if let Err(error) =
         crate::infrastructure::atomic_write::atomic_write(&paths.structure_lock, b"locked", 0o600)
     {

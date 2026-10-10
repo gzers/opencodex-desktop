@@ -92,12 +92,29 @@ impl SharedTrayRequests {
 }
 
 /// 托管安装 / 卸载的进行态：同一时刻只允许一个写者，并支持取消（`FZ-50`）。
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct SharedRuntimeInstall {
-    state: Mutex<Option<crate::modules::runtime::install::CancelFlag>>,
+    state: std::sync::Arc<Mutex<Option<crate::modules::runtime::install::CancelFlag>>>,
+}
+
+/// Lives in the worker, so dropping its IPC observer cannot unlock a still-running write.
+pub struct RuntimeMutationLease {
+    owner: SharedRuntimeInstall,
+    pub cancel: crate::modules::runtime::install::CancelFlag,
+}
+impl Drop for RuntimeMutationLease {
+    fn drop(&mut self) {
+        self.owner.finish();
+    }
 }
 
 impl SharedRuntimeInstall {
+    pub fn acquire(&self) -> Option<RuntimeMutationLease> {
+        self.begin().map(|cancel| RuntimeMutationLease {
+            owner: self.clone(),
+            cancel,
+        })
+    }
     pub fn new() -> Self {
         Self::default()
     }
@@ -142,5 +159,26 @@ impl SharedRuntimeInstall {
 }
 
 pub struct InstanceState {
-    pub _lock: crate::modules::instance::AppInstanceLock,
+    pub _locks: Vec<crate::modules::instance::AppInstanceLock>,
+}
+
+#[cfg(test)]
+mod mutation_tests {
+    use super::SharedRuntimeInstall;
+
+    #[test]
+    fn lease_retains_shared_reservation_and_cancellation_until_worker_finishes() {
+        let shared = SharedRuntimeInstall::new();
+        let observer = shared.clone();
+        let worker = shared.acquire().unwrap();
+        drop(shared);
+        assert!(observer.is_running());
+        assert!(observer.acquire().is_none());
+        assert!(observer.cancel());
+        assert!(worker.cancel.is_cancelled());
+        drop(worker);
+        assert!(!observer.is_running());
+        assert!(!observer.cancel());
+        assert!(observer.acquire().is_some());
+    }
 }

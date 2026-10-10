@@ -10,10 +10,18 @@ use crate::types::upgrade::UpgradeBackupResult;
 #[tauri::command]
 pub async fn create_upgrade_backup(
     data_root: tauri::State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
 ) -> crate::errors::AppResult<UpgradeBackupResult> {
     let root = data_root.0.clone();
     crate::commands::run_blocking("create upgrade backup", move || {
-        create_upgrade_backup_with_root(&root)
+        backup::manager::create_upgrade_observed(
+            &root,
+            &mut crate::commands::event_delivery::BackupEvents {
+                app: &app,
+                root: &root,
+                trigger: crate::modules::notifications::registry::Trigger::User,
+            },
+        )
     })
     .await
 }
@@ -21,10 +29,23 @@ pub async fn create_upgrade_backup(
 #[tauri::command]
 pub async fn create_restore_backup(
     data_root: tauri::State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
 ) -> crate::errors::AppResult<UpgradeBackupResult> {
     let root = data_root.0.clone();
     crate::commands::run_blocking("create restore backup", move || {
-        create_upgrade_backup_with_root(&root)
+        let guard = backup::manager::begin_preferences_protection_observed(
+            &root,
+            true,
+            &mut crate::commands::event_delivery::BackupEvents {
+                app: &app,
+                root: &root,
+                trigger: crate::modules::notifications::registry::Trigger::User,
+            },
+        )?;
+        guard
+            .backup
+            .clone()
+            .ok_or(crate::errors::AppError::NotConfigured)
     })
     .await
 }
@@ -70,21 +91,25 @@ pub fn create_upgrade_backup_with_root(
     }
     crate::modules::data_root::validate_structure(data_root)
         .map_err(|_| crate::errors::AppError::NotConfigured)?;
+    // Preserve the historical explicit missing-preferences error.
     let target = data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
-    let payload = std::fs::read(&target).map_err(|_| crate::errors::AppError::NotConfigured)?;
-    let record = backup::backup_file(
-        data_root,
-        backup::BackupAction::Upgrade,
-        &target,
-        &payload,
-        chrono::Utc::now(),
-        Some("ui-requested".to_string()),
-    )?;
-    Ok(UpgradeBackupResult {
-        backup_id: record.manifest.backup_id,
-        directory: record.directory.to_string_lossy().into_owned(),
-        target_path: record.manifest.target_path,
-    })
+    if std::fs::symlink_metadata(&target).is_err() {
+        return Err(crate::errors::AppError::NotConfigured);
+    }
+    backup::manager::create_upgrade(data_root)
+}
+
+/// Durable protection; retained independently of the generic upgrade history.
+pub fn create_restore_backup_with_root(
+    data_root: &std::path::Path,
+) -> crate::errors::AppResult<UpgradeBackupResult> {
+    crate::modules::data_root::validate_structure(data_root)
+        .map_err(|_| crate::errors::AppError::NotConfigured)?;
+    let guard = backup::manager::begin_preferences_protection(data_root, true)?;
+    guard
+        .backup
+        .clone()
+        .ok_or(crate::errors::AppError::NotConfigured)
 }
 
 #[cfg(all(test, unix))]
@@ -151,7 +176,7 @@ mod tests {
     }
 
     #[test]
-    fn create_restore_backup_reuses_the_frozen_upgrade_backup_path() {
+    fn create_restore_backup_is_permanently_protected() {
         let root = tempfile::tempdir().expect("temporary data root");
         crate::modules::data_root::initialize(root.path()).expect("initialize data root");
         let preferences = Preferences::default();
@@ -159,18 +184,20 @@ mod tests {
             .save(&preferences)
             .expect("save preferences");
 
-        let result = create_upgrade_backup_with_root(root.path()).expect("create backup");
-        assert!(result.directory.contains("/upgrade/"));
+        let result = create_restore_backup_with_root(root.path()).expect("create backup");
+        assert!(result.directory.contains("/preferences-protection/"));
         let directory = PathBuf::from(&result.directory);
         let stored = std::fs::read(directory.join("preferences.json")).expect("read backup");
-        let restored: Preferences = serde_json::from_slice(&stored).expect("restore preferences");
+        let document: serde_json::Value = serde_json::from_slice(&stored).unwrap();
+        let restored = crate::modules::preferences::preferences_from_document(&document).unwrap();
         assert_eq!(restored, preferences);
         let records = backup::list_action_records(
             &root.path().join("backups"),
-            backup::BackupAction::Upgrade.as_str(),
+            backup::BackupAction::PreferencesProtection.as_str(),
         )
         .expect("list upgrade records");
         assert_eq!(records.len(), 1);
+        assert!(records[0].manifest.management.as_ref().unwrap().pinned);
     }
 
     #[test]

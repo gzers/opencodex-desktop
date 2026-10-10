@@ -196,6 +196,7 @@ pub async fn test_sync_connection(
 
 #[tauri::command]
 pub async fn run_sync_now(
+    app: tauri::AppHandle,
     data_root: State<'_, SharedDataRoot>,
     home: State<'_, SharedHomeDir>,
     status: State<'_, SharedSyncStatus>,
@@ -222,18 +223,27 @@ pub async fn run_sync_now(
     let outcome =
         crate::modules::sync::runner::run_sync(&data_root_path, &home_path, &endpoint, &webdav)
             .await;
+    // Persist and broadcast outside the sync-state lock. A repeated conflict or
+    // failed persistence must not emit a notification-list change.
+    if outcome.as_ref().is_ok_and(|outcome| outcome.conflicted)
+        && publish_sync_conflict(
+            sync_conflict_alerts_enabled(&data_root_path),
+            notifications.inner(),
+            &data_root_path,
+        )
+    {
+        let _ = crate::commands::event_delivery::emit_signal(
+            &app,
+            crate::commands::notifications::NOTIFICATIONS_CHANGED_EVENT,
+            crate::modules::notifications::registry::Job::NotificationMutation,
+            crate::modules::notifications::registry::Trigger::Commit,
+            crate::modules::notifications::registry::Channel::Local,
+            (),
+        );
+    }
     let mut run = status_guard(&status);
     match outcome {
         Ok(outcome) => {
-            if outcome.conflicted {
-                // 「同步冲突提醒」：检测到冲突时写入一条持久通知；关闭开关则不打扰用户。
-                // 无论开关如何，覆盖都被暂停——提醒只影响通知，不影响安全语义。
-                publish_sync_conflict(
-                    sync_conflict_alerts_enabled(&data_root_path),
-                    notifications.inner(),
-                    &data_root_path,
-                );
-            }
             run.connection_state = crate::types::status::ConnectionState::Synced;
             run.operation_state = crate::types::status::OperationState::Succeeded;
             run.finished_at = Some(chrono::Utc::now());
@@ -297,9 +307,9 @@ fn publish_sync_conflict(
     enabled: bool,
     store: &SharedNotificationStore,
     data_root: &std::path::Path,
-) {
+) -> bool {
     if !enabled {
-        return;
+        return false;
     }
     let notification = match crate::modules::notifications::Notification::new(
         "sync-conflict-detected",
@@ -314,12 +324,16 @@ fn publish_sync_conflict(
         Some(crate::modules::notifications::NotificationAction::Sync),
     ) {
         Ok(value) => value.with_dedupe_key("sync:conflict-detected"),
-        Err(_) => return,
+        Err(_) => return false,
     };
     let publisher = crate::commands::notifications::NotificationPublisher { store, data_root };
-    if publisher.publish(notification).is_err() {
-        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
-            .append_event("publish sync conflict notification failed");
+    match publisher.publish_changed(notification) {
+        Ok(changed) => changed,
+        Err(_) => {
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                .append_event("publish sync conflict notification failed");
+            false
+        }
     }
 }
 
@@ -445,8 +459,8 @@ mod tests {
         let store: SharedNotificationStore = Arc::new(Mutex::new(
             crate::modules::notifications::NotificationStore::new(),
         ));
-        publish_sync_conflict(true, &store, root.path());
-        publish_sync_conflict(true, &store, root.path());
+        assert!(publish_sync_conflict(true, &store, root.path()));
+        assert!(!publish_sync_conflict(true, &store, root.path()));
         let guard = store.lock().expect("lock");
         assert_eq!(guard.live().len(), 1, "同一冲突只保留一条");
         assert_eq!(
@@ -470,7 +484,7 @@ mod tests {
         let empty: SharedNotificationStore = Arc::new(Mutex::new(
             crate::modules::notifications::NotificationStore::new(),
         ));
-        publish_sync_conflict(false, &empty, quiet.path());
+        assert!(!publish_sync_conflict(false, &empty, quiet.path()));
         assert!(empty.lock().expect("lock").live().is_empty());
     }
 }

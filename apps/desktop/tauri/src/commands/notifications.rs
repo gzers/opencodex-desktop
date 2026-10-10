@@ -9,10 +9,10 @@ use crate::errors::{AppError, AppResult};
 use crate::modules::notifications::persistence::{
     load_notifications, notifications_path, save_notifications,
 };
-use crate::modules::notifications::{
-    Notification, NotificationAction, NotificationCategory, NotificationLevel, NotificationSource,
-    NotificationStore,
+use crate::modules::notifications::registry::{
+    self, Delivery, DeliveryOutcome, NotificationPreferences, RegistryError,
 };
+use crate::modules::notifications::{Notification, NotificationStore};
 use crate::state::{SharedDataRoot, SharedNotificationStore};
 use crate::types::notifications::NotificationsDto;
 
@@ -21,6 +21,16 @@ use crate::types::notifications::NotificationsDto;
 /// 前端在启动时拉取一次列表；后端异步写入（状态观测、同步冲突等）时必须广播，
 /// 否则界面会一直停留在启动时那份旧列表——「后端写了但通知中心不显示」。
 pub const NOTIFICATIONS_CHANGED_EVENT: &str = "notifications-changed";
+
+impl From<RegistryError> for AppError {
+    fn from(value: RegistryError) -> Self {
+        AppError::FileSystem {
+            operation: "validate registered event delivery".to_owned(),
+            // RegistryError 文案是固定分类，绝不回显未知 ID 或调用方 payload。
+            detail: value.to_string(),
+        }
+    }
+}
 
 impl From<crate::modules::notifications::persistence::NotificationsError> for AppError {
     fn from(value: crate::modules::notifications::persistence::NotificationsError) -> Self {
@@ -35,21 +45,19 @@ impl From<crate::modules::notifications::persistence::NotificationsError> for Ap
 /// 并写入一条**真实**失败通知说明历史无法读取。这不是演示种子，而是
 /// 「本次读取失败」这一真实事件的记录，因此允许出现。
 pub fn startup_notification_store(data_root: &Path) -> NotificationStore {
-    match load_notifications(&notifications_path(data_root)) {
+    registry::registry().expect("embedded event registry must validate before startup");
+    let path = notifications_path(data_root);
+    let loaded = crate::modules::backup::safety::check_path(data_root, &path, true)
+        .and_then(|()| load_notifications(&path).map_err(AppError::from));
+    match loaded {
         Ok(store) => store,
         Err(_) => {
             let mut store = NotificationStore::new();
-            if let Ok(notification) = Notification::new(
+            if let Ok(notification) = registry::registered_notification(
                 "notifications-store-unreadable",
-                NotificationLevel::Warning,
-                NotificationCategory::System,
-                NotificationSource::Diagnostic,
-                "通知历史无法读取",
-                "通知历史文件无法解析，已按空历史启动；原文件保留在原处，可在诊断中心查看或清理。",
-                chrono::Utc::now().to_rfc3339(),
-                Some(NotificationAction::Logs),
+                chrono::Utc::now(),
             ) {
-                store.push(notification.with_dedupe_key("store:notifications-unreadable"));
+                store.push(notification);
             }
             store
         }
@@ -76,7 +84,12 @@ fn mutate_and_persist<T>(
     let mut guard = store.lock().map_err(|_poisoned| AppError::NotConfigured)?;
     let mut next = guard.clone();
     let outcome = operation(&mut next)?;
-    save_notifications(&notifications_path(data_root), &next)?;
+    if next == *guard {
+        return Ok(outcome);
+    }
+    let path = notifications_path(data_root);
+    crate::modules::backup::safety::check_path(data_root, &path, true)?;
+    save_notifications(&path, &next)?;
     *guard = next;
     Ok(outcome)
 }
@@ -93,9 +106,56 @@ pub struct NotificationPublisher<'a> {
 
 impl NotificationPublisher<'_> {
     pub fn publish(&self, notification: Notification) -> AppResult<()> {
+        self.publish_legacy(notification, false).map(|_| ())
+    }
+
+    /// Compatibility publishers can broadcast only after a durable change.
+    pub fn publish_changed(&self, notification: Notification) -> AppResult<bool> {
+        self.publish_legacy(notification, true)
+    }
+
+    fn publish_legacy(
+        &self,
+        notification: Notification,
+        suppress_reobservation: bool,
+    ) -> AppResult<bool> {
+        let notification = registry::canonical_legacy(&notification)?;
+        if registry::lifecycle_gated(&notification.notification_id)?
+            && !self.preferences().lifecycle
+        {
+            return Ok(false);
+        }
         mutate_and_persist(self.store, self.data_root, |notifications| {
+            // Reobserving the same live condition is not a new occurrence. Keep
+            // its timestamp and read state; a resolved/deleted condition may recur.
+            if suppress_reobservation
+                && notifications.all().iter().any(|existing| {
+                    !existing.deleted
+                        && !existing.resolved
+                        && existing.notification_id == notification.notification_id
+                        && existing.dedupe_key == notification.dedupe_key
+                })
+            {
+                return Ok(false);
+            }
+            let before = notifications.clone();
             notifications.push(notification);
-            Ok(())
+            Ok(*notifications != before)
+        })
+    }
+
+    fn preferences(&self) -> NotificationPreferences {
+        NotificationPreferences {
+            lifecycle: crate::commands::lifecycle_notifications_enabled(self.data_root),
+        }
+    }
+
+    /// 跨边界接入点：调用方提供完整作用域和候选真实成功证据；无原始 payload 参数。
+    /// 调用方在持久化成功且 outcome.changed 时广播 notifications-changed。
+    pub fn publish_event(&self, delivery: &Delivery<'_>) -> AppResult<DeliveryOutcome> {
+        let preferences = self.preferences();
+        mutate_and_persist(self.store, self.data_root, |store| {
+            registry::deliver(store, delivery, preferences).map_err(AppError::from)
         })
     }
 }
@@ -269,6 +329,9 @@ pub fn clear_read_notifications_with_store(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::modules::notifications::{
+        NotificationAction, NotificationCategory, NotificationLevel, NotificationSource,
+    };
     use std::sync::{Arc, Mutex};
     use tempfile::TempDir;
 
@@ -360,6 +423,31 @@ mod tests {
             live[0].dedupe_key.as_deref(),
             Some("store:notifications-unreadable")
         );
+    }
+
+    #[test]
+    fn unreadable_history_cannot_be_overwritten_by_a_notification_or_clear() {
+        for bytes in [
+            b"{broken".as_slice(),
+            br#"{"version":99,"items":[]}"#.as_slice(),
+        ] {
+            let root = temp_root();
+            let path = notifications_path(root.path());
+            std::fs::write(&path, bytes).unwrap();
+            let initial = startup_notification_store(root.path());
+            let shared = Arc::new(Mutex::new(initial.clone()));
+            let notification =
+                registry::registered_notification("run-start-failed", chrono::Utc::now()).unwrap();
+            let publisher = NotificationPublisher {
+                store: &shared,
+                data_root: root.path(),
+            };
+            assert!(publisher.publish(notification).is_err());
+            assert!(mark_all_notifications_read_with_store(&shared, root.path()).is_err());
+            assert!(clear_notifications_with_store(&shared, root.path()).is_err());
+            assert_eq!(*shared.lock().unwrap(), initial);
+            assert_eq!(std::fs::read(path).unwrap(), bytes);
+        }
     }
 
     #[test]
