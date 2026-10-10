@@ -4,6 +4,8 @@
 //! 真实网络、下载与安装由 Tauri updater 基础设施执行。
 
 use serde::{Deserialize, Serialize};
+pub mod handoff;
+pub mod progress;
 pub mod schedule;
 
 pub const CHANNELS: [&str; 2] = ["stable", "beta"];
@@ -47,6 +49,16 @@ pub struct UpdateStatus {
     pub last_checked_at: Option<String>,
     pub signature_verified: Option<bool>,
     pub error: Option<String>,
+    #[serde(default)]
+    pub notes: Option<String>,
+    #[serde(default)]
+    pub release_url: Option<String>,
+    #[serde(default)]
+    pub published_at: Option<String>,
+    #[serde(skip)]
+    pub pending_restart: Option<String>,
+    #[serde(skip)]
+    pub pending_handoff: Option<handoff::InstallationHandoff>,
     // Runtime ownership is never restored from serialized metadata.
     #[serde(skip)]
     pub generation: u64,
@@ -65,6 +77,11 @@ impl UpdateStatus {
             last_checked_at: None,
             signature_verified: None,
             error: None,
+            notes: None,
+            release_url: None,
+            published_at: None,
+            pending_restart: None,
+            pending_handoff: None,
             generation: 0,
             checking: false,
             installing: false,
@@ -83,13 +100,16 @@ impl UpdateStatus {
         if self.channel == channel {
             return true;
         }
-        if self.installing {
+        if self.installing || self.pending_restart.is_some() {
             return false;
         }
         self.generation = self.generation.wrapping_add(1);
         self.channel = channel;
         self.checking = false;
         self.available_version = None;
+        self.notes = None;
+        self.release_url = None;
+        self.published_at = None;
         self.signature_verified = None;
         self.last_checked_at = None;
         self.error = None;
@@ -97,7 +117,7 @@ impl UpdateStatus {
     }
 
     pub fn begin_check(&mut self) -> Option<u64> {
-        if self.checking || self.installing {
+        if self.checking || self.installing || self.pending_restart.is_some() {
             return None;
         }
         self.generation = self.generation.wrapping_add(1);

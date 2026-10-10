@@ -13,6 +13,10 @@ pub struct UpdateStatusDto {
     pub last_checked_at: Option<String>,
     pub signature_verified: Option<bool>,
     pub error: Option<String>,
+    pub notes: Option<String>,
+    pub release_url: Option<String>,
+    pub published_at: Option<String>,
+    pub pending_restart: Option<String>,
 }
 
 impl From<UpdateStatus> for UpdateStatusDto {
@@ -24,6 +28,10 @@ impl From<UpdateStatus> for UpdateStatusDto {
             last_checked_at: value.last_checked_at,
             signature_verified: value.signature_verified,
             error: value.error,
+            notes: value.notes,
+            release_url: value.release_url,
+            published_at: value.published_at,
+            pending_restart: value.pending_restart,
         }
     }
 }
@@ -48,6 +56,10 @@ mod tests {
             last_checked_at: Some("2026-09-16T00:00:00Z".to_string()),
             signature_verified: Some(true),
             error: None,
+            notes: None,
+            release_url: None,
+            published_at: None,
+            pending_restart: None,
         };
         let payload = serde_json::to_value(&value).unwrap();
         assert_eq!(payload["currentVersion"], "0.1.0");

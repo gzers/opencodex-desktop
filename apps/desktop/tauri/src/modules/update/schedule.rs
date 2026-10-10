@@ -8,6 +8,7 @@ pub const STATE_PATH: &str = "manager-state/update-schedule.json";
 pub const STARTUP_DELAY_SECONDS: u64 = 45;
 const DAY: i64 = 86400;
 const MAX_BYTES: u64 = 16 * 1024;
+const MAX_CACHE_BYTES: u64 = 512 * 1024;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -159,7 +160,7 @@ pub fn cache_path(root: &Path, target: Target) -> std::path::PathBuf {
 }
 pub fn save_cache<T: Serialize>(root: &Path, target: Target, value: &T) -> AppResult<()> {
     let bytes = serde_json::to_vec(value).map_err(|_| AppError::NotConfigured)?;
-    if bytes.len() as u64 > MAX_BYTES {
+    if bytes.len() as u64 > MAX_CACHE_BYTES {
         return Err(AppError::NotConfigured);
     }
     crate::infrastructure::atomic_write::atomic_write(&cache_path(root, target), &bytes, 0o600)
@@ -167,8 +168,10 @@ pub fn save_cache<T: Serialize>(root: &Path, target: Target, value: &T) -> AppRe
 pub fn load_cache<T: serde::de::DeserializeOwned>(root: &Path, target: Target) -> Option<T> {
     let file = std::fs::File::open(cache_path(root, target)).ok()?;
     let mut bytes = Vec::new();
-    file.take(MAX_BYTES + 1).read_to_end(&mut bytes).ok()?;
-    if bytes.len() as u64 > MAX_BYTES {
+    file.take(MAX_CACHE_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .ok()?;
+    if bytes.len() as u64 > MAX_CACHE_BYTES {
         return None;
     }
     serde_json::from_slice(&bytes).ok()
@@ -177,6 +180,26 @@ pub fn load_cache<T: serde::de::DeserializeOwned>(root: &Path, target: Target) -
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn escaped_bounded_release_notes_fit_cache_and_oversized_cache_is_refused() {
+        let root = tempfile::tempdir().unwrap();
+        // JSON escapes may be six bytes for each byte of plain release notes.
+        let metadata = serde_json::json!({"notes": "\u{0001}".repeat(64 * 1024)});
+        save_cache(root.path(), Target::ManagerStable, &metadata).unwrap();
+        assert_eq!(
+            load_cache::<serde_json::Value>(root.path(), Target::ManagerStable),
+            Some(metadata)
+        );
+        let oversized = serde_json::json!({"notes": "x".repeat(MAX_CACHE_BYTES as usize)});
+        assert!(save_cache(root.path(), Target::ManagerStable, &oversized).is_err());
+        std::fs::write(
+            cache_path(root.path(), Target::ManagerStable),
+            vec![b' '; MAX_CACHE_BYTES as usize + 1],
+        )
+        .unwrap();
+        assert!(load_cache::<serde_json::Value>(root.path(), Target::ManagerStable).is_none());
+    }
+
     #[test]
     fn hundred_routes_and_ten_restarts_with_fresh_schedule_make_no_requests() {
         let root = tempfile::tempdir().unwrap();
