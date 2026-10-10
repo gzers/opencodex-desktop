@@ -1,0 +1,73 @@
+{
+  "source_sha": "7a3f290e4fdc294983a9046af21a44d7624a3ae9",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "platform": "macOS",
+  "focused": {
+    "passed": 14,
+    "failed": 0,
+    "ignored": 0
+  },
+  "ipc": {
+    "passed": 28,
+    "failed": 0,
+    "ignored": 0
+  },
+  "full": {
+    "groups": 34,
+    "passed": 837,
+    "failed": 0,
+    "ignored": 5
+  },
+  "commands": [
+    {
+      "log": "focused.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml commands::update::tests -- --nocapture",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    },
+    {
+      "log": "ipc.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml modules::ipc::service::tests -- --nocapture",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    },
+    {
+      "log": "full.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --cached --check",
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+      "exit_code": 0
+    }
+  ],
+  "staged_diff_check_exit_code": 0,
+  "production_modified": true,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": false,
+  "task_state": "in_progress",
+  "limits": [
+    "Injected concurrency and real filesystem tests do not prove native AppHandle/updater HTTP or installer behavior",
+    "Cache and schedule are separately written; not a two-file atomic transaction; persistence-failure test blocks before cache write, not after it",
+    "Initial/intermediate focused logs predate final source additions; only final logs bind this source",
+    "No UI/native rerun; registry unchanged; TASK/IMP remain in_progress; platform/performance/release gates open"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-CLI真实共享更新查询"
+}

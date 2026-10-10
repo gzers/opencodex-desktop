@@ -335,3 +335,12 @@ Unix CLI 绑定 GUI 共享运行时变更准入，复用既有生命周期核验
 最终 IPC 定向 25/25，Rust 34 组 / 829 通过 / 0 失败 / 5 忽略；fmt / Clippy all-targets -D warnings / staged diff 检查通过。初轮 23 项成功但有 unused audit 警告的原件保留；最终删除字段并增加公共状态 / 切根实锁验证。20ms executor 响应、取消后落盘与终态矩阵为同进程实锁 / 隔离目录 / stopped shell 夹具，不能替代真实原生、Windows 路径或性能预算。
 
 证据见协作包验证/20261011-CLI查询与切根所有权及 .adg/evidence/OCX-0110-20261011-CLI-QUERY-BINDING-OWNERSHIP。注册表计数不变，无新增计时器 / 路径，未改 UI / 未重跑原生。CLI UpdateCheck 仍为 not_checked / pending 占位，真实更新查询待接通；迁移终态与全域事件、损坏保护受控修复、双平台 / 安装器、实际更新 / 重启与配对性能 / 真实周期仍待验。TASK / IMP 保持 in_progress，未回写稳定核心或发布。
+
+
+### 7a3f290e CLI 真实共享更新查询
+
+UpdateCheck 已接通 GUI 共享真实 updater 查询，共用状态、端点、通道、调度、缓存与终态事件。观察者取消不取消后台任务；持有存储准入至查询终态 / CLI 脱敏审计。过期世代零持久化 / 事件，冻结零 setup / 网络执行；网络失败清除旧详情，持久化失败不报告内存成功。保留 CLI 三字段 DTO，无 GUI AppHandle 明确失败，不返回虚假 pending。
+
+最终管理器定向 14/14、IPC 28/28，Rust 34 组 / 837 通过 / 0 失败 / 5 忽略；fmt / Clippy all-targets -D warnings / staged diff 检查通过。初轮 / 中间轮原件保留，不绑定最终源码。缓存与调度分别写入，不能承诺双文件原子事务；缓存保存后调度失败可能部分落盘，本轮夹具未覆盖第二次写入失败回滚。取消 / 终态测试为注入执行体与真实文件系统，不替代原生 updater HTTP 或安装器。
+
+证据见协作包验证/20261011-CLI真实共享更新查询及 .adg/evidence/OCX-0110-20261011-CLI-REAL-UPDATE。注册表不变，无新定时器 / 路径，未改 UI / 未重跑原生。本轮更新 f1a0e003 的 CLI 查询占位待办；迁移终态、损坏保护受控修复、双平台 / 安装器、真实更新 / 重启与配对性能 / 真实周期仍待验。TASK / IMP 保持 in_progress，未回写稳定核心或发布。
