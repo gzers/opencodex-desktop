@@ -263,6 +263,8 @@ pub fn run() {
                     current_version: app.package_info().version.to_string().leak(),
                 };
                 #[cfg(unix)]
+                let ipc_app = app.handle().clone();
+                #[cfg(unix)]
                 tauri::async_runtime::spawn(async move {
                     let endpoint =
                         crate::modules::ipc::endpoint::IpcEndpoint::bind(&ipc_cache_root);
@@ -273,7 +275,7 @@ pub fn run() {
                         ipc_collector,
                         ipc_runner,
                         ipc_dependencies,
-                    );
+                    ).with_app_handle(ipc_app);
                     loop {
                         if endpoint.accept_once(&mut service).await.is_err() {
                             break;

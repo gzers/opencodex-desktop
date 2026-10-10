@@ -88,7 +88,7 @@ pub fn get_sync_config(data_root: State<'_, SharedDataRoot>) -> AppResult<SyncCo
 
 /// A single admitted sync operation owns endpoint and status mutations. Busy
 /// commands fail admission; they do not queue or publish network failures.
-fn sync_operation_gate() -> std::sync::Arc<tokio::sync::Mutex<()>> {
+pub(crate) fn sync_operation_gate() -> std::sync::Arc<tokio::sync::Mutex<()>> {
     static GATE: std::sync::OnceLock<std::sync::Arc<tokio::sync::Mutex<()>>> =
         std::sync::OnceLock::new();
     GATE.get_or_init(|| std::sync::Arc::new(tokio::sync::Mutex::new(())))
@@ -112,7 +112,7 @@ where
     .await
 }
 
-async fn run_owned_sync_with_gates<T, F>(
+pub(crate) async fn run_owned_sync_with_gates<T, F>(
     writers: std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
     operations: std::sync::Arc<tokio::sync::Mutex<()>>,
     operation: &'static str,
@@ -361,73 +361,102 @@ pub async fn run_sync_now(
     let data_root_path = data_root.inner().0.clone();
     let home_path = home.inner().0.clone();
     run_owned_sync("run sync now", move || {
-        let config = SyncConfigStore::new(&data_root_path).load()?;
-        let endpoint = config.active().cloned().ok_or(AppError::NotConfigured)?;
-        let webdav = webdav_config(&endpoint)?;
-        webdav.validate().map_err(|_| AppError::NotConfigured)?;
-        let status = app.state::<SharedSyncStatus>();
-        let notifications = app.state::<SharedNotificationStore>();
-        let now = chrono::Utc::now();
-        {
-            let mut run = status_guard(&status);
-            run.run_id = uuid::Uuid::new_v4().to_string();
-            run.connection_state = crate::types::status::ConnectionState::Connecting;
-            run.operation_state = crate::types::status::OperationState::Validating;
-            run.started_at = now;
-            run.finished_at = None;
-            run.failure_reason = None;
-            run.items_total = crate::modules::sync::runner::SYNCED_ARTIFACTS.len();
-            run.items_done = 0;
-        }
-        let mut verified = true;
-        let outcome =
-            tauri::async_runtime::block_on(crate::modules::sync::runner::run_sync_observed(
-                &data_root_path,
-                &home_path,
-                &endpoint,
-                &webdav,
-                |candidate, terminal| {
-                    use crate::modules::sync::runner::SyncTerminal;
-                    match terminal {
-                        SyncTerminal::Conflict => {} // Existing conflict risk, never success.
-                        SyncTerminal::Failed => publish_endpoint_result(
-                            &app,
-                            &data_root_path,
-                            "sync-run",
-                            candidate,
-                            false,
-                        ),
-                        SyncTerminal::Succeeded => {
-                            // External edits are not covered by the process-local gate.
-                            // Refuse recovery unless the exact endpoint/secret still matches.
-                            verified = sync_endpoint_unchanged(
-                                &endpoint,
-                                &webdav,
-                                SyncConfigStore::new(&data_root_path).load(),
-                                webdav_config,
-                            );
-                            publish_endpoint_result(
-                                &app,
-                                &data_root_path,
-                                "sync-run",
-                                candidate,
-                                verified,
-                            );
-                        }
+        project_sync_result(execute_sync_now(Some(&app), &data_root_path, &home_path))
+    })
+    .await
+}
+
+/// GUI and the running GUI's CLI service consume the same verified execution.
+/// Production callers always pass the application; isolated service tests may
+/// omit it without creating a second notification store or GUI status source.
+pub(crate) struct VerifiedSyncOutcome {
+    pub(crate) outcome: crate::modules::sync::runner::SyncOutcome,
+    pub(crate) verified: bool,
+}
+
+pub(crate) enum SyncExecutionFailure {
+    Setup(AppError),
+    Run(SyncRunFailure),
+}
+
+impl From<SyncRunFailure> for SyncExecutionFailure {
+    fn from(failure: SyncRunFailure) -> Self {
+        Self::Run(failure)
+    }
+}
+
+pub(crate) fn execute_sync_now(
+    app: Option<&tauri::AppHandle>,
+    data_root: &std::path::Path,
+    home: &std::path::Path,
+) -> Result<VerifiedSyncOutcome, SyncExecutionFailure> {
+    let config = SyncConfigStore::new(data_root)
+        .load()
+        .map_err(SyncExecutionFailure::Setup)?;
+    let endpoint = config
+        .active()
+        .cloned()
+        .ok_or(SyncExecutionFailure::Setup(AppError::NotConfigured))?;
+    let webdav = webdav_config(&endpoint).map_err(SyncExecutionFailure::Setup)?;
+    webdav
+        .validate()
+        .map_err(|_| SyncRunFailure::NotConfigured)?;
+    let status = app.map(|app| app.state::<SharedSyncStatus>());
+    if let Some(status) = &status {
+        let mut run = status_guard(status);
+        run.run_id = uuid::Uuid::new_v4().to_string();
+        run.connection_state = crate::types::status::ConnectionState::Connecting;
+        run.operation_state = crate::types::status::OperationState::Validating;
+        run.started_at = chrono::Utc::now();
+        run.finished_at = None;
+        run.failure_reason = None;
+        run.snapshot_id = None;
+        run.items_total = crate::modules::sync::runner::SYNCED_ARTIFACTS.len();
+        run.items_done = 0;
+    }
+    let mut verified = true;
+    let outcome = tauri::async_runtime::block_on(crate::modules::sync::runner::run_sync_observed(
+        data_root,
+        home,
+        &endpoint,
+        &webdav,
+        |candidate, terminal| {
+            use crate::modules::sync::runner::SyncTerminal;
+            match terminal {
+                SyncTerminal::Conflict => {} // Existing conflict risk, never success.
+                SyncTerminal::Failed => {
+                    if let Some(app) = app {
+                        publish_endpoint_result(app, data_root, "sync-run", candidate, false);
                     }
-                },
-            ));
-        // Persist and broadcast outside the sync-state lock. A repeated conflict or
-        // failed persistence must not emit a notification-list change.
+                }
+                SyncTerminal::Succeeded => {
+                    // External edits are not covered by the process-local gate.
+                    verified = sync_endpoint_unchanged(
+                        &endpoint,
+                        &webdav,
+                        SyncConfigStore::new(data_root).load(),
+                        webdav_config,
+                    );
+                    if let Some(app) = app {
+                        publish_endpoint_result(app, data_root, "sync-run", candidate, verified);
+                    }
+                }
+            }
+        },
+    ));
+    // Persist and broadcast outside the sync-state lock. Repeated conflicts and
+    // failed persistence must not emit a notification-list change.
+    if let Some(app) = app {
+        let notifications = app.state::<SharedNotificationStore>();
         if outcome.as_ref().is_ok_and(|outcome| outcome.conflicted)
             && publish_sync_conflict(
-                sync_conflict_alerts_enabled(&data_root_path),
+                sync_conflict_alerts_enabled(data_root),
                 notifications.inner(),
-                &data_root_path,
+                data_root,
             )
         {
             let _ = crate::commands::event_delivery::emit_signal(
-                &app,
+                app,
                 crate::commands::notifications::NOTIFICATIONS_CHANGED_EVENT,
                 crate::modules::notifications::registry::Job::NotificationMutation,
                 crate::modules::notifications::registry::Trigger::Commit,
@@ -435,58 +464,72 @@ pub async fn run_sync_now(
                 (),
             );
         }
-        let mut run = status_guard(&status);
-        match outcome {
+    }
+    if let Some(status) = &status {
+        let mut run = status_guard(status);
+        run.finished_at = Some(chrono::Utc::now());
+        match &outcome {
             Ok(outcome) => {
-                let (connection, operation) = sync_success_states(&outcome, verified);
+                let (connection, operation) = sync_success_states(outcome, verified);
                 run.connection_state = connection;
                 run.operation_state = operation;
-                run.finished_at = Some(chrono::Utc::now());
                 run.items_done = outcome.uploaded.len();
                 run.snapshot_id = Some(outcome.snapshot_id.clone());
-                let message = if verified {
-                    outcome.message()
-                } else {
-                    "同步请求已执行，但端点或凭据回读不一致；可能已有内容应用或上传，请检查后重试。"
-                        .to_string()
-                };
                 run.failure_reason = (connection != crate::types::status::ConnectionState::Synced)
-                    .then(|| message.clone());
-                Ok(SyncOperationResultDto {
-                    connection_state: format!("{connection:?}").to_snake_case(),
-                    operation_state: format!("{operation:?}").to_snake_case(),
-                    message,
-                    snapshot_id: Some(outcome.snapshot_id),
-                    backup_id: None,
-                    etag: outcome.etag,
-                })
-            }
-            // 上传阶段失败：按既有契约返回「失败但命令成功」的结果投影。
-            Err(failure @ SyncRunFailure::WebDav(WebDavOperation::Upload, _)) => {
-                let message = failure.user_message();
-                run.connection_state = crate::types::status::ConnectionState::Failed;
-                run.operation_state = crate::types::status::OperationState::Failed;
-                run.finished_at = Some(chrono::Utc::now());
-                run.failure_reason = Some(message.clone());
-                Ok(SyncOperationResultDto {
-                    connection_state: "failed".to_string(),
-                    operation_state: "failed".to_string(),
-                    message,
-                    snapshot_id: None,
-                    backup_id: None,
-                    etag: None,
-                })
+                    .then(|| sync_outcome_message(outcome, verified));
             }
             Err(failure) => {
                 run.connection_state = crate::types::status::ConnectionState::Failed;
                 run.operation_state = crate::types::status::OperationState::Failed;
-                run.finished_at = Some(chrono::Utc::now());
                 run.failure_reason = Some(failure.user_message());
-                Err(app_error_for(failure))
             }
         }
-    })
-    .await
+    }
+    outcome
+        .map(|outcome| VerifiedSyncOutcome { outcome, verified })
+        .map_err(SyncExecutionFailure::Run)
+}
+
+fn sync_outcome_message(
+    outcome: &crate::modules::sync::runner::SyncOutcome,
+    verified: bool,
+) -> String {
+    if verified {
+        outcome.message()
+    } else {
+        "同步请求已执行，但端点或凭据回读不一致；可能已有内容应用或上传，请检查后重试。".to_string()
+    }
+}
+
+fn project_sync_result(
+    result: Result<VerifiedSyncOutcome, SyncExecutionFailure>,
+) -> AppResult<SyncOperationResultDto> {
+    match result {
+        Ok(VerifiedSyncOutcome { outcome, verified }) => {
+            let (connection, operation) = sync_success_states(&outcome, verified);
+            Ok(SyncOperationResultDto {
+                connection_state: format!("{connection:?}").to_snake_case(),
+                operation_state: format!("{operation:?}").to_snake_case(),
+                message: sync_outcome_message(&outcome, verified),
+                snapshot_id: Some(outcome.snapshot_id),
+                backup_id: None,
+                etag: outcome.etag,
+            })
+        }
+        // Keep the GUI's existing failed-upload DTO contract; CLI maps the typed failure.
+        Err(SyncExecutionFailure::Run(
+            failure @ SyncRunFailure::WebDav(WebDavOperation::Upload, _),
+        )) => Ok(SyncOperationResultDto {
+            connection_state: "failed".to_string(),
+            operation_state: "failed".to_string(),
+            message: failure.user_message(),
+            snapshot_id: None,
+            backup_id: None,
+            etag: None,
+        }),
+        Err(SyncExecutionFailure::Run(failure)) => Err(app_error_for(failure)),
+        Err(SyncExecutionFailure::Setup(error)) => Err(error),
+    }
 }
 
 fn sync_success_states(
@@ -638,6 +681,30 @@ mod tests {
             username: endpoint().username,
             password: "fixture-secret".into(),
         }
+    }
+
+    #[test]
+    fn shared_sync_preserves_gui_setup_and_upload_failure_contracts() {
+        let error = project_sync_result(Err(SyncExecutionFailure::Setup(AppError::FileSystem {
+            operation: "load sync config".into(),
+            detail: "unreadable".into(),
+        })));
+        assert!(
+            matches!(error, Err(AppError::FileSystem { operation, .. }) if operation == "load sync config")
+        );
+        let upload = project_sync_result(Err(SyncRunFailure::WebDav(
+            WebDavOperation::Upload,
+            crate::infrastructure::webdav_client::WebDavError::Unauthorized,
+        )
+        .into()))
+        .unwrap();
+        assert_eq!(upload.connection_state, "failed");
+        assert_eq!(upload.operation_state, "failed");
+        assert!(upload.snapshot_id.is_none());
+        assert!(matches!(
+            project_sync_result(Err(SyncRunFailure::ColdSync.into())),
+            Err(AppError::TargetLockTimeout { timeout_ms: 0 })
+        ));
     }
 
     #[test]

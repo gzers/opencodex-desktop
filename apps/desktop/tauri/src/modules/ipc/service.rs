@@ -1,7 +1,7 @@
 //! MOD-12 IPC 委托执行与命令验证。
 //!
 //! CLI 是运行中 GUI 的客户端：只读取共享快照，生命周期动作复用共享
-//! runner；写路径在本阶段保留为无副作用的能力占位。
+//! runner；同步由持有存储与同步准入的后台执行者完成核验、反馈及审计。
 
 use serde::Serialize;
 use std::collections::BTreeMap;
@@ -109,6 +109,8 @@ pub struct IpcService {
     dependencies: IpcDependencies,
     audit: super::audit::AuditStore,
     writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    sync_operations: Arc<tokio::sync::Mutex<()>>,
+    app: Option<tauri::AppHandle>,
 }
 
 impl IpcService {
@@ -132,7 +134,17 @@ impl IpcService {
             dependencies,
             audit,
             writers,
+            sync_operations: crate::commands::sync::sync_operation_gate(),
+            app: None,
         }
+    }
+
+    /// Bind the running GUI's shared status and notification store. The CLI must
+    /// never instantiate its own GUI state or a second notification publisher.
+    #[cfg(unix)]
+    pub(crate) fn with_app_handle(mut self, app: tauri::AppHandle) -> Self {
+        self.app = Some(app);
+        self
     }
 
     #[cfg(test)]
@@ -186,6 +198,7 @@ impl IpcService {
             },
         );
         service.writers = Arc::new(crate::infrastructure::storage_writers::WriterGate::default());
+        service.sync_operations = Arc::new(tokio::sync::Mutex::new(()));
         service.audit = super::audit::AuditStore::with_writers(
             &service.dependencies.active_data_root,
             service.writers.clone(),
@@ -199,6 +212,12 @@ impl IpcService {
             Ok(value) => value,
             Err(response) => return response,
         };
+        // A disconnected/cancelled observer must not cancel an admitted sync or
+        // release its old-root admission before terminal feedback and audit.
+        if request.command == IpcCommand::SyncRun {
+            let request_id = request.request_id.clone();
+            return sync_response(request_id, self.sync_run(request, started).await);
+        }
         let request_id = request.request_id.clone();
         let request_id = if request_id.starts_with("req_") {
             request_id
@@ -248,7 +267,7 @@ impl IpcService {
                 IpcCommand::BackupCreate => self.create_backup(),
                 IpcCommand::Export => self.export_config(&request.args),
                 IpcCommand::Import => self.import_config(&request.args, request.secret.as_deref()),
-                IpcCommand::SyncRun => self.sync_run().await,
+                IpcCommand::SyncRun => unreachable!("sync uses its owned execution path"),
             }
         };
         let (result, error_code) = match result {
@@ -507,40 +526,30 @@ impl IpcService {
         .unwrap_or(serde_json::Value::Null))
     }
 
-    /// CLI 的同步与 GUI 走同一段真实执行体（`modules::sync::runner`）。
-    ///
-    /// 这里此前只读同步状态文件、回一个伪造的 `snapshot_id` 与 `artifacts: 0` 就返回成功，
-    /// 从不接触网络——`ocxd sync run` 因此是「假成功」。现在改为真正执行同步，并把
-    /// 端点缺失、冷同步、互斥占用、认证失败、远端不存在等如实映射为不同退出码。
-    async fn sync_run(&self) -> Result<serde_json::Value, IpcErrorCode> {
-        let data_root = self.dependencies.active_data_root.clone();
-        let config = crate::modules::sync::config::SyncConfigStore::new(&data_root)
-            .load()
-            .map_err(|_| IpcErrorCode::ExecutionFailed)?;
-        let endpoint = config
-            .active()
-            .cloned()
-            .ok_or(IpcErrorCode::ExecutionFailed)?;
-        let webdav =
-            crate::modules::sync::runner::webdav_config(&endpoint).map_err(map_sync_run_failure)?;
-        let outcome = crate::modules::sync::runner::run_sync(
-            &data_root,
-            &self.dependencies.home,
-            &endpoint,
-            &webdav,
+    async fn sync_run(
+        &self,
+        request: IpcRequest,
+        started: chrono::DateTime<chrono::Utc>,
+    ) -> Result<serde_json::Value, IpcErrorCode> {
+        let root = self.dependencies.active_data_root.clone();
+        let home = self.dependencies.home.clone();
+        let app = self.app.clone();
+        let worker_root = root.clone();
+        run_ipc_sync_owned(
+            self.writers.clone(),
+            self.sync_operations.clone(),
+            root,
+            request,
+            started,
+            move || {
+                project_ipc_sync(crate::commands::sync::execute_sync_now(
+                    app.as_ref(),
+                    &worker_root,
+                    &home,
+                ))
+            },
         )
         .await
-        .map_err(map_sync_run_failure)?;
-        serde_json::to_value(IpcSyncData {
-            snapshot_id: outcome.snapshot_id,
-            artifacts: outcome.uploaded.len(),
-            direction: if outcome.applied.is_empty() {
-                "upload"
-            } else {
-                "sync"
-            },
-        })
-        .map_err(|_| IpcErrorCode::InternalError)
     }
 
     fn run_lifecycle(
@@ -629,6 +638,111 @@ fn map_sync_run_failure(failure: crate::modules::sync::runner::SyncRunFailure) -
     }
 }
 
+/// The same owner holds the storage and sync admissions across execution,
+/// terminal status/notification projection and the final redacted audit write.
+async fn run_ipc_sync_owned(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    operations: Arc<tokio::sync::Mutex<()>>,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let audit = super::audit::AuditStore::with_writers(&root, writers.clone());
+    crate::commands::sync::run_owned_sync_with_gates(
+        writers,
+        operations,
+        "CLI sync run",
+        move || {
+            let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(task))
+                .unwrap_or(Err(IpcErrorCode::InternalError));
+            let error = result.as_ref().err().copied();
+            let record = super::AuditRecord::from_request(
+                &request,
+                super::AuditSource::Cli,
+                started,
+                chrono::Utc::now(),
+                if error.is_some() {
+                    super::AuditResult::Failed
+                } else {
+                    super::AuditResult::Succeeded
+                },
+                error,
+            );
+            if audit.record(&record).is_err() {
+                let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&root)
+                    .append_event("CLI sync audit persistence failed");
+            }
+            Ok(result)
+        },
+    )
+    .await
+    .map_err(|error| match error {
+        crate::errors::AppError::TargetLockTimeout { .. } => IpcErrorCode::Timeout,
+        crate::errors::AppError::FileSystem { operation, .. } if operation == "storage binding" => {
+            IpcErrorCode::TargetStateConflict
+        }
+        _ => IpcErrorCode::ExecutionFailed,
+    })?
+}
+
+fn project_ipc_sync(
+    result: Result<
+        crate::commands::sync::VerifiedSyncOutcome,
+        crate::commands::sync::SyncExecutionFailure,
+    >,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    let verified = result.map_err(|failure| match failure {
+        crate::commands::sync::SyncExecutionFailure::Setup(error) => map_app_error(error),
+        crate::commands::sync::SyncExecutionFailure::Run(failure) => map_sync_run_failure(failure),
+    })?;
+    let outcome = verified.outcome;
+    if outcome.conflicted {
+        return Err(IpcErrorCode::TargetStateConflict);
+    }
+    if !verified.verified {
+        return Err(IpcErrorCode::ExecutionFailed);
+    }
+    serde_json::to_value(IpcSyncData {
+        snapshot_id: outcome.snapshot_id,
+        artifacts: outcome.uploaded.len(),
+        direction: if outcome.applied.is_empty() {
+            "upload"
+        } else {
+            "sync"
+        },
+    })
+    .map_err(|_| IpcErrorCode::InternalError)
+}
+
+fn sync_response(
+    request_id: String,
+    result: Result<serde_json::Value, IpcErrorCode>,
+) -> IpcResponse<serde_json::Value> {
+    let request_id = if request_id.starts_with("req_") {
+        request_id
+    } else {
+        format!("req_{request_id}")
+    };
+    match result {
+        Ok(data) => IpcResponse {
+            request_id,
+            ok: true,
+            data: Some(data),
+            error: None,
+        },
+        Err(code) => IpcResponse {
+            request_id,
+            ok: false,
+            data: None,
+            error: Some(IpcError {
+                code,
+                message: crate::modules::ipc::error_message(code).to_string(),
+            }),
+        },
+    }
+}
+
 fn action_log_label(action: LifecycleAction) -> &'static str {
     match action {
         LifecycleAction::Start => "start",
@@ -675,7 +789,8 @@ mod tests {
     /// 与 `artifacts: 0`，从不接触网络——这是「假成功」。未配置端点时必须如实失败。
     #[tokio::test]
     async fn sync_run_without_endpoint_reports_failure_instead_of_fake_success() {
-        let mut service = IpcService::for_tests();
+        let root = tempfile::tempdir().unwrap();
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
         let request = IpcRequest {
             request_id: "req_00000000-0000-0000-0000-0000000000ff".to_string(),
             command: IpcCommand::SyncRun,
@@ -690,6 +805,227 @@ mod tests {
             response.error.map(|error| error.code),
             Some(IpcErrorCode::ExecutionFailed)
         );
+    }
+
+    fn sync_request() -> IpcRequest {
+        IpcRequest {
+            request_id: "req_00000000-0000-0000-0000-0000000000aa".to_string(),
+            command: IpcCommand::SyncRun,
+            args: BTreeMap::new(),
+            confirm: true,
+            contract_version: 1,
+            secret: None,
+        }
+    }
+
+    fn verified_outcome(
+        conflicted: bool,
+        verified: bool,
+    ) -> crate::commands::sync::VerifiedSyncOutcome {
+        crate::commands::sync::VerifiedSyncOutcome {
+            outcome: crate::modules::sync::runner::SyncOutcome {
+                snapshot_id: "snap_test".to_string(),
+                uploaded: vec!["state/preferences.json".to_string()],
+                applied: vec![],
+                conflicted,
+                etag: None,
+            },
+            verified,
+        }
+    }
+
+    #[test]
+    fn sync_projection_preserves_conflicts_readback_failure_and_typed_network_errors() {
+        use crate::infrastructure::webdav_client::{WebDavError, WebDavOperation};
+        use crate::modules::sync::runner::SyncRunFailure as F;
+        let data = project_ipc_sync(Ok(verified_outcome(false, true))).unwrap();
+        assert_eq!(data["artifacts"], 1);
+        assert_eq!(data["direction"], "upload");
+        assert_eq!(
+            project_ipc_sync(Ok(verified_outcome(true, true))),
+            Err(IpcErrorCode::TargetStateConflict)
+        );
+        assert_eq!(
+            project_ipc_sync(Ok(verified_outcome(true, false))),
+            Err(IpcErrorCode::TargetStateConflict)
+        );
+        assert_eq!(
+            project_ipc_sync(Ok(verified_outcome(false, false))),
+            Err(IpcErrorCode::ExecutionFailed)
+        );
+        for (failure, code) in [
+            (F::ColdSync, IpcErrorCode::TargetStateConflict),
+            (F::TargetLocked, IpcErrorCode::Timeout),
+            (
+                F::WebDav(WebDavOperation::Upload, WebDavError::Unauthorized),
+                IpcErrorCode::AccessDenied,
+            ),
+            (
+                F::WebDav(WebDavOperation::Download, WebDavError::NotFound),
+                IpcErrorCode::TargetNotFound,
+            ),
+            (
+                F::WebDav(WebDavOperation::Upload, WebDavError::Network),
+                IpcErrorCode::ExecutionFailed,
+            ),
+        ] {
+            let response = sync_response("caller-id".into(), project_ipc_sync(Err(failure.into())));
+            assert!(!response.ok);
+            assert!(response.data.is_none());
+            assert_eq!(response.request_id, "req_caller-id");
+            assert_eq!(response.error.unwrap().code, code);
+        }
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::Duration;
+        // Real filesystem/admission/audit ownership, injected terminal executor.
+        // This is not a live WebDAV or native notification transport test.
+        for case in 0..5 {
+            let root = tempfile::tempdir().unwrap();
+            let committed = root.path().join("committed");
+            let terminal = root.path().join("terminal");
+            let writers = Arc::new(WriterGate::default());
+            let operations = Arc::new(tokio::sync::Mutex::new(()));
+            let entered = Arc::new(tokio::sync::Notify::new());
+            let release = Arc::new(tokio::sync::Notify::new());
+            let worker_writers = writers.clone();
+            let worker_operations = operations.clone();
+            let worker_root = root.path().to_path_buf();
+            let worker_committed = committed.clone();
+            let worker_terminal = terminal.clone();
+            let worker_entered = entered.clone();
+            let worker_release = release.clone();
+            let observer = tokio::spawn(async move {
+                run_ipc_sync_owned(
+                    worker_writers,
+                    worker_operations,
+                    worker_root,
+                    sync_request(),
+                    chrono::Utc::now(),
+                    move || {
+                        std::fs::write(worker_committed, b"committed").unwrap();
+                        worker_entered.notify_one();
+                        tauri::async_runtime::block_on(worker_release.notified());
+                        std::fs::write(worker_terminal, b"projected").unwrap();
+                        match case {
+                            0 => project_ipc_sync(Ok(verified_outcome(false, true))),
+                            1 => project_ipc_sync(Ok(verified_outcome(true, true))),
+                            2 => project_ipc_sync(Ok(verified_outcome(false, false))),
+                            3 => Err(IpcErrorCode::AccessDenied),
+                            _ => panic!("injected terminal panic"),
+                        }
+                    },
+                )
+                .await
+            });
+            tokio::time::timeout(Duration::from_secs(2), entered.notified())
+                .await
+                .unwrap();
+            observer.abort();
+            assert!(observer.await.unwrap_err().is_cancelled());
+            assert!(committed.exists());
+            assert!(!terminal.exists());
+            assert!(!root.path().join("audit.log").exists());
+            assert!(writers.freeze().unwrap().is_none());
+            assert!(operations.clone().try_lock_owned().is_err());
+            release.notify_one();
+            tokio::time::timeout(Duration::from_secs(2), async {
+                loop {
+                    if writers.freeze().unwrap().is_some() {
+                        break;
+                    }
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .unwrap();
+            assert!(operations.clone().try_lock_owned().is_ok());
+            assert!(terminal.exists());
+            let log = std::fs::read_to_string(root.path().join("audit.log")).unwrap();
+            let records: Vec<super::super::AuditRecord> = log
+                .lines()
+                .map(|line| serde_json::from_str(line).unwrap())
+                .collect();
+            assert_eq!(records.len(), 1);
+            assert_eq!(records[0].command, IpcCommand::SyncRun);
+            assert_eq!(
+                records[0].error_code,
+                match case {
+                    0 => None,
+                    1 => Some(IpcErrorCode::TargetStateConflict),
+                    2 => Some(IpcErrorCode::ExecutionFailed),
+                    3 => Some(IpcErrorCode::AccessDenied),
+                    _ => Some(IpcErrorCode::InternalError),
+                }
+            );
+            assert_eq!(
+                records[0].result,
+                if case == 0 {
+                    super::super::AuditResult::Succeeded
+                } else {
+                    super::super::AuditResult::Failed
+                }
+            );
+            assert!(!log.contains("committed"));
+            assert!(!log.contains("projected"));
+        }
+    }
+
+    #[tokio::test]
+    async fn busy_frozen_and_unconfirmed_cli_sync_do_not_execute_or_write_audit() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        let root = tempfile::tempdir().unwrap();
+        let calls = Arc::new(AtomicUsize::new(0));
+        let writers = Arc::new(WriterGate::default());
+        let operations = Arc::new(tokio::sync::Mutex::new(()));
+        let held = operations.clone().try_lock_owned().unwrap();
+        let counter = calls.clone();
+        assert_eq!(
+            run_ipc_sync_owned(
+                writers.clone(),
+                operations.clone(),
+                root.path().to_path_buf(),
+                sync_request(),
+                chrono::Utc::now(),
+                move || {
+                    counter.fetch_add(1, Ordering::SeqCst);
+                    Ok(serde_json::Value::Null)
+                }
+            )
+            .await,
+            Err(IpcErrorCode::Timeout)
+        );
+        drop(held);
+        let binding = writers.freeze().unwrap().unwrap();
+        let counter = calls.clone();
+        assert_eq!(
+            run_ipc_sync_owned(
+                writers.clone(),
+                operations,
+                root.path().to_path_buf(),
+                sync_request(),
+                chrono::Utc::now(),
+                move || {
+                    counter.fetch_add(1, Ordering::SeqCst);
+                    Ok(serde_json::Value::Null)
+                }
+            )
+            .await,
+            Err(IpcErrorCode::TargetStateConflict)
+        );
+        drop(binding);
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let mut request = sync_request();
+        request.confirm = false;
+        let response = service.execute(request).await;
+        assert!(!response.ok);
+        assert_eq!(response.error.unwrap().code, IpcErrorCode::RequireConfirm);
+        assert!(!root.path().join("audit.log").exists());
     }
 
     /// 回归：CLI 切换数据根必须把引用写回固定的应用数据目录。
