@@ -219,6 +219,13 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "uninstall",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1002,6 +1009,36 @@
       "availability": "active",
       "policy": null,
       "resolves": []
+    },
+    {
+      "id": "runtime-uninstall-failed",
+      "job": "uninstall",
+      "object": "runtime",
+      "action": "uninstall",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "runtime_uninstall_failure",
+      "resolves": []
+    },
+    {
+      "id": "runtime-uninstall-succeeded",
+      "job": "uninstall",
+      "object": "runtime",
+      "action": "uninstall",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "runtime-uninstall-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1170,6 +1207,18 @@
       "body": "远端快照与本地历史冲突，已暂停覆盖并保留双方历史；请确认后重试。",
       "action": "sync",
       "dedupe": "sync:conflict-detected",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "runtime_uninstall_failure",
+      "level": "warning",
+      "category": "run",
+      "source": "runtime",
+      "title": "OpenCodex 卸载未核验完成",
+      "body": "卸载被阻断、步骤失败或仍有残留待核验；请查看卸载步骤与诊断记录后处理。",
+      "action": "logs",
+      "dedupe": "runtime:uninstall-failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -1474,6 +1523,16 @@
       "event": "notifications-changed",
       "source": "commands/mod.rs::process_action persisted store change broadcast; pure catalog validation",
       "wiring": "validated_signal"
+    },
+    {
+      "event": "runtime-uninstall-failed",
+      "source": "commands/runtime.rs::uninstall_runtime owned worker terminal, steps and residue verification",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "runtime-uninstall-succeeded",
+      "source": "commands/runtime.rs::uninstall_runtime owned worker terminal, steps and residue verification",
+      "wiring": "scoped_terminal"
     }
   ],
   "scheduling_sites": [

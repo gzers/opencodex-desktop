@@ -657,9 +657,22 @@ pub async fn plan_runtime_uninstall(
     Ok(RuntimeUninstallPlanDto::from_plan(&plan, ocx.as_deref()))
 }
 
+/// Validate before acquiring leases or stopping the proxy. Cancellation or an
+/// unconfirmed request must leave the running process and storage untouched.
+fn confirmed_uninstall_scope(request: &RuntimeUninstallRequestDto) -> AppResult<UninstallScope> {
+    let scope = request.scope_kind().ok_or(AppError::RuntimeManaged {
+        code: "bad_scope".to_string(),
+        detail: "卸载范围必须是 body 或 full".to_string(),
+    })?;
+    if !request.confirmed() {
+        return Err(uninstall::UninstallError::ConfirmationRequired.into());
+    }
+    Ok(scope)
+}
+
 /// 统一卸载（Revision 11）：覆盖**任意已解析来源**，由**应用执行**。
 ///
-/// 顺序固定：停代理 → 备份（可选）→ 移除包体与入口 → 官方 `ocx uninstall`（完整卸载）→
+/// 顺序固定：停代理 → 备份（可选）→ 官方 `ocx uninstall`（完整卸载）→ 移除包体与入口 →
 /// 清空 `OPENCODEX_HOME` 非自有残留（可选）→ 只读残留核验。任一步失败如实记录，不静默跳过。
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
@@ -672,10 +685,7 @@ pub async fn uninstall_runtime(
     context: tauri::State<'_, SharedProcessContext>,
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<RuntimeUninstallResultDto> {
-    let scope = request.scope_kind().ok_or(AppError::RuntimeManaged {
-        code: "bad_scope".to_string(),
-        detail: "卸载范围必须是 body 或 full".to_string(),
-    })?;
+    let scope = confirmed_uninstall_scope(&request)?;
     let reservation = {
         let manager = app.state::<crate::commands::update::SharedUpdateStatus>();
         let state = manager.lock().map_err(|_| AppError::NotConfigured)?;
@@ -716,55 +726,85 @@ pub async fn uninstall_runtime(
     let outcome = crate::commands::run_blocking("uninstall runtime", move || {
         // Keep the reservation until the owned worker terminates, even if IPC is dropped.
         let _reservation = reservation;
-        {
-            let guard =
-                crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?;
-            crate::modules::runtime::protection::reconcile_pending(&data_root_path, &guard)?;
-        }
-        let runner = worker_app.state::<SharedProcessRunner>();
-        let stopped = crate::commands::process_action_with_runner(
-            crate::types::process_action::ProcessActionRequest {
-                action: crate::modules::process::LifecycleAction::Stop,
-                confirm: true,
-            },
-            runner.inner(),
-            &worker_context,
-            &crate::infrastructure::runtime_log::RuntimeLog::new(&data_root_path),
-            None,
-        )?;
-        if stopped.result != Some(crate::modules::process::LifecycleResult::Stopped) {
-            return Err(AppError::RuntimeManaged {
-                code: "stop_unconfirmed".to_string(),
-                detail: "代理停止尚未确认，未进入卸载步骤".to_string(),
-            });
-        }
-        let outcome = uninstall::execute_uninstall(
+        let source_version = handle_ref.store().load().resolved_version;
+        let candidate = serde_json::json!({
+            "scope": options.scope,
+            "auto_backup": options.auto_backup,
+            "clean_data": options.clean_data,
+            "source_kind": plan.source_kind,
+            "source_path": plan.source_path,
+            "source_version": source_version,
+            "remove_objects": plan.remove_objects,
+            "runtime_objects": plan.runtime_objects,
+        });
+        let identity = crate::commands::event_delivery::prepare(
             &data_root_path,
-            &opencodex_home,
-            &plan,
-            &options,
-            ocx.as_deref(),
-            npm.as_deref(),
-            &commands,
-        )?;
-        let failed = outcome
-            .steps
-            .iter()
-            .any(|step| step.status == uninstall::StepStatus::Failed);
-        let target = plan.source_path.clone().unwrap_or_default();
-        let resolution_after = handle_ref.refresh();
-        let version = handle_ref
-            .store()
-            .load()
-            .resolved_version
-            .unwrap_or_else(|| default_version().to_string());
-        let _ = handle_ref.record_history(uninstall::history_entry(
-            if failed { "failed" } else { "succeeded" },
-            &version,
-            Path::new(&target),
-            None,
-        ));
-        Ok((outcome, resolution_after))
+            "runtime-uninstall-failed",
+            crate::modules::notifications::registry::Channel::Local,
+            candidate.to_string().as_bytes(),
+        );
+        let result: AppResult<_> = (|| {
+            {
+                let guard = crate::modules::backup::manager::acquire_preferences_transaction(
+                    &data_root_path,
+                )?;
+                crate::modules::runtime::protection::reconcile_pending(&data_root_path, &guard)?;
+            }
+            let runner = worker_app.state::<SharedProcessRunner>();
+            let stopped = crate::commands::process_action_with_runner(
+                crate::types::process_action::ProcessActionRequest {
+                    action: crate::modules::process::LifecycleAction::Stop,
+                    confirm: true,
+                },
+                runner.inner(),
+                &worker_context,
+                &crate::infrastructure::runtime_log::RuntimeLog::new(&data_root_path),
+                None,
+            )?;
+            if stopped.result != Some(crate::modules::process::LifecycleResult::Stopped) {
+                return Err(AppError::RuntimeManaged {
+                    code: "stop_unconfirmed".to_string(),
+                    detail: "代理停止尚未确认，未进入卸载步骤".to_string(),
+                });
+            }
+            let outcome = uninstall::execute_uninstall(
+                &data_root_path,
+                &opencodex_home,
+                &plan,
+                &options,
+                ocx.as_deref(),
+                npm.as_deref(),
+                &commands,
+            )?;
+            let verified = outcome.verified_complete();
+            let target = plan.source_path.clone().unwrap_or_default();
+            let resolution_after = handle_ref.refresh();
+            let version = source_version.as_deref().unwrap_or("unknown");
+            let _ = handle_ref.record_history(uninstall::history_entry(
+                if verified { "succeeded" } else { "failed" },
+                version,
+                Path::new(&target),
+                (!verified).then(|| "uninstall_incomplete".to_string()),
+            ));
+            Ok((outcome, resolution_after))
+        })();
+        // Terminal delivery belongs to the worker, not its IPC observer.
+        // A delivery error cannot undo an already completed removal.
+        crate::commands::event_delivery::publish(
+            &worker_app,
+            &data_root_path,
+            if result
+                .as_ref()
+                .is_ok_and(|(outcome, _)| outcome.verified_complete())
+            {
+                "runtime-uninstall-succeeded"
+            } else {
+                "runtime-uninstall-failed"
+            },
+            identity,
+            crate::modules::notifications::registry::Trigger::User,
+        );
+        result
     })
     .await;
     let (outcome, resolution_after) = outcome?;
@@ -775,25 +815,18 @@ pub async fn uninstall_runtime(
         .iter()
         .filter(|step| step.status == uninstall::StepStatus::Failed)
         .count();
-    let residue_present = outcome
-        .residue
-        .iter()
-        .any(|item| item.status != uninstall::ResidueStatus::Cleared);
     let message = if failed_steps > 0 {
-        format!("卸载完成但 {failed_steps} 步失败；请按步骤详情处理，未清理项已列入残留核验")
+        format!("卸载未核验完成：{failed_steps} 步失败；请按步骤详情处理")
+    } else if !outcome.verified_complete() {
+        "卸载未核验完成：仍有残留或缺少清除证据；请查看残留核验与诊断记录".to_string()
     } else {
         format!(
-            "已按「{}」卸载；运行来源现在为「{}」{}",
+            "已按「{}」卸载；运行来源现在为「{}」",
             match scope {
                 UninstallScope::Body => "仅移除包体与入口",
                 UninstallScope::Full => "完整卸载",
             },
             uninstall::source_summary(resolution_after.kind),
-            if residue_present {
-                "（残留核验有未清除项）"
-            } else {
-                ""
-            }
         )
     };
 
@@ -850,6 +883,39 @@ mod tests {
 
     fn handle_for(root: &Path) -> std::sync::Arc<RuntimeHandle> {
         RuntimeHandle::initialize(root, Vec::new())
+    }
+
+    #[test]
+    fn uninstall_admission_requires_valid_scope_and_explicit_confirmation() {
+        let mut request = RuntimeUninstallRequestDto {
+            scope: "body".to_string(),
+            auto_backup: true,
+            clean_data: false,
+            confirmation: None,
+        };
+        for confirmation in [None, Some("".to_string()), Some("  ".to_string())] {
+            request.confirmation = confirmation;
+            assert!(matches!(
+                confirmed_uninstall_scope(&request),
+                Err(AppError::RuntimeManaged { code, .. })
+                    if code == "uninstall_confirmation_required"
+            ));
+        }
+        request.confirmation = Some("confirmed".to_string());
+        assert_eq!(
+            confirmed_uninstall_scope(&request).unwrap(),
+            UninstallScope::Body
+        );
+        request.scope = "full".to_string();
+        assert_eq!(
+            confirmed_uninstall_scope(&request).unwrap(),
+            UninstallScope::Full
+        );
+        request.scope = "invalid".to_string();
+        assert!(matches!(
+            confirmed_uninstall_scope(&request),
+            Err(AppError::RuntimeManaged { code, .. }) if code == "bad_scope"
+        ));
     }
 
     #[test]

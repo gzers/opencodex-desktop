@@ -726,6 +726,24 @@ pub struct UninstallOutcome {
     pub official_output: Vec<String>,
 }
 
+impl UninstallOutcome {
+    /// A zero exit code is not removal evidence. All observed targets must be
+    /// absent, and at least one requested step must have actually completed.
+    /// Intentionally retained HOME data is not part of residue_check's targets.
+    pub fn verified_complete(&self) -> bool {
+        self.steps.iter().any(|step| step.status == StepStatus::Ok)
+            && self
+                .steps
+                .iter()
+                .all(|step| step.status != StepStatus::Failed)
+            && !self.residue.is_empty()
+            && self
+                .residue
+                .iter()
+                .all(|item| item.status == ResidueStatus::Cleared)
+    }
+}
+
 /// 卸载选项（Revision 11）。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UninstallOptions {
@@ -1655,6 +1673,8 @@ mod tests {
         assert!(outcome.residue.iter().any(
             |item| item.status == ResidueStatus::Present && !item.path.ends_with("config.json")
         ));
+        // The stub's successful exit did not actually delete the package.
+        assert!(!outcome.verified_complete());
     }
 
     #[test]
@@ -1722,6 +1742,53 @@ mod tests {
             .iter()
             .all(|call| !call.starts_with("ocx ")));
         assert!(home.join("routing-history.sqlite").exists());
+        assert!(!outcome.verified_complete());
+    }
+
+    #[test]
+    fn actual_body_removal_is_verified_without_deleting_retained_home() {
+        let root = tempfile::tempdir().expect("temp");
+        let data_root = root.path().join("data-root");
+        let home = root.path().join("opencodex-home");
+        std::fs::create_dir_all(&home).unwrap();
+        std::fs::write(home.join("config.json"), b"{}").unwrap();
+        let (prefix, entry) = install_npm_global(root.path(), "2.64.0");
+        let package_dir = prefix.join("lib/node_modules/@bitkyc08/opencodex");
+        let mut plan = plan_uninstall(&data_root, &home, RuntimeSourceKind::Explicit, Some(&entry));
+        plan.owner = BodyOwner::External(ExternalRemoval::PackageDir {
+            package_dir: package_dir.clone(),
+            entry: entry.clone(),
+        });
+        let outcome = execute_uninstall(
+            &data_root,
+            &home,
+            &plan,
+            &UninstallOptions {
+                scope: UninstallScope::Body,
+                auto_backup: false,
+                clean_data: false,
+                confirmed: true,
+            },
+            None,
+            None,
+            &StubCommands::ok(),
+        )
+        .unwrap();
+        assert!(!package_dir.exists());
+        assert!(!entry.exists());
+        assert!(home.join("config.json").exists());
+        assert!(outcome.verified_complete());
+        let mut unknown = outcome.clone();
+        unknown.residue[0].status = ResidueStatus::Unknown;
+        assert!(!unknown.verified_complete());
+        let mut missing_evidence = outcome.clone();
+        missing_evidence.residue.clear();
+        assert!(!missing_evidence.verified_complete());
+        let mut partial = outcome;
+        partial
+            .steps
+            .push(step("官方卸载", StepStatus::Failed, None));
+        assert!(!partial.verified_complete());
     }
 
     #[test]

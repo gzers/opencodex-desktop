@@ -34,6 +34,7 @@ pub enum Job {
     Observe,
     LoadHistory,
     Install,
+    Uninstall,
     Source,
     NotificationMutation,
     Tray,
@@ -87,6 +88,7 @@ dimension!(Action {
     Observe,
     Read,
     Install,
+    Uninstall,
     ChangeSource,
     Mutate,
     Dispatch,
@@ -172,6 +174,7 @@ pub enum PolicyId {
     Takeover,
     HistoryUnreadable,
     ManagerInstallFailure,
+    RuntimeUninstallFailure,
     PreferencesBackupFailure,
     PreferencesRestoreFailure,
     BackupCleanupFailure,
@@ -642,6 +645,10 @@ enum SupportedEvent {
     RuntimeInstallFailed,
     #[serde(rename = "runtime-install-succeeded")]
     RuntimeInstallSucceeded,
+    #[serde(rename = "runtime-uninstall-failed")]
+    RuntimeUninstallFailed,
+    #[serde(rename = "runtime-uninstall-succeeded")]
+    RuntimeUninstallSucceeded,
     #[serde(rename = "preferences-restored")]
     PreferencesRestored,
 }

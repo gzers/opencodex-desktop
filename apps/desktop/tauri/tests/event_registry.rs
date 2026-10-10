@@ -1377,3 +1377,104 @@ fn validated_signal_site_cannot_be_assigned_a_persisted_terminal_fact() {
         RegistryError::InvalidConfig
     );
 }
+
+#[test]
+fn uninstall_failure_persists_and_only_matching_verified_removal_resolves() {
+    let (root, store) = setup();
+    let identity = candidate_identity(
+        root.path(),
+        ObjectKind::Runtime,
+        Action::Uninstall,
+        Phase::Execution,
+        Channel::Local,
+        [81; 32],
+    )
+    .unwrap();
+    let failed = terminal_delivery(
+        "runtime-uninstall-failed",
+        Trigger::User,
+        identity.clone(),
+        Evidence::Failure,
+        at(100),
+    )
+    .unwrap();
+    let publisher = NotificationPublisher {
+        store: &store,
+        data_root: root.path(),
+    };
+    assert!(publisher.publish_event(&failed).unwrap().added);
+    let saved = std::fs::read_to_string(notifications_path(root.path())).unwrap();
+    assert!(!saved.contains(root.path().to_str().unwrap()));
+    let restarted = Arc::new(Mutex::new(
+        load_notifications(&notifications_path(root.path())).unwrap(),
+    ));
+    let publisher = NotificationPublisher {
+        store: &restarted,
+        data_root: root.path(),
+    };
+    assert!(!publisher.publish_event(&failed).unwrap().added);
+    assert!(terminal_delivery(
+        "runtime-uninstall-succeeded",
+        Trigger::User,
+        identity.clone(),
+        Evidence::Success {
+            candidate: identity.candidate.clone(),
+            verified: false
+        },
+        at(101)
+    )
+    .is_err());
+    let mut wrong = identity.clone();
+    wrong.candidate = opaque(999);
+    let success = terminal_delivery(
+        "runtime-uninstall-succeeded",
+        Trigger::User,
+        wrong.clone(),
+        Evidence::Success {
+            candidate: wrong.candidate,
+            verified: true,
+        },
+        at(102),
+    )
+    .unwrap();
+    assert_eq!(publisher.publish_event(&success).unwrap().resolved, 0);
+    let install = candidate_identity(
+        root.path(),
+        ObjectKind::Runtime,
+        Action::Install,
+        Phase::Execution,
+        Channel::Official,
+        [81; 32],
+    )
+    .unwrap();
+    let success = terminal_delivery(
+        "runtime-install-succeeded",
+        Trigger::User,
+        install.clone(),
+        Evidence::Success {
+            candidate: install.candidate,
+            verified: true,
+        },
+        at(103),
+    )
+    .unwrap();
+    assert_eq!(publisher.publish_event(&success).unwrap().resolved, 0);
+    let success = terminal_delivery(
+        "runtime-uninstall-succeeded",
+        Trigger::User,
+        identity.clone(),
+        Evidence::Success {
+            candidate: identity.candidate.clone(),
+            verified: true,
+        },
+        at(104),
+    )
+    .unwrap();
+    assert_eq!(publisher.publish_event(&success).unwrap().resolved, 1);
+    let loaded = load_notifications(&notifications_path(root.path())).unwrap();
+    assert!(loaded.all()[0].resolved);
+    assert!(!loaded.all()[0].read);
+    let mut deadline = failed;
+    deadline.trigger = Trigger::Deadline;
+    assert!(publisher.publish_event(&deadline).is_err());
+}

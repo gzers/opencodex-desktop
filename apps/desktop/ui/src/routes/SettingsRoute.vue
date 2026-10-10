@@ -849,20 +849,26 @@ const uninstallStepRows = computed(() => {
     }))
   }
   const planned = uninstallScope.value === 'full'
-    ? ['停止代理', '生成备份', '移除包体与入口', '执行官方 ocx uninstall', '清空 OPENCODEX_HOME 非官方自有残留', '残留核验']
+    ? ['停止代理', '生成备份', '执行官方 ocx uninstall', '移除包体与入口', '清空 OPENCODEX_HOME 非官方自有残留', '残留核验']
     : ['停止代理', '生成备份', '移除包体与入口', '残留核验']
   return planned.map(name => ({ name, detail: '', cls: 'on' }))
 })
 
-const residueOk = computed(() =>
-  (app.runtimeUninstallResult?.residue ?? []).every(item => item.status === 'cleared'),
-)
+const residueOk = computed(() => {
+  const residue = app.runtimeUninstallResult?.residue ?? []
+  return residue.length > 0 && residue.every(item => item.status === 'cleared')
+})
 
-// 卸载头必须反映**真实结果**：有失败步骤时不得报「100%」成功（§26.1 禁止假成功）。
+// 与后端共用核验条件：失败、残留未知和证据缺失均不能显示成功。
 const uninstallFailedSteps = computed(() =>
   (app.runtimeUninstallResult?.steps ?? []).filter(step => step.status === 'failed').length,
 )
-const uninstallPartialFailure = computed(() => uninstallDone.value && uninstallFailedSteps.value > 0)
+const uninstallVerified = computed(() => {
+  const steps = app.runtimeUninstallResult?.steps ?? []
+  return residueOk.value && steps.some(step => step.status === 'ok')
+    && steps.every(step => step.status !== 'failed')
+})
+const uninstallPartialFailure = computed(() => uninstallDone.value && !uninstallVerified.value)
 
 function residueLabel(status: string) {
   if (status === 'cleared') return '已清除'
@@ -1499,8 +1505,8 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
               :class="{ done: uninstallDone, faulted: uninstallPartialFailure }"
               aria-hidden="true"
             >{{ uninstallDone ? (uninstallPartialFailure ? '!' : '✓') : '' }}</span>
-            <b data-testid="uninstall-progress-title">{{ uninstallDone ? (uninstallPartialFailure ? `卸载完成但有 ${uninstallFailedSteps} 步失败` : '卸载完成') : '正在卸载 OpenCodex' }}</b>
-            <span class="wiz-umeta">{{ uninstallScope === 'full' ? '完整卸载' : '仅移除包体' }}<template v-if="uninstallDone">{{ uninstallPartialFailure ? ` · ${uninstallFailedSteps} 步失败` : ' · 100%' }}</template></span>
+            <b data-testid="uninstall-progress-title">{{ uninstallDone ? (uninstallPartialFailure ? (uninstallFailedSteps > 0 ? `卸载未核验完成：${uninstallFailedSteps} 步失败` : '卸载待核验') : '卸载完成') : '正在卸载 OpenCodex' }}</b>
+            <span class="wiz-umeta">{{ uninstallScope === 'full' ? '完整卸载' : '仅移除包体' }}<template v-if="uninstallDone">{{ uninstallPartialFailure ? (uninstallFailedSteps > 0 ? ` · ${uninstallFailedSteps} 步失败` : ' · 未核验完成') : ' · 100%' }}</template></span>
           </div>
           <div class="wiz-ubar" role="progressbar" aria-label="卸载进度"><div class="wiz-ufill" :class="{ done: uninstallDone && !uninstallPartialFailure, faulted: uninstallPartialFailure, run: !uninstallDone }"></div></div>
           <ul class="wiz-substeps" data-testid="uninstall-steps">
@@ -1509,7 +1515,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
           <pre v-if="app.runtimeUninstallResult && app.runtimeUninstallResult.officialOutput.length" class="wiz-console wiz-console-fixed" data-testid="uninstall-console">{{ app.runtimeUninstallResult.officialOutput.join('\n') }}</pre>
         </div>
         <div v-if="uninstallDone" class="residue-card" data-testid="uninstall-residue">
-          <div class="residue-head"><span class="residue-badge" aria-hidden="true">{{ residueOk ? '✓' : '!' }}</span><b>残留核验</b><small>{{ residueOk ? '0 残留' : '有未清除项' }}</small></div>
+          <div class="residue-head"><span class="residue-badge" aria-hidden="true">{{ residueOk ? '✓' : '!' }}</span><b>残留核验</b><small>{{ residueOk ? '0 残留' : ((app.runtimeUninstallResult?.residue ?? []).length ? '有未清除项' : '缺少核验证据') }}</small></div>
           <ul class="residue-list">
             <li v-for="item in (app.runtimeUninstallResult?.residue ?? [])" :key="item.path" :class="item.status"><code>{{ item.path }}</code><span>{{ residueLabel(item.status) }}</span></li>
           </ul>

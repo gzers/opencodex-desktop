@@ -219,11 +219,40 @@ describe('统一卸载弹窗（Revision 11）', () => {
     await nextTick()
 
     const view = wrapper.find('[data-testid="runtime-uninstall-modal"]')
-    expect(view.find('[data-testid="uninstall-progress-title"]').text()).toBe('卸载完成但有 1 步失败')
+    expect(view.find('[data-testid="uninstall-progress-title"]').text()).toBe('卸载未核验完成：1 步失败')
     expect(view.find('[data-testid="uninstall-progress-title"]').text()).not.toContain('100%')
     expect(view.find('.wiz-umeta').text()).toContain('1 步失败')
     expect(view.find('.wiz-umeta').text()).not.toContain('100%')
     expect(view.find('.wiz-ufill').classes()).toContain('faulted')
+    await wrapper.unmount()
+  })
+
+  it.each(['present', 'unknown', 'missing', 'skipped'])('%s 证据不显示完成或 100%%', async (evidence) => {
+    const result = resultDto()
+    if (evidence === 'missing') result.residue = []
+    else if (evidence === 'skipped') result.steps = result.steps.map(step => ({ ...step, status: 'skip' }))
+    else result.residue[0]!.status = evidence
+    invoke.mockImplementation((command: string) => {
+      if (command === 'runtime_source') return Promise.resolve(sourceDto())
+      if (command === 'plan_runtime_uninstall') return Promise.resolve(planDto())
+      if (command === 'uninstall_runtime') return Promise.resolve(result)
+      return Promise.resolve(null)
+    })
+    const wrapper = await mountInstallation()
+    await openUninstall(wrapper)
+    const modal = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    await modal.find('[data-testid="uninstall-ack"]').setValue(true)
+    await modal.find('[data-testid="uninstall-confirm"]').trigger('click')
+    await flushPromises()
+    await nextTick()
+    const view = wrapper.find('[data-testid="runtime-uninstall-modal"]')
+    expect(view.find('[data-testid="uninstall-progress-title"]').text()).toBe('卸载待核验')
+    expect(view.find('.wiz-umeta').text()).not.toContain('100%')
+    expect(view.find('.wiz-ufill').classes()).toContain('faulted')
+    expect(view.find('.wiz-spin').text()).toBe('!')
+    if (evidence === 'missing') {
+      expect(view.find('[data-testid="uninstall-residue"]').text()).toContain('缺少核验证据')
+    }
     await wrapper.unmount()
   })
 })
