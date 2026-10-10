@@ -1,0 +1,86 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.24s
+     Running tests/event_registry.rs (apps/desktop/tauri/target/debug/deps/event_registry-2b419d010ceda59a)
+
+running 33 tests
+test invalid_job_trigger_scope_and_fact_never_mutate ... ok
+test manager_check_and_pending_restart_never_resolve_install_failure ... ok
+test lifecycle_preference_is_independent_of_environment_risks_and_recovery ... ok
+test pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived ... ok
+test config_recovery_is_structural_and_queries_cannot_be_repurposed_to_resolve_install ... ok
+test old_history_without_identity_still_loads_and_is_not_automatically_resolved ... ok
+test recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks ... ok
+test registry_is_closed_and_references_are_consistent ... ok
+test embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation ... ok
+test existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs ... ok
+test same_scope_dedupes_but_different_objects_and_candidates_coexist ... ok
+test concurrent_scope_creation_keeps_one_identity ... ok
+test legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes ... ok
+test exact_verified_candidate_success_resolves_after_restart_without_marking_read ... ok
+test signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact ... ok
+test configuration_export_is_user_only_and_does_not_activate_generic_migration ... ok
+test persistence_failure_rolls_back_new_notification_and_recovery ... ok
+test configuration_import_is_user_only_and_does_not_activate_generic_migration ... ok
+test validated_signal_site_cannot_be_assigned_a_persisted_terminal_fact ... ok
+test signal_delivery_and_suppressed_notifications_do_not_create_history_files ... ok
+test scope_rejects_symlinks_without_writing_external_files ... ok
+test transient_signals_validate_without_scopes_or_notification_writes ... ok
+test mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure ... ok
+test protection_reconcile_failure_requires_matching_verified_retry ... ok
+test cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline ... ok
+test uninstall_failure_persists_and_only_matching_verified_removal_resolves ... ok
+test legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates ... ok
+test persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes ... ok
+test terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence ... ok
+test candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids ... ok
+test lifecycle_command_only_resolves_matching_real_result_with_persisted_scope ... ok
+test new_terminal_pairs_persist_and_only_exact_verified_success_recovers ... ok
+test scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.10s
+
+     Running tests/extensions.rs (apps/desktop/tauri/target/debug/deps/extensions-2463f2da36c7afb0)
+
+running 39 tests
+test extension_write_command_accepts_frontend_camel_case_import_payload ... ok
+test dto_contract_uses_camel_case_and_masks_raw_env_values ... ok
+test empty_sources_render_explicit_empty_states_without_writing ... ok
+test first_mcp_write_without_projection_config_creates_the_config ... ok
+test config_terminal_backup_refusal_preserves_authority_and_reports_failure ... ok
+test lists_source_skills_and_codex_mcp_with_sanitized_description ... ok
+test first_write_without_projection_config_uses_defaults_and_creates_the_config ... ok
+test invalid_custom_source_dir_is_rejected_and_keeps_previous_value ... ok
+test live_asset_command_does_not_publish_configuration_only_receipt ... ok
+test configuration_candidate_isolates_commands_home_channels_and_preferences ... ok
+test legacy_fingerprint_schema_is_migrated_without_conflict ... ok
+test config_preflight_rejects_escaping_config_and_lock_without_terminal ... ok
+test mcp_detail_masks_sensitive_args_and_reports_client_landings ... ok
+test mcp_mask_preference_controls_argument_masking ... ok
+test extension_write_unlinks_skill_with_confirm_and_rejects_escape_names ... ok
+test merges_source_and_store_and_prefers_agents_source ... ok
+test rejects_unsafe_skill_names_and_unknown_skills ... ok
+test reads_skill_detail_with_bounded_body_and_directory_stats ... ok
+test legacy_config_without_skill_targets_keeps_existing_links_then_follows_explicit_toggles ... ok
+test links_skill_from_agents_source_without_manager_import ... ok
+test skill_archive_import_rejects_traversal_without_store_writes ... ok
+test truncates_oversized_skill_body_instead_of_reading_it_unbounded ... ok
+test unified_config_rejects_inconsistent_or_missing_target_context ... ok
+test unified_config_rejects_modified_projection_before_write ... ok
+test strips_yaml_frontmatter_but_keeps_the_rest_of_the_body ... ok
+test skill_archive_import_persists_export_and_preferred_store ... ok
+test unified_config_write_creates_locked_backed_projection_and_toggles_once ... ok
+test extension_write_requires_confirmation_for_new_conflicts_and_backs_up_targets ... ok
+test skill_link_skips_existing_real_directory_without_overwriting ... ok
+test config_receipts_fail_closed_then_resolve_only_verified_persistent_retry ... ok
+test custom_source_dir_is_used_by_discovery_and_link ... ok
+test skill_toggle_links_only_the_clicked_client_and_never_touches_the_source ... ok
+test mcp_remove_keeps_toml_target_parseable ... ok
+test mcp_projection_backups_land_in_the_data_root_not_next_to_home ... ok
+test skill_uninstall_backups_directory_and_restore_recovers_latest ... ok
+test add_edit_and_delete_mcp_writes_enabled_clients_with_confirmation ... ok
+test resync_skills_realigns_targets_after_source_dir_change_without_bumping_revision ... ok
+test extension_write_projects_skills_and_mcp_across_clients ... ok
+test copy_sync_method_writes_real_copies_and_replaces_leftover_symlinks ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.93s
+

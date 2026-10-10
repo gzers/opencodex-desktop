@@ -1,0 +1,30 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error[E0603]: module `event_delivery` is private
+    --> tests/extensions.rs:1896:9
+     |
+1896 |         event_delivery::prepare, extensions::extension_config_candidate,
+     |         ^^^^^^^^^^^^^^ private module
+     |
+note: the module `event_delivery` is defined here
+    --> src/commands/mod.rs:10:1
+     |
+  10 | pub(crate) mod event_delivery;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: module `event_delivery` is private
+    --> tests/extensions.rs:1705:58
+     |
+1705 |         self.identity = opencodex_desktop_lib::commands::event_delivery::prepare(
+     |                                                          ^^^^^^^^^^^^^^  ------- function `prepare` is not publicly re-exported
+     |                                                          |
+     |                                                          private module
+     |
+note: the module `event_delivery` is defined here
+    --> src/commands/mod.rs:10:1
+     |
+  10 | pub(crate) mod event_delivery;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `opencodex-desktop` (test "extensions") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...

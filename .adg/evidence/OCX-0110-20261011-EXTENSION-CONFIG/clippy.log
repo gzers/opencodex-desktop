@@ -1,0 +1,80 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:414:54
+    |
+414 |     let mut config = match std::fs::symlink_metadata(&path) {
+    |                                                      ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+    = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/modules/extensions/projection.rs:416:53
+    |
+416 |             let (loaded, _, conflict) = read_stored(&path, targets)?;
+    |                                                     ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+    = note: `-D clippy::needless-borrow` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:496:38
+    |
+496 |             let live = std::fs::read(&path).map_err(|_| ProjectionError::Corrupted)?;
+    |                                      ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/modules/extensions/projection.rs:507:46
+    |
+507 |                 document_sha256: sha256_file(&path).map_err(|_| ProjectionError::AtomicWrite)?,
+    |                                              ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:566:38
+    |
+566 |             let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    |                                      ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:589:38
+    |
+589 |             let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    |                                      ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:666:38
+    |
+666 |             let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    |                                      ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:702:38
+    |
+702 |             let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    |                                      ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: the borrowed expression implements the required traits
+   --> src/modules/extensions/projection.rs:709:30
+    |
+709 |     let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    |                              ^^^^^ help: change this to: `path`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrows_for_generic_args
+
+error: could not compile `opencodex-desktop` (lib) due to 9 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 9 previous errors

@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "evidence_id": "OCX-0110-20261011-EXTENSION-CONFIG",
+  "source_branch": "feature/0.1.10-maintenance",
+  "source_commit": "2064085ead3dbdc55105607e9008a760c23f1ef4",
+  "platform": "macOS local isolated fixtures",
+  "results": {
+    "final-full.log": {
+      "groups": 34,
+      "passed": 857,
+      "failed": 0,
+      "ignored": 5
+    }
+  },
+  "commands": [
+    {
+      "log": "final-fmt.log",
+      "command": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.379
+    },
+    {
+      "log": "final-clippy.log",
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 13.019
+    },
+    {
+      "log": "final-full.log",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 121.881
+    },
+    {
+      "log": "final-diff.log",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.027
+    }
+  ],
+  "historical_logs": [
+    {
+      "log": "fmt.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    },
+    {
+      "log": "full.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    },
+    {
+      "log": "clippy.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    },
+    {
+      "log": "third-focused.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    },
+    {
+      "log": "second-focused.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    },
+    {
+      "log": "diff.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    },
+    {
+      "log": "initial-focused.log",
+      "final_patch": false,
+      "note": "Intermediate source / focused iteration, not final source evidence"
+    }
+  ],
+  "production_modified": true,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": true,
+  "task_state": "in_progress",
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 39,
+    "events": 80,
+    "active_events": 78,
+    "planned_events": 2,
+    "policies": 27,
+    "emissions": 86,
+    "scheduling": 8,
+    "feedback": 8,
+    "paths": 12,
+    "cleanup": 4
+  },
+  "limits": [
+    "Config-only certification for ToggleClient / SetSourceDir / SetSyncMethod and standalone toggle alias, not live assets",
+    "No separately injected final readback sabotage after live apply",
+    "Cooperative lock and bounded readback, no global transaction rollback or arbitrary noncooperative mutation proof",
+    "Pre-admission errors have no execution terminal; delivery failure does not override domain result",
+    "Persistent NotificationPublisher fixtures, not native AppHandle / Windows installation",
+    "Ten existing asset command variants still need verified terminals; generic Migration/Backup/Sync planned 0.2.0",
+    "External update/restart, paired performance and real stable24h/beta6h gates remain open"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-扩展配置核验与终态"
+}

@@ -1,0 +1,1068 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.76s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 694 tests
+test commands::cleanup::tests::parses_retention_policies_and_falls_back ... ok
+test commands::backup::policy_event_tests::validation_and_lock_refusals_do_not_call_terminal_observer ... ok
+test commands::cleanup::tests::log_cleanup_rejects_linked_directory_and_preserves_external_log ... ok
+test commands::cleanup::tests::retention_rejects_non_utf8_without_rewriting_log ... ok
+test commands::data_root::tests::failed_status_collection_cannot_admit_a_binding_change ... ok
+test commands::cleanup::tests::log_cleanup_rejects_linked_file_and_preserves_external_log ... ok
+test commands::cleanup::tests::manual_log_cleanup_rejects_hard_link_and_preserves_external_log ... ok
+test commands::data_root::tests::only_observed_idle_runtime_allows_binding_save ... ok
+test commands::cleanup::tests::cleanup_handles_missing_logs ... ok
+test commands::cleanup::tests::cleanup_clears_only_log_partition_files ... ok
+test commands::cleanup::tests::startup_cleanup_is_skipped_when_disabled ... ok
+test commands::cleanup::tests::registered_startup_policy_error_is_not_silent ... ok
+test commands::cleanup::tests::startup_cleanup_prunes_read_notifications_past_retention ... ok
+test commands::extensions::tests::leaves_ordinary_args_untouched ... ok
+test commands::cleanup::tests::startup_cleanup_drops_lines_older_than_retention_window ... ok
+test commands::extensions::tests::masks_key_value_args_and_description ... ok
+test commands::extensions::tests::masks_value_following_sensitive_flag ... ok
+test commands::cleanup::tests::startup_cleanup_trims_logs_by_line_budget_and_keeps_audit_log ... ok
+test commands::cleanup::tests::startup_does_not_read_malformed_backup_manifests ... ok
+test commands::network::tests::live_no_proxy_probe_reaches_controlled_url ... ignored, hits the network; run explicitly
+test commands::network::tests::invalid_manual_proxy_is_reported_without_panicking ... ok
+test commands::data_root::tests::home_only_save_stays_pending_until_actual_startup_home_matches ... ok
+test commands::notifications::tests::production_store_starts_without_demo_seed ... ok
+test commands::backup::policy_event_tests::notification_persistence_failure_does_not_undo_saved_policy ... ok
+test commands::notifications::tests::failed_persist_does_not_report_success_or_change_memory ... ok
+test commands::notifications::tests::unknown_notification_is_explicit_not_silent ... ok
+test commands::panel::tests::bounds_follow_shell_zoom_instead_of_fixed_sidebar_width ... ok
+test commands::panel::tests::bounds_never_cover_shell_controls_or_escape_window ... ok
+test commands::panel::tests::corner_radius_follows_interface_scale ... ok
+test commands::panel::tests::idle_reclaim_requires_same_generation_hidden_view_and_elapsed_deadline ... ok
+test commands::notifications::tests::unreadable_store_starts_empty_and_reports_a_real_failure ... ok
+test commands::panel::tests::navigation_cannot_escape_the_panel_origin ... ok
+test commands::panel::tests::only_runtime_local_panel_urls_are_accepted ... ok
+test commands::panel::tests::panel_state_detail_normalizes_theme_and_keeps_scale ... ok
+test commands::panel::tests::theme_setting_syncs_through_the_official_storage_key ... ok
+test commands::notifications::tests::resolving_and_clearing_only_affect_requested_items ... ok
+test commands::notifications::tests::unreadable_history_cannot_be_overwritten_by_a_notification_or_clear ... ok
+test commands::notifications::tests::mutations_persist_so_state_survives_restart ... ok
+test commands::cleanup::tests::registered_startup_disabled_is_silent_and_corrupt_history_is_failure ... ok
+test commands::data_root::tests::reference_switch_preserves_external_home_without_copying ... ok
+test commands::runtime::tests::install_source_kind_is_carried_through_dto ... ok
+test commands::runtime::tests::official_update_binds_registry_version_and_current_prefix ... ok
+test commands::runtime::tests::protection_retry_owns_runtime_exclusion_until_worker_lease_drops ... ok
+test commands::runtime::tests::protection_retry_refuses_manager_handoff_and_installation_without_runtime_effects ... ok
+test commands::preferences::tests::camel_case_preferences_round_trip_through_disk ... ok
+test commands::preferences::tests::preflight_refusals_do_not_deliver_or_create_event_files ... ok
+test commands::runtime::tests::rejection_messages_are_human_readable_and_specific ... ok
+test commands::preferences::tests::channel_save_invalidates_old_checks_only_after_success ... ok
+test commands::data_root::tests::sandbox_escape_is_denied_before_reserving_target ... ok
+test commands::runtime::tests::uninstall_admission_requires_valid_scope_and_explicit_confirmation ... ok
+test commands::runtime_state_notification_tests::attention_states_carry_level_category_and_action ... ok
+test commands::runtime_state_notification_tests::lifecycle_preference_only_gates_lifecycle_outcomes ... ok
+test commands::runtime_state_notification_tests::observed_start_failure_remains_legacy_without_recovery_scope ... ok
+test commands::preferences::tests::prepared_update_refuses_channel_change_before_writing_disk ... ok
+test commands::runtime_state_notification_tests::restore_notifications_map_to_their_own_target ... ok
+test commands::runtime_state_notification_tests::stable_and_transitional_states_do_not_notify ... ok
+test commands::sync::owned_sync_tests::busy_and_frozen_operations_do_not_run_or_queue ... ok
+test commands::backup::policy_event_tests::changed_policy_and_other_root_do_not_clear_the_original_failure ... ok
+test commands::runtime_state_notification_tests::disabled_preference_skips_lifecycle_outcomes_only ... ok
+test commands::runtime::tests::source_dto_reports_managed_prefix_and_no_entry_until_managed ... ok
+test commands::sync::owned_sync_tests::worker_error_and_panic_release_both_admissions ... ok
+test commands::data_root::tests::startup_aliases_do_not_report_pending_restart_or_hide_real_changes ... ok
+test commands::sync::probe_tests::changed_endpoint_or_credential_and_failed_readback_do_not_publish ... ok
+test commands::sync::probe_tests::invalid_probe_has_no_request_or_terminal ... ok
+test commands::sync::probe_tests::cancelled_ipc_observer_does_not_release_probe_or_storage_ownership ... ok
+test commands::sync::probe_tests::bounded_probe_timeout_is_an_actual_failure ... ok
+test commands::sync::tests::config_dto_is_camel_case_and_masks_password ... ok
+test commands::sync::tests::shared_sync_preserves_gui_setup_and_upload_failure_contracts ... ok
+test commands::sync::tests::state_names_are_frozen_snake_case ... ok
+test commands::runtime_state_notification_tests::repeated_observation_updates_one_entry_and_resets_read ... ok
+test commands::sync::owned_sync_tests::cancelled_observer_keeps_owner_through_committed_write_and_terminal_projection ... ok
+test commands::runtime::tests::source_dto_marks_entry_and_inside_root_when_managed ... ok
+test commands::sync::tests::sync_conflict_and_failed_readback_never_project_success ... ok
+test commands::migration::tests::command_layer_round_trips_preferences_through_data_root ... ok
+test commands::sync::tests::sync_execution_recovers_only_exact_endpoint_and_credentials ... ok
+test commands::update::tests::cancelled_check_releases_only_its_own_generation ... ok
+test commands::update::tests::channel_switch_clears_stale_check_result ... ok
+test commands::update::tests::channel_switch_is_idempotent_and_blocked_during_installation ... ok
+test commands::update::tests::frozen_manager_query_has_no_setup_or_network_side_effect ... ok
+test commands::update::tests::install_marks_signature_only_after_plugin_download_and_install ... ok
+test commands::preferences::tests::changed_channel_candidate_cannot_clear_save_failure ... ok
+test commands::update::tests::late_check_cannot_overwrite_a_new_channel_or_release_its_lock ... ok
+test commands::preferences::tests::failed_notification_persistence_does_not_fail_committed_preferences ... ok
+test commands::update::tests::manager_query_owner_survives_disconnect_and_releases_on_all_terminals ... ok
+test commands::update::tests::notes_are_bounded_plaintext_and_release_links_cannot_escape ... ok
+test commands::update::tests::reviewed_candidate_must_match_channel_version_and_idle_state ... ok
+test commands::update::tests::successful_check_clears_stale_failure_and_records_result ... ok
+test commands::update::tests::stale_manager_query_cannot_persist_resolve_or_release_new_channel ... ok
+test commands::update::tests::manager_query_persistence_failure_never_reports_success_metadata ... ok
+test commands::sync::probe_tests::actual_failure_persists_and_exact_verified_retry_resolves_after_reload ... ok
+test commands::sync::probe_tests::notification_write_failure_does_not_change_network_success ... ok
+test commands::workspace::tests::external_links_are_frozen_allowlist ... ok
+test commands::workspace::tests::local_documents_are_frozen ... ok
+test commands::workspace::tests::local_panel_browser_fallback_is_runtime_port_allowlist ... ok
+test commands::data_root::tests::preparation_failure_keeps_old_binding_and_quarantines_partial_copy ... ok
+test commands::preferences::tests::real_save_failures_recover_exact_contents_and_keep_reset_independent ... ok
+test commands::sync::tests::sync_conflict_alerts_preference_is_consumed ... ok
+test commands::update::tests::channel_command_persists_and_refuses_install_races ... ok
+test commands::writer_dispatch_tests::cancelled_observer_does_not_release_blocking_worker_admission ... ok
+test infrastructure::app_activity::tests::windows_activation_tracks_root_visibility_without_keyboard_focus ... ok
+test commands::data_root::tests::migration_requires_matching_freeze_and_both_startup_locks ... ok
+test commands::upgrade::tests::missing_preferences_is_explicit_not_invented ... ok
+test commands::sync::probe_tests::new_endpoint_credentials_or_root_cannot_clear_old_failure ... ok
+test infrastructure::hash::tests::sha256_matches_known_vectors ... ok
+test infrastructure::keychain::tests::account_key_matches_frozen_shape ... ok
+test commands::upgrade::tests::relative_or_invalid_data_root_is_rejected ... ok
+test infrastructure::keychain::tests::keychain_round_trip_keeps_both_secrets_separate ... ignored
+test infrastructure::discovery_paths::tests::discovery_uses_controlled_user_tools_and_returns_missing_candidates ... ok
+test infrastructure::hash::tests::sha256_file_matches_memory_digest ... ok
+test infrastructure::keychain::tests::new_ref_id_is_valid ... ok
+test infrastructure::keychain::tests::only_explicit_absence_is_benign_for_load_and_removal ... ok
+test infrastructure::atomic_write::tests::atomic_write_replaces_target_and_preserves_permissions ... ok
+test infrastructure::keychain::tests::webdav_and_encryption_purposes_use_different_accounts ... ok
+test infrastructure::locking::tests::lock_path_uses_frozen_suffix ... ok
+test infrastructure::atomic_write::tests::failed_write_leaves_original_target_unchanged ... ok
+test commands::workspace::tests::open_data_root_and_opencodex_home_are_allowed ... ok
+test commands::workspace::tests::managed_targets_use_frozen_partitions_and_extension_paths ... ok
+test infrastructure::process_runner::tests::frozen_timeouts_match_fz10 ... ok
+test commands::workspace::tests::open_path_rejects_non_whitelisted_value ... ok
+test infrastructure::process_runner::tests::environment_keys_are_frozen ... ok
+test infrastructure::locking::tests::target_lock_serializes_writers ... ok
+test infrastructure::process_runner::tests::cancel_pending_is_repeatable_and_does_not_panic ... ok
+test commands::workspace::tests::open_path_reports_missing_allowed_target_without_platform_call ... ok
+test infrastructure::process_runner::tests::validates_explicit_context_before_spawning ... ok
+test infrastructure::process_runner::tests::failed_spawn_bumps_failure_epoch_without_running_process ... ok
+test infrastructure::status_source::tests::non_executable_file_is_unreachable ... ok
+test commands::sync::tests::conflict_alert_writes_one_deduplicated_notification ... ok
+test infrastructure::storage_writers::tests::busy_save_refuses_without_stopping_or_releasing_existing_writer ... ok
+test infrastructure::runtime_log::tests::appends_sanitized_private_events_and_rotates ... ok
+test infrastructure::storage_writers::tests::persisted_binding_stays_closed_until_a_new_process_gate ... ok
+test infrastructure::storage_writers::tests::racing_admission_and_binding_save_never_overlap ... ok
+test infrastructure::tray_controller::tests::action_contract_covers_all_menu_targets ... ok
+test infrastructure::tray_controller::tests::process_gates_cover_both_the_tray_and_the_app_menu ... ok
+test infrastructure::tray_controller::tests::projects_runtime_address_and_running_state ... ok
+test infrastructure::webdav_client::tests::missing_parent_collection_is_reported_as_not_found ... ok
+test infrastructure::webdav_client::tests::invalid_remote_path_is_rejected_before_network ... ok
+test commands::upgrade::tests::creates_upgrade_backup_from_real_preferences ... ok
+test infrastructure::webdav_client::tests::payload_file_name_follows_manifest_digest_not_transport_bytes ... ok
+test infrastructure::webdav_client::tests::remote_layout_has_no_intermediate_collections ... ok
+test infrastructure::webdav_client::tests::remote_path_rejects_escape_and_empty_segments ... ok
+test infrastructure::webdav_client::tests::tls_error_has_frozen_message ... ok
+test infrastructure::webdav_client::tests::test_connection_uses_propfind_with_basic_auth ... ok
+test infrastructure::webdav_client::tests::upload_puts_payloads_before_manifest ... ok
+test infrastructure::window_appearance::tests::native_policy_fallback_is_independent_of_animation_quality ... ok
+test infrastructure::webdav_client::tests::upload_requires_completed_pointer_write_and_preserves_transport_failure ... ok
+test infrastructure::windows_smoke::tests::sandbox_without_smoke_port_keeps_normal_window ... ok
+test infrastructure::windows_smoke::tests::preserves_existing_browser_options_and_rejects_missing_main ... ok
+test modules::about::remote::tests::combined_metadata_accepts_flat_and_nested_shapes_and_rejects_bad_versions ... ok
+test modules::about::remote::tests::live_remote_query_returns_version_and_integrity ... ignored, hits the npm registry; run explicitly
+test infrastructure::windows_smoke::tests::diagnostic_dpi_is_bounded_and_requires_smoke ... ok
+test infrastructure::windows_smoke::tests::smoke_configures_only_main_before_automatic_creation ... ok
+test modules::about::remote::tests::npm_path_appends_injected_before_fallback ... ok
+test infrastructure::windows_smoke::tests::smoke_requires_valid_port_and_isolated_root ... ok
+test modules::about::remote::tests::npm_path_includes_npm_dir_and_fallback ... ok
+test commands::upgrade::tests::create_restore_backup_stays_protected_without_inventing_a_user_pin ... ok
+test modules::about::remote::tests::parses_version_and_integrity_shapes ... ok
+test modules::about::remote::tests::tag_validation_rejects_arbitrary_input ... ok
+test modules::about::tests::bounds_unbounded_output ... ok
+test modules::about::tests::maps_source_errors ... ok
+test modules::about::tests::parses_name_and_version ... ok
+test modules::about::tests::rejects_empty_and_control_only_output ... ok
+test modules::backup::browser::tests::empty_missing_and_unsafe_paths ... ok
+test modules::backup::browser::tests::rejects_internal_and_external_symlinks_in_listing_and_open ... ok
+test modules::backup::browser::tests::bounded_depth_and_manifest_size ... ok
+test modules::backup::browser::tests::lists_real_files_without_verifying_payload_and_checks_manifest ... ok
+test infrastructure::status_source::tests::invalid_json_maps_to_parse_and_preserves_state ... ok
+test infrastructure::status_source::tests::fetches_and_maps_explicit_fixture_output ... ok
+test commands::cleanup::tests::startup_keeps_backups_and_explicit_cleanup_honors_retention ... ok
+test commands::update::tests::manager_query_commits_channel_cache_deadline_and_terminal_together ... ok
+test modules::backup::manager::tests::admission_failures_report_once_without_source_reads_or_backup_writes ... ok
+test modules::backup::manager::pin_event_tests::nominal_writer_success_requires_exact_manifest_readback ... ok
+test infrastructure::webdav_client::tests::refused_connection_is_network_not_tls ... ok
+test infrastructure::status_source::tests::steady_probe_avoids_cli_but_identity_restart_expiry_and_environment_refresh_it ... ok
+test modules::backup::manager::pin_event_tests::refusal_never_emits_and_unpin_cannot_bypass_active_protection ... ok
+test infrastructure::status_source::tests::oversized_diagnostic_is_bounded_and_does_not_seed_cache ... ok
+test modules::backup::manager::pin_event_tests::manifest_write_failure_and_exact_retry_recover_persisted_history ... ok
+test modules::about::remote::tests::metadata_query_uses_managed_cache_and_preserves_user_home ... ok
+test modules::backup::manager::pin_event_tests::notification_failure_does_not_undo_committed_pin ... ok
+test infrastructure::process_runner::tests::rapid_stop_exits_preserve_the_nonzero_status ... ok
+test commands::data_root::tests::explicit_sandbox_container_supports_migration_and_locked_restart ... ok
+test commands::data_root::tests::migration_command_retains_locks_and_freeze_until_locked_restart ... ok
+test modules::about::remote::tests::metadata_query_rejects_oversize_and_kills_timed_out_process_group ... ok
+test commands::backup::policy_event_tests::real_policy_write_failure_and_exact_retry_persist_without_cleanup ... ok
+test modules::backup::manager::tests::observed_backup_reports_invalid_source_failure_without_creating_a_record ... ok
+test modules::backup::manager::tests::optional_protection_invalid_source_is_a_failure_not_a_skip ... ok
+test modules::backup::manager::tests::interrupted_preferences_protection_is_not_a_user_pin_and_never_expires ... ok
+test modules::backup::manager::tests::failed_verification_persistence_keeps_restart_protection_active ... ok
+test modules::backup::manager::tests::corrupted_active_guard_is_never_reconciled ... ok
+test modules::backup::manager::tests::observed_backup_binds_terminal_to_the_captured_payload_under_the_same_lock ... ok
+test modules::backup::manager::tests::restore_missing_source_reports_guard_failure_but_invalid_id_attempts_no_guard ... ok
+test modules::backup::manager::tests::protection_helper_keeps_raw_bytes_and_holds_shared_lock ... ok
+test modules::backup::manager::tests::pending_restart_requires_exact_digest_and_is_idempotently_reconciled ... ok
+test modules::backup::manager::pin_event_tests::other_root_backup_and_unpin_cannot_clear_a_pin_failure ... ok
+test modules::backup::manager::tests::protection_success_precedes_cleanup_failure_and_keeps_its_guard ... ok
+test modules::backup::manager::tests::skipped_optional_protection_does_not_emit_success_or_cleanup ... ok
+test modules::backup::manager::tests::restore_legacy_schema1_single_payload_to_active_root_only_and_preserve_browser_mode ... ok
+test modules::backup::manager::tests::saved_policy_apis_share_transaction_lock_and_helpers_do_not_reenter ... ok
+test modules::backup::manager::tests::tampered_payload_and_legacy_or_unknown_metadata_cannot_release_protection ... ok
+test modules::backup::manager::tests::failed_restore_keeps_current_bytes_and_protection_for_sha_size_schema_and_type ... ok
+test modules::backup::manager::tests::symlinks_boundaries_and_multiple_payloads_are_rejected_without_touching_outside ... ok
+test modules::backup::manager::tests::cleanup_candidate_identity_survives_time_but_changes_with_inventory ... ok
+test modules::backup::manager::tests::automatic_cleanup_is_opt_in_and_runs_only_after_success ... ok
+test modules::backup::manager::tests::unreadable_cleanup_policy_reports_failure_after_verified_backup_once ... ok
+test modules::backup::manager::tests::preview_rechecks_pin_inventory_expiry_and_candidate_hash_before_any_delete ... ok
+test modules::backup::manager::tests::active_and_legacy_guards_keep_sources_and_reconciliation_preserves_user_pin ... ok
+test modules::backup::policy::tests::absent_policy_is_manual_without_creating_manager_state ... ok
+test modules::backup::manager::tests::real_manual_backup_does_not_expand_scope_and_defaults_to_no_cleanup ... ok
+test modules::backup::policy::tests::atomic_roundtrip_both_modes_and_invalid_save_preserves_previous_bytes ... ok
+test modules::backup::manager::tests::upgrade_bad_payload_emits_failure_and_never_starts_cleanup ... ok
+test modules::backup::tests::backup_id_matches_frozen_shape ... ok
+test modules::backup::manager::tests::persisted_automatic_fails_closed_for_source_policy_and_candidate_corruption ... ok
+test modules::backup::policy::tests::symlink_file_directory_and_nonregular_paths_are_rejected ... ok
+test modules::backup::tests::empty_target_is_rejected ... ok
+test modules::backup::tests::corrupted_payload_fails_verification ... ok
+test modules::backup::tests::creates_private_file_backup_and_verified_manifest ... ok
+test modules::codex_shim::tests::parses_installed_summary_and_corrupt_state ... ok
+test modules::backup::policy::tests::malformed_schema_types_retention_and_oversize_fail_closed ... ok
+test modules::codex_shim::tests::parses_not_installed_before_installed ... ok
+test modules::codex_shim::tests::report_keeps_first_line_and_truncates_tail ... ok
+test modules::codex_shim::tests::unrecognized_output_is_unreachable_not_guessed ... ok
+test modules::config_migration::tests::corrupted_bytes_are_invalid ... ok
+test modules::config_migration::tests::current_schema_is_not_rewritten ... ok
+test modules::config_migration::tests::future_schema_is_rejected_without_transform ... ok
+test modules::config_migration::tests::legacy_preferences_migrate_to_current_schema ... ok
+test modules::backup::tests::listing_reads_metadata_and_explicit_verification_detects_same_size_corruption ... ok
+test modules::config_migration::tests::commit_backs_up_original_and_writes_current_schema ... ok
+test infrastructure::status_source::tests::timeout_maps_to_frozen_timeout_and_preserves_state ... ok
+test infrastructure::status_source::tests::timeout_reaps_only_its_diagnostic_group ... ok
+test modules::config_migration::tests::startup_migration_skips_when_current_schema ... ok
+test modules::config_migration::tests::recovery_completes_record_when_target_is_candidate ... ok
+test modules::container::tests::array_limits_are_frozen ... ok
+test modules::container::tests::document_shape_matches_fz19 ... ok
+test modules::container::tests::header_fields_match_fz16_17_18 ... ok
+test modules::container::tests::extension_types_are_reusable_not_duplicated ... ok
+test modules::container::tests::header_rejects_future_or_invalid_contract ... ok
+test modules::container::tests::path_and_secret_references_are_restricted ... ok
+test modules::backup::manager::tests::verified_preferences_commit_allows_rotation_but_preserves_independent_pin ... ok
+test modules::container::tests::unknown_top_level_fields_are_rejected ... ok
+test modules::backup::manager::tests::transaction_automatic_failed_backup_never_cleans_and_cleanup_error_keeps_guard ... ok
+test modules::config_migration::tests::recovery_reapplies_when_target_is_still_original ... ok
+test modules::config_migration::tests::startup_migration_converts_legacy_preferences ... ok
+test modules::config_migration::tests::recovery_stops_on_external_change ... ok
+test modules::data_root::bootstrap::tests::losing_startup_does_not_repair_partitions_before_owning_root ... ok
+test modules::data_root::bootstrap::tests::windows_uses_installation_path_and_keeps_legacy_even_if_invalid ... ok
+test modules::data_root::bootstrap::tests::sandbox_rejects_external_home_before_creating_it ... ok
+test modules::data_root::bootstrap::tests::sandbox_rejects_escape_before_supplementing_partitions ... ok
+test modules::data_root::bootstrap::tests::resolves_before_stores_and_preserves_external_home ... ok
+test modules::data_root::bootstrap::tests::cycles_and_future_bindings_fail_without_initializing_target ... ok
+test modules::data_root::bootstrap::tests::setting_home_does_not_erase_selected_root ... ok
+test modules::backup::manager::tests::saved_policy_only_cleans_after_success_and_keeps_pins_legacy_and_recent ... ok
+test modules::data_root::bootstrap::tests::distinct_anchors_cannot_initialize_or_run_the_same_active_root ... ok
+test modules::backup::manager::tests::transaction_invalid_saved_policy_keeps_successful_upgrade_and_protection ... ok
+test modules::backup::manager::tests::transaction_default_manual_and_missing_optional_source_do_not_clean ... ok
+test modules::backup::manager::tests::unknown_transaction_metadata_cannot_expire ... ok
+test modules::data_root::migration::activation::tests::commit_retains_target_lock_then_locked_restart_enables_target_once ... ok
+test modules::backup::manager::tests::n10_or_d30_with_pins_additional_and_guards_retained ... ok
+test modules::data_root::migration::activation::tests::crash_immediately_after_anchor_replace_is_recovered_on_restart ... ok
+test modules::data_root::migration::activation::tests::ready_binding_changed_after_commit_refuses_target_without_lock_repair ... ok
+test modules::data_root::migration::activation::tests::ready_copy_crash_retains_old_binding_and_denies_target_startup ... ok
+test modules::data_root::migration::tests::broken_marker_blocks_repair_and_existing_dangling_target_is_preserved ... ok
+test modules::data_root::migration::activation::tests::replace_failure_with_confirmed_old_binding_can_return_ordinary_error ... ok
+test modules::data_root::migration::tests::existing_empty_target_is_never_merged ... ok
+test modules::data_root::migration::activation::tests::restart_record_write_failure_keeps_marker_for_retry ... ok
+test modules::data_root::migration::tests::escaping_and_broken_links_fail_without_reading_external_payload ... ok
+test modules::data_root::migration::tests::external_home_and_dormant_internal_home_are_not_copied ... ok
+test modules::data_root::migration::tests::nested_unknown_and_relative_targets_fail_before_reservation ... ok
+test modules::data_root::migration::tests::failed_copy_cannot_start_be_repaired_or_referenced_after_lock_release ... ok
+test modules::data_root::migration::activation::tests::wrong_effective_home_and_unprepared_runtime_cannot_be_activated ... ok
+test modules::data_root::migration::tests::reservation_blocks_startup_even_before_any_partition_exists ... ok
+test modules::data_root::migration::tests::interrupted_copy_keeps_old_root_and_no_verified_receipt ... ok
+test modules::backup::manager::tests::committed_restore_guards_rotate_by_action_without_consuming_manual_retention ... ok
+test modules::data_root::migration::tests::internal_links_are_relocated_and_executability_preserved ... ok
+test modules::data_root::migration::tests::damaged_copy_and_changed_source_never_update_source_binding ... ok
+test modules::data_root::migration::activation::tests::marker_and_binding_symlinks_are_rejected ... ok
+test modules::data_root::tests::corrupted_or_missing_metadata_is_blocked ... ok
+test modules::data_root::tests::future_structure_version_is_blocked_before_writes ... ok
+test modules::data_root::tests::existing_valid_structure_is_referenced_idempotently ... ok
+test modules::data_root::migration::activation::tests::source_change_or_anchor_change_before_commit_cannot_replace_binding ... ok
+test modules::data_root::tests::initialize_is_idempotent_on_existing_root ... ok
+test modules::data_root::tests::external_home_requires_absolute_path_and_rejects_nesting ... ok
+test modules::data_root::tests::initialize_recovers_when_partition_directory_already_exists ... ok
+test modules::data_root::tests::non_directory_target_is_rejected ... ok
+test modules::data_root::tests::initializes_seven_private_partitions_and_metadata ... ok
+test modules::data_root::migration::tests::receipt_distinguishes_verified_source_from_prepared_self_binding ... ok
+test modules::data_root::tests::clobbered_structure_metadata_is_repaired_on_initialize ... ok
+test modules::data_root::tests::metadata_write_failure_keeps_preexisting_partition_data ... ok
+test modules::data_root::tests::write_failure_does_not_leave_partial_structure ... ok
+test modules::backup::manager::tests::transaction_automatic_restore_guard_links_source_before_cleanup_on_success_and_failure ... ok
+test modules::discovery::tests::all_present_is_ready_and_does_not_short_circuit ... ok
+test modules::data_root::migration::tests::transient_locks_are_excluded_but_structure_metadata_is_copied ... ok
+test modules::doctor::tests::parses_and_limits_output ... ok
+test modules::doctor::tests::read_only_is_serialized ... ok
+test modules::doctor::tests::truncates_unbounded_output_after_frozen_limit ... ok
+test modules::discovery::tests::missing_node_marks_followups_not_checked ... ok
+test modules::discovery::tests::missing_npm_marks_ocx_not_checked ... ok
+test modules::discovery::tests::missing_ocx_keeps_ready_dependencies_visible ... ok
+test modules::extensions::discovery::tests::parses_jsonc_comments_and_extracts_server_entries ... ok
+test modules::extensions::discovery::tests::sanitize_description_removes_query_and_userinfo ... ok
+test modules::extensions::source_dir::tests::configured_source_dir_falls_back_to_default_when_unset ... ok
+test modules::data_root::migration::tests::verified_copy_keeps_old_binding_bytes_and_locks_target ... ok
+test modules::discovery::tests::non_executable_file_is_treated_as_missing ... ok
+test modules::data_root::tests::runtime_config_defaults_inside_home_and_rejects_relative_root ... ok
+test modules::extensions::source_dir::tests::default_source_dir_is_the_agents_standard_directory ... ok
+test modules::data_root::migration::activation::tests::uncertain_replace_or_failed_post_commit_sync_retains_lock_for_reconciliation ... ok
+test modules::extensions::tests::client_disabled_does_not_delete_projection ... ok
+test modules::extensions::tests::conflict_detection_matches_expected_or_flags_external_change ... ok
+test modules::extensions::tests::fingerprint_changes_with_enablement_and_content ... ok
+test modules::extensions::tests::fingerprint_shape_and_source_are_frozen ... ok
+test modules::extensions::tests::legacy_schema_version_is_readable_but_flagged_for_migration ... ok
+test modules::extensions::tests::no_real_user_home_is_implicitly_read ... ok
+test modules::extensions::tests::serialization_uses_frozen_snake_case ... ok
+test modules::data_root::tests::switching_back_to_the_data_root_itself_is_allowed ... ok
+test modules::extensions::tests::six_clients_are_frozen_with_default_enabled_matrix ... ok
+test modules::extensions::tests::user_paths_match_fz22 ... ok
+test modules::extensions::tests::source_store_and_sync_method_participate_in_fingerprint ... ok
+test modules::extensions::tests::writable_requires_installed_and_enabled ... ok
+test modules::data_root::tests::reference_switch_requires_valid_non_nested_target ... ok
+test modules::extensions::source_dir::tests::custom_source_dir_is_accepted_when_it_is_a_plain_readable_directory ... ok
+test modules::extensions::source_dir::tests::non_existent_candidate_reports_missing_before_overlap ... ok
+test modules::extensions::source_dir::tests::missing_client_directory_does_not_hide_overlap ... ok
+test modules::data_root::tests::switching_reference_keeps_structure_metadata_readable ... ok
+test modules::extensions::source_dir::tests::validate_or_default_reports_why_the_custom_dir_was_ignored ... ok
+test modules::instance::tests::first_instance_acquires_lock ... ok
+test modules::extensions::source_dir::tests::symlink_entry_is_rejected ... ok
+test modules::extensions::source_dir::tests::relative_and_missing_paths_are_rejected ... ok
+test modules::instance::tests::lock_metadata_contains_pid ... ok
+test modules::instance::tests::losing_instance_does_not_truncate_running_instance_identity ... ok
+test modules::instance::tests::lock_is_released_after_drop ... ok
+test modules::instance::tests::second_instance_is_blocked_with_conflict_error ... ok
+test modules::extensions::source_dir::tests::overlapping_managed_roots_are_rejected ... ok
+test modules::ipc::audit::tests::writes_sanitized_record_as_jsonl ... ok
+test modules::ipc::service::tests::busy_frozen_and_unconfirmed_cli_sync_do_not_execute_or_write_audit ... ok
+test modules::ipc::endpoint::tests::prevents_second_live_endpoint ... ok
+test modules::ipc::endpoint::tests::binds_private_socket_and_round_trips_frozen_response ... ok
+test modules::ipc::service::tests::backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop ... ok
+test modules::ipc::service::tests::cli_binding_busy_frozen_and_unconfirmed_never_execute_or_audit ... ok
+test modules::ipc::path_registration::tests::registers_and_removes_only_owned_symlink ... ok
+test modules::data_root::migration::tests::unresolved_panel_protection_blocks_copy_without_changing_source_or_target ... ok
+test modules::ipc::audit::tests::rotates_five_megabyte_logs_five_times ... ok
+test modules::ipc::endpoint::tests::rejects_bad_contract_and_too_large_frame ... ok
+test modules::ipc::service::tests::cli_lifecycle_projects_only_matching_terminal_and_preserves_context_and_wire_contract ... ok
+test modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit ... ok
+test modules::ipc::service::tests::cli_lifecycle_rejects_busy_frozen_unconfirmed_and_unsafe_arguments ... ok
+test modules::ipc::service::tests::binding_refuses_busy_writer_and_validation_failure_reopens_admission ... ok
+test modules::ipc::service::tests::cli_migration_rejects_unconfirmed_frozen_and_invalid_requests_without_file_mutation ... ok
+test modules::ipc::service::tests::cli_update_projects_truthful_terminal_status_and_keeps_three_field_dto ... ok
+test modules::ipc::service::tests::cli_backup_uses_manual_scope_verified_source_and_complete_metadata_listing ... ok
+test modules::ipc::service::tests::cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result ... ok
+test modules::ipc::service::tests::cli_update_requires_real_gui_and_frozen_query_has_no_side_effects ... ok
+test modules::ipc::service::tests::passphrase_required_is_reported_distinctly ... ok
+test modules::ipc::service::tests::frozen_and_unconfirmed_cli_backup_do_not_execute_or_write_audit ... ok
+test modules::ipc::service::tests::cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit ... ok
+test modules::ipc::service::tests::public_status_lock_wait_keeps_executor_responsive_and_survives_disconnect ... ok
+test modules::ipc::service::tests::sync_projection_preserves_conflicts_readback_failure_and_typed_network_errors ... ok
+test modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit ... ok
+test modules::ipc::tests::audit_record_never_captures_argument_values ... ok
+test modules::ipc::service::tests::sync_run_without_endpoint_reports_failure_instead_of_fake_success ... ok
+test modules::ipc::tests::audit_retention_matches_fz40 ... ok
+test modules::ipc::tests::cli_json_has_no_extra_top_level_fields ... ok
+test modules::ipc::tests::cli_parser_only_accepts_frozen_commands ... ok
+test modules::ipc::tests::confirm_false_is_rejected_with_exit_code_four ... ok
+test modules::ipc::tests::contract_version_must_match_one ... ok
+test modules::ipc::tests::failed_response_keeps_sanitized_error_and_exit_code ... ok
+test modules::ipc::tests::frozen_command_set_matches_fz34 ... ok
+test modules::ipc::tests::ipc_response_shape_is_frozen ... ok
+test modules::logs::tests::preserves_safe_text ... ok
+test modules::logs::tests::redacts_s3_uri_and_bucket_values ... ok
+test modules::ipc::service::tests::cli_lifecycle_reuses_registered_events_and_recovers_only_exact_action_and_candidate ... ok
+test modules::logs::tests::redacts_url_query_and_userinfo ... ok
+test modules::backup::manager::tests::transaction_automatic_upgrade_and_protection_preserve_all_related_snapshots ... ok
+test modules::logs::tests::user_home_redaction_handles_windows_paths_and_keeps_other_users ... ok
+test modules::logs::tests::bounded_tail_drops_partial_sensitive_and_utf8_records ... ok
+test modules::migration::tests::export_and_import_require_valid_data_root_structure ... ok
+test modules::ipc::service::tests::cli_queries_survive_disconnect_and_audit_only_admitted_roots ... ok
+test modules::migration::tests::corrupted_or_unknown_container_version_does_not_touch_config ... ok
+test modules::ipc::service::tests::cli_migration_lock_wait_keeps_executor_responsive_and_owns_audit_after_disconnect ... ok
+test modules::migration::tests::export_honours_include_toggles ... ok
+test modules::migration::tests::export_is_plaintext_and_needs_no_passphrase ... ok
+test modules::ipc::service::tests::cli_migration_roundtrip_uses_explicit_home_and_preserves_wire_contract ... ok
+test modules::migration::tests::export_previous_target_read_failure_publishes_failure_without_replacement ... ok
+test modules::migration::tests::export_previous_backup_failure_does_not_replace_destination ... ok
+test modules::data_root::migration::activation::tests::receipt_or_target_tampering_blocks_restart_without_partition_repair ... ok
+test modules::ipc::service::tests::cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit ... ok
+test modules::ipc::service::tests::switch_data_root_records_reference_in_the_fixed_app_data_root ... ok
+test modules::migration::tests::export_terminal_requires_exact_readback_under_lock_default_and_explicit_destination ... ok
+test modules::ipc::service::tests::public_binding_lock_wait_persists_reference_after_disconnect_and_keeps_root_frozen ... ok
+test modules::migration::tests::export_readback_corruption_emits_only_failure_then_exact_retry_recovers_after_reload ... ok
+test modules::migration::tests::export_different_content_or_destination_cannot_resolve_prior_failure ... ok
+test modules::migration::tests::import_creates_backup_before_overwriting_preferences ... ok
+test modules::migration::tests::import_failed_prewrite_backup_does_not_replace_preferences ... ok
+test modules::network_defaults::tests::frozen_network_defaults_match_contract ... ok
+test modules::notifications::persistence::tests::corrupted_or_unknown_version_fails_explicitly ... ok
+test modules::notifications::persistence::tests::error_mapping_never_claims_success ... ok
+test modules::notifications::persistence::tests::missing_file_loads_as_empty_instead_of_a_seed ... ok
+test modules::migration::tests::import_failure_removes_previously_absent_files_after_verification ... ok
+test modules::notifications::persistence::tests::relative_paths_are_refused ... ok
+test modules::notifications::persistence::tests::old_history_without_observation_counts_remains_readable ... ok
+test modules::notifications::tests::action_refs_use_frozen_targets ... ok
+test modules::notifications::tests::aggregation_counts_unread_and_danger ... ok
+test modules::migration::tests::import_without_passphrase_applies_preferences_extension_and_sync ... ok
+test modules::notifications::tests::batch_operations_only_change_requested_subset ... ok
+test modules::migration::tests::import_restoration_failure_is_explicit_and_cannot_report_success ... ok
+test modules::notifications::tests::clear_resolved_only_touches_resolved_items ... ok
+test modules::notifications::persistence::tests::round_trip_preserves_read_resolved_and_deleted ... ok
+test modules::notifications::tests::delete_is_soft_and_preserves_history ... ok
+test modules::notifications::tests::duplicate_dedupe_key_updates_instead_of_appending ... ok
+test modules::notifications::tests::levels_match_fz43 ... ok
+test modules::notifications::tests::notification_body_rejects_raw_secret_assignment ... ok
+test modules::notifications::tests::notification_category_by_category_filters_correctly ... ok
+test modules::notifications::tests::notification_requires_core_fields ... ok
+test modules::notifications::tests::read_and_resolved_are_independent_dimensions ... ok
+test modules::notifications::tests::single_delete_updates_same_store ... ok
+test modules::notifications::tests::source_and_expiry_are_independent_dimensions ... ok
+test modules::preferences::tests::glow_render_defaults_to_mesh_and_rejects_unknown ... ok
+test modules::preferences::tests::corrupted_file_fails_without_overwrite ... ok
+test modules::preferences::tests::future_disk_schema_is_rejected_without_guessing ... ok
+test modules::preferences::tests::rejects_out_of_range_and_unknown_enum_values ... ok
+test modules::preferences::tests::legacy_preferences_without_visual_effects_load_as_high ... ok
+test modules::preferences::tests::legacy_flat_document_loads_and_upgrades_in_memory ... ok
+test modules::preferences::tests::missing_file_returns_frozen_defaults ... ok
+test modules::migration::tests::re_export_backs_up_previous_container ... ok
+test modules::preferences::tests::unconfigured_path_is_rejected ... ok
+test modules::preferences::tests::visual_effects_defaults_to_high_and_rejects_unknown ... ok
+test modules::process::fixtures::tests::virtual_runner_records_start_and_stop_without_real_processes ... ok
+test modules::process::orchestration::tests::agent_process_tracks_not_attached_and_exit ... ok
+test modules::process::orchestration::tests::error_summary_is_fz12_shape_and_capped ... ok
+test modules::preferences::tests::save_writes_private_file_and_reload_round_trip ... ok
+test modules::process::orchestration::tests::failed_stop_preserves_running_observation ... ok
+test modules::process::orchestration::tests::frozen_action_timeouts_match_fz10 ... ok
+test modules::process::orchestration::tests::log_id_is_sixteen_hex_characters ... ok
+test modules::process::orchestration::tests::official_commands_are_frozen ... ok
+test modules::preferences::tests::save_writes_sectioned_disk_layout_at_current_schema ... ok
+test modules::process::orchestration::tests::unconfigured_runner_preserves_last_observation ... ok
+test modules::process::orchestration::tests::wrapper_exit_codes_match_fz11 ... ok
+test modules::preferences::tests::restore_defaults_writes_frozen_contract ... ok
+test modules::process::tests::cancel_pending_moves_to_last_stable_observation_without_kill ... ok
+test modules::process::tests::failure_and_unreachable_states_are_explicit ... ok
+test modules::process::tests::frozen_timeouts_match_contract ... ok
+test modules::process::tests::lifecycle_transitions_follow_frozen_flow ... ok
+test modules::process::tests::invalid_transitions_are_blocked ... ok
+test modules::process::tests::controlled_runner_never_searches_path ... ok
+test modules::runtime::archive::tests::declared_version_accepts_both_official_file_name_forms ... ok
+test modules::runtime::archive::tests::entry_path_validation_rejects_absolute_and_deep_paths ... ok
+test modules::process::tests::environment_policy_only_exposes_frozen_keys ... ok
+test modules::process::tests::validates_explicit_paths_and_absolute_home ... ok
+test modules::runtime::archive::tests::accepts_official_package_and_reports_entry ... ok
+test modules::process::tests::opencodex_home_must_be_a_directory ... ok
+test modules::migration::tests::import_existing_unreadable_or_corrupt_projection_is_not_an_empty_configuration ... ok
+test modules::runtime::archive::tests::rejects_non_gzip_and_bad_filename ... ok
+test modules::runtime::archive::tests::rejects_non_official_package_name ... ok
+test modules::runtime::archive::tests::resolves_bin_from_string_and_object_forms ... ok
+test modules::runtime::archive::tests::rejects_missing_package_json_and_missing_bin ... ok
+test modules::runtime::install::tests::entry_script_falls_back_to_env_node_without_recorded_node ... ok
+test modules::runtime::install::tests::extract_semver_reads_the_first_version_token ... ok
+test modules::runtime::install::tests::install_error_maps_to_stable_codes ... ok
+test modules::runtime::archive::tests::rejects_version_mismatch_between_filename_and_manifest ... ok
+test modules::runtime::archive::tests::rejects_path_escape_symlink_and_hardlink_entries ... ok
+test modules::runtime::archive::tests::extract_strips_the_top_level_package_prefix ... ok
+test modules::runtime::install::tests::masker_also_removes_known_secret ... ok
+test modules::runtime::install::tests::normalize_bin_strips_prefix_and_rejects_escapes ... ok
+test modules::runtime::install::tests::npm_reason_prefers_the_error_line ... ok
+test modules::runtime::install::tests::credential_proxy_never_reaches_the_command_line ... ok
+test modules::runtime::install::tests::npm_cache_is_explicit_and_does_not_replace_user_home ... ok
+test modules::runtime::install::tests::outcome_history_entry_and_restart_flag ... ok
+test modules::backup::tests::legacy_transactions_are_retained_even_without_known_links ... ok
+test modules::runtime::install::tests::proxy_forms_match_the_frozen_shape ... ok
+test modules::runtime::install::tests::cancel_before_start_leaves_no_trace ... ok
+test modules::runtime::install::tests::proxy_validation_rejects_empty_and_credential_hosts ... ok
+test modules::runtime::install::tests::install_target_rejections_surface_system_protection ... ok
+test modules::data_root::migration::activation::tests::malformed_oversized_or_uncommitted_marker_is_never_a_startup_license ... ok
+test modules::runtime::install::tests::offline_install_rejects_non_official_package_name ... ok
+test modules::runtime::install::tests::registry_install_requires_npm_path ... ok
+test modules::runtime::install::tests::strip_url_credentials_masks_userinfo_only ... ok
+test modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix ... ok
+test modules::runtime::install::tests::temp_userconfig_is_0600_and_removed_on_drop ... ok
+test modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch ... ok
+test modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance ... ok
+test modules::runtime::paths::tests::executable_accepts_relative_rejection_for_non_absolute ... ok
+test modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry ... ok
+test modules::runtime::install::tests::verify_package_rejects_name_and_version_and_missing_bin ... ok
+test modules::runtime::paths::tests::executable_follows_symlinks_and_allows_system_prefixes ... ok
+test modules::runtime::paths::tests::executable_rejects_missing_and_non_executable ... ok
+test modules::runtime::paths::tests::install_target_accepts_writable_directory_and_creatable_child ... ok
+test modules::runtime::paths::tests::install_target_rejects_regular_file_and_non_absolute ... ok
+test modules::runtime::paths::tests::install_target_rejects_symlink_and_protected_dirs ... ok
+test modules::runtime::protection::tests::absent_receipt_retry_does_not_initialize_storage ... ok
+test modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one ... ok
+test modules::runtime::paths::tests::symlink_component_detection_walks_in_scope_ancestors_only ... ok
+test modules::runtime::install::tests::successful_install_replaces_previous_prefix ... ok
+test modules::migration::tests::import_multifile_readback_failure_restores_bytes_and_exact_retry_resolves_after_reload ... ok
+test modules::migration::tests::import_different_document_or_home_cannot_resolve_previous_candidate_even_after_switch_back ... ok
+test modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent ... ok
+test modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent ... ok
+test modules::runtime::protection::tests::corrupt_receipt_is_reported_without_exposing_fields_or_overwriting_bytes ... ok
+test modules::runtime::protection::tests::disappeared_receipt_cannot_release_the_captured_backup ... ok
+test modules::runtime::protection::tests::explicit_retry_retains_inconclusive_receipt_then_releases_only_after_activation ... ok
+test modules::runtime::protection::tests::missing_final_activation_blocks_retry_overwrite_and_preserves_backup ... ok
+test modules::migration::tests::export_preexecution_source_root_and_lock_rejections_publish_nothing ... ok
+test modules::runtime::protection::tests::read_status_does_not_verify_or_release_valid_receipt ... ok
+test modules::runtime::protection::tests::persisted_verification_survives_backup_commit_failure_and_retries_without_package ... ok
+test modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe ... ok
+test modules::runtime::relocation::tests::generated_launcher_fallback_and_quoted_paths_round_trip ... ok
+test modules::runtime::protection::tests::terminal_failure_forgets_attempt_but_never_releases_backup ... ok
+test modules::runtime::protection::tests::replaced_receipt_and_backup_digest_cannot_release_protection ... ok
+test modules::runtime::protection::tests::strict_receipt_validation_rejects_unknown_corrupt_and_unbounded_fields ... ok
+test modules::runtime::protection::tests::same_version_different_attempt_cannot_release_previous_backup ... ok
+test modules::runtime::protection::tests::verification_write_failure_keeps_receipt_and_backup_for_restart_retry ... ok
+test modules::runtime::protection::tests::interrupted_receipt_removal_is_idempotent_after_commit_and_after_expiry ... ok
+test modules::runtime::tests::history_is_capped_at_the_frozen_limit ... ok
+test modules::runtime::tests::installed_prefix_comes_from_the_install_record_not_the_default_location ... ok
+test modules::runtime::tests::invalid_explicit_falls_back_instead_of_sticking ... ok
+test modules::runtime::tests::handle_persists_resolution_and_refreshes_after_install ... ok
+test modules::runtime::protection::tests::verified_activation_releases_exact_backup_and_preserves_independent_pin ... ok
+test modules::runtime::tests::nothing_available_is_unresolved ... ok
+test modules::runtime::tests::handle_restores_explicit_choice_across_restart ... ok
+test modules::runtime::tests::managed_wins_over_discovered_and_falls_back_when_missing ... ok
+test modules::runtime::tests::priority_is_explicit_then_managed_then_discovered ... ok
+test modules::runtime::tests::record_history_keeps_only_terminal_entries_and_caps_length ... ok
+test modules::runtime::relocation::tests::external_prefix_and_node_remain_external_without_writes ... ok
+test modules::runtime::tests::store_degrades_on_missing_corrupt_and_unknown_version ... ok
+test modules::runtime::tests::store_round_trips_and_creates_restricted_file ... ok
+test modules::runtime::tests::set_explicit_ignores_invalid_path_and_keeps_previous_choice ... ok
+test modules::runtime::uninstall::tests::execute_requires_explicit_confirmation ... ok
+test modules::runtime::uninstall::tests::history_entry_is_shaped_like_the_frozen_contract ... ok
+test modules::runtime::uninstall::tests::actual_body_removal_is_verified_without_deleting_retained_home ... ok
+test modules::runtime::uninstall::tests::body_scope_never_touches_runtime_or_home ... ok
+test modules::runtime::uninstall::tests::manifest_source_label_is_stable ... ok
+test modules::runtime::uninstall::tests::execute_full_uninstall_runs_fixed_commands_and_reports_steps ... ok
+test modules::runtime::tests::resolved_version_follows_the_current_source_path ... ok
+test modules::runtime::uninstall::tests::official_observation_reads_and_masks_the_official_record ... ok
+test modules::runtime::relocation::tests::histories_are_not_truncated_and_absent_old_internal_paths_relocate ... ok
+test modules::runtime::uninstall::tests::uninstall_error_maps_to_stable_codes ... ok
+test modules::runtime::uninstall::tests::uninstall_refuses_directory_without_manifest ... ok
+test modules::runtime::uninstall::tests::plan_classifies_body_owner_for_every_resolved_source ... ok
+test modules::runtime::uninstall::tests::residue_check_distinguishes_cleared_from_present ... ok
+test modules::runtime::uninstall::tests::residue_cleanup_is_explicit_and_stays_inside_home ... ok
+test modules::runtime_defaults::tests::frozen_values_match_declared_contract ... ok
+test modules::skills::tests::archive_limits_match_fz28 ... ok
+test modules::runtime::relocation::tests::managed_paths_relocate_but_source_and_backups_remain_identical ... ok
+test modules::skills::tests::distribution_plans_symlink_and_skips_uninstalled ... ok
+test modules::skills::tests::copy_fallback_is_explicit_not_implicit ... ok
+test modules::skills::tests::registration_rejects_secret_uri_and_bad_shape ... ok
+test modules::skills::tests::source_store_matches_fz23 ... ok
+test modules::skills::tests::existing_target_conflicts_only_on_different_hash ... ok
+test modules::status::polling::tests::background_interval_uses_frozen_thirty_seconds ... ok
+test modules::status::polling::tests::deadline_wait_and_failure_backoff_are_applied_once ... ok
+test modules::status::polling::tests::refreshes_once_within_debounce_and_gates_emissions ... ok
+test modules::status::tests::at_risk_facts_are_filled_from_startup ... ok
+test modules::status::tests::fz07_health_parse_failure_preserves_previous_state ... ok
+test modules::status::tests::fz07_keeps_previous_state_for_unknown_output ... ok
+test modules::skills::tests::directory_digest_is_order_stable_and_change_sensitive ... ok
+test modules::status::tests::fz07_maps_the_frozen_eleven_rows ... ok
+test modules::status::tests::fz07_missing_fields_are_degraded_not_invented ... ok
+test modules::ipc::service::tests::cli_backup_honours_saved_cleanup_mode_and_retains_pins_and_legacy_transactions ... ok
+test modules::status::tests::fz08_background_intervals_are_frozen ... ok
+test modules::status::tests::fz08_backoff_doubles_and_caps_at_sixty_seconds ... ok
+test modules::status::tests::fz08_debounces_the_same_dimension_for_one_second ... ok
+test modules::status::tests::ipc_gate_allows_at_most_two_emissions_per_second ... ok
+test modules::status::tests::official_2_50_running_report_overrides_startup_risk ... ok
+test modules::status::tests::official_schema_derives_running_and_not_found ... ok
+test modules::status::tests::official_schema_maps_startup_status_and_facts ... ok
+test modules::status::tests::source_timeout_is_a_frozen_contract_value ... ok
+test modules::status::tests::stopped_proxy_does_not_keep_stale_running_state ... ok
+test modules::skills::tests::symlink_chain_rejects_escape_but_accepts_internal_link ... ok
+test modules::status::tests::transient_failure_preserves_last_state ... ok
+test modules::status::tests::timeout_preserves_previous_state_and_increments_backoff ... ok
+test modules::status::tests::unresolved_source_falls_back_to_not_found ... ok
+test modules::runtime::protection::tests::linked_receipt_or_package_script_is_rejected_without_touching_link_target ... ok
+test modules::sync::config::endpoint_mutation_tests::preflight_refusals_do_not_write_or_observe_terminals ... ok
+test modules::sync::config::endpoint_mutation_tests::keeping_credentials_is_a_distinct_intent_and_never_accesses_them ... ok
+test modules::runtime::uninstall::tests::uninstall_refuses_symlinked_prefix ... ok
+test modules::sync::config::endpoint_mutation_tests::delete_partial_disk_failure_keeps_reference_and_retry_is_idempotent ... ok
+test modules::runtime::uninstall::tests::uninstall_refuses_when_prefix_was_externally_modified ... ok
+test modules::sync::config::endpoint_mutation_tests::save_partial_credential_write_reports_failure ... ok
+test modules::sync::config::tests::config_accepts_legacy_encryption_field_and_rejects_tls_override ... ok
+test modules::sync::config::tests::input_requires_https_and_passwords ... ok
+test modules::sync::config::tests::save_endpoint_stores_only_the_webdav_secret ... ignored
+test modules::sync::config::tests::legacy_encryption_field_is_read_and_not_written ... ok
+test modules::sync::engine::tests::endpoint_locks_are_exclusive ... ok
+test modules::sync::config::endpoint_mutation_tests::save_requires_exact_config_and_secret_readback ... ok
+test modules::sync::engine::tests::plaintext_manifest_package_round_trips_without_passphrase ... ok
+test modules::sync::config::endpoint_mutation_tests::save_missing_wrong_or_unavailable_readback_cannot_succeed ... ok
+test modules::sync::engine::tests::plaintext_payload_round_trips_and_detects_corruption ... ok
+test modules::sync::engine::tests::replay_snapshot_conflicts_and_is_recorded ... ok
+test modules::sync::config::endpoint_mutation_tests::delete_verifies_both_purposes_and_accepts_explicit_absence ... ok
+test modules::sync::config::endpoint_mutation_tests::save_retry_keeps_full_intent_and_observes_real_error ... ok
+test modules::sync::engine::tests::state_round_trip_uses_secure_sync_state_path ... ok
+test modules::sync::runner::tests::conflicted_outcome_reports_paused_overwrite ... ok
+test modules::sync::runner::tests::execution_identity_is_stable_for_retry_but_scopes_endpoint_secret_and_content ... ok
+test modules::sync::runner::tests::execution_observer_preserves_result_and_skips_policy_refusals ... ok
+test modules::sync::runner::tests::failure_messages_are_user_facing ... ok
+test modules::sync::runner::tests::incoming_current_preferences_are_written_verbatim ... ok
+test modules::sync::runner::tests::incoming_future_preferences_and_non_preferences_are_handled ... ok
+test modules::sync::config::endpoint_mutation_tests::failed_or_unverified_deletion_retains_reference_for_exact_retry ... ok
+test modules::sync::runner::tests::incoming_legacy_preferences_are_upgraded_to_sectioned_layout ... ok
+test modules::sync::runner::tests::synced_artifacts_are_whitelisted ... ok
+test modules::sync::tests::aad_is_bound_to_format_version_device_and_schema ... ok
+test modules::sync::tests::frozen_timeouts_and_limits_match_contract ... ok
+test modules::sync::tests::download_rejects_missing_duplicate_or_bad_payloads ... ok
+test modules::sync::tests::only_network_failures_retry ... ok
+test modules::sync::tests::manifest_validates_frozen_fields_and_limits ... ok
+test modules::sync::tests::replay_older_snapshot_enters_conflict ... ok
+test modules::sync::tests::sync_run_tracks_progress_and_failure ... ok
+test modules::sync::tests::snapshot_id_matches_frozen_shape ... ok
+test modules::sync::tests::tls_messages_do_not_leak_endpoint_details ... ok
+test modules::sync::engine::tests::apply_backs_up_then_replaces_and_updates_state ... ok
+test modules::test_sandbox::tests::sandbox_identity_and_root_contract ... ok
+test modules::tray::tests::action_gates_allow_start_when_at_risk ... ok
+test modules::tray::tests::action_gates_follow_frozen_matrix ... ok
+test modules::tray::tests::address_is_only_visible_when_running_with_port ... ok
+test modules::tray::tests::labels_cover_all_frozen_runtime_states ... ok
+test modules::test_sandbox::tests::explicit_container_allows_siblings_but_never_infers_parent_scope ... ok
+test modules::tray::tests::menu_ids_are_frozen ... ok
+test modules::tray::tests::tray_labels_never_carry_the_risk_verdict ... ok
+test modules::runtime::uninstall::tests::managed_uninstall_removes_only_prefix_and_entry_and_backs_up ... ok
+test modules::test_sandbox::tests::linked_or_dangling_paths_cannot_hide_container_escape ... ok
+test modules::backup::manager::tests::unknown_restore_reconciliation_states_fail_closed ... ok
+test modules::sync::runner::tests::cold_sync_missing_preferences_and_lock_are_not_execution_terminals ... ok
+test modules::runtime::uninstall::tests::managed_uninstall_falls_back_to_discovered_source ... ok
+test modules::update::handoff::tests::new_running_version_required_and_exact_original_channel_preserved ... ok
+test modules::update::progress::tests::operation_keeps_identity_and_does_not_invent_totals ... ok
+test modules::update::handoff::tests::different_root_or_newer_candidate_never_resolved_or_overwritten ... ok
+test modules::update::handoff::tests::invalid_oversized_or_linked_receipt_rejected_without_following_it ... ok
+test modules::runtime::protection::tests::changed_activation_inputs_never_release_protection ... ok
+test modules::update::schedule::tests::escaped_bounded_release_notes_fit_cache_and_oversized_cache_is_refused ... ok
+test modules::update::tests::channels_match_frozen_contract ... ok
+test modules::update::tests::failures_never_replace_current_version ... ok
+test modules::update::schedule::tests::backoff_sleep_channel_isolation_and_cache_cleanup ... ok
+test modules::update::schedule::tests::hundred_routes_and_ten_restarts_with_fresh_schedule_make_no_requests ... ok
+test modules::update::schedule::tests::malformed_state_is_not_silently_reset_and_crash_reservation_survives ... ok
+test modules::write::tests::backup_failure_blocks_write_and_preserves_target ... ok
+test modules::write::tests::scopes_and_states_are_frozen_serialized_values ... ok
+test modules::write::tests::cancel_has_no_side_effect ... ok
+test modules::write::tests::digest_mismatch_rejects_external_change_without_writing ... ok
+test modules::write::tests::target_must_have_parent_and_utf8_filename ... ok
+test state::mutation_tests::lease_retains_shared_reservation_and_cancellation_until_worker_finishes ... ok
+test modules::write::tests::rollback_restores_previous_payload_and_marks_recovered ... ok
+test modules::sync::runner::tests::captured_sync_reports_failed_final_pointer_after_payload_and_manifest_uploads ... ok
+test modules::write::tests::successful_write_follows_frozen_state_chain ... ok
+test types::about::tests::app_dto_is_camel_case ... ok
+test types::about::tests::official_dto_is_camel_case ... ok
+test types::cleanup::tests::cleanup_result_uses_camel_case ... ok
+test types::codex_shim::tests::dto_uses_camel_case_and_maps_installed_flag ... ok
+test types::codex_shim::tests::readable_dto_has_no_reason_code ... ok
+test types::codex_shim::tests::unreachable_dto_is_honest_and_empty ... ok
+test types::discovery::tests::all_paths_together_are_accepted ... ok
+test types::discovery::tests::default_paths_are_resolved_outside_the_discovery_module ... ok
+test types::discovery::tests::partial_paths_are_rejected_as_a_contract_guard ... ok
+test types::doctor::tests::doctor_dto_uses_camel_case_and_read_only_mode ... ok
+test types::extensions::tests::discovers_from_module_shapes ... ok
+test types::extensions::tests::extension_config_dto_uses_camel_case_and_no_paths ... ok
+test types::extensions::tests::extensions_dto_uses_camel_case ... ok
+test types::migration::tests::import_request_passphrase_is_optional ... ok
+test types::migration::tests::migration_dtos_use_camel_case ... ok
+test types::migration::tests::module_results_project_without_extra_fields ... ok
+test types::notifications::tests::aggregate_dto_uses_camel_case_counts ... ok
+test types::notifications::tests::notification_dto_uses_camel_case_and_frozen_action_refs ... ok
+test types::preferences::tests::preferences_dto_uses_camel_case ... ok
+test types::preferences::tests::webview_camel_case_payload_survives_command_boundary ... ok
+test types::process_action::tests::requires_confirm_for_every_action ... ok
+test types::process_action::tests::result_exposes_frozen_action_gates ... ok
+test types::process_action::tests::serializes_camel_case_frontend_contract ... ok
+test types::runtime::tests::blank_offline_path_is_not_an_archive ... ok
+test types::runtime::tests::proxy_is_absent_without_a_scheme ... ok
+test types::runtime::tests::proxy_with_credentials_carries_them_only_into_the_config_form ... ok
+test types::runtime::tests::proxy_without_credentials_stays_credential_free ... ok
+test types::runtime::tests::source_and_scope_parsing_is_closed_world ... ok
+test modules::ipc::service::tests::cli_backup_rejects_missing_corrupt_source_or_policy_without_fake_success_or_cleanup ... ok
+test types::runtime_status::tests::action_flags_follow_frozen_matrix ... ok
+test types::runtime_status::tests::health_label_matches_frozen_values ... ok
+test types::runtime_status::tests::source_failure_is_frozen ... ok
+test types::status::tests::at_risk_can_start_and_is_not_blocked_by_risk ... ok
+test types::runtime_status::tests::snapshot_matches_fz06_state_names ... ok
+test types::status::tests::runtime_gates_cover_every_frozen_state ... ok
+test types::update::tests::update_status_dto_is_camel_case_and_masks_raw_metadata ... ok
+test types::upgrade::tests::upgrade_backup_dto_uses_camel_case ... ok
+test types::upgrade::tests::restore_risk_summary_dto_uses_camel_case ... ok
+test types::workspace::tests::managed_path_dto_uses_camel_case ... ok
+test types::workspace::tests::open_result_is_explicit ... ok
+test modules::update::handoff::tests::invalid_association_remains_retryable_and_another_candidate_never_releases_it ... ok
+test tests::launch_main_preference_is_consumed ... ok
+test modules::update::handoff::tests::persisted_verification_survives_rotation_before_notification_delivery ... ok
+test tests::legacy_update_channel_enum_migrates_on_load ... ok
+test tests::update_channel_preference_seeds_update_status_channel ... ok
+test modules::update::handoff::tests::exact_running_candidate_releases_associated_backup_only_and_preserves_user_pin ... ok
+test modules::runtime::relocation::tests::no_runtime_is_noop_and_changed_inventory_or_marker_refuses_preparation ... ok
+test modules::update::handoff::tests::stale_same_candidate_receipt_cannot_overwrite_a_new_backup_association ... ok
+test modules::sync::engine::tests::legacy_packages_require_the_original_passphrase ... ok
+test modules::runtime::relocation::tests::invalid_records_or_launchers_do_not_write_target_runtime_files ... ok
+test modules::sync::engine::tests::target_lock_blocks_concurrent_snapshots ... ok
+test modules::migration::tests::import_validation_and_lock_rejections_do_not_publish_execution_terminal ... ok
+test modules::backup::manager::tests::listing_and_restore_reads_are_bounded ... ok
+test modules::migration::tests::legacy_container_needs_original_passphrase_and_leaves_config_untouched ... ok
+test modules::ipc::audit::tests::retention_keeps_ninety_days_and_max_records ... ok
+
+test result: ok. 690 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 35.13s
+
+     Running unittests src/bin/ocxd.rs (apps/desktop/tauri/target/debug/deps/ocxd-cc3e6e49af9034da)
+
+running 2 tests
+test tests::switch_without_migrate_keeps_reference_only_semantics ... ok
+test tests::migrate_flag_is_forwarded_to_the_ipc_request ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop-4b6225b0f1c5e4c5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/about.rs (apps/desktop/tauri/target/debug/deps/about-7a57da10f93a6c46)
+
+running 6 tests
+test official_command_maps_errors_and_preserves_explicit_contract ... ok
+test official_version_output_is_sanitized_and_bounded ... ok
+test official_project_dto_is_camel_case ... ok
+test frozen_version_contract_has_no_writable_flags ... ok
+test official_cli_source_requires_explicit_paths_and_freezes_environment ... ok
+test official_cli_source_enforces_frozen_timeout ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.01s
+
+     Running tests/app_icon.rs (apps/desktop/tauri/target/debug/deps/app_icon-b448063b2b546c32)
+
+running 1 test
+test windows_ico_has_all_sizes_and_visible_artwork_fills_each_frame ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/app_startup_wiring.rs (apps/desktop/tauri/target/debug/deps/app_startup_wiring-131bf660cae8dbec)
+
+running 2 tests
+test default_data_root_initializer_matches_fz02_structure ... ok
+test controlled_status_source_uses_explicit_fixture_without_path_search ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/app_status.rs (apps/desktop/tauri/target/debug/deps/app_status-ad3b72cd5fc70e24)
+
+running 1 test
+test app_status_reports_shell_ready ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/backup_process_lock.rs (apps/desktop/tauri/target/debug/deps/backup_process_lock-253246b3a296c149)
+
+running 3 tests
+test w2_child ... ignored, subprocess helper; run by both parent tests on explicit temporary roots
+test killed_process_releases_lock_but_keeps_unresolved_protection ... ok
+test w2_transactions_wait_across_processes_without_changing_files ... ok
+
+test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.72s
+
+     Running tests/cli_ipc.rs (apps/desktop/tauri/target/debug/deps/cli_ipc-c88328bc832ab24f)
+
+running 1 test
+test frozen_ipc_request_rejects_unknown_contract_and_missing_confirmation ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/codex_shim.rs (apps/desktop/tauri/target/debug/deps/codex_shim-93b441b9f8d1e345)
+
+running 5 tests
+test unresolved_runtime_is_unreachable_and_never_spawns ... ok
+test child_path_includes_only_candidate_dirs_that_really_hold_codex ... ok
+test stderr_reason_is_surfaced_when_official_write_is_denied ... ok
+test silent_no_op_is_reported_as_rejected_with_official_first_line ... ok
+test shim_status_set_and_read_back_through_controlled_subprocess ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.27s
+
+     Running tests/doctor.rs (apps/desktop/tauri/target/debug/deps/doctor-f7aacd238d7011bc)
+
+running 9 tests
+test doctor_mode_dto_is_read_only_only ... ok
+test doctor_command_maps_timeout_to_explicit_error ... ok
+test doctor_command_maps_unreachable_and_parse_to_not_configured ... ok
+test doctor_report_sanitizes_frozen_secret_shapes ... ok
+test doctor_dto_is_camel_case_and_read_only ... ok
+test frozen_timeout_has_no_writable_repair_flags ... ok
+test official_source_requires_explicit_paths_and_freezes_environment ... ok
+test official_source_rejects_non_executable_file ... ok
+test official_source_enforces_frozen_timeout ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.00s
+
+     Running tests/event_registry.rs (apps/desktop/tauri/target/debug/deps/event_registry-2b419d010ceda59a)
+
+running 33 tests
+test manager_check_and_pending_restart_never_resolve_install_failure ... ok
+test invalid_job_trigger_scope_and_fact_never_mutate ... ok
+test lifecycle_preference_is_independent_of_environment_risks_and_recovery ... ok
+test pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived ... ok
+test config_recovery_is_structural_and_queries_cannot_be_repurposed_to_resolve_install ... ok
+test recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks ... ok
+test old_history_without_identity_still_loads_and_is_not_automatically_resolved ... ok
+test embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation ... ok
+test concurrent_scope_creation_keeps_one_identity ... ok
+test legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes ... ok
+test same_scope_dedupes_but_different_objects_and_candidates_coexist ... ok
+test registry_is_closed_and_references_are_consistent ... ok
+test signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact ... ok
+test configuration_import_is_user_only_and_does_not_activate_generic_migration ... ok
+test existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs ... ok
+test configuration_export_is_user_only_and_does_not_activate_generic_migration ... ok
+test exact_verified_candidate_success_resolves_after_restart_without_marking_read ... ok
+test signal_delivery_and_suppressed_notifications_do_not_create_history_files ... ok
+test validated_signal_site_cannot_be_assigned_a_persisted_terminal_fact ... ok
+test persistence_failure_rolls_back_new_notification_and_recovery ... ok
+test scope_rejects_symlinks_without_writing_external_files ... ok
+test transient_signals_validate_without_scopes_or_notification_writes ... ok
+test mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure ... ok
+test protection_reconcile_failure_requires_matching_verified_retry ... ok
+test cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline ... ok
+test legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates ... ok
+test uninstall_failure_persists_and_only_matching_verified_removal_resolves ... ok
+test persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes ... ok
+test terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence ... ok
+test candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids ... ok
+test lifecycle_command_only_resolves_matching_real_result_with_persisted_scope ... ok
+test new_terminal_pairs_persist_and_only_exact_verified_success_recovers ... ok
+test scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots ... ok
+
+test result: ok. 33 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+
+     Running tests/extensions.rs (apps/desktop/tauri/target/debug/deps/extensions-2463f2da36c7afb0)
+
+running 39 tests
+test extension_write_command_accepts_frontend_camel_case_import_payload ... ok
+test dto_contract_uses_camel_case_and_masks_raw_env_values ... ok
+test empty_sources_render_explicit_empty_states_without_writing ... ok
+test first_mcp_write_without_projection_config_creates_the_config ... ok
+test config_terminal_backup_refusal_preserves_authority_and_reports_failure ... ok
+test lists_source_skills_and_codex_mcp_with_sanitized_description ... ok
+test first_write_without_projection_config_uses_defaults_and_creates_the_config ... ok
+test invalid_custom_source_dir_is_rejected_and_keeps_previous_value ... ok
+test configuration_candidate_isolates_commands_home_channels_and_preferences ... ok
+test live_asset_command_does_not_publish_configuration_only_receipt ... ok
+test config_preflight_rejects_escaping_config_and_lock_without_terminal ... ok
+test mcp_detail_masks_sensitive_args_and_reports_client_landings ... ok
+test legacy_fingerprint_schema_is_migrated_without_conflict ... ok
+test mcp_mask_preference_controls_argument_masking ... ok
+test merges_source_and_store_and_prefers_agents_source ... ok
+test extension_write_unlinks_skill_with_confirm_and_rejects_escape_names ... ok
+test links_skill_from_agents_source_without_manager_import ... ok
+test rejects_unsafe_skill_names_and_unknown_skills ... ok
+test reads_skill_detail_with_bounded_body_and_directory_stats ... ok
+test legacy_config_without_skill_targets_keeps_existing_links_then_follows_explicit_toggles ... ok
+test skill_archive_import_rejects_traversal_without_store_writes ... ok
+test truncates_oversized_skill_body_instead_of_reading_it_unbounded ... ok
+test unified_config_rejects_inconsistent_or_missing_target_context ... ok
+test strips_yaml_frontmatter_but_keeps_the_rest_of_the_body ... ok
+test unified_config_rejects_modified_projection_before_write ... ok
+test skill_archive_import_persists_export_and_preferred_store ... ok
+test extension_write_requires_confirmation_for_new_conflicts_and_backs_up_targets ... ok
+test unified_config_write_creates_locked_backed_projection_and_toggles_once ... ok
+test config_receipts_fail_closed_then_resolve_only_verified_persistent_retry ... ok
+test skill_link_skips_existing_real_directory_without_overwriting ... ok
+test custom_source_dir_is_used_by_discovery_and_link ... ok
+test skill_toggle_links_only_the_clicked_client_and_never_touches_the_source ... ok
+test mcp_remove_keeps_toml_target_parseable ... ok
+test mcp_projection_backups_land_in_the_data_root_not_next_to_home ... ok
+test skill_uninstall_backups_directory_and_restore_recovers_latest ... ok
+test add_edit_and_delete_mcp_writes_enabled_clients_with_confirmation ... ok
+test resync_skills_realigns_targets_after_source_dir_change_without_bumping_revision ... ok
+test extension_write_projects_skills_and_mcp_across_clients ... ok
+test copy_sync_method_writes_real_copies_and_replaces_leftover_symlinks ... ok
+
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.15s
+
+     Running tests/layer_boundaries.rs (apps/desktop/tauri/target/debug/deps/layer_boundaries-33ef27791d2f6960)
+
+running 1 test
+test public_layers_are_available ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/logs.rs (apps/desktop/tauri/target/debug/deps/logs-8e68db3301032a0c)
+
+running 6 tests
+test missing_log_file_is_explicit_not_an_error ... ok
+test fallback_keeps_missing_state_when_no_log_file_exists ... ok
+test missing_call_log_does_not_fall_back_to_application_log ... ok
+test missing_agent_log_falls_back_to_the_app_log ... ok
+test read_recent_returns_200_tail_and_sanitizes_frozen_rules ... ok
+test call_log_is_read_from_the_active_data_root_not_the_logs_partition ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/notifications.rs (apps/desktop/tauri/target/debug/deps/notifications-d15540b6d882d26c)
+
+running 5 tests
+test command_contract_does_not_create_raw_secret_payloads ... ok
+test fixture_contract_keeps_camel_case_aggregate_and_action_mapping ... ok
+test unknown_id_returns_explicit_not_found_without_mutating_store ... ok
+test startup_never_seeds_and_uses_the_persisted_file ... ok
+test command_operations_share_one_backend_model_and_persist ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/official_status_source.rs (apps/desktop/tauri/target/debug/deps/official_status_source-197b5ab1ecb69c14)
+
+running 4 tests
+test collector_refresh_success_maps_official_output_and_resets_backoff ... ok
+test collector_refresh_failure_preserves_state_and_increments_backoff ... ok
+test collector_request_debounces_one_second ... ok
+test manual_refresh_does_not_share_a_light_cached_result ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/preferences.rs (apps/desktop/tauri/target/debug/deps/preferences-9714c5b7c11eea99)
+
+running 7 tests
+test preferences_error_maps_to_app_error_contract ... ok
+test preferences_unconfigured_path_is_not_configured ... ok
+test preferences_load_returns_frozen_defaults_for_valid_data_root ... ok
+test preferences_save_rejects_invalid_contract_before_write ... ok
+test preferences_corrupted_file_fails_closed_and_preserves_target ... ok
+test preferences_save_is_atomic_private_and_reloadable ... ok
+test preferences_restore_writes_default_contract ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/process_action.rs (apps/desktop/tauri/target/debug/deps/process_action-8b4c04adbcfc2023)
+
+running 8 tests
+test process_action_requires_explicit_confirm ... ok
+test process_action_preserves_observation_when_context_is_unavailable ... ok
+test process_action_uses_controlled_context ... ok
+test run_success_publishes_no_notification ... ok
+test spawn_failure_also_publishes_a_danger_notification ... ok
+test stop_reaps_the_child_and_returns_within_the_window ... ok
+test run_failure_publishes_one_deduped_danger_notification ... ok
+test stop_returns_within_a_bounded_window_when_sigterm_is_ignored ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.61s
+
+     Running tests/runtime_managed_real.rs (apps/desktop/tauri/target/debug/deps/runtime_managed_real-2cc50bb86869b8e4)
+
+running 1 test
+test real_managed_runtime_round_trip ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sandbox_isolation.rs (apps/desktop/tauri/target/debug/deps/sandbox_isolation-40c7998c2331f2ac)
+
+running 1 test
+test sandbox_writes_never_touch_daily_root_and_missing_root_fails_closed ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/status_matrix.rs (apps/desktop/tauri/target/debug/deps/status_matrix-dc22dd2a3f5bbde2)
+
+running 2 tests
+test status_matrix_guards_start_and_stop_actions ... ok
+test status_enums_cover_the_contracted_matrix ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/status_snapshot.rs (apps/desktop/tauri/target/debug/deps/status_snapshot-84fd60c35cab49f7)
+
+running 3 tests
+test status_snapshot_reports_unconfigured_without_guessing_live_state ... ok
+test injected_collector_projects_frozen_running_snapshot ... ok
+test injected_collector_preserves_previous_snapshot_on_failure ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/sync_plaintext.rs (apps/desktop/tauri/target/debug/deps/sync_plaintext-ecdd9cec8b1f962a)
+
+running 3 tests
+test tampered_payload_and_manifest_are_rejected ... ok
+test two_isolated_clients_sync_without_any_extra_passphrase ... ok
+test legacy_transport_packages_need_the_original_passphrase ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.05s
+
+     Running tests/tray.rs (apps/desktop/tauri/target/debug/deps/tray-65472a73dcb508c6)
+
+running 4 tests
+test tray_state_uses_frozen_labels_for_failure_states ... ok
+test tray_state_hides_address_until_live_running_port_exists ... ok
+test tray_state_allows_start_at_risk_without_writing_the_risk_verdict_to_the_tray ... ok
+test tray_state_reports_running_address_and_action_gates ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tray_icon.rs (apps/desktop/tauri/target/debug/deps/tray_icon-d9a7a32a67c7b9c8)
+
+running 1 test
+test tray_icons_fill_their_canvas ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/tray_left_click.rs (apps/desktop/tauri/target/debug/deps/tray_left_click-0a0729ab1ee54b29)
+
+running 1 test
+test tray_shows_its_menu_on_left_click ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/webdav_legacy_real.rs (apps/desktop/tauri/target/debug/deps/webdav_legacy_real-7a69f4b3f7f5db62)
+
+running 1 test
+test legacy_encrypted_remote_is_read_with_the_original_passphrase ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/webdav_real.rs (apps/desktop/tauri/target/debug/deps/webdav_real-2f0a69cfbe513e82)
+
+running 6 tests
+test upload_then_download_round_trip ... ok
+test wrong_password_is_unauthorized ... ok
+test missing_snapshot_is_not_found ... ok
+test probe_reaches_real_server ... ok
+test closed_port_is_reported_as_failure ... ok
+test black_hole_endpoint_times_out_instead_of_hanging ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.76s
+
+     Running tests/webdav_sync_real.rs (apps/desktop/tauri/target/debug/deps/webdav_sync_real-b6b0cc8f1bddae5f)
+
+running 4 tests
+test two_isolated_roots_sync_through_a_real_server ... ok
+test wrong_password_over_real_server_is_unauthorized ... ok
+test concurrent_sync_is_blocked_by_endpoint_lock ... ok
+test missing_payload_on_a_valid_manifest_fails_without_touching_local ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/webdav_tls.rs (apps/desktop/tauri/target/debug/deps/webdav_tls-c4b7ecc6a5a01345)
+
+running 2 tests
+test tls_backend_is_compiled_in ... ok
+test https_scheme_reaches_the_transport_layer ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+
+     Running tests/window_close.rs (apps/desktop/tauri/target/debug/deps/window_close-7c5abc921d78c1d5)
+
+running 6 tests
+test hidden_window_releases_the_dock_icon_and_showing_it_restores_it ... ok
+test unreadable_preferences_never_quit_the_shell ... ok
+test window_close_only_hides_the_shell_when_keep_proxy_on_close_is_enabled ... ok
+test default_preference_is_keep_proxy_on_close ... ok
+test notification_publisher_is_absent_when_lifecycle_notifications_are_off ... ok
+test lifecycle_notifications_preference_is_consumed ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running tests/windows_runtime.rs (apps/desktop/tauri/target/debug/deps/windows_runtime-7b85a2f9243fb742)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests opencodex_desktop_lib
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
