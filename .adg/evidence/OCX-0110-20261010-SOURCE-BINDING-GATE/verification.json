@@ -1,0 +1,39 @@
+{
+  "source_sha": "d3e4df32eba37b087957a175d70b2b7f0097e12c",
+  "code_branch": "feature/0.1.10-maintenance",
+  "ui_targeted_passed": 12,
+  "rust_targeted_passed": 16,
+  "checks_passed": [
+    "typecheck",
+    "production-build",
+    "clippy-all-targets-D-warnings",
+    "fmt",
+    "custom-protocol-debug-build"
+  ],
+  "native": {
+    "source_sha": "d3e4df32eba37b087957a175d70b2b7f0097e12c",
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434",
+    "arch": "arm64",
+    "fixture_files": 5,
+    "receipt_and_backups_unchanged": true,
+    "source_controls_disabled_before_and_after": true,
+    "local_retry_refused_corrupt_record": true,
+    "scope": "isolated macOS custom-protocol debug fixture; no installer or actual runtime update"
+  },
+  "historical_failure": "56c8462c native corrupt-receipt state left source controls enabled; retained before-fix AX/screenshots",
+  "limits": [
+    "not full regression at d3e4df32",
+    "no installer or real runtime update",
+    "Windows not run",
+    "corrupt-record controlled repair remains absent"
+  ],
+  "commands": [
+    "npm test -- --run tests/runtime-protection.test.ts",
+    "cargo test modules::runtime::protection::tests",
+    "npm run typecheck",
+    "npm run build",
+    "cargo clippy --all-targets -- -D warnings",
+    "cargo fmt --all -- --check",
+    "cargo build --features custom-protocol"
+  ]
+}

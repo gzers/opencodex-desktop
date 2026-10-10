@@ -1,0 +1,110 @@
+Window: "", App: OpenCodeX0110ProtectionSandbox.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=installation
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 设置, Value: 1
+					14 text 设置
+				15 text 集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 text 未发现
+				21 button 刷新状态
+				22 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				23 tab group (selectable) 通用
+安装配置
+数据与备份
+扩展管理
+配置迁移
+WebDAV 同步
+日志与通知
+CLI 控制面
+版本升级
+关于
+				24 container 运行环境与安装发现
+					25 heading 运行环境与安装发现, Value: 2
+						26 text 运行环境与安装发现
+					27 text 只发现 / 展示 / 校验现有环境与安装。
+					28 button 重新发现
+					29 text 已按前置条件暂停 OpenCodex 发现；请先处理概览中的环境门禁。
+				30 container OpenCodex 运行来源
+					31 heading OpenCodex 运行来源, Value: 2
+						32 text OpenCodex 运行来源
+					33 text 应用不读取 PATH；来源只来自这里的记录与候选目录，并与发现、启停、版本检查共用同一份结果。
+					34 button 刷新
+					35 container
+						36 text 面板更新保护核对 保护记录无法安全读取或内容无效。记录与备份均保留；重试不会删除记录或强制解除保护，请结合诊断日志排查。
+						37 button 重试本地核对
+						38 button 查看诊断
+					39 text 来源类型
+					40 container
+						41 text 未解析  数据根外
+					42 text 路径
+					43 text 未解析
+					44 text 版本
+					45 text 未知
+					46 button (disabled) 安装 OpenCodex
+					47 button (disabled) 导入离线包
+					48 button 更换运行来源…
+					49 button (disabled) 恢复自动发现
+					50 text 应用不读取 PATH；来源只来自这里的记录与候选目录。未解析时请从上面的两个出口入手。
+				51 container 数据目录与 OPENCODEX_HOME
+					52 heading 数据目录与 OPENCODEX_HOME, Value: 2
+						53 text 数据目录与 OPENCODEX_HOME
+					54 text 自动发现当前路径，可在同一处统一修改。
+					55 table
+						56 row (selectable) 路径
+用途
+操作
+						57 row (selectable)
+							58 cell (selectable) /private/tmp/ocx-0110-protection-native-56c8462c/data 复制
+							59 cell (selectable) 数据目录 · 当前使用
+							60 cell (selectable) 打开
+						61 row (selectable)
+							62 cell (selectable) /private/tmp/ocx-0110-protection-native-56c8462c/data/opencodex-home 复制
+							63 cell (selectable) OPENCODEX_HOME · 当前使用
+							64 cell (selectable) 打开
+					65 text 外部 OPENCODEX_HOME
+					66 text field (settable) 外部 OPENCODEX_HOME, Placeholder: /absolute/path/to/OpenCodexHome
+					67 button (disabled) 使用外部路径
+					68 button (disabled) 回到数据目录内
+				69 container 初始化或切换数据目录
+					70 heading 初始化或切换数据目录, Value: 2
+						71 text 初始化或切换数据目录
+					72 text 使用显式绝对路径；先校验结构，成功后才初始化冻结分区。
+					73 text 数据目录路径
+					74 text field (settable) 数据目录路径, Placeholder: /absolute/path/to/OpenCodexData
+					75 text 切换目标路径
+					76 text field (settable) 切换目标路径, Placeholder: /absolute/path/to/ExistingOpenCodexData
+					77 button (disabled) 校验并初始化
+					78 button (disabled) 仅切换引用
+					79 button (disabled) 迁移数据…
+				80 container 数据目录分区
+					81 heading 数据目录分区, Value: 2
+						82 text 数据目录分区
+					83 text 分区名已按 IMP 冻结；点击路径可复制，右侧可直接打开。
+					84 table
+						85 row (selectable) 路径
+用途
+操作
+	86 close button
+	87 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	88 minimize button
+89 menu bar
+	90 OpenCodeX0110ProtectionSandbox
+	91 编辑
+	92 视图
+	93 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=installation
