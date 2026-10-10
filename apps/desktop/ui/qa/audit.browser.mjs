@@ -17,8 +17,8 @@ import { fileURLToPath } from 'url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const uiDir = path.resolve(here, '..')
-const repoRoot = path.resolve(uiDir, '..', '..', '..')
-const outDir = path.join(repoRoot, '.adg', 'work', 'imp03-04-execution', 'evidence', 'browser')
+// Evidence belongs outside the code branch; callers may select governance storage.
+const outDir = process.env.AUDIT_OUT_DIR || fs.mkdtempSync(path.join(os.tmpdir(), 'ocx-browser-audit-'))
 fs.mkdirSync(outDir, { recursive: true })
 
 function resolvePlaywright() {
@@ -141,7 +141,7 @@ async function main() {
     ]
     for (const [n, s, o] of scales) if (want(n)) await auditScale(browser, n, s, o)
 
-    // 三档特效（UI规范 §26.2）：高/中/低档属性与表面材质；系统减少动态把高档降为中档。
+    // 三档特效：软件画质独立定义，系统减少动态不改变高档。
     await auditEffects(browser, want)
 
     // 高性能预算（IMP-05 §7）：中/低档不得持续 rAF；页面隐藏必须暂停装饰动画。
@@ -178,7 +178,7 @@ async function main() {
   for (const f of failed) console.log(`  FAIL ${f.name}${f.detail ? ' — ' + f.detail : ''}`)
   console.log(`新页面错误 ${warn.length ? '' : '0'}`)
   for (const n of notes) console.log(`  性能 ${n}`)
-  console.log(`报告：${path.relative(repoRoot, path.join(outDir, 'audit-report.json'))}`)
+  console.log(`报告：${path.join(outDir, 'audit-report.json')}`)
   if (failed.length) process.exitCode = 1
 }
 
@@ -354,8 +354,8 @@ async function auditEffects(browser, want) {
     }
   }
 
-  // 系统减少动态：高档有效表现降为中档。
-  const reducedName = '三档·减少动态降档'
+  // 软件画质独立于系统减少动态。
+  const reducedName = '三档·减少动态保持高档'
   if (want(reducedName)) {
     const page = await browser.newPage({ viewport: { width: 1180, height: 760 }, deviceScaleFactor: 2, reducedMotion: 'reduce' })
     const errors = []
@@ -369,7 +369,7 @@ async function auditEffects(browser, want) {
       const report = await readReport(page)
       check(`${reducedName} 审计报告就绪`, report !== null)
       if (report) {
-        check(`${reducedName} 高档在减少动态下有效为 mid`, report.effects === 'mid', `data-effects=${report.effects}`)
+        check(`${reducedName} 高档在减少动态下保持 high`, report.effects === 'high', `data-effects=${report.effects}`)
         check(`${reducedName} 无未捕获错误`, errors.length === 0, errors.join(' | '))
       }
       await shot(page, 'effects-reduced')
@@ -487,7 +487,7 @@ async function auditLifecycle(browser, want) {
 
 /**
  * 概览动作按钮材质（IMP-07）：对齐原型 `BTN_MATERIAL_DEFAULT='glass'` 的玻璃观感——
- * 半透明分层填充 + 非透明边框 + 分层阴影（含 inset 顶部内高光）＝高阶层级；
+ * 半透明分层填充 + 非透明边框 + 外阴影；0.1.10 统一取消按钮内高光。
  * 刻意不做实时 `backdrop-filter`（保证三档动画的 p95 帧间隔预算），故断言 blur=none。
  */
 async function auditOverviewActions(browser, want) {
@@ -513,10 +513,10 @@ async function auditOverviewActions(browser, want) {
       return { all: buttons.map(read), primary: primary ? read(primary) : null, count: buttons.length }
     })
     check(`${name} 存在`, !!mat && mat.count > 0, mat ? JSON.stringify(mat.all.map(x => x.cls)) : '')
-    // 非主按钮：分层阴影含 inset 顶部内高光（玻璃体）；主按钮＝强调玻璃，按原型扁平无棱线（不带 inset）。
+    // 所有按钮统一无内高光，仍保留填充、边框和主操作层级。
     check(
-      `${name} 玻璃观感（非主按钮含内高光、主按钮扁平）`,
-      !!mat && mat.all.filter(x => !/primary/.test(x.cls)).every(x => /inset/.test(x.shadow)) && (!mat.primary || /inset/.test(mat.primary.shadow) === false),
+      `${name} 所有按钮统一取消内高光`,
+      !!mat && mat.all.every(x => !/inset/.test(x.shadow)),
       mat ? JSON.stringify(mat.all.map(x => [x.cls, x.shadow])) : '',
     )
     check(`${name} 边框非透明`, !!mat && mat.all.every(x => x.border !== 'rgba(0, 0, 0, 0)'), mat ? JSON.stringify(mat.all.map(x => [x.cls, x.border])) : '')
@@ -644,6 +644,9 @@ async function auditOverviewMotion(browser, want) {
             markH: px('.motion-mark'),
             heroW: w('.motion-hero svg'),
             fixedW: w('.motion-fixed'),
+            mainW: w('.main'),
+            mainEdges: document.querySelector('.main')?.getBoundingClientRect().toJSON(),
+            backdropEdges: document.querySelector('.motion-backdrop')?.getBoundingClientRect().toJSON(),
             renderMode,
             glowW: renderMode === 'mesh' ? w('.motion-mesh-host') : w('.motion-ambient'),
             meshCanvas: document.querySelectorAll('.motion-mesh-host canvas.motion-mesh').length,
@@ -667,7 +670,7 @@ async function auditOverviewMotion(browser, want) {
         check(`${name} 光场绘制层 ${vp.mark}px`, geom.markH === vp.mark, `markH=${geom.markH}`)
         check(`${name} Logo 展示 ${vp.hero}px`, geom.heroW === vp.hero, `heroW=${geom.heroW}`)
         // 光场范围回归（IMP-10）：容器必须铺满正文列，且柔化做在容器一层上。
-        check(`${name} 光场铺满正文列`, geom.glowW === geom.fixedW, `glowW=${geom.glowW} fixedW=${geom.fixedW}`)
+        check(`${name} 光场铺满主内容全边界`, geom.glowW === geom.mainW && geom.backdropEdges?.left === geom.mainEdges?.left && geom.backdropEdges?.right === geom.mainEdges?.right && geom.backdropEdges?.top === geom.mainEdges?.top, `glowW=${geom.glowW} fixedW=${geom.fixedW}`)
         // IMP-11：光场不靠 blur 柔化（低频渐变本身够平滑，模糊只吃帧预算且成像差 ≤0.5/255）。
         check(`${name} 光场不做逐层模糊（保帧预算）`, !/blur\(/.test(geom.glowBlur) && geom.glowLayerBlur === 0, `ambient=${geom.glowBlur} layers=${geom.glowLayerBlur}`)
         // 纵向渐隐：CSS 极光用 mask-template；WEBGL 网格着色器在片元里做长缓坡渐隐。
@@ -1080,6 +1083,8 @@ async function auditInteractions(browser, want) {
     await page.waitForTimeout(200)
     const value = await page.locator('.select-trigger[aria-label="面板打开方式"] .select-value').innerText()
     check('交互·选择器 选择生效', value.trim() === '浏览器兜底', value)
+    check('交互·选择器 选择后收起', (await trigger.getAttribute('aria-expanded')) === 'false')
+    await trigger.click()
     const selected = await page.locator('.select-menu[aria-label="面板打开方式"] .select-option[aria-selected="true"]').innerText()
     check('交互·选择器 选中态回读', selected.trim() === '浏览器兜底', selected)
   })
@@ -1096,13 +1101,13 @@ async function auditInteractions(browser, want) {
     // 切到 CSS：根属性即时生效，供样式层二选一。
     await glowRow.locator('.select-trigger').click()
     await page.waitForTimeout(150)
-    await glowRow.locator('.select-option', { hasText: 'CSS' }).click()
+    await page.locator('.select-menu[aria-label="背景光渲染"] .select-option', { hasText: 'CSS' }).click()
     await page.waitForTimeout(250)
     const mode = await page.evaluate(() => document.documentElement.getAttribute('data-glow-render'))
     check('背景光渲染切 CSS 生效', mode === 'css', `mode=${mode}`)
     await glowRow.locator('.select-trigger').click()
     await page.waitForTimeout(150)
-    await glowRow.locator('.select-option', { hasText: 'WEBGL' }).click()
+    await page.locator('.select-menu[aria-label="背景光渲染"] .select-option', { hasText: 'WEBGL' }).click()
     await page.waitForTimeout(250)
     const back = await page.evaluate(() => document.documentElement.getAttribute('data-glow-render'))
     check('背景光渲染切回 WEBGL 生效', back === 'mesh', `mode=${back}`)
