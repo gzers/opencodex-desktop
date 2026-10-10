@@ -206,7 +206,9 @@ pub fn run() {
                 runtime.clone();
             app.manage(runtime.clone());
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
-            app.manage(crate::state::SharedRuntimeInstall::new());
+            let runtime_install = crate::state::SharedRuntimeInstall::new();
+            app.manage(runtime_install.clone());
+            crate::commands::runtime::reconcile_startup(data_root.clone(), runtime_install);
             #[cfg(windows)]
             app.manage(crate::commands::update::SharedPendingUpdate::new(None));
             app.manage(crate::commands::update_schedule::SharedSchedule::default());

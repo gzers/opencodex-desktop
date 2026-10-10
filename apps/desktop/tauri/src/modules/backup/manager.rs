@@ -100,6 +100,42 @@ impl PreferencesProtectionRef {
     }
 }
 impl PreferencesProtectionGuard {
+    /// Exact panel association, with this guard already holding the shared W2 lock.
+    /// Verification must be durably recorded before the protection can expire.
+    pub(crate) fn reconcile_panel_recorded(
+        &self,
+        root: &Path,
+        reference: &PreferencesProtectionRef,
+        previously_verified: bool,
+        persist_verification: impl FnOnce() -> AppResult<()>,
+    ) -> AppResult<()> {
+        reference.validate()?;
+        if previously_verified
+            && !records(root)?
+                .iter()
+                .any(|r| r.manifest.backup_id == reference.backup_id)
+        {
+            return persist_verification();
+        }
+        let record = resolve(root, &reference.backup_id)?;
+        validate_preferences_protection(&record)?;
+        if record.manifest.sha256 != reference.sha256
+            || !matches!(
+                record
+                    .manifest
+                    .management
+                    .as_ref()
+                    .unwrap()
+                    .transaction_state
+                    .as_deref(),
+                Some("active" | "committed")
+            )
+        {
+            return Err(fail("panel protection association mismatch"));
+        }
+        persist_verification()?;
+        transition_preferences_protection(root, reference, "active", "committed")
+    }
     /// Keep the guard alive: this method already owns the backup lock.
     pub fn protection_ref(&self, root: &Path) -> AppResult<Option<PreferencesProtectionRef>> {
         self.backup

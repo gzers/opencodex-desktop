@@ -372,6 +372,8 @@ impl InstallSourceKind {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub struct RuntimeManifest {
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub activation: Option<super::protection::ActivationProof>,
     pub package: String,
     pub version: String,
     pub tarball_sha256: String,
@@ -1188,6 +1190,8 @@ struct Filled {
 
 /// 托管安装执行器。所有平台交互都经注入的边界，便于隔离测试。
 pub struct RuntimeInstaller<'a> {
+    /// Unique protected update attempt. Unprotected installs have no receipt.
+    pub attempt_id: Option<String>,
     pub data_root: &'a Path,
     pub npm: &'a dyn NpmRunner,
     /// 用于写路径校验的符号链接检查范围（通常是用户主目录）。
@@ -1211,6 +1215,7 @@ impl<'a> RuntimeInstaller<'a> {
     ) -> Self {
         Self {
             data_root,
+            attempt_id: None,
             npm,
             home,
             sink,
@@ -1309,7 +1314,8 @@ impl<'a> RuntimeInstaller<'a> {
         let verified = verify_package(&temp, expected, self.probe, self.node())?;
 
         let installed_at = now_rfc3339();
-        let manifest = RuntimeManifest {
+        let mut manifest = RuntimeManifest {
+            activation: None,
             package: OFFICIAL_PACKAGE.to_string(),
             version: verified.version.clone(),
             tarball_sha256: filled.tarball_sha256.clone(),
@@ -1334,6 +1340,28 @@ impl<'a> RuntimeInstaller<'a> {
             request.node_path.as_deref().or(self.node()),
             &final_bin,
         )?;
+        // Only record activation after the verified package and final launcher land.
+        // A crash before this marker is inconclusive and keeps the backup protected.
+        if let Some(attempt_id) = &self.attempt_id {
+            manifest.activation = Some(
+                super::protection::activation_proof(
+                    self.data_root,
+                    &prefix,
+                    attempt_id,
+                    &verified.bin_entry,
+                )
+                .map_err(InstallError::from)?,
+            );
+            self.write_manifest(&prefix, &manifest)?;
+            crate::modules::backup::safety::sync_directories(
+                self.data_root,
+                entry.parent().expect("managed entry parent"),
+            )
+            .map_err(InstallError::from)?;
+            // Custom prefixes can be outside data_root; their directory is its own anchor.
+            crate::modules::backup::safety::sync_directories(&prefix, &prefix)
+                .map_err(InstallError::from)?;
+        }
 
         self.emit(InstallPhase::Done, 100, None);
         Ok(InstallOutcome {
@@ -1992,6 +2020,66 @@ mod tests {
             allow_scripts: false,
             npm_path: Some(npm.to_path_buf()),
             node_path: None,
+        }
+    }
+
+    #[test]
+    fn protected_install_only_marks_and_reconciles_activation_after_successful_probe() {
+        use crate::modules::{
+            backup::manager,
+            preferences::{Preferences, PreferencesStore},
+            runtime::protection,
+        };
+        for probe_succeeds in [false, true] {
+            let root = tempfile::tempdir().unwrap();
+            let data_root = root.path().join("data");
+            crate::modules::data_root::initialize(&data_root).unwrap();
+            PreferencesStore::new(&data_root)
+                .save(&Preferences::default())
+                .unwrap();
+            let guard = manager::begin_preferences_protection(&data_root, true).unwrap();
+            let mut receipt = protection::PanelProtection::arm(
+                &data_root,
+                &guard,
+                &prefix_of(&data_root),
+                "0.3.1",
+                None,
+            )
+            .unwrap()
+            .unwrap();
+            let npm = FakeNpm::new(official_package(root.path(), "0.3.1"));
+            let npm_path = root.path().join("npm");
+            write_executable(&npm_path);
+            let sink = RecordingProgressSink::default();
+            let probe = FixedVersionProbe {
+                version: probe_succeeds.then(|| "0.3.1".into()),
+            };
+            let mut installer =
+                installer(&data_root, &npm, &sink, Some(root.path().into()), &probe);
+            installer.attempt_id = Some(receipt.attempt_id());
+            let result =
+                installer.install(&registry_request(prefix_of(&data_root), "0.3.1", &npm_path));
+            if probe_succeeds {
+                result.unwrap();
+                let manifest: RuntimeManifest = serde_json::from_slice(
+                    &std::fs::read(prefix_of(&data_root).join(MANIFEST_FILENAME)).unwrap(),
+                )
+                .unwrap();
+                assert!(manifest.activation.is_some());
+                receipt.reconcile(&data_root, &guard).unwrap();
+                assert!(protection::PanelProtection::load(&data_root)
+                    .unwrap()
+                    .is_none());
+                assert_eq!(sink.events().last().unwrap().phase, InstallPhase::Done);
+            } else {
+                assert!(result.is_err());
+                assert!(!prefix_of(&data_root).join(MANIFEST_FILENAME).exists());
+                assert!(receipt.reconcile(&data_root, &guard).is_err());
+                assert!(protection::PanelProtection::load(&data_root)
+                    .unwrap()
+                    .is_some());
+                assert!(!sink.events().iter().any(|e| e.phase == InstallPhase::Done));
+            }
         }
     }
 

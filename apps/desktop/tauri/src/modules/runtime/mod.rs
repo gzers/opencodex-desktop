@@ -8,6 +8,7 @@
 pub mod archive;
 pub mod install;
 pub mod paths;
+pub(crate) mod protection;
 pub(crate) mod relocation;
 pub mod uninstall;
 

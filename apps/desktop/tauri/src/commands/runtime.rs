@@ -30,6 +30,32 @@ pub const RUNTIME_INSTALL_PROGRESS_EVENT: &str = "runtime-install-progress";
 /// 运行来源变化事件名（安装 / 卸载 / 显式指定后广播，前端据此刷新）。
 pub const RUNTIME_SOURCE_CHANGED_EVENT: &str = "runtime-source-changed";
 
+/// One local startup retry on an admitted background worker. A malformed receipt
+/// is retained; no package execution, networking, or polling is introduced.
+pub(crate) fn reconcile_startup(root: PathBuf, install: SharedRuntimeInstall) {
+    let Ok(storage) = crate::infrastructure::storage_writers::global().admit() else {
+        return;
+    };
+    let Some(lease) = install.acquire() else {
+        return;
+    };
+    tauri::async_runtime::spawn(async move {
+        let result = crate::commands::run_blocking("reconcile panel protection", move || {
+            let _storage = storage;
+            let _lease = lease;
+            if crate::modules::runtime::protection::PanelProtection::load(&root)?.is_none() {
+                return Ok(());
+            }
+            let guard = crate::modules::backup::manager::acquire_preferences_transaction(&root)?;
+            crate::modules::runtime::protection::reconcile_pending(&root, &guard)
+        })
+        .await;
+        if result.is_err() {
+            eprintln!("panel protection startup reconciliation remains pending");
+        }
+    });
+}
+
 /// 已发现的 node / npm 绝对路径（**不读 PATH**，`FZ-13` / `FZ-50`）。
 fn discovered_executables() -> (Option<PathBuf>, Option<PathBuf>) {
     let Some(paths) = crate::types::discovery_paths::default_paths() else {
@@ -421,6 +447,11 @@ async fn install_managed_runtime(
             candidate.to_string().as_bytes(),
         );
         let result: AppResult<_> = (|| {
+            // Reconcile before creating another protection backup or replacing the prefix.
+            {
+                let guard = crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?;
+                crate::modules::runtime::protection::reconcile_pending(&data_root_path, &guard)?;
+            }
             let protection = if protect_update {
                 crate::modules::backup::manager::begin_preferences_protection_observed(
                     &data_root_path,
@@ -434,6 +465,10 @@ async fn install_managed_runtime(
             } else {
                 crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?
             };
+            let mut receipt = crate::modules::runtime::protection::PanelProtection::arm(
+                &data_root_path, &protection, &install_request.prefix,
+                &requested_version, node_path.as_deref(),
+            )?;
             let npm = crate::modules::runtime::install::SystemNpmRunner::new(
                 Some(home_path.clone()),
                 data_root_path.join("cache/npm"),
@@ -448,6 +483,7 @@ async fn install_managed_runtime(
                 node_path.clone(),
             );
             installer.cancel = mutation.cancel.clone();
+            installer.attempt_id = receipt.as_ref().map(|r| r.attempt_id());
             match installer.install(&install_request) {
                 Ok(outcome) => {
                     handle_ref.refresh();
@@ -456,13 +492,20 @@ async fn install_managed_runtime(
                     handle_ref.record_resolved_version(&outcome.version);
                     let entry = outcome.history_entry("succeeded", None);
                     let _ = handle_ref.record_history(entry);
-                    let protection_pending = protection.commit_verified(&data_root_path).is_err();
+                    let protection_pending = receipt.as_mut().is_some_and(|r|
+                        r.reconcile(&data_root_path, &protection).is_err());
                     if protection_pending {
                         eprintln!("managed runtime installed, but preference protection reconciliation is pending");
                     }
                     Ok((outcome, protection_pending))
                 }
                 Err(error) => {
+                    if let Some(receipt) = &receipt {
+                        // Forget only this failed attempt; its backup remains protected.
+                        if receipt.discard(&data_root_path).is_err() {
+                            eprintln!("failed panel attempt receipt retained for reconciliation");
+                        }
+                    }
                     // 终态失败：不改运行来源，但留一条可核对的历史（`FZ-48`）。
                     let _ = handle_ref.record_history(InstallHistoryEntry {
                         action: "install".to_string(),
@@ -673,6 +716,11 @@ pub async fn uninstall_runtime(
     let outcome = crate::commands::run_blocking("uninstall runtime", move || {
         // Keep the reservation until the owned worker terminates, even if IPC is dropped.
         let _reservation = reservation;
+        {
+            let guard =
+                crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?;
+            crate::modules::runtime::protection::reconcile_pending(&data_root_path, &guard)?;
+        }
         let runner = worker_app.state::<SharedProcessRunner>();
         let stopped = crate::commands::process_action_with_runner(
             crate::types::process_action::ProcessActionRequest {

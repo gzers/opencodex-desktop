@@ -257,6 +257,7 @@ fn change_binding(
     let root = app.state::<SharedDataRoot>();
     // Same lock order as preference writes: filesystem transaction, status.
     let _transaction = crate::modules::backup::manager::acquire_preferences_transaction(&root.0)?;
+    crate::modules::runtime::protection::ensure_binding_ready(&root.0)?;
     let status = app.state::<crate::commands::update::SharedUpdateStatus>();
     let status = status.lock().map_err(|_| AppError::NotConfigured)?;
     if status.installing || status.pending_restart.is_some() {

@@ -346,6 +346,7 @@ fn copy_with(
         return Err(failure("target must be an absolute normalized path"));
     }
     let source = config.active_data_root.canonicalize().map_err(io)?;
+    crate::modules::runtime::protection::ensure_binding_ready(&source)?;
     if super::validate_structure(&source)? != super::StructureValidation::Valid {
         return Err(failure("source structure is unsupported or corrupted"));
     }
@@ -550,6 +551,40 @@ mod tests {
         let config = super::super::load_runtime_config(&source).unwrap();
         let target = temp.path().join("target 中文 space");
         (temp, config, target)
+    }
+
+    #[test]
+    fn unresolved_panel_protection_blocks_copy_without_changing_source_or_target() {
+        use crate::modules::{
+            backup::manager,
+            preferences::{Preferences, PreferencesStore},
+            runtime::{protection::PanelProtection, MANAGED_PREFIX_RELATIVE},
+        };
+        for corrupt in [false, true] {
+            let (_temp, config, target) = fixture();
+            let source = &config.active_data_root;
+            PreferencesStore::new(source)
+                .save(&Preferences::default())
+                .unwrap();
+            let guard = manager::begin_preferences_protection(source, true).unwrap();
+            PanelProtection::arm(
+                source,
+                &guard,
+                &source.join(MANAGED_PREFIX_RELATIVE),
+                "0.3.1",
+                None,
+            )
+            .unwrap()
+            .unwrap();
+            let path = source.join("manager-state/runtime-protection.json");
+            if corrupt {
+                fs::write(&path, b"corrupt").unwrap();
+            }
+            let before = inventory(source, false).unwrap();
+            assert!(copy_verified(&config, &target).is_err());
+            assert!(!target.exists());
+            assert_eq!(inventory(source, false).unwrap(), before);
+        }
     }
 
     #[test]

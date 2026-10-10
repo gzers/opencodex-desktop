@@ -648,6 +648,7 @@ enum SupportedEvent {
 
 dimension!(PathId {
     UpdateHandoff,
+    RuntimeProtection,
     Notifications,
     EventScope,
     EventScopeLock,
@@ -885,6 +886,7 @@ impl RegistryConfig {
         }
         for id in [
             PathId::UpdateHandoff,
+            PathId::RuntimeProtection,
             PathId::Notifications,
             PathId::EventScope,
             PathId::EventScopeLock,
@@ -901,6 +903,7 @@ impl RegistryConfig {
         // Scope stays in manager-state; callers cannot relocate the durable UUID or lock.
         for id in [
             PathId::UpdateHandoff,
+            PathId::RuntimeProtection,
             PathId::Notifications,
             PathId::EventScope,
             PathId::EventScopeLock,
