@@ -222,6 +222,10 @@ impl IpcService {
             let request_id = request.request_id.clone();
             return owned_response(request_id, self.create_backup(request, started).await);
         }
+        if matches!(request.command, IpcCommand::Export | IpcCommand::Import) {
+            let request_id = request.request_id.clone();
+            return owned_response(request_id, self.migrate_config(request, started).await);
+        }
         let request_id = request.request_id.clone();
         let request_id = if request_id.starts_with("req_") {
             request_id
@@ -269,8 +273,9 @@ impl IpcService {
                     self.switch_data_root(&request.args, &mut saved_pending)
                 }
                 IpcCommand::BackupCreate => unreachable!("backup uses its owned execution path"),
-                IpcCommand::Export => self.export_config(&request.args),
-                IpcCommand::Import => self.import_config(&request.args, request.secret.as_deref()),
+                IpcCommand::Export | IpcCommand::Import => {
+                    unreachable!("migration uses its owned execution path")
+                }
                 IpcCommand::SyncRun => unreachable!("sync uses its owned execution path"),
             }
         };
@@ -479,8 +484,39 @@ impl IpcService {
         .await
     }
 
-    fn export_config(
+    async fn migrate_config(
         &self,
+        request: IpcRequest,
+        started: chrono::DateTime<chrono::Utc>,
+    ) -> Result<serde_json::Value, IpcErrorCode> {
+        let dependencies = self.dependencies.clone();
+        let worker_request = request.clone();
+        let operation = match request.command {
+            IpcCommand::Export => "CLI config export",
+            IpcCommand::Import => "CLI config import",
+            _ => unreachable!("migration accepts only export/import"),
+        };
+        run_ipc_storage_owned(
+            self.writers.clone(),
+            dependencies.active_data_root.clone(),
+            request,
+            started,
+            operation,
+            move || match worker_request.command {
+                IpcCommand::Export => Self::export_config(&dependencies, &worker_request.args),
+                IpcCommand::Import => Self::import_config(
+                    &dependencies,
+                    &worker_request.args,
+                    worker_request.secret.as_deref(),
+                ),
+                _ => unreachable!("migration accepts only export/import"),
+            },
+        )
+        .await
+    }
+
+    fn export_config(
+        dependencies: &IpcDependencies,
         args: &BTreeMap<String, String>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
         if args.contains_key("password") {
@@ -489,9 +525,9 @@ impl IpcService {
         let output = args.get("output").ok_or(IpcErrorCode::ValidationFailed)?;
         // 新版明文容器不需要口令；不再读取标准输入内容。
         let result = crate::modules::migration::export_with_container_file(
-            &self.dependencies.active_data_root,
+            &dependencies.active_data_root,
             std::path::Path::new(output),
-            self.dependencies.current_version,
+            dependencies.current_version,
         )
         .map_err(map_app_error)?;
         Ok(serde_json::to_value(IpcExportData {
@@ -505,7 +541,7 @@ impl IpcService {
     }
 
     fn import_config(
-        &self,
+        dependencies: &IpcDependencies,
         args: &BTreeMap<String, String>,
         secret: Option<&str>,
     ) -> Result<serde_json::Value, IpcErrorCode> {
@@ -518,11 +554,10 @@ impl IpcService {
         let passphrase = secret
             .map(str::to_string)
             .or_else(|| std::env::var("OCXD_PASSPHRASE").ok());
-        let home = self.dependencies.process_context.working_directory.clone();
         let result = crate::modules::migration::import_with_container_file(
-            &self.dependencies.active_data_root,
+            &dependencies.active_data_root,
             std::path::Path::new(input),
-            &home,
+            &dependencies.home,
             passphrase.as_deref(),
         )
         .map_err(map_app_error)?;
@@ -697,8 +732,21 @@ async fn run_ipc_backup_owned(
     started: chrono::DateTime<chrono::Utc>,
     task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
 ) -> Result<serde_json::Value, IpcErrorCode> {
+    run_ipc_storage_owned(writers, root, request, started, "CLI backup create", task).await
+}
+
+/// Filesystem work and its final audit share worker-owned admission. Dropping
+/// the IPC observer cannot allow a data-root switch during an admitted write.
+async fn run_ipc_storage_owned(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    operation: &'static str,
+    task: impl FnOnce() -> Result<serde_json::Value, IpcErrorCode> + Send + 'static,
+) -> Result<serde_json::Value, IpcErrorCode> {
     let audit = super::audit::AuditStore::with_writers(&root, writers.clone());
-    crate::commands::run_blocking_with_gate(writers, "CLI backup create", move || {
+    crate::commands::run_blocking_with_gate(writers, operation, move || {
         Ok(execute_and_audit(&audit, &root, &request, started, task))
     })
     .await
@@ -1097,6 +1145,215 @@ mod tests {
             .lines()
             .map(|line| serde_json::from_str(line).unwrap())
             .collect()
+    }
+
+    fn migration_request(command: IpcCommand, path: &std::path::Path) -> IpcRequest {
+        let mut request = backup_request(command);
+        let key = match command {
+            IpcCommand::Export => "output",
+            IpcCommand::Import => "input",
+            _ => unreachable!(),
+        };
+        request.args.insert(key.into(), path.display().to_string());
+        request
+    }
+
+    #[tokio::test]
+    async fn cli_migration_roundtrip_uses_explicit_home_and_preserves_wire_contract() {
+        use crate::modules::extensions::{ClientId, ClientTarget, ExtensionConfig, CLIENT_IDS};
+        use crate::modules::preferences::{Preferences, PreferencesStore};
+        let temp = tempfile::tempdir().unwrap();
+        let source = temp.path().join("source");
+        let target = temp.path().join("target");
+        let home = temp.path().join("explicit-home");
+        let cwd = temp.path().join("missing-working-directory");
+        for root in [&source, &target] {
+            crate::modules::data_root::initialize(root).unwrap();
+            preferences_fixture(root);
+        }
+        std::fs::create_dir(&home).unwrap();
+        PreferencesStore::new(&source)
+            .save(&Preferences {
+                interface_scale: 150,
+                ..Default::default()
+            })
+            .unwrap();
+        // Force the extension section to validate client destinations. An absent
+        // process cwd must not invalidate the valid, explicitly supplied HOME.
+        let mut config = ExtensionConfig {
+            enablement: CLIENT_IDS
+                .map(|client| (client, client == ClientId::Codex))
+                .into_iter()
+                .collect(),
+            sync_method: "copy".into(),
+            ..Default::default()
+        };
+        let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, &home, true, true));
+        crate::modules::extensions::projection::save_with_config(&source, &mut config, &targets)
+            .unwrap();
+        let output = temp.path().join("exports/config.ocx");
+        let mut exporter = IpcService::for_tests_with(source.clone(), source.clone());
+        let exported = exporter
+            .execute(migration_request(IpcCommand::Export, &output))
+            .await;
+        assert!(exported.ok, "{:?}", exported.error);
+        let data = exported.data.unwrap();
+        assert_eq!(data["path"], output.display().to_string());
+        assert!(data["backup_id"].is_null());
+        assert_eq!(data["format_version"], 2);
+        assert!(data["sections"]
+            .as_array()
+            .unwrap()
+            .contains(&"preferences".into()));
+        assert!(data.get("documentSha256").is_none());
+        let digest = data["document_sha256"].clone();
+        let mut importer = IpcService::for_tests_with(target.clone(), target.clone());
+        importer.dependencies.home = home;
+        importer.dependencies.process_context.working_directory = cwd.clone();
+        let imported = importer
+            .execute(migration_request(IpcCommand::Import, &output))
+            .await;
+        assert!(imported.ok, "{:?}", imported.error);
+        let data = imported.data.unwrap();
+        assert_eq!(data["document_sha256"], digest);
+        assert_eq!(data["format_version"], 2);
+        assert!(data["backup_id"].as_str().unwrap().starts_with("bk_"));
+        assert!(data["applied_sections"]
+            .as_array()
+            .unwrap()
+            .contains(&"extension_config".into()));
+        assert!(data["skipped_sections"]
+            .as_array()
+            .unwrap()
+            .contains(&"asset_files".into()));
+        assert_eq!(
+            PreferencesStore::new(&target)
+                .load()
+                .unwrap()
+                .interface_scale,
+            150
+        );
+        assert_eq!(
+            crate::modules::extensions::projection::load_config_lenient(&target).sync_method,
+            "copy"
+        );
+        assert!(!cwd.exists());
+        for (root, command) in [(&source, IpcCommand::Export), (&target, IpcCommand::Import)] {
+            let audit = audit_records(root);
+            assert_eq!(audit.len(), 1);
+            assert_eq!(audit[0].command, command);
+            assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
+        }
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn cli_migration_lock_wait_keeps_executor_responsive_and_owns_audit_after_disconnect() {
+        use crate::infrastructure::locking::TargetFileLock;
+        use std::time::{Duration, Instant};
+        for command in [IpcCommand::Export, IpcCommand::Import] {
+            let temp = tempfile::tempdir().unwrap();
+            let root = temp.path().join("root");
+            crate::modules::data_root::initialize(&root).unwrap();
+            preferences_fixture(&root);
+            let container = temp.path().join("config.ocx");
+            if command == IpcCommand::Import {
+                crate::modules::migration::export_with_container_file(&root, &container, "0.1.9")
+                    .unwrap();
+            }
+            let target = if command == IpcCommand::Export {
+                container.clone()
+            } else {
+                root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)
+            };
+            let guard = TargetFileLock::lock(&target).unwrap();
+            let (release, released) = std::sync::mpsc::channel();
+            // Bounded watchdog also releases on assertion failure, avoiding an
+            // orphaned lock. This tests async liveness, not native performance.
+            let holder = std::thread::spawn(move || {
+                let _ = released.recv_timeout(Duration::from_secs(2));
+                drop(guard);
+            });
+            let mut service = IpcService::for_tests_with(root.clone(), root.clone());
+            service.dependencies.home = temp.path().to_path_buf();
+            let writers = service.writers.clone();
+            let started = Instant::now();
+            let request = migration_request(command, &container);
+            let observer = tokio::spawn(async move { service.execute(request).await });
+            tokio::time::sleep(Duration::from_millis(20)).await;
+            assert!(started.elapsed() < Duration::from_secs(1));
+            assert!(!observer.is_finished());
+            assert!(writers.freeze().unwrap().is_none());
+            observer.abort();
+            assert!(observer.await.unwrap_err().is_cancelled());
+            assert!(writers.freeze().unwrap().is_none());
+            assert!(!root.join("audit.log").exists());
+            release.send(()).unwrap();
+            holder.join().unwrap();
+            tokio::time::timeout(Duration::from_secs(2), async {
+                loop {
+                    if writers.freeze().unwrap().is_some() {
+                        break;
+                    }
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .unwrap();
+            let audit = audit_records(&root);
+            assert_eq!(audit.len(), 1);
+            assert_eq!(audit[0].command, command);
+            assert_eq!(audit[0].result, super::super::AuditResult::Succeeded);
+            assert!(container.is_file());
+            assert_eq!(
+                crate::modules::preferences::PreferencesStore::new(&root)
+                    .load()
+                    .unwrap(),
+                crate::modules::preferences::Preferences::default()
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn cli_migration_rejects_unconfirmed_frozen_and_invalid_requests_without_file_mutation() {
+        for command in [IpcCommand::Export, IpcCommand::Import] {
+            let root = tempfile::tempdir().unwrap();
+            let container = root.path().join("config.ocx");
+            let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+            let mut unconfirmed = migration_request(command, &container);
+            unconfirmed.confirm = false;
+            assert_eq!(
+                service.execute(unconfirmed).await.error.unwrap().code,
+                IpcErrorCode::RequireConfirm
+            );
+            let binding = service.writers.freeze().unwrap().unwrap();
+            assert_eq!(
+                service
+                    .execute(migration_request(command, &container))
+                    .await
+                    .error
+                    .unwrap()
+                    .code,
+                IpcErrorCode::TargetStateConflict
+            );
+            assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
+            drop(binding);
+            let mut invalid = migration_request(command, &container);
+            invalid.args.clear();
+            invalid.secret = Some("test-only-secret-not-for-audit".into());
+            assert_eq!(
+                service.execute(invalid).await.error.unwrap().code,
+                IpcErrorCode::ValidationFailed
+            );
+            assert!(!container.exists());
+            assert!(!root.path().join("manager-state").exists());
+            let audit = audit_records(root.path());
+            assert_eq!(audit.len(), 1);
+            assert_eq!(audit[0].command, command);
+            assert_eq!(audit[0].result, super::super::AuditResult::Failed);
+            assert!(!std::fs::read_to_string(root.path().join("audit.log"))
+                .unwrap()
+                .contains("test-only-secret-not-for-audit"));
+        }
     }
 
     #[tokio::test]
