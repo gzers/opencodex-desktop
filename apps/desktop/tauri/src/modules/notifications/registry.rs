@@ -55,6 +55,7 @@ pub enum Job {
     Migration,
     ConfigExport,
     ConfigImport,
+    ExtensionConfigSave,
     PreferencesBackup,
     PreferencesRestore,
     PreferencesSave,
@@ -89,7 +90,8 @@ dimension!(ObjectKind {
     Tray,
     Sync,
     Backup,
-    Configuration
+    Configuration,
+    ExtensionConfiguration
 });
 dimension!(Action {
     Start,
@@ -207,6 +209,7 @@ pub enum PolicyId {
     SyncRunFailure,
     ConfigExportFailure,
     ConfigImportFailure,
+    ExtensionConfigSaveFailure,
 }
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -566,6 +569,10 @@ pub struct EmissionSite {
 
 #[derive(Debug, Deserialize)]
 enum SupportedEvent {
+    #[serde(rename = "extension-config-save-failed")]
+    ExtensionConfigSaveFailed,
+    #[serde(rename = "extension-config-save-succeeded")]
+    ExtensionConfigSaveSucceeded,
     #[serde(rename = "manager-install-progress")]
     ManagerInstallProgress,
     #[serde(rename = "run-start-failed")]
@@ -844,7 +851,10 @@ impl RegistryConfig {
             }
             if matches!(
                 job.id,
-                Job::SyncConflict | Job::ConfigExport | Job::ConfigImport
+                Job::SyncConflict
+                    | Job::ConfigExport
+                    | Job::ConfigImport
+                    | Job::ExtensionConfigSave
             ) {
                 config_assert(
                     job.availability == Availability::Active && job.triggers == [Trigger::User],

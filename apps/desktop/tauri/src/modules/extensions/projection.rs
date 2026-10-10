@@ -257,6 +257,7 @@ pub fn save_with_config(
     validate_data_root(data_root)?;
     let home = home_from_targets(targets)?;
     validate_targets(targets, home)?;
+    validate_config_paths(data_root)?;
     let _guard =
         TargetFileLock::lock(&config_path(data_root)).map_err(|_| ProjectionError::LockFailed)?;
     save_locked(data_root, config, targets)
@@ -277,14 +278,7 @@ impl<'a> ConfigTransaction<'a> {
         validate_data_root(data_root)?;
         validate_targets(targets, home_from_targets(targets)?)?;
         let path = config_path(data_root);
-        crate::modules::backup::safety::check_path(data_root, &path, true)
-            .map_err(|_| ProjectionError::PathEscape)?;
-        crate::modules::backup::safety::check_path(
-            data_root,
-            &crate::infrastructure::locking::lock_path_for(&path),
-            true,
-        )
-        .map_err(|_| ProjectionError::PathEscape)?;
+        validate_config_paths(data_root)?;
         Ok(Self {
             data_root,
             targets,
@@ -341,26 +335,100 @@ pub fn execute(
     targets: &[ClientTarget],
     command: ProjectionCommand,
 ) -> Result<ProjectionWriteResult, ProjectionError> {
+    execute_observed(data_root, targets, command, &mut IgnoreConfigWrite)
+}
+
+/// Observes only authoritative extension configuration saves. A successful
+/// receipt does not certify live Skills/MCP projection or asset restoration.
+pub trait ConfigWriteObserver {
+    fn begin(&mut self, command: &ProjectionCommand, home: &Path);
+    fn completed(&mut self, succeeded: bool);
+}
+pub struct IgnoreConfigWrite;
+impl ConfigWriteObserver for IgnoreConfigWrite {
+    fn begin(&mut self, _: &ProjectionCommand, _: &Path) {}
+    fn completed(&mut self, _: bool) {}
+}
+
+fn validate_config_paths(data_root: &Path) -> Result<(), ProjectionError> {
+    let path = config_path(data_root);
+    for target in [
+        path.clone(),
+        crate::infrastructure::locking::lock_path_for(&path),
+    ] {
+        crate::modules::backup::safety::check_path(data_root, &target, true)
+            .map_err(|_| ProjectionError::PathEscape)?;
+    }
+    Ok(())
+}
+
+pub fn execute_observed(
+    data_root: &Path,
+    targets: &[ClientTarget],
+    command: ProjectionCommand,
+    observer: &mut dyn ConfigWriteObserver,
+) -> Result<ProjectionWriteResult, ProjectionError> {
     validate_data_root(data_root)?;
     let home = home_from_targets(targets)?;
     validate_targets(targets, home)?;
 
     let path = config_path(data_root);
+    validate_config_paths(data_root)?;
     let _guard = TargetFileLock::lock(&path).map_err(|_| ProjectionError::LockFailed)?;
-    let mut config = if path.exists() {
-        let (loaded, _, conflict) = read_stored(&path, targets)?;
-        if conflict.is_some() {
-            return Err(match conflict.map(|value| value.kind) {
-                Some("half_written") => ProjectionError::HalfWritten,
-                _ => ProjectionError::ExternalModified,
-            });
+    let observed = matches!(
+        command,
+        ProjectionCommand::ToggleClient { .. }
+            | ProjectionCommand::SetSourceDir { .. }
+            | ProjectionCommand::SetSyncMethod { .. }
+    );
+    if observed {
+        observer.begin(&command, home);
+    }
+    let mut result = execute_locked(data_root, targets, home, command, &path);
+    if observed {
+        // Live projection can take time. Recheck the authoritative bytes at the
+        // terminal rather than using the earlier atomic-write return as proof.
+        result = result.and_then(|saved| {
+            let expected = serde_json::to_vec_pretty(&ExtensionProjectionFile {
+                config: saved.config.clone(),
+                fingerprint: saved.fingerprint.clone(),
+            })
+            .map_err(|_| ProjectionError::Corrupted)?;
+            if read_config_bounded(&path)? != expected {
+                return Err(ProjectionError::AtomicWrite);
+            }
+            Ok(saved)
+        });
+        observer.completed(result.is_ok());
+    }
+    result
+}
+
+fn execute_locked(
+    data_root: &Path,
+    targets: &[ClientTarget],
+    home: &Path,
+    command: ProjectionCommand,
+    path: &Path,
+) -> Result<ProjectionWriteResult, ProjectionError> {
+    let mut config = match std::fs::symlink_metadata(path) {
+        Ok(_) => {
+            let (loaded, _, conflict) = read_stored(path, targets)?;
+            if conflict.is_some() {
+                return Err(match conflict.map(|value| value.kind) {
+                    Some("half_written") => ProjectionError::HalfWritten,
+                    _ => ProjectionError::ExternalModified,
+                });
+            }
+            loaded
         }
-        loaded
-    } else {
-        // 首装无统一配置时按**默认配置**执行，并在本次写入落盘时把它建出来（用户决策 ②）：
-        // 全新安装第一次点图标同步 / 写 MCP 不该先失败；默认源目录是 `<主目录>/.agents/skills`，
-        // 用户之后可在设置页自行改成自定义目录。
-        ExtensionConfig::default()
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            // 首装无统一配置时按**默认配置**执行，并在本次写入落盘时把它建出来（用户决策 ②）：
+            // 全新安装第一次点图标同步 / 写 MCP 不该先失败；默认源目录是 `<主目录>/.agents/skills`，
+            // 用户之后可在设置页自行改成自定义目录。
+            ExtensionConfig::default()
+        }
+        Err(_) => return Err(ProjectionError::Corrupted),
     };
 
     match command {
@@ -425,7 +493,7 @@ pub fn execute(
         ProjectionCommand::ResyncSkills => {
             // 只把既有配置按当前源目录与分发方式重新落一遍：**不改配置、不涨修订号**
             // （FZ-25 的修订号只在统一配置或启用矩阵变化时 +1）。
-            let live = std::fs::read(&path).map_err(|_| ProjectionError::Corrupted)?;
+            let live = std::fs::read(path).map_err(|_| ProjectionError::Corrupted)?;
             let payload: ExtensionProjectionFile =
                 serde_json::from_slice(&live).map_err(|_| ProjectionError::Corrupted)?;
             payload
@@ -436,7 +504,7 @@ pub fn execute(
             return Ok(ProjectionWriteResult {
                 config: payload.config,
                 fingerprint: payload.fingerprint,
-                document_sha256: sha256_file(&path).map_err(|_| ProjectionError::AtomicWrite)?,
+                document_sha256: sha256_file(path).map_err(|_| ProjectionError::AtomicWrite)?,
                 backed_up: false,
                 skills_linked,
                 mcp_written: Vec::new(),
@@ -495,7 +563,7 @@ pub fn execute(
             config.servers.push(definition.name.clone());
             let mut result = save_locked(data_root, &mut config, targets)?;
             result.mcp_written = written;
-            let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+            let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
             result.skills_linked = apply_skill_links(data_root, &live, targets)?;
             return Ok(result);
         }
@@ -518,7 +586,7 @@ pub fn execute(
             }
             let mut result = save_locked(data_root, &mut config, targets)?;
             result.mcp_written = written;
-            let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+            let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
             result.skills_linked = apply_skill_links(data_root, &live, targets)?;
             return Ok(result);
         }
@@ -595,7 +663,7 @@ pub fn execute(
             }
             let mut result = save_locked(data_root, &mut config, targets)?;
             result.mcp_written = written;
-            let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+            let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
             result.skills_linked = apply_skill_links(data_root, &live, targets)?;
             return Ok(result);
         }
@@ -631,14 +699,14 @@ pub fn execute(
             }
             let mut result = save_locked(data_root, &mut config, targets)?;
             result.mcp_written = written;
-            let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+            let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
             result.skills_linked = apply_skill_links(data_root, &live, targets)?;
             return Ok(result);
         }
     }
 
     let mut result = save_locked(data_root, &mut config, targets)?;
-    let live = std::fs::read(&path).map_err(|_| ProjectionError::AtomicWrite)?;
+    let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
     result.skills_linked = apply_skill_links(data_root, &live, targets)?;
     result.mcp_written = Vec::new();
     Ok(result)

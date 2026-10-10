@@ -296,6 +296,13 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "extension_config_save",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1439,6 +1446,36 @@
       "resolves": [
         "config-import-failed"
       ]
+    },
+    {
+      "id": "extension-config-save-failed",
+      "job": "extension_config_save",
+      "object": "extension_configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "extension_config_save_failure",
+      "resolves": []
+    },
+    {
+      "id": "extension-config-save-succeeded",
+      "job": "extension_config_save",
+      "object": "extension_configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "extension-config-save-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1751,6 +1788,18 @@
       "body": "配置读取、保护备份、写入或回读核验失败。恢复可能未完成，请检查当前配置和备份后再重试。",
       "action": "logs",
       "dedupe": "config-import:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "extension_config_save_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "扩展配置保存未完成",
+      "body": "扩展配置读取、保护备份、保存或最终核验失败。客户端文件可能已部分改变，请检查配置和备份后再重试。配置保存成功不代表客户端资产同步已核验。",
+      "action": "logs",
+      "dedupe": "extension-config-save:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -2174,6 +2223,16 @@
     {
       "event": "config-import-succeeded",
       "source": "commands/migration::import_container_registered (GUI / IPC owned import worker; captured document + explicit HOME; verified multi-file terminal before mutation locks release)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "extension-config-save-failed",
+      "source": "commands/extensions::execute_extension_write_registered (both GUI write and standalone client toggle; configuration-only candidate + explicit HOME; final exact config readback before target lock release)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "extension-config-save-succeeded",
+      "source": "commands/extensions::execute_extension_write_registered (both GUI write and standalone client toggle; configuration-only candidate + explicit HOME; final exact config readback before target lock release)",
       "wiring": "scoped_terminal"
     }
   ],

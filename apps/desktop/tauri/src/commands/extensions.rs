@@ -365,13 +365,27 @@ pub struct ExtensionClientToggleRequest {
 }
 
 #[tauri::command]
-pub fn set_extension_client_enabled(
+pub async fn set_extension_client_enabled(
+    app: tauri::AppHandle,
     request: ExtensionClientToggleRequest,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, SharedHomeDir>,
 ) -> AppResult<ExtensionConfigDto> {
-    let _admission = crate::infrastructure::storage_writers::global().admit()?;
-    set_extension_client_enabled_with_paths(&data_root.0, &home.0, request.client, request.enabled)
+    let root = data_root.0.clone();
+    let home = home.0.clone();
+    crate::commands::run_blocking("set extension client enabled", move || {
+        execute_extension_write_registered(
+            &app,
+            &root,
+            &home,
+            ExtensionWriteCommand::ToggleClient {
+                client: request.client,
+                enabled: request.enabled,
+            },
+        )
+        .map(|result| result.config)
+    })
+    .await
 }
 
 // `kind` 用小写蛇形（前端命令名）；变体字段用 camelCase（前端 DTO 口径）。
@@ -441,6 +455,7 @@ pub enum ExtensionWriteCommand {
 
 #[tauri::command]
 pub async fn execute_extension_write(
+    app: tauri::AppHandle,
     command: ExtensionWriteCommand,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, SharedHomeDir>,
@@ -448,7 +463,7 @@ pub async fn execute_extension_write(
     let root = data_root.0.clone();
     let home = home.0.clone();
     crate::commands::run_blocking("execute extension write", move || {
-        execute_extension_write_with_paths(&root, &home, command)
+        execute_extension_write_registered(&app, &root, &home, command)
     })
     .await
 }
@@ -457,6 +472,33 @@ pub fn execute_extension_write_with_paths(
     data_root: &Path,
     home: &Path,
     command: ExtensionWriteCommand,
+) -> AppResult<ExtensionWriteResultDto> {
+    execute_extension_write_observed(data_root, home, command, &mut projection::IgnoreConfigWrite)
+}
+
+fn execute_extension_write_registered(
+    app: &tauri::AppHandle,
+    root: &Path,
+    home: &Path,
+    command: ExtensionWriteCommand,
+) -> AppResult<ExtensionWriteResultDto> {
+    execute_extension_write_observed(
+        root,
+        home,
+        command,
+        &mut ExtensionConfigEvents {
+            app,
+            root,
+            identity: None,
+        },
+    )
+}
+
+pub fn execute_extension_write_observed(
+    data_root: &Path,
+    home: &Path,
+    command: ExtensionWriteCommand,
+    observer: &mut dyn projection::ConfigWriteObserver,
 ) -> AppResult<ExtensionWriteResultDto> {
     let targets = client_targets(home)?;
     let command = match command {
@@ -535,8 +577,52 @@ pub fn execute_extension_write_with_paths(
         }
         ExtensionWriteCommand::ResyncSkills => projection::ProjectionCommand::ResyncSkills,
     };
-    let result = projection::execute(data_root, &targets, command).map_err(projection_error)?;
+    let result = projection::execute_observed(data_root, &targets, command, observer)
+        .map_err(projection_error)?;
     Ok(ExtensionWriteResultDto::from_projection(result, None))
+}
+
+/// Transient candidate input. Only its digest/opaque identity is persisted.
+pub fn extension_config_candidate(
+    command: &projection::ProjectionCommand,
+    home: &Path,
+) -> Result<Vec<u8>, serde_json::Error> {
+    let mut candidate = serde_json::to_vec(command)?;
+    candidate.push(0);
+    candidate.extend_from_slice(home.as_os_str().as_encoded_bytes());
+    Ok(candidate)
+}
+struct ExtensionConfigEvents<'a> {
+    app: &'a tauri::AppHandle,
+    root: &'a Path,
+    identity: Option<crate::modules::notifications::registry::EventIdentity>,
+}
+impl projection::ConfigWriteObserver for ExtensionConfigEvents<'_> {
+    fn begin(&mut self, command: &projection::ProjectionCommand, home: &Path) {
+        self.identity = extension_config_candidate(command, home)
+            .ok()
+            .and_then(|candidate| {
+                crate::commands::event_delivery::prepare(
+                    self.root,
+                    "extension-config-save-failed",
+                    crate::modules::notifications::registry::Channel::Local,
+                    &candidate,
+                )
+            });
+    }
+    fn completed(&mut self, succeeded: bool) {
+        crate::commands::event_delivery::publish(
+            self.app,
+            self.root,
+            if succeeded {
+                "extension-config-save-succeeded"
+            } else {
+                "extension-config-save-failed"
+            },
+            self.identity.take(),
+            crate::modules::notifications::registry::Trigger::User,
+        );
+    }
 }
 
 pub fn set_extension_client_enabled_with_paths(

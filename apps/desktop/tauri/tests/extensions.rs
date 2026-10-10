@@ -1678,3 +1678,366 @@ fn extension_write_command_accepts_frontend_camel_case_import_payload() {
         other => panic!("unexpected command: {other:?}"),
     }
 }
+
+fn prepare_config_identity(
+    root: &std::path::Path,
+    event: &str,
+    channel: opencodex_desktop_lib::modules::notifications::registry::Channel,
+    input: &[u8],
+) -> Option<opencodex_desktop_lib::modules::notifications::registry::EventIdentity> {
+    use opencodex_desktop_lib::modules::notifications::registry;
+    use sha2::{Digest, Sha256};
+    let definition = registry::lookup(event).unwrap();
+    Some(
+        registry::candidate_identity(
+            root,
+            definition.object,
+            definition.action,
+            definition.phase,
+            channel,
+            Sha256::digest(input).into(),
+        )
+        .unwrap(),
+    )
+}
+
+struct ConfigReceipt<'a> {
+    root: &'a std::path::Path,
+    identity: Option<opencodex_desktop_lib::modules::notifications::registry::EventIdentity>,
+    store: std::sync::Arc<
+        std::sync::Mutex<opencodex_desktop_lib::modules::notifications::NotificationStore>,
+    >,
+    terminals: Vec<bool>,
+    resolved: Vec<usize>,
+}
+impl<'a> ConfigReceipt<'a> {
+    fn new(root: &'a std::path::Path) -> Self {
+        Self {
+            root,
+            identity: None,
+            store: Default::default(),
+            terminals: vec![],
+            resolved: vec![],
+        }
+    }
+}
+impl projection::ConfigWriteObserver for ConfigReceipt<'_> {
+    fn begin(&mut self, command: &projection::ProjectionCommand, home: &std::path::Path) {
+        use opencodex_desktop_lib::commands::extensions::extension_config_candidate;
+        self.identity = prepare_config_identity(
+            self.root,
+            "extension-config-save-failed",
+            opencodex_desktop_lib::modules::notifications::registry::Channel::Local,
+            &extension_config_candidate(command, home).unwrap(),
+        );
+        assert!(self.identity.is_some());
+    }
+    fn completed(&mut self, succeeded: bool) {
+        use opencodex_desktop_lib::modules::notifications::registry::{
+            terminal_delivery, Evidence, Trigger,
+        };
+        assert!(
+            opencodex_desktop_lib::infrastructure::locking::TargetFileLock::try_lock_with_timeout(
+                &projection::config_path(self.root),
+                std::time::Duration::ZERO
+            )
+            .is_err()
+        );
+        let identity = self.identity.take().unwrap();
+        let evidence = if succeeded {
+            Evidence::Success {
+                candidate: identity.candidate.clone(),
+                verified: true,
+            }
+        } else {
+            Evidence::Failure
+        };
+        let delivery = terminal_delivery(
+            if succeeded {
+                "extension-config-save-succeeded"
+            } else {
+                "extension-config-save-failed"
+            },
+            Trigger::User,
+            identity,
+            evidence,
+            chrono::Utc::now(),
+        )
+        .unwrap();
+        let outcome = opencodex_desktop_lib::commands::notifications::NotificationPublisher {
+            store: &self.store,
+            data_root: self.root,
+        }
+        .publish_event(&delivery)
+        .unwrap();
+        self.terminals.push(succeeded);
+        self.resolved.push(outcome.resolved);
+    }
+}
+
+#[test]
+fn config_receipts_fail_closed_then_resolve_only_verified_persistent_retry() {
+    use opencodex_desktop_lib::commands::extensions::execute_extension_write_observed;
+    use opencodex_desktop_lib::modules::notifications::persistence::{
+        load_notifications, notifications_path,
+    };
+    for variant in 0..3 {
+        let (_temp, root, home) = fixture();
+        write_all_clients(&home);
+        let command = || match variant {
+            0 => ExtensionWriteCommand::ToggleClient {
+                client: ClientId::Codex,
+                enabled: false,
+            },
+            1 => ExtensionWriteCommand::SetSourceDir { path: None },
+            _ => ExtensionWriteCommand::SetSyncMethod {
+                method: "copy".into(),
+            },
+        };
+        let path = projection::config_path(&root);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, b"unreadable configuration").unwrap();
+        let mut observer = ConfigReceipt::new(&root);
+        assert!(execute_extension_write_observed(&root, &home, command(), &mut observer).is_err());
+        assert_eq!(fs::read(&path).unwrap(), b"unreadable configuration");
+        // Repair the fixture explicitly; the application must not overwrite corruption.
+        fs::remove_file(&path).unwrap();
+        observer.store = std::sync::Arc::new(std::sync::Mutex::new(
+            load_notifications(&notifications_path(&root)).unwrap(),
+        ));
+        let saved =
+            execute_extension_write_observed(&root, &home, command(), &mut observer).unwrap();
+        assert_eq!(observer.terminals, [false, true]);
+        assert_eq!(observer.resolved, [0, 1]);
+        let bytes = fs::read(&path).unwrap();
+        let stored: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+        assert_eq!(stored["config"]["revision"], saved.config.revision);
+        assert!(
+            load_notifications(&notifications_path(&root))
+                .unwrap()
+                .all()[0]
+                .resolved
+        );
+        for state in [
+            notifications_path(&root),
+            root.join("manager-state/event-scope.json"),
+        ] {
+            let raw = fs::read_to_string(state).unwrap();
+            assert!(!raw.contains(home.to_str().unwrap()));
+            assert!(!raw.contains(root.to_str().unwrap()));
+            assert!(!raw.contains("unreadable configuration"));
+        }
+    }
+}
+
+#[test]
+fn config_terminal_backup_refusal_preserves_authority_and_reports_failure() {
+    use opencodex_desktop_lib::commands::extensions::execute_extension_write_observed;
+    let (_temp, root, home) = fixture();
+    execute_extension_write_with_paths(
+        &root,
+        &home,
+        ExtensionWriteCommand::SetSyncMethod {
+            method: "copy".into(),
+        },
+    )
+    .unwrap();
+    let path = projection::config_path(&root);
+    let previous = fs::read(&path).unwrap();
+    let backups = root.join("backups");
+    if backups.exists() {
+        fs::remove_dir_all(&backups).unwrap();
+    }
+    fs::write(&backups, b"blocked backup directory").unwrap();
+    let mut observer = ConfigReceipt::new(&root);
+    assert!(execute_extension_write_observed(
+        &root,
+        &home,
+        ExtensionWriteCommand::SetSyncMethod {
+            method: "symlink".into()
+        },
+        &mut observer
+    )
+    .is_err());
+    assert_eq!(fs::read(path).unwrap(), previous);
+    assert_eq!(observer.terminals, [false]);
+}
+
+#[test]
+fn config_preflight_rejects_escaping_config_and_lock_without_terminal() {
+    use opencodex_desktop_lib::commands::extensions::execute_extension_write_observed;
+    for lock in [false, true] {
+        let (temp, root, home) = fixture();
+        let config = projection::config_path(&root);
+        fs::create_dir_all(config.parent().unwrap()).unwrap();
+        let path = if lock {
+            opencodex_desktop_lib::infrastructure::locking::lock_path_for(&config)
+        } else {
+            config.clone()
+        };
+        let outside = temp.path().join("outside.json");
+        fs::write(&outside, b"keep").unwrap();
+        std::os::unix::fs::symlink(&outside, path).unwrap();
+        let mut observer = ConfigReceipt::new(&root);
+        assert!(execute_extension_write_observed(
+            &root,
+            &home,
+            ExtensionWriteCommand::SetSourceDir { path: None },
+            &mut observer
+        )
+        .is_err());
+        assert_eq!(fs::read(outside).unwrap(), b"keep");
+        assert!(observer.terminals.is_empty());
+        assert!(observer.identity.is_none());
+    }
+}
+
+#[test]
+fn live_asset_command_does_not_publish_configuration_only_receipt() {
+    use opencodex_desktop_lib::commands::extensions::execute_extension_write_observed;
+    let (_temp, root, home) = fixture();
+    let mut observer = ConfigReceipt::new(&root);
+    // This remains an asset operation even though it can also create configuration.
+    assert!(execute_extension_write_observed(
+        &root,
+        &home,
+        ExtensionWriteCommand::UninstallSkill {
+            name: "missing".into(),
+            confirm: false
+        },
+        &mut observer
+    )
+    .is_err());
+    assert!(observer.identity.is_none());
+    assert!(observer.terminals.is_empty());
+}
+
+#[test]
+fn configuration_candidate_isolates_commands_home_channels_and_preferences() {
+    use opencodex_desktop_lib::commands::extensions::extension_config_candidate;
+    use opencodex_desktop_lib::modules::notifications::registry::{
+        terminal_delivery, Channel, Evidence, Trigger,
+    };
+    use prepare_config_identity as prepare;
+    use projection::ProjectionCommand;
+    let (_temp, root, home) = fixture();
+    let input =
+        extension_config_candidate(&ProjectionCommand::SetSourceDir { path: None }, &home).unwrap();
+    let initial = prepare(
+        &root,
+        "extension-config-save-failed",
+        Channel::Local,
+        &input,
+    )
+    .unwrap();
+    assert_eq!(
+        initial,
+        prepare(
+            &root,
+            "extension-config-save-failed",
+            Channel::Local,
+            &input
+        )
+        .unwrap()
+    );
+    // Preferences uses a different object scope, so it must not rotate or resolve extension config.
+    let prefs = prepare(
+        &root,
+        "preferences-save-failed",
+        Channel::Local,
+        b"different preferences",
+    )
+    .unwrap();
+    assert_ne!(prefs.object, initial.object);
+    assert_eq!(
+        initial,
+        prepare(
+            &root,
+            "extension-config-save-failed",
+            Channel::Local,
+            &input
+        )
+        .unwrap()
+    );
+    let mut wrong_channel = initial.clone();
+    wrong_channel.channel = Channel::Stable;
+    assert!(terminal_delivery(
+        "extension-config-save-succeeded",
+        Trigger::User,
+        wrong_channel.clone(),
+        Evidence::Success {
+            candidate: wrong_channel.candidate,
+            verified: true
+        },
+        chrono::Utc::now()
+    )
+    .is_err());
+    let changed = extension_config_candidate(
+        &ProjectionCommand::SetSyncMethod {
+            method: "copy".into(),
+        },
+        &home,
+    )
+    .unwrap();
+    let other = prepare(
+        &root,
+        "extension-config-save-failed",
+        Channel::Local,
+        &changed,
+    )
+    .unwrap();
+    assert_ne!(other.candidate, initial.candidate);
+    let other_home = extension_config_candidate(
+        &ProjectionCommand::SetSyncMethod {
+            method: "copy".into(),
+        },
+        &home.join("other"),
+    )
+    .unwrap();
+    let moved = prepare(
+        &root,
+        "extension-config-save-failed",
+        Channel::Local,
+        &other_home,
+    )
+    .unwrap();
+    assert_ne!(moved.candidate, other.candidate);
+    let rotated_back = prepare(
+        &root,
+        "extension-config-save-failed",
+        Channel::Local,
+        &input,
+    )
+    .unwrap();
+    assert_ne!(rotated_back.candidate, initial.candidate);
+    let mut observer = ConfigReceipt::new(&root);
+    observer.identity = Some(initial);
+    // Publish a genuine failure; a later candidate's verified success cannot clear it.
+    use opencodex_desktop_lib::commands::notifications::NotificationPublisher;
+    let failure = terminal_delivery(
+        "extension-config-save-failed",
+        Trigger::User,
+        observer.identity.take().unwrap(),
+        Evidence::Failure,
+        chrono::Utc::now(),
+    )
+    .unwrap();
+    let publisher = NotificationPublisher {
+        store: &observer.store,
+        data_root: &root,
+    };
+    publisher.publish_event(&failure).unwrap();
+    let success = terminal_delivery(
+        "extension-config-save-succeeded",
+        Trigger::User,
+        rotated_back.clone(),
+        Evidence::Success {
+            candidate: rotated_back.candidate,
+            verified: true,
+        },
+        chrono::Utc::now(),
+    )
+    .unwrap();
+    assert_eq!(publisher.publish_event(&success).unwrap().resolved, 0);
+    assert!(!observer.store.lock().unwrap().all()[0].resolved);
+}
