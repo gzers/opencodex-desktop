@@ -80,7 +80,7 @@ describe('runtime source store', () => {
     expect(app.runtimeSource?.kind).toBe('discovered')
   })
 
-  it('sends the install request through and refreshes the source afterwards', async () => {
+  it.each([false, true])('refreshes the installed source and reports protection pending=%s separately', async (protectionReconciliationPending) => {
     const app = useAppStore()
     invoke.mockImplementation(async (command: string) => {
       if (command === 'install_runtime') {
@@ -96,6 +96,7 @@ describe('runtime source store', () => {
           installedAt: '2026-09-25T00:00:00Z',
           proxyUsed: false,
           needsRestart: true,
+          protectionReconciliationPending,
         }
       }
       if (command === 'runtime_source') return sourceDto()
@@ -132,6 +133,8 @@ describe('runtime source store', () => {
     expect(invoke).toHaveBeenCalledWith('official_project_facts')
     expect(app.officialProject?.version).toBe('2.50.0')
     expect(app.toast).toContain('重启后生效')
+    expect(app.toast.includes('保护备份仍保留')).toBe(protectionReconciliationPending)
+    expect(app.runtimeInstallError).toBe('')
   })
 
   it('refuses to claim success when the source did not actually switch to managed', async () => {
@@ -150,6 +153,7 @@ describe('runtime source store', () => {
           installedAt: '2026-09-26T00:00:00Z',
           proxyUsed: false,
           needsRestart: false,
+          protectionReconciliationPending: false,
         }
       }
       // 来源仍是未解析：说明这次安装并没有真正落地。
@@ -331,6 +335,7 @@ describe('runtime source store', () => {
           installedAt: '2026-09-25T00:00:00Z',
           proxyUsed: true,
           needsRestart: false,
+          protectionReconciliationPending: false,
         }
       }
       if (command === 'runtime_source') return sourceDto()

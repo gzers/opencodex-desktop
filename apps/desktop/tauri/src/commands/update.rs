@@ -302,7 +302,7 @@ async fn install_update_owned(
         ))
     })
     .await?;
-    let handoff = crate::modules::update::handoff::InstallationHandoff::signed_candidate(
+    let mut handoff = crate::modules::update::handoff::InstallationHandoff::signed_candidate(
         candidate_version.clone(),
         identity.clone().ok_or(AppError::NotConfigured)?,
         chrono::Utc::now().timestamp(),
@@ -313,7 +313,7 @@ async fn install_update_owned(
             let _ = progress.send(observation.step("backup"));
         }
         let protection_app = app.clone();
-        let _protection = crate::commands::run_blocking("protect manager update", move || {
+        let protection = crate::commands::run_blocking("protect manager update", move || {
             if backup {
                 crate::modules::backup::manager::begin_preferences_protection_observed(
                     &root,
@@ -352,6 +352,16 @@ async fn install_update_owned(
             .await
             .map_err(|_| AppError::NotConfigured)?;
         // download() has completed signature validation; install() can block the OS thread.
+        let protection_root = event_root.clone();
+        // Move the owned lock through the worker, returning it to keep mutation
+        // ownership until the OS handoff finishes. No backup API re-enters it.
+        let (_protection, reference) =
+            crate::commands::run_blocking("associate manager protection", move || {
+                let reference = protection.await_restart(&protection_root)?;
+                Ok((protection, reference))
+            })
+            .await?;
+        handoff = handoff.clone().with_protection(reference)?;
         #[cfg(windows)]
         {
             let pending = app.state::<SharedPendingUpdate>();
@@ -506,17 +516,19 @@ async fn restart_owned(status: SharedUpdateStatus, app: tauri::AppHandle) -> App
 /// persistence leaves the receipt intact so a later startup can retry delivery.
 pub fn reconcile_startup(app: &tauri::AppHandle, root: &std::path::Path) -> AppResult<()> {
     use crate::modules::update::handoff::InstallationHandoff;
-    let Some(receipt) = InstallationHandoff::load(root)? else {
+    let Some(mut receipt) = InstallationHandoff::load(root)? else {
         return Ok(());
     };
-    let Some(identity) = receipt.running_identity(
-        root,
-        &app.package_info().version.to_string(),
-        chrono::Utc::now().timestamp(),
-    )?
-    else {
+    let version = app.package_info().version.to_string();
+    let now = chrono::Utc::now().timestamp();
+    let Some(identity) = receipt.running_identity(root, &version, now)? else {
         return Ok(());
     };
+    // Release before notification delivery. Both steps are retryable; a failed
+    // readback/delivery retains the receipt and never releases a different backup.
+    if !receipt.reconcile_protection(root, &version, now)? {
+        return Ok(());
+    }
     event_delivery::publish_checked(
         app,
         root,

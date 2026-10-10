@@ -421,7 +421,7 @@ async fn install_managed_runtime(
             candidate.to_string().as_bytes(),
         );
         let result: AppResult<_> = (|| {
-            let _protection = if protect_update {
+            let protection = if protect_update {
                 crate::modules::backup::manager::begin_preferences_protection_observed(
                     &data_root_path,
                     true,
@@ -456,7 +456,11 @@ async fn install_managed_runtime(
                     handle_ref.record_resolved_version(&outcome.version);
                     let entry = outcome.history_entry("succeeded", None);
                     let _ = handle_ref.record_history(entry);
-                    Ok(outcome)
+                    let protection_pending = protection.commit_verified(&data_root_path).is_err();
+                    if protection_pending {
+                        eprintln!("managed runtime installed, but preference protection reconciliation is pending");
+                    }
+                    Ok((outcome, protection_pending))
                 }
                 Err(error) => {
                     // 终态失败：不改运行来源，但留一条可核对的历史（`FZ-48`）。
@@ -490,7 +494,7 @@ async fn install_managed_runtime(
         result
     })
     .await;
-    let outcome = result?;
+    let (outcome, protection_reconciliation_pending) = result?;
 
     let needs_restart = outcome.restart_required(proxy_running);
     Ok(RuntimeInstallOutcomeDto {
@@ -505,6 +509,7 @@ async fn install_managed_runtime(
         installed_at: outcome.installed_at,
         proxy_used: outcome.proxy_used,
         needs_restart,
+        protection_reconciliation_pending,
     })
 }
 

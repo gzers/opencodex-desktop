@@ -74,6 +74,7 @@ export interface RuntimeInstallOutcomeDto {
   installedAt: string
   proxyUsed: boolean
   needsRestart: boolean
+  protectionReconciliationPending: boolean
 }
 
 export interface OfflinePackagePreviewDto {

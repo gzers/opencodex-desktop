@@ -1427,6 +1427,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <p v-if="app.runtimeInstallOutcome" class="wiz-hint" data-testid="wiz-outcome">
           入口 {{ app.runtimeInstallOutcome.entry }} · SHA-256 {{ app.runtimeInstallOutcome.tarballSha256.slice(0, 16) }}…
           <template v-if="app.runtimeInstallOutcome.needsRestart"> · 代理正在运行，重启后生效。</template>
+          <template v-if="app.runtimeInstallOutcome.protectionReconciliationPending"> · 保护备份仍保留，完整性核对未完成。请查看诊断日志。</template>
         </p>
       </div>
 

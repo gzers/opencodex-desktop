@@ -27,6 +27,13 @@ pub struct InstallationHandoff {
     version: String,
     identity: EventIdentity,
     armed_at: i64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    protection: Option<crate::modules::backup::manager::PreferencesProtectionRef>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    protection_verified: bool,
+}
+fn is_false(value: &bool) -> bool {
+    !value
 }
 impl InstallationHandoff {
     pub fn signed_candidate(version: String, identity: EventIdentity, now: i64) -> AppResult<Self> {
@@ -35,9 +42,20 @@ impl InstallationHandoff {
             version,
             identity,
             armed_at: now,
+            protection: None,
+            protection_verified: false,
         };
         record.validate()?;
         Ok(record)
+    }
+    pub fn with_protection(
+        mut self,
+        protection: Option<crate::modules::backup::manager::PreferencesProtectionRef>,
+    ) -> AppResult<Self> {
+        self.protection = protection;
+        self.protection_verified = false;
+        self.validate()?;
+        Ok(self)
     }
     fn validate(&self) -> AppResult<()> {
         let id = &self.identity;
@@ -47,8 +65,12 @@ impl InstallationHandoff {
             || (id.object, id.action, id.phase)
                 != (ObjectKind::Manager, Action::Install, Phase::Execution)
             || !matches!(id.channel, Channel::Stable | Channel::Beta)
+            || (self.protection_verified && self.protection.is_none())
         {
             return Err(AppError::NotConfigured);
+        }
+        if let Some(reference) = &self.protection {
+            reference.validate()?;
         }
         Ok(())
     }
@@ -111,6 +133,41 @@ impl InstallationHandoff {
     pub fn version(&self) -> &str {
         &self.version
     }
+    /// Only a verified running candidate can release the associated backup.
+    /// Failure leaves the durable handoff intact so startup can retry safely.
+    pub fn reconcile_protection(
+        &mut self,
+        root: &Path,
+        version: &str,
+        now: i64,
+    ) -> AppResult<bool> {
+        if self.running_identity(root, version, now)?.is_none() {
+            return Ok(false);
+        }
+        if let Some(reference) = self.protection.clone() {
+            let mut verified = self.clone();
+            verified.protection_verified = true;
+            crate::modules::backup::manager::reconcile_preferences_restart_recorded(
+                root,
+                &reference,
+                self.protection_verified,
+                || {
+                    // A newer attempt may use the same candidate/version but a
+                    // different backup. Never overwrite its durable association.
+                    if Self::load(root)?.as_ref() != Some(self) {
+                        return Err(AppError::NotConfigured);
+                    }
+                    verified.arm(root)?;
+                    if Self::load(root)?.as_ref() != Some(&verified) {
+                        return Err(AppError::NotConfigured);
+                    }
+                    Ok(())
+                },
+            )?;
+            *self = verified;
+        }
+        Ok(true)
+    }
     /// Do not remove another attempt. On delivery failure leave the receipt for retry.
     pub fn discard(&self, root: &Path) -> AppResult<()> {
         if Self::load(root)?.as_ref() == Some(self) {
@@ -142,6 +199,147 @@ mod tests {
         )
         .unwrap();
         InstallationHandoff::signed_candidate(version.into(), id, 100).unwrap()
+    }
+    fn protected_receipt(root: &Path, channel: Channel) -> InstallationHandoff {
+        crate::modules::data_root::initialize(root).unwrap();
+        crate::modules::preferences::PreferencesStore::new(root)
+            .save(&crate::modules::preferences::Preferences::default())
+            .unwrap();
+        let guard =
+            crate::modules::backup::manager::begin_preferences_protection(root, true).unwrap();
+        let reference = guard.await_restart(root).unwrap();
+        drop(guard);
+        receipt(root, "0.1.10", channel)
+            .with_protection(reference)
+            .unwrap()
+    }
+    #[test]
+    fn exact_running_candidate_releases_associated_backup_only_and_preserves_user_pin() {
+        let root = tempfile::tempdir().unwrap();
+        let mut record = protected_receipt(root.path(), Channel::Beta);
+        let reference = record.protection.clone().unwrap();
+        crate::modules::backup::manager::set_pinned(root.path(), &reference.backup_id, true)
+            .unwrap();
+        record.arm(root.path()).unwrap();
+        assert!(!record
+            .reconcile_protection(root.path(), "0.1.9", 101)
+            .unwrap());
+        assert!(record
+            .reconcile_protection(root.path(), "0.1.10", 101)
+            .unwrap());
+        assert!(record
+            .reconcile_protection(root.path(), "0.1.10", 101)
+            .unwrap());
+        // Pin survives reconciliation; it becomes removable only afterwards.
+        crate::modules::backup::manager::set_pinned(root.path(), &reference.backup_id, false)
+            .unwrap();
+        assert_eq!(record.identity().channel, Channel::Beta);
+        assert_eq!(
+            InstallationHandoff::load(root.path()).unwrap(),
+            Some(record)
+        );
+    }
+    #[test]
+    fn invalid_association_remains_retryable_and_another_candidate_never_releases_it() {
+        let root = tempfile::tempdir().unwrap();
+        let mut record = protected_receipt(root.path(), Channel::Stable);
+        let reference = record.protection.clone().unwrap();
+        let mut wrong = record
+            .clone()
+            .with_protection(Some(
+                crate::modules::backup::manager::PreferencesProtectionRef {
+                    sha256: "0".repeat(64),
+                    ..reference.clone()
+                },
+            ))
+            .unwrap();
+        wrong.arm(root.path()).unwrap();
+        assert!(wrong
+            .reconcile_protection(root.path(), "0.1.10", 101)
+            .is_err());
+        assert_eq!(InstallationHandoff::load(root.path()).unwrap(), Some(wrong));
+        assert!(crate::modules::backup::manager::set_pinned(
+            root.path(),
+            &reference.backup_id,
+            false
+        )
+        .is_err());
+        record.arm(root.path()).unwrap();
+        let next = receipt(root.path(), "0.1.11", Channel::Stable);
+        next.arm(root.path()).unwrap();
+        assert!(!record
+            .reconcile_protection(root.path(), "0.1.10", 101)
+            .unwrap());
+        assert!(crate::modules::backup::manager::set_pinned(
+            root.path(),
+            &reference.backup_id,
+            false
+        )
+        .is_err());
+        assert_eq!(InstallationHandoff::load(root.path()).unwrap(), Some(next));
+    }
+    #[test]
+    fn stale_same_candidate_receipt_cannot_overwrite_a_new_backup_association() {
+        let root = tempfile::tempdir().unwrap();
+        let mut stale = protected_receipt(root.path(), Channel::Stable);
+        stale.arm(root.path()).unwrap();
+        let current = protected_receipt(root.path(), Channel::Stable);
+        assert_eq!(stale.identity, current.identity);
+        assert_ne!(stale.protection, current.protection);
+        current.arm(root.path()).unwrap();
+        assert!(stale
+            .reconcile_protection(root.path(), "0.1.10", 101)
+            .is_err());
+        assert_eq!(
+            InstallationHandoff::load(root.path()).unwrap(),
+            Some(current)
+        );
+        assert!(crate::modules::backup::manager::set_pinned(
+            root.path(),
+            &stale.protection.as_ref().unwrap().backup_id,
+            false
+        )
+        .is_err());
+    }
+    #[test]
+    fn persisted_verification_survives_rotation_before_notification_delivery() {
+        let root = tempfile::tempdir().unwrap();
+        let mut record = protected_receipt(root.path(), Channel::Stable);
+        record.arm(root.path()).unwrap();
+        let reference = record.protection.clone().unwrap();
+        let row = crate::modules::backup::list_action_records(
+            &root.path().join("backups"),
+            "preferences-protection",
+        )
+        .unwrap()
+        .into_iter()
+        .find(|r| r.manifest.backup_id == reference.backup_id)
+        .unwrap();
+        assert!(record
+            .reconcile_protection(root.path(), "0.1.10", 101)
+            .unwrap());
+        let mut saved = InstallationHandoff::load(root.path()).unwrap().unwrap();
+        assert!(saved.protection_verified);
+        // Emulate expiry after release and before a failed notification retries.
+        std::fs::remove_dir_all(row.directory).unwrap();
+        assert!(saved
+            .reconcile_protection(root.path(), "0.1.10", 102)
+            .unwrap());
+        assert!(!saved
+            .reconcile_protection(root.path(), "0.1.9", 102)
+            .unwrap());
+        // An unverified handoff cannot infer success from a missing backup.
+        saved.protection_verified = false;
+        saved.arm(root.path()).unwrap();
+        assert!(saved
+            .reconcile_protection(root.path(), "0.1.10", 102)
+            .is_err());
+        assert!(
+            !InstallationHandoff::load(root.path())
+                .unwrap()
+                .unwrap()
+                .protection_verified
+        );
     }
     #[test]
     fn new_running_version_required_and_exact_original_channel_preserved() {

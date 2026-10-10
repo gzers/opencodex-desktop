@@ -304,9 +304,10 @@ export const useAppStore = defineStore("app", {
         await this.refreshEnvironment()
         await this.loadStatusSnapshot()
         this.showToast(
-          outcome.needsRestart
+          (outcome.needsRestart
             ? `已安装 OpenCodex ${outcome.version}；代理正在运行，重启后生效。`
-            : `已安装 OpenCodex ${outcome.version}。`,
+            : `已安装 OpenCodex ${outcome.version}。`) +
+          (outcome.protectionReconciliationPending ? '保护备份仍保留，完整性核对未完成，请查看诊断日志。' : ''),
         )
         return true
       } catch (error) {
@@ -437,7 +438,8 @@ export const useAppStore = defineStore("app", {
         await this.refreshEnvironment()
         await this.loadStatusSnapshot()
         runtime.markInstallDone()
-        this.showToast(`已更新 OpenCodex ${outcome.version}。`)
+        this.showToast(`已更新 OpenCodex ${outcome.version}。` +
+          (outcome.protectionReconciliationPending ? '保护备份仍保留，完整性核对未完成，请查看诊断日志。' : ''))
         return true
       } catch (error) {
         runtime.failInstall(runtimeErrorText(error))

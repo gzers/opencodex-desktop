@@ -176,7 +176,7 @@ mod tests {
     }
 
     #[test]
-    fn create_restore_backup_is_permanently_protected() {
+    fn create_restore_backup_stays_protected_without_inventing_a_user_pin() {
         let root = tempfile::tempdir().expect("temporary data root");
         crate::modules::data_root::initialize(root.path()).expect("initialize data root");
         let preferences = Preferences::default();
@@ -197,7 +197,11 @@ mod tests {
         )
         .expect("list upgrade records");
         assert_eq!(records.len(), 1);
-        assert!(records[0].manifest.management.as_ref().unwrap().pinned);
+        let metadata = records[0].manifest.management.as_ref().unwrap();
+        assert!(!metadata.pinned);
+        assert_eq!(metadata.transaction_state.as_deref(), Some("active"));
+        let inventory = backup::manager::list(root.path()).unwrap();
+        assert!(inventory[0].protected);
     }
 
     #[test]

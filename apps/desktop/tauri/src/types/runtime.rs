@@ -115,6 +115,8 @@ pub struct RuntimeInstallOutcomeDto {
     pub proxy_used: bool,
     /// 代理进程在运行，需重启才生效（`FZ-48`）。
     pub needs_restart: bool,
+    /// 安装已落地，但保护备份仍待完整性核对。
+    pub protection_reconciliation_pending: bool,
 }
 
 /// 离线包预检结果（拖拽区的「已选 / 校验失败 / 拒绝」三态）。

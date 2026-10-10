@@ -236,6 +236,7 @@ defineExpose({ check })
               <progress v-if="officialBusy" aria-label="面板更新进度"></progress>
               <pre v-if="!session.officialBackingUp && runtime.installLines.length && session.officialCandidate" class="update-console" tabindex="0" aria-label="面板安装输出">{{ runtime.installLines.join('\n') }}</pre>
               <p v-if="!officialBusy && runtime.installOutcome?.needsRestart" class="update-hint">面板更新已安装；请在运行操作中重启代理后生效。</p>
+              <p v-if="!officialBusy && runtime.installOutcome?.protectionReconciliationPending" class="update-hint" role="status">安装已完成；保护备份完整性核对未完成，备份仍保留。请查看诊断日志。</p>
             </div>
             <p v-if="session.officialError || app.officialUpdateError" class="update-error" role="alert">{{ session.officialError || app.officialUpdateError }}</p>
             <div class="update-object-actions"><small v-if="app.upgradeLastBackup">最近备份 {{ app.upgradeLastBackup.backupId }}</small><UiButton variant="primary" :disabled="busy || app.runtimeInstalling || app.upgradeBackupBusy || !officialAvailable" :loading="officialBusy" data-testid="install-official-update" @click="installOfficial">{{ officialBusy ? '更新中' : session.officialError || app.officialUpdateError ? '重试面板更新' : '备份并更新面板' }}</UiButton></div>

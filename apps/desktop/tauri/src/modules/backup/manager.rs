@@ -31,7 +31,7 @@ pub struct Management {
     pub kind: String,
     pub pinned: bool,
     pub related_backup_id: Option<String>,
-    /// v2 restore-only reconciliation, independent of the user pin. Missing/unknown
+    /// v2 restore / v3 preferences reconciliation, independent of the user pin. Missing/unknown
     /// states fail closed; v1 transaction records are never retrospectively released.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub transaction_state: Option<String>,
@@ -70,6 +70,171 @@ pub struct PreferencesProtectionGuard {
     /// Best-effort maintenance failure after a successful protection backup.
     /// The backup and mutation lock remain valid. Also emitted to diagnostics.
     pub cleanup_error: Option<String>,
+}
+
+/// Exact durable backup association, never a free-form path or note. The payload
+/// digest prevents a stale handoff from releasing a replaced protection record.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PreferencesProtectionRef {
+    pub backup_id: String,
+    pub sha256: String,
+}
+impl PreferencesProtectionRef {
+    pub fn validate(&self) -> AppResult<()> {
+        if self.backup_id.is_empty()
+            || self.backup_id.len() > 128
+            || !self
+                .backup_id
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b == b'_')
+            || self.sha256.len() != 64
+            || !self
+                .sha256
+                .bytes()
+                .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        {
+            return Err(fail("invalid preferences protection reference"));
+        }
+        Ok(())
+    }
+}
+impl PreferencesProtectionGuard {
+    /// Keep the guard alive: this method already owns the backup lock.
+    pub fn protection_ref(&self, root: &Path) -> AppResult<Option<PreferencesProtectionRef>> {
+        self.backup
+            .as_ref()
+            .map(|b| {
+                let record = resolve(root, &b.backup_id)?;
+                validate_preferences_protection(&record)?;
+                Ok(PreferencesProtectionRef {
+                    backup_id: b.backup_id.clone(),
+                    sha256: record.manifest.sha256,
+                })
+            })
+            .transpose()
+    }
+    /// Called only after a verified runtime installation, never on Drop / error.
+    pub fn commit_verified(&self, root: &Path) -> AppResult<()> {
+        if let Some(reference) = self.protection_ref(root)? {
+            transition_preferences_protection(root, &reference, "active", "committed")?;
+        }
+        Ok(())
+    }
+    /// Persist before OS handoff. A crash retains this state until startup proves
+    /// the exact candidate is running. Holding a handle is not completion evidence.
+    pub fn await_restart(&self, root: &Path) -> AppResult<Option<PreferencesProtectionRef>> {
+        let reference = self.protection_ref(root)?;
+        if let Some(reference) = &reference {
+            transition_preferences_protection(root, reference, "active", "awaiting_restart")?;
+        }
+        Ok(reference)
+    }
+}
+fn validate_preferences_protection(record: &BackupRecord) -> AppResult<()> {
+    let meta = record
+        .manifest
+        .management
+        .as_ref()
+        .ok_or_else(|| fail("missing protection metadata"))?;
+    if !candidate(record)
+        || record.manifest.action != BackupAction::PreferencesProtection
+        || meta.version != 3
+        || meta.kind != "preferences-protection"
+        || meta.related_backup_id.is_some()
+        || !matches!(
+            meta.transaction_state.as_deref(),
+            Some("active" | "awaiting_restart" | "committed")
+        )
+        || !super::verify_backup(record)?
+    {
+        return Err(fail("preferences protection failed verification"));
+    }
+    Ok(())
+}
+fn transition_preferences_protection(
+    root: &Path,
+    reference: &PreferencesProtectionRef,
+    from: &str,
+    to: &str,
+) -> AppResult<()> {
+    reference.validate()?;
+    let record = resolve(root, &reference.backup_id)?;
+    validate_preferences_protection(&record)?;
+    if record.manifest.sha256 != reference.sha256 {
+        return Err(fail("preferences protection reference changed"));
+    }
+    let state = record
+        .manifest
+        .management
+        .as_ref()
+        .unwrap()
+        .transaction_state
+        .as_deref();
+    if state == Some(to) {
+        return Ok(());
+    } // Retrying an already verified commit is safe.
+    if state != Some(from) {
+        return Err(fail("preferences protection state mismatch"));
+    }
+    let mut committed = record.manifest.clone();
+    committed.management.as_mut().unwrap().transaction_state = Some(to.into());
+    safety::check_path(root, &record.directory, false)?;
+    super::write_manifest(&record.directory, &committed)?;
+    safety::sync_directories(root, &record.directory)?;
+    let stored = resolve(root, &reference.backup_id)?;
+    if stored.manifest != committed {
+        return Err(fail("preferences protection readback mismatch"));
+    }
+    validate_preferences_protection(&stored)
+}
+/// Caller must first verify the running manager version against its signed
+/// handoff. This function cannot infer success from a pending-restart record.
+pub(crate) fn reconcile_preferences_restart_recorded(
+    root: &Path,
+    reference: &PreferencesProtectionRef,
+    previously_verified: bool,
+    persist_verification: impl FnOnce() -> AppResult<()>,
+) -> AppResult<()> {
+    let _lock = lock(root)?;
+    reference.validate()?;
+    // A verified committed record may already have expired before notification
+    // delivery retries. Malformed inventories or replacement records still fail.
+    if previously_verified
+        && !records(root)?
+            .iter()
+            .any(|r| r.manifest.backup_id == reference.backup_id)
+    {
+        return Ok(());
+    }
+    let record = resolve(root, &reference.backup_id)?;
+    validate_preferences_protection(&record)?;
+    if record.manifest.sha256 != reference.sha256
+        || !matches!(
+            record
+                .manifest
+                .management
+                .as_ref()
+                .unwrap()
+                .transaction_state
+                .as_deref(),
+            Some("awaiting_restart" | "committed")
+        )
+    {
+        return Err(fail("restart protection association mismatch"));
+    }
+    // Persist a verified receipt while cleanup cannot acquire the backup lock.
+    // If that write fails the record remains protected. If the following commit
+    // fails the receipt permits a verified retry, never a different association.
+    persist_verification()?;
+    transition_preferences_protection(root, reference, "awaiting_restart", "committed")
+}
+#[cfg(test)]
+fn reconcile_preferences_restart(
+    root: &Path,
+    reference: &PreferencesProtectionRef,
+) -> AppResult<()> {
+    reconcile_preferences_restart_recorded(root, reference, false, || Ok(()))
 }
 
 /// Always acquire this guard before a preferences mutation, including when the
@@ -202,23 +367,33 @@ fn managed_backup(
         None,
     )?;
     record.manifest.management = Some(Management {
-        version: if action == BackupAction::RestoreProtection {
+        version: if action == BackupAction::PreferencesProtection {
+            3
+        } else if action == BackupAction::RestoreProtection {
             2
         } else {
             1
         },
         kind: if action == BackupAction::ManualPreferences {
             "standalone"
+        } else if action == BackupAction::PreferencesProtection {
+            "preferences-protection"
         } else {
             "restore-protection"
         }
         .into(),
         pinned: !matches!(
             action,
-            BackupAction::ManualPreferences | BackupAction::RestoreProtection
+            BackupAction::ManualPreferences
+                | BackupAction::RestoreProtection
+                | BackupAction::PreferencesProtection
         ),
         related_backup_id: related,
-        transaction_state: (action == BackupAction::RestoreProtection).then(|| "active".into()),
+        transaction_state: matches!(
+            action,
+            BackupAction::RestoreProtection | BackupAction::PreferencesProtection
+        )
+        .then(|| "active".into()),
     });
     super::write_manifest(&record.directory, &record.manifest)?;
     safety::sync_directories(root, &record.directory)?;
@@ -439,6 +614,13 @@ fn reconciled_restore(record: &BackupRecord, meta: &Management) -> bool {
         && meta.related_backup_id.is_some()
         && meta.transaction_state.as_deref() == Some("committed")
 }
+fn reconciled_preferences(record: &BackupRecord, meta: &Management) -> bool {
+    record.manifest.action == BackupAction::PreferencesProtection
+        && meta.version == 3
+        && meta.kind == "preferences-protection"
+        && meta.related_backup_id.is_none()
+        && meta.transaction_state.as_deref() == Some("committed")
+}
 fn protection(record: &BackupRecord, related: &BTreeSet<String>) -> Option<String> {
     let m = &record.manifest;
     if related.contains(&m.backup_id) {
@@ -453,7 +635,7 @@ fn protection(record: &BackupRecord, related: &BTreeSet<String>) -> Option<Strin
     if meta.pinned {
         return Some("pinned".into());
     }
-    if reconciled_restore(record, meta) {
+    if reconciled_restore(record, meta) || reconciled_preferences(record, meta) {
         return None;
     }
     if m.action != BackupAction::ManualPreferences
@@ -522,7 +704,7 @@ pub fn set_pinned(root: &Path, id: &str, pinned: bool) -> AppResult<()> {
         .manifest
         .management
         .as_ref()
-        .is_some_and(|m| reconciled_restore(&r, m));
+        .is_some_and(|m| reconciled_restore(&r, m) || reconciled_preferences(&r, m));
     // Pinning legacy records is allowed, unpinning never releases their protection.
     let meta = r.manifest.management.get_or_insert(Management {
         version: 1,
@@ -532,6 +714,14 @@ pub fn set_pinned(root: &Path, id: &str, pinned: bool) -> AppResult<()> {
         transaction_state: None,
     });
     if meta.version != 1
+        && !(meta.version == 3
+            && r.manifest.action == BackupAction::PreferencesProtection
+            && meta.kind == "preferences-protection"
+            && meta.related_backup_id.is_none()
+            && matches!(
+                meta.transaction_state.as_deref(),
+                Some("active" | "awaiting_restart" | "committed")
+            ))
         && !(meta.version == 2
             && r.manifest.action == BackupAction::RestoreProtection
             && meta.kind == "restore-protection"
@@ -821,6 +1011,146 @@ mod tests {
         )
         .unwrap()
     }
+    fn aged_protection(root: &Path) -> PreferencesProtectionGuard {
+        let mut guard = acquire_preferences_transaction(root).unwrap();
+        let record = managed_backup(
+            root,
+            BackupAction::PreferencesProtection,
+            &active_payload(root).unwrap(),
+            now() - Duration::days(100),
+            None,
+        )
+        .unwrap();
+        guard.backup = Some(result(&record));
+        guard
+    }
+    #[test]
+    fn interrupted_preferences_protection_is_not_a_user_pin_and_never_expires() {
+        let root = root();
+        let guard = aged_protection(root.path());
+        let reference = guard.protection_ref(root.path()).unwrap().unwrap();
+        drop(guard);
+        let record = resolve(root.path(), &reference.backup_id).unwrap();
+        assert!(!record.manifest.management.as_ref().unwrap().pinned);
+        assert!(protection(&record, &BTreeSet::new()).is_some());
+        assert!(set_pinned(root.path(), &reference.backup_id, false).is_err());
+        assert!(reconcile_preferences_restart(root.path(), &reference).is_err());
+        assert!(preview_inner(root.path(), now(), 1)
+            .unwrap()
+            .candidate_ids
+            .is_empty());
+    }
+    #[test]
+    fn verified_preferences_commit_allows_rotation_but_preserves_independent_pin() {
+        let root = root();
+        let guard = aged_protection(root.path());
+        let reference = guard.protection_ref(root.path()).unwrap().unwrap();
+        guard.commit_verified(root.path()).unwrap();
+        guard.commit_verified(root.path()).unwrap();
+        drop(guard);
+        set_pinned(root.path(), &reference.backup_id, true).unwrap();
+        let recent = begin_preferences_protection(root.path(), true).unwrap();
+        recent.commit_verified(root.path()).unwrap();
+        drop(recent);
+        assert!(preview_inner(root.path(), now(), 1)
+            .unwrap()
+            .candidate_ids
+            .is_empty());
+        set_pinned(root.path(), &reference.backup_id, false).unwrap();
+        assert_eq!(
+            preview_inner(root.path(), now(), 1).unwrap().candidate_ids,
+            vec![reference.backup_id]
+        );
+    }
+    #[test]
+    fn pending_restart_requires_exact_digest_and_is_idempotently_reconciled() {
+        let root = root();
+        let guard = aged_protection(root.path());
+        let reference = guard.await_restart(root.path()).unwrap().unwrap();
+        drop(guard);
+        set_pinned(root.path(), &reference.backup_id, true).unwrap();
+        let before = resolve(root.path(), &reference.backup_id).unwrap().manifest;
+        let wrong = PreferencesProtectionRef {
+            sha256: "0".repeat(64),
+            ..reference.clone()
+        };
+        assert!(reconcile_preferences_restart(root.path(), &wrong).is_err());
+        let wrong = PreferencesProtectionRef {
+            backup_id: "absent_id".into(),
+            ..reference.clone()
+        };
+        assert!(reconcile_preferences_restart(root.path(), &wrong).is_err());
+        assert_eq!(
+            resolve(root.path(), &reference.backup_id).unwrap().manifest,
+            before
+        );
+        reconcile_preferences_restart(root.path(), &reference).unwrap();
+        reconcile_preferences_restart(root.path(), &reference).unwrap();
+        let after = resolve(root.path(), &reference.backup_id).unwrap();
+        assert!(after.manifest.management.as_ref().unwrap().pinned);
+        assert_eq!(
+            after
+                .manifest
+                .management
+                .as_ref()
+                .unwrap()
+                .transaction_state
+                .as_deref(),
+            Some("committed")
+        );
+    }
+    #[test]
+    fn failed_verification_persistence_keeps_restart_protection_active() {
+        let root = root();
+        let guard = aged_protection(root.path());
+        let reference = guard.await_restart(root.path()).unwrap().unwrap();
+        drop(guard);
+        let before = resolve(root.path(), &reference.backup_id).unwrap().manifest;
+        assert!(
+            reconcile_preferences_restart_recorded(root.path(), &reference, false, || {
+                let contender =
+                    safety::open_file(&root.path().join(".backup-w2.lock"), true).unwrap();
+                assert!(contender.try_lock().is_err());
+                Err(fail("injected receipt write failure"))
+            })
+            .is_err()
+        );
+        assert_eq!(
+            resolve(root.path(), &reference.backup_id).unwrap().manifest,
+            before
+        );
+        assert!(set_pinned(root.path(), &reference.backup_id, false).is_err());
+    }
+    #[test]
+    fn tampered_payload_and_legacy_or_unknown_metadata_cannot_release_protection() {
+        let root = root();
+        let guard = aged_protection(root.path());
+        let reference = guard.await_restart(root.path()).unwrap().unwrap();
+        drop(guard);
+        let record = resolve(root.path(), &reference.backup_id).unwrap();
+        let payload = safety::payload_path(&record.directory).unwrap();
+        let bytes = std::fs::read(&payload).unwrap();
+        std::fs::write(&payload, b"replaced").unwrap();
+        assert!(reconcile_preferences_restart(root.path(), &reference).is_err());
+        std::fs::write(&payload, bytes).unwrap();
+        for (version, state) in [(1, "awaiting_restart"), (3, "unknown")] {
+            let mut manifest = record.manifest.clone();
+            let meta = manifest.management.as_mut().unwrap();
+            meta.version = version;
+            meta.transaction_state = Some(state.into());
+            super::super::write_manifest(&record.directory, &manifest).unwrap();
+            assert!(reconcile_preferences_restart(root.path(), &reference).is_err());
+            assert_eq!(
+                resolve(root.path(), &reference.backup_id).unwrap().manifest,
+                manifest
+            );
+            assert!(protection(
+                &resolve(root.path(), &reference.backup_id).unwrap(),
+                &BTreeSet::new()
+            )
+            .is_some());
+        }
+    }
     struct Probe<'a> {
         root: &'a Path,
         events: Vec<(&'static str, bool)>,
@@ -890,7 +1220,9 @@ mod tests {
         assert!(guard.cleanup_error.is_some());
         let directory = std::path::PathBuf::from(&guard.backup.as_ref().unwrap().directory);
         let record = safety::load_record(&directory).unwrap();
-        assert!(record.manifest.management.unwrap().pinned);
+        let meta = record.manifest.management.unwrap();
+        assert!(!meta.pinned);
+        assert_eq!(meta.transaction_state.as_deref(), Some("active"));
         let contender = safety::open_file(&root.path().join(".backup-w2.lock"), true).unwrap();
         assert!(
             contender.try_lock().is_err(),
@@ -1690,7 +2022,7 @@ mod tests {
             .unwrap();
         assert!(begin_preferences_protection(root.path(), true).is_err());
         assert_eq!(records(root.path()).unwrap().len(), 12);
-        // Raw invalid preferences still get a durable, pinned protection. A bad
+        // Raw invalid preferences still get a durable, active protection. A bad
         // candidate hash blocks the entire cleanup without invalidating that guard.
         std::fs::write(&active, b"invalid").unwrap();
         let candidate_id = preview(root.path(), Utc::now()).unwrap().candidate_ids[0].clone();
@@ -1703,7 +2035,9 @@ mod tests {
         assert!(guard.cleanup_error.as_ref().unwrap().contains("SHA-256"));
         assert_eq!(records(root.path()).unwrap().len(), 13);
         let protection = resolve(root.path(), &guard.backup.as_ref().unwrap().backup_id).unwrap();
-        assert!(protection.manifest.management.as_ref().unwrap().pinned);
+        let meta = protection.manifest.management.as_ref().unwrap();
+        assert!(!meta.pinned);
+        assert_eq!(meta.transaction_state.as_deref(), Some("active"));
         assert_eq!(
             std::fs::read(safety::payload_path(&protection.directory).unwrap()).unwrap(),
             b"invalid"
