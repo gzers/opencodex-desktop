@@ -1,0 +1,107 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 7.26s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 89 tests
+test modules::runtime::install::tests::entry_script_falls_back_to_env_node_without_recorded_node ... ok
+test modules::runtime::install::tests::install_error_maps_to_stable_codes ... ok
+test modules::runtime::install::tests::normalize_bin_strips_prefix_and_rejects_escapes ... ok
+test modules::runtime::install::tests::extract_semver_reads_the_first_version_token ... ok
+test modules::runtime::archive::tests::declared_version_accepts_both_official_file_name_forms ... ok
+test modules::runtime::install::tests::masker_also_removes_known_secret ... ok
+test modules::runtime::archive::tests::resolves_bin_from_string_and_object_forms ... ok
+test modules::runtime::archive::tests::entry_path_validation_rejects_absolute_and_deep_paths ... ok
+test modules::runtime::install::tests::npm_reason_prefers_the_error_line ... ok
+test modules::runtime::install::tests::proxy_forms_match_the_frozen_shape ... ok
+test modules::runtime::install::tests::outcome_history_entry_and_restart_flag ... ok
+test modules::runtime::install::tests::proxy_validation_rejects_empty_and_credential_hosts ... ok
+test modules::runtime::install::tests::npm_cache_is_explicit_and_does_not_replace_user_home ... ok
+test modules::runtime::archive::tests::rejects_version_mismatch_between_filename_and_manifest ... ok
+test modules::runtime::archive::tests::rejects_non_official_package_name ... ok
+test modules::runtime::archive::tests::rejects_non_gzip_and_bad_filename ... ok
+test modules::runtime::install::tests::strip_url_credentials_masks_userinfo_only ... ok
+test modules::runtime::install::tests::install_target_rejections_surface_system_protection ... ok
+test modules::runtime::install::tests::credential_proxy_never_reaches_the_command_line ... ok
+test modules::runtime::install::tests::cancel_before_start_leaves_no_trace ... ok
+test modules::runtime::archive::tests::accepts_official_package_and_reports_entry ... ok
+test modules::runtime::paths::tests::executable_accepts_relative_rejection_for_non_absolute ... ok
+test modules::runtime::archive::tests::rejects_missing_package_json_and_missing_bin ... ok
+test modules::runtime::archive::tests::rejects_path_escape_symlink_and_hardlink_entries ... ok
+test modules::runtime::paths::tests::install_target_accepts_writable_directory_and_creatable_child ... ok
+test modules::runtime::install::tests::registry_install_requires_npm_path ... ok
+test modules::runtime::install::tests::offline_install_rejects_non_official_package_name ... ok
+test modules::runtime::archive::tests::extract_strips_the_top_level_package_prefix ... ok
+test modules::runtime::paths::tests::install_target_rejects_regular_file_and_non_absolute ... ok
+test modules::runtime::paths::tests::executable_rejects_missing_and_non_executable ... ok
+test modules::runtime::paths::tests::executable_follows_symlinks_and_allows_system_prefixes ... ok
+test modules::runtime::install::tests::temp_userconfig_is_0600_and_removed_on_drop ... ok
+test modules::runtime::install::tests::offline_install_rejects_bad_archive_and_keeps_existing_prefix ... ok
+test modules::runtime::paths::tests::install_target_rejects_symlink_and_protected_dirs ... ok
+test modules::runtime::paths::tests::symlink_component_detection_walks_in_scope_ancestors_only ... ok
+test modules::runtime::install::tests::verify_package_rejects_name_and_version_and_missing_bin ... ok
+test modules::runtime::install::tests::registry_install_rejects_explicit_version_mismatch ... ok
+test modules::runtime::install::tests::registry_install_uses_npm_and_records_provenance ... ok
+test modules::runtime::install::tests::offline_install_lands_prefix_manifest_and_entry ... ok
+test modules::runtime::relocation::tests::generated_launcher_fallback_and_quoted_paths_round_trip ... ok
+test modules::runtime::install::tests::stable_entry_points_at_the_final_prefix_not_the_temporary_one ... ok
+test modules::runtime::install::tests::successful_install_replaces_previous_prefix ... ok
+test modules::runtime::install::tests::unrunnable_entry_requires_scripts_and_is_retried_after_consent ... ok
+test modules::runtime::install::tests::scripts_required_then_retried_only_after_explicit_consent ... ok
+test modules::runtime::protection::tests::terminal_failure_forgets_attempt_but_never_releases_backup ... ok
+test modules::runtime::protection::tests::strict_receipt_validation_rejects_unknown_corrupt_and_unbounded_fields ... ok
+test modules::runtime::tests::history_is_capped_at_the_frozen_limit ... ok
+test modules::runtime::protection::tests::missing_final_activation_blocks_retry_overwrite_and_preserves_backup ... ok
+test modules::runtime::tests::installed_prefix_comes_from_the_install_record_not_the_default_location ... ok
+test modules::runtime::tests::invalid_explicit_falls_back_instead_of_sticking ... ok
+test modules::runtime::tests::handle_persists_resolution_and_refreshes_after_install ... ok
+test modules::runtime::tests::nothing_available_is_unresolved ... ok
+test modules::runtime::tests::managed_wins_over_discovered_and_falls_back_when_missing ... ok
+test modules::runtime::protection::tests::same_version_different_attempt_cannot_release_previous_backup ... ok
+test modules::runtime::protection::tests::replaced_receipt_and_backup_digest_cannot_release_protection ... ok
+test modules::runtime::protection::tests::persisted_verification_survives_backup_commit_failure_and_retries_without_package ... ok
+test modules::runtime::tests::handle_restores_explicit_choice_across_restart ... ok
+test modules::runtime::protection::tests::verification_write_failure_keeps_receipt_and_backup_for_restart_retry ... ok
+test modules::runtime::tests::priority_is_explicit_then_managed_then_discovered ... ok
+test modules::runtime::tests::store_degrades_on_missing_corrupt_and_unknown_version ... ok
+test modules::runtime::tests::record_history_keeps_only_terminal_entries_and_caps_length ... ok
+test modules::runtime::tests::store_round_trips_and_creates_restricted_file ... ok
+test modules::runtime::uninstall::tests::history_entry_is_shaped_like_the_frozen_contract ... ok
+test modules::runtime::uninstall::tests::manifest_source_label_is_stable ... ok
+test modules::runtime::uninstall::tests::execute_requires_explicit_confirmation ... ok
+test modules::runtime::protection::tests::verified_activation_releases_exact_backup_and_preserves_independent_pin ... ok
+test modules::runtime::uninstall::tests::official_observation_reads_and_masks_the_official_record ... ok
+test modules::runtime::uninstall::tests::body_scope_never_touches_runtime_or_home ... ok
+test modules::runtime::uninstall::tests::uninstall_error_maps_to_stable_codes ... ok
+test modules::runtime::tests::set_explicit_ignores_invalid_path_and_keeps_previous_choice ... ok
+test modules::runtime::uninstall::tests::execute_full_uninstall_runs_fixed_commands_and_reports_steps ... ok
+test modules::runtime::uninstall::tests::uninstall_refuses_directory_without_manifest ... ok
+test modules::runtime::uninstall::tests::residue_cleanup_is_explicit_and_stays_inside_home ... ok
+test modules::runtime::uninstall::tests::residue_check_distinguishes_cleared_from_present ... ok
+test modules::runtime::relocation::tests::external_prefix_and_node_remain_external_without_writes ... ok
+test modules::runtime::tests::resolved_version_follows_the_current_source_path ... ok
+test modules::runtime::uninstall::tests::plan_classifies_body_owner_for_every_resolved_source ... ok
+
+thread 'modules::runtime::protection::tests::linked_receipt_or_package_script_is_rejected_without_touching_link_target' (105478964) panicked at src/modules/runtime/protection.rs:628:13:
+assertion failed: receipt.reconcile(root.path(), &guard).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::runtime::protection::tests::linked_receipt_or_package_script_is_rejected_without_touching_link_target ... FAILED
+test modules::runtime::relocation::tests::histories_are_not_truncated_and_absent_old_internal_paths_relocate ... ok
+test modules::runtime::relocation::tests::managed_paths_relocate_but_source_and_backups_remain_identical ... ok
+test modules::runtime::uninstall::tests::uninstall_refuses_symlinked_prefix ... ok
+test modules::runtime::uninstall::tests::uninstall_refuses_when_prefix_was_externally_modified ... ok
+test modules::runtime::install::tests::protected_install_only_marks_and_reconciles_activation_after_successful_probe ... ok
+test modules::runtime::protection::tests::interrupted_receipt_removal_is_idempotent_after_commit_and_after_expiry ... ok
+test modules::runtime::uninstall::tests::managed_uninstall_removes_only_prefix_and_entry_and_backs_up ... ok
+test modules::runtime::uninstall::tests::managed_uninstall_falls_back_to_discovered_source ... ok
+test modules::runtime::relocation::tests::no_runtime_is_noop_and_changed_inventory_or_marker_refuses_preparation ... ok
+test modules::runtime::protection::tests::changed_activation_inputs_never_release_protection ... ok
+test modules::runtime::relocation::tests::invalid_records_or_launchers_do_not_write_target_runtime_files ... ok
+
+failures:
+
+failures:
+    modules::runtime::protection::tests::linked_receipt_or_package_script_is_rejected_without_touching_link_target
+
+test result: FAILED. 88 passed; 1 failed; 0 ignored; 0 measured; 511 filtered out; finished in 2.12s
+
+error: test failed, to rerun pass `--lib`

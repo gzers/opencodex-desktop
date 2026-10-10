@@ -1,0 +1,33 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error[E0599]: no function or associated item named `new` found for struct `modules::runtime::install::RecordingProgressSink` in the current scope
+    --> src/modules/runtime/install.rs:2053:47
+     |
+ 300 | pub struct RecordingProgressSink {
+     | -------------------------------- function or associated item `new` not found for this struct
+...
+2053 |             let sink = RecordingProgressSink::new();
+     |                                               ^^^ function or associated item not found in `modules::runtime::install::RecordingProgressSink`
+     |
+     = help: items from traits can only be used if the trait is implemented and in scope
+     = note: the following traits define an item `new`, perhaps you need to implement one of them:
+             candidate #1: `Bit`
+             candidate #2: `KeyIvInit`
+             candidate #3: `UniformSampler`
+             candidate #4: `VariableOutput`
+             candidate #5: `VariableOutputCore`
+             candidate #6: `aes_gcm::KeyInit`
+             candidate #7: `brotli::enc::backward_references::hash_to_binary_tree::Allocable`
+             candidate #8: `brotli::enc::threading::AnyBoxConstructor`
+             candidate #9: `ring::aead::BoundKey`
+             candidate #10: `serde_with::duplicate_key_impls::error_on_duplicate::PreventDuplicateInsertsMap`
+             candidate #11: `serde_with::duplicate_key_impls::error_on_duplicate::PreventDuplicateInsertsSet`
+             candidate #12: `serde_with::duplicate_key_impls::first_value_wins::DuplicateInsertsFirstWinsMap`
+             candidate #13: `serde_with::duplicate_key_impls::last_value_wins::DuplicateInsertsLastWinsSet`
+             candidate #14: `sha2::Digest`
+             candidate #15: `sha2::digest::Mac`
+             candidate #16: `tauri_runtime::Runtime`
+             candidate #17: `tauri_runtime::window::WindowBuilder`
+             candidate #18: `zip::read::magic_finder::FinderDirection`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

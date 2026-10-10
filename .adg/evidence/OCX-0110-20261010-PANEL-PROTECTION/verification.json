@@ -1,0 +1,38 @@
+{
+  "source_branch": "feature/0.1.10-maintenance",
+  "source_sha": "5401dd5c4ea7059e567e1840f76285d3c7a70b95",
+  "working_tree_clean": true,
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "machine": "arm64",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+  "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)",
+  "test_workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+  "scope": "source regression, not native installation acceptance",
+  "checks": [
+    {
+      "command": "cargo test",
+      "log": "ocx-0110-panel-protection-full-final.log",
+      "exit_code": 0,
+      "groups": 33,
+      "passed": 753,
+      "failed": 0,
+      "ignored": 4
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "log": "ocx-0110-panel-protection-fmt-final.log",
+      "exit_code": 0
+    },
+    {
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "log": "ocx-0110-panel-protection-clippy-final.log",
+      "exit_code": 0
+    }
+  ],
+  "initial_failures_retained": [
+    "ocx-0110-panel-protection-targeted-initial.log",
+    "ocx-0110-panel-protection-targeted-hardlink-failure.log"
+  ],
+  "ui_retested": false,
+  "task_closed": false
+}
