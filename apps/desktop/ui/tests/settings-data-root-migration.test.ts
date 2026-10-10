@@ -42,6 +42,17 @@ describe('data root migration confirmation and restart boundary', () => {
   })
   afterEach(() => { mounted.splice(0).forEach(wrapper => wrapper.unmount()) })
 
+  it('trusts resolved runtime identity for aliased paths instead of showing pending rows', async () => {
+    invoke.mockImplementation(async (command: string) => command === 'get_data_root_config'
+      ? { ...current, activeDataRoot: '/tmp/source', currentDataRoot: '/private/tmp/source',
+        opencodexHome: '/tmp/home', currentOpencodexHome: '/private/tmp/home', runtimeActive: true }
+      : null)
+    const { page } = await setup()
+    expect(page.text()).not.toContain('重启后生效')
+    expect(page.text()).not.toContain('写入已暂停')
+    expect(page.get('[data-testid="data-root-migrate"]').attributes('disabled')).toBeUndefined()
+  })
+
   it('renders an escaped captured target and cancellation never starts migration', async () => {
     const { page, modal, app } = await setup()
     const target = `/fixtures/<img src=x onerror="alert(1)"> & 'target'`
