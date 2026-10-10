@@ -37,6 +37,7 @@ export interface DataRootSwitchResult {
   status: DataRootSwitchStatus
   blocked: DataRootSwitchBlocked | null
   config: DataRootConfig | null
+  reconciliationRequired: boolean
 }
 
 export async function getDataRootConfig(): Promise<DataRootConfig> {

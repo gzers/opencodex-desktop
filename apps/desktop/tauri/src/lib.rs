@@ -120,7 +120,7 @@ pub fn run() {
             )?;
             let data_root = runtime_config.active_data_root.clone();
             app.manage(crate::state::SharedDataRootAnchor(anchor));
-            app.manage(crate::state::InstanceState { _locks: locks });
+            app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
             // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
             // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。
             if let Err(error) = crate::modules::config_migration::migrate_preferences_on_startup(&data_root)

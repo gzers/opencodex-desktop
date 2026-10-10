@@ -159,7 +159,8 @@ impl SharedRuntimeInstall {
 }
 
 pub struct InstanceState {
-    pub _locks: Vec<crate::modules::instance::AppInstanceLock>,
+    /// Startup chain and committed migration targets stay locked until exit.
+    pub locks: std::sync::Mutex<Vec<crate::modules::instance::AppInstanceLock>>,
 }
 
 #[cfg(test)]

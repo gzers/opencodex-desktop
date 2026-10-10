@@ -20,6 +20,8 @@ export const useDataRootStore = defineStore('data-root', {
     configError: false,
     switching: false,
     homeSaving: false,
+    pendingRestart: false,
+    reconciliationRequired: false,
     saving: false,
     lastResult: null as DataRootInitialization | null,
     lastValidation: null as DataRootValidation | null,
@@ -27,6 +29,7 @@ export const useDataRootStore = defineStore('data-root', {
   }),
   actions: {
     async save(rootPath: string) {
+      if (!this.allowBindingChange()) return false
       const path = rootPath.trim()
       if (!path) {
         this.error = '请输入显式数据目录路径。'
@@ -55,6 +58,7 @@ export const useDataRootStore = defineStore('data-root', {
       this.configLoading = true
       try {
         this.config = await getDataRootConfig()
+        if (!this.config.runtimeActive) this.pendingRestart = true
         this.configError = false
       } catch {
         this.configError = true
@@ -63,7 +67,7 @@ export const useDataRootStore = defineStore('data-root', {
       }
     },
     async switchTo(targetPath: string, migrateData: boolean) {
-      if (this.switching) return false
+      if (!this.allowBindingChange()) return false
       const path = targetPath.trim()
       if (!path) {
         this.error = '请输入显式数据目录路径。'
@@ -73,23 +77,27 @@ export const useDataRootStore = defineStore('data-root', {
       this.error = ''
       try {
         const result = await switchDataRootCommand(path, migrateData ? 'migrate_data' : 'reference_only')
-        if (result.config) this.config = result.config
         if (result.status === 'blocked') {
           this.error = result.blocked === 'running'
             ? '面板或安装任务仍在运行，暂时不能切换路径。'
             : '切换已被安全规则阻止。'
           return false
         }
+        if (result.config) this.config = result.config
+        this.reconciliationRequired = result.reconciliationRequired === true
+        this.pendingRestart = result.status === 'restart_required' || this.reconciliationRequired
         return true
       } catch {
-        this.error = '数据目录切换失败；未修改目标目录。'
+        this.error = migrateData
+          ? '迁移未提交，旧绑定保留；目标可能留下隔离的未完成副本，请勿直接使用。'
+          : '数据目录引用切换未完成；请重新读取路径配置。'
         return false
       } finally {
         this.switching = false
       }
     },
     async saveHome(mode: 'inside' | 'external', externalPath?: string) {
-      if (this.homeSaving) return false
+      if (!this.allowBindingChange()) return false
       if (mode === 'external' && !externalPath?.trim()) {
         this.error = '请输入显式 OPENCODEX_HOME 路径。'
         return false
@@ -98,13 +106,15 @@ export const useDataRootStore = defineStore('data-root', {
       this.error = ''
       try {
         const result = await setOpencodexHome(mode, externalPath?.trim())
-        if (result.config) this.config = result.config
         if (result.status === 'blocked') {
           this.error = result.blocked === 'running'
             ? '面板或安装任务仍在运行，暂时不能切换路径。'
             : '路径不能与数据目录互相嵌套。'
           return false
         }
+        if (result.config) this.config = result.config
+        this.reconciliationRequired = result.reconciliationRequired === true
+        this.pendingRestart = result.status === 'restart_required' || this.reconciliationRequired
         return true
       } catch {
         this.error = 'OPENCODEX_HOME 保存失败。'
@@ -112,6 +122,14 @@ export const useDataRootStore = defineStore('data-root', {
       } finally {
         this.homeSaving = false
       }
+    },
+    allowBindingChange() {
+      if (this.switching || this.homeSaving || this.saving) return false
+      if (this.pendingRestart || this.reconciliationRequired || this.config?.runtimeActive === false) {
+        this.error = '路径变更正在等待重启核对；请先重启管理器。'
+        return false
+      }
+      return true
     },
   },
 })

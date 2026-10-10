@@ -33,6 +33,7 @@ const app = useAppStore()
 const dataRootInput = ref('')
 const switchInput = ref('')
 const externalHomeInput = ref('')
+const dataRootBindingDisabled = computed(() => app.dataRootSwitching || app.dataRootHomeSaving || app.dataRootSaving || app.dataRootPendingRestart || app.dataRootReconciliationRequired || app.dataRootConfig?.runtimeActive === false || !app.dataRootConfig)
 const defaultPreferences: PreferencesDto = {
   schemaVersion: 1,
   themeNeedsImport: false,
@@ -251,10 +252,23 @@ async function saveDataRoot() {
   if (saved) app.showToast('数据目录已初始化；未执行依赖管理。')
   else app.showToast(app.dataRootError || '数据目录初始化失败。')
 }
-async function applyDataRootSwitch(migrateData: boolean) {
-  const saved = await app.switchDataRoot(switchInput.value, migrateData)
+function confirmDataRootMigration() {
+  const target = switchInput.value.trim()
+  if (!target) { app.showToast('请输入显式数据目录路径。'); return }
+  const escaped = target.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!)
+  app.openModal({
+    title: '迁移数据目录',
+    body: `<p>目标：<code>${escaped}</code></p><p>目标必须是尚不存在的新目录，父目录须已存在。将复制并校验管理器数据、备份及托管运行文件；外部 OPENCODEX_HOME 保持原位，不参与复制。</p><p>请先停止面板与安装任务。旧目录会保留；提交后暂停写入，重启管理器并核对新路径后生效。</p>`,
+    confirmLabel: '复制并校验',
+    onConfirm: () => { void applyDataRootSwitch(true, target) },
+  })
+}
+async function applyDataRootSwitch(migrateData: boolean, target = switchInput.value) {
+  const saved = await app.switchDataRoot(target, migrateData)
   if (saved) {
-    app.showToast(migrateData ? '已切换数据目录并迁移数据。' : '已切换数据目录引用。')
+    app.showToast(app.dataRootReconciliationRequired
+      ? '绑定提交结果需核对，写入已暂停；请重启管理器确认实际路径。'
+      : migrateData ? '数据复制校验完成；请重启管理器使新目录生效。' : '数据目录引用已保存；请重启管理器使其生效。')
     switchInput.value = ''
   } else app.showToast(app.dataRootError || '数据目录切换失败。')
 }
@@ -264,7 +278,7 @@ async function applyOpencodexHome(mode: 'inside' | 'external') {
     mode === 'external' ? externalHomeInput.value : undefined,
   )
   if (saved) {
-    app.showToast('OPENCODEX_HOME 已保存。')
+    app.showToast('OPENCODEX_HOME 已保存；请重启管理器使其生效。')
     externalHomeInput.value = ''
   } else app.showToast(app.dataRootError || 'OPENCODEX_HOME 保存失败。')
 }
@@ -1101,16 +1115,17 @@ function restoreGeneralDefaults() {
         <table v-else class="data-root-table"><thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead><tbody>
           <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentDataRoot)"><code>{{ app.dataRootConfig.currentDataRoot }}</code></button></td><td>数据目录 · 当前使用</td><td><button class="btn ghost" @click="openPath(app.dataRootConfig.currentDataRoot, '数据目录')">打开</button></td></tr>
           <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentOpencodexHome)"><code>{{ app.dataRootConfig.currentOpencodexHome }}</code></button></td><td>OPENCODEX_HOME · 当前使用</td><td><button class="btn ghost" @click="openPath(app.dataRootConfig.currentOpencodexHome, 'OPENCODEX_HOME')">打开</button></td></tr>
-          <tr v-if="app.dataRootConfig.activeDataRoot !== app.dataRootConfig.currentDataRoot"><td><code>{{ app.dataRootConfig.activeDataRoot }}</code></td><td>数据目录 · 重启后生效</td><td>已保存</td></tr>
-          <tr v-if="app.dataRootConfig.opencodexHome !== app.dataRootConfig.currentOpencodexHome"><td><code>{{ app.dataRootConfig.opencodexHome }}</code></td><td>OPENCODEX_HOME · 重启后生效</td><td>已保存</td></tr>
+          <tr v-if="app.dataRootConfig.activeDataRoot !== app.dataRootConfig.currentDataRoot"><td><code>{{ app.dataRootConfig.activeDataRoot }}</code></td><td>数据目录 · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
+          <tr v-if="app.dataRootConfig.opencodexHome !== app.dataRootConfig.currentOpencodexHome"><td><code>{{ app.dataRootConfig.opencodexHome }}</code></td><td>OPENCODEX_HOME · 重启后生效</td><td>{{ app.dataRootReconciliationRequired ? '待核对' : '已保存' }}</td></tr>
         </tbody></table>
-        <p v-if="app.dataRootConfig && !app.dataRootConfig.runtimeActive" class="env-bound">已保存新位置；当前服务仍使用上方当前路径，请重启管理器后回读确认。</p>
+        <p v-if="app.dataRootReconciliationRequired" class="env-bound" role="alert">绑定替换可能已完成，但持久性核对未通过；上方新位置为预期目标。写入已暂停，请重启管理器核对实际路径。</p>
+        <p v-else-if="app.dataRootPendingRestart || (app.dataRootConfig && !app.dataRootConfig.runtimeActive)" class="env-bound" role="status">已保存新位置，写入已暂停；当前服务仍使用上方当前路径，请重启管理器后回读确认。</p>
         <div class="field-grid">
           <div class="field"><label for="external-home-input">外部 OPENCODEX_HOME</label><input id="external-home-input" v-model="externalHomeInput" class="input" placeholder="/absolute/path/to/OpenCodexHome" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
         <div class="controls">
-          <button class="btn" :disabled="app.dataRootHomeSaving" @click="applyOpencodexHome('external')">{{ app.dataRootHomeSaving ? '保存中…' : '使用外部路径' }}</button>
-          <button class="btn ghost" :disabled="app.dataRootHomeSaving" @click="applyOpencodexHome('inside')">回到数据目录内</button>
+          <button class="btn" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('external')">{{ app.dataRootHomeSaving ? '保存中…' : '使用外部路径' }}</button>
+          <button class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyOpencodexHome('inside')">回到数据目录内</button>
         </div>
       </article>
       <article class="card"><div class="card-head"><div><h2>初始化或切换数据目录</h2><p>使用显式绝对路径；先校验结构，成功后才初始化冻结分区。</p></div></div>
@@ -1121,16 +1136,18 @@ function restoreGeneralDefaults() {
           <div class="field"><label for="switch-root-input">切换目标路径</label><input id="switch-root-input" v-model="switchInput" class="input" placeholder="/absolute/path/to/ExistingOpenCodexData" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
         <div class="controls">
-          <button class="btn" :disabled="app.dataRootSaving" @click="saveDataRoot">{{ app.dataRootSaving ? '校验中…' : '校验并初始化' }}</button>
-          <button class="btn ghost" :disabled="app.dataRootSwitching" @click="applyDataRootSwitch(false)">{{ app.dataRootSwitching ? '切换中…' : '仅切换引用' }}</button>
-          <button class="btn ghost" disabled title="数据迁移尚未开放">迁移数据（暂未开放）</button>
+          <button class="btn" :disabled="dataRootBindingDisabled" @click="saveDataRoot">{{ app.dataRootSaving ? '校验中…' : '校验并初始化' }}</button>
+          <button class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyDataRootSwitch(false)">{{ app.dataRootSwitching ? '切换中…' : '仅切换引用' }}</button>
+          <button class="btn ghost" data-testid="data-root-migrate" :disabled="dataRootBindingDisabled" @click="confirmDataRootMigration">迁移数据…</button>
           <span v-if="app.dataRootLastValidation === 'valid'" class="tag">结构有效</span>
           <span v-else-if="app.dataRootLastValidation === 'future_version'" class="tag">版本过新</span>
           <span v-else-if="app.dataRootLastValidation === 'corrupted'" class="tag">结构损坏</span>
-          <span v-if="app.dataRootError" class="tag">失败：未写入</span>
+          <span v-if="app.dataRootError" class="tag">未完成</span>
           <span v-else-if="app.dataRootLastResult" class="tag">{{ app.dataRootLastResult.created ? '已创建' : '已引用' }}</span>
         </div>
       </article>
+      <p v-if="app.dataRootSwitching" role="status" aria-live="polite" aria-busy="true" data-testid="data-root-progress" class="env-bound"><span class="btn-spinner" aria-hidden="true"></span>正在校验路径并执行复制 / 绑定核对，请等待；完成后需要重启。</p>
+      <p v-if="app.dataRootError" class="env-bound" role="alert">{{ app.dataRootError }}</p>
       <article class="card"><div class="card-head"><div><h2>数据目录分区</h2><p>分区名已按 IMP 冻结；点击路径可复制，右侧可直接打开。</p></div></div>
         <table class="data-root-table"><thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead><tbody>
           <tr v-for="row in managedPartitions" :key="row.key"><td><button class="cli-copy-btn" @click="copyPath(row.path)"><code>{{ row.path }}</code></button></td><td>{{ row.label }}</td><td><button class="btn ghost" @click="openPath(row.path, row.label)">打开</button></td></tr>
