@@ -115,6 +115,12 @@ impl NotificationPublisher<'_> {
         self.publish_legacy(notification, true)
     }
 
+    /// Legacy 状态观测兼容入口，保留原有重复观测的去重/更新时间语义，
+    /// 但把持久化是否真正改变 store 返回给调用方。
+    pub fn publish_legacy_changed(&self, notification: Notification) -> AppResult<bool> {
+        self.publish_legacy(notification, false)
+    }
+
     fn publish_legacy(
         &self,
         notification: Notification,

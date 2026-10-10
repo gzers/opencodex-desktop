@@ -597,6 +597,8 @@ enum SupportedEvent {
     RunAtRisk,
     #[serde(rename = "external-takeover")]
     ExternalTakeover,
+    #[serde(rename = "runtime-observation-recovered")]
+    RuntimeObservationRecovered,
     #[serde(rename = "notifications-store-unreadable")]
     NotificationsStoreUnreadable,
     #[serde(rename = "status-snapshot-changed")]
@@ -891,15 +893,22 @@ impl RegistryConfig {
                 )?;
             }
             for target in &event.resolves {
-                // JSON owns the mapping; only matching execution terminal names may recover.
-                // Query/progress/commit successes cannot acquire a recovery capability.
-                config_assert(
-                    event.phase == Phase::Execution
-                        && event
+                // JSON owns the mapping. Execution recovery keeps the terminal
+                // succeeded/failed naming contract; observation recovery has a
+                // single explicit event so it cannot be granted accidentally to
+                // query, progress, commit, or another observation signal.
+                match event.phase {
+                    Phase::Execution => config_assert(
+                        event
                             .id
                             .strip_suffix("-succeeded")
                             .is_some_and(|stem| target.strip_suffix("-failed") == Some(stem)),
-                )?;
+                    )?,
+                    Phase::Observation => {
+                        config_assert(event.id == "runtime-observation-recovered")?
+                    }
+                    _ => return Err(RegistryError::InvalidConfig),
+                }
                 let failure = self
                     .events
                     .iter()
@@ -907,7 +916,8 @@ impl RegistryConfig {
                     .ok_or(RegistryError::InvalidConfig)?;
                 config_assert(
                     event.fact == Fact::Success
-                        && failure.fact == Fact::Failure
+                        && event.policy.is_none()
+                        && matches!(failure.fact, Fact::Failure | Fact::Risk)
                         && failure.availability == Availability::Active
                         && failure.policy.is_some()
                         && (event.job, event.object, event.action, event.phase)
@@ -1338,17 +1348,16 @@ pub fn matches_candidate(
     })
 }
 /// 包内容 + 执行位置/工作目录/OPENCODEX_HOME 的摘要；路径从不进入持久文件。
-pub fn lifecycle_identity(
-    root: &std::path::Path,
+fn runtime_context_fingerprint(
+    domain: &[u8],
     executable: &std::path::Path,
     working_directory: &std::path::Path,
     opencodex_home: &std::path::Path,
-    action: Action,
-) -> Result<EventIdentity, RegistryError> {
+) -> Result<[u8; 32], RegistryError> {
     use sha2::{Digest, Sha256};
     use std::io::Read;
     let mut hash = Sha256::new();
-    hash.update(b"ocxd-lifecycle-candidate-v1");
+    hash.update(domain);
     for path in [executable, working_directory, opencodex_home] {
         let path = match path.canonicalize() {
             Ok(path) => path,
@@ -1379,12 +1388,52 @@ pub fn lifecycle_identity(
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => hash.update(b"missing"),
         Err(_) => return Err(RegistryError::ScopeUnavailable),
     }
+    Ok(hash.finalize().into())
+}
+
+pub fn lifecycle_identity(
+    root: &std::path::Path,
+    executable: &std::path::Path,
+    working_directory: &std::path::Path,
+    opencodex_home: &std::path::Path,
+    action: Action,
+) -> Result<EventIdentity, RegistryError> {
+    let fingerprint = runtime_context_fingerprint(
+        b"ocxd-lifecycle-candidate-v1",
+        executable,
+        working_directory,
+        opencodex_home,
+    )?;
     candidate_identity(
         root,
         ObjectKind::Runtime,
         action,
         Phase::Execution,
         Channel::Local,
-        hash.finalize().into(),
+        fingerprint,
+    )
+}
+
+/// 运行态观察使用独立的 action/phase 分区；它不能解除启停命令的终态通知。
+/// 只保存摘要和不透明 UUID，路径与凭据不会写入事件作用域文件。
+pub fn observation_identity(
+    root: &std::path::Path,
+    executable: &std::path::Path,
+    working_directory: &std::path::Path,
+    opencodex_home: &std::path::Path,
+) -> Result<EventIdentity, RegistryError> {
+    let fingerprint = runtime_context_fingerprint(
+        b"ocxd-observation-candidate-v1",
+        executable,
+        working_directory,
+        opencodex_home,
+    )?;
+    candidate_identity(
+        root,
+        ObjectKind::Runtime,
+        Action::Observe,
+        Phase::Observation,
+        Channel::Local,
+        fingerprint,
     )
 }

@@ -482,6 +482,25 @@
       "resolves": []
     },
     {
+      "id": "runtime-observation-recovered",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "runtime-starting-failed",
+        "run-unreachable",
+        "run-at-risk",
+        "external-takeover"
+      ]
+    },
+    {
       "id": "notifications-store-unreadable",
       "job": "load_history",
       "object": "notification_history",
@@ -1844,6 +1863,11 @@
       "event": "external-takeover",
       "source": "commands/mod.rs::runtime_state_notification",
       "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "runtime-observation-recovered",
+      "source": "commands/mod.rs::publish_runtime_state_notification verified running snapshot",
+      "wiring": "scoped_terminal"
     },
     {
       "event": "notifications-store-unreadable",

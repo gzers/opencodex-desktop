@@ -389,23 +389,122 @@ pub fn publish_runtime_state_notification(
     lifecycle_notifications: bool,
     runtime_log: &crate::infrastructure::runtime_log::RuntimeLog,
 ) -> bool {
+    publish_runtime_state_notification_with_context(
+        publisher,
+        runtime,
+        lifecycle_notifications,
+        runtime_log,
+        None,
+    )
+}
+
+/// 状态轮询的通知发布入口。
+///
+/// 观测状态和启停命令拥有不同的作用域：观测告警只能由同一运行上下文的
+/// `runtime-observation-recovered` 解除，不能借 `Running` 状态解除某次 start/stop
+/// 失败。无法取得完整 ProcessContext 时保留 legacy 记录，但不伪造候选身份。
+pub fn publish_runtime_state_notification_with_context(
+    publisher: Option<crate::commands::notifications::NotificationPublisher<'_>>,
+    runtime: crate::types::status::RuntimeState,
+    lifecycle_notifications: bool,
+    runtime_log: &crate::infrastructure::runtime_log::RuntimeLog,
+    context: Option<&crate::state::ProcessContext>,
+) -> bool {
     if is_lifecycle_outcome(runtime) && !lifecycle_notifications {
         return false;
     }
     let Some(publisher) = publisher else {
         return false;
     };
+
+    let scoped_event = match runtime {
+        crate::types::status::RuntimeState::StartingFailed => Some((
+            "runtime-starting-failed",
+            crate::modules::notifications::registry::Fact::Failure,
+        )),
+        crate::types::status::RuntimeState::Unreachable => Some((
+            "run-unreachable",
+            crate::modules::notifications::registry::Fact::Failure,
+        )),
+        crate::types::status::RuntimeState::AtRisk => Some((
+            "run-at-risk",
+            crate::modules::notifications::registry::Fact::Risk,
+        )),
+        crate::types::status::RuntimeState::ExternalTakeover => Some((
+            "external-takeover",
+            crate::modules::notifications::registry::Fact::Risk,
+        )),
+        crate::types::status::RuntimeState::Running => Some((
+            "runtime-observation-recovered",
+            crate::modules::notifications::registry::Fact::Success,
+        )),
+        _ => None,
+    };
+
+    if let (Some((event, fact)), Some(context)) = (scoped_event, context) {
+        if let Ok(executable) = context.executable() {
+            if let Ok(identity) = crate::modules::notifications::registry::observation_identity(
+                publisher.data_root,
+                &executable,
+                &context.working_directory,
+                &context.opencodex_home,
+            ) {
+                let evidence = match fact {
+                    crate::modules::notifications::registry::Fact::Failure => {
+                        crate::modules::notifications::registry::Evidence::Failure
+                    }
+                    crate::modules::notifications::registry::Fact::Risk => {
+                        crate::modules::notifications::registry::Evidence::Risk
+                    }
+                    crate::modules::notifications::registry::Fact::Success => {
+                        crate::modules::notifications::registry::Evidence::Success {
+                            candidate: identity.candidate.clone(),
+                            verified: true,
+                        }
+                    }
+                    _ => return false,
+                };
+                let delivery = crate::modules::notifications::registry::Delivery {
+                    event,
+                    job: crate::modules::notifications::registry::Job::Observe,
+                    trigger: crate::modules::notifications::registry::Trigger::StatusChange,
+                    identity,
+                    evidence,
+                    occurred_at: chrono::Utc::now(),
+                };
+                return match publisher.publish_event(&delivery) {
+                    Ok(outcome) => outcome.changed,
+                    Err(error) => {
+                        let _ = runtime_log.append_result(
+                            "runtime-state-notification",
+                            Err(format!("notification publish failed: {error}")),
+                        );
+                        false
+                    }
+                };
+            }
+        }
+        let _ = runtime_log.append_result(
+            "runtime-state-notification",
+            Err("observation scope unavailable; using legacy notification".to_owned()),
+        );
+    }
+
+    // NotFound intentionally remains legacy: a missing executable has no reliable
+    // runtime candidate to bind to, and Running must not clear it accidentally.
     let Some(notification) = runtime_state_notification(runtime) else {
         return false;
     };
-    if let Err(error) = publisher.publish(notification) {
-        let _ = runtime_log.append_result(
-            "runtime-state-notification",
-            Err(format!("notification publish failed: {error}")),
-        );
-        return false;
+    match publisher.publish_legacy_changed(notification) {
+        Ok(changed) => changed,
+        Err(error) => {
+            let _ = runtime_log.append_result(
+                "runtime-state-notification",
+                Err(format!("notification publish failed: {error}")),
+            );
+            false
+        }
     }
-    true
 }
 
 pub fn status_snapshot_from_collector<S>(
@@ -609,6 +708,208 @@ mod runtime_state_notification_tests {
         let live = guard.live();
         assert_eq!(live.len(), 1, "同一问题只保留一条");
         assert!(!live[0].read, "重复出现应恢复未读");
+    }
+
+    #[test]
+    fn observation_recovery_requires_the_same_process_context() {
+        use crate::infrastructure::runtime_executable::FixedRuntimeExecutable;
+        use crate::modules::notifications::registry::{Action, Phase};
+
+        let root = tempfile::tempdir().expect("temp data root");
+        let executable = root.path().join("ocx");
+        let other_executable = root.path().join("other-ocx");
+        std::fs::write(&executable, b"candidate-a").expect("runtime fixture");
+        std::fs::write(&other_executable, b"candidate-b").expect("runtime fixture");
+        let working_directory = root.path().join("work");
+        let other_working_directory = root.path().join("other-work");
+        let opencodex_home = root.path().join("home");
+        let other_opencodex_home = root.path().join("other-home");
+        for path in [
+            &working_directory,
+            &other_working_directory,
+            &opencodex_home,
+            &other_opencodex_home,
+        ] {
+            std::fs::create_dir_all(path).expect("process context fixture");
+        }
+        let context = crate::state::ProcessContext {
+            runtime: FixedRuntimeExecutable::resolved(executable.clone()),
+            working_directory: working_directory.clone(),
+            opencodex_home: opencodex_home.clone(),
+        };
+        let different_executable = crate::state::ProcessContext {
+            runtime: FixedRuntimeExecutable::resolved(other_executable),
+            working_directory: working_directory.clone(),
+            opencodex_home: opencodex_home.clone(),
+        };
+        let different_working_directory = crate::state::ProcessContext {
+            runtime: FixedRuntimeExecutable::resolved(executable.clone()),
+            working_directory: other_working_directory,
+            opencodex_home: opencodex_home.clone(),
+        };
+        let different_opencodex_home = crate::state::ProcessContext {
+            runtime: FixedRuntimeExecutable::resolved(executable.clone()),
+            working_directory,
+            opencodex_home: other_opencodex_home,
+        };
+        let store: crate::state::SharedNotificationStore = std::sync::Arc::new(
+            std::sync::Mutex::new(crate::modules::notifications::NotificationStore::new()),
+        );
+        let log = crate::infrastructure::runtime_log::RuntimeLog::new(root.path());
+        let publisher = crate::commands::notifications::NotificationPublisher {
+            store: &store,
+            data_root: root.path(),
+        };
+
+        assert!(publish_runtime_state_notification_with_context(
+            Some(publisher),
+            RuntimeState::StartingFailed,
+            true,
+            &log,
+            Some(&context),
+        ));
+        let failure = store.lock().expect("notification store lock").all()[0].clone();
+        let identity = failure.event_identity.expect("观测失败必须有作用域");
+        assert_eq!(identity.action, Action::Observe);
+        assert_eq!(identity.phase, Phase::Observation);
+        let same_identity = crate::modules::notifications::registry::observation_identity(
+            root.path(),
+            &executable,
+            &context.working_directory,
+            &context.opencodex_home,
+        )
+        .expect("same observation identity");
+        assert_eq!(identity, same_identity);
+        assert_eq!(
+            failure.notification_id.split(':').next(),
+            Some("runtime-starting-failed")
+        );
+        assert!(publish_runtime_state_notification_with_context(
+            Some(publisher),
+            RuntimeState::Running,
+            true,
+            &log,
+            Some(&context),
+        ));
+        assert!(store.lock().expect("notification store lock").all()[0].resolved);
+
+        for different in [
+            &different_executable,
+            &different_working_directory,
+            &different_opencodex_home,
+        ] {
+            assert!(publish_runtime_state_notification_with_context(
+                Some(publisher),
+                RuntimeState::StartingFailed,
+                true,
+                &log,
+                Some(&context),
+            ));
+            let failure_index = store.lock().expect("notification store lock").all().len() - 1;
+            assert!(!publish_runtime_state_notification_with_context(
+                Some(publisher),
+                RuntimeState::Running,
+                true,
+                &log,
+                Some(different),
+            ));
+            assert!(
+                !store.lock().expect("notification store lock").all()[failure_index].resolved,
+                "不同运行上下文不应解除观测异常"
+            );
+        }
+        assert_eq!(identity.action, Action::Observe);
+        assert_eq!(identity.phase, Phase::Observation);
+    }
+
+    #[test]
+    fn observation_recovery_cannot_resolve_lifecycle_execution_failure() {
+        use crate::infrastructure::runtime_executable::FixedRuntimeExecutable;
+        use crate::modules::notifications::registry::{
+            lifecycle_identity, terminal_delivery, Evidence, Trigger,
+        };
+
+        let root = tempfile::tempdir().expect("temp data root");
+        let executable = root.path().join("ocx");
+        let working_directory = root.path().join("work");
+        let opencodex_home = root.path().join("home");
+        std::fs::write(&executable, b"candidate").expect("runtime fixture");
+        std::fs::create_dir_all(&working_directory).expect("working directory");
+        std::fs::create_dir_all(&opencodex_home).expect("OpenCodex home");
+        let context = crate::state::ProcessContext {
+            runtime: FixedRuntimeExecutable::resolved(executable.clone()),
+            working_directory: working_directory.clone(),
+            opencodex_home: opencodex_home.clone(),
+        };
+        let store: crate::state::SharedNotificationStore = std::sync::Arc::new(
+            std::sync::Mutex::new(crate::modules::notifications::NotificationStore::new()),
+        );
+        let publisher = crate::commands::notifications::NotificationPublisher {
+            store: &store,
+            data_root: root.path(),
+        };
+        let identity = lifecycle_identity(
+            root.path(),
+            &executable,
+            &working_directory,
+            &opencodex_home,
+            crate::modules::notifications::registry::Action::Start,
+        )
+        .expect("lifecycle identity");
+        let failure = terminal_delivery(
+            "run-start-failed",
+            Trigger::User,
+            identity.clone(),
+            Evidence::Failure,
+            chrono::Utc::now(),
+        )
+        .expect("lifecycle failure delivery");
+        assert!(
+            publisher
+                .publish_event(&failure)
+                .expect("persist failure")
+                .added
+        );
+
+        let log = crate::infrastructure::runtime_log::RuntimeLog::new(root.path());
+        assert!(!publish_runtime_state_notification_with_context(
+            Some(publisher),
+            RuntimeState::Running,
+            true,
+            &log,
+            Some(&context),
+        ));
+        let store_guard = store.lock().expect("notification store lock");
+        let saved = store_guard.all();
+        assert_eq!(saved.len(), 1);
+        assert!(!saved[0].resolved);
+        assert_eq!(saved[0].event_identity.as_ref(), Some(&identity));
+    }
+
+    #[test]
+    fn observation_recovery_registration_is_explicit_and_scoped() {
+        use crate::modules::notifications::registry::{Action, Fact, Job, Phase};
+
+        let event =
+            crate::modules::notifications::registry::lookup("runtime-observation-recovered")
+                .expect("观测恢复事件必须登记");
+        assert_eq!(event.job, Job::Observe);
+        assert_eq!(
+            event.object,
+            crate::modules::notifications::registry::ObjectKind::Runtime
+        );
+        assert_eq!(event.action, Action::Observe);
+        assert_eq!(event.phase, Phase::Observation);
+        assert_eq!(event.fact, Fact::Success);
+        assert_eq!(
+            event.resolves,
+            vec![
+                "runtime-starting-failed".to_owned(),
+                "run-unreachable".to_owned(),
+                "run-at-risk".to_owned(),
+                "external-takeover".to_owned(),
+            ]
+        );
     }
 
     /// restore 引导按目标分文案：外部接管与 startup at-risk 不能混成同一 target。

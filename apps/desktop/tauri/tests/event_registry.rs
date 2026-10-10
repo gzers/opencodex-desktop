@@ -90,7 +90,11 @@ fn registry_is_closed_and_references_are_consistent() {
         }
         for failure in &event.resolves {
             let failed = lookup(failure).unwrap();
-            assert_eq!(failed.fact, Fact::Failure);
+            assert!(
+                matches!(failed.fact, Fact::Failure | Fact::Risk),
+                "恢复事件只能解除失败或风险事实：{}",
+                failure
+            );
             assert_eq!(failed.job, event.job);
             assert_eq!(failed.object, event.object);
             assert_eq!(failed.action, event.action);

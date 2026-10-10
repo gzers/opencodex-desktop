@@ -424,11 +424,13 @@ pub fn run() {
                         };
                         let runtime_log =
                             crate::infrastructure::runtime_log::RuntimeLog::new(&data_root.0);
-                        let published = crate::commands::publish_runtime_state_notification(
+                        let process_context = self.0.try_state::<crate::state::ProcessContext>();
+                        let published = crate::commands::publish_runtime_state_notification_with_context(
                             Some(publisher),
                             runtime,
                             enabled,
                             &runtime_log,
+                            process_context.as_deref(),
                         );
                         // 后端写入后必须广播，否则前端仍显示启动时那份旧列表。
                         if published {
