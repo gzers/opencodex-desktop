@@ -95,8 +95,38 @@ fn sync_operation_gate() -> std::sync::Arc<tokio::sync::Mutex<()>> {
         .clone()
 }
 
-fn admit_sync_operation() -> AppResult<tokio::sync::OwnedMutexGuard<()>> {
-    admit_sync_with_gate(sync_operation_gate())
+/// The worker, rather than its IPC observer, owns both admissions until all
+/// state projection and notifications complete. This also moves local IO and
+/// credentials off the IPC/main thread.
+async fn run_owned_sync<T, F>(operation: &'static str, task: F) -> AppResult<T>
+where
+    F: FnOnce() -> AppResult<T> + Send + 'static,
+    T: Send + 'static,
+{
+    run_owned_sync_with_gates(
+        crate::infrastructure::storage_writers::global(),
+        sync_operation_gate(),
+        operation,
+        task,
+    )
+    .await
+}
+
+async fn run_owned_sync_with_gates<T, F>(
+    writers: std::sync::Arc<crate::infrastructure::storage_writers::WriterGate>,
+    operations: std::sync::Arc<tokio::sync::Mutex<()>>,
+    operation: &'static str,
+    task: F,
+) -> AppResult<T>
+where
+    F: FnOnce() -> AppResult<T> + Send + 'static,
+    T: Send + 'static,
+{
+    crate::commands::run_blocking_with_gate(writers, operation, move || {
+        let _sync = admit_sync_with_gate(operations)?;
+        task()
+    })
+    .await
 }
 
 fn admit_sync_with_gate(
@@ -151,8 +181,7 @@ pub async fn save_sync_endpoint(
         conflict_policy: request.conflict_policy,
     };
     let root = data_root.inner().0.clone();
-    let endpoint = crate::commands::run_blocking("save sync endpoint", move || {
-        let _sync = admit_sync_operation()?;
+    let endpoint = run_owned_sync("save sync endpoint", move || {
         let store = SyncConfigStore::new(&root);
         store.save_endpoint(&input)
     })
@@ -169,8 +198,7 @@ pub async fn delete_sync_endpoint(
 ) -> AppResult<SyncConfigDto> {
     {
         let root = data_root.inner().0.clone();
-        crate::commands::run_blocking("delete sync endpoint", move || {
-            let _sync = admit_sync_operation()?;
+        run_owned_sync("delete sync endpoint", move || {
             SyncConfigStore::new(&root).delete_endpoint(delete_credentials)
         })
         .await?;
@@ -200,8 +228,7 @@ pub async fn test_sync_connection(
     data_root: State<'_, SharedDataRoot>,
 ) -> AppResult<SyncOperationResultDto> {
     let root = data_root.inner().0.clone();
-    crate::commands::run_blocking("test sync connection", move || {
-        let _sync = admit_sync_operation()?;
+    run_owned_sync("test sync connection", move || {
         let store = SyncConfigStore::new(&root);
         let config = store.load()?;
         let endpoint = config.active().cloned().ok_or(AppError::NotConfigured)?;
@@ -300,90 +327,95 @@ pub async fn run_sync_now(
     app: tauri::AppHandle,
     data_root: State<'_, SharedDataRoot>,
     home: State<'_, SharedHomeDir>,
-    status: State<'_, SharedSyncStatus>,
-    notifications: State<'_, SharedNotificationStore>,
 ) -> AppResult<SyncOperationResultDto> {
-    let _sync = admit_sync_operation()?;
-    let config = config_store(&data_root).load()?;
-    let Some(endpoint) = config.active().cloned() else {
-        return Err(AppError::NotConfigured);
-    };
-    let webdav = webdav_config(&endpoint)?;
-    let now = chrono::Utc::now();
-    {
-        let mut run = status_guard(&status);
-        run.connection_state = crate::types::status::ConnectionState::Connecting;
-        run.operation_state = crate::types::status::OperationState::Validating;
-        run.started_at = now;
-        run.finished_at = None;
-        run.failure_reason = None;
-        run.items_total = crate::modules::sync::runner::SYNCED_ARTIFACTS.len();
-        run.items_done = 0;
-    }
     let data_root_path = data_root.inner().0.clone();
     let home_path = home.inner().0.clone();
-    let outcome =
-        crate::modules::sync::runner::run_sync(&data_root_path, &home_path, &endpoint, &webdav)
-            .await;
-    // Persist and broadcast outside the sync-state lock. A repeated conflict or
-    // failed persistence must not emit a notification-list change.
-    if outcome.as_ref().is_ok_and(|outcome| outcome.conflicted)
-        && publish_sync_conflict(
-            sync_conflict_alerts_enabled(&data_root_path),
-            notifications.inner(),
+    run_owned_sync("run sync now", move || {
+        let config = SyncConfigStore::new(&data_root_path).load()?;
+        let endpoint = config.active().cloned().ok_or(AppError::NotConfigured)?;
+        let webdav = webdav_config(&endpoint)?;
+        webdav.validate().map_err(|_| AppError::NotConfigured)?;
+        let status = app.state::<SharedSyncStatus>();
+        let notifications = app.state::<SharedNotificationStore>();
+        let now = chrono::Utc::now();
+        {
+            let mut run = status_guard(&status);
+            run.run_id = uuid::Uuid::new_v4().to_string();
+            run.connection_state = crate::types::status::ConnectionState::Connecting;
+            run.operation_state = crate::types::status::OperationState::Validating;
+            run.started_at = now;
+            run.finished_at = None;
+            run.failure_reason = None;
+            run.items_total = crate::modules::sync::runner::SYNCED_ARTIFACTS.len();
+            run.items_done = 0;
+        }
+        let outcome = tauri::async_runtime::block_on(crate::modules::sync::runner::run_sync(
             &data_root_path,
-        )
-    {
-        let _ = crate::commands::event_delivery::emit_signal(
-            &app,
-            crate::commands::notifications::NOTIFICATIONS_CHANGED_EVENT,
-            crate::modules::notifications::registry::Job::NotificationMutation,
-            crate::modules::notifications::registry::Trigger::Commit,
-            crate::modules::notifications::registry::Channel::Local,
-            (),
-        );
-    }
-    let mut run = status_guard(&status);
-    match outcome {
-        Ok(outcome) => {
-            run.connection_state = crate::types::status::ConnectionState::Synced;
-            run.operation_state = crate::types::status::OperationState::Succeeded;
-            run.finished_at = Some(chrono::Utc::now());
-            run.items_done = outcome.uploaded.len();
-            run.snapshot_id = Some(outcome.snapshot_id.clone());
-            Ok(SyncOperationResultDto {
-                connection_state: "synced".to_string(),
-                operation_state: "succeeded".to_string(),
-                message: outcome.message(),
-                snapshot_id: Some(outcome.snapshot_id),
-                backup_id: None,
-                etag: outcome.etag,
-            })
+            &home_path,
+            &endpoint,
+            &webdav,
+        ));
+        // Persist and broadcast outside the sync-state lock. A repeated conflict or
+        // failed persistence must not emit a notification-list change.
+        if outcome.as_ref().is_ok_and(|outcome| outcome.conflicted)
+            && publish_sync_conflict(
+                sync_conflict_alerts_enabled(&data_root_path),
+                notifications.inner(),
+                &data_root_path,
+            )
+        {
+            let _ = crate::commands::event_delivery::emit_signal(
+                &app,
+                crate::commands::notifications::NOTIFICATIONS_CHANGED_EVENT,
+                crate::modules::notifications::registry::Job::NotificationMutation,
+                crate::modules::notifications::registry::Trigger::Commit,
+                crate::modules::notifications::registry::Channel::Local,
+                (),
+            );
         }
-        // 上传阶段失败：按既有契约返回「失败但命令成功」的结果投影。
-        Err(failure @ SyncRunFailure::WebDav(WebDavOperation::Upload, _)) => {
-            let message = failure.user_message();
-            run.connection_state = crate::types::status::ConnectionState::Failed;
-            run.operation_state = crate::types::status::OperationState::Failed;
-            run.finished_at = Some(chrono::Utc::now());
-            run.failure_reason = Some(message.clone());
-            Ok(SyncOperationResultDto {
-                connection_state: "failed".to_string(),
-                operation_state: "failed".to_string(),
-                message,
-                snapshot_id: None,
-                backup_id: None,
-                etag: None,
-            })
+        let mut run = status_guard(&status);
+        match outcome {
+            Ok(outcome) => {
+                run.connection_state = crate::types::status::ConnectionState::Synced;
+                run.operation_state = crate::types::status::OperationState::Succeeded;
+                run.finished_at = Some(chrono::Utc::now());
+                run.items_done = outcome.uploaded.len();
+                run.snapshot_id = Some(outcome.snapshot_id.clone());
+                Ok(SyncOperationResultDto {
+                    connection_state: "synced".to_string(),
+                    operation_state: "succeeded".to_string(),
+                    message: outcome.message(),
+                    snapshot_id: Some(outcome.snapshot_id),
+                    backup_id: None,
+                    etag: outcome.etag,
+                })
+            }
+            // 上传阶段失败：按既有契约返回「失败但命令成功」的结果投影。
+            Err(failure @ SyncRunFailure::WebDav(WebDavOperation::Upload, _)) => {
+                let message = failure.user_message();
+                run.connection_state = crate::types::status::ConnectionState::Failed;
+                run.operation_state = crate::types::status::OperationState::Failed;
+                run.finished_at = Some(chrono::Utc::now());
+                run.failure_reason = Some(message.clone());
+                Ok(SyncOperationResultDto {
+                    connection_state: "failed".to_string(),
+                    operation_state: "failed".to_string(),
+                    message,
+                    snapshot_id: None,
+                    backup_id: None,
+                    etag: None,
+                })
+            }
+            Err(failure) => {
+                run.connection_state = crate::types::status::ConnectionState::Failed;
+                run.operation_state = crate::types::status::OperationState::Failed;
+                run.finished_at = Some(chrono::Utc::now());
+                run.failure_reason = Some(failure.user_message());
+                Err(app_error_for(failure))
+            }
         }
-        Err(failure) => {
-            run.connection_state = crate::types::status::ConnectionState::Failed;
-            run.operation_state = crate::types::status::OperationState::Failed;
-            run.finished_at = Some(chrono::Utc::now());
-            run.failure_reason = Some(failure.user_message());
-            Err(app_error_for(failure))
-        }
-    }
+    })
+    .await
 }
 
 fn app_error_for(failure: SyncRunFailure) -> AppError {
@@ -902,8 +934,7 @@ mod probe_tests {
         let worker_gate = operation_gate.clone();
         let writers = writer_gate.clone();
         let observer = tokio::spawn(async move {
-            crate::commands::run_blocking_with_gate(writers, "injected sync probe", move || {
-                let _sync = admit_sync_with_gate(worker_gate)?;
+            run_owned_sync_with_gates(writers, worker_gate, "injected sync probe", move || {
                 let result = tauri::async_runtime::block_on(probe_connection_observed(
                     &client,
                     &config(),
@@ -941,5 +972,137 @@ mod probe_tests {
         .unwrap();
         assert!(admit_sync_with_gate(operation_gate).is_ok());
         assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
+}
+
+#[cfg(test)]
+mod owned_sync_tests {
+    use super::*;
+    use crate::infrastructure::storage_writers::WriterGate;
+    use std::sync::{
+        atomic::{AtomicUsize, Ordering},
+        Arc,
+    };
+
+    #[tokio::test]
+    async fn busy_and_frozen_operations_do_not_run_or_queue() {
+        let writers = Arc::new(WriterGate::default());
+        let operations = Arc::new(tokio::sync::Mutex::new(()));
+        let busy = admit_sync_with_gate(operations.clone()).unwrap();
+        let calls = Arc::new(AtomicUsize::new(0));
+        let counter = calls.clone();
+        let result = run_owned_sync_with_gates(
+            writers.clone(),
+            operations.clone(),
+            "busy sync",
+            move || {
+                counter.fetch_add(1, Ordering::SeqCst);
+                Ok(())
+            },
+        )
+        .await;
+        assert!(matches!(
+            result,
+            Err(AppError::TargetLockTimeout { timeout_ms: 0 })
+        ));
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        drop(busy);
+        let freeze = writers.freeze().unwrap().unwrap();
+        let counter = calls.clone();
+        assert!(
+            run_owned_sync_with_gates(writers, operations.clone(), "frozen sync", move || {
+                counter.fetch_add(1, Ordering::SeqCst);
+                Ok(())
+            })
+            .await
+            .is_err()
+        );
+        drop(freeze);
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        assert!(admit_sync_with_gate(operations).is_ok());
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn cancelled_observer_keeps_owner_through_committed_write_and_terminal_projection() {
+        let root = tempfile::tempdir().unwrap();
+        let committed = root.path().join("commit");
+        let terminal = root.path().join("terminal");
+        let entered = Arc::new(tokio::sync::Notify::new());
+        let release = Arc::new(tokio::sync::Notify::new());
+        let writers = Arc::new(WriterGate::default());
+        let operations = Arc::new(tokio::sync::Mutex::new(()));
+        let worker_writers = writers.clone();
+        let worker_operations = operations.clone();
+        let worker_committed = committed.clone();
+        let worker_terminal = terminal.clone();
+        let worker_entered = entered.clone();
+        let worker_release = release.clone();
+        let observer = tokio::spawn(async move {
+            run_owned_sync_with_gates(
+                worker_writers,
+                worker_operations,
+                "injected manual sync",
+                move || {
+                    std::fs::write(worker_committed, b"committed").unwrap();
+                    worker_entered.notify_one();
+                    tauri::async_runtime::block_on(worker_release.notified());
+                    std::fs::write(worker_terminal, b"succeeded").unwrap();
+                    Ok(())
+                },
+            )
+            .await
+        });
+        tokio::time::timeout(std::time::Duration::from_secs(2), entered.notified())
+            .await
+            .unwrap();
+        observer.abort();
+        assert!(observer.await.unwrap_err().is_cancelled());
+        assert_eq!(std::fs::read(&committed).unwrap(), b"committed");
+        assert!(!terminal.exists());
+        assert!(writers.freeze().unwrap().is_none());
+        assert!(admit_sync_with_gate(operations.clone()).is_err());
+        release.notify_one();
+        tokio::time::timeout(std::time::Duration::from_secs(2), async {
+            loop {
+                if terminal.exists() && writers.freeze().unwrap().is_some() {
+                    break;
+                }
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(std::fs::read(terminal).unwrap(), b"succeeded");
+        assert!(admit_sync_with_gate(operations).is_ok());
+    }
+
+    #[tokio::test]
+    async fn worker_error_and_panic_release_both_admissions() {
+        let writers = Arc::new(WriterGate::default());
+        let operations = Arc::new(tokio::sync::Mutex::new(()));
+        assert!(run_owned_sync_with_gates(
+            writers.clone(),
+            operations.clone(),
+            "failed sync",
+            || { Err::<(), _>(AppError::NotConfigured) }
+        )
+        .await
+        .is_err());
+        assert!(writers.freeze().unwrap().is_some());
+        assert!(admit_sync_with_gate(operations.clone()).is_ok());
+        assert!(run_owned_sync_with_gates(
+            writers.clone(),
+            operations.clone(),
+            "panicked sync",
+            || {
+                panic!("injected worker panic");
+                #[allow(unreachable_code)]
+                Ok(())
+            }
+        )
+        .await
+        .is_err());
+        assert!(writers.freeze().unwrap().is_some());
+        assert!(admit_sync_with_gate(operations).is_ok());
     }
 }
