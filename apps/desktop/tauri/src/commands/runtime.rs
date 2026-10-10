@@ -285,6 +285,7 @@ async fn change_runtime_source(
             }
             runtime.acquire().ok_or(AppError::NotConfigured)?
         };
+        crate::modules::runtime::protection::ensure_binding_ready(&data_root)?;
         let candidate = path
             .filter(|value| !value.trim().is_empty())
             .map(PathBuf::from);

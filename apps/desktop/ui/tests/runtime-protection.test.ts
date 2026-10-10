@@ -6,9 +6,10 @@ import { useRouteStore } from '@/stores/routes'
 import { useRuntimeStore } from '@/features/runtime/store'
 import type { RuntimeProtectionStatus } from '@/features/runtime/api'
 
-const invoke = vi.fn()
+const { invoke, open } = vi.hoisted(() => ({ invoke: vi.fn(), open: vi.fn() }))
 vi.mock('@tauri-apps/api/core', () => ({ invoke: (...args: unknown[]) => invoke(...args) }))
 vi.mock('@tauri-apps/api/event', () => ({ listen: async () => () => {} }))
+vi.mock('@tauri-apps/plugin-dialog', () => ({ open }))
 
 const none: RuntimeProtectionStatus = { state: 'none', version: null, backupId: null }
 const pending: RuntimeProtectionStatus = { state: 'pending', version: '2.51.0', backupId: 'bk_exact' }
@@ -26,7 +27,7 @@ function setup(status: RuntimeProtectionStatus = pending) {
     kind: 'managed', path: '/data/runtime/bin/ocx', version: '2.51.0', resolvedAt: null,
     insideDataRoot: true, managedEntry: '/data/runtime/bin/ocx',
     managedPrefix: '/data/runtime/opencodex', defaultPrefix: '/data/runtime/opencodex',
-    explicitPath: null, history: [],
+    explicitPath: '/selected/bin/ocx', history: [],
   }
   invoke.mockImplementation(async (command: string) => command === 'runtime_protection_status' ? status : null)
   useRouteStore().go('settings', { section: 'installation' })
@@ -36,6 +37,7 @@ function setup(status: RuntimeProtectionStatus = pending) {
 beforeEach(() => {
   setActivePinia(createPinia())
   invoke.mockReset()
+  open.mockReset()
 })
 
 describe('local panel protection status and retry', () => {
@@ -45,7 +47,7 @@ describe('local panel protection status and retry', () => {
     const warning = wrapper.get('[data-testid="runtime-protection"]')
     expect(warning.text()).toContain('面板更新保护核对')
     expect(warning.text()).toContain(status.state === 'unreadable' ? '记录与备份均保留' : '备份')
-    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'data-root-migrate']) {
+    for (const testid of ['runtime-install', 'runtime-import-offline', 'runtime-uninstall', 'data-root-migrate', 'runtime-change-source', 'runtime-restore-source']) {
       expect(wrapper.get('[data-testid="' + testid + '"]').attributes('disabled')).toBeDefined()
     }
     if (status.state === 'unreadable') expect(warning.text()).not.toContain('bk_exact')
@@ -53,6 +55,47 @@ describe('local panel protection status and retry', () => {
     await diagnosis.trigger('click')
     expect(useRouteStore().current).toBe('logs')
     expect(useRouteStore().diagnosticsTab).toBe('logs')
+    wrapper.unmount()
+  })
+
+  it('blocks source changes until a clean protection read finishes', async () => {
+    const { runtime, wrapper } = setup(none)
+    runtime.protection = null
+    runtime.protectionLoading = true
+    await wrapper.vm.$nextTick()
+    expect(wrapper.get('[data-testid="runtime-change-source"]').attributes('disabled')).toBeDefined()
+    expect(wrapper.get('[data-testid="runtime-restore-source"]').attributes('disabled')).toBeDefined()
+    await flushPromises()
+    expect(wrapper.get('[data-testid="runtime-change-source"]').attributes('disabled')).toBeUndefined()
+    expect(wrapper.get('[data-testid="runtime-restore-source"]').attributes('disabled')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('rechecks protection when the source file dialog returns', async () => {
+    const { runtime, wrapper } = setup(none)
+    await flushPromises()
+    const selected = deferred<string>()
+    open.mockReturnValue(selected.promise)
+    await wrapper.get('[data-testid="runtime-change-source"]').trigger('click')
+    expect(open).toHaveBeenCalledTimes(1)
+    runtime.protection = pending
+    selected.resolve('/selected/new/ocx')
+    await flushPromises()
+    expect(invoke.mock.calls.map(call => call[0])).not.toContain('set_runtime_source')
+    expect(runtime.source?.explicitPath).toBe('/selected/bin/ocx')
+    expect(wrapper.get('[data-testid="runtime-change-source"]').attributes('disabled')).toBeDefined()
+    wrapper.unmount()
+  })
+
+  it('allows a selected source when protection stays clean', async () => {
+    const { runtime, wrapper } = setup(none)
+    await flushPromises()
+    open.mockResolvedValue('/selected/new/ocx')
+    invoke.mockImplementation(async command => command === 'set_runtime_source'
+      ? { ...runtime.source, explicitPath: '/selected/new/ocx' } : null)
+    await wrapper.get('[data-testid="runtime-change-source"]').trigger('click')
+    await flushPromises()
+    expect(invoke).toHaveBeenCalledWith('set_runtime_source', { path: '/selected/new/ocx' })
     wrapper.unmount()
   })
 

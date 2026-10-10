@@ -470,6 +470,7 @@ mod tests {
         let original = std::fs::read(state_path(root.path())).unwrap();
         let pending = status(root.path());
         assert_eq!(pending.state, ProtectionState::Pending);
+        assert!(ensure_binding_ready(root.path()).is_err());
         assert_eq!(pending.version.as_deref(), Some("0.3.1"));
         assert_eq!(
             pending.backup_id,
@@ -482,6 +483,12 @@ mod tests {
         verified.verified = Some(verified.activation(root.path()).unwrap());
         verified.save(root.path()).unwrap();
         assert_eq!(status(root.path()).state, ProtectionState::VerifiedPending);
+        let verified_bytes = std::fs::read(state_path(root.path())).unwrap();
+        assert!(ensure_binding_ready(root.path()).is_err());
+        assert_eq!(
+            std::fs::read(state_path(root.path())).unwrap(),
+            verified_bytes
+        );
         assert_active(root.path(), &receipt);
     }
 
@@ -494,6 +501,7 @@ mod tests {
         let reported = status(root.path());
         assert_eq!(reported.state, ProtectionState::Unreadable);
         assert!(reported.version.is_none() && reported.backup_id.is_none());
+        assert!(ensure_binding_ready(root.path()).is_err());
         assert!(retry(root.path(), |_, _| panic!("corruption is pre-admission")).is_err());
         assert_eq!(std::fs::read(state_path(root.path())).unwrap(), original);
         assert_active(root.path(), &receipt);
@@ -536,6 +544,7 @@ mod tests {
     fn absent_receipt_retry_does_not_initialize_storage() {
         let root = tempfile::tempdir().unwrap();
         assert_eq!(status(root.path()).state, ProtectionState::None);
+        assert!(ensure_binding_ready(root.path()).is_ok());
         assert_eq!(
             retry(root.path(), |_, _| panic!("no receipt has no event"))
                 .unwrap()

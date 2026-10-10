@@ -34,9 +34,13 @@ const runtimeProtection = useRuntimeStore()
 const protectionBlocked = computed(() => runtimeProtection.protectionRetrying
   || !!runtimeProtection.protectionError
   || (!!runtimeProtection.protection && runtimeProtection.protection.state !== 'none'))
+const runtimeSourceBindingDisabled = computed(() => protectionBlocked.value
+  || runtimeProtection.protectionLoading || !runtimeProtection.protection
+  || app.runtimeInstalling || app.runtimeUninstallBusy
+  || app.dataRootPendingRestart || app.dataRootReconciliationRequired)
 const protectionDescription = computed(() => {
   switch (runtimeProtection.protection?.state) {
-    case 'pending': return '上次面板更新的安装证据尚未核验，关联备份继续保留。核对完成前无法安装、卸载或切换数据目录。'
+    case 'pending': return '上次面板更新的安装证据尚未核验，关联备份继续保留。核对完成前无法安装、卸载、更换运行来源或切换数据目录。'
     case 'verified_pending': return '安装证据已持久核验，备份关联的完成记录仍待处理。重试只处理本地记录，不重新安装面板。'
     case 'unreadable': return '保护记录无法安全读取或内容无效。记录与备份均保留；重试不会删除记录或强制解除保护，请结合诊断日志排查。'
     default: return runtimeProtection.protectionLoading ? '正在读取本地保护记录…' : runtimeProtection.protectionFeedback
@@ -926,8 +930,9 @@ function closeInstallModal() {
 }
 
 async function chooseRuntimeSource() {
+  if (runtimeSourceBindingDisabled.value) return
   const picked = await open({ multiple: false, title: '选择 ocx 可执行文件' })
-  if (typeof picked !== 'string') return
+  if (typeof picked !== 'string' || runtimeSourceBindingDisabled.value) return
   await app.setRuntimeSourcePath(picked)
 }
 
@@ -1139,8 +1144,8 @@ function restoreGeneralDefaults() {
           <div class="runtime-actions">
             <button class="btn primary" type="button" data-testid="runtime-install" :disabled="protectionBlocked" @click="openInstallModal('registry')">安装 OpenCodex</button>
             <button class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked" @click="openInstallModal('offline')">导入离线包</button>
-            <button class="btn ghost" type="button" @click="chooseRuntimeSource">更换运行来源…</button>
-            <button class="btn ghost" type="button" :disabled="!app.runtimeSource.explicitPath" @click="app.restoreDiscoveredRuntime()">恢复自动发现</button>
+            <button class="btn ghost" type="button" data-testid="runtime-change-source" :disabled="runtimeSourceBindingDisabled" @click="chooseRuntimeSource">更换运行来源…</button>
+            <button class="btn ghost" type="button" data-testid="runtime-restore-source" :disabled="runtimeSourceBindingDisabled || !app.runtimeSource.explicitPath" @click="app.restoreDiscoveredRuntime()">恢复自动发现</button>
             <button v-if="app.runtimeSource.kind === 'managed'" class="btn ghost" type="button" @click="routes.go('settings', { section: 'upgrade' })">更新（官方 ocx update）</button>
             <button v-if="app.runtimeSource.kind !== 'unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked" @click="openUninstall()">卸载</button>
           </div>
