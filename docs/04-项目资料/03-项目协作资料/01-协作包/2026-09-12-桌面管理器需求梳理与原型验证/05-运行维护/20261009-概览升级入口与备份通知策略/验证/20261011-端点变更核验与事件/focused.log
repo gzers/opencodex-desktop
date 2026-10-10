@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.40s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 9 tests
+test modules::sync::config::endpoint_mutation_tests::preflight_refusals_do_not_write_or_observe_terminals ... ok
+test modules::sync::config::endpoint_mutation_tests::save_requires_exact_config_and_secret_readback ... ok
+test modules::sync::config::endpoint_mutation_tests::save_partial_credential_write_reports_failure ... ok
+test modules::sync::config::endpoint_mutation_tests::keeping_credentials_is_a_distinct_intent_and_never_accesses_them ... ok
+test modules::sync::config::endpoint_mutation_tests::save_retry_keeps_full_intent_and_observes_real_error ... ok
+test modules::sync::config::endpoint_mutation_tests::delete_partial_disk_failure_keeps_reference_and_retry_is_idempotent ... ok
+test modules::sync::config::endpoint_mutation_tests::save_missing_wrong_or_unavailable_readback_cannot_succeed ... ok
+test modules::sync::config::endpoint_mutation_tests::delete_verifies_both_purposes_and_accepts_explicit_absence ... ok
+test modules::sync::config::endpoint_mutation_tests::failed_or_unverified_deletion_retains_reference_for_exact_retry ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 635 filtered out; finished in 0.10s
+

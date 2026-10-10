@@ -1,0 +1,75 @@
+{
+  "source_sha": "734583941b083a559b247bb58a1844b9f43536a6",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "rust_full": {
+    "groups": 33,
+    "passed": 798,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "endpoint_mutations": 9,
+    "absence_classification": 1,
+    "event_registry": 31
+  },
+  "commands": [
+    {
+      "log": "focused.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib endpoint_mutation_tests -- --nocapture",
+      "exit_code": 0
+    },
+    {
+      "log": "keychain.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib only_explicit_absence_is_benign_for_load_and_removal",
+      "exit_code": 0
+    },
+    {
+      "log": "registry.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --test event_registry",
+      "exit_code": 0
+    },
+    {
+      "log": "rust.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml",
+      "exit_code": 0
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "exit_code": 0
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0
+    }
+  ],
+  "checks_passed": [
+    "fmt-check",
+    "clippy-all-targets-D-warnings",
+    "diff-check"
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 35,
+    "events": 72,
+    "active_events": 70,
+    "planned_events": 2,
+    "policies": 23,
+    "emissions": 78,
+    "scheduling": 8,
+    "feedback": 8,
+    "paths": 12,
+    "cleanup": 4
+  },
+  "ui_rerun": false,
+  "native_rerun": false,
+  "limits": [
+    "no atomic transaction/rollback across credentials and configuration; partial commits and orphan credentials possible",
+    "injected credentials do not validate macOS Keychain or Windows Credential Manager",
+    "manual sync terminal coverage, CLI/IPC ownership and full-domain coverage incomplete",
+    "Windows, installers, actual update/restart, paired performance and real cycles pending"
+  ],
+  "task_state": "in_progress"
+}
