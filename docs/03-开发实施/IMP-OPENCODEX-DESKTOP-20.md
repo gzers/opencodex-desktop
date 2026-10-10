@@ -417,3 +417,11 @@ MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1
 周期合同固定为：manager stable 24 小时、panel 24 小时、manager beta 6 小时；本轮新增 Rust 5 项调度定向测试全部通过。UI 定向回归覆盖 update scheduler、查询 / 安装所有权、更新中心、树表与备份文件等 6 个测试文件，共 34 项通过；`npm run typecheck`、`npm run build`、Rust fmt、Clippy `-D warnings` 与 `git diff --check` 均通过。
 
 本轮只闭合调度来源与周期的源码级合同，不改变更新安装、重启、原生通知、双平台性能、真实 stable 24 小时 / beta 6 小时观察或发布门禁。macOS 原生、Windows 普通权限 / 外观 / 安装路径、真实更新 / 重启、签名制品、全域事件调用点和性能证据仍未闭合；IMP / TASK 保持 `in_progress`，不形成完成证书、合并授权或发布授权。
+
+### 9497b4e5 0.1.10 版本身份固化与源码门禁收口（2026-10-11）
+
+代码分支 `feature/0.1.10-maintenance` 的提交 `9497b4e56f01b92abf977c6b244ec8e087ffa6b5` 已推送。本提交把 Tauri 配置、Cargo 包 / 锁文件和 UI 包 / 锁文件统一为 `0.1.10`；测试夹具中的历史 0.1.9 输入保持不变。此前构建出的 Windows 候选仍是 0.1.9，不能复用为 0.1.10，必须基于新提交重打包并重新执行候选验收。
+
+源码门禁均通过：`cargo metadata --locked --format-version 1`、`cargo fmt --all -- --check`、`cargo clippy --locked --workspace --all-targets -- -D warnings`、`cargo test --locked --workspace --features integration-test`、`git diff --check`。全量 Rust 命令退出码为 0，库目标 691 项通过 / 0 失败 / 4 忽略，二进制目标 2 项通过，集成测试目标均通过；UI 全量为 94 个测试文件、459 项通过，类型检查和生产构建通过（170 modules transformed）；Windows bundle identity smoke 5/5 通过。
+
+该提交只闭合版本身份与源码级回归，不替代 macOS 原生 UI / 安装、Windows 普通权限与安装路径 / DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、真实更新 / 重启、自动检查性能、stable 24 小时 / beta 6 小时、签名制品、更新端点、全域事件调用点和真实用户迁移。`CHANGELOG.md` 仍只能在 `main` 集成阶段补写；所有 required checks 通过前保持 `in_progress`，不颁发完成证书、不合并 main、不发布或晋升 stable。证据见协作包验证/20261011-目标执行检查点及 `.adg/evidence/OCX-0110-20261011-TARGET-EXECUTION/`。

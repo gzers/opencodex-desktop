@@ -47,3 +47,15 @@
 - 本记录和后续运行证据：docs/governance-main
 
 后续新增设备、性能、安装、更新或发布证据，应继续追加到对应验证目录，并在 IMP-20 与本协作包索引中引用；不得用原型截图或源码定向测试替代原生验收。
+
+## 2026-10-11 版本身份固化与源码门禁收口
+
+代码分支 `feature/0.1.10-maintenance` 的最新提交为 `9497b4e56f01b92abf977c6b244ec8e087ffa6b5`，已推送。Tauri、Cargo、UI 包及锁文件的版本已统一为 `0.1.10`；旧 Windows 候选包仍按其真实身份记录为 0.1.9，不能直接作为本版本候选。
+
+本轮命令结果：
+
+- Cargo metadata、fmt、Clippy `-D warnings`、Rust workspace integration tests、`git diff --check` 均通过；Rust 测试命令退出码为 0，库目标 691 项通过 / 4 忽略，二进制目标 2 项通过，集成测试目标均通过。
+- UI 全量 94 个测试文件、459 项通过；类型检查和生产构建通过，构建转换 170 个模块。
+- Windows bundle identity smoke 5/5 通过，确认候选身份检查会接受 0.1.10 的包元数据。
+
+证据目录：`.adg/evidence/OCX-0110-20261011-TARGET-EXECUTION/`。该结果只闭合源码身份与源码回归；仍需在本提交上重新生成双平台候选，完成 macOS / Windows 原生安装、普通权限、路径、外观、性能、真实更新 / 重启、签名和发布门禁。`CHANGELOG.md` 属于 `main`，在集成阶段补写；当前仍为 `in_progress`，不构成发布授权。

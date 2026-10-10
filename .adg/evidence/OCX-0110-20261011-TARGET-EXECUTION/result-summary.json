@@ -1,0 +1,51 @@
+{
+  "evidence_id": "OCX-0110-20261011-TARGET-EXECUTION",
+  "verification": "0.1.10 target-mode source gate",
+  "version_identity": {
+    "version": "0.1.10",
+    "code_commit": "9497b4e56f01b92abf977c6b244ec8e087ffa6b5",
+    "updated_files": [
+      "apps/desktop/tauri/tauri.conf.json",
+      "apps/desktop/tauri/Cargo.toml",
+      "apps/desktop/tauri/Cargo.lock",
+      "apps/desktop/ui/package.json",
+      "apps/desktop/ui/package-lock.json"
+    ],
+    "historical_fixtures_preserved": true
+  },
+  "rust": {
+    "metadata": "passed",
+    "fmt": "passed",
+    "clippy": "passed",
+    "tests": {
+      "exit_code": 0,
+      "library_passed": 691,
+      "library_failed": 0,
+      "library_ignored": 4,
+      "binary_passed": 2,
+      "integration_targets": "passed"
+    }
+  },
+  "ui": {
+    "test_files": 94,
+    "tests_passed": 459,
+    "tests_failed": 0,
+    "typecheck": "passed",
+    "build": "passed",
+    "modules_transformed": 170
+  },
+  "windows_bundle_identity_smoke": {
+    "passed": 5,
+    "failed": 0
+  },
+  "gates": {
+    "source_version_identity": "passed",
+    "source_regression": "passed",
+    "native_platform_acceptance": "open",
+    "performance_acceptance": "open",
+    "real_update_and_restart": "open",
+    "signing_and_release_assets": "open",
+    "release_authorization": "not_granted"
+  },
+  "interpretation": "本证据只证明 0.1.10 当前源码身份和源码级回归通过；此前 0.1.9 Windows 候选不能复用，必须重新生成 0.1.10 制品并完成剩余门禁。"
+}

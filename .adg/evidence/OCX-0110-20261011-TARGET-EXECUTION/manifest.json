@@ -1,0 +1,30 @@
+{
+  "evidence_id": "OCX-0110-20261011-TARGET-EXECUTION",
+  "created_at": "2026-10-11",
+  "kind": "target-mode-source-gate",
+  "status": "passed_with_scope_limits",
+  "project_id": "opencodex-desktop",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "9497b4e56f01b92abf977c6b244ec8e087ffa6b5",
+  "document_branch": "docs/governance-main",
+  "document_head_at_capture": "397fd394",
+  "subject": "0.1.10 版本身份固化、源码回归与统一树表门禁",
+  "scope": [
+    "Tauri、Cargo、UI package 版本身份统一为 0.1.10",
+    "Rust metadata、fmt、Clippy、workspace integration tests",
+    "UI 全量测试、类型检查和生产构建",
+    "Windows bundle identity smoke",
+    "目标模式执行证据和发布门禁边界回写"
+  ],
+  "limitations": [
+    "不替代 macOS 原生 UI、隔离安装、升级保留和真实更新 / 重启恢复",
+    "不替代 Windows 普通权限、安装目录、受保护路径、自定义路径、DPI 和原生外观验收",
+    "不替代 Windows 云母、原生标题栏、动效、透明下拉框和双权限共享 DataRoot 验收",
+    "不替代自动检查启动 / 概览进入 / 定时 / 休眠恢复 / 跨启动性能与真实 stable 24h / beta 6h 周期",
+    "不替代真实更新端点、下载、签名、安装、重启、失败恢复和真实用户迁移",
+    "不替代全域事件注册表与实际调用点审阅",
+    "不产生合并 main、发布、stable 晋升或 CHANGELOG 写入授权"
+  ],
+  "release_authorized": false,
+  "task_state": "in_progress"
+}

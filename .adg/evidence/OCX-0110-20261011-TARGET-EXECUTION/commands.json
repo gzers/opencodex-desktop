@@ -1,0 +1,70 @@
+{
+  "evidence_id": "OCX-0110-20261011-TARGET-EXECUTION",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "9497b4e56f01b92abf977c6b244ec8e087ffa6b5",
+  "document_branch": "docs/governance-main",
+  "commands": [
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo metadata --locked --format-version 1",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo fmt --all -- --check",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo clippy --locked --workspace --all-targets -- -D warnings",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/tauri",
+      "command": "cargo test --locked --workspace --features integration-test",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "library 691 passed / 0 failed / 4 ignored; binary 2 passed; integration targets passed"
+    },
+    {
+      "cwd": "repository root",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm test -- --run",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "94 test files / 459 tests passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm run typecheck",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "apps/desktop/ui",
+      "command": "npm run build",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "170 modules transformed"
+    },
+    {
+      "cwd": "repository root",
+      "command": "node --test test/smoke/windows-bundle-identity.test.mjs",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "5/5 passed"
+    }
+  ],
+  "non_blocking_notes": [
+    "之前在仓库根目录误执行过一次 Clippy；根目录无 Cargo.toml，退出 101。随后在 apps/desktop/tauri 正确目录重跑并通过，该误调用不属于本轮源码失败。",
+    "历史测试夹具中的 0.1.9 输入保留，用于验证 0.1.9 到 0.1.10 的升级场景。"
+  ]
+}
