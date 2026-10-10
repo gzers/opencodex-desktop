@@ -58,6 +58,7 @@ pub enum DataRootSwitchMode {
 #[serde(rename_all = "snake_case")]
 pub enum DataRootSwitchBlocked {
     Running,
+    RuntimeUnverified,
     Nested,
     FutureVersion,
     Corrupted,

@@ -80,6 +80,8 @@ export const useDataRootStore = defineStore('data-root', {
         if (result.status === 'blocked') {
           this.error = result.blocked === 'running'
             ? '面板或安装任务仍在运行，暂时不能切换路径。'
+            : result.blocked === 'runtime_unverified'
+              ? '未能确认面板运行状态，暂时不能切换路径；请接入面板并重新检查后重试。'
             : '切换已被安全规则阻止。'
           return false
         }
@@ -109,6 +111,8 @@ export const useDataRootStore = defineStore('data-root', {
         if (result.status === 'blocked') {
           this.error = result.blocked === 'running'
             ? '面板或安装任务仍在运行，暂时不能切换路径。'
+            : result.blocked === 'runtime_unverified'
+              ? '未能确认面板运行状态，暂时不能切换路径；请接入面板并重新检查后重试。'
             : '路径不能与数据目录互相嵌套。'
           return false
         }

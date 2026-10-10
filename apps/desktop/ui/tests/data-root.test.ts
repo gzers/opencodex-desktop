@@ -58,6 +58,18 @@ describe('data root integration', () => {
     expect(app.dataRootError).toContain('显式数据目录路径')
   })
 
+  it('distinguishes unverified runtime from busy work without saving a binding', async () => {
+    const app = useAppStore()
+    invoke.mockResolvedValue({ status: 'blocked', blocked: 'runtime_unverified', config: null })
+    await expect(app.switchDataRoot('/fixtures/target', true)).resolves.toBe(false)
+    expect(app.dataRootError).toContain('未能确认面板运行状态')
+    expect(app.dataRootError).not.toContain('仍在运行')
+    await expect(app.saveOpencodexHome('external', '/fixtures/home')).resolves.toBe(false)
+    expect(app.dataRootError).toContain('未能确认面板运行状态')
+    expect(app.dataRootPendingRestart).toBe(false)
+    expect(app.dataRootConfig).toBeNull()
+  })
+
   it('loads and projects runtime data root config', async () => {
     const config = {
       activeDataRoot: '/fixtures/data-root',

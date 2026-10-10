@@ -249,8 +249,9 @@ fn change_binding(
     {
         let collector = app.state::<crate::state::SharedStatusCollector>();
         let mut collector = collector.lock().map_err(|_| AppError::NotConfigured)?;
-        if collector.refresh().is_err() || !binding_runtime_is_idle(collector.matrix().runtime) {
-            return Ok(blocked_running());
+        let verified = collector.refresh().is_ok();
+        if let Some(reason) = binding_runtime_blocked(verified, collector.matrix().runtime) {
+            return Ok(blocked_result(reason));
         }
     }
     let root = app.state::<SharedDataRoot>();
@@ -287,6 +288,19 @@ fn binding_runtime_is_idle(runtime: crate::types::status::RuntimeState) -> bool 
         runtime,
         crate::types::status::RuntimeState::Stopped | crate::types::status::RuntimeState::NotFound
     )
+}
+
+fn binding_runtime_blocked(
+    verified: bool,
+    runtime: crate::types::status::RuntimeState,
+) -> Option<DataRootSwitchBlocked> {
+    if !verified {
+        Some(DataRootSwitchBlocked::RuntimeUnverified)
+    } else if !binding_runtime_is_idle(runtime) {
+        Some(DataRootSwitchBlocked::Running)
+    } else {
+        None
+    }
 }
 
 struct MigrationPaths<'a> {
@@ -384,9 +398,13 @@ fn migrate_binding(
 }
 
 fn blocked_running() -> DataRootSwitchResult {
+    blocked_result(DataRootSwitchBlocked::Running)
+}
+
+fn blocked_result(reason: DataRootSwitchBlocked) -> DataRootSwitchResult {
     DataRootSwitchResult {
         status: DataRootSwitchStatus::Blocked,
-        blocked: Some(DataRootSwitchBlocked::Running),
+        blocked: Some(reason),
         config: None,
         reconciliation_required: false,
     }
@@ -717,6 +735,26 @@ mod tests {
         assert!(binding_runtime_is_idle(RuntimeState::NotFound));
         assert_eq!(
             blocked_running().blocked,
+            Some(DataRootSwitchBlocked::Running)
+        );
+    }
+
+    #[test]
+    fn failed_status_collection_cannot_admit_a_binding_change() {
+        for runtime in [
+            RuntimeState::NotFound,
+            RuntimeState::Stopped,
+            RuntimeState::Running,
+        ] {
+            let reason = binding_runtime_blocked(false, runtime).unwrap();
+            assert_eq!(reason, DataRootSwitchBlocked::RuntimeUnverified);
+            let result = blocked_result(reason);
+            assert_eq!(result.status, DataRootSwitchStatus::Blocked);
+            assert!(result.config.is_none());
+        }
+        assert!(binding_runtime_blocked(true, RuntimeState::Stopped).is_none());
+        assert_eq!(
+            binding_runtime_blocked(true, RuntimeState::Running),
             Some(DataRootSwitchBlocked::Running)
         );
     }

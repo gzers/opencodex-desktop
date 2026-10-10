@@ -20,6 +20,7 @@ export type DataRootSwitchMode = 'reference_only' | 'migrate_data'
 export type DataRootSwitchStatus = 'applied' | 'restart_required' | 'blocked'
 export type DataRootSwitchBlocked =
   | 'running'
+  | 'runtime_unverified'
   | 'nested'
   | 'future_version'
   | 'corrupted'
