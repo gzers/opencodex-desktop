@@ -1,0 +1,39 @@
+{
+  "source_sha": "d24bd4d56d9c2ad6ddbabffd02573ce81916d8f4",
+  "code_branch": "feature/0.1.10-maintenance",
+  "rust_full": {
+    "groups": 33,
+    "passed": 773,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "policy_events": 4,
+    "registry": 31
+  },
+  "checks_passed": [
+    "clippy-all-targets-D-warnings",
+    "fmt-check",
+    "diff-check"
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 32,
+    "events": 64,
+    "notification_policies": 19,
+    "emission_sites": 70,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "ui_rerun": false,
+  "native_rerun": false,
+  "ineffective_initial_run": "wrong cwd / append omitted; zero targeted tests; not passing evidence",
+  "limits": [
+    "no AppHandle native emission validation",
+    "Windows not run",
+    "full-domain terminal/admission/recovery matrix incomplete",
+    "full required_checks pending"
+  ]
+}
