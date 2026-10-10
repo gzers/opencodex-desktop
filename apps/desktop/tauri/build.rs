@@ -10,11 +10,15 @@ fn main() {
 }
 
 /// 使用 Tauri mock/context 的 Windows 测试也会链接 TaskDialogIndirect。
-/// 测试 EXE 不经过应用资源嵌入，需显式选择 Common Controls v6。
+/// cargo:rustc-link-arg-tests 只覆盖集成测试 target，不覆盖由
+/// src/lib.rs 生成的库单元测试 EXE；因此这里使用 Windows 目标的通用
+/// 链接参数，让单元测试、集成测试和最终二进制都明确选择 Common Controls v6。
 fn track_windows_test_manifest() {
-    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
-        println!("cargo:rustc-link-arg-tests=/MANIFEST:EMBED");
-        println!("cargo:rustc-link-arg-tests=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'");
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
+        && std::env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc")
+    {
+        println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
+        println!("cargo:rustc-link-arg=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'");
     }
 }
 

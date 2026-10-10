@@ -88,12 +88,36 @@ jobs:
             Sort-Object LastWriteTime -Descending | Select-Object -First 1
           if ($testExecutable) {
             Copy-Item $testExecutable.FullName (Join-Path $outputDirectory $testExecutable.Name)
-            $dumpbin = Get-Command dumpbin -ErrorAction SilentlyContinue
+            Get-FileHash $testExecutable.FullName -Algorithm SHA256 |
+              ConvertTo-Json | Set-Content (Join-Path $outputDirectory "test-executable-sha256.json")
+            $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+            $dumpbin = $null
+            $mt = $null
+            if (Test-Path $vswhere) {
+              $vsInstall = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath |
+                Select-Object -First 1
+              if ($vsInstall) {
+                $dumpbin = Get-ChildItem (Join-Path $vsInstall 'VC\Tools\MSVC\*\bin\Hostx64\x64\dumpbin.exe') -ErrorAction SilentlyContinue |
+                  Sort-Object FullName | Select-Object -Last 1
+              }
+            }
+            if (-not $dumpbin) { $dumpbin = Get-Command dumpbin -ErrorAction SilentlyContinue }
+            $mt = Get-ChildItem (Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin\*\x64\mt.exe') -ErrorAction SilentlyContinue |
+              Sort-Object FullName | Select-Object -Last 1
             if ($dumpbin) {
-              & $dumpbin.Source /DEPENDENTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-dependents.txt") 2>&1
-              & $dumpbin.Source /IMPORTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-imports.txt") 2>&1
+              $dumpbinPath = if ($dumpbin.FullName) { $dumpbin.FullName } else { $dumpbin.Source }
+              & $dumpbinPath /DEPENDENTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-dependents.txt") 2>&1
+              & $dumpbinPath /IMPORTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-imports.txt") 2>&1
+              & $dumpbinPath /HEADERS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-headers.txt") 2>&1
             } else {
               "dumpbin was not found on PATH" | Set-Content (Join-Path $outputDirectory "dumpbin-unavailable.txt")
+            }
+            if ($mt) {
+              $manifestPath = Join-Path $outputDirectory "test-executable.manifest.xml"
+              $resource = "$($testExecutable.FullName);#1"
+              & $mt.FullName "-inputresource:$resource" "-out:$manifestPath" > (Join-Path $outputDirectory "test-executable-manifest.txt") 2>&1
+            } else {
+              "mt.exe was not found in Windows SDK" | Set-Content (Join-Path $outputDirectory "mt-unavailable.txt")
             }
           } else {
             "Windows backend test executable was not produced" | Set-Content (Join-Path $outputDirectory "test-executable-unavailable.txt")
