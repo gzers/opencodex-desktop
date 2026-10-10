@@ -247,6 +247,13 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "backup_policy_save",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1150,6 +1157,36 @@
       "resolves": [
         "preferences-reset-failed"
       ]
+    },
+    {
+      "id": "preferences-backup-policy-failed",
+      "job": "backup_policy_save",
+      "object": "backup",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "backup_policy_save_failure",
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-policy-succeeded",
+      "job": "backup_policy_save",
+      "object": "backup",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "preferences-backup-policy-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1366,6 +1403,18 @@
       "body": "默认设置未成功恢复；请查看诊断记录后重试。",
       "action": "logs",
       "dedupe": "preferences-reset:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "backup_policy_save_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "备份策略保存失败",
+      "body": "备份策略未成功保存；请查看诊断记录后重试。",
+      "action": "logs",
+      "dedupe": "preferences-backup-policy:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -1709,6 +1758,16 @@
     {
       "event": "preferences-reset-succeeded",
       "source": "commands/preferences.rs::restore_default_preferences owned worker transaction result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-policy-failed",
+      "source": "commands/backup.rs::save_preferences_backup_policy owned worker transaction result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-policy-succeeded",
+      "source": "commands/backup.rs::save_preferences_backup_policy owned worker transaction result",
       "wiring": "scoped_terminal"
     }
   ],

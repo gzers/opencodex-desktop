@@ -275,10 +275,204 @@ pub async fn preferences_backup_policy(
 pub async fn save_preferences_backup_policy(
     root: tauri::State<'_, SharedDataRoot>,
     policy: crate::modules::backup::policy::CleanupPolicy,
+    app: tauri::AppHandle,
 ) -> AppResult<()> {
     let root = root.0.clone();
     crate::commands::run_blocking("save backup policy", move || {
-        manager::save_policy(&root, &policy)
+        manager::save_policy_observed(&root, &policy, |candidate, succeeded| {
+            let identity = event_delivery::prepare(
+                &root,
+                "preferences-backup-policy-failed",
+                Channel::Local,
+                candidate,
+            );
+            event_delivery::publish(
+                &app,
+                &root,
+                if succeeded {
+                    "preferences-backup-policy-succeeded"
+                } else {
+                    "preferences-backup-policy-failed"
+                },
+                identity,
+                Trigger::User,
+            );
+        })
     })
     .await
+}
+
+#[cfg(test)]
+mod policy_event_tests {
+    use super::*;
+    use crate::modules::backup::policy::{CleanupMode, CleanupPolicy, POLICY_RELATIVE_PATH};
+    use crate::modules::notifications::{
+        persistence::{load_notifications, notifications_path},
+        registry::{Delivery, Evidence},
+        NotificationStore,
+    };
+    use std::{
+        path::Path,
+        sync::{Arc, Mutex},
+    };
+
+    fn save_observed(
+        root: &Path,
+        policy: &CleanupPolicy,
+        store: &Arc<Mutex<NotificationStore>>,
+    ) -> AppResult<()> {
+        manager::save_policy_observed(root, policy, |candidate, succeeded| {
+            let identity = event_delivery::prepare(
+                root,
+                "preferences-backup-policy-failed",
+                Channel::Local,
+                candidate,
+            )
+            .unwrap();
+            let event = if succeeded {
+                "preferences-backup-policy-succeeded"
+            } else {
+                "preferences-backup-policy-failed"
+            };
+            let evidence = if succeeded {
+                Evidence::Success {
+                    candidate: identity.candidate.clone(),
+                    verified: true,
+                }
+            } else {
+                Evidence::Failure
+            };
+            let delivery = Delivery {
+                event,
+                job: Job::BackupPolicySave,
+                trigger: Trigger::User,
+                identity,
+                evidence,
+                occurred_at: chrono::Utc::now(),
+            };
+            let _ = crate::commands::notifications::NotificationPublisher {
+                store,
+                data_root: root,
+            }
+            .publish_event(&delivery);
+        })
+    }
+
+    #[test]
+    fn real_policy_write_failure_and_exact_retry_persist_without_cleanup() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        crate::commands::preferences::save_preferences_with_path(
+            root.path(),
+            &crate::modules::preferences::Preferences::default(),
+        )
+        .unwrap();
+        // More than N backups outside D days would be eligible if saving the
+        // automatic mode accidentally ran rotation immediately.
+        for days in 40..52 {
+            manager::create(
+                root.path(),
+                chrono::Utc::now() - chrono::Duration::days(days),
+                Default::default(),
+            )
+            .unwrap();
+        }
+        let inventory_before = manager::list(root.path()).unwrap();
+        assert_eq!(inventory_before.len(), 12);
+        let policy = CleanupPolicy {
+            mode: CleanupMode::Automatic,
+            ..Default::default()
+        };
+        let path = root.path().join(POLICY_RELATIVE_PATH);
+        std::fs::create_dir(&path).unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        assert!(save_observed(root.path(), &policy, &store).is_err());
+        let failed = load_notifications(&notifications_path(root.path())).unwrap();
+        assert_eq!(failed.all().len(), 1);
+        assert!(!failed.all()[0].resolved);
+        assert!(!failed.all()[0]
+            .body
+            .contains(&root.path().to_string_lossy().to_string()));
+        std::fs::remove_dir(&path).unwrap();
+        let reloaded = Arc::new(Mutex::new(failed));
+        save_observed(root.path(), &policy, &reloaded).unwrap();
+        assert_eq!(manager::read_policy(root.path()).unwrap(), policy);
+        let history = load_notifications(&notifications_path(root.path())).unwrap();
+        assert_eq!(history.all().len(), 1);
+        assert!(history.all()[0].resolved);
+        assert!(!history.all()[0].read);
+        let inventory_after = manager::list(root.path()).unwrap();
+        assert_eq!(
+            serde_json::to_value(inventory_before).unwrap(),
+            serde_json::to_value(inventory_after).unwrap()
+        );
+    }
+
+    #[test]
+    fn changed_policy_and_other_root_do_not_clear_the_original_failure() {
+        let root = tempfile::tempdir().unwrap();
+        let other = tempfile::tempdir().unwrap();
+        for path in [root.path(), other.path()] {
+            crate::modules::data_root::initialize(path).unwrap();
+        }
+        let policy = CleanupPolicy {
+            mode: CleanupMode::Automatic,
+            ..Default::default()
+        };
+        let path = root.path().join(POLICY_RELATIVE_PATH);
+        std::fs::create_dir(&path).unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        assert!(save_observed(root.path(), &policy, &store).is_err());
+        std::fs::remove_dir(&path).unwrap();
+        save_observed(other.path(), &policy, &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+        save_observed(root.path(), &CleanupPolicy::default(), &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+        // Returning to old contents is a new candidate generation, not recovery.
+        save_observed(root.path(), &policy, &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+    }
+
+    #[test]
+    fn validation_and_lock_refusals_do_not_call_terminal_observer() {
+        let root = tempfile::tempdir().unwrap();
+        let invalid = CleanupPolicy {
+            keep_days: 31,
+            ..Default::default()
+        };
+        assert!(
+            manager::save_policy_observed(root.path(), &invalid, |_, _| panic!("invalid delivery"))
+                .is_err()
+        );
+        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
+        std::fs::create_dir(root.path().join(".backup-w2.lock")).unwrap();
+        assert!(manager::save_policy_observed(
+            root.path(),
+            &CleanupPolicy::default(),
+            |_, _| panic!("lock refusal delivery")
+        )
+        .is_err());
+        assert!(!root.path().join("manager-state").exists());
+    }
+
+    #[test]
+    fn notification_persistence_failure_does_not_undo_saved_policy() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let path = root.path().join(POLICY_RELATIVE_PATH);
+        let policy = CleanupPolicy {
+            mode: CleanupMode::Automatic,
+            ..Default::default()
+        };
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        std::fs::create_dir(&path).unwrap();
+        assert!(save_observed(root.path(), &policy, &store).is_err());
+        std::fs::remove_dir(&path).unwrap();
+        let notifications = notifications_path(root.path());
+        std::fs::remove_file(&notifications).unwrap();
+        std::fs::create_dir(&notifications).unwrap();
+        save_observed(root.path(), &policy, &store).unwrap();
+        assert_eq!(manager::read_policy(root.path()).unwrap(), policy);
+        assert!(!store.lock().unwrap().all()[0].resolved);
+    }
 }

@@ -41,7 +41,7 @@ impl Default for CleanupPolicy {
     }
 }
 impl CleanupPolicy {
-    fn validate(&self) -> AppResult<()> {
+    pub(super) fn validate(&self) -> AppResult<()> {
         if self.schema_version != SCHEMA_VERSION
             || self.keep_recent != KEEP_RECENT
             || self.keep_days != KEEP_DAYS

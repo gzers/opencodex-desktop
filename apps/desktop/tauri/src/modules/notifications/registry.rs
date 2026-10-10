@@ -56,6 +56,7 @@ pub enum Job {
     BackupCleanup,
     BackupList,
     BackupPin,
+    BackupPolicySave,
     Cleanup,
     UiFeedback,
     ProcessSignals,
@@ -186,6 +187,7 @@ pub enum PolicyId {
     PreferencesRestoreFailure,
     PreferencesSaveFailure,
     PreferencesResetFailure,
+    BackupPolicySaveFailure,
     BackupCleanupFailure,
     LocalCleanupFailure,
     SyncConflict,
@@ -672,6 +674,10 @@ enum SupportedEvent {
     PreferencesResetFailed,
     #[serde(rename = "preferences-reset-succeeded")]
     PreferencesResetSucceeded,
+    #[serde(rename = "preferences-backup-policy-failed")]
+    PreferencesBackupPolicyFailed,
+    #[serde(rename = "preferences-backup-policy-succeeded")]
+    PreferencesBackupPolicySucceeded,
 }
 
 dimension!(PathId {

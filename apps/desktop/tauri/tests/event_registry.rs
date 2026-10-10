@@ -794,6 +794,7 @@ fn new_terminal_pairs_persist_and_only_exact_verified_success_recovers() {
         "preferences-restore",
         "preferences-save",
         "preferences-reset",
+        "preferences-backup-policy",
         "preferences-backup-cleanup",
         "local-cleanup",
     ] {

@@ -463,8 +463,23 @@ pub fn read_policy(root: &Path) -> AppResult<CleanupPolicy> {
 /// Save policy under the shared lock; changing the mode never runs cleanup.
 /// Do not call while holding a preferences transaction guard.
 pub fn save_policy(root: &Path, policy: &CleanupPolicy) -> AppResult<()> {
+    save_policy_observed(root, policy, |_, _| {})
+}
+
+/// The observer runs under the admitted mutation lock after validation. Only
+/// exact policy contents may resolve an earlier write failure. No cleanup runs.
+/// Lock/admission refusals remain immediate feedback, not terminal write facts.
+pub fn save_policy_observed(
+    root: &Path,
+    policy: &CleanupPolicy,
+    observer: impl FnOnce(&[u8], bool),
+) -> AppResult<()> {
+    policy.validate()?;
     let _lock = lock(root)?;
-    policy::save(root, policy)
+    let candidate = serde_json::to_vec(policy).map_err(|e| fail(e.to_string()))?;
+    let result = policy::save(root, policy);
+    observer(&candidate, result.is_ok());
+    result
 }
 
 /// Read persisted mode and create under one lock, preventing policy-change races.
