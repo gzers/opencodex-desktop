@@ -104,6 +104,9 @@ pub struct BackupCleanupPreviewDto {
 pub struct PreferencesRestoreResultDto {
     /// The disk commit succeeded, but the running projection needs a reload.
     pub refresh_required: bool,
+    /// Disk restore succeeded, but protection metadata needs reconciliation.
+    /// A partial metadata commit may have occurred; this does not assert retention.
+    pub protection_reconciliation_pending: bool,
     pub backup_id: String,
     pub protection_backup_id: String,
     pub target_path: String,

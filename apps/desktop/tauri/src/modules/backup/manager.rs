@@ -1,9 +1,10 @@
 //! W2 preferences-only backup management.
 //!
-//! Reliable protection model: only versioned standalone manual records may expire.
+//! Reliable protection model: standalone manual and reconciled restore records may expire.
 //! All legacy transaction records, unknown metadata, restore guards and their source
 //! references remain protected. Free-form notes are never used as transaction links.
-//! Guards are durable before restore validation and survive success/failure/crash.
+//! Guards are durable before restore validation. Only a verified disk commit releases
+//! new restore guards; legacy, failed and interrupted transactions remain protected.
 //! W2 operations serialize across processes; legacy creators only produce protected
 //! records. Persisted cleanup defaults to manual; no startup cleanup hook exists.
 //! Manual/upgrade/protection entry points may trigger cleanup only after a verified
@@ -30,6 +31,10 @@ pub struct Management {
     pub kind: String,
     pub pinned: bool,
     pub related_backup_id: Option<String>,
+    /// v2 restore-only reconciliation, independent of the user pin. Missing/unknown
+    /// states fail closed; v1 transaction records are never retrospectively released.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub transaction_state: Option<String>,
 }
 
 /// Called under the transaction lock with captured bytes or an exact cleanup
@@ -197,15 +202,23 @@ fn managed_backup(
         None,
     )?;
     record.manifest.management = Some(Management {
-        version: 1,
+        version: if action == BackupAction::RestoreProtection {
+            2
+        } else {
+            1
+        },
         kind: if action == BackupAction::ManualPreferences {
             "standalone"
         } else {
             "restore-protection"
         }
         .into(),
-        pinned: action != BackupAction::ManualPreferences,
+        pinned: !matches!(
+            action,
+            BackupAction::ManualPreferences | BackupAction::RestoreProtection
+        ),
         related_backup_id: related,
+        transaction_state: (action == BackupAction::RestoreProtection).then(|| "active".into()),
     });
     super::write_manifest(&record.directory, &record.manifest)?;
     safety::sync_directories(root, &record.directory)?;
@@ -414,9 +427,17 @@ fn related(records: &[BackupRecord]) -> BTreeSet<String> {
             r.manifest
                 .management
                 .as_ref()
+                .filter(|m| !reconciled_restore(r, m))
                 .and_then(|m| m.related_backup_id.clone())
         })
         .collect()
+}
+fn reconciled_restore(record: &BackupRecord, meta: &Management) -> bool {
+    record.manifest.action == BackupAction::RestoreProtection
+        && meta.version == 2
+        && meta.kind == "restore-protection"
+        && meta.related_backup_id.is_some()
+        && meta.transaction_state.as_deref() == Some("committed")
 }
 fn protection(record: &BackupRecord, related: &BTreeSet<String>) -> Option<String> {
     let m = &record.manifest;
@@ -432,10 +453,14 @@ fn protection(record: &BackupRecord, related: &BTreeSet<String>) -> Option<Strin
     if meta.pinned {
         return Some("pinned".into());
     }
+    if reconciled_restore(record, meta) {
+        return None;
+    }
     if m.action != BackupAction::ManualPreferences
         || meta.version != 1
         || meta.kind != "standalone"
         || meta.related_backup_id.is_some()
+        || meta.transaction_state.is_some()
     {
         return Some("transaction-or-unknown-management".into());
     }
@@ -493,20 +518,36 @@ fn resolve(root: &Path, id: &str) -> AppResult<BackupRecord> {
 pub fn set_pinned(root: &Path, id: &str, pinned: bool) -> AppResult<()> {
     let _lock = lock(root)?;
     let mut r = resolve(root, id)?;
+    let reconciled = r
+        .manifest
+        .management
+        .as_ref()
+        .is_some_and(|m| reconciled_restore(&r, m));
     // Pinning legacy records is allowed, unpinning never releases their protection.
     let meta = r.manifest.management.get_or_insert(Management {
         version: 1,
         kind: "legacy-protected".into(),
         pinned: false,
         related_backup_id: None,
+        transaction_state: None,
     });
-    if meta.version != 1 {
+    if meta.version != 1
+        && !(meta.version == 2
+            && r.manifest.action == BackupAction::RestoreProtection
+            && meta.kind == "restore-protection"
+            && meta.related_backup_id.is_some()
+            && matches!(
+                meta.transaction_state.as_deref(),
+                Some("active" | "committed")
+            ))
+    {
         return Err(fail("unknown management version"));
     }
     if matches!(
         r.manifest.action,
         BackupAction::RestoreProtection | BackupAction::PreferencesProtection
     ) && !pinned
+        && !reconciled
     {
         return Err(fail(
             "restore guards cannot be released without transaction reconciliation",
@@ -537,7 +578,7 @@ fn preview_inner(
             r.manifest.backup_id.clone(),
         )
     });
-    let mut unpinned_index = 0;
+    let mut unpinned_by_action = std::collections::BTreeMap::new();
     let mut ids = Vec::new();
     let mut bytes = 0_u64;
     for r in &all {
@@ -546,9 +587,12 @@ fn preview_inner(
         }
         let created = DateTime::parse_from_rfc3339(&r.manifest.created_at)
             .map_err(|_| fail("invalid time"))?;
+        let unpinned_index = unpinned_by_action
+            .entry(r.manifest.action.as_str())
+            .or_insert(0);
         let keep =
-            unpinned_index < count || now.signed_duration_since(created) < Duration::days(30);
-        unpinned_index += 1;
+            *unpinned_index < count || now.signed_duration_since(created) < Duration::days(30);
+        *unpinned_index += 1;
         if !keep {
             ids.push(r.manifest.backup_id.clone());
             bytes = bytes
@@ -673,8 +717,8 @@ pub fn restore_observed(
         Some(id.into()),
     );
     observer.backup_result(BackupAction::RestoreProtection, &before, protection.is_ok());
-    let guard = protection?;
-    // The pinned guard and its source reference must exist before cleanup. Even
+    let mut guard = protection?;
+    // The active guard and its source reference must exist before cleanup. Even
     // when the later restore fails, neither record can become a cleanup candidate.
     let _ = best_effort_saved_cleanup(root, now, observer);
     let attempt = (|| {
@@ -698,8 +742,14 @@ pub fn restore_observed(
         }
         // Preserve the original document exactly, including browser mode and unknown fields.
         super::write_and_verify(&target, &bytes, 0o600)?;
+        // Reconcile under the same lock, only after exact write and readback. No
+        // Drop reconciliation: failed/crashed operations must retain their guard.
+        // A metadata failure cannot turn an already committed restore into a failure.
+        let protection_reconciliation_pending =
+            release_restore_protection(root, &mut guard).is_err();
         Ok(PreferencesRestoreResultDto {
             refresh_required: false,
+            protection_reconciliation_pending,
             backup_id: id.into(),
             protection_backup_id: guard.manifest.backup_id.clone(),
             target_path: target.to_string_lossy().into(),
@@ -711,6 +761,38 @@ pub fn restore_observed(
             guard.manifest.backup_id
         ))
     })
+}
+fn release_restore_protection(root: &Path, guard: &mut BackupRecord) -> AppResult<()> {
+    let meta = guard
+        .manifest
+        .management
+        .as_mut()
+        .ok_or_else(|| fail("missing restore protection"))?;
+    if guard.manifest.action != BackupAction::RestoreProtection
+        || meta.version != 2
+        || meta.kind != "restore-protection"
+        || meta.related_backup_id.is_none()
+        || meta.transaction_state.as_deref() != Some("active")
+    {
+        return Err(fail("restore protection cannot be reconciled"));
+    }
+    safety::check_path(root, &guard.directory, false)?;
+    // Verify the persisted active guard before releasing it. Update a copy so a
+    // failed write never reports a committed state through the in-memory handle.
+    let stored = resolve(root, &guard.manifest.backup_id)?;
+    if stored.manifest != guard.manifest || !super::verify_backup(&stored)? {
+        return Err(fail("active restore protection failed verification"));
+    }
+    let mut committed = guard.manifest.clone();
+    committed.management.as_mut().unwrap().transaction_state = Some("committed".into());
+    super::write_manifest(&guard.directory, &committed)?;
+    safety::sync_directories(root, &guard.directory)?;
+    let stored = resolve(root, &guard.manifest.backup_id)?;
+    if stored.manifest != committed || !super::verify_backup(&stored)? {
+        return Err(fail("restore reconciliation failed verification"));
+    }
+    guard.manifest = committed;
+    Ok(())
 }
 
 #[cfg(test)]
@@ -1135,11 +1217,168 @@ mod tests {
         );
         assert!(!old_target.exists());
         let guard = resolve(root.path(), &result.protection_backup_id).unwrap();
-        assert!(guard.manifest.management.unwrap().pinned);
-        assert!(set_pinned(root.path(), &result.protection_backup_id, false).is_err());
+        let meta = guard.manifest.management.as_ref().unwrap();
+        assert!(!meta.pinned);
+        assert!(reconciled_restore(&guard, meta));
+        assert!(!result.protection_reconciliation_pending);
+        set_pinned(root.path(), &result.protection_backup_id, true).unwrap();
+        set_pinned(root.path(), &result.protection_backup_id, false).unwrap();
         let p = preview(root.path(), now() + Duration::days(400)).unwrap();
         assert!(!p.candidate_ids.contains(&legacy.manifest.backup_id));
         assert!(!p.candidate_ids.contains(&result.protection_backup_id));
+    }
+    #[test]
+    fn committed_restore_guards_rotate_by_action_without_consuming_manual_retention() {
+        let root = root();
+        let source = manual(root.path(), 400);
+        for age in 101..114 {
+            manual(root.path(), age);
+        }
+        let mut restored = Vec::new();
+        for age in 101..114 {
+            restored.push(
+                restore(
+                    root.path(),
+                    &source.manifest.backup_id,
+                    now() - Duration::days(age),
+                )
+                .unwrap(),
+            );
+        }
+        let pinned = &restored.last().unwrap().protection_backup_id;
+        set_pinned(root.path(), pinned, true).unwrap();
+        let p = preview(root.path(), now()).unwrap();
+        assert!(!p.candidate_ids.contains(pinned));
+        let all = records(root.path()).unwrap();
+        let action_count = |action| {
+            all.iter()
+                .filter(|r| {
+                    r.manifest.action == action && p.candidate_ids.contains(&r.manifest.backup_id)
+                })
+                .count()
+        };
+        assert_eq!(action_count(BackupAction::RestoreProtection), 2);
+        assert_eq!(action_count(BackupAction::ManualPreferences), 4);
+        assert!(p.candidate_ids.contains(&source.manifest.backup_id));
+        assert_eq!(execute(root.path(), &p, now()).unwrap().len(), 6);
+        assert!(resolve(root.path(), pinned).is_ok());
+    }
+    #[test]
+    fn active_and_legacy_guards_keep_sources_and_reconciliation_preserves_user_pin() {
+        let root = root();
+        let source = manual(root.path(), 400);
+        for age in 101..114 {
+            manual(root.path(), age);
+        }
+        let guard = managed_backup(
+            root.path(),
+            BackupAction::RestoreProtection,
+            &active_payload(root.path()).unwrap(),
+            now() - Duration::days(401),
+            Some(source.manifest.backup_id.clone()),
+        )
+        .unwrap();
+        set_pinned(root.path(), &guard.manifest.backup_id, true).unwrap();
+        assert!(set_pinned(root.path(), &guard.manifest.backup_id, false).is_err());
+        let p = preview(root.path(), now()).unwrap();
+        assert!(!p.candidate_ids.contains(&source.manifest.backup_id));
+        let mut guard = resolve(root.path(), &guard.manifest.backup_id).unwrap();
+        release_restore_protection(root.path(), &mut guard).unwrap();
+        let released = resolve(root.path(), &guard.manifest.backup_id).unwrap();
+        assert!(released.manifest.management.as_ref().unwrap().pinned);
+        assert!(reconciled_restore(
+            &released,
+            released.manifest.management.as_ref().unwrap()
+        ));
+        let p = preview(root.path(), now()).unwrap();
+        assert!(p.candidate_ids.contains(&source.manifest.backup_id));
+        assert!(!p.candidate_ids.contains(&released.manifest.backup_id));
+        // An old pinned guard has no proof of a completed transaction.
+        let mut legacy = managed_backup(
+            root.path(),
+            BackupAction::RestoreProtection,
+            &active_payload(root.path()).unwrap(),
+            now() - Duration::days(402),
+            Some(source.manifest.backup_id.clone()),
+        )
+        .unwrap();
+        let m = legacy.manifest.management.as_mut().unwrap();
+        m.version = 1;
+        m.pinned = true;
+        m.transaction_state = None;
+        super::super::write_manifest(&legacy.directory, &legacy.manifest).unwrap();
+        assert!(release_restore_protection(root.path(), &mut legacy).is_err());
+        assert!(set_pinned(root.path(), &legacy.manifest.backup_id, false).is_err());
+        assert!(!preview(root.path(), now())
+            .unwrap()
+            .candidate_ids
+            .contains(&source.manifest.backup_id));
+    }
+    #[test]
+    fn unknown_restore_reconciliation_states_fail_closed() {
+        for state in [None, Some("prepared"), Some("failed"), Some("future")] {
+            let root = root();
+            let source = manual(root.path(), 400);
+            for age in 101..114 {
+                manual(root.path(), age);
+            }
+            let mut guard = managed_backup(
+                root.path(),
+                BackupAction::RestoreProtection,
+                &active_payload(root.path()).unwrap(),
+                now() - Duration::days(401),
+                Some(source.manifest.backup_id.clone()),
+            )
+            .unwrap();
+            guard
+                .manifest
+                .management
+                .as_mut()
+                .unwrap()
+                .transaction_state = state.map(str::to_owned);
+            super::super::write_manifest(&guard.directory, &guard.manifest).unwrap();
+            assert!(release_restore_protection(root.path(), &mut guard).is_err());
+            let p = preview(root.path(), now()).unwrap();
+            assert!(!p.candidate_ids.contains(&source.manifest.backup_id));
+            assert!(!p.candidate_ids.contains(&guard.manifest.backup_id));
+        }
+    }
+    #[test]
+    fn corrupted_active_guard_is_never_reconciled() {
+        let root = root();
+        let source = manual(root.path(), 400);
+        let mut guard = managed_backup(
+            root.path(),
+            BackupAction::RestoreProtection,
+            &active_payload(root.path()).unwrap(),
+            now(),
+            Some(source.manifest.backup_id.clone()),
+        )
+        .unwrap();
+        let payload = safety::payload_path(&guard.directory).unwrap();
+        let mut bytes = std::fs::read(&payload).unwrap();
+        bytes[0] ^= 1;
+        std::fs::write(payload, bytes).unwrap();
+        assert!(release_restore_protection(root.path(), &mut guard).is_err());
+        let stored = resolve(root.path(), &guard.manifest.backup_id).unwrap();
+        assert_eq!(
+            stored
+                .manifest
+                .management
+                .unwrap()
+                .transaction_state
+                .as_deref(),
+            Some("active")
+        );
+        assert_eq!(
+            guard
+                .manifest
+                .management
+                .unwrap()
+                .transaction_state
+                .as_deref(),
+            Some("active")
+        );
     }
     #[test]
     fn failed_restore_keeps_current_bytes_and_protection_for_sha_size_schema_and_type() {
@@ -1502,13 +1741,20 @@ mod tests {
                 .find(|r| r.manifest.action == BackupAction::RestoreProtection)
                 .unwrap();
             let management = guard.manifest.management.as_ref().unwrap();
-            assert!(management.pinned);
+            assert!(!management.pinned);
+            assert_eq!(
+                management.transaction_state.as_deref(),
+                Some(if valid_source { "committed" } else { "active" })
+            );
             assert_eq!(
                 management.related_backup_id.as_deref(),
                 Some(source.manifest.backup_id.as_str())
             );
             let p = preview(root.path(), Utc::now() + Duration::days(400)).unwrap();
-            assert!(!p.candidate_ids.contains(&source.manifest.backup_id));
+            assert_eq!(
+                p.candidate_ids.contains(&source.manifest.backup_id),
+                valid_source
+            );
             assert!(!p.candidate_ids.contains(&guard.manifest.backup_id));
         }
     }

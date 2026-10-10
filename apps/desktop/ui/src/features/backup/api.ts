@@ -38,6 +38,6 @@ export const createBackup = () => call<{ backup: { backupId: string }; removedId
 export const pinBackup = (id: string, pinned: boolean) => call<void>('set_preferences_backup_pinned', { id, pinned })
 export const previewCleanup = () => call<CleanupPreview>('preview_preferences_backup_cleanup')
 export const executeCleanup = (preview: CleanupPreview) => call<string[]>('cleanup_preferences_backups', { preview })
-export const restoreBackup = (id: string) => call<{ backupId: string; protectionBackupId: string; targetPath: string; refreshRequired: boolean }>('restore_preferences_backup', { id })
+export const restoreBackup = (id: string) => call<{ backupId: string; protectionBackupId: string; targetPath: string; refreshRequired: boolean; protectionReconciliationPending: boolean }>('restore_preferences_backup', { id })
 export const getBackupPolicy = () => call<BackupPolicy>('preferences_backup_policy')
 export const saveBackupPolicy = (policy: BackupPolicy) => call<void>('save_preferences_backup_policy', { policy })

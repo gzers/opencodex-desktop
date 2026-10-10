@@ -82,14 +82,17 @@ function restore(record: PreferencesBackup) {
     confirmLabel: '校验并恢复',
     onConfirm: () => { void transact(async () => {
       const result = await restoreBackup(record.id)
-      if (result?.refreshRequired) return '偏好已恢复；运行状态刷新未完成，请重启管理器。恢复前保护备份已保留。'
+      const protection = result?.protectionReconciliationPending
+        ? '恢复前备份的保护状态需要重新核对，请查看备份列表。'
+        : '恢复前备份已纳入普通保留策略，可固定保留。'
+      if (result?.refreshRequired) return `偏好已恢复；运行状态刷新未完成，请重启管理器。${protection}`
       try {
         await app.loadPreferences()
         await getUpdateStatus()
       } catch {
-        return '偏好已恢复；界面刷新未完成，请重新加载。恢复前保护备份已保留。'
+        return `偏好已恢复；界面刷新未完成，请重新加载。${protection}`
       }
-      return '偏好已恢复；恢复前保护备份已保留。'
+      return `偏好已恢复；${protection}`
     }) },
   })
 }
@@ -114,7 +117,7 @@ onMounted(() => { void refresh() })
     </div>
     <BackupFiles ref="files" @open="openFile" />
     <div class="backup-policy">
-      <div><h3>保留与清理</h3><p>保留最近 10 份或 30 天内的备份；满足任一条件即保留。固定项与受保护项额外保留。</p></div>
+      <div><h3>保留与清理</h3><p>按用途分别保留最近 10 份或 30 天内的备份；满足任一条件即保留。固定项与受保护项额外保留。</p></div>
       <div class="controls">
         <label for="backup-cleanup-mode">清理方式</label>
         <select id="backup-cleanup-mode" v-model="mode" class="input" :disabled="busy || loading || !policy">
