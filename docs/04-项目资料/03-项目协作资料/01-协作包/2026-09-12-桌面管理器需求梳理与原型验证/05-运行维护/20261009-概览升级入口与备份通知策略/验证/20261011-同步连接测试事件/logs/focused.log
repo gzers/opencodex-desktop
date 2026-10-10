@@ -1,0 +1,45 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+warning: unused `Result` that must be used
+   --> src/commands/sync.rs:901:17
+    |
+901 | /                 tauri::async_runtime::block_on(probe_connection_observed(
+902 | |                     &client,
+903 | |                     &config(),
+904 | |                     Duration::from_secs(1),
+...   |
+909 | |                     },
+910 | |                 ))?;
+    | |___________________^
+    |
+    = note: this `Result` may be an `Err` variant, which should be handled
+    = note: `#[warn(unused_must_use)]` (part of `#[warn(unused)]`) on by default
+help: use `let _ = ...` to ignore the resulting value
+    |
+901 |                 let _ = tauri::async_runtime::block_on(probe_connection_observed(
+    |                 +++++++
+
+warning: `opencodex-desktop` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.32s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 7 tests
+test commands::sync::probe_tests::invalid_probe_has_no_request_or_terminal ... ok
+test commands::sync::probe_tests::changed_endpoint_or_credential_and_failed_readback_do_not_publish ... ok
+test commands::sync::probe_tests::cancelled_ipc_observer_does_not_release_probe_or_storage_ownership ... ok
+test commands::sync::probe_tests::bounded_probe_timeout_is_an_actual_failure ... ok
+test commands::sync::probe_tests::notification_write_failure_does_not_change_network_success ... ok
+
+thread 'commands::sync::probe_tests::actual_failure_persists_and_exact_verified_retry_resolves_after_reload' (107801120) panicked at src/commands/sync.rs:817:90:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test commands::sync::probe_tests::actual_failure_persists_and_exact_verified_retry_resolves_after_reload ... FAILED
+test commands::sync::probe_tests::new_endpoint_credentials_or_root_cannot_clear_old_failure ... ok
+
+failures:
+
+failures:
+    commands::sync::probe_tests::actual_failure_persists_and_exact_verified_retry_resolves_after_reload
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 624 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `--lib`

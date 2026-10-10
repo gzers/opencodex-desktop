@@ -1,0 +1,53 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error[E0277]: `?` couldn't convert the error to `errors::AppError`
+   --> src/commands/sync.rs:200:11
+    |
+194 |           let candidate = serde_json::to_vec(&(
+    |  _________________________-
+195 | |             &endpoint,
+196 | |             &webdav.base_url,
+197 | |             &webdav.remote_path,
+198 | |             &webdav.username,
+199 | |             &webdav.password,
+200 | |         ))?;
+    | |          -^ the trait `From<serde_json::Error>` is not implemented for `errors::AppError`
+    | |__________|
+    |            this can't be annotated with `?` because it has type `Result<_, serde_json::Error>`
+    |
+note: `errors::AppError` needs to implement `From<serde_json::Error>`
+   --> src/errors/mod.rs:6:1
+    |
+  6 | pub enum AppError {
+    | ^^^^^^^^^^^^^^^^^
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the following other types implement trait `From<T>`:
+              `errors::AppError` implements `From<CodexShimError>`
+              `errors::AppError` implements `From<DoctorError>`
+              `errors::AppError` implements `From<MigrationError>`
+              `errors::AppError` implements `From<RegistryError>`
+              `errors::AppError` implements `From<modules::about::OfficialVersionError>`
+              `errors::AppError` implements `From<modules::preferences::PreferencesError>`
+              `errors::AppError` implements `From<modules::runtime::install::InstallError>`
+              `errors::AppError` implements `From<persistence::NotificationsError>`
+            and 2 others
+
+error[E0599]: no variant or associated item named `NotConfigured` found for enum `types::status::ConnectionState` in the current scope
+   --> src/commands/sync.rs:251:79
+    |
+251 |                 run.connection_state = crate::types::status::ConnectionState::NotConfigured;
+    |                                                                               ^^^^^^^^^^^^^ variant or associated item not found in `types::status::ConnectionState`
+    |
+   ::: src/types/status.rs:28:1
+    |
+ 28 | pub enum ConnectionState {
+    | ------------------------ variant or associated item `NotConfigured` not found for this enum
+    |
+help: there is a variant with a similar name
+    |
+251 -                 run.connection_state = crate::types::status::ConnectionState::NotConfigured;
+251 +                 run.connection_state = crate::types::status::ConnectionState::Unconfigured;
+    |
+
+Some errors have detailed explanations: E0277, E0599.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

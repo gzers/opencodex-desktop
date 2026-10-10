@@ -1,0 +1,43 @@
+{
+  "source_sha": "a3b84474d68b1dffc93f2999fa165abe44b87b63",
+  "code_branch": "feature/0.1.10-maintenance",
+  "rust_full": {
+    "groups": 33,
+    "passed": 785,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "sync_probe": 7,
+    "registry": 31
+  },
+  "checks_passed": [
+    "clippy-all-targets-D-warnings",
+    "fmt-check",
+    "diff-check"
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 33,
+    "events": 68,
+    "notification_policies": 21,
+    "emission_sites": 74,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "ui_rerun": false,
+  "native_rerun": false,
+  "unsuccessful_rounds": [
+    "initial: unchanged source after edit-script SyntaxError",
+    "compile: error conversion and enum failures",
+    "focused: scope file fixture failure, 6 pass / 1 fail"
+  ],
+  "limits": [
+    "injected transport; no real WebDAV/keychain or native AppHandle validation",
+    "process-local gate only; manual sync IPC cancellation ownership still pending",
+    "endpoint save/delete terminals and full-domain coverage incomplete",
+    "Windows and full required_checks pending"
+  ]
+}

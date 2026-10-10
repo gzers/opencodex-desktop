@@ -1,0 +1,39 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.59s
+     Running tests/event_registry.rs (target/debug/deps/event_registry-2b419d010ceda59a)
+
+running 31 tests
+test manager_check_and_pending_restart_never_resolve_install_failure ... ok
+test lifecycle_preference_is_independent_of_environment_risks_and_recovery ... ok
+test invalid_job_trigger_scope_and_fact_never_mutate ... ok
+test pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived ... ok
+test config_recovery_is_structural_and_queries_cannot_be_repurposed_to_resolve_install ... ok
+test embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation ... ok
+test old_history_without_identity_still_loads_and_is_not_automatically_resolved ... ok
+test concurrent_scope_creation_keeps_one_identity ... ok
+test recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks ... ok
+test registry_is_closed_and_references_are_consistent ... ok
+test same_scope_dedupes_but_different_objects_and_candidates_coexist ... ok
+test legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes ... ok
+test existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs ... ok
+test persistence_failure_rolls_back_new_notification_and_recovery ... ok
+test signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact ... ok
+test exact_verified_candidate_success_resolves_after_restart_without_marking_read ... ok
+test validated_signal_site_cannot_be_assigned_a_persisted_terminal_fact ... ok
+test signal_delivery_and_suppressed_notifications_do_not_create_history_files ... ok
+test scope_rejects_symlinks_without_writing_external_files ... ok
+test transient_signals_validate_without_scopes_or_notification_writes ... ok
+test mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure ... ok
+test protection_reconcile_failure_requires_matching_verified_retry ... ok
+test cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline ... ok
+test uninstall_failure_persists_and_only_matching_verified_removal_resolves ... ok
+test legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates ... ok
+test terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence ... ok
+test persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes ... ok
+test candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids ... ok
+test lifecycle_command_only_resolves_matching_real_result_with_persisted_scope ... ok
+test new_terminal_pairs_persist_and_only_exact_verified_success_recovers ... ok
+test scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots ... ok
+
+test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+
