@@ -188,6 +188,7 @@ pub enum PolicyId {
     PreferencesSaveFailure,
     PreferencesResetFailure,
     BackupPolicySaveFailure,
+    BackupPinFailure,
     BackupCleanupFailure,
     LocalCleanupFailure,
     SyncConflict,
@@ -678,6 +679,10 @@ enum SupportedEvent {
     PreferencesBackupPolicyFailed,
     #[serde(rename = "preferences-backup-policy-succeeded")]
     PreferencesBackupPolicySucceeded,
+    #[serde(rename = "preferences-backup-pin-failed")]
+    PreferencesBackupPinFailed,
+    #[serde(rename = "preferences-backup-pin-succeeded")]
+    PreferencesBackupPinSucceeded,
 }
 
 dimension!(PathId {

@@ -114,6 +114,7 @@ pub async fn set_preferences_backup_pinned(
     root: tauri::State<'_, SharedDataRoot>,
     id: String,
     pinned: bool,
+    app: tauri::AppHandle,
 ) -> AppResult<()> {
     registry::validate_signal(
         "preferences-backup-pin",
@@ -124,7 +125,25 @@ pub async fn set_preferences_backup_pinned(
     .map_err(|_| AppError::NotConfigured)?;
     let root = root.0.clone();
     crate::commands::run_blocking("pin preferences backup", move || {
-        manager::set_pinned(&root, &id, pinned)
+        manager::set_pinned_observed(&root, &id, pinned, |candidate, succeeded| {
+            let identity = event_delivery::prepare(
+                &root,
+                "preferences-backup-pin-failed",
+                Channel::Local,
+                candidate,
+            );
+            event_delivery::publish(
+                &app,
+                &root,
+                if succeeded {
+                    "preferences-backup-pin-succeeded"
+                } else {
+                    "preferences-backup-pin-failed"
+                },
+                identity,
+                Trigger::User,
+            );
+        })
     })
     .await
 }

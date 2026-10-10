@@ -749,6 +749,32 @@ fn resolve(root: &Path, id: &str) -> AppResult<BackupRecord> {
     Ok(found.into_iter().next().unwrap())
 }
 pub fn set_pinned(root: &Path, id: &str, pinned: bool) -> AppResult<()> {
+    set_pinned_observed(root, id, pinned, |_, _| {})
+}
+
+/// Observe only an admitted manifest mutation, after durable write and readback.
+/// Failed admission or protection reconciliation never produces a write fact.
+pub fn set_pinned_observed(
+    root: &Path,
+    id: &str,
+    pinned: bool,
+    observer: impl FnOnce(&[u8], bool),
+) -> AppResult<()> {
+    set_pinned_with_writer(root, id, pinned, persist_pin, observer)
+}
+
+fn persist_pin(root: &Path, record: &BackupRecord) -> AppResult<()> {
+    super::write_manifest(&record.directory, &record.manifest)?;
+    safety::sync_directories(root, &record.directory)
+}
+
+fn set_pinned_with_writer(
+    root: &Path,
+    id: &str,
+    pinned: bool,
+    writer: impl FnOnce(&Path, &BackupRecord) -> AppResult<()>,
+    observer: impl FnOnce(&[u8], bool),
+) -> AppResult<()> {
     let _lock = lock(root)?;
     let mut r = resolve(root, id)?;
     let reconciled = r
@@ -796,8 +822,25 @@ pub fn set_pinned(root: &Path, id: &str, pinned: bool) -> AppResult<()> {
     }
     meta.pinned = pinned;
     safety::check_path(root, &r.directory, false)?;
-    super::write_manifest(&r.directory, &r.manifest)?;
-    safety::sync_directories(root, &r.directory)
+    // Hash exact backup identity and requested state, never paths or user content.
+    // A different backup or an unpin success cannot resolve a pin failure.
+    let candidate = serde_json::to_vec(&(
+        &r.manifest.backup_id,
+        r.manifest.action,
+        &r.manifest.sha256,
+        r.manifest.bytes,
+        pinned,
+    ))
+    .map_err(|e| fail(e.to_string()))?;
+    let result = writer(root, &r).and_then(|()| {
+        let persisted = safety::load_record(&r.directory)?;
+        if persisted.manifest != r.manifest {
+            return Err(fail("pin manifest readback mismatch"));
+        }
+        Ok(())
+    });
+    observer(&candidate, result.is_ok());
+    result
 }
 fn preview_inner(
     root: &Path,
@@ -2231,5 +2274,219 @@ mod tests {
             std::fs::write(root.path().join("backups").join(format!("file{i}")), b"").unwrap();
         }
         assert!(list(root.path()).is_err());
+    }
+}
+
+#[cfg(test)]
+mod pin_event_tests {
+    use super::*;
+    use crate::commands::event_delivery;
+    use crate::modules::notifications::{
+        persistence::{load_notifications, notifications_path},
+        registry::{Channel, Delivery, Evidence, Job, Trigger},
+        NotificationStore,
+    };
+    use std::sync::{Arc, Mutex};
+
+    fn root() -> tempfile::TempDir {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        crate::commands::preferences::save_preferences_with_path(
+            root.path(),
+            &crate::modules::preferences::Preferences::default(),
+        )
+        .unwrap();
+        root
+    }
+    fn record(root: &Path) -> BackupRecord {
+        let dto = create(root, Utc::now(), Default::default()).unwrap();
+        resolve(root, &dto.backup.backup_id).unwrap()
+    }
+    fn publish(root: &Path, store: &Arc<Mutex<NotificationStore>>, bytes: &[u8], succeeded: bool) {
+        let identity =
+            event_delivery::prepare(root, "preferences-backup-pin-failed", Channel::Local, bytes)
+                .unwrap();
+        let evidence = if succeeded {
+            Evidence::Success {
+                candidate: identity.candidate.clone(),
+                verified: true,
+            }
+        } else {
+            Evidence::Failure
+        };
+        let delivery = Delivery {
+            event: if succeeded {
+                "preferences-backup-pin-succeeded"
+            } else {
+                "preferences-backup-pin-failed"
+            },
+            job: Job::BackupPin,
+            trigger: Trigger::User,
+            identity,
+            evidence,
+            occurred_at: Utc::now(),
+        };
+        let _ = crate::commands::notifications::NotificationPublisher {
+            store,
+            data_root: root,
+        }
+        .publish_event(&delivery);
+    }
+    fn pin(
+        root: &Path,
+        id: &str,
+        pinned: bool,
+        store: &Arc<Mutex<NotificationStore>>,
+    ) -> AppResult<()> {
+        set_pinned_observed(root, id, pinned, |bytes, succeeded| {
+            publish(root, store, bytes, succeeded)
+        })
+    }
+    fn fail_write(root: &Path, record: &BackupRecord, store: &Arc<Mutex<NotificationStore>>) {
+        let path = record.directory.join(super::super::MANIFEST_NAME);
+        let original = std::fs::read(&path).unwrap();
+        // Inject after bounded admission/resolve: actual write failure, not refusal.
+        let result = set_pinned_with_writer(
+            root,
+            &record.manifest.backup_id,
+            true,
+            |root, candidate| {
+                std::fs::remove_file(&path).unwrap();
+                std::fs::create_dir(&path).unwrap();
+                persist_pin(root, candidate)
+            },
+            |bytes, succeeded| publish(root, store, bytes, succeeded),
+        );
+        assert!(result.is_err());
+        std::fs::remove_dir(&path).unwrap();
+        std::fs::write(path, original).unwrap();
+    }
+    #[test]
+    fn manifest_write_failure_and_exact_retry_recover_persisted_history() {
+        let root = root();
+        let record = record(root.path());
+        let payload = std::fs::read(record.directory.join("preferences.json")).unwrap();
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        fail_write(root.path(), &record, &store);
+        let history = load_notifications(&notifications_path(root.path())).unwrap();
+        assert_eq!(history.all().len(), 1);
+        assert!(!history.all()[0].resolved);
+        assert!(!history.all()[0]
+            .body
+            .contains(&root.path().to_string_lossy().to_string()));
+        let reloaded = Arc::new(Mutex::new(history));
+        pin(root.path(), &record.manifest.backup_id, true, &reloaded).unwrap();
+        assert!(
+            resolve(root.path(), &record.manifest.backup_id)
+                .unwrap()
+                .manifest
+                .management
+                .unwrap()
+                .pinned
+        );
+        assert_eq!(
+            std::fs::read(record.directory.join("preferences.json")).unwrap(),
+            payload
+        );
+        let history = load_notifications(&notifications_path(root.path())).unwrap();
+        assert_eq!(history.all().len(), 1);
+        assert!(history.all()[0].resolved);
+        assert!(!history.all()[0].read);
+    }
+    #[test]
+    fn other_root_backup_and_unpin_cannot_clear_a_pin_failure() {
+        let root = root();
+        let other = self::root();
+        let first = record(root.path());
+        let second = record(root.path());
+        let foreign = record(other.path());
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        fail_write(root.path(), &first, &store);
+        pin(other.path(), &foreign.manifest.backup_id, true, &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+        pin(root.path(), &second.manifest.backup_id, true, &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+        pin(root.path(), &first.manifest.backup_id, false, &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+        // Returning to original contents does not resurrect the old UUID.
+        pin(root.path(), &first.manifest.backup_id, true, &store).unwrap();
+        assert!(!store.lock().unwrap().all()[0].resolved);
+    }
+    #[test]
+    fn refusal_never_emits_and_unpin_cannot_bypass_active_protection() {
+        let root = root();
+        let guard = begin_preferences_protection(root.path(), true).unwrap();
+        let reference = guard.protection_ref(root.path()).unwrap().unwrap();
+        drop(guard);
+        set_pinned(root.path(), &reference.backup_id, true).unwrap();
+        let before = resolve(root.path(), &reference.backup_id).unwrap();
+        assert!(
+            set_pinned_observed(root.path(), &reference.backup_id, false, |_, _| panic!(
+                "active protection refused"
+            ))
+            .is_err()
+        );
+        assert_eq!(resolve(root.path(), &reference.backup_id).unwrap(), before);
+        for id in ["../escape", "missing"] {
+            assert!(set_pinned_observed(root.path(), id, true, |_, _| panic!(
+                "invalid id delivery"
+            ))
+            .is_err());
+        }
+        // The cooperative lock waits for contention; test a genuine admission
+        // refusal (invalid lock path), not recursive acquisition on this thread.
+        let lock_path = root.path().join(".backup-w2.lock");
+        std::fs::remove_file(&lock_path).unwrap();
+        std::fs::create_dir(&lock_path).unwrap();
+        assert!(
+            set_pinned_observed(root.path(), &reference.backup_id, true, |_, _| panic!(
+                "lock refused"
+            ))
+            .is_err()
+        );
+        assert!(!notifications_path(root.path()).exists());
+    }
+    #[test]
+    fn nominal_writer_success_requires_exact_manifest_readback() {
+        let root = root();
+        let record = record(root.path());
+        let mut observed = None;
+        assert!(set_pinned_with_writer(
+            root.path(),
+            &record.manifest.backup_id,
+            true,
+            |_, _| Ok(()),
+            |_, succeeded| observed = Some(succeeded)
+        )
+        .is_err());
+        assert_eq!(observed, Some(false));
+        assert!(
+            !resolve(root.path(), &record.manifest.backup_id)
+                .unwrap()
+                .manifest
+                .management
+                .unwrap()
+                .pinned
+        );
+    }
+    #[test]
+    fn notification_failure_does_not_undo_committed_pin() {
+        let root = root();
+        let record = record(root.path());
+        let store = Arc::new(Mutex::new(NotificationStore::new()));
+        fail_write(root.path(), &record, &store);
+        let path = notifications_path(root.path());
+        std::fs::remove_file(&path).unwrap();
+        std::fs::create_dir(&path).unwrap();
+        pin(root.path(), &record.manifest.backup_id, true, &store).unwrap();
+        assert!(
+            resolve(root.path(), &record.manifest.backup_id)
+                .unwrap()
+                .manifest
+                .management
+                .unwrap()
+                .pinned
+        );
+        assert!(!store.lock().unwrap().all()[0].resolved);
     }
 }
