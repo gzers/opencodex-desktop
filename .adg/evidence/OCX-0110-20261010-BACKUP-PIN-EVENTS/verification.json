@@ -1,0 +1,44 @@
+{
+  "source_sha": "c4996219215ccac3538eebb5eaeda81e3f64c362",
+  "code_branch": "feature/0.1.10-maintenance",
+  "rust_full": {
+    "groups": 33,
+    "passed": 778,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "pin_events": 5,
+    "registry": 31
+  },
+  "checks_passed": [
+    "clippy-all-targets-D-warnings",
+    "fmt-check",
+    "diff-check"
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 32,
+    "events": 66,
+    "notification_policies": 20,
+    "emission_sites": 72,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "ui_rerun": false,
+  "native_rerun": false,
+  "unsuccessful_rounds": [
+    "focused: wrong cwd, zero targeted",
+    "focused-rerun: compile failure, DTO field",
+    "focused-final: existing lock file fixture failure",
+    "focused-verified: recursive blocking lock hang; exact test child SIGTERM"
+  ],
+  "limits": [
+    "no AppHandle native emission validation",
+    "Windows not run",
+    "sync and full-domain terminal/admission/recovery coverage incomplete",
+    "full required_checks pending"
+  ]
+}

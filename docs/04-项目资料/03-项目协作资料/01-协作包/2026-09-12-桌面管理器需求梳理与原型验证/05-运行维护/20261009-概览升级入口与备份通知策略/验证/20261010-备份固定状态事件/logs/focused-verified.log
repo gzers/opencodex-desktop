@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.22s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 5 tests
+test modules::backup::manager::pin_event_tests::nominal_writer_success_requires_exact_manifest_readback ... ok
+test modules::backup::manager::pin_event_tests::notification_failure_does_not_undo_committed_pin ... ok
+test modules::backup::manager::pin_event_tests::manifest_write_failure_and_exact_retry_recover_persisted_history ... ok
+test modules::backup::manager::pin_event_tests::other_root_backup_and_unpin_cannot_clear_a_pin_failure ... ok
+test modules::backup::manager::pin_event_tests::refusal_never_emits_and_unpin_cannot_bypass_active_protection has been running for over 60 seconds
+error: test failed, to rerun pass `--lib`
+
+Caused by:
+  process didn't exit successfully: `/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7 pin_event_tests` (signal: 15, SIGTERM: termination signal)

@@ -1,0 +1,26 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.64s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 5 tests
+test modules::backup::manager::pin_event_tests::nominal_writer_success_requires_exact_manifest_readback ... ok
+test modules::backup::manager::pin_event_tests::refusal_never_emits_and_unpin_cannot_bypass_active_protection ... FAILED
+test modules::backup::manager::pin_event_tests::notification_failure_does_not_undo_committed_pin ... ok
+test modules::backup::manager::pin_event_tests::manifest_write_failure_and_exact_retry_recover_persisted_history ... ok
+test modules::backup::manager::pin_event_tests::other_root_backup_and_unpin_cannot_clear_a_pin_failure ... ok
+
+failures:
+
+---- modules::backup::manager::pin_event_tests::refusal_never_emits_and_unpin_cannot_bypass_active_protection stdout ----
+
+thread 'modules::backup::manager::pin_event_tests::refusal_never_emits_and_unpin_cannot_bypass_active_protection' (107555697) panicked at src/modules/backup/manager.rs:2436:66:
+called `Result::unwrap()` on an `Err` value: Os { code: 17, kind: AlreadyExists, message: "File exists" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::backup::manager::pin_event_tests::refusal_never_emits_and_unpin_cannot_bypass_active_protection
+
+test result: FAILED. 4 passed; 1 failed; 0 ignored; 0 measured; 619 filtered out; finished in 0.41s
+
+error: test failed, to rerun pass `--lib`
