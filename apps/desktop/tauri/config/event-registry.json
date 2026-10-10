@@ -1,0 +1,1613 @@
+{
+  "schema_version": 1,
+  "triggers": [
+    "user",
+    "startup",
+    "status_change",
+    "deadline",
+    "foreground",
+    "online",
+    "native_callback",
+    "commit"
+  ],
+  "jobs": [
+    {
+      "id": "start",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "stop",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "restart",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "observe",
+      "availability": "active",
+      "triggers": [
+        "startup",
+        "deadline",
+        "foreground",
+        "user",
+        "status_change"
+      ]
+    },
+    {
+      "id": "load_history",
+      "availability": "active",
+      "triggers": [
+        "startup"
+      ]
+    },
+    {
+      "id": "install",
+      "availability": "active",
+      "triggers": [
+        "user",
+        "native_callback"
+      ]
+    },
+    {
+      "id": "source",
+      "availability": "active",
+      "triggers": [
+        "commit"
+      ]
+    },
+    {
+      "id": "notification_mutation",
+      "availability": "active",
+      "triggers": [
+        "commit"
+      ]
+    },
+    {
+      "id": "tray",
+      "availability": "active",
+      "triggers": [
+        "native_callback"
+      ]
+    },
+    {
+      "id": "activity",
+      "availability": "active",
+      "triggers": [
+        "native_callback"
+      ]
+    },
+    {
+      "id": "appearance",
+      "availability": "active",
+      "triggers": [
+        "native_callback",
+        "user"
+      ]
+    },
+    {
+      "id": "panel",
+      "availability": "active",
+      "triggers": [
+        "native_callback",
+        "user"
+      ]
+    },
+    {
+      "id": "manager_check",
+      "availability": "active",
+      "triggers": [
+        "user",
+        "deadline",
+        "foreground",
+        "online"
+      ]
+    },
+    {
+      "id": "manager_install",
+      "availability": "active",
+      "triggers": [
+        "user",
+        "native_callback",
+        "startup"
+      ]
+    },
+    {
+      "id": "panel_check",
+      "availability": "active",
+      "triggers": [
+        "user",
+        "deadline",
+        "foreground",
+        "online"
+      ]
+    },
+    {
+      "id": "sync",
+      "availability": "planned",
+      "triggers": [
+        "user",
+        "deadline"
+      ]
+    },
+    {
+      "id": "backup",
+      "availability": "planned",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "migration",
+      "availability": "planned",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "preferences_backup",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "preferences_restore",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "backup_cleanup",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "backup_list",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "backup_pin",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    },
+    {
+      "id": "cleanup",
+      "availability": "active",
+      "triggers": [
+        "startup",
+        "user"
+      ]
+    },
+    {
+      "id": "ui_feedback",
+      "availability": "active",
+      "triggers": [
+        "user",
+        "status_change",
+        "native_callback"
+      ]
+    },
+    {
+      "id": "process_signals",
+      "availability": "active",
+      "triggers": [
+        "user",
+        "native_callback"
+      ]
+    },
+    {
+      "id": "sync_conflict",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "manager-install-progress",
+      "job": "manager_install",
+      "object": "manager",
+      "action": "install",
+      "phase": "progress",
+      "channels": [
+        "stable",
+        "beta"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "run-start-failed",
+      "job": "start",
+      "object": "runtime",
+      "action": "start",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "start_failure",
+      "resolves": []
+    },
+    {
+      "id": "run-stop-failed",
+      "job": "stop",
+      "object": "runtime",
+      "action": "stop",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "stop_failure",
+      "resolves": []
+    },
+    {
+      "id": "run-restart-failed",
+      "job": "restart",
+      "object": "runtime",
+      "action": "restart",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "restart_failure",
+      "resolves": []
+    },
+    {
+      "id": "run-start-succeeded",
+      "job": "start",
+      "object": "runtime",
+      "action": "start",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "run-start-failed"
+      ]
+    },
+    {
+      "id": "run-stop-succeeded",
+      "job": "stop",
+      "object": "runtime",
+      "action": "stop",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "run-stop-failed"
+      ]
+    },
+    {
+      "id": "run-restart-succeeded",
+      "job": "restart",
+      "object": "runtime",
+      "action": "restart",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "run-restart-failed"
+      ]
+    },
+    {
+      "id": "runtime-starting-failed",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "start_failure",
+      "resolves": []
+    },
+    {
+      "id": "runtime-not-found",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "risk",
+      "availability": "active",
+      "policy": "missing_runtime",
+      "resolves": []
+    },
+    {
+      "id": "run-unreachable",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "unreachable",
+      "resolves": []
+    },
+    {
+      "id": "run-at-risk",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "risk",
+      "availability": "active",
+      "policy": "at_risk",
+      "resolves": []
+    },
+    {
+      "id": "external-takeover",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "risk",
+      "availability": "active",
+      "policy": "takeover",
+      "resolves": []
+    },
+    {
+      "id": "notifications-store-unreadable",
+      "job": "load_history",
+      "object": "notification_history",
+      "action": "read",
+      "phase": "load",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "history_unreadable",
+      "resolves": []
+    },
+    {
+      "id": "status-snapshot-changed",
+      "job": "observe",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "notifications-changed",
+      "job": "notification_mutation",
+      "object": "notification_history",
+      "action": "mutate",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "runtime-install-progress",
+      "job": "install",
+      "object": "runtime",
+      "action": "install",
+      "phase": "progress",
+      "channels": [
+        "local",
+        "official"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "runtime-source-changed",
+      "job": "source",
+      "object": "runtime",
+      "action": "change_source",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "tray-requests-available",
+      "job": "tray",
+      "object": "tray",
+      "action": "dispatch",
+      "phase": "query",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "app-foreground-changed",
+      "job": "activity",
+      "object": "window",
+      "action": "activate",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "native-window-appearance",
+      "job": "appearance",
+      "object": "window",
+      "action": "render",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "ocxd-panel",
+      "job": "panel",
+      "object": "panel",
+      "action": "bridge",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "ocxd-panel-state",
+      "job": "panel",
+      "object": "panel",
+      "action": "bridge",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "manager-check-succeeded",
+      "job": "manager_check",
+      "object": "manager",
+      "action": "check",
+      "phase": "query",
+      "channels": [
+        "stable",
+        "beta"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "manager-check-failed",
+      "job": "manager_check",
+      "object": "manager",
+      "action": "check",
+      "phase": "query",
+      "channels": [
+        "stable",
+        "beta"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "panel-check-succeeded",
+      "job": "panel_check",
+      "object": "panel",
+      "action": "check",
+      "phase": "query",
+      "channels": [
+        "official"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "panel-check-failed",
+      "job": "panel_check",
+      "object": "panel",
+      "action": "check",
+      "phase": "query",
+      "channels": [
+        "official"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "sync-conflict-detected",
+      "job": "sync_conflict",
+      "object": "sync",
+      "action": "synchronize",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "risk",
+      "availability": "active",
+      "policy": "sync_conflict",
+      "resolves": []
+    },
+    {
+      "id": "backup-completed",
+      "job": "backup",
+      "object": "backup",
+      "action": "backup",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "planned",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "migration-completed",
+      "job": "migration",
+      "object": "configuration",
+      "action": "migrate",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "planned",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "manager-install-failed",
+      "job": "manager_install",
+      "object": "manager",
+      "action": "install",
+      "phase": "execution",
+      "channels": [
+        "stable",
+        "beta"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "manager_install_failure",
+      "resolves": []
+    },
+    {
+      "id": "manager-install-succeeded",
+      "job": "manager_install",
+      "object": "manager",
+      "action": "install",
+      "phase": "execution",
+      "channels": [
+        "stable",
+        "beta"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "manager-install-failed"
+      ]
+    },
+    {
+      "id": "manager-install-pending-restart",
+      "job": "manager_install",
+      "object": "manager",
+      "action": "install",
+      "phase": "execution",
+      "channels": [
+        "stable",
+        "beta"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-succeeded",
+      "job": "preferences_backup",
+      "object": "backup",
+      "action": "backup",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "preferences-backup-failed"
+      ]
+    },
+    {
+      "id": "preferences-backup-failed",
+      "job": "preferences_backup",
+      "object": "backup",
+      "action": "backup",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "preferences_backup_failure",
+      "resolves": []
+    },
+    {
+      "id": "preferences-restore-succeeded",
+      "job": "preferences_restore",
+      "object": "backup",
+      "action": "restore",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "preferences-restore-failed"
+      ]
+    },
+    {
+      "id": "preferences-restore-failed",
+      "job": "preferences_restore",
+      "object": "backup",
+      "action": "restore",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "preferences_restore_failure",
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-cleanup-succeeded",
+      "job": "backup_cleanup",
+      "object": "backup",
+      "action": "cleanup",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "preferences-backup-cleanup-failed"
+      ]
+    },
+    {
+      "id": "preferences-backup-cleanup-failed",
+      "job": "backup_cleanup",
+      "object": "backup",
+      "action": "cleanup",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "backup_cleanup_failure",
+      "resolves": []
+    },
+    {
+      "id": "local-cleanup-succeeded",
+      "job": "cleanup",
+      "object": "notification_history",
+      "action": "cleanup",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "local-cleanup-failed"
+      ]
+    },
+    {
+      "id": "local-cleanup-failed",
+      "job": "cleanup",
+      "object": "notification_history",
+      "action": "cleanup",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "local_cleanup_failure",
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-list",
+      "job": "backup_list",
+      "object": "backup",
+      "action": "read",
+      "phase": "query",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-pin",
+      "job": "backup_pin",
+      "object": "backup",
+      "action": "pin",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-preview",
+      "job": "backup_cleanup",
+      "object": "backup",
+      "action": "read",
+      "phase": "query",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "preferences-backup-open",
+      "job": "backup_list",
+      "object": "backup",
+      "action": "read",
+      "phase": "query",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "process-cancel-signal",
+      "job": "process_signals",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "process-observation-signal",
+      "job": "process_signals",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "process-exit-signal",
+      "job": "process_signals",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "runtime-stdout-signal",
+      "job": "process_signals",
+      "object": "runtime",
+      "action": "observe",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "ui-toast",
+      "job": "ui_feedback",
+      "object": "window",
+      "action": "render",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "ui-recent-event",
+      "job": "ui_feedback",
+      "object": "window",
+      "action": "render",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "ui-fault",
+      "job": "ui_feedback",
+      "object": "window",
+      "action": "render",
+      "phase": "observation",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "runtime-install-failed",
+      "job": "install",
+      "object": "runtime",
+      "action": "install",
+      "phase": "execution",
+      "channels": [
+        "local",
+        "official"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "runtime-install-succeeded",
+      "job": "install",
+      "object": "runtime",
+      "action": "install",
+      "phase": "execution",
+      "channels": [
+        "local",
+        "official"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "preferences-restored",
+      "job": "preferences_restore",
+      "object": "configuration",
+      "action": "restore",
+      "phase": "commit",
+      "channels": [
+        "local"
+      ],
+      "fact": "signal",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    }
+  ],
+  "notification_policies": [
+    {
+      "id": "start_failure",
+      "level": "danger",
+      "category": "run",
+      "source": "runtime",
+      "title": "OpenCodex 启动失败",
+      "body": "官方命令未成功完成；具体原因以诊断中心日志中的同动作记录为准。",
+      "action": "logs",
+      "dedupe": "run:start-failed",
+      "lifecycle_preference": true,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "stop_failure",
+      "level": "danger",
+      "category": "run",
+      "source": "runtime",
+      "title": "OpenCodex 停止失败",
+      "body": "官方命令未成功完成；具体原因以诊断中心日志中的同动作记录为准。",
+      "action": "logs",
+      "dedupe": "run:stop-failed",
+      "lifecycle_preference": true,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "restart_failure",
+      "level": "danger",
+      "category": "run",
+      "source": "runtime",
+      "title": "OpenCodex 重启失败",
+      "body": "官方命令未成功完成；具体原因以诊断中心日志中的同动作记录为准。",
+      "action": "logs",
+      "dedupe": "run:restart-failed",
+      "lifecycle_preference": true,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "missing_runtime",
+      "level": "warning",
+      "category": "system",
+      "source": "runtime",
+      "title": "未发现可运行的 OpenCodex",
+      "body": "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
+      "action": "settings_installation",
+      "dedupe": "runtime-not-found",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "unreachable",
+      "level": "danger",
+      "category": "run",
+      "source": "runtime",
+      "title": "进程或端口不可达",
+      "body": "建议刷新状态或查看日志确认原因。",
+      "action": "logs",
+      "dedupe": "run-unreachable",
+      "lifecycle_preference": true,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "at_risk",
+      "level": "warning",
+      "category": "run",
+      "source": "runtime",
+      "title": "官方状态报告启动存在风险",
+      "body": "桌面壳不会自动修复；请先查看建议，再决定是否走官方恢复（restore）。",
+      "action": "restore",
+      "dedupe": "run-at-risk",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "takeover",
+      "level": "warning",
+      "category": "run",
+      "source": "runtime",
+      "title": "外部 provider 已接管 Codex 配置",
+      "body": "该所有权边界属于 OpenCodex CLI 本身；桌面壳只解释影响，不会覆盖外部配置。",
+      "action": "restore",
+      "dedupe": "external-takeover",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "history_unreadable",
+      "level": "warning",
+      "category": "system",
+      "source": "diagnostic",
+      "title": "通知历史无法读取",
+      "body": "通知历史文件无法解析，已按空历史启动；原文件保留在原处，可在诊断中心查看或清理。",
+      "action": "logs",
+      "dedupe": "store:notifications-unreadable",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "manager_install_failure",
+      "level": "danger",
+      "category": "update",
+      "source": "update",
+      "title": "管理器更新安装失败",
+      "body": "安装未成功完成；请查看诊断记录后重试。",
+      "action": "app_update",
+      "dedupe": "manager:install-failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "preferences_backup_failure",
+      "level": "danger",
+      "category": "system",
+      "source": "user_action",
+      "title": "偏好备份失败",
+      "body": "备份未成功完成；请查看诊断记录后重试。",
+      "action": "logs",
+      "dedupe": "preferences-backup:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "preferences_restore_failure",
+      "level": "danger",
+      "category": "system",
+      "source": "user_action",
+      "title": "偏好恢复失败",
+      "body": "恢复未成功完成；请查看诊断记录后重试。",
+      "action": "logs",
+      "dedupe": "preferences-restore:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "backup_cleanup_failure",
+      "level": "danger",
+      "category": "system",
+      "source": "user_action",
+      "title": "备份清理失败",
+      "body": "备份清理未成功完成；请检查清理设置和诊断记录。",
+      "action": "settings_cleanup",
+      "dedupe": "preferences-backup-cleanup:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "local_cleanup_failure",
+      "level": "danger",
+      "category": "system",
+      "source": "user_action",
+      "title": "本地清理失败",
+      "body": "本地清理未成功完成；请检查清理设置和诊断记录。",
+      "action": "settings_cleanup",
+      "dedupe": "local-cleanup:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "sync_conflict",
+      "level": "warning",
+      "category": "sync",
+      "source": "sync",
+      "title": "检测到同步冲突",
+      "body": "远端快照与本地历史冲突，已暂停覆盖并保留双方历史；请确认后重试。",
+      "action": "sync",
+      "dedupe": "sync:conflict-detected",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    }
+  ],
+  "emission_sites": [
+    {
+      "event": "manager-install-progress",
+      "source": "commands/update.rs::install_update IPC Channel.send backup/checking/downloading/installing/pending_restart/failed",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "run-start-failed",
+      "source": "commands/mod.rs::process_action_with_runner actual failure",
+      "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "run-stop-failed",
+      "source": "commands/mod.rs::process_action_with_runner scoped actual failure",
+      "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "run-restart-failed",
+      "source": "commands/mod.rs::process_action_with_runner scoped actual failure",
+      "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "runtime-not-found",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "run-unreachable",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "run-at-risk",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "external-takeover",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "notifications-store-unreadable",
+      "source": "commands/notifications.rs::startup_notification_store",
+      "wiring": "startup_gate"
+    },
+    {
+      "event": "sync-conflict-detected",
+      "source": "commands/sync.rs::publish_sync_conflict",
+      "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "status-snapshot-changed",
+      "source": "lib.rs::TauriStatusEmitter; modules/status/polling.rs::emit_current",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "notifications-changed",
+      "source": "lib.rs::TauriStatusEmitter",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "runtime-install-progress",
+      "source": "commands/runtime.rs::EventProgressSink; modules/runtime/install.rs::InstallProgressSink",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "runtime-source-changed",
+      "source": "commands/runtime.rs::broadcast_source_changed",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "tray-requests-available",
+      "source": "lib.rs::on_menu_event (two branches)",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "app-foreground-changed",
+      "source": "infrastructure/app_activity.rs::publish",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "native-window-appearance",
+      "source": "infrastructure/window_appearance.rs windows emit_to",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "ocxd-panel",
+      "source": "commands/panel.rs::notify_main (action/load)",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "ocxd-panel-state",
+      "source": "commands/panel.rs::panel_action",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "manager-check-succeeded",
+      "source": "commands/update.rs::check_for_update accepted generation commit",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "manager-check-failed",
+      "source": "commands/update.rs::check_for_update accepted generation commit",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "panel-check-succeeded",
+      "source": "commands/about.rs::official_remote_latest serialized durable commit",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "panel-check-failed",
+      "source": "commands/about.rs::official_remote_latest serialized durable commit",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "manager-install-failed",
+      "source": "commands/update.rs::restart_owned owned native handoff failure",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "manager-install-failed",
+      "source": "commands/update.rs::install_update_owned owned terminal result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "manager-install-succeeded",
+      "source": "commands/update.rs::reconcile_startup exact running version and durable original candidate receipt",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "manager-install-pending-restart",
+      "source": "commands/update.rs::install_update_owned verified artifact retained; not installation success",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-succeeded",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-succeeded",
+      "source": "commands/backup.rs::create_preferences_backup owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-failed",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-failed",
+      "source": "commands/backup.rs::create_preferences_backup owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-restore-succeeded",
+      "source": "commands/backup.rs::restore_preferences_backup owned worker verified commit",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-restore-failed",
+      "source": "commands/backup.rs::restore_preferences_backup owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-cleanup-succeeded",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-cleanup-succeeded",
+      "source": "commands/backup.rs::cleanup_preferences_backups owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-cleanup-failed",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-cleanup-failed",
+      "source": "commands/backup.rs::cleanup_preferences_backups owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "local-cleanup-succeeded",
+      "source": "lib.rs::setup after commands/cleanup.rs::run_startup_cleanup_registered owned startup result (disabled stays silent; no backup scan)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "local-cleanup-succeeded",
+      "source": "commands/cleanup.rs::cleanup_local_logs owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "local-cleanup-failed",
+      "source": "lib.rs::setup after commands/cleanup.rs::run_startup_cleanup_registered owned startup result (disabled stays silent; no backup scan)",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "local-cleanup-failed",
+      "source": "commands/cleanup.rs::cleanup_local_logs owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "preferences-backup-list",
+      "source": "commands/backup.rs::list_preferences_backups/backup_files",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "preferences-backup-pin",
+      "source": "commands/backup.rs::set_preferences_backup_pinned",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "preferences-backup-preview",
+      "source": "commands/backup.rs::preview_preferences_backup_cleanup",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "preferences-backup-open",
+      "source": "commands/backup.rs::open_backup_file",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "process-cancel-signal",
+      "source": "infrastructure/process_runner.rs::CancelHandle watch sender.send(true)",
+      "wiring": "internal_only"
+    },
+    {
+      "event": "process-observation-signal",
+      "source": "infrastructure/process_runner.rs::observation_sender.send(observation)",
+      "wiring": "internal_only"
+    },
+    {
+      "event": "process-exit-signal",
+      "source": "infrastructure/process_runner.rs::sender.send(code)",
+      "wiring": "internal_only"
+    },
+    {
+      "event": "runtime-stdout-signal",
+      "source": "modules/runtime/install.rs::sender.send(line)",
+      "wiring": "internal_only"
+    },
+    {
+      "event": "ui-toast",
+      "source": "ui/app/feedback/store.ts::showToast",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "ui-recent-event",
+      "source": "ui/app/feedback/store.ts::recordEvent",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "ui-fault",
+      "source": "ui/app/feedback/store.ts::reportUiFault",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "runtime-install-failed",
+      "source": "commands/runtime.rs::install_managed_runtime owned worker result",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "runtime-install-succeeded",
+      "source": "commands/runtime.rs::install_managed_runtime owned worker verified activation",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "run-start-succeeded",
+      "source": "commands/mod.rs::process_action_with_runner verified LifecycleResult",
+      "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "run-stop-succeeded",
+      "source": "commands/mod.rs::process_action_with_runner verified LifecycleResult",
+      "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "run-restart-succeeded",
+      "source": "commands/mod.rs::process_action_with_runner verified LifecycleResult",
+      "wiring": "scoped_lifecycle"
+    },
+    {
+      "event": "preferences-restored",
+      "source": "commands/backup.rs::restore_preferences_backup emit_signal after committed restore",
+      "wiring": "validated_signal"
+    },
+    {
+      "event": "runtime-starting-failed",
+      "source": "commands/mod.rs::runtime_state_notification legacy run-start-failed alias",
+      "wiring": "legacy_notification_gate"
+    },
+    {
+      "event": "notifications-changed",
+      "source": "commands/mod.rs::process_action persisted store change broadcast; pure catalog validation",
+      "wiring": "validated_signal"
+    }
+  ],
+  "scheduling_sites": [
+    "lib.rs status loop; modules/status/polling.rs runtime/connection deadlines and foreground wake",
+    "modules/update/schedule.rs persistent stable/beta/panel deadlines; commands/update_schedule.rs reserve/complete",
+    "ui/features/updates/scheduler.ts; useUpdateScheduler.ts startup/route/foreground/online/preferences wake",
+    "ui/composables/useAppController.ts tray event + fallback timer",
+    "commands/panel.rs idle reclaim; ui/routes/PanelRoute.vue readiness polling/load timeout",
+    "ui/app/lifecycle/store.ts fallback polling, timeout, late observation, auto-dismiss",
+    "lib.rs startup cleanup; ui/routes/SettingsRoute.vue shim hold timer/scale debounce",
+    "ui/startup.ts startup deadline/retry; ui/app/feedback/store.ts toast expiry"
+  ],
+  "ui_feedback_sites": [
+    "ui/app/feedback/store.ts::recordEvent/reportUiFault/showToast",
+    "ui/app/lifecycle/store.ts::setStatusSnapshot/announceRuntimeTransition",
+    "ui/composables/useAppController.ts tray bridge recovery",
+    "ui/app/errors.ts; ui/main.ts; ui/app/useLifecycleController.ts",
+    "ui/stores/app.ts; ui/features/diagnostics/useDiagnosticsController.ts",
+    "ui/routes/LogsRoute.vue; ExtensionsRoute.vue; SettingsRoute.vue; OverviewRoute.vue; PanelRoute.vue",
+    "ui/features/environment/components/EnvironmentGate.vue"
+  ],
+  "paths": [
+    {
+      "id": "notifications",
+      "relative_path": "manager-state/notifications.json",
+      "owner": "modules/notifications/persistence.rs"
+    },
+    {
+      "id": "event_scope",
+      "relative_path": "manager-state/event-scope.json",
+      "owner": "modules/notifications/registry.rs"
+    },
+    {
+      "id": "event_scope_lock",
+      "relative_path": "manager-state/event-scope.lock",
+      "owner": "modules/notifications/registry.rs"
+    },
+    {
+      "id": "preferences",
+      "relative_path": "manager-state/preferences.json",
+      "owner": "modules/preferences/mod.rs"
+    },
+    {
+      "id": "backups",
+      "relative_path": "backups",
+      "owner": "modules/backup/mod.rs"
+    },
+    {
+      "id": "backup_lock",
+      "relative_path": ".backup-w2.lock",
+      "owner": "modules/backup/manager.rs"
+    },
+    {
+      "id": "cleanup_summaries",
+      "relative_path": "backups/{year}/{month}/cleanup/{backup_id}/cleanup-summary.json",
+      "owner": "commands/cleanup.rs"
+    },
+    {
+      "id": "runtime_history",
+      "relative_path": "manager-state/runtime.json",
+      "owner": "modules/runtime/mod.rs"
+    },
+    {
+      "id": "logs",
+      "relative_path": "logs",
+      "owner": "commands/cleanup.rs"
+    },
+    {
+      "id": "backup_records",
+      "relative_path": "backups/{year}/{month}/{action}/{backup_id}",
+      "owner": "modules/backup/mod.rs"
+    },
+    {
+      "id": "update_handoff",
+      "relative_path": "manager-state/update-handoff.json",
+      "owner": "modules/update/handoff.rs"
+    }
+  ],
+  "cleanup_policies": [
+    {
+      "id": "notifications",
+      "owner": "commands/cleanup.rs::prune_notifications_by_retention",
+      "mode": "read_age_soft_delete",
+      "preference": "notification_retention",
+      "default_days": 30,
+      "keep_recent": null,
+      "preview_ttl_seconds": null,
+      "protected": [
+        "unread",
+        "invalid_time",
+        "deleted_history"
+      ]
+    },
+    {
+      "id": "preferences_backups",
+      "owner": "modules/backup/manager.rs::preview/execute",
+      "mode": "manual_or_after_verified_backup",
+      "preference": null,
+      "default_days": 30,
+      "keep_recent": 10,
+      "preview_ttl_seconds": 900,
+      "protected": [
+        "pinned",
+        "transaction",
+        "referenced",
+        "restore_guard",
+        "unknown_metadata",
+        "failed_integrity"
+      ]
+    },
+    {
+      "id": "logs",
+      "owner": "commands/cleanup.rs::trim_logs_by_retention",
+      "mode": "age_and_line_limit",
+      "preference": "log_retention",
+      "default_days": 30,
+      "keep_recent": 10000,
+      "preview_ttl_seconds": null,
+      "protected": [
+        "outside_logs"
+      ]
+    },
+    {
+      "id": "event_scope",
+      "owner": "modules/notifications/registry.rs",
+      "mode": "never_automatic",
+      "preference": null,
+      "default_days": null,
+      "keep_recent": null,
+      "preview_ttl_seconds": null,
+      "protected": [
+        "stable_object_id",
+        "current_candidate"
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+import { allowsFeedbackSignal } from "@/config/eventRegistry"
 import type { RecentEvent } from "@/types/ui"
 
 /**
@@ -22,6 +23,7 @@ export const useFeedbackStore = defineStore("feedback", {
   }),
   actions: {
     showToast(message: string) {
+      if (!allowsFeedbackSignal("ui-toast")) return
       this.toast = message
       const revision = ++this.toastRevision
       window.setTimeout(() => {
@@ -33,11 +35,13 @@ export const useFeedbackStore = defineStore("feedback", {
       this.toast = ""
     },
     recordEvent(message: string) {
+      if (!allowsFeedbackSignal("ui-recent-event")) return
       const time = new Date().toLocaleTimeString("zh-CN", { hour12: false })
       this.recentEvents = [{ time, message }, ...this.recentEvents].slice(0, 8)
     },
     // 运行期异常兜底的责任位置：记录事实并置位界面故障条（不吞异常）。
     reportUiFault(message: string, info?: string) {
+      if (!allowsFeedbackSignal("ui-fault")) return
       this.uiFault = info ? `${message}（${info}）` : message
       this.recordEvent(`界面异常：${message}`)
     },

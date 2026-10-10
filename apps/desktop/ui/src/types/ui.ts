@@ -57,6 +57,8 @@ export interface NotificationItem {
   resolvedAt?: string | null
   operationId?: string | null
   dedupeKey?: string | null
+  occurrenceCount?: number
+  lastObservedAt?: string | null
   // 后端 `NotificationAction` 冻结为 snake_case（见 `types/notifications.rs` 的 DTO 契约测试），
   // 前端必须用同一套取值，否则多词动作（app_update / settings_installation / settings_cleanup）
   // 查不到对应按钮与跳转——「通知详情没有前往处理的按钮」。

@@ -40,6 +40,8 @@ pub struct NotificationDto {
     pub expires_at: Option<String>,
     pub operation_id: Option<String>,
     pub dedupe_key: Option<String>,
+    pub occurrence_count: u32,
+    pub last_observed_at: Option<String>,
     pub action: Option<crate::modules::notifications::NotificationAction>,
     pub target: Option<RuntimeState>,
 }
@@ -60,16 +62,18 @@ impl NotificationDto {
             expires_at: value.expires_at.clone(),
             operation_id: value.operation_id.clone(),
             dedupe_key: value.dedupe_key.clone(),
+            occurrence_count: value.occurrence_count,
+            last_observed_at: value.last_observed_at.clone(),
             action: value.action_ref,
             // restore 引导的文案分两种（外部接管 / startup at-risk），而领域实体没有
             // target 字段；按发布方使用的稳定 id 反推，避免把所有 restore 都当成外部接管。
             target: match value.action_ref {
-                Some(crate::modules::notifications::NotificationAction::Restore) => {
-                    Some(match value.notification_id.as_str() {
+                Some(crate::modules::notifications::NotificationAction::Restore) => Some(
+                    match value.notification_id.split(':').next().unwrap_or("") {
                         "external-takeover" => RuntimeState::ExternalTakeover,
                         _ => RuntimeState::AtRisk,
-                    })
-                }
+                    },
+                ),
                 _ => None,
             },
         }

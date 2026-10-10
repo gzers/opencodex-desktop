@@ -20,6 +20,7 @@ defineEmits<{ open: [string]; delete: [string] }>()
         <span v-else-if="item.read" class="n-tag">未解决</span>
       </strong>
       <span class="n-detail">{{ item.detail }}</span>
+      <span v-if="(item.occurrenceCount ?? 1) > 1" class="n-tag">已合并 {{ item.occurrenceCount }} 次</span>
     </button>
     <time v-if="showTime" class="n-time">{{ formatNotificationTime(item.time) }}</time>
     <div class="n-actions">

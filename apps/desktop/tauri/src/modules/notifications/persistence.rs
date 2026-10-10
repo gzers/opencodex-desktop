@@ -11,8 +11,6 @@ use std::path::{Path, PathBuf};
 use crate::errors::AppError;
 use crate::modules::notifications::{Notification, NotificationStore};
 
-/// 通知实体在数据根中的落点（`manager state` 分区）。
-pub const NOTIFICATIONS_RELATIVE_PATH: &str = "manager-state/notifications.json";
 /// 存储格式版本；字段语义变更时必须显式迁移，不猜测旧内容。
 pub const NOTIFICATIONS_SCHEMA_VERSION: u32 = 1;
 
@@ -47,7 +45,8 @@ impl NotificationsError {
 }
 
 pub fn notifications_path(data_root: &Path) -> PathBuf {
-    data_root.join(NOTIFICATIONS_RELATIVE_PATH)
+    let config = super::registry::registry().expect("validated embedded event registry");
+    data_root.join(config.path(super::registry::PathId::Notifications))
 }
 
 /// 读取通知集合。
@@ -82,6 +81,10 @@ pub fn save_notifications(
     if !path.is_absolute() {
         return Err(NotificationsError::NotConfigured);
     }
+    // An unreadable/unsupported history is not an empty history. Routine
+    // notifications and explicit clear must never overwrite the original.
+    // Missing is valid for the first durable write; recovery is a separate flow.
+    load_notifications(path)?;
     let file = NotificationsFile {
         version: NOTIFICATIONS_SCHEMA_VERSION,
         items: store.all().to_vec(),
@@ -172,6 +175,26 @@ mod tests {
         assert_eq!(restored.live().len(), 2);
         assert_eq!(restored.aggregate().unread, 1);
         assert_eq!(restored.aggregate().unresolved, 1);
+    }
+
+    #[test]
+    fn old_history_without_observation_counts_remains_readable() {
+        let temp = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(temp.path().join("manager-state")).unwrap();
+        let path = notifications_path(temp.path());
+        save_notifications(&path, &fixture()).unwrap();
+        let mut json: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+        for item in json["items"].as_array_mut().unwrap() {
+            item.as_object_mut().unwrap().remove("occurrence_count");
+            item.as_object_mut().unwrap().remove("last_observed_at");
+        }
+        std::fs::write(&path, serde_json::to_vec(&json).unwrap()).unwrap();
+        let restored = load_notifications(&path).unwrap();
+        assert!(restored
+            .all()
+            .iter()
+            .all(|item| item.occurrence_count == 1 && item.last_observed_at.is_none()));
     }
 
     #[test]

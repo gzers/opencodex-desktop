@@ -4,6 +4,7 @@
 //! 不允许各建副本。通知正文不得携带原始敏感值。
 
 pub mod persistence;
+pub mod registry;
 
 use serde::{Deserialize, Serialize};
 
@@ -71,6 +72,18 @@ pub struct Notification {
     pub operation_id: Option<String>,
     pub dedupe_key: Option<String>,
     pub action_ref: Option<NotificationAction>,
+    /// 只有通过注册表投递的新事件才带严格作用域；旧历史不猜测恢复对象。
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub event_identity: Option<registry::EventIdentity>,
+    /// Number of distinct observations in the current unresolved episode.
+    #[serde(default = "initial_occurrence_count")]
+    pub occurrence_count: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub last_observed_at: Option<String>,
+}
+
+fn initial_occurrence_count() -> u32 {
+    1
 }
 
 impl Notification {
@@ -106,6 +119,9 @@ impl Notification {
             operation_id: None,
             dedupe_key: None,
             action_ref,
+            event_identity: None,
+            occurrence_count: 1,
+            last_observed_at: None,
         };
         notification.validate()?;
         Ok(notification)
@@ -348,6 +364,9 @@ mod tests {
             operation_id: None,
             dedupe_key: None,
             action_ref: None,
+            event_identity: None,
+            occurrence_count: 1,
+            last_observed_at: None,
         }
     }
 
@@ -398,6 +417,8 @@ mod tests {
     fn notification_body_rejects_raw_secret_assignment() {
         let notification = Notification {
             notification_id: "bad".to_string(),
+            occurrence_count: 1,
+            last_observed_at: None,
             level: NotificationLevel::Warning,
             category: NotificationCategory::System,
             source: NotificationSource::Diagnostic,
@@ -412,6 +433,7 @@ mod tests {
             operation_id: None,
             dedupe_key: None,
             action_ref: None,
+            event_identity: None,
         };
         assert_eq!(
             notification.validate(),
