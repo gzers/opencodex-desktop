@@ -103,7 +103,7 @@
   const selected=closure().ids.size,dirty=signature(scopes.webdav)!==savedScope;
   host.innerHTML='<div class="sx-tabs" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
    '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'本机范围同时用于上传与接收；下载的变化先预览，再应用。')+'</p></div><div class="sx-actions">'+(tab==='file'?btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):btn('保存本机范围','save-scope',dirty?'':'disabled')+btn('同步配置','check',dirty?'disabled title="请先保存本机范围"':'',true))+'</div></header>'+
-   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong> <span class="sx-mark">'+(connection.connected?'演示连接':'未连接')+'</span> <span class="sx-muted">本机：MacBook</span></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','连接信息为演示数据','连接名称、地址与状态均为演示数据；测试连接、保存与同步仅切换演示状态，不发起真实网络请求。'):'') +
+   (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','连接信息为演示数据','此处为演示连接，连接名称、地址与状态均为演示数据；测试连接、保存与同步仅切换演示状态，不发起真实网络请求。'):'') +
    '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
    (result&&result.tab===tab?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span></div>':'') +
    '</div>';
@@ -116,8 +116,10 @@
   if(!dialogKind)originFocus=document.activeElement;
   dialogKind=kind;
   openModal(title,'<div class="sx-dialog">'+body+'<div class="sx-error" id="sxError" role="alert"></div></div>',confirm,handler,{confirmKeepsOpen:true,hideNote:true,...opts});
-  const annotation=$('#ann-modal-demo .annotation-source p');
-  if(opts.annotationText&&annotation)annotation.textContent+=' '+opts.annotationText;
+  const annotation=$('#ann-modal-demo .annotation-source');
+  if(opts.annotationText&&annotation)for(const text of [opts.annotationText].flat()){
+   const paragraph=document.createElement('p');paragraph.textContent=text;annotation.querySelector('.annotation-footer').before(paragraph);
+  }
   $('#modal').classList.remove('sx-comparison');$('#modal').classList.add('modal-wide');$('#modalConfirm').disabled=false;
   window.__modalOnClose=()=>{for(const el of [$('.modal-head'),$('.modal-actions')])if(el)el.inert=false;detailOpen=false;detailReturnFocus=null;$('#modal').classList.remove('sx-comparison');dialogKind='';$('#modalBody').innerHTML='';$('#modalConfirm').disabled=false;if(originFocus?.isConnected)originFocus.focus();originFocus=null;};
  }
@@ -131,17 +133,17 @@
   if(!closure().ids.size)return;
   const cl=closure(),secrets=secretIds(),count=secretCount();
   const manifest={demo:true,kind:'configuration-sync',objects:[...cl.ids],dependencies:[...cl.deps].map(([id,versions])=>({id,revisions:[...versions]})),credentials:secrets,source:'committed',encryptionRequired:count>0};
-  const body='<p class="sx-steps">选择范围 → <strong>确认内容</strong> → 生成配置包</p><div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"',count?'含凭据，必须加密':'为配置包设置加密口令',count,!!count)+'<div id="sxPassFields" '+(!count?'hidden':'')+'><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details><p class="sx-muted">未选择的凭据不进入包，也不会由模版依赖重新带入。</p>';
+  const body='<div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"',count?'含凭据，必须加密':'为配置包设置加密口令',count,!!count)+'<div id="sxPassFields" '+(!count?'hidden':'')+'><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details>';
   showDialog('export','确认导出',body,'生成配置包',()=>{
    const encrypted=$('#sxEncrypt').checked,p=$('#sxPass').value;if(encrypted&&(p.length<8||p!==$('#sxPassAgain').value)){setText('#sxError','请输入至少 8 位的加密口令，并保持两次一致。');return;}
    lastExport={...manifest,encrypted,simulated:true};result={tab:'file',title:'导出流程演示完成',detail:cl.ids.size+' 项配置；'+(encrypted?'加密容器步骤已演示，未生成真实加密文件。':'不携带凭据，未生成真实文件。')};closeModal();render();
-  });
+  },{annotationText:['选择范围 → 确认内容 → 生成配置包','未选择的凭据不进入包，也不会由模版依赖重新带入。']});
  }
  // 导入与 WebDAV 共用对象树、选择和凭据规则；详情层只读且不重建父弹窗。
  const comparisonGroup=x=>find(x.id)?.group||({channel:'channels',remap:'channels',template:'templates',account:'accounts',token:'accounts',skill:'skills',mcp:'mcp',extension:'mcp',preferences:'preferences',endpoint:'endpoints'}[x.kind])||'preferences';
  const changeLabels={add:'新增',update:'更新',delete:'删除'};
  function comparisonInit(p,mode){
-  p.mode=mode;p.expanded=new Set();p.scroll=0;p.pass='';
+  p.mode=mode;p.expanded=new Set();p.scroll=0;p.pass='';p.backup=true;
   p.rows=p.rows.map(x=>({...x,group:comparisonGroup(x),changes:x.changes||{update:1}}));
   p.selected ||=new Set(p.rows.filter(x=>!x.removal).map(x=>x.id));
   p.accountInfoOnly ||=new Set();p.endpointConfigOnly ||=new Set();p.credentialOverrides={};
@@ -217,9 +219,10 @@
    el.indeterminate=n>0&&n<eligible.length;
   }
  }
- function comparisonBody(p,intro,extra=''){
-  return '<div class="sx-compare-main" id="sxCompareMain">'+intro+comparisonTree(p)+extra+'<p class="sx-note">只处理勾选项；未包含对象保持原样。删除只来自明确删除记录。确认后先备份，再应用与核对。</p></div><div class="sx-detail-layer" id="sxCompareDetail" hidden></div>';
+ function comparisonBody(p,extra=''){
+  return '<div class="sx-compare-main" id="sxCompareMain">'+comparisonTree(p)+extra+(p.rows.length?'<div class="sx-apply-options">'+check('data-sx-backup','应用前备份当前配置',p.backup)+'</div>':'')+'</div><div class="sx-detail-layer" id="sxCompareDetail" hidden></div>';
  }
+ const comparisonNote='只处理勾选项；未包含对象保持原样。删除只来自明确删除记录。备份为可选项，默认勾选，可在底部取消；确认后按所选项备份，再应用与核对。';
  function comparisonFields(x,p){
   const source=p.mode==='import'?'包内':'远端',endpoint=find(x.id)?.endpoint||'https://gateway.example.com/v1';
   const f=(section,...rows)=>({section,rows});
@@ -244,7 +247,7 @@
   for(const el of [$('#sxCompareMain'),$('.modal-head'),$('.modal-actions')])if(el)el.inert=false;
   detailReturnFocus?.focus({preventScroll:true});detailReturnFocus=null;
  }
- function comparisonResult(p,rows){lastComparison={mode:p.mode,items:rows.map(x=>({id:x.id,group:x.group,changes:x.changes,direction:p.choices[x.id]||(x.kind==='upload'?'upload':'incoming'),credential:!!credentialType(p,x)&&credentialValue(p,x)}))};}
+ function comparisonResult(p,rows){lastComparison={mode:p.mode,backup:p.backup,items:rows.map(x=>({id:x.id,group:x.group,changes:x.changes,direction:p.choices[x.id]||(x.kind==='upload'?'upload':'incoming'),credential:!!credentialType(p,x)&&credentialValue(p,x)}))};}
  const importRows=()=>[
   {id:'template:gpt',name:'GPT · Responses / v4',detail:'新增已保存版本 v4 · 原主版本与引用保持',kind:'template',changes:{add:1}},
   {id:'channel:newapi',name:'NewApi',detail:'同一渠道 · 模型新增 3 / 更新 2 / 删除 1',kind:'channel',changes:{add:3,update:2,delete:1}},
@@ -260,7 +263,7 @@
  function importStart(context={}){
   importFile=null;
   importPlan={rows:importRows(),selected:new Set(importRows().map(x=>x.id)),choices:{},secrets:false,accountInfoOnly:new Set(),endpointConfigOnly:new Set(),source:'encrypted',modelScope:context.scope||null};
-  showDialog('import','导入配置','<p class="sx-steps"><strong>读取配置包</strong> → 选择与比较 → 应用结果</p><div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">尚未选择文件</span></div></div><label class="sx-field" id="sxUnlockField" hidden><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" aria-describedby="sxError" placeholder="请输入配置包的加密口令"></label>','读取并比较',()=>{
+  showDialog('import','导入配置','<div class="sx-field"><span>配置文件</span><div class="sx-file-picker">'+btn('选择文件','choose-import-file')+'<span id="sxImportFileName" aria-live="polite">尚未选择文件</span></div></div><label class="sx-field" id="sxUnlockField" hidden><span>解密口令</span><input class="input" id="sxUnlock" type="password" autocomplete="off" aria-describedby="sxError" placeholder="请输入配置包的加密口令"></label>','读取并比较',()=>{
    if(!importFile){setText('#sxError','请先选择配置文件。');return;}
    const kind=importFile.kind;if(kind==='corrupt'){setText('#sxError','容器完整性校验失败。未创建候选、未修改本机配置。');return;}
    if(importFile.encrypted&&$('#sxUnlock').value!=='demo-sync'){setText('#sxError','解密口令不正确，尚未读取内容。');return;}
@@ -271,20 +274,20 @@
    importPlan.selected=new Set(importPlan.rows.filter(x=>!x.removal).map(x=>x.id));
    if(context.scope?.length){const wanted=new Set(context.scope);importPlan.selected=new Set(importPlan.rows.filter(x=>wanted.has(x.id)||x.kind==='template'&&context.scope.some(id=>id.startsWith('channel:'))).map(x=>x.id));}
    comparisonInit(importPlan,'import');importPreview();
-  },{annotationText:'解密口令是导出配置包时设置的加密口令，与账户密码、WebDAV 连接密码相互独立。加密示例文件的测试口令为 demo-sync；非加密示例无需口令。读取后先比较配置，再确认应用。'});
+  },{annotationText:['读取配置包 → 选择与比较 → 应用结果','解密口令是导出配置包时设置的加密口令，与账户密码、WebDAV 连接密码相互独立。加密示例文件的测试口令为 demo-sync；非加密示例无需口令。读取后先比较配置，再确认应用。']});
   $('#modalConfirm').disabled=true;
  }
  function importPreview(){
   const p=importPlan,encrypted=p.source==='encrypted';rememberComparison(p);
-  const intro='<p class="sx-steps">已读取'+(encrypted?'并解密':'')+'配置包 → <strong>选择与比较</strong> → 应用结果</p><p class="sx-muted">勾选要应用的变化，展开分类查看对象。凭据采用规则可统一设置，也可逐项调整。</p>';
-  showDialog('import','选择导入内容',comparisonBody(p,intro),'备份并应用',()=>{
+  const annotationText=['已读取'+(encrypted?'并解密':'')+'配置包 → 选择与比较 → 应用结果','勾选要应用的变化，展开分类查看对象。凭据采用规则可统一设置，也可逐项调整。',comparisonNote];
+  showDialog('import','选择导入内容',comparisonBody(p),'应用',()=>{
    if(!p.selected.size){setText('#sxError','至少选择一项配置。');return;}
    if(p.rows.some(x=>p.selected.has(x.id)&&x.kind==='remap'&&!p.choices[x.id])){setText('#sxError','请先确认同名异端点渠道的身份映射。');return;}
    const applied=p.rows.filter(x=>p.selected.has(x.id));
    const accounts=applied.filter(x=>x.kind==='account').map(x=>({id:x.id,login:encrypted&&x.login&&!p.accountInfoOnly.has(x.id),infoOnly:p.accountInfoOnly.has(x.id)}));
    const endpoints=applied.filter(x=>x.kind==='endpoint').map(x=>({id:x.id,password:encrypted&&x.password&&!p.endpointConfigOnly.has(x.id)}));
-   comparisonResult(p,applied);finishApply('file',applied.length,accounts,0,endpoints);
-  });mountComparison(p);
+   comparisonResult(p,applied);finishApply('file',applied.length,accounts,0,endpoints,p.backup);
+  },{annotationText});mountComparison(p);
  }
  function connectionDialog(){
   showDialog('connection','WebDAV 连接','<label class="sx-field"><span>服务地址</span><input class="input" id="sxDavURL" value="'+esc(connection.url)+'"></label><label class="sx-field"><span>独立配置同步目录</span><input class="input" id="sxDavPath" value="'+esc(connection.path)+'"></label><div class="sx-grid"><label class="sx-field"><span>用户名</span><input class="input" id="sxDavUser" value="'+esc(connection.user)+'"></label><label class="sx-field"><span>连接密码</span><input class="input" id="sxDavPassword" type="password" placeholder="本机已保存 · 留空保留"></label></div><div class="sx-actions">'+btn('测试连接','test-connection')+'</div><p class="sx-muted" id="sxConnectionTest" role="status"></p>','保存连接',()=>{
@@ -311,9 +314,12 @@
  }
  function syncPreview(){
   const p=diffPlan;rememberComparison(p);
-  const intro='<p class="sx-steps"><strong>比较变化</strong> → 确认同步 → 应用与核对</p><p class="sx-muted">只处理本机所选范围。展开分类查看变化，按对象选择采用方向与凭据。</p>';
-  const extra=(p.rows.some(x=>x.kind==='token')?'<p id="sxTokenCheck" class="sx-muted" role="status">'+(p.verified?'已自动检查登录身份与状态；采用后自动恢复并检查可用性。':'自动检查未通过：远端登录状态已失效，可保留本机或仅同步账户信息。')+'</p>':'')+(p.secretCount?'<label class="sx-field"><span>同步加密口令</span><input type="password" id="sxSyncPass" class="input" autocomplete="off"></label>':'');
-  showDialog('diff','WebDAV · 同步配置',comparisonBody(p,intro,extra),p.rows.length?'确认同步':'关闭',()=>{
+  const hasToken=p.rows.some(x=>x.kind==='token');
+  const annotationText=['比较变化 → 应用 → 核对结果','只处理本机所选范围。展开分类查看变化，按对象选择采用方向与凭据。'];
+  if(hasToken&&p.verified)annotationText.push('已自动检查登录身份与状态；采用后自动恢复并检查可用性。');
+  annotationText.push(comparisonNote);
+  const extra=(hasToken&&!p.verified?'<p id="sxTokenCheck" class="sx-muted" role="status">自动检查未通过：远端登录状态已失效，可保留本机或仅同步账户信息。</p>':'')+(p.secretCount?'<label class="sx-field"><span>同步加密口令</span><input type="password" id="sxSyncPass" class="input" autocomplete="off"></label>':'');
+  showDialog('diff','WebDAV · 同步配置',comparisonBody(p,extra),p.rows.length?'应用':'关闭',()=>{
    if(!p.rows.length){closeModal();return;}
    if(p.scope!==signature(scopes.webdav)){setText('#sxError','范围已变化，请保存后重新比较。');return;}
    const selected=p.rows.filter(x=>p.selected.has(x.id));
@@ -323,23 +329,26 @@
    if(p.secretCount&&$('#sxSyncPass').value!=='demo-sync'){setText('#sxError','同步口令不正确。连接密码不能代替同步口令。');return;}
    const adopted=selected.filter(x=>!['local','skip'].includes(p.choices[x.id]));
    const accounts=adopted.filter(x=>x.group==='accounts').map(x=>({id:x.id,login:x.kind==='token'&&!p.accountInfoOnly.has(x.id),infoOnly:p.accountInfoOnly.has(x.id)}));
-   comparisonResult(p,adopted);finishApply('webdav',adopted.length,accounts,p.rows.length-adopted.length);
-  });mountComparison(p);
+   comparisonResult(p,adopted);finishApply('webdav',adopted.length,accounts,p.rows.length-adopted.length,[],p.backup);
+  },{annotationText});mountComparison(p);
  }
- function finishApply(mode,count,accounts=[],skipped=0,endpoints=[]){
+ function finishApply(mode,count,accounts=[],skipped=0,endpoints=[],backup=true){
   let title='应用流程演示完成',detail=count+' 项已按计划处理'+(skipped?'，'+skipped+' 项本次保留 / 跳过':'')+'。配置写入与读回已演示；真实运行尚未执行。';
-  if(scenario==='backup-fail'){title='备份失败 · 未应用';detail='未开始写入；原配置和凭据保持，待审内容可重试。';accounts=[];endpoints=[];}
+  if(backup&&scenario==='backup-fail'){title='备份失败 · 未应用';detail='未开始写入；原配置和凭据保持，待审内容可重试。';accounts=[];endpoints=[];}
   else if(scenario==='partial'){title='部分完成 · 需要核对';detail='演示部分步骤失败：已完成与待恢复项分开记录，不能报告整体同步成功。';accounts=[];endpoints=[];}
   const accountResults=accounts.map(x=>({id:x.id,status:x.infoOnly?'info-only':!x.login||scenario==='login-invalid'?'needs-login':'restored',name:find(x.id)?.name||x.id}));
   for(const x of accountResults)detail+=' '+x.name+'：'+(x.status==='restored'?'登录状态已恢复，自动检查通过（模拟）。':x.status==='info-only'?'仅账户信息；保留本机已有登录状态，新设备需登录。':'需重新登录（'+(scenario==='login-invalid'?'登录状态已失效':'设备绑定的登录状态无法迁移')+'）。');
   const endpointResults=endpoints.map(x=>({id:x.id,status:x.password?'password-imported':'config-only',enabled:false}));
   for(const x of endpointResults)detail+=' '+(find(x.id)?.name||x.id)+'：'+(x.status==='password-imported'?'配置与连接密码已导入（模拟），连接待启用。':'仅配置；同身份保留本机密码，新连接待补密码，连接待启用。');
-  result={tab:mode,title,detail,accounts:accountResults,endpoints:endpointResults,canVerify:false};serial++;closeModal();render();
+  result={tab:mode,title,detail,backup:backup?(scenario==='backup-fail'?'failed':'completed'):'skipped',accounts:accountResults,endpoints:endpointResults,canVerify:false};serial++;closeModal();render();
+  if(document.documentElement.dataset.route==='overview')toast(title);
  }
  function open(options={}){
   catalog=collect();tab=options.tab==='webdav'?'webdav':'file';query='';
   if(options.scope){const s=state();s.selected=new Set(options.scope.filter(id=>find(id)&&(tab==='file'||find(id).group!=='endpoints')));s.preset='custom';s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();}
-  setRoute('sync?tab='+tab);render(true);host.closest('.main').scrollTop=0;
+  const stayOnPage=options.action==='import'&&options.stayOnPage;
+  if(!stayOnPage)setRoute('sync?tab='+tab);
+  render(true);if(!stayOnPage)host.closest('.main').scrollTop=0;
   if(options.action==='import')importStart(options);else if(options.action==='export')exportPreview();else if(options.action==='connection')connectionDialog();else if(options.action==='check')syncCheck();
  }
  document.addEventListener('click',e=>{
@@ -370,6 +379,7 @@
   else if(el.matches('[data-sx-secret]')){const key=el.dataset.sxSecret,prop={keys:'key',extensions:'extensionSecret'}[key];s[key].clear();if(el.checked)for(const x of catalog.filter(x=>closure().ids.has(x.id)&&x[prop]))s[key].add(x.id);s.preset='custom';redraw=true;}
   else if(el.matches('[data-sx-secret-object]')){el.checked?s[el.dataset.kind].add(el.dataset.sxSecretObject):s[el.dataset.kind].delete(el.dataset.sxSecretObject);redraw=true;}
   else if(el.id==='sxEncrypt')$('#sxPassFields').hidden=!el.checked;
+  else if(el.matches('[data-sx-backup]')){const p=dialogKind==='diff'?diffPlan:importPlan;if(p?.mode)p.backup=el.checked;}
   else if(el.matches('[data-sx-import-pick],[data-sx-diff-pick],[data-sx-compare-all],[data-sx-compare-group],[data-sx-compare-rule],[data-sx-compare-credential],[data-sx-import-account-info],[data-sx-diff-account-info],[data-sx-import-endpoint-config]')){
    const p=dialogKind==='diff'?diffPlan:importPlan;
    if(el.matches('[data-sx-compare-rule]'))for(const x of p.rows.filter(x=>p.selected.has(x.id)&&credentialType(p,x)&&(el.dataset.sxCompareRule==='all'||x.group===el.dataset.sxCompareRule)))setCredential(p,x,el.checked);

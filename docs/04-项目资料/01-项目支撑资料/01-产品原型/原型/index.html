@@ -1869,7 +1869,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
           <div class="mod-head">
             <div class="proto-annotation" id="ann-ov-migration" data-annotation-number="04" data-annotation-title="文件同步为内存演示" data-annotation-category="实现边界 · 概览">
               <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 04：文件同步为内存演示"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">04</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-              <div class="annotation-source" hidden><p>导出 / 导入不读写真实文件，全流程在内存里演示；范围选择与凭据规则在弹窗中约定，真实写入方案待实现。</p><div class="annotation-footer">实现边界 · 概览</div></div>
+              <div class="annotation-source" hidden><p>概览可直接打开导入弹窗，导入与取消后仍停留在概览；导出需进入同步菜单选择范围与凭据，再确认导出。全流程在内存里演示，不读写真实文件，真实写入方案待实现。</p><div class="annotation-footer">实现边界 · 概览</div></div>
             </div>
             <h3>文件同步</h3>
             <span class="tag">规划中</span>
@@ -1880,7 +1880,6 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
             <span>凭据 <b>独立选择</b></span>
           </div>
           <div class="mod-actions">
-            <button class="btn" data-prototype-action="export">导出配置</button>
             <button class="btn" data-prototype-action="import">导入配置</button>
             <button class="btn ghost" data-settings-section="migration">选择同步范围</button>
           </div>
@@ -5811,7 +5810,7 @@ document.addEventListener('click',event=>{
   }else if(action==='export'){
     window.syncPrototype?.open({tab:'file',action:'export'});
   }else if(action==='import'){
-    window.syncPrototype?.open({tab:'file',action:'import'});
+    window.syncPrototype?.open({tab:'file',action:'import',stayOnPage:!!actionTarget.closest('#card-overview-migration')});
   }else if(action==='sync'){
     window.syncPrototype?.open({tab:'webdav',action:'check'});
   }else if(action==='test-webdav'){

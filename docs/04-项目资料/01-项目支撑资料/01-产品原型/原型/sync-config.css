@@ -99,6 +99,8 @@ html[data-route=sync] .main>.topbar{flex:none}
 .sx-compare-main>.sx-steps{margin-bottom:0}
 .sx-compare-main>.sx-note{margin-top:0!important}
 .sx-compare-main>.sx-field{flex:none;margin:4px 0}
+.sx-apply-options{flex:none}
+.sx-dialog .sx-apply-options .sx-check{margin:4px 0}
 .sx-compare-tree{flex:1;min-height:90px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-gutter:stable;border:1px solid var(--border);border-radius:8px;margin-top:8px}
 .sx-compare-head,.sx-compare-group-head,.sx-compare-item{display:grid;grid-template-columns:14px minmax(0,1fr) minmax(96px,auto) minmax(170px,230px);align-items:center;gap:10px;padding:10px 12px}
 .sx-compare-head{position:sticky;top:0;z-index:1;background:var(--panel);color:var(--muted);font-size:12px;border-bottom:1px solid var(--border)}

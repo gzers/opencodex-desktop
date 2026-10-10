@@ -109,7 +109,7 @@ try{
   await open({tab:'webdav',scope:['mcp:docs']});await act('save-scope');await act('check');await compareExpandAll();assert.equal(await page.locator('.sx-compare-item').count(),1);assert.match(await page.locator('#modalBody').innerText(),/Docs MCP/);assert.equal(await page.locator('#sxSyncPass').count(),0);await confirm();
  });
  await check('S-P15 登录态自动核对，冲突选择与独立加密口令仍必需',async()=>{
-  await open({tab:'webdav',scope:['account:chatgpt']});await act('save-scope');await act('check');await compareExpandAll();assert.equal(await page.locator('[data-sx="verify-token"]').count(),0);assert.match(await page.locator('#sxTokenCheck').innerText(),/已自动检查/);
+  await open({tab:'webdav',scope:['account:chatgpt']});await act('save-scope');await act('check');await compareExpandAll();assert.equal(await page.locator('[data-sx="verify-token"]').count(),0);assert.equal(await page.locator('#sxTokenCheck').count(),0);assert.match(await page.locator('#ann-modal-demo .annotation-source').textContent(),/已自动检查/);
   await confirm();assert.match(await page.locator('#sxError').innerText(),/冲突/);await select('[data-sx-diff-choice="account:chatgpt"]','remote');await confirm();assert.match(await page.locator('#sxError').innerText(),/同步口令/);
   await page.locator('#sxSyncPass').fill('demo-sync');await confirm();assert.equal((await sx()).result.canVerify,false);assert.equal((await sx()).result.accounts[0].status,'restored');assert.match((await sx()).result.detail,/自动检查通过（模拟）/);
  });
@@ -277,6 +277,50 @@ await check('S-P36 公共设置和 Mock 一起滚动，锚点保持产品路由'
    assert.equal(await page.locator('.sx-detail-body').evaluate(e=>getComputedStyle(e).overflowY),'auto');assert.equal(await page.locator('#sxCompareDetailClose').isVisible(),true);await page.keyboard.press('Escape');assert.equal(await page.locator('#modalConfirm').isVisible(),true);await close();
   }
   await sample('encrypted');await page.locator('#modal').screenshot({path:path.join(shots,'06-树形比较-900-dark.png')});await page.locator('[data-sx="compare-detail"][data-id="channel:newapi"]').click();await page.locator('#modal').screenshot({path:path.join(shots,'07-只读详情-900-dark.png')});await page.keyboard.press('Escape');
+ });
+ await check('S-P44 概览仅保留导入，取消与应用仍停留概览',async()=>{
+  await reset('overview');
+  const card=page.locator('#card-overview-migration'),origin=card.locator('[data-prototype-action="import"]');
+  assert.equal(await card.locator('[data-prototype-action="export"]').count(),0);
+  const hash=await page.evaluate(()=>location.hash);
+  await origin.click();assert.equal(await page.evaluate(()=>location.hash),hash);assert(await page.locator('#route-overview').isVisible());
+  await close();assert.equal(await origin.evaluate(e=>e===document.activeElement),true);
+  for(const scenario of ['normal','backup-fail','partial']){
+   await page.evaluate(s=>{syncPrototype.setImportSample('legacy');syncPrototype.setScenario(s);},scenario);
+   await origin.click();await act('choose-import-file');await confirm();await confirm();
+   assert.equal(await page.evaluate(()=>location.hash),hash);assert(await page.locator('#route-overview').isVisible());
+   assert.equal(await origin.evaluate(e=>e===document.activeElement),true);assert.equal((await sx()).dialogKind,'');
+   assert.match((await sx()).result.title,scenario==='normal'?/演示完成/:scenario==='partial'?/部分完成/:/未应用/);
+  }
+  await card.locator('[data-settings-section="migration"]').click();assert(await page.locator('#route-sync').isVisible());
+  await act('export');assert.equal((await sx()).dialogKind,'export');assert(await page.locator('#route-sync').isVisible());await close();
+  await act('import');assert(await page.locator('#route-sync').isVisible());
+ });
+ await check('S-P45 导入与 WebDAV 共用可选备份，说明仅在原型标签中',async()=>{
+  for(const entry of ['overview','file','webdav'])for(const backup of [true,false]){
+   await reset(entry==='overview'?'overview':'sync?tab='+entry);
+   await page.evaluate(()=>syncPrototype.setScenario('backup-fail'));
+   if(entry==='webdav'){
+    await open({tab:'webdav',scope:['mcp:docs']});await act('save-scope');await act('check');
+   }else{
+    await page.evaluate(()=>syncPrototype.setImportSample('encrypted'));
+    if(entry==='overview')await page.locator('#card-overview-migration [data-prototype-action="import"]').click();else await act('import');
+    await act('choose-import-file');await page.locator('#sxUnlock').fill('demo-sync');await confirm();
+   }
+   const hash=await page.evaluate(()=>location.hash),pick=page.locator('[data-sx-backup]');
+   assert.equal(await page.locator('#modalConfirm').innerText(),'应用');assert.equal(await pick.isChecked(),true);
+   assert.equal(await page.locator('#sxCompareMain > .sx-steps,#sxCompareMain > .sx-muted,#sxCompareMain > .sx-note').count(),0);
+   const note=await page.locator('#ann-modal-demo .annotation-source').textContent();
+   assert.match(note,/备份为可选项/);assert.match(note,entry==='webdav'?/比较变化 → 应用/:/已读取并解密配置包 → 选择与比较/);
+   if(entry!=='webdav')assert.match(note,/勾选要应用的变化/);
+   await pick.setChecked(backup);await compareExpand(entry==='webdav'?'mcp':'channels');assert.equal(await pick.isChecked(),backup);
+   await page.locator('[data-sx="compare-detail"][data-id="'+(entry==='webdav'?'mcp:docs':'channel:newapi')+'"]').click();
+   await page.keyboard.press('Escape');assert.equal(await pick.isChecked(),backup);
+   if(entry!=='webdav')await page.locator('[data-sx-import-pick="channel:legacy"]').uncheck();
+   await confirm();assert.equal(await page.evaluate(()=>location.hash),hash);
+   assert.equal((await sx()).lastComparison.backup,backup);assert.equal((await sx()).result.backup,backup?'failed':'skipped');
+   assert.match((await sx()).result.title,backup?/未应用/:/演示完成/);
+  }
  });
  await check('S-P24 浏览器脚本与资源无错误',async()=>assert.deepEqual(errors,[]));
 }finally{await browser.close();}
