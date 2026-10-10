@@ -39,11 +39,20 @@ pub fn complete<T: serde::Serialize>(
     let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let binding = app.state::<SharedSchedule>();
     let _lock = binding.0.lock().map_err(|_| AppError::NotConfigured)?;
+    complete_at_root(root, target, value, chrono::Utc::now().timestamp())
+}
+
+pub(crate) fn complete_at_root<T: serde::Serialize>(
+    root: &std::path::Path,
+    target: Target,
+    value: Option<&T>,
+    now: i64,
+) -> AppResult<()> {
     let mut state = Schedule::load(root)?;
     if let Some(value) = value {
         schedule::save_cache(root, target, value)?;
     }
-    state.complete(target, chrono::Utc::now().timestamp(), value.is_some());
+    state.complete(target, now, value.is_some());
     state.save(root)
 }
 #[tauri::command]

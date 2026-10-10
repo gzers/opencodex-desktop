@@ -130,19 +130,67 @@ pub async fn check_for_update(
     status: tauri::State<'_, SharedUpdateStatus>,
     app: tauri::AppHandle,
 ) -> AppResult<CheckUpdateResultDto> {
-    let _storage = crate::infrastructure::storage_writers::global().admit()?;
-    let (updater, generation, target, channel) = {
-        let mut guard = status.lock().map_err(|_| AppError::NotConfigured)?;
-        let updater = updater_for_status(&app, &guard)?;
-        let generation = guard.begin_check().ok_or(AppError::NotConfigured)?;
-        (
-            updater,
-            generation,
-            Target::manager(guard.channel),
-            guard.channel,
-        )
-    };
-    let _lease = CheckLease(status.inner().clone(), generation);
+    check_for_update_shared(trigger.unwrap_or_default(), status.inner().clone(), app).await
+}
+
+/// GUI, automatic scheduling and CLI use the same state, endpoint and cache.
+/// Dropping any observer never cancels the admitted query or its terminal delivery.
+pub(crate) async fn check_for_update_shared(
+    trigger: event_delivery::QueryTrigger,
+    status: SharedUpdateStatus,
+    app: tauri::AppHandle,
+) -> AppResult<CheckUpdateResultDto> {
+    run_check_owned(
+        crate::infrastructure::storage_writers::global(),
+        move || check_for_update_owned(trigger, status, app),
+    )
+    .await
+}
+
+async fn run_check_owned<T, F, Fut>(
+    gate: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    task: F,
+) -> AppResult<T>
+where
+    T: Send + 'static,
+    F: FnOnce() -> Fut + Send + 'static,
+    Fut: std::future::Future<Output = AppResult<T>> + Send + 'static,
+{
+    let admission = gate.admit()?;
+    tauri::async_runtime::spawn(async move {
+        let _admission = admission;
+        task().await
+    })
+    .await
+    .map_err(|_| AppError::NotConfigured)?
+}
+
+async fn check_for_update_owned(
+    trigger: event_delivery::QueryTrigger,
+    status: SharedUpdateStatus,
+    app: tauri::AppHandle,
+) -> AppResult<CheckUpdateResultDto> {
+    let setup_app = app.clone();
+    let setup_status = status.clone();
+    // Proxy preferences and plugin setup may access disk; never do this under
+    // an async executor's synchronous mutex. Lease starts in the actual worker.
+    let (updater, generation, target, channel, _lease) =
+        crate::commands::run_blocking("prepare manager query", move || {
+            let mut guard = setup_status.lock().map_err(|_| AppError::NotConfigured)?;
+            if guard.checking || guard.installing || guard.pending_restart.is_some() {
+                return Err(AppError::NotConfigured);
+            }
+            let updater = updater_for_status(&setup_app, &guard)?;
+            let generation = guard.begin_check().ok_or(AppError::NotConfigured)?;
+            Ok((
+                updater,
+                generation,
+                Target::manager(guard.channel),
+                guard.channel,
+                CheckLease(setup_status.clone(), generation),
+            ))
+        })
+        .await?;
     let reserve_app = app.clone();
     let (query_root, identity) =
         crate::commands::run_blocking("reserve manager query", move || {
@@ -151,8 +199,7 @@ pub async fn check_for_update(
                 UpdateChannel::Stable => EventChannel::Stable,
                 UpdateChannel::Beta => EventChannel::Beta,
             };
-            // Query scope is distinct from installation; retrying the same endpoint
-            // resolves only a query failure, never an installer failure.
+            // Query scope never resolves an installer failure.
             let identity = event_delivery::prepare(
                 &root,
                 "manager-check-failed",
@@ -162,61 +209,104 @@ pub async fn check_for_update(
             Ok((root, identity))
         })
         .await?;
-    let update = updater.check().await;
-    let shared_status = status.inner().clone();
+    let update = updater
+        .check()
+        .await
+        .map(|value| {
+            value.map(|value| ManagerCheckMetadata {
+                version: value.version,
+                notes: value.body,
+                published_at: value.date.map(|date| date.to_string()),
+            })
+        })
+        .map_err(|_| ());
     crate::commands::run_blocking("commit manager query", move || {
-        let mut guard = shared_status.lock().map_err(|_| AppError::NotConfigured)?;
-        if !guard.finish_check(generation) {
-            return Ok(CheckUpdateResultDto {
-                status: "superseded".into(),
-                update: current_status(&guard, &app).into(),
-            });
-        }
-        let (result_status, event) = match update {
-            Err(_) => {
-                guard.signature_verified = None;
-                guard.available_version = None;
-                guard.last_checked_at = Some(chrono::Utc::now().to_rfc3339());
-                guard.error = Some(UpdateFailureClass::Network.message().to_string());
-                update_schedule::complete::<UpdateStatus>(&app, &query_root, target, None)?;
-                ("failed", "manager-check-failed")
-            }
-            Ok(update) => {
-                record_check_success(
-                    &mut guard,
-                    update.as_ref().map(|value| value.version.clone()),
-                );
-                if let Some(value) = update.as_ref() {
-                    guard.notes = bounded_notes(value.body.as_deref());
-                    guard.release_url = release_page(&value.version);
-                    guard.published_at = value.date.map(|date| date.to_string());
-                }
-                update_schedule::complete(&app, &query_root, target, Some(&*guard))?;
-                (
-                    if update.is_some() {
-                        "available"
-                    } else {
-                        "up_to_date"
-                    },
-                    "manager-check-succeeded",
-                )
-            }
-        };
-        let result = CheckUpdateResultDto {
-            status: result_status.into(),
-            update: guard.clone().into(),
-        };
+        let mut guard = status.lock().map_err(|_| AppError::NotConfigured)?;
+        let (mut result, event) = commit_check_result(&mut guard, generation, update, |value| {
+            update_schedule::complete(&app, &query_root, target, value)
+        })?;
+        result.update.current_version = app.package_info().version.to_string();
         drop(guard);
-        event_delivery::publish(
-            &app,
-            &query_root,
-            event,
-            identity,
-            trigger.unwrap_or_default().into(),
-        );
+        if let Some(event) = event {
+            event_delivery::publish(&app, &query_root, event, identity, trigger.into());
+        }
         Ok(result)
     })
     .await
+}
+
+struct ManagerCheckMetadata {
+    version: String,
+    notes: Option<String>,
+    published_at: Option<String>,
+}
+
+/// A stale generation cannot persist metadata, advance deadlines or resolve an
+/// event. Persistence must succeed before the caller publishes terminal feedback.
+fn commit_check_result(
+    status: &mut UpdateStatus,
+    generation: u64,
+    update: Result<Option<ManagerCheckMetadata>, ()>,
+    complete: impl FnOnce(Option<&UpdateStatus>) -> AppResult<()>,
+) -> AppResult<(CheckUpdateResultDto, Option<&'static str>)> {
+    if !status.finish_check(generation) {
+        return Ok((
+            CheckUpdateResultDto {
+                status: "superseded".into(),
+                update: status.clone().into(),
+            },
+            None,
+        ));
+    }
+    let mut next = status.clone();
+    let (result_status, event, persisted) = match update {
+        Err(()) => {
+            record_check_failure(&mut next, UpdateFailureClass::Network);
+            ("failed", "manager-check-failed", complete(None))
+        }
+        Ok(update) => {
+            record_check_success(
+                &mut next,
+                update.as_ref().map(|value| value.version.clone()),
+            );
+            if let Some(value) = update.as_ref() {
+                next.notes = bounded_notes(value.notes.as_deref());
+                next.release_url = release_page(&value.version);
+                next.published_at = value.published_at.clone();
+            }
+            (
+                if update.is_some() {
+                    "available"
+                } else {
+                    "up_to_date"
+                },
+                "manager-check-succeeded",
+                complete(Some(&next)),
+            )
+        }
+    };
+    if let Err(error) = persisted {
+        record_check_failure(status, UpdateFailureClass::Internal);
+        return Err(error);
+    }
+    *status = next;
+    Ok((
+        CheckUpdateResultDto {
+            status: result_status.into(),
+            update: status.clone().into(),
+        },
+        Some(event),
+    ))
+}
+
+fn record_check_failure(status: &mut UpdateStatus, failure: UpdateFailureClass) {
+    status.signature_verified = None;
+    status.available_version = None;
+    status.notes = None;
+    status.release_url = None;
+    status.published_at = None;
+    status.last_checked_at = Some(chrono::Utc::now().to_rfc3339());
+    status.error = Some(failure.message().into());
 }
 
 /// 记录一次成功的检查结果。
@@ -594,6 +684,216 @@ fn hydrate_cache(status: &mut UpdateStatus, app: &tauri::AppHandle) -> AppResult
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn manager_query_owner_survives_disconnect_and_releases_on_all_terminals() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::Duration;
+        for terminal in [0, 1, 2] {
+            let gate = Arc::new(WriterGate::default());
+            let status = Arc::new(Mutex::new(UpdateStatus::pending("0.1.9")));
+            let worker_gate = gate.clone();
+            let worker_status = status.clone();
+            let (entered, entry) = tokio::sync::oneshot::channel();
+            let (release, released) = tokio::sync::oneshot::channel();
+            let (finished, done) = tokio::sync::oneshot::channel();
+            let observer = tokio::spawn(async move {
+                run_check_owned(worker_gate, move || async move {
+                    let generation = worker_status.lock().unwrap().begin_check().unwrap();
+                    let _lease = CheckLease(worker_status, generation);
+                    // The marker drops on success, failure and unwinding.
+                    struct Completion(Option<tokio::sync::oneshot::Sender<()>>);
+                    impl Drop for Completion {
+                        fn drop(&mut self) {
+                            let _ = self.0.take().unwrap().send(());
+                        }
+                    }
+                    let _finished = Completion(Some(finished));
+                    entered.send(()).unwrap();
+                    released.await.unwrap();
+                    match terminal {
+                        0 => Ok(()),
+                        1 => Err(AppError::NotConfigured),
+                        _ => panic!("isolated manager query panic"),
+                    }
+                })
+                .await
+            });
+            tokio::time::timeout(Duration::from_secs(2), entry)
+                .await
+                .unwrap()
+                .unwrap();
+            observer.abort();
+            assert!(observer.await.unwrap_err().is_cancelled());
+            assert!(gate.freeze().unwrap().is_none());
+            assert!(status.lock().unwrap().checking);
+            // A stalled network future leaves the async executor responsive.
+            tokio::time::timeout(Duration::from_secs(1), tokio::task::yield_now())
+                .await
+                .unwrap();
+            release.send(()).unwrap();
+            tokio::time::timeout(Duration::from_secs(2), done)
+                .await
+                .unwrap()
+                .unwrap();
+            tokio::time::timeout(Duration::from_secs(2), async {
+                while gate.freeze().unwrap().is_none() {
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .unwrap();
+            assert!(!status.lock().unwrap().checking);
+        }
+    }
+
+    #[tokio::test]
+    async fn frozen_manager_query_has_no_setup_or_network_side_effect() {
+        let gate = Arc::new(crate::infrastructure::storage_writers::WriterGate::default());
+        gate.freeze().unwrap().unwrap().commit();
+        let calls = Arc::new(std::sync::atomic::AtomicUsize::new(0));
+        let counter = calls.clone();
+        assert!(run_check_owned(gate, move || {
+            counter.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            async { Ok(()) }
+        })
+        .await
+        .is_err());
+        assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 0);
+    }
+
+    fn metadata(version: &str) -> ManagerCheckMetadata {
+        ManagerCheckMetadata {
+            version: version.into(),
+            notes: Some("更新🦀".repeat(30000)),
+            published_at: Some("2026-10-11T00:00:00Z".into()),
+        }
+    }
+
+    #[test]
+    fn manager_query_commits_channel_cache_deadline_and_terminal_together() {
+        for channel in [UpdateChannel::Stable, UpdateChannel::Beta] {
+            for terminal in [0, 1, 2] {
+                let root = tempfile::tempdir().unwrap();
+                let target = Target::manager(channel);
+                let other = Target::manager(if channel == UpdateChannel::Stable {
+                    UpdateChannel::Beta
+                } else {
+                    UpdateChannel::Stable
+                });
+                let mut state = schedule::Schedule::default();
+                state.reserve(target, 100);
+                state.complete(other, 100, true);
+                state.save(root.path()).unwrap();
+                let mut status = UpdateStatus::pending("0.1.9").with_channel(channel);
+                record_check_success(&mut status, Some("old-version".into()));
+                status.notes = Some("old notes".into());
+                schedule::save_cache(root.path(), target, &status).unwrap();
+                let old_cache = std::fs::read(schedule::cache_path(root.path(), target)).unwrap();
+                let generation = status.begin_check().unwrap();
+                let query = match terminal {
+                    0 => Ok(Some(metadata("0.1.10"))),
+                    1 => Ok(None),
+                    _ => Err(()),
+                };
+                let (result, event) =
+                    commit_check_result(&mut status, generation, query, |value| {
+                        update_schedule::complete_at_root(root.path(), target, value, 200)
+                    })
+                    .unwrap();
+                assert_eq!(
+                    result.status,
+                    ["available", "up_to_date", "failed"][terminal]
+                );
+                assert_eq!(
+                    event,
+                    Some(if terminal == 2 {
+                        "manager-check-failed"
+                    } else {
+                        "manager-check-succeeded"
+                    })
+                );
+                assert!(!status.checking);
+                assert_eq!(status.current_version, "0.1.9");
+                let persisted = schedule::Schedule::load(root.path()).unwrap();
+                let deadline = &persisted.entries[target.key()];
+                assert_eq!(persisted.entries[other.key()].last_success, Some(100));
+                if terminal == 2 {
+                    assert_eq!(deadline.failures, 1);
+                    assert_eq!(deadline.next_due, 500);
+                    assert_eq!(
+                        std::fs::read(schedule::cache_path(root.path(), target)).unwrap(),
+                        old_cache
+                    );
+                    assert!(status.error.is_some());
+                    assert!(
+                        status.available_version.is_none()
+                            && status.notes.is_none()
+                            && status.release_url.is_none()
+                    );
+                } else {
+                    assert_eq!(deadline.last_success, Some(200));
+                    assert_eq!(deadline.next_due, 200 + target.interval());
+                    let cached = schedule::load_cache::<UpdateStatus>(root.path(), target).unwrap();
+                    assert_eq!(cached.channel, channel);
+                    assert_eq!(cached.available_version, status.available_version);
+                    assert!(cached.error.is_none() && !cached.checking);
+                    if terminal == 0 {
+                        assert!(cached.notes.unwrap().len() <= 64 * 1024);
+                        assert!(cached.release_url.unwrap().ends_with("/v0.1.10"));
+                    } else {
+                        assert!(cached.notes.is_none() && cached.release_url.is_none());
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn stale_manager_query_cannot_persist_resolve_or_release_new_channel() {
+        let root = tempfile::tempdir().unwrap();
+        let mut status = UpdateStatus::pending("0.1.9");
+        let old = status.begin_check().unwrap();
+        assert!(status.switch_channel(UpdateChannel::Beta));
+        let current = status.begin_check().unwrap();
+        let before = status.clone();
+        for terminal in [Ok(Some(metadata("0.1.10"))), Ok(None), Err(())] {
+            let (result, event) = commit_check_result(&mut status, old, terminal, |_| {
+                panic!("stale query attempted persistence")
+            })
+            .unwrap();
+            assert_eq!(result.status, "superseded");
+            assert!(event.is_none());
+            assert_eq!(status, before);
+            assert!(status.checking);
+        }
+        assert!(status.finish_check(current));
+        assert!(std::fs::read_dir(root.path()).unwrap().next().is_none());
+    }
+
+    #[test]
+    fn manager_query_persistence_failure_never_reports_success_metadata() {
+        let root = tempfile::tempdir().unwrap();
+        // A real filesystem conflict stops the production schedule writer.
+        std::fs::write(root.path().join("manager-state"), b"blocked").unwrap();
+        let mut status = UpdateStatus::pending("0.1.9");
+        let generation = status.begin_check().unwrap();
+        assert!(commit_check_result(
+            &mut status,
+            generation,
+            Ok(Some(metadata("0.1.10"))),
+            |value| {
+                update_schedule::complete_at_root(root.path(), Target::ManagerStable, value, 200)
+            }
+        )
+        .is_err());
+        assert!(!status.checking);
+        assert!(status.available_version.is_none() && status.notes.is_none());
+        assert_eq!(
+            status.error.as_deref(),
+            Some(UpdateFailureClass::Internal.message())
+        );
+    }
 
     #[test]
     fn reviewed_candidate_must_match_channel_version_and_idle_state() {

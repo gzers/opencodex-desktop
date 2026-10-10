@@ -232,6 +232,10 @@ impl IpcService {
             let request_id = request.request_id.clone();
             return owned_response(request_id, self.run_lifecycle(request, started).await);
         }
+        if request.command == IpcCommand::UpdateCheck {
+            let request_id = request.request_id.clone();
+            return owned_response(request_id, self.update_check(request, started).await);
+        }
         let request_id = request.request_id.clone();
         owned_response(request_id, self.query_or_binding(request, started).await)
     }
@@ -263,7 +267,6 @@ impl IpcService {
                     IpcCommand::Status => service.read_status(),
                     IpcCommand::DataRootShow => service.read_data_root(),
                     IpcCommand::BackupList => service.list_backups(),
-                    IpcCommand::UpdateCheck => service.update_check(),
                     _ => Err(IpcErrorCode::ValidationFailed),
                 },
             )
@@ -324,15 +327,35 @@ impl IpcService {
         serde_json::to_value(IpcListData { items }).map_err(|_| IpcErrorCode::InternalError)
     }
 
-    fn update_check(&self) -> Result<serde_json::Value, IpcErrorCode> {
-        let status =
-            crate::modules::update::UpdateStatus::pending(self.dependencies.current_version);
-        serde_json::to_value(IpcUpdateData {
-            status: "not_checked".to_string(),
-            available_version: status.available_version,
-            error: status.error,
-        })
-        .map_err(|_| IpcErrorCode::InternalError)
+    async fn update_check(
+        &self,
+        request: IpcRequest,
+        started: chrono::DateTime<chrono::Utc>,
+    ) -> Result<serde_json::Value, IpcErrorCode> {
+        let app = self.app.clone();
+        run_ipc_update_owned(
+            self.writers.clone(),
+            self.dependencies.active_data_root.clone(),
+            request,
+            started,
+            move || async move {
+                use tauri::Manager;
+                let app = app.ok_or(IpcErrorCode::TargetNotFound)?;
+                let status = app
+                    .state::<crate::commands::update::SharedUpdateStatus>()
+                    .inner()
+                    .clone();
+                let result = crate::commands::update::check_for_update_shared(
+                    crate::commands::event_delivery::QueryTrigger::User,
+                    status,
+                    app,
+                )
+                .await
+                .map_err(map_backup_worker_error)?;
+                project_ipc_update(result)
+            },
+        )
+        .await
     }
 
     fn switch_data_root(
@@ -664,6 +687,57 @@ async fn run_ipc_sync_owned(
         }
         _ => IpcErrorCode::ExecutionFailed,
     })?
+}
+
+/// Querying updates writes schedule/cache and terminal events. The async owner
+/// retains storage admission until an uncancellable blocking audit finishes.
+/// The inner task captures panic without dropping the supervisor's admission.
+async fn run_ipc_update_owned<F, Fut>(
+    writers: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    root: std::path::PathBuf,
+    request: IpcRequest,
+    started: chrono::DateTime<chrono::Utc>,
+    task: F,
+) -> Result<serde_json::Value, IpcErrorCode>
+where
+    F: FnOnce() -> Fut + Send + 'static,
+    Fut: std::future::Future<Output = Result<serde_json::Value, IpcErrorCode>> + Send + 'static,
+{
+    let admission = writers
+        .admit()
+        .map_err(|_| IpcErrorCode::TargetStateConflict)?;
+    let audit = super::audit::AuditStore::with_writers(&root, writers);
+    tauri::async_runtime::spawn(async move {
+        let _admission = admission;
+        let result = tauri::async_runtime::spawn(async move { task().await })
+            .await
+            .unwrap_or(Err(IpcErrorCode::InternalError));
+        crate::commands::run_readonly("CLI update query audit", move || {
+            Ok(execute_and_audit(&audit, &root, &request, started, || {
+                result
+            }))
+        })
+        .await
+        .map_err(map_backup_worker_error)?
+    })
+    .await
+    .map_err(|_| IpcErrorCode::InternalError)?
+}
+
+fn project_ipc_update(
+    result: crate::types::update::CheckUpdateResultDto,
+) -> Result<serde_json::Value, IpcErrorCode> {
+    match result.status.as_str() {
+        "available" | "up_to_date" => serde_json::to_value(IpcUpdateData {
+            status: result.status,
+            available_version: result.update.available_version,
+            error: result.update.error,
+        })
+        .map_err(|_| IpcErrorCode::InternalError),
+        "superseded" => Err(IpcErrorCode::TargetStateConflict),
+        "failed" => Err(IpcErrorCode::ExecutionFailed),
+        _ => Err(IpcErrorCode::InternalError),
+    }
 }
 
 /// Metadata queries keep their optional old-root audit admission in the worker.
@@ -2282,6 +2356,161 @@ mod tests {
     }
 
     #[tokio::test(flavor = "current_thread")]
+    async fn cli_update_query_survives_disconnect_through_commit_and_terminal_audit() {
+        use crate::infrastructure::storage_writers::WriterGate;
+        use std::time::Duration;
+        for terminal in [0, 1, 2] {
+            let root = tempfile::tempdir().unwrap();
+            let writers = Arc::new(WriterGate::default());
+            let worker_gate = writers.clone();
+            let worker_root = root.path().to_path_buf();
+            let (entered, entry) = tokio::sync::oneshot::channel();
+            let (release, released) = tokio::sync::oneshot::channel();
+            let observer = tokio::spawn(async move {
+                run_ipc_update_owned(
+                    worker_gate,
+                    worker_root.clone(),
+                    backup_request(IpcCommand::UpdateCheck),
+                    chrono::Utc::now(),
+                    move || async move {
+                        entered.send(()).unwrap();
+                        released.await.unwrap();
+                        match terminal {
+                            0 => {
+                                crate::commands::run_readonly("fixture update cache", move || {
+                                    let status =
+                                        crate::modules::update::UpdateStatus::pending("0.1.9");
+                                    crate::commands::update_schedule::complete_at_root(
+                                        &worker_root,
+                                        crate::modules::update::schedule::Target::ManagerStable,
+                                        Some(&status),
+                                        200,
+                                    )
+                                })
+                                .await
+                                .map_err(map_app_error)?;
+                                Ok(serde_json::json!({"status":"up_to_date"}))
+                            }
+                            1 => Err(IpcErrorCode::ExecutionFailed),
+                            _ => panic!("isolated CLI update panic"),
+                        }
+                    },
+                )
+                .await
+            });
+            tokio::time::timeout(Duration::from_secs(2), entry)
+                .await
+                .unwrap()
+                .unwrap();
+            observer.abort();
+            assert!(observer.await.unwrap_err().is_cancelled());
+            assert!(writers.freeze().unwrap().is_none());
+            assert!(!root.path().join("audit.log").exists());
+            tokio::time::timeout(Duration::from_secs(1), tokio::task::yield_now())
+                .await
+                .unwrap();
+            release.send(()).unwrap();
+            tokio::time::timeout(Duration::from_secs(2), async {
+                while writers.freeze().unwrap().is_none() {
+                    tokio::task::yield_now().await;
+                }
+            })
+            .await
+            .unwrap();
+            let records = audit_records(root.path());
+            assert_eq!(records.len(), 1);
+            assert_eq!(records[0].command, IpcCommand::UpdateCheck);
+            assert_eq!(
+                records[0].error_code,
+                match terminal {
+                    0 => None,
+                    1 => Some(IpcErrorCode::ExecutionFailed),
+                    _ => Some(IpcErrorCode::InternalError),
+                }
+            );
+            assert_eq!(
+                root.path()
+                    .join("cache/updates/manager-stable.json")
+                    .exists(),
+                terminal == 0
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn cli_update_requires_real_gui_and_frozen_query_has_no_side_effects() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        let root = tempfile::tempdir().unwrap();
+        let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
+        let mut request = backup_request(IpcCommand::UpdateCheck);
+        request.confirm = false; // Metadata check remains a no-confirm CLI action.
+        let response = service.execute(request).await;
+        assert!(!response.ok);
+        assert_eq!(response.error.unwrap().code, IpcErrorCode::TargetNotFound);
+        assert_eq!(
+            audit_records(root.path())[0].error_code,
+            Some(IpcErrorCode::TargetNotFound)
+        );
+        let before = std::fs::read(root.path().join("audit.log")).unwrap();
+        service.writers.freeze().unwrap().unwrap().commit();
+        let calls = Arc::new(AtomicUsize::new(0));
+        let counter = calls.clone();
+        assert_eq!(
+            run_ipc_update_owned(
+                service.writers.clone(),
+                root.path().into(),
+                backup_request(IpcCommand::UpdateCheck),
+                chrono::Utc::now(),
+                move || {
+                    counter.fetch_add(1, Ordering::SeqCst);
+                    async { Ok(serde_json::Value::Null) }
+                }
+            )
+            .await,
+            Err(IpcErrorCode::TargetStateConflict)
+        );
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+        assert_eq!(
+            std::fs::read(root.path().join("audit.log")).unwrap(),
+            before
+        );
+        assert!(!root.path().join("manager-state").exists());
+        assert!(!root.path().join("cache").exists());
+    }
+
+    #[test]
+    fn cli_update_projects_truthful_terminal_status_and_keeps_three_field_dto() {
+        for terminal in [
+            "available",
+            "up_to_date",
+            "failed",
+            "superseded",
+            "not_checked",
+        ] {
+            let mut status = crate::modules::update::UpdateStatus::pending("0.1.9");
+            status.available_version = Some("0.1.10".into());
+            status.notes = Some("never exposed".into());
+            let projected = project_ipc_update(crate::types::update::CheckUpdateResultDto {
+                status: terminal.into(),
+                update: status.into(),
+            });
+            match terminal {
+                "available" | "up_to_date" => {
+                    let value = projected.unwrap();
+                    assert_eq!(value.as_object().unwrap().len(), 3);
+                    assert_eq!(value["status"], terminal);
+                    assert_eq!(value["available_version"], "0.1.10");
+                    assert!(value["error"].is_null());
+                    assert!(!value.to_string().contains("never exposed"));
+                }
+                "failed" => assert_eq!(projected, Err(IpcErrorCode::ExecutionFailed)),
+                "superseded" => assert_eq!(projected, Err(IpcErrorCode::TargetStateConflict)),
+                _ => assert_eq!(projected, Err(IpcErrorCode::InternalError)),
+            }
+        }
+    }
+
+    #[tokio::test(flavor = "current_thread")]
     async fn cli_queries_survive_disconnect_and_audit_only_admitted_roots() {
         use crate::infrastructure::storage_writers::WriterGate;
         use std::time::{Duration, Instant};
@@ -2289,7 +2518,6 @@ mod tests {
             IpcCommand::Status,
             IpcCommand::DataRootShow,
             IpcCommand::BackupList,
-            IpcCommand::UpdateCheck,
         ] {
             for terminal in [0, 1, 2] {
                 let root = tempfile::tempdir().unwrap();
@@ -2353,13 +2581,18 @@ mod tests {
         let root = tempfile::tempdir().unwrap();
         let mut service = IpcService::for_tests_with(root.path().into(), root.path().into());
         service.writers.freeze().unwrap().unwrap().commit();
-        for command in [
-            IpcCommand::Status,
-            IpcCommand::DataRootShow,
-            IpcCommand::UpdateCheck,
-        ] {
+        for command in [IpcCommand::Status, IpcCommand::DataRootShow] {
             assert!(service.execute(backup_request(command)).await.ok);
         }
+        assert_eq!(
+            service
+                .execute(backup_request(IpcCommand::UpdateCheck))
+                .await
+                .error
+                .unwrap()
+                .code,
+            IpcErrorCode::TargetStateConflict
+        );
         assert_eq!(
             service
                 .execute(backup_request(IpcCommand::BackupList))
