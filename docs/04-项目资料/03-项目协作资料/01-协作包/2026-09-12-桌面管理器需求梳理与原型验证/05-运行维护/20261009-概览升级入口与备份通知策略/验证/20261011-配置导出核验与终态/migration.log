@@ -1,0 +1,69 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.20s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 61 tests
+test modules::config_migration::tests::corrupted_bytes_are_invalid ... ok
+test modules::config_migration::tests::future_schema_is_rejected_without_transform ... ok
+test modules::config_migration::tests::current_schema_is_not_rewritten ... ok
+test modules::config_migration::tests::legacy_preferences_migrate_to_current_schema ... ok
+test modules::config_migration::tests::startup_migration_skips_when_current_schema ... ok
+test modules::config_migration::tests::commit_backs_up_original_and_writes_current_schema ... ok
+test modules::config_migration::tests::startup_migration_converts_legacy_preferences ... ok
+test modules::config_migration::tests::recovery_reapplies_when_target_is_still_original ... ok
+test modules::config_migration::tests::recovery_completes_record_when_target_is_candidate ... ok
+test modules::config_migration::tests::recovery_stops_on_external_change ... ok
+test commands::migration::tests::command_layer_round_trips_preferences_through_data_root ... ok
+test modules::data_root::migration::tests::broken_marker_blocks_repair_and_existing_dangling_target_is_preserved ... ok
+test commands::data_root::tests::migration_requires_matching_freeze_and_both_startup_locks ... ok
+test modules::data_root::migration::tests::existing_empty_target_is_never_merged ... ok
+test modules::data_root::migration::activation::tests::commit_retains_target_lock_then_locked_restart_enables_target_once ... ok
+test modules::data_root::migration::activation::tests::ready_copy_crash_retains_old_binding_and_denies_target_startup ... ok
+test modules::data_root::migration::tests::escaping_and_broken_links_fail_without_reading_external_payload ... ok
+test modules::data_root::migration::activation::tests::ready_binding_changed_after_commit_refuses_target_without_lock_repair ... ok
+test modules::data_root::migration::activation::tests::replace_failure_with_confirmed_old_binding_can_return_ordinary_error ... ok
+test modules::data_root::migration::activation::tests::crash_immediately_after_anchor_replace_is_recovered_on_restart ... ok
+test modules::data_root::migration::tests::reservation_blocks_startup_even_before_any_partition_exists ... ok
+test modules::data_root::migration::activation::tests::restart_record_write_failure_keeps_marker_for_retry ... ok
+test modules::data_root::migration::tests::nested_unknown_and_relative_targets_fail_before_reservation ... ok
+test modules::extensions::tests::legacy_schema_version_is_readable_but_flagged_for_migration ... ok
+test modules::data_root::migration::tests::damaged_copy_and_changed_source_never_update_source_binding ... ok
+test modules::data_root::migration::tests::failed_copy_cannot_start_be_repaired_or_referenced_after_lock_release ... ok
+test modules::data_root::migration::activation::tests::wrong_effective_home_and_unprepared_runtime_cannot_be_activated ... ok
+test modules::ipc::service::tests::cli_migration_rejects_unconfirmed_frozen_and_invalid_requests_without_file_mutation ... ok
+test modules::data_root::migration::tests::external_home_and_dormant_internal_home_are_not_copied ... ok
+test modules::migration::tests::export_and_import_require_valid_data_root_structure ... ok
+test modules::data_root::migration::tests::interrupted_copy_keeps_old_root_and_no_verified_receipt ... ok
+test modules::data_root::migration::tests::receipt_distinguishes_verified_source_from_prepared_self_binding ... ok
+test modules::data_root::migration::tests::internal_links_are_relocated_and_executability_preserved ... ok
+test modules::migration::tests::corrupted_or_unknown_container_version_does_not_touch_config ... ok
+test modules::data_root::migration::tests::transient_locks_are_excluded_but_structure_metadata_is_copied ... ok
+test modules::migration::tests::export_honours_include_toggles ... ok
+test modules::data_root::migration::tests::verified_copy_keeps_old_binding_bytes_and_locks_target ... ok
+test modules::migration::tests::export_is_plaintext_and_needs_no_passphrase ... ok
+test modules::migration::tests::export_previous_backup_failure_does_not_replace_destination ... ok
+test modules::data_root::migration::activation::tests::marker_and_binding_symlinks_are_rejected ... ok
+test modules::migration::tests::export_previous_target_read_failure_publishes_failure_without_replacement ... ok
+test types::migration::tests::import_request_passphrase_is_optional ... ok
+test types::migration::tests::migration_dtos_use_camel_case ... ok
+test types::migration::tests::module_results_project_without_extra_fields ... ok
+test modules::ipc::service::tests::cli_migration_lock_wait_keeps_executor_responsive_and_owns_audit_after_disconnect ... ok
+test modules::data_root::migration::activation::tests::source_change_or_anchor_change_before_commit_cannot_replace_binding ... ok
+test modules::migration::tests::export_terminal_requires_exact_readback_under_lock_default_and_explicit_destination ... ok
+test modules::data_root::migration::tests::unresolved_panel_protection_blocks_copy_without_changing_source_or_target ... ok
+test commands::data_root::tests::migration_command_retains_locks_and_freeze_until_locked_restart ... ok
+test modules::data_root::migration::activation::tests::uncertain_replace_or_failed_post_commit_sync_retains_lock_for_reconciliation ... ok
+test modules::migration::tests::export_readback_corruption_emits_only_failure_then_exact_retry_recovers_after_reload ... ok
+test modules::ipc::service::tests::cli_migration_roundtrip_uses_explicit_home_and_preserves_wire_contract ... ok
+test commands::data_root::tests::explicit_sandbox_container_supports_migration_and_locked_restart ... ok
+test modules::migration::tests::export_different_content_or_destination_cannot_resolve_prior_failure ... ok
+test modules::migration::tests::import_without_passphrase_applies_preferences_extension_and_sync ... ok
+test modules::migration::tests::re_export_backs_up_previous_container ... ok
+test modules::migration::tests::import_creates_backup_before_overwriting_preferences ... ok
+test modules::data_root::migration::activation::tests::receipt_or_target_tampering_blocks_restart_without_partition_repair ... ok
+test modules::data_root::migration::activation::tests::malformed_oversized_or_uncommitted_marker_is_never_a_startup_license ... ok
+test modules::migration::tests::export_preexecution_source_root_and_lock_rejections_publish_nothing ... ok
+test modules::migration::tests::legacy_container_needs_original_passphrase_and_leaves_config_untouched ... ok
+
+test result: ok. 61 passed; 0 failed; 0 ignored; 0 measured; 626 filtered out; finished in 16.18s
+

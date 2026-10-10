@@ -1,0 +1,79 @@
+{
+  "source_sha": "bd355e1c93f1d7f856ca72bb124f916ddb634ab1",
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "platform": "macOS",
+  "migration": {
+    "passed": 61,
+    "failed": 0
+  },
+  "ipc": {
+    "passed": 44,
+    "failed": 0
+  },
+  "registry": {
+    "passed": 32,
+    "failed": 0
+  },
+  "full": {
+    "groups": 34,
+    "passed": 844,
+    "failed": 0,
+    "ignored": 5
+  },
+  "commands": [
+    {
+      "log": "migration.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --lib migration",
+      "exit_code": 0
+    },
+    {
+      "log": "registry-failed.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --test event_registry",
+      "exit_code": 101
+    },
+    {
+      "log": "registry.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --test event_registry",
+      "exit_code": 0
+    },
+    {
+      "log": "ipc.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml --lib modules::ipc",
+      "exit_code": 0
+    },
+    {
+      "log": "full.log",
+      "command": "cargo test --manifest-path apps/desktop/tauri/Cargo.toml",
+      "exit_code": 0
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "exit_code": 0
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --cached --check",
+      "exit_code": 0
+    }
+  ],
+  "production_modified": true,
+  "ui_rerun": false,
+  "native_rerun": false,
+  "registry_changed": true,
+  "task_state": "in_progress",
+  "limits": [
+    "Initial focused log predates final patch; first registry test assertion failed then corrected",
+    "Readback failure may leave changed target; no automatic rollback",
+    "No consistent cross-store source snapshot or AppHandle/native delivery proof",
+    "Pre-begin admission errors have no execution terminal; rotated candidates do not reuse old UUID",
+    "Platform/installer/performance/release gates open"
+  ],
+  "human_evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-配置导出核验与终态"
+}
