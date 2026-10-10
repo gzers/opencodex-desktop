@@ -379,12 +379,44 @@ pub async fn run_sync_now(
             run.items_total = crate::modules::sync::runner::SYNCED_ARTIFACTS.len();
             run.items_done = 0;
         }
-        let outcome = tauri::async_runtime::block_on(crate::modules::sync::runner::run_sync(
-            &data_root_path,
-            &home_path,
-            &endpoint,
-            &webdav,
-        ));
+        let mut verified = true;
+        let outcome =
+            tauri::async_runtime::block_on(crate::modules::sync::runner::run_sync_observed(
+                &data_root_path,
+                &home_path,
+                &endpoint,
+                &webdav,
+                |candidate, terminal| {
+                    use crate::modules::sync::runner::SyncTerminal;
+                    match terminal {
+                        SyncTerminal::Conflict => {} // Existing conflict risk, never success.
+                        SyncTerminal::Failed => publish_endpoint_result(
+                            &app,
+                            &data_root_path,
+                            "sync-run",
+                            candidate,
+                            false,
+                        ),
+                        SyncTerminal::Succeeded => {
+                            // External edits are not covered by the process-local gate.
+                            // Refuse recovery unless the exact endpoint/secret still matches.
+                            verified = sync_endpoint_unchanged(
+                                &endpoint,
+                                &webdav,
+                                SyncConfigStore::new(&data_root_path).load(),
+                                webdav_config,
+                            );
+                            publish_endpoint_result(
+                                &app,
+                                &data_root_path,
+                                "sync-run",
+                                candidate,
+                                verified,
+                            );
+                        }
+                    }
+                },
+            ));
         // Persist and broadcast outside the sync-state lock. A repeated conflict or
         // failed persistence must not emit a notification-list change.
         if outcome.as_ref().is_ok_and(|outcome| outcome.conflicted)
@@ -406,15 +438,24 @@ pub async fn run_sync_now(
         let mut run = status_guard(&status);
         match outcome {
             Ok(outcome) => {
-                run.connection_state = crate::types::status::ConnectionState::Synced;
-                run.operation_state = crate::types::status::OperationState::Succeeded;
+                let (connection, operation) = sync_success_states(&outcome, verified);
+                run.connection_state = connection;
+                run.operation_state = operation;
                 run.finished_at = Some(chrono::Utc::now());
                 run.items_done = outcome.uploaded.len();
                 run.snapshot_id = Some(outcome.snapshot_id.clone());
+                let message = if verified {
+                    outcome.message()
+                } else {
+                    "同步请求已执行，但端点或凭据回读不一致；可能已有内容应用或上传，请检查后重试。"
+                        .to_string()
+                };
+                run.failure_reason = (connection != crate::types::status::ConnectionState::Synced)
+                    .then(|| message.clone());
                 Ok(SyncOperationResultDto {
-                    connection_state: "synced".to_string(),
-                    operation_state: "succeeded".to_string(),
-                    message: outcome.message(),
+                    connection_state: format!("{connection:?}").to_snake_case(),
+                    operation_state: format!("{operation:?}").to_snake_case(),
+                    message,
                     snapshot_id: Some(outcome.snapshot_id),
                     backup_id: None,
                     etag: outcome.etag,
@@ -446,6 +487,35 @@ pub async fn run_sync_now(
         }
     })
     .await
+}
+
+fn sync_success_states(
+    outcome: &crate::modules::sync::runner::SyncOutcome,
+    verified: bool,
+) -> (
+    crate::types::status::ConnectionState,
+    crate::types::status::OperationState,
+) {
+    use crate::types::status::{ConnectionState, OperationState};
+    if outcome.conflicted {
+        (ConnectionState::Conflict, OperationState::Cancelled)
+    } else if verified {
+        (ConnectionState::Synced, OperationState::Succeeded)
+    } else {
+        (ConnectionState::Failed, OperationState::Failed)
+    }
+}
+
+fn sync_endpoint_unchanged(
+    endpoint: &SyncEndpointConfig,
+    webdav: &WebDavConfig,
+    current: AppResult<SyncConfig>,
+    credentials: impl FnOnce(&SyncEndpointConfig) -> AppResult<WebDavConfig>,
+) -> bool {
+    current
+        .ok()
+        .and_then(|c| c.active().cloned())
+        .is_some_and(|e| e == *endpoint && credentials(&e).is_ok_and(|w| w == *webdav))
 }
 
 fn app_error_for(failure: SyncRunFailure) -> AppError {
@@ -558,6 +628,80 @@ mod tests {
             tls_policy: "verify_required".to_string(),
             legacy_encryption: "forced".to_string(),
             conflict_policy: "ask".to_string(),
+        }
+    }
+
+    fn fixture_webdav() -> WebDavConfig {
+        WebDavConfig {
+            base_url: endpoint().url,
+            remote_path: endpoint().remote_path,
+            username: endpoint().username,
+            password: "fixture-secret".into(),
+        }
+    }
+
+    #[test]
+    fn sync_execution_recovers_only_exact_endpoint_and_credentials() {
+        let e = endpoint();
+        let w = fixture_webdav();
+        let c = SyncConfig {
+            schema_version: 1,
+            endpoints: vec![e.clone()],
+        };
+        assert!(sync_endpoint_unchanged(&e, &w, Ok(c.clone()), |_| Ok(
+            w.clone()
+        )));
+        assert!(!sync_endpoint_unchanged(
+            &e,
+            &w,
+            Err(AppError::NotConfigured),
+            |_| panic!("no credentials read")
+        ));
+        assert!(!sync_endpoint_unchanged(
+            &e,
+            &w,
+            Ok(SyncConfig {
+                schema_version: 1,
+                endpoints: vec![]
+            }),
+            |_| panic!("no endpoint")
+        ));
+        let mut different = c.clone();
+        different.endpoints[0].remote_path.push_str("-changed");
+        assert!(!sync_endpoint_unchanged(&e, &w, Ok(different), |_| panic!(
+            "different endpoint"
+        )));
+        assert!(!sync_endpoint_unchanged(&e, &w, Ok(c.clone()), |_| Err(
+            AppError::NotConfigured
+        )));
+        let mut changed_password = w.clone();
+        changed_password.password.push_str("-changed");
+        assert!(!sync_endpoint_unchanged(&e, &w, Ok(c), |_| Ok(
+            changed_password
+        )));
+    }
+
+    #[test]
+    fn sync_conflict_and_failed_readback_never_project_success() {
+        use crate::types::status::{ConnectionState as C, OperationState as O};
+        let mut outcome = crate::modules::sync::runner::SyncOutcome {
+            snapshot_id: "snap".into(),
+            uploaded: vec![],
+            applied: vec![],
+            conflicted: false,
+            etag: None,
+        };
+        assert_eq!(
+            sync_success_states(&outcome, true),
+            (C::Synced, O::Succeeded)
+        );
+        assert_eq!(sync_success_states(&outcome, false), (C::Failed, O::Failed));
+        outcome.conflicted = true;
+        for verified in [true, false] {
+            assert_eq!(
+                sync_success_states(&outcome, verified),
+                (C::Conflict, O::Cancelled)
+            );
         }
     }
 

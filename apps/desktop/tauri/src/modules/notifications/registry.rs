@@ -50,6 +50,7 @@ pub enum Job {
     SyncProbe,
     SyncEndpointSave,
     SyncEndpointDelete,
+    SyncRun,
     Backup,
     Migration,
     PreferencesBackup,
@@ -199,6 +200,7 @@ pub enum PolicyId {
     SyncConnectionFailure,
     SyncEndpointSaveFailure,
     SyncEndpointDeleteFailure,
+    SyncRunFailure,
 }
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -624,6 +626,10 @@ enum SupportedEvent {
     SyncEndpointDeleteFailed,
     #[serde(rename = "sync-endpoint-delete-succeeded")]
     SyncEndpointDeleteSucceeded,
+    #[serde(rename = "sync-run-failed")]
+    SyncRunFailed,
+    #[serde(rename = "sync-run-succeeded")]
+    SyncRunSucceeded,
     #[serde(rename = "backup-completed")]
     BackupCompleted,
     #[serde(rename = "migration-completed")]

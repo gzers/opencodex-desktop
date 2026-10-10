@@ -91,9 +91,9 @@ export const useSyncStore = defineStore('sync', {
       this.running = true
       try {
         this.status = await runSyncNowCommand()
-        return true
+        return this.status.connectionState === 'synced' && this.status.operationState === 'succeeded'
       } catch {
-        this.status = failedStatus('同步执行失败；本地内容未修改。')
+        this.status = failedStatus('同步执行未完成；可能已有内容应用或上传，请检查同步状态与本地内容后重试。')
         return false
       } finally {
         this.running = false

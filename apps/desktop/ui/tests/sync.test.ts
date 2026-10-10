@@ -79,8 +79,8 @@ describe('sync conflict notification refresh', () => {
     invoke.mockImplementation((command: string) => {
       if (command === 'run_sync_now') {
         return Promise.resolve({
-          connectionState: 'synced',
-          operationState: 'succeeded',
+          connectionState: 'conflict',
+          operationState: 'cancelled',
           message: '检测到本地与远端冲突；已暂停覆盖并保留双方历史，请确认后重试。',
           snapshotId: 'snap',
           backupId: null,
@@ -93,9 +93,48 @@ describe('sync conflict notification refresh', () => {
       return Promise.resolve(undefined)
     })
     const app = useAppStore()
-    await app.runSyncNow()
+    expect(await app.runSyncNow()).toBe(false)
+    expect(app.webdavState).toBe('conflict')
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(invoke).toHaveBeenCalledWith('run_sync_now')
-    expect(invoke).toHaveBeenCalledWith('list_notifications')
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))
+  })
+})
+
+
+describe('sync terminal result is not command acknowledgement', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    invoke.mockReset()
+  })
+
+  it.each([
+    ['synced', 'succeeded', true],
+    ['failed', 'failed', false],
+    ['conflict', 'cancelled', false],
+    ['synced', 'validating', false],
+  ] as const)('projects %s / %s without inventing success', async (connectionState, operationState, expected) => {
+    const result: SyncOperationResultDto = {
+      connectionState, operationState, message: '终态说明', snapshotId: 'snap', backupId: null, etag: null,
+    }
+    invoke.mockImplementation((command: string) => Promise.resolve(command === 'run_sync_now' ? result : undefined))
+    const app = useAppStore()
+    expect(await app.runSyncNow()).toBe(expected)
+    expect(app.webdavState).toBe(connectionState)
+    expect(app.syncStatus?.message).toBe(result.message)
+    expect(useSyncStore().running).toBe(false)
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))
+  })
+
+  it('reports an uncertain failed execution and still refreshes its notifications', async () => {
+    invoke.mockImplementation((command: string) => command === 'run_sync_now'
+      ? Promise.reject(new Error('fixture execution failure')) : Promise.resolve(undefined))
+    const app = useAppStore()
+    expect(await app.runSyncNow()).toBe(false)
+    expect(app.webdavState).toBe('failed')
+    expect(app.syncStatus?.message).toContain('可能已有内容应用或上传')
+    expect(app.syncStatus?.message).not.toContain('本地内容未修改')
+    expect(useSyncStore().running).toBe(false)
+    await vi.waitFor(() => expect(invoke).toHaveBeenCalledWith('list_notifications'))
   })
 })

@@ -604,11 +604,8 @@ export const useAppStore = defineStore("app", {
       const ok = await useSyncStore().runNow()
       const status = useSyncStore().status
       useSyncStore().setWebdavState(status?.connectionState ?? "failed")
-      if (ok) {
-        // 冲突提醒由后端写入同一份通知 store；同步结束后刷新一次，
-        // 让「同步冲突提醒」产生的通知立即可见，而不是等到下次打开通知中心。
-        void this.loadNotifications()
-      }
+      // 成功、冲突和失败都可能发布终态通知；命令返回不代表同步成功。
+      void this.loadNotifications()
       return ok
     },
     async cleanupLocalLogs() {

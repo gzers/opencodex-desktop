@@ -11,7 +11,7 @@ use serde_json::Value;
 
 use crate::infrastructure::keychain;
 use crate::infrastructure::webdav_client::{
-    WebDavClient, WebDavConfig, WebDavError, WebDavOperation,
+    WebDavClient, WebDavConfig, WebDavError, WebDavOperation, WebDavTransport,
 };
 use crate::modules::extensions::{projection, ClientTarget, CLIENT_IDS};
 use crate::modules::sync::config::SyncEndpointConfig;
@@ -104,7 +104,9 @@ pub enum SyncRunFailure {
 impl SyncRunFailure {
     pub fn user_message(self) -> String {
         match self {
-            Self::NotConfigured => "同步未配置或内容无效；本地内容未修改。".to_string(),
+            Self::NotConfigured => {
+                "同步未配置或内容无效；请检查同步状态与本地内容后重试。".to_string()
+            }
             Self::ColdSync => "冷同步已开启，已跳过本次同步。".to_string(),
             Self::TargetLocked => "同步目标正被占用，请稍后重试。".to_string(),
             Self::WebDav(operation, error) => error.user_message(operation).to_string(),
@@ -167,6 +169,18 @@ pub async fn run_sync(
     endpoint: &SyncEndpointConfig,
     webdav: &WebDavConfig,
 ) -> Result<SyncOutcome, SyncRunFailure> {
+    run_sync_observed(data_root, home, endpoint, webdav, |_, _| {}).await
+}
+
+/// Only captured execution is terminal. Admission, cold-sync and local capture
+/// refusal happen before this observer and cannot recover earlier failures.
+pub(crate) async fn run_sync_observed(
+    data_root: &Path,
+    home: &Path,
+    endpoint: &SyncEndpointConfig,
+    webdav: &WebDavConfig,
+    observer: impl FnOnce(&[u8], SyncTerminal),
+) -> Result<SyncOutcome, SyncRunFailure> {
     let _admission = crate::infrastructure::storage_writers::global()
         .admit()
         .map_err(|_| SyncRunFailure::TargetLocked)?;
@@ -203,6 +217,74 @@ pub async fn run_sync(
     if local_payloads.is_empty() {
         return Err(SyncRunFailure::NotConfigured);
     }
+    let candidate = execution_candidate(endpoint, webdav, &local_payloads)?;
+    let client = WebDavClient::production();
+    observe_execution(
+        &candidate,
+        run_prepared_sync(
+            data_root,
+            home,
+            endpoint,
+            webdav,
+            local_payloads,
+            now,
+            &client,
+        ),
+        observer,
+    )
+    .await
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) enum SyncTerminal {
+    Failed,
+    Succeeded,
+    Conflict,
+}
+
+fn execution_candidate(
+    endpoint: &SyncEndpointConfig,
+    webdav: &WebDavConfig,
+    artifacts: &[(String, Vec<u8>)],
+) -> Result<Vec<u8>, SyncRunFailure> {
+    // Captured bytes, not generated snapshot IDs/timestamps, identify retries.
+    // Candidate bytes stay local; notification delivery persists only their hash.
+    serde_json::to_vec(&(
+        endpoint,
+        &webdav.base_url,
+        &webdav.remote_path,
+        &webdav.username,
+        &webdav.password,
+        artifacts,
+    ))
+    .map_err(|_| SyncRunFailure::NotConfigured)
+}
+
+async fn observe_execution(
+    candidate: &[u8],
+    task: impl std::future::Future<Output = Result<SyncOutcome, SyncRunFailure>>,
+    observer: impl FnOnce(&[u8], SyncTerminal),
+) -> Result<SyncOutcome, SyncRunFailure> {
+    let result = task.await;
+    let terminal = match &result {
+        Ok(outcome) if outcome.conflicted => SyncTerminal::Conflict,
+        Ok(_) => SyncTerminal::Succeeded,
+        Err(SyncRunFailure::ColdSync | SyncRunFailure::TargetLocked) => return result,
+        Err(_) => SyncTerminal::Failed,
+    };
+    observer(candidate, terminal);
+    result
+}
+
+async fn run_prepared_sync<T: WebDavTransport>(
+    data_root: &Path,
+    home: &Path,
+    endpoint: &SyncEndpointConfig,
+    webdav: &WebDavConfig,
+    local_payloads: Vec<(String, Vec<u8>)>,
+    now: chrono::DateTime<chrono::Utc>,
+    client: &WebDavClient<T>,
+) -> Result<SyncOutcome, SyncRunFailure> {
     let artifacts = local_payloads.clone();
     let (manifest, payloads) = build_local_snapshot(artifacts, "OpenCodeX Desktop", now)
         .map_err(|_| SyncRunFailure::NotConfigured)?;
@@ -213,7 +295,6 @@ pub async fn run_sync(
     // 新流程不索取额外内容口令：清单与载荷都是明文 + 完整性摘要。
     let sealed_manifest = seal_manifest(&manifest).map_err(|_| SyncRunFailure::NotConfigured)?;
     let manifest_snapshot = manifest.snapshot_id.clone();
-    let client = WebDavClient::production();
     let remote_package = client
         .download_latest_pointer(webdav)
         .await
@@ -370,6 +451,236 @@ pub async fn run_sync(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn endpoint() -> SyncEndpointConfig {
+        use crate::modules::sync::config::CredentialRef;
+        SyncEndpointConfig {
+            endpoint_id: uuid::Uuid::new_v4().to_string(),
+            url: "https://dav.example.test".into(),
+            remote_path: "sync".into(),
+            username: "fixture".into(),
+            credential_ref: CredentialRef {
+                ref_id: "cred_12345678-1234-1234-1234-123456789abc".into(),
+                backend: "keychain".into(),
+                service_name: "OpenCodex Desktop".into(),
+                account_key: "fixture".into(),
+                purpose: "webdav_credential".into(),
+                created_at: "2026-10-11T00:00:00Z".into(),
+                updated_at: "2026-10-11T00:00:00Z".into(),
+            },
+            tls_policy: "verify_required".into(),
+            legacy_encryption: "forced".into(),
+            conflict_policy: "ask".into(),
+        }
+    }
+
+    fn fixture_webdav(e: &SyncEndpointConfig) -> WebDavConfig {
+        WebDavConfig {
+            base_url: e.url.clone(),
+            remote_path: e.remote_path.clone(),
+            username: e.username.clone(),
+            password: "fixture-secret".into(),
+        }
+    }
+
+    #[test]
+    fn execution_identity_is_stable_for_retry_but_scopes_endpoint_secret_and_content() {
+        let e = endpoint();
+        let w = fixture_webdav(&e);
+        let content = vec![(SYNCED_ARTIFACTS[0].to_string(), b"{}".to_vec())];
+        let original = execution_candidate(&e, &w, &content).unwrap();
+        assert_eq!(original, execution_candidate(&e, &w, &content).unwrap());
+        let mut other_endpoint = e.clone();
+        other_endpoint.endpoint_id.push_str("-other");
+        assert_ne!(
+            original,
+            execution_candidate(&other_endpoint, &w, &content).unwrap()
+        );
+        let mut other_secret = w.clone();
+        other_secret.password.push_str("-other");
+        assert_ne!(
+            original,
+            execution_candidate(&e, &other_secret, &content).unwrap()
+        );
+        let changed = vec![(
+            SYNCED_ARTIFACTS[0].to_string(),
+            b"{\"changed\":true}".to_vec(),
+        )];
+        assert_ne!(original, execution_candidate(&e, &w, &changed).unwrap());
+    }
+
+    #[tokio::test]
+    async fn execution_observer_preserves_result_and_skips_policy_refusals() {
+        let success = SyncOutcome {
+            snapshot_id: "snap".into(),
+            uploaded: vec!["preferences".into()],
+            applied: vec![],
+            conflicted: false,
+            etag: Some("etag".into()),
+        };
+        for (result, terminal) in [
+            (Ok(success.clone()), Some(SyncTerminal::Succeeded)),
+            (
+                Ok(SyncOutcome {
+                    conflicted: true,
+                    ..success
+                }),
+                Some(SyncTerminal::Conflict),
+            ),
+            (
+                Err(SyncRunFailure::NotConfigured),
+                Some(SyncTerminal::Failed),
+            ),
+            (
+                Err(SyncRunFailure::WebDav(
+                    WebDavOperation::Upload,
+                    WebDavError::Network,
+                )),
+                Some(SyncTerminal::Failed),
+            ),
+            (Err(SyncRunFailure::ColdSync), None),
+            (Err(SyncRunFailure::TargetLocked), None),
+        ] {
+            let mut seen = Vec::new();
+            let expected = result.clone();
+            let actual = observe_execution(b"captured", async { result }, |candidate, terminal| {
+                assert_eq!(candidate, b"captured");
+                seen.push(terminal);
+            })
+            .await;
+            assert_eq!(actual, expected);
+            assert_eq!(seen, terminal.into_iter().collect::<Vec<_>>());
+        }
+    }
+
+    #[tokio::test]
+    async fn cold_sync_missing_preferences_and_lock_are_not_execution_terminals() {
+        let e = endpoint();
+        let w = fixture_webdav(&e);
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let store = crate::modules::preferences::PreferencesStore::new(root.path());
+        store
+            .save(&crate::modules::preferences::Preferences {
+                cold_sync: true,
+                ..Default::default()
+            })
+            .unwrap();
+        let callback =
+            |_: &[u8], _: SyncTerminal| panic!("refusals cannot publish execution terminals");
+        assert_eq!(
+            run_sync_observed(root.path(), home.path(), &e, &w, callback).await,
+            Err(SyncRunFailure::ColdSync)
+        );
+        store
+            .save(&crate::modules::preferences::Preferences {
+                cold_sync: false,
+                ..Default::default()
+            })
+            .unwrap();
+        std::fs::remove_file(root.path().join(SYNCED_ARTIFACTS[0])).unwrap();
+        assert_eq!(
+            run_sync_observed(root.path(), home.path(), &e, &w, callback).await,
+            // Missing preferences restore the conservative cold-sync default.
+            Err(SyncRunFailure::ColdSync)
+        );
+        let _locked = SyncEndpointLocks::global().acquire(&e.endpoint_id).unwrap();
+        assert_eq!(
+            run_sync_observed(root.path(), home.path(), &e, &w, callback).await,
+            Err(SyncRunFailure::TargetLocked)
+        );
+    }
+
+    struct SyncTransport {
+        pointer_status: u16,
+        requests: std::sync::Arc<std::sync::Mutex<Vec<String>>>,
+    }
+    #[async_trait::async_trait]
+    impl WebDavTransport for SyncTransport {
+        async fn request(
+            &self,
+            _: &WebDavConfig,
+            method: crate::infrastructure::webdav_client::WebDavMethod,
+            path: &str,
+            _: Option<Vec<u8>>,
+        ) -> Result<crate::infrastructure::webdav_client::WebDavResponse, WebDavError> {
+            use crate::infrastructure::webdav_client::{WebDavMethod, WebDavResponse};
+            self.requests.lock().unwrap().push(path.to_string());
+            if method == WebDavMethod::Get {
+                return Err(WebDavError::NotFound);
+            }
+            assert_eq!(method, WebDavMethod::Put);
+            Ok(WebDavResponse {
+                status: if path == "latest.txt" {
+                    self.pointer_status
+                } else {
+                    201
+                },
+                body: vec![],
+                etag: Some("etag".into()),
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn captured_sync_reports_failed_final_pointer_after_payload_and_manifest_uploads() {
+        for pointer_status in [201, 204, 202] {
+            let e = endpoint();
+            let w = fixture_webdav(&e);
+            let root = tempfile::tempdir().unwrap();
+            let home = tempfile::tempdir().unwrap();
+            crate::modules::data_root::initialize(root.path()).unwrap();
+            let bytes =
+                serde_json::to_vec(&crate::modules::preferences::document_from_preferences(
+                    &crate::modules::preferences::Preferences::default(),
+                ))
+                .unwrap();
+            std::fs::write(root.path().join(SYNCED_ARTIFACTS[0]), &bytes).unwrap();
+            let payloads = vec![(SYNCED_ARTIFACTS[0].to_string(), bytes.clone())];
+            let candidate = execution_candidate(&e, &w, &payloads).unwrap();
+            let requests = std::sync::Arc::new(std::sync::Mutex::new(vec![]));
+            let client = WebDavClient::new(SyncTransport {
+                pointer_status,
+                requests: requests.clone(),
+            });
+            let mut terminals = vec![];
+            let outcome = observe_execution(
+                &candidate,
+                run_prepared_sync(
+                    root.path(),
+                    home.path(),
+                    &e,
+                    &w,
+                    payloads,
+                    chrono::Utc::now(),
+                    &client,
+                ),
+                |_, terminal| terminals.push(terminal),
+            )
+            .await;
+            if pointer_status == 202 {
+                assert_eq!(
+                    outcome,
+                    Err(SyncRunFailure::WebDav(
+                        WebDavOperation::Upload,
+                        WebDavError::Protocol
+                    ))
+                );
+                assert_eq!(terminals, [SyncTerminal::Failed]);
+            } else {
+                assert_eq!(outcome.unwrap().uploaded, [SYNCED_ARTIFACTS[0]]);
+                assert_eq!(terminals, [SyncTerminal::Succeeded]);
+            }
+            let requests = requests.lock().unwrap();
+            assert_eq!(requests.len(), 4); // GET pointer, PUT payload, PUT manifest, PUT pointer.
+            assert_eq!(requests.last().unwrap(), "latest.txt");
+            assert_eq!(
+                std::fs::read(root.path().join(SYNCED_ARTIFACTS[0])).unwrap(),
+                bytes
+            );
+        }
+    }
 
     #[test]
     fn synced_artifacts_are_whitelisted() {

@@ -275,6 +275,13 @@
       "triggers": [
         "user"
       ]
+    },
+    {
+      "id": "sync_run",
+      "availability": "active",
+      "triggers": [
+        "user"
+      ]
     }
   ],
   "events": [
@@ -1328,6 +1335,36 @@
       "resolves": [
         "sync-endpoint-delete-failed"
       ]
+    },
+    {
+      "id": "sync-run-failed",
+      "job": "sync_run",
+      "object": "sync",
+      "action": "synchronize",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "sync_run_failure",
+      "resolves": []
+    },
+    {
+      "id": "sync-run-succeeded",
+      "job": "sync_run",
+      "object": "sync",
+      "action": "synchronize",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "sync-run-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1604,6 +1641,18 @@
       "body": "配置或凭据清理未完成核验；请检查连接设置后重试。",
       "action": "logs",
       "dedupe": "sync-endpoint-delete:failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "sync_run_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "WebDAV 同步未完成",
+      "body": "同步执行或结果核验未完成，可能已应用或上传部分内容；请检查同步状态后重试。",
+      "action": "logs",
+      "dedupe": "sync-run:failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -1997,6 +2046,16 @@
     {
       "event": "sync-endpoint-delete-succeeded",
       "source": "commands/sync.rs::delete_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-run-failed",
+      "source": "commands/sync.rs::run_sync_now captured execution terminal; conflicts/admission cannot recover",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "sync-run-succeeded",
+      "source": "commands/sync.rs::run_sync_now captured execution terminal; conflicts/admission cannot recover",
       "wiring": "scoped_terminal"
     }
   ],

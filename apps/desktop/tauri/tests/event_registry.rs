@@ -799,6 +799,7 @@ fn new_terminal_pairs_persist_and_only_exact_verified_success_recovers() {
         "sync-connection",
         "sync-endpoint-save",
         "sync-endpoint-delete",
+        "sync-run",
         "preferences-backup-cleanup",
         "local-cleanup",
     ] {
