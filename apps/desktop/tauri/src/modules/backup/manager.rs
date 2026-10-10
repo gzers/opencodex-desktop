@@ -33,12 +33,22 @@ pub struct Management {
 }
 
 /// Called under the transaction lock with captured bytes or an exact cleanup
-/// inventory. Implementations may publish diagnostics, never re-enter backup APIs.
+/// inventory. Admission failures have no lock or readable source and use the
+/// unavailable sentinel. Implementations must never re-enter backup APIs.
 pub trait MaintenanceObserver {
     fn backup_result(&mut self, _action: BackupAction, _payload: &[u8], _succeeded: bool) {}
     fn cleanup_result(&mut self, _preview: Option<&BackupCleanupPreviewDto>, _succeeded: bool) {}
 }
 impl MaintenanceObserver for () {}
+const SOURCE_UNAVAILABLE: &[u8] = b"preferences-source-unavailable";
+
+fn observed_lock(
+    root: &Path,
+    action: BackupAction,
+    observer: &mut dyn MaintenanceObserver,
+) -> AppResult<File> {
+    lock(root).inspect_err(|_| observer.backup_result(action, SOURCE_UNAVAILABLE, false))
+}
 
 fn lock(root: &Path) -> AppResult<File> {
     let path = root.join(".backup-w2.lock");
@@ -84,10 +94,20 @@ pub fn begin_preferences_protection_observed(
     required: bool,
     observer: &mut dyn MaintenanceObserver,
 ) -> AppResult<PreferencesProtectionGuard> {
-    let mut guard = acquire_preferences_transaction(root)?;
+    let mut guard = PreferencesProtectionGuard {
+        _lock: observed_lock(root, BackupAction::PreferencesProtection, observer)?,
+        backup: None,
+        cleanup_error: None,
+    };
     let now = Utc::now();
     let target = root.join(PREFERENCES_RELATIVE_PATH);
-    safety::check_path(root, &target, true)?;
+    safety::check_path(root, &target, true).inspect_err(|_| {
+        observer.backup_result(
+            BackupAction::PreferencesProtection,
+            SOURCE_UNAVAILABLE,
+            false,
+        );
+    })?;
     if !required
         && std::fs::symlink_metadata(&target)
             .is_err_and(|e| e.kind() == std::io::ErrorKind::NotFound)
@@ -251,7 +271,15 @@ pub fn create_with_saved_policy_and_observers<T>(
     terminal: impl FnOnce(T, &AppResult<PreferencesBackupResultDto>),
     observer: &mut dyn MaintenanceObserver,
 ) -> AppResult<PreferencesBackupResultDto> {
-    let _lock = lock(root)?;
+    let _lock = match lock(root) {
+        Ok(lock) => lock,
+        Err(error) => {
+            let identity = prepare(SOURCE_UNAVAILABLE);
+            let outcome = Err(error);
+            terminal(identity, &outcome);
+            return outcome;
+        }
+    };
     let payload = active_payload(root);
     let identity = prepare(
         payload
@@ -323,7 +351,7 @@ fn best_effort_saved_cleanup(
     observer: &mut dyn MaintenanceObserver,
 ) -> Option<String> {
     let cleanup = (|| {
-        let saved = policy::load(root)?;
+        let saved = policy::load(root).inspect_err(|_| observer.cleanup_result(None, false))?;
         if saved.mode == CleanupMode::Automatic {
             cleanup_inner(root, now, observer)?;
         }
@@ -344,7 +372,7 @@ pub fn create_upgrade_observed(
     root: &Path,
     observer: &mut dyn MaintenanceObserver,
 ) -> AppResult<UpgradeBackupResult> {
-    let _lock = lock(root)?;
+    let _lock = observed_lock(root, BackupAction::Upgrade, observer)?;
     let bytes = active_payload(root);
     let now = Utc::now();
     let outcome = bytes
@@ -632,8 +660,10 @@ pub fn restore_observed(
     {
         return Err(fail("invalid backup id"));
     }
-    let _lock = lock(root)?;
-    let before = active_payload(root)?;
+    let _lock = observed_lock(root, BackupAction::RestoreProtection, observer)?;
+    let before = active_payload(root).inspect_err(|_| {
+        observer.backup_result(BackupAction::RestoreProtection, SOURCE_UNAVAILABLE, false);
+    })?;
     // Raw current bytes are protected even if the current preferences are corrupt.
     let protection = managed_backup(
         root,
@@ -818,6 +848,101 @@ mod tests {
         let guard = begin_preferences_protection_observed(root.path(), false, &mut probe).unwrap();
         assert!(guard.backup.is_none());
         assert!(probe.events.is_empty());
+    }
+    #[derive(Default)]
+    struct FailureProbe(Vec<(&'static str, Vec<u8>, bool)>);
+    impl MaintenanceObserver for FailureProbe {
+        fn backup_result(&mut self, action: BackupAction, payload: &[u8], succeeded: bool) {
+            self.0.push((action.as_str(), payload.to_vec(), succeeded));
+        }
+        fn cleanup_result(&mut self, preview: Option<&BackupCleanupPreviewDto>, succeeded: bool) {
+            assert!(preview.is_none());
+            self.0.push(("cleanup", vec![], succeeded));
+        }
+    }
+    #[test]
+    fn admission_failures_report_once_without_source_reads_or_backup_writes() {
+        let container = tempfile::tempdir().unwrap();
+        let path = container.path().join("not-a-directory");
+        std::fs::write(&path, b"unchanged").unwrap();
+        for action in [
+            BackupAction::Upgrade,
+            BackupAction::PreferencesProtection,
+            BackupAction::RestoreProtection,
+        ] {
+            let mut probe = FailureProbe::default();
+            let failed = match action {
+                BackupAction::Upgrade => create_upgrade_observed(&path, &mut probe).is_err(),
+                BackupAction::PreferencesProtection => {
+                    begin_preferences_protection_observed(&path, false, &mut probe).is_err()
+                }
+                _ => restore_observed(&path, "valid_id", now(), &mut probe).is_err(),
+            };
+            assert!(failed);
+            assert_eq!(
+                probe.0,
+                vec![(action.as_str(), SOURCE_UNAVAILABLE.to_vec(), false)]
+            );
+        }
+        let calls = std::cell::Cell::new(0);
+        assert!(create_with_saved_policy_observed(
+            &path,
+            now(),
+            |payload| {
+                assert_eq!(payload, SOURCE_UNAVAILABLE);
+                calls.set(calls.get() + 1);
+            },
+            |(), result| {
+                assert!(result.is_err());
+                calls.set(calls.get() + 1);
+            }
+        )
+        .is_err());
+        assert_eq!(calls.get(), 2);
+        assert_eq!(std::fs::read(&path).unwrap(), b"unchanged");
+    }
+    #[test]
+    fn optional_protection_invalid_source_is_a_failure_not_a_skip() {
+        let root = root();
+        let target = root.path().join(PREFERENCES_RELATIVE_PATH);
+        std::fs::remove_file(&target).unwrap();
+        std::fs::create_dir(&target).unwrap();
+        let mut probe = FailureProbe::default();
+        assert!(begin_preferences_protection_observed(root.path(), false, &mut probe).is_err());
+        assert_eq!(
+            probe.0,
+            vec![("preferences-protection", SOURCE_UNAVAILABLE.to_vec(), false)]
+        );
+        assert!(records(root.path()).unwrap().is_empty());
+    }
+    #[test]
+    fn restore_missing_source_reports_guard_failure_but_invalid_id_attempts_no_guard() {
+        let root = root();
+        std::fs::remove_file(root.path().join(PREFERENCES_RELATIVE_PATH)).unwrap();
+        let mut probe = FailureProbe::default();
+        assert!(restore_observed(root.path(), "../invalid", now(), &mut probe).is_err());
+        assert!(probe.0.is_empty());
+        assert!(restore_observed(root.path(), "valid_id", now(), &mut probe).is_err());
+        assert_eq!(
+            probe.0,
+            vec![("restore-protection", SOURCE_UNAVAILABLE.to_vec(), false)]
+        );
+        assert!(records(root.path()).unwrap().is_empty());
+    }
+    #[test]
+    fn unreadable_cleanup_policy_reports_failure_after_verified_backup_once() {
+        let root = root();
+        let path = root.path().join(policy::POLICY_RELATIVE_PATH);
+        std::fs::write(path, b"broken").unwrap();
+        let mut probe = FailureProbe::default();
+        let guard = begin_preferences_protection_observed(root.path(), true, &mut probe).unwrap();
+        assert!(guard.backup.is_some());
+        assert!(guard.cleanup_error.is_some());
+        assert_eq!(probe.0.len(), 2);
+        assert_eq!(probe.0[0].0, "preferences-protection");
+        assert!(probe.0[0].2);
+        assert_eq!(probe.0[1], ("cleanup", vec![], false));
+        assert_eq!(records(root.path()).unwrap().len(), 1);
     }
     #[test]
     fn cleanup_candidate_identity_survives_time_but_changes_with_inventory() {

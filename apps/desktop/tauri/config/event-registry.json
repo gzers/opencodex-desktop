@@ -1312,7 +1312,7 @@
     },
     {
       "event": "preferences-backup-succeeded",
-      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
       "wiring": "scoped_terminal"
     },
     {
@@ -1322,7 +1322,7 @@
     },
     {
       "event": "preferences-backup-failed",
-      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
       "wiring": "scoped_terminal"
     },
     {
@@ -1342,7 +1342,7 @@
     },
     {
       "event": "preferences-backup-cleanup-succeeded",
-      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
       "wiring": "scoped_terminal"
     },
     {
@@ -1352,7 +1352,7 @@
     },
     {
       "event": "preferences-backup-cleanup-failed",
-      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result (early validation failures pending)",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
       "wiring": "scoped_terminal"
     },
     {
