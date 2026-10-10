@@ -75,7 +75,9 @@ export const useDataRootStore = defineStore('data-root', {
         const result = await switchDataRootCommand(path, migrateData ? 'migrate_data' : 'reference_only')
         if (result.config) this.config = result.config
         if (result.status === 'blocked') {
-          this.error = '切换已被安全规则阻止。'
+          this.error = result.blocked === 'running'
+            ? '面板或安装任务仍在运行，暂时不能切换路径。'
+            : '切换已被安全规则阻止。'
           return false
         }
         return true
@@ -98,7 +100,9 @@ export const useDataRootStore = defineStore('data-root', {
         const result = await setOpencodexHome(mode, externalPath?.trim())
         if (result.config) this.config = result.config
         if (result.status === 'blocked') {
-          this.error = '路径不能与数据目录互相嵌套。'
+          this.error = result.blocked === 'running'
+            ? '面板或安装任务仍在运行，暂时不能切换路径。'
+            : '路径不能与数据目录互相嵌套。'
           return false
         }
         return true

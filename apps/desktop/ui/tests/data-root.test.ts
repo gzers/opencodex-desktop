@@ -63,6 +63,8 @@ describe('data root integration', () => {
       activeDataRoot: '/fixtures/data-root',
       opencodexHomeMode: 'inside',
       opencodexHome: '/fixtures/data-root/opencodex-home',
+      currentDataRoot: '/fixtures/data-root',
+      currentOpencodexHome: '/fixtures/data-root/opencodex-home',
       runtimeActive: true,
     }
     invoke.mockResolvedValueOnce(config)
@@ -83,6 +85,8 @@ describe('data root integration', () => {
         activeDataRoot: '/fixtures/target',
         opencodexHomeMode: 'inside',
         opencodexHome: '/fixtures/target/opencodex-home',
+        currentDataRoot: '/fixtures/data-root',
+        currentOpencodexHome: '/fixtures/data-root/opencodex-home',
         runtimeActive: false,
       },
     })
@@ -111,7 +115,9 @@ describe('data root integration', () => {
         activeDataRoot: '/fixtures/data-root',
         opencodexHomeMode: 'external',
         opencodexHome: '/fixtures/external-home',
-        runtimeActive: true,
+        currentDataRoot: '/fixtures/data-root',
+        currentOpencodexHome: '/fixtures/data-root/opencodex-home',
+        runtimeActive: false,
       },
     })
     await expect(app.saveOpencodexHome('external', '/fixtures/external-home')).resolves.toBe(true)
@@ -119,5 +125,21 @@ describe('data root integration', () => {
       request: { mode: 'external', externalPath: '/fixtures/external-home' },
     })
     expect(app.dataRootConfig?.opencodexHomeMode).toBe('external')
+  })
+
+  it('preserves the existing binding when HOME save is blocked by a running task', async () => {
+    const app = useAppStore()
+    const before = {
+      activeDataRoot: '/fixtures/data-root', opencodexHomeMode: 'inside' as const,
+      opencodexHome: '/fixtures/data-root/opencodex-home', currentDataRoot: '/fixtures/data-root',
+      currentOpencodexHome: '/fixtures/data-root/opencodex-home', runtimeActive: true,
+    }
+    invoke.mockResolvedValueOnce(before)
+    await app.loadDataRootConfig()
+    invoke.mockResolvedValueOnce({ status: 'blocked', blocked: 'running', config: null })
+    await expect(app.saveOpencodexHome('external', '/fixtures/next-home')).resolves.toBe(false)
+    expect(app.dataRootConfig).toEqual(before)
+    expect(app.dataRootError).toContain('面板或安装任务仍在运行')
+    expect(app.dataRootHomeSaving).toBe(false)
   })
 })

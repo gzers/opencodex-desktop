@@ -135,6 +135,11 @@ export const useRuntimeStore = defineStore('runtime', {
       this.installOutcome = null
       this.installError = ''
     },
+    observeInstallProgress(progress: RuntimeInstallProgress) {
+      if (!this.installing) return
+      this.install = progress
+      if (progress.line) this.installLines = [...this.installLines, progress.line].slice(-400)
+    },
     setInstallOutcome(outcome: RuntimeInstallOutcomeDto) {
       this.installOutcome = outcome
     },
@@ -212,9 +217,7 @@ export const useRuntimeStore = defineStore('runtime', {
         const unlistenProgress = await listen<RuntimeInstallProgress>(
           RUNTIME_INSTALL_PROGRESS_EVENT,
           (event) => {
-            this.install = event.payload
-            const line = event.payload.line
-            if (line) this.installLines = [...this.installLines, line].slice(-400)
+            this.observeInstallProgress(event.payload)
           },
         )
         this.stopSourceEventStream = () => {

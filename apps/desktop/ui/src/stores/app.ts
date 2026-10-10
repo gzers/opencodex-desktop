@@ -415,29 +415,36 @@ export const useAppStore = defineStore("app", {
       await useUpdatesStore().loadRemoteLatest()
     },
     /** 代跑官方更新（U-04）：确认后解析远端确定版本并复用受控安装；装完刷新来源与版本事实。 */
-    async applyOfficialUpdate() {
+    async applyOfficialUpdate(candidateVersion: string) {
       const updates = useUpdatesStore()
-      if (updates.officialUpdateBusy) return false
+      const runtime = useRuntimeStore()
+      if (updates.officialUpdateBusy || runtime.installing) return false
       updates.beginOfficialUpdate()
+      runtime.beginInstall()
       try {
-        const outcome = await installOfficialUpdateCommand()
+        const outcome = await installOfficialUpdateCommand(candidateVersion, progress => runtime.observeInstallProgress(progress))
+        runtime.setInstallOutcome(outcome)
         await this.loadRuntimeSource()
         if (useRuntimeStore().source?.kind !== 'managed') {
           updates.failOfficialUpdate()
+          runtime.failInstall('更新命令已返回，但运行来源未切换到托管安装。')
           this.showToast('官方更新命令已返回，但运行来源没有切换到托管安装；请刷新运行来源。')
           return false
         }
         await this.loadOfficialProject()
         await this.refreshEnvironment()
         await this.loadStatusSnapshot()
+        runtime.markInstallDone()
         this.showToast(`已更新 OpenCodex ${outcome.version}。`)
         return true
-      } catch {
+      } catch (error) {
+        runtime.failInstall(runtimeErrorText(error))
         updates.failOfficialUpdate()
         this.showToast('官方更新安装失败；已保留当前版本。')
         return false
       } finally {
         updates.finishOfficialUpdate()
+        runtime.finishInstall()
       }
     },
     /**
@@ -458,9 +465,9 @@ export const useAppStore = defineStore("app", {
       }
     },
 
-    async installAppUpdate() {
-      const ok = await useUpdatesStore().installAppUpdate()
-      if (ok) this.showToast("更新已安装；正在重启。")
+    async installAppUpdate(options?: import('@/features/updates/update').InstallUpdateOptions) {
+      const ok = await useUpdatesStore().installAppUpdate(options)
+      if (ok) this.showToast("更新已准备就绪；请确认重启并应用。")
       else this.showToast("更新安装失败；已保留当前版本。")
       return ok
     },
@@ -470,8 +477,8 @@ export const useAppStore = defineStore("app", {
         this.showToast("数据目录不可用；已保留当前窗口。")
         return false
       }
-      const target = this.managedPathTargets?.[0]?.path.replace(
-        /\/manager-state$/,
+      const target = this.managedPathTargets?.find(item => item.key === "manager_state")?.path.replace(
+        /[\\/]manager-state[\\/]?$/,
         "",
       )
       if (!target) {
@@ -489,7 +496,7 @@ export const useAppStore = defineStore("app", {
         return false
       }
       const target =
-        this.dataRootConfig?.opencodexHome ??
+        this.dataRootConfig?.currentOpencodexHome ??
         this.statusSnapshot?.facts.opencodex_home
       if (!target) {
         this.showToast("OPENCODEX_HOME 不可用；已保留当前窗口。")

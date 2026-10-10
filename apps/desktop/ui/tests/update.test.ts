@@ -22,7 +22,7 @@ describe('update commands', () => {
     const update = { channel: 'stable', currentVersion: '0.1.0', lastCheckedAt: '2026-09-16T00:00:00Z' }
     mockInvoke.mockResolvedValue({ status: 'failed', update })
     await expect(checkForUpdate()).resolves.toEqual({ status: 'failed', update })
-    expect(mockInvoke).toHaveBeenCalledWith('check_for_update')
+    expect(mockInvoke).toHaveBeenCalledWith('check_for_update', { trigger: 'user' })
   })
 
   it('channel switching maps the selected stable or beta channel', async () => {

@@ -1,3 +1,4 @@
+import type { UpdateCheckTrigger } from '@/features/updates/scheduler'
 export interface AboutAppDto {
   name: string
   version: string
@@ -32,15 +33,15 @@ export async function getOfficialProjectFacts(): Promise<OfficialProjectDto> {
 }
 
 let remoteRequest: Promise<OfficialRemoteLatestDto> | null = null
-export function getOfficialRemoteLatest(): Promise<OfficialRemoteLatestDto> {
+export function getOfficialRemoteLatest(trigger: UpdateCheckTrigger = 'user'): Promise<OfficialRemoteLatestDto> {
   if (remoteRequest) return remoteRequest
-  const request = queryOfficialRemoteLatest().finally(() => { if (remoteRequest === request) remoteRequest = null })
+  const request = queryOfficialRemoteLatest(trigger).finally(() => { if (remoteRequest === request) remoteRequest = null })
   remoteRequest = request
   return request
 }
-async function queryOfficialRemoteLatest(): Promise<OfficialRemoteLatestDto> {
+async function queryOfficialRemoteLatest(trigger: UpdateCheckTrigger): Promise<OfficialRemoteLatestDto> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
-  return invoke<OfficialRemoteLatestDto>('official_remote_latest')
+  return invoke<OfficialRemoteLatestDto>('official_remote_latest', { trigger })
 }
 export async function getOfficialRemoteCache(): Promise<OfficialRemoteLatestDto | null> {
   const invoke = (await import('@tauri-apps/api/core')).invoke

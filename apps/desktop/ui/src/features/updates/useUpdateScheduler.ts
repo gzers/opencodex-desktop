@@ -20,17 +20,19 @@ export function useUpdateScheduler() {
     plan: getUpdateSchedulePlan,
     visible: () => effects.visible && effects.foreground,
     busy: () => updates.appUpdateBusy || updates.officialUpdateBusy || roots.switching,
-    check: async target => {
-      if (target === 'panel') await updates.loadRemoteLatest()
-      else await checkForUpdate()
+    check: async (target, trigger) => {
+      if (target === 'panel') await updates.loadRemoteLatest(trigger)
+      else await checkForUpdate(trigger)
     },
     // Native command persists the outcome/backoff. No repetitive foreground toast.
     onError: () => {},
   })
   const wake = () => scheduler.wake()
+  const foregroundWake = () => scheduler.wake('foreground')
+  const onlineWake = () => scheduler.wake('online')
   watch(() => routes.current, route => { if (route === 'overview') wake() })
   watch(() => [effects.visible, effects.foreground, roots.switching,
-    updates.appUpdateBusy, updates.officialUpdateBusy], wake)
+    updates.appUpdateBusy, updates.officialUpdateBusy], foregroundWake)
   watch(() => [preferences.data?.appUpdateChannel, preferences.data?.appUpdateAutoCheck], async () => {
     // Preferences transaction already switched native ownership; synchronize UI epoch first.
     try { await getUpdateStatus() } catch { /* retain last known result */ }
@@ -41,12 +43,12 @@ export function useUpdateScheduler() {
     void getOfficialRemoteCache().then(value => {
       if (!disposed && !updates.officialRemote && value) updates.officialRemote = value
     }).catch(() => {})
-    window.addEventListener('online', wake)
+    window.addEventListener('online', onlineWake)
     scheduler.start()
   })
   onUnmounted(() => {
     disposed = true
     scheduler.stop()
-    window.removeEventListener('online', wake)
+    window.removeEventListener('online', onlineWake)
   })
 }

@@ -93,9 +93,9 @@ describe('upgrade auto backup preference', () => {
   })
 
   // 回归：「升级前自动备份」此前没有任何消费方，进入升级引导不会生成备份。
-  it('creates a backup before the upgrade guide when enabled', async () => {
+  it('does not create a backup merely by entering updates even when enabled', async () => {
     await mountUpgrade(dto({ autoBackupUpgrade: true }))
-    expect(invoke).toHaveBeenCalledWith('create_upgrade_backup')
+    expect(invoke).not.toHaveBeenCalledWith('create_upgrade_backup')
   })
 
   it('does not create a backup when disabled', async () => {

@@ -13,6 +13,8 @@ import { useAppController } from '@/composables/useAppController'
 import AppTopbar from '@/components/AppTopbar.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiCard from '@/components/ui/UiCard.vue'
+import UpdateCenter from '@/features/updates/UpdateCenter.vue'
+import { managerUpdateStatus } from '@/features/updates/update'
 import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
 import EnvironmentGate from '@/features/environment/components/EnvironmentGate.vue'
 import { webdavStates } from '@/features/sync/states'
@@ -24,6 +26,14 @@ const routes = useRouteStore()
 const app = useAppStore()
 const controller = useAppController()
 
+const updateCenter = ref<InstanceType<typeof UpdateCenter> | null>(null)
+const updateOpen = ref(false)
+const updateTarget = ref<'manager' | 'official' | null>(null)
+function openUpdates(target: 'manager' | 'official' | null = null, check = false) {
+  updateTarget.value = target
+  updateOpen.value = true
+  if (check) void updateCenter.value?.check()
+}
 const detailOpen = ref(false)
 const envOpen = ref(false)
 const copiedCommand = ref<string | null>(null)
@@ -107,8 +117,8 @@ const runtime = computed(() =>
     ? `Codex 运行时（${runtimeSourceLabel(app.statusSnapshot.facts.runtime_label)}）`
     : '—',
 )
-const managerDataRoot = computed(() => app.dataRootConfig?.activeDataRoot || app.dataRootPath || '')
-const managerHome = computed(() => app.dataRootConfig?.opencodexHome || '')
+const managerDataRoot = computed(() => app.dataRootConfig?.currentDataRoot || app.dataRootPath || '')
+const managerHome = computed(() => app.dataRootConfig?.currentOpencodexHome || '')
 const dataRoot = computed(() => managerDataRoot.value || app.statusSnapshot?.facts.data_root || '—')
 const home = computed(() => managerHome.value || app.statusSnapshot?.facts.opencodex_home || '—')
 
@@ -216,11 +226,10 @@ const mods = computed(() => [
   {
     key: 'upgrade',
     title: '版本升级',
-    tag: app.officialProject?.version ? '已发现' : '检查中',
-    rows: [['当前版本', app.officialProject?.version ? `v${app.officialProject.version}` : '—'], ['安装形态', app.environment?.ocx.found ? 'npm 全局' : '未发现']],
+    tag: '管理器 · 面板',
+    rows: [],
     actions: [
-      { label: '检查更新', cls: 'btn primary', run: () => void app.loadOfficialProject() },
-      { label: '升级前备份', cls: 'btn', run: () => void app.createUpgradeBackup() },
+      { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
     ],
   },
   { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('settings', { section: 'migration' }) }, { label: '导入配置', cls: 'btn', run: () => routes.go('settings', { section: 'migration' }) }] },
@@ -229,6 +238,7 @@ const mods = computed(() => [
 </script>
 
 <template>
+  <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active ov" :data-mode="mode">
     <AppTopbar :subtitle-override="pageSubtitle" />
 
@@ -298,7 +308,11 @@ const mods = computed(() => [
           ><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5.2" cy="12" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="18.8" cy="12" r="1.7"/></svg></button>
         </div>
         <div class="mod-status">
-          <span v-for="row in mod.rows" :key="row[0]">{{ row[0] }} <b>{{ row[1] }}</b></span>
+          <template v-if="mod.key === 'upgrade'">
+            <button class="btn ghost overview-update-row" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')"><span>桌面管理器</span><b>{{ managerUpdateStatus?.currentVersion ?? app.aboutApp?.version ?? '—' }}</b><span aria-hidden="true">›</span></button>
+            <button class="btn ghost overview-update-row" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')"><span>OpenCodex 面板</span><b>{{ app.officialProject?.version ?? '—' }}</b><span aria-hidden="true">›</span></button>
+          </template>
+          <template v-else><span v-for="row in mod.rows" :key="row[0]">{{ row[0] }} <b>{{ row[1] }}</b></span></template>
         </div>
         <div class="mod-actions">
           <UiButton
@@ -421,3 +435,8 @@ const mods = computed(() => [
     </div>
   </section>
 </template>
+
+<style scoped>
+.overview-update-row { display: flex; justify-content: space-between; width: 100%; gap: var(--space-2); min-height: 26px; padding: var(--space-1) 0; font-size: var(--text-label); }
+.overview-update-row > b { margin-left: auto; overflow-wrap: anywhere; }
+</style>

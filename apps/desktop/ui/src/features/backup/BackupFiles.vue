@@ -28,6 +28,7 @@ async function refresh() {
   } finally { loading.value = false }
 }
 function file(node: TreeTableNode): BackupFileNode { return node as BackupFileNode }
+defineExpose({ refresh })
 onMounted(() => { void refresh() })
 </script>
 

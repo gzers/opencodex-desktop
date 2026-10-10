@@ -28,6 +28,8 @@ export interface DataRootConfig {
   activeDataRoot: string
   opencodexHomeMode: OpenCodexHomeMode
   opencodexHome: string
+  currentDataRoot: string
+  currentOpencodexHome: string
   runtimeActive: boolean
 }
 

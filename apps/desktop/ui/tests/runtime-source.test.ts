@@ -2,6 +2,7 @@ import { createPinia, setActivePinia } from 'pinia'
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useAppStore } from '@/stores/app'
+import { useRuntimeStore } from '@/features/runtime/store'
 import type { RuntimeSourceDto } from '@/features/runtime/api'
 import type { EnvironmentReport } from '@/features/environment/api'
 import EnvironmentGate from '@/features/environment/components/EnvironmentGate.vue'
@@ -443,6 +444,11 @@ describe('runtime source store', () => {
     expect(typeof eventBus.listeners['runtime-install-progress']).toBe('function')
     expect(typeof eventBus.listeners['runtime-source-changed']).toBe('function')
 
+    // Unowned/late progress must not open an unrelated installation.
+    eventBus.listeners['runtime-install-progress']({ payload: { phase: 'installing', percent: 60, line: 'late line' } })
+    expect(app.runtimeInstall).toBeNull()
+    const runtime = useRuntimeStore()
+    runtime.beginInstall()
     eventBus.listeners['runtime-install-progress']({ payload: { phase: 'installing', percent: 60, line: 'npm install line' } })
     expect(app.runtimeInstall?.phase).toBe('installing')
     expect(app.runtimeInstallLines).toEqual(['npm install line'])
@@ -452,6 +458,9 @@ describe('runtime source store', () => {
     await new Promise(resolve => setTimeout(resolve, 0))
     expect(invoke).toHaveBeenCalledWith('runtime_source', undefined)
 
+    runtime.finishInstall()
+    eventBus.listeners['runtime-install-progress']({ payload: { phase: 'installing', percent: 90, line: 'late line' } })
+    expect(app.runtimeInstallLines).toEqual(['npm install line'])
     stop?.()
     expect(eventBus.listeners['runtime-install-progress']).toBeUndefined()
   })

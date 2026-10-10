@@ -3,8 +3,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import AppTopbar from '@/components/AppTopbar.vue'
 import UiCard from '@/components/ui/UiCard.vue'
-import BackupFiles from '@/features/backup/BackupFiles.vue'
-import { openBackupFile, type BackupFileNode } from '@/features/backup/api'
+import BackupManagement from '@/features/backup/BackupManagement.vue'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -15,8 +14,7 @@ import { useRouteStore } from '@/stores/routes'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
-import { getUpdateStatus, managerUpdateStatus } from '@/features/updates/update'
-import { hasNewerVersion } from '@/features/updates/version'
+import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import type { SyncConflictPolicy } from '@/features/sync/api'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
@@ -32,17 +30,6 @@ import {
 
 const routes = useRouteStore()
 const app = useAppStore()
-function confirmBackupOpen(node: BackupFileNode) {
-  app.openModal({
-    title: node.directory ? '打开备份目录' : '打开备份文件',
-    body: '备份文件可能包含配置与敏感信息。请勿直接修改或删除文件，以免影响恢复。将在系统应用中打开所选项目。',
-    confirmLabel: '继续打开',
-    onConfirm: async () => {
-      try { await openBackupFile(node.id) }
-      catch { app.showToast('打开失败，请检查文件是否存在及目录权限。') }
-    },
-  })
-}
 const dataRootInput = ref('')
 const switchInput = ref('')
 const externalHomeInput = ref('')
@@ -167,16 +154,14 @@ const codexShimNotice = computed(() => {
   }
 })
 const openSelect = ref('')
-const updateStatus = managerUpdateStatus
-const updateChecking = ref(false)
-const installRequested = ref(false)
-const updateInstallDisabled = computed(() =>
-  !updateStatus.value?.availableVersion
-  || updateStatus.value.signatureVerified === true
-  || installRequested.value
-  || app.appUpdateBusy,
-)
-const updateError = ref('')
+const updateCenter = ref<InstanceType<typeof UpdateCenter> | null>(null)
+const updateOpen = ref(false)
+const updateTarget = ref<'manager' | 'official' | null>(null)
+function openUpdates(target: 'manager' | 'official' | null = null, check = false) {
+  updateTarget.value = target
+  updateOpen.value = true
+  if (check) void updateCenter.value?.check()
+}
 const SYNC_CONFLICT_POLICY_ASK: SyncConflictPolicy = 'ask'
 const syncEndpointInput = ref({
   baseUrl: '',
@@ -213,16 +198,7 @@ async function saveSyncEndpoint() {
 watch(() => app.preferences, value => {
   if (!value) return
   preferences.value = { ...preferences.value, ...value }
-  maybeAutoUpgradeBackup()
 }, { immediate: true })
-// 「升级前自动备份」：进入官方升级引导且本次会话尚无备份时先自动生成一份，
-// 让「升级前必须备份」在不额外点按钮的情况下也成立。
-function maybeAutoUpgradeBackup() {
-  if (routes.settingsSection !== 'upgrade') return
-  if (!app.preferences?.autoBackupUpgrade) return
-  if (app.upgradeLastBackup || app.upgradeBackupBusy) return
-  void app.createUpgradeBackup()
-}
 // 界面缩放的 DOM 镜像跟随生效偏好（含加载、保存成功与还原默认值）。
 watch(() => routes.settingsSection, section => {
   if (section === 'general') void loadCodexShim()
@@ -238,7 +214,6 @@ watch(() => routes.settingsSection, section => {
     if (!app.officialProject && !app.officialProjectLoading) {
       void app.loadOfficialProject()
     }
-    maybeAutoUpgradeBackup()
   }
 }, { immediate: true })
 
@@ -254,54 +229,6 @@ async function persist(next: PreferencesDto, successMessage: string): Promise<bo
     app.showToast('偏好保存失败；已保留当前显示值。')
   }
   return saved
-}
-
-const updateResultText = computed(() => {
-  if (updateError.value) return updateError.value
-  if (updateStatus.value?.error) return updateStatus.value.error
-  if (updateStatus.value?.availableVersion) return `可用 ${updateStatus.value.availableVersion}；签名校验通过后才会安装。`
-  if (updateStatus.value?.lastCheckedAt) return '已是最新版本；未发现可安装更新。'
-  return '尚未检查；当前版本保持不变。'
-})
-
-if (typeof window !== 'undefined') {
-  void getUpdateStatus().catch(() => {})
-}
-
-async function installUpdate() {
-  if (installRequested.value || app.appUpdateBusy) return
-  installRequested.value = true
-  app.openModal({
-    title: '安装应用更新',
-    body: '<p>更新包将重新下载并在本地完成签名校验，通过后才会安装并重启桌面壳。</p><p>托管中的 OpenCodex 代理不会被手动停止。</p>',
-    confirmLabel: '安装并重启',
-    onConfirm: async () => {
-      try {
-        await app.installAppUpdate()
-      } catch {
-        // 更新 store 展示失败原因；异常路径也必须允许再次安装。
-      } finally {
-        installRequested.value = false
-      }
-    },
-    onCancel: () => {
-      installRequested.value = false
-    },
-  })
-}
-
-async function runUpdateCheck() {
-  if (updateChecking.value) return
-  updateChecking.value = true
-  updateError.value = ''
-  try {
-    const { checkForUpdate } = await import('@/features/updates/update')
-    await checkForUpdate()
-  } catch {
-    updateError.value = '更新服务不可用；已保留当前版本。'
-  } finally {
-    updateChecking.value = false
-  }
 }
 
 // 更新通道（U-07）：偏好是唯一事实源，不再另起内存通道事务；保存后由偏好回读驱动状态。
@@ -341,39 +268,6 @@ async function applyOpencodexHome(mode: 'inside' | 'external') {
     externalHomeInput.value = ''
   } else app.showToast(app.dataRootError || 'OPENCODEX_HOME 保存失败。')
 }
-const upgradeGuideBody = `<p>升级前请确认已生成备份，然后在终端执行官方命令：</p><pre class="modal-code"><code>ocx update</code></pre><p>桌面管理器只提供展示型引导，不会执行 <code>ocx update</code>，不会接管 npm 包管理器，也不重写官方更新事务。</p>`
-
-function openUpgradeGuide() {
-  app.openModal({
-    title: '官方升级引导',
-    body: upgradeGuideBody,
-    confirmLabel: '复制命令',
-    onConfirm: () => {
-      void navigator.clipboard?.writeText('ocx update')
-      app.showToast('已复制官方升级命令。')
-    },
-  })
-}
-
-function openUpgradeAdvice() {
-  const backup = app.upgradeLastBackup
-  const dataRoot = app.dataRootConfig?.activeDataRoot ?? '—'
-  const backupLine = backup
-    ? `<p>最近一次升级备份：<code>${backup.backupId}</code></p><p>备份目录：<code>${backup.directory}</code></p><p>备份来源：<code>${backup.targetPath}</code></p>`
-    : '<p>本会话尚未生成升级备份。</p>'
-  const body = `<p>数据根：<code>${dataRoot}</code></p><p>常规备份目录模式：<code>${dataRoot}/backups/&lt;YYYY&gt;/&lt;MM&gt;/upgrade/</code></p>${backupLine}<p>如需恢复，请先退出升级操作，从对应备份目录复制 <code>preferences.json</code> 后重新进入官方升级；本界面只展示建议，不会执行恢复。</p>`
-  app.openModal({
-    title: '升级失败建议',
-    body,
-    confirmLabel: '复制备份目录',
-    onConfirm: () => {
-      if (!backup) return
-      void navigator.clipboard?.writeText(backup.directory)
-      app.showToast('已复制备份目录。')
-    },
-  })
-}
-
 // 同 EnvironmentGate：运行来源已解析时不再把「未发现 npm 全局安装」当成待处理的阻断项。
 const environment = computed(() =>
   buildEnvironmentPresentation(app.environment, app.environmentLoading, app.runtimeSource?.kind ?? null, app.aboutApp?.platform),
@@ -385,48 +279,11 @@ const officialVersion = computed(() => {
   const version = app.officialProject?.version ?? app.environment?.ocx.version
   return version ? `v${version}` : '未发现'
 })
-const officialInstallLabel = computed(() => {
-  const found = app.environment?.ocx.found
-  return found ? 'npm 全局 · @bitkyc08/opencodex' : '未发现 npm 全局安装'
-})
 const officialProjectState = computed(() => {
   if (app.officialProjectLoading && !app.officialProject) return '检查中'
   if (app.officialProjectError) return app.officialProject ? '上次结果' : '未发现'
   return app.officialProject?.truncated ? '已截断' : '外部项目'
 })
-// U-03：远端最新版本只读展示；查询失败如实标注，不显示假结果。
-const officialRemoteText = computed(() => {
-  if (app.officialRemoteLoading) return '查询中…'
-  if (app.officialRemoteError) return '远端查询不可用'
-  const version = app.officialRemote?.version
-  return version ? `v${version}` : '尚未查询'
-})
-const officialUpdateAvailable = computed(() => {
-  if (app.officialRemoteError) return null
-  return hasNewerVersion(app.officialProject?.version ?? null, app.officialRemote?.version ?? null)
-})
-const officialUpdateText = computed(() => {
-  if (app.officialRemoteError) return '远端不可用，无法比较版本。'
-  if (app.officialRemoteLoading) return '正在查询远端最新版本…'
-  if (officialUpdateAvailable.value === true) return '有可用更新；可在下方确认后由管理器代跑。'
-  if (officialUpdateAvailable.value === false) return '已是最新版本。'
-  return '尚未查询远端版本。'
-})
-async function runOfficialCheck() {
-  await app.loadOfficialProject()
-  await app.loadOfficialRemoteLatest()
-}
-function confirmOfficialUpdate() {
-  const version = app.officialRemote?.version ?? '当前最新'
-  app.openModal({
-    title: '应用官方更新',
-    body: `<p class="modal-lead">将联网把官方包 <code>@bitkyc08/opencodex@${version}</code> 安装到当前登记的托管前缀。</p><p>走受控 <code>install_runtime</code>：写 <code>.runtime-manifest.json</code>、不落全局 npm 前缀；如代理正在运行，完成后按提示重启生效。</p>`,
-    confirmLabel: '安装并应用',
-    onConfirm: () => {
-      void app.applyOfficialUpdate()
-    },
-  })
-}
 const appVersion = computed(() => app.aboutApp ? `v${app.aboutApp.version}` : 'v0.1.0')
 const installRows = computed(() => {
   const report = app.environment
@@ -937,7 +794,7 @@ const installPrefixError = computed(() => {
   return ''
 })
 const installLandingText = computed(() => {
-  const root = app.dataRootConfig?.activeDataRoot ?? ''
+  const root = app.dataRootConfig?.currentDataRoot ?? ''
   const value = installPrefix.value.trim()
   if (!root || !value) return ''
   return value.startsWith(root) ? '落点：数据根内' : '落点：数据根外'
@@ -1165,6 +1022,7 @@ function restoreGeneralDefaults() {
 </script>
 
 <template>
+  <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active">
     <AppTopbar />
     <div class="settings-tabs" role="tablist">
@@ -1241,9 +1099,12 @@ function restoreGeneralDefaults() {
         <div v-if="app.dataRootConfigError" class="empty">数据目录配置读取失败；请重新进入安装配置。</div>
         <div v-else-if="!app.dataRootConfig" class="empty">正在读取数据目录配置…</div>
         <table v-else class="data-root-table"><thead><tr><th>路径</th><th>用途</th><th>操作</th></tr></thead><tbody>
-          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.activeDataRoot)"><code>{{ app.dataRootConfig.activeDataRoot }}</code></button></td><td>数据目录{{ app.dataRootConfig.runtimeActive ? '' : ' · 需重启' }}</td><td><button class="btn ghost" @click="openPath(app.dataRootConfig.activeDataRoot, '数据目录')">打开</button></td></tr>
-          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.opencodexHome)"><code>{{ app.dataRootConfig.opencodexHome }}</code></button></td><td>OPENCODEX_HOME · {{ app.dataRootConfig.opencodexHomeMode === 'external' ? '外部路径' : '数据目录内' }}</td><td><button class="btn ghost" @click="openPath(app.dataRootConfig.opencodexHome, 'OPENCODEX_HOME')">打开</button></td></tr>
+          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentDataRoot)"><code>{{ app.dataRootConfig.currentDataRoot }}</code></button></td><td>数据目录 · 当前使用</td><td><button class="btn ghost" @click="openPath(app.dataRootConfig.currentDataRoot, '数据目录')">打开</button></td></tr>
+          <tr><td><button class="cli-copy-btn" @click="copyPath(app.dataRootConfig.currentOpencodexHome)"><code>{{ app.dataRootConfig.currentOpencodexHome }}</code></button></td><td>OPENCODEX_HOME · 当前使用</td><td><button class="btn ghost" @click="openPath(app.dataRootConfig.currentOpencodexHome, 'OPENCODEX_HOME')">打开</button></td></tr>
+          <tr v-if="app.dataRootConfig.activeDataRoot !== app.dataRootConfig.currentDataRoot"><td><code>{{ app.dataRootConfig.activeDataRoot }}</code></td><td>数据目录 · 重启后生效</td><td>已保存</td></tr>
+          <tr v-if="app.dataRootConfig.opencodexHome !== app.dataRootConfig.currentOpencodexHome"><td><code>{{ app.dataRootConfig.opencodexHome }}</code></td><td>OPENCODEX_HOME · 重启后生效</td><td>已保存</td></tr>
         </tbody></table>
+        <p v-if="app.dataRootConfig && !app.dataRootConfig.runtimeActive" class="env-bound">已保存新位置；当前服务仍使用上方当前路径，请重启管理器后回读确认。</p>
         <div class="field-grid">
           <div class="field"><label for="external-home-input">外部 OPENCODEX_HOME</label><input id="external-home-input" v-model="externalHomeInput" class="input" placeholder="/absolute/path/to/OpenCodexHome" type="text" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
@@ -1262,7 +1123,7 @@ function restoreGeneralDefaults() {
         <div class="controls">
           <button class="btn" :disabled="app.dataRootSaving" @click="saveDataRoot">{{ app.dataRootSaving ? '校验中…' : '校验并初始化' }}</button>
           <button class="btn ghost" :disabled="app.dataRootSwitching" @click="applyDataRootSwitch(false)">{{ app.dataRootSwitching ? '切换中…' : '仅切换引用' }}</button>
-          <button class="btn ghost" :disabled="app.dataRootSwitching" @click="applyDataRootSwitch(true)">{{ app.dataRootSwitching ? '迁移中…' : '迁移数据' }}</button>
+          <button class="btn ghost" disabled title="数据迁移尚未开放">迁移数据（暂未开放）</button>
           <span v-if="app.dataRootLastValidation === 'valid'" class="tag">结构有效</span>
           <span v-else-if="app.dataRootLastValidation === 'future_version'" class="tag">版本过新</span>
           <span v-else-if="app.dataRootLastValidation === 'corrupted'" class="tag">结构损坏</span>
@@ -1280,13 +1141,12 @@ function restoreGeneralDefaults() {
     <section v-else-if="section === 'backup'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>数据与备份</h2><p>备份边界基于安装配置里的数据目录。</p></div><button class="btn ghost" @click="routes.go('settings', { section: 'installation' })">打开安装配置</button></div>
         <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">升级前自动备份</div><div class="setting-desc">进入官方升级引导前先生成可定位备份。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.autoBackupUpgrade" @click="toggle('autoBackupUpgrade', '升级前自动备份')"></button></div></div>
+          <div class="setting-row"><div><div class="setting-title">升级前备份</div><div class="setting-desc">面板更新前必须备份，失败时阻断安装；管理器备份选项在更新详情中确认。</div></div><div class="controls"><span class="tag">面板必需</span></div></div>
           <div class="setting-row"><div><div class="setting-title">导入前自动备份</div><div class="setting-desc">导入校验通过后先备份当前配置，再进入最终确认。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.autoBackupImport" @click="toggle('autoBackupImport', '导入前自动备份')"></button></div></div>
           <div class="setting-row"><div><div class="setting-title">同步覆盖前自动备份</div><div class="setting-desc">任何覆盖动作都保留被覆盖侧的可恢复历史。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.autoBackupSync" @click="toggle('autoBackupSync', '同步覆盖前自动备份')"></button></div></div>
-          <div class="setting-row"><div><div class="setting-title">备份保留策略</div><div class="setting-desc">保留最近 10 份；超出的备份必须由用户显式清理。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'backupRetention' }"><button class="select-trigger" :aria-expanded="openSelect === 'backupRetention' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="备份保留策略" @click="toggleSelect('backupRetention')"><span class="select-value">{{ preferences.backupRetention === '5' ? '最近 5 份' : preferences.backupRetention === '20' ? '最近 20 份' : '最近 10 份' }}</span></button><UiSelectMenu :open="openSelect === 'backupRetention'" @close="openSelect = ''" role="listbox" aria-label="备份保留策略"><button v-for="option in [['5','最近 5 份'],['10','最近 10 份'],['20','最近 20 份']]" :key="option[0]" class="select-option" :class="{ selected: preferences.backupRetention === option[0] }" type="button" role="option" :aria-selected="preferences.backupRetention === option[0] ? 'true' : 'false'" @click="chooseOption('backupRetention', option[0] as PreferencesDto['backupRetention'], option[1])">{{ option[1] }}</button></UiSelectMenu></div></div></div>
           <div class="setting-row"><div><div class="setting-title">备份完整性校验</div><div class="setting-desc">生成备份后写入 SHA-256 校验摘要，恢复前先校验；算法在备份契约中固定。</div></div><div class="controls"><span class="setting-readonly">SHA-256</span></div></div>
         </div>
-        <BackupFiles @open="confirmBackupOpen" />
+        <BackupManagement />
       </article>
     </section>
 
@@ -1401,21 +1261,11 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
     </section>
 
     <section v-else-if="section === 'upgrade'" class="settings-panel active">
-      <article class="card"><div class="card-head"><div><h2>OpenCodex 版本</h2><p>官方 npm 包与官方面板；桌面管理器不接管更新事务，只做升级前备份与官方引导。</p></div></div>
+      <article class="card">
+        <div class="card-head"><h2>软件更新</h2><button class="btn primary" type="button" @click="openUpdates(null, true)">检查更新</button></div>
         <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">当前版本</div><div class="setting-desc">{{ officialVersion }} · {{ officialInstallLabel }}</div></div><div class="controls"><button class="btn ghost" :disabled="app.officialProjectLoading || app.officialRemoteLoading" @click="runOfficialCheck()">{{ app.officialProjectLoading || app.officialRemoteLoading ? '检查中' : '检查更新' }}</button></div></div>
-          <div class="setting-row" data-testid="official-remote-latest"><div><div class="setting-title">远端最新版本</div><div class="setting-desc">{{ officialRemoteText }} · {{ officialUpdateText }}</div></div><div class="controls"><span class="tag" :class="{ danger: app.officialRemoteError, ok: officialUpdateAvailable === false }">{{ app.officialRemoteError ? '不可用' : officialUpdateAvailable === true ? '有更新' : officialUpdateAvailable === false ? '已最新' : '未比较' }}</span><button class="btn" :disabled="app.officialUpdateBusy || officialUpdateAvailable !== true || app.runtimeInstalling" @click="confirmOfficialUpdate()">{{ app.officialUpdateBusy ? '更新中' : '应用官方更新' }}</button></div></div>
-          <div v-if="app.officialUpdateError" class="setting-row"><div><div class="setting-title">更新失败</div><div class="setting-desc">{{ app.officialUpdateError }}</div></div><div class="controls"><span class="tag danger">失败</span></div></div>
-          <div class="setting-row"><div><div class="setting-title">升级前备份</div><div class="setting-desc">{{ app.upgradeLastBackup ? `最近备份 ${app.upgradeLastBackup.backupId}` : '先备份当前配置，再进入官方升级引导。' }}</div></div><div class="controls"><button class="btn" :disabled="app.upgradeBackupBusy" @click="app.createUpgradeBackup()">{{ app.upgradeBackupBusy ? '备份中' : '生成备份' }}</button></div></div>
-          <div class="setting-row"><div><div class="setting-title">官方升级引导</div><div class="setting-desc">只展示并引导 <code>ocx update</code>；不重写更新事务。</div></div><div class="controls"><button class="btn ghost" @click="openUpgradeGuide">打开引导</button></div></div>
-          <div class="setting-row"><div><div class="setting-title">失败后建议</div><div class="setting-desc">展示备份位置、错误摘要和建议恢复动作。</div></div><div class="controls"><button class="btn ghost" @click="openUpgradeAdvice">查看建议</button></div></div>
-        </div>
-      </article>
-      <article class="card"><div class="card-head"><div><h2>桌面管理器版本</h2><p>OpenCodeX-Desktop 自身的应用更新；签名校验通过后才会安装，失败保留当前版本。</p></div></div>
-        <div class="setting-list">
-        <div class="setting-row"><div><div class="setting-title">当前版本</div><div class="setting-desc">v{{ updateStatus?.currentVersion ?? '0.1.0' }} · {{ updateStatus?.channel === 'beta' ? '测试' : '稳定' }}通道</div></div><div class="controls"><button class="btn ghost" :disabled="updateChecking" @click="runUpdateCheck">{{ updateChecking ? '检查中' : '检查应用更新' }}</button></div></div>
-          <div class="setting-row"><div><div class="setting-title">更新结果</div><div class="setting-desc">{{ updateResultText }}</div></div><div class="controls"><span class="tag" :class="{ danger: updateStatus?.error }">{{ updateStatus?.error ? '失败' : updateStatus?.availableVersion ? '有更新' : '已检查' }}</span><button class="btn" :disabled="updateInstallDisabled" @click="installUpdate">{{ app.appUpdateBusy ? '安装中' : '安装更新' }}</button></div></div>
-          <div class="setting-row"><div><div class="setting-title">安装完成后</div><div class="setting-desc">{{ app.appUpdateError || '签名校验通过后由桌面壳接管重启；不会停止托管代理。' }}</div></div><div class="controls"><button class="btn ghost" :disabled="updateInstallDisabled" @click="installUpdate">重新安装</button></div></div>
+          <div class="setting-row"><div><div class="setting-title">桌面管理器</div><div class="setting-desc">查看通道版本、更新说明与实时进度；准备就绪后选择重启时机。</div></div><div class="controls"><button class="btn ghost" type="button" @click="openUpdates('manager')">查看管理器更新</button></div></div>
+          <div class="setting-row"><div><div class="setting-title">OpenCodex 面板</div><div class="setting-desc">当前 {{ officialVersion }}；升级前必须备份配置。</div></div><div class="controls"><button class="btn ghost" type="button" @click="openUpdates('official')">查看面板更新</button></div></div>
 <div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><UiSelectMenu :open="openSelect === 'appUpdateChannel'" @close="openSelect = ''" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></UiSelectMenu></div></div></div><div class="setting-row" data-testid="setting-network-shortcut"><div><div class="setting-title">网络连接</div><div class="setting-desc">检查更新失败多为网络问题；可在此跳转配置代理。</div></div><div class="controls"><button class="btn ghost" @click="goToNetwork">配置网络</button></div></div>
 <div class="setting-row"><div><div class="setting-title">自动检查更新</div><div class="setting-desc">开启后按通道后台检查；关闭后不影响手动检查。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.appUpdateAutoCheck" @click="toggleUpdateAutoCheck()"></button></div></div>
         </div>

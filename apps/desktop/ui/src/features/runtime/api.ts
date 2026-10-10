@@ -172,8 +172,27 @@ export async function installRuntime(request: RuntimeInstallRequest): Promise<Ru
 }
 
 /** 代跑官方更新（U-04）：后端先解析远端确定版本，再复用受控安装；前端需先显式确认。 */
-export async function installOfficialUpdate(): Promise<RuntimeInstallOutcomeDto> {
-  return invoke<RuntimeInstallOutcomeDto>('install_official_update')
+export async function installOfficialUpdate(
+  candidateVersion: string,
+  observe?: (progress: RuntimeInstallProgress) => void,
+): Promise<RuntimeInstallOutcomeDto> {
+  const { Channel } = await import('@tauri-apps/api/core')
+  const onProgress = new Channel<{ operationId: string; candidateVersion: string; sequence: number; phase: InstallPhase; line: string | null }>()
+  let active = true
+  let operationId = ''
+  let sequence = 0
+  const phases: InstallPhase[] = ['preparing', 'downloading', 'installing', 'validating', 'extracting', 'verifying', 'activating', 'done', 'failed']
+  onProgress.onmessage = progress => {
+    if (!active || progress.candidateVersion !== candidateVersion || !progress.operationId
+      || !Number.isSafeInteger(progress.sequence) || progress.sequence <= sequence
+      || !phases.includes(progress.phase) || (operationId && operationId !== progress.operationId)) return
+    operationId = progress.operationId
+    sequence = progress.sequence
+    observe?.({ phase: progress.phase, percent: 0, line: progress.line })
+  }
+  try {
+    return await invoke<RuntimeInstallOutcomeDto>('install_official_update', { candidateVersion, onProgress })
+  } finally { active = false }
 }
 
 export async function cancelRuntimeInstall(): Promise<boolean> {

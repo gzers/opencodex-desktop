@@ -14,6 +14,22 @@ function fixture() {
   return { scheduler, state, plan, check, onError }
 }
 describe('application update scheduler', () => {
+  it('keeps the active query trigger and coalesces a later online wake', async () => {
+    const f = fixture(); let done!: () => void
+    f.plan.mockResolvedValueOnce({ targets: ['manager_stable'], nextDelayMs: 0 })
+    f.check.mockImplementationOnce(() => new Promise<void>(resolve => { done = resolve }))
+    f.scheduler.start(); f.scheduler.wake('foreground')
+    await vi.advanceTimersByTimeAsync(45_000)
+    expect(f.check.mock.calls).toEqual([['manager_stable', 'foreground']])
+    for (let i = 0; i < 100; i++) f.scheduler.wake('online')
+    expect(vi.getTimerCount()).toBe(0)
+    // First plan commits the old request; only the coalesced wake checks panel.
+    f.plan.mockResolvedValueOnce({ targets: [], nextDelayMs: 86_400_000 })
+      .mockResolvedValueOnce({ targets: ['panel'], nextDelayMs: 0 })
+    done(); await vi.advanceTimersByTimeAsync(100)
+    expect(f.check.mock.calls).toEqual([['manager_stable', 'foreground'], ['panel', 'online']])
+    expect(vi.getTimerCount()).toBe(1); f.scheduler.stop()
+  })
   it('coalesces startup triggers into one 45s wake and does not query valid cache', async () => {
     const f = fixture(); f.scheduler.start(); f.scheduler.start()
     for (let i = 0; i < 100; i++) f.scheduler.wake()
@@ -32,7 +48,7 @@ describe('application update scheduler', () => {
     expect(vi.getTimerCount()).toBe(0)
     f.plan.mockResolvedValueOnce({ targets: ['panel'], nextDelayMs: 0 })
     f.scheduler.wake(); await vi.advanceTimersByTimeAsync(100)
-    expect(f.check).toHaveBeenCalledWith('panel')
+    expect(f.check).toHaveBeenCalledWith('panel', 'deadline')
     expect(vi.getTimerCount()).toBe(0)
   })
   it('sleep resumes once without catchup; installations defer queries', async () => {
@@ -45,7 +61,7 @@ describe('application update scheduler', () => {
     f.state.busy = false; f.scheduler.wake()
     f.plan.mockResolvedValueOnce({ targets: ['manager_stable', 'panel'], nextDelayMs: 0 })
     await vi.advanceTimersByTimeAsync(100)
-    expect(f.check.mock.calls).toEqual([['manager_stable'], ['panel']])
+    expect(f.check.mock.calls).toEqual([['manager_stable', 'deadline'], ['panel', 'deadline']])
     expect(vi.getTimerCount()).toBe(1); f.scheduler.stop()
   })
   it('serializes objects and coalesces triggers arriving during a request', async () => {
@@ -54,10 +70,10 @@ describe('application update scheduler', () => {
     f.plan.mockResolvedValueOnce({ targets: ['manager_stable', 'panel'], nextDelayMs: 0 })
     f.scheduler.start(); await vi.advanceTimersByTimeAsync(45_000)
     for (let i = 0; i < 100; i++) f.scheduler.wake()
-    expect(f.check.mock.calls).toEqual([['manager_stable']])
+    expect(f.check.mock.calls).toEqual([['manager_stable', 'deadline']])
     expect(vi.getTimerCount()).toBe(0)
     done(); await vi.advanceTimersByTimeAsync(100)
-    expect(f.check.mock.calls).toEqual([['manager_stable'], ['panel']])
+    expect(f.check.mock.calls).toEqual([['manager_stable', 'deadline'], ['panel', 'deadline']])
     expect(vi.getTimerCount()).toBe(1); f.scheduler.stop()
   })
   it('stopping during a pending plan prevents queries and rearming', async () => {

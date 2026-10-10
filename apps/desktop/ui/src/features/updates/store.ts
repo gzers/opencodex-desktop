@@ -1,3 +1,4 @@
+import type { UpdateCheckTrigger } from './scheduler'
 // 更新/升级/恢复功能切片的状态与动作（IMP-04 §19.4 E：从总 store 拆出，切片十）。
 // 只负责 IPC 与自身状态；Toast、来源重读（loadRuntimeSource）等跨域编排仍由根壳负责。
 import { defineStore } from 'pinia'
@@ -50,11 +51,11 @@ export const useUpdatesStore = defineStore('updates', {
       }
     },
     /** 只读远端最新版本查询（U-03）：不安装、不写盘，失败不覆盖已有的本地/上次结果。 */
-    async loadRemoteLatest() {
+    async loadRemoteLatest(trigger: UpdateCheckTrigger = 'user') {
       if (this.officialRemoteLoading) return
       this.officialRemoteLoading = true
       try {
-        this.officialRemote = await getOfficialRemoteLatest()
+        this.officialRemote = await getOfficialRemoteLatest(trigger)
         this.officialRemoteError = false
       } catch {
         this.officialRemoteError = true
@@ -120,14 +121,14 @@ export const useUpdatesStore = defineStore('updates', {
         this.restoreBusy = false
       }
     },
-    async installAppUpdate() {
+    async installAppUpdate(options?: import('./update').InstallUpdateOptions) {
       if (this.appUpdateBusy) return false
       this.appUpdateBusy = true
       this.appUpdateError = ''
       try {
         // 动态导入：让更新器按需加载，不进主包（与既有做法一致）。
         const { installUpdate } = await import('@/features/updates/update')
-        await installUpdate()
+        await installUpdate(options)
         return true
       } catch {
         this.appUpdateError = '更新安装失败；已保留当前版本。'
