@@ -434,7 +434,8 @@ where
             return Err(WebDavError::Protocol);
         }
         let pointer = format!("{}\n", snapshot_id);
-        self.transport
+        let pointer_response = self
+            .transport
             .request(
                 config,
                 WebDavMethod::Put,
@@ -442,6 +443,9 @@ where
                 Some(pointer.into_bytes()),
             )
             .await?;
+        if pointer_response.status != 201 && pointer_response.status != 204 {
+            return Err(WebDavError::Protocol);
+        }
         Ok(response.etag)
     }
 }
@@ -485,6 +489,7 @@ mod tests {
     struct FixtureTransport {
         requests: Arc<Mutex<Vec<(WebDavMethod, String, usize)>>>,
         unauthorized: bool,
+        pointer_result: Option<Result<u16, WebDavError>>,
     }
 
     #[async_trait]
@@ -504,8 +509,15 @@ mod tests {
             if self.unauthorized {
                 return Err(WebDavError::Unauthorized);
             }
+            let pointer_status = if path == LATEST_FILE_NAME {
+                self.pointer_result.transpose()?
+            } else {
+                None
+            };
             Ok(WebDavResponse {
-                status: if method == WebDavMethod::Put {
+                status: if let Some(status) = pointer_status {
+                    status
+                } else if method == WebDavMethod::Put {
                     201
                 } else {
                     200
@@ -569,6 +581,46 @@ mod tests {
         assert!(!requests[0].1.contains('/'));
         assert_eq!(requests[1].1, "snap_20260917000000_aaaaaaaaaaaa.ocxd");
         assert_eq!(requests[2].1, "latest.txt");
+    }
+
+    #[tokio::test]
+    async fn upload_requires_completed_pointer_write_and_preserves_transport_failure() {
+        for result in [
+            Ok(201),
+            Ok(204),
+            Ok(200),
+            Ok(202),
+            Ok(403),
+            Err(WebDavError::Network),
+        ] {
+            let transport = FixtureTransport {
+                pointer_result: Some(result),
+                ..Default::default()
+            };
+            let requests = transport.requests.clone();
+            let client = WebDavClient::new(transport);
+            let actual = client
+                .upload(
+                    &config(),
+                    "snap_20260917000000_aaaaaaaaaaaa",
+                    &[(
+                        "a".into(),
+                        crate::infrastructure::hash::sha256_hex(b"one"),
+                        b"one".to_vec(),
+                    )],
+                    b"manifest",
+                )
+                .await;
+            let expected = match result {
+                Ok(201 | 204) => Ok(Some("\"etag-1\"".to_string())),
+                Ok(_) => Err(WebDavError::Protocol),
+                Err(e) => Err(e),
+            };
+            assert_eq!(actual, expected, "pointer result: {result:?}");
+            let requests = requests.lock().unwrap();
+            assert_eq!(requests.len(), 3);
+            assert_eq!(requests[2].1, LATEST_FILE_NAME);
+        }
     }
 
     /// 回归：载荷文件名必须来自清单里的明文 `sha256`，而不是传输封装字节的摘要。
