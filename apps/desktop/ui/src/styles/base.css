@@ -968,8 +968,9 @@ html[data-overview-size="compact"][data-route="overview"] .main {
 }
 html[data-route="overview"] .topbar { margin-bottom: 0; }
 .route-section.ov { gap: 0; }
-.route-section.ov > * + * { margin-top: 14px; }
-html[data-overview-size="compact"] .route-section.ov > * + * { margin-top: 10px; }
+/* Teleport 光层也是路由的直接子节点，但不是正文区块，不能继承区块间距。 */
+.route-section.ov > :not(.motion-backdrop) + :not(.motion-backdrop) { margin-top: 14px; }
+html[data-overview-size="compact"] .route-section.ov > :not(.motion-backdrop) + :not(.motion-backdrop) { margin-top: 10px; }
 .motion-fixed {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

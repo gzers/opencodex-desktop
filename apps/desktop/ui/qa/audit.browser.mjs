@@ -637,6 +637,17 @@ async function auditOverviewMotion(browser, want) {
           }
           // 背景光二选一：WEBGL 网格着色器层 / 纯 CSS 极光；几何断言针对**当前生效的那一层**。
           const renderMode = document.documentElement.getAttribute('data-glow-render') === 'mesh' ? 'mesh' : 'css'
+          // Absolute children cover the main padding box, inside its native border.
+          // Include all content padding, excluding only the border itself.
+          const main = document.querySelector('.main')
+          const mainRect = main?.getBoundingClientRect()
+          const mainStyle = main ? getComputedStyle(main) : null
+          const scale = main && mainRect ? mainRect.width / main.offsetWidth : 1
+          const mainEdges = mainRect && mainStyle ? {
+            left: mainRect.left + parseFloat(mainStyle.borderLeftWidth) * scale,
+            right: mainRect.right - parseFloat(mainStyle.borderRightWidth) * scale,
+            top: mainRect.top + parseFloat(mainStyle.borderTopWidth) * scale,
+          } : null
           return {
             mode: document.querySelector('.ov')?.getAttribute('data-mode') ?? '',
             fixedH: px('.motion-fixed'),
@@ -644,8 +655,8 @@ async function auditOverviewMotion(browser, want) {
             markH: px('.motion-mark'),
             heroW: w('.motion-hero svg'),
             fixedW: w('.motion-fixed'),
-            mainW: w('.main'),
-            mainEdges: document.querySelector('.main')?.getBoundingClientRect().toJSON(),
+            mainW: mainEdges ? Math.round(mainEdges.right - mainEdges.left) : -1,
+            mainEdges,
             backdropEdges: document.querySelector('.motion-backdrop')?.getBoundingClientRect().toJSON(),
             renderMode,
             glowW: renderMode === 'mesh' ? w('.motion-mesh-host') : w('.motion-ambient'),
@@ -670,7 +681,7 @@ async function auditOverviewMotion(browser, want) {
         check(`${name} 光场绘制层 ${vp.mark}px`, geom.markH === vp.mark, `markH=${geom.markH}`)
         check(`${name} Logo 展示 ${vp.hero}px`, geom.heroW === vp.hero, `heroW=${geom.heroW}`)
         // 光场范围回归（IMP-10）：容器必须铺满正文列，且柔化做在容器一层上。
-        check(`${name} 光场铺满主内容全边界`, geom.glowW === geom.mainW && geom.backdropEdges?.left === geom.mainEdges?.left && geom.backdropEdges?.right === geom.mainEdges?.right && geom.backdropEdges?.top === geom.mainEdges?.top, `glowW=${geom.glowW} fixedW=${geom.fixedW}`)
+        check(`${name} 光场铺满主内容全边界`, geom.glowW === geom.mainW && geom.backdropEdges?.left === geom.mainEdges?.left && geom.backdropEdges?.right === geom.mainEdges?.right && geom.backdropEdges?.top === geom.mainEdges?.top, `glowW=${geom.glowW} mainW=${geom.mainW} edges=${JSON.stringify({ main: geom.mainEdges, glow: geom.backdropEdges })}`)
         // IMP-11：光场不靠 blur 柔化（低频渐变本身够平滑，模糊只吃帧预算且成像差 ≤0.5/255）。
         check(`${name} 光场不做逐层模糊（保帧预算）`, !/blur\(/.test(geom.glowBlur) && geom.glowLayerBlur === 0, `ambient=${geom.glowBlur} layers=${geom.glowLayerBlur}`)
         // 纵向渐隐：CSS 极光用 mask-template；WEBGL 网格着色器在片元里做长缓坡渐隐。
