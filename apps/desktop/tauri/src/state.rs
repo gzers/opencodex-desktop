@@ -58,6 +58,8 @@ pub type SharedProcessContext = ProcessContext;
 /// 数据根由启动接线初始化后共享给命令层；路径不进入前端 DTO。
 #[derive(Debug, Clone)]
 pub struct SharedDataRoot(pub std::path::PathBuf);
+/// Stable bootstrap location; active stores always use SharedDataRoot.
+pub struct SharedDataRootAnchor(pub std::path::PathBuf);
 
 /// WebDAV 同步的共享运行状态；命令层与后续事件推送消费同一份状态。
 pub type SharedSyncStatus = std::sync::Mutex<crate::modules::sync::SyncRun>;

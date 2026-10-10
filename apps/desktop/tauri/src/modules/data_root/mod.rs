@@ -3,6 +3,8 @@
 //! 模块只作用于显式传入的数据根目录；测试使用临时路径。
 //! 不扫描用户目录、不迁移数据、不启动代理、不访问 Keychain。
 
+pub mod bootstrap;
+
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -112,8 +114,18 @@ pub fn initialize(root: &Path) -> Result<bool, AppError> {
         return Ok(false);
     }
 
+    let existing: Vec<_> = PARTITIONS.iter().filter_map(|(_, name)| {
+        let path = root.join(name); path.exists().then_some(path)
+    }).collect();
     create_partitions(root)?;
-    write_metadata_and_lock(&paths)?;
+    if let Err(error) = write_metadata_and_lock(&paths) {
+        // Only remove empty partitions created by this initialization.
+        for (_, name) in PARTITIONS {
+            let path = root.join(name);
+            if !existing.contains(&path) { let _ = std::fs::remove_dir(path); }
+        }
+        return Err(error);
+    }
 
     Ok(true)
 }
@@ -167,15 +179,28 @@ pub fn load_runtime_config(data_root: &Path) -> Result<DataRootRuntimeConfig, Ap
         return Err(AppError::NotConfigured);
     }
     let path = runtime_config_path(data_root);
-    let bytes = std::fs::read(&path).map_err(|error| AppError::FileSystem {
+    use std::io::Read;
+    let mut bytes = Vec::new();
+    let file = std::fs::File::open(&path).map_err(|error| AppError::FileSystem {
+        operation: "read data root runtime config".into(),
+        detail: error.to_string(),
+    })?;
+    file.take(65537).read_to_end(&mut bytes).map_err(|error| AppError::FileSystem {
         operation: "read data root runtime config".to_string(),
         detail: error.to_string(),
     })?;
+    if bytes.len() > 65536 { return Err(AppError::NotConfigured); }
     let payload: serde_json::Value =
         serde_json::from_slice(&bytes).map_err(|_| AppError::FileSystem {
             operation: "parse data root runtime config".to_string(),
             detail: "invalid runtime config".to_string(),
         })?;
+    if payload.get("structure_version") != Some(&serde_json::json!(STRUCTURE_VERSION)) {
+        return Err(AppError::FileSystem {
+            operation: "validate structure version".into(),
+            detail: "runtime binding has unsupported or missing structure version".into(),
+        });
+    }
     if payload.get("structure_version")
         == Some(&serde_json::Value::String(STRUCTURE_VERSION.to_string()))
         && payload.get("active_data_root").is_none()
@@ -324,11 +349,8 @@ pub fn switch_reference(
             detail: "target data root is not current version 1".to_string(),
         });
     }
-    let config = DataRootRuntimeConfig {
-        active_data_root: target.to_path_buf(),
-        opencodex_home_mode: OpenCodexHomeMode::Inside,
-        opencodex_home_path: None,
-    };
+    let mut config = load_runtime_config(current)?;
+    config.active_data_root = target.to_path_buf();
     save_runtime_config(current, &config)?;
     Ok(config)
 }
@@ -344,14 +366,13 @@ pub fn set_opencodex_home(
         OpenCodexHomeMode::External => Some(external_path.ok_or_else(|| AppError::NotConfigured)?),
     };
     if let Some(path) = resolved_path {
-        if is_nested(current, path) || *path == current.join("opencodex-home") {
+        if is_nested(current, path) || is_nested(&config.active_data_root, path) {
             return Err(AppError::FileSystem {
                 operation: "set OPENCODEX_HOME".to_string(),
                 detail: "OPENCODEX_HOME cannot be nested in the manager data root".to_string(),
             });
         }
     }
-    config.active_data_root = current.to_path_buf();
     config.opencodex_home_mode = mode;
     config.opencodex_home_path = resolved_path.map(Path::to_path_buf);
     save_runtime_config(current, &config)?;
@@ -454,14 +475,12 @@ fn write_metadata_and_lock(paths: &DataRootPaths) -> Result<(), AppError> {
     if let Err(error) =
         crate::infrastructure::atomic_write::atomic_write(&paths.metadata, &payload, 0o600)
     {
-        rollback_partitions(&paths.root);
         return Err(error);
     }
     if let Err(error) =
         crate::infrastructure::atomic_write::atomic_write(&paths.structure_lock, b"locked", 0o600)
     {
         let _ = std::fs::remove_file(&paths.metadata);
-        rollback_partitions(&paths.root);
         return Err(error);
     }
     Ok(())
@@ -487,13 +506,6 @@ fn read_and_validate_metadata(path: &Path) -> Result<StructureValidation, AppErr
 fn rollback_created(created: Vec<PathBuf>) {
     for path in created {
         let _ = std::fs::remove_dir(path);
-    }
-}
-
-fn rollback_partitions(root: &Path) {
-    for (_, name) in PARTITIONS {
-        let path = root.join(name);
-        let _ = std::fs::remove_dir_all(path);
     }
 }
 
@@ -532,6 +544,18 @@ mod tests {
             std::fs::read_to_string(root.join("manager-state").join("keep.txt")).expect("keep"),
             "keep"
         );
+    }
+
+    #[test]
+    fn metadata_write_failure_keeps_preexisting_partition_data() {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().join("root");
+        std::fs::create_dir_all(root.join("logs")).unwrap();
+        std::fs::write(root.join("logs/keep"), b"keep").unwrap();
+        std::fs::create_dir_all(root.join(STRUCTURE_LOCK_RELATIVE_PATH)).unwrap();
+        assert!(initialize(&root).is_err());
+        assert_eq!(std::fs::read(root.join("logs/keep")).unwrap(), b"keep");
+        assert!(!root.join("backups").exists());
     }
 
     /// 已有的合法数据根重复初始化必须幂等，且不返回「新建」。

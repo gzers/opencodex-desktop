@@ -9,7 +9,7 @@ use crate::modules::data_root::{
 use serde::Serialize;
 
 use crate::errors::AppError;
-use crate::state::SharedDataRoot;
+use crate::state::{SharedDataRoot, SharedDataRootAnchor};
 
 #[derive(Debug, Clone, PartialEq, Eq, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -88,36 +88,32 @@ pub async fn validate_data_root_structure(root_path: String) -> AppResult<Struct
 #[tauri::command]
 pub fn get_data_root_config(
     data_root: tauri::State<'_, SharedDataRoot>,
+    anchor: tauri::State<'_, SharedDataRootAnchor>,
 ) -> AppResult<DataRootConfigDto> {
-    data_root_config_with_paths(&data_root.0, &data_root.0)
+    data_root_config_with_paths(&anchor.0, &data_root.0)
 }
 
 #[tauri::command]
 pub async fn switch_data_root(
     request: DataRootSwitchRequest,
-    data_root: tauri::State<'_, SharedDataRoot>,
-    context: tauri::State<'_, crate::state::SharedProcessContext>,
-    collector: tauri::State<'_, crate::state::SharedStatusCollector>,
+    anchor: tauri::State<'_, SharedDataRootAnchor>,
 ) -> AppResult<DataRootSwitchResult> {
-    let root = data_root.0.clone();
+    let root = anchor.0.clone();
     let target = std::path::PathBuf::from(&request.target_path);
     let mode = request.mode;
     let result = crate::commands::run_blocking("switch data root", move || {
         switch_data_root_with_paths(&root, &target, mode)
     })
     .await?;
-    if result.status == DataRootSwitchStatus::RestartRequired {
-        reload_process_environment(&data_root.0, &mut context.inner().clone(), &collector)?;
-    }
     Ok(result)
 }
 
 #[tauri::command]
 pub async fn set_opencodex_home_config(
     request: OpenCodexHomeRequest,
-    data_root: tauri::State<'_, SharedDataRoot>,
+    anchor: tauri::State<'_, SharedDataRootAnchor>,
 ) -> AppResult<DataRootSwitchResult> {
-    let root = data_root.0.clone();
+    let root = anchor.0.clone();
     let external_path = request.external_path.map(std::path::PathBuf::from);
     let mode = request.mode;
     crate::commands::run_blocking("set opencodex home", move || {

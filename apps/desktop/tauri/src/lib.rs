@@ -100,7 +100,14 @@ pub fn run() {
             })?;
             // 测试沙箱身份（配置规划§10）：启用时强制使用独立沙箱根；根缺失/非法即停止，
             // 绝不回退到日常目录。未启用时行为与此前一致。
-            let data_root = crate::modules::test_sandbox::resolve_data_root(&default_root)
+            let bootstrap_root = if crate::modules::test_sandbox::enabled() {
+                default_root.clone()
+            } else {
+                crate::modules::data_root::bootstrap::default_anchor(
+                    &default_root, &std::env::current_exe()?, cfg!(windows),
+                )?
+            };
+            let anchor = crate::modules::test_sandbox::resolve_data_root(&bootstrap_root)
                 .map_err(|detail| {
                     Box::new(crate::errors::AppError::FileSystem {
                         operation: "resolve sandbox data root".to_string(),
@@ -108,8 +115,11 @@ pub fn run() {
                     }) as Box<dyn std::error::Error>
                 })?;
             // FZ-02 首次启动先初始化或引用当前版本的数据根；失败阻断启动。
-            crate::modules::data_root::initialize(&data_root)
-                .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
+            let runtime_config = crate::modules::data_root::bootstrap::resolve_with_boundary(
+                &anchor, crate::modules::test_sandbox::enabled().then_some(anchor.as_path()),
+            )?;
+            let data_root = runtime_config.active_data_root.clone();
+            app.manage(crate::state::SharedDataRootAnchor(anchor));
             // 配置格式自动转换（§5）：启动时按需迁移旧 schema 偏好并完成未提交事务；
             // 已是当前 schema 不写盘，损坏/过新不覆盖原件。失败只记日志，不阻断启动。
             if let Err(error) = crate::modules::config_migration::migrate_preferences_on_startup(&data_root)
@@ -190,7 +200,6 @@ pub fn run() {
             app.manage(runtime.clone());
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             app.manage(crate::state::SharedRuntimeInstall::new());
-            let runtime_config = crate::modules::data_root::load_runtime_config(&data_root)?;
             let active_data_root = runtime_config.active_data_root.clone();
             let opencodex_home = crate::modules::data_root::resolve_opencodex_home(&runtime_config);
             let process_path = crate::infrastructure::discovery_paths::process_path(&home, &discovery_paths);
@@ -210,10 +219,7 @@ pub fn run() {
             ));
             app.manage(collector.clone());
 
-            let cache_root = app
-                .path()
-                .app_cache_dir()
-                .map_err(|error| Box::new(error) as Box<dyn std::error::Error>)?;
+            let cache_root = data_root.join("cache");
             let cli_enabled = cfg!(unix) && crate::modules::preferences::PreferencesStore::new(&data_root)
                 .load()
                 .map(|value| value.cli_enabled)
