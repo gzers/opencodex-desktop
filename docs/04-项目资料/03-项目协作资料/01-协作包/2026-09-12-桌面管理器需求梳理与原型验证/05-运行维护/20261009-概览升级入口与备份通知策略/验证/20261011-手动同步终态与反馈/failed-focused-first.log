@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+error[E0425]: cannot find value `LATEST_POINTER` in this scope
+   --> src/infrastructure/webdav_client.rs:512:45
+    |
+512 |             let pointer_status = if path == LATEST_POINTER {
+    |                                             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find value `LATEST_POINTER` in this scope
+   --> src/infrastructure/webdav_client.rs:622:39
+    |
+622 |             assert_eq!(requests[2].1, LATEST_POINTER);
+    |                                       ^^^^^^^^^^^^^^ not found in this scope
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

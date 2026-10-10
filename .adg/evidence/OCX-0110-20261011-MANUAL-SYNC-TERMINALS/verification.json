@@ -1,0 +1,111 @@
+{
+  "source_sha": "82c3479b0defb3a12d38a0c430102653e481415c",
+  "related_commits": [
+    "b2307736",
+    "82c3479b"
+  ],
+  "code_branch": "feature/0.1.10-maintenance",
+  "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop",
+  "rust_full": {
+    "groups": 33,
+    "passed": 805,
+    "failed": 0,
+    "ignored": 4
+  },
+  "focused": {
+    "sync_passed": 60,
+    "sync_ignored": 1,
+    "webdav": 10,
+    "event_registry": 31,
+    "ui_files": 2,
+    "ui_passed": 11
+  },
+  "ui_full": {
+    "files": 94,
+    "passed": 459
+  },
+  "commands": [
+    {
+      "log": "focused-final.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib sync -- --nocapture",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "webdav.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --lib webdav_client",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "registry.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml --test event_registry",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "rust-full.log",
+      "command": "cargo test --offline --manifest-path apps/desktop/tauri/Cargo.toml",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "ui.log",
+      "command": "npm test -- --run tests/sync.test.ts tests/sync-conflict-default.test.ts",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui"
+    },
+    {
+      "log": "ui-full.log",
+      "command": "npm test -- --run",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui"
+    },
+    {
+      "log": "ui-build.log",
+      "command": "npm run build",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui"
+    },
+    {
+      "log": "fmt.log",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "clippy.log",
+      "command": "cargo clippy --offline --manifest-path apps/desktop/tauri/Cargo.toml --all-targets -- -D warnings",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    },
+    {
+      "log": "diff.log",
+      "command": "git diff --check",
+      "exit_code": 0,
+      "workdir": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop"
+    }
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 36,
+    "events": 74,
+    "active_events": 72,
+    "planned_events": 2,
+    "policies": 24,
+    "emissions": 80,
+    "scheduling": 8,
+    "feedback": 8,
+    "paths": 12,
+    "cleanup": 4
+  },
+  "native_rerun": false,
+  "task_state": "in_progress",
+  "limits": [
+    "no atomic rollback or durable remote readback guarantee",
+    "cold-sync/lock/pre-capture refusal does not publish terminal recovery; empty-capture branch not tested",
+    "legacy conflict alert is not resolved by sync-run success",
+    "CLI/IPC ownership and full-domain event coverage pending",
+    "native update/restart, Windows/installers and paired performance/real cycles pending"
+  ]
+}

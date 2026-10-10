@@ -1,0 +1,73 @@
+   Compiling opencodex-desktop v0.1.9 (/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 5.78s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 61 tests
+test commands::sync::tests::sync_conflict_and_failed_readback_never_project_success ... ok
+test commands::panel::tests::theme_setting_syncs_through_the_official_storage_key ... ok
+test commands::sync::tests::state_names_are_frozen_snake_case ... ok
+test commands::sync::tests::config_dto_is_camel_case_and_masks_password ... ok
+test commands::sync::tests::sync_execution_recovers_only_exact_endpoint_and_credentials ... ok
+test modules::ipc::service::tests::sync_run_without_endpoint_reports_failure_instead_of_fake_success ... ok
+thread 'tokio-rt-worker' (111899767) panicked at src/commands/sync.rs:1272:17:
+injected worker panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+test commands::sync::probe_tests::invalid_probe_has_no_request_or_terminal ... ok
+test commands::sync::probe_tests::changed_endpoint_or_credential_and_failed_readback_do_not_publish ... ok
+test commands::sync::owned_sync_tests::busy_and_frozen_operations_do_not_run_or_queue ... ok
+test commands::sync::probe_tests::cancelled_ipc_observer_does_not_release_probe_or_storage_ownership ... ok
+test modules::extensions::tests::source_store_and_sync_method_participate_in_fingerprint ... ok
+test commands::sync::owned_sync_tests::worker_error_and_panic_release_both_admissions ... ok
+test commands::sync::probe_tests::bounded_probe_timeout_is_an_actual_failure ... ok
+test modules::sync::config::tests::config_accepts_legacy_encryption_field_and_rejects_tls_override ... ok
+test modules::sync::config::tests::input_requires_https_and_passwords ... ok
+test commands::sync::owned_sync_tests::cancelled_observer_keeps_owner_through_committed_write_and_terminal_projection ... ok
+test modules::sync::config::tests::legacy_encryption_field_is_read_and_not_written ... ok
+test modules::sync::config::endpoint_mutation_tests::preflight_refusals_do_not_write_or_observe_terminals ... ok
+test modules::sync::config::tests::save_endpoint_stores_only_the_webdav_secret ... ignored
+test modules::sync::engine::tests::endpoint_locks_are_exclusive ... ok
+test modules::sync::config::endpoint_mutation_tests::save_requires_exact_config_and_secret_readback ... ok
+test modules::sync::config::endpoint_mutation_tests::save_partial_credential_write_reports_failure ... ok
+test modules::sync::engine::tests::plaintext_manifest_package_round_trips_without_passphrase ... ok
+test modules::sync::config::endpoint_mutation_tests::keeping_credentials_is_a_distinct_intent_and_never_accesses_them ... ok
+test modules::sync::engine::tests::plaintext_payload_round_trips_and_detects_corruption ... ok
+test modules::sync::engine::tests::replay_snapshot_conflicts_and_is_recorded ... ok
+test modules::sync::config::endpoint_mutation_tests::delete_partial_disk_failure_keeps_reference_and_retry_is_idempotent ... ok
+test commands::sync::probe_tests::notification_write_failure_does_not_change_network_success ... ok
+test modules::sync::runner::tests::conflicted_outcome_reports_paused_overwrite ... ok
+test commands::sync::probe_tests::actual_failure_persists_and_exact_verified_retry_resolves_after_reload ... ok
+test modules::sync::runner::tests::execution_identity_is_stable_for_retry_but_scopes_endpoint_secret_and_content ... ok
+test modules::sync::runner::tests::execution_observer_preserves_result_and_skips_policy_refusals ... ok
+test modules::sync::config::endpoint_mutation_tests::save_missing_wrong_or_unavailable_readback_cannot_succeed ... ok
+test modules::sync::config::endpoint_mutation_tests::save_retry_keeps_full_intent_and_observes_real_error ... ok
+test modules::sync::runner::tests::failure_messages_are_user_facing ... ok
+test modules::sync::engine::tests::state_round_trip_uses_secure_sync_state_path ... ok
+test modules::sync::runner::tests::incoming_future_preferences_and_non_preferences_are_handled ... ok
+test modules::sync::runner::tests::incoming_current_preferences_are_written_verbatim ... ok
+test modules::sync::runner::tests::incoming_legacy_preferences_are_upgraded_to_sectioned_layout ... ok
+test modules::sync::runner::tests::synced_artifacts_are_whitelisted ... ok
+test commands::sync::tests::sync_conflict_alerts_preference_is_consumed ... ok
+test modules::sync::tests::aad_is_bound_to_format_version_device_and_schema ... ok
+test modules::sync::tests::download_rejects_missing_duplicate_or_bad_payloads ... ok
+test modules::sync::tests::frozen_timeouts_and_limits_match_contract ... ok
+test modules::sync::tests::only_network_failures_retry ... ok
+test modules::sync::tests::manifest_validates_frozen_fields_and_limits ... ok
+test modules::sync::tests::replay_older_snapshot_enters_conflict ... ok
+test modules::sync::config::endpoint_mutation_tests::delete_verifies_both_purposes_and_accepts_explicit_absence ... ok
+test modules::sync::tests::sync_run_tracks_progress_and_failure ... ok
+test modules::sync::tests::snapshot_id_matches_frozen_shape ... ok
+test modules::sync::tests::tls_messages_do_not_leak_endpoint_details ... ok
+test modules::sync::engine::tests::apply_backs_up_then_replaces_and_updates_state ... ok
+test commands::sync::probe_tests::new_endpoint_credentials_or_root_cannot_clear_old_failure ... ok
+test commands::sync::tests::conflict_alert_writes_one_deduplicated_notification ... ok
+test modules::sync::config::endpoint_mutation_tests::failed_or_unverified_deletion_retains_reference_for_exact_retry ... ok
+test modules::sync::runner::tests::cold_sync_missing_preferences_and_lock_are_not_execution_terminals ... ok
+test modules::migration::tests::import_without_passphrase_applies_preferences_extension_and_sync ... ok
+test modules::sync::runner::tests::captured_sync_reports_failed_final_pointer_after_payload_and_manifest_uploads ... ok
+test modules::data_root::migration::activation::tests::uncertain_replace_or_failed_post_commit_sync_retains_lock_for_reconciliation ... ok
+test modules::sync::engine::tests::legacy_packages_require_the_original_passphrase ... ok
+test modules::sync::engine::tests::target_lock_blocks_concurrent_snapshots ... ok
+
+test result: ok. 60 passed; 0 failed; 1 ignored; 0 measured; 590 filtered out; finished in 3.19s
+

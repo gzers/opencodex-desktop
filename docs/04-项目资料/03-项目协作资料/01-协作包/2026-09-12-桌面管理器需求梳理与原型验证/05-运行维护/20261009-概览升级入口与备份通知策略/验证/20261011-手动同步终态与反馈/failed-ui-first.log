@@ -1,0 +1,76 @@
+
+> opencodex-desktop-ui@0.1.9 test
+> vitest --run tests/sync.test.ts tests/sync-conflict-default.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/sync.test.ts (9 tests | 5 failed) 26ms
+   ❯ sync terminal result is not command acknowledgement (5)
+     × projects synced / succeeded without inventing success 5ms
+     × projects failed / failed without inventing success 2ms
+     × projects conflict / cancelled without inventing success 2ms
+     × projects synced / validating without inventing success 1ms
+     × reports an uncertain failed execution and still refreshes its notifications 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects synced / succeeded without inventing success
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects failed / failed without inventing success
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects conflict / cancelled without inventing success
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > projects synced / validating without inventing success
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'list_notifications' ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "list_notifications",
++   "run_sync_now",
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/sync.test.ts:126:20
+    124|     expect(app.syncStatus?.message).toBe(result.message)
+    125|     expect(useSyncStore().running).toBe(false)
+    126|     expect(invoke).toHaveBeenCalledWith('list_notifications')
+       |                    ^
+    127|   })
+    128|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/sync.test.ts > sync terminal result is not command acknowledgement > reports an uncertain failed execution and still refreshes its notifications
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'list_notifications' ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "list_notifications",
++   "run_sync_now",
+  ]
+
+
+Number of calls: 1
+
+ ❯ tests/sync.test.ts:138:20
+    136|     expect(app.syncStatus?.message).not.toContain('本地内容未修改')
+    137|     expect(useSyncStore().running).toBe(false)
+    138|     expect(invoke).toHaveBeenCalledWith('list_notifications')
+       |                    ^
+    139|   })
+    140| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  5 failed | 6 passed (11)
+   Start at  00:28:41
+   Duration  1.58s (transform 47%, environment 36%, import 9%, tests 8%)
+

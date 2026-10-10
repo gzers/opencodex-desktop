@@ -1,0 +1,20 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.74s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-c015543d254f8ab7)
+
+running 10 tests
+test infrastructure::webdav_client::tests::missing_parent_collection_is_reported_as_not_found ... ok
+test infrastructure::webdav_client::tests::remote_layout_has_no_intermediate_collections ... ok
+test infrastructure::webdav_client::tests::tls_error_has_frozen_message ... ok
+test infrastructure::webdav_client::tests::remote_path_rejects_escape_and_empty_segments ... ok
+test infrastructure::webdav_client::tests::invalid_remote_path_is_rejected_before_network ... ok
+test infrastructure::webdav_client::tests::payload_file_name_follows_manifest_digest_not_transport_bytes ... ok
+test infrastructure::webdav_client::tests::test_connection_uses_propfind_with_basic_auth ... ok
+test infrastructure::webdav_client::tests::upload_puts_payloads_before_manifest ... ok
+test infrastructure::webdav_client::tests::upload_requires_completed_pointer_write_and_preserves_transport_failure ... ok
+test infrastructure::webdav_client::tests::refused_connection_is_network_not_tls ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 641 filtered out; finished in 0.36s
+
