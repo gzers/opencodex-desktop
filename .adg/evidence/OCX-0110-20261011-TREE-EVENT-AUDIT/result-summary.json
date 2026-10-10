@@ -1,0 +1,85 @@
+{
+  "evidence_id": "OCX-0110-20261011-TREE-EVENT-AUDIT",
+  "verification": "tree table and event registry audit",
+  "registry": {
+    "triggers": 8,
+    "jobs": 39,
+    "events": 81,
+    "active_events": 79,
+    "planned_events": 2,
+    "notification_policies": 27,
+    "emission_sites": 87,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "tree_table": {
+    "shared_component": [
+      "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+      "apps/desktop/ui/src/components/ui/treeTable.ts"
+    ],
+    "production_tree_entry": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+    "flat_data_root_tables": [
+      "apps/desktop/ui/src/routes/SettingsRoute.vue:1158",
+      "apps/desktop/ui/src/routes/SettingsRoute.vue:1195"
+    ],
+    "conclusion": "两处 data-root-table 是数据根路径平面清单，不是层级树；其余生产层级树表统一复用 UiTreeTable.vue/treeTable.ts。",
+    "alignment_contract": [
+      "checkbox 16px",
+      "arrow/placeholder 22px",
+      "icon 18px",
+      "label line-height 22px",
+      "flex align-items center",
+      "backup initial expansion depth 2，默认到月份层级"
+    ]
+  },
+  "event_boundary": {
+    "direct_tauri_emit_location": "apps/desktop/tauri/src/commands/event_delivery.rs",
+    "production_call_contract": [
+      "event_delivery::emit_signal",
+      "event_delivery::emit_signal_to",
+      "event_delivery::prepare",
+      "event_delivery::publish",
+      "event_delivery::publish_checked"
+    ],
+    "transient_emitters": [
+      "commands/runtime.rs::EventProgressSink::emit：先 validate_signal；无前端 Channel 时走 emit_signal",
+      "lib.rs::TauriStatusEmitter::emit：状态快照和通知列表变化走 emit_signal"
+    ]
+  },
+  "internal_process_signals": [
+    {
+      "event": "process-cancel-signal",
+      "wiring": "internal_only",
+      "source": "infrastructure/process_runner.rs::CancelHandle watch sender.send(true)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    },
+    {
+      "event": "process-observation-signal",
+      "wiring": "internal_only",
+      "source": "infrastructure/process_runner.rs::observation_sender.send(observation)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    },
+    {
+      "event": "process-exit-signal",
+      "wiring": "internal_only",
+      "source": "infrastructure/process_runner.rs::sender.send(code)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    },
+    {
+      "event": "runtime-stdout-signal",
+      "wiring": "internal_only",
+      "source": "modules/runtime/install.rs::sender.send(line)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    }
+  ],
+  "interpretation": "本轮闭合静态源码盘点、统一组件合同核对和事件注册定向回归；不替代双平台原生、安装、性能、真实更新、签名或发布门禁。",
+  "gates": {
+    "static_tree_table_audit": "passed",
+    "event_registry_targeted_regression": "passed",
+    "native_platform_acceptance": "open",
+    "release_authorization": "not_granted"
+  },
+  "releaseAccepted": false
+}

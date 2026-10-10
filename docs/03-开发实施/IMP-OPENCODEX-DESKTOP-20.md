@@ -435,3 +435,12 @@ MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1
     cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture
 
 结果为 33 passed、0 failed。最新生产注册表统计为 8 triggers / 39 jobs / 81 events / 27 notification policies / 87 emission sites / 8 scheduling sites / 8 UI feedback sites / 12 paths / 4 cleanup policies。该结果属于局部源码证据，不替代全域调用点审阅、macOS / Windows 原生 UI 与安装验收、性能与真实周期、签名制品、更新端点、真实迁移和发布门禁；IMP 继续保持 in_progress。
+
+
+### 2026-10-11 树表与事件注册审阅检查点
+
+当前代码基线为 feature/0.1.10-maintenance / c654287c06da3e621091c1051ebc19ce1c0b1077。静态盘点确认生产层级树表统一使用 UiTreeTable.vue / treeTable.ts；SettingsRoute.vue 的两处 data-root-table 仅为数据根路径平面清单。共享合同固定复选框 16px、箭头或占位 22px、图标 18px、文字行高 22px 和居中对齐，备份树初始展开深度为 2。
+
+当前事件注册表统计为 8 triggers / 39 jobs / 81 events（79 active / 2 planned）/ 27 notification policies / 87 emission sites / 8 scheduling sites / 8 UI feedback sites / 12 paths / 4 cleanup policies。生产 Tauri 发出边界集中到 event_delivery.rs；四项 process signal 明确为 internal_only，不属于用户通知遗漏。event_registry 定向测试 33/33 通过；本地 Rust / UI 全量源码证据继续有效。
+
+本检查点只完成静态范围审阅和定向测试，不生成完成证书。macOS / Windows 原生、安装、DPI / 外观、自动检查性能、真实更新 / 重启、签名、发布资产、真实迁移和发布门禁继续 open；TASK / IMP 保持 in_progress，不合并 main、不迁移真实用户数据、不替换日常安装、不公开发布、不晋升 stable。证据见 .adg/evidence/OCX-0110-20261011-TREE-EVENT-AUDIT 与协作包验证/20261011-树表与事件注册审阅/README.md。

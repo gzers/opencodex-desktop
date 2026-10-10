@@ -107,3 +107,12 @@ source_refs:
     cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture
 
 结果为 33 passed、0 failed。该提交只闭合运行态观测恢复边界和对应源码定向回归，不表示全域事件调用点、双平台原生验收、安装制品或发布门禁已完成；协作包与 IMP 继续保持 in_progress。
+
+
+### 2026-10-11 树表与事件注册审阅补充
+
+代码分支 feature/0.1.10-maintenance 的提交 c654287c06da3e621091c1051ebc19ce1c0b1077 已推送。本轮按 0.1.10 目标模式完成树表与统一事件注册的静态审阅和定向回归。生产层级树表统一复用 apps/desktop/ui/src/components/ui/UiTreeTable.vue 与 treeTable.ts，入口为 BackupFiles.vue；SettingsRoute.vue:1158、1195 的 data-root-table 是数据根路径平面清单，不是层级树。复选框、箭头或占位、图标和文字继续遵循 16px / 22px / 18px / 22px 的对齐合同，备份树默认展开到月份层级；同步页 WebDAV 与配置文件导入两个 tab 保留。
+
+当前注册表为 8 triggers / 39 jobs / 81 events，其中 79 active、2 planned；另有 27 notification policies、87 emission sites、8 scheduling sites、8 UI feedback sites、12 paths、4 cleanup policies。生产直接 app.emit / app.emit_to 集中在 event_delivery.rs，其余生产发出点经过统一 event_delivery 边界。process-cancel-signal、process-observation-signal、process-exit-signal、runtime-stdout-signal 四项明确登记为 internal_only 进程内部信号，不进入通知持久化、不提供前端订阅、不计为用户通知投递缺口。完整矩阵和盘点方法见 [树表与事件注册审阅证据](验证/20261011-树表与事件注册审阅/README.md) 与 .adg/evidence/OCX-0110-20261011-TREE-EVENT-AUDIT。
+
+定向 event_registry 测试为 33 passed / 0 failed / 0 ignored；既有 Rust 694 passed / 0 failed / 4 ignored、UI 94 个测试文件 459 项通过、类型检查和生产构建通过的源码证据保持有效。本轮只闭合静态审阅与定向测试。macOS / Windows 原生 UI、安装、DPI、云母、标题栏、动效、透明下拉框、自动检查性能、真实更新 / 重启、签名、发布资产、更新端点和真实用户迁移仍未闭合；releaseAccepted: false，不构成完成证书、合并授权、公开发布或 stable 晋升。

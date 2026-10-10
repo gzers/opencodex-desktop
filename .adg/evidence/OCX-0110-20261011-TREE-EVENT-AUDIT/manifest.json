@@ -1,0 +1,129 @@
+{
+  "evidence_id": "OCX-0110-20261011-TREE-EVENT-AUDIT",
+  "created_at": "2026-10-11",
+  "kind": "static-source-audit",
+  "status": "passed_with_scope_limits",
+  "subject": "0.1.10 统一树表组件与全域事件注册边界审阅",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "c654287c06da3e621091c1051ebc19ce1c0b1077",
+  "document_branch": "docs/governance-main",
+  "document_head_at_capture": "ac5f46c7eac223e650306337ee2b6a61b49a93c1",
+  "scope": [
+    "盘点生产 UI 原生 table 入口与共享 UiTreeTable/treeTable 实现",
+    "从当前 event-registry.json 生成事件矩阵并核对发出点、调度点、UI 反馈点和持久路径",
+    "确认运行进程内部信号与用户可见通知的边界",
+    "运行 event_registry 定向回归，并引用此前本地 Rust/UI 全量源码门禁"
+  ],
+  "methods": [
+    "读取 feature/0.1.10-maintenance 的 apps/desktop/tauri/config/event-registry.json",
+    "rg 盘点 apps/desktop/ui/src 下的 table、UiTreeTable、data-root-table，以及生产事件投递调用",
+    "检查 event_delivery.rs 的 app.emit/app.emit_to 集中边界和 internal_only wiring",
+    "执行 cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture"
+  ],
+  "registry_counts": {
+    "triggers": 8,
+    "jobs": 39,
+    "events": 81,
+    "active_events": 79,
+    "planned_events": 2,
+    "notification_policies": 27,
+    "emission_sites": 87,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 8,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "tree_table_inventory": {
+    "shared_component": [
+      "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+      "apps/desktop/ui/src/components/ui/treeTable.ts"
+    ],
+    "production_tree_entry": "apps/desktop/ui/src/features/backup/BackupFiles.vue",
+    "flat_data_root_tables": [
+      "apps/desktop/ui/src/routes/SettingsRoute.vue:1158",
+      "apps/desktop/ui/src/routes/SettingsRoute.vue:1195"
+    ],
+    "conclusion": "两处 data-root-table 是数据根路径平面清单，不是层级树；其余生产层级树表统一复用 UiTreeTable.vue/treeTable.ts。",
+    "alignment_contract": [
+      "checkbox 16px",
+      "arrow/placeholder 22px",
+      "icon 18px",
+      "label line-height 22px",
+      "flex align-items center",
+      "backup initial expansion depth 2，默认到月份层级"
+    ]
+  },
+  "internal_process_signals": [
+    {
+      "event": "process-cancel-signal",
+      "wiring": "internal_only",
+      "source": "infrastructure/process_runner.rs::CancelHandle watch sender.send(true)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    },
+    {
+      "event": "process-observation-signal",
+      "wiring": "internal_only",
+      "source": "infrastructure/process_runner.rs::observation_sender.send(observation)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    },
+    {
+      "event": "process-exit-signal",
+      "wiring": "internal_only",
+      "source": "infrastructure/process_runner.rs::sender.send(code)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    },
+    {
+      "event": "runtime-stdout-signal",
+      "wiring": "internal_only",
+      "source": "modules/runtime/install.rs::sender.send(line)",
+      "conclusion": "进程内部通道；不进入通知持久化，不提供前端订阅，不计为用户通知投递缺口。"
+    }
+  ],
+  "event_delivery_boundary": {
+    "direct_tauri_emit_location": "apps/desktop/tauri/src/commands/event_delivery.rs",
+    "production_call_contract": [
+      "event_delivery::emit_signal",
+      "event_delivery::emit_signal_to",
+      "event_delivery::prepare",
+      "event_delivery::publish",
+      "event_delivery::publish_checked"
+    ],
+    "transient_emitters": [
+      "commands/runtime.rs::EventProgressSink::emit：先 validate_signal；无前端 Channel 时走 emit_signal",
+      "lib.rs::TauriStatusEmitter::emit：状态快照和通知列表变化走 emit_signal"
+    ]
+  },
+  "test_results": {
+    "event_registry": {
+      "passed": 33,
+      "failed": 0,
+      "ignored": 0,
+      "status": "passed"
+    },
+    "rust_full_source_regression": {
+      "passed": 694,
+      "failed": 0,
+      "ignored": 4,
+      "status": "passed"
+    },
+    "ui_full_source_regression": {
+      "test_files": 94,
+      "passed": 459,
+      "failed": 0,
+      "typecheck": "passed",
+      "build": "passed"
+    }
+  },
+  "open_gates": [
+    "macOS 原生 UI / 安装回归",
+    "Windows 普通权限、DPI、云母、原生标题栏、动效、透明下拉框与安装路径",
+    "自动检查性能与真实 stable 24h / beta 6h 周期观察",
+    "真实更新 / 重启、签名制品、更新端点和发布资产",
+    "真实用户迁移与全域运行时设备证据"
+  ],
+  "releaseAccepted": false,
+  "dataMigrationAuthorized": false,
+  "dailyInstallationReplacementAuthorized": false,
+  "publicReleaseAuthorized": false,
+  "stablePromotionAuthorized": false
+}

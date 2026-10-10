@@ -1,0 +1,70 @@
+{
+  "evidence_id": "OCX-0110-20261011-TREE-EVENT-AUDIT",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "c654287c06da3e621091c1051ebc19ce1c0b1077",
+  "document_branch": "docs/governance-main",
+  "commands": [
+    {
+      "cwd": "code worktree/apps/desktop/tauri",
+      "command": "python3 registry count and matrix scan",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": {
+        "triggers": 8,
+        "jobs": 39,
+        "events": 81,
+        "active_events": 79,
+        "planned_events": 2,
+        "notification_policies": 27,
+        "emission_sites": 87,
+        "scheduling_sites": 8,
+        "ui_feedback_sites": 8,
+        "paths": 12,
+        "cleanup_policies": 4
+      }
+    },
+    {
+      "cwd": "code worktree",
+      "command": "rg production tree table, event delivery boundary, and internal_only signals",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "生产树表入口、统一投递边界和 4 个 internal_only 信号已定位"
+    },
+    {
+      "cwd": "code worktree",
+      "command": "cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "33 passed; 0 failed; 0 ignored"
+    },
+    {
+      "cwd": "code worktree",
+      "command": "cargo fmt --manifest-path apps/desktop/tauri/Cargo.toml --all -- --check",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "code worktree",
+      "command": "cargo clippy --locked --manifest-path apps/desktop/tauri/Cargo.toml --workspace --all-targets -- -D warnings",
+      "exit_code": 0,
+      "result": "passed"
+    },
+    {
+      "cwd": "code worktree",
+      "command": "cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --workspace --features integration-test",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "694 passed; 0 failed; 4 ignored"
+    },
+    {
+      "cwd": "code worktree/apps/desktop/ui",
+      "command": "npm test -- --run && npm run typecheck && npm run build",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "94 test files; 459 tests; typecheck and build passed"
+    }
+  ],
+  "non_blocking_output": [
+    "已有 Vite INEFFECTIVE_DYNAMIC_IMPORT 警告和 jsdom canvas notice，未阻断结果。"
+  ]
+}
