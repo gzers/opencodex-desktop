@@ -81,7 +81,7 @@ html[data-theme="dark"] {
 
 /* 概览动作按钮＝通知同款玻璃观感（IMP-07，对齐原型 `BTN_MATERIAL_DEFAULT='glass'`）：
    原型把玻璃铺满整行（`.ovb-actions>.btn`，不只默认档），这里同样统一到行内**所有**按钮；
-   半透明分层填充 + 非透明边框 + 分层阴影（含 inset 顶部内高光）＝高阶层级。
+   半透明分层填充 + 非透明边框 + 外投影；按钮不叠顶部内高光，焦点环由 base.css 保留。
    刻意**不做**实时 `backdrop-filter`：概览形象背后有持续动画层，模糊会每帧重算，
    把高档帧率从 ~41fps 压到 ~29fps（撞 IMP-05 §7 的 p95 ≤ 2B 预算），故用等效填充/阴影表达。
    选择器对齐上面的 `.btn:not(...)` 配方特异性，确保默认档也被覆盖。 */
@@ -89,7 +89,7 @@ html[data-theme="dark"] {
   background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), var(--glass-fill);
   border-color: color-mix(in srgb, var(--text) 15%, transparent);
   color: var(--text);
-  box-shadow: 0 8px 22px #10182814, inset 0 1px 0 #ffffff59;
+  box-shadow: var(--surface-control-shadow);
   -webkit-backdrop-filter: none; backdrop-filter: none;
 }
 .motion-actions > .btn:not(.primary):not(.danger):not(.ghost):hover {
@@ -101,21 +101,21 @@ html[data-theme="dark"] {
   background-image: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), linear-gradient(color-mix(in srgb, var(--accent) 80%, transparent), color-mix(in srgb, var(--accent) 80%, transparent));
   border-color: color-mix(in srgb, var(--accent) 42%, transparent);
   color: var(--accent-ink);
-  box-shadow: 0 8px 22px #10182814;
+  box-shadow: var(--surface-control-shadow);
   -webkit-backdrop-filter: none; backdrop-filter: none;
 }
 .motion-actions > .btn.danger {
   background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), color-mix(in srgb, var(--red) 16%, var(--glass-fill));
   border-color: color-mix(in srgb, var(--red) 38%, transparent);
   color: var(--red);
-  box-shadow: 0 8px 22px #10182814, inset 0 1px 0 #ffffff59;
+  box-shadow: var(--surface-control-shadow);
   -webkit-backdrop-filter: none; backdrop-filter: none;
 }
 .motion-actions > .btn.ghost {
   background: linear-gradient(158deg, var(--notif-tint-a), #0000 62%), linear-gradient(24deg, var(--notif-tint-b), #0000 58%), var(--glass-fill);
   border-color: color-mix(in srgb, var(--text) 15%, transparent);
   color: var(--text);
-  box-shadow: 0 8px 22px #10182814, inset 0 1px 0 #ffffff59;
+  box-shadow: var(--surface-control-shadow);
   -webkit-backdrop-filter: none; backdrop-filter: none;
 }
 /* 后台安全基线：`.main` 不叠 backdrop-filter；这里只给子层。 */

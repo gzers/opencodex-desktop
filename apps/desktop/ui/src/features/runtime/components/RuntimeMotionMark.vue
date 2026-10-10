@@ -23,6 +23,9 @@ const theme = useThemeStore()
 const ambientEl = ref<HTMLElement | null>(null)
 const markEl = ref<HTMLElement | null>(null)
 const meshHostEl = ref<HTMLElement | null>(null)
+// 光层挂到路由根节点，由 .main 定位；Teleport 锚点随路由销毁，不能追加到路由之后。
+// 独立挂载时仍留在形象容器中，供组件预览与测试使用。
+const backdropTarget = ref<HTMLElement | null>(null)
 let scene: MotionSceneHandle | null = null
 let mesh: MeshGlowHandle | null = null
 let lastGlowColors: readonly string[] = []
@@ -57,6 +60,7 @@ function unmountMesh(): void {
 
 onMounted(() => {
   if (!ambientEl.value || !markEl.value) return
+  backdropTarget.value = ambientEl.value.closest<HTMLElement>('.route-section.ov')
   scene = createMotionScene({
     ambient: ambientEl.value,
     markHost: markEl.value,
@@ -106,14 +110,18 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="motion-mark" aria-hidden="true">
-    <div ref="meshHostEl" class="motion-mesh-host"></div>
-    <div ref="ambientEl" class="motion-ambient">
-      <i class="energy"></i>
-      <i class="cloud cloud-a"></i>
-      <i class="cloud cloud-b"></i>
-      <i class="cloud cloud-c"></i>
-      <i class="light-floor"></i>
-    </div>
+    <Teleport :to="backdropTarget ?? 'body'" :disabled="!backdropTarget">
+      <div class="motion-backdrop" aria-hidden="true">
+        <div ref="meshHostEl" class="motion-mesh-host"></div>
+        <div ref="ambientEl" class="motion-ambient">
+          <i class="energy"></i>
+          <i class="cloud cloud-a"></i>
+          <i class="cloud cloud-b"></i>
+          <i class="cloud cloud-c"></i>
+          <i class="light-floor"></i>
+        </div>
+      </div>
+    </Teleport>
     <div ref="markEl" class="motion-hero"></div>
   </div>
 </template>

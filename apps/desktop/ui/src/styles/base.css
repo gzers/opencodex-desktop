@@ -947,7 +947,6 @@ html:not([data-effects="high"]) .wiz-spin, html:not([data-effects="high"]) .wiz-
    ============================================================ */
 .motion-overview {
   position: relative;
-  isolation: isolate;
   /* 无额外内距：与原型 `#card-overview-status`（padding:0）同宽同起点。 */
   padding: 0;
   background: transparent;
@@ -957,8 +956,16 @@ html:not([data-effects="high"]) .wiz-spin, html:not([data-effects="high"]) .wiz-
 }
 /* 概览页面内距与区块间距对齐原型：`html[data-route=overview] .main` 与区块 14/10px。
    原型顶栏在路由容器之外，这里用「相邻兄弟 margin」复现同样的 14/10px 间隔。 */
-html[data-route="overview"] .main { padding: 18px 22px 20px; }
-html[data-overview-size="compact"][data-route="overview"] .main { padding: 14px 18px 16px; }
+html[data-route="overview"] .main {
+  --overview-padding-inline: 22px;
+  position: relative;
+  isolation: isolate;
+  padding: 18px var(--overview-padding-inline) 20px;
+}
+html[data-overview-size="compact"][data-route="overview"] .main {
+  --overview-padding-inline: 18px;
+  padding: 14px var(--overview-padding-inline) 16px;
+}
 html[data-route="overview"] .topbar { margin-bottom: 0; }
 .route-section.ov { gap: 0; }
 .route-section.ov > * + * { margin-top: 14px; }
@@ -976,21 +983,33 @@ html[data-overview-size="compact"] .route-section.ov > * + * { margin-top: 10px;
 html[data-overview-size="compact"] .ov[data-mode="ready"] .motion-fixed { grid-template-rows: 128px 50px 44px; height: 222px; }
 html[data-overview-size="compact"] .ov[data-mode="setup"] .motion-fixed { grid-template-rows: 88px 54px; height: 142px; }
 .motion-stage { grid-row: 1; grid-column: 1; position: relative; width: 100%; height: 100%; }
-/* 光场容器＝正文列整宽（原型 `.motion-backdrop` 的 `left:0;width:100%`）。顶部与高度取原型同一组值。
+/* 形象容器保持正文列整宽与既有位置，背景光独立扩展到页面内距。
    高度要越过状态区底部、一直铺到下方卡片（三卡 + 最近事件）后面，玻璃卡才「透光」——
    若只盖到状态区（旧值 400／260／330／224），事件卡整块在容器之外会被 `overflow:hidden` 裁掉。 */
-/* 光场层必须画在形象区**内容之下**：原型把光场放进 `z-index:-1` 的 iframe（`.motion-backdrop`），
-   并由 `#card-overview-status{isolation:isolate}` 兜住，光场只盖住窗口底面、不压住状态文字与操作按钮。
-   这里同样用 `z-index:-1`：本组件祖先 `.motion-overview` 已是 `position:relative; isolation:isolate`，
-   -1 会停在它自己的层叠上下文里——仍在页面底色之上，但低于状态文字/按钮，不再把黑底主按钮染成灰紫、
-   把文字洗淡。（此前为 0：定位元素默认压在静态兄弟之上，等于把光场铺在内容上面。） */
+/* 背景光挂到静态路由根节点、由 .main 定位：不受正文 padding、顶栏换行或状态区位置影响。
+   .main 承接负层级，并以滚动边界和圆角裁切；光场在页面填充之上、Logo 与正文之下。
+   .motion-overview 不隔离层叠，让形象的 -1 层级也落在页面填充之上。 */
 .motion-mark { position: absolute; top: -75px; left: 50%; transform: translateX(-50%); width: 100%; height: 660px; pointer-events: none; z-index: -1; }
 .ov[data-mode="setup"] .motion-mark { top: -35px; height: 520px; }
 html[data-overview-size="compact"] .ov[data-mode="ready"] .motion-mark { top: -66px; height: 640px; }
 html[data-overview-size="compact"] .ov[data-mode="setup"] .motion-mark { top: -27px; height: 480px; }
-.motion-ambient {
+.motion-backdrop {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 760px;
+  max-height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -2;
+}
+.motion-ambient, .motion-mesh-host {
+  position: absolute;
+  /* 把渐隐的起点移出页面顶部，顶部 padding 仍有柔光；外层负责主内容边界裁切。 */
+  inset: -80px 0 0;
+}
+.motion-ambient {
   overflow: hidden;
   color-scheme: normal;
   opacity: 0.74;
@@ -1005,7 +1024,7 @@ html[data-theme="dark"] .motion-ambient { opacity: 0.48; }
 /* 背景光渲染方式二选一：WEBGL 网格渐变＋颗粒着色器 / 纯 CSS 极光（`.motion-ambient`）。
    着色器自带纵向渐隐与颗粒抖动，所以这里不再叠 CSS mask，避免二次渐隐。
    不透明度取正式原型定值（浅 0.6 / 暗 0.52）：颜色由着色器保色相归一保证，压透明只会变淡不会变灰。 */
-.motion-mesh-host { position: absolute; inset: 0; display: none; }
+.motion-mesh-host { display: none; }
 html[data-glow-render="mesh"] .motion-mesh-host { display: block; }
 html[data-glow-render="mesh"] .motion-ambient { display: none; }
 .motion-mesh {

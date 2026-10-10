@@ -74,7 +74,7 @@ pub fn snapshot(app: &tauri::AppHandle) -> Option<Appearance> {
 mod native {
     use super::*;
     use std::sync::{Mutex, OnceLock};
-    use tauri::{Emitter, Manager};
+    use tauri::Manager;
     use windows_sys::Win32::{
         Foundation::{HWND, LPARAM, LRESULT, WPARAM},
         Graphics::Dwm::*,
@@ -316,7 +316,15 @@ mod native {
                 *stored = Some(state.clone());
             }
         }
-        let _ = app.emit_to("main", "native-window-appearance", &state);
+        let _ = crate::commands::event_delivery::emit_signal_to(
+            app,
+            "main",
+            "native-window-appearance",
+            crate::modules::notifications::registry::Job::Appearance,
+            crate::modules::notifications::registry::Trigger::NativeCallback,
+            crate::modules::notifications::registry::Channel::Local,
+            &state,
+        );
         if let Some(root) = app.try_state::<crate::state::SharedDataRoot>() {
             let _ = crate::infrastructure::runtime_log::RuntimeLog::new(&root.0).append_event(
                 &format!("window appearance: theme={} material={} reason={} build={} active={} transparency={} dwm={:?}",
