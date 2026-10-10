@@ -31,7 +31,18 @@ export async function getOfficialProjectFacts(): Promise<OfficialProjectDto> {
   return invoke<OfficialProjectDto>('official_project_facts')
 }
 
-export async function getOfficialRemoteLatest(): Promise<OfficialRemoteLatestDto> {
+let remoteRequest: Promise<OfficialRemoteLatestDto> | null = null
+export function getOfficialRemoteLatest(): Promise<OfficialRemoteLatestDto> {
+  if (remoteRequest) return remoteRequest
+  const request = queryOfficialRemoteLatest().finally(() => { if (remoteRequest === request) remoteRequest = null })
+  remoteRequest = request
+  return request
+}
+async function queryOfficialRemoteLatest(): Promise<OfficialRemoteLatestDto> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
   return invoke<OfficialRemoteLatestDto>('official_remote_latest')
+}
+export async function getOfficialRemoteCache(): Promise<OfficialRemoteLatestDto | null> {
+  const invoke = (await import('@tauri-apps/api/core')).invoke
+  return invoke<OfficialRemoteLatestDto | null>('official_remote_cache')
 }

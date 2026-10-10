@@ -200,6 +200,8 @@ pub fn run() {
             app.manage(runtime.clone());
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             app.manage(crate::state::SharedRuntimeInstall::new());
+            app.manage(crate::commands::update_schedule::SharedSchedule::default());
+            app.manage(crate::commands::update_schedule::SharedPanelQuery::default());
             let active_data_root = runtime_config.active_data_root.clone();
             let opencodex_home = crate::modules::data_root::resolve_opencodex_home(&runtime_config);
             let process_path = crate::infrastructure::discovery_paths::process_path(&home, &discovery_paths);
@@ -503,6 +505,8 @@ pub fn run() {
             commands::update::install_update,
             commands::update::get_update_status,
             commands::update::set_update_channel,
+            commands::update_schedule::update_schedule_plan,
+            commands::update_schedule::official_remote_cache,
             commands::upgrade::create_upgrade_backup,
             commands::upgrade::create_restore_backup,
             commands::upgrade::restore_risk_summary,

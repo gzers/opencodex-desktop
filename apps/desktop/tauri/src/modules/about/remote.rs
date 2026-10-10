@@ -1,11 +1,12 @@
 //! 官方 OpenCodex 远端最新版本只读查询（U-03）。
 //!
-//! 执行受控 `npm view @bitkyc08/opencodex@<tag> version` 与 `dist.integrity`，带超时；
-//! 不安装、不写盘，失败返回明确错误，不改变任何本地状态。代理由进程环境（HTTP(S)_PROXY/NO_PROXY）
+//! 单次查询 version 与 dist.integrity，限制输出并设总截止时间；
+//! 不安装，失败返回明确错误。代理由进程环境（HTTP(S)_PROXY/NO_PROXY）
 //! 承载，与统一网络代理一致。
 
 use std::path::PathBuf;
 use std::process::Stdio;
+use tokio::io::AsyncReadExt;
 
 use serde::Deserialize;
 
@@ -71,20 +72,10 @@ pub fn query_remote_latest(
         return Err(AppError::NotConfigured);
     }
     let package = format!("{}@{tag}", crate::modules::runtime::OFFICIAL_PACKAGE);
-    let version = run_npm_view(npm, working_directory, environment, &package, "version")?;
-    let Some(version) = version.and_then(|raw| parse_version(&raw)) else {
-        return Err(AppError::NotConfigured);
-    };
-    let integrity = run_npm_view(
-        npm,
-        working_directory,
-        environment,
-        &package,
-        "dist.integrity",
-    )
-    .ok()
-    .flatten()
-    .and_then(|raw| parse_integrity(&raw));
+    let raw = run_npm_view(npm, working_directory, environment, &package)?;
+    let value: serde_json::Value =
+        serde_json::from_str(&raw).map_err(|_| AppError::NotConfigured)?;
+    let (version, integrity) = parse_metadata(&value).ok_or(AppError::NotConfigured)?;
     Ok(OfficialRemoteLatest {
         tag: tag.to_string(),
         version,
@@ -92,30 +83,61 @@ pub fn query_remote_latest(
     })
 }
 
-/// 执行单次 `npm view ... <field> --json`，带超时；输出截断防止异常放大。
-///
-/// 超时来自固化网络行为策略（U-05b）；超时后终止子进程并返回失败，不改写任何状态。
+/// 大于此上限即拒绝，不把截断数据当作有效元数据。
+const MAX_METADATA_BYTES: u64 = 16 * 1024;
+
+fn parse_metadata(value: &serde_json::Value) -> Option<(String, Option<String>)> {
+    let version = value.get("version")?.as_str()?;
+    if version.is_empty() || version.len() > 128 {
+        return None;
+    }
+    let integrity = value
+        .get("dist.integrity")
+        .or_else(|| value.get("dist").and_then(|dist| dist.get("integrity")))
+        .and_then(|value| value.as_str())
+        .filter(|text| text.len() <= 4096)
+        .map(str::to_owned);
+    Some((version.to_owned(), integrity))
+}
+
 fn run_npm_view(
     npm: &std::path::Path,
     working_directory: &std::path::Path,
     environment: &EnvironmentPolicy,
     package: &str,
-    field: &str,
-) -> Result<Option<String>, AppError> {
-    let mut command = std::process::Command::new(npm);
+) -> Result<String, AppError> {
+    run_npm_view_with_timeout(
+        npm,
+        working_directory,
+        environment,
+        package,
+        crate::modules::network_defaults::request_timeout(),
+    )
+}
+
+fn run_npm_view_with_timeout(
+    npm: &std::path::Path,
+    working_directory: &std::path::Path,
+    environment: &EnvironmentPolicy,
+    package: &str,
+    timeout: std::time::Duration,
+) -> Result<String, AppError> {
+    let mut command = tokio::process::Command::new(npm);
     command
         .arg("view")
         .arg(package)
-        .arg(field)
+        .args(["version", "dist.integrity"])
         .arg("--json")
         .current_dir(working_directory)
         .env_clear()
         .stdin(Stdio::null())
-        .stderr(Stdio::null());
+        .stderr(Stdio::null())
+        .stdout(Stdio::piped())
+        .kill_on_drop(true);
     if let Some(home) = environment.home.as_ref() {
-        crate::infrastructure::platform::apply_user_environment(&mut command, Some(home));
+        crate::infrastructure::platform::apply_user_environment(command.as_std_mut(), Some(home));
     } else {
-        crate::infrastructure::platform::apply_user_environment(&mut command, None);
+        crate::infrastructure::platform::apply_user_environment(command.as_std_mut(), None);
     }
     command.env("OPENCODEX_HOME", &environment.opencodex_home);
     // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
@@ -131,35 +153,54 @@ fn run_npm_view(
             command.env(key, value);
         }
     }
-    let mut child = command
-        .stdout(Stdio::piped())
-        .spawn()
-        .map_err(|_| AppError::NotConfigured)?;
-    // 带超时收口：到点先杀子进程再判定失败，避免查询请求悬挂。
-    let deadline = std::time::Instant::now() + crate::modules::network_defaults::request_timeout();
-    let output = loop {
-        match child.try_wait().map_err(|_| AppError::NotConfigured)? {
-            Some(_) => {
-                break child
-                    .wait_with_output()
+    #[cfg(unix)]
+    command.process_group(0);
+    // Called from spawn_blocking; never hold the UI executor while reading pipes.
+    tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .map_err(|_| AppError::NotConfigured)?
+        .block_on(async {
+            let mut child = command.spawn().map_err(|_| AppError::NotConfigured)?;
+            let pid = child.id();
+            let stdout = child.stdout.take().ok_or(AppError::NotConfigured)?;
+            let result = tokio::time::timeout(timeout, async {
+                let mut bytes = Vec::new();
+                stdout
+                    .take(MAX_METADATA_BYTES + 1)
+                    .read_to_end(&mut bytes)
+                    .await
+                    .map_err(|_| AppError::NotConfigured)?;
+                if bytes.len() as u64 > MAX_METADATA_BYTES {
+                    return Err(AppError::NotConfigured);
+                }
+                if !child
+                    .wait()
+                    .await
                     .map_err(|_| AppError::NotConfigured)?
+                    .success()
+                {
+                    return Err(AppError::NotConfigured);
+                }
+                String::from_utf8(bytes).map_err(|_| AppError::NotConfigured)
+            })
+            .await
+            .unwrap_or(Err(AppError::Timeout));
+            if result.is_err() {
+                #[cfg(unix)]
+                if let Some(pid) = pid {
+                    // Only this query group; never signal the managed panel process.
+                    unsafe {
+                        libc::kill(-(pid as i32), libc::SIGKILL);
+                    }
+                }
+                #[cfg(not(unix))]
+                let _ = pid;
+                let _ = child.kill().await;
+                let _ = child.wait().await;
             }
-            None if std::time::Instant::now() >= deadline => {
-                let _ = child.kill();
-                let _ = child.wait();
-                return Err(AppError::Timeout);
-            }
-            None => std::thread::sleep(std::time::Duration::from_millis(25)),
-        }
-    };
-    if !output.status.success() {
-        return Err(AppError::NotConfigured);
-    }
-    let text = String::from_utf8_lossy(&output.stdout).trim().to_string();
-    if text.is_empty() {
-        return Ok(None);
-    }
-    Ok(Some(text.chars().take(512).collect()))
+            result
+        })
 }
 
 /// 受控 npm 查询的最小 PATH：npm 自身目录 → 调用方注入的 PATH（若有）→ 系统最小兜底。
@@ -179,6 +220,73 @@ pub fn discovered_npm() -> Option<PathBuf> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn combined_metadata_accepts_flat_and_nested_shapes_and_rejects_bad_versions() {
+        for raw in [
+            r#"{"version":"2.50.0","dist.integrity":"sha512-abc"}"#,
+            r#"{"version":"2.50.0","dist":{"integrity":"sha512-abc"}}"#,
+        ] {
+            assert_eq!(
+                parse_metadata(&serde_json::from_str(raw).unwrap()),
+                Some(("2.50.0".into(), Some("sha512-abc".into())))
+            );
+        }
+        assert!(parse_metadata(&serde_json::json!({"version":""})).is_none());
+        assert!(parse_metadata(&serde_json::json!({"version":"x".repeat(129)})).is_none());
+        assert!(parse_metadata(&serde_json::json!(["2.50.0"])).is_none());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn metadata_query_rejects_oversize_and_kills_timed_out_process_group() {
+        use std::os::unix::fs::PermissionsExt;
+        let root = tempfile::tempdir().unwrap();
+        let npm = root.path().join("npm");
+        let environment = EnvironmentPolicy {
+            opencodex_home: root.path().to_owned(),
+            ..Default::default()
+        };
+        std::fs::write(&npm, "#!/bin/sh\nhead -c 17000 /dev/zero\n").unwrap();
+        std::fs::set_permissions(&npm, std::fs::Permissions::from_mode(0o700)).unwrap();
+        assert!(run_npm_view_with_timeout(
+            &npm,
+            root.path(),
+            &environment,
+            "test@latest",
+            std::time::Duration::from_secs(2)
+        )
+        .is_err());
+        // A descendant holding stdout must also be stopped at the total deadline.
+        std::fs::write(&npm, "#!/bin/sh\nsleep 30 &\necho $! > child-pid\nwait\n").unwrap();
+        let start = std::time::Instant::now();
+        assert!(matches!(
+            run_npm_view_with_timeout(
+                &npm,
+                root.path(),
+                &environment,
+                "test@latest",
+                std::time::Duration::from_millis(200)
+            ),
+            Err(AppError::Timeout)
+        ));
+        assert!(start.elapsed() < std::time::Duration::from_secs(2));
+        let pid: i32 = std::fs::read_to_string(root.path().join("child-pid"))
+            .unwrap()
+            .trim()
+            .parse()
+            .unwrap();
+        // The process may be briefly visible as a zombie; it must no longer be running.
+        let status = std::process::Command::new("/bin/ps")
+            .args(["-o", "stat=", "-p", &pid.to_string()])
+            .output()
+            .unwrap();
+        let stat = String::from_utf8_lossy(&status.stdout);
+        assert!(
+            stat.trim().is_empty() || stat.trim().starts_with('Z'),
+            "descendant still running: {stat}"
+        );
+    }
 
     #[test]
     fn tag_validation_rejects_arbitrary_input() {

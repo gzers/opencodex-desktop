@@ -32,9 +32,11 @@ describe('idle IPC frequency (IMP-04 §19.12)', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     invoke.mockReset()
-    // 托盘排空返回空队列；其余命令返回 undefined（各功能方法内部自行收敛失败）。
+    // 持久缓存尚未到期：启动只读一次计划，下一次评估在 24 小时后。
     invoke.mockImplementation((command: string) =>
-      command === 'drain_tray_requests' ? Promise.resolve([]) : Promise.resolve(undefined),
+      Promise.resolve(command === 'drain_tray_requests' ? []
+        : command === 'update_schedule_plan' ? { targets: [], nextDelayMs: 24 * 60 * 60_000 }
+        : undefined),
     )
     vi.useFakeTimers()
   })
@@ -53,18 +55,22 @@ describe('idle IPC frequency (IMP-04 §19.12)', () => {
     const commands = invoke.mock.calls.map(call => call[0] as string)
     const drains = commands.filter(name => name === 'drain_tray_requests').length
 
-    // 空闲 60s：仅 2 次低频兜底排空，且没有其它空闲 IPC（无状态/日志/通知轮询）。
+    // 启动 45s 的一次计划评估单列；零网络查询，零持续状态/日志/通知轮询。
     expect(drains).toBe(2)
-    expect(commands.length).toBe(drains)
+    expect(commands.filter(name => name === 'update_schedule_plan')).toHaveLength(1)
+    expect(commands.filter(name => name !== 'drain_tray_requests')).toEqual(['update_schedule_plan'])
 
     // 不随时间增长：后半段与前半段速率一致（每 30s 各 1 次），排除「越跑越多」的泄漏式轮询。
     invoke.mockClear()
     await vi.advanceTimersByTimeAsync(30_000)
-    const firstHalf = invoke.mock.calls.length
+    const firstCommands = invoke.mock.calls.map(call => call[0])
+    const firstHalf = firstCommands.length
+    expect(firstCommands).toEqual(['drain_tray_requests'])
     await vi.advanceTimersByTimeAsync(30_000)
     const secondHalf = invoke.mock.calls.length - firstHalf
     expect(firstHalf).toBe(1)
     expect(secondHalf).toBe(1)
+    expect(invoke.mock.calls.map(call => call[0])).toEqual(['drain_tray_requests', 'drain_tray_requests'])
 
     wrapper.unmount()
   })

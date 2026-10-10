@@ -13,7 +13,7 @@ import { useRouteStore } from '@/stores/routes'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
-import { checkForUpdate, getUpdateStatus, type UpdateStatusDto } from '@/features/updates/update'
+import { getUpdateStatus, managerUpdateStatus } from '@/features/updates/update'
 import { hasNewerVersion } from '@/features/updates/version'
 import type { SyncConflictPolicy } from '@/features/sync/api'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
@@ -154,8 +154,8 @@ const codexShimNotice = computed(() => {
   }
 })
 const openSelect = ref('')
-const updateStatus = ref<UpdateStatusDto | null>(null)
-const updateChecking = ref(true)
+const updateStatus = managerUpdateStatus
+const updateChecking = ref(false)
 const installRequested = ref(false)
 const updateInstallDisabled = computed(() =>
   !updateStatus.value?.availableVersion
@@ -252,18 +252,7 @@ const updateResultText = computed(() => {
 })
 
 if (typeof window !== 'undefined') {
-  void getUpdateStatus().then(result => {
-    updateStatus.value = result
-  }).catch(() => {})
-}
-
-if (typeof window !== 'undefined') {
-  void checkForUpdate().then(result => {
-    updateStatus.value = result.update
-    updateChecking.value = false
-  }).catch(() => {
-    updateChecking.value = false
-  })
+  void getUpdateStatus().catch(() => {})
 }
 
 async function installUpdate() {
@@ -294,8 +283,7 @@ async function runUpdateCheck() {
   updateError.value = ''
   try {
     const { checkForUpdate } = await import('@/features/updates/update')
-    const result = await checkForUpdate()
-    updateStatus.value = result.update
+    await checkForUpdate()
   } catch {
     updateError.value = '更新服务不可用；已保留当前版本。'
   } finally {

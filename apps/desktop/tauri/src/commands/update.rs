@@ -5,17 +5,16 @@ use std::sync::{Arc, Mutex};
 use tauri_plugin_updater::UpdaterExt;
 
 /// 用有效通道解析出的端点构建 updater（U-05）：检查、安装与后台调度共用同一来源，
-/// 不再各自读 tauri.conf.json 的静态占位端点。端点解析失败时回退插件默认配置。
+/// 不再各自读 tauri.conf.json 的静态占位端点。无效端点停止查询。
 fn updater_for_status(
     app: &tauri::AppHandle,
     status: &UpdateStatus,
 ) -> AppResult<tauri_plugin_updater::Updater> {
     let endpoint = status.channel.endpoint();
-    let Ok(url) = endpoint.parse() else {
-        return app.updater().map_err(|_error| AppError::NotConfigured);
-    };
+    let url = endpoint.parse().map_err(|_| AppError::NotConfigured)?;
     let builder = app
         .updater_builder()
+        .timeout(crate::modules::network_defaults::request_timeout())
         .endpoints(vec![url])
         .map_err(|_error| AppError::NotConfigured)?;
     let builder = apply_proxy_policy(
@@ -46,18 +45,41 @@ fn apply_proxy_policy(
     }
 }
 
+use crate::commands::update_schedule;
 use crate::errors::{AppError, AppResult};
+use crate::modules::update::schedule::{self, Target};
 use crate::modules::update::{UpdateChannel, UpdateFailureClass, UpdateStatus};
 use crate::types::update::{CheckUpdateResultDto, UpdateStatusDto};
 
 pub type SharedUpdateStatus = Arc<Mutex<UpdateStatus>>;
+
+struct CheckLease(SharedUpdateStatus, u64);
+impl Drop for CheckLease {
+    fn drop(&mut self) {
+        if let Ok(mut status) = self.0.lock() {
+            // Cancellation must not release the next channel's check.
+            status.finish_check(self.1);
+        }
+    }
+}
+
+/// Release installation ownership on all error and cancellation paths.
+struct InstallationLease(SharedUpdateStatus);
+impl Drop for InstallationLease {
+    fn drop(&mut self) {
+        if let Ok(mut status) = self.0.lock() {
+            status.installing = false;
+        }
+    }
+}
 
 #[tauri::command]
 pub fn get_update_status(
     status: tauri::State<'_, SharedUpdateStatus>,
     app: tauri::AppHandle,
 ) -> AppResult<UpdateStatusDto> {
-    let guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+    let mut guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+    hydrate_cache(&mut guard, &app)?;
     Ok(current_status(&guard, &app).into())
 }
 
@@ -68,11 +90,24 @@ pub fn set_update_channel(
     app: tauri::AppHandle,
 ) -> AppResult<UpdateStatusDto> {
     let mut guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
-    guard.channel = channel;
-    guard.available_version = None;
-    guard.signature_verified = None;
-    guard.error = None;
+    let root = update_schedule::active_root(&app)?;
+    persist_channel(&root, &mut guard, channel)?;
+    hydrate_cache(&mut guard, &app)?;
     Ok(current_status(&guard, &app).into())
+}
+
+fn persist_channel(
+    root: &std::path::Path,
+    status: &mut UpdateStatus,
+    channel: UpdateChannel,
+) -> AppResult<()> {
+    let mut preferences = crate::commands::preferences::load_preferences_with_path(root)?;
+    preferences.app_update_channel = match channel {
+        UpdateChannel::Stable => "stable",
+        UpdateChannel::Beta => "beta",
+    }.into();
+    crate::commands::preferences::save_preferences_transaction(root, &preferences, status)?;
+    Ok(())
 }
 
 #[tauri::command]
@@ -80,18 +115,29 @@ pub async fn check_for_update(
     status: tauri::State<'_, SharedUpdateStatus>,
     app: tauri::AppHandle,
 ) -> AppResult<CheckUpdateResultDto> {
-    let updater = {
-        let guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
-        updater_for_status(&app, &guard)?
+    let (updater, generation, target) = {
+        let mut guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+        let updater = updater_for_status(&app, &guard)?;
+        let generation = guard.begin_check().ok_or(AppError::NotConfigured)?;
+        (updater, generation, Target::manager(guard.channel))
     };
+    let _lease = CheckLease(status.inner().clone(), generation);
+    let query_root = update_schedule::reserve(&app, target)?;
     let update = match updater.check().await {
         Ok(value) => value,
         Err(_error) => {
             let mut guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+            if !guard.finish_check(generation) {
+                return Ok(CheckUpdateResultDto {
+                    status: "superseded".to_string(),
+                    update: current_status(&guard, &app).into(),
+                });
+            }
             guard.signature_verified = None;
             guard.available_version = None;
             guard.last_checked_at = Some(chrono::Utc::now().to_rfc3339());
             guard.error = Some(UpdateFailureClass::Network.message().to_string());
+            update_schedule::complete::<UpdateStatus>(&app, &query_root, target, None)?;
             return Ok(CheckUpdateResultDto {
                 status: "failed".to_string(),
                 update: guard.clone().into(),
@@ -99,11 +145,18 @@ pub async fn check_for_update(
         }
     };
     let mut guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+    if !guard.finish_check(generation) {
+        return Ok(CheckUpdateResultDto {
+            status: "superseded".to_string(),
+            update: current_status(&guard, &app).into(),
+        });
+    }
     let (result_status, available_version) = match update {
         Some(value) => ("available", Some(value.version.clone())),
         None => ("up_to_date", None),
     };
     record_check_success(&mut guard, available_version);
+    update_schedule::complete(&app, &query_root, target, Some(&*guard))?;
     Ok(CheckUpdateResultDto {
         status: result_status.to_string(),
         update: guard.clone().into(),
@@ -128,9 +181,15 @@ pub async fn install_update(
     app: tauri::AppHandle,
 ) -> AppResult<()> {
     let updater = {
-        let guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
-        updater_for_status(&app, &guard)?
+        let mut guard = status.lock().map_err(|_poisoned| AppError::NotConfigured)?;
+        if guard.checking || guard.installing {
+            return Err(AppError::NotConfigured);
+        }
+        let updater = updater_for_status(&app, &guard)?;
+        guard.installing = true;
+        updater
     };
+    let _lease = InstallationLease(status.inner().clone());
     let update = match updater.check().await {
         Ok(Some(value)) => value,
         Ok(None) => {
@@ -174,9 +233,62 @@ fn current_status(status: &UpdateStatus, app: &tauri::AppHandle) -> UpdateStatus
     value
 }
 
+fn hydrate_cache(status: &mut UpdateStatus, app: &tauri::AppHandle) -> AppResult<()> {
+    if status.last_checked_at.is_none() && !status.checking && !status.installing {
+        let root = update_schedule::active_root(app)?;
+        if let Some(cached) =
+            schedule::load_cache::<UpdateStatus>(&root, Target::manager(status.channel))
+        {
+            if cached.channel == status.channel {
+                status.available_version = cached.available_version;
+                status.last_checked_at = cached.last_checked_at;
+                status.error = None;
+                // A cached metadata result is never proof of an installed signature.
+                status.signature_verified = None;
+            }
+        }
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn channel_command_persists_and_refuses_install_races() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let mut preferences = crate::modules::preferences::Preferences::default();
+        preferences.interface_scale = 125;
+        crate::commands::preferences::save_preferences_with_path(root.path(), &preferences).unwrap();
+        let mut status = UpdateStatus::pending("0.1.9");
+        let old_check = status.begin_check().unwrap();
+        persist_channel(root.path(), &mut status, UpdateChannel::Beta).unwrap();
+        assert!(!status.finish_check(old_check));
+        let saved = crate::commands::preferences::load_preferences_with_path(root.path()).unwrap();
+        assert_eq!(saved.app_update_channel, "beta");
+        assert_eq!(saved.interface_scale, 125);
+        status.installing = true;
+        assert!(persist_channel(root.path(), &mut status, UpdateChannel::Stable).is_err());
+        assert_eq!(status.channel, UpdateChannel::Beta);
+        assert_eq!(crate::commands::preferences::load_preferences_with_path(root.path()).unwrap().app_update_channel, "beta");
+    }
+
+    #[test]
+    fn cancelled_check_releases_only_its_own_generation() {
+        let status = Arc::new(Mutex::new(UpdateStatus::pending("0.1.9")));
+        let generation = status.lock().unwrap().begin_check().unwrap();
+        drop(CheckLease(status.clone(), generation));
+        assert!(!status.lock().unwrap().checking);
+        let old = status.lock().unwrap().begin_check().unwrap();
+        status.lock().unwrap().switch_channel(UpdateChannel::Beta);
+        let next = status.lock().unwrap().begin_check().unwrap();
+        drop(CheckLease(status.clone(), old));
+        assert!(status.lock().unwrap().checking);
+        drop(CheckLease(status.clone(), next));
+        assert!(!status.lock().unwrap().checking);
+    }
 
     #[test]
     fn channel_switch_clears_stale_check_result() {
@@ -230,9 +342,30 @@ mod tests {
     }
 
     fn set_update_channel_state(status: &mut UpdateStatus, channel: UpdateChannel) {
-        status.channel = channel;
-        status.available_version = None;
-        status.signature_verified = None;
-        status.error = None;
+        assert!(status.switch_channel(channel));
+    }
+
+    #[test]
+    fn late_check_cannot_overwrite_a_new_channel_or_release_its_lock() {
+        let mut status = UpdateStatus::pending("0.1.9");
+        let old = status.begin_check().unwrap();
+        assert!(status.begin_check().is_none());
+        assert!(status.switch_channel(UpdateChannel::Beta));
+        let new = status.begin_check().unwrap();
+        assert!(!status.finish_check(old));
+        assert!(status.checking);
+        assert!(status.finish_check(new));
+        record_check_success(&mut status, Some("0.1.10-beta.1".into()));
+        assert_eq!(status.channel, UpdateChannel::Beta);
+        assert_eq!(status.available_version.as_deref(), Some("0.1.10-beta.1"));
+    }
+
+    #[test]
+    fn channel_switch_is_idempotent_and_blocked_during_installation() {
+        let mut status = UpdateStatus::pending("0.1.9");
+        status.installing = true;
+        assert!(!status.switch_channel(UpdateChannel::Beta));
+        assert!(status.switch_channel(UpdateChannel::Stable));
+        assert!(status.begin_check().is_none());
     }
 }

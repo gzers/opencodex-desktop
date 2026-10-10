@@ -17,6 +17,7 @@ pub mod runtime;
 pub mod sync;
 pub mod tray;
 pub mod update;
+pub mod update_schedule;
 pub mod upgrade;
 pub mod window;
 pub mod workspace;

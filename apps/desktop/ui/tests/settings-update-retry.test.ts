@@ -58,6 +58,17 @@ afterEach(() => {
 })
 
 describe('settings app-update installation', () => {
+  it('repeated page mounts read shared metadata without network checks and allow manual checking', async () => {
+    for (let i = 0; i < 20; i++) {
+      const wrapper = await mountUpgrade()
+      expect(button(wrapper, '检查应用更新').attributes('disabled')).toBeUndefined()
+      wrapper.unmount(); wrappers = []
+    }
+    expect(invoke.mock.calls.filter(call => call[0] === 'check_for_update')).toHaveLength(0)
+    const wrapper = await mountUpgrade()
+    await button(wrapper, '检查应用更新').trigger('click'); await flushPromises()
+    expect(invoke.mock.calls.filter(call => call[0] === 'check_for_update')).toHaveLength(1)
+  })
   it('allows retry on the same page after the real store handles an installation failure', async () => {
     install.mockRejectedValueOnce(new Error('download interrupted'))
     const wrapper = await mountUpgrade()

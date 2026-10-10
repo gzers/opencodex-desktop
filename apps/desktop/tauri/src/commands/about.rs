@@ -48,10 +48,38 @@ pub fn official_project_facts_with_source<S: OfficialVersionSource + ?Sized>(
     Ok(OfficialProjectFacts::run(&*guard)?.into())
 }
 
-/// 只读远端最新版本查询（U-03）：不安装、不写盘；失败返回明确错误。
+/// 远端元数据查询：并发调用复用结果，落盘缓存与退避，不安装。
 #[tauri::command]
 pub async fn official_remote_latest(
     app: tauri::AppHandle,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
+    use crate::commands::update_schedule::{self, SharedPanelQuery};
+    use crate::modules::update::schedule::Target;
+    use std::sync::atomic::Ordering;
+    use tauri::Manager;
+    let gate = app.state::<SharedPanelQuery>();
+    let sequence = gate.1.load(Ordering::Acquire);
+    let mut query = gate.0.lock().await;
+    if query.sequence != sequence {
+        return query.value.clone().ok_or(AppError::NotConfigured);
+    }
+    if app
+        .state::<crate::state::SharedRuntimeInstall>()
+        .is_running()
+    {
+        return Err(AppError::NotConfigured);
+    }
+    let query_root = update_schedule::reserve(&app, Target::Panel)?;
+    let result = query_panel_metadata(&app).await;
+    query.sequence = query.sequence.wrapping_add(1);
+    query.value = result.as_ref().ok().cloned();
+    gate.1.store(query.sequence, Ordering::Release);
+    update_schedule::complete(&app, &query_root, Target::Panel, query.value.as_ref())?;
+    result
+}
+
+async fn query_panel_metadata(
+    app: &tauri::AppHandle,
 ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
     use tauri::Manager;
     let Some(home) = app.try_state::<crate::state::SharedHomeDir>() else {

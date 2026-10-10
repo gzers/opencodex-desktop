@@ -4,6 +4,7 @@ use crate::errors::{AppError, AppResult};
 use crate::modules::preferences::{Preferences, PreferencesStore};
 use crate::state::SharedDataRoot;
 use crate::types::preferences::PreferencesDto;
+use tauri::Manager;
 
 #[tauri::command]
 pub fn get_preferences(data_root: tauri::State<'_, SharedDataRoot>) -> AppResult<PreferencesDto> {
@@ -44,7 +45,10 @@ pub fn save_preferences(
             detail: "Windows 暂不支持 CLI 控制面；本机 IPC 未实现".to_string(),
         });
     }
-    let saved = save_preferences_with_path(&data_root.0, &domain)?;
+    let state = app.state::<crate::commands::update::SharedUpdateStatus>();
+    let mut status = state.lock().map_err(|_| AppError::NotConfigured)?;
+    let saved = save_preferences_transaction(&data_root.0, &domain, &mut status)?;
+    drop(status);
     crate::infrastructure::window_appearance::refresh(&app);
     Ok(saved.into())
 }
@@ -54,7 +58,10 @@ pub fn restore_default_preferences(
     data_root: tauri::State<'_, SharedDataRoot>,
     app: tauri::AppHandle,
 ) -> AppResult<PreferencesDto> {
-    let restored = restore_preferences_with_path(&data_root.0)?;
+    let state = app.state::<crate::commands::update::SharedUpdateStatus>();
+    let mut status = state.lock().map_err(|_| AppError::NotConfigured)?;
+    let restored = save_preferences_transaction(&data_root.0, &Preferences::default(), &mut status)?;
+    drop(status);
     crate::infrastructure::window_appearance::refresh(&app);
     Ok(restored.into())
 }
@@ -63,6 +70,22 @@ pub fn load_preferences_with_path(data_root: &std::path::Path) -> AppResult<Pref
     PreferencesStore::new(data_root)
         .load()
         .map_err(AppError::from)
+}
+
+/// Disk and query ownership change together. Refusal or failed save changes neither.
+pub(crate) fn save_preferences_transaction(
+    root: &std::path::Path,
+    value: &Preferences,
+    status: &mut crate::modules::update::UpdateStatus,
+) -> AppResult<Preferences> {
+    let channel = crate::modules::update::UpdateChannel::parse(&value.app_update_channel)
+        .ok_or(AppError::NotConfigured)?;
+    if status.installing && status.channel != channel {
+        return Err(AppError::NotConfigured);
+    }
+    let saved = save_preferences_with_path(root, value)?;
+    status.switch_channel(channel);
+    Ok(saved)
 }
 
 pub fn save_preferences_with_path(
@@ -88,6 +111,26 @@ impl From<crate::modules::preferences::PreferencesError> for AppError {
 mod tests {
     use super::*;
     use crate::types::preferences::PreferencesDto;
+
+    #[test]
+    fn channel_save_invalidates_old_checks_only_after_success() {
+        use crate::modules::update::{UpdateChannel, UpdateStatus};
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let mut status = UpdateStatus::pending("0.1.9");
+        let old = status.begin_check().unwrap();
+        let value = Preferences { app_update_channel: "beta".into(), ..Preferences::default() };
+        save_preferences_transaction(root.path(), &value, &mut status).unwrap();
+        assert_eq!(status.channel, UpdateChannel::Beta);
+        assert!(!status.finish_check(old));
+        status.installing = true;
+        assert!(save_preferences_transaction(root.path(), &Preferences::default(), &mut status).is_err());
+        assert_eq!(load_preferences_with_path(root.path()).unwrap().app_update_channel, "beta");
+        status.installing = false;
+        let bad = Preferences { interface_scale: -1, ..Preferences::default() };
+        assert!(save_preferences_transaction(root.path(), &bad, &mut status).is_err());
+        assert_eq!(status.channel, UpdateChannel::Beta);
+    }
 
     // 回归：WebView 传入 camelCase 的完整偏好，保存后重新读取，取值必须保持一致，
     // 不能再被静默改写为默认值（此前所有开关/选择器/缩放都会回滚）。

@@ -15,11 +15,13 @@ import { usePanelStore } from '@/features/panel/store'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import { TRAY_FALLBACK_MS, TRAY_BACKOFF_MS } from '@/config/runtimeDefaults'
 import type { NotificationItem } from '@/types/ui'
+import { useUpdateScheduler } from '@/features/updates/useUpdateScheduler'
 
 // 组合根（IMP-04 §19.4 E）：把诊断与生命周期控制器组合起来，并向调用方暴露与拆分前一致的字段。
 export function useAppController(initialize = false) {
   const app = useAppStore()
   const routes = useRouteStore()
+  if (initialize) useUpdateScheduler()
 
   const scenario = computed(() =>
     statusScenario(
