@@ -94,6 +94,76 @@ describe("shared tree table", () => {
     expect(wrapper.emitted("retry")).toHaveLength(1)
   })
 
+  it("restores mixed selection focus after async refresh without selecting or stealing outside focus", async () => {
+    const wrapper = mount(UiTreeTable, { attachTo: document.body, props: { label: "备份文件", nodes: nodes(), initialExpandedDepth: 8 } })
+    ;(wrapper.get('[aria-label="选择 升级备份"]').element as HTMLInputElement).focus()
+    await wrapper.setProps({ loading: true })
+    await wrapper.setProps({ nodes: nodes(), loading: false })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement).toBe(wrapper.get('[aria-label="选择 升级备份"]').element)
+    expect((document.activeElement as HTMLInputElement).indeterminate).toBe(true)
+    expect(wrapper.emitted("select")).toBeUndefined()
+    await wrapper.setProps({ loading: true })
+    const outside = document.createElement("button")
+    document.body.append(outside)
+    outside.focus()
+    await wrapper.setProps({ nodes: nodes(), loading: false })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement).toBe(outside)
+    outside.remove()
+    wrapper.unmount()
+  })
+
+  it.each([false, true])("returns removed async leaf focus to the nearest surviving ancestor (remove parent: %s)", async removeParent => {
+    const wrapper = mount(UiTreeTable, { attachTo: document.body, props: { label: "备份文件", nodes: nodes(), initialExpandedDepth: 8 } })
+    ;(wrapper.get('[aria-label="preferences.json"]').element as HTMLButtonElement).focus()
+    await wrapper.setProps({ loading: true })
+    const updated = nodes()
+    const month = updated[0]!.children![0]!.children![0]!
+    if (removeParent) month.children = []
+    else month.children![0]!.children = []
+    // Data can arrive before the request clears its loading state.
+    await wrapper.setProps({ nodes: updated })
+    await wrapper.setProps({ loading: false })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement?.getAttribute("aria-label")).toBe(removeParent ? "10" : "升级备份")
+    wrapper.unmount()
+  })
+
+  it.each(["removed", "disabled"])("returns selection focus to the same row when its checkbox is %s", async change => {
+    const wrapper = mount(UiTreeTable, { attachTo: document.body, props: { label: "备份文件", nodes: nodes(), initialExpandedDepth: 8 } })
+    ;(wrapper.get('[aria-label="选择 升级备份"]').element as HTMLInputElement).focus()
+    const updated = nodes()
+    const backup = updated[0]!.children![0]!.children![0]!.children![0]!
+    if (change === "removed") backup.selectable = false
+    else backup.disabled = true
+    await wrapper.setProps({ nodes: updated })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement).toBe(wrapper.get('[aria-label="收起 升级备份"]').element)
+    wrapper.unmount()
+  })
+
+  it("returns selection focus to the surviving parent on collapse", async () => {
+    const wrapper = mount(UiTreeTable, { attachTo: document.body, props: { label: "备份文件", nodes: nodes(), initialExpandedDepth: 8 } })
+    ;(wrapper.get('[aria-label="选择 升级备份"]').element as HTMLInputElement).focus()
+    await wrapper.setProps({ expandedIds: ["root", "year"] })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement).toBe(wrapper.get('[aria-label="展开 10"]').element)
+    wrapper.unmount()
+  })
+
+  it("lets selection controls navigate without changing selection or expansion", async () => {
+    const wrapper = mount(UiTreeTable, { attachTo: document.body, props: { label: "备份文件", nodes: nodes(), initialExpandedDepth: 8 } })
+    const selection = wrapper.get('[aria-label="选择 升级备份"]')
+    ;(selection.element as HTMLInputElement).focus()
+    await selection.trigger("keydown", { key: "ArrowDown" })
+    await wrapper.vm.$nextTick()
+    expect(document.activeElement?.getAttribute("aria-label")).toBe("preferences.json")
+    expect(wrapper.emitted("select")).toBeUndefined()
+    expect(wrapper.emitted("update:expandedIds")).toBeUndefined()
+    wrapper.unmount()
+  })
+
   it("returns retry focus on failure and enters the first row on success", async () => {
     const wrapper = mount(UiTreeTable, { attachTo: document.body, props: { label: "备份文件", nodes: nodes(), error: "读取失败" } })
     ;(wrapper.get(".tree-message button").element as HTMLButtonElement).focus()

@@ -22,13 +22,48 @@ const localExpanded = ref(initialTreeExpansion(props.nodes, props.initialExpande
 const expanded = computed(() => new Set(props.expandedIds ?? localExpanded.value))
 const rows = computed(() => treeTableRows(props.nodes, expanded.value))
 const controls = new Map<string, HTMLButtonElement>()
-const focusedId = ref<string>()
-let refreshFocusId: string | undefined
+const selections = new Map<string, HTMLInputElement>()
+type FocusTarget = { id: string; kind: "name" | "selection" }
+type FocusSnapshot = { target?: FocusTarget; ancestry: string[]; retry?: boolean }
+let refreshFocus: FocusSnapshot | undefined
+let focusRevision = 0
 const retryControl = ref<HTMLButtonElement>()
-let retryHadFocus = false
 function setControl(id: string, element: unknown) {
   if (element instanceof HTMLButtonElement) controls.set(id, element)
   else controls.delete(id)
+}
+function setSelection(id: string, element: unknown) {
+  if (element instanceof HTMLInputElement) selections.set(id, element)
+  else selections.delete(id)
+}
+function captureFocus(visibleRows: readonly TreeTableRow[]): FocusSnapshot | undefined {
+  const active = document.activeElement
+  if (active === retryControl.value) return { ancestry: [], retry: true }
+  const selection = [...selections].find(([, element]) => element === active)?.[0]
+  const name = [...controls].find(([, element]) => element === active)?.[0]
+  const id = selection ?? name
+  if (!id) return
+  const ancestry: string[] = []
+  let row = visibleRows.find(item => item.node.id === id)
+  while (row?.parentId) {
+    ancestry.push(row.parentId)
+    row = visibleRows.find(item => item.node.id === row?.parentId)
+  }
+  return { target: { id, kind: selection ? "selection" : "name" }, ancestry }
+}
+function resolveFocus(snapshot: FocusSnapshot): HTMLElement | undefined {
+  const target = snapshot.target
+  if (target) {
+    const selection = selections.get(target.id)
+    if (target.kind === "selection" && selection && !selection.disabled) return selection
+    const name = controls.get(target.id)
+    if (name) return name
+  }
+  for (const id of snapshot.ancestry) {
+    const control = controls.get(id)
+    if (control) return control
+  }
+  return controls.get(rows.value[0]?.node.id ?? "")
 }
 function toggle(node: TreeTableNode) {
   if (!node.children?.length) return
@@ -63,37 +98,23 @@ function onKey(event: KeyboardEvent, row: TreeTableRow) {
   event.preventDefault()
   void focus(target)
 }
-watch(rows, async (next, previous) => {
-  const id = focusedId.value
+watch([rows, () => props.loading, () => props.error], async ([, loading], [previous, wasLoading]) => {
+  const revision = ++focusRevision
   const active = document.activeElement
-  if (!id || controls.get(id) !== active || next.some(row => row.node.id === id)) return
-  let old = previous.find(row => row.node.id === id)
-  while (old?.parentId && !next.some(row => row.node.id === old?.parentId)) old = previous.find(row => row.node.id === old?.parentId)
-  await nextTick()
-  if (document.activeElement === document.body || document.activeElement === active) {
-    controls.get(old?.parentId ?? next[0]?.node.id ?? "")?.focus()
-  }
-})
-watch(() => props.loading, async loading => {
+  // Capture before rows unmount, retaining the old ancestry while data arrives.
   if (loading) {
-    refreshFocusId = [...controls].find(([, element]) => element === document.activeElement)?.[0]
-    retryHadFocus = retryControl.value === document.activeElement
+    if (!wasLoading) refreshFocus = captureFocus(previous)
     return
   }
-  const id = refreshFocusId
-  const fromRetry = retryHadFocus
-  refreshFocusId = undefined
-  retryHadFocus = false
+  const snapshot = wasLoading ? refreshFocus : captureFocus(previous)
+  refreshFocus = undefined
+  if (!snapshot) return
   await nextTick()
-  // Restore only focus lost when our rows were removed; never steal it from another control.
-  if ((id || fromRetry) && document.activeElement === document.body) {
-    if (props.error) {
-      retryControl.value?.focus()
-      return
-    }
-    const target = id && controls.has(id) ? id : rows.value[0]?.node.id
-    if (target) controls.get(target)?.focus()
-  }
+  if (revision !== focusRevision) return
+  // An external control chosen during refresh always keeps focus.
+  if (document.activeElement !== document.body && (wasLoading || document.activeElement !== active)) return
+  if (props.error) retryControl.value?.focus()
+  else resolveFocus(snapshot)?.focus()
 }, { flush: "pre" })
 </script>
 
@@ -110,14 +131,15 @@ watch(() => props.loading, async loading => {
           <tr v-for="row in rows" :key="row.node.id" :data-node-id="row.node.id">
             <th scope="row">
               <div class="tree-name" :style="{ '--tree-depth': row.depth }">
-                <input v-if="row.node.selectable" type="checkbox" class="tree-check" :aria-label="`选择 ${row.node.label}`" :checked="row.node.selected === true" :indeterminate="row.node.selected === 'mixed'" :aria-checked="row.node.selected === 'mixed' ? 'mixed' : row.node.selected === true" :disabled="row.node.disabled" @change="emit('select', row.node.id, ($event.target as HTMLInputElement).checked)" />
-                <span v-else class="tree-check-placeholder" aria-hidden="true"></span>
-                <button v-if="row.node.children?.length" :ref="el => setControl(row.node.id, el)" class="tree-toggle" type="button" :aria-label="row.node.children?.length ? `${expanded.has(row.node.id) ? '收起' : '展开'} ${row.node.label}` : row.node.label" :aria-expanded="row.node.children?.length ? expanded.has(row.node.id) : undefined" @focus="focusedId = row.node.id" @keydown="onKey($event, row)" @click="toggle(row.node)">
+                <span class="tree-selection">
+                  <input v-if="row.node.selectable" :ref="el => setSelection(row.node.id, el)" type="checkbox" class="tree-check" :aria-label="`选择 ${row.node.label}`" :checked="row.node.selected === true" :indeterminate="row.node.selected === 'mixed'" :aria-checked="row.node.selected === 'mixed' ? 'mixed' : row.node.selected === true" :disabled="row.node.disabled" @keydown="onKey($event, row)" @change="emit('select', row.node.id, ($event.target as HTMLInputElement).checked)" />
+                </span>
+                <button v-if="row.node.children?.length" :ref="el => setControl(row.node.id, el)" class="tree-toggle" type="button" :aria-label="row.node.children?.length ? `${expanded.has(row.node.id) ? '收起' : '展开'} ${row.node.label}` : row.node.label" :aria-expanded="row.node.children?.length ? expanded.has(row.node.id) : undefined" @keydown="onKey($event, row)" @click="toggle(row.node)">
                   <svg v-if="row.node.children?.length" aria-hidden="true" viewBox="0 0 16 16" :class="{ expanded: expanded.has(row.node.id) }"><path d="m6 4 4 4-4 4" /></svg>
                 </button>
                 <span v-else class="tree-toggle-placeholder" aria-hidden="true"></span>
                 <span class="tree-icon" aria-hidden="true"><slot name="icon" :node="row.node" :depth="row.depth"></slot></span>
-                <button v-if="!row.node.children?.length" :ref="el => setControl(row.node.id, el)" class="tree-label tree-leaf" type="button" :aria-label="row.node.label" @focus="focusedId = row.node.id" @keydown="onKey($event, row)"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></button>
+                <button v-if="!row.node.children?.length" :ref="el => setControl(row.node.id, el)" class="tree-label tree-leaf" type="button" :aria-label="row.node.label" @keydown="onKey($event, row)"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></button>
                 <span v-else class="tree-label"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></span>
               </div>
             </th>
@@ -136,10 +158,11 @@ th, td { padding: 10px 12px; vertical-align: top; border-bottom: 1px solid var(-
 thead th { color: var(--muted); font-weight: inherit; }
 tbody th { font-weight: inherit; }
 tbody tr:last-child > * { border-bottom: 0; }
-.tree-name { display: flex; align-items: center; gap: 6px; min-height: 22px; padding-inline-start: calc(var(--tree-depth) * 16px); }
-.tree-check, .tree-check-placeholder { flex: 0 0 16px; width: 16px; height: 16px; margin: 0; }
+.tree-name { display: flex; align-items: flex-start; gap: 6px; min-height: 22px; padding-inline-start: calc(var(--tree-depth) * 16px); }
+.tree-selection { flex: 0 0 16px; width: 16px; height: 22px; display: grid; place-items: center; }
+.tree-check { width: 16px; height: 16px; margin: 0; }
 .tree-toggle { flex: 0 0 22px; width: 22px; height: 22px; padding: 3px; border: 0; background: transparent; color: inherit; border-radius: 4px; display: grid; place-items: center; cursor: pointer; }
-.tree-toggle:focus-visible, .tree-leaf:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.tree-check:focus-visible, .tree-toggle:focus-visible, .tree-leaf:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .tree-toggle-placeholder { flex: 0 0 22px; width: 22px; height: 22px; }
 .tree-leaf { text-align: left; border: 0; padding: 0; background: transparent; color: inherit; font: inherit; line-height: 22px; cursor: pointer; border-radius: 4px; }
 .tree-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; }
