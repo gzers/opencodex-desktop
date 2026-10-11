@@ -233,7 +233,7 @@ pub fn run() {
             app.manage(collector.clone());
 
             let cache_root = data_root.join("cache");
-            let cli_enabled = cfg!(unix) && crate::modules::preferences::PreferencesStore::new(&data_root)
+            let cli_enabled = crate::modules::preferences::PreferencesStore::new(&data_root)
                 .load()
                 .map(|value| value.cli_enabled)
                 .unwrap_or(false);
@@ -262,13 +262,11 @@ pub fn run() {
                     },
                     current_version: app.package_info().version.to_string().leak(),
                 };
-                #[cfg(unix)]
                 let ipc_app = app.handle().clone();
-                #[cfg(unix)]
                 tauri::async_runtime::spawn(async move {
                     let endpoint =
                         crate::modules::ipc::endpoint::IpcEndpoint::bind(&ipc_cache_root);
-                    let Ok(endpoint) = endpoint else {
+                    let Ok(mut endpoint) = endpoint else {
                         return;
                     };
                     let mut service = crate::modules::ipc::service::IpcService::new(
@@ -282,9 +280,6 @@ pub fn run() {
                         }
                     }
                 });
-                // Windows 暂无本机 IPC 端点实现；显式消费这些值，避免未使用告警。
-                #[cfg(not(unix))]
-                let _ = (ipc_cache_root, ipc_collector, ipc_runner, ipc_dependencies);
             }
 
             let tray_menu = crate::infrastructure::tray_controller::TauriTrayController::build_menu(app.handle())?;

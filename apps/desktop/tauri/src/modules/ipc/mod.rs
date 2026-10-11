@@ -8,9 +8,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 pub mod audit;
-// 本机 IPC 端点目前只有 Unix socket 实现；Windows 控制面尚未实现，
-// 因此在非 Unix 目标上不参与编译（见 apps/desktop/tauri 的跨平台说明）。
-#[cfg(unix)]
 pub mod endpoint;
 pub mod path_registration;
 pub mod service;
@@ -23,6 +20,7 @@ pub const AUDIT_MAX_RECORDS: usize = 5_000;
 pub const AUDIT_LOG_MAX_BYTES: u64 = 5 * 1024 * 1024;
 pub const AUDIT_LOG_ROTATIONS: usize = 5;
 pub const MAX_IPC_FRAME_BYTES: usize = 16 * 1024;
+#[cfg(unix)]
 pub const CLI_SOCKET_RELATIVE_PATH: &str =
     "Library/Caches/com.gzers.opencodex.desktop/ipc/opencodex.ipc";
 pub const CLI_PATH_TARGET: &str = "/usr/local/bin/ocxd";

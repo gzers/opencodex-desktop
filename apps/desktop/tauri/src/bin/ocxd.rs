@@ -1,33 +1,29 @@
 //! 默认关闭的 `ocxd` CLI 客户端。
 //!
-//! 只连接运行中 GUI 冻结的本机 Unix socket；凭据通过 stdin 输入，
+//! 只连接运行中 GUI 冻结的本机 IPC 端点；Unix 使用 socket，Windows 使用 named pipe。
+//! 凭据通过 stdin 输入，
 //! 不出现在 argv、日志或审计记录中。
 //!
-//! 本机 IPC 目前只有 Unix socket 实现，因此本 CLI 仅随 Unix 目标编译；
-//! Windows 目标提供一个明确报错的桩 `main`。
+//! 两个平台共用请求、响应和 frame 语义；只有传输端点按平台选择。
 
-#[cfg(unix)]
 use std::collections::BTreeMap;
-#[cfg(unix)]
 use std::io::{Read, Write};
 #[cfg(unix)]
 use std::os::unix::net::UnixStream;
 #[cfg(unix)]
 use std::path::PathBuf;
 use std::process::ExitCode;
-#[cfg(unix)]
 use zeroize::Zeroize;
 
 #[cfg(unix)]
+use opencodex_desktop_lib::modules::ipc::CLI_SOCKET_RELATIVE_PATH;
 use opencodex_desktop_lib::modules::ipc::{
     cli_json, parse_cli, CommandParseError, IpcCommand, IpcError, IpcErrorCode, IpcRequest,
-    IpcResponse, CLI_SOCKET_RELATIVE_PATH, CONTRACT_VERSION,
+    IpcResponse, CONTRACT_VERSION,
 };
 
-#[cfg(unix)]
 const HELP: &str = "Usage: ocxd <command> [options]\n\nCommands:\n  status\n  start --confirm\n  stop --confirm\n  restart --confirm\n  data-root show\n  data-root switch --target <path> [--migrate] --confirm\n  backup create --confirm\n  backup list\n  export --output <path> --confirm\n  import --input <path> [--password-stdin] --confirm\n  sync run --confirm\n  update check\n\nOptions:\n  --json              Emit schema-v1 JSON\n  --password-stdin    Read the legacy container passphrase from stdin (only for v1 containers)\n  --help              Show this help\n";
 
-#[cfg(unix)]
 #[derive(Debug)]
 enum CliOutcome {
     Help,
@@ -35,7 +31,6 @@ enum CliOutcome {
     Error(IpcErrorCode),
 }
 
-#[cfg(unix)]
 fn build_request(
     command: IpcCommand,
     args: &[String],
@@ -85,7 +80,6 @@ fn build_request(
     })
 }
 
-#[cfg(unix)]
 fn parse(argv: &[String], request_id: String) -> CliOutcome {
     if argv.iter().any(|value| value == "--help") {
         return CliOutcome::Help;
@@ -109,9 +103,12 @@ fn socket_path() -> Option<PathBuf> {
     Some(home.join(CLI_SOCKET_RELATIVE_PATH))
 }
 
-#[cfg(unix)]
-fn send_request(
-    path: &PathBuf,
+trait ReadWrite: Read + Write {}
+
+impl<T> ReadWrite for T where T: Read + Write {}
+
+fn send_request<T: ReadWrite>(
+    mut stream: T,
     mut request: IpcRequest,
     password_stdin: bool,
 ) -> Result<IpcResponse<serde_json::Value>, IpcErrorCode> {
@@ -130,7 +127,6 @@ fn send_request(
         request.secret = Some(cleaned);
     }
     let payload = serde_json::to_vec(&request).map_err(|_| IpcErrorCode::InternalError)?;
-    let mut stream = UnixStream::connect(path).map_err(|_| IpcErrorCode::InstanceOffline)?;
     stream
         .write_all(&(payload.len() as u64).to_be_bytes())
         .map_err(|_| IpcErrorCode::InternalError)?;
@@ -156,6 +152,20 @@ fn send_request(
 }
 
 #[cfg(unix)]
+fn connect_stream() -> Result<UnixStream, IpcErrorCode> {
+    let path = socket_path().ok_or(IpcErrorCode::InstanceOffline)?;
+    UnixStream::connect(path).map_err(|_| IpcErrorCode::InstanceOffline)
+}
+
+#[cfg(windows)]
+fn connect_stream() -> Result<std::fs::File, IpcErrorCode> {
+    std::fs::OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(opencodex_desktop_lib::modules::ipc::endpoint::pipe_name())
+        .map_err(|_| IpcErrorCode::InstanceOffline)
+}
+
 fn main() -> ExitCode {
     let argv: Vec<String> = std::env::args().skip(1).collect();
     let request_id = format!("req_{}", uuid::Uuid::new_v4());
@@ -169,12 +179,10 @@ fn main() -> ExitCode {
             ExitCode::from(code.exit_code() as u8)
         }
         CliOutcome::Request(request) => {
-            let Some(path) = socket_path() else {
-                return ExitCode::from(IpcErrorCode::InstanceOffline.exit_code() as u8);
-            };
             let command = request.command;
             let password_stdin = argv.iter().any(|value| value == "--password-stdin");
-            match send_request(&path, request, password_stdin) {
+            match connect_stream().and_then(|stream| send_request(stream, request, password_stdin))
+            {
                 Ok(response) => {
                     if argv.iter().any(|value| value == "--json") {
                         let payload = cli_json(
@@ -216,13 +224,6 @@ fn main() -> ExitCode {
             }
         }
     }
-}
-
-/// Windows 目标：本机 IPC（Unix socket）尚未实现，明确报错而不是静默失败。
-#[cfg(not(unix))]
-fn main() -> ExitCode {
-    eprintln!("ocxd 仅支持 Unix 平台；Windows 控制面尚未实现。");
-    ExitCode::from(2)
 }
 
 #[cfg(all(unix, test))]
