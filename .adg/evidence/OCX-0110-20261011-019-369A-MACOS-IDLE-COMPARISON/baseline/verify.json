@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "codesign",
+    "--verify",
+    "--deep",
+    "--strict",
+    "--verbose=2",
+    "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app"
+  ],
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "--prepared:/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app: satisfies its Designated Requirement\n"
+}

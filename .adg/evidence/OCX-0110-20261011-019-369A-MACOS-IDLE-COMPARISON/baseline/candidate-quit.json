@@ -1,0 +1,42 @@
+{
+  "captured_at": "2026-10-11T10:27:19.645457+00:00",
+  "source_sha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "test_executable": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "test_exe_sha256": "8bb3920180d03c54e78392df71d8e0e57fefda0ddb023d60f2879625e71f4018",
+  "source_sha_embedded": true,
+  "data_root": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-data",
+  "processes": [
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "executable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "sandbox_env": {}
+    }
+  ],
+  "lock": {
+    "path": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-data/manager-state/app.lock",
+    "exists": true,
+    "metadata_before_probe": {
+      "pid": 97688,
+      "started_at": 1791711517262
+    },
+    "nonblocking_exclusive_acquired": true,
+    "metadata_after_probe": {
+      "pid": 97688,
+      "started_at": 1791711517262
+    }
+  },
+  "backups": [
+    {
+      "relative_path": "backups/2026/10/manual-preferences/bk_20261011082942_7318022d/backup-manifest.json",
+      "bytes": 562,
+      "sha256": "681b0333bcc6858eb6c52212a6de819548871a58c221e85809c70e59ff38287d"
+    },
+    {
+      "relative_path": "backups/2026/10/manual-preferences/bk_20261011082942_7318022d/preferences.json",
+      "bytes": 1371,
+      "sha256": "58e1c8cc33f43243cd1dee8db4a45da712106e44c29c1ad6a0f97288843e3c85"
+    }
+  ],
+  "snapshot_method": "ps filtered to two exact executable paths; environmental fields allowlisted; flock read-only no lock deletion/truncation; backup hashes only, no preference payload exported"
+}

@@ -1,0 +1,48 @@
+{
+  "source_sha": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "executable": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "app_pid": 19382,
+  "bundle_id": "com.gzers.opencodex.desktop.sandbox019baseline",
+  "test_exe_sha256": "830d231c1f83c3384cfdec937963e306376df4664a0f0595f0d0f79e73136ea7",
+  "appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "high"
+  },
+  "updates": {
+    "app_update_auto_check": true,
+    "app_update_channel": "stable",
+    "app_update_check_interval_seconds": 86400
+  },
+  "host": {
+    "os": [
+      "ProductName:\t\tmacOS",
+      "ProductVersion:\t\t27.0.1",
+      "BuildVersion:\t\t26A434"
+    ],
+    "arch": "arm64",
+    "logical_cpus": 18
+  },
+  "requested_duration_seconds": 600,
+  "interval_seconds": 10,
+  "scene": "native overview preparation state; Node/npm found, OpenCodex missing",
+  "focus_visibility": "only initial/final bound-app AX/screenshots; not continuously verified",
+  "limits": [
+    "sequential exploratory comparison only; prior candidate focus not continuously verified",
+    "no main-thread instrumentation",
+    "10-second process polling can miss short-lived helpers",
+    "no network/syscall tracing; unchanged files do not prove zero network",
+    "preparation scene is not ready-state overview",
+    "RSS sum is per-process resident sum, not unique physical memory"
+  ],
+  "files_before": [
+    {
+      "relative_path": "manager-state/preferences.json",
+      "bytes": 1370,
+      "sha256": "6c4ba47c1b321b9c8745043733001a72d0949617019556a3d188b893c2ff8c68",
+      "mtime_ns": 1791714521799663047
+    }
+  ],
+  "started_at": "2026-10-11T10:29:37.297896+00:00"
+}

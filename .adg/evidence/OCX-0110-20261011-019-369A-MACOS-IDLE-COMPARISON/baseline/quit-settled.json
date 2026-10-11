@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-10-11T10:42:11.221250+00:00",
+  "source_sha": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "test_executable": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "test_exe_sha256": "830d231c1f83c3384cfdec937963e306376df4664a0f0595f0d0f79e73136ea7",
+  "source_sha_embedded": true,
+  "data_root": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-data",
+  "processes": [
+    {
+      "pid": 19382,
+      "started": "Sun Oct 11 18:27:32 2026",
+      "executable": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "sandbox_env": {
+        "OPENCODEX_SANDBOX": "1",
+        "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-data",
+        "OPENCODEX_SANDBOX_BOUNDARY": "/tmp/ocx-0110-dmg-install-tuk3m7"
+      }
+    },
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "executable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "sandbox_env": {}
+    }
+  ],
+  "lock": {
+    "path": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/baseline-019/test-data/manager-state/app.lock",
+    "exists": true,
+    "metadata_before_probe": {
+      "pid": 19382,
+      "started_at": 1791714452818
+    },
+    "nonblocking_exclusive_acquired": false,
+    "metadata_after_probe": {
+      "pid": 19382,
+      "started_at": 1791714452818
+    }
+  },
+  "backups": [],
+  "snapshot_method": "ps filtered to two exact executable paths; environmental fields allowlisted; flock read-only no lock deletion/truncation; backup hashes only, no preference payload exported"
+}

@@ -1,0 +1,73 @@
+{
+  "baseline_source_sha": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "candidate_source_sha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "baseline_evidence": ".adg/evidence/OCX-0110-20261011-019-369A-MACOS-IDLE-COMPARISON/baseline",
+  "candidate_evidence": ".adg/evidence/OCX-0110-20261011-369A-MACOS-IDLE-OBSERVATION",
+  "cpu_percent_one_core": {
+    "baseline": 54.67963,
+    "candidate": 58.34876,
+    "delta_percentage_points": 3.66913
+  },
+  "rss_resident_sum_mib": {
+    "baseline": {
+      "start": 284.75,
+      "end": 287.625,
+      "min": 284.578125,
+      "max": 288.171875
+    },
+    "candidate": {
+      "start": 249.828125,
+      "end": 242.546875,
+      "min": 242.546875,
+      "max": 265.96875
+    }
+  },
+  "role_comparison": [
+    {
+      "role": "opencodex-desktop",
+      "baseline_cpu_percent": 7.62972,
+      "candidate_cpu_percent": 7.89416
+    },
+    {
+      "role": "com.apple.WebKit.GPU",
+      "baseline_cpu_percent": 30.59719,
+      "candidate_cpu_percent": 34.17301
+    },
+    {
+      "role": "com.apple.WebKit.WebContent",
+      "baseline_cpu_percent": 16.45272,
+      "candidate_cpu_percent": 16.27993
+    },
+    {
+      "role": "com.apple.WebKit.Networking",
+      "baseline_cpu_percent": 0.0,
+      "candidate_cpu_percent": 0.00167
+    }
+  ],
+  "gate": "not_evaluated_uncontrolled_sequential_exploratory_comparison",
+  "budget_cpu_delta_percentage_points": 0.5,
+  "budget_rss_delta_mib": 10,
+  "numeric_cpu_signal_exceeds_budget": true,
+  "causal_regression_established": false,
+  "limits": [
+    "no continuous foreground or visibility record",
+    "no controlled repeated warmup or order",
+    "separate sandbox roots and cache/schema states",
+    "preparation scene only",
+    "no main-thread or network tracing",
+    "RSS is process resident sum, not unique memory",
+    "ad hoc isolated copies; not original signing acceptance"
+  ],
+  "lifecycle": {
+    "baseline_cmd_q_exit_verified": false,
+    "baseline_forced_cleanup": "SIGTERM of exact verified baseline executable PID19382",
+    "temporary_two_test_instances": "candidate started before baseline termination was independently confirmed",
+    "single_candidate_confirmed_at": "2026-10-11T10:45:10+00:00",
+    "candidate_pid": 21610,
+    "daily_pid_unchanged": 75764,
+    "startup_early_snapshot_not_lock_ready": true,
+    "candidate_lock_ready_in_settled_snapshot": true
+  },
+  "release_authorized": false,
+  "release_accepted": false
+}
