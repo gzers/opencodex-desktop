@@ -1,0 +1,36 @@
+{
+  "observed_at": "2026-10-11T07:32:46.266441+00:00",
+  "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+  "test_pid": 42681,
+  "data_root": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-data",
+  "manifest_path": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-data/backups/2026/10/manual-preferences/bk_20261011072259_f9e7a1ac/backup-manifest.json",
+  "manifest_sha256": "493ee0bcdd45f74d3a3df41e148046b94df2d86a3276a41bb45303957181edc7",
+  "backup_id": "bk_20261011072259_f9e7a1ac",
+  "action": "manual-preferences",
+  "target_path": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-data/manager-state/preferences.json",
+  "stored_at": "2026-10-11T07:22:59Z",
+  "expected": {
+    "sha256": "58e1c8cc33f43243cd1dee8db4a45da712106e44c29c1ad6a0f97288843e3c85",
+    "bytes": 1371,
+    "file_count": 1,
+    "restorable": true
+  },
+  "actual": {
+    "sha256": "58e1c8cc33f43243cd1dee8db4a45da712106e44c29c1ad6a0f97288843e3c85",
+    "bytes": 1371,
+    "payload_file_count": 1,
+    "directory_entries": [
+      "backup-manifest.json",
+      "preferences.json"
+    ]
+  },
+  "checks": {
+    "payload_sha_matches": true,
+    "payload_bytes_match": true,
+    "manifest_count_matches": true,
+    "two_expected_files_only": true,
+    "paths_confined_to_test_root": true,
+    "regular_files_without_symlinks": true
+  },
+  "scope": "只读核验沙箱偏好备份；未恢复、清理、固定或迁移；未导出 preferences.json 内容。"
+}

@@ -70,11 +70,21 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 
 2026-10-11 07:13 UTC，[CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 的完整 headSha 与 03e0 一致，frontend / release-tools / backend 成功，backend-windows 正在回归，整体 in_progress。旧 [Windows 候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 仍在 NSIS / MSI 构建，属于 3d856 SHA；后续使用最新 SHA 候选，不能混用。这轮局部通过不解除物理 DPI、双权限、默认数据根、性能、真实更新 / 事件或正式签名门禁。
 
+## 2026-10-11 07:32 UTC 最新局部验收与 CI
+
+继续沿用 PID42681，一个隔离测试实例。已真实生成偏好备份 `bk_20261011072259_f9e7a1ac`，载荷 1371 bytes，SHA256 独立重算与清单相符；真实文件只有 preferences.json 与 backup-manifest.json。根 / 年默认展开、月份收起；实际箭头展开、键盘焦点至清单文件以及刷新保留展开层级已有 AX / 截图。无复选框场景视觉对齐只覆盖当前 macOS；复选框、半选、禁用、物理 DPI、刷新移除行时焦点恢复仍待验。
+
+设置可进入共享更新中心及两类详情。管理器当前 0.1.10、可用 —，显示已是最新，缺说明且安装禁用；面板当前未知、可用 2.83.0，查询失败，缺说明回退与官方网页按钮可见，安装禁用。尚未执行网页跳转、安装或重启；准备态未发现 OpenCodex，不能替代概览就绪态入口或完整真实更新验收。
+
+最新 [03e0 CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 的 frontend / release-tools / backend / backend-windows 成功，macOS build 仍运行，整体 in_progress。旧 [3d856 Windows 候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 已 completed / success，构建、隔离 runner 安装验证、上传成功；未下载独立核验安装器，也不能代替 03e0 候选。
+
+原件见 `.adg/evidence/OCX-0110-20261011-03E0-NATIVE-BACKUP-DETAILS/`：15 组原生截图 / AX / metadata、备份校验、CI 原始 JSON 与 provenance / checksums。04 的文件名含 expanded 但该帧未展开，08 未证明焦点成功；不改写失败尝试为通过。未恢复、清理、固定备份或修改策略，日常安装未操作。
+
 ## 候选生成顺序（最新基线）
 
-1. 已完成：释放顺序及 macOS 应用菜单修复已推送。3d856 的五个 CI job 通过是历史轮次；最新 03e0 CI 尚未全部完成。
-2. 3d856 的 `windows-candidate.yml` 仅触发一次，仍运行，不重复 dispatch。03e0 的 Windows 候选需先等同 SHA 完整 CI 通过，再核实未重复触发后生成。
-3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装与局部退出 / 同根重启已观察；签名和完整原生仍待验，旧候选通过项不自动继承。
+1. 已完成：释放顺序及 macOS 应用菜单修复已推送。3d856 的五个 CI job 通过是历史轮次；最新 03e0 四项成功，macOS build 尚未完成。
+2. 3d856 的 `windows-candidate.yml` 仅触发一次，已成功，不重复 dispatch。03e0 的 Windows 候选需先等同 SHA 完整 CI 通过，再核实未重复触发后生成。
+3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装、局部退出 / 同根重启、备份树表及更新详情已观察；签名和完整原生仍待验，旧候选通过项不自动继承。
 4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
 
 ## 下一步及完成条件

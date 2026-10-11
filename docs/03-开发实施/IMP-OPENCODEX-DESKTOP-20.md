@@ -563,3 +563,13 @@ artifact ID `11694523976` 的关键原件、窗口截图、环境、原始字节
 原生菜单 AX、同根重启截图、构建与挂载原件、PID / 锁观察和哈希见 `.adg/evidence/OCX-0110-20261011-03E0-MACOS-APPLICATION-MENU/`。菜单截图不可用，⌘Q 后 AX 的 procNotFound / -600 仅有上下文记录，完整原始异常未留存；退出由独立进程 / 锁证据佐证。2026-10-11 07:13 UTC，[03e0 CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 的 frontend / release-tools / backend 通过，Windows 后端回归仍运行；旧 3d856 [候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 仍在 NSIS / MSI 构建，不作为 03e0 候选通过证据。
 
 下一步按最新 SHA 收齐完整 CI 和安装候选，再完成真机、性能、真实更新 / 事件及正式签名验收。隔离复制安装与局部退出观察不替代真实安装升级、完整原生或发布门禁。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；本轮未迁移真实数据、替换日常安装、创建标签或公开发布。
+
+### 2026-10-11 main@03e0ad94 备份树表、更新详情与候选状态收口
+
+继续使用唯一测试 PID42681 和既有隔离根，未另开实例。真实生成管理器偏好备份 `bk_20261011072259_f9e7a1ac`，目录仅含 preferences.json 与 backup-manifest.json；载荷 1371 bytes，独立重算 SHA256 与清单一致。根 / 年默认展开、月份收起；实际箭头逐层展开后可见两个真实文件，键盘焦点移至清单文件，刷新保留展开层级。当前 macOS 无复选框场景的箭头 / 文字 / 叶占位视觉对齐；不代替复选框、半选、禁用或 DPI 矩阵。点击刷新后的焦点改变，未独立验证行被移除时的焦点恢复，因此该项不记通过。
+
+设置可进入共享更新中心及两类详情。管理器当前 0.1.10、可用版本为 —，显示已是最新、缺说明且安装禁用；面板当前未知、可用 2.83.0，版本查询失败，展示缺说明回退与官方网页入口，安装禁用。沙箱未发现 OpenCodex，不能代替概览就绪态入口；未点击网页或安装。长篇说明滚动、真实说明来源 / 安装进度、备份失败阻断和重启回读仍待验，未根据禁用状态认定真实更新门禁通过。
+
+07:32 UTC 核查最新 [CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821)：headSha 与 03e0 一致，frontend / release-tools / backend / backend-windows 四项成功，macOS build 仍运行，整体尚未通过。旧 3d856 的 [Windows 候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 已 completed / success，构建、隔离 runner 安装验证与上传成功；尚未下载独立核验安装器，不能作为 03e0 候选通过证据。本轮未重复 dispatch。
+
+15 组原生 AX / JPEG / metadata、偏好备份只读完整性报告、CI 原始 JSON 与哈希见 `.adg/evidence/OCX-0110-20261011-03E0-NATIVE-BACKUP-DETAILS/`。其中 04 文件名含 expanded 但画面未展开，08 首次焦点尝试未证明成功，原样保留并说明。后续按交接顺序完成同 SHA Windows 候选、双平台设备验收、性能 / 真实周期、真实更新 / 事件与正式签名审阅。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`，本轮未迁移真实数据、替换日常安装或公开发布，0.2.0 原型及资料变更未夹带。

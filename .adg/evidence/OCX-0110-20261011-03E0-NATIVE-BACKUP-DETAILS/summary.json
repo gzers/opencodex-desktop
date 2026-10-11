@@ -1,0 +1,30 @@
+{
+  "task": "TASK-OPENCODEX-DESKTOP-182",
+  "imp": "IMP-OPENCODEX-DESKTOP-20",
+  "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+  "recorded_at": "2026-10-11T07:34:22.794193+00:00",
+  "capture_count": 15,
+  "test_pid": 42681,
+  "artifact_integrity": "passed",
+  "sandbox_backup_integrity": "passed",
+  "native_scope": "partial",
+  "update_installation": "not_run",
+  "release_authorized": false,
+  "release_accepted": false,
+  "unproven": [
+    "tree-checkbox-mixed-disabled-DPI",
+    "tree-focus-recovery-removed-row",
+    "overview-ready-update-entry",
+    "long-release-notes-scroll",
+    "release-page-navigation",
+    "real-update-progress-and-restart",
+    "paired-performance-and-real-period",
+    "Windows-physical-DPI-dual-token-data-root-IPC",
+    "official-signing-and-notarization"
+  ],
+  "evidence_notes": {
+    "04-tree-month-expanded": "AX cell 点击未展开，文件名不能作为通过依据",
+    "08-tree-keyboard-focus": "首次尝试未证明键盘焦点；09 是成功证据"
+  },
+  "result": "in_progress"
+}

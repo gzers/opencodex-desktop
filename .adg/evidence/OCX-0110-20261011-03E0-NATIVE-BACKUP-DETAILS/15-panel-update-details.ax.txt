@@ -1,0 +1,38 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=upgrade
+			3 container OpenCodex 面板更新
+				4 container
+					5 text 软件更新
+					6 heading OpenCodex 面板更新, Value: 3
+						7 text OpenCodex 面板更新
+					8 text 检查两个更新对象，查看说明后选择安装。
+					9 button 关闭更新中心
+				10 button ← 全部更新
+				11 container 更新说明
+					12 button (expanded) 查看 OpenCodex 面板更新详情, Secondary Actions: Collapse
+					13 text 当前 未知 可用 2.83.0
+					14 text 版本查询失败，请检查网络或运行来源后重试。
+					15 heading 更新说明, Value: 4
+						16 text 更新说明
+					17 container OpenCodex 面板更新说明
+						18 text 当前版本查询未提供发布说明。请查看官方网页详情，确认版本变化后再安装。
+					19 button 查看官方网页详情 ↗
+					20 text 面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。
+					21 button (disabled) 备份并更新面板
+				22 container
+					23 text 更新准备完成后由你选择重启时机。
+					24 button 稍后
+					25 button 重新检查更新
+	26 close button
+	27 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	28 minimize button
+29 menu bar
+	30 OpenCodeX Desktop
+	31 进程
+	32 编辑
+	33 视图
+	34 诊断
+
+The focused UI element is 3 container OpenCodex 面板更新

@@ -1,0 +1,38 @@
+[
+  {
+    "file": "03e0-ci.json",
+    "observed_at": "2026-10-11T07:32:46.266947+00:00",
+    "argv": [
+      "gh",
+      "run",
+      "view",
+      "38120149821",
+      "--repo",
+      "gzers/opencodex-desktop",
+      "--json",
+      "status,conclusion,headSha,jobs,url"
+    ],
+    "exit_code": 0,
+    "bytes": 10034,
+    "sha256": "f43235bf4a8d575fcfe8e919d17686d1a97ed3a5f9294e0a32ddb94203a57f58",
+    "head_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac"
+  },
+  {
+    "file": "3d856-windows-candidate.json",
+    "observed_at": "2026-10-11T07:32:48.285764+00:00",
+    "argv": [
+      "gh",
+      "run",
+      "view",
+      "38119648935",
+      "--repo",
+      "gzers/opencodex-desktop",
+      "--json",
+      "status,conclusion,headSha,jobs,url"
+    ],
+    "exit_code": 0,
+    "bytes": 3662,
+    "sha256": "6012ae6b52c1969fdb46a77888f1682919059896516fd41739a491d3121708c6",
+    "head_sha": "3d856fb561aa8dd21d0dd1347d8736c7b704f3d7"
+  }
+]
