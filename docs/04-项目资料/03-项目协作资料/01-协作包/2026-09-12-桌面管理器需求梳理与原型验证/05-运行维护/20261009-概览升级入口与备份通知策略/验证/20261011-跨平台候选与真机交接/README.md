@@ -82,10 +82,12 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 
 ## 候选生成顺序（最新基线）
 
-1. 已完成：释放顺序及 macOS 应用菜单修复已推送。3d856 的五个 CI job 通过是历史轮次；最新 03e0 四项成功，macOS build 尚未完成。
-2. 3d856 的 `windows-candidate.yml` 仅触发一次，已成功，不重复 dispatch。03e0 的 Windows 候选需先等同 SHA 完整 CI 通过，再核实未重复触发后生成。
+1. 已完成：释放顺序及 macOS 应用菜单修复已推送。最新 03e0 的 [CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 已 completed / success，五个 job 全部成功；3d856 通过仅作历史轮次。
+2. 核对远端 main 及同 SHA 候选查重后，2026-10-11 15:38（UTC+8）仅触发一次 03e0 的 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291)，已 in_progress，headSha 与最新 CI 相同。等待完成并下载核验，不重复 dispatch。3d856 候选已成功，仅作历史证据。
 3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装、局部退出 / 同根重启、备份树表及更新详情已观察；签名和完整原生仍待验，旧候选通过项不自动继承。
 4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
+
+完整 CI 后续快照、候选查重、单次 dispatch 与源码身份的原件见 `.adg/evidence/OCX-0110-20261011-03E0-CI-CANDIDATE-DISPATCH/`；不覆盖此前 07:32 UTC 的运行中快照。新候选当前尚未完成，不作为 Windows 安装或设备验收通过证据。
 
 ## 下一步及完成条件
 

@@ -573,3 +573,9 @@ artifact ID `11694523976` 的关键原件、窗口截图、环境、原始字节
 07:32 UTC 核查最新 [CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821)：headSha 与 03e0 一致，frontend / release-tools / backend / backend-windows 四项成功，macOS build 仍运行，整体尚未通过。旧 3d856 的 [Windows 候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 已 completed / success，构建、隔离 runner 安装验证与上传成功；尚未下载独立核验安装器，不能作为 03e0 候选通过证据。本轮未重复 dispatch。
 
 15 组原生 AX / JPEG / metadata、偏好备份只读完整性报告、CI 原始 JSON 与哈希见 `.adg/evidence/OCX-0110-20261011-03E0-NATIVE-BACKUP-DETAILS/`。其中 04 文件名含 expanded 但画面未展开，08 首次焦点尝试未证明成功，原样保留并说明。后续按交接顺序完成同 SHA Windows 候选、双平台设备验收、性能 / 真实周期、真实更新 / 事件与正式签名审阅。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`，本轮未迁移真实数据、替换日常安装或公开发布，0.2.0 原型及资料变更未夹带。
+
+### 2026-10-11 最新完整 CI 通过与同 SHA Windows 候选启动
+
+[CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 已 completed / success，五个 job（frontend、release-tools、backend、backend-windows、macOS build）全部成功；headSha 为 `03e0ad942c16fe2ef75473eb6693012b3ae684ac`。此前 07:32 UTC 的运行中快照保留，以上为后续状态。核对远端 main 及同 SHA 候选查重后，2026-10-11 15:38（UTC+8）仅触发一次 `windows-candidate.yml`，新 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291) 已 in_progress，headSha 与最新 CI 一致；不能在完成、下载、核验前写作候选通过。
+
+原始 CI JSON、触发前后列表、远端引用、dispatch stdout / stderr、命令时间与哈希见 `.adg/evidence/OCX-0110-20261011-03E0-CI-CANDIDATE-DISPATCH/`。下一步收齐该 run 的安装器及 runner 证据，独立核验资产身份后交 Windows 隔离设备完成双权限 / 物理 DPI / 默认数据根 / 原生验收；macOS、性能、真实周期、真实更新与正式签名门禁继续保留。未创建版本标签、Release 或 stable 晋升；唯一测试 PID42681、日常 PID75764 保持原状。

@@ -1,0 +1,104 @@
+[
+  {
+    "name": "ci-success",
+    "argv": [
+      "gh",
+      "run",
+      "view",
+      "38120149821",
+      "--repo",
+      "gzers/opencodex-desktop",
+      "--json",
+      "status,conclusion,headSha,jobs,url"
+    ],
+    "started_at": "2026-10-11T07:38:30.651353+00:00",
+    "finished_at": "2026-10-11T07:38:32.610333+00:00",
+    "exit_code": 0,
+    "stdout_bytes": 10219,
+    "stdout_sha256": "b811b324103b8bcddfbae017cf879b8c8ce04e3130333b9feb8fc3c35af35d65",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "main-ref",
+    "argv": [
+      "git",
+      "ls-remote",
+      "origin",
+      "refs/heads/main"
+    ],
+    "started_at": "2026-10-11T07:38:32.610587+00:00",
+    "finished_at": "2026-10-11T07:38:35.658600+00:00",
+    "exit_code": 0,
+    "stdout_bytes": 57,
+    "stdout_sha256": "54d9dc72dd674950ba84ee766720a11e632e74305b1a54a9bb15010c67901e88",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "candidate-before-dispatch",
+    "argv": [
+      "gh",
+      "run",
+      "list",
+      "--repo",
+      "gzers/opencodex-desktop",
+      "--workflow",
+      "windows-candidate.yml",
+      "--limit",
+      "30",
+      "--json",
+      "databaseId,status,conclusion,headSha,createdAt,event,url,headBranch"
+    ],
+    "started_at": "2026-10-11T07:38:35.658794+00:00",
+    "finished_at": "2026-10-11T07:38:37.642964+00:00",
+    "exit_code": 0,
+    "stdout_bytes": 4999,
+    "stdout_sha256": "5cecd1e3bf95b5e380fdff28563c62d47771b3678a93c3f6c937ddc0201466e7",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "dispatch",
+    "argv": [
+      "gh",
+      "workflow",
+      "run",
+      "windows-candidate.yml",
+      "--repo",
+      "gzers/opencodex-desktop",
+      "--ref",
+      "main"
+    ],
+    "started_at": "2026-10-11T07:38:37.643217+00:00",
+    "finished_at": "2026-10-11T07:38:40.218034+00:00",
+    "exit_code": 0,
+    "stdout_bytes": 68,
+    "stdout_sha256": "835b02dca224446c8fb51cd74b7c6350397a9b7a817a1d044eedc391eaaf99b1",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "candidate-after-dispatch",
+    "argv": [
+      "gh",
+      "run",
+      "list",
+      "--repo",
+      "gzers/opencodex-desktop",
+      "--workflow",
+      "windows-candidate.yml",
+      "--limit",
+      "30",
+      "--json",
+      "databaseId,status,conclusion,headSha,createdAt,event,url,headBranch"
+    ],
+    "started_at": "2026-10-11T07:38:58.562868+00:00",
+    "finished_at": "2026-10-11T07:39:00.277611+00:00",
+    "exit_code": 0,
+    "stdout_bytes": 5277,
+    "stdout_sha256": "3afcdf87d2006a4582caa87fd0a90f5747210e7b5fac990b0586a58b29478651",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]
