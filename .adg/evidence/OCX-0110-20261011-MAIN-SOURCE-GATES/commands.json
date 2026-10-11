@@ -1,0 +1,20 @@
+{
+  "evidence_id": "OCX-0110-20261011-MAIN-SOURCE-GATES",
+  "code_branch": "main",
+  "code_commit": "3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea",
+  "commands": [
+    {"cwd": "apps/desktop/tauri", "command": "cargo metadata --locked --format-version 1", "exit_code": 0, "result": "passed"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo fmt --all -- --check", "exit_code": 0, "result": "passed"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo clippy --locked --workspace --all-targets -- -D warnings", "exit_code": 0, "result": "passed"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo test --locked --workspace --features integration-test", "exit_code": 0, "result": "passed", "summary": "library 694 passed / 0 failed / 4 ignored; binary 2 passed / 0 failed; integration targets passed"},
+    {"cwd": "apps/desktop/ui", "command": "npm test -- --run", "exit_code": 0, "result": "passed", "summary": "94 test files / 459 tests passed"},
+    {"cwd": "apps/desktop/ui", "command": "npm run typecheck", "exit_code": 0, "result": "passed"},
+    {"cwd": "apps/desktop/ui", "command": "npm run build", "exit_code": 0, "result": "passed", "summary": "170 modules transformed"},
+    {"cwd": "repository root", "command": "node --test test/smoke/windows-bundle-identity.test.mjs", "exit_code": 0, "result": "passed", "summary": "5 passed / 0 failed"},
+    {"cwd": "repository root", "command": "git diff --check", "exit_code": 0, "result": "passed"}
+  ],
+  "non_blocking_notes": [
+    "既有 Vite INEFFECTIVE_DYNAMIC_IMPORT 警告和 jsdom canvas notice 未阻断 UI 结果。",
+    "测试夹具中的历史 0.1.9 输入保留，用于验证升级场景，不代表当前制品身份。"
+  ]
+}

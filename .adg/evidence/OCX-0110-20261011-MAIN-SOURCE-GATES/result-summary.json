@@ -1,0 +1,15 @@
+{
+  "evidence_id": "OCX-0110-20261011-MAIN-SOURCE-GATES",
+  "verification": "main@3bcd9318 当前源码门禁",
+  "version_identity": {"version": "0.1.10", "source_commit": "3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea", "main_synced": true},
+  "rust": {"metadata": "passed", "fmt": "passed", "clippy": "passed", "library_passed": 694, "library_failed": 0, "library_ignored": 4, "binary_passed": 2, "integration_targets": "passed"},
+  "ui": {"test_files": 94, "tests_passed": 459, "tests_failed": 0, "typecheck": "passed", "build": "passed", "modules_transformed": 170},
+  "windows_bundle_identity_smoke": {"passed": 5, "failed": 0},
+  "source_gate": "passed",
+  "native_platform_acceptance": "open",
+  "performance_acceptance": "open",
+  "real_update_restart": "open",
+  "signing_and_release_assets": "open",
+  "release_authorized": false,
+  "interpretation": "main 集成、源码回归和身份检查已通过；这不是双平台原生、安装、性能、签名或发布完成证书。"
+}

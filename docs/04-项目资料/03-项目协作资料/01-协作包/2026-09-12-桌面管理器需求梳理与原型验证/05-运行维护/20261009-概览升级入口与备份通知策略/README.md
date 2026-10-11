@@ -133,3 +133,12 @@ feature/0.1.10-maintenance 已集成到 main，集成提交为 3bcd9318eeba4dc0e
 本地门禁为通过：npm ci、UI 类型检查、生产构建、94 个测试文件 / 459 项 UI 测试；Cargo metadata、fmt、Clippy -D warnings、Rust 测试（library 694 passed / 0 failed / 4 ignored，binary 2 passed）和 git diff --check。回执见 .adg/evidence/OCX-0110-20261011-CI-38096673516/。
 
 CI 成功只闭合集成源码、构建和 smoke 门禁。真实 macOS / Windows 原生 UI、安装与数据根、双权限、DPI / 云母 / 标题栏 / 动效 / 透明下拉框、自动检查性能和稳定周期、真实更新 / 重启 / 恢复、签名与发布门禁仍待验收；本协作包和 IMP 继续 in_progress，release_authorized: false。本次不创建发布标签、不公开发布、不替换日常 0.1.7。
+
+
+### 2026-10-11 main 源码门禁证据
+
+0.1.10 当前源码事实已绑定到 main@3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea，并确认 origin/main 已同步。Rust metadata、fmt、Clippy、workspace integration tests、UI 全量测试、类型检查、生产构建、Windows bundle identity smoke 和 git diff --check 全部通过；结果为 Rust library 694 passed / 0 failed / 4 ignored、binary 2 passed / 0 failed，UI 94 个测试文件 / 459 项通过，构建转换 170 个模块，identity smoke 5/5。
+
+证据目录：.adg/evidence/OCX-0110-20261011-MAIN-SOURCE-GATES/；验证说明：验证/20261011-main源码门禁/README.md。该记录只证明 main 的源码、构建和身份门禁，旧 feature 分支与既有记录不改写。旧 Windows 候选包实际版本为 0.1.9，必须重新生成 0.1.10 双平台制品。
+
+发布仍未授权：release_authorized: false，本协作包保持 in_progress。原生 UI、安装、双权限与数据根、自动检查性能和真实周期、真实更新 / 重启 / 恢复、签名、公证 / Authenticode、全域事件执行证据、真实用户迁移和发布门禁均待闭合。

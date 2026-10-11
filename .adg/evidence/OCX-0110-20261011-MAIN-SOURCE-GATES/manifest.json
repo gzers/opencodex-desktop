@@ -1,0 +1,28 @@
+{
+  "evidence_id": "OCX-0110-20261011-MAIN-SOURCE-GATES",
+  "recorded_at": "2026-10-11T00:48:34Z",
+  "kind": "main-source-gate",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea",
+  "document_branch": "docs/governance-main",
+  "status": "passed_with_scope_limits",
+  "subject": "0.1.10 main 集成提交源码门禁收口",
+  "scope": [
+    "main 当前提交的 Rust metadata、fmt、Clippy 与全量测试",
+    "UI 全量测试、类型检查与生产构建",
+    "Windows bundle identity smoke",
+    "git diff --check"
+  ],
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "不替代 macOS 原生 UI、隔离安装、升级保留、真实更新 / 重启与恢复",
+    "不替代 Windows 普通权限、实际安装目录、自定义数据根、双权限、DPI、云母、标题栏、动效和透明下拉框验收",
+    "不替代自动检查性能、稳定 24 小时 / beta 6 小时真实周期和跨启动观察",
+    "不替代真实更新端点、下载、签名、公证 / Authenticode、失败恢复和真实用户迁移",
+    "不替代全域事件注册表调用点的跨平台执行证据",
+    "不生成 0.1.10 安装制品，不创建标签，不公开发布，不晋升 stable"
+  ],
+  "artifact_boundary": "此前 Windows 候选的实际身份为 0.1.9；必须基于 main 当前源码重新生成并验收 0.1.10 制品。"
+}

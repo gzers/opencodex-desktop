@@ -461,3 +461,14 @@ MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1
 集成前后本地门禁保持通过：npm ci、UI 类型检查、生产构建、94 个 UI 测试文件 / 459 项测试、Cargo metadata、fmt、Clippy -D warnings、Rust 测试（library 694 passed / 0 failed / 4 ignored，binary 2 passed）和 git diff --check。完整回执见 .adg/evidence/OCX-0110-20261011-CI-38096673516/。
 
 本次只闭合 main 集成源码、CI 构建和 smoke 门禁。CI 成功不能替代 macOS 原生 UI / 安装 / 更新重启、Windows 普通与管理员双权限 / 安装路径 / DPI / 云母 / 标题栏 / 动效 / 透明下拉框、配置与备份数据根、自动检查性能与 stable 24 小时 / beta 6 小时周期、真实端点更新、签名、公证 / Authenticode、用户迁移和发布后观察。状态继续为 in_progress，release_authorized: false；不创建 v0.1.10 标签，不公开发布，不替换日常 0.1.7。
+
+
+### 2026-10-11 main@3bcd9318 源码门禁回写
+
+代码实现已集成到 main@3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea，且 origin/main 已同步。当前提交将版本身份固定为 0.1.10；Windows bundle identity smoke 5/5 通过。
+
+本轮源码门禁全部通过：Cargo metadata、fmt、Clippy -D warnings、Rust workspace integration tests（library 694 passed / 0 failed / 4 ignored，binary 2 passed / 0 failed）、UI 94 个测试文件 / 459 项通过、类型检查、生产构建（170 modules transformed）和 git diff --check。完整命令及结果见 .adg/evidence/OCX-0110-20261011-MAIN-SOURCE-GATES/。
+
+本证据只闭合 main 集成、源码回归、构建和版本身份检查。旧 feature 分支记录继续作为历史证据；此前 Windows 候选包真实身份仍为 0.1.9，不能作为 0.1.10 发布资产，必须基于当前 main 重新生成明确身份为 0.1.10 的 macOS / Windows 制品。
+
+macOS / Windows 原生 UI、安装与路径、双权限数据根、DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、自动检查性能与稳定 / beta 周期、真实更新 / 重启 / 恢复、签名制品、全域事件调用点、真实用户迁移及发布门禁仍未闭合。当前 release_authorized: false、状态继续 in_progress；不创建标签、不公开发布、不晋升 stable、不替换日常 0.1.7。
