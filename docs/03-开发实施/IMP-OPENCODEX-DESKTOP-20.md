@@ -489,3 +489,11 @@ macOS / Windows 原生 UI、安装与路径、双权限数据根、DPI / 云母 
 当前复核显示测试 PID 86306、data/logs/app.log、data/manager-state/app.lock 和更新调度文件均存在，锁与保留进程匹配；日常安装 PID 75764 保持运行且未操作。历史强制终止后残留旧锁的失败证据继续保留，不被本轮局部成功覆盖。详见运行维护协作包中的 macOS DMG 安装生命周期验证记录与 .adg/evidence/OCX-0110-20261011-MACOS-LIFECYCLE/。
 
 本轮只证明 macOS 临时隔离安装与局部生命周期观察，不证明正式签名 / 公证、原生外观、升级 / 卸载、真实更新 / 重启、Windows 0.1.10 真机、自动检查性能、稳定周期或发布授权。release_authorized: false、release_accepted: false；协作包与 IMP 继续 in_progress。
+
+### 2026-10-11 main@861fdeea 调度与缓存定向复核
+
+基于代码主分支 main@861fdeea39d1c45fa2beddb2cba6659b67735d9f 完成自动检查调度 / 缓存定向复核。Rust 命令 cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test schedule -- --nocapture 通过 5 项、失败 0 项、忽略 0 项；UI 命令覆盖 update-scheduler、update-query-ownership、update-install-ownership、update-version 四个文件，18 项全部通过，两个命令 exit 0。
+
+该回执只确认固定周期、持久 deadline、缓存边界、通道隔离、single-flight 相关源码合同，以及查询 / 安装所有权定向回归；不把源码单测当作真实 CPU、RSS、网络 / 子进程、启动 p95、帧耗时或 stable 24 小时 / beta 6 小时性能证据。Windows 双权限 / DPI / 原生外观、macOS 原生安装、真实更新 / 重启、签名制品和发布门禁继续未闭合。详细记录见协作包验证/20261011-调度缓存复核及 .adg/evidence/OCX-0110-20261011-SCHEDULE-CACHE-REVALIDATION/。
+
+IMP-OPENCODEX-DESKTOP-20 继续 in_progress，release_authorized: false；不创建标签、不公开发布、不晋升 stable、不替换日常安装。

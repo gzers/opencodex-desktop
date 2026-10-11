@@ -1,0 +1,23 @@
+{
+  "evidence_id": "OCX-0110-20261011-SCHEDULE-CACHE-REVALIDATION",
+  "commands": [
+    {
+      "cwd": "/Users/ezio/.codex/worktrees/ocx-0110-main",
+      "command": "cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test schedule -- --nocapture",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "5 passed; 0 failed; 0 ignored; selected schedule tests"
+    },
+    {
+      "cwd": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui",
+      "command": "npm test -- --run tests/update-scheduler.test.ts tests/update-query-ownership.test.ts tests/update-install-ownership.test.ts tests/update-version.test.ts",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "4 test files passed; 18 tests passed"
+    }
+  ],
+  "source_identity": {
+    "branch": "main",
+    "commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f"
+  }
+}

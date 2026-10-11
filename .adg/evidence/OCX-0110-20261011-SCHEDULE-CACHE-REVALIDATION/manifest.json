@@ -1,0 +1,23 @@
+{
+  "evidence_id": "OCX-0110-20261011-SCHEDULE-CACHE-REVALIDATION",
+  "recorded_at": "2026-10-11",
+  "kind": "targeted-source-regression",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "document_branch": "docs/governance-main",
+  "status": "passed_with_scope_limits",
+  "subject": "0.1.10 自动检查调度与缓存命中定向复核",
+  "results": {
+    "rust_schedule_tests": {"passed": 5, "failed": 0, "ignored": 0},
+    "ui_update_tests": {"test_files": 4, "passed": 18, "failed": 0}
+  },
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "只证明调度、缓存、single-flight、通道隔离和前端更新所有权的源码合同",
+    "未证明真实 CPU、RSS、网络请求 / 子进程、启动 p95、帧耗时或 24 小时 / 6 小时周期",
+    "未替代 Windows 双权限 / DPI / 原生外观、macOS 原生安装、真实更新 / 重启、签名和发布门禁"
+  ],
+  "artifact_boundary": "本证据不生成制品、不创建标签、不公开发布、不晋升 stable"
+}
