@@ -1,0 +1,22 @@
+{
+  "observed_at_utc": "2026-10-11T07:05:31.951329+00:00",
+  "before": [
+    {
+      "pid": 17410,
+      "command": "/private/tmp/ocx-0110-dmg-install-tuk3m7/c654/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 75764,
+      "command": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "after": [
+    {
+      "pid": 75764,
+      "command": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "action": "SIGTERM scoped to verified old sandbox PID 17410",
+  "normal_exit_passed": false,
+  "purpose": "replace sole obsolete test instance; daily installation untouched"
+}

@@ -1,0 +1,29 @@
+{
+  "observed_at_utc": "2026-10-11T07:14:28.283266+00:00",
+  "apps": [
+    {
+      "pid": 42681,
+      "ppid": 1,
+      "executable": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 75764,
+      "ppid": 1,
+      "executable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "test_pid": 42681,
+  "test_instance_count": 1,
+  "daily_pid": 75764,
+  "daily_present": true,
+  "sandbox_environment": {
+    "OPENCODEX_SANDBOX": "1",
+    "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-data",
+    "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk"
+  },
+  "lock_metadata": {
+    "pid": 42681,
+    "started_at": 1791702676585
+  },
+  "read_only_observation": true
+}

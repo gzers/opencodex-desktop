@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.05s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-ac40b12f3c4967fb)
+
+running 3 tests
+test infrastructure::tray_controller::tests::action_contract_covers_all_menu_targets ... ok
+test infrastructure::tray_controller::tests::projects_runtime_address_and_running_state ... ok
+test infrastructure::tray_controller::tests::process_gates_cover_both_the_tray_and_the_app_menu ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 695 filtered out; finished in 0.00s

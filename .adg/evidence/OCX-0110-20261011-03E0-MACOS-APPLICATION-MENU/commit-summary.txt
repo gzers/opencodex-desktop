@@ -1,0 +1,10 @@
+commit 03e0ad942c16fe2ef75473eb6693012b3ae684ac
+Author:     Ezio <ezio@local>
+AuthorDate: Sun Oct 11 15:04:28 2026 +0800
+Commit:     Ezio <ezio@local>
+CommitDate: Sun Oct 11 15:04:28 2026 +0800
+
+    fix(macos): 恢复应用菜单退出与隐藏入口
+
+ .../tauri/src/infrastructure/tray_controller.rs    | 24 +++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)

@@ -1,0 +1,60 @@
+{
+  "build": {
+    "argv": [
+      "cargo",
+      "tauri",
+      "build",
+      "--bundles",
+      "app,dmg",
+      "--",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "seconds": 121.254,
+    "log": "build.raw.log"
+  },
+  "architecture": {
+    "argv": [
+      "lipo",
+      "-archs",
+      "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exit_code": 0,
+    "seconds": 0.016,
+    "log": "architecture.raw.log"
+  },
+  "dmg-verify": {
+    "argv": [
+      "hdiutil",
+      "verify",
+      "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+    ],
+    "exit_code": 0,
+    "seconds": 0.967,
+    "log": "dmg-verify.raw.log"
+  },
+  "codesign-verify": {
+    "argv": [
+      "codesign",
+      "--verify",
+      "--deep",
+      "--strict",
+      "--verbose=2",
+      "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app"
+    ],
+    "exit_code": 1,
+    "seconds": 0.029,
+    "log": "codesign-verify.raw.log"
+  },
+  "codesign-display": {
+    "argv": [
+      "codesign",
+      "--display",
+      "--verbose=4",
+      "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app"
+    ],
+    "exit_code": 0,
+    "seconds": 0.013,
+    "log": "codesign-display.raw.log"
+  }
+}

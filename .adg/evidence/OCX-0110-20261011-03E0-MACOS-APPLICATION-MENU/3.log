@@ -1,0 +1,23 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.47s
+     Running tests/tray.rs (target/debug/deps/tray-9e1cd099c62be96f)
+
+running 4 tests
+test tray_state_uses_frozen_labels_for_failure_states ... ok
+test tray_state_hides_address_until_live_running_port_exists ... ok
+test tray_state_reports_running_address_and_action_gates ... ok
+test tray_state_allows_start_at_risk_without_writing_the_risk_verdict_to_the_tray ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/window_close.rs (target/debug/deps/window_close-871661a12745ba58)
+
+running 6 tests
+test hidden_window_releases_the_dock_icon_and_showing_it_restores_it ... ok
+test unreadable_preferences_never_quit_the_shell ... ok
+test window_close_only_hides_the_shell_when_keep_proxy_on_close_is_enabled ... ok
+test default_preference_is_keep_proxy_on_close ... ok
+test notification_publisher_is_absent_when_lifecycle_notifications_are_off ... ok
+test lifecycle_notifications_preference_is_consumed ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s

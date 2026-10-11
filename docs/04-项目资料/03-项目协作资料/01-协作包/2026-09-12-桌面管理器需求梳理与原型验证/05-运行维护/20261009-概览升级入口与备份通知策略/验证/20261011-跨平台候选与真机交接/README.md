@@ -2,6 +2,8 @@
 
 关联 IMP-OPENCODEX-DESKTOP-20 / TASK-OPENCODEX-DESKTOP-182。本文保存候选构建和后续验收交接，不是版本通过证书或稳定核心事实。代码归属 main；本文和证据归属 docs/governance-main。
 
+最新源码基线已推进至 `main@03e0ad942c16fe2ef75473eb6693012b3ae684ac`，应用菜单与退出重启结果见下文“main@03e0ad94 的 macOS 候选与原生观察”。ADCC / 3D856 段落是历史轮次，已通过项不能自动替代最新 SHA 验收。
+
 ## main@adccca8e 的结果
 
 源码身份为 `adccca8e92d28c95d4fa83c11d994cb6bf3445f6`。在干净工作树执行 `cargo tauri build --bundles app,dmg -- --locked`，退出码 0。
@@ -18,7 +20,7 @@
 
 [失败 CI](https://github.com/gzers/opencodex-desktop/actions/runs/38117383632) 的 Windows Clippy 通过；Windows 后端库回归为 **485 passed / 1 failed / 4 ignored**。失败项为 `cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit`：运行操作锁已经可以取得时，未保存绑定的存储门仍冻结。运行操作锁是 worker 局部变量，而绑定门仍为闭包捕获，释放顺序存在窗口。保留这轮失败，修复需要重新取得 Windows 回归和候选证据；不删除断言、不增加重试掩盖失败、不降 Clippy 门禁。
 
-## 当前修复基线
+## main@3d856fb5 的释放顺序修复基线
 
 `main@3d856fb561aa8dd21d0dd1347d8736c7b704f3d7` 已提交推送：让绑定守卫在工作线程内先结算，随后才释放运行操作锁；保存后的待重启绑定仍冻结，未保存绑定正常解除。未删除或重试原竞态断言。
 
@@ -48,11 +50,31 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 
 原件和校验清单见 `.adg/evidence/OCX-0110-20261011-3D856-MACOS-CANDIDATE/`。原 `.app` 与 DMG 留存于 `/private/tmp/ocx-0110-3d856-candidate-2aw35kxm/`，本地路径不是下载地址；不得通过给原件重签覆盖原始失败记录。当前仍只有旧 c654 隔离测试实例；本轮尝试退出快捷键后该进程仍在运行，因此未启动第二个实例，也不记为正常退出 / 锁清理通过。
 
-## 候选生成顺序
+## main@03e0ad94 的 macOS 候选与原生观察
 
-1. 已完成：释放顺序修复已推送；新 CI 的 headSha 与 main 一致，五个 job 全部通过。
-2. 已仅触发一次 `windows-candidate.yml` 的 main 测试构建，实际 run SHA 已核验一致；等待 MSI / NSIS 和安装后最终 EXE 身份证据，未认定候选通过。
-3. macOS 已按该 SHA 重打候选并记录版本、字节数、SHA256 和签名缺口；后续使用留存原件，旧候选通过项不自动继承。
+`03e0ad942c16fe2ef75473eb6693012b3ae684ac` 已推送，恢复 macOS 原生应用菜单隐藏与退出入口。fmt、13 项定向测试及严格全目标 / 全特性 Clippy 通过。干净源码构建 app / DMG 退出 0、耗时 121.254 秒，arm64，版本 / 构建号为 0.1.10，完整源码 SHA 内嵌 EXE。
+
+| 制品 / 检查 | 实测结果 | 边界 |
+|---|---|---|
+| DMG | 4,384,633 bytes；SHA256 `1bc69e1b42676dfff93c4c402ffe8bb5affd234ade924ed5f4b33600a6fa3ab4`；容器校验通过 | 原件留存，不用于公开发布 |
+| 原 EXE | 7,897,776 bytes；SHA256 `196596e388f4f57d63c66c1067d70ac1be1879ec2a9096f657efbe2dc4590c0f` | 完整原 `.app` 单独保留 |
+| 严格签名 / 公证 | 原件签名 exit 1，资源未封装；公证未验证 | 测试副本 ad hoc 重签通过不能代替正式签名 |
+| DMG 隔离复制安装 | 只读挂载、核对其中 EXE、复制测试副本并卸载卷通过 | 没有覆盖日常安装，不是系统目录真实安装升级验收 |
+| 菜单退出 | PID41949 使用新 `test-data` 根，菜单原生 terminate 可用；点击后原 PID 消失、锁释放 | 退出后 UI 观察出现 PID42076 沿用旧测试根，来源未独立定位；不能记完整生命周期通过 |
+| ⌘Q | 对 PID42076 按快捷键，无信号 monitor 确认退出；两个测试根锁可取得 | 该 PID 使用旧测试根，未把它记为同新根重启 |
+| CLI 同新根重启 | 未删除锁文件，再启动新根为 PID42681，环境与锁 metadata 匹配 | 只保留这一测试实例；日常 PID75764 未操作 |
+
+原件留存 `/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/`。测试副本 identifier 为 `com.gzers.opencodex.desktop.sandbox011003e0`，EXE SHA256 `a9de09589d4631df9e5046332fb263e33d776c64cddf133410d2bd6091bf0151`；只修改该副本，不覆盖原件签名失败。旧 PID17410 精确 SIGTERM 清理不记正常退出通过。
+
+证据见 `.adg/evidence/OCX-0110-20261011-03E0-MACOS-APPLICATION-MENU/`：原生菜单有 AX 记录但无可用菜单截图；同根重启有 JPEG 截图及 AX diff。⌘Q 后读取 AX 报 procNotFound / -600，完整原始异常未保存，只有上下文说明；退出另由进程监控和锁观察确认。初次退出后窗口仍出现的原始记录继续保留，不能覆盖为成功快照。
+
+2026-10-11 07:13 UTC，[CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 的完整 headSha 与 03e0 一致，frontend / release-tools / backend 成功，backend-windows 正在回归，整体 in_progress。旧 [Windows 候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 仍在 NSIS / MSI 构建，属于 3d856 SHA；后续使用最新 SHA 候选，不能混用。这轮局部通过不解除物理 DPI、双权限、默认数据根、性能、真实更新 / 事件或正式签名门禁。
+
+## 候选生成顺序（最新基线）
+
+1. 已完成：释放顺序及 macOS 应用菜单修复已推送。3d856 的五个 CI job 通过是历史轮次；最新 03e0 CI 尚未全部完成。
+2. 3d856 的 `windows-candidate.yml` 仅触发一次，仍运行，不重复 dispatch。03e0 的 Windows 候选需先等同 SHA 完整 CI 通过，再核实未重复触发后生成。
+3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装与局部退出 / 同根重启已观察；签名和完整原生仍待验，旧候选通过项不自动继承。
 4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
 
 ## 下一步及完成条件

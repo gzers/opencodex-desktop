@@ -1,0 +1,93 @@
+{
+  "observed_at_utc": "2026-10-11T07:07:09.071810+00:00",
+  "source": {
+    "branch": "main",
+    "commit": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+    "clean": true
+  },
+  "commands": {
+    "build": {
+      "argv": [
+        "cargo",
+        "tauri",
+        "build",
+        "--bundles",
+        "app,dmg",
+        "--",
+        "--locked"
+      ],
+      "exit_code": 0,
+      "seconds": 121.254,
+      "log": "build.raw.log"
+    },
+    "architecture": {
+      "argv": [
+        "lipo",
+        "-archs",
+        "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+      ],
+      "exit_code": 0,
+      "seconds": 0.016,
+      "log": "architecture.raw.log"
+    },
+    "dmg-verify": {
+      "argv": [
+        "hdiutil",
+        "verify",
+        "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+      ],
+      "exit_code": 0,
+      "seconds": 0.967,
+      "log": "dmg-verify.raw.log"
+    },
+    "codesign-verify": {
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app"
+      ],
+      "exit_code": 1,
+      "seconds": 0.029,
+      "log": "codesign-verify.raw.log"
+    },
+    "codesign-display": {
+      "argv": [
+        "codesign",
+        "--display",
+        "--verbose=4",
+        "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app"
+      ],
+      "exit_code": 0,
+      "seconds": 0.013,
+      "log": "codesign-display.raw.log"
+    }
+  },
+  "identity": {
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleShortVersionString": "0.1.10",
+    "CFBundleVersion": "0.1.10",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "source_sha_embedded": true,
+  "artifacts": [
+    {
+      "kind": "dmg",
+      "path": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4384633,
+      "sha256": "1bc69e1b42676dfff93c4c402ffe8bb5affd234ade924ed5f4b33600a6fa3ab4"
+    },
+    {
+      "kind": "executable",
+      "path": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7897776,
+      "sha256": "196596e388f4f57d63c66c1067d70ac1be1879ec2a9096f657efbe2dc4590c0f"
+    }
+  ],
+  "release_accepted": false,
+  "release_authorized": false,
+  "notarization": "not verified",
+  "ui_launched": false
+}

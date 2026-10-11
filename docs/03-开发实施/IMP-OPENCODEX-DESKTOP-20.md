@@ -551,3 +551,15 @@ artifact ID `11694523976` 的关键原件、窗口截图、环境、原始字节
 06:56 UTC 核查 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 已完成，frontend / release-tools / backend / backend-windows / build 五个 job 均成功，headSha 与 main 完整 SHA 一致。核实该 SHA 没有已触发的 Windows 候选后，仅 dispatch 一次 main 的 `windows-candidate.yml`；[候选 run 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 的 headSha 再次核对一致，观察时为 `in_progress`。
 
 最终 CI 快照、候选快照、触发命令及哈希清单见 `.adg/evidence/OCX-0110-20261011-3D856-CI-AND-CANDIDATE-DISPATCH/`。下一步先核候选 MSI / NSIS 和安装后 EXE 身份，再补同 SHA 双平台真机、自动检查性能及真实周期、真实更新和事件生命周期、签名门禁。候选尚未认定通过，IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；没有触发公开发布、标签或 stable 晋升，也未增加前台测试实例。
+
+### 2026-10-11 main@03e0ad94 macOS 应用菜单与退出重启观察
+
+已提交推送 `03e0ad942c16fe2ef75473eb6693012b3ae684ac`：恢复 macOS 首个应用菜单中的原生隐藏、隐藏其他、显示全部和退出。fmt、tray 单元 3 项、tray integration 4 项、window_close integration 6 项及 all-targets / all-features Clippy `-D warnings` 全部通过，定向共 13 项，Windows 菜单处理保持原有逻辑。
+
+同 SHA macOS arm64 候选构建退出 0、耗时 121.254 秒，版本 / 构建号均为 0.1.10，EXE 内嵌完整源码 SHA。DMG 为 4,384,633 bytes，SHA256 `1bc69e1b42676dfff93c4c402ffe8bb5affd234ade924ed5f4b33600a6fa3ab4`，容器校验通过；原 EXE 为 7,897,776 bytes，SHA256 `196596e388f4f57d63c66c1067d70ac1be1879ec2a9096f657efbe2dc4590c0f`。原件严格签名仍 exit 1（资源未封装），正式签名与公证未通过；原 `.app` 和 DMG 单独留存，只有隔离测试副本修改 identifier 并 ad hoc 重签，不覆盖原件失败。
+
+从只读挂载的 DMG 核对 EXE 后复制测试副本，首次启动 PID41949 使用新沙箱根 `test-data`。真实应用菜单含原生退出；点击后原 PID 消失、该根锁可非阻塞取得。随后 UI 状态读取期间出现 PID42076，沿用了旧测试根；保留初读与后续精确 PID / 锁观察，重开来源未独立定位，不记为同新根重启或完整生命周期通过。对 PID42076 按 ⌘Q 后，无信号 monitor 确认原 PID 退出、两根锁均释放，随后 CLI 明确使用新根重启为 PID42681，未删除锁文件，环境与锁 PID 一致。只保留 PID42681 一个测试实例，日常 PID75764 未操作。旧 PID17410 的 SIGTERM 清理不算正常退出。
+
+原生菜单 AX、同根重启截图、构建与挂载原件、PID / 锁观察和哈希见 `.adg/evidence/OCX-0110-20261011-03E0-MACOS-APPLICATION-MENU/`。菜单截图不可用，⌘Q 后 AX 的 procNotFound / -600 仅有上下文记录，完整原始异常未留存；退出由独立进程 / 锁证据佐证。2026-10-11 07:13 UTC，[03e0 CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 的 frontend / release-tools / backend 通过，Windows 后端回归仍运行；旧 3d856 [候选 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 仍在 NSIS / MSI 构建，不作为 03e0 候选通过证据。
+
+下一步按最新 SHA 收齐完整 CI 和安装候选，再完成真机、性能、真实更新 / 事件及正式签名验收。隔离复制安装与局部退出观察不替代真实安装升级、完整原生或发布门禁。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；本轮未迁移真实数据、替换日常安装、创建标签或公开发布。

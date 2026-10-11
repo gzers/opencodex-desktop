@@ -1,0 +1,19 @@
+{
+  "observed_at_utc": "2026-10-11T07:09:01.236886+00:00",
+  "source_commit": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+  "source_app": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop.app",
+  "dmg": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+  "installed_test_app": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-install/OpenCodeX Desktop.app",
+  "test_identifier": "com.gzers.opencodex.desktop.sandbox011003e0",
+  "sandbox_root": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-data",
+  "sandbox_boundary": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk",
+  "dmg_executable_matches_source": true,
+  "original_exe_sha256": "196596e388f4f57d63c66c1067d70ac1be1879ec2a9096f657efbe2dc4590c0f",
+  "test_exe_sha256": "a9de09589d4631df9e5046332fb263e33d776c64cddf133410d2bd6091bf0151",
+  "original_strict_signature_passed": false,
+  "test_copy_ad_hoc_signature_passed": true,
+  "test_copy_is_not_release_artifact": true,
+  "processes_before_launch": [
+    "75764 /Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+  ]
+}

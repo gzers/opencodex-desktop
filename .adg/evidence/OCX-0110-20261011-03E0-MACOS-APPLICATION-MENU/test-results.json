@@ -1,0 +1,56 @@
+[
+  {
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.519,
+    "log": "1.raw.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--lib",
+      "infrastructure::tray_controller::tests"
+    ],
+    "exit_code": 0,
+    "seconds": 9.696,
+    "log": "2.raw.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--test",
+      "tray",
+      "--test",
+      "window_close"
+    ],
+    "exit_code": 0,
+    "seconds": 10.225,
+    "log": "3.raw.log"
+  },
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "seconds": 4.596,
+    "log": "4.raw.log"
+  }
+]
