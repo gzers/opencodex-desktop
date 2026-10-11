@@ -1,0 +1,59 @@
+{
+  "sourceSha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "runId": 38127059287,
+  "downloadRoot": "/private/tmp/ocx-0110-369a-windows-3sb0v4xp",
+  "observations": [
+    {
+      "argv": [
+        "gh",
+        "run",
+        "view",
+        "38127059287",
+        "--repo",
+        "gzers/opencodex-desktop",
+        "--json",
+        "databaseId,headSha,status,conclusion,url,jobs,createdAt,updatedAt"
+      ],
+      "exitCode": 0,
+      "stdout": "candidate-final.raw.json",
+      "stderr": "candidate-final.stderr.log",
+      "observedAt": "2026-10-11T09:23:38.967394+00:00"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/gzers/opencodex-desktop/actions/runs/38127059287/artifacts"
+      ],
+      "exitCode": 0,
+      "stdout": "artifacts.raw.json",
+      "stderr": "artifacts.stderr.log",
+      "observedAt": "2026-10-11T09:23:40.081860+00:00"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifactId": 11696909705,
+      "name": "windows-candidate-evidence",
+      "bytes": 1685851,
+      "sha256": "bae9aa0b6b1264d2c9df9d5f8fb1cec032ffc9a52f3b56559418a75337f68a5b",
+      "matchesGitHubDigest": true,
+      "zipCrcPassed": true,
+      "filesCount": 315,
+      "expiresAt": "2026-10-25T09:17:41Z",
+      "downloadUrl": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/11696909705/zip"
+    },
+    {
+      "artifactId": 11696829726,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "bytes": 7561927,
+      "sha256": "77d4ca63098b18a93589761edbe639c6808fd1dc253e61d805c4b5e6513cc002",
+      "matchesGitHubDigest": true,
+      "zipCrcPassed": true,
+      "filesCount": 3,
+      "expiresAt": "2026-10-25T09:17:39Z",
+      "downloadUrl": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/11696829726/zip"
+    }
+  ],
+  "note": "Compact view omits the extracted-entry manifests; exact original report retained as download-verification.json.gz."
+}

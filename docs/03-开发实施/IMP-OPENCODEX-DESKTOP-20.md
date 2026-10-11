@@ -605,3 +605,20 @@ macOS 同源码 app / dmg 构建 exit 0，用时 121.016s；arm64、版本 / 构
 原生根 / 年默认展开、月份收起；建立焦点后方向键到清单、Left 返回父箭头、刷新保留展开层级和浅深色局部可读已有证据。无复选框场景；刷新焦点位于 HTML 内容，不能记原生异步行焦点恢复通过。00—10 的 JPEG / AX / metadata 保留误点、无焦点按键和裁切尝试；08 只证明展开保留，09 树不在截图范围、10 滚动后才可见。见 .adg/evidence/OCX-0110-20261011-369A-MACOS-TREE-CANDIDATE/；原日志 gzip 按字节保存并记录摘要，各目录 checksums.sha256 独立校验。
 
 继续完成最新 Windows 候选资产核验、实际目标 token 双权限 / 物理 DPI / 默认数据根 / 原生外观，以及 macOS 完整树表密度 / 画质矩阵、最新 SHA 生命周期 / 真实安装升级、同机 0.1.9 配对性能 / 真实周期、真实更新 / 事件和正式签名。性能门禁不调整；核心事实推广仍待后续确认。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`。本轮文档提交只包括 0.1.10 证据与协作包，未夹带 0.2.0 资料、迁移真实数据、替换日常安装或公开发布。
+
+### 2026-10-11 main@369ab12d Windows 安装候选最终核验
+
+最新 [Windows 候选 38127059287](https://github.com/gzers/opencodex-desktop/actions/runs/38127059287) 于 17:17:48（UTC+8）completed / success，完整源码身份为 369ab12da55448fbfdc4d0c9bf03970b56fd6c27；该 SHA 只触发一次。锁定依赖回归、MSI / NSIS 构建、隔离 runner 安装 / 最终 EXE 首屏 / 卸载及上传成功。17:28（UTC+8）本地独立重算两个 ZIP 的大小、SHA256，与 GitHub API digest 一致，ZIP CRC 通过；候选 ZIP 只有两个安装器和回执。两份 artifact 的 installer-verification.json 字节一致（1970 bytes，SHA256 3144d002a110caca807595c2dd9ec7cb6c50e68de4d0d84f1e820a61b1ff4857）。
+
+| 资产 | bytes | 独立 SHA256 |
+|---|---:|---|
+| 候选 ZIP，artifact 11696829726 | 7561927 | 77d4ca63098b18a93589761edbe639c6808fd1dc253e61d805c4b5e6513cc002 |
+| 证据 ZIP，artifact 11696909705 | 1685851 | bae9aa0b6b1264d2c9df9d5f8fb1cec032ffc9a52f3b56559418a75337f68a5b |
+| MSI | 4538368 | f149f01f3096fc7aafa8bc574358ab11fd6c77479db28d822ee414a57fed2fc3 |
+| NSIS | 3231540 | c5a3b9dc9ed87e486933a64ff4402fb47c5d1eb9ecca46fcad5e090de6b3dd0f |
+
+安装器摘要与 runner 回执一致。MSI / NSIS 安装后 EXE 哈希、预期 bundle marker、启动源码 / 关于信息 / WebView 回执匹配；artifact 没有安装后 EXE，该部分仍是 runner 证据，本机未独立提取重算。30 秒首屏观察均已挂载 UI、0.1.10 / Windows、准备态、CLI 禁用、沙箱根初始化，安装 / 卸载 exit 0 且卸载后 EXE 移除。两个 artifact 预计 2026-10-25 17:17（UTC+8）到期，可从 run 的 Artifacts 下载最新候选；本地 ZIP / 安装器留存于 /private/tmp/ocx-0110-369a-windows-3sb0v4xp，未执行安装器。
+
+最新两张 CDP WebView 截图仍可见左侧透明区域黑底、部分文字对比度低，根因未确认；Windows 真机须保留同状态整窗 / CDP 对照，不能据图认定云母或完整原生外观通过。startup-diagnostics 权限字段属于 PowerShell harness 当前 token，不证明目标应用进程权限；沙箱根、DPR=1 与强制收尾也不替代默认安装目录 data、物理 DPI、正常退出或锁释放。
+
+原件见 .adg/evidence/OCX-0110-20261011-369A-WINDOWS-INSTALLER-CANDIDATE/：精选 PNG 与 JSON 原始 gzip 保留 artifact 字节，JSON、日志及 API / 下载报告均附原始摘要和可读视图，checksums.json 覆盖其余文件；没有把 315 项证据中的缓存、偏好载荷或大安装器复制进仓库。此前“构建中”快照继续保留，以上为最终核验结果。后续推进双平台真机 / 最新 SHA 生命周期、配对性能 / 真实周期、真实更新 / 事件和正式签名；IMP / TASK 保持 in_progress，release_authorized / release_accepted 为 false。

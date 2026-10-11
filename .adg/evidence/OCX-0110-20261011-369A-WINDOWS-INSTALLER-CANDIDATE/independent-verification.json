@@ -1,0 +1,89 @@
+{
+  "sourceCommit": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "runId": 38127059287,
+  "verifiedAtUtc": "2026-10-11T09:28:26.377109+00:00",
+  "installerReceipt": {
+    "sha256": "3144d002a110caca807595c2dd9ec7cb6c50e68de4d0d84f1e820a61b1ff4857",
+    "bytes": 1970,
+    "byteIdenticalAcrossArtifacts": true
+  },
+  "archives": [
+    {
+      "artifactId": 11696909705,
+      "name": "windows-candidate-evidence",
+      "bytes": 1685851,
+      "sha256": "bae9aa0b6b1264d2c9df9d5f8fb1cec032ffc9a52f3b56559418a75337f68a5b",
+      "matchesGitHubDigest": true,
+      "zipCrcPassed": true,
+      "filesCount": 315,
+      "expiresAt": "2026-10-25T09:17:41Z",
+      "downloadUrl": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/11696909705/zip"
+    },
+    {
+      "artifactId": 11696829726,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "bytes": 7561927,
+      "sha256": "77d4ca63098b18a93589761edbe639c6808fd1dc253e61d805c4b5e6513cc002",
+      "matchesGitHubDigest": true,
+      "zipCrcPassed": true,
+      "filesCount": 3,
+      "expiresAt": "2026-10-25T09:17:39Z",
+      "downloadUrl": "https://api.github.com/repos/gzers/opencodex-desktop/actions/artifacts/11696829726/zip"
+    }
+  ],
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4538368,
+      "sha256": "f149f01f3096fc7aafa8bc574358ab11fd6c77479db28d822ee414a57fed2fc3",
+      "matchesRunnerReceipt": true,
+      "installedExecutableSha256RunnerOnly": "ffe370ede6d7566afb63c632dba924024455549c0c778658eb83907480919741",
+      "expectedHashMatchesRunner": true,
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 7984421
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3231540,
+      "sha256": "c5a3b9dc9ed87e486933a64ff4402fb47c5d1eb9ecca46fcad5e090de6b3dd0f",
+      "matchesRunnerReceipt": true,
+      "installedExecutableSha256RunnerOnly": "cfbfe134fed9ab0f05db84fb8c1260723aff9f7aa8050fcf8627598fd7a74df8",
+      "expectedHashMatchesRunner": true,
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 7984421
+    }
+  ],
+  "startupReceipts": [
+    {
+      "kind": "msi",
+      "sourceCommitMatched": true,
+      "version": "0.1.10",
+      "platform": "Windows",
+      "pid": 8440,
+      "observedSeconds": 30,
+      "webviewMounted": true,
+      "sandboxOnly": true,
+      "physicalDpiAccepted": false,
+      "applicationTokenAccepted": false
+    },
+    {
+      "kind": "nsis",
+      "sourceCommitMatched": true,
+      "version": "0.1.10",
+      "platform": "Windows",
+      "pid": 9720,
+      "observedSeconds": 30,
+      "webviewMounted": true,
+      "sandboxOnly": true,
+      "physicalDpiAccepted": false,
+      "applicationTokenAccepted": false
+    }
+  ],
+  "boundaries": {
+    "installedExecutableHashes": "runner evidence only; artifact does not contain installed EXEs",
+    "physicalWindowsAcceptance": false,
+    "releaseAccepted": false
+  }
+}
