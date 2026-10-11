@@ -202,3 +202,11 @@ macOS 同源码 app / dmg 构建 exit 0，用时 121.016s；arm64、版本 / 构
 未控制重复预热 / 顺序和连续前台 / 可见性，独立根缓存 / schema 不同，无主线程或网络仪器，不能认定因果回归或自动检查开销，也不能记 CPU / RSS 性能通过。原冷 / 热各 20 次、CPU / RSS / 主线程 / 零请求与真实周期预算不变。下载资产、原 EXE / 测试副本身份、进程归属、原件和分解见 .adg/evidence/OCX-0110-20261011-019-369A-MACOS-IDLE-COMPARISON/，33 份摘要与 28 份来源逐一校验；候选原采样继续引用原证据。
 
 基线 ⌘Q 未退出，曾因退出未独立确认而与候选短暂并存；18:45 仅向精确路径基线 PID19382 发 SIGTERM 清理，不计正常退出通过。18:48:50 再次核实唯一候选 PID21610 / 正确根 / 持锁，原备份摘要和日常 PID75764 / 启动时间不变，18:49 原生 AX / JPEG 证明准备态恢复。旧基线 boundary 与正式签名限制见原件。后续先核实背景光移层后的定位，再补受控配对与其他开放门禁；IMP / TASK 保持 in_progress，release_authorized / release_accepted 为 false。
+
+### 2026-10-11 main@c1e3c09d 背景光布局锚点
+
+main@c1e3c09d8ed33238543ce5943e439991b8099088 已提交推送：光层 Teleport 后显式使用原处 Logo 元素，复用布局观察器响应 Logo 尺寸变化；高档连续帧不读几何，后台与销毁行为不变。没有调整画质或 shader，不能据此解决此前 CPU 超预算信号。
+
+修复前有效回归 5 fail / 1 pass，修复后相关 39 项、完整 UI 95 文件 / 472 项通过；测试 mock 类型修正后新 6 项复核、类型 / 构建通过。真实 WebGL 标准 / 紧凑 × 就绪 / 准备 × 浅 / 深共 8 项中心误差 0 CSSpx、顶部 / 左侧覆盖通过，无水平溢出。高档前台持续绘制、夹具后台约 15.55 秒停止并恢复；不替代原生焦点 / CPU / 物理 DPI。
+
+原件、失败轮次、陈旧首轮报告与最终截图、QA 夹具来源及摘要见 .adg/evidence/OCX-0110-20261011-C1E3-MESH-CENTER/，37 份摘要 / 27 份来源逐一校验。首次漏传 active 的测试与首次浏览器矩阵不计产品基线或通过。临时 QA 源已移除、Vite / 后台 tab 已关闭，原生测试仍只保留一个。旧 369a 候选不含此修复，新 CI [38134982244](https://github.com/gzers/opencodex-desktop/actions/runs/38134982244) / macOS 构建进行中，Windows 等全 CI 通过后按新 SHA 只触发一次。双平台真机、配对性能 / 真实周期、真实更新 / 事件及正式签名仍开放；IMP / TASK 保持 in_progress，release_authorized / release_accepted 为 false。

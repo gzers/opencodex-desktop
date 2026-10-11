@@ -656,3 +656,11 @@ macOS 同源码 app / dmg 构建 exit 0，用时 121.016s；arm64、版本 / 构
 基线 ⌘Q 退出未生效，normal-quit / quit-settled 快照仍见 PID19382 持锁；候选在基线退出未经独立确认时启动，曾短暂有两个测试实例。18:45 确认精确基线路径后，仅 SIGTERM 清理 PID19382；该项不计正常退出通过。候选早期启动快照未锁就绪，后续 settled 快照及 18:48:50 复核证明唯一候选 PID21610、正确环境 / 根、锁 metadata 一致，原两个备份文件摘要与日常 PID75764 / 启动时间不变；18:49 原生 AX / JPEG 证明准备态恢复。
 
 证据见 .adg/evidence/OCX-0110-20261011-019-369A-MACOS-IDLE-COMPARISON/：33 份文件摘要、28 份复制来源逐一校验，AX 原字节 gzip、其余按字节保存；候选原采样引用已有证据，不重复复制。旧 0.1.9 的 boundary 沿用旧临时目录，仅实际 root 隔离；原件严格签名失败、测试副本 ad hoc 校验不能替代签名验收。后续先核实背景光移层后的几何定位，再开展受控配对；完整性能、双平台真机 / 真实周期 / 更新 / 签名门禁仍开放。IMP / TASK 保持 in_progress，release_authorized / release_accepted 为 false。
+
+### 2026-10-11 main@c1e3c09d 背景光定位修复
+
+光层 Teleport 后，旧相邻查找找不到留在原处的 Logo，回落固定比例。main@c1e3c09d8ed33238543ce5943e439991b8099088 显式传入 Logo 锚点，并复用一个 ResizeObserver 观察光层 / Logo 的布局变化；连续高档动画帧不读几何，后台和销毁仍受原生命周期控制。未改 shader、画质、DPR 或绘图缓冲策略，此修复不解释此前 CPU 差值。
+
+有效修复前回归 5 fail / 1 pass，修复后相关 39 项、完整 UI 95 文件 / 472 项通过；最终测试类型修正后 6 项复核与类型 / 构建通过。首次漏传 active 的无效基线、首次构建类型失败和浏览器陈旧报告均保留。真实 WebGL 中档静态检查覆盖标准 / 紧凑 × 就绪 / 准备 × 浅 / 深 8 布局：中心误差 0 CSSpx，顶部 / 左侧覆盖，无水平溢出。高档 draws 前台持续增加，夹具后台约 15.55 秒不变，恢复后增加；这不是原生焦点或性能验收。
+
+证据 .adg/evidence/OCX-0110-20261011-C1E3-MESH-CENTER/ 的 37 份摘要与 27 份复制来源全部校验。临时 QA 源已归档移除，Vite 停止、后台 tab 关闭；仍保留一个旧 369a 原生测试实例与原日常实例。代码已推送，新源码 CI 38134982244 和本地 macOS 候选构建进行中，Windows 候选待全 CI 通过后按新 SHA 触发一次；旧包不覆盖本修复。配对性能 / 真实周期、双平台真机 / 更新 / 事件与签名门禁不变，IMP / TASK 保持 in_progress，release_authorized / release_accepted 为 false。

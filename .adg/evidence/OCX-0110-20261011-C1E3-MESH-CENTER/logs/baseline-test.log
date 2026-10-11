@@ -1,0 +1,101 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run tests/overview-mesh-center.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui
+
+ ❯ tests/overview-mesh-center.test.ts (6 tests | 6 failed) 43ms
+   × uses the actual Logo center after Teleport in standard ready 24ms
+   × uses the actual Logo center after Teleport in standard setup 4ms
+   × uses the actual Logo center after Teleport in compact ready 4ms
+   × uses the actual Logo center after Teleport in compact setup 4ms
+   × repositions a static glow when only the Logo layout changes, and releases its observer on route disposal 4ms
+   × does not read geometry in continuous high-tier frames or draw after backgrounding 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in standard ready
+AssertionError: expected 0.26212121212121214 to be close to 0.29523809523809524, received difference is 0.0331168831168831, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in standard setup
+AssertionError: expected 0.26212121212121214 to be close to 0.2523809523809524, received difference is 0.009740259740259771, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in compact ready
+AssertionError: expected 0.26212121212121214 to be close to 0.2369047619047619, received difference is 0.025216450216450248, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in compact setup
+AssertionError: expected 0.26212121212121214 to be close to 0.23809523809523808, received difference is 0.02402597402597406, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > repositions a static glow when only the Logo layout changes, and releases its observer on route disposal
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/overview-mesh-center.test.ts:93:70
+     91|     flushFrame(1000)
+     92|     const anchor = shell.querySelector('.motion-hero svg')!
+     93|     expect(observers.some(observer => observer.targets.has(anchor))).t…
+       |                                                                      ^
+     94|     for (const nextLayout of layouts.slice(1)) {
+     95|       layout = nextLayout
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > does not read geometry in continuous high-tier frames or draw after backgrounding
+AssertionError: expected "vi.fn()" to be called 3 times, but got 0 times
+ ❯ tests/overview-mesh-center.test.ts:115:27
+    113|     const reads = rectReads.mock.calls.length
+    114|     flushFrame(1000); flushFrame(1016); flushFrame(1032)
+    115|     expect(gl.drawArrays).toHaveBeenCalledTimes(3)
+       |                           ^
+    116|     expect(rectReads).toHaveBeenCalledTimes(reads)
+    117|     useEffectsStore().setForeground(false)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  19:00:23
+   Duration  546ms (environment 58%, transform 26%, tests 9%, import 7%)

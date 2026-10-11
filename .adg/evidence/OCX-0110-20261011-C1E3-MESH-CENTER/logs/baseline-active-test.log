@@ -1,0 +1,88 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run tests/overview-mesh-center.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui
+
+ ❯ tests/overview-mesh-center.test.ts (6 tests | 5 failed) 46ms
+   × uses the actual Logo center after Teleport in standard ready 25ms
+   × uses the actual Logo center after Teleport in standard setup 4ms
+   × uses the actual Logo center after Teleport in compact ready 3ms
+   × uses the actual Logo center after Teleport in compact setup 5ms
+   × repositions a static glow when only the Logo layout changes, and releases its observer on route disposal 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in standard ready
+AssertionError: expected 0.26212121212121214 to be close to 0.29523809523809524, received difference is 0.0331168831168831, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in standard setup
+AssertionError: expected 0.26212121212121214 to be close to 0.2523809523809524, received difference is 0.009740259740259771, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in compact ready
+AssertionError: expected 0.26212121212121214 to be close to 0.2369047619047619, received difference is 0.025216450216450248, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > uses the actual Logo center after Teleport in compact setup
+AssertionError: expected 0.26212121212121214 to be close to 0.23809523809523808, received difference is 0.02402597402597406, but expected 5e-9
+ ❯ tests/overview-mesh-center.test.ts:83:22
+     81|     observers.forEach(observer => observer.callback([], {} as ResizeOb…
+     82|     flushFrame(1000)
+     83|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+       |                      ^
+     84|     expect(pending.size).toBe(0)
+     85|   } finally { wrapper.unmount(); shell.remove() }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > repositions a static glow when only the Logo layout changes, and releases its observer on route disposal
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/overview-mesh-center.test.ts:93:70
+     91|     flushFrame(1000)
+     92|     const anchor = shell.querySelector('.motion-hero svg')!
+     93|     expect(observers.some(observer => observer.targets.has(anchor))).t…
+       |                                                                      ^
+     94|     for (const nextLayout of layouts.slice(1)) {
+     95|       layout = nextLayout
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 1 passed (6)
+   Start at  19:00:45
+   Duration  406ms (environment 42%, transform 36%, tests 13%, import 9%)

@@ -1,0 +1,251 @@
+{
+  "scope": "Fixture-controlled foreground state; not native focus/CPU/performance. Animated SVG transform changes instantaneous DOM center; high reports not used as static center assertions.",
+  "results": [
+    {
+      "stage": "foreground-high",
+      "observedAt": "2026-10-11T11:12:57.736Z",
+      "report": {
+        "size": "standard",
+        "mode": "ready",
+        "theme": "dark",
+        "quality": "high",
+        "foreground": true,
+        "webgl": "mesh",
+        "host": {
+          "x": 1,
+          "y": -18,
+          "width": 888,
+          "height": 839
+        },
+        "logo": {
+          "x": 375.1287841796875,
+          "y": 182.52426147460938,
+          "width": 140,
+          "height": 140
+        },
+        "backdrop": {
+          "x": 1,
+          "y": 62,
+          "width": 888,
+          "height": 759
+        },
+        "main": {
+          "x": 0,
+          "y": 61,
+          "width": 889,
+          "height": 760
+        },
+        "cy": 0.32419547079856975,
+        "expected": 0.32243654526175136,
+        "centerErrorPx": 1.475738525390629,
+        "drawingBuffer": [
+          1421,
+          1342
+        ],
+        "dpr": 2,
+        "draws": 40,
+        "topCoverage": true,
+        "leftCoverage": true,
+        "horizontalOverflow": false,
+        "teleported": true
+      }
+    },
+    {
+      "stage": "foreground-high-later",
+      "observedAt": "2026-10-11T11:13:08.755Z",
+      "report": {
+        "size": "standard",
+        "mode": "ready",
+        "theme": "dark",
+        "quality": "high",
+        "foreground": true,
+        "webgl": "mesh",
+        "host": {
+          "x": 1,
+          "y": -18,
+          "width": 888,
+          "height": 839
+        },
+        "logo": {
+          "x": 373.51220703125,
+          "y": 175.83242797851562,
+          "width": 140,
+          "height": 140
+        },
+        "backdrop": {
+          "x": 1,
+          "y": 62,
+          "width": 888,
+          "height": 759
+        },
+        "main": {
+          "x": 0,
+          "y": 61,
+          "width": 889,
+          "height": 760
+        },
+        "cy": 0.32419547079856975,
+        "expected": 0.31446058161920815,
+        "centerErrorPx": 8.167572021484387,
+        "drawingBuffer": [
+          1421,
+          1342
+        ],
+        "dpr": 2,
+        "draws": 1140,
+        "topCoverage": true,
+        "leftCoverage": true,
+        "horizontalOverflow": false,
+        "teleported": true
+      }
+    },
+    {
+      "stage": "background",
+      "observedAt": "2026-10-11T11:13:09.466Z",
+      "report": {
+        "size": "standard",
+        "mode": "ready",
+        "theme": "dark",
+        "quality": "high",
+        "foreground": false,
+        "webgl": "mesh",
+        "host": {
+          "x": 1,
+          "y": -18,
+          "width": 888,
+          "height": 839
+        },
+        "logo": {
+          "x": 373.7242431640625,
+          "y": 176.53919982910156,
+          "width": 140,
+          "height": 139.99998474121094
+        },
+        "backdrop": {
+          "x": 1,
+          "y": 62,
+          "width": 888,
+          "height": 759
+        },
+        "main": {
+          "x": 0,
+          "y": 61,
+          "width": 889,
+          "height": 760
+        },
+        "cy": 0.32419547079856975,
+        "expected": 0.31530297044065203,
+        "centerErrorPx": 7.460807800292968,
+        "drawingBuffer": [
+          1421,
+          1342
+        ],
+        "dpr": 2,
+        "draws": 1160,
+        "topCoverage": true,
+        "leftCoverage": true,
+        "horizontalOverflow": false,
+        "teleported": true
+      }
+    },
+    {
+      "stage": "background-later",
+      "observedAt": "2026-10-11T11:13:25.019Z",
+      "report": {
+        "size": "standard",
+        "mode": "ready",
+        "theme": "dark",
+        "quality": "high",
+        "foreground": false,
+        "webgl": "mesh",
+        "host": {
+          "x": 1,
+          "y": -18,
+          "width": 888,
+          "height": 839
+        },
+        "logo": {
+          "x": 373.7242431640625,
+          "y": 176.53919982910156,
+          "width": 140,
+          "height": 139.99998474121094
+        },
+        "backdrop": {
+          "x": 1,
+          "y": 62,
+          "width": 888,
+          "height": 759
+        },
+        "main": {
+          "x": 0,
+          "y": 61,
+          "width": 889,
+          "height": 760
+        },
+        "cy": 0.32419547079856975,
+        "expected": 0.31530297044065203,
+        "centerErrorPx": 7.460807800292968,
+        "drawingBuffer": [
+          1421,
+          1342
+        ],
+        "dpr": 2,
+        "draws": 1160,
+        "topCoverage": true,
+        "leftCoverage": true,
+        "horizontalOverflow": false,
+        "teleported": true
+      }
+    },
+    {
+      "stage": "foreground-resumed",
+      "observedAt": "2026-10-11T11:13:25.745Z",
+      "report": {
+        "size": "standard",
+        "mode": "ready",
+        "theme": "dark",
+        "quality": "high",
+        "foreground": true,
+        "webgl": "mesh",
+        "host": {
+          "x": 1,
+          "y": -18,
+          "width": 888,
+          "height": 839
+        },
+        "logo": {
+          "x": 374.55828857421875,
+          "y": 179.31924438476562,
+          "width": 140,
+          "height": 140
+        },
+        "backdrop": {
+          "x": 1,
+          "y": 62,
+          "width": 888,
+          "height": 759
+        },
+        "main": {
+          "x": 0,
+          "y": 61,
+          "width": 889,
+          "height": 760
+        },
+        "cy": 0.32419547079856975,
+        "expected": 0.3186165010545478,
+        "centerErrorPx": 4.680755615234411,
+        "drawingBuffer": [
+          1421,
+          1342
+        ],
+        "dpr": 2,
+        "draws": 1216,
+        "topCoverage": true,
+        "leftCoverage": true,
+        "horizontalOverflow": false,
+        "teleported": true
+      }
+    }
+  ],
+  "console": []
+}

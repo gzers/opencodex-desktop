@@ -1,0 +1,210 @@
+{
+  "source": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "baseline": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "verifiedSourceFiles": {
+    "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue": "27b5ef67873a29dbf0d96d2d3603888be013566122bc3fbb6c33f1703eb9753e",
+    "apps/desktop/ui/src/features/runtime/motion/meshGlow.ts": "b76b653421407fef89a9802d71443c2d0bf5c5ca49db1cc5fae735adbe6d4933",
+    "apps/desktop/ui/tests/overview-mesh-center.test.ts": "dfe3471f0e9936cfae02870566b76152248c40a2940c5a9be79762977d1929ec"
+  },
+  "codeStatus": "",
+  "qaSourcesRemovedFromCodeTree": true,
+  "copies": [
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/baseline-active-test.log",
+      "sourceBytes": 4325,
+      "sourceSha256": "7870b3b7128995d2495aaab99caae7ca87b6328b5fba6258c78f0f3395cfffe0",
+      "raw": "raw/baseline-active-test.log.gz",
+      "readable": "logs/baseline-active-test.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/baseline-test.log",
+      "sourceBytes": 5064,
+      "sourceSha256": "ae654329aa6732359768beccf87d5a34ca5bc368ec108a61280f89aa88c547ba",
+      "raw": "raw/baseline-test.log.gz",
+      "readable": "logs/baseline-test.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/browser-console.json",
+      "sourceBytes": 2,
+      "sourceSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "archive": "browser-console.json",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/browser-first-attempt-stale.json",
+      "sourceBytes": 3644,
+      "sourceSha256": "2f3e268177a050782a72ad47d1453960f8cde0f2b829feacf80264c1e3839bb1",
+      "archive": "browser-first-attempt-stale.json",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/browser-high-lifecycle.json",
+      "sourceBytes": 5889,
+      "sourceSha256": "92186cdccfaab8f73382ecf3cd2a86d72f1e53898fbecbc1fd1b92bd6af3c47b",
+      "archive": "browser-high-lifecycle.json",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/browser-matrix-final.json",
+      "sourceBytes": 8028,
+      "sourceSha256": "09a1541ecf12c556202b23a4dd79e67f044409647e7f94a7d7dd59dac93ad59b",
+      "archive": "browser-matrix-final.json",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/compact-ready-light.jpg",
+      "sourceBytes": 30323,
+      "sourceSha256": "80a65c8b1bc34d21c4a503e6a522a023e3a7f9e53ead865ac9956b2204eeac1c",
+      "archive": "screenshots/stale-attempt/compact-ready-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/compact-setup-light.jpg",
+      "sourceBytes": 30399,
+      "sourceSha256": "6b9faaf9c88c507b3c79d46bfc517e12fafc31b8e72cb94db3ce9bd1b983a4cb",
+      "archive": "screenshots/stale-attempt/compact-setup-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-compact-ready-dark.jpg",
+      "sourceBytes": 30521,
+      "sourceSha256": "2db9ab83933c346354c073279f67f497e353ca5eee30f895b570ad4c10eef380",
+      "archive": "screenshots/final/final-compact-ready-dark.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-compact-ready-light.jpg",
+      "sourceBytes": 31799,
+      "sourceSha256": "3b2ab58f94718ef0732c9a55af68b167363a281a7011e889652dc3dc5776af32",
+      "archive": "screenshots/final/final-compact-ready-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-compact-setup-dark.jpg",
+      "sourceBytes": 29593,
+      "sourceSha256": "749d929a03a669efef944d9fffae28bc5b81890dd759bb50342d742a89b13939",
+      "archive": "screenshots/final/final-compact-setup-dark.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-compact-setup-light.jpg",
+      "sourceBytes": 31545,
+      "sourceSha256": "cf282829e17667be13855a9edbffe8a45ea03242fe39e3c1dd91eb6a14ee583c",
+      "archive": "screenshots/final/final-compact-setup-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-standard-ready-dark.jpg",
+      "sourceBytes": 32796,
+      "sourceSha256": "aecfd5efa63689a76dabc11c8d57d0737bd84b7d85a87d2ee408f0c0371a2775",
+      "archive": "screenshots/final/final-standard-ready-dark.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-standard-ready-light.jpg",
+      "sourceBytes": 33563,
+      "sourceSha256": "57888eb0857ef8115ab4ccca5b5e23bb2a55b6016acae0b21590f5ead01fc8fe",
+      "archive": "screenshots/final/final-standard-ready-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-standard-setup-dark.jpg",
+      "sourceBytes": 31069,
+      "sourceSha256": "98166b8df6535ba43ccb76becb97af44381e1924f433d31006f9fa00d01e9b76",
+      "archive": "screenshots/final/final-standard-setup-dark.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/final-standard-setup-light.jpg",
+      "sourceBytes": 32924,
+      "sourceSha256": "7d037f7b6f9899b92d78bef6e49cd587d31390212886d0540aa278d270f82dbe",
+      "archive": "screenshots/final/final-standard-setup-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/fixture-final/MeshCenter0110Fixture.vue",
+      "sourceBytes": 4435,
+      "sourceSha256": "09ade42563eeb4e50e4a9883c681c9a9eb7bbdad9638946fda83718bcd761b4c",
+      "archive": "fixture-final/MeshCenter0110Fixture.vue",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/fixture-final/mesh-center-0110.html",
+      "sourceBytes": 271,
+      "sourceSha256": "8ccc08f92a4236da82fe0739175445191894846607d50585794d74337aecf2dc",
+      "archive": "fixture-final/mesh-center-0110.html",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/fixture-final/mesh-center-0110.js",
+      "sourceBytes": 970,
+      "sourceSha256": "926011a04537de84b8b1fd5949ac91d776b6127eae206790ffe775920e67ae3d",
+      "archive": "fixture-final/mesh-center-0110.js",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/full-ui-test.log",
+      "sourceBytes": 794,
+      "sourceSha256": "ce38074d3a722ac253aa2f0fd68d957eff73b990e42fb2f068e8034740a289ed",
+      "raw": "raw/full-ui-test.log.gz",
+      "readable": "logs/full-ui-test.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/standard-ready-light.jpg",
+      "sourceBytes": 32494,
+      "sourceSha256": "866f2678b3aff0d619aeef280656e1588ac2e47b042556a3ad8e04a3d5ae2634",
+      "archive": "screenshots/stale-attempt/standard-ready-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/standard-setup-light.jpg",
+      "sourceBytes": 31834,
+      "sourceSha256": "5f625776e03b2a78ddc4fe7fd7325d228ef30433d4ab2fd7c23db5ea459e5f6b",
+      "archive": "screenshots/stale-attempt/standard-setup-light.jpg",
+      "transform": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/targeted-final-test.log",
+      "sourceBytes": 322,
+      "sourceSha256": "a2b7cc547e82f7c97aa0a8b2006c472126408475c1a6a1cfb64cd9349e344706",
+      "raw": "raw/targeted-final-test.log.gz",
+      "readable": "logs/targeted-final-test.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/targeted-test.log",
+      "sourceBytes": 407,
+      "sourceSha256": "d30a42758b8c799b4a8bd95a196791776a8ddad6e6dd29d7f90dcefe1714f74b",
+      "raw": "raw/targeted-test.log.gz",
+      "readable": "logs/targeted-test.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/typecheck-build-final.log",
+      "sourceBytes": 2195,
+      "sourceSha256": "adf1e77bb173fa0e5daa867e4b426dd0af7686f2765e4a3aa2dfcde7eb839aa2",
+      "raw": "raw/typecheck-build-final.log.gz",
+      "readable": "logs/typecheck-build-final.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/typecheck-build.log",
+      "sourceBytes": 503,
+      "sourceSha256": "43081e8f562549b5f7178205aca8f7f86d77c74071b826d96f853755bdc4e4be",
+      "raw": "raw/typecheck-build.log.gz",
+      "readable": "logs/typecheck-build.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-mesh-center-2ryQQe/vite-qa.log",
+      "sourceBytes": 242,
+      "sourceSha256": "d701ecf24f8fae19525d46336a368ec5842c4d5b106def47d7297455dc1e484a",
+      "raw": "raw/vite-qa.log.gz",
+      "readable": "logs/vite-qa.log",
+      "transform": "gzip original bytes; readable ANSI/whitespace cleanup"
+    }
+  ]
+}
