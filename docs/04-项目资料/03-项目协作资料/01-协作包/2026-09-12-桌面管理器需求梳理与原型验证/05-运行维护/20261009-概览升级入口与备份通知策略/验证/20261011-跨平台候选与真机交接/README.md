@@ -24,7 +24,15 @@
 
 本地 fmt、IPC 定向 44 项、Rust workspace integration-test 34 组（861 passed / 0 failed / 6 ignored，其中库 694 passed / 4 ignored）、严格 all-targets / all-features Clippy 均退出 0。忽略项包括真实网络 / 钥匙串、子进程辅助测试和需要原生主线程的托盘集成，完整名称保留在回执，不记为这些场景通过。命令原件、原失败日志及哈希见 `.adg/evidence/OCX-0110-20261011-IPC-BINDING-RELEASE-ORDER/`。
 
-新 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 的 headSha 已核对一致，当前仍为 in_progress，frontend / release-tools / backend 已通过；Windows Clippy 和后端回归已通过，正在 release 构建。macOS 已按此 SHA 完成候选构建；Windows 候选待新 CI 全部通过再触发一次。运行快照见 `.adg/evidence/OCX-0110-20261011-CI-38118226895/`，不能当作完整 CI 通过。
+新 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 的 headSha 已核对一致。2026-10-11 06:53 UTC 快照中 frontend / release-tools / backend / backend-windows 已通过，macOS build 仍在运行，完整 CI 为 in_progress。Windows 候选待新 CI 全部通过再触发一次；不得使用旧 c654 安装包代替。06:41 UTC 的历史快照保留于 `.adg/evidence/OCX-0110-20261011-CI-38118226895/`，本轮新快照与 Windows 原件见下节，均不能当作完整 CI 通过。
+
+## main@3d856fb5 的 Windows CI 原生启动结果
+
+Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 EXE smoke。artifact 为 `windows-startup-evidence`（ID `11694523976`）；EXE SHA256 为 `ab023fa342b360d39c0298c85b14a844d716877d44ea8f0109369bcfda73902b`，启动回执的完整源码身份与修复提交一致。30 秒观察中窗口存在且响应，WebView 主 UI 已挂载，关于信息为 0.1.10 / Windows，隔离数据根已初始化。未发现 OpenCodex 时显示准备态，CLI 未启用。
+
+回执、关于信息、runner 环境、窗口截图、artifact 元数据、新 CI 快照及 SHA256 清单见 `.adg/evidence/OCX-0110-20261011-3D856-WINDOWS-CI-SMOKE/`。JSON 原始字节另存 `*.raw.gz`；可读 JSON 仅重新序列化，`source-provenance.json` 记录原始字节摘要。旧快照和失败轮次不覆盖。
+
+本结果只闭合 CI Windows job 和最终 EXE 启动检查，不是 MSI / NSIS 安装、真机双权限、物理 DPI、新装默认安装目录数据根、正常退出 / 锁清理、完整外观或性能通过证据。完整 CI 及同 SHA Windows 安装候选仍待收齐。
 
 ## main@3d856fb5 的 macOS 候选
 

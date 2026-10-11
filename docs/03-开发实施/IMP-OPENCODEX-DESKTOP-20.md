@@ -537,3 +537,11 @@ Windows 当前 main 双权限 / 安装路径 / 数据根 / 原生外观 / IPC、
 严格签名 exit 1（资源未封装），宿主 0 个有效签名身份，公证未验证。该候选未安装 / 启动；旧 c654 测试实例的退出快捷键尝试未结束进程，本轮没有另开测试实例，因此正常退出 / 锁清理及最新 SHA 原生验收仍待验。摘要与原件见 `.adg/evidence/OCX-0110-20261011-3D856-MACOS-CANDIDATE/`。
 
 执行顺序为：新 CI 全部通过后生成同 SHA Windows 候选；双平台隔离安装和设备验收；0.1.9 配对性能、缓存命中零请求与真实周期；真实更新 / 重启及事件生命周期；正式签名和发布资产审阅。各步完成条件已写入跨平台交接记录。最新运行快照中 frontend / release-tools / backend 已通过，Windows Clippy 和后端回归已通过且正在 release 构建；完整 CI 仍为 `in_progress`，快照见 `.adg/evidence/OCX-0110-20261011-CI-38118226895/`。IMP / TASK 保持 `in_progress`，`release_authorized: false`、`release_accepted: false`；正式发布和真实用户迁移仍需单独确认。
+
+### 2026-10-11 main@3d856fb5 Windows CI 与最终 EXE 启动通过
+
+06:53 UTC 新快照中 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 的 frontend / release-tools / backend / backend-windows 四个 job 已通过，macOS build 仍运行。Windows 严格 Clippy、后端回归、release EXE 构建和最终 EXE smoke 均成功。启动 EXE SHA256 为 `ab023fa342b360d39c0298c85b14a844d716877d44ea8f0109369bcfda73902b`，完整源码 SHA 与 `3d856fb561aa8dd21d0dd1347d8736c7b704f3d7` 匹配；30 秒观察窗口存在且响应，WebView 主 UI 挂载、关于信息 0.1.10 / Windows、隔离数据根初始化均通过。
+
+artifact ID `11694523976` 的关键原件、窗口截图、环境、原始字节归档、摘要和新运行快照见 `.adg/evidence/OCX-0110-20261011-3D856-WINDOWS-CI-SMOKE/`。历史 CI 快照与失败证据保留。仍需完整 CI 成功后仅触发一次同 SHA Windows 候选，随后验 MSI / NSIS 安装身份、真机双权限 / 安装路径数据根 / 物理 DPI / 原生外观 / IPC，以及 macOS 安装 / 正常退出 / 树表焦点对齐和既定性能、真实更新、事件及签名门禁。CI 隔离启动不替代这些验收。
+
+本轮未改代码、未重跑已通过回归、未启动额外测试实例。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；未生成完成证书或提前晋升稳定事实。

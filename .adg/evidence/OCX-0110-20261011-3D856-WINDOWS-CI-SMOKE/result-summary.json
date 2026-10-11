@@ -1,0 +1,65 @@
+{
+  "observed_at_utc": "2026-10-11T06:53:38.611493+00:00",
+  "run_id": 38118226895,
+  "source_sha": "3d856fb561aa8dd21d0dd1347d8736c7b704f3d7",
+  "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38118226895",
+  "ci_status": "in_progress",
+  "ci_conclusion": "",
+  "jobs": [
+    {
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "backend-windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "name": "build",
+      "status": "in_progress",
+      "conclusion": ""
+    }
+  ],
+  "artifact_id": 11694523976,
+  "artifact_name": "windows-startup-evidence",
+  "windows_backend_job": "success",
+  "windows_final_exe_smoke": "pass",
+  "final_exe_sha256": "ab023fa342b360d39c0298c85b14a844d716877d44ea8f0109369bcfda73902b",
+  "source_commit_matched": true,
+  "main_ui_mounted": true,
+  "about": {
+    "name": "OpenCodeX Desktop",
+    "version": "0.1.10",
+    "identifier": "com.gzers.opencodex.desktop",
+    "platform": "Windows",
+    "framework": "Tauri v2",
+    "license": "MIT License"
+  },
+  "observed_seconds": 30,
+  "sandbox_data_root_initialized": true,
+  "not_covered": [
+    "Windows MSI/NSIS install",
+    "ordinary/administrator real process-token matrix",
+    "physical display DPI",
+    "new installation default data root",
+    "normal exit and lock cleanup",
+    "native appearance matrix",
+    "performance and real update cycles",
+    "signing/notarization",
+    "public release"
+  ],
+  "release_authorized": false,
+  "release_accepted": false
+}
