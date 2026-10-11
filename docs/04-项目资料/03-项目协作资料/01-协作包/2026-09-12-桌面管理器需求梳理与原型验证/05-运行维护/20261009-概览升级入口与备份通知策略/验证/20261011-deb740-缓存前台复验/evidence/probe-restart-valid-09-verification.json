@@ -1,0 +1,28 @@
+{
+  "phase": "restart-valid-09",
+  "verified_at": 1791731345.394858,
+  "pid": 22437,
+  "elapsed_since_launch_s": 70.2681872844696,
+  "boundary_attempts": 0,
+  "probe_loaded_records": 1,
+  "cache_and_schedule_unchanged": true,
+  "files": {
+    "manager-state/update-schedule.json": {
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+      "bytes": 182
+    },
+    "cache/updates/manager-stable.json": {
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+      "bytes": 217
+    },
+    "cache/updates/panel-latest.json": {
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "bytes": 145
+    }
+  },
+  "foreground_duration_s": 46.36641788482666,
+  "foreground_sample_count": 47,
+  "all_foreground_samples_visible": true,
+  "foreground_file": "probe-restart-valid-09-foreground.json",
+  "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement"
+}

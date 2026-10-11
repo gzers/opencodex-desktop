@@ -1,0 +1,32 @@
+{
+  "files": {
+    "manager-state/update-schedule.json": {
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+      "bytes": 182
+    },
+    "cache/updates/manager-stable.json": {
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+      "bytes": 217
+    },
+    "cache/updates/panel-latest.json": {
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "bytes": 145
+    }
+  },
+  "schedule": {
+    "schema": 1,
+    "entries": {
+      "manager-stable": {
+        "next_due": 1791808953,
+        "failures": 0,
+        "last_success": 1791722553
+      },
+      "panel-latest": {
+        "next_due": 1791808952,
+        "failures": 0,
+        "last_success": 1791722552
+      }
+    }
+  },
+  "fixture": "Copied prior isolated test cache and future deadlines; no user data; cache-hit scenario only"
+}

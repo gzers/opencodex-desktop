@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "npm",
+    "test",
+    "--",
+    "--run",
+    "tests/update-scheduler.test.ts",
+    "tests/update-query-ownership.test.ts",
+    "tests/settings-update-retry.test.ts",
+    "tests/update-center.test.ts"
+  ],
+  "exit_code": 0
+}

@@ -1,0 +1,33 @@
+{
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "pid": 20960,
+  "verified_at": 1791730645.902102,
+  "settings_entries": 100,
+  "overview_entries": 100,
+  "all_routes_verified": true,
+  "action_start": 1791730169.337,
+  "action_end": 1791730426.094,
+  "foreground_start": 1791730154.4919,
+  "foreground_end": 1791730426.204809,
+  "foreground_sample_count": 2493,
+  "all_action_interval_covered": true,
+  "all_foreground_samples_visible": true,
+  "boundary_attempts": 0,
+  "probe_loaded_records": 1,
+  "cache_and_schedule_unchanged": true,
+  "files": {
+    "manager-state/update-schedule.json": {
+      "bytes": 182,
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a"
+    },
+    "cache/updates/manager-stable.json": {
+      "bytes": 217,
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214"
+    },
+    "cache/updates/panel-latest.json": {
+      "bytes": 145,
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508"
+    }
+  },
+  "scope": "preparation-state overview; instrumented main-process DNS/connect/exec/spawn attempts; not ready-state update entry acceptance or CPU/startup measurement"
+}

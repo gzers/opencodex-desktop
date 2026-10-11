@@ -1,0 +1,54 @@
+{
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "prepared_at": 1791729759.535666,
+  "app": "/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app",
+  "bundle_id": "com.gzers.opencodex.desktop.sandbox0110deb740",
+  "commands": [
+    {
+      "argv": [
+        "codesign",
+        "--force",
+        "--deep",
+        "--sign",
+        "-",
+        "/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app: replacing existing signature\n"
+    },
+    {
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "--prepared:/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n--validated:/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app/Contents/MacOS/ocxd\n/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app: valid on disk\n/private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app: satisfies its Designated Requirement\n"
+    },
+    {
+      "argv": [
+        "clang",
+        "-dynamiclib",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "/Users/ezio/.codex/worktrees/ocx-0110-main/test/smoke/macos-update-probe.c",
+        "-o",
+        "/private/tmp/ocx-0110-deb740-foreground/update-probe.dylib"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "test_exe_sha256": "d2b14777050edce579c58e7064bcbbb41f6c11d73da8b601582adcbb9ab5c315",
+  "original_exe_sha256": "5de76891f9f9ee9075dde9a4833bfa31a536b00e5984b81eb328f5650671799c",
+  "source_embedded": true,
+  "test_copy_adhoc_only": true,
+  "original_preserved": true
+}

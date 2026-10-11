@@ -1,0 +1,366 @@
+{
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "source_root": "/private/tmp/ocx-0110-clock-audit",
+  "archived_at_utc": "2026-10-11T14:36:01.710044+00:00",
+  "selection": "Named red/green test outputs, command manifests, source identity, code commit/push, macOS build/verification and CI snapshots. Raw logs are lossless gzip. No application binary, source patch, user payload, cache, profile or unrelated document dirty snapshot copied.",
+  "sources": [
+    {
+      "source": "source-identity.json",
+      "source_bytes": 879,
+      "source_sha256": "1824f291306385a109cd6a9dc902fd9c99efc15ed4289f7e723f2e8cb9045f00",
+      "archive": "source-identity.json",
+      "archive_bytes": 879,
+      "archive_sha256": "1824f291306385a109cd6a9dc902fd9c99efc15ed4289f7e723f2e8cb9045f00",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "candidate-verification.json",
+      "source_bytes": 2353,
+      "source_sha256": "f6fb2872c8459e405c5c930bb4785ffef76e068574fe408f5da02bff5c1409f3",
+      "archive": "candidate-verification.json",
+      "archive_bytes": 2353,
+      "archive_sha256": "f6fb2872c8459e405c5c930bb4785ffef76e068574fe408f5da02bff5c1409f3",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "macos-build.json",
+      "source_bytes": 296,
+      "source_sha256": "734cfb80f62ad5862c59e0fee8203eaf1d9132199db962faf00284e7ea3ca124",
+      "archive": "macos-build.json",
+      "archive_bytes": 296,
+      "archive_sha256": "734cfb80f62ad5862c59e0fee8203eaf1d9132199db962faf00284e7ea3ca124",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "macos-build.raw.log",
+      "source_bytes": 3442,
+      "source_sha256": "1d1b9ecfd088d2deaabc46c60efbb2be7364372ba1b4642a10036d7c93a0c1ac",
+      "archive": "macos-build.raw.log.gz",
+      "archive_bytes": 1134,
+      "archive_sha256": "1ccead3a7d275d7eaa5870dc94e96f254dd330769127a6ec6c9fe252b3b74ed8",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "ci-list.json",
+      "source_bytes": 3577,
+      "source_sha256": "bdbbd09238ddd9ca300cacc27034103f28287ec6c173590e16787cd98703596c",
+      "archive": "ci-list.json",
+      "archive_bytes": 3577,
+      "archive_sha256": "bdbbd09238ddd9ca300cacc27034103f28287ec6c173590e16787cd98703596c",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "ci-list.stderr.log",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive": "ci-list.stderr.log.gz",
+      "archive_bytes": 20,
+      "archive_sha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "ci-status-latest.json",
+      "source_bytes": 7909,
+      "source_sha256": "cbfa29690a1f5bc19d5ead35c249eaad70d4e67f722060673a9330a15bfb446d",
+      "archive": "ci-status-latest.json",
+      "archive_bytes": 7909,
+      "archive_sha256": "cbfa29690a1f5bc19d5ead35c249eaad70d4e67f722060673a9330a15bfb446d",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "ui-red.json",
+      "source_bytes": 120,
+      "source_sha256": "b2825372a4811d798e6f3320d049b5709aa3dc25d37f96aff5be12584c40519b",
+      "archive": "ui-red.json",
+      "archive_bytes": 120,
+      "archive_sha256": "b2825372a4811d798e6f3320d049b5709aa3dc25d37f96aff5be12584c40519b",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "ui-red.log",
+      "source_bytes": 1981,
+      "source_sha256": "bf618e4167aa6da119d51e24109327351bb954430108b4642a878f054bb6a701",
+      "archive": "ui-red.log.gz",
+      "archive_bytes": 695,
+      "archive_sha256": "1492602390e4d5f70375eb97176b826f8ace45422d5d60e1f28d106964de3b76",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "rust-red.json",
+      "source_bytes": 116,
+      "source_sha256": "93a7240af3cdacbe600c447508429bf47207277557c7cea06e74e7cb58d81dcc",
+      "archive": "rust-red.json",
+      "archive_bytes": 116,
+      "archive_sha256": "93a7240af3cdacbe600c447508429bf47207277557c7cea06e74e7cb58d81dcc",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "rust-red.log",
+      "source_bytes": 2221,
+      "source_sha256": "df4eb01ee33851d35ab230a8190d2d657012a3c5a9a5debd758407056e18e328",
+      "archive": "rust-red.log.gz",
+      "archive_bytes": 716,
+      "archive_sha256": "2bc4bf965db1309c74305ee7e2b74a76d3202430518d792481c27814abe5cc68",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "ui-green.json",
+      "source_bytes": 242,
+      "source_sha256": "c36f17ca592208a5b283bbe97bbe94aeadf9d7fd8842589e21ebab35b32d54a6",
+      "archive": "ui-green.json",
+      "archive_bytes": 242,
+      "archive_sha256": "c36f17ca592208a5b283bbe97bbe94aeadf9d7fd8842589e21ebab35b32d54a6",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "ui-green.log",
+      "source_bytes": 410,
+      "source_sha256": "59088e90753d6d2fcdc104b41756072ebb06ca252a77229d56bf5832e3293a2e",
+      "archive": "ui-green.log.gz",
+      "archive_bytes": 276,
+      "archive_sha256": "4661adb2378cbfefb739d602f0be53c650dd83ea143ef3e114822e4de0e0c337",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "rust-green-command.json",
+      "source_bytes": 104,
+      "source_sha256": "5547623beb21eceacfbcdf93e3fa065b54b7f58bf4304f92ed2d2592379095b6",
+      "archive": "rust-green-command.json",
+      "archive_bytes": 104,
+      "archive_sha256": "5547623beb21eceacfbcdf93e3fa065b54b7f58bf4304f92ed2d2592379095b6",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "rust-green-command.log",
+      "source_bytes": 833,
+      "source_sha256": "b2def2986a99428da72bae7a256a06c08a423823960bc3864685033b5aba96a2",
+      "archive": "rust-green-command.log.gz",
+      "archive_bytes": 471,
+      "archive_sha256": "09c8c6c7cc5fc578f796b716ae54f38d0a9c5554faa3eadf0bd68350e51c8887",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "ui-full.json",
+      "source_bytes": 82,
+      "source_sha256": "7e24c4d27962b16dc165e2e636122a2d92b6732f9a80520144d0c377e24e512f",
+      "archive": "ui-full.json",
+      "archive_bytes": 82,
+      "archive_sha256": "7e24c4d27962b16dc165e2e636122a2d92b6732f9a80520144d0c377e24e512f",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "ui-full.log",
+      "source_bytes": 783,
+      "source_sha256": "520817f6290d3503003849d2a9429026776f9ded6035c8deb52863bf18ddf1ee",
+      "archive": "ui-full.log.gz",
+      "archive_bytes": 461,
+      "archive_sha256": "82d2b532ebd7a8268e22568c51083080eb42a39f43000215a843debda7c2d22c",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "rust-full.json",
+      "source_bytes": 138,
+      "source_sha256": "84a1761452ee0280d627878b4186e12227937d4f33fc7a109a2a6ebd04820f24",
+      "archive": "rust-full.json",
+      "archive_bytes": 138,
+      "archive_sha256": "84a1761452ee0280d627878b4186e12227937d4f33fc7a109a2a6ebd04820f24",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "rust-full.log",
+      "source_bytes": 85254,
+      "source_sha256": "ffb3b15960fd557c1ff1a717f6f227bffc1a0aedc0642ca398f625536164b68e",
+      "archive": "rust-full.log.gz",
+      "archive_bytes": 19002,
+      "archive_sha256": "2ed527c3f6e100ebdc9c9415779dd8675a4324d0024312b3628356f8604b7de5",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "rust-fmt.json",
+      "source_bytes": 266,
+      "source_sha256": "3b2538886adc844ffb73a3834d11695ddff511bef776a2b933c3f19d4dd1a637",
+      "archive": "rust-fmt.json",
+      "archive_bytes": 266,
+      "archive_sha256": "3b2538886adc844ffb73a3834d11695ddff511bef776a2b933c3f19d4dd1a637",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "rust-fmt.log",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive": "rust-fmt.log.gz",
+      "archive_bytes": 20,
+      "archive_sha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "rust-clippy.json",
+      "source_bytes": 323,
+      "source_sha256": "d2399611c1e64be0e86e85218392332564bfda5d0cf4a7f60ead820d4547bdf5",
+      "archive": "rust-clippy.json",
+      "archive_bytes": 323,
+      "archive_sha256": "d2399611c1e64be0e86e85218392332564bfda5d0cf4a7f60ead820d4547bdf5",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "rust-clippy.log",
+      "source_bytes": 395,
+      "source_sha256": "211abc55d6802c51d47935eabfb5c1d5e63701ba681d5ebd3e0cafbc7191a7ae",
+      "archive": "rust-clippy.log.gz",
+      "archive_bytes": 228,
+      "archive_sha256": "38a0fde4ad004cdf9387fc5f7efd061f3f93d69c10c719084466960f9447952f",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "ui-build.json",
+      "source_bytes": 236,
+      "source_sha256": "18be50eefce0b633c349049b425ba9ca8141ce596a5de2919f36936496c8d31d",
+      "archive": "ui-build.json",
+      "archive_bytes": 236,
+      "archive_sha256": "18be50eefce0b633c349049b425ba9ca8141ce596a5de2919f36936496c8d31d",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "ui-build.log",
+      "source_bytes": 2195,
+      "source_sha256": "fad13e6afdc64fef7aaab368d08e53e7be1028413ac547bb26503af7d1fbc5b1",
+      "archive": "ui-build.log.gz",
+      "archive_bytes": 743,
+      "archive_sha256": "7969e968b34592b8b0ee41b3dc7cab4c56aee2df257efd8468faef847479e88d",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "code-diff-check.json",
+      "source_bytes": 130,
+      "source_sha256": "0811846ff33fa60355b4104436075cbb62301c994f60f80f8165b3dcb71260e0",
+      "archive": "code-diff-check.json",
+      "archive_bytes": 130,
+      "archive_sha256": "0811846ff33fa60355b4104436075cbb62301c994f60f80f8165b3dcb71260e0",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "code-diff-check.log",
+      "source_bytes": 0,
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "archive": "code-diff-check.log.gz",
+      "archive_bytes": 20,
+      "archive_sha256": "f1b651238a58fe290baec6c5e32f3bdb1943dd2bd582f02569231f7a757c7837",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "code-commit.json",
+      "source_bytes": 400,
+      "source_sha256": "4ffc87c0712aa7f056da13d58b9f32a39354d25e529b76442b8100aa2dee3f74",
+      "archive": "code-commit.json",
+      "archive_bytes": 400,
+      "archive_sha256": "4ffc87c0712aa7f056da13d58b9f32a39354d25e529b76442b8100aa2dee3f74",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "code-commit.log",
+      "source_bytes": 126,
+      "source_sha256": "11f10b9cb038ca3aa819981913be230045114b9f49ceb532cfb7e206ceccfefb",
+      "archive": "code-commit.log.gz",
+      "archive_bytes": 144,
+      "archive_sha256": "3617c98c1dbcdc8bc19f15df187e638a241ac4ea503af3205377897965111edf",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "code-push.json",
+      "source_bytes": 172,
+      "source_sha256": "c98f9d18100253ae23f1625ed2df2abe8ac734e81eef290b9dde439b06373958",
+      "archive": "code-push.json",
+      "archive_bytes": 172,
+      "archive_sha256": "c98f9d18100253ae23f1625ed2df2abe8ac734e81eef290b9dde439b06373958",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "code-push.log",
+      "source_bytes": 78,
+      "source_sha256": "42556c2b4e7426ee7cc2475883d036b1b42f9087eea2e64f5cd50237a2f3f3d0",
+      "archive": "code-push.log.gz",
+      "archive_bytes": 93,
+      "archive_sha256": "e66f137ed1dff2b9d1b04dc97e3c15a56f78433a179113e1f73a6c6805b0efbc",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "macos-file.log",
+      "source_bytes": 140,
+      "source_sha256": "9a73f0653ec0d91c7ea02708c5e9da8c397087f4e0ed58004db58ab70448459a",
+      "archive": "macos-file.log.gz",
+      "archive_bytes": 137,
+      "archive_sha256": "f059e912a3920b7b78445498e344d99db5bab35d885bd5628e7891526ba80e35",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "macos-dmg-verify.log",
+      "source_bytes": 1256,
+      "source_sha256": "de968be34066c382906d866b5cca2e5b1b9f876a581c63fb5b92b31e69609a7b",
+      "archive": "macos-dmg-verify.log.gz",
+      "archive_bytes": 455,
+      "archive_sha256": "a23b6077e3337c099950fc4041a49765386851fd9d93ebe334710c5b93bf93a9",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "macos-signature-verify.log",
+      "source_bytes": 143,
+      "source_sha256": "674b2d09359d4c3fbb2b9b8c143305c641626d66a8a109e03c4d887c094604fe",
+      "archive": "macos-signature-verify.log.gz",
+      "archive_bytes": 135,
+      "archive_sha256": "da24efc8930f373f5095d34c200b9ffc3fce717a0f8aeb39e6e83acbc434c74b",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "macos-signature-display.log",
+      "source_bytes": 915,
+      "source_sha256": "32593de6b90d7312fe541043ff6023ca6e4f54a13e97b486e6a8ed6e70108083",
+      "archive": "macos-signature-display.log.gz",
+      "archive_bytes": 507,
+      "archive_sha256": "5857fa244ba0586a3f555767376dbc259ab1599e942ef2bb30201ff51e7a1d25",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "macos-signing-identities.log",
+      "source_bytes": 30,
+      "source_sha256": "0ad30eb1563c325d77f4dc564c5d96851d5a39205307f5cdd7d762b59688f87a",
+      "archive": "macos-signing-identities.log.gz",
+      "archive_bytes": 48,
+      "archive_sha256": "e24f3c228a0ba24bed7fbac9d21fce9ace4e951bf5382501ea9699a6f4f5dc43",
+      "transformation": "lossless gzip; mtime=0"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-clock-collect.py",
+      "source_bytes": 3026,
+      "source_sha256": "f3d7e64303addae59608dfa0da7bf33b7179bfc4fad0df4dc2ffc403c67dfb41",
+      "archive": "ocx-0110-clock-collect.py",
+      "archive_bytes": 3026,
+      "archive_sha256": "f3d7e64303addae59608dfa0da7bf33b7179bfc4fad0df4dc2ffc403c67dfb41",
+      "transformation": "byte-identical"
+    },
+    {
+      "source": "/private/tmp/ocx-0110-clock-archive.py",
+      "source_bytes": 6308,
+      "source_sha256": "03cc4a45cff91b3527bae017e7f3f83f940d0abd10776ba40069dae857a7131b",
+      "archive": "ocx-0110-clock-archive.py",
+      "archive_bytes": 6308,
+      "archive_sha256": "03cc4a45cff91b3527bae017e7f3f83f940d0abd10776ba40069dae857a7131b",
+      "transformation": "byte-identical"
+    }
+  ],
+  "digest_only": [
+    {
+      "path": "candidate/original/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4391555,
+      "sha256": "b12b55e4c78e526d693d7deb9698f7922b9b2548f03befca63e9b9a1b88db877",
+      "retention": "digest only; not copied to docs"
+    },
+    {
+      "path": "candidate/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7914288,
+      "sha256": "5de76891f9f9ee9075dde9a4833bfa31a536b00e5984b81eb328f5650671799c",
+      "retention": "digest only; not copied to docs"
+    }
+  ],
+  "unrelated_tracked_paths_verified": 138,
+  "code_before_snapshot_not_a_clean_baseline": true
+}

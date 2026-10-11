@@ -1,0 +1,67 @@
+{
+  "verified_at_utc": "2026-10-11T15:47:10.948925+00:00",
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "run_id": 38149645814,
+  "result": "pass",
+  "zips": [
+    {
+      "artifact_id": 11706329022,
+      "bytes": 7562877,
+      "sha256": "9bab91aeace36b5bb6f75661587b867b91226cd943b2ac4efed04d833b9afbb5",
+      "api_digest_matches": true,
+      "crc_passed": true,
+      "members": 3,
+      "expires_at": "2026-10-25T15:16:47Z"
+    },
+    {
+      "artifact_id": 11706169265,
+      "bytes": 1681112,
+      "sha256": "71f8879ad1726972c9b2b6ed7ea34d1b909e4d9de6659175ffa39b7b0d972bf1",
+      "api_digest_matches": true,
+      "crc_passed": true,
+      "members": 315,
+      "expires_at": "2026-10-25T15:16:50Z"
+    }
+  ],
+  "receipt_bytes": 1970,
+  "receipt_sha256": "72d32fb8da5dcd1e336c8300555d0e040e9f4ee790a7dd563c35114fcf4bea84",
+  "receipts_byte_identical": true,
+  "installers": [
+    {
+      "kind": "msi",
+      "path": "/private/tmp/ocx-0110-deb740-foreground/windows-download/11706329022/apps/desktop/tauri/target/release/bundle/msi/OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4538368,
+      "sha256": "079b9ffabd655ce7335a63af518352e08b57463fa2d9423ae182eb722667d90f",
+      "receipt_matches": true,
+      "runner_installed_exe_sha256": "3f556299972f208ee5f85a7436096e884e255816f380cf4506747c8bd9f42677",
+      "runner_pid": 5672,
+      "runner_observed_seconds": 30,
+      "source_identity_and_webview_match": true,
+      "webview_version": "Edg/153.0.4234.48",
+      "installed_exe_not_independently_extracted": true
+    },
+    {
+      "kind": "nsis",
+      "path": "/private/tmp/ocx-0110-deb740-foreground/windows-download/11706329022/apps/desktop/tauri/target/release/bundle/nsis/OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3231824,
+      "sha256": "59042244b98d09e732982581b040d59a453368ed7859e736eb8b39c259a3f105",
+      "receipt_matches": true,
+      "runner_installed_exe_sha256": "98b6700d0e3152e0a0de3c3f369b03665af9167e79284edf8033156408776123",
+      "runner_pid": 1804,
+      "runner_observed_seconds": 30,
+      "source_identity_and_webview_match": true,
+      "webview_version": "Edg/153.0.4234.48",
+      "installed_exe_not_independently_extracted": true
+    }
+  ],
+  "installer_executed_on_this_host": false,
+  "permission_fields_scope": "PowerShell harness current identity, not target application token",
+  "limits": [
+    "runner installed EXEs are not archived members; only runner hashes",
+    "sandbox data root / DPR1 / forced teardown do not accept default root, physical DPI or normal exit",
+    "CDP screenshots do not accept Mica/native appearance",
+    "code signing and real update/install acceptance remain open"
+  ],
+  "code_signed": false,
+  "release_accepted": false
+}

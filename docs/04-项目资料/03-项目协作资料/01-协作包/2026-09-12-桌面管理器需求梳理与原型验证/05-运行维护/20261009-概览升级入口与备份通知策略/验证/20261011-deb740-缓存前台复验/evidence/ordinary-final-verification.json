@@ -1,0 +1,33 @@
+{
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "verified_at_utc": "2026-10-11T15:22:44.636615+00:00",
+  "pid": 23060,
+  "only_one_test_instance": true,
+  "process": "23060 Sun Oct 11 23:17:20 2026     /private/tmp/ocx-0110-deb740-foreground/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "daily_process_unchanged": true,
+  "daily_process": "75764 Fri Oct  9 22:00:24 2026     /Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "injection_environment_absent": true,
+  "lock_held": true,
+  "lock_metadata": {
+    "pid": 23060,
+    "started_at": 1791731840945
+  },
+  "cache_and_schedule_unchanged": true,
+  "files": {
+    "manager-state/update-schedule.json": {
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+      "bytes": 182
+    },
+    "cache/updates/manager-stable.json": {
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+      "bytes": 217
+    },
+    "cache/updates/panel-latest.json": {
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "bytes": 145
+    }
+  },
+  "mounted_ui_evidence": "ordinary-final-ax.txt",
+  "test_exe_sha256": "d2b14777050edce579c58e7064bcbbb41f6c11d73da8b601582adcbb9ab5c315",
+  "release_accepted": false
+}

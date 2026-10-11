@@ -1,0 +1,340 @@
+{
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "verified_at": 1791731840.618975,
+  "restarts_verified": 10,
+  "restarts": [
+    {
+      "phase": "restart-valid-01",
+      "verified_at": 1791729991.107373,
+      "pid": 20593,
+      "elapsed_since_launch_s": 200.3865509033203,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.40779209136963,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-01-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-01-ax.txt"
+    },
+    {
+      "phase": "restart-valid-02",
+      "verified_at": 1791730089.335608,
+      "pid": 20777,
+      "elapsed_since_launch_s": 79.08344292640686,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.381354093551636,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-02-foreground-corrected.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-02-ax.txt"
+    },
+    {
+      "phase": "restart-valid-03",
+      "verified_at": 1791730212.299158,
+      "pid": 20960,
+      "elapsed_since_launch_s": 106.13041424751282,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.37061405181885,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-03-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "routes-100-final-ax.txt"
+    },
+    {
+      "phase": "restart-valid-04",
+      "verified_at": 1791730656.5295858,
+      "pid": 21441,
+      "elapsed_since_launch_s": 59.432490825653076,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.36779999732971,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-04-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-04-ax.txt"
+    },
+    {
+      "phase": "restart-valid-05",
+      "verified_at": 1791730863.2014668,
+      "pid": 21621,
+      "elapsed_since_launch_s": 193.73043775558472,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.33564805984497,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-05-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-05-ax.txt"
+    },
+    {
+      "phase": "restart-valid-06",
+      "verified_at": 1791730989.765263,
+      "pid": 21948,
+      "elapsed_since_launch_s": 64.7876341342926,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.34414625167847,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-06-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-06-ax.txt"
+    },
+    {
+      "phase": "restart-valid-07",
+      "verified_at": 1791731156.484821,
+      "pid": 22131,
+      "elapsed_since_launch_s": 153.43060111999512,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.35999417304993,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-07-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-07-final-ax.txt"
+    },
+    {
+      "phase": "restart-valid-08",
+      "verified_at": 1791731259.444236,
+      "pid": 22320,
+      "elapsed_since_launch_s": 68.10261917114258,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.3795599937439,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-08-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-08-final-ax.txt"
+    },
+    {
+      "phase": "restart-valid-09",
+      "verified_at": 1791731345.394858,
+      "pid": 22437,
+      "elapsed_since_launch_s": 70.2681872844696,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.36641788482666,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-09-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-09-ax.txt"
+    },
+    {
+      "phase": "restart-valid-10",
+      "verified_at": 1791731557.2178829,
+      "pid": 22639,
+      "elapsed_since_launch_s": 72.97467088699341,
+      "boundary_attempts": 0,
+      "probe_loaded_records": 1,
+      "cache_and_schedule_unchanged": true,
+      "files": {
+        "manager-state/update-schedule.json": {
+          "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+          "bytes": 182
+        },
+        "cache/updates/manager-stable.json": {
+          "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+          "bytes": 217
+        },
+        "cache/updates/panel-latest.json": {
+          "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+          "bytes": 145
+        }
+      },
+      "foreground_duration_s": 46.3251268863678,
+      "foreground_sample_count": 47,
+      "all_foreground_samples_visible": true,
+      "foreground_file": "probe-restart-valid-10-foreground.json",
+      "scope": "instrumented main process DNS/connect/exec/spawn boundary; not system-wide traffic or CPU/startup measurement",
+      "mounted_ui_evidence": "restart-valid-10-ax.txt"
+    }
+  ],
+  "routes": {
+    "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+    "pid": 20960,
+    "verified_at": 1791730645.902102,
+    "settings_entries": 100,
+    "overview_entries": 100,
+    "all_routes_verified": true,
+    "action_start": 1791730169.337,
+    "action_end": 1791730426.094,
+    "foreground_start": 1791730154.4919,
+    "foreground_end": 1791730426.204809,
+    "foreground_sample_count": 2493,
+    "all_action_interval_covered": true,
+    "all_foreground_samples_visible": true,
+    "boundary_attempts": 0,
+    "probe_loaded_records": 1,
+    "cache_and_schedule_unchanged": true,
+    "files": {
+      "manager-state/update-schedule.json": {
+        "bytes": 182,
+        "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a"
+      },
+      "cache/updates/manager-stable.json": {
+        "bytes": 217,
+        "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214"
+      },
+      "cache/updates/panel-latest.json": {
+        "bytes": 145,
+        "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508"
+      }
+    },
+    "scope": "preparation-state overview; instrumented main-process DNS/connect/exec/spawn attempts; not ready-state update entry acceptance or CPU/startup measurement"
+  },
+  "preserved_invalid_monitor": "probe-restart-valid-02-foreground.json",
+  "invalid_reason": "Wrong PID 20962 was supplied to the monitor; corrected monitor follows PID20777. Not an application failure.",
+  "scope": "Cache valid, future deadlines, preparation-state overview; main-process boundary attempts only.",
+  "not_acceptance": [
+    "CPU/startup performance",
+    "system-wide network traffic",
+    "ready-state overview updates",
+    "stable 24h / beta 6h cycles",
+    "real update install"
+  ]
+}

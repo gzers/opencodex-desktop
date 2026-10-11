@@ -1,0 +1,89 @@
+{
+  "verified_at_utc": "2026-10-11T14:33:07.071313+00:00",
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "build": {
+    "argv": [
+      "cargo",
+      "tauri",
+      "build",
+      "--bundles",
+      "app,dmg",
+      "--",
+      "--locked"
+    ],
+    "cwd": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri",
+    "exit_code": 0,
+    "started_at": "2026-10-11T14:27:56.469055+00:00",
+    "elapsed_seconds": 122.561674916
+  },
+  "info": {
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleShortVersionString": "0.1.10",
+    "CFBundleVersion": "0.1.10",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "full_source_sha_embedded": true,
+  "assets": [
+    {
+      "path": "candidate/original/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4391555,
+      "sha256": "b12b55e4c78e526d693d7deb9698f7922b9b2548f03befca63e9b9a1b88db877"
+    },
+    {
+      "path": "candidate/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7914288,
+      "sha256": "5de76891f9f9ee9075dde9a4833bfa31a536b00e5984b81eb328f5650671799c"
+    }
+  ],
+  "commands": {
+    "macos-file": {
+      "argv": [
+        "file",
+        "/private/tmp/ocx-0110-clock-audit/candidate/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+      ],
+      "exit_code": 0
+    },
+    "macos-dmg-verify": {
+      "argv": [
+        "hdiutil",
+        "verify",
+        "/private/tmp/ocx-0110-clock-audit/candidate/original/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+      ],
+      "exit_code": 0
+    },
+    "macos-signature-verify": {
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-clock-audit/candidate/original/OpenCodeX Desktop.app"
+      ],
+      "exit_code": 1
+    },
+    "macos-signature-display": {
+      "argv": [
+        "codesign",
+        "-d",
+        "--verbose=4",
+        "/private/tmp/ocx-0110-clock-audit/candidate/original/OpenCodeX Desktop.app"
+      ],
+      "exit_code": 0
+    },
+    "macos-signing-identities": {
+      "argv": [
+        "security",
+        "find-identity",
+        "-v",
+        "-p",
+        "codesigning"
+      ],
+      "exit_code": 0
+    }
+  },
+  "installed_or_launched": false,
+  "resigned": false,
+  "notarization_verified": false,
+  "release_accepted": false
+}
