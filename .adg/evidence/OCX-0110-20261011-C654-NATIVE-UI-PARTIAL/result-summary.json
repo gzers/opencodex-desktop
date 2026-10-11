@@ -1,0 +1,49 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-NATIVE-UI-PARTIAL",
+  "scope": "c654 sandbox / macOS / current viewport only",
+  "observations": {
+    "single_isolated_test_instance": "passed",
+    "backup_hash_matches_manifest": "passed",
+    "tree_default_root_year_expanded_month_collapsed": "observed",
+    "tree_month_action_package_expand": "observed",
+    "tree_refresh_preserves_expanded_layers": "observed",
+    "tree_manifest_preferences_purpose_and_open_actions": "observed",
+    "tree_focus_preservation": "not_verified",
+    "tree_checkbox_alignment": "not_applicable_to_backup_tree; full matrix open",
+    "settings_shared_update_center_and_two_detail_return_paths": "observed",
+    "manager_current_version": "0.1.10",
+    "manager_available_version": null,
+    "manager_install_action": "disabled",
+    "panel_current_version": "unknown; local panel not discovered",
+    "panel_remote_available_version": "2.83.0",
+    "panel_query_message": "版本查询失败，请检查网络或运行来源后重试。",
+    "panel_install_action": "disabled",
+    "release_notes_fallback": "observed for both objects",
+    "panel_official_web_details_action": "present; not clicked",
+    "overview_background": "准备态当前视口顶部及左右未见明显内层边距截断；主题/档位未完整确认"
+  },
+  "not_executed": [
+    "打开文件或目录",
+    "外部网页链接",
+    "下载或安装更新",
+    "更新后重启回读",
+    "备份恢复",
+    "备份清理",
+    "真实用户迁移"
+  ],
+  "open_checks": [
+    "tree focus and checkbox alignment matrix",
+    "long release notes scrolling",
+    "real update progress and restart",
+    "current main Windows dual privilege install/data root/native appearance/IPC",
+    "macOS formal signing and notarization",
+    "CPU/RSS/network/subprocess/startup p95/frame time and stable24h/beta6h",
+    "all-domain event execution evidence",
+    "release authorization"
+  ],
+  "prior_test_pid_86306": "historical; SIGTERM termination is not normal-exit or lock-cleanup acceptance",
+  "original_candidate_signature_failure_preserved": true,
+  "release_authorized": false,
+  "release_accepted": false,
+  "interpretation": "局部原生观察及环境整理，不提升整体验收状态、不替代当前 main 候选或发布门禁"
+}
