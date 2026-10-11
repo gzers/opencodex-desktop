@@ -1,0 +1,26 @@
+[
+  {
+    "argv": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "cwd": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui",
+    "exitCode": 0,
+    "durationSeconds": 2.183,
+    "stdout": "production-build.stdout.log",
+    "stderr": "production-build.stderr.log"
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/ezio/.codex/worktrees/ocx-0110-main",
+    "exitCode": 0,
+    "durationSeconds": 0.012,
+    "stdout": "diff-check.stdout.log",
+    "stderr": "diff-check.stderr.log"
+  }
+]

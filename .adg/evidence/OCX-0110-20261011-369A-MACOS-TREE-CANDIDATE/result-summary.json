@@ -1,0 +1,50 @@
+{
+  "sourceSha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "checks": {
+    "build": {
+      "result": "passed",
+      "exitCode": 0,
+      "seconds": 121.016
+    },
+    "dmgIntegrity": "passed",
+    "embeddedSource": "passed",
+    "originalStrictCodesign": {
+      "result": "failed",
+      "exitCode": 1,
+      "reason": "code has no resources but signature indicates they must be present"
+    },
+    "testCopyAdhocVerification": "passed (test copy only)",
+    "singleIsolatedInstance": {
+      "testPID": 9422,
+      "dailyPID": 75764,
+      "oldTestPID": 75489,
+      "sandboxEnvironmentVerified": true,
+      "instanceLockHeld": true
+    },
+    "nativeTree": {
+      "defaultExpansion": "root/year expanded, month collapsed",
+      "keyboard": "focused Down/Right expand and navigate to manifest; Left returns to parent",
+      "refresh": "expansion retained; async row focus not independently verified",
+      "themes": [
+        "dark",
+        "light"
+      ],
+      "checkboxScene": false
+    },
+    "backup": {
+      "id": "bk_20261011082942_7318022d",
+      "payloadBytes": 1371,
+      "independentSHA256MatchesManifest": true,
+      "scope": "manager preferences only"
+    }
+  },
+  "pending": [
+    "native checkbox/density/quality/DPI matrix",
+    "same-SHA full lifecycle and true install upgrade/default root",
+    "paired performance / real periods",
+    "real update and event lifecycle",
+    "formal signing / notarization"
+  ],
+  "releaseAuthorized": false,
+  "releaseAccepted": false
+}

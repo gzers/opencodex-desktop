@@ -1,0 +1,71 @@
+{
+  "source": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "originalDmgSHA256": "7ccb4927be704711997674ad58dba8342c80a70fcf0b62de080440cea351f743",
+  "mountedOriginalExeSHA256": "3e670b4e2e7517e4d10897919b56769030bde3eac944d4642fe5c0e5ded9f52e",
+  "testBundleIdentifier": "com.gzers.opencodex.desktop.sandbox0110369a",
+  "testExeSHA256": "8bb3920180d03c54e78392df71d8e0e57fefda0ddb023d60f2879625e71f4018",
+  "testAdhocOnly": true,
+  "formalSigningPassed": false,
+  "checks": [
+    {
+      "name": "dmg-attach",
+      "argv": [
+        "hdiutil",
+        "attach",
+        "-readonly",
+        "-nobrowse",
+        "-mountpoint",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/mounted-dmg",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707249.390665
+    },
+    {
+      "name": "test-copy",
+      "argv": [
+        "ditto",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/mounted-dmg/OpenCodeX Desktop.app",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-install/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707249.416147
+    },
+    {
+      "name": "dmg-detach",
+      "argv": [
+        "hdiutil",
+        "detach",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/mounted-dmg"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707249.499537
+    },
+    {
+      "name": "test-copy-adhoc-sign",
+      "argv": [
+        "codesign",
+        "--force",
+        "--deep",
+        "--sign",
+        "-",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-install/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707249.520588
+    },
+    {
+      "name": "test-copy-signature-verify",
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-install/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707249.533416
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "sourceSha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "checks": {
+    "baselineFocused": {
+      "result": "failed",
+      "passed": 8,
+      "failed": 6
+    },
+    "intermediateFocused": {
+      "result": "passed",
+      "tests": 14
+    },
+    "finalFullUi": {
+      "result": "passed",
+      "files": 94,
+      "tests": 466,
+      "treeTests": 15
+    },
+    "build": {
+      "result": "passed",
+      "exitCode": 0
+    },
+    "browserGeometry": {
+      "result": "passed",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "widths": [
+        300,
+        420
+      ],
+      "firstLineCenterDeltaCssPx": 0
+    },
+    "asyncRefreshMixedFocus": "passed",
+    "checkboxArrowNavigation": "passed",
+    "browserConsole": [],
+    "latestCI": {
+      "run": 38124355301,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "latestMacOSCandidate": "built; partial native tree validation; formal signing failed",
+    "latestWindowsCandidate": {
+      "run": 38127059287,
+      "status": "in_progress",
+      "regression": "passed",
+      "build": "in_progress"
+    }
+  },
+  "pending": [
+    "native density/quality matrix",
+    "Windows actual process token / physical DPI / native composition",
+    "latest Windows installer completion and local asset verification; complete latest macOS native/install validation",
+    "performance paired baseline / real cycles",
+    "real update and event lifecycle",
+    "formal signing / notarization"
+  ],
+  "releaseAuthorized": false,
+  "releaseAccepted": false
+}

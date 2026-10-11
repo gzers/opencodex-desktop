@@ -1,0 +1,80 @@
+{
+  "source": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "bundleIdentifier": "com.gzers.opencodex.desktop",
+  "version": "0.1.10",
+  "buildVersion": "0.1.10",
+  "checks": [
+    {
+      "name": "dmg-verify",
+      "argv": [
+        "hdiutil",
+        "verify",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707105.002025
+    },
+    {
+      "name": "original-codesign",
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 1,
+      "observedAtUnix": 1791707107.0099242
+    },
+    {
+      "name": "original-signature-details",
+      "argv": [
+        "codesign",
+        "-d",
+        "--verbose=4",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707107.051286
+    },
+    {
+      "name": "architecture",
+      "argv": [
+        "file",
+        "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707107.061727
+    },
+    {
+      "name": "identities",
+      "argv": [
+        "security",
+        "find-identity",
+        "-v",
+        "-p",
+        "codesigning"
+      ],
+      "exitCode": 0,
+      "observedAtUnix": 1791707107.0670662
+    }
+  ],
+  "files": [
+    {
+      "path": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4384841,
+      "sha256": "7ccb4927be704711997674ad58dba8342c80a70fcf0b62de080440cea351f743"
+    },
+    {
+      "path": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7897776,
+      "sha256": "3e670b4e2e7517e4d10897919b56769030bde3eac944d4642fe5c0e5ded9f52e"
+    },
+    {
+      "path": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/OpenCodeX Desktop.app/Contents/MacOS/ocxd",
+      "bytes": 386416,
+      "sha256": "ee294c65ccc22f6f738e1dbcfce019ccf02ee848fee2ccbec17f00b5eaafc6c1"
+    }
+  ]
+}

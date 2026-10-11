@@ -2,7 +2,7 @@
 
 关联 IMP-OPENCODEX-DESKTOP-20 / TASK-OPENCODEX-DESKTOP-182。本文保存候选构建和后续验收交接，不是版本通过证书或稳定核心事实。代码归属 main；本文和证据归属 docs/governance-main。
 
-最新源码基线已推进至 `main@03e0ad942c16fe2ef75473eb6693012b3ae684ac`，应用菜单与退出重启结果见下文“main@03e0ad94 的 macOS 候选与原生观察”。ADCC / 3D856 段落是历史轮次，已通过项不能自动替代最新 SHA 验收。
+最新源码基线已推进至 `main@369ab12da55448fbfdc4d0c9bf03970b56fd6c27`，树表对齐 / 刷新焦点、完整 CI 及同源码候选见下文“main@369ab12d 最新候选与树表验证”。ADCC / 3D856 / 03E0 段落保留为历史轮次，已通过项不能自动替代最新 SHA 验收。
 
 ## main@adccca8e 的结果
 
@@ -82,12 +82,12 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 
 ## 候选生成顺序（最新基线）
 
-1. 已完成：释放顺序及 macOS 应用菜单修复已推送。最新 03e0 的 [CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 已 completed / success，五个 job 全部成功；3d856 通过仅作历史轮次。
-2. 已完成：2026-10-11 15:38（UTC+8）单次触发的 03e0 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291) completed / success，package job 于 15:49:19 完成；两个 ZIP 的 GitHub digest、MSI / NSIS 本地摘要与回执已核对。最终安装后 EXE 身份由 runner 回执支持，尚未本机独立提取重算。3d856 候选仅作历史证据。
-3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装、同根正常退出 / 锁释放 / 重启及备份保留已补齐，见下方后续验收；签名、真实安装升级和完整原生仍待验，旧候选通过项不自动继承。
+1. 已完成：统一树表首行对齐、刷新焦点修复已推送 main@369ab12d；[CI 38124355301](https://github.com/gzers/opencodex-desktop/actions/runs/38124355301) completed / success，五个 job 全部成功。
+2. 进行中：2026-10-11 17:04（UTC+8）只触发一次 [Windows 候选 38127059287](https://github.com/gzers/opencodex-desktop/actions/runs/38127059287)，headSha 一致，锁定依赖回归成功，NSIS / MSI 构建中；安装 smoke、上传和 ZIP / MSI / NSIS 本地核验尚未完成。旧 03e0 的已收齐候选留作历史，不能混用。
+3. macOS 最新候选已构建并留存原件，隔离复制安装和原生树表局部观察见下文；只有一个测试实例。最新 SHA 的完整生命周期、默认根 / 真实安装升级及全密度 / 画质矩阵仍待验，正式签名未通过。
 4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
 
-完整 CI 后续快照、候选查重、单次 dispatch 与源码身份的原件见 `.adg/evidence/OCX-0110-20261011-03E0-CI-CANDIDATE-DISPATCH/`；完成及下载核验原件见 `.adg/evidence/OCX-0110-20261011-03E0-WINDOWS-INSTALLER-CANDIDATE/`。不覆盖此前 07:32 UTC 的运行中快照；临时 runner 安装 smoke 不作为 Windows 真机完整验收。
+最新 CI / 查重 / 单次 dispatch 原件见 .adg/evidence/OCX-0110-20261011-369A-CI-CANDIDATE-DISPATCH/；macOS 原件与树表观察见 .adg/evidence/OCX-0110-20261011-369A-MACOS-TREE-CANDIDATE/。保留旧状态，临时 runner 安装 smoke 不作为 Windows 真机完整验收。
 
 ## 2026-10-11 15:44—15:50（UTC+8）后续验收
 
@@ -106,7 +106,7 @@ macOS 对原唯一测试 PID42681 原生 ⌘Q 后，独立确认进程退出且�
 
 | 顺序 | 工作 | 完成条件 |
 |---|---|---|
-| 1 | 已收齐同源码 CI 和 Windows 安装候选 | CI 五个 job 通过，候选 headSha 一致、ZIP / MSI / NSIS 本地核验通过；安装后 EXE 由 runner 回执匹配，设备独立重算仍保留 |
+| 1 | 收齐最新 369ab12d 的 Windows 安装候选 | CI 五个 job 已通过，候选 headSha 一致且正在构建；待安装 smoke / 上传完成后核验 ZIP / MSI / NSIS 与最终 EXE 身份，设备独立重算仍保留 |
 | 2 | 双平台隔离原生与安装验收 | Windows 双权限 / 数据根 / 物理 DPI / 外观 / IPC；macOS 正常退出、安装升级、树表焦点及对齐；均保存同 SHA 证据 |
 | 3 | 自动检查性能与真实周期 | 下述 0.1.9 配对预算、缓存命中零请求、慢网离线、stable 24h / beta 6h 实测通过 |
 | 4 | 真实更新和事件生命周期 | 两类更新详情 / 进度 / 备份阻断 / 重启回读、异常精确解除与通道隔离有执行证据 |
@@ -144,3 +144,19 @@ macOS 对原唯一测试 PID42681 原生 ⌘Q 后，独立确认进程退出且�
 ## 原始日志与可读视图
 
 ADCC / 3D856 macOS 构建日志、IPC 定向日志及 Windows 失败摘录的原始字节保存为对应 `*.raw.gz`。同名 `.log` 为去除行尾空格和末尾空行的可读视图，未修改消息；各目录的 `log-provenance.json` 记录原始字节数、解压后 SHA256 与视图 SHA256，`checksums.json` 覆盖归档和视图。签名失败与测试失败均保留，不能通过视图规范化改变验收结论。
+
+## main@369ab12d 最新候选与树表验证
+
+源码 `main@369ab12da55448fbfdc4d0c9bf03970b56fd6c27` 已推送。统一 UiTreeTable 采用 16×22px 选择槽、16px 选择框，箭头 / 图标 / 叶占位与文字按 22px 首行对齐；多行名称不再使控件居中于整段。异步卸载前保存焦点及可见祖先，回退至可用选择框、同行主控件、可见祖先、首行；外部焦点不抢夺，错误移至重试入口，过期回调受保护。复选框方向键接入树导航，Space 保持原生选择。
+
+扩展用例对父提交生产组件的基线为 8 passed / 6 failed，失败原件保留；修复后树表 15 项、全 UI 94 文件 / 466 项通过，typecheck / 构建 / diff check 通过。生产浏览器夹具浅深色、300 / 420px 名称列的首行中心偏差 11→0 CSS px；混合态选择框刷新保焦与 ArrowDown 实测通过，console 无错误。临时 QA 标签和 Vite PID4947 已清理；证据见 .adg/evidence/OCX-0110-20261011-369A-TREE-ALIGNMENT-FOCUS/，不代替完整原生 / 物理 DPI。
+
+同源码 [CI 38124355301](https://github.com/gzers/opencodex-desktop/actions/runs/38124355301) completed / success，release-tools、frontend、backend、backend-windows、macOS build 五项成功。核对远端 main、最近 50 个候选查重后，于 17:04（UTC+8）只触发一次 [Windows 候选 38127059287](https://github.com/gzers/opencodex-desktop/actions/runs/38127059287)，headSha 一致。后续快照锁定依赖回归成功，NSIS / MSI 构建中，安装 smoke / 上传 / 本地核验待完成；原件见 .adg/evidence/OCX-0110-20261011-369A-CI-CANDIDATE-DISPATCH/。03e0 已通过项保留历史，不自动继承为最新 SHA 通过。
+
+macOS 同源码 app / dmg 构建 exit 0，用时 121.016s；arm64、版本 / 构建号 0.1.10，完整 SHA 内嵌核验通过。DMG 4384841 bytes，SHA256 `7ccb4927be704711997674ad58dba8342c80a70fcf0b62de080440cea351f743`，hdiutil verify exit 0；原 EXE 7897776 bytes，SHA256 `3e670b4e2e7517e4d10897919b56769030bde3eac944d4642fe5c0e5ded9f52e`。原件保存于 /private/tmp/ocx-0110-369a-candidate-tgpmm_zq/original/；严格 codesign exit 1，资源未封装、只有 linker ad hoc，宿主 0 个有效签名身份，公证未验证。测试副本独立 identifier sandbox0110369a，ad hoc 严格校验通过，EXE SHA256 `8bb3920180d03c54e78392df71d8e0e57fefda0ddb023d60f2879625e71f4018`；不能代表原件正式签名。
+
+旧测试 PID75489 原生 ⌘Q 退出、锁非阻塞可取得且字节不变；只读挂载 DMG 复制安装后，最新 PID9422 为唯一测试实例，test-data 根、环境与锁 metadata 匹配。日常 PID75764 与启动时间未变。真实偏好备份 `bk_20261011082942_7318022d` 仅含 preferences.json / backup-manifest.json，载荷 1371 bytes，独立摘要与清单一致；不含完整面板配置，未恢复。
+
+原生根 / 年默认展开、月份收起；建立焦点后方向键到清单、Left 返回父箭头、刷新保留展开层级和浅深色局部可读已有证据。无复选框场景；刷新焦点位于 HTML 内容，不能记原生异步行焦点恢复通过。00—10 的 JPEG / AX / metadata 保留误点、无焦点按键和裁切尝试；08 只证明展开保留，09 树不在截图范围、10 滚动后才可见。见 .adg/evidence/OCX-0110-20261011-369A-MACOS-TREE-CANDIDATE/；原日志 gzip 按字节保存并记录摘要，各目录 checksums.sha256 独立校验。
+
+继续完成最新 Windows 候选资产核验、实际目标 token 双权限 / 物理 DPI / 默认数据根 / 原生外观，以及 macOS 完整树表密度 / 画质矩阵、最新 SHA 生命周期 / 真实安装升级、同机 0.1.9 配对性能 / 真实周期、真实更新 / 事件和正式签名。性能门禁不调整；核心事实推广仍待后续确认。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`。本轮文档提交只包括 0.1.10 证据与协作包，未夹带 0.2.0 资料、迁移真实数据、替换日常安装或公开发布。

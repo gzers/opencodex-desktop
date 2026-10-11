@@ -1,0 +1,17 @@
+ ❯ tests/ui-tree-table.test.ts (14 tests | 6 failed) 76ms
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > restores mixed selection focus after async refresh without selecting or stealing outside focus
+ ❯ tests/ui-tree-table.test.ts:103:36
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns removed async leaf focus to the nearest surviving ancestor (remove parent: false)
+ ❯ tests/ui-tree-table.test.ts:129:64
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns removed async leaf focus to the nearest surviving ancestor (remove parent: true)
+ ❯ tests/ui-tree-table.test.ts:129:64
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns selection focus to the same row when its checkbox is removed
+ ❯ tests/ui-tree-table.test.ts:142:36
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns selection focus to the same row when its checkbox is disabled
+ ❯ tests/ui-tree-table.test.ts:142:36
+ FAIL  tests/ui-tree-table.test.ts > shared tree table > returns selection focus to the surviving parent on collapse
+ ❯ tests/ui-tree-table.test.ts:151:36
+ Test Files  1 failed (1)
+      Tests  6 failed | 8 passed (14)
+   Start at  16:10:23
+   Duration  460ms (environment 62%, tests 19%, transform 12%, import 6%)
