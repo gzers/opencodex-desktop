@@ -139,7 +139,6 @@ impl IpcService {
 
     /// Bind the running GUI's shared status and notification store. The CLI must
     /// never instantiate its own GUI state or a second notification publisher.
-    #[cfg(unix)]
     pub(crate) fn with_app_handle(mut self, app: tauri::AppHandle) -> Self {
         use tauri::Manager;
         self.runtime_mutations = app

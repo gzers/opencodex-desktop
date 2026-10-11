@@ -308,7 +308,7 @@ mod platform {
         where
             S: crate::modules::ipc::service::IpcExecutor<serde_json::Value>,
         {
-            let mut server = self.server.take().ok_or(AppError::InstanceLockConflict)?;
+            let server = self.server.take().ok_or(AppError::InstanceLockConflict)?;
             server
                 .connect()
                 .await
