@@ -513,3 +513,11 @@ IMP-OPENCODEX-DESKTOP-20 继续 in_progress，release_authorized: false；不创
 本轮真实偏好备份大小及 SHA-256 与清单一致；树表初始根 / 年展开、月份收起，展开到文件后刷新能保留层级。焦点及复选框对齐仍待验。设置页可进入共用更新中心及两类详情；管理器当前 0.1.10 无可用版本，面板本地未发现且查询失败，安装按钮禁用；发行说明回退及面板官方网页入口可见，未下载、安装、重启或打开外部链接。概览准备态当前视口顶部与左右未见明显光层留缝，完整外观矩阵仍待验。截图仅在本会话观察、未落盘。详细边界见协作包 [c654 macOS 候选补充记录](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-c654-macOS候选重打包/README.md) 与 `.adg/evidence/OCX-0110-20261011-C654-NATIVE-UI-PARTIAL/`。
 
 Windows 当前 main 双权限 / 安装路径 / 数据根 / 原生外观 / IPC、macOS 正式签名公证及真实更新重启、自动检查性能及 stable24h / beta6h、全域事件执行和发布授权等门禁已连续多轮未闭合。完成本轮回写后，目标执行设为 `blocked`，等待对应设备、签名与真实更新条件；IMP / TASK 保持未完成的 `in_progress`，不生成完成证书、不提前回写稳定核心事实。恢复时沿用源码与证据，只补受影响的缺口，不重复全套测试或另开多余实例。
+
+### 2026-10-11 Windows IPC CI 失败与修复提交
+
+`main@861fdeea39d1c45fa2beddb2cba6659b67735d9f` 的 [CI 38101892145](https://github.com/gzers/opencodex-desktop/actions/runs/38101892145) 已失败：`backend-windows` 的 Clippy 编译发现 `with_app_handle` 被 `cfg(unix)` 限制而 Windows GUI 注册仍调用该方法，以及 named pipe 接收路径多余的 `mut`。Windows 后端回归、release build、最终 EXE smoke 与 bundle build 均未执行。此前 `3bcd9318` 的成功 CI 不能作为后续 IPC 提交的 Windows 通过证据。
+
+修复提交 `adccca8e92d28c95d4fa83c11d994cb6bf3445f6` 已推送到 `main`：让既有 GUI 共享状态绑定方法跨平台可用，删除不需要的可变绑定，保持 `-D warnings` 门禁。本机格式检查、IPC 定向回归（44 passed / 0 failed / 0 ignored）、workspace all-targets/all-features Clippy 和暂存 diff 检查均通过。新 [CI 38117383632](https://github.com/gzers/opencodex-desktop/actions/runs/38117383632) 与修复提交 SHA 匹配，观察时仍为 `in_progress`，暂不认定 Windows 门禁通过。证据见 `.adg/evidence/OCX-0110-20261011-WINDOWS-IPC-CI-FIX/`。
+
+下一步先确认该提交 Windows CI 和候选构建，再用同一源码身份完成 Windows 双权限 / 安装路径 / 数据根 / DPI / 原生外观 / IPC 真机验收；同时补 macOS 正式签名公证、真实更新进度与重启、自动检查性能及全域事件执行证据。本轮没有启动额外测试软件；沿用现有唯一隔离实例。IMP / TASK 保持 `in_progress`，未迁移真实数据、未替换日常安装、未创建标签或公开发布，`release_authorized: false`。

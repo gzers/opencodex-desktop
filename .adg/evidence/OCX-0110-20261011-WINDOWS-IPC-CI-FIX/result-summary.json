@@ -1,0 +1,87 @@
+{
+  "evidence_id": "OCX-0110-20261011-WINDOWS-IPC-CI-FIX",
+  "observed_at_utc": "2026-10-11T06:14:04Z",
+  "implementation_ref": "IMP-OPENCODEX-DESKTOP-20",
+  "source_branch": "main",
+  "failed_ci": {
+    "run_id": 38101892145,
+    "head_sha": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38101892145",
+    "conclusion": "failure",
+    "failed_job": "backend-windows",
+    "failed_step": "cargo clippy --locked --workspace --all-targets -- -D warnings",
+    "diagnostics": [
+      {
+        "path": "apps/desktop/tauri/src/modules/ipc/service.rs",
+        "message": "with_app_handle was gated by cfg(unix), but Windows GUI registration calls it; E0599 at src/lib.rs:276"
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/ipc/endpoint.rs",
+        "line": 311,
+        "message": "unused mut on NamedPipeServer; denied by -D warnings"
+      }
+    ],
+    "passed_jobs": [
+      "frontend",
+      "backend",
+      "release-tools"
+    ],
+    "skipped_gates": [
+      "Windows backend regression",
+      "Windows release build",
+      "Windows final EXE smoke",
+      "build"
+    ]
+  },
+  "fix_commit": "adccca8e92d28c95d4fa83c11d994cb6bf3445f6",
+  "fix": "Expose the existing GUI state binding on Windows and Unix; remove unnecessary mutable server binding. CI thresholds unchanged.",
+  "local_checks": [
+    {
+      "command": "cargo fmt --all -- --check",
+      "host": "macOS",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": "cargo test --locked --lib modules::ipc -- --test-threads=1",
+      "host": "macOS",
+      "exit_code": 0,
+      "status": "passed",
+      "passed": 44,
+      "failed": 0,
+      "ignored": 0,
+      "filtered_out": 654
+    },
+    {
+      "command": "cargo clippy --locked --workspace --all-targets --all-features -- -D warnings",
+      "host": "macOS",
+      "exit_code": 0,
+      "status": "passed"
+    },
+    {
+      "command": "git diff --cached --check",
+      "exit_code": 0,
+      "status": "passed"
+    }
+  ],
+  "followup_ci": {
+    "run_id": 38117383632,
+    "head_sha": "adccca8e92d28c95d4fa83c11d994cb6bf3445f6",
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38117383632",
+    "observed_status": "in_progress",
+    "conclusion": null
+  },
+  "remaining_gates": [
+    "Windows current-source CI and candidate packaging",
+    "Windows native dual-permission/path/DPI/appearance/IPC acceptance",
+    "macOS production signing/notarization",
+    "real update/install/restart feedback",
+    "scheduler real-device performance and cycles",
+    "full-domain event execution"
+  ],
+  "native_tests_launched": 0,
+  "goal_complete": false,
+  "release_authorized": false,
+  "release_accepted": false,
+  "interpretation": "The local focused checks pass; Windows CI is pending. Earlier successful 3bcd9318 CI does not cover the later IPC change. No new UI instances, user-data migration, daily-install replacement, release tag or publication."
+}
