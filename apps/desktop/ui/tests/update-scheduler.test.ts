@@ -14,6 +14,19 @@ function fixture() {
   return { scheduler, state, plan, check, onError }
 }
 describe('application update scheduler', () => {
+  it.each([-7 * 86_400_000, 7 * 86_400_000])('keeps the startup grace period after a wall-clock shift of %i ms', async shift => {
+    const f = fixture(); f.scheduler.start()
+    await vi.advanceTimersByTimeAsync(10_000)
+    vi.setSystemTime(Date.now() + shift)
+    for (let i = 0; i < 100; i++) f.scheduler.wake('foreground')
+    expect(vi.getTimerCount()).toBe(1)
+    await vi.advanceTimersByTimeAsync(34_999)
+    expect(f.plan).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(1)
+    expect(f.plan).toHaveBeenCalledOnce()
+    expect(f.check).not.toHaveBeenCalled()
+    f.scheduler.stop()
+  })
   it('keeps the active query trigger and coalesces a later online wake', async () => {
     const f = fixture(); let done!: () => void
     f.plan.mockResolvedValueOnce({ targets: ['manager_stable'], nextDelayMs: 0 })

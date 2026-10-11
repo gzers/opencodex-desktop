@@ -38,6 +38,14 @@ impl Target {
             DAY
         }
     }
+    fn delay(self, failures: u8) -> i64 {
+        match failures {
+            1 => 300,
+            2 => 1800,
+            3 => 7200,
+            _ => self.interval(),
+        }
+    }
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -88,6 +96,7 @@ impl Schedule {
                 !["manager-stable", "manager-beta", "panel-latest"].contains(&key.as_str())
                     || d.next_due < 0
                     || d.failures > 4
+                    || d.last_success.is_some_and(|t| t < 0)
             })
         {
             return Err(AppError::NotConfigured);
@@ -97,6 +106,23 @@ impl Schedule {
     pub fn save(&self, root: &Path) -> AppResult<()> {
         let bytes = serde_json::to_vec(self).map_err(|_| AppError::NotConfigured)?;
         crate::infrastructure::atomic_write::atomic_write(&root.join(STATE_PATH), &bytes, 0o600)
+    }
+    /// Rebase only impossible future deadlines for the selected objects. Persist this
+    /// repair before planning so reloads/wakes cannot keep postponing the deadline.
+    /// Retain failure counts and history, and wait the existing interval/backoff
+    /// rather than querying immediately after a rollback or corrupt future time.
+    pub fn reconcile_clock(&mut self, now: i64, channel: UpdateChannel) -> bool {
+        let mut changed = false;
+        for target in [Target::manager(channel), Target::Panel] {
+            if let Some(d) = self.entries.get_mut(target.key()) {
+                let latest = now.saturating_add(target.delay(d.failures)).max(0);
+                if d.next_due > latest {
+                    d.next_due = latest;
+                    changed = true;
+                }
+            }
+        }
+        changed
     }
     pub fn plan(&self, now: i64, channel: UpdateChannel, enabled: bool, busy: bool) -> Plan {
         if !enabled {
@@ -144,12 +170,7 @@ impl Schedule {
             target.interval()
         } else {
             d.failures = d.failures.saturating_add(1).min(4);
-            match d.failures {
-                1 => 300,
-                2 => 1800,
-                3 => 7200,
-                _ => target.interval(),
-            }
+            target.delay(d.failures)
         };
         d.next_due = now.saturating_add(delay);
     }
@@ -278,5 +299,24 @@ mod tests {
             .all(|t| *t != Target::Panel));
         std::fs::write(root.path().join(STATE_PATH), b"bad").unwrap();
         assert!(Schedule::load(root.path()).is_err());
+    }
+    #[test]
+    fn invalid_deadline_history_is_refused_without_reset() {
+        for (next_due, last_success, failures) in [(100, -1, 0), (-1, 100, 0), (100, 100, 5)] {
+            let root = tempfile::tempdir().unwrap();
+            let mut state = Schedule::default();
+            state.entries.insert(
+                Target::Panel.key().into(),
+                Deadline {
+                    next_due,
+                    last_success: Some(last_success),
+                    failures,
+                },
+            );
+            state.save(root.path()).unwrap();
+            let bytes = std::fs::read(root.path().join(STATE_PATH)).unwrap();
+            assert!(Schedule::load(root.path()).is_err());
+            assert_eq!(std::fs::read(root.path().join(STATE_PATH)).unwrap(), bytes);
+        }
     }
 }

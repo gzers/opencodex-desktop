@@ -25,7 +25,7 @@ export function createUpdateScheduler(deps: Dependencies) {
   function arm(delay: number | null) {
     clear()
     if (disposed || !started || delay === null || !deps.visible()) return
-    timer = setTimeout(() => { timer = null; void tick() }, Math.max(100, delay, notBefore - Date.now()))
+    timer = setTimeout(() => { timer = null; void tick() }, Math.max(100, delay, notBefore - performance.now()))
   }
   async function tick() {
     const trigger = nextTrigger
@@ -54,7 +54,8 @@ export function createUpdateScheduler(deps: Dependencies) {
     }
   }
   return {
-    start() { if (started || disposed) return; started = true; notBefore = Date.now() + 45_000; arm(45_000) },
+    // Startup grace is elapsed time; adjusting the system clock must not change it.
+    start() { if (started || disposed) return; started = true; notBefore = performance.now() + 45_000; arm(45_000) },
     wake(trigger: UpdateCheckTrigger = 'deadline') { if (!started || disposed) return; if (running) pendingWake = trigger; else { nextTrigger = trigger; arm(100) } },
     stop() { disposed = true; clear() },
   }
