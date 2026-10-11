@@ -1,0 +1,116 @@
+{
+  "capturedAt": "2026-10-11T18:49:47.166335+00:00",
+  "sourceCommit": "fb34f5b91c3a6feb5b41f11f9527171c4bf742f5",
+  "artifacts": [
+    {
+      "id": 11710787813,
+      "name": "windows-process-token-evidence",
+      "bytes": 827,
+      "sha256": "ff2c8add71b2151fe8336ebb741886970b777b33f1b4ae275d80ef59e5642212",
+      "entries": 1,
+      "apiBytesAndDigestMatched": true,
+      "sourceCommitMatched": true,
+      "crcMatched": true,
+      "pathsSafe": true,
+      "expiresAt": "2027-01-09T18:11:40Z",
+      "sourceZip": "/private/tmp/ocx-0110-fb34f5-windows-token/artifact.zip"
+    },
+    {
+      "id": 11711053854,
+      "name": "windows-startup-evidence",
+      "bytes": 9171726,
+      "sha256": "7412c5e9dc72779921fbe558a0b1ea14eb636a1cbf28b32c0eec5096c4996407",
+      "entries": 166,
+      "apiBytesAndDigestMatched": true,
+      "sourceCommitMatched": true,
+      "crcMatched": true,
+      "pathsSafe": true,
+      "expiresAt": "2027-01-09T18:11:40Z",
+      "sourceZip": "/private/tmp/ocx-0110-fb34f5-windows-finalexe/artifact.zip"
+    },
+    {
+      "id": 11711681378,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "bytes": 7563840,
+      "sha256": "45452782db5a6a5b083d547fafb3254ba505cfc97ee0a7986d43bdd736c072c4",
+      "entries": 3,
+      "apiBytesAndDigestMatched": true,
+      "sourceCommitMatched": true,
+      "crcMatched": true,
+      "pathsSafe": true,
+      "expiresAt": "2026-10-25T18:28:29Z",
+      "sourceZip": "/private/tmp/ocx-0110-fb34f5-windows-candidate/opencodex-desktop-0.1.10-windows-x64-candidate.zip"
+    },
+    {
+      "id": 11711551623,
+      "name": "windows-candidate-evidence",
+      "bytes": 1645686,
+      "sha256": "7dc661e7a41a496c283a7a85e4a93d911694fd8a853e69d09aba3d98f6cb9613",
+      "entries": 316,
+      "apiBytesAndDigestMatched": true,
+      "sourceCommitMatched": true,
+      "crcMatched": true,
+      "pathsSafe": true,
+      "expiresAt": "2026-10-25T18:28:30Z",
+      "sourceZip": "/private/tmp/ocx-0110-fb34f5-windows-candidate/windows-candidate-evidence.zip"
+    }
+  ],
+  "installers": [
+    {
+      "kind": "msi",
+      "packageBytes": 4538368,
+      "packageSha256": "834dba519f3c159762ceb2656f312137806dbdf22f926e6c270c06cc1422a771",
+      "downloadedPackageIndependentlyHashed": true,
+      "installedExecutableLocallyAvailable": false,
+      "installedExecutableSha256RunnerOnly": "3825586724890099d7b30ba70b3a600dd1f21f6241f81a0d8b9ed76c62880826"
+    },
+    {
+      "kind": "nsis",
+      "packageBytes": 3232774,
+      "packageSha256": "49f8d0e51fdcbce234ab0c70225d73e33486a2ef6fad517b3874597b504482b2",
+      "downloadedPackageIndependentlyHashed": true,
+      "installedExecutableLocallyAvailable": false,
+      "installedExecutableSha256RunnerOnly": "61953eb64cef16d3593d70c3111239eda8944e799a7c26529d7dd28867574d3c"
+    }
+  ],
+  "applications": [
+    {
+      "receipt": "ci/startup/startup.json",
+      "pid": 8308,
+      "applicationTokenVerified": true,
+      "actualElevated": true,
+      "elevationType": 1,
+      "mode": "any",
+      "explicitModeAcceptance": false,
+      "sourceCommitMatched": true
+    },
+    {
+      "receipt": "candidate/msi-startup/startup.json",
+      "pid": 2592,
+      "applicationTokenVerified": true,
+      "actualElevated": true,
+      "elevationType": 1,
+      "mode": "any",
+      "explicitModeAcceptance": false,
+      "sourceCommitMatched": true
+    },
+    {
+      "receipt": "candidate/nsis-startup/startup.json",
+      "pid": 2792,
+      "applicationTokenVerified": true,
+      "actualElevated": true,
+      "elevationType": 1,
+      "mode": "any",
+      "explicitModeAcceptance": false,
+      "sourceCommitMatched": true
+    }
+  ],
+  "installerReceiptCopiesMatched": true,
+  "scope": "ephemeral elevated runner, sandbox override, fresh install/startup/uninstall; not dual-permission/default-root/native/upgrade/OTA/normal-exit/signing acceptance",
+  "ordinaryPermissionAccepted": false,
+  "dualPermissionAccepted": false,
+  "nativeAccepted": false,
+  "defaultInstallDataRootAccepted": false,
+  "installedExecutableIndependentHashAccepted": false,
+  "releaseAccepted": false
+}

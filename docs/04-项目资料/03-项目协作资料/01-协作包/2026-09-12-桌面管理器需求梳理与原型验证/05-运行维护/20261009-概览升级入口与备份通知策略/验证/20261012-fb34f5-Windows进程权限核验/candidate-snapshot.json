@@ -1,0 +1,172 @@
+{
+  "conclusion": "success",
+  "headSha": "fb34f5b91c3a6feb5b41f11f9527171c4bf742f5",
+  "jobs": [
+    {
+      "completedAt": "2026-10-11T18:28:35Z",
+      "conclusion": "success",
+      "databaseId": 114540354915,
+      "name": "package",
+      "startedAt": "2026-10-11T18:18:14Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-11T18:18:16Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-11T18:18:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:18:20Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "number": 2,
+          "startedAt": "2026-10-11T18:18:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:18:21Z",
+          "conclusion": "success",
+          "name": "Read candidate version",
+          "number": 3,
+          "startedAt": "2026-10-11T18:18:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:18:25Z",
+          "conclusion": "success",
+          "name": "Verify process-token evidence and all Windows smoke syntax",
+          "number": 4,
+          "startedAt": "2026-10-11T18:18:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:18:30Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@v5",
+          "number": 5,
+          "startedAt": "2026-10-11T18:18:25Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:18:49Z",
+          "conclusion": "success",
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "number": 6,
+          "startedAt": "2026-10-11T18:18:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:18:50Z",
+          "conclusion": "success",
+          "name": "Verify strict bundle identity checks",
+          "number": 7,
+          "startedAt": "2026-10-11T18:18:49Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:19:30Z",
+          "conclusion": "success",
+          "name": "Run Swatinem/rust-cache@v2",
+          "number": 8,
+          "startedAt": "2026-10-11T18:18:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:19:43Z",
+          "conclusion": "success",
+          "name": "Install pinned CLI and frontend",
+          "number": 9,
+          "startedAt": "2026-10-11T18:19:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:20:04Z",
+          "conclusion": "success",
+          "name": "Freeze and record dependency resolution",
+          "number": 10,
+          "startedAt": "2026-10-11T18:19:43Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:23:20Z",
+          "conclusion": "success",
+          "name": "Windows regression with the package lock",
+          "number": 11,
+          "startedAt": "2026-10-11T18:20:04Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:27:06Z",
+          "conclusion": "success",
+          "name": "Build NSIS and MSI candidates",
+          "number": 12,
+          "startedAt": "2026-10-11T18:23:20Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:27Z",
+          "conclusion": "success",
+          "name": "Install, verify final EXE and uninstall on isolated runner",
+          "number": 13,
+          "startedAt": "2026-10-11T18:27:06Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:30Z",
+          "conclusion": "success",
+          "name": "Upload verified Windows installers",
+          "number": 14,
+          "startedAt": "2026-10-11T18:28:27Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:32Z",
+          "conclusion": "success",
+          "name": "Preserve package evidence",
+          "number": 15,
+          "startedAt": "2026-10-11T18:28:30Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:32Z",
+          "conclusion": "success",
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "number": 28,
+          "startedAt": "2026-10-11T18:28:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:32Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@v5",
+          "number": 29,
+          "startedAt": "2026-10-11T18:28:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:33Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "number": 30,
+          "startedAt": "2026-10-11T18:28:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-11T18:28:34Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 31,
+          "startedAt": "2026-10-11T18:28:33Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38163233949/job/114540354915"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38163233949",
+  "capturedAt": "2026-10-11T18:49:47.166335+00:00"
+}

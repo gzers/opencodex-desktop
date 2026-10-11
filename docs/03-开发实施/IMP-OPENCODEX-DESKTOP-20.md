@@ -720,3 +720,11 @@ main@3ed00487958185a520e61ed2ba2d706f95e9a384 已提交推送，只新增 macOS 
 方法、首末 AX / JPEG、原始采样、失败退出、锁屏限制及独立重算见[十分钟性能对照](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/README.md)。46 项 manifest、42 份来源无损复制、3 份显式筛选归属衍生、3 份 gzip roundtrip、4 张 JPEG 扩展名修正和离线重算全部通过；未复制二进制 / 用户载荷 / WebView profile / 其他应用元数据。
 
 下一步解锁后做中档静态、高档 CSS 与必要的 mesh 返回诊断，记录首末设置和连续前台以隔离原因，保留已确认的光层边距覆盖。建立复现并修复后重跑十分钟配对；原 CPU / RSS、冷 / 热各 ≥20 次、启动可交互 p95 增量 ≤100ms 且 ≤5%、检查无 >50ms 主线程任务、真实周期及双平台原生 / 安装 / 更新 / 事件 / 签名门禁不变。review:scheduler-performance-0110 记录 failed，八项门禁仍未整体闭合；IMP / TASK in_progress、acceptance_results 为空、发布未授权 / 未验收。
+
+### 2026-10-12 main@fb34f5 Windows 应用进程权限与候选安装包复核
+
+`main@fb34f5b91c3a6feb5b41f11f9527171c4bf742f5` 相对 deb740 仅修改 7 个 Windows smoke / token helper / workflow 文件，无应用实现变化。[CI 38162783294](https://github.com/gzers/opencodex-desktop/actions/runs/38162783294)与[候选安装 38163233949](https://github.com/gzers/opencodex-desktop/actions/runs/38163233949)同 SHA 均 completed / success。完整日志独立统计：Windows Rust 与候选 Rust 各 34 组 / 585 passed / 0 failed / 6 ignored，macOS Rust 34 组 / 866 passed / 0 failed / 6 ignored，前端 95 文件 / 474 passed，token helper 9 项通过；零测试组保留，ignored 不计通过。最新下载证据未含 macOS DMG，不声明其独立核验完成。
+
+4 个 artifact 的 API 大小 / SHA256、源码身份、CRC 和安全条目路径通过；下载 MSI 4538368 bytes / SHA256 834dba519f3c159762ceb2656f312137806dbdf22f926e6c270c06cc1422a771、NSIS 3232774 bytes / SHA256 49f8d0e51fdcbce234ab0c70225d73e33486a2ef6fad517b3874597b504482b2 与回执一致。runner 新装 / 首屏 / 卸载通过，安装后 EXE 不在 artifact 内，该摘要仍为 runner-only；本机未运行 Windows 安装器。CI PID8308、MSI PID2592、NSIS PID2792 的实际应用 token / 全路径 / 源码匹配，均 elevated=true、elevationType=1、applicationTokenVerified=true；mode:any / applicationModeMatched=false，不计普通 / 管理员双权限验收。沙箱 override、DPR=1 和自动收尾不计默认安装目录 data、物理 DPI、正常退出、真实升级或用户数据保留。正式签名 / 发布 false，云母 / 标题栏 / 菜单及 CDP 黑底根因仍需真机确认。
+
+证据与限制见[Windows 进程权限核验](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-fb34f5-Windows进程权限核验/README.md)：34 份来源无损复制、6 份 gzip roundtrip、39 项摘要清单；原 helper-only 核验保留原义，不复制安装器 / 用户载荷 / WebView profile。前台锁屏等待人工解锁，复用唯一隔离实例，无新的前台诊断结果。既有十分钟 CPU / RSS 性能失败继续保留，原阈值不变；八项门禁未整体闭合，TASK / IMP in_progress、acceptance_results 为空，无核心事实推广、真实迁移、日常替换或发布。

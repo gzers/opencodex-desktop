@@ -1,0 +1,30 @@
+{
+  "capturedAt": "2026-10-11T18:27:20.791634+00:00",
+  "sourceCommit": "fb34f5b91c3a6feb5b41f11f9527171c4bf742f5",
+  "artifact": {
+    "id": 11710787813,
+    "name": "windows-process-token-evidence",
+    "zipBytes": 827,
+    "zipSha256": "ff2c8add71b2151fe8336ebb741886970b777b33f1b4ae275d80ef59e5642212",
+    "apiDigestMatched": true,
+    "crcMatched": true,
+    "entries": [
+      "process-token.json"
+    ],
+    "entryBytesMatched": true,
+    "createdAt": "2026-10-11T18:11:52Z",
+    "expiresAt": "2027-01-09T18:11:40Z"
+  },
+  "receipt": {
+    "result": "pass",
+    "checks": 9,
+    "childExecutable": "C:\\Windows\\System32\\cmd.exe",
+    "actualApplicationTested": false,
+    "ordinaryApplicationTested": false,
+    "administratorApplicationTested": false,
+    "nativeAcceptance": false,
+    "installerAcceptance": false
+  },
+  "sourceZipLocation": "/private/tmp/ocx-0110-fb34f5-windows-token/artifact.zip",
+  "scope": "token helper only, not actual application or dual-permission acceptance"
+}
