@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "gh",
+    "run",
+    "list",
+    "--workflow",
+    "windows-candidate.yml",
+    "--branch",
+    "main",
+    "--limit",
+    "50",
+    "--json",
+    "databaseId,headSha,status,conclusion,event,url,createdAt"
+  ],
+  "started_at": "2026-10-11T11:45:37.390634+00:00",
+  "ended_at": "2026-10-11T11:45:39.115511+00:00",
+  "exit_code": 0
+}

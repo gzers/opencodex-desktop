@@ -1,0 +1,1616 @@
+[
+  {
+    "id": 11702111331,
+    "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+    "bytes": 7562414,
+    "sha256": "c7b66cb7ebc7b2a38369b6ca3c35d7051fda5afa7d57f55c5293ed9806a2b16c",
+    "api_digest_match": true,
+    "size_match": true,
+    "zip_crc_pass": true,
+    "expires_at": "2026-10-25T12:00:47Z",
+    "entries": [
+      {
+        "path": "apps/desktop/tauri/target/release/bundle/nsis/OpenCodeX Desktop_0.1.10_x64-setup.exe",
+        "bytes": 3231880,
+        "crc32": "04c8ddb2"
+      },
+      {
+        "path": "test/out/windows-candidate/installer-verification.json",
+        "bytes": 1970,
+        "crc32": "7ea38646"
+      },
+      {
+        "path": "apps/desktop/tauri/target/release/bundle/msi/OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+        "bytes": 4538368,
+        "crc32": "c6b35f53"
+      }
+    ]
+  },
+  {
+    "id": 11702016494,
+    "name": "windows-candidate-evidence",
+    "bytes": 1703512,
+    "sha256": "3add893cca8644b28772e1e5f32a8b622171661648270b98544498758ea53b1e",
+    "api_digest_match": true,
+    "size_match": true,
+    "zip_crc_pass": true,
+    "expires_at": "2026-10-25T12:00:50Z",
+    "entries": [
+      {
+        "path": "cargo-metadata.json",
+        "bytes": 2808915,
+        "crc32": "9b0c4d87"
+      },
+      {
+        "path": "Cargo.lock",
+        "bytes": 140816,
+        "crc32": "91850314"
+      },
+      {
+        "path": "cargo-tree.txt",
+        "bytes": 90663,
+        "crc32": "70be3984"
+      },
+      {
+        "path": "environment.json",
+        "bytes": 298,
+        "crc32": "8542e6c9"
+      },
+      {
+        "path": "installer-verification.json",
+        "bytes": 1970,
+        "crc32": "7ea38646"
+      },
+      {
+        "path": "msi-install.log",
+        "bytes": 109496,
+        "crc32": "6f23014a"
+      },
+      {
+        "path": "msi-startup/cdp-diagnostics.json",
+        "bytes": 1745,
+        "crc32": "61d7ae86"
+      },
+      {
+        "path": "msi-startup/main-window.png",
+        "bytes": 566961,
+        "crc32": "fd57baae"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/BrowserMetrics/BrowserMetrics-6ACB7A21-968.pma",
+        "bytes": 1310720,
+        "crc32": "9ff4d708"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/component_crx_cache/metadata.json",
+        "bytes": 13,
+        "crc32": "247f69e8"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Crashpad/metadata",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Crashpad/settings.dat",
+        "bytes": 288,
+        "crc32": "8d0da4d5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Crashpad/throttle_store.dat",
+        "bytes": 20,
+        "crc32": "a5db39be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/ClientCertificates/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/ClientCertificates/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Code Cache/js/f5007be918d1e23f_0",
+        "bytes": 256,
+        "crc32": "a686fe80"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Code Cache/js/index",
+        "bytes": 24,
+        "crc32": "ad5762a5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Code Cache/js/index-dir/the-real-index",
+        "bytes": 72,
+        "crc32": "700357d5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Code Cache/wasm/index",
+        "bytes": 24,
+        "crc32": "ad5762a5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Code Cache/wasm/index-dir/the-real-index",
+        "bytes": 48,
+        "crc32": "436c7f8b"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/commerce_subscription_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/commerce_subscription_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnGraphiteCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnGraphiteCache/data_1",
+        "bytes": 270336,
+        "crc32": "6cfdabb1"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnGraphiteCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnGraphiteCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnGraphiteCache/index",
+        "bytes": 262512,
+        "crc32": "c3be6ffb"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnWebGPUCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnWebGPUCache/data_1",
+        "bytes": 270336,
+        "crc32": "6cfdabb1"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnWebGPUCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnWebGPUCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/DawnWebGPUCache/index",
+        "bytes": 262512,
+        "crc32": "9decf1c2"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/declarative_performance_observer.db",
+        "bytes": 32768,
+        "crc32": "65a2dd81"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/discounts_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/declarative_performance_observer.db-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/discounts_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/discount_infos_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/discount_infos_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Rules/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Rules/000003.log",
+        "bytes": 38,
+        "crc32": "4aa95a39"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Rules/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Rules/LOG",
+        "bytes": 455,
+        "crc32": "a65db86d"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Rules/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Scripts/000003.log",
+        "bytes": 38,
+        "crc32": "4aa95a39"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Scripts/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Scripts/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Scripts/LOG",
+        "bytes": 457,
+        "crc32": "74a207bc"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension Scripts/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension State/000003.log",
+        "bytes": 114,
+        "crc32": "9d3565c6"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension State/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension State/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension State/LOG",
+        "bytes": 453,
+        "crc32": "cceea49c"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Extension State/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Favicons",
+        "bytes": 20480,
+        "crc32": "b5e67627"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Favicons-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/GPUCache/data_0",
+        "bytes": 45056,
+        "crc32": "aecae7c8"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/GPUCache/data_1",
+        "bytes": 270336,
+        "crc32": "fd5c0775"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/GPUCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/GPUCache/data_3",
+        "bytes": 4202496,
+        "crc32": "3ad149ba"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/GPUCache/index",
+        "bytes": 262512,
+        "crc32": "8fb90c94"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/History",
+        "bytes": 212992,
+        "crc32": "cb296b7c"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/History-journal",
+        "bytes": 25136,
+        "crc32": "2b7872f4"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Local Storage/leveldb/000003.log",
+        "bytes": 179,
+        "crc32": "23289d51"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Local Storage/leveldb/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Local Storage/leveldb/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Local Storage/leveldb/LOG",
+        "bytes": 467,
+        "crc32": "df433dce"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Local Storage/leveldb/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Login Data",
+        "bytes": 43008,
+        "crc32": "e42317f2"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Login Data For Account",
+        "bytes": 43008,
+        "crc32": "e42317f2"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Login Data-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Login Data For Account-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Cookies",
+        "bytes": 20480,
+        "crc32": "773bc0a2"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Device Bound Sessions",
+        "bytes": 20480,
+        "crc32": "94a36892"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Cookies-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Device Bound Sessions-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Network Persistent State",
+        "bytes": 59,
+        "crc32": "f6bde54f"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/NetworkDataMigrated",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Reporting and NEL",
+        "bytes": 36864,
+        "crc32": "36166717"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Reporting and NEL-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/SCT Auditing Pending Reports",
+        "bytes": 2,
+        "crc32": "0d4cbb29"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Sdch Dictionaries",
+        "bytes": 40,
+        "crc32": "216914d5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Trust Tokens",
+        "bytes": 36864,
+        "crc32": "3c35bae8"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Network/Trust Tokens-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/parcel_tracking_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/parcel_tracking_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/PersistentOriginTrials/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/PersistentOriginTrials/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Preferences",
+        "bytes": 7560,
+        "crc32": "637e8604"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/README",
+        "bytes": 182,
+        "crc32": "54a45c92"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Secure Preferences",
+        "bytes": 9856,
+        "crc32": "62688954"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/ServerCertificate",
+        "bytes": 20480,
+        "crc32": "b5c50fff"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/ServerCertificate-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Session Storage/000003.log",
+        "bytes": 49,
+        "crc32": "48b2102f"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Session Storage/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Session Storage/LOG",
+        "bytes": 455,
+        "crc32": "a248da75"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Session Storage/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Session Storage/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Shared Dictionary/cache/index",
+        "bytes": 24,
+        "crc32": "ad5762a5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Shared Dictionary/cache/index-dir/the-real-index",
+        "bytes": 48,
+        "crc32": "19c832e8"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Shared Dictionary/db",
+        "bytes": 45056,
+        "crc32": "e28e838b"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Shared Dictionary/db-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/000003.log",
+        "bytes": 19,
+        "crc32": "0bdd1b52"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/LOG",
+        "bytes": 453,
+        "crc32": "618b14cd"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/metadata/000003.log",
+        "bytes": 474,
+        "crc32": "3488b01a"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/metadata/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOG",
+        "bytes": 471,
+        "crc32": "da40e146"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/shared_proto_db/metadata/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Site Characteristics Database/000003.log",
+        "bytes": 40,
+        "crc32": "655909bc"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Site Characteristics Database/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Site Characteristics Database/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Site Characteristics Database/LOG",
+        "bytes": 483,
+        "crc32": "135640ce"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Site Characteristics Database/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Sync Data/LevelDB/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Sync Data/LevelDB/000003.log",
+        "bytes": 65,
+        "crc32": "a772e454"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Sync Data/LevelDB/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOG",
+        "bytes": 457,
+        "crc32": "aff54fa3"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Vpn Tokens",
+        "bytes": 28672,
+        "crc32": "ece5f093"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Vpn Tokens-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Web Data",
+        "bytes": 235520,
+        "crc32": "eba28175"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Default/Web Data-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.db",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.db-wal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GrShaderCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GrShaderCache/data_1",
+        "bytes": 270336,
+        "crc32": "6cfdabb1"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GrShaderCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GrShaderCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/GrShaderCache/index",
+        "bytes": 262512,
+        "crc32": "bcca39f8"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Last Version",
+        "bytes": 13,
+        "crc32": "566d3730"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Local State",
+        "bytes": 4172,
+        "crc32": "ae1b5b1a"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/ShaderCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/ShaderCache/data_1",
+        "bytes": 270336,
+        "crc32": "6cfdabb1"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/ShaderCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/ShaderCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/ShaderCache/index",
+        "bytes": 262512,
+        "crc32": "07c8c6cf"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/Variations",
+        "bytes": 86,
+        "crc32": "1e5bcce2"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/VariationsRuntimeSeedV2",
+        "bytes": 19,
+        "crc32": "1b11f127"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/VariationsSafeSeedV2",
+        "bytes": 19,
+        "crc32": "1b11f127"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/EBWebView/EBWebView/VariationsSeedV2",
+        "bytes": 11,
+        "crc32": "233b1dc5"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/logs/app.log",
+        "bytes": 252,
+        "crc32": "c4490732"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/app.lock",
+        "bytes": 40,
+        "crc32": "69364c13"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/data-root.json",
+        "bytes": 30,
+        "crc32": "2a466853"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/event-scope.json",
+        "bytes": 531,
+        "crc32": "88ec468f"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/event-scope.lock",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/notifications.json",
+        "bytes": 666,
+        "crc32": "4de4d9ce"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/preferences.json",
+        "bytes": 1371,
+        "crc32": "cfc6a124"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/runtime.json",
+        "bytes": 153,
+        "crc32": "cdec7ffc"
+      },
+      {
+        "path": "msi-startup/sandbox-37631056ff824a7aa71ca56ed80d2a64/manager-state/structure.lock",
+        "bytes": 6,
+        "crc32": "ead2c891"
+      },
+      {
+        "path": "msi-startup/startup-diagnostics.json",
+        "bytes": 8311,
+        "crc32": "5c78de57"
+      },
+      {
+        "path": "msi-startup/startup-stderr.log",
+        "bytes": 2,
+        "crc32": "14a285ac"
+      },
+      {
+        "path": "msi-startup/startup-stdout.log",
+        "bytes": 2,
+        "crc32": "14a285ac"
+      },
+      {
+        "path": "msi-startup/webview.json",
+        "bytes": 761,
+        "crc32": "bf8f0234"
+      },
+      {
+        "path": "msi-startup/startup.json",
+        "bytes": 599,
+        "crc32": "12449657"
+      },
+      {
+        "path": "msi-uninstall.log",
+        "bytes": 103106,
+        "crc32": "3591052a"
+      },
+      {
+        "path": "nsis-startup/cdp-diagnostics.json",
+        "bytes": 1745,
+        "crc32": "dca9abce"
+      },
+      {
+        "path": "nsis-startup/main-window.png",
+        "bytes": 529547,
+        "crc32": "b989786f"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/BrowserMetrics/BrowserMetrics-6ACB7A4A-9B0.pma",
+        "bytes": 1310720,
+        "crc32": "0b586986"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/component_crx_cache/metadata.json",
+        "bytes": 13,
+        "crc32": "247f69e8"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Crashpad/settings.dat",
+        "bytes": 288,
+        "crc32": "4f1140e8"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Crashpad/metadata",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Crashpad/throttle_store.dat",
+        "bytes": 20,
+        "crc32": "a5db39be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/ClientCertificates/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/ClientCertificates/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Code Cache/js/f5007be918d1e23f_0",
+        "bytes": 256,
+        "crc32": "99783c6e"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Code Cache/js/index",
+        "bytes": 24,
+        "crc32": "ad5762a5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Code Cache/js/index-dir/the-real-index",
+        "bytes": 72,
+        "crc32": "80d039c5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Code Cache/wasm/index",
+        "bytes": 24,
+        "crc32": "ad5762a5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Code Cache/wasm/index-dir/the-real-index",
+        "bytes": 48,
+        "crc32": "e00ebc72"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/commerce_subscription_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/commerce_subscription_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnGraphiteCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnGraphiteCache/data_1",
+        "bytes": 270336,
+        "crc32": "d8334bab"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnGraphiteCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnGraphiteCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnGraphiteCache/index",
+        "bytes": 262512,
+        "crc32": "892f1a2f"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnWebGPUCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnWebGPUCache/data_1",
+        "bytes": 270336,
+        "crc32": "d8334bab"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnWebGPUCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnWebGPUCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/DawnWebGPUCache/index",
+        "bytes": 262512,
+        "crc32": "3a329683"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/declarative_performance_observer.db",
+        "bytes": 32768,
+        "crc32": "65a2dd81"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/declarative_performance_observer.db-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/discounts_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/discounts_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/discount_infos_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/discount_infos_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Rules/000003.log",
+        "bytes": 38,
+        "crc32": "4aa95a39"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Rules/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Rules/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Rules/LOG",
+        "bytes": 457,
+        "crc32": "2b1ee554"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Rules/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Scripts/000003.log",
+        "bytes": 38,
+        "crc32": "4aa95a39"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Scripts/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Scripts/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Scripts/LOG",
+        "bytes": 461,
+        "crc32": "ddb03420"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension Scripts/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension State/000003.log",
+        "bytes": 114,
+        "crc32": "9d3565c6"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension State/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension State/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension State/LOG",
+        "bytes": 457,
+        "crc32": "ab955179"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Extension State/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Favicons-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Favicons",
+        "bytes": 20480,
+        "crc32": "b5e67627"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/GPUCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/GPUCache/data_1",
+        "bytes": 270336,
+        "crc32": "d8334bab"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/GPUCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/GPUCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/GPUCache/index",
+        "bytes": 262512,
+        "crc32": "3f07da14"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/History",
+        "bytes": 212992,
+        "crc32": "698e498f"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/History-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Local Storage/leveldb/000003.log",
+        "bytes": 179,
+        "crc32": "84e8a9f5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Local Storage/leveldb/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Local Storage/leveldb/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Local Storage/leveldb/LOG",
+        "bytes": 467,
+        "crc32": "4aa29408"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Local Storage/leveldb/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Login Data",
+        "bytes": 43008,
+        "crc32": "e42317f2"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Login Data For Account",
+        "bytes": 43008,
+        "crc32": "e42317f2"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Login Data For Account-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Login Data-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Cookies",
+        "bytes": 20480,
+        "crc32": "773bc0a2"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Cookies-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Device Bound Sessions",
+        "bytes": 20480,
+        "crc32": "94a36892"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Device Bound Sessions-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Network Persistent State",
+        "bytes": 59,
+        "crc32": "f6bde54f"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/NetworkDataMigrated",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Reporting and NEL",
+        "bytes": 36864,
+        "crc32": "36166717"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Reporting and NEL-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/SCT Auditing Pending Reports",
+        "bytes": 2,
+        "crc32": "0d4cbb29"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Sdch Dictionaries",
+        "bytes": 40,
+        "crc32": "216914d5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Trust Tokens",
+        "bytes": 36864,
+        "crc32": "3c35bae8"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Network/Trust Tokens-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/parcel_tracking_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/parcel_tracking_db/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/PersistentOriginTrials/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/PersistentOriginTrials/LOG",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Preferences",
+        "bytes": 7560,
+        "crc32": "fca4ebe2"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/README",
+        "bytes": 182,
+        "crc32": "54a45c92"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Secure Preferences",
+        "bytes": 9856,
+        "crc32": "23f03b05"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/ServerCertificate",
+        "bytes": 20480,
+        "crc32": "b5c50fff"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/ServerCertificate-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Session Storage/000003.log",
+        "bytes": 30,
+        "crc32": "441e0042"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Session Storage/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Session Storage/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Session Storage/LOG",
+        "bytes": 455,
+        "crc32": "871aefec"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Session Storage/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Shared Dictionary/cache/index",
+        "bytes": 24,
+        "crc32": "ad5762a5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Shared Dictionary/cache/index-dir/the-real-index",
+        "bytes": 48,
+        "crc32": "449b5356"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Shared Dictionary/db",
+        "bytes": 45056,
+        "crc32": "e28e838b"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Shared Dictionary/db-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/000003.log",
+        "bytes": 19,
+        "crc32": "0bdd1b52"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/LOG",
+        "bytes": 457,
+        "crc32": "89dbea44"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/metadata/000003.log",
+        "bytes": 474,
+        "crc32": "49015a65"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/metadata/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOG",
+        "bytes": 475,
+        "crc32": "c171bd97"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/shared_proto_db/metadata/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Site Characteristics Database/000003.log",
+        "bytes": 40,
+        "crc32": "655909bc"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Site Characteristics Database/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Site Characteristics Database/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Site Characteristics Database/LOG",
+        "bytes": 485,
+        "crc32": "ed172723"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Site Characteristics Database/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Sync Data/LevelDB/000003.log",
+        "bytes": 65,
+        "crc32": "a772e454"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Sync Data/LevelDB/CURRENT",
+        "bytes": 16,
+        "crc32": "90ea72be"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOCK",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOG",
+        "bytes": 461,
+        "crc32": "d35496ce"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Sync Data/LevelDB/MANIFEST-000001",
+        "bytes": 41,
+        "crc32": "7b501ca0"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Vpn Tokens",
+        "bytes": 28672,
+        "crc32": "ece5f093"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Vpn Tokens-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Web Data",
+        "bytes": 235520,
+        "crc32": "eba28175"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Default/Web Data-journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.db",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.db-wal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.journal",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GrShaderCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GrShaderCache/data_1",
+        "bytes": 270336,
+        "crc32": "6cfdabb1"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GrShaderCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GrShaderCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/GrShaderCache/index",
+        "bytes": 262512,
+        "crc32": "13b4c00a"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Last Version",
+        "bytes": 13,
+        "crc32": "566d3730"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Local State",
+        "bytes": 4173,
+        "crc32": "e92abccf"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/ShaderCache/data_0",
+        "bytes": 8192,
+        "crc32": "74ab3fbb"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/ShaderCache/data_1",
+        "bytes": 270336,
+        "crc32": "6cfdabb1"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/ShaderCache/data_2",
+        "bytes": 8192,
+        "crc32": "11ba5f7e"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/ShaderCache/data_3",
+        "bytes": 8192,
+        "crc32": "c8f038c9"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/ShaderCache/index",
+        "bytes": 262512,
+        "crc32": "89e3b782"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/Variations",
+        "bytes": 86,
+        "crc32": "1e5bcce2"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/VariationsRuntimeSeedV2",
+        "bytes": 19,
+        "crc32": "1b11f127"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/VariationsSafeSeedV2",
+        "bytes": 19,
+        "crc32": "1b11f127"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/EBWebView/EBWebView/VariationsSeedV2",
+        "bytes": 11,
+        "crc32": "233b1dc5"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/logs/app.log",
+        "bytes": 252,
+        "crc32": "7caff35f"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/app.lock",
+        "bytes": 40,
+        "crc32": "37ecf0d7"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/data-root.json",
+        "bytes": 30,
+        "crc32": "2a466853"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/event-scope.json",
+        "bytes": 531,
+        "crc32": "4af397cc"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/event-scope.lock",
+        "bytes": 0,
+        "crc32": "00000000"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/notifications.json",
+        "bytes": 663,
+        "crc32": "b866478f"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/preferences.json",
+        "bytes": 1371,
+        "crc32": "cfc6a124"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/runtime.json",
+        "bytes": 153,
+        "crc32": "7185fc02"
+      },
+      {
+        "path": "nsis-startup/sandbox-ac85972fcba948d3af8e450bc8d928fc/manager-state/structure.lock",
+        "bytes": 6,
+        "crc32": "ead2c891"
+      },
+      {
+        "path": "nsis-startup/startup-diagnostics.json",
+        "bytes": 8290,
+        "crc32": "e86837a3"
+      },
+      {
+        "path": "nsis-startup/startup-stderr.log",
+        "bytes": 2,
+        "crc32": "14a285ac"
+      },
+      {
+        "path": "nsis-startup/startup-stdout.log",
+        "bytes": 2,
+        "crc32": "14a285ac"
+      },
+      {
+        "path": "nsis-startup/startup.json",
+        "bytes": 601,
+        "crc32": "9525817f"
+      },
+      {
+        "path": "nsis-startup/webview.json",
+        "bytes": 761,
+        "crc32": "bf8f0234"
+      }
+    ]
+  }
+]

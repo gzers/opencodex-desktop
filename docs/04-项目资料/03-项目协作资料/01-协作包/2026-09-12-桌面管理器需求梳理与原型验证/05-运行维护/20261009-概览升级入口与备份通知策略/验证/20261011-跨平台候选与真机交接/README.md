@@ -2,7 +2,7 @@
 
 关联 IMP-OPENCODEX-DESKTOP-20 / TASK-OPENCODEX-DESKTOP-182。本文保存候选构建和后续验收交接，不是版本通过证书或稳定核心事实。代码归属 main；本文和证据归属 docs/governance-main。
 
-最新源码基线已推进至 `main@369ab12da55448fbfdc4d0c9bf03970b56fd6c27`，树表对齐 / 刷新焦点、完整 CI 及同源码候选见下文“main@369ab12d 最新候选与树表验证”。ADCC / 3D856 / 03E0 段落保留为历史轮次，已通过项不能自动替代最新 SHA 验收。
+最新源码基线已推进至 `main@c1e3c09d8ed33238543ce5943e439991b8099088`，完整 CI、同 SHA Windows / macOS 候选、隔离生命周期及剩余门禁见 [c1e3 候选核验记录](../20261011-c1e3-候选最终核验/README.md)。下文 ADCC / 3D856 / 03E0 / 369a 段落保留为历史轮次，旧通过项不能自动替代最新 SHA 验收。
 
 ## main@adccca8e 的结果
 
@@ -82,12 +82,12 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 
 ## 候选生成顺序（最新基线）
 
-1. 已完成：统一树表首行对齐、刷新焦点修复已推送 main@369ab12d；[CI 38124355301](https://github.com/gzers/opencodex-desktop/actions/runs/38124355301) completed / success，五个 job 全部成功。
-2. 已完成候选资产核验：2026-10-11 17:04（UTC+8）只触发一次 [Windows 候选 38127059287](https://github.com/gzers/opencodex-desktop/actions/runs/38127059287)，17:17:48 completed / success，headSha 与 main@369ab12d 一致。锁定依赖回归、MSI / NSIS 构建、隔离 runner 安装 / 首屏 / 卸载和上传成功；ZIP / MSI / NSIS 本地大小与 SHA256 核验通过。安装后 EXE 哈希仍为 runner 回执，真机验收待做。旧 03e0 留作历史，不能混用。
-3. macOS 最新候选已构建并留存原件，隔离复制安装和原生树表局部观察见下文；只有一个测试实例。最新 SHA 的完整生命周期、默认根 / 真实安装升级及全密度 / 画质矩阵仍待验，正式签名未通过。
+1. 已完成：main@c1e3c09d 包含统一树表首行对齐 / 刷新焦点及背景光锚点修复；[CI 38134982244](https://github.com/gzers/opencodex-desktop/actions/runs/38134982244) completed / success，五个 job 全部成功。
+2. 已完成候选资产核验：2026-10-11 19:45:41（UTC+8）只触发一次 [Windows 候选 38136743628](https://github.com/gzers/opencodex-desktop/actions/runs/38136743628)，20:00:57 completed / success，headSha 为 c1e3。锁定依赖回归、MSI / NSIS 构建、隔离 runner 安装 / 首屏 / 卸载和上传成功；ZIP / MSI / NSIS 本地大小与 SHA256 核验通过。安装后 EXE 哈希仍为 runner 回执，真机验收待做。旧包留作历史，不混用。
+3. macOS c1e3 候选已构建并留存原件，隔离副本正常退出 / 释放锁 / 同根重启 / 备份回读局部通过，只有一个测试实例。默认根 / 真实安装升级、完整密度 / 准备就绪 / 画质 / 焦点矩阵仍待验，原件正式签名未通过。
 4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
 
-最新 CI / 查重 / 单次 dispatch 原件见 .adg/evidence/OCX-0110-20261011-369A-CI-CANDIDATE-DISPATCH/；macOS 原件与树表观察见 .adg/evidence/OCX-0110-20261011-369A-MACOS-TREE-CANDIDATE/。保留旧状态，临时 runner 安装 smoke 不作为 Windows 真机完整验收。
+最新 CI / 查重 / 单次 dispatch、候选身份 / 安装器核验、macOS 原生局部观察和生命周期原件见 [c1e3 候选核验记录](../20261011-c1e3-候选最终核验/README.md)。155 项归档摘要 / 153 份来源全部校验；保留旧轮次状态和本轮无效尝试，临时 runner 安装 smoke 不作为 Windows 真机完整验收。
 
 ## 2026-10-11 15:44—15:50（UTC+8）后续验收
 
@@ -106,7 +106,7 @@ macOS 对原唯一测试 PID42681 原生 ⌘Q 后，独立确认进程退出且�
 
 | 顺序 | 工作 | 完成条件 |
 |---|---|---|
-| 1 | 收齐最新 369ab12d 的 Windows 安装候选 | 已完成同 SHA CI / 候选与 ZIP / MSI / NSIS 独立核验；最终 EXE 身份由 runner 回执证明，设备安装后独立重算仍保留 |
+| 1 | 收齐最新 c1e3c09d 的 Windows 安装候选 | 已完成同 SHA CI / 候选与 ZIP / MSI / NSIS 独立核验；最终 EXE 身份由 runner 回执证明，设备安装后独立重算仍保留 |
 | 2 | 双平台隔离原生与安装验收 | Windows 双权限 / 数据根 / 物理 DPI / 外观 / IPC；macOS 正常退出、安装升级、树表焦点及对齐；均保存同 SHA 证据 |
 | 3 | 自动检查性能与真实周期 | 下述 0.1.9 配对预算、缓存命中零请求、慢网离线、stable 24h / beta 6h 实测通过 |
 | 4 | 真实更新和事件生命周期 | 两类更新详情 / 进度 / 备份阻断 / 重启回读、异常精确解除与通道隔离有执行证据 |

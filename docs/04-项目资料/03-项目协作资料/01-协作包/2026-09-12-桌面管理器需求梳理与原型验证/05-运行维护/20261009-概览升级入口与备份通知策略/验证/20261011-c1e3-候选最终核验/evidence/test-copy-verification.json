@@ -1,0 +1,78 @@
+{
+  "source_sha": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "original_identifier": "com.gzers.opencodex.desktop",
+  "test_identifier": "com.gzers.opencodex.desktop.sandbox0110c1e3",
+  "test_exe_sha256": "b32c9a8d07955bcd5c0b3edaec34ba7ef738c9444bf0cfd7ac5af204077508f2",
+  "test_exe_bytes": 7852000,
+  "source_embedded": true,
+  "test_root": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-data",
+  "original_untouched": true,
+  "commands": [
+    {
+      "label": "dmg-attach",
+      "argv": [
+        "hdiutil",
+        "attach",
+        "-readonly",
+        "-nobrowse",
+        "-mountpoint",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/dmg-mount",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+      ],
+      "started_at": "2026-10-11T11:26:40.336600+00:00",
+      "finished_at": "2026-10-11T11:26:40.464534+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "dmg-copy",
+      "argv": [
+        "ditto",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/dmg-mount/OpenCodeX Desktop.app",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-install/OpenCodeX Desktop.app"
+      ],
+      "started_at": "2026-10-11T11:26:40.464564+00:00",
+      "finished_at": "2026-10-11T11:26:40.486707+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "dmg-detach",
+      "argv": [
+        "hdiutil",
+        "detach",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/dmg-mount"
+      ],
+      "started_at": "2026-10-11T11:26:40.486730+00:00",
+      "finished_at": "2026-10-11T11:26:51.111002+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "test-copy-adhoc-sign",
+      "argv": [
+        "codesign",
+        "--force",
+        "--deep",
+        "--sign",
+        "-",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-install/OpenCodeX Desktop.app"
+      ],
+      "started_at": "2026-10-11T11:26:51.111608+00:00",
+      "finished_at": "2026-10-11T11:26:51.141817+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "test-copy-strict-verify",
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-install/OpenCodeX Desktop.app"
+      ],
+      "started_at": "2026-10-11T11:26:51.141835+00:00",
+      "finished_at": "2026-10-11T11:26:51.157364+00:00",
+      "exit_code": 0
+    }
+  ],
+  "strict_verify_scope": "isolated ad hoc testcopy only; original signing failure remains"
+}

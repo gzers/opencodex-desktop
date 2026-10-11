@@ -1,0 +1,25 @@
+{
+  "capturedAtUtc": "2026-10-11T12:06:36.567700+00:00",
+  "sourceCommit": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "receiptsByteIdentical": true,
+  "receiptBytes": 1970,
+  "receiptSha256": "2df775be0bfc0b89fed06bddaf40811328ef5b46605a494f54e4118f28499cd2",
+  "installers": [
+    {
+      "kind": "msi",
+      "path": "installers/apps/desktop/tauri/target/release/bundle/msi/OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4538368,
+      "sha256": "9b46cb725cdbef0a70e482dc027185f6f2d5d8998cd6ad06eb5adff513b02d92",
+      "matchesRunnerReceipt": true
+    },
+    {
+      "kind": "nsis",
+      "path": "installers/apps/desktop/tauri/target/release/bundle/nsis/OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3231880,
+      "sha256": "78abbd92eda79b6bf2ea91ed4e648afe1dfb63424479cd9726c6e9254d775f3e",
+      "matchesRunnerReceipt": true
+    }
+  ],
+  "installedExecutableHashVerification": "runner receipt only; installed EXEs absent from artifacts; not independently recomputed locally",
+  "releaseAccepted": false
+}

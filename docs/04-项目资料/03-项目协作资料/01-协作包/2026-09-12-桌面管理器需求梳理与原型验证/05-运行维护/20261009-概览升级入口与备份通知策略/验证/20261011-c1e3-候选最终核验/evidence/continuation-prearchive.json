@@ -1,0 +1,83 @@
+{
+  "captured_at": "2026-10-11T12:06:19.692538+00:00",
+  "source_sha": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "processes": [
+    {
+      "pid": 28269,
+      "started": "Sun Oct 11 19:46:12 2026",
+      "executable": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "role": "new",
+      "sandbox_env": {
+        "OPENCODEX_SANDBOX": "1",
+        "OPENCODEX_SANDBOX_ROOT": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-data",
+        "OPENCODEX_SANDBOX_BOUNDARY": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6"
+      }
+    },
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "executable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "role": "daily",
+      "sandbox_env": {}
+    }
+  ],
+  "roots": {
+    "old": {
+      "data_root": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-data",
+      "lock": {
+        "path": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-data/manager-state/app.lock",
+        "exists": true,
+        "sha256_before_probe": "ba81161e87eed90e3acf805c7756d1290ba90735515b3d14379b651bbe3dab2d",
+        "metadata_before_probe": {
+          "pid": 21610,
+          "started_at": 1791715320082
+        },
+        "nonblocking_exclusive_acquired": true,
+        "sha256_after_probe": "ba81161e87eed90e3acf805c7756d1290ba90735515b3d14379b651bbe3dab2d"
+      },
+      "backups": [
+        {
+          "relative_path": "backups/2026/10/manual-preferences/bk_20261011082942_7318022d/backup-manifest.json",
+          "bytes": 562,
+          "sha256": "681b0333bcc6858eb6c52212a6de819548871a58c221e85809c70e59ff38287d"
+        },
+        {
+          "relative_path": "backups/2026/10/manual-preferences/bk_20261011082942_7318022d/preferences.json",
+          "bytes": 1371,
+          "sha256": "58e1c8cc33f43243cd1dee8db4a45da712106e44c29c1ad6a0f97288843e3c85"
+        }
+      ],
+      "exe_sha256": "8bb3920180d03c54e78392df71d8e0e57fefda0ddb023d60f2879625e71f4018",
+      "source_embedded": null
+    },
+    "new": {
+      "data_root": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-data",
+      "lock": {
+        "path": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/test-data/manager-state/app.lock",
+        "exists": true,
+        "sha256_before_probe": "db5992996317c9cd533acb824fd6559102dd7c65b00a7ca4f4cec51f1e007e84",
+        "metadata_before_probe": {
+          "pid": 28269,
+          "started_at": 1791719173054
+        },
+        "nonblocking_exclusive_acquired": false,
+        "sha256_after_probe": "db5992996317c9cd533acb824fd6559102dd7c65b00a7ca4f4cec51f1e007e84"
+      },
+      "backups": [
+        {
+          "relative_path": "backups/2026/10/manual-preferences/bk_20261011114045_e3fa4410/backup-manifest.json",
+          "bytes": 562,
+          "sha256": "90fb16b9acf4f8c2e1dd7cde2c3fcedb22e2ec85d7380311109e46249b9532a6"
+        },
+        {
+          "relative_path": "backups/2026/10/manual-preferences/bk_20261011114045_e3fa4410/preferences.json",
+          "bytes": 1369,
+          "sha256": "1a5895d9c89e7144c3353cc3306ce6b0ee1028777c749bb6613adc1d7f1a86ad"
+        }
+      ],
+      "exe_sha256": "b32c9a8d07955bcd5c0b3edaec34ba7ef738c9444bf0cfd7ac5af204077508f2",
+      "source_embedded": true
+    }
+  },
+  "method": "ps filtered to exact old/new/daily executables; only allowlisted sandbox env exported; read-only nonblocking flock; backup digest only"
+}

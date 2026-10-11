@@ -1,0 +1,106 @@
+{
+  "source": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "observedAtUnix": 1791717776.0890849,
+  "plist": {
+    "CFBundleDevelopmentRegion": "English",
+    "CFBundleDisplayName": "OpenCodeX Desktop",
+    "CFBundleExecutable": "opencodex-desktop",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleInfoDictionaryVersion": "6.0",
+    "CFBundleName": "OpenCodeX Desktop",
+    "CFBundlePackageType": "APPL",
+    "CFBundleShortVersionString": "0.1.10",
+    "CFBundleVersion": "0.1.10",
+    "CSResourcesFileMapped": true,
+    "LSMinimumSystemVersion": "10.13",
+    "CFBundleIconFile": "icon.icns",
+    "LSRequiresCarbon": true,
+    "NSHighResolutionCapable": true
+  },
+  "files": {
+    "original/OpenCodeX Desktop_0.1.10_aarch64.dmg": {
+      "bytes": 4384913,
+      "sha256": "821724953dedc7f8ef782d23834edc7f9c035a4bf8b65be0ac88a63989a0b541"
+    },
+    "original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop": {
+      "bytes": 7897776,
+      "sha256": "288f36c20354d377d55b29ce430c36f0383e2290e38c713a2167ce684e2dcca6"
+    },
+    "original/OpenCodeX Desktop.app/Contents/MacOS/ocxd": {
+      "bytes": 386416,
+      "sha256": "ee294c65ccc22f6f738e1dbcfce019ccf02ee848fee2ccbec17f00b5eaafc6c1"
+    }
+  },
+  "commands": [
+    {
+      "name": "file",
+      "argv": [
+        "file",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+      ],
+      "exitCode": 0,
+      "stdout": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop: Mach-O 64-bit executable arm64\n",
+      "stderr": ""
+    },
+    {
+      "name": "source-marker",
+      "argv": [
+        "strings",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+      ],
+      "exitCode": 0,
+      "stdout": "expected source marker present: True\n",
+      "stderr": ""
+    },
+    {
+      "name": "strict-signature",
+      "argv": [
+        "codesign",
+        "--verify",
+        "--deep",
+        "--strict",
+        "--verbose=2",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app: code has no resources but signature indicates they must be present\n"
+    },
+    {
+      "name": "signature-details",
+      "argv": [
+        "codesign",
+        "-dv",
+        "--verbose=4",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Executable=/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=opencodex_desktop-a3d1735d20921617\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=61384 flags=0x20002(adhoc,linker-signed) hashes=1914+0 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=37741b792492da007ffbd4d0b8c74a00ef5b024c\nCandidateCDHashFull sha256=37741b792492da007ffbd4d0b8c74a00ef5b024cac4405d3400e7c5ae6aea47b\nHash choices=sha256\nCMSDigest=37741b792492da007ffbd4d0b8c74a00ef5b024cac4405d3400e7c5ae6aea47b\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=7520256\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=37741b792492da007ffbd4d0b8c74a00ef5b024c\nSignature=adhoc\nInfo.plist=not bound\nTeamIdentifier=not set\nSealed Resources=none\nInternal requirements=none\n"
+    },
+    {
+      "name": "identities",
+      "argv": [
+        "security",
+        "find-identity",
+        "-v",
+        "-p",
+        "codesigning"
+      ],
+      "exitCode": 0,
+      "stdout": "     0 valid identities found\n",
+      "stderr": ""
+    },
+    {
+      "name": "dmg-verify",
+      "argv": [
+        "hdiutil",
+        "verify",
+        "/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+      ],
+      "exitCode": 0,
+      "stdout": "正在检查“Protective Master Boot Record（MBR：0）”的校验和…\nProtective Master Boot Record（MBR：0）：已验证CRC32 $F348260E\n正在检查“GPT Header（Primary GPT Header：1）”的校验和…\n    GPT Header（Primary GPT Header：1）：已验证CRC32 $93B01B76\n正在检查“GPT Partition Data（Primary GPT Table：2）”的校验和…\nGPT Partition Data（Primary GPT Table：已验证CRC32 $06B220EA\n正在检查“（Apple_Free：3）”的校验和…\n                      （Apple_Free：3）：已验证CRC32 $00000000\n正在检查“disk image（Apple_HFS：4）”的校验和…\n             disk image（Apple_HFS：4）：已验证CRC32 $59F73F0A\n正在检查“GPT Partition Data（Backup GPT Table：5）”的校验和…\nGPT Partition Data（Backup GPT Table：：已验证CRC32 $06B220EA\n正在检查“GPT Header（Backup GPT Header：6）”的校验和…\n     GPT Header（Backup GPT Header：6）：已验证CRC32 $7A3E7312\n已验证CRC32 $27E8EBDC\n",
+      "stderr": "hdiutil: verify: checksum of \"/private/tmp/ocx-0110-c1e3-candidate-hqjf10k6/original/OpenCodeX Desktop_0.1.10_aarch64.dmg\" is VALID\n"
+    }
+  ]
+}
