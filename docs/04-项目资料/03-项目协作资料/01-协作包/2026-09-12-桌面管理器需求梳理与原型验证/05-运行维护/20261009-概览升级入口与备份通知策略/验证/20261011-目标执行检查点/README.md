@@ -107,3 +107,10 @@ cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --workspace --
 命令退出码为 `0`。Cargo 输出共 33 个 `test result` 结果组，合计 `861 passed / 0 failed / 6 ignored / 0 measured`。证据目录为 `.adg/evidence/OCX-0110-20261011-MAIN-RUST-WORKSPACE-ALL-TARGETS/`。
 
 该补充记录只闭合当前 `main` 的 Rust workspace 源码回归；不扩写为 Windows 编译或真机通过。Windows MSVC 交叉检查仍受当前 macOS 宿主缺少 SDK/C 头文件阻塞，Windows 双权限 IPC / 首屏 / 安装路径 / 数据根 / 原生外观、macOS 原生 UI / 安装、自动检查性能、真实更新 / 重启 / 恢复、签名和发布资产仍是 open。状态继续为 `in_progress`，`release_authorized: false`。
+
+
+## 2026-10-11 macOS arm64 候选构建
+
+在 main@861fdeea39d1c45fa2beddb2cba6659b67735d9f、macOS 27.0.1 arm64 宿主执行 cargo tauri build --target aarch64-apple-darwin，退出码为 0，前端完成 170 个模块转换，生成版本明确为 0.1.10 的 .app 与 .dmg。DMG 经 hdiutil verify 通过；应用为 arm64 Mach-O。构建结果和 SHA-256 见 [20261011 macOS arm64 候选构建](../20261011-macOS%20arm64候选构建/README.md) 及 .adg/evidence/OCX-0110-20261011-MACOS-ARM64-BUILD/。
+
+本轮只闭合 macOS arm64 候选打包与 DMG 容器完整性；应用仍为 ad hoc 签名，正式签名、公证、真实安装 / 升级 / 重启回读、macOS 原生 UI 回归、Windows 0.1.10 制品与双权限 / 路径 / 外观、自动检查性能、真实更新 / 恢复、全域事件执行证据和发布授权仍未闭合。状态继续为 in_progress，release_authorized: false。

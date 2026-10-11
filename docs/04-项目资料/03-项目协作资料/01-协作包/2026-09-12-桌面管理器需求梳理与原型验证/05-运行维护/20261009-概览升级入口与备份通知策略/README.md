@@ -151,3 +151,6 @@ CI 成功只闭合集成源码、构建和 smoke 门禁。真实 macOS / Windows
 本地源码门禁通过：fmt；Rust library 694 passed / 0 failed / 4 ignored；ocxd 2 passed / 0 failed；Clippy -D warnings；diff 检查。Windows MSVC 交叉检查在当前 macOS 宿主缺少 SDK/C 头文件、ring 找不到 assert.h 处失败，不能记为 Windows 编译通过。验证页见验证/20261011-Windows IPC本机控制面/README.md，原始证据见 .adg/evidence/OCX-0110-20261011-WINDOWS-IPC-TARGET/。
 
 这只闭合 IPC 源码局部范围。Windows 双权限真机 smoke、安装路径 / 数据根、原生 UI、DPI、云母、标题栏、动效、透明下拉框、macOS 原生安装、自动检查性能、真实更新 / 重启、签名和发布仍未闭合；0.1.10 双平台制品须重新生成。协作包与 IMP 继续 in_progress，release_authorized: false。
+
+
+代码基线 main@861fdeea 已生成 0.1.10 macOS arm64 候选 .app 与 .dmg，构建和 DMG 完整性校验通过；证据见 [macOS arm64 候选构建](验证/20261011-macOS%20arm64候选构建/README.md)。该制品仍是 ad hoc 签名，macOS 安装 / 升级 / 原生 UI、Windows 0.1.10 制品与真机门禁、性能、真实更新 / 重启 / 恢复、正式签名公证和发布授权继续保持 open。

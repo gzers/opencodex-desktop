@@ -1,0 +1,53 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-ARM64-BUILD",
+  "recorded_at": "2026-10-11T10:00:00+08:00",
+  "kind": "macos-arm64-candidate-build",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "document_branch": "docs/governance-main",
+  "status": "build_passed_with_release_scope_limits",
+  "subject": "0.1.10 macOS Apple Silicon 候选构建",
+  "environment": {
+    "host": "macOS 27.0.1 arm64",
+    "rustc": "1.95.0",
+    "tauri_cli": "2.11.4",
+    "target": "aarch64-apple-darwin"
+  },
+  "artifacts": [
+    {
+      "kind": "app",
+      "path": "apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app",
+      "version": "0.1.10",
+      "architecture": "arm64",
+      "size_bytes": 4265674,
+      "sha256": "3221a952eb07c0cee57fc03486ce252e604c2470025bd04028d5d4dbfc0afd1f",
+      "hash_representation": "ditto zip of the .app bundle"
+    },
+    {
+      "kind": "dmg",
+      "path": "apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "version": "0.1.10",
+      "architecture": "arm64",
+      "size_bytes": 4390813,
+      "sha256": "e3f89379909f1dd7c185409f207f0c4223cf9d178b8244943760dc4cdcdef283",
+      "hdiutil_verify": "passed"
+    }
+  ],
+  "bundle_identity": {
+    "cf_bundle_short_version_string": "0.1.10",
+    "cf_bundle_version": "0.1.10",
+    "mach_o": "arm64 thin",
+    "signature": "adhoc; no TeamIdentifier; no notarization evidence"
+  },
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "只证明当前 main 提交可生成版本明确的 macOS arm64 候选包",
+    "未证明真实安装、升级保留、重启回读、原生 UI 回归或用户迁移",
+    "当前为 ad hoc 签名；未完成正式签名、公证、更新端点和发布资产验收",
+    "Windows 0.1.10 制品、双权限、安装路径、DPI、云母、标题栏、动效和透明下拉框仍未闭合",
+    "本记录不创建标签、不公开发布、不晋升 stable、不替换日常安装"
+  ],
+  "artifact_boundary": "候选构建证据，不是发布授权或完成证书。"
+}

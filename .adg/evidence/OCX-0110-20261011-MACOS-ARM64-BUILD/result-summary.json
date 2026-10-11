@@ -1,0 +1,17 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-ARM64-BUILD",
+  "build_exit_code": 0,
+  "bundle_count": 2,
+  "bundle_outputs": ["app", "dmg"],
+  "version_identity": "0.1.10",
+  "architecture": "aarch64-apple-darwin / arm64",
+  "dmg_integrity": "passed",
+  "source_gate": "macOS arm64 bundle build passed",
+  "native_install_acceptance": "open",
+  "native_ui_acceptance": "open",
+  "upgrade_restart_acceptance": "open",
+  "signing_notarization": "open; build is ad hoc signed",
+  "windows_candidate": "open",
+  "release_authorized": false,
+  "interpretation": "已生成可复核的 0.1.10 macOS arm64 候选制品，但 0.1.10 整体仍处于 in_progress。"
+}

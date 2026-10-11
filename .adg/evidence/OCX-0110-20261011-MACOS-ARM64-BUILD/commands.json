@@ -1,0 +1,33 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-ARM64-BUILD",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "cwd": "apps/desktop/tauri",
+  "commands": [
+    {
+      "command": "cargo tauri build --target aarch64-apple-darwin",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "frontend 170 modules transformed; release binary and 2 bundles created"
+    },
+    {
+      "command": "hdiutil verify 'target/aarch64-apple-darwin/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg'",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "disk image checksum is VALID"
+    },
+    {
+      "command": "codesign -dv --verbose=4 'target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app'",
+      "exit_code": 0,
+      "result": "inspected",
+      "summary": "arm64 app bundle is ad hoc signed; TeamIdentifier is not set"
+    },
+    {
+      "command": "PlistBuddy CFBundleShortVersionString and CFBundleVersion; file and otool -hv on app executable",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "both bundle versions are 0.1.10; executable is Mach-O 64-bit arm64"
+    }
+  ],
+  "interpretation": "构建和 DMG 容器校验通过；正式签名、公证、安装与平台原生验收仍是独立门禁。"
+}
