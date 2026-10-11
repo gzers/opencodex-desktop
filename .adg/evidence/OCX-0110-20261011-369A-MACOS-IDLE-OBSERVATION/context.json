@@ -1,0 +1,66 @@
+{
+  "source_sha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "executable": "/private/tmp/ocx-0110-369a-candidate-tgpmm_zq/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+  "app_pid": 97688,
+  "bundle_id": "com.gzers.opencodex.desktop.sandbox0110369a",
+  "test_exe_sha256": "8bb3920180d03c54e78392df71d8e0e57fefda0ddb023d60f2879625e71f4018",
+  "appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "high"
+  },
+  "updates": {
+    "app_update_auto_check": true,
+    "app_update_channel": "stable",
+    "app_update_check_interval_seconds": 86400
+  },
+  "host": {
+    "os": [
+      "ProductName:\t\tmacOS",
+      "ProductVersion:\t\t27.0.1",
+      "BuildVersion:\t\t26A434"
+    ],
+    "arch": "arm64",
+    "logical_cpus": 18
+  },
+  "requested_duration_seconds": 600,
+  "interval_seconds": 10,
+  "scene": "native overview preparation state; Node/npm found, OpenCodex missing",
+  "focus_visibility": "only initial/final bound-app AX/screenshots; not continuously verified",
+  "limits": [
+    "no controlled 0.1.9 baseline",
+    "no main-thread instrumentation",
+    "10-second process polling can miss short-lived helpers",
+    "no network/syscall tracing; unchanged files do not prove zero network",
+    "preparation scene is not ready-state overview",
+    "RSS sum is per-process resident sum, not unique physical memory"
+  ],
+  "files_before": [
+    {
+      "relative_path": "cache/updates/manager-stable.json",
+      "bytes": 217,
+      "sha256": "5dcd8c2d04069fc52bdab77c02c841e47c251abe5c7cd1dc8b178867cafa3f07",
+      "mtime_ns": 1791707341263182315
+    },
+    {
+      "relative_path": "cache/updates/panel-latest.json",
+      "bytes": 145,
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "mtime_ns": 1791707342925430094
+    },
+    {
+      "relative_path": "manager-state/preferences.json",
+      "bytes": 1370,
+      "sha256": "6c4ba47c1b321b9c8745043733001a72d0949617019556a3d188b893c2ff8c68",
+      "mtime_ns": 1791711517429478813
+    },
+    {
+      "relative_path": "manager-state/update-schedule.json",
+      "bytes": 182,
+      "sha256": "0d3e566ccbc9bc83cab4c7a0cb1a660747ebbe19fa6eb53d3a17cc524466da1c",
+      "mtime_ns": 1791707342930054791
+    }
+  ],
+  "started_at": "2026-10-11T10:05:43.560654+00:00"
+}

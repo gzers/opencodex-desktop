@@ -185,3 +185,12 @@ macOS 同源码 app / dmg 构建 exit 0，用时 121.016s；arm64、版本 / 构
 原生设置回读正确根，根 / 年默认展开、月份收起，原备份 bk_20261011082942_7318022d 可见；退出前 / 后、显式重启后及 17:49 最终快照中 preferences.json 与 backup-manifest.json 大小 / SHA256 全部不变。日常 PID75764 及启动时间不变，最终只有一个测试实例。原始快照、只读锁探针方法、AX、失败重开与截图映射见 .adg/evidence/OCX-0110-20261011-369A-MACOS-SAME-ROOT-LIFECYCLE/；截图实为 JPEG，只改扩展名、未改字节。
 
 仅闭合当前 SHA 的隔离同根生命周期局部验证；ad hoc 副本不替代原件正式签名 / 公证、默认 Application Support 根、真实安装升级或更新重启。Windows 实际目标双权限 / 物理 DPI / 默认根 / 原生外观、完整画质矩阵、配对性能 / 真实周期、真实更新 / 事件及正式签名继续待验。IMP / TASK 保持 in_progress，release_authorized: false、release_accepted: false。
+
+
+### 2026-10-11 main@369ab12d macOS 十分钟 CPU / RSS 观测
+
+18:05:43–18:15:43（UTC+8），唯一隔离测试 PID97688 在浅色 / 高画质 / mesh / 100% 的概览准备态完成 61 次、600.064179 秒采样；Node/npm 已发现、OpenCodex 缺失。应用及同 resource coalition 的 WebKit 进程累计 CPU 增加 350.13 秒，平均 58.34876% 单核（应用约 7.89%、GPU 约 34.17%、WebContent 约 16.28%）。RSS 进程 resident 之和 249.83 → 242.55 MiB，峰 265.97 MiB，不能解释成去重物理内存或整机 CPU。进程身份稳定，采集器本身 CPU 0.2364 秒。
+
+缓存、偏好与调度文件的 SHA256 / mtime 未变；这不证明零网络，也不足以将开销归因于自动检查。无连续前台 / 可见性、主线程或网络仪器，10 秒轮询可能遗漏短命进程；缺受控配对 0.1.9 基线，性能门禁未评定。18:17:44 独立快照确认正确根 / 锁持有、两个备份文件摘要和日常 PID75764 / 启动时间不变。
+
+原件、方法、首末 AX / JPEG、候选 coalition 筛选记录、CPU 分解及摘要见 .adg/evidence/OCX-0110-20261011-369A-MACOS-IDLE-OBSERVATION/。before.png 原件为 JPEG，归档只更正扩展名；未归档其他应用元数据或原始环境。下一步以隔离官方 0.1.9 进行同场景对照，保持一个测试实例。性能门禁及双平台真机、真实周期 / 更新、签名门禁保持不变；IMP / TASK 保持 in_progress，release_authorized / release_accepted 为 false。

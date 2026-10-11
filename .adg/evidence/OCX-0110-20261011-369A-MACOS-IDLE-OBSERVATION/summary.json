@@ -1,0 +1,46 @@
+{
+  "source_sha": "369ab12da55448fbfdc4d0c9bf03970b56fd6c27",
+  "started_at": "2026-10-11T10:05:43.693995+00:00",
+  "ended_at": "2026-10-11T10:15:43.765322+00:00",
+  "elapsed_seconds": 600.0641793330433,
+  "sample_count": 61,
+  "process_identity_stable": true,
+  "cpu_seconds_delta": 350.13,
+  "average_cpu_one_core_percent": 58.34876,
+  "rss_mib": {
+    "start": 249.828125,
+    "end": 242.546875,
+    "min": 242.546875,
+    "max": 265.96875
+  },
+  "collector_cpu_seconds": 0.23638900000000002,
+  "collection_wall_seconds": 2.7732212523696944,
+  "files_after": [
+    {
+      "relative_path": "cache/updates/manager-stable.json",
+      "bytes": 217,
+      "sha256": "5dcd8c2d04069fc52bdab77c02c841e47c251abe5c7cd1dc8b178867cafa3f07",
+      "mtime_ns": 1791707341263182315
+    },
+    {
+      "relative_path": "cache/updates/panel-latest.json",
+      "bytes": 145,
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "mtime_ns": 1791707342925430094
+    },
+    {
+      "relative_path": "manager-state/preferences.json",
+      "bytes": 1370,
+      "sha256": "6c4ba47c1b321b9c8745043733001a72d0949617019556a3d188b893c2ff8c68",
+      "mtime_ns": 1791711517429478813
+    },
+    {
+      "relative_path": "manager-state/update-schedule.json",
+      "bytes": 182,
+      "sha256": "0d3e566ccbc9bc83cab4c7a0cb1a660747ebbe19fa6eb53d3a17cc524466da1c",
+      "mtime_ns": 1791707342930054791
+    }
+  ],
+  "performance_gate": "not_evaluated_no_paired_baseline",
+  "focus_visibility": "not continuously observed; scheduler-active attribution not proven"
+}
