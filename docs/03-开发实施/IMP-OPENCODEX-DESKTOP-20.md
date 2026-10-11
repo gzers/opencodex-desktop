@@ -545,3 +545,9 @@ Windows 当前 main 双权限 / 安装路径 / 数据根 / 原生外观 / IPC、
 artifact ID `11694523976` 的关键原件、窗口截图、环境、原始字节归档、摘要和新运行快照见 `.adg/evidence/OCX-0110-20261011-3D856-WINDOWS-CI-SMOKE/`。历史 CI 快照与失败证据保留。仍需完整 CI 成功后仅触发一次同 SHA Windows 候选，随后验 MSI / NSIS 安装身份、真机双权限 / 安装路径数据根 / 物理 DPI / 原生外观 / IPC，以及 macOS 安装 / 正常退出 / 树表焦点对齐和既定性能、真实更新、事件及签名门禁。CI 隔离启动不替代这些验收。
 
 本轮未改代码、未重跑已通过回归、未启动额外测试实例。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；未生成完成证书或提前晋升稳定事实。
+
+### 2026-10-11 main@3d856fb5 完整 CI 通过与 Windows 候选触发
+
+06:56 UTC 核查 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 已完成，frontend / release-tools / backend / backend-windows / build 五个 job 均成功，headSha 与 main 完整 SHA 一致。核实该 SHA 没有已触发的 Windows 候选后，仅 dispatch 一次 main 的 `windows-candidate.yml`；[候选 run 38119648935](https://github.com/gzers/opencodex-desktop/actions/runs/38119648935) 的 headSha 再次核对一致，观察时为 `in_progress`。
+
+最终 CI 快照、候选快照、触发命令及哈希清单见 `.adg/evidence/OCX-0110-20261011-3D856-CI-AND-CANDIDATE-DISPATCH/`。下一步先核候选 MSI / NSIS 和安装后 EXE 身份，再补同 SHA 双平台真机、自动检查性能及真实周期、真实更新和事件生命周期、签名门禁。候选尚未认定通过，IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；没有触发公开发布、标签或 stable 晋升，也未增加前台测试实例。

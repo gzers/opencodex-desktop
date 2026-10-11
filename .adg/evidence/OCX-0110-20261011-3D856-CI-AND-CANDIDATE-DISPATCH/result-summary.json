@@ -1,0 +1,29 @@
+{
+  "observed_at_utc": "2026-10-11T06:56:01.716647+00:00",
+  "source_sha": "3d856fb561aa8dd21d0dd1347d8736c7b704f3d7",
+  "ci_run_id": 38118226895,
+  "ci_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38118226895",
+  "ci_status": "completed",
+  "ci_conclusion": "success",
+  "ci_jobs_passed": 5,
+  "candidate_run_id": 38119648935,
+  "candidate_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38119648935",
+  "candidate_head_sha_matched": true,
+  "candidate_status": "in_progress",
+  "candidate_conclusion": "",
+  "dispatch_count_this_session": 1,
+  "dispatch_command": [
+    "gh",
+    "workflow",
+    "run",
+    "windows-candidate.yml",
+    "--ref",
+    "main",
+    "--repo",
+    "gzers/opencodex-desktop"
+  ],
+  "candidate_artifacts_not_yet_accepted": true,
+  "release_authorized": false,
+  "release_accepted": false,
+  "boundary": "Complete CI approval and same-source candidate dispatch only; no candidate installer acceptance, native-device acceptance or public release."
+}
