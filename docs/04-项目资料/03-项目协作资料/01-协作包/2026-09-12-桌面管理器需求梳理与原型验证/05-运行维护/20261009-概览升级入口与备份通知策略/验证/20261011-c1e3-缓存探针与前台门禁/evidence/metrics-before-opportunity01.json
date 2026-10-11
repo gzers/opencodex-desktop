@@ -1,0 +1,195 @@
+{
+  "computed_at": "2026-10-11T13:38:18.549466+00:00",
+  "candidate_source_sha": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "tooling_commit": "3ed00487958185a520e61ed2ba2d706f95e9a384",
+  "selftest": {
+    "exit_code": 0,
+    "duration_seconds": 0.8558831659611315,
+    "result": {
+      "result": "passed",
+      "observed": {
+        "probe_loaded:sandbox": 1,
+        "connect:inet": 1,
+        "connectx:inet": 1,
+        "getaddrinfo:lookup": 1,
+        "posix_spawn:npm_view": 2,
+        "posix_spawnp:npm_view": 1,
+        "execv:npm_view": 1,
+        "execvp:npm_view": 1,
+        "execve:npm_view": 3
+      },
+      "sandbox_guard": true,
+      "symlink_guard": true,
+      "redacted_schema": true
+    }
+  },
+  "positive_control": {
+    "probe_loaded:sandbox": 1,
+    "getaddrinfo:lookup": 4,
+    "posix_spawnp:npm_view": 1,
+    "posix_spawn:npm_view": 1,
+    "connect:inet": 2
+  },
+  "restart_rounds": [
+    {
+      "file": "probe-restart-01-foreground.json",
+      "pid": 329,
+      "samples": 47,
+      "invalid_samples": 47,
+      "nonfrontmost_samples": 47,
+      "invisible_samples": 0,
+      "duration_monotonic_s": null,
+      "duration_wall_s": 46.38950991630554,
+      "all_samples_frontmost_visible": false
+    },
+    {
+      "file": "probe-restart-valid-01-foreground.json",
+      "pid": 2647,
+      "samples": 47,
+      "invalid_samples": 0,
+      "nonfrontmost_samples": 0,
+      "invisible_samples": 0,
+      "duration_monotonic_s": 46.417726124986075,
+      "duration_wall_s": 46.41798686981201,
+      "all_samples_frontmost_visible": true
+    },
+    {
+      "file": "probe-restart-valid-02-foreground.json",
+      "pid": 4705,
+      "samples": 47,
+      "invalid_samples": 1,
+      "nonfrontmost_samples": 0,
+      "invisible_samples": 1,
+      "duration_monotonic_s": 46.39645995828323,
+      "duration_wall_s": 46.39672303199768,
+      "all_samples_frontmost_visible": false
+    },
+    {
+      "file": "probe-restart-valid-02-ready-foreground.json",
+      "pid": 4705,
+      "samples": 47,
+      "invalid_samples": 47,
+      "nonfrontmost_samples": 47,
+      "invisible_samples": 0,
+      "duration_monotonic_s": 46.41165825002827,
+      "duration_wall_s": 46.41201210021973,
+      "all_samples_frontmost_visible": false
+    },
+    {
+      "file": "probe-restart-ready-02-foreground.json",
+      "pid": 5439,
+      "samples": 47,
+      "invalid_samples": 40,
+      "nonfrontmost_samples": 40,
+      "invisible_samples": 0,
+      "duration_monotonic_s": 46.325718208332546,
+      "duration_wall_s": 46.32600116729736,
+      "all_samples_frontmost_visible": false
+    }
+  ],
+  "accepted_restarts": 1,
+  "required_restarts": 10,
+  "routes": {
+    "file": "probe-routes-valid-200-foreground.json",
+    "pid": 2647,
+    "samples": 259,
+    "invalid_samples": 249,
+    "nonfrontmost_samples": 249,
+    "invisible_samples": 0,
+    "duration_monotonic_s": 260.30321495828684,
+    "duration_wall_s": 260.30469512939453,
+    "all_samples_frontmost_visible": false,
+    "actions": 200,
+    "settings": 100,
+    "overview": 100,
+    "all_ax_urls_match": true,
+    "action_interval_samples": 202,
+    "action_interval_nonfrontmost_samples": 202,
+    "boundary_counts": {
+      "probe_loaded:sandbox": 1
+    },
+    "acceptance_passed": false
+  },
+  "cache_and_schedule_unchanged": true,
+  "cache_digests_at_archive": {
+    "manager-state/update-schedule.json": {
+      "bytes": 182,
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a"
+    },
+    "cache/updates/manager-stable.json": {
+      "bytes": 217,
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214"
+    },
+    "cache/updates/panel-latest.json": {
+      "bytes": 145,
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508"
+    }
+  },
+  "cache_before": {
+    "captured_at": 1791722631.826147,
+    "schedule": {
+      "schema": 1,
+      "entries": {
+        "manager-stable": {
+          "next_due": 1791808953,
+          "failures": 0,
+          "last_success": 1791722553
+        },
+        "panel-latest": {
+          "next_due": 1791808952,
+          "failures": 0,
+          "last_success": 1791722552
+        }
+      }
+    },
+    "files": {
+      "manager-state/update-schedule.json": {
+        "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+        "bytes": 182
+      },
+      "cache/updates/manager-stable.json": {
+        "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+        "bytes": 217
+      },
+      "cache/updates/panel-latest.json": {
+        "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+        "bytes": 145
+      }
+    },
+    "source": "Real successful manual checks in positive-control phase; no deadline or cache edit"
+  },
+  "boundary_counts_by_file": {
+    "probe-positive.jsonl": {
+      "probe_loaded:sandbox": 1,
+      "getaddrinfo:lookup": 4,
+      "posix_spawnp:npm_view": 1,
+      "posix_spawn:npm_view": 1,
+      "connect:inet": 2
+    },
+    "probe-restart-01.jsonl": {
+      "probe_loaded:sandbox": 1
+    },
+    "probe-restart-ready-02.jsonl": {
+      "probe_loaded:sandbox": 1
+    },
+    "probe-restart-valid-01.jsonl": {
+      "probe_loaded:sandbox": 1
+    },
+    "probe-restart-valid-02.jsonl": {
+      "probe_loaded:sandbox": 1
+    },
+    "probe-routes.jsonl": {
+      "probe_loaded:sandbox": 1
+    }
+  },
+  "sole_noninjected_instance": 7538,
+  "daily_instance": 75764,
+  "backup_digests_unchanged": true,
+  "overall_acceptance": "incomplete",
+  "limitations": [
+    "one-second foreground sampling does not prove continuous state between samples",
+    "interposed main-process boundary attempts, not complete system-wide successful request capture",
+    "injected runs are excluded from CPU/startup comparisons",
+    "one accepted restart; route foreground precondition failed; real expiry and sleep remain unverified"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "computed_at": "2026-10-11T13:56:19.345020+00:00",
+  "round": "opportunity01",
+  "result": "passed_local_short_restart",
+  "candidate_source_sha": "c1e3c09d8ed33238543ce5943e439991b8099088",
+  "pid": 10029,
+  "launch_file": "probe-opportunity01-launch.json",
+  "foreground_file": "probe-opportunity01-foreground.json",
+  "probe_verification_file": "probe-opportunity01-verification.json",
+  "foreground_samples": 47,
+  "all_samples_frontmost_visible": true,
+  "duration_monotonic_s": 46.432739791693166,
+  "launch_to_observation_end_wall_s": 68.02150201797485,
+  "probe_loaded_records": 1,
+  "boundary_attempts": 0,
+  "cache_and_schedule_unchanged": true,
+  "real_cache_deadline_still_in_future": true,
+  "verification_limitation": "Original verifier only merges foreground for restart-* phase names; its null fields are retained, and independent same-PID foreground record is joined here.",
+  "lifecycle": {
+    "prior_test_pid": 7538,
+    "normal_quit_before_launch": true,
+    "normal_probe_quit": true,
+    "restored_noninjected_pid": 10336,
+    "sole_isolated_instance": true,
+    "lock_held_and_bytes_unchanged": true,
+    "backup_digests_unchanged": true,
+    "daily_pid": 75764,
+    "daily_unchanged": true
+  },
+  "scope": "Instrumented main-process boundary attempts, sampled foreground after readiness; not continuous/system-wide network, CPU, startup or full version acceptance."
+}
