@@ -1,0 +1,86 @@
+{
+  "observed_at_utc": "2026-10-11T06:41:22.177108+00:00",
+  "run_id": 38118226895,
+  "source_sha": "3d856fb561aa8dd21d0dd1347d8736c7b704f3d7",
+  "status": "in_progress",
+  "conclusion": "",
+  "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38118226895",
+  "jobs": [
+    {
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "current": [],
+      "completed_steps": [
+        "Set up job",
+        "Run actions/checkout@v5",
+        "Run actions/setup-node@v5",
+        "Windows CDP protocol regression",
+        "Run npm --prefix apps/desktop/ui ci",
+        "Run npm --prefix apps/desktop/ui run typecheck",
+        "Run npm --prefix apps/desktop/ui run test -- --run",
+        "Run npm --prefix apps/desktop/ui run build",
+        "Post Run actions/setup-node@v5",
+        "Post Run actions/checkout@v5",
+        "Complete job"
+      ],
+      "failed_steps": []
+    },
+    {
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": "",
+      "current": [
+        "Run cargo build --locked --release --features custom-protocol --bins"
+      ],
+      "completed_steps": [
+        "Set up job",
+        "Run actions/checkout@v5",
+        "Run actions/setup-node@v5",
+        "Run dtolnay/rust-toolchain@stable",
+        "Run npm --prefix ../ui ci",
+        "Run npm --prefix ../ui run build",
+        "Run cargo fmt --all -- --check",
+        "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "Windows backend regression",
+        "Collect Windows native dependency diagnostics"
+      ],
+      "failed_steps": []
+    },
+    {
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success",
+      "current": [],
+      "completed_steps": [
+        "Set up job",
+        "Run actions/checkout@v5",
+        "Run dtolnay/rust-toolchain@stable",
+        "Run cargo fmt --all -- --check",
+        "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "Run cargo test --locked --workspace --features integration-test",
+        "Post Run actions/checkout@v5",
+        "Complete job"
+      ],
+      "failed_steps": []
+    },
+    {
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success",
+      "current": [],
+      "completed_steps": [
+        "Set up job",
+        "Run actions/checkout@v5",
+        "Run sudo apt-get update && sudo apt-get install -y minisign",
+        "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+        "Post Run actions/checkout@v5",
+        "Complete job"
+      ],
+      "failed_steps": []
+    }
+  ],
+  "boundary": "time snapshot; not full CI approval or Windows candidate installer evidence",
+  "release_authorized": false,
+  "release_accepted": false
+}

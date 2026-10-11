@@ -521,3 +521,19 @@ Windows 当前 main 双权限 / 安装路径 / 数据根 / 原生外观 / IPC、
 修复提交 `adccca8e92d28c95d4fa83c11d994cb6bf3445f6` 已推送到 `main`：让既有 GUI 共享状态绑定方法跨平台可用，删除不需要的可变绑定，保持 `-D warnings` 门禁。本机格式检查、IPC 定向回归（44 passed / 0 failed / 0 ignored）、workspace all-targets/all-features Clippy 和暂存 diff 检查均通过。新 [CI 38117383632](https://github.com/gzers/opencodex-desktop/actions/runs/38117383632) 与修复提交 SHA 匹配，观察时仍为 `in_progress`，暂不认定 Windows 门禁通过。证据见 `.adg/evidence/OCX-0110-20261011-WINDOWS-IPC-CI-FIX/`。
 
 下一步先确认该提交 Windows CI 和候选构建，再用同一源码身份完成 Windows 双权限 / 安装路径 / 数据根 / DPI / 原生外观 / IPC 真机验收；同时补 macOS 正式签名公证、真实更新进度与重启、自动检查性能及全域事件执行证据。本轮没有启动额外测试软件；沿用现有唯一隔离实例。IMP / TASK 保持 `in_progress`，未迁移真实数据、未替换日常安装、未创建标签或公开发布，`release_authorized: false`。
+
+### 2026-10-11 Windows IPC 释放顺序竞态与同源码候选交接
+
+前述 `main@adccca8e` 的 [CI 38117383632](https://github.com/gzers/opencodex-desktop/actions/runs/38117383632) 已完成并失败：Windows Clippy 通过，后端库为 485 passed / 1 failed / 4 ignored，build 跳过。失败项 `cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit` 揭示运行锁先释放、未保存绑定的写门稍后解除的竞态；原断言继续保留。该 SHA 的 macOS DMG 构建及容器校验通过，但严格签名失败、宿主没有有效签名身份，不构成正式签名或公证证据。
+
+释放顺序修复 `3d856fb561aa8dd21d0dd1347d8736c7b704f3d7` 已提交推送到 main。绑定守卫移入 worker 局部变量，未保存绑定先解除写门再释放运行操作锁；已保存的待重启绑定继续冻结。本地 fmt、IPC 定向 44 项、Rust workspace integration-test 34 组（861 passed / 0 failed / 6 ignored，其中库 694 passed / 4 ignored）以及 all-targets / all-features Clippy `-D warnings` 全部退出 0；忽略项原样列于回执，不能当作原生、真实网络或钥匙串验收通过。新 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 源码身份一致，观察时仍在运行，Windows 尚未认定通过。
+
+本地命令、原失败日志、修复差异和哈希见 `.adg/evidence/OCX-0110-20261011-IPC-BINDING-RELEASE-ORDER/`；旧 macOS 候选见 `.adg/evidence/OCX-0110-20261011-ADCC-MACOS-CANDIDATE/`。后续按同一修复 SHA 收齐 Windows 与 macOS 候选，不混用旧制品。设备验收、物理 DPI 与双权限、安装目录数据根、自动检查性能预算、真实更新和发布边界统一见 [跨平台候选与真机交接](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-跨平台候选与真机交接/README.md)。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`；本轮未启动额外软件。
+
+### 2026-10-11 main@3d856fb5 macOS 候选与下一步门禁
+
+按修复后的 `main@3d856fb561aa8dd21d0dd1347d8736c7b704f3d7` 完成 macOS arm64 候选构建，命令退出 0，耗时 116.398 秒。应用版本 / 构建号均为 0.1.10，EXE 内嵌完整源码 SHA；DMG 为 4,383,683 bytes，SHA256 `bbe9ef00f9ea5a46e69c2ae09b10b611b9757f18a0b8b4e080680696708eede4`，容器校验通过。原 EXE 为 7,897,760 bytes，SHA256 `af154f85fd7116f681b951c331bd1b99ad49f589ed8da1107e68d2179cd550c7`；完整原 `.app` 和 DMG 单独留存，不被后续构建或测试重签覆盖。
+
+严格签名 exit 1（资源未封装），宿主 0 个有效签名身份，公证未验证。该候选未安装 / 启动；旧 c654 测试实例的退出快捷键尝试未结束进程，本轮没有另开测试实例，因此正常退出 / 锁清理及最新 SHA 原生验收仍待验。摘要与原件见 `.adg/evidence/OCX-0110-20261011-3D856-MACOS-CANDIDATE/`。
+
+执行顺序为：新 CI 全部通过后生成同 SHA Windows 候选；双平台隔离安装和设备验收；0.1.9 配对性能、缓存命中零请求与真实周期；真实更新 / 重启及事件生命周期；正式签名和发布资产审阅。各步完成条件已写入跨平台交接记录。最新运行快照中 frontend / release-tools / backend 已通过，Windows Clippy 和后端回归已通过且正在 release 构建；完整 CI 仍为 `in_progress`，快照见 `.adg/evidence/OCX-0110-20261011-CI-38118226895/`。IMP / TASK 保持 `in_progress`，`release_authorized: false`、`release_accepted: false`；正式发布和真实用户迁移仍需单独确认。

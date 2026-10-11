@@ -1,0 +1,56 @@
+[
+  {
+    "name": "fmt",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.65
+  },
+  {
+    "name": "ipc",
+    "argv": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace",
+      "--features",
+      "integration-test",
+      "modules::ipc"
+    ],
+    "exit_code": 0,
+    "seconds": 43.083
+  },
+  {
+    "name": "rust-full",
+    "argv": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace",
+      "--features",
+      "integration-test"
+    ],
+    "exit_code": 0,
+    "seconds": 81.435
+  },
+  {
+    "name": "clippy",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "seconds": 5.334
+  }
+]

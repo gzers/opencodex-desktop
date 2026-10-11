@@ -1,0 +1,17 @@
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1872213Z failures:
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1872402Z
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1874333Z ---- modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit stdout ----
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1875038Z
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1875876Z thread 'modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit' (9232) panicked at src\modules\ipc\service.rs:2672:17:
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1877125Z assertion `left == right` failed
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1877416Z   left: true
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1877632Z  right: false
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1877766Z
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1877773Z
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1877863Z failures:
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1878394Z     modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1878964Z
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1879497Z test result: FAILED. 485 passed; 1 failed; 4 ignored; 0 measured; 0 filtered out; finished in 103.02s
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1880167Z
+backend-windows	Windows backend regression	2026-10-11T06:23:37.1960005Z ^[[1m^[[91merror^[[0m: test failed, to rerun pass `--lib`
+backend-windows	Windows backend regression	2026-10-11T06:23:37.5577061Z ##[error]Process completed with exit code 1.

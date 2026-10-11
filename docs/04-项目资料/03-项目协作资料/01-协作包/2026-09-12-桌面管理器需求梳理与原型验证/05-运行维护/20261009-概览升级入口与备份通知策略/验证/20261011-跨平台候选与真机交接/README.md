@@ -1,0 +1,90 @@
+# 0.1.10 跨平台候选与真机交接
+
+关联 IMP-OPENCODEX-DESKTOP-20 / TASK-OPENCODEX-DESKTOP-182。本文保存候选构建和后续验收交接，不是版本通过证书或稳定核心事实。代码归属 main；本文和证据归属 docs/governance-main。
+
+## main@adccca8e 的结果
+
+源码身份为 `adccca8e92d28c95d4fa83c11d994cb6bf3445f6`。在干净工作树执行 `cargo tauri build --bundles app,dmg -- --locked`，退出码 0。
+
+| 项目 | 实测结果 | 边界 |
+|---|---|---|
+| macOS 包身份 | 版本 / 构建号均为 0.1.10，arm64；EXE 包含完整源码 SHA | 只验证身份 |
+| DMG | 4,383,725 bytes；SHA256 `059f85310a1b400d0755a524234e83d0eb066ad4854fbba384a1816f0ebc779d` | `hdiutil verify` exit 0 |
+| macOS EXE | 7,897,760 bytes；SHA256 `5e54dee8ab172f1321e54da0ba14c1d9b113189de9c61a64fa58236764c3acd3` | 与其他 SHA 候选不可混用 |
+| 严格签名 | `codesign --verify --deep --strict --verbose=2` exit 1；资源未封装，linker ad hoc | 未通过；当前宿主 0 个有效签名身份，公证未验证 |
+| CI 38117383632 | frontend / release-tools / backend 成功；backend-windows 失败；build 跳过 | 不准入下一步 Windows 候选构建 |
+
+原始摘要、命令和哈希清单见 `.adg/evidence/OCX-0110-20261011-ADCC-MACOS-CANDIDATE/`。DMG 留存于 `/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/OpenCodeX Desktop_0.1.10_aarch64.dmg`，未安装或启动。本地留存路径不是用户下载地址。构建输出中的原 `.app` 可被后续构建覆盖，追溯该候选时使用对应 DMG 与哈希。
+
+[失败 CI](https://github.com/gzers/opencodex-desktop/actions/runs/38117383632) 的 Windows Clippy 通过；Windows 后端库回归为 **485 passed / 1 failed / 4 ignored**。失败项为 `cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit`：运行操作锁已经可以取得时，未保存绑定的存储门仍冻结。运行操作锁是 worker 局部变量，而绑定门仍为闭包捕获，释放顺序存在窗口。保留这轮失败，修复需要重新取得 Windows 回归和候选证据；不删除断言、不增加重试掩盖失败、不降 Clippy 门禁。
+
+## 当前修复基线
+
+`main@3d856fb561aa8dd21d0dd1347d8736c7b704f3d7` 已提交推送：让绑定守卫在工作线程内先结算，随后才释放运行操作锁；保存后的待重启绑定仍冻结，未保存绑定正常解除。未删除或重试原竞态断言。
+
+本地 fmt、IPC 定向 44 项、Rust workspace integration-test 34 组（861 passed / 0 failed / 6 ignored，其中库 694 passed / 4 ignored）、严格 all-targets / all-features Clippy 均退出 0。忽略项包括真实网络 / 钥匙串、子进程辅助测试和需要原生主线程的托盘集成，完整名称保留在回执，不记为这些场景通过。命令原件、原失败日志及哈希见 `.adg/evidence/OCX-0110-20261011-IPC-BINDING-RELEASE-ORDER/`。
+
+新 [CI 38118226895](https://github.com/gzers/opencodex-desktop/actions/runs/38118226895) 的 headSha 已核对一致，当前仍为 in_progress，frontend / release-tools / backend 已通过；Windows Clippy 和后端回归已通过，正在 release 构建。macOS 已按此 SHA 完成候选构建；Windows 候选待新 CI 全部通过再触发一次。运行快照见 `.adg/evidence/OCX-0110-20261011-CI-38118226895/`，不能当作完整 CI 通过。
+
+## main@3d856fb5 的 macOS 候选
+
+在干净 main 工作树执行 `cargo tauri build --bundles app,dmg -- --locked`，退出码 0，耗时 116.398 秒。应用版本 / 构建号均为 0.1.10，identifier 为 `com.gzers.opencodex.desktop`，arm64 EXE 内嵌完整源码 SHA。
+
+| 制品 / 检查 | 实测结果 | 验收边界 |
+|---|---|---|
+| DMG | 4,383,683 bytes；SHA256 `bbe9ef00f9ea5a46e69c2ae09b10b611b9757f18a0b8b4e080680696708eede4` | `hdiutil verify` exit 0 |
+| 原 EXE | 7,897,760 bytes；SHA256 `af154f85fd7116f681b951c331bd1b99ad49f589ed8da1107e68d2179cd550c7` | 原 `.app` 完整复制留存，不与测试重签副本混用 |
+| 严格签名 | exit 1：`code has no resources but signature indicates they must be present` | linker ad hoc；没有 TeamIdentifier / sealed resources，正式签名未通过 |
+| 可用签名身份 / 公证 | 宿主 0 个有效签名身份；公证未验证 | 需要正式签名环境才能闭合 |
+| 安装 / 原生 UI | 此候选未安装、未启动 | c654 旧实例观察不能作为该 SHA 的原生通过证据 |
+
+原件和校验清单见 `.adg/evidence/OCX-0110-20261011-3D856-MACOS-CANDIDATE/`。原 `.app` 与 DMG 留存于 `/private/tmp/ocx-0110-3d856-candidate-2aw35kxm/`，本地路径不是下载地址；不得通过给原件重签覆盖原始失败记录。当前仍只有旧 c654 隔离测试实例；本轮尝试退出快捷键后该进程仍在运行，因此未启动第二个实例，也不记为正常退出 / 锁清理通过。
+
+## 候选生成顺序
+
+1. 释放顺序修复已推送；确认新 CI 的 headSha 与 main 一致并取得完整通过结果。
+2. CI 全部通过后，只触发一次 `windows-candidate.yml` 的 main 测试构建；核验实际 run SHA，重新生成 MSI / NSIS 和安装后最终 EXE 身份证据。
+3. macOS 已按该 SHA 重打候选并记录版本、字节数、SHA256 和签名缺口；后续使用留存原件，旧候选通过项不自动继承。
+4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
+
+## 下一步及完成条件
+
+| 顺序 | 工作 | 完成条件 |
+|---|---|---|
+| 1 | 收齐同源码 CI 和 Windows 安装候选 | CI 五个 job 全部通过，候选 run 的 headSha、MSI / NSIS、最终 EXE 身份与哈希一致 |
+| 2 | 双平台隔离原生与安装验收 | Windows 双权限 / 数据根 / 物理 DPI / 外观 / IPC；macOS 正常退出、安装升级、树表焦点及对齐；均保存同 SHA 证据 |
+| 3 | 自动检查性能与真实周期 | 下述 0.1.9 配对预算、缓存命中零请求、慢网离线、stable 24h / beta 6h 实测通过 |
+| 4 | 真实更新和事件生命周期 | 两类更新详情 / 进度 / 备份阻断 / 重启回读、异常精确解除与通道隔离有执行证据 |
+| 5 | 签名与发布资产审阅 | macOS 签名 / 公证、Windows Authenticode 和更新源 / 资产校验闭合；正式发布另行确认 |
+
+前四步的候选与隔离验收属于当前目标执行范围；真实用户迁移、替换日常安装、创建版本标签、公开 Release 和 stable 晋升仍需单独授权。
+
+## Windows 真机交接
+
+使用 Windows 隔离测试机 / VM 或独立测试账户，保留日常安装和真实用户数据。测试包与源码必须同 SHA；记录 Windows / WebView2 版本、安装器哈希、安装后 EXE 哈希、实际启动日志的源码身份。按顺序执行，前台只保留一个测试实例。
+
+| 验收项 | 必须留下的证据 |
+|---|---|
+| 普通 / 管理员权限 | 实际进程 token，启动 / 正常退出 / 锁清理，不能只写启动方式 |
+| 安装与全部存储 | 自选实际安装位置的新装默认 `<安装目录>\data`；旧根 / 显式自定义根优先；偏好、备份、日志、缓存、托管面板 HOME 都回读同一活动根 |
+| 权限与失败路径 | 不可写安装目录明确失败，无静默 AppData 回退；隔离夹具验证切根拒绝忙写者、失败解除、成功待重启与重启回读 |
+| 原生外观 | 标题栏、云母、窗口控制与拖动、动效、下拉玻璃、浅深主题 / 高中低画质、顶部左右光层边界 |
+| DPI 与树表 | 实际显示缩放 100 / 125 / 150 / 200%；复选框 / 半选 / 禁用 / 箭头 / 叶占位 / 长文字与焦点、刷新保留层级 |
+| IPC | GUI 先显式启用；同 SHA 的 ocxd 只读查询核验目标实例；断开观察者后操作与审计所有权、重启世代和释放顺序 |
+| 事件 | 按注册表核对现有发出点，成功只解除精确匹配异常；切通道保留面板状态；进度 tick 不重复通知 |
+
+`test/smoke/windows-appearance.ps1` 需要 PowerShell 7，分别用 `-Mode ordinary` / `administrator` 校验实际 token。它强制 WebView scale 1 / 1.25 / 1.5 / 2，只是渲染 DPR 矩阵，不能代替物理 DPI 验收；脚本结束强制收尾不能当作正常退出或锁清理通过。它设置独立沙箱根，因此也不能代替新装默认数据根测试。
+
+`test/smoke/windows-installer.ps1` 仅允许临时 GitHub Actions Windows runner，不能绕过 guard 在用户设备运行。Windows named pipe 身份按账户派生，不能靠不同沙箱根区分；IPC 测试需要先确认目标，避免连到同账户日常实例。安装器是否包含 ocxd 以资产清单为准，需要另编 CLI 时记录同 SHA 来源。
+
+## 性能与真实更新
+
+继续使用实施前预算，测试后不得下调：同机 0.1.9 配对，冷 / 热启动各至少 20 次；启动可交互 p95 增量 **≤100ms 且 ≤5%**，闲置 10min CPU 增量 **≤0.5 百分点**、RSS 增量 **≤10MiB**，检查不产生 **>50ms** 主线程任务。缓存命中 100 次切页 / 10 次重启应为零网络和查询子进程；慢网、离线、单次检查分别取样，stable 24h / beta 6h 真实周期单独取证。
+
+共用更新流程要补真实端点、内部说明滚动 / 网页、备份失败阻断、阶段动画、安装 / 重启后版本回读、失败与精确恢复证据。候选构建、源码测试和加速时钟都不能替代这些实测。macOS 正式签名 / 公证和真实安装升级同样待验。
+
+当前 `release_authorized: false`、`release_accepted: false`，IMP / TASK 保持 `in_progress`。本轮没有启动额外测试软件、迁移真实数据、替换日常安装、创建标签、公开发布或晋升 stable。
+
+## 原始日志与可读视图
+
+ADCC / 3D856 macOS 构建日志、IPC 定向日志及 Windows 失败摘录的原始字节保存为对应 `*.raw.gz`。同名 `.log` 为去除行尾空格和末尾空行的可读视图，未修改消息；各目录的 `log-provenance.json` 记录原始字节数、解压后 SHA256 与视图 SHA256，`checksums.json` 覆盖归档和视图。签名失败与测试失败均保留，不能通过视图规范化改变验收结论。

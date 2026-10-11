@@ -1,0 +1,243 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.75s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-4f1aaf34584e17e7)
+
+running 44 tests
+test modules::ipc::path_registration::tests::registers_and_removes_only_owned_symlink ... ok
+test modules::ipc::service::tests::cli_binding_busy_frozen_and_unconfirmed_never_execute_or_audit ... ok
+test modules::ipc::audit::tests::rotates_five_megabyte_logs_five_times ... ok
+test modules::ipc::service::tests::busy_frozen_and_unconfirmed_cli_sync_do_not_execute_or_write_audit ... ok
+test modules::ipc::audit::tests::writes_sanitized_record_as_jsonl ... ok
+test modules::ipc::endpoint::tests::binds_private_socket_and_round_trips_frozen_response ... ok
+test modules::ipc::endpoint::tests::prevents_second_live_endpoint ... ok
+test modules::ipc::service::tests::backup_list_lock_wait_keeps_executor_responsive_and_survives_observer_drop ... ok
+test modules::ipc::service::tests::cli_update_projects_truthful_terminal_status_and_keeps_three_field_dto ... ok
+test modules::ipc::service::tests::cli_lifecycle_projects_only_matching_terminal_and_preserves_context_and_wire_contract ... ok
+test modules::ipc::service::tests::cli_migration_rejects_unconfirmed_frozen_and_invalid_requests_without_file_mutation ... ok
+test modules::ipc::service::tests::cli_lifecycle_rejects_busy_frozen_unconfirmed_and_unsafe_arguments ... ok
+test modules::ipc::endpoint::tests::rejects_bad_contract_and_too_large_frame ... ok
+test modules::ipc::service::tests::passphrase_required_is_reported_distinctly ... ok
+test modules::ipc::service::tests::cli_update_requires_real_gui_and_frozen_query_has_no_side_effects ... ok
+test modules::ipc::service::tests::frozen_and_unconfirmed_cli_backup_do_not_execute_or_write_audit ... ok
+test modules::ipc::service::tests::sync_projection_preserves_conflicts_readback_failure_and_typed_network_errors ... ok
+test modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit ... ok
+test modules::ipc::service::tests::sync_run_without_endpoint_reports_failure_instead_of_fake_success ... ok
+test modules::ipc::service::tests::public_status_lock_wait_keeps_executor_responsive_and_survives_disconnect ... ok
+test modules::ipc::tests::audit_record_never_captures_argument_values ... ok
+test modules::ipc::tests::audit_retention_matches_fz40 ... ok
+test modules::ipc::tests::cli_json_has_no_extra_top_level_fields ... ok
+test modules::ipc::tests::cli_parser_only_accepts_frozen_commands ... ok
+test modules::ipc::tests::confirm_false_is_rejected_with_exit_code_four ... ok
+test modules::ipc::service::tests::binding_refuses_busy_writer_and_validation_failure_reopens_admission ... ok
+test modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit ... ok
+test modules::ipc::tests::contract_version_must_match_one ... ok
+test modules::ipc::tests::failed_response_keeps_sanitized_error_and_exit_code ... ok
+test modules::ipc::tests::frozen_command_set_matches_fz34 ... ok
+test modules::ipc::tests::ipc_response_shape_is_frozen ... ok
+test modules::ipc::service::tests::cli_backup_uses_manual_scope_verified_source_and_complete_metadata_listing ... ok
+test modules::ipc::service::tests::cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result ... ok
+test modules::ipc::service::tests::cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit ... ok
+test modules::ipc::service::tests::cli_lifecycle_reuses_registered_events_and_recovers_only_exact_action_and_candidate ... ok
+test modules::ipc::service::tests::cli_queries_survive_disconnect_and_audit_only_admitted_roots ... ok
+test modules::ipc::service::tests::cli_migration_lock_wait_keeps_executor_responsive_and_owns_audit_after_disconnect ... ok
+test modules::ipc::service::tests::cli_migration_roundtrip_uses_explicit_home_and_preserves_wire_contract ... ok
+test modules::ipc::service::tests::public_binding_lock_wait_persists_reference_after_disconnect_and_keeps_root_frozen ... ok
+test modules::ipc::service::tests::cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit ... ok
+test modules::ipc::service::tests::switch_data_root_records_reference_in_the_fixed_app_data_root ... ok
+test modules::ipc::service::tests::cli_backup_honours_saved_cleanup_mode_and_retains_pins_and_legacy_transactions ... ok
+test modules::ipc::service::tests::cli_backup_rejects_missing_corrupt_source_or_policy_without_fake_success_or_cleanup ... ok
+test modules::ipc::audit::tests::retention_keeps_ninety_days_and_max_records ... ok
+
+test result: ok. 44 passed; 0 failed; 0 ignored; 0 measured; 654 filtered out; finished in 17.47s
+
+     Running unittests src/bin/ocxd.rs (target/debug/deps/ocxd-b48a8c281eacc5e7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/opencodex_desktop-1d665fd1c0dc68f9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/about.rs (target/debug/deps/about-9989c1155f252122)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/app_icon.rs (target/debug/deps/app_icon-3f84201bb38170dc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/app_startup_wiring.rs (target/debug/deps/app_startup_wiring-0fe87464fb44c6b1)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/app_status.rs (target/debug/deps/app_status-339a1ec205fa0107)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/backup_process_lock.rs (target/debug/deps/backup_process_lock-a1fe45f915f24660)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/cli_ipc.rs (target/debug/deps/cli_ipc-b33e746007b00fb0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/codex_shim.rs (target/debug/deps/codex_shim-6cb9b8f5f605ae35)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+     Running tests/doctor.rs (target/debug/deps/doctor-d7537c36302e5e0a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.00s
+
+     Running tests/event_registry.rs (target/debug/deps/event_registry-f2a51e9be34e9a83)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 33 filtered out; finished in 0.00s
+
+     Running tests/extensions.rs (target/debug/deps/extensions-e0958415f7697085)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.00s
+
+     Running tests/layer_boundaries.rs (target/debug/deps/layer_boundaries-e0248121f341f6a8)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/logs.rs (target/debug/deps/logs-1fc382d6545d88ba)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/notifications.rs (target/debug/deps/notifications-b5121f9cf0e5673f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 5 filtered out; finished in 0.00s
+
+     Running tests/official_status_source.rs (target/debug/deps/official_status_source-bfad0ecb8e64d997)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/preferences.rs (target/debug/deps/preferences-8c1e7e3e7ec102fc)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+     Running tests/process_action.rs (target/debug/deps/process_action-65af5b7cce269dd4)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running tests/runtime_managed_real.rs (target/debug/deps/runtime_managed_real-8dd68b5b28ddb838)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/sandbox_isolation.rs (target/debug/deps/sandbox_isolation-2ec78bac869a7374)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/status_matrix.rs (target/debug/deps/status_matrix-4589429027ec4d76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/status_snapshot.rs (target/debug/deps/status_snapshot-856abc374267f982)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/sync_plaintext.rs (target/debug/deps/sync_plaintext-4d5cfa2b28d6e428)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/tray.rs (target/debug/deps/tray-b8b315767ef5c71c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/tray_icon.rs (target/debug/deps/tray_icon-e8790a3adfb8d2f7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/tray_left_click.rs (target/debug/deps/tray_left_click-d2aa752a9c599110)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/webdav_legacy_real.rs (target/debug/deps/webdav_legacy_real-031a997c3b2ab52d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/webdav_real.rs (target/debug/deps/webdav_real-9e9bdaca3d332a0b)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/webdav_sync_real.rs (target/debug/deps/webdav_sync_real-41895d2350be0558)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/webdav_tls.rs (target/debug/deps/webdav_tls-fb9f5a399a85ce15)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/window_close.rs (target/debug/deps/window_close-5e26746c8301d7c2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/windows_runtime.rs (target/debug/deps/windows_runtime-09e4e04ccdcdb61e)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

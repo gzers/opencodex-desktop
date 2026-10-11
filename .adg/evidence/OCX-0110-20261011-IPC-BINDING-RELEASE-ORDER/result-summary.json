@@ -1,0 +1,110 @@
+{
+  "observed_at_utc": "2026-10-11T06:31:18.938993+00:00",
+  "repair_source": {
+    "branch": "main",
+    "commit": "3d856fb561aa8dd21d0dd1347d8736c7b704f3d7",
+    "tests_executed_on": "parent adccca8e plus identical service.rs repair before commit",
+    "source_file_sha256": "f32dc9f7307dda1bc6a239fa74fb754ba062c0df0857fd8eaa42e8b8861ce2da"
+  },
+  "failed_ci": {
+    "run": 38117383632,
+    "head_sha": "adccca8e92d28c95d4fa83c11d994cb6bf3445f6",
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38117383632",
+    "windows_library": {
+      "passed": 485,
+      "failed": 1,
+      "ignored": 4
+    },
+    "failed_test": "modules::ipc::service::tests::cli_binding_owns_runtime_and_exclusive_storage_until_terminal_audit",
+    "cause": "runtime lease local dropped before captured binding guard; no-persisted-binding writer gate remained frozen after runtime mutation admission reopened"
+  },
+  "repair": "binding guard moved to worker local after runtime lease; explicitly commit persisted pending binding or drop unsaved binding before runtime lease drops; tests and strict Clippy unchanged",
+  "checks": [
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 0.65
+    },
+    {
+      "name": "ipc",
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--features",
+        "integration-test",
+        "modules::ipc"
+      ],
+      "exit_code": 0,
+      "seconds": 43.083
+    },
+    {
+      "name": "rust-full",
+      "argv": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--features",
+        "integration-test"
+      ],
+      "exit_code": 0,
+      "seconds": 81.435
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "seconds": 5.334
+    }
+  ],
+  "ipc": {
+    "passed": 44,
+    "failed": 0,
+    "ignored": 0
+  },
+  "rust_workspace": {
+    "groups": 34,
+    "passed": 861,
+    "failed": 0,
+    "ignored": 6,
+    "library": {
+      "passed": 694,
+      "failed": 0,
+      "ignored": 4
+    },
+    "ignored_lines": [
+      "test commands::network::tests::live_no_proxy_probe_reaches_controlled_url ... ignored, hits the network; run explicitly",
+      "test infrastructure::keychain::tests::keychain_round_trip_keeps_both_secrets_separate ... ignored",
+      "test modules::about::remote::tests::live_remote_query_returns_version_and_integrity ... ignored, hits the npm registry; run explicitly",
+      "test modules::sync::config::tests::save_endpoint_stores_only_the_webdav_secret ... ignored",
+      "test w2_child ... ignored, subprocess helper; run by both parent tests on explicit temporary roots",
+      "test ipc::managed_collector_is_injected_into_status_command ... ignored, Tauri tray setup requires the native main thread"
+    ]
+  },
+  "ci_after_repair": {
+    "run": 38118226895,
+    "head_sha": "3d856fb561aa8dd21d0dd1347d8736c7b704f3d7",
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38118226895",
+    "observed_status": "in_progress"
+  },
+  "release_authorized": false,
+  "release_accepted": false
+}

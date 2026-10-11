@@ -1,0 +1,13 @@
+{
+  "note": "可读日志仅去除行尾空格和文件末尾空行；原始字节保留在 raw.gz，原始证据以解压后 SHA256 为准。",
+  "normalization": "strip trailing horizontal whitespace and terminal blank lines; no message changes",
+  "files": [
+    {
+      "readable_view": "build.log",
+      "raw_archive": "build.log.raw.gz",
+      "original_bytes": 3442,
+      "original_sha256": "1af3f2ce111f64a84654dd1c49a0da1ba3bf46c6ba2f0a884c17d8078a9b27c2",
+      "readable_sha256": "ba70f611f74670b5d599ca5627da1307dd31b11e9e778538dde684542efcfd32"
+    }
+  ]
+}

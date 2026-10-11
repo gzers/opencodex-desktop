@@ -1,0 +1,102 @@
+{
+  "observed_at_utc": "2026-10-11T06:21:26.060258+00:00",
+  "source": {
+    "branch": "main",
+    "commit": "adccca8e92d28c95d4fa83c11d994cb6bf3445f6",
+    "clean": true
+  },
+  "build": {
+    "argv": [
+      "cargo",
+      "tauri",
+      "build",
+      "--bundles",
+      "app,dmg",
+      "--",
+      "--locked"
+    ],
+    "exit_code": 0,
+    "log": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/build.log"
+  },
+  "identity": {
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleShortVersionString": "0.1.10",
+    "CFBundleVersion": "0.1.10",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "architecture": {
+    "argv": [
+      "lipo",
+      "-archs",
+      "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exit_code": 0,
+    "log": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/architecture.txt",
+    "output": "arm64"
+  },
+  "source_sha_embedded": true,
+  "artifacts": [
+    {
+      "kind": "dmg",
+      "path": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4383725,
+      "sha256": "059f85310a1b400d0755a524234e83d0eb066ad4854fbba384a1816f0ebc779d"
+    },
+    {
+      "kind": "executable",
+      "path": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7897760,
+      "sha256": "5e54dee8ab172f1321e54da0ba14c1d9b113189de9c61a64fa58236764c3acd3"
+    }
+  ],
+  "dmg_verify": {
+    "argv": [
+      "hdiutil",
+      "verify",
+      "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg"
+    ],
+    "exit_code": 0,
+    "log": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/dmg-verify.txt",
+    "output": "正在检查“Protective Master Boot Record（MBR：0）”的校验和…\nProtective Master Boot Record（MBR：0）：已验证CRC32 $F348260E\n正在检查“GPT Header（Primary GPT Header：1）”的校验和…\n    GPT Header（Primary GPT Header：1）：已验证CRC32 $5FE3B616\n正在检查“GPT Partition Data（Primary GPT Table：2）”的校验和…\nGPT Partition Data（Primary GPT Table：已验证CRC32 $357C5B17\n正在检查“（Apple_Free：3）”的校验和…\n                      （Apple_Free：3）：已验证CRC32 $00000000\n正在检查“disk image（Apple_HFS：4）”的校验和…\n             disk image（Apple_HFS：4）：已验证CRC32 $CD412F83\n正在检查“GPT Partition Data（Backup GPT Table：5）”的校验和…\nGPT Partition Data（Backup GPT Table：：已验证CRC32 $357C5B17\n正在检查“GPT Header（Backup GPT Header：6）”的校验和…\n     GPT Header（Backup GPT Header：6）：已验证CRC32 $B66DDE72\n已验证CRC32 $4A60DEB1\nhdiutil: verify: checksum of \"/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg\" is VALID"
+  },
+  "codesign_verify": {
+    "argv": [
+      "codesign",
+      "--verify",
+      "--deep",
+      "--strict",
+      "--verbose=2",
+      "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app"
+    ],
+    "exit_code": 1,
+    "log": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/codesign-verify.txt",
+    "output": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app: code has no resources but signature indicates they must be present"
+  },
+  "codesign_display": {
+    "argv": [
+      "codesign",
+      "--display",
+      "--verbose=4",
+      "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app"
+    ],
+    "exit_code": 0,
+    "log": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/codesign-display.txt",
+    "output": "Executable=/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=opencodex_desktop-a3d1735d20921617\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=61384 flags=0x20002(adhoc,linker-signed) hashes=1914+0 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=649f2ccc234c4832531cb6becad166f5225e0dda\nCandidateCDHashFull sha256=649f2ccc234c4832531cb6becad166f5225e0ddae8dd6303f9c0c006cfd9c8ab\nHash choices=sha256\nCMSDigest=649f2ccc234c4832531cb6becad166f5225e0ddae8dd6303f9c0c006cfd9c8ab\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=7520256\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=649f2ccc234c4832531cb6becad166f5225e0dda\nSignature=adhoc\nInfo.plist=not bound\nTeamIdentifier=not set\nSealed Resources=none\nInternal requirements=none"
+  },
+  "signing_identities": {
+    "argv": [
+      "security",
+      "find-identity",
+      "-v",
+      "-p",
+      "codesigning"
+    ],
+    "exit_code": 0,
+    "log": "/private/tmp/ocx-0110-adcc-candidate-cSZKEZ/signing-identities.txt",
+    "output": "0 valid identities found"
+  },
+  "release_accepted": false,
+  "release_authorized": false,
+  "notarization": "not verified",
+  "ui_launched": false
+}

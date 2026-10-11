@@ -1,0 +1,20 @@
+{
+  "note": "可读日志仅去除行尾空格和文件末尾空行；原始字节保留在 raw.gz，原始证据以解压后 SHA256 为准。",
+  "normalization": "strip trailing horizontal whitespace and terminal blank lines; no message changes",
+  "files": [
+    {
+      "readable_view": "ipc.log",
+      "raw_archive": "ipc.log.raw.gz",
+      "original_bytes": 11181,
+      "original_sha256": "eb0d146f81e9a44330e7f805ecd93c6a7a6e54ec78de315cc1c666e5d37abc80",
+      "readable_sha256": "2e75c13f03ab41f3da720b1ef41d4df807157b7c70dc03a106173fbc81535a51"
+    },
+    {
+      "readable_view": "windows-failure-excerpt.log",
+      "raw_archive": "windows-failure-excerpt.log.raw.gz",
+      "original_bytes": 1894,
+      "original_sha256": "42e29d4a88274c66d17a57bc25dd4540de26b5e33c982be1995ba124d833ffaa",
+      "readable_sha256": "79af6a0e052e2a05de9fd72dd5fd7602fd923d404f32184e82cc9e30ad4118be"
+    }
+  ]
+}
