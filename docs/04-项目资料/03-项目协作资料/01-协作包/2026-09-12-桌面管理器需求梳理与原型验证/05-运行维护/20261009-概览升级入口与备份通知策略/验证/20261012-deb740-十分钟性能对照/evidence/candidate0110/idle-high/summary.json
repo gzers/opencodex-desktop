@@ -1,0 +1,81 @@
+{
+  "source": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "started_at": "2026-10-11T16:38:47.753837+00:00",
+  "ended_at": "2026-10-11T16:48:47.778817+00:00",
+  "elapsed_seconds": 600.0238033749629,
+  "samples": 61,
+  "process_identity_stable": true,
+  "cpu_seconds_delta": 300.96000000000004,
+  "cpu_one_core_percent": 50.15801011679633,
+  "breakdown": [
+    {
+      "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "pid": 31501,
+      "cpu_seconds_delta": 35.78
+    },
+    {
+      "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+      "pid": 31510,
+      "cpu_seconds_delta": 175.61
+    },
+    {
+      "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+      "pid": 31511,
+      "cpu_seconds_delta": 89.57
+    },
+    {
+      "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+      "pid": 31512,
+      "cpu_seconds_delta": 0.0
+    }
+  ],
+  "rss_mib": {
+    "start": 294.140625,
+    "end": 505.53125,
+    "min": 293.9375,
+    "max": 505.53125,
+    "mean": 401.6265368852459
+  },
+  "collector_cpu_seconds": 0.3245,
+  "collection_wall_seconds": 5.233687995467335,
+  "files_after": [
+    {
+      "path": "manager-state/preferences.json",
+      "size": 1370,
+      "sha256": "6c4ba47c1b321b9c8745043733001a72d0949617019556a3d188b893c2ff8c68",
+      "mtime_ns": 1791736543878854616
+    },
+    {
+      "path": "manager-state/update-schedule.json",
+      "size": 182,
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+      "mtime_ns": 1791722553429751867
+    },
+    {
+      "path": "cache/updates/manager-stable.json",
+      "size": 217,
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+      "mtime_ns": 1791722553424253422
+    },
+    {
+      "path": "cache/updates/panel-latest.json",
+      "size": 145,
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "mtime_ns": 1791722552647615494
+    }
+  ],
+  "apps_after": [
+    {
+      "pid": 31501,
+      "started": "Mon Oct 12 00:35:43 2026",
+      "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "thermal_after": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+  "gate": "not_evaluated_until_matching_ui_and_comparison_review"
+}

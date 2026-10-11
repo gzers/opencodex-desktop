@@ -1,0 +1,44 @@
+{
+  "started_at": "2026-10-11T16:20:19.571577+00:00",
+  "monotonic_start": 719510.963709666,
+  "argv": [
+    "open",
+    "-n",
+    "-a",
+    "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app",
+    "--stdout",
+    "/private/tmp/ocx-0110-performance-20261012/baseline019/idle-high/stdout.log",
+    "--stderr",
+    "/private/tmp/ocx-0110-performance-20261012/baseline019/idle-high/stderr.log",
+    "--env",
+    "OPENCODEX_SANDBOX=1",
+    "--env",
+    "OPENCODEX_SANDBOX_ROOT=/private/tmp/ocx-0110-performance-20261012/baseline019/test-data",
+    "--env",
+    "OPENCODEX_SANDBOX_BOUNDARY=/private/tmp/ocx-0110-performance-20261012"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "",
+  "apps_before": [
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "pid": 29226,
+  "process_observed_seconds": 0.09962454193737358,
+  "apps_after": [
+    {
+      "pid": 29226,
+      "started": "Mon Oct 12 00:20:19 2026",
+      "exe": "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ]
+}

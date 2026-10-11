@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-11T16:35:36.393367+00:00",
+  "reason": "Official 0.1.9 application menu exposes process actions but no quit item; two Cmd+Q attempts and Raise did not exit. Exact isolated baseline PID cleanup after sampling.",
+  "signal": "SIGTERM",
+  "process_before": [
+    {
+      "pid": 29226,
+      "started": "Mon Oct 12 00:20:19 2026",
+      "exe": "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "returncode": 1,
+  "processes_after": "",
+  "apps_after": [
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ]
+}

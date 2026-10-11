@@ -1,0 +1,63 @@
+{
+  "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "started_at": "2026-10-11T16:23:24.286544+00:00",
+  "ended_at": "2026-10-11T16:33:24.296692+00:00",
+  "elapsed_seconds": 600.0159544999478,
+  "samples": 61,
+  "process_identity_stable": true,
+  "cpu_seconds_delta": 290.05,
+  "cpu_one_core_percent": 48.34038125564963,
+  "breakdown": [
+    {
+      "exe": "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "pid": 29226,
+      "cpu_seconds_delta": 42.3
+    },
+    {
+      "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+      "pid": 29236,
+      "cpu_seconds_delta": 150.37
+    },
+    {
+      "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+      "pid": 29238,
+      "cpu_seconds_delta": 97.38
+    },
+    {
+      "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+      "pid": 29239,
+      "cpu_seconds_delta": 0.0
+    }
+  ],
+  "rss_mib": {
+    "start": 284.375,
+    "end": 284.859375,
+    "min": 284.171875,
+    "max": 284.875,
+    "mean": 284.6175717213115
+  },
+  "collector_cpu_seconds": 0.317583,
+  "collection_wall_seconds": 5.094874125672504,
+  "files_after": [
+    {
+      "path": "manager-state/preferences.json",
+      "size": 1370,
+      "sha256": "6c4ba47c1b321b9c8745043733001a72d0949617019556a3d188b893c2ff8c68",
+      "mtime_ns": 1791735620390215127
+    }
+  ],
+  "apps_after": [
+    {
+      "pid": 29226,
+      "started": "Mon Oct 12 00:20:19 2026",
+      "exe": "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "thermal_after": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+  "gate": "not_evaluated_until_matching_ui_and_comparison_review"
+}

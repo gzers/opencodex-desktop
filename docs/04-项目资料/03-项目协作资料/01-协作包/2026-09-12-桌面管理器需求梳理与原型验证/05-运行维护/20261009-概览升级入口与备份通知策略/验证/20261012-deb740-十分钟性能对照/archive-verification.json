@@ -1,0 +1,18 @@
+{
+  "captured_at": "2026-10-11T17:19:18.263447+00:00",
+  "result": "passed",
+  "manifest_item_count": 46,
+  "lossless_source_count": 42,
+  "filtered_derivative_count": 3,
+  "gzip_roundtrip_count": 3,
+  "jpeg_extension_rename_count": 4,
+  "evidence_bytes": 1984585,
+  "sha256sums_sha256": "ff7c72fc892e72b6353b12ef6154d01ffbce91bade93442ab00375e61ba6c922",
+  "offline_recomputation": {
+    "returncode": 0,
+    "stdout": "{\n  \"recompute\": \"passed\",\n  \"isolated_binaries_verified\": false,\n  \"delta\": {\n    \"cpu_one_core_percentage_points\": 1.8176288611467015,\n    \"rss_mean_mib\": 117.00896516393442,\n    \"rss_end_mib\": 220.671875\n  },\n  \"budget_comparison\": {\n    \"cpu_within_budget\": false,\n    \"rss_mean_within_budget\": false,\n    \"rss_end_within_budget\": false\n  },\n  \"gate\": \"not_passed\"\n}\n",
+    "stderr": "",
+    "comparison_byte_equal": true
+  },
+  "gate": "archive_integrity_only; performance acceptance not passed"
+}

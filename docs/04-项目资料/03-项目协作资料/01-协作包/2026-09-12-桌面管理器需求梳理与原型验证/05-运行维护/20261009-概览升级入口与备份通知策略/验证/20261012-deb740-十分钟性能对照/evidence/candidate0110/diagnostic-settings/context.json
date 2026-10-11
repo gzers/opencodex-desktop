@@ -1,0 +1,84 @@
+{
+  "candidate": {
+    "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+    "app": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app",
+    "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+    "bundle": "com.gzers.opencodex.desktop.perf0110oct12",
+    "root": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-data",
+    "boundary": "/private/tmp/ocx-0110-performance-20261012",
+    "source_exe_sha256": "d2b14777050edce579c58e7064bcbbb41f6c11d73da8b601582adcbb9ab5c315",
+    "test_exe_sha256": "ab6b967da2936e66cb5ba481a462de7334e692573d2f6db0c539a73c7d61f9b4",
+    "source_sha_embedded": true,
+    "version": "0.1.10",
+    "appearance": {
+      "glow_render": "mesh",
+      "interface_scale": 100,
+      "theme": "light",
+      "visual_effects": "high"
+    },
+    "updates": {
+      "app_update_auto_check": true,
+      "app_update_channel": "stable",
+      "app_update_check_interval_seconds": 86400
+    },
+    "signing": "ad-hoc isolated copy; not official signing acceptance"
+  },
+  "started_at": "2026-10-11T16:57:48.448290+00:00",
+  "duration_seconds": 90,
+  "interval_seconds": 10,
+  "actual_warmup_seconds": 1325.471984792035,
+  "host": {
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+    "arch": "arm64",
+    "logical_cpus": 18,
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23265379)\t80%; AC attached; not charging present: true\n",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+  },
+  "files_before": [
+    {
+      "path": "manager-state/preferences.json",
+      "size": 1370,
+      "sha256": "6c4ba47c1b321b9c8745043733001a72d0949617019556a3d188b893c2ff8c68",
+      "mtime_ns": 1791736543878854616
+    },
+    {
+      "path": "manager-state/update-schedule.json",
+      "size": 182,
+      "sha256": "2bbdedb306dbf9b8c34b109014c00f130dba270a68978b24b0a6f95082f1676a",
+      "mtime_ns": 1791722553429751867
+    },
+    {
+      "path": "cache/updates/manager-stable.json",
+      "size": 217,
+      "sha256": "4e98783a3efd8d22c002bfb60c00289f9e9cd6829e8b204945bca643b2a98214",
+      "mtime_ns": 1791722553424253422
+    },
+    {
+      "path": "cache/updates/panel-latest.json",
+      "size": 145,
+      "sha256": "32347ef6243354565e586a8d8a73bf6d715b4c4dbd6a6702170187e6f832a508",
+      "mtime_ns": 1791722552647615494
+    }
+  ],
+  "apps_before": [
+    {
+      "pid": 31501,
+      "started": "Mon Oct 12 00:35:43 2026",
+      "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    },
+    {
+      "pid": 75764,
+      "started": "Fri Oct 9 22:00:24 2026",
+      "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    }
+  ],
+  "method": "ps cumulative CPU/RSS for exact application and launchctl resource-coalition WebKit helpers; no DYLD probe",
+  "limits": [
+    "10-second polling can miss transient helpers",
+    "RSS is resident sum, not unique physical footprint",
+    "Cua AX and screenshots are separate UI evidence; collection does not itself prove global foreground",
+    "Sequential single pairing; not randomized repeated runs",
+    "Preparation state only, not ready-state overview",
+    "No main-thread, network/syscall or startup interactive instrumentation"
+  ]
+}
