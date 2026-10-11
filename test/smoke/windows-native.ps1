@@ -7,6 +7,7 @@ param(
 # Native-caption checks own one sandbox process and never install a package.
 $ErrorActionPreference='Stop'
 if(!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7){throw 'Windows PowerShell 7 required'}
+. (Join-Path $PSScriptRoot 'windows-process-token.ps1')
 $taskExe=(Resolve-Path -LiteralPath $Executable).Path
 $taskNode=(Resolve-Path -LiteralPath $Node).Path
 $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
@@ -81,13 +82,9 @@ public static class NativeCaption {
 # DWM and UI Automation return physical pixels. Disable caller virtualization so
 # the caption/hit tests, mouse and CopyFromScreen share that coordinate space.
 $taskDpiContext=[NativeCaption]::SetThreadDpiAwarenessContext([IntPtr](-4))
-$taskIdentity=[Security.Principal.WindowsIdentity]::GetCurrent()
-$taskElevated=[Security.Principal.WindowsPrincipal]::new($taskIdentity).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-$taskIdentity.Dispose()
-if(($Mode -eq 'administrator') -ne $taskElevated){throw 'Native test permission mismatch'}
 $taskPrevious=[NativeCaption]::GetForegroundWindow()
 $taskMouse=[NativeCaption+Point]::new();[void][NativeCaption]::GetCursorPos([ref]$taskMouse)
-$taskSummary=[ordered]@{mode=$Mode;elevated=$taskElevated;sourceCommit=(& git rev-parse HEAD);exeSha256=(Get-FileHash -LiteralPath $taskExe).Hash.ToLower();startedAt=(Get-Date).ToString('o');checks=@();result='fail'}
+$taskSummary=[ordered]@{schemaVersion=2;mode=$Mode;harnessToken=$null;applicationToken=$null;applicationModeMatched=$false;sourceCommit=(& git rev-parse HEAD);exeSha256=(Get-FileHash -LiteralPath $taskExe).Hash.ToLower();startedAt=(Get-Date).ToString('o');checks=@();result='fail'}
 $taskProcess=$null
 function Test-Native([string]$Name,[scriptblock]$Action){
  try{$taskDetail=& $Action;$taskSummary.checks+=@{name=$Name;result='pass';detail=$taskDetail}}
@@ -124,6 +121,7 @@ function Invoke-NativePage([string]$Phase){
  if($LASTEXITCODE -ne 0){throw "Native page probe failed: $Phase"}
 }
 try{
+ $taskSummary.harnessToken=Get-WindowsHarnessToken
  $taskSocket=[Net.Sockets.TcpListener]::new([Net.IPAddress]::Loopback,0);$taskSocket.Start();$taskPort=$taskSocket.LocalEndpoint.Port;$taskSocket.Stop()
  $taskSandbox=Join-Path $taskOutput ('sandbox-'+[guid]::NewGuid().ToString('N'))
  $taskInfo=[Diagnostics.ProcessStartInfo]::new();$taskInfo.FileName=$taskExe;$taskInfo.UseShellExecute=$false
@@ -134,6 +132,10 @@ try{
  # belongs only to the separate WebView quality matrix, never native DPI claims.
  foreach($taskVariable in @('HOME','OPENCODEX_WINDOWS_SMOKE_SCALE','WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS','WEBVIEW2_USER_DATA_FOLDER')){[void]$taskInfo.Environment.Remove($taskVariable)}
  $taskProcess=[Diagnostics.Process]::Start($taskInfo);$taskSummary.pid=$taskProcess.Id;$taskSummary.port=$taskPort
+ # Capture while live: the normal-close check deliberately exits this process.
+ $taskSummary.applicationToken=Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
+ Assert-WindowsProcessMode -Observation $taskSummary.applicationToken -Mode $Mode
+ $taskSummary.applicationModeMatched=$true
  Start-Sleep -Seconds 2;$taskProcess.Refresh();if($taskProcess.HasExited){throw 'Candidate exited before native checks'}
  $taskWindow=$taskProcess.MainWindowHandle;if(!$taskWindow){throw 'Native HWND missing'}
  Focus-Native

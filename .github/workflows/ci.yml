@@ -6,6 +6,21 @@ on:
   pull_request:
 
 jobs:
+  windows-smoke-evidence:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify Windows process-token evidence and smoke syntax
+        shell: pwsh
+        run: ./test/smoke/windows-process-token.test.ps1 -OutputDirectory test/out/windows-process-token
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-process-token-evidence
+          path: test/out/windows-process-token
+          if-no-files-found: error
+
   release-tools:
     runs-on: ubuntu-latest
     steps:
@@ -143,7 +158,7 @@ jobs:
 
   build:
     if: github.ref == 'refs/heads/main'
-    needs: [frontend, backend, backend-windows, release-tools]
+    needs: [frontend, backend, backend-windows, release-tools, windows-smoke-evidence]
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v5

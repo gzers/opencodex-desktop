@@ -3,10 +3,12 @@ param(
     [Parameter(Mandatory=$true)][string]$Node,
     [Parameter(Mandatory=$true)][string]$OutputDirectory,
     [ValidateRange(1,300)][int]$ObserveSeconds = 30,
-    [string]$ExpectedCommit = ''
+    [string]$ExpectedCommit = '',
+    [ValidateSet('any','ordinary','administrator')][string]$Mode = 'any'
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows) { throw 'This smoke requires Windows and PowerShell 7' }
+. (Join-Path $PSScriptRoot 'windows-process-token.ps1')
 $taskExe = (Resolve-Path -LiteralPath $Executable).Path
 $taskNode = (Resolve-Path -LiteralPath $Node).Path
 $taskOutput = [System.IO.Path]::GetFullPath($OutputDirectory)
@@ -16,33 +18,11 @@ if (!$ExpectedCommit) {
 }
 if ($ExpectedCommit -notmatch '^[0-9a-f]{40}$') { throw 'A full source commit is required for EXE provenance verification' }
 
-function Get-SmokeDiagnostics([int]$RootProcessId, [int]$Port, [datetime]$StartedAt) {
-    $diagnostics = [ordered]@{ collectedAtUtc = [datetime]::UtcNow.ToString('o'); rootPid = $RootProcessId; cdpPort = $Port }
-    try {
-        if (!('OpenCodexSmokeToken' -as [type])) {
-            Add-Type -TypeDefinition @'
-using System;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-public static class OpenCodexSmokeToken {
-    [DllImport("advapi32.dll", SetLastError = true)]
-    private static extern bool GetTokenInformation(IntPtr token, int kind, out int value, int size, out int returned);
-    public static int Read(IntPtr token, int kind) {
-        if (!GetTokenInformation(token, kind, out int value, sizeof(int), out int returned))
-            throw new Win32Exception(Marshal.GetLastWin32Error());
-        return value;
+function Get-SmokeDiagnostics([int]$RootProcessId, [int]$Port, [datetime]$StartedAt, $HarnessToken, $ApplicationToken) {
+    $diagnostics = [ordered]@{
+        schemaVersion = 2; collectedAtUtc = [datetime]::UtcNow.ToString('o'); rootPid = $RootProcessId; cdpPort = $Port
+        harnessToken = $HarnessToken; applicationToken = $ApplicationToken
     }
-}
-'@
-        }
-        $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
-        try {
-            $principal = [System.Security.Principal.WindowsPrincipal]::new($identity)
-            $diagnostics.effectiveAdministrator = $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
-            $diagnostics.tokenElevated = [bool][OpenCodexSmokeToken]::Read($identity.Token, 20)
-            $diagnostics.tokenElevationType = [OpenCodexSmokeToken]::Read($identity.Token, 18)
-        } finally { $identity.Dispose() }
-    } catch { $diagnostics.tokenError = $_.Exception.Message }
     try {
         # 只保存本脚本启动的进程及其后代；不导出其它应用的命令行。
         $processes = @(Get-CimInstance -ClassName Win32_Process -ErrorAction Stop)
@@ -87,15 +67,20 @@ $taskOutputRead = $null
 $taskFailure = $null
 $taskStartedAt = Get-Date
 $taskResult = [ordered]@{
+    schemaVersion = 2; mode = $Mode; harnessToken = $null; applicationToken = $null
+    applicationTokenVerified = $false; applicationModeMatched = $false
     result = 'fail'; executable = $taskExe; sha256 = (Get-FileHash -LiteralPath $taskExe -Algorithm SHA256).Hash.ToLower()
     homeRemoved = $true; sandbox = $taskSandbox; observedSeconds = $ObserveSeconds; cdpPort = $taskPort
     expectedCommit = $ExpectedCommit; sourceCommitMatched = $false; mainWindowPresent = $false
 }
 try {
+    $taskResult.harnessToken = Get-WindowsHarnessToken
     $taskProcess = [System.Diagnostics.Process]::Start($taskInfo)
     $taskResult.pid = $taskProcess.Id
     $taskErrorRead = $taskProcess.StandardError.ReadToEndAsync()
     $taskOutputRead = $taskProcess.StandardOutput.ReadToEndAsync()
+    $taskResult.applicationToken = Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
+    Assert-WindowsProcessMode -Observation $taskResult.applicationToken -Mode $Mode
     $taskDeadline = (Get-Date).AddSeconds($ObserveSeconds)
     while ((Get-Date) -lt $taskDeadline) {
         if ($taskProcess.HasExited) { throw "Application exited before smoke completed: $($taskProcess.ExitCode)" }
@@ -114,6 +99,10 @@ try {
     if (!(Test-Path -LiteralPath (Join-Path $taskSandbox 'manager-state/data-root.json'))) { throw 'Sandbox data root not initialized' }
     & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput
     if ($LASTEXITCODE -ne 0) { throw "WebView smoke failed: $LASTEXITCODE" }
+    $taskResult.applicationToken = Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
+    Assert-WindowsProcessMode -Observation $taskResult.applicationToken -Mode $Mode
+    $taskResult.applicationTokenVerified = $true
+    $taskResult.applicationModeMatched = $Mode -ne 'any'
     $taskResult.result = 'pass'
 } catch {
     $taskFailure = $_
@@ -121,7 +110,7 @@ try {
 } finally {
     try {
         $taskRootId = if ($taskProcess) { $taskProcess.Id } else { 0 }
-        Get-SmokeDiagnostics -RootProcessId $taskRootId -Port $taskPort -StartedAt $taskStartedAt | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $taskOutput 'startup-diagnostics.json') -Encoding utf8
+        Get-SmokeDiagnostics -RootProcessId $taskRootId -Port $taskPort -StartedAt $taskStartedAt -HarnessToken $taskResult.harnessToken -ApplicationToken $taskResult.applicationToken | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $taskOutput 'startup-diagnostics.json') -Encoding utf8
     } catch { $taskResult.diagnosticsError = $_.Exception.Message }
     # 只结束本脚本启动的隔离进程树；失败也保留证据，不删除任何数据根。
     try {

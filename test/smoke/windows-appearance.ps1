@@ -10,6 +10,7 @@ $taskNode=(Resolve-Path -LiteralPath $Node).Path
 $taskOutput=[System.IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Path $taskOutput -Force|Out-Null
 if(!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7){throw 'Windows PowerShell 7 required'}
+. (Join-Path $PSScriptRoot 'windows-process-token.ps1')
 Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
@@ -31,19 +32,8 @@ public static class AppearanceNative {
   try { BringWindowToTop(window); return SetForegroundWindow(window); }
   finally { if(b)AttachThreadInput(current,target,false);if(a)AttachThreadInput(current,foreground,false); }
  }
- [DllImport("advapi32.dll",SetLastError=true)]
- static extern bool GetTokenInformation(IntPtr token,int kind,out int value,int size,out int returned);
- public static int Token(IntPtr token,int kind) {
-  if(!GetTokenInformation(token,kind,out int value,4,out int returned))throw new Win32Exception(Marshal.GetLastWin32Error());
-  return value;
- }
 }
 '@
-$taskIdentity=[System.Security.Principal.WindowsIdentity]::GetCurrent()
-$taskElevated=[bool][AppearanceNative]::Token($taskIdentity.Token,20)
-$taskElevationType=[AppearanceNative]::Token($taskIdentity.Token,18)
-$taskIdentity.Dispose()
-if(($Mode -eq 'administrator') -ne $taskElevated){throw 'Requested and actual permission token differ'}
 $taskCommit=(& git rev-parse HEAD)
 $taskPrevious=[AppearanceNative]::GetForegroundWindow()
 function Focus-Candidate([IntPtr]$Window,[int]$ProcessId) {
@@ -87,7 +77,7 @@ function Invoke-AppearancePhase([string]$Phase,[string]$Destination,[string]$Log
  }
 }
 $taskSummary=[ordered]@{
- mode=$Mode;tokenElevated=$taskElevated;tokenElevationType=$taskElevationType
+ schemaVersion=2;mode=$Mode;harnessToken=$null
  powershell=$PSVersionTable.PSVersion.ToString();expectedCommit=$taskCommit
  exeSha256=(Get-FileHash -LiteralPath $taskExe -Algorithm SHA256).Hash.ToLower()
  startedAtUtc=[datetime]::UtcNow.ToString('o');result='fail';scales=@()
@@ -95,6 +85,7 @@ $taskSummary=[ordered]@{
 }
 $taskFailure=$null
 try {
+ $taskSummary.harnessToken=Get-WindowsHarnessToken
  foreach($taskScale in @('1','1.25','1.5','2')){
   $taskGroup=Join-Path $taskOutput ('scale-'+$taskScale)
   New-Item -ItemType Directory -Path $taskGroup -Force|Out-Null
@@ -113,15 +104,18 @@ try {
   [void]$taskInfo.Environment.Remove('WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS')
   [void]$taskInfo.Environment.Remove('WEBVIEW2_USER_DATA_FOLDER')
   $taskProcess=$null;$taskErrorRead=$null;$taskOutRead=$null
-  $taskRun=[ordered]@{scale=$taskScale;sandbox=$taskSandbox;port=$taskPort;result='fail'}
+  $taskLog=Join-Path $taskSandbox 'logs\app.log'
+  $taskRun=[ordered]@{schemaVersion=2;scale=$taskScale;sandbox=$taskSandbox;port=$taskPort;applicationToken=$null;applicationModeMatched=$false;result='fail'}
   try {
    $taskProcess=[System.Diagnostics.Process]::Start($taskInfo)
+   $taskRun.pid=$taskProcess.Id
    $taskErrorRead=$taskProcess.StandardError.ReadToEndAsync();$taskOutRead=$taskProcess.StandardOutput.ReadToEndAsync()
+   $taskRun.applicationToken=Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
+   Assert-WindowsProcessMode -Observation $taskRun.applicationToken -Mode $Mode
    Start-Sleep -Seconds 2;$taskProcess.Refresh()
    if($taskProcess.HasExited){throw 'Candidate exited before first screen'}
    $taskRun.pid=$taskProcess.Id;$taskWindow=$taskProcess.MainWindowHandle
    if(!$taskWindow){throw 'Native main window missing'}
-   $taskLog=Join-Path $taskSandbox 'logs\app.log'
    if(!(Get-Content -LiteralPath $taskLog -Raw).Contains("commit=$taskCommit")){throw 'EXE source provenance mismatch'}
    Focus-Candidate $taskWindow $taskProcess.Id
    $taskRun.foregroundWindow=[AppearanceNative]::GetForegroundWindow().ToInt64()
@@ -142,6 +136,9 @@ try {
    }
    }
    Invoke-AppearancePhase reload $taskGroup (Join-Path $taskGroup 'reload.log')
+   $taskRun.applicationToken=Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
+   Assert-WindowsProcessMode -Observation $taskRun.applicationToken -Mode $Mode
+   $taskRun.applicationModeMatched=$true
    $taskRun.result='pass'
   } catch {
    $taskRun.error=$_.Exception.Message
