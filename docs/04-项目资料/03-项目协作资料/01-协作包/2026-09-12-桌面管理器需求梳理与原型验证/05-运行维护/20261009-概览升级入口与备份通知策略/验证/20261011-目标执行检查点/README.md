@@ -95,3 +95,15 @@
 本地验证为：fmt 通过；Rust library 694 passed / 0 failed / 4 ignored；ocxd 2 passed / 0 failed；Clippy -D warnings 通过；diff 检查通过。Windows 交叉检查因 macOS 宿主缺少 Windows MSVC SDK/C 头文件而在 assert.h 处失败，不能替代 Windows 真机编译或 smoke。
 
 本检查点只闭合 IPC 源码局部门禁。Windows 普通权限 / 管理员权限真机、安装路径和数据根、DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、macOS 原生安装、自动检查性能、真实更新 / 重启、签名和发布资产仍待闭合。证据见验证/20261011-Windows IPC本机控制面/README.md 和 .adg/evidence/OCX-0110-20261011-WINDOWS-IPC-TARGET/。状态继续为 in_progress，release_authorized: false。
+
+## 2026-10-11 main Rust workspace 全量回归补充
+
+代码基线为 `main@861fdeea39d1c45fa2beddb2cba6659b67735d9f`，代码工作树干净且已推送。重新执行：
+
+```text
+cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --workspace --all-targets --all-features
+```
+
+命令退出码为 `0`。Cargo 输出共 33 个 `test result` 结果组，合计 `861 passed / 0 failed / 6 ignored / 0 measured`。证据目录为 `.adg/evidence/OCX-0110-20261011-MAIN-RUST-WORKSPACE-ALL-TARGETS/`。
+
+该补充记录只闭合当前 `main` 的 Rust workspace 源码回归；不扩写为 Windows 编译或真机通过。Windows MSVC 交叉检查仍受当前 macOS 宿主缺少 SDK/C 头文件阻塞，Windows 双权限 IPC / 首屏 / 安装路径 / 数据根 / 原生外观、macOS 原生 UI / 安装、自动检查性能、真实更新 / 重启 / 恢复、签名和发布资产仍是 open。状态继续为 `in_progress`，`release_authorized: false`。

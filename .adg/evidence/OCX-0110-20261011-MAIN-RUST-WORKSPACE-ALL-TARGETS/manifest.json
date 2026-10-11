@@ -1,0 +1,33 @@
+{
+  "evidence_id": "OCX-0110-20261011-MAIN-RUST-WORKSPACE-ALL-TARGETS",
+  "recorded_at": "2026-10-11T09:46:40+08:00",
+  "kind": "main-rust-workspace-regression",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "document_branch": "docs/governance-main",
+  "status": "passed_with_scope_limits",
+  "subject": "0.1.10 main Rust workspace 全量回归",
+  "scope": [
+    "workspace 全部 crate",
+    "all-targets",
+    "all-features",
+    "locked 依赖解析"
+  ],
+  "aggregate": {
+    "test_result_groups": 33,
+    "passed": 861,
+    "failed": 0,
+    "ignored": 6,
+    "measured": 0
+  },
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "当前 macOS 宿主无法提供 Windows MSVC SDK/C 头文件；Windows 交叉检查仍为环境阻塞",
+    "未证明 Windows 普通权限 / 管理员权限真机、安装路径、原生外观和性能",
+    "未证明 macOS 原生 UI、安装、升级、重启回读、签名、公证或真实更新端点",
+    "本记录不生成制品、不创建标签、不公开发布、不晋升 stable"
+  ],
+  "artifact_boundary": "仅记录 main@861fdeea 的 Rust 源码回归结果；0.1.10 双平台候选制品与发布门禁仍需独立证据。"
+}

@@ -1,0 +1,19 @@
+{
+  "evidence_id": "OCX-0110-20261011-MAIN-RUST-WORKSPACE-ALL-TARGETS",
+  "verification": "main@861fdeea Rust workspace all-targets all-features",
+  "command_exit_code": 0,
+  "test_result_groups": 33,
+  "tests": {
+    "passed": 861,
+    "failed": 0,
+    "ignored": 6,
+    "measured": 0
+  },
+  "source_gate": "passed",
+  "windows_cross_compile": "separate environment_blocked evidence: missing Windows MSVC SDK/C headers on macOS host",
+  "native_platform_acceptance": "open",
+  "performance_acceptance": "open",
+  "signing_and_release_assets": "open",
+  "release_authorized": false,
+  "interpretation": "源码全量回归通过，0.1.10 整体仍处于 in_progress。"
+}

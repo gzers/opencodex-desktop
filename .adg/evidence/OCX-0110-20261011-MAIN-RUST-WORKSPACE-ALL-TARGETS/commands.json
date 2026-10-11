@@ -1,0 +1,15 @@
+{
+  "evidence_id": "OCX-0110-20261011-MAIN-RUST-WORKSPACE-ALL-TARGETS",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "commands": [
+    {
+      "cwd": "repository root",
+      "command": "cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --workspace --all-targets --all-features",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "33 test result groups; 861 passed / 0 failed / 6 ignored / 0 measured"
+    }
+  ],
+  "interpretation": "main 当前代码通过完整 Rust workspace、all-targets、all-features 回归；该命令不包含 Windows 真机、macOS 原生、安装、性能、签名或真实更新验收。"
+}
