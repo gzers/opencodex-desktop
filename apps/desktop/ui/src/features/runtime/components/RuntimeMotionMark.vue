@@ -41,6 +41,7 @@ function mountMesh(): void {
   if (mesh || !meshHostEl.value) return
   const handle = createMeshGlow(meshHostEl.value, {
     getDark: () => document.documentElement.getAttribute('data-theme') === 'dark',
+    centerAnchor: markEl.value?.querySelector('svg') ?? undefined,
   })
   if (!handle) {
     // 创建失败：把能力探测收回为不支持，交给统一策略回退 CSS。

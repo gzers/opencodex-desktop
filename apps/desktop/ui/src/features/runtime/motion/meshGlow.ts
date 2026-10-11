@@ -76,7 +76,9 @@ export interface MeshGlowHandle {
 export interface MeshGlowOptions {
   /** 亮色/暗色由调用方给出（跟随主题），只影响增益与颗粒强度。 */
   getDark: () => boolean
-  /** logo 中心在光场容器内的纵向比例（0–1）；缺省回落到设计稿的 173/660。 */
+  /** Logo 的实际元素；光层 Teleport 后仍用此锚点定位，并监听其布局尺寸变化。 */
+  centerAnchor?: Element
+  /** 可覆盖锚点测量的纵向比例（0–1）；未提供可测锚点时回落到 173/660。 */
   getCenterFraction?: () => number
 }
 
@@ -201,7 +203,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     if (rect.height <= 0) return fallback
     const custom = options.getCenterFraction?.()
     if (typeof custom === 'number' && custom > 0 && custom < 1) return custom
-    const svg = host.parentElement?.querySelector('.motion-hero svg')
+    const svg = options.centerAnchor ?? host.parentElement?.querySelector('.motion-hero svg')
     if (!svg) return fallback
     const box = svg.getBoundingClientRect()
     if (box.height <= 0) return fallback
@@ -232,8 +234,15 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   resize()
   frame = requestAnimationFrame(loop)
   // resize 会清空 drawing buffer，高/中档都必须重新画；后台 wake 仍受 active 限制。
-  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => { resize(); wake() })
+  const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => {
+    if (destroyed) return
+    resize()
+    wake()
+  })
   observer?.observe(host)
+  // 就绪 / 准备与标准 / 紧凑切换可能只改变 Logo 尺寸，不改变页面光层尺寸。
+  // 复用一个布局观察器；连续动画帧仍不读取几何。
+  if (options.centerAnchor) observer?.observe(options.centerAnchor)
 
   return {
     setColors(next) {
