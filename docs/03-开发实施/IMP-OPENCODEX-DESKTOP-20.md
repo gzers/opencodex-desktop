@@ -481,3 +481,11 @@ macOS / Windows 原生 UI、安装与路径、双权限数据根、DPI / 云母 
 本地源码门禁：cargo fmt --check、cargo test --lib（694 passed / 0 failed / 4 ignored）、cargo test --bin ocxd（2 passed / 0 failed）、cargo clippy --all-targets --all-features -- -D warnings、git diff --check 均通过。cargo check --target x86_64-pc-windows-msvc --all-targets 因当前 macOS 宿主缺少 Windows MSVC SDK/C 头文件，在 ring 找不到 assert.h 处失败；该结果记为环境阻塞，不能当作 Windows 编译通过。
 
 本轮只闭合 IPC 源码实现和本地回归。Windows 普通权限 / 管理员权限真机 smoke、安装目录和数据根、DPI、云母、原生标题栏、动效、透明下拉框、macOS 原生安装、自动检查性能、真实更新 / 重启、签名制品、全域事件执行证据仍待验。0.1.10 双平台制品必须基于当前 main 重新生成，旧 0.1.9 候选不能复用。证据见协作包验证/20261011-Windows IPC本机控制面/README.md 与 .adg/evidence/OCX-0110-20261011-WINDOWS-IPC-TARGET/。IMP / TASK 继续 in_progress，release_authorized: false。
+
+### 2026-10-11 macOS DMG 隔离安装生命周期观察
+
+基于 main@861fdeea39d1c45fa2beddb2cba6659b67735d9f 的 0.1.10 arm64 候选已完成临时 DMG 隔离安装、启动和首屏读取。候选使用独立 bundle identifier 与 /tmp/ocx-0110-dmg-install-tuk3m7/data，未替换 /Applications 日常安装；窗口关闭后进程继续保活，随后通过应用退出路径退出并重新启动，当前只保留一个隔离测试实例。
+
+当前复核显示测试 PID 86306、data/logs/app.log、data/manager-state/app.lock 和更新调度文件均存在，锁与保留进程匹配；日常安装 PID 75764 保持运行且未操作。历史强制终止后残留旧锁的失败证据继续保留，不被本轮局部成功覆盖。详见运行维护协作包中的 macOS DMG 安装生命周期验证记录与 .adg/evidence/OCX-0110-20261011-MACOS-LIFECYCLE/。
+
+本轮只证明 macOS 临时隔离安装与局部生命周期观察，不证明正式签名 / 公证、原生外观、升级 / 卸载、真实更新 / 重启、Windows 0.1.10 真机、自动检查性能、稳定周期或发布授权。release_authorized: false、release_accepted: false；协作包与 IMP 继续 in_progress。

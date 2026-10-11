@@ -1,0 +1,18 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-LIFECYCLE",
+  "operations": [
+    {"operation":"dmg_isolated_install_and_start","result":"passed","scope":"temporary candidate app and temporary data root","observation":"0.1.10 arm64 candidate launched and first screen was readable"},
+    {"operation":"native_window_close","result":"observed_process_kept_alive","scope":"candidate only","observation":"window disappeared while the process remained alive; this exposed the expected tray / process lifecycle boundary"},
+    {"operation":"app_owned_exit","result":"passed_scoped_observation","scope":"candidate only","observation":"application exit path was used before the retained candidate was started again"},
+    {"operation":"candidate_restart","result":"passed","scope":"same temporary data root","observation":"new PID 86306 started; log and lock were regenerated and matched the retained process"},
+    {"operation":"current_instance_cleanup","result":"intentionally_retained_one","scope":"test process inventory","observation":"all extra test instances were closed; one isolated candidate remains for the next test"}
+  ],
+  "verification_commands": [
+    "ps -p 75764,86306 -o pid=,ppid=,state=,comm=,args=",
+    "find /tmp/ocx-0110-dmg-install-tuk3m7/data -maxdepth 3 -type f -print | sort",
+    "cat /tmp/ocx-0110-dmg-install-tuk3m7/data/manager-state/app.lock",
+    "tail -n 8 /tmp/ocx-0110-dmg-install-tuk3m7/data/logs/app.log",
+    "codesign -dv --verbose=4 /tmp/ocx-0110-dmg-install-tuk3m7/OpenCodeX Desktop.app"
+  ],
+  "interpretation": "隔离安装、首屏、局部退出与重启观察通过；正式身份、原生验收和发布门禁保持开放。"
+}

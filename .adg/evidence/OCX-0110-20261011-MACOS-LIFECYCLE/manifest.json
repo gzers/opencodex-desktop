@@ -1,0 +1,39 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-LIFECYCLE",
+  "recorded_at": "2026-10-11T12:13:58+08:00",
+  "kind": "macos-native-candidate-dmg-isolated-lifecycle",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "document_branch": "docs/governance-main",
+  "status": "isolated_install_and_partial_lifecycle_passed",
+  "candidate": {
+    "version": "0.1.10",
+    "architecture": "arm64",
+    "dmg": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+    "dmg_sha256": "e3f89379909f1dd7c185409f207f0c4223cf9d178b8244943760dc4cdcdef283",
+    "installed_app": "/tmp/ocx-0110-dmg-install-tuk3m7/OpenCodeX Desktop.app",
+    "bundle_identifier": "com.gzers.opencodex.desktop.sandbox0110dmg",
+    "data_root": "/tmp/ocx-0110-dmg-install-tuk3m7/data"
+  },
+  "observations": {
+    "isolated_dmg_install": true,
+    "first_screen_readable": true,
+    "isolated_data_root_used": true,
+    "daily_install_untouched": true,
+    "window_close_observed_process_kept_alive": true,
+    "app_owned_exit_observed": true,
+    "restart_observed": true,
+    "restart_pid": 86306,
+    "fresh_log_and_lock_observed": true,
+    "saved_state_dont_reopen_selected": true,
+    "retained_test_instance_count": 1
+  },
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "当前保留实例的 app.lock 存在且与 PID 86306 匹配；本轮不以保留运行态宣称锁清理已完成。",
+    "候选为 ad hoc / linker-signed，未完成正式签名、公证和发布身份验收。",
+    "不替代 Windows 真机、原生外观、更新 / 重启、卸载、性能、稳定周期和发布门禁。"
+  ]
+}

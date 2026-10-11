@@ -154,3 +154,11 @@ CI 成功只闭合集成源码、构建和 smoke 门禁。真实 macOS / Windows
 
 
 代码基线 main@861fdeea 已生成 0.1.10 macOS arm64 候选 .app 与 .dmg，构建和 DMG 完整性校验通过；证据见 [macOS arm64 候选构建](验证/20261011-macOS%20arm64候选构建/README.md)。该制品仍是 ad hoc 签名，macOS 安装 / 升级 / 原生 UI、Windows 0.1.10 制品与真机门禁、性能、真实更新 / 重启 / 恢复、正式签名公证和发布授权继续保持 open。
+
+### 2026-10-11 macOS DMG 隔离安装生命周期观察
+
+基于 main@861fdeea39d1c45fa2beddb2cba6659b67735d9f 的 0.1.10 arm64 候选已完成临时 DMG 隔离安装、启动和首屏读取。候选使用独立 bundle identifier 与临时数据根，未替换 /Applications 日常安装；窗口关闭后进程继续保活，随后通过应用退出路径退出并重新启动，当前只保留一个隔离测试实例。
+
+当前复核：隔离测试 PID 86306，日常安装 PID 75764 未操作；测试数据根下的日志、锁、更新调度和目录结构已落盘，锁与保留测试进程匹配。机器证据见 .adg/evidence/OCX-0110-20261011-MACOS-LIFECYCLE/，验证说明见 验证/20261011-macOS DMG安装生命周期/README.md。历史强制终止 / 旧锁失败记录继续保留，不由本轮局部成功覆盖。
+
+本轮只闭合 macOS 临时隔离安装与局部生命周期观察。正式签名 / 公证、原生外观、升级 / 卸载、真实更新 / 重启、Windows 0.1.10 真机、自动检查性能、稳定周期、全域事件执行和发布门禁仍未闭合；release_authorized: false、release_accepted: false，不构成完成证书或发布授权。

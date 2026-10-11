@@ -1,0 +1,16 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-LIFECYCLE",
+  "isolated_dmg_install": "passed",
+  "first_screen": "readable",
+  "isolated_data_root": "passed",
+  "window_close_behavior": "process remained alive; observed and retained as lifecycle contract to verify",
+  "app_owned_exit": "observed",
+  "restart_readback": "passed_scoped_observation",
+  "retained_test_instances": 1,
+  "daily_install_touched": false,
+  "native_ui_acceptance": "open",
+  "signing_notarization": "open",
+  "release_authorized": false,
+  "release_accepted": false,
+  "interpretation": "macOS 0.1.10 候选已完成临时隔离安装和局部生命周期观察，但不形成整体验收或发布授权。"
+}
