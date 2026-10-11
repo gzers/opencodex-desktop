@@ -497,3 +497,11 @@ macOS / Windows 原生 UI、安装与路径、双权限数据根、DPI / 云母 
 该回执只确认固定周期、持久 deadline、缓存边界、通道隔离、single-flight 相关源码合同，以及查询 / 安装所有权定向回归；不把源码单测当作真实 CPU、RSS、网络 / 子进程、启动 p95、帧耗时或 stable 24 小时 / beta 6 小时性能证据。Windows 双权限 / DPI / 原生外观、macOS 原生安装、真实更新 / 重启、签名制品和发布门禁继续未闭合。详细记录见协作包验证/20261011-调度缓存复核及 .adg/evidence/OCX-0110-20261011-SCHEDULE-CACHE-REVALIDATION/。
 
 IMP-OPENCODEX-DESKTOP-20 继续 in_progress，release_authorized: false；不创建标签、不公开发布、不晋升 stable、不替换日常安装。
+
+### 2026-10-11 feature/0.1.10-maintenance@c654287c macOS arm64 候选重打包
+
+在代码分支 `feature/0.1.10-maintenance` 的 `c654287c06da3e621091c1051ebc19ce1c0b1077` 上执行 `cargo tauri build --bundles app,dmg -- --locked`，退出码为 0；生成的应用和 DMG 身份均为 0.1.10，应用可执行文件为 arm64 Mach-O，DMG `hdiutil verify` 通过。当前 `.app` 为 ad hoc、linker-signed，未设置 TeamIdentifier，严格签名校验失败，因此该结果只证明候选构建和容器完整性，不构成正式签名、公证或发布资产。
+
+本轮候选摘要与命令原件见 [.adg/evidence/OCX-0110-20261011-C654-MACOS-CANDIDATE](../../.adg/evidence/OCX-0110-20261011-C654-MACOS-CANDIDATE) 及协作包 [20261011-c654-macOS候选重打包](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261011-c654-macOS候选重打包/README.md)。该记录与此前 `main@861fdeea` 的 macOS 构建证据并列保存，不能混用制品哈希。
+
+本轮只闭合 feature 分支的候选打包身份和 DMG 容器校验。macOS 正式签名 / 公证、真实安装升级 / 重启回读、Windows 普通与管理员权限及安装路径 / 数据根 / DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、自动检查性能与 stable 24h / beta 6h 周期、真实更新端点、全域事件执行证据和发布授权仍未闭合。`state: in_progress`、`release_authorized: false` 保持不变；不创建标签、不公开发布、不晋升 stable、不替换日常 0.1.7。

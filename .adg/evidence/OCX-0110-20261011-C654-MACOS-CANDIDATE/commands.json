@@ -1,0 +1,32 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-MACOS-CANDIDATE",
+  "cwd": "/Users/ezio/.codex/worktrees/ocx-018-macos-regression/opencodex-desktop/apps/desktop/tauri",
+  "commands": [
+    {
+      "command": "cargo tauri build --bundles app,dmg -- --locked",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "0.1.10 app and dmg bundles generated; frontend 170 modules transformed"
+    },
+    {
+      "command": "hdiutil verify 'target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg'",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "disk image checksum is VALID"
+    },
+    {
+      "command": "PlistBuddy CFBundleIdentifier, CFBundleShortVersionString and CFBundleVersion; file and otool -hv on app executable",
+      "exit_code": 0,
+      "result": "passed",
+      "summary": "bundle identity is 0.1.10 and executable is arm64 Mach-O"
+    },
+    {
+      "command": "codesign --verify --deep --strict 'target/release/bundle/macos/OpenCodeX Desktop.app'",
+      "exit_code": 1,
+      "result": "expected_scope_failure",
+      "summary": "ad hoc linker signature present but strict resource verification is not valid for release"
+    }
+  ],
+  "source_gate_reference": "OCX-0110-20261011-C654-SOURCE-REVALIDATION",
+  "interpretation": "构建和制品身份可复核；签名、公证、原生安装与发布门禁仍开放"
+}

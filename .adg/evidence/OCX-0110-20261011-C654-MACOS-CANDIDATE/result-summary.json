@@ -1,0 +1,18 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-MACOS-CANDIDATE",
+  "build_exit_code": 0,
+  "bundle_count": 2,
+  "bundle_outputs": ["app", "dmg"],
+  "version_identity": "0.1.10",
+  "architecture": "arm64",
+  "dmg_integrity": "passed",
+  "strict_codesign_verify": "failed_expected_for_unsigned_candidate",
+  "source_gate": "c654 source revalidation passed",
+  "native_install_acceptance": "open",
+  "native_ui_acceptance": "open",
+  "upgrade_restart_acceptance": "open",
+  "signing_notarization": "open",
+  "performance_acceptance": "open",
+  "release_authorized": false,
+  "interpretation": "已生成并核验 0.1.10 feature 分支 macOS arm64 候选制品，但整体仍为 in_progress"
+}

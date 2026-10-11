@@ -1,0 +1,60 @@
+{
+  "evidence_id": "OCX-0110-20261011-C654-MACOS-CANDIDATE",
+  "recorded_at": "2026-10-11T13:40:00+08:00",
+  "kind": "macos-arm64-candidate-rebuild",
+  "project_id": "opencodex-desktop",
+  "code_branch": "feature/0.1.10-maintenance",
+  "code_commit": "c654287c06da3e621091c1051ebc19ce1c0b1077",
+  "document_branch": "docs/governance-main",
+  "status": "candidate_build_passed_with_release_scope_limits",
+  "subject": "0.1.10 feature 分支 macOS arm64 候选重打包",
+  "environment": {
+    "host": "macOS 27.0.1 arm64",
+    "tauri_cli": "2.11.4",
+    "target": "aarch64-apple-darwin"
+  },
+  "artifacts": [
+    {
+      "kind": "app",
+      "path": "apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+      "version": "0.1.10",
+      "architecture": "arm64",
+      "canonical_ditto_zip_bytes": 4262901,
+      "canonical_ditto_zip_sha256": "87f939f19003285a9e9e296cf5097ad33f0944552fcb3b243a2771c9da28617f",
+      "executable_sha256": "e94b6cb758b4fbd4ecc67cd4af7f3dcbc024071be3b3d4d61f3b18589b574ec6",
+      "info_plist_sha256": "80f28d5ee5bbb972e9ff1f4b0b92d437f72abb53df70923f1b45f3bb4f8f47e5"
+    },
+    {
+      "kind": "dmg",
+      "path": "apps/desktop/tauri/target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "version": "0.1.10",
+      "architecture": "arm64",
+      "size_bytes": 4383007,
+      "sha256": "f2d903261bd7b6627d2e8872157e5bd03ee0ce18d7d66a1cea6ff5d33809bb25",
+      "hdiutil_verify": "passed"
+    }
+  ],
+  "bundle_identity": {
+    "cf_bundle_identifier": "com.gzers.opencodex.desktop",
+    "cf_bundle_short_version_string": "0.1.10",
+    "cf_bundle_version": "0.1.10",
+    "mach_o": "arm64 thin",
+    "signature": "adhoc; linker-signed; TeamIdentifier not set",
+    "strict_codesign_verify": "failed: code has no resources but signature indicates they must be present"
+  },
+  "test_process_observation": {
+    "isolated_candidate_pid": 86306,
+    "daily_install_pid": 75764,
+    "extra_candidate_test_instances": 0
+  },
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "未完成正式签名、公证和发布资产验收",
+    "未替代真实 macOS 安装、升级、重启回读和原生外观验收",
+    "Windows 普通 / 管理员权限、安装路径、数据根、DPI 与原生外观仍需真机证据",
+    "自动检查 CPU、RSS、网络、子进程、启动 p95、帧耗时和 stable / beta 长周期仍未闭合",
+    "不创建标签、不公开发布、不晋升 stable、不替换日常安装"
+  ],
+  "artifact_boundary": "候选构建证据，不是发布授权或完成证书"
+}
