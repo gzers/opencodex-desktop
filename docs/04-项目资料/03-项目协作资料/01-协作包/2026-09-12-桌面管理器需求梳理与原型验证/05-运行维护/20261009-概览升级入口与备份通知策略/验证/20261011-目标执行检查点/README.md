@@ -67,3 +67,11 @@
 注册表定向命令：cargo test --locked --manifest-path apps/desktop/tauri/Cargo.toml --features integration-test --test event_registry -- --nocapture；结果 33 passed / 0 failed。当前生产源码统计为 8 triggers、39 jobs、81 events、27 notification policies、87 emission sites、8 scheduling sites、8 UI feedback sites、12 paths、4 cleanup policies。
 
 该检查点只增加局部源码证据，不能替代全域事件调用点审阅、macOS / Windows 原生 UI 与安装、自动检查性能、真实更新 / 重启、稳定 / beta 周期、重新生成 0.1.10 制品、签名和发布确认；状态继续为 in_progress。
+
+## 2026-10-11 main 集成与 CI 成功回写
+
+代码实现已从 feature/0.1.10-maintenance 集成到 main，提交为 3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea，origin/main 已同步；CHANGELOG.md 已记录 0.1.10 未发布候选说明。GitHub Actions 38096673516（https://github.com/gzers/opencodex-desktop/actions/runs/38096673516）状态为 completed / success，release-tools、frontend、backend、backend-windows、build 五个顶层 job 全部成功。Windows CDP / backend regression、release build、final EXE smoke、artifact upload 通过，macOS arm64 bundle build 通过。
+
+本地门禁也已记录为通过：npm ci、类型检查、生产构建、UI 94 个测试文件 / 459 项通过；Cargo metadata、fmt、Clippy、Rust 测试（library 694 passed / 0 failed / 4 ignored，binary 2 passed）与 git diff --check 通过。证据目录为 .adg/evidence/OCX-0110-20261011-CI-38096673516/。
+
+这只说明 main 集成和 CI 源码 / 构建 / smoke 门禁通过。macOS 与 Windows 真实设备原生 UI、安装与路径、双权限数据根、自动检查性能与真实周期、真实更新 / 重启 / 恢复、签名制品、全域事件执行证据和发布确认仍未闭合；状态保持 in_progress，release_authorized: false。不得用 CI 成功替代原生验收，也不得把旧 0.1.9 Windows 包当作 0.1.10 发布资产。

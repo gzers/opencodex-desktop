@@ -1,0 +1,37 @@
+{
+  "evidence_id": "OCX-0110-20261011-CI-38096673516",
+  "integration": {
+    "branch": "main",
+    "commit": "3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea",
+    "origin_main_synchronized": true,
+    "changelog_updated_on_main": true
+  },
+  "ci": {
+    "run_id": 38096673516,
+    "status": "completed",
+    "conclusion": "success",
+    "top_level_jobs": 5,
+    "failed_jobs": 0,
+    "windows_final_exe_smoke": "passed",
+    "windows_artifact_upload": "passed",
+    "macos_arm64_bundle_build": "passed"
+  },
+  "local_gates": {
+    "frontend": "passed",
+    "backend": "passed",
+    "windows_protocol_and_smoke": "passed",
+    "diff_check": "passed"
+  },
+  "gates": {
+    "source_and_ci": "passed",
+    "native_platform_acceptance": "open",
+    "installer_path_permissions_and_dpi": "open",
+    "automatic_check_performance_and_real_cycles": "open",
+    "real_update_restart_and_recovery": "open",
+    "signing_and_release_assets": "open",
+    "release_authorization": "not_granted"
+  },
+  "task_state": "in_progress",
+  "release_authorized": false,
+  "interpretation": "CI 成功只证明集成源码和构建门禁通过；不能把 0.1.9 旧候选包或 CI smoke 当作 0.1.10 双平台发布制品。"
+}

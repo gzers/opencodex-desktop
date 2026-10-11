@@ -125,3 +125,11 @@ source_refs:
 本轮继续绑定运行态观测异常与启停执行异常的隔离规则：只有可执行文件、工作目录、`OPENCODEX_HOME`、对象、动作、阶段、通道和候选身份全部匹配时才解除对应观测异常；不能解除 start / stop / restart 的 execution 生命周期失败。注册表快照为 8 triggers / 39 jobs / 81 events / 27 notification policies / 87 emission sites / 8 scheduling sites / 8 UI feedback sites / 12 paths / 4 cleanup policies。
 
 详细命令、结果和限制见 [c654287c 源码复核](验证/20261011-c654源码复核/README.md) 与 `.adg/evidence/OCX-0110-20261011-C654-SOURCE-REVALIDATION/`。本轮只证明源码级回归；macOS / Windows 原生、安装、性能、真实更新 / 重启、签名、发布资产、真实迁移及发布门禁仍未闭合。协作包与 IMP 保持 `in_progress`，`release_authorization: false`，不构成完成证书、合并或发布授权。
+
+### 2026-10-11 main 集成 CI 回写
+
+feature/0.1.10-maintenance 已集成到 main，集成提交为 3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea，origin/main 已同步；CHANGELOG.md 已写入 0.1.10 未发布候选说明。GitHub Actions 38096673516（https://github.com/gzers/opencodex-desktop/actions/runs/38096673516）已完成并成功，release-tools、frontend、backend、backend-windows、build 全部通过。Windows CDP / backend regression、Windows release build、final EXE smoke 与 artifact upload 通过，macOS arm64 bundle build 通过。
+
+本地门禁为通过：npm ci、UI 类型检查、生产构建、94 个测试文件 / 459 项 UI 测试；Cargo metadata、fmt、Clippy -D warnings、Rust 测试（library 694 passed / 0 failed / 4 ignored，binary 2 passed）和 git diff --check。回执见 .adg/evidence/OCX-0110-20261011-CI-38096673516/。
+
+CI 成功只闭合集成源码、构建和 smoke 门禁。真实 macOS / Windows 原生 UI、安装与数据根、双权限、DPI / 云母 / 标题栏 / 动效 / 透明下拉框、自动检查性能和稳定周期、真实更新 / 重启 / 恢复、签名与发布门禁仍待验收；本协作包和 IMP 继续 in_progress，release_authorized: false。本次不创建发布标签、不公开发布、不替换日常 0.1.7。

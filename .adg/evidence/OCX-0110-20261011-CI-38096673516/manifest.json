@@ -1,0 +1,32 @@
+{
+  "evidence_id": "OCX-0110-20261011-CI-38096673516",
+  "created_at": "2026-10-11",
+  "kind": "integrated-ci-regression-and-build",
+  "status": "passed_with_scope_limits",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea",
+  "document_branch": "docs/governance-main",
+  "ci_run": {
+    "id": 38096673516,
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38096673516",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "subject": "0.1.10 main 集成提交的 CI、Windows 构建与 macOS arm64 bundle 门禁",
+  "jobs": {
+    "release-tools": "success",
+    "frontend": "success：Windows CDP protocol regression、npm ci、typecheck、UI tests、production build",
+    "backend": "success：fmt、Clippy、integration tests",
+    "backend-windows": "success：Windows backend regression、native dependency diagnostics、Windows release build、Windows final EXE smoke、artifact upload",
+    "build": "success：macOS arm64 bundle build"
+  },
+  "limits": [
+    "CI 成功不替代 macOS 原生 UI、隔离安装、升级保留、真实更新与重启验收",
+    "CI 成功不替代 Windows 普通 / 管理员双权限、实际安装目录、自定义路径、DPI、云母、标题栏、动效和透明下拉框验收",
+    "CI 成功不替代自动检查性能、stable 24 小时 / beta 6 小时周期和休眠恢复观察",
+    "CI 成功不代表签名、公证、Authenticode、真实更新端点、用户迁移或公开发布门禁完成"
+  ],
+  "task_state": "in_progress",
+  "release_authorized": false
+}

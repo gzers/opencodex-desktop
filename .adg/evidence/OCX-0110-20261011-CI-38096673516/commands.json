@@ -1,0 +1,30 @@
+{
+  "evidence_id": "OCX-0110-20261011-CI-38096673516",
+  "code_branch": "main",
+  "code_commit": "3bcd9318eeba4dc0e69d41c9dfe77b4bdb0a27ea",
+  "ci": {
+    "run_id": 38096673516,
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38096673516",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {"name": "release-tools", "status": "completed", "conclusion": "success"},
+      {"name": "frontend", "status": "completed", "conclusion": "success", "checks": ["Windows CDP protocol regression", "npm ci", "typecheck", "UI tests", "production build"]},
+      {"name": "backend", "status": "completed", "conclusion": "success", "checks": ["fmt", "Clippy", "integration tests"]},
+      {"name": "backend-windows", "status": "completed", "conclusion": "success", "checks": ["Windows backend regression", "Windows native dependency diagnostics", "Windows release build", "Windows final EXE smoke", "Windows artifact upload"]},
+      {"name": "build", "status": "completed", "conclusion": "success", "checks": ["macOS arm64 bundle build"]}
+    ]
+  },
+  "local_gates": [
+    {"command": "npm ci", "result": "passed"},
+    {"command": "npm run typecheck", "result": "passed"},
+    {"command": "npm run build", "result": "passed"},
+    {"command": "npm test -- --run", "result": "passed", "summary": "94 test files / 459 tests passed"},
+    {"command": "cargo metadata --locked --format-version 1", "result": "passed"},
+    {"command": "cargo fmt --all -- --check", "result": "passed"},
+    {"command": "cargo test --locked", "result": "passed", "summary": "library 694 passed / 0 failed / 4 ignored; binary 2 passed"},
+    {"command": "cargo clippy --locked --all-targets --all-features -- -D warnings", "result": "passed"},
+    {"command": "git diff --check", "result": "passed"}
+  ],
+  "interpretation": "main 集成源码、CI 构建和 smoke 通过；原生设备、签名、真实更新 / 重启、性能周期和发布授权仍未闭合。"
+}
