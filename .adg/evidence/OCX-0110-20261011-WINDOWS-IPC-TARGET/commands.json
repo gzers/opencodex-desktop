@@ -1,0 +1,14 @@
+{
+  "evidence_id": "OCX-0110-20261011-WINDOWS-IPC-TARGET",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "commands": [
+    {"cwd": "apps/desktop/tauri", "command": "cargo fmt --check", "exit_code": 0, "result": "passed"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo test --lib", "exit_code": 0, "result": "passed", "summary": "694 passed / 0 failed / 4 ignored"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo test --bin ocxd", "exit_code": 0, "result": "passed", "summary": "2 passed / 0 failed"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo clippy --all-targets --all-features -- -D warnings", "exit_code": 0, "result": "passed"},
+    {"cwd": "repository root", "command": "git diff --check", "exit_code": 0, "result": "passed"},
+    {"cwd": "apps/desktop/tauri", "command": "cargo check --target x86_64-pc-windows-msvc --all-targets", "exit_code": 101, "result": "environment_blocked", "summary": "当前 macOS 环境缺少 Windows MSVC SDK/C 头文件；ring 编译报 fatal error: assert.h file not found"}
+  ],
+  "interpretation": "本地源码门禁通过；Windows 目标检查被宿主工具链阻塞，不能替代真实 Windows 构建或双权限设备验收。"
+}

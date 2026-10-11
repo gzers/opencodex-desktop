@@ -142,3 +142,12 @@ CI 成功只闭合集成源码、构建和 smoke 门禁。真实 macOS / Windows
 证据目录：.adg/evidence/OCX-0110-20261011-MAIN-SOURCE-GATES/；验证说明：验证/20261011-main源码门禁/README.md。该记录只证明 main 的源码、构建和身份门禁，旧 feature 分支与既有记录不改写。旧 Windows 候选包实际版本为 0.1.9，必须重新生成 0.1.10 双平台制品。
 
 发布仍未授权：release_authorized: false，本协作包保持 in_progress。原生 UI、安装、双权限与数据根、自动检查性能和真实周期、真实更新 / 重启 / 恢复、签名、公证 / Authenticode、全域事件执行证据、真实用户迁移和发布门禁均待闭合。
+
+
+### 2026-10-11 Windows IPC 本机控制面
+
+代码 861fdeea39d1c45fa2beddb2cba6659b67735d9f 已推送到 main。Windows 本机 IPC 使用 Tokio named pipe，Unix 继续使用私有 Unix socket；两端共用 8 字节大端长度前缀与 JSON frame。ocxd CLI、服务注册、Tokio net feature 和本机访问限制已跨平台接通。
+
+本地源码门禁通过：fmt；Rust library 694 passed / 0 failed / 4 ignored；ocxd 2 passed / 0 failed；Clippy -D warnings；diff 检查。Windows MSVC 交叉检查在当前 macOS 宿主缺少 SDK/C 头文件、ring 找不到 assert.h 处失败，不能记为 Windows 编译通过。验证页见验证/20261011-Windows IPC本机控制面/README.md，原始证据见 .adg/evidence/OCX-0110-20261011-WINDOWS-IPC-TARGET/。
+
+这只闭合 IPC 源码局部范围。Windows 双权限真机 smoke、安装路径 / 数据根、原生 UI、DPI、云母、标题栏、动效、透明下拉框、macOS 原生安装、自动检查性能、真实更新 / 重启、签名和发布仍未闭合；0.1.10 双平台制品须重新生成。协作包与 IMP 继续 in_progress，release_authorized: false。

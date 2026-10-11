@@ -1,0 +1,27 @@
+{
+  "evidence_id": "OCX-0110-20261011-WINDOWS-IPC-TARGET",
+  "recorded_at": "2026-10-11T09:24:27+08:00",
+  "kind": "windows-ipc-source-gate",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "document_branch": "docs/governance-main",
+  "status": "passed_with_scope_limits",
+  "subject": "0.1.10 Windows 本机 IPC 控制面源码执行",
+  "scope": [
+    "Windows named pipe 本机控制面",
+    "Unix socket 与 Windows named pipe 共用长度帧和 JSON 协议",
+    "ocxd CLI、IPC 服务注册和 Tokio net feature 的跨平台接通",
+    "Unix UID / socket 权限保护保持有效",
+    "Rust fmt、库测试、ocxd 测试、Clippy 与 diff 检查"
+  ],
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "当前 macOS 环境没有 Windows MSVC SDK/C 头文件，交叉检查在 ring 找不到 assert.h 处失败；这不是 Windows 编译通过证据",
+    "Windows 普通权限 / 管理员权限 IPC smoke 尚未在真实 Windows 设备执行",
+    "安装路径、数据根、DPI、云母、原生标题栏、动效、透明下拉框、安装器、签名和真实更新仍未闭合",
+    "本记录不生成制品、不创建标签、不公开发布、不晋升 stable"
+  ],
+  "artifact_boundary": "源码提交已推送到 origin/main；0.1.10 双平台安装制品和原生验收仍需独立门禁。"
+}

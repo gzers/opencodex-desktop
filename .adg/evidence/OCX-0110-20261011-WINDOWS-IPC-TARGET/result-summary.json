@@ -1,0 +1,25 @@
+{
+  "evidence_id": "OCX-0110-20261011-WINDOWS-IPC-TARGET",
+  "verification": "main@861fdeea Windows 本机 IPC 控制面",
+  "implementation": {
+    "windows_transport": "Tokio named pipe",
+    "unix_transport": "private Unix socket",
+    "shared_protocol": "8-byte big-endian length prefix + JSON frame",
+    "pipe_identity": "OpenCodeXDesktop + current-user stable digest",
+    "local_access": "Windows reject-remote-clients and creator DACL; Unix UID/socket permissions retained"
+  },
+  "source_gates": {
+    "fmt": "passed",
+    "library_tests": "694 passed / 0 failed / 4 ignored",
+    "ocxd_tests": "2 passed / 0 failed",
+    "clippy": "passed",
+    "diff_check": "passed"
+  },
+  "windows_cross_check": "blocked by missing Windows MSVC SDK/C headers on macOS host",
+  "windows_real_device_smoke": "open",
+  "native_platform_acceptance": "open",
+  "performance_acceptance": "open",
+  "signing_and_release_assets": "open",
+  "release_authorized": false,
+  "interpretation": "仅闭合 Windows IPC 源码实现与本地回归；0.1.10 整体仍处于 in_progress。"
+}

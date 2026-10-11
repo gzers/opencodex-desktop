@@ -472,3 +472,12 @@ MSI 与 NSIS 均完成隔离安装、首屏和卸载：MSI OpenCodeX Desktop_0.1
 本证据只闭合 main 集成、源码回归、构建和版本身份检查。旧 feature 分支记录继续作为历史证据；此前 Windows 候选包真实身份仍为 0.1.9，不能作为 0.1.10 发布资产，必须基于当前 main 重新生成明确身份为 0.1.10 的 macOS / Windows 制品。
 
 macOS / Windows 原生 UI、安装与路径、双权限数据根、DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、自动检查性能与稳定 / beta 周期、真实更新 / 重启 / 恢复、签名制品、全域事件调用点、真实用户迁移及发布门禁仍未闭合。当前 release_authorized: false、状态继续 in_progress；不创建标签、不公开发布、不晋升 stable、不替换日常 0.1.7。
+
+
+### 2026-10-11 Windows 本机 IPC 控制面执行回写
+
+代码提交 861fdeea39d1c45fa2beddb2cba6659b67735d9f 已推送到 main。本提交把 Windows 本机控制面接到 Tokio named pipe；管道身份由 OpenCodeXDesktop 与当前账户稳定摘要组成，并启用拒绝远程客户端与创建者默认 DACL。Unix 保持私有 Unix socket、UID 校验和 socket 权限。两端共用 8 字节大端长度前缀与 JSON frame，ocxd CLI、IPC 服务注册和 Tokio net feature 已跨平台接通。
+
+本地源码门禁：cargo fmt --check、cargo test --lib（694 passed / 0 failed / 4 ignored）、cargo test --bin ocxd（2 passed / 0 failed）、cargo clippy --all-targets --all-features -- -D warnings、git diff --check 均通过。cargo check --target x86_64-pc-windows-msvc --all-targets 因当前 macOS 宿主缺少 Windows MSVC SDK/C 头文件，在 ring 找不到 assert.h 处失败；该结果记为环境阻塞，不能当作 Windows 编译通过。
+
+本轮只闭合 IPC 源码实现和本地回归。Windows 普通权限 / 管理员权限真机 smoke、安装目录和数据根、DPI、云母、原生标题栏、动效、透明下拉框、macOS 原生安装、自动检查性能、真实更新 / 重启、签名制品、全域事件执行证据仍待验。0.1.10 双平台制品必须基于当前 main 重新生成，旧 0.1.9 候选不能复用。证据见协作包验证/20261011-Windows IPC本机控制面/README.md 与 .adg/evidence/OCX-0110-20261011-WINDOWS-IPC-TARGET/。IMP / TASK 继续 in_progress，release_authorized: false。

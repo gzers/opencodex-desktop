@@ -86,3 +86,12 @@
 - 未闭合：双平台原生 UI / 安装 / 数据根 / 权限、Windows DPI / 云母 / 标题栏 / 动效 / 透明下拉框、自动检查性能与 stable 24 小时 / beta 6 小时、真实更新 / 重启 / 恢复、签名、公证 / Authenticode、全域事件调用点、真实用户迁移和发布门禁。
 
 本检查点只证明源码级门禁通过，不是完成证书。状态保持 in_progress，release_authorized: false；不创建标签、不公开发布、不晋升 stable、不替换日常 0.1.7。
+
+
+## 2026-10-11 Windows IPC 控制面执行检查点
+
+当前代码基线为 main@861fdeea39d1c45fa2beddb2cba6659b67735d9f，已推送且代码工作树干净。Windows 本机控制面已使用 Tokio named pipe；Unix 继续使用私有 Unix socket；长度帧和 JSON 协议保持共用。ocxd CLI、IPC 服务注册、Tokio net feature 和本机访问限制已接通。
+
+本地验证为：fmt 通过；Rust library 694 passed / 0 failed / 4 ignored；ocxd 2 passed / 0 failed；Clippy -D warnings 通过；diff 检查通过。Windows 交叉检查因 macOS 宿主缺少 Windows MSVC SDK/C 头文件而在 assert.h 处失败，不能替代 Windows 真机编译或 smoke。
+
+本检查点只闭合 IPC 源码局部门禁。Windows 普通权限 / 管理员权限真机、安装路径和数据根、DPI / 云母 / 原生标题栏 / 动效 / 透明下拉框、macOS 原生安装、自动检查性能、真实更新 / 重启、签名和发布资产仍待闭合。证据见验证/20261011-Windows IPC本机控制面/README.md 和 .adg/evidence/OCX-0110-20261011-WINDOWS-IPC-TARGET/。状态继续为 in_progress，release_authorized: false。
