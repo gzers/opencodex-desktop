@@ -253,6 +253,7 @@ pub const TRAY_ACTIONS: [TrayAction; 10] = [
 ];
 
 /// 构建顶部应用菜单，提供进程、视图与日志入口；动作仍走托盘请求桥。
+/// macOS 的首个子菜单保留为应用菜单，系统退出与隐藏走原生 responder chain。
 pub fn build_app_menu<R: tauri::Runtime>(
     app: &tauri::AppHandle<R>,
 ) -> tauri::Result<tauri::menu::Menu<R>> {
@@ -362,7 +363,28 @@ pub fn build_app_menu<R: tauri::Runtime>(
             &PredefinedMenuItem::select_all(app, None)?,
         ],
     )?;
-    Menu::with_items(app, &[&process, &edit, &view, &logs])
+    let menu = Menu::with_items(app, &[&process, &edit, &view, &logs])?;
+    #[cfg(target_os = "macos")]
+    {
+        // macOS 会把首个子菜单当作应用菜单。没有独立应用菜单时，
+        // 「进程」被改名为应用名，默认退出项也被覆盖，⌘Q 因而失效。
+        // 使用系统预定义退出，不把它交给依赖 WebView 的请求桥。
+        let application = Submenu::with_id_and_items(
+            app,
+            "menu-application",
+            "OpenCodeX Desktop",
+            true,
+            &[
+                &PredefinedMenuItem::hide(app, Some("隐藏 OpenCodeX Desktop"))?,
+                &PredefinedMenuItem::hide_others(app, Some("隐藏其他"))?,
+                &PredefinedMenuItem::show_all(app, Some("显示全部"))?,
+                &PredefinedMenuItem::separator(app)?,
+                &PredefinedMenuItem::quit(app, Some("退出 OpenCodeX Desktop"))?,
+            ],
+        )?;
+        menu.insert(&application, 0)?;
+    }
+    Ok(menu)
 }
 
 /// 把原生菜单事件映射为同一冻结动作域；ID 不在事件处理处重复字符串。
