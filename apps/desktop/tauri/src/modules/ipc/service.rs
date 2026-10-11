@@ -799,6 +799,9 @@ async fn run_ipc_binding_owned(
     let audit = super::audit::AuditStore::with_writers(&root, writers);
     crate::commands::run_readonly("CLI data root switch", move || {
         let _lease = lease;
+        // Settle storage before releasing the runtime lease, including unwind.
+        // A closure capture otherwise outlives the worker's local lease.
+        let binding = binding;
         let mut saved_pending = false;
         let result =
             std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| task(&mut saved_pending)))
@@ -821,6 +824,8 @@ async fn run_ipc_binding_owned(
         let _ = audit.record_during_binding(&record, &binding);
         if saved_pending {
             binding.commit();
+        } else {
+            drop(binding);
         }
         Ok(result)
     })
