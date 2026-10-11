@@ -1,0 +1,16 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-ISOLATED-STARTUP",
+  "startup": "passed",
+  "first_screen": "readable",
+  "isolated_data_root": "passed",
+  "window_close_behavior": "process remained alive; requires lifecycle decision and verification",
+  "graceful_exit": "not verified",
+  "lock_cleanup": "not verified; stale lock remained after forced termination",
+  "restart_readback": "not verified; restart was blocked by stale lock",
+  "real_dmg_install": "not verified",
+  "native_ui_acceptance": "open",
+  "signing_notarization": "open",
+  "release_authorized": false,
+  "release_accepted": false,
+  "interpretation": "候选包隔离启动证据已记录，但不形成 macOS 安装完成证书或 0.1.10 发布授权。"
+}

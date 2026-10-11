@@ -1,0 +1,28 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-ISOLATED-STARTUP",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "operations": [
+    {
+      "operation": "isolated_candidate_start",
+      "environment": "OPENCODEX_SANDBOX=1; OPENCODEX_SANDBOX_ROOT=/tmp/ocx-0110-native-install-graceful-20261011101622-65451",
+      "result": "passed",
+      "observed": "candidate app launched; first screen was read through native UI; data directories were created below the temporary root"
+    },
+    {
+      "operation": "window_close_observation",
+      "result": "observed_with_scope_limit",
+      "observed": "window hid / reopened while the candidate process remained alive"
+    },
+    {
+      "operation": "process_termination",
+      "result": "forced",
+      "observed": "terminal termination was used; this was not an app-owned graceful exit"
+    },
+    {
+      "operation": "restart_attempt",
+      "result": "blocked_by_stale_lock",
+      "observed": "data/manager-state/app.lock remained with pid 65472; clean exit and readback were not certified"
+    }
+  ],
+  "interpretation": "隔离启动与首屏观察通过；退出、锁清理和重启回读仍为开放门禁。"
+}

@@ -1,0 +1,50 @@
+{
+  "evidence_id": "OCX-0110-20261011-MACOS-ISOLATED-STARTUP",
+  "recorded_at": "2026-10-11T10:24:00+08:00",
+  "kind": "macos-native-candidate-isolated-startup",
+  "project_id": "opencodex-desktop",
+  "code_branch": "main",
+  "code_commit": "861fdeea39d1c45fa2beddb2cba6659b67735d9f",
+  "document_branch": "docs/governance-main",
+  "status": "startup_passed_lifecycle_open",
+  "subject": "0.1.10 macOS arm64 候选包临时隔离启动观察",
+  "environment": {
+    "host": "macOS arm64",
+    "sandbox_root": "/tmp/ocx-0110-native-install-graceful-20261011101622-65451",
+    "bundle_identifier": "com.gzers.opencodex.desktop.sandbox0110graceful",
+    "sandbox": true
+  },
+  "observations": {
+    "candidate_app_started": true,
+    "first_screen_readable": true,
+    "temporary_data_root_used": true,
+    "window_close_keeps_process_alive": true,
+    "forced_termination_used": true,
+    "stale_app_lock_remained": true,
+    "clean_exit_verified": false,
+    "restart_readback_verified": false,
+    "real_dmg_install_verified": false
+  },
+  "data_root_entries": [
+    "data/backups",
+    "data/cache",
+    "data/exports",
+    "data/logs/app.log",
+    "data/manager-state/app.lock",
+    "data/manager-state/data-root.json",
+    "data/manager-state/event-scope.json",
+    "data/manager-state/notifications.json",
+    "data/manager-state/preferences.json",
+    "data/manager-state/runtime.json",
+    "data/manager-state/update-schedule.json",
+    "data/opencodex-home",
+    "data/sync-state"
+  ],
+  "release_authorized": false,
+  "release_accepted": false,
+  "limitations": [
+    "窗口关闭后进程仍存活；本轮未证明应用自身退出路径是否清理锁。",
+    "随后使用终端终止进程，留下旧 PID 65472 的 app.lock；再次启动被旧锁阻止。",
+    "不替代真实 DMG 安装、升级保留、卸载、原生 UI、正式签名、公证或真实更新验收。"
+  ]
+}
