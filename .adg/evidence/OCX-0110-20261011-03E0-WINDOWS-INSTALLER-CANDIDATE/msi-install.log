@@ -1,0 +1,607 @@
+=== Verbose logging started: 10/11/2026  7:47:17  Build type: SHIP UNICODE 5.00.10011.00  Calling process: C:\Windows\system32\msiexec.exe ===
+MSI (c) (F0:94) [07:47:17:891]: Resetting cached policy values
+MSI (c) (F0:94) [07:47:17:891]: Machine policy value 'Debug' is 0
+MSI (c) (F0:94) [07:47:17:891]: ******* RunEngine:
+           ******* Product: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi
+           ******* Action:
+           ******* CommandLine: **********
+MSI (c) (F0:94) [07:47:17:893]: Client-side and UI is none or basic: Running entire install on the server.
+MSI (c) (F0:94) [07:47:17:893]: Grabbed execution mutex.
+MSI (c) (F0:94) [07:47:17:897]: Cloaking enabled.
+MSI (c) (F0:94) [07:47:17:897]: Attempting to enable all disabled privileges before calling Install on Server
+MSI (c) (F0:94) [07:47:17:899]: Incrementing counter to disable shutdown. Counter after increment: 0
+MSI (s) (A4:AC) [07:47:17:909]: Running installation inside multi-package transaction D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi
+MSI (s) (A4:AC) [07:47:17:909]: Grabbed execution mutex.
+MSI (s) (A4:34) [07:47:17:910]: Resetting cached policy values
+MSI (s) (A4:34) [07:47:17:910]: Machine policy value 'Debug' is 0
+MSI (s) (A4:34) [07:47:17:910]: ******* RunEngine:
+           ******* Product: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi
+           ******* Action:
+           ******* CommandLine: **********
+MSI (s) (A4:34) [07:47:17:914]: Machine policy value 'DisableUserInstalls' is 0
+MSI (s) (A4:34) [07:47:17:936]: Note: 1: 2203 2: C:\Windows\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (A4:34) [07:47:17:938]: SRSetRestorePoint skipped for this transaction.
+MSI (s) (A4:34) [07:47:17:938]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer 3: 2
+MSI (s) (A4:34) [07:47:17:938]: File will have security applied from OpCode.
+MSI (s) (A4:34) [07:47:17:951]: SOFTWARE RESTRICTION POLICY: Verifying package --> 'D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi' against software restriction policy
+MSI (s) (A4:34) [07:47:17:953]: Note: 1: 2262 2: DigitalSignature 3: -2147287038
+MSI (s) (A4:34) [07:47:17:953]: SOFTWARE RESTRICTION POLICY: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi is not digitally signed
+MSI (s) (A4:34) [07:47:17:954]: SOFTWARE RESTRICTION POLICY: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi is permitted to run at the 'unrestricted' authorization level.
+MSI (s) (A4:34) [07:47:17:954]: MSCOREE not loaded loading copy from system32
+MSI (s) (A4:34) [07:47:17:995]: End dialog not enabled
+MSI (s) (A4:34) [07:47:17:995]: Original package ==> D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi
+MSI (s) (A4:34) [07:47:17:995]: Package we're running from ==> C:\Windows\Installer\9b356.msi
+MSI (s) (A4:34) [07:47:17:997]: APPCOMPAT: Compatibility mode property overrides found.
+MSI (s) (A4:34) [07:47:17:997]: APPCOMPAT: looking for appcompat database entry with ProductCode '{B3033F85-CE66-4600-B76D-F9A95F261897}'.
+MSI (s) (A4:34) [07:47:17:998]: APPCOMPAT: no matching ProductCode found in database.
+MSI (s) (A4:34) [07:47:18:030]: Machine policy value 'TransformsSecure' is 1
+MSI (s) (A4:34) [07:47:18:030]: Note: 1: 2205 2:  3: MsiFileHash
+MSI (s) (A4:34) [07:47:18:030]: Machine policy value 'DisablePatch' is 0
+MSI (s) (A4:34) [07:47:18:030]: Machine policy value 'AllowLockdownPatch' is 0
+MSI (s) (A4:34) [07:47:18:030]: Machine policy value 'DisableLUAPatching' is 0
+MSI (s) (A4:34) [07:47:18:030]: Machine policy value 'DisableFlyWeightPatching' is 0
+MSI (s) (A4:34) [07:47:18:032]: APPCOMPAT: looking for appcompat database entry with ProductCode '{B3033F85-CE66-4600-B76D-F9A95F261897}'.
+MSI (s) (A4:34) [07:47:18:032]: APPCOMPAT: no matching ProductCode found in database.
+MSI (s) (A4:34) [07:47:18:034]: Transforms are not secure.
+MSI (s) (A4:34) [07:47:18:034]: PROPERTY CHANGE: Adding MsiLogFileLocation property. Its value is 'D:\a\opencodex-desktop\opencodex-desktop\test\out\windows-candidate\msi-install.log'.
+MSI (s) (A4:34) [07:47:18:034]: Command Line: REBOOT=ReallySuppress INSTALLDIR=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8 CURRENTDIRECTORY=D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri CLIENTUILEVEL=3 CLIENTPROCESSID=5616
+MSI (s) (A4:34) [07:47:18:034]: PROPERTY CHANGE: Adding PackageCode property. Its value is '{1DB10A09-E33C-4C94-A95A-5E6A5CCCFA2F}'.
+MSI (s) (A4:34) [07:47:18:034]: Product Code passed to Engine.Initialize:           ''
+MSI (s) (A4:34) [07:47:18:034]: Product Code from property table before transforms: '{B3033F85-CE66-4600-B76D-F9A95F261897}'
+MSI (s) (A4:34) [07:47:18:034]: Product Code from property table after transforms:  '{B3033F85-CE66-4600-B76D-F9A95F261897}'
+MSI (s) (A4:34) [07:47:18:034]: Product not registered: beginning first-time install
+MSI (s) (A4:34) [07:47:18:034]: Product {B3033F85-CE66-4600-B76D-F9A95F261897} is not managed.
+MSI (s) (A4:34) [07:47:18:034]: MSI_LUA: Credential prompt not required, user is an admin
+MSI (s) (A4:34) [07:47:18:034]: PROPERTY CHANGE: Adding ProductState property. Its value is '-1'.
+MSI (s) (A4:34) [07:47:18:034]: Entering CMsiConfigurationManager::SetLastUsedSource.
+MSI (s) (A4:34) [07:47:18:034]: User policy value 'SearchOrder' is 'nmu'
+MSI (s) (A4:34) [07:47:18:034]: Adding new sources is allowed.
+MSI (s) (A4:34) [07:47:18:034]: PROPERTY CHANGE: Adding PackagecodeChanging property. Its value is '1'.
+MSI (s) (A4:34) [07:47:18:034]: Package name extracted from package path: 'OpenCodeX Desktop_0.1.10_x64_en-US.msi'
+MSI (s) (A4:34) [07:47:18:034]: Package to be registered: 'OpenCodeX Desktop_0.1.10_x64_en-US.msi'
+MSI (s) (A4:34) [07:47:18:034]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:037]: Note: 1: 2262 2: AdminProperties 3: -2147287038
+MSI (s) (A4:34) [07:47:18:037]: Machine policy value 'DisableMsi' is 1
+MSI (s) (A4:34) [07:47:18:037]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (A4:34) [07:47:18:037]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (A4:34) [07:47:18:037]: Product installation will be elevated because user is admin and product is being installed per-machine.
+MSI (s) (A4:34) [07:47:18:037]: Running product '{B3033F85-CE66-4600-B76D-F9A95F261897}' with elevated privileges: Product is assigned.
+MSI (s) (A4:34) [07:47:18:037]: PROPERTY CHANGE: Adding REBOOT property. Its value is 'ReallySuppress'.
+MSI (s) (A4:34) [07:47:18:037]: PROPERTY CHANGE: Adding INSTALLDIR property. Its value is 'D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8'.
+MSI (s) (A4:34) [07:47:18:037]: PROPERTY CHANGE: Adding CURRENTDIRECTORY property. Its value is 'D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri'.
+MSI (s) (A4:34) [07:47:18:037]: PROPERTY CHANGE: Adding CLIENTUILEVEL property. Its value is '3'.
+MSI (s) (A4:34) [07:47:18:037]: PROPERTY CHANGE: Adding CLIENTPROCESSID property. Its value is '5616'.
+MSI (s) (A4:34) [07:47:18:037]: Machine policy value 'DisableAutomaticApplicationShutdown' is 0
+MSI (s) (A4:34) [07:47:18:060]: PROPERTY CHANGE: Adding MsiRestartManagerSessionKey property. Its value is '1b5320a123de274ebde1a84c80ca3998'.
+MSI (s) (A4:34) [07:47:18:060]: RESTART MANAGER: Session opened.
+MSI (s) (A4:34) [07:47:18:060]: TRANSFORMS property is now:
+MSI (s) (A4:34) [07:47:18:060]: PROPERTY CHANGE: Adding VersionDatabase property. Its value is '450'.
+MSI (s) (A4:34) [07:47:18:066]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming
+MSI (s) (A4:34) [07:47:18:066]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\Favorites
+MSI (s) (A4:34) [07:47:18:068]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Network Shortcuts
+MSI (s) (A4:34) [07:47:18:068]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\Documents
+MSI (s) (A4:34) [07:47:18:070]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Printer Shortcuts
+MSI (s) (A4:34) [07:47:18:070]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Recent
+MSI (s) (A4:34) [07:47:18:072]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\SendTo
+MSI (s) (A4:34) [07:47:18:072]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Templates
+MSI (s) (A4:34) [07:47:18:072]: SHELL32::SHGetFolderPath returned: C:\ProgramData
+MSI (s) (A4:34) [07:47:18:074]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Local
+MSI (s) (A4:34) [07:47:18:074]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\Pictures
+MSI (s) (A4:34) [07:47:18:076]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+MSI (s) (A4:34) [07:47:18:078]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
+MSI (s) (A4:34) [07:47:18:078]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs
+MSI (s) (A4:34) [07:47:18:078]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu
+MSI (s) (A4:34) [07:47:18:080]: SHELL32::SHGetFolderPath returned: C:\Users\Public\Desktop
+MSI (s) (A4:34) [07:47:18:082]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+MSI (s) (A4:34) [07:47:18:082]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+MSI (s) (A4:34) [07:47:18:083]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
+MSI (s) (A4:34) [07:47:18:084]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Start Menu
+MSI (s) (A4:34) [07:47:18:085]: SHELL32::SHGetFolderPath returned: C:\Users\runneradmin\Desktop
+MSI (s) (A4:34) [07:47:18:086]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Templates
+MSI (s) (A4:34) [07:47:18:086]: SHELL32::SHGetFolderPath returned: C:\Windows\Fonts
+MSI (s) (A4:34) [07:47:18:087]: Note: 1: 2898 2: MS Sans Serif 3: MS Sans Serif 4: 0 5: 16
+MSI (s) (A4:34) [07:47:18:093]: MSI_LUA: Setting MsiRunningElevated property to 1 because the install is already running elevated.
+MSI (s) (A4:34) [07:47:18:093]: PROPERTY CHANGE: Adding MsiRunningElevated property. Its value is '1'.
+MSI (s) (A4:34) [07:47:18:093]: PROPERTY CHANGE: Adding Privileged property. Its value is '1'.
+MSI (s) (A4:34) [07:47:18:093]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\MS Setup (ACME)\User Info 3: 2
+MSI (s) (A4:34) [07:47:18:093]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\MS Setup (ACME)\User Info 3: 2
+MSI (s) (A4:34) [07:47:18:093]: PROPERTY CHANGE: Adding DATABASE property. Its value is 'C:\Windows\Installer\9b356.msi'.
+MSI (s) (A4:34) [07:47:18:093]: PROPERTY CHANGE: Adding OriginalDatabase property. Its value is 'D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi'.
+MSI (s) (A4:34) [07:47:18:093]: Machine policy value 'MsiDisableEmbeddedUI' is 0
+MSI (s) (A4:34) [07:47:18:093]: EEUI - Disabling MsiEmbeddedUI for service because it's not a quiet/basic install
+MSI (s) (A4:34) [07:47:18:093]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (A4:34) [07:47:18:093]: Machine policy value 'DisableRollback' is 0
+MSI (s) (A4:34) [07:47:18:093]: User policy value 'DisableRollback' is 0
+MSI (s) (A4:34) [07:47:18:093]: PROPERTY CHANGE: Adding UILevel property. Its value is '2'.
+=== Logging started: 10/11/2026  7:47:18 ===
+MSI (s) (A4:34) [07:47:18:093]: Note: 1: 2203 2: C:\Windows\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (A4:34) [07:47:18:094]: Note: 1: 2205 2:  3: LaunchCondition
+MSI (s) (A4:34) [07:47:18:094]: Note: 1: 2228 2:  3: LaunchCondition 4: SELECT `Condition` FROM `LaunchCondition`
+MSI (s) (A4:34) [07:47:18:094]: APPCOMPAT: [DetectVersionLaunchCondition] Failed to initialize pRecErr.
+MSI (s) (A4:34) [07:47:18:130]: PROPERTY CHANGE: Adding ACTION property. Its value is 'INSTALL'.
+MSI (s) (A4:34) [07:47:18:130]: Doing action: INSTALL
+MSI (s) (A4:34) [07:47:18:130]: Note: 1: 2205 2:  3: ActionText
+Action start 7:47:18: INSTALL.
+MSI (s) (A4:34) [07:47:18:132]: Running ExecuteSequence
+MSI (s) (A4:34) [07:47:18:132]: Doing action: FindRelatedProducts
+MSI (s) (A4:34) [07:47:18:132]: Note: 1: 2205 2:  3: ActionText
+Action start 7:47:18: FindRelatedProducts.
+MSI (s) (A4:34) [07:47:18:134]: Doing action: AppSearch
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: FindRelatedProducts. Return value 1.
+Action start 7:47:18: AppSearch.
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2262 2: Signature 3: -2147287038
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\gzers\OpenCodeX Desktop 3: 2
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2262 2: Signature 3: -2147287038
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\gzers\OpenCodeX Desktop 3: 2
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2262 2: Signature 3: -2147287038
+MSI (s) (A4:34) [07:47:18:134]: PROPERTY CHANGE: Adding INSTALLED_WEBVIEW2_VERSION property. Its value is '153.0.4234.48'.
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2262 2: Signature 3: -2147287038
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5} 3: 2
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2262 2: Signature 3: -2147287038
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 1402 2: HKEY_CURRENT_USER\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5} 3: 2
+MSI (s) (A4:34) [07:47:18:134]: Doing action: ValidateProductID
+MSI (s) (A4:34) [07:47:18:134]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: AppSearch. Return value 1.
+Action start 7:47:18: ValidateProductID.
+MSI (s) (A4:34) [07:47:18:136]: Doing action: CostInitialize
+MSI (s) (A4:34) [07:47:18:136]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: ValidateProductID. Return value 1.
+MSI (s) (A4:34) [07:47:18:136]: Machine policy value 'MaxPatchCacheSize' is 10
+MSI (s) (A4:34) [07:47:18:158]: PROPERTY CHANGE: Adding ROOTDRIVE property. Its value is 'D:\'.
+MSI (s) (A4:34) [07:47:18:158]: PROPERTY CHANGE: Adding CostingComplete property. Its value is '0'.
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: Patch
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: MsiPatchHeaders
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: __MsiPatchFileList
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2228 2:  3: PatchPackage 4: SELECT `DiskId`, `PatchId`, `LastSequence` FROM `Media`, `PatchPackage` WHERE `Media`.`DiskId`=`PatchPackage`.`Media_` ORDER BY `DiskId`
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: Patch
+Action start 7:47:18: CostInitialize.
+MSI (s) (A4:34) [07:47:18:158]: Doing action: FileCost
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: CostInitialize. Return value 1.
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: MsiAssembly
+MSI (s) (A4:34) [07:47:18:158]: Note: 1: 2205 2:  3: Class
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: Extension
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: TypeLib
+Action start 7:47:18: FileCost.
+MSI (s) (A4:34) [07:47:18:160]: Doing action: CostFinalize
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: FileCost. Return value 1.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding OutOfDiskSpace property. Its value is '0'.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding OutOfNoRbDiskSpace property. Its value is '0'.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceAvailable property. Its value is '0'.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceRequired property. Its value is '0'.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceRemaining property. Its value is '0'.
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: Patch
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: Condition
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding TARGETDIR property. Its value is 'D:\'.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding ApplicationProgramsFolder property. Its value is 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\'.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Modifying INSTALLDIR property. Its current value is 'D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8'. Its new value: 'D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\'.
+MSI (s) (A4:34) [07:47:18:160]: Target path resolution complete. Dumping Directory table...
+MSI (s) (A4:34) [07:47:18:160]: Note: target paths subject to change (via custom actions or browsing)
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: TARGETDIR	, Object: D:\
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: WindowsFolder	, Object: C:\Windows\
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: ProgramMenuFolder	, Object: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: ApplicationProgramsFolder	, Object: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: DesktopFolder	, Object: C:\Users\Public\Desktop\
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: ProgramFiles64Folder	, Object: C:\Program Files\
+MSI (s) (A4:34) [07:47:18:160]: Dir (target): Key: INSTALLDIR	, Object: D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding INSTALLLEVEL property. Its value is '1'.
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: MsiAssembly
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2228 2:  3: MsiAssembly 4:  SELECT `MsiAssembly`.`Attributes`, `MsiAssembly`.`File_Application`, `MsiAssembly`.`File_Manifest`,  `Component`.`KeyPath` FROM `MsiAssembly`, `Component` WHERE  `MsiAssembly`.`Component_` = `Component`.`Component` AND `MsiAssembly`.`Component_` = ?
+Action start 7:47:18: CostFinalize.
+MSI (s) (A4:34) [07:47:18:160]: Doing action: SetARPINSTALLLOCATION
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: CostFinalize. Return value 1.
+MSI (s) (A4:34) [07:47:18:160]: PROPERTY CHANGE: Adding ARPINSTALLLOCATION property. Its value is 'D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\'.
+Action start 7:47:18: SetARPINSTALLLOCATION.
+MSI (s) (A4:34) [07:47:18:160]: Doing action: MigrateFeatureStates
+MSI (s) (A4:34) [07:47:18:160]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: SetARPINSTALLLOCATION. Return value 1.
+Action start 7:47:18: MigrateFeatureStates.
+MSI (s) (A4:34) [07:47:18:162]: Doing action: InstallValidate
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: MigrateFeatureStates. Return value 0.
+MSI (s) (A4:34) [07:47:18:162]: PROPERTY CHANGE: Deleting MsiRestartManagerSessionKey property. Its current value is '1b5320a123de274ebde1a84c80ca3998'.
+MSI (s) (A4:34) [07:47:18:162]: Feature: ShortcutsFeature; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Feature: MainProgram; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Feature: Environment; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Feature: External; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: ApplicationShortcutDesktop; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: RegistryEntries; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: Path; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: ocxd; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: CMP_UninstallShortcut; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: ApplicationShortcut; Installed: Absent;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: __ApplicationShortcutDesktop65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: __RegistryEntries65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: __CMP_UninstallShortcut65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Component: __ApplicationShortcut65; Installed: Null;   Request: Local;   Action: Local
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: BindImage
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: ProgId
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: PublishComponent
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: SelfReg
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: Extension
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: Font
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: Class
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: TypeLib
+Action start 7:47:18: InstallValidate.
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: _RemoveFilePath
+MSI (s) (A4:34) [07:47:18:162]: Note: 1: 2205 2:  3: MsiFileHash
+MSI (s) (A4:34) [07:47:18:164]: PROPERTY CHANGE: Modifying CostingComplete property. Its current value is '0'. Its new value: '1'.
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: BindImage
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: ProgId
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: PublishComponent
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: SelfReg
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: Extension
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: Font
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: Class
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: TypeLib
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2727 2:
+MSI (s) (A4:34) [07:47:18:164]: Note: 1: 2205 2:  3: FilesInUse
+MSI (s) (A4:34) [07:47:18:179]: Note: 1: 2727 2:
+MSI (s) (A4:34) [07:47:18:179]: Doing action: SetARPNOMODIFY
+MSI (s) (A4:34) [07:47:18:179]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: InstallValidate. Return value 1.
+Action start 7:47:18: SetARPNOMODIFY.
+MSI (s) (A4:34) [07:47:18:179]: Doing action: InstallInitialize
+MSI (s) (A4:34) [07:47:18:179]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: SetARPNOMODIFY. Return value 1.
+MSI (s) (A4:34) [07:47:18:179]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (A4:34) [07:47:18:179]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (A4:34) [07:47:18:179]: BeginTransaction: Locking Server
+MSI (s) (A4:34) [07:47:18:179]: Note: 1: 2203 2: C:\Windows\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (A4:34) [07:47:18:179]: SRSetRestorePoint skipped for this transaction.
+MSI (s) (A4:34) [07:47:18:179]: Note: 1: 2203 2: C:\Windows\Installer\inprogressinstallinfo.ipi 3: -2147287038
+MSI (s) (A4:34) [07:47:18:179]: Server not locked: locking for product {B3033F85-CE66-4600-B76D-F9A95F261897}
+Action start 7:47:18: InstallInitialize.
+MSI (s) (A4:34) [07:47:18:199]: Doing action: RemoveExistingProducts
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: InstallInitialize. Return value 1.
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 22
+Action start 7:47:18: RemoveExistingProducts.
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 23
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 16
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:199]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 21
+MSI (s) (A4:34) [07:47:18:201]: Doing action: ProcessComponents
+MSI (s) (A4:34) [07:47:18:201]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: RemoveExistingProducts. Return value 1.
+MSI (s) (A4:34) [07:47:18:201]: Note: 1: 2205 2:  3: MsiPatchCertificate
+MSI (s) (A4:34) [07:47:18:201]: LUA patching is disabled: missing MsiPatchCertificate table
+MSI (s) (A4:34) [07:47:18:201]: Resolving source.
+MSI (s) (A4:34) [07:47:18:201]: Resolving source to launched-from source.
+MSI (s) (A4:34) [07:47:18:201]: Setting launched-from source as last-used.
+MSI (s) (A4:34) [07:47:18:201]: PROPERTY CHANGE: Adding SourceDir property. Its value is 'D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\'.
+MSI (s) (A4:34) [07:47:18:201]: PROPERTY CHANGE: Adding SOURCEDIR property. Its value is 'D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\'.
+MSI (s) (A4:34) [07:47:18:201]: PROPERTY CHANGE: Adding SourcedirProduct property. Its value is '{B3033F85-CE66-4600-B76D-F9A95F261897}'.
+MSI (s) (A4:34) [07:47:18:201]: SOURCEDIR ==> D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\
+MSI (s) (A4:34) [07:47:18:201]: SOURCEDIR product ==> {B3033F85-CE66-4600-B76D-F9A95F261897}
+MSI (s) (A4:34) [07:47:18:201]: Determining source type
+MSI (s) (A4:34) [07:47:18:202]: Source type from package 'OpenCodeX Desktop_0.1.10_x64_en-US.msi': 2
+MSI (s) (A4:34) [07:47:18:202]: SECREPAIR: Hash Database: C:\Windows\Installer\SourceHash{B3033F85-CE66-4600-B76D-F9A95F261897}
+MSI (s) (A4:34) [07:47:18:227]: Note: 1: 2262 2: SourceHash 3: -2147287038
+MSI (s) (A4:34) [07:47:18:239]: SECREPAIR: New Hash Database creation complete.
+MSI (s) (A4:34) [07:47:18:246]: Source path resolution complete. Dumping Directory table...
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: TARGETDIR	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: WindowsFolder	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: ProgramMenuFolder	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: 	, ShortSubPath:
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: ApplicationProgramsFolder	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: OpenCodeX Desktop\	, ShortSubPath: ex_0dksl\
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: DesktopFolder	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: Desktop\	, ShortSubPath:
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: ProgramFiles64Folder	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: PFiles\	, ShortSubPath:
+MSI (s) (A4:34) [07:47:18:246]: Dir (source): Key: INSTALLDIR	, Object: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\	, LongSubPath: PFiles\OpenCodeX Desktop\	, ShortSubPath: PFiles\usgsdzy9\
+MSI (s) (A4:34) [07:47:18:246]: Note: 1: 2205 2:  3: ActionText
+MSI (s) (A4:34) [07:47:18:248]: Note: 1: 2205 2:  3: ActionText
+MSI (s) (A4:34) [07:47:18:248]: Note: 1: 2205 2:  3: ActionText
+Action start 7:47:18: ProcessComponents.
+MSI (s) (A4:34) [07:47:18:250]: Doing action: UnpublishFeatures
+MSI (s) (A4:34) [07:47:18:250]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: ProcessComponents. Return value 1.
+Action start 7:47:18: UnpublishFeatures.
+MSI (s) (A4:34) [07:47:18:250]: Doing action: RemoveRegistryValues
+MSI (s) (A4:34) [07:47:18:250]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: UnpublishFeatures. Return value 1.
+Action start 7:47:18: RemoveRegistryValues.
+MSI (s) (A4:34) [07:47:18:250]: Skipping action: RemoveShortcuts (condition is false)
+MSI (s) (A4:34) [07:47:18:250]: Doing action: RemoveFiles
+MSI (s) (A4:34) [07:47:18:250]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: RemoveRegistryValues. Return value 1.
+Action start 7:47:18: RemoveFiles.
+MSI (s) (A4:34) [07:47:18:252]: Doing action: InstallFiles
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: RemoveFiles. Return value 1.
+Action start 7:47:18: InstallFiles.
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: Patch
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2228 2:  3: Patch 4: SELECT `Patch`.`File_`, `Patch`.`Header`, `Patch`.`Attributes`, `Patch`.`Sequence`, `Patch`.`StreamRef_` FROM `Patch` WHERE `Patch`.`File_` = ? AND `Patch`.`#_MsiActive`=? ORDER BY `Patch`.`Sequence`
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1302
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: MsiSFCBypass
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2228 2:  3: MsiSFCBypass 4: SELECT `File_` FROM `MsiSFCBypass` WHERE `File_` = ?
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: MsiPatchHeaders
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2228 2:  3: MsiPatchHeaders 4: SELECT `Header` FROM `MsiPatchHeaders` WHERE `StreamRef` = ?
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: MsiPatchHeaders
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: PatchPackage
+MSI (s) (A4:34) [07:47:18:252]: Doing action: CreateShortcuts
+MSI (s) (A4:34) [07:47:18:252]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: InstallFiles. Return value 1.
+Action start 7:47:18: CreateShortcuts.
+MSI (s) (A4:34) [07:47:18:256]: Doing action: WriteRegistryValues
+MSI (s) (A4:34) [07:47:18:256]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: CreateShortcuts. Return value 1.
+Action start 7:47:18: WriteRegistryValues.
+MSI (s) (A4:34) [07:47:18:256]: Doing action: RegisterUser
+MSI (s) (A4:34) [07:47:18:256]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: WriteRegistryValues. Return value 1.
+Action start 7:47:18: RegisterUser.
+MSI (s) (A4:34) [07:47:18:258]: Doing action: RegisterProduct
+MSI (s) (A4:34) [07:47:18:258]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: RegisterUser. Return value 1.
+MSI (s) (A4:34) [07:47:18:258]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:258]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1302
+Action start 7:47:18: RegisterProduct.
+MSI (s) (A4:34) [07:47:18:258]: PROPERTY CHANGE: Adding ProductToBeRegistered property. Its value is '1'.
+MSI (s) (A4:34) [07:47:18:258]: Doing action: PublishFeatures
+MSI (s) (A4:34) [07:47:18:258]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: RegisterProduct. Return value 1.
+Action start 7:47:18: PublishFeatures.
+MSI (s) (A4:34) [07:47:18:260]: Doing action: PublishProduct
+MSI (s) (A4:34) [07:47:18:260]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: PublishFeatures. Return value 1.
+Action start 7:47:18: PublishProduct.
+MSI (s) (A4:34) [07:47:18:262]: Skipping action: DownloadAndInvokeBootstrapper (condition is false)
+MSI (s) (A4:34) [07:47:18:262]: Doing action: InstallFinalize
+MSI (s) (A4:34) [07:47:18:262]: Note: 1: 2205 2:  3: ActionText
+Action ended 7:47:18: PublishProduct. Return value 1.
+MSI (s) (A4:34) [07:47:18:262]: Running Script: C:\Windows\Installer\MSIB47F.tmp
+MSI (s) (A4:34) [07:47:18:262]: PROPERTY CHANGE: Adding UpdateStarted property. Its value is '1'.
+MSI (s) (A4:34) [07:47:18:264]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (A4:34) [07:47:18:264]: Machine policy value 'DisableRollback' is 0
+MSI (s) (A4:34) [07:47:18:264]: Note: 1: 2318 2:
+MSI (s) (A4:34) [07:47:18:284]: Note: 1: 2318 2:
+MSI (s) (A4:34) [07:47:18:284]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2
+MSI (s) (A4:34) [07:47:18:284]: Executing op: Header(Signature=1397708873,Version=500,Timestamp=1565212138,LangId=0,Platform=589824,ScriptType=1,ScriptMajorVersion=21,ScriptMinorVersion=4,ScriptAttributes=1)
+Action start 7:47:18: InstallFinalize.
+MSI (s) (A4:34) [07:47:18:284]: Executing op: ProductInfo(ProductKey={B3033F85-CE66-4600-B76D-F9A95F261897},ProductName=OpenCodeX Desktop,PackageName=OpenCodeX Desktop_0.1.10_x64_en-US.msi,Language=0,Version=65546,Assignment=1,ObsoleteArg=0,ProductIcon=ProductIcon,,PackageCode={1DB10A09-E33C-4C94-A95A-5E6A5CCCFA2F},,,InstanceType=0,LUASetting=0,RemoteURTInstalls=0,ProductDeploymentFlags=3)
+MSI (s) (A4:34) [07:47:18:285]: Executing op: DialogInfo(Type=0,Argument=0)
+MSI (s) (A4:34) [07:47:18:285]: Executing op: DialogInfo(Type=1,Argument=OpenCodeX Desktop)
+MSI (s) (A4:34) [07:47:18:285]: Executing op: RollbackInfo(,RollbackAction=Rollback,RollbackDescription=Rolling back action: [1],,CleanupAction=RollbackCleanup,CleanupDescription=Removing backup files File: [1],)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: SetBaseline(Baseline=0,)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: SetBaseline(Baseline=1,)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: ActionStart(Name=ProcessComponents,Description=Updating component registration,)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: ProgressTotal(Total=6,Type=1,ByteEquivalent=24000)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: ComponentRegister(ComponentId={C3F10F4C-0818-5270-ADDC-6F1357B8B2D9},KeyPath=21:\Software\gzers\OpenCodeX Desktop\Desktop Shortcut,State=3,,Disk=1,SharedDllRefCount=0,BinaryType=1)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: ComponentRegister(ComponentId={26FD65D9-1253-5394-A4BD-0690B098BF8C},KeyPath=21:\Software\gzers\OpenCodeX Desktop\InstallDir,State=3,,Disk=1,SharedDllRefCount=0,BinaryType=1)
+MSI (s) (A4:34) [07:47:18:286]: Executing op: ComponentRegister(ComponentId={4F79C528-4B03-580B-947C-4C6F103FC98E},KeyPath=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\opencodex-desktop.exe,State=3,,Disk=1,SharedDllRefCount=0,BinaryType=1)
+MSI (s) (A4:34) [07:47:18:288]: Executing op: ComponentRegister(ComponentId={EC8D0A98-18A3-4823-A4A9-B150B8EB54B5},KeyPath=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\ocxd.exe,State=3,,Disk=1,SharedDllRefCount=0,BinaryType=1)
+MSI (s) (A4:34) [07:47:18:289]: Executing op: ComponentRegister(ComponentId={9F494C2B-895E-5860-B464-27455CE4E315},KeyPath=21:\Software\gzers\OpenCodeX Desktop\Uninstaller Shortcut,State=3,,Disk=1,SharedDllRefCount=0,BinaryType=1)
+MSI (s) (A4:34) [07:47:18:290]: Executing op: ComponentRegister(ComponentId={7366BE85-5B94-5EA2-9CD6-C5A71258DF0F},KeyPath=21:\Software\gzers\OpenCodeX Desktop\Start Menu Shortcut,State=3,,Disk=1,SharedDllRefCount=0,BinaryType=1)
+MSI (s) (A4:34) [07:47:18:291]: Executing op: ActionStart(Name=InstallFiles,Description=Copying new files File: [1],  Directory: [9],  Size: [6],)
+MSI (s) (A4:34) [07:47:18:291]: Executing op: ProgressTotal(Total=8954368,Type=0,ByteEquivalent=1)
+MSI (s) (A4:34) [07:47:18:291]: Executing op: SetTargetFolder(Folder=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\)
+MSI (s) (A4:34) [07:47:18:291]: Executing op: SetSourceFolder(Folder=1\PFiles\usgsdzy9\|PFiles\OpenCodeX Desktop\)
+MSI (s) (A4:34) [07:47:18:291]: Executing op: ChangeMedia(,MediaPrompt=Please insert the disk: ,MediaCabinet=app.cab,BytesPerTick=65536,CopierType=2,ModuleFileName=C:\Windows\Installer\9b356.msi,,,,,IsFirstPhysicalMedia=1)
+MSI (s) (A4:34) [07:47:18:291]: Executing op: FileCopy(SourceName=ocxd.exe,SourceCabKey=Bin_ocxd,DestName=ocxd.exe,Attributes=512,FileSize=281088,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,Version=0.1.10.0,Language=0,InstallMode=62914560,,,,,,,)
+MSI (s) (A4:34) [07:47:18:296]: File: D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\ocxd.exe;	To be installed;	Won't patch;	No existing file
+MSI (s) (A4:34) [07:47:18:296]: Source for file 'Bin_ocxd' is compressed
+MSI (s) (A4:34) [07:47:18:299]: Executing op: FileCopy(SourceName=3iewmbpe.exe|opencodex-desktop.exe,SourceCabKey=Path,DestName=opencodex-desktop.exe,Attributes=1536,FileSize=8673280,PerTick=65536,,VerifyMedia=1,,,,,CheckCRC=0,Version=0.1.10.0,Language=0,InstallMode=62914560,,,,,,,)
+MSI (s) (A4:34) [07:47:18:299]: File: D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\opencodex-desktop.exe;	To be installed;	Won't patch;	No existing file
+MSI (s) (A4:34) [07:47:18:299]: Source for file 'Path' is compressed
+MSI (s) (A4:34) [07:47:18:340]: Executing op: CacheSizeFlush(,)
+MSI (s) (A4:34) [07:47:18:340]: Executing op: ActionStart(Name=CreateShortcuts,Description=Creating shortcuts Shortcut: [1],)
+MSI (s) (A4:34) [07:47:18:342]: Executing op: IconCreate(Icon=ProductIcon,Data=BinaryData)
+MSI (s) (A4:34) [07:47:18:344]: Executing op: SetTargetFolder(Folder=23\OpenCodeX Desktop\)
+MSI (s) (A4:34) [07:47:18:346]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs
+MSI (s) (A4:34) [07:47:18:346]: Executing op: ShortcutCreate(Name=kl_b57eh|OpenCodeX Desktop,,,FileName=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\opencodex-desktop.exe,,WorkingDir=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\,Icon=ProductIcon,,,,Description=Runs OpenCodeX Desktop,,,,)
+MSI (s) (A4:34) [07:47:18:416]: Executing op: ShortcutPropertyCreate(ShortcutName=kl_b57eh|OpenCodeX Desktop,PropertyKey=System.AppUserModel.ID,PropVariantValue=com.gzers.opencodex.desktop)
+MSI (s) (A4:34) [07:47:18:427]: Executing op: SetTargetFolder(Folder=25)
+MSI (s) (A4:34) [07:47:18:429]: SHELL32::SHGetFolderPath returned: C:\Users\Public\Desktop
+MSI (s) (A4:34) [07:47:18:429]: Executing op: ShortcutCreate(Name=usodqigf|OpenCodeX Desktop,,,FileName=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\opencodex-desktop.exe,,WorkingDir=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\,,,,,Description=Runs OpenCodeX Desktop,,,,)
+MSI (s) (A4:34) [07:47:18:431]: Executing op: SetTargetFolder(Folder=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\)
+MSI (s) (A4:34) [07:47:18:431]: Executing op: ShortcutCreate(Name=kmcqt9co|Uninstall OpenCodeX Desktop,,,FileName=C:\Windows\system32\msiexec.exe,Arguments=/x {B3033F85-CE66-4600-B76D-F9A95F261897},,,,,,Description=Uninstalls OpenCodeX Desktop,,,,)
+MSI (s) (A4:34) [07:47:18:432]: Executing op: ActionStart(Name=WriteRegistryValues,Description=Writing system registry values Key: [1], Name: [2], Value: [3],)
+MSI (s) (A4:34) [07:47:18:432]: Executing op: ProgressTotal(Total=4,Type=1,ByteEquivalent=13200)
+MSI (s) (A4:34) [07:47:18:433]: Executing op: RegOpenKey(Root=-2147483647,Key=Software\gzers\OpenCodeX Desktop,,BinaryType=1,,)
+MSI (s) (A4:34) [07:47:18:433]: Executing op: RegAddValue(Name=Desktop Shortcut,Value=#1,)
+MSI (s) (A4:34) [07:47:18:434]: Executing op: RegAddValue(Name=InstallDir,Value=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\,)
+MSI (s) (A4:34) [07:47:18:434]: Executing op: RegAddValue(Name=Uninstaller Shortcut,Value=#1,)
+MSI (s) (A4:34) [07:47:18:434]: Executing op: RegAddValue(Name=Start Menu Shortcut,Value=#1,)
+MSI (s) (A4:34) [07:47:18:434]: Executing op: ActionStart(Name=RegisterProduct,Description=Registering product [1],)
+MSI (s) (A4:34) [07:47:18:434]: Executing op: ChangeMedia(,MediaPrompt=Please insert the disk: ,MediaCabinet=app.cab,BytesPerTick=0,CopierType=2,ModuleFileName=C:\Windows\Installer\9b356.msi,,,,,IsFirstPhysicalMedia=1)
+MSI (s) (A4:34) [07:47:18:434]: Executing op: DatabaseCopy(DatabasePath=C:\Windows\Installer\9b356.msi,ProductCode={B3033F85-CE66-4600-B76D-F9A95F261897},,,)
+MSI (s) (A4:34) [07:47:18:434]: Note: 1: 1402 2: UNKNOWN\Products\58F3303B66EC00647BD69F9AF5628179\InstallProperties 3: 2
+MSI (s) (A4:34) [07:47:18:434]: Note: 1: 2318 2: C:\Windows\Installer\9b35a.msi
+MSI (s) (A4:34) [07:47:18:434]: File will have security applied from OpCode.
+MSI (s) (A4:34) [07:47:18:437]: Executing op: ProductRegister(UpgradeCode={30FC0B19-5C02-5849-A234-D548E7AFC0DE},VersionString=0.1.10,,,InstallLocation=D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\,InstallSource=D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\,Publisher=gzers,,,,NoModify=1,NoRepair=1,,,,,,,EstimatedSize=8744,,,,)
+MSI (s) (A4:34) [07:47:18:439]: Executing op: ProductCPDisplayInfoRegister()
+MSI (s) (A4:34) [07:47:18:441]: Executing op: ActionStart(Name=PublishFeatures,Description=Publishing Product Features Feature: [1],)
+MSI (s) (A4:34) [07:47:18:441]: Executing op: FeaturePublish(Feature=ShortcutsFeature,Parent=MainProgram,Absent=2,Component=5=v{gau+RB1c~8)p-?{n0w3VA*j=ADJWWjK{RitU.fT4[t}FJDX_57=cG$&*F1_*MoaAKF_8Gw^'Q]+()
+MSI (s) (A4:34) [07:47:18:441]: Executing op: FeaturePublish(Feature=MainProgram,,Absent=2,Component=2U1U0vv=rBwJ_@Vii*8U)
+MSI (s) (A4:34) [07:47:18:443]: Executing op: FeaturePublish(Feature=Environment,Parent=MainProgram,Absent=2,Component=0w3VA*j=ADJWWjK{RitUEGB%uO}d3?y!PxA'Qk?c)
+MSI (s) (A4:34) [07:47:18:443]: Executing op: FeaturePublish(Feature=External,,Absent=2,)
+MSI (s) (A4:34) [07:47:18:443]: Executing op: ActionStart(Name=PublishProduct,Description=Publishing product information,)
+MSI (s) (A4:34) [07:47:18:443]: Executing op: CleanupConfigData()
+MSI (s) (A4:34) [07:47:18:443]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\UserData\S-1-5-18\Products\58F3303B66EC00647BD69F9AF5628179\Patches 3: 2
+MSI (s) (A4:34) [07:47:18:443]: Executing op: RegisterPatchOrder(Continue=0,SequenceType=1,Remove=0)
+MSI (s) (A4:34) [07:47:18:443]: Note: 1: 1402 2: UNKNOWN\Products\58F3303B66EC00647BD69F9AF5628179\Patches 3: 2
+MSI (s) (A4:34) [07:47:18:443]: Executing op: ProductPublish(PackageKey={1DB10A09-E33C-4C94-A95A-5E6A5CCCFA2F})
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Executing op: UpgradeCodePublish(UpgradeCode={30FC0B19-5C02-5849-A234-D548E7AFC0DE})
+MSI (s) (A4:34) [07:47:18:445]: Executing op: SourceListPublish(,,,,NumberOfDisks=1)
+MSI (s) (A4:34) [07:47:18:445]: Note: 1: 1402 2: UNKNOWN\Installer\Products\58F3303B66EC00647BD69F9AF5628179\SourceList 3: 2
+MSI (s) (A4:34) [07:47:18:445]: Executing op: ProductPublishClient(,,)
+MSI (s) (A4:34) [07:47:18:447]: Executing op: SourceListRegisterLastUsed(SourceProduct={B3033F85-CE66-4600-B76D-F9A95F261897},LastUsedSource=D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\)
+MSI (s) (A4:34) [07:47:18:447]: Entering CMsiConfigurationManager::SetLastUsedSource.
+MSI (s) (A4:34) [07:47:18:447]: Specifed source is already in a list.
+MSI (s) (A4:34) [07:47:18:447]: User policy value 'SearchOrder' is 'nmu'
+MSI (s) (A4:34) [07:47:18:447]: Adding new sources is allowed.
+MSI (s) (A4:34) [07:47:18:447]: Set LastUsedSource to: D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\.
+MSI (s) (A4:34) [07:47:18:447]: Set LastUsedType to: n.
+MSI (s) (A4:34) [07:47:18:447]: Set LastUsedIndex to: 1.
+MSI (s) (A4:34) [07:47:18:447]: Executing op: End(Checksum=0,ProgressTotalHDWord=0,ProgressTotalLDWord=13689536)
+MSI (s) (A4:34) [07:47:18:459]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (A4:34) [07:47:18:459]: User policy value 'DisableRollback' is 0
+MSI (s) (A4:34) [07:47:18:459]: Machine policy value 'DisableRollback' is 0
+MSI (s) (A4:34) [07:47:18:465]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (A4:34) [07:47:18:467]: Note: 1: 2318 2:
+MSI (s) (A4:34) [07:47:18:469]: Note: 1: 2318 2:
+MSI (s) (A4:34) [07:47:18:471]: No System Restore sequence number for this installation.
+MSI (s) (A4:34) [07:47:18:471]: Unlocking Server
+MSI (s) (A4:34) [07:47:18:475]: PROPERTY CHANGE: Deleting UpdateStarted property. Its current value is '1'.
+MSI (s) (A4:34) [07:47:18:477]: Skipping action: LaunchApplication (condition is false)
+Action ended 7:47:18: InstallFinalize. Return value 1.
+Action ended 7:47:18: INSTALL. Return value 1.
+Property(S): UpgradeCode = {30FC0B19-5C02-5849-A234-D548E7AFC0DE}
+Property(S): INSTALLDIR = D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\
+Property(S): INSTALLED_WEBVIEW2_VERSION = 153.0.4234.48
+Property(S): WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1
+Property(S): DesktopFolder = C:\Users\Public\Desktop\
+Property(S): ApplicationProgramsFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\
+Property(S): WIXUI_INSTALLDIR = INSTALLDIR
+Property(S): WixUIRMOption = UseRM
+Property(S): ALLUSERS = 1
+Property(S): ARPNOMODIFY = 1
+Property(S): ARPNOREPAIR = yes
+Property(S): ARPINSTALLLOCATION = D:\a\_temp\ocxd-candidate-msi-805f2f434799437fae4f9f8e94f59cc8\
+Property(S): TARGETDIR = D:\
+Property(S): ProgramFiles64Folder = C:\Program Files\
+Property(S): ProgramMenuFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
+Property(S): SourceDir = D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\
+Property(S): REINSTALLMODE = amus
+Property(S): ARPPRODUCTICON = ProductIcon
+Property(S): WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT = Launch OpenCodeX Desktop
+Property(S): Manufacturer = gzers
+Property(S): ProductCode = {B3033F85-CE66-4600-B76D-F9A95F261897}
+Property(S): ProductLanguage = 1033
+Property(S): ProductName = OpenCodeX Desktop
+Property(S): ProductVersion = 0.1.10
+Property(S): DefaultUIFont = WixUI_Font_Normal
+Property(S): WixUI_Mode = InstallDir
+Property(S): ErrorDialog = ErrorDlg
+Property(S): SecureCustomProperties = ARPNOREPAIR;AUTOLAUNCHAPP;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED
+Property(S): MsiLogFileLocation = D:\a\opencodex-desktop\opencodex-desktop\test\out\windows-candidate\msi-install.log
+Property(S): PackageCode = {1DB10A09-E33C-4C94-A95A-5E6A5CCCFA2F}
+Property(S): ProductState = -1
+Property(S): PackagecodeChanging = 1
+Property(S): REBOOT = ReallySuppress
+Property(S): CURRENTDIRECTORY = D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri
+Property(S): CLIENTUILEVEL = 3
+Property(S): CLIENTPROCESSID = 5616
+Property(S): VersionDatabase = 450
+Property(S): VersionMsi = 5.00
+Property(S): VersionNT = 603
+Property(S): VersionNT64 = 603
+Property(S): WindowsBuild = 9600
+Property(S): ServicePackLevel = 0
+Property(S): ServicePackLevelMinor = 0
+Property(S): MsiNTProductType = 3
+Property(S): MsiNTSuiteDataCenter = 1
+Property(S): WindowsFolder = C:\Windows\
+Property(S): WindowsVolume = C:\
+Property(S): System64Folder = C:\Windows\system32\
+Property(S): SystemFolder = C:\Windows\SysWOW64\
+Property(S): RemoteAdminTS = 1
+Property(S): TempFolder = C:\Users\RUNNER~1\AppData\Local\Temp\
+Property(S): ProgramFilesFolder = C:\Program Files (x86)\
+Property(S): CommonFilesFolder = C:\Program Files (x86)\Common Files\
+Property(S): CommonFiles64Folder = C:\Program Files\Common Files\
+Property(S): AppDataFolder = C:\Users\runneradmin\AppData\Roaming\
+Property(S): FavoritesFolder = C:\Users\runneradmin\Favorites\
+Property(S): NetHoodFolder = C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Network Shortcuts\
+Property(S): PersonalFolder = C:\Users\runneradmin\Documents\
+Property(S): PrintHoodFolder = C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Printer Shortcuts\
+Property(S): RecentFolder = C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\Recent\
+Property(S): SendToFolder = C:\Users\runneradmin\AppData\Roaming\Microsoft\Windows\SendTo\
+Property(S): TemplateFolder = C:\ProgramData\Microsoft\Windows\Templates\
+Property(S): CommonAppDataFolder = C:\ProgramData\
+Property(S): LocalAppDataFolder = C:\Users\runneradmin\AppData\Local\
+Property(S): MyPicturesFolder = C:\Users\runneradmin\Pictures\
+Property(S): AdminToolsFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\
+Property(S): StartupFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\
+Property(S): StartMenuFolder = C:\ProgramData\Microsoft\Windows\Start Menu\
+Property(S): FontsFolder = C:\Windows\Fonts\
+Property(S): GPTSupport = 1
+Property(S): OLEAdvtSupport = 1
+Property(S): ShellAdvtSupport = 1
+Property(S): MsiAMD64 = 26
+Property(S): Msix64 = 26
+Property(S): Intel = 26
+Property(S): PhysicalMemory = 16379
+Property(S): VirtualMemory = 16598
+Property(S): AdminUser = 1
+Property(S): MsiTrueAdminUser = 1
+Property(S): LogonUser = runneradmin
+Property(S): UserSID = S-1-5-21-1643835476-1616584234-1346609752-500
+Property(S): UserLanguageID = 1033
+Property(S): ComputerName = runnervmfi6oq
+Property(S): SystemLanguageID = 1033
+Property(S): ScreenX = 1024
+Property(S): ScreenY = 768
+Property(S): CaptionHeight = 23
+Property(S): BorderTop = 1
+Property(S): BorderSide = 1
+Property(S): TextHeight = 16
+Property(S): TextInternalLeading = 3
+Property(S): ColorBits = 32
+Property(S): TTCSupport = 1
+Property(S): Time = 7:47:18
+Property(S): Date = 10/11/2026
+Property(S): MsiNetAssemblySupport = 4.8.9221.0
+Property(S): MsiWin32AssemblySupport = 6.3.26100.33438
+Property(S): RedirectedDllSupport = 2
+Property(S): MsiRunningElevated = 1
+Property(S): Privileged = 1
+Property(S): DATABASE = C:\Windows\Installer\9b356.msi
+Property(S): OriginalDatabase = D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.1.10_x64_en-US.msi
+Property(S): UILevel = 2
+Property(S): ACTION = INSTALL
+Property(S): ROOTDRIVE = D:\
+Property(S): CostingComplete = 1
+Property(S): OutOfDiskSpace = 0
+Property(S): OutOfNoRbDiskSpace = 0
+Property(S): PrimaryVolumeSpaceAvailable = 0
+Property(S): PrimaryVolumeSpaceRequired = 0
+Property(S): PrimaryVolumeSpaceRemaining = 0
+Property(S): INSTALLLEVEL = 1
+Property(S): SOURCEDIR = D:\a\opencodex-desktop\opencodex-desktop\apps\desktop\tauri\target\release\bundle\msi\
+Property(S): SourcedirProduct = {B3033F85-CE66-4600-B76D-F9A95F261897}
+Property(S): ProductToBeRegistered = 1
+MSI (s) (A4:34) [07:47:18:493]: Note: 1: 1707
+MSI (s) (A4:34) [07:47:18:493]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:493]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1707
+MSI (s) (A4:34) [07:47:18:493]: Note: 1: 2205 2:  3: Error
+MSI (s) (A4:34) [07:47:18:493]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1709
+MSI (s) (A4:34) [07:47:18:493]: Product: OpenCodeX Desktop -- Installation completed successfully.
+
+MSI (s) (A4:34) [07:47:18:493]: Windows Installer installed the product. Product Name: OpenCodeX Desktop. Product Version: 0.1.10. Product Language: 1033. Manufacturer: gzers. Installation success or error status: 0.
+
+MSI (s) (A4:34) [07:47:18:499]: Deferring clean up of packages/files, if any exist
+MSI (s) (A4:34) [07:47:18:499]: MainEngineThread is returning 0
+MSI (s) (A4:AC) [07:47:18:501]: RESTART MANAGER: Session closed.
+MSI (s) (A4:AC) [07:47:18:501]: No System Restore sequence number for this installation.
+=== Logging stopped: 10/11/2026  7:47:18 ===
+MSI (s) (A4:AC) [07:47:18:503]: User policy value 'DisableRollback' is 0
+MSI (s) (A4:AC) [07:47:18:503]: Machine policy value 'DisableRollback' is 0
+MSI (s) (A4:AC) [07:47:18:505]: Incrementing counter to disable shutdown. Counter after increment: 0
+MSI (s) (A4:AC) [07:47:18:505]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2
+MSI (s) (A4:AC) [07:47:18:507]: Note: 1: 2265 2:  3: -2147287035
+MSI (s) (A4:AC) [07:47:18:507]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2
+MSI (s) (A4:AC) [07:47:18:507]: Decrementing counter to disable shutdown. If counter >= 0, shutdown will be denied.  Counter after decrement: -1
+MSI (c) (F0:94) [07:47:18:507]: Decrementing counter to disable shutdown. If counter >= 0, shutdown will be denied.  Counter after decrement: -1
+MSI (c) (F0:94) [07:47:18:507]: MainEngineThread is returning 0
+=== Verbose logging stopped: 10/11/2026  7:47:18 ===

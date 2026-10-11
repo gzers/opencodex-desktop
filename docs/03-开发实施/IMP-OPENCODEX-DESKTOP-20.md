@@ -579,3 +579,13 @@ artifact ID `11694523976` 的关键原件、窗口截图、环境、原始字节
 [CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 已 completed / success，五个 job（frontend、release-tools、backend、backend-windows、macOS build）全部成功；headSha 为 `03e0ad942c16fe2ef75473eb6693012b3ae684ac`。此前 07:32 UTC 的运行中快照保留，以上为后续状态。核对远端 main 及同 SHA 候选查重后，2026-10-11 15:38（UTC+8）仅触发一次 `windows-candidate.yml`，新 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291) 已 in_progress，headSha 与最新 CI 一致；不能在完成、下载、核验前写作候选通过。
 
 原始 CI JSON、触发前后列表、远端引用、dispatch stdout / stderr、命令时间与哈希见 `.adg/evidence/OCX-0110-20261011-03E0-CI-CANDIDATE-DISPATCH/`。下一步收齐该 run 的安装器及 runner 证据，独立核验资产身份后交 Windows 隔离设备完成双权限 / 物理 DPI / 默认数据根 / 原生验收；macOS、性能、真实周期、真实更新与正式签名门禁继续保留。未创建版本标签、Release 或 stable 晋升；唯一测试 PID42681、日常 PID75764 保持原状。
+
+### 2026-10-11 同 SHA Windows 安装候选核验与 macOS 同根生命周期
+
+最新 `main@03e0ad942c16fe2ef75473eb6693012b3ae684ac` 的 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291) 已 completed / success，package job 于 15:49:19（UTC+8）完成。两个 artifact ZIP 的本地摘要与 GitHub digest 一致；MSI / NSIS 本地重算大小与 SHA256，和 ZIP 条目、runner 回执相符。两份 artifact 的 installer-verification.json 字节一致。临时 runner 报告安装 / 最终 EXE 首屏 / 卸载均通过；最终 EXE 的预期 bundle marker 与安装后哈希相符，但安装后 EXE 只由 runner 回执证明，本机没有独立提取重算。安装器、ZIP、最终 EXE 摘要及环境原件见 `.adg/evidence/OCX-0110-20261011-03E0-WINDOWS-INSTALLER-CANDIDATE/`。
+
+本轮发现并限定两项证据：main-window.png 来自 CDP WebView 捕获，图中左侧透明区域黑底、文字对比度低；需要真机整窗 / CDP 对照，根因未确认，不判云母 / 原生外观通过。startup-diagnostics 权限字段读取 PowerShell harness 当前 token，不是目标应用进程 token；不能代替普通 / 管理员应用双权限验收。runner 采用沙箱根、结束时强杀测试进程树，因此不替代新装默认 `<安装目录>\data`、正常退出 / 锁清理或物理 DPI。候选仍 codeSigned / releaseAccepted false。
+
+macOS 继续使用原隔离副本，15:44:41（UTC+8）对 PID42681 按原生 ⌘Q；随后独立进程观察确认退出，非阻塞锁可取得，锁文件未删除或截断。15:45:03 显式以同一 test-data 根重启为 PID75489，环境、内嵌源码身份与锁 metadata 一致，只有一个测试实例。退出前 / 退出后 / 重启后 / 最终四次快照中，原备份 `bk_20261011072259_f9e7a1ac` 的 preferences.json（1371 bytes）与 backup-manifest.json 摘要完全一致；原生设置回读原根，月份默认收起，原备份记录可见。日常 PID75764 与启动时间不变。原始 AX / 截图、完整 procNotFound / -600 异常、只读锁探针方法及回执见 `.adg/evidence/OCX-0110-20261011-03E0-MACOS-SAME-ROOT-LIFECYCLE/`；no-change diff、误点和裁切画面均保留说明。该项只闭合隔离同根生命周期，不代替原件正式签名、默认数据根或真实安装升级。
+
+当前同 SHA CI / Windows 候选资产已收齐，后续进入 Windows 实际目标进程双权限、物理 DPI、默认根及原生外观验收；并继续树表、配对性能 / 真实周期、真实更新 / 事件与正式签名门禁。IMP / TASK 保持 `in_progress`、`release_authorized: false`、`release_accepted: false`。本轮只回写文档与证据，没有代码变更；未迁移真实数据、替换日常安装、创建标签、公开发布或晋升 stable。

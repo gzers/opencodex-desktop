@@ -1,0 +1,30 @@
+{
+  "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+  "result": "pass-with-bounded-scope",
+  "test_executable_sha256": "a9de09589d4631df9e5046332fb263e33d776c64cddf133410d2bd6091bf0151",
+  "normal_quit_pid": 42681,
+  "restart_pid": 75489,
+  "same_root": "/private/tmp/ocx-0110-03e0-candidate-3wpphyvk/test-data",
+  "released_lock_without_deletion_or_truncation": true,
+  "lock_held_after_restart": true,
+  "backup_payload_and_manifest_unchanged_across_four_snapshots": true,
+  "backup_record_visible_after_restart": true,
+  "daily_process_unchanged_in_snapshots": true,
+  "single_test_instance_in_snapshots": true,
+  "observed_failures_preserved": [
+    "02 AX no-change diff; 03 supplies full pre-quit AX",
+    "04 full post-quit AX procNotFound/-600 error",
+    "09 coordinate click missed; 10 corrects navigation",
+    "11 record partially clipped; 13 visibly includes full record"
+  ],
+  "not_accepted": [
+    "official signing/notarization",
+    "real installed upgrade",
+    "macOS default Application Support root",
+    "checkbox/mixed/disabled physical DPI matrix",
+    "removed-row focus recovery",
+    "same-machine performance",
+    "real update lifecycle",
+    "public release"
+  ]
+}

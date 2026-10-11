@@ -1,0 +1,85 @@
+{
+  "captured_at": "2026-10-11T07:58:50.519841+00:00",
+  "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+  "run_id": 38122059291,
+  "result": "pass-with-bounded-scope",
+  "archive_checks": [
+    {
+      "artifact_id": 11696430158,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "bytes": 7562238,
+      "sha256": "98319a0d2c2b5bdb2c6ec1806d1470820cf006e11d7548422cc494b04af3b005",
+      "github_digest_matches": true,
+      "expires_at": "2026-10-25T07:49:13Z"
+    },
+    {
+      "artifact_id": 11696305214,
+      "name": "windows-candidate-evidence",
+      "bytes": 1604535,
+      "sha256": "86dc0986d3f76087d9bd5ae2b1223ce5d6a8e2bc76d623f32e10b4e41ce1277d",
+      "github_digest_matches": true,
+      "expires_at": "2026-10-25T07:49:14Z"
+    }
+  ],
+  "installer_checks": [
+    {
+      "kind": "msi",
+      "installer_bytes": 4538368,
+      "installer_sha256": "1c803172d7cca9d294c011f40e0b58c1e057f33680b32cc29759f41e649e3527",
+      "installer_locally_rehashed": true,
+      "installed_exe_sha256_runner_receipt": "c6e4b492db5c31107a7f1ecd3e3cff1bbeee9007859ec84dc067ec689f41b0a4",
+      "installed_exe_locally_extracted_or_rehashed": false,
+      "startup_pid_runner_receipt": 2500,
+      "harness_token_elevated": true,
+      "target_process_token_verified": false
+    },
+    {
+      "kind": "nsis",
+      "installer_bytes": 3231828,
+      "installer_sha256": "c6c0520c37d3957d66132f086c4f0fb85a9ed2df37d7e4b9fe02437781357cde",
+      "installer_locally_rehashed": true,
+      "installed_exe_sha256_runner_receipt": "d9314c1908e883571fe8ed8f9b8cde2b10300a544dd140bd4f9490cf6d811aa0",
+      "installed_exe_locally_extracted_or_rehashed": false,
+      "startup_pid_runner_receipt": 7596,
+      "harness_token_elevated": true,
+      "target_process_token_verified": false
+    }
+  ],
+  "same_receipt_in_both_artifacts": true,
+  "receipt_sha256": "bd2810039883604c96b0d1c5b0518668710c87d9806b6d2caaf2468aa03a5eab",
+  "evidence_sources": [
+    {
+      "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+      "path": "test/smoke/windows-webview.mjs",
+      "bytes": 5386,
+      "sha256": "58951de41ca392e811a50e31793a925ec0d7c492b5471927cd06cfc570da8c9b"
+    },
+    {
+      "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+      "path": "test/smoke/windows-startup.ps1",
+      "bytes": 7825,
+      "sha256": "8e483786ed74d456bdf47e4e677278553e09ac4894572a1a7ae461529aef392a"
+    },
+    {
+      "source_sha": "03e0ad942c16fe2ef75473eb6693012b3ae684ac",
+      "path": "test/smoke/windows-installer.ps1",
+      "bytes": 5581,
+      "sha256": "f4f634b1f5ee7f63aee52b4e27ac104dd0a060eb79c9667b4599d11ea3ce76cb"
+    }
+  ],
+  "capture_method": "CDP Page.captureScreenshot of WebView; no native desktop/window-compositor capture",
+  "token_method": "WindowsIdentity.GetCurrent in PowerShell harness; not OpenProcessToken(target PID)",
+  "teardown_method": "Kill(true) of isolated test process tree; not normal quit or lock release acceptance",
+  "large_assets_retained_external": "/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/ocx-0110-03e0-windows-jlrwq9hs",
+  "not_accepted": [
+    "physical DPI",
+    "ordinary/admin application tokens",
+    "native Mica/contrast/glass",
+    "default install data root",
+    "normal quit and lock release",
+    "same-machine performance",
+    "real update lifecycle",
+    "Authenticode",
+    "public release"
+  ]
+}

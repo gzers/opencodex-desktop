@@ -1,0 +1,12 @@
+{
+  "started_at": "2026-10-11T07:44:41.519Z",
+  "action": "test0110Final.pressKey(super+q)",
+  "target_pid": 42681,
+  "shortcut_returned": true,
+  "ax_error": {
+    "name": "Error",
+    "message": "Computer Use server error -10005: Error Domain=NSCocoaErrorDomain Code=256 \"The file “OpenCodeX Desktop.app” couldn’t be opened.\" UserInfo={NSURL=file:///tmp/ocx-0110-03e0-candidate-3wpphyvk/test-install/OpenCodeX%20Desktop.app/, NSUnderlyingError=0x76b809a430 {Error Domain=NSOSStatusErrorDomain Code=-600 \"procNotFound: no eligible process with specified descriptor\" UserInfo={_LSLine=392, _LSFunction=_LSAnnotateAndSendAppleEventWithOptions, _LSFile=LSOpenCore.mm, _LSErrorMessage=procNotFound}}}",
+    "stack": "Error: Computer Use server error -10005: Error Domain=NSCocoaErrorDomain Code=256 \"The file “OpenCodeX Desktop.app” couldn’t be opened.\" UserInfo={NSURL=file:///tmp/ocx-0110-03e0-candidate-3wpphyvk/test-install/OpenCodeX%20Desktop.app/, NSUnderlyingError=0x76b809a430 {Error Domain=NSOSStatusErrorDomain Code=-600 \"procNotFound: no eligible process with specified descriptor\" UserInfo={_LSLine=392, _LSFunction=_LSAnnotateAndSendAppleEventWithOptions, _LSFile=LSOpenCore.mm, _LSErrorMessage=procNotFound}}}\n    at /private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpTtPzEw/kernel.js:1595:16\n    at Object.settle (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpTtPzEw/worker-runtime.js:396:5)\n    at /private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpTtPzEw/kernel.js:1871:11\n    at handleInputFrame (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpTtPzEw/worker-runtime.js:418:7)\n    at Socket.<anonymous> (/private/var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpTtPzEw/worker-runtime.js:434:9)\n    at Socket.emit (node:events:514:28)\n    at addChunk (node:internal/streams/readable:568:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:519:3)\n    at Readable.push (node:internal/streams/readable:399:5)\n    at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)"
+  },
+  "finished_at": "2026-10-11T07:44:41.673Z"
+}

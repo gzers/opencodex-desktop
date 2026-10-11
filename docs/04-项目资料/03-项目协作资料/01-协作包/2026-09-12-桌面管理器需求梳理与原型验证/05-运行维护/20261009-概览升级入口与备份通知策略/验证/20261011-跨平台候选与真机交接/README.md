@@ -83,17 +83,30 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 ## 候选生成顺序（最新基线）
 
 1. 已完成：释放顺序及 macOS 应用菜单修复已推送。最新 03e0 的 [CI 38120149821](https://github.com/gzers/opencodex-desktop/actions/runs/38120149821) 已 completed / success，五个 job 全部成功；3d856 通过仅作历史轮次。
-2. 核对远端 main 及同 SHA 候选查重后，2026-10-11 15:38（UTC+8）仅触发一次 03e0 的 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291)，已 in_progress，headSha 与最新 CI 相同。等待完成并下载核验，不重复 dispatch。3d856 候选已成功，仅作历史证据。
-3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装、局部退出 / 同根重启、备份树表及更新详情已观察；签名和完整原生仍待验，旧候选通过项不自动继承。
+2. 已完成：2026-10-11 15:38（UTC+8）单次触发的 03e0 [Windows 候选 38122059291](https://github.com/gzers/opencodex-desktop/actions/runs/38122059291) completed / success，package job 于 15:49:19 完成；两个 ZIP 的 GitHub digest、MSI / NSIS 本地摘要与回执已核对。最终安装后 EXE 身份由 runner 回执支持，尚未本机独立提取重算。3d856 候选仅作历史证据。
+3. macOS 已按 03e0 重打候选并留存原件，隔离复制安装、同根正常退出 / 锁释放 / 重启及备份保留已补齐，见下方后续验收；签名、真实安装升级和完整原生仍待验，旧候选通过项不自动继承。
 4. 完成下面的设备、性能和真实更新验收，补齐 TASK 所需检查，再进行发布审阅。候选工作流不创建 Release 或版本标签。
 
-完整 CI 后续快照、候选查重、单次 dispatch 与源码身份的原件见 `.adg/evidence/OCX-0110-20261011-03E0-CI-CANDIDATE-DISPATCH/`；不覆盖此前 07:32 UTC 的运行中快照。新候选当前尚未完成，不作为 Windows 安装或设备验收通过证据。
+完整 CI 后续快照、候选查重、单次 dispatch 与源码身份的原件见 `.adg/evidence/OCX-0110-20261011-03E0-CI-CANDIDATE-DISPATCH/`；完成及下载核验原件见 `.adg/evidence/OCX-0110-20261011-03E0-WINDOWS-INSTALLER-CANDIDATE/`。不覆盖此前 07:32 UTC 的运行中快照；临时 runner 安装 smoke 不作为 Windows 真机完整验收。
+
+## 2026-10-11 15:44—15:50（UTC+8）后续验收
+
+同 SHA Windows artifact 已下载并重算 ZIP / 安装器 SHA256，候选与证据 artifact 的 installer-verification.json 字节一致。临时 runner 的 MSI / NSIS 新装、最终 EXE 首屏与卸载回执均 pass；关于信息 0.1.10 / Windows、主 UI 已挂载、沙箱根初始化、准备态、CLI 关闭。最终 EXE 与预期 Tauri bundle marker 的哈希一致，这是 runner 回执，本机未提取安装后 EXE 独立重算。两个 artifact 预计 2026-10-25 15:49（UTC+8）到期。
+
+| 安装器 | 本地 SHA256 |
+|---|---|
+| MSI，4538368 bytes | `1c803172d7cca9d294c011f40e0b58c1e057f33680b32cc29759f41e649e3527` |
+| NSIS，3231828 bytes | `c6c0520c37d3957d66132f086c4f0fb85a9ed2df37d7e4b9fe02437781357cde` |
+
+Windows 图片为 CDP WebView 捕获，左侧透明区域呈黑色、部分文字对比度低，原因未确认；应补真机整窗与 CDP 对照，不能直接认定云母外观通过。startup-diagnostics 中权限字段属于 PowerShell harness 当前 token，不是目标应用进程；后续双权限必须记录实际目标 token。沙箱启动与脚本最终强杀不能证明默认安装目录数据根、普通退出或锁释放。codeSigned / releaseAccepted 仍 false。
+
+macOS 对原唯一测试 PID42681 原生 ⌘Q 后，独立确认进程退出且锁可取得；不删除 / 不截断锁文件。显式同根重启为 PID75489，锁重新由该 PID 持有；四次快照的原备份载荷与清单哈希不变。重启后设置回读原根、根 / 年展开、月份 10 收起，原记录 `bk_20261011072259_f9e7a1ac`（15:22:59 / 1.3KB）可见；日常 PID75764 和启动时间不变。只闭合同根隔离生命周期。原件见 `.adg/evidence/OCX-0110-20261011-03E0-MACOS-SAME-ROOT-LIFECYCLE/`，保留完整退出后 AX 异常和误点 / 裁切尝试；不覆盖先前来源不明的退出后窗口记录，也不替代原件正式签名、默认 Application Support 根及真实安装升级。
 
 ## 下一步及完成条件
 
 | 顺序 | 工作 | 完成条件 |
 |---|---|---|
-| 1 | 收齐同源码 CI 和 Windows 安装候选 | CI 五个 job 全部通过，候选 run 的 headSha、MSI / NSIS、最终 EXE 身份与哈希一致 |
+| 1 | 已收齐同源码 CI 和 Windows 安装候选 | CI 五个 job 通过，候选 headSha 一致、ZIP / MSI / NSIS 本地核验通过；安装后 EXE 由 runner 回执匹配，设备独立重算仍保留 |
 | 2 | 双平台隔离原生与安装验收 | Windows 双权限 / 数据根 / 物理 DPI / 外观 / IPC；macOS 正常退出、安装升级、树表焦点及对齐；均保存同 SHA 证据 |
 | 3 | 自动检查性能与真实周期 | 下述 0.1.9 配对预算、缓存命中零请求、慢网离线、stable 24h / beta 6h 实测通过 |
 | 4 | 真实更新和事件生命周期 | 两类更新详情 / 进度 / 备份阻断 / 重启回读、异常精确解除与通道隔离有执行证据 |
@@ -111,6 +124,7 @@ Windows job 已完成严格 Clippy、后端回归、release EXE 构建及最终 
 | 安装与全部存储 | 自选实际安装位置的新装默认 `<安装目录>\data`；旧根 / 显式自定义根优先；偏好、备份、日志、缓存、托管面板 HOME 都回读同一活动根 |
 | 权限与失败路径 | 不可写安装目录明确失败，无静默 AppData 回退；隔离夹具验证切根拒绝忙写者、失败解除、成功待重启与重启回读 |
 | 原生外观 | 标题栏、云母、窗口控制与拖动、动效、下拉玻璃、浅深主题 / 高中低画质、顶部左右光层边界 |
+| CDP 黑底观察 | 保存同一准备态的真机整窗和 CDP 对照；定位透明侧栏黑底 / 低对比度是否为原生合成或捕获差异，不用 WebView 截图代替云母验收 |
 | DPI 与树表 | 实际显示缩放 100 / 125 / 150 / 200%；复选框 / 半选 / 禁用 / 箭头 / 叶占位 / 长文字与焦点、刷新保留层级 |
 | IPC | GUI 先显式启用；同 SHA 的 ocxd 只读查询核验目标实例；断开观察者后操作与审计所有权、重启世代和释放顺序 |
 | 事件 | 按注册表核对现有发出点，成功只解除精确匹配异常；切通道保留面板状态；进度 tick 不重复通知 |
