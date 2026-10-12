@@ -1,0 +1,54 @@
+{
+  "recorded_at": "2026-10-12T02:40:56.559756+00:00",
+  "branch": "main",
+  "commit": "01a1d85504781f4cb189a68ed85d1d803a1409ff",
+  "parent": "fb34f5b91c3a6feb5b41f11f9527171c4bf742f5",
+  "node": "v26.8.1",
+  "npm": "11.19.0",
+  "changed_paths": [
+    "apps/desktop/ui/src/features/updates/scheduler.ts",
+    "apps/desktop/ui/tests/update-scheduler.test.ts"
+  ],
+  "file_sha256": {
+    "apps/desktop/ui/src/features/updates/scheduler.ts": "1fdc3625bf87511cada30a51ce17755f2635fb6d258a663fb1081f38979fc652",
+    "apps/desktop/ui/tests/update-scheduler.test.ts": "8aa683fa80e4fd7891a2ce9b758b531326ae95f8200ff1430f2495ab9bb8f177"
+  },
+  "runs": [
+    {
+      "log": "red-test.log",
+      "exit_code": 1,
+      "files": 1,
+      "tests": 11,
+      "passed": 9,
+      "failed": 2,
+      "meaning": "修复前新增回归复现排队唤醒提前查询"
+    },
+    {
+      "log": "green-test.log",
+      "exit_code": 0,
+      "files": 1,
+      "tests": 11,
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "log": "related-tests.log",
+      "exit_code": 0,
+      "files": 8,
+      "tests": 38,
+      "passed": 38,
+      "failed": 0
+    },
+    {
+      "log": "build.log",
+      "exit_code": 0,
+      "command": "npm run build",
+      "includes": "vue-tsc --noEmit && vite build",
+      "warnings": "4 INEFFECTIVE_DYNAMIC_IMPORT warnings"
+    }
+  ],
+  "performance_acceptance": false,
+  "foreground_test_performed": false,
+  "real_data_touched": false,
+  "release_authorized": false
+}

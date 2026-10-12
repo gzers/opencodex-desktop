@@ -1,0 +1,71 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-SCHEDULE-ERROR-BACKOFF-20261012",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-SCHEDULE-ERROR-BACKOFF-20261012.json",
+    "apps/desktop/ui/src/features/updates/scheduler.ts",
+    "apps/desktop/ui/tests/update-scheduler.test.ts",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/06-执行基线与契约.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/README.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/archive-verification.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/build.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/green-test.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/manifest.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/red-test.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/related-tests.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/run-results.json"
+  ],
+  "checks": [
+    {
+      "name": "local:schedule-error-evidence-integrity",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/archive-verification.json"
+    },
+    {
+      "name": "local:schedule-error-red-green",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/run-results.json"
+    },
+    {
+      "name": "local:typecheck-production-build",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/build.log"
+    },
+    {
+      "name": "local:update-related-regression",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/related-tests.log"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/README.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "b088be5ac79bce564e4acac1f6355f0cc5fb73a9df2d50fc2751a6500605464a",
+      "summary": "记录状态读取失败退避被唤醒提前的复现、源码修复及局部回归；性能与整体门禁继续开放。"
+    },
+    {
+      "target": "0110-execution-contract",
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/06-执行基线与契约.md",
+      "after_digest": "1ea9d3d63a0275c9947ce4fe7b3945030682b29ee9bb4c2f12922bdc09483486",
+      "summary": "明确本进程状态错误的单调时间30min重试下限，不改变持久对象退避和手动查询。"
+    }
+  ],
+  "completed_at": "2026-10-12T02:44:36.806643+00:00",
+  "summary": "01a1d855已推送；调度错误重试下限修复，修复前2失败原样保留，修复后11项及相关38项、类型检查/构建通过。无前台性能、真机或真实周期证据，既有性能failed与空验收保留。",
+  "revision": 1,
+  "summary_digest": "450cd8747387ac0f1dccfccacfbeb046ec7eca99084650c7c25219df78d29d6d",
+  "content_digest": "7ae4381ba9296149c29ec4e199142f4a9ab2d73a5f5316bf51934fb6dea0bc9c"
+}

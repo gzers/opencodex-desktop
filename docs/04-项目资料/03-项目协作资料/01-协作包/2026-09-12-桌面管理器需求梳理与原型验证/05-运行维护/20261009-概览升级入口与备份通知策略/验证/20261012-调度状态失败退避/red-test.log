@@ -1,0 +1,33 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run tests/update-scheduler.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui
+
+ ❯ tests/update-scheduler.test.ts (11 tests | 2 failed) 8ms
+   ❯ application update scheduler (11)
+     × preserves state-error backoff across queued wakes and a wall-clock shift of -604800000 ms 2ms
+     × preserves state-error backoff across queued wakes and a wall-clock shift of 604800000 ms 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-scheduler.test.ts > application update scheduler > preserves state-error backoff across queued wakes and a wall-clock shift of -604800000 ms
+ FAIL  tests/update-scheduler.test.ts > application update scheduler > preserves state-error backoff across queued wakes and a wall-clock shift of 604800000 ms
+AssertionError: expected "vi.fn()" to be called once, but got 2 times
+ ❯ tests/update-scheduler.test.ts:123:20
+    121|     for (let i = 0; i < 100; i++) f.scheduler.wake(i % 2 ? 'foreground…
+    122|     await vi.advanceTimersByTimeAsync(30 * 60_000 - 10_001)
+    123|     expect(f.plan).toHaveBeenCalledOnce()
+       |                    ^
+    124|     expect(f.check).not.toHaveBeenCalled()
+    125|     f.plan.mockResolvedValueOnce({ targets: ['panel'], nextDelayMs: 0 …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 9 passed (11)
+   Start at  10:31:16
+   Duration  338ms (environment 87%, transform 7%, tests 3%, import 2%, worker 1%)
+
