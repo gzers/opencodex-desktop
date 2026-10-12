@@ -24,7 +24,13 @@ fn preferences_file_has_theme(data_root: &std::path::Path) -> bool {
     match std::fs::read(&path) {
         Ok(bytes) => serde_json::from_slice::<serde_json::Value>(&bytes)
             .ok()
-            .and_then(|value| value.get("theme").cloned())
+            .and_then(|value| {
+                value
+                    .get("appearance")
+                    .and_then(|appearance| appearance.get("theme"))
+                    .or_else(|| value.get("theme"))
+                    .cloned()
+            })
             .is_some(),
         Err(_) => false,
     }
@@ -200,6 +206,43 @@ mod tests {
     };
     use crate::types::preferences::PreferencesDto;
     use std::sync::{Arc, Mutex};
+
+    #[test]
+    fn nested_and_flat_explicit_themes_do_not_request_legacy_import() {
+        let root = tempfile::tempdir().unwrap();
+        crate::modules::data_root::initialize(root.path()).unwrap();
+        let path = root
+            .path()
+            .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+        assert!(!preferences_file_has_theme(root.path()));
+        for theme in ["system", "light", "dark"] {
+            let value = Preferences {
+                theme: theme.into(),
+                ..Preferences::default()
+            };
+            save_preferences_with_path(root.path(), &value).unwrap();
+            let original = std::fs::read(&path).unwrap();
+            let document: serde_json::Value = serde_json::from_slice(&original).unwrap();
+            assert!(document.get("theme").is_none());
+            assert_eq!(document["appearance"]["theme"], theme);
+            assert!(preferences_file_has_theme(root.path()));
+            assert_eq!(std::fs::read(&path).unwrap(), original);
+            assert_eq!(
+                load_preferences_with_path(root.path()).unwrap().theme,
+                theme
+            );
+
+            std::fs::write(&path, serde_json::to_vec(&value).unwrap()).unwrap();
+            assert!(preferences_file_has_theme(root.path()));
+        }
+        let mut legacy = serde_json::to_value(Preferences::default()).unwrap();
+        legacy.as_object_mut().unwrap().remove("theme");
+        std::fs::write(&path, serde_json::to_vec(&legacy).unwrap()).unwrap();
+        assert!(!preferences_file_has_theme(root.path()));
+        std::fs::write(&path, b"invalid JSON").unwrap();
+        assert!(!preferences_file_has_theme(root.path()));
+        assert!(load_preferences_with_path(root.path()).is_err());
+    }
 
     fn observed_save(
         root: &std::path::Path,
