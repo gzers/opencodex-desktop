@@ -1,0 +1,30 @@
+{
+  "calculatedAtUtc": "2026-10-12T14:08:00.303624+00:00",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 38924,
+  "completeRecords": 49,
+  "observationPrefixSha256": "8d63aa730f792e37eb9395f8b75b611aa983c59752e334ecbc6e9796168888ef",
+  "monotonicObservationsNondecreasing": true,
+  "elapsedFromInitialEnableToLastSampleMs": 14623496.700000018,
+  "targets": {
+    "manager-stable": {
+      "lastSuccessEpoch": 1791799267,
+      "nextDueEpoch": 1791885667,
+      "intervalSeconds": 86400,
+      "dueUtc": "2026-10-13T10:01:07+00:00",
+      "secondsUntilDueAtAudit": 71586.69637608528,
+      "observedChangesFromBaseline": 0
+    },
+    "panel-latest": {
+      "lastSuccessEpoch": 1791799269,
+      "nextDueEpoch": 1791885669,
+      "intervalSeconds": 86400,
+      "dueUtc": "2026-10-13T10:01:09+00:00",
+      "secondsUntilDueAtAudit": 71588.69637608528,
+      "observedChangesFromBaseline": 0
+    }
+  },
+  "rawNetworkOrNativeCommandCounts": "not instrumented",
+  "newMainCycleAccepted": false,
+  "realCycleCompleted": false
+}
