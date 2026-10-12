@@ -1,0 +1,177 @@
+{
+  "derivation": "target-only foreground.jsonl and guard-result/settings files; no resource collector output",
+  "runs": [
+    {
+      "run": "guarded-mid-finder-20261012",
+      "event_count": 92,
+      "event_kinds": {
+        "sample": 91,
+        "invalid": 1
+      },
+      "sample_count": 91,
+      "valid_sample_count": 0,
+      "invalid_sample_count": 91,
+      "first_sample": {
+        "elapsed_s": 0.056878208299167454,
+        "kind": "sample",
+        "target_frontmost": false,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791770692.043608
+      },
+      "last_valid_sample": null,
+      "first_invalid_sample": {
+        "elapsed_s": 0.056878208299167454,
+        "kind": "sample",
+        "target_frontmost": false,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791770692.043608
+      },
+      "ready_events": [],
+      "resource_sample_count": 0,
+      "resource_collector_started": false,
+      "warmup_completed": false,
+      "requested_warmup_seconds": 90,
+      "requested_measurement_seconds": 180,
+      "result": {
+        "collection_completed": false,
+        "foreground_monitor_exit": 2,
+        "resource_collector_exit": null,
+        "invalid_reason": "not_ready_within_ten_seconds",
+        "diagnostic_collection_valid": false,
+        "application_acceptance": "not_evaluated",
+        "full_start_end_ui_review": "required",
+        "partial_samples": "forensic only when invalid; never a successful performance run"
+      },
+      "preferences_sha256_unchanged": true,
+      "actual_appearance": {
+        "glow_render": "mesh",
+        "interface_scale": 100,
+        "theme": "light",
+        "visual_effects": "mid"
+      },
+      "original_manifest_quality": "high",
+      "performance_acceptance": "not_evaluated"
+    },
+    {
+      "run": "guarded-mid-prearmed-20261012",
+      "event_count": 93,
+      "event_kinds": {
+        "sample": 92,
+        "invalid": 1
+      },
+      "sample_count": 92,
+      "valid_sample_count": 0,
+      "invalid_sample_count": 92,
+      "first_sample": {
+        "elapsed_s": 0.039894291665405035,
+        "kind": "sample",
+        "target_frontmost": false,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791770747.015322
+      },
+      "last_valid_sample": null,
+      "first_invalid_sample": {
+        "elapsed_s": 0.039894291665405035,
+        "kind": "sample",
+        "target_frontmost": false,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791770747.015322
+      },
+      "ready_events": [],
+      "resource_sample_count": 0,
+      "resource_collector_started": false,
+      "warmup_completed": false,
+      "requested_warmup_seconds": 90,
+      "requested_measurement_seconds": 180,
+      "result": {
+        "collection_completed": false,
+        "foreground_monitor_exit": 2,
+        "resource_collector_exit": null,
+        "invalid_reason": "not_ready_within_ten_seconds",
+        "diagnostic_collection_valid": false,
+        "application_acceptance": "not_evaluated",
+        "full_start_end_ui_review": "required",
+        "partial_samples": "forensic only when invalid; never a successful performance run"
+      },
+      "preferences_sha256_unchanged": true,
+      "actual_appearance": {
+        "glow_render": "mesh",
+        "interface_scale": 100,
+        "theme": "light",
+        "visual_effects": "mid"
+      },
+      "original_manifest_quality": "high",
+      "performance_acceptance": "not_evaluated"
+    },
+    {
+      "run": "guarded-mid-inner-20261012",
+      "event_count": 172,
+      "event_kinds": {
+        "sample": 171,
+        "ready": 1
+      },
+      "sample_count": 171,
+      "valid_sample_count": 170,
+      "invalid_sample_count": 1,
+      "first_sample": {
+        "elapsed_s": 0.0492717499146238,
+        "kind": "sample",
+        "target_frontmost": true,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791771009.115182
+      },
+      "last_valid_sample": {
+        "elapsed_s": 18.644822458270937,
+        "kind": "sample",
+        "target_frontmost": true,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791771027.711156
+      },
+      "first_invalid_sample": {
+        "elapsed_s": 18.75080479157623,
+        "kind": "sample",
+        "target_frontmost": false,
+        "target_pid": 31501,
+        "target_window_on_screen": true,
+        "wall_s": 1791771027.8171391
+      },
+      "ready_events": [
+        {
+          "elapsed_s": 0.0492717499146238,
+          "kind": "ready",
+          "wall_s": 1791771009.11623
+        }
+      ],
+      "resource_sample_count": 0,
+      "resource_collector_started": false,
+      "warmup_completed": false,
+      "requested_warmup_seconds": 90,
+      "requested_measurement_seconds": 180,
+      "result": {
+        "collection_completed": false,
+        "foreground_monitor_exit": 3,
+        "resource_collector_exit": null,
+        "invalid_reason": "foreground_or_visible_window_lost",
+        "diagnostic_collection_valid": false,
+        "application_acceptance": "not_evaluated",
+        "full_start_end_ui_review": "required",
+        "partial_samples": "forensic only when invalid; never a successful performance run"
+      },
+      "preferences_sha256_unchanged": true,
+      "actual_appearance": {
+        "glow_render": "mesh",
+        "interface_scale": 100,
+        "theme": "light",
+        "visual_effects": "mid"
+      },
+      "original_manifest_quality": "high",
+      "performance_acceptance": "not_evaluated"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 拓展
+				10 button 诊断
+				11 button 设置
+			12 container
+				13 heading 设置, Value: 1
+					14 text 设置
+				15 text 集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。
+				16 container 主题
+					17 button 浅色
+					18 button 深色
+					19 button 跟随系统
+				20 text 未发现
+				21 button 刷新状态
+				22 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+				23 tab group (selectable) 通用
+安装配置
+数据与备份
+扩展管理
+配置迁移
+WebDAV 同步
+日志与通知
+CLI 控制面
+版本升级
+关于
+				24 container 桌面壳偏好
+					25 heading 桌面壳偏好, Value: 2
+						26 text 桌面壳偏好
+					27 text 管理器自有行为、面板承载与通知。
+					28 text 界面缩放
+					29 text 外壳与官方面板使用同一缩放因子；支持 50%–200% 自定义，默认 100%。
+					30 slider (settable, float) 界面缩放, Value: 100
+						31 value indicator 100
+					32 container 界面缩放刻度
+						33 toggle button 50, Value: off
+						34 toggle button 100, Value: on
+						35 toggle button 150, Value: off
+						36 toggle button 200, Value: off
+					37 number field (settable) 界面缩放数值, Value: 100
+						38 stepper 0
+							39 unknown
+							40 unknown
+					41 text 启动时打开主界面
+					42 text 默认打开；关闭后启动只保留托盘，不自动显示主窗口，也不自动启动代理。
+					43 switch (settable, boolean) on
+					44 text 面板打开方式
+					45 text 默认内嵌到 App 窗口；加载异常时提供浏览器兜底入口。
+					46 pop up button 面板打开方式
+					47 text 关闭窗口后保持代理运行
+					48 text 关闭窗口只隐藏桌面壳；从托盘退出会完全退出并可能中断由桌面壳托管的代理。
+					49 switch (settable, boolean) on
+					50 text 启停结果通知
+					51 text 通知启动、停止、重启和失败结果；不展示敏感配置。
+					52 switch (settable, boolean) on
+					53 text 同步冲突提醒
+					54 text 检测到本地与远端冲突时暂停覆盖，并要求显式确认。
+					55 switch (settable, boolean) on
+				56 container 画质
+					57 heading 画质, Value: 2
+						58 text 画质
+					59 text 背景光与视觉效果的渲染方式；按设备能力自动降级。
+					60 text 界面特效
+					61 text 高档为通知玻璃与动态光场；中档玻璃静态；低档统一实底、无光场。画质由所选档位决定，不跟随系统减少动态。即时生效并按偏好恢复。
+					62 pop up button 界面特效
+					63 text 背景光渲染
+					64 text WEBGL 用网格渐变＋颗粒着色器，过渡最平滑、色带最少；CSS 为纯极光兜底，不依赖 GPU。
+					65 pop up button 背景光渲染
+				66 container 网络
+					67 heading 网络, Value: 2
+						68 text 网络
+					69 text 应用自更新、官方版本查询与托管安装的出站请求代理；不含凭据，不写入系统代理设置。
+					70 text 代理模式
+					71 text 无代理直连；自动沿用系统代理设置；手动指定 HTTP 或 SOCKS5 代理。
+					72 pop up button 代理模式
+					73 text 应用范围
+					74 text 应用自更新、官方版本查询与托管安装共用此代理；TLS 证书校验不可关闭。WebDAV 同步使用其端点自带代理。
+					75 text 本版不含代理鉴权
+					76 text 检查连接
+					77 text 用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。
+					78 button 检查连接
+				79 container 官方共享配置
+					80 heading 官方共享配置, Value: 2
+						81 text 官方共享配置
+					82 text 与官方 OpenCodex 使用同一配置源；模型、路由与提供方仍由官方面板或官方 CLI 管理。
+					83 container
+						84 text 随 Codex 启动 OpenCodex  官方共享
+					85 container
+						86 text 与官方面板同一配置；开关的读写都经官方 shim ocx codex-shim，管理器不旁路改写官方配置。
+					87 text 未解析到 ocx 可执行文件；请先在「安装配置」里指定运行来源。
+					88 text 官方 CLI 未就绪
+				89 button 还原通用默认
+	90 close button
+	91 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	92 minimize button
+93 menu bar
+	94 OpenCodeX Desktop
+	95 进程
+	96 编辑
+	97 视图
+	98 诊断

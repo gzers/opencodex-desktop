@@ -1,0 +1,25 @@
+{
+  "source": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "exe_sha256": "ab6b967da2936e66cb5ba481a462de7334e692573d2f6db0c539a73c7d61f9b4",
+  "process": {
+    "pid": 31501,
+    "started": "Mon Oct 12 00:35:43 2026",
+    "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+  },
+  "expected": {
+    "theme": "light",
+    "visual_effects": "mid",
+    "glow_render": "mesh",
+    "interface_scale": 100
+  },
+  "original_manifest_appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "high"
+  },
+  "validation_role": "attribution diagnostic only; full start/end UI and human review remain required",
+  "monitoring": "0.1s NSWorkspace/CGWindow snapshots; gaps or stream stalls >1s invalidate; no app UI actions",
+  "warmup_seconds": 90,
+  "requested_measurement_seconds": 180
+}
