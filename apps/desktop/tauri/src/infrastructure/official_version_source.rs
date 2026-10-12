@@ -92,7 +92,7 @@ impl OfficialCliVersionSource {
             .stdin(Stdio::null())
             .stdout(Stdio::piped())
             .stderr(Stdio::null())
-            .kill_on_drop(false);
+            .kill_on_drop(true);
         crate::infrastructure::platform::apply_user_environment(
             process.as_std_mut(),
             self.environment.home.as_deref(),
@@ -115,6 +115,7 @@ impl OfficialCliVersionSource {
 
 impl OfficialVersionSource for OfficialCliVersionSource {
     fn run(&self) -> Result<OfficialVersionOutput, OfficialVersionError> {
+        let started = std::time::Instant::now();
         let executable = self
             .runtime
             .executable()
@@ -122,22 +123,35 @@ impl OfficialVersionSource for OfficialCliVersionSource {
         if !executable.is_file() || !self.working_directory.is_dir() {
             return Err(OfficialVersionError::Unreachable);
         }
+        let mut command = self.command(&executable);
+        #[cfg(windows)]
+        let job = crate::infrastructure::windows_query_job::OwnedQueryJob::new(&mut command)
+            .map_err(|_| OfficialVersionError::Unreachable)?;
         let runtime = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()
             .map_err(|_| OfficialVersionError::Unreachable)?;
         runtime.block_on(async {
-            let child = self
-                .command(&executable)
+            let child = command
                 .spawn()
                 .map_err(|_| OfficialVersionError::Unreachable)?;
+            #[cfg(windows)]
+            job.assign_and_resume(&child)
+                .map_err(|_| OfficialVersionError::Unreachable)?;
             let output = tokio::time::timeout(
-                crate::modules::about::official_version_timeout(),
+                crate::modules::about::official_version_timeout().saturating_sub(started.elapsed()),
                 child.wait_with_output(),
             )
-            .await
-            .map_err(|_| OfficialVersionError::Timeout)?
-            .map_err(|_| OfficialVersionError::Unreachable)?;
+            .await;
+            // Kill the owned Windows tree before dropping the Tokio runtime:
+            // anonymous-pipe reader tasks can otherwise wait for an orphaned
+            // helper even after the timeout future was dropped.
+            #[cfg(windows)]
+            job.terminate()
+                .map_err(|_| OfficialVersionError::Unreachable)?;
+            let output = output
+                .map_err(|_| OfficialVersionError::Timeout)?
+                .map_err(|_| OfficialVersionError::Unreachable)?;
             if !output.status.success() {
                 return Err(OfficialVersionError::Unreachable);
             }
