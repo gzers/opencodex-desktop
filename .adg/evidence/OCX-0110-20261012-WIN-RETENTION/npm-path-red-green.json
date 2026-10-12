@@ -1,0 +1,17 @@
+{
+  "scope": "same npm Arborist function, same real directory, no network or installation",
+  "npmVersion": "10.9.0",
+  "nodeVersion": "v24.19.0",
+  "rows": [
+    {
+      "path": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\npm-path-repro",
+      "result": "failure",
+      "error": "Error: ELOOP: too many symbolic links encountered, stat '\\\\?\\C:'"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\npm-path-repro",
+      "result": "success",
+      "resolved": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\npm-path-repro"
+    }
+  ]
+}

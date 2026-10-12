@@ -1,0 +1,35 @@
+0 verbose cli C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node.exe C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.9.0
+2 info using node@v24.19.0
+3 silly config load:file:C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\npmrc
+4 silly config load:file:\\?\C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\runtime\opencodex.new-1a5f1a634885\.npmrc
+5 silly config load:file:C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.npmrc
+6 silly config load:file:\\?\C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\runtime\opencodex.new-1a5f1a634885\etc\npmrc
+7 verbose title npm install @bitkyc08/opencodex@2.82.0
+8 verbose argv "install" "--prefix" "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\runtime\\opencodex.new-1a5f1a634885" "--no-audit" "--no-fund" "--loglevel" "info" "--ignore-scripts" "@bitkyc08/opencodex@2.82.0"
+9 verbose logfile logs-max:10 dir:\\?\C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\cache\npm\_logs\2026-10-12T05_29_00_101Z-
+10 verbose logfile \\?\C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\cache\npm\_logs\2026-10-12T05_29_00_101Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 verbose stack RangeError: Maximum call stack size exceeded
+13 verbose stack     at resolve (node:path:199:9)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:18:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+13 verbose stack     at realpathCached (C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\home\.local\bin\node_modules\npm\node_modules\@npmcli\arborist\lib\realpath.js:38:10)
+14 error Maximum call stack size exceeded
+15 silly unfinished npm timer reify 1791782940469
+16 silly unfinished npm timer reify:loadTrees 1791782940470
+17 silly unfinished npm timer idealTree:init 1791782940481
+18 verbose cwd C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\software\candidate4f
+19 verbose os Windows_NT 10.0.26100
+20 verbose node v24.19.0
+21 verbose npm  v10.9.0
+22 verbose exit 1
+23 verbose code 1
+24 error A complete log of this run can be found in: \\?\C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\runtime\windows0110\data\cache\npm\_logs\2026-10-12T05_29_00_101Z-debug-0.log

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUtc": "2026-10-12T05:18:05.5106802Z",
+  "package": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\downloads\\11727387957\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+  "packageSha256": "5df2185496378ae67d7e16936a8c5d2cbfafb17a60e90cd8749f4ff91bfc5385",
+  "databaseMode": "read-only",
+  "installerExecuted": false,
+  "properties": {
+    "ProductName": "OpenCodeX Desktop",
+    "ALLUSERS": "1",
+    "ProductCode": "{6AD6EE4E-D19F-45E6-9B39-2557BBF448F2}",
+    "ProductVersion": "0.1.10",
+    "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}"
+  },
+  "media": [
+    {
+      "diskId": "1",
+      "cabinet": "#app.cab",
+      "lastSequence": "2"
+    }
+  ],
+  "files": [
+    {
+      "id": "Path",
+      "fileName": "3iewmbpe.exe|opencodex-desktop.exe",
+      "bytes": "8675328",
+      "sequence": "2"
+    },
+    {
+      "id": "Bin_ocxd",
+      "fileName": "ocxd.exe",
+      "bytes": "283136",
+      "sequence": "1"
+    }
+  ],
+  "upgrades": [
+    {
+      "upgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+      "versionMin": "0",
+      "versionMax": "",
+      "attributes": "257",
+      "actionProperty": "WIX_UPGRADE_DETECTED"
+    }
+  ],
+  "extractedExecutables": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate4f\\opencodex-desktop.exe",
+      "name": "opencodex-desktop.exe",
+      "bytes": 8675328,
+      "sha256": "5e17773983bfcbdd741121210170a95922a436b4b6b9b783b12eca2062a5f6dc",
+      "productVersion": "0.1.10"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate4f\\ocxd.exe",
+      "name": "ocxd.exe",
+      "bytes": 283136,
+      "sha256": "74d9c86bfa9ff8d3c0ad6594390bdf2df70556585b5a5590ae3e619dd2502567",
+      "productVersion": "0.1.10"
+    }
+  ],
+  "result": "pass"
+}
