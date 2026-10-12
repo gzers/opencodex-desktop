@@ -1,0 +1,145 @@
+{
+  "collectedAtUtc": "2026-10-12T08:55:00.474Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 29936,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261012-WIN-INFLIGHT-CHANNEL\\methods\\native-panel-query-channel.js",
+  "screenshot": null,
+  "result": {
+    "startedAtUtc": "2026-10-12T08:54:58.704Z",
+    "nativeInvokeUnchanged": true,
+    "originalChannel": "stable",
+    "cacheBefore": {
+      "tag": "latest",
+      "version": "2.83.0",
+      "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+    },
+    "transitions": [
+      {
+        "atMs": 7138797.900000006,
+        "atUtc": "2026-10-12T08:54:58.705Z",
+        "loading": true,
+        "error": false,
+        "remote": {
+          "tag": "latest",
+          "version": "2.83.0",
+          "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+        }
+      },
+      {
+        "atMs": 7140552.300000012,
+        "atUtc": "2026-10-12T08:55:00.460Z",
+        "loading": true,
+        "error": false,
+        "remote": {
+          "tag": "latest",
+          "version": "2.83.0",
+          "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+        }
+      },
+      {
+        "atMs": 7140552.400000006,
+        "atUtc": "2026-10-12T08:55:00.460Z",
+        "loading": false,
+        "error": false,
+        "remote": {
+          "tag": "latest",
+          "version": "2.83.0",
+          "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+        }
+      }
+    ],
+    "snapshots": [
+      {
+        "phase": "native beta switch completed",
+        "atMs": 7138904.599999994,
+        "atUtc": "2026-10-12T08:54:58.812Z",
+        "loading": true,
+        "error": false,
+        "remote": {
+          "tag": "latest",
+          "version": "2.83.0",
+          "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+        },
+        "nativeCache": {
+          "tag": "latest",
+          "version": "2.83.0",
+          "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+        },
+        "nativePreferences": {
+          "channel": "beta",
+          "automaticCheck": false
+        }
+      }
+    ],
+    "source": "production Pinia loadRemoteLatest and native set_update_channel; actual npm metadata source; no response or clock injection",
+    "cleanup": {
+      "originalChannelRestored": true,
+      "automaticCheckStillDisabled": true,
+      "nativeInvokeUnchanged": true,
+      "preferencesStoreChannel": "stable",
+      "preferenceStoreError": false
+    },
+    "queryStartedAtMs": 7138797.700000018,
+    "queryStillPendingBeforeSwitch": true,
+    "switchStartedAtMs": 7138899.200000018,
+    "switched": {
+      "channel": "beta",
+      "currentVersion": "0.1.10",
+      "availableVersion": null,
+      "lastCheckedAt": null,
+      "signatureVerified": null,
+      "error": null,
+      "notes": null,
+      "releaseUrl": null,
+      "publishedAt": null,
+      "pendingRestart": null
+    },
+    "switchCompletedAtMs": 7138903.700000018,
+    "queryStillPendingAfterSwitch": true,
+    "queryCompletedAtMs": 7140552.5,
+    "queryFinalState": {
+      "atMs": 7140552.5,
+      "atUtc": "2026-10-12T08:55:00.460Z",
+      "loading": false,
+      "error": false,
+      "remote": {
+        "tag": "latest",
+        "version": "2.83.0",
+        "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+      }
+    },
+    "cacheAfterQuery": {
+      "tag": "latest",
+      "version": "2.83.0",
+      "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+    },
+    "nativeManagerAfterQuery": {
+      "channel": "beta",
+      "currentVersion": "0.1.10",
+      "availableVersion": null,
+      "lastCheckedAt": null,
+      "signatureVerified": null,
+      "error": null,
+      "notes": null,
+      "releaseUrl": null,
+      "publishedAt": null,
+      "pendingRestart": null
+    },
+    "restoredStatus": {
+      "channel": "stable",
+      "currentVersion": "0.1.10",
+      "availableVersion": null,
+      "lastCheckedAt": "2026-10-12T04:59:07.732242400+00:00",
+      "signatureVerified": null,
+      "error": null,
+      "notes": null,
+      "releaseUrl": null,
+      "publishedAt": null,
+      "pendingRestart": null
+    },
+    "finishedAtUtc": "2026-10-12T08:55:00.473Z",
+    "scope": "one actual in-flight panel metadata query across stable to beta; no installer, manager query, panel installation or full event matrix"
+  }
+}

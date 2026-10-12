@@ -1,0 +1,35 @@
+{
+  "policies": [
+    {
+      "id": "panel-check-succeeded",
+      "job": "panel_check",
+      "object": "panel",
+      "action": "check",
+      "phase": "query",
+      "channels": [
+        "official"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    },
+    {
+      "id": "panel-check-failed",
+      "job": "panel_check",
+      "object": "panel",
+      "action": "check",
+      "phase": "query",
+      "channels": [
+        "official"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": null,
+      "resolves": []
+    }
+  ],
+  "scope": "selected primary source policy, not a new product registry",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "registrySha256": "7a5f5ffeee55e4291debf1678eb038e147b06f424ae0c3e8c2f777ea23ccd3ec"
+}
