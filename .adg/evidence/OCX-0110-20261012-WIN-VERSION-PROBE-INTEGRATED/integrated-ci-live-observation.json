@@ -1,0 +1,26 @@
+{
+  "observedAtUtc": "2026-10-12T13:45:15.8253872Z",
+  "runs": [
+    {
+      "runId": 38254821701,
+      "name": "CI",
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "runId": 38254885601,
+      "name": "Windows candidate installer",
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "observerPid": 35556,
+  "observerCreationUtc": "2026-10-12T13:32:26.4286951Z",
+  "elapsedWaitMs": 768941.6608,
+  "observerErrors": 0,
+  "restartRequested": false,
+  "localInstallerExecuted": false,
+  "scope": "read-only at most one observation per run per minute; no CI/product restart"
+}
