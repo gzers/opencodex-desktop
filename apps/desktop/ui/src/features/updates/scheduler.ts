@@ -47,6 +47,8 @@ export function createUpdateScheduler(deps: Dependencies) {
       }
     } catch {
       // Corrupt/unavailable state must not produce a tight query loop.
+      // Queued or later wakes must preserve this elapsed-time retry floor.
+      notBefore = Math.max(notBefore, performance.now() + 30 * 60_000)
       deps.onError(); arm(30 * 60_000)
     } finally {
       running = false
