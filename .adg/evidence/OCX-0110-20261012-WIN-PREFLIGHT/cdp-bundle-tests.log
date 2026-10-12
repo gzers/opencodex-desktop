@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: accepts exact NSIS and MSI package bytes
+ok 1 - accepts exact NSIS and MSI package bytes
+  ---
+  duration_ms: 3.8563
+  ...
+# Subtest: rejects changed application payload
+ok 2 - rejects changed application payload
+  ---
+  duration_ms: 0.6212
+  ...
+# Subtest: rejects wrong package marker or unchanged EXE
+ok 3 - rejects wrong package marker or unchanged EXE
+  ---
+  duration_ms: 0.4592
+  ...
+# Subtest: rejects missing or ambiguous original marker
+ok 4 - rejects missing or ambiguous original marker
+  ---
+  duration_ms: 0.2373
+  ...
+# Subtest: rejects unsupported bundle kind
+ok 5 - rejects unsupported bundle kind
+  ---
+  duration_ms: 0.1467
+  ...
+# Subtest: retries until the main page appears; ignores embedded or unrelated pages
+ok 6 - retries until the main page appears; ignores embedded or unrelated pages
+  ---
+  duration_ms: 78.319
+  ...
+# Subtest: HTTP errors are preserved instead of being swallowed
+ok 7 - HTTP errors are preserved instead of being swallowed
+  ---
+  duration_ms: 2014.6769
+  ...
+# Subtest: malformed target JSON fails with parse evidence
+ok 8 - malformed target JSON fails with parse evidence
+  ---
+  duration_ms: 2014.068
+  ...
+# Subtest: non-array responses and empty target lists never count as rendered UI
+ok 9 - non-array responses and empty target lists never count as rendered UI
+  ---
+  duration_ms: 4018.2051
+  ...
+# Subtest: stalled responses are bounded by both request and discovery deadlines
+ok 10 - stalled responses are bounded by both request and discovery deadlines
+  ---
+  duration_ms: 154.8121
+  ...
+# Subtest: connection refusal retains the underlying network error
+ok 11 - connection refusal retains the underlying network error
+  ---
+  duration_ms: 2012.8866
+  ...
+# Subtest: refuses non-loopback endpoints before making a request
+ok 12 - refuses non-loopback endpoints before making a request
+  ---
+  duration_ms: 0.5213
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10436.6975

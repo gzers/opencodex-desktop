@@ -1,0 +1,22 @@
+{
+  "result": "passed",
+  "scope": "archive integrity and preflight observations only",
+  "formalTaskReceipt": false,
+  "nativeGateResult": "not_run",
+  "pairedPerformanceResult": "not_run",
+  "realCycleObservationStarted": false,
+  "existingPerformanceFailureCleared": false,
+  "filesVerified": 20,
+  "checks": {
+    "source_identity": true,
+    "ci_identity_and_success": true,
+    "no_same_sha_installer_run": true,
+    "artifact_metadata_only": true,
+    "task_authority_not_reconstructed": true,
+    "shared_files_match": true,
+    "token_tool_only": true,
+    "tool_regression_counts": true,
+    "push_preflight_failed_without_mutation": true,
+    "native_gate_not_started": true
+  }
+}

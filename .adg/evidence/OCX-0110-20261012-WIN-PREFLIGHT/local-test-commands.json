@@ -1,0 +1,28 @@
+{
+  "codeCommit": "01a1d85504781f4cb189a68ed85d1d803a1409ff",
+  "workingDirectory": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop",
+  "commands": [
+    {
+      "argv": [
+        "test/smoke/windows-process-token.test.ps1",
+        "-OutputDirectory",
+        "<evidence>/process-token"
+      ],
+      "exitCode": 0,
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "argv": [
+        "node",
+        "--test",
+        "test/smoke/windows-cdp.test.mjs",
+        "test/smoke/windows-bundle-identity.test.mjs"
+      ],
+      "exitCode": 0,
+      "passed": 12,
+      "failed": 0
+    }
+  ],
+  "scope": "test tooling only; no candidate application acceptance"
+}

@@ -1,0 +1,510 @@
+[
+  {
+    "id": 114641055478,
+    "name": "windows-smoke-evidence",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-12T02:41:25Z",
+    "completed_at": "2026-10-12T02:41:42Z",
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:26Z",
+        "completed_at": "2026-10-12T02:41:27Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:27Z",
+        "completed_at": "2026-10-12T02:41:32Z"
+      },
+      {
+        "number": 3,
+        "name": "Verify Windows process-token evidence and smoke syntax",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:32Z",
+        "completed_at": "2026-10-12T02:41:38Z"
+      },
+      {
+        "number": 4,
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:38Z",
+        "completed_at": "2026-10-12T02:41:38Z"
+      },
+      {
+        "number": 8,
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:38Z",
+        "completed_at": "2026-10-12T02:41:41Z"
+      },
+      {
+        "number": 9,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:41Z",
+        "completed_at": "2026-10-12T02:41:41Z"
+      }
+    ]
+  },
+  {
+    "id": 114641055586,
+    "name": "backend",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-12T02:41:30Z",
+    "completed_at": "2026-10-12T02:46:54Z",
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:30Z",
+        "completed_at": "2026-10-12T02:41:31Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:31Z",
+        "completed_at": "2026-10-12T02:41:33Z"
+      },
+      {
+        "number": 3,
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:33Z",
+        "completed_at": "2026-10-12T02:41:41Z"
+      },
+      {
+        "number": 4,
+        "name": "Run cargo fmt --all -- --check",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:41Z",
+        "completed_at": "2026-10-12T02:41:42Z"
+      },
+      {
+        "number": 5,
+        "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:42Z",
+        "completed_at": "2026-10-12T02:43:06Z"
+      },
+      {
+        "number": 6,
+        "name": "Run cargo test --locked --workspace --features integration-test",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:43:06Z",
+        "completed_at": "2026-10-12T02:46:51Z"
+      },
+      {
+        "number": 12,
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:46:51Z",
+        "completed_at": "2026-10-12T02:46:52Z"
+      },
+      {
+        "number": 13,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:46:52Z",
+        "completed_at": "2026-10-12T02:46:52Z"
+      }
+    ]
+  },
+  {
+    "id": 114641055609,
+    "name": "frontend",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-12T02:41:31Z",
+    "completed_at": "2026-10-12T02:42:34Z",
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:31Z",
+        "completed_at": "2026-10-12T02:41:32Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:32Z",
+        "completed_at": "2026-10-12T02:41:34Z"
+      },
+      {
+        "number": 3,
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:34Z",
+        "completed_at": "2026-10-12T02:41:35Z"
+      },
+      {
+        "number": 4,
+        "name": "Windows CDP protocol regression",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:35Z",
+        "completed_at": "2026-10-12T02:41:45Z"
+      },
+      {
+        "number": 5,
+        "name": "Run npm --prefix apps/desktop/ui ci",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:45Z",
+        "completed_at": "2026-10-12T02:41:49Z"
+      },
+      {
+        "number": 6,
+        "name": "Run npm --prefix apps/desktop/ui run typecheck",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:49Z",
+        "completed_at": "2026-10-12T02:41:55Z"
+      },
+      {
+        "number": 7,
+        "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:55Z",
+        "completed_at": "2026-10-12T02:42:25Z"
+      },
+      {
+        "number": 8,
+        "name": "Run npm --prefix apps/desktop/ui run build",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:25Z",
+        "completed_at": "2026-10-12T02:42:30Z"
+      },
+      {
+        "number": 15,
+        "name": "Post Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:31Z",
+        "completed_at": "2026-10-12T02:42:31Z"
+      },
+      {
+        "number": 16,
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:31Z",
+        "completed_at": "2026-10-12T02:42:31Z"
+      },
+      {
+        "number": 17,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:31Z",
+        "completed_at": "2026-10-12T02:42:32Z"
+      }
+    ]
+  },
+  {
+    "id": 114641055635,
+    "name": "backend-windows",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-12T02:41:25Z",
+    "completed_at": "2026-10-12T03:01:29Z",
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:26Z",
+        "completed_at": "2026-10-12T02:41:28Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:28Z",
+        "completed_at": "2026-10-12T02:41:32Z"
+      },
+      {
+        "number": 3,
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:32Z",
+        "completed_at": "2026-10-12T02:41:36Z"
+      },
+      {
+        "number": 4,
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:36Z",
+        "completed_at": "2026-10-12T02:41:55Z"
+      },
+      {
+        "number": 5,
+        "name": "Run npm --prefix ../ui ci",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:55Z",
+        "completed_at": "2026-10-12T02:42:04Z"
+      },
+      {
+        "number": 6,
+        "name": "Run npm --prefix ../ui run build",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:04Z",
+        "completed_at": "2026-10-12T02:42:14Z"
+      },
+      {
+        "number": 7,
+        "name": "Run cargo fmt --all -- --check",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:14Z",
+        "completed_at": "2026-10-12T02:42:16Z"
+      },
+      {
+        "number": 8,
+        "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:42:16Z",
+        "completed_at": "2026-10-12T02:45:03Z"
+      },
+      {
+        "number": 9,
+        "name": "Windows backend regression",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:45:03Z",
+        "completed_at": "2026-10-12T02:51:22Z"
+      },
+      {
+        "number": 10,
+        "name": "Collect Windows native dependency diagnostics",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:51:22Z",
+        "completed_at": "2026-10-12T02:51:50Z"
+      },
+      {
+        "number": 11,
+        "name": "Run cargo build --locked --release --features custom-protocol --bins",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:51:50Z",
+        "completed_at": "2026-10-12T03:00:40Z"
+      },
+      {
+        "number": 12,
+        "name": "Windows final EXE smoke",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:00:40Z",
+        "completed_at": "2026-10-12T03:01:19Z"
+      },
+      {
+        "number": 13,
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:19Z",
+        "completed_at": "2026-10-12T03:01:23Z"
+      },
+      {
+        "number": 25,
+        "name": "Post Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:23Z",
+        "completed_at": "2026-10-12T03:01:23Z"
+      },
+      {
+        "number": 26,
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:23Z",
+        "completed_at": "2026-10-12T03:01:25Z"
+      },
+      {
+        "number": 27,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:25Z",
+        "completed_at": "2026-10-12T03:01:26Z"
+      }
+    ]
+  },
+  {
+    "id": 114641055688,
+    "name": "release-tools",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-10-12T02:41:26Z",
+    "completed_at": "2026-10-12T02:41:49Z",
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:27Z",
+        "completed_at": "2026-10-12T02:41:27Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:27Z",
+        "completed_at": "2026-10-12T02:41:29Z"
+      },
+      {
+        "number": 3,
+        "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:29Z",
+        "completed_at": "2026-10-12T02:41:46Z"
+      },
+      {
+        "number": 4,
+        "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:46Z",
+        "completed_at": "2026-10-12T02:41:47Z"
+      },
+      {
+        "number": 8,
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:47Z",
+        "completed_at": "2026-10-12T02:41:47Z"
+      },
+      {
+        "number": 9,
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T02:41:47Z",
+        "completed_at": "2026-10-12T02:41:47Z"
+      }
+    ]
+  },
+  {
+    "id": 114645239444,
+    "name": "build",
+    "status": "in_progress",
+    "conclusion": null,
+    "started_at": "2026-10-12T03:01:39Z",
+    "completed_at": null,
+    "steps": [
+      {
+        "number": 1,
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:39Z",
+        "completed_at": "2026-10-12T03:01:41Z"
+      },
+      {
+        "number": 2,
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:41Z",
+        "completed_at": "2026-10-12T03:01:43Z"
+      },
+      {
+        "number": 3,
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:43Z",
+        "completed_at": "2026-10-12T03:01:44Z"
+      },
+      {
+        "number": 4,
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:44Z",
+        "completed_at": "2026-10-12T03:01:53Z"
+      },
+      {
+        "number": 5,
+        "name": "Install pinned Tauri CLI",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:53Z",
+        "completed_at": "2026-10-12T03:01:54Z"
+      },
+      {
+        "number": 6,
+        "name": "Install frontend deps (build job installs its own, not relying on frontend job)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-12T03:01:54Z",
+        "completed_at": "2026-10-12T03:01:56Z"
+      },
+      {
+        "number": 7,
+        "name": "Build macOS arm64 bundle",
+        "status": "in_progress",
+        "conclusion": null,
+        "started_at": "2026-10-12T03:01:56Z",
+        "completed_at": null
+      },
+      {
+        "number": 13,
+        "name": "Post Run actions/setup-node@v5",
+        "status": "pending",
+        "conclusion": null,
+        "started_at": null,
+        "completed_at": null
+      },
+      {
+        "number": 14,
+        "name": "Post Run actions/checkout@v5",
+        "status": "pending",
+        "conclusion": null,
+        "started_at": null,
+        "completed_at": null
+      }
+    ]
+  }
+]
