@@ -18,6 +18,56 @@ pub struct OfficialCliVersionSource {
     environment: EnvironmentPolicy,
 }
 
+#[cfg(all(test, windows))]
+mod windows_tests {
+    use super::*;
+    use crate::infrastructure::runtime_executable::FixedRuntimeExecutable;
+    use crate::infrastructure::windows_query_fixture::{process_case, QueryOutcome};
+
+    fn version_process_case(mode: &str) {
+        assert_eq!(
+            crate::modules::about::official_version_timeout(),
+            std::time::Duration::from_secs(2),
+            "Preserve the original production probe deadline"
+        );
+        process_case(
+            "version",
+            mode,
+            "OpenCodex 2.50.0\n",
+            |executable, root, environment| {
+                let source = OfficialCliVersionSource::new(
+                    FixedRuntimeExecutable::resolved(executable),
+                    root,
+                    environment,
+                );
+                match source.run() {
+                    Ok(output) => {
+                        assert_eq!(output.stdout, b"OpenCodex 2.50.0\n");
+                        QueryOutcome::Success
+                    }
+                    Err(OfficialVersionError::Timeout) => QueryOutcome::Timeout,
+                    Err(_) => QueryOutcome::Failure,
+                }
+            },
+        );
+    }
+
+    #[test]
+    fn version_timeout_cleans_owned_tree_and_preserves_unrelated_process() {
+        version_process_case("timeout");
+    }
+
+    #[test]
+    fn version_nonzero_exit_reaps_owned_helper() {
+        version_process_case("nonzero");
+    }
+
+    #[test]
+    fn version_success_reaps_owned_helper_and_preserves_version_output() {
+        version_process_case("success");
+    }
+}
+
 impl OfficialCliVersionSource {
     pub fn new(
         runtime: crate::infrastructure::runtime_executable::SharedRuntimeExecutable,

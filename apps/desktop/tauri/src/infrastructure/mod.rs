@@ -19,6 +19,8 @@ pub mod webdav_client;
 
 pub mod app_activity;
 pub mod window_appearance;
+#[cfg(all(windows, test))]
+pub(crate) mod windows_query_fixture;
 #[cfg(windows)]
 pub(crate) mod windows_query_job;
 #[cfg(any(windows, test))]
