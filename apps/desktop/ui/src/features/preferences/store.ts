@@ -24,17 +24,22 @@ export const usePreferencesStore = defineStore('preferences', {
       this.loading = true
       try {
         this.data = await getPreferences()
+        // Capture historical cache before applying the native fallback. A first
+        // default projection must not create its own "historical" import.
+        const importedTheme = this.data.themeNeedsImport && hasStoredThemeCache()
+          ? readThemeCache()
+          : null
         // 启动与重新加载偏好时立即把缩放应用到界面，不依赖用户打开设置页。
         applyInterfaceScale(this.data.interfaceScale)
         // 用户档位立即落到 `data-effects`；系统动画设置不改变选择。
         useEffectsStore().setSetting(this.data.visualEffects)
         useGlowRenderStore().setSetting(this.data.glowRender)
         // 主题以后端偏好为事实源：仅在偏好有值且与当前投影不同时写缓存，避免旧缓存反向覆盖。
-        useThemeStore().apply(this.data.theme)
+        useThemeStore().apply(this.data.theme, { persistCache: importedTheme === null })
         // 一次性历史主题导入（H-15）：仅当旧偏好没有 theme 且本机确实缓存过历史选择时提交一次。
-        if (this.data.themeNeedsImport && hasStoredThemeCache()) {
-          const imported = readThemeCache()
-          await this.save({ ...this.data, theme: imported })
+        if (importedTheme !== null) {
+          if (!await this.save({ ...this.data, theme: importedTheme })) return
+          useThemeStore().apply(this.data.theme)
         }
         this.error = false
       } catch {

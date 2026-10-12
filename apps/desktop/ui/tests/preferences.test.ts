@@ -1,5 +1,5 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { getPreferences, type PreferencesDto } from '@/features/preferences/api'
 import { useAppStore } from '@/stores/app'
 
@@ -158,4 +158,55 @@ describe('interface scale application through the preference lifecycle', () => {
     expect(app.preferences?.networkProxyHost).toBe('127.0.0.1:1080')
   })
 
+})
+
+describe('persisted theme and one-time legacy cache import', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    invoke.mockReset()
+    window.localStorage.clear()
+  })
+  afterEach(() => window.localStorage.clear())
+
+  it('uses an explicit persisted theme without saving or importing stale cache', async () => {
+    window.localStorage.setItem('ocx-theme', 'dark')
+    invoke.mockResolvedValueOnce(dto({ theme: 'light', themeNeedsImport: false }))
+    const app = useAppStore()
+    await app.loadPreferences()
+    expect(app.preferences?.theme).toBe('light')
+    expect(window.localStorage.getItem('ocx-theme')).toBe('light')
+    expect(invoke).toHaveBeenCalledTimes(1)
+  })
+
+  it('captures the historical theme before the persisted fallback projects into cache', async () => {
+    window.localStorage.setItem('ocx-theme', 'dark')
+    invoke.mockResolvedValueOnce(dto({ theme: 'system', themeNeedsImport: true }))
+    invoke.mockResolvedValueOnce(dto({ theme: 'dark', themeNeedsImport: false }))
+    const app = useAppStore()
+    await app.loadPreferences()
+    expect(invoke).toHaveBeenLastCalledWith('save_preferences', {
+      preferences: dto({ theme: 'dark', themeNeedsImport: true }),
+    })
+    expect(app.preferences?.theme).toBe('dark')
+    expect(window.localStorage.getItem('ocx-theme')).toBe('dark')
+  })
+
+  it('does not create a legacy import from a fresh default projection', async () => {
+    invoke.mockResolvedValueOnce(dto({ theme: 'system', themeNeedsImport: true }))
+    const app = useAppStore()
+    await app.loadPreferences()
+    expect(invoke).toHaveBeenCalledTimes(1)
+    expect(app.preferences?.theme).toBe('system')
+  })
+
+  it('retains historical cache and reports failure when the one-time save is refused', async () => {
+    window.localStorage.setItem('ocx-theme', 'dark')
+    invoke.mockResolvedValueOnce(dto({ theme: 'system', themeNeedsImport: true }))
+    invoke.mockRejectedValueOnce(new Error('isolated import write failed'))
+    const app = useAppStore()
+    await app.loadPreferences()
+    expect(app.preferences?.theme).toBe('system')
+    expect(app.preferencesError).toBe(true)
+    expect(window.localStorage.getItem('ocx-theme')).toBe('dark')
+  })
 })
