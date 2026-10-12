@@ -1,0 +1,15 @@
+
+running 1 test
+
+thread 'modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant' (38980) panicked at src\modules\about\remote_windows_tests.rs:199:5:
+metadata query left its own overflow descendant running
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant ... FAILED
+
+failures:
+
+failures:
+    modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 505 filtered out; finished in 4.14s
+

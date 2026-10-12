@@ -1,0 +1,34 @@
+
+running 4 tests
+metadata fixture nonzero: elapsed=75.3742ms, result=Err(NotConfigured)
+
+thread 'modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant' (40252) panicked at src\modules\about\remote_windows_tests.rs:232:5:
+metadata query left its own nonzero descendant running
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant ... FAILED
+metadata fixture overflow: elapsed=72.742ms, result=Err(NotConfigured)
+
+thread 'modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant' (27568) panicked at src\modules\about\remote_windows_tests.rs:232:5:
+metadata query left its own overflow descendant running
+test modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant ... FAILED
+metadata fixture success: elapsed=113.1254ms, result=Ok(54)
+
+thread 'modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree' (44676) panicked at src\modules\about\remote_windows_tests.rs:232:5:
+metadata query left its own success descendant running
+test modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree ... FAILED
+metadata fixture timeout: elapsed=8.1121649s, result=Err(Timeout)
+
+thread 'modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process' (31916) panicked at src\modules\about\remote_windows_tests.rs:219:5:
+query required external fixture watchdog cleanup
+test modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process ... FAILED
+
+failures:
+
+failures:
+    modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant
+    modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant
+    modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree
+    modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 502 filtered out; finished in 16.47s
+

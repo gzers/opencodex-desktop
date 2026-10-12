@@ -1,0 +1,59 @@
+{
+  "originMainHead": "4852820b89f7f9df7d54bc623e94f3f55d884023",
+  "redTestBlob": "3dc48b4251cd8465f933bd59387e77dcfc8f339b",
+  "fullNativeGateAccepted": false,
+  "runningApplicationPid": 38924,
+  "blobWitness": [
+    {
+      "presentInRunningOld": "100644 blob 69bd24522f6bffbe884416d083d30301bc5c516c\tapps/desktop/tauri/Cargo.toml",
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "fixBlob": "8aef5012ac14d4ed72cd29e79a9d42ce84698802",
+      "runningOldBlob": "69bd24522f6bffbe884416d083d30301bc5c516c"
+    },
+    {
+      "presentInRunningOld": "100644 blob 11071d2be643ad56640f39298369d06a8d3eb210\tapps/desktop/tauri/src/infrastructure/mod.rs",
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "fixBlob": "3fd071ba1dad0363b8dda975221d1d6b8a551f12",
+      "runningOldBlob": "11071d2be643ad56640f39298369d06a8d3eb210"
+    },
+    {
+      "presentInRunningOld": null,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "fixBlob": "63ed75bddfb87c6e8364a8a34d468a634369888e",
+      "runningOldBlob": null
+    },
+    {
+      "presentInRunningOld": "100644 blob 7fa24fbd7d037539a6c01c5ad9db9a9e282f5f8c\tapps/desktop/tauri/src/modules/about/remote.rs",
+      "path": "apps/desktop/tauri/src/modules/about/remote.rs",
+      "fixBlob": "bdcf9ee0bc5aaeccddfbfa27b553fe03d2000520",
+      "runningOldBlob": "7fa24fbd7d037539a6c01c5ad9db9a9e282f5f8c"
+    },
+    {
+      "presentInRunningOld": null,
+      "path": "apps/desktop/tauri/src/modules/about/remote_windows_tests.rs",
+      "fixBlob": "3dc48b4251cd8465f933bd59387e77dcfc8f339b",
+      "runningOldBlob": null
+    }
+  ],
+  "codeWorktreeClean": true,
+  "formalTaskReceipt": false,
+  "runningApplicationSource": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "mainHead": "4852820b89f7f9df7d54bc623e94f3f55d884023",
+  "mainExactCiStillRequiresFinalAudit": true,
+  "fixTestBlob": "3dc48b4251cd8465f933bd59387e77dcfc8f339b",
+  "mainIntegratedWithoutConflict": true,
+  "realCycleSourceUnaffectedByCheckout": true,
+  "comparisonDiff": [
+    "M\tapps/desktop/tauri/Cargo.toml",
+    "M\tapps/desktop/tauri/src/infrastructure/mod.rs",
+    "A\tapps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+    "M\tapps/desktop/tauri/src/modules/about/remote.rs"
+  ],
+  "redSource": "2218b8c94187efbb5139e33e312676d7beffafb2",
+  "fixSource": "4852820b89f7f9df7d54bc623e94f3f55d884023",
+  "windowsSysCrateSha256": "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc",
+  "released": false,
+  "recordedAtUtc": "2026-10-12T11:28:41.7823911Z",
+  "candidateApplicationNotYetLaunched": true,
+  "originalPerformanceFailureCleared": false
+}

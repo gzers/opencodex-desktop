@@ -1,0 +1,50 @@
+{
+  "usedPinnedPrimarySource": {
+    "crate": "windows-sys",
+    "version": "0.61.2",
+    "crateSha256": "ae137229bcbd6cdf0f7b80a31df61766145077ddf49416a728b02cb3921ff3fc",
+    "matchesCargoLock": true
+  },
+  "head": "ffed7df9795f182c5bcafecc07b3454623c2f883",
+  "runningApplicationUnreplaced": true,
+  "fullAcceptance": false,
+  "initialFixSha": "f2de7dc6ecda8a532df322e5b16875cb70c79a71",
+  "cycleMonitorLiveHandleVerified": true,
+  "mainUnmodified": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "earliestRegressionSha": "1f02c24aec4019fe2e23a555769d1a75104f5447",
+  "testedCandidateNativeApp": false,
+  "localFullRustBuildAvailable": false,
+  "changes": [
+    {
+      "sha256": "0b80870b6dd088661825553333b5c9af2e33a24b1ac108edcdeb9c6486623f8c",
+      "path": "apps/desktop/tauri/src/modules/about/remote.rs"
+    },
+    {
+      "sha256": "854e4ac4f89671e7bf266ba4b84df8dd6874f131b849f7b59ffdacc36318f73d",
+      "path": "apps/desktop/tauri/src/modules/about/remote_windows_tests.rs"
+    },
+    {
+      "sha256": "0cc42c3eb30b333f6b799f4924ef47e2c54f05ff31917ee860d04b62687b9341",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs"
+    },
+    {
+      "sha256": "954a5d40a7ddbbd57f8446bc2c3312a573989a855940ed7e246463681ed0c2bc",
+      "path": "apps/desktop/tauri/Cargo.toml"
+    }
+  ],
+  "retainedHandleRegressionSha": "9952255ec151a9037dc08e6443783fd13352e660",
+  "recordedAtUtc": "2026-10-12T10:39:30.6000911Z",
+  "finalCandidateSha": "ffed7df9795f182c5bcafecc07b3454623c2f883",
+  "runningApplicationSource": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "performanceFailureCleared": false,
+  "cycleMonitorPid": 18944,
+  "runningApplicationPid": 38924,
+  "writeBranch": "feature/windows-query-process-tree",
+  "scriptsRequiredApprovalReceived": false,
+  "testsAdded": [
+    "metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+    "metadata_output_overflow_cleans_descendant",
+    "metadata_nonzero_exit_cleans_descendant",
+    "metadata_success_also_reaps_its_owned_helper_tree"
+  ]
+}
