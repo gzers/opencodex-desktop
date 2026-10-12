@@ -24,7 +24,7 @@ try {
   for (const theme of ['light', 'dark']) {
     for (const scale of [1, 1.25, 1.5, 2]) {
       const page = await browser.newPage({ viewport: { width: 1700, height: 1200 } })
-      await page.goto(`http://127.0.0.1:${address.port}/qa/tree-table.html`)
+      await page.goto(`http://127.0.0.1:${address.port}/qa/tree-table.geometry.html`)
       await page.waitForSelector('.tree-name')
       await page.evaluate(({ theme, scale }) => {
         document.documentElement.dataset.theme = theme
