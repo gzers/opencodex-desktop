@@ -23,6 +23,11 @@ if (process.argv[2] === '--sleep') {
     stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore', 'ignore'],
   });
   fs.writeFileSync(path.join(__dirname, 'child-pid'), String(child.pid));
+  const readyDeadline = Date.now() + 10000;
+  while (!fs.existsSync(path.join(__dirname, 'ownership-ready'))) {
+    if (Date.now() > readyDeadline) process.exit(12);
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5);
+  }
   if (mode === 'overflow') process.stdout.write('x'.repeat(17000));
   if (mode === 'success') {
     process.stdout.write('{"version":"2.50.0","dist.integrity":"sha512-fixture"}',
@@ -34,6 +39,13 @@ if (process.argv[2] === '--sleep') {
 "#;
 
 struct ObservedChild(OwnedHandle);
+struct ControlProcess(std::process::Child);
+impl Drop for ControlProcess {
+    fn drop(&mut self) {
+        let _ = self.0.kill();
+        let _ = self.0.wait();
+    }
+}
 impl ObservedChild {
     fn open(pid: u32, node: &std::path::Path, not_before: std::time::SystemTime) -> Option<Self> {
         // PID comes only from our locally generated fixture. Retain the handle
@@ -116,15 +128,48 @@ fn metadata_process_case(mode: &str) {
         ),
     )
     .unwrap();
-    let mut control = std::process::Command::new(&node)
-        .args([fixture.as_os_str(), std::ffi::OsStr::new("--sleep")])
-        .stdin(Stdio::null())
-        .stdout(Stdio::null())
-        .stderr(Stdio::null())
-        .creation_flags(0x0800_0000)
-        .spawn()
-        .unwrap();
+    let mut control = ControlProcess(
+        std::process::Command::new(&node)
+            .args([fixture.as_os_str(), std::ffi::OsStr::new("--sleep")])
+            .stdin(Stdio::null())
+            .stdout(Stdio::null())
+            .stderr(Stdio::null())
+            .creation_flags(0x0800_0000)
+            .spawn()
+            .unwrap(),
+    );
     let created_after = std::time::SystemTime::now();
+    let observer_root = root.path().to_owned();
+    let observer_node = node.clone();
+    let observer = std::thread::spawn(move || {
+        let ready_deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        let child_pid_file = observer_root.join("child-pid");
+        while !child_pid_file.is_file() {
+            assert!(
+                std::time::Instant::now() < ready_deadline,
+                "fixture descendant did not start"
+            );
+            std::thread::sleep(std::time::Duration::from_millis(5));
+        }
+        let pid: u32 = std::fs::read_to_string(child_pid_file)
+            .unwrap()
+            .trim()
+            .parse()
+            .unwrap();
+        let parent_pid: u32 = std::fs::read_to_string(observer_root.join("parent-pid"))
+            .unwrap()
+            .trim()
+            .parse()
+            .unwrap();
+        let descendant = ObservedChild::open(pid, &observer_node, created_after);
+        let parent = ObservedChild::open(parent_pid, &observer_node, created_after);
+        assert!(
+            descendant.is_some() && parent.is_some(),
+            "fixture ended before handle ownership"
+        );
+        std::fs::write(observer_root.join("ownership-ready"), b"retained").unwrap();
+        (descendant, parent)
+    });
     let environment = EnvironmentPolicy {
         opencodex_home: root.path().to_owned(),
         home: Some(root.path().join("home").into_os_string()),
@@ -138,23 +183,11 @@ fn metadata_process_case(mode: &str) {
         "test@latest",
         std::time::Duration::from_secs(2),
     );
-    let pid: u32 = std::fs::read_to_string(root.path().join("child-pid"))
-        .expect("fixture must have started its descendant within the total deadline")
-        .trim()
-        .parse()
-        .unwrap();
-    let descendant = ObservedChild::open(pid, &node, created_after);
-    let parent_pid: u32 = std::fs::read_to_string(root.path().join("parent-pid"))
-        .unwrap()
-        .trim()
-        .parse()
-        .unwrap();
-    let parent = ObservedChild::open(parent_pid, &node, created_after);
+    let (descendant, parent) = observer.join().expect("fixture handle observation failed");
     let stopped = descendant.as_ref().is_none_or(ObservedChild::stopped);
     let parent_stopped = parent.as_ref().is_none_or(ObservedChild::stopped);
-    let control_live = control.try_wait().unwrap().is_none();
-    let _ = control.kill();
-    let _ = control.wait();
+    let control_live = control.0.try_wait().unwrap().is_none();
+    drop(control);
     drop(parent);
     drop(descendant);
     assert!(control_live, "unrelated control process was stopped");
