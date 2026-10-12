@@ -1,0 +1,72 @@
+{
+  "recordedAtUtc": "2026-10-12T15:29:04.711497+00:00",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "witnesses": [
+    {
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "path": "apps/desktop/tauri/src/commands/data_root.rs",
+      "gitBlob": "f7f7555d6316410c2a7f3f784aa95e89332b33c1",
+      "rawBlobSha256": "e9436a16158c1c61276f71d23974f695d22a201197e3a76a0560de323a2669a6",
+      "function": "change_binding",
+      "witnessLineNumbers": [
+        252
+      ],
+      "meaning": "a new real successful collector.refresh is required; an idle projected enum alone is insufficient",
+      "sourceCopiedIntoDocs": false
+    },
+    {
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "path": "apps/desktop/tauri/src/commands/data_root.rs",
+      "gitBlob": "f7f7555d6316410c2a7f3f784aa95e89332b33c1",
+      "rawBlobSha256": "e9436a16158c1c61276f71d23974f695d22a201197e3a76a0560de323a2669a6",
+      "function": "binding_runtime_blocked",
+      "witnessLineNumbers": [
+        299
+      ],
+      "meaning": "false verified flag returns RuntimeUnverified before binding change",
+      "sourceCopiedIntoDocs": false
+    },
+    {
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "gitBlob": "410382cdfde6c6168882221b9096197ad313e70c",
+      "rawBlobSha256": "40b4f89e2b8c384ce39e8c004e2cfcc0aa525f5c56e0ee02825fd08bef053ce6",
+      "function": "OfficialStatusSource::fetch_inner",
+      "witnessLineNumbers": [
+        102
+      ],
+      "meaning": "unresolved actual runtime executable results in Unreachable, no inferred stopped runtime",
+      "sourceCopiedIntoDocs": false
+    },
+    {
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "path": "apps/desktop/tauri/src/modules/status/mod.rs",
+      "gitBlob": "6501acfbce9f3eb5856c134bf867fb95f584cc6a",
+      "rawBlobSha256": "26064e689d1f425ce296172b63854425918c313fc571e69683ca6a4c119d52e5",
+      "function": "StatusCollector::refresh_with",
+      "witnessLineNumbers": [
+        825
+      ],
+      "meaning": "on collection failure, unresolved source sets matrix to NotFound but preserves Err in the refresh result",
+      "sourceCopiedIntoDocs": false
+    },
+    {
+      "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "gitBlob": "81e16688210b801fe9607cab9aee00bb445c7546",
+      "rawBlobSha256": "12ec7a18c9f27504e70c00d626b0f5df8676c861e53754afa20d2af42828fdf5",
+      "function": "status_snapshot_from_collector",
+      "witnessLineNumbers": [
+        517
+      ],
+      "meaning": "snapshot getter discards refresh error and projects existing collector fields with Live source; API success is not refresh success",
+      "sourceCopiedIntoDocs": false
+    }
+  ],
+  "currentAdmissionConclusion": "inference from current unresolved native source and exact production contract; no switch invoked or raw refresh result exposed",
+  "currentRootSuccessAccepted": false,
+  "knownOlderActualRefusal": ".adg/evidence/OCX-0110-20261012-WIN-RETENTION/custom-root-reference-switch.json",
+  "olderRefusalNotReclassifiedAsCurrentCommandAttempt": true,
+  "noVerifierFlagOrEnumOverride": true,
+  "requiresOriginalVerifiedIdleRuntimeGate": true
+}

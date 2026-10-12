@@ -1010,3 +1010,9 @@ main eae8532 CI38254821701于21:44:37（UTC+8）completed/success，六job含实
 同一eae普通PID37276在RDP断开时做真实原生命令场景：新测试snapshot一字节临时损坏→restore拒绝/新异常false；另一Backup真实成功仍不解除；finally修复原载荷字节后连续重试同一Restore候选成功，新异常于23:16:30.380（UTC+8）真实解除。活动偏好前/拒绝后/恢复后SHA相同、其他旧通知resolved及时间保持，原pin保留、新事务保护释放；无事件注入/手工解除。
 
 event-scope整文件因Backup分区候选变化而不同，如实保留。Restore/local/execution分区UUID/指纹与object_id连续，指纹由实际snapshot ID重算匹配，不能用整文件等同要求误判动作隔离。最终源周期原字节/stable/auto-check true保持，名义截止仍2026-10-13 22:55:39/40，应用/监测句柄仍活。见[最终eae恢复事件解除](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows最终eae恢复事件解除/README.md)。只通过此动作/阶段/通道场景，不抵全事件/UI/安全矩阵或性能周期；原TASK/脚本/环境、全部预算/既有failed保持，IMP in_progress，不降低门禁、不关闭或发布。
+
+### 2026-10-12 最终eae切根前提只读诊断
+
+当前eae普通PID37276实际来源unresolved，状态刷新DTO为NotFound/Live、pid/port空/health unknown。精确源码确认：未解析真实来源返回Unreachable，collector投影NotFound但refresh仍Err；快照getter忽略该Err后组装Live，而切根入口单独要求本次refresh.is_ok()再验证idle。DTO/命令成功不能代替原门禁verified成功，也不放宽fresh状态。
+
+本轮没有调用切根/迁移，准入结论按当前来源与精确函数路径推断；旧0a837实际runtime_unverified拒绝保留但不重新标eae结果。根配置/绑定文件、偏好与eae周期完整字节前后不变，应用/监测真实句柄仍活、日常摘要保持。见[最终eae切根准入诊断](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows最终eae切根准入诊断/README.md)。只认证诊断，不计自定义根成功；真实来源/采集前提、TASK/脚本/安全环境及其余原门禁与预算/既有failed保持，IMP in_progress，不降低门禁、不关闭或发布。
