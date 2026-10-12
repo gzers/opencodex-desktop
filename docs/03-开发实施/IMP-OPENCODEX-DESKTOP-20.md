@@ -896,3 +896,11 @@ afff490的main CI38213445710于15:05:46（UTC+8）completed/success，六项job�
 真实原生关闭按钮使原afff PID29936窗口visible=false/minimized=false且进程存活，app_foreground=false、Mica转inactive/attr1；WebView document.visibilityState实际仍visible，如实区分。没有运行代理，不计代理保持通过。Computer Use隐藏窗口绑定/激活分别返回not found/not usable，没有实际托盘恢复，不将工具限制记为产品故障或通过。
 
 有意结束此测试会话，经原监督器受控清理并独立确认旧应用/监督器退出、进程数0后，才启动同根同EXE新普通PID41328/监督器44628/主HWND787306（exec91566）。偏好SHA及原pin、事件解除/旧异常状态跨启动保持，themeNeedsImport=false、auto-check false，日常EXE摘要未变。见[关闭隐藏与顺序重启证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows关闭隐藏与顺序重启/README.md)。不冒充同HWND恢复或正常退出验收；其余门禁/TASK/脚本确认缺口、原预算/既有性能failed保持，IMP in_progress，不关闭或发布。
+
+### 2026-10-12 同机普通与管理员真实令牌及管理员备份回环
+
+原普通PID41328实际false/type3，确认退出及候选数0后经标准RunAs启动同根afff管理员PID42372/监督器44052，应用真实elevated=true/type2。独立管理员只读助手打开同一进程句柄再次核验EXE/创建时间/令牌一致；只有一个应用。普通metrics身份门禁拒绝管理员路径null，未放松；管理员读主HWND381618848实际DPI192/visible/foreground=false，抓帧超时及AX只有标题栏不抵完整管理员UI/Mica通过。
+
+管理员真实新建/固定备份、save light→restore system，DTO与偏好SHA恢复一致，无兜底保存替代；pin跨恢复保留、新事务保护释放，最后撤回临时pin，原pin/自动关闭保持。管理员只读Hyper-V查询成功返回0台VM，补充此前普通访问拒绝，未修改VM。管理员受控终态后才返回同根普通PID38924/监督器44780（exec58413），false/type3、源码匹配，无重叠。
+
+见[双真实令牌与管理员备份](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows双真实令牌与管理员备份/README.md)。只通过令牌与该原生命令场景，管理员完整交互/其余DPI/安装更新/全事件/配对性能/真实周期继续开放；TASK/脚本确认、原预算/既有性能failed不变，IMP in_progress，不关闭或发布。

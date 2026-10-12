@@ -1,0 +1,52 @@
+{
+  "originalAdministratorApplicationPresent": false,
+  "originalAdministratorSupervisorPresent": false,
+  "applicationCount": 0,
+  "collectedAtUtc": "2026-10-12T09:49:32.2436494Z",
+  "finalSession": {
+    "schemaVersion": 1,
+    "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateafff\\opencodex-desktop.exe",
+    "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+    "mode": "administrator",
+    "base": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110",
+    "anchor": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+    "supervisorPid": 44052,
+    "supervisorCreationTimeUtc": "2026-10-12T09:38:40.8028515Z",
+    "startedAtUtc": "2026-10-12T09:38:41.57221Z",
+    "status": "stop-requested",
+    "installerExecuted": false,
+    "preservesDailyInstallation": true,
+    "scope": "one retained application process; copied EXE and explicit sandbox, not installer/default-directory acceptance",
+    "harnessToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 44052,
+      "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+      "creationTimeUtc": "2026-10-12T09:38:40.8028515Z",
+      "elevated": true,
+      "elevationType": 2,
+      "collectedAtUtc": "2026-10-12T09:38:42.6699143Z"
+    },
+    "preferencesSeed": "existing isolated preferences retained",
+    "applicationToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 42372,
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateafff\\opencodex-desktop.exe",
+      "creationTimeUtc": "2026-10-12T09:38:42.7901683Z",
+      "elevated": true,
+      "elevationType": 2,
+      "collectedAtUtc": "2026-10-12T09:49:08.7324784Z"
+    },
+    "applicationPid": 42372,
+    "cdpPort": 59680,
+    "endpoint": "http://127.0.0.1:59680",
+    "sourceCommitMatched": true,
+    "startupLogWrittenDuringThisProcess": true,
+    "lastLiveAtUtc": "2026-10-12T09:49:08.7322785Z",
+    "elapsedSeconds": 624.749591,
+    "finishedAtUtc": "2026-10-12T09:49:13.8208422Z"
+  },
+  "normalExitAcceptance": false
+}

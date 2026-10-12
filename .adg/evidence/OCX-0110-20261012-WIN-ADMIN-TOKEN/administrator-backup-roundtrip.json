@@ -1,0 +1,72 @@
+{
+  "collectedAtUtc": "2026-10-12T09:48:08.803Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 42372,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261012-WIN-ADMIN-TOKEN\\methods\\admin-backup-roundtrip.js",
+  "screenshot": null,
+  "result": {
+    "startedAtUtc": "2026-10-12T09:48:08.556Z",
+    "originalPreferenceSummary": {
+      "theme": "system",
+      "automaticCheck": false,
+      "channel": "stable"
+    },
+    "cleanup": {
+      "preferenceDtoRestored": true,
+      "temporaryPinRemoved": true,
+      "originalUserPinRetained": true,
+      "productionStoreError": false,
+      "productionStoreTheme": "system",
+      "automaticChecksDisabled": true,
+      "nativeInvokeUnchanged": true
+    },
+    "scope": "actual administrator process native backup, temporary different-theme save and restore; no synthetic UI input, installer or package scripts",
+    "createdBackupId": "bk_20261012094808_1ef0160b",
+    "changedTheme": "light",
+    "beforeRestorePin": {
+      "id": "bk_20261012094808_1ef0160b",
+      "action": "manual-preferences",
+      "createdAt": "2026-10-12T09:48:08Z",
+      "bytes": 1374,
+      "pinned": true,
+      "protected": true,
+      "protectionReason": "pinned",
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "restored": {
+      "refreshRequired": false,
+      "protectionReconciliationPending": false,
+      "backupId": "bk_20261012094808_1ef0160b",
+      "protectionBackupId": "bk_20261012094808_449e074f",
+      "targetPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json"
+    },
+    "restoredTheme": "system",
+    "restoredPreferenceDtoMatches": true,
+    "pinAfterRestore": {
+      "id": "bk_20261012094808_1ef0160b",
+      "action": "manual-preferences",
+      "createdAt": "2026-10-12T09:48:08Z",
+      "bytes": 1374,
+      "pinned": true,
+      "protected": true,
+      "protectionReason": "pinned",
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "protectionAfterRestore": {
+      "id": "bk_20261012094808_449e074f",
+      "action": "restore-protection",
+      "createdAt": "2026-10-12T09:48:08Z",
+      "bytes": 1373,
+      "pinned": false,
+      "protected": false,
+      "protectionReason": null,
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "finishedAtUtc": "2026-10-12T09:48:08.802Z"
+  }
+}

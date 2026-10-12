@@ -1,0 +1,33 @@
+{
+  "requestedAtUtc": "2026-10-12T09:38:40.6012780Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "supervisorSha256": "f13b4335ce9ef1eed94d4cafb2fd832f2af5f2da8ad4fef07d4e96acd4457d1e",
+  "requestedMode": "administrator",
+  "requesterPid": 37956,
+  "applicationCountBeforeRequest": 0,
+  "status": "elevated-supervisor-started-token-not-yet-verified",
+  "filePath": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+  "arguments": [
+    "-NoProfile",
+    "-NonInteractive",
+    "-File",
+    "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-single-session.ps1",
+    "-Executable",
+    "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateafff\\opencodex-desktop.exe",
+    "-ExpectedSha256",
+    "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+    "-ExpectedCommit",
+    "afff490a430a81f8c233d44928aa3681a23e91e0",
+    "-Mode",
+    "administrator"
+  ],
+  "windowStyle": "Hidden",
+  "securitySettingsChanged": false,
+  "authenticationAutomated": false,
+  "packageLifecycleScriptsExecuted": false,
+  "installerExecuted": false,
+  "administratorApplicationTokenProved": false,
+  "supervisorPid": 44052,
+  "returnedAtUtc": "2026-10-12T09:38:40.8405240Z"
+}
