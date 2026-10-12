@@ -1,0 +1,138 @@
+{
+  "id": 114657220689,
+  "run_id": 38201999141,
+  "head_sha": "6b9abc35742d12a48d25482bf7f7f84d19981300",
+  "name": "backend-windows",
+  "status": "completed",
+  "conclusion": "failure",
+  "steps": [
+    {
+      "number": 1,
+      "name": "Set up job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:00:17Z",
+      "completed_at": "2026-10-12T04:00:19Z"
+    },
+    {
+      "number": 2,
+      "name": "Run actions/checkout@v5",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:00:19Z",
+      "completed_at": "2026-10-12T04:00:25Z"
+    },
+    {
+      "number": 3,
+      "name": "Run actions/setup-node@v5",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:00:25Z",
+      "completed_at": "2026-10-12T04:00:31Z"
+    },
+    {
+      "number": 4,
+      "name": "Run dtolnay/rust-toolchain@stable",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:00:31Z",
+      "completed_at": "2026-10-12T04:00:54Z"
+    },
+    {
+      "number": 5,
+      "name": "Run npm --prefix ../ui ci",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:00:54Z",
+      "completed_at": "2026-10-12T04:01:04Z"
+    },
+    {
+      "number": 6,
+      "name": "Run npm --prefix ../ui run build",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:01:04Z",
+      "completed_at": "2026-10-12T04:01:12Z"
+    },
+    {
+      "number": 7,
+      "name": "Run cargo fmt --all -- --check",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:01:12Z",
+      "completed_at": "2026-10-12T04:01:15Z"
+    },
+    {
+      "number": 8,
+      "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:01:15Z",
+      "completed_at": "2026-10-12T04:03:39Z"
+    },
+    {
+      "number": 9,
+      "name": "Windows backend regression",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-12T04:03:39Z",
+      "completed_at": "2026-10-12T04:11:02Z"
+    },
+    {
+      "number": 10,
+      "name": "Collect Windows native dependency diagnostics",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:11:02Z",
+      "completed_at": "2026-10-12T04:11:23Z"
+    },
+    {
+      "number": 11,
+      "name": "Run cargo build --locked --release --features custom-protocol --bins",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-12T04:11:23Z",
+      "completed_at": "2026-10-12T04:11:23Z"
+    },
+    {
+      "number": 12,
+      "name": "Windows final EXE smoke",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-12T04:11:23Z",
+      "completed_at": "2026-10-12T04:11:23Z"
+    },
+    {
+      "number": 13,
+      "name": "Run actions/upload-artifact@v4",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:11:23Z",
+      "completed_at": "2026-10-12T04:11:27Z"
+    },
+    {
+      "number": 25,
+      "name": "Post Run actions/setup-node@v5",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-12T04:11:27Z",
+      "completed_at": "2026-10-12T04:11:27Z"
+    },
+    {
+      "number": 26,
+      "name": "Post Run actions/checkout@v5",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:11:27Z",
+      "completed_at": "2026-10-12T04:11:29Z"
+    },
+    {
+      "number": 27,
+      "name": "Complete job",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-12T04:11:29Z",
+      "completed_at": "2026-10-12T04:11:29Z"
+    }
+  ]
+}

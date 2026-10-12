@@ -1,0 +1,159 @@
+{
+  "collectedAtUtc": "2026-10-12T04:59:07.740Z",
+  "sourceCommit": "0a83761a99bdcb721d929f33e4c60c2e95eb6224",
+  "applicationPid": 41528,
+  "executableSha256": "fa89ba3f75d44b331cfb54df3ce75a74af0ce45cbf5ce907e50667b7945aaa2f",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-backup-failure-check.js",
+  "result": {
+    "before": {
+      "items": [
+        {
+          "id": "runtime-not-found",
+          "kind": "warning",
+          "category": "system",
+          "source": "runtime",
+          "title": "未发现可运行的 OpenCodex",
+          "detail": "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
+          "time": "2026-10-12T04:35:37.039334400+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "runtime-not-found",
+          "occurrenceCount": 1,
+          "lastObservedAt": null,
+          "action": "settings_installation",
+          "target": null
+        }
+      ],
+      "aggregate": {
+        "total": 1,
+        "unread": 1,
+        "unresolved": 1,
+        "dangerUnread": 0
+      }
+    },
+    "result": {
+      "rejected": true,
+      "error": {
+        "code": 1,
+        "message": "file system operation failed: manage backups; unsupported cleanup policy schema or retention"
+      }
+    },
+    "failed": {
+      "items": [
+        {
+          "id": "runtime-not-found",
+          "kind": "warning",
+          "category": "system",
+          "source": "runtime",
+          "title": "未发现可运行的 OpenCodex",
+          "detail": "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
+          "time": "2026-10-12T04:35:37.039334400+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "runtime-not-found",
+          "occurrenceCount": 1,
+          "lastObservedAt": null,
+          "action": "settings_installation",
+          "target": null
+        },
+        {
+          "id": "preferences-backup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+          "kind": "danger",
+          "category": "system",
+          "source": "user_action",
+          "title": "偏好备份失败",
+          "detail": "备份未成功完成；请查看诊断记录后重试。",
+          "time": "2026-10-12T04:59:05.133134100+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "preferences-backup:failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+          "occurrenceCount": 1,
+          "lastObservedAt": "2026-10-12T04:59:05.133134100+00:00",
+          "action": "logs",
+          "target": null
+        }
+      ],
+      "aggregate": {
+        "total": 2,
+        "unread": 2,
+        "unresolved": 2,
+        "dangerUnread": 1
+      }
+    },
+    "check": {
+      "status": "up_to_date",
+      "update": {
+        "channel": "stable",
+        "currentVersion": "0.1.10",
+        "availableVersion": null,
+        "lastCheckedAt": "2026-10-12T04:59:07.732242400+00:00",
+        "signatureVerified": false,
+        "error": null,
+        "notes": null,
+        "releaseUrl": null,
+        "publishedAt": null,
+        "pendingRestart": null
+      }
+    },
+    "afterCheck": {
+      "items": [
+        {
+          "id": "runtime-not-found",
+          "kind": "warning",
+          "category": "system",
+          "source": "runtime",
+          "title": "未发现可运行的 OpenCodex",
+          "detail": "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
+          "time": "2026-10-12T04:35:37.039334400+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "runtime-not-found",
+          "occurrenceCount": 1,
+          "lastObservedAt": null,
+          "action": "settings_installation",
+          "target": null
+        },
+        {
+          "id": "preferences-backup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+          "kind": "danger",
+          "category": "system",
+          "source": "user_action",
+          "title": "偏好备份失败",
+          "detail": "备份未成功完成；请查看诊断记录后重试。",
+          "time": "2026-10-12T04:59:05.133134100+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "preferences-backup:failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+          "occurrenceCount": 1,
+          "lastObservedAt": "2026-10-12T04:59:05.133134100+00:00",
+          "action": "logs",
+          "target": null
+        }
+      ],
+      "aggregate": {
+        "total": 2,
+        "unread": 2,
+        "unresolved": 2,
+        "dangerUnread": 1
+      }
+    },
+    "failureId": "preferences-backup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+    "scope": "native command failure delivery and unrelated update query isolation; no UI input"
+  }
+}

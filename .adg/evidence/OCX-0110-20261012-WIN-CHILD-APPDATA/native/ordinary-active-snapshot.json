@@ -1,0 +1,151 @@
+{
+  "collectedAtUtc": "2026-10-12T04:40:15.380Z",
+  "sourceCommit": "0a83761a99bdcb721d929f33e4c60c2e95eb6224",
+  "applicationPid": 41528,
+  "executableSha256": "fa89ba3f75d44b331cfb54df3ce75a74af0ce45cbf5ce907e50667b7945aaa2f",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-initial-snapshot.js",
+  "result": {
+    "about": {
+      "name": "OpenCodeX Desktop",
+      "version": "0.1.10",
+      "identifier": "com.gzers.opencodex.desktop",
+      "platform": "Windows",
+      "framework": "Tauri v2",
+      "license": "MIT License"
+    },
+    "roots": {
+      "activeDataRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+      "opencodexHomeMode": "inside",
+      "opencodexHome": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\opencodex-home",
+      "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+      "currentOpencodexHome": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\opencodex-home",
+      "runtimeActive": true
+    },
+    "discovery": {
+      "node": {
+        "found": false,
+        "path": null,
+        "version": null
+      },
+      "npm": {
+        "found": false,
+        "path": null,
+        "version": null
+      },
+      "ocx": {
+        "found": false,
+        "path": null,
+        "version": null
+      },
+      "gate": "missing_node",
+      "shortCircuited": true,
+      "brewFound": false
+    },
+    "foreground": true,
+    "appearance": {
+      "platform": "Windows",
+      "material": "mica",
+      "reason": "mica",
+      "theme": "dark",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": true,
+      "nativeCaption": true,
+      "backdropAttribute": 2,
+      "dwmResult": 0
+    },
+    "preferences": {
+      "schemaVersion": 2,
+      "themeNeedsImport": false,
+      "interfaceScale": 100,
+      "launchMain": true,
+      "autoPanel": false,
+      "panelMode": "embedded",
+      "keepProxyOnClose": true,
+      "lifecycleNotifications": true,
+      "syncConflictAlerts": true,
+      "launchWithCodex": false,
+      "autoBackupUpgrade": true,
+      "autoBackupImport": true,
+      "autoBackupSync": true,
+      "backupRetention": "10",
+      "backupIntegrity": "sha-256",
+      "backupIncludeSkills": true,
+      "exportIncludeSkills": true,
+      "mcpConflictPolicy": "ask",
+      "mcpMask": true,
+      "backupIncludeMcp": true,
+      "exportIncludeMcp": true,
+      "logRetention": "30d-10000",
+      "notificationRetention": "30",
+      "startupCleanup": true,
+      "cleanupBackupSummary": true,
+      "cliEnabled": false,
+      "syncConflictPolicy": "ask",
+      "coldSync": true,
+      "backupBeforeOverwrite": true,
+      "appUpdateChannel": "stable",
+      "appUpdateAutoCheck": false,
+      "appUpdateCheckIntervalSeconds": 86400,
+      "theme": "system",
+      "networkProxyMode": "none",
+      "networkProxyScheme": "http",
+      "networkProxyHost": "",
+      "networkNoProxy": "",
+      "visualEffects": "high",
+      "glowRender": "mesh"
+    },
+    "updateStatus": {
+      "channel": "stable",
+      "currentVersion": "0.1.10",
+      "availableVersion": null,
+      "lastCheckedAt": null,
+      "signatureVerified": null,
+      "error": null,
+      "notes": null,
+      "releaseUrl": null,
+      "publishedAt": null,
+      "pendingRestart": null
+    },
+    "schedule": {
+      "targets": [],
+      "nextDelayMs": null
+    },
+    "bodyText": "OpenCodeX-Desktop\nDesktop Manager\n概览\n面板\n拓展\n诊断\n设置\n概览\n\n完成启动前的环境准备，再继续运行操作。\n\n1\n待接入\n\n启动条件未满足 · 请按下方指引处理\n\n缺少 Node.js\n\n补全启动条件后，即可继续使用 OpenCodex。\n\n0 / 3 项通过\n01\nNode.js\n未发现\n02\nnpm\n待检查\n03\nOpenCodex\n待检查\n安装 Node.js\n\n请安装 Windows 版 Node.js LTS（包含 npm），或使用受支持的 NVM 安装目录，完成后重新检查。\n\n安装后校验\nnode -v; npm -v\n安装指引\n重新检查\n\n未执行的项目显示「待检查」；补全前置条件后继续。\n\n完整指引 ›\n\n应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。",
+    "dpr": 2,
+    "visibility": "visible",
+    "focus": true,
+    "stores": [
+      "app",
+      "effects",
+      "glowRender",
+      "preferences",
+      "theme",
+      "lifecycle",
+      "feedback",
+      "routes",
+      "notifications",
+      "data-root",
+      "updates",
+      "modal",
+      "environment",
+      "runtime",
+      "about",
+      "extensions",
+      "sync"
+    ],
+    "effects": {
+      "setting": "high",
+      "effective": "high",
+      "visible": true,
+      "lightAllowed": true,
+      "ambientAllowed": true,
+      "animated": true,
+      "solid": false
+    },
+    "treeTables": 0
+  }
+}

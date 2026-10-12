@@ -1,0 +1,110 @@
+Window: "OpenCodeX Desktop", App: opencodex-desktop.exe.
+	0 窗口 OpenCodeX Desktop Secondary Actions: Raise
+		1 窗格
+			2 窗格 OpenCodeX Desktop
+				3 窗格 (disabled)
+				4 区域 OpenCodeX Desktop - Web 内容
+					5 区域
+						6 区域
+							7 区域
+								8 区域
+								9 区域
+									10 区域
+										11 区域
+											12 区域
+												13 区域
+												14 文档 OpenCodeX Desktop Value: http://tauri.localhost/#overview ID: RootWebArea
+													15 补充
+														16 图形 OpenCodeX logo
+														17 文本 OpenCodeX-Desktop
+														18 文本 Desktop Manager
+														19 导航
+															20 按钮 概览 Description: 概览
+															21 按钮 面板 Description: 面板
+															22 按钮 拓展 Description: 拓展
+															23 按钮 诊断 Description: 诊断
+															24 按钮 设置 Description: 设置
+													25 主要
+														26 章节标题
+															27 标题 概览
+															28 文本 完成启动前的环境准备，再继续运行操作。
+															29 组 主题
+																30 按钮 浅色 Description: 浅色
+																31 按钮 深色 Description: 深色
+																32 按钮 跟随系统 Description: 跟随系统
+															33 按钮 刷新状态 Description: 刷新状态
+															34 按钮 1 Description: 通知
+														35 按钮 (disabled) 待接入，环境准备中 Description: 当前运行状态；请先完成环境准备
+														36 文本 启动条件未满足 · 请按下方指引处理
+														37 标题 缺少 Node.js
+														38 文本 补全启动条件后，即可继续使用 OpenCodex。
+														39 文本 0 / 3 项通过
+														40 列表 环境检查结果
+															41 列表项目 01Node.js未发现
+																42 文本 Node.js
+															43 列表项目 02npm待检查
+																44 文本 npm
+															45 列表项目 03OpenCodex待检查
+																46 文本 OpenCodex
+														47 标题 安装 Node.js
+														48 文本 请安装 Windows 版 Node.js LTS（包含 npm），或使用受支持的 NVM 安装目录，完成后重新检查。
+														49 文本 安装后校验
+														50 按钮 node -v; npm -v 复制
+														51 按钮 安装指引
+														52 按钮 重新检查
+														53 文本 未执行的项目显示「待检查」；补全前置条件后继续。
+														54 按钮 完整指引 ›
+														55 文本 应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。
+								56 区域
+						57 区域
+						58 区域
+		59 标题栏 (settable, string) Value: OpenCodeX Desktop
+			60 菜单栏 系统 ID: MenuBar
+				61 菜单项目 系统
+			62 按钮 最小化
+			63 按钮 最大化
+			64 按钮 关闭
+
+Document text: ```
+￼
+OpenCodeX-Desktop
+Desktop Manager
+概览
+面板
+拓展
+诊断
+设置
+概览
+完成启动前的环境准备，再继续运行操作。
+浅色
+深色
+跟随系统
+刷新状态
+1
+￼
+待接入
+启动条件未满足 · 请按下方指引处理
+缺少 Node.js
+补全启动条件后，即可继续使用 OpenCodex。
+0 / 3 项通过
+01
+Node.js
+未发现
+02
+npm
+待检查
+03
+OpenCodex
+待检查
+安装 Node.js
+请安装 Windows 版 Node.js LTS（包含 npm），或使用受支持的 NVM 安装目录，完成后重新检查。
+安装后校验
+node -v; npm -v
+复制
+安装指引
+重新检查
+未执行的项目显示「待检查」；补全前置条件后继续。
+完整指引 ›
+应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。
+￼
+```

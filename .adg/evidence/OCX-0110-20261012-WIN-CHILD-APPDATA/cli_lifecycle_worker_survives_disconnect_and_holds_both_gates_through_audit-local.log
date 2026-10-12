@@ -1,0 +1,16 @@
+
+running 1 test
+
+thread 'tokio-rt-worker' (41036) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'tokio-rt-worker' (41036) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (41036) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+test modules::ipc::service::tests::cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 500 filtered out; finished in 0.28s
+

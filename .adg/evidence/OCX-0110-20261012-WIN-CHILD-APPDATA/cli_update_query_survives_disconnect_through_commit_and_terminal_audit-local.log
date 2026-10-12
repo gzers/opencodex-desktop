@@ -1,0 +1,10 @@
+
+running 1 test
+
+thread 'tokio-rt-worker' (31464) panicked at src\modules\ipc\service.rs:2407:34:
+isolated CLI update panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 500 filtered out; finished in 0.02s
+

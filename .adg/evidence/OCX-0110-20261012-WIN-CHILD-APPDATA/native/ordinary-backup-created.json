@@ -1,0 +1,408 @@
+{
+  "collectedAtUtc": "2026-10-12T04:45:44.622Z",
+  "sourceCommit": "0a83761a99bdcb721d929f33e4c60c2e95eb6224",
+  "applicationPid": 41528,
+  "executableSha256": "fa89ba3f75d44b331cfb54df3ce75a74af0ce45cbf5ce907e50667b7945aaa2f",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-backup-snapshot.js",
+  "result": {
+    "backups": [
+      {
+        "id": "bk_20261012044452_a921f503",
+        "action": "manual-preferences",
+        "createdAt": "2026-10-12T04:44:52Z",
+        "bytes": 1170,
+        "pinned": false,
+        "protected": false,
+        "protectionReason": null,
+        "preferencesCandidate": true,
+        "integrityVerified": false
+      }
+    ],
+    "files": {
+      "rootPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\backups",
+      "nodes": [
+        {
+          "id": ".",
+          "label": "backups",
+          "directory": true,
+          "purpose": "按 UTC 年月与事务分类保存备份。",
+          "canOpen": true,
+          "children": [
+            {
+              "id": "2026",
+              "label": "2026",
+              "directory": true,
+              "purpose": "UTC 年份。",
+              "canOpen": true,
+              "children": [
+                {
+                  "id": "2026/10",
+                  "label": "10",
+                  "directory": true,
+                  "purpose": "UTC 月份。",
+                  "canOpen": true,
+                  "children": [
+                    {
+                      "id": "2026/10/manual-preferences",
+                      "label": "manual-preferences",
+                      "directory": true,
+                      "purpose": "管理器偏好手动备份。",
+                      "canOpen": true,
+                      "children": [
+                        {
+                          "id": "2026/10/manual-preferences/bk_20261012044452_a921f503",
+                          "label": "bk_20261012044452_a921f503",
+                          "directory": true,
+                          "purpose": "一份备份；内容与用途以本份清单为准。",
+                          "canOpen": true,
+                          "children": [
+                            {
+                              "id": "2026/10/manual-preferences/bk_20261012044452_a921f503/backup-manifest.json",
+                              "label": "backup-manifest.json",
+                              "directory": false,
+                              "purpose": "备份范围、时间与完整性摘要；恢复前重新校验。",
+                              "canOpen": true,
+                              "children": []
+                            },
+                            {
+                              "id": "2026/10/manual-preferences/bk_20261012044452_a921f503/preferences.json",
+                              "label": "preferences.json",
+                              "directory": false,
+                              "purpose": "事务保存的文件副本；实际范围以本份清单为准。",
+                              "canOpen": true,
+                              "children": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "policy": {
+      "schema_version": 1,
+      "mode": "manual",
+      "keep_recent": 10,
+      "keep_days": 30
+    },
+    "preferences": {
+      "schemaVersion": 2,
+      "themeNeedsImport": false,
+      "interfaceScale": 100,
+      "launchMain": true,
+      "autoPanel": false,
+      "panelMode": "embedded",
+      "keepProxyOnClose": true,
+      "lifecycleNotifications": true,
+      "syncConflictAlerts": true,
+      "launchWithCodex": false,
+      "autoBackupUpgrade": true,
+      "autoBackupImport": true,
+      "autoBackupSync": true,
+      "backupRetention": "10",
+      "backupIntegrity": "sha-256",
+      "backupIncludeSkills": true,
+      "exportIncludeSkills": true,
+      "mcpConflictPolicy": "ask",
+      "mcpMask": true,
+      "backupIncludeMcp": true,
+      "exportIncludeMcp": true,
+      "logRetention": "30d-10000",
+      "notificationRetention": "30",
+      "startupCleanup": true,
+      "cleanupBackupSummary": true,
+      "cliEnabled": false,
+      "syncConflictPolicy": "ask",
+      "coldSync": true,
+      "backupBeforeOverwrite": true,
+      "appUpdateChannel": "stable",
+      "appUpdateAutoCheck": false,
+      "appUpdateCheckIntervalSeconds": 86400,
+      "theme": "system",
+      "networkProxyMode": "none",
+      "networkProxyScheme": "http",
+      "networkProxyHost": "",
+      "networkNoProxy": "",
+      "visualEffects": "high",
+      "glowRender": "mesh"
+    },
+    "notifications": {
+      "items": [
+        {
+          "id": "runtime-not-found",
+          "kind": "warning",
+          "category": "system",
+          "source": "runtime",
+          "title": "未发现可运行的 OpenCodex",
+          "detail": "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
+          "time": "2026-10-12T04:35:37.039334400+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "runtime-not-found",
+          "occurrenceCount": 1,
+          "lastObservedAt": null,
+          "action": "settings_installation",
+          "target": null
+        }
+      ],
+      "aggregate": {
+        "total": 1,
+        "unread": 1,
+        "unresolved": 1,
+        "dangerUnread": 0
+      }
+    },
+    "geometry": [
+      {
+        "text": "名称\t用途\t操作",
+        "rectangle": {
+          "x": 285,
+          "y": 680.7890625,
+          "width": 845,
+          "height": 38.5,
+          "top": 680.7890625,
+          "right": 1130,
+          "bottom": 719.2890625,
+          "left": 285
+        },
+        "controls": []
+      },
+      {
+        "text": "backups\n\t按 UTC 年月与事务分类保存备份。\t打开目录",
+        "rectangle": {
+          "x": 285,
+          "y": 719.2890625,
+          "width": 845,
+          "height": 55,
+          "top": 719.2890625,
+          "right": 1130,
+          "bottom": 774.2890625,
+          "left": 285
+        },
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "label": "收起 backups",
+            "expanded": "true",
+            "rectangle": {
+              "x": 319,
+              "y": 729.7890625,
+              "width": 22,
+              "height": 22,
+              "top": 729.7890625,
+              "right": 341,
+              "bottom": 751.7890625,
+              "left": 319
+            }
+          },
+          {
+            "tag": "svg",
+            "label": "",
+            "expanded": null,
+            "rectangle": {
+              "x": 322,
+              "y": 732.7890625,
+              "width": 16,
+              "height": 16,
+              "top": 732.7890625,
+              "right": 338,
+              "bottom": 748.7890625,
+              "left": 322
+            }
+          },
+          {
+            "tag": "svg",
+            "label": "",
+            "expanded": null,
+            "rectangle": {
+              "x": 347,
+              "y": 731.7890625,
+              "width": 18,
+              "height": 18,
+              "top": 731.7890625,
+              "right": 365,
+              "bottom": 749.7890625,
+              "left": 347
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "label": "打开目录 backups",
+            "expanded": null,
+            "rectangle": {
+              "x": 958.59375,
+              "y": 729.7890625,
+              "width": 74,
+              "height": 34,
+              "top": 729.7890625,
+              "right": 1032.59375,
+              "bottom": 763.7890625,
+              "left": 958.59375
+            }
+          }
+        ]
+      },
+      {
+        "text": "2026\n\tUTC 年份。\t打开目录",
+        "rectangle": {
+          "x": 285,
+          "y": 774.2890625,
+          "width": 845,
+          "height": 55,
+          "top": 774.2890625,
+          "right": 1130,
+          "bottom": 829.2890625,
+          "left": 285
+        },
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "label": "收起 2026",
+            "expanded": "true",
+            "rectangle": {
+              "x": 335,
+              "y": 784.7890625,
+              "width": 22,
+              "height": 22,
+              "top": 784.7890625,
+              "right": 357,
+              "bottom": 806.7890625,
+              "left": 335
+            }
+          },
+          {
+            "tag": "svg",
+            "label": "",
+            "expanded": null,
+            "rectangle": {
+              "x": 338,
+              "y": 787.7890625,
+              "width": 16,
+              "height": 16,
+              "top": 787.7890625,
+              "right": 354,
+              "bottom": 803.7890625,
+              "left": 338
+            }
+          },
+          {
+            "tag": "svg",
+            "label": "",
+            "expanded": null,
+            "rectangle": {
+              "x": 363,
+              "y": 786.7890625,
+              "width": 18,
+              "height": 18,
+              "top": 786.7890625,
+              "right": 381,
+              "bottom": 804.7890625,
+              "left": 363
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "label": "打开目录 2026",
+            "expanded": null,
+            "rectangle": {
+              "x": 958.59375,
+              "y": 784.7890625,
+              "width": 74,
+              "height": 34,
+              "top": 784.7890625,
+              "right": 1032.59375,
+              "bottom": 818.7890625,
+              "left": 958.59375
+            }
+          }
+        ]
+      },
+      {
+        "text": "10\n\tUTC 月份。\t打开目录",
+        "rectangle": {
+          "x": 285,
+          "y": 829.2890625,
+          "width": 845,
+          "height": 54.5,
+          "top": 829.2890625,
+          "right": 1130,
+          "bottom": 883.7890625,
+          "left": 285
+        },
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "label": "展开 10",
+            "expanded": "false",
+            "rectangle": {
+              "x": 351,
+              "y": 839.7890625,
+              "width": 22,
+              "height": 22,
+              "top": 839.7890625,
+              "right": 373,
+              "bottom": 861.7890625,
+              "left": 351
+            }
+          },
+          {
+            "tag": "svg",
+            "label": "",
+            "expanded": null,
+            "rectangle": {
+              "x": 354,
+              "y": 842.7890625,
+              "width": 16,
+              "height": 16,
+              "top": 842.7890625,
+              "right": 370,
+              "bottom": 858.7890625,
+              "left": 354
+            }
+          },
+          {
+            "tag": "svg",
+            "label": "",
+            "expanded": null,
+            "rectangle": {
+              "x": 379,
+              "y": 841.7890625,
+              "width": 18,
+              "height": 18,
+              "top": 841.7890625,
+              "right": 397,
+              "bottom": 859.7890625,
+              "left": 379
+            }
+          },
+          {
+            "tag": "BUTTON",
+            "label": "打开目录 10",
+            "expanded": null,
+            "rectangle": {
+              "x": 958.59375,
+              "y": 839.7890625,
+              "width": 74,
+              "height": 34,
+              "top": 839.7890625,
+              "right": 1032.59375,
+              "bottom": 873.7890625,
+              "left": 958.59375
+            }
+          }
+        ]
+      }
+    ],
+    "dpr": 2,
+    "foreground": true
+  }
+}

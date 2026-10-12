@@ -1,0 +1,86 @@
+{
+  "collectedAtUtc": "2026-10-12T04:50:17.044Z",
+  "sourceCommit": "0a83761a99bdcb721d929f33e4c60c2e95eb6224",
+  "applicationPid": 41528,
+  "executableSha256": "fa89ba3f75d44b331cfb54df3ce75a74af0ce45cbf5ce907e50667b7945aaa2f",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-restore-transaction.js",
+  "result": {
+    "beforeTheme": "light",
+    "afterTheme": "system",
+    "pinnedBeforeRestore": true,
+    "pinnedAfterRestore": true,
+    "restored": {
+      "refreshRequired": false,
+      "protectionReconciliationPending": false,
+      "backupId": "bk_20261012044452_a921f503",
+      "protectionBackupId": "bk_20261012045017_0609193d",
+      "targetPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json"
+    },
+    "finalBackups": [
+      {
+        "id": "bk_20261012045017_0609193d",
+        "action": "restore-protection",
+        "createdAt": "2026-10-12T04:50:17Z",
+        "bytes": 1373,
+        "pinned": false,
+        "protected": false,
+        "protectionReason": null,
+        "preferencesCandidate": true,
+        "integrityVerified": false
+      },
+      {
+        "id": "bk_20261012044452_a921f503",
+        "action": "manual-preferences",
+        "createdAt": "2026-10-12T04:44:52Z",
+        "bytes": 1170,
+        "pinned": true,
+        "protected": true,
+        "protectionReason": "pinned",
+        "preferencesCandidate": true,
+        "integrityVerified": false
+      }
+    ],
+    "protection": {
+      "id": "bk_20261012045017_0609193d",
+      "action": "restore-protection",
+      "createdAt": "2026-10-12T04:50:17Z",
+      "bytes": 1373,
+      "pinned": false,
+      "protected": false,
+      "protectionReason": null,
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "notifications": {
+      "items": [
+        {
+          "id": "runtime-not-found",
+          "kind": "warning",
+          "category": "system",
+          "source": "runtime",
+          "title": "未发现可运行的 OpenCodex",
+          "detail": "可以在「安装配置」里把官方包托管安装到数据根内，或导入官方离线包。",
+          "time": "2026-10-12T04:35:37.039334400+00:00",
+          "read": false,
+          "resolved": false,
+          "resolvedAt": null,
+          "expiresAt": null,
+          "operationId": null,
+          "dedupeKey": "runtime-not-found",
+          "occurrenceCount": 1,
+          "lastObservedAt": null,
+          "action": "settings_installation",
+          "target": null
+        }
+      ],
+      "aggregate": {
+        "total": 1,
+        "unread": 1,
+        "unresolved": 1,
+        "dangerUnread": 0
+      }
+    },
+    "scope": "real native backup commands in the sole isolated application; UI confirmation pending"
+  }
+}

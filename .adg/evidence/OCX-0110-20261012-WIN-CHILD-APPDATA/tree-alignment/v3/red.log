@@ -1,0 +1,15 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: light/1/Root with mixed selection: first-line alignment failed [{"className":"tree-check","center":81,"height":16,"offsetFromFirstLine":0},{"className":"tree-toggle","center":81,"height":22,"offsetFromFirstLine":0},{"className":"tree-icon","center":81,"height":22,"offsetFromFirstLine":0},{"className":"btn ghost","center":87,"height":34,"offsetFromFirstLine":6}]
+    at file:///C:/Users/15119/.codex/worktrees/0110-windows-gates/opencodex-desktop/apps/desktop/ui/qa/tree-table.geometry.mjs:50:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

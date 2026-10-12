@@ -1,0 +1,1086 @@
+{
+  "result": "passed",
+  "scope": "production shared component in Chromium; CSS zoom, not physical DPI",
+  "cases": [
+    {
+      "theme": "light",
+      "scale": 1,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 81,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 81,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 81,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 81,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 80.5,
+          "labelHeight": 44,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 146,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 146,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 146,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 145.5,
+          "labelHeight": 22,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 201,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 201,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 201,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 200.5,
+          "labelHeight": 22,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 256,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 256,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 256,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 255.5,
+          "labelHeight": 132,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 409,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 409,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 408.5,
+          "labelHeight": 44,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "light-1.png",
+      "result": "passed"
+    },
+    {
+      "theme": "light",
+      "scale": 1.25,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 100.75,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 100.75,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 100.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 100.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 100.25,
+          "labelHeight": 55,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 181.75,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 181.75,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 181.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 181.25,
+          "labelHeight": 27.5,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 250.25,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 250.25,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 250.25,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 249.75,
+          "labelHeight": 27.5,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 318.75,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 318.75,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 318.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 318.25,
+          "labelHeight": 165,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 509.75,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 509.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 509.25,
+          "labelHeight": 55,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "light-1.25.png",
+      "result": "passed"
+    },
+    {
+      "theme": "light",
+      "scale": 1.5,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 120.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 120.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 120.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 120.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 120,
+          "labelHeight": 66,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 217.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 217.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 217.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 217,
+          "labelHeight": 33,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 299.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 299.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 299.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 299,
+          "labelHeight": 33,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 381.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 381.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 381.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 381,
+          "labelHeight": 198,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 610.5,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 610.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 610,
+          "labelHeight": 66,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "light-1.5.png",
+      "result": "passed"
+    },
+    {
+      "theme": "light",
+      "scale": 2,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 162,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 162,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 162,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 162,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 161,
+          "labelHeight": 88,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 292,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 292,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 292,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 291,
+          "labelHeight": 44,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 402,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 402,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 402,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 401,
+          "labelHeight": 44,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 512,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 512,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 512,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 511,
+          "labelHeight": 264,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 818,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 818,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 817,
+          "labelHeight": 88,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "light-2.png",
+      "result": "passed"
+    },
+    {
+      "theme": "dark",
+      "scale": 1,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 81,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 81,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 81,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 81,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 80.5,
+          "labelHeight": 44,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 146,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 146,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 146,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 145.5,
+          "labelHeight": 22,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 201,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 201,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 201,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 200.5,
+          "labelHeight": 22,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 256,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 256,
+              "height": 16,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 256,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 255.5,
+          "labelHeight": 132,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 409,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 409,
+              "height": 22,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 408.5,
+          "labelHeight": 44,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "dark-1.png",
+      "result": "passed"
+    },
+    {
+      "theme": "dark",
+      "scale": 1.25,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 100.75,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 100.75,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 100.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 100.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 100.25,
+          "labelHeight": 55,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 181.75,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 181.75,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 181.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 181.25,
+          "labelHeight": 27.5,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 250.25,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 250.25,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 250.25,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 249.75,
+          "labelHeight": 27.5,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 318.75,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 318.75,
+              "height": 20,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 318.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 318.25,
+          "labelHeight": 165,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 509.75,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 509.75,
+              "height": 27.5,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 509.25,
+          "labelHeight": 55,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "dark-1.25.png",
+      "result": "passed"
+    },
+    {
+      "theme": "dark",
+      "scale": 1.5,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 120.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 120.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 120.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 120.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 120,
+          "labelHeight": 66,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 217.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 217.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 217.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 217,
+          "labelHeight": 33,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 299.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 299.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 299.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 299,
+          "labelHeight": 33,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 381.5,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 381.5,
+              "height": 24,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 381.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 381,
+          "labelHeight": 198,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 610.5,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 610.5,
+              "height": 33,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 610,
+          "labelHeight": 66,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "dark-1.5.png",
+      "result": "passed"
+    },
+    {
+      "theme": "dark",
+      "scale": 2,
+      "rows": [
+        {
+          "label": "Root with mixed selection",
+          "firstLine": 162,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 162,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-toggle",
+              "center": 162,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 162,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 161,
+          "labelHeight": 88,
+          "lineHeight": 22
+        },
+        {
+          "label": "Selected leaf",
+          "firstLine": 292,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 292,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 292,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 291,
+          "labelHeight": 44,
+          "lineHeight": 22
+        },
+        {
+          "label": "Disabled leaf",
+          "firstLine": 402,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 402,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 402,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 401,
+          "labelHeight": 44,
+          "lineHeight": 22
+        },
+        {
+          "label": "Long name across several lines with spaces and enough content to exercise the first line contract",
+          "firstLine": 512,
+          "controls": [
+            {
+              "className": "tree-check",
+              "center": 512,
+              "height": 32,
+              "offsetFromFirstLine": 0
+            },
+            {
+              "className": "tree-icon",
+              "center": 512,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 511,
+          "labelHeight": 264,
+          "lineHeight": 22
+        },
+        {
+          "label": "Plain leaf without a checkbox",
+          "firstLine": 818,
+          "controls": [
+            {
+              "className": "tree-icon",
+              "center": 818,
+              "height": 44,
+              "offsetFromFirstLine": 0
+            }
+          ],
+          "purposeLine": 817,
+          "labelHeight": 88,
+          "lineHeight": 22
+        }
+      ],
+      "selections": [
+        {
+          "disabled": false,
+          "mixed": true,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": true
+        },
+        {
+          "disabled": true,
+          "mixed": false,
+          "selected": false
+        },
+        {
+          "disabled": false,
+          "mixed": false,
+          "selected": false
+        }
+      ],
+      "screenshot": "dark-2.png",
+      "result": "passed"
+    }
+  ]
+}

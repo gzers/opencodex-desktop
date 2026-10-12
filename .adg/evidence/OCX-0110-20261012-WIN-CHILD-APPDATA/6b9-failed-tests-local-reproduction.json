@@ -1,0 +1,29 @@
+[
+  {
+    "sourceCommit": "6b9abc35742d12a48d25482bf7f7f84d19981300",
+    "test": "modules::ipc::service::tests::cli_lifecycle_worker_survives_disconnect_and_holds_both_gates_through_audit",
+    "exitCode": 0,
+    "startedAtUtc": "2026-10-12T04:18:32.6214737Z",
+    "finishedAtUtc": "2026-10-12T04:18:32.9524827Z",
+    "binarySha256": "b97a32053c4ca345b5e5bcc092f6f313b5a291e7ac9481b0a5befcd0d4c58e3a",
+    "scope": "exact downloaded CI lib test, isolated TEMP; no GUI instance"
+  },
+  {
+    "sourceCommit": "6b9abc35742d12a48d25482bf7f7f84d19981300",
+    "test": "modules::ipc::service::tests::cli_migration_lock_wait_keeps_executor_responsive_and_owns_audit_after_disconnect",
+    "exitCode": 0,
+    "startedAtUtc": "2026-10-12T04:18:32.9553743Z",
+    "finishedAtUtc": "2026-10-12T04:18:33.0686212Z",
+    "binarySha256": "b97a32053c4ca345b5e5bcc092f6f313b5a291e7ac9481b0a5befcd0d4c58e3a",
+    "scope": "exact downloaded CI lib test, isolated TEMP; no GUI instance"
+  },
+  {
+    "sourceCommit": "6b9abc35742d12a48d25482bf7f7f84d19981300",
+    "test": "modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit",
+    "exitCode": 0,
+    "startedAtUtc": "2026-10-12T04:18:33.0686640Z",
+    "finishedAtUtc": "2026-10-12T04:18:33.1435825Z",
+    "binarySha256": "b97a32053c4ca345b5e5bcc092f6f313b5a291e7ac9481b0a5befcd0d4c58e3a",
+    "scope": "exact downloaded CI lib test, isolated TEMP; no GUI instance"
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "sourceCommit": "0a83761a99bdcb721d929f33e4c60c2e95eb6224",
+  "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate0a\\opencodex-desktop.exe",
+  "executableSha256": "fa89ba3f75d44b331cfb54df3ce75a74af0ce45cbf5ce907e50667b7945aaa2f",
+  "mode": "ordinary",
+  "base": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110",
+  "anchor": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "supervisorPid": 43188,
+  "supervisorCreationTimeUtc": "2026-10-12T04:33:45.8188256Z",
+  "startedAtUtc": "2026-10-12T04:33:46.3588313Z",
+  "status": "failed",
+  "installerExecuted": false,
+  "preservesDailyInstallation": true,
+  "scope": "one retained application process; copied EXE and explicit sandbox, not installer/default-directory acceptance",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 43188,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-12T04:33:45.8188256Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-12T04:33:47.1389681Z"
+  },
+  "preferencesSeed": "supported flat schema-2 defaults with startup panel and automatic checks disabled during initial gate setup",
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 43792,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate0a\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-12T04:33:47.2254387Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-12T04:33:47.2485796Z"
+  },
+  "applicationPid": 43792,
+  "cdpPort": 49854,
+  "endpoint": "http://127.0.0.1:49854",
+  "error": "Isolated application exited during initialization",
+  "finishedAtUtc": "2026-10-12T04:33:51.1449143Z"
+}
