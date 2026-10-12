@@ -1,0 +1,18 @@
+{
+  "collectedAtUtc": "2026-10-12T03:28:35.5559771Z",
+  "scope": "OpenCodeX installation registration only; no changes",
+  "uninstallRecords": [
+    {
+      "PSPath": "Microsoft.PowerShell.Core\\Registry::HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{7069DA97-F262-4585-98CA-AE416E6833A5}",
+      "DisplayName": "OpenCodeX Desktop",
+      "DisplayVersion": "0.1.9",
+      "InstallLocation": "D:\\Software\\Develop\\OpenCodeX Desktop\\",
+      "UninstallString": "MsiExec.exe /X{7069DA97-F262-4585-98CA-AE416E6833A5}",
+      "QuietUninstallString": null,
+      "WindowsInstaller": 1,
+      "Publisher": "gzers"
+    }
+  ],
+  "rememberedInstallDirs": [],
+  "decision": "do not execute unchanged installer until side-by-side registration and existing-install detection are verified"
+}

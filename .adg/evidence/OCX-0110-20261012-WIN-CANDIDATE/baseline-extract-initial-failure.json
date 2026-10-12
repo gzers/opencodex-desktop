@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUtc": "2026-10-12T03:34:43.1547517Z",
+  "package": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\OpenCodeX.Desktop_0.1.9_x64_en-US.msi",
+  "packageSha256": "b33dd0c890511467e72a453daaceb4b60b6f5af64dcae5dba54f69ed46bbad6a",
+  "databaseMode": "read-only",
+  "installerExecuted": false,
+  "properties": {
+    "ProductVersion": "0.1.9",
+    "ALLUSERS": "1",
+    "ProductName": "OpenCodeX Desktop",
+    "ProductCode": "{7C063778-E6A6-4D0E-9770-4C4349101866}",
+    "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}"
+  },
+  "media": [
+    null,
+    {
+      "diskId": "1",
+      "cabinet": "#app.cab",
+      "lastSequence": "2"
+    },
+    null
+  ],
+  "files": [
+    null,
+    {
+      "id": "Path",
+      "fileName": "3iewmbpe.exe|opencodex-desktop.exe",
+      "bytes": "7619584",
+      "sequence": "2"
+    },
+    {
+      "id": "Bin_ocxd",
+      "fileName": "ocxd.exe",
+      "bytes": "162816",
+      "sequence": "1"
+    },
+    null
+  ],
+  "upgrades": [
+    null,
+    {
+      "upgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+      "versionMin": "0",
+      "versionMax": "",
+      "attributes": "257",
+      "actionProperty": "WIX_UPGRADE_DETECTED"
+    },
+    null
+  ],
+  "extractedExecutables": [],
+  "result": "fail",
+  "error": "Only an embedded cabinet with a bounded stream name is supported"
+}

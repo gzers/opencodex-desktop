@@ -1,0 +1,36 @@
+{
+  "packageSha256": "8f42a40b10113acb7053d4425deb006aa6db5ac0c43153b6364cc52e750d2174",
+  "properties": {
+    "ProductName": "OpenCodeX Desktop",
+    "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+    "ALLUSERS": "1",
+    "ProductCode": "{2481427F-7BFE-44A1-BE73-50B8F160DCF7}",
+    "ProductVersion": "0.1.10"
+  },
+  "upgrades": [
+    {
+      "upgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+      "versionMin": "0",
+      "versionMax": "",
+      "attributes": "257",
+      "actionProperty": "WIX_UPGRADE_DETECTED"
+    }
+  ],
+  "extractedExecutables": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate01a1\\opencodex-desktop.exe",
+      "name": "opencodex-desktop.exe",
+      "bytes": 8673792,
+      "sha256": "3a02f3d96834e6fc08f03c3f9c1a323072b7dc527456f2d0f971a59c578bad34",
+      "productVersion": "0.1.10"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate01a1\\ocxd.exe",
+      "name": "ocxd.exe",
+      "bytes": 281088,
+      "sha256": "e393a0b8922b1fac0ba7ff895beb50363b520715e3a825fed87da97bd91511d8",
+      "productVersion": "0.1.10"
+    }
+  ],
+  "result": "pass"
+}

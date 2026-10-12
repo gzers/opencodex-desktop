@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUtc": "2026-10-12T03:34:40.2647521Z",
+  "package": "C:\\WINDOWS\\Installer\\6dfb1063.msi",
+  "packageSha256": "1a5a894863904970e835ce7e425ccc74aa9ae0f0810c88ed1cd0b23080a8aa81",
+  "databaseMode": "read-only",
+  "installerExecuted": false,
+  "properties": {
+    "ProductVersion": "0.1.9",
+    "ALLUSERS": "1",
+    "ProductName": "OpenCodeX Desktop",
+    "ProductCode": "{7069DA97-F262-4585-98CA-AE416E6833A5}",
+    "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}"
+  },
+  "media": [
+    null,
+    {
+      "diskId": "1",
+      "cabinet": "#app.cab",
+      "lastSequence": "2"
+    },
+    null
+  ],
+  "files": [
+    null,
+    {
+      "id": "Path",
+      "fileName": "3iewmbpe.exe|opencodex-desktop.exe",
+      "bytes": "7619584",
+      "sequence": "2"
+    },
+    {
+      "id": "Bin_ocxd",
+      "fileName": "ocxd.exe",
+      "bytes": "162816",
+      "sequence": "1"
+    },
+    null
+  ],
+  "upgrades": [
+    null,
+    {
+      "upgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+      "versionMin": "0",
+      "versionMax": "",
+      "attributes": "257",
+      "actionProperty": "WIX_UPGRADE_DETECTED"
+    },
+    null
+  ],
+  "extractedExecutables": [],
+  "result": "pass"
+}

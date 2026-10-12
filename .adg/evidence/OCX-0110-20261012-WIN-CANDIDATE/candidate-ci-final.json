@@ -1,0 +1,116 @@
+{
+  "collectedAtUtc": "2026-10-12T03:56:38.8991206Z",
+  "run": {
+    "id": 38199793144,
+    "head_sha": "01a1d85504781f4cb189a68ed85d1d803a1409ff",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38199793144"
+  },
+  "jobs": [
+    {
+      "id": 114650439119,
+      "name": "package",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Read candidate version",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify process-token evidence and all Windows smoke syntax",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify strict bundle identity checks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install pinned CLI and frontend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Freeze and record dependency resolution",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Windows regression with the package lock",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build NSIS and MSI candidates",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install, verify final EXE and uninstall on isolated runner",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Upload verified Windows installers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Preserve package evidence",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}
