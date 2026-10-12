@@ -1,0 +1,52 @@
+{
+  "atUtc": "2026-10-12T17:07:21.9094352Z",
+  "baselineSourceCommit": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExecutable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\baseline019-v2\\opencodex-desktop.exe",
+  "baselineExecutableSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "baselineLibBlob": "bff711b332dd353251769e95a85bd09f1de9d5f5",
+  "baselinePlatformBlob": "a79b1ff0fc8659ddd0b13fe6f281314ffea044a3",
+  "baselineStarted": false,
+  "profileEnvironmentIsolationPreviouslyProven": false,
+  "priorNativeKnownFolderEvidence": ".adg/evidence/OCX-0110-20261012-WIN-BASELINE-KNOWN-FOLDERS",
+  "taskExactPath": ".adg/work/objects/task/TASK-OPENCODEX-DESKTOP-182.json",
+  "taskLocalExists": false,
+  "taskExactRequestedSourceTree": [],
+  "taskExactAllRefsHistory": [],
+  "requestedDocsSource": "a83250ba",
+  "trackedWorkPathsAtRequestedSource": [
+    ".adg/work/objects/cert/CERT-OPENCODEX-PERF-017.json",
+    ".adg/work/objects/dmd/DMD-OPENCODEX-PERF-017.json",
+    ".adg/work/objects/imp/IMP-OPENCODEX-DESKTOP-17.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-FG-GUARD-20261012.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-INNER-FG-20261012.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-MIDMESH-20261012.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-PERF-20261012.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-SCHEDULE-ERROR-BACKOFF-20261012.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WINTOKEN-20261012.json",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-PERF-017.json",
+    ".adg/work/objects/task/TASK-OPENCODEX-PERF-017.json"
+  ],
+  "taskIgnoredBy": ".gitignore:4:.adg/work/\t.adg/work/objects/task/TASK-OPENCODEX-DESKTOP-182.json",
+  "taskReconstructed": false,
+  "originalPerformanceReceiptId": "RCP-OPENCODEX-DESKTOP-182-PERF-20261012",
+  "originalPerformanceStatus": "failed",
+  "originalPerformanceSummary": "同机准备态顺序配对十分钟 CPU +1.817629 百分点、平均 RSS +117.008965 MiB、结束 RSS +220.671875 MiB，性能预算未通过；证据完整性与独立重算通过。设置短时诊断受锁屏和前台证据限制，不能认定根因。八项门禁继续开放，TASK/IMP in_progress；无关闭证书、核心事实推广、真实迁移、日常替换或发布。",
+  "originalPerformanceChecks": [
+    {
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/archive-verification.json",
+      "name": "local:deb740-performance-archive-integrity",
+      "status": "passed"
+    },
+    {
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/archive-verification.json",
+      "name": "local:deb740-performance-independent-recompute",
+      "status": "passed"
+    },
+    {
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/README.md",
+      "name": "review:scheduler-performance-0110",
+      "status": "failed"
+    }
+  ],
+  "priorFailureCleared": false
+}

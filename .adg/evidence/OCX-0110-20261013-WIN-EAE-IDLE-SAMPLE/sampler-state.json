@@ -1,0 +1,130 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "executableSha256": "f5e4a2eef0ffc364a2a57b47b1463015faf3433a15ff021d544d6e161004f00c",
+  "requiredElapsedSeconds": 600,
+  "sampleIntervalSeconds": 1,
+  "status": "sampled-real-ten-minute-window",
+  "samplerPid": 36408,
+  "samplerCreationUtc": "2026-10-12T16:58:30.880082+00:00",
+  "logicalProcessorCountAllGroups": 20,
+  "allProcessLifetimeCountAccepted": false,
+  "queryOrNetworkCountsAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "completeIdleGateAccepted": false,
+  "fullNativeGateAccepted": false,
+  "realCyclesAccepted": false,
+  "releaseAccepted": false,
+  "startedAtUtc": "2026-10-12T16:58:30.991641+00:00",
+  "stateHashesBefore": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11"
+  },
+  "samples": 601,
+  "lastElapsedNs": 600229455400,
+  "lastSampleAtUtc": "2026-10-12T17:08:31.256484+00:00",
+  "finishedAtUtc": "2026-10-12T17:08:31.258999+00:00",
+  "actualObservedElapsedSeconds": 600.2127483,
+  "observedFamilyCpuSeconds": 0.515625,
+  "observedFamilyCpuSingleLogicalProcessorPercent": 0.08590703903914397,
+  "observedFamilyCpuAllLogicalProcessorsPercent": 0.004295351951957198,
+  "familySummedWorkingSetBytesMean": 656021609.6372712,
+  "familySummedWorkingSetBytesMax": 657330176,
+  "rootWorkingSetBytesMean": 44740989.65723794,
+  "rootWorkingSetBytesMax": 44773376,
+  "actualWindowStates": [
+    {
+      "dpi": 192,
+      "foreground": false,
+      "hwnd": 1051698,
+      "minimized": false,
+      "ownerPid": 37276,
+      "visible": true
+    }
+  ],
+  "observedDistinctProcessHandles": 7,
+  "candidateOpenRaces": [],
+  "attachedActualProcesses": [
+    {
+      "atUtc": "2026-10-12T16:58:30.975921+00:00",
+      "pid": 37276,
+      "parentPid": null,
+      "creationUtc": "2026-10-12T14:53:12.008801+00:00",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateeae\\opencodex-desktop.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:30.990944+00:00",
+      "pid": 44836,
+      "parentPid": 37276,
+      "creationUtc": "2026-10-12T14:53:12.165213+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:30.990944+00:00",
+      "pid": 45156,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.195028+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:30.990944+00:00",
+      "pid": 20388,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.383392+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:30.990944+00:00",
+      "pid": 15576,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.399188+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:30.990944+00:00",
+      "pid": 45376,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.431125+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:30.990944+00:00",
+      "pid": 44048,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.528377+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    }
+  ],
+  "stateHashesAfter": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11"
+  },
+  "dailyExecutableSha256After": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "transientProcessesBetweenSnapshots": "not proven absent; no complete lifetime-count claim",
+  "workingSetSumSharedPageCaveat": "arithmetic sum, not unique physical resident memory"
+}

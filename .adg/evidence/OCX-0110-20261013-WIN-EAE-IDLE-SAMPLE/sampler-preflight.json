@@ -1,0 +1,198 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "executableSha256": "f5e4a2eef0ffc364a2a57b47b1463015faf3433a15ff021d544d6e161004f00c",
+  "requiredElapsedSeconds": 600,
+  "sampleIntervalSeconds": 1,
+  "status": "real-readonly-apis-preflight",
+  "samplerPid": 45964,
+  "samplerCreationUtc": "2026-10-12T16:58:22.690342+00:00",
+  "logicalProcessorCountAllGroups": 20,
+  "allProcessLifetimeCountAccepted": false,
+  "queryOrNetworkCountsAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "completeIdleGateAccepted": false,
+  "fullNativeGateAccepted": false,
+  "realCyclesAccepted": false,
+  "releaseAccepted": false,
+  "sample": {
+    "atUtc": "2026-10-12T16:58:22.791450+00:00",
+    "elapsedNs": 12434400,
+    "familyCpuSinceStart100ns": 0,
+    "workingSetFamilySumBytes": 656584704,
+    "rootWorkingSetBytes": 44752896,
+    "activeObservedProcesses": [
+      {
+        "pid": 37276,
+        "parentPid": null,
+        "creationUtc": "2026-10-12T14:53:12.008801+00:00",
+        "image": "opencodex-desktop.exe",
+        "cpuTotal100ns": 234843750,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 44752896,
+        "peakWorkingSetBytes": 59162624,
+        "pagefileUsageBytes": 8998912,
+        "pageFaultCount": 39515
+      },
+      {
+        "pid": 44836,
+        "parentPid": 37276,
+        "creationUtc": "2026-10-12T14:53:12.165213+00:00",
+        "image": "msedgewebview2.exe",
+        "cpuTotal100ns": 826875000,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 153255936,
+        "peakWorkingSetBytes": 155217920,
+        "pagefileUsageBytes": 44904448,
+        "pageFaultCount": 185851
+      },
+      {
+        "pid": 45156,
+        "parentPid": 44836,
+        "creationUtc": "2026-10-12T14:53:12.195028+00:00",
+        "image": "msedgewebview2.exe",
+        "cpuTotal100ns": 1093750,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 15831040,
+        "peakWorkingSetBytes": 24633344,
+        "pagefileUsageBytes": 3129344,
+        "pageFaultCount": 7777
+      },
+      {
+        "pid": 20388,
+        "parentPid": 44836,
+        "creationUtc": "2026-10-12T14:53:12.383392+00:00",
+        "image": "msedgewebview2.exe",
+        "cpuTotal100ns": 872500000,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 262975488,
+        "peakWorkingSetBytes": 418435072,
+        "pagefileUsageBytes": 280289280,
+        "pageFaultCount": 715747
+      },
+      {
+        "pid": 15576,
+        "parentPid": 44836,
+        "creationUtc": "2026-10-12T14:53:12.399188+00:00",
+        "image": "msedgewebview2.exe",
+        "cpuTotal100ns": 2343750,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 44478464,
+        "peakWorkingSetBytes": 45314048,
+        "pagefileUsageBytes": 11268096,
+        "pageFaultCount": 13397
+      },
+      {
+        "pid": 45376,
+        "parentPid": 44836,
+        "creationUtc": "2026-10-12T14:53:12.431125+00:00",
+        "image": "msedgewebview2.exe",
+        "cpuTotal100ns": 1093750,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 20946944,
+        "peakWorkingSetBytes": 24518656,
+        "pagefileUsageBytes": 7737344,
+        "pageFaultCount": 6789
+      },
+      {
+        "pid": 44048,
+        "parentPid": 44836,
+        "creationUtc": "2026-10-12T14:53:12.528377+00:00",
+        "image": "msedgewebview2.exe",
+        "cpuTotal100ns": 505312500,
+        "cpuSinceSampleStart100ns": 0,
+        "workingSetBytes": 114343936,
+        "peakWorkingSetBytes": 122478592,
+        "pagefileUsageBytes": 58372096,
+        "pageFaultCount": 71992
+      }
+    ],
+    "exitedObservedProcesses": [],
+    "window": {
+      "hwnd": 1051698,
+      "ownerPid": 37276,
+      "dpi": 192,
+      "visible": true,
+      "minimized": false,
+      "foreground": false
+    }
+  },
+  "attachedActualProcesses": [
+    {
+      "atUtc": "2026-10-12T16:58:22.764204+00:00",
+      "pid": 37276,
+      "parentPid": null,
+      "creationUtc": "2026-10-12T14:53:12.008801+00:00",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateeae\\opencodex-desktop.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:22.777943+00:00",
+      "pid": 44836,
+      "parentPid": 37276,
+      "creationUtc": "2026-10-12T14:53:12.165213+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:22.777943+00:00",
+      "pid": 45156,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.195028+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:22.777943+00:00",
+      "pid": 20388,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.383392+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:22.777943+00:00",
+      "pid": 15576,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.399188+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:22.777943+00:00",
+      "pid": 45376,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.431125+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    },
+    {
+      "atUtc": "2026-10-12T16:58:22.777943+00:00",
+      "pid": 44048,
+      "parentPid": 44836,
+      "creationUtc": "2026-10-12T14:53:12.528377+00:00",
+      "path": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\154.0.4258.62\\msedgewebview2.exe",
+      "initialPopulation": true,
+      "lateDiscoveredPreexisting": false,
+      "liveHandleAcquired": true
+    }
+  ],
+  "stateHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11"
+  }
+}

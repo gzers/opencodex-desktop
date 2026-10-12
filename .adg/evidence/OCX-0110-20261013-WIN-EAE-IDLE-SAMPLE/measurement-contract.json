@@ -1,0 +1,37 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "mainWindow": 1051698,
+  "requiredIdleElapsedSeconds": 600,
+  "sampleIntervalSeconds": 1,
+  "automaticCheckPreferencesChanged": false,
+  "performanceBudgetChanged": false,
+  "budgetSource": "IMP-20 original same-host paired budget; CPU increment at most0.5 percentage points and RSS increment at most10MiB in ten-minute idle window",
+  "cpuRawUnit": "GetProcessTimes kernel plus user100ns ticks, cumulative per actual retained process handle",
+  "cpuReportedUnits": [
+    "single logical processor percent:100*sumCpuSeconds/elapsedSeconds",
+    "all-active-logical-processors normalized percent:singleProcessorPercent/GetActiveProcessorCount(ALL_PROCESSOR_GROUPS)"
+  ],
+  "budgetCpuConvention": "Preserve prior raw one-logical-processor convention; the all-processors normalized value is supplemental and must not be substituted to make the0.5pp gate pass",
+  "originalPerformanceReceiptSource": "a83250ba:.adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-PERF-20261012.json",
+  "originalPerformanceReceiptStatus": "failed; original summary CPU+1.817629pp/mean RSS+117.008965MiB/end RSS+220.671875MiB; this new Windows unpaired sample does not clear it",
+  "residentMetric": "GetProcessMemoryInfo.WorkingSetSize, per actual live observed handle and arithmetic family sum; shared resident pages may be counted more than once; not unique physical resident memory",
+  "familyIdentity": "Root PID37276 with exact creation time and image SHA; observed descendants via Toolhelp parent relationship, handle creation timestamps and parent exit boundary; includes observed exited descendants in cumulative CPU",
+  "transientCoverageLimit": "Process snapshot interval cannot prove capture of processes born and terminated entirely between snapshots. Raw all-process/network/query count gates are not accepted.",
+  "scene": "Current retained isolated final ordinary desktop and actual foreground/background observations; no second desktop or baseline launch",
+  "appOrCycleRestarted": false,
+  "sourcePrimaryReferences": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes",
+    "https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-process_memory_counters",
+    "https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getactiveprocessorcount",
+    "https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w"
+  ],
+  "referencesWebToolAttempt": "Both search and official-page open returned empty; references identify API documentation, not retrieved source-content evidence",
+  "official019BaselineAvailableButNotAdmitted": true,
+  "pairedPerformanceAccepted": false,
+  "baselinePerformanceAccepted": false,
+  "completeIdleGateAccepted": false,
+  "framesOrMainThreadAccepted": false,
+  "realCyclesAccepted": false,
+  "releaseAccepted": false
+}
