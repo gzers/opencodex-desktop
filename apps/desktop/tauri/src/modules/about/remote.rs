@@ -223,6 +223,10 @@ pub fn discovered_npm() -> Option<PathBuf> {
     crate::modules::runtime::paths::validate_executable(&paths.npm).ok()
 }
 
+#[cfg(all(test, windows))]
+#[path = "remote_windows_tests.rs"]
+mod windows_tests;
+
 #[cfg(test)]
 mod tests {
     use super::*;
