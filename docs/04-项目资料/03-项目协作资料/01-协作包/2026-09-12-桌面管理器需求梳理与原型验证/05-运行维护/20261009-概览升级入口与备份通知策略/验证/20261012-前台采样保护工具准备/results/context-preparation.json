@@ -1,0 +1,41 @@
+{
+  "captured_at": "2026-10-12T01:17:01.991607+00:00",
+  "test_process": {
+    "pid": 31501,
+    "started": "Mon Oct 12 00:35:43 2026",
+    "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+  },
+  "daily_process": {
+    "pid": 75764,
+    "started": "Fri Oct 9 22:00:24 2026",
+    "exe": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+  },
+  "source_sha": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "test_exe_sha256": "ab6b967da2936e66cb5ba481a462de7334e692573d2f6db0c539a73c7d61f9b4",
+  "actual_appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "mid"
+  },
+  "actual_updates": {
+    "app_update_auto_check": true,
+    "app_update_channel": "stable",
+    "app_update_check_interval_seconds": 86400
+  },
+  "preferences_sha256": "aed374985a30e077a7093a4ea5983b5f7b61bce40cee7ccbf5cc957f19e9e8aa",
+  "original_manifest_appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "high"
+  },
+  "original_measure_sha256": "6efacce58f380597ce6f5f4bb727ff6d079cbc567eeeaa916181bf535ed180bb",
+  "original_candidates_sha256": "6d52f7a77448c899ba6513c342e8538dd4ac74de861cfc6f9bf9646e3326a8ac",
+  "code_head": "fb34f5b91c3a6feb5b41f11f9527171c4bf742f5",
+  "native_access": "no new CUA call this continuation; last unlock response still had locked tool result, per handoff",
+  "native_readiness": "unverified",
+  "application_acceptance": "not_evaluated",
+  "live_harness_integration": "not_run",
+  "note": "process and selected settings read-only; no app launch/activation/input/stop, no raw preference payload archived"
+}

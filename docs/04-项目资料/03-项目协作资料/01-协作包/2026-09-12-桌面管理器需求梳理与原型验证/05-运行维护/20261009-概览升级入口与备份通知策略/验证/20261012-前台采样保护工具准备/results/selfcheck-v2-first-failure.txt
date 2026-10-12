@@ -1,0 +1,1 @@
+首次 v2 自检未通过：repeated_readiness 用例把重复 ready 放在 stop 之后，新增边界校验返回 event_after_stop_boundary，旧期望仍是 missing_or_repeated_monitor_boundaries。调整测试使重复 ready 位于 stop 之前，并独立保留 event_after_stop 用例；未弱化监视器判定。首次退出码 1，未生成通过报告。

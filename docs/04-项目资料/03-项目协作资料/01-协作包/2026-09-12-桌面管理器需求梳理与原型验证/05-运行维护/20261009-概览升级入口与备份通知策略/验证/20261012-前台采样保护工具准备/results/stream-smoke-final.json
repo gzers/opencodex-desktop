@@ -1,0 +1,48 @@
+{
+  "captured_at": "2026-10-12T01:15:35.886543+00:00",
+  "scope": "synthetic I/O/watchdog/owned-child cleanup only; real app and full run_guard integration untested",
+  "count": 4,
+  "failed": 0,
+  "cases": [
+    {
+      "mode": "healthy",
+      "passed": true,
+      "reason": null,
+      "elapsed_seconds": 0.4306952909100801,
+      "before_owned_cleanup": {
+        "monitor_running": true,
+        "collector_running": true
+      },
+      "monitor_stopped": true,
+      "collector_stopped": true
+    },
+    {
+      "mode": "loss",
+      "passed": true,
+      "reason": "foreground_or_visible_window_lost",
+      "elapsed_seconds": 0.3292278340086341,
+      "before_owned_cleanup": {
+        "monitor_running": true,
+        "collector_running": true
+      },
+      "monitor_stopped": true,
+      "collector_stopped": true
+    },
+    {
+      "mode": "stall",
+      "passed": true,
+      "reason": "monitor_stream_stalled_over_one_second",
+      "elapsed_seconds": 1.0345260000322014,
+      "before_owned_cleanup": {
+        "monitor_running": true,
+        "collector_running": true
+      },
+      "monitor_stopped": true,
+      "collector_stopped": true
+    },
+    {
+      "mode": "burst_and_split_raw_pipe",
+      "passed": true
+    }
+  ]
+}

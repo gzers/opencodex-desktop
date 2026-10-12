@@ -1,0 +1,133 @@
+{
+  "captured_at": "2026-10-12T01:15:33.962372+00:00",
+  "scope": "synthetic harness checks; no application, foreground or performance acceptance",
+  "count": 25,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "valid_sample",
+      "passed": true,
+      "result": null
+    },
+    {
+      "name": "focus_loss",
+      "passed": true,
+      "result": "foreground_or_visible_window_lost"
+    },
+    {
+      "name": "hidden_window",
+      "passed": true,
+      "result": "foreground_or_visible_window_lost"
+    },
+    {
+      "name": "sampling_gap",
+      "passed": true,
+      "result": "sampling_clock_or_gap_invalid"
+    },
+    {
+      "name": "clock_backwards",
+      "passed": true,
+      "result": "sampling_clock_or_gap_invalid"
+    },
+    {
+      "name": "clock_repeated",
+      "passed": true,
+      "result": "sampling_clock_or_gap_invalid"
+    },
+    {
+      "name": "nonfinite_clock",
+      "passed": true,
+      "result": "invalid_sample_clock"
+    },
+    {
+      "name": "readiness_timeout",
+      "passed": true,
+      "result": "not_ready_within_ten_seconds"
+    },
+    {
+      "name": "valid_completed_stream",
+      "passed": true,
+      "result": null
+    },
+    {
+      "name": "missing_resource_summary",
+      "passed": true,
+      "result": "resource_summary_missing"
+    },
+    {
+      "name": "helper_identity_change",
+      "passed": true,
+      "result": "resource_process_identity_changed"
+    },
+    {
+      "name": "missing_stop_boundary",
+      "passed": true,
+      "result": "missing_or_repeated_monitor_boundaries"
+    },
+    {
+      "name": "missing_readiness",
+      "passed": true,
+      "result": "missing_or_repeated_monitor_boundaries"
+    },
+    {
+      "name": "repeated_readiness",
+      "passed": true,
+      "result": "missing_or_repeated_monitor_boundaries"
+    },
+    {
+      "name": "unarmed_stop",
+      "passed": true,
+      "result": "monitor_stopped_without_readiness"
+    },
+    {
+      "name": "loss_in_buffered_tail",
+      "passed": true,
+      "result": "foreground_or_visible_window_lost"
+    },
+    {
+      "name": "stop_only_owned_collector",
+      "passed": true,
+      "result": true
+    },
+    {
+      "name": "owned_child_stop_bounded",
+      "passed": true,
+      "result": true
+    },
+    {
+      "name": "negative_clock",
+      "passed": true,
+      "result": "invalid_sample_clock"
+    },
+    {
+      "name": "boolean_clock",
+      "passed": true,
+      "result": "invalid_sample_clock"
+    },
+    {
+      "name": "event_after_stop",
+      "passed": true,
+      "result": "event_after_stop_boundary"
+    },
+    {
+      "name": "watchdog_healthy",
+      "passed": true,
+      "result": null
+    },
+    {
+      "name": "watchdog_stall",
+      "passed": true,
+      "result": "monitor_stream_stalled_over_one_second"
+    },
+    {
+      "name": "watchdog_not_ready",
+      "passed": true,
+      "result": "monitor_readiness_watchdog_timeout"
+    },
+    {
+      "name": "readiness_window",
+      "passed": true,
+      "result": null
+    }
+  ]
+}

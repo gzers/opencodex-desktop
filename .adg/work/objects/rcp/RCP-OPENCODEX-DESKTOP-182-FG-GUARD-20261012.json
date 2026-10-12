@@ -1,0 +1,68 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-FG-GUARD-20261012",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-FG-GUARD-20261012.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/README.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/archive-verification.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/manifest.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/methods/archive-preparation.py",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/methods/foreground-stream.swift",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/methods/run_guard.py",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/methods/selfcheck-v2.py",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/methods/stream-smoke.py",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/compile-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/context-preparation.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/selfcheck-v2-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/selfcheck-v2-first-failure.txt",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/stream-smoke-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/source-map.json"
+  ],
+  "checks": [
+    {
+      "name": "local:foreground-guard-archive-integrity",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/archive-verification.json"
+    },
+    {
+      "name": "local:foreground-guard-compilation",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/compile-final.json"
+    },
+    {
+      "name": "local:foreground-guard-synthetic-selfchecks",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/selfcheck-v2-final.json"
+    },
+    {
+      "name": "local:foreground-guard-synthetic-stream-smoke",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-前台采样保护工具准备/results/stream-smoke-final.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/README.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "b327cb4cc9caf06627c30958f67dafa1f00747101f76b7913d92818fb0a34182",
+      "summary": "记录外部前台采样保护工具的编译和合成验证；真实应用集成未执行，不解除性能失败与开放门禁。"
+    }
+  ],
+  "completed_at": "2026-10-12T01:17:49.501469+00:00",
+  "summary": "外部采样保护工具编译、25项合成自检、4项子进程/管道测试和归档核验通过。真实应用集成、前台UI与资源复验未执行；既有性能失败、八项开放门禁与空验收保持，仅提交协作包/IMP/RCP，无产品源码或真实数据变更。",
+  "revision": 1,
+  "summary_digest": "422c4a8da7f964d2c4c91322d2fc5494f803bfb4dbd40f4b788f13dc97c4e773",
+  "content_digest": "8d14423eeca22dcfd41d093f8f715c675aadad160e2512af04206282ccf1cc99"
+}

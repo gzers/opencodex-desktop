@@ -1,0 +1,30 @@
+{
+  "captured_at": "2026-10-12T01:17:01.947072+00:00",
+  "swift": {
+    "argv": [
+      "swiftc",
+      "/private/tmp/ocx-0110-performance-guard-20261012/foreground-stream.swift",
+      "-o",
+      "/private/tmp/ocx-0110-performance-guard-20261012/foreground-stream-verified"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "python": {
+    "argv": [
+      "/Users/ezio/.pyenv/versions/3.11.15/bin/python3",
+      "-m",
+      "py_compile",
+      "/private/tmp/ocx-0110-performance-guard-20261012/run_guard.py",
+      "/private/tmp/ocx-0110-performance-guard-20261012/selfcheck-v2.py",
+      "/private/tmp/ocx-0110-performance-guard-20261012/stream-smoke.py"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "swift_source_sha256": "71d85a91e252bfee5bd9c7d44b62c8e854fb8531888ef6a10d9a11fda6684944",
+  "swift_binary_sha256": "f4a466713c2133d034282b0a1f9084940832fd354faae56481c7ac4060dc8b75",
+  "application_test": false
+}
