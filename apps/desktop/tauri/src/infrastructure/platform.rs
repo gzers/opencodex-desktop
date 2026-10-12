@@ -128,7 +128,8 @@ pub fn apply_user_environment(command: &mut std::process::Command, home: Option<
         if let Some(home) = home.map(PathBuf::from) {
             command.env("USERPROFILE", &home);
             // 尊重本机重定向的 AppData；隔离测试 HOME 则使用自身目录。
-            let daily = home_dir().as_ref() == Some(&home);
+            let daily =
+                !crate::modules::test_sandbox::enabled() && home_dir().as_ref() == Some(&home);
             let roaming = daily
                 .then(dirs::data_dir)
                 .flatten()

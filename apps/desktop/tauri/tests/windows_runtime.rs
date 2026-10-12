@@ -103,6 +103,27 @@ fn windows_explicit_sandbox_child() {
     assert!(endpoint::pipe_name()
         .unwrap()
         .starts_with(r"\\.\pipe\OpenCodeXDesktop-Sandbox-"));
+    // The resolved sandbox HOME must not be mistaken for the daily profile
+    // when child processes receive APPDATA/LOCALAPPDATA.
+    let mut command = std::process::Command::new(node());
+    command.env_clear();
+    platform::apply_user_environment(&mut command, Some(home.as_os_str()));
+    command.args(["-e", "console.log(JSON.stringify(process.env))"]);
+    let output = command.output().unwrap();
+    assert!(output.status.success());
+    let environment: serde_json::Value = serde_json::from_slice(&output.stdout).unwrap();
+    assert_eq!(
+        environment["APPDATA"],
+        home.join("AppData/Roaming").to_string_lossy().as_ref()
+    );
+    assert_eq!(
+        environment["LOCALAPPDATA"],
+        home.join("AppData/Local").to_string_lossy().as_ref()
+    );
+    assert_eq!(environment["HOME"], home.to_string_lossy().as_ref());
+    assert_eq!(environment["USERPROFILE"], home.to_string_lossy().as_ref());
+    assert!(environment.get("OPENCODEX_TEST_NODE").is_none());
+    assert!(environment.get("NVM_SYMLINK").is_none());
 }
 
 fn write_launcher(root: &Path, script: &str) -> PathBuf {
