@@ -19,5 +19,7 @@ pub mod webdav_client;
 
 pub mod app_activity;
 pub mod window_appearance;
+#[cfg(windows)]
+pub(crate) mod windows_query_job;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_smoke;

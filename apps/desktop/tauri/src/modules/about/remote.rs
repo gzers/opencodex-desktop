@@ -126,6 +126,7 @@ fn run_npm_view_with_timeout(
     package: &str,
     timeout: std::time::Duration,
 ) -> Result<String, AppError> {
+    let started = std::time::Instant::now();
     let mut command = tokio::process::Command::new(npm);
     command
         .arg("view")
@@ -161,6 +162,9 @@ fn run_npm_view_with_timeout(
     }
     #[cfg(unix)]
     command.process_group(0);
+    #[cfg(windows)]
+    let job = crate::infrastructure::windows_query_job::OwnedQueryJob::new(&mut command)
+        .map_err(|_| AppError::NotConfigured)?;
     // Called from spawn_blocking; never hold the UI executor while reading pipes.
     tokio::runtime::Builder::new_current_thread()
         .enable_all()
@@ -168,9 +172,12 @@ fn run_npm_view_with_timeout(
         .map_err(|_| AppError::NotConfigured)?
         .block_on(async {
             let mut child = command.spawn().map_err(|_| AppError::NotConfigured)?;
+            #[cfg(windows)]
+            job.assign_and_resume(&child)
+                .map_err(|_| AppError::NotConfigured)?;
             let pid = child.id();
             let stdout = child.stdout.take().ok_or(AppError::NotConfigured)?;
-            let result = tokio::time::timeout(timeout, async {
+            let result = tokio::time::timeout(timeout.saturating_sub(started.elapsed()), async {
                 let mut bytes = Vec::new();
                 stdout
                     .take(MAX_METADATA_BYTES + 1)
@@ -193,6 +200,8 @@ fn run_npm_view_with_timeout(
             .await
             .unwrap_or(Err(AppError::Timeout));
             if result.is_err() {
+                #[cfg(windows)]
+                let job_termination_failed = job.terminate().is_err();
                 #[cfg(unix)]
                 if let Some(pid) = pid {
                     // Only this query group; never signal the managed panel process.
@@ -204,6 +213,10 @@ fn run_npm_view_with_timeout(
                 let _ = pid;
                 let _ = child.kill().await;
                 let _ = child.wait().await;
+                #[cfg(windows)]
+                if job_termination_failed {
+                    return Err(AppError::NotConfigured);
+                }
             }
             result
         })
