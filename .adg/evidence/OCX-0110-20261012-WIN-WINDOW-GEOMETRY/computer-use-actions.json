@@ -1,0 +1,54 @@
+{
+  "window": {
+    "app": "process:C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateafff\\opencodex-desktop.exe",
+    "id": 852848,
+    "title": "OpenCodeX Desktop"
+  },
+  "scope": "one isolated real ordinary token window at DPI192; input via @oai/sky only",
+  "actions": [
+    {
+      "action": "caption drag",
+      "from": [
+        500,
+        14
+      ],
+      "to": [
+        550,
+        44
+      ],
+      "result": "native bounds translated100x60 physical pixels"
+    },
+    {
+      "action": "corner drag",
+      "result": "no native geometry change; not accepted"
+    },
+    {
+      "action": "Alt+Space, size selection, Right, Escape",
+      "result": "no asserted resize result"
+    },
+    {
+      "action": "top edge drag",
+      "from": [
+        600,
+        0
+      ],
+      "to": [
+        600,
+        30
+      ],
+      "result": "native top+60 physical pixels, bottom unchanged"
+    },
+    {
+      "action": "top edge restore outside screenshot",
+      "to": [
+        600,
+        -30
+      ],
+      "result": "tool rejected outside bounds; resized geometry retained"
+    },
+    {
+      "action": "final screenshot",
+      "result": "first capture instrumentation mismatch quarantined outside public evidence; window reselected and activated; final candidate screenshot verified visually"
+    }
+  ]
+}
