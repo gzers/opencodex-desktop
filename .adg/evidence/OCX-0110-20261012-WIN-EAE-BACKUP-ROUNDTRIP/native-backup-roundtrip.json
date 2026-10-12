@@ -1,0 +1,190 @@
+{
+  "collectedAtUtc": "2026-10-12T15:07:43.779Z",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "executableSha256": "f5e4a2eef0ffc364a2a57b47b1463015faf3433a15ff021d544d6e161004f00c",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261012-WIN-EAE-BACKUP-ROUNDTRIP\\methods\\backup-roundtrip.js",
+  "screenshot": null,
+  "result": {
+    "startedAtUtc": "2026-10-12T15:07:43.541Z",
+    "originalPreferences": {
+      "theme": "system",
+      "automaticCheck": true,
+      "channel": "stable"
+    },
+    "manualPolicy": {
+      "schema_version": 1,
+      "mode": "manual",
+      "keep_recent": 10,
+      "keep_days": 30
+    },
+    "beforeNotifications": [
+      {
+        "id": "runtime-not-found",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-backup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T04:59:07.902283+00:00"
+      },
+      {
+        "id": "preferences-backup-cleanup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Cleanup:Execution:Local:bb8cdb7d-587b-4ee9-921e-cfc1f8b982b0",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T05:14:03.176186200+00:00"
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:10fb90e2-fcf0-41b5-8db8-c45f5592b128",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:1695188a-60bd-44ad-829d-ca2ea77499fd",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:5a53223f-141f-4694-81e0-138255efddff",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T09:05:15.520170600+00:00"
+      }
+    ],
+    "phases": [
+      {
+        "phase": "different light value persisted",
+        "atUtc": "2026-10-12T15:07:43.622Z",
+        "theme": "light",
+        "automaticCheck": true,
+        "channel": "stable"
+      },
+      {
+        "phase": "original snapshot restored",
+        "atUtc": "2026-10-12T15:07:43.709Z",
+        "theme": "system",
+        "automaticCheck": true,
+        "channel": "stable"
+      },
+      {
+        "phase": "cleanup and production-store reload",
+        "atUtc": "2026-10-12T15:07:43.758Z",
+        "theme": "system",
+        "automaticCheck": true,
+        "channel": "stable"
+      }
+    ],
+    "cleanup": {
+      "originalDtoRestored": true,
+      "temporaryPinRemoved": true,
+      "originalUserPinRetained": true,
+      "storeError": false,
+      "storeTheme": "system",
+      "policy": {
+        "schema_version": 1,
+        "mode": "manual",
+        "keep_recent": 10,
+        "keep_days": 30
+      },
+      "invokeBridgeUnchanged": true
+    },
+    "scope": "real final-desktop native commands and production-store readback; RDP disconnected, not a mouse/keyboard UI sample",
+    "createdBackup": {
+      "backup": {
+        "backupId": "bk_20261012150743_7dc2689a",
+        "directory": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\backups\\2026\\10\\manual-preferences\\bk_20261012150743_7dc2689a",
+        "targetPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json"
+      },
+      "removedIds": [],
+      "cleanupError": null
+    },
+    "pinBeforeRestore": {
+      "id": "bk_20261012150743_7dc2689a",
+      "action": "manual-preferences",
+      "createdAt": "2026-10-12T15:07:43Z",
+      "bytes": 1373,
+      "pinned": true,
+      "protected": true,
+      "protectionReason": "pinned",
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "changedAppearance": {
+      "platform": "Windows",
+      "material": "solid",
+      "reason": "inactive",
+      "theme": "light",
+      "build": 26100,
+      "transparency": true,
+      "highContrast": false,
+      "composition": true,
+      "active": false,
+      "nativeCaption": true,
+      "backdropAttribute": 1,
+      "dwmResult": 0
+    },
+    "restoreResult": {
+      "refreshRequired": false,
+      "protectionReconciliationPending": false,
+      "backupId": "bk_20261012150743_7dc2689a",
+      "protectionBackupId": "bk_20261012150743_83813305",
+      "targetPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json"
+    },
+    "dtoMatchesOriginal": true,
+    "pinAfterRestore": {
+      "id": "bk_20261012150743_7dc2689a",
+      "action": "manual-preferences",
+      "createdAt": "2026-10-12T15:07:43Z",
+      "bytes": 1373,
+      "pinned": true,
+      "protected": true,
+      "protectionReason": "pinned",
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "protectionAfterRestore": {
+      "id": "bk_20261012150743_83813305",
+      "action": "restore-protection",
+      "createdAt": "2026-10-12T15:07:43Z",
+      "bytes": 1372,
+      "pinned": false,
+      "protected": false,
+      "protectionReason": null,
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "afterNotifications": [
+      {
+        "id": "runtime-not-found",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-backup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T04:59:07.902283+00:00"
+      },
+      {
+        "id": "preferences-backup-cleanup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Cleanup:Execution:Local:bb8cdb7d-587b-4ee9-921e-cfc1f8b982b0",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T05:14:03.176186200+00:00"
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:10fb90e2-fcf0-41b5-8db8-c45f5592b128",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:1695188a-60bd-44ad-829d-ca2ea77499fd",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:5a53223f-141f-4694-81e0-138255efddff",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T09:05:15.520170600+00:00"
+      }
+    ],
+    "finishedAtUtc": "2026-10-12T15:07:43.776Z"
+  }
+}
