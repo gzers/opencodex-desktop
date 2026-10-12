@@ -1,0 +1,17 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "actualStoreErrorValue": false,
+  "actualStoreTheme": "system",
+  "firstVerifierExpectedIncorrectType": "None instead of boolean False",
+  "productionContractPath": "apps/desktop/ui/src/features/preferences/store.ts",
+  "productionContract": "state.error is boolean; successful load sets it to false",
+  "correctedCheck": "returned['storeError'] is False",
+  "acceptAnyFalsyValue": false,
+  "firstFailurePreserved": "first-verifier-failure.txt",
+  "nativeSceneRerun": false,
+  "applicationOrCycleRestarted": false,
+  "nativeArtifactChangedForVerifier": false,
+  "budgetOrAcceptanceThresholdChanged": false,
+  "fullChannelPhaseOrInFlightMatrixAccepted": false
+}

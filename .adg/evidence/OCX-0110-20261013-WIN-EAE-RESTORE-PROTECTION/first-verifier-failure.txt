@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261013-WIN-EAE-RESTORE-PROTECTION\verify-evidence.py", line 49, in <module>
+    assert returned["storeTheme"] == "system" and returned["storeError"] is None and returned["nativeBridgeUnchanged"]
+AssertionError
+
+The original returned-candidate-success.json reported storeTheme=system,
+storeError=false and nativeBridgeUnchanged=true. This was an erroneous
+verifier type expectation, not a native restore failure.
+No native scene, process, preference or schedule was restarted or rewritten.
+The production preference store defines error as a boolean and sets it to
+false after a successful load. The corrected verifier requires exactly False.

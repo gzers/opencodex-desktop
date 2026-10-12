@@ -1,0 +1,17 @@
+{
+  "result": "passed",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "filesVerified": 53,
+  "scope": "native all-candidate prevalidation, failed Restore guard/source protection and local candidate UUID rotation/old-generation nonresolution",
+  "badSecondCandidateDeletesNoFirstCandidate": true,
+  "failedGuardAndSourceProtected": true,
+  "oldFingerprintDoesNotResurrectOldUuid": true,
+  "preexistingBackupAndPreferenceBytesPreserved": true,
+  "fullChannelPhaseOrInFlightMatrixAccepted": false,
+  "fullBackupSafetyOrUiAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realCyclesAccepted": false,
+  "fullNativeGateAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}

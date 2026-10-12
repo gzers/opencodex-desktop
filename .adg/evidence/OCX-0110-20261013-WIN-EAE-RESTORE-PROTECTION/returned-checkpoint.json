@@ -1,0 +1,128 @@
+{
+  "atUtc": "2026-10-12T16:20:38.750686+00:00",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "executableSha256": "f5e4a2eef0ffc364a2a57b47b1463015faf3433a15ff021d544d6e161004f00c",
+  "stateHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11"
+  },
+  "newOwnedRecords": [
+    {
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261012162037_7f2f82c5",
+        "action": "manual-preferences",
+        "target_path": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json",
+        "stored_at": "2026-10-12T16:20:37Z",
+        "created_at": "2026-09-01T00:00:01Z",
+        "sha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+        "bytes": 1373,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 1,
+          "kind": "standalone",
+          "pinned": false,
+          "related_backup_id": null
+        }
+      },
+      "payloadSha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa"
+    },
+    {
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261012162037_85e92c53",
+        "action": "manual-preferences",
+        "target_path": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json",
+        "stored_at": "2026-10-12T16:20:37Z",
+        "created_at": "2026-09-01T00:00:00Z",
+        "sha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+        "bytes": 1373,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 1,
+          "kind": "standalone",
+          "pinned": false,
+          "related_backup_id": null
+        }
+      },
+      "payloadSha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa"
+    },
+    {
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261012162037_682ae822",
+        "action": "restore-protection",
+        "target_path": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json",
+        "stored_at": "2026-10-12T16:20:37Z",
+        "created_at": "2026-10-12T16:20:37Z",
+        "sha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+        "bytes": 1373,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 2,
+          "kind": "restore-protection",
+          "pinned": false,
+          "related_backup_id": "bk_20261012162037_85e92c53",
+          "transaction_state": "active"
+        }
+      },
+      "payloadSha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa"
+    },
+    {
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261012162038_62ecbe24",
+        "action": "restore-protection",
+        "target_path": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json",
+        "stored_at": "2026-10-12T16:20:38Z",
+        "created_at": "2026-10-12T16:20:38Z",
+        "sha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+        "bytes": 1373,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 2,
+          "kind": "restore-protection",
+          "pinned": false,
+          "related_backup_id": "bk_20261012162037_85e92c53",
+          "transaction_state": "committed"
+        }
+      },
+      "payloadSha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa"
+    },
+    {
+      "manifest": {
+        "schema_version": 1,
+        "backup_id": "bk_20261012162038_d7edd341",
+        "action": "restore-protection",
+        "target_path": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json",
+        "stored_at": "2026-10-12T16:20:38Z",
+        "created_at": "2026-10-12T16:20:38Z",
+        "sha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+        "bytes": 1373,
+        "file_count": 1,
+        "restorable": true,
+        "note": null,
+        "management": {
+          "version": 2,
+          "kind": "restore-protection",
+          "pinned": false,
+          "related_backup_id": "bk_20261012162037_7f2f82c5",
+          "transaction_state": "committed"
+        }
+      },
+      "payloadSha256": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa"
+    }
+  ],
+  "cooperativeWindowsLockHeld": true
+}
