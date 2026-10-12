@@ -1,0 +1,42 @@
+{
+  "collectedAtUtc": "2026-10-12T09:57:21.386Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 38924,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261012-WIN-REAL-BETA-CYCLE\\methods\\start-cycle.js",
+  "screenshot": null,
+  "result": {
+    "startedAtUtc": "2026-10-12T09:57:20.707Z",
+    "startedAtMs": 451543.3000000119,
+    "originalChannel": "stable",
+    "originalAutomaticCheck": false,
+    "events": [],
+    "status": "preparation-failed-original-preferences-restored",
+    "businessResponsesInjected": false,
+    "clocksChanged": false,
+    "timersWrapped": false,
+    "manualQueryUsedOnlyAtInitialization": true,
+    "fullRealCycleAccepted": false,
+    "managerQueryStartedAtUtc": "2026-10-12T09:57:20.718Z",
+    "managerQueryStartedAtMs": 451554.8000000119,
+    "managerInitialQuery": {
+      "status": "failed",
+      "update": {
+        "channel": "beta",
+        "currentVersion": "0.1.10",
+        "availableVersion": null,
+        "lastCheckedAt": "2026-10-12T09:57:21.371927900+00:00",
+        "signatureVerified": null,
+        "error": "更新下载或连接失败；已保留当前版本。",
+        "notes": null,
+        "releaseUrl": null,
+        "publishedAt": null,
+        "pendingRestart": null
+      }
+    },
+    "managerQueryCompletedAtMs": 452211.09999999404,
+    "managerQueryCompletedAtUtc": "2026-10-12T09:57:21.375Z",
+    "preparationError": "Error: Successful beta query baseline unavailable"
+  }
+}
