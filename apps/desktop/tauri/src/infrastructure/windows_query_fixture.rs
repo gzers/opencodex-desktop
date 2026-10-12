@@ -15,17 +15,23 @@ const FIXTURE: &str = r#"
 const fs = require('node:fs');
 const path = require('node:path');
 const { spawn } = require('node:child_process');
+function publishPid(name, pid) {
+  const destination = path.join(__dirname, name);
+  const temporary = destination + '.pending';
+  fs.writeFileSync(temporary, String(pid));
+  fs.renameSync(temporary, destination);
+}
 if (process.argv[2] === '--sleep') {
   setInterval(() => {}, 1000);
 } else {
-  fs.writeFileSync(path.join(__dirname, 'parent-pid'), String(process.pid));
+  publishPid('parent-pid', process.pid);
   const mode = fs.readFileSync(path.join(__dirname, 'mode'), 'utf8');
   const child = spawn(process.execPath, [__filename, '--sleep'], {
     windowsHide: true,
     detached: true,
     stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore', 'ignore'],
   });
-  fs.writeFileSync(path.join(__dirname, 'child-pid'), String(child.pid));
+  publishPid('child-pid', child.pid);
   const readyDeadline = Date.now() + 10000;
   while (!fs.existsSync(path.join(__dirname, 'ownership-ready'))) {
     if (Date.now() > readyDeadline) process.exit(12);
