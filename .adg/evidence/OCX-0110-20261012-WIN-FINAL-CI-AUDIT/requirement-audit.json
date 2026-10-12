@@ -1,0 +1,141 @@
+{
+  "objectiveScopeUnchanged": true,
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "requirements": [
+    {
+      "requirement": "exact same-SHA main CI and candidate identity",
+      "status": "proved for recorded merged SHA",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-FINAL-CI-AUDIT/main-ci-final.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-MERGED-NATIVE/run-38213528684-final.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-MERGED-NATIVE/download-verification.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-MERGED-NATIVE/native-launch-input.json"
+      ]
+    },
+    {
+      "requirement": "read IMP-20 and original TASK-182",
+      "status": "incomplete",
+      "evidence": [
+        "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+        ".adg/evidence/OCX-0110-20261012-WIN-FINAL-CI-AUDIT/current-state-audit.json"
+      ],
+      "reason": "Original TASK-182 absent; do not reconstruct authority from receipt digests"
+    },
+    {
+      "requirement": "one isolated test instance; preserve daily installation and real data",
+      "status": "observed invariant",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-FINAL-CI-AUDIT/current-state-audit.json"
+      ],
+      "limits": "Current process snapshot and test-only action scope; no claim of a full real-data inventory"
+    },
+    {
+      "requirement": "ordinary and administrator actual process tokens on this physical machine",
+      "status": "partial",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-FINAL-CI-AUDIT/current-state-audit.json"
+      ],
+      "reason": "Ordinary token observed; same-host administrator application run pending"
+    },
+    {
+      "requirement": "physical DPI, Mica and native titlebar matrix",
+      "status": "partial",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-CHILD-APPDATA/native/ordinary-native-metrics.json"
+      ],
+      "reason": "Recorded DPI192/DPR2 and foreground Mica only; remaining scales, administrator, caption actions/Snap pending; desktop now connected for continued native checks"
+    },
+    {
+      "requirement": "installed directory data, custom root, upgrade and uninstall retention",
+      "status": "incomplete",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-RETENTION/custom-root-reference-switch.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-CANDIDATE/candidate-msi-identity.json"
+      ],
+      "reason": "Explicit sandbox does not prove installed default; custom switch blocked/runtime_unverified; same UpgradeCode prevents safe daily-side installer use"
+    },
+    {
+      "requirement": "update details, truthful progress, real application and readback",
+      "status": "incomplete",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-NPM-CWD-FINAL/no-script-native-install-observation.json"
+      ],
+      "reason": "Real official-package seed install scripts_required; script second confirmation pending; successful update transaction and UI matrix not accepted"
+    },
+    {
+      "requirement": "backup restore, retention, pinning and safety",
+      "status": "partial",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-RETENTION/retention-summary.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-CHILD-APPDATA/native/ordinary-pinned-different-value-restore.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-RETENTION/corrupt-fixture-file-verification.json"
+      ],
+      "reason": "Recorded native command cases passed with labelled fixtures; full failure/protection/UI matrix pending; junction fixture rejected by automatic review"
+    },
+    {
+      "requirement": "shared tree alignment across all applicable controls and native matrices",
+      "status": "partial",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-RETENTION/4f-native-tree-alignment-visible.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-CHILD-APPDATA/tree-alignment/final/geometry.json"
+      ],
+      "reason": "Three production WebView rows and eight browser cases passed; complete foreground/native keyboard/checkbox/DPI coverage pending"
+    },
+    {
+      "requirement": "event resolution and channel isolation",
+      "status": "partial",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-CHILD-APPDATA/native/ordinary-backup-exact-recovery.json",
+        ".adg/evidence/OCX-0110-20261012-WIN-CHILD-APPDATA/native/ordinary-channel-panel-file-verification.json"
+      ],
+      "reason": "Recorded exact-backup retry and completed panel-query cache isolation only; all domains and in-flight channel cases pending"
+    },
+    {
+      "requirement": "real state-error 30-minute scheduling backoff",
+      "status": "incomplete",
+      "evidence": [
+        "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/README.md"
+      ],
+      "reason": "Accelerated regression is not elapsed foreground native evidence"
+    },
+    {
+      "requirement": "same-host official0.1.9 paired startup, frames, CPU/RSS, network/process counts within original budgets",
+      "status": "incomplete",
+      "evidence": [
+        "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/06-执行基线与契约.md"
+      ],
+      "reason": "Baseline package verified but no valid Windows paired run; prior performance failure and predeclared budgets retained"
+    },
+    {
+      "requirement": "real stable24h/beta6h/panel24h, suspend/resume and restart cycles",
+      "status": "incomplete",
+      "evidence": [
+        ".adg/evidence/OCX-0110-20261012-WIN-CHILD-APPDATA/native/ordinary-channel-panel-file-verification.json"
+      ],
+      "reason": "Real successful query produced future deadline only; automatic checks remain off and no actual elapsed-cycle acceptance"
+    },
+    {
+      "requirement": "fixes and evidence committed/pushed by branch ownership; no early closure/publication",
+      "status": "recorded scoped delivery",
+      "evidence": [
+        "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+        ".adg/evidence/OCX-0110-20261012-WIN-FINAL-CI-AUDIT/current-state-audit.json"
+      ],
+      "limits": "Code/main and docs/governance preserved; no formal completion certificate or release"
+    }
+  ],
+  "overallResult": "not_achieved",
+  "requiredChecksClosureAccepted": false,
+  "originalPerformanceFailureCleared": false,
+  "formalTaskReceipt": false,
+  "formalCertificate": false,
+  "pendingUserPrerequisites": [
+    "sync original TASK-182 authority object",
+    "explicit FZ50 second confirmation for one precise2.82.0 script-enabled retry"
+  ],
+  "liveCiWaitEnded": true,
+  "collectedAtUtc": "2026-10-12T07:08:38.8432661Z",
+  "desktopConnectionRestored": true,
+  "independentNativeWorkCanContinue": true,
+  "blockedGoalMarkingDeferred": true
+}

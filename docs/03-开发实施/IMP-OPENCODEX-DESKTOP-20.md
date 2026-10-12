@@ -838,3 +838,15 @@ afff490合并候选38213528684 completed/success，ZIP/MSI/提取EXE身份与CI�
 原e1测试进程确认退出后复用同容器启动唯一afff PID29936，实际普通令牌false/type3、startup源码匹配。production DTO/store reload记录schema2 appearance.theme=system、themeNeedsImport=false、cache=system；启动与reload前后偏好SHA/mtime完全不变，原用户pin跨启动保留。由真实合并制品纠正此前DTO误判，不抵全部历史导入/主题/物理DPI/前台交互矩阵；记录foreground=false/RDP断开。
 
 见[合并制品主题原生回验](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows合并制品主题原生回验/README.md)。脚本二次确认、原TASK、桌面与完整双权限/安装更新/30min退避/同机性能/真实周期门禁继续开放；原性能failed/预算不变，IMP in_progress，不颁发证书、不迁移真实数据、不替换日常安装、不关闭或发布。
+
+### 2026-10-12 合并main最终CI通过，完整目标仍未达成
+
+afff490的main CI38213445710于15:05:46（UTC+8）completed/success，六项job含macOS arm64实际bundle构建均success，最终原回执已归档；候选38213528684与精确本机制品身份另有记录。当前原根唯一普通PID29936身份/创建时间/supervisor匹配，日常EXE摘要一致，未替换真实安装。
+
+按原目标逐项审计保留所有明确范围，详见[最终CI与未闭合门禁审计](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows最终CI与未闭合门禁审计/README.md)。CI/局部原生/备份/树表/事件证据不抵管理员/完整物理DPI/实际安装升级卸载/切根成功/完整更新与安全矩阵、真实30min退避、同机性能及真实周期。原性能failed/预算及八项门禁未闭合保持；目标overallResult=not_achieved，无正式RCP/证书。
+
+原TASK缺失、FZ50脚本二次确认未收到的接续阻塞仍存在。写入本轮审计时query session原始输出已显示15119/session2 Active，重查确认；提交前纠正沿用Disconnected的状态，当前可继续独立原生工作，goal保持active。本IMP仍in_progress，不关闭TASK/AC、不降低门禁、不晋升核心事实、不迁移真实数据、不替换日常版、不发布。
+
+连接恢复后同一afff普通/200%实例完成系统按钮最大化、Alt+Space真实菜单还原、系统最小化及恢复；原主HWND/PID核验与实际effect暂停/恢复云母证据保留，只覆盖这些具体操作。AX还原输入未生效不计通过；最小化后的MainWindowHandle托盘误选已以已选主HWND独立核验修正，不推断为产品缺陷。
+
+真实30min退避观测prepare未启动成功：内部invoke为只读属性，透明记录器实际未安装，零计数不证明计划未执行。监测器terminal，schema99测试调度文件恢复原字节、auto-check恢复false；未加速时钟、未重启仍活产品或解除真实内部floor，也未计30min通过。失败原件/诊断归 `.adg/evidence/OCX-0110-20261012-WIN-REAL-BACKOFF/`，后续用可验证边界接续。

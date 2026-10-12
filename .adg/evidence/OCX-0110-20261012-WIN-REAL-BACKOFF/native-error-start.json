@@ -1,0 +1,16 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: {"exceptionId":1,"text":"Uncaught (in promise) Error: Real invalid schedule did not reach the production scheduler","lineNumber":0,"columnNumber":0,"exception":{"type":"object","subtype":"error","className":"Error","description":"Error: Real invalid schedule did not reach the production scheduler\n    at <anonymous>:47:22","objectId":"-7962575557913826326.2.1"}}
+    at evaluate (file:///C:/Users/15119/.codex/tmp/ocx-0110-cdp-query.mjs:44:3)
+    at async file:///C:/Users/15119/.codex/tmp/ocx-0110-cdp-query.mjs:59:18 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
