@@ -1,0 +1,42 @@
+{
+  "originalTask182Present": false,
+  "collectedAtUtc": "2026-10-12T09:21:11.2419461Z",
+  "featureQuery": [
+    {
+      "Name": "Microsoft-Hyper-V",
+      "InstallState": 1
+    }
+  ],
+  "applicationPid": 29936,
+  "services": [
+    {
+      "Name": "hns",
+      "status": "Running"
+    },
+    {
+      "Name": "vmcompute",
+      "status": "Running"
+    },
+    {
+      "Name": "vmms",
+      "status": "Running"
+    }
+  ],
+  "applicationToken": {
+    "elevated": false,
+    "elevationType": 3
+  },
+  "settingsChanged": false,
+  "hyperVInventory": {
+    "category": "NotSpecified",
+    "fullyQualifiedErrorId": "Unspecified,Microsoft.HyperV.PowerShell.Commands.GetVM",
+    "hresult": -2146233088,
+    "status": "access_denied",
+    "exceptionType": "Microsoft.HyperV.PowerShell.VirtualizationException",
+    "scope": "current ordinary token cannot inventory Hyper-V; no claim that no suitable VM exists"
+  },
+  "scriptConfirmationStillMissing": true,
+  "authenticationAutomated": false,
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "localInstallerExecuted": false
+}
