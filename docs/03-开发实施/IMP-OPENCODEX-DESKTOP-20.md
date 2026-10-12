@@ -932,3 +932,11 @@ main已集成推送4852820。原Windows查询仅终止直接子进程，实际�
 19:27 RDP session2已重连Active，Computer Use激活原afff PID38924/HWND461032，production foreground/effects均true、DWM attr2。完整调度文件与初始化基线一致，lastCheckedAt/面板缓存未变，next_due仍为2026-10-13 18:01:07/09（UTC+8）；没有新应用、手动检查、改偏好/截止或时钟/timer。
 
 见[周期窗口前台恢复](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows周期窗口前台恢复/README.md)。只记录原窗口/截止实态，不据文件推断原始网络次数、系统睡眠恢复或24h通过；仍旧运行SHA，不抵新main原生验收。全部剩余门禁/TASK/脚本确认、原预算/既有failed保持，IMP in_progress，不关闭或发布。
+
+### 2026-10-12 查询修复main同SHA CI与候选制品最终核验
+
+main4852820 CI38242543274于19:48:41（UTC+8）completed/success，六job含实际macOS bundle均success；候选38242585130于19:46:52 completed/success，branch/main与SHA精确匹配。两个下载ZIP11744123025/11744028167摘要核对已认证API，MSI/NSIS与CI回执一致；只读MSI CAB提取EXE SHA7526561c…与CI安装marker EXE一致，产品0.1.10/Cargo.lock原字节一致。
+
+候选仅CI fresh install/first-screen/uninstall smoke，实际token true/type1、mode any，不能抵本机双模式/默认data/升级卸载/OTA；未代码签名、不发布。包仍共享日常UpgradeCode，未本机执行安装器或新候选应用。唯一旧afff PID38924/监测18944实际句柄仍活、真实24h截止保持，日常摘要未变，main源码与运行旧SHA不混记。
+
+见[集成CI与制品核验](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows查询修复集成CI与制品/README.md)。只闭合同SHA CI/制品身份；新main本机原生、其余安装/更新/事件/配对性能/真实周期、TASK/脚本确认继续开放。预算/既有failed不变，IMP in_progress，无正式RCP/证书，不降低门禁、不关闭或发布。
