@@ -1,0 +1,42 @@
+{
+  "startedAtUtc": "2026-10-12T12:13:29.2010740Z",
+  "sourceCommit": "4852820b89f7f9df7d54bc623e94f3f55d884023",
+  "ciTestExecutableSha256": "097421b7971853e5ef38667100de6eee0b96366adfee5221dfb86ca640c4e23c",
+  "testSourceBlob": "3dc48b4251cd8465f933bd59387e77dcfc8f339b",
+  "filter": "modules::about::remote::windows_tests::",
+  "requestedMode": "ordinary",
+  "helperPid": 27492,
+  "helperToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 27492,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-12T12:13:27.3248859Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-12T12:13:28.7105436Z"
+  },
+  "testProcessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 40324,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\query-job-source\\fix-final\\windows-backend\\opencodex_desktop_lib-713299640ffef8db.exe",
+    "creationTimeUtc": "2026-10-12T12:13:29.2067049Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-12T12:13:29.2229781Z"
+  },
+  "ordinaryDesktopPid": 38924,
+  "runtimeRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\query-tree-ordinary-functions-485",
+  "credentialsInherited": false,
+  "status": "recorded-ordinary-functions-passed",
+  "desktopApplicationLaunched": false,
+  "packageLifecycleScriptsExecuted": false,
+  "securitySettingsChanged": false,
+  "scope": "actual mode-verified production Rust query process functions; not desktop UI acceptance",
+  "elapsedMs": 2745.8544,
+  "exitCode": 0,
+  "finishedAtUtc": "2026-10-12T12:13:32.2652373Z",
+  "desktopCountAfter": 1,
+  "sameDesktopLifecycleRetained": true
+}
