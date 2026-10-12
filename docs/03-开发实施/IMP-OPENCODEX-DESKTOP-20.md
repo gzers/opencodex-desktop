@@ -830,3 +830,11 @@ e1a1aaa精确feature CI38210513009与候选38210653937success，已快进推送m
 cf71ea4精确CI38211754315/候选38211818636均success，主题支线ZIP下载摘要一致，未在本机运行支线应用。主题支线与已通过cwd的main e1以双亲合并为afff490，已推送main；首次因提交身份未设而停止，后续命令级既有Codex身份完成无冲突，不改全局身份。代码归属未变。
 
 合并SHA的CI38213445710与Windows候选38213528684已启动；不能用两个父提交绿色替代合并精确制品与原生DTO复验。见[主题与cwd集成证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows主题与cwd集成/README.md)。当前仍原根唯一e1 PID32564、脚本未开启；原TASK/桌面/脚本二次确认及完整原生安装更新性能周期门禁保持，IMP in_progress，既有性能failed/预算不变，不关闭或发布。
+
+### 2026-10-12 合并精确制品与主题原生回读局部验证
+
+afff490合并候选38213528684 completed/success，ZIP/MSI/提取EXE身份与CI安装EXE核验一致。main CI38213445710前置Windows回归/最终EXE/smoke通过后进入macOS打包，14:57观察仍in_progress，不记整条通过。八个相关合并文件blob与已测父提交完全一致，只作源码核验。
+
+原e1测试进程确认退出后复用同容器启动唯一afff PID29936，实际普通令牌false/type3、startup源码匹配。production DTO/store reload记录schema2 appearance.theme=system、themeNeedsImport=false、cache=system；启动与reload前后偏好SHA/mtime完全不变，原用户pin跨启动保留。由真实合并制品纠正此前DTO误判，不抵全部历史导入/主题/物理DPI/前台交互矩阵；记录foreground=false/RDP断开。
+
+见[合并制品主题原生回验](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows合并制品主题原生回验/README.md)。脚本二次确认、原TASK、桌面与完整双权限/安装更新/30min退避/同机性能/真实周期门禁继续开放；原性能failed/预算不变，IMP in_progress，不颁发证书、不迁移真实数据、不替换日常安装、不关闭或发布。

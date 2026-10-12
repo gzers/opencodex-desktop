@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUtc": "2026-10-12T06:54:58.2754879Z",
+  "package": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\downloads\\11732300240\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+  "packageSha256": "1707ae1187c98b2cd9eda186f3824301e477fc68867938cfbb9a9b4dbae5dcbd",
+  "databaseMode": "read-only",
+  "installerExecuted": false,
+  "properties": {
+    "ALLUSERS": "1",
+    "ProductCode": "{F2ED09CE-08D0-4193-97F7-79CF1D7362D5}",
+    "ProductName": "OpenCodeX Desktop",
+    "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+    "ProductVersion": "0.1.10"
+  },
+  "media": [
+    {
+      "diskId": "1",
+      "cabinet": "#app.cab",
+      "lastSequence": "2"
+    }
+  ],
+  "files": [
+    {
+      "id": "Path",
+      "fileName": "3iewmbpe.exe|opencodex-desktop.exe",
+      "bytes": "8676352",
+      "sequence": "2"
+    },
+    {
+      "id": "Bin_ocxd",
+      "fileName": "ocxd.exe",
+      "bytes": "283136",
+      "sequence": "1"
+    }
+  ],
+  "upgrades": [
+    {
+      "upgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+      "versionMin": "0",
+      "versionMax": "",
+      "attributes": "257",
+      "actionProperty": "WIX_UPGRADE_DETECTED"
+    }
+  ],
+  "extractedExecutables": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateafff\\opencodex-desktop.exe",
+      "name": "opencodex-desktop.exe",
+      "bytes": 8676352,
+      "sha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+      "productVersion": "0.1.10"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateafff\\ocxd.exe",
+      "name": "ocxd.exe",
+      "bytes": 283136,
+      "sha256": "701549df3d65d8b8cc36aba5ec45e9e45be82c040ee8d8685e28bba7f7cebebb",
+      "productVersion": "0.1.10"
+    }
+  ],
+  "result": "pass"
+}

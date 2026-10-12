@@ -1,0 +1,66 @@
+{
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "parents": [
+    "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+    "cf71ea4f84b82b2e4c1bb3a15de88fd5815dc066"
+  ],
+  "entries": [
+    {
+      "path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "expectedSource": "cf71ea4f84b82b2e4c1bb3a15de88fd5815dc066",
+      "mergedGitBlob": "855328ba87cd7a544c1521ded9c7698b4754f164",
+      "expectedGitBlob": "855328ba87cd7a544c1521ded9c7698b4754f164",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/ui/src/features/preferences/store.ts",
+      "expectedSource": "cf71ea4f84b82b2e4c1bb3a15de88fd5815dc066",
+      "mergedGitBlob": "bcfde4d98a70d4c42be39367f533a45415d9fa73",
+      "expectedGitBlob": "bcfde4d98a70d4c42be39367f533a45415d9fa73",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/ui/tests/preferences.test.ts",
+      "expectedSource": "cf71ea4f84b82b2e4c1bb3a15de88fd5815dc066",
+      "mergedGitBlob": "ad194e78fb52e14decd4b5185db36b7013ea64e7",
+      "expectedGitBlob": "ad194e78fb52e14decd4b5185db36b7013ea64e7",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "expectedSource": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+      "mergedGitBlob": "836c78ce7ac2e494c7c837081bd72f127da1ffe8",
+      "expectedGitBlob": "836c78ce7ac2e494c7c837081bd72f127da1ffe8",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/tauri/tests/windows_runtime.rs",
+      "expectedSource": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+      "mergedGitBlob": "e30f4b78defce55ad7fa500ac45d4023a29ab320",
+      "expectedGitBlob": "e30f4b78defce55ad7fa500ac45d4023a29ab320",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/about/remote.rs",
+      "expectedSource": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+      "mergedGitBlob": "7fa24fbd7d037539a6c01c5ad9db9a9e282f5f8c",
+      "expectedGitBlob": "7fa24fbd7d037539a6c01c5ad9db9a9e282f5f8c",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "expectedSource": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+      "mergedGitBlob": "69bd24522f6bffbe884416d083d30301bc5c516c",
+      "expectedGitBlob": "69bd24522f6bffbe884416d083d30301bc5c516c",
+      "equal": true
+    },
+    {
+      "path": "apps/desktop/tauri/Cargo.lock",
+      "expectedSource": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+      "mergedGitBlob": "2c5a304c1e799b54dd42c84c3c656a4945ee167e",
+      "expectedGitBlob": "2c5a304c1e799b54dd42c84c3c656a4945ee167e",
+      "equal": true
+    }
+  ],
+  "scope": "merged paths retain exact tested parent bytes; does not replace exact merged CI or artifact identity"
+}
