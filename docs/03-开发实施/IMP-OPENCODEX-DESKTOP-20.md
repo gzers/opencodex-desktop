@@ -802,3 +802,11 @@ TASK-182 原始对象仍待同步；本轮无正式 RCP、无候选真机运行 
 为接续真实更新和状态回读，唯一4f GUI生产安装官方2.82.0，下载校验后npm安装栈溢出失败，来源仍unresolved；2006条原始事件及npm日志保留，旧阶段/日志percent不算可信下载进度。日志与同目录Arborist复现指向npm对canonical的\\\\?\\路径处理：带前缀失败、普通路径成功。ee65f11已推送feature/0.1.10-windows-npm-path，在npm参数边界使用锁中既有dunce1.0.5安全简化，内部canonical/保护不变；真实Node回归和本地fmt准备，CI38208548177/候选38208582603仍在运行，未并入main或宣称实际安装修复通过。
 
 见[轮换与npm路径故障证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows轮换与npm路径故障/README.md)。Junction夹具命令被自动审批以blocked by policy拒绝，未执行或绕过；原TASK、双权限/其余物理DPI、安装卸载/custom-root成功、真实更新、全事件/在途通道、30min退避、同机配对及真实周期继续待验。性能failed/原预算/八项门禁保持，IMP in_progress，保留日常版和真实数据，不关闭或发布。
+
+### 2026-10-12 npm路径实际复验、scripts_required与工作目录补丁
+
+ee65f11精确feature CI38208548177/候选38208582603success，已并入推送main，main CI38210214739仍在运行。制品ZIP/MSI/EXE身份均核验；旧4f退出后原根唯一PID21592实际普通令牌false/type3。真实2.82.0无脚本重跑已完成npm install（102依赖/exit0），旧路径栈溢出消失，但版本探针返回scripts_required，来源仍unresolved、失败保留；不计完整安装或官方升级通过。
+
+FZ-50明确用户二次确认后才可allowScripts=true重跑一次；未开启脚本。只读包/依赖锁审阅核实精确2.82.0摘要与bun1.4.2 postinstall，具体目标/权限/代码执行范围已形成待确认计划。npm日志还揭示cwd为manager EXE目录，e1a1aaa已推送feature/0.1.10-windows-npm-cwd补齐pack/install工作目录及真实Node断言，CI38210513009和候选待验，未并入main。见[npm复验与脚本门禁](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windowsnpm复验与脚本门禁/README.md)。
+
+原TASK/桌面、双权限物理DPI、安装卸载/切根、真实升级/事件/30min退避/性能周期仍未完整闭合；原性能failed/预算/八项门禁保留，IMP in_progress，不颁发证书、不替换日常版、不迁移真实数据、不关闭或发布。

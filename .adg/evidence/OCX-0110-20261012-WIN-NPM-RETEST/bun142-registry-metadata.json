@@ -1,0 +1,30 @@
+{
+  "name": "bun",
+  "version": "1.4.2",
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "bin": {
+    "bun": "bin/bun.exe",
+    "bunx": "bin/bunx.exe"
+  },
+  "optionalDependencies": {
+    "@oven/bun-linux-x64": "1.4.2",
+    "@oven/bun-darwin-x64": "1.4.2",
+    "@oven/bun-freebsd-x64": "1.4.2",
+    "@oven/bun-windows-x64": "1.4.2",
+    "@oven/bun-linux-aarch64": "1.4.2",
+    "@oven/bun-darwin-aarch64": "1.4.2",
+    "@oven/bun-linux-x64-musl": "1.4.2",
+    "@oven/bun-freebsd-aarch64": "1.4.2",
+    "@oven/bun-windows-aarch64": "1.4.2",
+    "@oven/bun-linux-x64-android": "1.4.2",
+    "@oven/bun-linux-aarch64-musl": "1.4.2",
+    "@oven/bun-linux-aarch64-android": "1.4.2"
+  },
+  "dist": {
+    "tarball": "https://registry.npmjs.org/bun/-/bun-1.4.2.tgz",
+    "integrity": "sha512-TrSXo6HJfIEaczpb3kjX82I2pL47vK1QUNmHRCUdz9IzaOwa9lzOXSWwu2l18YHE3sNfGRapVLd4nNm+22vVVA==",
+    "shasum": "79e72a583198bc3cdabe569c8aa83d9f014d6f3d"
+  }
+}

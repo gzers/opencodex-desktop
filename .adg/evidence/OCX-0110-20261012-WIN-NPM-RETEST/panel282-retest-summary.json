@@ -1,0 +1,42 @@
+{
+  "sourceCommit": "ee65f1158c4f0bb7c283ff09e24120a7884472d0",
+  "state": "failed",
+  "error": {
+    "code": 14,
+    "message": "managed runtime operation failed: scripts_required; 该包需要执行安装脚本才能生成入口；需要你的二次确认"
+  },
+  "startedAtUtc": "2026-10-12T05:54:31.143Z",
+  "finishedAtUtc": "2026-10-12T05:54:48.838Z",
+  "eventCount": 2245,
+  "lastEvents": [
+    {
+      "receivedAtUtc": "2026-10-12T05:54:47.757Z",
+      "payload": {
+        "phase": "installing",
+        "percent": 85,
+        "line": ""
+      }
+    },
+    {
+      "receivedAtUtc": "2026-10-12T05:54:47.757Z",
+      "payload": {
+        "phase": "installing",
+        "percent": 85,
+        "line": "added 102 packages in 14s"
+      }
+    },
+    {
+      "receivedAtUtc": "2026-10-12T05:54:47.758Z",
+      "payload": {
+        "phase": "installing",
+        "percent": 85,
+        "line": "npm info ok"
+      }
+    }
+  ],
+  "sourceKindAfter": "unresolved",
+  "listenerRemoved": true,
+  "progressClaim": "legacy stage/log percentages; not byte-count acceptance",
+  "scriptsAllowed": false,
+  "scriptsRequiredGateHonoured": true
+}

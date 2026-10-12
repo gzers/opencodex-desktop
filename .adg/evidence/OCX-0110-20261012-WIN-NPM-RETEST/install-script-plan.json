@@ -1,0 +1,28 @@
+{
+  "package": "@bitkyc08/opencodex",
+  "version": "2.82.0",
+  "scriptsExecuted": false,
+  "command": "npm install --package-lock-only --ignore-scripts --no-audit --no-fund",
+  "installScriptPackages": [
+    {
+      "path": "node_modules/bun",
+      "version": "1.4.2",
+      "resolved": "https://registry.npmjs.org/bun/-/bun-1.4.2.tgz",
+      "integrity": "sha512-TrSXo6HJfIEaczpb3kjX82I2pL47vK1QUNmHRCUdz9IzaOwa9lzOXSWwu2l18YHE3sNfGRapVLd4nNm+22vVVA==",
+      "optional": null,
+      "cpu": [
+        "arm64",
+        "x64"
+      ],
+      "os": [
+        "darwin",
+        "linux",
+        "android",
+        "freebsd",
+        "win32"
+      ]
+    }
+  ],
+  "packageCount": 125,
+  "scope": "review dependency install hooks before required explicit second confirmation"
+}
