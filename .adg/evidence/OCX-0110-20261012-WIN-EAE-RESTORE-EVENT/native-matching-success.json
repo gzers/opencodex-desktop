@@ -1,0 +1,87 @@
+{
+  "collectedAtUtc": "2026-10-12T15:16:30.398Z",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "executableSha256": "f5e4a2eef0ffc364a2a57b47b1463015faf3433a15ff021d544d6e161004f00c",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261012-WIN-EAE-RESTORE-EVENT\\methods\\same-candidate-success.js",
+  "screenshot": null,
+  "result": {
+    "backupId": "bk_20261012151535_1301aad6",
+    "actualRestore": {
+      "refreshRequired": false,
+      "protectionReconciliationPending": false,
+      "backupId": "bk_20261012151535_1301aad6",
+      "protectionBackupId": "bk_20261012151630_2da982eb",
+      "targetPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\manager-state\\preferences.json"
+    },
+    "notifications": [
+      {
+        "id": "runtime-not-found",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-backup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Backup:Execution:Local:4a9f72d7-3668-442c-bbf0-b41db478738a",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T04:59:07.902283+00:00"
+      },
+      {
+        "id": "preferences-backup-cleanup-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Cleanup:Execution:Local:bb8cdb7d-587b-4ee9-921e-cfc1f8b982b0",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T05:14:03.176186200+00:00"
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:10fb90e2-fcf0-41b5-8db8-c45f5592b128",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:1695188a-60bd-44ad-829d-ca2ea77499fd",
+        "resolved": false,
+        "resolvedAt": null
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:5a53223f-141f-4694-81e0-138255efddff",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T09:05:15.520170600+00:00"
+      },
+      {
+        "id": "preferences-restore-failed:dfaf6976-e171-4bc9-b8fe-64685d323fdc:Restore:Execution:Local:ba8e9fae-3831-4b3a-8a5c-f07321877b96",
+        "resolved": true,
+        "resolvedAt": "2026-10-12T15:16:30.380655700+00:00"
+      }
+    ],
+    "protection": {
+      "id": "bk_20261012151630_2da982eb",
+      "action": "restore-protection",
+      "createdAt": "2026-10-12T15:16:30Z",
+      "bytes": 1373,
+      "pinned": false,
+      "protected": false,
+      "protectionReason": null,
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "originalUserPin": {
+      "id": "bk_20261012044452_a921f503",
+      "action": "manual-preferences",
+      "createdAt": "2026-10-12T04:44:52Z",
+      "bytes": 1170,
+      "pinned": true,
+      "protected": true,
+      "protectionReason": "referenced-by-protection",
+      "preferencesCandidate": true,
+      "integrityVerified": false
+    },
+    "preferences": {
+      "channel": "stable",
+      "automaticCheck": true,
+      "theme": "system"
+    },
+    "storeError": false,
+    "storeTheme": "system",
+    "invokeBridgeUnchanged": true,
+    "scope": "actual matching final-source restore after repair of original fixture bytes; no event or notification mutation command"
+  }
+}
