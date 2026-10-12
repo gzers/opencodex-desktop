@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "firstLifecycleWrapperReported": "Lifecycle inspection failed",
+  "actualFirstLifecycleArtifact": "scene-lifecycle.json",
+  "firstArtifactAllThreeRealHandlesPassed": true,
+  "firstLifecycleStderrEmpty": true,
+  "wrapperProblem": "The caller checked LASTEXITCODE after a PowerShell script that does not set a native-process exit code. The wrapper stopped after the actual helper had succeeded.",
+  "correction": "Recheck with the PowerShell success variable immediately after the PowerShell invocation. Keep both original and recheck artifacts.",
+  "backupSceneRerunForWrapperError": false,
+  "applicationRestarted": false,
+  "clockOrScheduleChanged": false,
+  "uiInputsWhileDisconnected": false,
+  "calendarBoundary": "Native preparation began 2026-10-12 23:59:53 UTC+8; cleanup and verification continued on 2026-10-13. The evidence directory retains its creation-date name.",
+  "budgetOrAcceptanceThresholdChanged": false
+}
