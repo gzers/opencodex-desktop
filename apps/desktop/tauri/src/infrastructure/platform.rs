@@ -9,10 +9,33 @@ use std::io;
 use std::path::Path;
 use std::path::PathBuf;
 
-/// Windows 使用用户配置目录 API / USERPROFILE；Unix 保留 HOME 语义。
-/// 绝不把缺失或相对路径当作当前工作目录。
+/// Windows 日常身份使用 Known Folder；显式沙箱使用自身 HOME。
+/// Unix 保留 HOME 语义；非法沙箱不回退到真实用户目录。
 pub fn home_dir() -> Option<PathBuf> {
+    #[cfg(windows)]
+    {
+        windows_home(
+            crate::modules::test_sandbox::enabled(),
+            crate::modules::test_sandbox::sandbox_root().as_deref(),
+            dirs::home_dir,
+        )
+    }
+    #[cfg(not(windows))]
     dirs::home_dir().filter(|path| path.is_absolute() && !path.as_os_str().is_empty())
+}
+
+#[cfg(any(windows, test))]
+fn windows_home(
+    sandbox_enabled: bool,
+    sandbox_root: Option<&Path>,
+    daily_home: impl FnOnce() -> Option<PathBuf>,
+) -> Option<PathBuf> {
+    if sandbox_enabled {
+        return sandbox_root
+            .filter(|root| root.is_absolute())
+            .map(|root| root.join("home"));
+    }
+    daily_home().filter(|path| path.is_absolute() && !path.as_os_str().is_empty())
 }
 
 pub fn platform_label() -> &'static str {
@@ -205,4 +228,40 @@ pub fn symlink_file(source: &Path, destination: &Path) -> io::Result<()> {
         io::ErrorKind::Unsupported,
         "symbolic links are not supported on this platform",
     ))
+}
+
+#[cfg(test)]
+mod home_tests {
+    use super::*;
+
+    #[test]
+    fn windows_sandbox_home_never_reads_the_daily_profile() {
+        let root = tempfile::tempdir().unwrap();
+        assert_eq!(
+            windows_home(true, Some(root.path()), || panic!("daily profile accessed")),
+            Some(root.path().join("home"))
+        );
+        for invalid in [None, Some(Path::new("relative"))] {
+            assert_eq!(
+                windows_home(true, invalid, || panic!("daily profile accessed")),
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn windows_daily_home_keeps_the_known_folder_contract() {
+        let daily = tempfile::tempdir().unwrap();
+        let ignored_sandbox = tempfile::tempdir().unwrap();
+        assert_eq!(
+            windows_home(false, Some(ignored_sandbox.path()), || {
+                Some(daily.path().to_path_buf())
+            }),
+            Some(daily.path().to_path_buf())
+        );
+        assert_eq!(
+            windows_home(false, None, || Some(PathBuf::from("relative"))),
+            None
+        );
+    }
 }

@@ -39,12 +39,12 @@ fn select_tool(directories: &[PathBuf], names: Vec<String>) -> PathBuf {
 pub fn candidate_dirs(home: &Path) -> Vec<PathBuf> {
     #[cfg(windows)]
     {
-        let mut directories = vec![
-            home.join(".local/bin"),
-            home.join(".nvmd/bin"),
-            home.join("AppData/Roaming/npm"),
-            home.join("AppData/Local/Programs/nodejs"),
-        ];
+        let mut directories = windows_home_candidates(home);
+        // An explicit sandbox may discover only tools provisioned in its HOME.
+        // Host NVM variables and Known Folders can contain the daily ocx launcher.
+        if crate::modules::test_sandbox::enabled() {
+            return directories;
+        }
         for key in ["NVM_SYMLINK", "NODE_HOME", "NVM_HOME"] {
             if let Some(path) = std::env::var_os(key)
                 .map(PathBuf::from)
@@ -77,6 +77,16 @@ pub fn candidate_dirs(home: &Path) -> Vec<PathBuf> {
     }
 }
 
+#[cfg(any(windows, test))]
+fn windows_home_candidates(home: &Path) -> Vec<PathBuf> {
+    vec![
+        home.join(".local/bin"),
+        home.join(".nvmd/bin"),
+        home.join("AppData/Roaming/npm"),
+        home.join("AppData/Local/Programs/nodejs"),
+    ]
+}
+
 pub fn runtime_candidates(home: &Path) -> Vec<PathBuf> {
     let mut candidates = candidate_dirs(home)
         .iter()
@@ -106,6 +116,26 @@ pub fn process_path(home: &Path, paths: &EnvironmentPaths) -> std::ffi::OsString
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn isolated_windows_candidates_cannot_select_a_daily_launcher() {
+        let root = tempfile::tempdir().unwrap();
+        let isolated = root.path().join("sandbox/home");
+        let daily = root.path().join("daily");
+        std::fs::create_dir_all(daily.join(".local/bin")).unwrap();
+        std::fs::write(daily.join(".local/bin/ocx.cmd"), b"daily fixture").unwrap();
+        let directories = windows_home_candidates(&isolated);
+        assert!(directories.iter().all(|path| path.starts_with(&isolated)));
+        let missing = select_tool(&directories, vec!["ocx.cmd".into()]);
+        assert_eq!(missing, isolated.join(".local/bin/ocx.cmd"));
+        assert!(!missing.exists());
+        std::fs::create_dir_all(isolated.join(".local/bin")).unwrap();
+        std::fs::write(isolated.join(".local/bin/ocx.cmd"), b"isolated fixture").unwrap();
+        assert_eq!(
+            select_tool(&directories, vec!["ocx.cmd".into()]),
+            isolated.join(".local/bin/ocx.cmd")
+        );
+    }
 
     #[test]
     fn discovery_uses_controlled_user_tools_and_returns_missing_candidates() {

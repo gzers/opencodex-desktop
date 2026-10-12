@@ -159,10 +159,12 @@ fn connect_stream() -> Result<UnixStream, IpcErrorCode> {
 
 #[cfg(windows)]
 fn connect_stream() -> Result<std::fs::File, IpcErrorCode> {
+    let pipe = opencodex_desktop_lib::modules::ipc::endpoint::pipe_name()
+        .map_err(|_| IpcErrorCode::InstanceOffline)?;
     std::fs::OpenOptions::new()
         .read(true)
         .write(true)
-        .open(opencodex_desktop_lib::modules::ipc::endpoint::pipe_name())
+        .open(pipe)
         .map_err(|_| IpcErrorCode::InstanceOffline)
 }
 

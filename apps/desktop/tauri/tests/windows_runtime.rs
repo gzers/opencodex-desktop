@@ -26,6 +26,80 @@ fn node() -> PathBuf {
     path
 }
 
+#[test]
+fn windows_sandbox_home_discovery_and_pipe_use_the_same_explicit_identity() {
+    let fixture = tempfile::tempdir().unwrap();
+    let sandbox = fixture.path().join("sandbox");
+    let daily = fixture.path().join("daily");
+    std::fs::create_dir_all(&sandbox).unwrap();
+    std::fs::create_dir_all(daily.join(".local/bin")).unwrap();
+    std::fs::write(daily.join(".local/bin/ocx.cmd"), b"daily launcher fixture").unwrap();
+    for (root, expected) in [
+        (Some(sandbox.as_os_str()), "isolated"),
+        (Some(std::ffi::OsStr::new("relative")), "invalid"),
+        (None, "invalid"),
+    ] {
+        let mut child = std::process::Command::new(std::env::current_exe().unwrap());
+        child.args([
+            "--exact",
+            "windows_explicit_sandbox_child",
+            "--ignored",
+            "--nocapture",
+        ]);
+        child
+            .env("OPENCODEX_SANDBOX", "1")
+            .env("OPENCODEX_SANDBOX_TEST_EXPECT", expected)
+            .env("HOME", &daily)
+            .env("USERPROFILE", &daily)
+            .env("NVM_SYMLINK", daily.join(".local/bin"))
+            .env("NODE_HOME", daily.join(".local/bin"))
+            .env("NVM_HOME", daily.join(".local/bin"));
+        match root {
+            Some(root) => {
+                child.env("OPENCODEX_SANDBOX_ROOT", root);
+            }
+            None => {
+                child.env_remove("OPENCODEX_SANDBOX_ROOT");
+            }
+        }
+        let output = child.output().unwrap();
+        assert!(
+            output.status.success(),
+            "child rejected {expected}: {} {}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+}
+
+#[test]
+#[ignore = "child entry explicitly executed by the isolated-environment parent"]
+fn windows_explicit_sandbox_child() {
+    use opencodex_desktop_lib::infrastructure::discovery_paths;
+    use opencodex_desktop_lib::modules::{ipc::endpoint, test_sandbox};
+    assert!(test_sandbox::enabled());
+    if std::env::var("OPENCODEX_SANDBOX_TEST_EXPECT").unwrap() == "invalid" {
+        assert!(platform::home_dir().is_none());
+        assert!(discovery_paths::default_paths().is_none());
+        assert!(endpoint::pipe_name().is_err());
+        return;
+    }
+    let root = test_sandbox::sandbox_root().unwrap();
+    let home = platform::home_dir().unwrap();
+    assert_eq!(home, root.join("home"));
+    let paths = discovery_paths::default_paths().unwrap();
+    assert!(paths.node.starts_with(&home));
+    assert!(paths.npm.starts_with(&home));
+    assert!(paths.ocx.starts_with(&home));
+    assert!(!paths.ocx.exists());
+    assert!(discovery_paths::runtime_candidates(&home)
+        .iter()
+        .all(|path| path.starts_with(&home)));
+    assert!(endpoint::pipe_name()
+        .unwrap()
+        .starts_with(r"\\.\pipe\OpenCodeXDesktop-Sandbox-"));
+}
+
 fn write_launcher(root: &Path, script: &str) -> PathBuf {
     let js = root.join("入口 script.js");
     std::fs::write(&js, script).unwrap();

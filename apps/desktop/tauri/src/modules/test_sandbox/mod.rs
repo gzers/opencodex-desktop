@@ -18,18 +18,23 @@ const SANDBOX_BOUNDARY_ENV: &str = "OPENCODEX_SANDBOX_BOUNDARY";
 ///
 /// 只有显式设置 ${B}OPENCODEX_SANDBOX=${B}（或等价 dev 标记）才启用；未设置时保持日常身份。
 pub fn enabled() -> bool {
-    match std::env::var("OPENCODEX_SANDBOX") {
-        Ok(value) => matches!(value.trim(), "1" | "true" | "yes" | "on"),
-        Err(_) => false,
-    }
+    enabled_value(std::env::var("OPENCODEX_SANDBOX").ok().as_deref())
+}
+
+fn enabled_value(value: Option<&str>) -> bool {
+    value.is_some_and(|value| matches!(value.trim(), "1" | "true" | "yes" | "on"))
 }
 
 /// 沙箱数据根：要求 ${B}OPENCODEX_SANDBOX_ROOT${B} 为绝对路径；缺失或非法即返回 None，由调用方停止。
 pub fn sandbox_root() -> Option<PathBuf> {
-    if !enabled() {
+    root_value(enabled(), std::env::var_os(SANDBOX_ROOT_ENV))
+}
+
+fn root_value(enabled: bool, raw: Option<std::ffi::OsString>) -> Option<PathBuf> {
+    if !enabled {
         return None;
     }
-    let raw = std::env::var_os(SANDBOX_ROOT_ENV)?;
+    let raw = raw?;
     if raw.is_empty() {
         return None;
     }
@@ -166,34 +171,24 @@ mod tests {
         assert!(isolated_boundary(&container.join("linked/source"), Some(&container)).is_err());
     }
 
-    // 单测共享进程环境变量，合并为一个测试避免并发互相干扰。
+    // Pure inputs avoid changing HOME/IPC behavior in concurrent Windows tests.
     #[test]
     fn sandbox_identity_and_root_contract() {
-        std::env::remove_var("OPENCODEX_SANDBOX");
-        std::env::remove_var(SANDBOX_ROOT_ENV);
-        assert!(!enabled());
-        assert!(resolve_data_root(Path::new("/daily/root")).is_ok());
-
-        std::env::set_var("OPENCODEX_SANDBOX", "1");
-        std::env::remove_var(SANDBOX_ROOT_ENV);
-        assert!(enabled());
-        assert!(sandbox_root().is_none());
-        // 沙箱启用但根缺失：拒绝回退到日常目录。
-        assert!(resolve_data_root(Path::new("/daily/root")).is_err());
-
-        std::env::set_var(SANDBOX_ROOT_ENV, "relative/path");
-        assert!(sandbox_root().is_none());
-        assert!(resolve_data_root(Path::new("/daily/root")).is_err());
-
+        assert!(!enabled_value(None));
+        for disabled in ["", "0", "false", "off"] {
+            assert!(!enabled_value(Some(disabled)));
+        }
+        for enabled in ["1", "true", "yes", "on", " 1 "] {
+            assert!(enabled_value(Some(enabled)));
+        }
+        assert!(root_value(true, None).is_none());
+        assert!(root_value(true, Some("relative/path".into())).is_none());
+        assert!(root_value(true, Some("".into())).is_none());
         let dir = tempfile::tempdir().expect("temp");
-        std::env::set_var(SANDBOX_ROOT_ENV, dir.path());
-        assert_eq!(sandbox_root().as_deref(), Some(dir.path()));
         assert_eq!(
-            resolve_data_root(Path::new("/daily/root")).expect("sandbox root"),
-            dir.path()
+            root_value(true, Some(dir.path().as_os_str().to_owned())).as_deref(),
+            Some(dir.path())
         );
-
-        std::env::remove_var(SANDBOX_ROOT_ENV);
-        std::env::remove_var("OPENCODEX_SANDBOX");
+        assert!(root_value(false, Some(dir.path().as_os_str().to_owned())).is_none());
     }
 }

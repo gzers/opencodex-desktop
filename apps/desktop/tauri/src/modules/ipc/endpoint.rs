@@ -20,8 +20,38 @@ pub const SOCKET_RELATIVE_PATH: &str = "ipc/opencodex.ipc";
 /// Windows named pipe 的稳定身份前缀。实际名称还包含当前账户的稳定摘要，
 /// 避免不同账户的客户端意外连接到同一个可见名称；访问控制仍由 named pipe
 /// 的创建者默认 DACL 和 reject_remote_clients 共同承担。
-#[cfg(windows)]
+#[cfg(any(windows, test))]
 const WINDOWS_PIPE_IDENTITY: &str = "OpenCodeXDesktop";
+
+#[cfg(any(windows, test))]
+fn windows_pipe_identity(
+    account: &str,
+    sandbox_enabled: bool,
+    sandbox_root: Option<&Path>,
+) -> Result<String, AppError> {
+    use sha2::{Digest, Sha256};
+    let mut digest = Sha256::new();
+    digest.update(account.as_bytes());
+    let identity = if sandbox_enabled {
+        let root = sandbox_root
+            .filter(|root| root.is_absolute())
+            .ok_or(AppError::NotConfigured)?
+            .canonicalize()
+            .map_err(|_| AppError::NotConfigured)?;
+        digest.update(b"\0sandbox\0");
+        digest.update(root.as_os_str().as_encoded_bytes());
+        "OpenCodeXDesktop-Sandbox"
+    } else {
+        WINDOWS_PIPE_IDENTITY
+    };
+    let suffix = digest
+        .finalize()
+        .iter()
+        .take(12)
+        .map(|byte| format!("{byte:02x}"))
+        .collect::<String>();
+    Ok(format!(r"\\.\pipe\{identity}-{suffix}"))
+}
 
 async fn read_request<R>(stream: &mut R) -> Result<IpcRequest, AppError>
 where
@@ -249,24 +279,19 @@ mod platform {
 #[cfg(windows)]
 mod platform {
     use super::*;
-    use sha2::{Digest, Sha256};
     use tokio::net::windows::named_pipe::{NamedPipeServer, PipeMode, ServerOptions};
 
     /// Named pipe 名称不使用 C/D 盘路径；默认 DACL 绑定创建者的 Windows
     /// 安全边界，且服务端拒绝远程客户端。账户摘要只用于稳定区分同机账户。
-    pub fn pipe_name() -> String {
+    pub fn pipe_name() -> Result<String, AppError> {
         let account = std::env::var_os("USERNAME")
             .map(|value| value.to_string_lossy().into_owned())
             .unwrap_or_else(|| "unknown-user".to_string());
-        let mut digest = Sha256::new();
-        digest.update(account.as_bytes());
-        let suffix = digest
-            .finalize()
-            .iter()
-            .take(12)
-            .map(|byte| format!("{byte:02x}"))
-            .collect::<String>();
-        format!(r"\\.\pipe\{WINDOWS_PIPE_IDENTITY}-{suffix}")
+        windows_pipe_identity(
+            &account,
+            crate::modules::test_sandbox::enabled(),
+            crate::modules::test_sandbox::sandbox_root().as_deref(),
+        )
     }
 
     fn create_server(name: &str, first: bool) -> std::io::Result<NamedPipeServer> {
@@ -288,7 +313,10 @@ mod platform {
 
     impl IpcEndpoint {
         pub fn bind(_cache_root: &Path) -> Result<Self, AppError> {
-            let pipe_name = pipe_name();
+            Self::bind_name(pipe_name()?)
+        }
+
+        fn bind_name(pipe_name: String) -> Result<Self, AppError> {
             let server = create_server(&pipe_name, true).map_err(|error| AppError::FileSystem {
                 operation: "bind Windows IPC named pipe".to_string(),
                 detail: error.to_string(),
@@ -327,6 +355,39 @@ mod platform {
             Ok(self.requests_served.fetch_add(1, Ordering::SeqCst) + 1)
         }
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+        use tokio::net::windows::named_pipe::ClientOptions;
+
+        #[tokio::test]
+        async fn sandbox_pipes_bind_separately_and_reject_duplicate_owners() {
+            let first = tempfile::tempdir().unwrap();
+            let second = tempfile::tempdir().unwrap();
+            let first_name = windows_pipe_identity("test-user", true, Some(first.path())).unwrap();
+            let second_name =
+                windows_pipe_identity("test-user", true, Some(second.path())).unwrap();
+            let endpoint = IpcEndpoint::bind_name(first_name.clone()).unwrap();
+            let other = IpcEndpoint::bind_name(second_name).unwrap();
+            assert_ne!(endpoint.endpoint_name(), other.endpoint_name());
+            assert!(IpcEndpoint::bind_name(first_name.clone()).is_err());
+
+            // A real pipe connection proves that the isolated name is usable.
+            // No GUI instance or production account endpoint is started.
+            let client = ClientOptions::new().open(&first_name).unwrap();
+            tokio::time::timeout(
+                std::time::Duration::from_secs(2),
+                endpoint.server.as_ref().unwrap().connect(),
+            )
+            .await
+            .unwrap()
+            .unwrap();
+            drop(client);
+            drop(endpoint);
+            drop(other);
+        }
+    }
 }
 
 #[cfg(windows)]
@@ -334,6 +395,49 @@ pub use platform::pipe_name;
 #[cfg(unix)]
 pub use platform::socket_path;
 pub use platform::IpcEndpoint;
+
+#[cfg(test)]
+mod windows_identity_tests {
+    use super::*;
+
+    #[test]
+    fn daily_pipe_identity_is_unchanged_and_ignores_sandbox_root_without_opt_in() {
+        let root = tempfile::tempdir().unwrap();
+        let expected = r"\\.\pipe\OpenCodeXDesktop-f85ac825d102b9f2d546aa16";
+        assert_eq!(
+            windows_pipe_identity("test-user", false, None).unwrap(),
+            expected
+        );
+        assert_eq!(
+            windows_pipe_identity("test-user", false, Some(root.path())).unwrap(),
+            expected
+        );
+    }
+
+    #[test]
+    fn sandbox_pipe_is_root_scoped_and_invalid_root_never_selects_daily_pipe() {
+        let first = tempfile::tempdir().unwrap();
+        let second = tempfile::tempdir().unwrap();
+        let daily = windows_pipe_identity("test-user", false, None).unwrap();
+        let isolated = windows_pipe_identity("test-user", true, Some(first.path())).unwrap();
+        assert_ne!(isolated, daily);
+        assert!(isolated.starts_with(r"\\.\pipe\OpenCodeXDesktop-Sandbox-"));
+        assert_ne!(
+            isolated,
+            windows_pipe_identity("test-user", true, Some(second.path())).unwrap()
+        );
+        assert_eq!(
+            isolated,
+            windows_pipe_identity("test-user", true, Some(&first.path().join("."))).unwrap()
+        );
+        for invalid in [None, Some(Path::new("relative"))] {
+            assert!(windows_pipe_identity("test-user", true, invalid).is_err());
+        }
+        assert!(
+            windows_pipe_identity("test-user", true, Some(&first.path().join("missing"))).is_err()
+        );
+    }
+}
 
 #[cfg(all(test, unix))]
 mod tests {
