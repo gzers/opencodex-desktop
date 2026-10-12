@@ -1,0 +1,94 @@
+{
+  "collectedAtUtc": "2026-10-12T08:31:10.518Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 29936,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-timer-trace-observe.js",
+  "screenshot": null,
+  "result": {
+    "status": "fresh-native-error-floor-observed",
+    "anchor": {
+      "id": 1,
+      "scheduledAtMs": 3892485.599999994,
+      "scheduledAtUtc": "2026-10-12T08:00:52.196Z",
+      "delayMs": 1800000,
+      "callbackText": "()=>{t=null,u()}",
+      "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at u (http://tauri.localhost/assets/index-BvePWDig.js:25:3252)",
+      "cancelled": true,
+      "fired": false,
+      "handle": 241,
+      "cancelledAtMs": 3919257.900000006
+    },
+    "sourceWitness": {
+      "url": "http://tauri.localhost/assets/index-BvePWDig.js",
+      "sha256": "dde7f6265ed0e8fa40546490177fffeb73e48f31d987193819ac60ff877b9535",
+      "callbackText": "()=>{t=null,u()}",
+      "armSnippet": "){let t=null,n=!1,r=!1,i=!1,a=null,o=`deadline`,s=0;function c(){t!==null&&clearTimeout(t),t=null}function l(i){c(),!r&&n&&i!==null&&e.visible()&&(t=setTimeout(()=>{t=null,u()},Math.max(100,i,s-performance.now())))}async function u(){let t=o;if(o=`deadline`,!r&&e.visible()){if(i){a=t;return}if(e.busy()){l(6e4);return}i=!0;try{let n=aw",
+      "errorFloorSnippet": "ror()}}r||l((n.targets.length?await e.plan():n).nextDelayMs)}catch{s=Math.max(s,performance.now()+18e5),e.onError(),l(18e5)}finally{i=!1,a&&!r&&(o=a,a=null,l(100))}}}return{start(){n||r||(n=!0,s=performance.now()+45e3,l(45e3))},wake(e=`deadline`){n&&!r&&(i?a=e"
+    },
+    "recordCount": 155,
+    "associatedArmCount": 154,
+    "activeTimerCount": 1,
+    "fired": [
+      {
+        "id": 153,
+        "scheduledAtMs": 5284428.700000018,
+        "scheduledAtUtc": "2026-10-12T08:24:04.224Z",
+        "delayMs": 408057,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at c (http://tauri.localhost/assets/index-BvePWDig.js:25:3709)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:20995)\n    at mn (http://tauri.localhost/assets/index-BvePWDig.js:1:21063)\n    at Un.u.call (http://tauri.localhost/assets/index-BvePWDig.js:1:24364)\n    at C (http://tauri.localhost/assets/index-BvePWDig.js:1:20249)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:21003)\n    at Mn (http://tauri.localhost/assets/index-BvePWDig.js:1:22754)",
+        "cancelled": false,
+        "fired": true,
+        "handle": 545,
+        "firedAtMs": 5692487.099999994,
+        "firedAtUtc": "2026-10-12T08:30:52.308Z"
+      }
+    ],
+    "earliestNominalDueMs": 5692485.599999994,
+    "elapsedSinceAnchorMs": 1818208.6000000238,
+    "lastRecords": [
+      {
+        "id": 152,
+        "scheduledAtMs": 5055915.5,
+        "scheduledAtUtc": "2026-10-12T08:20:15.696Z",
+        "delayMs": 636570.1999999881,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at c (http://tauri.localhost/assets/index-BvePWDig.js:25:3709)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:20995)\n    at mn (http://tauri.localhost/assets/index-BvePWDig.js:1:21063)\n    at Un.u.call (http://tauri.localhost/assets/index-BvePWDig.js:1:24364)\n    at C (http://tauri.localhost/assets/index-BvePWDig.js:1:20249)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:21003)\n    at Mn (http://tauri.localhost/assets/index-BvePWDig.js:1:22754)",
+        "cancelled": true,
+        "fired": false,
+        "handle": 536,
+        "cancelledAtMs": 5251857.900000006
+      },
+      {
+        "id": 153,
+        "scheduledAtMs": 5284428.700000018,
+        "scheduledAtUtc": "2026-10-12T08:24:04.224Z",
+        "delayMs": 408057,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at c (http://tauri.localhost/assets/index-BvePWDig.js:25:3709)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:20995)\n    at mn (http://tauri.localhost/assets/index-BvePWDig.js:1:21063)\n    at Un.u.call (http://tauri.localhost/assets/index-BvePWDig.js:1:24364)\n    at C (http://tauri.localhost/assets/index-BvePWDig.js:1:20249)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:21003)\n    at Mn (http://tauri.localhost/assets/index-BvePWDig.js:1:22754)",
+        "cancelled": false,
+        "fired": true,
+        "handle": 545,
+        "firedAtMs": 5692487.099999994,
+        "firedAtUtc": "2026-10-12T08:30:52.308Z"
+      },
+      {
+        "id": 154,
+        "scheduledAtMs": 5692489.599999994,
+        "scheduledAtUtc": "2026-10-12T08:30:52.311Z",
+        "delayMs": 73695000,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at u (http://tauri.localhost/assets/index-BvePWDig.js:25:3146)",
+        "cancelled": false,
+        "fired": false,
+        "handle": 560
+      }
+    ],
+    "sourceEvents": 200,
+    "foreground": true,
+    "visibility": "visible",
+    "observedAtUtc": "2026-10-12T08:31:10.516Z",
+    "scope": "observe existing real timer trace; no scheduler query, clock change or timer restart"
+  }
+}

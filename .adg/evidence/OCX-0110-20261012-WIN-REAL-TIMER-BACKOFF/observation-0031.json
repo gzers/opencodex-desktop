@@ -1,0 +1,79 @@
+{
+  "collectedAtUtc": "2026-10-12T08:07:33.057Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 29936,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-timer-trace-observe.js",
+  "screenshot": null,
+  "result": {
+    "status": "fresh-native-error-floor-observed",
+    "anchor": {
+      "id": 1,
+      "scheduledAtMs": 3892485.599999994,
+      "scheduledAtUtc": "2026-10-12T08:00:52.196Z",
+      "delayMs": 1800000,
+      "callbackText": "()=>{t=null,u()}",
+      "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at u (http://tauri.localhost/assets/index-BvePWDig.js:25:3252)",
+      "cancelled": true,
+      "fired": false,
+      "handle": 241,
+      "cancelledAtMs": 3919257.900000006
+    },
+    "sourceWitness": {
+      "url": "http://tauri.localhost/assets/index-BvePWDig.js",
+      "sha256": "dde7f6265ed0e8fa40546490177fffeb73e48f31d987193819ac60ff877b9535",
+      "callbackText": "()=>{t=null,u()}",
+      "armSnippet": "){let t=null,n=!1,r=!1,i=!1,a=null,o=`deadline`,s=0;function c(){t!==null&&clearTimeout(t),t=null}function l(i){c(),!r&&n&&i!==null&&e.visible()&&(t=setTimeout(()=>{t=null,u()},Math.max(100,i,s-performance.now())))}async function u(){let t=o;if(o=`deadline`,!r&&e.visible()){if(i){a=t;return}if(e.busy()){l(6e4);return}i=!0;try{let n=aw",
+      "errorFloorSnippet": "ror()}}r||l((n.targets.length?await e.plan():n).nextDelayMs)}catch{s=Math.max(s,performance.now()+18e5),e.onError(),l(18e5)}finally{i=!1,a&&!r&&(o=a,a=null,l(100))}}}return{start(){n||r||(n=!0,s=performance.now()+45e3,l(45e3))},wake(e=`deadline`){n&&!r&&(i?a=e"
+    },
+    "recordCount": 152,
+    "associatedArmCount": 151,
+    "activeTimerCount": 1,
+    "fired": [],
+    "earliestNominalDueMs": 5692485.599999994,
+    "elapsedSinceAnchorMs": 400833.2000000179,
+    "lastRecords": [
+      {
+        "id": 149,
+        "scheduledAtMs": 3930715.700000018,
+        "scheduledAtUtc": "2026-10-12T08:01:30.429Z",
+        "delayMs": 1761769.8999999762,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:3736)\n    at <anonymous>:7:12",
+        "cancelled": true,
+        "fired": false,
+        "handle": 489,
+        "cancelledAtMs": 3930882.400000006
+      },
+      {
+        "id": 150,
+        "scheduledAtMs": 3930882.400000006,
+        "scheduledAtUtc": "2026-10-12T08:01:30.596Z",
+        "delayMs": 1761603.199999988,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:3736)\n    at <anonymous>:7:12",
+        "cancelled": true,
+        "fired": false,
+        "handle": 491,
+        "cancelledAtMs": 3930882.599999994
+      },
+      {
+        "id": 151,
+        "scheduledAtMs": 3930882.599999994,
+        "scheduledAtUtc": "2026-10-12T08:01:30.596Z",
+        "delayMs": 1761603,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at c (http://tauri.localhost/assets/index-BvePWDig.js:25:3709)\n    at http://tauri.localhost/assets/index-BvePWDig.js:25:3787\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:20995)\n    at mn (http://tauri.localhost/assets/index-BvePWDig.js:1:21063)\n    at Un.u.call (http://tauri.localhost/assets/index-BvePWDig.js:1:24364)\n    at C (http://tauri.localhost/assets/index-BvePWDig.js:1:20249)\n    at pn (http://tauri.localhost/assets/index-BvePWDig.js:1:21003)",
+        "cancelled": false,
+        "fired": false,
+        "handle": 493
+      }
+    ],
+    "sourceEvents": 200,
+    "foreground": true,
+    "visibility": "visible",
+    "observedAtUtc": "2026-10-12T08:07:33.056Z",
+    "scope": "observe existing real timer trace; no scheduler query, clock change or timer restart"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "collectedAtUtc": "2026-10-12T07:55:40.666Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 29936,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-timer-trace-source-check.js",
+  "screenshot": null,
+  "result": {
+    "record": {
+      "id": 0,
+      "delayMs": 546556.900000006,
+      "scheduledAtUtc": "2026-10-12T07:51:45.604Z",
+      "callbackText": "()=>{t=null,u()}"
+    },
+    "source": {
+      "url": "http://tauri.localhost/assets/index-BvePWDig.js",
+      "sha256": "dde7f6265ed0e8fa40546490177fffeb73e48f31d987193819ac60ff877b9535"
+    },
+    "matches": [
+      {
+        "offset": 164260,
+        "arm": "){let t=null,n=!1,r=!1,i=!1,a=null,o=`deadline`,s=0;function c(){t!==null&&clearTimeout(t),t=null}function l(i){c(),!r&&n&&i!==null&&e.visible()&&(t=setTimeout(()=>{t=null,u()},Math.max(100,i,s-performance.now())))}async function u(){let t=o;if(o=`deadline`,!r&&e.visible()){if(i){a=t;return}if(e.busy()){l(6e4);return}i=!0;try{let n=aw",
+        "errorWithin3500Characters": 363,
+        "errorSnippet": "ror()}}r||l((n.targets.length?await e.plan():n).nextDelayMs)}catch{s=Math.max(s,performance.now()+18e5),e.onError(),l(18e5)}finally{i=!1,a&&!r&&(o=a,a=null,l(100))}}}return{start(){n||r||(n=!0,s=performance.now()+45e3,l(45e3))},wake(e=`deadline`){n&&!r&&(i?a=e"
+      }
+    ],
+    "timerBridgeStillInstalled": true,
+    "nativeInvokeUnchanged": true,
+    "scope": "read-only attribution diagnostic before waiting for a fresh error; no timer restarts or source modification"
+  }
+}

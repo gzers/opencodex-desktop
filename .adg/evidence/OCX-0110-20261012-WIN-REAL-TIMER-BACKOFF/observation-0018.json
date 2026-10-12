@@ -1,0 +1,38 @@
+{
+  "collectedAtUtc": "2026-10-12T08:00:48.659Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 29936,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-timer-trace-observe.js",
+  "screenshot": null,
+  "result": {
+    "status": "awaiting-fresh-thirty-minute-arm",
+    "anchor": null,
+    "sourceWitness": null,
+    "recordCount": 1,
+    "associatedArmCount": 0,
+    "activeTimerCount": 0,
+    "fired": [],
+    "earliestNominalDueMs": null,
+    "elapsedSinceAnchorMs": null,
+    "lastRecords": [
+      {
+        "id": 0,
+        "scheduledAtMs": 3345927.5,
+        "scheduledAtUtc": "2026-10-12T07:51:45.604Z",
+        "delayMs": 546556.900000006,
+        "callbackText": "()=>{t=null,u()}",
+        "stack": "Error\n    at setTimeoutObserved (<anonymous>:35:74)\n    at l (http://tauri.localhost/assets/index-BvePWDig.js:25:2842)\n    at Object.wake (http://tauri.localhost/assets/index-BvePWDig.js:25:3402)\n    at s (http://tauri.localhost/assets/index-BvePWDig.js:25:3694)\n    at http://tauri.localhost/assets/index-BvePWDig.js:25:3971",
+        "cancelled": false,
+        "fired": false,
+        "handle": 220
+      }
+    ],
+    "sourceEvents": 0,
+    "foreground": true,
+    "visibility": "visible",
+    "observedAtUtc": "2026-10-12T08:00:48.657Z",
+    "scope": "observe existing real timer trace; no scheduler query, clock change or timer restart"
+  }
+}
