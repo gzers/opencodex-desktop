@@ -20,6 +20,7 @@ if (process.argv[2] === '--sleep') {
   const mode = fs.readFileSync(path.join(__dirname, 'mode'), 'utf8');
   const child = spawn(process.execPath, [__filename, '--sleep'], {
     windowsHide: true,
+    detached: true,
     stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore', 'ignore'],
   });
   fs.writeFileSync(path.join(__dirname, 'child-pid'), String(child.pid));
