@@ -1,0 +1,24 @@
+{
+  "result": "passed",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "filesVerified": 131,
+  "scope": "six real native ordinary Windows W2 commands pending under independently held cooperative lock; files unchanged while held, natural-release success and exact original bytes",
+  "actualNativeCommandPhases": [
+    "create",
+    "list",
+    "pin",
+    "policy",
+    "restore",
+    "cleanup"
+  ],
+  "ordinaryHolderActualTokensVerified": true,
+  "nonCooperatingWritersAccepted": false,
+  "killedHolderRecoveryAccepted": false,
+  "fullBackupSafetyOrUiAccepted": false,
+  "adminLockMatrixAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realCyclesAccepted": false,
+  "fullNativeGateAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}
