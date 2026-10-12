@@ -1,0 +1,15 @@
+{
+  "collectedAtUtc": "2026-10-12T12:23:52.292900+00:00",
+  "baselineCommit": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "machine": "x86_64",
+  "selectedImports": [
+    {
+      "dll": "shell32.dll",
+      "function": "SHGetKnownFolderPath"
+    }
+  ],
+  "baselineExecutableRun": false,
+  "baselineModified": false,
+  "scope": "read-only exact official PE import provenance; does not prove all dependency versions or runtime call frequency"
+}

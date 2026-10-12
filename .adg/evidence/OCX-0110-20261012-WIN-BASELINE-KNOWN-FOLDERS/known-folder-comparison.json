@@ -1,0 +1,33 @@
+{
+  "recordedAtUtc": "2026-10-12T12:22:23.8589859Z",
+  "fixtureRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\baseline-known-folder-readonly",
+  "actualApiExperiment": true,
+  "comparison": [
+    {
+      "folder": "profile",
+      "sameNativePathBeforeAndAfterOverride": true,
+      "nativePathInsideFixture": false,
+      "overriddenEnvironmentInsideFixture": true,
+      "overriddenEnvironmentMatchesNativePath": false
+    },
+    {
+      "folder": "roaming",
+      "sameNativePathBeforeAndAfterOverride": false,
+      "nativePathInsideFixture": true,
+      "overriddenEnvironmentInsideFixture": true,
+      "overriddenEnvironmentMatchesNativePath": true
+    },
+    {
+      "folder": "local",
+      "sameNativePathBeforeAndAfterOverride": false,
+      "nativePathInsideFixture": true,
+      "overriddenEnvironmentInsideFixture": true,
+      "overriddenEnvironmentMatchesNativePath": true
+    }
+  ],
+  "fullBaselineIsolationProved": false,
+  "baselineApplicationLaunched": false,
+  "settingsOrProfileChanged": false,
+  "rawRealUserPathsPublished": false,
+  "sourceScope": "native API boundary; old official baseline source separately requests dirs6/home_dir"
+}

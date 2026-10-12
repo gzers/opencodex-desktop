@@ -1,0 +1,45 @@
+{
+  "collectedAtUtc": "2026-10-12T12:22:21.9944417Z",
+  "probeMode": "control",
+  "processId": 21488,
+  "fixtureRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\baseline-known-folder-readonly",
+  "knownFolderApi": "SHGetKnownFolderPath(flags=0, token=NULL)",
+  "userProfileEnvironmentOverridden": false,
+  "windowsSecuritySettingsChanged": false,
+  "registryOrKnownFolderBindingChanged": false,
+  "baselineApplicationLaunched": false,
+  "rows": [
+    {
+      "folder": "profile",
+      "folderId": "5e6c858f-0e22-4760-9afe-ea3317b67173",
+      "nativePathSha256": "b980b003ef70fb1670ff25451977ecb5ca444912df4c70c89ebdaaef2debad19",
+      "nativePathInsideFixture": false,
+      "environmentName": "USERPROFILE",
+      "environmentPathInsideFixture": false,
+      "nativePathEqualsEnvironment": true,
+      "rawUserPathIncluded": false
+    },
+    {
+      "folder": "roaming",
+      "folderId": "3eb685db-65f9-4cf6-a03a-e3ef65729f3d",
+      "nativePathSha256": "ead03198c072cd03f3e32211eaafeb9a61dd5f88b382a4ffe9b6a911ff723eea",
+      "nativePathInsideFixture": false,
+      "environmentName": "APPDATA",
+      "environmentPathInsideFixture": false,
+      "nativePathEqualsEnvironment": true,
+      "rawUserPathIncluded": false
+    },
+    {
+      "folder": "local",
+      "folderId": "f1b32785-6fba-4fcf-9d55-7b8e7f157091",
+      "nativePathSha256": "991961aa7ab14adc5fb9c5699fcb1b45e839b8a1d1a3a9eb0329876d2129ceb0",
+      "nativePathInsideFixture": false,
+      "environmentName": "LOCALAPPDATA",
+      "environmentPathInsideFixture": false,
+      "nativePathEqualsEnvironment": true,
+      "rawUserPathIncluded": false
+    }
+  ],
+  "scope": "actual read-only Known Folder API behavior for current account token; no baseline EXE execution or claim of original dependency resolution"
+}
+

@@ -1,0 +1,47 @@
+{
+  "oldOfficialSource": [
+    {
+      "sourceCommit": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "path": "apps/desktop/tauri/src/infrastructure/platform.rs",
+      "blob": "a79b1ff0fc8659ddd0b13fe6f281314ffea044a3"
+    },
+    {
+      "sourceCommit": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "blob": "bff711b332dd353251769e95a85bd09f1de9d5f5"
+    },
+    {
+      "sourceCommit": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "blob": "a1d09307eb3307d8ce0f8d08f6276604957df8b4"
+    }
+  ],
+  "scope": "bounded primary source/PE/native-API witnesses; baseline dependency lock absent, not reconstructed",
+  "sourceSymbols": {
+    "dirsWindowsHome": "dirs_sys::known_folder_profile",
+    "dirsSysProfile": "SHGetKnownFolderPath(FOLDERID_Profile, flags=0, token=NULL)"
+  },
+  "primaryCrates": [
+    {
+      "name": "dirs",
+      "matchesCurrentCommittedLock": true,
+      "baselineResolvedVersionIndependentlyProved": false,
+      "sourceOrigin": "official static.crates.io registry artifact",
+      "rawCrateSha256": "c3e8aa94d75141228480295a7d0e7feb620b1a5ad9f12bc40be62411e38cce4e",
+      "version": "6.0.0"
+    },
+    {
+      "name": "dirs-sys",
+      "matchesCurrentCommittedLock": true,
+      "baselineResolvedVersionIndependentlyProved": false,
+      "sourceOrigin": "official static.crates.io registry artifact",
+      "rawCrateSha256": "e01a3366d27ee9890022452ee61b2b63a67e6f13f58900b651ff5665f0bb1fab",
+      "version": "0.5.0"
+    }
+  ],
+  "baselineSourceChanged": false,
+  "baselineNativeApplicationLaunched": false,
+  "settingsChanged": false,
+  "recordedAtUtc": "2026-10-12T12:23:52.6927477Z",
+  "rawUserKnownFolderPathsPublished": false
+}
