@@ -272,6 +272,89 @@ fn windows_version_probe_executes_node_script_in_a_spaced_path() {
     );
 }
 
+#[test]
+fn windows_npm_receives_safe_paths_without_retargeting_validated_storage() {
+    use opencodex_desktop_lib::modules::runtime::install::NpmPackRequest;
+    let root = tempfile::Builder::new()
+        .prefix("npm canonical 中文 ")
+        .tempdir()
+        .unwrap();
+    let evidence = root.path().join("canonical-arguments.json");
+    let script = format!(
+        r#"const fs=require('fs'),p=require('path'),argv=process.argv.slice(2);
+const option=argv[0]==='pack'?'--pack-destination':'--prefix';
+const target=argv[argv.indexOf(option)+1],cache=process.env.npm_config_cache;
+if(target.startsWith('\\\\?\\')||cache.startsWith('\\\\?\\'))process.exit(9);
+fs.mkdirSync(target,{{recursive:true}});
+if(argv[0]==='pack')fs.writeFileSync(p.join(target,'fixture.tgz'),'bounded fixture');
+fs.writeFileSync({},JSON.stringify({{argv,cache,targetReal:fs.realpathSync(target),cacheReal:fs.realpathSync(cache)}}));"#,
+        serde_json::to_string(&evidence.to_string_lossy()).unwrap()
+    );
+    let npm = write_launcher(root.path(), &script);
+    let cache = root.path().join("cache/npm");
+    let prefix = root.path().join("安装 prefix");
+    let download = root.path().join("下载");
+    for directory in [&cache, &prefix, &download] {
+        std::fs::create_dir_all(directory).unwrap();
+    }
+    let canonical_prefix = prefix.canonicalize().unwrap();
+    let canonical_download = download.canonicalize().unwrap();
+    let canonical_cache = cache.canonicalize().unwrap();
+    assert!(canonical_prefix.to_string_lossy().starts_with(r"\\?\"));
+    let runner = SystemNpmRunner::new(Some(root.path().to_owned()), canonical_cache.clone());
+    runner
+        .install_package(
+            &NpmInstallRequest {
+                npm_path: npm.clone(),
+                node_dir: node().parent().map(Path::to_path_buf),
+                prefix: canonical_prefix.clone(),
+                version: "2.77.0".into(),
+                proxy: None,
+                scripts_enabled: false,
+                offline: true,
+            },
+            &Sink,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    let observed: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&evidence).unwrap()).unwrap();
+    assert_eq!(
+        PathBuf::from(observed["targetReal"].as_str().unwrap())
+            .canonicalize()
+            .unwrap(),
+        canonical_prefix
+    );
+    assert_eq!(
+        PathBuf::from(observed["cacheReal"].as_str().unwrap())
+            .canonicalize()
+            .unwrap(),
+        canonical_cache
+    );
+    let archive = runner
+        .pack(
+            &NpmPackRequest {
+                npm_path: npm,
+                node_dir: node().parent().map(Path::to_path_buf),
+                work_dir: canonical_download.clone(),
+                version: "2.77.0".into(),
+                proxy: None,
+            },
+            &Sink,
+            &CancelFlag::new(),
+        )
+        .unwrap();
+    assert_eq!(archive, canonical_download.join("fixture.tgz"));
+    assert_eq!(
+        dunce::simplified(Path::new(r"\\?\C:\CON")),
+        Path::new(r"\\?\C:\CON")
+    );
+    assert_eq!(
+        dunce::simplified(Path::new(r"\\?\C:\directory\trailing.")),
+        Path::new(r"\\?\C:\directory\trailing.")
+    );
+}
+
 struct Sink;
 impl InstallProgressSink for Sink {
     fn emit(&self, _: InstallProgress) {}

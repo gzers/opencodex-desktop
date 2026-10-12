@@ -34,6 +34,8 @@ tauri = { version = "2", features = ["tray-icon", "image-png", "unstable"] }
 chrono = { version = "0.4", features = ["serde"] }
 libc = "0.2"
 dirs = "6"
+# Canonical storage stays unchanged; only npm-facing paths use safe Windows simplification.
+dunce = "=1.0.5"
 rand = "0.9"
 uuid = { version = "1.26.1", features = ["v4"] }
 sha2 = "0.10"

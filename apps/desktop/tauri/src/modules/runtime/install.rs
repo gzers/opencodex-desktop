@@ -809,7 +809,7 @@ impl SystemNpmRunner {
             &mut command,
             self.home.as_ref().map(|home| home.as_os_str()),
         );
-        command.env("npm_config_cache", &self.cache);
+        command.env("npm_config_cache", dunce::simplified(&self.cache));
         command
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
@@ -836,7 +836,9 @@ impl SystemNpmRunner {
         Ok((
             vec![
                 std::ffi::OsString::from("--userconfig"),
-                userconfig.path().as_os_str().to_os_string(),
+                dunce::simplified(userconfig.path())
+                    .as_os_str()
+                    .to_os_string(),
             ],
             Some(userconfig),
         ))
@@ -866,7 +868,7 @@ impl NpmRunner for SystemNpmRunner {
             .arg("pack")
             .arg(&spec)
             .arg("--pack-destination")
-            .arg(&request.work_dir)
+            .arg(dunce::simplified(&request.work_dir))
             .arg("--loglevel")
             .arg("info");
         command.args(&proxy_args);
@@ -913,7 +915,7 @@ impl NpmRunner for SystemNpmRunner {
         command
             .arg("install")
             .arg("--prefix")
-            .arg(&request.prefix)
+            .arg(dunce::simplified(&request.prefix))
             .arg("--no-audit")
             .arg("--no-fund")
             .arg("--loglevel")

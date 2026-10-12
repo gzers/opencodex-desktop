@@ -144,7 +144,7 @@ fn run_npm_view_with_timeout(
         crate::infrastructure::platform::apply_user_environment(command.as_std_mut(), None);
     }
     command.env("OPENCODEX_HOME", &environment.opencodex_home);
-    command.env("npm_config_cache", cache);
+    command.env("npm_config_cache", dunce::simplified(cache));
     command.env("npm_config_update_notifier", "false");
     // 关键：npm 是 `#!/usr/bin/env node` 脚本，env_clear 后必须给出能找到 node 的 PATH。
     // 至少包含 npm 自身所在目录（node 与它同目录），并补系统最小 PATH 兜底，
