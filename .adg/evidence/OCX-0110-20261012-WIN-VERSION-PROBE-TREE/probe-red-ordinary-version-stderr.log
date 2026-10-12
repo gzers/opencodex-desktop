@@ -1,0 +1,14 @@
+query fixture version/nonzero: elapsed=137.8663ms, result=Failure
+
+thread 'infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper' (38296) panicked at src\infrastructure\windows_query_fixture.rs:238:5:
+version query left its own nonzero descendant running
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+query fixture version/success: elapsed=153.3539ms, result=Success
+
+thread 'infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output' (42916) panicked at src\infrastructure\windows_query_fixture.rs:238:5:
+version query left its own success descendant running
+query fixture version/timeout: elapsed=8.1554181s, result=Timeout
+
+thread 'infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process' (30552) panicked at src\infrastructure\windows_query_fixture.rs:225:5:
+query required external fixture watchdog cleanup
+

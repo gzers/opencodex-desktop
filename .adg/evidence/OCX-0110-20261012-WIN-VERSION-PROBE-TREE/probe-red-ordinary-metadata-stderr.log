@@ -1,0 +1,12 @@
+query fixture metadata/nonzero: elapsed=189.5834ms, result=Failure
+query fixture metadata/overflow: elapsed=216.091ms, result=Failure
+query fixture metadata/success: elapsed=212.3032ms, result=Success
+
+thread '<unnamed>' (18544) panicked at src\infrastructure\windows_query_fixture.rs:179:14:
+called `Result::unwrap()` on an `Err` value: ParseIntError { kind: Empty }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+query fixture metadata/timeout: elapsed=2.0118672s, result=Timeout
+
+thread 'modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process' (26508) panicked at src\infrastructure\windows_query_fixture.rs:217:25:
+fixture handle observation failed: Any { .. }
+

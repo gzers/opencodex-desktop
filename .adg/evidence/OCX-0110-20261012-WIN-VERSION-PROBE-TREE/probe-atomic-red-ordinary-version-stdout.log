@@ -1,0 +1,16 @@
+
+running 3 tests
+test infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper ... FAILED
+test infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output ... FAILED
+test infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process ... FAILED
+
+failures:
+
+failures:
+    infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper
+    infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output
+    infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 506 filtered out; finished in 12.53s
+
+

@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "ciTestExecutableSha256": "c05912cede102ae471209c51a2caad3b56aa2d41ac06c71b12e7bb61e5e6c06c",
+  "label": "probe-atomic-fixed",
+  "requestedMode": "administrator",
+  "testGroup": "version",
+  "filter": "infrastructure::official_version_source::windows_tests::",
+  "helperToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 46004,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-12T13:17:43.6099526Z",
+    "elevated": true,
+    "elevationType": 2,
+    "collectedAtUtc": "2026-10-12T13:17:44.5802765Z"
+  },
+  "testProcessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 17256,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\query-job-source\\probe-atomic-fixed\\windows-backend\\opencodex_desktop_lib-713299640ffef8db.exe",
+    "creationTimeUtc": "2026-10-12T13:17:44.8449183Z",
+    "elevated": true,
+    "elevationType": 2,
+    "collectedAtUtc": "2026-10-12T13:17:44.8553516Z"
+  },
+  "runtimeRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\version-probe-probe-atomic-fixed-administrator\\version",
+  "startedAtUtc": "2026-10-12T13:17:44.8427313Z",
+  "status": "recorded-tests-passed",
+  "credentialsInherited": false,
+  "desktopApplicationLaunched": false,
+  "productionVersionDeadlineSeconds": 2,
+  "scope": "actual source-bound Rust functions and process fixtures; current desktop not replaced",
+  "elapsedMs": 2350.5622,
+  "exitCode": 0,
+  "finishedAtUtc": "2026-10-12T13:17:47.5038533Z",
+  "desktopCountAfter": 1,
+  "sameOriginalDesktopLifecycle": true
+}

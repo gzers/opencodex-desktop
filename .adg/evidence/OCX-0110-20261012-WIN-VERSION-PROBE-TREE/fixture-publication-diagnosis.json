@@ -1,0 +1,17 @@
+{
+  "newResultsAccepted": false,
+  "productTimeoutResult": "query returned Timeout at 2.0118672s",
+  "redFixedFixtureSource": "277f76251b2db5401c152b3517bf4e539224a75c",
+  "versionFailuresRemainRealRecordedFailures": true,
+  "observedError": "ParseIntError { kind: Empty } in PID-file observer",
+  "budgetChanged": false,
+  "assertionsRemoved": false,
+  "fixedFixtureSource": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "oldLogsPreserved": true,
+  "affectedTest": "metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+  "affectedSource": "3d449ac0e9c1c02afa5fb2a1422db06fc3778531",
+  "classification": "fixture publication race, not metadata cleanup regression",
+  "recordedAtUtc": "2026-10-12T12:57:24.3015185Z",
+  "affectedFile": "probe-red-ordinary-metadata-stderr.log",
+  "correction": "write PID to .pending then rename before observer sees final path"
+}
