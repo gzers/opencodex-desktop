@@ -1,0 +1,72 @@
+{
+  "collectedAtUtc": "2026-10-12T08:25:09.324Z",
+  "sourceCommit": "afff490a430a81f8c233d44928aa3681a23e91e0",
+  "applicationPid": 29936,
+  "executableSha256": "bf8a39e977ce5c554923f5f826a02b8f71cc37ed00ac08c258e436f104d9a7a1",
+  "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+  "expressionFile": "C:\\Users\\15119\\.codex\\tmp\\ocx-0110-update-details-read.js",
+  "screenshot": null,
+  "result": {
+    "manager": {
+      "channel": "stable",
+      "currentVersion": "0.1.10",
+      "availableVersion": null,
+      "lastCheckedAt": "2026-10-12T04:59:07.732242400+00:00",
+      "signatureVerified": null,
+      "error": null,
+      "notes": null,
+      "releaseUrl": null,
+      "publishedAt": null,
+      "pendingRestart": null
+    },
+    "panelCache": {
+      "tag": "latest",
+      "version": "2.83.0",
+      "integrity": "sha512-NymR7wS0gtzOBUfyeoHMa1XZbw9qXJIVFh7L01E5DC+3+jdrOdru8wIZXouRk+Ct2NDAci+1Xp22788LQu6nxw=="
+    },
+    "runtimeSource": {
+      "kind": "unresolved",
+      "path": null,
+      "version": null,
+      "resolvedAt": "2026-10-12T06:55:59Z",
+      "insideDataRoot": false,
+      "managedEntry": null,
+      "managedPrefix": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\runtime\\opencodex",
+      "defaultPrefix": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\runtime\\opencodex",
+      "explicitPath": null,
+      "history": [
+        {
+          "action": "install",
+          "result": "failed",
+          "package": "@bitkyc08/opencodex",
+          "version": "2.82.0",
+          "target": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\runtime\\opencodex",
+          "at": "2026-10-12T05:29:00Z",
+          "reason": "npm 安装以退出码 1 结束"
+        },
+        {
+          "action": "install",
+          "result": "failed",
+          "package": "@bitkyc08/opencodex",
+          "version": "2.82.0",
+          "target": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\runtime\\opencodex",
+          "at": "2026-10-12T05:54:48Z",
+          "reason": "该包需要执行安装脚本才能生成入口；需要你的二次确认"
+        },
+        {
+          "action": "install",
+          "result": "failed",
+          "package": "@bitkyc08/opencodex",
+          "version": "2.82.0",
+          "target": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data\\runtime\\opencodex",
+          "at": "2026-10-12T06:27:20Z",
+          "reason": "该包需要执行安装脚本才能生成入口；需要你的二次确认"
+        }
+      ]
+    },
+    "modalCount": 1,
+    "route": "#settings?section=upgrade",
+    "foreground": true,
+    "scope": "read-only native status after opening and closing cached update details; no query, download or installation"
+  }
+}
