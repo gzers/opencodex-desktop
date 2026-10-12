@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+  "runId": 38210653937,
+  "jobId": 114683819707,
+  "originalBytes": 146033,
+  "originalSha256": "b6d68c13b9d6cc940f1d25ff5d4d3b65e9ef64890d610586237a507b4d17e5c6",
+  "gzipRoundtrip": true,
+  "tests": [
+    {
+      "test": "windows_npm_receives_safe_paths_without_retargeting_validated_storage",
+      "result": "passed",
+      "line": "2026-10-12T06:09:04.0443568Z test windows_npm_receives_safe_paths_without_retargeting_validated_storage ... ok"
+    },
+    {
+      "test": "windows_npm_cmd_runner_passes_paths_and_controlled_environment",
+      "result": "passed",
+      "line": "2026-10-12T06:09:03.9255401Z test windows_npm_cmd_runner_passes_paths_and_controlled_environment ... ok"
+    },
+    {
+      "test": "windows_sandbox_home_discovery_and_pipe_use_the_same_explicit_identity",
+      "result": "passed",
+      "line": "2026-10-12T06:09:04.0760570Z test windows_sandbox_home_discovery_and_pipe_use_the_same_explicit_identity ... ok"
+    }
+  ],
+  "scope": "exact package job executed real Windows path/cwd/environment regressions; no full native acceptance"
+}

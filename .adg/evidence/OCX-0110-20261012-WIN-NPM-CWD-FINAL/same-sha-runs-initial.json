@@ -1,0 +1,29 @@
+[
+  {
+    "id": 38212329011,
+    "name": "CI",
+    "head_sha": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+    "head_branch": "main",
+    "event": "push",
+    "status": "queued",
+    "conclusion": null
+  },
+  {
+    "id": 38210653937,
+    "name": "Windows candidate installer",
+    "head_sha": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+    "head_branch": "feature/0.1.10-windows-npm-cwd",
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  {
+    "id": 38210513009,
+    "name": "CI",
+    "head_sha": "e1a1aaa54ccc56530d5da507d0666b6ec8d2c138",
+    "head_branch": "feature/0.1.10-windows-npm-cwd",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success"
+  }
+]
