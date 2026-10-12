@@ -865,6 +865,7 @@ impl NpmRunner for SystemNpmRunner {
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
         command
+            .current_dir(dunce::simplified(&request.work_dir))
             .arg("pack")
             .arg(&spec)
             .arg("--pack-destination")
@@ -913,6 +914,7 @@ impl NpmRunner for SystemNpmRunner {
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
         command
+            .current_dir(dunce::simplified(&request.prefix))
             .arg("install")
             .arg("--prefix")
             .arg(dunce::simplified(&request.prefix))

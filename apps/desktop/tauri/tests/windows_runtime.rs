@@ -287,7 +287,7 @@ const target=argv[argv.indexOf(option)+1],cache=process.env.npm_config_cache;
 if(target.startsWith('\\\\?\\')||cache.startsWith('\\\\?\\'))process.exit(9);
 fs.mkdirSync(target,{{recursive:true}});
 if(argv[0]==='pack')fs.writeFileSync(p.join(target,'fixture.tgz'),'bounded fixture');
-fs.writeFileSync({},JSON.stringify({{argv,cache,targetReal:fs.realpathSync(target),cacheReal:fs.realpathSync(cache)}}));"#,
+fs.writeFileSync({},JSON.stringify({{argv,cache,cwd:process.cwd(),targetReal:fs.realpathSync(target),cacheReal:fs.realpathSync(cache)}}));"#,
         serde_json::to_string(&evidence.to_string_lossy()).unwrap()
     );
     let npm = write_launcher(root.path(), &script);
@@ -331,6 +331,12 @@ fs.writeFileSync({},JSON.stringify({{argv,cache,targetReal:fs.realpathSync(targe
             .unwrap(),
         canonical_cache
     );
+    assert_eq!(
+        PathBuf::from(observed["cwd"].as_str().unwrap())
+            .canonicalize()
+            .unwrap(),
+        canonical_prefix
+    );
     let archive = runner
         .pack(
             &NpmPackRequest {
@@ -345,6 +351,14 @@ fs.writeFileSync({},JSON.stringify({{argv,cache,targetReal:fs.realpathSync(targe
         )
         .unwrap();
     assert_eq!(archive, canonical_download.join("fixture.tgz"));
+    let observed: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&evidence).unwrap()).unwrap();
+    assert_eq!(
+        PathBuf::from(observed["cwd"].as_str().unwrap())
+            .canonicalize()
+            .unwrap(),
+        canonical_download
+    );
     assert_eq!(
         dunce::simplified(Path::new(r"\\?\C:\CON")),
         Path::new(r"\\?\C:\CON")
@@ -368,7 +382,7 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
         .unwrap();
     let evidence = root.path().join("arguments.json");
     let script = format!(
-        "require('fs').writeFileSync({}, JSON.stringify({{argv:process.argv.slice(2), profile:process.env.USERPROFILE, path:process.env.PATH}}));",
+        "require('fs').writeFileSync({}, JSON.stringify({{argv:process.argv.slice(2), cwd:process.cwd(), profile:process.env.USERPROFILE, path:process.env.PATH}}));",
         serde_json::to_string(&evidence.to_string_lossy()).unwrap(),
     );
     let npm = write_launcher(root.path(), &script);
@@ -400,6 +414,10 @@ fn windows_npm_cmd_runner_passes_paths_and_controlled_environment() {
     ));
     assert!(argv.contains(&"--offline".to_owned()));
     assert!(argv.contains(&"--ignore-scripts".to_owned()));
+    assert_eq!(
+        PathBuf::from(evidence["cwd"].as_str().unwrap()),
+        root.path().join("安装 prefix")
+    );
     assert_eq!(evidence["profile"], root.path().to_string_lossy().as_ref());
     assert!(
         std::env::split_paths(std::ffi::OsStr::new(evidence["path"].as_str().unwrap()))
