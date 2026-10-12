@@ -1,0 +1,55 @@
+{
+  "performancePassed": false,
+  "baselineCommit": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "startupWitness": [
+    {
+      "line": 103,
+      "text": "            let data_root = crate::modules::test_sandbox::resolve_data_root(&default_root)"
+    },
+    {
+      "line": 172,
+      "text": "            let home = crate::infrastructure::platform::home_dir()"
+    }
+  ],
+  "currentLiveCycle": {
+    "monitorCreationUtc": "2026-10-12T10:04:20.6633773Z",
+    "applicationPid": 38924,
+    "preserved": true,
+    "monitorPid": 18944
+  },
+  "baselineLaunchAttempted": false,
+  "originalFailedPerformanceCleared": false,
+  "recordedAtUtc": "2026-10-12T10:42:01.3830393Z",
+  "platformWitness": [
+    {
+      "line": 14,
+      "text": "pub fn home_dir() -> Option<PathBuf> {"
+    },
+    {
+      "line": 15,
+      "text": "    dirs::home_dir().filter(|path| path.is_absolute() && !path.as_os_str().is_empty())"
+    },
+    {
+      "line": 108,
+      "text": "            let daily = home_dir().as_ref() == Some(&home);"
+    }
+  ],
+  "configuredIsolationSufficientlyProved": false,
+  "nextPrerequisite": "prove isolated Windows user-profile/known-folder environment for exact official baseline; execute paired samples only after retained real cycle lifecycle permits replacement",
+  "originalPerformanceContract": {
+    "cacheRoutes": 100,
+    "idleMinutes": 10,
+    "unexpiredCacheAutoNetworkOrQuerySubprocessMax": 0,
+    "idleCpuIncrementMaxPercentagePoints": 0.5,
+    "p95IncrementMaxPercent": 5,
+    "p95IncrementMaxMilliseconds": 100,
+    "coldStartsMinimum": 20,
+    "mainThreadTaskMaxMilliseconds": 50,
+    "cacheRestarts": 10,
+    "rssIncrementMaxMiB": 10,
+    "hotStartsMinimum": 20
+  },
+  "source": "git blobs at official release source commit, not current main",
+  "baselineExecutableSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "reason": "official baseline home_dir calls dirs Windows known-folder source; overriding HOME/USERPROFILE does not establish full isolation; no new baseline binary or identifier substituted"
+}

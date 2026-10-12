@@ -1,0 +1,82 @@
+{
+  "collectedAtUtc": "2026-10-12T17:52:06.7328414Z",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "retainedProcesses": [
+    {
+      "processId": 37276,
+      "actualLiveHandle": true,
+      "creationTimeUtc": "2026-10-12T14:53:12.0088010Z",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateeae\\opencodex-desktop.exe"
+    },
+    {
+      "processId": 24300,
+      "actualLiveHandle": true,
+      "creationTimeUtc": "2026-10-12T14:53:10.4430287Z",
+      "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe"
+    },
+    {
+      "processId": 3920,
+      "actualLiveHandle": true,
+      "creationTimeUtc": "2026-10-12T14:55:52.1278297Z",
+      "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe"
+    }
+  ],
+  "desktopApplicationCount": 1,
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 37276,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateeae\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-12T14:53:12.0088010Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-12T17:52:05.5845239Z"
+  },
+  "managerDeadlineEpoch": 1791903339,
+  "panelDeadlineEpoch": 1791903340,
+  "cycleStatus": "observing-real-deadlines",
+  "cycleExecSession": 46484,
+  "cycleAccepted": false,
+  "currentFixedDisks": [
+    {
+      "DeviceID": "C:",
+      "FileSystem": "NTFS",
+      "Size": 498882048000,
+      "FreeSpace": 277491462144
+    },
+    {
+      "DeviceID": "D:",
+      "FileSystem": "NTFS",
+      "Size": 1000202039296,
+      "FreeSpace": 895607410688
+    }
+  ],
+  "vmms": {
+    "status": "Running",
+    "startType": "Automatic"
+  },
+  "currentVmInventoryQueried": false,
+  "vmServiceAvailabilityProvesUsableVm": false,
+  "candidatePerformanceUser": "ocx0110_accept",
+  "candidatePerformanceUserExists": false,
+  "proposedPerformanceRoot": "D:\\OpenCodex-Acceptance\\0.1.10-20261013",
+  "proposedPerformanceRootExists": false,
+  "finalCandidateMsiSha256": "17f70d357f163a881a41b740614b7506a654207041bc2ac3e7ad57717b6c73f6",
+  "dailyRegistration": {
+    "displayName": "OpenCodeX Desktop",
+    "productCode": "{7069DA97-F262-4585-98CA-AE416E6833A5}",
+    "windowsInstaller": 1,
+    "displayVersion": "0.1.9",
+    "installLocation": "D:\\Software\\Develop\\OpenCodeX Desktop\\"
+  },
+  "dailyExecutableSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "task182LocalExists": false,
+  "accountOrProfileCreated": false,
+  "virtualMachineCreated": false,
+  "installerExecuted": false,
+  "permissionsChanged": false,
+  "passwordOrCredentialCollected": false,
+  "sourceChannelOrClockChanged": false,
+  "productOrCycleRestarted": false
+}
