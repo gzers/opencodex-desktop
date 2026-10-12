@@ -14,7 +14,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawn } = require('node:child_process');
 if (process.argv[2] === '--sleep') {
-  setTimeout(() => process.exit(0), 30000);
+  setInterval(() => {}, 1000);
 } else {
   fs.writeFileSync(path.join(__dirname, 'parent-pid'), String(process.pid));
   const mode = fs.readFileSync(path.join(__dirname, 'mode'), 'utf8');
@@ -34,7 +34,7 @@ if (process.argv[2] === '--sleep') {
       () => process.exit(0));
   }
   if (mode === 'nonzero') process.exit(9);
-  setTimeout(() => process.exit(0), 30000);
+  setInterval(() => {}, 1000);
 }
 "#;
 
@@ -98,15 +98,19 @@ impl ObservedChild {
     fn stopped(&self) -> bool {
         unsafe { WaitForSingleObject(self.0.as_raw_handle(), 2000) == WAIT_OBJECT_0 }
     }
+
+    fn stop(&self) {
+        unsafe {
+            TerminateProcess(self.0.as_raw_handle(), 1);
+            WaitForSingleObject(self.0.as_raw_handle(), 2000);
+        }
+    }
 }
 impl Drop for ObservedChild {
     fn drop(&mut self) {
         // On the red regression, terminate only this verified retained fixture
         // process; never search or kill by name or a later reused PID.
-        unsafe {
-            TerminateProcess(self.0.as_raw_handle(), 1);
-            WaitForSingleObject(self.0.as_raw_handle(), 2000);
-        }
+        self.stop();
     }
 }
 
@@ -141,6 +145,7 @@ fn metadata_process_case(mode: &str) {
     let created_after = std::time::SystemTime::now();
     let observer_root = root.path().to_owned();
     let observer_node = node.clone();
+    let (query_completed, query_end) = std::sync::mpsc::channel();
     let observer = std::thread::spawn(move || {
         let ready_deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
         let child_pid_file = observer_root.join("child-pid");
@@ -168,13 +173,25 @@ fn metadata_process_case(mode: &str) {
             "fixture ended before handle ownership"
         );
         std::fs::write(observer_root.join("ownership-ready"), b"retained").unwrap();
-        (descendant, parent)
+        // Windows anonymous-pipe readers can keep a dropped Tokio runtime
+        // waiting if a broken query leaves writers alive. Bound a red test by
+        // cleaning only the retained fixture handles, and make that intervention
+        // fail the assertion rather than count it as production cleanup.
+        let watchdog_cleanup = query_end
+            .recv_timeout(std::time::Duration::from_secs(8))
+            .is_err();
+        if watchdog_cleanup {
+            parent.as_ref().unwrap().stop();
+            descendant.as_ref().unwrap().stop();
+        }
+        (descendant, parent, watchdog_cleanup)
     });
     let environment = EnvironmentPolicy {
         opencodex_home: root.path().to_owned(),
         home: Some(root.path().join("home").into_os_string()),
         ..Default::default()
     };
+    let query_started = std::time::Instant::now();
     let result = run_npm_view_with_timeout(
         &npm,
         root.path(),
@@ -183,7 +200,14 @@ fn metadata_process_case(mode: &str) {
         "test@latest",
         std::time::Duration::from_secs(2),
     );
-    let (descendant, parent) = observer.join().expect("fixture handle observation failed");
+    let query_elapsed = query_started.elapsed();
+    eprintln!(
+        "metadata fixture {mode}: elapsed={query_elapsed:?}, result={:?}",
+        result.as_ref().map(String::len)
+    );
+    let _ = query_completed.send(());
+    let (descendant, parent, watchdog_cleanup) =
+        observer.join().expect("fixture handle observation failed");
     let stopped = descendant.as_ref().is_none_or(ObservedChild::stopped);
     let parent_stopped = parent.as_ref().is_none_or(ObservedChild::stopped);
     let control_live = control.0.try_wait().unwrap().is_none();
@@ -191,6 +215,14 @@ fn metadata_process_case(mode: &str) {
     drop(parent);
     drop(descendant);
     assert!(control_live, "unrelated control process was stopped");
+    assert!(
+        !watchdog_cleanup,
+        "query required external fixture watchdog cleanup"
+    );
+    assert!(
+        query_elapsed < std::time::Duration::from_secs(4),
+        "two-second query did not finish bounded cleanup: {query_elapsed:?}"
+    );
     match mode {
         "timeout" => assert!(matches!(result, Err(AppError::Timeout))),
         "success" => assert!(result.is_ok()),
