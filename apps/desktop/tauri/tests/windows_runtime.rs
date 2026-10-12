@@ -79,12 +79,17 @@ fn windows_explicit_sandbox_child() {
     use opencodex_desktop_lib::modules::{ipc::endpoint, test_sandbox};
     assert!(test_sandbox::enabled());
     if std::env::var("OPENCODEX_SANDBOX_TEST_EXPECT").unwrap() == "invalid" {
+        assert!(test_sandbox::resolve_data_root(&std::env::temp_dir()).is_err());
         assert!(platform::home_dir().is_none());
         assert!(discovery_paths::default_paths().is_none());
         assert!(endpoint::pipe_name().is_err());
         return;
     }
     let root = test_sandbox::sandbox_root().unwrap();
+    assert_eq!(
+        test_sandbox::resolve_data_root(&std::env::temp_dir()).unwrap(),
+        root
+    );
     let home = platform::home_dir().unwrap();
     assert_eq!(home, root.join("home"));
     let paths = discovery_paths::default_paths().unwrap();

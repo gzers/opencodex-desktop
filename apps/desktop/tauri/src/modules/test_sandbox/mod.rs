@@ -49,10 +49,18 @@ fn root_value(enabled: bool, raw: Option<std::ffi::OsString>) -> Option<PathBuf>
 ///
 /// 沙箱启用但根缺失/非法时返回 Err，调用方必须停止启动，不能回退到日常目录。
 pub fn resolve_data_root(default_root: &Path) -> Result<PathBuf, String> {
-    if !enabled() {
+    data_root_value(default_root, enabled(), sandbox_root())
+}
+
+fn data_root_value(
+    default_root: &Path,
+    sandbox_enabled: bool,
+    sandbox_root: Option<PathBuf>,
+) -> Result<PathBuf, String> {
+    if !sandbox_enabled {
         return Ok(default_root.to_path_buf());
     }
-    match sandbox_root() {
+    match sandbox_root {
         Some(root) => Ok(root),
         None => Err(format!(
             "沙箱已启用但 {SANDBOX_ROOT_ENV} 缺失或不是绝对路径；拒绝回退到日常目录"
@@ -185,6 +193,16 @@ mod tests {
         assert!(root_value(true, Some("relative/path".into())).is_none());
         assert!(root_value(true, Some("".into())).is_none());
         let dir = tempfile::tempdir().expect("temp");
+        let daily = dir.path().join("daily");
+        assert_eq!(data_root_value(&daily, false, None).unwrap(), daily);
+        assert!(data_root_value(&daily, true, None).is_err());
+        assert!(
+            data_root_value(&daily, true, root_value(true, Some("relative/path".into()))).is_err()
+        );
+        assert_eq!(
+            data_root_value(&daily, true, Some(dir.path().to_path_buf())).unwrap(),
+            dir.path()
+        );
         assert_eq!(
             root_value(true, Some(dir.path().as_os_str().to_owned())).as_deref(),
             Some(dir.path())
