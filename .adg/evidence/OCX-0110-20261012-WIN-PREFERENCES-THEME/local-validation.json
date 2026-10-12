@@ -1,0 +1,37 @@
+{
+  "sourceBaseline": "ee65f1158c4f0bb7c283ff09e24120a7884472d0",
+  "fixSource": "cf71ea4f84b82b2e4c1bb3a15de88fd5815dc066",
+  "red": {
+    "passed": 9,
+    "failed": 3,
+    "total": 12,
+    "log": "red-preferences-tests.log",
+    "scope": "original preference store with new contract regressions"
+  },
+  "green": {
+    "passed": 12,
+    "failed": 0,
+    "log": "green-preferences-tests.log"
+  },
+  "fullUi": {
+    "files": 95,
+    "passed": 480,
+    "failed": 0,
+    "log": "ui-full-tests.log"
+  },
+  "typecheck": {
+    "exitCode": 0,
+    "log": "typecheck.log"
+  },
+  "productionBuild": {
+    "exitCode": 0,
+    "log": "build.log",
+    "warnings": "jsdom canvas limitations in tests; four existing dynamic import splitting warnings"
+  },
+  "rustfmt": {
+    "exitCode": 0,
+    "log": "rustfmt.log"
+  },
+  "rustTests": "await exact CI; not locally executed",
+  "nativeFixVerification": "await rebuilt candidate; existing binary shows original bug"
+}
