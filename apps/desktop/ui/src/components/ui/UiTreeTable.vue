@@ -143,7 +143,7 @@ watch([rows, () => props.loading, () => props.error], async ([, loading], [previ
                 <span v-else class="tree-label"><slot name="name" :node="row.node" :depth="row.depth">{{ row.node.label }}</slot></span>
               </div>
             </th>
-            <td v-for="column in columns" :key="column.key"><slot :name="`cell-${column.key}`" :node="row.node" :depth="row.depth"></slot></td>
+            <td v-for="column in columns" :key="column.key"><div class="tree-cell" :class="{ 'tree-cell-action': column.kind === 'action' }"><slot :name="`cell-${column.key}`" :node="row.node" :depth="row.depth"></slot></div></td>
           </tr>
         </template>
       </tbody>
@@ -152,13 +152,16 @@ watch([rows, () => props.loading, () => props.error], async ([, loading], [previ
 </template>
 
 <style scoped>
-.ui-tree-table { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
+.ui-tree-table { --tree-first-line-height: var(--control-md, 34px); --tree-line-inset: calc((var(--tree-first-line-height) - 22px) / 2); overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; }
 table { width: 100%; border-collapse: collapse; text-align: left; font-size: var(--text-label); }
 th, td { padding: 10px 12px; vertical-align: top; border-bottom: 1px solid var(--border); }
 thead th { color: var(--muted); font-weight: inherit; }
 tbody th { font-weight: inherit; }
 tbody tr:last-child > * { border-bottom: 0; }
-.tree-name { display: flex; align-items: flex-start; gap: 6px; min-height: 22px; padding-inline-start: calc(var(--tree-depth) * 16px); }
+.tree-name { display: flex; align-items: flex-start; gap: 6px; min-height: 22px; padding-block: var(--tree-line-inset); padding-inline-start: calc(var(--tree-depth) * 16px); }
+.tree-cell { min-height: var(--tree-first-line-height); box-sizing: border-box; padding-block: var(--tree-line-inset); line-height: 22px; }
+.tree-cell-action { display: flex; align-items: flex-start; gap: 6px; padding-block: 0; }
+.tree-cell-action :deep(button) { min-height: var(--tree-first-line-height); line-height: 22px; padding-block: calc((var(--tree-first-line-height) - 24px) / 2); }
 .tree-selection { flex: 0 0 16px; width: 16px; height: 22px; display: grid; place-items: center; }
 .tree-check { width: 16px; height: 16px; margin: 0; }
 .tree-toggle { flex: 0 0 22px; width: 22px; height: 22px; padding: 3px; border: 0; background: transparent; color: inherit; border-radius: 4px; display: grid; place-items: center; cursor: pointer; }

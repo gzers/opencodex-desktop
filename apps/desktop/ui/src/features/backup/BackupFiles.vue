@@ -42,7 +42,7 @@ onMounted(() => { void refresh() })
       <button class="btn ghost" type="button" :aria-disabled="loading || undefined" :aria-busy="loading || undefined" @click="refresh">{{ loading ? '正在读取…' : '刷新' }}</button>
     </div>
     <p v-if="rootPath" class="backup-root">{{ rootPath }}</p>
-    <UiTreeTable v-model:expanded-ids="expanded" :nodes="nodes" :loading="loading" :error="error" label="备份文件与目录" empty-label="尚无备份文件" :columns="[{ key: 'purpose', label: '用途' }, { key: 'action', label: '操作' }]" @retry="refresh">
+    <UiTreeTable v-model:expanded-ids="expanded" :nodes="nodes" :loading="loading" :error="error" label="备份文件与目录" empty-label="尚无备份文件" :columns="[{ key: 'purpose', label: '用途' }, { key: 'action', label: '操作', kind: 'action' }]" @retry="refresh">
       <template #icon="{ node }">
         <svg v-if="file(node).directory" viewBox="0 0 20 20" aria-hidden="true"><path d="M2 5h6l2 2h8v10H2Z" /></svg>
         <svg v-else viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h7l4 4v12H5Z M12 2v5h4" /></svg>

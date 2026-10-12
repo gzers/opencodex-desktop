@@ -10,6 +10,7 @@ export interface TreeTableNode {
 export interface TreeTableColumn {
   key: string
   label: string
+  kind?: "text" | "action"
 }
 
 export interface TreeTableRow {
