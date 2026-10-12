@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "kind": "interrupted_midmesh_diagnostic_independent_recompute",
+  "actual_appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "mid"
+  },
+  "manifest_appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "high"
+  },
+  "appearance_authority": "Actual settings captures and stable preferences SHA; context candidate.appearance is a stale static manifest, raw retained unchanged",
+  "inputs_sha256": {
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/context.json": "4f4ba4dd3bda8f0bed0931ff98eae282dd99976fc300075e781102b3dbadcf4a",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/summary.json": "f12d9fc10ab0268248649f2faae49c154277a20b6906024cf460dfce4f5e4a03",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/launch.json": "f0abaf4a27d7d239a7b2dd3dd3133d474a5e7aa1c41d92ce8b42fe4ca0af8e80",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/foreground.json": "667d19d1f148f81c457de6134496970e95e446c8fd1d4c0c76a7d1a612cdf150",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/settings-start.json": "c6712c0dac2588a8c7f1f034850012d96f759d95367d8c13bff970129a0c6877",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/settings-end.json": "c51094e168d1e8b7307576a2a2c83766f7a8f19bf35e273676d0b26af9ad9d72",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/samples.jsonl": "209c4975eb7565120a61edbe956abcfeb54204341da53bcec236b4a39bcaf6e2",
+    "candidate0110/diagnostic-mid-mesh-finder-reopen/attribution-admitted.json": "a6695a3e8c9e9a91b9c77ffc2aded9e3c26801edc4611847d79e4c45d99e6f4b",
+    "candidate0110/diagnostic-unlocked-mid-mesh/foreground.json": "ec1d6d9b478300ea7318796e64a5ae27cd0669bd9571ed5432f121c4644c7425",
+    "candidate0110/diagnostic-mid-mesh-active/foreground.json": "591e60a861b55ed0f1878e0eb36cb389e005a64351ce1a751fdebb8ef6165cf2",
+    "candidate0110/diagnostic-mid-mesh-active/foreground-preflight.json": "f4f2688a696f27a2f106e7b39e4d8cd62b4fa4345ebc2a09f45da2b3dee705bf",
+    "candidate0110/diagnostic-mid-mesh-unlocked-final/foreground.json": "507bb21b533f1d27651556f94c772b5864958f6f2ba3f41ab75e3ec899fbeaff"
+  },
+  "source": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+  "process_identities_stable": true,
+  "files_unchanged": true,
+  "whole_run": {
+    "sample_count": 19,
+    "start_utc": "2026-10-12T00:32:27.512142+00:00",
+    "end_utc": "2026-10-12T00:35:27.524211+00:00",
+    "elapsed_seconds": 180.0093404171057,
+    "cpu_seconds_delta": 0.09999999999999432,
+    "cpu_one_core_percent": 0.05555267286035322,
+    "rss_mib": {
+      "start": 408.140625,
+      "end": 269.53125,
+      "min": 269.484375,
+      "max": 408.1875,
+      "mean": 378.8231907894737
+    },
+    "breakdown": [
+      {
+        "pid": 31501,
+        "cpu_seconds_delta": 0.060000000000002274,
+        "rss_start_mib": 108.796875,
+        "rss_end_mib": 107.578125
+      },
+      {
+        "pid": 31510,
+        "cpu_seconds_delta": 0.029999999999972715,
+        "rss_start_mib": 53.6875,
+        "rss_end_mib": 50.109375
+      },
+      {
+        "pid": 31511,
+        "cpu_seconds_delta": 0.010000000000019327,
+        "rss_start_mib": 236.28125,
+        "rss_end_mib": 102.640625
+      },
+      {
+        "pid": 31512,
+        "cpu_seconds_delta": 0.0,
+        "rss_start_mib": 9.375,
+        "rss_end_mib": 9.203125
+      }
+    ]
+  },
+  "foreground": {
+    "sample_count": 2427,
+    "valid_count": 2060,
+    "invalid_count": 367,
+    "first_invalid_utc": "2026-10-12T00:34:47.150252+00:00",
+    "first_invalid_elapsed_s": 230.8488153750077,
+    "max_consecutive_monotonic_sample_gap_s": 0.1456941666547209,
+    "whole_run_valid": false,
+    "lock_onset_known": false
+  },
+  "pre_interruption_subwindow": {
+    "sample_count": 14,
+    "start_utc": "2026-10-12T00:32:27.512142+00:00",
+    "end_utc": "2026-10-12T00:34:37.436545+00:00",
+    "elapsed_seconds": 129.9218248340767,
+    "cpu_seconds_delta": 0.010000000000005116,
+    "cpu_one_core_percent": 0.007696936225130863,
+    "rss_mib": {
+      "start": 408.140625,
+      "end": 407.953125,
+      "min": 407.9375,
+      "max": 408.1875,
+      "mean": 408.015625
+    },
+    "breakdown": [
+      {
+        "pid": 31501,
+        "cpu_seconds_delta": 0.010000000000005116,
+        "rss_start_mib": 108.796875,
+        "rss_end_mib": 108.609375
+      },
+      {
+        "pid": 31510,
+        "cpu_seconds_delta": 0.0,
+        "rss_start_mib": 53.6875,
+        "rss_end_mib": 53.6875
+      },
+      {
+        "pid": 31511,
+        "cpu_seconds_delta": 0.0,
+        "rss_start_mib": 236.28125,
+        "rss_end_mib": 236.28125
+      },
+      {
+        "pid": 31512,
+        "cpu_seconds_delta": 0.0,
+        "rss_start_mib": 9.375,
+        "rss_end_mib": 9.375
+      }
+    ],
+    "role": "Partial diagnostic strictly before first invalid foreground sample; not acceptance or causal evidence"
+  },
+  "attribution": {
+    "admitted_count": 8,
+    "rejected_count": 28
+  },
+  "failed_preparations": [
+    {
+      "phase": "diagnostic-unlocked-mid-mesh",
+      "monitor": "foreground.json",
+      "readiness_attempt_count": 94,
+      "first_utc": "2026-10-12T00:14:24.496179+00:00",
+      "last_utc": "2026-10-12T00:14:34.546801+00:00",
+      "error": "foreground visible window not ready within 10s",
+      "resource_measurement_started": false,
+      "app_defect_attributed": false
+    },
+    {
+      "phase": "diagnostic-mid-mesh-active",
+      "monitor": "foreground.json",
+      "readiness_attempt_count": 94,
+      "first_utc": "2026-10-12T00:19:37.261070+00:00",
+      "last_utc": "2026-10-12T00:19:47.237631+00:00",
+      "error": "foreground visible window not ready within 10s",
+      "resource_measurement_started": false,
+      "app_defect_attributed": false
+    },
+    {
+      "phase": "diagnostic-mid-mesh-active",
+      "monitor": "foreground-preflight.json",
+      "readiness_attempt_count": 94,
+      "first_utc": "2026-10-12T00:18:25.829786+00:00",
+      "last_utc": "2026-10-12T00:18:35.855586+00:00",
+      "error": "foreground visible window not ready within 10s",
+      "resource_measurement_started": false,
+      "app_defect_attributed": false
+    },
+    {
+      "phase": "diagnostic-mid-mesh-unlocked-final",
+      "monitor": "foreground.json",
+      "readiness_attempt_count": 94,
+      "first_utc": "2026-10-12T00:25:47.497779+00:00",
+      "last_utc": "2026-10-12T00:25:57.499681+00:00",
+      "error": "foreground visible window not ready within 10s",
+      "resource_measurement_started": false,
+      "app_defect_attributed": false
+    }
+  ],
+  "gate": "invalid_diagnostic_not_acceptance",
+  "limitations": [
+    "Last resource interval is not frontmost; end native UI capture unavailable because CUA reported locked",
+    "First observed focus loss is not established as lock onset or application defect",
+    "Pre-interruption approximately 130 seconds is a diagnostic subwindow, not a valid full run or baseline pair",
+    "Foreground samples observe points at about 0.1-second spacing; no claim about every instant between samples",
+    "First AX artifact is a delta reporting unchanged tree and overview focus, not a full standalone AX tree",
+    "RSS is resident sum, not deduplicated physical footprint or proof of a leak",
+    "Reused instance and changed quality are not independent cold runs or a matched high-versus-mid causal study",
+    "No network, startup interactive or main-thread instrumentation; file stability alone does not prove zero network",
+    "Existing ten-minute CPU and RSS budget failure remains unresolved"
+  ]
+}

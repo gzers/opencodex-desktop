@@ -1,0 +1,26 @@
+{
+  "captured_at": "2026-10-12T00:50:17.083782+00:00",
+  "result": "passed",
+  "manifest_item_count": 47,
+  "lossless_source_count": 44,
+  "filtered_derivative_count": 1,
+  "gzip_roundtrip_count": 1,
+  "evidence_bytes": 2004393,
+  "sha256sums_sha256": "3b8bc7cd32fe11697ac896e4333caafbbcf3bfed04fa855271ddbdc516a3efc7",
+  "offline_recomputation": {
+    "source_and_archived_metrics_equal": true,
+    "runs": [
+      {
+        "returncode": 0,
+        "stdout": "{\n  \"recompute\": \"passed\",\n  \"whole_run_valid\": false,\n  \"pre_interruption_seconds\": 129.9218248340767,\n  \"pre_interruption_samples\": 14,\n  \"first_invalid_utc\": \"2026-10-12T00:34:47.150252+00:00\",\n  \"gate\": \"invalid_diagnostic_not_acceptance\"\n}\n",
+        "stderr": ""
+      },
+      {
+        "returncode": 0,
+        "stdout": "{\n  \"recompute\": \"passed\",\n  \"whole_run_valid\": false,\n  \"pre_interruption_seconds\": 129.9218248340767,\n  \"pre_interruption_samples\": 14,\n  \"first_invalid_utc\": \"2026-10-12T00:34:47.150252+00:00\",\n  \"gate\": \"invalid_diagnostic_not_acceptance\"\n}\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "gate": "archive_integrity_only; interrupted diagnostic is not acceptance"
+}

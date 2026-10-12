@@ -728,3 +728,13 @@ main@3ed00487958185a520e61ed2ba2d706f95e9a384 已提交推送，只新增 macOS 
 4 个 artifact 的 API 大小 / SHA256、源码身份、CRC 和安全条目路径通过；下载 MSI 4538368 bytes / SHA256 834dba519f3c159762ceb2656f312137806dbdf22f926e6c270c06cc1422a771、NSIS 3232774 bytes / SHA256 49f8d0e51fdcbce234ab0c70225d73e33486a2ef6fad517b3874597b504482b2 与回执一致。runner 新装 / 首屏 / 卸载通过，安装后 EXE 不在 artifact 内，该摘要仍为 runner-only；本机未运行 Windows 安装器。CI PID8308、MSI PID2592、NSIS PID2792 的实际应用 token / 全路径 / 源码匹配，均 elevated=true、elevationType=1、applicationTokenVerified=true；mode:any / applicationModeMatched=false，不计普通 / 管理员双权限验收。沙箱 override、DPR=1 和自动收尾不计默认安装目录 data、物理 DPI、正常退出、真实升级或用户数据保留。正式签名 / 发布 false，云母 / 标题栏 / 菜单及 CDP 黑底根因仍需真机确认。
 
 证据与限制见[Windows 进程权限核验](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-fb34f5-Windows进程权限核验/README.md)：34 份来源无损复制、6 份 gzip roundtrip、39 项摘要清单；原 helper-only 核验保留原义，不复制安装器 / 用户载荷 / WebView profile。前台锁屏等待人工解锁，复用唯一隔离实例，无新的前台诊断结果。既有十分钟 CPU / RSS 性能失败继续保留，原阈值不变；八项门禁未整体闭合，TASK / IMP in_progress、acceptance_results 为空，无核心事实推广、真实迁移、日常替换或发布。
+
+### 2026-10-12 deb740 中档静态前台中断诊断，不计验收
+
+复用唯一隔离测试 PID31501 / 同 deb740 EXE，概览准备态、浅色 / 中档静态 / mesh / 100%，预热约 91 秒后完成 19 个资源样本 / 180.009340 秒。前台监控 2427 个样本中 2060 个有效、367 个无效，首次无效 UTC 00:34:47.150252 为非前台但窗口可见；结束 CUA 报告锁屏，缺结束 AX / JPEG，整轮无效。锁屏起点未知，不能认定焦点缺陷；用户此前人工操作原因按用户报告保留，不作软件问题。三次准备阶段和另一次 preflight 在 10 秒内未前台就绪，均未资源采样，原件保留。
+
+首次无效前仅 14 个资源样本 / 129.921825 秒（不是 140 秒）：累计 CPU +0.01 秒、单核 0.007697%，RSS 408.140625 → 407.953125 MiB。该子区间为调查线索，不是完整有效轮次、官方配对或因果证明。整轮原资源 CPU +0.10 秒 / 0.055553%、RSS 408.140625 → 269.531250 MiB 受末约 40 秒非前台限制，不归因于中档、页面卸载或锁屏回收。进程身份和四个文件摘要稳定，不证明零网络或无泄漏。
+
+场景清单 context.candidate.appearance 仍写 high，来自旧静态 manifest；真实首末 settings 和同一 preferences SHA 均为 mid，回写明确两者区别，原件不修正。首 AX 是树未变化 / overview 焦点的增量，不能当完整树；settings-end.json 本身有效，没有修复。44 份来源无损归档、1 份 admitted-only 衍生、1 份 gzip roundtrip、47 项摘要与外部 / 归档输入独立重算通过；排除其他应用元数据、应用二进制、数据载荷和 WebView profile。详见[中档静态中断诊断](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-中档静态中断诊断/README.md)。
+
+用户已回复解锁，但末次原生控制仍报告锁屏，等待“桌面可操作”后再用同一个实例做中档 / 高档 CSS / 必要的高档 mesh 对照，补首末 UI 与持续前台；代理 Finder test-install 标签页待操作恢复后关闭。暂无根因或源码修复，不凭部分低 CPU 取消既有十分钟失败。原性能预算、光层边距覆盖、真实周期和双平台原生 / 安装 / 更新 / 事件 / 签名要求均不变；review:scheduler-performance-0110 failed、八项门禁开放，TASK / IMP in_progress、acceptance_results 为空、发布未授权 / 未验收。
