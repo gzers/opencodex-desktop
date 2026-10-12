@@ -1016,3 +1016,11 @@ event-scope整文件因Backup分区候选变化而不同，如实保留。Restor
 当前eae普通PID37276实际来源unresolved，状态刷新DTO为NotFound/Live、pid/port空/health unknown。精确源码确认：未解析真实来源返回Unreachable，collector投影NotFound但refresh仍Err；快照getter忽略该Err后组装Live，而切根入口单独要求本次refresh.is_ok()再验证idle。DTO/命令成功不能代替原门禁verified成功，也不放宽fresh状态。
 
 本轮没有调用切根/迁移，准入结论按当前来源与精确函数路径推断；旧0a837实际runtime_unverified拒绝保留但不重新标eae结果。根配置/绑定文件、偏好与eae周期完整字节前后不变，应用/监测真实句柄仍活、日常摘要保持。见[最终eae切根准入诊断](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows最终eae切根准入诊断/README.md)。只认证诊断，不计自定义根成功；真实来源/采集前提、TASK/脚本/安全环境及其余原门禁与预算/既有failed保持，IMP in_progress，不降低门禁、不关闭或发布。
+
+### 2026-10-12 最终eae树表原生键盘、刷新与24行对齐
+
+原普通PID37276/主HWND1051698在RDP Active时实际进入BackupFiles，鼠标展开月份后，以Right/Enter/Right/Space展开原用户固定备份，Right/Down进入文件，Left/Home返回父项/根。独立生产activeElement和5→22→24行回读对应真实输入；实际树外刷新busy true→false，五展开层级保持、焦点留在刷新。DOM仅观察，没有程序化导航/滚动/聚焦或刷新。
+
+24个生产行用途/操作首行最大偏差0 CSSpx、按钮最小命中高度34 CSSpx；当前没有checkbox。Win32独立核验DPI192/foreground true/backdrop attr2、实际普通false/type3。首帧/AX延迟均再观察，最终新capture失败0x80070057后确认session2 Disconnected并停止UI输入；保留此前成功原帧，明确可能滞后且不是断开后当前截图。共享更新详情UI尚未执行。
+
+见[最终eae树表原生证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-Windows最终eae树表原生键盘与刷新/README.md)。27份原件冻结/重验通过，偏好/根绑定/周期原字节保持、唯一应用/监测真实句柄仍活，真实截止仍2026-10-13 22:55:39/40（UTC+8）。只闭合该普通200%数据场景，不抵checkbox/密度/主题/完整DPI与管理员矩阵、更新详情/进度、配对性能或周期终态；TASK/脚本/环境、全部原门禁/预算及既有failed保持，IMP in_progress，不降低门禁、不关闭或发布。

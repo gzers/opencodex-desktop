@@ -1,0 +1,34 @@
+{
+  "window": {
+    "app": "process:C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateeae\\opencodex-desktop.exe",
+    "id": 1051698,
+    "title": "OpenCodeX Desktop"
+  },
+  "source": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "actualInputs": [
+    "click Settings",
+    "click Data and Backup",
+    "scroll main content450",
+    "click expand month10",
+    "Right",
+    "Return",
+    "Right",
+    "space",
+    "Right",
+    "Down",
+    "Left",
+    "Home",
+    "click external tree Refresh"
+  ],
+  "nativeInputOnlyViaSky": true,
+  "domReadOnly": true,
+  "programmaticRoutingScrollingFocusOrKeyboard": false,
+  "asynchronousScreenshotAndAxDelay": "after Settings and Backup click, first capture showed prior state; reobserved before next input, no retry click",
+  "nativeRefreshObserver": "only watches actual click/aria-busy; never calls refresh",
+  "lastSuccessfulFrameScope": "raw frame from the last successful refresh action capture; immediate frame may lag stable focus/geometry; not a post-disconnect current screenshot",
+  "failedFinalCapture": "IGraphicsCaptureItemInterop.CreateForMonitor failed: Could not capture the given monitor. (0x80070057)",
+  "recovery": "list_windows confirmed same HWND; terminal session check showed RDP Disconnected; stopped UI input",
+  "afterDisconnectFurtherUiInputs": false,
+  "updateDetailsUiAcceptedThisTurn": false,
+  "checkboxMatrixAccepted": false
+}
