@@ -19,7 +19,7 @@
 
 已提交推送`feature/0.1.10-update-center-focus@be7395acfce0ec1e36b83300b576db408f8c35bb`：仅测试期输出版本探针runtime-ready、spawned、assigned-and-resumed、waited-and-terminated的耗时；夹具原5秒就绪断言增加父/子PID文件及ownership-ready存在性；CI读取逻辑处理器、Node路径、temp及两个Rust测试设置。
 
-原2秒生产探针预算、4秒清理断言、生产清理逻辑、fixture脚本、完整cargo测试命令、CI并发与ignored均不改。源码检查确认四个诊断块受`cfg(all(test, windows))`约束，去掉这些块后官方版本来源与父提交逐字一致；夹具模块本来即仅Windows测试编译。这个检查不是本机Rust编译或release制品验收。本机未发现可用Cargo/Rustfmt，PowerShell步骤语法及Git空白检查通过，Rust编译/格式/Clippy/全部回归等待真实CI。
+原2秒生产探针预算、4秒清理断言、生产清理逻辑、fixture脚本、完整cargo测试命令、CI并发与ignored均不改。源码检查确认四个诊断块受`cfg(all(test, windows))`约束，去掉这些块后官方版本来源与父提交逐字一致；夹具模块本来即仅Windows测试编译。这个检查不是本机Rust编译或release制品验收。当时仅检查PATH和常规Cargo/Rustup目录，没有找到工具；PowerShell步骤语法及Git空白检查通过，Rust编译/格式/Clippy/全部回归当时等待真实CI。后续已在既有隔离软件目录找到Rustfmt并对两份改动文件只读检查通过，见[同SHA候选与只读提取](../20261013-Windows焦点修复同SHA候选与只读提取/README.md)；此前原始观察保持，不据此宣称本机完整Cargo构建通过。
 
 新push自动触发的精确run38352525092在13:41:02观察in_progress；该历史快照冻结，不请求旧run重跑求绿。后续结果须另存原件，再审阅同SHA完整CI及制品，原因当前仍未隔离，特性未集成main。
 

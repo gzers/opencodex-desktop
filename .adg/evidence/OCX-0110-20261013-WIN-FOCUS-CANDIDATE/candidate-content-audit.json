@@ -1,0 +1,205 @@
+{
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "runId": 38355803684,
+  "result": "passed",
+  "artifactZipDigestsAndCrcVerified": true,
+  "installerReceiptCopiesByteIdentical": true,
+  "packages": [
+    {
+      "kind": "msi",
+      "zipMember": "apps/desktop/tauri/target/release/bundle/msi/OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4546560,
+      "sha256": "6a500186d89c8a2d73216c5ac7b47b9ab27372938f1ea0048f95c6abc11f5573",
+      "expectedInstalledExecutableSha256": "3a26098e813ddd56070a0092cbcb640473cb73e626aee45198c4b335ec2d8bd1"
+    },
+    {
+      "kind": "nsis",
+      "zipMember": "apps/desktop/tauri/target/release/bundle/nsis/OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3238886,
+      "sha256": "09b2526cfd2bc15ff17da753d8ce4bf5d03c71833cd61f31df3abecb4a570e4c",
+      "expectedInstalledExecutableSha256": "c6b5361585bec04bdbc5db525aaa0e16c2193232cab7b97540d15c3ac8362f34"
+    }
+  ],
+  "builtExecutableSha256": "8e2e9b3e003a136b9b7a5599976607b4aee9ced1c7e26ccc845ffefa45825f6a",
+  "selectedRawWitnesses": [
+    {
+      "artifactId": 11792974377,
+      "zipMember": "Cargo.lock",
+      "path": "artifact-raw/11792974377/Cargo.lock",
+      "bytes": 140827,
+      "sha256": "f7be175dc8a55c139781d3076b1eb79bb0af38ecb5664a77aaa8f2a87af9d8ab"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "environment.json",
+      "path": "artifact-raw/11792974377/environment.json",
+      "bytes": 298,
+      "sha256": "36464120fb3e41abc886161256208bcaabdaa8560f88c92b711b5833eda161d4"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "installer-verification.json",
+      "path": "artifact-raw/11792974377/installer-verification.json",
+      "bytes": 1970,
+      "sha256": "6359afadf5c202acb4d5e0e3b4c4ae6d9ccde5eb7846183d1b9cebf3015c4c52"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/cdp-diagnostics.json",
+      "path": "artifact-raw/11792974377/msi-startup/cdp-diagnostics.json",
+      "bytes": 1745,
+      "sha256": "5768eb808bf09473edabe9a07393f971bc03dc6111cd308e276ade3b14038853"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/main-window.png",
+      "path": "artifact-raw/11792974377/msi-startup/main-window.png",
+      "bytes": 572323,
+      "sha256": "7d9f6800609686eb16e64aed915be74c0771ad81c563f3f3ce60523cf131ad8c"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/sandbox-a1a07ed4ac5246d7b3d68ef88f4ec96c/logs/app.log",
+      "path": "artifact-raw/11792974377/msi-startup/sandbox-a1a07ed4ac5246d7b3d68ef88f4ec96c/logs/app.log",
+      "bytes": 252,
+      "sha256": "7a63dad745af179d21865b0b7e1b432c178f1a8ad9c2f11b5ccb94eb5e7c3201"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/startup-diagnostics.json",
+      "path": "artifact-raw/11792974377/msi-startup/startup-diagnostics.json",
+      "bytes": 8923,
+      "sha256": "3c561bb6cec99988277681bf7c060c50bc6a492cdb6b18a8502e13e1c0992b61"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/startup-stderr.log",
+      "path": "artifact-raw/11792974377/msi-startup/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/startup-stdout.log",
+      "path": "artifact-raw/11792974377/msi-startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/startup.json",
+      "path": "artifact-raw/11792974377/msi-startup/startup.json",
+      "bytes": 1415,
+      "sha256": "f491ed77d2ffda84a51297d77657c22dab3b96a6c50ab57e0550cedbd7b9cd4a"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "msi-startup/webview.json",
+      "path": "artifact-raw/11792974377/msi-startup/webview.json",
+      "bytes": 698,
+      "sha256": "7327fce7979a8bda22c224c89815430159cd421e005a75d3fc2bccedddfa6b99"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/cdp-diagnostics.json",
+      "path": "artifact-raw/11792974377/nsis-startup/cdp-diagnostics.json",
+      "bytes": 1745,
+      "sha256": "a95d84fdbed7f32eae4a83fd50e6b5d6a954813356b2a2f93d0e0569ac839deb"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/main-window.png",
+      "path": "artifact-raw/11792974377/nsis-startup/main-window.png",
+      "bytes": 520547,
+      "sha256": "1843c54828705a847efbfa97f2e1cbdca11293974c3547e00a7b3bbb17e9f947"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/sandbox-2c065cd5c6374cb4a8d4e4427c6fe393/logs/app.log",
+      "path": "artifact-raw/11792974377/nsis-startup/sandbox-2c065cd5c6374cb4a8d4e4427c6fe393/logs/app.log",
+      "bytes": 252,
+      "sha256": "94bc72c87e4b4f0f94bdeda821f7dd945e6e8b2f8e24c0c9235421df38dac1c1"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/startup-diagnostics.json",
+      "path": "artifact-raw/11792974377/nsis-startup/startup-diagnostics.json",
+      "bytes": 8950,
+      "sha256": "eb01cdd0dd9b9059523af0b89fbe594f6570e98a8902fd2f58b24d1335f20a69"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/startup-stderr.log",
+      "path": "artifact-raw/11792974377/nsis-startup/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/startup-stdout.log",
+      "path": "artifact-raw/11792974377/nsis-startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/startup.json",
+      "path": "artifact-raw/11792974377/nsis-startup/startup.json",
+      "bytes": 1418,
+      "sha256": "365a0cd3c2327449733b439d67e7d6cd0dc418a7ba4ae14b9a298681ae54d2b7"
+    },
+    {
+      "artifactId": 11792974377,
+      "zipMember": "nsis-startup/webview.json",
+      "path": "artifact-raw/11792974377/nsis-startup/webview.json",
+      "bytes": 698,
+      "sha256": "7327fce7979a8bda22c224c89815430159cd421e005a75d3fc2bccedddfa6b99"
+    },
+    {
+      "artifactId": 11792959449,
+      "zipMember": "test/out/windows-candidate/installer-verification.json",
+      "path": "artifact-raw/11792959449/test/out/windows-candidate/installer-verification.json",
+      "bytes": 1970,
+      "sha256": "6359afadf5c202acb4d5e0e3b4c4ae6d9ccde5eb7846183d1b9cebf3015c4c52"
+    }
+  ],
+  "runnerInstallUninstallAndFirstScreenAccepted": true,
+  "runnerInstallerKinds": [
+    "msi",
+    "nsis"
+  ],
+  "runnerActualApplicationTokens": {
+    "msi": {
+      "elevated": true,
+      "elevationType": 1,
+      "mode": "any",
+      "specificModeMatched": false
+    },
+    "nsis": {
+      "elevated": true,
+      "elevationType": 1,
+      "mode": "any",
+      "specificModeMatched": false
+    }
+  },
+  "localPackagesAvailable": true,
+  "localInstallerInvoked": false,
+  "localApplicationStarted": false,
+  "localFinalExeReadOnlyExtractionAccepted": false,
+  "localOrdinaryAdminTokenPairAccepted": false,
+  "physicalDpiMicaTitlebarAccepted": false,
+  "realDataRetentionOrUpgradeAccepted": false,
+  "nativeFocusFixAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realCyclesAccepted": false,
+  "originalDesktopOrCycleReplaced": false,
+  "originalFailedCiFailureCleared": false,
+  "originalFailedCiCauseIsolated": false,
+  "mainIntegrated": false,
+  "formalTaskReceipt": false,
+  "codeSigned": false,
+  "releasePublished": false,
+  "releaseAccepted": false
+}

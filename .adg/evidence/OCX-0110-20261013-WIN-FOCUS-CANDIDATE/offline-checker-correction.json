@@ -1,0 +1,12 @@
+{
+  "originalCheckerAssumption": "installed MSI marker occurs once",
+  "originalCheckResult": "failed before normalized hash check",
+  "actualInstalledMsiMarkerOffsets": [
+    7987543,
+    7987597
+  ],
+  "ciReportedPatchOffset": 7987597,
+  "unpatchedMarkerOccurrences": 0,
+  "rawArtifactOrExeChanged": false,
+  "intendedCheckerCorrection": "Use the CI recorded patch offset and verify entire normalized built hash, matching the committed strict bundle method; do not alter any artifact or product assertion"
+}
