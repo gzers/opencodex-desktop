@@ -1,0 +1,25 @@
+{
+  "scope": "validator-only in-memory synthetic refusal tests; no product time or state injection",
+  "tests": [
+    {
+      "name": "wrong-source",
+      "validatorRejected": true,
+      "reason": "Observed source/image/original lifecycle differs",
+      "nativeEvidence": false
+    },
+    {
+      "name": "backward-monotonic",
+      "validatorRejected": true,
+      "reason": "Observed monotonic time went backward",
+      "nativeEvidence": false
+    },
+    {
+      "name": "early-success",
+      "validatorRejected": true,
+      "reason": "Observation of new success before strict86400000ms",
+      "nativeEvidence": false
+    }
+  ],
+  "nativeCycleAccepted": false,
+  "realResponsesOrClockInjected": false
+}
