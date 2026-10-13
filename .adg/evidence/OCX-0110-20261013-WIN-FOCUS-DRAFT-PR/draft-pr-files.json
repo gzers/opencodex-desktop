@@ -1,0 +1,62 @@
+[
+  {
+    "sha": "808ceb9e61c07ea5c17fd4c23336d161163d80e2",
+    "filename": ".github/workflows/ci.yml",
+    "status": "modified",
+    "additions": 7,
+    "deletions": 0,
+    "changes": 7,
+    "blob_url": "https://github.com/gzers/opencodex-desktop/blob/be7395acfce0ec1e36b83300b576db408f8c35bb/.github%2Fworkflows%2Fci.yml",
+    "raw_url": "https://github.com/gzers/opencodex-desktop/raw/be7395acfce0ec1e36b83300b576db408f8c35bb/.github%2Fworkflows%2Fci.yml",
+    "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/.github%2Fworkflows%2Fci.yml?ref=be7395acfce0ec1e36b83300b576db408f8c35bb",
+    "patch": "@@ -81,6 +81,13 @@ jobs:\n         shell: pwsh\n         run: |\n           $env:OPENCODEX_TEST_NODE = (Get-Command node).Source\n+          [ordered]@{\n+            logicalProcessors = [Environment]::ProcessorCount\n+            nodeExecutable = $env:OPENCODEX_TEST_NODE\n+            tempDirectory = [IO.Path]::GetTempPath()\n+            rustTestThreads = $env:RUST_TEST_THREADS\n+            rustTestTimeUnit = $env:RUST_TEST_TIME_UNIT\n+          } | ConvertTo-Json\n           cargo test --locked --workspace --features integration-test\n       - name: Collect Windows native dependency diagnostics\n         if: always()"
+  },
+  {
+    "sha": "15e82602e0be79cef133ac0afe240fd626dfce2c",
+    "filename": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+    "status": "modified",
+    "additions": 24,
+    "deletions": 0,
+    "changes": 24,
+    "blob_url": "https://github.com/gzers/opencodex-desktop/blob/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Ftauri%2Fsrc%2Finfrastructure%2Fofficial_version_source.rs",
+    "raw_url": "https://github.com/gzers/opencodex-desktop/raw/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Ftauri%2Fsrc%2Finfrastructure%2Fofficial_version_source.rs",
+    "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/apps%2Fdesktop%2Ftauri%2Fsrc%2Finfrastructure%2Fofficial_version_source.rs?ref=be7395acfce0ec1e36b83300b576db408f8c35bb",
+    "patch": "@@ -131,13 +131,31 @@ impl OfficialVersionSource for OfficialCliVersionSource {\n             .enable_all()\n             .build()\n             .map_err(|_| OfficialVersionError::Unreachable)?;\n+        #[cfg(all(test, windows))]\n+        eprintln!(\n+            \"version probe fixture={} phase=runtime-ready elapsed={:?}\",\n+            self.working_directory.display(),\n+            started.elapsed()\n+        );\n         runtime.block_on(async {\n             let child = command\n                 .spawn()\n                 .map_err(|_| OfficialVersionError::Unreachable)?;\n+            #[cfg(all(test, windows))]\n+            eprintln!(\n+                \"version probe fixture={} phase=spawned elapsed={:?}\",\n+                self.working_directory.display(),\n+                started.elapsed()\n+            );\n             #[cfg(windows)]\n             job.assign_and_resume(&child)\n                 .map_err(|_| OfficialVersionError::Unreachable)?;\n+            #[cfg(all(test, windows))]\n+            eprintln!(\n+                \"version probe fixture={} phase=assigned-and-resumed elapsed={:?}\",\n+                self.working_directory.display(),\n+                started.elapsed()\n+            );\n             let output = tokio::time::timeout(\n                 crate::modules::about::official_version_timeout().saturating_sub(started.elapsed()),\n                 child.wait_with_output(),\n@@ -149,6 +167,12 @@ impl OfficialVersionSource for OfficialCliVersionSource {\n             #[cfg(windows)]\n             job.terminate()\n                 .map_err(|_| OfficialVersionError::Unreachable)?;\n+            #[cfg(all(test, windows))]\n+            eprintln!(\n+                \"version probe fixture={} phase=waited-and-terminated elapsed={:?}\",\n+                self.working_directory.display(),\n+                started.elapsed()\n+            );\n             let output = output\n                 .map_err(|_| OfficialVersionError::Timeout)?\n                 .map_err(|_| OfficialVersionError::Unreachable)?;"
+  },
+  {
+    "sha": "e52c3b1f064a4c9a846da110aa08abb8fe50554b",
+    "filename": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+    "status": "modified",
+    "additions": 5,
+    "deletions": 1,
+    "changes": 6,
+    "blob_url": "https://github.com/gzers/opencodex-desktop/blob/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Ftauri%2Fsrc%2Finfrastructure%2Fwindows_query_fixture.rs",
+    "raw_url": "https://github.com/gzers/opencodex-desktop/raw/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Ftauri%2Fsrc%2Finfrastructure%2Fwindows_query_fixture.rs",
+    "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/apps%2Fdesktop%2Ftauri%2Fsrc%2Finfrastructure%2Fwindows_query_fixture.rs?ref=be7395acfce0ec1e36b83300b576db408f8c35bb",
+    "patch": "@@ -174,7 +174,11 @@ pub(crate) fn process_case(\n         while !child_pid_file.is_file() {\n             assert!(\n                 std::time::Instant::now() < ready_deadline,\n-                \"fixture descendant did not start\"\n+                \"fixture descendant did not start: root={}, parent-pid={}, child-pid={}, ownership-ready={}\",\n+                observer_root.display(),\n+                observer_root.join(\"parent-pid\").is_file(),\n+                child_pid_file.is_file(),\n+                observer_root.join(\"ownership-ready\").is_file()\n             );\n             std::thread::sleep(std::time::Duration::from_millis(5));\n         }"
+  },
+  {
+    "sha": "a5d587f4b7a4828cac9234feb9c7335ba0c38155",
+    "filename": "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "status": "modified",
+    "additions": 11,
+    "deletions": 0,
+    "changes": 11,
+    "blob_url": "https://github.com/gzers/opencodex-desktop/blob/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Fui%2Fsrc%2Ffeatures%2Fupdates%2FUpdateCenter.vue",
+    "raw_url": "https://github.com/gzers/opencodex-desktop/raw/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Fui%2Fsrc%2Ffeatures%2Fupdates%2FUpdateCenter.vue",
+    "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/apps%2Fdesktop%2Fui%2Fsrc%2Ffeatures%2Fupdates%2FUpdateCenter.vue?ref=be7395acfce0ec1e36b83300b576db408f8c35bb",
+    "patch": "@@ -163,6 +163,17 @@ function onKeydown(event: KeyboardEvent) {\n   }\n }\n watch(() => props.target, target => { selected.value = target })\n+watch(selected, async () => {\n+  const label = dialog.value?.contains(document.activeElement)\n+    ? document.activeElement?.getAttribute('aria-label')\n+    : null\n+  await nextTick()\n+  if (!props.open || !dialog.value || dialog.value.contains(document.activeElement)) return\n+  // Returning to all updates removes its focused back button. Keep modal focus\n+  // inside, preserving a labelled control if the render replaced that control.\n+  const replacement = label ? focusables().find(element => element.getAttribute('aria-label') === label) : null\n+  ;(replacement ?? dialog.value).focus()\n+})\n watch(() => props.open, async open => {\n   if (open) {\n     selected.value = props.target"
+  },
+  {
+    "sha": "3da03dbbd22ac21e05b55b27b7790a794d784dc8",
+    "filename": "apps/desktop/ui/tests/update-center.test.ts",
+    "status": "modified",
+    "additions": 19,
+    "deletions": 0,
+    "changes": 19,
+    "blob_url": "https://github.com/gzers/opencodex-desktop/blob/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Fui%2Ftests%2Fupdate-center.test.ts",
+    "raw_url": "https://github.com/gzers/opencodex-desktop/raw/be7395acfce0ec1e36b83300b576db408f8c35bb/apps%2Fdesktop%2Fui%2Ftests%2Fupdate-center.test.ts",
+    "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/apps%2Fdesktop%2Fui%2Ftests%2Fupdate-center.test.ts?ref=be7395acfce0ec1e36b83300b576db408f8c35bb",
+    "patch": "@@ -150,6 +150,25 @@ describe('shared production update center', () => {\n     await wrapper.setProps({ open: false })\n     expect(document.activeElement).toBe(opener)\n   })\n+  it.each(['manager', 'official'] as const)('keeps focus inside when returning from %s details to all updates', async target => {\n+    const wrapper = render({ target }); await flushPromises()\n+    const back = button(wrapper, '← 全部更新')\n+    ;(back.element as HTMLButtonElement).focus()\n+    expect(document.activeElement).toBe(back.element)\n+    await back.trigger('click'); await flushPromises()\n+    expect(wrapper.get('[role=\"dialog\"]').attributes('aria-modal')).toBe('true')\n+    expect(wrapper.get('[role=\"dialog\"]').element.contains(document.activeElement)).toBe(true)\n+    expect(mocks.check).not.toHaveBeenCalled()\n+    expect(mocks.install).not.toHaveBeenCalled()\n+  })\n+  it('preserves an existing dialog control focus when the selected target changes', async () => {\n+    const wrapper = render({ target: 'manager' }); await flushPromises()\n+    const close = wrapper.get('button[aria-label=\"关闭更新中心\"]')\n+    ;(close.element as HTMLButtonElement).focus()\n+    expect(document.activeElement).toBe(close.element)\n+    await wrapper.setProps({ target: 'official' }); await flushPromises()\n+    expect(document.activeElement).toBe(wrapper.get('button[aria-label=\"关闭更新中心\"]').element)\n+  })\n   it('settings reuses the component and does not back up merely by entering', async () => {\n     useRouteStore().go('settings', { section: 'upgrade' })\n     const backup = vi.spyOn(useUpdatesStore(), 'createUpgradeBackup')"
+  }
+]
