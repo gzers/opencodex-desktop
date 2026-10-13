@@ -1,0 +1,42 @@
+{
+  "atUtc": "2026-10-13T05:20:57.3472737Z",
+  "sourceCommit": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "ciRunId": 38349316806,
+  "artifactId": 11790820992,
+  "zipSha256": "8da4ce67906620da0cfe42b76863922c87b44809766d946d360b4f3eab01607d",
+  "zipDigestMatchesApi": true,
+  "testExeSha256": "e5aaed4c66d4bc362c1a63f9485e3fdf806f620e7be6a39d503c5e7c0018a4fc",
+  "testExeMatchesCiReceipt": true,
+  "localNodeVersion": "v24.19.0",
+  "sourceWitnesses": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "eaeBlob": "08752751dd626977f09dc2b73db42fd075d3b661",
+      "d975Blob": "08752751dd626977f09dc2b73db42fd075d3b661",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "eaeBlob": "8981fad939b417b6560993bac7234518d73ff005",
+      "d975Blob": "8981fad939b417b6560993bac7234518d73ff005",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "eaeBlob": "63ed75bddfb87c6e8364a8a34d468a634369888e",
+      "d975Blob": "63ed75bddfb87c6e8364a8a34d468a634369888e",
+      "unchanged": true
+    }
+  ],
+  "sourceDiff": [
+    "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "apps/desktop/ui/tests/update-center.test.ts"
+  ],
+  "productionTimeoutChanged": false,
+  "testAssertionsChanged": false,
+  "failureCauseIsolated": false,
+  "localPassClearsCiFailure": false,
+  "ciRerunRequested": false,
+  "mainIntegrated": false,
+  "nativeCurrentSource": "eae85322ebca3b755c034db97cbebf2ea5bf71fc"
+}

@@ -1,0 +1,49 @@
+{
+  "atUtc": "2026-10-13T05:12:56.8673946Z",
+  "watcherPid": 51028,
+  "watcherCreationUtc": "2026-10-13T05:11:49.4296687Z",
+  "runId": 38349316806,
+  "sha": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 115137831685,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 115137831818,
+      "name": "backend-windows",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 115137831846,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 115137831880,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 115137831896,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 115140717582,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "elapsedWatcherSeconds": 66.4713354,
+  "productInvokedOrRestarted": false
+}

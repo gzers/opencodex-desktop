@@ -1,0 +1,72 @@
+{
+  "sourceCommit": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "runId": 38349316806,
+  "ciConclusion": "failure",
+  "failedJobId": 115137831818,
+  "failedStep": "Windows backend regression",
+  "ciLibraryResult": {
+    "passed": 502,
+    "failed": 3,
+    "ignored": 4
+  },
+  "failingCases": [
+    "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+    "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+    "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process"
+  ],
+  "actualCiObservations": [
+    "version success elapsed2.1725273s, resultTimeout",
+    "version nonzero elapsed2.174039s, resultTimeout",
+    "version timeout elapsed2.1548715s, resultTimeout",
+    "all three observers failed fixture descendant did not start before retained-handle ownership",
+    "metadata process-tree tests passed",
+    "Windows frontend build, fmt and Clippy succeeded; Windows release build and EXE smoke skipped",
+    "frontend, Linux backend, release tools and token smoke succeeded; overall build job skipped"
+  ],
+  "localReadback": {
+    "testExeMatchedFailureRunArtifact": true,
+    "testExeSha256": "e5aaed4c66d4bc362c1a63f9485e3fdf806f620e7be6a39d503c5e7c0018a4fc",
+    "firstNodeVersion": "v24.19.0",
+    "exactCiNodeVersion": "v24.21.0",
+    "serialAndSevenThreadsAtBothNodeVersions": "each9 passed,0 failed,0 ignored;500 filtered",
+    "counts": "Seven query/probe process-tree cases plus two Windows runtime-path cases. The early commentary7/7 referred to process-tree cases only; raw filtered runs each have9 tests.",
+    "originalProductionProbeSeconds": 2,
+    "unchangedFixtureAssertions": true,
+    "outerWatchdogCleanupUsed": false,
+    "failureCauseIsolated": false,
+    "versionDifferenceAloneExplainsFailure": false,
+    "wholeCiWorkspaceReproducedLocally": false,
+    "linuxOrFrontendPassClearsWindowsFailure": false
+  },
+  "sourceComparison": {
+    "featureDiffScope": "UpdateCenter.vue and update-center.test.ts only",
+    "windowsQueryFixtureBlobUnchanged": true,
+    "officialVersionSourceBlobUnchanged": true,
+    "windowsOwnedQueryJobBlobUnchanged": true,
+    "unchangedBlobsProveNoBackendRegression": false,
+    "runnerContentionCauseProven": false
+  },
+  "actions": {
+    "ciRerunRequested": false,
+    "fixtureSerializedOrThresholdLoosened": false,
+    "newBackendFixClaimed": false,
+    "mainIntegrated": false,
+    "candidateWorkflowTriggered": false,
+    "productOrCycleRestarted": false,
+    "foregroundInputsPerformed": false,
+    "exactNodeInstalledIntoDailyLocation": false,
+    "thirdPartyLifecycleScriptsExecuted": false
+  },
+  "instrumentationError": {
+    "firstLifecycleWrapper": "Wrong historical evidence path/date and missing explicit full path made PowerShell interpret .adg as a module. No helper or product action ran.",
+    "correction": "Use the existing20261012 retention lifecycle helper via checked full path, capture actual retained handles.",
+    "probeRerunDueToWrapperError": false
+  },
+  "remaining": "Diagnose and resolve full Windows CI failure before main integration; local targeted9-test success is insufficient. Current eae cycle and full original native/performance gates remain separate.",
+  "fullCiAccepted": false,
+  "fixedNativeUiAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realCyclesAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}
