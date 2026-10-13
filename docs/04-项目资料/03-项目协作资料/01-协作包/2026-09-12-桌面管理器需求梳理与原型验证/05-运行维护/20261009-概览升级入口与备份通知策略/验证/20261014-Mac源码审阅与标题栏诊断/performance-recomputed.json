@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "kind": "independently_recomputed_sequential_pair",
+  "inputs_sha256": {
+    "baseline019/idle-high/samples.jsonl": "fdf944ad34cdf3f5a8ce64c9fd23df47c1b9af9cdc3372818a755e11bb2d64ce",
+    "baseline019/idle-high/context.json": "e9d74e016db72e352eb8f721801bdf45a33703801b7728fc931674a09e13b5b2",
+    "baseline019/idle-high/summary.json": "3be5b7dcbf2c427395a0a1632eb8fc2a0d35cef776ccf18317e6ae5b1bd41c3d",
+    "baseline019/idle-high/launch.json": "b2fdc2adae4f934b1712427e4e4e92821ec01cea8071b1f6c21a8938f96291da",
+    "candidate0110/idle-high/samples.jsonl": "daa6e8e5391cd0a20758a59c8a117b8d548de3a7cc88bbbafca1b41d91bcd8fd",
+    "candidate0110/idle-high/context.json": "2eef0a819eed6b081e8a23339d9544b18092268f52c996f440403d23220c2931",
+    "candidate0110/idle-high/summary.json": "d6925554d03d60b969f33b1a91b9406ad97f7616f00cbfd081ec3c61030f43be",
+    "candidate0110/idle-high/launch.json": "9aa57ce05620de9945f56d4b4d49983c1f07208de7f3678e73048a4245e75e79",
+    "candidate0110/diagnostic-settings/samples.jsonl": "3121c5207171bf36f9d314bbd428bf8ff4e25a0b895008dc6f8071ab20b33564",
+    "candidate0110/diagnostic-settings/context.json": "bd493cbabb9a740dfc6b633aed1a4ca4ba1a869c7351f4f09399162f8e838711",
+    "candidate0110/diagnostic-settings/summary.json": "0d669d80a6f25f9f7433c3ad7ca893c34ac951b0df25056c98278f882973070d",
+    "candidate0110/diagnostic-settings/launch.json": "9aa57ce05620de9945f56d4b4d49983c1f07208de7f3678e73048a4245e75e79"
+  },
+  "runs": {
+    "baseline019/idle-high": {
+      "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "start_utc": "2026-10-11T16:23:24.286544+00:00",
+      "end_utc": "2026-10-11T16:33:24.296692+00:00",
+      "elapsed_seconds": 600.0159544999478,
+      "sample_count": 61,
+      "cpu_seconds_delta": 290.05,
+      "cpu_one_core_percent": 48.34038125564963,
+      "rss_mib": {
+        "start": 284.375,
+        "end": 284.859375,
+        "min": 284.171875,
+        "max": 284.875,
+        "mean": 284.6175717213115
+      },
+      "rss_growth_mib": 0.484375,
+      "breakdown": [
+        {
+          "pid": 29226,
+          "started": "Mon Oct 12 00:20:19 2026",
+          "exe": "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+          "cpu_seconds_delta": 42.3,
+          "rss_start_mib": 112.046875,
+          "rss_end_mib": 112.03125
+        },
+        {
+          "pid": 29236,
+          "started": "Mon Oct 12 00:20:20 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+          "cpu_seconds_delta": 150.37,
+          "rss_start_mib": 61.84375,
+          "rss_end_mib": 61.78125
+        },
+        {
+          "pid": 29238,
+          "started": "Mon Oct 12 00:20:20 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+          "cpu_seconds_delta": 97.38,
+          "rss_start_mib": 94.75,
+          "rss_end_mib": 95.296875
+        },
+        {
+          "pid": 29239,
+          "started": "Mon Oct 12 00:20:20 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+          "cpu_seconds_delta": 0.0,
+          "rss_start_mib": 15.734375,
+          "rss_end_mib": 15.75
+        }
+      ],
+      "files_unchanged": true,
+      "process_identities_stable": true,
+      "admitted_entry_count": 8,
+      "rejected_entry_count": 29,
+      "collector_cpu_seconds": 0.317583,
+      "collection_wall_seconds": 5.094874125672504
+    },
+    "candidate0110/idle-high": {
+      "source": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+      "start_utc": "2026-10-11T16:38:47.753837+00:00",
+      "end_utc": "2026-10-11T16:48:47.778817+00:00",
+      "elapsed_seconds": 600.0238033749629,
+      "sample_count": 61,
+      "cpu_seconds_delta": 300.96000000000004,
+      "cpu_one_core_percent": 50.15801011679633,
+      "rss_mib": {
+        "start": 294.140625,
+        "end": 505.53125,
+        "min": 293.9375,
+        "max": 505.53125,
+        "mean": 401.6265368852459
+      },
+      "rss_growth_mib": 211.390625,
+      "breakdown": [
+        {
+          "pid": 31501,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+          "cpu_seconds_delta": 35.78,
+          "rss_start_mib": 118.96875,
+          "rss_end_mib": 119.015625
+        },
+        {
+          "pid": 31510,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+          "cpu_seconds_delta": 175.61,
+          "rss_start_mib": 55.34375,
+          "rss_end_mib": 61.171875
+        },
+        {
+          "pid": 31511,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+          "cpu_seconds_delta": 89.57,
+          "rss_start_mib": 103.953125,
+          "rss_end_mib": 309.46875
+        },
+        {
+          "pid": 31512,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+          "cpu_seconds_delta": 0.0,
+          "rss_start_mib": 15.875,
+          "rss_end_mib": 15.875
+        }
+      ],
+      "files_unchanged": true,
+      "process_identities_stable": true,
+      "admitted_entry_count": 8,
+      "rejected_entry_count": 28,
+      "collector_cpu_seconds": 0.3245,
+      "collection_wall_seconds": 5.233687995467335
+    },
+    "candidate0110/diagnostic-settings": {
+      "source": "deb740c09857b5f0bef7c9b4090fe5e8587bb4b3",
+      "start_utc": "2026-10-11T16:57:48.683248+00:00",
+      "end_utc": "2026-10-11T16:59:18.704510+00:00",
+      "elapsed_seconds": 90.02097616693936,
+      "sample_count": 10,
+      "cpu_seconds_delta": 0.06999999999995055,
+      "cpu_one_core_percent": 0.07775965445002404,
+      "rss_mib": {
+        "start": 611.125,
+        "end": 580.109375,
+        "min": 580.109375,
+        "max": 611.234375,
+        "mean": 608.034375
+      },
+      "rss_growth_mib": -31.015625,
+      "breakdown": [
+        {
+          "pid": 31501,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+          "cpu_seconds_delta": 0.01999999999999602,
+          "rss_start_mib": 119.1875,
+          "rss_end_mib": 118.03125
+        },
+        {
+          "pid": 31510,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+          "cpu_seconds_delta": 0.029999999999972715,
+          "rss_start_mib": 62.9375,
+          "rss_end_mib": 58.328125
+        },
+        {
+          "pid": 31511,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+          "cpu_seconds_delta": 0.01999999999998181,
+          "rss_start_mib": 413.203125,
+          "rss_end_mib": 388.109375
+        },
+        {
+          "pid": 31512,
+          "started": "Mon Oct 12 00:35:43 2026",
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+          "cpu_seconds_delta": 0.0,
+          "rss_start_mib": 15.796875,
+          "rss_end_mib": 15.640625
+        }
+      ],
+      "files_unchanged": true,
+      "process_identities_stable": true,
+      "admitted_entry_count": 8,
+      "rejected_entry_count": 28,
+      "collector_cpu_seconds": 0.08924100000000001,
+      "collection_wall_seconds": 1.006603331072256
+    }
+  },
+  "matching_host": {
+    "os": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n",
+    "arch": "arm64",
+    "logical_cpus": 18,
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23265379)\t80%; AC attached; not charging present: true\n",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+  },
+  "matching_appearance": {
+    "glow_render": "mesh",
+    "interface_scale": 100,
+    "theme": "light",
+    "visual_effects": "high"
+  },
+  "matching_updates": {
+    "app_update_auto_check": true,
+    "app_update_channel": "stable",
+    "app_update_check_interval_seconds": 86400
+  },
+  "delta": {
+    "cpu_one_core_percentage_points": 1.8176288611467015,
+    "rss_mean_mib": 117.00896516393442,
+    "rss_end_mib": 220.671875
+  },
+  "budgets": {
+    "cpu_increment_percentage_points": 0.5,
+    "rss_increment_mib": 10
+  },
+  "budget_comparison": {
+    "cpu_within_budget": false,
+    "rss_mean_within_budget": false,
+    "rss_end_within_budget": false
+  },
+  "gate": "not_passed",
+  "limitations": [
+    "10-second polling can miss transient helpers",
+    "RSS is resident sum, not unique physical footprint",
+    "Cua AX and screenshots are separate UI evidence; collection does not itself prove global foreground",
+    "Sequential single pairing; not randomized repeated runs",
+    "Preparation state only, not ready-state overview",
+    "No main-thread, network/syscall or startup interactive instrumentation",
+    "Settings diagnostic lock onset unknown; no contemporaneous endpoint UI; low CPU cannot be assigned to route unmount.",
+    "Recorded source-binary digests are provenance; this independent rerun hashes isolated test binaries only when requested.",
+    "Single sequential pair and lack of continuous foreground monitoring do not establish regression causality.",
+    "Sampling and vmmap are post-pair investigation leads, not leak/root-cause proof."
+  ]
+}

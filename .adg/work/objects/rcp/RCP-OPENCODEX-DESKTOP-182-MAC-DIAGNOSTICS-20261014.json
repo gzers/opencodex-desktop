@@ -1,0 +1,71 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-MAC-DIAGNOSTICS-20261014",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-MAC-DIAGNOSTICS-20261014.json",
+    ".github/workflows/ci.yml",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/.gitattributes",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/README.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/caption-ci-observation.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/caption-probe-unit.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/caption-probe-unit.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/feature-review-ui.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/feature-review-ui.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/manifest.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/offline-performance-diagnostics.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/performance-recompute.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/performance-recomputed.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/pr1-review-state.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/source-comparison.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/windows-focus-evidence-verification.json",
+    "test/smoke/windows_caption_probe.py",
+    "test/test_windows_caption_probe.py"
+  ],
+  "checks": [
+    {
+      "name": "local:caption-tool-portable-contracts",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/caption-probe-unit.json"
+    },
+    {
+      "name": "local:focus-and-motion-regression",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/feature-review-ui.json"
+    },
+    {
+      "name": "local:prior-focus-evidence-integrity",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/windows-focus-evidence-verification.json"
+    },
+    {
+      "name": "local:prior-performance-recompute",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/performance-recomputed.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac源码审阅与标题栏诊断/README.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "0812b68f9f40fae1aa75281789a3a4ae02c56a3657bd2e4e4c7201cb9d7be534",
+      "summary": "原性能失败保留；记录后台焦点审阅、只读caption工具与尚待真机验证的范围。"
+    }
+  ],
+  "completed_at": "2026-10-13T16:23:03.123954+00:00",
+  "summary": "焦点/动画52项及只读caption工具12项通过，旧Windows48份证据核验、macOS失败重算一致；无新原生采样，性能failed与整体门禁保持。",
+  "revision": 1,
+  "summary_digest": "3aa306d693a729367bb57038f57db803772d8b0963b3d632b64504e7b413777f",
+  "content_digest": "1c91e32b915014a186a7f79be80fbac8b2b4f9adf86c9e5e6b74aec99d3d63b6"
+}

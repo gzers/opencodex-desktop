@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "test",
+    "-p",
+    "test_windows_caption_probe.py",
+    "-v"
+  ],
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "python_executable": "/Library/Developer/CommandLineTools/usr/bin/python3",
+  "exit": 0,
+  "elapsed_seconds": 0.03733225,
+  "tests_passed": 12,
+  "native_windows_api_executed": false,
+  "native_application_started": false,
+  "foreground_or_lifecycle_input_issued": false,
+  "files_sha256": {
+    "test/smoke/windows_caption_probe.py": "cab37b1c45ad2754cb88c805d0ebd27d5b4c9816497107a42c2e13f4061a894e",
+    "test/test_windows_caption_probe.py": "f74d49fee6750fe87d7082c9a60fe0400180a617373c2c25414c6fc06d6f81f2",
+    ".github/workflows/ci.yml": "acc005ef848a8338ceb1be5bb4cc43ddd404d72c9ec8abfa6e1e459350aa7516"
+  }
+}

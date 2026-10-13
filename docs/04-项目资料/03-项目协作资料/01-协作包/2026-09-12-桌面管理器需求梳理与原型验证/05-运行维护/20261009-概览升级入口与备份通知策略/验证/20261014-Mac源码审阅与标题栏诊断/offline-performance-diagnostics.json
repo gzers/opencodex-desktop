@@ -1,0 +1,124 @@
+{
+  "recompute_exit": 0,
+  "comparison_bytes_identical": true,
+  "raw_samples_sha256": {
+    "baseline019": "3abc597ce1c6b7173017c7a0d4c92d9a409bb1f4b0240f657f30e6e4f0b4aaec",
+    "candidate0110": "af082b8b205e022cb5c2557318beb570a6a5e188d4086b9e0eaae470826b57a9"
+  },
+  "runs": {
+    "baseline019": {
+      "sample_count": 61,
+      "elapsed_seconds": 600.0159544999478,
+      "total_rss_mib_at_0_60_120_180_300_600s": [
+        {
+          "elapsed_seconds": 0.15930195804685354,
+          "rss_mib": 284.375
+        },
+        {
+          "elapsed_seconds": 60.08307875005994,
+          "rss_mib": 284.375
+        },
+        {
+          "elapsed_seconds": 120.08667183306534,
+          "rss_mib": 284.3125
+        },
+        {
+          "elapsed_seconds": 180.08158016600646,
+          "rss_mib": 284.640625
+        },
+        {
+          "elapsed_seconds": 300.08774850005284,
+          "rss_mib": 284.875
+        },
+        {
+          "elapsed_seconds": 600.1752564579947,
+          "rss_mib": 284.859375
+        }
+      ],
+      "processes": {
+        "29226": {
+          "exe": "/private/tmp/ocx-0110-performance-20261012/baseline019/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+          "cpu_seconds_delta": 42.3,
+          "rss_start_mib": 112.046875,
+          "rss_end_mib": 112.03125
+        },
+        "29236": {
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+          "cpu_seconds_delta": 150.37,
+          "rss_start_mib": 61.84375,
+          "rss_end_mib": 61.78125
+        },
+        "29238": {
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+          "cpu_seconds_delta": 97.38,
+          "rss_start_mib": 94.75,
+          "rss_end_mib": 95.296875
+        },
+        "29239": {
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+          "cpu_seconds_delta": 0.0,
+          "rss_start_mib": 15.734375,
+          "rss_end_mib": 15.75
+        }
+      }
+    },
+    "candidate0110": {
+      "sample_count": 61,
+      "elapsed_seconds": 600.0238033749629,
+      "total_rss_mib_at_0_60_120_180_300_600s": [
+        {
+          "elapsed_seconds": 0.1579462920781225,
+          "rss_mib": 294.140625
+        },
+        {
+          "elapsed_seconds": 60.08920112508349,
+          "rss_mib": 317.78125
+        },
+        {
+          "elapsed_seconds": 120.09069112502038,
+          "rss_mib": 341.921875
+        },
+        {
+          "elapsed_seconds": 180.08745012502186,
+          "rss_mib": 359.71875
+        },
+        {
+          "elapsed_seconds": 300.0900536670815,
+          "rss_mib": 402.3125
+        },
+        {
+          "elapsed_seconds": 600.181749667041,
+          "rss_mib": 505.53125
+        }
+      ],
+      "processes": {
+        "31501": {
+          "exe": "/private/tmp/ocx-0110-performance-20261012/candidate0110/test-install/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+          "cpu_seconds_delta": 35.78,
+          "rss_start_mib": 118.96875,
+          "rss_end_mib": 119.015625
+        },
+        "31510": {
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.GPU.xpc/Contents/MacOS/com.apple.WebKit.GPU",
+          "cpu_seconds_delta": 175.61,
+          "rss_start_mib": 55.34375,
+          "rss_end_mib": 61.171875
+        },
+        "31511": {
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.WebContent.xpc/Contents/MacOS/com.apple.WebKit.WebContent",
+          "cpu_seconds_delta": 89.57,
+          "rss_start_mib": 103.953125,
+          "rss_end_mib": 309.46875
+        },
+        "31512": {
+          "exe": "/System/Library/Frameworks/WebKit.framework/Versions/A/XPCServices/com.apple.WebKit.Networking.xpc/Contents/MacOS/com.apple.WebKit.Networking",
+          "cpu_seconds_delta": 0.0,
+          "rss_start_mib": 15.875,
+          "rss_end_mib": 15.875
+        }
+      }
+    }
+  },
+  "native_samples_collected_this_round": 0,
+  "causality_proven": false
+}
