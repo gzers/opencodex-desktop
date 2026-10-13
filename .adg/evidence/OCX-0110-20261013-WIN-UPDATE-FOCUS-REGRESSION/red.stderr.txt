@@ -1,0 +1,287 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > keeps focus inside when returning from manager details to all updates
+ FAIL  tests/update-center.test.ts > shared production update center > keeps focus inside when returning from official details to all updates
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/update-center.test.ts:160:85
+    158|     await back.trigger('click'); await flushPromises()
+    159|     expect(wrapper.get('[role="dialog"]').attributes('aria-modal')).to…
+    160|     expect(wrapper.get('[role="dialog"]').element.contains(document.ac…
+       |                                                                                     ^
+    161|     expect(mocks.check).not.toHaveBeenCalled()
+    162|     expect(mocks.install).not.toHaveBeenCalled()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > preserves an existing dialog control focus when the selected target changes
+AssertionError: expected <body><div data-v-app>…(1)</div></body> to be <button data-v-c975c606 …(3)></button> // Object.is equality
+
+- Expected
++ Received
+
+@@ -1,5 +1,51 @@
++ <body>
++   <div
++     data-v-app=""
++   >
++     <teleport-stub
++       data-v-c975c606=""
++       to="body"
++     >
++       <div
++         class="modal-mask update-center-mask"
++         data-testid="update-center"
++         data-v-c975c606=""
++       >
++         <div
++           aria-labelledby="update-center-v-0"
++           aria-modal="true"
++           class="modal modal-wide update-center"
++           data-v-c975c606=""
++           role="dialog"
++           tabindex="-1"
++         >
++           <header
++             class="update-center-head"
++             data-v-c975c606=""
++           >
++             <div
++               data-v-c975c606=""
++             >
++               <span
++                 class="update-kicker"
++                 data-v-c975c606=""
++               >
++                 软件更新
++               </span>
++               <h3
++                 data-v-c975c606=""
++                 id="update-center-v-0"
++               >
++                 OpenCodex 面板更新
++               </h3>
++               <p
++                 data-v-c975c606=""
++               >
++                 检查两个更新对象，查看说明后选择安装。
++               </p>
++             </div>
+              <button
+                aria-label="关闭更新中心"
+                class="btn ghost"
+                data-v-c975c606=""
+                type="button"
+@@ -7,5 +53,194 @@
+                <!--v-if-->
+                
+                关闭
+                
+              </button>
++           </header>
++           <div
++             class="update-center-body"
++             data-v-c975c606=""
++           >
++             <div
++               class="update-back"
++               data-v-c975c606=""
++             >
++               <button
++                 class="btn ghost"
++                 data-v-c975c606=""
++                 type="button"
++               >
++                 <!--v-if-->
++                 
++                 ← 全部更新
++                 
++               </button>
++             </div>
++             <!--v-if-->
++             <article
++               class="card update-object"
++               data-testid="official-update-card"
++               data-v-c975c606=""
++             >
++               
++               <button
++                 aria-expanded="true"
++                 aria-label="查看 OpenCodex 面板更新详情"
++                 class="update-object-head"
++                 data-v-c975c606=""
++                 type="button"
++               >
++                 <span
++                   aria-hidden="true"
++                   class="update-object-icon"
++                   data-v-c975c606=""
++                 >
++                   ⌘
++                 </span>
++                 <span
++                   data-v-c975c606=""
++                 >
++                   <strong
++                     data-v-c975c606=""
++                   >
++                     OpenCodex 面板
++                   </strong>
++                   <small
++                     data-v-c975c606=""
++                   >
++                     官方项目 · @bitkyc08/opencodex
++                   </small>
++                 </span>
++                 <span
++                   class="tag"
++                   data-v-c975c606=""
++                 >
++                   发现新版本
++                 </span>
++               </button>
++               <div
++                 class="update-versions"
++                 data-v-c975c606=""
++               >
++                 <span
++                   data-v-c975c606=""
++                 >
++                   当前 
++                   <b
++                     data-v-c975c606=""
++                   >
++                     2.50.0
++                   </b>
++                 </span>
++                 <span
++                   aria-hidden="true"
++                   data-v-c975c606=""
++                 >
++                   →
++                 </span>
++                 <span
++                   data-v-c975c606=""
++                 >
++                   可用 
++                   <b
++                     data-v-c975c606=""
++                   >
++                     2.51.0
++                   </b>
++                 </span>
++               </div>
++               <!--v-if-->
++               <div
++                 class="update-detail"
++                 data-v-c975c606=""
++               >
++                 <h4
++                   data-v-c975c606=""
++                 >
++                   更新说明
++                 </h4>
++                 <pre
++                   aria-label="OpenCodex 面板更新说明"
++                   class="update-notes"
++                   data-v-c975c606=""
++                   tabindex="0"
++                 >
++                   当前版本查询未提供发布说明。请查看官方网页详情，确认版本变化后再安装。
++                 </pre>
++                 <button
++                   class="btn ghost"
++                   data-v-c975c606=""
++                   type="button"
++                 >
++                   <!--v-if-->
++                   
++                   查看官方网页详情 ↗
++                   
++                 </button>
++               </div>
++               <p
++                 class="update-hint"
++                 data-v-c975c606=""
++               >
++                 面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。
++               </p>
++               <!--v-if-->
++               <!--v-if-->
++               <div
++                 class="update-object-actions"
++                 data-v-c975c606=""
++               >
++                 <!--v-if-->
++                 <button
++                   class="btn primary"
++                   data-testid="install-official-update"
++                   data-v-c975c606=""
++                   type="button"
++                 >
++                   <!--v-if-->
++                   
++                   备份并更新面板
++                   
++                 </button>
++               </div>
++               
++             </article>
++           </div>
++           <footer
++             class="update-center-foot"
++             data-v-c975c606=""
++           >
++             <p
++               data-v-c975c606=""
++             >
++               更新准备完成后由你选择重启时机。
++             </p>
++             <div
++               data-v-c975c606=""
++             >
++               <button
++                 class="btn ghost"
++                 data-v-c975c606=""
++                 type="button"
++               >
++                 <!--v-if-->
++                 
++                 稍后
++                 
++               </button>
++               <button
++                 class="btn"
++                 data-v-c975c606=""
++                 type="button"
++               >
++                 <!--v-if-->
++                 
++                 重新检查更新
++                 
++               </button>
++             </div>
++           </footer>
++         </div>
++       </div>
++     </teleport-stub>
++   </div>
++ </body>
+
+ ❯ tests/update-center.test.ts:169:36
+    167|     ;(close.element as HTMLButtonElement).focus()
+    168|     await wrapper.setProps({ target: 'official' }); await flushPromise…
+    169|     expect(document.activeElement).toBe(close.element)
+       |                                    ^
+    170|   })
+    171|   it('settings reuses the component and does not back up merely by ent…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+

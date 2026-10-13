@@ -1,0 +1,31 @@
+{
+  "nativeFindingSource": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "nativeEvidence": ".adg/evidence/OCX-0110-20261013-WIN-EAE-NOON-NATIVE/06-all-update-objects.json",
+  "featureCommit": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "featureBranch": "feature/0.1.10-update-center-focus",
+  "problem": "Returning to all updates removes the focused back button and leaves activeElement BODY outside the aria-modal dialog.",
+  "fix": "After selected-view render, only restore focus if it is outside the still-open dialog; preserve a labelled control when available, otherwise focus the dialog. Do not move surviving inside focus.",
+  "firstRedRun": "3 failed /8 passed; preserved",
+  "testRefinementBeforeFinalRed": "The close-control check now asserts initial focus and re-queries the current labelled close button after rendering instead of comparing a potentially detached old DOM node. The final red and green test blobs are identical.",
+  "finalRed": "3 failed /8 passed",
+  "green": "11 passed",
+  "frontendAll": "95 files /483 tests passed",
+  "typecheck": "exit0",
+  "productionFrontendBuild": "exit0; existing ineffective dynamic import warnings preserved",
+  "codeScope": [
+    "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "apps/desktop/ui/tests/update-center.test.ts"
+  ],
+  "scheduleCodeModified": false,
+  "retainedApplicationPatchedOrRestarted": false,
+  "mainIntegrated": false,
+  "featureCiRun": 38349316806,
+  "featureCiStatusAtObservation": "in_progress",
+  "fullCiAccepted": false,
+  "fixNativeUiAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realCyclesAccepted": false,
+  "fullNativeGateAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}

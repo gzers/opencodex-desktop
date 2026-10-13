@@ -1,0 +1,18 @@
+
+ RUN  v5.0.0 C:/Users/15119/.codex/worktrees/0110-windows-gates/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/update-center.test.ts (11 tests | 3 failed) 417ms
+   ❯ shared production update center (11)
+     × keeps focus inside when returning from manager details to all updates 20ms
+     × keeps focus inside when returning from official details to all updates 15ms
+     × preserves an existing dialog control focus when the selected target changes 30ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 8 passed (11)
+   Start at  12:54:52
+   Duration  5.18s (transform 44%, environment 39%, tests 8%, import 8%)
+
+  Transform  transforming modules took 2.18s · 44% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

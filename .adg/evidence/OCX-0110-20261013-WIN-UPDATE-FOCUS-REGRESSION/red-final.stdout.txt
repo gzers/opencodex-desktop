@@ -1,0 +1,14 @@
+
+ RUN  v5.0.0 C:/Users/15119/.codex/worktrees/0110-windows-gates/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/update-center.test.ts (11 tests | 3 failed) 351ms
+   ❯ shared production update center (11)
+     × keeps focus inside when returning from manager details to all updates 29ms
+     × keeps focus inside when returning from official details to all updates 19ms
+     × preserves an existing dialog control focus when the selected target changes 26ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 8 passed (11)
+   Start at  12:56:32
+   Duration  3.54s (transform 57%, environment 24%, tests 10%, import 9%)
+
