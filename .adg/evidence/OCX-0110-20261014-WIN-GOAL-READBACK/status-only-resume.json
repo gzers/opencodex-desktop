@@ -1,0 +1,45 @@
+{
+  "atUtc": "2026-10-13T16:48:34.638652+00:00",
+  "userAuthorization": "那么你把Windows能做的继续修改本对话目标模式完成为止",
+  "mutationParameters": {
+    "threadId": "01a12e0e-c38f-7df3-b42f-6e80f629545e",
+    "status": "active",
+    "origin": "user"
+  },
+  "objectiveReplacementIssued": false,
+  "budgetChangeIssued": false,
+  "writerLockOverrideIssued": false,
+  "retryLoopStarted": false,
+  "goalClearedOrMarkedComplete": false,
+  "nativeInputIssued": false,
+  "before": {
+    "threadId": "01a12e0e-c38f-7df3-b42f-6e80f629545e",
+    "objective": "继续 OpenCodex Desktop 0.1.10：同步 main@01a1d855 与 docs/governance-main@a83250ba，读取 IMP-20/TASK-182 并按原契约、原预算完成 Windows 真机门禁、同机 0.1.9 配对性能及真实周期测试；仅用一个隔离测试实例，修复问题、回写证据并按分支归属提交推送，保留日常版与真实数据，不降低门禁、不提前关闭或发布。",
+    "status": "paused",
+    "tokenBudget": null,
+    "tokensUsed": 18453728,
+    "timeUsedSeconds": 63871,
+    "createdAt": 1791774103,
+    "updatedAt": 1791876196
+  },
+  "setResponse": {
+    "error": {
+      "code": -32603,
+      "message": "failed to record goal instruction: thread 01a12e0e-c38f-7df3-b42f-6e80f629545e already has an active writer"
+    },
+    "id": 3
+  },
+  "readback": {
+    "threadId": "01a12e0e-c38f-7df3-b42f-6e80f629545e",
+    "objective": "继续 OpenCodex Desktop 0.1.10：同步 main@01a1d855 与 docs/governance-main@a83250ba，读取 IMP-20/TASK-182 并按原契约、原预算完成 Windows 真机门禁、同机 0.1.9 配对性能及真实周期测试；仅用一个隔离测试实例，修复问题、回写证据并按分支归属提交推送，保留日常版与真实数据，不降低门禁、不提前关闭或发布。",
+    "status": "paused",
+    "tokenBudget": null,
+    "tokensUsed": 18453728,
+    "timeUsedSeconds": 63871,
+    "createdAt": 1791774103,
+    "updatedAt": 1791876196
+  },
+  "originalAccountingPreserved": true,
+  "resumeVerified": false,
+  "status": "not-resumed-readback-verified"
+}
