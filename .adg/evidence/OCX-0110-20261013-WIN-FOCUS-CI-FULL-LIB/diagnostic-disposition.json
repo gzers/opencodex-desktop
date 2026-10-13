@@ -1,0 +1,69 @@
+{
+  "atUtc": "2026-10-13T05:43:38.0751579Z",
+  "originalCiSha": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "originalCiRunId": 38349316806,
+  "originalCiFailurePreserved": true,
+  "diagnosticSha": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "diagnosticCiRunId": 38352525092,
+  "fullLocalLibrarySamples": 2,
+  "localFailures": [
+    "commands::workspace::tests::local_documents_are_frozen",
+    "modules::sync::config::tests::config_accepts_legacy_encryption_field_and_rejects_tls_override",
+    "modules::sync::config::tests::legacy_encryption_field_is_read_and_not_written"
+  ],
+  "originalCiFailedVersionTestsReproduced": false,
+  "originalCiCauseIsolated": false,
+  "localFullLibraryPassed": false,
+  "localDifferences": {
+    "compiledCargoManifestDirectory": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri",
+    "compiledRepositoryLicensePath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\LICENSE",
+    "compiledRepositoryLicenseExists": false,
+    "opencodexSandboxEnabled": true,
+    "fixtureCredentialService": "OpenCodex Desktop",
+    "activeSandboxCredentialService": "OpenCodex Desktop Sandbox",
+    "runtimeValidationRequiresExactService": true,
+    "dailyProfileOrKeychainUsed": false,
+    "ignoredTestsExecuted": false,
+    "fourThreadsMatchCiDefaultIsKnown": false
+  },
+  "sourceWitnesses": [
+    {
+      "path": "apps/desktop/tauri/src/commands/workspace.rs",
+      "originalBlob": "e8b905f3d082c92f115ad3eea27d7baff85464c6",
+      "diagnosticBlob": "e8b905f3d082c92f115ad3eea27d7baff85464c6",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/sync/config.rs",
+      "originalBlob": "5bb491f68cc43890788e7dd8477795607b99de28",
+      "diagnosticBlob": "5bb491f68cc43890788e7dd8477795607b99de28",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/keychain.rs",
+      "originalBlob": "328cf3f5e15258a28b1760dca384c65155b0818f",
+      "diagnosticBlob": "328cf3f5e15258a28b1760dca384c65155b0818f",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/test_sandbox/mod.rs",
+      "originalBlob": "0d42ac5375e52f4615a14995c453066d92ee9eef",
+      "diagnosticBlob": "0d42ac5375e52f4615a14995c453066d92ee9eef",
+      "unchanged": true
+    }
+  ],
+  "productDeadlineSeconds": 2,
+  "testThresholdsChanged": false,
+  "ciConcurrencyChanged": false,
+  "releaseRuntimeDiagnosticsCompiled": false,
+  "localCargoOrRustfmtAvailable": false,
+  "localRustBuildAccepted": false,
+  "mainIntegrated": false,
+  "nativeFocusFixAccepted": false,
+  "lifecycleWrapperNote": "First external wrapper compared unset LASTEXITCODE after a successful PowerShell helper; raw JSON and empty stderr prove helper succeeded. Parsed all three handles, then used PowerShell success status for the next separate readback. No tests rerun for wrapper handling.",
+  "fullNativeAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "cyclesAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}

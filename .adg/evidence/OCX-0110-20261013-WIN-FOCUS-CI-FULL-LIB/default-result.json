@@ -1,0 +1,83 @@
+{
+  "sourceCommit": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "ciRunId": 38349316806,
+  "nativeSourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "testExeSha256": "e5aaed4c66d4bc362c1a63f9485e3fdf806f620e7be6a39d503c5e7c0018a4fc",
+  "nodeExeSha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+  "nodeExecutable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-ci-24.21.0\\node.exe",
+  "actualNodeVersion": "v24.21.0",
+  "mode": "default",
+  "argv": [
+    "--nocapture"
+  ],
+  "hostLogicalProcessors": 20,
+  "runtime": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\update-focus-full-lib-default",
+  "workingDirectory": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\update-focus-full-lib-default\\fixture",
+  "helperToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 18560,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-13T05:35:56.5084421Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-13T05:35:57.7071253Z"
+  },
+  "isolatedEnvironmentKeys": [
+    "APPDATA",
+    "COMSPEC",
+    "HOME",
+    "LOCALAPPDATA",
+    "OPENCODEX_SANDBOX",
+    "OPENCODEX_SANDBOX_ROOT",
+    "OPENCODEX_TEST_NODE",
+    "PATH",
+    "SystemRoot",
+    "TEMP",
+    "TMP",
+    "USERPROFILE",
+    "WINDIR"
+  ],
+  "inheritedCredentials": false,
+  "desktopApplicationStarted": false,
+  "foregroundInputIssued": false,
+  "testFilterApplied": false,
+  "ignoredTestsEnabled": false,
+  "productionProbeDeadlineSeconds": 2,
+  "testAssertionsChanged": false,
+  "fixtureSourceChanged": false,
+  "outerObservationLimitSeconds": 600,
+  "fullCiWorkspaceMatched": false,
+  "localPassClearsCiFailure": false,
+  "ciRerunRequested": false,
+  "originalDataHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20"
+  },
+  "startedAtUtc": "2026-10-13T05:35:58.1122847Z",
+  "status": "actual-local-full-library-failed",
+  "testToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 49188,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\downloads\\11790820992\\windows-backend\\opencodex_desktop_lib-713299640ffef8db.exe",
+    "creationTimeUtc": "2026-10-13T05:35:58.1162483Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-13T05:35:58.1295305Z"
+  },
+  "exitCode": 101,
+  "elapsedMs": 11229.9884,
+  "sameOriginalDesktopLifecycle": true,
+  "originalDataBytesPreserved": true,
+  "afterDataHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20"
+  },
+  "dailyExecutableSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "finishedAtUtc": "2026-10-13T05:36:09.5433926Z"
+}

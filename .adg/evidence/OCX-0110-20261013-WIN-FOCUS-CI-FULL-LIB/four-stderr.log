@@ -1,0 +1,61 @@
+
+thread 'tokio-rt-worker' (46660) panicked at src\commands\sync.rs:1339:17:
+injected worker panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'tokio-rt-worker' (40672) panicked at src\commands\update.rs:717:30:
+isolated manager query panic
+
+thread 'commands::workspace::tests::local_documents_are_frozen' (45064) panicked at src\commands\workspace.rs:482:9:
+assertion failed: license.opened
+query fixture version/nonzero: elapsed=366.4827ms, result=Failure
+query fixture version/success: elapsed=399.6614ms, result=Success
+query fixture metadata/nonzero: elapsed=266.6408ms, result=Failure
+query fixture metadata/overflow: elapsed=242.5415ms, result=Failure
+query fixture metadata/success: elapsed=179.377ms, result=Success
+query fixture version/timeout: elapsed=2.0044822s, result=Timeout
+query fixture metadata/timeout: elapsed=2.0023372s, result=Timeout
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; file system operation failed: manage backups; invalid manifest
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; cleanup candidate SHA-256 mismatch
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; invalid cleanup policy JSON
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; invalid cleanup policy JSON
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; invalid cleanup policy JSON
+
+thread 'tokio-rt-worker' (36852) panicked at src\modules\ipc\service.rs:1185:34:
+injected terminal panic
+
+thread 'tokio-rt-worker' (46660) panicked at src\modules\ipc\service.rs:2104:37:
+injected backup panic
+
+thread 'tokio-rt-worker' (48520) panicked at src\modules\ipc\service.rs:2651:38:
+isolated binding projection panic
+
+thread 'tokio-rt-worker' (48520) panicked at src\modules\ipc\service.rs:2651:38:
+isolated binding projection panic
+
+thread 'tokio-rt-worker' (36852) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (36852) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (48520) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (40672) panicked at src\modules\ipc\service.rs:2407:34:
+isolated CLI update panic
+
+thread 'tokio-rt-worker' (36852) panicked at src\modules\ipc\service.rs:2553:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (48520) panicked at src\modules\ipc\service.rs:2553:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (48520) panicked at src\modules\ipc\service.rs:2553:38:
+isolated query panic
+
+thread 'modules::sync::config::tests::config_accepts_legacy_encryption_field_and_rejects_tls_override' (28172) panicked at src\modules\sync\config.rs:398:9:
+assertion failed: validate_config(&config).is_ok()
+
+thread 'modules::sync::config::tests::legacy_encryption_field_is_read_and_not_written' (35952) panicked at src\modules\sync\config.rs:428:9:
+assertion failed: validate_config(&parsed).is_ok()

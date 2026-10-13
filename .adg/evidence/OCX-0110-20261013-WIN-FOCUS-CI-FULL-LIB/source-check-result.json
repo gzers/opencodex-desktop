@@ -1,0 +1,19 @@
+{
+  "result": "passed",
+  "parentSourceCommit": "d975b2351920bc027c931c8135b5605fde7a46c2",
+  "diagnosticSourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "officialVersionBlobs": {
+    "before": "8981fad939b417b6560993bac7234518d73ff005",
+    "after": "15e82602e0be79cef133ac0afe240fd626dfce2c"
+  },
+  "testOnlyTraceBlocks": 4,
+  "officialReleaseSourceEqualsParentAfterCfgRemoval": true,
+  "fixtureModuleIsTestWindowsOnly": true,
+  "fixtureObserverSeconds": 5,
+  "originalCleanupBoundSeconds": 4,
+  "productionTimeoutExpressionUnchanged": true,
+  "ciTestCommandAndConcurrencyUnchanged": true,
+  "scope": "committed source/config guard checks, not Rust compilation or CI acceptance",
+  "localRustCompilationAccepted": false,
+  "originalCiFailureCleared": false
+}

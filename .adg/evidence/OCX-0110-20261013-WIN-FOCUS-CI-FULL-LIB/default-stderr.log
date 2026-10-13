@@ -1,0 +1,61 @@
+
+thread 'tokio-rt-worker' (38092) panicked at src\commands\sync.rs:1339:17:
+injected worker panic
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'tokio-rt-worker' (49832) panicked at src\commands\update.rs:717:30:
+isolated manager query panic
+
+thread 'commands::workspace::tests::local_documents_are_frozen' (50192) panicked at src\commands\workspace.rs:482:9:
+assertion failed: license.opened
+query fixture version/nonzero: elapsed=524.0775ms, result=Failure
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; file system operation failed: manage backups; invalid manifest
+query fixture version/success: elapsed=745.5951ms, result=Success
+query fixture metadata/nonzero: elapsed=715.6414ms, result=Failure
+query fixture metadata/overflow: elapsed=694.3605ms, result=Failure
+query fixture metadata/success: elapsed=718.5951ms, result=Success
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; invalid cleanup policy JSON
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; invalid cleanup policy JSON
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; invalid cleanup policy JSON
+Backup succeeded; automatic cleanup skipped or failed: file system operation failed: manage backups; cleanup candidate SHA-256 mismatch
+query fixture version/timeout: elapsed=2.0067385s, result=Timeout
+
+thread 'tokio-rt-worker' (12532) panicked at src\modules\ipc\service.rs:1185:34:
+injected terminal panic
+
+thread 'tokio-rt-worker' (38092) panicked at src\modules\ipc\service.rs:2651:38:
+isolated binding projection panic
+
+thread 'tokio-rt-worker' (36268) panicked at src\modules\ipc\service.rs:2651:38:
+isolated binding projection panic
+query fixture metadata/timeout: elapsed=2.0081472s, result=Timeout
+
+thread 'tokio-rt-worker' (18152) panicked at src\modules\ipc\service.rs:2104:37:
+injected backup panic
+
+thread 'tokio-rt-worker' (19244) panicked at src\modules\ipc\service.rs:2553:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (49832) panicked at src\modules\ipc\service.rs:2407:34:
+isolated CLI update panic
+
+thread 'tokio-rt-worker' (50036) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (38092) panicked at src\modules\ipc\service.rs:2553:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (38092) panicked at src\modules\ipc\service.rs:2553:38:
+isolated query panic
+
+thread 'tokio-rt-worker' (36268) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'tokio-rt-worker' (38092) panicked at src\modules\ipc\service.rs:1548:46:
+isolated lifecycle worker panic
+
+thread 'modules::sync::config::tests::config_accepts_legacy_encryption_field_and_rejects_tls_override' (47568) panicked at src\modules\sync\config.rs:398:9:
+assertion failed: validate_config(&config).is_ok()
+
+thread 'modules::sync::config::tests::legacy_encryption_field_is_read_and_not_written' (48568) panicked at src\modules\sync\config.rs:428:9:
+assertion failed: validate_config(&parsed).is_ok()
