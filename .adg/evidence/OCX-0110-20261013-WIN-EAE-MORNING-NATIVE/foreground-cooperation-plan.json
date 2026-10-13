@@ -1,0 +1,51 @@
+{
+  "timezone": "Asia/Shanghai",
+  "currentDate": "2026-10-13",
+  "userPreference": "必要时前台，不影响工作；提供时间节点方便安排",
+  "foregroundOnlyAfterHumanStartSignal": true,
+  "clockOrAutomaticGoalContinuationIsStartSignal": false,
+  "automaticFocusTaking": false,
+  "windows": [
+    {
+      "start": "2026-10-13T12:30:00+08:00",
+      "end": "2026-10-13T12:50:00+08:00",
+      "purpose": "cached update details, tree and native titlebar",
+      "requiresForeground": true,
+      "status": "proposed window; wait for human start signal",
+      "updateCheckInstallOrRestartPlanned": false
+    },
+    {
+      "start": "2026-10-13T22:50:00+08:00",
+      "end": "2026-10-13T23:10:00+08:00",
+      "purpose": "real stable/panel query eligibility after original due, retain foreground until actual query terminal",
+      "requiresForeground": true,
+      "status": "proposed window; wait for human start signal"
+    },
+    {
+      "start": "2026-10-13T23:10:00+08:00",
+      "end": "2026-10-13T23:30:00+08:00",
+      "purpose": "background evidence and terminal-cycle audit if actual outcome is available",
+      "requiresForeground": false,
+      "status": "planned review window, not a guaranteed cycle pass"
+    },
+    {
+      "start": "2026-10-14T00:15:00+08:00",
+      "end": "2026-10-14T00:35:00+08:00",
+      "purpose": "only if terminal query not observed and human can restore foreground",
+      "requiresForeground": true,
+      "status": "conditional proposed window; wait for human start signal"
+    }
+  ],
+  "originalDueBeijing": [
+    "2026-10-13T22:55:39+08:00",
+    "2026-10-13T22:55:40+08:00"
+  ],
+  "unchangedMonitorMaximumHours": 26,
+  "originalMonitorLatestEndBeijing": "2026-10-14T00:55:52.6406386+08:00",
+  "monitorExtendedOrRestarted": false,
+  "scheduledAutomationCreated": false,
+  "scriptsAuthorizedBySchedule": false,
+  "formalTaskRecovered": false,
+  "originalBudgetsAndFullGateScopePreserved": true,
+  "releaseAccepted": false
+}

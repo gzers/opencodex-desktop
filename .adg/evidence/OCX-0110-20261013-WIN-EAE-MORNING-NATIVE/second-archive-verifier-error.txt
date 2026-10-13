@@ -1,0 +1,9 @@
+Second verify-evidence.py execution:
+  line56 asserted len(actualUiSequenceBeforeForegroundPreference)==7
+  AssertionError
+
+The preserved morning-disposition.json sequence contained eight entries,
+including the final user foreground preference and cessation of UI input.
+Corrected the archive-only count to exactly eight. The disposition and all
+original capture/native artifacts remain unchanged.
+No product test, acceptance budget, foreground input or lifecycle was altered.

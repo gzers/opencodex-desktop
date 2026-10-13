@@ -1,0 +1,33 @@
+{
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "windowId": 1051698,
+  "actualUiSequenceBeforeForegroundPreference": [
+    "list_windows returned the original candidate HWND1051698",
+    "get_window and activate_window succeeded; actual BackupFiles target frame observed",
+    "archive the earlier successful target frame and AX; no additional screenshot capture for archive",
+    "fresh AX observation included version tab45 but that tab was above the scrolled viewport",
+    "click AX45 failed: point (970, -210) is outside window bounds { originX: 0, originY: 0, width: 1182, height: 790 }",
+    "reobserve, without another click; the frame showed a different foreground window, not the candidate, so it was not saved as product evidence",
+    "reactivate the returned original candidate HWND and observe the BackupFiles page again",
+    "user requested foreground only when needed; stop subsequent app input and activation"
+  ],
+  "versionTabClickAccepted": false,
+  "cachedUpdateDetailsOpened": false,
+  "updateChecksInstallOrRestartInvoked": false,
+  "nativeWindowRestoreEvidence": "00-native-window.json: actual PID/HWND, foreground true, DPI192, DWM attr2",
+  "initialRawFrameScope": "00-original-window.jpg is the initial successful target frame; metadata.capturedAtUtc is archive time, not the earlier actual capture time",
+  "nonTargetFrameArchived": false,
+  "outOfViewportAxClickIsProductFailure": false,
+  "uiBackupInventoryNotRefreshed": true,
+  "currentEntireBackupInventoryAcceptedFromOldUi": false,
+  "afterUserForegroundPreferenceFurtherInput": false,
+  "backgroundReadbackRequiresNoForeground": true,
+  "fullNativeGateAccepted": false,
+  "treeMatrixAccepted": false,
+  "updateDetailsAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realCycleAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}

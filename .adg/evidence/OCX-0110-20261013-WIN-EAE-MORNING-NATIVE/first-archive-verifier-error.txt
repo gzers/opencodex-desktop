@@ -1,0 +1,11 @@
+Initial verify-evidence.py execution:
+  line37 expected dialog["title"]
+  KeyError: 'title'
+
+Raw 00-before-input.json and01-background-readback.json both contained the
+invisible notification-history dialog with0x0 bounds. Its title was JavaScript
+undefined, so JSON.stringify omitted the key rather than emitting null.
+The verifier was corrected to require the observed omitted key, exact0x0
+geometry, no active focus, null update header/body/footer, and empty update
+notes/progress/version/result arrays. Neither native artifact was changed.
+No UI input, product invocation or cycle restart was used to repair this error.
