@@ -1,0 +1,32 @@
+{
+  "actions": [
+    {
+      "atUtc": "2026-10-13T14:59:18.029Z",
+      "action": "click settings",
+      "elementIndex": 33
+    },
+    {
+      "atUtc": "2026-10-13T14:59:45.372Z",
+      "action": "click version upgrade tab",
+      "elementIndex": 85
+    },
+    {
+      "atUtc": "2026-10-13T15:00:18.544Z",
+      "action": "open manager cached detail",
+      "elementIndex": 152
+    }
+  ],
+  "inputError": {
+    "attempt": "Tab from observed manager dialog",
+    "error": "failed to activate captured window",
+    "retryObservationError": "IGraphicsCaptureItemInterop.CreateForMonitor failed: Could not capture the given monitor. (0x80070057)",
+    "outcome": "input outcome unproved; no retry input after desktop disconnected"
+  },
+  "stopReason": "query session shows15119/session2 Disconnected at23:01:56 Beijing",
+  "source": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "windowHandle": 6685560,
+  "manualUpdateCheckIssued": false,
+  "installed": false,
+  "focusReturnRegressionAccepted": false,
+  "fullNativeGateAccepted": false
+}

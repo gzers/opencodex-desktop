@@ -1,0 +1,112 @@
+Window: "OpenCodeX Desktop", App: opencodex-desktop.exe.
+	0 窗口 OpenCodeX Desktop Secondary Actions: Raise
+		1 窗格
+			2 窗格 OpenCodeX Desktop
+				3 窗格 (disabled)
+				4 区域 OpenCodeX Desktop - Web 内容
+					5 区域
+						6 区域
+							7 区域
+								8 区域
+								9 区域
+									10 区域
+										11 区域
+											12 区域
+												13 区域
+												23 文档 OpenCodeX Desktop Value: http://tauri.localhost/#overview ID: RootWebArea
+													24 补充
+														25 图形 OpenCodeX logo
+														26 文本 OpenCodeX-Desktop
+														27 文本 Desktop Manager
+														28 导航
+															29 按钮 概览 Description: 概览
+															30 按钮 面板 Description: 面板
+															31 按钮 拓展 Description: 拓展
+															32 按钮 诊断 Description: 诊断
+															33 按钮 设置 Description: 设置
+													34 主要
+														35 章节标题
+															36 标题 概览
+															37 文本 完成启动前的环境准备，再继续运行操作。
+															38 组 主题
+																39 按钮 浅色 Description: 浅色
+																40 按钮 深色 Description: 深色
+																41 按钮 跟随系统 Description: 跟随系统
+															42 按钮 刷新状态 Description: 刷新状态
+															43 按钮 6 Description: 通知
+														44 按钮 (disabled) 待接入，环境准备中 Description: 当前运行状态；请先完成环境准备
+														45 文本 启动条件未满足 · 请按下方指引处理
+														46 标题 尚未接入 OpenCodex
+														47 文本 补全启动条件后，即可继续使用 OpenCodex。
+														48 文本 2 / 3 项通过
+														49 列表 环境检查结果
+															50 列表项目 01Node.js已发现
+																51 文本 Node.js
+															52 列表项目 02npm已发现
+																53 文本 npm
+															54 列表项目 03OpenCodex未发现
+																55 文本 OpenCodex
+														56 标题 接入 OpenCodex
+														57 文本 可以把官方包装进数据根内的私有前缀（联网安装，或导入官方离线包）；安装完成后由应用重新解析运行来源。
+														58 文本 官方 npm 命令（终端备选）
+														59 按钮 npm install -g @bitkyc08/opencodex 复制
+														60 按钮 安装 OpenCodex
+														61 按钮 导入离线包
+														62 按钮 重新检查
+														63 文本 安装仅写管理器数据目录；已有安装可在设置中指定来源。
+														64 按钮 完整指引 ›
+														65 文本 应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。
+								14 区域
+						15 区域
+						16 区域
+		17 标题栏 (settable, string) Value: OpenCodeX Desktop
+			18 菜单栏 系统 ID: MenuBar
+				19 菜单项目 系统
+			20 按钮 最小化
+			21 按钮 最大化
+			22 按钮 关闭
+
+Document text: ```
+￼
+OpenCodeX-Desktop
+Desktop Manager
+概览
+面板
+拓展
+诊断
+设置
+概览
+完成启动前的环境准备，再继续运行操作。
+浅色
+深色
+跟随系统
+刷新状态
+6
+￼
+待接入
+启动条件未满足 · 请按下方指引处理
+尚未接入 OpenCodex
+补全启动条件后，即可继续使用 OpenCodex。
+2 / 3 项通过
+01
+Node.js
+已发现
+02
+npm
+已发现
+03
+OpenCodex
+未发现
+接入 OpenCodex
+可以把官方包装进数据根内的私有前缀（联网安装，或导入官方离线包）；安装完成后由应用重新解析运行来源。
+官方 npm 命令（终端备选）
+npm install -g @bitkyc08/opencodex
+复制
+安装 OpenCodex
+导入离线包
+重新检查
+安装仅写管理器数据目录；已有安装可在设置中指定来源。
+完整指引 ›
+应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。
+￼
+```

@@ -1,0 +1,97 @@
+{
+  "atUtc": "2026-10-13T15:03:15.1267842Z",
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "applicationPid": 10904,
+  "supervisorPid": 32492,
+  "applicationExecSession": 42581,
+  "desktopCount": 1,
+  "actualHandleReadbacks": [
+    {
+      "pid": 10904,
+      "creationUtc": "2026-10-13T14:57:31.5757733Z",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\msi-readonly\\opencodex-desktop.exe",
+      "actualLiveHandle": true
+    },
+    {
+      "pid": 32492,
+      "creationUtc": "2026-10-13T14:57:29.7146553Z",
+      "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+      "actualLiveHandle": true
+    }
+  ],
+  "actualApplicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 10904,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\msi-readonly\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-13T14:57:31.5757733Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-13T15:03:05.6279551Z"
+  },
+  "ownedRootProcessSnapshot": [
+    {
+      "ProcessId": 10904,
+      "ParentProcessId": 32492,
+      "Name": "opencodex-desktop.exe",
+      "CreationDate": "2026-10-13T22:57:31.575773+08:00",
+      "ExecutablePath": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\msi-readonly\\opencodex-desktop.exe"
+    },
+    {
+      "ProcessId": 15380,
+      "ParentProcessId": 10904,
+      "Name": "msedgewebview2.exe",
+      "CreationDate": "2026-10-13T22:57:31.764275+08:00",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe"
+    },
+    {
+      "ProcessId": 1348,
+      "ParentProcessId": 15380,
+      "Name": "msedgewebview2.exe",
+      "CreationDate": "2026-10-13T22:57:31.834213+08:00",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe"
+    },
+    {
+      "ProcessId": 21072,
+      "ParentProcessId": 15380,
+      "Name": "msedgewebview2.exe",
+      "CreationDate": "2026-10-13T22:57:32.278931+08:00",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe"
+    },
+    {
+      "ProcessId": 45528,
+      "ParentProcessId": 15380,
+      "Name": "msedgewebview2.exe",
+      "CreationDate": "2026-10-13T22:57:32.278932+08:00",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe"
+    },
+    {
+      "ProcessId": 49672,
+      "ParentProcessId": 15380,
+      "Name": "msedgewebview2.exe",
+      "CreationDate": "2026-10-13T22:57:32.295478+08:00",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe"
+    },
+    {
+      "ProcessId": 41448,
+      "ParentProcessId": 15380,
+      "Name": "msedgewebview2.exe",
+      "CreationDate": "2026-10-13T22:57:32.373043+08:00",
+      "ExecutablePath": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\155.0.4283.45\\msedgewebview2.exe"
+    },
+    {
+      "ProcessId": 12216,
+      "ParentProcessId": 37212,
+      "Name": "pwsh.exe",
+      "CreationDate": "2026-10-13T23:03:14.248368+08:00",
+      "ExecutablePath": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe"
+    }
+  ],
+  "rawTransientProcessOrNetworkCountAccepted": false,
+  "nativeSourceAndExeHashMatched": true,
+  "dailyExeSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "foregroundStoppedAfterDisconnected": true,
+  "focusSwitchFixAccepted": false,
+  "fullNativeGateAccepted": false,
+  "releaseAccepted": false
+}
