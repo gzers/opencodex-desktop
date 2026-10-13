@@ -1216,3 +1216,7 @@ Windows文档b3eb4274已快进同步，正常窗口只读2/9/20与既有合同�
 旧04 CI38429545855完整success，五必需job成功、main-only build skipped；MacRust872passed/6ignored、Windows601passed/7ignored，均34组/0failed，ignored不计通过。新5a CI38431616359最后in_progress，不能沿用旧CI证明新工具。主main/eae与焦点be草稿未改变，未制作候选或自动合并/签名。两提交只改test/CI；现有be可供诊断，工具与实际制品身份分别记录。[坐标归属及CI证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/README.md)。
 
 Mac继续后台工作，无新原生性能样本，切原生平台前仍须协调Windows实例0。原性能failed、全部预算/门禁及原TASK revision2/in_progress/pending/空验收保持；FZ50脚本未获许可不执行，无真实迁移、日常替换、核心事实晋升、关闭证书或发布。
+
+### 2026-10-14 最新坐标归属工具完整 CI 通过
+
+feature/0.1.10-caption-diagnostics@5a36cda0 的 CI38431616359 已completed/success，五必需job success、main-only build skipped；CI实际运行16项工具合同，Ran16/OK。本次只改test/CI，旧进行中及红绿原件保留，终态另归档。未在be真机执行新API或点击，不制作/安装候选，不用CI替代还原或原macOS配对性能；原门禁/预算、performance failed及TASK空验收保持。[同SHA终态证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/CI-终态.md)。

@@ -1,0 +1,40 @@
+{
+  "recorded_at_utc": "2026-10-13T16:55:23.308430+00:00",
+  "run_id": 38431616359,
+  "head_sha": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "release-tools",
+      "conclusion": "success"
+    },
+    {
+      "name": "windows-smoke-evidence",
+      "conclusion": "success"
+    },
+    {
+      "name": "backend",
+      "conclusion": "success"
+    },
+    {
+      "name": "frontend",
+      "conclusion": "success"
+    },
+    {
+      "name": "backend-windows",
+      "conclusion": "success"
+    },
+    {
+      "name": "build",
+      "conclusion": "skipped"
+    }
+  ],
+  "portable_caption_contract_tests": 16,
+  "contract_excerpt_lines": 25,
+  "raw_log_external": "/private/tmp/ocx-0110-caption-point-20261014/ci-5a36-raw.log",
+  "raw_log_bytes": 884610,
+  "raw_log_sha256": "d2edcfb17053f1d77c3a31545af9df08727f24c8bab0cbf8b343a0f19314c882",
+  "native_target_probe_executed": false,
+  "new_device_acceptance": false,
+  "product_changes": false
+}

@@ -1,0 +1,44 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-CAPTION-POINT-CI-20261014",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-CAPTION-POINT-CI-20261014.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/CI-终态.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/ci-5a36-contract-excerpt.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/ci-5a36-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/ci-5a36-results.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/ci-terminal-manifest.json"
+  ],
+  "checks": [
+    {
+      "name": "local:caption-point-full-ci",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/ci-5a36-results.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/CI-终态.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "e19f541d56495acaf63c172532c951f8f7c4ebe5d545c861ce6e867ad97985ce",
+      "summary": "记录5a工具完整CI，真机还原和配对性能仍待验。"
+    }
+  ],
+  "completed_at": "2026-10-13T16:58:14.271858+00:00",
+  "summary": "5a36cda0完整CI及16项工具合同通过，仅后台回归，不解除真机、性能或整体门禁。",
+  "revision": 1,
+  "summary_digest": "073856f2b74447c3663032b7ddbf1651d6755f379c688374288aeb7a92dd3b42",
+  "content_digest": "71783b97e201d305ae1a949170804ff286fe833a594e9e761849f9cf4c40f408"
+}
