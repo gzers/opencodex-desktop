@@ -1,0 +1,112 @@
+{
+  "atUtc": "2026-10-13T17:01:03.830234+00:00",
+  "diagnosticSource": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03",
+  "candidateSource": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "probeBranchBase": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "probeBranchChangesProductRuntimeSinceMain": false,
+  "probeBranchContainsFocusFix": false,
+  "candidateSourceAcceptedAsDiagnosticSource": false,
+  "ciRequiredJobs": {
+    "release-tools": "success",
+    "windows-smoke-evidence": "success",
+    "backend": "success",
+    "frontend": "success",
+    "backend-windows": "success",
+    "build": "skipped"
+  },
+  "selectedCiOriginals": [
+    {
+      "artifactId": 11831361283,
+      "archivePath": "process-token.json",
+      "savedAs": "ci-selected-process-token.json",
+      "bytes": 2322,
+      "sha256": "ffd001241d165812109f21343f371d7ab3cfb0f2a7643da5d2d069b479d267e8"
+    },
+    {
+      "artifactId": 11831009311,
+      "archivePath": "windows-startup/cdp-diagnostics.json",
+      "savedAs": "ci-selected-windows-startup-cdp-diagnostics.json",
+      "bytes": 1745,
+      "sha256": "76c4b6184e644fcff940e100b9b53da62c3f0eaf466de186aa6e733faa5c4e4a"
+    },
+    {
+      "artifactId": 11831009311,
+      "archivePath": "windows-startup/startup-diagnostics.json",
+      "savedAs": "ci-selected-windows-startup-startup-diagnostics.json",
+      "bytes": 8893,
+      "sha256": "6651e66a5f76c933259b1298257daa0c00a35c1e5fe5ead45f441599f698631a"
+    },
+    {
+      "artifactId": 11831009311,
+      "archivePath": "windows-startup/startup.json",
+      "savedAs": "ci-selected-windows-startup-startup.json",
+      "bytes": 1434,
+      "sha256": "abb1f454b2bd0b757e24d3edaf56fc34b14bc8a0d834610f729b1f866b3a7e61"
+    },
+    {
+      "artifactId": 11831009311,
+      "archivePath": "windows-startup/webview.json",
+      "savedAs": "ci-selected-windows-startup-webview.json",
+      "bytes": 698,
+      "sha256": "7327fce7979a8bda22c224c89815430159cd421e005a75d3fc2bccedddfa6b99"
+    },
+    {
+      "artifactId": 11831009311,
+      "archivePath": "windows-backend/environment.json",
+      "savedAs": "ci-selected-windows-backend-environment.json",
+      "bytes": 282,
+      "sha256": "a48d784610efb6d957b1bccc095839421921bf9f46bc1102189e8d266371baed"
+    },
+    {
+      "artifactId": 11831009311,
+      "archivePath": "windows-backend/test-executable-sha256.json",
+      "savedAs": "ci-selected-windows-backend-test-executable-sha256.json",
+      "bytes": 255,
+      "sha256": "80f57ed1d41852eb070b9353df1a3ea12ce0dd6e92e7d977f0962d6f2cf7d311"
+    }
+  ],
+  "localPortableContracts": 16,
+  "captionPoints": 9,
+  "captionPointRootsMatchingTarget": 0,
+  "parentHitsByButton": {
+    "minimize": [
+      2,
+      2,
+      8
+    ],
+    "maximizeOrRestore": [
+      8,
+      9,
+      9
+    ],
+    "close": [
+      20,
+      20,
+      20
+    ]
+  },
+  "observationOnly": true,
+  "rootCauseIdentified": false,
+  "outsideTargetWindowIdsDisclosed": false,
+  "nextForegroundSequence": [
+    "Use a new human start signal and reconnect/lock guard; retain the single identified instance.",
+    "Select the actual main HWND and observe a fresh complete screenshot without assuming focus.",
+    "Maximize with one authorized native action; immediately reread identity/state and a complete screenshot.",
+    "Run the read-only probe while maximized; require WindowFromPoint/GA_ROOT ownership before clicking.",
+    "Use screenshot-verified physical coordinates for one restore click; observe maximized flag and bounds.",
+    "If not restored, preserve the actual point and before/after evidence before using system-menu recovery.",
+    "Then test minimize/restore, Snap, tray and exit in separate observed steps; no AX-only success inference."
+  ],
+  "remainingPrerequisites": {
+    "foregroundNative": "new human start signal and stable unlocked desktop",
+    "administratorAndDpi": "real elevated token and physical 100/125/150% display changes, foreground window",
+    "installationAndOfficial019": "verified installation isolation and real KnownFolder user profile; do not share daily MSI product registration",
+    "officialScripts": "FZ50 explicit permission for pinned third-party postinstall, still absent",
+    "newSourceAcceptance": "Mac fix commit, same-SHA CI and new candidate artifact; current EXE cannot prove future source",
+    "realCyclesAndBackoff": "final source and independently verified raw command/network observation; auto-check remains false",
+    "pairedPerformance": "final source, isolated official019 profile and controlled physical-host foreground window; original budgets unchanged"
+  },
+  "anyFullRequiredGatePromoted": false,
+  "taskClosed": false,
+  "releaseAuthorized": false
+}

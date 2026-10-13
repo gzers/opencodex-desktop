@@ -1,0 +1,29 @@
+[
+  {
+    "artifactId": 11831361283,
+    "attempt": "original",
+    "result": "archive-saved"
+  },
+  {
+    "artifactId": 11831009311,
+    "attempt": "original",
+    "result": "failed-before-second-archive-created",
+    "reason": "TLS unexpected EOF; verification not disabled"
+  },
+  {
+    "artifactId": 11831361283,
+    "attempt": "second-invocation",
+    "result": "existing-output-guard-stopped-before-network",
+    "correction": "First archive existed; the original TLS failure was on the second archive"
+  },
+  {
+    "artifactId": 11831361283,
+    "attempt": "recovery",
+    "result": "existing-archive-read-only-rehash"
+  },
+  {
+    "artifactId": 11831009311,
+    "attempt": "recovery",
+    "result": "HTTPS-response-opened"
+  }
+]

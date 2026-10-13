@@ -1205,7 +1205,7 @@ caption还原原件缺实际点击坐标与命中，尚不能判产品缺陷。�
 
 Windows 接续固定 be7395a 制品验收，Mac 协调源码修复；全局最多一个隔离原生实例，当前仅后台授权。PID10904/HWND6685560 只读身份与真实普通令牌复核，正常窗口 DPI192，按钮命中2/9/20。原测试最小化允许2/8，局部诊断仅期待8的差异另记纠正；不覆盖原件、不计产品失败或点击通过。caption还原仍待下一前台联合坐标复验，未定位根因。
 
-Windows 已取得 ae6cd08 同步的原TASK182并用治理provider独立校验，3878字节/SHA bc7965bc…保持，content/summary/baseline与既有回执一致；原缺失阻碍已解除。revision2、in_progress/pending、九项验收绑定、八项required_checks及历史performance failed不变。
+Windows 已取得 ae6cd08 同步的原TASK182并用治理provider独立校验，3878字节/SHA bc7965b4…保持，content/summary/baseline与既有回执一致；原缺失阻碍已解除。revision2、in_progress/pending、九项验收绑定、八项required_checks及历史performance failed不变。
 
 两批冻结证据12/13份清单校验通过。用户要求修改本线程目标；标准工具仍读paused，官方thread/goal/set被当前active writer拒绝。已启动有界后台等待器，等待本轮writer释放后正式写入并读回；当前冻结快照只证明waiting/live，不能宣称目标已恢复。没有绕锁、改数据库、清除/重建目标或标complete。[分工、原件与写入边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows分工与原TASK复核/README.md)。其余原门禁、预算、日常安装/真实数据保护保持，未关闭或发布。
 
@@ -1220,3 +1220,11 @@ Mac继续后台工作，无新原生性能样本，切原生平台前仍须协�
 ### 2026-10-14 最新坐标归属工具完整 CI 通过
 
 feature/0.1.10-caption-diagnostics@5a36cda0 的 CI38431616359 已completed/success，五必需job success、main-only build skipped；CI实际运行16项工具合同，Ran16/OK。本次只改test/CI，旧进行中及红绿原件保留，终态另归档。未在be真机执行新API或点击，不制作/安装候选，不用CI替代还原或原macOS配对性能；原门禁/预算、performance failed及TASK空验收保持。[同SHA终态证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/CI-终态.md)。
+
+### 2026-10-14 Windows 后台完成精确5a CI与坐标归属观察
+
+固定5a36cda工具的CI38431616359现completed/success，五必需job成功、main-only build skipped；两证据ZIP825/9218509字节的API摘要与实际SHA256、ZIP CRC核验一致，七份选定JSON原字节归档。第二包初次TLS EOF及已有包保护中断如实记录，只补缺失包，未关闭验证或执行包内文件。CI startup为any/elevated=true/type1，EXE不同于本机；不抵本机双令牌或安装候选。5a基于main/eae且不含be焦点修复，产品身份分别记录。
+
+00:50:34 Windows实际PID10904/HWND6685560及完整creation/EXE摘要保持，普通false/type3、正常窗口DPI192/foreground=false/DWM1。本机16项便携合同通过，九物理坐标父窗口命中按按钮为2/2/8、8/9/9、20/20/20；WindowFromPoint/GA_ROOT九点均不归目标窗口/PID，当前遮挡状态不证明真实点击送达，也不定位旧caption还原根因。没有输入、前台激活、实例切换或安装，日常与隔离保护摘要前后一致、本机仅一个隔离实例，auto=false。
+
+见[Windows坐标与精确CI](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows标题栏坐标与精确CI/README.md)。下一前台逐动作采完整帧、最大化后坐标归属/还原真实点击联合取证；其余双令牌/物理DPI、安装隔离与KnownFolder、脚本许可、新SHA制品、最终源退避/周期原始计数和官方019完整配对继续保留。原八项门禁/性能failed/预算不提升，IMP/TASK不关闭或发布。

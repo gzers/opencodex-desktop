@@ -1,0 +1,870 @@
+{
+  "atUtc": "2026-10-13T16:55:38.606445+00:00",
+  "runId": 38431616359,
+  "source": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03",
+  "artifacts": [
+    {
+      "id": 11831361283,
+      "name": "windows-process-token-evidence",
+      "source": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03",
+      "archiveBytes": 825,
+      "expectedSha256": "89ffa78f88fbd3532b24f1da8d41932a185eba9e8080c894569e855b63ed42e7",
+      "actualSha256": "89ffa78f88fbd3532b24f1da8d41932a185eba9e8080c894569e855b63ed42e7",
+      "digestMatches": true,
+      "zipCrcVerified": true,
+      "entries": [
+        {
+          "path": "process-token.json",
+          "bytes": 2322,
+          "crc32": 79201321
+        }
+      ],
+      "downloadedToIgnoredRuntime": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows-caption-point-5a36cda-20261014\\artifact-11831361283.zip",
+      "archiveContentsExecuted": false,
+      "installerOrNewCandidate": false
+    },
+    {
+      "id": 11831009311,
+      "name": "windows-startup-evidence",
+      "source": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03",
+      "archiveBytes": 9218509,
+      "expectedSha256": "56dd8f16ff4409e68d448f44565375dca6d8034353fefc2b2fd1c5f4bf889b72",
+      "actualSha256": "56dd8f16ff4409e68d448f44565375dca6d8034353fefc2b2fd1c5f4bf889b72",
+      "digestMatches": true,
+      "zipCrcVerified": true,
+      "entries": [
+        {
+          "path": "windows-startup/cdp-diagnostics.json",
+          "bytes": 1745,
+          "crc32": 781447802
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/BrowserMetrics/BrowserMetrics-6ACE60E2-F8C.pma",
+          "bytes": 1310720,
+          "crc32": 750930996
+        },
+        {
+          "path": "windows-startup/main-window.png",
+          "bytes": 531434,
+          "crc32": 1500174357
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/component_crx_cache/metadata.json",
+          "bytes": 13,
+          "crc32": 612329960
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Crashpad/metadata",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Crashpad/settings.dat",
+          "bytes": 288,
+          "crc32": 4224108984
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Crashpad/throttle_store.dat",
+          "bytes": 20,
+          "crc32": 2782607806
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/ClientCertificates/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/ClientCertificates/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Code Cache/js/718c6d910bd0048d_0",
+          "bytes": 256,
+          "crc32": 2118870546
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Code Cache/js/index",
+          "bytes": 24,
+          "crc32": 2908185253
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Code Cache/js/index-dir/the-real-index",
+          "bytes": 72,
+          "crc32": 3113548289
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Code Cache/wasm/index",
+          "bytes": 24,
+          "crc32": 2908185253
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Code Cache/wasm/index-dir/the-real-index",
+          "bytes": 48,
+          "crc32": 2350364783
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/commerce_subscription_db/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnGraphiteCache/data_0",
+          "bytes": 8192,
+          "crc32": 1957380027
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/commerce_subscription_db/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnGraphiteCache/data_1",
+          "bytes": 270336,
+          "crc32": 1828563889
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnGraphiteCache/data_2",
+          "bytes": 8192,
+          "crc32": 297426814
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnGraphiteCache/data_3",
+          "bytes": 8192,
+          "crc32": 3371186377
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnGraphiteCache/index",
+          "bytes": 262512,
+          "crc32": 2438019244
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnWebGPUCache/data_0",
+          "bytes": 8192,
+          "crc32": 1957380027
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnWebGPUCache/data_1",
+          "bytes": 270336,
+          "crc32": 1828563889
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnWebGPUCache/data_2",
+          "bytes": 8192,
+          "crc32": 297426814
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnWebGPUCache/data_3",
+          "bytes": 8192,
+          "crc32": 3371186377
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/DawnWebGPUCache/index",
+          "bytes": 262512,
+          "crc32": 863157823
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/declarative_performance_observer.db",
+          "bytes": 32768,
+          "crc32": 1705172353
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/declarative_performance_observer.db-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/discounts_db/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/discounts_db/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/discount_infos_db/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/discount_infos_db/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Rules/000003.log",
+          "bytes": 38,
+          "crc32": 1252612665
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Rules/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Rules/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Rules/LOG",
+          "bytes": 427,
+          "crc32": 1747601622
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Rules/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Scripts/000003.log",
+          "bytes": 38,
+          "crc32": 1252612665
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Scripts/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Scripts/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Scripts/LOG",
+          "bytes": 431,
+          "crc32": 3017695740
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension Scripts/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension State/000003.log",
+          "bytes": 114,
+          "crc32": 2637522374
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension State/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension State/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension State/LOG",
+          "bytes": 427,
+          "crc32": 3464979872
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Extension State/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Favicons",
+          "bytes": 20480,
+          "crc32": 3051779623
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Favicons-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/GPUCache/data_0",
+          "bytes": 45056,
+          "crc32": 1983342343
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/GPUCache/data_1",
+          "bytes": 270336,
+          "crc32": 2796318655
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/GPUCache/data_2",
+          "bytes": 8192,
+          "crc32": 297426814
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/GPUCache/data_3",
+          "bytes": 4202496,
+          "crc32": 986794426
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/GPUCache/index",
+          "bytes": 262512,
+          "crc32": 71956863
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/History",
+          "bytes": 212992,
+          "crc32": 3198453894
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/History-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Local Storage/leveldb/000003.log",
+          "bytes": 179,
+          "crc32": 2632999151
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Local Storage/leveldb/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Local Storage/leveldb/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Local Storage/leveldb/LOG",
+          "bytes": 439,
+          "crc32": 2140823902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Local Storage/leveldb/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Login Data",
+          "bytes": 43008,
+          "crc32": 3827505138
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Login Data For Account",
+          "bytes": 43008,
+          "crc32": 3827505138
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Login Data For Account-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Login Data-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Cookies",
+          "bytes": 20480,
+          "crc32": 2000404642
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Cookies-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Device Bound Sessions",
+          "bytes": 20480,
+          "crc32": 2493737106
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Device Bound Sessions-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Network Persistent State",
+          "bytes": 59,
+          "crc32": 4139640143
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/NetworkDataMigrated",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Reporting and NEL",
+          "bytes": 36864,
+          "crc32": 907437847
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Reporting and NEL-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/SCT Auditing Pending Reports",
+          "bytes": 2,
+          "crc32": 223132457
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Sdch Dictionaries",
+          "bytes": 40,
+          "crc32": 560534741
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Trust Tokens",
+          "bytes": 36864,
+          "crc32": 1010154216
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Network/Trust Tokens-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/parcel_tracking_db/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/parcel_tracking_db/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/PersistentOriginTrials/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/PersistentOriginTrials/LOG",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/README",
+          "bytes": 182,
+          "crc32": 1420057746
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Preferences",
+          "bytes": 7700,
+          "crc32": 2788153134
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Secure Preferences",
+          "bytes": 9856,
+          "crc32": 909520993
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/ServerCertificate",
+          "bytes": 20480,
+          "crc32": 3049590783
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/ServerCertificate-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Session Storage/000003.log",
+          "bytes": 30,
+          "crc32": 1142816834
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Session Storage/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Session Storage/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Session Storage/LOG",
+          "bytes": 427,
+          "crc32": 3000993554
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Session Storage/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Shared Dictionary/cache/index",
+          "bytes": 24,
+          "crc32": 2908185253
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Shared Dictionary/cache/index-dir/the-real-index",
+          "bytes": 48,
+          "crc32": 2012696972
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Shared Dictionary/db",
+          "bytes": 45056,
+          "crc32": 3800990603
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/000003.log",
+          "bytes": 19,
+          "crc32": 199039826
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Shared Dictionary/db-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/LOG",
+          "bytes": 427,
+          "crc32": 21350332
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/metadata/000003.log",
+          "bytes": 474,
+          "crc32": 663691016
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/metadata/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOG",
+          "bytes": 445,
+          "crc32": 3640424885
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/shared_proto_db/metadata/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Site Characteristics Database/000003.log",
+          "bytes": 40,
+          "crc32": 1700334012
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Site Characteristics Database/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Site Characteristics Database/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Site Characteristics Database/LOG",
+          "bytes": 455,
+          "crc32": 378252639
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Site Characteristics Database/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Sync Data/LevelDB/000003.log",
+          "bytes": 65,
+          "crc32": 2809324628
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Sync Data/LevelDB/CURRENT",
+          "bytes": 16,
+          "crc32": 2431283902
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOCK",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Sync Data/LevelDB/MANIFEST-000001",
+          "bytes": 41,
+          "crc32": 2068847776
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Vpn Tokens",
+          "bytes": 28672,
+          "crc32": 3974492307
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOG",
+          "bytes": 431,
+          "crc32": 1812987229
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Vpn Tokens-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Web Data",
+          "bytes": 235520,
+          "crc32": 3953295733
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Default/Web Data-journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.db",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.db-wal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/ZBRSUVJ7IMDXK2RUP4UNAHPCKJL4BWQB/cache.journal",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GrShaderCache/data_0",
+          "bytes": 8192,
+          "crc32": 1957380027
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GrShaderCache/data_1",
+          "bytes": 270336,
+          "crc32": 1828563889
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GrShaderCache/data_2",
+          "bytes": 8192,
+          "crc32": 297426814
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GrShaderCache/data_3",
+          "bytes": 8192,
+          "crc32": 3371186377
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/GrShaderCache/index",
+          "bytes": 262512,
+          "crc32": 895397794
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Last Version",
+          "bytes": 13,
+          "crc32": 1449998128
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/ShaderCache/data_0",
+          "bytes": 8192,
+          "crc32": 1957380027
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Local State",
+          "bytes": 4171,
+          "crc32": 170500839
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/ShaderCache/data_1",
+          "bytes": 270336,
+          "crc32": 1828563889
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/ShaderCache/data_2",
+          "bytes": 8192,
+          "crc32": 297426814
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/ShaderCache/data_3",
+          "bytes": 8192,
+          "crc32": 3371186377
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/ShaderCache/index",
+          "bytes": 262512,
+          "crc32": 1476251866
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/Variations",
+          "bytes": 86,
+          "crc32": 509332706
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/VariationsRuntimeSeedV2",
+          "bytes": 19,
+          "crc32": 454160679
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/VariationsSafeSeedV2",
+          "bytes": 19,
+          "crc32": 454160679
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/EBWebView/EBWebView/VariationsSeedV2",
+          "bytes": 11,
+          "crc32": 591076805
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/logs/app.log",
+          "bytes": 252,
+          "crc32": 3567256364
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/app.lock",
+          "bytes": 40,
+          "crc32": 3646905351
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/data-root.json",
+          "bytes": 30,
+          "crc32": 709257299
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/event-scope.json",
+          "bytes": 325,
+          "crc32": 1661630458
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/event-scope.lock",
+          "bytes": 0,
+          "crc32": 0
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/notifications.json",
+          "bytes": 666,
+          "crc32": 1817295240
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/runtime.json",
+          "bytes": 153,
+          "crc32": 3390961812
+        },
+        {
+          "path": "windows-startup/sandbox-0cc866e3dc80430da00ae25c6e9a6695/manager-state/structure.lock",
+          "bytes": 6,
+          "crc32": 3939682449
+        },
+        {
+          "path": "windows-startup/startup-diagnostics.json",
+          "bytes": 8893,
+          "crc32": 1682269682
+        },
+        {
+          "path": "windows-startup/startup-stderr.log",
+          "bytes": 2,
+          "crc32": 346195372
+        },
+        {
+          "path": "windows-startup/startup-stdout.log",
+          "bytes": 2,
+          "crc32": 346195372
+        },
+        {
+          "path": "windows-startup/startup.json",
+          "bytes": 1434,
+          "crc32": 1683834816
+        },
+        {
+          "path": "windows-startup/webview.json",
+          "bytes": 698,
+          "crc32": 1634552530
+        },
+        {
+          "path": "windows-backend/cargo-metadata.json",
+          "bytes": 2815810,
+          "crc32": 945136739
+        },
+        {
+          "path": "windows-backend/cargo-tree.txt",
+          "bytes": 91639,
+          "crc32": 3408194214
+        },
+        {
+          "path": "windows-backend/environment.json",
+          "bytes": 282,
+          "crc32": 317753035
+        },
+        {
+          "path": "windows-backend/opencodex_desktop_lib-713299640ffef8db.exe",
+          "bytes": 25774080,
+          "crc32": 2479401654
+        },
+        {
+          "path": "windows-backend/test-executable-dependents.txt",
+          "bytes": 1017,
+          "crc32": 1182924086
+        },
+        {
+          "path": "windows-backend/test-executable-headers.txt",
+          "bytes": 6014,
+          "crc32": 1430863336
+        },
+        {
+          "path": "windows-backend/test-executable-imports.txt",
+          "bytes": 22541,
+          "crc32": 3116532526
+        },
+        {
+          "path": "windows-backend/test-executable-manifest.txt",
+          "bytes": 96,
+          "crc32": 2752526338
+        },
+        {
+          "path": "windows-backend/test-executable-sha256.json",
+          "bytes": 255,
+          "crc32": 2312675172
+        },
+        {
+          "path": "windows-backend/test-executable.manifest.xml",
+          "bytes": 680,
+          "crc32": 1486808767
+        },
+        {
+          "path": "windows-backend/webview2-registry.json",
+          "bytes": 298,
+          "crc32": 1975420036
+        },
+        {
+          "path": "windows-backend/webview2-runtime-files.txt",
+          "bytes": 113,
+          "crc32": 880158535
+        }
+      ],
+      "downloadedToIgnoredRuntime": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows-caption-point-5a36cda-20261014\\artifact-11831009311.zip",
+      "archiveContentsExecuted": false,
+      "installerOrNewCandidate": false
+    }
+  ],
+  "authorizationHeaderForwardedToStorageHost": false,
+  "productInstallerAcceptance": false,
+  "newNativeInstanceStarted": false
+}
