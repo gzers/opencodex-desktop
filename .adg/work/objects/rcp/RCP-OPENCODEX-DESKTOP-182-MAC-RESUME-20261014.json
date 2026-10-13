@@ -1,0 +1,43 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-MAC-RESUME-20261014",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-MAC-RESUME-20261014.json",
+    ".adg/work/objects/task/.gitattributes",
+    ".adg/work/objects/task/TASK-OPENCODEX-DESKTOP-182.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac接续与原TASK同步/README.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac接续与原TASK同步/task-provenance.json"
+  ],
+  "checks": [
+    {
+      "name": "local:original-task-provenance",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac接续与原TASK同步/task-provenance.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac接续与原TASK同步/README.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "d5cf69c6f31d69e80dfc8088435199d05e428641ad6d4fbc25b04de45897ec6e",
+      "summary": "记录原TASK原件同步与双平台执行分工；性能和整体门禁未闭合。"
+    }
+  ],
+  "completed_at": "2026-10-13T16:08:50.100974+00:00",
+  "summary": "原TASK182无损同步，Mac后台审阅和诊断接续；原性能failed及八项门禁保留，无发布/关闭。",
+  "revision": 1,
+  "summary_digest": "4f7fdd6f29d15bf5a13542bfcdccb2441990090fb62b300a18b0a78ae6530c87",
+  "content_digest": "d798a8202b9858b0e22d3b8594307772458a08a409bf668607e777137a3a5bd5"
+}

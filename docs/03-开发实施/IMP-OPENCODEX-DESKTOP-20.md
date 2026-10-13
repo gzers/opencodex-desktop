@@ -1182,3 +1182,11 @@ PR #1为main/eae8532←feature/be7395a的5文件代码提案，open/draft、未�
 见[焦点真机复验与标题栏局部结果](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261013-Windows焦点真机复验与标题栏局部结果/README.md)。48份字节冻结重验；截图JPEG字节误存png名及13×13辅助帧明确标识，原件不改/不重跑。首末四项数据字节/成功调度/auto=false及日常摘要、同两真实句柄保持。焦点子集接受不抵完整门禁；原CI/性能failed、TASK脚本环境、全更新备份树表事件/安装/配对预算/真实周期仍开放，PR草稿main未集成，IMP in_progress，无正式RCP/证书，不降低门禁、不关闭或发布。
 
 23:37:31 PR #1标题移除已完成焦点子集的“待Windows原生复验”括注，正文引用5dee74b实际证据与caption等保留范围；只写title/body，head/base及open/draft/merged=false/无auto_merge保持，原API历史不改。`.adg/evidence/OCX-0110-20261013-WIN-FOCUS-PR-NATIVE-WRITEBACK/`保留前后读回和原文，不请求合并、关闭或发布，原完整门禁与预算仍开放。
+
+### 2026-10-14 Mac 后台接续与原 TASK 同步
+
+远端 main@eae85322、feature/0.1.10-update-center-focus@be7395a、docs/governance-main@6bd9547c 已核验，main / 文档工作区快进同步，既有未提交文件摘要和删除状态保留。PR #1 仍 open / draft、未合并；焦点修复尚未进入 main。
+
+Mac 找到本地原 TASK-182：3878 字节 / SHA256 bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93，2026-10-10 创建 / 修改，内容校验通过且与既有回执的 content / summary / baseline 绑定一致。因 .adg/work 被忽略，此前未 Git 跟踪；本轮按文档归属同步原件并加单文件 -text，未依据回执重建 / 修改 TASK。revision2、in_progress / pending、八项 required_checks 及空验收保持。[来源与分工记录](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Mac接续与原TASK同步/README.md)。
+
+用户重新授权目标执行：Mac 源码审阅 / 定位 / 修复与后台回归，Windows 固定 SHA 真机验收。Windows be7395a / PID10904 为交接快照；Mac 暂不启动桌面应用或原生性能测试，切换原生平台须先协调关闭 Windows 实例并确认 0。先查 caption 还原与既有 macOS 同机配对失败，保留原始失败和原预算；FZ50 脚本未获许可不执行。不得以旧制品证明新源码，不自动合并 PR、签名、发布、晋升稳定通道或生成完成证书。

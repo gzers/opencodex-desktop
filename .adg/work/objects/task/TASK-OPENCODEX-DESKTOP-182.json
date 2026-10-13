@@ -1,0 +1,105 @@
+{
+  "acceptance_bindings": [
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-02",
+      "criterion_digest": "e9a3df988933d604a30de37b2582c60bcaa4c9d7866b670c881ad3707d8d5b70",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-06",
+      "criterion_digest": "ea45873d5eddca4eba871ad2585eba59d188acd3122c4d29d7ffa7e1bd84671c",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-07",
+      "criterion_digest": "bc4da835bf759e029cb2b6d70178048049b0493f6038f7149f2375d15d9e7a27",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-08",
+      "criterion_digest": "fe64a7bbacbce24982db4f6f7988d5929c10c777a4f41474a07b66c955b7f707",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-09",
+      "criterion_digest": "fd8886c9b60f0f5be5848c439ead0381ff0c1ca01f4be784f040d789f48d9fed",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-11",
+      "criterion_digest": "6deb2ce9ff4e43ff3cd18203b115bd4e9e5e325981e0ae530c2013ed255c7f52",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-15",
+      "criterion_digest": "ade6af10fb576c99e1e75f337dd898bd670218729b2c36f92139fac180ba939f",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-16",
+      "criterion_digest": "299314a431a978ac2d5bf942cd687cb56634bab0e5b2676a533f514da917e057",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    },
+    {
+      "acceptance_id": "AC-OPENCODEX-DESKTOP-17",
+      "criterion_digest": "9b2d3e6d983ad81e71e9150be57eaf486247a860f647f49379c1ce892429552b",
+      "demand_id": "DMD-OPENCODEX-DESKTOP-MANAGER"
+    }
+  ],
+  "acceptance_ids": [
+    "AC-OPENCODEX-DESKTOP-02",
+    "AC-OPENCODEX-DESKTOP-06",
+    "AC-OPENCODEX-DESKTOP-07",
+    "AC-OPENCODEX-DESKTOP-08",
+    "AC-OPENCODEX-DESKTOP-09",
+    "AC-OPENCODEX-DESKTOP-11",
+    "AC-OPENCODEX-DESKTOP-15",
+    "AC-OPENCODEX-DESKTOP-16",
+    "AC-OPENCODEX-DESKTOP-17"
+  ],
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "certificate_digest": null,
+  "content_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "demand_ids": [
+    "DMD-OPENCODEX-DESKTOP-MANAGER"
+  ],
+  "fact_writeback": {
+    "mode": "required",
+    "targets": [
+      {
+        "before_digest": "fc1552671b63137a85069c084963f8e12c418772ee1be0ec426287d05c853122",
+        "id": "imp-20",
+        "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+      }
+    ]
+  },
+  "id": "TASK-OPENCODEX-DESKTOP-182",
+  "implementation_id": "IMP-OPENCODEX-DESKTOP-20",
+  "imported_receipt_digest": null,
+  "kind": "TASK",
+  "owner": "Ezio",
+  "required_checks": [
+    "review:backup-tree-0110",
+    "review:event-coverage-0110",
+    "review:installer-0110",
+    "review:native-0110",
+    "review:scheduler-performance-0110",
+    "review:scope-0110",
+    "review:storage-0110",
+    "review:updates-0110"
+  ],
+  "result": "pending",
+  "revision": 2,
+  "state": "in_progress",
+  "summary": "按 IMP-20 实施 W1–W6，代码 feature/0.1.10-maintenance、文档 docs/governance-main；真实用户迁移及公开发布另确认。",
+  "summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "title": "0.1.10 运行维护实施与验收",
+  "write_scope": [
+    ".adg/work/**",
+    ".github/**",
+    "apps/desktop/**",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/**",
+    "test/**"
+  ]
+}
