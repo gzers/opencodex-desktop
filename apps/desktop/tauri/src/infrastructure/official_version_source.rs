@@ -131,13 +131,31 @@ impl OfficialVersionSource for OfficialCliVersionSource {
             .enable_all()
             .build()
             .map_err(|_| OfficialVersionError::Unreachable)?;
+        #[cfg(all(test, windows))]
+        eprintln!(
+            "version probe fixture={} phase=runtime-ready elapsed={:?}",
+            self.working_directory.display(),
+            started.elapsed()
+        );
         runtime.block_on(async {
             let child = command
                 .spawn()
                 .map_err(|_| OfficialVersionError::Unreachable)?;
+            #[cfg(all(test, windows))]
+            eprintln!(
+                "version probe fixture={} phase=spawned elapsed={:?}",
+                self.working_directory.display(),
+                started.elapsed()
+            );
             #[cfg(windows)]
             job.assign_and_resume(&child)
                 .map_err(|_| OfficialVersionError::Unreachable)?;
+            #[cfg(all(test, windows))]
+            eprintln!(
+                "version probe fixture={} phase=assigned-and-resumed elapsed={:?}",
+                self.working_directory.display(),
+                started.elapsed()
+            );
             let output = tokio::time::timeout(
                 crate::modules::about::official_version_timeout().saturating_sub(started.elapsed()),
                 child.wait_with_output(),
@@ -149,6 +167,12 @@ impl OfficialVersionSource for OfficialCliVersionSource {
             #[cfg(windows)]
             job.terminate()
                 .map_err(|_| OfficialVersionError::Unreachable)?;
+            #[cfg(all(test, windows))]
+            eprintln!(
+                "version probe fixture={} phase=waited-and-terminated elapsed={:?}",
+                self.working_directory.display(),
+                started.elapsed()
+            );
             let output = output
                 .map_err(|_| OfficialVersionError::Timeout)?
                 .map_err(|_| OfficialVersionError::Unreachable)?;

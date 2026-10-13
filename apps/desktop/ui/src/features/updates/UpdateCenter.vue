@@ -163,6 +163,17 @@ function onKeydown(event: KeyboardEvent) {
   }
 }
 watch(() => props.target, target => { selected.value = target })
+watch(selected, async () => {
+  const label = dialog.value?.contains(document.activeElement)
+    ? document.activeElement?.getAttribute('aria-label')
+    : null
+  await nextTick()
+  if (!props.open || !dialog.value || dialog.value.contains(document.activeElement)) return
+  // Returning to all updates removes its focused back button. Keep modal focus
+  // inside, preserving a labelled control if the render replaced that control.
+  const replacement = label ? focusables().find(element => element.getAttribute('aria-label') === label) : null
+  ;(replacement ?? dialog.value).focus()
+})
 watch(() => props.open, async open => {
   if (open) {
     selected.value = props.target

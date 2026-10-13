@@ -174,7 +174,11 @@ pub(crate) fn process_case(
         while !child_pid_file.is_file() {
             assert!(
                 std::time::Instant::now() < ready_deadline,
-                "fixture descendant did not start"
+                "fixture descendant did not start: root={}, parent-pid={}, child-pid={}, ownership-ready={}",
+                observer_root.display(),
+                observer_root.join("parent-pid").is_file(),
+                child_pid_file.is_file(),
+                observer_root.join("ownership-ready").is_file()
             );
             std::thread::sleep(std::time::Duration::from_millis(5));
         }
