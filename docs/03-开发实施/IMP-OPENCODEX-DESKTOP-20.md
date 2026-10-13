@@ -1180,3 +1180,5 @@ PR #1为main/eae8532←feature/be7395a的5文件代码提案，open/draft、未�
 普通DPI192/200%重连接后实际DWMattr2/foreground true、最大化true通过；caption还原click窗口仍最大化/边界不变，原因未隔离不计通过。AltSpace实际系统菜单选还原再Return，正常边界恢复/非最小化/attr2保持，仅计菜单还原，不清中午旧eae异常。Snap/托盘/退出/管理员/100125150物理矩阵继续待验。
 
 见[焦点真机复验与标题栏局部结果](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261013-Windows焦点真机复验与标题栏局部结果/README.md)。48份字节冻结重验；截图JPEG字节误存png名及13×13辅助帧明确标识，原件不改/不重跑。首末四项数据字节/成功调度/auto=false及日常摘要、同两真实句柄保持。焦点子集接受不抵完整门禁；原CI/性能failed、TASK脚本环境、全更新备份树表事件/安装/配对预算/真实周期仍开放，PR草稿main未集成，IMP in_progress，无正式RCP/证书，不降低门禁、不关闭或发布。
+
+23:37:31 PR #1标题移除已完成焦点子集的“待Windows原生复验”括注，正文引用5dee74b实际证据与caption等保留范围；只写title/body，head/base及open/draft/merged=false/无auto_merge保持，原API历史不改。`.adg/evidence/OCX-0110-20261013-WIN-FOCUS-PR-NATIVE-WRITEBACK/`保留前后读回和原文，不请求合并、关闭或发布，原完整门禁与预算仍开放。

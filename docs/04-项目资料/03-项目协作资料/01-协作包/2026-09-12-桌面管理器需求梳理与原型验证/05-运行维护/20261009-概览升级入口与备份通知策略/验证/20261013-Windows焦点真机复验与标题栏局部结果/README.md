@@ -36,3 +36,5 @@ be7395a候选的原生焦点回归子集已通过：管理器和面板详情中�
 首末偏好、根绑定、备份策略、成功schedule四项字节完全相同；auto=false继续保持，manager/panel成功/下一截止及beta分区不变。应用/监督器真实保留句柄、创建时间和普通令牌、全机唯一桌面及日常EXE SHA43e06bc3…保持。没有为焦点取证生成新备份、执行包脚本、改root/权限、重启周期或改时钟。
 
 PR #1焦点原生子集现在有实际证据，但仍保持草稿/main未集成。旧CI根因未隔离、原TASK182、FZ50显式脚本许可及独立测试环境/官方0.1.9 Profile仍缺；全更新/备份/树表/事件、安装数据保留、完整真实周期/原始计数、30min/beta6h、同机配对原预算与历史性能failed继续开放。IMP in_progress，无正式RCP/关闭证书，不降低门禁、不关闭或发布。
+
+23:37:31仅更新PR #1标题/正文，标题为“fix(updates): 切换详情视图后保留弹窗焦点”，移除已不准确的“待Windows原生复验”括注；正文引用本轮5dee74b证据并说明caption/完整门禁待验。head/be7395a、base/eae和open/draft状态保持，merged=false/auto_merge=null，没有请求ready/合并或发布。前后API原件及正文归`.adg/evidence/OCX-0110-20261013-WIN-FOCUS-PR-NATIVE-WRITEBACK/`；旧草稿标题记录保持历史含义。
