@@ -1,0 +1,79 @@
+{
+  "scope": "in-memory transition-contract tests only; no native state, time, response or process injection",
+  "result": "passed",
+  "cases": [
+    {
+      "name": "synthetic-complete-prerequisites-remain-review-only",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "running-monitor",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "interrupted-monitor",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "incomplete-successes",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "cleanup-absent",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "cleanup-boolean-is-not-enough",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "disk-not-restored",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "supervisor-still-running",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "original-handle-still-live",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "query-denial-is-not-absent-process",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "another-desktop-running",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "wrong-native-source",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "wrong-cleanup-owner",
+      "passed": true,
+      "nativeEvidence": false
+    },
+    {
+      "name": "monitor-gap-needs-review",
+      "passed": true,
+      "nativeEvidence": false
+    }
+  ],
+  "nativeCycleAccepted": false,
+  "foregroundAuthorityGranted": false,
+  "processTransitionExecuted": false
+}

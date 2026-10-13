@@ -1,0 +1,38 @@
+{
+  "status": "pending_original_deadlines",
+  "sourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "applicationPid": 37276,
+  "observationsAudited": 193,
+  "targets": {
+    "manager-stable": {
+      "observedNextPersistedSuccess": false,
+      "firstSuccessObservationIndex": null,
+      "strictElapsedAtSuccessObservationMs": null,
+      "candidateNextDeadlineEpoch": null
+    },
+    "panel-latest": {
+      "observedNextPersistedSuccess": false,
+      "firstSuccessObservationIndex": null,
+      "strictElapsedAtSuccessObservationMs": null,
+      "candidateNextDeadlineEpoch": null
+    }
+  },
+  "observedElapsedSpanMs": 57707890.8787,
+  "lastObservedAtUtc": "2026-10-13T06:57:44.1793919Z",
+  "lastForeground": false,
+  "limits": [
+    "Elapsed requirement is checked at the success observation; exact earliest query-start elapsed time is not instrumented.",
+    "Persisted success plus cached native state is evidence for a recorded transition, not proof of automatic trigger or raw request counts.",
+    "This tool requires separate owner session terminal/cleanup, actual foreground outcome and human scope review.",
+    "Whole beta6h, sleep/resume/cross-startup/clock, performance and original TASK required checks remain independent gates."
+  ],
+  "rawNetworkOrQueryCountAccepted": false,
+  "earliestQueryStartElapsedProven": false,
+  "automaticTriggerProven": false,
+  "originalTaskRequiredChecksRecovered": false,
+  "realFullCycleAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "fullNativeGateAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}

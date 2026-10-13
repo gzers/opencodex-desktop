@@ -1,0 +1,69 @@
+{
+  "status": "pending_original_owners_or_zero_instance",
+  "blockingConditions": [
+    "original stable/panel persisted next successes remain unproved",
+    "original monitor has no reviewed successful terminal decision and finished timestamp",
+    "original monitor cleanup has not restored its initial update preferences",
+    "original native cleanup receipt is absent",
+    "actual isolated disk update preferences do not match the original pair",
+    "original application supervisor has not completed its own cleanup",
+    "original process 37276 is still live",
+    "original process 24300 is still live",
+    "original process 3920 is still live",
+    "independent whole-host desktop-process count is not zero"
+  ],
+  "currentLifecycleSource": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "candidateSource": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "automaticProcessTransitionAllowed": false,
+  "foregroundAuthorityGranted": false,
+  "ownerToolTerminalResultsStillNeedReview": true,
+  "localCandidateIdentityMustBeRecheckedImmediatelyBeforeStart": true,
+  "candidateNativeSourceMatchedByThisOldCycle": false,
+  "rawNetworkOrQueryCountAccepted": false,
+  "earliestQueryStartElapsedProven": false,
+  "automaticTriggerProven": false,
+  "originalTaskRequiredChecksRecovered": false,
+  "realFullCycleAccepted": false,
+  "betaCycleAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "fullNativeGateAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false,
+  "auditAtUtc": "2026-10-13T06:53:57.603606+00:00",
+  "observationsAudited": 192,
+  "actualOriginalProcessHandles": [
+    {
+      "pid": 37276,
+      "creationFileTime100ns": 134362903920088010,
+      "exactCreationMatched": true,
+      "actualLiveHandle": true
+    },
+    {
+      "pid": 24300,
+      "creationFileTime100ns": 134362903904430287,
+      "exactCreationMatched": true,
+      "actualLiveHandle": true
+    },
+    {
+      "pid": 3920,
+      "creationFileTime100ns": 134362905521278297,
+      "exactCreationMatched": true,
+      "actualLiveHandle": true
+    }
+  ],
+  "independentWholeHostDesktopInventory": {
+    "count": 1,
+    "items": [
+      {
+        "ProcessId": 37276,
+        "CreationDate": "2026-10-12T22:53:12.008801+08:00",
+        "ExecutablePath": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidateeae\\opencodex-desktop.exe"
+      }
+    ]
+  },
+  "monitorStatus": "observing-real-deadlines",
+  "monitorFinishedAtUtc": null,
+  "supervisorStatus": "running",
+  "supervisorFinishedAtUtc": null,
+  "scope": "read-only prerequisite audit; no stop request, command invocation, focus, timers, routing or app start"
+}

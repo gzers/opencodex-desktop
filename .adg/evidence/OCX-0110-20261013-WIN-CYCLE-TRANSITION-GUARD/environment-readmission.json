@@ -1,0 +1,29 @@
+{
+  "atUtc": "2026-10-13T06:56:44.1811914Z",
+  "mode": "read-only",
+  "hyperVModuleAvailable": true,
+  "getVmSucceeded": false,
+  "getVmError": "你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。",
+  "getVmRows": [],
+  "cimComputerSystems": [
+    {
+      "ElementName": "EZIO-MINI",
+      "EnabledState": 2,
+      "Caption": "宿主计算机系统",
+      "Name": "EZIO-MINI"
+    }
+  ],
+  "scope": "Get-VM denied under current ordinary token; CIM returned the host only. This does not prove no VM exists or that installation isolation is ready.",
+  "proposedTestAccount": "ocx0110_accept",
+  "proposedTestAccountExists": false,
+  "proposedTestRoot": "D:\\OpenCodex-Acceptance\\0.1.10-20261013",
+  "proposedTestRootExists": false,
+  "testProfileOrAccountCreated": false,
+  "vmCreatedOrStarted": false,
+  "permissionsChanged": false,
+  "authenticationUiAutomated": false,
+  "safeInstallerEnvironmentAdmitted": false,
+  "official019ProfileIsolationAdmitted": false,
+  "pairedPerformanceAccepted": false,
+  "releaseAccepted": false
+}
