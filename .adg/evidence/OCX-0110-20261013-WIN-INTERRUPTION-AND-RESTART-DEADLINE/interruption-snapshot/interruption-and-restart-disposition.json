@@ -1,0 +1,79 @@
+{
+  "observedAtUtc": "2026-10-13T08:05:15.688215+00:00",
+  "status": "old-owner-lifecycle-unavailable-before-original-deadlines",
+  "originalSourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "originalApplicationPid": 37276,
+  "originalObservationsPreserved": 201,
+  "lastActualNativeObservationUtc": "2026-10-13T07:37:48.380Z",
+  "lastRecordedOwnerHandleCheckUtc": "2026-10-13T07:39:58.6399260Z",
+  "exactExitTimeKnown": false,
+  "productCrashCauseProven": false,
+  "staleRunningStatusIsLiveProof": false,
+  "oldContinuousLifecycleCompleted": false,
+  "ownerCleanupReceiptExists": false,
+  "recordedStopRequestExists": false,
+  "originalPersistentDeadlinePairs": {
+    "manager-stable": {
+      "lastSuccessEpoch": 1791816939,
+      "nextDueEpoch": 1791903339,
+      "realIntervalSeconds": 86400
+    },
+    "panel-latest": {
+      "lastSuccessEpoch": 1791816940,
+      "nextDueEpoch": 1791903340,
+      "realIntervalSeconds": 86400
+    }
+  },
+  "deadlineStateByteUnchanged": true,
+  "protectedDataHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20"
+  },
+  "dailyExecutableSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "candidateSourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "candidateExecutable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\msi-readonly\\opencodex-desktop.exe",
+  "candidateExecutableSha256": "3a26098e813ddd56070a0092cbcb640473cb73e626aee45198c4b335ec2d8bd1",
+  "scheduleSourceBlobWitnesses": [
+    {
+      "path": "apps/desktop/ui/src/features/updates/scheduler.ts",
+      "oldSourceBlob": "a754c2933535860b6d21e298d4f319e6db731900",
+      "candidateBlob": "a754c2933535860b6d21e298d4f319e6db731900",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/update_schedule.rs",
+      "oldSourceBlob": "8d26791e8a8f95d18d513a6611e60dafd4fb06d4",
+      "candidateBlob": "8d26791e8a8f95d18d513a6611e60dafd4fb06d4",
+      "unchanged": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/update/schedule.rs",
+      "oldSourceBlob": "089d879ba2566fc89b2baaa510d61e41e7c7d30f",
+      "candidateBlob": "089d879ba2566fc89b2baaa510d61e41e7c7d30f",
+      "unchanged": true
+    }
+  ],
+  "crossStartupRealDeadlineMayBeEvaluatedFromUnchangedPersistentState": true,
+  "continuousOldProcessObservationMayBeClaimed": false,
+  "candidateNativeBehaviorProvenByOldRecords": false,
+  "nextStartupMustPreserveOriginalSuccessAndDeadlineWithoutManualCheck": true,
+  "restartEvidenceMustIdentifyNewProcessAndSourceSeparately": true,
+  "actualAutomaticTerminalQueryStillRequired": true,
+  "rawNoDuplicateNetworkOrQueryCountsProven": false,
+  "remainingHumanTriggeredForegroundWindowBeijing": [
+    "2026-10-13T22:50:00+08:00",
+    "2026-10-13T23:10:00+08:00"
+  ],
+  "currentTurnForegroundInputIssued": false,
+  "candidateStarted": false,
+  "clocksOrTimersChanged": false,
+  "originalTaskRecovered": false,
+  "formalTaskReceipt": false,
+  "mainIntegrated": false,
+  "realFullCyclesAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "fullNativeGateAccepted": false,
+  "releaseAccepted": false
+}
