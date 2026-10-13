@@ -1,0 +1,93 @@
+{
+  "atUtc": "2026-10-13T16:21:30.253942+00:00",
+  "sourceDocsCommit": "ae6cd0801965236093c9b42c4c24a07365405ac1",
+  "taskPath": ".adg\\work\\objects\\task\\TASK-OPENCODEX-DESKTOP-182.json",
+  "taskRawSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "taskBytes": 3878,
+  "taskRevision": 2,
+  "taskState": "in_progress",
+  "taskResult": "pending",
+  "taskContentDigest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "taskSummaryDigest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baselineDigest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "requiredChecks": [
+    "review:backup-tree-0110",
+    "review:event-coverage-0110",
+    "review:installer-0110",
+    "review:native-0110",
+    "review:scheduler-performance-0110",
+    "review:scope-0110",
+    "review:storage-0110",
+    "review:updates-0110"
+  ],
+  "acceptanceBindings": 9,
+  "providerValidation": "passed",
+  "providerRoot": "C:\\Users\\15119\\.codex\\skills\\project-governance",
+  "providerFunction": "scripts/lib/runtime/kernel.py::validate_object",
+  "providerSourceSha256": "50fa34d74a4bac7cb722d2e688cf5284496939adb041e85a7bedcc017695a0ad",
+  "sameBytesAsTrackedMacSyncCommit": true,
+  "matchedExistingReceipts": [
+    {
+      "path": ".adg\\work\\objects\\rcp\\RCP-OPENCODEX-DESKTOP-182-PERF-20261012.json",
+      "result": "failed",
+      "checks": [
+        {
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/archive-verification.json",
+          "name": "local:deb740-performance-archive-integrity",
+          "status": "passed"
+        },
+        {
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/archive-verification.json",
+          "name": "local:deb740-performance-independent-recompute",
+          "status": "passed"
+        },
+        {
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-deb740-十分钟性能对照/README.md",
+          "name": "review:scheduler-performance-0110",
+          "status": "failed"
+        }
+      ],
+      "taskContentSummaryAndBaselineMatch": true
+    },
+    {
+      "path": ".adg\\work\\objects\\rcp\\RCP-OPENCODEX-DESKTOP-182-SCHEDULE-ERROR-BACKOFF-20261012.json",
+      "result": "failed",
+      "checks": [
+        {
+          "name": "local:schedule-error-evidence-integrity",
+          "status": "passed",
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/archive-verification.json"
+        },
+        {
+          "name": "local:schedule-error-red-green",
+          "status": "passed",
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/run-results.json"
+        },
+        {
+          "name": "local:typecheck-production-build",
+          "status": "passed",
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/build.log"
+        },
+        {
+          "name": "local:update-related-regression",
+          "status": "passed",
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/related-tests.log"
+        },
+        {
+          "name": "review:scheduler-performance-0110",
+          "status": "failed",
+          "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261012-调度状态失败退避/README.md"
+        }
+      ],
+      "taskContentSummaryAndBaselineMatch": true
+    }
+  ],
+  "originalTaskRecoveredOnWindows": true,
+  "taskReconstructedOrModified": false,
+  "existingPerformanceFailedCleared": false,
+  "taskStatusPromoted": false,
+  "formalNewReceiptOrCertificateCreated": false,
+  "taskClosed": false,
+  "firstProviderImportWrapperError": "scripts path/lib.runtime import did not satisfy provider's runtime absolute imports; corrected to installed scripts/lib import root, no object or Skill source changed",
+  "scope": "raw original TASK byte sync plus provider and prior receipt identity verification; not full acceptance"
+}

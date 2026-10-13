@@ -1,0 +1,56 @@
+{
+  "recorded_at_utc": "2026-10-13T16:07:37.243368+00:00",
+  "client_date": "2026-10-14",
+  "origin": "pre-existing Mac local file; original bytes are synchronized, not reconstructed from receipts",
+  "path": ".adg/work/objects/task/TASK-OPENCODEX-DESKTOP-182.json",
+  "raw_bytes": 3878,
+  "raw_sha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "filesystem_created_at_utc": "2026-10-10T03:16:25.665770+00:00",
+  "filesystem_modified_at_utc": "2026-10-10T03:16:25.665824+00:00",
+  "task_content_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "revision": 2,
+  "state": "in_progress",
+  "result": "pending",
+  "required_checks": [
+    "review:backup-tree-0110",
+    "review:event-coverage-0110",
+    "review:installer-0110",
+    "review:native-0110",
+    "review:scheduler-performance-0110",
+    "review:scope-0110",
+    "review:storage-0110",
+    "review:updates-0110"
+  ],
+  "ignored_by": ".gitignore:4 .adg/work/",
+  "previously_git_tracked": false,
+  "digest_validation_passed": true,
+  "matching_prior_receipts": [
+    {
+      "path": ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-C1E3-CANDIDATE-20261011.json",
+      "git_blob": null,
+      "completed_at": "2026-10-11T12:23:15.022674+00:00",
+      "file_sha256": "f5135690a9add3ca395e94117cf373f65cec82532052e351e5a1ef638b6a8e41",
+      "tracked_in_synced_docs_head": false
+    },
+    {
+      "path": ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-PERF-20261012.json",
+      "git_blob": "653db3e3bcb8bea8df7cedac9e173a33fe73c3cf",
+      "completed_at": "2026-10-11T17:39:59.711446+00:00",
+      "file_sha256": "58f9f02c4f25ae2e535bf7086b778cd02ed0ffbac3b15a2a0be39d1c07bca3ce",
+      "tracked_in_synced_docs_head": true
+    },
+    {
+      "path": ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-SCHEDULE-ERROR-BACKOFF-20261012.json",
+      "git_blob": "8e36513ce0655aa8b4475121f8111f3046c14e58",
+      "completed_at": "2026-10-12T02:44:36.806643+00:00",
+      "file_sha256": "186ef41c84f2e9d5bb7ff1222c3d17a4da0f273d44d9dbd366bdc3be6657254b",
+      "tracked_in_synced_docs_head": true
+    }
+  ],
+  "receipt_matching_limitation": "matching verifies identity; file was already present, no fields generated from receipts; early receipt is local-only",
+  "reconstructed": false,
+  "task_modified": false,
+  "release_authorized": false
+}

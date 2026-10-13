@@ -1,0 +1,30 @@
+{
+  "atUtc": "2026-10-13T16:07:10.2892161Z",
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "sourceWitnesses": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+      "baseline019Blob": "82649995628d2c908830922368720a18dbacc5bf",
+      "mainBlob": "5184c0d74eb35633ee5e3e64cbac96944ba83bab",
+      "candidateBlob": "5184c0d74eb35633ee5e3e64cbac96944ba83bab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "baseline019Blob": "bff711b332dd353251769e95a85bd09f1de9d5f5",
+      "mainBlob": "220fe1aa1dbe415ee3dc361b19997592dc90d6b0",
+      "candidateBlob": "220fe1aa1dbe415ee3dc361b19997592dc90d6b0"
+    },
+    {
+      "path": "apps/desktop/ui/src/App.vue",
+      "baseline019Blob": "02494e7eeb811f5d322acd3e1967c0134fda269d",
+      "mainBlob": "02494e7eeb811f5d322acd3e1967c0134fda269d",
+      "candidateBlob": "02494e7eeb811f5d322acd3e1967c0134fda269d"
+    }
+  ],
+  "reviewedCaptionProcedure": "window_appearance.rs::native::message delegates every message to DefSubclassProc before observing a bounded settings/theme/activate/resize set; it does not directly handle WM_NCHITTEST or caption mouse commands",
+  "reviewIsStaticNotNativeInputProof": true,
+  "releaseProductSourceChanged": false,
+  "fullNativeGateAccepted": false,
+  "pastCaptionClickFailureCauseIsolated": false,
+  "shellReadbackWrapperCorrection": "An earlier foreach was piped directly and PowerShell parser rejected the command before execution. Corrected to assign then pipe; actual caption query was not rerun."
+}

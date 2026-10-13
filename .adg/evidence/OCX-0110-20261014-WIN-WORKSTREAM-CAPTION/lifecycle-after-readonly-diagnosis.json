@@ -1,0 +1,40 @@
+{
+  "atUtc": "2026-10-13T16:07:10.3798516Z",
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "applicationPid": 10904,
+  "supervisorPid": 32492,
+  "supervisorExecSession": 42581,
+  "desktopCount": 1,
+  "actualProcessHandles": [
+    {
+      "pid": 10904,
+      "actualLiveHandle": true,
+      "exactCreationTimeUtc": "2026-10-13T14:57:31.5757733Z",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\msi-readonly\\opencodex-desktop.exe"
+    },
+    {
+      "pid": 32492,
+      "actualLiveHandle": true,
+      "exactCreationTimeUtc": "2026-10-13T14:57:29.7146553Z",
+      "path": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe"
+    }
+  ],
+  "actualApplicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 10904,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-be7395a-38355803684\\msi-readonly\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-13T14:57:31.5757733Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-13T16:07:01.5474203Z"
+  },
+  "dailyExeSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "applicationRestarted": false,
+  "foregroundInputIssued": false,
+  "automaticCheck": false,
+  "fullNativeGateAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}

@@ -1,0 +1,23 @@
+{
+  "observedGoalStatus": "paused",
+  "observedGoalObjective": "original whole version goal",
+  "purpose": "User-authorized requested Windows thread objective edit/resume",
+  "directGoalToolSupport": "get_goal read; update_goal exposes only complete/blocked/paused, no objective or active transition",
+  "officialDocumentationSearch": "OpenAI Docs searched/opened app-server guidance; it did not establish a usable live goal-edit endpoint for this host",
+  "officialProxyReadOnlyAttempt": {
+    "command": "codex app-server proxy",
+    "initializeAttempted": true,
+    "goalReadRequestSent": false,
+    "error": "Read-only proxy exited before response",
+    "goalMutationIssued": false,
+    "childProxyStoppedDuringCleanupOnly": true,
+    "daemonStartedRestartedOrStopped": false
+  },
+  "goalMutationSucceeded": false,
+  "requestedObjectiveFile": "windows-objective.txt",
+  "humanContinuedWorkAuthority": true,
+  "currentTurnNativeForegroundInputIssued": false,
+  "newGoalCreated": false,
+  "goalMarkedComplete": false,
+  "usageAccountingReset": false
+}

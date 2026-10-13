@@ -1,0 +1,92 @@
+{
+  "requestedByHuman": "还有windows修改本对话的目标模式，继续开工",
+  "originalVersionObjectivePreserved": true,
+  "originalObjectiveText": "继续 OpenCodex Desktop 0.1.10：同步 main@01a1d855 与 docs/governance-main@a83250ba，读取 IMP-20/TASK-182 并按原契约、原预算完成 Windows 真机门禁、同机 0.1.9 配对性能及真实周期测试；仅用一个隔离测试实例，修复问题、回写证据并按分支归属提交推送，保留日常版与真实数据，不降低门禁、不提前关闭或发布。",
+  "requestedThreadObjectiveFile": "windows-objective.txt",
+  "threadId": "01a12e0e-c38f-7df3-b42f-6e80f629545e",
+  "appGoalObservation": {
+    "observedStatus": "paused",
+    "observedObjectiveIsOriginal": true,
+    "goalTokensUsedAtReadback": 18453728,
+    "directToolAllowsObjectiveEditOrResume": false,
+    "officialCliReadOnlyProxyAttempt": "proxy child exited before initialize response; no running-server goal response or mutation",
+    "appGoalUiTextEdited": false,
+    "appGoalStatusResumedByTool": false,
+    "goalCompletedToCreateReplacement": false,
+    "newGoalCreated": false,
+    "usageAccountingReset": false,
+    "humanResumeAuthorityAppliesToCurrentWork": true
+  },
+  "implementationAuthority": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+  "originalTaskPath": ".adg/work/objects/task/TASK-OPENCODEX-DESKTOP-182.json",
+  "originalTaskRecovered": false,
+  "replacementTaskOrRequiredChecksCreated": false,
+  "currentSource": {
+    "main": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+    "featureBranch": "feature/0.1.10-update-center-focus",
+    "candidateSource": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+    "docsBranch": "docs/governance-main",
+    "docsBeforeThisWorkstream": "6bd9547c77785b4faebc8472731e3134c9aea81e",
+    "candidateExecutableSha256": "3a26098e813ddd56070a0092cbcb640473cb73e626aee45198c4b335ec2d8bd1",
+    "pr": 1,
+    "prKeptDraft": true,
+    "mainIntegrated": false
+  },
+  "retainedWindowsInstance": {
+    "applicationPid": 10904,
+    "applicationCreationUtc": "2026-10-13T14:57:31.5757733Z",
+    "supervisorPid": 32492,
+    "supervisorCreationUtc": "2026-10-13T14:57:29.7146553Z",
+    "supervisorExecSession": 42581,
+    "mainHwnd": 6685560,
+    "actualElevated": false,
+    "actualElevationType": 3,
+    "automaticCheckEnabled": false,
+    "applicationStoppedOrRestartedForWorkstreamChange": false
+  },
+  "coordination": {
+    "macExecutionObservedByThisThread": false,
+    "macRole": "source review/fixes, unit/integration regression, macOS historical performance investigation; native runs wait for sequential handoff",
+    "windowsRole": "fixed-SHA Windows native acceptance, isolated test fixtures and .adg Windows evidence",
+    "globalMaximumIsolatedNativeDesktopInstances": 1,
+    "sourceChangesConcurrentWithFixedShaWindowsReadback": "permitted only with exclusive write scope and recorded source identity; current EXE cannot prove new source changes",
+    "windowsMayEditMacOwnedImplementationFilesNow": false,
+    "windowsToolsOwnedPath": ".adg/evidence/OCX-0110-20261014-WIN-WORKSTREAM-CAPTION/**",
+    "sharedImpAndDocsPush": "one writer at a time; fetch/recheck remote before shared writeback, preserve unrelated edits",
+    "nativePlatformSwitch": "human-directed handoff, stop current retained owner safely and independently confirm zero desktop instances before next platform native run",
+    "thirdPartyTaskMessageSent": false
+  },
+  "currentAuthorizedMode": "background-only implementation analysis and read-only native diagnostics; no new foreground window authorized",
+  "nextWindowsActions": [
+    "Compare actual caption geometry and system hit-test with prior no-op restore click evidence without changing the app.",
+    "In a new human-started foreground window, reobserve one full native screenshot and confirm maximize/restore hit target; test caption click, minimize/restore, Snap/tray/exit with current exact candidate.",
+    "Keep physical100/125/150DPI and administrator tokens separate from ordinary192DPI samples; no browser/interface zoom substitution.",
+    "Admit the original safe installer environment and genuine independent Profile before installer or official019 paired tests.",
+    "Perform actual update/progress, backup/restore/retention/pin, tree alignment and exact event/channel/in-flight matrices at the assigned SHA.",
+    "Finish actual30min state-error floor, beta6h and remaining real scheduler request/count/sleep/resume evidence without changing production thresholds.",
+    "Recover original TASK182 and match its exact required checks before formal receipts or closure.",
+    "Validate new source CI and artifact identity after any coordinated fixes; preserve earlier failed runs and measured performance failures."
+  ],
+  "remainingPrerequisites": {
+    "originalTask182Missing": true,
+    "fz50ScriptExplicitApprovalReceived": false,
+    "independentProfileAdmitted": false,
+    "safeInstallerEnvironmentAdmitted": false,
+    "macHistoricalPerformanceFailureCleared": false,
+    "originalFailedWindowsCiCauseIsolated": false
+  },
+  "captionReadonlyLimits": {
+    "currentNormalWindowOnly": true,
+    "priorInputCoordinatesOrDeliveryCaptured": false,
+    "captionRestoreClickAccepted": false,
+    "currentQueryPassedProductGate": false,
+    "failedOrUnexpectedHitsRetained": true
+  },
+  "globalCompletionDependsOnOriginalFullEvidence": true,
+  "fullWindowsNativeGateAccepted": false,
+  "pairedPerformanceAccepted": false,
+  "realFullCyclesAccepted": false,
+  "formalTaskReceiptCreated": false,
+  "releaseAuthorizedByThisRequest": false,
+  "releaseAccepted": false
+}

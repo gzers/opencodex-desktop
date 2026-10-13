@@ -1,0 +1,29 @@
+{
+  "atUtc": "2026-10-13T16:24:18.5308754Z",
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "existingTestPath": "test/smoke/windows-native.ps1",
+  "existingGitBlob": "cf807e9294bfaed99c629fb546df8449dd7e437d",
+  "existingMinHitAllowedValues": [
+    2,
+    8
+  ],
+  "existingMaxHitRequired": 9,
+  "existingCloseHitRequired": 20,
+  "sourceWitness": [
+    "  # DWM can report HTCAPTION for its minimize zone to a direct WM_NCHITTEST",
+    "  # probe; the separate real mouse-click/minimize assertion is authoritative.",
+    "  if($taskHits[0] -notin @(2,8) -or $taskHits[1] -ne 9 -or $taskHits[2] -ne 20){throw \"Native caption hit targets differ: $taskHits\"}"
+  ],
+  "currentReadonlyObservedHits": [
+    2,
+    9,
+    20
+  ],
+  "normalReadOnlyHitPatternWithinExistingContract": true,
+  "previousSimpleDiagnosticExpectedMin8WasNotProductGate": true,
+  "actualMinimizeClickRequiredAndNotExecutedThisTurn": true,
+  "pastRestoreClickFailureCauseIsolated": false,
+  "testContractOrAssertionModified": false,
+  "readonlyMin2IsProductDefect": false,
+  "scope": "Existing code test explicitly documents direct DWM hit-query2 or8 at minimize; actual mouse/minimize is separate authority. Retain raw expectedMin8 discrepancy without labelling a new product failure."
+}
