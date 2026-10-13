@@ -54,8 +54,9 @@ def collect_snapshot(native, pid, hwnd, expected_sha256, expected_creation=None)
         probes = []
         points = caption_points(item['rect'], state['windowRect']) if item else []
         for x, y in points:
+            under_point = native.point_target(pid, hwnd, x, y)
             hit = native.hit_test(hwnd, pack_screen_point(x, y))
-            probes.append({'physicalScreenPoint': [x, y], **hit,
+            probes.append({'physicalScreenPoint': [x, y], 'windowUnderPoint': under_point, **hit,
                            'hitName': HT_NAMES.get(hit.get('value'), 'other-or-unavailable')})
         buttons[name] = {'titleBarInfoEx': item, 'probes': probes}
     after = native.identity(pid, hwnd)
@@ -113,6 +114,9 @@ class NativeWindows:
         self.api(self.user, 'GetWindowRect', [ctypes.c_void_p, ctypes.POINTER(RECT)], ctypes.c_int32)
         self.api(self.user, 'GetWindowPlacement', [ctypes.c_void_p, ctypes.POINTER(WINDOWPLACEMENT)], ctypes.c_int32)
         self.api(self.user, 'GetCursorPos', [ctypes.POINTER(POINT)], ctypes.c_int32)
+        self.api(self.user, 'WindowFromPoint', [POINT], ctypes.c_void_p)
+        self.api(self.user, 'GetAncestor', [ctypes.c_void_p, ctypes.c_uint32], ctypes.c_void_p)
+        self.api(self.user, 'GetClassNameW', [ctypes.c_void_p, ctypes.c_wchar_p, ctypes.c_int32], ctypes.c_int32)
         for name in ('IsWindow', 'IsWindowVisible', 'IsIconic', 'IsZoomed'):
             self.api(self.user, name, [ctypes.c_void_p], ctypes.c_int32)
         self.api(self.user, 'GetForegroundWindow', [], ctypes.c_void_p)
@@ -172,6 +176,20 @@ class NativeWindows:
 
     def hit_test(self, hwnd, packed):
         return self.message(hwnd, 0x84, lp=packed)  # WM_NCHITTEST, no input
+
+    def point_target(self, pid, hwnd, x, y):
+        actual = self.user.WindowFromPoint(POINT(x, y))
+        root = self.user.GetAncestor(actual, 2) if actual else None  # GA_ROOT
+        owner = ctypes.c_uint32()
+        owner_ok = bool(actual and self.user.GetWindowThreadProcessId(actual, ctypes.byref(owner)))
+        related = root == hwnd or owner_ok and owner.value == pid
+        name = ctypes.create_unicode_buffer(256)
+        class_ok = bool(related and self.user.GetClassNameW(actual, name, len(name)))
+        return {'windowFound': bool(actual), 'rootMatchesTarget': root == hwnd,
+                'belongsToTargetPid': owner_ok and owner.value == pid,
+                'targetFamilyHwnd': actual if related else None,
+                'targetFamilyClass': name.value if class_ok else None,
+                'scope': 'point query only; unrelated window identities omitted; not click delivery'}
 
     def caption(self, hwnd):
         info = TITLEBARINFOEX()

@@ -32,6 +32,10 @@ class FakeWindows:
         self.queries.append(packed)
         return {'ok': self.hit_ok, 'value': 9 if self.hit_ok else None, 'lastError': 0 if self.hit_ok else 5}
 
+    def point_target(self, pid, hwnd, x, y):
+        self.queries.append(('point', x, y))
+        return {'windowFound': True, 'rootMatchesTarget': True, 'belongsToTargetPid': True}
+
 
 class CaptionObservationTests(unittest.TestCase):
     def test_signed_screen_coordinates_round_trip(self):
@@ -96,7 +100,8 @@ class CaptionObservationTests(unittest.TestCase):
     def test_observations_are_not_inputs_or_acceptance_claims(self):
         native = FakeWindows()
         result = probe.collect_snapshot(native, 10904, 6685560, 'A' * 64, 123)
-        self.assertEqual(len(native.queries), 11)
+        self.assertEqual(len(native.queries), 20)
+        self.assertTrue(all(hit['windowUnderPoint']['rootMatchesTarget'] for item in result['buttons'].values() for hit in item['probes']))
         self.assertFalse(result['inputIssued'])
         self.assertFalse(result['applicationLifecycleChanged'])
         self.assertFalse(result['acceptancePassed'])
@@ -106,6 +111,64 @@ class CaptionObservationTests(unittest.TestCase):
         self.assertEqual(probe.ctypes.sizeof(probe.RECT), 16)
         self.assertEqual(probe.ctypes.sizeof(probe.TITLEBARINFOEX), 140)
         self.assertEqual(probe.ctypes.sizeof(probe.WINDOWPLACEMENT), 44)
+
+    def test_correct_parent_hit_cannot_disguise_another_window_at_the_point(self):
+        native = FakeWindows()
+        native.point_target = lambda *args: {'windowFound': True, 'rootMatchesTarget': False, 'belongsToTargetPid': False}
+        result = probe.collect_snapshot(native, 10904, 6685560, 'a' * 64)
+        for item in result['buttons'].values():
+            for hit in item['probes']:
+                self.assertEqual(hit['value'], 9)
+                self.assertFalse(hit['windowUnderPoint']['rootMatchesTarget'])
+        self.assertFalse(result['acceptancePassed'])
+
+    def point_backend(self, actual, root, owner):
+        class User:
+            class_reads = 0
+
+            def WindowFromPoint(self, point):
+                return actual
+
+            def GetAncestor(self, window, flag):
+                self.last_ancestor_flag = flag
+                return root
+
+            def GetWindowThreadProcessId(self, window, destination):
+                destination._obj.value = owner
+                return 99
+
+            def GetClassNameW(self, window, destination, size):
+                self.class_reads += 1
+                destination.value = 'TestChild'
+                return len(destination.value)
+        native = probe.NativeWindows.__new__(probe.NativeWindows)
+        native.user = User()
+        return native
+
+    def test_child_of_target_root_is_recorded_without_claiming_input(self):
+        native = self.point_backend(22, 6685560, 10904)
+        result = native.point_target(10904, 6685560, -7, 15)
+        self.assertTrue(result['rootMatchesTarget'])
+        self.assertEqual(result['targetFamilyHwnd'], 22)
+        self.assertEqual(result['targetFamilyClass'], 'TestChild')
+        self.assertEqual(native.user.last_ancestor_flag, 2)
+
+    def test_unrelated_window_does_not_disclose_class_or_identity(self):
+        native = self.point_backend(22, 33, 456)
+        result = native.point_target(10904, 6685560, 3190, 15)
+        self.assertFalse(result['rootMatchesTarget'])
+        self.assertFalse(result['belongsToTargetPid'])
+        self.assertIsNone(result['targetFamilyHwnd'])
+        self.assertIsNone(result['targetFamilyClass'])
+        self.assertEqual(native.user.class_reads, 0)
+
+    def test_missing_window_under_point_is_explicit(self):
+        native = self.point_backend(None, None, 0)
+        result = native.point_target(10904, 6685560, 3190, 15)
+        self.assertFalse(result['windowFound'])
+        self.assertFalse(result['rootMatchesTarget'])
+        self.assertIsNone(result['targetFamilyHwnd'])
+        self.assertEqual(native.user.class_reads, 0)
 
 
 if __name__ == '__main__':
