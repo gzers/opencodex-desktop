@@ -1,0 +1,61 @@
+test_child_of_target_root_is_recorded_without_claiming_input (test_windows_caption_probe.CaptionObservationTests) ... ERROR
+test_correct_parent_hit_cannot_disguise_another_window_at_the_point (test_windows_caption_probe.CaptionObservationTests) ... ERROR
+test_identity_changed_during_queries_cannot_be_accepted (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_invalid_or_off_window_button_bounds_never_issue_hit_test (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_missing_window_under_point_is_explicit (test_windows_caption_probe.CaptionObservationTests) ... ERROR
+test_observations_are_not_inputs_or_acceptance_claims (test_windows_caption_probe.CaptionObservationTests) ... FAIL
+test_overflow_and_noninteger_are_rejected_instead_of_wrapping_to_another_button (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_points_stay_inside_caption_on_negative_origin_monitor (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_query_failure_is_not_a_successful_client_or_caption_hit (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_reused_process_identity_is_rejected_before_queries (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_sha_mismatch_blocks_all_window_queries (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_signed_screen_coordinates_round_trip (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_single_pixel_rect_has_one_unique_sample (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_unavailable_caption_query_produces_no_invented_button_geometry (test_windows_caption_probe.CaptionObservationTests) ... ok
+test_unrelated_window_does_not_disclose_class_or_identity (test_windows_caption_probe.CaptionObservationTests) ... ERROR
+test_win32_struct_layouts_are_fixed_width_on_non_windows_test_hosts (test_windows_caption_probe.CaptionObservationTests) ... ok
+
+======================================================================
+ERROR: test_child_of_target_root_is_recorded_without_claiming_input (test_windows_caption_probe.CaptionObservationTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-caption-point-20261014/old-tool/test_windows_caption_probe.py", line 150, in test_child_of_target_root_is_recorded_without_claiming_input
+    result = native.point_target(10904, 6685560, -7, 15)
+AttributeError: 'NativeWindows' object has no attribute 'point_target'
+
+======================================================================
+ERROR: test_correct_parent_hit_cannot_disguise_another_window_at_the_point (test_windows_caption_probe.CaptionObservationTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-caption-point-20261014/old-tool/test_windows_caption_probe.py", line 122, in test_correct_parent_hit_cannot_disguise_another_window_at_the_point
+    self.assertFalse(hit['windowUnderPoint']['rootMatchesTarget'])
+KeyError: 'windowUnderPoint'
+
+======================================================================
+ERROR: test_missing_window_under_point_is_explicit (test_windows_caption_probe.CaptionObservationTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-caption-point-20261014/old-tool/test_windows_caption_probe.py", line 167, in test_missing_window_under_point_is_explicit
+    result = native.point_target(10904, 6685560, 3190, 15)
+AttributeError: 'NativeWindows' object has no attribute 'point_target'
+
+======================================================================
+ERROR: test_unrelated_window_does_not_disclose_class_or_identity (test_windows_caption_probe.CaptionObservationTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-caption-point-20261014/old-tool/test_windows_caption_probe.py", line 158, in test_unrelated_window_does_not_disclose_class_or_identity
+    result = native.point_target(10904, 6685560, 3190, 15)
+AttributeError: 'NativeWindows' object has no attribute 'point_target'
+
+======================================================================
+FAIL: test_observations_are_not_inputs_or_acceptance_claims (test_windows_caption_probe.CaptionObservationTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-caption-point-20261014/old-tool/test_windows_caption_probe.py", line 103, in test_observations_are_not_inputs_or_acceptance_claims
+    self.assertEqual(len(native.queries), 20)
+AssertionError: 11 != 20
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.001s
+
+FAILED (failures=1, errors=4)

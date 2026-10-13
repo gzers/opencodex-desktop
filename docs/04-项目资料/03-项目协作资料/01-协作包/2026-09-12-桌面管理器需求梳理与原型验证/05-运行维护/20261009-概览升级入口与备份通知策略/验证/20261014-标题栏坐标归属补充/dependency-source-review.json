@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-10-13T16:35:01.278783+00:00",
+  "source_commit": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03",
+  "pinned_dependencies": [
+    {
+      "crate": "tao",
+      "version": "0.37.1",
+      "cargo_package_checksum": "f37f381f4e048e6cdf038b5705f8cf14ad108279d46eb968140a7b291aba9400",
+      "source_path": "src/platform_impl/windows/event_loop.rs",
+      "source_sha256": "6b32446a660a21a88b1b9ff910327bdf597326830d0bb7a15dd3433b701fe99f",
+      "archive_present": true,
+      "archive_checksum_and_file_bytes_verified": true
+    },
+    {
+      "crate": "tauri-runtime-wry",
+      "version": "2.12.1",
+      "cargo_package_checksum": "7f9e7e0c9f80a5130773cfabb6df4dc924518fb1b2c923726966804634b57d22",
+      "source_path": "src/lib.rs",
+      "source_sha256": "ec343fc347aff1fb5327100df2541992e47eb6be1ddb55102170e2253b9c6d59",
+      "archive_present": true,
+      "archive_checksum_and_file_bytes_verified": true
+    }
+  ],
+  "findings": [
+    "Tao WM_NCLBUTTONDOWN emits DecorationsClick and leaves default message dispatch; source does not establish actual input delivery.",
+    "Wry attaches its Windows resize child only when resizable and not decorated; actual window flags still require native evidence."
+  ],
+  "native_execution": false,
+  "product_root_cause_established": false
+}

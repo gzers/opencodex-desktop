@@ -1208,3 +1208,11 @@ Windows 接续固定 be7395a 制品验收，Mac 协调源码修复；全局最�
 Windows 已取得 ae6cd08 同步的原TASK182并用治理provider独立校验，3878字节/SHA bc7965bc…保持，content/summary/baseline与既有回执一致；原缺失阻碍已解除。revision2、in_progress/pending、九项验收绑定、八项required_checks及历史performance failed不变。
 
 两批冻结证据12/13份清单校验通过。用户要求修改本线程目标；标准工具仍读paused，官方thread/goal/set被当前active writer拒绝。已启动有界后台等待器，等待本轮writer释放后正式写入并读回；当前冻结快照只证明waiting/live，不能宣称目标已恢复。没有绕锁、改数据库、清除/重建目标或标complete。[分工、原件与写入边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows分工与原TASK复核/README.md)。其余原门禁、预算、日常安装/真实数据保护保持，未关闭或发布。
+
+### 2026-10-14 caption 坐标归属补充与旧工具完整 CI 终态
+
+Windows文档b3eb4274已快进同步，正常窗口只读2/9/20与既有合同一致，不计最大化还原点击通过。Mac补充诊断feature/0.1.10-caption-diagnostics@5a36cda0：主窗口HTMAXBUTTON与WindowFromPoint/GA_ROOT并列，避免把主窗口查询当实际鼠标目标；无关窗口身份不落盘，不发送输入/改应用生命周期。同新增测试文件，旧04工具11通过/1失败/4错误，新16/16通过；均为fake工具合同，非产品原生故障复现。Tao0.37.1/Wry2.12.1审阅源与锁定crate归档摘要验证通过，不证明真实派发或还原根因。
+
+旧04 CI38429545855完整success，五必需job成功、main-only build skipped；MacRust872passed/6ignored、Windows601passed/7ignored，均34组/0failed，ignored不计通过。新5a CI38431616359最后in_progress，不能沿用旧CI证明新工具。主main/eae与焦点be草稿未改变，未制作候选或自动合并/签名。两提交只改test/CI；现有be可供诊断，工具与实际制品身份分别记录。[坐标归属及CI证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-标题栏坐标归属补充/README.md)。
+
+Mac继续后台工作，无新原生性能样本，切原生平台前仍须协调Windows实例0。原性能failed、全部预算/门禁及原TASK revision2/in_progress/pending/空验收保持；FZ50脚本未获许可不执行，无真实迁移、日常替换、核心事实晋升、关闭证书或发布。

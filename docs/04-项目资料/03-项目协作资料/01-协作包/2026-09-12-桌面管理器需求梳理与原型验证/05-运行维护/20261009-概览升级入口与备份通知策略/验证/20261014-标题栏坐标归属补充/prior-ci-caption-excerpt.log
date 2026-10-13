@@ -1,0 +1,21 @@
+release-tools	Read-only caption observer portable contracts	﻿2026-10-13T16:19:48.5017706Z ##[group]Run python3 -B -m unittest discover -s test -p 'test_windows_caption_probe.py' -v
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.5018238Z ^[[36;1mpython3 -B -m unittest discover -s test -p 'test_windows_caption_probe.py' -v^[[0m
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.5073672Z shell: /usr/bin/bash -e {0}
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.5074076Z ##[endgroup]
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6935346Z test_identity_changed_during_queries_cannot_be_accepted (test_windows_caption_probe.CaptionObservationTests.test_identity_changed_during_queries_cannot_be_accepted) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6937037Z test_invalid_or_off_window_button_bounds_never_issue_hit_test (test_windows_caption_probe.CaptionObservationTests.test_invalid_or_off_window_button_bounds_never_issue_hit_test) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6938558Z test_observations_are_not_inputs_or_acceptance_claims (test_windows_caption_probe.CaptionObservationTests.test_observations_are_not_inputs_or_acceptance_claims) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6940247Z test_overflow_and_noninteger_are_rejected_instead_of_wrapping_to_another_button (test_windows_caption_probe.CaptionObservationTests.test_overflow_and_noninteger_are_rejected_instead_of_wrapping_to_another_button) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6942064Z test_points_stay_inside_caption_on_negative_origin_monitor (test_windows_caption_probe.CaptionObservationTests.test_points_stay_inside_caption_on_negative_origin_monitor) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6943437Z test_query_failure_is_not_a_successful_client_or_caption_hit (test_windows_caption_probe.CaptionObservationTests.test_query_failure_is_not_a_successful_client_or_caption_hit) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6944665Z test_reused_process_identity_is_rejected_before_queries (test_windows_caption_probe.CaptionObservationTests.test_reused_process_identity_is_rejected_before_queries) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6946055Z test_sha_mismatch_blocks_all_window_queries (test_windows_caption_probe.CaptionObservationTests.test_sha_mismatch_blocks_all_window_queries) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6947318Z test_signed_screen_coordinates_round_trip (test_windows_caption_probe.CaptionObservationTests.test_signed_screen_coordinates_round_trip) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6948281Z test_single_pixel_rect_has_one_unique_sample (test_windows_caption_probe.CaptionObservationTests.test_single_pixel_rect_has_one_unique_sample) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6949193Z test_unavailable_caption_query_produces_no_invented_button_geometry (test_windows_caption_probe.CaptionObservationTests.test_unavailable_caption_query_produces_no_invented_button_geometry) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6950192Z test_win32_struct_layouts_are_fixed_width_on_non_windows_test_hosts (test_windows_caption_probe.CaptionObservationTests.test_win32_struct_layouts_are_fixed_width_on_non_windows_test_hosts) ... ok
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6950715Z 
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6950850Z ----------------------------------------------------------------------
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6951145Z Ran 12 tests in 0.001s
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6951261Z 
+release-tools	Read-only caption observer portable contracts	2026-10-13T16:19:48.6951334Z OK

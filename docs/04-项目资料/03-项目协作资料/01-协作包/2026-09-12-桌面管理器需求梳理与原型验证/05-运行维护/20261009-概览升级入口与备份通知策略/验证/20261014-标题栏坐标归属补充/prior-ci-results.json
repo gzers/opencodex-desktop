@@ -1,0 +1,53 @@
+{
+  "recorded_at_utc": "2026-10-13T16:38:21.123188+00:00",
+  "run_id": 38429545855,
+  "head_sha": "04c5f54d05d50243a83925511dd8f3ccbc4ca951",
+  "status": "completed",
+  "conclusion": "success",
+  "job_results": [
+    {
+      "name": "backend",
+      "conclusion": "success"
+    },
+    {
+      "name": "frontend",
+      "conclusion": "success"
+    },
+    {
+      "name": "backend-windows",
+      "conclusion": "success"
+    },
+    {
+      "name": "release-tools",
+      "conclusion": "success"
+    },
+    {
+      "name": "windows-smoke-evidence",
+      "conclusion": "success"
+    },
+    {
+      "name": "build",
+      "conclusion": "skipped"
+    }
+  ],
+  "raw_log_external": "/private/tmp/ocx-0110-caption-point-20261014/prior-ci-raw.log",
+  "raw_log_bytes": 883556,
+  "raw_log_sha256": "13445e7479fd19547baac5534d58bd69da721b820d9c845f150ca453db45fb1d",
+  "cargo_result_sums_by_job": {
+    "backend": {
+      "suites": 34,
+      "passed": 872,
+      "failed": 0,
+      "ignored": 6
+    },
+    "backend-windows": {
+      "suites": 34,
+      "passed": 601,
+      "failed": 0,
+      "ignored": 7
+    }
+  },
+  "caption_portable_step_lines": 21,
+  "all_native_acceptance_open": true,
+  "latest_tool_sha": "5a36cda04018fb367c2f77e3a2a1bdc22d991e03"
+}

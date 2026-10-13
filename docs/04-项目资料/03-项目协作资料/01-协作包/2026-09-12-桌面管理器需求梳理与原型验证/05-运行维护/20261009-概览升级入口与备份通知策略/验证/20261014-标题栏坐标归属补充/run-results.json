@@ -1,0 +1,52 @@
+{
+  "python": "3.9.6 (default, Aug 25 2026, 21:26:21) \n[Clang 21.0.0 (clang-2100.3.34.2)]",
+  "baseline_diagnostic_commit": "04c5f54d05d50243a83925511dd8f3ccbc4ca951",
+  "test_sha256": "f3318e7180768ab575db73559f588b63fe2d76ef06480e8effa470caa3ae04ad",
+  "source_sha256": "9f748ae084e6b460f8c7718aa01245cfc0c473f9b9e076b9a6aac380006bf437",
+  "red_passed": 11,
+  "red_failed": 5,
+  "green_passed": 16,
+  "runs": [
+    {
+      "name": "red",
+      "argv": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        ".",
+        "-p",
+        "test_windows_caption_probe.py",
+        "-v"
+      ],
+      "cwd": "/private/tmp/ocx-0110-caption-point-20261014/old-tool",
+      "exit": 1,
+      "elapsed_seconds": 0.052246209
+    },
+    {
+      "name": "green",
+      "argv": [
+        "/Library/Developer/CommandLineTools/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_windows_caption_probe.py",
+        "-v"
+      ],
+      "cwd": "/Users/ezio/.codex/worktrees/ocx-0110-main",
+      "exit": 0,
+      "elapsed_seconds": 0.04112349999999999
+    }
+  ],
+  "native_api_executed": false,
+  "application_input_issued": false,
+  "red_assertion_failures": 1,
+  "red_errors": 4,
+  "red_failed_including_errors": 5
+}
