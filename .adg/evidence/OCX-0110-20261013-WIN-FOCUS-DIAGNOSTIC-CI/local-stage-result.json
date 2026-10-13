@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "ciRunId": 38352525092,
+  "testExeSha256": "bcb9d346a829da51b50b4b85ae32258488e66aa9c25d5868dace0d3a21276a76",
+  "nodeExeSha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+  "actualNodeVersion": "v24.21.0",
+  "requestedTestThreads": 7,
+  "argv": [
+    "windows_tests::",
+    "--test-threads=7",
+    "--nocapture"
+  ],
+  "helperToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 22448,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-13T06:06:20.2467049Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-13T06:06:21.6941403Z"
+  },
+  "testToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 49564,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\downloads\\11792440963\\windows-backend\\opencodex_desktop_lib-713299640ffef8db.exe",
+    "creationTimeUtc": "2026-10-13T06:06:22.2737395Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-13T06:06:22.2994738Z"
+  },
+  "runtime": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\update-focus-stage-probe-20261013",
+  "startedAtUtc": "2026-10-13T06:06:22.2668596Z",
+  "inheritedCredentials": false,
+  "desktopApplicationStarted": false,
+  "foregroundInputIssued": false,
+  "productionProbeSeconds": 2,
+  "fixtureSourceChanged": false,
+  "testTimeoutBudgetAltered": false,
+  "originalDataHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20"
+  },
+  "status": "actual-local-stage-tests-passed",
+  "originalCiCauseIsolated": false,
+  "originalCiFailureCleared": false,
+  "fullNativeAccepted": false,
+  "exitCode": 0,
+  "elapsedMs": 2096.8312,
+  "sameOriginalDesktopLifecycle": true,
+  "originalDataBytesPreserved": true,
+  "afterDataHashes": {
+    "preferences.json": "674ad619b46fc27a273eb37da775660e3b44263fe3485e4ade98287f5fbda8fa",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11",
+    "update-schedule.json": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20"
+  },
+  "finishedAtUtc": "2026-10-13T06:06:24.5640741Z"
+}

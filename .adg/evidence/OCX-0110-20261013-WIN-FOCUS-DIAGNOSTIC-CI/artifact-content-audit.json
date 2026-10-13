@@ -1,0 +1,108 @@
+{
+  "sourceCommit": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+  "runId": 38352525092,
+  "artifactId": 11792440963,
+  "zipSha256": "3fae1e04e42f85ee681356c27464fbf6e4a93bd8d50ecaa612874fe385eca808",
+  "zipDigestMatchesApi": true,
+  "zipCrcVerified": true,
+  "zipEntries": 165,
+  "totalUncompressedBytes": 34209627,
+  "selectedRawWitnesses": [
+    {
+      "zipMember": "windows-startup/startup.json",
+      "archivedPath": "artifact-raw/windows-startup/startup.json",
+      "bytes": 1434,
+      "sha256": "db032cbb34ce00f19905ccd0ffa53154d79f27926758d4d7db1e53ac0a2acf97"
+    },
+    {
+      "zipMember": "windows-startup/webview.json",
+      "archivedPath": "artifact-raw/windows-startup/webview.json",
+      "bytes": 698,
+      "sha256": "7327fce7979a8bda22c224c89815430159cd421e005a75d3fc2bccedddfa6b99"
+    },
+    {
+      "zipMember": "windows-startup/cdp-diagnostics.json",
+      "archivedPath": "artifact-raw/windows-startup/cdp-diagnostics.json",
+      "bytes": 1414,
+      "sha256": "dd78eea35bc8d06ad12a7b2d431485ec5dc63072e8c47c0be52052c785caab91"
+    },
+    {
+      "zipMember": "windows-startup/startup-diagnostics.json",
+      "archivedPath": "artifact-raw/windows-startup/startup-diagnostics.json",
+      "bytes": 8871,
+      "sha256": "1b4b7b18878ec469fda4f1eef04de9129267c451f559a027e36edfc815da1863"
+    },
+    {
+      "zipMember": "windows-startup/startup-stderr.log",
+      "archivedPath": "artifact-raw/windows-startup/startup-stderr.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "zipMember": "windows-startup/startup-stdout.log",
+      "archivedPath": "artifact-raw/windows-startup/startup-stdout.log",
+      "bytes": 2,
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    },
+    {
+      "zipMember": "windows-startup/main-window.png",
+      "archivedPath": "artifact-raw/windows-startup/main-window.png",
+      "bytes": 527819,
+      "sha256": "227c59a2774a28889aa97a2832bf1193500000beff48f90a38c020c4d3143842"
+    },
+    {
+      "zipMember": "windows-backend/environment.json",
+      "archivedPath": "artifact-raw/windows-backend/environment.json",
+      "bytes": 282,
+      "sha256": "5aab1187d5dc0611184fde6e94b0ee26706e68db5954603e71c9d9b4736f6271"
+    },
+    {
+      "zipMember": "windows-backend/test-executable-sha256.json",
+      "archivedPath": "artifact-raw/windows-backend/test-executable-sha256.json",
+      "bytes": 255,
+      "sha256": "4bf02245f167cf73068cc15e2cbeba819a94d6bfdb313784b3f711b4c3e8efe1"
+    },
+    {
+      "zipMember": "windows-backend/test-executable.manifest.xml",
+      "archivedPath": "artifact-raw/windows-backend/test-executable.manifest.xml",
+      "bytes": 680,
+      "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+    },
+    {
+      "zipMember": "windows-startup/sandbox-920106b19c3448c48b6120b1703fd138/logs/app.log",
+      "archivedPath": "artifact-raw/windows-startup/sandbox-920106b19c3448c48b6120b1703fd138/logs/app.log",
+      "bytes": 252,
+      "sha256": "b50a9a504c0301d52f22bc7c36ad50f4c966a73a88761b9eaa5ab88ca8d1f884"
+    }
+  ],
+  "ciTestExeSha256": "bcb9d346a829da51b50b4b85ae32258488e66aa9c25d5868dace0d3a21276a76",
+  "ciFinalExeSha256FromSmokeReceipt": "8651ba8375835ca22802bfc2d6192da588f184be5a2395d0f417182db3c8c251",
+  "finalDesktopExePresentInZip": false,
+  "ciSmokeResult": "pass",
+  "ciSmokeActualToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 4644,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-13T05:59:13.2407135Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-13T05:59:46.3663614Z"
+  },
+  "ciSmokeMode": "any",
+  "ciRequestedModeMatched": false,
+  "ordinaryAndAdminPairedNativeTokenGateAccepted": false,
+  "ciOverviewWebviewMounted": true,
+  "cdpVersionEndpointTimeoutRetained": true,
+  "cdpListTargetAndMainOverviewSucceeded": true,
+  "fullNativeFocusFixAccepted": false,
+  "localExecutableStarted": false,
+  "currentDesktopSourceCommit": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "currentCycleReplaced": false,
+  "originalCiFailureCleared": false,
+  "originalCiCauseIsolated": false,
+  "mainIntegrated": false,
+  "installerOrReleaseArtifactAccepted": false,
+  "formalTaskReceipt": false,
+  "releaseAccepted": false
+}
