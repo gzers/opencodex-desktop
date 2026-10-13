@@ -81,6 +81,13 @@ jobs:
         shell: pwsh
         run: |
           $env:OPENCODEX_TEST_NODE = (Get-Command node).Source
+          [ordered]@{
+            logicalProcessors = [Environment]::ProcessorCount
+            nodeExecutable = $env:OPENCODEX_TEST_NODE
+            tempDirectory = [IO.Path]::GetTempPath()
+            rustTestThreads = $env:RUST_TEST_THREADS
+            rustTestTimeUnit = $env:RUST_TEST_TIME_UNIT
+          } | ConvertTo-Json
           cargo test --locked --workspace --features integration-test
       - name: Collect Windows native dependency diagnostics
         if: always()
