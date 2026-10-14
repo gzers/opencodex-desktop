@@ -1936,12 +1936,12 @@
     },
     {
       "event": "panel-check-succeeded",
-      "source": "commands/about.rs::official_remote_latest serialized durable commit",
+      "source": "commands/about.rs::official_remote_latest_owned serialized durable commit (admitted run_panel_query_owned worker)",
       "wiring": "scoped_terminal"
     },
     {
       "event": "panel-check-failed",
-      "source": "commands/about.rs::official_remote_latest serialized durable commit",
+      "source": "commands/about.rs::official_remote_latest_owned serialized durable commit (admitted run_panel_query_owned worker)",
       "wiring": "scoped_terminal"
     },
     {
@@ -2278,7 +2278,8 @@
     "ui/stores/app.ts; ui/features/diagnostics/useDiagnosticsController.ts",
     "ui/routes/LogsRoute.vue; ExtensionsRoute.vue; SettingsRoute.vue; OverviewRoute.vue; PanelRoute.vue",
     "ui/features/environment/components/EnvironmentGate.vue",
-    "ui/features/runtime/store.ts::loadProtection/retryProtection (read/refusal/retry feedback; no polling)"
+    "ui/features/runtime/store.ts::loadProtection/retryProtection (read/refusal/retry feedback; no polling)",
+    "ui/features/updates/ReleaseNotes.vue::load (user-requested notes loading/absence/error/retry; no center delivery or version/install resolution)"
   ],
   "paths": [
     {

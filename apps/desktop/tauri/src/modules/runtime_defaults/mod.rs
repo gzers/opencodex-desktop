@@ -70,6 +70,18 @@ struct DiagnosticsDefaults {
 #[derive(Debug, Clone, Deserialize)]
 struct UpdatesDefaults {
     desktop: DesktopUpdates,
+    release_notes: ReleaseNotesDefaults,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ReleaseNotesDefaults {
+    pub manager_repository: String,
+    pub panel_repository: String,
+    pub response_max_bytes: u64,
+    pub notes_max_bytes: usize,
+    pub total_seconds: u64,
+    pub cache_seconds: i64,
+    pub missing_cache_seconds: i64,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -205,6 +217,10 @@ pub fn desktop_update_endpoint(channel: &str) -> &'static str {
         .or_else(|| channels.get("stable"))
         .map(String::as_str)
         .unwrap_or("")
+}
+
+pub fn release_notes() -> &'static ReleaseNotesDefaults {
+    &defaults().updates.release_notes
 }
 
 #[cfg(test)]

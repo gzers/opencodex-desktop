@@ -43,7 +43,9 @@ beforeEach(() => {
   pinia = createPinia(); setActivePinia(pinia)
   managerUpdateStatus.value = { channel: 'stable', currentVersion: '0.1.9', availableVersion: '0.1.10', lastCheckedAt: '2026-10-10', signatureVerified: false, error: null }
   managerInstallProgress.value = null
-  mocks.invoke.mockImplementation(async command => command === 'get_update_status' ? managerUpdateStatus.value : null)
+  mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
+    : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'unavailable',
+      notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false } : null)
   const updates = useUpdatesStore()
   updates.officialProject = { displayName: 'OpenCodex', version: '2.50.0', rawVersion: '2.50.0', truncated: false }
   updates.officialRemote = { tag: 'latest', version: '2.51.0', integrity: null }
@@ -63,16 +65,20 @@ describe('shared production update center', () => {
     expect(mocks.check).toHaveBeenCalledOnce()
   })
   it('renders remote notes as text and only opens validated HTTPS links', async () => {
-    managerUpdateStatus.value = { ...managerUpdateStatus.value!, notes: '<img src=x onerror=alert(1)>', releaseUrl: 'https://example.com/releases/0.1.10', publishedAt: '2026-10-10' }
+    managerUpdateStatus.value = { ...managerUpdateStatus.value!, notes: '<img src=x onerror=alert(1)>', releaseUrl: 'https://example.com/unverified', publishedAt: '2026-10-10' }
+    mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
+      : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready',
+        notes: managerUpdateStatus.value!.notes, notesSource: 'updater', releaseUrl: 'https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10', fetchedAt: 100, publishedAt: '2026-10-10', cached: false } : null)
     const open = vi.spyOn(useAppStore(), 'openExternalLink').mockResolvedValue(true)
     const wrapper = render({ target: 'manager' }); await flushPromises()
     expect(wrapper.find('img').exists()).toBe(false)
-    expect(wrapper.get('.update-notes').text()).toContain('<img src=x onerror=alert(1)>')
+    expect(wrapper.get('.release-notes-body').text()).toContain('<img src=x onerror=alert(1)>')
     await button(wrapper, '查看网页详情 ↗').trigger('click')
-    expect(open).toHaveBeenCalledWith('https://example.com/releases/0.1.10')
+    expect(open).toHaveBeenCalledWith('https://github.com/gzers/opencodex-desktop/releases/tag/v0.1.10')
     for (const releaseUrl of ['javascript:alert(1)', 'http://example.com', 'https://user:secret@example.com', String.raw`https://example.com\evil`, 'file:///tmp/release', 'https://']) {
       managerUpdateStatus.value = { ...managerUpdateStatus.value!, releaseUrl }; await wrapper.vm.$nextTick()
-      expect(wrapper.text()).not.toContain('查看网页详情 ↗')
+      // Old metadata URLs are never read; only independently verified details are used.
+      expect(wrapper.text()).toContain('查看网页详情 ↗')
     }
   })
   it('locks the confirmed manager candidate and backup choice, and observes byte progress after remount', async () => {
