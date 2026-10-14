@@ -1424,3 +1424,13 @@ abc3a914接续5fa，仅改原三个test/smoke工具，先EnableKernel再访问So
 本机Add-Type和53项纯检查（38scope/7生命周期/8native-stop布局与名称）通过，摘要/输出边界/普通权限拒绝保持，ETW/Node/原库/desktop新执行0。草稿PR#5更新标题正文到abc、仍open/draft/unmerged/无auto_merge；新push38561752521/PR38561759502末读仍in_progress，四通用job成功/Windows最终EXE构建，旧5fa绿不抵新head。只读等待600秒终态后按同run直接复核，没有把观测错误或截止当远端停止，不重派。
 
 25份修正/权限原件冻结校验通过，[生命周期修正与当前入口](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2采集器生命周期修正/README.md)。待批准record-request.ps1新入口固定abc/无局部改动，旧2fd/e581准备证据不改，旧入口拒绝新HEAD。系统内存筛选范围、一次原库/120s外层保护+收尾、原2/4/5/8s/并发/隐私界限保持。目标active、desktop0，原失败/性能failed/预算/八门禁/TASK原字节revision2/in_progress/pending/FZ50许可/日常数据边界不变，无录制批准推定、原生交接、新包、合并、签名、发布或关闭。
+
+### 2026-10-14 abc 采集器修正双 CI 终态与执行依赖
+
+abc3a914 push38561752521/PR38561759502现completed/success，五必需job成功/main-only build skipped，Windows最终EXE首屏通过；各35组，Mac900/Windows627passed、忽略6/7。push实际abc，PR实际16c781ea，整tree均0aa5440b…；apps/原CI/锁/共享文件相对bd2不变，head/PR构建身份仍分别记录。完整两ZIP/SHA/CRC、安全条目与四后端checkout/test原件封存，不以树相同推断二进制相同。PR#5正文补新CI终态后读回仍draft/open/unmerged/无auto_merge，head/base/title不变，未重派CI或新候选。
+
+新CI不执行C#实时collector或53项本机纯准备检查，不能证明真实kernel enable/过滤/排空/native stop、失败case/活Node覆盖或根因。管理员批准持续缺失，自动目标续行不作批准；本机desktop/官方Node0、录制根不存在，日常EXE及隔离偏好/根/策略/调度摘要匹配，未再次跑本机原库/Node/ETW。
+
+27份终态原件冻结校验通过，[修正双CI及当前执行依赖](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2生命周期修正双CI/README.md)。已完成独立后台的工具修正、制品来源、准备合同和同源CI；下一实际失败取证需批准/提权，完整原生需新前台窗口和最终候选，安装/Profile需安全隔离，FZ50脚本许可仍缺，性能/周期需原控制条件，Mac需正式平台交接。没有当前获准可执行的替代工作能取代这些证据；不继续纯文档/测试求绿循环或缩小目标。
+
+原完整版本目标/八门禁/CI失败/mac性能failed/预算/TASK原字节revision2/in_progress/pending和空验收保持；待用户权限或环境变化再接续实际取证，整体未完成，不关闭证书、合并、签名、发布、晋升或替换日常安装。
