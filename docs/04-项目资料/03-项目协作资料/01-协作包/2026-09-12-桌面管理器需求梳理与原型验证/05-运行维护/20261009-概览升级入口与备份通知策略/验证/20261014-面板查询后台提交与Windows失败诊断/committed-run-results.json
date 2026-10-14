@@ -1,0 +1,37 @@
+{
+  "recorded_at_utc": "2026-10-14T02:48:18.869016+00:00",
+  "branch": "feature/0.1.10-release-details",
+  "commit": "fd31d7167c03b1e4e83554a9bf778a2ffb9baf4e",
+  "parent": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "changed_paths": [
+    "apps/desktop/tauri/src/commands/about.rs",
+    "apps/desktop/tauri/src/commands/update.rs",
+    "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs",
+    "apps/desktop/tauri/config/event-registry.json"
+  ],
+  "file_sha256": {
+    "apps/desktop/tauri/src/commands/about.rs": "cb16b8366e71dc319358773560990818815b5d5eb4b09f32c3411eed37d5d66f",
+    "apps/desktop/tauri/src/commands/update.rs": "c10950eb8eeabbcc088a395360f018c4a8ec06d348fc02f44894ecb41fc7e6bd",
+    "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs": "f489a81346e1f4ab84d2028b7522ba58bf10c643ee15e1401d57adeb348af2db",
+    "apps/desktop/tauri/config/event-registry.json": "3dd0e6d0d8f641cee9122641004976c2475861c488f1dde787c87452ba0a4390"
+  },
+  "same_red_green_test_bytes": true,
+  "test_sha256": "f489a81346e1f4ab84d2028b7522ba58bf10c643ee15e1401d57adeb348af2db",
+  "red_passed": 1,
+  "red_failed": 1,
+  "green_passed": 2,
+  "green_scenarios": [
+    "accepted successful metadata survives aborted observer and commits real temporary-root schedule/cache",
+    "accepted failed metadata survives aborted observer and commits normal backoff; manager entries unchanged",
+    "frozen root refuses before setup/network side effects"
+  ],
+  "full_rust_suites": 34,
+  "full_rust_passed": 890,
+  "full_rust_ignored": 6,
+  "related_ui_passed": 16,
+  "fmt_clippy_diff_passed": true,
+  "test_scope_limitation": "entry wrapper and shared task owner with controlled metadata future, real schedule persistence, synthetic terminal marker; not native Tauri IPC cancellation or notification delivery",
+  "native_app_started": false,
+  "performance_samples": 0,
+  "release_authorized": false
+}

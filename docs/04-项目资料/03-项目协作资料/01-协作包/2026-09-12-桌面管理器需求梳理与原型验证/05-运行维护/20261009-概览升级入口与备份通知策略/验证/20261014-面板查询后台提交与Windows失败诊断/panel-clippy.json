@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "clippy",
+    "--locked",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--workspace",
+    "--all-targets",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "exit": 0,
+  "elapsed_seconds": 5.709524167
+}

@@ -1,0 +1,33 @@
+{
+  "recorded_at_utc": "2026-10-14T03:20:52.572285+00:00",
+  "run": 38503064187,
+  "raw_log_bytes": 804946,
+  "raw_log_sha256": "a91b01c30c145b75d8dad443a4eebde5fa4316b2f1ea8efb26fb6c6ff8abc9a1",
+  "cargo_counts": {
+    "backend-windows": {
+      "suites": 1,
+      "passed": 519,
+      "failed": 3,
+      "ignored": 4
+    },
+    "backend": {
+      "suites": 34,
+      "passed": 890,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "failure_lines": [
+    "backend-windows\tWindows backend regression\t2026-10-14T02:58:09.8552681Z test infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper ... FAILED",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:58:09.8729312Z test infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output ... FAILED",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:58:09.9811617Z test infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process ... FAILED",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5967885Z thread '<unnamed>' (7132) panicked at src\\infrastructure\\windows_query_fixture.rs:175:13:",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5969969Z thread 'infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper' (10196) panicked at src\\infrastructure\\windows_query_fixture.rs:227:25:",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5981053Z thread '<unnamed>' (9956) panicked at src\\infrastructure\\windows_query_fixture.rs:175:13:",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5982709Z thread 'infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output' (6472) panicked at src\\infrastructure\\windows_query_fixture.rs:227:25:",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5987391Z thread '<unnamed>' (5988) panicked at src\\infrastructure\\windows_query_fixture.rs:175:13:",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5989353Z thread 'infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process' (7244) panicked at src\\infrastructure\\windows_query_fixture.rs:227:25:",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.5992654Z test result: FAILED. 519 passed; 3 failed; 4 ignored; 0 measured; 0 filtered out; finished in 96.22s",
+    "backend-windows\tWindows backend regression\t2026-10-14T02:59:34.7053377Z ##[error]Process completed with exit code 1."
+  ]
+}

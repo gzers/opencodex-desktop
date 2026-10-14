@@ -1,0 +1,116 @@
+[
+  {
+    "prefix": "panel-push",
+    "artifact_id": 11866189404,
+    "bytes": 8771837,
+    "sha256": "10c9f0252f3e8ae93239264a8b5058517497a8320da8c8a8400a05f486896a85",
+    "zip_crc": true,
+    "exe": {
+      "member": "windows-backend/opencodex_desktop_lib-4ef9ce48b814b037.exe",
+      "bytes": 26658304,
+      "sha256": "3db398f600043ee5ac516334e991527e9cb0f99721bd493cbe26931b534029d4"
+    },
+    "selected_originals": [
+      {
+        "member": "windows-backend/environment.json",
+        "bytes": 282,
+        "sha256": "de853eb5cf1379757709cade66f1d166183b2d58ad96d2075d0a2f339d33f3c6"
+      },
+      {
+        "member": "windows-backend/test-executable-sha256.json",
+        "bytes": 255,
+        "sha256": "df9dd95f73de2ef611a86f550539cc970256e089204c16d47ab062bf36b16f53"
+      },
+      {
+        "member": "windows-backend/test-executable.manifest.xml",
+        "bytes": 680,
+        "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+      }
+    ],
+    "environment": {
+      "runner": "GitHub Actions 1000000898",
+      "image": "win25-vs2026",
+      "imageVersion": "20260925.250.1",
+      "os": "Microsoft Windows NT 10.0.26100.0",
+      "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+      "node": "v24.21.0"
+    }
+  },
+  {
+    "prefix": "panel-pr",
+    "artifact_id": 11867756755,
+    "bytes": 9472114,
+    "sha256": "601de5c9fbefed30307a86affbf788a0450b2f86714cd3d83e580a4fdd68f8da",
+    "zip_crc": true,
+    "exe": {
+      "member": "windows-backend/opencodex_desktop_lib-4ef9ce48b814b037.exe",
+      "bytes": 26658304,
+      "sha256": "5daabe6bca112de7948d9bc98bbce0839c464453f1d08a31ea964486ddbd046b"
+    },
+    "selected_originals": [
+      {
+        "member": "windows-backend/environment.json",
+        "bytes": 282,
+        "sha256": "f0b5d0f91991867301312325e64d7f326ee2fe790dbe157296097e32c732c919"
+      },
+      {
+        "member": "windows-backend/test-executable-sha256.json",
+        "bytes": 255,
+        "sha256": "cdf4a9eea928e5f7a31a576f0bb19ac4a496120677b6e37e84aa1a85b519c7a7"
+      },
+      {
+        "member": "windows-backend/test-executable.manifest.xml",
+        "bytes": 680,
+        "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+      }
+    ],
+    "environment": {
+      "runner": "GitHub Actions 1000000903",
+      "image": "win25-vs2026",
+      "imageVersion": "20260925.250.1",
+      "os": "Microsoft Windows NT 10.0.26100.0",
+      "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+      "node": "v24.21.0"
+    }
+  },
+  {
+    "prefix": "integration-push",
+    "artifact_id": 11866743591,
+    "bytes": 8779711,
+    "sha256": "546707dab42a262e95e8b31c6cd76a59e931d54305d50cf39d79167a42b20735",
+    "zip_crc": true,
+    "exe": {
+      "member": "windows-backend/opencodex_desktop_lib-4ef9ce48b814b037.exe",
+      "bytes": 26661888,
+      "sha256": "7eef5a8d59d728721e8e9f2824fe467c33c047ac15358e56a9c2036ef0fe3976"
+    },
+    "selected_originals": [
+      {
+        "member": "windows-backend/environment.json",
+        "bytes": 282,
+        "sha256": "2a235dbc0b5e769302480455aa053d324632c5a7008ac38d83150dc01b5a6700"
+      },
+      {
+        "member": "windows-backend/test-executable-sha256.json",
+        "bytes": 255,
+        "sha256": "a9d25df9d69f3231e7094c59ecffabf55a67026c131614fdaaab1fc92968e624"
+      },
+      {
+        "member": "windows-backend/test-executable.manifest.xml",
+        "bytes": 680,
+        "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+      }
+    ],
+    "environment": {
+      "runner": "GitHub Actions 1000000909",
+      "image": "win25-vs2026",
+      "imageVersion": "20260925.250.1",
+      "os": "Microsoft Windows NT 10.0.26100.0",
+      "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+      "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+      "node": "v24.21.0"
+    }
+  }
+]

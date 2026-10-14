@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--locked",
+    "--lib",
+    "commands::about::query_ownership_tests",
+    "--",
+    "--nocapture"
+  ],
+  "exit": 101,
+  "elapsed_seconds": 7.361419292,
+  "baseline_sha": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "test_sha256": "f489a81346e1f4ab84d2028b7522ba58bf10c643ee15e1401d57adeb348af2db"
+}
