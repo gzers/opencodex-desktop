@@ -10,11 +10,17 @@ pub struct SharedSchedule(pub Mutex<()>);
 pub struct PanelQuery {
     pub sequence: u64,
     pub value: Option<crate::modules::about::remote::OfficialRemoteLatest>,
+    /// Last completed query outcome; a durable commit failure must also be
+    /// shared with callers already waiting for that attempt.
+    pub error: Option<AppError>,
 }
 impl PanelQuery {
     pub(crate) fn completed_result(
         &self,
     ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
+        if let Some(error) = &self.error {
+            return Err(error.clone());
+        }
         self.value.clone().ok_or(AppError::NotConfigured)
     }
 }

@@ -140,15 +140,21 @@ where
     F: FnOnce(Option<crate::modules::about::remote::OfficialRemoteLatest>) -> Fut,
     Fut: std::future::Future<Output = AppResult<()>>,
 {
-    // Do not publish a new in-memory result until schedule/cache/event
-    // persistence has succeeded. Otherwise a failed durable commit could make
-    // a concurrent caller observe success that cannot survive a restart.
+    // Await the durable completion before releasing any result to waiters.
+    // Publish failure as a completed attempt too, so already waiting callers
+    // neither expose old success nor silently start a duplicate metadata query.
     let next_value = result.as_ref().ok().cloned();
-    commit(next_value.clone()).await?;
+    let completed = match commit(next_value.clone()).await {
+        Ok(()) => {
+            query.value = next_value;
+            result
+        }
+        Err(error) => Err(error),
+    };
+    query.error = completed.as_ref().err().cloned();
     query.sequence = query.sequence.wrapping_add(1);
-    query.value = next_value;
     sequence.store(query.sequence, std::sync::atomic::Ordering::Release);
-    result
+    completed
 }
 
 #[cfg(test)]

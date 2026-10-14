@@ -49,16 +49,21 @@ async fn accepted_panel_query_commits_success_or_failure_after_observer_abort() 
                 })
                 .await
                 .unwrap();
-                held.sequence = held.sequence.wrapping_add(1);
-                held.value = metadata.as_ref().ok().cloned();
-                worker_query.1.store(held.sequence, Ordering::Release);
-                complete_at_root(&worker_root, Target::Panel, held.value.as_ref(), 101)?;
-                let _ = committed.send(if succeed {
-                    "panel-check-succeeded"
-                } else {
-                    "panel-check-failed"
-                });
-                metadata
+                commit_panel_query_result(
+                    &mut held,
+                    &worker_query.1,
+                    metadata,
+                    |value| async move {
+                        complete_at_root(&worker_root, Target::Panel, value.as_ref(), 101)?;
+                        let _ = committed.send(if succeed {
+                            "panel-check-succeeded"
+                        } else {
+                            "panel-check-failed"
+                        });
+                        Ok(())
+                    },
+                )
+                .await
             })
             .await
         });
@@ -156,6 +161,7 @@ async fn failed_panel_commit_does_not_publish_unpersisted_result() {
     let mut query = PanelQuery {
         sequence: 4,
         value: Some(previous.clone()),
+        error: None,
     };
     let published_sequence = std::sync::atomic::AtomicU64::new(4);
     let result = super::commit_panel_query_result(
@@ -166,9 +172,10 @@ async fn failed_panel_commit_does_not_publish_unpersisted_result() {
     )
     .await;
     assert_eq!(result, Err(AppError::NotConfigured));
-    assert_eq!(query.sequence, 4);
+    assert_eq!(query.sequence, 5);
     assert_eq!(query.value, Some(previous));
-    assert_eq!(published_sequence.load(Ordering::Acquire), 4);
+    assert_eq!(query.completed_result(), Err(AppError::NotConfigured));
+    assert_eq!(published_sequence.load(Ordering::Acquire), 5);
 
     let result = super::commit_panel_query_result(
         &mut query,
@@ -182,7 +189,150 @@ async fn failed_panel_commit_does_not_publish_unpersisted_result() {
     .await
     .unwrap();
     assert_eq!(result.version, "2.84.0");
-    assert_eq!(query.sequence, 5);
+    assert_eq!(query.sequence, 6);
+    assert!(query.error.is_none());
     assert_eq!(query.value.unwrap().version, "2.84.0");
-    assert_eq!(published_sequence.load(Ordering::Acquire), 5);
+    assert_eq!(published_sequence.load(Ordering::Acquire), 6);
+}
+
+#[tokio::test]
+async fn delayed_commit_publishes_metadata_failure_only_after_persisted_backoff() {
+    use std::future::{poll_fn, Future};
+    use std::task::Poll;
+    let root = tempfile::tempdir().unwrap();
+    let mut schedule = Schedule::default();
+    schedule.reserve(Target::Panel, 100);
+    schedule.save(root.path()).unwrap();
+    let before = std::fs::read(root.path().join(schedule::STATE_PATH)).unwrap();
+    let query = SharedPanelQuery::default();
+    let mut held = query.0.lock().await;
+    let (release, released) = tokio::sync::oneshot::channel();
+    let root_path = root.path();
+    {
+        let mut completion = std::pin::pin!(super::commit_panel_query_result(
+            &mut held,
+            &query.1,
+            Err(AppError::Timeout),
+            |value| async move {
+                released.await.unwrap();
+                complete_at_root(root_path, Target::Panel, value.as_ref(), 101)
+            },
+        ));
+        poll_fn(|cx| {
+            assert!(completion.as_mut().poll(cx).is_pending());
+            Poll::Ready(())
+        })
+        .await;
+        assert_eq!(query.1.load(Ordering::Acquire), 0);
+        assert_eq!(
+            std::fs::read(root.path().join(schedule::STATE_PATH)).unwrap(),
+            before
+        );
+        assert!(
+            query.0.try_lock().is_err(),
+            "commit released the waiter mutex"
+        );
+        release.send(()).unwrap();
+        assert_eq!(completion.await, Err(AppError::Timeout));
+    }
+    assert_eq!(held.completed_result(), Err(AppError::Timeout));
+    assert_eq!(query.1.load(Ordering::Acquire), 1);
+    assert!(held.value.is_none());
+    let state = Schedule::load(root.path()).unwrap();
+    assert_eq!(state.entries["panel-latest"].failures, 1);
+    assert_eq!(state.entries["panel-latest"].next_due, 101 + 300);
+}
+
+#[tokio::test]
+async fn failed_durable_commit_is_shared_with_waiters_without_requery() {
+    use crate::modules::about::remote::OfficialRemoteLatest;
+    use std::future::{poll_fn, Future};
+    use std::task::Poll;
+    let root = tempfile::tempdir().unwrap();
+    let mut schedule = Schedule::default();
+    schedule.complete(Target::ManagerStable, 90, true);
+    schedule.complete(Target::ManagerBeta, 90, false);
+    schedule.reserve(Target::Panel, 100);
+    schedule.save(root.path()).unwrap();
+    let reserved_bytes = std::fs::read(root.path().join(schedule::STATE_PATH)).unwrap();
+    let previous = OfficialRemoteLatest {
+        tag: "latest".into(),
+        version: "2.83.0".into(),
+        integrity: None,
+    };
+    let next = OfficialRemoteLatest {
+        tag: "latest".into(),
+        version: "2.84.0".into(),
+        integrity: None,
+    };
+    // Real cache write failure, independent of permission/elevation differences.
+    std::fs::write(root.path().join("cache"), b"blocked").unwrap();
+    let gate = SharedPanelQuery::default();
+    let mut held = gate.0.lock().await;
+    held.value = Some(previous.clone());
+    let mut waiter = std::pin::pin!(async {
+        // Same observed-sequence/mutex branch as the production entry point.
+        let observed = gate.1.load(Ordering::Acquire);
+        let completed = gate.0.lock().await;
+        assert_ne!(
+            completed.sequence, observed,
+            "waiter would start a second query"
+        );
+        completed.completed_result()
+    });
+    poll_fn(|cx| {
+        assert!(
+            waiter.as_mut().poll(cx).is_pending(),
+            "waiter did not wait for the query"
+        );
+        Poll::Ready(())
+    })
+    .await;
+    let root_path = root.path();
+    let result = super::commit_panel_query_result(
+        &mut held,
+        &gate.1,
+        Ok(next.clone()),
+        |value| async move { complete_at_root(root_path, Target::Panel, value.as_ref(), 101) },
+    )
+    .await;
+    let error = result.unwrap_err();
+    assert_eq!(held.value, Some(previous));
+    assert_eq!(
+        std::fs::read(root.path().join(schedule::STATE_PATH)).unwrap(),
+        reserved_bytes
+    );
+    assert!(schedule::load_cache::<OfficialRemoteLatest>(root.path(), Target::Panel).is_none());
+    assert_eq!(gate.1.load(Ordering::Acquire), 1);
+    drop(held);
+    // No second reserve/metadata/commit: the actual completion projection must
+    // carry the same precise error rather than expose the old success value.
+    let shared_error = tokio::time::timeout(Duration::from_secs(2), waiter)
+        .await
+        .unwrap()
+        .unwrap_err();
+    assert_eq!(
+        serde_json::to_value(shared_error).unwrap(),
+        serde_json::to_value(&error).unwrap()
+    );
+
+    // A later explicit request begins after the failed sequence and can retry.
+    std::fs::remove_file(root.path().join("cache")).unwrap();
+    let mut retry = gate.0.lock().await;
+    assert_eq!(retry.sequence, gate.1.load(Ordering::Acquire));
+    let restored = super::commit_panel_query_result(
+        &mut retry,
+        &gate.1,
+        Ok(next.clone()),
+        |value| async move { complete_at_root(root_path, Target::Panel, value.as_ref(), 102) },
+    )
+    .await
+    .unwrap();
+    assert_eq!(restored, next);
+    assert_eq!(retry.completed_result().unwrap(), restored);
+    assert_eq!(gate.1.load(Ordering::Acquire), 2);
+    let persisted = Schedule::load(root.path()).unwrap();
+    assert_eq!(persisted.entries["panel-latest"].next_due, 102 + 86400);
+    assert_eq!(persisted.entries["manager-stable"].last_success, Some(90));
+    assert_eq!(persisted.entries["manager-beta"].failures, 1);
 }
