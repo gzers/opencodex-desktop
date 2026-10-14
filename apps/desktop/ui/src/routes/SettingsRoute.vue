@@ -18,6 +18,7 @@ import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import type { SyncConflictPolicy } from '@/features/sync/api'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
+import { useEffectsStore } from '@/app/appearance/effects'
 import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
 import {
   installPhaseLabel,
@@ -848,6 +849,14 @@ const installCanAdvance = computed(() => {
   return true
 })
 const installProgress = computed(() => app.runtimeInstall)
+const installEffects = useEffectsStore()
+const installCompleted = computed(() => !app.runtimeInstalling && !app.runtimeInstallError
+  && !!app.runtimeInstallOutcome && installProgress.value?.phase === 'done')
+const installStatusLabel = computed(() => {
+  if (app.runtimeInstallError || installProgress.value?.phase === 'failed') return '安装失败'
+  if (installProgress.value?.phase === 'done' && !installCompleted.value) return '正在核对安装结果'
+  return installPhaseLabel(installProgress.value?.phase ?? 'preparing')
+})
 const offlineStepList = computed(() => offlineSteps(app.runtimeInstall?.phase ?? 'preparing'))
 const showInstallCommandLine = computed(() =>
   installSource.value === 'registry' && phaseShowsCommandLine(app.runtimeInstall?.phase ?? 'preparing'),
@@ -1456,11 +1465,15 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
       </div>
 
       <div v-else class="wiz-body">
-        <div class="wiz-progress"><div class="wiz-progress-bar" :style="{ width: `${installProgress?.percent ?? 0}%` }"></div></div>
+        <div v-if="!app.runtimeInstallError && installProgress?.phase !== 'failed'" class="wiz-progress" role="progressbar" aria-label="OpenCodex 安装进度"
+          :aria-valuenow="installCompleted ? 100 : undefined" :aria-valuemin="0" :aria-valuemax="100"
+          :aria-valuetext="installCompleted ? '安装已完成' : installStatusLabel + '，等待实际完成'">
+          <div class="wiz-progress-bar" :class="{ 'is-indeterminate': !installCompleted, 'is-animated': !installCompleted && installEffects.strategy.animated, 'is-complete': installCompleted }"></div>
+        </div>
         <p class="wiz-status" data-testid="wiz-status">
-          {{ installPhaseLabel(installProgress?.phase ?? 'preparing') }}
+          {{ installStatusLabel }}
           <template v-if="app.runtimeInstallOutcome"> · {{ app.runtimeInstallOutcome.version }} · {{ installSource === 'registry' ? '联网安装' : '离线导入' }}</template>
-          · {{ installProgress?.percent ?? 0 }}%
+
         </p>
         <pre v-if="showInstallCommandLine" class="wiz-console" data-testid="wiz-console">{{ app.runtimeInstallLines.join('\n') || '等待 npm 输出…' }}</pre>
         <ul v-else class="wiz-substeps" data-testid="wiz-substeps">
