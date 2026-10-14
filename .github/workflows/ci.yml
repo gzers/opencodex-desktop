@@ -88,7 +88,9 @@ jobs:
             rustTestThreads = $env:RUST_TEST_THREADS
             rustTestTimeUnit = $env:RUST_TEST_TIME_UNIT
           } | ConvertTo-Json
-          cargo test --locked --workspace --features integration-test
+          # Print captured fixture phases after execution, including successful
+          # cases, without changing test parallelism or production deadlines.
+          cargo test --locked --workspace --features integration-test -- --show-output
       - name: Collect Windows native dependency diagnostics
         if: always()
         shell: pwsh

@@ -873,6 +873,9 @@ html:not([data-effects="high"]) .topbar-refresh.is-busy svg { animation: none; }
 .wiz-more summary { color: var(--muted); font-size: var(--text-micro); cursor: pointer; }
 .wiz-progress { height: 6px; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, var(--text) 12%, transparent); }
 .wiz-progress-bar { height: 100%; background: var(--accent); transition: width .2s ease; }
+.wiz-progress-bar.is-indeterminate { width: 38%; transform: translateX(80%); transition: none; }
+.wiz-progress-bar.is-animated { animation: progress-slide 1.2s ease-in-out infinite; }
+.wiz-progress-bar.is-complete { width: 100%; background: var(--green); transition: none; }
 .wiz .wiz-status { font-size: var(--text-body); margin: 0; }
 .wiz-console { margin: 0; max-height: 180px; overflow: auto; padding: 8px; border-radius: var(--radius-sm); background: color-mix(in srgb, var(--text) 6%, transparent); font-size: var(--text-micro); white-space: pre-wrap; }
 .wiz-substeps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: var(--text-micro); }

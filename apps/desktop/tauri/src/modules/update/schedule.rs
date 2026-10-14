@@ -2,7 +2,7 @@
 use super::UpdateChannel;
 use crate::errors::{AppError, AppResult};
 use serde::{Deserialize, Serialize};
-use std::{collections::BTreeMap, io::Read, path::Path};
+use std::{collections::BTreeMap, path::Path};
 
 pub const STATE_PATH: &str = "manager-state/update-schedule.json";
 pub const STARTUP_DELAY_SECONDS: u64 = 45;
@@ -76,19 +76,12 @@ pub struct Plan {
 }
 impl Schedule {
     pub fn load(root: &Path) -> AppResult<Self> {
-        let path = root.join(STATE_PATH);
-        let file = match std::fs::File::open(path) {
-            Ok(f) => f,
+        let path = super::storage::file_path(root, Path::new(STATE_PATH), false)?;
+        let bytes = match super::storage::read_file(&path, MAX_BYTES) {
+            Ok(bytes) => bytes,
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(Self::default()),
             Err(_) => return Err(AppError::NotConfigured),
         };
-        let mut bytes = Vec::new();
-        file.take(MAX_BYTES + 1)
-            .read_to_end(&mut bytes)
-            .map_err(|_| AppError::NotConfigured)?;
-        if bytes.len() as u64 > MAX_BYTES {
-            return Err(AppError::NotConfigured);
-        }
         let value: Self = serde_json::from_slice(&bytes).map_err(|_| AppError::NotConfigured)?;
         if value.schema != 1
             || value.entries.len() > 3
@@ -105,7 +98,8 @@ impl Schedule {
     }
     pub fn save(&self, root: &Path) -> AppResult<()> {
         let bytes = serde_json::to_vec(self).map_err(|_| AppError::NotConfigured)?;
-        crate::infrastructure::atomic_write::atomic_write(&root.join(STATE_PATH), &bytes, 0o600)
+        let path = super::storage::file_path(root, Path::new(STATE_PATH), true)?;
+        crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)
     }
     /// Rebase only impossible future deadlines for the selected objects. Persist this
     /// repair before planning so reloads/wakes cannot keep postponing the deadline.
@@ -184,23 +178,119 @@ pub fn save_cache<T: Serialize>(root: &Path, target: Target, value: &T) -> AppRe
     if bytes.len() as u64 > MAX_CACHE_BYTES {
         return Err(AppError::NotConfigured);
     }
-    crate::infrastructure::atomic_write::atomic_write(&cache_path(root, target), &bytes, 0o600)
+    let relative = Path::new("cache/updates").join(format!("{}.json", target.key()));
+    let path = super::storage::file_path(root, &relative, true)?;
+    crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)
 }
 pub fn load_cache<T: serde::de::DeserializeOwned>(root: &Path, target: Target) -> Option<T> {
-    let file = std::fs::File::open(cache_path(root, target)).ok()?;
-    let mut bytes = Vec::new();
-    file.take(MAX_CACHE_BYTES + 1)
-        .read_to_end(&mut bytes)
-        .ok()?;
-    if bytes.len() as u64 > MAX_CACHE_BYTES {
-        return None;
-    }
+    let relative = Path::new("cache/updates").join(format!("{}.json", target.key()));
+    let path = super::storage::file_path(root, &relative, false).ok()?;
+    let bytes = super::storage::read_file(&path, MAX_CACHE_BYTES).ok()?;
     serde_json::from_slice(&bytes).ok()
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(unix)]
+    fn directory_link(target: &Path, link: &Path) {
+        std::os::unix::fs::symlink(target, link).unwrap();
+    }
+
+    #[cfg(windows)]
+    fn directory_link(target: &Path, link: &Path) {
+        use std::os::windows::process::CommandExt;
+        let powershell = std::path::PathBuf::from(std::env::var_os("SystemRoot").unwrap())
+            .join("System32/WindowsPowerShell/v1.0/powershell.exe");
+        // A fixed OS junction command on two test-owned temporary roots; no
+        // developer-mode/symlink privilege or application instance is required.
+        let result = std::process::Command::new(powershell)
+            .args(["-NoProfile", "-NonInteractive", "-Command",
+                "$ErrorActionPreference='Stop'; New-Item -ItemType Junction -Path $env:OPENCODEX_TEST_LINK -Target $env:OPENCODEX_TEST_TARGET | Out-Null"])
+            // Pass paths as string values, never interpolate them into script code.
+            .env("OPENCODEX_TEST_LINK", link)
+            .env("OPENCODEX_TEST_TARGET", target)
+            .creation_flags(0x0800_0000)
+            .output()
+            .unwrap();
+        assert!(
+            result.status.success(),
+            "junction fixture failed: {result:?}"
+        );
+        use std::os::windows::fs::MetadataExt;
+        assert_ne!(
+            std::fs::symlink_metadata(link).unwrap().file_attributes() & 0x400,
+            0
+        );
+    }
+
+    #[cfg(any(unix, windows))]
+    #[test]
+    fn linked_schedule_partition_never_reads_or_rewrites_another_root() {
+        let root = tempfile::tempdir().unwrap();
+        let outside = tempfile::tempdir().unwrap();
+        let mut saved = Schedule::default();
+        saved.complete(Target::ManagerStable, 100, true);
+        saved.save(outside.path()).unwrap();
+        let foreign = outside.path().join(STATE_PATH);
+        let before = std::fs::read(&foreign).unwrap();
+        directory_link(
+            &outside.path().join("manager-state"),
+            &root.path().join("manager-state"),
+        );
+        let read_refused = Schedule::load(root.path()).is_err();
+        let mut replacement = Schedule::default();
+        replacement.complete(Target::Panel, 200, false);
+        let write_refused = replacement.save(root.path()).is_err();
+        let unchanged = std::fs::read(&foreign).unwrap() == before;
+        assert!(read_refused && write_refused && unchanged,
+            "linked schedule escaped root: read_refused={read_refused}, write_refused={write_refused}, external_unchanged={unchanged}");
+    }
+
+    #[cfg(any(unix, windows))]
+    #[test]
+    fn linked_version_cache_never_reads_or_rewrites_another_root() {
+        for component in ["cache", "updates", "file"] {
+            let root = tempfile::tempdir().unwrap();
+            let outside = tempfile::tempdir().unwrap();
+            let prior = serde_json::json!({"version":"2.83.0"});
+            save_cache(outside.path(), Target::Panel, &prior).unwrap();
+            let foreign = cache_path(outside.path(), Target::Panel);
+            let before = std::fs::read(&foreign).unwrap();
+            match component {
+                "cache" => {
+                    directory_link(&outside.path().join("cache"), &root.path().join("cache"))
+                }
+                "updates" => {
+                    std::fs::create_dir(root.path().join("cache")).unwrap();
+                    directory_link(
+                        &outside.path().join("cache/updates"),
+                        &root.path().join("cache/updates"),
+                    );
+                }
+                _ => {
+                    std::fs::create_dir_all(root.path().join("cache/updates")).unwrap();
+                    #[cfg(unix)]
+                    std::os::unix::fs::symlink(&foreign, cache_path(root.path(), Target::Panel))
+                        .unwrap();
+                    #[cfg(windows)]
+                    std::fs::hard_link(&foreign, cache_path(root.path(), Target::Panel)).unwrap();
+                }
+            }
+            let read_refused =
+                load_cache::<serde_json::Value>(root.path(), Target::Panel).is_none();
+            let write_refused = save_cache(
+                root.path(),
+                Target::Panel,
+                &serde_json::json!({"version":"2.84.0"}),
+            )
+            .is_err();
+            let unchanged = std::fs::read(&foreign).unwrap() == before;
+            assert!(read_refused && write_refused && unchanged,
+                "linked cache {component} escaped root: read_refused={read_refused}, write_refused={write_refused}, external_unchanged={unchanged}");
+        }
+    }
     #[test]
     fn escaped_bounded_release_notes_fit_cache_and_oversized_cache_is_refused() {
         let root = tempfile::tempdir().unwrap();

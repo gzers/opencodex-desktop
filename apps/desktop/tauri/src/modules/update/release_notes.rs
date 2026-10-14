@@ -3,7 +3,6 @@ use crate::modules::runtime_defaults::ReleaseNotesDefaults;
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use std::{
-    io::Read,
     path::{Path, PathBuf},
     time::Duration,
 };
@@ -230,33 +229,8 @@ struct Cache {
 }
 
 fn cache_file(root: &Path, name: &str, create: bool) -> Result<PathBuf, Error> {
-    let mut path = root.to_path_buf();
-    for dir in ["cache", "updates", "release-notes"] {
-        path.push(dir);
-        match std::fs::symlink_metadata(&path) {
-            Ok(meta) if meta.file_type().is_dir() => {}
-            Err(error) if error.kind() == std::io::ErrorKind::NotFound && create => {
-                if let Err(error) = std::fs::create_dir(&path) {
-                    if error.kind() != std::io::ErrorKind::AlreadyExists {
-                        return Err(Error::Cache);
-                    }
-                }
-                if !std::fs::symlink_metadata(&path)
-                    .map_err(|_| Error::Cache)?
-                    .file_type()
-                    .is_dir()
-                {
-                    return Err(Error::Cache);
-                }
-            }
-            _ => return Err(Error::Cache),
-        }
-    }
-    path.push(format!("{name}.json"));
-    match std::fs::symlink_metadata(&path) {
-        Ok(meta) if !meta.file_type().is_file() => Err(Error::Cache),
-        _ => Ok(path),
-    }
+    let relative = Path::new("cache/updates/release-notes").join(format!("{name}.json"));
+    super::storage::file_path(root, &relative, create).map_err(|_| Error::Cache)
 }
 fn cached(
     root: &Path,
@@ -266,15 +240,7 @@ fn cached(
     limits: &ReleaseNotesDefaults,
 ) -> Option<Details> {
     let path = cache_file(root, name, false).ok()?;
-    let mut bytes = Vec::new();
-    std::fs::File::open(path)
-        .ok()?
-        .take(512 * 1024 + 1)
-        .read_to_end(&mut bytes)
-        .ok()?;
-    if bytes.len() > 512 * 1024 {
-        return None;
-    }
+    let bytes = super::storage::read_file(&path, 512 * 1024).ok()?;
     let cache: Cache = serde_json::from_slice(&bytes).ok()?;
     let d = &cache.details;
     let ttl = if d.notes_state == NotesState::Ready {
