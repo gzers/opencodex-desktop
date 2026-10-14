@@ -1,0 +1,63 @@
+{
+  "atUtc": "2026-10-14T16:30:48.3176306Z",
+  "isolatedPreferenceFile": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-e6a4b32-20261014\\data\\manager-state\\preferences.json",
+  "rawFileSha256": "207057ac5d1543e3cb95b5e19baf71495cffc54ac05a5ade0b2eef4dd06d372c",
+  "preferences": {
+    "appearance": {
+      "glow_render": "mesh",
+      "interface_scale": 100,
+      "theme": "system",
+      "visual_effects": "high"
+    },
+    "backup": {
+      "auto_backup_import": true,
+      "auto_backup_sync": true,
+      "auto_backup_upgrade": true,
+      "backup_before_overwrite": true,
+      "backup_include_mcp": true,
+      "backup_include_skills": true,
+      "backup_integrity": "sha-256",
+      "backup_retention": "10",
+      "export_include_mcp": true,
+      "export_include_skills": true
+    },
+    "cli": {
+      "cli_enabled": false
+    },
+    "extensions": {
+      "mcp_conflict_policy": "ask",
+      "mcp_mask": true
+    },
+    "maintenance": {
+      "cleanup_backup_summary": true,
+      "log_retention": "30d-10000",
+      "notification_retention": "30",
+      "startup_cleanup": false
+    },
+    "network": {
+      "network_no_proxy": "",
+      "network_proxy_host": "",
+      "network_proxy_mode": "none",
+      "network_proxy_scheme": "http"
+    },
+    "schema_version": 2,
+    "shell": {
+      "auto_panel": false,
+      "keep_proxy_on_close": false,
+      "launch_main": true,
+      "launch_with_codex": false,
+      "lifecycle_notifications": true,
+      "panel_mode": "embedded"
+    },
+    "sync": {
+      "cold_sync": true,
+      "sync_conflict_alerts": true,
+      "sync_conflict_policy": "ask"
+    },
+    "updates": {
+      "app_update_auto_check": false,
+      "app_update_channel": "stable",
+      "app_update_check_interval_seconds": 86400
+    }
+  }
+}

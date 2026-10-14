@@ -1474,3 +1474,13 @@ e6a4b32f push CI38583679031成功；PR CI38583689702保留原三个Windows versi
 原库529passed/1failed/4ignored，七query均通过，唯一license.opened仍为本机缺失CI runner路径；没有复现bd2失败时间窗。根高频调度915533、根I/O initiation311295仍按范围省略并计数，故证明的是自有Node/cmd家族及其线程/调度/IO/生命周期覆盖，不能宣称测试根全部热点完整。见[basename覆盖与完整家族录制](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2basename覆盖与完整家族录制/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-BASENAME-RUN/`。历史失败、性能failed、完整双平台门禁、真实周期/安装/更新/备份/树表/事件要求及TASK revision2/in_progress/pending保持；Mac后台未交接，不关闭、合并、签名、晋升或发布。
 
 同 SHA 代码 worktree 的 Windows harness token 自检及纯 bundle identity 自检也已完成：普通 harness/child 真实令牌检查与拒绝错误身份、错误模式、退出/释放句柄等 9 项通过；NSIS/MSI marker 与 payload 纯测试 5 项通过。首轮因调用 CWD 为 docs 分支而错误记录 docs HEAD，原件保留；改在代码 worktree CWD 重跑后记录 `e6a4b32f`，证据`.adg/evidence/OCX-0110-20261014-WIN-TOKEN-HARNESS/`。该证据不替代应用普通/管理员双权限、原生 UI、安装器或性能门禁。
+
+### 2026-10-15 e6 精确桌面候选与普通权限前台子集
+
+用户开始30分钟Windows前台窗口，但开始时缺精确桌面候选；此次未提前准备的耗时如实保留，不当UI验收。仅dispatch一次e6 Windows candidate run38591604133，最终success；artifact11909280359/11909105485 API摘要、ZIP CRC/安全条目、包内source/回执核验，MSI只读提取EXE SHA2c9cad96…匹配精确bundle回执/版本。未本机安装或卸载，原e6 PR三个query失败及bd2失败不因新candidate绿撤销。
+
+用户本轮“不用管dpi的问题”，物理缩放跳过、门禁保持待验；实际远程会话metric1/nativeDpi192不当物理200%。00:00创建唯一普通实例73920/elevated false/type3，新隔离根自动面板/自动检查/启动清理关闭；初次UI工具遭用户物理Escape即停止，只有用户00:16再“继续前台验证”后才操作同实例，至00:31短窗口收尾。
+
+真实Sky输入及原生只读状态证明：同e6首屏/单系统标题/无应用菜单；最大化3200×1121；索引还原点击未生效原件保留，当前截图坐标点击回原1180×760及精确外框；最小化/恢复同PID，DWM backdrop2→1→2且日志mica→inactive solid→mica；真实设置关闭keep-on-close后系统关闭按钮正常退出，native0、未强制终止。时间字符串被JSON解析为DateTime造成只读方法误报PIDreuse，原记录保留并改UTCticks/原生creation核验；未修产品。
+
+详见[普通权限前台子集](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-e6普通权限前台子集/README.md)，57份证据方法/回执/截图/状态清单`.adg/evidence/OCX-0110-20261014-WIN-FG-REQUEST/`。日常EXE/旧隔离状态摘要保持，前台已结束；管理员、托盘重开/Snap、全部物理/安装/更新/备份树表/事件/退避周期及配对性能仍开放。完整原目标/八门禁/TASK原字节revision2/in_progress/pending/旧性能failed/Mac依赖不改，不关闭、自动合并、签名、晋升或发布。
