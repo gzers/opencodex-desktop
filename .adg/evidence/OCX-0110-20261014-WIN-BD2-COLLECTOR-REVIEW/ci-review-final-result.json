@@ -1,0 +1,110 @@
+{
+  "atUtc": "2026-10-14T11:54:40.722958+00:00",
+  "source": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "base": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "ciResults": [
+    {
+      "runId": 38555890377,
+      "event": "push",
+      "associatedHead": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+      "actualCheckout": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+      "actualTreeEqualsHelperHead": true,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "frontend": "success",
+        "backend": "success",
+        "backend-windows": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      },
+      "rustCounts": {
+        "backend": {
+          "suites": 35,
+          "passed": 900,
+          "failed": 0,
+          "ignored": 6
+        },
+        "backend-windows": {
+          "suites": 35,
+          "passed": 627,
+          "failed": 0,
+          "ignored": 7
+        }
+      },
+      "queryFixtureCasesPassed": [
+        "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+        "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+        "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+        "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+        "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+        "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+        "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process"
+      ],
+      "archiveBytes": 293003,
+      "archiveSha256": "86d18ff744fb94e4ebe99664859485f519d77e51d25c67b3d4c33b0d7f08ab0f",
+      "recorderOrPureScopeTestsExecutedByCi": false
+    },
+    {
+      "runId": 38556292712,
+      "event": "pull_request",
+      "associatedHead": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+      "actualCheckout": "a813c1dc964e5f4cc441aa75d79a7d2277823dbd",
+      "actualTreeEqualsHelperHead": true,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "frontend": "success",
+        "backend": "success",
+        "backend-windows": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      },
+      "rustCounts": {
+        "backend": {
+          "suites": 35,
+          "passed": 900,
+          "failed": 0,
+          "ignored": 6
+        },
+        "backend-windows": {
+          "suites": 35,
+          "passed": 627,
+          "failed": 0,
+          "ignored": 7
+        }
+      },
+      "queryFixtureCasesPassed": [
+        "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+        "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+        "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+        "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+        "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+        "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+        "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process"
+      ],
+      "archiveBytes": 295758,
+      "archiveSha256": "fc3ce645652161750923f2b7fefaebc2374ee8d40a56fa528530c8978525c431",
+      "recorderOrPureScopeTestsExecutedByCi": false
+    }
+  ],
+  "productAndOriginalWorkflowBytesUnchangedSinceBd2": true,
+  "helperWaitExecSession": 67983,
+  "helperWaitPid": 33408,
+  "helperWaitTerminal": true,
+  "boundedWaitElapsedSeconds": 166.01600000000326,
+  "ciManuallyDispatchedOrRerun": false,
+  "rawEtwRecordedOnUserHost": false,
+  "originalFailureReproducedOrClosed": false,
+  "administratorApprovalStillPending": true,
+  "goalAutomaticallyContinuingDoesNotApproveRecording": true,
+  "earlierPreparationEvidenceModified": false,
+  "localNativeInstanceCount": 0,
+  "fullVersionGatePromoted": false,
+  "pr5Merged": false,
+  "releaseAccepted": false,
+  "logParserCorrection": "Match the initial checkout step only, not Post checkout; reused already-downloaded ZIP and selected bytes after verifying their equality.",
+  "firstInspectionEncodingCorrection": "Explicit UTF-8 after console-default GBK read failed; original bytes unchanged."
+}

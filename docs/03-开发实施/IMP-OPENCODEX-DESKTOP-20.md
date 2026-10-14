@@ -1406,3 +1406,11 @@ feature/0.1.10-windows-query-etw@5fa36a60仅新增三个test/smoke诊断文件�
 管理员单次录制可审阅入口已准备：默认只显示方案，明确批准且手动管理员PowerShell7才可能运行；源HEAD/无局部改动、制品/Node/DLL摘要、desktop0、新输出根均为执行前提。先启唯一实时session，再启动一次原完整库，默认并发/capture和2s/4s/5s/8s不改；120s只作原库外层保护，另短时排空。系统内核事件短暂内存解码，持久化按自有家族/原QPC生命周期筛选，不宣传kernel PID白名单、不写整机ETL或保存其他调度参与者ID/命令行/SID/无关路径。队列/IRP/输出均有界，无WCT串行轮询、全局防护修改或自提升。真实事件覆盖/失败复现/排空未执行，loss计数设计为stop前快照，不称最终零丢失。
 
 35份准备原件冻结校验通过，[实时采集准备与权限范围](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2实时采集准备/README.md)。本轮原测试/Node/ETW新执行数0、本机desktop0，管理员录制批准待用户；不以工具准备代替失败原始证据。无手动CI重派/新候选/原生交接，原CI失败/性能failed/预算/八门禁/TASKrevision2/in_progress/pending及FZ50缺口保持，目标active、不关闭/签名/合并/发布。
+
+### 2026-10-14 采集器分支双 CI 终态，实际录制仍待批准
+
+只读核验5fa36a60的push38555890377/PR38556292712现completed/success，五必需job成功/main-only build skipped；每轮Mac900/Windows627passed、忽略6/7，各35组。七query夹具在两通用回归均passed，不撤销原bd2 PR38537166560失败。push实际5fa、PR实际a813c1dc，整tree均fa1d4d54…；apps/原CI工作流相对bd2未变。
+
+完整两ZIP/CRC/安全条目与四后端checkout/test原件核验，日志解析初次误选Post checkout触发不覆盖保护，精确选择后只复用已下载/已保存字节；GBK读取失败改显式UTF8，不重造原件。exec67983/PID33408有界等待166.016秒后正常终态，期间读取错误不当远端停止，不重派/重启。PR#5最新仍open/draft/unmerged/无auto_merge。[双CI证据与边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2采集器双CI终态/README.md)。
+
+CI未执行实时ETW采集器或38scope本机检查，不证明record/事件覆盖/排空/隐私过滤实跑或原失败复现。自动目标接续不是管理员批准；本机desktop/官方Node0、录制输出根不存在，未再次跑本机原库/Node/ETW或自提升，正式录制仍待人的批准，目标active。原CI/性能failed、全部预算/八门禁、TASK原字节/revision2/in_progress/pending及FZ50许可/日常数据边界保持，无新包/原生交接、合并、关闭、签名、发布或晋升。
