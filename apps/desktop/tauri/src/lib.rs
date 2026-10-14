@@ -294,12 +294,9 @@ pub fn run() {
                 }
             }
             if let Some(tray) = app.tray_by_id(crate::modules::tray::TRAY_ID) {
-                // Windows 托盘不会像 macOS 模板图标那样按主题反色，使用应用彩色图标。
+                // Windows notification-area artwork is independent of the app icon.
                 #[cfg(windows)]
-                if let Some(icon) = app.default_window_icon() {
-                    tray.set_icon(Some(icon.clone()))?;
-                    tray.set_icon_as_template(false)?;
-                }
+                crate::infrastructure::windows_tray_icon::install(app.handle())?;
                 tray.set_menu(Some(tray_menu.clone()))?;
             }
             // Windows keeps one system caption row. Product actions stay in the

@@ -163,6 +163,11 @@ mod native {
         let _ = app.run_on_main_thread(move || apply(&queued));
     }
     fn apply(app: &tauri::AppHandle) {
+        // SystemUsesLightTheme can change while the app's explicit theme stays
+        // unchanged, so refresh the tray before the appearance cache early-return.
+        if let Err(error) = crate::infrastructure::windows_tray_icon::refresh(app) {
+            eprintln!("Windows tray appearance refresh failed: {error}");
+        }
         let Some(window) = app.get_webview_window("main") else {
             return;
         };
