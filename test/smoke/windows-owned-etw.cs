@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Diagnostics.Tracing;
 using Microsoft.Diagnostics.Tracing.Parsers;
@@ -333,6 +334,46 @@ namespace OpenCodex.Diagnostics
         private static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern bool QueryFullProcessImageNameW(IntPtr process, uint flags, StringBuilder path, ref uint size);
+        private static string QueryProcessImage(IntPtr handle)
+        {
+            // MainModule enumerates loader modules, which need not be ready on
+            // a just-created process. Query the already-held process handle;
+            // never wait for initialization or relaunch the original test.
+            var image = new StringBuilder(32768);
+            uint size = 32768;
+            if (!QueryFullProcessImageNameW(handle, 0, image, ref size))
+                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
+            return image.ToString();
+        }
+        private static string RequireExpectedImage(string actual, string expected)
+        {
+            if (!SamePath(actual, expected)) throw new InvalidOperationException("Root image mismatch.");
+            return actual;
+        }
+        public static int SelfTestProcessImage()
+        {
+            // Only this controller's retained handle is queried. No process,
+            // Node, original library, ETW session, or startup wait is created.
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Owned root image contract");
+                checks++;
+            };
+            using var current = Process.GetCurrentProcess();
+            string actual = QueryProcessImage(current.Handle);
+            require(SamePath(actual, Environment.ProcessPath));
+            require(RequireExpectedImage(actual, Environment.ProcessPath) == actual);
+            require(RequireExpectedImage(@"\\?\" + actual, Environment.ProcessPath) == @"\\?\" + actual);
+            bool mismatchRejected = false;
+            try { RequireExpectedImage(actual, actual + ".unowned"); }
+            catch (InvalidOperationException) { mismatchRejected = true; }
+            require(mismatchRejected);
+            bool invalidHandleRejected = false;
+            try { QueryProcessImage(IntPtr.Zero); }
+            catch (System.ComponentModel.Win32Exception) { invalidHandleRejected = true; }
+            require(invalidHandleRejected);
+            return checks;
+        }
         [StructLayout(LayoutKind.Sequential)]
         private struct NativeTime
         {
@@ -492,7 +533,9 @@ namespace OpenCodex.Diagnostics
             };
             OwnedEtwScope scope = null;
             Process process = null;
+            Task<string> stdout = null, stderr = null;
             Exception captureError = null;
+            Exception runError = null;
             var started = DateTime.UtcNow;
             long minimumQpc = 0;
             string commandExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "cmd.exe");
@@ -504,6 +547,8 @@ namespace OpenCodex.Diagnostics
             };
             AppDomain.CurrentDomain.ProcessExit += processExitStop;
             int? exitCode = null, lost = null;
+            int? exitCodeAfterCleanup = null;
+            bool stdoutSaved = false, stderrSaved = false, ownedRootExited = false;
             DateTime? processCreatedUtc = null;
             Action<TraceEvent, Action> guarded = (data, action) => {
                 try { action(); }
@@ -645,9 +690,16 @@ namespace OpenCodex.Diagnostics
                 Configure(info, nodeExe, temporaryDirectory, homeDirectory);
                 process = Process.Start(info);
                 if (process == null) throw new InvalidOperationException("Test did not start.");
+                // Drain immediately, including when identity validation fails.
+                // Original libtest capture and CLI arguments remain unchanged.
+                stdout = process.StandardOutput.ReadToEndAsync();
+                stderr = process.StandardError.ReadToEndAsync();
                 processCreatedUtc = process.StartTime.ToUniversalTime();
-                string actualImage = process.MainModule.FileName;
-                if (!SamePath(actualImage, testExe)) throw new InvalidOperationException("Root image mismatch.");
+                string actualImage = QueryProcessImage(process.Handle);
+                emit(new { kind = "root-handle-image-query", atUtc = DateTime.UtcNow, pid = process.Id,
+                    createdUtc = processCreatedUtc, image = actualImage, expectedImageMatches = SamePath(actualImage, testExe),
+                    query = "QueryFullProcessImageNameW on retained Process.Handle; no loader-module enumeration" });
+                RequireExpectedImage(actualImage, testExe);
                 scope = new OwnedEtwScope(process.Id, minimumQpc);
                 emit(new { kind = "root-handle-binding", atUtc = DateTime.UtcNow, pid = process.Id,
                     createdUtc = processCreatedUtc, image = actualImage, minimumQpc,
@@ -657,8 +709,6 @@ namespace OpenCodex.Diagnostics
                 consumer.Start();
                 consumerStarted = true;
                 if (!ready.Wait(5000)) throw new TimeoutException("ETW consumer did not schedule; stop owned session.");
-                var stdout = process.StandardOutput.ReadToEndAsync();
-                var stderr = process.StandardError.ReadToEndAsync();
                 if (!process.WaitForExit(120000))
                 {
                     outerCleanup = true;
@@ -666,11 +716,16 @@ namespace OpenCodex.Diagnostics
                     process.WaitForExit(10000);
                 }
                 exitCode = process.ExitCode;
-                if (stdout.Wait(5000)) File.WriteAllText(Path.Combine(outputDirectory, "test-stdout.original.log"), stdout.Result);
-                if (stderr.Wait(5000)) File.WriteAllText(Path.Combine(outputDirectory, "test-stderr.original.log"), stderr.Result);
                 // Flush/stop only our unique session. ProcessTrace drains buffered
                 // original events; it does not depend on Node still being alive.
                 lost = session.EventsLost;
+            }
+            catch (Exception error)
+            {
+                // Preserve setup/root-identity errors as well as decoder errors.
+                // A null decoder error alone must never suggest valid coverage.
+                runError = error;
+                throw;
             }
             finally
             {
@@ -681,6 +736,11 @@ namespace OpenCodex.Diagnostics
                             outerCleanup = true;
                             process.Kill(true);
                             process.WaitForExit(10000);
+                        }
+                        if (process != null) {
+                            ownedRootExited = process.HasExited;
+                            if (!ownedRootExited) throw new TimeoutException("Owned root cleanup deadline exceeded.");
+                            exitCodeAfterCleanup = process.ExitCode;
                         }
                     }),
                     new KeyValuePair<string, Action>("session-stop", () => {
@@ -704,11 +764,25 @@ namespace OpenCodex.Diagnostics
                     }),
                     new KeyValuePair<string, Action>("writer-complete", () => queue.CompleteAdding()),
                     new KeyValuePair<string, Action>("writer-drain", () => writerJoined = writer.Join(10000)),
+                    new KeyValuePair<string, Action>("stdout-drain", () => {
+                        if (stdout == null) return;
+                        if (!stdout.Wait(5000)) throw new TimeoutException("Owned stdout drain deadline exceeded.");
+                        File.WriteAllText(Path.Combine(outputDirectory, "test-stdout.original.log"), stdout.Result);
+                        stdoutSaved = true;
+                    }),
+                    new KeyValuePair<string, Action>("stderr-drain", () => {
+                        if (stderr == null) return;
+                        if (!stderr.Wait(5000)) throw new TimeoutException("Owned stderr drain deadline exceeded.");
+                        File.WriteAllText(Path.Combine(outputDirectory, "test-stderr.original.log"), stderr.Result);
+                        stderrSaved = true;
+                    }),
                 });
                 if (sessionStopped) AppDomain.CurrentDomain.ProcessExit -= processExitStop;
                 var result = new {
                     startedAtUtc = started, finishedAtUtc = DateTime.UtcNow, sessionName,
                     testPid = process?.Id, rootCreationUtc = processCreatedUtc, testExitCode = exitCode,
+                    testExitCodeAfterCleanup = exitCodeAfterCleanup, ownedRootExited,
+                    stdoutSaved, stderrSaved, originalLibraryCompleted = exitCode.HasValue && !outerCleanup,
                     rootProcessStartSeen = rootStartSeen != 0, minimumQpc,
                     processTraceStarted = consumerStarted, processTraceJoined = consumerJoined,
                     ownedSessionStopSucceeded = sessionStopped,
@@ -717,6 +791,7 @@ namespace OpenCodex.Diagnostics
                     maximumSerializedBytes = 64L * 1024 * 1024,
                     maximumQueueRecords = 32768, maximumTrackedIrps = 32768,
                     kernelEventsLost = lost, captureError = captureError?.GetType().Name,
+                    runError = runError?.GetType().Name, runErrorMessage = runError?.Message,
                     writerError = writerError?.GetType().Name, cleanupErrors,
                     kernelBeforeSourceOrder = true,
                     nativeOwnedSessionStop = nativeStop, traceEventGenericStopInvoked = false,

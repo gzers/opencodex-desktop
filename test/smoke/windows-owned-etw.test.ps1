@@ -17,6 +17,7 @@ $taskResult = & $taskScript @taskArguments | ConvertFrom-Json
 if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 38 -or
     $taskResult.pureLifecycleChecks -ne 7 -or
     $taskResult.pureNativeStopChecks -ne 8 -or
+    $taskResult.controllerProcessImageChecks -ne 5 -or
     $taskResult.etwSessionStarted -or $taskResult.testOrNodeStarted -or $taskResult.recordingApproved) {
     throw 'Default invocation must prepare and exercise pure scope contracts only'
 }
@@ -53,6 +54,7 @@ if (!$taskResult.controllerElevated) {
 if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards created a recording root' }
 [ordered]@{
     status='passed';pureScopeChecks=38;pureLifecycleChecks=7;pureNativeStopChecks=8
+    controllerProcessImageChecks=5
     digestGuard='passed';outputScopeGuard='passed'
     ordinaryPrivilegeGuard=$taskOrdinaryGuard
     etwSessionStarted=$false;testOrNodeStarted=$false;recordingRootCreated=$false
