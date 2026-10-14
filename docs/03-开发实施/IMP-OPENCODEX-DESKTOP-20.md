@@ -1258,3 +1258,11 @@ feature/0.1.10-release-details@d3b83b38从630接续并推送，仅改说明领�
 完整Rust34组/888通过/6忽略、fmt/strictClippy/diff通过；UI未改，不把630的501旧轮次称本轮重跑。原红与完整绿日志留存。[缓存修复证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-说明缓存一致性与延迟客户端/README.md)。新pushCI38495887680/PRCI38495891289观察in_progress；PR#2head为d3仍draft/basebe，main和PR#1未合并，须新SHA候选设备验收，630旧包只归旧证据。
 
 Mac无桌面启动/原生性能或FZ50脚本，Windows旧实例不操作。原macOS配对failed、全部预算/门禁和TASKrevision2/in_progress/pending/空验收保持；无真实迁移、日常替换、核心晋升、自动合并、签名、发布或证书。
+
+### 2026-10-14 d3 缓存修复精确双 CI 与候选终态
+
+d3b83b38 pushCI38495887680、PRCI38495891289和单次Windows候选38497980368均completed/success。两CI MacRust各34组/888passed/6ignored，Windows及候选各34组/616passed/7ignored、0failed；ignored和0测试组不计通过。新CI前端完整测试/类型构建通过，本地旧501轮次不称新重跑。PR#2head更新d3仍open/draft/basebe，PR#1/main未合并。
+
+两个ZIP11864817991/11865046498 API大小/sha256、CRC、安全条目通过，3/315项，两份安装回执原字节相同；MSI4595712字节/SHA5032162d28a2c0ead5387cca058aeb42af80bddd69206feb7abe690a1915171c、NSIS3277473字节/SHAd51f5b47cda0c9010de948a687090737e430c35a702ee53b90111eef5b38b55f与回执一致。runner新装/首屏/卸载通过，source/version/bundle预期摘要对应；安装后EXE字节不在下载artifact内，本机只核回执，不执行Windows二进制。实际MSI/NSIS应用elevated/type1、modeany，不抵真机双权限/物理DPI/默认安装根data/正常退出/升级数据保留，codeSigned/releaseAcceptedfalse。[新SHA候选与接续证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-d3-缓存修复双CI与Windows候选/README.md)。
+
+新d3候选设备复验须协调旧实例结束并确认0，保留日常版/注册/真实数据；有效离线缓存、坏语义缓存重查、四态/长正文/网页/独立重试焦点/真实请求计数等按新SHA取证，不用630旧包通过代替。Mac无原生启动或新性能样本，原macOS性能failed及全部预算/门禁、TASKrevision2/in_progress/pending/空验收、FZ50未许可边界保持。无真实迁移、日常替换、核心晋升、自动合并、签名、发布或关闭证书。

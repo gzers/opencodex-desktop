@@ -1,0 +1,120 @@
+{
+  "verified_at_utc": "2026-10-14T02:09:39.912046+00:00",
+  "source_sha": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "candidate_run": 38497980368,
+  "two_receipts_byte_identical": true,
+  "installer_bytes_match_receipt": true,
+  "runner_installed_exe_hashes_match_expected_bundle_bytes": true,
+  "runner_environment_source_matches": true,
+  "runner_environment": {
+    "source": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+    "runner": "win25-vs2026",
+    "image": "20260925.250.1",
+    "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "tauri": "tauri-cli 2.11.4"
+  },
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4595712,
+      "sha256": "5032162d28a2c0ead5387cca058aeb42af80bddd69206feb7abe690a1915171c",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-2304d8783ab246c894fe871488c6dc22",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "1c265b5c8310bc71bf411986b46c4b48db5b0ef3e4ddfb25d00ddb927785ae64",
+      "expectedInstalledExecutableSha256": "1c265b5c8310bc71bf411986b46c4b48db5b0ef3e4ddfb25d00ddb927785ae64",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 8082541,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3277473,
+      "sha256": "d51f5b47cda0c9010de948a687090737e430c35a702ee53b90111eef5b38b55f",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-7734546875474c45b94bb821ddc57303",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "1fea9806bea06ed5c69f5e068ae57aa6c848e115aa73041e0b9fdf4a5b6546f1",
+      "expectedInstalledExecutableSha256": "1fea9806bea06ed5c69f5e068ae57aa6c848e115aa73041e0b9fdf4a5b6546f1",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 8082541,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ],
+  "startup_tokens": [
+    {
+      "startup_path": "msi-startup/startup.json",
+      "mode": "any",
+      "applicationModeMatched": false,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 1376,
+        "executable": "D:\\a\\_temp\\ocxd-candidate-msi-2304d8783ab246c894fe871488c6dc22\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-10-14T02:03:40.9395226Z",
+        "elevated": true,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-10-14T02:04:12.1722584Z"
+      },
+      "exe_sha256": "1c265b5c8310bc71bf411986b46c4b48db5b0ef3e4ddfb25d00ddb927785ae64"
+    },
+    {
+      "startup_path": "nsis-startup/startup.json",
+      "mode": "any",
+      "applicationModeMatched": false,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8668,
+        "executable": "D:\\a\\_temp\\ocxd-candidate-nsis-7734546875474c45b94bb821ddc57303\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-10-14T02:04:17.8136629Z",
+        "elevated": true,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-10-14T02:04:48.6440809Z"
+      },
+      "exe_sha256": "1fea9806bea06ed5c69f5e068ae57aa6c848e115aa73041e0b9fdf4a5b6546f1"
+    }
+  ],
+  "selected_originals": [
+    {
+      "archive_path": "environment.json",
+      "saved_as": "/private/tmp/ocx-0110-notes-cache-20261014/candidate-selected/11865046498/environment.json",
+      "bytes": 298,
+      "sha256": "badf7073311b3a011ad47d2fb74a623e015fa3d1cc655ae556370533f6668938"
+    },
+    {
+      "archive_path": "msi-startup/startup.json",
+      "saved_as": "/private/tmp/ocx-0110-notes-cache-20261014/candidate-selected/11865046498/msi-startup/startup.json",
+      "bytes": 1414,
+      "sha256": "1375f2fd99d5b547d65cf9d2d822f4e0fe8a68da1e2868072ddb953f67914f00"
+    },
+    {
+      "archive_path": "nsis-startup/startup.json",
+      "saved_as": "/private/tmp/ocx-0110-notes-cache-20261014/candidate-selected/11865046498/nsis-startup/startup.json",
+      "bytes": 1417,
+      "sha256": "58248d99c7a0b1ff9062f0eaad090c4c48b1e1d2d946da82c3a340d6b7d8dd1f"
+    },
+    {
+      "archive_path": "process-token/process-token.json",
+      "saved_as": "/private/tmp/ocx-0110-notes-cache-20261014/candidate-selected/11865046498/process-token/process-token.json",
+      "bytes": 2322,
+      "sha256": "7e071ba72c684ec2239630f4fe03bb7cc97b956dcf974c400f2dd7076e3bfbc5"
+    }
+  ],
+  "installed_exe_bytes_available_on_mac": false,
+  "local_installer_execution": false,
+  "physical_acceptance": false,
+  "code_signed": false,
+  "release_accepted": false
+}
