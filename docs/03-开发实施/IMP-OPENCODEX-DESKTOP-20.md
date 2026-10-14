@@ -1259,6 +1259,16 @@ feature/0.1.10-release-details@d3b83b38从630接续并推送，仅改说明领�
 
 Mac无桌面启动/原生性能或FZ50脚本，Windows旧实例不操作。原macOS配对failed、全部预算/门禁和TASKrevision2/in_progress/pending/空验收保持；无真实迁移、日常替换、核心晋升、自动合并、签名、发布或证书。
 
+### 2026-10-14 用户确认 Windows 透明图标并完成专属资源接入
+
+用户先要求预览/确认后提交，再确认“我看了效果可以，可以继续”。采用应用透明主体90%与独立亮暗单色托盘；16px增加一像素透明安全边距，32px以上保持确认外观。原品牌规范早已要求Windows无底板，0.1.8复用含底板AppIcon与托盘的实现冲突本轮纠正；macOS默认PNG/ICNS/模板及默认配置不变。旧Windows交付归档，当前素材清单/生成入口在品牌目录，不用旧26.6%小主体素材替换。
+
+feature/0.1.10-windows-transparent-icons@bb3122d基于Mac d3说明修复推送，草稿PR#3/base说明分支，仅Windows资源/配置/托盘与测试；系统任务栏主题独立选色并在既有事件路径刷新，不用应用主题强制选色。旧七ICO帧被新底板合同拒绝、新七ICO/十四托盘通过，官方fmt通过；pushCI38499759600、PRCI38499860360、同SHA候选38499860139全success，五必需CIjob成功/main-only build skipped，runner新装/首屏/卸载成功。两ZIP摘要/CRC、安全条目与MSI/NSIS包回执一致；MSI只读提取EXE SHA3b5c5176…完整bundle/源码身份匹配，PE七档图标像素与源码一致，亮暗托盘PNG均嵌入。未在日常宿主执行安装器。
+
+临时旧be预览10:11:06已还原/结束helper；10:30:51旧app10904/supervisor32492退出且本机原生0，10:31:15新唯一bb3122d PID39680/supervisor44136/exec91561/HWND2625640在原根启动，普通false/type3、日志匹配新源。原生标题栏无底板实际观察与原始JPEG归档，日常EXE及隔离preferences/root/policy/schedule摘要保持，auto=false。新源任务栏/托盘全像素、物理主题/高对比/完整DPI仍不计全通过。Mac原生仍须此新实例归零后交接。
+
+58份实现原件冻结校验通过，PR#3最终说明读回仍open/draft/unmerged/无auto_merge。[透明图标接入与证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows透明图标接入/README.md)。本次只闭合此实现与子集，原完整门禁/性能failed/预算、FZ50许可缺口及TASKrevision2/in_progress/pending/空验收保留，无真实迁移、日常替换、自动合并、签名、发布或完成证书。
+
 ### 2026-10-14 d3 缓存修复精确双 CI 与候选终态
 
 d3b83b38 pushCI38495887680、PRCI38495891289和单次Windows候选38497980368均completed/success。两CI MacRust各34组/888passed/6ignored，Windows及候选各34组/616passed/7ignored、0failed；ignored和0测试组不计通过。新CI前端完整测试/类型构建通过，本地旧501轮次不称新重跑。PR#2head更新d3仍open/draft/basebe，PR#1/main未合并。

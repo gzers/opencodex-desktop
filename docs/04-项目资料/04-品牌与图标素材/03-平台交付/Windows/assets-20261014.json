@@ -1,0 +1,212 @@
+{
+  "approval": "User approved the 90% transparent app and monochrome tray preview on 2026-10-14",
+  "largeSubjectCoverage": 0.9,
+  "small16PixelSafetyMargin": 1,
+  "tools": {
+    "aom": "3.15.1",
+    "archive": "3.8.9",
+    "cairo": "1.18.6",
+    "cgif": "0.5.4",
+    "exif": "0.6.26",
+    "expat": "2.8.5",
+    "ffi": "3.8.0",
+    "fontconfig": "2.18.3",
+    "freetype": "2.14.3",
+    "fribidi": "1.0.17",
+    "glib": "2.90.0",
+    "harfbuzz": "14.5.0",
+    "heif": "1.23.5",
+    "highway": "1.4.0",
+    "imagequant": "2.4.1",
+    "lcms": "2.19.1",
+    "mozjpeg": "0826579",
+    "pango": "1.58.2",
+    "pixman": "0.46.4",
+    "png": "1.6.58",
+    "proxy-libintl": "0.5",
+    "rsvg": "2.63.2",
+    "tiff": "4.7.2",
+    "uhdr": "2.0.2",
+    "vips": "8.18.7",
+    "webp": "1.6.0",
+    "xml2": "2.15.4",
+    "zlib-ng": "2.3.3",
+    "sharp": "0.35.5"
+  },
+  "inputs": [
+    {
+      "path": "AppIcon/AppIcon.svg",
+      "sha256": "62df185058c14a2cf9d3ecb40ca79f19497a9a3f0bbeaf35fbd70698394b07b7"
+    },
+    {
+      "path": "Tray/tray-light.svg",
+      "sha256": "16a3487dc954f4e413cb5455d32aa8760317c929344209e0bc1891bae53eaba9"
+    },
+    {
+      "path": "Tray/tray-dark.svg",
+      "sha256": "4bdcf125d088e103aa37bb78dd91b562e170ed17ee9a551243dc93c6ae1f2dfc"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "AppIcon/png/16.png",
+      "bytes": 471,
+      "sha256": "3974fe79626405ea15c8ef4f6b5b1f9db14f838420328da6506f617574eb0630",
+      "codeName": "16x16.png"
+    },
+    {
+      "path": "AppIcon/png/24.png",
+      "bytes": 777,
+      "sha256": "506f32ff36897cd95f5f3351df61e362ed5eb378b98aae5107d82773b43a1966",
+      "codeName": "24x24.png"
+    },
+    {
+      "path": "AppIcon/png/32.png",
+      "bytes": 1047,
+      "sha256": "96eb522e0d2809929a6717353217e5e6567c04ed8627bf82786f0ed2e8312def",
+      "codeName": "32x32.png"
+    },
+    {
+      "path": "AppIcon/png/48.png",
+      "bytes": 1524,
+      "sha256": "386fd35d1110839809a6fad51be85202d9034e214977f20c0ffba909a6acc446",
+      "codeName": "48x48.png"
+    },
+    {
+      "path": "AppIcon/png/64.png",
+      "bytes": 2088,
+      "sha256": "d3c2d22c7043ebb66c30aadad55b28ff769ca6df4eee5a6fe25a0b14f83a4b43",
+      "codeName": "64x64.png"
+    },
+    {
+      "path": "AppIcon/png/128.png",
+      "bytes": 4439,
+      "sha256": "399f34a04e5474918ebbd33b75de4b8f3b96baab58b12e63faafffb1b561f365",
+      "codeName": "128x128.png"
+    },
+    {
+      "path": "AppIcon/png/256.png",
+      "bytes": 9292,
+      "sha256": "8c434ee893b8b8be55fad45bc5cd7386cbfc971020047ce8db85701beaea425c",
+      "codeName": "256x256.png"
+    },
+    {
+      "path": "AppIcon/png/512.png",
+      "bytes": 20823,
+      "sha256": "29e8e7896f83dc0caf7f510df58d6f2a189515787507c86ba3a090f8a042f1ec",
+      "codeName": "512x512.png"
+    },
+    {
+      "path": "AppIcon/AppIcon.ico",
+      "bytes": 19756,
+      "sha256": "6093b7f46ccb8db92d3a064c8694f1cbae22b781410b9679de0e7beb4fda5813",
+      "codeName": "icon.ico"
+    },
+    {
+      "path": "Tray/tray-light-16.png",
+      "bytes": 335,
+      "sha256": "1aa2b442e0b6c9698936ba1d3461ef077aba3f7da47bf894672e5157434b2f01",
+      "codeName": "tray-light-16.png"
+    },
+    {
+      "path": "Tray/tray-light-20.png",
+      "bytes": 412,
+      "sha256": "c1e37e39bd15da09ce981702ef3a9d5ecf9ba947f5751ddca5f2c1946c83b233",
+      "codeName": "tray-light-20.png"
+    },
+    {
+      "path": "Tray/tray-light-24.png",
+      "bytes": 491,
+      "sha256": "395a10ed196dd3f5cc29a4c08be81d19fc42f22919aa3fdf5057dfc97c16befc",
+      "codeName": "tray-light-24.png"
+    },
+    {
+      "path": "Tray/tray-light-32.png",
+      "bytes": 676,
+      "sha256": "ded465d7e9a9eca7a61cea2c7f71044594fd7ec9cc1708824b1d3c346dc43eee",
+      "codeName": "tray-light-32.png"
+    },
+    {
+      "path": "Tray/tray-light@2x.png",
+      "bytes": 676,
+      "sha256": "ded465d7e9a9eca7a61cea2c7f71044594fd7ec9cc1708824b1d3c346dc43eee"
+    },
+    {
+      "path": "Tray/tray-light-40.png",
+      "bytes": 808,
+      "sha256": "a2f4274adcd3be1461a53ce5e7f103af79a206972843c3def867a7272da2685e",
+      "codeName": "tray-light-40.png"
+    },
+    {
+      "path": "Tray/tray-light-48.png",
+      "bytes": 986,
+      "sha256": "189b386787d6e9e18604026c94bf74ab0fe1833ebbef3636b35ccb1967d977f7",
+      "codeName": "tray-light-48.png"
+    },
+    {
+      "path": "Tray/tray-light-64.png",
+      "bytes": 1360,
+      "sha256": "ba6c23128fa9dce3b73bf9f77e4f7987e100ab4c497d5ad756052bc18de160bb",
+      "codeName": "tray-light-64.png"
+    },
+    {
+      "path": "Tray/tray-light.ico",
+      "bytes": 1556,
+      "sha256": "e24c13a861ad42db2b44ddf2f896e2a4412d609babc9c2534490212b28c9dcac",
+      "codeName": null
+    },
+    {
+      "path": "Tray/tray-dark-16.png",
+      "bytes": 349,
+      "sha256": "3ee2f12137443b0e0875980e832313bd0a6025cd0268025eaf7f99d09c87e43a",
+      "codeName": "tray-dark-16.png"
+    },
+    {
+      "path": "Tray/tray-dark-20.png",
+      "bytes": 438,
+      "sha256": "a143c39a0dd1b512353ed9942b9342f7f77cd2351183277eea8b06192e1a8643",
+      "codeName": "tray-dark-20.png"
+    },
+    {
+      "path": "Tray/tray-dark-24.png",
+      "bytes": 535,
+      "sha256": "ab2544d7a435f086b2bcfd1fd3ac23eba20ec5e1de75d782a70e6be77ca81430",
+      "codeName": "tray-dark-24.png"
+    },
+    {
+      "path": "Tray/tray-dark-32.png",
+      "bytes": 715,
+      "sha256": "edbdc7706c815319bc2ba5bbb12fa672467bb849d526cc6376429f616d09026d",
+      "codeName": "tray-dark-32.png"
+    },
+    {
+      "path": "Tray/tray-dark@2x.png",
+      "bytes": 715,
+      "sha256": "edbdc7706c815319bc2ba5bbb12fa672467bb849d526cc6376429f616d09026d"
+    },
+    {
+      "path": "Tray/tray-dark-40.png",
+      "bytes": 854,
+      "sha256": "de4a8bd743cd57707990078857241bdc7d4bdebe7584360fad5ceb2abe57b415",
+      "codeName": "tray-dark-40.png"
+    },
+    {
+      "path": "Tray/tray-dark-48.png",
+      "bytes": 1033,
+      "sha256": "584e5689373ae73a72c0f7cc9c601f8edc01f105a6c75b05702dd7be5c5a4fb5",
+      "codeName": "tray-dark-48.png"
+    },
+    {
+      "path": "Tray/tray-dark-64.png",
+      "bytes": 1432,
+      "sha256": "6a087476469fc74c385cac251e0fd7ac62360d6c992548c701c4bab402edba5a",
+      "codeName": "tray-dark-64.png"
+    },
+    {
+      "path": "Tray/tray-dark.ico",
+      "bytes": 1653,
+      "sha256": "72ba1e1e64db72ee21f97f56d15ce5d1436033025fd22f4bc1ed8cda9f39812c",
+      "codeName": null
+    }
+  ]
+}

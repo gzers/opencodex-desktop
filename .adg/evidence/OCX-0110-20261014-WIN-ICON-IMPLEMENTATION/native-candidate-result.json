@@ -1,0 +1,68 @@
+{
+  "atUtc": "2026-10-14T02:33:00.1023805Z",
+  "currentSession": {
+    "schemaVersion": 1,
+    "sourceCommit": "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-bb3122d-38499860139\\msi-readonly\\opencodex-desktop.exe",
+    "executableSha256": "3b5c5176139fd9da4b7c5f444c2b5e7af08d2e6df9aaacd07fc9007e6ec1e989",
+    "mode": "ordinary",
+    "base": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110",
+    "anchor": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\windows0110\\data",
+    "supervisorPid": 44136,
+    "supervisorCreationTimeUtc": "2026-10-14T02:31:13.5822883Z",
+    "startedAtUtc": "2026-10-14T02:31:13.9911432Z",
+    "status": "running",
+    "installerExecuted": false,
+    "preservesDailyInstallation": true,
+    "scope": "one retained application process; copied EXE and explicit sandbox, not installer/default-directory acceptance",
+    "harnessToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 44136,
+      "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+      "creationTimeUtc": "2026-10-14T02:31:13.5822883Z",
+      "elevated": false,
+      "elevationType": 3,
+      "collectedAtUtc": "2026-10-14T02:31:15.0383626Z"
+    },
+    "preferencesSeed": "existing isolated preferences retained",
+    "applicationToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 39680,
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-bb3122d-38499860139\\msi-readonly\\opencodex-desktop.exe",
+      "creationTimeUtc": "2026-10-14T02:31:15.1043658Z",
+      "elevated": false,
+      "elevationType": 3,
+      "collectedAtUtc": "2026-10-14T02:32:56.3265689Z"
+    },
+    "applicationPid": 39680,
+    "cdpPort": 57640,
+    "endpoint": "http://127.0.0.1:57640",
+    "sourceCommitMatched": true,
+    "startupLogWrittenDuringThisProcess": true,
+    "lastLiveAtUtc": "2026-10-14T02:32:56.3257994Z",
+    "elapsedSeconds": 100.312111
+  },
+  "localApplicationProcesses": [
+    {
+      "ProcessId": 39680,
+      "ExecutablePath": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-bb3122d-38499860139\\msi-readonly\\opencodex-desktop.exe",
+      "CreationDate": "2026-10-14T10:31:15.104365+08:00"
+    }
+  ],
+  "isolatedNativeCount": 1,
+  "protectedSandbox": {
+    "update-schedule.json": "045991fb0a7a71604632e5c9255c3fe008e8e5f21c7e28feabe0d4178bc4ffd2",
+    "data-root.json": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25",
+    "backup-cleanup-policy.json": "85884ab649b82b6b4ab880fe24492c6c400a266254277e29e78c8080b20d2e11",
+    "preferences.json": "8498f7cf8984c74a555202027800027fa7fd1366e0e5ce51c455aaf3ba1fdb7a"
+  },
+  "dailyExeSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "oldApplicationAndSupervisorGone": true,
+  "newSourceTitlebarObserved": true,
+  "newSourceTaskbarTrayPixelsAccepted": false,
+  "themeSwitchPhysicallyTested": false,
+  "installerInvoked": false,
+  "fullVersionGatePromoted": false
+}

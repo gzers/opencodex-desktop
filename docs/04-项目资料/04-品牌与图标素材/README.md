@@ -301,3 +301,16 @@
 | `03-平台交付/Windows/Tray/tray-dark.ico` | 多尺寸 ICO（16/24/32） | `a8492ef181fcea38fe29a50b67bcb4ae2fbf34e44f906deca3b430452633956c` |
 | `03-平台交付/Windows/Tray/tray-light.ico` | 多尺寸 ICO（16/24/32） | `2248c14febc5c55bf725b6e0578fff359be5abca4745ffe92fef0d17d59891a2` |
 | `04-品牌组件/Favicon/favicon.ico` | 多尺寸 ICO（16/32/48/64/128） | `79666d0c671521daef73e4540555e8e5547c9dd758fb3fc6c8d3f5784a7febe9` |
+
+## Windows 当前交付修订（2026-10-14）
+
+用户确认了透明应用图标的90%主体方案，以及无底板的独立单色托盘。Windows AppIcon保留渐变云形与聚合镂空，移除白色圆角底板；16px档保留完整一像素透明安全边距，避免抗锯齿延伸到画布边缘。macOS底板、ICNS和模板托盘保持原样。
+
+本节及 [`Windows/assets-20261014.json`](03-平台交付/Windows/assets-20261014.json)是Windows当前素材清单；前文2026-09-12清单保留历史身份。旧Windows平台交付已原字节存入 `05-归档/20261014-Windows透明图标前/`，不把旧小主体素材直接作为运行图标。
+
+- AppIcon：透明SVG、16/24/32/48/64/128/256七档ICO和16–512px PNG。
+- Tray：纯白 `tray-light` / 深色 `tray-dark`，16/20/24/32/40/48/64px PNG；ICO保留16/24/32档，`@2x`仍为32px。仅alpha表示抗锯齿，不引入渐变、底板或阴影。
+- 生成入口：`03-平台交付/Windows/generate-windows-assets.mjs`。使用sharp0.35.5，`OPENCODEX_SHARP_PACKAGE`可指向已安装sharp的package.json；脚本不改macOS文件，可选输出路径仅接收Windows代码资源。
+- 实现：`feature/0.1.10-windows-transparent-icons@bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a`，Windows独立配置选择 `icons/windows/`，托盘按系统任务栏主题选亮暗版，不复用AppIcon。PR#3保持草稿，尚未并入main或发布。
+
+预览与确认过程见[85%/90%对照](03-平台交付/Windows/previews/20261014-transparent/comparison.png)。旧be7395a实例只证明用户确认的临时视觉效果；新源码的编译、包身份和真机证据须分别绑定新SHA，不能将素材确认等同完整版本验收。

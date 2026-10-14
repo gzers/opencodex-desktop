@@ -1,0 +1,62 @@
+{
+  "atUtc": "2026-10-14T02:36:58.041062+00:00",
+  "source": "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a",
+  "branch": "feature/0.1.10-windows-transparent-icons",
+  "base": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "ci": {
+    "38499860139": {
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "package": "success"
+      }
+    },
+    "38499860360": {
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "backend": "success",
+        "backend-windows": "success",
+        "frontend": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      }
+    },
+    "38499759600": {
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "frontend": "success",
+        "backend-windows": "success",
+        "release-tools": "success",
+        "backend": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      }
+    }
+  },
+  "icoAssetFramesPassed": 7,
+  "trayAssetFramesPassed": 14,
+  "oldBackingPlateFramesRejected": 7,
+  "exeIcoFramesMatched": 7,
+  "bothMonochromeTrayPngsEmbedded": true,
+  "nativeApplicationPid": 39680,
+  "nativeSupervisorPid": 44136,
+  "nativeExecSession": 91561,
+  "nativeHwnd": 2625640,
+  "nativeExeSha256": "3b5c5176139fd9da4b7c5f444c2b5e7af08d2e6df9aaacd07fc9007e6ec1e989",
+  "nativeTokenElevated": false,
+  "nativeTokenType": 3,
+  "sameSandboxProtectedBytesPreserved": true,
+  "systemThemeSwitchPhysicallyAccepted": false,
+  "taskbarTrayPixelMatrixAccepted": false,
+  "userDailyInstallerExecuted": false,
+  "userDailyInstallationReplaced": false,
+  "fullVersionTaskClosed": false,
+  "releaseAccepted": false,
+  "assetManifestSha256": "7ca81a1cc112bc32d2de25d745023fa124143dc93d91889ec4b8c1ad3a7cc2f9"
+}
