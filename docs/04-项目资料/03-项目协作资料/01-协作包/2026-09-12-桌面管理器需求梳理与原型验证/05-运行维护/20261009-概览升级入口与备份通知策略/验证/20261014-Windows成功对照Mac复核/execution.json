@@ -1,0 +1,19 @@
+{
+  "platform": "macOS",
+  "sourceDocsSha": "019dd6c2bdacd6e79c4a5aa6b9b11981197e7d34",
+  "legacyVerifier": {
+    "path": ".adg/evidence/OCX-0110-20261014-WIN-BD2-TRACE/verify-evidence.py",
+    "exitCode": 1,
+    "stderrSha256": "011acabc559d1647063fcf1ec77034677e1d703508c82e239282a401972b95d5",
+    "failureReason": "ordered list comparison; file mappings have identical bytes/sizes/sha256"
+  },
+  "independentReadOnlyReview": {
+    "exitCode": 0,
+    "output": "review-result.json",
+    "sha256": "ff1bcb0bed8e548d9bca66963a6f5deb0da75d49c6568e69bc84cf0dd1c6577a"
+  },
+  "originalEvidenceRewritten": false,
+  "desktopStarted": false,
+  "ciOrCandidateTriggered": false,
+  "fullGatePromoted": false
+}

@@ -1,0 +1,119 @@
+{
+  "sourceSha": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "evidenceDocsSha": "019dd6c2bdacd6e79c4a5aa6b9b11981197e7d34",
+  "manifest": {
+    "pathKeyedBytesAndSha256": "passed",
+    "fileCount": 35,
+    "frozenManifestSha256": "106ecba0632dd58b1e98b329bd9a14312f4a931a82d32cf3727d6a5bd6a2aba1",
+    "windowsPathOrderMatches": true,
+    "posixPathOrderMatches": false,
+    "legacyMacStrictListComparison": "failed: order-only; original unchanged"
+  },
+  "rawTraceSha256": "d60c572f4a1b77862f8f5670bebe996e88bc44eafc45f69ccd9be9fc68a02844",
+  "rawCounts": {
+    "observer-start": 1,
+    "fixture-file-notification": 274,
+    "owned-process-sample": 554,
+    "owned-node-discovered": 6,
+    "observer-finished": 1
+  },
+  "processCoverage": [
+    {
+      "pid": 11640,
+      "isNode": false,
+      "samples": 80,
+      "waitStatusCounts": {
+        "258": 78,
+        "0": 2
+      },
+      "threadRecords": 2664,
+      "wctRecords": 80,
+      "firstNodeSampleAfterExitMs": null
+    },
+    {
+      "pid": 31992,
+      "isNode": true,
+      "samples": 79,
+      "waitStatusCounts": {
+        "0": 79
+      },
+      "threadRecords": 0,
+      "wctRecords": 0,
+      "firstNodeSampleAfterExitMs": 72.4926
+    },
+    {
+      "pid": 38248,
+      "isNode": true,
+      "samples": 79,
+      "waitStatusCounts": {
+        "0": 79
+      },
+      "threadRecords": 0,
+      "wctRecords": 0,
+      "firstNodeSampleAfterExitMs": 84.0364
+    },
+    {
+      "pid": 53680,
+      "isNode": true,
+      "samples": 79,
+      "waitStatusCounts": {
+        "0": 79
+      },
+      "threadRecords": 0,
+      "wctRecords": 0,
+      "firstNodeSampleAfterExitMs": 12.7967
+    },
+    {
+      "pid": 65712,
+      "isNode": true,
+      "samples": 79,
+      "waitStatusCounts": {
+        "0": 79
+      },
+      "threadRecords": 0,
+      "wctRecords": 0,
+      "firstNodeSampleAfterExitMs": 21.8082
+    },
+    {
+      "pid": 66100,
+      "isNode": true,
+      "samples": 79,
+      "waitStatusCounts": {
+        "0": 79
+      },
+      "threadRecords": 0,
+      "wctRecords": 0,
+      "firstNodeSampleAfterExitMs": 84.0885
+    },
+    {
+      "pid": 74072,
+      "isNode": true,
+      "samples": 79,
+      "waitStatusCounts": {
+        "0": 79
+      },
+      "threadRecords": 0,
+      "wctRecords": 0,
+      "firstNodeSampleAfterExitMs": 21.8272
+    }
+  ],
+  "allThreadAndWctRecordsBelongToTestRoot": true,
+  "nodeLiveSamples": 0,
+  "nodeLiveThreadRecords": 0,
+  "nodeLiveWctRecords": 0,
+  "nodeIoIntervalProgressNotObserved": true,
+  "queryFixtureCasesPassedLocally": 7,
+  "wholeLibrary": {
+    "passed": 529,
+    "failed": 1,
+    "ignored": 4,
+    "exitCode": 101
+  },
+  "failedSceneObtained": false,
+  "rootCauseIdentified": false,
+  "oldCiFailureCleared": false,
+  "macPerformanceFailureCleared": false,
+  "fullGatePromoted": false,
+  "macNativeStarted": false,
+  "originalEvidenceModified": false
+}

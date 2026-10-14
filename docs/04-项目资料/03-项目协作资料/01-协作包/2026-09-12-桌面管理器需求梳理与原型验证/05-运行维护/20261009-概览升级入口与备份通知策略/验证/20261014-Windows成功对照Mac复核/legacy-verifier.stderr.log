@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.adg/evidence/OCX-0110-20261014-WIN-BD2-TRACE/verify-evidence.py", line 77, in <module>
+    assert read("manifest.json") == manifest, "Frozen evidence bytes changed"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Frozen evidence bytes changed
