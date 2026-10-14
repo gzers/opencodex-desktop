@@ -7,7 +7,17 @@ fn u32_at(bytes: &[u8], offset: usize) -> usize {
 
 #[test]
 fn windows_ico_has_all_sizes_and_visible_artwork_fills_each_frame() {
-    let bytes = include_bytes!("../icons/icon.ico");
+    let configuration: serde_json::Value =
+        serde_json::from_str(include_str!("../tauri.windows.conf.json")).unwrap();
+    let icon_path = configuration["bundle"]["icon"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find_map(|value| value.as_str().filter(|path| path.ends_with(".ico")))
+        .expect("Windows has a platform-specific ICO");
+    let directory = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
+    let data = std::fs::read(directory.join(icon_path)).unwrap();
+    let bytes = data.as_slice();
     assert_eq!(&bytes[..4], &[0, 0, 1, 0]);
     let count = u16::from_le_bytes(bytes[4..6].try_into().unwrap()) as usize;
     let mut sizes = Vec::new();
@@ -39,7 +49,12 @@ fn windows_ico_has_all_sizes_and_visible_artwork_fills_each_frame() {
         let mut y1 = 0;
         for y in 0..height {
             for x in 0..width {
-                if buffer[((y * width + x) * 4 + 3) as usize] > 16 {
+                let pixel = &buffer[((y * width + x) * 4) as usize..][..4];
+                if pixel[3] > 16 {
+                    assert!(
+                        pixel[..3].iter().any(|channel| *channel < 240),
+                        "{width}px Windows icon must not contain a white backing plate"
+                    );
                     x0 = x0.min(x);
                     y0 = y0.min(y);
                     x1 = x1.max(x + 1);
@@ -48,12 +63,16 @@ fn windows_ico_has_all_sizes_and_visible_artwork_fills_each_frame() {
             }
         }
         assert!(
-            (x1 - x0) * 100 / width >= 80,
+            (x1 - x0) * 100 / width >= 85,
             "{width}px icon artwork is too narrow"
         );
         assert!(
-            (y1 - y0) * 100 / height >= 80,
+            (y1 - y0) * 100 / height >= 85,
             "{width}px icon artwork is too short"
+        );
+        assert!(
+            x0 > 0 && y0 > 0 && x1 < width && y1 < height,
+            "{width}px Windows icon has no transparent safety margin"
         );
     }
     sizes.sort_unstable();

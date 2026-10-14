@@ -25,3 +25,5 @@ pub(crate) mod windows_query_fixture;
 pub(crate) mod windows_query_job;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_smoke;
+#[cfg(any(windows, test))]
+pub(crate) mod windows_tray_icon;
