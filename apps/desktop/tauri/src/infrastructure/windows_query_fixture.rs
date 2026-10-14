@@ -7,7 +7,7 @@ use std::path::{Path, PathBuf};
 use std::process::Stdio;
 use windows_sys::Win32::Foundation::{FILETIME, WAIT_OBJECT_0};
 use windows_sys::Win32::System::Threading::{
-    GetProcessTimes, OpenProcess, QueryFullProcessImageNameW, TerminateProcess,
+    GetExitCodeProcess, GetProcessTimes, OpenProcess, QueryFullProcessImageNameW, TerminateProcess,
     WaitForSingleObject, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE, PROCESS_TERMINATE,
 };
 
@@ -63,6 +63,53 @@ if (process.argv[2] === '--sleep') {
 
 struct ObservedChild(OwnedHandle);
 struct ControlProcess(std::process::Child);
+impl ControlProcess {
+    /// Observe only the retained handle created by this fixture. Never wait for
+    /// Node to warm up or reinterpret a failed production query as a pass.
+    fn trace(
+        &self,
+        label: &str,
+        mode: &str,
+        point: &str,
+        started: std::time::Instant,
+        root: &Path,
+    ) {
+        let handle = self.0.as_raw_handle();
+        // SAFETY: Child retains this process handle until its own cleanup below.
+        let wait_status = unsafe { WaitForSingleObject(handle, 0) };
+        let mut creation = FILETIME::default();
+        let mut exit = FILETIME::default();
+        let mut kernel = FILETIME::default();
+        let mut user = FILETIME::default();
+        // SAFETY: all output pointers refer to live initialized FILETIMEs.
+        let times_ok =
+            unsafe { GetProcessTimes(handle, &mut creation, &mut exit, &mut kernel, &mut user) };
+        let times_error = (times_ok == 0).then(|| std::io::Error::last_os_error().raw_os_error());
+        let ticks = |value: FILETIME| {
+            (u64::from(value.dwHighDateTime) << 32) | u64::from(value.dwLowDateTime)
+        };
+        let times = (times_ok != 0).then(|| {
+            serde_json::json!({
+                "creation_filetime_100ns": ticks(creation), "exit_filetime_100ns": ticks(exit),
+                "kernel_cpu_100ns": ticks(kernel), "user_cpu_100ns": ticks(user),
+            })
+        });
+        let mut exit_code = 0_u32;
+        // SAFETY: output points at a live u32; handle is the same owned process.
+        let exit_ok = unsafe { GetExitCodeProcess(handle, &mut exit_code) };
+        let exit_error = (exit_ok == 0).then(|| std::io::Error::last_os_error().raw_os_error());
+        eprintln!(
+            "query fixture {label}/{mode}: control-snapshot={}",
+            serde_json::json!({
+                "point": point, "process_id": self.0.id(), "elapsed_ms": started.elapsed().as_millis(),
+                "wait_status": wait_status, "process_times": times, "times_error": times_error,
+                "exit_code": (exit_ok != 0).then_some(exit_code), "exit_error": exit_error,
+            })
+        );
+        let marker = std::fs::read_to_string(root.join("control-started.json"));
+        eprintln!("query fixture {label}/{mode}: control-marker-at={point}, evidence={marker:?}");
+    }
+}
 impl Drop for ControlProcess {
     fn drop(&mut self) {
         let _ = self.0.kill();
@@ -241,11 +288,13 @@ pub(crate) fn process_case(
         path: Some(node.parent().unwrap().as_os_str().to_owned()),
         ..Default::default()
     };
+    control.trace(label, mode, "before-query", fixture_started, root.path());
     let query_started = std::time::Instant::now();
     let result = execute(&npm, root.path(), environment);
     let query_elapsed = query_started.elapsed();
     eprintln!("query fixture {label}/{mode}: elapsed={query_elapsed:?}, result={result:?}");
     let _ = query_completed.send(());
+    control.trace(label, mode, "query-returned", fixture_started, root.path());
     // Evidence only: never wait for/prewarm Node, extend the query deadline or
     // replace a failed outcome. Each marker belongs to this temporary fixture.
     eprintln!(
@@ -266,8 +315,18 @@ pub(crate) fn process_case(
         let evidence = std::fs::read_to_string(root.path().join(format!("{phase}.json")));
         eprintln!("query fixture {label}/{mode}: phase={phase}, evidence={evidence:?}");
     }
+    let observed = observer.join();
+    // Preserve the control's state after the original observer deadline even
+    // when it failed before opening query handles. Cleanup/assertions stay intact.
+    control.trace(
+        label,
+        mode,
+        "observer-returned",
+        fixture_started,
+        root.path(),
+    );
     let (descendant, parent, watchdog_cleanup) =
-        observer.join().expect("fixture handle observation failed");
+        observed.expect("fixture handle observation failed");
     let stopped = descendant.as_ref().is_none_or(ObservedChild::stopped);
     let parent_stopped = parent.as_ref().is_none_or(ObservedChild::stopped);
     let control_live = control.0.try_wait().unwrap().is_none();
