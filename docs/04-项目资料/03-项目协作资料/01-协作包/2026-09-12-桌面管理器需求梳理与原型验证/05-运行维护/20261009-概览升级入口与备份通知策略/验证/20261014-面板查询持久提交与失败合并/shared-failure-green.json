@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--lib",
+    "commands::about::query_ownership_tests",
+    "--",
+    "--nocapture"
+  ],
+  "working_directory": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri",
+  "exit": 0,
+  "elapsed_seconds": 11.224446833,
+  "code_head": "9cf213170459ac04927e369ea3bef899041c21fb",
+  "tests_sha256": "a0e27a68c2941a08069cf87ca73d02b8cfcd58482c3b9428617f123c70d1a9e9"
+}

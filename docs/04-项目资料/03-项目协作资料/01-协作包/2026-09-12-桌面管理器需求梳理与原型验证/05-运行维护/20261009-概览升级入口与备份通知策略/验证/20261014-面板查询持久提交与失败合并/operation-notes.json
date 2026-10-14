@@ -1,0 +1,13 @@
+{
+  "recorded_at_utc": "2026-10-14T05:52:07.093129+00:00",
+  "initial_regression_attempt": "test async value borrowing compile errors preserved, not product red",
+  "product_red": "corrected same regression function on 9cf returned zero passed/one failed, sequence remained0 instead of1",
+  "prior_9cf_test_assumption": "old unit expectation preserved sequence after failure; corrected to track failure completion separately from success metadata, prior commit history retained",
+  "pr_patch_eof": "read-only recovery verified old body, then standard-TLS authenticated PATCH and returned-body equality; no merge or rerun",
+  "source_logs": "test logs run on final bytes before commit; committed blob hashes independently match; baseline head shown in run metadata is9cf",
+  "raw_text_evidence": "original CI job logs gzip; original ZIP CRC/hash retained, no binary execution",
+  "ui_scope": "no UI code changed; previous local typecheck succeeded but no claimed full UI rerun for a7",
+  "native_or_performance_scope": "zero desktop starts/foreground operations or new native performance samples",
+  "candidate_dispatched": false,
+  "task_original_unchanged": true
+}

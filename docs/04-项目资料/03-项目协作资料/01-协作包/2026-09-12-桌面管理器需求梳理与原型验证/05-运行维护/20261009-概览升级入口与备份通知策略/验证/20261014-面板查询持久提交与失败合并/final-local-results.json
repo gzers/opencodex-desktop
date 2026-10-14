@@ -1,0 +1,27 @@
+{
+  "baseline_sha": "9cf213170459ac04927e369ea3bef899041c21fb",
+  "rust": {
+    "suites": 35,
+    "passed": 895,
+    "failed": 0,
+    "ignored": 6
+  },
+  "ownership_tests_passed": 5,
+  "fmt_clippy_passed": true,
+  "same_red_green_regression_function": true,
+  "regression_body_sha256": "ca26e1f87c7793089fc2ca36134befb283d722459f745bd63baf30872785c402",
+  "changed_paths": [
+    "apps/desktop/tauri/src/commands/about.rs",
+    "apps/desktop/tauri/src/commands/update_schedule.rs",
+    "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs"
+  ],
+  "file_sha256": {
+    "apps/desktop/tauri/src/commands/about.rs": "a87c900335b5be8762c39cc3462b15458e153c9533ffca4ac774dee977869a1d",
+    "apps/desktop/tauri/src/commands/update_schedule.rs": "91b61d754e04251f06c7d5df0f3f69efde8dea7d44f8cf2d75ff9ab54f862c92",
+    "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs": "0c0d95d1623b71b8107794948ce45b18bcc1a1942f6e972bd0d5a3c7a4e0bbe4"
+  },
+  "native_app_started": false,
+  "new_performance_samples": 0,
+  "deadline_interval_changed": false,
+  "test_limitations": "controlled query/persistence completion and same waiter mutex branch; no native Tauri IPC or actual AppHandle notification delivery"
+}

@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--locked",
+    "--lib",
+    "commands::about::query_ownership_tests::failed_durable_commit_is_shared_with_waiters_without_requery",
+    "--",
+    "--nocapture"
+  ],
+  "working_directory": "/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri",
+  "exit": 101,
+  "elapsed_seconds": 8.658699792,
+  "code_head": "9cf213170459ac04927e369ea3bef899041c21fb",
+  "tests_sha256": "f6d9f56df67db6521e6e2bf0d343fb06d877e4a5f1fc99c7272b809f06939eea"
+}
