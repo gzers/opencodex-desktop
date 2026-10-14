@@ -1,0 +1,53 @@
+{
+  "recorded_at_utc": "2026-10-14T08:28:46.445059+00:00",
+  "run": 38533779767,
+  "event": "pull_request",
+  "associated_head": "f545cb3317b2c935ae07c8bca1674d3acf818552",
+  "status": "completed",
+  "conclusion": "failure",
+  "archive_bytes": 265540,
+  "archive_sha256": "da3c8618db57db5e6cfdc83ae488c74a7bf3f247a1c4d56ecb500019a05ff7e9",
+  "zip_crc": true,
+  "safe_paths": true,
+  "cargo_counts": {
+    "backend-windows": {
+      "suites": 1,
+      "passed": 527,
+      "failed": 3,
+      "ignored": 4
+    },
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "failed_test_lines": [
+    "2026-10-14T08:22:27.1254584Z test infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process ... FAILED",
+    "2026-10-14T08:22:27.1256117Z test infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output ... FAILED",
+    "2026-10-14T08:22:27.1257299Z test infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper ... FAILED"
+  ],
+  "selected_logs": [
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "file": "f545-pr-final-observation-backend-windows.log",
+      "bytes": 169842,
+      "sha256": "eb98efe0744ddc031c6c83990069eeff6ef5d0c86fe7b0532cbc2c307b37f975"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "f545-pr-final-observation-backend.log",
+      "bytes": 143510,
+      "sha256": "bc0bae1c3ad995d049a2680e7d2e45bb1479f41d3b91d326cffac609f27040a7"
+    }
+  ],
+  "windows_checkout": {
+    "member": "backend-windows/2_Run actions_checkout@v5.txt",
+    "observed_shas": [
+      "2a2110dae5069846a19c1e24fb3cb6faa5fc19ae",
+      "f545cb3317b2c935ae07c8bca1674d3acf818552",
+      "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a"
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "baseline_sha": "f545cb3317b2c935ae07c8bca1674d3acf818552",
+  "changed_paths": [
+    "apps/desktop/ui/src/routes/SettingsRoute.vue",
+    "apps/desktop/ui/src/features/runtime/installPath.ts",
+    "apps/desktop/ui/tests/settings-install-path.test.ts"
+  ],
+  "file_sha256": {
+    "apps/desktop/ui/src/routes/SettingsRoute.vue": "bbd6e688ecae9feb1b8620f554a851a1b7a25cde9647c856f453096bb2315559",
+    "apps/desktop/ui/src/features/runtime/installPath.ts": "6f92f931d4a022b4f1a1c1068cbcda19faa225c7c0d10e629d58a9d6a66f399b",
+    "apps/desktop/ui/tests/settings-install-path.test.ts": "78efe2309f831cc7fa0a5ff4b7b27f84ed1d4f576b7e7faf9c2afc67387f0120"
+  },
+  "same_final_test_sha256": "78efe2309f831cc7fa0a5ff4b7b27f84ed1d4f576b7e7faf9c2afc67387f0120",
+  "old_final_tests_passed": 14,
+  "old_final_tests_failed": 8,
+  "new_ui_files": 99,
+  "new_ui_passed": 533,
+  "new_test_cases": 22,
+  "typecheck_production_build_diff_passed": true,
+  "backend_changed": false,
+  "frontend_scope": "platform-aware lexical validation and component-boundary hint only; authoritative protected path, link and write permission validation stays native",
+  "native_windows_test_performed": false,
+  "new_candidate_dispatched": false,
+  "new_performance_samples": 0,
+  "known_build_dynamic_import_warnings": 4
+}

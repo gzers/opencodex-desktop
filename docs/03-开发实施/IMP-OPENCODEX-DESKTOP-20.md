@@ -1344,3 +1344,11 @@ f545cb33修复SettingsRoute仍用安装percent阶段常量、失败100%及提前
 新push38533772616/PR38533779767最后in_progress，PR4draft/open/headf545未合并；已验证aae候选不含新UI，不抵新SHA。main×f545只读tree模拟干净，无实际merge/branch改变。原保护损坏恢复仍缺精确关联事实，manifest ActivationProof不含backup ref，不能从版本/目录猜造；Windows向导POSIX路径判断另为下一挂载复现线索，本提交未改或验。见[向导修复与边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-安装向导真实阶段反馈/README.md)。
 
 Mac继续后台，Windows仍唯一原生验收，切Mac须实例0；原性能failed、预算/八门禁、FZ50许可/日常真实数据边界及TASK原字节/revision2/in_progress/pending/空验收保持，不关闭/签名/发布或核心事实晋升。
+
+### 2026-10-14 Windows 向导路径红绿与父提交 Windows CI 失败
+
+51a35eff将SettingsRoute仅POSIX的路径校验改为平台事实识别盘符/UNC，按组件/分隔符/Windows大小写判断归属，同前缀相邻目录不误标；拒绝相对/根/设备/点段，mac保护检查保持，原请求仍由后端系统保护/链接/写权限验证，不固定盘符或放宽ACL。最终同22项测试父f545为14通过/8失败，新UI99文件/533通过、类型/构建/diff通过；原Tauri全部字节与aae相同，未本地Rust/原生/性能重跑。
+
+f545 PRCI38533779767已failure：Mac900通过/6忽略，Windows库527通过/三版本夹具失败/4忽略。约2秒Timeout时独立control/parent标记缺失，完整日志/ZIP/CRC保留，原因未解不认定环境波动；父push最新job回归success但构建仍进行，不能覆盖PR失败。新51a push38535387208/PR38535398225进行中，frontend均success，不抵完整Windows或新SHA制品。PR4title/body经owner回执核验draft/open/unmerged，旧aae包不含51a/f545，暂不新打包。见[路径修复与失败原件](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows向导路径与父提交CI失败/README.md)。
+
+Mac仅后台，Windows原唯一实例不操作；原性能failed、全部预算/门禁、保护损坏恢复缺口/FZ50许可、日常与真实数据和TASK原字节/revision2/in_progress/pending/空验收保持，无合并/核心晋升/签名/发布/关闭证书。
