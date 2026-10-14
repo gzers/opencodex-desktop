@@ -20,6 +20,7 @@ import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
 import { useEffectsStore } from '@/app/appearance/effects'
 import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
+import { installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
 import {
   installPhaseLabel,
   offlineSteps,
@@ -818,21 +819,10 @@ const uninstallDone = ref(false)
 const runtimeSourceLabel = computed(() =>
   app.runtimeSource ? sourceKindLabel(app.runtimeSource.kind) : '未解析',
 )
-const installPrefixError = computed(() => {
-  const value = installPrefix.value.trim()
-  if (!value) return ''
-  if (!value.startsWith('/')) return '安装位置必须是绝对路径'
-  const protectedRoots = ['/', '/bin', '/sbin', '/usr', '/etc', '/System', '/Library', '/private', '/Applications']
-  if (protectedRoots.some(root => value === root || (root !== '/' && value.startsWith(`${root}/`)))) {
-    return '安装位置落在系统保护目录内，已拒绝'
-  }
-  return ''
-})
+const installPrefixError = computed(() => installPrefixIssue(installPrefix.value, app.aboutApp?.platform))
 const installLandingText = computed(() => {
-  const root = app.dataRootConfig?.currentDataRoot ?? ''
-  const value = installPrefix.value.trim()
-  if (!root || !value) return ''
-  return value.startsWith(root) ? '落点：数据根内' : '落点：数据根外'
+  const inside = prefixInsideDataRoot(app.dataRootConfig?.currentDataRoot ?? '', installPrefix.value, app.aboutApp?.platform)
+  return inside === null ? '' : inside ? '落点：数据根内' : '落点：数据根外'
 })
 const proxyHint = computed(() => {
   const host = installProxy.value.host.trim()
