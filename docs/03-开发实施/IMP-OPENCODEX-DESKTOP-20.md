@@ -1336,3 +1336,11 @@ aae2a3fe pushCI38521648491/PRCI38521655917均completed/success，Mac各35组/900
 四草稿PR身份核验maineae/focusbe/detailsfd/iconsbb/candidateaae；main×aae merge-tree干净且tree=d9d894fb等于候选，但details×aae的about.rs/content、about_query_ownership_tests.rs/add-add冲突。外部临时index保留aae两blob后整个tree等于已测候选，实际HEAD/index/ref/PR均未变，未合并。详见[审计证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-原契约与合并门禁复核/README.md)。新mergeSHA仍需mainCI/候选/门禁，旧artifact不晋升。
 
 本轮无生产代码/原生/性能/安装动作，Windows仍验收、Mac仅后台，Mac原生先协调Windows实例0。aae候选冻结、原CPU/RSSfailed与全部矩阵/FZ50许可/日常数据保护保持；原TASKrevision2/in_progress/pending及空验收、goalactive不变，无稳定核心晋升、自动合并、签名、发布或关闭证书。
+
+### 2026-10-14 安装向导取消阶段伪百分比
+
+f545cb33修复SettingsRoute仍用安装percent阶段常量、失败100%及提前done的反馈；等待实际outcome/来源核对/事务finish才显示完成，不定条按既有软件画质/可见性策略动画或暂停，命令/离线/重启/保护待核验事实保留。后端协议/注册/脚本许可不改。相同最终10项挂载测试在父aae全失败、新全UI98文件/511通过、类型/构建/diff通过，原4动态导入和canvas警告保留；Rust/原生/性能未重跑。
+
+新push38533772616/PR38533779767最后in_progress，PR4draft/open/headf545未合并；已验证aae候选不含新UI，不抵新SHA。main×f545只读tree模拟干净，无实际merge/branch改变。原保护损坏恢复仍缺精确关联事实，manifest ActivationProof不含backup ref，不能从版本/目录猜造；Windows向导POSIX路径判断另为下一挂载复现线索，本提交未改或验。见[向导修复与边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-安装向导真实阶段反馈/README.md)。
+
+Mac继续后台，Windows仍唯一原生验收，切Mac须实例0；原性能failed、预算/八门禁、FZ50许可/日常真实数据边界及TASK原字节/revision2/in_progress/pending/空验收保持，不关闭/签名/发布或核心事实晋升。
