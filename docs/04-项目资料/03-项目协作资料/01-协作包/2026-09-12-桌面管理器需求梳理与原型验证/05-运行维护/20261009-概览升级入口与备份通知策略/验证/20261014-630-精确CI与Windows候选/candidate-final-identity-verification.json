@@ -1,0 +1,86 @@
+{
+  "verified_at_utc": "2026-10-14T01:12:23.435690+00:00",
+  "run": 38492240481,
+  "source_sha": "6305747f035945f3563296b42d21edcf5c816464",
+  "two_receipts_byte_identical": true,
+  "installer_bytes_match_receipt": true,
+  "runner_installed_exe_matches_expected_marker_hash": true,
+  "runner_environment_source_matches": true,
+  "runner_environment": {
+    "source": "6305747f035945f3563296b42d21edcf5c816464",
+    "runner": "win25-vs2026",
+    "image": "20260925.250.1",
+    "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "tauri": "tauri-cli 2.11.4"
+  },
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4591616,
+      "sha256": "6725f7f7982a40229c7465a95bbb3ba822e28afab6c62fb008b3e18cbb4499d7",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-8a12869323b44e6988eaee7a872328e8",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "23d1b43a24f544866c4708421c65e5ae774116241876aecd80cf3d030818e99e",
+      "expectedInstalledExecutableSha256": "23d1b43a24f544866c4708421c65e5ae774116241876aecd80cf3d030818e99e",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 8078005,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3275286,
+      "sha256": "3d85d834e689342e1e9dc27e14c533b7dd29a2d00a4185c016411825386eae30",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-9a94d7dff72941d0bfb544f88b3f65c2",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "025106a21a752fe5a532f319ec75dee8e612012e8cf8db2c3606d6b38148547d",
+      "expectedInstalledExecutableSha256": "025106a21a752fe5a532f319ec75dee8e612012e8cf8db2c3606d6b38148547d",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 8078005,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ],
+  "selected_originals": [
+    {
+      "zip_path": "environment.json",
+      "saved": "/private/tmp/ocx-0110-release-notes-20261014/candidate-selected/environment.json",
+      "bytes": 298,
+      "sha256": "685a55f83a796d2478da2a5413debd019a91b10a40f9502fb1b99aad04207f62"
+    },
+    {
+      "zip_path": "msi-startup/startup.json",
+      "saved": "/private/tmp/ocx-0110-release-notes-20261014/candidate-selected/msi-startup/startup.json",
+      "bytes": 1415,
+      "sha256": "8f5acf96f4ec00101864e646e10b0d84a1d10fdf317d3da1f44746fc22f4d270"
+    },
+    {
+      "zip_path": "nsis-startup/startup.json",
+      "saved": "/private/tmp/ocx-0110-release-notes-20261014/candidate-selected/nsis-startup/startup.json",
+      "bytes": 1418,
+      "sha256": "a1882c3e38364788132d99291c975c11721c6a215b52032a3859f33f38676caa"
+    },
+    {
+      "zip_path": "process-token/process-token.json",
+      "saved": "/private/tmp/ocx-0110-release-notes-20261014/candidate-selected/process-token/process-token.json",
+      "bytes": 2322,
+      "sha256": "b2b2b7915f7d470866d29a5bc76b59eee34bfb30ad80c6db574cf6a6ebe43796"
+    }
+  ],
+  "installed_exe_bytes_available_locally": false,
+  "windows_installer_executed_on_mac": false,
+  "physical_acceptance": false,
+  "code_signed": false,
+  "release_accepted": false
+}

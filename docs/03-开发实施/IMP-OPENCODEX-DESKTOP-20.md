@@ -1242,3 +1242,11 @@ feature/0.1.10-release-details@6305747f 已从be7395a开发并推送，包含父
 两入口共用ReleaseNotes，明确加载/可读/缺失/独立失败重试，正文纯文本内部滚动，仅核验精确Release才提供网页，updater正文优先，不触发版本检查/备份/安装。后端说明独立事务按候选/通道/世代与维护源校验；总30s、响应256KiB/正文64KiB，无重定向/自动重试。代理沿原策略，cache/updates/release-notes三槽按活动根/对象通道/版本归属，正文24h、缺失1h，失败不覆缓存，缓存命中零说明请求；原调度/退避/签名备份门禁不改。UI迟到结果与根冻结拒绝、重试焦点保留，真实反馈点登记，说明失败不解除版本/安装异常。[实现与证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/README.md)。
 
 本地最终前端97文件/501通过，Rust34组/884通过/6忽略(不计通过)，说明针对29UI/12Rust项包含完整suite；fmt/strictClippy/类型/构建/diff通过，4条动态导入警告保留。业务红3项、首轮编译/Clippy/测试夹具失败原件保留。630同SHA CI38490716335最后in_progress，不称Windows构建或制品通过；Mac无桌面启动/新原生性能，Windows旧be不可证明新源码，后续须协调单实例切换新SHA候选。原macOS性能failed、全部预算/门禁、TASKrevision2/in_progress/pending/空验收及FZ50许可缺口保持，无核心晋升、真实迁移、日常替换、自动合并、签名或发布。
+
+### 2026-10-14 630 精确双 CI 与 Windows 安装候选终态
+
+6305747f的push CI38490716335、PR CI38491351619及单次隔离候选38492240481均completed/success。两轮CI五必需job成功/main-only build skipped，MacRust各34组/884passed/6ignored、Windows及候选各34组/612passed/7ignored，ignored不计通过。PR#2基于be焦点分支、17文件open/draft；PR#1/main未合并，不混同PR检出二进制与独立head候选。
+
+两个ZIP11863515199/11863360486大小/sha256/API/CRC/安全条目通过，3/316项，两份安装回执字节一致；MSI4591616字节/SHA6725f7f7982a40229c7465a95bbb3ba822e28afab6c62fb008b3e18cbb4499d7、NSIS3275286字节/SHA3d85d834e689342e1e9dc27e14c533b7dd29a2d00a4185c016411825386eae30匹配回执。runner逐个新装/首屏/卸载成功，实际应用均elevated/type1、mode any，不计双权限；安装后EXE字节不在artifact内，本机仅核回执对应，Mac未执行Windows安装器或开应用。source630、包锁环境及bundle预期摘要一致；codeSigned/releaseAcceptedfalse，沙箱根/DPR/自动收尾不替代默认安装data/物理DPI/正常退出/真实保留/升级门禁。[终态与Windows接续证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-630-精确CI与Windows候选/README.md)。
+
+新说明功能真机须固定630制品，先协调现有be实例结束并确认0，使用准入的安装/只读提取隔离方案，保护日常数据/注册；旧be不能证明新代码。四态/正文网页/长滚动/独立重试焦点/缓存真实计数与其他原矩阵仍待。原macOS性能failed、全部预算、TASKrevision2/in_progress/pending/空验收及FZ50许可缺口不变；没有核心事实晋升、真实迁移、日常替换、自动合并、签名、发布、通道晋升或完成证书。

@@ -1,0 +1,60 @@
+{
+  "verified_at_utc": "2026-10-14T01:10:27.793733+00:00",
+  "run": 38492240481,
+  "source_sha": "6305747f035945f3563296b42d21edcf5c816464",
+  "artifacts": [
+    {
+      "id": 11863515199,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "archive_bytes": 7658531,
+      "archive_sha256": "8861851c191bc03d57dd6d594a037a6e93264268903c4896e1699fd641e37616",
+      "zip_crc_verified": true,
+      "entry_count": 3,
+      "safe_paths": true,
+      "receipt_path": "/private/tmp/ocx-0110-release-notes-20261014/candidate-archives/11863515199-installer-verification.json",
+      "receipt_sha256": "e8ba6b2daf2d68b49bae01cc080d7b07c1ed973897eea20ed755d65c5fc50192",
+      "installer_entries": [
+        {
+          "path": "apps/desktop/tauri/target/release/bundle/nsis/OpenCodeX Desktop_0.1.10_x64-setup.exe",
+          "bytes": 3275286,
+          "sha256": "3d85d834e689342e1e9dc27e14c533b7dd29a2d00a4185c016411825386eae30"
+        },
+        {
+          "path": "apps/desktop/tauri/target/release/bundle/msi/OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+          "bytes": 4591616,
+          "sha256": "6725f7f7982a40229c7465a95bbb3ba822e28afab6c62fb008b3e18cbb4499d7"
+        }
+      ],
+      "downloads": [
+        {
+          "attempt": 0,
+          "exit": 0,
+          "partial_bytes": 7658531,
+          "stderr_file": "/private/tmp/ocx-0110-release-notes-20261014/candidate-archives/11863515199-attempt-0.stderr"
+        }
+      ]
+    },
+    {
+      "id": 11863360486,
+      "name": "windows-candidate-evidence",
+      "archive_bytes": 1685594,
+      "archive_sha256": "7b31c6eeefbb132065e83a50b4a1852eb20bcd48b58e89420acc868fc0a7176c",
+      "zip_crc_verified": true,
+      "entry_count": 316,
+      "safe_paths": true,
+      "receipt_path": "/private/tmp/ocx-0110-release-notes-20261014/candidate-archives/11863360486-installer-verification.json",
+      "receipt_sha256": "e8ba6b2daf2d68b49bae01cc080d7b07c1ed973897eea20ed755d65c5fc50192",
+      "installer_entries": [],
+      "downloads": [
+        {
+          "attempt": 0,
+          "exit": 0,
+          "partial_bytes": 1685594,
+          "stderr_file": "/private/tmp/ocx-0110-release-notes-20261014/candidate-archives/11863360486-attempt-0.stderr"
+        }
+      ]
+    }
+  ],
+  "windows_binary_executed_on_mac": false,
+  "local_application_started": false
+}
