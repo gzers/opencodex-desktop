@@ -147,7 +147,7 @@ pub(crate) async fn check_for_update_shared(
     .await
 }
 
-async fn run_check_owned<T, F, Fut>(
+pub(crate) async fn run_check_owned<T, F, Fut>(
     gate: Arc<crate::infrastructure::storage_writers::WriterGate>,
     task: F,
 ) -> AppResult<T>

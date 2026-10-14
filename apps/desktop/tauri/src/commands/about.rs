@@ -53,7 +53,31 @@ pub async fn official_remote_latest(
     trigger: Option<crate::commands::event_delivery::QueryTrigger>,
     app: tauri::AppHandle,
 ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
-    let _storage = crate::infrastructure::storage_writers::global().admit()?;
+    run_panel_query_owned(
+        crate::infrastructure::storage_writers::global(),
+        move || official_remote_latest_owned(trigger, app),
+    )
+    .await
+}
+
+async fn run_panel_query_owned<T, F, Fut>(
+    gate: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    task: F,
+) -> AppResult<T>
+where
+    T: Send + 'static,
+    F: FnOnce() -> Fut + Send + 'static,
+    Fut: std::future::Future<Output = AppResult<T>> + Send + 'static,
+{
+    // Reuse the manager's admitted query owner: metadata, durable completion and
+    // terminal delivery belong to the worker, not to the disconnected observer.
+    super::update::run_check_owned(gate, task).await
+}
+
+async fn official_remote_latest_owned(
+    trigger: Option<crate::commands::event_delivery::QueryTrigger>,
+    app: tauri::AppHandle,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
     use crate::commands::update_schedule::{self, SharedPanelQuery};
     use crate::modules::update::schedule::Target;
     use std::sync::atomic::Ordering;
@@ -107,6 +131,10 @@ pub async fn official_remote_latest(
     .await?;
     result
 }
+
+#[cfg(test)]
+#[path = "about_query_ownership_tests.rs"]
+mod query_ownership_tests;
 
 async fn query_panel_metadata(
     app: &tauri::AppHandle,
