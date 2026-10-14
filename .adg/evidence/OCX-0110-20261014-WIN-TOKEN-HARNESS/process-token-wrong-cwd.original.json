@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "result": "pass",
+  "checks": [
+    {
+      "name": "parse-all-windows-smoke-scripts",
+      "result": "pass",
+      "detail": {
+        "files": [
+          "windows-appearance.ps1",
+          "windows-installer.ps1",
+          "windows-native.ps1",
+          "windows-owned-etw.ps1",
+          "windows-owned-etw.test.ps1",
+          "windows-process-token.ps1",
+          "windows-process-token.test.ps1",
+          "windows-startup.ps1"
+        ]
+      }
+    },
+    {
+      "name": "harness-process-identity",
+      "result": "pass",
+      "detail": {
+        "processId": 25536
+      }
+    },
+    {
+      "name": "actual-child-identity-and-inherited-token",
+      "result": "pass",
+      "detail": {
+        "elevationType": 3,
+        "mode": "ordinary",
+        "processId": 35252
+      }
+    },
+    {
+      "name": "reject-wrong-executable",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-opposite-permission-mode",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-missing-token-evidence",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-string-elevation-value",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-exited-process",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-disposed-process",
+      "result": "pass",
+      "detail": null
+    }
+  ],
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 25536,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-14T15:19:18.8231890Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-14T15:19:19.8737869Z"
+  },
+  "childToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 35252,
+    "executable": "C:\\Windows\\System32\\cmd.exe",
+    "creationTimeUtc": "2026-10-14T15:19:19.8945297Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-14T15:19:19.9070599Z"
+  },
+  "sourceCommit": "85182c632c16855dbff3cba4bbea57c54bd5956b",
+  "powershell": "7.6.5",
+  "scope": "read-only token helper; does not accept native UI or dual-permission application gates",
+  "collectedAtUtc": "2026-10-14T15:19:20.0137371Z"
+}
