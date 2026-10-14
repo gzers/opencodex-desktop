@@ -1444,3 +1444,11 @@ abc3a914 push38561752521/PR38561759502现completed/success，五必需job成功/
 629b9c6f仅修改原三份test/smoke工具：以已持有Process.Handle的QueryFullProcessImageNameW查询根映像、校验前留记录，不等待初始化或预热；启动立即异步读输出，异常也有界排空，单列setup/run error及完成/收尾状态。本机编译、原53项纯检查+5项自身句柄映像检查及摘要/目录/普通权限拒绝通过，没有再次执行原库/Node/ETW，修正后真实录制待验证。代码已推送，PR5描述已独立读回draft/open/unmerged/无auto_merge；新push38567345341/PR38567352891初读仍in_progress，旧abc双CI不抵新head。
 
 见[管理员录制中止与映像修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2管理员录制中止与映像修正/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-ETW-RUN/`。本次批准的一次原库已启动，不自动第二次；下一步先核验修正SHA终态，再明确批准新的有界录制。Mac继续后台、未原生交接；旧查询失败/根因、性能failed、原预算/八门禁/TASK原字节revision2/in_progress/pending及FZ50许可保持，整体目标active且未完成，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-14 根映像修正双 CI 终态与实际检出准入
+
+629b9c6f push38567345341/PR38567352891现均completed/success，五必需job成功/main-only build skipped；每轮Mac900/Windows627passed、忽略6/7，各35组，runner最终Windows EXE首屏成功。实际push checkout629b9c6f、PR合成513cea4a，原checkout日志与GitHub commit元数据分别核验，整tree均30e3be09…；完整两ZIP的SHA/CRC、安全条目及八份backend原日志字节通过，不把tree同推定为二进制同。
+
+只读观察同两run，API间歇错误保留；后续读回确认继续构建，21:14:55两轮终态成功，观察器正常退出，无重派或新候选。PR5仅补正文并独立读回draft/open/unmerged/无auto_merge，head/base/title未变。见[双CI与录制准入](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2根映像修正双CI与录制准入/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-IMAGEFIX-CI/`。
+
+ci-admission仅供新review-only入口核验源码CI/实际检出/原日志，不是第二次管理员录制批准。通用CI未运行C#collector或53+5本机检查，不证明句柄查询后的真实启动/事件过滤/排空或失败取证。本机原库/Node/ETW/desktop新执行0，第二录制根不存在，旧中止原件重验、日常及隔离数据摘要保持、原TASK字节不变；下一实际执行仍需人的明确批准。Mac保持后台、无原生交接；旧七query失败/根因、性能failed/预算/八门禁/TASKrevision2/in_progress/pending及FZ50许可保持，目标active，整体未完成，不关闭、合并、签名、晋升或发布。

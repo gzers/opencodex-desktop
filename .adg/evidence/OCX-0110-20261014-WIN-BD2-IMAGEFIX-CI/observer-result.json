@@ -1,0 +1,37 @@
+{
+  "status": "all-terminal",
+  "atUtc": "2026-10-14T13:14:55.062494+00:00",
+  "source": "629b9c6f913b5e04badc9ce747f6bb8ba247fd89",
+  "runs": [
+    {
+      "id": 38567345341,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "backend": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "backend-windows": "success",
+        "frontend": "success",
+        "build": "skipped"
+      }
+    },
+    {
+      "id": 38567352891,
+      "event": "pull_request",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": {
+        "release-tools": "success",
+        "backend": "success",
+        "backend-windows": "success",
+        "windows-smoke-evidence": "success",
+        "frontend": "success",
+        "build": "skipped"
+      }
+    }
+  ],
+  "newTestRuns": 0,
+  "newEtwSessions": 0
+}

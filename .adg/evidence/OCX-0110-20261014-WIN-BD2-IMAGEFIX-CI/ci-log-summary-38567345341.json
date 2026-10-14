@@ -1,0 +1,63 @@
+{
+  "atUtc": "2026-10-14T13:10:52.502584+00:00",
+  "runId": 38567345341,
+  "associatedHead": "629b9c6f913b5e04badc9ce747f6bb8ba247fd89",
+  "event": "push",
+  "conclusion": "success",
+  "archiveBytes": 292369,
+  "archiveSha256": "efdd94d38e6cf1bea52217c6319a05d2f03e448c53fc94ffba73599df7e54081",
+  "zipCrcPassed": true,
+  "safeEntries": true,
+  "selectedOriginalLogs": [
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "savedAs": "ci-38567345341-backend-checkout.log.gz",
+      "bytes": 6358,
+      "sha256": "b0627e21b045aef9608a5b66fef757ac35c1d7a08d973eeb75807e0b92e3beb2"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "savedAs": "ci-38567345341-backend-tests.log.gz",
+      "bytes": 143510,
+      "sha256": "662e41821d40c0d1424da5dbcf15a5c4ddefe8b93bf83979ebe9e9d34636a6ba"
+    },
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "savedAs": "ci-38567345341-backend-windows-checkout.log.gz",
+      "bytes": 5472,
+      "sha256": "f87c7096d0cfc872bb3bb9ccedaf0d00dc80fad91d377b40d9e307a6750b6a5d"
+    },
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "savedAs": "ci-38567345341-backend-windows-tests.log.gz",
+      "bytes": 217654,
+      "sha256": "452abae537207fc40b60f6b95d523ce0dcdf7158e5adc2af05cc771d1494429d"
+    }
+  ],
+  "actualCheckoutShas": {
+    "backend": [
+      "629b9c6f913b5e04badc9ce747f6bb8ba247fd89"
+    ],
+    "backend-windows": [
+      "629b9c6f913b5e04badc9ce747f6bb8ba247fd89"
+    ]
+  },
+  "rustCounts": {
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    },
+    "backend-windows": {
+      "suites": 35,
+      "passed": 627,
+      "failed": 0,
+      "ignored": 7
+    }
+  },
+  "failedTestLines": [],
+  "collectorRecordOrScopeTestsExecutedByCi": false,
+  "originalBd2FailedRunCleared": false,
+  "authorizationHeaderForwardedAcrossHosts": false
+}
