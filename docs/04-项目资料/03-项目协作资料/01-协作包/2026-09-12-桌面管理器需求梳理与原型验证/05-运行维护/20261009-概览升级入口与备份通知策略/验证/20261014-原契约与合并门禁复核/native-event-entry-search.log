@@ -1,0 +1,29 @@
+apps/desktop/tauri/src/modules/migration/tests.rs:526:        .publish_event(&delivery)
+apps/desktop/tauri/src/modules/migration/tests.rs:774:        .publish_event(&delivery)
+apps/desktop/tauri/src/modules/backup/manager.rs:2341:        .publish_event(&delivery);
+apps/desktop/tauri/src/modules/status/polling.rs:82:            self.emitter.emit(&snapshot);
+apps/desktop/tauri/src/commands/sync.rs:971:        .publish_event(&delivery)
+apps/desktop/tauri/src/commands/notifications.rs:162:    pub fn publish_event(&self, delivery: &Delivery<'_>) -> AppResult<DeliveryOutcome> {
+apps/desktop/tauri/src/commands/preferences.rs:282:            .publish_event(&delivery);
+apps/desktop/tauri/src/commands/event_delivery.rs:21:    app.emit(event, payload)?;
+apps/desktop/tauri/src/commands/event_delivery.rs:37:    app.emit_to(target, event, payload)?;
+apps/desktop/tauri/src/commands/event_delivery.rs:132:    .publish_event(&delivery)?;
+apps/desktop/tauri/src/modules/runtime/install.rs:1068:                sink.emit(InstallProgress {
+apps/desktop/tauri/src/modules/runtime/install.rs:1077:                    sink.emit(InstallProgress {
+apps/desktop/tauri/src/modules/runtime/install.rs:1250:                self.emit(
+apps/desktop/tauri/src/modules/runtime/install.rs:1290:        self.emit(InstallPhase::Preparing, 2, None);
+apps/desktop/tauri/src/modules/runtime/install.rs:1317:        self.emit(InstallPhase::Verifying, 88, None);
+apps/desktop/tauri/src/modules/runtime/install.rs:1333:        self.emit(InstallPhase::Activating, 95, None);
+apps/desktop/tauri/src/modules/runtime/install.rs:1370:        self.emit(InstallPhase::Done, 100, None);
+apps/desktop/tauri/src/modules/runtime/install.rs:1394:        self.emit(InstallPhase::Validating, 8, None);
+apps/desktop/tauri/src/modules/runtime/install.rs:1399:        self.emit(
+apps/desktop/tauri/src/modules/runtime/install.rs:1441:            self.emit(
+apps/desktop/tauri/src/modules/runtime/install.rs:1504:        self.emit(InstallPhase::Installing, 45, None);
+apps/desktop/tauri/src/modules/runtime/install.rs:1527:            self.emit(
+apps/desktop/tauri/src/modules/runtime/install.rs:1571:        self.sink.emit(InstallProgress {
+apps/desktop/tauri/src/modules/runtime/install.rs:1960:            sink.emit(InstallProgress {
+apps/desktop/tauri/src/modules/runtime/install.rs:1987:            sink.emit(InstallProgress {
+apps/desktop/tauri/src/commands/backup.rs:390:            .publish_event(&delivery);
+apps/desktop/tauri/src/commands/mod.rs:302:            if let Err(error) = publisher.publish_event(&delivery) {
+apps/desktop/tauri/src/commands/mod.rs:476:                return match publisher.publish_event(&delivery) {
+apps/desktop/tauri/src/commands/mod.rs:870:                .publish_event(&failure)

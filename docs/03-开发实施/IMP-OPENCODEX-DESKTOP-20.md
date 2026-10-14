@@ -1326,3 +1326,13 @@ aae2a3fe pushCI38521648491/PRCI38521655917均completed/success，Mac各35组/900
 双CI终态及零已有候选核验后只发一次workflow_dispatch38524086177，headaae/package全success，Windows627通过/7忽略、MSI/NSIS隔离新装/首屏/卸载通过。artifact11875775415 ZIP7625913/SHAea980905…，证据11876045020 ZIP1690231/SHAe75f5949…；MSI4567040/SHA0dbcb8cf…、NSIS3270031/SHA3937bdcd…，两份安装回执byte-identical，startup source/hash/token绑定。实际应用均elevated/type1/modeany，未取得installed EXE本体独立核验，不抵普通权限/DPI/默认根data/升级卸载数据保留或完整性能。Cargo.lock仅CRLF/LF差异、原始摘要各存，TOML依赖一致；不称byte-identical。
 
 见[精确候选与设备接续](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-aae-存储修复双CI与Windows候选/README.md)。新SHA验收先Windows旧实例结束确认0后启唯一新实例；Mac仍后台。PR4draft/unmerged/main仍eae，未签名/发布/stable晋升；原query启动失败、macOSCPU/RSSfailed、全部预算/矩阵、FZ50许可缺口及原TASK字节/revision2/in_progress/pending/空验收保持，无关闭证书或稳定核心事实晋升。
+
+### 2026-10-14 原契约与八门禁复核，候选保持未验收
+
+按原TASK182读取原字节并provider校验，9个AC绑定与当前DMDdigest全部匹配；23份原task_digest封存RCP有效、acceptance_results共0，performancefailed保持、其余七项整check尚无匹配整体验收回执，不撤销既有局部通过。八门禁的当前证明/缺口/退出条件及P8–P10顺序整理到[固定候选验收与合并发布门禁](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/07-固定候选验收与合并发布门禁.md)，不改预算、TASK或AC状态。
+
+事件当前8triggers/39jobs/81events/27policies/87emissions/8scheduling/9UIfeedback/12paths/4cleanup，79active均登记source，generic sync/backup/migration仍planned；文件定位/词法入口不代替全域投递。损坏面板保护关联受控修复未证明，现有安全拒绝/保留不当完整恢复。旧节点名称/统计仅历史，本页不提前晋升核心事实。
+
+四草稿PR身份核验maineae/focusbe/detailsfd/iconsbb/candidateaae；main×aae merge-tree干净且tree=d9d894fb等于候选，但details×aae的about.rs/content、about_query_ownership_tests.rs/add-add冲突。外部临时index保留aae两blob后整个tree等于已测候选，实际HEAD/index/ref/PR均未变，未合并。详见[审计证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-原契约与合并门禁复核/README.md)。新mergeSHA仍需mainCI/候选/门禁，旧artifact不晋升。
+
+本轮无生产代码/原生/性能/安装动作，Windows仍验收、Mac仅后台，Mac原生先协调Windows实例0。aae候选冻结、原CPU/RSSfailed与全部矩阵/FZ50许可/日常数据保护保持；原TASKrevision2/in_progress/pending及空验收、goalactive不变，无稳定核心晋升、自动合并、签名、发布或关闭证书。

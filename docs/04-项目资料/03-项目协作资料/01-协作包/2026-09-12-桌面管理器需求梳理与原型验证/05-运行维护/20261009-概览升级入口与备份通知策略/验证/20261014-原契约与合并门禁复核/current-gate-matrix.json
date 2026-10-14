@@ -1,0 +1,178 @@
+{
+  "recorded_at_utc": "2026-10-14T07:51:04.236586+00:00",
+  "source_commit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "candidate_run": 38524086177,
+  "gates": [
+    {
+      "check": "review:scope-0110",
+      "work_packages": [
+        "W1",
+        "W2",
+        "W3",
+        "W4",
+        "W5",
+        "W6"
+      ],
+      "ac": [
+        "AC08",
+        "AC09",
+        "AC15",
+        "AC06",
+        "AC11",
+        "AC07",
+        "AC02",
+        "AC16",
+        "AC17"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "Original 9/9 AC digests unchanged; frozen W1–W6 mapping; candidate has no docs/.adg changes; future generic jobs remain planned",
+      "missing": [
+        "final requirement-by-requirement evidence across current candidate and platforms",
+        "explicit dispositions for existing damaged-protection recovery and planned future functionality",
+        "final main CHANGELOG/shared-file and integration review after device gates"
+      ]
+    },
+    {
+      "check": "review:storage-0110",
+      "work_packages": [
+        "W4"
+      ],
+      "ac": [
+        "AC02",
+        "AC08",
+        "AC09"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "captured active-root bindings, writer freeze, isolated migration unit/integration; current static update link rejection tested on Mac/WindowsCI",
+      "missing": [
+        "current candidate physical ordinary/elevated default installation directory-derived data root and custom root",
+        "old AppData/reference-only/external HOME/full restart binding plus isolation and failure/rollback matrix",
+        "space/permission/partial-copy preservation on each platform; no static-link test substitution for all partitions"
+      ]
+    },
+    {
+      "check": "review:updates-0110",
+      "work_packages": [
+        "W1"
+      ],
+      "ac": [
+        "AC08",
+        "AC09",
+        "AC15"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "exact-source notes, cache semantics, focus, task ownership/durable error sharing; current candidate CI and runner evidence",
+      "missing": [
+        "current candidate two-entry detail/result/confirmation/progress/close/reopen/candidate-generation native matrix",
+        "real signature failure/backup failure/restart readback with retained proxy and config; permitted panel update/activation evidence",
+        "true source/cache/request counters, independent retry and notification scope on both platforms; old bb/be not new evidence"
+      ]
+    },
+    {
+      "check": "review:backup-tree-0110",
+      "work_packages": [
+        "W2",
+        "W6"
+      ],
+      "ac": [
+        "AC06",
+        "AC08",
+        "AC11",
+        "AC15",
+        "AC07",
+        "AC17"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "production BackupFiles uses UiTreeTable; manifest/retention/protection/focus regression and historical native subcases",
+      "missing": [
+        "current candidate different-value restore and persistence, intact payload/manifest/group protection after failures",
+        "fixed10 OR30d/pins/protection, preview race/expiry/corrupt/rollback and safe open failures with actual artifacts",
+        "Mac/Windows alignment and keyboard/focus at real size/scale/themes/quality; shared prototype comparison separately tracked"
+      ]
+    },
+    {
+      "check": "review:event-coverage-0110",
+      "work_packages": [
+        "W3"
+      ],
+      "ac": [
+        "AC07",
+        "AC11",
+        "AC15"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "8triggers/39jobs/81events/27policies/87emissions/8scheduling/9UIfeedback/12paths/4cleanup; every79active event has site; two planned events",
+      "missing": [
+        "all existing production GUI/CLI/observer/background paths to registered facts with actual success/failure/admission classification",
+        "native persisted notification/recovery evidence after restart for same object/action/phase/channel/candidate",
+        "no unregistered delivery, no notification flooding, redaction and retention; file existence/count is not exhaustive flow proof"
+      ]
+    },
+    {
+      "check": "review:native-0110",
+      "work_packages": [
+        "W5",
+        "W6",
+        "W1"
+      ],
+      "ac": [
+        "AC16",
+        "AC17",
+        "AC15"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "old be focus and bb icon subset, existing frontend/geometry tests; new candidate runner first screen",
+      "missing": [
+        "final SHA Mac/Windows themes/high-medium-low/css-webgl-fallback/density/size and top/side glow coverage",
+        "production vs accepted prototype screenshots, tree checkbox/arrow/text alignment and modal interaction",
+        "ordinary/elevated Windows physical100/125/150/200% scaling, titlebar restore actual click target/message and lifecycle; runner startup not substitute"
+      ]
+    },
+    {
+      "check": "review:installer-0110",
+      "work_packages": [
+        "W4",
+        "W1"
+      ],
+      "ac": [
+        "AC02",
+        "AC08",
+        "AC09"
+      ],
+      "state": "incomplete",
+      "existing_evidence": "exact aae MSI/NSIS bytes, elevated runner fresh install/startup/uninstall; historic Mac candidate evidence",
+      "missing": [
+        "safe MSI ALLUSERS/UpgradeCode coexistence and approved isolated-profile/device installation path before host installer use",
+        "current Mac artifact app/DMG lifecycle; Windows ordinary/elevated new install and0.1.9 upgrade/custom/protected installation",
+        "normal exit/upgrade/uninstall keeps data by default and explicit cleanup only owned data; separate0.1.7 OTA compatibility on dedicated scheme"
+      ]
+    },
+    {
+      "check": "review:scheduler-performance-0110",
+      "work_packages": [
+        "W1",
+        "W4",
+        "W5"
+      ],
+      "ac": [
+        "AC02",
+        "AC09",
+        "AC15",
+        "AC16",
+        "AC17"
+      ],
+      "state": "failed",
+      "existing_evidence": "old macOS paired CPU+1.817629pp/RSS+117.008965MiB fail; source/cached-state and true partial cross-start deadline records",
+      "missing": [
+        "reproduce and diagnose native failure after platform instance0 coordination, then repaired exact-source full pairs",
+        "cold/hot eachversion>=20, startup p95<=100ms AND<=5%;10min idle CPU<=0.5pp/RSS<=10MiB; no main task>50ms",
+        "100route/10restart valid-cache zero automatic networks/queryprocesses with original counters; real stable24h/beta6h/deadline trigger/backoff/sleep/restart windows"
+      ]
+    }
+  ],
+  "status_semantics": "incomplete means full current-contract proof missing; failed means retained measured budget failure. These are audit labels, not new passed RCP or AC records.",
+  "original_task_unchanged": true,
+  "acceptance_results_written": false,
+  "gate_pass_count": 0,
+  "public_release_ready": false
+}

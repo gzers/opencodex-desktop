@@ -1,0 +1,207 @@
+{
+  "recorded_at_utc": "2026-10-14T07:39:40.662635+00:00",
+  "branches": {
+    "main": {
+      "ref": "origin/main",
+      "sha": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "tree": "fc742fb082b79963635b94f48dc78f2854aab07b"
+    },
+    "focus": {
+      "ref": "origin/feature/0.1.10-update-center-focus",
+      "sha": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+      "tree": "d713ccf5736e2611c429c823b755d6f11b673a5d"
+    },
+    "details": {
+      "ref": "origin/feature/0.1.10-release-details",
+      "sha": "fd31d7167c03b1e4e83554a9bf778a2ffb9baf4e",
+      "tree": "02f4bba6efe63adee4b4487a8f5983104dfd655a"
+    },
+    "icons": {
+      "ref": "origin/feature/0.1.10-windows-transparent-icons",
+      "sha": "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a",
+      "tree": "7b6fe1d26efaeb87bc83411fdacd1ef56e877fff"
+    },
+    "candidate": {
+      "ref": "origin/feature/0.1.10-integration-candidate",
+      "sha": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+      "tree": "d9d894fbad25c4c29e041b921ccf255f6034766e"
+    }
+  },
+  "open_draft_prs": [
+    {
+      "baseRefName": "feature/0.1.10-windows-transparent-icons",
+      "headRefName": "feature/0.1.10-integration-candidate",
+      "headRefOid": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+      "isDraft": true,
+      "number": 4,
+      "title": "fix(updates): 修复查询持久终态与存储隔离",
+      "url": "https://github.com/gzers/opencodex-desktop/pull/4"
+    },
+    {
+      "baseRefName": "feature/0.1.10-release-details",
+      "headRefName": "feature/0.1.10-windows-transparent-icons",
+      "headRefOid": "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a",
+      "isDraft": true,
+      "number": 3,
+      "title": "fix(windows): 透明应用图标与独立单色托盘",
+      "url": "https://github.com/gzers/opencodex-desktop/pull/3"
+    },
+    {
+      "baseRefName": "feature/0.1.10-update-center-focus",
+      "headRefName": "feature/0.1.10-release-details",
+      "headRefOid": "fd31d7167c03b1e4e83554a9bf778a2ffb9baf4e",
+      "isDraft": true,
+      "number": 2,
+      "title": "feat(updates): 核验精确版本更新说明并独立重试",
+      "url": "https://github.com/gzers/opencodex-desktop/pull/2"
+    },
+    {
+      "baseRefName": "main",
+      "headRefName": "feature/0.1.10-update-center-focus",
+      "headRefOid": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+      "isDraft": true,
+      "number": 1,
+      "title": "fix(updates): 切换详情视图后保留弹窗焦点",
+      "url": "https://github.com/gzers/opencodex-desktop/pull/1"
+    }
+  ],
+  "shared_files_equal_across_references": true,
+  "candidate_changes_from_main": [
+    ".github/workflows/ci.yml",
+    "apps/desktop/tauri/Cargo.toml",
+    "apps/desktop/tauri/config/event-registry.json",
+    "apps/desktop/tauri/config/runtime.defaults.json",
+    "apps/desktop/tauri/icons/windows/128x128.png",
+    "apps/desktop/tauri/icons/windows/16x16.png",
+    "apps/desktop/tauri/icons/windows/24x24.png",
+    "apps/desktop/tauri/icons/windows/256x256.png",
+    "apps/desktop/tauri/icons/windows/32x32.png",
+    "apps/desktop/tauri/icons/windows/48x48.png",
+    "apps/desktop/tauri/icons/windows/512x512.png",
+    "apps/desktop/tauri/icons/windows/64x64.png",
+    "apps/desktop/tauri/icons/windows/icon.ico",
+    "apps/desktop/tauri/icons/windows/tray-dark-16.png",
+    "apps/desktop/tauri/icons/windows/tray-dark-20.png",
+    "apps/desktop/tauri/icons/windows/tray-dark-24.png",
+    "apps/desktop/tauri/icons/windows/tray-dark-32.png",
+    "apps/desktop/tauri/icons/windows/tray-dark-40.png",
+    "apps/desktop/tauri/icons/windows/tray-dark-48.png",
+    "apps/desktop/tauri/icons/windows/tray-dark-64.png",
+    "apps/desktop/tauri/icons/windows/tray-light-16.png",
+    "apps/desktop/tauri/icons/windows/tray-light-20.png",
+    "apps/desktop/tauri/icons/windows/tray-light-24.png",
+    "apps/desktop/tauri/icons/windows/tray-light-32.png",
+    "apps/desktop/tauri/icons/windows/tray-light-40.png",
+    "apps/desktop/tauri/icons/windows/tray-light-48.png",
+    "apps/desktop/tauri/icons/windows/tray-light-64.png",
+    "apps/desktop/tauri/src/commands/about.rs",
+    "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs",
+    "apps/desktop/tauri/src/commands/mod.rs",
+    "apps/desktop/tauri/src/commands/release_details.rs",
+    "apps/desktop/tauri/src/commands/update.rs",
+    "apps/desktop/tauri/src/commands/update_schedule.rs",
+    "apps/desktop/tauri/src/infrastructure/mod.rs",
+    "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+    "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+    "apps/desktop/tauri/src/lib.rs",
+    "apps/desktop/tauri/src/modules/runtime_defaults/mod.rs",
+    "apps/desktop/tauri/src/modules/update/mod.rs",
+    "apps/desktop/tauri/src/modules/update/release_notes.rs",
+    "apps/desktop/tauri/src/modules/update/release_notes_tests.rs",
+    "apps/desktop/tauri/src/modules/update/schedule.rs",
+    "apps/desktop/tauri/src/modules/update/storage.rs",
+    "apps/desktop/tauri/tauri.windows.conf.json",
+    "apps/desktop/tauri/tests/app_icon.rs",
+    "apps/desktop/tauri/tests/windows_tray_icon.rs",
+    "apps/desktop/ui/src/features/updates/ReleaseNotes.vue",
+    "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "apps/desktop/ui/src/features/updates/releaseDetails.ts",
+    "apps/desktop/ui/tests/release-notes.test.ts",
+    "apps/desktop/ui/tests/update-center.test.ts",
+    "apps/desktop/ui/tests/update-release-details-flow.test.ts"
+  ],
+  "no_docs_or_governance_code_branch_changes": true,
+  "simulations": [
+    {
+      "simulation": "main-candidate",
+      "exit": 0,
+      "tree": "d9d894fbad25c4c29e041b921ccf255f6034766e",
+      "left_sha": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+      "right_sha": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579"
+    },
+    {
+      "simulation": "details-icons",
+      "exit": 0,
+      "tree": "5e0c1d62d1ed09186614eff7b1104e4240e55cf7",
+      "left_sha": "fd31d7167c03b1e4e83554a9bf778a2ffb9baf4e",
+      "right_sha": "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a"
+    },
+    {
+      "simulation": "details-candidate",
+      "exit": 1,
+      "tree": "291a22943b72d24a167bdb437901d496ad99614c",
+      "left_sha": "fd31d7167c03b1e4e83554a9bf778a2ffb9baf4e",
+      "right_sha": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579"
+    }
+  ],
+  "details_candidate_conflict_stages": [
+    {
+      "mode": "100644",
+      "blob": "22ccec0bb1ae239e2eca7a838ccb33a332500d77",
+      "stage": 1,
+      "path": "apps/desktop/tauri/src/commands/about.rs"
+    },
+    {
+      "mode": "100644",
+      "blob": "34af6dd32461e7c295e5f53d42bf1231ae4e70a1",
+      "stage": 2,
+      "path": "apps/desktop/tauri/src/commands/about.rs"
+    },
+    {
+      "mode": "100644",
+      "blob": "ab9f19d77ded38dde5f0bfd73368905575eb6ef0",
+      "stage": 3,
+      "path": "apps/desktop/tauri/src/commands/about.rs"
+    },
+    {
+      "mode": "100644",
+      "blob": "e15005c0816d016e2413ceb29c44c836020665d7",
+      "stage": 2,
+      "path": "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs"
+    },
+    {
+      "mode": "100644",
+      "blob": "5fe76c6c960d3479dd3491e4063474d14fcb9d86",
+      "stage": 3,
+      "path": "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs"
+    }
+  ],
+  "proposed_conflict_resolution": [
+    {
+      "path": "apps/desktop/tauri/src/commands/about.rs",
+      "mode": "100644",
+      "candidate_blob": "ab9f19d77ded38dde5f0bfd73368905575eb6ef0",
+      "retained_source_commit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+      "scope": "retain final admitted task owner, durable completion/error coalescing and regression tests"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/about_query_ownership_tests.rs",
+      "mode": "100644",
+      "candidate_blob": "5fe76c6c960d3479dd3491e4063474d14fcb9d86",
+      "retained_source_commit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+      "scope": "retain final admitted task owner, durable completion/error coalescing and regression tests"
+    }
+  ],
+  "proposed_resolution_tree": "d9d894fbad25c4c29e041b921ccf255f6034766e",
+  "candidate_tree": "d9d894fbad25c4c29e041b921ccf255f6034766e",
+  "entire_proposed_resolution_tree_equals_tested_candidate": true,
+  "actual_checkout_or_index_changed": false,
+  "merge_commit_created": false,
+  "branch_refs_updated": false,
+  "pr_or_main_merged": false,
+  "native_app_started": false,
+  "future_merge_commit_new_ci_and_artifact_still_required": true,
+  "limits": "merge-tree and isolated index validate Git content only; this does not authorize executing the merge or replace new-main CI/candidate/physical/signature gates"
+}

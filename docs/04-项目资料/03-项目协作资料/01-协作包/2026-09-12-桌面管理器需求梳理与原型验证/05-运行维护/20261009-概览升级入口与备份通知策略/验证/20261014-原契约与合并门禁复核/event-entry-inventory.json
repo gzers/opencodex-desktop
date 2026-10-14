@@ -1,0 +1,671 @@
+{
+  "recorded_at_utc": "2026-10-14T07:45:52.338452+00:00",
+  "source_commit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "registry_path": "apps/desktop/tauri/config/event-registry.json",
+  "registry_sha256": "3dd0e6d0d8f641cee9122641004976c2475861c488f1dde787c87452ba0a4390",
+  "counts": {
+    "triggers": 8,
+    "jobs": 39,
+    "events": 81,
+    "notification_policies": 27,
+    "emission_sites": 87,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 9,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "active_events": 79,
+  "planned_events": [
+    "backup-completed",
+    "migration-completed"
+  ],
+  "planned_jobs": [
+    "sync",
+    "backup",
+    "migration"
+  ],
+  "active_events_without_registered_emission": [],
+  "emission_source_file_inventory": [
+    {
+      "event": "manager-install-progress",
+      "source": "commands/update.rs::install_update IPC Channel.send backup/checking/downloading/installing/pending_restart/failed",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-start-failed",
+      "source": "commands/mod.rs::process_action_with_runner actual failure",
+      "wiring": "scoped_lifecycle",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-stop-failed",
+      "source": "commands/mod.rs::process_action_with_runner scoped actual failure",
+      "wiring": "scoped_lifecycle",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-restart-failed",
+      "source": "commands/mod.rs::process_action_with_runner scoped actual failure",
+      "wiring": "scoped_lifecycle",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-not-found",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-unreachable",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-at-risk",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "external-takeover",
+      "source": "commands/mod.rs::runtime_state_notification",
+      "wiring": "legacy_notification_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-observation-recovered",
+      "source": "commands/mod.rs::publish_runtime_state_notification verified running snapshot",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "notifications-store-unreadable",
+      "source": "commands/notifications.rs::startup_notification_store",
+      "wiring": "startup_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/notifications.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-conflict-detected",
+      "source": "commands/sync.rs::publish_sync_conflict",
+      "wiring": "legacy_notification_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "status-snapshot-changed",
+      "source": "lib.rs::TauriStatusEmitter; modules/status/polling.rs::emit_current",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/lib.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "notifications-changed",
+      "source": "lib.rs::TauriStatusEmitter",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/lib.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-install-progress",
+      "source": "commands/runtime.rs::EventProgressSink; modules/runtime/install.rs::InstallProgressSink",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-source-changed",
+      "source": "commands/runtime.rs::broadcast_source_changed",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "tray-requests-available",
+      "source": "lib.rs::on_menu_event (two branches)",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/lib.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "app-foreground-changed",
+      "source": "infrastructure/app_activity.rs::publish",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/infrastructure/app_activity.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "native-window-appearance",
+      "source": "infrastructure/window_appearance.rs windows emit_to",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "ocxd-panel",
+      "source": "commands/panel.rs::notify_main (action/load)",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/panel.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "ocxd-panel-state",
+      "source": "commands/panel.rs::panel_action",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/panel.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "manager-check-succeeded",
+      "source": "commands/update.rs::check_for_update accepted generation commit",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "manager-check-failed",
+      "source": "commands/update.rs::check_for_update accepted generation commit",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "panel-check-succeeded",
+      "source": "commands/about.rs::official_remote_latest_owned serialized durable commit (admitted run_panel_query_owned worker)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/about.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "panel-check-failed",
+      "source": "commands/about.rs::official_remote_latest_owned serialized durable commit (admitted run_panel_query_owned worker)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/about.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "manager-install-failed",
+      "source": "commands/update.rs::restart_owned owned native handoff failure",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "manager-install-failed",
+      "source": "commands/update.rs::install_update_owned owned terminal result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "manager-install-succeeded",
+      "source": "commands/update.rs::reconcile_startup exact running version and durable original candidate receipt",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "manager-install-pending-restart",
+      "source": "commands/update.rs::install_update_owned verified artifact retained; not installation success",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/update.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-succeeded",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/event_delivery.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-succeeded",
+      "source": "commands/backup.rs::create_preferences_backup owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-failed",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/event_delivery.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-failed",
+      "source": "commands/backup.rs::create_preferences_backup owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-restore-succeeded",
+      "source": "commands/backup.rs::restore_preferences_backup owned worker verified commit",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-restore-failed",
+      "source": "commands/backup.rs::restore_preferences_backup owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-cleanup-succeeded",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/event_delivery.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-cleanup-succeeded",
+      "source": "commands/backup.rs::cleanup_preferences_backups owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-cleanup-failed",
+      "source": "commands/event_delivery.rs::BackupEvents via modules/backup/manager.rs owned transaction result including lock/source admission failures and unreadable cleanup policy",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/event_delivery.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-cleanup-failed",
+      "source": "commands/backup.rs::cleanup_preferences_backups owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "local-cleanup-succeeded",
+      "source": "lib.rs::setup after commands/cleanup.rs::run_startup_cleanup_registered owned startup result (disabled stays silent; no backup scan)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/lib.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "local-cleanup-succeeded",
+      "source": "commands/cleanup.rs::cleanup_local_logs owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/cleanup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "local-cleanup-failed",
+      "source": "lib.rs::setup after commands/cleanup.rs::run_startup_cleanup_registered owned startup result (disabled stays silent; no backup scan)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/lib.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "local-cleanup-failed",
+      "source": "commands/cleanup.rs::cleanup_local_logs owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/cleanup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-list",
+      "source": "commands/backup.rs::list_preferences_backups/backup_files",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-pin",
+      "source": "commands/backup.rs::set_preferences_backup_pinned",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-preview",
+      "source": "commands/backup.rs::preview_preferences_backup_cleanup",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-open",
+      "source": "commands/backup.rs::open_backup_file",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "process-cancel-signal",
+      "source": "infrastructure/process_runner.rs::CancelHandle watch sender.send(true)",
+      "wiring": "internal_only",
+      "inferred_path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "process-observation-signal",
+      "source": "infrastructure/process_runner.rs::observation_sender.send(observation)",
+      "wiring": "internal_only",
+      "inferred_path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "process-exit-signal",
+      "source": "infrastructure/process_runner.rs::sender.send(code)",
+      "wiring": "internal_only",
+      "inferred_path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-stdout-signal",
+      "source": "modules/runtime/install.rs::sender.send(line)",
+      "wiring": "internal_only",
+      "inferred_path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "ui-toast",
+      "source": "ui/app/feedback/store.ts::showToast",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/ui/src/app/feedback/store.ts",
+      "source_file_exists": true
+    },
+    {
+      "event": "ui-recent-event",
+      "source": "ui/app/feedback/store.ts::recordEvent",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/ui/src/app/feedback/store.ts",
+      "source_file_exists": true
+    },
+    {
+      "event": "ui-fault",
+      "source": "ui/app/feedback/store.ts::reportUiFault",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/ui/src/app/feedback/store.ts",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-install-failed",
+      "source": "commands/runtime.rs::install_managed_runtime owned worker result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-install-succeeded",
+      "source": "commands/runtime.rs::install_managed_runtime owned worker verified activation",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-start-succeeded",
+      "source": "commands/mod.rs::process_action_with_runner verified LifecycleResult",
+      "wiring": "scoped_lifecycle",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-stop-succeeded",
+      "source": "commands/mod.rs::process_action_with_runner verified LifecycleResult",
+      "wiring": "scoped_lifecycle",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "run-restart-succeeded",
+      "source": "commands/mod.rs::process_action_with_runner verified LifecycleResult",
+      "wiring": "scoped_lifecycle",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-restored",
+      "source": "commands/backup.rs::restore_preferences_backup emit_signal after committed restore",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-starting-failed",
+      "source": "commands/mod.rs::runtime_state_notification legacy run-start-failed alias",
+      "wiring": "legacy_notification_gate",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "notifications-changed",
+      "source": "commands/mod.rs::process_action persisted store change broadcast; pure catalog validation",
+      "wiring": "validated_signal",
+      "inferred_path": "apps/desktop/tauri/src/commands/mod.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-uninstall-failed",
+      "source": "commands/runtime.rs::uninstall_runtime owned worker terminal, steps and residue verification",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-uninstall-succeeded",
+      "source": "commands/runtime.rs::uninstall_runtime owned worker terminal, steps and residue verification",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-protection-reconcile-failed",
+      "source": "commands/runtime.rs::retry_runtime_protection",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "runtime-protection-reconcile-succeeded",
+      "source": "commands/runtime.rs::retry_runtime_protection",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-save-failed",
+      "source": "commands/preferences.rs::save_preferences owned worker transaction result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-save-succeeded",
+      "source": "commands/preferences.rs::save_preferences owned worker transaction result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-reset-failed",
+      "source": "commands/preferences.rs::restore_default_preferences owned worker transaction result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-reset-succeeded",
+      "source": "commands/preferences.rs::restore_default_preferences owned worker transaction result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/preferences.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-policy-failed",
+      "source": "commands/backup.rs::save_preferences_backup_policy owned worker transaction result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-policy-succeeded",
+      "source": "commands/backup.rs::save_preferences_backup_policy owned worker transaction result",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-pin-failed",
+      "source": "commands/backup.rs::set_preferences_backup_pinned admitted manifest write + readback under backup lock",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "preferences-backup-pin-succeeded",
+      "source": "commands/backup.rs::set_preferences_backup_pinned admitted manifest write + readback under backup lock",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/backup.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-connection-failed",
+      "source": "commands/sync.rs::test_sync_connection owned bounded probe + endpoint/credential readback under sync gate",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-connection-succeeded",
+      "source": "commands/sync.rs::test_sync_connection owned bounded probe + endpoint/credential readback under sync gate",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-endpoint-save-failed",
+      "source": "commands/sync.rs::save_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-endpoint-save-succeeded",
+      "source": "commands/sync.rs::save_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-endpoint-delete-failed",
+      "source": "commands/sync.rs::delete_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-endpoint-delete-succeeded",
+      "source": "commands/sync.rs::delete_sync_endpoint owned credential/config mutation + exact readback under sync gate",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-run-failed",
+      "source": "commands/sync.rs::run_sync_now captured execution terminal; conflicts/admission cannot recover",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "sync-run-succeeded",
+      "source": "commands/sync.rs::run_sync_now captured execution terminal; conflicts/admission cannot recover",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/sync.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "config-export-failed",
+      "source": "commands/migration::export_container_registered (GUI / IPC owned export worker; captured document + destination; terminal after write/readback before target lock release)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/migration.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "config-export-succeeded",
+      "source": "commands/migration::export_container_registered (GUI / IPC owned export worker; captured document + destination; terminal after write/readback before target lock release)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/migration.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "config-import-failed",
+      "source": "commands/migration::import_container_registered (GUI / IPC owned import worker; captured document + explicit HOME; verified multi-file terminal before mutation locks release)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/migration.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "config-import-succeeded",
+      "source": "commands/migration::import_container_registered (GUI / IPC owned import worker; captured document + explicit HOME; verified multi-file terminal before mutation locks release)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/migration.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "extension-config-save-failed",
+      "source": "commands/extensions::execute_extension_write_registered (both GUI write and standalone client toggle; configuration-only candidate + explicit HOME; final exact config readback before target lock release)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/extensions.rs",
+      "source_file_exists": true
+    },
+    {
+      "event": "extension-config-save-succeeded",
+      "source": "commands/extensions::execute_extension_write_registered (both GUI write and standalone client toggle; configuration-only candidate + explicit HOME; final exact config readback before target lock release)",
+      "wiring": "scoped_terminal",
+      "inferred_path": "apps/desktop/tauri/src/commands/extensions.rs",
+      "source_file_exists": true
+    }
+  ],
+  "unresolved_inferred_source_files": [],
+  "search_command": [
+    "rg",
+    "-n",
+    "-F",
+    "-e",
+    ".emit(",
+    "-e",
+    ".emit_to(",
+    "-e",
+    "push_notification",
+    "-e",
+    "publish_event(",
+    "apps/desktop/tauri/src",
+    "--glob",
+    "*.rs"
+  ],
+  "search_exit": 0,
+  "wiring_categories": [
+    "internal_only",
+    "legacy_notification_gate",
+    "scoped_lifecycle",
+    "scoped_terminal",
+    "startup_gate",
+    "validated_signal"
+  ],
+  "limits": [
+    "emission source strings and lexical search are a locator, not proof of every action terminal and recovery path",
+    "existing registry tests prove catalog consistency, not native Tauri delivery",
+    "raw sink.emit calls include progress adapters and tests, not all are notification emissions",
+    "no native instances or code changed"
+  ]
+}
