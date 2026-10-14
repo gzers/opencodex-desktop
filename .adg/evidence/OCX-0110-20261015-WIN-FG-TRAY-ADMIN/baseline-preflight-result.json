@@ -1,0 +1,22 @@
+{
+  "atUtc": "2026-10-14T23:29:35.553114+00:00",
+  "result": "preflight_incomplete",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "candidateSource": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+  "nativeApplicationsStarted": 0,
+  "installerExecuted": false,
+  "performanceMeasured": false,
+  "performanceGatePassed": false,
+  "readFailures": [
+    {
+      "name": "baseline-tag-ref.original.json",
+      "error": "RuntimeError",
+      "message": "Baseline metadata read unavailable; no download, dispatch, or restart."
+    }
+  ],
+  "error": {
+    "type": "RuntimeError",
+    "message": "Metadata preflight incomplete; inspect retained read results."
+  },
+  "finishedAtUtc": "2026-10-14T23:29:38.094741+00:00"
+}
