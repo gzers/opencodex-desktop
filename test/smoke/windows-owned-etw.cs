@@ -139,6 +139,175 @@ namespace OpenCodex.Diagnostics
         }
     }
 
+    public static class OwnedEtwLifecycle
+    {
+        public static T KernelBeforeSource<T>(Action enableKernel, Func<T> getSource)
+        {
+            // TraceEvent's Source getter starts a session when it is inactive.
+            // Kernel enablement must precede that getter, or the library refuses
+            // to enable the kernel provider on the already-started session.
+            enableKernel();
+            return getSource();
+        }
+        public static List<string> FinishAll(IEnumerable<KeyValuePair<string, Action>> stages)
+        {
+            var errors = new List<string>();
+            foreach (var stage in stages)
+            {
+                try { stage.Value(); }
+                catch (Exception error) { errors.Add(stage.Key + ":" + error.GetType().Name); }
+            }
+            return errors;
+        }
+        public static int SelfTest()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("ETW lifecycle contract");
+                checks++;
+            };
+            bool sessionStarted = false, kernelEnabled = false, sourceRead = false;
+            Action enable = () => {
+                if (sessionStarted) throw new InvalidOperationException("Kernel must be enabled first.");
+                kernelEnabled = true;
+                sessionStarted = true;
+            };
+            Func<int> getSource = () => {
+                sourceRead = true;
+                sessionStarted = true;
+                return kernelEnabled ? 1 : 0;
+            };
+            // Independent red model reproduces the old getter-before-enable
+            // order without touching Windows ETW or requiring administrator.
+            bool oldOrderRejected = false;
+            getSource();
+            try { enable(); } catch (InvalidOperationException) { oldOrderRejected = true; }
+            require(oldOrderRejected && !kernelEnabled);
+            sessionStarted = kernelEnabled = sourceRead = false;
+            require(KernelBeforeSource(enable, getSource) == 1);
+            require(sessionStarted && kernelEnabled && sourceRead);
+            sourceRead = false;
+            bool failedEnablePreserved = false;
+            try {
+                KernelBeforeSource(() => { throw new UnauthorizedAccessException(); }, getSource);
+            } catch (UnauthorizedAccessException) { failedEnablePreserved = true; }
+            require(failedEnablePreserved && !sourceRead);
+            var completed = new List<string>();
+            var errors = FinishAll(new[] {
+                new KeyValuePair<string, Action>("stop", () => { completed.Add("stop"); throw new IOException(); }),
+                new KeyValuePair<string, Action>("drain", () => { completed.Add("drain"); }),
+                new KeyValuePair<string, Action>("dispose", () => { completed.Add("dispose"); throw new InvalidOperationException(); }),
+                new KeyValuePair<string, Action>("writer", () => { completed.Add("writer"); }),
+            });
+            require(completed.SequenceEqual(new[] { "stop", "drain", "dispose", "writer" }));
+            require(errors.SequenceEqual(new[] { "stop:IOException", "dispose:InvalidOperationException" }));
+            require(FinishAll(Array.Empty<KeyValuePair<string, Action>>()).Count == 0);
+            return checks;
+        }
+    }
+
+    public static class OwnedEtwNativeStop
+    {
+        [StructLayout(LayoutKind.Sequential)]
+        private struct Wnode
+        {
+            public uint BufferSize, ProviderId;
+            public ulong HistoricalContext;
+            public long TimeStamp;
+            public Guid Guid;
+            public uint ClientContext, Flags;
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        private struct Properties
+        {
+            public Wnode Wnode;
+            public uint BufferSize, MinimumBuffers, MaximumBuffers, MaximumFileSize,
+                        LogFileMode, FlushTimer, EnableFlags;
+            public int AgeLimit;
+            public uint NumberOfBuffers, FreeBuffers, EventsLost, BuffersWritten,
+                        LogBuffersLost, RealTimeBuffersLost;
+            public IntPtr LoggerThreadId;
+            public uint LogFileNameOffset, LoggerNameOffset;
+        }
+        public sealed class Result
+        {
+            public uint Status { get; set; }
+            public bool StoppedOrAlreadyAbsent { get; set; }
+            public uint? FinalEventsLost { get; set; }
+            public uint? FinalRealTimeBuffersLost { get; set; }
+        }
+        [DllImport("advapi32.dll", CharSet = CharSet.Unicode, EntryPoint = "ControlTraceW")]
+        private static extern uint ControlTrace(ulong handle, string name, IntPtr properties, uint controlCode);
+        private static void RequireOwnName(string name)
+        {
+            const string prefix = "OpenCodex-BD2-";
+            if (name == null || !name.StartsWith(prefix, StringComparison.Ordinal)
+                || !Guid.TryParseExact(name.Substring(prefix.Length), "N", out _))
+                throw new ArgumentException("Only the unique task-created session can be stopped.");
+        }
+        private static IntPtr Buffer(string name)
+        {
+            RequireOwnName(name);
+            int size = Marshal.SizeOf<Properties>();
+            int capacity = size + 4096; // Two maximum 1024-character name buffers.
+            IntPtr buffer = Marshal.AllocHGlobal(capacity);
+            Marshal.Copy(new byte[capacity], 0, buffer, capacity);
+            var properties = new Properties {
+                Wnode = new Wnode { BufferSize = (uint)capacity, Flags = 0x00020000 },
+                LoggerNameOffset = (uint)size, LogFileNameOffset = (uint)(size + 2048)
+            };
+            Marshal.StructureToPtr(properties, buffer, false);
+            byte[] nameBytes = Encoding.Unicode.GetBytes(name + "\0");
+            Marshal.Copy(nameBytes, 0, IntPtr.Add(buffer, size), nameBytes.Length);
+            return buffer;
+        }
+        // TraceEventSession.Stop resets a machine-wide sampling interval. Avoid
+        // it completely: this calls only ControlTrace STOP by our unique name,
+        // and returns that owned session's final loss counters.
+        public static Result Stop(string name)
+        {
+            IntPtr buffer = Buffer(name);
+            try {
+                uint status = ControlTrace(0, name, buffer, 1);
+                var properties = Marshal.PtrToStructure<Properties>(buffer);
+                return new Result {
+                    Status = status, StoppedOrAlreadyAbsent = status == 0 || status == 4201,
+                    FinalEventsLost = status == 0 ? properties.EventsLost : (uint?)null,
+                    FinalRealTimeBuffersLost = status == 0 ? properties.RealTimeBuffersLost : (uint?)null
+                };
+            }
+            finally { Marshal.FreeHGlobal(buffer); }
+        }
+        public static int SelfTest()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Owned native-stop contract");
+                checks++;
+            };
+            require(IntPtr.Size == 8);
+            require(Marshal.SizeOf<Wnode>() == 48);
+            require(Marshal.SizeOf<Properties>() == 120);
+            require(Marshal.OffsetOf<Properties>(nameof(Properties.LoggerNameOffset)).ToInt32() == 116);
+            foreach (string rejected in new[] { "NT Kernel Logger", "OpenCodex-BD2-not-a-guid" }) {
+                bool denied = false;
+                try { RequireOwnName(rejected); } catch (ArgumentException) { denied = true; }
+                require(denied);
+            }
+            string name = "OpenCodex-BD2-" + Guid.NewGuid().ToString("N");
+            IntPtr buffer = Buffer(name);
+            try {
+                var properties = Marshal.PtrToStructure<Properties>(buffer);
+                require(properties.Wnode.BufferSize == 4216
+                    && properties.LogFileNameOffset == 2168
+                    && properties.Wnode.Guid == Guid.Empty);
+                require(Marshal.PtrToStringUni(IntPtr.Add(buffer, (int)properties.LoggerNameOffset)) == name);
+            }
+            finally { Marshal.FreeHGlobal(buffer); }
+            return checks; // No ControlTrace call or Windows session in these tests.
+        }
+    }
+
     public static class OwnedEtwRecorder
     {
         // Preserve the original ETW QPC domain for lifecycle and PID-reuse
@@ -289,17 +458,30 @@ namespace OpenCodex.Diagnostics
             var session = new TraceEventSession(sessionName,
                 TraceEventSessionOptions.Create | TraceEventSessionOptions.NoRestartOnCreate);
             session.BufferSizeMB = 64;
-            session.StopOnDispose = true;
+            // Stop/Dispose's implicit Stop in TraceEvent 3.1.21 would call a
+            // machine-wide TraceSampledProfileIntervalInfo reset. We use our
+            // narrowly named native stopper and only dispose decoding handles.
+            session.StopOnDispose = false;
             var queue = new BlockingCollection<string>(32768);
             int dropped = 0, recorded = 0, callbackErrors = 0, rootStartSeen = 0;
             long submittedBytes = 0;
             var pendingIo = new Dictionary<ulong, PendingIo>();
             var retainedHandles = new List<IntPtr>();
+            Exception writerError = null;
             var writer = new Thread(() => {
-                using var stream = new StreamWriter(new FileStream(
-                    Path.Combine(outputDirectory, "owned-etw.events.jsonl"),
-                    FileMode.CreateNew, FileAccess.Write, FileShare.Read), new UTF8Encoding(false));
-                foreach (var row in queue.GetConsumingEnumerable()) stream.WriteLine(row);
+                try {
+                    using var stream = new StreamWriter(new FileStream(
+                        Path.Combine(outputDirectory, "owned-etw.events.jsonl"),
+                        FileMode.CreateNew, FileAccess.Write, FileShare.Read), new UTF8Encoding(false));
+                    foreach (var row in queue.GetConsumingEnumerable()) stream.WriteLine(row);
+                }
+                catch (Exception error) {
+                    // Never let a background writer exception terminate the
+                    // controller before its own ETW session is stopped.
+                    writerError = error;
+                    foreach (var row in queue.GetConsumingEnumerable())
+                        Interlocked.Increment(ref dropped);
+                }
             }) { IsBackground = true, Name = "OpenCodex-owned-etw-writer" };
             writer.Start();
             Action<object> emit = value => {
@@ -316,6 +498,11 @@ namespace OpenCodex.Diagnostics
             string commandExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "cmd.exe");
             Thread consumer = null;
             bool outerCleanup = false, consumerJoined = false, consumerStarted = false, sessionStopped = false;
+            OwnedEtwNativeStop.Result nativeStop = null;
+            EventHandler processExitStop = (_, __) => {
+                try { OwnedEtwNativeStop.Stop(sessionName); } catch { /* Capture already invalid if explicit stop failed. */ }
+            };
+            AppDomain.CurrentDomain.ProcessExit += processExitStop;
             int? exitCode = null, lost = null;
             DateTime? processCreatedUtc = null;
             Action<TraceEvent, Action> guarded = (data, action) => {
@@ -328,7 +515,13 @@ namespace OpenCodex.Diagnostics
             };
             try
             {
-                var kernel = session.Source.Kernel;
+                var kernel = OwnedEtwLifecycle.KernelBeforeSource(
+                    () => session.EnableKernelProvider(
+                        KernelTraceEventParser.Keywords.Process | KernelTraceEventParser.Keywords.Thread
+                        | KernelTraceEventParser.Keywords.ImageLoad | KernelTraceEventParser.Keywords.ContextSwitch
+                        | KernelTraceEventParser.Keywords.Dispatcher | KernelTraceEventParser.Keywords.FileIO
+                        | KernelTraceEventParser.Keywords.FileIOInit),
+                    () => session.Source.Kernel);
                 kernel.ProcessStart += data => guarded(data, () => {
                     if (scope == null) return;
                     bool root = process != null && data.ProcessID == process.Id
@@ -438,11 +631,6 @@ namespace OpenCodex.Diagnostics
                 });
                 // No filename, ETL merge, stack collection, profiler sampling,
                 // network, registry, or other-party event serialization.
-                session.EnableKernelProvider(
-                    KernelTraceEventParser.Keywords.Process | KernelTraceEventParser.Keywords.Thread
-                    | KernelTraceEventParser.Keywords.ImageLoad | KernelTraceEventParser.Keywords.ContextSwitch
-                    | KernelTraceEventParser.Keywords.Dispatcher | KernelTraceEventParser.Keywords.FileIO
-                    | KernelTraceEventParser.Keywords.FileIOInit);
                 var ready = new ManualResetEventSlim(false);
                 consumer = new Thread(() => {
                     ready.Set();
@@ -486,27 +674,38 @@ namespace OpenCodex.Diagnostics
             }
             finally
             {
-                try
-                {
-                    if (process != null && !process.HasExited)
-                    {
-                        outerCleanup = true;
-                        process.Kill(true);
-                        process.WaitForExit(10000);
-                    }
-                }
-                catch (Exception error) { captureError = captureError ?? error; }
-                sessionStopped = session.Stop(true);
-                if (consumerStarted) consumerJoined = consumer.Join(10000);
-                if (consumerStarted && !consumerJoined)
-                {
-                    session.Source.StopProcessing();
-                    consumerJoined = consumer.Join(5000);
-                }
-                session.Dispose();
-                foreach (IntPtr handle in retainedHandles) CloseHandle(handle);
-                queue.CompleteAdding();
-                bool writerJoined = writer.Join(10000);
+                bool writerJoined = false;
+                var cleanupErrors = OwnedEtwLifecycle.FinishAll(new[] {
+                    new KeyValuePair<string, Action>("owned-process", () => {
+                        if (process != null && !process.HasExited) {
+                            outerCleanup = true;
+                            process.Kill(true);
+                            process.WaitForExit(10000);
+                        }
+                    }),
+                    new KeyValuePair<string, Action>("session-stop", () => {
+                        nativeStop = OwnedEtwNativeStop.Stop(sessionName);
+                        sessionStopped = nativeStop.StoppedOrAlreadyAbsent;
+                    }),
+                    new KeyValuePair<string, Action>("consumer-drain", () => {
+                        if (consumerStarted) consumerJoined = consumer.Join(10000);
+                        if (consumerStarted && !consumerJoined) {
+                            session.Source.StopProcessing();
+                            consumerJoined = consumer.Join(5000);
+                        }
+                    }),
+                    new KeyValuePair<string, Action>("session-dispose", () => session.Dispose()),
+                    new KeyValuePair<string, Action>("handles-close", () => {
+                        // If a decoder is still running, do not race its handle
+                        // list. The controller's process exit releases those
+                        // handles; the explicit incomplete-drain result invalidates capture.
+                        if (!consumerStarted || consumerJoined)
+                            foreach (IntPtr handle in retainedHandles) CloseHandle(handle);
+                    }),
+                    new KeyValuePair<string, Action>("writer-complete", () => queue.CompleteAdding()),
+                    new KeyValuePair<string, Action>("writer-drain", () => writerJoined = writer.Join(10000)),
+                });
+                if (sessionStopped) AppDomain.CurrentDomain.ProcessExit -= processExitStop;
                 var result = new {
                     startedAtUtc = started, finishedAtUtc = DateTime.UtcNow, sessionName,
                     testPid = process?.Id, rootCreationUtc = processCreatedUtc, testExitCode = exitCode,
@@ -518,6 +717,10 @@ namespace OpenCodex.Diagnostics
                     maximumSerializedBytes = 64L * 1024 * 1024,
                     maximumQueueRecords = 32768, maximumTrackedIrps = 32768,
                     kernelEventsLost = lost, captureError = captureError?.GetType().Name,
+                    writerError = writerError?.GetType().Name, cleanupErrors,
+                    kernelBeforeSourceOrder = true,
+                    nativeOwnedSessionStop = nativeStop, traceEventGenericStopInvoked = false,
+                    globalCpuSampleIntervalWritten = false,
                     forcedOuterCleanup = outerCleanup, systemWideEtlWritten = false,
                     unrelatedEventPayloadsSerialized = false, boundedOriginalRunCount = process == null ? 0 : 1,
                     defaultConcurrencyAndCapturePreserved = true, observerWctQueries = 0,

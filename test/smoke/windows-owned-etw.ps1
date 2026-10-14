@@ -9,6 +9,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7) { throw 'Windows PowerShell 7 required' }
+if ([IntPtr]::Size -ne 8) { throw 'Admitted Windows x64 binaries require a 64-bit controller' }
 $taskRepo = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '../..')).Path
 $taskSoftware = (Resolve-Path -LiteralPath (Join-Path $taskRepo 'test/software')).Path
 $taskRuntime = (Resolve-Path -LiteralPath (Join-Path $taskRepo 'test/runtime')).Path
@@ -42,9 +43,13 @@ foreach ($taskFile in $taskDecoderFiles) { [void][Reflection.Assembly]::LoadFrom
 $taskReferences = @((Get-ChildItem -LiteralPath (Join-Path $PSHOME 'ref') -Filter '*.dll').FullName) + $taskDecoderFiles
 Add-Type -Path (Join-Path $PSScriptRoot 'windows-owned-etw.cs') -ReferencedAssemblies $taskReferences
 $taskScopeChecks = [OpenCodex.Diagnostics.OwnedEtwScope]::SelfTest()
+$taskLifecycleChecks = [OpenCodex.Diagnostics.OwnedEtwLifecycle]::SelfTest()
+$taskNativeStopChecks = [OpenCodex.Diagnostics.OwnedEtwNativeStop]::SelfTest()
 if (!$RecordApproved) {
     [ordered]@{
         status='prepared-only';pureScopeChecks=$taskScopeChecks
+        pureLifecycleChecks=$taskLifecycleChecks
+        pureNativeStopChecks=$taskNativeStopChecks
         testSha256=$ExpectedTestSha256;nodeSha256=$ExpectedNodeSha256
         compiler='PowerShell Add-Type';controllerElevated=[Microsoft.Diagnostics.Tracing.Session.TraceEventSession]::IsElevated()
         etwSessionStarted=$false;testOrNodeStarted=$false;recordingApproved=$false
