@@ -73,6 +73,14 @@ namespace OpenCodex.Diagnostics
         }
         public bool ProcessOwned(int pid, long qpc) => At(processes, pid, qpc) != null;
         public string Role(int pid, long qpc) => At(processes, pid, qpc)?.Role;
+        public bool HotEventsOwned(int pid, long qpc)
+        {
+            // Full libtest root scheduling/I/O floods a bounded trace before
+            // the query children start. Preserve root identity/lifecycle, but
+            // target high-volume events to the admitted Node/cmd descendants.
+            string role = Role(pid, qpc);
+            return role == "node" || role == "command";
+        }
         public long? ProcessGeneration(int pid, long qpc) => At(processes, pid, qpc)?.Start;
         public bool ThreadStart(int pid, int tid, long qpc)
         {
@@ -136,6 +144,94 @@ namespace OpenCodex.Diagnostics
             require(scope.ThreadOwner(206, 1135) == 106);
             require(scope.ProcessStop(100, 1150));
             require(!scope.ProcessStart(100, 1, 1160, true, null));
+            return checks;
+        }
+        public static int SelfTestHotScope()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Owned descendant hot-event scope");
+                checks++;
+            };
+            var scope = new OwnedEtwScope(100, 1000);
+            scope.ProcessStart(100, 1, 1001, true, null);
+            require(scope.ProcessOwned(100, 1002));
+            require(!scope.HotEventsOwned(100, 1002));
+            scope.ProcessStart(101, 100, 1002, false, "command");
+            require(scope.HotEventsOwned(101, 1002));
+            scope.ProcessStart(102, 101, 1003, false, "node");
+            require(scope.HotEventsOwned(102, 1004));
+            require(!scope.HotEventsOwned(999, 1004));
+            scope.ProcessStop(102, 1010);
+            require(scope.HotEventsOwned(102, 1004)); // Delayed original event remains valid.
+            require(!scope.HotEventsOwned(102, 1011));
+            scope.ProcessStart(102, 999, 1020, false, "node");
+            require(!scope.HotEventsOwned(102, 1021));
+            scope.ProcessStart(103, 101, 1030, false, "node");
+            scope.ThreadStart(103, 206, 1031);
+            require(scope.HotEventsOwned(scope.ThreadOwner(206, 1032).Value, 1032));
+            scope.ProcessStop(100, 1040);
+            require(!scope.HotEventsOwned(100, 1041));
+            return checks;
+        }
+    }
+
+    public sealed class OwnedEtwLineBudget
+    {
+        private readonly long maximum;
+        private readonly object gate = new object();
+        private long used;
+        public OwnedEtwLineBudget(long maximumBytes)
+        {
+            if (maximumBytes <= 0) throw new ArgumentOutOfRangeException(nameof(maximumBytes));
+            maximum = maximumBytes;
+        }
+        public long QueuedBytes { get { lock (gate) return used; } }
+        public bool TrySubmit(BlockingCollection<string> queue, string row)
+        {
+            // Count actual UTF-8 bytes including the exact LF written below.
+            // Failed queue admission must not consume the remaining budget.
+            long bytes = Encoding.UTF8.GetByteCount(row) + 1L;
+            lock (gate) {
+                if (bytes > maximum - used || !queue.TryAdd(row)) return false;
+                used += bytes;
+                return true;
+            }
+        }
+        public static StreamWriter OpenWriter(Stream output)
+        {
+            var writer = new StreamWriter(output, new UTF8Encoding(false), 4096, true);
+            writer.NewLine = "\n";
+            return writer;
+        }
+        public static int SelfTest()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Bounded UTF-8 JSONL output");
+                checks++;
+            };
+            string first = "{\"message\":\"汉字\"}", second = "{\"message\":\"b\"}";
+            long limit = Encoding.UTF8.GetByteCount(first) + Encoding.UTF8.GetByteCount(second) + 2;
+            using var queue = new BlockingCollection<string>(2);
+            var budget = new OwnedEtwLineBudget(limit);
+            require(budget.TrySubmit(queue, first));
+            require(budget.TrySubmit(queue, second));
+            require(!budget.TrySubmit(queue, second));
+            queue.CompleteAdding();
+            using var output = new MemoryStream();
+            using (var writer = OpenWriter(output))
+                foreach (var row in queue.GetConsumingEnumerable()) writer.WriteLine(row);
+            require(output.Length == limit && budget.QueuedBytes == limit);
+            require(Encoding.UTF8.GetString(output.ToArray()) == first + "\n" + second + "\n");
+            require(!output.ToArray().Contains((byte)'\r'));
+            using var full = new BlockingCollection<string>(1);
+            var queueBudget = new OwnedEtwLineBudget(2 * (Encoding.UTF8.GetByteCount(second) + 1));
+            require(queueBudget.TrySubmit(full, second));
+            require(!queueBudget.TrySubmit(full, second));
+            require(queueBudget.QueuedBytes == Encoding.UTF8.GetByteCount(second) + 1);
+            full.Take();
+            require(queueBudget.TrySubmit(full, second));
             return checks;
         }
     }
@@ -505,15 +601,17 @@ namespace OpenCodex.Diagnostics
             session.StopOnDispose = false;
             var queue = new BlockingCollection<string>(32768);
             int dropped = 0, recorded = 0, callbackErrors = 0, rootStartSeen = 0;
-            long submittedBytes = 0;
+            var lineBudget = new OwnedEtwLineBudget(64L * 1024 * 1024);
+            long omittedRootScheduling = 0, omittedRootFileIo = 0;
             var pendingIo = new Dictionary<ulong, PendingIo>();
             var retainedHandles = new List<IntPtr>();
             Exception writerError = null;
             var writer = new Thread(() => {
                 try {
-                    using var stream = new StreamWriter(new FileStream(
+                    using var output = new FileStream(
                         Path.Combine(outputDirectory, "owned-etw.events.jsonl"),
-                        FileMode.CreateNew, FileAccess.Write, FileShare.Read), new UTF8Encoding(false));
+                        FileMode.CreateNew, FileAccess.Write, FileShare.Read);
+                    using var stream = OwnedEtwLineBudget.OpenWriter(output);
                     foreach (var row in queue.GetConsumingEnumerable()) stream.WriteLine(row);
                 }
                 catch (Exception error) {
@@ -527,8 +625,7 @@ namespace OpenCodex.Diagnostics
             writer.Start();
             Action<object> emit = value => {
                 string row = JsonSerializer.Serialize(value);
-                if (Interlocked.Add(ref submittedBytes, Encoding.UTF8.GetByteCount(row) + 1) > 64L * 1024 * 1024
-                    || !queue.TryAdd(row)) Interlocked.Increment(ref dropped);
+                if (!lineBudget.TrySubmit(queue, row)) Interlocked.Increment(ref dropped);
                 else Interlocked.Increment(ref recorded);
             };
             OwnedEtwScope scope = null;
@@ -609,19 +706,25 @@ namespace OpenCodex.Diagnostics
                 kernel.ThreadCSwitch += data => guarded(data, () => {
                     int? incoming = scope?.ThreadOwner(data.NewThreadID, OriginalQpc(data));
                     int? outgoing = scope?.ThreadOwner(data.OldThreadID, OriginalQpc(data));
-                    if (incoming.HasValue)
+                    if (incoming.HasValue && scope.HotEventsOwned(incoming.Value, OriginalQpc(data)))
                         emit(new { kind = "owned-thread-scheduled-in", original = Header(data), pid = incoming.Value,
                             tid = data.NewThreadID, priority = data.NewThreadPriority, waitTime = data.NewThreadWaitTime,
                             counterpartThreadIdSaved = false });
-                    if (outgoing.HasValue)
+                    else if (incoming.HasValue) omittedRootScheduling++;
+                    if (outgoing.HasValue && scope.HotEventsOwned(outgoing.Value, OriginalQpc(data)))
                         emit(new { kind = "owned-thread-scheduled-out", original = Header(data), pid = outgoing.Value,
                             tid = data.OldThreadID, priority = data.OldThreadPriority,
                             waitReason = data.OldThreadWaitReason.ToString(), waitMode = data.OldThreadWaitMode.ToString(),
                             state = data.OldThreadState.ToString(), counterpartThreadIdSaved = false });
+                    else if (outgoing.HasValue) omittedRootScheduling++;
                 });
                 kernel.DispatcherReadyThread += data => guarded(data, () => {
                     int? owner = scope?.ThreadOwner(data.AwakenedThreadID, OriginalQpc(data));
                     if (!owner.HasValue) return;
+                    if (!scope.HotEventsOwned(owner.Value, OriginalQpc(data))) {
+                        omittedRootScheduling++;
+                        return;
+                    }
                     emit(new { kind = "owned-thread-ready", original = Header(data), pid = owner.Value,
                         tid = data.AwakenedThreadID, adjustReason = data.AdjustReason.ToString(),
                         adjustIncrement = data.AdjustIncrement, flags = data.Flags.ToString(),
@@ -640,6 +743,10 @@ namespace OpenCodex.Diagnostics
                     // owned. No unrelated fields are saved.
                     pendingIo.Remove(data.IrpPtr);
                     if (scope?.ProcessOwned(data.ProcessID, OriginalQpc(data)) != true) return;
+                    if (!scope.HotEventsOwned(data.ProcessID, OriginalQpc(data))) {
+                        omittedRootFileIo++;
+                        return;
+                    }
                     if (pendingIo.Count < 32768)
                         pendingIo[data.IrpPtr] = new PendingIo { Pid = data.ProcessID, Tid = data.ThreadID,
                             Qpc = OriginalQpc(data), Generation = scope.ProcessGeneration(data.ProcessID, OriginalQpc(data)).Value };
@@ -654,6 +761,10 @@ namespace OpenCodex.Diagnostics
                 kernel.FileIOCreate += data => guarded(data, () => {
                     pendingIo.Remove(data.IrpPtr);
                     if (scope?.ProcessOwned(data.ProcessID, OriginalQpc(data)) != true) return;
+                    if (!scope.HotEventsOwned(data.ProcessID, OriginalQpc(data))) {
+                        omittedRootFileIo++;
+                        return;
+                    }
                     if (pendingIo.Count < 32768)
                         pendingIo[data.IrpPtr] = new PendingIo { Pid = data.ProcessID, Tid = data.ThreadID,
                             Qpc = OriginalQpc(data), Generation = scope.ProcessGeneration(data.ProcessID, OriginalQpc(data)).Value };
@@ -778,6 +889,9 @@ namespace OpenCodex.Diagnostics
                     }),
                 });
                 if (sessionStopped) AppDomain.CurrentDomain.ProcessExit -= processExitStop;
+                var serializedFile = new FileInfo(Path.Combine(outputDirectory, "owned-etw.events.jsonl"));
+                long? actualSerializedBytes = writerJoined && serializedFile.Exists
+                    ? serializedFile.Length : (long?)null;
                 var result = new {
                     startedAtUtc = started, finishedAtUtc = DateTime.UtcNow, sessionName,
                     testPid = process?.Id, rootCreationUtc = processCreatedUtc, testExitCode = exitCode,
@@ -789,6 +903,13 @@ namespace OpenCodex.Diagnostics
                     writerJoined, droppedRecords = dropped,
                     recordedEvents = recorded, decoderCallbackErrors = callbackErrors,
                     maximumSerializedBytes = 64L * 1024 * 1024,
+                    actualSerializedBytes, queuedSerializedBytes = lineBudget.QueuedBytes,
+                    serializedBytesWithinLimit = actualSerializedBytes.HasValue && actualSerializedBytes.Value <= 64L * 1024 * 1024,
+                    jsonLinesNewline = "LF", hotEventsScope = "admitted Node/cmd descendants only",
+                    rootIdentityAndProcessThreadImageLifecyclesRetained = true,
+                    rootSchedulingEventsIntentionallyOmitted = omittedRootScheduling,
+                    rootFileIoInitiationsIntentionallyOmitted = omittedRootFileIo,
+                    omittedRootHotEventsAreNotClaimsOfNoRootActivity = true,
                     maximumQueueRecords = 32768, maximumTrackedIrps = 32768,
                     kernelEventsLost = lost, captureError = captureError?.GetType().Name,
                     runError = runError?.GetType().Name, runErrorMessage = runError?.Message,
