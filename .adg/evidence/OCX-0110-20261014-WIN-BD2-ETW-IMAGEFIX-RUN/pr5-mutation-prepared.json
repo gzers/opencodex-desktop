@@ -1,0 +1,9 @@
+{
+  "source": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+  "base": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "patch": {
+    "title": "test(windows): 限定ETW高频后代事件并修正字节上限",
+    "body": "为 bd2 原查询失败取得自有 Node/cmd 的进程、线程、调度、初始化及文件 I/O 原始时序。采集器仅位于 test/smoke，基于 integration-candidate@bd2f6eb1，不修改产品、原夹具、工作流、默认并发/capture 或 2/4/5/8 秒预算。\n\n固定 TraceEvent 3.1.21，先 kernel enable 再 Source，StopOnDispose=false，以 ControlTraceW 只停止唯一自有会话，不调用重设机器 CPU 采样间隔的通用 Stop。不写整机 ETL，不保存无关命令行/SID/路径或其他调度参与者 ID；按原 QPC 和 PID/TID 生命周期准入，队列/IRP/输出均有界。\n\n首次 abc 录制在 MainModule 根映像校验处中止。629b9c6 改为已持有 Process.Handle 的 QueryFullProcessImageNameW，并立即异步读取原输出，异常时分别排空。629 的 push38567345341/PR38567352891已成功，但通用 CI 不执行 C# 采集器。\n\n用户持续授权修正版管理员后台 ETW 后，629 于 2026-10-14 21:23:35–21:23:46 完成一次原失败 PR38537166560测试EXE的本机完整库：529passed/1failed/4ignored，七query均通过，唯一license.opened因编译时runner路径缺失；不改断言或造路径求绿。真实测试根 elevated=true/type2，consumer/writer排空与自有session stop成功、最终kernel loss0，原输出保留；未复现目标失败。\n\n该轮暴露容量缺陷：测试根高频事件占已保存记录97.27%，64MiB在最初约0.64秒用尽，1339173条丢弃，终止事件缺失；CRLF只按LF计数，实际文件超上限182992bytes。183278条原JSONL已无损gzip封存，不能认定完整覆盖或用零kernel loss抵序列化丢失。\n\n3a91c175接续修正：保留根身份/进程、线程及映像生命周期；高频调度/文件I/O限已准入Node/cmd后代，显式统计省略的根事件，不把省略说成根无活动。严格按UTF8+LF写入和计量，queue失败不占字节预算。保留64MiB/32768queue/32768IRP、120秒原库上限、原全部断言/并发/capture；不预热或无限重跑求绿。\n\n本机Add-Type、原58检查及新增10后代范围/10UTF8-LF实际写入检查、摘要/目录/普通权限拒绝通过；仅自身句柄和内存流，无原库/Node/ETW新执行。新head双CI和修正后真实采集均以实际新证据为准，旧绿不抵新head。下一次有界采集已获持续授权，只在新SHA准入后执行；UAC仍由用户手动确认。\n\n保持草稿。原bd2七query失败及根因、macOS CPU/RSS失败、完整双平台原生/安装数据保留/更新备份事件/真实周期/官方0.1.9配对性能门禁仍开放。保留日常版与真实数据，不合并、签名、晋升、发布或关闭TASK。\n"
+  },
+  "mergeOrDispatchRequested": false
+}

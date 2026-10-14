@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "passed": 529,
+    "failed": 1,
+    "ignored": 4,
+    "filtered": 0
+  },
+  "soleFailure": "commands::workspace::tests::local_documents_are_frozen",
+  "failedAssertion": "license.opened",
+  "queryCleanupFixtureResults": [
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+      "result": "ok"
+    }
+  ],
+  "originalLibraryCompleted": true,
+  "fullDefaultCapturePreserved": true,
+  "originalQueryFailureReproduced": false,
+  "historicalFailureClosed": false,
+  "completeEventCoverage": false,
+  "capacityExceeded": true,
+  "newlineUnderCountEqualsRecordedEventCount": 182992,
+  "rawBytesExceedMaximumBy": 182992,
+  "testSourceOrAssertChanged": false
+}
