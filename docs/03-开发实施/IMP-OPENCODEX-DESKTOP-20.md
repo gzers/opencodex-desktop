@@ -1352,3 +1352,9 @@ Mac继续后台，Windows仍唯一原生验收，切Mac须实例0；原性能fai
 f545 PRCI38533779767已failure：Mac900通过/6忽略，Windows库527通过/三版本夹具失败/4忽略。约2秒Timeout时独立control/parent标记缺失，完整日志/ZIP/CRC保留，原因未解不认定环境波动；父push最新job回归success但构建仍进行，不能覆盖PR失败。新51a push38535387208/PR38535398225进行中，frontend均success，不抵完整Windows或新SHA制品。PR4title/body经owner回执核验draft/open/unmerged，旧aae包不含51a/f545，暂不新打包。见[路径修复与失败原件](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows向导路径与父提交CI失败/README.md)。
 
 Mac仅后台，Windows原唯一实例不操作；原性能failed、全部预算/门禁、保护损坏恢复缺口/FZ50许可、日常与真实数据和TASK原字节/revision2/in_progress/pending/空验收保持，无合并/核心晋升/签名/发布/关闭证书。
+
+### 2026-10-14 控制 Node 自有句柄后台诊断
+
+bd2f6eb1仅改Windows测试fixture，在query前/返回/原observer结束记录自有control句柄Wait0、GetProcessTimes/exitcode与本地标记，即使observerpanic也保留最终状态；JS/产品源码与51a相同，不预热/等待/新增进程，不改2s/4s/5s/8s、并发或清理断言。本地fmt/diff通过，WindowsAPI实跑待push38537161445/PR38537166560；父51a两CI38535387208/38535398225最后仍进行中，原f545失败保持。观察开销非性能样本、快照非根因结论；见[有界诊断](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node句柄后台诊断/README.md)。
+
+WindowsCLI传输层虽存在，但偏好命令仍明确禁用开启，界面与当前命令行为一致；本轮未以UI改动声称完整IPC启动。oldaae候选不含51a/f545，未新打包。Mac只后台、Windows唯一实例不操作，原预算/性能failed/八门禁/FZ50许可/保护恢复/日常与真实数据边界及原TASKrevision2/in_progress/pending/空验收保持，未合并/核心晋升/签名/发布或证书。

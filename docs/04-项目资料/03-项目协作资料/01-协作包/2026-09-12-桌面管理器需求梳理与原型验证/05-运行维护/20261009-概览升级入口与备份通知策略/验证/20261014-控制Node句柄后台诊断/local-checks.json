@@ -1,0 +1,18 @@
+{
+  "baseline_sha": "51a35effb3bea7b8f49a73e508e45152881790f7",
+  "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+  "sha256": "802526b02a89a1962658a3302ca91a52c447928974ef19b9383f4bfbaf285306",
+  "js_fixture_bytes_unchanged": true,
+  "production_code_changed": false,
+  "windows_api_not_executed_on_mac": true,
+  "local_fmt_diff_passed": true,
+  "trace_queries": {
+    "wait_ms": 0,
+    "owned_handle_only": true,
+    "reads_control_marker_only": true,
+    "before_query_and_query_returned_and_observer_returned": true
+  },
+  "original_deadlines_assertions_concurrency_preserved": true,
+  "additional_observation_overhead_not_performance_proof": true,
+  "native_apps_started": false
+}

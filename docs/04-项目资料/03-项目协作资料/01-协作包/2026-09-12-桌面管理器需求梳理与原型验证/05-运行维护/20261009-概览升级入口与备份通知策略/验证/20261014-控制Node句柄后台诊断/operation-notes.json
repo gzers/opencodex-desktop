@@ -1,0 +1,11 @@
+{
+  "recorded_at_utc": "2026-10-14T08:48:51.533715+00:00",
+  "only_code_change": "windows_query_fixture.rs diagnostics under cfg(test,windows)",
+  "local_checks": "fmt/diff only, not Windows API compile/runtime or Rust-full rerun",
+  "CI_observation": "same run IDs, no rerun/cancel/dispatch; transport observation EOF recovered via available reads",
+  "window_cli": "confirmed existing preference command refusal; did not enable a partially integrated feature",
+  "trace_cost": "three zero-wait handle snapshots plus local marker read and captured eprintln, not a warmup or permission/performance assertion",
+  "production_native_actions": false,
+  "new_installer_candidate": false,
+  "goal_complete_or_release_claim": false
+}
