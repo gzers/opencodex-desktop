@@ -1,0 +1,60 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-CONTROL-NODE-PUSH-20261014",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-CONTROL-NODE-PUSH-20261014.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/07-固定候选验收与合并发布门禁.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-backend-windows.log.gz",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-backend.log.gz",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-logs.zip",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-run-rest.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-summary.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-windows-checkout.log.gz",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-snapshot-analysis.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/push-manifest.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/push终态对照.md"
+  ],
+  "checks": [
+    {
+      "name": "local:control-node-push-terminal",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/control-push-final-summary.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/push终态对照.md"
+    },
+    {
+      "name": "review:windows-query-ci",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/push终态对照.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "2472c36460e5e2cb33b4317183e4fda0fe0bce5ad0aace8d0ca34f699e735378",
+      "summary": "补bd2push终态与成功controlCPU计量限界，不解除PR/原性能失败。"
+    },
+    {
+      "target": "candidate-gate-plan-0110",
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/07-固定候选验收与合并发布门禁.md",
+      "after_digest": "50f682b321b2b107108fc438f97465fda0571ff349595f438d909b7c62e48f15",
+      "summary": "两个CI均已结束，固定源等待Windows原进程证据，无新包。"
+    }
+  ],
+  "completed_at": "2026-10-14T09:06:28.246334+00:00",
+  "summary": "bd2push成功原件追加，PR七失败保留；成功CPU可0限制单指标归因，下一Windows原始线程/调度/I/O证据，任务不关闭发布。",
+  "revision": 1,
+  "summary_digest": "abee91ffa35a0977ed5e42599b53d694c71b365c0d4b261071f33a36a8de3c87",
+  "content_digest": "87917bc4466da3853ee9f3bcf31944cf6022e68796517b0cb11861621e5aeba6"
+}

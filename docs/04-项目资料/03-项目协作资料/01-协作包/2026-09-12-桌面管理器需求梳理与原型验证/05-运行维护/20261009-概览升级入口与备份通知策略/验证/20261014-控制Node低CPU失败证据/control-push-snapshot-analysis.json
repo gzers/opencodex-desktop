@@ -1,0 +1,502 @@
+{
+  "run": 38537161445,
+  "source_sha": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "result": "success",
+  "cargo_counts": {
+    "backend-windows": {
+      "suites": 35,
+      "passed": 627,
+      "failed": 0,
+      "ignored": 7
+    },
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "fixtures": [
+    {
+      "fixture": "metadata/nonzero",
+      "snapshots": [
+        {
+          "elapsed_ms": 6,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 5496,
+          "process_times": {
+            "creation_filetime_100ns": 134364414868987824,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 147,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 5496,
+          "process_times": {
+            "creation_filetime_100ns": 134364414868987824,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 468750
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 147,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 5496,
+          "process_times": {
+            "creation_filetime_100ns": 134364414868987824,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 468750
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":5496,\\\"atUnixMs\\\":1791967886972}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":5496,\\\"atUnixMs\\\":1791967886972}\")"
+        }
+      ],
+      "observer_elapsed_ms": 147,
+      "user_cpu_ms": 46.875,
+      "kernel_cpu_ms": 15.625,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":5496,\\\"atUnixMs\\\":1791967886972}\")"
+    },
+    {
+      "fixture": "metadata/overflow",
+      "snapshots": [
+        {
+          "elapsed_ms": 8,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 5468,
+          "process_times": {
+            "creation_filetime_100ns": 134364414869014080,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 142,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 5468,
+          "process_times": {
+            "creation_filetime_100ns": 134364414869014080,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 468750
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 143,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 5468,
+          "process_times": {
+            "creation_filetime_100ns": 134364414869014080,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 468750
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":5468,\\\"atUnixMs\\\":1791967886974}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":5468,\\\"atUnixMs\\\":1791967886974}\")"
+        }
+      ],
+      "observer_elapsed_ms": 143,
+      "user_cpu_ms": 46.875,
+      "kernel_cpu_ms": 15.625,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":5468,\\\"atUnixMs\\\":1791967886974}\")"
+    },
+    {
+      "fixture": "metadata/success",
+      "snapshots": [
+        {
+          "elapsed_ms": 5,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 4720,
+          "process_times": {
+            "creation_filetime_100ns": 134364414870546435,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 164,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 4720,
+          "process_times": {
+            "creation_filetime_100ns": 134364414870546435,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 165,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 4720,
+          "process_times": {
+            "creation_filetime_100ns": 134364414870546435,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":4720,\\\"atUnixMs\\\":1791967887134}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":4720,\\\"atUnixMs\\\":1791967887134}\")"
+        }
+      ],
+      "observer_elapsed_ms": 165,
+      "user_cpu_ms": 31.25,
+      "kernel_cpu_ms": 31.25,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":4720,\\\"atUnixMs\\\":1791967887134}\")"
+    },
+    {
+      "fixture": "metadata/timeout",
+      "snapshots": [
+        {
+          "elapsed_ms": 5,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 3000,
+          "process_times": {
+            "creation_filetime_100ns": 134364414870568390,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2020,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 3000,
+          "process_times": {
+            "creation_filetime_100ns": 134364414870568390,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2020,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 3000,
+          "process_times": {
+            "creation_filetime_100ns": 134364414870568390,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":3000,\\\"atUnixMs\\\":1791967887138}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":3000,\\\"atUnixMs\\\":1791967887138}\")"
+        }
+      ],
+      "observer_elapsed_ms": 2020,
+      "user_cpu_ms": 31.25,
+      "kernel_cpu_ms": 15.625,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":3000,\\\"atUnixMs\\\":1791967887138}\")"
+    },
+    {
+      "fixture": "version/nonzero",
+      "snapshots": [
+        {
+          "elapsed_ms": 33,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 5660,
+          "process_times": {
+            "creation_filetime_100ns": 134364414861932469,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 705,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 5660,
+          "process_times": {
+            "creation_filetime_100ns": 134364414861932469,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 706,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 5660,
+          "process_times": {
+            "creation_filetime_100ns": 134364414861932469,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":5660,\\\"atUnixMs\\\":1791967886823}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":5660,\\\"atUnixMs\\\":1791967886823}\")"
+        }
+      ],
+      "observer_elapsed_ms": 706,
+      "user_cpu_ms": 15.625,
+      "kernel_cpu_ms": 31.25,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":5660,\\\"atUnixMs\\\":1791967886823}\")"
+    },
+    {
+      "fixture": "version/success",
+      "snapshots": [
+        {
+          "elapsed_ms": 37,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 528,
+          "process_times": {
+            "creation_filetime_100ns": 134364414862029111,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 706,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 528,
+          "process_times": {
+            "creation_filetime_100ns": 134364414862029111,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 468750,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 706,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 528,
+          "process_times": {
+            "creation_filetime_100ns": 134364414862029111,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 468750,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":528,\\\"atUnixMs\\\":1791967886823}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":528,\\\"atUnixMs\\\":1791967886823}\")"
+        }
+      ],
+      "observer_elapsed_ms": 706,
+      "user_cpu_ms": 0.0,
+      "kernel_cpu_ms": 46.875,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":528,\\\"atUnixMs\\\":1791967886823}\")"
+    },
+    {
+      "fixture": "version/timeout",
+      "snapshots": [
+        {
+          "elapsed_ms": 16,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 9096,
+          "process_times": {
+            "creation_filetime_100ns": 134364414862198629,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2033,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 9096,
+          "process_times": {
+            "creation_filetime_100ns": 134364414862198629,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 625000,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2033,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 9096,
+          "process_times": {
+            "creation_filetime_100ns": 134364414862198629,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 625000,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "control_markers": [
+        {
+          "point": "before-query",
+          "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+        },
+        {
+          "point": "query-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":9096,\\\"atUnixMs\\\":1791967886823}\")"
+        },
+        {
+          "point": "observer-returned",
+          "evidence": "Ok(\"{\\\"pid\\\":9096,\\\"atUnixMs\\\":1791967886823}\")"
+        }
+      ],
+      "observer_elapsed_ms": 2033,
+      "user_cpu_ms": 15.625,
+      "kernel_cpu_ms": 62.5,
+      "marker_at_query_returned": "Ok(\"{\\\"pid\\\":9096,\\\"atUnixMs\\\":1791967886823}\")"
+    }
+  ],
+  "limits": [
+    "successful different runner is a control comparison, not a cause or cure for PR failure",
+    "no budgets/timeouts/assertions changed, but trace calls add small fixture overhead",
+    "Windows thread/loader/I/O evidence still required for failed low-CPU process sample"
+  ]
+}

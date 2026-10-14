@@ -1370,3 +1370,9 @@ bd2仅诊断head两CI当前Windows回归仍in_progress，未计完整WindowsAPI�
 bd2PR38537166560完整failure：Mac35组/900通过/6忽略、Windows库523通过/七query夹具失败/4忽略。七独立control在原observer5.05–5.66秒结束仍同handle/creation、Wait0=258、exit259/exitFILETIME0，user CPU0–31.25ms/kernel0–31.25ms，control标记三个时点均缺失。WindowsAPI诊断已实际编译/执行但业务失败不解除；线索收窄到JS之前/初期低执行进展，尚无loader/线程调度/I/O根因，需Windows自有新PID的限定时间窗原证据。完整日志/REST/ZIP摘要/CRC和逐组analysis封存，见[失败与后台下一证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/README.md)。
 
 push38537161445最后进行中，旧51a/f545成功轮次不抵本PR失败；PR4draft/未合并，无新包/原生/性能。原2s/4s/5s/8s/并发/预算与macOSfailed、八门禁/FZ50/日常数据/原TASKrevision2/in_progress/pending/空验收保持。Mac继续后台，Windows旧runnerPID不当本机目标，后续不靠预热或放宽截止求绿，不合并/签名/发布/核心晋升或证书。
+
+### 2026-10-14 bd2 push 完整终态，PR失败继续开放
+
+push38537161445 completed/success，bd2独立head，Mac900/Windows627通过（35组各、忽略6/7）；完整日志/REST/checkout/CRC封存。七control在query返回前已写标记；但成功versioncontrol的userCPU也可0，不能以单CPU指标推断执行阶段。PR38537166560七夹具失败及5秒active/标记缺失联合线索保持，根因待Windows原线程/调度/I/O证据，不放宽预算/重跑求绿。见[终态对照](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/push终态对照.md)。
+
+两个bd2CI均终态，下一后台诊断依赖Windows原证据；旧aae候选不抵51aUI，无新包/原生操作。原CPU/RSSfailed/八门禁/预算/FZ50许可/日常数据和TASK原字节/revision2/in_progress/pending/空验收保持，目标active，未合并/签名/发布/核心晋升或证书。
