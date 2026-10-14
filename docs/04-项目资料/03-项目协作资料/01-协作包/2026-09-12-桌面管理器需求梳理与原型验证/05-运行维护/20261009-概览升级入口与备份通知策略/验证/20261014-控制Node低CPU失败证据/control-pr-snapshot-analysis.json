@@ -1,0 +1,426 @@
+{
+  "recorded_at_utc": "2026-10-14T08:57:40.565775+00:00",
+  "run": 38537166560,
+  "job": 115762749496,
+  "associated_head": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "job_log_step_bytes": 185438,
+  "job_log_step_sha256": "f10471e4851fc994f6d58fc7d6459b7a5bc8ba063e08e7e5e06a083a300f373a",
+  "fixtures": [
+    {
+      "fixture": "metadata/nonzero",
+      "pid": 2780,
+      "creation_filetime_100ns": 134364415093299529,
+      "snapshots": [
+        {
+          "elapsed_ms": 654,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 2780,
+          "process_times": {
+            "creation_filetime_100ns": 134364415093299529,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2975,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 2780,
+          "process_times": {
+            "creation_filetime_100ns": 134364415093299529,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5657,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 2780,
+          "process_times": {
+            "creation_filetime_100ns": 134364415093299529,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5657,
+      "final_kernel_cpu_ms": 0.0,
+      "final_user_cpu_ms": 0.0,
+      "final_total_cpu_ms": 0.0
+    },
+    {
+      "fixture": "metadata/overflow",
+      "pid": 4272,
+      "creation_filetime_100ns": 134364415116674103,
+      "snapshots": [
+        {
+          "elapsed_ms": 399,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 4272,
+          "process_times": {
+            "creation_filetime_100ns": 134364415116674103,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2820,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 4272,
+          "process_times": {
+            "creation_filetime_100ns": 134364415116674103,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5401,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 4272,
+          "process_times": {
+            "creation_filetime_100ns": 134364415116674103,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5401,
+      "final_kernel_cpu_ms": 15.625,
+      "final_user_cpu_ms": 0.0,
+      "final_total_cpu_ms": 15.625
+    },
+    {
+      "fixture": "metadata/success",
+      "pid": 7308,
+      "creation_filetime_100ns": 134364415117339888,
+      "snapshots": [
+        {
+          "elapsed_ms": 454,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 7308,
+          "process_times": {
+            "creation_filetime_100ns": 134364415117339888,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2780,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 7308,
+          "process_times": {
+            "creation_filetime_100ns": 134364415117339888,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5464,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 7308,
+          "process_times": {
+            "creation_filetime_100ns": 134364415117339888,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5464,
+      "final_kernel_cpu_ms": 31.25,
+      "final_user_cpu_ms": 0.0,
+      "final_total_cpu_ms": 31.25
+    },
+    {
+      "fixture": "metadata/timeout",
+      "pid": 10036,
+      "creation_filetime_100ns": 134364415119322564,
+      "snapshots": [
+        {
+          "elapsed_ms": 379,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 10036,
+          "process_times": {
+            "creation_filetime_100ns": 134364415119322564,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2420,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 10036,
+          "process_times": {
+            "creation_filetime_100ns": 134364415119322564,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5418,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 10036,
+          "process_times": {
+            "creation_filetime_100ns": 134364415119322564,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5418,
+      "final_kernel_cpu_ms": 15.625,
+      "final_user_cpu_ms": 0.0,
+      "final_total_cpu_ms": 15.625
+    },
+    {
+      "fixture": "version/nonzero",
+      "pid": 9288,
+      "creation_filetime_100ns": 134364415061763613,
+      "snapshots": [
+        {
+          "elapsed_ms": 45,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 9288,
+          "process_times": {
+            "creation_filetime_100ns": 134364415061763613,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2341,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 9288,
+          "process_times": {
+            "creation_filetime_100ns": 134364415061763613,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5051,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 9288,
+          "process_times": {
+            "creation_filetime_100ns": 134364415061763613,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5051,
+      "final_kernel_cpu_ms": 15.625,
+      "final_user_cpu_ms": 0.0,
+      "final_total_cpu_ms": 15.625
+    },
+    {
+      "fixture": "version/success",
+      "pid": 7548,
+      "creation_filetime_100ns": 134364415062072951,
+      "snapshots": [
+        {
+          "elapsed_ms": 74,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 7548,
+          "process_times": {
+            "creation_filetime_100ns": 134364415062072951,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2331,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 7548,
+          "process_times": {
+            "creation_filetime_100ns": 134364415062072951,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5128,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 7548,
+          "process_times": {
+            "creation_filetime_100ns": 134364415062072951,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 312500,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5128,
+      "final_kernel_cpu_ms": 31.25,
+      "final_user_cpu_ms": 31.25,
+      "final_total_cpu_ms": 62.5
+    },
+    {
+      "fixture": "version/timeout",
+      "pid": 5976,
+      "creation_filetime_100ns": 134364415062266373,
+      "snapshots": [
+        {
+          "elapsed_ms": 46,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 5976,
+          "process_times": {
+            "creation_filetime_100ns": 134364415062266373,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2297,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 5976,
+          "process_times": {
+            "creation_filetime_100ns": 134364415062266373,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5153,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 5976,
+          "process_times": {
+            "creation_filetime_100ns": 134364415062266373,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "marker_missing_at_all_three_points": true,
+      "still_live_after_observer": true,
+      "final_elapsed_ms": 5153,
+      "final_kernel_cpu_ms": 15.625,
+      "final_user_cpu_ms": 31.25,
+      "final_total_cpu_ms": 46.875
+    }
+  ],
+  "wait_status_interpretation": "258=WAIT_TIMEOUT at zero wait; combined with retained same handle/creation and no exit FILETIME, process is not yet exited at the sample",
+  "exit_code_interpretation": "259=STILL_ACTIVE, only interpreted together with Wait0; not alone proof of liveness",
+  "conclusions": [
+    "all seven independent control processes still live at original observer return, with no JS startup marker",
+    "kernel CPU0-31.25ms and user CPU0-31.25ms at roughly5.05-5.66sec wall time; little CPU progressed",
+    "this contradicts an explanation involving only production queryJob termination, because control does not belong to that Job",
+    "it does not identify loader lock, scheduling, filesystem or security-product cause; Windows thread/ETW evidence still needed"
+  ],
+  "new_deadline_budget_or_test_assertion_changed": false,
+  "production_regression_causality_proven": false
+}

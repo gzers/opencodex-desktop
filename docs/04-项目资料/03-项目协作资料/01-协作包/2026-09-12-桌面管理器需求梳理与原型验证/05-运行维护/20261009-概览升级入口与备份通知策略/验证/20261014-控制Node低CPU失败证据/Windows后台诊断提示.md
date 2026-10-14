@@ -1,0 +1,1 @@
+固定bd2f6eb1与原TASK/IMP-20，读取本证据和旧f545失败；不启动新桌面实例，避开原生性能采样。原夹具默认并发/2秒query/<4秒清理不变。后台对自有Node/query/control的新PID+creation+EXE摘要收集线程/调度/ETW或本地文件I/O时间窗，查明约5秒仍active、CPU极低、control-started缺失原因，保留原失败与完整证据；runner旧PID不能当本机目标。不改防护/全局环境、不预热放宽门禁、不FZ50脚本、不重跑求绿或新打包。

@@ -1364,3 +1364,9 @@ WindowsCLI传输层虽存在，但偏好命令仍明确禁用开启，界面与�
 51a35eff push38535387208/PR38535398225均completed/success，UI各99文件/533通过，Mac/Windows各35组/900/627通过、忽略6/7；PR实际fe4fb178合成检出。f545push38533772616也success、UI511/后端900/627，f545PR三版本夹具失败仍保留，不能用新绿撤销或推断根因。三份完整日志ZIP/REST/checkout与测试数独立核验，详见[51a终态](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-51a双CI终态/README.md)。
 
 bd2仅诊断head两CI当前Windows回归仍in_progress，未计完整WindowsAPI通过；oldaae候选不含51a/f545UI，未新打包/原生动作。原预算/性能failed/八门禁/FZ50许可/日常真实数据和TASK原字节/revision2/in_progress/pending/空验收保持，goalactive，无自动合并、核心晋升、签名/发布/证书。
+
+### 2026-10-14 bd2 控制进程快照证实低执行进展，PR失败保留
+
+bd2PR38537166560完整failure：Mac35组/900通过/6忽略、Windows库523通过/七query夹具失败/4忽略。七独立control在原observer5.05–5.66秒结束仍同handle/creation、Wait0=258、exit259/exitFILETIME0，user CPU0–31.25ms/kernel0–31.25ms，control标记三个时点均缺失。WindowsAPI诊断已实际编译/执行但业务失败不解除；线索收窄到JS之前/初期低执行进展，尚无loader/线程调度/I/O根因，需Windows自有新PID的限定时间窗原证据。完整日志/REST/ZIP摘要/CRC和逐组analysis封存，见[失败与后台下一证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/README.md)。
+
+push38537161445最后进行中，旧51a/f545成功轮次不抵本PR失败；PR4draft/未合并，无新包/原生/性能。原2s/4s/5s/8s/并发/预算与macOSfailed、八门禁/FZ50/日常数据/原TASKrevision2/in_progress/pending/空验收保持。Mac继续后台，Windows旧runnerPID不当本机目标，后续不靠预热或放宽截止求绿，不合并/签名/发布/核心晋升或证书。

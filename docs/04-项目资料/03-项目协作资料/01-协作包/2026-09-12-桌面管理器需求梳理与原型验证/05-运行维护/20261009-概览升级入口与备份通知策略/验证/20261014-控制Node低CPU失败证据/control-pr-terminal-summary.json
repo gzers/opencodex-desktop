@@ -1,0 +1,57 @@
+{
+  "recorded_at_utc": "2026-10-14T08:56:30.281621+00:00",
+  "run": 38537166560,
+  "event": "pull_request",
+  "associated_head": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "status": "completed",
+  "conclusion": "failure",
+  "archive_bytes": 267933,
+  "archive_sha256": "221ec2fcdae5a6ebd3a1e116872e672078f7304256bd398ecd2be12597ddbce8",
+  "zip_crc": true,
+  "safe_paths": true,
+  "cargo_counts": {
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    },
+    "backend-windows": {
+      "suites": 1,
+      "passed": 523,
+      "failed": 7,
+      "ignored": 4
+    }
+  },
+  "failed_test_lines": [
+    "2026-10-14T08:51:51.2823586Z test infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper ... FAILED",
+    "2026-10-14T08:51:51.3249338Z test infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output ... FAILED",
+    "2026-10-14T08:51:51.6837079Z test infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process ... FAILED",
+    "2026-10-14T08:51:54.4064164Z test modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant ... FAILED",
+    "2026-10-14T08:51:56.8274328Z test modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree ... FAILED",
+    "2026-10-14T08:51:56.8550619Z test modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant ... FAILED",
+    "2026-10-14T08:51:57.1914599Z test modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process ... FAILED"
+  ],
+  "selected_logs": [
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "control-pr-terminal-backend.log",
+      "bytes": 143510,
+      "sha256": "4e5542aa01caf877f69d6dfefa4221a0d7e4f52afa3df92d89899372cb98d45c"
+    },
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "file": "control-pr-terminal-backend-windows.log",
+      "bytes": 185438,
+      "sha256": "f10471e4851fc994f6d58fc7d6459b7a5bc8ba063e08e7e5e06a083a300f373a"
+    }
+  ],
+  "windows_checkout": {
+    "member": "backend-windows/2_Run actions_checkout@v5.txt",
+    "observed_shas": [
+      "31e7748d9e82c79bef97fc1b73233f08bc1f1b3d",
+      "bd2f6eb10d58115235e35d575507bb69f44666da",
+      "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a"
+    ]
+  }
+}
