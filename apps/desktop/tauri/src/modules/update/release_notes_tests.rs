@@ -78,6 +78,89 @@ struct Fixture {
     calls: Mutex<Vec<String>>,
     responses: Mutex<std::collections::VecDeque<Result<Option<Vec<u8>>, Error>>>,
 }
+
+async fn cache_semantics_refetch(mutate: impl FnOnce(&mut Cache)) {
+    let root = tempfile::tempdir().unwrap();
+    let limits = crate::modules::runtime_defaults::release_notes();
+    let source = Fixture::new(vec![
+        release("gzers/opencodex-desktop", "0.1.10", json!("verified notes")),
+        release(
+            "gzers/opencodex-desktop",
+            "0.1.10",
+            json!("rechecked notes"),
+        ),
+    ]);
+    let request = || Request {
+        target: Target::Manager,
+        channel: Channel::Stable,
+        version: "0.1.10",
+        updater_notes: None,
+        force: false,
+        now: 100,
+    };
+    query(&source, root.path(), request(), limits)
+        .await
+        .unwrap();
+    let path = root
+        .path()
+        .join("cache/updates/release-notes/manager-stable.json");
+    let mut cache: Cache = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    mutate(&mut cache);
+    std::fs::write(&path, serde_json::to_vec(&cache).unwrap()).unwrap();
+    let result = query(&source, root.path(), request(), limits)
+        .await
+        .unwrap();
+    assert!(!result.cached, "semantically corrupt cache was accepted");
+    assert_eq!(result.notes.as_deref(), Some("rechecked notes"));
+    assert_eq!(source.count(), 2);
+}
+
+#[tokio::test]
+async fn ready_cache_without_nonempty_notes_is_refetched() {
+    cache_semantics_refetch(|cache| cache.details.notes = None).await;
+    cache_semantics_refetch(|cache| cache.details.notes = Some("  \n".into())).await;
+}
+
+#[tokio::test]
+async fn unavailable_cache_cannot_contain_a_ready_body() {
+    cache_semantics_refetch(|cache| cache.details.notes_state = NotesState::Unavailable).await;
+}
+
+#[tokio::test]
+async fn unknown_notes_source_or_invalid_publication_time_is_refetched() {
+    cache_semantics_refetch(|cache| cache.details.notes_source = Some("unverified".into())).await;
+    cache_semantics_refetch(|cache| cache.details.published_at = Some("tomorrow".into())).await;
+}
+
+#[tokio::test]
+async fn valid_offline_cache_does_not_require_valid_proxy_transport() {
+    let root = tempfile::tempdir().unwrap();
+    let limits = crate::modules::runtime_defaults::release_notes();
+    let seed = Fixture::new(vec![release(
+        "gzers/opencodex-desktop",
+        "0.1.10",
+        json!("verified notes"),
+    )]);
+    let request = || Request {
+        target: Target::Manager,
+        channel: Channel::Stable,
+        version: "0.1.10",
+        updater_notes: None,
+        force: false,
+        now: 100,
+    };
+    query(&seed, root.path(), request(), limits).await.unwrap();
+    let transport = HttpSource::new(
+        crate::modules::preferences::ProxyPolicy::Manual("http://[invalid".into()),
+        limits,
+    )
+    .expect("transport configuration must be deferred until a real cache miss");
+    let result = query(&transport, root.path(), request(), limits)
+        .await
+        .unwrap();
+    assert!(result.cached);
+    assert_eq!(result.notes.as_deref(), Some("verified notes"));
+}
 impl Fixture {
     fn new(items: Vec<Result<Option<Vec<u8>>, Error>>) -> Self {
         Self {

@@ -58,7 +58,9 @@ pub trait Source: Send + Sync {
 }
 
 pub struct HttpSource {
-    client: reqwest::Client,
+    client: tokio::sync::OnceCell<reqwest::Client>,
+    policy: crate::modules::preferences::ProxyPolicy,
+    total_seconds: u64,
     max_bytes: u64,
 }
 impl HttpSource {
@@ -66,11 +68,38 @@ impl HttpSource {
         policy: crate::modules::preferences::ProxyPolicy,
         limits: &ReleaseNotesDefaults,
     ) -> Result<Self, Error> {
+        if limits.total_seconds == 0 || limits.response_max_bytes == 0 {
+            return Err(Error::Source);
+        }
+        Ok(Self {
+            client: tokio::sync::OnceCell::new(),
+            policy,
+            total_seconds: limits.total_seconds,
+            max_bytes: limits.response_max_bytes,
+        })
+    }
+    async fn client(&self) -> Result<&reqwest::Client, Error> {
+        self.client
+            .get_or_try_init(|| async {
+                let policy = self.policy.clone();
+                let total_seconds = self.total_seconds;
+                // Proxy/certificate discovery is not needed for offline cache hits,
+                // and must not block the async executor on an actual cache miss.
+                tokio::task::spawn_blocking(move || Self::build_client(policy, total_seconds))
+                    .await
+                    .map_err(|_| Error::Network)?
+            })
+            .await
+    }
+    fn build_client(
+        policy: crate::modules::preferences::ProxyPolicy,
+        total_seconds: u64,
+    ) -> Result<reqwest::Client, Error> {
         use crate::modules::preferences::ProxyPolicy;
         let builder = reqwest::Client::builder()
             .user_agent(crate::modules::network_defaults::user_agent())
             .connect_timeout(crate::modules::network_defaults::connect_timeout())
-            .timeout(Duration::from_secs(limits.total_seconds))
+            .timeout(Duration::from_secs(total_seconds))
             .redirect(reqwest::redirect::Policy::none());
         let builder = match policy {
             ProxyPolicy::None => builder.no_proxy(),
@@ -79,17 +108,15 @@ impl HttpSource {
                 builder.proxy(reqwest::Proxy::all(url).map_err(|_| Error::Source)?)
             }
         };
-        Ok(Self {
-            client: builder.build().map_err(|_| Error::Network)?,
-            max_bytes: limits.response_max_bytes,
-        })
+        builder.build().map_err(|_| Error::Network)
     }
 }
 #[async_trait]
 impl Source for HttpSource {
     async fn get(&self, url: &str) -> Result<Option<Vec<u8>>, Error> {
         let mut response = self
-            .client
+            .client()
+            .await?
             .get(url)
             .header("Accept", "application/json")
             .send()
@@ -264,6 +291,7 @@ fn cached(
         || d.fetched_at > request.fetched_at
         || request.fetched_at - d.fetched_at >= ttl
         || d.notes_state == NotesState::Failed
+        || !consistent_notes(d)
         || d.notes
             .as_ref()
             .is_some_and(|s| s.len() > limits.notes_max_bytes)
@@ -279,6 +307,28 @@ fn cached(
     let mut details = cache.details;
     details.cached = true;
     Some(details)
+}
+
+fn consistent_notes(details: &Details) -> bool {
+    let content = details
+        .notes
+        .as_deref()
+        .is_some_and(|text| !text.trim().is_empty());
+    let source = match details.notes_source.as_deref() {
+        Some("github_release") => details.release_url.is_some(),
+        Some("updater") => details.target == Target::Manager,
+        _ => false,
+    };
+    let state = match details.notes_state {
+        NotesState::Ready => content && source,
+        NotesState::Unavailable => details.notes.is_none() && details.notes_source.is_none(),
+        NotesState::Failed => false,
+    };
+    state
+        && details
+            .published_at
+            .as_deref()
+            .is_none_or(|time| chrono::DateTime::parse_from_rfc3339(time).is_ok())
 }
 
 pub struct Request<'a> {
