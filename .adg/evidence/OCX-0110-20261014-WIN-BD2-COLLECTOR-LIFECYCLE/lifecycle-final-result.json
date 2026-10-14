@@ -1,0 +1,55 @@
+{
+  "atUtc": "2026-10-14T12:17:16.078019+00:00",
+  "oldCollector": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "collectorSource": "abc3a9140fc6f1b5d2aa6e739299af260f0f5d94",
+  "originalTestSource": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "changedCodeFiles": [
+    {
+      "path": "test/smoke/windows-owned-etw.cs",
+      "gitBlob": "1c6f821f2f8ea325bb6c921c8322c2166292a9d1",
+      "gitBytesSha256": "7bc967215936453594f3bc54631a4fe7d27ba6a65e32e8bfae0c04d839c63071",
+      "bytes": 42758
+    },
+    {
+      "path": "test/smoke/windows-owned-etw.ps1",
+      "gitBlob": "604545220d37c695d052a7435151680209a78a3a",
+      "gitBytesSha256": "00dc10eb9fe04997ab08e7b0002cd8faa25ecb367cbdf2e6268961927bedb37b",
+      "bytes": 4447
+    },
+    {
+      "path": "test/smoke/windows-owned-etw.test.ps1",
+      "gitBlob": "33dc1fdc62385237cc723e21c329986bbcb3797b",
+      "gitBytesSha256": "5c2cd6ee35ef130a8a5b28f4d293e03c62f5d899d165f68d1e6704c0a5097d04",
+      "bytes": 3008
+    }
+  ],
+  "oldCollectorRuntimeStartupOrderBugConfirmedAgainstPinnedProvider": true,
+  "kernelBeforeSourceGetterFixed": true,
+  "providerGenericStopWouldWriteGlobalSampleInterval": true,
+  "providerGenericStopAvoidedInNewCollector": true,
+  "ownNativeStopDoesNotCallTraceSetInformation": true,
+  "backgroundWriterExceptionsCaptured": true,
+  "cleanupStagesContinueAfterIndependentStageFailure": true,
+  "pureScopeChecks": 38,
+  "pureLifecycleChecks": 7,
+  "pureNativeStopChecks": 8,
+  "totalPureChecks": 53,
+  "actualNativeControlTraceStopExecuted": false,
+  "actualEtwSessionStarted": false,
+  "originalTestOrNodeStarted": false,
+  "liveRecordingOrFailureReproductionProved": false,
+  "decoderDependencyPackageModified": false,
+  "globalEnvironmentChanged": false,
+  "productOrOriginalFixtureChanged": false,
+  "draftPr": 5,
+  "prMerged": false,
+  "administratorRecordingApproved": false,
+  "newRecordingEntryPrepared": true,
+  "previousFrozenPreparationAndCiEvidenceModified": false,
+  "goalActiveAndOriginalFullScopePreserved": true,
+  "originalCiOrMacPerformanceFailureClosed": false,
+  "fullVersionGatePromoted": false,
+  "releaseAccepted": false,
+  "initialPrDescriptionReadFailedBeforeMutation": true,
+  "nativeStopVerificationScope": "x64 structure/layout/own-name checks; actual ControlTrace call remains pending approved recording"
+}

@@ -1,0 +1,47 @@
+{
+  "collectorSource": "abc3a9140fc6f1b5d2aa6e739299af260f0f5d94",
+  "supersededCollector": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "sourceReviewReferences": [
+    "https://raw.githubusercontent.com/microsoft/perfview/v3.1.21/src/TraceEvent/TraceEventSession.cs",
+    "https://raw.githubusercontent.com/microsoft/perfview/v3.1.21/src/TraceEvent/TraceEventNativeMethods.cs",
+    "https://learn.microsoft.com/en-us/windows/win32/api/evntrace/nf-evntrace-controltracew",
+    "https://learn.microsoft.com/en-us/windows/win32/api/evntrace/ns-evntrace-event_trace_properties"
+  ],
+  "helperBugsFoundBeforeApprovedExecution": [
+    "Old Source getter access implicitly starts an ordinary session before kernel enablement.",
+    "TraceEvent generic Stop resets global sample interval and invokes heap tracing cleanup, even though our collector does not request Profile."
+  ],
+  "newScopeChecksPassed": 38,
+  "newLifecycleChecksPassed": 7,
+  "newNativeStopChecksPassed": 8,
+  "allChecksWerePureOrOrdinaryPrivilegeRejection": true,
+  "actualKernelEnableOrControlTraceStopProved": false,
+  "realTimeDecoderOrderingAndFullEventCoverageProved": false,
+  "stopOnDispose": false,
+  "genericTraceEventStopCalled": false,
+  "globalSampleIntervalSetterCalled": false,
+  "newNativeStopUsesOnlyUniqueTaskName": true,
+  "nativeBufferX64LayoutTestedWithoutApi": true,
+  "backgroundWriterExceptionGuardCompiledNotFaultInjected": true,
+  "cleanupContinueAfterStageFailurePureCheckPassed": true,
+  "adminApprovalReceived": false,
+  "foregroundStartSignalReceived": false,
+  "originalTestOrNodeRunDuringThisTurn": false,
+  "existingPreparedEvidenceRewritten": false,
+  "newCandidateOrManualCiDispatched": false,
+  "runtimeCounterpartFieldsAreOmittedBeforeSerialization": true,
+  "globalEnvironmentChanged": false,
+  "stronglyTerminatingTheControllerCannotGuaranteeSessionCleanup": true,
+  "failedStopOrIncompleteDrainInvalidatesCapture": true,
+  "remainingNeeded": [
+    "Explicit user approval and real administrator controller.",
+    "Actual one-shot original failed-artifact execution with unchanged defaults, deadlines and assertions.",
+    "Verified owned Node lifetime coverage and failure case correlation.",
+    "Native STOP success, final counter validity, no decoder drops/errors, and consumer/writer completion.",
+    "Actual failed case evidence; query success or the separate license assertion cannot close the historical failure."
+  ],
+  "originalBd2CiFailureClosed": false,
+  "macPerformanceFailureClosed": false,
+  "fullVersionGatePromoted": false,
+  "goalScopeReducedToCollectorOnly": false
+}

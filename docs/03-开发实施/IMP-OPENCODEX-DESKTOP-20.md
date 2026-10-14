@@ -1414,3 +1414,13 @@ feature/0.1.10-windows-query-etw@5fa36a60仅新增三个test/smoke诊断文件�
 完整两ZIP/CRC/安全条目与四后端checkout/test原件核验，日志解析初次误选Post checkout触发不覆盖保护，精确选择后只复用已下载/已保存字节；GBK读取失败改显式UTF8，不重造原件。exec67983/PID33408有界等待166.016秒后正常终态，期间读取错误不当远端停止，不重派/重启。PR#5最新仍open/draft/unmerged/无auto_merge。[双CI证据与边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2采集器双CI终态/README.md)。
 
 CI未执行实时ETW采集器或38scope本机检查，不证明record/事件覆盖/排空/隐私过滤实跑或原失败复现。自动目标接续不是管理员批准；本机desktop/官方Node0、录制输出根不存在，未再次跑本机原库/Node/ETW或自提升，正式录制仍待人的批准，目标active。原CI/性能failed、全部预算/八门禁、TASK原字节/revision2/in_progress/pending及FZ50许可/日常数据边界保持，无新包/原生交接、合并、关闭、签名、发布或晋升。
+
+### 2026-10-14 采集器启动/停止实际设计缺陷修正
+
+管理员录制批准仍缺，本轮自动目标只推进代码审阅及纯准备检查。按固定TraceEvent3.1.21源核实5fa采集器先读Source会自动启动普通session，再EnableKernelProvider将被库拒绝；旧38scope与旧双CI不覆盖真实启动顺序。另核实库通用Stop会TraceSetInformation重设机器CPU采样间隔并做heap清理，不符合原“不改全局环境”范围。
+
+abc3a914接续5fa，仅改原三个test/smoke工具，先EnableKernel再访问Source，StopOnDispose=false且不调用通用Stop，改用ControlTraceW按唯一自有session名STOP，并返回该session最终loss计数；布局及名字检查纯执行，实际ControlTrace仍待批准。writer错误捕获/排空仅编译审阅未注入线程故障，cleanup逐阶段异常继续有纯检查；完整consumer/writer/stop未真实跑，不预称通过。实际失败case/活Node/调度/IO仍缺，不关闭原失败。
+
+本机Add-Type和53项纯检查（38scope/7生命周期/8native-stop布局与名称）通过，摘要/输出边界/普通权限拒绝保持，ETW/Node/原库/desktop新执行0。草稿PR#5更新标题正文到abc、仍open/draft/unmerged/无auto_merge；新push38561752521/PR38561759502末读仍in_progress，四通用job成功/Windows最终EXE构建，旧5fa绿不抵新head。只读等待600秒终态后按同run直接复核，没有把观测错误或截止当远端停止，不重派。
+
+25份修正/权限原件冻结校验通过，[生命周期修正与当前入口](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2采集器生命周期修正/README.md)。待批准record-request.ps1新入口固定abc/无局部改动，旧2fd/e581准备证据不改，旧入口拒绝新HEAD。系统内存筛选范围、一次原库/120s外层保护+收尾、原2/4/5/8s/并发/隐私界限保持。目标active、desktop0，原失败/性能failed/预算/八门禁/TASK原字节revision2/in_progress/pending/FZ50许可/日常数据边界不变，无录制批准推定、原生交接、新包、合并、签名、发布或关闭。
