@@ -1,0 +1,42 @@
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-panel-owner-20261014/collect_diagnostic_terminal.py", line 11, in api
+    with opener.open(req,timeout=30) as r: raw=r.read(limit+1)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/urllib/request.py", line 525, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 302: Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/private/tmp/ocx-0110-panel-owner-20261014/collect_diagnostic_terminal.py", line 22, in <module>
+    raw=api(f'actions/artifacts/{a["id"]}/zip',32*1024*1024)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/ocx-0110-panel-owner-20261014/collect_diagnostic_terminal.py", line 15, in api
+    with urllib.request.urlopen(urllib.request.Request(location,headers={'User-Agent':'ocx-0110-ci-evidence'}),timeout=30) as r: raw=r.read(limit+1)
+                                                                                                                                     ^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/http/client.py", line 478, in read
+    s = self.fp.read(amt)
+        ^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/socket.py", line 718, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/ssl.py", line 1314, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/ezio/.pyenv/versions/3.11.15/lib/python3.11/ssl.py", line 1166, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: The read operation timed out
