@@ -1,0 +1,220 @@
+{
+  "runId": 38572890687,
+  "snapshots": [
+    {
+      "mode": "nonzero",
+      "snapshot": {
+        "elapsed_ms": 57,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "before-query",
+        "process_id": 6704,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627223524,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 0,
+          "user_cpu_100ns": 0
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "nonzero",
+      "snapshot": {
+        "elapsed_ms": 2110,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "query-returned",
+        "process_id": 6704,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627223524,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 156250,
+          "user_cpu_100ns": 0
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "nonzero",
+      "snapshot": {
+        "elapsed_ms": 5063,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "observer-returned",
+        "process_id": 6704,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627223524,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 468750,
+          "user_cpu_100ns": 156250
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "success",
+      "snapshot": {
+        "elapsed_ms": 108,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "before-query",
+        "process_id": 2796,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627377817,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 0,
+          "user_cpu_100ns": 0
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "success",
+      "snapshot": {
+        "elapsed_ms": 2188,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "query-returned",
+        "process_id": 2796,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627377817,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 0,
+          "user_cpu_100ns": 156250
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "success",
+      "snapshot": {
+        "elapsed_ms": 5111,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "observer-returned",
+        "process_id": 2796,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627377817,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 312500,
+          "user_cpu_100ns": 156250
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "timeout",
+      "snapshot": {
+        "elapsed_ms": 83,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "before-query",
+        "process_id": 8808,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627922511,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 0,
+          "user_cpu_100ns": 156250
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "timeout",
+      "snapshot": {
+        "elapsed_ms": 2148,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "query-returned",
+        "process_id": 8808,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627922511,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 312500,
+          "user_cpu_100ns": 156250
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    },
+    {
+      "mode": "timeout",
+      "snapshot": {
+        "elapsed_ms": 5102,
+        "exit_code": 259,
+        "exit_error": null,
+        "point": "observer-returned",
+        "process_id": 8808,
+        "process_times": {
+          "creation_filetime_100ns": 134364589627922511,
+          "exit_filetime_100ns": 0,
+          "kernel_cpu_100ns": 468750,
+          "user_cpu_100ns": 625000
+        },
+        "times_error": null,
+        "wait_status": 258
+      }
+    }
+  ],
+  "markerObservations": [
+    {
+      "mode": "nonzero",
+      "point": "before-query",
+      "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+    },
+    {
+      "mode": "nonzero",
+      "point": "observer-returned",
+      "evidence": "Ok(\"{\\\"pid\\\":6704,\\\"atUnixMs\\\":1791985366974}\")"
+    },
+    {
+      "mode": "nonzero",
+      "point": "query-returned",
+      "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+    },
+    {
+      "mode": "success",
+      "point": "before-query",
+      "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+    },
+    {
+      "mode": "success",
+      "point": "observer-returned",
+      "evidence": "Ok(\"{\\\"pid\\\":2796,\\\"atUnixMs\\\":1791985366973}\")"
+    },
+    {
+      "mode": "success",
+      "point": "query-returned",
+      "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+    },
+    {
+      "mode": "timeout",
+      "point": "before-query",
+      "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+    },
+    {
+      "mode": "timeout",
+      "point": "observer-returned",
+      "evidence": "Ok(\"{\\\"pid\\\":8808,\\\"atUnixMs\\\":1791985366974}\")"
+    },
+    {
+      "mode": "timeout",
+      "point": "query-returned",
+      "evidence": "Err(Os { code: 2, kind: NotFound, message: \"The system cannot find the file specified.\" })"
+    }
+  ],
+  "nodeVersion": "24.21.0",
+  "controlMarkersMissingAtQueryReturn": true,
+  "controlMarkersPresentAtObserverReturn": true,
+  "rawSchedulerOrFileIoEtwAvailable": false,
+  "rootCauseClaimed": false,
+  "consoleInspectionEncodingFailure": "An initial GBK stdout print failed; frozen UTF-8 log bytes were unchanged."
+}

@@ -1464,3 +1464,11 @@ ci-admission仅供新review-only入口核验源码CI/实际检出/原日志，�
 3a91c175仅修原三份test/smoke采集器：根身份/进程线程映像生命周期保留，高频调度/文件IO集中已准入Node/cmd后代、省略根热点显式计数；UTF8+LF真实写入及预算一致，queue失败不占额，64MiB/32768/120s上限保持。本机编译及78检查通过（原58+10后代范围+10实际内存字节），未新执行原库/Node/ETW；新push38572890687/PR38572902717初读in_progress，PR5draft/未合并。新review-only入口固定3a，先新SHA准入再依持续授权单次录制，不重复求绿。
 
 详见[持续授权录制与容量修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2持续授权录制与容量修正/README.md)，原件`.adg/evidence/OCX-0110-20261014-WIN-BD2-ETW-IMAGEFIX-RUN/`。自有session/进程/desktop0，日常及隔离数据摘要保持；Mac后台未原生交接，旧失败/性能failed/预算/八门禁/TASK原字节revision2/in_progress/pending及FZ50边界不变，目标active，整体未完成，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-14 e6 basename 命令映像准入与完整自有家族录制
+
+e6a4b32f push CI38583679031成功；PR CI38583689702保留原三个Windows version fixture失败（Windows527通过/3失败/4忽略），两轮CI均未执行collector。失败保持诊断范围，不能作为版本通过。e6本机准备91项通过。
+
+持续授权下完成一次真实管理员后台录制：原库PID73328，真实测试根令牌elevated/type2，exit101；28,001事件/9,591,262bytes，零序列化丢弃、零kernel loss、零decoder error，session/writer/consumer正常收尾。ETW Process/Start仅给cmd basename时，e6按已归属父进程+映像/argv basename准入并由持有句柄复核；本轮记录测试根1、Node22、command-basename8，共31 start/31 stop，已知映像未准入0，补齐0407命令覆盖缺口。
+
+原库529passed/1failed/4ignored，七query均通过，唯一license.opened仍为本机缺失CI runner路径；没有复现bd2失败时间窗。根高频调度915533、根I/O initiation311295仍按范围省略并计数，故证明的是自有Node/cmd家族及其线程/调度/IO/生命周期覆盖，不能宣称测试根全部热点完整。见[basename覆盖与完整家族录制](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2basename覆盖与完整家族录制/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-BASENAME-RUN/`。历史失败、性能failed、完整双平台门禁、真实周期/安装/更新/备份/树表/事件要求及TASK revision2/in_progress/pending保持；Mac后台未交接，不关闭、合并、签名、晋升或发布。

@@ -1,0 +1,75 @@
+{
+  "source": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+  "eventBytes": 9591262,
+  "eventSha256": "0ae119833940693062106ae509a0ea1dc6c54bba7708bffc98a1d9c6ad154c68",
+  "recordedEvents": 28001,
+  "eventKinds": {
+    "root-handle-image-query": 1,
+    "root-handle-binding": 1,
+    "process-start": 31,
+    "thread-start": 991,
+    "owned-image": 1878,
+    "thread-stop": 991,
+    "owned-thread-ready": 3743,
+    "owned-thread-scheduled-in": 7489,
+    "owned-thread-scheduled-out": 7227,
+    "owned-file-create": 2669,
+    "owned-file-operation-end": 2809,
+    "owned-file-read-write": 140,
+    "process-stop": 31
+  },
+  "processStarts": 31,
+  "processStops": 31,
+  "roleCounts": {
+    "test": 1,
+    "node": 22,
+    "command-basename": 8
+  },
+  "commandBasenameStarts": 8,
+  "knownImageChildrenNotAdmitted": 0,
+  "coverageGap": false,
+  "allProcessStartsHaveStops": true,
+  "allQueries": [
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+      "result": "ok"
+    },
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+      "result": "ok"
+    }
+  ],
+  "allQueriesPassed": true,
+  "soleFailure": "commands::workspace::tests::local_documents_are_frozen",
+  "failedAssertion": "license.opened",
+  "targetFailureReproduced": false,
+  "fullQueryFamilyCoverageProven": true,
+  "completeRootHotEventCoverage": false,
+  "rootHotEventsOmitted": {
+    "scheduling": 915533,
+    "fileIoInitiations": 311295
+  },
+  "serializedDrops": 0,
+  "kernelEventsLost": 0,
+  "decoderCallbackErrors": 0
+}
