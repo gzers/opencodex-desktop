@@ -1,0 +1,52 @@
+{
+  "candidate_run": 38524086177,
+  "source_sha": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "log_zip_bytes": 81745,
+  "log_zip_sha256": "009c2b5908ee01866e1cd3b3eed21992fe93609f7f553813900afd5c80970072",
+  "zip_crc": true,
+  "safe_paths": true,
+  "cargo_counts": {
+    "suites": 35,
+    "passed": 627,
+    "failed": 0,
+    "ignored": 7
+  },
+  "relevant_windows_tests": [
+    "2026-10-14T06:50:07.3577810Z test commands::about::query_ownership_tests::failed_durable_commit_is_shared_with_waiters_without_requery ... ok",
+    "2026-10-14T06:50:43.2695462Z test modules::update::storage::tests::bounds_and_linked_files_are_refused_without_truncating_the_payload ... ok",
+    "2026-10-14T06:50:57.2957602Z test modules::update::schedule::tests::linked_schedule_partition_never_reads_or_rewrites_another_root ... ok",
+    "2026-10-14T06:50:57.5781647Z test modules::update::schedule::tests::linked_version_cache_never_reads_or_rewrites_another_root ... ok"
+  ],
+  "selected_original_logs": [
+    {
+      "member": "package/2_Run actions_checkout@v5.txt",
+      "file": "candidate-selected-logs/2_Run actions_checkout@v5.txt",
+      "bytes": 5500,
+      "sha256": "e78338ed7e4ce7d961ae77e0aaab1c67a66830d8b24c0850fad7e14ff17521f1"
+    },
+    {
+      "member": "package/3_Read candidate version.txt",
+      "file": "candidate-selected-logs/3_Read candidate version.txt",
+      "bytes": 634,
+      "sha256": "3b2c502854b1be02676d9047422ba98a66477bcc13a1ff6d36cff56fc46a4581"
+    },
+    {
+      "member": "package/10_Freeze and record dependency resolution.txt",
+      "file": "candidate-selected-logs/10_Freeze and record dependency resolution.txt",
+      "bytes": 1625,
+      "sha256": "c82527ffa8017432c7f46689919cd2255cbf5de5ab42595dbc59889129d59584"
+    },
+    {
+      "member": "package/11_Windows regression with the package lock.txt",
+      "file": "candidate-selected-logs/11_Windows regression with the package lock.txt",
+      "bytes": 93328,
+      "sha256": "1da687e4f27e8881faf0a46f190d9e8489d7023e12fab3df042326ae60dc6080"
+    },
+    {
+      "member": "package/13_Install, verify final EXE and uninstall on isolated runner.txt",
+      "file": "candidate-selected-logs/13_Install, verify final EXE and uninstall on isolated runner.txt",
+      "bytes": 1143,
+      "sha256": "02342a0a1a0237f5ff8ab8dc88bc9f3fa577ef0964a8452a361d6431469418d9"
+    }
+  ]
+}

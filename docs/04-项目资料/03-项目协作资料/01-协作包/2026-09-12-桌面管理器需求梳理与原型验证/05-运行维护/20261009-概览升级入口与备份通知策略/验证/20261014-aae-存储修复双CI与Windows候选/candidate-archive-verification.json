@@ -1,0 +1,181 @@
+{
+  "verified_at_utc": "2026-10-14T07:20:27.630441+00:00",
+  "source_sha": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "candidate_run": 38524086177,
+  "artifacts": [
+    {
+      "artifact_id": 11875775415,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "zip_name": "candidate-installers.zip",
+      "bytes": 7625913,
+      "sha256": "ea98090530f0cf981e028d95ddb27aa73b6efb49d3df380e65577aa2072e9d2f",
+      "api_digest_and_size_verified": true,
+      "zip_crc_verified": true,
+      "safe_paths": true,
+      "entries": 3,
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38524086177/artifacts/11875775415"
+    },
+    {
+      "artifact_id": 11876045020,
+      "name": "windows-candidate-evidence",
+      "zip_name": "candidate-evidence.zip",
+      "bytes": 1690231,
+      "sha256": "e75f594995ca71cc93f7a2052f11d79946eddcccb0c52f7083b9b2ab43642396",
+      "api_digest_and_size_verified": true,
+      "zip_crc_verified": true,
+      "safe_paths": true,
+      "entries": 315,
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/38524086177/artifacts/11876045020"
+    }
+  ],
+  "two_receipts_byte_identical": true,
+  "installer_payload_bytes_verified": true,
+  "runner_installed_hashes_match_receipt_expected": true,
+  "source_lockfile_bytes_equal": false,
+  "lockfile_identity": {
+    "raw_bytes_equal": false,
+    "runner_bytes": 140827,
+    "runner_sha256": "f7be175dc8a55c139781d3076b1eb79bb0af38ecb5664a77aaa8f2a87af9d8ab",
+    "source_bytes": 135241,
+    "source_sha256": "225e522bcd78cc87155c85a09880af78415c3773f9b54cd98109e2135088b083",
+    "source_crlf_count": 0,
+    "runner_crlf_count": 5586,
+    "lf_content_equal": true,
+    "toml_parsed_dependency_equal": true,
+    "archived_original_bytes_modified": false
+  },
+  "environment": {
+    "source": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+    "runner": "win25-vs2026",
+    "image": "20260925.250.1",
+    "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "cargo": "cargo 1.99.0 (5f94df478 2026-08-27)",
+    "node": "v24.21.0",
+    "npm": "11.19.0",
+    "tauri": "tauri-cli 2.11.4"
+  },
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4567040,
+      "sha256": "0dbcb8cf2891c977b6cfa203e9ac13393bf68bb64e34c15c12af1b46af81dbd8",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-3f77f255cf38423186d2b34149a97b3a",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "2e31e51552bb2ab1e0ae9fb49db0e0f4aabed080cc70bf8b31e50c12e5906824",
+      "expectedInstalledExecutableSha256": "2e31e51552bb2ab1e0ae9fb49db0e0f4aabed080cc70bf8b31e50c12e5906824",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 8096909,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3270031,
+      "sha256": "3937bdcd97a84de7b62b3f198855c6ce9b9d1d7d1560e97b0db6d957f3b0ff9f",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-2530c841265f45208d9194423b0a7950",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "d191ac0bdf46eeb725bc057a9683dd8ec927b418508058393a9d434b39081870",
+      "expectedInstalledExecutableSha256": "d191ac0bdf46eeb725bc057a9683dd8ec927b418508058393a9d434b39081870",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 8096909,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ],
+  "startup_tokens": [
+    {
+      "kind": "msi",
+      "mode": "any",
+      "applicationModeMatched": false,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 2788,
+        "executable": "D:\\a\\_temp\\ocxd-candidate-msi-3f77f255cf38423186d2b34149a97b3a\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-10-14T06:57:45.3807397Z",
+        "elevated": true,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-10-14T06:58:16.5594315Z"
+      },
+      "exe_sha256": "2e31e51552bb2ab1e0ae9fb49db0e0f4aabed080cc70bf8b31e50c12e5906824",
+      "source_commit_matched": true,
+      "observedSeconds": 30
+    },
+    {
+      "kind": "nsis",
+      "mode": "any",
+      "applicationModeMatched": false,
+      "applicationToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 8400,
+        "executable": "D:\\a\\_temp\\ocxd-candidate-nsis-2530c841265f45208d9194423b0a7950\\opencodex-desktop.exe",
+        "creationTimeUtc": "2026-10-14T06:58:22.3552086Z",
+        "elevated": true,
+        "elevationType": 1,
+        "collectedAtUtc": "2026-10-14T06:58:53.3094140Z"
+      },
+      "exe_sha256": "d191ac0bdf46eeb725bc057a9683dd8ec927b418508058393a9d434b39081870",
+      "source_commit_matched": true,
+      "observedSeconds": 30
+    }
+  ],
+  "selected_originals": [
+    {
+      "member": "environment.json",
+      "relative": "candidate-selected-original/environment.json",
+      "bytes": 298,
+      "sha256": "9bffa7c75cbc446c98770dbd4c69b0272ec91fccc54127dc915387662e418364"
+    },
+    {
+      "member": "installer-verification.json",
+      "relative": "candidate-selected-original/installer-verification.json",
+      "bytes": 1970,
+      "sha256": "11d49f8dc82958a376b2fc9c2cb6041c885c9e058df5cc58292fac168915dade"
+    },
+    {
+      "member": "msi-startup/startup.json",
+      "relative": "candidate-selected-original/msi-startup/startup.json",
+      "bytes": 1415,
+      "sha256": "5e7f25ac7a2e54e9fd96261770335a4e9cf9d02012cf2b99ce2c6c27c768f805"
+    },
+    {
+      "member": "nsis-startup/startup.json",
+      "relative": "candidate-selected-original/nsis-startup/startup.json",
+      "bytes": 1418,
+      "sha256": "4711ac0672da7382a5ff8fcdebf7fd36c1431bae23e23cb72c8a643b37027f5d"
+    },
+    {
+      "member": "process-token/process-token.json",
+      "relative": "candidate-selected-original/process-token/process-token.json",
+      "bytes": 2322,
+      "sha256": "4f65792ba8f05e85068e9f60b7b5f10dace33a1584419bda84b3ac0b23d1f9b6"
+    },
+    {
+      "member": "Cargo.lock",
+      "relative": "candidate-selected-original/Cargo.lock",
+      "bytes": 140827,
+      "sha256": "f7be175dc8a55c139781d3076b1eb79bb0af38ecb5664a77aaa8f2a87af9d8ab"
+    }
+  ],
+  "test_counts": {
+    "suites": 35,
+    "passed": 627,
+    "failed": 0,
+    "ignored": 7
+  },
+  "installed_executable_bytes_available_locally": false,
+  "local_installer_or_windows_executable_execution": false,
+  "physical_dual_permission_or_dpi_acceptance": false,
+  "performance_gate_complete": false,
+  "code_signed": false,
+  "release_accepted": false
+}

@@ -1318,3 +1318,11 @@ aae2a3fe修复调度/版本缓存跟随manager-state/cache/updates链接读取�
 a7push38518361054/PR38518366179已completed/success，Mac各895/Windows各623；PR实际f5f774dd合成检出。9cfPR38517007573也已success，Mac893/Windows621；三份完整日志/REST/checkout/CRC独立封存。aae新push38521648491/PR38521655917最后in_progress，旧成功不抵新实现；PR4title/说明更新draft/open/unmerged，main仍eae，未生成新候选。见[静态链接修复及精确CI](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-更新存储链接隔离与a7双CI终态/README.md)。
 
 Mac无原生或新性能，Windows仍验收，原query夹具失败/control未及时启动原因未解；原CPU/RSS failed、全部预算/双平台/安装/真实周期门禁及TASK原字节/revision2/in_progress/pending/空验收保持。无FZ50脚本、真实迁移、日常替换、核心晋升、自动合并、签名、发布或证书。
+
+### 2026-10-14 aae 双 CI 终态与固定 SHA Windows 候选
+
+aae2a3fe pushCI38521648491/PRCI38521655917均completed/success，Mac各35组/900passed/6ignored、Windows各35组/627passed/7ignored；新增Junction/硬链接/有界读取/持久失败合并实际执行通过。PR检出7365f7b0合成不当head制品；两份CIartifact大小/SHA/CRC与测试EXE/首屏原回执核验，PR下载reset截断/同artifact补取完整原件保留。
+
+双CI终态及零已有候选核验后只发一次workflow_dispatch38524086177，headaae/package全success，Windows627通过/7忽略、MSI/NSIS隔离新装/首屏/卸载通过。artifact11875775415 ZIP7625913/SHAea980905…，证据11876045020 ZIP1690231/SHAe75f5949…；MSI4567040/SHA0dbcb8cf…、NSIS3270031/SHA3937bdcd…，两份安装回执byte-identical，startup source/hash/token绑定。实际应用均elevated/type1/modeany，未取得installed EXE本体独立核验，不抵普通权限/DPI/默认根data/升级卸载数据保留或完整性能。Cargo.lock仅CRLF/LF差异、原始摘要各存，TOML依赖一致；不称byte-identical。
+
+见[精确候选与设备接续](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-aae-存储修复双CI与Windows候选/README.md)。新SHA验收先Windows旧实例结束确认0后启唯一新实例；Mac仍后台。PR4draft/unmerged/main仍eae，未签名/发布/stable晋升；原query启动失败、macOSCPU/RSSfailed、全部预算/矩阵、FZ50许可缺口及原TASK字节/revision2/in_progress/pending/空验收保持，无关闭证书或稳定核心事实晋升。

@@ -1,0 +1,1 @@
+继续OpenCodex Desktop0.1.10/TASK-182。先读AGENTS、IMP-20及“20261014-aae-存储修复双CI与Windows候选”；同步feature/0.1.10-integration-candidate@aae2a3fe及最新docs/governance-main。固定候选run38524086177/artifact11875775415并核对包/EXE摘要，结束旧隔离实例确认0后才启一个新实例，保护日常安装和真实数据。复验说明/焦点、持久失败合并、存储链接拒绝，并继续原双权限DPI/安装保留/更新备份事件/真实周期矩阵，保留失败；性能预算不变，FZ50未许可不执行，不合并、签名、发布或关闭。

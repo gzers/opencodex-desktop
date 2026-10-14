@@ -1,0 +1,174 @@
+[
+  {
+    "verified_at_utc": "2026-10-14T07:14:30.349031+00:00",
+    "label": "storage-push",
+    "artifact_id": 11874523110,
+    "bytes": 9474982,
+    "sha256": "82c958a3a64ff0fca906d9bc71c7c41002ff4a91fec538a5d6281029e9bc06fa",
+    "api_digest_verified": true,
+    "crc_ok": true,
+    "safe_paths": true,
+    "test_executable": {
+      "member": "windows-backend/opencodex_desktop_lib-4ef9ce48b814b037.exe",
+      "bytes": 26769408,
+      "sha256": "68ea5d25fd85c5366b933eab3399bb9711b5b62192ff5106e35d680d05e3e836"
+    },
+    "test_executable_matches_runner_receipt": true,
+    "selected_originals": [
+      {
+        "member": "windows-startup/startup.json",
+        "relative": "selected-ci-original/storage-push/windows-startup/startup.json",
+        "bytes": 1434,
+        "sha256": "050bcdd91c766366399784204e1acf81746606fca21449e43ef1842a7d5b6265"
+      },
+      {
+        "member": "windows-backend/environment.json",
+        "relative": "selected-ci-original/storage-push/windows-backend/environment.json",
+        "bytes": 282,
+        "sha256": "94b47f84829c06eb0d186ad3c689fe40104d52036540bcbf741bf87e134e8751"
+      },
+      {
+        "member": "windows-backend/test-executable-sha256.json",
+        "relative": "selected-ci-original/storage-push/windows-backend/test-executable-sha256.json",
+        "bytes": 255,
+        "sha256": "778317559436e043e62b89ca0c34c3d4abd9ee7ede0b3b810d88bb95f93cefdc"
+      },
+      {
+        "member": "windows-backend/test-executable.manifest.xml",
+        "relative": "selected-ci-original/storage-push/windows-backend/test-executable.manifest.xml",
+        "bytes": 680,
+        "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+      }
+    ],
+    "startup_receipts": [
+      {
+        "path": "selected-ci-original/storage-push/windows-startup/startup.json",
+        "value": {
+          "schemaVersion": 2,
+          "mode": "any",
+          "harnessToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 5112,
+            "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTimeUtc": "2026-10-14T06:39:22.0394876Z",
+            "elevated": true,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-10-14T06:39:26.5936625Z"
+          },
+          "applicationToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 1528,
+            "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+            "creationTimeUtc": "2026-10-14T06:39:26.6013119Z",
+            "elevated": true,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-10-14T06:39:59.6065076Z"
+          },
+          "applicationTokenVerified": true,
+          "applicationModeMatched": false,
+          "result": "pass",
+          "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+          "sha256": "20cf348a5fcf70bd88f34f05f67c4bd85230640724e0d20017b2a95d6067309b",
+          "homeRemoved": true,
+          "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-d68bcc0144564dbaba4f1ea2478cdf3c",
+          "observedSeconds": 30,
+          "cdpPort": 55872,
+          "expectedCommit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+          "sourceCommitMatched": true,
+          "mainWindowPresent": true,
+          "pid": 1528,
+          "responding": true
+        }
+      }
+    ],
+    "windows_binary_executed_locally": false
+  },
+  {
+    "verified_at_utc": "2026-10-14T07:14:30.416618+00:00",
+    "label": "storage-pr",
+    "artifact_id": 11875146610,
+    "bytes": 9482979,
+    "sha256": "b92a16b5c0ea3815fd76af67348ce8cb88956515bc34d1debded2cb3bdd8b33c",
+    "api_digest_verified": true,
+    "crc_ok": true,
+    "safe_paths": true,
+    "test_executable": {
+      "member": "windows-backend/opencodex_desktop_lib-4ef9ce48b814b037.exe",
+      "bytes": 26769408,
+      "sha256": "204046c29be853e52007f4ad39bd2b3534e8962ed935f2db792e1dfc8a1920dc"
+    },
+    "test_executable_matches_runner_receipt": true,
+    "selected_originals": [
+      {
+        "member": "windows-startup/startup.json",
+        "relative": "selected-ci-original/storage-pr/windows-startup/startup.json",
+        "bytes": 1432,
+        "sha256": "e8eddb2f422665342bdcd7d5d4d70257bff717eac37350c264bf1b7342511cc7"
+      },
+      {
+        "member": "windows-backend/environment.json",
+        "relative": "selected-ci-original/storage-pr/windows-backend/environment.json",
+        "bytes": 282,
+        "sha256": "1ec7cc128a97c40d9f1ab6fb0634e6e19e4e2a4016efc416f25d61b45fd9f421"
+      },
+      {
+        "member": "windows-backend/test-executable-sha256.json",
+        "relative": "selected-ci-original/storage-pr/windows-backend/test-executable-sha256.json",
+        "bytes": 255,
+        "sha256": "bbaa74433208b1f19ede4bffa7a55be2d6541ea7a894142a121f05d333942a92"
+      },
+      {
+        "member": "windows-backend/test-executable.manifest.xml",
+        "relative": "selected-ci-original/storage-pr/windows-backend/test-executable.manifest.xml",
+        "bytes": 680,
+        "sha256": "7bc7e2845396a0c4ae519f5d315f2a315e97f29b6ad47558325c6b23a991fc59"
+      }
+    ],
+    "startup_receipts": [
+      {
+        "path": "selected-ci-original/storage-pr/windows-startup/startup.json",
+        "value": {
+          "schemaVersion": 2,
+          "mode": "any",
+          "harnessToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 5704,
+            "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+            "creationTimeUtc": "2026-10-14T06:39:29.7909591Z",
+            "elevated": true,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-10-14T06:39:35.6469577Z"
+          },
+          "applicationToken": {
+            "schemaVersion": 1,
+            "status": "observed",
+            "processId": 872,
+            "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+            "creationTimeUtc": "2026-10-14T06:39:35.6595935Z",
+            "elevated": true,
+            "elevationType": 1,
+            "collectedAtUtc": "2026-10-14T06:40:08.4583761Z"
+          },
+          "applicationTokenVerified": true,
+          "applicationModeMatched": false,
+          "result": "pass",
+          "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+          "sha256": "209ef0324c95c77a09bd8fc2099fb60b084b0c5ccc1d061d624d1e4a4c761240",
+          "homeRemoved": true,
+          "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-cdc4e45ff59c4c7c8369d593c885e399",
+          "observedSeconds": 30,
+          "cdpPort": 53662,
+          "expectedCommit": "7365f7b0e776987f2b01e3d034e19990cf924120",
+          "sourceCommitMatched": true,
+          "mainWindowPresent": true,
+          "pid": 872,
+          "responding": true
+        }
+      }
+    ],
+    "windows_binary_executed_locally": false
+  }
+]

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "result": "pass",
+  "checks": [
+    {
+      "name": "parse-all-windows-smoke-scripts",
+      "result": "pass",
+      "detail": {
+        "files": [
+          "windows-appearance.ps1",
+          "windows-installer.ps1",
+          "windows-native.ps1",
+          "windows-process-token.ps1",
+          "windows-process-token.test.ps1",
+          "windows-startup.ps1"
+        ]
+      }
+    },
+    {
+      "name": "harness-process-identity",
+      "result": "pass",
+      "detail": {
+        "processId": 6024
+      }
+    },
+    {
+      "name": "actual-child-identity-and-inherited-token",
+      "result": "pass",
+      "detail": {
+        "processId": 7924,
+        "mode": "administrator",
+        "elevationType": 1
+      }
+    },
+    {
+      "name": "reject-wrong-executable",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-opposite-permission-mode",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-missing-token-evidence",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-string-elevation-value",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-exited-process",
+      "result": "pass",
+      "detail": null
+    },
+    {
+      "name": "reject-disposed-process",
+      "result": "pass",
+      "detail": null
+    }
+  ],
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 6024,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-10-14T06:45:39.7711435Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-14T06:45:48.0453823Z"
+  },
+  "childToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7924,
+    "executable": "C:\\Windows\\System32\\cmd.exe",
+    "creationTimeUtc": "2026-10-14T06:45:48.0707602Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-14T06:45:48.0747415Z"
+  },
+  "sourceCommit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "powershell": "7.6.6",
+  "scope": "read-only token helper; does not accept native UI or dual-permission application gates",
+  "collectedAtUtc": "2026-10-14T06:45:48.1349922Z"
+}

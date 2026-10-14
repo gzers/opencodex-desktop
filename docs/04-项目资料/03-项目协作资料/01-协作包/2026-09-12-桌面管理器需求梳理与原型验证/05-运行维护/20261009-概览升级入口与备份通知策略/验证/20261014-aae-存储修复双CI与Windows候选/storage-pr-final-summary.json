@@ -1,0 +1,49 @@
+{
+  "recorded_at_utc": "2026-10-14T06:41:49.549952+00:00",
+  "run": 38521655917,
+  "event": "pull_request",
+  "associated_head": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "status": "completed",
+  "conclusion": "success",
+  "archive_bytes": 292882,
+  "archive_sha256": "931142ce8bbce7bd0abe95cd637b9623cd6ec8a8d81c9532d573de52f1e86d20",
+  "zip_crc": true,
+  "safe_paths": true,
+  "cargo_counts": {
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    },
+    "backend-windows": {
+      "suites": 35,
+      "passed": 627,
+      "failed": 0,
+      "ignored": 7
+    }
+  },
+  "failed_test_lines": [],
+  "selected_logs": [
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "storage-pr-final-backend.log",
+      "bytes": 143510,
+      "sha256": "362ee2286a30285e0612e27505819b220b18d09ee6b2af5801c13d38628456d4"
+    },
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "file": "storage-pr-final-backend-windows.log",
+      "bytes": 207018,
+      "sha256": "fc9b67659b44b21581d1f914ebb30e60431546e68e59e620bb037033c70f695b"
+    }
+  ],
+  "windows_checkout": {
+    "member": "backend-windows/2_Run actions_checkout@v5.txt",
+    "observed_shas": [
+      "7365f7b0e776987f2b01e3d034e19990cf924120",
+      "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+      "bb3122d678a9c6fdbd2c8bd78fa9f3f22b955c8a"
+    ]
+  }
+}
