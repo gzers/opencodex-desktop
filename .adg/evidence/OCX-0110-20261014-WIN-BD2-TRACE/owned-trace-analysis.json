@@ -1,0 +1,239 @@
+{
+  "atUtc": "2026-10-14T09:37:08.915852+00:00",
+  "source": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "scope": "one Windows local success comparison with sampled own-process thread/WCT/IO and fixture file notifications",
+  "rawTraceSha256": "d60c572f4a1b77862f8f5670bebe996e88bc44eafc45f69ccd9be9fc68a02844",
+  "rawTraceBytes": 1123383,
+  "rawRecordCounts": {
+    "observer-start": 1,
+    "fixture-file-notification": 274,
+    "owned-process-sample": 554,
+    "owned-node-discovered": 6,
+    "observer-finished": 1
+  },
+  "fullLibrary": {
+    "passed": 529,
+    "failed": 1,
+    "ignored": 4,
+    "filtered": 0,
+    "exitCode": 101
+  },
+  "failedTest": "commands::workspace::tests::local_documents_are_frozen",
+  "failedAssertion": "license.opened",
+  "failedTestScope": "CI-compiled CARGO_MANIFEST_DIR points at runner repository absent on this physical host",
+  "queryFixtureCasesPassed": [
+    "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+    "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+    "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+    "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+    "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+    "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+    "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process"
+  ],
+  "queryFixtureFailureReproduced": false,
+  "originalFailedCiTraceObtained": false,
+  "originalCiFailureCleared": false,
+  "originalCiRootCauseIdentified": false,
+  "etwSchedulingOrKernelFileTraceObtained": false,
+  "observerInitializedAfterTestStartedMs": 312.4522,
+  "sampleCount": 80,
+  "maximumSampleReadMs": 1459.0111,
+  "threadStateCounts": {
+    "Running": 56,
+    "Wait": 2567,
+    "unavailable": 39,
+    "Standby": 2
+  },
+  "threadWaitReasons": {
+    "EventPairLow": 477,
+    "Unknown": 2023,
+    "UserRequest": 12,
+    "Executive": 55
+  },
+  "wctOutcomeCounts": {
+    "True:0": 78,
+    "False:1444": 2
+  },
+  "waitChainNodesBeyondFirstStored": false,
+  "processSummaries": [
+    {
+      "pid": 11640,
+      "creationFileTime100ns": 134364440179039668,
+      "sampleCount": 80,
+      "firstObservedMs": 310.542,
+      "lastObservedMs": 10629.5586,
+      "firstWaitStatus": 258,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 10312500,
+      "lastKernelCpu100ns": 287812500,
+      "firstUserCpu100ns": 7812500,
+      "lastUserCpu100ns": 56875000,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 46361,
+        "writeOperations": 15140,
+        "otherOperations": 943105,
+        "readBytes": 16270688,
+        "writeBytes": 21870186,
+        "otherBytes": 26612406
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    },
+    {
+      "pid": 31992,
+      "creationFileTime100ns": 134364440182553414,
+      "sampleCount": 79,
+      "firstObservedMs": 2422.3299,
+      "lastObservedMs": 10629.6639,
+      "firstWaitStatus": 0,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 0,
+      "lastKernelCpu100ns": 0,
+      "firstUserCpu100ns": 625000,
+      "lastUserCpu100ns": 625000,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 0,
+        "writeOperations": 0,
+        "otherOperations": 0,
+        "readBytes": 0,
+        "writeBytes": 0,
+        "otherBytes": 0
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    },
+    {
+      "pid": 53680,
+      "creationFileTime100ns": 134364440183153282,
+      "sampleCount": 79,
+      "firstObservedMs": 2422.3492,
+      "lastObservedMs": 10629.6704,
+      "firstWaitStatus": 0,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 156250,
+      "lastKernelCpu100ns": 156250,
+      "firstUserCpu100ns": 312500,
+      "lastUserCpu100ns": 312500,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 0,
+        "writeOperations": 0,
+        "otherOperations": 0,
+        "readBytes": 0,
+        "writeBytes": 0,
+        "otherBytes": 0
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    },
+    {
+      "pid": 38248,
+      "creationFileTime100ns": 134364440190592567,
+      "sampleCount": 79,
+      "firstObservedMs": 2422.3585,
+      "lastObservedMs": 10629.6754,
+      "firstWaitStatus": 0,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 312500,
+      "lastKernelCpu100ns": 312500,
+      "firstUserCpu100ns": 468750,
+      "lastUserCpu100ns": 468750,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 0,
+        "writeOperations": 0,
+        "otherOperations": 0,
+        "readBytes": 0,
+        "writeBytes": 0,
+        "otherBytes": 0
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    },
+    {
+      "pid": 74072,
+      "creationFileTime100ns": 134364440191165761,
+      "sampleCount": 79,
+      "firstObservedMs": 2422.3665,
+      "lastObservedMs": 10629.6791,
+      "firstWaitStatus": 0,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 156250,
+      "lastKernelCpu100ns": 156250,
+      "firstUserCpu100ns": 625000,
+      "lastUserCpu100ns": 625000,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 0,
+        "writeOperations": 0,
+        "otherOperations": 0,
+        "readBytes": 0,
+        "writeBytes": 0,
+        "otherBytes": 0
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    },
+    {
+      "pid": 66100,
+      "creationFileTime100ns": 134364440191511225,
+      "sampleCount": 79,
+      "firstObservedMs": 2422.3725,
+      "lastObservedMs": 10629.6827,
+      "firstWaitStatus": 0,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 468750,
+      "lastKernelCpu100ns": 468750,
+      "firstUserCpu100ns": 156250,
+      "lastUserCpu100ns": 156250,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 0,
+        "writeOperations": 0,
+        "otherOperations": 0,
+        "readBytes": 0,
+        "writeBytes": 0,
+        "otherBytes": 0
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    },
+    {
+      "pid": 65712,
+      "creationFileTime100ns": 134364440191978848,
+      "sampleCount": 79,
+      "firstObservedMs": 2422.378,
+      "lastObservedMs": 10629.691,
+      "firstWaitStatus": 0,
+      "lastWaitStatus": 0,
+      "firstKernelCpu100ns": 468750,
+      "lastKernelCpu100ns": 468750,
+      "firstUserCpu100ns": 156250,
+      "lastUserCpu100ns": 156250,
+      "sampleIntervalIoDeltas": {
+        "readOperations": 0,
+        "writeOperations": 0,
+        "otherOperations": 0,
+        "readBytes": 0,
+        "writeBytes": 0,
+        "otherBytes": 0
+      },
+      "deltaStartsAtFirstObservationNotProcessCreation": true,
+      "caseRoleMappedFromCapturedOriginalTestLog": false
+    }
+  ],
+  "limitations": [
+    "One run only; no rerun-to-green, altered default test concurrency, prewarming or deadline/assertion changes.",
+    "The CI failure did not reproduce; the snapshots describe locally successful query cases, not the historical failed runner.",
+    "Default libtest capture hides successful-case eprintln; case-to-PID mapping and full process birth coverage are incomplete.",
+    "Observer was initialized about 312ms after the test process began; short-lived processes may be missed.",
+    "Six Node processes were sampled; this is not all seven controls plus every query worker/descendant.",
+    "The observer's longest read was about 1459ms, including dynamic waits; diagnostics can perturb timing and are not performance acceptance.",
+    "WCT is dynamic; thread states are sampled snapshots, not CPU scheduling/context-switch ETW events.",
+    "Filesystem records are notification-delivery times, not operation-start times, latencies, filename-level I/O ETW, or all reads.",
+    "Process I/O counters are cumulative; deltas begin at first observation and include the retained test process's full library activity.",
+    "No causal attribution to Defender, loader, CPU starvation or product code is supported."
+  ],
+  "nativeBeforeAfter": [
+    0,
+    0
+  ],
+  "sameProtectedSandboxAndDailyBytes": true,
+  "nextEvidenceNeeded": "A actually failing reproduction/runner window with verified owned PID/creation and scheduler + file-I/O ETW; requires an appropriate privileged scoped capture."
+}

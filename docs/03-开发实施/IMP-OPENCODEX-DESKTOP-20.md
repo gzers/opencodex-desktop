@@ -1376,3 +1376,15 @@ push38537161445最后进行中，旧51a/f545成功轮次不抵本PR失败；PR4d
 push38537161445 completed/success，bd2独立head，Mac900/Windows627通过（35组各、忽略6/7）；完整日志/REST/checkout/CRC封存。七control在query返回前已写标记；但成功versioncontrol的userCPU也可0，不能以单CPU指标推断执行阶段。PR38537166560七夹具失败及5秒active/标记缺失联合线索保持，根因待Windows原线程/调度/I/O证据，不放宽预算/重跑求绿。见[终态对照](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node低CPU失败证据/push终态对照.md)。
 
 两个bd2CI均终态，下一后台诊断依赖Windows原证据；旧aae候选不抵51aUI，无新包/原生操作。原CPU/RSSfailed/八门禁/预算/FZ50许可/日常数据和TASK原字节/revision2/in_progress/pending/空验收保持，目标active，未合并/签名/发布/核心晋升或证书。
+
+### 2026-10-14 Windows 固定bd2后台单次线程/WCT/I/O成功对照
+
+用户授权接续后，Windows固定bd2f6eb10d58115235e35d575507bb69f44666da，独立push38537161445实际checkout、artifact归属/ZIP摘要CRC与runner测试EXE摘要匹配；测试EXE SHA2709775e…不含commit字面量，初准入停止后改以实际checkout/原制品身份绑定，不混同PR合成或桌面候选。CI Node24.21.0官方ZIP/SHASUMS与Authenticode OpenJS/Valid核验，EXE SHAba4e6d11…，不安装npm/生命周期/改全局PATH/预热。
+
+17:33:37.903–17:33:48.585仅执行一次原完整库，默认并发/capture、无filter和截止/清理断言变更。结果529passed/1failed/4ignored、exit101，七查询夹具均passed；失败为编译时runner路径下LICENSE的license.opened，本机不造路径或改断言求绿。不复现旧PR五秒active/标记缺失，原失败及根因问题保持。
+
+836条原JSONL：554进程采样、六自有Node后代+测试根、80轮、274自有临时夹具文件通知；78次WCT成功/2次1444，保留句柄/EXE路径/新creation核验及线程状态/CPU/cycle/进程I/O累计量。原capture隐藏成功场景详细日志，case↔PID与短进程覆盖不全；观察器初始化晚约312ms、最长读取1459ms，快照/WCT不替代调度ETW，文件通知不代替逐文件读写时序/延迟，不作性能样本或Defender/loader/调度原因结论。外层保护未触发，无agent终止进程，原夹具正常清理后官方Node/desktop均0。WPR仅status未start，不能宣称ETW被OS拒绝。
+
+35份方法/原件/分析清单冻结重验通过，[Windows线程与I/O成功对照](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2线程与IO对照/README.md)。本提交是本机成功对照证据，**不是bd2失败场景原始调度/文件I/O跟踪**；下一证据需实际失败时间窗及限定自有PID的适当录制。Mac继续后台，未正式交接原生；旧bb session最后14:58:12已不存活，不能当实时证据。日常EXE及隔离preferences/root/policy/schedule摘要保持，未启动新自动周期。
+
+本线程目标工具仍paused，本轮单次正式status-only active/origin=user恢复被active writer拒绝，原目标/累计用量读回未变；用户授权已接收且诊断实际完成，准备的优先指令未应用，不能宣称目标自动续行。无绕锁、清除重建目标、新CI/包/desktop/防护或全局改变；原完整门禁/CPU-RSSfailed/预算、TASKrevision2/in_progress/pending/空验收及FZ50缺口保持，不合并、签名、发布或关闭。
