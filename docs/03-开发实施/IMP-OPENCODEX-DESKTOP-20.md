@@ -1358,3 +1358,9 @@ Mac仅后台，Windows原唯一实例不操作；原性能failed、全部预算/
 bd2f6eb1仅改Windows测试fixture，在query前/返回/原observer结束记录自有control句柄Wait0、GetProcessTimes/exitcode与本地标记，即使observerpanic也保留最终状态；JS/产品源码与51a相同，不预热/等待/新增进程，不改2s/4s/5s/8s、并发或清理断言。本地fmt/diff通过，WindowsAPI实跑待push38537161445/PR38537166560；父51a两CI38535387208/38535398225最后仍进行中，原f545失败保持。观察开销非性能样本、快照非根因结论；见[有界诊断](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-控制Node句柄后台诊断/README.md)。
 
 WindowsCLI传输层虽存在，但偏好命令仍明确禁用开启，界面与当前命令行为一致；本轮未以UI改动声称完整IPC启动。oldaae候选不含51a/f545，未新打包。Mac只后台、Windows唯一实例不操作，原预算/性能failed/八门禁/FZ50许可/保护恢复/日常与真实数据边界及原TASKrevision2/in_progress/pending/空验收保持，未合并/核心晋升/签名/发布或证书。
+
+### 2026-10-14 51a 双 CI 终态，旧查询失败不撤销
+
+51a35eff push38535387208/PR38535398225均completed/success，UI各99文件/533通过，Mac/Windows各35组/900/627通过、忽略6/7；PR实际fe4fb178合成检出。f545push38533772616也success、UI511/后端900/627，f545PR三版本夹具失败仍保留，不能用新绿撤销或推断根因。三份完整日志ZIP/REST/checkout与测试数独立核验，详见[51a终态](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-51a双CI终态/README.md)。
+
+bd2仅诊断head两CI当前Windows回归仍in_progress，未计完整WindowsAPI通过；oldaae候选不含51a/f545UI，未新打包/原生动作。原预算/性能failed/八门禁/FZ50许可/日常真实数据和TASK原字节/revision2/in_progress/pending/空验收保持，goalactive，无自动合并、核心晋升、签名/发布/证书。
