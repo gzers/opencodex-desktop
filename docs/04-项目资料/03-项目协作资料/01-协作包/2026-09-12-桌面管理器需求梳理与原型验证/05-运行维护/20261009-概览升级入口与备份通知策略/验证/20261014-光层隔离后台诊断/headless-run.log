@@ -1,0 +1,17 @@
+file:///private/tmp/ocx-0110-perf-review-20261014/layer-diagnostic.mjs:66
+ await writeFile(path.join(out,'results.json'),JSON.stringify({browserVersion:browser.version(),sourceSha:'d3b83b3822bf10a511556d80dc851c2ccfb17cf5',productionFilesEdited:false,cases,rootCauseProven:false,nativePerformanceAccepted:false},null,2)+'
+                                                                                                                                                                                                                                                      ^
+
+SyntaxError: Invalid or unexpected token
+    at compileSourceTextModule (node:internal/modules/esm/utils:355:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:93:18)
+    at #translate (node:internal/modules/esm/loader:441:20)
+    at afterLoad (node:internal/modules/esm/loader:509:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:514:12)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:567:36)
+    at afterResolve (node:internal/modules/esm/loader:614:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:620:12)
+    at node:internal/modules/esm/loader:639:32
+    at TracingChannel.tracePromise (node:diagnostics_channel:547:22)
+
+Node.js v26.8.1

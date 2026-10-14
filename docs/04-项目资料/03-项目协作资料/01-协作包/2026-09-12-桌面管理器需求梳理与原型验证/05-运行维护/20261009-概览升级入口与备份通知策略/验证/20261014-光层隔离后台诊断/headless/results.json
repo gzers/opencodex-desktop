@@ -1,0 +1,1337 @@
+{
+  "browserVersion": "156.0.8078.4",
+  "sourceSha": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "productionFilesEdited": false,
+  "cases": [
+    {
+      "name": "setup-mesh",
+      "time": {
+        "pending": 2,
+        "now": 2920
+      },
+      "before": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 174,
+              "top": 124,
+              "right": 1157,
+              "bottom": 298,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 114,
+              "top": 124,
+              "right": 1157,
+              "bottom": 238,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 89,
+              "width": 889,
+              "height": 520,
+              "top": 89,
+              "right": 1157,
+              "bottom": 609,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 669.7192993164062,
+              "y": 140.8258514404297,
+              "width": 90,
+              "height": 90,
+              "top": 140.8258514404297,
+              "right": 759.7192993164062,
+              "bottom": 230.8258514404297,
+              "left": 669.7192993164062
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "mesh",
+          "mode": "setup",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(2.46589%, -0.193502%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(204,211,234)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(164,179,214)\"></stop><stop offset=\"1\" stop-color=\"rgb(119,140,183)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(17.088728521702205 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 7.688770088999842 C15.31878633287241 7.688770088999842 17.393027790917664 11.281461681499971 15.73363462448146 14.155614955500077\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.73363462448146 14.155614955500077 C14.074241458045256 17.02976822950018 9.925758541954746 17.029768229500185 8.26636537551854 14.15561495550008\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.26636537551854 14.15561495550008 C6.6069722090823335 11.281461681499977 8.68121366712759 7.688770088999842 12 7.688770088999842\" opacity=\"0\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"7.688770088999842\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.73363462448146\" cy=\"14.155614955500077\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.26636537551854\" cy=\"14.15561495550008\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          1493,
+          1294
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "after": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 174,
+              "top": 124,
+              "right": 1157,
+              "bottom": 298,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 114,
+              "top": 124,
+              "right": 1157,
+              "bottom": 238,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 89,
+              "width": 889,
+              "height": 520,
+              "top": 89,
+              "right": 1157,
+              "bottom": 609,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 669.7192993164062,
+              "y": 140.8258514404297,
+              "width": 90,
+              "height": 90,
+              "top": 140.8258514404297,
+              "right": 759.7192993164062,
+              "bottom": 230.8258514404297,
+              "left": 669.7192993164062
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "mesh",
+          "mode": "setup",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(2.46589%, -0.193502%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(204,211,234)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(164,179,214)\"></stop><stop offset=\"1\" stop-color=\"rgb(119,140,183)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(17.088728521702205 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 7.688770088999842 C15.31878633287241 7.688770088999842 17.393027790917664 11.281461681499971 15.73363462448146 14.155614955500077\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.73363462448146 14.155614955500077 C14.074241458045256 17.02976822950018 9.925758541954746 17.029768229500185 8.26636537551854 14.15561495550008\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.26636537551854 14.15561495550008 C6.6069722090823335 11.281461681499977 8.68121366712759 7.688770088999842 12 7.688770088999842\" opacity=\"0\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"7.688770088999842\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.73363462448146\" cy=\"14.155614955500077\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.26636537551854\" cy=\"14.15561495550008\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          1493,
+          1294
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "errors": [],
+      "blockedRequests": [],
+      "scope": "headless Chromium, audit fixture, synthetic rAF, no native performance or real runtime state"
+    },
+    {
+      "name": "setup-css",
+      "time": {
+        "pending": 1,
+        "now": 2920
+      },
+      "before": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 174,
+              "top": 124,
+              "right": 1157,
+              "bottom": 298,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 114,
+              "top": 124,
+              "right": 1157,
+              "bottom": 238,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 89,
+              "width": 889,
+              "height": 520,
+              "top": 89,
+              "right": 1157,
+              "bottom": 609,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": null
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 669.7192993164062,
+              "y": 140.8258514404297,
+              "width": 90,
+              "height": 90,
+              "top": 140.8258514404297,
+              "right": 759.7192993164062,
+              "bottom": 230.8258514404297,
+              "left": 669.7192993164062
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "css",
+          "mode": "setup",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(2.46589%, -0.193502%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(204,211,234)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(164,179,214)\"></stop><stop offset=\"1\" stop-color=\"rgb(119,140,183)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(17.088728521702205 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 7.688770088999842 C15.31878633287241 7.688770088999842 17.393027790917664 11.281461681499971 15.73363462448146 14.155614955500077\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.73363462448146 14.155614955500077 C14.074241458045256 17.02976822950018 9.925758541954746 17.029768229500185 8.26636537551854 14.15561495550008\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.26636537551854 14.15561495550008 C6.6069722090823335 11.281461681499977 8.68121366712759 7.688770088999842 12 7.688770088999842\" opacity=\"0\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"7.688770088999842\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.73363462448146\" cy=\"14.155614955500077\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.26636537551854\" cy=\"14.15561495550008\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          null,
+          null
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "after": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 174,
+              "top": 124,
+              "right": 1157,
+              "bottom": 298,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 114,
+              "top": 124,
+              "right": 1157,
+              "bottom": 238,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 89,
+              "width": 889,
+              "height": 520,
+              "top": 89,
+              "right": 1157,
+              "bottom": 609,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": null
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 669.7192993164062,
+              "y": 140.8258514404297,
+              "width": 90,
+              "height": 90,
+              "top": 140.8258514404297,
+              "right": 759.7192993164062,
+              "bottom": 230.8258514404297,
+              "left": 669.7192993164062
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "css",
+          "mode": "setup",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(2.46589%, -0.193502%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(204,211,234)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(164,179,214)\"></stop><stop offset=\"1\" stop-color=\"rgb(119,140,183)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(17.088728521702205 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 7.688770088999842 C15.31878633287241 7.688770088999842 17.393027790917664 11.281461681499971 15.73363462448146 14.155614955500077\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.73363462448146 14.155614955500077 C14.074241458045256 17.02976822950018 9.925758541954746 17.029768229500185 8.26636537551854 14.15561495550008\" opacity=\"0\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.26636537551854 14.15561495550008 C6.6069722090823335 11.281461681499977 8.68121366712759 7.688770088999842 12 7.688770088999842\" opacity=\"0\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"7.688770088999842\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.73363462448146\" cy=\"14.155614955500077\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.26636537551854\" cy=\"14.15561495550008\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          null,
+          null
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "errors": [],
+      "blockedRequests": [],
+      "scope": "headless Chromium, audit fixture, synthetic rAF, no native performance or real runtime state"
+    },
+    {
+      "name": "ready-mesh",
+      "time": {
+        "pending": 2,
+        "now": 2920
+      },
+      "before": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 300,
+              "top": 124,
+              "right": 1157,
+              "bottom": 424,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 168,
+              "top": 124,
+              "right": 1157,
+              "bottom": 292,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 49,
+              "width": 889,
+              "height": 660,
+              "top": 49,
+              "right": 1157,
+              "bottom": 709,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 644.1953735351562,
+              "y": 154.44290161132812,
+              "width": 140,
+              "height": 140,
+              "top": 154.44290161132812,
+              "right": 784.1953735351562,
+              "bottom": 294.4429016113281,
+              "left": 644.1953735351562
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "mesh",
+          "mode": "ready",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(1.21098%, 1.74494%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(128,233,205)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(59,174,209)\"></stop><stop offset=\"1\" stop-color=\"rgb(88,97,232)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(102.71444637061177 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 8.5 C14.694301256218253 8.5 16.378239541354663 11.416666666666668 15.031088913245537 13.75\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.031088913245537 13.75 C13.68393828513641 16.083333333333332 10.316061714863594 16.083333333333336 8.968911086754465 13.750000000000002\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.968911086754465 13.750000000000002 C7.621760458645338 11.41666666666667 9.305698743781747 8.5 12 8.5\" opacity=\"1\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"8.5\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.031088913245537\" cy=\"13.75\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.968911086754465\" cy=\"13.750000000000002\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          1493,
+          1294
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "after": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 300,
+              "top": 124,
+              "right": 1157,
+              "bottom": 424,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 168,
+              "top": 124,
+              "right": 1157,
+              "bottom": 292,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 49,
+              "width": 889,
+              "height": 660,
+              "top": 49,
+              "right": 1157,
+              "bottom": 709,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 644.1953735351562,
+              "y": 154.44290161132812,
+              "width": 140,
+              "height": 140,
+              "top": 154.44290161132812,
+              "right": 784.1953735351562,
+              "bottom": 294.4429016113281,
+              "left": 644.1953735351562
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "mesh",
+          "mode": "ready",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(1.21098%, 1.74494%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(128,233,205)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(59,174,209)\"></stop><stop offset=\"1\" stop-color=\"rgb(88,97,232)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(102.71444637061177 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 8.5 C14.694301256218253 8.5 16.378239541354663 11.416666666666668 15.031088913245537 13.75\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.031088913245537 13.75 C13.68393828513641 16.083333333333332 10.316061714863594 16.083333333333336 8.968911086754465 13.750000000000002\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.968911086754465 13.750000000000002 C7.621760458645338 11.41666666666667 9.305698743781747 8.5 12 8.5\" opacity=\"1\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"8.5\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.031088913245537\" cy=\"13.75\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.968911086754465\" cy=\"13.750000000000002\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          1493,
+          1294
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "errors": [],
+      "blockedRequests": [],
+      "scope": "headless Chromium, audit fixture, synthetic rAF, no native performance or real runtime state"
+    },
+    {
+      "name": "ready-css",
+      "time": {
+        "pending": 1,
+        "now": 2920
+      },
+      "before": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 300,
+              "top": 124,
+              "right": 1157,
+              "bottom": 424,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 168,
+              "top": 124,
+              "right": 1157,
+              "bottom": 292,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 49,
+              "width": 889,
+              "height": 660,
+              "top": 49,
+              "right": 1157,
+              "bottom": 709,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": null
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 644.1953735351562,
+              "y": 154.44290161132812,
+              "width": 140,
+              "height": 140,
+              "top": 154.44290161132812,
+              "right": 784.1953735351562,
+              "bottom": 294.4429016113281,
+              "left": 644.1953735351562
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "css",
+          "mode": "ready",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(1.21098%, 1.74494%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(128,233,205)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(59,174,209)\"></stop><stop offset=\"1\" stop-color=\"rgb(88,97,232)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(102.71444637061177 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 8.5 C14.694301256218253 8.5 16.378239541354663 11.416666666666668 15.031088913245537 13.75\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.031088913245537 13.75 C13.68393828513641 16.083333333333332 10.316061714863594 16.083333333333336 8.968911086754465 13.750000000000002\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.968911086754465 13.750000000000002 C7.621760458645338 11.41666666666667 9.305698743781747 8.5 12 8.5\" opacity=\"1\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"8.5\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.031088913245537\" cy=\"13.75\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.968911086754465\" cy=\"13.750000000000002\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          null,
+          null
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "after": {
+        "nodes": {
+          ".main": {
+            "rect": {
+              "x": 245,
+              "y": 29,
+              "width": 934,
+              "height": 730,
+              "top": 29,
+              "right": 1179,
+              "bottom": 759,
+              "left": 245
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "auto",
+            "offsetParent": "app-window is-macos"
+          },
+          ".motion-overview": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 300,
+              "top": 124,
+              "right": 1157,
+              "bottom": 424,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "isolate",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "main"
+          },
+          ".motion-stage": {
+            "rect": {
+              "x": 268,
+              "y": 124,
+              "width": 889,
+              "height": 168,
+              "top": 124,
+              "right": 1157,
+              "bottom": 292,
+              "left": 268
+            },
+            "position": "relative",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": "motion-overview"
+          },
+          ".motion-mark": {
+            "rect": {
+              "x": 268,
+              "y": 49,
+              "width": 889,
+              "height": 660,
+              "top": 49,
+              "right": 1157,
+              "bottom": 709,
+              "left": 268
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-1",
+            "overflow": "visible",
+            "offsetParent": "motion-stage"
+          },
+          ".motion-backdrop": {
+            "rect": {
+              "x": 246,
+              "y": 30,
+              "width": 933,
+              "height": 729,
+              "top": 30,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "-2",
+            "overflow": "hidden",
+            "offsetParent": "main"
+          },
+          ".motion-mesh-host": {
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "none",
+            "zIndex": "auto",
+            "overflow": "visible",
+            "offsetParent": null
+          },
+          ".motion-ambient": {
+            "rect": {
+              "x": 246,
+              "y": -50,
+              "width": 933,
+              "height": 809,
+              "top": -50,
+              "right": 1179,
+              "bottom": 759,
+              "left": 246
+            },
+            "position": "absolute",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": "motion-backdrop"
+          },
+          ".motion-hero svg": {
+            "rect": {
+              "x": 644.1953735351562,
+              "y": 154.44290161132812,
+              "width": 140,
+              "height": 140,
+              "top": 154.44290161132812,
+              "right": 784.1953735351562,
+              "bottom": 294.4429016113281,
+              "left": 644.1953735351562
+            },
+            "position": "static",
+            "isolation": "auto",
+            "display": "block",
+            "zIndex": "auto",
+            "overflow": "hidden",
+            "offsetParent": null
+          }
+        },
+        "attributes": {
+          "theme": "light",
+          "effects": "high",
+          "glow": "css",
+          "mode": "ready",
+          "size": "standard"
+        },
+        "svg": "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" style=\"transform-origin: 50% 50%; transform: translate(1.21098%, 1.74494%) rotate(0deg); filter: saturate(1); opacity: 1;\"><defs><linearGradient id=\"motion-mark-0-g\" gradientUnits=\"userSpaceOnUse\" x1=\"10.835005295775815\" x2=\"13.164994704224185\" y1=\"3\" y2=\"21\"><stop offset=\"0\" stop-color=\"rgb(128,233,205)\"></stop><stop offset=\"0.6398414022741976\" stop-color=\"rgb(59,174,209)\"></stop><stop offset=\"1\" stop-color=\"rgb(88,97,232)\"></stop></linearGradient><mask id=\"motion-mark-0-m\" maskUnits=\"userSpaceOnUse\" x=\"-4\" y=\"-4\" width=\"32\" height=\"32\"><rect x=\"-4\" y=\"-4\" width=\"32\" height=\"32\" fill=\"white\"></rect><g data-layer=\"core\" transform=\"rotate(102.71444637061177 12 12)\"><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M12 8.5 C14.694301256218253 8.5 16.378239541354663 11.416666666666668 15.031088913245537 13.75\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M15.031088913245537 13.75 C13.68393828513641 16.083333333333332 10.316061714863594 16.083333333333336 8.968911086754465 13.750000000000002\" opacity=\"1\"></path><path fill=\"none\" stroke=\"black\" stroke-width=\"0.78\" stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M8.968911086754465 13.750000000000002 C7.621760458645338 11.41666666666667 9.305698743781747 8.5 12 8.5\" opacity=\"1\"></path><circle r=\"1.18\" fill=\"black\" cx=\"12\" cy=\"8.5\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"15.031088913245537\" cy=\"13.75\"></circle><circle r=\"1.18\" fill=\"black\" cx=\"8.968911086754465\" cy=\"13.750000000000002\"></circle></g><g data-layer=\"original\" transform=\"translate(7.5 7.5) scale(0.0087890625)\" display=\"none\"><path d=\"M512 150m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M150 699c10 0 19.8 0.9 29.4 2.5-18-43.5-27.1-89.6-27.1-137.2 0-48.6 9.5-95.7 28.2-140 18.1-42.8 44.1-81.3 77.1-114.4 30.1-30.1 64.7-54.3 103-72.1-15-25.7-23.6-55.8-23.6-87.8 0-3.7 0.1-7.4 0.4-11.1C170.1 207.7 52.3 372.2 52.3 564.3c0 52.7 8.9 103.3 25.2 150.4C99.6 704.6 124.1 699 150 699z\" fill=\"black\"></path><path d=\"M874 874m-150 0a150 150 0 1 0 300 0 150 150 0 1 0-300 0Z\" fill=\"black\"></path><path d=\"M699 871.7c-15 9.2-30.7 17.2-47 24.1-44.3 18.7-91.4 28.2-140 28.2s-95.7-9.5-140-28.2c-16.3-6.9-32-15-47-24.1v2.3c0 35.6-10.6 68.6-28.8 96.3C360.5 1004.6 434 1024 512 1024s151.5-19.4 215.8-53.7C709.6 942.6 699 909.6 699 874v-2.3zM766.3 310c33.1 33.1 59 71.5 77.1 114.4 18.7 44.3 28.2 91.4 28.2 140 0 47.6-9.1 93.7-27.1 137.2 9.6-1.6 19.4-2.5 29.4-2.5 25.9 0 50.4 5.6 72.5 15.7 16.3-47.1 25.2-97.7 25.2-150.4 0-192.1-117.8-356.6-285.1-425.4 0.2 3.7 0.4 7.3 0.4 11.1 0 32-8.6 62.1-23.7 87.9 38.4 17.7 73 41.8 103.1 72z\" fill=\"black\"></path></g></mask></defs><path d=\"M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z\" fill=\"url(#motion-mark-0-g)\" mask=\"url(#motion-mark-0-m)\"></path></svg>",
+        "canvasSize": [
+          null,
+          null
+        ],
+        "backdropParent": "route-section active ov"
+      },
+      "errors": [],
+      "blockedRequests": [],
+      "scope": "headless Chromium, audit fixture, synthetic rAF, no native performance or real runtime state"
+    }
+  ],
+  "rootCauseProven": false,
+  "nativePerformanceAccepted": false
+}

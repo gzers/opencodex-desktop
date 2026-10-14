@@ -1,0 +1,107 @@
+{
+  "recorded_at_utc": "2026-10-14T02:31:18.430818+00:00",
+  "source_sha": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "scope": "headless Chromium, injected diagnostic-only CSS and synthetic rAF; not WKWebView or native performance",
+  "cases": [
+    {
+      "name": "setup-mesh",
+      "pixel_count": 30,
+      "total_pixels": 3587200,
+      "pixel_fraction": 8.36306868867083e-06,
+      "max_channel_delta": 13,
+      "mean_channel_delta": 2.5437667261373773e-05,
+      "bbox": [
+        2061,
+        97,
+        2318,
+        135
+      ],
+      "geometry_equal": true,
+      "svg_equal": true,
+      "canvas_size_equal": true,
+      "layers_before": 14,
+      "layers_after": 14,
+      "paint_events_before": 0,
+      "paint_events_after": 0,
+      "errors": [],
+      "blocked_external_requests": []
+    },
+    {
+      "name": "setup-css",
+      "pixel_count": 30,
+      "total_pixels": 3587200,
+      "pixel_fraction": 8.36306868867083e-06,
+      "max_channel_delta": 14,
+      "mean_channel_delta": 2.5855820695807316e-05,
+      "bbox": [
+        2061,
+        97,
+        2318,
+        135
+      ],
+      "geometry_equal": true,
+      "svg_equal": true,
+      "canvas_size_equal": true,
+      "layers_before": 19,
+      "layers_after": 19,
+      "paint_events_before": 0,
+      "paint_events_after": 0,
+      "errors": [],
+      "blocked_external_requests": []
+    },
+    {
+      "name": "ready-mesh",
+      "pixel_count": 57,
+      "total_pixels": 3587200,
+      "pixel_fraction": 1.5889830508474576e-05,
+      "max_channel_delta": 13,
+      "mean_channel_delta": 3.421888938447814e-05,
+      "bbox": [
+        1554,
+        97,
+        2318,
+        803
+      ],
+      "geometry_equal": true,
+      "svg_equal": true,
+      "canvas_size_equal": true,
+      "layers_before": 24,
+      "layers_after": 24,
+      "paint_events_before": 0,
+      "paint_events_after": 0,
+      "errors": [],
+      "blocked_external_requests": []
+    },
+    {
+      "name": "ready-css",
+      "pixel_count": 60,
+      "total_pixels": 3587200,
+      "pixel_fraction": 1.672613737734166e-05,
+      "max_channel_delta": 14,
+      "mean_channel_delta": 3.7145963425512936e-05,
+      "bbox": [
+        1554,
+        97,
+        2318,
+        803
+      ],
+      "geometry_equal": true,
+      "svg_equal": true,
+      "canvas_size_equal": true,
+      "layers_before": 0,
+      "layers_after": 29,
+      "paint_events_before": 0,
+      "paint_events_after": 0,
+      "errors": [],
+      "blocked_external_requests": []
+    }
+  ],
+  "causality_proven": false,
+  "old_performance_failed_retained": true,
+  "native_samples": 0,
+  "limitations": [
+    "All 120 synthetic frames run in a single JS task, cannot infer native frame times from sync duration.",
+    "LayerTree first snapshot absent for ready/css; zero paints do not prove no rendering.",
+    "No official0.1.9 equivalent browser instrumentation or CPU/RSS comparison was collected."
+  ]
+}

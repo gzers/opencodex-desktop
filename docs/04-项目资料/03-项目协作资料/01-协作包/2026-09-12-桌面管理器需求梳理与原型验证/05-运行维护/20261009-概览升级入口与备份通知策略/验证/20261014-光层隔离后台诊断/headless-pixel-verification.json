@@ -1,0 +1,89 @@
+{
+  "verified_at_utc": "2026-10-14T02:27:36.819398+00:00",
+  "source_sha": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "browser_version": "156.0.8078.4",
+  "cases": [
+    {
+      "case": "setup-mesh",
+      "image_size": [
+        2360,
+        1520
+      ],
+      "different_pixels": 70,
+      "total_pixels": 3587200,
+      "different_fraction": 1.9513826940231936e-05,
+      "max_channel_delta": 14,
+      "mean_channel_delta": 2.5995205173951828e-05,
+      "before_sha256": "a8baa79d47504ccaf8467b64247c66d7a6379d1ada59f0633c42a758e4141748",
+      "after_sha256": "075ef5c13c7bb548110c597ad31c7893d6c6daffa71f64cf10c54580e9419573",
+      "geometry_equal": true,
+      "canvas_size_equal": true,
+      "svg_frame_equal": true,
+      "runtime_errors": [],
+      "external_requests_blocked": []
+    },
+    {
+      "case": "setup-css",
+      "image_size": [
+        2360,
+        1520
+      ],
+      "different_pixels": 60,
+      "total_pixels": 3587200,
+      "different_fraction": 1.672613737734166e-05,
+      "max_channel_delta": 14,
+      "mean_channel_delta": 2.550735950044603e-05,
+      "before_sha256": "1e4489ab5e20433e0c1439ae134e7355cd5259432a389ad4416e3778e1ce4f33",
+      "after_sha256": "7173f46b5e4805144fb606e698279d96b3a9b4e9ceb4832173e21a4aecd5ca4c",
+      "geometry_equal": true,
+      "canvas_size_equal": true,
+      "svg_frame_equal": true,
+      "runtime_errors": [],
+      "external_requests_blocked": []
+    },
+    {
+      "case": "ready-mesh",
+      "image_size": [
+        2360,
+        1520
+      ],
+      "different_pixels": 98,
+      "total_pixels": 3587200,
+      "different_fraction": 2.731935771632471e-05,
+      "max_channel_delta": 14,
+      "mean_channel_delta": 3.4427966101694915e-05,
+      "before_sha256": "ba6fb9b5f69bf35dda6a58eea83ca0cdbb1ca5baff848de7c95ddf18ad165260",
+      "after_sha256": "593df7cb762171a30d8e005274ad97268a789111bacdd0c728ee48510850dbf6",
+      "geometry_equal": true,
+      "canvas_size_equal": true,
+      "svg_frame_equal": true,
+      "runtime_errors": [],
+      "external_requests_blocked": []
+    },
+    {
+      "case": "ready-css",
+      "image_size": [
+        2360,
+        1520
+      ],
+      "different_pixels": 94,
+      "total_pixels": 3587200,
+      "different_fraction": 2.62042818911686e-05,
+      "max_channel_delta": 14,
+      "mean_channel_delta": 3.62399643175736e-05,
+      "before_sha256": "356917c904292fd0de619ec76e3e17cfe954cbae312fd345824e4992f2a4bc5c",
+      "after_sha256": "05d17c2cbb688b97202dedde7533f385f2dda50430b15913b7114cbbae012397",
+      "geometry_equal": true,
+      "canvas_size_equal": true,
+      "svg_frame_equal": true,
+      "runtime_errors": [],
+      "external_requests_blocked": []
+    }
+  ],
+  "method": "fixed fixture geometry and static-frame screenshots; temporary CSS in fresh headless page only",
+  "production_source_changed": false,
+  "native_app_started": false,
+  "native_performance_samples": 0,
+  "old_cpu_rss_failure_resolved": false,
+  "causal_claim": false
+}
