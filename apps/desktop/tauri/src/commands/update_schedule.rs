@@ -11,6 +11,13 @@ pub struct PanelQuery {
     pub sequence: u64,
     pub value: Option<crate::modules::about::remote::OfficialRemoteLatest>,
 }
+impl PanelQuery {
+    pub(crate) fn completed_result(
+        &self,
+    ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
+        self.value.clone().ok_or(AppError::NotConfigured)
+    }
+}
 #[derive(Default)]
 pub struct SharedPanelQuery(
     pub tokio::sync::Mutex<PanelQuery>,

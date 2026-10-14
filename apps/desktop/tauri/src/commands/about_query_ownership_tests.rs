@@ -1,5 +1,5 @@
 use super::*;
-use crate::commands::update_schedule::{complete_at_root, SharedPanelQuery};
+use crate::commands::update_schedule::{complete_at_root, PanelQuery, SharedPanelQuery};
 use crate::infrastructure::storage_writers::WriterGate;
 use crate::modules::update::schedule::{self, Schedule, Target};
 use std::{sync::atomic::Ordering, time::Duration};
@@ -139,4 +139,50 @@ async fn frozen_storage_refuses_panel_setup_and_query_before_side_effects() {
     .await
     .is_err());
     assert_eq!(calls.load(Ordering::SeqCst), 0);
+}
+
+#[tokio::test]
+async fn failed_panel_commit_does_not_publish_unpersisted_result() {
+    let previous = crate::modules::about::remote::OfficialRemoteLatest {
+        tag: "previous".into(),
+        version: "2.83.0".into(),
+        integrity: None,
+    };
+    let next = crate::modules::about::remote::OfficialRemoteLatest {
+        tag: "latest".into(),
+        version: "2.84.0".into(),
+        integrity: None,
+    };
+    let mut query = PanelQuery {
+        sequence: 4,
+        value: Some(previous.clone()),
+    };
+    let published_sequence = std::sync::atomic::AtomicU64::new(4);
+    let result = super::commit_panel_query_result(
+        &mut query,
+        &published_sequence,
+        Ok(next.clone()),
+        |_value| async { Err(AppError::NotConfigured) },
+    )
+    .await;
+    assert_eq!(result, Err(AppError::NotConfigured));
+    assert_eq!(query.sequence, 4);
+    assert_eq!(query.value, Some(previous));
+    assert_eq!(published_sequence.load(Ordering::Acquire), 4);
+
+    let result = super::commit_panel_query_result(
+        &mut query,
+        &published_sequence,
+        Ok(next.clone()),
+        |value| async move {
+            assert_eq!(value, Some(next));
+            Ok(())
+        },
+    )
+    .await
+    .unwrap();
+    assert_eq!(result.version, "2.84.0");
+    assert_eq!(query.sequence, 5);
+    assert_eq!(query.value.unwrap().version, "2.84.0");
+    assert_eq!(published_sequence.load(Ordering::Acquire), 5);
 }

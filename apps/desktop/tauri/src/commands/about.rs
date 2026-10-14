@@ -86,7 +86,7 @@ async fn official_remote_latest_owned(
     let sequence = gate.1.load(Ordering::Acquire);
     let mut query = gate.0.lock().await;
     if query.sequence != sequence {
-        return query.value.clone().ok_or(AppError::NotConfigured);
+        return query.completed_result();
     }
     if app
         .state::<crate::state::SharedRuntimeInstall>()
@@ -107,28 +107,47 @@ async fn official_remote_latest_owned(
     })
     .await?;
     let result = query_panel_metadata(&app).await;
-    query.sequence = query.sequence.wrapping_add(1);
-    query.value = result.as_ref().ok().cloned();
-    gate.1.store(query.sequence, Ordering::Release);
-    let value = query.value.clone();
     let succeeded = result.is_ok();
     let commit_app = app.clone();
-    crate::commands::run_blocking("commit panel query", move || {
-        update_schedule::complete(&commit_app, &query_root, Target::Panel, value.as_ref())?;
-        crate::commands::event_delivery::publish(
-            &commit_app,
-            &query_root,
-            if succeeded {
-                "panel-check-succeeded"
-            } else {
-                "panel-check-failed"
-            },
-            identity,
-            trigger.unwrap_or_default().into(),
-        );
-        Ok(())
+    commit_panel_query_result(&mut query, &gate.1, result, move |value| async move {
+        crate::commands::run_blocking("commit panel query", move || {
+            update_schedule::complete(&commit_app, &query_root, Target::Panel, value.as_ref())?;
+            crate::commands::event_delivery::publish(
+                &commit_app,
+                &query_root,
+                if succeeded {
+                    "panel-check-succeeded"
+                } else {
+                    "panel-check-failed"
+                },
+                identity,
+                trigger.unwrap_or_default().into(),
+            );
+            Ok(())
+        })
+        .await
     })
-    .await?;
+    .await
+}
+
+async fn commit_panel_query_result<F, Fut>(
+    query: &mut crate::commands::update_schedule::PanelQuery,
+    sequence: &std::sync::atomic::AtomicU64,
+    result: AppResult<crate::modules::about::remote::OfficialRemoteLatest>,
+    commit: F,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest>
+where
+    F: FnOnce(Option<crate::modules::about::remote::OfficialRemoteLatest>) -> Fut,
+    Fut: std::future::Future<Output = AppResult<()>>,
+{
+    // Do not publish a new in-memory result until schedule/cache/event
+    // persistence has succeeded. Otherwise a failed durable commit could make
+    // a concurrent caller observe success that cannot survive a restart.
+    let next_value = result.as_ref().ok().cloned();
+    commit(next_value.clone()).await?;
+    query.sequence = query.sequence.wrapping_add(1);
+    query.value = next_value;
+    sequence.store(query.sequence, std::sync::atomic::Ordering::Release);
     result
 }
 
