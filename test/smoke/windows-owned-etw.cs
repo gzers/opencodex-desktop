@@ -79,7 +79,8 @@ namespace OpenCodex.Diagnostics
             // the query children start. Preserve root identity/lifecycle, but
             // target high-volume events to the admitted Node/cmd descendants.
             string role = Role(pid, qpc);
-            return role == "node" || role == "command";
+            return role == "node" || role == "command"
+                || role == "node-basename" || role == "command-basename";
         }
         public long? ProcessGeneration(int pid, long qpc) => At(processes, pid, qpc)?.Start;
         public bool ThreadStart(int pid, int tid, long qpc)
@@ -553,6 +554,16 @@ namespace OpenCodex.Diagnostics
                 && SamePath(argument, node)) return "node";
             if (String.Equals(eventImage, Path.GetFileName(command), StringComparison.OrdinalIgnoreCase)
                 && SamePath(argument, command)) return "command";
+            // Windows kernel events may expose only a basename while argv[0]
+            // is the same basename. Admit only this direct child of an
+            // already-owned process; RetainIdentity still checks the live
+            // handle's full path below.
+            if (String.Equals(eventImage, Path.GetFileName(node), StringComparison.OrdinalIgnoreCase)
+                && String.Equals(argument, Path.GetFileName(node), StringComparison.OrdinalIgnoreCase))
+                return "node-basename";
+            if (String.Equals(eventImage, Path.GetFileName(command), StringComparison.OrdinalIgnoreCase)
+                && String.Equals(argument, Path.GetFileName(command), StringComparison.OrdinalIgnoreCase))
+                return "command-basename";
             return null;
         }
         public static int SelfTestExecutableAdmission()
@@ -560,7 +571,7 @@ namespace OpenCodex.Diagnostics
             int checks = 0;
             string node = @"C:\owned\node.exe", command = @"C:\Windows\System32\cmd.exe";
             Action<bool> require = value => {
-                if (!value) throw new InvalidOperationException("Owned executable image admission");
+                if (!value) throw new InvalidOperationException("Owned executable image admission check " + (checks + 1));
                 checks++;
             };
             require(ExecutableRole(node, "node.exe fixture.cjs", node, command) == "node");
@@ -568,12 +579,14 @@ namespace OpenCodex.Diagnostics
             require(ExecutableRole(command, "", node, command) == "command");
             require(ExecutableRole("node.exe", "\"" + node + "\" fixture.cjs", node, command) == "node");
             require(ExecutableRole("cmd.exe", "\"" + command + "\" /c fixture.cmd", node, command) == "command");
-            require(ExecutableRole("cmd.exe", "cmd.exe /c fixture.cmd", node, command) == null);
+            require(ExecutableRole("cmd.exe", "cmd.exe /c fixture.cmd", node, command) == "command-basename");
             require(ExecutableRole("", "\"" + command + "\" /c fixture.cmd", node, command) == null);
             require(ExecutableRole("other.exe", "\"" + node + "\" fixture.cjs", node, command) == null);
             require(ExecutableRole(@"C:\other\node.exe", "\"" + node + "\" fixture.cjs", node, command) == null);
             require(ExecutableRole(@"\\?\" + node, "node.exe", node, command) == "node");
             require(ExecutableRole(command, "\"" + node + "\"", node, command) == "command");
+            require(ExecutableRole("node.exe", "node.exe", node, command) == "node-basename");
+            require(ExecutableRole("cmd.exe", "cmd.exe", node, command) == "command-basename");
             return checks;
         }
         private static bool SamePath(string first, string second)
@@ -733,7 +746,8 @@ namespace OpenCodex.Diagnostics
                     }
                     if (!scope.ProcessStart(data.ProcessID, data.ParentID, OriginalQpc(data), root, role)) return;
                     if (root) Interlocked.Exchange(ref rootStartSeen, 1);
-                    string expectedImage = root ? testExe : role == "node" ? nodeExe : commandExe;
+                    string expectedImage = root ? testExe
+                        : role.StartsWith("node", StringComparison.Ordinal) ? nodeExe : commandExe;
                     emit(new { kind = "process-start", original = Header(data), pid = data.ProcessID,
                         parentPid = root ? (int?)null : data.ParentID, role = root ? "test" : role,
                         uniqueProcessKey = data.UniqueProcessKey,
@@ -743,7 +757,10 @@ namespace OpenCodex.Diagnostics
                         apiIdentityObservation = RetainIdentity(data.ProcessID, expectedImage,
                             data.TimeStamp.ToUniversalTime(), retainedHandles),
                         fullCommandLineSaved = false, sidSaved = false,
-                        identityBasis = root ? "retained root handle/image/creation" : "ETW lifecycle + owned parent + exact event image or basename-consistent exact executable argument" });
+                        identityBasis = root ? "retained root handle/image/creation" :
+                            role.EndsWith("-basename", StringComparison.Ordinal)
+                            ? "ETW lifecycle + matching image/argv basenames; live handle path check retained"
+                            : "ETW lifecycle + owned parent + exact event image or basename-consistent exact executable argument" });
                 });
                 kernel.ProcessStop += data => guarded(data, () => {
                     if (scope?.ProcessStop(data.ProcessID, OriginalQpc(data)) != true) return;
