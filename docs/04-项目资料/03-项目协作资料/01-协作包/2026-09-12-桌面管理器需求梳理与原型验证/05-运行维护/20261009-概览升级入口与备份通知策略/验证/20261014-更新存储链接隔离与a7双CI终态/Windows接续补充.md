@@ -1,0 +1,1 @@
+当前后台源码为feature/0.1.10-integration-candidate@aae2a3fe；同步docs/governance-main并先读本验证页。避开现有性能采样，保留唯一原生实例，核验WindowsJunction/硬链接拒绝及外根字节不变，兼顾原Node夹具启动失败原因；固定源码/EXE身份、保留原失败。原2秒截止/并发/预算与FZ50许可门禁保持，不用bb旧制品抵新代码，不自动切实例、打包、合并或发布。

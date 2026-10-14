@@ -1310,3 +1310,11 @@ Windows仍验收、Mac仅后台，无新原生或性能样本。原macOS CPU/RSS
 9cf pushCI38517002166已success（Mac893/Windows621），PR38517007573最后in_progress；a7 push38518361054/PR38518366179最后in_progress，旧SHA不抵新实现。PR4更新draft/open/unmerged，新候选未触发；原fd/fb/8be夹具失败和control启动线索不撤销。见[提交顺序、失败合并及证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-面板查询持久提交与失败合并/README.md)。
 
 Mac继续后台、Windows仍验收，平台切Mac原生须确认Windows实例0。原CPU/RSS failed、全部预算/矩阵、TASK原字节/revision2/in_progress/pending/空验收及FZ50未许可保持，无核心事实晋升、真实迁移、日常替换、签名/发布或完成证书。
+
+### 2026-10-14 更新存储静态链接隔离与 a7 双 CI 终态
+
+aae2a3fe修复调度/版本缓存跟随manager-state/cache/updates链接读取和覆写其他根的实际缺陷，统一更新领域storage检查并接入说明缓存。最终相同调度测试模块在a7红0通过/2失败、aae绿；根内目录/叶类型、Windowsreparse/linkcount、读取上限及缺失读零创建覆盖，macOS最终Rust35组/900通过/6忽略、fmt/strictClippy/diff通过。路径/schema/TTL/2秒查询/周期预算不改，WindowsJunction新SHA待CI；未证明并发父目录替换race或全分区安全。
+
+a7push38518361054/PR38518366179已completed/success，Mac各895/Windows各623；PR实际f5f774dd合成检出。9cfPR38517007573也已success，Mac893/Windows621；三份完整日志/REST/checkout/CRC独立封存。aae新push38521648491/PR38521655917最后in_progress，旧成功不抵新实现；PR4title/说明更新draft/open/unmerged，main仍eae，未生成新候选。见[静态链接修复及精确CI](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-更新存储链接隔离与a7双CI终态/README.md)。
+
+Mac无原生或新性能，Windows仍验收，原query夹具失败/control未及时启动原因未解；原CPU/RSS failed、全部预算/双平台/安装/真实周期门禁及TASK原字节/revision2/in_progress/pending/空验收保持。无FZ50脚本、真实迁移、日常替换、核心晋升、自动合并、签名、发布或证书。

@@ -1,0 +1,40 @@
+{
+  "source_commit": "aae2a3fe37a19a33b2f423a1f0b04e5b376c9579",
+  "parent": "a7feba5fda9422cd177d31fefb18054b513524a2",
+  "local_final_results": {
+    "recorded_at_utc": "2026-10-14T06:19:45.221288+00:00",
+    "baseline": "a7feba5fda9422cd177d31fefb18054b513524a2",
+    "file_sha256": {
+      "apps/desktop/tauri/src/modules/update/mod.rs": "3598bfe95f057a8966cc9360e9283e5e8cabe8df24c4a2739b6af5cccdff5061",
+      "apps/desktop/tauri/src/modules/update/schedule.rs": "3bf88d62f2fed2d9b56b3e74f6027461b46dd6aa474930603cd8f5ca440f380c",
+      "apps/desktop/tauri/src/modules/update/release_notes.rs": "34fd6cb5fc524fd835f5e13d04e09d47709555549a00a99ecd77223adde39a80",
+      "apps/desktop/tauri/src/modules/update/storage.rs": "3c55f06ba01a381152fbb2c1f856526ebaf30439080c914729524076cf46a1e5"
+    },
+    "same_final_test_module_sha256_red_green": "58f6896781a06f86c7de6b4342a470a4d663567ee0c0745526c3a613486fa914",
+    "red_passed": 0,
+    "red_failed": 2,
+    "final_rust": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    },
+    "fmt_clippy_diff": true,
+    "windows_junction_test_added_not_locally_executed": true,
+    "native_apps_started": false,
+    "new_performance_samples": 0,
+    "existing_query_timeouts_intervals_and_storage_paths_unchanged": true,
+    "limitations": [
+      "checked path components and opened leaf handle; not a proof against adversarial concurrent parent-directory replacement",
+      "only static temporary-root links tested locally; Windows Junction and handle API await new source CI",
+      "no native cache/request counting or installation-data-retention proof"
+    ]
+  },
+  "four_code_paths_committed_bytes_equal": true,
+  "panel_durable_patch_three_paths_identical_to_a7": true,
+  "windows_icon_30_paths_identical_to_bb": true,
+  "five_shared_files_equal": true,
+  "unrelated_untracked_status_retained": true,
+  "native_app_started": false,
+  "new_candidate_dispatched": false
+}
