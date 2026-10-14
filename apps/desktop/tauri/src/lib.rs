@@ -532,6 +532,7 @@ pub fn run() {
             commands::update::install_update,
             commands::update::restart_after_update,
             commands::update::get_update_status,
+            commands::release_details::update_release_details,
             commands::update::set_update_channel,
             commands::update_schedule::update_schedule_plan,
             commands::update_schedule::official_remote_cache,

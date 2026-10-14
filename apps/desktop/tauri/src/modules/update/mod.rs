@@ -6,6 +6,7 @@
 use serde::{Deserialize, Serialize};
 pub mod handoff;
 pub mod progress;
+pub mod release_notes;
 pub mod schedule;
 
 pub const CHANNELS: [&str; 2] = ["stable", "beta"];

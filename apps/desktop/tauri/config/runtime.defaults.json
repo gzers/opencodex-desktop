@@ -68,6 +68,15 @@
     "default_client_enablement": true
   },
   "updates": {
+    "release_notes": {
+      "manager_repository": "gzers/opencodex-desktop",
+      "panel_repository": "lidge-jun/opencodex",
+      "response_max_bytes": 262144,
+      "notes_max_bytes": 65536,
+      "total_seconds": 30,
+      "cache_seconds": 86400,
+      "missing_cache_seconds": 3600
+    },
     "desktop": {
       "channels": {
         "stable": "https://github.com/gzers/opencodex-desktop/releases/latest/download/latest.json",

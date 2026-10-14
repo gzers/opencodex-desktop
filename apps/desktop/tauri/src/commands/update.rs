@@ -271,7 +271,8 @@ fn commit_check_result(
             );
             if let Some(value) = update.as_ref() {
                 next.notes = bounded_notes(value.notes.as_deref());
-                next.release_url = release_page(&value.version);
+                // Only a separately verified matching Release may supply a page.
+                next.release_url = None;
                 next.published_at = value.published_at.clone();
             }
             (
@@ -649,11 +650,6 @@ fn bounded_notes(notes: Option<&str>) -> Option<String> {
         value[..end].to_owned()
     })
 }
-fn release_page(version: &str) -> Option<String> {
-    valid_candidate(version)
-        .then(|| format!("https://github.com/gzers/opencodex-desktop/releases/tag/v{version}"))
-}
-
 fn current_status(status: &UpdateStatus, app: &tauri::AppHandle) -> UpdateStatus {
     let mut value = status.clone();
     value.current_version = app.package_info().version.to_string();
@@ -669,7 +665,8 @@ fn hydrate_cache(status: &mut UpdateStatus, app: &tauri::AppHandle) -> AppResult
             if cached.channel == status.channel {
                 status.available_version = cached.available_version;
                 status.notes = bounded_notes(cached.notes.as_deref());
-                status.release_url = status.available_version.as_deref().and_then(release_page);
+                // Legacy cache URLs were guessed from a version, not verified.
+                status.release_url = None;
                 status.published_at = cached.published_at;
                 status.last_checked_at = cached.last_checked_at;
                 status.error = None;
@@ -840,7 +837,7 @@ mod tests {
                     assert!(cached.error.is_none() && !cached.checking);
                     if terminal == 0 {
                         assert!(cached.notes.unwrap().len() <= 64 * 1024);
-                        assert!(cached.release_url.unwrap().ends_with("/v0.1.10"));
+                        assert!(cached.release_url.is_none());
                     } else {
                         assert!(cached.notes.is_none() && cached.release_url.is_none());
                     }
@@ -915,7 +912,7 @@ mod tests {
     }
 
     #[test]
-    fn notes_are_bounded_plaintext_and_release_links_cannot_escape() {
+    fn notes_are_bounded_plaintext_and_candidate_links_are_not_guessed() {
         let notes = "更新🦀".repeat(30000);
         let bounded = bounded_notes(Some(&notes)).unwrap();
         assert!(bounded.len() <= 64 * 1024);
@@ -934,11 +931,9 @@ mod tests {
             "0.1.10\n",
             "http://x",
         ] {
-            assert!(release_page(invalid).is_none());
+            assert!(!valid_candidate(invalid));
         }
-        assert!(release_page("0.1.10-beta.1")
-            .unwrap()
-            .ends_with("/v0.1.10-beta.1"));
+        assert!(valid_candidate("0.1.10-beta.1"));
         let mut status = UpdateStatus::pending("0.1.9");
         status.notes = Some("stale".into());
         status.release_url = Some("stale".into());
