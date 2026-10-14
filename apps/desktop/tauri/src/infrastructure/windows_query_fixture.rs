@@ -21,28 +21,42 @@ function publishPid(name, pid) {
   fs.writeFileSync(temporary, String(pid));
   fs.renameSync(temporary, destination);
 }
+function publishPhase(name) {
+  const destination = path.join(__dirname, name + '.json');
+  const temporary = destination + '.pending';
+  fs.writeFileSync(temporary, JSON.stringify({ pid: process.pid, atUnixMs: Date.now() }));
+  fs.renameSync(temporary, destination);
+}
 if (process.argv[2] === '--sleep') {
+  publishPhase(process.argv[3] === '--control' ? 'control-started' : 'descendant-started');
   setInterval(() => {}, 1000);
 } else {
+  publishPhase('parent-started');
   publishPid('parent-pid', process.pid);
   const mode = fs.readFileSync(path.join(__dirname, 'mode'), 'utf8');
+  publishPhase('before-child-spawn');
   const child = spawn(process.execPath, [__filename, '--sleep'], {
     windowsHide: true,
     detached: true,
     stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore', 'ignore'],
   });
   publishPid('child-pid', child.pid);
+  publishPhase('after-child-spawn');
   const readyDeadline = Date.now() + 10000;
   while (!fs.existsSync(path.join(__dirname, 'ownership-ready'))) {
     if (Date.now() > readyDeadline) process.exit(12);
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5);
   }
+  publishPhase('ownership-ready-seen');
   if (mode === 'overflow') process.stdout.write('x'.repeat(17000));
   if (mode === 'success') {
     process.stdout.write(fs.readFileSync(path.join(__dirname, 'success-output'), 'utf8'),
       () => process.exit(0));
   }
-  if (mode === 'nonzero') process.exit(9);
+  if (mode === 'nonzero') {
+    publishPhase('before-nonzero-exit');
+    process.exit(9);
+  }
   setInterval(() => {}, 1000);
 }
 "#;
@@ -136,6 +150,11 @@ pub(crate) fn process_case(
     success_output: &str,
     execute: impl FnOnce(&Path, &Path, EnvironmentPolicy) -> QueryOutcome,
 ) {
+    let fixture_started = std::time::Instant::now();
+    let fixture_started_unix_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
     let node =
         PathBuf::from(std::env::var_os("OPENCODEX_TEST_NODE").expect("explicit test Node path"));
     assert!(node.is_absolute() && node.is_file());
@@ -156,7 +175,11 @@ pub(crate) fn process_case(
     .unwrap();
     let mut control = ControlProcess(
         std::process::Command::new(&node)
-            .args([fixture.as_os_str(), std::ffi::OsStr::new("--sleep")])
+            .args([
+                fixture.as_os_str(),
+                std::ffi::OsStr::new("--sleep"),
+                std::ffi::OsStr::new("--control"),
+            ])
             .stdin(Stdio::null())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
@@ -223,6 +246,26 @@ pub(crate) fn process_case(
     let query_elapsed = query_started.elapsed();
     eprintln!("query fixture {label}/{mode}: elapsed={query_elapsed:?}, result={result:?}");
     let _ = query_completed.send(());
+    // Evidence only: never wait for/prewarm Node, extend the query deadline or
+    // replace a failed outcome. Each marker belongs to this temporary fixture.
+    eprintln!(
+        "query fixture {label}/{mode}: started-unix-ms={fixture_started_unix_ms}, total-elapsed={:?}, node={}, control-pid={}",
+        fixture_started.elapsed(),
+        node.display(),
+        control.0.id()
+    );
+    for phase in [
+        "control-started",
+        "parent-started",
+        "before-child-spawn",
+        "after-child-spawn",
+        "descendant-started",
+        "ownership-ready-seen",
+        "before-nonzero-exit",
+    ] {
+        let evidence = std::fs::read_to_string(root.path().join(format!("{phase}.json")));
+        eprintln!("query fixture {label}/{mode}: phase={phase}, evidence={evidence:?}");
+    }
     let (descendant, parent, watchdog_cleanup) =
         observer.join().expect("fixture handle observation failed");
     let stopped = descendant.as_ref().is_none_or(ObservedChild::stopped);
