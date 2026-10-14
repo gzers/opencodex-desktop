@@ -1,0 +1,57 @@
+{
+  "atUtc": "2026-10-14T11:31:51.634476+00:00",
+  "goalStatusActuallyReadBack": "active",
+  "goalCreatedAtPreserved": 1791774103,
+  "goalBudgetModifiedByAgent": false,
+  "goalMarkedComplete": false,
+  "priorGoalTurnClassifiedAs": "progress: Windows success-comparison evidence 019dd6c was produced and pushed",
+  "collectorSource": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "collectorBase": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "changedFiles": [
+    {
+      "path": "test/smoke/windows-owned-etw.cs",
+      "gitBlob": "98fb128b953b4d03b8756c84ba5210c08ad7efac",
+      "normalizedGitBytes": 31819,
+      "sha256": "fa7b7ad446c3e012837091e647c0ac0cf382a40200e7a8eb701437ee15928c48"
+    },
+    {
+      "path": "test/smoke/windows-owned-etw.ps1",
+      "gitBlob": "615f1bafe576a4fb7be0d350aa53a44cc360ea73",
+      "normalizedGitBytes": 4095,
+      "sha256": "6deb31fa859280d004841daebc14e257a4733c862690909e614c6ba2d093edb9"
+    },
+    {
+      "path": "test/smoke/windows-owned-etw.test.ps1",
+      "gitBlob": "6246b519c7455c814b453a79249e5c791316b24d",
+      "normalizedGitBytes": 2866,
+      "sha256": "2d71ce8603acb0afd160b15ff19f25021916726696cdfb345ce600dbe3816846"
+    }
+  ],
+  "productOrOriginalFixtureSourceChanged": false,
+  "pureScopeChecks": 38,
+  "ordinaryPrivilegeAndDigestAndScopeGuardsPassed": true,
+  "failedPrRun": 38537166560,
+  "failedPrActualCheckout": "31e7748d9e82c79bef97fc1b73233f08bc1f1b3d",
+  "failedPrTreeEqualsBd2": true,
+  "failedPrTestExeSha256": "497814ca08c071dcd4a2666ceb954bd4788e7cc6cf1dc8972c3efd515884c0d3",
+  "successPushTestExeSha256": "2709775efbce5a08a02827c61a74abb1adfb3170653898b8c614eebf9c367400",
+  "testExeBytesDifferAcrossCiRuns": true,
+  "testExeDifferenceAttributedAsRootCause": false,
+  "newTestOrNodeExecutions": 0,
+  "newEtwSessionCount": 0,
+  "oldLiveNodeCoverageCorrectionConfirmed": true,
+  "preparedMicrosoftDecoderSha512Verified": true,
+  "decoderInstalledGlobally": false,
+  "automaticCiStatusProved": false,
+  "newCandidateOrCiManuallyDispatched": false,
+  "draftPr": 5,
+  "draftPrMerged": false,
+  "adminRecordingApproved": false,
+  "adminRecordingStarted": false,
+  "formalMacNativeHandoffIssued": false,
+  "localNativeCount": 0,
+  "originalFailureReproduced": false,
+  "originalFailureClosed": false,
+  "fullVersionGatePromoted": false,
+  "releaseAccepted": false
+}

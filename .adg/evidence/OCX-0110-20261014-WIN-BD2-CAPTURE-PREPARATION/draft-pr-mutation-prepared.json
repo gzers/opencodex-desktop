@@ -1,0 +1,11 @@
+{
+  "body": {
+    "title": "test(windows): 自有进程实时ETW诊断准备",
+    "head": "feature/0.1.10-windows-query-etw",
+    "base": "feature/0.1.10-integration-candidate",
+    "draft": true,
+    "body": "新增一个默认只准备、不录制的Windows诊断入口，用于bd2查询夹具失败的线程、调度、加载和文件I/O取证。旧轮询/WCT曾在Node退出后才首次采样；新工具先启用唯一实时会话，再启动原测试EXE，按原始ETW时间戳和进程/线程生命周期筛选自有家族，支持PID/TID重用隔离。只写筛选后的JSONL，不写整机ETL、不保存其他调度参与者ID、命令行或SID。\n\n入口必须同时有明确RecordApproved和实际管理员控制器；拒绝摘要不符、路径越界、已有输出、原生桌面实例或同名会话。原测试一次完整执行，默认并发/capture与2s/4s/5s/8s合同不改，不预热、不自提升、不改防护或全局环境。用户目录路径出现在自有I/O时也会省略，只保留夹具、已核验Node和系统加载路径。\n\n本机编译、38项纯生命周期合同及摘要/目录/普通权限拒绝检查通过，没有建立ETW会话或再次运行Node/测试。管理员录制和真实事件覆盖尚未执行，不称bd2失败复现、根因解决或原门禁通过。失败PR实际检出31e7748d的整tree与bd2相同；该轮测试EXE已单独核验，区别于成功push的EXE，来源证据另归docs/governance-main。\n\n此草稿只改test/smoke三个工具文件，产品与原夹具不变。不自动合并、打包或发布；原CI失败、性能failed及全部门禁预算保留。\n"
+  },
+  "headSha": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "status": "mutation-about-to-be-issued"
+}

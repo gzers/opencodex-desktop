@@ -1394,3 +1394,15 @@ push38537161445 completed/success，bd2独立head，Mac900/Windows627通过（35
 后台同步docs019dd6c2，代码bd2/main eae不变；原TASK3878字节/SHA bc7965b4…仍一致。35份原证据逐路径字节数/摘要完全一致，原verify-evidence在Mac失败是Windows/Posix大小写名称排序造成的列表顺序差异，原清单/方法不改，独立只读复核通过且保存原失败stderr。
 
 六Node各79条、共474条进程记录均Wait0=0、已退出；首次采样晚于退出约12.8–84.1ms，Node活跃/线程/WCT均0。2664线程和80WCT全部归测试主进程，Node累计I/O无区间变化，不能解释旧CI早期启动等待。下一项需实际失败时间窗内自有活Node的case/creation/句柄/时刻与调度/I/O证据；串行WCT最长读取1459ms的扰动保持显式，不以50ms等待推定固定采样。详见[Mac独立复核](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows成功对照Mac复核/README.md)。未正式交接原生，Mac继续后台，原七CI失败/CPU-RSSfailed/预算/八门禁及FZ50许可保持，不推定根因或版本验收，不启动新CI/候选/desktop，不发布或关闭。
+
+### 2026-10-14 Windows 原失败测试制品准入与实时采集准备
+
+用户在宿主设置了完整新目标，本线程get_goal现读active、createdAt/预算保留；不再尝试目标恢复或重置累计用量。Windows按path-keyed摘要及原JSONL独立复核Mac b14a0f6结论：旧019dd6c六Node均为退出后采样，活Node线程/WCT为0，全部2664线程/80WCT归测试根。旧原件/清单不改，列表排序差异不冒充字节损坏。
+
+取得原失败PR38537166560测试EXE并核验API归属/ZIP摘要CRC/runner回执，EXE SHA497814ca…与成功push2709775e…不同；PR实际checkout31e7748d整tree753be161…与bd2相同，未由树同或二进制差异推定根因。失败EXE本轮未运行，Node仍固定官方24.21.0/SHAba4e6d11…，未预热。
+
+feature/0.1.10-windows-query-etw@5fa36a60仅新增三个test/smoke诊断文件，基于bd2，不改apps/原夹具/CI工作流。草稿PR#5/base integration-candidate/bd2未合并；本机Add-Type编译、38项生命周期/PID-TID重用合同、默认准备及摘要/输出边界/普通权限拒绝通过。固定Microsoft TraceEvent3.1.21官方metadata SHA512/ZIP CRC核验，本线程runtime解码DLL，无全局安装或包脚本。初始获取/压缩/编译错误如实记录；CS0618首轮stderr只在工具输出、重定向为空，不伪造日志。自动CI状态读取失败，不计新CI通过。
+
+管理员单次录制可审阅入口已准备：默认只显示方案，明确批准且手动管理员PowerShell7才可能运行；源HEAD/无局部改动、制品/Node/DLL摘要、desktop0、新输出根均为执行前提。先启唯一实时session，再启动一次原完整库，默认并发/capture和2s/4s/5s/8s不改；120s只作原库外层保护，另短时排空。系统内核事件短暂内存解码，持久化按自有家族/原QPC生命周期筛选，不宣传kernel PID白名单、不写整机ETL或保存其他调度参与者ID/命令行/SID/无关路径。队列/IRP/输出均有界，无WCT串行轮询、全局防护修改或自提升。真实事件覆盖/失败复现/排空未执行，loss计数设计为stop前快照，不称最终零丢失。
+
+35份准备原件冻结校验通过，[实时采集准备与权限范围](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2实时采集准备/README.md)。本轮原测试/Node/ETW新执行数0、本机desktop0，管理员录制批准待用户；不以工具准备代替失败原始证据。无手动CI重派/新候选/原生交接，原CI失败/性能failed/预算/八门禁/TASKrevision2/in_progress/pending及FZ50缺口保持，目标active、不关闭/签名/合并/发布。

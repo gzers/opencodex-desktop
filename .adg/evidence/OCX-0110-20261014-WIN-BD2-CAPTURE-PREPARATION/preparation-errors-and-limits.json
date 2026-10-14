@@ -1,0 +1,65 @@
+{
+  "preparationOnly": true,
+  "originalTestExecutionsDuringPreparation": 0,
+  "recordingInvocationsDuringPreparation": 0,
+  "observedPreparationErrors": [
+    {
+      "stage": "initial failed-artifact metadata read",
+      "result": "read stopped without binary execution",
+      "originalFullStderrSaved": false,
+      "subsequentBoundedReadOutcome": "failed-PR artifact and runner receipt independently verified"
+    },
+    {
+      "stage": "failed-run job metadata",
+      "result": "two Schannel handshake errors",
+      "savedErrorFile": "artifact-read-failure.json",
+      "tlsVerificationDisabled": false
+    },
+    {
+      "stage": "NuGet v3 catalog",
+      "result": "HTTP 404; switched to official v2 package metadata SHA512",
+      "recordedAsSummaryNotFullOriginalStderr": true
+    },
+    {
+      "stage": "NuGet v2 metadata",
+      "result": "gzip HTTP response was initially treated as XML; actual Content-Encoding inspected and explicitly decompressed",
+      "recordedAsSummaryNotFullOriginalStderr": true
+    },
+    {
+      "stage": "initial collector Add-Type",
+      "result": "CS0618 on raw QPC property",
+      "zeroByteRedirectFile": "collector-prepare-initial.log",
+      "originalErrorInToolOutputButNotSavedStderr": true,
+      "correction": "Scoped helper intentionally uses original QPC and handles only this discouraged-but-supported API warning."
+    },
+    {
+      "stage": "source edit precondition",
+      "result": "Expected 19 QPC occurrences but actual count was 17; stopped before writing, corrected precondition",
+      "codeWrittenOnFailedPrecondition": false
+    },
+    {
+      "stage": "initial evidence verifier",
+      "result": "Expected the CS0618 text in redirected file, but PowerShell stopping error bypassed the redirect and left zero bytes",
+      "correction": "Retain empty redirect and describe the preparation error as a summary from tool output; do not manufacture stderr"
+    }
+  ],
+  "helperAutomaticCi": {
+    "status": "observation-unavailable",
+    "automaticRunAssumedPassed": false,
+    "ciManuallyDispatchedOrRerun": false
+  },
+  "privilegedRecording": {
+    "explicitApprovalPending": true,
+    "ordinaryTokenGuardPassed": true,
+    "kernelSessionStarted": false,
+    "maximumOriginalLibraryWaitSeconds": 120,
+    "drainAndShutdownAdditionalTime": true,
+    "wholeMachineEtlWritten": false,
+    "kernelEventsTransientlyDecodedInMemory": true,
+    "actualOwnNodeCoverageAndFailureReproductionUnproven": true,
+    "lossCounterIsPreStopSnapshot": true
+  },
+  "originalFailureClosed": false,
+  "fullVersionGoalComplete": false,
+  "formalMacNativeHandoffIssued": false
+}
