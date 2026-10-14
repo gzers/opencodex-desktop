@@ -1936,12 +1936,12 @@
     },
     {
       "event": "panel-check-succeeded",
-      "source": "commands/about.rs::official_remote_latest serialized durable commit",
+      "source": "commands/about.rs::official_remote_latest_owned serialized durable commit (admitted run_panel_query_owned worker)",
       "wiring": "scoped_terminal"
     },
     {
       "event": "panel-check-failed",
-      "source": "commands/about.rs::official_remote_latest serialized durable commit",
+      "source": "commands/about.rs::official_remote_latest_owned serialized durable commit (admitted run_panel_query_owned worker)",
       "wiring": "scoped_terminal"
     },
     {
