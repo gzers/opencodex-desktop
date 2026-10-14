@@ -1,0 +1,55 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri)
+error[E0425]: cannot find type `SharedUpdateStatus` in module `crate::state`
+  --> src/commands/release_details.rs:44:67
+   |
+44 |                     let store = prepare_app.state::<crate::state::SharedUpdateStatus>();
+   |                                                                   ^^^^^^^^^^^^^^^^^^
+   |
+  ::: src/state.rs:67:1
+   |
+67 | pub type SharedSyncStatus = std::sync::Mutex<crate::modules::sync::SyncRun>;
+   | ---------------------------------------------------------------------------- similarly named type alias `SharedSyncStatus` defined here
+   |
+help: a type alias with a similar name exists
+   |
+44 -                     let store = prepare_app.state::<crate::state::SharedUpdateStatus>();
+44 +                     let store = prepare_app.state::<crate::state::SharedSyncStatus>();
+   |
+help: consider importing this type alias
+   |
+ 2 + use crate::commands::update::SharedUpdateStatus;
+   |
+help: if you import `SharedUpdateStatus`, refer to it directly
+   |
+44 -                     let store = prepare_app.state::<crate::state::SharedUpdateStatus>();
+44 +                     let store = prepare_app.state::<SharedUpdateStatus>();
+   |
+
+error[E0425]: cannot find type `SharedUpdateStatus` in module `crate::state`
+  --> src/commands/release_details.rs:94:51
+   |
+94 |             let store = app.state::<crate::state::SharedUpdateStatus>();
+   |                                                   ^^^^^^^^^^^^^^^^^^
+   |
+  ::: src/state.rs:67:1
+   |
+67 | pub type SharedSyncStatus = std::sync::Mutex<crate::modules::sync::SyncRun>;
+   | ---------------------------------------------------------------------------- similarly named type alias `SharedSyncStatus` defined here
+   |
+help: a type alias with a similar name exists
+   |
+94 -             let store = app.state::<crate::state::SharedUpdateStatus>();
+94 +             let store = app.state::<crate::state::SharedSyncStatus>();
+   |
+help: consider importing this type alias
+   |
+ 2 + use crate::commands::update::SharedUpdateStatus;
+   |
+help: if you import `SharedUpdateStatus`, refer to it directly
+   |
+94 -             let store = app.state::<crate::state::SharedUpdateStatus>();
+94 +             let store = app.state::<SharedUpdateStatus>();
+   |
+
+For more information about this error, try `rustc --explain E0425`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

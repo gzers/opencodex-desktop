@@ -1,0 +1,35 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run tests/update-release-details-flow.test.ts
+
+
+ RUN  v5.0.0 /private/tmp/ocx-0110-release-notes-20261014/baseline-ui/apps/desktop/ui
+
+ ❯ tests/update-release-details-flow.test.ts (0 test)
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  08:21:02
+   Duration  446ms (environment 99%, worker 1%)
+
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-release-details-flow.test.ts [ tests/update-release-details-flow.test.ts ]
+Error: Failed to resolve import "../../../tauri/config/event-registry.json" from "src/config/eventRegistry.ts". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /private/tmp/ocx-0110-release-notes-20261014/baseline-ui/apps/desktop/ui/src/config/eventRegistry.ts:1:29
+  1  |  import { events, jobs } from "../../../tauri/config/event-registry.json";
+     |                                ^
+  2  |  // Share the backend catalog; UI feedback stays memory-only. Neither message text
+  3  |  // nor UI faults become persisted notifications through this adapter.
+ ❯ TransformPluginContext._formatLog ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:8393:39
+ ❯ TransformPluginContext.error ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:8390:14
+ ❯ normalizeUrl ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:26058:18
+ ❯ ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:26128:30
+ ❯ TransformPluginContext.transform ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:26094:4
+ ❯ EnvironmentPluginContainer.transform ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:8172:14
+ ❯ loadAndTransform ../../../../../../../Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui/node_modules/vite/dist/node/chunks/node.js:19634:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,31 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri)
+    Checking reqwest v0.12.28
+error: this function has too many arguments (9/7)
+   --> src/modules/update/release_notes.rs:284:1
+    |
+284 | / pub async fn query<S: Source + ?Sized>(
+285 | |     source: &S,
+286 | |     root: &Path,
+287 | |     target: Target,
+...   |
+293 | |     limits: &ReleaseNotesDefaults,
+294 | | ) -> Result<Details, Error> {
+    | |___________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#too_many_arguments
+    = note: `-D clippy::too-many-arguments` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::too_many_arguments)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: read amount is not handled
+  --> src/modules/update/release_notes_tests.rs:32:13
+   |
+32 |             stream.read(&mut request).await.unwrap();
+   |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = help: use `AsyncReadExt::read_exact` instead, or handle partial reads
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#unused_io_amount
+   = note: `#[deny(clippy::unused_io_amount)]` on by default
+
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

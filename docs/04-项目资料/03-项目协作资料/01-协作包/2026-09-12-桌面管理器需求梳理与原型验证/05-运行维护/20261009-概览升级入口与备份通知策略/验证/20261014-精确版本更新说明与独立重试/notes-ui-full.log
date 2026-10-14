@@ -1,0 +1,47 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/ui
+
+ ❯ tests/release-notes.test.ts (15 tests | 2 failed) 102ms
+   ❯ exact candidate release notes (15)
+     × closing an observer ignores late results and a root freeze prevents new queries 7ms
+     × rejects unsafe or different-version page javascript:evil() 4ms
+
+ Test Files  1 failed | 96 passed (97)
+      Tests  2 failed | 499 passed (501)
+   Start at  08:26:29
+   Duration  3.85s (environment 52%, transform 18%, tests 18%, import 12%, worker 1%)
+
+Environment  jsdom was created 97 times · 28.43s total, 52% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/release-notes.test.ts > exact candidate release notes > closing an observer ignores late results and a root freeze prevents new queries
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ tests/release-notes.test.ts:105:26
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/release-notes.test.ts > exact candidate release notes > rejects unsafe or different-version page javascript:evil()
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/release-notes.test.ts:109:94
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

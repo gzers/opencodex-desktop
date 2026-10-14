@@ -1,0 +1,103 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-RELEASE-NOTES-20261014",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-RELEASE-NOTES-20261014.json",
+    "apps/desktop/tauri/Cargo.toml",
+    "apps/desktop/tauri/config/event-registry.json",
+    "apps/desktop/tauri/config/runtime.defaults.json",
+    "apps/desktop/tauri/src/commands/mod.rs",
+    "apps/desktop/tauri/src/commands/release_details.rs",
+    "apps/desktop/tauri/src/commands/update.rs",
+    "apps/desktop/tauri/src/lib.rs",
+    "apps/desktop/tauri/src/modules/runtime_defaults/mod.rs",
+    "apps/desktop/tauri/src/modules/update/mod.rs",
+    "apps/desktop/tauri/src/modules/update/release_notes.rs",
+    "apps/desktop/tauri/src/modules/update/release_notes_tests.rs",
+    "apps/desktop/ui/src/features/updates/ReleaseNotes.vue",
+    "apps/desktop/ui/src/features/updates/UpdateCenter.vue",
+    "apps/desktop/ui/src/features/updates/releaseDetails.ts",
+    "apps/desktop/ui/tests/release-notes.test.ts",
+    "apps/desktop/ui/tests/update-center.test.ts",
+    "apps/desktop/ui/tests/update-release-details-flow.test.ts",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/03-更新详情来源与进度反馈.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/06-执行基线与契约.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/.gitattributes",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/README.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/committed-run-results.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/manager-release-identity.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/manifest.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-build-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-build-final.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-clippy-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-clippy-final.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-clippy-first.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-clippy-green.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-flow-red-admitted.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-flow-red-admitted.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-flow-red.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-rust-first.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-rust-full-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-rust-full-final.log.gz",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-ui-full-final.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-ui-full-final.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-ui-full.log",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/panel-release-identity.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/panel-version-identity.json",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/release-notes-ci-current.json"
+  ],
+  "checks": [
+    {
+      "name": "local:exact-release-notes-red-green",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-flow-red-admitted.json"
+    },
+    {
+      "name": "local:release-notes-full-rust-and-clippy",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/committed-run-results.json"
+    },
+    {
+      "name": "local:release-notes-full-ui-and-build",
+      "status": "passed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/notes-ui-full-final.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-精确版本更新说明与独立重试/README.md"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "2f038de3554ccd6cb24c47ecc42a87e6edbb9cd815665fadadd8e4117e1c1bba",
+      "summary": "记录说明四态/来源缓存/独立重试实现、本地回归与CI在途，原性能和设备门禁保持。"
+    },
+    {
+      "target": "0110-execution-contract",
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/06-执行基线与契约.md",
+      "after_digest": "d526f011ad70f653ec13864010a381f78b0cf2ae9d5e8613cf2d09f3d9749014",
+      "summary": "补充原计划说明事务的源/限额/文件范围，不修改自动检查与性能预算。"
+    },
+    {
+      "target": "0110-release-detail-design",
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/分析/03-更新详情来源与进度反馈.md",
+      "after_digest": "13020146e56e3e795b5f39396040d16a7a4acc7ff67f27afcdb0c9ce60440b8f",
+      "summary": "引用真实说明实现及待新SHA设备验收边界，不晋升核心事实。"
+    }
+  ],
+  "completed_at": "2026-10-14T00:35:42.458507+00:00",
+  "summary": "6305747f按原说明合同补齐精确源/核验网页/四态独立重试缓存，UI501/Rust884及strict检查通过；原业务红与首轮失败保留，CI/新制品和双平台门禁待验，性能failed。",
+  "revision": 1,
+  "summary_digest": "9ca2fe646b06e5f93ae0833b28a7cf21bd4d07feebd69005c7099c151246c883",
+  "content_digest": "6adba637ca88425e2c504ed25a04ad13e697230b0d8474beb5472e789bf05b70"
+}

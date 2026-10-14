@@ -1,0 +1,63 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run tests/update-release-details-flow.test.ts
+
+
+ RUN  v5.0.0 /private/tmp/ocx-0110-release-notes-20261014/baseline-ui/apps/desktop/ui
+
+ ❯ tests/update-release-details-flow.test.ts (3 tests | 3 failed) 25ms
+   ❯ release detail integration through the shared update center (3)
+     × loads the exact panel release body without running a version check, backup or install 14ms
+     × never presents a guessed manager page when the matching Release is absent 4ms
+     × notes failure has an independent retry and retains the confirmed manager candidate 7ms
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  08:21:54
+   Duration  370ms (transform 41%, environment 38%, import 12%, tests 8%)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/update-release-details-flow.test.ts > release detail integration through the shared update center > loads the exact panel release body without running a version check, backup or install
+AssertionError: expected [ [ 'get_update_status' ] ] to deep equally contain [ 'update_release_details', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "update_release_details",
+-   {
+-     "candidateVersion": "2.84.0",
+-     "channel": "official",
+-     "force": false,
+-     "target": "official",
+-   },
++   [
++     "get_update_status",
++   ],
+  ]
+
+ ❯ tests/update-release-details-flow.test.ts:30:37
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/update-release-details-flow.test.ts > release detail integration through the shared update center > never presents a guessed manager page when the matching Release is absent
+AssertionError: expected '软件更新桌面管理器更新检查两个更新对象，查看说明后选择安装。关闭← 全部更…' not to contain '查看网页详情'
+
+Expected: "查看网页详情"
+Received: "软件更新桌面管理器更新检查两个更新对象，查看说明后选择安装。关闭← 全部更新↗桌面管理器OpenCodex Desktop · 测试通道发现新版本当前 0.1.9→可用 0.1.10-beta.1更新说明发行方尚未提供更新说明。可打开网页详情查看发行信息。查看网页详情 ↗更新包通过签名校验后准备应用；准备完成后可选择重启时机。更新前备份配置（推荐）安装管理器更新更新准备完成后由你选择重启时机。稍后重新检查更新"
+
+ ❯ tests/update-release-details-flow.test.ts:39:26
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/update-release-details-flow.test.ts > release detail integration through the shared update center > notes failure has an independent retry and retains the confirmed manager candidate
+AssertionError: expected undefined to be defined
+ ❯ tests/update-release-details-flow.test.ts:48:88
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
