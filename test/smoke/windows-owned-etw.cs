@@ -537,6 +537,45 @@ namespace OpenCodex.Diagnostics
             int space = commandLine.IndexOf(' ');
             return space < 0 ? commandLine : commandLine.Substring(0, space);
         }
+        private static string ExecutableRole(string eventImage, string commandLine, string node, string command)
+        {
+            // Kernel ProcessStart carries the actual image independently of
+            // argv[0]. Rust/Windows command wrappers need not put a full image
+            // path in argv[0]. Prefer the exact ETW image, without saving argv.
+            if (SamePath(eventImage, node)) return "node";
+            if (SamePath(eventImage, command)) return "command";
+            // Older events can contain only an image basename. In that case a
+            // full exact executable argument is still required. An incompatible
+            // full event-image path is never overridden by a claimed argv[0].
+            if (String.IsNullOrEmpty(eventImage) || Path.GetFileName(eventImage) != eventImage) return null;
+            string argument = ExecutableArgument(commandLine);
+            if (String.Equals(eventImage, Path.GetFileName(node), StringComparison.OrdinalIgnoreCase)
+                && SamePath(argument, node)) return "node";
+            if (String.Equals(eventImage, Path.GetFileName(command), StringComparison.OrdinalIgnoreCase)
+                && SamePath(argument, command)) return "command";
+            return null;
+        }
+        public static int SelfTestExecutableAdmission()
+        {
+            int checks = 0;
+            string node = @"C:\owned\node.exe", command = @"C:\Windows\System32\cmd.exe";
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Owned executable image admission");
+                checks++;
+            };
+            require(ExecutableRole(node, "node.exe fixture.cjs", node, command) == "node");
+            require(ExecutableRole(command, "cmd.exe /c fixture.cmd", node, command) == "command");
+            require(ExecutableRole(command, "", node, command) == "command");
+            require(ExecutableRole("node.exe", "\"" + node + "\" fixture.cjs", node, command) == "node");
+            require(ExecutableRole("cmd.exe", "\"" + command + "\" /c fixture.cmd", node, command) == "command");
+            require(ExecutableRole("cmd.exe", "cmd.exe /c fixture.cmd", node, command) == null);
+            require(ExecutableRole("", "\"" + command + "\" /c fixture.cmd", node, command) == null);
+            require(ExecutableRole("other.exe", "\"" + node + "\" fixture.cjs", node, command) == null);
+            require(ExecutableRole(@"C:\other\node.exe", "\"" + node + "\" fixture.cjs", node, command) == null);
+            require(ExecutableRole(@"\\?\" + node, "node.exe", node, command) == "node");
+            require(ExecutableRole(command, "\"" + node + "\"", node, command) == "command");
+            return checks;
+        }
         private static bool SamePath(string first, string second)
         {
             try {
@@ -601,6 +640,7 @@ namespace OpenCodex.Diagnostics
             session.StopOnDispose = false;
             var queue = new BlockingCollection<string>(32768);
             int dropped = 0, recorded = 0, callbackErrors = 0, rootStartSeen = 0;
+            int knownImageChildrenNotAdmitted = 0;
             var lineBudget = new OwnedEtwLineBudget(64L * 1024 * 1024);
             long omittedRootScheduling = 0, omittedRootFileIo = 0;
             var pendingIo = new Dictionary<ulong, PendingIo>();
@@ -673,9 +713,23 @@ namespace OpenCodex.Diagnostics
                     {
                         // CommandLine is inspected only for an already-owned
                         // descendant and is never serialized.
-                        string image = ExecutableArgument(data.CommandLine);
-                        if (SamePath(image, nodeExe)) role = "node";
-                        else if (SamePath(image, commandExe)) role = "command";
+                        role = ExecutableRole(data.ImageFileName, data.CommandLine, nodeExe, commandExe);
+                        string basename = Path.GetFileName(data.ImageFileName);
+                        string knownKind = String.Equals(basename, Path.GetFileName(nodeExe), StringComparison.OrdinalIgnoreCase)
+                            ? "node" : String.Equals(basename, Path.GetFileName(commandExe), StringComparison.OrdinalIgnoreCase)
+                            ? "command" : null;
+                        if (role == null && knownKind != null) {
+                            knownImageChildrenNotAdmitted++;
+                            string argument = ExecutableArgument(data.CommandLine);
+                            emit(new { kind = "known-child-image-not-admitted", original = Header(data),
+                                pid = data.ProcessID, parentPid = data.ParentID, knownImageKind = knownKind,
+                                eventImageIsExactKnownPath = SamePath(data.ImageFileName, nodeExe) || SamePath(data.ImageFileName, commandExe),
+                                eventImageIsBasenameOnly = basename == data.ImageFileName,
+                                firstArgumentIsExactKnownPath = SamePath(argument, nodeExe) || SamePath(argument, commandExe),
+                                firstArgumentIsBareKnownName = String.Equals(argument, Path.GetFileName(nodeExe), StringComparison.OrdinalIgnoreCase)
+                                    || String.Equals(argument, Path.GetFileName(commandExe), StringComparison.OrdinalIgnoreCase),
+                                fullCommandLineSaved = false, sidSaved = false, descendantsNotAssumedCovered = true });
+                        }
                     }
                     if (!scope.ProcessStart(data.ProcessID, data.ParentID, OriginalQpc(data), root, role)) return;
                     if (root) Interlocked.Exchange(ref rootStartSeen, 1);
@@ -684,10 +738,12 @@ namespace OpenCodex.Diagnostics
                         parentPid = root ? (int?)null : data.ParentID, role = root ? "test" : role,
                         uniqueProcessKey = data.UniqueProcessKey,
                         ownedImage = expectedImage,
+                        exactEtwImageMatched = SamePath(data.ImageFileName, expectedImage),
+                        exactExecutableArgumentMatched = SamePath(ExecutableArgument(data.CommandLine), expectedImage),
                         apiIdentityObservation = RetainIdentity(data.ProcessID, expectedImage,
                             data.TimeStamp.ToUniversalTime(), retainedHandles),
                         fullCommandLineSaved = false, sidSaved = false,
-                        identityBasis = root ? "retained root handle/image/creation" : "ETW lifecycle + owned parent + exact executable argument" });
+                        identityBasis = root ? "retained root handle/image/creation" : "ETW lifecycle + owned parent + exact event image or basename-consistent exact executable argument" });
                 });
                 kernel.ProcessStop += data => guarded(data, () => {
                     if (scope?.ProcessStop(data.ProcessID, OriginalQpc(data)) != true) return;
@@ -902,6 +958,7 @@ namespace OpenCodex.Diagnostics
                     ownedSessionStopSucceeded = sessionStopped,
                     writerJoined, droppedRecords = dropped,
                     recordedEvents = recorded, decoderCallbackErrors = callbackErrors,
+                    knownImageChildrenNotAdmitted, knownImageCoverageGap = knownImageChildrenNotAdmitted != 0,
                     maximumSerializedBytes = 64L * 1024 * 1024,
                     actualSerializedBytes, queuedSerializedBytes = lineBudget.QueuedBytes,
                     serializedBytesWithinLimit = actualSerializedBytes.HasValue && actualSerializedBytes.Value <= 64L * 1024 * 1024,

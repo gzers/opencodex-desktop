@@ -19,6 +19,7 @@ if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 3
     $taskResult.pureNativeStopChecks -ne 8 -or
     $taskResult.controllerProcessImageChecks -ne 5 -or
     $taskResult.descendantHotScopeChecks -ne 10 -or $taskResult.utf8LineBudgetChecks -ne 10 -or
+    $taskResult.executableAdmissionChecks -ne 11 -or
     $taskResult.etwSessionStarted -or $taskResult.testOrNodeStarted -or $taskResult.recordingApproved) {
     throw 'Default invocation must prepare and exercise pure scope contracts only'
 }
@@ -57,6 +58,7 @@ if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards 
     status='passed';pureScopeChecks=38;pureLifecycleChecks=7;pureNativeStopChecks=8
     controllerProcessImageChecks=5
     descendantHotScopeChecks=10;utf8LineBudgetChecks=10
+    executableAdmissionChecks=11
     digestGuard='passed';outputScopeGuard='passed'
     ordinaryPrivilegeGuard=$taskOrdinaryGuard
     etwSessionStarted=$false;testOrNodeStarted=$false;recordingRootCreated=$false
