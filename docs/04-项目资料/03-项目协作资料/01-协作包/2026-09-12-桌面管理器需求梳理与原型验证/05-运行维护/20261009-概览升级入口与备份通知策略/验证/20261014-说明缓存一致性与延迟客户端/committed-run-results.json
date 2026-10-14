@@ -1,0 +1,28 @@
+{
+  "recorded_at_utc": "2026-10-14T01:26:49.928507+00:00",
+  "commit": "d3b83b3822bf10a511556d80dc851c2ccfb17cf5",
+  "parent": "6305747f035945f3563296b42d21edcf5c816464",
+  "branch": "feature/0.1.10-release-details",
+  "changed_paths": [
+    "apps/desktop/tauri/src/modules/update/release_notes.rs",
+    "apps/desktop/tauri/src/modules/update/release_notes_tests.rs"
+  ],
+  "file_sha256": {
+    "apps/desktop/tauri/src/modules/update/release_notes.rs": "e77a690755fa8478a691dd6b5090163f68cddcf5619b65ee222a30bbcd67e2af",
+    "apps/desktop/tauri/src/modules/update/release_notes_tests.rs": "f75ffc650bb20905ad346c064d799730c6a7d0937fb2cd98edc5cf60b404fa3e"
+  },
+  "same_red_green_test_bytes": true,
+  "test_sha256": "f75ffc650bb20905ad346c064d799730c6a7d0937fb2cd98edc5cf60b404fa3e",
+  "red_passed": 12,
+  "red_failed": 4,
+  "green_passed": 16,
+  "full_rust_suites": 34,
+  "full_rust_passed": 888,
+  "full_rust_failed": 0,
+  "full_rust_ignored": 6,
+  "fmt_clippy_diff_passed": true,
+  "frontend_changed": false,
+  "native_app_started": false,
+  "new_performance_samples": 0,
+  "release_authorized": false
+}

@@ -1,0 +1,24 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.52s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-73c62cbbdf8766bf)
+
+running 16 tests
+test modules::update::release_notes::tests::utf8_notes_are_bounded_and_remote_html_stays_literal_text ... ok
+test modules::update::release_notes::tests::invalid_request_is_rejected_before_any_network_or_filesystem_mutation ... ok
+test modules::update::release_notes::tests::cache_link_escape_does_not_write_external_directory ... ok
+test modules::update::release_notes::tests::wrong_package_identity_repository_or_version_never_contacts_a_supplied_repository ... ok
+test modules::update::release_notes::tests::draft_wrong_tag_wrong_url_or_stable_prerelease_cannot_supply_notes_or_links ... ok
+test modules::update::release_notes::tests::updater_notes_take_priority_but_a_404_never_generates_a_guessed_release_link ... ok
+test modules::update::release_notes::tests::valid_offline_cache_does_not_require_valid_proxy_transport ... ok
+test modules::update::release_notes::tests::panel_repository_and_exact_version_are_verified_before_release_and_cache_hit_has_zero_requests ... ok
+test modules::update::release_notes::tests::unavailable_cache_cannot_contain_a_ready_body ... ok
+test modules::update::release_notes::tests::missing_notes_and_network_failure_are_distinct_and_failed_notes_retry_independently ... ok
+test modules::update::release_notes::tests::channel_version_and_root_do_not_share_details_and_force_only_refreshes_notes ... ok
+test modules::update::release_notes::tests::unknown_notes_source_or_invalid_publication_time_is_refetched ... ok
+test modules::update::release_notes::tests::ready_cache_without_nonempty_notes_is_refetched ... ok
+test modules::update::release_notes::tests::expired_future_corrupt_and_wrong_version_cache_are_refetched ... ok
+test modules::update::release_notes::tests::bounded_http_transport_rejects_oversize_redirect_and_error_instead_of_missing ... ok
+test modules::update::release_notes::tests::total_deadline_stops_a_hung_notes_source_without_fast_retries_or_cache ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 709 filtered out; finished in 1.01s
+
