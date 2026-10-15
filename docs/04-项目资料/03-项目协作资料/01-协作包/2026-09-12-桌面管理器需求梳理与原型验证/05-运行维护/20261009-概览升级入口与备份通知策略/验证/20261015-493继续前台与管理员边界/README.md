@@ -55,6 +55,18 @@
 
 `checkpoint-manifest.json`/`checkpoint-verification.json`只冻结这个历史检查点。仍在运行的控制器只会产生`administrator-exit-observer-result.json`或错误文件，这两个确切根输出明确排除，之后即使出现也不自动变成通过证据，必须另行核验/追加。旧检查点、原采样、原失败不覆盖；没有重跑采样或产品求绿。
 
+### 用户窗口确认与后续日志补证
+
+用户随后直接确认“最大化最小化都没有问题”，并提供最大化窗口截图。本段接受为人工操作通过，不要求重复。原图3437×1885、SHA256 `7b296a6ea34320a73984dcdabc87edad8d77d94ed0bbd305424882d192c9144a`，以原字节归档；截图可见还原按钮，但不单独证明PID、令牌、最小化瞬间或精确拍摄时间。12:50–12:54的旧采样窗口早于这些后续操作，不能用“未采到”否定人工反馈。
+
+13:06:26提升只读方法补读仍为同PID78512/creation/HWND8786154，产品真实true/type2，当前visible=true、maximized=false、minimized=false，已恢复原1180×760客户区。当前foreground=false/DWM backdrop1，与失焦回退一致。新的同根日志快照在管理员startup后另有12:58:31.259、12:59:37.665、12:59:41.903、13:00:04.647、13:00:18.840五次`material=mica reason=mica active=true dwm=Some(0)`，其间有solid/inactive回退。新增日志补充活动材质生命周期证据，不冒充当时同步DWM2采样，也不抹去早先前台布尔/材质不一致的时间窗或提升成完整管理员UI通过。
+
+首个900s退出观察器13:02:46到期，exitObserved=false/exitCode=null。补读控制器持有同一实际进程句柄再观察120s，于13:08:26仍未观察退出；13:08:43独立检查点native1，未强制终止、未启动第二产品实例或Mac原生交接。用户可正常关闭该测试实例，后续归零需独立补证；两个超时都不能称退出失败或补造exit0。本轮前台13:08:46结束，不自动延长。
+
+两次只读尝试使用Windows PowerShell 5.1默认ANSI解码，分别在中文授权/嵌套启动记录JSON解析处失败，均在访问应用前停止，原件保留；改用原成功方法相同的内置PowerShell 7后完成，未改授权或历史读取器。初次离线核对因PowerShell日期重序列化为等价时区字符串而比较失败，改按时间瞬间比较，原退出回执不变；均属证据方法边界，不是产品失败。
+
+新增`.adg/evidence/OCX-0110-20261015-WIN-FG-493-MANUAL-WINDOW/`独立冻结38项；`verify-manual-window.py`及旧117项检查点重验通过。11份隔离JSON中9份逐字节保持，notifications/runtime两份只有本次管理员启动产生的created_at/resolved_at时间戳变化，业务字段相同；配置、调度、缓存与备份保持。日常EXE、旧隔离四摘要、原TASK摘要及代码493干净均重核。人工窗口确认、日志补证、退出仍待观察分别记录，完整门禁继续开放。
+
 ## 门禁边界
 
 证据目录`.adg/evidence/OCX-0110-20261015-WIN-FG-493-CONTINUE/`。本段只补生产打开确认/实际自有目录、树表左右键、普通最小化恢复及当前精确SHA双权限令牌。未以局部检查改写TASK.required_checks。
