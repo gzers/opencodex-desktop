@@ -1724,3 +1724,9 @@ push38734133095/PR38734138996完整success，每轮Mac923/Windows648passed、忽
 针对Windows平均RSS+38.328092MiB失败，真实旧画布观察到depth=true/24位但深度测试关闭；同一WebView的24组原生产着色器对比证明取消深度缓冲后RGBA逐字节相等。代码8be87e2d已推送，仅为二维光场请求depth:false/stencil:false，不改画面、分辨率、光层尺寸或画质；本地UI99文件/533项、类型与构建通过，精确push/PR CI沿原run进行。PR5说明已读回仍draft/未合并；新候选只在完整同SHA CI通过后单次派发，尚无新EXE内存通过结论。详见[光场辅助缓冲优化](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261016-Windows光场辅助缓冲优化/README.md)。冷/热采集方法提前冻结，尚未执行，不拿准备抵样本。
 
 00:13:55两轮8be CI完整success：各Mac923/6ignored、Windows648/7ignored、35组，四份原job日志/摘要及实际checkout核对通过；PR实际7bf52c8e与head8be的完整tree均16749535…。fmt/Clippy/前端与最终EXE沙箱冒烟通过，历史失败不清。00:14:05仅派发一次8be候选38767255195，00:18:08沿同run构建中，不重复请求；50项优化与CI清单/独立verify通过。00:12:26再读可信来源，beta Release仍404、stable为正式v0.1.9；只作来源观察，不是产品周期检查，不为补条件发布beta或更改来源。
+
+### 2026-10-16 已有自定义根的同SID双令牌启动
+
+02精确EXE以当前账户普通false/type3、管理员true/type2分别原生启动，TokenUser摘要相同，两次设置页均读到自有anchor预置的custom-root与外置HOME；真实手动备份写入custom-root，原anchor日志未改，各正常退出0。只对自有夹具预置已有绑定，之后恢复anchor元数据原字节，HKCU指针未变；五个相关存储blob在02/8be相同，实际EXE身份仍记02。49项清单与独立verify通过，首次页面未就绪的观察失败保留。
+
+详见[自定义根启动绑定](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261016-Windows自定义根启动绑定/README.md)及`.adg/evidence/OCX-0110-20261016-WIN-CUSTOM-ROOT/`。本子集不证明UI路径保存、真实OpenCodex子进程HOME继承、迁移或宿主安装/升级/卸载保留；此前被未核验运行态阻止的UI保存仍待验。八门禁与TASK revision2/in_progress/pending、Mac性能failed、全部原预算及发布状态不提升。
