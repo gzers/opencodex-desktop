@@ -1,0 +1,95 @@
+{
+  "id": 1,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "atUtc": "2026-10-15T16:37:10.517Z",
+        "about": {
+          "name": "OpenCodeX Desktop",
+          "version": "0.1.10",
+          "identifier": "com.gzers.opencodex.desktop",
+          "platform": "Windows",
+          "framework": "Tauri v2",
+          "license": "MIT License"
+        },
+        "preferences": {
+          "schemaVersion": 2,
+          "themeNeedsImport": false,
+          "interfaceScale": 100,
+          "launchMain": true,
+          "autoPanel": false,
+          "panelMode": "embedded",
+          "keepProxyOnClose": false,
+          "lifecycleNotifications": true,
+          "syncConflictAlerts": true,
+          "launchWithCodex": false,
+          "autoBackupUpgrade": true,
+          "autoBackupImport": true,
+          "autoBackupSync": true,
+          "backupRetention": "10",
+          "backupIntegrity": "sha-256",
+          "backupIncludeSkills": true,
+          "exportIncludeSkills": true,
+          "mcpConflictPolicy": "ask",
+          "mcpMask": true,
+          "backupIncludeMcp": true,
+          "exportIncludeMcp": true,
+          "logRetention": "30d-10000",
+          "notificationRetention": "30",
+          "startupCleanup": false,
+          "cleanupBackupSummary": true,
+          "cliEnabled": false,
+          "syncConflictPolicy": "ask",
+          "coldSync": true,
+          "backupBeforeOverwrite": true,
+          "appUpdateChannel": "stable",
+          "appUpdateAutoCheck": false,
+          "appUpdateCheckIntervalSeconds": 86400,
+          "theme": "light",
+          "networkProxyMode": "none",
+          "networkProxyScheme": "http",
+          "networkProxyHost": "",
+          "networkNoProxy": "",
+          "visualEffects": "mid",
+          "glowRender": "mesh"
+        },
+        "root": {
+          "activeDataRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\native-depth-8be-20261016\\data",
+          "opencodexHomeMode": "inside",
+          "opencodexHome": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\native-depth-8be-20261016\\data\\opencodex-home",
+          "currentDataRoot": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\native-depth-8be-20261016\\data",
+          "currentOpencodexHome": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\native-depth-8be-20261016\\data\\opencodex-home",
+          "runtimeActive": true
+        },
+        "canvases": [
+          {
+            "width": 1496,
+            "height": 1342,
+            "cssWidth": 935,
+            "cssHeight": 839,
+            "attributes": {
+              "alpha": true,
+              "antialias": false,
+              "depth": false,
+              "desynchronized": false,
+              "failIfMajorPerformanceCaveat": false,
+              "powerPreference": "default",
+              "premultipliedAlpha": false,
+              "preserveDrawingBuffer": false,
+              "stencil": false,
+              "xrCompatible": false
+            },
+            "depthBits": 0,
+            "stencilBits": 0,
+            "depthTestEnabled": false,
+            "glError": 0
+          }
+        ],
+        "dpr": 2,
+        "runtimePatched": false,
+        "forceScaleUsed": false
+      }
+    }
+  }
+}

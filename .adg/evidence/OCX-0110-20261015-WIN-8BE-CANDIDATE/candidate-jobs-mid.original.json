@@ -1,0 +1,231 @@
+{
+  "total_count": 3,
+  "jobs": [
+    {
+      "id": 116533594125,
+      "run_id": 38767255195,
+      "workflow_name": "Windows candidate installer",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38767255195",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbIfGIDQ",
+      "head_sha": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116533594125",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38767255195/job/116533594125",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-10-15T16:14:08Z",
+      "started_at": "2026-10-15T16:14:11Z",
+      "completed_at": null,
+      "name": "package",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T16:14:11Z",
+          "completed_at": "2026-10-15T16:14:13Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T16:14:13Z",
+          "completed_at": "2026-10-15T16:14:18Z"
+        },
+        {
+          "name": "Read candidate version",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T16:14:18Z",
+          "completed_at": "2026-10-15T16:14:19Z"
+        },
+        {
+          "name": "Verify process-token evidence and all Windows smoke syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T16:14:19Z",
+          "completed_at": "2026-10-15T16:14:24Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T16:14:24Z",
+          "completed_at": "2026-10-15T16:14:29Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T16:14:29Z",
+          "completed_at": "2026-10-15T16:14:36Z"
+        },
+        {
+          "name": "Verify strict bundle identity checks",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T16:14:36Z",
+          "completed_at": "2026-10-15T16:14:36Z"
+        },
+        {
+          "name": "Run Swatinem/rust-cache@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-15T16:14:36Z",
+          "completed_at": "2026-10-15T16:15:10Z"
+        },
+        {
+          "name": "Install pinned CLI and frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-15T16:15:10Z",
+          "completed_at": "2026-10-15T16:15:28Z"
+        },
+        {
+          "name": "Freeze and record dependency resolution",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-15T16:15:28Z",
+          "completed_at": "2026-10-15T16:16:06Z"
+        },
+        {
+          "name": "Windows regression with the package lock",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-15T16:16:06Z",
+          "completed_at": "2026-10-15T16:19:53Z"
+        },
+        {
+          "name": "Build NSIS and MSI candidates",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 12,
+          "started_at": "2026-10-15T16:19:53Z",
+          "completed_at": null
+        },
+        {
+          "name": "Install, verify final EXE and uninstall on isolated runner",
+          "status": "pending",
+          "conclusion": null,
+          "number": 13,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Upload verified Windows installers",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Preserve package evidence",
+          "status": "pending",
+          "conclusion": null,
+          "number": 15,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run Swatinem/rust-cache@v2",
+          "status": "pending",
+          "conclusion": null,
+          "number": 28,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 29,
+          "started_at": null,
+          "completed_at": null
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "pending",
+          "conclusion": null,
+          "number": 30,
+          "started_at": null,
+          "completed_at": null
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116533594125",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000001173,
+      "runner_name": "GitHub Actions 1000001173",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116533602521,
+      "run_id": 38767255195,
+      "workflow_name": "Windows candidate installer",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38767255195",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbIfGo2Q",
+      "head_sha": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116533602521",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38767255195/job/116533602521",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-15T16:14:09Z",
+      "started_at": "2026-10-15T16:14:09Z",
+      "completed_at": "2026-10-15T16:14:08Z",
+      "name": "query-etw",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116533602521",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 116533604094,
+      "run_id": 38767255195,
+      "workflow_name": "Windows candidate installer",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38767255195",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbIfGu_g",
+      "head_sha": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116533604094",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38767255195/job/116533604094",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-15T16:14:09Z",
+      "started_at": "2026-10-15T16:14:09Z",
+      "completed_at": "2026-10-15T16:14:08Z",
+      "name": "retention",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116533604094",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}

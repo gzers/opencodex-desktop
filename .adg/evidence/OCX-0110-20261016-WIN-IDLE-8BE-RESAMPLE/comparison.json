@@ -1,0 +1,208 @@
+{
+  "versions": {
+    "baseline019": {
+      "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "exeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+      "evidenceDirectory": "OCX-0110-20261016-WIN-IDLE-8BE-019-SETTLED",
+      "rawSha256": "21e08a7d92305eba261d8c4883e8f35afac2c9e87d0190bb18c4870c92ea7ac4",
+      "samples": 598,
+      "observedSpanSeconds": 600.5629495000001,
+      "firstObservedAt": "2026-10-15T16:45:03.9112634+00:00",
+      "lastObservedAt": "2026-10-15T16:55:04.5095863+00:00",
+      "singleLogicalProcessorPercent": 35.77893044832263,
+      "meanWorkingSetMiB": 536.7521490907191,
+      "startWorkingSetMiB": 553.02734375,
+      "endWorkingSetMiB": 544.0859375,
+      "peakWorkingSetMiB": 566.4375,
+      "foregroundLostSamples": 0,
+      "nativeInstanceViolations": 0,
+      "minimumFamilyMembers": 7,
+      "maximumFamilyMembers": 8,
+      "childDiscoveryReadFailures": 0,
+      "collectorCpuSeconds": 106.78125,
+      "validForRecordedForegroundIdleSubset": true,
+      "perObservedProcess": [
+        {
+          "pid": 54144,
+          "creationUtc": "2026-10-15T16:43:52.9265370Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.0,
+          "endWorkingSetMiB": 20.0546875,
+          "exited": false
+        },
+        {
+          "pid": 81236,
+          "creationUtc": "2026-10-15T16:45:52.9128889Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": false,
+          "cpuSecondsDelta": 0.234375,
+          "endWorkingSetMiB": 0.0,
+          "exited": true
+        },
+        {
+          "pid": 19424,
+          "creationUtc": "2026-10-15T16:43:52.5669437Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.046875,
+          "endWorkingSetMiB": 31.25,
+          "exited": false
+        },
+        {
+          "pid": 73652,
+          "creationUtc": "2026-10-15T16:43:52.9035950Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 129.265625,
+          "endWorkingSetMiB": 204.9765625,
+          "exited": false
+        },
+        {
+          "pid": 58232,
+          "creationUtc": "2026-10-15T16:43:52.9857407Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 83.328125,
+          "endWorkingSetMiB": 108.8203125,
+          "exited": false
+        },
+        {
+          "pid": 22632,
+          "creationUtc": "2026-10-15T16:43:52.7253608Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.0,
+          "endWorkingSetMiB": 12.5703125,
+          "exited": false
+        },
+        {
+          "pid": 82556,
+          "creationUtc": "2026-10-15T16:43:52.6987276Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 1.96875,
+          "endWorkingSetMiB": 129.41796875,
+          "exited": false
+        },
+        {
+          "pid": 75652,
+          "creationUtc": "2026-10-15T16:43:52.9057946Z",
+          "role": "unobserved",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.03125,
+          "endWorkingSetMiB": 36.99609375,
+          "exited": false
+        }
+      ]
+    },
+    "candidate0110": {
+      "source": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+      "exeSha256": "26d5458d1e25ab6c9da74229e638f1c2b475ca1e1934dd0538b542d1f6bf38c9",
+      "evidenceDirectory": "OCX-0110-20261016-WIN-IDLE-8BE-RESAMPLE",
+      "rawSha256": "4edd66c8ef0e900e15f380af8a32be612777d27eb7903ed89df69db12774a971",
+      "samples": 596,
+      "observedSpanSeconds": 600.4095113000001,
+      "firstObservedAt": "2026-10-15T17:14:45.2130307+00:00",
+      "lastObservedAt": "2026-10-15T17:24:45.6565405+00:00",
+      "singleLogicalProcessorPercent": 12.57214843858187,
+      "meanWorkingSetMiB": 570.0014287961409,
+      "startWorkingSetMiB": 556.046875,
+      "endWorkingSetMiB": 563.84765625,
+      "peakWorkingSetMiB": 587.23828125,
+      "foregroundLostSamples": 0,
+      "nativeInstanceViolations": 0,
+      "minimumFamilyMembers": 7,
+      "maximumFamilyMembers": 7,
+      "childDiscoveryReadFailures": 0,
+      "collectorCpuSeconds": 64.828125,
+      "validForRecordedForegroundIdleSubset": true,
+      "perObservedProcess": [
+        {
+          "pid": 77196,
+          "creationUtc": "2026-10-15T17:13:24.5380585Z",
+          "role": "gpu-process",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 49.640625,
+          "endWorkingSetMiB": 223.328125,
+          "exited": false
+        },
+        {
+          "pid": 72876,
+          "creationUtc": "2026-10-15T17:13:24.7015745Z",
+          "role": "renderer",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 17.296875,
+          "endWorkingSetMiB": 106.578125,
+          "exited": false
+        },
+        {
+          "pid": 82376,
+          "creationUtc": "2026-10-15T17:13:24.5832197Z",
+          "role": "utility",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.0,
+          "endWorkingSetMiB": 19.6171875,
+          "exited": false
+        },
+        {
+          "pid": 22568,
+          "creationUtc": "2026-10-15T17:13:24.5432728Z",
+          "role": "utility",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.0,
+          "endWorkingSetMiB": 36.66015625,
+          "exited": false
+        },
+        {
+          "pid": 80248,
+          "creationUtc": "2026-10-15T17:13:24.3111515Z",
+          "role": "browser",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 6.328125,
+          "endWorkingSetMiB": 132.9453125,
+          "exited": false
+        },
+        {
+          "pid": 57364,
+          "creationUtc": "2026-10-15T17:13:24.1578074Z",
+          "role": "application",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 2.203125,
+          "endWorkingSetMiB": 32.15234375,
+          "exited": false
+        },
+        {
+          "pid": 76176,
+          "creationUtc": "2026-10-15T17:13:24.3376754Z",
+          "role": "crashpad-handler",
+          "presentAtBothEndpoints": true,
+          "cpuSecondsDelta": 0.015625,
+          "endWorkingSetMiB": 12.56640625,
+          "exited": false
+        }
+      ]
+    }
+  },
+  "cpuIncreasePercentagePoints": -23.206782009740763,
+  "meanWorkingSetIncreaseMiB": 33.24927970542183,
+  "endWorkingSetIncreaseMiB": 19.76171875,
+  "peakWorkingSetIncreaseMiB": 20.80078125,
+  "budgets": {
+    "rssIncreaseMiB": 10,
+    "cpuIncreasePercentagePoints": 0.5
+  },
+  "validPairForRecordedSubset": true,
+  "cpuBudgetPassed": true,
+  "meanRssBudgetPassed": false,
+  "baselineReusedFromExplicitlyBoundCompletedObservation": true,
+  "candidateResampledAfterForegroundInterruption": true,
+  "interruptedCandidateSamplesUsed": false,
+  "readinessObserverDiffersFromBaseline": true,
+  "pairedVersionsObservedWithoutInterveningInterruption": false,
+  "sharedResidentPagesDeduplicated": false,
+  "shortLivedChildrenFullyCovered": false,
+  "causalAttributionToDepthBufferEstablished": false,
+  "fullPerformanceGatePassed": false,
+  "macHistoricalFailureCleared": false
+}

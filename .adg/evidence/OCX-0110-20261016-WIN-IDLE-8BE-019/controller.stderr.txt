@@ -1,0 +1,6 @@
+ParentContainsErrorRecordException: D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261016-WIN-IDLE-8BE-019\measure.ps1:142
+Line |
+ 142 |          [void][IdleBoundClose]::PostMessageW($taskWindow,0x10,[IntPtr бн
+     |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot convert argument "w", with value: "", for "PostMessageW" to type "System.IntPtr": "Cannot convert null to
+     | type "System.IntPtr"."

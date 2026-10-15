@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "scope": "fresh candidate-only resampling; reuse the completed same-host baseline explicitly",
+  "candidateSource": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+  "candidateExeSha256": "26d5458d1e25ab6c9da74229e638f1c2b475ca1e1934dd0538b542d1f6bf38c9",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "order": [
+    "candidate0110"
+  ],
+  "settleSecondsPerVersion": 60,
+  "measurementSecondsPerVersion": 600,
+  "deadlineRule": "last completed counter observation minus first completed counter observation >= 600 seconds",
+  "theme": "light",
+  "visualEffects": "high",
+  "glowRender": "mesh",
+  "interfaceScale": 100,
+  "bothVersionsNewProcess": true,
+  "identicalOwnedManagerFixtureClone": true,
+  "singleNativeInstance": true,
+  "foregroundLossStopsAttempt": true,
+  "cpuUnit": "one logical processor percent from retained observed process-family handles",
+  "rssUnit": "summed live WorkingSet64, shared pages not deduplicated",
+  "budgetsUnchanged": {
+    "rssIncreaseMiB": 10,
+    "cpuIncreasePercentagePoints": 0.5
+  },
+  "shortLivedChildrenFullyCovered": false,
+  "fullPerformanceGatePassed": false,
+  "reusedBaselineEvidence": "OCX-0110-20261016-WIN-IDLE-8BE-019-SETTLED",
+  "baselineCompletedAtUtc": "2026-10-15T16:55:04.5169095+00:00",
+  "pairedVersionsObservedWithoutInterveningInterruption": false,
+  "candidateResampledAfterForegroundInterruption": true,
+  "interruptedCandidateSamplesUsed": false,
+  "readinessObserver": "Computer Use sky before collection, no UI observation during collection",
+  "readinessObserverDiffersFromBaseline": true,
+  "closeMethod": "Computer Use Alt+F4 after collection; no collector UI input or force kill"
+}

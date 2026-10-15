@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "scope": "same-host fresh-process foreground idle subset after color-only buffer optimization",
+  "candidateSource": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+  "candidateExeSha256": "26d5458d1e25ab6c9da74229e638f1c2b475ca1e1934dd0538b542d1f6bf38c9",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "order": [
+    "baseline019",
+    "candidate0110"
+  ],
+  "settleSecondsPerVersion": 60,
+  "measurementSecondsPerVersion": 600,
+  "deadlineRule": "last completed counter observation minus first completed counter observation >= 600 seconds",
+  "theme": "light",
+  "visualEffects": "high",
+  "glowRender": "mesh",
+  "interfaceScale": 100,
+  "bothVersionsNewProcess": true,
+  "identicalOwnedManagerFixtureClone": true,
+  "singleNativeInstance": true,
+  "foregroundLossStopsAttempt": true,
+  "cpuUnit": "one logical processor percent from retained observed process-family handles",
+  "rssUnit": "summed live WorkingSet64, shared pages not deduplicated",
+  "budgetsUnchanged": {
+    "rssIncreaseMiB": 10,
+    "cpuIncreasePercentagePoints": 0.5
+  },
+  "shortLivedChildrenFullyCovered": false,
+  "fullPerformanceGatePassed": false
+}
