@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-not-executed",
+  "frozenBeforeSamples": true,
+  "candidateSource": "8be87e2d54a895d4fe02e31300100a1ffed90121",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "candidateArtifactIdentityRequiredBeforeExecution": true,
+  "originalContract": "06-执行基线与契约.md performance budget",
+  "sampleCounts": {"perVersionCacheCold": 20, "perVersionProcessWarm": 20},
+  "cacheColdDefinition": "new WebView disk profile, unchanged owned manager data, no previous product or associated WebView process alive",
+  "processWarmDefinition": "normal exit then new process using the same just-populated WebView disk profile and manager data",
+  "osColdDefinition": "not measured: no OS reboot, standby-list purge or machine cache reset",
+  "definitionsRequireExplicitReporting": true,
+  "readiness": "time from Process.Start through the first successful native Settings-button invocation and observed Settings route text",
+  "readinessLimit": "bounded UI Automation polling adds timing overhead; retain bracket and polling duration rather than claiming sub-poll precision",
+  "p95Method": "nearest-rank percentile, 20 observations per version and mode",
+  "budgetsUnchanged": {"p95IncreaseMsMaximum": 100, "p95IncreaseFractionMaximum": 0.05},
+  "setup": {"account": "same existing unelevated Windows account", "theme": "light", "visualEffects": "high", "glowRender": "mesh", "interfaceScale": 100},
+  "noSampleCollected": true,
+  "notClaimed": ["formal cold/hot gate passed", "OS cold startup passed", "main-thread task budget passed", "cache zero-query gate passed"]
+}

@@ -1,0 +1,106 @@
+{
+  "id": 1,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "internals": {
+          "plugins": {
+            "value": {},
+            "writable": true,
+            "enumerable": true,
+            "configurable": true
+          },
+          "postMessage": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "metadata": {
+            "value": {
+              "currentWindow": {
+                "label": "main"
+              },
+              "currentWebview": {
+                "label": "main"
+              }
+            },
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "__TAURI_PATTERN__": {
+            "value": {
+              "pattern": "brownfield"
+            },
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "ipc": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "convertFileSrc": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "transformCallback": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "unregisterCallback": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "runCallback": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "callbacks": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          },
+          "invoke": {
+            "value": {},
+            "writable": false,
+            "enumerable": false,
+            "configurable": false
+          }
+        },
+        "window": {
+          "ipc": {
+            "writable": false,
+            "configurable": false,
+            "type": "object"
+          },
+          "__TAURI_INTERNALS__": {
+            "writable": false,
+            "configurable": false,
+            "type": "object"
+          },
+          "__TAURI_EVENT_PLUGIN_INTERNALS__": {
+            "writable": false,
+            "configurable": false,
+            "type": "object"
+          }
+        },
+        "invokeSource": "function (cmd, payload = {}, options) {\n      return new Promise(function (resolve, reject) {\n        const callback = registerCallback((r) => {\n          resolve(r)\n          unregisterCallback(error)\n        }, true)\n        const error = registerCallback((e) => {\n          reject(e)\n          unregisterCallback(callback)\n        }, true)\n\n        const action = () => {\n          window.__TAURI_INTERNALS__.ipc({\n            cmd,\n            callback,\n            error,\n            payload,\n            options\n          })\n        }\n        if ('ipc' in window.__TAURI_INTERNALS__) {\n          action()\n        } else {\n          ipcQueue.push(action)\n          if (!isWaitingForIpc) {\n            waitForIpc()\n            isWaitingForIpc = true\n          }\n        }\n      })\n    }",
+        "ipcSource": "(message) => {\n      switch (pattern) {\n        case 'brownfield':\n          window.__TAURI_INTERNALS__.postMessage(message)\n          break\n\n        case 'isolation':\n          if (!isIsolationPayload(message)) {\n            console.error(\n              'Tauri \"Isolation\" Pattern found an invalid isolation message payload',\n              message\n            )\n            break\n          }\n\n          if (isolation.ready) {\n            sendIsolationMessage(message)\n          } else {\n            isolation.queue.push(message)\n          }\n\n          break\n\n        case 'error':\n          console.error(\n            'Tauri IPC found a Tauri Pattern, but it was an error. Check for other log messages to find the cause.'\n          )\n          break\n\n        default:\n          console.error(\n            'Tauri IPC did not find a Tauri Pattern that it understood.'\n          )\n          break\n      }\n    }"
+      }
+    }
+  }
+}

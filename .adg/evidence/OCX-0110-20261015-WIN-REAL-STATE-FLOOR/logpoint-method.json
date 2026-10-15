@@ -1,0 +1,16 @@
+{
+  "atUtc": "2026-10-15T15:37:55.033Z",
+  "nowPerf": 158.69999998807907,
+  "visible": "visible",
+  "hasFocus": true,
+  "schemaVersion": 1,
+  "scope": "isolated WebView reload, production scheduler/native IPC unchanged",
+  "method": "conditional function-call logpoints always returning false; original functions remain immutable",
+  "postCondition": "(() => { try {\n    const m=arguments[0],s=window.__ocxFloorLog;\n    if (m && ['update_schedule_plan','check_for_update','official_remote_latest'].includes(m.cmd)) {\n      s.events.push({command:m.cmd,callback:m.callback,error:m.error,startedAtUtc:new Date().toISOString(),startPerf:performance.now()});\n    }\n  } catch {} return false; })()",
+  "callbackCondition": "(() => { try {\n    const id=arguments[0],s=window.__ocxFloorLog;\n    const e=s.events.findLast(x=>!x.status&&(x.callback===id||x.error===id));\n    if(e){e.status=e.error===id?'rejected':'fulfilled';e.endPerf=performance.now();e.finishedAtUtc=new Date().toISOString();\n      if(e.command==='update_schedule_plan'&&e.status==='fulfilled'){e.plan=arguments[1];}\n      if(e.status==='rejected'){e.errorKind=typeof arguments[1]==='object'?arguments[1]?.code:typeof arguments[1];}}\n  } catch {} return false; })()",
+  "clockOrTimerChanged": false,
+  "stubbedResult": false,
+  "nativeBridgeReplaced": false,
+  "expectedDebuggerPauses": 0,
+  "priorNetworkMethodCouldNotObserveWindowsPostMessage": true
+}
