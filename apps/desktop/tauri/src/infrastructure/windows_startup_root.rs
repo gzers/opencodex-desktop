@@ -876,8 +876,20 @@ mod tests {
     fn drive_root_parent_traversal_and_source_nesting_are_rejected() {
         let (_temp, target, anchor) = fixture();
         assert!(validate_selection(target.parent().unwrap(), &anchor).is_err());
-        assert!(validate_selection(&target.join("..").join("selected"), &anchor).is_err());
-        assert!(check_path(Path::new("/")).is_err());
+        // PathBuf::push normalizes '..' for Windows verbatim prefixes. Keep
+        // the raw input so this actually exercises a traversal supplied by a
+        // pointer or chooser, rather than its already-normalized destination.
+        let mut traversal = target.as_os_str().to_os_string();
+        traversal.push(std::path::MAIN_SEPARATOR_STR);
+        traversal.push("..");
+        traversal.push(std::path::MAIN_SEPARATOR_STR);
+        traversal.push("selected");
+        let traversal = Path::new(&traversal);
+        assert!(traversal
+            .components()
+            .any(|part| part == Component::ParentDir));
+        assert!(validate_selection(traversal, &anchor).is_err());
+        assert!(check_path(target.ancestors().last().unwrap()).is_err());
     }
 
     #[cfg(unix)]
