@@ -1,0 +1,91 @@
+{
+  "atUtc": "2026-10-15T13:19:54.4094515+00:00",
+  "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "result": "passed",
+  "scope": "Prepared kit and cloned PowerShell runtime, profile preflight only",
+  "checks": [
+    {
+      "name": "daily-profile-refusal",
+      "result": "passed",
+      "exitCode": 0,
+      "ownedProcessId": 16080,
+      "helperOnly": true,
+      "productStarted": false
+    },
+    {
+      "name": "wrong-manifest-refusal",
+      "result": "passed",
+      "exitCode": 1,
+      "ownedProcessId": 16824,
+      "helperOnly": true,
+      "productStarted": false
+    },
+    {
+      "name": "changed-payload-refusal",
+      "result": "passed",
+      "exitCode": 1,
+      "ownedProcessId": 77852,
+      "helperOnly": true,
+      "productStarted": false
+    }
+  ],
+  "checksPassed": 3,
+  "runtimeVersion": "7.6.5",
+  "copiedRuntimeSignatureStatus": "Valid",
+  "childPolicyMode": "process-remotesigned",
+  "parentExecutionPoliciesUnchanged": true,
+  "parentExecutionPoliciesBefore": [
+    {
+      "Scope": 4,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 3,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 0,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 1,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 2,
+      "ExecutionPolicy": 1
+    }
+  ],
+  "parentExecutionPoliciesAfter": [
+    {
+      "Scope": 4,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 3,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 0,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 1,
+      "ExecutionPolicy": 5
+    },
+    {
+      "Scope": 2,
+      "ExecutionPolicy": 1
+    }
+  ],
+  "kitManifestSha256": "96a756942733c34cc3c09b9c4886a8ee2ba9f9c2379fb8b95688642d4cb6692a",
+  "nativeBeforeCount": 0,
+  "nativeAfterCount": 0,
+  "sourceMethodSha256": "f0686c9ce2604e5180f2e0687e449887756b461c50941d99ec72cdae84187ca4",
+  "profilePreparedOrAdmitted": false,
+  "accountOrProfileCreated": false,
+  "productStarted": false,
+  "registryOrAclOrKnownFoldersChanged": false,
+  "performanceMeasured": false,
+  "fullVersionGatePassed": false
+}
