@@ -1,0 +1,117 @@
+{
+  "scope": "Selected historical evidence reuse audit, no application or timer execution",
+  "currentSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "inputFiles": [
+    {
+      "path": "OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/before-update-schedule.json",
+      "bytes": 254,
+      "sha256": "6e51fe41559c287c6036ef495456f1d1d5200710f5f925b3e9e7084621c3df20",
+      "originalManifestSha256": "657112ac3fbdaf7747ec80716b385b561a928f8a65b68a009927e20b618b73f3"
+    },
+    {
+      "path": "OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/after-update-schedule.json",
+      "bytes": 254,
+      "sha256": "045991fb0a7a71604632e5c9255c3fe008e8e5f21c7e28feabe0d4178bc4ffd2",
+      "originalManifestSha256": "657112ac3fbdaf7747ec80716b385b561a928f8a65b68a009927e20b618b73f3"
+    },
+    {
+      "path": "OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/post-cleanup-schedule.json",
+      "bytes": 254,
+      "sha256": "045991fb0a7a71604632e5c9255c3fe008e8e5f21c7e28feabe0d4178bc4ffd2",
+      "originalManifestSha256": "657112ac3fbdaf7747ec80716b385b561a928f8a65b68a009927e20b618b73f3"
+    },
+    {
+      "path": "OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/startup-preflight.json",
+      "bytes": 774,
+      "sha256": "bc860d4fdd550a3432e6523b819958a7d8f0ce85565ac03a68c38e47b59ed490",
+      "originalManifestSha256": "657112ac3fbdaf7747ec80716b385b561a928f8a65b68a009927e20b618b73f3"
+    },
+    {
+      "path": "OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/new-session-startup.json",
+      "bytes": 2146,
+      "sha256": "072b5ecad8b4d114ed74e2cfc27f3f7ba1ad9b3beacd8e99268026b435bbfe36",
+      "originalManifestSha256": "657112ac3fbdaf7747ec80716b385b561a928f8a65b68a009927e20b618b73f3"
+    },
+    {
+      "path": "OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/new-process-initial-native.json",
+      "bytes": 2114,
+      "sha256": "a5251164a460b2c8acc7f59096557317f5e34211689bde1cf534f8fd23ee4c8a",
+      "originalManifestSha256": "657112ac3fbdaf7747ec80716b385b561a928f8a65b68a009927e20b618b73f3"
+    },
+    {
+      "path": "OCX-0110-20261012-WIN-REAL-TIMER-BACKOFF/independent-recalculation.json",
+      "bytes": 778,
+      "sha256": "6b0d421646f30b69b9a9c40e13838212d1e458c4513884326e0c20ecbd672756",
+      "originalManifestSha256": "33ff8c14880dbafeed83a01982d152d2e9e0f1f72c9a048021e8ebd16672e499"
+    },
+    {
+      "path": "OCX-0110-20261012-WIN-REAL-BETA-CYCLE/schedule-baseline.json",
+      "bytes": 254,
+      "sha256": "ac89d7ff25f651d6d7fec948b19b1f57fb97b3113bab20d4e54b3d25455b5c55",
+      "originalManifestSha256": "4342ddbc9494f203a02a700e3ac1daf84587f9e6ae0dad0b66e4fd3cbe08ffaf"
+    }
+  ],
+  "sourceBlobs": {
+    "afff490a430a81f8c233d44928aa3681a23e91e0": {
+      "apps/desktop/ui/src/features/updates/scheduler.ts": "a754c2933535860b6d21e298d4f319e6db731900",
+      "apps/desktop/tauri/src/commands/update_schedule.rs": "8d26791e8a8f95d18d513a6611e60dafd4fb06d4",
+      "apps/desktop/tauri/src/modules/update/schedule.rs": "089d879ba2566fc89b2baaa510d61e41e7c7d30f"
+    },
+    "be7395acfce0ec1e36b83300b576db408f8c35bb": {
+      "apps/desktop/ui/src/features/updates/scheduler.ts": "a754c2933535860b6d21e298d4f319e6db731900",
+      "apps/desktop/tauri/src/commands/update_schedule.rs": "8d26791e8a8f95d18d513a6611e60dafd4fb06d4",
+      "apps/desktop/tauri/src/modules/update/schedule.rs": "089d879ba2566fc89b2baaa510d61e41e7c7d30f"
+    },
+    "43142bdbcc7a0b9f1325103febae3f44dce407ab": {
+      "apps/desktop/ui/src/features/updates/scheduler.ts": "a754c2933535860b6d21e298d4f319e6db731900",
+      "apps/desktop/tauri/src/commands/update_schedule.rs": "b4b75ccfedd22d1fb773fe3d4c94f9d4b79e882a",
+      "apps/desktop/tauri/src/modules/update/schedule.rs": "a1d6ac3c350dbf82bed6d2ffd9a239c6f76e7491"
+    }
+  },
+  "stableAndPanelFacts": [
+    {
+      "object": "manager-stable",
+      "originalLastSuccess": 1791816939,
+      "originalDeadline": 1791903339,
+      "observedNextSuccess": 1791903503,
+      "newDeadline": 1791989903,
+      "oldIntervalSeconds": 86400,
+      "newIntervalSeconds": 86400,
+      "elapsedSuccessToSuccessSeconds": 86564,
+      "factReusable": "Historical same-root persisted deadline followed by later native success across restart",
+      "directAutomaticTriggerOrRawRequestCountProven": false
+    },
+    {
+      "object": "panel-latest",
+      "originalLastSuccess": 1791816940,
+      "originalDeadline": 1791903340,
+      "observedNextSuccess": 1791903506,
+      "newDeadline": 1791989906,
+      "oldIntervalSeconds": 86400,
+      "newIntervalSeconds": 86400,
+      "elapsedSuccessToSuccessSeconds": 86566,
+      "factReusable": "Historical same-root persisted deadline followed by later native success across restart",
+      "directAutomaticTriggerOrRawRequestCountProven": false
+    }
+  ],
+  "historicalThirtyMinuteErrorFloorMs": 1800001.5,
+  "uiSchedulerBlobUnchanged": true,
+  "backendScheduleBlobsChanged": true,
+  "historicalNativeFactsPreserved": true,
+  "oldSourceExecutionRelabelledAsCurrentSource": false,
+  "fullCurrentNativeErrorPathAccepted": false,
+  "betaSixHourSuccessfulBaselineExistsInSelectedEvidence": false,
+  "betaFailureIsNotSixHourCyclePass": true,
+  "continuousSingleProcessTwentyFourHoursRequired": false,
+  "restartAutomaticallyInvalidatesPersistedDeadlineEvidence": false,
+  "rawRequestsAndQueryProcessCountsStillRequired": true,
+  "remainingRealCycleScope": [
+    "Current-source backend admission/error path and actual 30-minute lower bound",
+    "Direct current-source automatic trigger and raw network/query-process count evidence",
+    "Real beta six-hour window after a verified usable source and successful baseline",
+    "Sleep/resume and cross-start behavior with original lifecycle gaps retained"
+  ],
+  "newApplicationStarted": false,
+  "timerOrClockChanged": false,
+  "fullVersionGatePassed": false
+}

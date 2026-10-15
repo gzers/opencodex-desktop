@@ -1,0 +1,34 @@
+{
+  "atUtc": "2026-10-15T09:02:16.513822+00:00",
+  "source": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "runtimeDefaultsGitBlob": "6d3131e4760fc5135fb32ed3ac583adc02240042",
+  "observations": [
+    {
+      "kind": "authenticated-api",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/releases/tags/beta",
+      "requestStartedUtc": "2026-10-15T09:02:14.295863+00:00",
+      "errorType": "URLError",
+      "terminalOrAbsenceInferred": false
+    },
+    {
+      "kind": "public-metadata",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/beta/latest.json",
+      "requestStartedUtc": "2026-10-15T09:02:14.319234+00:00",
+      "responseObservedUtc": "2026-10-15T09:02:16.513822+00:00",
+      "authenticatedRequest": false,
+      "statusCode": 404,
+      "bodyBytes": 21,
+      "bodySha256": "e28bf7d9fcc22cdfde0c7c8f31e3648a4847e7bda9cb69f309f24257eee3dd41",
+      "followedRedirect": false,
+      "credentialOrHeadersSaved": false
+    }
+  ],
+  "bothEndpointsObserved404": false,
+  "scope": "Metadata availability prerequisite only; no product or scheduling proof",
+  "productCheckInvoked": false,
+  "beta6hStarted": false,
+  "sourceOrClockChanged": false,
+  "betaSourcePublished": false,
+  "realCycleVerified": false,
+  "fullVersionGatePassed": false
+}

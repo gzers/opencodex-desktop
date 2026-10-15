@@ -1646,3 +1646,11 @@ artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP16
 本机12项准入/108项采集器纯检查/脚本与TOML数组回读通过，无本机Cargo/原库/固定Node/ETW。push38705201081/PR38705207794完整success，各Mac900/Windows627passed、忽略6/7，各35组；实际checkout43142bdb/485372d7整treeccb9f9ab相同。两轮各首次库530passed/0failed/4ignored/exit0、七query通过，EXE SHA874cd89c…/4e86d7b2…分别核验。自有ETW18732条-6787959bytes与16128条-5825028bytes，每轮31进程开始结束/948对线程，丢弃/内核丢失/解码错误/覆盖缺口0，排空/自有STOP0/未强制清理；根热点省略边界保持。
 
 已验证首次回归同步留证能力，但当前失败及历史固定制品失败窗口ETW均未取得，根因未知；原失败不撤销、不自动追加重跑。118项清单/verify-evidence、制品API摘要/原日志/原字节核验通过；ETW压缩保留并验证解压原字节。16:45本机native0、日常/旧隔离/TASK摘要及43142bdb干净保持，PR5说明读回仍草稿/未合并。无新桌面候选，旧493 UI不重标；未前台/安装/账户或正式Mac交接。见[首次CI同步留证](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows首次CI回归同步留证/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-FIRST-CI-ETW/`。原完整八门禁、预算、周期、Macfailed及环境依赖保持，不关闭或发布。
+
+### 2026-10-15 431 阶段候选、旧计时复用与专项环境方案
+
+普通CI同SHA成功/实际checkout/制品链核对后单次candidate run38709701621，17:14:45 completed/success、query-etw跳过；实际检出43142bdb，包锁35组/627passed/0failed/7ignored。MSI/NSIS临时runner新装/精确首屏/卸载exit0；安装ZIPartifact11960342769/7626479bytes-SHA5c91c10a…与runner证据ZIP均API摘要/CRC/安全条目通过。宿主只读MSI/CAB提取8777216bytes EXE，版本0.1.10、完整431来源、SHA3be7ea60…匹配MSI载荷，未启动产品/安装器，不抵宿主升级保留或旧493原生证据。
+
+独立复核8份旧manifest原件，保留stable/panel跨启动真实success间隔86564/86566秒及next_due24h、旧timer floor1800001.5ms事实；前端scheduler blob相同但后端两个blob已变，旧执行不冒充新版完整通过，只补受影响路径/直接触发/原始计数/睡眠恢复。17:02公开beta元数据404，API首读TLS错误保留，17:05认证API才实际404，beta成功6h基线仍缺；不发布或改源制造条件。
+
+只读环境确认Hyper-V可见/服务运行，但Get-VM报VirtualizationException、VM可用性未知，拟用普通账户/WindowsSandbox.exe不存在、空闲内存约5GiB。已写可审阅的独立普通Profile及专用Windows安装环境方案，账户/VM/ACL/网络均未创建改变，需明确确认后实施；安装VM不替代宿主性能。17:16:02本机native0/日常/旧隔离/TASK摘要/431干净保持，无Mac正式原生交接。52项清单/verify-readiness通过，详见[候选与专项环境准备](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows候选与专项环境准备/README.md)及其中执行方案，证据`.adg/evidence/OCX-0110-20261015-WIN-431-READINESS/`。原失败ETW/根因、八门禁/全部预算/Macfailed/周期缺口保持，未关闭或发布。
