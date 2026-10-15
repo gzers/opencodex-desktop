@@ -65,6 +65,11 @@ def verify_diagnostic_path(value, application_tree):
         require(application_tree == BD2_APPLICATION_TREE, "Original regression application tree changed")
 
 
+def verify_execution_context(event, first_regression):
+    require(event in {"push", "pull_request"} if first_regression else event == "workflow_dispatch",
+            "Unexpected diagnostic workflow event")
+
+
 def checked_zip(archive):
     seen = set()
     total = 0
@@ -128,20 +133,23 @@ def extract_one(archive, member, destination, expected):
     destination.write_bytes(content)
 
 
-def prepare():
+def prepare(first_regression=False):
     require(os.name == "nt" and os.environ.get("GITHUB_ACTIONS") == "true", "Ephemeral Windows Actions runner only")
     require(os.environ.get("GITHUB_REPOSITORY") == REPOSITORY, "Unexpected repository")
-    require(os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch", "Explicit diagnostic dispatch required")
+    event = os.environ.get("GITHUB_EVENT_NAME")
+    verify_execution_context(event, first_regression)
     require(os.environ.get("GITHUB_RUN_ATTEMPT") == "1", "No diagnostic rerun; review a new bounded request")
     sha = os.environ.get("GITHUB_SHA", "")
     require(re.fullmatch("[0-9a-f]{40}", sha), "Expected collector source missing")
     admission_run = os.environ.get("OPENCODEX_ETW_ADMISSION_RUN", "")
-    require(re.fullmatch("[1-9][0-9]{0,19}", admission_run), "Exact-head CI admission run required")
+    if not first_regression:
+        require(re.fullmatch("[1-9][0-9]{0,19}", admission_run), "Exact-head CI admission run required")
     token = os.environ["GITHUB_TOKEN"]
     repo = Path(__file__).resolve().parents[2]
     require(subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo).decode().strip() == sha,
             "Actual collector checkout mismatch")
-    diagnostic_path = os.environ.get("OPENCODEX_ETW_DIAGNOSTIC_PATH", "isolated-replay")
+    diagnostic_path = ("post-build-runner-temp" if first_regression else
+                       os.environ.get("OPENCODEX_ETW_DIAGNOSTIC_PATH", "isolated-replay"))
     application_tree = subprocess.check_output(
         ["git", "rev-parse", "HEAD:apps/desktop"], cwd=repo).decode().strip()
     verify_diagnostic_path(diagnostic_path, application_tree)
@@ -161,9 +169,10 @@ def prepare():
         download(BASE + path, target, 4 * 1024 * 1024, token=token)
         return json.loads(target.read_text(encoding="utf-8-sig"))
 
-    ci = get("actions/runs/" + admission_run, "collector-ci.original.json")
-    jobs = get("actions/runs/" + admission_run + "/jobs?per_page=100", "collector-ci-jobs.original.json")
-    verify_ci(ci, jobs, sha)
+    if not first_regression:
+        ci = get("actions/runs/" + admission_run, "collector-ci.original.json")
+        jobs = get("actions/runs/" + admission_run + "/jobs?per_page=100", "collector-ci-jobs.original.json")
+        verify_ci(ci, jobs, sha)
     original = get("actions/runs/" + str(ORIGINAL_RUN), "original-failed-run.original.json")
     artifact = get("actions/artifacts/" + str(ARTIFACT_ID), "original-test-artifact.original.json")
     verify_original(original, artifact)
@@ -202,7 +211,9 @@ def prepare():
             extract_one(archive, "lib/netstandard2.0/" + name, decoder / name, expected)
     record = {
         "atUtc": datetime.now(timezone.utc).isoformat(),
-        "collectorSource": sha, "collectorCiRun": int(admission_run),
+        "collectorSource": sha, "collectorCiRun": None if first_regression else int(admission_run),
+        "firstOrdinaryCiRegression": first_regression,
+        "currentCiIsVerificationNotPreviouslyAdmitted": first_regression,
         "diagnosticPath": diagnostic_path, "applicationTree": application_tree,
         "originalTestSource": BD2, "originalFailedRun": ORIGINAL_RUN, "originalArtifactId": ARTIFACT_ID,
         "pinnedHistoricalActualPrCheckout": "31e7748d9e82c79bef97fc1b73233f08bc1f1b3d",
@@ -229,7 +240,9 @@ def prepare():
 
 if __name__ == "__main__":
     try:
-        prepare()
+        import sys
+        require(sys.argv[1:] in ([], ["--first-regression"]), "Unexpected admission arguments")
+        prepare(first_regression=sys.argv[1:] == ["--first-regression"])
     except Exception as error:
         # urllib exceptions can include a signed redirect URL. Persist only
         # safe status/type information, never credentials or temporary SAS URLs.

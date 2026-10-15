@@ -670,15 +670,25 @@ namespace OpenCodex.Diagnostics
                                      string outputDirectory, string temporaryDirectory,
                                      string homeDirectory, string sessionName, bool runnerRegressionEnvironment)
         {
+            return RunOnce(testExe, nodeExe, workingDirectory, outputDirectory, temporaryDirectory,
+                           homeDirectory, sessionName, runnerRegressionEnvironment, false);
+        }
+        public static string RunOnce(string testExe, string nodeExe, string workingDirectory,
+                                     string outputDirectory, string temporaryDirectory,
+                                     string homeDirectory, string sessionName, bool runnerRegressionEnvironment,
+                                     bool firstCargoRegression)
+        {
             if (TraceEventSession.IsElevated() != true)
                 throw new UnauthorizedAccessException("Kernel ETW capture requires an approved elevated controller.");
             if (Environment.OSVersion.Version.Major < 10)
                 throw new NotSupportedException("Use a modern dedicated system logger, never the shared NT Kernel Logger.");
+            if (firstCargoRegression && !runnerRegressionEnvironment)
+                throw new UnauthorizedAccessException("First Cargo regression requires the CI-only runner environment.");
             if (runnerRegressionEnvironment)
             {
                 if (Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != "true"
                     || Environment.GetEnvironmentVariable("GITHUB_REPOSITORY") != "gzers/opencodex-desktop"
-                    || Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME") != "workflow_dispatch"
+                    || !AdmitRegressionEvent(Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME"), firstCargoRegression)
                     || Environment.GetEnvironmentVariable("GITHUB_RUN_ATTEMPT") != "1")
                     throw new UnauthorizedAccessException("Runner environment capture is CI-dispatch-only.");
                 string parent = Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.GetTempPath()));
@@ -931,6 +941,7 @@ namespace OpenCodex.Diagnostics
                 minimumQpc = Stopwatch.GetTimestamp();
                 var info = new ProcessStartInfo(testExe) { WorkingDirectory = workingDirectory };
                 Configure(info, nodeExe, temporaryDirectory, homeDirectory, runnerRegressionEnvironment);
+                if (firstCargoRegression) info.ArgumentList.Add("--show-output");
                 process = Process.Start(info);
                 if (process == null) throw new InvalidOperationException("Test did not start.");
                 // Drain immediately, including when identity validation fails.
@@ -948,6 +959,8 @@ namespace OpenCodex.Diagnostics
                     createdUtc = processCreatedUtc, image = actualImage, minimumQpc,
                     createdFileTime100ns = process.StartTime.ToFileTimeUtc(), actualToken = ProcessToken(process),
                     fullLibraryArgumentCount = info.ArgumentList.Count, defaultConcurrency = true,
+                    firstCargoRegression,
+                    executedLibraryArguments = info.ArgumentList.ToArray(),
                     originalCapture = true, noPrewarm = true,
                     runnerRegressionEnvironment, fixtureTemporaryDirectory = temporaryDirectory,
                     runnerProfilePreserved = runnerRegressionEnvironment,
@@ -1059,6 +1072,8 @@ namespace OpenCodex.Diagnostics
                     runnerRegressionEnvironment, fixtureTemporaryDirectory = temporaryDirectory,
                     runnerProfilePreserved = runnerRegressionEnvironment,
                     pinnedDecoderVersion = "3.1.21", versionSpecificWaitSemanticsVerified = false,
+                    firstCargoRegression,
+                    executedLibraryArguments = firstCargoRegression ? new[] { "--show-output" } : Array.Empty<string>(),
                     nodePrewarmed = false, performanceAcceptanceClaimed = false,
                     actualFailureOrRootCauseMustBeDeterminedFromEvidence = true
                 };
@@ -1066,6 +1081,25 @@ namespace OpenCodex.Diagnostics
                 process?.Dispose();
             }
             return File.ReadAllText(Path.Combine(outputDirectory, "capture-result.json"));
+        }
+        public static bool AdmitRegressionEvent(string eventName, bool firstCargoRegression) =>
+            firstCargoRegression ? eventName == "push" || eventName == "pull_request"
+                                 : eventName == "workflow_dispatch";
+        public static int SelfTestRegressionEvent()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Ordinary regression event contract");
+                checks++;
+            };
+            require(AdmitRegressionEvent("push", true));
+            require(AdmitRegressionEvent("pull_request", true));
+            require(!AdmitRegressionEvent("workflow_dispatch", true));
+            require(!AdmitRegressionEvent("pull_request_target", true));
+            require(!AdmitRegressionEvent(null, true));
+            require(!AdmitRegressionEvent("push", false));
+            require(AdmitRegressionEvent("workflow_dispatch", false));
+            return checks;
         }
     }
 }

@@ -6,12 +6,18 @@ param(
     [Parameter(Mandatory=$true)][string]$ExpectedNodeSha256,
     [Parameter(Mandatory=$true)][string]$OutputRoot,
     [switch]$RecordApproved,
-    [switch]$RunnerRegressionEnvironment
+    [switch]$RunnerRegressionEnvironment,
+    [switch]$FirstCargoRegression
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7) { throw 'Windows PowerShell 7 required' }
 if ([IntPtr]::Size -ne 8) { throw 'Admitted Windows x64 binaries require a 64-bit controller' }
-if ($RunnerRegressionEnvironment -and
+if ($FirstCargoRegression -and (!$RunnerRegressionEnvironment -or
+    $env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop' -or
+    $env:GITHUB_EVENT_NAME -cnotin @('push','pull_request') -or $env:GITHUB_RUN_ATTEMPT -cne '1')) {
+    throw 'First cargo regression capture is ordinary CI-only'
+}
+if ($RunnerRegressionEnvironment -and !$FirstCargoRegression -and
     ($env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop' -or
      $env:GITHUB_EVENT_NAME -cne 'workflow_dispatch' -or $env:GITHUB_RUN_ATTEMPT -cne '1')) {
     throw 'Runner environment capture is CI-dispatch-only'
@@ -23,7 +29,11 @@ $taskExe = (Resolve-Path -LiteralPath $TestExecutable).Path
 $taskNode = (Resolve-Path -LiteralPath $Node).Path
 $taskOutput = [IO.Path]::GetFullPath($OutputRoot)
 foreach ($taskPath in @($taskExe,$taskNode)) {
-    if (!$taskPath.StartsWith($taskSoftware + '\',[StringComparison]::OrdinalIgnoreCase)) {
+    $taskCurrentLibrary = $FirstCargoRegression -and $taskPath -ceq $taskExe -and
+        (Split-Path -Leaf $taskPath) -cmatch '^opencodex_desktop_lib-[0-9a-f]+\.exe$' -and
+        (Split-Path -Parent $taskPath).Equals(
+            (Join-Path $taskRepo 'apps/desktop/tauri/target/debug/deps'),[StringComparison]::OrdinalIgnoreCase)
+    if (!$taskCurrentLibrary -and !$taskPath.StartsWith($taskSoftware + '\',[StringComparison]::OrdinalIgnoreCase)) {
         throw 'Test EXE and Node must be explicit, task-owned, admitted binaries'
     }
 }
@@ -56,6 +66,7 @@ $taskHotScopeChecks = [OpenCodex.Diagnostics.OwnedEtwScope]::SelfTestHotScope()
 $taskLineBudgetChecks = [OpenCodex.Diagnostics.OwnedEtwLineBudget]::SelfTest()
 $taskExecutableAdmissionChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestExecutableAdmission()
 $taskRunnerEnvironmentChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestRunnerEnvironment()
+$taskRegressionEventChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestRegressionEvent()
 if (!$RecordApproved) {
     [ordered]@{
         status='prepared-only';pureScopeChecks=$taskScopeChecks
@@ -65,6 +76,7 @@ if (!$RecordApproved) {
         descendantHotScopeChecks=$taskHotScopeChecks;utf8LineBudgetChecks=$taskLineBudgetChecks
         executableAdmissionChecks=$taskExecutableAdmissionChecks
         runnerEnvironmentChecks=$taskRunnerEnvironmentChecks
+        regressionEventChecks=$taskRegressionEventChecks
         testSha256=$ExpectedTestSha256;nodeSha256=$ExpectedNodeSha256
         compiler='PowerShell Add-Type';controllerElevated=[Microsoft.Diagnostics.Tracing.Session.TraceEventSession]::IsElevated()
         etwSessionStarted=$false;testOrNodeStarted=$false;recordingApproved=$false
@@ -90,5 +102,5 @@ New-Item -ItemType Directory -Path $taskOutput | Out-Null
 # changes. Controller elevation is confined to the temporary ETW session.
 $taskRun = [OpenCodex.Diagnostics.OwnedEtwRecorder]::RunOnce(
     $taskExe,$taskNode,(Join-Path $taskRepo 'apps/desktop/tauri'),
-    $taskCapture,$taskTemp,$taskHome,$taskSession,[bool]$RunnerRegressionEnvironment)
+    $taskCapture,$taskTemp,$taskHome,$taskSession,[bool]$RunnerRegressionEnvironment,[bool]$FirstCargoRegression)
 Write-Output $taskRun

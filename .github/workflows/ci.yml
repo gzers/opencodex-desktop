@@ -66,6 +66,9 @@ jobs:
   # 隔离数据初始化和 WebView 首屏。该 job 不生成安装器或发布制品。
   backend-windows:
     runs-on: windows-latest
+    permissions:
+      contents: read
+      actions: read
     defaults:
       run:
         working-directory: apps/desktop/tauri
@@ -81,6 +84,23 @@ jobs:
       - run: npm --prefix ../ui run build
       - run: cargo fmt --all -- --check
       - run: cargo clippy --locked --workspace --all-targets -- -D warnings
+      - name: Prepare first-regression ETW only on the Windows diagnostic branch
+        id: regression-etw
+        if: github.repository == 'gzers/opencodex-desktop' && github.run_attempt == 1 && (github.ref == 'refs/heads/feature/0.1.10-windows-query-etw' || github.head_ref == 'feature/0.1.10-windows-query-etw')
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python ../../../test/smoke/windows-etw-ci-admit.py --first-regression
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $taskAdmission = Get-Content -LiteralPath ../../../test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
+          & ../../../test/smoke/windows-owned-etw.test.ps1 `
+            -DecoderDirectory $taskAdmission.decoder `
+            -TestExecutable $taskAdmission.testExecutable -ExpectedTestSha256 $taskAdmission.testSha256 `
+            -Node $taskAdmission.node -ExpectedNodeSha256 $taskAdmission.nodeSha256 `
+            -OutputRoot $taskAdmission.outputRoot |
+            Tee-Object -FilePath ../../../test/out/windows-query-etw/pure-guards.original.json
+          'enabled=true' >> $env:GITHUB_OUTPUT
       - name: Windows backend regression
         shell: pwsh
         run: |
@@ -94,7 +114,21 @@ jobs:
           } | ConvertTo-Json
           # Print captured fixture phases after execution, including successful
           # cases, without changing test parallelism or production deadlines.
-          cargo test --locked --workspace --features integration-test -- --show-output
+          if ('${{ steps.regression-etw.outputs.enabled }}' -ceq 'true') {
+            $taskAdmission = Get-Content -LiteralPath ../../../test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
+            $env:OPENCODEX_TEST_NODE = $taskAdmission.node
+            $taskRunner = @((Get-Process -Id $PID).Path,'-NoLogo','-NoProfile','-NonInteractive','-File',
+              (Resolve-Path -LiteralPath ../../../test/smoke/windows-ci-test-runner.ps1).Path)
+            $taskConfig = "[target.x86_64-pc-windows-msvc]`nrunner = " + (ConvertTo-Json -InputObject $taskRunner -Compress)
+            $taskConfigPath = [IO.Path]::GetFullPath('../../../test/out/windows-query-etw/ci-test-runner.toml')
+            [IO.File]::WriteAllText($taskConfigPath,$taskConfig,[Text.UTF8Encoding]::new($false))
+            foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+              [Environment]::SetEnvironmentVariable($taskName,$null,'Process')
+            }
+            cargo --config $taskConfigPath test --locked --workspace --features integration-test -- --show-output
+          } else {
+            cargo test --locked --workspace --features integration-test -- --show-output
+          }
       - name: Collect Windows native dependency diagnostics
         if: always()
         shell: pwsh
@@ -168,6 +202,8 @@ jobs:
           path: |
             test/out/windows-startup
             test/out/windows-backend
+            test/out/windows-query-etw
+            test/runtime/ci-bd2-query-etw/capture
 
   build:
     if: github.ref == 'refs/heads/main'

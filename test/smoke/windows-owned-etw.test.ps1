@@ -21,6 +21,7 @@ if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 3
     $taskResult.descendantHotScopeChecks -ne 10 -or $taskResult.utf8LineBudgetChecks -ne 10 -or
     $taskResult.executableAdmissionChecks -ne 13 -or
     $taskResult.runnerEnvironmentChecks -ne 10 -or
+    $taskResult.regressionEventChecks -ne 7 -or
     $taskResult.etwSessionStarted -or $taskResult.testOrNodeStarted -or $taskResult.recordingApproved) {
     throw 'Default invocation must prepare and exercise pure scope contracts only'
 }
@@ -38,6 +39,9 @@ Assert-GuardRejected $taskWrongHash 'Test EXE digest mismatch'
 $taskWrongScope = $taskArguments.Clone()
 $taskWrongScope.OutputRoot = Join-Path ([IO.Path]::GetTempPath()) 'opencodex-outside-workspace'
 Assert-GuardRejected $taskWrongScope 'All recording output must remain inside this task runtime'
+$taskFirstRegressionArguments = $taskArguments.Clone()
+$taskFirstRegressionArguments.FirstCargoRegression = $true
+Assert-GuardRejected $taskFirstRegressionArguments 'First cargo regression capture is ordinary CI-only'
 $taskRunnerGuard = 'not-applicable-on-dispatched-runner'
 if ($env:GITHUB_EVENT_NAME -cne 'workflow_dispatch' -or $env:GITHUB_ACTIONS -cne 'true' -or
     $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop' -or $env:GITHUB_RUN_ATTEMPT -cne '1') {
@@ -69,6 +73,7 @@ if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards 
     descendantHotScopeChecks=10;utf8LineBudgetChecks=10
     executableAdmissionChecks=13
     runnerEnvironmentChecks=10
+    regressionEventChecks=7
     digestGuard='passed';outputScopeGuard='passed'
     runnerEnvironmentHostAndEventGuard=$taskRunnerGuard
     ordinaryPrivilegeGuard=$taskOrdinaryGuard

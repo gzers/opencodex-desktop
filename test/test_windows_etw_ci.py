@@ -77,6 +77,16 @@ class AdmissionTests(unittest.TestCase):
             with self.subTest(mode=mode), self.assertRaises(ValueError):
                 admit.verify_diagnostic_path(mode, admit.BD2_APPLICATION_TREE)
 
+    def test_first_regression_and_replay_events_cannot_be_interchanged(self):
+        for event in ("push", "pull_request"):
+            admit.verify_execution_context(event, True)
+            with self.assertRaises(ValueError):
+                admit.verify_execution_context(event, False)
+        admit.verify_execution_context("workflow_dispatch", False)
+        for event in ("workflow_dispatch", "pull_request_target", "", None):
+            with self.subTest(event=event), self.assertRaises(ValueError):
+                admit.verify_execution_context(event, True)
+
     def test_foreign_expired_wrong_digest_size_and_run_artifact_are_rejected(self):
         for key, value in (
             ("id", 1), ("expired", True), ("digest", "sha256:" + "0" * 64),
