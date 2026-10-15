@@ -1,0 +1,226 @@
+{
+  "result": "pass",
+  "scope": "Offline profile admission predicates only; native test-account acceptance unproven",
+  "checks": [
+    {
+      "name": "ordinary-isolated-profile",
+      "admitted": true,
+      "reasons": [],
+      "result": "pass"
+    },
+    {
+      "name": "daily-account",
+      "admitted": false,
+      "reasons": [
+        "daily-account",
+        "unexpected-account"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "unexpected-account",
+      "admitted": false,
+      "reasons": [
+        "unexpected-account"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "filtered-administrator",
+      "admitted": false,
+      "reasons": [
+        "ordinary-nonadministrator-account-required"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "elevated-administrator",
+      "admitted": false,
+      "reasons": [
+        "ordinary-nonadministrator-account-required"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "string-false-is-not-evidence",
+      "admitted": false,
+      "reasons": [
+        "ordinary-nonadministrator-account-required"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "string-type-is-not-evidence",
+      "admitted": false,
+      "reasons": [
+        "ordinary-nonadministrator-account-required"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "unconfirmed-account",
+      "admitted": false,
+      "reasons": [
+        "local-account-unconfirmed"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "string-account-confirmation",
+      "admitted": false,
+      "reasons": [
+        "local-account-unconfirmed"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "impersonating-thread",
+      "admitted": false,
+      "reasons": [
+        "thread-impersonation"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "string-impersonation",
+      "admitted": false,
+      "reasons": [
+        "thread-impersonation"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "missing-directory",
+      "admitted": false,
+      "reasons": [
+        "profile-directories-unverified"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "string-directory-confirmation",
+      "admitted": false,
+      "reasons": [
+        "profile-directories-unverified"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "reparse-path",
+      "admitted": false,
+      "reasons": [
+        "reparse-boundary-unverified"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "string-reparse-confirmation",
+      "admitted": false,
+      "reasons": [
+        "reparse-boundary-unverified"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "live-desktop",
+      "admitted": false,
+      "reasons": [
+        "native-instances-not-zero"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "unknown-desktop-count",
+      "admitted": false,
+      "reasons": [
+        "native-instances-not-zero"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "known-profile-still-daily",
+      "admitted": false,
+      "reasons": [
+        "known-profile-outside-fixture"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "same-prefix-neighbor",
+      "admitted": false,
+      "reasons": [
+        "known-roaming-outside-fixture"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "local-data-outside",
+      "admitted": false,
+      "reasons": [
+        "known-local-outside-fixture"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "relative-known-folder",
+      "admitted": false,
+      "reasons": [
+        "invalid-known-folder-path"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "dot-escape",
+      "admitted": false,
+      "reasons": [
+        "invalid-known-folder-path"
+      ],
+      "result": "pass"
+    },
+    {
+      "name": "case-insensitive-and-forward-separators",
+      "admitted": true,
+      "reasons": [],
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    },
+    {
+      "name": "reject-invalid-path",
+      "result": "pass"
+    }
+  ],
+  "checksPassed": 31,
+  "methodSha256": "b75bbf4202c51fd49db63a7694deed97ffba9fd6e36d30097efb4e51c08011fb",
+  "nativeProfileProbeExecuted": false,
+  "syntheticAccountCreated": false,
+  "productStarted": false,
+  "installerIsolationProved": false,
+  "fullVersionGatePassed": false
+}
