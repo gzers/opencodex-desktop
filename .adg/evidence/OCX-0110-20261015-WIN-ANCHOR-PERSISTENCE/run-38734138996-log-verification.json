@@ -1,0 +1,48 @@
+{
+  "runId": 38734138996,
+  "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "event": "pull_request",
+  "status": "completed",
+  "conclusion": "success",
+  "logFormat": "individual-job-originals",
+  "actualCheckout": {
+    "backend": "ea03b2eb0c5034f76ff8c5ba123e8c7638b7ae54",
+    "backend-windows": "ea03b2eb0c5034f76ff8c5ba123e8c7638b7ae54"
+  },
+  "rustResults": {
+    "backend": {
+      "suites": 35,
+      "passed": 923,
+      "failed": 0,
+      "ignored": 6
+    },
+    "backend-windows": {
+      "suites": 35,
+      "passed": 648,
+      "failed": 0,
+      "ignored": 7
+    }
+  },
+  "originalJobs": [
+    {
+      "job": "backend",
+      "jobId": 116419014992,
+      "metadata": "run-38734138996-job-116419014992.json",
+      "file": "run-38734138996-job-116419014992.original.log",
+      "bytes": 224493,
+      "sha256": "8f90d0a0d80e20236adc81d0317856de0f1ef7b4923e4d9ef84037bedfda02ba"
+    },
+    {
+      "job": "backend-windows",
+      "jobId": 116419015910,
+      "metadata": "run-38734138996-job-116419015910.json",
+      "file": "run-38734138996-job-116419015910.original.log",
+      "bytes": 349232,
+      "sha256": "3338080ce661ed179a1ea362164fe64e3acf81d5ce49f444df61e239c185510e"
+    }
+  ],
+  "runWideZipObtained": false,
+  "archiveFabricated": false,
+  "crossHostCredentialsForwarded": false,
+  "historicalFailureCleared": false
+}

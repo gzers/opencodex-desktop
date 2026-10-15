@@ -1,0 +1,53 @@
+{
+  "atUtc": "2026-10-15T12:24:05.967172+00:00",
+  "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "before": "a2e4ea1786723ceab0a1ed0d322503ac79cd64e0",
+  "changedFile": {
+    "path": "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+    "bytes": 44781,
+    "sha256": "320b9a4751771851a4ce61fac824e192dad12c3081ce9c9d48180eb41ab5ad1a",
+    "gitBlob": "4fc7adc8603c65676900abaef97a3574fb50d8ea"
+  },
+  "applicationTree": "2b38f5218f26a0682e2eec520886c14107bf2bed",
+  "unchangedFiles": [
+    "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+    "apps/desktop/tauri/src/modules/about/remote.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+    "apps/desktop/tauri/src/modules/process/mod.rs",
+    "apps/desktop/tauri/src/modules/ipc/audit.rs",
+    "apps/desktop/tauri/src/lib.rs",
+    ".github/workflows/ci.yml",
+    "test/smoke/windows-owned-etw.cs"
+  ],
+  "sharedFiles": {
+    "AGENTS.md": {
+      "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f": "aa0e29311f2bdebba09e76139aeded53c3be6a70",
+      "origin/main": "aa0e29311f2bdebba09e76139aeded53c3be6a70",
+      "origin/docs/governance-main": "aa0e29311f2bdebba09e76139aeded53c3be6a70"
+    },
+    "README.md": {
+      "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f": "18b41a067ead1eda36671076158d9c3d8db7a245",
+      "origin/main": "18b41a067ead1eda36671076158d9c3d8db7a245",
+      "origin/docs/governance-main": "18b41a067ead1eda36671076158d9c3d8db7a245"
+    },
+    "README.en.md": {
+      "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f": "845eba94e1e05c80accfccb095a1add397608227",
+      "origin/main": "845eba94e1e05c80accfccb095a1add397608227",
+      "origin/docs/governance-main": "845eba94e1e05c80accfccb095a1add397608227"
+    },
+    "LICENSE": {
+      "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f": "d010072a2f8e579962ad1dccaf76ffbeeb16bf2b",
+      "origin/main": "d010072a2f8e579962ad1dccaf76ffbeeb16bf2b",
+      "origin/docs/governance-main": "d010072a2f8e579962ad1dccaf76ffbeeb16bf2b"
+    },
+    ".gitignore": {
+      "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f": "76b4ec60de439cf87ed2307ec77f9e78808dd805",
+      "origin/main": "76b4ec60de439cf87ed2307ec77f9e78808dd805",
+      "origin/docs/governance-main": "76b4ec60de439cf87ed2307ec77f9e78808dd805"
+    }
+  },
+  "contract": "IMP-20 section 4: installation location changes must not silently change an existing root",
+  "nativeInstallRelocationOrRegistryProbeExecuted": false,
+  "fullVersionGatePassed": false
+}

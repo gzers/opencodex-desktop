@@ -1,0 +1,53 @@
+{
+  "atUtc": "2026-10-15T12:37:56.3946121+00:00",
+  "result": "passed",
+  "scope": "Read-only SID method with owned PowerShell child only",
+  "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "checks": [
+    "retained-target-current-identity-matches-independent-identity",
+    "independent-child-token-sid-matches-with-distinct-process-generation",
+    "wrong-executable-rejected-before-publishing-user-evidence",
+    "exited-target-rejected-without-reopening-a-pid"
+  ],
+  "checksPassed": 4,
+  "harness": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 79480,
+    "creationTimeUtc": "2026-10-15T12:37:54.4363244Z",
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 3,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T12:37:55.6371407+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "ownedChild": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 73128,
+    "creationTimeUtc": "2026-10-15T12:37:55.6554932Z",
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "elevated": false,
+    "elevationType": 3,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T12:37:55.6680097+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "childExitedNormally": true,
+  "nativeBeforeCount": 0,
+  "nativeAfterCount": 0,
+  "targetApplicationObserved": false,
+  "dualPermissionOrSameRootAcceptanceProved": false,
+  "registryOrAccountOrAclChanged": false,
+  "foregroundInputInjected": false,
+  "productStarted": false
+}

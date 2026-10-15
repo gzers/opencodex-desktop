@@ -1,0 +1,44 @@
+{
+  "anchorPersistenceSourceStage": "passed",
+  "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "manifestFiles": 95,
+  "currentCi": [
+    38734133095,
+    38734138996
+  ],
+  "bothCiRunsSuccessful": true,
+  "newRootRegistrationTestsPerPlatform": 5,
+  "macRustPerRun": {
+    "passed": 923,
+    "ignored": 6
+  },
+  "windowsRustPerRun": {
+    "passed": 648,
+    "ignored": 7
+  },
+  "readonlySidMethodChecks": 4,
+  "actualApplicationSidOrDualPermissionObserved": false,
+  "captures": [
+    {
+      "run": 38734133095,
+      "events": 16564,
+      "bytes": 5982054,
+      "librarySha256": "b9f43c10233edb60790b0b65dd68ca806917e65d2d4bc3dc7ab1e0396bf1716b"
+    },
+    {
+      "run": 38734138996,
+      "events": 15849,
+      "bytes": 5708973,
+      "librarySha256": "04113a1045b8730db0a0482c413861ca4918d9a76a9022d9c9af2d8a1e8ade62"
+    }
+  ],
+  "realHkcuOrInstallRelocationAcceptance": "pending",
+  "ordinaryAdministratorAcceptance": "pending",
+  "oldA2CandidateRelabelled": false,
+  "nativeCountAtCheckpoint": 0,
+  "historicalFixedArtifactFailureWindowEtwObtained": false,
+  "historicalFailuresCleared": false,
+  "fullVersionGatePassed": false,
+  "taskClosed": false,
+  "releaseRequested": false
+}
