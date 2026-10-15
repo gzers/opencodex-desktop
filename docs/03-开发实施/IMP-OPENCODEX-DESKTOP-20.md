@@ -1506,3 +1506,13 @@ e6a4b32f push CI38583679031成功；PR CI38583689702保留原三个Windows versi
 08:11:47日常/旧隔离四摘要、干净代码e6及原TASK字节保持；本机WindowsSandbox.exe不存在，仅只读盘点未启用功能/创建VM/执行安装器。详见[托盘重开与双权限令牌](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-e6托盘重开与双权限令牌/README.md)，原`.adg/evidence/OCX-0110-20261015-WIN-FG-TRAY-ADMIN/`追加证据，退出未来结果另验。管理员生命周期/材质、托盘退出/Snap/物理DPI、其他完整门禁/旧query与性能failed/原预算/Mac依赖不提升，TASK/IMP仍in_progress，不关闭、自动合并、签名、晋升或发布。
 
 随后用户回复“已退出”，08:20:31进程/窗口已无产品，08:21:18保护复核native0、原管理员PID73048及两个只读观察器均不存在，日常/旧隔离四摘要及TASK摘要一致。退出观察器08:19:44先到600s截止，原件timeout=true/exitObserved=false/exitCode=null；只记录用户协助退出后的真实归零，不补造退出码/实际退出时刻，也不覆盖前一历史快照。四份追加原件/方法清单及`verify-administrator-exit.py`核验；15分钟前台窗口到时不再启动实例，Mac原生尚未正式交接，完整门禁与原失败/预算保持。
+
+### 2026-10-15 Windows CI 固定失败制品的单次 ETW
+
+前台结束后后台推进，代码ca26e771只改两workflow与新增准入/离线测试，apps/原夹具/collector三份及预算未变。已有Windows工作流新增query-etw模式，固定bd2原失败run38537166560/artifact11881042603/EXE497814ca…、官方Node24.21.0/TraceEvent3.1.21，核验精确head成功push CI、API digest/ZIP CRC/安全条目/载荷及Node签名。离线10项/真实包3份/PS块10项通过，Windows ZIP反斜杠规范化红例/修正保留，本机原库/Node/ETW/desktop新执行0。
+
+push38660621496及PR38660625647均success，各Mac900/Windows627passed、忽略6/7，各35组，完整日志ZIP及实际checkout分别核验；原API/TLS/运行中日志404失败保留，905.391s观察到时未重派，第二观察169.813s读取原handle真实终态。PR5说明更新最终读回一致，仍draft/open/unmerged，无auto_merge。
+
+准入后只dispatch一次run38662786466/attempt1，query-etw成功/package skipped、无新安装候选。08:56:06–22原失败EXE完整库exit0、530passed/0failed/4ignored、七query通过，**目标失败仍未复现**。根PID9668/creation真实/句柄映像一致、runner elevated/type1；17085事件/5811506bytes，31process start/stop（test1/Node22/cmd-basename8）、940thread start/stop，serialization/kernel/decoder丢失错误0，consumer/writer/自有session stop完整。根热点158572调度/287481IO按原范围省略，不称根全覆盖；不重复求绿或清除历史失败。
+
+artifact11939861138/340221bytes/API摘要6f53dd39…、13份原件及job实际checkout原日志核验，详见[CI固定失败制品ETW](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-CI固定失败制品ETW/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-CI-ETW/`。失败时间窗ETW/根因仍缺，官方019的profile隔离与安装隔离未解决、Mac原生未交接；本机native0/日常及旧隔离/TASK摘要不变，原性能failed/完整八门禁/预算/周期保持，不关闭、合并、签名、晋升或发布。
