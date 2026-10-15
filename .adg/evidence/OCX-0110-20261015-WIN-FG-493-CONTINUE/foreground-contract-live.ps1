@@ -1,0 +1,35 @@
+function Assert-BackupForegroundAuthorization {
+    param([Parameter(Mandatory=$true)]$Authorization,
+          [datetimeoffset]$AtUtc=[datetimeoffset]::UtcNow)
+    if ($Authorization.origin -cne 'human' -or $Authorization.foregroundStartGranted -cne $true) {
+        throw 'A new actual human foreground-start signal is required; goal continuation is insufficient.'
+    }
+    if ([string]::IsNullOrWhiteSpace([string]$Authorization.userText)) { throw 'Original human signal text is required.' }
+    if ($Authorization.source -cne '493da80675e6508e46e0fd83d86ee7216abf96fe' -or
+        $Authorization.scope -cne 'isolated-updates-tree') { throw 'Foreground signal is not bound to this source and scope.' }
+    $taskMinutes=0L
+    if (![long]::TryParse([string]$Authorization.windowMinutes,[ref]$taskMinutes) -or
+        $taskMinutes -lt 1 -or $taskMinutes -gt 30) { throw 'A bounded 1-30 minute foreground window is required.' }
+    $taskRawStarted=$Authorization.atUtc
+    if ($taskRawStarted -is [datetimeoffset]) {
+        $taskStarted=$taskRawStarted.ToUniversalTime()
+    } elseif ($taskRawStarted -is [datetime]) {
+        if ($taskRawStarted.Kind -eq [DateTimeKind]::Unspecified) { throw 'Authorization date lost its timezone.' }
+        $taskStarted=[datetimeoffset]::new($taskRawStarted).ToUniversalTime()
+    } else {
+        $taskTextStarted=[string]$taskRawStarted
+        if ($taskTextStarted -notmatch '(Z|[+-]\d\d:\d\d)$') { throw 'Explicit authorization timezone required.' }
+        $taskStarted=[datetimeoffset]::Parse($taskTextStarted,[Globalization.CultureInfo]::InvariantCulture)
+    }
+    if ($taskStarted -gt $AtUtc.AddSeconds(5)) { throw 'Future-dated authorization is not accepted.' }
+    $taskExpires=$taskStarted.AddMinutes($taskMinutes)
+    if ($AtUtc -ge $taskExpires) { throw 'The earlier foreground window has expired.' }
+    [pscustomobject]@{
+        origin='human'; userText=[string]$Authorization.userText
+        source=[string]$Authorization.source; scope=[string]$Authorization.scope
+        startedAtUtc=$taskStarted.ToUniversalTime().ToString('o')
+        expiresAtUtc=$taskExpires.ToUniversalTime().ToString('o')
+        windowMinutes=$taskMinutes; remainingSeconds=($taskExpires-$AtUtc).TotalSeconds
+        syntheticAuthorizationCreated=$false
+    }
+}
