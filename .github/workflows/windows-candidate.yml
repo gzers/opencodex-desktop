@@ -8,7 +8,7 @@ on:
       purpose:
         description: Package a candidate, or run one bounded diagnostic without a desktop/package
         type: choice
-        options: [candidate, query-etw]
+        options: [candidate, query-etw, installer-retention]
         default: candidate
       admission_run:
         description: Successful exact-head push CI run required for query-etw
@@ -238,3 +238,41 @@ jobs:
           path: |
             test/out/windows-query-etw
             test/runtime/ci-bd2-query-etw/capture
+
+  retention:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && github.repository == 'gzers/opencodex-desktop'
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [msi, nsis]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Admit exact harness CI, official 019 and fixed 431 candidate
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENCODEX_RETENTION_ADMISSION_RUN: ${{ inputs.admission_run }}
+        run: python test/smoke/windows-retention-ci-admit.py ${{ matrix.kind }}
+      - name: Verify installer scope without installation
+        shell: pwsh
+        run: ./test/smoke/windows-installer-retention.ps1 -AdmissionPath test/out/windows-installer-retention/admission.json
+      - name: Install 019, upgrade, verify default-uninstall and reinstall retention
+        shell: pwsh
+        run: |
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName,$null,'Process')
+          }
+          ./test/smoke/windows-installer-retention.ps1 -AdmissionPath test/out/windows-installer-retention/admission.json -Execute
+      - name: Preserve successful or failed retention evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-retention-${{ matrix.kind }}-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: test/out/windows-installer-retention
