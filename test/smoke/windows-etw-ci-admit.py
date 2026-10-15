@@ -26,6 +26,7 @@ DECODERS = {
     "Microsoft.Diagnostics.Tracing.TraceEvent.dll": "401e948dac99d0f9756ef96d5a8b8e4736e19e9f82ce8cdd744495951e3a94bb",
     "Microsoft.Diagnostics.FastSerialization.dll": "83e89baf0bbecca8cfa194cff13365f716849e22efc374b669206f26998a019f",
 }
+BD2_APPLICATION_TREE = "bf4365586d874d1a9268636e5227efad4621bad1"
 REQUIRED_JOBS = {"frontend", "backend", "backend-windows", "release-tools", "windows-smoke-evidence"}
 
 
@@ -56,6 +57,12 @@ def verify_original(run, artifact):
             and artifact.get("digest") == "sha256:" + ARTIFACT_SHA, "Original artifact bytes differ")
     require(artifact.get("workflow_run", {}).get("id") == ORIGINAL_RUN
             and artifact["workflow_run"].get("head_sha") == BD2, "Artifact belongs to another run")
+
+
+def verify_diagnostic_path(value, application_tree):
+    require(value in {"isolated-replay", "post-build-runner-temp"}, "Unknown diagnostic execution path")
+    if value == "post-build-runner-temp":
+        require(application_tree == BD2_APPLICATION_TREE, "Original regression application tree changed")
 
 
 def checked_zip(archive):
@@ -134,6 +141,10 @@ def prepare():
     repo = Path(__file__).resolve().parents[2]
     require(subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo).decode().strip() == sha,
             "Actual collector checkout mismatch")
+    diagnostic_path = os.environ.get("OPENCODEX_ETW_DIAGNOSTIC_PATH", "isolated-replay")
+    application_tree = subprocess.check_output(
+        ["git", "rev-parse", "HEAD:apps/desktop"], cwd=repo).decode().strip()
+    verify_diagnostic_path(diagnostic_path, application_tree)
     output = repo / "test/out/windows-query-etw"
     require(not output.exists(), "Diagnostic evidence already exists")
     output.mkdir(parents=True)
@@ -192,6 +203,7 @@ def prepare():
     record = {
         "atUtc": datetime.now(timezone.utc).isoformat(),
         "collectorSource": sha, "collectorCiRun": int(admission_run),
+        "diagnosticPath": diagnostic_path, "applicationTree": application_tree,
         "originalTestSource": BD2, "originalFailedRun": ORIGINAL_RUN, "originalArtifactId": ARTIFACT_ID,
         "pinnedHistoricalActualPrCheckout": "31e7748d9e82c79bef97fc1b73233f08bc1f1b3d",
         "testExecutable": str(test_executable), "testSha256": TEST_SHA,
@@ -201,6 +213,9 @@ def prepare():
         "apiDigestZipCrcAndPayloadHashesVerified": True,
         "crossHostAuthorizationForwarded": False, "testOrNodeExecutedDuringAdmission": False,
         "originalLibraryRunsAllowed": 1, "originalLibraryCommandArguments": [],
+        "buildStageRunsTests": False, "additionalNodePrewarmRequested": False,
+        "runnerEnvironmentModifiedOnlyInOriginalChild": diagnostic_path == "post-build-runner-temp",
+        "exactHistoricalEnvironmentReproduced": False,
         "prewarm": False, "originalConcurrencyAndDeadlinesPreserved": True,
         "desktopStarted": False, "installerExecuted": False, "releaseAccepted": False,
         "historicalFailureCleared": False, "performanceAcceptanceClaimed": False,

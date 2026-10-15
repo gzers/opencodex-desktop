@@ -20,6 +20,7 @@ if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 3
     $taskResult.controllerProcessImageChecks -ne 5 -or
     $taskResult.descendantHotScopeChecks -ne 10 -or $taskResult.utf8LineBudgetChecks -ne 10 -or
     $taskResult.executableAdmissionChecks -ne 13 -or
+    $taskResult.runnerEnvironmentChecks -ne 10 -or
     $taskResult.etwSessionStarted -or $taskResult.testOrNodeStarted -or $taskResult.recordingApproved) {
     throw 'Default invocation must prepare and exercise pure scope contracts only'
 }
@@ -37,6 +38,14 @@ Assert-GuardRejected $taskWrongHash 'Test EXE digest mismatch'
 $taskWrongScope = $taskArguments.Clone()
 $taskWrongScope.OutputRoot = Join-Path ([IO.Path]::GetTempPath()) 'opencodex-outside-workspace'
 Assert-GuardRejected $taskWrongScope 'All recording output must remain inside this task runtime'
+$taskRunnerGuard = 'not-applicable-on-dispatched-runner'
+if ($env:GITHUB_EVENT_NAME -cne 'workflow_dispatch' -or $env:GITHUB_ACTIONS -cne 'true' -or
+    $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop' -or $env:GITHUB_RUN_ATTEMPT -cne '1') {
+    $taskRunnerArguments = $taskArguments.Clone()
+    $taskRunnerArguments.RunnerRegressionEnvironment = $true
+    Assert-GuardRejected $taskRunnerArguments 'Runner environment capture is CI-dispatch-only'
+    $taskRunnerGuard = 'passed'
+}
 $taskOrdinaryGuard = 'not-applicable-on-elevated-controller'
 if (!$taskResult.controllerElevated) {
     $taskRejected = $false
@@ -59,7 +68,9 @@ if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards 
     controllerProcessImageChecks=5
     descendantHotScopeChecks=10;utf8LineBudgetChecks=10
     executableAdmissionChecks=13
+    runnerEnvironmentChecks=10
     digestGuard='passed';outputScopeGuard='passed'
+    runnerEnvironmentHostAndEventGuard=$taskRunnerGuard
     ordinaryPrivilegeGuard=$taskOrdinaryGuard
     etwSessionStarted=$false;testOrNodeStarted=$false;recordingRootCreated=$false
     diagnosticRecordExecutionTested=$false

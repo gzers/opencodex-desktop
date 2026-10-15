@@ -610,7 +610,8 @@ namespace OpenCodex.Diagnostics
                 return path;
             return null;
         }
-        private static void Configure(ProcessStartInfo info, string node, string temp, string home)
+        private static void Configure(ProcessStartInfo info, string node, string temp, string home,
+                                      bool runnerRegressionEnvironment = false)
         {
             info.UseShellExecute = false;
             info.CreateNoWindow = true;
@@ -619,11 +620,42 @@ namespace OpenCodex.Diagnostics
             info.Environment["OPENCODEX_TEST_NODE"] = node;
             info.Environment["TEMP"] = temp;
             info.Environment["TMP"] = temp;
-            info.Environment["HOME"] = home;
-            info.Environment["USERPROFILE"] = home;
+            if (!runnerRegressionEnvironment)
+            {
+                info.Environment["HOME"] = home;
+                info.Environment["USERPROFILE"] = home;
+            }
             foreach (string name in new[] { "RUST_TEST_THREADS", "OPENCODEX_SANDBOX_ROOT",
                 "OPENCODEX_SANDBOX_BOUNDARY", "OPENCODEX_WINDOWS_SMOKE_CDP_PORT" })
                 info.Environment.Remove(name);
+        }
+        public static int SelfTestRunnerEnvironment()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Owned runner environment contract " + (checks + 1));
+                checks++;
+            };
+            // ProcessStartInfo only: no process, ETW, environment mutation or
+            // warm-up. An ephemeral runner profile is preserved, never a host's.
+            var original = new ProcessStartInfo("unused.exe");
+            original.Environment["HOME"] = "runner-home-sentinel";
+            original.Environment["USERPROFILE"] = "runner-profile-sentinel";
+            original.Environment["RUST_TEST_THREADS"] = "must-not-force-concurrency";
+            Configure(original, "pinned-node.exe", "owned-runner-temp", "unused-home", true);
+            require(original.Environment["HOME"] == "runner-home-sentinel");
+            require(original.Environment["USERPROFILE"] == "runner-profile-sentinel");
+            require(original.Environment["TEMP"] == "owned-runner-temp");
+            require(original.Environment["TMP"] == "owned-runner-temp");
+            require(original.Environment["OPENCODEX_TEST_NODE"] == "pinned-node.exe");
+            require(!original.Environment.ContainsKey("RUST_TEST_THREADS"));
+            require(original.ArgumentList.Count == 0);
+            var isolated = new ProcessStartInfo("unused.exe");
+            Configure(isolated, "pinned-node.exe", "owned-workspace-temp", "owned-home");
+            require(isolated.Environment["HOME"] == "owned-home");
+            require(isolated.Environment["USERPROFILE"] == "owned-home");
+            require(isolated.Environment["TEMP"] == "owned-workspace-temp");
+            return checks;
         }
         // This entry point must be explicitly authorized by the caller. It
         // always runs the original binary once, with no filter or CLI options.
@@ -631,10 +663,33 @@ namespace OpenCodex.Diagnostics
                                      string outputDirectory, string temporaryDirectory,
                                      string homeDirectory, string sessionName)
         {
+            return RunOnce(testExe, nodeExe, workingDirectory, outputDirectory, temporaryDirectory,
+                           homeDirectory, sessionName, false);
+        }
+        public static string RunOnce(string testExe, string nodeExe, string workingDirectory,
+                                     string outputDirectory, string temporaryDirectory,
+                                     string homeDirectory, string sessionName, bool runnerRegressionEnvironment)
+        {
             if (TraceEventSession.IsElevated() != true)
                 throw new UnauthorizedAccessException("Kernel ETW capture requires an approved elevated controller.");
             if (Environment.OSVersion.Version.Major < 10)
                 throw new NotSupportedException("Use a modern dedicated system logger, never the shared NT Kernel Logger.");
+            if (runnerRegressionEnvironment)
+            {
+                if (Environment.GetEnvironmentVariable("GITHUB_ACTIONS") != "true"
+                    || Environment.GetEnvironmentVariable("GITHUB_REPOSITORY") != "gzers/opencodex-desktop"
+                    || Environment.GetEnvironmentVariable("GITHUB_EVENT_NAME") != "workflow_dispatch"
+                    || Environment.GetEnvironmentVariable("GITHUB_RUN_ATTEMPT") != "1")
+                    throw new UnauthorizedAccessException("Runner environment capture is CI-dispatch-only.");
+                string parent = Path.TrimEndingDirectorySeparator(Path.GetFullPath(Path.GetTempPath()));
+                string temporary = Path.GetFullPath(temporaryDirectory);
+                if (!SamePath(Path.GetDirectoryName(temporary), parent)
+                    || !Path.GetFileName(temporary).StartsWith("OpenCodex-BD2-", StringComparison.Ordinal)
+                    || Directory.Exists(temporary))
+                    throw new IOException("Runner temporary directory must be new, directly owned and task-specific.");
+                if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("RUST_TEST_THREADS")))
+                    throw new InvalidOperationException("Runner diagnostic requires original default test concurrency.");
+            }
             if (!sessionName.StartsWith("OpenCodex-BD2-", StringComparison.Ordinal))
                 throw new ArgumentException("A task-specific unique session name is required.");
             if (TraceEventSession.GetActiveSessionNames().Contains(sessionName))
@@ -788,6 +843,10 @@ namespace OpenCodex.Diagnostics
                         emit(new { kind = "owned-thread-scheduled-out", original = Header(data), pid = outgoing.Value,
                             tid = data.OldThreadID, priority = data.OldThreadPriority,
                             waitReason = data.OldThreadWaitReason.ToString(), waitMode = data.OldThreadWaitMode.ToString(),
+                            waitReasonDecodedRaw = (int)data.OldThreadWaitReason,
+                            waitModeDecodedRaw = (int)data.OldThreadWaitMode,
+                            stateDecodedRaw = (int)data.OldThreadState,
+                            versionSpecificWaitSemanticsVerified = false,
                             state = data.OldThreadState.ToString(), counterpartThreadIdSaved = false });
                     else if (outgoing.HasValue) omittedRootScheduling++;
                 });
@@ -871,7 +930,7 @@ namespace OpenCodex.Diagnostics
                 // an early ProcessStart cannot race a null ownership scope.
                 minimumQpc = Stopwatch.GetTimestamp();
                 var info = new ProcessStartInfo(testExe) { WorkingDirectory = workingDirectory };
-                Configure(info, nodeExe, temporaryDirectory, homeDirectory);
+                Configure(info, nodeExe, temporaryDirectory, homeDirectory, runnerRegressionEnvironment);
                 process = Process.Start(info);
                 if (process == null) throw new InvalidOperationException("Test did not start.");
                 // Drain immediately, including when identity validation fails.
@@ -889,7 +948,10 @@ namespace OpenCodex.Diagnostics
                     createdUtc = processCreatedUtc, image = actualImage, minimumQpc,
                     createdFileTime100ns = process.StartTime.ToFileTimeUtc(), actualToken = ProcessToken(process),
                     fullLibraryArgumentCount = info.ArgumentList.Count, defaultConcurrency = true,
-                    originalCapture = true, noPrewarm = true });
+                    originalCapture = true, noPrewarm = true,
+                    runnerRegressionEnvironment, fixtureTemporaryDirectory = temporaryDirectory,
+                    runnerProfilePreserved = runnerRegressionEnvironment,
+                    logicalProcessors = Environment.ProcessorCount });
                 consumer.Start();
                 consumerStarted = true;
                 if (!ready.Wait(5000)) throw new TimeoutException("ETW consumer did not schedule; stop owned session.");
@@ -994,6 +1056,9 @@ namespace OpenCodex.Diagnostics
                     forcedOuterCleanup = outerCleanup, systemWideEtlWritten = false,
                     unrelatedEventPayloadsSerialized = false, boundedOriginalRunCount = process == null ? 0 : 1,
                     defaultConcurrencyAndCapturePreserved = true, observerWctQueries = 0,
+                    runnerRegressionEnvironment, fixtureTemporaryDirectory = temporaryDirectory,
+                    runnerProfilePreserved = runnerRegressionEnvironment,
+                    pinnedDecoderVersion = "3.1.21", versionSpecificWaitSemanticsVerified = false,
                     nodePrewarmed = false, performanceAcceptanceClaimed = false,
                     actualFailureOrRootCauseMustBeDeterminedFromEvidence = true
                 };

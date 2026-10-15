@@ -68,6 +68,15 @@ class AdmissionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             admit.verify_original({**self.original, "conclusion": "success"}, self.artifact)
 
+    def test_post_build_path_requires_unchanged_original_application_tree(self):
+        admit.verify_diagnostic_path("post-build-runner-temp", admit.BD2_APPLICATION_TREE)
+        admit.verify_diagnostic_path("isolated-replay", "a" * 40)
+        with self.assertRaises(ValueError):
+            admit.verify_diagnostic_path("post-build-runner-temp", "a" * 40)
+        for mode in ("", "repeat-until-failure", "post-build-runner-temp "):
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                admit.verify_diagnostic_path(mode, admit.BD2_APPLICATION_TREE)
+
     def test_foreign_expired_wrong_digest_size_and_run_artifact_are_rejected(self):
         for key, value in (
             ("id", 1), ("expired", True), ("digest", "sha256:" + "0" * 64),

@@ -5,11 +5,17 @@ param(
     [Parameter(Mandatory=$true)][string]$Node,
     [Parameter(Mandatory=$true)][string]$ExpectedNodeSha256,
     [Parameter(Mandatory=$true)][string]$OutputRoot,
-    [switch]$RecordApproved
+    [switch]$RecordApproved,
+    [switch]$RunnerRegressionEnvironment
 )
 $ErrorActionPreference = 'Stop'
 if (!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7) { throw 'Windows PowerShell 7 required' }
 if ([IntPtr]::Size -ne 8) { throw 'Admitted Windows x64 binaries require a 64-bit controller' }
+if ($RunnerRegressionEnvironment -and
+    ($env:GITHUB_ACTIONS -cne 'true' -or $env:GITHUB_REPOSITORY -cne 'gzers/opencodex-desktop' -or
+     $env:GITHUB_EVENT_NAME -cne 'workflow_dispatch' -or $env:GITHUB_RUN_ATTEMPT -cne '1')) {
+    throw 'Runner environment capture is CI-dispatch-only'
+}
 $taskRepo = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot '../..')).Path
 $taskSoftware = (Resolve-Path -LiteralPath (Join-Path $taskRepo 'test/software')).Path
 $taskRuntime = (Resolve-Path -LiteralPath (Join-Path $taskRepo 'test/runtime')).Path
@@ -49,6 +55,7 @@ $taskProcessImageChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestProc
 $taskHotScopeChecks = [OpenCodex.Diagnostics.OwnedEtwScope]::SelfTestHotScope()
 $taskLineBudgetChecks = [OpenCodex.Diagnostics.OwnedEtwLineBudget]::SelfTest()
 $taskExecutableAdmissionChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestExecutableAdmission()
+$taskRunnerEnvironmentChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestRunnerEnvironment()
 if (!$RecordApproved) {
     [ordered]@{
         status='prepared-only';pureScopeChecks=$taskScopeChecks
@@ -57,6 +64,7 @@ if (!$RecordApproved) {
         controllerProcessImageChecks=$taskProcessImageChecks
         descendantHotScopeChecks=$taskHotScopeChecks;utf8LineBudgetChecks=$taskLineBudgetChecks
         executableAdmissionChecks=$taskExecutableAdmissionChecks
+        runnerEnvironmentChecks=$taskRunnerEnvironmentChecks
         testSha256=$ExpectedTestSha256;nodeSha256=$ExpectedNodeSha256
         compiler='PowerShell Add-Type';controllerElevated=[Microsoft.Diagnostics.Tracing.Session.TraceEventSession]::IsElevated()
         etwSessionStarted=$false;testOrNodeStarted=$false;recordingApproved=$false
@@ -71,11 +79,16 @@ if (Test-Path -LiteralPath $taskOutput) { throw 'Recording root already exists; 
 $taskSession = 'OpenCodex-BD2-' + [guid]::NewGuid().ToString('N')
 $taskCapture = Join-Path $taskOutput 'capture'
 $taskTemp = Join-Path $taskOutput 'temp'
+if ($RunnerRegressionEnvironment) {
+    # Use the original runner TEMP volume with an exclusive task-owned child,
+    # never the broad runner Temp directory as the serialized-path allowlist.
+    $taskTemp = Join-Path ([IO.Path]::GetTempPath()) $taskSession
+}
 $taskHome = Join-Path $taskOutput 'home'
 New-Item -ItemType Directory -Path $taskOutput | Out-Null
 # No execution policy, defense, service, global PATH, registry, or task scheduler
 # changes. Controller elevation is confined to the temporary ETW session.
 $taskRun = [OpenCodex.Diagnostics.OwnedEtwRecorder]::RunOnce(
     $taskExe,$taskNode,(Join-Path $taskRepo 'apps/desktop/tauri'),
-    $taskCapture,$taskTemp,$taskHome,$taskSession)
+    $taskCapture,$taskTemp,$taskHome,$taskSession,[bool]$RunnerRegressionEnvironment)
 Write-Output $taskRun
