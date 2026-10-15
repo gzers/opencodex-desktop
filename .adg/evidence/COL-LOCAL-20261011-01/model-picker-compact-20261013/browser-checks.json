@@ -1,0 +1,125 @@
+{
+  "date": "2026-10-13",
+  "scope": "字号间距紧凑化、移除默认说明、共享玻璃背景",
+  "checks": [
+    {
+      "name": "同型号中档位前后字号和尺寸",
+      "status": "passed",
+      "observed": {
+        "before": {
+          "chip": {
+            "bottom": 802,
+            "height": 38,
+            "left": 241.5,
+            "right": 445.4453125,
+            "top": 764,
+            "width": 203.9453125,
+            "x": 241.5,
+            "y": 764
+          },
+          "chipFont": "13px",
+          "chipPadding": "8px 10px",
+          "currentFont": "22px",
+          "modelFont": "12px",
+          "padding": "16px 18px 12px",
+          "popover": {
+            "bottom": 756.1953125,
+            "height": 188.1953125,
+            "left": 173.46875,
+            "right": 513.46875,
+            "top": 568,
+            "width": 340,
+            "x": 173.46875,
+            "y": 568
+          }
+        },
+        "after": {
+          "chip": {
+            "bottom": 805,
+            "height": 28,
+            "left": 239.5,
+            "right": 412.8125,
+            "top": 777,
+            "width": 173.3125,
+            "x": 239.5,
+            "y": 777
+          },
+          "chipFont": "12px",
+          "chipPadding": "4px 7px",
+          "currentFont": "16px",
+          "modelFont": "11px",
+          "noteCount": 0,
+          "overflow": false,
+          "padding": "10px 12px",
+          "popover": {
+            "bottom": 768.9453125,
+            "height": 121.9453125,
+            "left": 192.15625,
+            "right": 460.15625,
+            "top": 647,
+            "width": 268,
+            "x": 192.15625,
+            "y": 647
+          },
+          "text": "中\nNewApi / gpt-5.4-mini\n默认\n低\n中\n高\n极高"
+        }
+      }
+    },
+    {
+      "name": "移除默认说明且无横向溢出",
+      "status": "passed"
+    },
+    {
+      "name": "紧凑滑杆键盘选档仍即时返回",
+      "status": "passed",
+      "observed": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini 高"
+    },
+    {
+      "name": "深色多选尺寸与字号一致、无说明及溢出",
+      "status": "passed",
+      "observed": {
+        "chipHeights": [
+          28,
+          28
+        ],
+        "font": "16px",
+        "glass": "rgba(37, 40, 47, 0.9)",
+        "height": 121.9453125,
+        "overflow": false,
+        "padding": "10px 12px",
+        "text": "默认\nNewApi / gpt-5.4\n默认\n低\n中\n高\n极高",
+        "width": 268
+      }
+    },
+    {
+      "name": "多选紧凑标签可改档且主弹窗保留",
+      "status": "passed",
+      "observed": "已选模型 2\n清空选择\n✓\n1. NewApi / gpt-5.4\n高\n⌄\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n默认\n⌄\n↑\n↓\n×"
+    },
+    {
+      "name": "紧凑浮层采用共享半透明玻璃材质",
+      "status": "passed",
+      "observed": {
+        "background": "rgba(244, 245, 249, 0.52)",
+        "blur": "saturate(1.6) blur(22px)",
+        "font": "16px",
+        "height": 121.9453125,
+        "highlight": "linear-gradient(145deg, color(srgb 1 1 1 / 0.14), rgba(0, 0, 0, 0) 65%), none",
+        "noteCount": 0,
+        "padding": "10px 12px",
+        "width": 268
+      }
+    },
+    {
+      "name": "深色同步使用共享玻璃材质且保持紧凑",
+      "status": "passed",
+      "observed": {
+        "background": "rgba(34, 36, 42, 0.56)",
+        "blur": "saturate(1.6) blur(22px)",
+        "height": 121.9453125,
+        "width": 268
+      }
+    }
+  ],
+  "logs": []
+}

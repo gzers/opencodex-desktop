@@ -1,0 +1,134 @@
+{
+  "date": "2026-10-13",
+  "scope": "默认弹窗形态增量",
+  "checks": [
+    {
+      "name": "直接入口默认弹窗",
+      "observed": {
+        "context": "model-picker:single",
+        "inline": 0,
+        "mode": "single",
+        "open": true,
+        "picked": "已选模型 · 1清空选择1. NewApi / gpt-5.4↑↓×",
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4",
+        "searches": 1,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "多选保持弹窗形态",
+      "observed": {
+        "context": "model-picker:multiple",
+        "inline": 0,
+        "mode": "multiple",
+        "open": true,
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×",
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4\naimami / gpt-5.4-mini",
+        "searches": 1,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "取消关闭且不自动重开、不退回页内",
+      "observed": {
+        "context": "model-picker:multiple",
+        "inline": 0,
+        "mode": "multiple",
+        "open": false,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4\naimami / gpt-5.4-mini",
+        "searches": 0,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "切模式重新展示弹窗",
+      "observed": {
+        "context": "model-picker:single",
+        "inline": 0,
+        "mode": "single",
+        "open": true,
+        "picked": "已选模型 · 1清空选择1. NewApi / gpt-5.4↑↓×",
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4",
+        "searches": 1,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "单选返回关闭",
+      "observed": {
+        "context": "model-picker:single",
+        "inline": 0,
+        "mode": "single",
+        "open": false,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini",
+        "searches": 0,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "显式页内展示",
+      "observed": {
+        "context": "model-picker:single",
+        "inline": 1,
+        "mode": "single",
+        "open": false,
+        "picked": "已选模型 · 1清空选择1. NewApi / gpt-5.4-mini↑↓×",
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini",
+        "searches": 1,
+        "shape": "inline"
+      }
+    },
+    {
+      "name": "切回弹窗",
+      "observed": {
+        "context": "model-picker:single",
+        "inline": 0,
+        "mode": "single",
+        "open": true,
+        "picked": "已选模型 · 1清空选择1. NewApi / gpt-5.4-mini↑↓×",
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini",
+        "searches": 1,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "非功能入口自动打开",
+      "observed": {
+        "context": "model-picker:single",
+        "inline": 0,
+        "mode": "single",
+        "open": true,
+        "picked": "已选模型 · 1清空选择1. NewApi / gpt-5.4-mini↑↓×",
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini",
+        "searches": 1,
+        "shape": "dialog"
+      }
+    },
+    {
+      "name": "页内对照手动开弹窗后模式仍正确切换",
+      "observed": {
+        "context": "model-picker:multiple",
+        "inline": 0,
+        "mode": "multiple",
+        "open": true,
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×",
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4\naimami / gpt-5.4-mini",
+        "searches": 1,
+        "shape": "inline"
+      }
+    },
+    {
+      "name": "Esc关闭默认弹窗",
+      "observed": {
+        "context": "model-picker:multiple",
+        "inline": 0,
+        "mode": "multiple",
+        "open": false,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4\naimami / gpt-5.4-mini",
+        "searches": 0,
+        "shape": "dialog"
+      }
+    }
+  ],
+  "logs": []
+}

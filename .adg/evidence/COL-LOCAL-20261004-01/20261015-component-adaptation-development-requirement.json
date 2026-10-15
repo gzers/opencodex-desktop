@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-15",
+  "project_id": "opencodex-desktop",
+  "request": "后续开发按组件化实现，全部组件按专题指标适配",
+  "scope": "仅长期要求/开发交接/待执行验收门记录",
+  "checks": {
+    "new_document_links": [
+      {
+        "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/02-开发实施/README.md",
+        "target": "../../../../../02-项目核心/UI规范.md#341-开发阶段组件化与逐项适配2026-10-15用户确认",
+        "passed": true
+      },
+      {
+        "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/02-开发实施/README.md",
+        "target": "../03-测试验收/README.md#全部组件按指标适配验收020",
+        "passed": true
+      },
+      {
+        "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/03-测试验收/README.md",
+        "target": "../../../../../02-项目核心/UI规范.md#341-开发阶段组件化与逐项适配2026-10-15用户确认",
+        "passed": true
+      },
+      {
+        "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/03-测试验收/README.md",
+        "target": "../02-开发实施/README.md#全部组件按指标适配020开发约束",
+        "passed": true
+      },
+      {
+        "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题交付与检查.md",
+        "target": "../../../02-项目核心/UI规范.md#341-开发阶段组件化与逐项适配2026-10-15用户确认",
+        "passed": true
+      }
+    ],
+    "broken_links": [],
+    "diff_check": true,
+    "prototype_tests": "not rerun; no prototype/source implementation changed",
+    "production_acceptance": "not executed"
+  },
+  "writeback": [
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "before_sha256": "7b0c2d5a3b4e04a616eb3e5fe01d63d350dc49869e0c22f818f9e01dcff4c8f7",
+      "after_sha256": "b651b6ddd1ac28c269de3d032e66b815650747fad34ea5e50416cb4bed6ecef0"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/02-开发实施/README.md",
+      "before_sha256": "e371f125e39edc4b60c559861472f719ab3585939fbd93d9c34853b974a9b3bc",
+      "after_sha256": "7328431c3ad1af18b28875b6738e4c123105a8dbba27b9ef215cc062ab885066"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/03-测试验收/README.md",
+      "before_sha256": "e4b8a744f6dad0029c85c840922fdbeb1f73072497b47ea6d8b5e991a417291b",
+      "after_sha256": "979c9c3e434c5642d655fbda2782032e1876b3b88b55c56b64cb0918828a9397"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题交付与检查.md",
+      "before_sha256": "4735ff55c8015d7adad5775afe3a1acbdae52918e4b6c4de68a17418bd01b423",
+      "after_sha256": "e8458edc68864236c3e236cdf513672d28ff4e573bb630bc2a8ba6b5be36f4cf"
+    }
+  ],
+  "manifest": [
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "role": "authority-spec",
+      "sha256": "b651b6ddd1ac28c269de3d032e66b815650747fad34ea5e50416cb4bed6ecef0",
+      "size_bytes": 112713,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/02-开发实施/README.md",
+      "role": "development-and-acceptance-handoff",
+      "sha256": "7328431c3ad1af18b28875b6738e4c123105a8dbba27b9ef215cc062ab885066",
+      "size_bytes": 33632,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/03-测试验收/README.md",
+      "role": "development-and-acceptance-handoff",
+      "sha256": "979c9c3e434c5642d655fbda2782032e1876b3b88b55c56b64cb0918828a9397",
+      "size_bytes": 43067,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题交付与检查.md",
+      "role": "development-and-acceptance-handoff",
+      "sha256": "e8458edc68864236c3e236cdf513672d28ff4e573bb630bc2a8ba6b5be36f4cf",
+      "size_bytes": 19200,
+      "media_type": "text/markdown"
+    }
+  ],
+  "boundaries": [
+    "当前未启动apps开发，未修改原型实现或运行配置",
+    "0.2.0承接公共底座及本版页面；延期业务沿所属版本适配",
+    "待确认建议实施前明确采用并回写，不自动认定全部候选数值获批",
+    "未提交/发布"
+  ]
+}

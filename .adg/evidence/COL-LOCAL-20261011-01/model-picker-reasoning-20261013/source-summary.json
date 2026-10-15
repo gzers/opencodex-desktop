@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-13",
+  "branch": "docs/governance-main",
+  "syntax_passed": [
+    "model-picker.js",
+    "prototype-panel.js",
+    "annotation-cards.js",
+    "index inline 1",
+    "index inline 2"
+  ],
+  "resources_checked": 32,
+  "material_links_checked": 68,
+  "browser_checks_passed": 25,
+  "default_omits_reasoningEffort": true,
+  "changed_files": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-picker.js",
+      "sha256": "812397f9f78392f38b2473162975d74739e5ddb034815a1a4ca3c2eb50090ee7"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-picker.css",
+      "sha256": "f0faa970d761086266c8d195c1f807f00478a121ad697a48a2d3ba57d738485a"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "sha256": "0eb620a955d0fa03e14dc8cc7bf13f7971305812835245c2474406750fa923d4"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/公共渠道模型选择器交互方案.md",
+      "sha256": "b2a790cf00c154a69561cc3f47c7a204d382face1bda6ed17b33a4111c57f688"
+    }
+  ],
+  "business_integration": false,
+  "real_config_writes": false,
+  "remaining": [
+    "真实模型能力权威来源与业务默认解析需在接入时核验",
+    "跨平台原生滑杆与辅助技术未做生产验收"
+  ]
+}

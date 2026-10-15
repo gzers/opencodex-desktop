@@ -1,0 +1,86 @@
+{
+  "date": "2026-10-13",
+  "scope": "OpenCodex Desktop mock shared picker and model-template Agent settings",
+  "checks": [
+    {
+      "name": "single-confirm-present",
+      "pass": true
+    },
+    {
+      "name": "model-click-no-return",
+      "pass": true
+    },
+    {
+      "name": "effort-fast-keep-open-no-return",
+      "pass": true
+    },
+    {
+      "name": "outside-closes-float-only",
+      "pass": true
+    },
+    {
+      "name": "one-confirm-while-float-open-returns-combo",
+      "pass": true
+    },
+    {
+      "name": "single-cancel-restores-model-and-settings",
+      "pass": true
+    },
+    {
+      "name": "single-current-no-delete",
+      "pass": true
+    },
+    {
+      "name": "plain-single-stays-pending-with-confirm",
+      "pass": true
+    },
+    {
+      "name": "plain-single-confirm-returns",
+      "pass": true
+    },
+    {
+      "name": "multiple-still-requires-confirm",
+      "pass": true
+    },
+    {
+      "name": "multiple-confirm-returns-complete-list",
+      "pass": true
+    },
+    {
+      "name": "tab-out-no-auto-confirm",
+      "pass": true
+    },
+    {
+      "name": "business-empty-single-confirm-disabled",
+      "pass": true
+    },
+    {
+      "name": "agent-blur-keeps-picker-without-buffer-return",
+      "pass": true
+    },
+    {
+      "name": "agent-confirm-returns-complete-buffer",
+      "pass": true
+    },
+    {
+      "name": "agent-save-applies-confirmed-combo",
+      "pass": true
+    },
+    {
+      "name": "agent-picker-cancel-restores-buffer",
+      "pass": true
+    },
+    {
+      "name": "agent-settings-cancel-preserves-saved",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "mock only; no production integration",
+    "unchanged themes and responsive styles were not reaudited"
+  ],
+  "assertionCorrections": [
+    "business picker has its own title; matched visible business title on recheck",
+    "multiple fixture started with existing selections; tested increment relative to observed count"
+  ]
+}

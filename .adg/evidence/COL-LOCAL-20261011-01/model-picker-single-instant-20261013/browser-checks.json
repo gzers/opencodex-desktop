@@ -1,0 +1,206 @@
+{
+  "date": "2026-10-13",
+  "scope": "单选点即返回、只读已选、柔化表头、唯一清除按钮、原型标记零占位",
+  "checks": [
+    {
+      "name": "单选只读已选，无删除与确认，表头非纯白",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4",
+        "header": {
+          "bg": "color(srgb 0.889848 0.893479 0.908005 / 0.540706)",
+          "position": "sticky",
+          "text": "模型\n↕"
+        }
+      }
+    },
+    {
+      "name": "模型搜索只有一个清除按钮且垂直居中",
+      "status": "passed",
+      "observed": {
+        "input": {
+          "clear": {
+            "bottom": 383,
+            "height": 24,
+            "left": 1297,
+            "right": 1321,
+            "top": 359,
+            "width": 24,
+            "x": 1297,
+            "y": 359
+          },
+          "clearCount": 1,
+          "clearHidden": false,
+          "rect": {
+            "bottom": 388,
+            "height": 34,
+            "left": 530,
+            "right": 1326,
+            "top": 354,
+            "width": 796,
+            "x": 530,
+            "y": 354
+          },
+          "type": "text"
+        },
+        "centerDifference": 0
+      }
+    },
+    {
+      "name": "清除模型查询后恢复目录，已选保持",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4",
+        "inputValue": ""
+      }
+    },
+    {
+      "name": "渠道使用同一清除样式，清除只恢复渠道列表",
+      "status": "passed",
+      "observed": {
+        "modelQuery": "",
+        "channelQuery": ""
+      }
+    },
+    {
+      "name": "单选点击直接返回并关闭",
+      "status": "passed",
+      "observed": {
+        "open": false,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini"
+      }
+    },
+    {
+      "name": "重新打开已选保持且无法删除",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4-mini"
+      }
+    },
+    {
+      "name": "单选Enter同样立即选择并关闭",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.3-codex"
+      }
+    },
+    {
+      "name": "取消不清空当前单选",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.3-codex"
+      }
+    },
+    {
+      "name": "多选保留删除与确认",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×",
+        "removeCount": 3
+      }
+    },
+    {
+      "name": "多选移除和确认仍返回列表",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 2 个模型引用。\n\naimami / gpt-5.4-mini\nnewapi / gpt-5.4-mini"
+      }
+    },
+    {
+      "name": "原型注释在标题层绝对定位，展开不改变内容几何",
+      "status": "passed",
+      "observed": {
+        "tag": {
+          "location": "modalHeadActions",
+          "position": "absolute",
+          "rect": {
+            "bottom": 291,
+            "height": 24,
+            "left": 1239.2578125,
+            "right": 1320,
+            "top": 267,
+            "width": 80.7421875,
+            "x": 1239.2578125,
+            "y": 267
+          }
+        },
+        "bodyHeight": 499,
+        "tableHeight": 347,
+        "annotation": "原型\n01\n悬浮注释\n×\n模型选择与排序的操作规则\n\n选择形式由业务决定。单选点击模型立即替换并返回，弹窗关闭；底部当前已选只读，不提供删除或确认。多选逐项加入、确定后返回，取消保持原选择。配置保存由调用页面负责。\n\n点表头按升序、降序、原目录顺序循环；浏览排序不改变已选优先级。左右搜索分别查渠道和当前范围模型，跨查询选择保持。\n\n本页使用已保存模型 mock 的目录和示例能力，不读取真实配置、不调用模型或网络。组件只返回具体模型引用；继承与来源由业务配置页面负责。\n\n再次点击标记可收起\nESC"
+      }
+    },
+    {
+      "name": "隐藏原型标记不改变软件尺寸与表格空间",
+      "status": "passed",
+      "observed": {
+        "body": 499,
+        "title": 61,
+        "table": 347
+      }
+    },
+    {
+      "name": "柔化表头仍可排序",
+      "status": "passed",
+      "observed": {
+        "sortedHeader": "模型\n↑"
+      }
+    },
+    {
+      "name": "深色表头与唯一清除按钮仍匹配主题",
+      "status": "passed",
+      "observed": {
+        "header": {
+          "bg": "color(srgb 0.18812 0.195421 0.217323 / 0.578353)",
+          "position": "sticky",
+          "text": "模型\n↕"
+        },
+        "clear": {
+          "bottom": 383,
+          "height": 24,
+          "left": 1297,
+          "right": 1321,
+          "top": 359,
+          "width": 24,
+          "x": 1297,
+          "y": 359
+        },
+        "tag": {
+          "location": "modalHeadActions",
+          "position": "absolute",
+          "rect": {
+            "bottom": 291,
+            "height": 24,
+            "left": 1239.2578125,
+            "right": 1320,
+            "top": 267,
+            "width": 80.7421875,
+            "x": 1239.2578125,
+            "y": 267
+          }
+        }
+      }
+    },
+    {
+      "name": "页内对照同样无单选删除和确认，标记悬浮",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.3-codex",
+        "tag": {
+          "location": "",
+          "position": "absolute",
+          "rect": {
+            "bottom": 314,
+            "height": 24,
+            "left": 1335.2578125,
+            "right": 1416,
+            "top": 290,
+            "width": 80.7421875,
+            "x": 1335.2578125,
+            "y": 290
+          }
+        }
+      }
+    }
+  ],
+  "logs": []
+}

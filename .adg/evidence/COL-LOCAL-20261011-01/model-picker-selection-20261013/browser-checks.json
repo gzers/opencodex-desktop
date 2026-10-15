@@ -1,0 +1,267 @@
+{
+  "date": "2026-10-13",
+  "scope": "五条批注：标题搜索对齐、移除继承、单选已选区和选中效果",
+  "checks": [
+    {
+      "name": "标题和搜索对齐，继承区移除，初始单选已选显示底部",
+      "observed": {
+        "actions": {
+          "bottom": 873,
+          "height": 58,
+          "left": 360,
+          "right": 1338,
+          "top": 815,
+          "width": 978,
+          "x": 360,
+          "y": 815
+        },
+        "checkboxes": 0,
+        "confirmDisabled": false,
+        "headings": {
+          "channel": {
+            "bottom": 346,
+            "height": 18,
+            "left": 377,
+            "right": 511,
+            "top": 328,
+            "width": 134,
+            "x": 377,
+            "y": 328
+          },
+          "model": {
+            "bottom": 346,
+            "height": 18,
+            "left": 530,
+            "right": 1326,
+            "top": 328,
+            "width": 796,
+            "x": 530,
+            "y": 328
+          }
+        },
+        "inheritedEntries": 0,
+        "marker": "✓\n已选",
+        "modal": {
+          "bottom": 874,
+          "height": 620,
+          "left": 359,
+          "right": 1339,
+          "top": 254,
+          "width": 980,
+          "x": 359,
+          "y": 254
+        },
+        "open": true,
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4\n×",
+        "pickedCount": 1,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4",
+        "rowColor": "color(srgb 0.0509804 0.0509804 0.0509804 / 0.14)",
+        "searches": {
+          "channel": {
+            "bottom": 388,
+            "height": 34,
+            "left": 370,
+            "right": 518,
+            "top": 354,
+            "width": 148,
+            "x": 370,
+            "y": 354
+          },
+          "model": {
+            "bottom": 388,
+            "height": 34,
+            "left": 530,
+            "right": 1326,
+            "top": 354,
+            "width": 796,
+            "x": 530,
+            "y": 354
+          }
+        },
+        "selectedArea": {
+          "bottom": 781.5,
+          "height": 73.5,
+          "left": 360,
+          "right": 1338,
+          "top": 708,
+          "width": 978,
+          "x": 360,
+          "y": 708
+        },
+        "selectedRows": [
+          "[\"channel\",\"newapi\",\"gpt-5.4\"]"
+        ],
+        "strip": "rgb(13, 13, 13) 3px 0px 0px 0px inset",
+        "title": "模型"
+      },
+      "status": "passed"
+    },
+    {
+      "name": "单选替换底部唯一模型，确认前不提交",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4-mini\n×",
+        "marker": "✓\n已选",
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4"
+      }
+    },
+    {
+      "name": "单选取消恢复原项",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4\n×"
+      }
+    },
+    {
+      "name": "单选范围外已选仍在底部，标题固定模型",
+      "status": "passed",
+      "observed": {
+        "title": "模型",
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4\n×",
+        "footer": "1 项已选 · 列表外 1 项"
+      }
+    },
+    {
+      "name": "单选确认返回正确渠道身份并关闭",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\naimami / gpt-5.3-codex"
+      }
+    },
+    {
+      "name": "单选移除后禁用确定，待重新选择",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 0\n尚未选择模型",
+        "confirmDisabled": true
+      }
+    },
+    {
+      "name": "Enter选入保持弹窗，待确认",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4-mini\n×",
+        "open": true
+      }
+    },
+    {
+      "name": "多选底部保留跨范围选择，浏览排序不改已选",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 3\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×\n3. Aimami / gpt-5.4\n↑\n↓\n×",
+        "checkboxes": 3
+      }
+    },
+    {
+      "name": "多选取消恢复原两项",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "单选失效引用在底部，替换前不可确认",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\n已移除渠道 / removed-model · 目录缺失\n×",
+        "confirmDisabled": true
+      }
+    },
+    {
+      "name": "选择可用模型替换失效引用",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nNewApi / gpt-5.4\n×"
+      }
+    },
+    {
+      "name": "900×600 深色长型号，搜索对齐且已选与动作保持可见",
+      "status": "passed",
+      "observed": {
+        "searches": {
+          "channel": {
+            "bottom": 431,
+            "height": 34,
+            "left": 431,
+            "right": 579,
+            "top": 397,
+            "width": 148,
+            "x": 431,
+            "y": 397
+          },
+          "model": {
+            "bottom": 431,
+            "height": 34,
+            "left": 591,
+            "right": 1265,
+            "top": 397,
+            "width": 674,
+            "x": 591,
+            "y": 397
+          }
+        },
+        "modal": {
+          "bottom": 831,
+          "height": 534,
+          "left": 420,
+          "right": 1278,
+          "top": 297,
+          "width": 858,
+          "x": 420,
+          "y": 297
+        },
+        "selectedArea": {
+          "bottom": 738.5,
+          "height": 73.5,
+          "left": 421,
+          "right": 1277,
+          "top": 665,
+          "width": 856,
+          "x": 421,
+          "y": 665
+        },
+        "actions": {
+          "bottom": 830,
+          "height": 58,
+          "left": 421,
+          "right": 1277,
+          "top": 772,
+          "width": 856,
+          "x": 421,
+          "y": 772
+        },
+        "marker": "✓\n已选"
+      }
+    },
+    {
+      "name": "页内对照也有单选已选区及对齐搜索",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 1\nAimami / gpt-5.3-codex\n×",
+        "searches": {
+          "channel": {
+            "bottom": 528.1953125,
+            "height": 34,
+            "left": 676,
+            "right": 806,
+            "top": 494.1953125,
+            "width": 130,
+            "x": 676,
+            "y": 494.1953125
+          },
+          "model": {
+            "bottom": 528.1953125,
+            "height": 34,
+            "left": 816,
+            "right": 1266,
+            "top": 494.1953125,
+            "width": 450,
+            "x": 816,
+            "y": 494.1953125
+          }
+        }
+      }
+    }
+  ],
+  "logs": []
+}

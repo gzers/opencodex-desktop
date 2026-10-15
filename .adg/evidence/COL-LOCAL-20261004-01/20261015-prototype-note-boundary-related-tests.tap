@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: 设置页只承载 Agent 配置，文件与行为说明在隐藏注释，按钮前后一致
+ok 1 - 设置页只承载 Agent 配置，文件与行为说明在隐藏注释，按钮前后一致
+  ---
+  duration_ms: 22.834208
+  type: 'test'
+  ...
+# Subtest: 弹窗交互说明不再占正文，传给共用原型注释，模型选择和保存仍可达
+ok 2 - 弹窗交互说明不再占正文，传给共用原型注释，模型选择和保存仍可达
+  ---
+  duration_ms: 8.990084
+  type: 'test'
+  ...
+# Subtest: Agent 快速状态随组合与能力显示，支持能力不等于已开启，取消不更新摘要
+ok 3 - Agent 快速状态随组合与能力显示，支持能力不等于已开启，取消不更新摘要
+  ---
+  duration_ms: 73.660333
+  type: 'test'
+  ...
+# Subtest: 高级 Fast 入口已移除，旧事件无效，Agent 选择不改既有运行策略与兼容目录
+ok 4 - 高级 Fast 入口已移除，旧事件无效，Agent 选择不改既有运行策略与兼容目录
+  ---
+  duration_ms: 31.067208
+  type: 'test'
+  ...
+# Subtest: 共用弹窗原型注释自定义标题和内容安全转义，其他弹窗默认说明仍保留
+ok 5 - 共用弹窗原型注释自定义标题和内容安全转义，其他弹窗默认说明仍保留
+  ---
+  duration_ms: 1.268208
+  type: 'test'
+  ...
+# Subtest: 总原型接线：单入口创建/提交/回执，统一通知可回到同一任务且不带正文
+ok 6 - 总原型接线：单入口创建/提交/回执，统一通知可回到同一任务且不带正文
+  ---
+  duration_ms: 13214.228083
+  type: 'test'
+  ...
+# Subtest: 选范围/场景原位生成完整内容、一次复制；六场景与只检查不写入
+ok 7 - 选范围/场景原位生成完整内容、一次复制；六场景与只检查不写入
+  ---
+  duration_ms: 17547.181417
+  type: 'test'
+  ...
+# Subtest: 共享弹窗不再向正文添加原型脚注或注释占位，说明只走共享注释参数
+ok 8 - 共享弹窗不再向正文添加原型脚注或注释占位，说明只走共享注释参数
+  ---
+  duration_ms: 2.412292
+  type: 'test'
+  ...
+# Subtest: 所有原型CSS禁止标记改回static/relative，专用宿主不参与布局
+ok 9 - 所有原型CSS禁止标记改回static/relative，专用宿主不参与布局
+  ---
+  duration_ms: 1.706708
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 31031.580125

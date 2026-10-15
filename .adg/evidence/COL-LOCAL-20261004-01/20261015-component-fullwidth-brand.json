@@ -1,0 +1,188 @@
+{
+  "date": "2026-10-15",
+  "project_id": "opencodex-desktop",
+  "scope": "独立全宽组件专题、侧栏品牌完整显示及品牌/平台图标置前；docs原型与规格",
+  "entry": "index.html#components?section=brand",
+  "sections": 19,
+  "components": 43,
+  "front_sections": [
+    "brand",
+    "app-icons",
+    "tray-icons",
+    "icons-spacing"
+  ],
+  "layout": [
+    "占满工具板左侧空间，不绘制假软件窗口装饰",
+    "保留同一主滚动/浮层坐标；原通知铃铛移动到专题页头并在离开后归还",
+    "样例宽度fluid/1180/900不控制专题外壳；旧size查询兼容",
+    "侧栏品牌32px图形和可换行完整名称"
+  ],
+  "checks": {
+    "full_prototype_regression": {
+      "tests": 235,
+      "pass": 235,
+      "fail": 0,
+      "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-component-fullwidth-brand-tests.tap"
+    },
+    "static": {
+      "javascript_syntax": "passed",
+      "css_syntax": "passed",
+      "fullwidth_and_brand_rules": "passed",
+      "svg_assets_parsed": 9,
+      "asset_files_modified": false,
+      "scope": "源码/DOM检查，不是实屏布局或原生小尺寸验收"
+    },
+    "git_diff_check": true
+  },
+  "writeback": {
+    "path": "docs/02-项目核心/UI规范.md",
+    "before_sha256": "006ff35ca2c1cbce8ead20e0c859cb8f4d99e79a1fc723bfb5670905bbff8c3d",
+    "after_sha256": "224fa2d87e28ca5e9f791eb6e872763a43cbca118f3778527150226e0f800713"
+  },
+  "limits": [
+    "无本轮浏览器实屏/对比度/真实几何/原生DPI验收；未绕行file访问限制",
+    "未修改品牌交付资产或apps正式源码，未提交/发布"
+  ],
+  "manifest": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "role": "prototype-or-spec",
+      "sha256": "b922770c53f29ce979e22cf5336848599edfe1ed512effb1a0006fad812b8cab",
+      "size_bytes": 593770,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-catalog.js",
+      "role": "prototype-or-spec",
+      "sha256": "a832c40f93a8d902e88668fc7f1ac59ae8a592c67c50e1bf645b5e67677654ca",
+      "size_bytes": 9283,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.js",
+      "role": "prototype-or-spec",
+      "sha256": "f2743d557067d32a171109443d7615ea9531665c56e37f14509e80c7c7010f32",
+      "size_bytes": 48671,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.css",
+      "role": "prototype-or-spec",
+      "sha256": "088f2219baed5573d5fc7d6dfd4cb653a51e89eff5dd790ebc5adb0dcbc6e483",
+      "size_bytes": 16500,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.test.cjs",
+      "role": "prototype-or-spec",
+      "sha256": "3351ff2ea3c3a59bdde3487389ade147369c4912be35aa40fe27d624aba5b755",
+      "size_bytes": 15032,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题交付与检查.md",
+      "role": "prototype-or-spec",
+      "sha256": "448062b2f77b7fc33c2a4d6a8408259ff1fbdc12b3812ca7219d697580b5e8c2",
+      "size_bytes": 15897,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题规划.md",
+      "role": "prototype-or-spec",
+      "sha256": "861444cb14e5bd26b233d40d7e9f32a7f7e1e1d5f68dffcc479971286b8beca4",
+      "size_bytes": 24936,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "role": "prototype-or-spec",
+      "sha256": "faec6c42a8c2bd9e55ff0265f06695bb68af060169b2aa83331bee6e70bac7df",
+      "size_bytes": 45772,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md",
+      "role": "prototype-or-spec",
+      "sha256": "e8601b3b9626e36a0eb87b8e4d9ebfe40884162a3fb50922d191c94effb2f4ff",
+      "size_bytes": 18684,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "role": "prototype-or-spec",
+      "sha256": "224fa2d87e28ca5e9f791eb6e872763a43cbca118f3778527150226e0f800713",
+      "size_bytes": 109104,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-component-fullwidth-brand-tests.tap",
+      "role": "test-evidence",
+      "sha256": "039ee277c9ca39bcd00512334584359c2e704fdfa6ecf2b59c47e2868c5da9fa",
+      "size_bytes": 57737,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/04-品牌组件/Logo/logo.svg",
+      "role": "source-asset-read-only",
+      "sha256": "c546f8d8b3f7e75111e2992f4671729cc55961ff74ddfc5727cc1c5868b2f8c0",
+      "size_bytes": 3319,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/04-品牌组件/Logo/logo-light.svg",
+      "role": "source-asset-read-only",
+      "sha256": "d9b705416e8daec6c7774915e5435e06adb7c491ed2cdc2bc88ef2258e3602fd",
+      "size_bytes": 3306,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/04-品牌组件/Logo/logo-dark.svg",
+      "role": "source-asset-read-only",
+      "sha256": "0aac6ce7eb2fb9e33458c1b38fd777430d3151d891b26598049ab0ff8b064f9c",
+      "size_bytes": 3306,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/03-平台交付/macOS/AppIcon/AppIcon.svg",
+      "role": "source-asset-read-only",
+      "sha256": "6f37da285a35795332d8cff8a382f946a2ff27ef1751e61ead1677066e57a75e",
+      "size_bytes": 3513,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/03-平台交付/Windows/AppIcon/AppIcon.svg",
+      "role": "source-asset-read-only",
+      "sha256": "43d574e8796c9f39461780fb9b218c921ba6149e212f0c1b6a3a294249b19bf5",
+      "size_bytes": 3378,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/03-平台交付/macOS/Tray/tray-template.svg",
+      "role": "source-asset-read-only",
+      "sha256": "6f0d29447763299eeda4dea5ff493721c7a62906ce3bfeefd638d77291e3122e",
+      "size_bytes": 3306,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/03-平台交付/macOS/Tray/tray-white.svg",
+      "role": "source-asset-read-only",
+      "sha256": "d9b705416e8daec6c7774915e5435e06adb7c491ed2cdc2bc88ef2258e3602fd",
+      "size_bytes": 3306,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/03-平台交付/Windows/Tray/tray-dark.svg",
+      "role": "source-asset-read-only",
+      "sha256": "1e6921e9f41ec99cc4903d49c805a3ca3aa0533ccd10e944ed6ea5b81a003379",
+      "size_bytes": 3362,
+      "media_type": "image/svg+xml"
+    },
+    {
+      "path": "docs/04-项目资料/04-品牌与图标素材/03-平台交付/Windows/Tray/tray-light.svg",
+      "role": "source-asset-read-only",
+      "sha256": "7578ca0b95d462ab673c47833df50cf2708db77192e98379d18f32005a752633",
+      "size_bytes": 3363,
+      "media_type": "image/svg+xml"
+    }
+  ]
+}

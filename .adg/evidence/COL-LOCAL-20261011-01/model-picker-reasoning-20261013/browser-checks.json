@@ -1,0 +1,189 @@
+{
+  "date": "2026-10-13",
+  "scope": "可选推理档位玻璃离散滑杆＋已选标签样式",
+  "checks": [
+    {
+      "name": "单选标签打开玻璃浮层，只有模型支持的默认低中高极高",
+      "status": "passed"
+    },
+    {
+      "name": "单选极高一次返回，弹窗关闭，重新打开保留极高后缀",
+      "status": "passed"
+    },
+    {
+      "name": "换型号不自动套用原型号等级",
+      "status": "passed"
+    },
+    {
+      "name": "方向键逐档预览，Enter前未提交，Enter返回模型与中",
+      "status": "passed"
+    },
+    {
+      "name": "恢复默认清除显式等级并返回",
+      "status": "passed"
+    },
+    {
+      "name": "Esc先收起推理浮层，主弹窗保留",
+      "status": "passed"
+    },
+    {
+      "name": "鼠标拖动滑杆松开返回模型与极高",
+      "status": "passed"
+    },
+    {
+      "name": "多选各模型等级独立，主弹窗保持",
+      "status": "passed"
+    },
+    {
+      "name": "从模型行档位一次加入，同型号更新不重复",
+      "status": "passed"
+    },
+    {
+      "name": "切渠道搜索排序保持跨范围型号与等级",
+      "status": "passed"
+    },
+    {
+      "name": "多选取消恢复型号与默认档位",
+      "status": "passed"
+    },
+    {
+      "name": "多选确认返回newapi gpt-5.4极高与aimami mini低",
+      "status": "passed"
+    },
+    {
+      "name": "关闭推理能力移除触发与后缀，普通单选仍直接返回",
+      "status": "passed"
+    },
+    {
+      "name": "能力差异场景mini仅默认最低低中",
+      "status": "passed"
+    },
+    {
+      "name": "无推理与默认分开，显式无可返回",
+      "status": "passed"
+    },
+    {
+      "name": "档位未知不编造滑杆，仍可用默认只选模型",
+      "status": "passed"
+    },
+    {
+      "name": "仅悬停已选标签打开，表格几何不变",
+      "status": "passed",
+      "observed": {
+        "steps": [
+          "默认",
+          "低",
+          "中",
+          "高",
+          "极高"
+        ],
+        "tableHeight": 324
+      }
+    },
+    {
+      "name": "从标签移入浮层保持展开",
+      "status": "passed",
+      "observed": {
+        "popover": {
+          "bottom": 756.1953125,
+          "height": 188.1953125,
+          "left": 298.484375,
+          "right": 638.484375,
+          "top": 568,
+          "width": 340,
+          "x": 298.484375,
+          "y": 568
+        }
+      }
+    },
+    {
+      "name": "悬停滑杆End预览极高不提前关闭",
+      "status": "passed",
+      "observed": {
+        "level": "极高"
+      }
+    },
+    {
+      "name": "滚轮逐档预览不提交，标签仍默认",
+      "status": "passed",
+      "observed": {
+        "preview": "低",
+        "chip": "已选模型 2\n清空选择\n✓\n1. NewApi / gpt-5.4\n默认\n⌄\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n低\n⌄\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "900×600深色长标签和浮层在软件边界内，无外层溢出",
+      "status": "passed",
+      "observed": {
+        "bodyScrollWidth": 856,
+        "bodyWidth": 856,
+        "chip": [
+          {
+            "client": 269,
+            "scroll": 269
+          },
+          {
+            "client": 298,
+            "scroll": 298
+          },
+          {
+            "client": 776,
+            "scroll": 776
+          }
+        ],
+        "filter": "saturate(1.5) blur(8px)",
+        "glass": "rgba(37, 40, 47, 0.9)",
+        "pop": {
+          "bottom": 712.78125,
+          "height": 183.78125,
+          "left": 612.0078125,
+          "right": 952.0078125,
+          "top": 529,
+          "width": 340,
+          "x": 612.0078125,
+          "y": 529
+        },
+        "window": {
+          "bottom": 864,
+          "height": 600,
+          "left": 399,
+          "right": 1299,
+          "top": 264,
+          "width": 900,
+          "x": 399,
+          "y": 264
+        }
+      }
+    },
+    {
+      "name": "页内对照共用推理浮层，不改变表格高度",
+      "status": "passed",
+      "observed": {
+        "height": 270
+      }
+    },
+    {
+      "name": "推理列表表头按显示的选择等级排序",
+      "status": "passed",
+      "observed": {
+        "ascendingFirst": "默认\n⌄\n低 / 中 / 高 / 极高",
+        "descendingFirst": "极高\n⌄\n低 / 中 / 高 / 极高"
+      }
+    },
+    {
+      "name": "推理浮层Tab环回首控件",
+      "status": "passed",
+      "observed": {
+        "focus": "采用当前推理档位"
+      }
+    },
+    {
+      "name": "移除再选从默认开始，不保留已删等级",
+      "status": "passed",
+      "observed": {
+        "chip": "已选模型 3\n清空选择\n✓\n1. NewApi / gpt-5.4\n默认\n⌄\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n默认\n⌄\n↑\n↓\n×\n✓\n3. NewApi / gpt-5.4-mini\n默认\n⌄\n↑\n↓\n×"
+      }
+    }
+  ],
+  "logs": []
+}

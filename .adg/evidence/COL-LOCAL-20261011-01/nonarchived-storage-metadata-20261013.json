@@ -1,0 +1,33 @@
+{
+  "observed_at": "2026-10-13T10:30:46.856453+08:00",
+  "method": "filesystem metadata only; sessions only; archived_sessions excluded; no content read or compression",
+  "source_root": "/Users/ezio/.codex/sessions",
+  "native_record_count": 75,
+  "total_bytes": 12897514439,
+  "allocated_bytes_from_stat": 12899897344,
+  "median_bytes": 1453530,
+  "p90_bytes": 30042843,
+  "p95_bytes": 85487631,
+  "max_bytes": 10839103082,
+  "top4_sizes_bytes": [
+    10839103082,
+    1372329773,
+    245505213,
+    85487631
+  ],
+  "remaining_without_largest_bytes": 2058411357,
+  "remaining_without_top2_bytes": 686081584,
+  "bins": {
+    "under_1_MiB": 31,
+    "1_to_10_MiB": 31,
+    "10_to_100_MiB": 10,
+    "100_MiB_and_over": 3
+  },
+  "stat_errors": 0,
+  "limitations": [
+    "Native file count is not independent root-chat count; child/fork records may be included.",
+    "Sessions-directory records do not establish runtime loaded/active status.",
+    "Other homes, attachments, databases and caches excluded.",
+    "Compression ratio and unique APFS physical allocation not measured."
+  ]
+}

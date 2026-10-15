@@ -1,0 +1,86 @@
+{
+  "tested_at_utc": "2026-10-13T01:23:45.425990+00:00",
+  "codex_version": "codex-cli 0.162.0-alpha.17.2",
+  "probe_sha256": "e85481dd7688391bc4927543a7d0b96e63fc0d695d3c5b4d3f57d435e641af69",
+  "helper_sha256": "ebcaf55aa832dd0bc8b9b68fa80bae4ef9c779b63649aec4eb38d1a67bffa098",
+  "experimental_api": true,
+  "isolated_homes": 2,
+  "provider": "loopback Responses stub",
+  "checks": [
+    {
+      "name": "read_stored_history",
+      "status": "passed",
+      "observed": {
+        "turn_count": 1,
+        "native_record_available": true
+      }
+    },
+    {
+      "name": "fork_from_native_session_layout",
+      "status": "passed",
+      "observed": {
+        "accepted": true,
+        "database_copy": false
+      }
+    },
+    {
+      "name": "fork_copied_native_record",
+      "status": "passed",
+      "observed": {
+        "new_thread_id": true,
+        "preserved_turn_count": 1
+      }
+    },
+    {
+      "name": "import_project_with_new_thread",
+      "status": "passed",
+      "observed": {
+        "new_project_id": true,
+        "new_thread_bound": true
+      }
+    },
+    {
+      "name": "continue_with_prior_context",
+      "status": "passed",
+      "observed": {
+        "prior_assistant_sent": true,
+        "turn_count": 2,
+        "model": "gpt-5.4"
+      }
+    }
+  ],
+  "observations": [
+    {
+      "name": "fork_from_staging_path",
+      "accepted": false,
+      "error": {
+        "code": -32600,
+        "message": "no rollout found for thread id 01a132db-c2d1-7dc3-b768-d7dac655a8f7"
+      }
+    }
+  ],
+  "limitations": [
+    "Same binary on both ends; no cross-version, cross-platform, or real desktop import checked.",
+    "Native path fork is UNSTABLE; thread/resume.history is reserved for Codex Cloud and is not used.",
+    "No production archive format, policy import, child-tree, attachments, or repository transfer checked."
+  ],
+  "status": "passed",
+  "local_requests": [
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "low",
+        "summary": "auto"
+      },
+      "service_tier": null
+    },
+    {
+      "model": "gpt-5.4",
+      "reasoning": {
+        "effort": "medium",
+        "summary": "auto"
+      },
+      "service_tier": null
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-13",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "single_channel_search_return",
+      "status": "passed",
+      "observed": "All channels stayed visible after query; selecting Aimami kept query and one click returned its separate model identity"
+    },
+    {
+      "name": "multiple_cross_channel_cancel_commit",
+      "status": "passed",
+      "observed": "Cross-channel picks persist, list-external selection counted; cancellation restores previous 2; full select of native results preserves 2 elsewhere and returns 8"
+    },
+    {
+      "name": "browse_sort_does_not_reorder_selection",
+      "status": "passed",
+      "observed": "Changing name sort kept exact selected-priority sequence"
+    },
+    {
+      "name": "complete_directory_and_unavailable",
+      "status": "passed",
+      "observed": "Full 152-record discovery includes model beyond first 100, disabled no-credit reason visible, no inference or credit probes"
+    },
+    {
+      "name": "empty_query_keeps_channel_navigation",
+      "status": "passed",
+      "observed": "Zero query matches left all + 4 channels unchanged, explicit clear/all actions provided"
+    },
+    {
+      "name": "inheritance_intent",
+      "status": "passed",
+      "observed": "Single inheritance returns inheritance rather than snapshot model and displays explicit source"
+    },
+    {
+      "name": "missing_reference_and_retry",
+      "status": "passed",
+      "observed": "Missing current ref visible/removable; invalid selection not accepted, remove enables confirmation; read failure retry preserves channels and selection"
+    },
+    {
+      "name": "keyboard_selection",
+      "status": "passed",
+      "observed": "Search ArrowDown focused first available result; Enter returned single reference; no business setting saved"
+    },
+    {
+      "name": "explicit_selected_priority",
+      "status": "passed",
+      "observed": "Selected-priority Up changed ordered selection and confirmation returns that sequence, independently of browse sort"
+    },
+    {
+      "name": "explicit_recommendation_and_list_inherit",
+      "status": "passed",
+      "observed": "Explicit fixture recommendations sort first; whole-list inheritance excludes custom extras; picking a model switches to custom list"
+    },
+    {
+      "name": "narrow_dark_long_names",
+      "status": "passed",
+      "observed": "900x600 dark modal and actions fit inside app, long channel/ID wrap without horizontal overflow"
+    },
+    {
+      "name": "public_demo_scope_and_escape",
+      "status": "passed",
+      "observed": "Demo available in both version-review scopes, recommendations disappear when none provided; Escape cancelled and focus returned to nonfunctional launcher"
+    }
+  ],
+  "consoleWarningsOrErrors": [],
+  "limits": [
+    "Standalone in-memory picker demo only; no business model field integrated, no real model/protocol/network/config writes.",
+    "Recommendations and availability are explicit fixtures; no live quality, price or credit ranking.",
+    "1180x760 and 900x600 app layouts checked; extreme zoom, large-scale virtualization and full assistive technology/cross-platform QA not executed."
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "date": "2026-10-13",
+  "prototype": "http://127.0.0.1:57285/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?design=conversations#model-picker",
+  "scope": "公共组件表格修订，静态mock",
+  "checks": [
+    {
+      "name": "渠道独立搜索，全部固定首项",
+      "status": "passed",
+      "observed": {
+        "channels": [
+          "全部152",
+          "Aimami12"
+        ],
+        "modelCount": 152
+      }
+    },
+    {
+      "name": "模型搜索在当前渠道，单选无选择框",
+      "status": "passed",
+      "observed": {
+        "scope": "Aimami",
+        "count": "1 个结果",
+        "rows": [
+          {
+            "cells": [
+              "GPT 5.4 minigpt-5.4-mini",
+              "Aimami",
+              "128,000",
+              "中低 / 中 / 高 / 极高",
+              "可选",
+              "—"
+            ],
+            "key": "[\"channel\",\"aimami\",\"gpt-5.4-mini\"]"
+          }
+        ],
+        "checkCount": 0
+      }
+    },
+    {
+      "name": "渠道无结果不改变右侧范围",
+      "status": "passed",
+      "observed": {
+        "channels": [
+          "全部11"
+        ],
+        "scope": "Aimami",
+        "count": "1 个结果"
+      }
+    },
+    {
+      "name": "单选返回所选渠道引用",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\naimami / gpt-5.4-mini"
+      }
+    },
+    {
+      "name": "六列表头循环排序，第三次恢复目录顺序",
+      "status": "passed",
+      "observed": [
+        {
+          "field": "模型",
+          "asc": "模型↑",
+          "desc": "模型↓",
+          "original": true,
+          "firstAsc": [
+            "claude-haiku-4-5claude-haiku-4-5",
+            "NewApi",
+            "未知",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "firstDesc": [
+            "qwen3-max--demo-5qwen3-max--demo-5",
+            "A6api",
+            "未知",
+            "中低 / 中 / 高 / 极高",
+            "无额度（示例）",
+            "—"
+          ],
+          "lastDesc": [
+            "claude-haiku-4-5claude-haiku-4-5",
+            "Aimami",
+            "未知",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ]
+        },
+        {
+          "field": "渠道",
+          "asc": "渠道↑",
+          "desc": "渠道↓",
+          "original": true,
+          "firstAsc": [
+            "GPT 5.4gpt-5.4",
+            "官方 / 原生",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "firstDesc": [
+            "GPT 5.4gpt-5.4",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "lastDesc": [
+            "gpt-5-minigpt-5-mini",
+            "官方 / 原生",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ]
+        },
+        {
+          "field": "上下文",
+          "asc": "上下文↑",
+          "desc": "上下文↓",
+          "original": true,
+          "firstAsc": [
+            "GPT 5.4gpt-5.4",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "firstDesc": [
+            "GPT 5.4gpt-5.4",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "lastDesc": [
+            "qwen3-coderqwen3-coder",
+            "Aimami",
+            "未知",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ]
+        },
+        {
+          "field": "推理档位",
+          "asc": "推理档位↑",
+          "desc": "推理档位↓",
+          "original": true,
+          "firstAsc": [
+            "GPT 5.4gpt-5.4",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "firstDesc": [
+            "GPT 5.4gpt-5.4",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "lastDesc": [
+            "gpt-5-minigpt-5-mini",
+            "官方 / 原生",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ]
+        },
+        {
+          "field": "状态",
+          "asc": "状态↑",
+          "desc": "状态↓",
+          "original": true,
+          "firstAsc": [
+            "GPT 5.4gpt-5.4",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ],
+          "firstDesc": [
+            "GPT 5.4gpt-5.4",
+            "A6api",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "无额度（示例）",
+            "—"
+          ],
+          "lastDesc": [
+            "gpt-5-minigpt-5-mini",
+            "官方 / 原生",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ]
+        },
+        {
+          "field": "推荐",
+          "asc": "推荐↑",
+          "desc": "推荐↓",
+          "original": true,
+          "firstAsc": [
+            "GPT 5.4 minigpt-5.4-mini",
+            "NewApi",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "推荐"
+          ],
+          "firstDesc": [
+            "GPT 5.4gpt-5.4",
+            "Aimami",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "推荐"
+          ],
+          "lastDesc": [
+            "gpt-5-minigpt-5-mini",
+            "官方 / 原生",
+            "128,000",
+            "中低 / 中 / 高 / 极高",
+            "可选",
+            "—"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "右侧切换多选，底部常驻已选模型",
+      "status": "passed",
+      "observed": {
+        "context": "model-picker:multiple",
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×",
+        "checkCount": 153
+      }
+    },
+    {
+      "name": "跨渠道和查询多选，底部可查看范围外已选",
+      "status": "passed",
+      "observed": {
+        "scope": "Aimami",
+        "count": "1 个结果",
+        "picked": "已选模型 · 4\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×\n3. NewApi / gpt-5.4-mini\n↑\n↓\n×\n4. Aimami / gpt-5.3-codex\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "浏览排序保持已选优先级",
+      "status": "passed",
+      "observed": {
+        "unchanged": true
+      }
+    },
+    {
+      "name": "独立页取消恢复原选择",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "当前结果全选保留查询外模型",
+      "status": "passed",
+      "observed": {
+        "count": "2 个结果",
+        "picked": "已选模型 · 3\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×\n3. Aimami / gpt-5.4\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "多选确认返回完整列表",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 3 个模型引用。\n\nnewapi / gpt-5.4\naimami / gpt-5.4-mini\naimami / gpt-5.4"
+      }
+    },
+    {
+      "name": "弹窗取消恢复独立页已提交选择",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 3\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×\n3. Aimami / gpt-5.4\n↑\n↓\n×",
+        "context": "model-picker:multiple"
+      }
+    },
+    {
+      "name": "弹窗键盘单选返回并关闭",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.3-codex",
+        "focus": "打开弹窗形态"
+      }
+    },
+    {
+      "name": "失效引用展示与移除",
+      "status": "passed",
+      "observed": {
+        "confirmEnabled": false,
+        "picked": "已选模型 · 3\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×\n3. 已移除渠道 / removed-model · 目录缺失\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "移除失效引用恢复确定",
+      "status": "passed",
+      "observed": {
+        "confirmEnabled": true
+      }
+    },
+    {
+      "name": "目录失败保留已选",
+      "status": "passed",
+      "observed": {
+        "message": "目录读取失败\n已有选择保持。重试读取示例",
+        "picked": "已选模型 · 2\n清空选择\n1. NewApi / gpt-5.4\n↑\n↓\n×\n2. Aimami / gpt-5.4-mini\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "失败重试恢复全目录",
+      "status": "passed",
+      "observed": {
+        "count": "152 个结果"
+      }
+    },
+    {
+      "name": "空目录仍显示原选择",
+      "status": "passed",
+      "observed": {
+        "message": "目录暂无模型，原选择保持。\n清空模型搜索",
+        "picked": "已选模型 · 2\n清空选择\n1. newapi / gpt-5.4 · 当前目录缺失 · 目录缺失\n↑\n↓\n×\n2. aimami / gpt-5.4-mini · 当前目录缺失 · 目录缺失\n↑\n↓\n×"
+      }
+    },
+    {
+      "name": "900×600 深色长名称，表格内部滚动，已选和动作保持",
+      "status": "passed",
+      "observed": {
+        "body": {
+          "client": 856,
+          "scroll": 856
+        },
+        "footer": {
+          "bottom": 716,
+          "height": 58,
+          "left": 182,
+          "right": 1038,
+          "top": 658,
+          "width": 856,
+          "x": 182,
+          "y": 658
+        },
+        "picked": {
+          "bottom": 624.5,
+          "height": 117,
+          "left": 182,
+          "right": 1038,
+          "top": 507.5,
+          "width": 856,
+          "x": 182,
+          "y": 507.5
+        },
+        "popup": {
+          "bottom": 717,
+          "height": 534,
+          "left": 181,
+          "right": 1039,
+          "top": 183,
+          "width": 858,
+          "x": 181,
+          "y": 183
+        },
+        "tableScroller": {
+          "client": 674,
+          "scroll": 674
+        },
+        "window": {
+          "bottom": 750,
+          "height": 600,
+          "left": 160,
+          "right": 1060,
+          "top": 150,
+          "width": 900,
+          "x": 160,
+          "y": 150
+        }
+      }
+    },
+    {
+      "name": "无推荐数据时移除推荐列",
+      "status": "passed",
+      "observed": {
+        "headers": [
+          "模型↕",
+          "渠道↕",
+          "上下文↕",
+          "推理档位↕",
+          "状态↕"
+        ],
+        "hasRecommendation": false
+      }
+    },
+    {
+      "name": "集合模式不显示优先级调整",
+      "status": "passed",
+      "observed": {
+        "picked": "已选模型 · 2\n清空选择\nNewApi / gpt-5.4\n×\nAimami / gpt-5.4-mini\n×"
+      }
+    },
+    {
+      "name": "整体继承独立返回",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回继承意图。\n\n沿用上层设置"
+      }
+    },
+    {
+      "name": "非功能菜单进入独立路由，收起公共条件",
+      "status": "passed",
+      "observed": {
+        "url": "http://127.0.0.1:57285/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?design=conversations#model-picker",
+        "conditionsOpen": null,
+        "context": "model-picker:multiple"
+      }
+    },
+    {
+      "name": "弹窗确认更新独立页结果",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4-mini"
+      }
+    },
+    {
+      "name": "弹窗关闭清空旧内容，独立页控件唯一",
+      "status": "passed",
+      "observed": {
+        "searchIds": 1,
+        "channelIds": 1,
+        "tables": 1
+      }
+    },
+    {
+      "name": "调用方无继承时移除继承入口",
+      "status": "passed",
+      "observed": {
+        "entries": 0
+      }
+    },
+    {
+      "name": "优先级显式调整并按顺序返回",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 3 个模型引用。\n\nnewapi / gpt-5.4\nnewapi / gpt-5.4-mini\naimami / gpt-5.4-mini"
+      }
+    },
+    {
+      "name": "通用原型标记展开操作说明",
+      "status": "passed",
+      "observed": {
+        "expanded": "true",
+        "text": "原型\n01\n悬浮注释\n×\n模型选择与排序的操作规则\n\n选择形式由业务决定。单选点击模型即返回，配置保存由调用页面负责；多选确定后一次返回，取消保持原选择。\n\n点表头按升序、降序、原目录顺序循环；浏览排序不改变已选优先级。左右搜索分别查渠道和当前范围模型，跨查询选择保持。\n\n本页使用已保存模型 mock 的目录和示例能力，不读取真实配置、不调用模型或网络。继承意图与固定模型引用分别返回。\n\n再次点击标记可收起\nESC"
+      }
+    },
+    {
+      "name": "模型候选范围也能使用公共页",
+      "status": "passed",
+      "observed": {
+        "route": "http://127.0.0.1:57285/docs/04-%E9%A1%B9%E7%9B%AE%E8%B5%84%E6%96%99/01-%E9%A1%B9%E7%9B%AE%E6%94%AF%E6%92%91%E8%B5%84%E6%96%99/01-%E4%BA%A7%E5%93%81%E5%8E%9F%E5%9E%8B/%E5%8E%9F%E5%9E%8B/index.html?design=conversations#model-picker",
+        "title": "渠道模型选择器",
+        "context": "model-picker:multiple"
+      }
+    },
+    {
+      "name": "模型业务页保持原有两个Tab",
+      "status": "passed",
+      "observed": {
+        "title": "模型配置",
+        "pickerVisible": false
+      }
+    }
+  ],
+  "final_review_screenshot": "screenshots/12-user-review-page.jpg",
+  "limitations": [
+    "静态mock，无生产接入",
+    "推理档位示例值分布有限；真实数据契约补验",
+    "未做跨平台或辅助技术验收"
+  ]
+}

@@ -1,0 +1,224 @@
+{
+  "date": "2026-10-13",
+  "scope": "连续编辑推理与Fast，失焦收起一次返回",
+  "checks": [
+    {
+      "name": "直接点击模型进入设置，不提前返回",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4 中",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n中",
+        "level": "中",
+        "fast": "false"
+      }
+    },
+    {
+      "name": "点击高只更新草稿，浮层保持",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4 中",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n高",
+        "level": "高",
+        "fast": "false"
+      }
+    },
+    {
+      "name": "随后开启Fast仍保持浮层，不丢档位",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4 中",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n高\nFast",
+        "level": "高",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "连续改档与反复切Fast不关闭",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4 中",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n极高\nFast",
+        "level": "极高",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "点击浮层外，单选一次返回全部组合",
+      "status": "passed",
+      "observed": {
+        "main": false,
+        "float": false,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 极高 Fast",
+        "chip": null,
+        "level": "极高",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "Esc撤回本次浮层修改，主选择器保留",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": false,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 极高 Fast",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n极高\nFast",
+        "level": "低",
+        "fast": "false"
+      }
+    },
+    {
+      "name": "键盘调档立即更新草稿但不关闭",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 极高 Fast",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n低\nFast",
+        "level": "低",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "Tab离开浮层才返回组合",
+      "status": "passed",
+      "observed": {
+        "main": false,
+        "float": false,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 低 Fast",
+        "chip": null,
+        "level": "低",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "多选连续设置也不关闭",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4 中\naimami / gpt-5.4-mini 中",
+        "chip": "已选模型 2\n清空选择\n✓\n1. NewApi / gpt-5.4\n高\nFast\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n中\n↑\n↓\n×",
+        "level": "高",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "多选失焦只关浮层，不提前返回",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": false,
+        "result": "选择结果\n\n尚未返回选择。\n\nnewapi / gpt-5.4 中\naimami / gpt-5.4-mini 中",
+        "chip": "已选模型 2\n清空选择\n✓\n1. NewApi / gpt-5.4\n高\nFast\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n中\n↑\n↓\n×",
+        "level": "高",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "多选最后统一确认带回组合",
+      "status": "passed",
+      "observed": {
+        "main": false,
+        "float": false,
+        "result": "选择结果\n\n已返回 2 个模型引用。\n\nnewapi / gpt-5.4 高 Fast\naimami / gpt-5.4-mini 中",
+        "chip": null,
+        "level": "高",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "主窗取消不误触外部采用，恢复原组合",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": false,
+        "result": "选择结果\n\n已返回 2 个模型引用。\n\nnewapi / gpt-5.4 高 Fast\naimami / gpt-5.4-mini 中",
+        "chip": "已选模型 2\n清空选择\n✓\n1. NewApi / gpt-5.4\n高\nFast\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n中\n↑\n↓\n×",
+        "level": "极高",
+        "fast": "false"
+      }
+    },
+    {
+      "name": "Fast支持未知禁用开关，仍能设置推理",
+      "status": "passed",
+      "observed": {
+        "switchEnabled": false,
+        "title": "快速模式支持未知"
+      }
+    },
+    {
+      "name": "不支持Fast的模型推理编辑同样保持",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n已返回 2 个模型引用。\n\nnewapi / gpt-5.4 高 Fast\naimami / gpt-5.4-mini 中",
+        "chip": "已选模型 3\n清空选择\n✓\n1. NewApi / gpt-5.4\n高\nFast\n↑\n↓\n×\n✓\n2. Aimami / gpt-5.4-mini\n中\n↑\n↓\n×\n✓\n3. NewApi / claude-opus-4-6\n中\n↑\n↓\n×",
+        "level": "中",
+        "fast": "false"
+      }
+    },
+    {
+      "name": "Agent业务入口也能连续改档与Fast",
+      "status": "passed",
+      "observed": {
+        "level": "高"
+      }
+    },
+    {
+      "name": "失焦带回Agent缓冲，Fast与档位同时保留，尚未保存",
+      "status": "passed",
+      "observed": {
+        "label": "NewApi / gpt-5.4\nNewApi / gpt-5.4 · 高 · Fast",
+        "fastChecked": ""
+      }
+    },
+    {
+      "name": "保存共用设置后实际页面展示组合",
+      "status": "passed",
+      "observed": {
+        "summary": "模型配置\n原型\n02\n＋\n模型模版 Agent · 本机共用\n\nNewApi / gpt-5.4 · 高 · Fast\n\n调整 Agent\n\n自动填充与全部 / 单个更新共用本机执行设置；外部 Codex / CLI 使用自己的设置。\n\n快速模式\nFast 请求策略\n开启\n在选择器中显示独立 Fast 项\n\n跟随支持的模型，占用激活数量。保存后需重启 Codex。\n\n前往模型页保存\n配置文件与状态"
+      }
+    },
+    {
+      "name": "业务选择器取消不采用正在编辑的新型号",
+      "status": "passed",
+      "observed": {
+        "label": "NewApi / gpt-5.4\nNewApi / gpt-5.4 · 高 · Fast"
+      }
+    },
+    {
+      "name": "恢复推理默认也不关闭，保持已选Fast",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 低 Fast",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n中\nFast",
+        "level": "中",
+        "fast": "true"
+      }
+    },
+    {
+      "name": "最终高与Fast可同时编辑且未提前返回",
+      "status": "passed",
+      "observed": {
+        "main": true,
+        "float": true,
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 低 Fast",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n高\nFast",
+        "level": "高",
+        "fast": "true"
+      }
+    }
+  ],
+  "logs": []
+}

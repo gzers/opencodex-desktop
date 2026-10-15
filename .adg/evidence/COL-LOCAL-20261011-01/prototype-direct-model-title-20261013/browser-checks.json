@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-13",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "visible_model_and_inherited_value",
+      "observed": "Visible naming/search/subagent selectors expose inherited provider+model and origin without mode toggle"
+    },
+    {
+      "name": "direct_choice_and_restore",
+      "observed": "Clicked visible model option creates local draft; inheritance option removes override; unchanged policy becomes non-dirty"
+    },
+    {
+      "name": "recommended_model_multiselect",
+      "observed": "Recommended models selectable by names, advanced section stays expanded after changes"
+    },
+    {
+      "name": "title_preview_cancel_adopt",
+      "observed": "Candidate preview and cancel kept old title; adopt updated heading; unsaved policy stayed unsaved"
+    },
+    {
+      "name": "manual_title_edit",
+      "observed": "Manual title action updated displayed title without config save"
+    },
+    {
+      "name": "narrow_dark_layout",
+      "observed": "900x600 dark controls fit without main horizontal overflow or shell scroll"
+    }
+  ],
+  "consoleWarningsOrErrors": [],
+  "limits": [
+    "All model and title generation results are fixtures; no real history read, inference, title RPC or production config write.",
+    "Auto update on every turn is not enabled; user chose explicit click regeneration.",
+    "Loaded/persisted title-update API is documented; actual Desktop instance integration remains unimplemented."
+  ]
+}

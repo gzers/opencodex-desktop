@@ -1,0 +1,149 @@
+{
+  "observed_at": "2026-10-13T10:24:37.691839+08:00",
+  "method": "filesystem metadata only; no content read, no compression, no symlinks followed",
+  "source_root": "/Users/ezio/.codex",
+  "roots": {
+    "sessions": {
+      "all_files": {
+        "count": 75,
+        "total_bytes": 12895408088,
+        "median_bytes": 1410568,
+        "p90_bytes": 30042843,
+        "p95_bytes": 85487631,
+        "max_bytes": 10839103082,
+        "top4_sizes_bytes": [
+          10839103082,
+          1372329773,
+          245505213,
+          85487631
+        ],
+        "bins": {
+          "under_1_MiB": 31,
+          "1_to_10_MiB": 31,
+          "10_to_100_MiB": 10,
+          "100_MiB_and_over": 3
+        }
+      },
+      "jsonl": {
+        "count": 75,
+        "total_bytes": 12895408088,
+        "median_bytes": 1410568,
+        "p90_bytes": 30042843,
+        "p95_bytes": 85487631,
+        "max_bytes": 10839103082,
+        "top4_sizes_bytes": [
+          10839103082,
+          1372329773,
+          245505213,
+          85487631
+        ],
+        "bins": {
+          "under_1_MiB": 31,
+          "1_to_10_MiB": 31,
+          "10_to_100_MiB": 10,
+          "100_MiB_and_over": 3
+        }
+      },
+      "allocated_bytes_from_stat": 12898717696,
+      "stat_errors": 0
+    },
+    "archived_sessions": {
+      "all_files": {
+        "count": 117,
+        "total_bytes": 733014621,
+        "median_bytes": 1810654,
+        "p90_bytes": 12685599,
+        "p95_bytes": 25850195,
+        "max_bytes": 163842667,
+        "top4_sizes_bytes": [
+          163842667,
+          51854631,
+          51423186,
+          28952945
+        ],
+        "bins": {
+          "under_1_MiB": 35,
+          "1_to_10_MiB": 67,
+          "10_to_100_MiB": 14,
+          "100_MiB_and_over": 1
+        }
+      },
+      "jsonl": {
+        "count": 117,
+        "total_bytes": 733014621,
+        "median_bytes": 1810654,
+        "p90_bytes": 12685599,
+        "p95_bytes": 25850195,
+        "max_bytes": 163842667,
+        "top4_sizes_bytes": [
+          163842667,
+          51854631,
+          51423186,
+          28952945
+        ],
+        "bins": {
+          "under_1_MiB": 35,
+          "1_to_10_MiB": 67,
+          "10_to_100_MiB": 14,
+          "100_MiB_and_over": 1
+        }
+      },
+      "allocated_bytes_from_stat": 733278208,
+      "stat_errors": 0
+    },
+    "attachments": {
+      "all_files": {
+        "count": 4,
+        "total_bytes": 344377,
+        "median_bytes": 13835.5,
+        "p90_bytes": 309723,
+        "p95_bytes": 309723,
+        "max_bytes": 309723,
+        "top4_sizes_bytes": [
+          309723,
+          17797,
+          9874,
+          6983
+        ],
+        "bins": {
+          "under_1_MiB": 4,
+          "1_to_10_MiB": 0,
+          "10_to_100_MiB": 0,
+          "100_MiB_and_over": 0
+        }
+      },
+      "jsonl": {
+        "count": 0,
+        "total_bytes": 0
+      },
+      "allocated_bytes_from_stat": 352256,
+      "stat_errors": 0
+    }
+  },
+  "combined_native_history": {
+    "count": 192,
+    "total_bytes": 13628422709,
+    "median_bytes": 1648869.5,
+    "p90_bytes": 20029529,
+    "p95_bytes": 33359134,
+    "max_bytes": 10839103082,
+    "top4_sizes_bytes": [
+      10839103082,
+      1372329773,
+      245505213,
+      163842667
+    ],
+    "bins": {
+      "under_1_MiB": 66,
+      "1_to_10_MiB": 98,
+      "10_to_100_MiB": 24,
+      "100_MiB_and_over": 4
+    }
+  },
+  "limitations": [
+    "File count is not independent root-chat count; child and fork records may be included.",
+    "Only three selected local directories counted; external assets, other homes, databases and caches excluded.",
+    "Native history is not plain transcript; largest-record cause and compression ratio unexamined.",
+    "Logical sizes and stat block allocation do not establish unique APFS physical bytes."
+  ]
+}

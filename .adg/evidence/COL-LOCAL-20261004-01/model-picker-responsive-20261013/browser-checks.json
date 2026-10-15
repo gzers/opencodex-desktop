@@ -1,0 +1,79 @@
+{
+  "started": "2026-10-13",
+  "completed": "2026-10-14",
+  "scope": "shared picker table, continuous effort/Fast, and Agent settings mock",
+  "checks": [
+    {
+      "name": "row-effort-fast-updates-draft-keeps-open",
+      "pass": true
+    },
+    {
+      "name": "range-keyboard-focus-retained",
+      "pass": true
+    },
+    {
+      "name": "single-replace-highlight-only-one",
+      "pass": true
+    },
+    {
+      "name": "single-confirm-still-returns-combo",
+      "pass": true
+    },
+    {
+      "name": "effort-sort-stays-open-after-edit",
+      "pass": true
+    },
+    {
+      "name": "sorted-edit-defers-reorder-keeps-float-in-view",
+      "pass": true
+    },
+    {
+      "name": "sorted-reset-default-shows-medium",
+      "pass": true
+    },
+    {
+      "name": "effort-order-updates-on-dismiss",
+      "pass": true
+    },
+    {
+      "name": "multiple-new-effort-selects-model-and-checkbox",
+      "pass": true
+    },
+    {
+      "name": "multiple-continuous-edit-no-return-keeps-focus",
+      "pass": true
+    },
+    {
+      "name": "escape-restores-pre-edit-selection",
+      "pass": true
+    },
+    {
+      "name": "agent-settings-no-duplicate-fast-control",
+      "pass": true
+    },
+    {
+      "name": "agent-combo-return-no-duplicate-fast",
+      "pass": true
+    },
+    {
+      "name": "agent-combo-save",
+      "pass": true
+    },
+    {
+      "name": "real-pointer-hover-table-opens-preview",
+      "pass": true
+    },
+    {
+      "name": "real-pointer-next-table-row-previews-correct-model",
+      "pass": true
+    }
+  ],
+  "limitations": [
+    "No end-to-end timing measurement; 70ms is configured first-hover delay",
+    "Production directory, runtime settings and platform performance not verified"
+  ],
+  "foundAndFixed": [
+    "Sorting while editing moved the anchor outside viewport; defer row reorder until float dismissal and clamp float bounds"
+  ],
+  "observation": "First-hover visibility check waits for the intentional short hover delay instead of reading immediately after pointer entry"
+}

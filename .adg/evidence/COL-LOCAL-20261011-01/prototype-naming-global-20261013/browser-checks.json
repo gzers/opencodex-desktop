@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-13",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "global_model_only",
+      "observed": "Global model field present and savable; naming mode/prompt absent"
+    },
+    {
+      "name": "local_scope_fields",
+      "observed": "Project/thread have no naming section; search/agent remain"
+    },
+    {
+      "name": "policy_import_scope",
+      "observed": "Exported global naming rejected for project target; accepted for global target without changing WebDAV scope"
+    }
+  ],
+  "limits": [
+    "In-memory mock only; upstream helper routing is still unverified; first-pass screenshots remain historical"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "date": "2026-10-15",
+  "project_id": "opencodex-desktop",
+  "scope": "工具板原型版本命名、统一宽度和分区导航顺序；仅docs及.adg",
+  "labels": [
+    "0.2.0 · 模型配置管理与同步",
+    "待定版本 · Codex 对话配置管理",
+    "待定版本 · 多 Agent 平台扩展管理"
+  ],
+  "order": [
+    "工具板标题/说明",
+    "原型版本",
+    "控制器分区",
+    "全局与本页工具"
+  ],
+  "checks": {
+    "related_tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-prototype-version-control-tests.tap",
+    "static": {
+      "javascript_syntax": true,
+      "css_syntax": true,
+      "document_links": [
+        {
+          "ref": "../../../../../01-项目支撑资料/01-产品原型/原型/index.html#models",
+          "exists": true
+        }
+      ],
+      "diff_check": true,
+      "scope": "源码/DOM检查，非浏览器实际宽度/像素验收"
+    },
+    "diff_check": true
+  },
+  "writeback": {
+    "path": "docs/02-项目核心/UI规范.md",
+    "before_sha256": "b3a99bb79effcd452bd9ca312b0946f6a97783e7790d1bf73d84141fe3f5c410",
+    "after_sha256": "91bc8f36932792186501c39a13cc4d0513be5f7780e1ae0b7718e0f9e004d7fa"
+  },
+  "limits": [
+    "内存DOM与CSS配方检查不代表实屏像素宽度/截断/窄窗验收",
+    "浏览器file访问限制未重试/绕行，未重复运行全部原型回归",
+    "原范围ID/design查询不改，不给延期包指定新版本；未改apps/真实偏好，未提交/发布"
+  ],
+  "manifest": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.js",
+      "role": "active-prototype",
+      "sha256": "ec0be9bdc8245ce49606cb09c07256b43f72a1a8b58fa1f0771ffbc82f0df465",
+      "size_bytes": 51363,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.css",
+      "role": "active-prototype",
+      "sha256": "424cce1164eaa1016644e81f31813284f4297ffe9491fc65b3015322404cb5e4",
+      "size_bytes": 8703,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "role": "active-prototype",
+      "sha256": "bcd2c0bec78c5c8b3f26b3d633849b1cd87f2b1da8cfd7872eedf51088e17624",
+      "size_bytes": 595128,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-version-control.test.cjs",
+      "role": "active-prototype",
+      "sha256": "934edc6dd7dba150670cf3b5dcc69d4489a1722187cdea270f3afdf70a009d9a",
+      "size_bytes": 2963,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "role": "authority-spec",
+      "sha256": "91bc8f36932792186501c39a13cc4d0513be5f7780e1ae0b7718e0f9e004d7fa",
+      "size_bytes": 119242,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "role": "prototype-record",
+      "sha256": "bbfebc37b5a9cc34887f0d878144ef212b25a1151675db5256d6b048b583e5a4",
+      "size_bytes": 47695,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-工具板原型版本命名与布局.md",
+      "role": "prototype-record",
+      "sha256": "6a6e266e08569e74c39a411d49114fc89740f965a97526c22b58a1060e0cdd0a",
+      "size_bytes": 2078,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/README.md",
+      "role": "prototype-record",
+      "sha256": "ccedbaffeef984b00bdfca53d3094117a9eb93fa0ffa66c9209c3c786468f45a",
+      "size_bytes": 7598,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-prototype-version-control-tests.tap",
+      "role": "test-evidence",
+      "sha256": "a6faafee0ef960472c91bd5750c1d741bd78efed9c5984fd551eb22c0d25326d",
+      "size_bytes": 609,
+      "media_type": "text/plain"
+    }
+  ]
+}

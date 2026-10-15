@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-15",
+  "project_id": "opencodex-desktop",
+  "scope": "各章节样例下补齐尺寸/样式/使用场景建议；原型需求，不启动正式开发",
+  "entry": "index.html#components?section=<section>",
+  "catalog": {
+    "sections": 19,
+    "components": 43,
+    "usage": 76,
+    "statuses": {
+      "existing": 49,
+      "proposal": 8,
+      "suggestion": 19
+    }
+  },
+  "guidance_fields": [
+    "默认规格",
+    "适用场景",
+    "切换条件",
+    "避免误用"
+  ],
+  "statuses": {
+    "existing": "已有规范规则；不代表生产已采用",
+    "proposal": "引用已有候选方案约定",
+    "suggestion": "建议待确认；本轮不自动提升为已定稿规格"
+  },
+  "checks": {
+    "related_tests": 13,
+    "passed": 13,
+    "failed": 0,
+    "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-component-usage-tests.tap",
+    "assertions": [
+      "19节指导默认可见且位于样例后、采用状态前",
+      "43项组件按章节继承完整指导",
+      "依据文件与Markdown锚点存在、登记不可变",
+      "原有模型/节点/通知/平台及环境切换交互回归"
+    ],
+    "javascript_syntax": "passed",
+    "css_syntax": "passed",
+    "diff_check": true
+  },
+  "writeback": {
+    "path": "docs/02-项目核心/UI规范.md",
+    "before_sha256": "224fa2d87e28ca5e9f791eb6e872763a43cbca118f3778527150226e0f800713",
+    "after_sha256": "7b0c2d5a3b4e04a616eb3e5fe01d63d350dc49869e0c22f818f9e01dcff4c8f7"
+  },
+  "limits": [
+    "未执行当前浏览器实屏/真实几何或原生验收；file访问限制未重试/绕行",
+    "前序235项完整回归保留其原版本身份，本轮仅运行相关检查",
+    "仅docs及.adg变更；未改apps/运行配置/品牌资产，未提交/发布"
+  ],
+  "manifest": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-catalog.js",
+      "role": "prototype-or-spec",
+      "sha256": "684f3a19cdcbc7185e0af3477b0e1c753b1f175d3216b5862586e5940f71ea61",
+      "size_bytes": 22960,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.js",
+      "role": "prototype-or-spec",
+      "sha256": "68940159467b7b8cdc7e593fb2896f0a96287f7a4debf5b751ce29edcf913cae",
+      "size_bytes": 49627,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.css",
+      "role": "prototype-or-spec",
+      "sha256": "d4cd426e4fb14a574b0103582cac4065750bbb579acc9ee9febab6de1ff32aab",
+      "size_bytes": 17744,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.test.cjs",
+      "role": "prototype-or-spec",
+      "sha256": "75e3fd7f32d569e8f59967890b2f9d56a20e9cc55a5af720888c6fc3f7de2f44",
+      "size_bytes": 16783,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "role": "prototype-or-spec",
+      "sha256": "ae965b550009ca9f5f3e9ea2ebf4316f80a80bbf7492bea5384dd57edfcd3a85",
+      "size_bytes": 593758,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题交付与检查.md",
+      "role": "prototype-or-spec",
+      "sha256": "4735ff55c8015d7adad5775afe3a1acbdae52918e4b6c4de68a17418bd01b423",
+      "size_bytes": 18047,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题规划.md",
+      "role": "prototype-or-spec",
+      "sha256": "13983875ce74f797edd0d5f291f9ff45dc8e6020dc7a15f63e6928e03d34a829",
+      "size_bytes": 25306,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "role": "prototype-or-spec",
+      "sha256": "ee10107b6491c073198ac16836921d613b340271d67467ff0aaeab068fc74faa",
+      "size_bytes": 46098,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "role": "prototype-or-spec",
+      "sha256": "7b0c2d5a3b4e04a616eb3e5fe01d63d350dc49869e0c22f818f9e01dcff4c8f7",
+      "size_bytes": 109571,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-component-usage-tests.tap",
+      "role": "test-evidence",
+      "sha256": "1d0f864268cd123a69e49ffa025b26ba7dddbb7ff17822c93ba0c2692e5a2cdb",
+      "size_bytes": 3448,
+      "media_type": "text/plain"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-13",
+  "scope": "显示实际默认档位、删除默认滑点和标签箭头",
+  "checks": [
+    {
+      "name": "已选标签无箭头，直接显示实际默认中",
+      "status": "passed",
+      "observed": {
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n中"
+      }
+    },
+    {
+      "name": "滑杆只含实际档位且定位到中",
+      "status": "passed",
+      "observed": {
+        "steps": [
+          "低",
+          "中",
+          "高",
+          "极高"
+        ],
+        "value": "中"
+      }
+    },
+    {
+      "name": "单选显式档位直接返回并关闭",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 极高"
+      }
+    },
+    {
+      "name": "恢复默认回到中而不是首档低，并清除显式标签样式",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 中",
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4\n中"
+      }
+    },
+    {
+      "name": "多选每项直接显示实际默认",
+      "status": "passed",
+      "observed": {
+        "efforts": [
+          "中",
+          "中"
+        ]
+      }
+    },
+    {
+      "name": "多选仍分别设置高和低",
+      "status": "passed",
+      "observed": {
+        "efforts": [
+          "高",
+          "低"
+        ]
+      }
+    },
+    {
+      "name": "多选取消回到实际默认而不固化显示值",
+      "status": "passed",
+      "observed": {
+        "efforts": [
+          "中",
+          "中"
+        ]
+      }
+    },
+    {
+      "name": "不同模型实际默认低，仍保留真实无推理档",
+      "status": "passed",
+      "observed": {
+        "value": "低",
+        "steps": [
+          "无",
+          "低",
+          "高"
+        ]
+      }
+    },
+    {
+      "name": "恢复默认低，不把无推理误当默认",
+      "status": "passed",
+      "observed": {
+        "chip": "✓\n3. NewApi / qwen3-max\n低"
+      }
+    },
+    {
+      "name": "实际默认未知时不虚构档位或默认滑点",
+      "status": "passed",
+      "observed": {
+        "value": "未知",
+        "message": "未提供可选档位"
+      }
+    },
+    {
+      "name": "多选确认保留显示的实际档位与显式覆盖",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 3 个模型引用。\n\nnewapi / gpt-5.4 中\naimami / gpt-5.4-mini 中\nnewapi / qwen3-max 高"
+      }
+    },
+    {
+      "name": "能力关闭后仍只显示模型、不保留后缀",
+      "status": "passed",
+      "observed": {
+        "chip": "已选模型 1\n✓\nNewApi / gpt-5.4"
+      }
+    },
+    {
+      "name": "移除默认滑点后Home就是最低支持档低",
+      "status": "passed",
+      "observed": {
+        "value": "低"
+      }
+    },
+    {
+      "name": "新滑杆索引正确返回低",
+      "status": "passed",
+      "observed": {
+        "result": "选择结果\n\n已返回 1 个模型引用。\n\nnewapi / gpt-5.4 低"
+      }
+    }
+  ],
+  "logs": []
+}

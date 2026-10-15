@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-13",
+  "branch": "docs/governance-main",
+  "prototype_source": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "sha256": "9e8cb83d5946f5ef87bcd2df7827ee9e31c16e63ab6ba9550cf88f8a9b0d94fd",
+      "size_bytes": 584169
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.js",
+      "sha256": "c2029fb2707753bfb199389e06b81149eedf5b18726be5f6a902470568ca714b",
+      "size_bytes": 45989
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/conversation-config.css",
+      "sha256": "b539269cc226acebf696a5ad2946cf182506dd7e43a179a5d745156985e05944",
+      "size_bytes": 8174
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/sync-config.js",
+      "sha256": "f58b4e90e48564e27eb5b74d576347eb65647b6153e3a97f782a3c42cf73d7a6",
+      "size_bytes": 61227
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-panel.js",
+      "sha256": "34b5cbc933101df48dc9b461755a54a895c184d44ae9bfeec2db6edfbd43c888",
+      "size_bytes": 6884
+    }
+  ],
+  "browser_check_groups": 12,
+  "screenshots": 12,
+  "production_integration": false,
+  "limits": [
+    "Browser checks apply to in-memory mock only; no actual Codex/model/WebDAV/filesystem operations.",
+    "1200-class and 900x600 app layouts checked; exhaustive assistive technology, extreme zoom and cross-platform QA not executed.",
+    "Generic package protocols, true compression, native child-tree restore and live adoption remain unimplemented."
+  ]
+}

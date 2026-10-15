@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-13",
+  "status": "passed",
+  "checks": [
+    {
+      "name": "shared_scope_navigation",
+      "status": "passed",
+      "observed": "0.2.0 hides conversation route, sync categories and recovery entry together; conversation exploration restores them"
+    },
+    {
+      "name": "scoped_drafts_and_inheritance",
+      "status": "passed",
+      "observed": "Project draft persisted across object selection; sibling thread used saved project value; save and restore inheritance applied one object"
+    },
+    {
+      "name": "local_export_restore",
+      "status": "passed",
+      "observed": "Range and size updated after deselecting large record; exported mock package fed import; partial recovery retry preserved object mapping"
+    },
+    {
+      "name": "archive_cleans_override_preserves_input",
+      "status": "passed",
+      "observed": "Archived thread was read-only, active override cleared, unsaved input available in temporary viewer"
+    },
+    {
+      "name": "offline_save_and_naming",
+      "status": "passed",
+      "observed": "Offline object saved manager naming/prompt; adoption remained disconnected"
+    },
+    {
+      "name": "search_path_field_scope",
+      "status": "passed",
+      "observed": "Hosted path omitted sidecar model/effort controls"
+    },
+    {
+      "name": "policy_import_target_mapping",
+      "status": "passed",
+      "observed": "Standalone policy imported to another project in shared file workflow; target source changed and WebDAV untouched"
+    },
+    {
+      "name": "space_failure_preserves_source",
+      "status": "passed",
+      "observed": "Space failure kept scope and source; retry requires a changed recovery scenario"
+    },
+    {
+      "name": "narrow_dark_layout",
+      "status": "passed",
+      "observed": "900x600 dark uses detail-only, back returns tree, no horizontal main overflow"
+    },
+    {
+      "name": "window_focus_clipping_fixed",
+      "status": "passed",
+      "observed": "1180 and 900 app kept titlebar visible, shell scrollTop zero after focused actions"
+    },
+    {
+      "name": "model_module_regression",
+      "status": "passed",
+      "observed": "Old model tabs and standard sync categories remain available; future conversation categories absent in 0.2.0 review scope"
+    },
+    {
+      "name": "scope_tab_keyboard",
+      "status": "passed",
+      "observed": "ArrowRight changed global tab to project/thread without applying config"
+    }
+  ],
+  "consoleWarningsOrErrors": [],
+  "limits": [
+    "Browser checks apply to in-memory mock only; no actual Codex/model/WebDAV/filesystem operations.",
+    "1200-class and 900x600 app layouts checked; exhaustive assistive technology, extreme zoom and cross-platform QA not executed.",
+    "Generic package protocols, true compression, native child-tree restore and live adoption remain unimplemented."
+  ]
+}

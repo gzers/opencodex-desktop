@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-15",
+  "project_id": "opencodex-desktop",
+  "scope": "非功能菜单重复入口收简，仅docs原型/记录",
+  "kept": [
+    "组件与样式"
+  ],
+  "removed": [
+    "托盘",
+    "通知与反馈",
+    "Windows 窗口",
+    "渠道模型选择器",
+    "0.1.10 维护"
+  ],
+  "preserved": [
+    "旧model-picker/tray路由与Windows/通知演示兼容",
+    "概览/设置/诊断页维护工具、通知注册表及投递记录",
+    "全部功能菜单和专题样例"
+  ],
+  "checks": {
+    "related_tests": 27,
+    "passed": 27,
+    "failed": 0,
+    "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-component-menu-cleanup-tests.tap",
+    "assertions": [
+      "全部脚本加载后的非功能菜单只剩一个按钮",
+      "旧模型/托盘入口可达，激活状态映射组件与样式",
+      "移除Windows菜单按钮后仍可切换并退出旧Windows专题",
+      "维护工具从概览可见并可打开注册表"
+    ],
+    "diff_check": true
+  },
+  "limits": [
+    "内存DOM检查，无本轮浏览器/视觉/原生验收",
+    "未修改apps或正式软件菜单，未提交/发布"
+  ],
+  "manifest": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "role": "prototype-or-note",
+      "sha256": "bd35f9f7fd4025244efdacd4928eed07343f8c767c263eac2e446daa7b0c2318",
+      "size_bytes": 593722,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-picker.js",
+      "role": "prototype-or-note",
+      "sha256": "ca5eda7bd648cd46fedb069cdf14536b9fbd6f5527d6a34924fb2a66d592827e",
+      "size_bytes": 50953,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/maintenance-ui.js",
+      "role": "prototype-or-note",
+      "sha256": "3ad7c19dc8e4fa4a91a61f59d70871b6f05ab315f6c8d7d476aa8d0649788d97",
+      "size_bytes": 37396,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/windows-window.js",
+      "role": "prototype-or-note",
+      "sha256": "d2033a21ec331672710c19ba103ba5c4fb7b544e94bc71a280a323e61f2be324",
+      "size_bytes": 9916,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.test.cjs",
+      "role": "prototype-or-note",
+      "sha256": "c55dc979f3713c4a0523afb877bbf46b4aa47c77e5970133a84f1230fc5d43cf",
+      "size_bytes": 14201,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题规划.md",
+      "role": "prototype-or-note",
+      "sha256": "9a3eb0dd132bb0f432782b219f5a3e5eaf64defc1e92ea033af0ef29605105c2",
+      "size_bytes": 24664,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/组件与样式专题交付与检查.md",
+      "role": "prototype-or-note",
+      "sha256": "a65a4db6995f596adcf6d4a27d85cae2e7b5713a09de57bd8d2afc3023c43fa4",
+      "size_bytes": 13270,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "role": "prototype-or-note",
+      "sha256": "e5cc54e601de5fd2254cf34b3d83ba27f159b3f7156a139dcb5bc646d838fdef",
+      "size_bytes": 45636,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-component-menu-cleanup-tests.tap",
+      "role": "test-evidence",
+      "sha256": "26d98077a4d49134d409a62a399f0a21440f60e4cb9abf85e364ce4aeb8e1b2c",
+      "size_bytes": 6753,
+      "media_type": "text/plain"
+    }
+  ]
+}

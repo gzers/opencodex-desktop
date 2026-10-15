@@ -1,0 +1,243 @@
+{
+  "date": "2026-10-15",
+  "project_id": "opencodex-desktop",
+  "scope": "外部任务原型说明归属、共用Modal独立注释层及后续防复发；docs/.adg仅",
+  "entry": "index.html#models → 模型模版 → 外部任务",
+  "moved_to_annotation": [
+    "mpExternalSceneHint",
+    "mpCopyStatus",
+    "mpExternalError",
+    "默认Modal演示说明"
+  ],
+  "preserved_product_behaviors": [
+    "复制/只读/范围校验及禁用状态",
+    "可读原因/焦点",
+    "真实提交错误、保存回执及检查报告"
+  ],
+  "mechanisms": [
+    "prototypeAnnotation title/body/blocks统一说明入口",
+    "modalAnnotationHost在产品弹窗文档流之外，空间不足仅右侧目录",
+    "隐藏源动态更新，浮层副本去ID，Escape先收注释",
+    "原型CSS文档流与正文脚注/占位契约测试",
+    "右侧注释与布局诊断：语义复核线索、已登记文案外露、标记/宿主排版、控件矩形和滚动范围比较",
+    "UI规范§36及原型README首部的制作前文案归属与交付检查要求"
+  ],
+  "checks": {
+    "reports": {
+      "full": {
+        "tests": 252,
+        "passed": 252,
+        "failed": 0,
+        "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-prototype-note-boundary-full-tests.tap"
+      },
+      "related": {
+        "tests": 9,
+        "passed": 9,
+        "failed": 0,
+        "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-prototype-note-boundary-related-tests.tap"
+      }
+    },
+    "static": {
+      "resources": 46,
+      "missing_resources": [],
+      "js_errors": [],
+      "css_errors": {
+        "annotation-cards.css": [],
+        "model-picker.css": [],
+        "component-topic.css": []
+      },
+      "links": [
+        {
+          "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-原型文案归属与注释零占位护栏.md",
+          "target": "../../../../../01-项目支撑资料/01-产品原型/原型/index.html#models",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-原型文案归属与注释零占位护栏.md",
+          "target": "../../../../../../02-项目核心/UI规范.md#36-原型文案归属与注释零占位2026-10-15",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+          "target": "../../../02-项目核心/UI规范.md#36-原型文案归属与注释零占位2026-10-15",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+          "target": "../../03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/外部制模任务鞍具方案.md",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+          "target": "原型/index.html#components",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+          "target": "组件与样式专题规划.md",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+          "target": "组件与样式专题交付与检查.md",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+          "target": "组件与样式专题交付与检查.md",
+          "passed": true
+        }
+      ],
+      "broken_links": [],
+      "diff_check": true,
+      "scope": "源码/资源/链接检查；非浏览器实屏或真实几何验收"
+    },
+    "runtime_audit_bad_fixture": "完整DOM用例可发现故意注入的in-flow标记和外露原型文案；未以此证明真实浏览器几何通过"
+  },
+  "writeback": {
+    "path": "docs/02-项目核心/UI规范.md",
+    "before_sha256": "b99af1b65cd1f915b3dcdc9fb6430c8342710e4099a9f12762fe9de4ec6ec853",
+    "after_sha256": "b3a99bb79effcd452bd9ca312b0946f6a97783e7790d1bf73d84141fe3f5c410"
+  },
+  "limitations": [
+    "浏览器file访问受限，未重试或绕行；没有当前实屏/真实几何/原生验收",
+    "运行时矩形/滚动比较需可用宿主实际运行；源码/DOM不能证明全部窄窗无遮挡",
+    "关键词仅供语义复核，不能自动决定产品/原型文案；未宣称全量旧页面文案已迁移",
+    "未改apps、全局Skill、共享根文件、品牌资产或真实配置；未提交/发布"
+  ],
+  "manifest": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "role": "active-prototype",
+      "sha256": "02b0f0b7d8799d69c8b4eecfe50861e2f7937b406e85fef0eb5c02945bcf0756",
+      "size_bytes": 595101,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/annotation-cards.css",
+      "role": "active-prototype",
+      "sha256": "1fdd37a591478920220b6a8b6220cb0dacb98c5a4d024c45674870c0c24a2fdf",
+      "size_bytes": 13073,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/annotation-cards.js",
+      "role": "active-prototype",
+      "sha256": "8646b8a95a0f610d2841abfafd826bd7d9bde7a1c1b74365aa090e8baa71e047",
+      "size_bytes": 21896,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js",
+      "role": "active-prototype",
+      "sha256": "57f9e14ae1ec42c95285b4b8888d5bad908c826d1942ee5c7bceec184e7d0920",
+      "size_bytes": 302956,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-picker.css",
+      "role": "active-prototype",
+      "sha256": "b5986c1926098d740d84311e38deaad30a5f381ce5e77557dae61a6b5a940c67",
+      "size_bytes": 17796,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/component-topic.css",
+      "role": "active-prototype",
+      "sha256": "48530dd994b5a3baa6771df4f964019f56be38f440dbdb2ff20ac6cd17f5f40a",
+      "size_bytes": 17803,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs",
+      "role": "active-prototype",
+      "sha256": "92951f8b6d66807624bf3801746101b14877095c9d7b059594a3d1e25fe63012",
+      "size_bytes": 4691,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/agent-settings-page.test.cjs",
+      "role": "active-prototype",
+      "sha256": "06fb29114293892e16b536c15c47a8d8ce0c54fdc50e07bf828445d8545a30e7",
+      "size_bytes": 5695,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-external-task-dom.test.cjs",
+      "role": "active-prototype",
+      "sha256": "27afa3260fd9419c2ffd79e00585dc4921781e7058755afa0a4309af1c2ae2a6",
+      "size_bytes": 7825,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/prototype-annotation-contract.test.cjs",
+      "role": "active-prototype",
+      "sha256": "6f9fc82018cd3624dab24c1405108c42d42274daf363c69ec0281ec83c8d13f7",
+      "size_bytes": 2195,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "role": "authority-spec",
+      "sha256": "b3a99bb79effcd452bd9ca312b0946f6a97783e7790d1bf73d84141fe3f5c410",
+      "size_bytes": 118680,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "34d605886fbf724958063991755807d636a850e8452c8ef35fb3dcda430cc920",
+      "size_bytes": 47439,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/外部制模任务鞍具方案.md",
+      "role": "requirements-and-handoff",
+      "sha256": "d689a97aaa04e90a1944e2df3c51bd51529c2e99c82b49037f7e8af246db3f8c",
+      "size_bytes": 10938,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/02-开发实施/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "47143e3fe01f55ba0f8d0c4c4c3683ff6d5e4ec5513361e1be542385eb0c4672",
+      "size_bytes": 37056,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/03-测试验收/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "a3b4ab27924758edf9f0daab9a9f3a71d4028eb799d475861dd70942e29e3969",
+      "size_bytes": 47087,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-原型文案归属与注释零占位护栏.md",
+      "role": "requirements-and-handoff",
+      "sha256": "cf431ac350df989d0d5ec36f17e4387412c83d362464877c84b27e3aa199e561",
+      "size_bytes": 2745,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "6480ff9957376262dd14916d48d7c68a056c1abf8c18d270117431a62a33dfb9",
+      "size_bytes": 7360,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-prototype-note-boundary-full-tests.tap",
+      "role": "test-evidence",
+      "sha256": "021194c43281cd6ab76350a00f54c6d1d9e013f34a1be5f07ea9ed5e03a93467",
+      "size_bytes": 62160,
+      "media_type": "text/plain"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-prototype-note-boundary-related-tests.tap",
+      "role": "test-evidence",
+      "sha256": "93c5485ac3ae088cdce73aacb1950efda6d02889c8aac3be32c165ccae4b9f80",
+      "size_bytes": 2441,
+      "media_type": "text/plain"
+    }
+  ]
+}

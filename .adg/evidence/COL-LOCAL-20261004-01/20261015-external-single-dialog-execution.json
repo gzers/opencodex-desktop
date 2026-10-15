@@ -1,0 +1,274 @@
+{
+  "project_id": "opencodex-desktop",
+  "date": "2026-10-15",
+  "scope": "外部任务单弹窗、六场景和完整任务一次复制，取消产品队列；原型/需求仅docs与.adg",
+  "entry": "index.html#models → 模型模版 → 外部任务",
+  "flow": [
+    "范围/场景",
+    "可选补充要求",
+    "同一输出区原位预览",
+    "复制完整任务/关闭"
+  ],
+  "scenes": [
+    "从资料制模",
+    "更新型号资料",
+    "批量检查与修订",
+    "私有模型配置",
+    "按偏好调整",
+    "仅检查，不保存"
+  ],
+  "checks": {
+    "full_prototype_regression": {
+      "tests": 250,
+      "passed": 250,
+      "failed": 0,
+      "report": ".adg/evidence/COL-LOCAL-20261004-01/20261015-external-single-dialog-250-tests.tap"
+    },
+    "assertions": [
+      "输入/场景/范围原位更新，不重开弹窗或输出框",
+      "剪贴板一次得到完整提示词和结构资料；失败同字段手工复制",
+      "无创建→详情/两份复制/任务队列入口",
+      "准备未复制不登记；复制不写模版",
+      "只检查服务拒绝版本写入，只接受范围内报告；报告重试不重复写",
+      "已复制基准不长期保护版本，基准删除后提交准确冲突",
+      "原有版本/校验/去重/通知恢复与组件专题回归"
+    ],
+    "static": {
+      "local_resources": 46,
+      "missing_resources": [],
+      "javascript_errors": [],
+      "css_errors": [],
+      "document_links": [
+        {
+          "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/外部制模任务鞍具方案.md",
+          "target": "../../../../../01-项目支撑资料/01-产品原型/原型/index.html#models",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-外部任务一步弹窗与一次复制.md",
+          "target": "../../../../../01-项目支撑资料/01-产品原型/原型/index.html#models",
+          "passed": true
+        },
+        {
+          "from": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-外部任务一步弹窗与一次复制.md",
+          "target": "../02-方案草案/外部制模任务鞍具方案.md#1-界面2026-10-15收简",
+          "passed": true
+        }
+      ],
+      "diff_check": true,
+      "scope": "源码/内存DOM检查；非浏览器实屏、真实文件权限或生产验收"
+    },
+    "input_sizes_characters": [
+      {
+        "range": "current",
+        "scene": "update",
+        "targets": 1,
+        "completeCopyCharacters": 8058,
+        "entryAvailable": false
+      },
+      {
+        "range": "all",
+        "scene": "update",
+        "targets": 17,
+        "completeCopyCharacters": 20257,
+        "entryAvailable": false
+      },
+      {
+        "range": "create",
+        "scene": "docs",
+        "targets": 0,
+        "completeCopyCharacters": 6922,
+        "entryAvailable": false
+      }
+    ]
+  },
+  "writeback": [
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "before_sha256": "f2f97359e7a2929bb514d4efbdbdfe04aff30dc76c1a31003f1e3a081804e706",
+      "after_sha256": "b99af1b65cd1f915b3dcdc9fb6430c8342710e4099a9f12762fe9de4ec6ec853"
+    },
+    {
+      "path": "docs/02-项目核心/数据与状态.md",
+      "before_sha256": "2573e66bdf2174272556299f7122f1857b732f21ea16b6525f9bac199da877da",
+      "after_sha256": "0dc74632adc6f449cf1c1e1df5de6d2999d846072ad90c4779278750cdc81125"
+    }
+  ],
+  "limits": [
+    "无当前浏览器实屏/原生/真实外部模型与文件权限验收；file访问限制未重试/绕行",
+    "后台仅身份/基准/幂等回执登记，不调度外部Agent，不作为产品队列",
+    "原型没有真实提交地址/CLI/MCP/文件写入或权限沙箱；正式实现随0.2.0/WP-06冻结",
+    "最终测试后仅移除空白，不重复未改变的行为测试",
+    "未改apps/品牌资源/真实配置，未提交/发布"
+  ],
+  "manifest": [
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js",
+      "role": "active-prototype",
+      "sha256": "7eaaffdebd55b1fd8921adfa65d9b5f66416f74681df8524e87a3456af050015",
+      "size_bytes": 302233,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.css",
+      "role": "active-prototype",
+      "sha256": "f1b650f7e66befa2250d333f7024d76b8e509970733ce3669952bacb105e24ed",
+      "size_bytes": 52646,
+      "media_type": "text/css"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-external-notification.js",
+      "role": "active-prototype",
+      "sha256": "da2c08b3aacb4cc44838a8e7f53556d338eb5a5d040ec5a26c0ba15416ba00cb",
+      "size_bytes": 2160,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-prototype-test-harness.cjs",
+      "role": "active-prototype",
+      "sha256": "1eaf0306d46031155d32632b2b81eef3b5496d65ab8fbf7afa0f68e58aeb8f03",
+      "size_bytes": 4239,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-external-task.test.cjs",
+      "role": "active-prototype",
+      "sha256": "aec39d9760bc702d2658da043f5c88279a76e90a7a4a9d3ec56ebb8e625916c9",
+      "size_bytes": 10624,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-external-task-dom.test.cjs",
+      "role": "active-prototype",
+      "sha256": "d9101859c495814c6c3b4cc59419f4ee320f642d7a0b8ad303480faddb62b35d",
+      "size_bytes": 5775,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-template-actions.test.cjs",
+      "role": "active-prototype",
+      "sha256": "cbb3bb8ae8efb6ae8b30ea2567682a0f594d2eacabac5014e9cd7b6b4b1791bf",
+      "size_bytes": 7884,
+      "media_type": "text/javascript"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "role": "active-prototype",
+      "sha256": "ea76fc46776d4efa254305862728ea26864dc76c32bd67741b6034d1e91cddf5",
+      "size_bytes": 594689,
+      "media_type": "text/html"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/外部制模任务鞍具方案.md",
+      "role": "requirements-and-handoff",
+      "sha256": "125ac411455559f4ef5544aad9491d9b836b565a7ea78523cf34434f09391665",
+      "size_bytes": 10528,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/Agent制模与版本恢复方案.md",
+      "role": "requirements-and-handoff",
+      "sha256": "a3d12866a8ed094b460322e45c55c6ae6f42b057494e3252757bcd073d1c95dc",
+      "size_bytes": 28920,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/模型模版与匹配规则方案.md",
+      "role": "requirements-and-handoff",
+      "sha256": "c1efd61029ac477b4b19956e03d38c5d60fb60fdf3cbd4d86866117f9bb54718",
+      "size_bytes": 24154,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/02-方案草案/原型交互方案.md",
+      "role": "requirements-and-handoff",
+      "sha256": "1bd0589d594354b08a50a407d4fae736e6011cbfbe74e01c81679cd01e7404bd",
+      "size_bytes": 37834,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/02-项目核心/UI规范.md",
+      "role": "authority-spec",
+      "sha256": "b99af1b65cd1f915b3dcdc9fb6430c8342710e4099a9f12762fe9de4ec6ec853",
+      "size_bytes": 114917,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/02-项目核心/数据与状态.md",
+      "role": "authority-spec",
+      "sha256": "0dc74632adc6f449cf1c1e1df5de6d2999d846072ad90c4779278750cdc81125",
+      "size_bytes": 38433,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "44fd059296f62fffa81b879a03371be40c9a717bc1c1249848e6a7d94e77702f",
+      "size_bytes": 10877,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/02-开发实施/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "9a719608680ae8f067abda9e9a86a23bd9226267a96e4ea86269c2b284d44815",
+      "size_bytes": 36499,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/03-测试验收/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "ad9952d0546a7dd5e17640704968a737e7b418658dc512a06e67e298a467791f",
+      "size_bytes": 46430,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/DESIGN.md",
+      "role": "requirements-and-handoff",
+      "sha256": "730c1209805bdd0f67f78aa2367dd024718c1e3847c464e5c588329795d460a0",
+      "size_bytes": 38680,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/05-原型/原型QA.md",
+      "role": "requirements-and-handoff",
+      "sha256": "f61df88ef1ca8d00e893a9a1316f03d421cc9293491fa8413f2bbf08e3d21df6",
+      "size_bytes": 28734,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "33fe5368ce32567c0687e66df28d8b69edd0e8778e7d3ffed9c8466d0e4f17c9",
+      "size_bytes": 7107,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md",
+      "role": "requirements-and-handoff",
+      "sha256": "0e35cd5bc694055aa2e297bb4bef2e3f7f5c9d53fba65b5d5230ce3f73220992",
+      "size_bytes": 46519,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md",
+      "role": "requirements-and-handoff",
+      "sha256": "661a30695070257f10ef68899f64f9c8ddb2f3a25cc516f06e6b90bcf53876e7",
+      "size_bytes": 19105,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": ".adg/evidence/COL-LOCAL-20261004-01/20261015-external-single-dialog-250-tests.tap",
+      "role": "test-evidence",
+      "sha256": "83045703a9e5a522c2b1e538e49c37e8b73c865d8aaca362bd5907e2f48fdf8b",
+      "size_bytes": 61637,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-04-模型配置管理与同步/01-需求分析/06-版本记录/20261015-外部任务一步弹窗与一次复制.md",
+      "role": "requirements-and-handoff",
+      "sha256": "18fd7e775ddf717583445f6c6f8b541bf745da62a59072f13ed134c2af37355b",
+      "size_bytes": 3395,
+      "media_type": "text/markdown"
+    }
+  ]
+}
