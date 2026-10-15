@@ -1516,3 +1516,11 @@ push38660621496及PR38660625647均success，各Mac900/Windows627passed、忽略6
 准入后只dispatch一次run38662786466/attempt1，query-etw成功/package skipped、无新安装候选。08:56:06–22原失败EXE完整库exit0、530passed/0failed/4ignored、七query通过，**目标失败仍未复现**。根PID9668/creation真实/句柄映像一致、runner elevated/type1；17085事件/5811506bytes，31process start/stop（test1/Node22/cmd-basename8）、940thread start/stop，serialization/kernel/decoder丢失错误0，consumer/writer/自有session stop完整。根热点158572调度/287481IO按原范围省略，不称根全覆盖；不重复求绿或清除历史失败。
 
 artifact11939861138/340221bytes/API摘要6f53dd39…、13份原件及job实际checkout原日志核验，详见[CI固定失败制品ETW](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-CI固定失败制品ETW/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-CI-ETW/`。失败时间窗ETW/根因仍缺，官方019的profile隔离与安装隔离未解决、Mac原生未交接；本机native0/日常及旧隔离/TASK摘要不变，原性能failed/完整八门禁/预算/周期保持，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 ca26 候选提前准备及回放适用边界
+
+只读对照原38537166560日志与38662786466成功回放：测试EXE字节相同，但EXE/Node位置、Temp/HOME/USERPROFILE及原cargo --show-output上下文不同；回放stdout不含成功夹具control阶段原文，31个已保存进程生命周期齐全不等于七场景逐项PID/creation/phase关联已证。环境/负载相同未证明，不归因路径或清除失败；下一失败证据需实际失败当次并审计上下文，不再同类回放求绿。
+
+为下一前台提前只dispatch一次精确ca26 Windows候选run38663871103/attempt1，旧38662786466诊断模式被明确排除。09:09:58实际package进行中/query-etw skipped、conclusion null，尚非候选通过或宿主安装；600秒只读观察到时继续同run，不重派。12份准入前快照及差异方法见[候选准备与回放差异](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26候选后台准备与回放差异/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-CA26-CANDIDATE/`。
+
+本机native0/日常及旧隔离四摘要/TASK原字节保持，无前台/原库/ETW新执行、真实迁移或安装；候选准入后仍等用户新的前台信号。Mac原生、失败时间窗、profile与安装隔离/原性能failed/全部门禁及原预算不提升，TASK/IMP保持in_progress，不关闭、合并、签名、晋升或发布。
