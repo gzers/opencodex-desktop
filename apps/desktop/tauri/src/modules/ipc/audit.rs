@@ -310,7 +310,7 @@ mod tests {
         }
         std::fs::write(store.path(), history).expect("stage persisted history");
         let last_index = AUDIT_MAX_RECORDS + 3;
-        let last_started = if last_index % 2 == 0 {
+        let last_started = if last_index.is_multiple_of(2) {
             now - chrono::Duration::days(91)
         } else {
             now - chrono::Duration::days(1)
