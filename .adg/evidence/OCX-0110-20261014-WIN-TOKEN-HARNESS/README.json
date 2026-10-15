@@ -1,0 +1,13 @@
+{
+  "correction": "The first run recorded docs HEAD because the caller CWD was docs/governance-main; the corrected run executed with code worktree as CWD.",
+  "sourceCommit": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+  "scope": "Harness token identity and pure bundle marker tests; does not claim application dual-permission or native UI acceptance",
+  "harnessMode": "ordinary",
+  "correctedTokenEvidence": "process-token-codehead.json",
+  "tokenChecks": "pass",
+  "schemaVersion": 1,
+  "bundleIdentityChecks": "5 pass",
+  "nativeApplicationChecks": "not run",
+  "wrongWorkingDirectoryEvidence": "process-token-wrong-cwd.original.json",
+  "childMode": "ordinary"
+}

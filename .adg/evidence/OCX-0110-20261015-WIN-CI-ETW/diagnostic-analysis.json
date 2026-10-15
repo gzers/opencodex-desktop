@@ -1,0 +1,87 @@
+{
+  "collectorSource": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+  "originalBd2FailedRun": 38537166560,
+  "diagnosticRun": 38662786466,
+  "artifactId": 11939861138,
+  "originalUnfilteredLibraryRuns": 1,
+  "originalTestExitCode": 0,
+  "tests": {
+    "passed": 530,
+    "failed": 0,
+    "ignored": 4
+  },
+  "queryFixtures": [
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+      "result": "ok"
+    },
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+      "result": "ok"
+    },
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+      "result": "ok"
+    }
+  ],
+  "targetQueryFailureReproduced": false,
+  "recordedEvents": 17085,
+  "eventBytes": 5811506,
+  "eventSha256": "a4f4260a3a58d812a1e17a436364c2616e1a9e8fb8c9c40086cf116c4f76b1d8",
+  "eventKinds": {
+    "root-handle-image-query": 1,
+    "root-handle-binding": 1,
+    "process-start": 31,
+    "thread-start": 940,
+    "owned-image": 1864,
+    "thread-stop": 940,
+    "owned-thread-ready": 2155,
+    "owned-thread-scheduled-in": 3419,
+    "owned-thread-scheduled-out": 3175,
+    "owned-file-create": 2025,
+    "owned-file-operation-end": 2264,
+    "owned-file-read-write": 239,
+    "process-stop": 31
+  },
+  "processStarts": 31,
+  "processStops": 31,
+  "roleCounts": {
+    "test": 1,
+    "node": 22,
+    "command-basename": 8
+  },
+  "allRetainedProcessStartsHaveStops": true,
+  "knownImageCoverageGap": false,
+  "rootToken": {
+    "elevated": true,
+    "elevationType": 1,
+    "pid": 9668
+  },
+  "rootCreationUtc": "2026-10-15T00:56:06.1703141Z",
+  "serializationAndKernelDrops": 0,
+  "rootHotEventsOmitted": {
+    "scheduling": 158572,
+    "fileIoInitiations": 287481
+  },
+  "fullRootHotEventCoverage": false,
+  "actualFailureTimeWindowEvidenceObtained": false,
+  "historicalBd2AndE6FailuresCleared": false,
+  "versionOrPerformanceAcceptanceClaimed": false,
+  "localDesktopStarted": false
+}

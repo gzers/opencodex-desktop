@@ -1,0 +1,3657 @@
+{
+  "method": "Offline recomputation from hash-checked original logs and recorded events",
+  "cohorts": [
+    {
+      "run": 38537166560,
+      "rawLogSha256": "f10471e4851fc994f6d58fc7d6459b7a5bc8ba063e08e7e5e06a083a300f373a",
+      "library": {
+        "status": "FAILED",
+        "passed": 523,
+        "failed": 7,
+        "ignored": 4
+      },
+      "fixtures": {
+        "metadata/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 654,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 2780,
+              "process_times": {
+                "creation_filetime_100ns": 134364415093299529,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2975,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 2780,
+              "process_times": {
+                "creation_filetime_100ns": 134364415093299529,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5657,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 2780,
+              "process_times": {
+                "creation_filetime_100ns": 134364415093299529,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2321.6166,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967908691,
+          "queryReturnedTotalElapsedMs": 2976.0813,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 2780,
+          "controlCreationFiletime100ns": 134364415093299529,
+          "controlCreationUnixMsDecimal": "1791967909329.9529",
+          "controlCreationAfterFixtureStartMs": 638.9529,
+          "observerElapsedMs": 5657,
+          "observerControlCpuMs": 0.0,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "metadata/overflow": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 399,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 4272,
+              "process_times": {
+                "creation_filetime_100ns": 134364415116674103,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2820,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 4272,
+              "process_times": {
+                "creation_filetime_100ns": 134364415116674103,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5401,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 4272,
+              "process_times": {
+                "creation_filetime_100ns": 134364415116674103,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2420.1278,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967911282,
+          "queryReturnedTotalElapsedMs": 2821.2255,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 4272,
+          "controlCreationFiletime100ns": 134364415116674103,
+          "controlCreationUnixMsDecimal": "1791967911667.4103",
+          "controlCreationAfterFixtureStartMs": 385.4103,
+          "observerElapsedMs": 5401,
+          "observerControlCpuMs": 15.625,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "metadata/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 454,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 7308,
+              "process_times": {
+                "creation_filetime_100ns": 134364415117339888,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2780,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 7308,
+              "process_times": {
+                "creation_filetime_100ns": 134364415117339888,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5464,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 7308,
+              "process_times": {
+                "creation_filetime_100ns": 134364415117339888,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2325.8075,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967911324,
+          "queryReturnedTotalElapsedMs": 2780.8089,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 7308,
+          "controlCreationFiletime100ns": 134364415117339888,
+          "controlCreationUnixMsDecimal": "1791967911733.9888",
+          "controlCreationAfterFixtureStartMs": 409.9888,
+          "observerElapsedMs": 5464,
+          "observerControlCpuMs": 31.25,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "metadata/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 379,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 10036,
+              "process_times": {
+                "creation_filetime_100ns": 134364415119322564,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2420,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 10036,
+              "process_times": {
+                "creation_filetime_100ns": 134364415119322564,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5418,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 10036,
+              "process_times": {
+                "creation_filetime_100ns": 134364415119322564,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2040.8211,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967911683,
+          "queryReturnedTotalElapsedMs": 2420.1813,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 10036,
+          "controlCreationFiletime100ns": 134364415119322564,
+          "controlCreationUnixMsDecimal": "1791967911932.2564",
+          "controlCreationAfterFixtureStartMs": 249.2564,
+          "observerElapsedMs": 5418,
+          "observerControlCpuMs": 15.625,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 45,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 9288,
+              "process_times": {
+                "creation_filetime_100ns": 134364415061763613,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2341,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 9288,
+              "process_times": {
+                "creation_filetime_100ns": 134364415061763613,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5051,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 9288,
+              "process_times": {
+                "creation_filetime_100ns": 134364415061763613,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2295.9553,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967906137,
+          "queryReturnedTotalElapsedMs": 2341.255,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 9288,
+          "controlCreationFiletime100ns": 134364415061763613,
+          "controlCreationUnixMsDecimal": "1791967906176.3613",
+          "controlCreationAfterFixtureStartMs": 39.3613,
+          "observerElapsedMs": 5051,
+          "observerControlCpuMs": 15.625,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 74,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 7548,
+              "process_times": {
+                "creation_filetime_100ns": 134364415062072951,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2331,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 7548,
+              "process_times": {
+                "creation_filetime_100ns": 134364415062072951,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5128,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 7548,
+              "process_times": {
+                "creation_filetime_100ns": 134364415062072951,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2255.6913,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967906149,
+          "queryReturnedTotalElapsedMs": 2331.1027,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 7548,
+          "controlCreationFiletime100ns": 134364415062072951,
+          "controlCreationUnixMsDecimal": "1791967906207.2951",
+          "controlCreationAfterFixtureStartMs": 58.2951,
+          "observerElapsedMs": 5128,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 46,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5976,
+              "process_times": {
+                "creation_filetime_100ns": 134364415062266373,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2297,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5976,
+              "process_times": {
+                "creation_filetime_100ns": 134364415062266373,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5153,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5976,
+              "process_times": {
+                "creation_filetime_100ns": 134364415062266373,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": null
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2250.6146,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967906182,
+          "queryReturnedTotalElapsedMs": 2297.0814,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5976,
+          "controlCreationFiletime100ns": 134364415062266373,
+          "controlCreationUnixMsDecimal": "1791967906226.6373",
+          "controlCreationAfterFixtureStartMs": 44.6373,
+          "observerElapsedMs": 5153,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": true,
+          "markerPublicationAfterCreationMs": null,
+          "markerPublicationAfterFixtureStartMs": null,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        }
+      },
+      "diagnosticOnly": true,
+      "historicalRunnerPidsAreNotLocalTargets": true,
+      "schedulerOrIoFailureTracePresent": false,
+      "rootCauseDetermined": false
+    },
+    {
+      "run": 38537161445,
+      "rawLogSha256": "e79dfae85e759f9af1eefe7dd43ca27382c8c7dd8d5d985f51a78578c2cabe4b",
+      "library": {
+        "status": "ok",
+        "passed": 530,
+        "failed": 0,
+        "ignored": 4
+      },
+      "fixtures": {
+        "metadata/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 6,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5496,
+              "process_times": {
+                "creation_filetime_100ns": 134364414868987824,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 147,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5496,
+              "process_times": {
+                "creation_filetime_100ns": 134364414868987824,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 468750
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 147,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5496,
+              "process_times": {
+                "creation_filetime_100ns": 134364414868987824,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 468750
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 5496,
+              "atUnixMs": 1791967886972
+            },
+            "observer-returned": {
+              "pid": 5496,
+              "atUnixMs": 1791967886972
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 5496,
+              "atUnixMs": 1791967886972
+            },
+            "parent-started": {
+              "pid": 1052,
+              "atUnixMs": 1791967887008
+            },
+            "before-child-spawn": {
+              "pid": 1052,
+              "atUnixMs": 1791967887010
+            },
+            "after-child-spawn": {
+              "pid": 1052,
+              "atUnixMs": 1791967887016
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 1052,
+              "atUnixMs": 1791967887023
+            },
+            "before-nonzero-exit": {
+              "pid": 1052,
+              "atUnixMs": 1791967887024
+            }
+          },
+          "queryElapsedMs": 140.3992,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791967886893,
+          "queryReturnedTotalElapsedMs": 147.3788,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5496,
+          "controlCreationFiletime100ns": 134364414868987824,
+          "controlCreationUnixMsDecimal": "1791967886898.7824",
+          "controlCreationAfterFixtureStartMs": 5.7824,
+          "observerElapsedMs": 147,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 73.2176,
+          "markerPublicationAfterFixtureStartMs": 79,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "before-nonzero-exit",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/overflow": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 8,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5468,
+              "process_times": {
+                "creation_filetime_100ns": 134364414869014080,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 142,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5468,
+              "process_times": {
+                "creation_filetime_100ns": 134364414869014080,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 468750
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 143,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5468,
+              "process_times": {
+                "creation_filetime_100ns": 134364414869014080,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 468750
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 5468,
+              "atUnixMs": 1791967886974
+            },
+            "observer-returned": {
+              "pid": 5468,
+              "atUnixMs": 1791967886974
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 5468,
+              "atUnixMs": 1791967886974
+            },
+            "parent-started": {
+              "pid": 7884,
+              "atUnixMs": 1791967887012
+            },
+            "before-child-spawn": {
+              "pid": 7884,
+              "atUnixMs": 1791967887013
+            },
+            "after-child-spawn": {
+              "pid": 7884,
+              "atUnixMs": 1791967887020
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 7884,
+              "atUnixMs": 1791967887027
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 134.2017,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791967886894,
+          "queryReturnedTotalElapsedMs": 143.0649,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5468,
+          "controlCreationFiletime100ns": 134364414869014080,
+          "controlCreationUnixMsDecimal": "1791967886901.408",
+          "controlCreationAfterFixtureStartMs": 7.408,
+          "observerElapsedMs": 143,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 72.592,
+          "markerPublicationAfterFixtureStartMs": 80,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 5,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 4720,
+              "process_times": {
+                "creation_filetime_100ns": 134364414870546435,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 164,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 4720,
+              "process_times": {
+                "creation_filetime_100ns": 134364414870546435,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 165,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 4720,
+              "process_times": {
+                "creation_filetime_100ns": 134364414870546435,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 4720,
+              "atUnixMs": 1791967887134
+            },
+            "observer-returned": {
+              "pid": 4720,
+              "atUnixMs": 1791967887134
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 4720,
+              "atUnixMs": 1791967887134
+            },
+            "parent-started": {
+              "pid": 8044,
+              "atUnixMs": 1791967887172
+            },
+            "before-child-spawn": {
+              "pid": 8044,
+              "atUnixMs": 1791967887174
+            },
+            "after-child-spawn": {
+              "pid": 8044,
+              "atUnixMs": 1791967887180
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 8044,
+              "atUnixMs": 1791967887198
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 158.9298,
+          "queryOutcome": "Success",
+          "fixtureStartedUnixMs": 1791967887049,
+          "queryReturnedTotalElapsedMs": 165.0818,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 4720,
+          "controlCreationFiletime100ns": 134364414870546435,
+          "controlCreationUnixMsDecimal": "1791967887054.6435",
+          "controlCreationAfterFixtureStartMs": 5.6435,
+          "observerElapsedMs": 165,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 79.3565,
+          "markerPublicationAfterFixtureStartMs": 85,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 5,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 3000,
+              "process_times": {
+                "creation_filetime_100ns": 134364414870568390,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2020,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 3000,
+              "process_times": {
+                "creation_filetime_100ns": 134364414870568390,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 2020,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 3000,
+              "process_times": {
+                "creation_filetime_100ns": 134364414870568390,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 3000,
+              "atUnixMs": 1791967887138
+            },
+            "observer-returned": {
+              "pid": 3000,
+              "atUnixMs": 1791967887138
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 3000,
+              "atUnixMs": 1791967887138
+            },
+            "parent-started": {
+              "pid": 4548,
+              "atUnixMs": 1791967887172
+            },
+            "before-child-spawn": {
+              "pid": 4548,
+              "atUnixMs": 1791967887174
+            },
+            "after-child-spawn": {
+              "pid": 4548,
+              "atUnixMs": 1791967887180
+            },
+            "descendant-started": {
+              "pid": 856,
+              "atUnixMs": 1791967887233
+            },
+            "ownership-ready-seen": {
+              "pid": 4548,
+              "atUnixMs": 1791967887198
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2014.1861,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967887051,
+          "queryReturnedTotalElapsedMs": 2020.579,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 3000,
+          "controlCreationFiletime100ns": 134364414870568390,
+          "controlCreationUnixMsDecimal": "1791967887056.839",
+          "controlCreationAfterFixtureStartMs": 5.839,
+          "observerElapsedMs": 2020,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 81.161,
+          "markerPublicationAfterFixtureStartMs": 87,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 33,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5660,
+              "process_times": {
+                "creation_filetime_100ns": 134364414861932469,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 705,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5660,
+              "process_times": {
+                "creation_filetime_100ns": 134364414861932469,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 706,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5660,
+              "process_times": {
+                "creation_filetime_100ns": 134364414861932469,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 5660,
+              "atUnixMs": 1791967886823
+            },
+            "observer-returned": {
+              "pid": 5660,
+              "atUnixMs": 1791967886823
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 5660,
+              "atUnixMs": 1791967886823
+            },
+            "parent-started": {
+              "pid": 1300,
+              "atUnixMs": 1791967886823
+            },
+            "before-child-spawn": {
+              "pid": 1300,
+              "atUnixMs": 1791967886830
+            },
+            "after-child-spawn": {
+              "pid": 1300,
+              "atUnixMs": 1791967886842
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 1300,
+              "atUnixMs": 1791967886843
+            },
+            "before-nonzero-exit": {
+              "pid": 1300,
+              "atUnixMs": 1791967886845
+            }
+          },
+          "queryElapsedMs": 671.7888,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791967886168,
+          "queryReturnedTotalElapsedMs": 705.7077,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5660,
+          "controlCreationFiletime100ns": 134364414861932469,
+          "controlCreationUnixMsDecimal": "1791967886193.2469",
+          "controlCreationAfterFixtureStartMs": 25.2469,
+          "observerElapsedMs": 706,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 629.7531,
+          "markerPublicationAfterFixtureStartMs": 655,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "before-nonzero-exit",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 37,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 528,
+              "process_times": {
+                "creation_filetime_100ns": 134364414862029111,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 706,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 528,
+              "process_times": {
+                "creation_filetime_100ns": 134364414862029111,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 706,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 528,
+              "process_times": {
+                "creation_filetime_100ns": 134364414862029111,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 528,
+              "atUnixMs": 1791967886823
+            },
+            "observer-returned": {
+              "pid": 528,
+              "atUnixMs": 1791967886823
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 528,
+              "atUnixMs": 1791967886823
+            },
+            "parent-started": {
+              "pid": 5500,
+              "atUnixMs": 1791967886823
+            },
+            "before-child-spawn": {
+              "pid": 5500,
+              "atUnixMs": 1791967886831
+            },
+            "after-child-spawn": {
+              "pid": 5500,
+              "atUnixMs": 1791967886842
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 5500,
+              "atUnixMs": 1791967886843
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 668.8882,
+          "queryOutcome": "Success",
+          "fixtureStartedUnixMs": 1791967886169,
+          "queryReturnedTotalElapsedMs": 706.6431,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 528,
+          "controlCreationFiletime100ns": 134364414862029111,
+          "controlCreationUnixMsDecimal": "1791967886202.9111",
+          "controlCreationAfterFixtureStartMs": 33.9111,
+          "observerElapsedMs": 706,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 620.0889,
+          "markerPublicationAfterFixtureStartMs": 654,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 16,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 9096,
+              "process_times": {
+                "creation_filetime_100ns": 134364414862198629,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2033,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 9096,
+              "process_times": {
+                "creation_filetime_100ns": 134364414862198629,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 625000,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 2033,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 9096,
+              "process_times": {
+                "creation_filetime_100ns": 134364414862198629,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 625000,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 9096,
+              "atUnixMs": 1791967886823
+            },
+            "observer-returned": {
+              "pid": 9096,
+              "atUnixMs": 1791967886823
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 9096,
+              "atUnixMs": 1791967886823
+            },
+            "parent-started": {
+              "pid": 924,
+              "atUnixMs": 1791967886823
+            },
+            "before-child-spawn": {
+              "pid": 924,
+              "atUnixMs": 1791967886829
+            },
+            "after-child-spawn": {
+              "pid": 924,
+              "atUnixMs": 1791967886842
+            },
+            "descendant-started": {
+              "pid": 2296,
+              "atUnixMs": 1791967886906
+            },
+            "ownership-ready-seen": {
+              "pid": 924,
+              "atUnixMs": 1791967886855
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2016.4186,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791967886204,
+          "queryReturnedTotalElapsedMs": 2033.2376,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 9096,
+          "controlCreationFiletime100ns": 134364414862198629,
+          "controlCreationUnixMsDecimal": "1791967886219.8629",
+          "controlCreationAfterFixtureStartMs": 15.8629,
+          "observerElapsedMs": 2033,
+          "observerControlCpuMs": 78.125,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 603.1371,
+          "markerPublicationAfterFixtureStartMs": 619,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        }
+      },
+      "diagnosticOnly": true,
+      "historicalRunnerPidsAreNotLocalTargets": true,
+      "schedulerOrIoFailureTracePresent": false,
+      "rootCauseDetermined": false
+    },
+    {
+      "run": 38572890687,
+      "rawLogSha256": "e20bb08f40cb23e38e1efe95963850020fafa8d4166e774ed26033e506e2956f",
+      "library": {
+        "status": "FAILED",
+        "passed": 527,
+        "failed": 3,
+        "ignored": 4
+      },
+      "fixtures": {
+        "metadata/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 255,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 4016,
+              "process_times": {
+                "creation_filetime_100ns": 134364589653874690,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 1929,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 4016,
+              "process_times": {
+                "creation_filetime_100ns": 134364589653874690,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 781250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 1930,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 4016,
+              "process_times": {
+                "creation_filetime_100ns": 134364589653874690,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 781250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 4016,
+              "atUnixMs": 1791985366973
+            },
+            "observer-returned": {
+              "pid": 4016,
+              "atUnixMs": 1791985366973
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 4016,
+              "atUnixMs": 1791985366973
+            },
+            "parent-started": {
+              "pid": 8660,
+              "atUnixMs": 1791985366973
+            },
+            "before-child-spawn": {
+              "pid": 8660,
+              "atUnixMs": 1791985366978
+            },
+            "after-child-spawn": {
+              "pid": 8660,
+              "atUnixMs": 1791985366986
+            },
+            "descendant-started": {
+              "pid": 2020,
+              "atUnixMs": 1791985367033
+            },
+            "ownership-ready-seen": {
+              "pid": 8660,
+              "atUnixMs": 1791985366998
+            },
+            "before-nonzero-exit": {
+              "pid": 8660,
+              "atUnixMs": 1791985367002
+            }
+          },
+          "queryElapsedMs": 1673.3628,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791985365144,
+          "queryReturnedTotalElapsedMs": 1929.4563,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 4016,
+          "controlCreationFiletime100ns": 134364589653874690,
+          "controlCreationUnixMsDecimal": "1791985365387.469",
+          "controlCreationAfterFixtureStartMs": 243.469,
+          "observerElapsedMs": 1930,
+          "observerControlCpuMs": 109.375,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 1585.531,
+          "markerPublicationAfterFixtureStartMs": 1829,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "before-nonzero-exit",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/overflow": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 6,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 7480,
+              "process_times": {
+                "creation_filetime_100ns": 134364589670917912,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 126,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 7480,
+              "process_times": {
+                "creation_filetime_100ns": 134364589670917912,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 127,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 7480,
+              "process_times": {
+                "creation_filetime_100ns": 134364589670917912,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 7480,
+              "atUnixMs": 1791985367159
+            },
+            "observer-returned": {
+              "pid": 7480,
+              "atUnixMs": 1791985367159
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 7480,
+              "atUnixMs": 1791985367159
+            },
+            "parent-started": {
+              "pid": 7228,
+              "atUnixMs": 1791985367184
+            },
+            "before-child-spawn": {
+              "pid": 7228,
+              "atUnixMs": 1791985367186
+            },
+            "after-child-spawn": {
+              "pid": 7228,
+              "atUnixMs": 1791985367191
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 7228,
+              "atUnixMs": 1791985367202
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 119.9726,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791985367086,
+          "queryReturnedTotalElapsedMs": 127.1317,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 7480,
+          "controlCreationFiletime100ns": 134364589670917912,
+          "controlCreationUnixMsDecimal": "1791985367091.7912",
+          "controlCreationAfterFixtureStartMs": 5.7912,
+          "observerElapsedMs": 127,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 67.2088,
+          "markerPublicationAfterFixtureStartMs": 73,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 5,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 9168,
+              "process_times": {
+                "creation_filetime_100ns": 134364589672270081,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 141,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 9168,
+              "process_times": {
+                "creation_filetime_100ns": 134364589672270081,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 142,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 9168,
+              "process_times": {
+                "creation_filetime_100ns": 134364589672270081,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 9168,
+              "atUnixMs": 1791985367287
+            },
+            "observer-returned": {
+              "pid": 9168,
+              "atUnixMs": 1791985367287
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 9168,
+              "atUnixMs": 1791985367287
+            },
+            "parent-started": {
+              "pid": 7828,
+              "atUnixMs": 1791985367318
+            },
+            "before-child-spawn": {
+              "pid": 7828,
+              "atUnixMs": 1791985367323
+            },
+            "after-child-spawn": {
+              "pid": 7828,
+              "atUnixMs": 1791985367330
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 7828,
+              "atUnixMs": 1791985367344
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 135.6236,
+          "queryOutcome": "Success",
+          "fixtureStartedUnixMs": 1791985367222,
+          "queryReturnedTotalElapsedMs": 142.0308,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 9168,
+          "controlCreationFiletime100ns": 134364589672270081,
+          "controlCreationUnixMsDecimal": "1791985367227.0081",
+          "controlCreationAfterFixtureStartMs": 5.0081,
+          "observerElapsedMs": 142,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 59.9919,
+          "markerPublicationAfterFixtureStartMs": 65,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 100,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 6280,
+              "process_times": {
+                "creation_filetime_100ns": 134364589674737011,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2110,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 6280,
+              "process_times": {
+                "creation_filetime_100ns": 134364589674737011,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 2111,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 6280,
+              "process_times": {
+                "creation_filetime_100ns": 134364589674737011,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 6280,
+              "atUnixMs": 1791985367541
+            },
+            "observer-returned": {
+              "pid": 6280,
+              "atUnixMs": 1791985367541
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 6280,
+              "atUnixMs": 1791985367541
+            },
+            "parent-started": {
+              "pid": 6888,
+              "atUnixMs": 1791985367574
+            },
+            "before-child-spawn": {
+              "pid": 6888,
+              "atUnixMs": 1791985367582
+            },
+            "after-child-spawn": {
+              "pid": 6888,
+              "atUnixMs": 1791985367589
+            },
+            "descendant-started": {
+              "pid": 2344,
+              "atUnixMs": 1791985367635
+            },
+            "ownership-ready-seen": {
+              "pid": 6888,
+              "atUnixMs": 1791985367596
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2010.0849,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791985367374,
+          "queryReturnedTotalElapsedMs": 2110.6159,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 6280,
+          "controlCreationFiletime100ns": 134364589674737011,
+          "controlCreationUnixMsDecimal": "1791985367473.7011",
+          "controlCreationAfterFixtureStartMs": 99.7011,
+          "observerElapsedMs": 2111,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 67.2989,
+          "markerPublicationAfterFixtureStartMs": 167,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 57,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 6704,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627223524,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2110,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 6704,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627223524,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5063,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 6704,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627223524,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": {
+              "pid": 6704,
+              "atUnixMs": 1791985366974
+            }
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2053.3186,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791985362679,
+          "queryReturnedTotalElapsedMs": 2110.9022,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 6704,
+          "controlCreationFiletime100ns": 134364589627223524,
+          "controlCreationUnixMsDecimal": "1791985362722.3524",
+          "controlCreationAfterFixtureStartMs": 43.3524,
+          "observerElapsedMs": 5063,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 4251.6476,
+          "markerPublicationAfterFixtureStartMs": 4295,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 108,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 2796,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627377817,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2188,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 2796,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627377817,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5111,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 2796,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627377817,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": {
+              "pid": 2796,
+              "atUnixMs": 1791985366973
+            }
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2080.3034,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791985362680,
+          "queryReturnedTotalElapsedMs": 2188.5163,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 2796,
+          "controlCreationFiletime100ns": 134364589627377817,
+          "controlCreationUnixMsDecimal": "1791985362737.7817",
+          "controlCreationAfterFixtureStartMs": 57.7817,
+          "observerElapsedMs": 5111,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 4235.2183,
+          "markerPublicationAfterFixtureStartMs": 4293,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 83,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 8808,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627922511,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2148,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 8808,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627922511,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5102,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 8808,
+              "process_times": {
+                "creation_filetime_100ns": 134364589627922511,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 625000
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": {
+              "pid": 8808,
+              "atUnixMs": 1791985366974
+            }
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2064.4613,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791985362721,
+          "queryReturnedTotalElapsedMs": 2148.4221,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 8808,
+          "controlCreationFiletime100ns": 134364589627922511,
+          "controlCreationUnixMsDecimal": "1791985362792.2511",
+          "controlCreationAfterFixtureStartMs": 71.2511,
+          "observerElapsedMs": 5102,
+          "observerControlCpuMs": 109.375,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 4181.7489,
+          "markerPublicationAfterFixtureStartMs": 4253,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        }
+      },
+      "diagnosticOnly": true,
+      "historicalRunnerPidsAreNotLocalTargets": true,
+      "schedulerOrIoFailureTracePresent": false,
+      "rootCauseDetermined": false
+    },
+    {
+      "run": 38583689702,
+      "rawLogSha256": "c4d6b3731625d312b4944c565392c5b5fecf7e4c6013c5f7282c34fbbcc48b62",
+      "library": {
+        "status": "FAILED",
+        "passed": 527,
+        "failed": 3,
+        "ignored": 4
+      },
+      "fixtures": {
+        "metadata/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 891,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 8596,
+              "process_times": {
+                "creation_filetime_100ns": 134364633942763338,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 1048,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 8596,
+              "process_times": {
+                "creation_filetime_100ns": 134364633942763338,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 1049,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 8596,
+              "process_times": {
+                "creation_filetime_100ns": 134364633942763338,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 8596,
+              "atUnixMs": 1791989794381
+            },
+            "observer-returned": {
+              "pid": 8596,
+              "atUnixMs": 1791989794381
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 8596,
+              "atUnixMs": 1791989794381
+            },
+            "parent-started": {
+              "pid": 4652,
+              "atUnixMs": 1791989794404
+            },
+            "before-child-spawn": {
+              "pid": 4652,
+              "atUnixMs": 1791989794406
+            },
+            "after-child-spawn": {
+              "pid": 4652,
+              "atUnixMs": 1791989794422
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 4652,
+              "atUnixMs": 1791989794440
+            },
+            "before-nonzero-exit": {
+              "pid": 4652,
+              "atUnixMs": 1791989794441
+            }
+          },
+          "queryElapsedMs": 155.9759,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791989793411,
+          "queryReturnedTotalElapsedMs": 1048.4718,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 8596,
+          "controlCreationFiletime100ns": 134364633942763338,
+          "controlCreationUnixMsDecimal": "1791989794276.3338",
+          "controlCreationAfterFixtureStartMs": 865.3338,
+          "observerElapsedMs": 1049,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 104.6662,
+          "markerPublicationAfterFixtureStartMs": 970,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "before-nonzero-exit",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/overflow": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 133,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 7300,
+              "process_times": {
+                "creation_filetime_100ns": 134364633946044094,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 604,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 7300,
+              "process_times": {
+                "creation_filetime_100ns": 134364633946044094,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 604,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 7300,
+              "process_times": {
+                "creation_filetime_100ns": 134364633946044094,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 7300,
+              "atUnixMs": 1791989794676
+            },
+            "observer-returned": {
+              "pid": 7300,
+              "atUnixMs": 1791989794676
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 7300,
+              "atUnixMs": 1791989794676
+            },
+            "parent-started": {
+              "pid": 7036,
+              "atUnixMs": 1791989794725
+            },
+            "before-child-spawn": {
+              "pid": 7036,
+              "atUnixMs": 1791989794727
+            },
+            "after-child-spawn": {
+              "pid": 7036,
+              "atUnixMs": 1791989794733
+            },
+            "descendant-started": {
+              "pid": 5712,
+              "atUnixMs": 1791989794790
+            },
+            "ownership-ready-seen": {
+              "pid": 7036,
+              "atUnixMs": 1791989794756
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 470.1531,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791989794472,
+          "queryReturnedTotalElapsedMs": 604.2801,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 7300,
+          "controlCreationFiletime100ns": 134364633946044094,
+          "controlCreationUnixMsDecimal": "1791989794604.4094",
+          "controlCreationAfterFixtureStartMs": 132.4094,
+          "observerElapsedMs": 604,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 71.5906,
+          "markerPublicationAfterFixtureStartMs": 204,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 5,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5956,
+              "process_times": {
+                "creation_filetime_100ns": 134364633950941701,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 161,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5956,
+              "process_times": {
+                "creation_filetime_100ns": 134364633950941701,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 162,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5956,
+              "process_times": {
+                "creation_filetime_100ns": 134364633950941701,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 5956,
+              "atUnixMs": 1791989795200
+            },
+            "observer-returned": {
+              "pid": 5956,
+              "atUnixMs": 1791989795200
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 5956,
+              "atUnixMs": 1791989795200
+            },
+            "parent-started": {
+              "pid": 2012,
+              "atUnixMs": 1791989795205
+            },
+            "before-child-spawn": {
+              "pid": 2012,
+              "atUnixMs": 1791989795207
+            },
+            "after-child-spawn": {
+              "pid": 2012,
+              "atUnixMs": 1791989795213
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 2012,
+              "atUnixMs": 1791989795229
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 155.5873,
+          "queryOutcome": "Success",
+          "fixtureStartedUnixMs": 1791989795089,
+          "queryReturnedTotalElapsedMs": 161.5644,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5956,
+          "controlCreationFiletime100ns": 134364633950941701,
+          "controlCreationUnixMsDecimal": "1791989795094.1701",
+          "controlCreationAfterFixtureStartMs": 5.1701,
+          "observerElapsedMs": 162,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 105.8299,
+          "markerPublicationAfterFixtureStartMs": 111,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 7,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 1324,
+              "process_times": {
+                "creation_filetime_100ns": 134364633952687626,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2020,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 1324,
+              "process_times": {
+                "creation_filetime_100ns": 134364633952687626,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 468750
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 2021,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 1324,
+              "process_times": {
+                "creation_filetime_100ns": 134364633952687626,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 468750
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 1324,
+              "atUnixMs": 1791989795413
+            },
+            "observer-returned": {
+              "pid": 1324,
+              "atUnixMs": 1791989795413
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 1324,
+              "atUnixMs": 1791989795413
+            },
+            "parent-started": {
+              "pid": 1132,
+              "atUnixMs": 1791989795437
+            },
+            "before-child-spawn": {
+              "pid": 1132,
+              "atUnixMs": 1791989795442
+            },
+            "after-child-spawn": {
+              "pid": 1132,
+              "atUnixMs": 1791989795450
+            },
+            "descendant-started": {
+              "pid": 8800,
+              "atUnixMs": 1791989795492
+            },
+            "ownership-ready-seen": {
+              "pid": 1132,
+              "atUnixMs": 1791989795463
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2012.7642,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791989795262,
+          "queryReturnedTotalElapsedMs": 2020.8046,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 1324,
+          "controlCreationFiletime100ns": 134364633952687626,
+          "controlCreationUnixMsDecimal": "1791989795268.7626",
+          "controlCreationAfterFixtureStartMs": 6.7626,
+          "observerElapsedMs": 2021,
+          "observerControlCpuMs": 93.75,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 144.2374,
+          "markerPublicationAfterFixtureStartMs": 151,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 93,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 1164,
+              "process_times": {
+                "creation_filetime_100ns": 134364633910213796,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2099,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 1164,
+              "process_times": {
+                "creation_filetime_100ns": 134364633910213796,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 625000,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5114,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 1164,
+              "process_times": {
+                "creation_filetime_100ns": 134364633910213796,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 625000,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": {
+              "pid": 1164,
+              "atUnixMs": 1791989794278
+            }
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2005.6624,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791989790929,
+          "queryReturnedTotalElapsedMs": 2099.3159,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 1164,
+          "controlCreationFiletime100ns": 134364633910213796,
+          "controlCreationUnixMsDecimal": "1791989791021.3796",
+          "controlCreationAfterFixtureStartMs": 92.3796,
+          "observerElapsedMs": 5114,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 3256.6204,
+          "markerPublicationAfterFixtureStartMs": 3349,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 10,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 8480,
+              "process_times": {
+                "creation_filetime_100ns": 134364633909449293,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2059,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 8480,
+              "process_times": {
+                "creation_filetime_100ns": 134364633909449293,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5014,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 8480,
+              "process_times": {
+                "creation_filetime_100ns": 134364633909449293,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": {
+              "pid": 8480,
+              "atUnixMs": 1791989794279
+            }
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2048.7612,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791989790936,
+          "queryReturnedTotalElapsedMs": 2059.6514,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 8480,
+          "controlCreationFiletime100ns": 134364633909449293,
+          "controlCreationUnixMsDecimal": "1791989790944.9293",
+          "controlCreationAfterFixtureStartMs": 8.9293,
+          "observerElapsedMs": 5014,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 3334.0707,
+          "markerPublicationAfterFixtureStartMs": 3343,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        },
+        "version/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 82,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 7836,
+              "process_times": {
+                "creation_filetime_100ns": 134364633910598779,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2089,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 7836,
+              "process_times": {
+                "creation_filetime_100ns": 134364633910598779,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 5109,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 7836,
+              "process_times": {
+                "creation_filetime_100ns": 134364633910598779,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": null,
+            "observer-returned": {
+              "pid": 7836,
+              "atUnixMs": 1791989794273
+            }
+          },
+          "phases": {
+            "control-started": null,
+            "parent-started": null,
+            "before-child-spawn": null,
+            "after-child-spawn": null,
+            "descendant-started": null,
+            "ownership-ready-seen": null,
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2006.7114,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791989790978,
+          "queryReturnedTotalElapsedMs": 2089.8176,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 7836,
+          "controlCreationFiletime100ns": 134364633910598779,
+          "controlCreationUnixMsDecimal": "1791989791059.8779",
+          "controlCreationAfterFixtureStartMs": 81.8779,
+          "observerElapsedMs": 5109,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": true,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 3213.1221,
+          "markerPublicationAfterFixtureStartMs": 3295,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": []
+        }
+      },
+      "diagnosticOnly": true,
+      "historicalRunnerPidsAreNotLocalTargets": true,
+      "schedulerOrIoFailureTracePresent": false,
+      "rootCauseDetermined": false
+    },
+    {
+      "run": 38583679031,
+      "rawLogSha256": "cddb80caffb2aaf0b1825538911daa876403ff82f646608a19f159497bc6b601",
+      "library": {
+        "status": "ok",
+        "passed": 530,
+        "failed": 0,
+        "ignored": 4
+      },
+      "fixtures": {
+        "metadata/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 5,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5264,
+              "process_times": {
+                "creation_filetime_100ns": 134364633228620482,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 129,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5264,
+              "process_times": {
+                "creation_filetime_100ns": 134364633228620482,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 129,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5264,
+              "process_times": {
+                "creation_filetime_100ns": 134364633228620482,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 5264,
+              "atUnixMs": 1791989722920
+            },
+            "observer-returned": {
+              "pid": 5264,
+              "atUnixMs": 1791989722920
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 5264,
+              "atUnixMs": 1791989722920
+            },
+            "parent-started": {
+              "pid": 4920,
+              "atUnixMs": 1791989722956
+            },
+            "before-child-spawn": {
+              "pid": 4920,
+              "atUnixMs": 1791989722957
+            },
+            "after-child-spawn": {
+              "pid": 4920,
+              "atUnixMs": 1791989722962
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 4920,
+              "atUnixMs": 1791989722977
+            },
+            "before-nonzero-exit": {
+              "pid": 4920,
+              "atUnixMs": 1791989722977
+            }
+          },
+          "queryElapsedMs": 124.0057,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791989722857,
+          "queryReturnedTotalElapsedMs": 129.4114,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5264,
+          "controlCreationFiletime100ns": 134364633228620482,
+          "controlCreationUnixMsDecimal": "1791989722862.0482",
+          "controlCreationAfterFixtureStartMs": 5.0482,
+          "observerElapsedMs": 129,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 57.9518,
+          "markerPublicationAfterFixtureStartMs": 63,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "before-nonzero-exit",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/overflow": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 6,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 9376,
+              "process_times": {
+                "creation_filetime_100ns": 134364633228640639,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 115,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 9376,
+              "process_times": {
+                "creation_filetime_100ns": 134364633228640639,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 116,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 9376,
+              "process_times": {
+                "creation_filetime_100ns": 134364633228640639,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 156250,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 9376,
+              "atUnixMs": 1791989722920
+            },
+            "observer-returned": {
+              "pid": 9376,
+              "atUnixMs": 1791989722920
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 9376,
+              "atUnixMs": 1791989722920
+            },
+            "parent-started": {
+              "pid": 2084,
+              "atUnixMs": 1791989722954
+            },
+            "before-child-spawn": {
+              "pid": 2084,
+              "atUnixMs": 1791989722955
+            },
+            "after-child-spawn": {
+              "pid": 2084,
+              "atUnixMs": 1791989722960
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 2084,
+              "atUnixMs": 1791989722967
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 108.504,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791989722857,
+          "queryReturnedTotalElapsedMs": 115.7351,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 9376,
+          "controlCreationFiletime100ns": 134364633228640639,
+          "controlCreationUnixMsDecimal": "1791989722864.0639",
+          "controlCreationAfterFixtureStartMs": 7.0639,
+          "observerElapsedMs": 116,
+          "observerControlCpuMs": 31.25,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 55.9361,
+          "markerPublicationAfterFixtureStartMs": 63,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 5,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 6648,
+              "process_times": {
+                "creation_filetime_100ns": 134364633229864821,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 118,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 6648,
+              "process_times": {
+                "creation_filetime_100ns": 134364633229864821,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 118,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 6648,
+              "process_times": {
+                "creation_filetime_100ns": 134364633229864821,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 6648,
+              "atUnixMs": 1791989723042
+            },
+            "observer-returned": {
+              "pid": 6648,
+              "atUnixMs": 1791989723042
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 6648,
+              "atUnixMs": 1791989723042
+            },
+            "parent-started": {
+              "pid": 6640,
+              "atUnixMs": 1791989723069
+            },
+            "before-child-spawn": {
+              "pid": 6640,
+              "atUnixMs": 1791989723071
+            },
+            "after-child-spawn": {
+              "pid": 6640,
+              "atUnixMs": 1791989723077
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 6640,
+              "atUnixMs": 1791989723087
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 112.8025,
+          "queryOutcome": "Success",
+          "fixtureStartedUnixMs": 1791989722982,
+          "queryReturnedTotalElapsedMs": 118.5317,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 6648,
+          "controlCreationFiletime100ns": 134364633229864821,
+          "controlCreationUnixMsDecimal": "1791989722986.4821",
+          "controlCreationAfterFixtureStartMs": 4.4821,
+          "observerElapsedMs": 118,
+          "observerControlCpuMs": 62.5,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 55.5179,
+          "markerPublicationAfterFixtureStartMs": 60,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "metadata/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 6,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 8248,
+              "process_times": {
+                "creation_filetime_100ns": 134364633230033391,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2021,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 8248,
+              "process_times": {
+                "creation_filetime_100ns": 134364633230033391,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 2022,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 8248,
+              "process_times": {
+                "creation_filetime_100ns": 134364633230033391,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 8248,
+              "atUnixMs": 1791989723060
+            },
+            "observer-returned": {
+              "pid": 8248,
+              "atUnixMs": 1791989723060
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 8248,
+              "atUnixMs": 1791989723060
+            },
+            "parent-started": {
+              "pid": 8608,
+              "atUnixMs": 1791989723090
+            },
+            "before-child-spawn": {
+              "pid": 8608,
+              "atUnixMs": 1791989723092
+            },
+            "after-child-spawn": {
+              "pid": 8608,
+              "atUnixMs": 1791989723097
+            },
+            "descendant-started": {
+              "pid": 2024,
+              "atUnixMs": 1791989723134
+            },
+            "ownership-ready-seen": {
+              "pid": 8608,
+              "atUnixMs": 1791989723118
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2015.5604,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791989722998,
+          "queryReturnedTotalElapsedMs": 2022.0731,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 8248,
+          "controlCreationFiletime100ns": 134364633230033391,
+          "controlCreationUnixMsDecimal": "1791989723003.3391",
+          "controlCreationAfterFixtureStartMs": 5.3391,
+          "observerElapsedMs": 2022,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 56.6609,
+          "markerPublicationAfterFixtureStartMs": 62,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/nonzero": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 7,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 3252,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223074656,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 539,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 3252,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223074656,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 539,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 3252,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223074656,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 468750,
+                "user_cpu_100ns": 312500
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 3252,
+              "atUnixMs": 1791989722797
+            },
+            "observer-returned": {
+              "pid": 3252,
+              "atUnixMs": 1791989722797
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 3252,
+              "atUnixMs": 1791989722797
+            },
+            "parent-started": {
+              "pid": 7796,
+              "atUnixMs": 1791989722797
+            },
+            "before-child-spawn": {
+              "pid": 7796,
+              "atUnixMs": 1791989722801
+            },
+            "after-child-spawn": {
+              "pid": 7796,
+              "atUnixMs": 1791989722809
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 7796,
+              "atUnixMs": 1791989722818
+            },
+            "before-nonzero-exit": {
+              "pid": 7796,
+              "atUnixMs": 1791989722820
+            }
+          },
+          "queryElapsedMs": 531.2932,
+          "queryOutcome": "Failure",
+          "fixtureStartedUnixMs": 1791989722300,
+          "queryReturnedTotalElapsedMs": 539.5317,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 3252,
+          "controlCreationFiletime100ns": 134364633223074656,
+          "controlCreationUnixMsDecimal": "1791989722307.4656",
+          "controlCreationAfterFixtureStartMs": 7.4656,
+          "observerElapsedMs": 539,
+          "observerControlCpuMs": 78.125,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 489.5344,
+          "markerPublicationAfterFixtureStartMs": 497,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "before-nonzero-exit",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/success": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 52,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 6924,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223541514,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 541,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 6924,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223541514,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 625000,
+                "user_cpu_100ns": 625000
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 542,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 6924,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223541514,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 625000,
+                "user_cpu_100ns": 625000
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 6924,
+              "atUnixMs": 1791989722797
+            },
+            "observer-returned": {
+              "pid": 6924,
+              "atUnixMs": 1791989722797
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 6924,
+              "atUnixMs": 1791989722797
+            },
+            "parent-started": {
+              "pid": 4680,
+              "atUnixMs": 1791989722797
+            },
+            "before-child-spawn": {
+              "pid": 4680,
+              "atUnixMs": 1791989722801
+            },
+            "after-child-spawn": {
+              "pid": 4680,
+              "atUnixMs": 1791989722809
+            },
+            "descendant-started": null,
+            "ownership-ready-seen": {
+              "pid": 4680,
+              "atUnixMs": 1791989722819
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 489.0417,
+          "queryOutcome": "Success",
+          "fixtureStartedUnixMs": 1791989722302,
+          "queryReturnedTotalElapsedMs": 541.875,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 6924,
+          "controlCreationFiletime100ns": 134364633223541514,
+          "controlCreationUnixMsDecimal": "1791989722354.1514",
+          "controlCreationAfterFixtureStartMs": 52.1514,
+          "observerElapsedMs": 542,
+          "observerControlCpuMs": 125.0,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 442.8486,
+          "markerPublicationAfterFixtureStartMs": 495,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        },
+        "version/timeout": {
+          "snapshots": {
+            "before-query": {
+              "elapsed_ms": 44,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "before-query",
+              "process_id": 5476,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223715340,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 0,
+                "user_cpu_100ns": 0
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "query-returned": {
+              "elapsed_ms": 2059,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "query-returned",
+              "process_id": 5476,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223715340,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            },
+            "observer-returned": {
+              "elapsed_ms": 2059,
+              "exit_code": 259,
+              "exit_error": null,
+              "point": "observer-returned",
+              "process_id": 5476,
+              "process_times": {
+                "creation_filetime_100ns": 134364633223715340,
+                "exit_filetime_100ns": 0,
+                "kernel_cpu_100ns": 312500,
+                "user_cpu_100ns": 156250
+              },
+              "times_error": null,
+              "wait_status": 258
+            }
+          },
+          "controlMarkers": {
+            "before-query": null,
+            "query-returned": {
+              "pid": 5476,
+              "atUnixMs": 1791989722798
+            },
+            "observer-returned": {
+              "pid": 5476,
+              "atUnixMs": 1791989722798
+            }
+          },
+          "phases": {
+            "control-started": {
+              "pid": 5476,
+              "atUnixMs": 1791989722798
+            },
+            "parent-started": {
+              "pid": 7708,
+              "atUnixMs": 1791989722797
+            },
+            "before-child-spawn": {
+              "pid": 7708,
+              "atUnixMs": 1791989722802
+            },
+            "after-child-spawn": {
+              "pid": 7708,
+              "atUnixMs": 1791989722810
+            },
+            "descendant-started": {
+              "pid": 2792,
+              "atUnixMs": 1791989722859
+            },
+            "ownership-ready-seen": {
+              "pid": 7708,
+              "atUnixMs": 1791989722817
+            },
+            "before-nonzero-exit": null
+          },
+          "queryElapsedMs": 2014.7167,
+          "queryOutcome": "Timeout",
+          "fixtureStartedUnixMs": 1791989722328,
+          "queryReturnedTotalElapsedMs": 2059.215,
+          "node": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+          "controlPid": 5476,
+          "controlCreationFiletime100ns": 134364633223715340,
+          "controlCreationUnixMsDecimal": "1791989722371.534",
+          "controlCreationAfterFixtureStartMs": 43.534,
+          "observerElapsedMs": 2059,
+          "observerControlCpuMs": 46.875,
+          "controlStillLiveAtObserver": true,
+          "controlMarkerMissingAtQueryReturn": false,
+          "controlMarkerMissingAtObserverReturn": false,
+          "markerPublicationAfterCreationMs": 426.466,
+          "markerPublicationAfterFixtureStartMs": 470,
+          "githubLogPrefixUsedAsExecutionClock": false,
+          "phaseMarkersObservedAtQueryReturn": [
+            "after-child-spawn",
+            "before-child-spawn",
+            "control-started",
+            "descendant-started",
+            "ownership-ready-seen",
+            "parent-started"
+          ]
+        }
+      },
+      "diagnosticOnly": true,
+      "historicalRunnerPidsAreNotLocalTargets": true,
+      "schedulerOrIoFailureTracePresent": false,
+      "rootCauseDetermined": false
+    }
+  ],
+  "decoderReview": {
+    "run": 38662786466,
+    "scope": "successful comparison only",
+    "scheduledOutRecords": 3175,
+    "eventVersion": 5,
+    "decodedFieldHistograms": {
+      "waitMode": {
+        "16": 6,
+        "17": 12,
+        "80": 43,
+        "81": 16,
+        "96": 209,
+        "97": 116,
+        "NonSwap": 1617,
+        "Swappable": 1156
+      },
+      "waitReason": {
+        "15": 206,
+        "17": 174,
+        "27": 364,
+        "28": 96,
+        "30": 9,
+        "31": 975,
+        "32": 280,
+        "34": 36,
+        "37": 377,
+        "ExecutionDelay": 15,
+        "Executive": 364,
+        "LpcReceive": 93,
+        "Suspended": 21,
+        "Unknown": 15,
+        "UserRequest": 150
+      },
+      "state": {
+        "Ready": 1222,
+        "Running": 14,
+        "Standby": 192,
+        "Unknown": 109,
+        "Wait": 1638
+      }
+    },
+    "waitModeValuesWithoutPinnedEnumNames": 402,
+    "unnamedWaitModeFraction": 0.12661417322834645,
+    "unknownValuesPreservedWithoutMasking": true,
+    "waitMode96IsNotReinterpretedAsKernelMode": true,
+    "version5WaitFieldSemanticsVerified": false,
+    "enumNameIsNotAWaitChainOrRootCause": true,
+    "controlMarkerCreateEvents": 14,
+    "controlMarkerWriteEvents": 7,
+    "uniqueControlPidsWithMarkerWrites": 7,
+    "markerFileWriteProvesSuccessfulComparisonProgressOnly": true
+  },
+  "originalBd2FailureStillOpen": true,
+  "actualFailureTimeWindowEtwObtained": false,
+  "noNewExecution": true,
+  "desktopStarted": false,
+  "nodeStarted": false,
+  "etwSessionStarted": false,
+  "originalDeadlinesOrAssertionsChanged": false,
+  "rootCauseClaimed": false,
+  "fullVersionGatePassed": false,
+  "nextCaptureRequirements": [
+    "Retain exact failed-artifact and official-Node identity and all original budgets.",
+    "Record original process/thread/image starts before first owned Node launch.",
+    "Keep capture through the original five-second observer, not only the query return.",
+    "Differentiate control startup, query-worker startup and marker I/O by original time and process generation.",
+    "Retain numeric decoded wait fields; do not infer version-five wait semantics from a version-two table.",
+    "Capture a naturally failing first library run; do not repeat successful replays or prewarm Node."
+  ]
+}

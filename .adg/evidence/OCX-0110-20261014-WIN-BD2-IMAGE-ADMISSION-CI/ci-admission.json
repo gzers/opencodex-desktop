@@ -1,0 +1,87 @@
+{
+  "atUtc": "2026-10-14T14:39:06.392800+00:00",
+  "source": "0407fdb2328038dbda0d6b5947a00d5a6ecfdb44",
+  "base": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "runs": [
+    {
+      "runId": 38576903523,
+      "event": "push",
+      "head": "0407fdb2328038dbda0d6b5947a00d5a6ecfdb44",
+      "status": "completed",
+      "conclusion": "success",
+      "actualCheckout": "0407fdb2328038dbda0d6b5947a00d5a6ecfdb44",
+      "jobs": {
+        "frontend": "success",
+        "backend": "success",
+        "backend-windows": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      },
+      "rustCounts": {
+        "backend": {
+          "suites": 35,
+          "passed": 900,
+          "failed": 0,
+          "ignored": 6
+        },
+        "backend-windows": {
+          "suites": 35,
+          "passed": 627,
+          "failed": 0,
+          "ignored": 7
+        }
+      },
+      "archiveBytes": 293640,
+      "archiveSha256": "d94ea8617df74b324da69d9683bd9b9d3f46b08ecb37239ce0e3c787dafe1450",
+      "originalLogsVerified": true,
+      "actualTree": "cdcf6d037e09735fcb533ecafae7a3642b41e7c3",
+      "actualTreeEqualsHead": true
+    },
+    {
+      "runId": 38576914275,
+      "event": "pull_request",
+      "head": "0407fdb2328038dbda0d6b5947a00d5a6ecfdb44",
+      "status": "completed",
+      "conclusion": "success",
+      "actualCheckout": "4279a608a1d99285ea9d5114df9fc4b1fb9576c8",
+      "jobs": {
+        "frontend": "success",
+        "backend": "success",
+        "backend-windows": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      },
+      "rustCounts": {
+        "backend-windows": {
+          "suites": 35,
+          "passed": 627,
+          "failed": 0,
+          "ignored": 7
+        },
+        "backend": {
+          "suites": 35,
+          "passed": 900,
+          "failed": 0,
+          "ignored": 6
+        }
+      },
+      "archiveBytes": 294745,
+      "archiveSha256": "cc1143fdfcdc0a34cb92ed4d39b2a4fbb0aa30d5ea6060241fa2f99418cfc137",
+      "originalLogsVerified": true,
+      "actualTree": "cdcf6d037e09735fcb533ecafae7a3642b41e7c3",
+      "actualTreeEqualsHead": true
+    }
+  ],
+  "productAndWorkflowUnchanged": true,
+  "collectorLiveRecordTested": false,
+  "administratorRecordingApproved": true,
+  "standingUserAuthorization": true,
+  "newOriginalLibraryRuns": 0,
+  "originalFailureReproduced": false,
+  "originalFailureClosed": false,
+  "nativeInstanceStarted": false,
+  "candidateOrCiManuallyDispatched": false,
+  "fullVersionGatePromoted": false
+}

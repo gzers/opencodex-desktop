@@ -1,0 +1,109 @@
+{
+  "startedAtUtc": "2026-10-14T11:43:02.788668+00:00",
+  "helperPid": 33408,
+  "source": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "runIds": [
+    38555890377,
+    38556292712
+  ],
+  "maximumWaitSeconds": 600,
+  "intervalSeconds": 30,
+  "status": "both-existing-runs-terminal-verified",
+  "manuallyDispatchedOrRerun": false,
+  "testsOrEtwStarted": false,
+  "recordingApprovalInferredFromGoalContinuation": false,
+  "observations": [
+    {
+      "atUtc": "2026-10-14T11:43:02.789314+00:00",
+      "runs": [
+        {
+          "id": 38555890377,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 38556292712,
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ]
+    },
+    {
+      "atUtc": "2026-10-14T11:43:37.402268+00:00",
+      "runs": [
+        {
+          "id": 38555890377,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 38556292712,
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ]
+    },
+    {
+      "atUtc": "2026-10-14T11:44:09.647051+00:00",
+      "runs": [
+        {
+          "id": 38555890377,
+          "readErrorType": "RuntimeError",
+          "terminalStateInferred": false
+        },
+        {
+          "id": 38556292712,
+          "readErrorType": "RuntimeError",
+          "terminalStateInferred": false
+        }
+      ]
+    },
+    {
+      "atUtc": "2026-10-14T11:44:39.751084+00:00",
+      "runs": [
+        {
+          "id": 38555890377,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 38556292712,
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ]
+    },
+    {
+      "atUtc": "2026-10-14T11:45:12.277653+00:00",
+      "runs": [
+        {
+          "id": 38555890377,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 38556292712,
+          "status": "in_progress",
+          "conclusion": null
+        }
+      ]
+    },
+    {
+      "atUtc": "2026-10-14T11:45:44.225095+00:00",
+      "runs": [
+        {
+          "id": 38555890377,
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 38556292712,
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "finishedAtUtc": "2026-10-14T11:45:48.820541+00:00",
+  "elapsedSeconds": 166.01600000000326
+}

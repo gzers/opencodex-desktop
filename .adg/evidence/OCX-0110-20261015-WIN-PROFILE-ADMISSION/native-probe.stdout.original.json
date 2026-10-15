@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUtc": "2026-10-15T02:24:50.0574935+00:00",
+  "status": "rejected",
+  "processId": 56504,
+  "creationTimeUtc": "2026-10-15T02:24:48.4452646Z",
+  "elevated": false,
+  "elevationType": 3,
+  "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+  "expectedSidMatched": true,
+  "dailySidMatched": true,
+  "administratorsSidPresent": false,
+  "localAccountConfirmed": true,
+  "threadImpersonating": false,
+  "existingDirectoriesVerified": false,
+  "reparseFree": true,
+  "desktopCount": 0,
+  "knownFolderApi": "SHGetKnownFolderPath(flags=0, token=NULL)",
+  "knownFolders": [
+    {
+      "folder": "profile",
+      "pathSha256": "88011e584002fd8f31894b79c94c06c110cdd2507c773b71e19bcc6db0cf20e4"
+    },
+    {
+      "folder": "roaming",
+      "pathSha256": "d7045984aa4e3024f065160a7e351de9bae644c1a7a8e02cf7f8e7ecd0d6e818"
+    },
+    {
+      "folder": "local",
+      "pathSha256": "1300b84d1b4af1e20a12f0e0dcc24c277a0e7f3eb54ed9caaa6918f969d40a59"
+    }
+  ],
+  "expectedProfileSha256": "152a258684e8bf542cff7f33c471a9df711474b96a3117e2b173d970aee699f2",
+  "admitted": false,
+  "reasons": [
+    "daily-account",
+    "ordinary-nonadministrator-account-required",
+    "profile-directories-unverified",
+    "known-profile-outside-fixture",
+    "known-roaming-outside-fixture",
+    "known-local-outside-fixture"
+  ],
+  "methodSha256": "b75bbf4202c51fd49db63a7694deed97ffba9fd6e36d30097efb4e51c08011fb",
+  "rawUserPathsOrSidsPublished": false,
+  "accountOrProfileCreated": false,
+  "knownFolderBindingsChanged": false,
+  "environmentChanged": false,
+  "permissionsChanged": false,
+  "productStarted": false,
+  "inputInjected": false,
+  "installerIsolationProved": false,
+  "profileAdmissionIsLaunchPermission": false,
+  "fullVersionGatePassed": false,
+  "negativeControl": "actual-current-daily-account; ExpectedSid intentionally equals DailySid",
+  "sourceCommit": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+  "proposedTestAccountExists": false,
+  "methodMatchesCurrentFile": true
+}

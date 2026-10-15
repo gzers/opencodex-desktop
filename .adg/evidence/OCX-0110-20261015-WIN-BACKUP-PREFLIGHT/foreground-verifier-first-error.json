@@ -1,0 +1,11 @@
+{
+  "stage": "offline-verifier-before-manifest-creation",
+  "error": "KeyError: document_text",
+  "cause": "Initial native first-screen Sky state has an accessibility tree but no document_text before page content becomes available.",
+  "originalMethod": "verify-foreground-backup.first-attempt.py",
+  "evidenceChanged": false,
+  "manifestCreated": false,
+  "applicationStarted": false,
+  "productFailureClaimed": false,
+  "correction": "Require document_text on all content states, exempt only the recorded initial native state. Match the recorded generic restore failure message; notification identity and disk integrity establish the specific failure."
+}

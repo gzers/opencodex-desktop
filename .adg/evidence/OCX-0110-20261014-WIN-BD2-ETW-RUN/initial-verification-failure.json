@@ -1,0 +1,7 @@
+{
+  "atUtc": "2026-10-14T13:01:57.6366248Z",
+  "stage": "evidence-verifier-before-freeze",
+  "result": "failed",
+  "reason": "Bare PID postcheck included controller PID 26048 reused by a different process with later creation time; original raw postcheck retained",
+  "repair": "Use PID + creation + exact image; no process action"
+}

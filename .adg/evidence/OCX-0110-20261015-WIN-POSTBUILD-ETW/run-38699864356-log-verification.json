@@ -1,0 +1,70 @@
+{
+  "runId": 38699864356,
+  "source": "8e266abac78ff6d1b78cb05e680c7c5dbe1f0e56",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "logs": {
+    "bytes": 300297,
+    "sha256": "45c44349d1191a74dc9468eaebba522a7be8290e625d1f39bd89e0df2ef93c5b"
+  },
+  "safeEntriesAndCrcVerified": true,
+  "actualCheckout": {
+    "backend-windows": "8e266abac78ff6d1b78cb05e680c7c5dbe1f0e56",
+    "backend": "8e266abac78ff6d1b78cb05e680c7c5dbe1f0e56"
+  },
+  "rustResults": {
+    "backend-windows": {
+      "suites": 35,
+      "passed": 627,
+      "failed": 0,
+      "ignored": 7
+    },
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "selectedLogs": [
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "file": "run-38699864356-backend-windows-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 5472,
+      "sha256": "65659797c6fc6426fac472a506d8f6488296f4b53b76839d17f24becf9a33539"
+    },
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "file": "run-38699864356-backend-windows-9_Windows_backend_regression.txt.gz",
+      "bytes": 218302,
+      "sha256": "656584d4c81c6af7dda3b60321cbda1163e9ef611104a037e1f20ef0466cddf1"
+    },
+    {
+      "member": "backend-windows/26_Post Run actions_checkout@v5.txt",
+      "file": "run-38699864356-backend-windows-26_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1935,
+      "sha256": "3e128967ef039a946a3f087f77d2d7465f4d61d7b42242a26021714936f237f0"
+    },
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "file": "run-38699864356-backend-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 6358,
+      "sha256": "9d9782ccb258c0e56442d97d4e30d8de106e119f3d95b87aa4ef7edaada28d82"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "run-38699864356-backend-6_Run_cargo_test_--locked_--workspace_--features_integration-test.txt.gz",
+      "bytes": 143510,
+      "sha256": "42ccf2d0311b44e3ae3a48e3c337a41b5d00727fbaf52c36f77e291278057429"
+    },
+    {
+      "member": "backend/12_Post Run actions_checkout@v5.txt",
+      "file": "run-38699864356-backend-12_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1954,
+      "sha256": "2c893e4a53ab31a7281c19cc9f0cb44d53ed31d9b2abd77dea8ea3980bd8c35b"
+    }
+  ],
+  "crossHostCredentialsForwarded": false,
+  "historicalFailureCleared": false
+}

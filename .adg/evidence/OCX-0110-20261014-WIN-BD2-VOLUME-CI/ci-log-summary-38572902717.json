@@ -1,0 +1,67 @@
+{
+  "atUtc": "2026-10-14T13:49:59.737580+00:00",
+  "runId": 38572902717,
+  "associatedHead": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+  "event": "pull_request",
+  "conclusion": "success",
+  "archiveBytes": 294175,
+  "archiveSha256": "723582936c15636398ec4b9bf443390f02f5addf975c1ebec7a596906f127909",
+  "zipCrcPassed": true,
+  "safeEntries": true,
+  "selectedOriginalLogs": [
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "savedAs": "ci-38572902717-backend-windows-checkout.log.gz",
+      "bytes": 6355,
+      "sha256": "aabe438ed3028a4c4b10db008e44406497c246bffff0403694e723a0429b4d1c"
+    },
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "savedAs": "ci-38572902717-backend-windows-tests.log.gz",
+      "bytes": 217984,
+      "sha256": "d2ee33be8b377d7788a0b5827590685a28331909ce030004bbcbd3770806c1cf"
+    },
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "savedAs": "ci-38572902717-backend-checkout.log.gz",
+      "bytes": 6167,
+      "sha256": "e9e116c51e0fcd779614c92df0387966b845c82a49da9b0d486ddc6f4468afb4"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "savedAs": "ci-38572902717-backend-tests.log.gz",
+      "bytes": 143510,
+      "sha256": "945a7f2428cc298b061e90c90c364461b61c239d90bc79fbd0be0256c59f1453"
+    }
+  ],
+  "actualCheckoutShas": {
+    "backend-windows": [
+      "15be684d7cda5829fa3519852e16a5e43bf5645e",
+      "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+      "bd2f6eb10d58115235e35d575507bb69f44666da"
+    ],
+    "backend": [
+      "15be684d7cda5829fa3519852e16a5e43bf5645e",
+      "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+      "bd2f6eb10d58115235e35d575507bb69f44666da"
+    ]
+  },
+  "rustCounts": {
+    "backend-windows": {
+      "suites": 35,
+      "passed": 627,
+      "failed": 0,
+      "ignored": 7
+    },
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "failedTestLines": [],
+  "collectorRecordOrScopeTestsExecutedByCi": false,
+  "originalBd2FailedRunCleared": false,
+  "authorizationHeaderForwardedAcrossHosts": false
+}

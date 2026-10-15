@@ -1,0 +1,84 @@
+{
+  "runId": 38705201081,
+  "event": "push",
+  "actualSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "firstOrdinaryCargoLibraryExecutionCaptured": true,
+  "executions": 1,
+  "actualLibrarySha256": "874cd89cada161299750c3beb9e24457b2b26b377c22a0ae5641ec9d218e4e8b",
+  "actualLibraryBytes": 26782720,
+  "sameOriginalBd2ApplicationTree": true,
+  "sameHistoricalFailedBinary": false,
+  "libraryExitCode": 0,
+  "libraryResult": {
+    "passed": 530,
+    "failed": 0,
+    "ignored": 4
+  },
+  "queryFixtures": [
+    {
+      "test": "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+      "result": "ok"
+    },
+    {
+      "test": "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+      "result": "ok"
+    },
+    {
+      "test": "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+      "result": "ok"
+    }
+  ],
+  "queryFailureObservedInCurrentBuild": false,
+  "currentBuildFailureWindowEtwObtained": false,
+  "historicalFixedArtifactFailureWindowEtwObtained": false,
+  "rootPid": 2016,
+  "rootCreationUtc": "2026-10-15T08:31:13.4347165Z",
+  "rootToken": {
+    "elevated": true,
+    "elevationType": 1,
+    "pid": 2016
+  },
+  "recordedEvents": 18732,
+  "eventBytes": 6787959,
+  "eventSha256": "6433c787926f27941cab7ce5f3470712ab44bbaf8fb1a6686a97c6c41e89565c",
+  "eventKinds": {
+    "root-handle-image-query": 1,
+    "root-handle-binding": 1,
+    "process-start": 31,
+    "thread-start": 948,
+    "owned-image": 1858,
+    "thread-stop": 948,
+    "owned-thread-ready": 2534,
+    "owned-thread-scheduled-in": 3883,
+    "owned-thread-scheduled-out": 3633,
+    "owned-file-create": 2164,
+    "owned-file-operation-end": 2432,
+    "owned-file-read-write": 268,
+    "process-stop": 31
+  },
+  "processStartsAndStops": [
+    31,
+    31
+  ],
+  "captureLossOrDecoderErrors": 0,
+  "originalQueryAssertionsOrDeadlinesChanged": false,
+  "rootCauseDetermined": false,
+  "historicalFailuresCleared": false,
+  "fullVersionGatePassed": false
+}

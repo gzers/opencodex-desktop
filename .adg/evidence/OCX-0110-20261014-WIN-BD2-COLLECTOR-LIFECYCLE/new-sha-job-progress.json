@@ -1,0 +1,81 @@
+{
+  "atUtc": "2026-10-14T12:21:52.617697+00:00",
+  "runs": [
+    {
+      "runId": 38561752521,
+      "jobs": [
+        {
+          "name": "frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        },
+        {
+          "name": "windows-smoke-evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        },
+        {
+          "name": "backend",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        },
+        {
+          "name": "backend-windows",
+          "status": "in_progress",
+          "conclusion": null,
+          "activeSteps": [
+            "Run cargo build --locked --release --features custom-protocol --bins"
+          ]
+        },
+        {
+          "name": "release-tools",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        }
+      ]
+    },
+    {
+      "runId": 38561759502,
+      "jobs": [
+        {
+          "name": "frontend",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        },
+        {
+          "name": "release-tools",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        },
+        {
+          "name": "backend",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        },
+        {
+          "name": "backend-windows",
+          "status": "in_progress",
+          "conclusion": null,
+          "activeSteps": [
+            "Run cargo build --locked --release --features custom-protocol --bins"
+          ]
+        },
+        {
+          "name": "windows-smoke-evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "activeSteps": []
+        }
+      ]
+    }
+  ],
+  "manuallyDispatched": false,
+  "recordingApproved": false
+}

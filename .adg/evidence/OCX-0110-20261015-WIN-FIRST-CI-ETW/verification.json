@@ -1,0 +1,54 @@
+{
+  "archiveIntegrity": "passed",
+  "manifestFiles": 118,
+  "source": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "localAdmissionTests": 12,
+  "pureCollectorChecks": 108,
+  "bothExactCiRunsSuccessful": true,
+  "firstCargoLibraryExecutionCapturedPerRun": 1,
+  "runs": [
+    {
+      "runId": 38705201081,
+      "event": "push",
+      "actualSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+      "actualLibrarySha256": "874cd89cada161299750c3beb9e24457b2b26b377c22a0ae5641ec9d218e4e8b",
+      "rootPid": 2016,
+      "rootCreationUtc": "2026-10-15T08:31:13.4347165Z",
+      "recordedEvents": 18732,
+      "eventBytes": 6787959,
+      "processStartsAndStops": [
+        31,
+        31
+      ]
+    },
+    {
+      "runId": 38705207794,
+      "event": "pull_request",
+      "actualSource": "485372d7d382673a1b78565fa03171836acefce9",
+      "actualLibrarySha256": "4e86d7b28bcebb1fd7f98e4205aea2b74164d940c4c3e99bfef63566b0125591",
+      "rootPid": 8196,
+      "rootCreationUtc": "2026-10-15T08:30:53.8924927Z",
+      "recordedEvents": 16128,
+      "eventBytes": 5825028,
+      "processStartsAndStops": [
+        31,
+        31
+      ]
+    }
+  ],
+  "currentLibraryCasesPerRun": {
+    "passed": 530,
+    "failed": 0,
+    "ignored": 4
+  },
+  "sameHistoricalFailedBinary": false,
+  "currentFailureWindowEtwObtained": false,
+  "historicalFixedArtifactFailureWindowEtwObtained": false,
+  "historicalFailuresCleared": false,
+  "rootCauseDetermined": false,
+  "nativeCountAtCheckpoint": 0,
+  "pr5DraftOpenUnmerged": true,
+  "fullVersionGatePassed": false,
+  "taskClosed": false,
+  "releaseRequested": false
+}

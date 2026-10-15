@@ -1394,3 +1394,255 @@ push38537161445 completed/success，bd2独立head，Mac900/Windows627通过（35
 后台同步docs019dd6c2，代码bd2/main eae不变；原TASK3878字节/SHA bc7965b4…仍一致。35份原证据逐路径字节数/摘要完全一致，原verify-evidence在Mac失败是Windows/Posix大小写名称排序造成的列表顺序差异，原清单/方法不改，独立只读复核通过且保存原失败stderr。
 
 六Node各79条、共474条进程记录均Wait0=0、已退出；首次采样晚于退出约12.8–84.1ms，Node活跃/线程/WCT均0。2664线程和80WCT全部归测试主进程，Node累计I/O无区间变化，不能解释旧CI早期启动等待。下一项需实际失败时间窗内自有活Node的case/creation/句柄/时刻与调度/I/O证据；串行WCT最长读取1459ms的扰动保持显式，不以50ms等待推定固定采样。详见[Mac独立复核](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows成功对照Mac复核/README.md)。未正式交接原生，Mac继续后台，原七CI失败/CPU-RSSfailed/预算/八门禁及FZ50许可保持，不推定根因或版本验收，不启动新CI/候选/desktop，不发布或关闭。
+
+### 2026-10-14 Windows 原失败测试制品准入与实时采集准备
+
+用户在宿主设置了完整新目标，本线程get_goal现读active、createdAt/预算保留；不再尝试目标恢复或重置累计用量。Windows按path-keyed摘要及原JSONL独立复核Mac b14a0f6结论：旧019dd6c六Node均为退出后采样，活Node线程/WCT为0，全部2664线程/80WCT归测试根。旧原件/清单不改，列表排序差异不冒充字节损坏。
+
+取得原失败PR38537166560测试EXE并核验API归属/ZIP摘要CRC/runner回执，EXE SHA497814ca…与成功push2709775e…不同；PR实际checkout31e7748d整tree753be161…与bd2相同，未由树同或二进制差异推定根因。失败EXE本轮未运行，Node仍固定官方24.21.0/SHAba4e6d11…，未预热。
+
+feature/0.1.10-windows-query-etw@5fa36a60仅新增三个test/smoke诊断文件，基于bd2，不改apps/原夹具/CI工作流。草稿PR#5/base integration-candidate/bd2未合并；本机Add-Type编译、38项生命周期/PID-TID重用合同、默认准备及摘要/输出边界/普通权限拒绝通过。固定Microsoft TraceEvent3.1.21官方metadata SHA512/ZIP CRC核验，本线程runtime解码DLL，无全局安装或包脚本。初始获取/压缩/编译错误如实记录；CS0618首轮stderr只在工具输出、重定向为空，不伪造日志。自动CI状态读取失败，不计新CI通过。
+
+管理员单次录制可审阅入口已准备：默认只显示方案，明确批准且手动管理员PowerShell7才可能运行；源HEAD/无局部改动、制品/Node/DLL摘要、desktop0、新输出根均为执行前提。先启唯一实时session，再启动一次原完整库，默认并发/capture和2s/4s/5s/8s不改；120s只作原库外层保护，另短时排空。系统内核事件短暂内存解码，持久化按自有家族/原QPC生命周期筛选，不宣传kernel PID白名单、不写整机ETL或保存其他调度参与者ID/命令行/SID/无关路径。队列/IRP/输出均有界，无WCT串行轮询、全局防护修改或自提升。真实事件覆盖/失败复现/排空未执行，loss计数设计为stop前快照，不称最终零丢失。
+
+35份准备原件冻结校验通过，[实时采集准备与权限范围](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2实时采集准备/README.md)。本轮原测试/Node/ETW新执行数0、本机desktop0，管理员录制批准待用户；不以工具准备代替失败原始证据。无手动CI重派/新候选/原生交接，原CI失败/性能failed/预算/八门禁/TASKrevision2/in_progress/pending及FZ50缺口保持，目标active、不关闭/签名/合并/发布。
+
+### 2026-10-14 采集器分支双 CI 终态，实际录制仍待批准
+
+只读核验5fa36a60的push38555890377/PR38556292712现completed/success，五必需job成功/main-only build skipped；每轮Mac900/Windows627passed、忽略6/7，各35组。七query夹具在两通用回归均passed，不撤销原bd2 PR38537166560失败。push实际5fa、PR实际a813c1dc，整tree均fa1d4d54…；apps/原CI工作流相对bd2未变。
+
+完整两ZIP/CRC/安全条目与四后端checkout/test原件核验，日志解析初次误选Post checkout触发不覆盖保护，精确选择后只复用已下载/已保存字节；GBK读取失败改显式UTF8，不重造原件。exec67983/PID33408有界等待166.016秒后正常终态，期间读取错误不当远端停止，不重派/重启。PR#5最新仍open/draft/unmerged/无auto_merge。[双CI证据与边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2采集器双CI终态/README.md)。
+
+CI未执行实时ETW采集器或38scope本机检查，不证明record/事件覆盖/排空/隐私过滤实跑或原失败复现。自动目标接续不是管理员批准；本机desktop/官方Node0、录制输出根不存在，未再次跑本机原库/Node/ETW或自提升，正式录制仍待人的批准，目标active。原CI/性能failed、全部预算/八门禁、TASK原字节/revision2/in_progress/pending及FZ50许可/日常数据边界保持，无新包/原生交接、合并、关闭、签名、发布或晋升。
+
+### 2026-10-14 采集器启动/停止实际设计缺陷修正
+
+管理员录制批准仍缺，本轮自动目标只推进代码审阅及纯准备检查。按固定TraceEvent3.1.21源核实5fa采集器先读Source会自动启动普通session，再EnableKernelProvider将被库拒绝；旧38scope与旧双CI不覆盖真实启动顺序。另核实库通用Stop会TraceSetInformation重设机器CPU采样间隔并做heap清理，不符合原“不改全局环境”范围。
+
+abc3a914接续5fa，仅改原三个test/smoke工具，先EnableKernel再访问Source，StopOnDispose=false且不调用通用Stop，改用ControlTraceW按唯一自有session名STOP，并返回该session最终loss计数；布局及名字检查纯执行，实际ControlTrace仍待批准。writer错误捕获/排空仅编译审阅未注入线程故障，cleanup逐阶段异常继续有纯检查；完整consumer/writer/stop未真实跑，不预称通过。实际失败case/活Node/调度/IO仍缺，不关闭原失败。
+
+本机Add-Type和53项纯检查（38scope/7生命周期/8native-stop布局与名称）通过，摘要/输出边界/普通权限拒绝保持，ETW/Node/原库/desktop新执行0。草稿PR#5更新标题正文到abc、仍open/draft/unmerged/无auto_merge；新push38561752521/PR38561759502末读仍in_progress，四通用job成功/Windows最终EXE构建，旧5fa绿不抵新head。只读等待600秒终态后按同run直接复核，没有把观测错误或截止当远端停止，不重派。
+
+25份修正/权限原件冻结校验通过，[生命周期修正与当前入口](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2采集器生命周期修正/README.md)。待批准record-request.ps1新入口固定abc/无局部改动，旧2fd/e581准备证据不改，旧入口拒绝新HEAD。系统内存筛选范围、一次原库/120s外层保护+收尾、原2/4/5/8s/并发/隐私界限保持。目标active、desktop0，原失败/性能failed/预算/八门禁/TASK原字节revision2/in_progress/pending/FZ50许可/日常数据边界不变，无录制批准推定、原生交接、新包、合并、签名、发布或关闭。
+
+### 2026-10-14 abc 采集器修正双 CI 终态与执行依赖
+
+abc3a914 push38561752521/PR38561759502现completed/success，五必需job成功/main-only build skipped，Windows最终EXE首屏通过；各35组，Mac900/Windows627passed、忽略6/7。push实际abc，PR实际16c781ea，整tree均0aa5440b…；apps/原CI/锁/共享文件相对bd2不变，head/PR构建身份仍分别记录。完整两ZIP/SHA/CRC、安全条目与四后端checkout/test原件封存，不以树相同推断二进制相同。PR#5正文补新CI终态后读回仍draft/open/unmerged/无auto_merge，head/base/title不变，未重派CI或新候选。
+
+新CI不执行C#实时collector或53项本机纯准备检查，不能证明真实kernel enable/过滤/排空/native stop、失败case/活Node覆盖或根因。管理员批准持续缺失，自动目标续行不作批准；本机desktop/官方Node0、录制根不存在，日常EXE及隔离偏好/根/策略/调度摘要匹配，未再次跑本机原库/Node/ETW。
+
+27份终态原件冻结校验通过，[修正双CI及当前执行依赖](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2生命周期修正双CI/README.md)。已完成独立后台的工具修正、制品来源、准备合同和同源CI；下一实际失败取证需批准/提权，完整原生需新前台窗口和最终候选，安装/Profile需安全隔离，FZ50脚本许可仍缺，性能/周期需原控制条件，Mac需正式平台交接。没有当前获准可执行的替代工作能取代这些证据；不继续纯文档/测试求绿循环或缩小目标。
+
+原完整版本目标/八门禁/CI失败/mac性能failed/预算/TASK原字节revision2/in_progress/pending和空验收保持；待用户权限或环境变化再接续实际取证，整体未完成，不关闭证书、合并、签名、发布、晋升或替换日常安装。
+
+### 2026-10-14 Windows 管理员录制中止，根映像与异常输出修正
+
+用户明确批准管理员后台ETW并完成提权；abc采集器一次执行原失败PR38537166560的EXE/SHA497814ca…，官方Node24.21.0不变。20:48:34创建提升控制器PID26048、真实管理员角色核验成功；20:48:37.665创建原库PID55376后Root image mismatch，事件消费者未启动。原库实际启动1/完成0、testExitCode null、强制外层收尾，原测试stdout/stderr未保存、事件0条；不能判断七query结果或认定旧失败复现。旧MainModule实际返回值缺失，具体误判原因仍未知。
+
+唯一自有session native STOP=0、最终loss/buffer loss=0、writer排空成功，独立只读检查无session/自有进程/desktop残留；这些只证明收尾，不证明完整覆盖。只有控制器令牌已核验，测试根真实令牌未采得。日常EXE与隔离偏好/根/策略/调度摘要一致，无新原生/周期。原件全部七份封存，旧证据不改。
+
+629b9c6f仅修改原三份test/smoke工具：以已持有Process.Handle的QueryFullProcessImageNameW查询根映像、校验前留记录，不等待初始化或预热；启动立即异步读输出，异常也有界排空，单列setup/run error及完成/收尾状态。本机编译、原53项纯检查+5项自身句柄映像检查及摘要/目录/普通权限拒绝通过，没有再次执行原库/Node/ETW，修正后真实录制待验证。代码已推送，PR5描述已独立读回draft/open/unmerged/无auto_merge；新push38567345341/PR38567352891初读仍in_progress，旧abc双CI不抵新head。
+
+见[管理员录制中止与映像修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2管理员录制中止与映像修正/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-ETW-RUN/`。本次批准的一次原库已启动，不自动第二次；下一步先核验修正SHA终态，再明确批准新的有界录制。Mac继续后台、未原生交接；旧查询失败/根因、性能failed、原预算/八门禁/TASK原字节revision2/in_progress/pending及FZ50许可保持，整体目标active且未完成，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-14 根映像修正双 CI 终态与实际检出准入
+
+629b9c6f push38567345341/PR38567352891现均completed/success，五必需job成功/main-only build skipped；每轮Mac900/Windows627passed、忽略6/7，各35组，runner最终Windows EXE首屏成功。实际push checkout629b9c6f、PR合成513cea4a，原checkout日志与GitHub commit元数据分别核验，整tree均30e3be09…；完整两ZIP的SHA/CRC、安全条目及八份backend原日志字节通过，不把tree同推定为二进制同。
+
+只读观察同两run，API间歇错误保留；后续读回确认继续构建，21:14:55两轮终态成功，观察器正常退出，无重派或新候选。PR5仅补正文并独立读回draft/open/unmerged/无auto_merge，head/base/title未变。见[双CI与录制准入](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2根映像修正双CI与录制准入/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-IMAGEFIX-CI/`。
+
+ci-admission仅供新review-only入口核验源码CI/实际检出/原日志，不是第二次管理员录制批准。通用CI未运行C#collector或53+5本机检查，不证明句柄查询后的真实启动/事件过滤/排空或失败取证。本机原库/Node/ETW/desktop新执行0，第二录制根不存在，旧中止原件重验、日常及隔离数据摘要保持、原TASK字节不变；下一实际执行仍需人的明确批准。Mac保持后台、无原生交接；旧七query失败/根因、性能failed/预算/八门禁/TASKrevision2/in_progress/pending及FZ50许可保持，目标active，整体未完成，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-14 持续管理员后台授权、完整原库与采集容量缺陷
+
+用户明确“批准修正版后续都可以管理员后台 ETW 录制”，后续本目标内修正版必要有界后台ETW不再逐轮请求权限；仍固定源码/CI/制品、独立目录、一次原库/120s外层、原2/4/5/8s/默认并发capture/断言，无预热或无限重跑求绿，UAC仍人工、前台另有新开始信号。
+
+629同SHA准入后21:23:35–46完成原失败PR38537166560制品的一次原库，529passed/1failed/4ignored，七query均通过；唯一license.opened仍编译时runner路径缺失，不改断言造路径。根55592的持有句柄映像匹配、真实elevated/type2，原输出保存，consumer/writer排空与自有session stop成功、最终kernel loss0、未外层强制。没有复现旧query失败，也不以测试根管理员令牌代替产品权限门禁。
+
+实际JSONL183278条/67291856bytes，测试根178269条占97.27%，前约0.64秒耗尽序列化额度，1339173丢弃、无终止记录；kernel0不抵序列化丢失，覆盖不完整。CRLF实际每行多1byte，文件超64MiB182992bytes，旧预算只按LF计量是实现缺陷。原JSONL无损gzip2889091bytes/解压摘要一致，成功查询不清除旧失败或推定根因。
+
+3a91c175仅修原三份test/smoke采集器：根身份/进程线程映像生命周期保留，高频调度/文件IO集中已准入Node/cmd后代、省略根热点显式计数；UTF8+LF真实写入及预算一致，queue失败不占额，64MiB/32768/120s上限保持。本机编译及78检查通过（原58+10后代范围+10实际内存字节），未新执行原库/Node/ETW；新push38572890687/PR38572902717初读in_progress，PR5draft/未合并。新review-only入口固定3a，先新SHA准入再依持续授权单次录制，不重复求绿。
+
+详见[持续授权录制与容量修正](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2持续授权录制与容量修正/README.md)，原件`.adg/evidence/OCX-0110-20261014-WIN-BD2-ETW-IMAGEFIX-RUN/`。自有session/进程/desktop0，日常及隔离数据摘要保持；Mac后台未原生交接，旧失败/性能failed/预算/八门禁/TASK原字节revision2/in_progress/pending及FZ50边界不变，目标active，整体未完成，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-14 e6 basename 命令映像准入与完整自有家族录制
+
+e6a4b32f push CI38583679031成功；PR CI38583689702保留原三个Windows version fixture失败（Windows527通过/3失败/4忽略），两轮CI均未执行collector。失败保持诊断范围，不能作为版本通过。e6本机准备91项通过。
+
+持续授权下完成一次真实管理员后台录制：原库PID73328，真实测试根令牌elevated/type2，exit101；28,001事件/9,591,262bytes，零序列化丢弃、零kernel loss、零decoder error，session/writer/consumer正常收尾。ETW Process/Start仅给cmd basename时，e6按已归属父进程+映像/argv basename准入并由持有句柄复核；本轮记录测试根1、Node22、command-basename8，共31 start/31 stop，已知映像未准入0，补齐0407命令覆盖缺口。
+
+原库529passed/1failed/4ignored，七query均通过，唯一license.opened仍为本机缺失CI runner路径；没有复现bd2失败时间窗。根高频调度915533、根I/O initiation311295仍按范围省略并计数，故证明的是自有Node/cmd家族及其线程/调度/IO/生命周期覆盖，不能宣称测试根全部热点完整。见[basename覆盖与完整家族录制](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261014-Windows-bd2basename覆盖与完整家族录制/README.md)，证据`.adg/evidence/OCX-0110-20261014-WIN-BD2-BASENAME-RUN/`。历史失败、性能failed、完整双平台门禁、真实周期/安装/更新/备份/树表/事件要求及TASK revision2/in_progress/pending保持；Mac后台未交接，不关闭、合并、签名、晋升或发布。
+
+同 SHA 代码 worktree 的 Windows harness token 自检及纯 bundle identity 自检也已完成：普通 harness/child 真实令牌检查与拒绝错误身份、错误模式、退出/释放句柄等 9 项通过；NSIS/MSI marker 与 payload 纯测试 5 项通过。首轮因调用 CWD 为 docs 分支而错误记录 docs HEAD，原件保留；改在代码 worktree CWD 重跑后记录 `e6a4b32f`，证据`.adg/evidence/OCX-0110-20261014-WIN-TOKEN-HARNESS/`。该证据不替代应用普通/管理员双权限、原生 UI、安装器或性能门禁。
+
+### 2026-10-15 e6 精确桌面候选与普通权限前台子集
+
+用户开始30分钟Windows前台窗口，但开始时缺精确桌面候选；此次未提前准备的耗时如实保留，不当UI验收。仅dispatch一次e6 Windows candidate run38591604133，最终success；artifact11909280359/11909105485 API摘要、ZIP CRC/安全条目、包内source/回执核验，MSI只读提取EXE SHA2c9cad96…匹配精确bundle回执/版本。未本机安装或卸载，原e6 PR三个query失败及bd2失败不因新candidate绿撤销。
+
+用户本轮“不用管dpi的问题”，物理缩放跳过、门禁保持待验；实际远程会话metric1/nativeDpi192不当物理200%。00:00创建唯一普通实例73920/elevated false/type3，新隔离根自动面板/自动检查/启动清理关闭；初次UI工具遭用户物理Escape即停止，只有用户00:16再“继续前台验证”后才操作同实例，至00:31短窗口收尾。
+
+真实Sky输入及原生只读状态证明：同e6首屏/单系统标题/无应用菜单；最大化3200×1121；索引还原点击未生效原件保留，当前截图坐标点击回原1180×760及精确外框；最小化/恢复同PID，DWM backdrop2→1→2且日志mica→inactive solid→mica；真实设置关闭keep-on-close后系统关闭按钮正常退出，native0、未强制终止。时间字符串被JSON解析为DateTime造成只读方法误报PIDreuse，原记录保留并改UTCticks/原生creation核验；未修产品。
+
+详见[普通权限前台子集](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-e6普通权限前台子集/README.md)，57份证据方法/回执/截图/状态清单`.adg/evidence/OCX-0110-20261014-WIN-FG-REQUEST/`。日常EXE/旧隔离状态摘要保持，前台已结束；管理员、托盘重开/Snap、全部物理/安装/更新/备份树表/事件/退避周期及配对性能仍开放。完整原目标/八门禁/TASK原字节revision2/in_progress/pending/旧性能failed/Mac依赖不改，不关闭、自动合并、签名、晋升或发布。
+
+### 2026-10-15 Windows e6 托盘隐藏阶段与官方基线补核
+
+00:45:43创建唯一隔离普通实例56448，真实产品令牌false/type3、同e6候选/同EXE摘要；keep-on-close=true。首次关闭点击仍可见原件保留，随后Sky Alt+F4使同PID主HWND2229478隐藏、DWM2→1，未退出。MainWindowHandle误选13×13托盘helper的原件保留，只读方法改为绑定原主HWND/PID/creation。Snap提示出现但捕获no monitor found，未通过；Sky无系统托盘/隐藏窗口入口，恢复报window id 2229478 was not found，未使用其他输入或第二实例绕过。
+
+用户提供托盘图标截图后，07:24:51仍为原PID/creation、主窗口隐藏；裁切图标不替代产品身份。07:27:49保护检查native1、普通未正常退出、管理员未启动。本次恢复仅后台读取，原15分钟前台时段已过，不自动延长；下一步待托盘打开主界面并实证重开/正常退出，归零后顺序管理员对照。自动检查关闭，经过的小时数不当真实周期证据。
+
+官方0.1.9 release407422226/asset623593980的MSI摘要b33dd0c8…与本地4030464bytes匹配；标签API读取失败保持，独立Git远端peeled tag核验de6862d4，原只读提取EXE626d63ad…及ocxd14cfc0a7…逐项匹配。未启动基线/安装器，冷热/600s配对新样本0，不作性能通过。30份历史快照与5份补核原件分别校验，详见[托盘隐藏与基线补核](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-e6托盘隐藏与基线补核/README.md)，证据`.adg/evidence/OCX-0110-20261015-WIN-FG-TRAY-ADMIN/`。
+
+日常EXE/旧隔离四摘要及原TASK字节不变，用户原删除不纳入提交；八门禁、历史query失败/失败时间窗ETW缺口、Mac CPU/RSSfailed、原预算/真实周期和Mac依赖继续开放，TASK/IMP保持in_progress，不关闭、自动合并、签名、晋升或发布。
+
+### 2026-10-15 Windows 用户协助托盘重开、普通退出与管理员真实令牌
+
+用户再次授权前台后，08:06:59核验原普通PID56448/creation/HWND2229478不变，主窗口已从托盘恢复，DWM1→2，产品日志tray/menu show/focus成功；菜单动作由用户完成、工具独立核验。真实设置关闭关窗保留后Sky Alt+F4，持有句柄观察器08:08:32记录exit0，08:08:48本机native0，无强制终止；未把此系统关闭当托盘“退出”菜单通过。
+
+顺序RunAs启动管理员产品PID73048/creation2026-10-15T00:08:50.4343117Z，控制器和实际产品均真实elevated/type2；普通false/type3、EXE摘要相同、显式sandbox配置根相同，启动后偏好回读相同。此为真实双权限产品令牌及本次配置根证据，不替代默认安装目录普通可写/自定义根全矩阵。
+
+普通读取器访问管理员令牌拒绝原件保留，换只读管理员观察器成功；Sky管理员AX仅窗口/标题栏，系统菜单及一次设置定位输入无确认变化。未以Alt+F10无变化判产品失败，也未绕其他UI输入。原生foreground=true而产品日志inactive/solid、DWM1，管理员活动云母待实际激活证据，未归因产品缺陷。已请求用户手动窗口状态/正常退出，绑定HWND只读采样最多240s、持有句柄退出观察最多600s，截止不当产品退出或门禁通过。
+
+08:11:47日常/旧隔离四摘要、干净代码e6及原TASK字节保持；本机WindowsSandbox.exe不存在，仅只读盘点未启用功能/创建VM/执行安装器。详见[托盘重开与双权限令牌](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-e6托盘重开与双权限令牌/README.md)，原`.adg/evidence/OCX-0110-20261015-WIN-FG-TRAY-ADMIN/`追加证据，退出未来结果另验。管理员生命周期/材质、托盘退出/Snap/物理DPI、其他完整门禁/旧query与性能failed/原预算/Mac依赖不提升，TASK/IMP仍in_progress，不关闭、自动合并、签名、晋升或发布。
+
+随后用户回复“已退出”，08:20:31进程/窗口已无产品，08:21:18保护复核native0、原管理员PID73048及两个只读观察器均不存在，日常/旧隔离四摘要及TASK摘要一致。退出观察器08:19:44先到600s截止，原件timeout=true/exitObserved=false/exitCode=null；只记录用户协助退出后的真实归零，不补造退出码/实际退出时刻，也不覆盖前一历史快照。四份追加原件/方法清单及`verify-administrator-exit.py`核验；15分钟前台窗口到时不再启动实例，Mac原生尚未正式交接，完整门禁与原失败/预算保持。
+
+### 2026-10-15 Windows CI 固定失败制品的单次 ETW
+
+前台结束后后台推进，代码ca26e771只改两workflow与新增准入/离线测试，apps/原夹具/collector三份及预算未变。已有Windows工作流新增query-etw模式，固定bd2原失败run38537166560/artifact11881042603/EXE497814ca…、官方Node24.21.0/TraceEvent3.1.21，核验精确head成功push CI、API digest/ZIP CRC/安全条目/载荷及Node签名。离线10项/真实包3份/PS块10项通过，Windows ZIP反斜杠规范化红例/修正保留，本机原库/Node/ETW/desktop新执行0。
+
+push38660621496及PR38660625647均success，各Mac900/Windows627passed、忽略6/7，各35组，完整日志ZIP及实际checkout分别核验；原API/TLS/运行中日志404失败保留，905.391s观察到时未重派，第二观察169.813s读取原handle真实终态。PR5说明更新最终读回一致，仍draft/open/unmerged，无auto_merge。
+
+准入后只dispatch一次run38662786466/attempt1，query-etw成功/package skipped、无新安装候选。08:56:06–22原失败EXE完整库exit0、530passed/0failed/4ignored、七query通过，**目标失败仍未复现**。根PID9668/creation真实/句柄映像一致、runner elevated/type1；17085事件/5811506bytes，31process start/stop（test1/Node22/cmd-basename8）、940thread start/stop，serialization/kernel/decoder丢失错误0，consumer/writer/自有session stop完整。根热点158572调度/287481IO按原范围省略，不称根全覆盖；不重复求绿或清除历史失败。
+
+artifact11939861138/340221bytes/API摘要6f53dd39…、13份原件及job实际checkout原日志核验，详见[CI固定失败制品ETW](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows-CI固定失败制品ETW/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-CI-ETW/`。失败时间窗ETW/根因仍缺，官方019的profile隔离与安装隔离未解决、Mac原生未交接；本机native0/日常及旧隔离/TASK摘要不变，原性能failed/完整八门禁/预算/周期保持，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 ca26 候选提前准备及回放适用边界
+
+只读对照原38537166560日志与38662786466成功回放：测试EXE字节相同，但EXE/Node位置、Temp/HOME/USERPROFILE及原cargo --show-output上下文不同；回放stdout不含成功夹具control阶段原文，31个已保存进程生命周期齐全不等于七场景逐项PID/creation/phase关联已证。环境/负载相同未证明，不归因路径或清除失败；下一失败证据需实际失败当次并审计上下文，不再同类回放求绿。
+
+为下一前台提前只dispatch一次精确ca26 Windows候选run38663871103/attempt1，旧38662786466诊断模式被明确排除。09:09:58实际package进行中/query-etw skipped、conclusion null，尚非候选通过或宿主安装；600秒只读观察到时继续同run，不重派。12份准入前快照及差异方法见[候选准备与回放差异](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26候选后台准备与回放差异/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-CA26-CANDIDATE/`。
+
+本机native0/日常及旧隔离四摘要/TASK原字节保持，无前台/原库/ETW新执行、真实迁移或安装；候选准入后仍等用户新的前台信号。Mac原生、失败时间窗、profile与安装隔离/原性能failed/全部门禁及原预算不提升，TASK/IMP保持in_progress，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 ca26 Windows 候选终态与只读载荷核验
+
+原run38663871103于09:22:32读得completed/success，package成功/query-etw skipped。第一608.296s观察到时后仍读同run，第二271.078s取得真实终态，无重派。原始日志ZIP/CRC及20份阶段日志核验实际checkout ca26，包锁回归35组/627passed/0failed/7ignored。
+
+artifact11940418610安装ZIP7627587bytes/SHA2e945d4b…与11940483370证据ZIP1662626bytes/SHAcff231eb…分别匹配API；安全条目/CRC/source/版本/回执通过。MSI6abf1095…与NSIS5162ef6f…在临时runner新装/首屏/卸载成功。本机MSI只读数据库/CAB提取EXE8777216bytes、0.1.10、SHAf43e81a9…，匹配精确MSI载荷回执并含完整ca26源码字面量；未在宿主执行安装器/应用。TLS/curl下载失败保留，核对现存字节后只读补缺，正常证书校验且跨host不带Authorization，无覆盖/重派。
+
+94份最终原件方法清单和独立`verify-candidate.py`通过，见[候选准备与回放差异](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26候选后台准备与回放差异/README.md)的终态段，原`.adg/evidence/OCX-0110-20261015-WIN-CA26-CANDIDATE/`追加。12份历史准备快照不改；下一前台候选就绪，但runner新装不抵本机双权限/安装根与升级卸载数据保留。native0/日常/旧隔离/TASK原摘要保持，仍等新的前台信号，原失败/预算/双平台依赖和八门禁不提升，无关闭/合并/签名/晋升/发布。
+
+### 2026-10-15 ca26 备份前台只读预检
+
+缺少新前台信号时仅后台准备启动/身份/保护方法：09:38:48精确ca26载荷、代码/defaults/token-reader只读准入，普通harness false/type3，native0/拟用runtime不存在/日常及旧隔离四摘要保持。默认review-only不建目录/写偏好或启动；显式启动需要当前source/备份树表scope及未过期的人类新信号，JSON字段不替代宿主的人类授权判定。
+
+内存11输入检查（1正/10负）通过，首轮OrderedDictionary.Clone方法错误及空输出/说明保留、修正后通过，无产品/原生门禁推定。四方法语法通过；主HWND/creation/UTCticks修正沿用，phase文件名有界，未来实际启动先留identity-pending再核验真实产品token，拒绝第二实例或覆盖未知runtime。本轮无应用/备份/恢复/固定/清理/计时器/原库/ETW新执行，也未写合成授权文件。
+
+详见[ca26备份前台预检](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26备份前台预检/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-BACKUP-PREFLIGHT/`。下一段需新前台信号，profile/安装隔离、失败时间窗、Mac及全部剩余门禁/原预算仍开放；TASK/IMP in_progress，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 ca26 Windows 备份恢复、轮换与本地事件前台子集
+
+用户09:43:50真实授权30分钟前台，先核验已准入ca26候选/EXE f43e81a9…，新隔离根启动普通PID18460/creation09:45:25.4876884、产品token false/type3。真实UI生成并固定备份，主题dark→light→恢复dark，active偏好与原payload逐字节相同；light恢复前保护v2/精确关联/committed，用户pin独立保持。全程Sky输入，CDP仅配置隔离profile，未改变物理DPI。
+
+真实UI额外生成12份后共14份，新鲜备份超过10仍无可清理项。明确仅调整隔离manifest created_at的年龄夹具后，手动预览/确认恰删两份60/61天普通项，固定90天项保留；保存automatic策略本身不删，新备份成功才自动轮换一份掉出最近10的60天项，最后UI保存回manual。原件/前后摘要保留，不把合成年龄当真实30天、stable24h/beta6h或错误退避证据。
+
+同大小/同JSON语义但摘要损坏的隔离备份被真实恢复拒绝，active preferences未改；失败前保护保持active。无关备份成功不解除恢复失败，修复原payload并UI重试同目标后，同notification_id/Local restore精确identity于10:00:30解除，仍未读未删，无关runtime警告未解除。新成功保护committed，旧失败guard仍active，不宣称新尝试清理旧事务；管理器stable/beta与全领域事件门禁不提升。
+
+生产树表空态/默认层级、文件叶节点、空格收起/Enter展开、刷新后展开状态保留有原生截图/AX；未量化像素、完整焦点/全主题密度缩放或原型复选框，浅色切换截图不替代浅色完整树表验收。首实例10:02:05持有句柄观察exit0，native0后10:02:33顺序同根重启PID66488/普通token false/type3；15份备份所有文件字节/摘要、dark偏好与已解除通知状态持久。真实取消固定再固定不立即删除，最终仍15份。
+
+第二实例10:04:59正常exit0，无强杀；10:05:29本机native0，早于10:13:50窗口截止结束前台。日常EXE/旧隔离四摘要/TASK原字节保持。原授权UTC类型误转换、损坏夹具末尾LF假设及离线verifier初始AX结构假设的方法错误均保留并修正；补10项纯离线时间类型回归，不延长授权或重启应用。582项独立清单、18快照/193次有效payload摘要及两次预期损坏、新旧verifier通过，见[备份恢复轮换与事件实测](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26备份恢复轮换与事件/README.md)及原证据目录新增foreground清单；旧17项预检清单不改。
+
+只完成本段备份与本地事件子集。管理员完整材质/窗口、托盘退出/Snap/物理DPI、默认安装data与自定义根及升级卸载保留、真实更新详情/进度/重启、备份全失败矩阵/完整树表、事件通道隔离、最终源码真实30分钟退避/周期/配对性能仍开放；019 profile与安装隔离、bd2失败时间窗ETW/原查询失败、Mac CPU/RSSfailed及原预算/Mac交接依赖保持。八项required_checks与TASKrevision2/in_progress/pending不改，不关闭、合并、签名、晋升或发布；后续原生需新的用户前台窗口。
+
+### 2026-10-15 Windows 独立测试 Profile 只读准入
+
+前台结束后继续后台，493da806在原Windows工具分支新增Profile只读准入/31项纯合同，并接入既有Windows smoke job；相对ca26仅两份test/smoke与ci.yml，apps/原查询夹具/collector/预算未改。本机31项与原有9项令牌/语法检查通过，提交前测试父HEAD ca26如实保留，以最终方法摘要与493三文件blob绑定；10:24:50提交后真实日常账户负向探针被拒绝，未启动官方019或新候选。
+
+工具按真实令牌/SID/本地账户/线程状态、Profile及两种AppData、现有目录与全祖先重解析边界、本机native0准入；日常/错误账户、提升或受限管理员、环境路径假象、相邻同前缀/点段/设备路径及未知状态拒绝。回执只存路径/SID摘要，不创建账户或改变绑定/环境/ACL。合成正例不当实际新账户验收，Profile通过不代表前台授权或机器级安装隔离；此前false/type3产品普通模式结论保持独立。
+
+493 push38670771363 / PR38670774817于10:29:53两轮均有Windows smoke/frontend/release-tools/Mac backend成功，Windows backend仍in_progress，旧ca26绿不代新head。草稿PR5元数据按当前工具范围更新并独立读回，仍head493/basebd2/open/draft/unmerged/无auto_merge。连接器权限/传输与本机TLS只读失败保留，未关闭证书校验/重派CI或重复原库。
+
+见[独立Profile准入](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows独立Profile准入/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-PROFILE-ADMISSION/`。当前ocx0110_accept不存在，实际正向Profile/官方019配对需用户准备独立普通账户并首次登录、后续新前台窗口；ETW批准不含账户创建，安装还需独立Windows环境，不能仅换用户或目录。10:31:32本机native0，日常/ca26/旧隔离/TASK七摘要匹配；原TASK字节/八门禁/失败/全部预算/周期与Mac依赖保持，工具准备不作完整门禁通过，不关闭、合并、签名、晋升或发布。
+
+随后读取原push38670771363/PR38670774817于10:42取得completed/success，各五必需job成功/main-only build skipped，未重派。两份完整日志ZIP/CRC及精确checkout/test/Profile合同原文核验：push实际493da806、PR实际23e55c8d，整tree均cd5f3dcf；每轮Mac900/Windows627passed、忽略6/7，各35组；Profile纯合同各31项，方法摘要匹配源码checkout字节。新`.adg/evidence/OCX-0110-20261015-WIN-PROFILE-CI/`独立冻结31项，verify-ci与旧25项verifier均通过；PR5终态说明更新并读回仍draft/open/unmerged/无auto_merge，head/base不变。Git TLS断连后仅命令级兼容参数完成原493/证据1b5推送与远端核对，无证书/全局配置改变。本机native0，真实新Profile/019配对/安装环境、失败时间窗ETW、全部原生/周期/预算及完整版本门禁仍待验，不关闭或发布。
+
+### 2026-10-15 493 精确 Windows 候选与 beta 前置来源
+
+旧ca26候选不抵新head，后台先核验493精确成功pushCI/干净worktree/远端一致/无已有候选，单次dispatch run38673288645/attempt1，仅candidate模式/query-etw skipped。第一633.657s观察结束仍在构建，继续同run第二387.735s取得11:10:02 completed/success，未重派。完整日志ZIP/CRC及20份阶段日志确认实际checkout493、包锁回归35组/627passed/0failed/7ignored。
+
+artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP1688746bytes/SHA77ee9a35…分别匹配API；安全条目/source/版本/回执通过。MSI3db2d45a…与NSIS09ace38e…在临时runner新装/首屏/卸载exit0；宿主仅只读MSI/CAB提取，主EXE8777216bytes/0.1.10/SHA9ca21e30…匹配精确MSI载荷并含完整493来源，未启动。裸构建/MSI/NSIS EXE摘要不同，分别核验，不混用。
+
+10:59:54–56按493冻结defaults读取已认证beta Release API与公开beta/latest.json均404；只证明当前来源缺失，不作产品检查或beta6h/退避证据，不发布或改来源。日志curl与.NET读取失败和缺失原stderr边界保留，独立有界urllib取回同run原ZIP；无跨host凭据转发、证书放宽、覆盖失败或重跑。94项独立清单/verify-candidate通过，见[493精确Windows候选](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493精确Windows候选/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-493-CANDIDATE/`。
+
+11:10:40本机native0/日常EXE/旧隔离四摘要/TASK原字节保持，代码493干净；候选已就绪但后续原生仍需新人类前台窗口。独立普通账户/安装环境/beta有效来源、失败时间窗ETW/原查询失败、Mac性能failed/全部预算及剩余八门禁仍开放；不将ca26/e6历史原生重标为493，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 493 Windows 更新通道与树表前台子集
+
+用户新“开始前台验证”11:30:22.806起30分钟，截止12:00:22.806。精确493/MSI载荷SHA9ca21e30…新隔离根启动普通PID4092/creation11:32:12.6267866、实际token false/type3；全程Sky输入、CDP仅隔离profile。管理器详情→全部更新键盘往返及切换后Tab仍在弹窗有截图，AX只报告容器，不冒充完整焦点矩阵。stable真实手动检查11:36:29成功；11:36:36才关闭，故只证明完成终态跨路由复用，不能称关闭时仍在途或后台继续完成。当前0.1.10/无候选/安装禁用，不虚构说明、签名或下载进度。
+
+真实UI切beta后panel调度/stable缓存/通知字节保持；未据此推定绝对零请求。beta实际手动检查失败，manager-beta failures1与panel第二次手动失败落盘；回stable不再检查，完整schedule不变，失败/退避未被清除。持久通知只有runtime-not-found且未解除，不能称已测beta持久事件精确解除、panel在途事务或全部通道隔离。自动检查始终关闭，nextDue状态不当真实24h/6h或状态错误30分钟退避。
+
+真实UI生成备份bk_20261015034010_ebc5cff3，空态/默认root-year展开month收起、文件叶节点、Space/Enter/Home/End/Down、刷新展开保留及刷新按钮后Tab入根有证据；浅深两套全展开树截图和普通最大化client1728×981/还原原外框核验。未量化像素、后台刷新同叶焦点、复选框原型/全档位密度缩放，物理DPI按用户指示跳过，remoteSession1/nativeDpi192不计物理200%。
+
+首实例11:44:47持有句柄正常exit0，输入返回后捕获无PID不当产品崩溃；native0后11:45:11同根顺序重启PID77760/普通token false/type3，偏好/调度/stable缓存/备份五文件逐字节保持、浅色/stable/自动false持久。重启Sky两次FrameArrived timeout，按恢复规则重选唯一HWND2950032仍失败后停输入；只读token/HWND/日志不替代重启UI截图。已请用户正常关闭；11:51:32退出观察器300s截止exitObserved=false/exitCode=null，11:51:53独立确认同PID仍native1，没有强杀或新实例/Mac交接，不宣称已退出。
+
+初次快照误读持有lock产生PermissionError，空目录/原方法保留，改为JSON自有状态另phase；非产品失败。209项独立清单/45Sky状态/41输入/9快照84次摘要复核与verify-foreground通过，明确断言checkpoint native1及全部局限，见[493前台更新通道与树表](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493前台更新通道与树表/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/`。日常EXE/旧隔离四摘要/原TASK字节保持，代码493干净；后续退出另追加原件，不覆盖旧checkpoint。原失败ETW/查询失败/MacCPU-RSSfailed、完整八门禁/预算/真实周期/安装与Profile环境/FZ50依赖均不提升，TASKrevision2/in_progress/pending不改，不关闭、合并、签名、晋升或发布。
+
+提交后索引全字节核对发现basename排除输出名使九份嵌套config-migrations/manifest.json未直接列入旧209项；它们均已提交并由snapshot摘要复核，原件无损。旧清单/方法/结果保持，另增完整222项清单，仅排除自身两个根输出，含旧清单与九份嵌套文件；verify-complete-archive全字节及隔离旧文件集回放通过，未执行产品/新UI。此为归档覆盖方法补强，不改变原checkpoint native1/重启未观察退出或完整门禁结果。
+
+随后用户“已退出”，11:59:20初次工具枚举native0（另存明确转录），12:00:50–51独立只读保护核对前后再次native0，原PID77760不再存在。旧观察器已11:51:32超时，实际退出时刻/exitCode仍null，不补造exit0或覆盖11:51:53 native1历史。没有新启动/强杀/前台输入或授权延长。日常/候选/旧隔离四摘要/TASK原3878字节SHA bc7965b4…保持、代码493干净；本轮偏好/调度/stable缓存/备份manifest与payload五文件与重启后逐字节一致。独立`.adg/evidence/OCX-0110-20261015-WIN-FG-493-EXIT/`11项与verify-exit通过，旧222项重验通过，原归档不改。本轮进程收尾已完成，Mac未正式原生交接；完整门禁/失败/预算/安装Profile来源等依赖保持，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 493 新前台继续、目录打开与管理员边界
+
+用户直接“我批准继续”按新人类前台信号处理，无需精确口令；窗口12:38:46–13:08:46，未新增账户/安装或发布授权。普通PID49492/creation12:40:07.2524141、false/type3，同493/EXE9ca21e30…复用已退出隔离根，启动前五持久文件与保护摘要重核。真实目录/文件打开警告及取消、右键进入子层展开/左键回父层收起通过；再次确认根目录实际打开系统backups窗口，自有层级/2026目录核对后关闭，仅保留自有路径见证、不归档无关Explorer侧栏。文件实际编辑器打开/越界逃逸全矩阵未验。
+
+普通最小化/恢复同PID-HWND，IsIconic与前台状态/DWM2→1→2、外框恢复一致；12:46:39持有句柄正常exit0，退出后捕获无PID不当崩溃。native0后12:47:46顺序管理员PID78512/creation12:47:46.0681912，控制器74792及实际产品true/type2，同精确EXE/显式data根。首屏截图可见、AX仅标题栏；旧普通helper前置拒绝未输入，改显式新管理员观察的一次设置坐标点击返回但无确认导航，不判产品设置失败或通过，也不用CDP/其他注入绕过。
+
+请用户手动窗口操作/正常退出后，提升只读采样器78676限定原PID/creation/HWND最长240s。12:54:15终态240.298s/240行，均foregroundtrue/backdrop1、无max/min，产品仅inactive/solid日志；原生前台与产品材质不一致保留待验，无mica/人工动作通过推断。活采样文件独占PermissionError保留，待原writer关闭才解析，无重启/改共享；普通CIM提升映像null如实保留，以提升原件提供身份。
+
+12:55:45检查点仍native1/PID78512，退出控制器74792活着/暂无终态/exitCode未知，未强杀/新实例或Mac交接。117项独立完成清单/analyze-session/verify-checkpoint通过，明确排除控制器稍后两个确切终态/错误输出，未来需另验；三普通快照11文件一致、日常/旧隔离/TASK原摘要及代码493干净保持，见[493继续前台与管理员边界](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493继续前台与管理员边界/README.md)和`.adg/evidence/OCX-0110-20261015-WIN-FG-493-CONTINUE/`。本段不替代管理员完整窗口/活动材质、DPI/Snap/托盘、安装data/升级卸载、真实更新进度/事件、原失败ETW/查询失败、Mac性能failed/原预算与真实周期/Profile安装环境/FZ50依赖；八门禁/TASKrevision2/in_progress/pending不改，不关闭、合并、签名、晋升或发布。
+
+随后用户确认“最大化最小化都没有问题”并附原图，按人工操作通过记录，不要求重复；原图3437×1885/SHA7b296a6e…只证明可见窗口状态，不单独证明令牌/PID、最小化瞬间或精确时间。旧采样已12:54结束，不否定后续人工反馈。13:06:26提升只读补读仍同管理员PID78512/creation/HWND8786154/true-type2，当前已还原原客户区、foregroundfalse/backdrop1；新同根日志另补12:58:31–13:00:18五次active/mica/dwmSome0及其间失焦回退，不冒充同步DWM2采样或完整管理员UI通过，旧不一致时间窗仍保留。
+
+900s原退出观察器13:02:46超时，补读持有句柄120s观察13:08:26也超时，均exitObservedfalse/exitCodenull；13:08:43独立检查点native1，未强杀、无第二产品/正式Mac交接，前台13:08:46结束不延长。两次PowerShell5默认ANSI在访问应用前解析中文JSON失败原件保留，复用原PowerShell7成功；离线日期等价时区比较方法修正不改原回执。新增`.adg/evidence/OCX-0110-20261015-WIN-FG-493-MANUAL-WINDOW/`38项独立清单/verify-manual-window与旧117项重验通过；11份JSON中9份字节保持，两份仅管理员启动运行时间戳变化；日常/旧隔离/TASK摘要、代码493干净保持。后续正常关闭/归零需另补证，完整八门禁/历史失败/预算/周期与依赖均不提升，不关闭或发布。
+
+### 2026-10-15 Windows 原失败窗口离线对齐与解读边界
+
+前台结束后只后台读取11份显式输入，原摘要核对后重算5轮库/35条夹具时间线：原bd2PR七组5.051–5.657s observer结束仍缺control标记；38572890687及e6PR各三个version失败在query返回后才出现标记，距实际创建分别4.182–4.252s、3.213–3.334s，早于约5s observer。两成功push的七组标记均在query返回前已可读。保留各自时间窗和失败，不把后续control进展解释成查询通过；按内嵌时间/创建FILETIME/elapsed对齐，不用缓冲输出的GitHub日志前缀作执行时刻。
+
+原成功CI ETW3175条scheduled-out均CSwitchversion5，其中402条waitMode没有固定3.1.21枚举名称；原数值保留，不把96等重映射为0/1。只读固定Microsoft源码getter/枚举及公开Thread_V2文档后明确version5等待语义未验证，不据枚举标签归因。7个control的标记文件写事件只证成功对照进展。下一失败采集需覆盖自有创建至原5s observer，保留进程代际/未知字段，不自动重复成功回放、预热或放宽预算。
+
+新增`.adg/evidence/OCX-0110-20261015-WIN-FAILURE-WINDOW-REPLAY/`8项清单/11项输入摘要及两离线verifier通过，019dd6c2旧35项重验保持成功对照边界；未改产品/采集器/工作流或启动Node/原库/ETW。13:22:54仍同管理员PID78512/native1/exit未知，日常/候选/旧隔离/TASK摘要及493干净保持；未正式Mac原生交接。详见[失败时间线离线复核](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows失败时间线离线复核/README.md)。实际失败ETW/根因、全部八门禁/预算/真实周期及依赖保持开放，不关闭或发布。
+
+### 2026-10-15 Windows 共享树表后台几何执行与前台依赖
+
+原生前台结束后复用既有geometry入口，在Windows内置Node24.19/playwright-core1.62.1/已安装Edge154.0.4258.62无头运行，13:27:55exit0/8组通过/stderr空/finally关闭browser-server；未改官方查询Node24.21、安装包或源码。浅深×四CSSzoom共40行/120控件，名称首行与复选框/箭头/图标/操作中心最大差0px、用途首行差0px、操作高度缩放前≥34px；24多行场景，半选/已选/禁用/无框均覆盖。仅生产组件浏览器几何，不替代原生WebView/物理DPI/全档位密度/原型及焦点矩阵。17项独立清单/verify-browser-evidence通过，9份方法组件样式锁文件摘要绑定493干净代码，见[后台几何复核](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows树表后台几何复核/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-TREE-BROWSER/`。
+
+13:31:11仍原管理员PID78512/native1/exit未知，连续此前13:08:43、13:22:54同状态；前台13:08:46已到期，自动续办不延长授权。当前需用户正常关闭后独立归零，不能重启原实例/强杀/开第二实例或正式Mac原生交接。独立普通账户及WindowsSandbox.exe仍不存在，019配对需真实Profile/前台，宿主升级卸载需独立环境。日常/旧隔离/TASK摘要保持；原失败ETW、完整门禁/预算/周期继续开放，不关闭或发布。
+
+### 2026-10-15 用户退出后管理员实例归零
+
+用户“我已退出”后，14:48初次只读枚举无产品进程，14:50:09–11独立保护核对前后均native0；原管理员PID78512、控制器74792及观察器79860均不存在。实例占用解除，实际退出时间/exitCode仍null，因两观察器先前已超时，不补造正常exit0或覆盖13:31仍live的历史。用户退出不延长已结束前台授权，无新启动/强杀/安装/账户或正式Mac原生交接。
+
+11份隔离JSON与管理员13:07:35快照逐字节一致，日常/候选/旧隔离/TASK原摘要及代码493干净保持。新`.adg/evidence/OCX-0110-20261015-WIN-FG-493-ADMIN-EXIT/`20项清单/verify-exit通过，旧117/38/17项三归档独立重验通过；TASKrevision2/in_progress/pending/八检查不改。首次fetchTLS失败后命令级schannel读取与fetch成功，远端无新差异。见[管理员退出追加证据](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493继续前台与管理员边界/README.md)。
+
+下一步仍优先实际失败窗口诊断，不能重复成功对照清除原失败；原生剩余矩阵需新前台窗口，官方019配对与安装保留需要真实独立Profile/独立Windows环境。完整门禁、历史失败、Mac性能failed、原预算及真实周期保持，未关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 新目标首轮：原构建后与系统临时盘单次取证
+
+8e266aba只改6份test/工作流，apps/desktop整树仍bf4365586d与原bd2相同；新增仅CI-dispatch/attempt1的post-build-runner-temp模式，在常规构建且无测试执行后，固定原失败EXE497814ca/官方Node24.21.0-ba4e6d11单次完整原库，使用系统TEMP盘独占子目录、保留临时runner用户配置。保持2/4/5/8秒、120秒外层、默认并发/capture、64MiB及队列/IRP预算；作业45分钟仅供构建准备。无额外预热/人工压力/宿主环境改动。新增等待字段原解码数值，不宣称version5语义已确认。
+
+本机11项准入/101项采集器纯合同、10脚本/11工作流块解析通过；同SHA push38699864356/PR38699869579全部成功，各Mac900/Windows627passed、忽略6/7，各35组。完整原日志/实际checkout核验：push8e266aba、PR02de6ed6整tree73c4af0f相同，不推断包字节相同。原失败制品API未过期/摘要、固定EXE/Node/解码DLL及签名独立重核。
+
+单次dispatch38702455024/attempt1成功，package跳过；15:59:51–16:04:45常规构建，16:04:51–16:05:53原库530passed/0failed/4ignored/exit0、七query通过。根PID6208/creation08:04:51.4337703Z、runner真token type1，31进程/957线程开始结束，16865条ETW/6089687bytes-SHAb9a04471…，丢弃/内核丢失/解码错误/已知覆盖缺口0、排空/自有STOP0、未强制清理；根高频省略按原scope计数。artifact11957286829/351969bytes-SHA055eeed1…匹配API，14包内原件与原job日志核验。
+
+该次仍成功对照，目标失败/实际失败窗口ETW及根因未取得，原失败不撤销，也不据成功排除任一环境原因；不自动再录相同条件，下一取证方向为普通CI首次回归的自然失败留证。134项独立清单/verify-evidence通过，PR5终态说明读回仍草稿/未合并；16:09本机native0、日常/旧隔离/TASK摘要及8e266aba干净保持，未新候选/前台/安装/账户或正式Mac交接。见[原构建后单次诊断](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows原构建后单次ETW诊断/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-POSTBUILD-ETW/`。完整八门禁、原预算/周期/Macfailed与环境依赖保持，不关闭或发布。
+
+### 2026-10-15 普通 CI 首次库回归同步留证
+
+43142bdb只改7份test/ci.yml，apps/desktop与原bd2整tree保持；仅诊断分支普通push/PR-attempt1经固定失败参照/官方Node/解码器准入后，用当次输出目录的Cargo runner在正常编译库首次执行时同步录制，库每作业一次、原退出码传回Cargo，其他套件正常执行。--show-output、capture、默认并发、2/4/5/8秒、120秒外层和64MiB/队列/IRP预算不改。执行为当次编译EXE而非历史失败EXE，分别保存身份；临时runner用户配置保留/TEMP独占子目录与工具开销显式记录，不声称完全重建旧环境。此普通CI本身是新路径验证，不伪造先前同SHA成功准入。
+
+本机12项准入/108项采集器纯检查/脚本与TOML数组回读通过，无本机Cargo/原库/固定Node/ETW。push38705201081/PR38705207794完整success，各Mac900/Windows627passed、忽略6/7，各35组；实际checkout43142bdb/485372d7整treeccb9f9ab相同。两轮各首次库530passed/0failed/4ignored/exit0、七query通过，EXE SHA874cd89c…/4e86d7b2…分别核验。自有ETW18732条-6787959bytes与16128条-5825028bytes，每轮31进程开始结束/948对线程，丢弃/内核丢失/解码错误/覆盖缺口0，排空/自有STOP0/未强制清理；根热点省略边界保持。
+
+已验证首次回归同步留证能力，但当前失败及历史固定制品失败窗口ETW均未取得，根因未知；原失败不撤销、不自动追加重跑。118项清单/verify-evidence、制品API摘要/原日志/原字节核验通过；ETW压缩保留并验证解压原字节。16:45本机native0、日常/旧隔离/TASK摘要及43142bdb干净保持，PR5说明读回仍草稿/未合并。无新桌面候选，旧493 UI不重标；未前台/安装/账户或正式Mac交接。见[首次CI同步留证](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows首次CI回归同步留证/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-FIRST-CI-ETW/`。原完整八门禁、预算、周期、Macfailed及环境依赖保持，不关闭或发布。

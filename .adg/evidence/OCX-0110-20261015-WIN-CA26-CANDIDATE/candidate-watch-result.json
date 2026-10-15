@@ -1,0 +1,30 @@
+{
+  "atUtc": "2026-10-15T01:17:29.199211+00:00",
+  "observations": 17,
+  "elapsedSeconds": 608.295999999973,
+  "lastObservation": {
+    "runId": 38663871103,
+    "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+    "status": "in_progress",
+    "conclusion": null,
+    "jobs": [
+      {
+        "name": "package",
+        "status": "in_progress",
+        "conclusion": null,
+        "activeSteps": [
+          "Build NSIS and MSI candidates"
+        ]
+      },
+      {
+        "name": "query-etw",
+        "status": "completed",
+        "conclusion": "skipped",
+        "activeSteps": []
+      }
+    ]
+  },
+  "remoteTerminalObserved": false,
+  "dispatchRepeated": false,
+  "hostDesktopStarted": false
+}

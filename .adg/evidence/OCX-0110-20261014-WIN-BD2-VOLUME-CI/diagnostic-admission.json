@@ -1,0 +1,103 @@
+{
+  "atUtc": "2026-10-14T13:52:12.329069+00:00",
+  "source": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+  "base": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "runs": [
+    {
+      "runId": 38572890687,
+      "event": "push",
+      "head": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+      "status": "completed",
+      "conclusion": "failure",
+      "actualCheckout": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+      "originalLogsVerified": true,
+      "failedTests": [
+        "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+        "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+        "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process"
+      ],
+      "unexpectedFailedTests": [],
+      "failureClass": "unmodified-original-version-query-fixtures",
+      "rustCounts": {
+        "backend-windows": {
+          "suites": 1,
+          "passed": 527,
+          "failed": 3,
+          "ignored": 4
+        },
+        "backend": {
+          "suites": 35,
+          "passed": 900,
+          "failed": 0,
+          "ignored": 6
+        }
+      },
+      "archiveBytes": 267153,
+      "archiveSha256": "4d234a779e18ea58e9f4c633af480d77a815ac4e3f2492449f2c03760d74740e",
+      "jobs": {
+        "windows-smoke-evidence": "success",
+        "backend": "success",
+        "backend-windows": "failure",
+        "frontend": "success",
+        "release-tools": "success",
+        "build": "skipped"
+      },
+      "actualTree": "5a9555c074c3ee72eddd568b03fff514f5cfd19c",
+      "actualTreeEqualsHead": true
+    },
+    {
+      "runId": 38572902717,
+      "event": "pull_request",
+      "head": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+      "status": "completed",
+      "conclusion": "success",
+      "actualCheckout": "15be684d7cda5829fa3519852e16a5e43bf5645e",
+      "originalLogsVerified": true,
+      "failedTests": [],
+      "unexpectedFailedTests": [],
+      "failureClass": null,
+      "rustCounts": {
+        "backend-windows": {
+          "suites": 35,
+          "passed": 627,
+          "failed": 0,
+          "ignored": 7
+        },
+        "backend": {
+          "suites": 35,
+          "passed": 900,
+          "failed": 0,
+          "ignored": 6
+        }
+      },
+      "archiveBytes": 294175,
+      "archiveSha256": "723582936c15636398ec4b9bf443390f02f5addf975c1ebec7a596906f127909",
+      "jobs": {
+        "backend": "success",
+        "windows-smoke-evidence": "success",
+        "frontend": "success",
+        "release-tools": "success",
+        "backend-windows": "success",
+        "build": "skipped"
+      },
+      "actualTree": "5a9555c074c3ee72eddd568b03fff514f5cfd19c",
+      "actualTreeEqualsHead": true
+    }
+  ],
+  "diagnosticOnly": true,
+  "releaseAdmission": false,
+  "allCiPassed": false,
+  "standingUserAuthorization": "批准修正版后续都可以管理员后台 ETW 录制",
+  "collectorLiveRecordTested": false,
+  "collectorPreparationChecks": 78,
+  "preparationEvidenceSha256": "76d28cd90ffffdce380d24294a765879a040b94cfb24033db8823e4a306d6ec4",
+  "productFixtureWorkflowSharedFilesUnchanged": true,
+  "originalBudgetsAndAssertionsUnchanged": true,
+  "newLocalOriginalLibraryRuns": 0,
+  "originalFailureClosed": false,
+  "newCiFailureRetained": true,
+  "fullVersionGatePromoted": false,
+  "localEtwStillRequiredForActualFailure": true,
+  "reason": "The collector is not executed by CI. Diagnose known unmodified fixture failures; no release or version gate is passed.",
+  "greenOnlyHelperNotExecuted": true
+}

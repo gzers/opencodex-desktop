@@ -1,0 +1,55 @@
+{
+  "historicalRun": 38537166560,
+  "replayRun": 38662786466,
+  "testExecutableBytesSame": true,
+  "testExecutableSha256": "497814ca08c071dcd4a2666ceb954bd4788e7cc6cf1dc8972c3efd515884c0d3",
+  "historicalEnvironmentFromOriginalLog": {
+    "logicalProcessors": 4,
+    "nodeExecutable": "C:\\hostedtoolcache\\windows\\node\\24.21.0\\x64\\node.exe",
+    "tempDirectory": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\",
+    "rustTestThreads": null,
+    "rustTestTimeUnit": null
+  },
+  "historicalTestExecutablePath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\debug\\deps\\opencodex_desktop_lib-4ef9ce48b814b037.exe",
+  "replayTestExecutablePath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\software\\ci-bd2-query-etw\\opencodex_desktop_lib-4ef9ce48b814b037.exe",
+  "replayNodePath": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\software\\ci-bd2-query-etw\\node.exe",
+  "historicalCommand": "cargo test --locked --workspace --features integration-test -- --show-output",
+  "replayLibraryArguments": [],
+  "historicalPostCompileWorkloadContextPreserved": false,
+  "sameRuntimeEnvironmentProven": false,
+  "testAndNodeLocationsChanged": true,
+  "replayTempAndHomeEnvironmentOverridden": [
+    "TEMP",
+    "TMP",
+    "HOME",
+    "USERPROFILE"
+  ],
+  "replaySuccessfulFixturePhaseOutputPresent": false,
+  "perCaseEtwPidToQueryLabelMappingProven": false,
+  "allRetainedNodeCmdLifecyclesHaveStop": true,
+  "targetFailureReproduced": false,
+  "causalClaimMade": false,
+  "newOriginalLibraryOrNodeRuns": 0,
+  "etwRecordingsOrCiReruns": 0,
+  "nextEvidence": [
+    "Actual failing query time window, with retained PID/creation and case/phase correlation.",
+    "Preserve and record real run paths, CLI flags and environment; audit all intentional differences.",
+    "Do not use another successful replay, a longer deadline, forced contention or warm-up to close the failure."
+  ],
+  "sources": [
+    {
+      "path": "docs/04-\u9879\u76ee\u8d44\u6599/03-\u9879\u76ee\u534f\u4f5c\u8d44\u6599/01-\u534f\u4f5c\u5305/2026-09-12-\u684c\u9762\u7ba1\u7406\u5668\u9700\u6c42\u68b3\u7406\u4e0e\u539f\u578b\u9a8c\u8bc1/05-\u8fd0\u884c\u7ef4\u62a4/20261009-\u6982\u89c8\u5347\u7ea7\u5165\u53e3\u4e0e\u5907\u4efd\u901a\u77e5\u7b56\u7565/\u9a8c\u8bc1/20261014-\u63a7\u5236Node\u4f4eCPU\u5931\u8d25\u8bc1\u636e/control-pr-terminal-backend-windows.log.gz",
+      "sha256": "6142cc8c29e53d884f730ef1823bbddcaf169423257fcafbc73a6ad265fb2da0",
+      "uncompressedSha256": "f10471e4851fc994f6d58fc7d6459b7a5bc8ba063e08e7e5e06a083a300f373a"
+    },
+    {
+      "path": "ca26e771:test/smoke/windows-owned-etw.cs",
+      "gitBlob": "f7022efc93fa47737ac6fdea26a2770604dd2526",
+      "sha256": "ba827aaef5dc892db0c2bdec4fd9c8dbfa49a0f67376c7bde6d64d6dd4caef34"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-CI-ETW/diagnostic-original/runtime/ci-bd2-query-etw/capture/test-stdout.original.log",
+      "sha256": "689840656fbfaec3662da58ec630dda589a2a9e9bceffb9dc0c97b28676ed1a4"
+    }
+  ]
+}

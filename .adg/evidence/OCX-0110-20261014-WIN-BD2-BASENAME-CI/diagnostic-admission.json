@@ -1,0 +1,64 @@
+{
+  "atUtc": "2026-10-14T15:05:00Z",
+  "source": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+  "base": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "diagnosticOnly": true,
+  "releaseAdmission": false,
+  "allCiPassed": false,
+  "newCiFailureRetained": true,
+  "productFixtureWorkflowSharedFilesUnchanged": true,
+  "originalBudgetsAndAssertionsUnchanged": true,
+  "collectorPreparationChecks": 91,
+  "preparationEvidenceSha256": "90e5523386999a7ebe5a8095fa0987e49bf17c078dc0ec44c6aefcffe6a3c224",
+  "standingUserAuthorization": "批准修正版后续都可以管理员后台 ETW 录制",
+  "originalFailureClosed": false,
+  "fullVersionGatePromoted": false,
+  "runs": [
+    {
+      "runId": 38583679031,
+      "event": "push",
+      "head": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+      "status": "completed",
+      "conclusion": "success",
+      "actualCheckout": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+      "actualTree": "de7d465c91d91d28fa4c924eb617250c522a01e9",
+      "originalLogsVerified": true,
+      "unexpectedFailedTests": [],
+      "failedTests": [],
+      "failureClass": null,
+      "jobs": {
+        "frontend": "success",
+        "backend": "success",
+        "backend-windows": "success",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      }
+    },
+    {
+      "runId": 38583689702,
+      "event": "pull_request",
+      "head": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+      "status": "completed",
+      "conclusion": "failure",
+      "actualCheckout": "c6b55931b212491ac9c3094d7ed64390ae19e769",
+      "actualTree": "de7d465c91d91d28fa4c924eb617250c522a01e9",
+      "originalLogsVerified": true,
+      "unexpectedFailedTests": [],
+      "failedTests": [
+        "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+        "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+        "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process"
+      ],
+      "failureClass": "unmodified-original-version-query-fixtures",
+      "jobs": {
+        "frontend": "success",
+        "backend": "success",
+        "backend-windows": "failure",
+        "release-tools": "success",
+        "windows-smoke-evidence": "success",
+        "build": "skipped"
+      }
+    }
+  ]
+}

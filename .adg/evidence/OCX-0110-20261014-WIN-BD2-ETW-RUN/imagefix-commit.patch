@@ -1,0 +1,218 @@
+commit 629b9c6f913b5e04badc9ce747f6bb8ba247fd89
+Author:     Codex <codex@local>
+AuthorDate: Wed Oct 14 20:53:43 2026 +0800
+Commit:     Codex <codex@local>
+CommitDate: Wed Oct 14 20:53:43 2026 +0800
+
+    fix(test): 以进程句柄校验ETW根映像并保留异常输出
+
+diff --git a/test/smoke/windows-owned-etw.cs b/test/smoke/windows-owned-etw.cs
+index 1c6f821..8acfdfb 100644
+--- a/test/smoke/windows-owned-etw.cs
++++ b/test/smoke/windows-owned-etw.cs
+@@ -10,6 +10,7 @@ using System.Linq;
+ using System.Text;
+ using System.Text.Json;
+ using System.Threading;
++using System.Threading.Tasks;
+ using System.Runtime.InteropServices;
+ using Microsoft.Diagnostics.Tracing;
+ using Microsoft.Diagnostics.Tracing.Parsers;
+@@ -333,6 +334,46 @@ namespace OpenCodex.Diagnostics
+         private static extern IntPtr OpenProcess(uint access, bool inherit, int pid);
+         [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+         private static extern bool QueryFullProcessImageNameW(IntPtr process, uint flags, StringBuilder path, ref uint size);
++        private static string QueryProcessImage(IntPtr handle)
++        {
++            // MainModule enumerates loader modules, which need not be ready on
++            // a just-created process. Query the already-held process handle;
++            // never wait for initialization or relaunch the original test.
++            var image = new StringBuilder(32768);
++            uint size = 32768;
++            if (!QueryFullProcessImageNameW(handle, 0, image, ref size))
++                throw new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error());
++            return image.ToString();
++        }
++        private static string RequireExpectedImage(string actual, string expected)
++        {
++            if (!SamePath(actual, expected)) throw new InvalidOperationException("Root image mismatch.");
++            return actual;
++        }
++        public static int SelfTestProcessImage()
++        {
++            // Only this controller's retained handle is queried. No process,
++            // Node, original library, ETW session, or startup wait is created.
++            int checks = 0;
++            Action<bool> require = value => {
++                if (!value) throw new InvalidOperationException("Owned root image contract");
++                checks++;
++            };
++            using var current = Process.GetCurrentProcess();
++            string actual = QueryProcessImage(current.Handle);
++            require(SamePath(actual, Environment.ProcessPath));
++            require(RequireExpectedImage(actual, Environment.ProcessPath) == actual);
++            require(RequireExpectedImage(@"\\?\" + actual, Environment.ProcessPath) == @"\\?\" + actual);
++            bool mismatchRejected = false;
++            try { RequireExpectedImage(actual, actual + ".unowned"); }
++            catch (InvalidOperationException) { mismatchRejected = true; }
++            require(mismatchRejected);
++            bool invalidHandleRejected = false;
++            try { QueryProcessImage(IntPtr.Zero); }
++            catch (System.ComponentModel.Win32Exception) { invalidHandleRejected = true; }
++            require(invalidHandleRejected);
++            return checks;
++        }
+         [StructLayout(LayoutKind.Sequential)]
+         private struct NativeTime
+         {
+@@ -492,7 +533,9 @@ namespace OpenCodex.Diagnostics
+             };
+             OwnedEtwScope scope = null;
+             Process process = null;
++            Task<string> stdout = null, stderr = null;
+             Exception captureError = null;
++            Exception runError = null;
+             var started = DateTime.UtcNow;
+             long minimumQpc = 0;
+             string commandExe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "cmd.exe");
+@@ -504,6 +547,8 @@ namespace OpenCodex.Diagnostics
+             };
+             AppDomain.CurrentDomain.ProcessExit += processExitStop;
+             int? exitCode = null, lost = null;
++            int? exitCodeAfterCleanup = null;
++            bool stdoutSaved = false, stderrSaved = false, ownedRootExited = false;
+             DateTime? processCreatedUtc = null;
+             Action<TraceEvent, Action> guarded = (data, action) => {
+                 try { action(); }
+@@ -645,9 +690,16 @@ namespace OpenCodex.Diagnostics
+                 Configure(info, nodeExe, temporaryDirectory, homeDirectory);
+                 process = Process.Start(info);
+                 if (process == null) throw new InvalidOperationException("Test did not start.");
++                // Drain immediately, including when identity validation fails.
++                // Original libtest capture and CLI arguments remain unchanged.
++                stdout = process.StandardOutput.ReadToEndAsync();
++                stderr = process.StandardError.ReadToEndAsync();
+                 processCreatedUtc = process.StartTime.ToUniversalTime();
+-                string actualImage = process.MainModule.FileName;
+-                if (!SamePath(actualImage, testExe)) throw new InvalidOperationException("Root image mismatch.");
++                string actualImage = QueryProcessImage(process.Handle);
++                emit(new { kind = "root-handle-image-query", atUtc = DateTime.UtcNow, pid = process.Id,
++                    createdUtc = processCreatedUtc, image = actualImage, expectedImageMatches = SamePath(actualImage, testExe),
++                    query = "QueryFullProcessImageNameW on retained Process.Handle; no loader-module enumeration" });
++                RequireExpectedImage(actualImage, testExe);
+                 scope = new OwnedEtwScope(process.Id, minimumQpc);
+                 emit(new { kind = "root-handle-binding", atUtc = DateTime.UtcNow, pid = process.Id,
+                     createdUtc = processCreatedUtc, image = actualImage, minimumQpc,
+@@ -657,8 +709,6 @@ namespace OpenCodex.Diagnostics
+                 consumer.Start();
+                 consumerStarted = true;
+                 if (!ready.Wait(5000)) throw new TimeoutException("ETW consumer did not schedule; stop owned session.");
+-                var stdout = process.StandardOutput.ReadToEndAsync();
+-                var stderr = process.StandardError.ReadToEndAsync();
+                 if (!process.WaitForExit(120000))
+                 {
+                     outerCleanup = true;
+@@ -666,12 +716,17 @@ namespace OpenCodex.Diagnostics
+                     process.WaitForExit(10000);
+                 }
+                 exitCode = process.ExitCode;
+-                if (stdout.Wait(5000)) File.WriteAllText(Path.Combine(outputDirectory, "test-stdout.original.log"), stdout.Result);
+-                if (stderr.Wait(5000)) File.WriteAllText(Path.Combine(outputDirectory, "test-stderr.original.log"), stderr.Result);
+                 // Flush/stop only our unique session. ProcessTrace drains buffered
+                 // original events; it does not depend on Node still being alive.
+                 lost = session.EventsLost;
+             }
++            catch (Exception error)
++            {
++                // Preserve setup/root-identity errors as well as decoder errors.
++                // A null decoder error alone must never suggest valid coverage.
++                runError = error;
++                throw;
++            }
+             finally
+             {
+                 bool writerJoined = false;
+@@ -682,6 +737,11 @@ namespace OpenCodex.Diagnostics
+                             process.Kill(true);
+                             process.WaitForExit(10000);
+                         }
++                        if (process != null) {
++                            ownedRootExited = process.HasExited;
++                            if (!ownedRootExited) throw new TimeoutException("Owned root cleanup deadline exceeded.");
++                            exitCodeAfterCleanup = process.ExitCode;
++                        }
+                     }),
+                     new KeyValuePair<string, Action>("session-stop", () => {
+                         nativeStop = OwnedEtwNativeStop.Stop(sessionName);
+@@ -704,11 +764,25 @@ namespace OpenCodex.Diagnostics
+                     }),
+                     new KeyValuePair<string, Action>("writer-complete", () => queue.CompleteAdding()),
+                     new KeyValuePair<string, Action>("writer-drain", () => writerJoined = writer.Join(10000)),
++                    new KeyValuePair<string, Action>("stdout-drain", () => {
++                        if (stdout == null) return;
++                        if (!stdout.Wait(5000)) throw new TimeoutException("Owned stdout drain deadline exceeded.");
++                        File.WriteAllText(Path.Combine(outputDirectory, "test-stdout.original.log"), stdout.Result);
++                        stdoutSaved = true;
++                    }),
++                    new KeyValuePair<string, Action>("stderr-drain", () => {
++                        if (stderr == null) return;
++                        if (!stderr.Wait(5000)) throw new TimeoutException("Owned stderr drain deadline exceeded.");
++                        File.WriteAllText(Path.Combine(outputDirectory, "test-stderr.original.log"), stderr.Result);
++                        stderrSaved = true;
++                    }),
+                 });
+                 if (sessionStopped) AppDomain.CurrentDomain.ProcessExit -= processExitStop;
+                 var result = new {
+                     startedAtUtc = started, finishedAtUtc = DateTime.UtcNow, sessionName,
+                     testPid = process?.Id, rootCreationUtc = processCreatedUtc, testExitCode = exitCode,
++                    testExitCodeAfterCleanup = exitCodeAfterCleanup, ownedRootExited,
++                    stdoutSaved, stderrSaved, originalLibraryCompleted = exitCode.HasValue && !outerCleanup,
+                     rootProcessStartSeen = rootStartSeen != 0, minimumQpc,
+                     processTraceStarted = consumerStarted, processTraceJoined = consumerJoined,
+                     ownedSessionStopSucceeded = sessionStopped,
+@@ -717,6 +791,7 @@ namespace OpenCodex.Diagnostics
+                     maximumSerializedBytes = 64L * 1024 * 1024,
+                     maximumQueueRecords = 32768, maximumTrackedIrps = 32768,
+                     kernelEventsLost = lost, captureError = captureError?.GetType().Name,
++                    runError = runError?.GetType().Name, runErrorMessage = runError?.Message,
+                     writerError = writerError?.GetType().Name, cleanupErrors,
+                     kernelBeforeSourceOrder = true,
+                     nativeOwnedSessionStop = nativeStop, traceEventGenericStopInvoked = false,
+diff --git a/test/smoke/windows-owned-etw.ps1 b/test/smoke/windows-owned-etw.ps1
+index 6045452..87b81f8 100644
+--- a/test/smoke/windows-owned-etw.ps1
++++ b/test/smoke/windows-owned-etw.ps1
+@@ -45,11 +45,13 @@ Add-Type -Path (Join-Path $PSScriptRoot 'windows-owned-etw.cs') -ReferencedAssem
+ $taskScopeChecks = [OpenCodex.Diagnostics.OwnedEtwScope]::SelfTest()
+ $taskLifecycleChecks = [OpenCodex.Diagnostics.OwnedEtwLifecycle]::SelfTest()
+ $taskNativeStopChecks = [OpenCodex.Diagnostics.OwnedEtwNativeStop]::SelfTest()
++$taskProcessImageChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestProcessImage()
+ if (!$RecordApproved) {
+     [ordered]@{
+         status='prepared-only';pureScopeChecks=$taskScopeChecks
+         pureLifecycleChecks=$taskLifecycleChecks
+         pureNativeStopChecks=$taskNativeStopChecks
++        controllerProcessImageChecks=$taskProcessImageChecks
+         testSha256=$ExpectedTestSha256;nodeSha256=$ExpectedNodeSha256
+         compiler='PowerShell Add-Type';controllerElevated=[Microsoft.Diagnostics.Tracing.Session.TraceEventSession]::IsElevated()
+         etwSessionStarted=$false;testOrNodeStarted=$false;recordingApproved=$false
+diff --git a/test/smoke/windows-owned-etw.test.ps1 b/test/smoke/windows-owned-etw.test.ps1
+index 33dc1fd..7e110be 100644
+--- a/test/smoke/windows-owned-etw.test.ps1
++++ b/test/smoke/windows-owned-etw.test.ps1
+@@ -17,6 +17,7 @@ $taskResult = & $taskScript @taskArguments | ConvertFrom-Json
+ if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 38 -or
+     $taskResult.pureLifecycleChecks -ne 7 -or
+     $taskResult.pureNativeStopChecks -ne 8 -or
++    $taskResult.controllerProcessImageChecks -ne 5 -or
+     $taskResult.etwSessionStarted -or $taskResult.testOrNodeStarted -or $taskResult.recordingApproved) {
+     throw 'Default invocation must prepare and exercise pure scope contracts only'
+ }
+@@ -53,6 +54,7 @@ if (!$taskResult.controllerElevated) {
+ if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards created a recording root' }
+ [ordered]@{
+     status='passed';pureScopeChecks=38;pureLifecycleChecks=7;pureNativeStopChecks=8
++    controllerProcessImageChecks=5
+     digestGuard='passed';outputScopeGuard='passed'
+     ordinaryPrivilegeGuard=$taskOrdinaryGuard
+     etwSessionStarted=$false;testOrNodeStarted=$false;recordingRootCreated=$false

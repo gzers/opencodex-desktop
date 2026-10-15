@@ -1,0 +1,28 @@
+{
+  "atUtc": "2026-10-15T05:21:08.898784+00:00",
+  "provider": "Microsoft PerfView official source",
+  "tag": "v3.1.21",
+  "url": "https://raw.githubusercontent.com/microsoft/perfview/v3.1.21/src/TraceEvent/Parsers/KernelTraceEventParser.cs",
+  "httpStatus": 200,
+  "sourceBytes": 565319,
+  "sourceSha256": "5a1ff963eb4c5b6dbe8845843c841e8466b5c4855e72b454c7a0cf31ea4a708f",
+  "waitModeEnumValues": {
+    "NonSwap": 0,
+    "Swappable": 1
+  },
+  "waitModeGetterByteOffset": 13,
+  "modeGetterSourceLine": 4333,
+  "independentVersion5LayoutValidationPerformed": false,
+  "fullThirdPartySourceVendored": false,
+  "kernelModeInferenceFrom96Made": false,
+  "comparisonDocumentation": {
+    "provider": "Microsoft Learn",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/etw/cswitch",
+    "describedSchema": "CSwitch : Thread_V2",
+    "documentedModeValues": {
+      "KernelMode": 0,
+      "UserMode": 1
+    },
+    "documentDescribesObservedVersion5Layout": false
+  }
+}

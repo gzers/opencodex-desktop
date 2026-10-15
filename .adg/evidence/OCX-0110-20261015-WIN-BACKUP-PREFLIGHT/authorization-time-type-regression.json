@@ -1,0 +1,165 @@
+{
+  "atUtc": "2026-10-15T02:09:58.1923458+00:00",
+  "scope": "Offline regression of authorization timestamp representation only",
+  "actualJsonDateType": "System.DateTime",
+  "cases": [
+    {
+      "name": "actual-json-native-date",
+      "inputType": "System.DateTime",
+      "expectedAccepted": true,
+      "accepted": true,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": {
+        "origin": "human",
+        "userText": "开始前台验证",
+        "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+        "scope": "isolated-backup-tree",
+        "startedAtUtc": "2026-10-15T01:43:50.7232350+00:00",
+        "expiresAtUtc": "2026-10-15T02:13:50.7232350+00:00",
+        "windowMinutes": 30,
+        "remainingSeconds": 1680.0,
+        "syntheticAuthorizationCreated": false
+      },
+      "error": null
+    },
+    {
+      "name": "explicit-z-string",
+      "inputType": "System.String",
+      "expectedAccepted": true,
+      "accepted": true,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": {
+        "origin": "human",
+        "userText": "开始前台验证",
+        "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+        "scope": "isolated-backup-tree",
+        "startedAtUtc": "2026-10-15T01:43:50.7232350+00:00",
+        "expiresAtUtc": "2026-10-15T02:13:50.7232350+00:00",
+        "windowMinutes": 30,
+        "remainingSeconds": 1680.0,
+        "syntheticAuthorizationCreated": false
+      },
+      "error": null
+    },
+    {
+      "name": "explicit-plus-eight-string",
+      "inputType": "System.String",
+      "expectedAccepted": true,
+      "accepted": true,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": {
+        "origin": "human",
+        "userText": "开始前台验证",
+        "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+        "scope": "isolated-backup-tree",
+        "startedAtUtc": "2026-10-15T01:43:50.7232350+00:00",
+        "expiresAtUtc": "2026-10-15T02:13:50.7232350+00:00",
+        "windowMinutes": 30,
+        "remainingSeconds": 1680.0,
+        "syntheticAuthorizationCreated": false
+      },
+      "error": null
+    },
+    {
+      "name": "date-time-offset",
+      "inputType": "System.DateTimeOffset",
+      "expectedAccepted": true,
+      "accepted": true,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": {
+        "origin": "human",
+        "userText": "开始前台验证",
+        "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+        "scope": "isolated-backup-tree",
+        "startedAtUtc": "2026-10-15T01:43:50.7232350+00:00",
+        "expiresAtUtc": "2026-10-15T02:13:50.7232350+00:00",
+        "windowMinutes": 30,
+        "remainingSeconds": 1680.0,
+        "syntheticAuthorizationCreated": false
+      },
+      "error": null
+    },
+    {
+      "name": "utc-date-time",
+      "inputType": "System.DateTime",
+      "expectedAccepted": true,
+      "accepted": true,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": {
+        "origin": "human",
+        "userText": "开始前台验证",
+        "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+        "scope": "isolated-backup-tree",
+        "startedAtUtc": "2026-10-15T01:43:50.7232350+00:00",
+        "expiresAtUtc": "2026-10-15T02:13:50.7232350+00:00",
+        "windowMinutes": 30,
+        "remainingSeconds": 1680.0,
+        "syntheticAuthorizationCreated": false
+      },
+      "error": null
+    },
+    {
+      "name": "local-date-time",
+      "inputType": "System.DateTime",
+      "expectedAccepted": true,
+      "accepted": true,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": {
+        "origin": "human",
+        "userText": "开始前台验证",
+        "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+        "scope": "isolated-backup-tree",
+        "startedAtUtc": "2026-10-15T01:43:50.7232350+00:00",
+        "expiresAtUtc": "2026-10-15T02:13:50.7232350+00:00",
+        "windowMinutes": 30,
+        "remainingSeconds": 1680.0,
+        "syntheticAuthorizationCreated": false
+      },
+      "error": null
+    },
+    {
+      "name": "expired-exact-boundary",
+      "inputType": "System.DateTime",
+      "expectedAccepted": false,
+      "accepted": false,
+      "atUtc": "2026-10-15T02:13:50.7232350+00:00",
+      "result": null,
+      "error": "The earlier foreground window has expired."
+    },
+    {
+      "name": "unspecified-date-time",
+      "inputType": "System.DateTime",
+      "expectedAccepted": false,
+      "accepted": false,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": null,
+      "error": "Authorization date lost its timezone."
+    },
+    {
+      "name": "timezone-free-string",
+      "inputType": "System.String",
+      "expectedAccepted": false,
+      "accepted": false,
+      "atUtc": "2026-10-15T01:45:50.7232350+00:00",
+      "result": null,
+      "error": "Explicit authorization timezone required."
+    },
+    {
+      "name": "future-six-seconds",
+      "inputType": "System.DateTime",
+      "expectedAccepted": false,
+      "accepted": false,
+      "atUtc": "2026-10-15T01:43:44.7232350+00:00",
+      "result": null,
+      "error": "Future-dated authorization is not accepted."
+    }
+  ],
+  "positiveChecks": 6,
+  "negativeChecks": 4,
+  "originalAuthorizationChanged": false,
+  "applicationStarted": false,
+  "inputInjected": false,
+  "syntheticAuthorizationFileWritten": false,
+  "foregroundWindowExtended": false,
+  "fullVersionGatePassed": false
+}

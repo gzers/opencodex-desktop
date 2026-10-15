@@ -1,0 +1,52 @@
+{
+  "atUtc": "2026-10-14T11:04:06.837928+00:00",
+  "packageId": "microsoft.diagnostics.tracing.traceevent",
+  "version": "3.1.21",
+  "registrationUrl": "https://api.nuget.org/v3/registration5-semver1/microsoft.diagnostics.tracing.traceevent/3.1.21.json",
+  "catalogUrl": "https://api.nuget.org/v3/catalog0/data/2025.05.02.09.09.21/microsoft.diagnostics.tracing.traceevent.3.1.21.json",
+  "metadataUrl": "https://www.nuget.org/api/v2/Packages(Id='Microsoft.Diagnostics.Tracing.TraceEvent',Version='3.1.21')",
+  "packageUrl": "https://api.nuget.org/v3-flatcontainer/microsoft.diagnostics.tracing.traceevent/3.1.21/microsoft.diagnostics.tracing.traceevent.3.1.21.nupkg",
+  "initialCatalogRequest404": true,
+  "officialCatalogSha512Matches": true,
+  "packageSha256": "664da746a9c1316767e451dec4c386c458aa5fde6c26461d2d57774fc4cc3d3f",
+  "packageBytes": 4423135,
+  "zipCrcPassed": true,
+  "repositorySignaturePresent": true,
+  "repositorySignatureCryptographicallyVerified": false,
+  "decoderFiles": [
+    {
+      "file": "Microsoft.Diagnostics.Tracing.TraceEvent.dll",
+      "sha256": "401e948dac99d0f9756ef96d5a8b8e4736e19e9f82ce8cdd744495951e3a94bb",
+      "bytes": 3213360
+    },
+    {
+      "file": "Microsoft.Diagnostics.FastSerialization.dll",
+      "sha256": "83e89baf0bbecca8cfa194cff13365f716849e22efc374b669206f26998a019f",
+      "bytes": 76336
+    },
+    {
+      "file": "Microsoft.Diagnostics.Tracing.TraceEvent.xml",
+      "sha256": "8b1d196d667d3e32d56f756f376c766e74bc10f4bb1860d335b595af6c6d8481",
+      "bytes": 905447
+    }
+  ],
+  "sourceFiles": [
+    {
+      "url": "https://raw.githubusercontent.com/microsoft/perfview/v3.1.21/src/TraceEvent/TraceEventSession.cs",
+      "file": "TraceEventSession.cs",
+      "bytes": 167949,
+      "sha256": "b1e85b77ef5aa90491758248e80e1b0307cd6513bf0a45390b922b2df6880475"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/microsoft/perfview/v3.1.21/src/TraceEvent/Parsers/KernelTraceEventParser.cs",
+      "file": "KernelTraceEventParser.cs",
+      "bytes": 565319,
+      "sha256": "5a1ff963eb4c5b6dbe8845843c841e8466b5c4855e72b454c7a0cf31ea4a708f"
+    }
+  ],
+  "runtime": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\bd2-etw-preparation-20261014",
+  "installedGlobally": false,
+  "packageScriptsExecuted": false,
+  "etwSessionStarted": false,
+  "testExeOrNodeStarted": false
+}

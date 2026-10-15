@@ -1,0 +1,12 @@
+{
+  "historicalSubsetManifest": "manifest.json",
+  "historicalSubsetManifestEntries": 209,
+  "issue": "Root archive-output exclusions were applied by basename, so nine nested configuration-migration manifest.json files were not directly listed.",
+  "nestedFilesWereAlreadyCopiedAndIndexed": true,
+  "nestedFilesWereAlreadyVerifiedAgainstSnapshotHashes": true,
+  "nestedFileCount": 9,
+  "rawEvidenceOrHistoricalManifestChanged": false,
+  "correction": "Add an independent complete archive manifest, excluding only its own two exact root output paths. It includes historical manifests, reports, and all nine nested files.",
+  "newProductOrUiExecution": false,
+  "productFailureClaimed": false
+}

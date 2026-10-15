@@ -1,0 +1,67 @@
+{
+  "atUtc": "2026-10-14T13:47:46.940347+00:00",
+  "runId": 38572890687,
+  "associatedHead": "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac",
+  "event": "push",
+  "conclusion": "failure",
+  "archiveBytes": 267153,
+  "archiveSha256": "4d234a779e18ea58e9f4c633af480d77a815ac4e3f2492449f2c03760d74740e",
+  "zipCrcPassed": true,
+  "safeEntries": true,
+  "selectedOriginalLogs": [
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "savedAs": "ci-38572890687-backend-windows-checkout.log.gz",
+      "bytes": 5472,
+      "sha256": "56148fbdb202299bfc62048e99eb93d08d19c6751a72327281345de30ff5cc6a"
+    },
+    {
+      "member": "backend-windows/9_Windows backend regression.txt",
+      "savedAs": "ci-38572890687-backend-windows-tests.log.gz",
+      "bytes": 180794,
+      "sha256": "e20bb08f40cb23e38e1efe95963850020fafa8d4166e774ed26033e506e2956f"
+    },
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "savedAs": "ci-38572890687-backend-checkout.log.gz",
+      "bytes": 6358,
+      "sha256": "3f78241c2c90984663a34a9006d581bd2beafbb570a35b66c1bb6e4a3ca8069a"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "savedAs": "ci-38572890687-backend-tests.log.gz",
+      "bytes": 143510,
+      "sha256": "3e1f9dc5fab8f4518e268f6dd26bf1e1f987485d580e6047c2da11de30ca1ef5"
+    }
+  ],
+  "actualCheckoutShas": {
+    "backend-windows": [
+      "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac"
+    ],
+    "backend": [
+      "3a91c175a6c42d1cec16ef3eeb1d799d9abe4aac"
+    ]
+  },
+  "rustCounts": {
+    "backend-windows": {
+      "suites": 1,
+      "passed": 527,
+      "failed": 3,
+      "ignored": 4
+    },
+    "backend": {
+      "suites": 35,
+      "passed": 900,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "failedTestLines": [
+    "2026-10-14T13:42:47.7505336Z test infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper ... FAILED",
+    "2026-10-14T13:42:47.8022263Z test infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output ... FAILED",
+    "2026-10-14T13:42:47.8349073Z test infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process ... FAILED"
+  ],
+  "collectorRecordOrScopeTestsExecutedByCi": false,
+  "originalBd2FailedRunCleared": false,
+  "authorizationHeaderForwardedAcrossHosts": false
+}

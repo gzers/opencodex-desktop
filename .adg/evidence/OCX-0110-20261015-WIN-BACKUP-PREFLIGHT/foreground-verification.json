@@ -1,0 +1,52 @@
+{
+  "archiveIntegrity": "passed",
+  "scope": "Bounded native backup session only",
+  "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+  "exeSha256": "f43e81a9d96f25a29a937a54d2c779ce2459c3ecb30a73b131c57729f70cb929",
+  "manifestFiles": 582,
+  "snapshots": 18,
+  "validPayloadDigestChecks": 193,
+  "expectedCorruptPayloadSnapshots": [
+    {
+      "phase": "corrupt-restore-rejected",
+      "backupId": "bk_20261015015618_1393e76a"
+    },
+    {
+      "phase": "unrelated-success",
+      "backupId": "bk_20261015015618_1393e76a"
+    }
+  ],
+  "uiStateArtifacts": 29,
+  "ordinaryApplicationTokensVerified": 2,
+  "sequentialInstances": 2,
+  "nativeInstancesAtFinalCheckpoint": 0,
+  "bothObservedExitCodes": [
+    0,
+    0
+  ],
+  "darkLightDarkBytesVerified": true,
+  "manualCleanupRemoved": [
+    "bk_20261015015159_1cc59ec0",
+    "bk_20261015015200_df084d8f"
+  ],
+  "automaticCleanupRemoved": "bk_20261015015201_a254f99c",
+  "policySaveDeletedNothing": true,
+  "pinnedSynthetic90DayBackupRetained": true,
+  "unpinRepinPersistedWithoutDeletion": true,
+  "corruptRestoreRejectedWithoutOverwrite": true,
+  "sameLocalEventResolved": true,
+  "unrelatedSuccessDidNotResolve": true,
+  "restartPersistenceVerified": true,
+  "priorFailedGuardStillActive": true,
+  "timestampTypeRegressionChecks": 10,
+  "treeKeyboardExpansionAndRefreshObserved": true,
+  "treePixelAlignmentMeasured": false,
+  "treeRefreshFocusRetentionVerified": false,
+  "prototypeCheckboxCoverageVerified": false,
+  "physicalDpiVerified": false,
+  "managerChannelIsolationVerified": false,
+  "realCycleVerified": false,
+  "pairedPerformanceVerified": false,
+  "installerRetentionVerified": false,
+  "fullVersionGatePassed": false
+}

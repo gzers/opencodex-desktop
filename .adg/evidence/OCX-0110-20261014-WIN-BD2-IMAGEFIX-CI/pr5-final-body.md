@@ -1,0 +1,11 @@
+为 bd2 查询夹具的启动等待保留自有进程、线程、调度和文件 I/O 原始时序。采集器位于 test/smoke，只在明确批准且真实管理员令牌下启用唯一命名的实时 ETW 会话；不修改产品、原查询夹具、工作流、并发、capture 或 2/4/5/8 秒预算。
+
+先启用 kernel provider 再访问 Source，避免 TraceEvent 的隐式普通会话启动。固定 TraceEvent 3.1.21，StopOnDispose=false，以 ControlTraceW 仅停止本次唯一自有会话，保留最终 loss counters，不调用会重设机器 CPU 采样间隔的通用 Stop。自有家族按原 QPC 和 PID/TID 生命周期过滤；不写整机 ETL，不保存其他调度参与者 ID、命令行、SID 或无关路径。序列化、队列及 IRP 均有界，独立尝试各收尾阶段。
+
+2026-10-14 首次管理员实跑使用 abc3a914 采集器和原失败 PR 38537166560 的测试制品。提权成功；根进程启动后 Root image mismatch，事件消费者未启动，原库被外层安全收尾终止。原始事件 0 条，不能判断原查询结果；自有 session 停止成功、最终 loss 0、writer 排空成功不代表完整采集。控制器令牌已核验，测试根令牌尚未采得。历史失败与根因保持开放。
+
+629b9c6 改用已持有 Process.Handle 的 QueryFullProcessImageNameW 校验根映像，记录映像查询结果，不等待初始化或预热。启动后立即异步读取 stdout/stderr，异常收尾也分别排空并记录 setup/run error、完成/终止状态，避免校验失败时丢失原输出。旧失败没有记录 MainModule 的实际返回值，具体误判原因尚不能确认，修正后真实启动仍待下一次有界录制。
+
+本机 Add-Type 编译、53 项原纯检查、新增 5 项当前控制器句柄映像检查、摘要/目录/普通权限拒绝检查通过；这些检查没有运行原库、Node 或 ETW。abc 双 CI 38561752521/38561759502 已成功，但不能证明 629b9c6 或实时采集；629b9c6 的 push38567345341/PR38567352891 现均 completed/success，五必需 job 成功、main-only build skipped；每轮 Mac900/Windows627 通过、忽略6/7，各35组。原 checkout/测试日志和完整 ZIP 的 SHA/CRC 已核验，PR 合成检出与 head 整树相同，身份分别保留。通用 CI 不执行 C# 采集器，修正后真实录制仍未执行。一次批准的原库已实际启动，本轮没有自动第二次执行。
+
+保留草稿，base 为 feature/0.1.10-integration-candidate@bd2f6eb1。完整 Windows/macOS 原生、安装数据保留、更新备份事件、真实周期和官方 0.1.9 配对性能门禁仍开放；既有 macOS CPU/RSS 失败不解除。不合并、签名、发布、晋升或关闭 TASK。

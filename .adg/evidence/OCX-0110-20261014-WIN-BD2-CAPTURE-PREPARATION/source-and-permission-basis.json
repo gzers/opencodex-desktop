@@ -1,0 +1,50 @@
+{
+  "purpose": "One approved real-time kernel trace of the original failed-PR test EXE, without recording a general desktop ETL",
+  "officialReferences": [
+    {
+      "url": "https://github.com/microsoft/perfview/blob/v3.1.21/documentation/TraceEvent/TraceEventProgrammersGuide.md",
+      "supports": "Real-time sessions have no log filename; handlers consume kernel events, buffered callbacks can arrive after event generation."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-hardware/test/wpt/systemprovider",
+      "supports": "System-provider schema has keywords/stacks/pool tags; a user-mode ProcessExeFilter must not be advertised as a kernel process whitelist."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/evntprov/ns-evntprov-event_filter_descriptor",
+      "supports": "PID scope filter is not a generic solution for kernel-mode providers and dynamically born child processes."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/etw/system-providers",
+      "supports": "Process/loader, scheduler/context-switch and IO categories are system logger events."
+    },
+    {
+      "url": "https://www.nuget.org/packages/Microsoft.Diagnostics.Tracing.TraceEvent/3.1.21",
+      "supports": "Pinned Microsoft TraceEvent decoder package; official metadata SHA512 independently verified, not globally installed."
+    }
+  ],
+  "privilegeRequirement": "The prepared entry point requires a manually elevated controller and an explicit approval switch; ordinary-token rejection was tested.",
+  "kernelEventsTransientlyDecodedInMemory": true,
+  "providerLevelOnlyOwnProcessFilterClaimed": false,
+  "systemWideRawEtlOrOtherPartyPayloadsWritten": false,
+  "furtherPrivacyApprovalRequiredBeforeRecord": true,
+  "approvedInCurrentTurn": false,
+  "recordApprovedInvoked": false,
+  "processRunsThisTurn": 0,
+  "testSource": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "collectorSource": "5fa36a60a6867124cf13f27e1e1856ae495ef29b",
+  "captureScopeChecksPassed": 38,
+  "realTimeRecordAndDrainExecuted": false,
+  "preparedOnlyDoesNotProveEventCoverage": true,
+  "futureCaptureAcceptanceRequirements": [
+    "Actual failing query-case output, not the separate license.opened failure or a success comparison.",
+    "Original failing case/control PID bound to ETW process generation and API creation/image observation when available.",
+    "Owned Node ProcessStart/Stop, thread lifecycle, ready/context-switch and useful loader/FileIO events cover the failure window.",
+    "Unrelated event payloads, command lines, SIDs and scheduling counterpart IDs must not be serialized.",
+    "Root-start seen, consumer/writer drain and owned-session stop succeed; decoded errors or dropped records invalidate full coverage.",
+    "Report kernel loss count as a pre-stop snapshot, not as proof of zero loss through final shutdown.",
+    "Preserve original default concurrency/capture/deadlines and any failures, even if the failing CI case does not reproduce.",
+    "Keep the original failure and version gates open unless evidence actually establishes their resolution."
+  ],
+  "historicalEvidenceUntouched": true,
+  "fullVersionGoalActiveNotCompleted": true
+}

@@ -1,0 +1,28 @@
+{
+  "atUtc": "2026-10-15T03:10:02.121156+00:00",
+  "observations": 12,
+  "elapsedSeconds": 387.73499999998603,
+  "latest": {
+    "runId": 38673288645,
+    "source": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "package",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      },
+      {
+        "name": "query-etw",
+        "status": "completed",
+        "conclusion": "skipped",
+        "activeSteps": []
+      }
+    ]
+  },
+  "remoteTerminalObserved": true,
+  "dispatchRepeated": false,
+  "hostDesktopStarted": false
+}

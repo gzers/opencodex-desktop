@@ -1,0 +1,15 @@
+{
+  "sources": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/psapi/module-information",
+      "usedFor": "Module enumeration may fail or return incorrect information before module-list initialization; no inference about the missing observed image."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew",
+      "usedFor": "Query the executable image using the already-retained process handle and Win32-path flag 0."
+    }
+  ],
+  "moduleImageAtFailureRecorded": false,
+  "specificStartupMisclassificationCauseConfirmed": false,
+  "fixedCollectorRealRecordingExecuted": false
+}

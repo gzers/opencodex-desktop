@@ -1,0 +1,30 @@
+{
+  "atUtc": "2026-10-15T08:02:45.993016+00:00",
+  "boundaries": [
+    {
+      "action": "initial code push",
+      "result": "TLS unexpected EOF; remote readback remained493 before one normal schannel retry succeeded8e266aba",
+      "securityRelaxed": false
+    },
+    {
+      "action": "original artifact API read",
+      "result": "initial TLS read failed; later read verified same failed run and nonexpired original artifact",
+      "remoteStateInferredFromError": false
+    },
+    {
+      "action": "terminal log extraction",
+      "result": "first extraction rejected checkout post-cleanup log without checkout SHA; original ZIP preserved, parser ignores only absent final-checkout marker and reuses verified original bytes",
+      "ciRerun": false
+    },
+    {
+      "action": "PR original logs download",
+      "result": "TLS read errors before output; same terminal run archive subsequently downloaded and verified",
+      "ciRerun": false
+    }
+  ],
+  "yamlParserExecutedLocally": false,
+  "powerShellWorkflowBlocksParsedLocally": 11,
+  "remoteActionsWorkflowActuallyAccepted": true,
+  "sameDiagnosticDispatchRepeated": false,
+  "originalFailureCleared": false
+}

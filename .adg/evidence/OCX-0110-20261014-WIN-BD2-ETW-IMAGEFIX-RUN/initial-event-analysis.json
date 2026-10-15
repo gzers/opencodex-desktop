@@ -1,0 +1,255 @@
+{
+  "bytes": 67291856,
+  "sha256": "710bc329c01453fef1f8118eeeef46481fb008e16102429119a3844b8a7554aa",
+  "rowCount": 183278,
+  "eventKinds": {
+    "root-handle-image-query": 1,
+    "root-handle-binding": 1,
+    "process-start": 8,
+    "thread-start": 375,
+    "owned-thread-ready": 41479,
+    "owned-thread-scheduled-in": 48361,
+    "owned-thread-scheduled-out": 48086,
+    "owned-image": 277,
+    "owned-file-create": 16387,
+    "owned-file-operation-end": 22211,
+    "thread-stop": 260,
+    "owned-file-read-write": 5832
+  },
+  "pidRecordCounts": {
+    "55592": 178269,
+    "19296": 941,
+    "71776": 954,
+    "10560": 1043,
+    "61208": 713,
+    "45820": 475,
+    "73092": 500,
+    "8300": 383
+  },
+  "processStarts": [
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894501424232,
+        "atUtc": "2026-10-14T13:23:35.9663028Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 55592,
+      "parentPid": null,
+      "role": "test",
+      "uniqueProcessKey": 18446710039183712448,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\diagnostic-bd2-pr-failure-38537166560\\opencodex_desktop_lib-4ef9ce48b814b037.exe",
+      "apiIdentityObservation": {
+        "retained": true,
+        "fullImageMatches": true,
+        "creationFileTime100ns": 134364578159662199,
+        "exitFileTime100ns": 0,
+        "kernelCpu100ns": 625000,
+        "userCpu100ns": 1718750,
+        "originalEventUtc": "2026-10-14T13:23:35.9663028Z",
+        "apiObservedUtc": "2026-10-14T13:23:36.0473255Z",
+        "creationVsOriginalEventDeltaMs": -0.0829,
+        "sameEventLifetimeRequiresTimestampReview": true
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "retained root handle/image/creation"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894505709487,
+        "atUtc": "2026-10-14T13:23:36.3948283Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 19296,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710039294652544,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": false,
+        "error": 87,
+        "identity": "ETW lifecycle only; no live API handle observation"
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894505788577,
+        "atUtc": "2026-10-14T13:23:36.4027373Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 71776,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710038876389504,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": true,
+        "fullImageMatches": true,
+        "creationFileTime100ns": 134364578164026844,
+        "exitFileTime100ns": 0,
+        "kernelCpu100ns": 625000,
+        "userCpu100ns": 312500,
+        "originalEventUtc": "2026-10-14T13:23:36.4027373Z",
+        "apiObservedUtc": "2026-10-14T13:23:37.1990919Z",
+        "creationVsOriginalEventDeltaMs": -0.0529,
+        "sameEventLifetimeRequiresTimestampReview": true
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894505887740,
+        "atUtc": "2026-10-14T13:23:36.4126536Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 10560,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710038484082816,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": false,
+        "error": 87,
+        "identity": "ETW lifecycle only; no live API handle observation"
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894506423150,
+        "atUtc": "2026-10-14T13:23:36.4661946Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 61208,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710039162511488,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": false,
+        "error": 87,
+        "identity": "ETW lifecycle only; no live API handle observation"
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894506635491,
+        "atUtc": "2026-10-14T13:23:36.4874287Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 45820,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710039013884032,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": true,
+        "fullImageMatches": true,
+        "creationFileTime100ns": 134364578164872061,
+        "exitFileTime100ns": 0,
+        "kernelCpu100ns": 468750,
+        "userCpu100ns": 312500,
+        "originalEventUtc": "2026-10-14T13:23:36.4874287Z",
+        "apiObservedUtc": "2026-10-14T13:23:37.44928Z",
+        "creationVsOriginalEventDeltaMs": -0.2226,
+        "sameEventLifetimeRequiresTimestampReview": true
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894506770484,
+        "atUtc": "2026-10-14T13:23:36.500928Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 73092,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710038238093440,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": false,
+        "error": 87,
+        "identity": "ETW lifecycle only; no live API handle observation"
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    },
+    {
+      "kind": "process-start",
+      "original": {
+        "qpc": 3894507017510,
+        "atUtc": "2026-10-14T13:23:36.5256306Z",
+        "provider": "9e814aad-3204-11d2-9a82-006008a86939",
+        "eventId": 65535,
+        "version": 4,
+        "opcode": 1,
+        "eventName": "Process/Start"
+      },
+      "pid": 8300,
+      "parentPid": 55592,
+      "role": "node",
+      "uniqueProcessKey": 18446710038811709568,
+      "ownedImage": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\node-v24.21.0-official\\node.exe",
+      "apiIdentityObservation": {
+        "retained": false,
+        "error": 87,
+        "identity": "ETW lifecycle only; no live API handle observation"
+      },
+      "fullCommandLineSaved": false,
+      "sidSaved": false,
+      "identityBasis": "ETW lifecycle + owned parent + exact executable argument"
+    }
+  ],
+  "firstRecordedOriginalEventUtc": "2026-10-14T13:23:35.9663028Z",
+  "lastRecordedOriginalEventUtc": "2026-10-14T13:23:36.6049333Z",
+  "completeCoverageClaimed": false
+}
