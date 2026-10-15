@@ -4,12 +4,23 @@ on:
   push:
     branches: [feature/0.1.8-windows-package, feature/0.1.9-windows-appearance, feature/0.1.10-maintenance]
   workflow_dispatch:
+    inputs:
+      purpose:
+        description: Package a candidate, or run one bounded diagnostic without a desktop/package
+        type: choice
+        options: [candidate, query-etw]
+        default: candidate
+      admission_run:
+        description: Successful exact-head push CI run required for query-etw
+        type: string
+        default: ''
 
 permissions:
   contents: read
 
 jobs:
   package:
+    if: github.event_name != 'workflow_dispatch' || inputs.purpose == 'candidate'
     runs-on: windows-latest
     timeout-minutes: 45
     defaults:
@@ -96,3 +107,74 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           path: test/out/windows-candidate
+
+  query-etw:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'query-etw' && github.repository == 'gzers/opencodex-desktop'
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Admit exact-head CI, original failed bd2 artifact and pinned offline dependencies
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENCODEX_ETW_ADMISSION_RUN: ${{ inputs.admission_run }}
+        run: python test/smoke/windows-etw-ci-admit.py
+      - name: Verify collector guards without starting the original library or Node
+        shell: pwsh
+        run: |
+          $taskAdmission = Get-Content -LiteralPath test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
+          $taskNodeSignature = Get-AuthenticodeSignature -LiteralPath $taskAdmission.node
+          if ($taskNodeSignature.Status -ne 'Valid' -or $taskNodeSignature.SignerCertificate.Subject -notlike '*OpenJS*') {
+            throw 'Pinned official Node signature is not valid'
+          }
+          & test/smoke/windows-owned-etw.test.ps1 `
+            -DecoderDirectory $taskAdmission.decoder `
+            -TestExecutable $taskAdmission.testExecutable -ExpectedTestSha256 $taskAdmission.testSha256 `
+            -Node $taskAdmission.node -ExpectedNodeSha256 $taskAdmission.nodeSha256 `
+            -OutputRoot $taskAdmission.outputRoot |
+            Tee-Object -FilePath test/out/windows-query-etw/pure-guards.original.json
+      - name: Record one original unfiltered library run with owned-family ETW
+        shell: pwsh
+        run: |
+          $taskAdmission = Get-Content -LiteralPath test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
+          # No original test deadline, parallelism, assertion, or collector
+          # scope is changed. Do not let a CI credential enter the child.
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName, $null, 'Process')
+          }
+          & test/smoke/windows-owned-etw.ps1 `
+            -DecoderDirectory $taskAdmission.decoder `
+            -TestExecutable $taskAdmission.testExecutable -ExpectedTestSha256 $taskAdmission.testSha256 `
+            -Node $taskAdmission.node -ExpectedNodeSha256 $taskAdmission.nodeSha256 `
+            -OutputRoot $taskAdmission.outputRoot -RecordApproved |
+            Tee-Object -FilePath test/out/windows-query-etw/invocation.original.json
+          $taskCapture = Get-Content -LiteralPath (Join-Path $taskAdmission.outputRoot 'capture/capture-result.json') -Raw | ConvertFrom-Json
+          if (!$taskCapture.originalLibraryCompleted -or !$taskCapture.ownedRootExited -or
+              !$taskCapture.rootProcessStartSeen -or !$taskCapture.processTraceJoined -or
+              !$taskCapture.writerJoined -or !$taskCapture.ownedSessionStopSucceeded -or
+              !$taskCapture.serializedBytesWithinLimit -or $taskCapture.droppedRecords -ne 0 -or
+              $taskCapture.kernelEventsLost -ne 0 -or $taskCapture.decoderCallbackErrors -ne 0 -or
+              $taskCapture.nativeOwnedSessionStop.Status -ne 0 -or
+              $taskCapture.nativeOwnedSessionStop.FinalEventsLost -ne 0 -or
+              $taskCapture.nativeOwnedSessionStop.FinalRealTimeBuffersLost -ne 0 -or
+              $taskCapture.knownImageCoverageGap -or $taskCapture.captureError -or $taskCapture.runError -or
+              $taskCapture.writerError -or $taskCapture.cleanupErrors.Count -ne 0) {
+            throw 'Bounded capture incomplete; original records retained, no automatic retry'
+          }
+          if ($taskCapture.testExitCode -ne 0) {
+            throw "Original library exit $($taskCapture.testExitCode); failure retained, not a version acceptance"
+          }
+      - name: Preserve diagnostic evidence including failure and partial cleanup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-query-etw-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            test/out/windows-query-etw
+            test/runtime/ci-bd2-query-etw/capture
