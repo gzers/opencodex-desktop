@@ -1,0 +1,60 @@
+{
+  "harnessSource": "3c51367f1be89abf66f69805d29b2a660a570a2c",
+  "fixedCandidateSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "runId": 38716371739,
+  "runConclusion": "success",
+  "installerResults": [
+    {
+      "kind": "msi",
+      "result": "pass",
+      "baselineVersion": "0.1.9",
+      "candidateVersion": "0.1.10",
+      "candidateInstalledSha256": "3be7ea60f549e76e80416eb1bee2cba2be4b2dd0f2f4a4d0a2964230b51f82f9",
+      "installerSteps": [
+        "install-official-019",
+        "upgrade-to-431",
+        "default-uninstall",
+        "reinstall-431",
+        "final-default-uninstall"
+      ],
+      "seededFilesVerifiedPerPhase": 6,
+      "byteEqualityVerificationPhases": 5,
+      "errorType": null,
+      "error": null,
+      "applicationLaunched": false,
+      "customRootResolutionAccepted": false,
+      "physicalHostOrdinaryPermissionAccepted": false,
+      "explicitPurgeAccepted": false,
+      "msiLegacyProductDetectedAndRemovalLogged": true
+    },
+    {
+      "kind": "nsis",
+      "result": "pass",
+      "baselineVersion": "0.1.9",
+      "candidateVersion": "0.1.10",
+      "candidateInstalledSha256": "014fae2986ed4339c910f40bc73044bd232295e5b1e50d9b28360165b50412be",
+      "installerSteps": [
+        "install-official-019",
+        "upgrade-to-431",
+        "default-uninstall",
+        "reinstall-431",
+        "final-default-uninstall"
+      ],
+      "seededFilesVerifiedPerPhase": 6,
+      "byteEqualityVerificationPhases": 5,
+      "errorType": null,
+      "error": null,
+      "applicationLaunched": false,
+      "customRootResolutionAccepted": false,
+      "physicalHostOrdinaryPermissionAccepted": false,
+      "explicitPurgeAccepted": false,
+      "msiLegacyProductDetectedAndRemovalLogged": false
+    }
+  ],
+  "bothInstallerUpgradeAndDefaultUninstallFixtureRetentionPassed": true,
+  "historicalQueryFailureCleared": false,
+  "nativeRootAndPermissionsFullMatrixPassed": false,
+  "pairedPerformancePassed": false,
+  "fullVersionGatePassed": false,
+  "releaseRequested": false
+}

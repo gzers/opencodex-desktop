@@ -1,0 +1,247 @@
+{
+  "scope": "Real ephemeral Windows installer upgrade/uninstall with seeded fixtures; no app/root-resolution/ordinary-token/UI acceptance",
+  "harnessSource": "3c51367f1be89abf66f69805d29b2a660a570a2c",
+  "candidateSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "kind": "nsis",
+  "fixtureBoundary": "D:\\a\\_temp\\OpenCodex-Retention-aedc025686fa4c52b85dedef8a3d8f92",
+  "installDirectory": "D:\\a\\_temp\\OpenCodex-Retention-aedc025686fa4c52b85dedef8a3d8f92\\install with spaces",
+  "result": "pass",
+  "steps": [
+    {
+      "name": "install-official-019",
+      "atUtc": "2026-10-15T09:54:33.6462474+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "before-upgrade",
+      "atUtc": "2026-10-15T09:54:33.7009863+00:00",
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "bytes": 87,
+          "sha256": "a76189e0c0dab70c321ade4f563f982cf72a25164e74711541c2c397dd373a80"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "bytes": 94,
+          "sha256": "568bce9234798c5affd4fa799082fcdc266571e260ede90469fd69a6c117fa73"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "bytes": 90,
+          "sha256": "7374babc003dea3eb3169c4532f99723007361859e4d77ae7e2d8f421fc05d92"
+        },
+        {
+          "relative": "custom-root/manager-state/preferences.json",
+          "bytes": 74,
+          "sha256": "aa3b228d930e014e69c7ca5374fbb9f3036bcc41a731fb42143a31c2eff91021"
+        },
+        {
+          "relative": "custom-root/backups/retained-payload.json",
+          "bytes": 73,
+          "sha256": "180208f5564c9402f4632f09dbb3b1ddef2de87058800d417649eebbdd238f11"
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "bytes": 29,
+          "sha256": "410125f09c1b6fbc091bee4894ddea4fe5f44c3b3b09d5c7400b3f96ffa841b7"
+        }
+      ],
+      "allBytesUnchanged": true
+    },
+    {
+      "name": "upgrade-to-431",
+      "atUtc": "2026-10-15T09:54:34.2127744+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "after-upgrade",
+      "atUtc": "2026-10-15T09:54:34.2330583+00:00",
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "bytes": 87,
+          "sha256": "a76189e0c0dab70c321ade4f563f982cf72a25164e74711541c2c397dd373a80"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "bytes": 94,
+          "sha256": "568bce9234798c5affd4fa799082fcdc266571e260ede90469fd69a6c117fa73"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "bytes": 90,
+          "sha256": "7374babc003dea3eb3169c4532f99723007361859e4d77ae7e2d8f421fc05d92"
+        },
+        {
+          "relative": "custom-root/manager-state/preferences.json",
+          "bytes": 74,
+          "sha256": "aa3b228d930e014e69c7ca5374fbb9f3036bcc41a731fb42143a31c2eff91021"
+        },
+        {
+          "relative": "custom-root/backups/retained-payload.json",
+          "bytes": 73,
+          "sha256": "180208f5564c9402f4632f09dbb3b1ddef2de87058800d417649eebbdd238f11"
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "bytes": 29,
+          "sha256": "410125f09c1b6fbc091bee4894ddea4fe5f44c3b3b09d5c7400b3f96ffa841b7"
+        }
+      ],
+      "allBytesUnchanged": true
+    },
+    {
+      "name": "default-uninstall",
+      "atUtc": "2026-10-15T09:54:34.3105495+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "after-default-uninstall",
+      "atUtc": "2026-10-15T09:54:34.5350636+00:00",
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "bytes": 87,
+          "sha256": "a76189e0c0dab70c321ade4f563f982cf72a25164e74711541c2c397dd373a80"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "bytes": 94,
+          "sha256": "568bce9234798c5affd4fa799082fcdc266571e260ede90469fd69a6c117fa73"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "bytes": 90,
+          "sha256": "7374babc003dea3eb3169c4532f99723007361859e4d77ae7e2d8f421fc05d92"
+        },
+        {
+          "relative": "custom-root/manager-state/preferences.json",
+          "bytes": 74,
+          "sha256": "aa3b228d930e014e69c7ca5374fbb9f3036bcc41a731fb42143a31c2eff91021"
+        },
+        {
+          "relative": "custom-root/backups/retained-payload.json",
+          "bytes": 73,
+          "sha256": "180208f5564c9402f4632f09dbb3b1ddef2de87058800d417649eebbdd238f11"
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "bytes": 29,
+          "sha256": "410125f09c1b6fbc091bee4894ddea4fe5f44c3b3b09d5c7400b3f96ffa841b7"
+        }
+      ],
+      "allBytesUnchanged": true
+    },
+    {
+      "name": "reinstall-431",
+      "atUtc": "2026-10-15T09:54:35.1080774+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "after-reinstall",
+      "atUtc": "2026-10-15T09:54:35.1272897+00:00",
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "bytes": 87,
+          "sha256": "a76189e0c0dab70c321ade4f563f982cf72a25164e74711541c2c397dd373a80"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "bytes": 94,
+          "sha256": "568bce9234798c5affd4fa799082fcdc266571e260ede90469fd69a6c117fa73"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "bytes": 90,
+          "sha256": "7374babc003dea3eb3169c4532f99723007361859e4d77ae7e2d8f421fc05d92"
+        },
+        {
+          "relative": "custom-root/manager-state/preferences.json",
+          "bytes": 74,
+          "sha256": "aa3b228d930e014e69c7ca5374fbb9f3036bcc41a731fb42143a31c2eff91021"
+        },
+        {
+          "relative": "custom-root/backups/retained-payload.json",
+          "bytes": 73,
+          "sha256": "180208f5564c9402f4632f09dbb3b1ddef2de87058800d417649eebbdd238f11"
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "bytes": 29,
+          "sha256": "410125f09c1b6fbc091bee4894ddea4fe5f44c3b3b09d5c7400b3f96ffa841b7"
+        }
+      ],
+      "allBytesUnchanged": true
+    },
+    {
+      "name": "final-default-uninstall",
+      "atUtc": "2026-10-15T09:54:35.1854692+00:00",
+      "exitCode": 0
+    },
+    {
+      "name": "after-final-uninstall",
+      "atUtc": "2026-10-15T09:54:35.4070748+00:00",
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "bytes": 87,
+          "sha256": "a76189e0c0dab70c321ade4f563f982cf72a25164e74711541c2c397dd373a80"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "bytes": 94,
+          "sha256": "568bce9234798c5affd4fa799082fcdc266571e260ede90469fd69a6c117fa73"
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "bytes": 90,
+          "sha256": "7374babc003dea3eb3169c4532f99723007361859e4d77ae7e2d8f421fc05d92"
+        },
+        {
+          "relative": "custom-root/manager-state/preferences.json",
+          "bytes": 74,
+          "sha256": "aa3b228d930e014e69c7ca5374fbb9f3036bcc41a731fb42143a31c2eff91021"
+        },
+        {
+          "relative": "custom-root/backups/retained-payload.json",
+          "bytes": 73,
+          "sha256": "180208f5564c9402f4632f09dbb3b1ddef2de87058800d417649eebbdd238f11"
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "bytes": 29,
+          "sha256": "410125f09c1b6fbc091bee4894ddea4fe5f44c3b3b09d5c7400b3f96ffa841b7"
+        }
+      ],
+      "allBytesUnchanged": true
+    }
+  ],
+  "baselinePackageSha256": "e2538debc1f8acf5b5ed931f3e68d9b128263742c230fbc151513f2833a38006",
+  "candidatePackageSha256": "6ae167452eead3662ab274dd61f8a2d9c7c78e92db6e35a646faf5cd01877bbc",
+  "defaultDataFixtureSeeded": true,
+  "customRootIsSeededSiblingNotApplicationBinding": true,
+  "productLaunched": false,
+  "explicitDataPurgeTested": false,
+  "hostMachineAcceptanceClaimed": false,
+  "fullVersionGatePassed": false,
+  "releaseRequested": false,
+  "baselineImage": {
+    "version": "0.1.9",
+    "bytes": 7619584,
+    "sha256": "238067b78fac14c6c0633555357ff21af5d6e964f5f65319e0f469acebb4e22d"
+  },
+  "candidateImage": {
+    "version": "0.1.10",
+    "bytes": 8777216,
+    "sha256": "014fae2986ed4339c910f40bc73044bd232295e5b1e50d9b28360165b50412be"
+  },
+  "reinstalledImage": {
+    "version": "0.1.10",
+    "bytes": 8777216,
+    "sha256": "014fae2986ed4339c910f40bc73044bd232295e5b1e50d9b28360165b50412be"
+  },
+  "installerStateMayRemain": false,
+  "finishedAtUtc": "2026-10-15T09:54:35.4240882+00:00"
+}

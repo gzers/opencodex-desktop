@@ -1654,3 +1654,11 @@ artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP16
 独立复核8份旧manifest原件，保留stable/panel跨启动真实success间隔86564/86566秒及next_due24h、旧timer floor1800001.5ms事实；前端scheduler blob相同但后端两个blob已变，旧执行不冒充新版完整通过，只补受影响路径/直接触发/原始计数/睡眠恢复。17:02公开beta元数据404，API首读TLS错误保留，17:05认证API才实际404，beta成功6h基线仍缺；不发布或改源制造条件。
 
 只读环境确认Hyper-V可见/服务运行，但Get-VM报VirtualizationException、VM可用性未知，拟用普通账户/WindowsSandbox.exe不存在、空闲内存约5GiB。已写可审阅的独立普通Profile及专用Windows安装环境方案，账户/VM/ACL/网络均未创建改变，需明确确认后实施；安装VM不替代宿主性能。17:16:02本机native0/日常/旧隔离/TASK摘要/431干净保持，无Mac正式原生交接。52项清单/verify-readiness通过，详见[候选与专项环境准备](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows候选与专项环境准备/README.md)及其中执行方案，证据`.adg/evidence/OCX-0110-20261015-WIN-431-READINESS/`。原失败ETW/根因、八门禁/全部预算/Macfailed/周期缺口保持，未关闭或发布。
+
+### 2026-10-15 固定431候选的独立Windows安装器文件保留
+
+账户/VM等待期间独立补安装器专项：工具3c51367f只改test/CI、产品tree不变，被测仍固定431候选run38709701621，不重贴源码身份。本机6项离线准入/宿主拒绝/语法通过，同SHA push38713455586/PR38713465220完整success，各Mac900/Windows627passed、忽略6/7、35组；实际push3c/PR6f92618e树相同、日志原字节核验。
+
+单次安装专项run38716371739/attempt1成功、package/query-etw跳过；MSI/NSIS各独立全新runner实际安装官方019后，升级431、默认卸载、重装再卸载，每种5安装步骤exit0、6夹具文件×5读回阶段全部字节保持、两次卸载主EXE实际移除。MSI原日志确认旧ProductCode被FindRelatedProducts识别并RemoveExistingProducts成功。固定官方包/API摘要、431包及安装EXE/MSI3be7ea60…/NSIS014fae29…分别绑定核验。
+
+未启动桌面应用；安装目录data、自有兄弟custom-root和哨兵为seeded夹具，结果只证明安装器文件保留，不代替应用根绑定/普通权限/不可写/旧AppData迁移/显式清理或完整installer门禁。两artifact原件/原job实际checkout/安装日志、139项清单/verify-evidence通过。17:59:15本机native0、日常/旧隔离/TASK摘要与3c工具干净保持，未账户/VM/ACL改变或正式Mac交接，PR5终态说明读回仍草稿/未合并。见[升级默认卸载保留实测](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows固定候选升级卸载保留/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-INSTALLER-RETENTION/`。原失败ETW/根因、Macfailed、全部预算/周期/来源/环境依赖保持，不关闭或发布。
