@@ -54,3 +54,13 @@ Known Folder 调用为 `SHGetKnownFolderPath(flags=0, token=NULL)`，不使用 C
 证据 `.adg/evidence/OCX-0110-20261015-WIN-PROFILE-ADMISSION/`。10:31:32 日常 EXE、ca26 候选、旧隔离四文件、原 TASK 共七项摘要匹配，native=0；TASK 原 3878 bytes / SHA bc7965b4…保持。用户原删除不入提交。此工具不是 required_check 通过回执，不关闭、合并、签名、晋升或发布。
 
 本段 25 项原件/方法清单独立冻结，`verify-profile-admission.py` 通过；范围仅为工具合同、真实日常账户拒绝、PR 元数据及所列 CI 历史快照。后续 CI 终态/日志/制品另建证据目录，不能向这份冻结清单追加观测或重跑 PATCH/探针来覆盖原件。
+
+## 同两轮 CI 终态补充
+
+随后继续读取原 run，10:42 取得两轮 completed/success；各五个必需 job 成功、main-only build skipped，没有重派。另以 `.adg/evidence/OCX-0110-20261015-WIN-PROFILE-CI/` 独立保留两份完整原始日志 ZIP、CRC/条目检查、每轮四份后端 checkout/test 原始压缩日志及两份 Profile checkout/checks 日志，不修改上述历史快照。
+
+日志精确定位 `git log -1 --format=%H` 的实际输出：push checkout 为 493da806，PR checkout 为 `23e55c8def4fbf4bd18f0022b771e604a4be72be`；两个整 tree 均 `cd5f3dcf1a9240bea62aa2c6458b4353d367e0b8`。每轮 Mac Rust 900 passed / 0 failed / 6 ignored、Windows 627 passed / 0 failed / 7 ignored，各 35 组。两轮 Profile 合同日志均实际输出 31 项通过，方法摘要与精确源码的 Windows checkout 行尾字节一致；仍仅为纯合同，不是新测试账户的原生正例。
+
+新目录 31 项原件/方法清单及 `verify-ci.py` 核验通过，旧 25 项 verifier 继续通过。PR #5 验证段更新至本终态后独立读回仍 draft/open/unmerged/auto_merge=null，head/base 不变。工具与首次证据提交已分别推送 493da806 / 1b5f0cb6；此前 Git TLS 断连保留于工具输出，使用仅命令级 TLS/HTTP 兼容参数后推送与远端读回成功，未禁用证书校验或修改全局 Git 配置。
+
+新 CI 不执行实际新账户准入、bd2 失败时间窗录制或本机官方 0.1.9 配对；也未构建/准入新的宿主桌面候选。前述账户/Profile、安装环境、前台、完整门禁和原预算依赖均保持，不能由 CI 绿推定版本可发布。

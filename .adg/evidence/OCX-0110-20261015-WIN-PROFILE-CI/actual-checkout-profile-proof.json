@@ -1,0 +1,59 @@
+{
+  "atUtc": "2026-10-15T02:45:09.279633+00:00",
+  "source": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+  "prActualCheckout": "23e55c8def4fbf4bd18f0022b771e604a4be72be",
+  "wholeTreesEqual": true,
+  "tree": "cd5f3dcf1a9240bea62aa2c6458b4353d367e0b8",
+  "runs": [
+    {
+      "runId": 38670771363,
+      "actualCheckout": {
+        "backend": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+        "backend-windows": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+        "windows-smoke-evidence": "493da80675e6508e46e0fd83d86ee7216abf96fe"
+      },
+      "profileContractChecks": 31,
+      "runnerMethodSha256": "85d2c91b59883676adb10e546103bd70f24a7283f65159a31574689a0a6195f2",
+      "runnerMethodMatchesSourceWithCheckoutLineEndings": true,
+      "selectedOriginalLogs": [
+        {
+          "member": "windows-smoke-evidence/2_Run actions_checkout@v5.txt",
+          "savedAs": "ci-38670771363-profile-checkout.log.gz",
+          "bytes": 5472,
+          "sha256": "498700116f98c5a476678190b17556f3558274d743c5dc6300e14fe534c9b524"
+        },
+        {
+          "member": "windows-smoke-evidence/4_Verify isolated acceptance Profile admission.txt",
+          "savedAs": "ci-38670771363-profile-checks.log.gz",
+          "bytes": 12004,
+          "sha256": "e70b4e1149bee17fe9ff3a63c74cbaa2a1cb4ab64930f672d66700da69fe0e26"
+        }
+      ]
+    },
+    {
+      "runId": 38670774817,
+      "actualCheckout": {
+        "backend": "23e55c8def4fbf4bd18f0022b771e604a4be72be",
+        "backend-windows": "23e55c8def4fbf4bd18f0022b771e604a4be72be",
+        "windows-smoke-evidence": "23e55c8def4fbf4bd18f0022b771e604a4be72be"
+      },
+      "profileContractChecks": 31,
+      "runnerMethodSha256": "85d2c91b59883676adb10e546103bd70f24a7283f65159a31574689a0a6195f2",
+      "runnerMethodMatchesSourceWithCheckoutLineEndings": true,
+      "selectedOriginalLogs": [
+        {
+          "member": "windows-smoke-evidence/2_Run actions_checkout@v5.txt",
+          "savedAs": "ci-38670774817-profile-checkout.log.gz",
+          "bytes": 6355,
+          "sha256": "8a72d704f4bfaa117b180590f9ed0b77454564b61fa0d1839816ab40f587dc28"
+        },
+        {
+          "member": "windows-smoke-evidence/4_Verify isolated acceptance Profile admission.txt",
+          "savedAs": "ci-38670774817-profile-checks.log.gz",
+          "bytes": 12004,
+          "sha256": "d21c27a51cd3c97e6d1cfbb88ae0e05a374329283351811c0552e3eedf2bbd25"
+        }
+      ]
+    }
+  ]
+}
