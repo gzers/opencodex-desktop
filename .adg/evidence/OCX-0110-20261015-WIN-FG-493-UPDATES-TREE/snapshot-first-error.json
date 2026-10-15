@@ -1,0 +1,10 @@
+{
+  "errorType": "PermissionError",
+  "stage": "read-only snapshot before-manual-check",
+  "cause": "Initial reader enumerated held lock files rather than limiting snapshots to JSON state and payload.",
+  "partialDirectoryPreserved": "owned-state-before-manual-check",
+  "sourceDataChanged": false,
+  "productFailureClaimed": false,
+  "originalReader": "snapshot-owned-state.first-attempt.py",
+  "nextSnapshotUsesNewPhase": true
+}

@@ -1576,3 +1576,15 @@ artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP16
 10:59:54–56按493冻结defaults读取已认证beta Release API与公开beta/latest.json均404；只证明当前来源缺失，不作产品检查或beta6h/退避证据，不发布或改来源。日志curl与.NET读取失败和缺失原stderr边界保留，独立有界urllib取回同run原ZIP；无跨host凭据转发、证书放宽、覆盖失败或重跑。94项独立清单/verify-candidate通过，见[493精确Windows候选](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493精确Windows候选/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-493-CANDIDATE/`。
 
 11:10:40本机native0/日常EXE/旧隔离四摘要/TASK原字节保持，代码493干净；候选已就绪但后续原生仍需新人类前台窗口。独立普通账户/安装环境/beta有效来源、失败时间窗ETW/原查询失败、Mac性能failed/全部预算及剩余八门禁仍开放；不将ca26/e6历史原生重标为493，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 493 Windows 更新通道与树表前台子集
+
+用户新“开始前台验证”11:30:22.806起30分钟，截止12:00:22.806。精确493/MSI载荷SHA9ca21e30…新隔离根启动普通PID4092/creation11:32:12.6267866、实际token false/type3；全程Sky输入、CDP仅隔离profile。管理器详情→全部更新键盘往返及切换后Tab仍在弹窗有截图，AX只报告容器，不冒充完整焦点矩阵。stable真实手动检查11:36:29成功；11:36:36才关闭，故只证明完成终态跨路由复用，不能称关闭时仍在途或后台继续完成。当前0.1.10/无候选/安装禁用，不虚构说明、签名或下载进度。
+
+真实UI切beta后panel调度/stable缓存/通知字节保持；未据此推定绝对零请求。beta实际手动检查失败，manager-beta failures1与panel第二次手动失败落盘；回stable不再检查，完整schedule不变，失败/退避未被清除。持久通知只有runtime-not-found且未解除，不能称已测beta持久事件精确解除、panel在途事务或全部通道隔离。自动检查始终关闭，nextDue状态不当真实24h/6h或状态错误30分钟退避。
+
+真实UI生成备份bk_20261015034010_ebc5cff3，空态/默认root-year展开month收起、文件叶节点、Space/Enter/Home/End/Down、刷新展开保留及刷新按钮后Tab入根有证据；浅深两套全展开树截图和普通最大化client1728×981/还原原外框核验。未量化像素、后台刷新同叶焦点、复选框原型/全档位密度缩放，物理DPI按用户指示跳过，remoteSession1/nativeDpi192不计物理200%。
+
+首实例11:44:47持有句柄正常exit0，输入返回后捕获无PID不当产品崩溃；native0后11:45:11同根顺序重启PID77760/普通token false/type3，偏好/调度/stable缓存/备份五文件逐字节保持、浅色/stable/自动false持久。重启Sky两次FrameArrived timeout，按恢复规则重选唯一HWND2950032仍失败后停输入；只读token/HWND/日志不替代重启UI截图。已请用户正常关闭；11:51:32退出观察器300s截止exitObserved=false/exitCode=null，11:51:53独立确认同PID仍native1，没有强杀或新实例/Mac交接，不宣称已退出。
+
+初次快照误读持有lock产生PermissionError，空目录/原方法保留，改为JSON自有状态另phase；非产品失败。209项独立清单/45Sky状态/41输入/9快照84次摘要复核与verify-foreground通过，明确断言checkpoint native1及全部局限，见[493前台更新通道与树表](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493前台更新通道与树表/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/`。日常EXE/旧隔离四摘要/原TASK字节保持，代码493干净；后续退出另追加原件，不覆盖旧checkpoint。原失败ETW/查询失败/MacCPU-RSSfailed、完整八门禁/预算/真实周期/安装与Profile环境/FZ50依赖均不提升，TASKrevision2/in_progress/pending不改，不关闭、合并、签名、晋升或发布。
