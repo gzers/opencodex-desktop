@@ -1,0 +1,4 @@
+{
+  "title": "test(windows): 固定失败制品的构建后ETW诊断与Profile准入",
+  "body": "Windows诊断工具补充：固定原bd2失败制品与官方Node24.21.0，按自有进程代际保留线程、调度及文件I/O；加入只读验收Profile准入。新增post-build-runner-temp模式在临时Actions runner重建原应用正常构建阶段后，首次执行原失败EXE，使用runner TEMP盘的独占子目录并保留临时runner用户环境。每次只运行一次完整原库，保留默认并发、2秒query/4秒cleanup/5秒observer/8秒watchdog与120秒外层上限，不预热、不施加人工压力。未知等待字段保留解码数值，不先认定等待语义或根因。\n\n验证：当前head8e266aba，本机11项准入测试、101项采集器纯合同及脚本语法检查通过，未启动原库/Node/ETW。同SHA push38699864356与PR38699869579全部成功，各Windows627/Mac900通过；实际push检出8e266aba、PR检出02de6ed6，原日志归档。单次新条件诊断38702455024已成功终态，package跳过。原库530passed/0failed/4ignored、七query全部通过；16865条自有ETW/31进程开始及结束/6089687bytes，丢弃、内核丢失、解码错误均0，收尾通过。目标失败未复现、实际失败窗口ETW及根因仍缺，不自动再录一轮，也不撤销原失败。\n\n范围只含test/**与CI，apps/desktop完整tree与原bd2相同。历史bd2/e6失败、Mac性能超预算、全部版本预算和原生/安装/更新/周期门禁保持；仅草稿，不自动合并、签名或发布。"
+}

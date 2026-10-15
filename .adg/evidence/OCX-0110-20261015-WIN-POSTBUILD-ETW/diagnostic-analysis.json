@@ -1,0 +1,87 @@
+{
+  "source": "8e266abac78ff6d1b78cb05e680c7c5dbe1f0e56",
+  "runId": 38702455024,
+  "diagnosticPath": "post-build-runner-temp",
+  "originalLibraryRuns": 1,
+  "libraryExitCode": 0,
+  "tests": {
+    "passed": 530,
+    "failed": 0,
+    "ignored": 4
+  },
+  "queryFixtures": [
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+      "result": "ok"
+    },
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+      "result": "ok"
+    },
+    {
+      "name": "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+      "result": "ok"
+    },
+    {
+      "name": "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+      "result": "ok"
+    }
+  ],
+  "targetQueryFailureReproduced": false,
+  "actualFailingQueryExecutionWindowEtwObtained": false,
+  "rootCauseDetermined": false,
+  "historicalFailureCleared": false,
+  "processStarts": 31,
+  "processStops": 31,
+  "processRoles": {
+    "test": 1,
+    "node": 22,
+    "command-basename": 8
+  },
+  "eventKinds": {
+    "root-handle-image-query": 1,
+    "root-handle-binding": 1,
+    "process-start": 31,
+    "thread-start": 957,
+    "owned-image": 1874,
+    "thread-stop": 957,
+    "owned-thread-ready": 2090,
+    "owned-thread-scheduled-in": 3126,
+    "owned-thread-scheduled-out": 2865,
+    "owned-file-create": 2193,
+    "owned-file-operation-end": 2466,
+    "owned-file-read-write": 273,
+    "process-stop": 31
+  },
+  "eventBytes": 6089687,
+  "eventSha256": "b9a044718f8ab98d707ee3a2c056204f1c6a5a16091ca757ea3e7847bc95b1fe",
+  "rootPid": 6208,
+  "rootCreationUtc": "2026-10-15T08:04:51.4337703Z",
+  "rootToken": {
+    "elevated": true,
+    "elevationType": 1,
+    "pid": 6208
+  },
+  "logicalProcessors": 4,
+  "fixtureTemporaryDirectory": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodex-BD2-f27fdeaa19dc42f69ddfdf5670e2db69",
+  "captureAndCleanupVerified": true,
+  "versionSpecificWaitSemanticsVerified": false,
+  "rootSchedulingEventsOmitted": 237673,
+  "rootFileIoInitiationsOmitted": 303353,
+  "fullRootHotEventCoverage": false,
+  "exactHistoricalEnvironmentReproduced": false,
+  "performanceOrNativeAcceptanceClaimed": false,
+  "fullVersionGatePassed": false
+}
