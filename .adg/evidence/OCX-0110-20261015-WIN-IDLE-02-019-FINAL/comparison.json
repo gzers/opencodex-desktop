@@ -1,0 +1,60 @@
+{
+  "versions": {
+    "baseline019": {
+      "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "exeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+      "samples": 598,
+      "observedSpanSeconds": 600.5384537000001,
+      "foregroundLostSamples": 0,
+      "nativeInstanceViolations": 0,
+      "minimumFamilyMembers": 7,
+      "maximumFamilyMembers": 7,
+      "childDiscoveryReadFailures": 0,
+      "cpuSecondsDelta": 243.1875,
+      "singleLogicalProcessorPercent": 40.494908944079825,
+      "meanWorkingSetMiB": 544.7247400188127,
+      "startWorkingSetMiB": 528.0859375,
+      "endWorkingSetMiB": 553.3671875,
+      "peakWorkingSetMiB": 595.578125,
+      "validForRecordedForegroundIdleSubset": true,
+      "rawSha256": "04e1fa237bdb68a481a9d0f0eaca1317726af60cb8625942a4d64c19bdc14392"
+    },
+    "candidate0110": {
+      "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+      "exeSha256": "7383c275f58fed7e25678420a6d3f5c739f9b23d7373acc40fab1e7cd98db6d9",
+      "samples": 598,
+      "observedSpanSeconds": 600.5969226999999,
+      "foregroundLostSamples": 0,
+      "nativeInstanceViolations": 0,
+      "minimumFamilyMembers": 7,
+      "maximumFamilyMembers": 7,
+      "childDiscoveryReadFailures": 0,
+      "cpuSecondsDelta": 177.28125,
+      "singleLogicalProcessorPercent": 29.51750888150197,
+      "meanWorkingSetMiB": 583.0528323578595,
+      "startWorkingSetMiB": 573.4453125,
+      "endWorkingSetMiB": 593.625,
+      "peakWorkingSetMiB": 601.4296875,
+      "validForRecordedForegroundIdleSubset": true,
+      "rawSha256": "fd6730af4898fcce30d52bdf591d3f7d683c9a02fb0db07da412b3a8fc8c742c"
+    }
+  },
+  "cpuIncreasePercentagePoints": -10.977400062577853,
+  "meanWorkingSetIncreaseMiB": 38.32809233904686,
+  "endWorkingSetIncreaseMiB": 40.2578125,
+  "peakWorkingSetIncreaseMiB": 5.8515625,
+  "budgets": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "validPairForRecordedSubset": true,
+  "cpuBudgetPassed": true,
+  "meanRssBudgetPassed": false,
+  "candidateWasReattachedAfterInterruption": false,
+  "baselineWasReattachedAfterReadinessToolFailure": true,
+  "oldInterruptedSamplesUsed": false,
+  "sharedResidentPagesDeduplicated": false,
+  "shortLivedChildrenFullyCovered": false,
+  "fullPerformanceGatePassed": false,
+  "macHistoricalFailureCleared": false
+}

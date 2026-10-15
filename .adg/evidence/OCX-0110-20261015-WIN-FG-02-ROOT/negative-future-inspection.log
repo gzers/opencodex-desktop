@@ -1,0 +1,63 @@
+{
+  "atUtc": "2026-10-15T14:35:31.3973118+00:00",
+  "launch": "negative-future",
+  "phase": "negative-future-dialog",
+  "action": "inspect",
+  "x": 0,
+  "y": 0,
+  "keys": "",
+  "name": "",
+  "value": "",
+  "applicationUser": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 61708,
+    "creationTimeUtc": "2026-10-15T14:35:28.7255084Z",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-b\\opencodex-desktop.exe",
+    "elevated": false,
+    "elevationType": 3,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T14:35:30.4014959+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "hwnd": 6493266,
+  "bounds": {
+    "Left": 2618,
+    "Top": 948,
+    "Right": 3756,
+    "Bottom": 1224
+  },
+  "visible": true,
+  "foreground": true,
+  "backdropHresult": 0,
+  "backdropRaw": 0,
+  "applicationMenuAttached": false,
+  "screenshotSaved": true,
+  "ax": [
+    {
+      "name": "MainInstructionIcon",
+      "type": "ControlType.Image",
+      "bounds": "2651,1026,64,64",
+      "enabled": true
+    },
+    {
+      "name": "数据目录未能安全载入。请检查目录结构、访问权限和未完成的迁移后重启；本次未自动改用其他目录。",
+      "type": "ControlType.Text",
+      "bounds": "2735,1036,988,62",
+      "enabled": true
+    },
+    {
+      "name": "确定",
+      "type": "ControlType.Pane",
+      "bounds": "3593,1146,130,47",
+      "enabled": true
+    }
+  ],
+  "startupPointer": "{\"anchor\":\"C:\\\\Users\\\\15119\\\\.codex\\\\worktrees\\\\0110-windows-gates\\\\opencodex-desktop\\\\test\\\\runtime\\\\foreground-02-current-20261015\\\\install-a\\\\data\",\"schema\":2}",
+  "physicalDpiGateClaimed": false,
+  "cdpUsed": false
+}

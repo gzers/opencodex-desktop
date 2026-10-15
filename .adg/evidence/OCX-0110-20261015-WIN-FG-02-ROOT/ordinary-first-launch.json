@@ -1,0 +1,49 @@
+{
+  "atUtc": "2026-10-15T14:11:09.0342718+00:00",
+  "phase": "ordinary-first",
+  "mode": "ordinary",
+  "source": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\opencodex-desktop.exe",
+  "exeSha256": "7383c275f58fed7e25678420a6d3f5c739f9b23d7373acc40fab1e7cd98db6d9",
+  "pid": 79248,
+  "creationTimeUtc": "2026-10-15T14:11:08.9145809Z",
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 79248,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-15T14:11:08.9145809Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-15T14:11:08.9319096Z"
+  },
+  "applicationUser": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 79248,
+    "creationTimeUtc": "2026-10-15T14:11:08.9145809Z",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\opencodex-desktop.exe",
+    "elevated": false,
+    "elevationType": 3,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T14:11:09.0294731+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 76888,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-15T14:11:07.3905084Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-15T14:11:08.8927574Z"
+  },
+  "sandboxUsed": false,
+  "cdpUsed": false,
+  "environmentRootRedirected": false
+}

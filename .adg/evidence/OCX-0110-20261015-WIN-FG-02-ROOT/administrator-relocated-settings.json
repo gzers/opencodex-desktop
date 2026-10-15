@@ -1,0 +1,693 @@
+{
+  "atUtc": "2026-10-15T14:21:27.1307158+00:00",
+  "launch": "administrator-relocated",
+  "phase": "administrator-relocated-settings",
+  "action": "invoke",
+  "x": 0,
+  "y": 0,
+  "keys": "",
+  "name": "设置",
+  "value": "",
+  "applicationUser": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 52760,
+    "creationTimeUtc": "2026-10-15T14:21:19.5297029Z",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-b\\opencodex-desktop.exe",
+    "elevated": true,
+    "elevationType": 2,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T14:21:25.9356525+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "hwnd": 9767552,
+  "bounds": {
+    "Left": 2007,
+    "Top": 355,
+    "Right": 4393,
+    "Bottom": 1946
+  },
+  "visible": true,
+  "foreground": true,
+  "backdropHresult": 0,
+  "backdropRaw": 2,
+  "applicationMenuAttached": false,
+  "screenshotSaved": true,
+  "ax": [
+    {
+      "enabled": true,
+      "bounds": "2020,413,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,413,2360,1520",
+      "name": "OpenCodeX Desktop",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": false,
+      "bounds": "2020,413,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "OpenCodeX Desktop - Web 内容",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "Empty",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "Empty",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "OpenCodeX Desktop",
+      "type": "ControlType.Document"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,488,1520",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,450,80,80",
+      "name": "OpenCodeX logo",
+      "type": "ControlType.Image"
+    },
+    {
+      "enabled": true,
+      "bounds": "2148,451,320,44",
+      "name": "OpenCodeX-Desktop",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2148,496,179,30",
+      "name": "Desktop Manager",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,566,432,424",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,566,432,80",
+      "name": "概览",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,652,432,80",
+      "name": "面板",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,738,432,80",
+      "name": "拓展",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,824,432,80",
+      "name": "诊断",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2048,910,432,80",
+      "name": "设置",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2508,414,1872,1520",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,456,1762,124",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,456,812,72",
+      "name": "设置",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,540,812,37",
+      "name": "集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3798,458,188,64",
+      "name": "主题",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "3804,464,56,52",
+      "name": "浅色",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3864,464,56,52",
+      "name": "深色",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3924,464,56,52",
+      "name": "跟随系统",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "4054,474,72,32",
+      "name": "未发现",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4164,458,64,64",
+      "name": "刷新状态",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "4248,456,68,68",
+      "name": "2",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,648,1762,75",
+      "name": "",
+      "type": "ControlType.Tab"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,648,100,75",
+      "name": "通用",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2658,648,152,75",
+      "name": "安装配置",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2814,648,178,75",
+      "name": "数据与备份",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2996,648,152,75",
+      "name": "扩展管理",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3152,648,152,75",
+      "name": "配置迁移",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3308,648,213,75",
+      "name": "WebDAV 同步",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3525,648,178,75",
+      "name": "日志与通知",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3707,648,172,75",
+      "name": "CLI 控制面",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3882,648,153,75",
+      "name": "版本升级",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "4038,648,101,75",
+      "name": "关于",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,755,1762,1077",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,789,384,48",
+      "name": "桌面壳偏好",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,845,384,32",
+      "name": "管理器自有行为、面板承载与通知。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,937,112,37",
+      "name": "界面缩放",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,984,804,32",
+      "name": "外壳与官方面板使用同一缩放因子；支持 50%–200% 自定义，默认 100%。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3748,954,360,45",
+      "name": "界面缩放",
+      "type": "ControlType.Slider"
+    },
+    {
+      "enabled": true,
+      "bounds": "3748,1004,360,39",
+      "name": "界面缩放刻度",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "3736,1004,24,37",
+      "name": "50",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3850,1004,36,37",
+      "name": "100",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "3971,1004,34,37",
+      "name": "150",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "4091,1004,34,37",
+      "name": "200",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "4124,942,132,69",
+      "name": "界面缩放数值",
+      "type": "ControlType.Spinner"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1087,224,38",
+      "name": "启动时打开主界面",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1134,816,33",
+      "name": "默认打开；关闭后启动只保留托盘，不自动显示主窗口，也不自动启动代理。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4180,1105,76,45",
+      "name": "",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1238,168,38",
+      "name": "面板打开方式",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1285,614,33",
+      "name": "默认内嵌到 App 窗口；加载异常时提供浏览器兜底入口。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3956,1243,300,69",
+      "name": "面板打开方式",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1389,308,38",
+      "name": "关闭窗口后保持代理运行",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1436,864,33",
+      "name": "关闭窗口只隐藏桌面壳；从托盘退出会完全退出并可能中断由桌面壳托管的代理。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4180,1406,76,45",
+      "name": "",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1540,168,38",
+      "name": "启停结果通知",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1587,576,33",
+      "name": "通知启动、停止、重启和失败结果；不展示敏感配置。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4180,1557,76,45",
+      "name": "",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1690,168,38",
+      "name": "同步冲突提醒",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,1737,576,33",
+      "name": "检测到本地与远端冲突时暂停覆盖，并要求显式确认。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4180,1708,76,45",
+      "name": "",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,1863,1762,510",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,1897,576,49",
+      "name": "画质",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,1953,576,33",
+      "name": "背景光与视觉效果的渲染方式；按设备能力自动降级。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2045,112,38",
+      "name": "界面特效",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2092,1296,68",
+      "name": "高档为通知玻璃与动态光场；中档玻璃静态；低档统一实底、无光场。画质由所选档位决定，不跟随系统减少动态。即时生效并按偏好恢复。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3956,2068,300,69",
+      "name": "界面特效",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2231,140,38",
+      "name": "背景光渲染",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2278,1008,33",
+      "name": "WEBGL 用网格渐变＋颗粒着色器，过渡最平滑、色带最少；CSS 为纯极光兜底，不依赖 GPU。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3881,2236,375,69",
+      "name": "背景光渲染",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,2404,1762,625",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,2438,960,49",
+      "name": "网络",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,2494,960,33",
+      "name": "应用自更新、官方版本查询与托管安装的出站请求代理；不含凭据，不写入系统代理设置。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2586,112,38",
+      "name": "代理模式",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2633,779,33",
+      "name": "无代理直连；自动沿用系统代理设置；手动指定 HTTP 或 SOCKS5 代理。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3956,2591,300,69",
+      "name": "代理模式",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2736,112,38",
+      "name": "应用范围",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2783,1207,33",
+      "name": "应用自更新、官方版本查询与托管安装共用此代理；TLS 证书校验不可关闭。WebDAV 同步使用其端点自带代理。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4064,2760,192,33",
+      "name": "本版不含代理鉴权",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2887,112,38",
+      "name": "检查连接",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,2934,792,33",
+      "name": "用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4092,2890,164,75",
+      "name": "检查连接",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "2554,3060,1762,379",
+      "name": "",
+      "type": "ControlType.Group"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,3094,963,49",
+      "name": "官方共享配置",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2588,3150,963,33",
+      "name": "与官方 OpenCodex 使用同一配置源；模型、路由与提供方仍由官方面板或官方 CLI 管理。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,3242,362,38",
+      "name": "随 Codex 启动 OpenCodex ",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2993,3250,81,28",
+      "name": "官方共享",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,3293,525,33",
+      "name": "与官方面板同一配置；开关的读写都经官方 shim ",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3138,3298,169,25",
+      "name": "ocx codex-shim",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "3306,3293,337,33",
+      "name": "，管理器不旁路改写官方配置。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "2614,3343,682,33",
+      "name": "未解析到 ocx 可执行文件；请先在「安装配置」里指定运行来源。",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4085,3293,171,33",
+      "name": "官方 CLI 未就绪",
+      "type": "ControlType.Text"
+    },
+    {
+      "enabled": true,
+      "bounds": "4096,3470,220,75",
+      "name": "还原通用默认",
+      "type": "ControlType.Button"
+    },
+    {
+      "enabled": true,
+      "bounds": "Empty",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "Empty",
+      "name": "",
+      "type": "ControlType.Pane"
+    },
+    {
+      "enabled": true,
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "type": "ControlType.Pane"
+    }
+  ],
+  "startupPointer": "{\"schema\":1,\"anchor\":\"\\\\\\\\?\\\\C:\\\\Users\\\\15119\\\\.codex\\\\worktrees\\\\0110-windows-gates\\\\opencodex-desktop\\\\test\\\\runtime\\\\foreground-02-current-20261015\\\\install-a\\\\data\"}",
+  "physicalDpiGateClaimed": false,
+  "cdpUsed": false
+}

@@ -1,0 +1,597 @@
+{
+  "atUtc": "2026-10-15T14:23:53.5105895+00:00",
+  "launch": "ordinary-relocated",
+  "phase": "backup-page",
+  "action": "invoke",
+  "x": 0,
+  "y": 0,
+  "keys": "",
+  "name": "数据与备份",
+  "value": "",
+  "applicationUser": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 74760,
+    "creationTimeUtc": "2026-10-15T14:22:32.3397575Z",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-b\\opencodex-desktop.exe",
+    "elevated": false,
+    "elevationType": 3,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T14:23:52.3913042+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "hwnd": 24712216,
+  "bounds": {
+    "Left": 2007,
+    "Top": 355,
+    "Right": 4393,
+    "Bottom": 1946
+  },
+  "visible": true,
+  "foreground": true,
+  "backdropHresult": 0,
+  "backdropRaw": 2,
+  "applicationMenuAttached": false,
+  "screenshotSaved": true,
+  "ax": [
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,413,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,413,2360,1520",
+      "name": "OpenCodeX Desktop",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,413,2360,1520",
+      "name": "",
+      "enabled": false
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "OpenCodeX Desktop - Web 内容",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "Empty",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "Empty",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Document",
+      "bounds": "2020,414,2360,1520",
+      "name": "OpenCodeX Desktop",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2020,414,488,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Image",
+      "bounds": "2048,450,80,80",
+      "name": "OpenCodeX logo",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2148,451,320,44",
+      "name": "OpenCodeX-Desktop",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2148,496,179,30",
+      "name": "Desktop Manager",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2048,566,432,424",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2048,566,432,80",
+      "name": "概览",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2048,652,432,80",
+      "name": "面板",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2048,738,432,80",
+      "name": "拓展",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2048,824,432,80",
+      "name": "诊断",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2048,910,432,80",
+      "name": "设置",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2508,414,1872,1520",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2554,456,1762,124",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2554,456,812,72",
+      "name": "设置",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2554,540,812,37",
+      "name": "集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "3798,458,188,64",
+      "name": "主题",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3804,464,56,52",
+      "name": "浅色",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3864,464,56,52",
+      "name": "深色",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3924,464,56,52",
+      "name": "跟随系统",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "4054,474,72,32",
+      "name": "未发现",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4164,458,64,64",
+      "name": "刷新状态",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4248,456,68,68",
+      "name": "2",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Tab",
+      "bounds": "2554,648,1762,75",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2554,648,100,75",
+      "name": "通用",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2658,648,152,75",
+      "name": "安装配置",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2814,648,178,75",
+      "name": "数据与备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2996,648,152,75",
+      "name": "扩展管理",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3152,648,152,75",
+      "name": "配置迁移",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3308,648,213,75",
+      "name": "WebDAV 同步",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3525,648,178,75",
+      "name": "日志与通知",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3707,648,172,75",
+      "name": "CLI 控制面",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3882,648,153,75",
+      "name": "版本升级",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4038,648,101,75",
+      "name": "关于",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2554,755,1762,1715",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,789,408,48",
+      "name": "数据与备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,845,408,32",
+      "name": "备份边界基于安装配置里的数据目录。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4062,797,220,74",
+      "name": "打开安装配置",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,937,140,37",
+      "name": "升级前备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,984,816,32",
+      "name": "面板更新前必须备份，失败时阻断安装；管理器备份选项在更新详情中确认。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "4158,962,80,28",
+      "name": "面板必需",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,1087,196,38",
+      "name": "导入前自动备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,1134,552,33",
+      "name": "导入校验通过后先备份当前配置，再进入最终确认。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4180,1105,76,45",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,1238,252,38",
+      "name": "同步覆盖前自动备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,1285,480,33",
+      "name": "任何覆盖动作都保留被覆盖侧的可恢复历史。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4180,1255,76,45",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,1389,196,38",
+      "name": "备份完整性校验",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2614,1436,833,33",
+      "name": "生成备份后写入 SHA-256 校验摘要，恢复前先校验；算法在备份契约中固定。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "4160,1412,96,33",
+      "name": "SHA-256",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2588,1496,1694,916",
+      "name": "管理器偏好备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,1523,816,33",
+      "name": "备份管理器偏好与清单；面板完整配置、会话及登录态由对应事务另行管理。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4118,1502,164,75",
+      "name": "生成备份",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Group",
+      "bounds": "2588,1622,1694,342",
+      "name": "备份文件与目录",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,1640,182,40",
+      "name": "备份文件与目录",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4174,1622,108,75",
+      "name": "刷新",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,1718,1606,30",
+      "name": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\data\\backups",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Table",
+      "bounds": "2590,1775,1690,187",
+      "name": "备份文件与目录",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "2590,1775,1690,78",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "2590,1775,534,78",
+      "name": "名称",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "3123,1775,790,78",
+      "name": "用途",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "3912,1775,368,78",
+      "name": "操作",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "2590,1852,1690,110",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "2590,1852,534,110",
+      "name": "backups",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "2762,1885,89,45",
+      "name": "backups",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "3123,1852,790,110",
+      "name": "按 UTC 年月与事务分类保存备份。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.DataItem",
+      "bounds": "3912,1852,368,110",
+      "name": "打开目录 backups",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3936,1873,149,69",
+      "name": "打开目录 backups",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,2035,1694,40",
+      "name": "保留与清理",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,2101,1047,33",
+      "name": "按用途分别保留最近 10 份或 30 天内的备份；满足任一条件即保留。固定项与受保护项额外保留。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,2178,112,38",
+      "name": "清理方式",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.ComboBox",
+      "bounds": "2716,2163,324,69",
+      "name": "清理方式",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3056,2160,164,75",
+      "name": "保存策略",
+      "enabled": false
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "3236,2160,164,75",
+      "name": "预览清理",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,2292,104,40",
+      "name": "备份记录",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Button",
+      "bounds": "4118,2274,164,75",
+      "name": "刷新记录",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Text",
+      "bounds": "2588,2375,528,33",
+      "name": "尚无备份。生成一份后可在这里固定保留或恢复。",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "Empty",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "Empty",
+      "name": "",
+      "enabled": true
+    },
+    {
+      "type": "ControlType.Pane",
+      "bounds": "2020,414,2360,1520",
+      "name": "",
+      "enabled": true
+    }
+  ],
+  "startupPointer": "{\"schema\":1,\"anchor\":\"\\\\\\\\?\\\\C:\\\\Users\\\\15119\\\\.codex\\\\worktrees\\\\0110-windows-gates\\\\opencodex-desktop\\\\test\\\\runtime\\\\foreground-02-current-20261015\\\\install-a\\\\data\"}",
+  "physicalDpiGateClaimed": false,
+  "cdpUsed": false
+}

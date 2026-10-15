@@ -1,0 +1,69 @@
+{
+  "atUtc": "2026-10-15T14:28:58.0974337+00:00",
+  "launch": "ordinary-unwritable-select",
+  "phase": "unwritable-select-dialog",
+  "action": "inspect",
+  "x": 0,
+  "y": 0,
+  "keys": "",
+  "name": "",
+  "value": "",
+  "applicationUser": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 50600,
+    "creationTimeUtc": "2026-10-15T14:28:55.4389436Z",
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-c\\opencodex-desktop.exe",
+    "elevated": false,
+    "elevationType": 3,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-15T14:28:57.1063950+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "hwnd": 14417964,
+  "bounds": {
+    "Left": 2618,
+    "Top": 948,
+    "Right": 3756,
+    "Bottom": 1224
+  },
+  "visible": true,
+  "foreground": true,
+  "backdropHresult": 0,
+  "backdropRaw": 0,
+  "applicationMenuAttached": false,
+  "screenshotSaved": true,
+  "ax": [
+    {
+      "bounds": "2651,1026,64,64",
+      "name": "MainInstructionIcon",
+      "enabled": true,
+      "type": "ControlType.Image"
+    },
+    {
+      "bounds": "2735,1036,988,62",
+      "name": "安装目录下的数据目录无法写入。请选择一个可写的空目录或已有合法管理器数据目录。选择验证通过后将保存并重启；取消将退出，不自动改用 AppData，也不移动或删除原目录。",
+      "enabled": true,
+      "type": "ControlType.Text"
+    },
+    {
+      "bounds": "3413,1146,168,47",
+      "name": "选择目录",
+      "enabled": true,
+      "type": "ControlType.Pane"
+    },
+    {
+      "bounds": "3593,1146,130,47",
+      "name": "退出",
+      "enabled": true,
+      "type": "ControlType.Pane"
+    }
+  ],
+  "startupPointer": null,
+  "physicalDpiGateClaimed": false,
+  "cdpUsed": false
+}
