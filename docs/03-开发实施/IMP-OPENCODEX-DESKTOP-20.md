@@ -1588,3 +1588,5 @@ artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP16
 首实例11:44:47持有句柄正常exit0，输入返回后捕获无PID不当产品崩溃；native0后11:45:11同根顺序重启PID77760/普通token false/type3，偏好/调度/stable缓存/备份五文件逐字节保持、浅色/stable/自动false持久。重启Sky两次FrameArrived timeout，按恢复规则重选唯一HWND2950032仍失败后停输入；只读token/HWND/日志不替代重启UI截图。已请用户正常关闭；11:51:32退出观察器300s截止exitObserved=false/exitCode=null，11:51:53独立确认同PID仍native1，没有强杀或新实例/Mac交接，不宣称已退出。
 
 初次快照误读持有lock产生PermissionError，空目录/原方法保留，改为JSON自有状态另phase；非产品失败。209项独立清单/45Sky状态/41输入/9快照84次摘要复核与verify-foreground通过，明确断言checkpoint native1及全部局限，见[493前台更新通道与树表](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493前台更新通道与树表/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/`。日常EXE/旧隔离四摘要/原TASK字节保持，代码493干净；后续退出另追加原件，不覆盖旧checkpoint。原失败ETW/查询失败/MacCPU-RSSfailed、完整八门禁/预算/真实周期/安装与Profile环境/FZ50依赖均不提升，TASKrevision2/in_progress/pending不改，不关闭、合并、签名、晋升或发布。
+
+提交后索引全字节核对发现basename排除输出名使九份嵌套config-migrations/manifest.json未直接列入旧209项；它们均已提交并由snapshot摘要复核，原件无损。旧清单/方法/结果保持，另增完整222项清单，仅排除自身两个根输出，含旧清单与九份嵌套文件；verify-complete-archive全字节及隔离旧文件集回放通过，未执行产品/新UI。此为归档覆盖方法补强，不改变原checkpoint native1/重启未观察退出或完整门禁结果。

@@ -73,6 +73,14 @@ manager 的 24h next_due、panel 第二次失败约 30min next_due 都只作真�
 
 归档只表达此普通 UI 子集与采集限制，不将检查通过填入原 TASK.required_checks。11:51:53 日常 EXE SHA43e06bc3…、旧隔离四摘要、TASK原SHA bc7965b4…及代码493干净均保持，详见 `foreground-postcheck.json`；该检查点时刻仍 native=1。
 
+随后对 Git 索引逐文件核对发现顶层清单按 basename 排除 `manifest.json`，使九份快照内的配置迁移同名清单没有直接列在 209 项中。这九份真实文件已经复制、提交，并在各自 snapshot 的 84 次摘要核验中检查；并非遗失或字节未核验。保留原始清单、方法和结果，新增 `archive-complete-manifest.json` / `archive-complete-verification.json`，仅排除自身两个根输出路径，直接覆盖 222 项，包括旧清单/结果及全部九个嵌套文件。
+
+`verify-complete-archive.py` 复核全部原字节，并在限定自有临时目录中按旧文件集执行旧 verifier；失败读取留下的空目录按说明重建，旧原件不改。临时目录在清理前核验仍位于任务 runtime 内，未运行产品或变更真实数据。以后使用此完整 verifier 复核，原 verifier 保留为历史固定文件集的方法，不直接向其文件集追加新观测：
+
+```powershell
+python -X utf8 .adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/verify-complete-archive.py
+```
+
 原始 bd2/e6 查询失败及失败时间窗 ETW 缺口、Mac CPU/RSS 超预算、全部原性能样本数和阈值继续开放。管理员/托盘/Snap/物理 DPI、默认安装 data / 自定义根及升级卸载保留、真实更新候选/notes/进度/签名/重启、完整树表和事件通道、真实 30min 退避/周期/请求计数、官方 0.1.9 同机配对及 Mac 交接仍未完成。独立测试账户/安装环境和有效 beta 来源依赖保持。
 
 不合并、关闭、签名、晋升或发布，原 TASK revision2 / in_progress / pending、3878 bytes / SHA bc7965b4…保持。后续需要新的可用画面/用户操作证据后才能恢复输入，既有 12:00:22 窗口到期不自动延长。
