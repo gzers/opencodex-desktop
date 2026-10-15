@@ -1,0 +1,105 @@
+{
+  "atUtc": "2026-10-15T11:05:17.647947+00:00",
+  "source": "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9",
+  "before": "3c51367f1be89abf66f69805d29b2a660a570a2c",
+  "applicationTree": "71ef722cb0ac956f46c69cb1487a2e5ed9abb5c6",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/errors/mod.rs",
+      "gitBlob": "64a08cca2b2455f8e0e2e1cb7177860ee3be99e2",
+      "bytes": 5537,
+      "sha256": "c20e2448f8d18aa39929f830e00ad0a91864917a4847f117345a73c1c086e9ad"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "gitBlob": "f3d8ed195559c5b9d418eed5818979c061edd5d8",
+      "bytes": 840,
+      "sha256": "670b7e6282334d8b6584b4556b7b998799814536572f7c31afa76aa9aaaf893e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "gitBlob": "2466897363336720bf839df6808427c264a592c5",
+      "bytes": 35725,
+      "sha256": "eebd560103abda1592293e5f9227c9a8370b0dc69e05554085a6728a930c7ef8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "gitBlob": "2dea496449799c73784402981afa0b052ad5f865",
+      "bytes": 43181,
+      "sha256": "cc6062d048d4bc70cbb19188d15f4393b734d69f61b6673a048c342dd962ae9d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/bootstrap.rs",
+      "gitBlob": "73ce15d06676d17b0f554fc2f01e745c6cf0d151",
+      "bytes": 12384,
+      "sha256": "b089b4d0dbf5abc1d2a7a8c6f6e597a29f98933239b6799eb51ac8f74338fc4f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/instance/mod.rs",
+      "gitBlob": "61341ccbaecb9a22d4f92929787666c8c4a95c61",
+      "bytes": 6417,
+      "sha256": "9a6da6821d107992d4d8a1380e5af77dab71c12db95c0c08109188f3bb5e5c59"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/process/orchestration.rs",
+      "gitBlob": "2a9f21f7071f89ae37d32726c2b8963ff62af86a",
+      "bytes": 14291,
+      "sha256": "4e3f7fb472fd0f481d663ca981bd1c7e1c5f4e4e713284aea0d67ae1bf6e8242"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/write/mod.rs",
+      "gitBlob": "5f68b9d20dff9ce3dd9f1b52328faa602afff889",
+      "bytes": 22730,
+      "sha256": "20c7f9139ee40d73640294126879dfd7fdc420843a9c23d7356ed655209c25f7"
+    },
+    {
+      "path": "test/smoke/windows-etw-ci-admit.py",
+      "gitBlob": "8be2e5b304e0e223dcd55088bd32b04f16b08984",
+      "bytes": 14809,
+      "sha256": "9f8e41009ecad276cb49d1f1e01572d28b5c23625208ecb030562bfd6d019615"
+    },
+    {
+      "path": "test/test_windows_etw_ci.py",
+      "gitBlob": "5d19b4c8e74ccf5a1b2d10df3e507d92c126ea89",
+      "bytes": 8143,
+      "sha256": "b9e38632bedcc8afe9e2b1dfa5e5746020512e7db1990fa3fd168f087e02c8d3"
+    }
+  ],
+  "unchangedQueryFiles": [
+    "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+    "apps/desktop/tauri/src/modules/about/remote.rs",
+    "apps/desktop/tauri/src/modules/process/mod.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs"
+  ],
+  "sharedBlobs": {
+    "AGENTS.md": {
+      "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9": "aa0e29311f2bdebba09e76139aeded53c3be6a70",
+      "origin/main": "aa0e29311f2bdebba09e76139aeded53c3be6a70",
+      "origin/docs/governance-main": "aa0e29311f2bdebba09e76139aeded53c3be6a70"
+    },
+    "README.md": {
+      "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9": "18b41a067ead1eda36671076158d9c3d8db7a245",
+      "origin/main": "18b41a067ead1eda36671076158d9c3d8db7a245",
+      "origin/docs/governance-main": "18b41a067ead1eda36671076158d9c3d8db7a245"
+    },
+    "README.en.md": {
+      "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9": "845eba94e1e05c80accfccb095a1add397608227",
+      "origin/main": "845eba94e1e05c80accfccb095a1add397608227",
+      "origin/docs/governance-main": "845eba94e1e05c80accfccb095a1add397608227"
+    },
+    "LICENSE": {
+      "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9": "d010072a2f8e579962ad1dccaf76ffbeeb16bf2b",
+      "origin/main": "d010072a2f8e579962ad1dccaf76ffbeeb16bf2b",
+      "origin/docs/governance-main": "d010072a2f8e579962ad1dccaf76ffbeeb16bf2b"
+    },
+    ".gitignore": {
+      "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9": "76b4ec60de439cf87ed2307ec77f9e78808dd805",
+      "origin/main": "76b4ec60de439cf87ed2307ec77f9e78808dd805",
+      "origin/docs/governance-main": "76b4ec60de439cf87ed2307ec77f9e78808dd805"
+    }
+  },
+  "scope": "Production recovery and diagnostic admission; no native acceptance claimed",
+  "historicalFailureCleared": false,
+  "fullVersionGatePassed": false
+}

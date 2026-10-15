@@ -1,0 +1,101 @@
+{
+  "atUtc": "2026-10-15T11:20:26.087025+00:00",
+  "source": "020e668c4b9de5859e1137c08769af8c6be75281",
+  "runId": 38725991590,
+  "job": {
+    "id": 116391863520,
+    "run_id": 38725991590,
+    "workflow_name": "CI",
+    "head_branch": "feature/0.1.10-windows-query-etw",
+    "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+    "run_attempt": 1,
+    "node_id": "CR_kwDOUZxf888AAAAbGX7k4A",
+    "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+    "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391863520",
+    "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116391863520",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-10-15T11:15:04Z",
+    "started_at": "2026-10-15T11:15:12Z",
+    "completed_at": "2026-10-15T11:17:25Z",
+    "name": "backend",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-10-15T11:15:13Z",
+        "completed_at": "2026-10-15T11:15:14Z"
+      },
+      {
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-10-15T11:15:14Z",
+        "completed_at": "2026-10-15T11:15:16Z"
+      },
+      {
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-10-15T11:15:16Z",
+        "completed_at": "2026-10-15T11:15:25Z"
+      },
+      {
+        "name": "Run cargo fmt --all -- --check",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-10-15T11:15:25Z",
+        "completed_at": "2026-10-15T11:15:26Z"
+      },
+      {
+        "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 5,
+        "started_at": "2026-10-15T11:15:26Z",
+        "completed_at": "2026-10-15T11:17:21Z"
+      },
+      {
+        "name": "Run cargo test --locked --workspace --features integration-test",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 6,
+        "started_at": "2026-10-15T11:17:21Z",
+        "completed_at": "2026-10-15T11:17:21Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 12,
+        "started_at": "2026-10-15T11:17:21Z",
+        "completed_at": "2026-10-15T11:17:22Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13,
+        "started_at": "2026-10-15T11:17:22Z",
+        "completed_at": "2026-10-15T11:17:22Z"
+      }
+    ],
+    "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391863520",
+    "labels": [
+      "macos-14"
+    ],
+    "runner_id": 1000001135,
+    "runner_name": "GitHub Actions 1000001135",
+    "runner_group_id": 0,
+    "runner_group_name": "GitHub Actions"
+  },
+  "log": {
+    "bytes": 78817,
+    "sha256": "3e18248fa6373aee2e866ecf1959a6cc2447f67b6193f935eea179d983c530b7"
+  }
+}

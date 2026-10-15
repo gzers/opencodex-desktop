@@ -1,0 +1,8 @@
+{
+  "atUtc": "2026-10-15T10:52:06.9701786+00:00",
+  "source": "bc14165ceb91cb084361e8dce23b10d381330e1a",
+  "command": "python -B -m unittest discover -s test -p test_windows_etw_ci.py -v",
+  "exitCode": 0,
+  "testsPassed": 13,
+  "scope": "Offline ETW admission only; no Rust compiler or native application run locally"
+}

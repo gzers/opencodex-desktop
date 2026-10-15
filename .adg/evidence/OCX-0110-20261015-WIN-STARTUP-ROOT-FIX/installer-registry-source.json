@@ -1,0 +1,72 @@
+{
+  "url": "https://raw.githubusercontent.com/tauri-apps/tauri/tauri-cli-v2.11.4/crates/tauri-bundler/src/bundle/windows/nsis/installer.nsi",
+  "bytes": 32007,
+  "sha256": "20f4ecc730defb71f1342eaeaec4021df13be3d843abba0effe88ea5835fa079",
+  "matches": [
+    {
+      "line": 68,
+      "text": "!define MANUPRODUCTKEY \"${MANUKEY}\\${PRODUCTNAME}\""
+    },
+    {
+      "line": 122,
+      "text": "!define MULTIUSER_INSTALLMODE_DEFAULT_REGISTRY_KEY \"${UNINSTKEY}\""
+    },
+    {
+      "line": 164,
+      "text": "!define MUI_LANGDLL_REGISTRY_KEY \"${MANUPRODUCTKEY}\""
+    },
+    {
+      "line": 355,
+      "text": "ReadRegStr $4 SHCTX \"${MANUPRODUCTKEY}\" \"\""
+    },
+    {
+      "line": 682,
+      "text": "WriteRegStr SHCTX \"${MANUPRODUCTKEY}\" \"\" $INSTDIR"
+    },
+    {
+      "line": 809,
+      "text": "DeleteRegKey SHCTX \"Software\\Classes\\\\{{protocol}}\""
+    },
+    {
+      "line": 853,
+      "text": "DeleteRegKey SHCTX \"${UNINSTKEY}\""
+    },
+    {
+      "line": 855,
+      "text": "DeleteRegKey HKLM \"${UNINSTKEY}\""
+    },
+    {
+      "line": 857,
+      "text": "DeleteRegKey HKCU \"${UNINSTKEY}\""
+    },
+    {
+      "line": 865,
+      "text": "DeleteRegValue HKCU \"Software\\Microsoft\\Windows\\CurrentVersion\\Run\" \"${PRODUCTNAME}\""
+    },
+    {
+      "line": 873,
+      "text": "DeleteRegKey SHCTX \"${MANUPRODUCTKEY}\""
+    },
+    {
+      "line": 874,
+      "text": "DeleteRegKey /ifempty SHCTX \"${MANUKEY}\""
+    },
+    {
+      "line": 877,
+      "text": "DeleteRegValue HKCU \"${MANUPRODUCTKEY}\" \"Installer Language\""
+    },
+    {
+      "line": 878,
+      "text": "DeleteRegKey /ifempty HKCU \"${MANUPRODUCTKEY}\""
+    },
+    {
+      "line": 879,
+      "text": "DeleteRegKey /ifempty HKCU \"${MANUKEY}\""
+    },
+    {
+      "line": 898,
+      "text": "ReadRegStr $4 SHCTX \"${MANUPRODUCTKEY}\" \"\""
+    }
+  ],
+  "nativeRetentionTest": false
+}

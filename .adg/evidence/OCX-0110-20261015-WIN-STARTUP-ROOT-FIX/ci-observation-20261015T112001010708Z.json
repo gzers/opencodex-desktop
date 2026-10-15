@@ -1,0 +1,1668 @@
+{
+  "atUtc": "2026-10-15T11:20:01.010708+00:00",
+  "source": "020e668c4b9de5859e1137c08769af8c6be75281",
+  "readOnly": true,
+  "runs": [
+    {
+      "run": {
+        "id": 38726001178,
+        "name": "CI",
+        "node_id": "WFR_kwLOUZxf888AAAAJBD_iGg",
+        "head_branch": "feature/0.1.10-windows-query-etw",
+        "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+        "path": ".github/workflows/ci.yml",
+        "display_title": "fix(windows): \u663e\u5f0f\u6062\u590d\u4e0d\u53ef\u5199\u542f\u52a8\u6839\u5e76\u4fdd\u7559\u9996\u6b21\u56de\u5f52\u53d6\u8bc1",
+        "run_number": 178,
+        "event": "pull_request",
+        "status": "completed",
+        "conclusion": "failure",
+        "workflow_id": 373713239,
+        "check_suite_id": 104941342394,
+        "check_suite_node_id": "CS_kwDOUZxf888AAAAYbv3Oug",
+        "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+        "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178",
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/pulls/5",
+            "id": 4857117437,
+            "number": 5,
+            "head": {
+              "ref": "feature/0.1.10-windows-query-etw",
+              "sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+              "repo": {
+                "id": 1369202675,
+                "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+                "name": "opencodex-desktop"
+              }
+            },
+            "base": {
+              "ref": "feature/0.1.10-integration-candidate",
+              "sha": "bd2f6eb10d58115235e35d575507bb69f44666da",
+              "repo": {
+                "id": 1369202675,
+                "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+                "name": "opencodex-desktop"
+              }
+            }
+          }
+        ],
+        "created_at": "2026-10-15T11:15:08Z",
+        "updated_at": "2026-10-15T11:19:24Z",
+        "actor": {
+          "login": "gzers",
+          "id": 22311504,
+          "node_id": "MDQ6VXNlcjIyMzExNTA0",
+          "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/gzers",
+          "html_url": "https://github.com/gzers",
+          "followers_url": "https://api.github.com/users/gzers/followers",
+          "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+          "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+          "organizations_url": "https://api.github.com/users/gzers/orgs",
+          "repos_url": "https://api.github.com/users/gzers/repos",
+          "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/gzers/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "run_attempt": 1,
+        "referenced_workflows": [],
+        "run_started_at": "2026-10-15T11:15:08Z",
+        "triggering_actor": {
+          "login": "gzers",
+          "id": 22311504,
+          "node_id": "MDQ6VXNlcjIyMzExNTA0",
+          "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/gzers",
+          "html_url": "https://github.com/gzers",
+          "followers_url": "https://api.github.com/users/gzers/followers",
+          "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+          "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+          "organizations_url": "https://api.github.com/users/gzers/orgs",
+          "repos_url": "https://api.github.com/users/gzers/repos",
+          "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/gzers/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "jobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178/jobs",
+        "logs_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178/logs",
+        "check_suite_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-suites/104941342394",
+        "artifacts_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178/artifacts",
+        "cancel_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178/cancel",
+        "rerun_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178/rerun",
+        "previous_attempt_url": null,
+        "workflow_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/workflows/373713239",
+        "head_commit": {
+          "id": "020e668c4b9de5859e1137c08769af8c6be75281",
+          "tree_id": "196720991c6935aec09f837b8afb27e6ff8e814f",
+          "message": "\u6d4b\u8bd5\uff1a\u6279\u91cf\u51c6\u5907\u5ba1\u8ba1\u4fdd\u7559\u5939\u5177\u5e76\u4fdd\u7559\u771f\u5b9e\u6301\u4e45\u8ffd\u52a0\u4e0e\u5168\u90e8\u65ad\u8a00",
+          "timestamp": "2026-10-15T11:14:58Z",
+          "author": {
+            "name": "Codex",
+            "email": "codex@local"
+          },
+          "committer": {
+            "name": "Codex",
+            "email": "codex@local"
+          }
+        },
+        "repository": {
+          "id": 1369202675,
+          "node_id": "R_kgDOUZxf8w",
+          "name": "opencodex-desktop",
+          "full_name": "gzers/opencodex-desktop",
+          "private": false,
+          "owner": {
+            "login": "gzers",
+            "id": 22311504,
+            "node_id": "MDQ6VXNlcjIyMzExNTA0",
+            "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/gzers",
+            "html_url": "https://github.com/gzers",
+            "followers_url": "https://api.github.com/users/gzers/followers",
+            "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+            "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+            "organizations_url": "https://api.github.com/users/gzers/orgs",
+            "repos_url": "https://api.github.com/users/gzers/repos",
+            "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/gzers/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/gzers/opencodex-desktop",
+          "description": "\u9762\u5411 OpenCodex \u7684\u72ec\u7acb\u684c\u9762\u7ba1\u7406\u5668\uff1a\u56fe\u5f62\u5316\u53d1\u73b0\u3001\u542f\u505c\u6258\u7ba1\u3001\u72b6\u6001\u89c2\u6d4b\u3001\u914d\u7f6e\u8fc1\u79fb\u3001WebDAV \u540c\u6b65\u4e0e Skills / MCP \u6269\u5c55\u7ba1\u7406\u3002",
+          "fork": false,
+          "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+          "forks_url": "https://api.github.com/repos/gzers/opencodex-desktop/forks",
+          "keys_url": "https://api.github.com/repos/gzers/opencodex-desktop/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/gzers/opencodex-desktop/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/gzers/opencodex-desktop/teams",
+          "hooks_url": "https://api.github.com/repos/gzers/opencodex-desktop/hooks",
+          "issue_events_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/gzers/opencodex-desktop/events",
+          "assignees_url": "https://api.github.com/repos/gzers/opencodex-desktop/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/gzers/opencodex-desktop/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/tags",
+          "blobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/gzers/opencodex-desktop/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/gzers/opencodex-desktop/languages",
+          "stargazers_url": "https://api.github.com/repos/gzers/opencodex-desktop/stargazers",
+          "contributors_url": "https://api.github.com/repos/gzers/opencodex-desktop/contributors",
+          "subscribers_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscribers",
+          "subscription_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscription",
+          "commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/gzers/opencodex-desktop/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/gzers/opencodex-desktop/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/gzers/opencodex-desktop/merges",
+          "archive_url": "https://api.github.com/repos/gzers/opencodex-desktop/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/gzers/opencodex-desktop/downloads",
+          "issues_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/gzers/opencodex-desktop/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/gzers/opencodex-desktop/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/gzers/opencodex-desktop/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/gzers/opencodex-desktop/labels{/name}",
+          "releases_url": "https://api.github.com/repos/gzers/opencodex-desktop/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/gzers/opencodex-desktop/deployments"
+        },
+        "head_repository": {
+          "id": 1369202675,
+          "node_id": "R_kgDOUZxf8w",
+          "name": "opencodex-desktop",
+          "full_name": "gzers/opencodex-desktop",
+          "private": false,
+          "owner": {
+            "login": "gzers",
+            "id": 22311504,
+            "node_id": "MDQ6VXNlcjIyMzExNTA0",
+            "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/gzers",
+            "html_url": "https://github.com/gzers",
+            "followers_url": "https://api.github.com/users/gzers/followers",
+            "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+            "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+            "organizations_url": "https://api.github.com/users/gzers/orgs",
+            "repos_url": "https://api.github.com/users/gzers/repos",
+            "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/gzers/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/gzers/opencodex-desktop",
+          "description": "\u9762\u5411 OpenCodex \u7684\u72ec\u7acb\u684c\u9762\u7ba1\u7406\u5668\uff1a\u56fe\u5f62\u5316\u53d1\u73b0\u3001\u542f\u505c\u6258\u7ba1\u3001\u72b6\u6001\u89c2\u6d4b\u3001\u914d\u7f6e\u8fc1\u79fb\u3001WebDAV \u540c\u6b65\u4e0e Skills / MCP \u6269\u5c55\u7ba1\u7406\u3002",
+          "fork": false,
+          "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+          "forks_url": "https://api.github.com/repos/gzers/opencodex-desktop/forks",
+          "keys_url": "https://api.github.com/repos/gzers/opencodex-desktop/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/gzers/opencodex-desktop/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/gzers/opencodex-desktop/teams",
+          "hooks_url": "https://api.github.com/repos/gzers/opencodex-desktop/hooks",
+          "issue_events_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/gzers/opencodex-desktop/events",
+          "assignees_url": "https://api.github.com/repos/gzers/opencodex-desktop/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/gzers/opencodex-desktop/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/tags",
+          "blobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/gzers/opencodex-desktop/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/gzers/opencodex-desktop/languages",
+          "stargazers_url": "https://api.github.com/repos/gzers/opencodex-desktop/stargazers",
+          "contributors_url": "https://api.github.com/repos/gzers/opencodex-desktop/contributors",
+          "subscribers_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscribers",
+          "subscription_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscription",
+          "commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/gzers/opencodex-desktop/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/gzers/opencodex-desktop/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/gzers/opencodex-desktop/merges",
+          "archive_url": "https://api.github.com/repos/gzers/opencodex-desktop/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/gzers/opencodex-desktop/downloads",
+          "issues_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/gzers/opencodex-desktop/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/gzers/opencodex-desktop/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/gzers/opencodex-desktop/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/gzers/opencodex-desktop/labels{/name}",
+          "releases_url": "https://api.github.com/repos/gzers/opencodex-desktop/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/gzers/opencodex-desktop/deployments"
+        }
+      },
+      "jobs": {
+        "total_count": 6,
+        "jobs": [
+          {
+            "id": 116391894042,
+            "run_id": 38726001178,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX9cGg",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391894042",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178/job/116391894042",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T11:15:09Z",
+            "started_at": "2026-10-15T11:15:15Z",
+            "completed_at": "2026-10-15T11:16:23Z",
+            "name": "frontend",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:16Z",
+                "completed_at": "2026-10-15T11:15:17Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:17Z",
+                "completed_at": "2026-10-15T11:15:19Z"
+              },
+              {
+                "name": "Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:19Z",
+                "completed_at": "2026-10-15T11:15:20Z"
+              },
+              {
+                "name": "Windows CDP protocol regression",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:20Z",
+                "completed_at": "2026-10-15T11:15:30Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui ci",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:30Z",
+                "completed_at": "2026-10-15T11:15:33Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui run typecheck",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-15T11:15:33Z",
+                "completed_at": "2026-10-15T11:15:38Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-10-15T11:15:39Z",
+                "completed_at": "2026-10-15T11:16:13Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui run build",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-10-15T11:16:13Z",
+                "completed_at": "2026-10-15T11:16:20Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15,
+                "started_at": "2026-10-15T11:16:20Z",
+                "completed_at": "2026-10-15T11:16:20Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 16,
+                "started_at": "2026-10-15T11:16:20Z",
+                "completed_at": "2026-10-15T11:16:21Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 17,
+                "started_at": "2026-10-15T11:16:21Z",
+                "completed_at": "2026-10-15T11:16:21Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391894042",
+            "labels": [
+              "macos-14"
+            ],
+            "runner_id": 1000001136,
+            "runner_name": "GitHub Actions 1000001136",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391894296,
+            "run_id": 38726001178,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX9dGA",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391894296",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178/job/116391894296",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-15T11:15:09Z",
+            "started_at": "2026-10-15T11:15:18Z",
+            "completed_at": "2026-10-15T11:17:21Z",
+            "name": "backend",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:18Z",
+                "completed_at": "2026-10-15T11:15:20Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:20Z",
+                "completed_at": "2026-10-15T11:15:21Z"
+              },
+              {
+                "name": "Run dtolnay/rust-toolchain@stable",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:21Z",
+                "completed_at": "2026-10-15T11:15:31Z"
+              },
+              {
+                "name": "Run cargo fmt --all -- --check",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:31Z",
+                "completed_at": "2026-10-15T11:15:32Z"
+              },
+              {
+                "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:32Z",
+                "completed_at": "2026-10-15T11:17:17Z"
+              },
+              {
+                "name": "Run cargo test --locked --workspace --features integration-test",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 6,
+                "started_at": "2026-10-15T11:17:17Z",
+                "completed_at": "2026-10-15T11:17:17Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 12,
+                "started_at": "2026-10-15T11:17:17Z",
+                "completed_at": "2026-10-15T11:17:18Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-10-15T11:17:18Z",
+                "completed_at": "2026-10-15T11:17:19Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391894296",
+            "labels": [
+              "macos-14"
+            ],
+            "runner_id": 1000001137,
+            "runner_name": "GitHub Actions 1000001137",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391894336,
+            "run_id": 38726001178,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX9dQA",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391894336",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178/job/116391894336",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-15T11:15:09Z",
+            "started_at": "2026-10-15T11:15:13Z",
+            "completed_at": "2026-10-15T11:19:23Z",
+            "name": "backend-windows",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:15Z",
+                "completed_at": "2026-10-15T11:15:17Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:17Z",
+                "completed_at": "2026-10-15T11:15:22Z"
+              },
+              {
+                "name": "Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:22Z",
+                "completed_at": "2026-10-15T11:15:27Z"
+              },
+              {
+                "name": "Run dtolnay/rust-toolchain@stable",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:27Z",
+                "completed_at": "2026-10-15T11:15:47Z"
+              },
+              {
+                "name": "Run npm --prefix ../ui ci",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:47Z",
+                "completed_at": "2026-10-15T11:15:55Z"
+              },
+              {
+                "name": "Run npm --prefix ../ui run build",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-15T11:15:55Z",
+                "completed_at": "2026-10-15T11:16:05Z"
+              },
+              {
+                "name": "Run cargo fmt --all -- --check",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-10-15T11:16:05Z",
+                "completed_at": "2026-10-15T11:16:07Z"
+              },
+              {
+                "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 8,
+                "started_at": "2026-10-15T11:16:07Z",
+                "completed_at": "2026-10-15T11:19:00Z"
+              },
+              {
+                "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 9,
+                "started_at": "2026-10-15T11:19:00Z",
+                "completed_at": "2026-10-15T11:19:00Z"
+              },
+              {
+                "name": "Windows backend regression",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 10,
+                "started_at": "2026-10-15T11:19:00Z",
+                "completed_at": "2026-10-15T11:19:00Z"
+              },
+              {
+                "name": "Collect Windows native dependency diagnostics",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11,
+                "started_at": "2026-10-15T11:19:00Z",
+                "completed_at": "2026-10-15T11:19:17Z"
+              },
+              {
+                "name": "Run cargo build --locked --release --features custom-protocol --bins",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 12,
+                "started_at": "2026-10-15T11:19:17Z",
+                "completed_at": "2026-10-15T11:19:17Z"
+              },
+              {
+                "name": "Windows final EXE smoke",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 13,
+                "started_at": "2026-10-15T11:19:17Z",
+                "completed_at": "2026-10-15T11:19:17Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@v4",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14,
+                "started_at": "2026-10-15T11:19:17Z",
+                "completed_at": "2026-10-15T11:19:19Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 27,
+                "started_at": "2026-10-15T11:19:19Z",
+                "completed_at": "2026-10-15T11:19:19Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 28,
+                "started_at": "2026-10-15T11:19:19Z",
+                "completed_at": "2026-10-15T11:19:21Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 29,
+                "started_at": "2026-10-15T11:19:21Z",
+                "completed_at": "2026-10-15T11:19:21Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391894336",
+            "labels": [
+              "windows-latest"
+            ],
+            "runner_id": 1000001138,
+            "runner_name": "GitHub Actions 1000001138",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391894337,
+            "run_id": 38726001178,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX9dQQ",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391894337",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178/job/116391894337",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T11:15:09Z",
+            "started_at": "2026-10-15T11:15:12Z",
+            "completed_at": "2026-10-15T11:15:37Z",
+            "name": "release-tools",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:13Z",
+                "completed_at": "2026-10-15T11:15:14Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:14Z",
+                "completed_at": "2026-10-15T11:15:15Z"
+              },
+              {
+                "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:15Z",
+                "completed_at": "2026-10-15T11:15:33Z"
+              },
+              {
+                "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:33Z",
+                "completed_at": "2026-10-15T11:15:33Z"
+              },
+              {
+                "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:33Z",
+                "completed_at": "2026-10-15T11:15:33Z"
+              },
+              {
+                "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-15T11:15:33Z",
+                "completed_at": "2026-10-15T11:15:34Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 12,
+                "started_at": "2026-10-15T11:15:34Z",
+                "completed_at": "2026-10-15T11:15:34Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-10-15T11:15:34Z",
+                "completed_at": "2026-10-15T11:15:34Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391894337",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000001140,
+            "runner_name": "GitHub Actions 1000001140",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391894505,
+            "run_id": 38726001178,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX9d6Q",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391894505",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178/job/116391894505",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T11:15:09Z",
+            "started_at": "2026-10-15T11:15:11Z",
+            "completed_at": "2026-10-15T11:15:33Z",
+            "name": "windows-smoke-evidence",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:12Z",
+                "completed_at": "2026-10-15T11:15:13Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:13Z",
+                "completed_at": "2026-10-15T11:15:22Z"
+              },
+              {
+                "name": "Verify Windows process-token evidence and smoke syntax",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:22Z",
+                "completed_at": "2026-10-15T11:15:28Z"
+              },
+              {
+                "name": "Verify isolated acceptance Profile admission",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:28Z",
+                "completed_at": "2026-10-15T11:15:29Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@v4",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:29Z",
+                "completed_at": "2026-10-15T11:15:30Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 10,
+                "started_at": "2026-10-15T11:15:30Z",
+                "completed_at": "2026-10-15T11:15:32Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11,
+                "started_at": "2026-10-15T11:15:32Z",
+                "completed_at": "2026-10-15T11:15:32Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391894505",
+            "labels": [
+              "windows-latest"
+            ],
+            "runner_id": 1000001139,
+            "runner_name": "GitHub Actions 1000001139",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116393551446,
+            "run_id": 38726001178,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38726001178",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGZimVg",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116393551446",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38726001178/job/116393551446",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-10-15T11:19:24Z",
+            "started_at": "2026-10-15T11:19:24Z",
+            "completed_at": "2026-10-15T11:19:23Z",
+            "name": "build",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116393551446",
+            "labels": [
+              "macos-14"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          }
+        ]
+      }
+    },
+    {
+      "run": {
+        "id": 38725991590,
+        "name": "CI",
+        "node_id": "WFR_kwLOUZxf888AAAAJBD-8pg",
+        "head_branch": "feature/0.1.10-windows-query-etw",
+        "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+        "path": ".github/workflows/ci.yml",
+        "display_title": "\u6d4b\u8bd5\uff1a\u6279\u91cf\u51c6\u5907\u5ba1\u8ba1\u4fdd\u7559\u5939\u5177\u5e76\u4fdd\u7559\u771f\u5b9e\u6301\u4e45\u8ffd\u52a0\u4e0e\u5168\u90e8\u65ad\u8a00",
+        "run_number": 177,
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "workflow_id": 373713239,
+        "check_suite_id": 104941315978,
+        "check_suite_node_id": "CS_kwDOUZxf888AAAAYbv1nig",
+        "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+        "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590",
+        "pull_requests": [
+          {
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/pulls/5",
+            "id": 4857117437,
+            "number": 5,
+            "head": {
+              "ref": "feature/0.1.10-windows-query-etw",
+              "sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+              "repo": {
+                "id": 1369202675,
+                "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+                "name": "opencodex-desktop"
+              }
+            },
+            "base": {
+              "ref": "feature/0.1.10-integration-candidate",
+              "sha": "bd2f6eb10d58115235e35d575507bb69f44666da",
+              "repo": {
+                "id": 1369202675,
+                "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+                "name": "opencodex-desktop"
+              }
+            }
+          }
+        ],
+        "created_at": "2026-10-15T11:15:03Z",
+        "updated_at": "2026-10-15T11:19:05Z",
+        "actor": {
+          "login": "gzers",
+          "id": 22311504,
+          "node_id": "MDQ6VXNlcjIyMzExNTA0",
+          "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/gzers",
+          "html_url": "https://github.com/gzers",
+          "followers_url": "https://api.github.com/users/gzers/followers",
+          "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+          "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+          "organizations_url": "https://api.github.com/users/gzers/orgs",
+          "repos_url": "https://api.github.com/users/gzers/repos",
+          "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/gzers/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "run_attempt": 1,
+        "referenced_workflows": [],
+        "run_started_at": "2026-10-15T11:15:03Z",
+        "triggering_actor": {
+          "login": "gzers",
+          "id": 22311504,
+          "node_id": "MDQ6VXNlcjIyMzExNTA0",
+          "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/gzers",
+          "html_url": "https://github.com/gzers",
+          "followers_url": "https://api.github.com/users/gzers/followers",
+          "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+          "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+          "organizations_url": "https://api.github.com/users/gzers/orgs",
+          "repos_url": "https://api.github.com/users/gzers/repos",
+          "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/gzers/received_events",
+          "type": "User",
+          "user_view_type": "public",
+          "site_admin": false
+        },
+        "jobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590/jobs",
+        "logs_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590/logs",
+        "check_suite_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-suites/104941315978",
+        "artifacts_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590/artifacts",
+        "cancel_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590/cancel",
+        "rerun_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590/rerun",
+        "previous_attempt_url": null,
+        "workflow_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/workflows/373713239",
+        "head_commit": {
+          "id": "020e668c4b9de5859e1137c08769af8c6be75281",
+          "tree_id": "196720991c6935aec09f837b8afb27e6ff8e814f",
+          "message": "\u6d4b\u8bd5\uff1a\u6279\u91cf\u51c6\u5907\u5ba1\u8ba1\u4fdd\u7559\u5939\u5177\u5e76\u4fdd\u7559\u771f\u5b9e\u6301\u4e45\u8ffd\u52a0\u4e0e\u5168\u90e8\u65ad\u8a00",
+          "timestamp": "2026-10-15T11:14:58Z",
+          "author": {
+            "name": "Codex",
+            "email": "codex@local"
+          },
+          "committer": {
+            "name": "Codex",
+            "email": "codex@local"
+          }
+        },
+        "repository": {
+          "id": 1369202675,
+          "node_id": "R_kgDOUZxf8w",
+          "name": "opencodex-desktop",
+          "full_name": "gzers/opencodex-desktop",
+          "private": false,
+          "owner": {
+            "login": "gzers",
+            "id": 22311504,
+            "node_id": "MDQ6VXNlcjIyMzExNTA0",
+            "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/gzers",
+            "html_url": "https://github.com/gzers",
+            "followers_url": "https://api.github.com/users/gzers/followers",
+            "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+            "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+            "organizations_url": "https://api.github.com/users/gzers/orgs",
+            "repos_url": "https://api.github.com/users/gzers/repos",
+            "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/gzers/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/gzers/opencodex-desktop",
+          "description": "\u9762\u5411 OpenCodex \u7684\u72ec\u7acb\u684c\u9762\u7ba1\u7406\u5668\uff1a\u56fe\u5f62\u5316\u53d1\u73b0\u3001\u542f\u505c\u6258\u7ba1\u3001\u72b6\u6001\u89c2\u6d4b\u3001\u914d\u7f6e\u8fc1\u79fb\u3001WebDAV \u540c\u6b65\u4e0e Skills / MCP \u6269\u5c55\u7ba1\u7406\u3002",
+          "fork": false,
+          "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+          "forks_url": "https://api.github.com/repos/gzers/opencodex-desktop/forks",
+          "keys_url": "https://api.github.com/repos/gzers/opencodex-desktop/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/gzers/opencodex-desktop/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/gzers/opencodex-desktop/teams",
+          "hooks_url": "https://api.github.com/repos/gzers/opencodex-desktop/hooks",
+          "issue_events_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/gzers/opencodex-desktop/events",
+          "assignees_url": "https://api.github.com/repos/gzers/opencodex-desktop/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/gzers/opencodex-desktop/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/tags",
+          "blobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/gzers/opencodex-desktop/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/gzers/opencodex-desktop/languages",
+          "stargazers_url": "https://api.github.com/repos/gzers/opencodex-desktop/stargazers",
+          "contributors_url": "https://api.github.com/repos/gzers/opencodex-desktop/contributors",
+          "subscribers_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscribers",
+          "subscription_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscription",
+          "commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/gzers/opencodex-desktop/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/gzers/opencodex-desktop/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/gzers/opencodex-desktop/merges",
+          "archive_url": "https://api.github.com/repos/gzers/opencodex-desktop/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/gzers/opencodex-desktop/downloads",
+          "issues_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/gzers/opencodex-desktop/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/gzers/opencodex-desktop/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/gzers/opencodex-desktop/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/gzers/opencodex-desktop/labels{/name}",
+          "releases_url": "https://api.github.com/repos/gzers/opencodex-desktop/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/gzers/opencodex-desktop/deployments"
+        },
+        "head_repository": {
+          "id": 1369202675,
+          "node_id": "R_kgDOUZxf8w",
+          "name": "opencodex-desktop",
+          "full_name": "gzers/opencodex-desktop",
+          "private": false,
+          "owner": {
+            "login": "gzers",
+            "id": 22311504,
+            "node_id": "MDQ6VXNlcjIyMzExNTA0",
+            "avatar_url": "https://avatars.githubusercontent.com/u/22311504?v=4",
+            "gravatar_id": "",
+            "url": "https://api.github.com/users/gzers",
+            "html_url": "https://github.com/gzers",
+            "followers_url": "https://api.github.com/users/gzers/followers",
+            "following_url": "https://api.github.com/users/gzers/following{/other_user}",
+            "gists_url": "https://api.github.com/users/gzers/gists{/gist_id}",
+            "starred_url": "https://api.github.com/users/gzers/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/gzers/subscriptions",
+            "organizations_url": "https://api.github.com/users/gzers/orgs",
+            "repos_url": "https://api.github.com/users/gzers/repos",
+            "events_url": "https://api.github.com/users/gzers/events{/privacy}",
+            "received_events_url": "https://api.github.com/users/gzers/received_events",
+            "type": "User",
+            "user_view_type": "public",
+            "site_admin": false
+          },
+          "html_url": "https://github.com/gzers/opencodex-desktop",
+          "description": "\u9762\u5411 OpenCodex \u7684\u72ec\u7acb\u684c\u9762\u7ba1\u7406\u5668\uff1a\u56fe\u5f62\u5316\u53d1\u73b0\u3001\u542f\u505c\u6258\u7ba1\u3001\u72b6\u6001\u89c2\u6d4b\u3001\u914d\u7f6e\u8fc1\u79fb\u3001WebDAV \u540c\u6b65\u4e0e Skills / MCP \u6269\u5c55\u7ba1\u7406\u3002",
+          "fork": false,
+          "url": "https://api.github.com/repos/gzers/opencodex-desktop",
+          "forks_url": "https://api.github.com/repos/gzers/opencodex-desktop/forks",
+          "keys_url": "https://api.github.com/repos/gzers/opencodex-desktop/keys{/key_id}",
+          "collaborators_url": "https://api.github.com/repos/gzers/opencodex-desktop/collaborators{/collaborator}",
+          "teams_url": "https://api.github.com/repos/gzers/opencodex-desktop/teams",
+          "hooks_url": "https://api.github.com/repos/gzers/opencodex-desktop/hooks",
+          "issue_events_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/events{/number}",
+          "events_url": "https://api.github.com/repos/gzers/opencodex-desktop/events",
+          "assignees_url": "https://api.github.com/repos/gzers/opencodex-desktop/assignees{/user}",
+          "branches_url": "https://api.github.com/repos/gzers/opencodex-desktop/branches{/branch}",
+          "tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/tags",
+          "blobs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/blobs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/tags{/sha}",
+          "git_refs_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/refs{/sha}",
+          "trees_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/trees{/sha}",
+          "statuses_url": "https://api.github.com/repos/gzers/opencodex-desktop/statuses/{sha}",
+          "languages_url": "https://api.github.com/repos/gzers/opencodex-desktop/languages",
+          "stargazers_url": "https://api.github.com/repos/gzers/opencodex-desktop/stargazers",
+          "contributors_url": "https://api.github.com/repos/gzers/opencodex-desktop/contributors",
+          "subscribers_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscribers",
+          "subscription_url": "https://api.github.com/repos/gzers/opencodex-desktop/subscription",
+          "commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/commits{/sha}",
+          "git_commits_url": "https://api.github.com/repos/gzers/opencodex-desktop/git/commits{/sha}",
+          "comments_url": "https://api.github.com/repos/gzers/opencodex-desktop/comments{/number}",
+          "issue_comment_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues/comments{/number}",
+          "contents_url": "https://api.github.com/repos/gzers/opencodex-desktop/contents/{+path}",
+          "compare_url": "https://api.github.com/repos/gzers/opencodex-desktop/compare/{base}...{head}",
+          "merges_url": "https://api.github.com/repos/gzers/opencodex-desktop/merges",
+          "archive_url": "https://api.github.com/repos/gzers/opencodex-desktop/{archive_format}{/ref}",
+          "downloads_url": "https://api.github.com/repos/gzers/opencodex-desktop/downloads",
+          "issues_url": "https://api.github.com/repos/gzers/opencodex-desktop/issues{/number}",
+          "pulls_url": "https://api.github.com/repos/gzers/opencodex-desktop/pulls{/number}",
+          "milestones_url": "https://api.github.com/repos/gzers/opencodex-desktop/milestones{/number}",
+          "notifications_url": "https://api.github.com/repos/gzers/opencodex-desktop/notifications{?since,all,participating}",
+          "labels_url": "https://api.github.com/repos/gzers/opencodex-desktop/labels{/name}",
+          "releases_url": "https://api.github.com/repos/gzers/opencodex-desktop/releases{/id}",
+          "deployments_url": "https://api.github.com/repos/gzers/opencodex-desktop/deployments"
+        }
+      },
+      "jobs": {
+        "total_count": 6,
+        "jobs": [
+          {
+            "id": 116391863001,
+            "run_id": 38725991590,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX7i2Q",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391863001",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116391863001",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T11:15:04Z",
+            "started_at": "2026-10-15T11:15:06Z",
+            "completed_at": "2026-10-15T11:15:23Z",
+            "name": "release-tools",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:07Z",
+                "completed_at": "2026-10-15T11:15:08Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:08Z",
+                "completed_at": "2026-10-15T11:15:09Z"
+              },
+              {
+                "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:09Z",
+                "completed_at": "2026-10-15T11:15:20Z"
+              },
+              {
+                "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:20Z",
+                "completed_at": "2026-10-15T11:15:21Z"
+              },
+              {
+                "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:21Z",
+                "completed_at": "2026-10-15T11:15:21Z"
+              },
+              {
+                "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-15T11:15:21Z",
+                "completed_at": "2026-10-15T11:15:21Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 12,
+                "started_at": "2026-10-15T11:15:21Z",
+                "completed_at": "2026-10-15T11:15:21Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-10-15T11:15:21Z",
+                "completed_at": "2026-10-15T11:15:21Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391863001",
+            "labels": [
+              "ubuntu-latest"
+            ],
+            "runner_id": 1000001131,
+            "runner_name": "GitHub Actions 1000001131",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391863279,
+            "run_id": 38725991590,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX7j7w",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391863279",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116391863279",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T11:15:04Z",
+            "started_at": "2026-10-15T11:15:11Z",
+            "completed_at": "2026-10-15T11:16:25Z",
+            "name": "frontend",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:12Z",
+                "completed_at": "2026-10-15T11:15:13Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:13Z",
+                "completed_at": "2026-10-15T11:15:14Z"
+              },
+              {
+                "name": "Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:14Z",
+                "completed_at": "2026-10-15T11:15:15Z"
+              },
+              {
+                "name": "Windows CDP protocol regression",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:15Z",
+                "completed_at": "2026-10-15T11:15:26Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui ci",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:26Z",
+                "completed_at": "2026-10-15T11:15:29Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui run typecheck",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-15T11:15:29Z",
+                "completed_at": "2026-10-15T11:15:35Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-10-15T11:15:35Z",
+                "completed_at": "2026-10-15T11:16:14Z"
+              },
+              {
+                "name": "Run npm --prefix apps/desktop/ui run build",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 8,
+                "started_at": "2026-10-15T11:16:14Z",
+                "completed_at": "2026-10-15T11:16:22Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 15,
+                "started_at": "2026-10-15T11:16:22Z",
+                "completed_at": "2026-10-15T11:16:23Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 16,
+                "started_at": "2026-10-15T11:16:23Z",
+                "completed_at": "2026-10-15T11:16:23Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 17,
+                "started_at": "2026-10-15T11:16:23Z",
+                "completed_at": "2026-10-15T11:16:24Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391863279",
+            "labels": [
+              "macos-14"
+            ],
+            "runner_id": 1000001132,
+            "runner_name": "GitHub Actions 1000001132",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391863342,
+            "run_id": 38725991590,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX7kLg",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391863342",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116391863342",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-15T11:15:04Z",
+            "started_at": "2026-10-15T11:15:07Z",
+            "completed_at": "2026-10-15T11:19:04Z",
+            "name": "backend-windows",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:08Z",
+                "completed_at": "2026-10-15T11:15:10Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:10Z",
+                "completed_at": "2026-10-15T11:15:15Z"
+              },
+              {
+                "name": "Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:15Z",
+                "completed_at": "2026-10-15T11:15:20Z"
+              },
+              {
+                "name": "Run dtolnay/rust-toolchain@stable",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:20Z",
+                "completed_at": "2026-10-15T11:15:40Z"
+              },
+              {
+                "name": "Run npm --prefix ../ui ci",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:40Z",
+                "completed_at": "2026-10-15T11:15:48Z"
+              },
+              {
+                "name": "Run npm --prefix ../ui run build",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 6,
+                "started_at": "2026-10-15T11:15:48Z",
+                "completed_at": "2026-10-15T11:15:57Z"
+              },
+              {
+                "name": "Run cargo fmt --all -- --check",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 7,
+                "started_at": "2026-10-15T11:15:57Z",
+                "completed_at": "2026-10-15T11:16:00Z"
+              },
+              {
+                "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 8,
+                "started_at": "2026-10-15T11:16:00Z",
+                "completed_at": "2026-10-15T11:18:43Z"
+              },
+              {
+                "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 9,
+                "started_at": "2026-10-15T11:18:43Z",
+                "completed_at": "2026-10-15T11:18:43Z"
+              },
+              {
+                "name": "Windows backend regression",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 10,
+                "started_at": "2026-10-15T11:18:43Z",
+                "completed_at": "2026-10-15T11:18:43Z"
+              },
+              {
+                "name": "Collect Windows native dependency diagnostics",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11,
+                "started_at": "2026-10-15T11:18:43Z",
+                "completed_at": "2026-10-15T11:18:59Z"
+              },
+              {
+                "name": "Run cargo build --locked --release --features custom-protocol --bins",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 12,
+                "started_at": "2026-10-15T11:18:59Z",
+                "completed_at": "2026-10-15T11:18:59Z"
+              },
+              {
+                "name": "Windows final EXE smoke",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 13,
+                "started_at": "2026-10-15T11:18:59Z",
+                "completed_at": "2026-10-15T11:18:59Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@v4",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 14,
+                "started_at": "2026-10-15T11:18:59Z",
+                "completed_at": "2026-10-15T11:19:00Z"
+              },
+              {
+                "name": "Post Run actions/setup-node@v5",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 27,
+                "started_at": "2026-10-15T11:19:00Z",
+                "completed_at": "2026-10-15T11:19:00Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 28,
+                "started_at": "2026-10-15T11:19:00Z",
+                "completed_at": "2026-10-15T11:19:02Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 29,
+                "started_at": "2026-10-15T11:19:02Z",
+                "completed_at": "2026-10-15T11:19:02Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391863342",
+            "labels": [
+              "windows-latest"
+            ],
+            "runner_id": 1000001133,
+            "runner_name": "GitHub Actions 1000001133",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391863429,
+            "run_id": 38725991590,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX7khQ",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391863429",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116391863429",
+            "status": "completed",
+            "conclusion": "success",
+            "created_at": "2026-10-15T11:15:04Z",
+            "started_at": "2026-10-15T11:15:07Z",
+            "completed_at": "2026-10-15T11:15:27Z",
+            "name": "windows-smoke-evidence",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:08Z",
+                "completed_at": "2026-10-15T11:15:09Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:09Z",
+                "completed_at": "2026-10-15T11:15:18Z"
+              },
+              {
+                "name": "Verify Windows process-token evidence and smoke syntax",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:18Z",
+                "completed_at": "2026-10-15T11:15:23Z"
+              },
+              {
+                "name": "Verify isolated acceptance Profile admission",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:23Z",
+                "completed_at": "2026-10-15T11:15:23Z"
+              },
+              {
+                "name": "Run actions/upload-artifact@v4",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:23Z",
+                "completed_at": "2026-10-15T11:15:24Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 10,
+                "started_at": "2026-10-15T11:15:24Z",
+                "completed_at": "2026-10-15T11:15:26Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 11,
+                "started_at": "2026-10-15T11:15:26Z",
+                "completed_at": "2026-10-15T11:15:26Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391863429",
+            "labels": [
+              "windows-latest"
+            ],
+            "runner_id": 1000001134,
+            "runner_name": "GitHub Actions 1000001134",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116391863520,
+            "run_id": 38725991590,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGX7k4A",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116391863520",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116391863520",
+            "status": "completed",
+            "conclusion": "failure",
+            "created_at": "2026-10-15T11:15:04Z",
+            "started_at": "2026-10-15T11:15:12Z",
+            "completed_at": "2026-10-15T11:17:25Z",
+            "name": "backend",
+            "steps": [
+              {
+                "name": "Set up job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 1,
+                "started_at": "2026-10-15T11:15:13Z",
+                "completed_at": "2026-10-15T11:15:14Z"
+              },
+              {
+                "name": "Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 2,
+                "started_at": "2026-10-15T11:15:14Z",
+                "completed_at": "2026-10-15T11:15:16Z"
+              },
+              {
+                "name": "Run dtolnay/rust-toolchain@stable",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 3,
+                "started_at": "2026-10-15T11:15:16Z",
+                "completed_at": "2026-10-15T11:15:25Z"
+              },
+              {
+                "name": "Run cargo fmt --all -- --check",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 4,
+                "started_at": "2026-10-15T11:15:25Z",
+                "completed_at": "2026-10-15T11:15:26Z"
+              },
+              {
+                "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+                "status": "completed",
+                "conclusion": "failure",
+                "number": 5,
+                "started_at": "2026-10-15T11:15:26Z",
+                "completed_at": "2026-10-15T11:17:21Z"
+              },
+              {
+                "name": "Run cargo test --locked --workspace --features integration-test",
+                "status": "completed",
+                "conclusion": "skipped",
+                "number": 6,
+                "started_at": "2026-10-15T11:17:21Z",
+                "completed_at": "2026-10-15T11:17:21Z"
+              },
+              {
+                "name": "Post Run actions/checkout@v5",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 12,
+                "started_at": "2026-10-15T11:17:21Z",
+                "completed_at": "2026-10-15T11:17:22Z"
+              },
+              {
+                "name": "Complete job",
+                "status": "completed",
+                "conclusion": "success",
+                "number": 13,
+                "started_at": "2026-10-15T11:17:22Z",
+                "completed_at": "2026-10-15T11:17:22Z"
+              }
+            ],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116391863520",
+            "labels": [
+              "macos-14"
+            ],
+            "runner_id": 1000001135,
+            "runner_name": "GitHub Actions 1000001135",
+            "runner_group_id": 0,
+            "runner_group_name": "GitHub Actions"
+          },
+          {
+            "id": 116393431838,
+            "run_id": 38725991590,
+            "workflow_name": "CI",
+            "head_branch": "feature/0.1.10-windows-query-etw",
+            "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38725991590",
+            "run_attempt": 1,
+            "node_id": "CR_kwDOUZxf888AAAAbGZbTHg",
+            "head_sha": "020e668c4b9de5859e1137c08769af8c6be75281",
+            "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116393431838",
+            "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38725991590/job/116393431838",
+            "status": "completed",
+            "conclusion": "skipped",
+            "created_at": "2026-10-15T11:19:05Z",
+            "started_at": "2026-10-15T11:19:05Z",
+            "completed_at": "2026-10-15T11:19:04Z",
+            "name": "build",
+            "steps": [],
+            "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116393431838",
+            "labels": [
+              "macos-14"
+            ],
+            "runner_id": null,
+            "runner_name": null,
+            "runner_group_id": null,
+            "runner_group_name": null
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

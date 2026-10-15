@@ -1,0 +1,83 @@
+{
+  "runId": 38724446374,
+  "event": "pull_request",
+  "actualSource": "37f8804d492fdf70c6030cfd6765b20245eb5753",
+  "firstOrdinaryCargoLibraryExecutionCaptured": true,
+  "executions": 1,
+  "actualLibrarySha256": "12f2197e9300975b1e31e9b0958831b4cfdf733a2c1342a5865b9d052c631f72",
+  "actualLibraryBytes": 26900480,
+  "sameOriginalBd2ApplicationTree": false,
+  "sameHistoricalFailedBinary": false,
+  "libraryExitCode": -1,
+  "libraryResult": null,
+  "queryFixtures": [
+    {
+      "test": "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+      "result": "ok"
+    },
+    {
+      "test": "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+      "result": "ok"
+    },
+    {
+      "test": "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+      "result": "ok"
+    },
+    {
+      "test": "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+      "result": "ok"
+    }
+  ],
+  "queryFailureObservedInCurrentBuild": false,
+  "currentBuildFailureWindowEtwObtained": false,
+  "historicalFixedArtifactFailureWindowEtwObtained": false,
+  "rootPid": 6536,
+  "rootCreationUtc": "2026-10-15T11:08:23.7343252Z",
+  "rootToken": {
+    "elevated": true,
+    "elevationType": 1,
+    "pid": 6536
+  },
+  "recordedEvents": 17891,
+  "eventBytes": 6466908,
+  "eventSha256": "34923357b073bbe0c40736c083dd2b09b97cc1003c21f2573d256c0dc843e99d",
+  "eventKinds": {
+    "root-handle-image-query": 1,
+    "root-handle-binding": 1,
+    "process-start": 31,
+    "thread-start": 967,
+    "owned-image": 1866,
+    "thread-stop": 967,
+    "owned-thread-ready": 2356,
+    "owned-thread-scheduled-in": 3484,
+    "owned-thread-scheduled-out": 3229,
+    "owned-file-create": 2214,
+    "owned-file-operation-end": 2479,
+    "owned-file-read-write": 265,
+    "process-stop": 31
+  },
+  "processStartsAndStops": [
+    31,
+    31
+  ],
+  "captureLossOrDecoderErrors": 0,
+  "originalQueryAssertionsOrDeadlinesChanged": false,
+  "rootCauseDetermined": false,
+  "historicalFailuresCleared": false,
+  "fullVersionGatePassed": false,
+  "originalLibraryCompleted": false,
+  "forcedOuterCleanup": true,
+  "classification": "Outer diagnostic deadline; incomplete library, not a passing regression"
+}

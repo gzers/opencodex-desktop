@@ -1,0 +1,173 @@
+{
+  "atUtc": "2026-10-15T10:50:01.108113+00:00",
+  "source": "6ab09772855b964f1f7e4f6faf170337109b3f7c",
+  "runId": 38722473197,
+  "job": {
+    "id": 116380146799,
+    "run_id": 38722473197,
+    "workflow_name": "CI",
+    "head_branch": "feature/0.1.10-windows-query-etw",
+    "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38722473197",
+    "run_attempt": 1,
+    "node_id": "CR_kwDOUZxf888AAAAbGMwcbw",
+    "head_sha": "6ab09772855b964f1f7e4f6faf170337109b3f7c",
+    "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116380146799",
+    "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38722473197/job/116380146799",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-10-15T10:45:06Z",
+    "started_at": "2026-10-15T10:45:09Z",
+    "completed_at": "2026-10-15T10:49:08Z",
+    "name": "backend-windows",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-10-15T10:45:10Z",
+        "completed_at": "2026-10-15T10:45:11Z"
+      },
+      {
+        "name": "Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-10-15T10:45:11Z",
+        "completed_at": "2026-10-15T10:45:17Z"
+      },
+      {
+        "name": "Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-10-15T10:45:17Z",
+        "completed_at": "2026-10-15T10:45:26Z"
+      },
+      {
+        "name": "Run dtolnay/rust-toolchain@stable",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-10-15T10:45:26Z",
+        "completed_at": "2026-10-15T10:45:36Z"
+      },
+      {
+        "name": "Run npm --prefix ../ui ci",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5,
+        "started_at": "2026-10-15T10:45:36Z",
+        "completed_at": "2026-10-15T10:45:44Z"
+      },
+      {
+        "name": "Run npm --prefix ../ui run build",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6,
+        "started_at": "2026-10-15T10:45:44Z",
+        "completed_at": "2026-10-15T10:45:54Z"
+      },
+      {
+        "name": "Run cargo fmt --all -- --check",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7,
+        "started_at": "2026-10-15T10:45:54Z",
+        "completed_at": "2026-10-15T10:46:04Z"
+      },
+      {
+        "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 8,
+        "started_at": "2026-10-15T10:46:04Z",
+        "completed_at": "2026-10-15T10:48:49Z"
+      },
+      {
+        "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 9,
+        "started_at": "2026-10-15T10:48:49Z",
+        "completed_at": "2026-10-15T10:48:49Z"
+      },
+      {
+        "name": "Windows backend regression",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 10,
+        "started_at": "2026-10-15T10:48:49Z",
+        "completed_at": "2026-10-15T10:48:49Z"
+      },
+      {
+        "name": "Collect Windows native dependency diagnostics",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 11,
+        "started_at": "2026-10-15T10:48:49Z",
+        "completed_at": "2026-10-15T10:49:03Z"
+      },
+      {
+        "name": "Run cargo build --locked --release --features custom-protocol --bins",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 12,
+        "started_at": "2026-10-15T10:49:03Z",
+        "completed_at": "2026-10-15T10:49:03Z"
+      },
+      {
+        "name": "Windows final EXE smoke",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 13,
+        "started_at": "2026-10-15T10:49:03Z",
+        "completed_at": "2026-10-15T10:49:03Z"
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14,
+        "started_at": "2026-10-15T10:49:03Z",
+        "completed_at": "2026-10-15T10:49:04Z"
+      },
+      {
+        "name": "Post Run actions/setup-node@v5",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 27,
+        "started_at": "2026-10-15T10:49:04Z",
+        "completed_at": "2026-10-15T10:49:04Z"
+      },
+      {
+        "name": "Post Run actions/checkout@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 28,
+        "started_at": "2026-10-15T10:49:04Z",
+        "completed_at": "2026-10-15T10:49:06Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 29,
+        "started_at": "2026-10-15T10:49:06Z",
+        "completed_at": "2026-10-15T10:49:06Z"
+      }
+    ],
+    "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116380146799",
+    "labels": [
+      "windows-latest"
+    ],
+    "runner_id": 1000001102,
+    "runner_name": "GitHub Actions 1000001102",
+    "runner_group_id": 0,
+    "runner_group_name": "GitHub Actions"
+  },
+  "log": {
+    "bytes": 97923,
+    "sha256": "13d4ea2c9736a182e278f03885c35129ec670ad9828c2fa46639afa52d73d887"
+  }
+}

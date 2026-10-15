@@ -1,0 +1,76 @@
+{
+  "sourceFixStageEvidence": "passed",
+  "manifestFiles": 303,
+  "source": "a2e4ea1786723ceab0a1ed0d322503ac79cd64e0",
+  "priorFailedRunsRetained": [
+    38722473197,
+    38722479010,
+    38723079993,
+    38723086934,
+    38724446374,
+    38725991590,
+    38726001178
+  ],
+  "currentCi": [
+    38726727330,
+    38726732452
+  ],
+  "bothCurrentCiRunsSuccessful": true,
+  "macRustPerRun": {
+    "passed": 918,
+    "ignored": 6
+  },
+  "windowsRustPerRun": {
+    "passed": 643,
+    "ignored": 7
+  },
+  "captures": [
+    {
+      "run": 38723079993,
+      "exitCode": 101,
+      "queryFailure": false,
+      "librarySha256": "29bf22c23e380700eead189843d852a74d810df8823569fb8d8b27e7eff6cea8"
+    },
+    {
+      "run": 38723086934,
+      "exitCode": 101,
+      "queryFailure": false,
+      "librarySha256": "19143aeae5398f63a0a6393ec15c046e8b36b27d38dca90028f8dbf745aa242e"
+    },
+    {
+      "run": 38724440086,
+      "exitCode": 0,
+      "queryFailure": false,
+      "librarySha256": "69044536a24d039d58e7309e2dd38e820a00d07a2877a934289466fcbb3db15a"
+    },
+    {
+      "run": 38724446374,
+      "exitCode": -1,
+      "queryFailure": false,
+      "librarySha256": "12f2197e9300975b1e31e9b0958831b4cfdf733a2c1342a5865b9d052c631f72"
+    },
+    {
+      "run": 38726727330,
+      "exitCode": 0,
+      "queryFailure": false,
+      "librarySha256": "c0f9ffa739ad26b48e95ca75ae39f9ccb12812d42a5aa64373cadc643bddd187"
+    },
+    {
+      "run": 38726732452,
+      "exitCode": 0,
+      "queryFailure": false,
+      "librarySha256": "387d9a9475a5af5aee1f496b10dc195df04f40c7c1c96599e034f6b816c2f6b5"
+    }
+  ],
+  "nativeRecoveryAcceptance": "pending",
+  "newMatchingInstallerAcceptance": "pending",
+  "matchingCandidateRun": 38729632145,
+  "candidateAcceptanceClaimed": false,
+  "historicalFixedArtifactFailureWindowEtwObtained": false,
+  "rootCauseDetermined": false,
+  "historicalFailuresCleared": false,
+  "nativeCountAtCheckpoint": 0,
+  "fullVersionGatePassed": false,
+  "taskClosed": false,
+  "releaseRequested": false
+}

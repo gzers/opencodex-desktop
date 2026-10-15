@@ -1,0 +1,64 @@
+{
+  "runId": 38724446374,
+  "source": "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9",
+  "event": "pull_request",
+  "status": "completed",
+  "conclusion": "failure",
+  "logs": {
+    "bytes": 243752,
+    "sha256": "79100f367941c10a8c99ec44a6138e5fa9cd571d6b2d9419dd21d5c02feb7eb9"
+  },
+  "safeEntriesAndCrcVerified": true,
+  "actualCheckout": {
+    "backend-windows": "37f8804d492fdf70c6030cfd6765b20245eb5753",
+    "backend": "37f8804d492fdf70c6030cfd6765b20245eb5753"
+  },
+  "rustResults": {
+    "backend": {
+      "suites": 35,
+      "passed": 918,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "selectedLogs": [
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "file": "run-38724446374-backend-windows-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 6355,
+      "sha256": "4e4a0462660471b0bf030c8c14b66b5e941ef5abd5c7cc3d58d1ef075f97ed08"
+    },
+    {
+      "member": "backend-windows/10_Windows backend regression.txt",
+      "file": "run-38724446374-backend-windows-10_Windows_backend_regression.txt.gz",
+      "bytes": 95101,
+      "sha256": "562afac3827c4158699d5666028c110f511ea96a44a3343e561a15b856343f7a"
+    },
+    {
+      "member": "backend-windows/28_Post Run actions_checkout@v5.txt",
+      "file": "run-38724446374-backend-windows-28_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1935,
+      "sha256": "42477b2d68a2955ec1b1ef0022d8a50311a0e3ed1c9a7774287ef3cea74247cf"
+    },
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "file": "run-38724446374-backend-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 6167,
+      "sha256": "96184b1946feffdbad5b4ef420aa3d9408eb3b7eefcbdf07e29aad6ee0a39a9d"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "run-38724446374-backend-6_Run_cargo_test_--locked_--workspace_--features_integration-test.txt.gz",
+      "bytes": 146183,
+      "sha256": "888a8b68a3de9d19eae10b464492b975d9fe0c731f33dfe8d475a4b4688f226c"
+    },
+    {
+      "member": "backend/12_Post Run actions_checkout@v5.txt",
+      "file": "run-38724446374-backend-12_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1954,
+      "sha256": "3b22844d77b0031c9c6cd0fdf6a2364c4af2a90cc1688523e78e2cf7f8c19a99"
+    }
+  ],
+  "crossHostCredentialsForwarded": false,
+  "historicalFailureCleared": false
+}

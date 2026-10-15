@@ -1,0 +1,70 @@
+{
+  "runId": 38724440086,
+  "source": "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "logs": {
+    "bytes": 304045,
+    "sha256": "1390117833317e374995000c8adbbd1ccf04bf7a8929fdfcfbc16d98641737e4"
+  },
+  "safeEntriesAndCrcVerified": true,
+  "actualCheckout": {
+    "backend-windows": "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9",
+    "backend": "c9f92ce7ed4002fa8fa6b1d5e8a62e8d4cea49a9"
+  },
+  "rustResults": {
+    "backend-windows": {
+      "suites": 35,
+      "passed": 643,
+      "failed": 0,
+      "ignored": 7
+    },
+    "backend": {
+      "suites": 35,
+      "passed": 918,
+      "failed": 0,
+      "ignored": 6
+    }
+  },
+  "selectedLogs": [
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "file": "run-38724440086-backend-windows-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 5472,
+      "sha256": "549fc2a7be969e784f81a2f83380e02fd0976b45259917859ac1de6338dfd6ab"
+    },
+    {
+      "member": "backend-windows/10_Windows backend regression.txt",
+      "file": "run-38724440086-backend-windows-10_Windows_backend_regression.txt.gz",
+      "bytes": 225273,
+      "sha256": "efe4f254683edc2d1b08ea554792e9b70a07b5ab304d9577ba4a40ddc7342215"
+    },
+    {
+      "member": "backend-windows/28_Post Run actions_checkout@v5.txt",
+      "file": "run-38724440086-backend-windows-28_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1935,
+      "sha256": "ce5c172dde23ed9bfcd8e444d9e00adf38275a789339f01564343a24ccd71d5f"
+    },
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "file": "run-38724440086-backend-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 6358,
+      "sha256": "b5178b2c9a8b20d2d4f122841dc74aa75a3b160153c25ff2665329ce3fc58be3"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "run-38724440086-backend-6_Run_cargo_test_--locked_--workspace_--features_integration-test.txt.gz",
+      "bytes": 146183,
+      "sha256": "5e5f14a258ce865056b1a479066e9b1ff9aa1c13402f4adc1ab5aa469672c99a"
+    },
+    {
+      "member": "backend/12_Post Run actions_checkout@v5.txt",
+      "file": "run-38724440086-backend-12_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1954,
+      "sha256": "cdcc2a7f010951a4c579eb9de1013ddfbe0b86b0a30ab0e6895f17225fe4b187"
+    }
+  ],
+  "crossHostCredentialsForwarded": false,
+  "historicalFailureCleared": false
+}

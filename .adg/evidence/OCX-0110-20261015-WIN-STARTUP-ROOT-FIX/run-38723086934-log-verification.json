@@ -1,0 +1,70 @@
+{
+  "runId": 38723086934,
+  "source": "bc14165ceb91cb084361e8dce23b10d381330e1a",
+  "event": "pull_request",
+  "status": "completed",
+  "conclusion": "failure",
+  "logs": {
+    "bytes": 279988,
+    "sha256": "f47e14df0259e4f82bcae54907de6e977749cb5a3d4673ae6c8436cc03330777"
+  },
+  "safeEntriesAndCrcVerified": true,
+  "actualCheckout": {
+    "backend": "e1b0487b7373812c1ecbb0f44f15527dc0ba17a3",
+    "backend-windows": "e1b0487b7373812c1ecbb0f44f15527dc0ba17a3"
+  },
+  "rustResults": {
+    "backend": {
+      "suites": 35,
+      "passed": 918,
+      "failed": 0,
+      "ignored": 6
+    },
+    "backend-windows": {
+      "suites": 1,
+      "passed": 545,
+      "failed": 1,
+      "ignored": 4
+    }
+  },
+  "selectedLogs": [
+    {
+      "member": "backend/2_Run actions_checkout@v5.txt",
+      "file": "run-38723086934-backend-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 6167,
+      "sha256": "2f478ab21024acbae2bb60a7519a8537eb609059bb6d5de26f9cd994ddbf02f1"
+    },
+    {
+      "member": "backend/6_Run cargo test --locked --workspace --features integration-test.txt",
+      "file": "run-38723086934-backend-6_Run_cargo_test_--locked_--workspace_--features_integration-test.txt.gz",
+      "bytes": 146183,
+      "sha256": "303001ba9536cc6c4873b89f947929703cda678c9dc0409ccb1f323c6a930119"
+    },
+    {
+      "member": "backend/12_Post Run actions_checkout@v5.txt",
+      "file": "run-38723086934-backend-12_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1954,
+      "sha256": "fd278562d2e563db875703d950ffdb388ef14cc075ec2ac6a664bc2331c6adce"
+    },
+    {
+      "member": "backend-windows/2_Run actions_checkout@v5.txt",
+      "file": "run-38723086934-backend-windows-2_Run_actions_checkout_v5.txt.gz",
+      "bytes": 6355,
+      "sha256": "34ec96c7fcff8c4c5e4457b8649fac1f444f2db7ea987247ef26807e03904f14"
+    },
+    {
+      "member": "backend-windows/10_Windows backend regression.txt",
+      "file": "run-38723086934-backend-windows-10_Windows_backend_regression.txt.gz",
+      "bytes": 185953,
+      "sha256": "213719fd1e9903598d51d6aac8b22258b08fb71d18192350e2160c319e3325aa"
+    },
+    {
+      "member": "backend-windows/28_Post Run actions_checkout@v5.txt",
+      "file": "run-38723086934-backend-windows-28_Post_Run_actions_checkout_v5.txt.gz",
+      "bytes": 1935,
+      "sha256": "79a4d912c046603ccdc4c9fabf2404de54d7a20749f4d08d8be69606c0920c52"
+    }
+  ],
+  "crossHostCredentialsForwarded": false,
+  "historicalFailureCleared": false
+}
