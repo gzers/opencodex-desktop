@@ -1,0 +1,80 @@
+
+ RUN  v5.0.0 C:/Users/15119/.codex/worktrees/0110-windows-gates/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/overview-mesh-center.test.ts (8 tests | 2 failed) 126ms
+   × allocates the first mesh buffer in the final Teleport target 59ms
+   × does not allocate a mesh when the route is removed before its Teleport update flushes 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > allocates the first mesh buffer in the final Teleport target
+AssertionError: expected [ …(1) ] to deeply equal [ <section …(1)>…(2)</section> ]
+
+- Expected
++ Received
+
+  [
+-   <section
+-     class="route-section ov"
++   <div
++     aria-hidden="true"
++     class="motion-mark"
+    >
++     <!--teleport start-->
++     <!--teleport end-->
+      <div
+-       class="motion-stage"
++       class="motion-hero"
+      />
+-   </section>,
++   </div>,
+  ]
+
+ ❯ tests/overview-mesh-center.test.ts:82:31
+     80|   const { shell, wrapper } = await mountOverview()
+     81|   try {
+     82|     expect(allocationParents).toEqual([shell.querySelector('.route-sec…
+       |                               ^
+     83|     expect(gl.viewport).toHaveBeenCalledTimes(1)
+     84|     expect(center()).toBeCloseTo(expectedCenter(), 8)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/overview-mesh-center.test.ts > does not allocate a mesh when the route is removed before its Teleport update flushes
+AssertionError: expected "getContext" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st getContext call:
+
+    Array [
+      "webgl",
+      Object {
+        "alpha": true,
+        "antialias": false,
+        "depth": false,
+        "premultipliedAlpha": false,
+        "preserveDrawingBuffer": false,
+        "stencil": false,
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ tests/overview-mesh-center.test.ts:98:54
+     96|   wrapper.unmount()
+     97|   await nextTick()
+     98|   expect(HTMLCanvasElement.prototype.getContext).not.toHaveBeenCalled()
+       |                                                      ^
+     99|   expect(gl.createProgram).not.toHaveBeenCalled()
+    100|   expect(pending.size).toBe(0)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  07:28:46
+   Duration  1.46s (environment 57%, transform 27%, tests 10%, import 7%, worker 1%)
+
