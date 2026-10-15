@@ -14,6 +14,9 @@ jobs:
       - name: Verify Windows process-token evidence and smoke syntax
         shell: pwsh
         run: ./test/smoke/windows-process-token.test.ps1 -OutputDirectory test/out/windows-process-token
+      - name: Verify isolated acceptance Profile admission
+        shell: pwsh
+        run: ./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile
       - uses: actions/upload-artifact@v4
         if: always()
         with:
