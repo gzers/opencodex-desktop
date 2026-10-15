@@ -53,6 +53,7 @@ impl ProcessExitCode {
     pub fn for_error(error: &AppError) -> i32 {
         match error {
             AppError::NotConfigured => Self::INTERNAL_ERROR,
+            AppError::DataRootWriteDenied { .. } => Self::ACCESS_DENIED,
             AppError::AtomicWrite { .. } => Self::EXECUTION_FAILED,
             AppError::InstanceLockConflict => Self::TARGET_STATE_CONFLICT,
             AppError::TargetLockTimeout { .. } | AppError::Timeout => Self::TIMEOUT,
@@ -153,6 +154,7 @@ impl ErrorSummary {
         let (source, phrase) = match error {
             AppError::NotConfigured => ("ocx", "动作未配置"),
             AppError::FileSystem { .. } => ("fs", "文件访问失败"),
+            AppError::DataRootWriteDenied { .. } => ("fs", "数据目录写入权限不足"),
             AppError::InstanceLockConflict => ("ipc", "已有运行中实例"),
             AppError::TargetLockTimeout { .. } => ("fs", "目标锁等待超时"),
             AppError::AtomicWrite { .. } => ("fs", "原子写入失败"),
@@ -299,6 +301,17 @@ mod tests {
         assert_eq!(ProcessExitCode::CANCELLED, 10);
         assert_eq!(ProcessExitCode::TIMEOUT, 11);
         assert_eq!(ProcessExitCode::INTERNAL_ERROR, 12);
+        let denied = AppError::DataRootWriteDenied {
+            operation: "open instance lock".into(),
+        };
+        assert_eq!(
+            ProcessExitCode::for_error(&denied),
+            ProcessExitCode::ACCESS_DENIED
+        );
+        assert_eq!(
+            ErrorSummary::from_error(&denied, "0123456789abcdef"),
+            "[fs] 数据目录写入权限不足 [log:0123456789abcdef]"
+        );
     }
 
     #[test]

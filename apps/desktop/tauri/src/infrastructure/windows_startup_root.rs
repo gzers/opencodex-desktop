@@ -215,6 +215,38 @@ fn recovery_allowed(error: &AppError, configured: bool, fresh: bool) -> bool {
     !configured && fresh && matches!(error, AppError::DataRootWriteDenied { .. })
 }
 
+enum InitialAdmission {
+    Ready(crate::modules::data_root::bootstrap::StartupResolution),
+    Choose(PathBuf),
+}
+
+/// The exact production admission path is testable without native dialogs or
+/// the real HKCU pointer. Invalid saved choices cannot initialize a default.
+fn admit_initial(
+    platform_root: &Path,
+    executable: &Path,
+    configured: Option<&Path>,
+) -> AppResult<InitialAdmission> {
+    use crate::modules::data_root::bootstrap::{self, StartupResolution};
+    let anchor = match configured {
+        Some(path) => validate_saved(path)?,
+        None => bootstrap::default_anchor(platform_root, executable, true)?,
+    };
+    let fresh = configured.is_none() && fresh_anchor(&anchor)?;
+    match bootstrap::resolve_locked_with_boundary(&anchor, None) {
+        Ok((runtime_config, locks)) => Ok(InitialAdmission::Ready(StartupResolution {
+            anchor,
+            sandbox_boundary: None,
+            runtime_config,
+            locks,
+        })),
+        Err(error) if recovery_allowed(&error, configured.is_some(), fresh) => {
+            Ok(InitialAdmission::Choose(anchor))
+        }
+        Err(error) => Err(error),
+    }
+}
+
 /// Keep admission/selection/commit ordering independently testable without
 /// invoking native UI, modifying the registry, or changing process privileges.
 fn commit_selected<T>(
@@ -317,7 +349,7 @@ mod native {
             // SAFETY: Windows returned a valid SID for the current retained token.
             let bytes = unsafe { std::slice::from_raw_parts(user.User.Sid.cast::<u8>(), length) };
             let name = wide(&format!(
-                "Local\\OpenCodex-StartupRoot-{:x}",
+                "Global\\OpenCodex-StartupRoot-{:x}",
                 Sha256::digest(bytes)
             ));
             // SAFETY: terminated UTF-16 name, no inherited custom ACL or handle.
@@ -493,36 +525,9 @@ mod native {
                 return Ok(None);
             }
         };
-        let anchor_result = match configured.as_ref() {
-            Some(path) => validate_saved(path),
-            None => bootstrap::default_anchor(platform_root, executable, true),
-        };
-        let anchor = match anchor_result {
-            Ok(anchor) => anchor,
-            Err(error) => {
-                explain(app, &error);
-                return Ok(None);
-            }
-        };
-        let fresh = match configured
-            .is_none()
-            .then(|| fresh_anchor(&anchor))
-            .transpose()
-        {
-            Ok(value) => value.unwrap_or(false),
-            Err(error) => {
-                explain(app, &error);
-                return Ok(None);
-            }
-        };
-        match bootstrap::resolve_locked_with_boundary(&anchor, None) {
-            Ok((runtime_config, locks)) => Ok(Some(StartupResolution {
-                anchor,
-                sandbox_boundary: None,
-                runtime_config,
-                locks,
-            })),
-            Err(error) if recovery_allowed(&error, configured.is_some(), fresh) => {
+        match admit_initial(platform_root, executable, configured.as_deref()) {
+            Ok(InitialAdmission::Ready(resolution)) => Ok(Some(resolution)),
+            Ok(InitialAdmission::Choose(anchor)) => {
                 if let Some(window) = app.get_window("main") {
                     let _ = window.hide();
                 }
@@ -583,6 +588,63 @@ mod tests {
         let selected = base.join("selected");
         std::fs::create_dir(&selected).unwrap();
         (temp, selected, base.join("install/data"))
+    }
+
+    #[test]
+    fn real_initial_admission_uses_install_data_then_keeps_its_instance_lock() {
+        let (temp, _target, anchor) = fixture();
+        let base = temp.path().canonicalize().unwrap();
+        let legacy = base.join("legacy");
+        let executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        let first = match admit_initial(&legacy, &executable, None).unwrap() {
+            InitialAdmission::Ready(value) => value,
+            InitialAdmission::Choose(path) => {
+                panic!("writable default requested recovery: {path:?}")
+            }
+        };
+        assert_eq!(first.anchor, anchor);
+        assert_eq!(
+            first.runtime_config.active_data_root,
+            anchor.canonicalize().unwrap()
+        );
+        assert!(first.sandbox_boundary.is_none());
+        assert_eq!(first.locks.len(), 1);
+        assert!(matches!(
+            admit_initial(&legacy, &executable, None),
+            Err(AppError::InstanceLockConflict)
+        ));
+        assert!(!legacy.exists());
+        drop(first);
+        assert!(matches!(
+            admit_initial(&legacy, &executable, None),
+            Ok(InitialAdmission::Ready(_))
+        ));
+    }
+
+    #[test]
+    fn saved_choice_precedes_legacy_and_invalid_choice_never_falls_back() {
+        let (temp, target, anchor) = fixture();
+        let legacy = temp.path().canonicalize().unwrap().join("legacy");
+        let executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        std::fs::create_dir(&legacy).unwrap();
+        std::fs::write(legacy.join("keep"), b"old legacy").unwrap();
+        crate::modules::data_root::initialize(&target).unwrap();
+        let selected = match admit_initial(&legacy, &executable, Some(&target)).unwrap() {
+            InitialAdmission::Ready(value) => value,
+            InitialAdmission::Choose(path) => {
+                panic!("valid selected root requested recovery: {path:?}")
+            }
+        };
+        assert_eq!(selected.anchor, target.canonicalize().unwrap());
+        assert!(!anchor.exists());
+        drop(selected);
+        let metadata = target.join(crate::modules::data_root::METADATA_RELATIVE_PATH);
+        std::fs::write(&metadata, b"corrupt").unwrap();
+        assert!(admit_initial(&legacy, &executable, Some(&target)).is_err());
+        assert_eq!(std::fs::read(metadata).unwrap(), b"corrupt");
+        assert_eq!(std::fs::read(legacy.join("keep")).unwrap(), b"old legacy");
+        assert!(!legacy.join("manager-state").exists());
+        assert!(!anchor.exists());
     }
 
     #[test]
