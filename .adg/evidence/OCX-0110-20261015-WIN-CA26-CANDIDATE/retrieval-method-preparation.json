@@ -1,0 +1,21 @@
+{
+  "atUtc": "2026-10-15T01:15:35.7174874Z",
+  "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+  "runId": 38663871103,
+  "originalRetrievalMethod": ".adg/evidence/OCX-0110-20261014-WIN-FG-REQUEST/retrieve-candidate.py",
+  "originalRetrievalMethodSha256": "f0f68689f9a6544be13034fd61fe1b4a6f388176600b91f403d6872e35d19fb4",
+  "changes": [
+    "bind ca26 and run38663871103; refuse nonterminal or failed builds",
+    "require package success and query-etw skipped",
+    "use bounded curl download without forwarding Authorization across hosts",
+    "verify API byte count; reject original-name escapes, links, case collisions and excessive expansion"
+  ],
+  "retrievalMethod": "retrieve-candidate.py",
+  "msiMethod": "msi-readonly.ps1",
+  "msiMethodSha256": "98a35f58c8d1ee9608e81630de88a3f1a62fd56eb9bca766e4b5dd2b6284e6e8",
+  "msiDatabaseMode": 0,
+  "hostInstallerExecutionPlanned": false,
+  "hostDesktopStartPlanned": false,
+  "syntaxChecksPassed": true,
+  "networkDownloadExecutedDuringPreparation": false
+}

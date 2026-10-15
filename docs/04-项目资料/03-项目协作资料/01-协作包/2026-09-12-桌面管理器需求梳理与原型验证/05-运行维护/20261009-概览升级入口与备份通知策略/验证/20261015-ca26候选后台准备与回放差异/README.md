@@ -30,6 +30,26 @@
 
 准备快照固定12份方法/请求/实际run绑定/只读差异与保护状态；`verify-preparation.py` 只验证此历史时点。独立观察器最多观察600秒；观察到时不代表远端终止，更不能重派。后续必须继续同run，终态后核验API digest/ZIP CRC/安装载荷/版本/source和runner原始回执，只有准入后才可等待用户新的前台开始信号。
 
+### 候选终态及本机只读准入
+
+第一观察器608.296s到时仍为构建中，第二观察器继续同run，271.078s后于09:22:32读得completed/success。整个阶段只请求一次，未重派；实际package成功、query-etw skipped。runner原始日志ZIP/CRC及20份阶段日志核验，checkout确认为ca26，包锁回归35组/627passed/0failed/7ignored。
+
+| 制品 | 原始ID / 大小 | SHA256 |
+|---|---|---|
+| 安装包ZIP | 11940418610 / 7,627,587 bytes | `2e945d4bd8ad35a0efb1c4a1449bc678138f1794d5326d588db448da32abff0f` |
+| runner证据ZIP | 11940483370 / 1,662,626 bytes | `cff231eb27d29f9b3f2474e536e890a95ee1300c4b2ef69ecfc7f99830ac566f` |
+| MSI | 4,567,040 bytes | `6abf10954e91f3bcbad2a0916aa152181d87edb5aad1f2f92a0e5ec0a4ed7d94` |
+| NSIS | 3,271,178 bytes | `5162ef6fa6609908bca54c2aa9d1cb97d1a27cb933c8cc9a733eb453dad6d189` |
+| MSI提取产品EXE | 8,777,216 bytes / 0.1.10 | `f43e81a9d96f25a29a937a54d2c779ce2459c3ecb30a73b131c57729f70cb929` |
+
+两份artifact大小/API摘要/ZIP CRC/原始条目安全检查、包内source/版本与回执通过。证据包在首次curl下载发生TLS错误，没有留下其部分文件；原失败和方法保留，先独立确认已下载的安装包字节和缺失文件，再只读补取证据。恢复使用正常证书校验的HttpClient，新重定向请求不带Authorization；没有关闭TLS校验、覆盖原压缩包或重跑CI。完整任务日志的curl读取失败也保留，随后同一终态run经独立HttpClient取回原日志ZIP，79320bytes/SHA787d7d8b…，不是作业重试。
+
+MSI数据库只读模式0，提取内嵌CAB，未调用宿主安装流程。产品EXE摘要与runner精确MSI载荷回执相等，产品版本0.1.10，读取原始字节确认内嵌完整ca26源码身份。NSIS/MSI在临时runner的安装退出码0、首屏通过、卸载退出码0且EXE移除；它们不是本机普通/管理员UI、默认data根/自定义根/升级保留/卸载数据选项、物理DPI或真实OTA验收。
+
+本机候选保存于代码worktree `test/software/candidate-ca26e77-38663871103`，可执行载荷位于其 `msi-readonly/opencodex-desktop.exe`。本机未运行产品EXE或安装器、nativeCount=0，日常和旧隔离四摘要及TASK原字节保持。
+
+最终`candidate-manifest.json`固定94份原件/方法，`verify-candidate.py`独立复核真实checkout、原始runner证据ZIP、627项回归、制品、精确载荷与保护检查；`fullVersionGatePassed=false/releaseAccepted=false`。最初12份准备快照不倒改。下一前台的精确候选已经就绪，仍需用户新的前台开始信号。
+
 下一轮前台优先以一个普通隔离实例完成真实偏好备份、异值恢复及保护/固定/轮换和共享树表操作；实际操作时间及候选就绪后再安排。未开始前台，不提前把计划计为通过。
 
 ## 保护与未完成

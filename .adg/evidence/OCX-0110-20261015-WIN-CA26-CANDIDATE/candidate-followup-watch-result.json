@@ -1,0 +1,30 @@
+{
+  "atUtc": "2026-10-15T01:22:32.656229+00:00",
+  "runId": 38663871103,
+  "sameRemoteHandle": true,
+  "observations": 9,
+  "elapsedSeconds": 271.0779999999795,
+  "lastObservation": {
+    "runId": 38663871103,
+    "source": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "package",
+        "status": "completed",
+        "conclusion": "success",
+        "activeSteps": []
+      },
+      {
+        "name": "query-etw",
+        "status": "completed",
+        "conclusion": "skipped",
+        "activeSteps": []
+      }
+    ]
+  },
+  "remoteTerminalObserved": true,
+  "remoteRestarts": 0,
+  "hostDesktopStarted": false
+}

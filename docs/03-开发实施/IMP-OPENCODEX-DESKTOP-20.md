@@ -1524,3 +1524,11 @@ artifact11939861138/340221bytes/API摘要6f53dd39…、13份原件及job实际ch
 为下一前台提前只dispatch一次精确ca26 Windows候选run38663871103/attempt1，旧38662786466诊断模式被明确排除。09:09:58实际package进行中/query-etw skipped、conclusion null，尚非候选通过或宿主安装；600秒只读观察到时继续同run，不重派。12份准入前快照及差异方法见[候选准备与回放差异](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26候选后台准备与回放差异/README.md)，`.adg/evidence/OCX-0110-20261015-WIN-CA26-CANDIDATE/`。
 
 本机native0/日常及旧隔离四摘要/TASK原字节保持，无前台/原库/ETW新执行、真实迁移或安装；候选准入后仍等用户新的前台信号。Mac原生、失败时间窗、profile与安装隔离/原性能failed/全部门禁及原预算不提升，TASK/IMP保持in_progress，不关闭、合并、签名、晋升或发布。
+
+### 2026-10-15 ca26 Windows 候选终态与只读载荷核验
+
+原run38663871103于09:22:32读得completed/success，package成功/query-etw skipped。第一608.296s观察到时后仍读同run，第二271.078s取得真实终态，无重派。原始日志ZIP/CRC及20份阶段日志核验实际checkout ca26，包锁回归35组/627passed/0failed/7ignored。
+
+artifact11940418610安装ZIP7627587bytes/SHA2e945d4b…与11940483370证据ZIP1662626bytes/SHAcff231eb…分别匹配API；安全条目/CRC/source/版本/回执通过。MSI6abf1095…与NSIS5162ef6f…在临时runner新装/首屏/卸载成功。本机MSI只读数据库/CAB提取EXE8777216bytes、0.1.10、SHAf43e81a9…，匹配精确MSI载荷回执并含完整ca26源码字面量；未在宿主执行安装器/应用。TLS/curl下载失败保留，核对现存字节后只读补缺，正常证书校验且跨host不带Authorization，无覆盖/重派。
+
+94份最终原件方法清单和独立`verify-candidate.py`通过，见[候选准备与回放差异](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-ca26候选后台准备与回放差异/README.md)的终态段，原`.adg/evidence/OCX-0110-20261015-WIN-CA26-CANDIDATE/`追加。12份历史准备快照不改；下一前台候选就绪，但runner新装不抵本机双权限/安装根与升级卸载数据保留。native0/日常/旧隔离/TASK原摘要保持，仍等新的前台信号，原失败/预算/双平台依赖和八门禁不提升，无关闭/合并/签名/晋升/发布。
