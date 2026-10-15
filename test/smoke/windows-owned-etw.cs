@@ -31,6 +31,23 @@ namespace OpenCodex.Diagnostics
         }
         private readonly List<Life> processes = new List<Life>();
         private readonly List<Life> threads = new List<Life>();
+        private sealed class QueryName
+        {
+            public long ThreadStart, ProcessStart, At;
+            public string Fixture;
+        }
+        private readonly Dictionary<int, List<QueryName>> queryNames = new Dictionary<int, List<QueryName>>();
+        private static readonly HashSet<string> queryFixtures = new HashSet<string>(StringComparer.Ordinal) {
+            "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+            "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+            "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+            "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+            "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+            "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+            "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process"
+        };
+        private int queryNameRecords;
+        public bool QueryNameHistoryOverflowed { get; private set; }
         private readonly int root;
         private readonly long notBefore;
         private bool rootBound;
@@ -102,6 +119,45 @@ namespace OpenCodex.Diagnostics
             var item = At(threads, tid, qpc);
             return item != null && ProcessOwned(item.Parent, qpc) ? item.Parent : (int?)null;
         }
+        // Root hot events remain excluded except for these exact libtest names.
+        // Keep rename intervals tied to the original thread/process generation:
+        // a delayed callback or recycled TID must not inherit a query's scope.
+        public bool ThreadNamed(int pid, int tid, long qpc, string name)
+        {
+            var thread = At(threads, tid, qpc);
+            var process = At(processes, pid, qpc);
+            if (pid != root || process?.Role != "test" || thread?.Parent != pid) return false;
+            bool admitted = name != null && queryFixtures.Contains(name);
+            bool existing = queryNames.TryGetValue(tid, out var names);
+            if (!admitted && (!existing || !names.Any(item =>
+                item.ThreadStart == thread.Start && item.ProcessStart == process.Start))) return false;
+            if (queryNameRecords >= 512) {
+                QueryNameHistoryOverflowed = true;
+                return false;
+            }
+            if (!existing) {
+                names = new List<QueryName>();
+                queryNames.Add(tid, names);
+            }
+            names.Add(new QueryName { ThreadStart = thread.Start, ProcessStart = process.Start,
+                At = qpc, Fixture = admitted ? name : null });
+            queryNameRecords++;
+            return admitted;
+        }
+        public string QueryFixture(int tid, long qpc)
+        {
+            if (QueryNameHistoryOverflowed || !queryNames.TryGetValue(tid, out var names)) return null;
+            var thread = At(threads, tid, qpc);
+            var process = At(processes, root, qpc);
+            if (thread?.Parent != root || process?.Role != "test") return null;
+            QueryName latest = null;
+            foreach (var name in names)
+                if (name.ThreadStart == thread.Start && name.ProcessStart == process.Start
+                    && name.At <= qpc && (latest == null || name.At >= latest.At)) latest = name;
+            return latest?.Fixture;
+        }
+        public bool ThreadHotEventsOwned(int pid, int tid, long qpc) =>
+            HotEventsOwned(pid, qpc) || (pid == root && QueryFixture(tid, qpc) != null);
         public static int SelfTest()
         {
             int checks = 0;
@@ -173,6 +229,64 @@ namespace OpenCodex.Diagnostics
             require(scope.HotEventsOwned(scope.ThreadOwner(206, 1032).Value, 1032));
             scope.ProcessStop(100, 1040);
             require(!scope.HotEventsOwned(100, 1041));
+            return checks;
+        }
+        public static int SelfTestNamedQueryScope()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("Named root query thread scope");
+                checks++;
+            };
+            const string fixture = "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant";
+            var scope = new OwnedEtwScope(100, 1000);
+            require(!scope.ThreadNamed(100, 200, 1000, fixture));
+            require(scope.ProcessStart(100, 1, 1001, true, null));
+            require(scope.ThreadStart(100, 200, 1002));
+            require(!scope.ThreadNamed(100, 200, 1003, fixture + "-suffix"));
+            require(!scope.ThreadHotEventsOwned(100, 200, 1003));
+            require(scope.ThreadNamed(100, 200, 1004, fixture));
+            require(scope.QueryFixture(200, 1003) == null);
+            require(scope.QueryFixture(200, 1004) == fixture);
+            require(!scope.HotEventsOwned(100, 1005));
+            require(scope.ThreadHotEventsOwned(100, 200, 1005));
+            require(!scope.ThreadHotEventsOwned(100, 201, 1005));
+            require(!scope.ThreadNamed(999, 200, 1005, fixture));
+            require(!scope.ThreadNamed(100, 200, 1010, "unrelated-name"));
+            require(!scope.ThreadHotEventsOwned(100, 200, 1011));
+            require(scope.ThreadHotEventsOwned(100, 200, 1005));
+            require(scope.ThreadNamed(100, 200, 1020, fixture));
+            require(scope.ThreadStop(200, 1021));
+            require(!scope.ThreadHotEventsOwned(100, 200, 1022));
+            require(scope.ThreadStart(100, 200, 1030));
+            require(!scope.ThreadHotEventsOwned(100, 200, 1031));
+            require(scope.ThreadNamed(100, 200, 1032, fixture));
+            require(scope.ThreadHotEventsOwned(100, 200, 1033));
+            require(scope.QueryFixture(200, 1005) == fixture);
+            require(scope.ProcessStart(101, 100, 1040, false, "node"));
+            require(scope.ThreadStart(101, 201, 1041));
+            require(!scope.ThreadNamed(101, 201, 1042, fixture));
+            require(scope.ThreadHotEventsOwned(101, 201, 1042));
+            require(scope.ThreadStart(100, 202, 1043));
+            require(!scope.ThreadNamed(100, 202, 1044, null));
+            require(!scope.ThreadHotEventsOwned(999, 200, 1045));
+            require(!scope.QueryNameHistoryOverflowed);
+            for (int i = 0; i < 512; i++) scope.ThreadNamed(100, 200, 1050 + i, fixture);
+            require(scope.QueryNameHistoryOverflowed);
+            require(!scope.ThreadHotEventsOwned(100, 200, 1600));
+            require(scope.ThreadHotEventsOwned(101, 201, 1600));
+            require(scope.ProcessStop(100, 1700));
+            require(!scope.ThreadHotEventsOwned(100, 200, 1701));
+            var reused = new OwnedEtwScope(100, 1000);
+            reused.ProcessStart(100, 1, 1001, true, null);
+            reused.ThreadStart(100, 200, 1002);
+            require(reused.ThreadNamed(100, 200, 1003, fixture));
+            for (int i = 0; i < 600; i++) {
+                reused.ThreadStart(100, 200, 1010 + i * 3);
+                reused.ThreadNamed(100, 200, 1011 + i * 3, "unrelated-name");
+            }
+            require(!reused.QueryNameHistoryOverflowed);
+            require(!reused.ThreadHotEventsOwned(100, 200, 3000));
             return checks;
         }
     }
@@ -420,6 +534,7 @@ namespace OpenCodex.Diagnostics
         {
             public int Pid, Tid;
             public long Qpc, Generation;
+            public string Fixture;
         }
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool OpenProcessToken(IntPtr process, uint access, out IntPtr token);
@@ -721,6 +836,8 @@ namespace OpenCodex.Diagnostics
             int knownImageChildrenNotAdmitted = 0;
             var lineBudget = new OwnedEtwLineBudget(64L * 1024 * 1024);
             long omittedRootScheduling = 0, omittedRootFileIo = 0;
+            var namedQueryFixtures = new HashSet<string>(StringComparer.Ordinal);
+            int namedQueryThreadEvents = 0;
             var pendingIo = new Dictionary<ulong, PendingIo>();
             var retainedHandles = new List<IntPtr>();
             Exception writerError = null;
@@ -835,6 +952,21 @@ namespace OpenCodex.Diagnostics
                 kernel.ThreadStart += data => guarded(data, () => {
                     if (scope?.ThreadStart(data.ProcessID, data.ThreadID, OriginalQpc(data)) != true) return;
                     emit(new { kind = "thread-start", original = Header(data), pid = data.ProcessID, tid = data.ThreadID });
+                    if (scope.ThreadNamed(data.ProcessID, data.ThreadID, OriginalQpc(data), data.ThreadName)) {
+                        namedQueryFixtures.Add(data.ThreadName);
+                        namedQueryThreadEvents++;
+                        emit(new { kind = "root-query-thread-name", original = Header(data),
+                            pid = data.ProcessID, tid = data.ThreadID, fixture = data.ThreadName,
+                            nameSource = "ThreadStart payload", unrecognizedNamesSaved = false });
+                    }
+                });
+                kernel.ThreadSetName += data => guarded(data, () => {
+                    if (scope?.ThreadNamed(data.ProcessID, data.ThreadID, OriginalQpc(data), data.ThreadName) != true) return;
+                    namedQueryFixtures.Add(data.ThreadName);
+                    namedQueryThreadEvents++;
+                    emit(new { kind = "root-query-thread-name", original = Header(data),
+                        pid = data.ProcessID, tid = data.ThreadID, fixture = data.ThreadName,
+                        nameSource = "ThreadSetName payload", unrecognizedNamesSaved = false });
                 });
                 kernel.ThreadStop += data => guarded(data, () => {
                     int? owner = scope?.ThreadOwner(data.ThreadID, OriginalQpc(data));
@@ -844,12 +976,13 @@ namespace OpenCodex.Diagnostics
                 kernel.ThreadCSwitch += data => guarded(data, () => {
                     int? incoming = scope?.ThreadOwner(data.NewThreadID, OriginalQpc(data));
                     int? outgoing = scope?.ThreadOwner(data.OldThreadID, OriginalQpc(data));
-                    if (incoming.HasValue && scope.HotEventsOwned(incoming.Value, OriginalQpc(data)))
+                    if (incoming.HasValue && scope.ThreadHotEventsOwned(incoming.Value, data.NewThreadID, OriginalQpc(data)))
                         emit(new { kind = "owned-thread-scheduled-in", original = Header(data), pid = incoming.Value,
                             tid = data.NewThreadID, priority = data.NewThreadPriority, waitTime = data.NewThreadWaitTime,
+                            fixture = scope.QueryFixture(data.NewThreadID, OriginalQpc(data)),
                             counterpartThreadIdSaved = false });
                     else if (incoming.HasValue) omittedRootScheduling++;
-                    if (outgoing.HasValue && scope.HotEventsOwned(outgoing.Value, OriginalQpc(data)))
+                    if (outgoing.HasValue && scope.ThreadHotEventsOwned(outgoing.Value, data.OldThreadID, OriginalQpc(data)))
                         emit(new { kind = "owned-thread-scheduled-out", original = Header(data), pid = outgoing.Value,
                             tid = data.OldThreadID, priority = data.OldThreadPriority,
                             waitReason = data.OldThreadWaitReason.ToString(), waitMode = data.OldThreadWaitMode.ToString(),
@@ -857,18 +990,20 @@ namespace OpenCodex.Diagnostics
                             waitModeDecodedRaw = (int)data.OldThreadWaitMode,
                             stateDecodedRaw = (int)data.OldThreadState,
                             versionSpecificWaitSemanticsVerified = false,
+                            fixture = scope.QueryFixture(data.OldThreadID, OriginalQpc(data)),
                             state = data.OldThreadState.ToString(), counterpartThreadIdSaved = false });
                     else if (outgoing.HasValue) omittedRootScheduling++;
                 });
                 kernel.DispatcherReadyThread += data => guarded(data, () => {
                     int? owner = scope?.ThreadOwner(data.AwakenedThreadID, OriginalQpc(data));
                     if (!owner.HasValue) return;
-                    if (!scope.HotEventsOwned(owner.Value, OriginalQpc(data))) {
+                    if (!scope.ThreadHotEventsOwned(owner.Value, data.AwakenedThreadID, OriginalQpc(data))) {
                         omittedRootScheduling++;
                         return;
                     }
                     emit(new { kind = "owned-thread-ready", original = Header(data), pid = owner.Value,
                         tid = data.AwakenedThreadID, adjustReason = data.AdjustReason.ToString(),
+                        fixture = scope.QueryFixture(data.AwakenedThreadID, OriginalQpc(data)),
                         adjustIncrement = data.AdjustIncrement, flags = data.Flags.ToString(),
                         readyingThreadIdSaved = false });
                 });
@@ -885,17 +1020,19 @@ namespace OpenCodex.Diagnostics
                     // owned. No unrelated fields are saved.
                     pendingIo.Remove(data.IrpPtr);
                     if (scope?.ProcessOwned(data.ProcessID, OriginalQpc(data)) != true) return;
-                    if (!scope.HotEventsOwned(data.ProcessID, OriginalQpc(data))) {
+                    if (!scope.ThreadHotEventsOwned(data.ProcessID, data.ThreadID, OriginalQpc(data))) {
                         omittedRootFileIo++;
                         return;
                     }
                     if (pendingIo.Count < 32768)
                         pendingIo[data.IrpPtr] = new PendingIo { Pid = data.ProcessID, Tid = data.ThreadID,
-                            Qpc = OriginalQpc(data), Generation = scope.ProcessGeneration(data.ProcessID, OriginalQpc(data)).Value };
+                            Qpc = OriginalQpc(data), Generation = scope.ProcessGeneration(data.ProcessID, OriginalQpc(data)).Value,
+                            Fixture = scope.QueryFixture(data.ThreadID, OriginalQpc(data)) };
                     else Interlocked.Increment(ref dropped);
                     string file = SafeFile(data.FileName, nodeExe, temporaryDirectory);
                     emit(new { kind = "owned-file-read-write", original = Header(data),
                         pid = data.ProcessID, tid = data.ThreadID, file, pathOmitted = file == null,
+                        fixture = scope.QueryFixture(data.ThreadID, OriginalQpc(data)),
                         fileObject = data.FileObject, irp = data.IrpPtr, offset = data.Offset, bytes = data.IoSize });
                 });
                 kernel.FileIORead += io;
@@ -903,17 +1040,19 @@ namespace OpenCodex.Diagnostics
                 kernel.FileIOCreate += data => guarded(data, () => {
                     pendingIo.Remove(data.IrpPtr);
                     if (scope?.ProcessOwned(data.ProcessID, OriginalQpc(data)) != true) return;
-                    if (!scope.HotEventsOwned(data.ProcessID, OriginalQpc(data))) {
+                    if (!scope.ThreadHotEventsOwned(data.ProcessID, data.ThreadID, OriginalQpc(data))) {
                         omittedRootFileIo++;
                         return;
                     }
                     if (pendingIo.Count < 32768)
                         pendingIo[data.IrpPtr] = new PendingIo { Pid = data.ProcessID, Tid = data.ThreadID,
-                            Qpc = OriginalQpc(data), Generation = scope.ProcessGeneration(data.ProcessID, OriginalQpc(data)).Value };
+                            Qpc = OriginalQpc(data), Generation = scope.ProcessGeneration(data.ProcessID, OriginalQpc(data)).Value,
+                            Fixture = scope.QueryFixture(data.ThreadID, OriginalQpc(data)) };
                     else Interlocked.Increment(ref dropped);
                     string file = SafeFile(data.FileName, nodeExe, temporaryDirectory);
                     emit(new { kind = "owned-file-create", original = Header(data),
                         pid = data.ProcessID, tid = data.ThreadID, file, pathOmitted = file == null,
+                        fixture = scope.QueryFixture(data.ThreadID, OriginalQpc(data)),
                         fileObject = data.FileObject, irp = data.IrpPtr });
                 });
                 kernel.FileIOOperationEnd += data => guarded(data, () => {
@@ -923,6 +1062,7 @@ namespace OpenCodex.Diagnostics
                         || scope?.ProcessGeneration(operation.Pid, OriginalQpc(data)) != operation.Generation) return;
                     emit(new { kind = "owned-file-operation-end", original = Header(data),
                         pid = operation.Pid, tid = operation.Tid, irp = data.IrpPtr,
+                        fixture = operation.Fixture,
                         initiationQpc = operation.Qpc, status = data.NtStatus,
                         correlation = "owned initiating IRP; original completion-header process not stored",
                         completionsAfterOwnerExitOmitted = true });
@@ -1054,7 +1194,12 @@ namespace OpenCodex.Diagnostics
                     maximumSerializedBytes = 64L * 1024 * 1024,
                     actualSerializedBytes, queuedSerializedBytes = lineBudget.QueuedBytes,
                     serializedBytesWithinLimit = actualSerializedBytes.HasValue && actualSerializedBytes.Value <= 64L * 1024 * 1024,
-                    jsonLinesNewline = "LF", hotEventsScope = "admitted Node/cmd descendants only",
+                    jsonLinesNewline = "LF", hotEventsScope = "admitted Node/cmd descendants and exact named root query test threads",
+                    namedQueryThreadEvents, namedQueryFixtures = namedQueryFixtures.OrderBy(name => name).ToArray(),
+                    expectedNamedQueryFixtures = 7, maximumQueryNameHistoryRecords = 512,
+                    rootQueryHotEventsBeginAtNameEvent = true,
+                    queryNameHistoryOverflowed = scope?.QueryNameHistoryOverflowed ?? false,
+                    rootQueryThreadCoverageGap = namedQueryFixtures.Count != 7 || scope?.QueryNameHistoryOverflowed == true,
                     rootIdentityAndProcessThreadImageLifecyclesRetained = true,
                     rootSchedulingEventsIntentionallyOmitted = omittedRootScheduling,
                     rootFileIoInitiationsIntentionallyOmitted = omittedRootFileIo,

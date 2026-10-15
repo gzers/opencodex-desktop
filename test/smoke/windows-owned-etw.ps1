@@ -63,6 +63,7 @@ $taskLifecycleChecks = [OpenCodex.Diagnostics.OwnedEtwLifecycle]::SelfTest()
 $taskNativeStopChecks = [OpenCodex.Diagnostics.OwnedEtwNativeStop]::SelfTest()
 $taskProcessImageChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestProcessImage()
 $taskHotScopeChecks = [OpenCodex.Diagnostics.OwnedEtwScope]::SelfTestHotScope()
+$taskNamedQueryScopeChecks = [OpenCodex.Diagnostics.OwnedEtwScope]::SelfTestNamedQueryScope()
 $taskLineBudgetChecks = [OpenCodex.Diagnostics.OwnedEtwLineBudget]::SelfTest()
 $taskExecutableAdmissionChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestExecutableAdmission()
 $taskRunnerEnvironmentChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestRunnerEnvironment()
@@ -74,6 +75,7 @@ if (!$RecordApproved) {
         pureNativeStopChecks=$taskNativeStopChecks
         controllerProcessImageChecks=$taskProcessImageChecks
         descendantHotScopeChecks=$taskHotScopeChecks;utf8LineBudgetChecks=$taskLineBudgetChecks
+        namedQueryThreadScopeChecks=$taskNamedQueryScopeChecks
         executableAdmissionChecks=$taskExecutableAdmissionChecks
         runnerEnvironmentChecks=$taskRunnerEnvironmentChecks
         regressionEventChecks=$taskRegressionEventChecks

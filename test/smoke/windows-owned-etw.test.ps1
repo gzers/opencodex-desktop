@@ -19,6 +19,7 @@ if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 3
     $taskResult.pureNativeStopChecks -ne 8 -or
     $taskResult.controllerProcessImageChecks -ne 5 -or
     $taskResult.descendantHotScopeChecks -ne 10 -or $taskResult.utf8LineBudgetChecks -ne 10 -or
+    $taskResult.namedQueryThreadScopeChecks -ne 39 -or
     $taskResult.executableAdmissionChecks -ne 13 -or
     $taskResult.runnerEnvironmentChecks -ne 10 -or
     $taskResult.regressionEventChecks -ne 7 -or
@@ -71,6 +72,7 @@ if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards 
     status='passed';pureScopeChecks=38;pureLifecycleChecks=7;pureNativeStopChecks=8
     controllerProcessImageChecks=5
     descendantHotScopeChecks=10;utf8LineBudgetChecks=10
+    namedQueryThreadScopeChecks=39
     executableAdmissionChecks=13
     runnerEnvironmentChecks=10
     regressionEventChecks=7
