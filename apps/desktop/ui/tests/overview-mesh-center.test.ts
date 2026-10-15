@@ -71,6 +71,37 @@ async function mountOverview() {
   return { shell, wrapper }
 }
 
+it('allocates the first mesh buffer in the final Teleport target', async () => {
+  const allocationParents: Element[] = []
+  vi.mocked(HTMLCanvasElement.prototype.getContext).mockImplementation(function (this: HTMLCanvasElement) {
+    allocationParents.push(this.parentElement!.parentElement!.parentElement!)
+    return gl as unknown as WebGLRenderingContext
+  })
+  const { shell, wrapper } = await mountOverview()
+  try {
+    expect(allocationParents).toEqual([shell.querySelector('.route-section')])
+    expect(gl.viewport).toHaveBeenCalledTimes(1)
+    expect(center()).toBeCloseTo(expectedCenter(), 8)
+  } finally { wrapper.unmount(); shell.remove() }
+})
+
+it('does not allocate a mesh when the route is removed before its Teleport update flushes', async () => {
+  const shell = document.createElement('main')
+  shell.innerHTML = '<section class="route-section ov"><div class="motion-stage"></div></section>'
+  document.body.append(shell)
+  const wrapper = mount(RuntimeMotionMark, {
+    attachTo: shell.querySelector('.motion-stage')!,
+    props: { state: 'running', active: true },
+  })
+  wrapper.unmount()
+  await nextTick()
+  expect(HTMLCanvasElement.prototype.getContext).not.toHaveBeenCalled()
+  expect(gl.createProgram).not.toHaveBeenCalled()
+  expect(pending.size).toBe(0)
+  expect(shell.querySelector('.motion-backdrop')).toBeNull()
+  shell.remove()
+})
+
 it.each(layouts)('uses the actual Logo center after Teleport in $name', async nextLayout => {
   layout = nextLayout
   const { shell, wrapper } = await mountOverview()
