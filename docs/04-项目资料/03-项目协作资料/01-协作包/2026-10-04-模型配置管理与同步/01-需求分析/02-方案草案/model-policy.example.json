@@ -13,7 +13,7 @@
   "channels": [
     {
       "id": "channel-demo-responses",
-      "label": "示例多协议渠道",
+      "label": "示例共用认证多节点渠道",
       "bindingHint": {
         "adapter": "openai-responses"
       },
@@ -116,7 +116,6 @@
             "mode": "custom",
             "value": "openai-chat"
           },
-          "endpointId": "chat",
           "naming": {
             "alias": "gpt54",
             "displayName": "GPT 5.4（示例显示名）"
@@ -131,7 +130,6 @@
           "protocol": {
             "mode": "inherit"
           },
-          "endpointId": "anthropic",
           "reasoning": {
             "ladder": {
               "mode": "inherit"
@@ -143,20 +141,17 @@
         }
       ],
       "defaultProtocol": "openai-responses",
-      "protocolEndpoints": [
+      "nodes": [
         {
           "id": "primary",
-          "protocol": "openai-responses"
+          "name": "默认节点"
         },
         {
-          "id": "chat",
-          "protocol": "openai-chat"
-        },
-        {
-          "id": "anthropic",
-          "protocol": "anthropic"
+          "id": "backup",
+          "name": "备用节点"
         }
-      ]
+      ],
+      "activeNodeId": "primary"
     },
     {
       "id": "channel-demo-responses-b",
@@ -183,12 +178,13 @@
       "familyOverrides": [],
       "modelOverrides": [],
       "defaultProtocol": "openai-responses",
-      "protocolEndpoints": [
+      "nodes": [
         {
           "id": "primary",
-          "protocol": "openai-responses"
+          "name": "默认节点"
         }
-      ]
+      ],
+      "activeNodeId": "primary"
     },
     {
       "id": "channel-demo-anthropic",
@@ -225,12 +221,13 @@
         }
       ],
       "defaultProtocol": "anthropic",
-      "protocolEndpoints": [
+      "nodes": [
         {
           "id": "primary",
-          "protocol": "anthropic"
+          "name": "默认节点"
         }
-      ]
+      ],
+      "activeNodeId": "primary"
     }
   ],
   "pickerOrder": {

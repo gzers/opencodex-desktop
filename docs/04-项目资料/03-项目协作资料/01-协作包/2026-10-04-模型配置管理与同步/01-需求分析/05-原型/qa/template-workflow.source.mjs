@@ -56,7 +56,7 @@ class Node {
 for(const id of ['mpMain','mpAssistantHost','mpContent','mpSettingsContent','modal','modalBody','modalMask','modalConfirm'])nodes.set(id,new Node(id));
 const document={activeElement:null,documentElement:{dataset:{route:'models',theme:'light'}},querySelector:q=>q==='#modalBody .mp-dialog'?new Node():q.startsWith('#')?nodes.get(q.slice(1))||null:q==='[data-field-editor]'?new Node():q==='[data-scope-all]'?nodes.get('mpScopeAll'):null,querySelectorAll:q=>q==='[data-scope-all]'&&nodes.has('mpScopeAll')?[nodes.get('mpScopeAll')]:[],addEventListener:(type,fn)=>{listeners[type]=fn;}};
 const context={document,navigator:{},window:{location:{hash:'#models'},matchMedia:()=>({matches:false}),getComputedStyle:()=>({paddingTop:mainPadding+'px'}),addEventListener:(type,fn)=>listeners['window:'+type]=fn},JSON,Date,URL,Set,Object,String,Number,Array,console,setTimeout:fn=>timers.push(fn),toast(){},setRoute(route){routes.push(route);document.documentElement.dataset.route=route;},showSettingsSection(section){routes.push(section);},openModal(title,body,label,fn,opts){modalTitle=title;nodes.get('modalBody').innerHTML=body;nodes.get('modalMask').style.display='flex';confirm=fn;options=opts||{};},closeModal(){nodes.get('modalMask').style.display='none';confirm=null;context.window.__modalOnClose?.();}};
-vm.createContext(context);vm.runInContext(fs.readFileSync(source,'utf8'),context,{filename:source});
+vm.createContext(context);for(const file of ['tree-table.js','model-template-updates.js','model-template-seeds.js'])vm.runInContext(fs.readFileSync(path.join(path.dirname(source),file),'utf8'),context);vm.runInContext(fs.readFileSync(source,'utf8'),context,{filename:source});
 const state=()=>context.window.modelPrototype.state(),page=()=>nodes.get('mpContent').innerHTML,dialog=()=>nodes.get('modalBody').innerHTML;
 function click(action,data={}){const target={dataset:{mp:action,...data},closest(){return this;}};listeners.click({target});}
 function runConfirm(){const fn=confirm;assert.equal(typeof fn,'function');fn();}
@@ -66,11 +66,11 @@ function drain(){let limit=30;while(timers.length&&limit-->0)timers.shift()();as
  const event=(type,selector,dataset={},value='',checked=false)=>listeners[type]({target:{dataset,value,checked,matches:q=>q===selector}});
  const meta=(key,value)=>event('input','[data-template-meta],[data-template-match]',{templateMeta:key},value);
  const match=(key,value,checked=false)=>event('change','[data-template-match]',{templateMatch:key},value,checked);
- const open=(id='gpt')=>{click('tab',{tab:'templates'});click('view-template',{id});};
+ const open=(id='gpt')=>{click('tab',{tab:'templates'});click('open-template-editor',{id});};
  const startExternal=(range='current')=>{click('external-agent');nodes.get('mpExternalScope').value=range;runConfirm();return state().externalTask;};
  const operation=(target,content=target.content)=>({action:'revision',id:target.id,revision:target.nextRevision,baseDigest:target.baseDigest,content:JSON.parse(JSON.stringify(content)),sources:['演示来源，未检索']});
  const incoming=(task,ops)=>{click('external-result');nodes.get('mpExternalJSON').value=JSON.stringify({kind:'template-batch-result',taskId:task.taskId,operations:ops});runConfirm();};
- const configureAgent=()=>{click('agent-settings');nodes.get('mpAgentProvider').value='newapi';nodes.get('mpAgentProvider').onchange();nodes.get('mpAgentModel').value='gpt-5.4';nodes.get('mpAgentModel').onchange();runConfirm();context.closeModal();};
+ const configureAgent=()=>{const picker=context.window.modelPickerPrototype;context.window.modelPickerPrototype={choose(options){options.onSelect({kind:'models',models:[{kind:'channel',channelId:'newapi',modelId:'gpt-5.4'}]});return true;}};click('agent-settings');click('agent-pick-model');runConfirm();context.window.modelPickerPrototype=picker;context.closeModal();};
  const scroll=(top,target=nodes.get('mpMain'))=>{target.scrollTop=top;listeners.scroll({target});};
  return {nodes,context,state,page,dialog,click,runConfirm,drain,proto,event,meta,match,open,startExternal,operation,incoming,configureAgent,scroll,routes,resize:(height,viewport=600,padding=mainPadding,border=0)=>{headerHeight=height;mainPadding=padding;nodes.get('mpMain').clientHeight=viewport;nodes.get('mpMain').clientTop=border;listeners['window:resize']?.();}};
 }

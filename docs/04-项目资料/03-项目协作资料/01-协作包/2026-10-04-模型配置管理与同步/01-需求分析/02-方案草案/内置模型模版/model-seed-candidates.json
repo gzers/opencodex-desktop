@@ -1,0 +1,4385 @@
+{
+  "format": "model-seed-research-v1",
+  "status": "candidate-research-not-production-schema",
+  "asOf": "2026-10-13",
+  "product": "OpenCodex 桌面管理器",
+  "scope": "通用文本、编码、推理与可输入多模态的模型；不含独立图片/视频/音频生成及 embedding/rerank",
+  "unitRule": "保留官方 K/k/M 原文；只有页面给出精确整数时填写 exactTokens，不能把上下文、最大输入、最大输出相加。",
+  "unknownRule": "null 为尚未确认；不代表不支持。所有字段按型号与 serviceScope 读取，不按族扩散。",
+  "sources": [
+    {
+      "id": "glm53",
+      "title": "GLM-5.3",
+      "url": "https://docs.z.ai/guides/llm/glm-5.3",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "glm53flash",
+      "title": "GLM-5.3-Flash/FlashX",
+      "url": "https://docs.z.ai/guides/vlm/glm-5.3-flash",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "glm52",
+      "title": "GLM-5.2",
+      "url": "https://docs.z.ai/guides/llm/glm-5.2",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "glm5",
+      "title": "GLM-5",
+      "url": "https://docs.bigmodel.cn/cn/guide/models/text/glm-5",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "hy-models",
+      "title": "TokenHub 模型列表",
+      "url": "https://intl.cloud.tencent.com/zh/document/product/1300/78934",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "hy-reasoning",
+      "title": "TokenHub 深度思考",
+      "url": "https://intl.cloud.tencent.com/jp/document/product/1300/80637",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "hy-guide",
+      "title": "混元调用指南",
+      "url": "https://cloud.tencent.com/document/product/1823/132252",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "hy-retirement",
+      "title": "混元旧版本下线迁移公告",
+      "url": "https://cloud.tencent.com/document/product/1729/131925",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "ark-models",
+      "title": "火山方舟模型列表",
+      "url": "https://docs.volcengine.com/docs/ark/model-list?lang=zh",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "ark-reasoning",
+      "title": "火山方舟深度思考",
+      "url": "https://docs.volcengine.com/docs/ark/deep-thinking?lang=en",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "ark-retirement",
+      "title": "火山方舟模型下线通知",
+      "url": "https://docs.volcengine.com/docs/ark/model-deprecation-notice",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "qwen-models",
+      "title": "百炼文本生成模型",
+      "url": "https://help.aliyun.com/zh/model-studio/text-generation-model",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "qwen-vision",
+      "title": "百炼视觉理解",
+      "url": "https://help.aliyun.com/en/model-studio/vision-model/",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "deepseek-models",
+      "title": "DeepSeek 模型与参数",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "deepseek-reasoning",
+      "title": "DeepSeek 思考模式",
+      "url": "https://api-docs.deepseek.com/guides/thinking_mode/",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "kimi3",
+      "title": "Kimi K3",
+      "url": "https://platform.kimi.ai/docs/guide/kimi-k3-quickstart",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "kimi26",
+      "title": "Kimi K2.6",
+      "url": "https://platform.kimi.ai/docs/guide/kimi-k2-6-quickstart",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "minimax-models",
+      "title": "MiniMax 模型调用",
+      "url": "https://platform.minimax.io/docs/guides/text-generation",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "ernie-models",
+      "title": "千帆模型列表",
+      "url": "https://intl.cloud.baidu.com/en/doc/qianfan/s/7m95lyy43-intl-en",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "ernie-product",
+      "title": "千帆 ERNIE 5.0 与 X1.1",
+      "url": "https://cloud.baidu.com/product-s/qianfan_home",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official-deployment"
+    },
+    {
+      "id": "step5",
+      "title": "Step 5 Preview",
+      "url": "https://www.stepfun.com/step-5-preview",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "step37",
+      "title": "Step 3.7 Flash",
+      "url": "https://www.stepfun.com/step-3.7-flash",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "step35",
+      "title": "Step 3.5 Flash",
+      "url": "https://www.stepfun.com/step-3.5-flash",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "mimo25",
+      "title": "MiMo-V2.5",
+      "url": "https://mimo.xiaomi.com/mimo-v2-5",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "mimo-reasoning",
+      "title": "MiMo 思考内容回传",
+      "url": "https://platform.xiaomimimo.com/docs/en-US/usage-guide/passing-back-reasoning_content",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "mimo-retirement",
+      "title": "MiMo 版本动态",
+      "url": "https://platform.xiaomimimo.com/docs/en-US/news/v2.5-tts-release",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "gpt6astra",
+      "title": "GPT-6 Astra",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-astra",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "gpt61sol",
+      "title": "GPT-6.1 Sol",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "gpt6luna",
+      "title": "GPT-6 Luna",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-luna",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "gpt6sol",
+      "title": "GPT-6 Sol",
+      "url": "https://developers.openai.com/api/docs/models/gpt-6-sol",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "gpt6reasoning",
+      "title": "OpenAI 推理模型",
+      "url": "https://developers.openai.com/api/docs/guides/reasoning",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "claude-models",
+      "title": "Claude 模型概览",
+      "url": "https://platform.claude.com/docs/en/models/overview",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "claude-context",
+      "title": "Claude 上下文窗口",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "gemini38",
+      "title": "Gemini 3.8 Flash",
+      "url": "https://ai.google.dev/gemini-api/docs/latest-model",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "gemini-thinking",
+      "title": "Gemini 思考配置",
+      "url": "https://ai.google.dev/gemini-api/docs/thinking/",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "gemini35",
+      "title": "Gemini 3.5 Flash",
+      "url": "https://ai.google.dev/gemini-api/docs/whats-new-gemini-3.5",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "grok47",
+      "title": "Grok 4.7",
+      "url": "https://docs.x.ai/developers/models/grok-4.7",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "grok-reasoning",
+      "title": "Grok 推理参数",
+      "url": "https://docs.x.ai/developers/model-capabilities/text/reasoning",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "grok-release",
+      "title": "Grok 发布说明",
+      "url": "https://docs.x.ai/developers/release-notes",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "mistral4",
+      "title": "Mistral Large 4",
+      "url": "https://docs.mistral.ai/models/mistral-large-4-0",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "mistral-index",
+      "title": "Mistral 模型目录",
+      "url": "https://docs.mistral.ai/inference",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "devstral2",
+      "title": "Devstral 2",
+      "url": "https://docs.mistral.ai/models/devstral-2-25-12",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "mistral-limit",
+      "title": "Mistral 已知限制",
+      "url": "https://docs.mistral.ai/resources/known-limitations",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "gemma4",
+      "title": "Gemma 4 模型卡",
+      "url": "https://ai.google.dev/gemma/docs/core/model_card_4",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "llama4",
+      "title": "Llama 4 官方介绍",
+      "url": "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "llama-start",
+      "title": "Llama 开发入口",
+      "url": "https://ai.meta.com/llama/get-started/",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    },
+    {
+      "id": "step35-api",
+      "title": "Step 3.5 Flash API 示例",
+      "url": "https://static.stepfun.com/blog/step-3.5-flash/",
+      "checkedAt": "2026-10-13",
+      "access": "page",
+      "scope": "official"
+    },
+    {
+      "id": "gemma4-ids",
+      "title": "Gemma 4 视觉输入与权重 ID",
+      "url": "https://ai.google.dev/gemma/docs/capabilities/vision/image",
+      "checkedAt": "2026-10-13",
+      "access": "indexed-excerpt",
+      "scope": "official"
+    }
+  ],
+  "families": [
+    {
+      "id": "glm",
+      "name": "智谱 GLM",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "hy",
+      "name": "腾讯混元 HY",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "doubao",
+      "name": "豆包 Seed",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "qwen",
+      "name": "千问 Qwen",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi / Moonshot",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "minimax",
+      "name": "MiniMax",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "ernie",
+      "name": "百度 ERNIE",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "step",
+      "name": "阶跃 Step",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "mimo",
+      "name": "小米 MiMo",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "gpt",
+      "name": "OpenAI GPT",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "claude",
+      "name": "Claude",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "grok",
+      "name": "Grok",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral / Devstral",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "gemma",
+      "name": "Gemma",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    },
+    {
+      "id": "llama",
+      "name": "Llama",
+      "initialRevision": "builtin-candidate-2026-10-13.1",
+      "matching": "按下列精确原始 ID 和服务范围建立候选；未知型号不承接本族已知值",
+      "templateDefaults": {
+        "context": "inherit",
+        "inputModalities": "inherit",
+        "reasoningDefault": "inherit",
+        "fast": "inherit"
+      },
+      "autoAdopt": false
+    }
+  ],
+  "models": [
+    {
+      "family": "glm",
+      "modelId": "glm-5.3",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "default": "max",
+        "wireFields": [
+          "thinking.type=enabled",
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "glm53"
+      ],
+      "notes": []
+    },
+    {
+      "family": "glm",
+      "modelId": "glm-5.3-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "video",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "default": "max",
+        "wireFields": [
+          "thinking.type=enabled",
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "glm53flash"
+      ],
+      "notes": [
+        "FlashX 与 Flash 的产品额度 / 速度不同；FlashX 不据此视为 OpenAI service_tier。"
+      ]
+    },
+    {
+      "family": "glm",
+      "modelId": "glm-5.3-flashx",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "video",
+        "file"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "default": "max",
+        "wireFields": [
+          "thinking.type=enabled",
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "glm53flash"
+      ],
+      "notes": [
+        "FlashX 与 Flash 的产品额度 / 速度不同；FlashX 不据此视为 OpenAI service_tier。"
+      ]
+    },
+    {
+      "family": "glm",
+      "modelId": "glm-5.2",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "glm52"
+      ],
+      "notes": []
+    },
+    {
+      "family": "glm",
+      "modelId": "glm-5",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "200K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "glm5"
+      ],
+      "notes": []
+    },
+    {
+      "family": "hy",
+      "modelId": "hy3",
+      "idKind": "api-model-id",
+      "serviceScope": "tencent-tokenhub",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "192k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128k",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": [
+          "none",
+          "low",
+          "high"
+        ],
+        "default": "high",
+        "wireFields": [
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "hy-models",
+        "hy-reasoning",
+        "hy-guide"
+      ],
+      "notes": [
+        "旧混元平台与 TokenHub 不混用连接；工具请求的 low 映射须按具体型号复核。"
+      ]
+    },
+    {
+      "family": "hy",
+      "modelId": "hy4-preview",
+      "idKind": "api-model-id",
+      "serviceScope": "tencent-tokenhub",
+      "lifecycle": "preview",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "960k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "64k",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": [
+          "none",
+          "high"
+        ],
+        "default": "high",
+        "wireFields": [
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "hy-models",
+        "hy-reasoning",
+        "hy-guide"
+      ],
+      "notes": [
+        "旧混元平台与 TokenHub 不混用连接；工具请求的 low 映射须按具体型号复核。"
+      ]
+    },
+    {
+      "family": "hy",
+      "modelId": "hunyuan-2.0-instruct-20251111",
+      "idKind": "api-model-id",
+      "serviceScope": "legacy-hunyuan-platform",
+      "lifecycle": "retired-at-origin",
+      "builtinSelection": "archive",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "hy-retirement"
+      ],
+      "notes": [
+        "2026-06-22 原混元平台模型下线；第三方保留同名不代表此原厂服务仍可用。"
+      ]
+    },
+    {
+      "family": "hy",
+      "modelId": "hunyuan-2.0-thinking-20251109",
+      "idKind": "api-model-id",
+      "serviceScope": "legacy-hunyuan-platform",
+      "lifecycle": "retired-at-origin",
+      "builtinSelection": "archive",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "hy-retirement"
+      ],
+      "notes": [
+        "2026-06-22 原混元平台模型下线；第三方保留同名不代表此原厂服务仍可用。"
+      ]
+    },
+    {
+      "family": "hy",
+      "modelId": "hunyuan-t1-latest",
+      "idKind": "api-model-id",
+      "serviceScope": "legacy-hunyuan-platform",
+      "lifecycle": "retired-at-origin",
+      "builtinSelection": "archive",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "hy-retirement"
+      ],
+      "notes": [
+        "2026-06-22 原混元平台模型下线；第三方保留同名不代表此原厂服务仍可用。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-1-pro-260915",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1024k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "1024k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-1-lite-260915",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1024k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "1024k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-1-turbo-260628",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-evolving",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "rolling",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1024k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "1024k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-0-lite-260428",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "older-documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "224k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-0-mini-260428",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "older-documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "224k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-0-pro-260215",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "deprecating",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "224k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "doubao",
+      "modelId": "doubao-seed-2-0-code-preview-260215",
+      "idKind": "api-model-id",
+      "serviceScope": "volcengine-ark",
+      "lifecycle": "deprecating",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "224k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ark-models",
+        "ark-reasoning",
+        "ark-retirement"
+      ],
+      "notes": [
+        "官方目录列多模态理解；具体图像 / 视频限制待型号详情复核，模态不直接补满。",
+        "最大回答与最大思维链分别核对；不能把输出上限当默认输出值。",
+        "保留日期 ID；ep 接入点是渠道绑定，不作为全局型号。"
+      ]
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.8-max",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models",
+        "qwen-vision"
+      ],
+      "notes": [
+        "文档支持多模态输入；本资料未逐一确认模态组合，保持待核实。",
+        "地域与快照需绑定后复核；不同型号不统一推理枚举。"
+      ]
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.8-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models",
+        "qwen-vision"
+      ],
+      "notes": [
+        "文档支持多模态输入；本资料未逐一确认模态组合，保持待核实。",
+        "地域与快照需绑定后复核；不同型号不统一推理枚举。"
+      ]
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.7-plus",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models",
+        "qwen-vision"
+      ],
+      "notes": [
+        "文档支持多模态输入；本资料未逐一确认模态组合，保持待核实。",
+        "地域与快照需绑定后复核；不同型号不统一推理枚举。"
+      ]
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.7-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models",
+        "qwen-vision"
+      ],
+      "notes": [
+        "文档支持多模态输入；本资料未逐一确认模态组合，保持待核实。",
+        "地域与快照需绑定后复核；不同型号不统一推理枚举。"
+      ]
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.7-max",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models"
+      ],
+      "notes": []
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.6-plus",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models"
+      ],
+      "notes": []
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.6-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models"
+      ],
+      "notes": []
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.5-plus",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models"
+      ],
+      "notes": []
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3.5-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models"
+      ],
+      "notes": []
+    },
+    {
+      "family": "qwen",
+      "modelId": "qwen3-coder-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "alibaba-model-studio",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": [
+          "enable_thinking"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "qwen-models"
+      ],
+      "notes": []
+    },
+    {
+      "family": "deepseek",
+      "modelId": "deepseek-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "384K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "default": "high",
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)",
+          "output_config.effort (Anthropic)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "deepseek-models",
+        "deepseek-reasoning"
+      ],
+      "notes": [
+        "文档对应 DeepSeek-V4.1-Flash；显示版本与 API model ID 分开。"
+      ]
+    },
+    {
+      "family": "deepseek",
+      "modelId": "deepseek-v4-pro",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "384K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "default": "high",
+        "wireFields": [
+          "thinking.type (Chat)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)",
+          "output_config.effort (Anthropic)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat",
+        "openai-responses",
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "deepseek-models",
+        "deepseek-reasoning"
+      ],
+      "notes": []
+    },
+    {
+      "family": "deepseek",
+      "modelId": "deepseek-v4-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "redirected-alias",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "deepseek-models"
+      ],
+      "notes": [
+        "原厂目前接收此旧名并转至 deepseek-flash；其他渠道不得自动同样重定向。"
+      ]
+    },
+    {
+      "family": "deepseek",
+      "modelId": "deepseek-v4-flash-vision-exp",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "redirected-alias",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "deepseek-models"
+      ],
+      "notes": [
+        "原厂目前接收此旧名并转至 deepseek-flash；其他渠道不得自动同样重定向。"
+      ]
+    },
+    {
+      "family": "kimi",
+      "modelId": "kimi-k3",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "high",
+          "max"
+        ],
+        "default": "max",
+        "wireFields": [
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "kimi3"
+      ],
+      "notes": []
+    },
+    {
+      "family": "kimi",
+      "modelId": "kimi-k2.6",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "video"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "kimi26"
+      ],
+      "notes": []
+    },
+    {
+      "family": "kimi",
+      "modelId": "kimi-k2.7-code",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "kimi26"
+      ],
+      "notes": [
+        "此来源确认型号与上下文；其余能力等待该型号详情。"
+      ]
+    },
+    {
+      "family": "minimax",
+      "modelId": "MiniMax-M3.1-Flash-Preview",
+      "idKind": "api-model-id",
+      "serviceScope": "minimax-m-plan-and-code",
+      "lifecycle": "preview-restricted",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1,000,000",
+        "exactTokens": 1000000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "default": "max",
+        "wireFields": [
+          "output_config.effort (Anthropic)",
+          "reasoning_effort (Chat)",
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "anthropic",
+        "openai-chat",
+        "openai-responses"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "minimax-models"
+      ],
+      "notes": [
+        "截至核对日仅 M Plan / MiniMax Code 提供；不等于所有按量 API Key 可用。",
+        "原厂称多模态；具体模态与最大输出未在本资料确认。"
+      ]
+    },
+    {
+      "family": "minimax",
+      "modelId": "MiniMax-M3",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1000000",
+        "exactTokens": 1000000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "minimax-models"
+      ],
+      "notes": [
+        "保留原厂大小写；highspeed 是独立 API ID，不推导成所有渠道 Fast。"
+      ]
+    },
+    {
+      "family": "minimax",
+      "modelId": "MiniMax-M2.7",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "204800",
+        "exactTokens": 204800
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "minimax-models"
+      ],
+      "notes": [
+        "保留原厂大小写；highspeed 是独立 API ID，不推导成所有渠道 Fast。"
+      ]
+    },
+    {
+      "family": "minimax",
+      "modelId": "MiniMax-M2.7-highspeed",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "204800",
+        "exactTokens": 204800
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "minimax-models"
+      ],
+      "notes": [
+        "保留原厂大小写；highspeed 是独立 API ID，不推导成所有渠道 Fast。"
+      ]
+    },
+    {
+      "family": "minimax",
+      "modelId": "MiniMax-M2.5",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "legacy",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "204800",
+        "exactTokens": 204800
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "minimax-models"
+      ],
+      "notes": [
+        "保留原厂大小写；highspeed 是独立 API ID，不推导成所有渠道 Fast。"
+      ]
+    },
+    {
+      "family": "minimax",
+      "modelId": "MiniMax-M2.5-highspeed",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "legacy",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "204800",
+        "exactTokens": 204800
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "minimax-models"
+      ],
+      "notes": [
+        "保留原厂大小写；highspeed 是独立 API ID，不推导成所有渠道 Fast。"
+      ]
+    },
+    {
+      "family": "ernie",
+      "modelId": "ernie-5.0",
+      "idKind": "api-model-id",
+      "serviceScope": "baidu-qianfan",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "128k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": "119k",
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "65536",
+        "exactTokens": 65536
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ernie-models",
+        "ernie-product"
+      ],
+      "notes": [
+        "千帆公开目录可核对型号与限制；具体协议、思考枚举和模态仍需对应详情。"
+      ]
+    },
+    {
+      "family": "ernie",
+      "modelId": "ernie-5.0-thinking-preview",
+      "idKind": "api-model-id",
+      "serviceScope": "baidu-qianfan",
+      "lifecycle": "preview",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "ernie-product"
+      ],
+      "notes": []
+    },
+    {
+      "family": "step",
+      "modelId": "step-3.5-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "step35",
+        "step35-api"
+      ],
+      "notes": [
+        "权重与云端部署限制分别验证；其余接口字段待模型详情。"
+      ]
+    },
+    {
+      "family": "step",
+      "modelId": "step-3.7-flash",
+      "idKind": "name-derived-api-id-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "step37"
+      ],
+      "notes": [
+        "官方页面确认型号名称；上下文与推理枚举待补齐。"
+      ]
+    },
+    {
+      "family": "step",
+      "modelId": "Step 5 Preview",
+      "idKind": "display-name-api-id-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "preview",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "step5"
+      ],
+      "notes": [
+        "先登记显示名称；不猜测 API model ID，不能直接生成可用匹配规则。"
+      ]
+    },
+    {
+      "family": "mimo",
+      "modelId": "mimo-v2.5",
+      "idKind": "name-derived-api-id-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "audio"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "mimo25"
+      ],
+      "notes": [
+        "官方介绍确认能力；API 标识采用资料名称，大小写及视频格式须绑定前确认。"
+      ]
+    },
+    {
+      "family": "mimo",
+      "modelId": "mimo-v2.5-pro",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "mimo25",
+        "mimo-reasoning"
+      ],
+      "notes": [
+        "官方示例确认精确 API ID；不能从 V2.5 普通版推导 Pro 模态、上下文或推理枚举。"
+      ]
+    },
+    {
+      "family": "gpt",
+      "modelId": "gpt-6-astra",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1,050,000",
+        "exactTokens": 1050000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128,000",
+        "exactTokens": 128000
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "default": null,
+        "wireFields": [
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-responses",
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gpt6astra",
+        "gpt6reasoning"
+      ],
+      "notes": [
+        "工具调用优先 Responses；Chat Completions 的可用参数另按型号限制。",
+        "本机 ultra 属代理执行层选项，不列为原厂原生 effort。"
+      ]
+    },
+    {
+      "family": "gpt",
+      "modelId": "gpt-6.1-sol",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1,050,000",
+        "exactTokens": 1050000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128,000",
+        "exactTokens": 128000
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "default": "medium",
+        "wireFields": [
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-responses",
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "documented",
+        "semantics": "已确认 Responses service_tier=ultrafast；普通 Fast 的参数和渠道权限另核对"
+      },
+      "sourceRefs": [
+        "gpt61sol"
+      ],
+      "notes": [
+        "工具调用优先 Responses；Chat Completions 的可用参数另按型号限制。",
+        "本机 ultra 属代理执行层选项，不列为原厂原生 effort。"
+      ]
+    },
+    {
+      "family": "gpt",
+      "modelId": "gpt-6-luna",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1,050,000",
+        "exactTokens": 1050000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128,000",
+        "exactTokens": 128000
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "default": "medium",
+        "wireFields": [
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-responses",
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gpt6luna"
+      ],
+      "notes": [
+        "工具调用优先 Responses；Chat Completions 的可用参数另按型号限制。",
+        "本机 ultra 属代理执行层选项，不列为原厂原生 effort。"
+      ]
+    },
+    {
+      "family": "gpt",
+      "modelId": "gpt-6-sol",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1,050,000",
+        "exactTokens": 1050000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128,000",
+        "exactTokens": 128000
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "switchable",
+        "efforts": [
+          "none",
+          "low",
+          "medium",
+          "high",
+          "xhigh",
+          "max"
+        ],
+        "default": "medium",
+        "wireFields": [
+          "reasoning.effort (Responses)"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": [
+        "openai-responses",
+        "openai-chat"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gpt6sol"
+      ],
+      "notes": [
+        "工具调用优先 Responses；Chat Completions 的可用参数另按型号限制。",
+        "本机 ultra 属代理执行层选项，不列为原厂原生 effort。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-fable-5-1",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "model-specific",
+        "efforts": null,
+        "default": "high",
+        "wireFields": []
+      },
+      "functionCalling": true,
+      "protocols": [
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-models"
+      ],
+      "notes": [
+        "默认 effort 已确认；是否允许关闭 thinking 与完整枚举须逐型号查 capabilities。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-opus-5-5",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "model-specific",
+        "efforts": null,
+        "default": "medium",
+        "wireFields": []
+      },
+      "functionCalling": true,
+      "protocols": [
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-models"
+      ],
+      "notes": [
+        "默认 effort 已确认；是否允许关闭 thinking 与完整枚举须逐型号查 capabilities。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-sonnet-5-5",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "model-specific",
+        "efforts": null,
+        "default": "high",
+        "wireFields": []
+      },
+      "functionCalling": true,
+      "protocols": [
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-models"
+      ],
+      "notes": [
+        "默认 effort 已确认；是否允许关闭 thinking 与完整枚举须逐型号查 capabilities。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-haiku-5-5",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "model-specific",
+        "efforts": null,
+        "default": "medium",
+        "wireFields": []
+      },
+      "functionCalling": true,
+      "protocols": [
+        "anthropic"
+      ],
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-models"
+      ],
+      "notes": [
+        "默认 effort 已确认；是否允许关闭 thinking 与完整枚举须逐型号查 capabilities。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-opus-5",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-context"
+      ],
+      "notes": [
+        "此来源只确认上下文；不要继承当前新版完整能力。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-opus-4-8",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-context"
+      ],
+      "notes": [
+        "此来源只确认上下文；不要继承当前新版完整能力。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-opus-4-7",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-context"
+      ],
+      "notes": [
+        "此来源只确认上下文；不要继承当前新版完整能力。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-opus-4-6",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-context"
+      ],
+      "notes": [
+        "此来源只确认上下文；不要继承当前新版完整能力。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-sonnet-5",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-context"
+      ],
+      "notes": [
+        "此来源只确认上下文；不要继承当前新版完整能力。"
+      ]
+    },
+    {
+      "family": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "claude-context"
+      ],
+      "notes": [
+        "此来源只确认上下文；不要继承当前新版完整能力。"
+      ]
+    },
+    {
+      "family": "gemini",
+      "modelId": "gemini-3.8-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "64k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "required",
+        "efforts": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "default": "medium",
+        "wireFields": [
+          "thinking_level (Interactions)"
+        ]
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemini38"
+      ],
+      "notes": [
+        "minimal 不支持；GenerateContent 参数表达与模态仍需按具体接口确认。"
+      ]
+    },
+    {
+      "family": "gemini",
+      "modelId": "gemini-3.5-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "older-documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": "65k",
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemini35",
+        "gemini-thinking"
+      ],
+      "notes": []
+    },
+    {
+      "family": "gemini",
+      "modelId": "gemini-3.6-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemini38",
+        "gemini-thinking"
+      ],
+      "notes": [
+        "登记已在官方文档出现的名称；本次未逐型号冻结能力。"
+      ]
+    },
+    {
+      "family": "gemini",
+      "modelId": "gemini-3.7-flash",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemini38",
+        "gemini-thinking"
+      ],
+      "notes": [
+        "登记已在官方文档出现的名称；本次未逐型号冻结能力。"
+      ]
+    },
+    {
+      "family": "gemini",
+      "modelId": "gemini-3.5-flash-lite",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemini38",
+        "gemini-thinking"
+      ],
+      "notes": [
+        "登记已在官方文档出现的名称；本次未逐型号冻结能力。"
+      ]
+    },
+    {
+      "family": "gemini",
+      "modelId": "gemini-3.1-pro-preview",
+      "idKind": "local-id-official-name-correspondence-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "preview",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemini38",
+        "gemini-thinking"
+      ],
+      "notes": [
+        "登记已在官方文档出现的名称；本次未逐型号冻结能力。"
+      ]
+    },
+    {
+      "family": "grok",
+      "modelId": "grok-4.7",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "500,000",
+        "exactTokens": 500000
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": [
+          "low",
+          "medium",
+          "high",
+          "xhigh"
+        ],
+        "default": "high",
+        "wireFields": [
+          "reasoning_effort"
+        ]
+      },
+      "functionCalling": true,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "grok47",
+        "grok-release"
+      ],
+      "notes": [
+        "Fast 为同模型服务速度档；不自造 grok-4.7-fast model ID。"
+      ]
+    },
+    {
+      "family": "grok",
+      "modelId": "grok-4.6",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "grok-reasoning"
+      ],
+      "notes": [
+        "只确认支持 reasoning_effort，完整枚举与限制待型号页。"
+      ]
+    },
+    {
+      "family": "grok",
+      "modelId": "grok-4.5",
+      "idKind": "api-model-id",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "supported",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "grok-reasoning"
+      ],
+      "notes": [
+        "只确认支持 reasoning_effort，完整枚举与限制待型号页。"
+      ]
+    },
+    {
+      "family": "mistral",
+      "modelId": "Mistral Large 4",
+      "idKind": "display-name-api-id-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "1M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "mistral4"
+      ],
+      "notes": [
+        "模型详情可见 1M；API 精确 ID 与输出限制未确认，不猜日期后缀。"
+      ]
+    },
+    {
+      "family": "mistral",
+      "modelId": "Mistral Medium 3.5",
+      "idKind": "display-name-api-id-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "mistral-index"
+      ],
+      "notes": []
+    },
+    {
+      "family": "mistral",
+      "modelId": "Devstral 2",
+      "idKind": "display-name-api-id-unverified",
+      "serviceScope": "vendor-api",
+      "lifecycle": "documented",
+      "builtinSelection": "compatibility",
+      "context": {
+        "reported": "256k",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": null,
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "devstral2",
+        "mistral-limit"
+      ],
+      "notes": [
+        "官方建议新集成评估 Medium 3.5；先保留既有 SWE 型号登记。"
+      ]
+    },
+    {
+      "family": "gemma",
+      "modelId": "google/gemma-4-E2B-it",
+      "idKind": "weight-repository-id",
+      "serviceScope": "self-hosted",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "audio"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemma4",
+        "gemma4-ids"
+      ],
+      "notes": [
+        "权重身份不是 Ollama tag；实际上下文受部署、量化、模板和显存限制。"
+      ]
+    },
+    {
+      "family": "gemma",
+      "modelId": "google/gemma-4-E4B-it",
+      "idKind": "weight-repository-id",
+      "serviceScope": "self-hosted",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "128K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "audio"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemma4",
+        "gemma4-ids"
+      ],
+      "notes": [
+        "权重身份不是 Ollama tag；实际上下文受部署、量化、模板和显存限制。"
+      ]
+    },
+    {
+      "family": "gemma",
+      "modelId": "google/gemma-4-12B-it",
+      "idKind": "weight-repository-id",
+      "serviceScope": "self-hosted",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image",
+        "audio"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemma4",
+        "gemma4-ids"
+      ],
+      "notes": [
+        "权重身份不是 Ollama tag；实际上下文受部署、量化、模板和显存限制。"
+      ]
+    },
+    {
+      "family": "gemma",
+      "modelId": "google/gemma-4-26B-A4B-it",
+      "idKind": "weight-repository-id",
+      "serviceScope": "self-hosted",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemma4",
+        "gemma4-ids"
+      ],
+      "notes": [
+        "权重身份不是 Ollama tag；实际上下文受部署、量化、模板和显存限制。"
+      ]
+    },
+    {
+      "family": "gemma",
+      "modelId": "google/gemma-4-31B-it",
+      "idKind": "weight-repository-id",
+      "serviceScope": "self-hosted",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "256K",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "gemma4",
+        "gemma4-ids"
+      ],
+      "notes": [
+        "权重身份不是 Ollama tag；实际上下文受部署、量化、模板和显存限制。"
+      ]
+    },
+    {
+      "family": "llama",
+      "modelId": "Llama 4 Scout",
+      "idKind": "display-name-api-id-unverified",
+      "serviceScope": "self-hosted-or-hosted-vendor",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": "10M",
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "llama4",
+        "llama-start"
+      ],
+      "notes": [
+        "权重 / 产品宣称上限不作为第三方 API 默认窗口。"
+      ]
+    },
+    {
+      "family": "llama",
+      "modelId": "Llama 4 Maverick",
+      "idKind": "display-name-api-id-unverified",
+      "serviceScope": "self-hosted-or-hosted-vendor",
+      "lifecycle": "documented",
+      "builtinSelection": "review",
+      "context": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxInput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "maxOutput": {
+        "reported": null,
+        "exactTokens": null
+      },
+      "inputModalities": [
+        "text",
+        "image"
+      ],
+      "outputModalities": [
+        "text"
+      ],
+      "reasoning": {
+        "mode": "unknown",
+        "efforts": null,
+        "default": null,
+        "wireFields": []
+      },
+      "functionCalling": null,
+      "protocols": null,
+      "fast": {
+        "state": "unknown",
+        "semantics": null
+      },
+      "sourceRefs": [
+        "llama4"
+      ],
+      "notes": []
+    }
+  ]
+}

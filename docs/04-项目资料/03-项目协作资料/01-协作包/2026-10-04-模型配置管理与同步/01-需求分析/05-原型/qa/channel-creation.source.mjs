@@ -38,7 +38,7 @@ class Node {
 for(const id of ['mpContent','mpSettingsContent','modal','modalBody','modalMask','modalConfirm'])nodes.set(id,new Node(id));
 const document={activeElement:null,querySelector:q=>q==='#modalBody .mp-dialog'?new Node():q.startsWith('#')?nodes.get(q.slice(1))||null:q==='[data-field-editor]'?new Node():null,querySelectorAll:()=>[],addEventListener:(type,fn)=>{listeners[type]=fn;}};
 const context={document,window:{},JSON,Date,URL,Set,Object,String,Number,Array,console,setTimeout:fn=>timers.push(fn),toast(){},setRoute(){},showSettingsSection(){},openModal(title,body,label,fn,opts){nodes.get('modalBody').innerHTML=body;nodes.get('modalMask').style.display='flex';confirm=fn;options=opts||{};},closeModal(){nodes.get('modalMask').style.display='none';confirm=null;context.window.__modalOnClose?.();}};
-vm.createContext(context);vm.runInContext(fs.readFileSync(source,'utf8'),context,{filename:source});
+vm.createContext(context);for(const file of ['tree-table.js','model-template-updates.js','model-template-seeds.js'])vm.runInContext(fs.readFileSync(path.join(path.dirname(source),file),'utf8'),context);vm.runInContext(fs.readFileSync(source,'utf8'),context,{filename:source});
 const state=()=>context.window.modelPrototype.state(),page=()=>nodes.get('mpContent').innerHTML,dialog=()=>nodes.get('modalBody').innerHTML;
 function click(action,data={}){const target={dataset:{mp:action,...data},closest(){return this;}};listeners.click({target});}
 function runConfirm(){const fn=confirm;assert.equal(typeof fn,'function');fn();}
