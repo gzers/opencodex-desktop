@@ -1,0 +1,122 @@
+{
+  "archiveIntegrity": "passed",
+  "manifestFiles": 20,
+  "source": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+  "formerPid": 78512,
+  "nativeCountBeforeAndAfterChecks": [
+    0,
+    0
+  ],
+  "actualExitTimeKnown": false,
+  "actualExitCodeKnown": false,
+  "previousTimeoutAndLiveEvidencePreserved": true,
+  "historicalArchivesVerified": [
+    {
+      "directory": "OCX-0110-20261015-WIN-FG-493-CONTINUE",
+      "verification": {
+        "archiveIntegrity": "passed",
+        "scope": "Completed ordinary UI and administrator sampler checkpoint only",
+        "manifestFiles": 117,
+        "source": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+        "ordinaryPid": 49492,
+        "administratorPid": 78512,
+        "ordinaryNormalExitCode": 0,
+        "sequentialSameImageAndRootDualTokensVerified": true,
+        "directoryAndFileOpenWarningsCancelled": true,
+        "actualOwnedDirectoryOpened": true,
+        "treeLeftAndRightKeyboardObserved": true,
+        "ordinaryMinimizeRestoreDwm2To1To2Verified": true,
+        "administratorSampleCount": 240,
+        "administratorForegroundSolidSamples": 240,
+        "administratorMaximizedOrMinimizedObserved": false,
+        "administratorActiveMicaAccepted": false,
+        "administratorSettingsNavigationVerified": false,
+        "administratorFullUiGatePassed": false,
+        "nativeCountAtCheckpoint": 1,
+        "exitObserverLiveAtCheckpoint": true,
+        "administratorExitObservedAtCheckpoint": false,
+        "administratorExitCodeAtCheckpoint": null,
+        "laterObserverOutputsExcludedAndMustBeVerifiedSeparately": [
+          "administrator-controller-error.json",
+          "administrator-exit-observer-result.json"
+        ],
+        "physicalDpiVerified": false,
+        "installerRetentionVerified": false,
+        "actualUpdateDownloadProgressVerified": false,
+        "realThirtyMinuteBackoffVerified": false,
+        "pairedPerformanceVerified": false,
+        "historicalFailuresCleared": false,
+        "fullVersionGatePassed": false,
+        "releaseRequested": false
+      }
+    },
+    {
+      "directory": "OCX-0110-20261015-WIN-FG-493-MANUAL-WINDOW",
+      "verification": {
+        "archiveIntegrity": "passed",
+        "source": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+        "manifestFiles": 38,
+        "humanMaximizeMinimizeReportAccepted": true,
+        "screenshotDimensions": [
+          3437,
+          1885
+        ],
+        "screenshotSha256": "7b296a6ea34320a73984dcdabc87edad8d77d94ed0bbd305424882d192c9144a",
+        "sameAdministratorProcessAndHwndReadBack": true,
+        "windowRestoredAtFollowup": true,
+        "administratorMicaSuccessLogLinesAfterOldSampler": 5,
+        "administratorInactiveLogLines": 6,
+        "concurrentForegroundDwmMicaReadbackClaimed": false,
+        "oldSamplerCheckpointUnchangedAndVerified": true,
+        "persistentFilesVerified": 11,
+        "runtimeTimestampOnlyChanges": [
+          "manager-state/notifications.json",
+          "manager-state/runtime.json"
+        ],
+        "nativeCountAtFollowup": 1,
+        "administratorExitObserved": false,
+        "administratorExitCode": null,
+        "historicalFailuresCleared": false,
+        "administratorFullUiGatePassed": false,
+        "fullVersionGatePassed": false,
+        "taskClosed": false,
+        "releaseRequested": false
+      }
+    },
+    {
+      "directory": "OCX-0110-20261015-WIN-TREE-BROWSER",
+      "verification": {
+        "archiveIntegrity": "passed",
+        "source": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+        "manifestFiles": 17,
+        "scope": "Windows headless Edge production Vue component geometry only",
+        "browserCases": 8,
+        "rows": 40,
+        "controlsMeasured": 120,
+        "multilineRowCases": 24,
+        "maximumControlCenterDeltaCssPixels": 0,
+        "maximumPurposeDeltaCssPixels": 0,
+        "minimumActionHeightBeforeCssZoom": 34.0,
+        "allNativeTreeMatrixPassed": false,
+        "physicalDpiAccepted": false,
+        "newProductInstanceStarted": false,
+        "productionSourceChanged": false,
+        "originalAdministratorInstanceStillLive": true,
+        "administratorExitCode": null,
+        "historicalFailuresCleared": false,
+        "fullVersionGatePassed": false,
+        "taskClosed": false,
+        "releaseRequested": false
+      }
+    }
+  ],
+  "isolatedJsonFilesUnchanged": 11,
+  "dailyAndProtectedSandboxAndTaskHashesUnchanged": true,
+  "productStartedOrForcedTermination": false,
+  "foregroundWindowExtended": false,
+  "macNativeHandoffPerformed": false,
+  "historicalFailuresCleared": false,
+  "fullVersionGatePassed": false,
+  "taskClosed": false,
+  "releaseRequested": false
+}
