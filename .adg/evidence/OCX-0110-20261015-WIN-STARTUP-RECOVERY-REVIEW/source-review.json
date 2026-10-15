@@ -1,0 +1,130 @@
+{
+  "source": "3c51367f1be89abf66f69805d29b2a660a570a2c",
+  "sameProductFilesAsFixed431Candidate": true,
+  "method": "Exact Git blob reading plus located control-flow edges; human-reviewed source finding",
+  "sourceFiles": {
+    "apps/desktop/tauri/src/lib.rs": {
+      "gitBlob": "a8a7af3c6063bb18e955361bb8d0de1ed4417f9c",
+      "bytes": 42812,
+      "sha256": "6485eb41e3e9b176a3a5afd04d4014d2a9241ea537e5a7a638bca34c82f0a2dc"
+    },
+    "apps/desktop/tauri/src/main.rs": {
+      "gitBlob": "f132bdfb74ac3fb1c9775c510d1b2dfb7dfe096b",
+      "bytes": 277,
+      "sha256": "54aca712d7a8f96737fb2412bc9c5099300d859d2a3781da6ae1708307d6711c"
+    },
+    "apps/desktop/tauri/src/modules/data_root/bootstrap.rs": {
+      "gitBlob": "a0facf94494f5c98ed5b9788f1d1791a56604b17",
+      "bytes": 11019,
+      "sha256": "80b8d45dfc8ad13cd46c6fbd396f6576e775afd1c6bb560e5570d59d204f47a4"
+    },
+    "apps/desktop/tauri/src/modules/instance/mod.rs": {
+      "gitBlob": "6ef68b8c2c4ce57d9f58b561a12d53c28953badf",
+      "bytes": 5491,
+      "sha256": "e696b115e548b665787e08e3727d2f7c149be1b4ee5fae262a2691916e7bf8d5"
+    },
+    "apps/desktop/tauri/src/commands/data_root.rs": {
+      "gitBlob": "f7f7555d6316410c2a7f3f784aa95e89332b33c1",
+      "bytes": 30710,
+      "sha256": "e9436a16158c1c61276f71d23974f695d22a201197e3a76a0560de323a2669a6"
+    },
+    "apps/desktop/ui/src/features/data-root/store.ts": {
+      "gitBlob": "482106b1d5771702f38a23531a46597e110b2bc7",
+      "bytes": 5150,
+      "sha256": "86c770eca35c60d062efbbb8a49e11cc6fd32058f6f3d70c18cdcd7cce64151b"
+    },
+    "apps/desktop/tauri/tests/app_startup_wiring.rs": {
+      "gitBlob": "7681aff5d29d5ae5d67224c748443afc62ffafa3",
+      "bytes": 2583,
+      "sha256": "ec763e57f127787cf2194954c86b537ff8449f749981f2f3dfcc65d85e609973"
+    }
+  },
+  "locations": {
+    "setupClosure": {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "line": 86,
+      "gitBlob": "a8a7af3c6063bb18e955361bb8d0de1ed4417f9c"
+    },
+    "installationDefaultAnchor": {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "line": 106,
+      "gitBlob": "a8a7af3c6063bb18e955361bb8d0de1ed4417f9c"
+    },
+    "rootResolutionBeforeState": {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "line": 120,
+      "gitBlob": "a8a7af3c6063bb18e955361bb8d0de1ed4417f9c"
+    },
+    "firstRootState": {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "line": 124,
+      "gitBlob": "a8a7af3c6063bb18e955361bb8d0de1ed4417f9c"
+    },
+    "buildErrorExpect": {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "line": 634,
+      "gitBlob": "a8a7af3c6063bb18e955361bb8d0de1ed4417f9c"
+    },
+    "mainCallsRunOnly": {
+      "path": "apps/desktop/tauri/src/main.rs",
+      "line": 8,
+      "gitBlob": "f132bdfb74ac3fb1c9775c510d1b2dfb7dfe096b"
+    },
+    "lockBeforeInitialize": {
+      "path": "apps/desktop/tauri/src/modules/data_root/bootstrap.rs",
+      "line": 51,
+      "gitBlob": "a0facf94494f5c98ed5b9788f1d1791a56604b17"
+    },
+    "managerStateDirectoryCreation": {
+      "path": "apps/desktop/tauri/src/modules/instance/mod.rs",
+      "line": 27,
+      "gitBlob": "6ef68b8c2c4ce57d9f58b561a12d53c28953badf"
+    },
+    "existingSwitchRequiresInitializedAnchor": {
+      "path": "apps/desktop/tauri/src/commands/data_root.rs",
+      "line": 110,
+      "gitBlob": "f7f7555d6316410c2a7f3f784aa95e89332b33c1"
+    },
+    "settingsSwitchAction": {
+      "path": "apps/desktop/ui/src/features/data-root/store.ts",
+      "line": 69,
+      "gitBlob": "482106b1d5771702f38a23531a46597e110b2bc7"
+    },
+    "existingStartupTestUnixOnly": {
+      "path": "apps/desktop/tauri/tests/app_startup_wiring.rs",
+      "line": 1,
+      "gitBlob": "7681aff5d29d5ae5d67224c748443afc62ffafa3"
+    }
+  },
+  "finding": {
+    "id": "WIN-0110-STARTUP-ROOT-RECOVERY",
+    "status": "open-source-wiring-gap",
+    "contract": "IMP-20 section 4: unwritable Windows root must explicitly offer custom-root guidance; no silent AppData fallback or daily administrator requirement",
+    "scenario": "New installation without legacy AppData; data root or manager-state cannot be created/opened under the ordinary user token",
+    "observedSourceBehavior": [
+      "Installer-relative default root is selected before root/store initialization.",
+      "Root lock/initialization errors propagate out of setup before SharedDataRootAnchor is managed.",
+      "This application has no startup root-recovery branch around the fallible setup root resolution.",
+      "Pinned Tauri 2.12.1 runs setup on Ready and panics on a returned setup error; the project's build expect is not that error handler.",
+      "Existing settings root-switch command requires the initialized anchor; it cannot substitute for failed startup admission."
+    ],
+    "nativeOrdinaryTokenFailureReproduced": false,
+    "actualWindowsErrorUiObserved": false,
+    "allPossibleFrameworkErrorPresentationExcluded": false,
+    "productFixed": false,
+    "requiredNextWork": [
+      "Implement and test an explicit startup root-recovery path, including a durable validated user choice before normal service initialization.",
+      "Retain old roots/bindings on cancellation or failure; never convert malformed roots, instance conflicts or migration protection into a silent fallback.",
+      "Verify ordinary denied-write, chosen-root startup and subsequent ordinary/administrator same-root readback on the matching candidate."
+    ]
+  },
+  "unitOrNativeTestsExecuted": false,
+  "productLaunched": false,
+  "userProfileOrAclChanged": false,
+  "codeModifiedByThisReview": false,
+  "installerRetentionResultInvalidated": false,
+  "fullStorageGatePassed": false,
+  "historicalQueryFailureCleared": false,
+  "fullVersionGatePassed": false,
+  "frameworkVerificationRef": "framework-source-review.json"
+}

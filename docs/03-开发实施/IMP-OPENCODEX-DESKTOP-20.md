@@ -1662,3 +1662,9 @@ artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP16
 单次安装专项run38716371739/attempt1成功、package/query-etw跳过；MSI/NSIS各独立全新runner实际安装官方019后，升级431、默认卸载、重装再卸载，每种5安装步骤exit0、6夹具文件×5读回阶段全部字节保持、两次卸载主EXE实际移除。MSI原日志确认旧ProductCode被FindRelatedProducts识别并RemoveExistingProducts成功。固定官方包/API摘要、431包及安装EXE/MSI3be7ea60…/NSIS014fae29…分别绑定核验。
 
 未启动桌面应用；安装目录data、自有兄弟custom-root和哨兵为seeded夹具，结果只证明安装器文件保留，不代替应用根绑定/普通权限/不可写/旧AppData迁移/显式清理或完整installer门禁。两artifact原件/原job实际checkout/安装日志、139项清单/verify-evidence通过。17:59:15本机native0、日常/旧隔离/TASK摘要与3c工具干净保持，未账户/VM/ACL改变或正式Mac交接，PR5终态说明读回仍草稿/未合并。见[升级默认卸载保留实测](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows固定候选升级卸载保留/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-INSTALLER-RETENTION/`。原失败ETW/根因、Macfailed、全部预算/周期/来源/环境依赖保持，不关闭或发布。
+
+### 2026-10-15 启动根恢复的源码接线发现
+
+后台只读审阅3c/固定431相同的7份产品Git文件，确认`WIN-0110-STARTUP-ROOT-RECOVERY`仍开放：setup中根锁/初始化错误通过`?`离开，发生在SharedDataRootAnchor注册前；设置切根依赖该状态，当前调用点没有失败启动的显式根选择恢复。锁定Tauri2.12.1官方源码确认setup在Ready执行、错误映射后panic；初稿将其归于build.expect的推断已更正保留。此发现对应原第4节不可写提示/选择根合同，尚无普通账户真机故障、实际报错UI或修复通过结论。
+
+下一步优先实现初始化服务前的显式根恢复及合法选择持久化，取消/失败保留旧绑定，损坏/过新/锁冲突/未决迁移不得静默回退；随后同SHA普通拒绝写/选根重启/双权限同根复验。10项归档清单/verify-review只证明审阅来源，不是产品测试；18:16:08native0/3c干净/日常旧隔离TASK摘要保持，无新执行或系统配置改动。见[启动根恢复源码缺口](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows启动根恢复源码缺口/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-STARTUP-RECOVERY-REVIEW/`。此前安装器保留子集继续有效，storage/installer与原完整八门禁、历史失败、预算/周期/Mac依赖未关闭，不发布。
