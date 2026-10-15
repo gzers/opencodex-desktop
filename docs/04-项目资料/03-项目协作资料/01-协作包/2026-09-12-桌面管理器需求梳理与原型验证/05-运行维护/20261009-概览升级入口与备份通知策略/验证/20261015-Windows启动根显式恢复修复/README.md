@@ -53,3 +53,7 @@ a2 两轮首次库各 546 passed / 4 ignored / exit 0，七查询通过；16613 
 仅请求一次匹配 02 候选 `38737628201`，已读回构建中，证据续记 `.adg/evidence/OCX-0110-20261015-WIN-02-CANDIDATE/`；旧 a2 制品保留自身身份，不能冒充 02 提交。普通/管理员真实 HKCU、实际换安装位置和全原生门禁仍待测试身份/前台授权，不把临时指针测试或 CI 冒烟提升为真机通过。
 
 同目录 `methods/process-user-sid.ps1` 为只读补充采集方法：从持有的目标进程句柄查询 TokenUser，并与提升状态及创建代际对应，只发表 SID 摘要。4 项自身/受控 PowerShell 子进程方法检查通过；初次 UTC/本地时间直接比较失败及后续 UTC ticks 修正分析保留。未观察产品身份、写入注册表或证明双权限，方法成功不提升任何原生门禁。账户方案已明确区分非管理员性能 Profile 与同 SID 过滤/提升令牌专项，不新增授权。
+
+02 候选 `38737628201` 后续已单次成功，包锁 35 组 / 648 passed / 7 ignored，MSI/NSIS 在全新 runner 的安装、隔离首屏和卸载子集通过；query-etw/retention 专项跳过。两个制品摘要/ZIP CRC/安装器/实装载荷核对通过，本机仅下载、只读提取和静态来源字串核对。准备的 MSI EXE 位于 `test/software/candidate-02a0d4-38737628201/msi-readonly/opencodex-desktop.exe`，0.1.10 / 8808448 bytes，SHA-256 `7383c275f58fed7e25678420a6d3f5c739f9b23d7373acc40fab1e7cd98db6d9`；NSIS 实装摘要独立记录，未假定两者相同。
+
+候选 42 项清单及独立 `verify-candidate.py` 通过；完整 package job 原日志的 checkout/35 组计数与候选环境绑定原件对应。下载曾发生 TLS 失败，最终只对读取进程使用带系统证书验证的 TLS 1.2 上下文获取原件，未降低证书校验、修改全局网络或重跑构建。21:05:40 本机 native 0，日常/旧隔离/TASK 摘要与 02 干净保持。实际 HKCU/换安装位置/双令牌同根、原预算性能及真实周期、原失败窗口/Mac failed 等仍开放；无前台/账户/VM/ACL/FZ50/合并/发布。
