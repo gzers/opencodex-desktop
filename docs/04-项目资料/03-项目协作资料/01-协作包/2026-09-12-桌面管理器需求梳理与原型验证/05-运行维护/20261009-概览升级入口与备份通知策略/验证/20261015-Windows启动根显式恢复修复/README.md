@@ -29,3 +29,11 @@ a2 两轮首次库各 546 passed / 4 ignored / exit 0，七查询通过；16613 
 通过两轮同提交 CI 后，仅请求一次匹配 a2 的安装候选 `38729632145`，已经读回为构建中，query-etw/retention 跳过。继续观察该句柄，不能因观察超时重发请求；候选终态/制品另在 `.adg/evidence/OCX-0110-20261015-WIN-A2-CANDIDATE/` 归档。当前不声称该安装候选或原生恢复已验收。
 
 本轮没有启动本机产品、修改账户/VM/ACL、替换日常版或迁移真实数据。bd2 实际失败窗口 ETW 与根因仍未取得；既有成功对照不撤销失败。Mac CPU/RSS 失败、原性能预算及周期/来源缺口、DPI 暂缓和其他原门禁保持。未正式 Mac 原生交接、合并、关闭、签名、晋升或发布。
+
+## 同提交候选的后续身份核验
+
+候选 `38729632145` 单次完成成功，实际 checkout 为 a2；包锁回归 35 组 / 643 passed / 7 ignored，MSI/NSIS 在全新 runner 的安装、隔离首屏及卸载子集通过。两个制品 API 摘要、ZIP CRC、安装器与分别记录的安装后 EXE 摘要全部匹配；未重发构建或执行 query-etw/retention 专项。
+
+本机仅下载与 Windows Installer 数据库只读提取，没有执行安装器或启动产品。准备用于后续授权测试的 MSI 载荷为 `test/software/candidate-a2e4ea-38729632145/msi-readonly/opencodex-desktop.exe`，0.1.10 / 8807936 bytes，SHA-256 `4295367e8dbf235c0f221d2fff127624faa201d20d6c905af8d7265d305fe44f`，静态二进制中找到 a2 的完整构建来源字串，且摘要匹配 runner 实装载荷。NSIS 实装载荷另记为 `f3858764…`，不假定两包 EXE 字节相同。
+
+候选专档 42 项清单及 `verify-candidate.py` 通过，20:14:02 本机 native 0，日常 EXE/旧隔离配置/原 TASK 摘要保持。此处证明制品就绪与 runner 新装子集，不能代替本机普通/管理员恢复、自定义根/升级保留、官方 0.1.9 同机配对性能、真实周期或原失败 ETW。独立 Profile、安装环境和新前台窗口继续按原方案单独授权，原任务与全部未决门禁保持。
