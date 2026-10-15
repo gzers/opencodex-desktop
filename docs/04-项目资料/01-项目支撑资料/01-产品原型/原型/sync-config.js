@@ -4,12 +4,12 @@
  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const host=$('#syncContent'); if(!host)return;
- const groups=[['channels','渠道与模型'],['templates','模型模版'],['accounts','账户'],['skills','Skills'],['mcp','MCP'],['preferences','桌面偏好'],['endpoints','WebDAV 配置']];
+ const groups=[['channels','渠道与模型'],['templates','模型模版'],['accounts','账户'],['skills','Skills'],['mcp','MCP'],['preferences','桌面偏好'],['endpoints','WebDAV 配置'],['dialog-policies','对话配置'],['dialog-history','对话历史']];
  function collect(){
   const m=window.modelPrototype?.state(),list=[];
   for(const p of m?.saved.providers||[]){
    if(p.id==='native')continue;
-   list.push({id:'channel:'+p.id,group:'channels',name:p.name,summary:p.models.filter(x=>x.selected).length+' 个已选模型 · 顺序 / 别名 / 覆盖',source:'Desktop 策略 + OpenCodex 已配置渠道',fields:'连接地址、协议端点、模型清单、启停、选择顺序、别名、模版引用与人工覆盖',endpoint:p.connection?.baseUrl||'https://gateway.example.com/v1',key:true,deps:[...new Set([...Object.values(p.refs||{}),...Object.values(m.saved.globalRefs||{}),...p.models.map(x=>x.templateRef).filter(Boolean)])],models:p.models.filter(x=>x.selected).map(x=>x.id),files:'model-policy.json / OpenCodex 渠道配置',modelId:p.id});
+   list.push({id:'channel:'+p.id,group:'channels',name:p.name,summary:p.models.filter(x=>x.selected).length+' 个已选模型 · 顺序 / 别名 / 覆盖',source:'Desktop 策略 + OpenCodex 已配置渠道',fields:'服务节点、当前节点、渠道认证、模型协议与模型清单、启停、选择顺序、别名、模版引用与人工覆盖',endpoint:p.nodes?.find(n=>n.id===p.activeNodeId)?.url||'',nodes:(p.nodes||[]).map(n=>({...n,current:n.id===p.activeNodeId})),key:true,deps:[...new Set([...Object.values(p.refs||{}),...Object.values(m.saved.globalRefs||{}),...p.models.map(x=>x.templateRef).filter(Boolean)])],models:p.models.filter(x=>x.selected).map(x=>x.id),files:'model-policy.json / OpenCodex 渠道配置',modelId:p.id});
   }
   list.push({id:'channel:legacy',group:'channels',name:'私有网关',summary:'2 个已配置模型 · 来自 OpenCodex',source:'OpenCodex 原有配置（非 Desktop 创建）',fields:'已有渠道、协议、端点与显式模型配置；不复制发现缓存',endpoint:'https://private.example.com/v1',key:true,deps:[],files:'OpenCodex 渠道配置'});
   for(const t of m?.templates||[]){list.push({id:'template:'+t.id,group:'templates',name:t.name,summary:t.versions.length+' 个已保存版本 · 主版本 v'+t.main,source:'Desktop 模版库',fields:'已保存版本、匹配规则、协议、能力、版本或后缀与来源；未保存缓冲不进入',files:'model-family-templates.json',versions:t.versions.map(v=>v.n),templateId:t.id});}
@@ -20,7 +20,7 @@
    {id:'mcp:docs',group:'mcp',name:'Docs MCP',summary:'HTTP 服务器 · 完整定义',source:'本机扩展库',fields:'传输类型、地址、参数、启用状态；Authorization 需另选扩展凭据',extensionSecret:true,files:'MCP 完整定义 / extension-config.json'},
    {id:'preferences:desktop',group:'preferences',name:'通用偏好',summary:'主题、语言与可移植显示偏好',source:'Desktop',fields:'排除机器绝对路径、窗口坐标、日志、缓存、执行绑定与未提交草稿',files:'preferences.json（字段白名单）'},
    {id:'endpoint:personal',group:'endpoints',name:'个人 WebDAV',summary:'文件同步默认包含 · 密码随配置同步',source:'Desktop WebDAV 配置',fields:'服务地址、目录、用户名与连接密码；导入为未启用连接，不改当前连接或本机同步范围；不包含同步加密口令',password:true,files:'sync_endpoints / 受保护凭据部分'}
-  ); return list;
+  ); return list.concat(window.conversationPrototype?.syncObjects()||[]);
  }
  const importSamples={
   encrypted:{file:'opencodex-device-config.ocx',encrypted:true},
@@ -42,7 +42,7 @@
  let detailReturnFocus=null,detailOpen=false,lastComparison=null;
  let catalog=collect(),tab='file',query='',originFocus=null,dialogKind='',scenario='normal',serial=0,renderedTab=null;
  const expanded={file:new Set(),webdav:new Set()},searchCollapsed={file:new Set(),webdav:new Set()},scrolls={file:{list:0,secrets:0},webdav:{list:0,secrets:0}};
- const fresh=mode=>({selected:new Set(catalog.filter(x=>mode==='file'||x.group!=='endpoints').map(x=>x.id)),keys:new Set(),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(),preset:'all'});
+ const fresh=mode=>({selected:new Set(catalog.filter(x=>!x.defaultExcluded&&(mode==='file'||x.group!=='endpoints')).map(x=>x.id)),keys:new Set(),accountInfoOnly:new Set(),endpointConfigOnly:new Set(),extensions:new Set(),preset:'all'});
  const scopes={file:fresh('file'),webdav:fresh('webdav')};
  let connection={name:'个人 WebDAV',url:'https://dav.example.com',path:'/opencodex/config-sync/v1',user:'demo-user',connected:true},savedScope='',result=null,lastExport=null,importPlan=null,diffPlan=null;
  const state=()=>scopes[tab], find=id=>catalog.find(x=>x.id===id);
@@ -52,7 +52,7 @@
  function closure(s=state()){
   const deps=new Map();
   for(const id of s.selected){for(const ref of find(id)?.deps||[]){const split=ref.lastIndexOf(':'),tid=ref.slice(0,split),revision=Number(ref.slice(split+1));if(!tid)continue;const key='template:'+tid;if(!deps.has(key))deps.set(key,new Set());deps.get(key).add(revision);}}
-  return {deps,ids:new Set([...s.selected,...deps.keys()])};
+  return {deps,ids:new Set([...s.selected,...deps.keys()].filter(id=>find(id)&&!find(id).history))};
  }
  function secretIds(s=state()){
   const selected=closure(s).ids;
@@ -65,11 +65,12 @@
   const s=state();s.preset=value;
   if(value==='custom')return;
   s.keys.clear();s.accountInfoOnly.clear();s.endpointConfigOnly.clear();s.extensions.clear();
-  s.selected=new Set(catalog.filter(x=>tab==='file'||x.group!=='endpoints').map(x=>x.id));
+  s.selected=new Set(catalog.filter(x=>!x.defaultExcluded&&(tab==='file'||x.group!=='endpoints')).map(x=>x.id));
   if(value==='share')for(const x of catalog){if(x.group==='accounts')s.accountInfoOnly.add(x.id);if(x.password)s.endpointConfigOnly.add(x.id);}
   if(value==='device'){for(const x of catalog){if(x.key)s.keys.add(x.id);if(x.extensionSecret)s.extensions.add(x.id);}}
  }
  function selectObject(s,id,checked){
+  if(find(id)?.history)return;
   if(checked){if(!s.selected.has(id)){s.accountInfoOnly.delete(id);s.endpointConfigOnly.delete(id);}s.selected.add(id);}
   else{s.selected.delete(id);s.accountInfoOnly.delete(id);s.endpointConfigOnly.delete(id);}
  }
@@ -80,21 +81,21 @@
   const s=state(),{ids,deps}=closure(),visible=catalog.filter(x=>(tab==='file'||x.group!=='endpoints')&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase()));
   const rows=groups.map(([id,label])=>{
    const items=visible.filter(x=>x.group===id);if(!items.length)return '';
-   const all=items.every(x=>ids.has(x.id)),count=items.filter(x=>ids.has(x.id)).length,open=query?!searchCollapsed[tab].has(id):expanded[tab].has(id);
+   const selectable=items.filter(x=>!x.history),all=selectable.length>0&&selectable.every(x=>ids.has(x.id)),count=items.filter(x=>ids.has(x.id)).length,open=query?!searchCollapsed[tab].has(id):expanded[tab].has(id);
    const children=window.PrototypeTreeTable.rows(open?items:[],x=>{
     const dependent=deps.has(x.id)&&!s.selected.has(x.id),included=Object.values(secretIds(s)).some(items=>items.includes(x.id));
-    let mark=dependent?'依赖补齐':x.group==='accounts'?(s.accountInfoOnly.has(x.id)?'仅账户信息':x.login?(included?'含登录状态':'随账户同步'):'需重新登录'):x.password?(included?'含密码':'仅配置'):included?'含凭据':x.key?'不带 Key':'配置';
+    let mark=x.history?'本地恢复包中选择':dependent?'依赖补齐':x.group==='accounts'?(s.accountInfoOnly.has(x.id)?'仅账户信息':x.login?(included?'含登录状态':'随账户同步'):'需重新登录'):x.password?(included?'含密码':'仅配置'):included?'含凭据':x.key?'不带 Key':'配置';
     return {className:'sx-object',depth:1,label:x.name,
-      selection:'<input type="checkbox" data-sx-object="'+esc(x.id)+'" aria-label="选择 '+esc(x.name)+'" '+(ids.has(x.id)?'checked':'')+(dependent?' disabled title="所选渠道需要此精确版本"':'')+'>',
+      selection:'<input type="checkbox" data-sx-object="'+esc(x.id)+'" aria-label="选择 '+esc(x.name)+'" '+(ids.has(x.id)?'checked':'')+(x.history?' disabled title="使用本地重装恢复流程；当前未接入远端历史交换"':dependent?' disabled title="所选渠道需要此精确版本"':'')+'>',
       nameHtml:'<button class="sx-object-name" data-sx="detail" data-id="'+esc(x.id)+'">'+esc(x.name)+'</button><small>'+esc(dependent?'仅精确版本 v'+[...deps.get(x.id)].join(' / v'):x.password?(s.endpointConfigOnly.has(x.id)?'仅配置 · 不含连接密码':'密码随配置同步 · 导入后待启用'):x.summary)+'</small>',
       cells:['<span class="sx-mark '+(included?'secret':x.group==='accounts'&&!x.login?'warn':'')+'">'+mark+'</span>']};
    });
    return '<div class="sx-group">'+window.PrototypeTreeTable.row({className:'sx-group-head',label,
-     selection:'<input type="checkbox" data-sx-group="'+id+'" aria-label="选择'+label+'" '+(all?'checked':'')+'>',
+     selection:'<input type="checkbox" data-sx-group="'+id+'" aria-label="选择'+label+'" '+(all?'checked':'')+(selectable.length?'':' disabled')+'>',
      toggleAttrs:'data-sx="expand" data-id="'+id+'"',expanded:open,
-     cells:['<span class="sx-group-count">'+count+' / '+items.length+'</span>']})+children+'</div>';
+     cells:['<span class="sx-group-count">'+(selectable.length?count+' / '+items.length:'本地恢复')+'</span>']})+children+'</div>';
   }).join('');
-  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>全部配置</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.length&&visible.every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','勾选账户默认含可迁移登录状态'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。未保存草稿不参与。搜索仅改变显示，隐藏勾选保留。范围预设、勾选与搜索均为内存演示；导入 / 导出走确认流程，不读写真实文件。');
+  return '<div class="sx-toolbar"><select data-sx-preset aria-label="同步范围预设"><option value="all" '+(s.preset==='all'?'selected':'')+'>默认配置范围</option><option value="share" '+(s.preset==='share'?'selected':'')+'>分享配置 · 不含凭据</option><option value="device" '+(s.preset==='device'?'selected':'')+'>换设备 · 含可转移凭据</option><option value="custom" '+(s.preset==='custom'?'selected':'')+'>自定义范围</option></select><input class="input" id="sxSearch" type="search" aria-label="搜索配置对象" placeholder="搜索配置对象" value="'+esc(query)+'">'+btn('清空选择','clear',ids.size?'':'disabled')+'</div><div class="sx-table proto-tree" role="region" aria-label="配置对象列表" tabindex="0">'+window.PrototypeTreeTable.row({className:'sx-table-head',label:'配置对象',selection:'<input type="checkbox" data-sx-all aria-label="选择当前搜索结果" '+(visible.length&&visible.every(x=>ids.has(x.id))?'checked':'')+'>',cells:['<span>范围与凭据</span>']})+''+(rows||'<div class="sx-empty">没有匹配的配置对象<br>更换关键词或清除搜索。</div>')+'</div>'+sxAnn('01','同步范围与选择规则','勾选账户默认含可迁移登录状态'+(tab==='file'?'，WebDAV 配置默认含连接密码':'')+'；点击名称可调整同步选项。未保存草稿不参与。搜索仅改变显示，隐藏勾选保留。范围预设、勾选与搜索均为内存演示；导入 / 导出走确认流程，不读写真实文件。');
  }
  function credentialsHTML(){
   const s=state(),ids=closure().ids;
@@ -105,15 +106,18 @@
   return '<aside class="sx-secrets"><header><h3>其他凭据</h3><p class="sx-muted">账户登录状态随账户选择'+(tab==='file'?'，WebDAV 密码随配置选择':'')+'；以下凭据可另选。</p></header>'+blocks+'<p class="sx-note">'+(secretCount()?'所选凭据需加密':'当前不携带凭据')+'</p>'+sxAnn('02','凭据选择与加密规则','加密口令独立于 WebDAV 密码，不随包或远端数据保存。导入同一身份时保留本机已有凭据，不用空值覆盖。凭据选择只演示勾选与加密要求，不读取真实密钥；加密口令只描述规则，不做真实加密。')+'</aside>';
  }
  function render(resetList=false){
+  if(document.documentElement.dataset.route==='sync')host.closest('.main').scrollTop=0;
   if(renderedTab){scrolls[renderedTab].list=$('.sx-table',host)?.scrollTop||0;scrolls[renderedTab].secrets=$('.sx-secrets',host)?.scrollTop||0;}
   if(resetList)scrolls[tab].list=0;
   const selected=closure().ids.size,dirty=signature(scopes.webdav)!==savedScope;
-  host.innerHTML='<div class="sx-tabs" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
+  host.innerHTML='<div class="sx-tabs" data-page-tabs data-tabs-scroll="inner" role="tablist" aria-label="同步方式">'+[['file','文件同步'],['webdav','WebDAV 同步']].map(([id,name])=>'<button type="button" role="tab" id="sxTab-'+id+'" aria-controls="sxPanel" aria-selected="'+(tab===id)+'" tabindex="'+(tab===id?'0':'-1')+'" data-sx="tab" data-id="'+id+'">'+name+'</button>').join('')+'</div>'+
    '<div id="sxPanel" role="tabpanel" aria-labelledby="sxTab-'+tab+'"><header class="sx-top"><div><h2>'+(tab==='file'?'导入与导出':'设备间同步')+'</h2><p class="sx-muted">'+(tab==='file'?'把选定配置带到另一台设备，或用分享预设导出不含凭据的配置。':'本机范围同时用于上传与接收；下载的变化先预览，再应用。')+'</p></div><div class="sx-actions">'+(tab==='file'?btn('导入配置','import')+btn('导出配置','export',selected?'':'disabled',true):btn('保存本机范围','save-scope',dirty?'':'disabled')+btn('同步配置','check',dirty?'disabled title="请先保存本机范围"':'',true))+'</div></header>'+
    (tab==='webdav'?'<div class="sx-connection"><div class="sx-connection-info"><div><strong>'+esc(connection.name)+'</strong></div><small class="sx-muted" title="'+esc(connection.url+connection.path)+'">'+esc(connection.url+connection.path)+'</small></div>'+btn('连接设置','connection')+'</div>'+sxAnn('03','连接信息为演示数据','此处为演示连接，连接名称、地址与状态均为演示数据；测试连接、保存与同步仅切换演示状态，不发起真实网络请求。'):'') +
    '<div class="sx-layout"><section class="sx-scope" aria-label="同步范围">'+scopeHTML()+'</section>'+credentialsHTML()+'</div>' +
    (result&&result.tab===tab?'<div class="sx-result" role="status"><strong>'+esc(result.title)+'</strong><span>'+esc(result.detail)+'</span></div>':'') +
    '</div>';
+  if(window.conversationPrototype?.renderRecovery($('#sxPanel',host),tab)){renderedTab=tab;return;}
+  if(tab==='file'&&window.conversationPrototype?.scope()==='conversations')$('.sx-layout',host).insertAdjacentHTML('beforebegin',window.conversationPrototype.recoveryEntry());
   $('.sx-table',host).scrollTop=scrolls[tab].list;$('.sx-secrets',host).scrollTop=scrolls[tab].secrets;renderedTab=tab;
   for(const el of $$('[data-sx-group]',host)){const items=catalog.filter(x=>x.group===el.dataset.sxGroup&&(x.name+' '+x.summary).toLowerCase().includes(query.toLowerCase())),n=items.filter(x=>closure().ids.has(x.id)).length;el.indeterminate=n>0&&n<items.length;}
   for(const el of $$('[data-sx-secret]',host)){const key=el.dataset.sxSecret,prop={keys:'key',extensions:'extensionSecret'}[key],items=catalog.filter(x=>closure().ids.has(x.id)&&x[prop]),n=items.filter(x=>state()[key].has(x.id)).length;el.indeterminate=n>0&&n<items.length;}
@@ -132,14 +136,15 @@
  }
  function detail(id){
   const x=find(id);if(!x)return;
+  if(x.history){window.conversationPrototype?.openRecovery('export','thread:'+id.slice('dialog-history:'.length));return;}
   const accountOptions=x.login?'<details class="sx-account-options"><summary>同步选项</summary>'+check('data-sx-account-info="'+esc(id)+'"','仅同步账户信息，不含登录状态',state().accountInfoOnly.has(id),!state().selected.has(id))+'<p class="sx-muted">'+(state().selected.has(id)?'默认随账户同步登录状态；修改后立即计入当前范围。':'先勾选此账户，再调整同步选项。')+'</p></details>':'';
   const endpointOptions=x.password?'<details class="sx-account-options"><summary>同步选项</summary>'+check('data-sx-endpoint-config="'+esc(id)+'"','仅同步配置，不含密码',state().endpointConfigOnly.has(id),!state().selected.has(id))+'<p class="sx-muted">默认随配置同步连接密码；导入后需另行启用连接。同步加密口令始终不进入配置包。</p></details>':'';
-  showDialog('detail',x.name,'<p class="sx-muted">配置对象详情 · 敏感值不展示</p><dl class="sx-detail-list"><dt>归属</dt><dd>'+esc(x.source)+'</dd><dt>包含字段</dt><dd>'+esc(x.fields)+'</dd><dt>配置来源</dt><dd>'+esc(x.files)+'</dd>'+(x.endpoint?'<dt>连接地址</dt><dd>'+esc(x.endpoint)+'</dd>':'')+'<dt>依赖</dt><dd>'+esc(x.deps?.length?x.deps.join('、'):'无额外模版依赖')+'</dd>'+(x.models?.length?'<dt>已选模型</dt><dd>'+x.models.map(esc).join('、')+'</dd>':'')+'<dt>凭据</dt><dd>'+esc(x.key?'API Key 单独选择；不显示或复制掩码值':x.login?'登录状态默认随账户同步，接收端自动恢复并检查':x.id==='account:device'?'设备绑定的登录状态无法迁移；新设备需重新登录':x.extensionSecret?'授权头 / 环境变量单独选择':x.password?'连接密码默认随配置同步，可选仅配置；不包含同步加密口令':'不携带凭据')+'</dd></dl>'+accountOptions+endpointOptions+(['accounts','endpoints'].includes(x.group)?'':'<p class="sx-note">Desktop 策略和 OpenCodex 字段属于同一渠道时合为一个应用计划，不重复创建；外部漂移先比较。</p>'),'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true});
+  showDialog('detail',x.name,'<p class="sx-muted">配置对象详情 · 敏感值不展示</p><dl class="sx-detail-list"><dt>归属</dt><dd>'+esc(x.source)+'</dd><dt>包含字段</dt><dd>'+esc(x.fields)+'</dd><dt>配置来源</dt><dd>'+esc(x.files)+'</dd>'+(x.endpoint?'<dt>当前连接地址</dt><dd>'+esc(x.endpoint)+'</dd>':'')+(x.nodes?.length?'<dt>服务节点</dt><dd>'+x.nodes.map(n=>esc(n.name)+(n.current?' · 当前':'')+'：'+esc(n.url||'待配置')).join('<br>')+'</dd>':'')+'<dt>依赖</dt><dd>'+esc(x.deps?.length?x.deps.join('、'):'无额外模版依赖')+'</dd>'+(x.models?.length?'<dt>已选模型</dt><dd>'+x.models.map(esc).join('、')+'</dd>':'')+'<dt>凭据</dt><dd>'+esc(x.key?'API Key 单独选择；不显示或复制掩码值':x.login?'登录状态默认随账户同步，接收端自动恢复并检查':x.id==='account:device'?'设备绑定的登录状态无法迁移；新设备需重新登录':x.extensionSecret?'授权头 / 环境变量单独选择':x.password?'连接密码默认随配置同步，可选仅配置；不包含同步加密口令':'不携带凭据')+'</dd></dl>'+accountOptions+endpointOptions+(['accounts','endpoints','dialog-policies'].includes(x.group)?'':'<p class="sx-note">Desktop 策略和 OpenCodex 字段属于同一渠道时合为一个应用计划，不重复创建；外部漂移先比较。</p>'),'关闭',closeModal,{cancelLabel:'关闭',hideConfirm:true});
  }
  function exportPreview(){
   if(!closure().ids.size)return;
   const cl=closure(),secrets=secretIds(),count=secretCount();
-  const manifest={demo:true,kind:'configuration-sync',objects:[...cl.ids],dependencies:[...cl.deps].map(([id,versions])=>({id,revisions:[...versions]})),credentials:secrets,source:'committed',encryptionRequired:count>0};
+  const manifest={demo:true,kind:'configuration-sync',objects:[...cl.ids],dependencies:[...cl.deps].map(([id,versions])=>({id,revisions:[...versions]})),credentials:secrets,source:'committed',encryptionRequired:count>0,modules:[...cl.ids].filter(id=>find(id)?.group==='dialog-policies').map(id=>({id,schemaVersion:1,content:find(id).payload}))};
   const body='<div class="sx-info"><strong>'+cl.ids.size+' 项配置 · '+(count?'含 '+count+' 项凭据':'不含任何凭据')+'</strong><br>渠道 Key '+secrets.keys.length+' 项 / 账户登录态 '+secrets.accounts.length+' 项 / 扩展凭据 '+secrets.extensions.length+' 项 / WebDAV 密码 '+secrets.endpointPasswords.length+' 项</div>'+check('id="sxEncrypt"',count?'含凭据，必须加密':'为配置包设置加密口令',count,!!count)+'<div id="sxPassFields" '+(!count?'hidden':'')+'><div class="sx-grid"><label class="sx-field"><span>加密口令（至少 8 位）</span><input id="sxPass" class="input" type="password" autocomplete="new-password"></label><label class="sx-field"><span>再次输入</span><input id="sxPassAgain" class="input" type="password" autocomplete="new-password"></label></div></div><details><summary>查看内容清单</summary><pre>'+esc(JSON.stringify(manifest,null,2))+'</pre></details>';
   showDialog('export','确认导出',body,'生成配置包',()=>{
    const encrypted=$('#sxEncrypt').checked,p=$('#sxPass').value;if(encrypted&&(p.length<8||p!==$('#sxPassAgain').value)){setText('#sxError','请输入至少 8 位的加密口令，并保持两次一致。');return;}
@@ -239,8 +244,9 @@
  function comparisonFields(x,p){
   const source=p.mode==='import'?'包内':'远端',endpoint=find(x.id)?.endpoint||'https://gateway.example.com/v1';
   const f=(section,...rows)=>({section,rows});
-  if(x.group==='channels')return [f('连接与身份',['渠道 ID',x.id,x.kind==='remap'?'待新建或重新绑定':x.id],['服务地址',endpoint,x.kind==='remap'?'https://new-private.example.com/v1':endpoint],['协议','openai-responses','openai-responses'],['API Key','本机已保存',credentialType(p,x)?source+'已携带 · 值隐藏':'未携带 · 保留同身份本机 Key']),f('模型与覆盖',['模型清单','17 个','19 个 · 新增 3 / 删除 1'],['新增模型','—','gpt-5.4-mini、gpt-5.3-codex、gpt-5.2-codex'],['删除模型','gpt-4.1','—'],['gpt-5.4 别名','—','主力模型'],['上下文大小','128,000','256,000'],['启用状态','启用','启用'],['推理等级','低 / 中 / 高','低 / 中 / 高 / 极高'],['快速模式','支持','支持'],['选择顺序','gpt-5.4 → gpt-5.2','gpt-5.4 → gpt-5.4-mini'],['模版引用','gpt:v1','gpt:v4（精确依赖）'])];
-  if(x.group==='templates')return [f('版本与匹配',['模版 ID',x.id,x.id],['已保存版本','v1 / v2 / v3','新增 v4'],['主版本','v3','保持 v3'],['匹配规则','gpt-*','gpt-*（排除旧版）'],['协议端点','/responses','/responses']),f('能力与来源',['上下文大小','128,000','256,000'],['推理等级','低 / 中 / 高','低 / 中 / 高 / 极高'],['快速模式','支持','支持'],['版本 / 后缀覆盖','gpt-5.2','gpt-5.2 / gpt-5.4-mini'],['来源','人工维护','已保存版本 · 另一台设备'])];
+  if(x.group==='dialog-policies')return [f('对话配置与范围',['对象',x.id,x.id],['传输方向','本机已保存','上传当前覆盖'],['模型规则 / 历史','保持原样','不携带'],['本层覆盖',JSON.stringify(find(x.id)?.payload||{}),JSON.stringify(find(x.id)?.payload||{})])];
+  if(x.group==='channels')return [f('连接与身份',['渠道 ID',x.id,x.kind==='remap'?'待新建或重新绑定':x.id],['当前节点 URL',endpoint,x.kind==='remap'?'https://new-private.example.com/v1':endpoint],['节点规则','同渠道共用认证与 Key','同渠道共用认证与 Key'],['协议','openai-responses','openai-responses'],['API Key','本机已保存',credentialType(p,x)?source+'已携带 · 值隐藏':'未携带 · 保留同身份本机 Key']),f('模型与覆盖',['模型清单','17 个','19 个 · 新增 3 / 删除 1'],['新增模型','—','gpt-5.4-mini、gpt-5.3-codex、gpt-5.2-codex'],['删除模型','gpt-4.1','—'],['gpt-5.4 别名','—','主力模型'],['上下文大小','128,000','256,000'],['启用状态','启用','启用'],['推理等级','低 / 中 / 高','低 / 中 / 高 / 极高'],['快速模式','支持','支持'],['选择顺序','gpt-5.4 → gpt-5.2','gpt-5.4 → gpt-5.4-mini'],['模版引用','gpt:v1','gpt:v4（精确依赖）'])];
+  if(x.group==='templates')return [f('版本与匹配',['模版 ID',x.id,x.id],['已保存版本','v1 / v2 / v3','新增 v4'],['主版本','v3','保持 v3'],['匹配规则','gpt-*','gpt-*（排除旧版）'],['模型协议','openai-responses','openai-responses']),f('能力与来源',['上下文大小','128,000','256,000'],['推理等级','低 / 中 / 高','低 / 中 / 高 / 极高'],['快速模式','支持','支持'],['版本 / 后缀覆盖','gpt-5.2','gpt-5.2 / gpt-5.4-mini'],['来源','人工维护','已保存版本 · 另一台设备'])];
   if(x.group==='accounts')return [f('账户身份',['账户 ID',x.id,x.id],['邮箱',x.login?'demo@example.com':'corp@example.com',x.login?'demo@example.com':'corp@example.com'],['提供方','OpenAI',x.login?'OpenAI':'企业身份服务'],['授权范围','模型访问','模型访问']),f('登录状态',['登录材料','本机已有 · 值隐藏',x.login?'可迁移 · 值隐藏':'设备绑定 · 无可迁移材料'],['有效性','本机状态待核对',p.mode==='diff'&&!p.verified?'已失效 · 需重新登录':x.login?'应用时自动检查':'新设备需重新登录'],['采用规则','保留当前登录',p.accountInfoOnly.has(x.id)?'仅账户信息，保留本机登录状态':'采用可迁移登录状态并检查'])];
   if(x.group==='skills')return [f('Skill 与资源',['Skill ID',x.id,x.removal?'删除记录':x.id],['启用状态','启用',x.removal?'—':'启用'],['SKILL.md','旧版审查步骤',x.removal?'—':'更新审查步骤与输出要求'],['资源文件','references/old-guide.md',x.removal?'—':'新增 references/checklist.md、scripts/report.js；删除 old-guide.md'],['内容校验','旧版摘要',x.removal?'明确删除':'更新版本 · 摘要已校验'])];
   if(x.kind==='extension')return [f('旧版扩展开关',['对象范围','本机开关','仅启用状态 / 同步方式'],['实际内容','保留本机 Skill / MCP','未包含，不覆盖本机内容'])];
@@ -264,7 +270,7 @@
  const importRows=()=>[
   {id:'template:gpt',name:'GPT · Responses / v4',detail:'新增已保存版本 v4 · 原主版本与引用保持',kind:'template',changes:{add:1}},
   {id:'channel:newapi',name:'NewApi',detail:'同一渠道 · 模型新增 3 / 更新 2 / 删除 1',kind:'channel',changes:{add:3,update:2,delete:1}},
-  {id:'channel:legacy',name:'私有网关',detail:'同名但端点不同 · 必须确认身份，不复用原 Key',kind:'remap',conflict:true,changes:{add:1}},
+  {id:'channel:legacy',name:'私有网关',detail:'同名但服务身份不同 · 必须确认身份，不复用原 Key',kind:'remap',conflict:true,changes:{add:1}},
   {id:'account:chatgpt',name:'ChatGPT · 个人账户',detail:'账户信息与登录状态更新',kind:'account',login:true,changes:{update:1}},
   {id:'account:device',name:'企业账户 · 设备绑定',detail:'账户信息更新 · 新设备需重新登录',kind:'account',login:false,changes:{update:1}},
   {id:'skill:review',name:'Code Review Skill',detail:'Skill 更新 · 新增 2 个资源 / 删除 1 个旧资源',kind:'skill',changes:{add:2,update:1,delete:1}},
@@ -295,7 +301,7 @@
   const annotationText=['已读取'+(encrypted?'并解密':'')+'配置包 → 选择与比较 → 应用结果','勾选要应用的变化，展开分类查看对象。凭据采用规则可统一设置，也可逐项调整。',comparisonNote];
   showDialog('import','选择导入内容',comparisonBody(p),'应用',()=>{
    if(!p.selected.size){setText('#sxError','至少选择一项配置。');return;}
-   if(p.rows.some(x=>p.selected.has(x.id)&&x.kind==='remap'&&!p.choices[x.id])){setText('#sxError','请先确认同名异端点渠道的身份映射。');return;}
+   if(p.rows.some(x=>p.selected.has(x.id)&&x.kind==='remap'&&!p.choices[x.id])){setText('#sxError','请先确认同名不同服务渠道的身份映射。');return;}
    const applied=p.rows.filter(x=>p.selected.has(x.id));
    const accounts=applied.filter(x=>x.kind==='account').map(x=>({id:x.id,login:encrypted&&x.login&&!p.accountInfoOnly.has(x.id),infoOnly:p.accountInfoOnly.has(x.id)}));
    const endpoints=applied.filter(x=>x.kind==='endpoint').map(x=>({id:x.id,password:encrypted&&x.password&&!p.endpointConfigOnly.has(x.id)}));
@@ -322,6 +328,7 @@
   if(ids.has('mcp:docs'))rows.push({id:'mcp:docs',name:'Docs MCP',detail:'本机已提交更新 → 远端',kind:'upload',changes:{update:1}});
   if(ids.has('preferences:desktop'))rows.push({id:'preferences:desktop',name:'通用偏好',detail:'远端显示偏好更新 → 本机',kind:'download',changes:{update:2}});
   for(const x of catalog.filter(x=>ids.has(x.id)&&x.group==='accounts'))rows.push(secretIds(scopes.webdav).accounts.includes(x.id)?{id:x.id,name:x.name,detail:scenario==='login-invalid'?'远端登录状态已失效':'两端登录状态不同 · 已自动检查，需选择方向',kind:'token',login:true}:{id:x.id,name:x.name,detail:'仅同步账户信息',kind:'account',login:false});
+  for(const x of catalog.filter(x=>ids.has(x.id)&&x.group==='dialog-policies'))rows.push({id:x.id,name:x.name,detail:'本机已保存作用域覆盖 → 远端；不携带对话历史',kind:'upload',changes:{update:1}});
   diffPlan=comparisonInit({rows,choices:{},verified:scenario!=='login-invalid',scope:signature(scopes.webdav),secretCount:secretCount(scopes.webdav),accountInfoOnly:new Set(scopes.webdav.accountInfoOnly)},'diff');
   syncPreview();
  }
@@ -419,6 +426,6 @@
  function routeChanged(){if(document.documentElement.dataset.route!=='sync')return;const p=new URLSearchParams(location.hash.split('?')[1]||'');tab=p.get('tab')==='webdav'?'webdav':'file';catalog=collect();render();}
  new MutationObserver(routeChanged).observe(document.documentElement,{attributes:true,attributeFilter:['data-route']});
  window.addEventListener('hashchange',routeChanged);
- window.syncPrototype={open,state:()=>({tab,selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,dirty:signature(scopes.webdav)!==savedScope,lastExport,result,dialogKind,detailOpen,lastComparison,comparison:dialogKind==='diff'&&diffPlan||dialogKind==='import'&&importPlan?.mode?(()=>{const p=dialogKind==='diff'?diffPlan:importPlan;return {mode:p.mode,selected:[...p.selected],expanded:[...p.expanded],rules:Object.fromEntries(p.rows.filter(x=>credentialType(p,x)).map(x=>[x.id,credentialValue(p,x)]))};})():null,serial,scenario,importSample,importFile}),setImportSample,setScenario:v=>{if(['normal','login-invalid','backup-fail','partial'].includes(v)){scenario=v;const el=$('#sxMockScenario');if(el)el.value=v;}},render};
+ window.syncPrototype={open,refreshCatalog:()=>{if(dialogKind)closeModal();catalog=collect();render();},state:()=>({tab,selected:[...state().selected],effective:[...closure().ids],accountInfoOnly:[...state().accountInfoOnly],endpointConfigOnly:[...state().endpointConfigOnly],secrets:secretIds(),savedScope,dirty:signature(scopes.webdav)!==savedScope,lastExport,result,dialogKind,detailOpen,lastComparison,comparison:dialogKind==='diff'&&diffPlan||dialogKind==='import'&&importPlan?.mode?(()=>{const p=dialogKind==='diff'?diffPlan:importPlan;return {mode:p.mode,selected:[...p.selected],expanded:[...p.expanded],rules:Object.fromEntries(p.rows.filter(x=>credentialType(p,x)).map(x=>[x.id,credentialValue(p,x)]))};})():null,serial,scenario,importSample,importFile}),setImportSample,setScenario:v=>{if(['normal','login-invalid','backup-fail','partial'].includes(v)){scenario=v;const el=$('#sxMockScenario');if(el)el.value=v;}},render};
  routeChanged();render();
 })();

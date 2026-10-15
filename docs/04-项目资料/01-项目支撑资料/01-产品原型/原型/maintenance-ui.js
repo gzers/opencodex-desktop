@@ -251,10 +251,6 @@
     const backupTool=$('[data-proto-contexts="settings:backup"]');
     backupTool?.remove();
     old.outerHTML='<div class="proto-card" id="maintenanceDemoCard" data-proto-contexts="overview settings:upgrade settings:backup logs:notifications"><div class="proto-note-title">0.1.10 · 运行维护</div><div class="pctl-grid">'+btn('goto-upgrade','版本升级')+btn('goto-backup','数据与备份')+'</div><label class="proto-mock-field"><span>下一次更新结果</span><select id="maintenanceScenario" aria-label="维护更新结果"><option value="available">发现更新 / 更新成功</option><option value="latest">已是最新</option><option value="failed">网络或校验失败</option></select></label><label class="proto-mock-field"><span>更新说明（均为排版示例）</span><select id="maintenanceNotesScenario"><option value="ready">有更新内容</option><option value="empty">发布者未提供说明</option><option value="failed">说明加载失败，可重试</option><option value="loading">说明加载中</option></select></label><div class="pctl-grid">'+btn('reset-updates','重置更新状态')+btn('registry','通知注册表')+btn('history','投递记录')+'</div><label class="proto-mock-field"><span>升级前备份结果</span><select id="maintenanceBackupResult"><option value="valid">成功</option><option value="failed">失败，阻止已勾选的更新</option></select></label><div class="pctl-grid">'+['app.ready','route.overview.enter','window.resume','network.online','schedule.due','retry.due'].map(id=>btn('trigger',M.config.triggers[id],id)).join('')+btn('advance','模拟经过 24 小时')+'</div><p class="pctl-hint">共享概览 / 设置状态。备份树表为现有格式的独立示例，不对应下方备份记录；展开、打开与警告只演示交互，不检查文件存在或调用系统应用。更新内容与下载百分比为排版示例；网页链接是官方发布列表 / 包页面参考，非候选版本的真实说明。重启按钮只模拟版本回读。所有版本、路径、更新、备份和事件都为内存示例，不读写本机数据。启动延迟 15 秒、路由与页面计时仅演示调度；可模拟触发与经过时间，刷新重置。</p><div id="maintenanceLive" class="mnt-sr" role="status" aria-live="polite"></div></div>';
-    const group=$('#launchGrid .proto-launch-group:last-child .pctl-tiles');
-    const entry=document.createElement('button');entry.type='button';entry.textContent='0.1.10 维护';entry.dataset.maintAction='entry';
-    // 在原有 launch 监听器安装后加入，交给本模块，不注册一个不存在的产品路由。
-    group.appendChild(entry);
     window.prototypePanel?.refresh();
   }
   document.addEventListener('click',event=>{

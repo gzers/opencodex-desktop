@@ -62,8 +62,7 @@ html[data-theme="dark"]{--annotation-ink:#c1b2ee;--annotation-line:#514661;--ann
 .ap-sync-row .proto-annotation{right:12px}
 /* 打样页导航卡的标记挂在卡片自身：卡头较窄，挂 section-head 会越出正文滚出视口。 */
 .ap-navigation>.proto-annotation{right:16px;top:16px}
-.ap-form-row.annotation-anchor{margin-top:44px}
-.ap-form-row>.proto-annotation{right:12px;top:-36px}
+.ap-form-row>.proto-annotation{right:12px;top:-12px}
 .ap-action-anchor>.proto-annotation{top:-34px}
 .ap-footnote{margin:0;font-size:11px;color:var(--muted);line-height:1.6}
 .annotation-search{display:flex;flex-direction:column;gap:7px;color:var(--pctl-sub);font-size:11px}
@@ -82,14 +81,22 @@ html[data-route="annotations"] #statePill{display:none}
 html[data-route="annotations"] #protoStdCards{display:none}
 
 /* 正式页面锚点：卡片没有自带定位上下文，统一由容器类补 position:relative。
-   设置页注释挂在 Tab 行上，右对齐且上移避开下边框；弹窗注释用 sticky 挂在正文顶部。 */
-.card>.proto-annotation,.install-card>.proto-annotation,.tray-os{position:relative}
+   设置页注释挂在 Tab 行上；弹窗标记使用正文之外的独立层，不参与任何正文或按钮排版。 */
+.card,.install-card,.tray-os{position:relative}
 .diag-tabs,.settings-tabs,.ext-tabs{position:relative}
 .route-section>.settings-tabs>.proto-annotation,.route-section>.diag-tabs>.proto-annotation,.route-section>.ext-tabs>.proto-annotation,.mp-toolbar>.settings-tabs>.proto-annotation{right:4px;top:-26px}
 .ovb-actions,.recent-events-head,.mod-head,.sx-connection,.sx-scope,.sx-secrets{position:relative}
 .annotation-anchor{position:relative}
-#modalBody>.modal-note-anchor{position:sticky;top:0;z-index:30;height:0}
-#modalBody>.modal-note-anchor>.proto-annotation{right:0;top:-30px}
+#modalAnnotationHost{position:absolute;left:0;top:0;inset-inline-end:auto;width:0;height:0;min-width:0;min-height:0;margin:0;padding:0;border:0;z-index:31;pointer-events:none}
+#modalAnnotationHost[hidden]{display:none!important}
+#modalAnnotationHost>.proto-annotation{position:absolute;left:0;right:auto;top:0;margin:0;padding:0;pointer-events:auto}
+#modalAnnotationHost[data-index-only=true]>.proto-annotation{visibility:hidden;pointer-events:none}
+.annotation-source[hidden]{display:none!important}
+[data-prototype-copy]{margin:0}
+.annotation-audit{font-size:11px;line-height:1.6}
+.annotation-audit summary{cursor:pointer;color:var(--pctl-sub)}
+.annotation-audit ul{padding-left:18px;margin:8px 0 0}
+.annotation-audit[data-has-issues=true] summary{color:var(--red)}
 /* 卡内标记（Doctor 等）与 Tab 行标记同位叠放时，卡内标记属于更具体对象，抬到其上保证可点。 */
 .card .proto-annotation{z-index:31}
 html[data-route="logs"] .route-section>.proto-annotation{z-index:32}
@@ -116,3 +123,5 @@ button.annotation-marker:focus-visible{outline:2px solid var(--annotation-ring);
 button.annotation-marker .annotation-number{font-size:10px;font-weight:550}
 button.annotation-marker .annotation-marker-plus{font-size:12px;opacity:.7}
 .proto-annotation.is-located button.annotation-marker{border-color:var(--annotation-ring)}
+
+.annotation-layout-check .proto-annotation,.annotation-layout-check [data-prototype-layer],.annotation-layout-check .ct-note-anchor,.annotation-layout-check .mpk-help{display:none!important}

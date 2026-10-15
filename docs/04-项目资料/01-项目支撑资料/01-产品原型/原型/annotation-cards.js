@@ -58,13 +58,58 @@
     previous?.querySelector('button').setAttribute('aria-expanded', 'false');
     located = '';
     renderList();
-    if (restoreFocus && previous && visible(previous)) previous.querySelector('button').focus({preventScroll:true});
+    if (restoreFocus && previous && visible(previous)){const back=previous.closest('#modalAnnotationHost[data-index-only=true]')?list.querySelector('[data-annotation-target="'+previous.id+'"]'):previous.querySelector('button');back?.focus({preventScroll:true});}
+  }
+  // 弹窗注释停靠到产品框外；没有安全余量时仅从右侧注释目录访问，不挤压标题/正文/动作。
+  function positionModalMarker() {
+    const host=document.getElementById('modalAnnotationHost'),dialog=document.getElementById('modal'),mask=document.getElementById('modalMask');
+    const node=host?.querySelector('.proto-annotation');if(!node||host.hidden||mask.style.display==='none')return;
+    const box=dialog.getBoundingClientRect(),bounds=mask.getBoundingClientRect(),width=node.offsetWidth||84,height=node.offsetHeight||24,gap=8;
+    let x,y,indexOnly=false;
+    if(box.top-bounds.top>=height+gap){x=box.right-width;y=box.top-height-gap;}
+    else if(bounds.right-box.right>=width+gap){x=box.right+gap;y=box.top;}
+    else if(box.left-bounds.left>=width+gap){x=box.left-width-gap;y=box.top;}
+    else{x=bounds.right-width-gap;y=bounds.top+gap;indexOnly=true;}
+    const left=(Math.max(bounds.left+gap,Math.min(x,bounds.right-width-gap))-bounds.left)+'px',top=(Math.max(bounds.top+gap,Math.min(y,bounds.bottom-height-gap))-bounds.top)+'px';
+    if(host.style.left!==left)host.style.left=left;if(host.style.top!==top)host.style.top=top;if(host.dataset.indexOnly!==String(indexOnly))host.dataset.indexOnly=String(indexOnly);
+  }
+  function annotationContent(node) {
+    const content=node.querySelector('.annotation-source').cloneNode(true);content.hidden=false;content.removeAttribute('hidden');
+    // 浮层是源说明的视图，不创建第二份有相同ID的业务/状态节点。
+    content.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
+    return content.innerHTML;
+  }
+  function audit({measure=false}={}) {
+    const issues=[],style=el=>getComputedStyle(el),markers=[...document.querySelectorAll('.proto-annotation')];
+    for(const node of markers){
+      const position=style(node).position;
+      if(!['absolute','fixed'].includes(position))issues.push({type:'flow',id:node.id,message:'注释标记进入文档流：'+(node.id||'未登记ID')});
+      if(!node.querySelector('.annotation-source[hidden]'))issues.push({type:'source',id:node.id,message:'注释内容缺少隐藏源：'+node.id});
+    }
+    document.querySelectorAll('[data-prototype-copy]').forEach(el=>{if(!el.closest('.annotation-source[hidden],.annotation-popover,.prototype-side'))issues.push({type:'copy',id:el.dataset.prototypeCopy,message:'已登记原型文案出现在产品正文：'+el.dataset.prototypeCopy});});
+    const hiddenNoteHost=document.getElementById('modalAnnotationHost');
+    if(hiddenNoteHost&&!['absolute','fixed'].includes(style(hiddenNoteHost).position))issues.push({type:'flow',id:'modalAnnotationHost',message:'共享弹窗注释宿主参与布局'});
+    if(document.querySelector('#modalBody .modal-note-anchor,#modalBody .modal-prototype-note'))issues.push({type:'flow',id:'modalBody',message:'弹窗正文中重新出现注释占位或原型脚注'});
+    // 关键词只作为人工复核线索；不自动隐藏真实错误、保存结果或用户输入。
+    const surfaces=[document.querySelector('#modalBody'),...document.querySelectorAll('.route-section.active')].filter(Boolean);
+    for(const surface of surfaces)for(const el of surface.querySelectorAll('p,small')){
+      if(el.closest('.annotation-source,.annotation-popover,[hidden],pre,code,textarea,[data-prototype-content-review]'))continue;
+      const value=el.textContent.trim();if(/本原型|原型演示|仅.{0,8}内存.{0,8}演示|真实.{0,16}(?:待实现|未接入)/.test(value))issues.push({type:'review',id:el.id,message:'复核文案归属：'+value.slice(0,80)});
+    }
+    if(measure){
+      const controls=[...document.querySelectorAll('.main input,.main select,.main textarea,.main button,#modalBody input,#modalBody select,#modalBody textarea,.modal-actions button')].filter(el=>!el.closest('.proto-annotation,.annotation-source,[hidden]')&&el.getClientRects().length);
+      const scrollers=[document.querySelector('.main'),document.getElementById('modalBody'),document.getElementById('modal')].filter(Boolean),sizes=scrollers.map(el=>[el.scrollWidth,el.scrollHeight]);
+      const read=()=>controls.map(el=>{const r=el.getBoundingClientRect();return [r.left,r.top,r.width,r.height];}),before=read();
+      try{document.documentElement.classList.add('annotation-layout-check');const after=read();controls.forEach((el,i)=>{if(before[i].some((n,k)=>Math.abs(n-after[i][k])>.5))issues.push({type:'geometry',id:el.id,message:'隐藏注释改变产品控件位置或尺寸：'+(el.id||el.tagName)});});scrollers.forEach((el,i)=>{if(el.scrollWidth!==sizes[i][0]||el.scrollHeight!==sizes[i][1])issues.push({type:'geometry',id:el.id,message:'隐藏注释改变产品滚动范围：'+(el.id||el.className)});});}
+      finally{document.documentElement.classList.remove('annotation-layout-check');}
+    }
+    return issues;
   }
   function position() {
     if (!active || popover.hidden) return;
     const rect = active.getBoundingClientRect();
     // 托盘等路由 .main 会整体隐藏（rect 归零），此时退回视口作为横向/纵向边界。
-    const hostEl = active.closest('#modalBody') || main;
+    const hostEl = active.closest('#modalMask') || active.closest('#modalBody') || active.closest('#modal') || main;
     const host = hostEl.getClientRects().length > 0 ? hostEl : null;
     const bounds = host ? host.getBoundingClientRect() : {left: 0, right: innerWidth, top: 0, bottom: innerHeight};
     // 横向仍贴正文容器；纵向以视口为准，标记在窗口外壳上缘被裁剪时浮层仍可显示。
@@ -88,7 +133,7 @@
   function schedulePosition() {
     if (repositionQueued) return;
     repositionQueued = true;
-    requestAnimationFrame(() => {repositionQueued=false; position();});
+    requestAnimationFrame(() => {repositionQueued=false;positionModalMarker();position();});
   }
   function open(node) {
     close();
@@ -97,7 +142,7 @@
     active = node;
     located = node.id;
     node.querySelector('button').setAttribute('aria-expanded', 'true');
-    popover.innerHTML = '<div class="annotation-popover-head"><span class="annotation-label">'+icon+'原型</span><span class="annotation-number">'+escape(node.dataset.annotationNumber)+'</span><span class="annotation-floating-hint">悬浮注释</span><button type="button" class="annotation-close" aria-label="收起注释">×</button></div><h3 id="annotationPopoverTitle">'+escape(node.dataset.annotationTitle)+'</h3><div class="annotation-content">'+node.querySelector('.annotation-source').innerHTML+'</div><div class="annotation-popover-bottom">再次点击标记可收起<span>ESC</span></div>';
+    popover.innerHTML = '<div class="annotation-popover-head"><span class="annotation-label">'+icon+'原型</span><span class="annotation-number">'+escape(node.dataset.annotationNumber)+'</span><span class="annotation-floating-hint">悬浮注释</span><button type="button" class="annotation-close" aria-label="收起注释">×</button></div><h3 id="annotationPopoverTitle">'+escape(node.dataset.annotationTitle)+'</h3><div class="annotation-content">'+annotationContent(node)+'</div><div class="annotation-popover-bottom">再次点击标记可收起<span>ESC</span></div>';
     popover.hidden = false;
     position();
     renderList();
@@ -112,8 +157,8 @@
     else if (active && !popover.contains(event.target) && !event.target.closest('[data-annotation-target]')) close();
   });
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && active) {event.preventDefault(); close(true);}
-  });
+    if (event.key === 'Escape' && active) {event.preventDefault();event.stopImmediatePropagation();close(true);}
+  },true);
   document.addEventListener('scroll', schedulePosition, true);
   window.addEventListener('resize', schedulePosition);
   new ResizeObserver(schedulePosition).observe(main);
@@ -129,19 +174,20 @@
     empty.hidden = filtered.length > 0;
   }
   function refresh() {
+    positionModalMarker();
     const nextContext = window.prototypePanel?.context();
     const key = nextContext ? nextContext.page+':'+nextContext.tab : document.documentElement.dataset.route;
     const changed = key !== context;
     if (changed) {context=key; search.value=''; close();}
     // 托盘 section 在 .main 之外（#trayStage），单独纳入扫描。
-    entries = [...document.querySelectorAll('.main .proto-annotation, #modalBody .proto-annotation, #trayStage .proto-annotation')].filter(visible).sort((a,b) => Number(a.dataset.annotationNumber)-Number(b.dataset.annotationNumber));
+    entries = [...document.querySelectorAll('.main .proto-annotation, #modalMask .proto-annotation, #trayStage .proto-annotation')].filter(visible).sort((a,b) => Number(a.dataset.annotationNumber)-Number(b.dataset.annotationNumber));
     // 专题覆盖层不属于底下仍保留的产品路由。
     if (['windows','notify'].includes(nextContext?.page)) entries=[];
     if (active && !entries.includes(active)) close();
     group.hidden = entries.length === 0;
     const nextSignature = JSON.stringify(entries.map(node => [node.id,node.dataset.annotationTitle,node.dataset.annotationNumber,node.dataset.annotationCategory,node.textContent]));
     if (!changed && nextSignature===signature) return;
-    signature=nextSignature; renderList();
+    signature=nextSignature;if(active&&!popover.hidden){popover.querySelector('.annotation-content').innerHTML=annotationContent(active);document.getElementById('annotationPopoverTitle').textContent=active.dataset.annotationTitle;position();}renderList();
   }
   function schedule() {
     if (queued) return;
@@ -194,12 +240,14 @@
   const observer = new MutationObserver(schedule);
   observer.observe(main,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','hidden','aria-selected','data-annotation-title','data-annotation-category','data-annotation-number']});
   const modal = document.getElementById('modalMask');
-  if (modal) observer.observe(modal,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden','style']});
+  if (modal) observer.observe(modal,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','hidden','style']});
   observer.observe(document.documentElement,{attributes:true,attributeFilter:['data-route']});
   observer.observe(document.body,{attributes:true,attributeFilter:['class']});
   const trayStage = document.getElementById('trayStage');
   if (trayStage) observer.observe(trayStage,{subtree:true,childList:true,attributes:true,attributeFilter:['class','hidden']});
   window.addEventListener('hashchange',schedule);
-  window.prototypeAnnotations={refresh,locate,entries:()=>entries.map(node=>({id:node.id,title:node.dataset.annotationTitle}))};
+  const auditPanel=document.createElement('details');auditPanel.className='annotation-audit';auditPanel.innerHTML='<summary>注释与布局检查</summary><button type="button" id="prototypeAnnotationAudit">检查当前页面</button><ul id="prototypeAnnotationAuditResult"></ul>';group.appendChild(auditPanel);
+  document.getElementById('prototypeAnnotationAudit').addEventListener('click',()=>{const issues=audit({measure:true});auditPanel.dataset.hasIssues=String(issues.length>0);document.getElementById('prototypeAnnotationAuditResult').innerHTML=issues.length?issues.map(item=>'<li>'+escape(item.message)+'</li>').join(''):'<li>当前检查未发现注释占位或已登记文案外露；仍需实屏复核遮挡和文字归属。</li>';});
+  window.prototypeAnnotations={refresh,locate,audit,positionModalMarker,entries:()=>entries.map(node=>({id:node.id,title:node.dataset.annotationTitle}))};
   refresh();
 })();

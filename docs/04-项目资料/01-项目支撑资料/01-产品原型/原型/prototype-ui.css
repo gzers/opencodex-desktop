@@ -1,0 +1,27 @@
+/* 原型公共控件配方。选择size而非在业务页面覆盖；限定prototype-ui，生产接入沿0.2.0。 */
+.prototype-ui{--ui-button-height:var(--control-md);--ui-button-font:var(--text-control);--ui-button-leading:18px;--ui-button-pad-y:7px;--ui-button-pad-x:12px;--ui-button-icon:var(--icon-md,16px)}
+.prototype-ui .btn{box-sizing:border-box;min-height:var(--ui-button-height);padding:var(--ui-button-pad-y) var(--ui-button-pad-x);font:inherit;font-size:var(--ui-button-font);line-height:var(--ui-button-leading);display:inline-flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.prototype-ui .btn-sm{--ui-button-height:var(--control-sm);--ui-button-font:var(--text-label);--ui-button-leading:16px;--ui-button-pad-y:5px;--ui-button-pad-x:10px;--ui-button-icon:var(--icon-sm,14px)}
+.prototype-ui .btn-lg{--ui-button-height:var(--control-lg);--ui-button-font:var(--text-body);--ui-button-leading:20px;--ui-button-pad-y:9px;--ui-button-pad-x:15px;--ui-button-icon:var(--icon-lg,20px)}
+.prototype-ui .btn-compact{--ui-button-pad-y:4px;--ui-button-pad-x:9px}
+.prototype-ui .btn svg{width:var(--ui-button-icon);height:var(--ui-button-icon);flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.prototype-ui .ui-icon-button{width:32px;min-width:32px;min-height:32px;padding:0;display:grid;place-items:center}
+.prototype-ui .ui-icon-button svg{width:var(--icon-md,16px);height:var(--icon-md,16px)}
+.prototype-ui .ui-field{display:grid;gap:6px;min-width:0;font-size:var(--text-label)}
+.prototype-ui .ui-field :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select){box-sizing:border-box;min-height:var(--control-md);width:100%;border:1px solid var(--border);border-radius:var(--radius-xs);padding:7px 10px;background:var(--rail);color:var(--text);font:inherit;font-size:var(--text-control);line-height:18px}
+.prototype-ui .ui-field textarea{min-height:90px;resize:vertical}
+.prototype-ui .ui-field [aria-invalid=true]{border-color:var(--red)}
+.prototype-ui .ui-field small{color:var(--muted);line-height:1.5}
+.prototype-ui .ui-field .ui-error{color:var(--red)}
+.prototype-ui .ui-stack{display:grid;gap:var(--space-3)}
+.prototype-ui .ui-inline{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}
+.prototype-ui .ui-tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border:1px solid var(--border);border-radius:var(--radius-pill);font-size:var(--text-caption);line-height:16px;background:var(--rail)}
+.prototype-ui .ui-tag.success{color:var(--green);background:var(--green-soft)}
+.prototype-ui .ui-tag.warning{color:var(--amber);background:var(--amber-soft)}
+.prototype-ui .ui-tag.danger{color:var(--red);background:var(--red-soft)}
+.prototype-ui :is(button,input,textarea,select,a):focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.prototype-ui .ui-spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:ui-spin .8s linear infinite;flex:none}
+@keyframes ui-spin{to{transform:rotate(360deg)}}
+html[data-effects=mid] .prototype-ui .ui-spinner,html[data-effects=low] .prototype-ui .ui-spinner{animation:none}
+.prototype-ui .ui-field-sm :is(input:not([type=checkbox]):not([type=radio]),select){min-height:var(--control-sm);padding:5px 10px;font-size:var(--text-label);line-height:16px}
+.prototype-ui .ui-field-lg :is(input:not([type=checkbox]):not([type=radio]),select){min-height:var(--control-lg);padding:9px 12px;font-size:var(--text-body);line-height:20px}

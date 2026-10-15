@@ -1,0 +1,8 @@
+/* 页面主Tab公共规则；概览、面板及页内分类/弹窗Tab不自动注册。 */
+.route-section:not(#route-overview):not(#route-panel) [data-page-tabs]{position:sticky;top:var(--page-tabs-top,var(--mp-tabs-top,0px));z-index:6;flex-shrink:0;box-sizing:border-box;min-width:0;margin-inline-start:calc(-1 * var(--page-tabs-left,var(--mp-header-inset-left,0px)));margin-inline-end:calc(-1 * var(--page-tabs-right,var(--mp-header-inset-right,0px)));padding:8px var(--page-tabs-right,var(--mp-header-inset-right,0px)) 8px var(--page-tabs-left,var(--mp-header-inset-left,0px));border-bottom:1px solid var(--border);background:linear-gradient(158deg,var(--notif-tint-a,#0000),#0000 62%),linear-gradient(24deg,var(--notif-tint-b,#0000),#0000 58%),var(--glass-fill,var(--panel));-webkit-backdrop-filter:var(--glass-blur-notif,none);backdrop-filter:var(--glass-blur-notif,none)}
+.route-section:not(#route-overview):not(#route-panel) [data-page-tabs][data-tabs-scroll=inner]{top:0}
+.route-section:not(#route-overview):not(#route-panel) [data-page-tabs]>.cv-tabs{margin-bottom:0;border-bottom:0}
+.cv-note-anchor[data-page-tabs]{margin-bottom:16px}
+#route-conversations .cv-tree-panel{top:calc(var(--page-tabs-top,0px) + var(--page-tabs-height,0px) + 12px)}
+.route-section:is(#route-extensions,#route-logs,#route-settings,#route-conversations) :is(.card,.settings-panel){scroll-margin-top:var(--page-tabs-offset,12px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.route-section:not(#route-overview):not(#route-panel) [data-page-tabs]{background:var(--panel)}}

@@ -314,7 +314,6 @@ button{font:inherit}
 .modal-facts b{color:var(--muted);font-weight:500}
 .modal-facts .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);color:var(--text)}
 .modal-facts+.reset-table{margin-top:12px}
-.modal-prototype-note{margin:12px 0 0;color:var(--muted);font-size:var(--text-caption)}
 .modal-code{margin:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:var(--text-caption);line-height:1.7;white-space:pre-wrap;word-break:break-word;color:var(--text);border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--rail);padding:10px}
 .modal h3{margin:0 0 8px;font-size:var(--text-title)}
 .modal p{color:var(--muted);margin:0 0 15px;font-size:var(--text-body)}
@@ -412,6 +411,12 @@ button{font:inherit}
 .task-card{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);padding:14px}
 .task-card .tc-head{display:flex;align-items:center;gap:9px}
 .task-card .tc-spin{width:15px;height:15px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--brand);animation:tcSpin .8s linear infinite;flex:none}
+.task-card .tc-result{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#fff;font-size:12px;font-weight:700;line-height:1;flex:none}
+.task-card .tc-result.info{background:var(--blue)}
+.task-card .tc-result.neutral{background:var(--muted)}
+.task-card .tc-result.warning{background:var(--amber)}
+.task-card .tc-result.danger{background:var(--red)}
+.task-steps li.failed{color:var(--red)}
 @keyframes tcSpin{to{transform:rotate(360deg)}}
 .task-card h4{margin:0;font-size:var(--text-control);flex:1}
 .task-card .tc-phase{margin:8px 0 0;color:var(--muted);font-size:var(--text-caption)}
@@ -1677,12 +1682,19 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 <link rel="stylesheet" href="../glass-effects.css">
 <link rel="stylesheet" href="../overview-dual.css">
 <link rel="stylesheet" href="../proto-controls.css">
-<link rel="stylesheet" href="model-config.css?v=1">
+<link rel="stylesheet" href="action-menu.css?v=20261014-channel-actions">
+<link rel="stylesheet" href="model-config.css?v=20261015-external-single-dialog">
 <link rel="stylesheet" href="sync-config.css?v=4">
+<link rel="stylesheet" href="conversation-config.css?v=20261015-prototype-version">
+<link rel="stylesheet" href="extension-manager.css?v=20261014-col-extensions">
+<link rel="stylesheet" href="model-picker.css?v=20261015-note-layer">
 <link rel="stylesheet" href="windows-window.css">
-<link rel="stylesheet" href="annotation-cards.css?v=31">
+<link rel="stylesheet" href="annotation-cards.css?v=20261015-zero-flow">
 <link rel="stylesheet" href="maintenance-ui.css?v=2">
 <link rel="stylesheet" href="tree-table.css?v=1">
+<link rel="stylesheet" href="sticky-tabs.css?v=20261014-common-tabs">
+<link rel="stylesheet" href="prototype-ui.css?v=20261015">
+<link rel="stylesheet" href="component-topic.css?v=20261015-note-layer">
 </head>
 <body>
 <!-- 扩展客户端品牌图标：来自 @lobehub/icons-static-svg@1.95.0 / icons.lobehub.com -->
@@ -1708,6 +1720,7 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
       <button data-route="overview" id="overviewNavBtn" class="active" title="概览"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-label">概览</span></button>
       <button data-route="panel" id="panelNavBtn" title="面板"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M9.5 4v16"/></svg><span class="nav-label">面板</span></button>
       <button data-route="models" title="模型"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg><span class="nav-label">模型</span></button>
+      <button data-route="conversations" data-conversation-feature hidden title="Codex 对话配置"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H4l-2 2V11.5a8.5 8.5 0 0 1 17 0Z"/><path d="M7 9h8M7 13h5"/></svg><span class="nav-label">对话</span></button>
       <button data-route="extensions" title="Skills & MCP"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5a2.5 2.5 0 0 1 4 0V5h3A1.5 1.5 0 0 1 18.5 6.5V10h1.5a2.5 2.5 0 0 1 0 4h-1.5v3.5A1.5 1.5 0 0 1 17 19h-3v-1.5a2.5 2.5 0 0 0-5 0V19H6.5A1.5 1.5 0 0 1 5 17.5V14H3.5a2.5 2.5 0 0 1 0-4H5V6.5A1.5 1.5 0 0 1 6.5 5H10V3.5Z"/></svg><span class="nav-label">拓展</span></button>
       <button data-route="sync" title="同步"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 14 6M18 18a8 8 0 0 1-14-6"/></svg><span class="nav-label">同步</span></button>
       <button data-route="logs" title="诊断"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 12h6M9 16h6"/></svg><span class="nav-label">诊断</span></button>
@@ -1907,13 +1920,16 @@ input.input:hover{border-color:var(--border);background-color:var(--hover)}
 
     <section class="route-section sx-page" id="route-sync"><div id="syncContent"></div></section>
     <section class="route-section mp-page" id="route-models"><div id="mpContent"></div></section>
+    <section class="route-section cv-page" id="route-conversations"><div id="conversationContent"></div></section>
+    <section class="route-section" id="route-components" aria-label="组件与样式"><div id="componentTopicPage" class="ct-page prototype-ui"></div></section>
+    <section class="route-section mpk-demo-page" id="route-model-picker"><div id="modelPickerPage"></div></section>
     <section class="route-section annotation-preview" id="route-annotations" aria-label="原型注释卡片打样"></section>
       <section class="route-section" id="route-extensions">
         <div class="proto-annotation" id="ann-ext-tabs" data-annotation-number="01" data-annotation-title="列表与设置的分工" data-annotation-category="实现边界 · 扩展管理">
           <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：列表与设置的分工"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
           <div class="annotation-source" hidden><p>本页只承载列表维护；源目录、冲突策略与路径配置收敛在设置页的「扩展管理」。</p><div class="annotation-footer">列表与设置的分工 · 扩展管理</div></div>
         </div>
-        <div class="ext-tabs" role="tablist" aria-label="扩展分区">
+        <div class="ext-tabs" data-page-tabs role="tablist" aria-label="扩展分区">
           <button type="button" data-ext-tab="skills" class="active" data-anchor="skills" aria-label="Skills，查看锚点">Skills<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
           <button type="button" data-ext-tab="mcp" data-anchor="mcp" aria-label="MCP，查看锚点">MCP<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         </div>
@@ -2179,7 +2195,7 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
         <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：先诊断，再查历史"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
         <div class="annotation-source" hidden><p>环境诊断是默认 Tab；完整排障路径是「先运行 Doctor，再按需查日志或通知历史」。清理类动作只进入历史 Tab，不在概览出现。</p><div class="annotation-footer">页面导览 · 诊断中心</div></div>
       </div>
-      <div class="diag-tabs" role="tablist" aria-label="诊断分区">
+      <div class="diag-tabs" data-page-tabs role="tablist" aria-label="诊断分区">
         <button type="button" data-diag-tab="doctor" class="active" data-anchor="doctor" aria-label="环境诊断，查看锚点">环境诊断<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-diag-tab="logs" data-anchor="logs" aria-label="日志历史，查看锚点">日志历史<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-diag-tab="notifications" data-anchor="notifications" aria-label="通知历史，查看锚点">通知历史<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -2249,14 +2265,14 @@ Use when a user wants to hatch a Codex pet, create a custom animated pet, or bui
     <section class="route-section" id="route-settings">
       <div class="proto-annotation" id="ann-settings-tabs" data-annotation-number="01" data-annotation-title="设置页的分组顺序" data-annotation-category="页面导览 · 设置">
         <button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：设置页的分组顺序"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button>
-        <div class="annotation-source" hidden><p>Tab 按桌面壳自有 → 官方共享 → 数据安全 → 扩展维护 → 升级归属排序；模型配置与同步策略的完整页面在独立路由，这里只保留入口。</p><div class="annotation-footer">页面导览 · 设置</div></div>
+        <div class="annotation-source" hidden><p>Tab 按桌面壳自有 → 官方共享 → 数据安全 → 扩展维护 → 升级归属排序；Agent 配置承载本机模型模版助手，模型与同步管理的完整页面在独立路由。</p><div class="annotation-footer">页面导览 · 设置</div></div>
       </div>
-      <div class="settings-tabs" id="settingsTabs" role="tablist" aria-label="设置分区">
+      <div class="settings-tabs" id="settingsTabs" data-page-tabs role="tablist" aria-label="设置分区">
         <button type="button" data-settings-section="general" class="active" data-anchor="general" aria-label="通用，查看锚点">通用<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="installation" data-anchor="installation" aria-label="安装配置，查看锚点">安装配置<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="backup" data-anchor="backup" aria-label="数据与备份，查看锚点">数据与备份<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="extensions" data-anchor="extensions" aria-label="扩展管理，查看锚点">扩展管理<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
-        <button type="button" data-settings-section="models" data-anchor="models">模型配置</button>
+        <button type="button" data-settings-section="models" data-anchor="models">Agent 配置</button>
         <button type="button" data-settings-section="cleanup" data-anchor="cleanup" aria-label="日志与通知，查看锚点">日志与通知<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="cli" data-anchor="cli" aria-label="CLI 控制面，查看锚点">CLI 控制面<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
         <button type="button" data-settings-section="upgrade" data-anchor="upgrade" aria-label="版本升级，查看锚点">版本升级<svg class="anchor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg></button>
@@ -2916,6 +2932,7 @@ ocx update</code></pre>
         <button class="btn primary" id="modalConfirm"></button>
       </div>
     </div>
+    <div id="modalAnnotationHost" class="modal-note-anchor" data-prototype-layer="modal" hidden></div>
   </div>
   </div>
 
@@ -3071,6 +3088,7 @@ ocx update</code></pre>
           <button type="button" data-launch="overview">概览</button>
           <button type="button" data-launch="panel">面板</button>
           <button type="button" data-launch="models">模型</button>
+          <button type="button" data-launch="conversations" data-conversation-feature hidden>对话</button>
           <button type="button" data-launch="extensions">拓展</button>
           <button type="button" data-launch="sync">同步</button>
           <button type="button" data-launch="logs">诊断</button>
@@ -3081,11 +3099,9 @@ ocx update</code></pre>
       <section class="proto-launch-group" aria-labelledby="launchNonFunctionalTitle">
         <h3 class="pctl-sec" id="launchNonFunctionalTitle">非功能菜单</h3>
         <div class="pctl-tiles">
-          <button type="button" data-launch="tray">托盘</button>
-          <button type="button" data-launch="notify">通知与反馈</button>
-          <button type="button" data-launch="windows">Windows 窗口</button>
+          <button type="button" data-launch="components">组件与样式</button>
         </div>
-        <p class="pctl-hint">打开托盘原型、交互反馈与平台外观专题测试器。</p>
+        <p class="pctl-hint">统一浏览组件、通知与任务、托盘及平台窗口样例。</p>
       </section>
     </nav>
 
@@ -3288,7 +3304,9 @@ ocx update</code></pre>
       </div>
       <p class="pctl-hint">只切「卸载」弹窗里备份检测的 mock：影响提示文案与「卸载前自动备份」默认勾选。<b>无备份只提醒、不阻断卸载</b>；只切 mock，不写盘、不删任何文件。</p>
     </div>
-<details class="proto-card" id="mpDemoCard" data-proto-contexts="models" open><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget" data-proto-contexts="models:channels">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">待重启＋草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail" data-proto-contexts="models:channels">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty" data-proto-contexts="models:channels">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized" data-proto-contexts="models:channels">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported" data-proto-contexts="models:channels">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">部分写入</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation" data-proto-contexts="models:templates">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button></div><p class="pctl-hint">只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。</p></details>
+<details class="proto-card" id="mpDemoCard" data-proto-contexts="models" open><summary>模型配置 · 演示场景</summary><div class="pctl-grid"><button type="button" data-mp="scene" data-scene="normal">正常</button><button type="button" data-mp="scene" data-scene="over-budget" data-proto-contexts="models:channels">超预算</button><button type="button" data-mp="scene" data-scene="pending-draft">待重启＋草稿</button><button type="button" data-mp="scene" data-scene="discovery-fail" data-proto-contexts="models:channels">发现失败</button><button type="button" data-mp="scene" data-scene="discovery-empty" data-proto-contexts="models:channels">发现空清单</button><button type="button" data-mp="scene" data-scene="discovery-unauthorized" data-proto-contexts="models:channels">认证失败</button><button type="button" data-mp="scene" data-scene="discovery-unsupported" data-proto-contexts="models:channels">无清单接口</button><button type="button" data-mp="scene" data-scene="backup-fail">备份失败</button><button type="button" data-mp="scene" data-scene="partial">部分写入</button><button type="button" data-mp="scene" data-scene="timeout">写入超时</button><button type="button" data-mp="scene" data-scene="drift">基准漂移</button><button type="button" data-mp="scene" data-scene="late-generation" data-proto-contexts="models:templates">生成晚回</button><button type="button" data-mp="scene" data-scene="incoming">同步候选</button><button type="button" data-mp="scene" data-scene="template-history" data-proto-contexts="models:templates">多版本与清理</button><button type="button" data-mp="scene" data-scene="update-none" data-proto-contexts="models:templates">资料无变化</button><button type="button" data-mp="scene" data-scene="update-fail" data-proto-contexts="models:templates">检索失败</button><button type="button" data-mp="scene" data-scene="update-conflict" data-proto-contexts="models:templates">人工冲突</button><button type="button" data-mp="scene" data-scene="update-late" data-proto-contexts="models:templates">更新晚回</button></div><p class="pctl-hint">只改变内存演示状态；不会调用 A6api、搜索、CLI 或运行写入。</p></details>
+<details class="proto-card" id="mpExternalTaskDemo" data-proto-contexts="models:templates" open><summary>外部任务 · 提交演示</summary><div class="pctl-grid"><button type="button" data-mp="external-context">打开当前任务</button><button type="button" data-mp="external-preflight">模拟校验</button><button type="button" data-mp="external-submit">模拟提交 / 重试</button><button type="button" data-mp="external-submit" data-scene="invalid">模拟字段错误</button></div><p class="pctl-hint">先从弹窗一次复制完整任务。仅演示读取契约、校验、软件分配版本与回执；不调用外部Agent、接口或文件。待处理结果经已登记事件进入右上角通知。</p></details>
+<details class="proto-card" id="mpNodeSpeedDemo" data-proto-contexts="models:channels" open><summary>节点测速 · 演示结果</summary><div class="pctl-grid"><button type="button" data-mp="node-speed-scene" data-scene="normal">正常</button><button type="button" data-mp="node-speed-scene" data-scene="mixed">部分失败</button><button type="button" data-mp="node-speed-scene" data-scene="timeout">超时</button></div><p class="pctl-hint">只影响下一次测速的模拟结果，保留渠道草稿；不联网、不使用真实 Key，也不自动切换节点。</p></details>
     <div class="proto-card" id="logDemoCard" data-proto-contexts="logs:logs">
       <div class="proto-note-title">日志分类演示（mock 状态）</div>
       <div class="pctl-grid" id="logScenarios">
@@ -3583,6 +3601,7 @@ ocx update</code></pre>
   </div>
 
 <script src="data-paths.js"></script>
+<script src="maintenance-events.js?v=20261015-external-task"></script>
 <script>
 const statePill=document.getElementById('statePill');
 const installArea=document.getElementById('installArea');
@@ -3603,9 +3622,12 @@ let confirmHandler=null;
 let confirmKeepsOpen=false;
 
 const routes={
+  components:{title:"组件与样式",subtitle:"设计基础、公共控件与平台外观原型。"},
+  'model-picker':{title:'渠道模型选择器',subtitle:'公共组件打样'},
   annotations:{title:'原型注释',subtitle:'组件打样 · 02　悬浮卡片与页内定位'},
   sync:{title:'同步',subtitle:'按范围导入、导出与同步 OpenCodex 配置；凭据和登录状态独立选择。'},
   models:{title:'模型配置',subtitle:'管理渠道模型、族模版与选择器顺序。'},
+  conversations:{title:'Codex 对话配置',subtitle:'全局命名模型；按项目或对话配置联网搜索与子 Agent。'},
   overview:{title:'概览',subtitle:'一行运行摘要、页内折叠的运行详情与常用动作入口；参数型配置保留在设置页。'},
   tray:{title:'托盘',subtitle:'系统托盘状态菜单的跨平台原型；控制动作走管理器自有域。'},
   panel:{title:'面板',subtitle:'窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。'},
@@ -4680,9 +4702,9 @@ function setRoute(route, replace=false){
   if(next==='tray') renderTray();
   if(aboutRedirect) showSettingsSection('about');
   if(next!=='panel') document.body.classList.remove('panel-mode');
-  if(next!=='roadmap'){
+  if(next!=='roadmap'&&next!=='components'){
     try{window.localStorage.setItem('ocx-route',next)}catch(e){}
-  }else{
+  }else if(next==='roadmap'){
     try{window.localStorage.removeItem('ocx-route')}catch(e){}
   }
   const query=hashParams.toString();
@@ -6037,6 +6059,8 @@ function deleteNotification(id){
   const item=notifications.find(entry=>entry.id===id);
   if(!item) return;
   item.deleted=true;
+  if(item.eventId?.startsWith('component.demo.'))clearTask(item.id);
+  if(item.eventId==='model.policy.save'){modelSaveHidden.add(item.id);clearTask(item.id);}
   renderNotifications();
   closeNotificationPanel();
   toast('原型模拟：已删除通知「'+item.title+'」。');
@@ -6064,6 +6088,9 @@ function activateDiagTab(tab){
 function openNotificationDetail(id){
   const item=notifications.find(entry=>entry.id===id);
   if(!item) return;
+  if(item.eventId?.startsWith('component.demo.')){window.prototypeNotificationPublisher?.open(item.id);return;}
+  if(item.eventId==='model.template.external'){window.openExternalTaskNotification?.(item.id);return;}
+  if(item.eventId==='model.policy.save'){window.openModelSaveNotification(item.id);return;}
   const kindLabel={warning:'警告',danger:'风险',info:'信息'}[item.kind]||'信息';
   const jump=notificationJump(item);
   closeNotificationPanel();
@@ -6095,10 +6122,17 @@ function openModal(title,body,confirmText,handler,opts){
   window.prototypeSelect?.close();
   opts=opts||{};
   modalTitle.textContent=title;
-  // opts.hideNote：只读信息类弹窗不显示「原型演示」脚注（详情内容本身就是演示数据，脚注反而占高度）。
-  // 注释便签始终注入：弹窗是原型演示的一部分，所有弹窗（含同步 / 模型配置弹窗）都统一挂通用注释组件，不逐弹窗重复实现。
-  const modalNote='<div class="modal-note-anchor"><div class="proto-annotation" id="ann-modal-demo" data-annotation-number="01" data-annotation-title="弹窗均为演示交互" data-annotation-category="行为约定 · 弹窗"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：弹窗均为演示交互"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>确认动作只演示流程与文案；原型不执行真实命令、文件删除或设置写入。各专题按自身规则保留本页内存状态，刷新后重置。</p><div class="annotation-footer">行为约定 · 弹窗</div></div></div></div>';
-  modalBody.innerHTML=body+modalNote+(opts.hideNote?'':'<p class="modal-prototype-note">当前为原型演示；真实实现尚未启用。</p>');
+  // 所有原型说明统一进入共享注释层；hideNote为旧调用兼容参数，不再生成正文脚注。
+  const modalAnnotationTitle=logEsc(opts.prototypeAnnotation?.title||'弹窗均为演示交互');
+  const modalAnnotationBody=logEsc(opts.prototypeAnnotation?.body||'确认动作只演示流程与文案；原型不执行真实命令、文件删除或设置写入。各专题按自身规则保留本页内存状态，刷新后重置。');
+  const noteBlocks=(opts.prototypeAnnotation?.blocks||[]).map(block=>{
+    if(!/^[A-Za-z][A-Za-z0-9_-]*$/.test(block.id))throw Error('原型说明ID无效');
+    return '<p data-prototype-copy="'+logEsc(block.id)+'"><strong>'+logEsc(block.label||'说明')+'：</strong><span id="'+logEsc(block.id)+'">'+logEsc(block.text||'')+'</span></p>';
+  }).join('');
+  const modalNote='<div class="proto-annotation" id="ann-modal-demo" data-annotation-number="01" data-annotation-title="'+modalAnnotationTitle+'" data-annotation-category="行为约定 · 弹窗"><button type="button" class="annotation-marker" aria-expanded="false" aria-controls="annotationPopover" aria-label="原型注释 01：'+modalAnnotationTitle+'"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2.5h7l3 3v8H3zM10 2.5v3h3M5.5 8h5M5.5 10.5h3"/></svg><span>原型</span><span class="annotation-number">01</span><span class="annotation-marker-plus" aria-hidden="true">＋</span></button><div class="annotation-source" hidden><p>'+modalAnnotationBody+'</p>'+noteBlocks+'<div class="annotation-footer">行为约定 · 弹窗</div></div></div>';
+  modalBody.innerHTML=body;
+  const annotationHost=document.getElementById('modalAnnotationHost');annotationHost.innerHTML=modalNote;annotationHost.hidden=false;
+  window.prototypeAnnotations?.refresh();
   modalConfirm.textContent=confirmText||'关闭';
   modalConfirm.hidden=!!opts.hideConfirm;
   modalCancel.textContent=opts.cancelLabel||'取消';
@@ -6117,11 +6151,13 @@ function openModal(title,body,confirmText,handler,opts){
   modalMask.style.display='flex';
   // 键盘可达性：记录来源焦点，打开后把焦点移入弹窗，关闭后归还。
   window.__modalReturnFocus=document.activeElement;
-  requestAnimationFrame(()=>{(!modalConfirm.hidden?modalConfirm:modalCancel).focus();});
+  requestAnimationFrame(()=>{window.prototypeAnnotations?.refresh();(!modalConfirm.hidden?modalConfirm:modalCancel).focus();});
 }
 function closeModal(){
   window.prototypeSelect?.close();
   modalMask.style.display='none';
+  const annotationHost=document.getElementById('modalAnnotationHost');annotationHost.hidden=true;annotationHost.innerHTML='';
+  window.prototypeAnnotations?.refresh();
   modal.classList.remove('modal-wide');
   modal.classList.remove('modal-tall');
   modal.classList.remove('modal-uninstall');
@@ -6250,7 +6286,8 @@ document.addEventListener('click',event=>{
     clearTimeout(window.__toastTimer);
     collapseToBell(el,()=>{el.classList.remove('show')});
   }else if(kind==='task'){
-    collapseToBell(btn.closest('.task-card'),()=>clearTask());
+    const task=btn.closest('.task-card'),id=task?.dataset.taskNotification||'';if(id.startsWith('component-demo:'))window.prototypeNotificationPublisher?.hide(id);else window.hideModelSaveNotification?.(id);
+    collapseToBell(task,()=>clearTask(id));
   }
 });
 document.getElementById('notificationHistoryLink').onclick=()=>{
@@ -7018,29 +7055,88 @@ function toast(msg,opts){
    ========================================================================== */
 function showTask(cfg){
   const host=document.getElementById('taskHost');
-  const steps=cfg.steps.map(s=>'<li class="'+s[1]+'"><span class="mk">'+(s[1]==='done'?'✓':'')+'</span>'+s[0]+'</li>').join('');
-  // 允许 [标签, 行为] 或纯标签；纯标签按文案推断行为，避免专题场景里按钮退化成「generic」。
-  const acts=(cfg.acts||[]).map(a=>{
-    const arr=Array.isArray(a)?a:[a,''];
-    let behavior=arr[1];
-    if(!behavior||behavior==='generic') behavior=/取消/.test(arr[0])?'cancel':(/后台/.test(arr[0])?'background':'generic');
-    return [arr[0],behavior];
-  });
-  host.innerHTML='<div class="task-card"><div class="tc-head"><span class="tc-spin"></span><h4>'+cfg.title+'</h4>'+
+  const steps=cfg.steps.map(s=>'<li class="'+logEsc(s[1])+'"><span class="mk">'+(s[1]==='done'?'✓':'')+'</span>'+logEsc(s[0])+'</li>').join('');
+  const acts=(cfg.acts||[]).map(a=>{const arr=Array.isArray(a)?a:[a,''];return [arr[0],!arr[1]||arr[1]==='generic'?/取消/.test(arr[0])?'cancel':/后台/.test(arr[0])?'background':'generic':arr[1]];});
+  const mark=cfg.running===false?(cfg.kind==='danger'?'!':cfg.kind==='warning'?'!':cfg.kind==='neutral'?'−':'✓'):null;
+  const key=cfg.notificationId||'';
+  const markup='<div class="task-card'+(cfg.running===false?' is-complete':'')+'"'+(key?' data-task-notification="'+logEsc(key)+'"':'')+'><div class="tc-head">'+(mark?'<span class="tc-result '+logEsc(cfg.kind||'info')+'">'+mark+'</span>':'<span class="tc-spin"></span>')+'<h4>'+logEsc(cfg.title)+'</h4>'+
     '<button type="button" class="notify-min" data-collapse="task" title="收起到铃铛" aria-label="收起到铃铛">'+MIN_ICON+'</button></div>'+
-    '<p class="tc-phase">'+cfg.phase+'</p><ul class="task-steps">'+steps+'</ul>'+
-    '<div class="tc-acts">'+acts.map((a,i)=>'<button type="button" class="btn'+(a[1]==='cancel'?' cancel':(i?' ghost':''))+'" data-task-act="'+a[1]+'" data-task-label="'+a[0]+'">'+a[0]+'</button>').join('')+'</div></div>';
-  host.dataset.op=cfg.op||'';
+    (cfg.phase?'<p class="tc-phase">'+logEsc(cfg.phase)+'</p>':'')+'<ul class="task-steps">'+steps+'</ul>'+
+    (acts.length?'<div class="tc-acts">'+acts.map((a,i)=>'<button type="button" class="btn'+(a[1]==='cancel'?' cancel':(i?' ghost':''))+'" data-task-act="'+logEsc(a[1])+'" data-task-label="'+logEsc(a[0])+'">'+logEsc(a[0])+'</button>').join('')+'</div>':'')+'</div>';
+  const existing=[...host.querySelectorAll('.task-card')].find(card=>(card.dataset.taskNotification||'')===key);
+  if(existing)existing.outerHTML=markup;else host.insertAdjacentHTML('beforeend',markup);
+  if(!key)host.dataset.op=cfg.op||'';
   host.classList.toggle('stacked',document.getElementById('toastEl').classList.contains('show'));
   syncNotifHost();
 }
-function clearTask(){const h=document.getElementById('taskHost');if(h)h.innerHTML='';syncNotifHost();}
+function clearTask(notificationId=''){
+  const host=document.getElementById('taskHost');
+  if(host)[...host.querySelectorAll('.task-card')].filter(card=>(card.dataset.taskNotification||'')===notificationId).forEach(card=>card.remove());
+  syncNotifHost();
+}
+// 模型保存注册到既有通知实体及壳层任务宿主；收起仅是视图状态，不取消任务或解决通知。
+const modelSaveHidden=new Set();
+const MODEL_SAVE_PHASES=['校验','备份','写入','核对目录','发布成功快照'];
+const MODEL_SAVE_STATES={
+  running:['正在保存模型配置','info',false],
+  success:['保存成功 · 待重启 Codex','warning',false],
+  confirmed:['模型配置已由用户确认','info',true],
+  failed:['模型配置保存失败','danger',false],
+  timeout:['模型配置保存结果待核对','warning',false],
+  stopped:['模型配置保存已取消','info',true],
+  uncertain:['已停止后续步骤 · 结果待核对','warning',false],
+  verified:['已核对 · 草稿保留，需重新保存','info',true],
+  superseded:['已由后续保存替代','info',true]
+};
+function renderModelSaveTask(item){
+  if(item.deleted||modelSaveHidden.has(item.id))return;
+  const task=item.modelSave,active=window.modelPrototype?.state().operation?.id===task.id;
+  const running=task.state==='running',failed=['failed','timeout','uncertain'].includes(task.state);
+  const completed=failed?Math.min(task.step,2):task.step;
+  const steps=MODEL_SAVE_PHASES.map((label,index)=>[label,index<completed?'done':running&&index===task.step?'active':failed&&index===completed?'failed':'pending']);
+  const acts=!active?[]:running?[[task.step<2?'取消保存':'停止后续步骤','model-stop']]:failed?[['核对实际结果','model-verify']]:task.state==='success'?[['重启后重新检查','model-check']]:[];
+  showTask({notificationId:item.id,title:item.title,phase:item.detail,steps,acts,running,kind:['stopped','superseded'].includes(task.state)?'neutral':item.kind});
+}
+window.hideModelSaveNotification=id=>{if(id)modelSaveHidden.add(id);};
+window.openModelSaveNotification=id=>{
+  const item=notifications.find(n=>n.id===id&&!n.deleted&&n.eventId==='model.policy.save');if(!item)return;
+  item.read=true;modelSaveHidden.delete(id);closeNotificationPanel();renderNotifications();renderModelSaveTask(item);
+};
+window.modelSaveNotificationBridge=function(snapshot){
+  const spec=window.MaintenanceEvents.events.find(event=>event.id==='model.policy.save');
+  if(!snapshot){
+    notifications.filter(item=>item.eventId===spec.id).forEach(item=>{item.deleted=true;modelSaveHidden.delete(item.id);clearTask(item.id);});
+    renderNotifications();return;
+  }
+  const {id,status,step,pending}=snapshot;
+  if(!Number.isSafeInteger(id)||!Number.isInteger(step)||step<0||step>5||!['running','success','failed','timeout','stopped','verified'].includes(status))return;
+  const state=status==='success'?(pending?'success':'confirmed'):status==='stopped'&&step>=2?'uncertain':status;
+  const key='model-policy-save:'+id,revision=state+':'+step;
+  let item=notifications.find(entry=>entry.id===key);
+  if(item?.modelSave.revision===revision)return;
+  const [title,kind,resolved]=MODEL_SAVE_STATES[state];
+  const detail=state==='running'?'全渠道保存 · '+MODEL_SAVE_PHASES[Math.min(step,4)]+'…':state==='success'?'运行目录已核对；请手动重启 Codex 后重新检查客户端。':state==='confirmed'?'用户目视确认；不作为自动加载证据。':state==='failed'?(step<2?'备份未成功，未写入，草稿保留。':'可能已有部分写入，先核对实际结果。'):state==='timeout'||state==='uncertain'?'可能已有写入，先核对实际结果，不重复提交。':state==='stopped'?'未写入，草稿保留。':'已完成核对，草稿保留。';
+  if(!item){
+    notifications.filter(other=>other.eventId===spec.id).forEach(other=>{modelSaveHidden.add(other.id);clearTask(other.id);});
+    item={id:key,eventId:spec.id,cat:spec.category,op:key,dedupe:key,read:false,resolved:false,deleted:false};notifications.unshift(item);
+  }
+  else if(item.modelSave.state!==state)item.read=false;
+  Object.assign(item,{title,kind,detail,resolved,time:clockLabel(),modelSave:{id,state,step,revision}});
+  if(resolved)item.resolvedAt=item.time;
+  if(state==='success')notifications.filter(other=>other.eventId===spec.id&&other!==item&&other.modelSave.state==='success').forEach(other=>{
+    other.modelSave.state='superseded';other.title=MODEL_SAVE_STATES.superseded[0];other.detail='以最新成功保存的配置为准。';other.kind='info';other.resolved=true;other.resolvedAt=item.time;renderModelSaveTask(other);
+  });
+  renderNotifications();renderModelSaveTask(item);
+};
 // 任务卡动作：原型只做 mock 反馈，不执行真实副作用。
 document.getElementById('taskHost').addEventListener('click',event=>{
   const btn=event.target.closest('[data-task-act]');
   if(!btn) return;
   const behavior=btn.dataset.taskAct;
-  if(behavior==='background'){clearTask();toast('原型模拟：已转入后台，任务仍在运行。');}
+  const task=btn.closest('.task-card'),item=notifications.find(n=>n.id===task?.dataset.taskNotification&&!n.deleted);
+  if(behavior.startsWith('component-demo-')){window.prototypeNotificationPublisher?.action(behavior.slice(15),item?.id);}
+  else if(behavior.startsWith('model-')){if(item)window.modelSaveNotificationAction?.(behavior.slice(6),item.modelSave.id);}
+  else if(behavior==='background'){clearTask();toast('原型模拟：已转入后台，任务仍在运行。');}
   else if(behavior==='cancel'){clearTask();toast('原型模拟：已取消观察；后台动作按真实实现处理。');}
   else{toast('原型模拟：点击了「'+btn.dataset.taskLabel+'」。');}
 });
@@ -7362,9 +7458,10 @@ function resetNotifDemo(){
 function syncLaunchActive(){
   const inNotif=document.body.classList.contains('notif-mode');
   const inWindows=document.body.classList.contains('windows-mode');
-  const map={overview:'overview',panel:'panel',models:'models',extensions:'extensions',logs:'logs',settings:'settings',sync:'sync',tray:'tray',};
+  const inComponents=inNotif||inWindows||['components','model-picker','tray','annotations'].includes(currentRoute);
+  const map={overview:'overview',panel:'panel',models:'models',conversations:'conversations',extensions:'extensions',logs:'logs',settings:'settings',sync:'sync'};
   document.querySelectorAll('#launchGrid button').forEach(b=>{
-    const on=b.dataset.launch==='windows'?inWindows:(b.dataset.launch==='notify'?inNotif&&!inWindows:(!inNotif&&!inWindows&&map[currentRoute]===b.dataset.launch));
+    const on=b.dataset.launch==='components'?inComponents:(!inNotif&&!inWindows&&map[currentRoute]===b.dataset.launch);
     b.classList.toggle('active',on);
   });
 }
@@ -7448,14 +7545,27 @@ window.addEventListener('prototype:data-paths',event=>{
 <script src="../proto-controls.js"></script>
 <script src="select-component.js"></script>
 <script src="tree-table.js?v=1"></script>
-<script src="model-config.js?v=1"></script>
-<script src="sync-config.js?v=3"></script>
+<script src="action-menu.js?v=20261014-channel-actions"></script>
+<script src="model-template-updates.js"></script>
+<script src="model-template-seeds.js"></script>
+<script src="model-template-summary.js?v=20261014-change-summary-v2"></script>
+<script src="component-views.js?v=20261015"></script>
+<script src="model-external-notification.js?v=20261015-external-single-dialog"></script>
+<script src="model-config.js?v=20261015-prototype-note-boundary"></script>
+<script src="conversation-config.js?v=20261015-prototype-version"></script>
+<script src="extension-manager.js?v=20261014-col-extensions"></script>
+<script src="sync-config.js?v=20261014-common-tabs"></script>
 <script src="windows-window.js"></script>
-<script src="prototype-panel.js"></script>
-<script src="annotation-cards.js?v=18"></script>
-<script src="maintenance-events.js?v=1"></script>
+<script src="prototype-panel.js?v=20261014-extension-scope"></script>
+<script src="annotation-cards.js?v=20261015-zero-flow"></script>
+
 <script src="maintenance-state.js?v=2"></script>
 <script src="maintenance-ui.js?v=2"></script>
 <script src="data-paths-ui.js"></script>
+<script src="model-picker.js?v=20261013-responsive-effort"></script>
+<script src="sticky-tabs.js?v=20261014-common-tabs"></script>
+<script src="component-catalog.js?v=20261015-usage-guide"></script>
+<script src="prototype-notification-publisher.js?v=20261015"></script>
+<script src="component-topic.js?v=20261015-usage-guide"></script>
 </body>
 </html>

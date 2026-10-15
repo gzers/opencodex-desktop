@@ -1,0 +1,105 @@
+/* COL-LOCAL-20261011-01 · 对话探索，版本未定；复用现有桌面令牌。 */
+.cv-page{container-type:inline-size;min-width:0}
+[data-conversation-feature][hidden],#conversationDemoCard[hidden]{display:none!important}
+/* 窗口环境光超出边界，clip 避免焦点导航把整个产品壳滚走；页面内部仍正常滚动。 */
+html[data-design-scope=conversations] .window{overflow:clip}
+.cv-page h2,.cv-recovery h2{font-size:var(--text-subtitle,16px);margin:0;font-weight:650}
+.cv-page h3,.cv-recovery h3{font-size:var(--text-label,13px);margin:0;font-weight:650}
+.cv-tabs{display:flex;gap:24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+.cv-tabs button{border:0;border-bottom:2px solid transparent;background:none;font:inherit;color:var(--muted);padding:0 2px 12px;cursor:pointer}
+.cv-tabs button[aria-selected=true]{border-color:var(--accent);color:var(--text);font-weight:600}
+.cv-muted{font-size:var(--text-caption,12px);color:var(--muted);line-height:1.6}
+.cv-line,.cv-actions,.cv-heading,.cv-filter{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.cv-heading{justify-content:space-between;gap:12px;align-items:flex-start}
+.cv-heading>div:first-child{min-width:0;flex:1}
+.cv-heading h2{overflow-wrap:anywhere}
+.cv-workspace{display:grid;grid-template-columns:224px minmax(0,1fr);gap:24px;align-items:start}
+.cv-tree-panel{position:sticky;top:0;min-width:0;display:grid;gap:10px}
+.cv-filter{justify-content:space-between;font-size:12px;color:var(--muted)}
+.cv-filter label{display:flex;gap:5px;align-items:center}
+.cv-tree-panel>.input{width:100%;box-sizing:border-box;min-width:0}
+.cv-object-list{max-height:480px;overflow:auto}
+.cv-object-row{display:flex;border-bottom:1px solid var(--border-soft,var(--border));padding-block:9px}
+.cv-object-row:last-child{border-bottom:0}
+.cv-object-row.selected{background:var(--accent-soft,var(--rail))}
+.cv-object-name{border:0;background:none;color:var(--text);font:inherit;text-align:left;padding:0;cursor:pointer;width:100%;overflow-wrap:anywhere}
+.cv-object-name strong{font-size:13px;font-weight:550;display:block}
+.cv-object-name small{font-size:11px;color:var(--muted);display:block;margin-top:3px}
+.cv-child-mark{font-size:10px;color:var(--muted)}
+.cv-editor{min-width:0}
+.cv-editor-top{position:sticky;top:-1px;background:var(--page-fill,var(--bg));backdrop-filter:blur(18px);z-index:3;padding:10px 0 14px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.cv-editor-top .cv-actions{margin-top:12px}
+.cv-save{min-width:120px}
+.cv-save span{display:block;font-size:10px;font-weight:400;opacity:.8;margin-top:2px}
+.cv-banner{margin:12px 0;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm,8px);font-size:12px;line-height:1.65;background:var(--rail)}
+.cv-warning{color:var(--warning,#976518)}
+.cv-error{color:var(--danger,#c0392b)}
+.cv-section{padding:22px 0;border-bottom:1px solid var(--border)}
+.cv-section>.cv-heading{margin-bottom:6px}
+.cv-section p{margin:5px 0 14px}
+.cv-field{display:grid;gap:7px;padding:13px 0;border-bottom:1px solid var(--border-soft,var(--border));min-width:0}
+.cv-field:last-child{border-bottom:0}
+.cv-field-head{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;font-weight:550}
+.cv-field-origin{font-size:11px;font-weight:400;color:var(--muted)}
+.cv-field>.btn{justify-self:start;font-size:11px;min-height:26px;padding:4px 7px}
+.cv-field-control{display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-width:0}
+.cv-field-control>.input,.cv-field-control>.select{flex:1;min-width:100px;max-width:100%;box-sizing:border-box}
+.cv-page select,.cv-recovery select{font:inherit;color:var(--text);background:var(--card,var(--bg));border:1px solid var(--border);border-radius:var(--radius-sm,6px);padding:7px 9px;max-width:100%}
+.cv-field select[data-cv-mode]{font-size:12px;flex:none;width:100px}
+.cv-field textarea{width:100%;min-height:76px;box-sizing:border-box;resize:vertical;font:inherit;line-height:1.6}
+.cv-effective{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.cv-effective strong{font-weight:400;overflow-wrap:anywhere}
+.cv-status{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:3px 7px;white-space:normal}
+.cv-advanced{margin-top:16px}
+.cv-advanced>summary,.cv-tools>summary{cursor:pointer;font-size:12px;color:var(--muted)}
+.cv-tools{position:relative}
+.cv-tools[open] .cv-menu{position:absolute;right:0;top:30px;z-index:5;width:210px;display:grid;gap:5px;padding:8px;background:var(--card,var(--bg));border:1px solid var(--border);border-radius:8px;box-shadow:0 10px 25px #0002}
+.cv-menu .btn{justify-content:flex-start;text-align:left}
+.cv-back{display:none}
+.cv-empty{padding:36px 12px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
+.cv-source{margin:0 0 14px}
+.cv-page :focus-visible,.cv-recovery :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.cv-page input[type=checkbox],.cv-recovery input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;flex:none}
+.cv-note-anchor{position:relative}
+.cv-sync-entry{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:8px;flex-wrap:wrap}
+.cv-sync-entry p{margin:3px 0 0}
+.cv-recovery{display:flex;flex:1;flex-direction:column;gap:12px;min-width:0;min-height:0}
+.cv-recovery-content{flex:1;overflow:auto;min-height:0;padding:2px 2px 8px;overscroll-behavior:contain}
+.cv-steps{display:flex;list-style:none;padding:0;margin:2px 0 6px;gap:18px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+.cv-steps li[aria-current=step]{color:var(--text);font-weight:650}
+.cv-recovery-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0 2px;border-top:1px solid var(--border)}
+.cv-recovery-footer .cv-actions{margin-left:auto}
+.cv-recovery-row{display:grid;grid-template-columns:minmax(0,1fr) auto;border-bottom:1px solid var(--border-soft,var(--border));align-items:center}
+.cv-recovery-row:last-child{border:0}
+.cv-recovery-row small{font-size:11px;color:var(--muted);display:block}
+.cv-size{font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted);white-space:nowrap}
+.cv-summary{display:grid;gap:0;margin:14px 0}
+.cv-summary>div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cv-summary dt{font-size:13px;color:var(--muted)}
+.cv-summary dd{font-size:13px;margin:0;text-align:right;overflow-wrap:anywhere}
+.cv-rec-options{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0;font-size:12px;color:var(--muted)}
+.cv-rec-options label{display:flex;align-items:center;gap:6px}
+.cv-path-field{display:grid;gap:7px;margin:15px 0;font-size:13px}
+.cv-path-field .input{width:100%;box-sizing:border-box}
+.cv-progress{width:100%;height:8px;accent-color:var(--accent);margin:14px 0}
+.cv-map-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,1fr);align-items:center;gap:12px;border-bottom:1px solid var(--border);padding:12px 0;font-size:13px}
+.cv-map-row .input{width:100%;min-width:0;box-sizing:border-box}
+.cv-result-list{display:grid;gap:12px;padding-left:20px;font-size:13px;line-height:1.7}
+#conversationDemoCard .pctl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* 与工具板正文共用同一左右内边界；共用Select增强后外层也须充满，避免双层缩进。 */
+.prototype-side .cv-scope-control{box-sizing:border-box;width:100%;min-width:0;margin:12px 0;padding:0;border:0}
+.prototype-side .cv-scope-control label{display:grid;gap:8px;min-width:0;font-size:12px;font-weight:600}
+.prototype-side .cv-scope-control :is(select,.select){box-sizing:border-box;width:100%;max-width:100%;min-width:0}
+.prototype-side .cv-scope-control select{font:inherit;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--card,var(--bg));color:var(--text)}
+.prototype-side .cv-scope-control .select-trigger{width:100%;min-width:0}
+
+@container (max-width:760px){
+ .cv-workspace{display:block}
+ .cv-workspace .cv-tree-panel{position:static}
+ .cv-workspace:not(.cv-detail-open) .cv-editor{display:none}
+ .cv-workspace.cv-detail-open .cv-tree-panel{display:none}
+ .cv-workspace .cv-back{display:inline-flex;margin-bottom:10px}
+ .cv-object-list{max-height:none}
+ .cv-map-row{grid-template-columns:1fr;gap:8px}
+}
+@container (max-width:480px){.cv-field-head{align-items:flex-start;flex-direction:column;gap:5px}.cv-heading>.cv-actions{width:100%}.cv-steps{gap:10px}.cv-recovery-footer .cv-actions{width:100%;justify-content:flex-end}}

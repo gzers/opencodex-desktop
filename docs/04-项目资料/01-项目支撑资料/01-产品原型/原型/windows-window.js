@@ -8,7 +8,8 @@
   let previous=null;
   const caption=document.createElement('div');
   caption.className='windows-caption';
-  caption.innerHTML='<div class="windows-drag" title="双击模拟最大化 / 还原"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#tray-logo"/></svg><span>OpenCodeX Desktop</span></div><div class="windows-buttons"><button type="button" data-win-action="minimize" aria-label="最小化" title="最小化"><svg viewBox="0 0 16 16"><path d="M3 8.5h10"/></svg></button><button type="button" data-win-action="maximize" aria-label="最大化" title="最大化"><svg viewBox="0 0 16 16"><rect x="3.5" y="3.5" width="9" height="9"/></svg></button><button type="button" data-win-action="close" aria-label="关闭窗口" title="关闭窗口"><svg viewBox="0 0 16 16"><path d="m3.5 3.5 9 9m0-9-9 9"/></svg></button></div>';
+  const captionMarkup=()=>'<div class="windows-drag" title="双击模拟最大化 / 还原"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#tray-logo"/></svg><span>OpenCodeX Desktop</span></div><div class="windows-buttons"><button type="button" data-win-action="minimize" aria-label="最小化" title="最小化"><svg viewBox="0 0 16 16"><path d="M3 8.5h10"/></svg></button><button type="button" data-win-action="maximize" aria-label="最大化" title="最大化"><svg viewBox="0 0 16 16"><rect x="3.5" y="3.5" width="9" height="9"/></svg></button><button type="button" data-win-action="close" aria-label="关闭窗口" title="关闭窗口"><svg viewBox="0 0 16 16"><path d="m3.5 3.5 9 9m0-9-9 9"/></svg></button></div>';
+  caption.innerHTML=captionMarkup();
   titlebar.append(caption);
   const menu=document.createElement('div');menu.className='windows-legacy-menu';
   menu.textContent='进程　 编辑　 视图　 诊断';menu.setAttribute('aria-label','现有 Windows 原生菜单的静态对照');titlebar.append(menu);
@@ -48,7 +49,7 @@
     const labels={minimized:['窗口已最小化','代理 mock 状态保留；从任务栏重新打开。'],tray:['窗口已收起到托盘','代理 mock 状态保留；从托盘重新打开。'],exited:['桌面壳已退出（模拟）','此处只展示退出状态；重新打开会重新初始化本专题的代理 mock。']};
     const label=labels[state.visibility]||['',''];
     document.getElementById('winHiddenTitle').textContent=label[0];document.getElementById('winHiddenHint').textContent=label[1];
-    document.querySelector('[data-launch="windows"]').classList.add('active');
+    syncLaunchActive();
   }
   function action(name){
     if(name==='leave'){exit();return;}
@@ -82,6 +83,6 @@
     state.theme=root.dataset.theme==='dark'?'dark':'light';
     card.querySelectorAll('[data-win-key="theme"]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.winValue===state.theme)));
   }).observe(root,{attributes:true,attributeFilter:['data-theme']});
-  window.windowsPrototype={enter,exit,state:()=>({...state})};
+  window.windowsPrototype={enter,exit,captionMarkup,state:()=>({...state})};
   if(new URLSearchParams(location.search).get('topic')==='windows')enter();
 })();

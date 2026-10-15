@@ -16,18 +16,21 @@
     const target = document.getElementById(link.getAttribute('href').slice(1));
     if (target && commonGroup.contains(target) && !commonGroup.open) commonGroup.open = true;
   }, true);
-  const labels = {annotations:'注释卡片', overview:'概览', panel:'面板', models:'模型', extensions:'拓展', sync:'同步', logs:'诊断', settings:'设置', tray:'托盘', notify:'通知与反馈', windows:'Windows 窗口'};
-  const tabs = {file:'文件同步', webdav:'WebDAV 同步', channels:'渠道模型', templates:'模型模版', doctor:'诊断检查', logs:'日志历史', notifications:'通知历史', skills:'Skills', mcp:'MCP'};
+  const labels = {components:'组件与样式','model-picker':'公共渠道模型选择器', annotations:'注释卡片', overview:'概览', panel:'面板', models:'模型', conversations:'对话 · 版本未定', extensions:'拓展', sync:'同步', logs:'诊断', settings:'设置', tray:'托盘', notify:'通知与反馈', windows:'Windows 窗口'};
+  const tabs = {models:'Agent 配置', single:'单选打样', multiple:'多选打样', global:'全局设置', objects:'项目与对话', file:'文件同步', webdav:'WebDAV 同步', channels:'渠道模型', templates:'模型模版', doctor:'诊断检查', logs:'日志历史', notifications:'通知历史', skills:'Skills', mcp:'MCP', clients:'客户端'};
   function currentContext() {
+    if (document.documentElement.dataset.route !== 'components' && document.documentElement.dataset.prototypeDialog === 'model-picker') return {page:'model-picker', tab:document.documentElement.dataset.prototypePickerMode || 'single'};
     if (document.body.classList.contains('windows-mode')) return {page:'windows', tab:''};
     if (document.body.classList.contains('notif-mode')) return {page:'notify', tab:''};
     const page = document.documentElement.dataset.route || 'overview';
     const params = new URLSearchParams(location.hash.split('?')[1] || '');
     let tab = '';
+    if (page === 'model-picker') tab = window.modelPickerPrototype?.state().mode || 'single';
     if (page === 'sync') tab = window.syncPrototype?.state().tab || params.get('tab') || 'file';
+    if (page === 'conversations') tab = window.conversationPrototype?.state().tab || 'global';
     if (page === 'models') tab = $('[data-mp="tab"][aria-selected="true"]')?.dataset.tab || 'channels';
     if (page === 'logs') tab = $('[data-diag-tab].active')?.dataset.diagTab || 'doctor';
-    if (page === 'extensions') tab = $('[data-ext-tab].active')?.dataset.extTab || 'skills';
+    if (page === 'extensions') tab = window.extensionPrototype?.active() ? window.extensionPrototype.tab() : $('[data-ext-tab].active')?.dataset.extTab || 'skills';
     if (page === 'settings') tab = $('.settings-tabs [data-settings-section].active')?.dataset.settingsSection || params.get('section') || 'general';
     return {page, tab};
   }
@@ -39,7 +42,12 @@
     $('#protoGroupMeta').textContent = name;
     $('#protoContextHint').textContent = '仅展示' + name + '的测试场景；全局评审条件在上方折叠区。';
     side.querySelectorAll('[data-proto-contexts]').forEach(card => {
-      card.hidden = !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
+      card.hidden = card.id === 'conversationDemoCard' && window.conversationPrototype?.scope() !== 'conversations' || !card.dataset.protoContexts.split(/\s+/).some(value => value === context.page || value === key);
+      if (context.page === 'extensions') {
+        const extended = window.extensionPrototype?.active();
+        if (card.id === 'extensionManagerDemoCard') card.hidden = !extended;
+        else if (extended && card.dataset.protoContexts.includes('extensions')) card.hidden = true;
+      } else if (card.id === 'extensionManagerDemoCard') card.hidden = true;
     });
     const contextNote = $('.proto-context-note');
     if (contextNote) contextNote.hidden = ['windows', 'notify', 'annotations'].includes(context.page);
@@ -59,7 +67,7 @@
     queued = true;
     requestAnimationFrame(() => {queued = false; refresh();});
   }
-  new MutationObserver(schedule).observe(document.documentElement, {attributes:true, attributeFilter:['data-route']});
+  new MutationObserver(schedule).observe(document.documentElement, {attributes:true, attributeFilter:['data-route', 'data-design-scope', 'data-prototype-dialog', 'data-prototype-picker-mode']});
   new MutationObserver(schedule).observe(document.body, {attributes:true, attributeFilter:['class']});
   const main = $('.main');
   if (main) new MutationObserver(schedule).observe(main, {subtree:true, childList:true, attributes:true, attributeFilter:['class', 'aria-selected']});
