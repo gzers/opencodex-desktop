@@ -1566,3 +1566,13 @@ artifact11940418610安装ZIP7627587bytes/SHA2e945d4b…与11940483370证据ZIP16
 见[独立Profile准入](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-Windows独立Profile准入/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-PROFILE-ADMISSION/`。当前ocx0110_accept不存在，实际正向Profile/官方019配对需用户准备独立普通账户并首次登录、后续新前台窗口；ETW批准不含账户创建，安装还需独立Windows环境，不能仅换用户或目录。10:31:32本机native0，日常/ca26/旧隔离/TASK七摘要匹配；原TASK字节/八门禁/失败/全部预算/周期与Mac依赖保持，工具准备不作完整门禁通过，不关闭、合并、签名、晋升或发布。
 
 随后读取原push38670771363/PR38670774817于10:42取得completed/success，各五必需job成功/main-only build skipped，未重派。两份完整日志ZIP/CRC及精确checkout/test/Profile合同原文核验：push实际493da806、PR实际23e55c8d，整tree均cd5f3dcf；每轮Mac900/Windows627passed、忽略6/7，各35组；Profile纯合同各31项，方法摘要匹配源码checkout字节。新`.adg/evidence/OCX-0110-20261015-WIN-PROFILE-CI/`独立冻结31项，verify-ci与旧25项verifier均通过；PR5终态说明更新并读回仍draft/open/unmerged/无auto_merge，head/base不变。Git TLS断连后仅命令级兼容参数完成原493/证据1b5推送与远端核对，无证书/全局配置改变。本机native0，真实新Profile/019配对/安装环境、失败时间窗ETW、全部原生/周期/预算及完整版本门禁仍待验，不关闭或发布。
+
+### 2026-10-15 493 精确 Windows 候选与 beta 前置来源
+
+旧ca26候选不抵新head，后台先核验493精确成功pushCI/干净worktree/远端一致/无已有候选，单次dispatch run38673288645/attempt1，仅candidate模式/query-etw skipped。第一633.657s观察结束仍在构建，继续同run第二387.735s取得11:10:02 completed/success，未重派。完整日志ZIP/CRC及20份阶段日志确认实际checkout493、包锁回归35组/627passed/0failed/7ignored。
+
+artifact11945931457安装ZIP7626883bytes/SHA921c52cf…与11944729636证据ZIP1688746bytes/SHA77ee9a35…分别匹配API；安全条目/source/版本/回执通过。MSI3db2d45a…与NSIS09ace38e…在临时runner新装/首屏/卸载exit0；宿主仅只读MSI/CAB提取，主EXE8777216bytes/0.1.10/SHA9ca21e30…匹配精确MSI载荷并含完整493来源，未启动。裸构建/MSI/NSIS EXE摘要不同，分别核验，不混用。
+
+10:59:54–56按493冻结defaults读取已认证beta Release API与公开beta/latest.json均404；只证明当前来源缺失，不作产品检查或beta6h/退避证据，不发布或改来源。日志curl与.NET读取失败和缺失原stderr边界保留，独立有界urllib取回同run原ZIP；无跨host凭据转发、证书放宽、覆盖失败或重跑。94项独立清单/verify-candidate通过，见[493精确Windows候选](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261015-493精确Windows候选/README.md)及`.adg/evidence/OCX-0110-20261015-WIN-493-CANDIDATE/`。
+
+11:10:40本机native0/日常EXE/旧隔离四摘要/TASK原字节保持，代码493干净；候选已就绪但后续原生仍需新人类前台窗口。独立普通账户/安装环境/beta有效来源、失败时间窗ETW/原查询失败、Mac性能failed/全部预算及剩余八门禁仍开放；不将ca26/e6历史原生重标为493，不关闭、合并、签名、晋升或发布。
