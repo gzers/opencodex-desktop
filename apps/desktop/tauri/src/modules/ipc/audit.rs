@@ -294,14 +294,31 @@ mod tests {
         let root = tempfile::tempdir().expect("create root");
         let store = store_with(root.path());
         let now = chrono::Utc::now();
-        for index in 0..AUDIT_MAX_RECORDS + 4 {
+        // This tests retirement of a full persisted history, not 5,004
+        // independent durable IPC calls. Stage the same historical rows in one
+        // write, then append the last row through the real durable writer.
+        // Production sync_all and the 90-day/5,000-row assertions stay intact.
+        let mut history = String::new();
+        for index in 0..AUDIT_MAX_RECORDS + 3 {
             let started = if index % 2 == 0 {
                 now - chrono::Duration::days(91)
             } else {
                 now - chrono::Duration::days(1)
             };
-            store.record(&record(started)).expect("write record");
+            history.push_str(&serde_json::to_string(&record(started)).expect("serialize history"));
+            history.push('\n');
         }
+        std::fs::write(store.path(), history).expect("stage persisted history");
+        let last_index = AUDIT_MAX_RECORDS + 3;
+        let last_started = if last_index % 2 == 0 {
+            now - chrono::Duration::days(91)
+        } else {
+            now - chrono::Duration::days(1)
+        };
+        store
+            .record(&record(last_started))
+            .expect("append durable record");
+        assert_eq!(store.read_records().unwrap().len(), AUDIT_MAX_RECORDS + 4);
         store.retire(now).expect("retire");
         let records = store.read_records().expect("read retained records");
         assert_eq!(records.len(), (AUDIT_MAX_RECORDS + 4).div_ceil(2));
