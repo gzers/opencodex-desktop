@@ -99,6 +99,10 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
 
   const context = canvas.getContext('webgl', {
     antialias: false,
+    // This full-screen color pass never uses depth or stencil testing.
+    // Do not allocate auxiliary buffers at the canvas's full pixel size.
+    depth: false,
+    stencil: false,
     alpha: true,
     premultipliedAlpha: false,
     preserveDrawingBuffer: false,
