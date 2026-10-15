@@ -1,4 +1,4 @@
-//! Explicit recovery for a fresh Windows installation's unwritable default root.
+//! Durable Windows startup anchors and explicit recovery of a fresh unwritable root.
 //! The per-user registry value is a startup pointer, never an automatic data
 //! fallback. Business stores are created only on the next admitted startup.
 use crate::errors::{AppError, AppResult};
@@ -247,6 +247,32 @@ fn admit_initial(
     }
 }
 
+/// Remember the first admitted anchor before business services can start.
+/// The executable may move during a later installation; it must not silently
+/// choose a new empty data directory. A malformed/unreadable pointer stops
+/// before admission, and an existing pointer is never rewritten here.
+fn admit_registered(
+    platform_root: &Path,
+    executable: &Path,
+    read: impl FnOnce() -> AppResult<Option<PathBuf>>,
+    persist: impl FnOnce(&Path) -> AppResult<()>,
+) -> AppResult<InitialAdmission> {
+    let configured = read()?;
+    let admission = admit_initial(platform_root, executable, configured.as_deref())?;
+    if let (None, InitialAdmission::Ready(resolution)) = (configured.as_ref(), &admission) {
+        // The anchor is already initialized and exclusively locked. Store
+        // its canonical identity so later launches do not depend on the
+        // old spelling or executable directory. The active root may be a
+        // different binding; that binding still belongs to this anchor.
+        let anchor = resolution
+            .anchor
+            .canonicalize()
+            .map_err(|_| failure("the admitted startup anchor could not be resolved"))?;
+        persist(&anchor)?;
+    }
+    Ok(admission)
+}
+
 /// Keep admission/selection/commit ordering independently testable without
 /// invoking native UI, modifying the registry, or changing process privileges.
 fn commit_selected<T>(
@@ -468,7 +494,8 @@ mod native {
                 (data.len() * 2) as u32,
             )
         };
-        // This runs only for an explicit recovery choice, never every startup.
+        // This runs for a first admitted anchor or an explicit recovery choice,
+        // never every startup.
         // SAFETY: key remains open with the query right required by RegFlushKey.
         let flush_status = if status == ERROR_SUCCESS {
             unsafe { RegFlushKey(key) }
@@ -518,14 +545,7 @@ mod native {
                 return Ok(None);
             }
         };
-        let configured = match read_choice() {
-            Ok(value) => value,
-            Err(error) => {
-                explain(app, &error);
-                return Ok(None);
-            }
-        };
-        match admit_initial(platform_root, executable, configured.as_deref()) {
+        match admit_registered(platform_root, executable, read_choice, persist_choice) {
             Ok(InitialAdmission::Ready(resolution)) => Ok(Some(resolution)),
             Ok(InitialAdmission::Choose(anchor)) => {
                 if let Some(window) = app.get_window("main") {
@@ -619,6 +639,203 @@ mod tests {
             admit_initial(&legacy, &executable, None),
             Ok(InitialAdmission::Ready(_))
         ));
+    }
+
+    #[test]
+    fn installed_location_change_reuses_registered_anchor_and_its_reference_binding() {
+        let (temp, target, anchor) = fixture();
+        let base = temp.path().canonicalize().unwrap();
+        let platform = base.join("legacy");
+        let first_executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        let moved_executable = base.join("new-install/opencodex-desktop.exe");
+        let pointer = base.join("fixture-startup-pointer.json");
+        let read_pointer = || {
+            if pointer.exists() {
+                decode_choice(&std::fs::read_to_string(&pointer).unwrap()).map(Some)
+            } else {
+                Ok(None)
+            }
+        };
+        let first = match admit_registered(&platform, &first_executable, read_pointer, |path| {
+            assert!(matches!(
+                crate::modules::instance::AppInstanceLock::acquire(path),
+                Err(AppError::InstanceLockConflict)
+            ));
+            std::fs::write(&pointer, encode_choice(path)?).unwrap();
+            Ok(())
+        })
+        .unwrap()
+        {
+            InitialAdmission::Ready(value) => value,
+            InitialAdmission::Choose(_) => panic!("writable default must be admitted"),
+        };
+        assert_eq!(
+            decode_choice(&std::fs::read_to_string(&pointer).unwrap()).unwrap(),
+            anchor.canonicalize().unwrap()
+        );
+        drop(first);
+        // Settings can bind this durable anchor to a custom active root. A
+        // later executable location must keep both this binding and its data.
+        crate::modules::data_root::initialize(&target).unwrap();
+        std::fs::write(target.join("manager-state/keep"), b"retained state").unwrap();
+        crate::modules::data_root::switch_reference(
+            &anchor,
+            &target,
+            crate::modules::data_root::DataRootSwitchMode::ReferenceOnly,
+        )
+        .unwrap();
+        let before =
+            std::fs::read(anchor.join(crate::modules::data_root::METADATA_RELATIVE_PATH)).unwrap();
+        let resumed = match admit_registered(&platform, &moved_executable, read_pointer, |_| {
+            panic!("a registered pointer must not be rewritten")
+        })
+        .unwrap()
+        {
+            InitialAdmission::Ready(value) => value,
+            InitialAdmission::Choose(_) => panic!("registered root must not request a new choice"),
+        };
+        assert_eq!(resumed.anchor, anchor.canonicalize().unwrap());
+        assert_eq!(
+            resumed.runtime_config.active_data_root,
+            target.canonicalize().unwrap()
+        );
+        assert_eq!(resumed.locks.len(), 2);
+        assert_eq!(
+            std::fs::read(target.join("manager-state/keep")).unwrap(),
+            b"retained state"
+        );
+        assert_eq!(
+            std::fs::read(anchor.join(crate::modules::data_root::METADATA_RELATIVE_PATH)).unwrap(),
+            before
+        );
+        assert!(!base.join("new-install/data").exists());
+        assert!(!platform.exists());
+    }
+
+    #[test]
+    fn first_anchor_registration_failure_releases_locks_and_refuses_business_startup() {
+        let (temp, _target, anchor) = fixture();
+        let platform = temp.path().canonicalize().unwrap().join("legacy");
+        let executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        let result = admit_registered(
+            &platform,
+            &executable,
+            || Ok(None),
+            |path| {
+                assert!(matches!(
+                    crate::modules::instance::AppInstanceLock::acquire(path),
+                    Err(AppError::InstanceLockConflict)
+                ));
+                Err(failure("startup pointer persistence is unavailable"))
+            },
+        );
+        assert!(matches!(result, Err(AppError::FileSystem { .. })));
+        assert!(crate::modules::instance::AppInstanceLock::acquire(&anchor).is_ok());
+        assert!(!platform.exists());
+    }
+
+    #[test]
+    fn unreadable_or_future_pointer_stops_before_creating_installation_data() {
+        let (temp, _target, anchor) = fixture();
+        let platform = temp.path().canonicalize().unwrap().join("legacy");
+        let executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        for payload in ["corrupt", r#"{"schema":2,"anchor":"invalid"}"#] {
+            let result = admit_registered(
+                &platform,
+                &executable,
+                || decode_choice(payload).map(Some),
+                |_| panic!("an unreadable pointer must not be overwritten"),
+            );
+            assert!(result.is_err());
+            assert!(!anchor.exists());
+            assert!(!platform.exists());
+        }
+    }
+
+    #[test]
+    fn uncertain_pointer_commit_is_reconciled_without_resetting_a_moved_install() {
+        let (temp, _target, anchor) = fixture();
+        let base = temp.path().canonicalize().unwrap();
+        let platform = base.join("legacy");
+        let executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        let moved = base.join("new-install/opencodex-desktop.exe");
+        let pointer = base.join("fixture-pointer.json");
+        let first = admit_registered(
+            &platform,
+            &executable,
+            || Ok(None),
+            |path| {
+                std::fs::write(&pointer, encode_choice(path)?).unwrap();
+                Err(failure("pointer flush/readback result is uncertain"))
+            },
+        );
+        assert!(first.is_err());
+        let restarted = admit_registered(
+            &platform,
+            &moved,
+            || decode_choice(&std::fs::read_to_string(&pointer).unwrap()).map(Some),
+            |_| panic!("an uncertain committed pointer must not be reset"),
+        )
+        .unwrap();
+        match restarted {
+            InitialAdmission::Ready(resolution) => {
+                assert_eq!(resolution.anchor, anchor.canonicalize().unwrap());
+            }
+            InitialAdmission::Choose(_) => panic!("committed anchor must be reconciled"),
+        }
+        assert!(!base.join("new-install/data").exists());
+        assert!(!platform.exists());
+    }
+
+    #[test]
+    fn legacy_anchor_is_registered_without_changing_its_binding_or_external_home() {
+        let (temp, target, anchor) = fixture();
+        let base = temp.path().canonicalize().unwrap();
+        let legacy = base.join("legacy");
+        let home = base.join("external-home");
+        let executable = anchor.parent().unwrap().join("opencodex-desktop.exe");
+        crate::modules::data_root::initialize(&legacy).unwrap();
+        crate::modules::data_root::initialize(&target).unwrap();
+        crate::modules::data_root::set_opencodex_home(
+            &legacy,
+            crate::modules::data_root::OpenCodexHomeMode::External,
+            Some(&home),
+        )
+        .unwrap();
+        crate::modules::data_root::switch_reference(
+            &legacy,
+            &target,
+            crate::modules::data_root::DataRootSwitchMode::ReferenceOnly,
+        )
+        .unwrap();
+        let pointer = RefCell::new(None);
+        let result = match admit_registered(
+            &legacy,
+            &executable,
+            || Ok(None),
+            |path| {
+                *pointer.borrow_mut() = Some(encode_choice(path)?);
+                Ok(())
+            },
+        )
+        .unwrap()
+        {
+            InitialAdmission::Ready(value) => value,
+            InitialAdmission::Choose(_) => panic!("legacy binding must remain admitted"),
+        };
+        assert_eq!(
+            decode_choice(pointer.borrow().as_ref().unwrap()).unwrap(),
+            legacy.canonicalize().unwrap()
+        );
+        assert_eq!(
+            result.runtime_config.active_data_root,
+            target.canonicalize().unwrap()
+        );
+        assert_eq!(
+            crate::modules::data_root::resolve_opencodex_home(&result.runtime_config),
+            home
+        );
+        assert!(!anchor.exists());
     }
 
     #[test]
