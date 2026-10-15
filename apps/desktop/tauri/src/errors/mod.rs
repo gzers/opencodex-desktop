@@ -8,6 +8,10 @@ pub enum AppError {
     NotConfigured,
     #[error("file system operation failed: {operation}; {detail}")]
     FileSystem { operation: String, detail: String },
+    /// A native write-permission denial while admitting the root instance lock.
+    /// Keep the OS classification; localized error strings are not authority.
+    #[error("data root write permission denied: {operation}")]
+    DataRootWriteDenied { operation: String },
     #[error("another application instance is already running")]
     InstanceLockConflict,
     #[error("target file lock timed out after {timeout_ms}ms")]
@@ -54,7 +58,7 @@ impl From<&AppError> for AppErrorPayload {
         let code = match value {
             AppError::Tauri(_) => 1000,
             AppError::NotConfigured => 1,
-            AppError::FileSystem { .. } => 1,
+            AppError::FileSystem { .. } | AppError::DataRootWriteDenied { .. } => 1,
             AppError::InstanceLockConflict => 7,
             AppError::TargetLockTimeout { .. } | AppError::Timeout => 7,
             AppError::AtomicWrite { .. } => 12,
@@ -80,6 +84,9 @@ impl Clone for AppError {
             Self::FileSystem { operation, detail } => Self::FileSystem {
                 operation: operation.clone(),
                 detail: detail.clone(),
+            },
+            Self::DataRootWriteDenied { operation } => Self::DataRootWriteDenied {
+                operation: operation.clone(),
             },
             Self::InstanceLockConflict => Self::InstanceLockConflict,
             Self::TargetLockTimeout { timeout_ms } => Self::TargetLockTimeout {
@@ -121,7 +128,7 @@ impl AppError {
     fn to_error_kind(&self) -> &'static str {
         match self {
             Self::NotConfigured => "not-configured",
-            Self::FileSystem { .. } => "file-system",
+            Self::FileSystem { .. } | Self::DataRootWriteDenied { .. } => "file-system",
             Self::InstanceLockConflict => "instance-lock-conflict",
             Self::TargetLockTimeout { .. } | Self::Timeout => "target-lock-timeout",
             Self::AtomicWrite { .. } => "atomic-write",

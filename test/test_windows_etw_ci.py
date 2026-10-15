@@ -87,6 +87,14 @@ class AdmissionTests(unittest.TestCase):
             with self.subTest(event=event), self.assertRaises(ValueError):
                 admit.verify_execution_context(event, True)
 
+    def test_current_first_regression_accepts_a_new_product_tree_without_relabelling_replay(self):
+        admit.verify_diagnostic_path("post-build-runner-temp", "a" * 40, first_regression=True)
+        with self.assertRaises(ValueError):
+            admit.verify_diagnostic_path("post-build-runner-temp", "a" * 40)
+        for invalid in ("", "not-a-tree", "a" * 39):
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                admit.verify_diagnostic_path("post-build-runner-temp", invalid, first_regression=True)
+
     def test_foreign_expired_wrong_digest_size_and_run_artifact_are_rejected(self):
         for key, value in (
             ("id", 1), ("expired", True), ("digest", "sha256:" + "0" * 64),

@@ -59,9 +59,10 @@ def verify_original(run, artifact):
             and artifact["workflow_run"].get("head_sha") == BD2, "Artifact belongs to another run")
 
 
-def verify_diagnostic_path(value, application_tree):
+def verify_diagnostic_path(value, application_tree, first_regression=False):
     require(value in {"isolated-replay", "post-build-runner-temp"}, "Unknown diagnostic execution path")
-    if value == "post-build-runner-temp":
+    require(re.fullmatch("[0-9a-f]{40}", application_tree), "Invalid application tree identity")
+    if value == "post-build-runner-temp" and not first_regression:
         require(application_tree == BD2_APPLICATION_TREE, "Original regression application tree changed")
 
 
@@ -152,7 +153,7 @@ def prepare(first_regression=False):
                        os.environ.get("OPENCODEX_ETW_DIAGNOSTIC_PATH", "isolated-replay"))
     application_tree = subprocess.check_output(
         ["git", "rev-parse", "HEAD:apps/desktop"], cwd=repo).decode().strip()
-    verify_diagnostic_path(diagnostic_path, application_tree)
+    verify_diagnostic_path(diagnostic_path, application_tree, first_regression)
     output = repo / "test/out/windows-query-etw"
     require(not output.exists(), "Diagnostic evidence already exists")
     output.mkdir(parents=True)
@@ -215,6 +216,8 @@ def prepare(first_regression=False):
         "firstOrdinaryCiRegression": first_regression,
         "currentCiIsVerificationNotPreviouslyAdmitted": first_regression,
         "diagnosticPath": diagnostic_path, "applicationTree": application_tree,
+        "applicationTreeMatchesHistorical": application_tree == BD2_APPLICATION_TREE,
+        "executedLibraryProvenance": "current-ci-build" if first_regression else "fixed-historical-executable",
         "originalTestSource": BD2, "originalFailedRun": ORIGINAL_RUN, "originalArtifactId": ARTIFACT_ID,
         "pinnedHistoricalActualPrCheckout": "31e7748d9e82c79bef97fc1b73233f08bc1f1b3d",
         "testExecutable": str(test_executable), "testSha256": TEST_SHA,

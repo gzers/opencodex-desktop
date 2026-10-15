@@ -24,10 +24,8 @@ impl AppInstanceLock {
     /// `<data_root>/manager-state/app.lock`。
     pub fn acquire(data_root: &Path) -> Result<Self, AppError> {
         let state_dir = data_root.join("manager-state");
-        std::fs::create_dir_all(&state_dir).map_err(|error| AppError::FileSystem {
-            operation: "create manager-state directory".to_string(),
-            detail: error.to_string(),
-        })?;
+        std::fs::create_dir_all(&state_dir)
+            .map_err(|error| admission_io("create manager-state directory", error))?;
 
         let lock_path = state_dir.join("app.lock");
         let mut file = OpenOptions::new()
@@ -36,10 +34,7 @@ impl AppInstanceLock {
             .write(true)
             .truncate(false)
             .open(&lock_path)
-            .map_err(|error| AppError::FileSystem {
-                operation: "open instance lock".to_string(),
-                detail: error.to_string(),
-            })?;
+            .map_err(|error| admission_io("open instance lock", error))?;
 
         match file.try_lock() {
             Ok(()) => {}
@@ -82,6 +77,19 @@ impl AppInstanceLock {
     }
 }
 
+fn admission_io(operation: &str, error: std::io::Error) -> AppError {
+    if error.kind() == std::io::ErrorKind::PermissionDenied {
+        AppError::DataRootWriteDenied {
+            operation: operation.into(),
+        }
+    } else {
+        AppError::FileSystem {
+            operation: operation.into(),
+            detail: error.to_string(),
+        }
+    }
+}
+
 impl Drop for AppInstanceLock {
     fn drop(&mut self) {
         let _ = self._file.unlock();
@@ -91,6 +99,27 @@ impl Drop for AppInstanceLock {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn permission_denial_is_typed_without_localized_message_matching() {
+        assert!(matches!(
+            admission_io(
+                "open instance lock",
+                std::io::ErrorKind::PermissionDenied.into()
+            ),
+            AppError::DataRootWriteDenied { .. }
+        ));
+        assert!(matches!(
+            admission_io("open instance lock", std::io::ErrorKind::NotFound.into()),
+            AppError::FileSystem { .. }
+        ));
+        let error = admission_io(
+            "open instance lock",
+            std::io::ErrorKind::PermissionDenied.into(),
+        );
+        assert_eq!(crate::errors::AppErrorPayload::from(&error).code, 1);
+        assert_eq!(error, error.clone());
+    }
 
     #[test]
     fn first_instance_acquires_lock() {
