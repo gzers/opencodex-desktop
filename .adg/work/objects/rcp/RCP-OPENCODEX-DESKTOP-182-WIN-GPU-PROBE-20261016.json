@@ -1,0 +1,39 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-GPU-PROBE-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-GPU-PROBE-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:win-gpu-controlled-binding",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-GPU-BOUND-PROBE/verification.json"
+    },
+    {
+      "name": "local:win-gpu-first-push-ci-status",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-GPU-BOUND-PROBE/ci-current-readback.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "f7cf853970314296ec75feece4000b5e21428fde84ddcf37deb6cfac1f6c00c7",
+      "summary": "记录GPU读取器受控执行37项及首次全CI状态；完整原日志、原生执行和原全部门禁不提升。"
+    }
+  ],
+  "completed_at": "2026-10-16T07:30:38.114242+00:00",
+  "summary": "受控GPU绑定读取方法与首次CI状态通过；不代表产品性能或TASK关闭，原失败保持。",
+  "revision": 2,
+  "summary_digest": "19923868140a6e2f1f115a7a61a86e74bf744fa0ff86c932fe187bdf291a361b",
+  "content_digest": "2ac5f4d125b9cddc38ec83eb395830c3cbb632e35794ab27793f8fd109bd7788"
+}

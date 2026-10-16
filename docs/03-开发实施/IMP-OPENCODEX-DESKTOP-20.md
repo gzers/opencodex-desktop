@@ -1836,3 +1836,9 @@ push38838964154的Windows Clippy依赖下载遇phf_generator0.13.1连接中断�
 GPU只读伴随方法本机47144dbe已提交、21项纯检查通过，含真实Windows argv解析、角色允许表、PID过滤、缺失值与UInt64精度；真实产品快照/GL缓冲归因未做，代码未推送/CI，先保留549待录制源。网络原件读回遇Winsock10055及非任务进程大量UDP端点，本机配置/外部进程未改；细节留私有运行目录。证据和继续入口见`.adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-BYTES/`，网络恢复后须在新RUN档案补原日志与准入，最多派发一次，不修改冻结目录或重发已受理调用。未派发新ETW，无需重请既有管理员录制许可。
 
 14:43只读保护核到native0、产品823干净及日常/TASK摘要保持。bd2实际失败窗口、+29.221361MiB RSS失败及原Mac/Windows资源失败、原全部预算/周期/八检查仍开放，DPI待验；TASK/IMP未关闭，不合并、签名、晋升或发布。
+
+### 2026-10-16 GPU读取器完成受控执行与首次CI
+
+独立工具分支768e2318已推送读回，保持ETW待录制分支549不变。本机37项检查含真实PowerShell根/子代保留句柄与正常退出，控制代际均已消失、native0；GPU实例为空不视为零显存，不当作桌面产品快照。首次push38864269467于15:17:42全CI成功，五必需作业通过、main-only build正常skip，原run/jobs API核对；完整job原日志仍未取得。初版UTC字符串尾零比较失败与修订校验器保留，原件未改。
+
+证据`.adg/evidence/OCX-0110-20261016-WIN-GPU-BOUND-PROBE/`独立校验通过，只证明受控方法及CI状态。后续真实人工窗口的823恢复/GPU执行另档，不回改准备时事实。Windows RSS+29.221361MiB、原Mac/Windows失败、bd2实际失败窗口缺失及全部原预算/周期/八门禁保持；TASK revision2/in_progress/pending、DPI待验与禁止发布状态不变。

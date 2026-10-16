@@ -1,0 +1,46 @@
+{
+  "source": "768e231811a2363b32f5fa67c8e74cbc31d751e1",
+  "branch": "feature/0.1.10-windows-gpu-resources",
+  "parent": "47144dbe1e813352f0e4618150ab89a15614a4cf",
+  "pushedAndReadBack": true,
+  "sourceCiPassed": false,
+  "etwRemoteSourcePreserved": "54927d2cb184a38d5dd2e1f7c00ed4697b2e0a56",
+  "originalCopies": [
+    {
+      "path": "checks.original.log",
+      "bytes": 268,
+      "sha256": "6dfda621dad900b047d333998e60b2a986b46ed0580a518b06d98ff9c7e9fef9"
+    },
+    {
+      "path": "probe/controlled-launch.original.json",
+      "bytes": 288,
+      "sha256": "c985f5532c3408372a438f58d9bbee4b107f03dbfe3d1a3c494893ee6d83fb0b"
+    },
+    {
+      "path": "probe/controlled-snapshot.original.json",
+      "bytes": 1653,
+      "sha256": "7ac912630f574ab33d332a1de42c1858e759e177c142b1271a93d58d92ae2386"
+    },
+    {
+      "path": "probe/controlled-exit.original.json",
+      "bytes": 130,
+      "sha256": "4872c39b9279d1409c08fd8b20afeeb0b64ead7de907ada2923c181b98d133eb"
+    },
+    {
+      "path": "probe/result.json",
+      "bytes": 268,
+      "sha256": "6dfda621dad900b047d333998e60b2a986b46ed0580a518b06d98ff9c7e9fef9"
+    }
+  ],
+  "sourceBlobs": {
+    ".github/workflows/ci.yml": "4b886170f0339b40a637651df49afef6524676bde7da5173e10971f6d185bc46",
+    "test/smoke/windows-gpu-resource.ps1": "a154791158b15de89843d54085a44324fee820baf435fe6692a9639cdd0b2c5a",
+    "test/smoke/windows-gpu-resource.test.ps1": "96f0526a8a5df0312556a4bb5310335d9980ef2f6237fde7153acf763877763b"
+  },
+  "appsTreeUnchanged": true,
+  "controlledProcessStarted": true,
+  "productStarted": false,
+  "nativeSnapshotExecutionTested": false,
+  "individualGpuBuffersAttributed": false,
+  "fullPerformanceGatePassed": false
+}

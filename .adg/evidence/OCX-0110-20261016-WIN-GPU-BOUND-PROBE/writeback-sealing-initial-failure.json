@@ -1,0 +1,11 @@
+{
+  "atUtc": "2026-10-16T07:30:14.7148526+00:00",
+  "stage": "writeback-receipt-sealing",
+  "exceptionType": "runtime.kernel.ContractError",
+  "message": "RCP.result has unsupported value 'passed'",
+  "receiptCreated": false,
+  "manifestCreated": false,
+  "rawEvidenceChanged": false,
+  "taskChanged": false,
+  "correction": "Use succeeded for receipt result; check status remains passed; resume completed authored stages without overwriting them"
+}
