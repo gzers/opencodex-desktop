@@ -1,0 +1,55 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-CONTROLLED-MEMORY-PROOF-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261016-WIN-CONTROLLED-MEMORY-PROOF",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-CONTROLLED-MEMORY-PROOF-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-controlled-memory-allocation-stack",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-CONTROLLED-MEMORY-PROOF/verification.json"
+    },
+    {
+      "name": "local:windows-ordinary-token-memory-recording-refusal",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-CONTROLLED-MEMORY-PROOF/original/lf-source-tests/result.json"
+    },
+    {
+      "name": "local:windows-wpr-preparation-full-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-CONTROLLED-MEMORY-PROOF/previous-ci/admission.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/candidate0110-exit.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "0716b1dd6a241a465eb0f5d61dff2246e8d9e796bfad66860d4c3264a316edd9",
+      "summary": "a5受控CI捕获8MiB分配/栈1对且无丢失，普通令牌拒绝有效；494完整CI通过，但产品RSS、bd2失败窗口及原门禁未解除。"
+    }
+  ],
+  "completed_at": "2026-10-16T15:49:21.832888+00:00",
+  "summary": "仅受控自进程取证方法通过；真实GPU入口与产品分配根因未验证，RSS/原生等完整门禁继续失败。",
+  "revision": 1,
+  "summary_digest": "fcb2a84c479d815a7a74ae97fb4af835aa516925327dcd7cb129f4897dd027c1",
+  "content_digest": "71fa9affe67e0aa22c31e3e067db717297648dc5077a55933d42cb7e15edca13"
+}
