@@ -186,3 +186,92 @@ function Close-WindowsMemoryTargetBinding {
     [void]$script:OcxMemoryTargetLeases.Remove($LeaseId)
     foreach($taskItem in $taskEntry.items){$taskItem.process.Dispose()}
 }
+
+function Assert-WindowsMemoryMethodAdmission {
+    param([Parameter(Mandatory)][string]$Path)
+    $ErrorActionPreference='Stop'
+    $taskAdmission=Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json
+    if(!$taskAdmission.wholeToolCiAdmitted -or $taskAdmission.status -cne 'completed' -or
+       $taskAdmission.conclusion -cne 'success' -or $taskAdmission.event -cne 'push' -or
+       $taskAdmission.attempt -ne 1 -or $taskAdmission.runId -le 0){
+        throw 'A verified first complete tool CI admission is required'
+    }
+    $taskRepo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+    $taskHead=(git -C $taskRepo rev-parse HEAD).Trim()
+    if($LASTEXITCODE -ne 0 -or $taskAdmission.source -cne $taskHead){throw 'Same committed tool source required'}
+    $taskPaths=@('test/smoke/windows-controlled-memory.cs','test/smoke/windows-owned-etw.cs',
+        'test/smoke/windows-memory-recorder-loader.ps1','test/smoke/windows-memory-target.ps1',
+        'test/smoke/windows-bound-gpu-memory.ps1','test/smoke/windows-process-token.ps1',
+        'test/smoke/windows-gpu-resource.ps1','.github/workflows/ci.yml')
+    $taskChanges=@(git -C $taskRepo status --porcelain --untracked-files=all -- @taskPaths)
+    if($LASTEXITCODE -ne 0 -or $taskChanges.Count){throw 'Committed and unchanged tool methods required'}
+    return $taskAdmission
+}
+
+function Invoke-WindowsGpuMemoryRecording {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)][string]$LeaseId,
+        [Parameter(Mandatory)][string]$OutputDirectory,
+        [ValidateRange(1,45)][int]$Seconds=30,
+        [string]$MethodAdmissionPath,
+        [switch]$RecordApproved
+    )
+    $ErrorActionPreference='Stop'
+    if(!$script:OcxMemoryTargetLeases.ContainsKey($LeaseId)){throw 'Unknown or closed memory-target lease'}
+    $taskEntry=$script:OcxMemoryTargetLeases[$LeaseId]
+    if($taskEntry.controlledSelf -or !$taskEntry.gpuRoleVerified){throw 'An actual GPU metadata lease is required; self-test bindings cannot record a GPU'}
+    $taskBefore=Assert-WindowsMemoryTargetBinding -LeaseId $LeaseId
+    $taskRepo=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+    $taskOutput=[IO.Path]::GetFullPath($OutputDirectory)
+    $taskRoots=@((Join-Path $taskRepo 'test/runtime'),(Join-Path $taskRepo 'test/out'))
+    if(!@($taskRoots | Where-Object {$taskOutput.StartsWith($_+'\',[StringComparison]::OrdinalIgnoreCase)}).Count){
+        throw 'Task-owned GPU recording output required'
+    }
+    if(Test-Path -LiteralPath $taskOutput){throw 'Existing GPU recording output refused'}
+    $taskCursor=$taskOutput
+    while($taskCursor){
+        if((Test-Path -LiteralPath $taskCursor) -and
+           ((Get-Item -LiteralPath $taskCursor -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)){throw 'GPU recording output aliases refused'}
+        $taskCursor=[IO.Path]::GetDirectoryName($taskCursor)
+    }
+    if(!$RecordApproved){
+        return [pscustomobject][ordered]@{status='bound-gpu-prepared-only';binding=$taskBefore
+            maximumObservationSeconds=$Seconds;outputDirectory=$taskOutput
+            tracingStarted=$false;productStarted=$false;recordingExecutionAdmitted=$false}
+    }
+    $taskAdmin=([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+    if(!$taskAdmin){throw 'Bound GPU recording requires an elevated controller; no self-elevation performed'}
+    if(!$MethodAdmissionPath){throw 'Explicit same-source complete CI admission required'}
+    $taskAdmission=Assert-WindowsMemoryMethodAdmission -Path $MethodAdmissionPath
+    if(!('OpenCodex.Diagnostics.ControlledMemoryRecorder' -as [type])){throw 'Pinned decoder and committed memory recorder must be loaded first'}
+    $taskRoot=$taskEntry.root
+    $taskTarget=$taskEntry.target
+    $taskRaw=[OpenCodex.Diagnostics.ControlledMemoryRecorder]::RunBoundGpu(
+        $taskOutput,$taskRoot.process,$taskTarget.process,
+        ([datetimeoffset]$taskRoot.launch.creationTimeUtc).UtcDateTime.ToFileTimeUtc(),
+        ([datetimeoffset]$taskTarget.launch.creationTimeUtc).UtcDateTime.ToFileTimeUtc(),
+        [string]$taskRoot.launch.executable,[string]$taskTarget.launch.executable,
+        [string]$taskRoot.launch.exeSha256,[string]$taskTarget.launch.exeSha256,$Seconds)
+    $taskCapture=$taskRaw | ConvertFrom-Json
+    $taskAfter=$null
+    $taskBindingError=$null
+    try{$taskAfter=Assert-WindowsMemoryTargetBinding -LeaseId $LeaseId}
+    catch{$taskBindingError=$_.Exception.Message}
+    $taskReadback=[ordered]@{atUtc=[datetimeoffset]::UtcNow.ToString('o')
+        toolSource=$taskAdmission.source;ciRunId=$taskAdmission.runId
+        before=$taskBefore;after=$taskAfter;bindingError=$taskBindingError
+        bindingStable=($null -eq $taskBindingError)
+        captureQualityPassed=$taskCapture.passed
+        captureResultSha256=(Get-FileHash -LiteralPath (Join-Path $taskOutput 'result.json')).Hash.ToLowerInvariant()
+        allocationEvidenceObserved=$taskCapture.allocationEvidenceObserved
+        fullProductGatePassed=$false;rssFailureCleared=$false}
+    $taskReadbackPath=Join-Path $taskOutput 'binding-validation.json'
+    $taskStream=[IO.FileStream]::new($taskReadbackPath,[IO.FileMode]::CreateNew,[IO.FileAccess]::Write,[IO.FileShare]::Read)
+    try{
+        $taskBytes=[Text.Encoding]::UTF8.GetBytes(($taskReadback | ConvertTo-Json -Depth 12)+"`n")
+        $taskStream.Write($taskBytes,0,$taskBytes.Length)
+    }finally{$taskStream.Dispose()}
+    if($taskBindingError -or !$taskCapture.passed){throw 'Bound GPU observation failed; preserve the first capture and binding readback'}
+    return $taskReadback
+}

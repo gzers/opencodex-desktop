@@ -1,4 +1,5 @@
-// Controlled self-process diagnostic only. No product or query fixture launch.
+// Controlled self-process proof or an explicitly bound existing GPU. Never
+// launches a process, replays query fixtures, or writes an external target.
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -52,19 +54,66 @@ namespace OpenCodex.Diagnostics
         }
         public static string RunOnce(string outputDirectory)
         {
-            if (TraceEventSession.IsElevated() != true)
-                throw new UnauthorizedAccessException("Controlled ETW recording requires an elevated token.");
-            if (Process.GetProcessesByName("opencodex-desktop").Length != 0 ||
-                Process.GetProcessesByName("ocxd").Length != 0)
-                throw new InvalidOperationException("Do not overlap a native desktop instance.");
-            if (Directory.Exists(outputDirectory))
-                throw new IOException("New controlled output required; no repeat or overwrite.");
             using var self = Process.GetCurrentProcess();
-            var selfHandle = self.SafeHandle;
             if (!String.Equals(Path.GetFileName(self.MainModule.FileName), "pwsh.exe", StringComparison.OrdinalIgnoreCase))
                 throw new InvalidOperationException("This diagnostic reads its PowerShell controller only.");
+            return Capture(outputDirectory, self, null, true, 0);
+        }
+        private static bool NativeSetMatches(Process desktopRoot)
+        {
+            Process[] native = Process.GetProcessesByName("opencodex-desktop");
+            Process[] cli = Process.GetProcessesByName("ocxd");
+            try {
+                return cli.Length == 0 && (desktopRoot == null
+                    ? native.Length == 0
+                    : native.Length == 1 && native[0].Id == desktopRoot.Id);
+            } finally {
+                foreach (var process in native) process.Dispose();
+                foreach (var process in cli) process.Dispose();
+            }
+        }
+        private static void RequireImage(Process process, long created, string image, string digest, string leaf)
+        {
+            if (created <= 0 || !Path.IsPathFullyQualified(image) || digest == null ||
+                digest.Length != 64 || digest.Any(c => !"0123456789abcdef".Contains(c)) ||
+                !String.Equals(Path.GetFileName(image), leaf, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Exact bound image, digest and generation required.");
+            if (process.HasExited || process.StartTime.ToUniversalTime().ToFileTimeUtc() != created ||
+                !String.Equals(process.MainModule.FileName, image, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Retained bound process identity changed.");
+            using var stream = File.OpenRead(image);
+            string actual = Convert.ToHexString(SHA256.HashData(stream)).ToLowerInvariant();
+            if (actual != digest) throw new InvalidOperationException("Bound image digest changed.");
+        }
+        // The caller retains root, GPU and ancestor leases, verifies actual
+        // TokenUser/elevation/ancestry/GPU argv, and revalidates them after this
+        // call. This method never creates a process or writes target memory.
+        public static string RunBoundGpu(string outputDirectory, Process root, Process gpu,
+            long rootCreated, long gpuCreated, string rootImage, string gpuImage,
+            string rootDigest, string gpuDigest, int seconds)
+        {
+            if (root == null || gpu == null || root.Id == gpu.Id || seconds < 1 || seconds > 45)
+                throw new ArgumentException("Separate bound desktop and GPU with a 1-45 second diagnostic window required.");
+            _ = root.SafeHandle;
+            _ = gpu.SafeHandle;
+            RequireImage(root, rootCreated, rootImage, rootDigest, "opencodex-desktop.exe");
+            RequireImage(gpu, gpuCreated, gpuImage, gpuDigest, "msedgewebview2.exe");
+            if (!NativeSetMatches(root)) throw new InvalidOperationException("One exact native desktop required.");
+            return Capture(outputDirectory, gpu, root, false, seconds);
+        }
+        private static string Capture(string outputDirectory, Process self, Process desktopRoot,
+            bool controlledProbe, int seconds)
+        {
+            if (TraceEventSession.IsElevated() != true)
+                throw new UnauthorizedAccessException("Memory ETW recording requires an elevated token.");
+            if (!NativeSetMatches(desktopRoot))
+                throw new InvalidOperationException("Native set does not match the admitted diagnostic mode.");
+            if (Directory.Exists(outputDirectory))
+                throw new IOException("New controlled output required; no repeat or overwrite.");
+            var selfHandle = self.SafeHandle;
             int selfPid = self.Id;
             long created = self.StartTime.ToUniversalTime().ToFileTimeUtc();
+            long? rootCreated = desktopRoot?.StartTime.ToUniversalTime().ToFileTimeUtc();
             string name = "OpenCodex-Memory-" + Guid.NewGuid().ToString("N");
             if (TraceEventSession.GetActiveSessionNames().Contains(name))
                 throw new InvalidOperationException("Never attach or restart an existing session.");
@@ -146,7 +195,7 @@ namespace OpenCodex.Diagnostics
                         emit(new { kind = "allocation-stack", pid = data.ProcessID, tid = data.ThreadID,
                             eventRelativeMilliseconds = data.EventTimeStampRelativeMSec,
                             frameCount = data.FrameCount, instructionPointersHex = frames,
-                            ownedControllerFramesOnly = true });
+                            ownedControllerFramesOnly = controlledProbe, boundGpuFramesOnly = !controlledProbe });
                     });
                 };
                 var ready = new ManualResetEventSlim(false);
@@ -156,12 +205,29 @@ namespace OpenCodex.Diagnostics
                 }) { IsBackground = true, Name = "OpenCodex-controlled-memory" };
                 consumer.Start();
                 if (!ready.Wait(2000)) throw new TimeoutException("Controlled trace reader not ready.");
-                IntPtr address = AllocateProbe();
-                probeAddress = unchecked((ulong)address.ToInt64());
-                try { Thread.Sleep(250); }
-                finally { FreeProbe(address); probeFreed = true; }
-                // ETW's first real-time buffer may take up to a second to flush.
-                Thread.Sleep(1500);
+                if (controlledProbe) {
+                    IntPtr address = AllocateProbe();
+                    probeAddress = unchecked((ulong)address.ToInt64());
+                    try { Thread.Sleep(250); }
+                    finally { FreeProbe(address); probeFreed = true; }
+                    // ETW's first real-time buffer may take up to a second to flush.
+                    Thread.Sleep(1500);
+                } else {
+                    using (var output = new FileStream(Path.Combine(outputDirectory, "recording-ready.json"),
+                        FileMode.CreateNew, FileAccess.Write, FileShare.Read))
+                    using (var writer = new StreamWriter(output, new UTF8Encoding(false)))
+                        writer.Write(JsonSerializer.Serialize(new {
+                            atUtc = DateTime.UtcNow, targetPid = selfPid,
+                            targetCreationFileTime = created.ToString(), rootPid = desktopRoot.Id,
+                            maximumObservationSeconds = seconds, nativeDesktopStartedByRecorder = false
+                        }) + "\n");
+                    var timer = Stopwatch.StartNew();
+                    while (timer.ElapsedMilliseconds < seconds * 1000L) {
+                        if (self.HasExited || desktopRoot.HasExited)
+                            throw new InvalidOperationException("Bound target or root exited during observation.");
+                        Thread.Sleep(100);
+                    }
+                }
             } catch (Exception error) { captureError = error; }
             finally {
                 try { stop = OwnedEtwNativeStop.Stop(name); }
@@ -180,7 +246,9 @@ namespace OpenCodex.Diagnostics
             List<Tuple<ulong, long, int, double>> matching;
             int matchingStackCount;
             lock (gate) {
-                matching = allocations.Where(row => row.Item1 == probeAddress && row.Item2 == ProbeBytes).ToList();
+                matching = controlledProbe
+                    ? allocations.Where(row => row.Item1 == probeAddress && row.Item2 == ProbeBytes).ToList()
+                    : allocations.ToList();
                 matchingStackCount = matching.Count(row =>
                     stacks.Any(stack => stack.Item1 == row.Item3 && stack.Item2 == row.Item4 && stack.Item3 > 0));
                 using var output = new FileStream(Path.Combine(outputDirectory, "owned-memory.events.jsonl"),
@@ -190,25 +258,39 @@ namespace OpenCodex.Diagnostics
             }
             bool sessionAbsent = !TraceEventSession.GetActiveSessionNames().Contains(name);
             bool sameSelf = !self.HasExited && self.StartTime.ToUniversalTime().ToFileTimeUtc() == created;
+            bool sameRoot = desktopRoot == null || (!desktopRoot.HasExited &&
+                desktopRoot.StartTime.ToUniversalTime().ToFileTimeUtc() == rootCreated);
             bool passed = enabled && captureError == null && consumerError == null && callbackErrors == 0
-                && omittedRecords == 0 && probeFreed && matching.Count > 0 && matchingStackCount > 0
+                && omittedRecords == 0 && (!controlledProbe || (probeFreed && matching.Count > 0 && matchingStackCount > 0))
                 && stop != null && stop.Status == 0 && stop.FinalEventsLost == 0
                 && stop.FinalRealTimeBuffersLost == 0 && joined && !stopProcessingUsed
-                && cleanupErrors.Count == 0 && sessionAbsent && sameSelf;
+                && cleanupErrors.Count == 0 && sessionAbsent && sameSelf && sameRoot && NativeSetMatches(desktopRoot);
             string result = JsonSerializer.Serialize(new {
                 passed, startedAtUtc = started, finishedAtUtc = DateTime.UtcNow,
-                selfPid, selfCreationFileTime = created.ToString(), sessionName = name,
-                configuredBufferMiB = 32, probeBytes = ProbeBytes, probeFreed,
-                matchingProbeAllocationEvents = matching.Count, matchingAllocationStacks = matchingStackCount,
+                selfPid = controlledProbe ? (int?)selfPid : null,
+                selfCreationFileTime = controlledProbe ? created.ToString() : null,
+                targetPid = selfPid, targetCreationFileTime = created.ToString(),
+                rootPid = desktopRoot?.Id, rootCreationFileTime = rootCreated?.ToString(),
+                controlledSelf = controlledProbe, boundGpuObservation = !controlledProbe,
+                sessionName = name, configuredBufferMiB = 32,
+                probeBytes = controlledProbe ? (int?)ProbeBytes : null, probeFreed,
+                matchingProbeAllocationEvents = controlledProbe ? matching.Count : 0,
+                matchingAllocationStacks = matchingStackCount, observedAllocationEvents = matching.Count,
+                allocationEvidenceObserved = matching.Count > 0 && matchingStackCount > 0,
                 records = rows.Count, serializedBytes, maximumSerializedBytes = MaximumSerializedBytes,
                 omittedRecords, callbackErrors, nativeStop = stop, readerJoined = joined, stopProcessingUsed,
-                ownedSessionAbsent = sessionAbsent, retainedSelfGenerationUnchanged = sameSelf,
-                retainedSelfProcessHandle = !selfHandle.IsInvalid && !selfHandle.IsClosed,
+                ownedSessionAbsent = sessionAbsent,
+                retainedSelfGenerationUnchanged = controlledProbe ? (bool?)sameSelf : null,
+                retainedTargetGenerationUnchanged = sameSelf,
+                retainedRootGenerationUnchanged = desktopRoot != null ? (bool?)sameRoot : null,
+                retainedSelfProcessHandle = controlledProbe ? (bool?)(!selfHandle.IsInvalid && !selfHandle.IsClosed) : null,
+                retainedTargetProcessHandle = !selfHandle.IsInvalid && !selfHandle.IsClosed,
                 captureError = captureError?.GetType().Name, consumerError = consumerError?.GetType().Name,
                 cleanupErrors, globalSampleIntervalExplicitlyWritten = false,
                 globalSampleIntervalBeforeAfterMeasured = false, genericSessionStopInvoked = false,
                 systemWideEtlWritten = false, unrelatedEventPayloadsSerialized = false,
-                rawAllocationAddressSaved = false, ownStackInstructionPointersSaved = true,
+                rawAllocationAddressSaved = false, ownStackInstructionPointersSaved = controlledProbe,
+                boundGpuStackInstructionPointersSaved = !controlledProbe,
                 targetMemoryContentsSaved = false, nativeDesktopStarted = false,
                 originalTestLibraryExecuted = false, officialQueryNodeExecuted = false,
                 fullProductGatePassed = false

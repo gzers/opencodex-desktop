@@ -35,6 +35,8 @@ try{
     Assert-Target (!$taskOne.rawSidSaved -and !$taskOne.rawCommandLineSaved -and !$taskOne.tracingStarted -and !$taskOne.productStarted -and !$taskOne.recordingExecutionAdmitted) 'Metadata scope changed'
     $taskReadAgain=Assert-WindowsMemoryTargetBinding -LeaseId $taskOne.leaseId
     Assert-Target ($taskReadAgain.targetCreationUtc -ceq $taskLaunch.creationTimeUtc -and $taskReadAgain.targetExeSha256 -ceq $taskLaunch.exeSha256) 'Retained identity changed'
+    Assert-TargetRefusal {Invoke-WindowsGpuMemoryRecording -LeaseId $taskOne.leaseId -OutputDirectory (Join-Path $taskOutput 'not-a-gpu-capture') -RecordApproved} 'actual GPU metadata lease'
+    Assert-Target (!(Test-Path -LiteralPath (Join-Path $taskOutput 'not-a-gpu-capture'))) 'Self binding refusal created a capture'
     $taskTwo=Open-WindowsMemoryTargetBinding -Launch $taskLaunch -ControlledSelf
     Assert-Target ($taskTwo.leaseId -cne $taskOne.leaseId) 'Independent leases require unique capabilities'
     Close-WindowsMemoryTargetBinding -LeaseId $taskOne.leaseId
