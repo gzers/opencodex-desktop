@@ -1,0 +1,132 @@
+{
+  "atUtc": "2026-10-16T01:42:35.034015+00:00",
+  "remoteHeads": {
+    "refs/heads/docs/governance-main": "401e0847a168d79b18c401d1ccd2b2c70366ba35",
+    "refs/heads/feature/0.1.10-windows-etw-query-threads": "f2271f361b9da562b62c71afcdbeb15e61d183e2",
+    "refs/heads/feature/0.1.10-windows-query-etw": "d94c215d869c0560717d79dc02881ce8858afe88",
+    "refs/heads/main": "eae85322ebca3b755c034db97cbebf2ea5bf71fc"
+  },
+  "methods": {
+    "test/smoke/windows-idle-family.ps1": {
+      "gitBlobSha256": "e937aaa1f7a572ae382c31916b2718138ee1ea14e16b50e1d93047d1ab41ab66",
+      "workingFileSha256": "e937aaa1f7a572ae382c31916b2718138ee1ea14e16b50e1d93047d1ab41ab66",
+      "identicalExceptCrLf": true
+    },
+    "test/smoke/windows-idle-observe.ps1": {
+      "gitBlobSha256": "e0b489cc907d992f82e4f8ef52f2da41943463b7946ae56cf3fd0ebc04a6dfda",
+      "workingFileSha256": "e0b489cc907d992f82e4f8ef52f2da41943463b7946ae56cf3fd0ebc04a6dfda",
+      "identicalExceptCrLf": true
+    },
+    "test/smoke/windows-process-token.ps1": {
+      "gitBlobSha256": "1058a67212da256e3f9c03558733bc9eb48db2752cce8089502bd8d5ad8458a9",
+      "workingFileSha256": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca",
+      "identicalExceptCrLf": true
+    }
+  },
+  "sharedFiles": {
+    "AGENTS.md": {
+      "gitObjectsIdentical": true,
+      "workingContentMatchesGitExceptCrLf": true,
+      "workingBytesIdentical": true,
+      "records": {
+        "docs": {
+          "gitBlobSha256": "6e12b491e14541573ed11c6a7057d33462d0559430065b88698e23b534cea0dc",
+          "workingFileSha256": "98563387350d120033765cc8ff3eaa91c36683021f1b06bb17f75660605faad8"
+        },
+        "product": {
+          "gitBlobSha256": "6e12b491e14541573ed11c6a7057d33462d0559430065b88698e23b534cea0dc",
+          "workingFileSha256": "98563387350d120033765cc8ff3eaa91c36683021f1b06bb17f75660605faad8"
+        },
+        "diagnostic": {
+          "gitBlobSha256": "6e12b491e14541573ed11c6a7057d33462d0559430065b88698e23b534cea0dc",
+          "workingFileSha256": "98563387350d120033765cc8ff3eaa91c36683021f1b06bb17f75660605faad8"
+        }
+      }
+    },
+    "README.md": {
+      "gitObjectsIdentical": true,
+      "workingContentMatchesGitExceptCrLf": true,
+      "workingBytesIdentical": false,
+      "records": {
+        "docs": {
+          "gitBlobSha256": "57883ae3799c313999ad49e3d54c2e7139f2f72a27d1e144f098f30c2baa10f7",
+          "workingFileSha256": "57883ae3799c313999ad49e3d54c2e7139f2f72a27d1e144f098f30c2baa10f7"
+        },
+        "product": {
+          "gitBlobSha256": "57883ae3799c313999ad49e3d54c2e7139f2f72a27d1e144f098f30c2baa10f7",
+          "workingFileSha256": "f5207e06efe4d9a02e36c78dd2e7affd2431913acf02634be1f5694c4e199556"
+        },
+        "diagnostic": {
+          "gitBlobSha256": "57883ae3799c313999ad49e3d54c2e7139f2f72a27d1e144f098f30c2baa10f7",
+          "workingFileSha256": "f5207e06efe4d9a02e36c78dd2e7affd2431913acf02634be1f5694c4e199556"
+        }
+      }
+    },
+    "README.en.md": {
+      "gitObjectsIdentical": true,
+      "workingContentMatchesGitExceptCrLf": true,
+      "workingBytesIdentical": false,
+      "records": {
+        "docs": {
+          "gitBlobSha256": "43d7dc3e0893c13a2c8102970246e5b6980c906af62f3f926f9c3839d5a918f2",
+          "workingFileSha256": "43d7dc3e0893c13a2c8102970246e5b6980c906af62f3f926f9c3839d5a918f2"
+        },
+        "product": {
+          "gitBlobSha256": "43d7dc3e0893c13a2c8102970246e5b6980c906af62f3f926f9c3839d5a918f2",
+          "workingFileSha256": "d9c396e53d3febc77ce90503d518f3cc7f48cc3ff5086f32885b5055b80cfc0d"
+        },
+        "diagnostic": {
+          "gitBlobSha256": "43d7dc3e0893c13a2c8102970246e5b6980c906af62f3f926f9c3839d5a918f2",
+          "workingFileSha256": "d9c396e53d3febc77ce90503d518f3cc7f48cc3ff5086f32885b5055b80cfc0d"
+        }
+      }
+    },
+    "LICENSE": {
+      "gitObjectsIdentical": true,
+      "workingContentMatchesGitExceptCrLf": true,
+      "workingBytesIdentical": true,
+      "records": {
+        "docs": {
+          "gitBlobSha256": "27af58016cf1091cdf12050019a01c71918a3d09826e3e4b6ae9a552a0327999",
+          "workingFileSha256": "eafe6877a9cfcb22e5a84b56a7863afefa75cfff58ab4ff0039410f50e74fd27"
+        },
+        "product": {
+          "gitBlobSha256": "27af58016cf1091cdf12050019a01c71918a3d09826e3e4b6ae9a552a0327999",
+          "workingFileSha256": "eafe6877a9cfcb22e5a84b56a7863afefa75cfff58ab4ff0039410f50e74fd27"
+        },
+        "diagnostic": {
+          "gitBlobSha256": "27af58016cf1091cdf12050019a01c71918a3d09826e3e4b6ae9a552a0327999",
+          "workingFileSha256": "eafe6877a9cfcb22e5a84b56a7863afefa75cfff58ab4ff0039410f50e74fd27"
+        }
+      }
+    },
+    ".gitignore": {
+      "gitObjectsIdentical": true,
+      "workingContentMatchesGitExceptCrLf": true,
+      "workingBytesIdentical": true,
+      "records": {
+        "docs": {
+          "gitBlobSha256": "3be823e37cd08997e39e75370b1dd67f9d413e138d21718971057843286809b8",
+          "workingFileSha256": "7b6172a6eb8d8544180abf9fa29006c8f39606caae97355587115ed287d36fe0"
+        },
+        "product": {
+          "gitBlobSha256": "3be823e37cd08997e39e75370b1dd67f9d413e138d21718971057843286809b8",
+          "workingFileSha256": "7b6172a6eb8d8544180abf9fa29006c8f39606caae97355587115ed287d36fe0"
+        },
+        "diagnostic": {
+          "gitBlobSha256": "3be823e37cd08997e39e75370b1dd67f9d413e138d21718971057843286809b8",
+          "workingFileSha256": "7b6172a6eb8d8544180abf9fa29006c8f39606caae97355587115ed287d36fe0"
+        }
+      }
+    }
+  },
+  "sharedContentIdentical": true,
+  "readmeWorkingByteDifferenceIsCrLfOnly": true,
+  "appsTreeIdentical": true,
+  "appsTree": "3c88194fa0cc3f20b249b4358bc83c5cf8b35d9f",
+  "bothCodeWorktreesClean": true,
+  "expectedBuildSkipCheckedInWorkflow": true,
+  "sourceChanged": false,
+  "productStarted": false,
+  "foregroundActivated": false
+}

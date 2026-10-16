@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "preparationOnly": true,
+  "foregroundWindowGranted": false,
+  "collectorSource": "f2271f361b9da562b62c71afcdbeb15e61d183e2",
+  "collectorCiRunId": 38834762492,
+  "candidateSource": "d94c215d869c0560717d79dc02881ce8858afe88",
+  "candidateExecutable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-d94c21-38827408691\\msi-readonly\\opencodex-desktop.exe",
+  "candidateExeSha256": "b2284ba66a20c7ef11b61fea328f7aa960cd6530011d6e7a09fc78e782c5b224",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExecutable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\acceptance-kit-02a0d4-20261015\\bin\\baseline019\\opencodex-desktop.exe",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "order": [
+    "baseline019",
+    "candidate0110"
+  ],
+  "settleSecondsPerVersion": 60,
+  "minimumCompletedCounterSpanSeconds": 600,
+  "zeroReadOrFrameFailuresRequired": true,
+  "clientWidth": 2360,
+  "clientHeight": 1520,
+  "theme": "light",
+  "visualEffects": "high",
+  "glowRender": "mesh",
+  "interfaceScale": 100,
+  "budgetsUnchanged": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "methodWorkingFileSha256": {
+    "test/smoke/windows-idle-family.ps1": "e937aaa1f7a572ae382c31916b2718138ee1ea14e16b50e1d93047d1ab41ab66",
+    "test/smoke/windows-idle-observe.ps1": "e0b489cc907d992f82e4f8ef52f2da41943463b7946ae56cf3fd0ebc04a6dfda",
+    "test/smoke/windows-process-token.ps1": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+  },
+  "sidMethodPath": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261015-WIN-ANCHOR-PERSISTENCE\\methods\\process-user-sid.ps1",
+  "sidMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+  "fixtureRoot": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\data",
+  "baselineFixtureRoot": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+  "priorSamplesUsedInNewComparison": false,
+  "productBuildRequested": false,
+  "etwReplayRequested": false,
+  "fullPerformanceGatePassed": false,
+  "historicalFailuresCleared": false
+}

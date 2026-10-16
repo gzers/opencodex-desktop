@@ -1,0 +1,40 @@
+{
+  "observedAtUtc": "2026-10-16T01:35:09.074672+00:00",
+  "runId": 38834762492,
+  "source": "f2271f361b9da562b62c71afcdbeb15e61d183e2",
+  "status": "in_progress",
+  "conclusion": null,
+  "jobs": [
+    {
+      "id": 116761284668,
+      "name": "backend-windows",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 116761284772,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284853,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284865,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284946,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "rerunRequested": false
+}

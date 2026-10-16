@@ -1,0 +1,47 @@
+{
+  "observedAtUtc": "2026-10-16T09:42:43.815418+08:00",
+  "runId": 38834762492,
+  "source": "f2271f361b9da562b62c71afcdbeb15e61d183e2",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "id": 116761284668,
+      "name": "backend-windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284772,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284853,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284865,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116761284946,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116764978147,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "derivedFrom": "ci-collection.json",
+  "rerunRequested": false
+}
