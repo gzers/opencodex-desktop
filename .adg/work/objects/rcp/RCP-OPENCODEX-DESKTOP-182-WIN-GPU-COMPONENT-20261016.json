@@ -1,0 +1,34 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-GPU-COMPONENT-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-GPU-COMPONENT-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-component-resource-comparison",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-GPU-COMPONENT-ATTEMPT/verification.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "805b0cef52f16360ec2ccf75642cc6da3f29cb7cbcf9091fcd213a0a44fdeadd",
+      "summary": "保留组件资源观察未准入，不生成比较、采用原型或解除原生RSS失败。"
+    }
+  ],
+  "completed_at": "2026-10-16T09:38:04.607346+00:00",
+  "summary": "组件资源快照被自有子进程退出守卫拒绝，0组完整结果、无重跑、无生产修改；原门禁保持。",
+  "revision": 1,
+  "summary_digest": "9dd42b0a15b68d8567165b1241fb7aa2348f2866fa1d3ef3b79914dc0fbe830f",
+  "content_digest": "844786ec1c3d8183229dc684de78f47afbd87a3e1274c7a747f7bebe2f2ae0cb"
+}
