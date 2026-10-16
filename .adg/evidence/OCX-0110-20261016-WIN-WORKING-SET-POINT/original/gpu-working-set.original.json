@@ -1,0 +1,81 @@
+{
+  "sourceMethodSha256": "4bdc0c645069c4a01c6130ee4bd4547aa65050ecd9e27b0fb4f66ad1c3eedc37",
+  "targetPid": 17236,
+  "targetCreationUtc": "2026-10-16T13:00:18.4261052Z",
+  "targetExeSha256": "46b3c6ac9169416cc2ee76b23ee3d9db0eb8daefb914b1d9cc0f5d2387b033ac",
+  "rootPid": 76372,
+  "controlledSelf": false,
+  "snapshot": {
+    "ProcessId": 17236,
+    "CreationFileTime": "134366292184261052",
+    "StartedAtUtc": "2026-10-16T13:51:20.0739269+00:00",
+    "FinishedAtUtc": "2026-10-16T13:51:20.1012116+00:00",
+    "PageSize": 4096,
+    "ListedResidentPages": 61230,
+    "ListedResidentBytes": "250798080",
+    "ValidAtRecheckPages": 61230,
+    "InvalidAtRecheckPages": 0,
+    "RegionQueries": 1517,
+    "ProcessWorkingSetBeforeBytes": "250863616",
+    "ProcessWorkingSetAfterBytes": "250863616",
+    "ProcessPrivateCommitBeforeBytes": "213504000",
+    "ProcessPrivateCommitAfterBytes": "213504000",
+    "Buckets": [
+      {
+        "RegionType": "image-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": false,
+        "Pages": 808,
+        "Bytes": "3309568"
+      },
+      {
+        "RegionType": "image-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 14672,
+        "Bytes": "60096512"
+      },
+      {
+        "RegionType": "mapped-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": false,
+        "Pages": 17,
+        "Bytes": "69632"
+      },
+      {
+        "RegionType": "mapped-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 1272,
+        "Bytes": "5210112"
+      },
+      {
+        "RegionType": "private-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": false,
+        "Pages": 44390,
+        "Bytes": "181821440"
+      },
+      {
+        "RegionType": "private-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 71,
+        "Bytes": "290816"
+      }
+    ],
+    "NonAtomic": true,
+    "RawAddressesSaved": false,
+    "TargetMemoryContentsRead": false,
+    "TargetMemoryChanged": false,
+    "SharedPagesDeduplicated": false
+  },
+  "metadataOnly": true,
+  "rawCommandLinesSaved": false,
+  "unrelatedProcessesSerialized": false,
+  "newProductStarted": false,
+  "uiInputInjected": false,
+  "formalRssMetricReplaced": false,
+  "allocationStackAttributed": false,
+  "fullPerformanceGatePassed": false
+}

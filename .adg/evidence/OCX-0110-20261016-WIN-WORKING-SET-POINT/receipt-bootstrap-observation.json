@@ -1,0 +1,13 @@
+{
+  "kind": "observed-command-failure",
+  "source": "exec_command returned traceback, not an independently saved original log",
+  "command": "python .adg/evidence/OCX-0110-20261016-WIN-WORKING-SET-POINT/record.py",
+  "exitCode": 1,
+  "exception": "ModuleNotFoundError: No module named 'runtime'",
+  "beforeController": "record-before-import-correction.py",
+  "stage": "module import before receipt or manifest writes",
+  "correction": "Use the skill runtime package from scripts/lib, preserving the failed controller.",
+  "originalProbeDataChanged": false,
+  "taskChanged": false,
+  "globalSkillChanged": false
+}

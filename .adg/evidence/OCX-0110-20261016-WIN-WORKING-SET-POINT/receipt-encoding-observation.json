@@ -1,0 +1,13 @@
+{
+  "kind": "observed-command-failure",
+  "source": "exec_command returned traceback, not an independently saved original log",
+  "command": "python .adg/evidence/OCX-0110-20261016-WIN-WORKING-SET-POINT/record.py",
+  "exitCode": 1,
+  "exception": "UnicodeDecodeError: 'gbk' codec can't decode byte 0x80 in position 2691",
+  "beforeController": "record-before-utf8-correction.py",
+  "stage": "reading the unchanged UTF-8 TASK before receipt or manifest writes",
+  "correction": "Declare UTF-8 with optional BOM when reading TASK.",
+  "originalProbeDataChanged": false,
+  "taskChanged": false,
+  "globalSkillChanged": false
+}

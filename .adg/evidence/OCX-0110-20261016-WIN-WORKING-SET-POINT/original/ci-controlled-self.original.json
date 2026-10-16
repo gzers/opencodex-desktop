@@ -1,0 +1,88 @@
+{
+  "sourceMethodSha256": "d69410a0f1f4471adef5bce9cf5d60e9153144550ad04b3b25b55153e392573a",
+  "targetPid": 7100,
+  "targetCreationUtc": "2026-10-16T13:46:17.9095105Z",
+  "targetExeSha256": "bfb46af89433268872ddb43d1ca7a3f433452ee91ed356a9786940f90118e285",
+  "rootPid": null,
+  "controlledSelf": true,
+  "snapshot": {
+    "ProcessId": 7100,
+    "CreationFileTime": "134366319779095105",
+    "StartedAtUtc": "2026-10-16T13:46:18.9811597+00:00",
+    "FinishedAtUtc": "2026-10-16T13:46:19.0166070+00:00",
+    "PageSize": 4096,
+    "ListedResidentPages": 44699,
+    "ListedResidentBytes": "183087104",
+    "ValidAtRecheckPages": 44699,
+    "InvalidAtRecheckPages": 0,
+    "RegionQueries": 1432,
+    "ProcessWorkingSetBeforeBytes": "182755328",
+    "ProcessWorkingSetAfterBytes": "185769984",
+    "ProcessPrivateCommitBeforeBytes": "89939968",
+    "ProcessPrivateCommitAfterBytes": "92577792",
+    "Buckets": [
+      {
+        "RegionType": "image-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": false,
+        "Pages": 906,
+        "Bytes": "3710976"
+      },
+      {
+        "RegionType": "image-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 16424,
+        "Bytes": "67272704"
+      },
+      {
+        "RegionType": "mapped-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": false,
+        "Pages": 136,
+        "Bytes": "557056"
+      },
+      {
+        "RegionType": "mapped-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 8101,
+        "Bytes": "33181696"
+      },
+      {
+        "RegionType": "not-committed-at-region-query",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 4,
+        "Bytes": "16384"
+      },
+      {
+        "RegionType": "private-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": false,
+        "Pages": 19126,
+        "Bytes": "78340096"
+      },
+      {
+        "RegionType": "private-region",
+        "ValidAtRecheck": true,
+        "ShareableAtRecheck": true,
+        "Pages": 2,
+        "Bytes": "8192"
+      }
+    ],
+    "NonAtomic": true,
+    "RawAddressesSaved": false,
+    "TargetMemoryContentsRead": false,
+    "TargetMemoryChanged": false,
+    "SharedPagesDeduplicated": false
+  },
+  "metadataOnly": true,
+  "rawCommandLinesSaved": false,
+  "unrelatedProcessesSerialized": false,
+  "newProductStarted": false,
+  "uiInputInjected": false,
+  "formalRssMetricReplaced": false,
+  "allocationStackAttributed": false,
+  "fullPerformanceGatePassed": false
+}
