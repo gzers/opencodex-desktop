@@ -1,0 +1,60 @@
+{
+  "atUtc": "2026-10-16T11:10:18.160731+00:00",
+  "source": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "beforeSource": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "beforeRegression": {
+    "passed": 3,
+    "failed": 3,
+    "actualContextAtCreation": [
+      300,
+      150
+    ]
+  },
+  "targeted": {
+    "passed": 23,
+    "failed": 0
+  },
+  "fullCorrectCwd": {
+    "passed": 538,
+    "failed": 0,
+    "files": 99
+  },
+  "firstFullAttempt": {
+    "passed": 534,
+    "assertionFailed": 1,
+    "failedFiles": 2,
+    "reason": "Caller used repository cwd instead of UI cwd; existing tests read relative CSS/panel assets; retained unchanged"
+  },
+  "typecheck": {
+    "execToolObservedExitCode": 0,
+    "emptyOriginalLogIsNotIndependentExitProof": true
+  },
+  "productionBuild": {
+    "execToolObservedExitCode": 0,
+    "bundlerWarningsRetained": true
+  },
+  "ciFrontend": {
+    "runId": 38891188021,
+    "jobId": 116940815709,
+    "files": 99,
+    "passed": 538,
+    "typecheckAndBuildCompleted": true
+  },
+  "ciMacBackend": {
+    "runId": 38891188021,
+    "jobId": 116940815459,
+    "passed": 923,
+    "failed": 0,
+    "ignored": 6,
+    "groups": 35
+  },
+  "wholeCiAdmitted": false,
+  "nativeMemoryBenefitMeasured": false,
+  "newNativeSamples": 0,
+  "pixelComparisonPerformed": false,
+  "originalRssBudgetPassed": false,
+  "originalQueryFailureReplayed": false,
+  "dpiGateAdded": false,
+  "taskClosed": false,
+  "releaseAccepted": false
+}

@@ -1,0 +1,58 @@
+{
+  "atUtc": "2026-10-16T11:28:30.603756+00:00",
+  "source": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "runId": 38891188021,
+  "jobs": [
+    {
+      "job": "frontend",
+      "log": "ci-38891188021-frontend.original.log",
+      "sha256": "acfcf50214f4cd3b3f8690bc66b1fce993db2a845919bbc39bdef492d07b1af7",
+      "actualCheckout": "e7272dddb093dcffa0a27dd8dad5e7422288218a",
+      "wholeTree": "6d984c20825172036de79a62e47c3f7bf4f927c3",
+      "wholeTreeEquivalentToHead": true
+    },
+    {
+      "job": "backend",
+      "log": "ci-38891188021-backend.original.log",
+      "sha256": "18fb3b3d57abacc28196c19f5e415eedaa239ab3163bea67216ea59a5393fd4b",
+      "actualCheckout": "e7272dddb093dcffa0a27dd8dad5e7422288218a",
+      "wholeTree": "6d984c20825172036de79a62e47c3f7bf4f927c3",
+      "wholeTreeEquivalentToHead": true
+    },
+    {
+      "job": "backend-windows",
+      "log": "ci-38891188021-backend-windows.original.log",
+      "sha256": "d03585f518cf19da9a2e02d6cb3b96daa16f0429d7d2fb214801b9a90d5e111b",
+      "actualCheckout": "e7272dddb093dcffa0a27dd8dad5e7422288218a",
+      "wholeTree": "6d984c20825172036de79a62e47c3f7bf4f927c3",
+      "wholeTreeEquivalentToHead": true
+    },
+    {
+      "job": "release-tools",
+      "log": "ci-38891188021-release-tools.original.log",
+      "sha256": "b1ef3fbbdacac734a985a9078e42a1f7c560bdc8f1e9501dccde3581e5938d5e",
+      "actualCheckout": "e7272dddb093dcffa0a27dd8dad5e7422288218a",
+      "wholeTree": "6d984c20825172036de79a62e47c3f7bf4f927c3",
+      "wholeTreeEquivalentToHead": true
+    },
+    {
+      "job": "windows-smoke-evidence",
+      "log": "ci-38891188021-windows-smoke-evidence.original.log",
+      "sha256": "1c83c09196415e0e86153fee70fb9f0bdffc4f35a44531b8ce46077d9248267c",
+      "actualCheckout": "e7272dddb093dcffa0a27dd8dad5e7422288218a",
+      "wholeTree": "6d984c20825172036de79a62e47c3f7bf4f927c3",
+      "wholeTreeEquivalentToHead": true
+    }
+  ],
+  "supersedesInaccurateMarkerAbsenceClaimsIn": [
+    "remaining-log-format-check-failure.json",
+    "ci-38891188021-release-tools.download.json",
+    "ci-38891188021-windows-smoke-evidence.download.json",
+    "ci-admission.json:apiJobHeadShaBindingUsedForLogsWithoutCheckoutMarker"
+  ],
+  "actualInitialFailureCause": "The initial additional-log checker expected branch SHA directly; all five PR logs contain the synthetic merge SHA with identical whole tree.",
+  "missingMarkerClaimWasIncorrect": true,
+  "originalFilesRewritten": false,
+  "ciReexecuted": false,
+  "admissionWholeTreeStillValid": true
+}

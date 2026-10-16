@@ -1,0 +1,67 @@
+{
+  "atUtc": "2026-10-16T11:24:45.502249+00:00",
+  "source": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "branch": "codex/0.1.10-windows-mesh-initial-size",
+  "runId": 38891188021,
+  "runAttempt": 1,
+  "wholeCiSucceeded": true,
+  "originalCheckoutAndJobsVerified": true,
+  "runConclusion": "success",
+  "frontendPassed": 538,
+  "frontendFiles": 99,
+  "macPassed": 923,
+  "macFailed": 0,
+  "windowsPassed": 650,
+  "windowsFailed": 0,
+  "jobs": [
+    {
+      "name": "frontend",
+      "id": 116940815709,
+      "headSha": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+      "conclusion": "success",
+      "logBytes": 39542,
+      "logSha256": "acfcf50214f4cd3b3f8690bc66b1fce993db2a845919bbc39bdef492d07b1af7"
+    },
+    {
+      "name": "backend",
+      "id": 116940815459,
+      "headSha": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+      "conclusion": "success",
+      "logBytes": 224494,
+      "logSha256": "18fb3b3d57abacc28196c19f5e415eedaa239ab3163bea67216ea59a5393fd4b"
+    },
+    {
+      "name": "backend-windows",
+      "id": 116940815642,
+      "headSha": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+      "conclusion": "success",
+      "logBytes": 345397,
+      "logSha256": "d03585f518cf19da9a2e02d6cb3b96daa16f0429d7d2fb214801b9a90d5e111b"
+    },
+    {
+      "name": "release-tools",
+      "id": 116940815575,
+      "headSha": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+      "conclusion": "success",
+      "logBytes": 27916,
+      "logSha256": "b1ef3fbbdacac734a985a9078e42a1f7c560bdc8f1e9501dccde3581e5938d5e"
+    },
+    {
+      "name": "windows-smoke-evidence",
+      "id": 116940815876,
+      "headSha": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+      "conclusion": "success",
+      "logBytes": 29730,
+      "logSha256": "1c83c09196415e0e86153fee70fb9f0bdffc4f35a44531b8ce46077d9248267c"
+    }
+  ],
+  "candidatePackagingRequested": false,
+  "hostInstallerExecuted": false,
+  "hostProductStarted": false,
+  "queryReplayRequested": false,
+  "releaseAccepted": false,
+  "historicalFailuresCleared": false,
+  "apiJobHeadShaBindingUsedForLogsWithoutCheckoutMarker": true,
+  "formatCheckFailureRetained": true,
+  "ansiRemovedOnlyForParsing": true
+}

@@ -1,0 +1,49 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-MESH-INITIAL-SIZE-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-MESH-INITIAL-SIZE-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:mesh-context-initial-backing-size",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-MESH-INITIAL-SIZE/original/full-test-correct-cwd.json"
+    },
+    {
+      "name": "local:mesh-initial-size-exact-tree-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-MESH-INITIAL-SIZE/original/all-job-checkout-correction.json"
+    },
+    {
+      "name": "local:mesh-initial-size-pixel-equivalence",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-MESH-INITIAL-SIZE/original/pixel-check/result.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "afb94815568a97d8b7828cad4075aaf0018c0ce08e46125c8b938fdd5bbb6c50",
+      "summary": "光层在上下文前定最终尺寸，完整CI及24像素对照通过；原生RSS收益未建立，候选已唯一派发但未准入，原门禁不提升。"
+    }
+  ],
+  "completed_at": "2026-10-16T11:30:25.742059+00:00",
+  "summary": "光层初始化修正b4d已推送并有草稿PR6；538/923/650同tree CI及24组件像素对照通过，原RSS与完整验收仍失败，不关闭或发布。",
+  "revision": 1,
+  "summary_digest": "83b38c8f8d7e6e28fc2ba284a789647ac44ad69e29390542a3e72701d00e3144",
+  "content_digest": "2da0a0d5a658bae49e953c59b34e4fcc736013474b20b517cc425cf7028aaf1d"
+}
