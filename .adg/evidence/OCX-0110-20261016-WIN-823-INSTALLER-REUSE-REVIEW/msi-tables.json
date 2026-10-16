@@ -1,0 +1,885 @@
+{
+  "collectedAtUtc": "2026-10-16T04:06:55.2067696+00:00",
+  "packages": [
+    {
+      "package": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-43142bd-38709701621\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "packageSha256": "2dc08092319fb91fc2866d010de850ca23bcc7716232ef2ac212b94c4d118dbe",
+      "databaseMode": "read-only",
+      "tables": {
+        "Property": [
+          {
+            "Property": "UpgradeCode",
+            "Value": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}"
+          },
+          {
+            "Property": "WIXUI_EXITDIALOGOPTIONALCHECKBOX",
+            "Value": "1"
+          },
+          {
+            "Property": "WIXUI_INSTALLDIR",
+            "Value": "INSTALLDIR"
+          },
+          {
+            "Property": "WixUIRMOption",
+            "Value": "UseRM"
+          },
+          {
+            "Property": "ALLUSERS",
+            "Value": "1"
+          },
+          {
+            "Property": "ARPNOMODIFY",
+            "Value": "1"
+          },
+          {
+            "Property": "ARPNOREPAIR",
+            "Value": "yes"
+          },
+          {
+            "Property": "REINSTALLMODE",
+            "Value": "amus"
+          },
+          {
+            "Property": "ARPPRODUCTICON",
+            "Value": "ProductIcon"
+          },
+          {
+            "Property": "WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT",
+            "Value": "Launch OpenCodeX Desktop"
+          },
+          {
+            "Property": "Manufacturer",
+            "Value": "gzers"
+          },
+          {
+            "Property": "ProductCode",
+            "Value": "{87DF633E-FE5B-447C-AF93-5122BCD4B0FD}"
+          },
+          {
+            "Property": "ProductLanguage",
+            "Value": "1033"
+          },
+          {
+            "Property": "ProductName",
+            "Value": "OpenCodeX Desktop"
+          },
+          {
+            "Property": "ProductVersion",
+            "Value": "0.1.10"
+          },
+          {
+            "Property": "DefaultUIFont",
+            "Value": "WixUI_Font_Normal"
+          },
+          {
+            "Property": "WixUI_Mode",
+            "Value": "InstallDir"
+          },
+          {
+            "Property": "ErrorDialog",
+            "Value": "ErrorDlg"
+          },
+          {
+            "Property": "SecureCustomProperties",
+            "Value": "ARPNOREPAIR;AUTOLAUNCHAPP;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED"
+          }
+        ],
+        "File": [
+          {
+            "File": "Path",
+            "Component_": "Path",
+            "FileName": "3iewmbpe.exe|opencodex-desktop.exe",
+            "FileSize": "8777216",
+            "Version": "0.1.10.0",
+            "Language": "0",
+            "Attributes": "1536",
+            "Sequence": "2"
+          },
+          {
+            "File": "Bin_ocxd",
+            "Component_": "ocxd",
+            "FileName": "ocxd.exe",
+            "FileSize": "271360",
+            "Version": "0.1.10.0",
+            "Language": "0",
+            "Attributes": "512",
+            "Sequence": "1"
+          }
+        ],
+        "Directory": [
+          {
+            "Directory": "INSTALLDIR",
+            "Directory_Parent": "ProgramFiles64Folder",
+            "DefaultDir": "usgsdzy9|OpenCodeX Desktop"
+          },
+          {
+            "Directory": "DesktopFolder",
+            "Directory_Parent": "TARGETDIR",
+            "DefaultDir": "Desktop"
+          },
+          {
+            "Directory": "ApplicationProgramsFolder",
+            "Directory_Parent": "ProgramMenuFolder",
+            "DefaultDir": "ex_0dksl|OpenCodeX Desktop"
+          },
+          {
+            "Directory": "TARGETDIR",
+            "Directory_Parent": "",
+            "DefaultDir": "SourceDir"
+          },
+          {
+            "Directory": "ProgramFiles64Folder",
+            "Directory_Parent": "TARGETDIR",
+            "DefaultDir": "PFiles"
+          },
+          {
+            "Directory": "ProgramMenuFolder",
+            "Directory_Parent": "TARGETDIR",
+            "DefaultDir": "."
+          }
+        ],
+        "Component": [
+          {
+            "Component": "ApplicationShortcutDesktop",
+            "ComponentId": "{C3F10F4C-0818-5270-ADDC-6F1357B8B2D9}",
+            "Directory_": "DesktopFolder",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "regA49F638B26843C58BDE27A4322C2E8E4"
+          },
+          {
+            "Component": "RegistryEntries",
+            "ComponentId": "{26FD65D9-1253-5394-A4BD-0690B098BF8C}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "reg3DDE7826D7B6DFA4C424D1C364FF1AC9"
+          },
+          {
+            "Component": "Path",
+            "ComponentId": "{4F79C528-4B03-580B-947C-4C6F103FC98E}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "256",
+            "Condition": "",
+            "KeyPath": "Path"
+          },
+          {
+            "Component": "ocxd",
+            "ComponentId": "{862E435C-A105-4453-8CAF-F1A3C653C726}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "256",
+            "Condition": "",
+            "KeyPath": "Bin_ocxd"
+          },
+          {
+            "Component": "CMP_UninstallShortcut",
+            "ComponentId": "{9F494C2B-895E-5860-B464-27455CE4E315}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "reg5FE66DAD0B80D5719819081178C75141"
+          },
+          {
+            "Component": "ApplicationShortcut",
+            "ComponentId": "{7366BE85-5B94-5EA2-9CD6-C5A71258DF0F}",
+            "Directory_": "ApplicationProgramsFolder",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "reg84CFB6BD6B837AD73CFED6CE85A4F209"
+          }
+        ],
+        "RemoveFile": [
+          {
+            "FileKey": "INSTALLDIR",
+            "Component_": "CMP_UninstallShortcut",
+            "FileName": "",
+            "DirProperty": "INSTALLDIR",
+            "InstallMode": "2"
+          },
+          {
+            "FileKey": "DesktopFolder",
+            "Component_": "ApplicationShortcutDesktop",
+            "FileName": "",
+            "DirProperty": "DesktopFolder",
+            "InstallMode": "2"
+          },
+          {
+            "FileKey": "ApplicationProgramsFolder",
+            "Component_": "ApplicationShortcut",
+            "FileName": "",
+            "DirProperty": "ApplicationProgramsFolder",
+            "InstallMode": "2"
+          }
+        ],
+        "CustomAction": [
+          {
+            "Action": "LaunchApplication",
+            "Type": "210",
+            "Source": "Path",
+            "Target": "[LAUNCHAPPARGS]"
+          },
+          {
+            "Action": "WixUIValidatePath",
+            "Type": "65",
+            "Source": "WixUIWixca",
+            "Target": "ValidatePath"
+          },
+          {
+            "Action": "WixUIPrintEula",
+            "Type": "65",
+            "Source": "WixUIWixca",
+            "Target": "PrintEula"
+          },
+          {
+            "Action": "SetARPNOMODIFY",
+            "Type": "51",
+            "Source": "ARPNOMODIFY",
+            "Target": "1"
+          },
+          {
+            "Action": "DownloadAndInvokeBootstrapper",
+            "Type": "1058",
+            "Source": "INSTALLDIR",
+            "Target": "powershell.exe -NoProfile -windowstyle hidden try [\\{] [\\[]Net.ServicePointManager[\\]]::SecurityProtocol = [\\[]Net.SecurityProtocolType[\\]]::Tls12 [\\}] catch [\\{][\\}]; Invoke-WebRequest -Uri \"https://go.microsoft.com/fwlink/p/?LinkId=2124703\" -OutFile \"$env:TEMP\\MicrosoftEdgeWebview2Setup.exe\" ; Start-Process -FilePath \"$env:TEMP\\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList ('/silent', '/install') -Wait"
+          },
+          {
+            "Action": "SetARPINSTALLLOCATION",
+            "Type": "51",
+            "Source": "ARPINSTALLLOCATION",
+            "Target": "[INSTALLDIR]"
+          }
+        ],
+        "InstallExecuteSequence": [
+          {
+            "Action": "AppSearch",
+            "Condition": "",
+            "Sequence": "50"
+          },
+          {
+            "Action": "CostInitialize",
+            "Condition": "",
+            "Sequence": "800"
+          },
+          {
+            "Action": "FileCost",
+            "Condition": "",
+            "Sequence": "900"
+          },
+          {
+            "Action": "CostFinalize",
+            "Condition": "",
+            "Sequence": "1000"
+          },
+          {
+            "Action": "InstallValidate",
+            "Condition": "",
+            "Sequence": "1400"
+          },
+          {
+            "Action": "InstallInitialize",
+            "Condition": "",
+            "Sequence": "1500"
+          },
+          {
+            "Action": "InstallFiles",
+            "Condition": "",
+            "Sequence": "4000"
+          },
+          {
+            "Action": "InstallFinalize",
+            "Condition": "",
+            "Sequence": "6600"
+          },
+          {
+            "Action": "CreateShortcuts",
+            "Condition": "",
+            "Sequence": "4500"
+          },
+          {
+            "Action": "PublishFeatures",
+            "Condition": "",
+            "Sequence": "6300"
+          },
+          {
+            "Action": "PublishProduct",
+            "Condition": "",
+            "Sequence": "6400"
+          },
+          {
+            "Action": "LaunchApplication",
+            "Condition": "AUTOLAUNCHAPP AND NOT Installed",
+            "Sequence": "6601"
+          },
+          {
+            "Action": "SetARPNOMODIFY",
+            "Condition": "",
+            "Sequence": "1401"
+          },
+          {
+            "Action": "DownloadAndInvokeBootstrapper",
+            "Condition": "NOT(REMOVE OR INSTALLED_WEBVIEW2_VERSION)",
+            "Sequence": "6599"
+          },
+          {
+            "Action": "SetARPINSTALLLOCATION",
+            "Condition": "",
+            "Sequence": "1001"
+          },
+          {
+            "Action": "FindRelatedProducts",
+            "Condition": "",
+            "Sequence": "25"
+          },
+          {
+            "Action": "ValidateProductID",
+            "Condition": "",
+            "Sequence": "700"
+          },
+          {
+            "Action": "MigrateFeatureStates",
+            "Condition": "",
+            "Sequence": "1200"
+          },
+          {
+            "Action": "ProcessComponents",
+            "Condition": "",
+            "Sequence": "1600"
+          },
+          {
+            "Action": "UnpublishFeatures",
+            "Condition": "",
+            "Sequence": "1800"
+          },
+          {
+            "Action": "RemoveRegistryValues",
+            "Condition": "",
+            "Sequence": "2600"
+          },
+          {
+            "Action": "RemoveShortcuts",
+            "Condition": "Installed AND NOT UPGRADINGPRODUCTCODE",
+            "Sequence": "3200"
+          },
+          {
+            "Action": "RemoveFiles",
+            "Condition": "",
+            "Sequence": "3500"
+          },
+          {
+            "Action": "WriteRegistryValues",
+            "Condition": "",
+            "Sequence": "5000"
+          },
+          {
+            "Action": "RegisterUser",
+            "Condition": "",
+            "Sequence": "6000"
+          },
+          {
+            "Action": "RegisterProduct",
+            "Condition": "",
+            "Sequence": "6100"
+          },
+          {
+            "Action": "RemoveExistingProducts",
+            "Condition": "",
+            "Sequence": "1501"
+          }
+        ],
+        "Upgrade": [
+          {
+            "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+            "VersionMin": "0",
+            "VersionMax": "",
+            "Language": "",
+            "Attributes": "257",
+            "Remove": "",
+            "ActionProperty": "WIX_UPGRADE_DETECTED"
+          }
+        ],
+        "Registry": [
+          {
+            "Registry": "regA49F638B26843C58BDE27A4322C2E8E4",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "Desktop Shortcut",
+            "Value": "#1",
+            "Component_": "ApplicationShortcutDesktop"
+          },
+          {
+            "Registry": "reg3DDE7826D7B6DFA4C424D1C364FF1AC9",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "InstallDir",
+            "Value": "[INSTALLDIR]",
+            "Component_": "RegistryEntries"
+          },
+          {
+            "Registry": "reg5FE66DAD0B80D5719819081178C75141",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "Uninstaller Shortcut",
+            "Value": "#1",
+            "Component_": "CMP_UninstallShortcut"
+          },
+          {
+            "Registry": "reg84CFB6BD6B837AD73CFED6CE85A4F209",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "Start Menu Shortcut",
+            "Value": "#1",
+            "Component_": "ApplicationShortcut"
+          }
+        ],
+        "RemoveRegistry": [],
+        "CreateFolder": [],
+        "ServiceInstall": [],
+        "ServiceControl": []
+      },
+      "source": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+      "label": "431"
+    },
+    {
+      "package": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-823a8a-38841117656\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "packageSha256": "e64491715bc5e510d06eb8a18f723b6700be800e4555a44c4e2207059bf0318c",
+      "databaseMode": "read-only",
+      "tables": {
+        "Property": [
+          {
+            "Property": "UpgradeCode",
+            "Value": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}"
+          },
+          {
+            "Property": "WIXUI_EXITDIALOGOPTIONALCHECKBOX",
+            "Value": "1"
+          },
+          {
+            "Property": "WIXUI_INSTALLDIR",
+            "Value": "INSTALLDIR"
+          },
+          {
+            "Property": "WixUIRMOption",
+            "Value": "UseRM"
+          },
+          {
+            "Property": "ALLUSERS",
+            "Value": "1"
+          },
+          {
+            "Property": "ARPNOMODIFY",
+            "Value": "1"
+          },
+          {
+            "Property": "ARPNOREPAIR",
+            "Value": "yes"
+          },
+          {
+            "Property": "REINSTALLMODE",
+            "Value": "amus"
+          },
+          {
+            "Property": "ARPPRODUCTICON",
+            "Value": "ProductIcon"
+          },
+          {
+            "Property": "WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT",
+            "Value": "Launch OpenCodeX Desktop"
+          },
+          {
+            "Property": "Manufacturer",
+            "Value": "gzers"
+          },
+          {
+            "Property": "ProductCode",
+            "Value": "{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}"
+          },
+          {
+            "Property": "ProductLanguage",
+            "Value": "1033"
+          },
+          {
+            "Property": "ProductName",
+            "Value": "OpenCodeX Desktop"
+          },
+          {
+            "Property": "ProductVersion",
+            "Value": "0.1.10"
+          },
+          {
+            "Property": "DefaultUIFont",
+            "Value": "WixUI_Font_Normal"
+          },
+          {
+            "Property": "WixUI_Mode",
+            "Value": "InstallDir"
+          },
+          {
+            "Property": "ErrorDialog",
+            "Value": "ErrorDlg"
+          },
+          {
+            "Property": "SecureCustomProperties",
+            "Value": "ARPNOREPAIR;AUTOLAUNCHAPP;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED"
+          }
+        ],
+        "File": [
+          {
+            "File": "Path",
+            "Component_": "Path",
+            "FileName": "3iewmbpe.exe|opencodex-desktop.exe",
+            "FileSize": "8830976",
+            "Version": "0.1.10.0",
+            "Language": "0",
+            "Attributes": "1536",
+            "Sequence": "2"
+          },
+          {
+            "File": "Bin_ocxd",
+            "Component_": "ocxd",
+            "FileName": "ocxd.exe",
+            "FileSize": "271872",
+            "Version": "0.1.10.0",
+            "Language": "0",
+            "Attributes": "512",
+            "Sequence": "1"
+          }
+        ],
+        "Directory": [
+          {
+            "Directory": "INSTALLDIR",
+            "Directory_Parent": "ProgramFiles64Folder",
+            "DefaultDir": "usgsdzy9|OpenCodeX Desktop"
+          },
+          {
+            "Directory": "DesktopFolder",
+            "Directory_Parent": "TARGETDIR",
+            "DefaultDir": "Desktop"
+          },
+          {
+            "Directory": "ApplicationProgramsFolder",
+            "Directory_Parent": "ProgramMenuFolder",
+            "DefaultDir": "ex_0dksl|OpenCodeX Desktop"
+          },
+          {
+            "Directory": "TARGETDIR",
+            "Directory_Parent": "",
+            "DefaultDir": "SourceDir"
+          },
+          {
+            "Directory": "ProgramFiles64Folder",
+            "Directory_Parent": "TARGETDIR",
+            "DefaultDir": "PFiles"
+          },
+          {
+            "Directory": "ProgramMenuFolder",
+            "Directory_Parent": "TARGETDIR",
+            "DefaultDir": "."
+          }
+        ],
+        "Component": [
+          {
+            "Component": "ApplicationShortcutDesktop",
+            "ComponentId": "{C3F10F4C-0818-5270-ADDC-6F1357B8B2D9}",
+            "Directory_": "DesktopFolder",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "regA49F638B26843C58BDE27A4322C2E8E4"
+          },
+          {
+            "Component": "RegistryEntries",
+            "ComponentId": "{26FD65D9-1253-5394-A4BD-0690B098BF8C}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "reg3DDE7826D7B6DFA4C424D1C364FF1AC9"
+          },
+          {
+            "Component": "Path",
+            "ComponentId": "{4F79C528-4B03-580B-947C-4C6F103FC98E}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "256",
+            "Condition": "",
+            "KeyPath": "Path"
+          },
+          {
+            "Component": "ocxd",
+            "ComponentId": "{18BBEE9E-EB74-4DD7-82A8-CDFCD9667C47}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "256",
+            "Condition": "",
+            "KeyPath": "Bin_ocxd"
+          },
+          {
+            "Component": "CMP_UninstallShortcut",
+            "ComponentId": "{9F494C2B-895E-5860-B464-27455CE4E315}",
+            "Directory_": "INSTALLDIR",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "reg5FE66DAD0B80D5719819081178C75141"
+          },
+          {
+            "Component": "ApplicationShortcut",
+            "ComponentId": "{7366BE85-5B94-5EA2-9CD6-C5A71258DF0F}",
+            "Directory_": "ApplicationProgramsFolder",
+            "Attributes": "260",
+            "Condition": "",
+            "KeyPath": "reg84CFB6BD6B837AD73CFED6CE85A4F209"
+          }
+        ],
+        "RemoveFile": [
+          {
+            "FileKey": "INSTALLDIR",
+            "Component_": "CMP_UninstallShortcut",
+            "FileName": "",
+            "DirProperty": "INSTALLDIR",
+            "InstallMode": "2"
+          },
+          {
+            "FileKey": "DesktopFolder",
+            "Component_": "ApplicationShortcutDesktop",
+            "FileName": "",
+            "DirProperty": "DesktopFolder",
+            "InstallMode": "2"
+          },
+          {
+            "FileKey": "ApplicationProgramsFolder",
+            "Component_": "ApplicationShortcut",
+            "FileName": "",
+            "DirProperty": "ApplicationProgramsFolder",
+            "InstallMode": "2"
+          }
+        ],
+        "CustomAction": [
+          {
+            "Action": "LaunchApplication",
+            "Type": "210",
+            "Source": "Path",
+            "Target": "[LAUNCHAPPARGS]"
+          },
+          {
+            "Action": "WixUIValidatePath",
+            "Type": "65",
+            "Source": "WixUIWixca",
+            "Target": "ValidatePath"
+          },
+          {
+            "Action": "WixUIPrintEula",
+            "Type": "65",
+            "Source": "WixUIWixca",
+            "Target": "PrintEula"
+          },
+          {
+            "Action": "SetARPNOMODIFY",
+            "Type": "51",
+            "Source": "ARPNOMODIFY",
+            "Target": "1"
+          },
+          {
+            "Action": "DownloadAndInvokeBootstrapper",
+            "Type": "1058",
+            "Source": "INSTALLDIR",
+            "Target": "powershell.exe -NoProfile -windowstyle hidden try [\\{] [\\[]Net.ServicePointManager[\\]]::SecurityProtocol = [\\[]Net.SecurityProtocolType[\\]]::Tls12 [\\}] catch [\\{][\\}]; Invoke-WebRequest -Uri \"https://go.microsoft.com/fwlink/p/?LinkId=2124703\" -OutFile \"$env:TEMP\\MicrosoftEdgeWebview2Setup.exe\" ; Start-Process -FilePath \"$env:TEMP\\MicrosoftEdgeWebview2Setup.exe\" -ArgumentList ('/silent', '/install') -Wait"
+          },
+          {
+            "Action": "SetARPINSTALLLOCATION",
+            "Type": "51",
+            "Source": "ARPINSTALLLOCATION",
+            "Target": "[INSTALLDIR]"
+          }
+        ],
+        "InstallExecuteSequence": [
+          {
+            "Action": "AppSearch",
+            "Condition": "",
+            "Sequence": "50"
+          },
+          {
+            "Action": "CostInitialize",
+            "Condition": "",
+            "Sequence": "800"
+          },
+          {
+            "Action": "FileCost",
+            "Condition": "",
+            "Sequence": "900"
+          },
+          {
+            "Action": "CostFinalize",
+            "Condition": "",
+            "Sequence": "1000"
+          },
+          {
+            "Action": "InstallValidate",
+            "Condition": "",
+            "Sequence": "1400"
+          },
+          {
+            "Action": "InstallInitialize",
+            "Condition": "",
+            "Sequence": "1500"
+          },
+          {
+            "Action": "InstallFiles",
+            "Condition": "",
+            "Sequence": "4000"
+          },
+          {
+            "Action": "InstallFinalize",
+            "Condition": "",
+            "Sequence": "6600"
+          },
+          {
+            "Action": "CreateShortcuts",
+            "Condition": "",
+            "Sequence": "4500"
+          },
+          {
+            "Action": "PublishFeatures",
+            "Condition": "",
+            "Sequence": "6300"
+          },
+          {
+            "Action": "PublishProduct",
+            "Condition": "",
+            "Sequence": "6400"
+          },
+          {
+            "Action": "LaunchApplication",
+            "Condition": "AUTOLAUNCHAPP AND NOT Installed",
+            "Sequence": "6601"
+          },
+          {
+            "Action": "SetARPNOMODIFY",
+            "Condition": "",
+            "Sequence": "1401"
+          },
+          {
+            "Action": "DownloadAndInvokeBootstrapper",
+            "Condition": "NOT(REMOVE OR INSTALLED_WEBVIEW2_VERSION)",
+            "Sequence": "6599"
+          },
+          {
+            "Action": "SetARPINSTALLLOCATION",
+            "Condition": "",
+            "Sequence": "1001"
+          },
+          {
+            "Action": "FindRelatedProducts",
+            "Condition": "",
+            "Sequence": "25"
+          },
+          {
+            "Action": "ValidateProductID",
+            "Condition": "",
+            "Sequence": "700"
+          },
+          {
+            "Action": "MigrateFeatureStates",
+            "Condition": "",
+            "Sequence": "1200"
+          },
+          {
+            "Action": "ProcessComponents",
+            "Condition": "",
+            "Sequence": "1600"
+          },
+          {
+            "Action": "UnpublishFeatures",
+            "Condition": "",
+            "Sequence": "1800"
+          },
+          {
+            "Action": "RemoveRegistryValues",
+            "Condition": "",
+            "Sequence": "2600"
+          },
+          {
+            "Action": "RemoveShortcuts",
+            "Condition": "Installed AND NOT UPGRADINGPRODUCTCODE",
+            "Sequence": "3200"
+          },
+          {
+            "Action": "RemoveFiles",
+            "Condition": "",
+            "Sequence": "3500"
+          },
+          {
+            "Action": "WriteRegistryValues",
+            "Condition": "",
+            "Sequence": "5000"
+          },
+          {
+            "Action": "RegisterUser",
+            "Condition": "",
+            "Sequence": "6000"
+          },
+          {
+            "Action": "RegisterProduct",
+            "Condition": "",
+            "Sequence": "6100"
+          },
+          {
+            "Action": "RemoveExistingProducts",
+            "Condition": "",
+            "Sequence": "1501"
+          }
+        ],
+        "Upgrade": [
+          {
+            "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+            "VersionMin": "0",
+            "VersionMax": "",
+            "Language": "",
+            "Attributes": "257",
+            "Remove": "",
+            "ActionProperty": "WIX_UPGRADE_DETECTED"
+          }
+        ],
+        "Registry": [
+          {
+            "Registry": "regA49F638B26843C58BDE27A4322C2E8E4",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "Desktop Shortcut",
+            "Value": "#1",
+            "Component_": "ApplicationShortcutDesktop"
+          },
+          {
+            "Registry": "reg3DDE7826D7B6DFA4C424D1C364FF1AC9",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "InstallDir",
+            "Value": "[INSTALLDIR]",
+            "Component_": "RegistryEntries"
+          },
+          {
+            "Registry": "reg5FE66DAD0B80D5719819081178C75141",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "Uninstaller Shortcut",
+            "Value": "#1",
+            "Component_": "CMP_UninstallShortcut"
+          },
+          {
+            "Registry": "reg84CFB6BD6B837AD73CFED6CE85A4F209",
+            "Root": "1",
+            "Key": "Software\\gzers\\OpenCodeX Desktop",
+            "Name": "Start Menu Shortcut",
+            "Value": "#1",
+            "Component_": "ApplicationShortcut"
+          }
+        ],
+        "RemoveRegistry": [],
+        "CreateFolder": [],
+        "ServiceInstall": [],
+        "ServiceControl": []
+      },
+      "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+      "label": "823"
+    }
+  ],
+  "installerExecuted": false,
+  "productStarted": false,
+  "registryWritten": false,
+  "hostInstallerGatePassed": false
+}

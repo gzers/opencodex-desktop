@@ -55,3 +55,9 @@
 按823固化配置对管理器两通道各做一次只读来源复核：stable Release API和实际生产清单均HTTP200，分别为v0.1.9/0.1.9；beta固定tag API及实际`beta/latest.json`均HTTP404。四次传输均正常结束，没有观察到高于当前0.1.10候选的真实管理器版本。来源条件原件、配置Git摘要及13项清单在`.adg/evidence/OCX-0110-20261016-WIN-UPDATE-SOURCE-PRECONDITIONS/`，独立核验通过。
 
 这四次为独立HTTP读取，不是产品planner检查、实际周期或请求计数证据，也未验证新包应用进度；不安装、不执行npm生命周期脚本、不调用FZ50、不修改调度状态或重置计时。11:41:37本机native0、日常/TASK/自有夹具摘要保持。真实beta周期基线及新候选的真实更新进度仍缺相应来源前提，既有真实计时按原适用范围保留；不通过发布、改源或伪造版本补条件，不提升任何未完门禁。
+
+### 12:12 安装器证据复用范围
+
+只读打开已验431与823两份MSI数据库（mode0），重新核对安装包摘要并比较原表。所读Directory、RemoveFile、CustomAction、InstallExecuteSequence、Upgrade、Registry等10表字段相同；Property仅ProductCode不同，File仅两个EXE尺寸不同，Component仅ocxd的ComponentId不同。两版Tauri基础/Windows配置、安装器验证与包身份校验脚本、候选工作流package段Git字节一致。原7项审阅清单在`.adg/evidence/OCX-0110-20261016-WIN-823-INSTALLER-REUSE-REVIEW/`；另由`OCX-0110-20261016-WIN-823-INSTALLER-REUSE-CHECK/crosscheck.py`直接从原表复算，校验两包实际字节、全部例外字段及历史回执，未修改冻结原件。
+
+旧安装专项38716371739的MSI/NSIS各5步安装/升级/默认卸载/重装、6份夹具×5阶段字节保持仍只属于431；custom-root为自有兄弟目录夹具，未通过应用绑定。保留这些历史子集及输入一致性作为后续复测依据，不把源码/表结构相同当成823已执行升级卸载。当前未比较MSI自定义动作二进制流或NSIS内部结构，未执行宿主安装/卸载/应用，不能证明823实际根解析、双权限或完整安装门禁。12:09:39保护读回native0、日常EXE与TASK原摘要保持；产品823、原预算、历史失败及所有未完门禁不变，前台仍待新的人工开始信号。

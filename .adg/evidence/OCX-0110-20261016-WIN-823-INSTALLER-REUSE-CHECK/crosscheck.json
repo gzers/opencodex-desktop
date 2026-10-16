@@ -1,0 +1,83 @@
+{
+  "status": "crosschecked-original-selected-msi-tables",
+  "reviewManifestSha256": "476cb3ad66d14f92ab4a58c9bb0a25539f073c9841758e24da1b40c45db5e4be",
+  "checkerSha256": "fbbfd90b29edee55d81dbf9de5fd8764d74139d5250149ddedc76b077089d7a3",
+  "oldSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "candidateSource": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "originalTablesRecomputed": true,
+  "packageBytesReverified": true,
+  "equalSelectedTables": [
+    "CreateFolder",
+    "CustomAction",
+    "Directory",
+    "InstallExecuteSequence",
+    "Registry",
+    "RemoveFile",
+    "RemoveRegistry",
+    "ServiceControl",
+    "ServiceInstall",
+    "Upgrade"
+  ],
+  "differentProperty": "ProductCode",
+  "fileChanges": {
+    "Path": {
+      "FileSize": [
+        "8777216",
+        "8830976"
+      ]
+    },
+    "Bin_ocxd": {
+      "FileSize": [
+        "271360",
+        "271872"
+      ]
+    }
+  },
+  "componentChanges": {
+    "ocxd": [
+      "ComponentId"
+    ]
+  },
+  "identicalSourceInputs": {
+    "apps/desktop/tauri/tauri.conf.json": "429d9026d7af811e078c86fede215fc16abb4f6fc7552b242e7cda4a52131e6f",
+    "apps/desktop/tauri/tauri.windows.conf.json": "880ca050ba99684d5e056f7ec10ac239be1939542e0b1867a3454a0dc09d6ccb",
+    "test/smoke/windows-installer.ps1": "f4f634b1f5ee7f63aee52b4e27ac104dd0a060eb79c9667b4599d11ea3ce76cb",
+    "test/smoke/windows-bundle-identity.mjs": "69993d9f772cea27dca4424d895866a4ebf093fb7c52f855603334e4e4c9f482"
+  },
+  "packageWorkflowSectionSha256": "f22b73f1d24fded68ca15bf101e1ce24f1e27c176ede1d3d6e53fb4750059b18",
+  "retentionRunId": 38716371739,
+  "retainedHistoricalResults": {
+    "msi": {
+      "actualTestedSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+      "installerSteps": 5,
+      "retainedSeededFiles": 6,
+      "readbackPhases": 5,
+      "productLaunched": false,
+      "customRootWasSeededSibling": true
+    },
+    "nsis": {
+      "actualTestedSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+      "installerSteps": 5,
+      "retainedSeededFiles": 6,
+      "readbackPhases": 5,
+      "productLaunched": false,
+      "customRootWasSeededSibling": true
+    }
+  },
+  "historicalRawReferences": {
+    "OCX-0110-20261015-WIN-INSTALLER-RETENTION/msi/original/admission.json": "7f94bd3a4948ffadbb11a180eb0b4fff8119730f87ded2522114f4e0ea633deb",
+    "OCX-0110-20261015-WIN-INSTALLER-RETENTION/msi/original/retention-result.json": "9db83925c75f69c4f7e0855d53454ae8b6248c4ca4c2ccb8d7d3795019869755",
+    "OCX-0110-20261015-WIN-INSTALLER-RETENTION/nsis/original/admission.json": "2c031b0d296f0d456a29de27a7c35e52fb7edf121a9f9f00c3b96f261a5884d6",
+    "OCX-0110-20261015-WIN-INSTALLER-RETENTION/nsis/original/retention-result.json": "a6c403708a108f9874f66b200189b0e42c1d1fa3ba5e0693b7016a927ec56a7b"
+  },
+  "scope": "Selected MSI fields and source inputs; historical tests retain their original source.",
+  "msiBinaryCustomActionStreamsCompared": false,
+  "nsisBinaryStructureCompared": false,
+  "new823UpgradeOrRetentionExecutionClaimed": false,
+  "nativeApplicationRootOrPermissionsProven": false,
+  "hostInstallerExecuted": false,
+  "productStarted": false,
+  "fullInstallerGatePassed": false,
+  "historicalFailuresCleared": false,
+  "releaseAccepted": false
+}

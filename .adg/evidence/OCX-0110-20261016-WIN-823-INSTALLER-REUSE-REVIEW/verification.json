@@ -1,0 +1,28 @@
+{
+  "status": "verified-readonly-msi-reuse-boundary",
+  "files": 7,
+  "oldSource": "43142bdbcc7a0b9f1325103febae3f44dce407ab",
+  "candidateSource": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "sameUpgradeAndRemovalStructure": true,
+  "sameCustomActionAndSequenceStructure": true,
+  "sameDirectoryAndRegistryStructure": true,
+  "productCodeDiffExpected": true,
+  "payloadFileSizeDiffExpected": true,
+  "ocxdComponentGuidDiffObserved": true,
+  "oldRetentionEvidenceReusableFor": [
+    "installer upgrade sequencing",
+    "default uninstall preserving seeded files",
+    "reinstall after uninstall"
+  ],
+  "oldRetentionEvidenceDoesNotProve": [
+    "823 host installation",
+    "823 ordinary/admin token",
+    "823 startup root binding",
+    "823 native UI or performance"
+  ],
+  "readOnlyDatabaseMode": true,
+  "hostInstallerExecuted": false,
+  "hostProductStarted": false,
+  "fullInstallerGatePassed": false,
+  "releaseAccepted": false
+}
