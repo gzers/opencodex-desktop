@@ -28,4 +28,6 @@
 
 按上述准入只请求一次候选 `38827408691`，固定source d94、run_attempt1、purpose=candidate。08:13:05 package仍进行，query-etw和retention预期skip；下载、实际安装载荷和原生补测尚未完成，不能把候选请求当成制品通过。后续原件在 `.adg/evidence/OCX-0110-20261016-WIN-D94-CANDIDATE/`。
 
+08:18:10伴随push `38824163566` 终态为failure。唯一失败job是Mac backend，GitHub check-run注释为“The hosted runner lost communication with the server”，另有macOS arm64容量提示；job最后状态停在Rust工具链安装，cargo fmt/Clippy/test均pending、未执行，不归为源码测试失败，也不把该轮改标成功。作业原日志下载HTTP404“specified blob does not exist”，缺失如实保留；注释只说明runner失联，实际根因未确定。未重跑或取消任何作业；此前一轮完整PR成功及由其准入的单次候选保持各自身份。8份原件、终态、jobs/check-run/annotations与独立verifier归`.adg/evidence/OCX-0110-20261016-WIN-D94-CI/push-runner-failure/`。截至08:20:17候选仍进行，未启动宿主产品。
+
 019冷/热各20、p95≤100ms且≤5%、CPU≤+0.5pp、平均RSS≤+10MiB、主线程50ms及完整请求/周期预算不变。DPI仍待验，真实更新/来源、安装保留、树表/事件、历史bd2失败窗口、严格单EXE恢复交接和Mac CPU/RSS继续未闭合。TASK-182/IMP-20不关闭，不合并、签名、晋升或发布。
