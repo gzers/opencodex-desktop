@@ -1,0 +1,50 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-B4-RESTORATION-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261016-WIN-B4-RESTORATION",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-B4-RESTORATION-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-test-profile-restoration",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-RESTORATION/verification.json"
+    },
+    {
+      "name": "local:windows-captured-generations-ended",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-RESTORATION/restoration-readback.original.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/candidate0110-exit.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "7cb865dbaf66abc9fb5de80e8ce3c027b03fd02e94a40c57952de6f6898af7d4",
+      "summary": "用户退出后确认native0并恢复原目录，原身份/偏好/指针与14代际结束核验通过；保留测量克隆，原退出超时及RSS失败不解除。"
+    }
+  ],
+  "completed_at": "2026-10-16T14:45:31.155800+00:00",
+  "summary": "配置恢复子集通过；原目录及测量克隆均保留，原性能/生命周期和其它门禁未通过，TASK不关闭。",
+  "revision": 1,
+  "summary_digest": "2c9db5af47e60c9525f268b8cb72bf22d524f48f9ed7f058ea38ba67ef39d933",
+  "content_digest": "a3a4c55f75d099d6eca428c39d34912277b9ced19e55f09f8824216ab16e950a"
+}
