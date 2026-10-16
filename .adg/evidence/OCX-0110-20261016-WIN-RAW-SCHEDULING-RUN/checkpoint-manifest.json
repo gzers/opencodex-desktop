@@ -1,0 +1,62 @@
+{
+  "scope": "immutable file checkpoint; the RUN directory remains open for a later same-CI network recovery",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    {
+      "path": "admit-ci.py",
+      "bytes": 4552,
+      "sha256": "3c34c027a3a6a96e96b7c218d9ba1e37f25a463e13d8eff011af9caabbf241b3"
+    },
+    {
+      "path": "ci-binding.json",
+      "bytes": 121,
+      "sha256": "487d07bbfba5e05b06187868c50df8a45c76536242c1ca14a0012cb44fe48fc1"
+    },
+    {
+      "path": "ci-terminal.original.json",
+      "bytes": 37305,
+      "sha256": "a9c54bece6652234f6fe16f3d895e51733686f0c2738e45f9b139c540e9c9eaf"
+    },
+    {
+      "path": "continuation-binding.json",
+      "bytes": 1764,
+      "sha256": "59fe982d9e5a0f3befa1e549952498f01c2c653fd64a49c38486504dd75e4423"
+    },
+    {
+      "path": "dispatch-once.py",
+      "bytes": 5264,
+      "sha256": "bc0716b6508d0e1f3149a36e533a7add7a6c3bcf2879bac361534a9340f99ea4"
+    },
+    {
+      "path": "download-ci-logs.py",
+      "bytes": 4629,
+      "sha256": "f1a7bd922783caad597506f6ce14fce5772a1ecde503226770e37bc2ab743a31"
+    },
+    {
+      "path": "fixed-inputs-readback.json",
+      "bytes": 680,
+      "sha256": "db102fa2a9d4b592823416cba8e8983d03ab75468159f691109b712a1b1a7fcb"
+    },
+    {
+      "path": "frontend-transfer-20261016T080426130605Z.original.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "frontend-transfer-failure-20261016T080426130605Z.json",
+      "bytes": 331,
+      "sha256": "07cb1e31b70d09ea7cd38db27d248927b4f0c17c88a6b12a3e3614876e73d39c"
+    },
+    {
+      "path": "network-continuation-checkpoint.json",
+      "bytes": 1097,
+      "sha256": "3137a12b90a74a187eafbe0965d81dde191bc453648ae916429d93c5c3276cec"
+    }
+  ],
+  "completeCiLogAdmission": false,
+  "recordingStarted": false
+}

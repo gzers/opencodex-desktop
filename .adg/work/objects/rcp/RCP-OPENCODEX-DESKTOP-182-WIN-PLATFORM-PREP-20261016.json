@@ -1,0 +1,44 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-PLATFORM-PREP-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-PLATFORM-PREP-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-native-directory-isolation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-PLATFORM-PREP/verification.json"
+    },
+    {
+      "name": "local:windows-platform-and-human-window-guards",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-PLATFORM-PREP/prepared/guard-validation.original.json"
+    },
+    {
+      "name": "local:windows-raw-ci-log-admission",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-RUN/network-continuation-checkpoint.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "b61c802db023a5cac2f80b4c927294b33406f3c0e071f6956fb3f7ce6ab6be3c",
+      "summary": "实际保存两份原生配置目录并核四逻辑根缺失，保持人工窗口守卫；ETW日志仍受阻、RSS根因与原门禁未完成。"
+    }
+  ],
+  "completed_at": "2026-10-16T08:28:16.714476+00:00",
+  "summary": "恢复夹具原生目录映射已修正、缺根/人工窗口守卫通过；ETW日志下载阻塞，未录制或启动产品，原失败与TASK未完成状态保持。",
+  "revision": 1,
+  "summary_digest": "effd65bdf3e5a20009b8c720d6065501a7fa8021fca0eff5a9622124eb637e0f",
+  "content_digest": "736cc526c9e00702edd8c419a9e2c81a2741a734bf339eacfb4eddb9d6569fcb"
+}

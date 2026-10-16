@@ -1,0 +1,26 @@
+{
+  "atUtc": "2026-10-16T08:26:19.012178+00:00",
+  "baseline": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "candidate": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "sourceBlobSha256": {
+    "de6862d40389d527527b9db8ef52e186a58b625f:apps/desktop/ui/src/App.vue": "d447cb99542910ca4684924f6e7be9d5ba8211042f8dd9c5fa0d883d08589e8d",
+    "de6862d40389d527527b9db8ef52e186a58b625f:apps/desktop/ui/src/styles/base.css": "3345ef181587a97f1e831d7b529cd8bb82d3ce83d81c5e424a32ae377e8480dd",
+    "de6862d40389d527527b9db8ef52e186a58b625f:apps/desktop/ui/src/features/runtime/motion/meshGlow.ts": "1af5ee287f21e0bbf1c2e6d9c0510bb1f5164570bb184e8a835e456997bc49c1",
+    "de6862d40389d527527b9db8ef52e186a58b625f:apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue": "eddbacdc6a286f753a3476a06d3667b167e33a7d541005cc033cc95814acb881",
+    "823a8a0615153068594daef530c2e80f1d95fc29:apps/desktop/ui/src/App.vue": "d447cb99542910ca4684924f6e7be9d5ba8211042f8dd9c5fa0d883d08589e8d",
+    "823a8a0615153068594daef530c2e80f1d95fc29:apps/desktop/ui/src/styles/base.css": "bd2a28020e5c3638e14880d81438af00e77e4645d3f3670ccb069be750d41b87",
+    "823a8a0615153068594daef530c2e80f1d95fc29:apps/desktop/ui/src/features/runtime/motion/meshGlow.ts": "6991a6898ae798bf4c97c0aa5f8d67dbb920768032050057e2d0efd6d05e0f1d",
+    "823a8a0615153068594daef530c2e80f1d95fc29:apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue": "c71d27c913240c50e4b7355e18b1194555c59a9ebd503c2a1cb7931c1f53892f"
+  },
+  "inspectionOnly": true,
+  "observations": [
+    "App.vue renders one selected route component; this source contradicts all routes being mounted at once.",
+    "The old mesh host uses the motion-mark rectangle; current backdrop uses the main page and extends 80 CSS pixels above its clip.",
+    "No native renderer/GPU attribution for the earlier idle-pair PIDs can be reconstructed from these source reads."
+  ],
+  "allRoutesMountedAtOnceHypothesisSupported": false,
+  "rssRootCauseEstablished": false,
+  "formalPairRepeated": false,
+  "productionCodeChanged": false,
+  "performanceBudgetChanged": false
+}

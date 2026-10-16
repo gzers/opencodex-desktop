@@ -1,0 +1,85 @@
+{
+  "atUtc": "2026-10-16T08:26:19.013208+00:00",
+  "configurationCleanupAuthorityCommit": "9e6292244e99750d66672ce0e3bcfee1f6849e62",
+  "runtimePrepared": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\recovery-platform-preparation-v2-20261016T1612",
+  "runtimeFirstAttempt": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\recovery-platform-preparation-20261016T1606",
+  "originalCopies": [
+    {
+      "path": "first-attempt/profile-isolation-plan.json",
+      "bytes": 2149,
+      "sha256": "f0854a9957061a826452da13da0860926ec5f84aa1062b8cf0cda8e445332289"
+    },
+    {
+      "path": "first-attempt/profile-isolation-failure.json",
+      "bytes": 1464,
+      "sha256": "1c68282e4e99799d3fe286534df21788e94b1ab12f916223f02bb993768ad430"
+    },
+    {
+      "path": "first-attempt/partial-restoration-result.json",
+      "bytes": 5181,
+      "sha256": "cd23d312407d869e5ea2cb13a1e74dca064ec67fbfd0e395ba8a93b2378f97a2"
+    },
+    {
+      "path": "prepared/profile-isolation-plan.json",
+      "bytes": 4730,
+      "sha256": "91fe2b522e4d345922237f2dc78d7ffed1e12e6add2fd49806d59bbd010ad30f"
+    },
+    {
+      "path": "prepared/profile-isolation-result.json",
+      "bytes": 4050,
+      "sha256": "3500d6a3dbf83d32d00a13c4c54ba94cf68e6a0181437c480151533e39a2a94b"
+    },
+    {
+      "path": "prepared/preflight-ready-readback.json",
+      "bytes": 486,
+      "sha256": "b4e734308b9ff7fe660212f165c8fd6a5f8209cc0a89dd850f4145c7d4680a74"
+    },
+    {
+      "path": "prepared/validate-guards.ps1",
+      "bytes": 3462,
+      "sha256": "bb9d07fd07c6e74057978da2b1e2a9cbd3c84fad80b758b3c6733808d258e284"
+    },
+    {
+      "path": "prepared/guard-validation.original.json",
+      "bytes": 1138,
+      "sha256": "a40d5d73e599e267748ad2ea4389a1f28648fba77ca6cbc8124552fae82f2e4a"
+    },
+    {
+      "path": "prepared/validate-guards-initial.original.ps1",
+      "bytes": 3376,
+      "sha256": "11b4c2e153ae9d9cd3b8f17ee2a6c12f4ee9c524def686d43e073015277594b1"
+    },
+    {
+      "path": "prepared/guard-validation-initial-failure.json",
+      "bytes": 791,
+      "sha256": "8e41ebe7a2d3b3b9537dc20004c17b8484863cab5873d527bab9d1b2035601c8"
+    },
+    {
+      "path": "prepared/cleanup-empty-guard-probe.ps1",
+      "bytes": 1420,
+      "sha256": "9e459a30e2409d5f8fb5be5ee48fe0cda89d1624079c9fce51162a5097c86461"
+    },
+    {
+      "path": "prepared/final-preparation-readback.json",
+      "bytes": 2929,
+      "sha256": "9aeb64f178f13a16b23b61409ac4703359ca16ee5ebba5e9f19ac2226073aa3b"
+    }
+  ],
+  "frozenRecoveryControllerDirectory": ".adg/evidence/OCX-0110-20261016-WIN-823-FRONT-PREP",
+  "frozenControllerSha256": {
+    "prepare-recovery.ps1": "01950fbbe5dbc6a38d45899f5201e3170f7dec359f95b108730d4e8e1152aa92",
+    "launch-recovery.ps1": "2d5970cec4353c89d31362394733a748f79159c97958003fa23c357f309f07f3",
+    "restore-recovery.ps1": "63b73fbb3dcb9097d7d5ebf58bd350765edd01804830f401d92ce91481004204",
+    "run-binding.ps1": "a8dd00a12fdfb29e81416b8f0e13554a44826dee61a6f9d8eb22539f0504e073",
+    "contract.json": "e897ae07d8c7427a955384fa67bb8a398c6bf0cd2cf4f2e2c33d05f1ea0fb178"
+  },
+  "namespace": "actual ordinary calling Codex host; four logical paths resolve to two native directory IDs",
+  "profileContentsArchived": false,
+  "profileContentsDeleted": false,
+  "productLaunched": false,
+  "currentPreparedRootsAbsent": true,
+  "fullProfileRestorationHelperExecuted": false,
+  "firstPartialRestorationExecutedAndNativeIdsVerified": true,
+  "foregroundAuthorizationGranted": false,
+  "fullNativeRecoveryGatePassed": false
+}
