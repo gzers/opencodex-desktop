@@ -97,6 +97,19 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   canvas.setAttribute('aria-hidden', 'true')
   host.append(canvas)
 
+  function sizeCanvas(rect: DOMRect): { width: number; height: number } {
+    const dpr = Math.min(1.6, window.devicePixelRatio || 1)
+    const width = Math.max(1, Math.round(rect.width * dpr))
+    const height = Math.max(1, Math.round(rect.height * dpr))
+    if (canvas.width !== width) canvas.width = width
+    if (canvas.height !== height) canvas.height = height
+    return { width, height }
+  }
+  // Size the backing store before creating its context, avoiding a default-size
+  // context followed by two initialization resizes. Keep the same final pixels.
+  const initialRect = host.getBoundingClientRect()
+  sizeCanvas(initialRect)
+
   const context = canvas.getContext('webgl', {
     antialias: false,
     // This full-screen color pass never uses depth or stencil testing.
@@ -189,13 +202,8 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     gl.uniform1f(loc.sat, dark ? 1.28 : 1.18)
   }
 
-  function resize(): void {
-    const rect = host.getBoundingClientRect()
-    const dpr = Math.min(1.6, window.devicePixelRatio || 1)
-    const width = Math.max(1, Math.round(rect.width * dpr))
-    const height = Math.max(1, Math.round(rect.height * dpr))
-    if (canvas.width !== width) canvas.width = width
-    if (canvas.height !== height) canvas.height = height
+  function resize(rect = host.getBoundingClientRect()): void {
+    const { width, height } = sizeCanvas(rect)
     gl.uniform2f(loc.res, width, height)
     gl.viewport(0, 0, canvas.width, canvas.height)
     gl.uniform1f(loc.cy, centerFraction(rect))
@@ -235,7 +243,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   }
 
   applyLook()
-  resize()
+  resize(initialRect)
   frame = requestAnimationFrame(loop)
   // resize 会清空 drawing buffer，高/中档都必须重新画；后台 wake 仍受 active 限制。
   const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => {
