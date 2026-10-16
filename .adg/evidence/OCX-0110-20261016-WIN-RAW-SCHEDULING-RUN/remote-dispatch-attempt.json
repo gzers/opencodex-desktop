@@ -1,0 +1,29 @@
+{
+  "atUtc": "2026-10-16T08:55:44.579651+00:00",
+  "collectorSource": "54927d2cb184a38d5dd2e1f7c00ed4697b2e0a56",
+  "originalFailedRun": 38537166560,
+  "originalFailedSource": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "testSha256": "497814ca08c071dcd4a2666ceb954bd4788e7cc6cf1dc8972c3efd515884c0d3",
+  "officialNodeSha256": "ba4e6d110e8c1592a1ecd390f6b05f3da124b13871a5be62b341a07a853c6c32",
+  "authorization": "\u6279\u51c6\u4fee\u6b63\u7248\u540e\u7eed\u90fd\u53ef\u4ee5\u7ba1\u7406\u5458\u540e\u53f0 ETW \u5f55\u5236",
+  "reason": "revised recorder retains the missing scheduling byte window after the v5 audit; semantics remain unverified and no failure is preclaimed",
+  "maximumOriginalLibraryRuns": 1,
+  "automaticRetryAllowed": false,
+  "noPrewarm": true,
+  "defaultConcurrency": true,
+  "deadlinesSeconds": [
+    2,
+    4,
+    5,
+    8
+  ],
+  "outerSeconds": 120,
+  "serializedMiB": 64,
+  "queueRecords": 32768,
+  "trackedIrps": 32768,
+  "hostDesktopOrElevationPromptUsed": false,
+  "localRecordEntryExecuted": false,
+  "historicalEnvironmentClaimedIdentical": false,
+  "failurePreclaimed": false,
+  "admissionSha256": "677a8677210fc3f30cf579e11a5d27a8dcb8f8fdcb8edc249f22f5519c0f223a"
+}

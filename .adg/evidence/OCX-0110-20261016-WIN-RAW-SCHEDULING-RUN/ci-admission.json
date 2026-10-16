@@ -1,0 +1,89 @@
+{
+  "atUtc": "2026-10-16T08:55:11.496954+00:00",
+  "source": "54927d2cb184a38d5dd2e1f7c00ed4697b2e0a56",
+  "tree": "a40ae34617e34c8fc715877e6f569bdc2bf55a64",
+  "runId": 38858859494,
+  "runAttempt": 1,
+  "wholeCiSucceeded": true,
+  "originalCheckoutAndJobsVerified": true,
+  "requiredJobs": [
+    "backend",
+    "backend-windows",
+    "frontend",
+    "release-tools",
+    "windows-smoke-evidence"
+  ],
+  "jobs": [
+    {
+      "name": "frontend",
+      "jobId": 116836334325,
+      "actualCheckout": "54927d2cb184a38d5dd2e1f7c00ed4697b2e0a56",
+      "counts": {
+        "files": 99,
+        "passed": 535,
+        "failed": 0
+      },
+      "log": "ci-38858859494-frontend.original.log",
+      "bytes": 39792,
+      "sha256": "5aed4c02806bca3bb6dc888cdbdeabd6e357d848813b01ee0ea2de26f6bf4f25",
+      "certificateVerificationEnabled": true,
+      "redirectAuthorizationForwarded": false,
+      "transport": "Git curl command-local SOCKS5 remote DNS",
+      "proxy": "socks5h://[::1]:3060",
+      "hosts": [
+        "api.github.com",
+        "productionresultssa18.blob.core.windows.net"
+      ],
+      "systemSettingsChanged": false
+    },
+    {
+      "name": "backend",
+      "jobId": 116836334180,
+      "actualCheckout": "54927d2cb184a38d5dd2e1f7c00ed4697b2e0a56",
+      "counts": {
+        "suites": 35,
+        "passed": 923,
+        "failed": 0,
+        "ignored": 6
+      },
+      "log": "ci-38858859494-backend.original.log",
+      "bytes": 224739,
+      "sha256": "0b7add86dab49d78a9c3281fa3b4dd756274da14c4e00b73ec23cfd4ee543def",
+      "certificateVerificationEnabled": true,
+      "redirectAuthorizationForwarded": false,
+      "transport": "Git curl command-local SOCKS5 remote DNS",
+      "proxy": "socks5h://[::1]:3060",
+      "hosts": [
+        "api.github.com",
+        "productionresultssa18.blob.core.windows.net"
+      ],
+      "systemSettingsChanged": false
+    },
+    {
+      "name": "backend-windows",
+      "jobId": 116836333924,
+      "actualCheckout": "54927d2cb184a38d5dd2e1f7c00ed4697b2e0a56",
+      "counts": {
+        "suites": 35,
+        "passed": 648,
+        "failed": 0,
+        "ignored": 7
+      },
+      "log": "ci-38858859494-backend-windows.original.log",
+      "bytes": 344863,
+      "sha256": "6d725ff245a2bf40aadfcb76c7c699cc70e99915c7fc2f6041ab376227a35211",
+      "certificateVerificationEnabled": true,
+      "redirectAuthorizationForwarded": false,
+      "transport": "Git curl command-local SOCKS5 remote DNS",
+      "proxy": "socks5h://[::1]:3060",
+      "hosts": [
+        "api.github.com",
+        "productionresultssa18.blob.core.windows.net"
+      ],
+      "systemSettingsChanged": false
+    }
+  ],
+  "recordingStarted": false,
+  "historicalFailureCleared": false,
+  "releaseAdmission": false
+}

@@ -1,0 +1,49 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-RAW-SCHEDULING-RUN-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-RAW-SCHEDULING-RUN-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-bd2-actual-failure-window",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-RUN/recording-analysis.json"
+    },
+    {
+      "name": "local:windows-one-raw-scheduling-capture",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-RUN/verification.json"
+    },
+    {
+      "name": "local:windows-raw-ci-log-admission",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-RUN/ci-admission.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "3a6878d67dfe9d4e2f6d140def71cb59ce5c6aa1b15f3203d86022aae73cbfb8",
+      "summary": "完整CI原日志准入与单次固定bd2成功录制已核验；原失败窗口/根因、RSS预算及全部未完门禁保持。"
+    }
+  ],
+  "completed_at": "2026-10-16T09:34:40.220952+00:00",
+  "summary": "单次549调度字节录制完整但bd2失败未复现；保留成功对照与原失败，不再追加回放，不关闭TASK或发布。",
+  "revision": 1,
+  "summary_digest": "bcd668a586bdb27a78690c6304bf54b2cc7506ba102e01a7ce88b67f76d09601",
+  "content_digest": "1c5e5d788e0d665dd42284217e02733a25c436390b3709fc33f7cc36473d9f5f"
+}

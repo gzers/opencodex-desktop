@@ -1,0 +1,14 @@
+{
+  "atUtc": "2026-10-16T09:30:40.8074786+00:00",
+  "stage": "offline scheduling count audit",
+  "initialAssumption": "eventsWithRawSchedulingWindow equals serialized scheduling rows",
+  "observedCallbackCount": 5319,
+  "observedSerializedRows": 6131,
+  "uniqueQpcAndByteGroups": 5318,
+  "pairedDirectionGroups": 812,
+  "sameDirectionCollisionGroups": 1,
+  "counterChanged": false,
+  "rawEvidenceChanged": false,
+  "recordingRepeated": false,
+  "cause": "One callback can emit two direction rows; reduced identity can collide across processors"
+}
