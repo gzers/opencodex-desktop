@@ -1,0 +1,73 @@
+{
+  "atUtc": "2026-10-16T02:16:07.566426+00:00",
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "parentSource": "d94c215d869c0560717d79dc02881ce8858afe88",
+  "oldFailureSource": "02a0d4a8cbae8ef1450908d86b2c75fcad65f04f",
+  "oldStartupBlobSha256": "320b9a4751771851a4ce61fac824e192dad12c3081ce9c9d48180eb41ab5ad1a",
+  "oldStartupBlobUnchangedThroughD94": true,
+  "oldObservedMaximumExeCount": 2,
+  "twoPidSnapshotAtUtc": "2026-10-15T14:32:06.3210983+00:00",
+  "exactOverlapDurationEstablished": false,
+  "oldEvidenceReferences": {
+    "manifest.json": "c7a0d346796085fde4fbf925658d6d74f83f009b75637c780003ffd557a89759",
+    "recovered-launch.json": "746bb8475c0917459421c85b218df7a84b6bce27681cc99c1880bcb29394670d",
+    "recovery-process-timeline.original.json": "48c5d13a96e18af08a352435b1e0cf479596c81b4f10dc6b06f1ea22674969b8",
+    "ordinary-unwritable-select-exit.json": "3bac0cde683f2c19a520f05e13fbedef5b4409a52f16dc69879393c4065d09e7"
+  },
+  "changedPaths": [
+    ".github/workflows/ci.yml",
+    "apps/desktop/tauri/src/infrastructure/mod.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+    "apps/desktop/tauri/src/infrastructure/windows_restart.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+    "test/smoke/windows-restart-handoff.test.ps1"
+  ],
+  "sourceBlobs": {
+    ".github/workflows/ci.yml": {
+      "gitBlobSha256": "e87ba83b92cbc6e1f359072103a0d426c929687638672ef5ed832d963bce5996",
+      "workingFileSha256": "2b458d16c21dd0b304e385b5db88d484c5629a4d2048e6cef85235b22946c0b3",
+      "identicalExceptCrLf": true
+    },
+    "apps/desktop/tauri/src/infrastructure/mod.rs": {
+      "gitBlobSha256": "728b438fb9be4de770b48da4fc58d764a8e15eb1156ff94083c229034a98712d",
+      "workingFileSha256": "728b438fb9be4de770b48da4fc58d764a8e15eb1156ff94083c229034a98712d",
+      "identicalExceptCrLf": true
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_restart.ps1": {
+      "gitBlobSha256": "946c4e0fe9aa1dde254836bfe99cb0078ea99f93fe2cdb3d622efd5b2c539240",
+      "workingFileSha256": "946c4e0fe9aa1dde254836bfe99cb0078ea99f93fe2cdb3d622efd5b2c539240",
+      "identicalExceptCrLf": true
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_restart.rs": {
+      "gitBlobSha256": "ab3f466386e2c41ddb01a6bf5ce7fa943c637aadf5827939bb2492e5f9d48d61",
+      "workingFileSha256": "ab3f466386e2c41ddb01a6bf5ce7fa943c637aadf5827939bb2492e5f9d48d61",
+      "identicalExceptCrLf": true
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs": {
+      "gitBlobSha256": "b3a8d3819dec453c875d6e5c71d9808d9805212aa237a3da1b43828055a293b2",
+      "workingFileSha256": "b3a8d3819dec453c875d6e5c71d9808d9805212aa237a3da1b43828055a293b2",
+      "identicalExceptCrLf": true
+    },
+    "test/smoke/windows-restart-handoff.test.ps1": {
+      "gitBlobSha256": "ffcd9a5171cf9a1f944b13f2365bcdbad93a845360ad32d36ca7e34cb279c95c",
+      "workingFileSha256": "ffcd9a5171cf9a1f944b13f2365bcdbad93a845360ad32d36ca7e34cb279c95c",
+      "identicalExceptCrLf": true
+    }
+  },
+  "bothCodeWorktreesClean": true,
+  "sharedFilesIdentical": {
+    "AGENTS.md": true,
+    "README.md": true,
+    "README.en.md": true,
+    "LICENSE": true,
+    ".gitignore": true
+  },
+  "uiTreeUnchangedFromD94": true,
+  "ordinaryStartupDoesNotPrepareRestart": true,
+  "windowsRecoverySourceChanged": true,
+  "nativeRecoveryExecutedOnNewSource": false,
+  "oldFailureMarkedPassed": false,
+  "newCandidateBuilt": false,
+  "productStarted": false,
+  "foregroundActivated": false
+}

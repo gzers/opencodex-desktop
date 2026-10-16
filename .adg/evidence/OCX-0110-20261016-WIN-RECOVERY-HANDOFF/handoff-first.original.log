@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "checks": 33,
+  "cases": [
+    {
+      "case": "commit-after-exit",
+      "status": "passed",
+      "parentCreationFileTime": 134365897978409104,
+      "helperExitCode": 0,
+      "parentPid": 42092,
+      "productStarted": false
+    },
+    {
+      "case": "no-commit",
+      "status": "passed",
+      "parentCreationFileTime": 134365898009395084,
+      "helperExitCode": 42,
+      "parentPid": 75528,
+      "productStarted": false
+    },
+    {
+      "case": "wrong-generation",
+      "status": "passed",
+      "parentCreationFileTime": 134365898015283336,
+      "helperExitCode": 41,
+      "parentPid": 53216,
+      "productStarted": false
+    },
+    {
+      "case": "exit-deadline",
+      "status": "passed",
+      "parentCreationFileTime": 134365898021822207,
+      "helperExitCode": 43,
+      "parentPid": 72988,
+      "productStarted": false
+    }
+  ],
+  "waiterSha256": "dfd38b697b8fd0a2d86fd4185da7632642b29da42d7519afe9d7488e0c7e0da6",
+  "controlledParentAndWaiterPairs": 4,
+  "cleanup": [],
+  "usesSystemWindowsPowerShell": true,
+  "productStarted": false,
+  "foregroundActivated": false,
+  "dataRootOrRegistryModified": false,
+  "nativeRecoveryGatePassed": false,
+  "fullPerformanceGatePassed": false,
+  "originalQueryDeadlinesChanged": false
+}
+

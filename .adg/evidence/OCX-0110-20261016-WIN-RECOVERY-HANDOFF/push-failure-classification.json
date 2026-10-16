@@ -1,0 +1,27 @@
+{
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "runId": 38838964154,
+  "jobId": 116774382572,
+  "jobConclusionRetained": "failure",
+  "failureKind": "dependency-download-transport",
+  "package": "phf_generator",
+  "packageVersion": "0.13.1",
+  "failedStep": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+  "skippedSteps": [
+    "Prepare first-regression ETW only on the Windows diagnostic branch",
+    "Windows backend regression",
+    "Run cargo build --locked --release --features custom-protocol --bins",
+    "Windows final EXE smoke",
+    "Post Run actions/setup-node@v5"
+  ],
+  "rustCompilerDiagnosticObserved": false,
+  "rustClippyCompleted": false,
+  "backendTestsExecuted": false,
+  "finalExecutableProduced": false,
+  "artifactId": 12019729608,
+  "artifactSha256": "760ed579418c822a6cfcc0e66e387c269f225dda93b7004378edf2ed9736e2d7",
+  "fullCiClaimedPassed": false,
+  "workflowRerunRequested": false,
+  "nativeRecoveryGatePassed": false,
+  "historicalFailureCleared": false
+}

@@ -1,0 +1,105 @@
+warning: constant `READY` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:14:7
+   |
+14 | const READY: &str = "OCX_RESTART_READY_V1";
+   |       ^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `COMMIT` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:15:7
+   |
+15 | const COMMIT: &[u8] = b"OCX_RESTART_COMMIT_V1\n";
+   |       ^^^^^^
+
+warning: constant `HANDSHAKE_TIMEOUT` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:16:7
+   |
+16 | const HANDSHAKE_TIMEOUT: Duration = Duration::from_secs(15);
+   |       ^^^^^^^^^^^^^^^^^
+
+warning: constant `WAITER` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:18:7
+   |
+18 | const WAITER: &str = include_str!("windows_restart.ps1");
+   |       ^^^^^^
+
+warning: struct `FileTime` is never constructed
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:22:8
+   |
+22 | struct FileTime {
+   |        ^^^^^^^^
+
+warning: function `system_powershell` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:40:4
+   |
+40 | fn system_powershell() -> io::Result<PathBuf> {
+   |    ^^^^^^^^^^^^^^^^^
+
+warning: function `creation_time` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:58:4
+   |
+58 | fn creation_time(process: *mut c_void) -> io::Result<u64> {
+   |    ^^^^^^^^^^^^^
+
+warning: struct `RestartHandoff` is never constructed
+   --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:139:19
+    |
+139 | pub(crate) struct RestartHandoff {
+    |                   ^^^^^^^^^^^^^^
+
+warning: method `commit` is never used
+   --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:145:19
+    |
+144 | impl RestartHandoff {
+    | ------------------- method in this implementation
+145 |     pub(crate) fn commit(mut self) -> io::Result<()> {
+    |                   ^^^^^^
+
+warning: function `prepare` is never used
+   --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:171:4
+    |
+171 | fn prepare(request: &Request<'_>) -> io::Result<RestartHandoff> {
+    |    ^^^^^^^
+
+warning: function `prepare_current_restart` is never used
+   --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:223:15
+    |
+223 | pub(crate) fn prepare_current_restart() -> io::Result<RestartHandoff> {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `GetSystemDirectoryW` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:29:8
+   |
+29 |     fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `GetCurrentProcess` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:30:8
+   |
+30 |     fn GetCurrentProcess() -> *mut c_void;
+   |        ^^^^^^^^^^^^^^^^^
+
+warning: function `GetProcessTimes` is never used
+  --> apps/desktop/tauri/src/infrastructure/windows_restart.rs:31:8
+   |
+31 |     fn GetProcessTimes(
+   |        ^^^^^^^^^^^^^^^
+
+error: linking with `C:\Users\15119\.codex\worktrees\0110-windows-gates\opencodex-desktop\test\software\rustc-tool\rustc-1.99.0-x86_64-pc-windows-msvc\rustc\lib\rustlib\x86_64-pc-windows-msvc\bin\rust-lld.exe` failed: exit code: 1
+  |
+  = note: "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\rustc-tool\\rustc-1.99.0-x86_64-pc-windows-msvc\\rustc\\lib\\rustlib\\x86_64-pc-windows-msvc\\bin\\rust-lld.exe" "-flavor" "link" "/NOLOGO" "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test/runtime\\rustcZ4Mvpp\\symbols.o" "<3 object files omitted>" "kernel32.lib" "<sysroot>\\lib\\rustlib\\x86_64-pc-windows-msvc\\lib/{libtest-*,libgetopts-*,librustc_std_workspace_std-*,libstd-*,libpanic_unwind-*,libcfg_if-*,libwindows_link-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libunwind-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "kernel32.lib" "kernel32.lib" "kernel32.lib" "kernel32.lib" "ntdll.lib" "userenv.lib" "ws2_32.lib" "dbghelp.lib" "/defaultlib:msvcrt" "/NXCOMPAT" "/OUT:test/runtime/windows-restart-unit-tests.exe" "/OPT:REF,NOICF" "/DEBUG" "/PDBALTPATH:%_PDB%"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: rust-lld: error: could not open 'kernel32.lib': no such file or directory
+          rust-lld: error: could not open 'kernel32.lib': no such file or directory
+          rust-lld: error: could not open 'kernel32.lib': no such file or directory
+          rust-lld: error: could not open 'kernel32.lib': no such file or directory
+          rust-lld: error: could not open 'kernel32.lib': no such file or directory
+          rust-lld: error: could not open 'ntdll.lib': no such file or directory
+          rust-lld: error: could not open 'userenv.lib': no such file or directory
+          rust-lld: error: could not open 'ws2_32.lib': no such file or directory
+          rust-lld: error: could not open 'dbghelp.lib': no such file or directory
+          
+
+error: aborting due to 1 previous error; 14 warnings emitted
+

@@ -1,0 +1,27 @@
+{
+  "atUtc": "2026-10-16T02:08:42.8158688+00:00",
+  "status": "passed",
+  "controlledProcessChecks": 40,
+  "controlledPairs": 5,
+  "powershellParsing": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "errors": 0,
+      "sha256": "946c4e0fe9aa1dde254836bfe99cb0078ea99f93fe2cdb3d622efd5b2c539240"
+    },
+    {
+      "path": "test/smoke/windows-restart-handoff.test.ps1",
+      "errors": 0,
+      "sha256": "ffcd9a5171cf9a1f944b13f2365bcdbad93a845360ad32d36ca7e34cb279c95c"
+    }
+  ],
+  "rustProductionMetadataPassed": true,
+  "rustTestMetadataPassed": true,
+  "changedRustFormatPassed": true,
+  "fullRustLinkCompletedLocally": false,
+  "localLinkMissingWindowsSdk": true,
+  "productStarted": false,
+  "foregroundActivated": false,
+  "nativeRecoveryGatePassed": false,
+  "fullPerformanceGatePassed": false
+}

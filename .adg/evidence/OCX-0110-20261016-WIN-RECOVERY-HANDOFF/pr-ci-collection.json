@@ -1,0 +1,96 @@
+{
+  "observedAtUtc": "2026-10-16T02:30:13.334851+00:00",
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "runId": 38838969102,
+  "status": "completed",
+  "conclusion": "success",
+  "headFullTree": "4e1965dea1938394c47c4f6eebff79cbe7c9e2d1",
+  "jobs": [
+    {
+      "id": 116774399275,
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116774399442,
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116774399502,
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116774399551,
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116774399579,
+      "name": "backend-windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 116779823275,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "archivedJobs": [
+    {
+      "name": "frontend",
+      "jobId": 116774399442,
+      "status": "completed",
+      "conclusion": "success",
+      "logArchived": true,
+      "actualCheckout": "7633c3ba1ae1ed5d4a210ed9d3316af54f6893d8",
+      "fullTree": "4e1965dea1938394c47c4f6eebff79cbe7c9e2d1",
+      "bytes": 39542,
+      "sha256": "dfce61ebda1fb7d53591d82b9fbc525003926ad89a8fe86dcd7325f173261ea9",
+      "files": 99,
+      "passed": 535
+    },
+    {
+      "name": "backend",
+      "jobId": 116774399502,
+      "status": "completed",
+      "conclusion": "success",
+      "logArchived": true,
+      "actualCheckout": "7633c3ba1ae1ed5d4a210ed9d3316af54f6893d8",
+      "fullTree": "4e1965dea1938394c47c4f6eebff79cbe7c9e2d1",
+      "bytes": 224490,
+      "sha256": "c36783ebbceb31c65e15431339b39c6f04d6d535c76fe31c39afeb11dc8e9a16",
+      "suites": 35,
+      "passed": 923,
+      "failed": 0,
+      "ignored": 6
+    },
+    {
+      "name": "backend-windows",
+      "jobId": 116774399579,
+      "status": "completed",
+      "conclusion": "success",
+      "logArchived": true,
+      "actualCheckout": "7633c3ba1ae1ed5d4a210ed9d3316af54f6893d8",
+      "fullTree": "4e1965dea1938394c47c4f6eebff79cbe7c9e2d1",
+      "bytes": 350160,
+      "sha256": "e1f11963cebd695138559c8002c4f1f0aee1940e21cfb67e206b1421349ed6fd",
+      "suites": 35,
+      "passed": 650,
+      "failed": 0,
+      "ignored": 7
+    }
+  ],
+  "wholeCiSucceeded": true,
+  "companionPushFailureCleared": false,
+  "workflowRerunRequested": false,
+  "candidateBuildRequested": false,
+  "nativeRecoveryGatePassed": false
+}

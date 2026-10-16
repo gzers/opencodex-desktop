@@ -1,0 +1,96 @@
+{
+  "atUtc": "2026-10-16T02:33:52.221182+00:00",
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "admittedWholeRun": 38838969102,
+  "runs": [
+    {
+      "id": 38838969102,
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 116774399275,
+          "name": "release-tools",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774399442,
+          "name": "frontend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774399502,
+          "name": "backend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774399551,
+          "name": "windows-smoke-evidence",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774399579,
+          "name": "backend-windows",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116779823275,
+          "name": "build",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ]
+    },
+    {
+      "id": 38838964154,
+      "status": "completed",
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 116774382318,
+          "name": "backend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774382547,
+          "name": "release-tools",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774382566,
+          "name": "frontend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116774382572,
+          "name": "backend-windows",
+          "status": "completed",
+          "conclusion": "failure"
+        },
+        {
+          "id": 116774382636,
+          "name": "windows-smoke-evidence",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "id": 116776032437,
+          "name": "build",
+          "status": "completed",
+          "conclusion": "skipped"
+        }
+      ]
+    }
+  ],
+  "workflowRerunRequested": false,
+  "candidateBuildRequested": false,
+  "nativeRecoveryGatePassed": false
+}

@@ -1,0 +1,1414 @@
+﻿2026-10-16T02:09:40.9992242Z Current runner version: '2.337.0'
+2026-10-16T02:09:41.0018494Z ##[group]Runner Image Provisioner
+2026-10-16T02:09:41.0019268Z Hosted Compute Agent
+2026-10-16T02:09:41.0019865Z Version: 20261002.596
+2026-10-16T02:09:41.0020439Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-16T02:09:41.0021113Z Build Date: 2026-10-02T22:28:27Z
+2026-10-16T02:09:41.0021757Z Worker ID: {89e12879-81d9-4d9b-a775-acc47181383f}
+2026-10-16T02:09:41.0022434Z Region: westus2
+2026-10-16T02:09:41.0022958Z Cloud: Azure
+2026-10-16T02:09:41.0023440Z ##[endgroup]
+2026-10-16T02:09:41.0024837Z ##[group]Operating System
+2026-10-16T02:09:41.0025500Z Microsoft Windows Server 2025
+2026-10-16T02:09:41.0026065Z 10.0.26100
+2026-10-16T02:09:41.0027028Z Datacenter
+2026-10-16T02:09:41.0027546Z ##[endgroup]
+2026-10-16T02:09:41.0028065Z ##[group]Runner Image
+2026-10-16T02:09:41.0028673Z Image: windows-2025-vs2026
+2026-10-16T02:09:41.0029225Z Version: 20261007.264.1
+2026-10-16T02:09:41.0030669Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261007.264/images/windows/Windows2025-VS2026-Readme.md
+2026-10-16T02:09:41.0032227Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261007.264
+2026-10-16T02:09:41.0033224Z ##[endgroup]
+2026-10-16T02:09:41.0034353Z ##[group]GITHUB_TOKEN Permissions
+2026-10-16T02:09:41.0036197Z Actions: read
+2026-10-16T02:09:41.0036758Z Contents: read
+2026-10-16T02:09:41.0037295Z Metadata: read
+2026-10-16T02:09:41.0037794Z ##[endgroup]
+2026-10-16T02:09:41.0039732Z Secret source: Actions
+2026-10-16T02:09:41.0040652Z Cache mode: write
+2026-10-16T02:09:41.0041286Z Prepare workflow directory
+2026-10-16T02:09:41.0494731Z Prepare all required actions
+2026-10-16T02:09:41.0542755Z Getting action download info
+2026-10-16T02:09:41.3927468Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-16T02:09:41.5297980Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-10-16T02:09:41.7002830Z Download action repository 'dtolnay/rust-toolchain@stable' (SHA:686976e191b89faba57d3206551f0f330d8cb249)
+2026-10-16T02:09:41.8716496Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-16T02:09:42.2591540Z Complete job name: backend-windows
+2026-10-16T02:09:42.4150177Z ##[group]Run actions/checkout@v5
+2026-10-16T02:09:42.4151273Z with:
+2026-10-16T02:09:42.4151753Z   repository: gzers/opencodex-desktop
+2026-10-16T02:09:42.4156269Z   token: ***
+2026-10-16T02:09:42.4156730Z   ssh-strict: true
+2026-10-16T02:09:42.4157197Z   ssh-user: git
+2026-10-16T02:09:42.4157668Z   persist-credentials: true
+2026-10-16T02:09:42.4158183Z   clean: true
+2026-10-16T02:09:42.4158653Z   sparse-checkout-cone-mode: true
+2026-10-16T02:09:42.4159207Z   fetch-depth: 1
+2026-10-16T02:09:42.4159644Z   fetch-tags: false
+2026-10-16T02:09:42.4160105Z   show-progress: true
+2026-10-16T02:09:42.4160567Z   lfs: false
+2026-10-16T02:09:42.4161389Z   submodules: false
+2026-10-16T02:09:42.4161873Z   set-safe-directory: true
+2026-10-16T02:09:42.4162409Z   allow-unsafe-pr-checkout: false
+2026-10-16T02:09:42.4163445Z ##[endgroup]
+2026-10-16T02:09:42.5947781Z Syncing repository: gzers/opencodex-desktop
+2026-10-16T02:09:42.5950683Z ##[group]Getting Git version info
+2026-10-16T02:09:42.5952198Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-10-16T02:09:42.7165238Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-16T02:09:43.0533956Z git version 2.56.0.windows.2
+2026-10-16T02:09:43.0715413Z ##[endgroup]
+2026-10-16T02:09:43.0724574Z Temporarily overriding HOME='D:\a\_temp\83bb91ea-0a2f-48ee-a4d4-ce02e0353752' before making global git config changes
+2026-10-16T02:09:43.0729009Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T02:09:43.0733805Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-16T02:09:43.1569196Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-10-16T02:09:43.1577025Z ##[group]Initializing the repository
+2026-10-16T02:09:43.1586076Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-10-16T02:09:43.2800195Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-10-16T02:09:43.2852864Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-10-16T02:09:43.3596899Z ##[endgroup]
+2026-10-16T02:09:43.3599423Z ##[group]Disabling automatic garbage collection
+2026-10-16T02:09:43.3612568Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-16T02:09:43.4084962Z ##[endgroup]
+2026-10-16T02:09:43.4087190Z ##[group]Setting up auth
+2026-10-16T02:09:43.4098957Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T02:09:43.4569337Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-16T02:09:45.0391649Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T02:09:45.0816084Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-16T02:09:45.9145668Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T02:09:45.9525753Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-16T02:09:46.5461791Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-16T02:09:46.5941612Z ##[endgroup]
+2026-10-16T02:09:46.5942452Z ##[group]Fetching the repository
+2026-10-16T02:09:46.5966391Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +823a8a0615153068594daef530c2e80f1d95fc29:refs/remotes/origin/feature/0.1.10-windows-query-etw
+2026-10-16T02:09:53.8594067Z From https://github.com/gzers/opencodex-desktop
+2026-10-16T02:09:53.8595253Z  * [new ref]         823a8a0615153068594daef530c2e80f1d95fc29 -> origin/feature/0.1.10-windows-query-etw
+2026-10-16T02:09:53.8644445Z ##[endgroup]
+2026-10-16T02:09:53.8646469Z ##[group]Determining the checkout info
+2026-10-16T02:09:53.8647451Z ##[endgroup]
+2026-10-16T02:09:53.8658770Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-16T02:09:53.9515192Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-16T02:09:53.9935120Z ##[group]Checking out the ref
+2026-10-16T02:09:53.9944626Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/0.1.10-windows-query-etw refs/remotes/origin/feature/0.1.10-windows-query-etw
+2026-10-16T02:09:54.2720774Z Switched to a new branch 'feature/0.1.10-windows-query-etw'
+2026-10-16T02:09:54.2863402Z branch 'feature/0.1.10-windows-query-etw' set up to track 'origin/feature/0.1.10-windows-query-etw'.
+2026-10-16T02:09:54.2918655Z ##[endgroup]
+2026-10-16T02:09:54.3811488Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-16T02:09:54.4210442Z 823a8a0615153068594daef530c2e80f1d95fc29
+2026-10-16T02:09:54.4919531Z ##[group]Run actions/setup-node@v5
+2026-10-16T02:09:54.4919925Z with:
+2026-10-16T02:09:54.4920169Z   node-version: 24
+2026-10-16T02:09:54.4920420Z   always-auth: false
+2026-10-16T02:09:54.4920670Z   check-latest: false
+2026-10-16T02:09:54.4923453Z   token: ***
+2026-10-16T02:09:54.4924382Z   package-manager-cache: true
+2026-10-16T02:09:54.4924706Z ##[endgroup]
+2026-10-16T02:09:54.7280001Z Found in cache @ C:\hostedtoolcache\windows\node\24.21.0\x64
+2026-10-16T02:09:54.7287382Z (node:2060) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:09:54.7288361Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:09:54.7290516Z ##[group]Environment details
+2026-10-16T02:10:07.4810899Z node: v24.21.0
+2026-10-16T02:10:07.4811315Z npm: 11.19.0
+2026-10-16T02:10:07.4811580Z yarn: 1.22.22
+2026-10-16T02:10:07.4812420Z ##[endgroup]
+2026-10-16T02:10:07.5342874Z ##[group]Run dtolnay/rust-toolchain@stable
+2026-10-16T02:10:07.5343290Z with:
+2026-10-16T02:10:07.5343540Z   components: rustfmt, clippy
+2026-10-16T02:10:07.5343846Z   toolchain: stable
+2026-10-16T02:10:07.5344096Z ##[endgroup]
+2026-10-16T02:10:07.5417911Z ##[start-action display=Parse toolchain version;id=__dtolnay_rust-toolchain.parse]
+2026-10-16T02:10:07.5588949Z ##[group]Run if [[ -z $toolchain ]]; then
+2026-10-16T02:10:07.5589328Z [36;1mif [[ -z $toolchain ]]; then[0m
+2026-10-16T02:10:07.5589858Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+2026-10-16T02:10:07.5590407Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+2026-10-16T02:10:07.5590709Z [36;1m  exit 1[0m
+2026-10-16T02:10:07.5591049Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+2026-10-16T02:10:07.5591465Z [36;1m  if [[ Windows == macOS ]]; then[0m
+2026-10-16T02:10:07.5592037Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-10-16T02:10:07.5592549Z [36;1m  else[0m
+2026-10-16T02:10:07.5592940Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+2026-10-16T02:10:07.5593403Z [36;1m  fi[0m
+2026-10-16T02:10:07.5593694Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+2026-10-16T02:10:07.5594218Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+2026-10-16T02:10:07.5594678Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+2026-10-16T02:10:07.5595186Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+2026-10-16T02:10:07.5595673Z [36;1melse[0m
+2026-10-16T02:10:07.5595859Z [36;1m  delimiter=EOF[0m
+2026-10-16T02:10:07.5596594Z [36;1m  while [[ $toolchain == *$delimiter* ]]; do delimiter+=_; done[0m
+2026-10-16T02:10:07.5597125Z [36;1m  printf 'toolchain<<%s\n%s\n%s\n' "$delimiter" "$toolchain" "$delimiter" >> $GITHUB_OUTPUT[0m
+2026-10-16T02:10:07.5597543Z [36;1mfi[0m
+2026-10-16T02:10:07.5618663Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:07.5619075Z env:
+2026-10-16T02:10:07.5619247Z   toolchain: stable
+2026-10-16T02:10:07.5619438Z ##[endgroup]
+2026-10-16T02:10:07.9225123Z ##[end-action id=__dtolnay_rust-toolchain.parse;outcome=success;conclusion=success;duration_ms=380]
+2026-10-16T02:10:07.9230049Z ##[start-action display=Set $CARGO_HOME;id=__dtolnay_rust-toolchain.__run]
+2026-10-16T02:10:07.9367682Z ##[group]Run echo CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV
+2026-10-16T02:10:07.9368213Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$USERPROFILE\.cargo"} >> $GITHUB_ENV[0m
+2026-10-16T02:10:07.9384593Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:07.9385004Z ##[endgroup]
+2026-10-16T02:10:07.9898821Z ##[end-action id=__dtolnay_rust-toolchain.__run;outcome=success;conclusion=success;duration_ms=66]
+2026-10-16T02:10:07.9901104Z ##[start-action display=Install rustup if needed;id=__dtolnay_rust-toolchain.__run_2]
+2026-10-16T02:10:07.9910560Z ##[end-action id=__dtolnay_rust-toolchain.__run_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-16T02:10:07.9937597Z ##[start-action display=Install rustup if needed on windows;id=__dtolnay_rust-toolchain.__run_3]
+2026-10-16T02:10:08.0072809Z ##[group]Run if ! command -v rustup &>/dev/null; then
+2026-10-16T02:10:08.0073167Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+2026-10-16T02:10:08.0074210Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://win.rustup.rs/x86_64 --output 'D:\a\_temp\rustup-init.exe'[0m
+2026-10-16T02:10:08.0077235Z [36;1m  'D:\a\_temp\rustup-init.exe' --default-toolchain none --no-modify-path -y[0m
+2026-10-16T02:10:08.0077807Z [36;1m  echo "$CARGO_HOME\bin" >> $GITHUB_PATH[0m
+2026-10-16T02:10:08.0078103Z [36;1mfi[0m
+2026-10-16T02:10:08.0094625Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:08.0095025Z env:
+2026-10-16T02:10:08.0095227Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:08.0095501Z ##[endgroup]
+2026-10-16T02:10:08.0706629Z ##[end-action id=__dtolnay_rust-toolchain.__run_3;outcome=success;conclusion=success;duration_ms=76]
+2026-10-16T02:10:08.0720797Z ##[start-action display=rustup toolchain install stable;id=__dtolnay_rust-toolchain.__run_4]
+2026-10-16T02:10:08.0857798Z ##[group]Run set -f  # split targets and components on commas and whitespace, without glob expansion
+2026-10-16T02:10:08.0858465Z [36;1mset -f  # split targets and components on commas and whitespace, without glob expansion[0m
+2026-10-16T02:10:08.0858900Z [36;1mflags=()[0m
+2026-10-16T02:10:08.0859183Z [36;1mfor t in ${targets//,/ }; do flags+=(--target "$t"); done[0m
+2026-10-16T02:10:08.0859585Z [36;1mfor c in ${components//,/ }; do flags+=(--component "$c"); done[0m
+2026-10-16T02:10:08.0860074Z [36;1mif [[ $toolchain == nightly && -n $components ]]; then flags+=(--allow-downgrade); fi[0m
+2026-10-16T02:10:08.0860488Z [36;1mlog=$(mktemp)[0m
+2026-10-16T02:10:08.0860735Z [36;1mtrap 'rm -f "$log"' EXIT[0m
+2026-10-16T02:10:08.0860983Z [36;1mfor attempt in 1 2 3 4 5; do[0m
+2026-10-16T02:10:08.0861551Z [36;1m  if rustup toolchain install "$toolchain" "${flags[@]}" --profile minimal --no-self-update --force-non-host 2>&1 | tee "$log"; then[0m
+2026-10-16T02:10:08.0862120Z [36;1m    break[0m
+2026-10-16T02:10:08.0862305Z [36;1m  else[0m
+2026-10-16T02:10:08.0862584Z [36;1m    status=$?[0m
+2026-10-16T02:10:08.0862938Z [36;1m  fi[0m
+2026-10-16T02:10:08.0863226Z [36;1m  if [[ $attempt == 5 ]] || ! grep -Fq 'checksum failed for ' "$log" \[0m
+2026-10-16T02:10:08.0863794Z [36;1m      || ! grep -Fq 'this is likely due to an ongoing update of the official release server' "$log"; then[0m
+2026-10-16T02:10:08.0864262Z [36;1m    exit "$status"[0m
+2026-10-16T02:10:08.0864476Z [36;1m  fi[0m
+2026-10-16T02:10:08.0864814Z [36;1m  echo "Retrying rustup toolchain install in 30 seconds (retry $attempt of 4)" >&2[0m
+2026-10-16T02:10:08.0865235Z [36;1m  sleep 30[0m
+2026-10-16T02:10:08.0865421Z [36;1mdone[0m
+2026-10-16T02:10:08.0882830Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:08.0883390Z env:
+2026-10-16T02:10:08.0883603Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:08.0883860Z   toolchain: stable
+2026-10-16T02:10:08.0884041Z   targets: 
+2026-10-16T02:10:08.0884238Z   components: rustfmt, clippy
+2026-10-16T02:10:08.0884478Z   RUSTUP_PERMIT_COPY_RENAME: 1
+2026-10-16T02:10:08.0884702Z ##[endgroup]
+2026-10-16T02:10:12.4836978Z info: syncing channel updates for stable-x86_64-pc-windows-msvc
+2026-10-16T02:10:13.0849143Z info: latest update on 2026-10-15 for version 1.99.1 (58cf8f9c3 2026-10-13)
+2026-10-16T02:10:13.1165688Z info: removing previous version of component rustfmt
+2026-10-16T02:10:13.1323122Z info: removing previous version of component clippy
+2026-10-16T02:10:13.1641083Z info: removing previous version of component rust-std for target x86_64-pc-windows-gnu
+2026-10-16T02:10:13.3060496Z info: removing previous version of component rust-std for target i686-pc-windows-msvc
+2026-10-16T02:10:13.4168123Z info: removing previous version of component cargo
+2026-10-16T02:10:13.5277197Z info: removing previous version of component rust-std
+2026-10-16T02:10:13.6227802Z info: removing previous version of component rustc
+2026-10-16T02:10:13.7811410Z info: downloading 7 components
+2026-10-16T02:10:28.8705403Z 
+2026-10-16T02:10:28.9007068Z   stable-x86_64-pc-windows-msvc updated - rustc 1.99.1 (58cf8f9c3 2026-10-13) (from rustc 1.99.0 (b940084d7 2026-09-28))
+2026-10-16T02:10:28.9007836Z 
+2026-10-16T02:10:28.9563421Z ##[end-action id=__dtolnay_rust-toolchain.__run_4;outcome=success;conclusion=success;duration_ms=20883]
+2026-10-16T02:10:28.9571877Z ##[start-action display=rustup default stable;id=__dtolnay_rust-toolchain.__run_5]
+2026-10-16T02:10:28.9709828Z ##[group]Run rustup default "$toolchain" --force-non-host
+2026-10-16T02:10:28.9710220Z [36;1mrustup default "$toolchain" --force-non-host[0m
+2026-10-16T02:10:28.9728065Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:28.9728468Z env:
+2026-10-16T02:10:28.9728669Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:28.9728941Z   toolchain: stable
+2026-10-16T02:10:28.9729140Z ##[endgroup]
+2026-10-16T02:10:29.0865046Z info: using existing install for stable-x86_64-pc-windows-msvc
+2026-10-16T02:10:29.0911790Z info: default toolchain set to stable-x86_64-pc-windows-msvc
+2026-10-16T02:10:29.0912277Z 
+2026-10-16T02:10:29.1207310Z   stable-x86_64-pc-windows-msvc unchanged - rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-10-16T02:10:29.1208311Z 
+2026-10-16T02:10:29.1313584Z ##[end-action id=__dtolnay_rust-toolchain.__run_5;outcome=success;conclusion=success;duration_ms=174]
+2026-10-16T02:10:29.1317205Z ##[start-action display=Create cachekey;id=__dtolnay_rust-toolchain.rustc-version]
+2026-10-16T02:10:29.1450605Z ##[group]Run DATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')
+2026-10-16T02:10:29.1451444Z [36;1mDATE=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+2026-10-16T02:10:29.1452106Z [36;1mHASH=$(rustc +"$toolchain" --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+2026-10-16T02:10:29.1452606Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+2026-10-16T02:10:29.1468030Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:29.1468418Z env:
+2026-10-16T02:10:29.1468629Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:29.1468884Z   toolchain: stable
+2026-10-16T02:10:29.1469074Z ##[endgroup]
+2026-10-16T02:10:30.1960462Z ##[end-action id=__dtolnay_rust-toolchain.rustc-version;outcome=success;conclusion=success;duration_ms=1064]
+2026-10-16T02:10:30.1963083Z ##[start-action display=Disable incremental compilation;id=__dtolnay_rust-toolchain.__run_6]
+2026-10-16T02:10:30.2092765Z ##[group]Run if [ -z "${CARGO_INCREMENTAL+set}" ]; then
+2026-10-16T02:10:30.2093149Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+2026-10-16T02:10:30.2093466Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+2026-10-16T02:10:30.2093736Z [36;1mfi[0m
+2026-10-16T02:10:30.2109491Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:30.2109889Z env:
+2026-10-16T02:10:30.2110096Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:30.2110366Z ##[endgroup]
+2026-10-16T02:10:30.2531181Z ##[end-action id=__dtolnay_rust-toolchain.__run_6;outcome=success;conclusion=success;duration_ms=56]
+2026-10-16T02:10:30.2534526Z ##[start-action display=Enable colors in Cargo output;id=__dtolnay_rust-toolchain.__run_7]
+2026-10-16T02:10:30.2697227Z ##[group]Run if [ -z "${CARGO_TERM_COLOR+set}" ]; then
+2026-10-16T02:10:30.2697836Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+2026-10-16T02:10:30.2699535Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+2026-10-16T02:10:30.2700040Z [36;1mfi[0m
+2026-10-16T02:10:30.2720694Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:30.2721098Z env:
+2026-10-16T02:10:30.2721305Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:30.2721576Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:10:30.2721782Z ##[endgroup]
+2026-10-16T02:10:30.3205714Z ##[end-action id=__dtolnay_rust-toolchain.__run_7;outcome=success;conclusion=success;duration_ms=67]
+2026-10-16T02:10:30.3210083Z ##[start-action display=Enable Cargo sparse registry;id=__dtolnay_rust-toolchain.__run_8]
+2026-10-16T02:10:30.3373198Z ##[group]Run # implemented in 1.66, stabilized in 1.68, made default in 1.70
+2026-10-16T02:10:30.3373760Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+2026-10-16T02:10:30.3374415Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+2026-10-16T02:10:30.3375123Z [36;1m  if rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+2026-10-16T02:10:30.3375669Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-10-16T02:10:30.3376152Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+2026-10-16T02:10:30.3376663Z [36;1m  elif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+2026-10-16T02:10:30.3377191Z [36;1m    touch "D:\a\_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+2026-10-16T02:10:30.3377657Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+2026-10-16T02:10:30.3378001Z [36;1m  fi[0m
+2026-10-16T02:10:30.3378183Z [36;1mfi[0m
+2026-10-16T02:10:30.3395407Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:30.3395828Z env:
+2026-10-16T02:10:30.3396046Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:30.3396341Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:10:30.3396573Z   CARGO_TERM_COLOR: always
+2026-10-16T02:10:30.3396803Z   toolchain: stable
+2026-10-16T02:10:30.3397014Z ##[endgroup]
+2026-10-16T02:10:30.5268343Z ##[end-action id=__dtolnay_rust-toolchain.__run_8;outcome=success;conclusion=success;duration_ms=205]
+2026-10-16T02:10:30.5272907Z ##[start-action display=Work around spurious network errors in curl 8.0;id=__dtolnay_rust-toolchain.__run_9]
+2026-10-16T02:10:30.5404054Z ##[group]Run # https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation
+2026-10-16T02:10:30.5404813Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+2026-10-16T02:10:30.5405459Z [36;1mif rustc +"$toolchain" --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+2026-10-16T02:10:30.5405940Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+2026-10-16T02:10:30.5406242Z [36;1mfi[0m
+2026-10-16T02:10:30.5423297Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:30.5423715Z env:
+2026-10-16T02:10:30.5423917Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:30.5424191Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:10:30.5424407Z   CARGO_TERM_COLOR: always
+2026-10-16T02:10:30.5424628Z   toolchain: stable
+2026-10-16T02:10:30.5424820Z ##[endgroup]
+2026-10-16T02:10:30.6550802Z ##[end-action id=__dtolnay_rust-toolchain.__run_9;outcome=success;conclusion=success;duration_ms=127]
+2026-10-16T02:10:30.6555644Z ##[start-action display=rustc +stable --version --verbose;id=__dtolnay_rust-toolchain.__run_10]
+2026-10-16T02:10:30.6689699Z ##[group]Run rustc +"$toolchain" --version --verbose
+2026-10-16T02:10:30.6690061Z [36;1mrustc +"$toolchain" --version --verbose[0m
+2026-10-16T02:10:30.6706633Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-16T02:10:30.6707036Z env:
+2026-10-16T02:10:30.6707433Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:30.6707708Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:10:30.6707926Z   CARGO_TERM_COLOR: always
+2026-10-16T02:10:30.6708141Z   toolchain: stable
+2026-10-16T02:10:30.6708341Z ##[endgroup]
+2026-10-16T02:10:30.7580041Z rustc 1.99.1 (58cf8f9c3 2026-10-13)
+2026-10-16T02:10:30.7580631Z binary: rustc
+2026-10-16T02:10:30.7581157Z commit-hash: 58cf8f9c35b355199727627d07ae34a4e2846d67
+2026-10-16T02:10:30.7581747Z commit-date: 2026-10-13
+2026-10-16T02:10:30.7582203Z host: x86_64-pc-windows-msvc
+2026-10-16T02:10:30.7582616Z release: 1.99.1
+2026-10-16T02:10:30.7583085Z LLVM version: 23.1.1
+2026-10-16T02:10:30.7714042Z ##[end-action id=__dtolnay_rust-toolchain.__run_10;outcome=success;conclusion=success;duration_ms=115]
+2026-10-16T02:10:30.7881429Z ##[group]Run npm --prefix ../ui ci
+2026-10-16T02:10:30.7881785Z [36;1mnpm --prefix ../ui ci[0m
+2026-10-16T02:10:30.8573035Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T02:10:30.8573503Z env:
+2026-10-16T02:10:30.8573751Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:30.8574071Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:10:30.8574326Z   CARGO_TERM_COLOR: always
+2026-10-16T02:10:30.8574583Z ##[endgroup]
+2026-10-16T02:10:34.6898168Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-16T02:10:38.4771068Z 
+2026-10-16T02:10:38.4771994Z added 146 packages, and audited 147 packages in 7s
+2026-10-16T02:10:38.4772371Z 
+2026-10-16T02:10:38.4773736Z 27 packages are looking for funding
+2026-10-16T02:10:38.4776598Z   run `npm fund` for details
+2026-10-16T02:10:38.4786913Z 
+2026-10-16T02:10:38.4787217Z found 0 vulnerabilities
+2026-10-16T02:10:40.3983511Z ##[group]Run npm --prefix ../ui run build
+2026-10-16T02:10:40.3983953Z [36;1mnpm --prefix ../ui run build[0m
+2026-10-16T02:10:40.4067880Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T02:10:40.4068254Z env:
+2026-10-16T02:10:40.4068487Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:10:40.4068765Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:10:40.4068979Z   CARGO_TERM_COLOR: always
+2026-10-16T02:10:40.4069198Z ##[endgroup]
+2026-10-16T02:10:41.4117341Z 
+2026-10-16T02:10:41.4118063Z > opencodex-desktop-ui@0.1.10 build
+2026-10-16T02:10:41.4118773Z > vue-tsc --noEmit && vite build
+2026-10-16T02:10:41.4119095Z 
+2026-10-16T02:10:56.8132939Z [36mvite v8.3.0 [32mbuilding client environment for production...[36m[39m
+2026-10-16T02:10:56.8286835Z transforming...
+2026-10-16T02:10:57.8135471Z ✓ 175 modules transformed.
+2026-10-16T02:10:57.8722950Z rendering chunks...
+2026-10-16T02:10:57.9469405Z computing gzip size...
+2026-10-16T02:10:57.9540835Z dist/index.html                   0.41 kB │ gzip:   0.28 kB
+2026-10-16T02:10:57.9541802Z dist/assets/index-Bx9SSXaW.css   96.18 kB │ gzip:  17.55 kB
+2026-10-16T02:10:57.9542913Z dist/assets/index-CYK4o80U.js   454.72 kB │ gzip: 148.22 kB
+2026-10-16T02:10:57.9543364Z 
+2026-10-16T02:10:57.9557201Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/core.js is dynamically imported by src/app/appearance/effects.ts, src/contracts/runtimeStatus.ts, src/features/about/api.ts, src/features/backup/api.ts, src/features/codex-shim/api.ts, ... but also statically imported by node_modules/@tauri-apps/api/event.js, node_modules/@tauri-apps/plugin-dialog/dist-js/index.js, node_modules/@tauri-apps/plugin-process/dist-js/index.js, src/app/appearance/nativeWindow.ts, src/features/runtime/api.ts, ..., dynamic import will not move module into another chunk.
+2026-10-16T02:10:57.9561435Z [39m
+2026-10-16T02:10:57.9564994Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+2026-10-16T02:10:57.9570142Z [39m
+2026-10-16T02:10:57.9574409Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+2026-10-16T02:10:57.9577662Z [39m
+2026-10-16T02:10:57.9581029Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, src/features/tray/api.ts but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+2026-10-16T02:10:57.9583974Z [39m
+2026-10-16T02:10:57.9584461Z [32m✓ built in 1.14s[39m
+2026-10-16T02:11:07.3279749Z ##[group]Run cargo fmt --all -- --check
+2026-10-16T02:11:07.3280914Z [36;1mcargo fmt --all -- --check[0m
+2026-10-16T02:11:07.3389202Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T02:11:07.3389794Z env:
+2026-10-16T02:11:07.3390139Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:11:07.3390588Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:11:07.3390935Z   CARGO_TERM_COLOR: always
+2026-10-16T02:11:07.3391289Z ##[endgroup]
+2026-10-16T02:11:10.9770968Z ##[group]Run cargo clippy --locked --workspace --all-targets -- -D warnings
+2026-10-16T02:11:10.9771583Z [36;1mcargo clippy --locked --workspace --all-targets -- -D warnings[0m
+2026-10-16T02:11:10.9849297Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T02:11:10.9849662Z env:
+2026-10-16T02:11:10.9849866Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:11:10.9850139Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:11:10.9850373Z   CARGO_TERM_COLOR: always
+2026-10-16T02:11:10.9850590Z ##[endgroup]
+2026-10-16T02:11:18.0216753Z [1m[92m    Updating[0m crates.io index
+2026-10-16T02:11:18.4577071Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [56] Failure when receiving data from the peer (Recv failure: Connection was reset)
+2026-10-16T02:11:18.4580827Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4591135Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4595839Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4597289Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4598696Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4600047Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4601402Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4603283Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4605486Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4607620Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4609163Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4610533Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4611894Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4613316Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4614653Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4618477Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4620047Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4621484Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4622895Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4624257Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4627328Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4629840Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4632815Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4635308Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4637722Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4640147Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4642553Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4645249Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4649506Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4652960Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4655401Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4657821Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4660981Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4663421Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4666127Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4669390Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4671900Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4674325Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4676736Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4679147Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4681543Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4684451Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4687223Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4689644Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4692042Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4695499Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4697971Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4701248Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4704236Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4707790Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4710663Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4713134Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4715557Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4718588Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4721759Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4723294Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4724671Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4726443Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4727812Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4729157Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4730511Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4731869Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4733203Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4734530Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4735911Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4737769Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4740891Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4743675Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4746447Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4748951Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4751508Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4754694Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4757254Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4759740Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4762442Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4765049Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4768024Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4770567Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4773053Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4775546Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4778020Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4780536Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4783632Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4787462Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4791371Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4795114Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4797896Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4800347Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4802753Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4805848Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4808301Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4811297Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4814166Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4818423Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4821124Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4823608Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:18.4827003Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:21.3869336Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:22.8918790Z [1m[92m Downloading[0m crates ...
+2026-10-16T02:11:23.0351328Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0360302Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0366298Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0368909Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0371508Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0373982Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0376763Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0379168Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0381975Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0384374Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0386829Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0389241Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0391712Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0394116Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0396821Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0399475Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0401899Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0404615Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0407014Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0409409Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0411788Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0414172Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0416826Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0419235Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0421629Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0424003Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0426370Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0428751Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0431452Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0433840Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0436499Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0438963Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0441377Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0443757Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0446668Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0449504Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0452689Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0455118Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0457507Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0459904Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0462277Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0464644Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0467049Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0469417Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0472080Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0474514Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0476915Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0479640Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0482046Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0484490Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0486884Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0489267Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0491983Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0494422Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0497066Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0499504Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0501894Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0504289Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0506666Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0509058Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0511744Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0514184Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0516588Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0518980Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0521373Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0523779Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0526180Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0528844Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0531526Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0533980Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0536386Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0538802Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0541218Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0544827Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0547345Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0549786Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0552514Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0554928Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0557335Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0559738Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0562175Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0564565Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0567777Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0570457Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0573403Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0578289Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0582717Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0584729Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0586187Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0587576Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0588932Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0590523Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0591870Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0593672Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0595047Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0596384Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0597712Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0599044Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0600369Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0601719Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0603040Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0604354Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0610481Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0613066Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0615517Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0617907Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0620622Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0623035Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0625431Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0627834Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0630491Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0632933Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0635505Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0638009Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0640437Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0642849Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0645240Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0647616Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0650022Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0652787Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0655225Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0657626Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0660089Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0662494Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0664868Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0667627Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0670146Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0672839Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0675376Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0677855Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0680348Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0682830Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0685525Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0688044Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0690797Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0693335Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0695814Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0698316Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0700783Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0703194Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0705599Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0708002Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0710426Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0713153Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0715588Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0718236Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0720664Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0723139Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0725650Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0728102Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0730608Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0733530Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0736023Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0738541Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0741004Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0743430Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0745856Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0748250Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0750033Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0751631Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0753268Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0754625Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0755944Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0780588Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0783552Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0786110Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0809497Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0813704Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0817484Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0831038Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0832322Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Recv failure: Connection was reset)
+2026-10-16T02:11:23.0833609Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Recv failure: Connection was reset)
+2026-10-16T02:11:23.0834882Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0836239Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0837577Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0838899Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0840225Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0841545Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0842917Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0844223Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0845541Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0847093Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0848435Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0849968Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0851503Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0852852Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0854185Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0855501Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0856828Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0858155Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0859482Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0860884Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0862209Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0863529Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0864842Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0866155Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0867669Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0868998Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0870550Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0871878Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0873204Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0875787Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0878240Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0880925Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0883354Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0885775Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0888518Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0890986Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0897065Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0901373Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0902931Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0904296Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0905640Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0906982Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0909506Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0912405Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0914936Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0917427Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0919916Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0922395Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0924881Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0945774Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0947308Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0949178Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0950545Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0951893Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0953231Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0956491Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0958623Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0960396Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0963272Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0965354Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0967581Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0970885Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0972489Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0974335Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0976072Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0977417Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0978957Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0980303Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0981628Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0982955Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0984520Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0986048Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0987412Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0988926Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0990253Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0991563Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0992870Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0994314Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0995648Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:23.0996694Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.0997476Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.0998890Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1000282Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1001664Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1003043Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1004421Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1005811Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1007209Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1008873Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1010260Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1011643Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1013022Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1014400Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1015769Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1017133Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1018513Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1019791Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1020562Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1021339Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1022117Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1022860Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1023619Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1024402Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1025158Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1026064Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1026901Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1027656Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1028730Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1029518Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1030294Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1031050Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1031802Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1032549Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1033301Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1034049Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1034814Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1035569Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1036326Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1037075Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1037822Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1038565Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1039298Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1040041Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1040790Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1041572Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1042315Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1043192Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1043930Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1044678Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1045414Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1046335Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1047115Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1047876Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1048795Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1049555Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1050302Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1051053Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1051921Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1052683Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1053433Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1054185Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1054933Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1055684Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1056425Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1057173Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1057917Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1058662Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1059406Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1060142Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1060897Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1061644Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1062395Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1063136Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1063881Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1064896Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1065680Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1066639Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1067581Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1068561Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1069329Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1070081Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1070840Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1071579Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1072329Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1073075Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1073829Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1074569Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1075310Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1076143Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1076893Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1077651Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1078391Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:23.1079322Z [1m[93mwarning[0m: spurious network error (3 tries remaining): [16] Error in the HTTP2 framing layer (Recv failure: Connection was reset)
+2026-10-16T02:11:23.6728655Z [1m[92m  Downloaded[0m time-macros v0.2.32
+2026-10-16T02:11:24.0842761Z [1m[92m  Downloaded[0m syn v2.0.119
+2026-10-16T02:11:24.2207322Z [1m[92m  Downloaded[0m schemars_derive v0.8.22
+2026-10-16T02:11:24.3322358Z [1m[92m  Downloaded[0m once_cell v1.21.4
+2026-10-16T02:11:24.3583007Z [1m[92m  Downloaded[0m dtoa v1.0.11
+2026-10-16T02:11:24.3724534Z [1m[92m  Downloaded[0m crc32fast v1.5.2
+2026-10-16T02:11:24.3924212Z [1m[92m  Downloaded[0m string_cache_codegen v0.6.1
+2026-10-16T02:11:24.3993667Z [1m[92m  Downloaded[0m unicode-ident v1.0.26
+2026-10-16T02:11:24.4320739Z [1m[92m  Downloaded[0m hashbrown v0.17.1
+2026-10-16T02:11:24.4757757Z [1m[92m  Downloaded[0m minisign-verify v0.2.5
+2026-10-16T02:11:24.4946661Z [1m[92m  Downloaded[0m dom_query v0.28.0
+2026-10-16T02:11:24.5829724Z [1m[92m  Downloaded[0m ident_case v1.0.1
+2026-10-16T02:11:24.6035491Z [1m[92m  Downloaded[0m dyn-clone v1.0.20
+2026-10-16T02:11:24.6763631Z [1m[92m  Downloaded[0m serde_derive_internals v0.29.1
+2026-10-16T02:11:24.6908593Z [1m[92m  Downloaded[0m miniz_oxide v0.8.9
+2026-10-16T02:11:24.7123097Z [1m[92m  Downloaded[0m subtle v2.6.1
+2026-10-16T02:11:24.7248188Z [1m[92m  Downloaded[0m icu_collections v2.3.0
+2026-10-16T02:11:24.8000299Z [1m[92m  Downloaded[0m time-core v0.1.9
+2026-10-16T02:11:24.8123699Z [1m[92m  Downloaded[0m windows-interface v0.59.3
+2026-10-16T02:11:24.8220703Z [1m[92m  Downloaded[0m url v2.5.8
+2026-10-16T02:11:24.8414662Z [1m[92m  Downloaded[0m windows_x86_64_msvc v0.52.6
+2026-10-16T02:11:24.8619049Z [1m[92m  Downloaded[0m cargo_metadata v0.19.2
+2026-10-16T02:11:24.8825082Z [1m[92m  Downloaded[0m powerfmt v0.2.0
+2026-10-16T02:11:24.9719183Z [1m[92m  Downloaded[0m rand_chacha v0.9.0
+2026-10-16T02:11:25.1311972Z [1m[92m  Downloaded[0m servo_arc v0.4.3
+2026-10-16T02:11:25.6012794Z [1m[92m  Downloaded[0m windows v0.62.2
+2026-10-16T02:11:27.8280296Z [1m[92m  Downloaded[0m tendril v0.5.1
+2026-10-16T02:11:27.8476113Z [1m[92m  Downloaded[0m crossbeam-channel v0.5.17
+2026-10-16T02:11:28.6704633Z [1m[92m  Downloaded[0m tokio-macros v2.7.2
+2026-10-16T02:11:28.7000041Z [1m[92m  Downloaded[0m form_urlencoded v1.2.2
+2026-10-16T02:11:28.7533974Z [1m[92m  Downloaded[0m foldhash v0.2.0
+2026-10-16T02:11:28.9408087Z [1m[92m  Downloaded[0m byteorder v1.5.0
+2026-10-16T02:11:28.9854210Z [1m[92m  Downloaded[0m parking_lot_core v0.9.12
+2026-10-16T02:11:29.0537397Z [1m[92m  Downloaded[0m time v0.3.55
+2026-10-16T02:11:29.4660713Z [1m[92m  Downloaded[0m jiff-tzdb-platform v0.1.3
+2026-10-16T02:11:29.4778156Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4783462Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4787065Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4789771Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4791228Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4792619Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4794305Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4795714Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4797089Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4799789Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4801261Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4802637Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4803994Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4805370Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4806716Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4808065Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4809407Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4810766Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4812117Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4813537Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4831495Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4833214Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4834605Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4835499Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4837253Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4840139Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4841655Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4843147Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4845235Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4847217Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4848737Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4850167Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4851574Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4852951Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4854300Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4855651Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4857297Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4858727Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4860393Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4861782Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4863147Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4864511Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4865859Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4867208Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4868566Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4869922Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4871288Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4872647Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:29.4873613Z [1m[92m  Downloaded[0m web_atoms v0.2.6
+2026-10-16T02:11:29.4891646Z [1m[92m  Downloaded[0m keyring v3.6.3
+2026-10-16T02:11:29.5211662Z [1m[92m  Downloaded[0m serde_json v1.0.151
+2026-10-16T02:11:29.8260442Z [1m[92m  Downloaded[0m tray-icon v0.25.1
+2026-10-16T02:11:29.8513476Z [1m[92m  Downloaded[0m find-msvc-tools v0.1.14
+2026-10-16T02:11:29.8732841Z [1m[92m  Downloaded[0m windows-result v0.4.1
+2026-10-16T02:11:29.8929591Z [1m[92m  Downloaded[0m icu_provider v2.3.1
+2026-10-16T02:11:29.9285716Z [1m[92m  Downloaded[0m crossbeam-utils v0.8.23
+2026-10-16T02:11:29.9731384Z [1m[92m  Downloaded[0m tracing-core v0.1.36
+2026-10-16T02:11:30.9904355Z [1m[92m  Downloaded[0m lock_api v0.4.14
+2026-10-16T02:11:30.9988394Z [1m[92m  Downloaded[0m ghash v0.5.1
+2026-10-16T02:11:31.0085769Z [1m[92m  Downloaded[0m markup5ever v0.39.0
+2026-10-16T02:11:31.0183433Z [1m[92m  Downloaded[0m windows-targets v0.53.5
+2026-10-16T02:11:31.0256545Z [1m[92m  Downloaded[0m futures-util v0.3.34
+2026-10-16T02:11:31.1690383Z [1m[92m  Downloaded[0m tauri-plugin-fs v2.6.0
+2026-10-16T02:11:31.2366991Z [1m[92m  Downloaded[0m quote v1.0.47
+2026-10-16T02:11:31.2614413Z [1m[92m  Downloaded[0m http v1.5.0
+2026-10-16T02:11:31.2889650Z [1m[92m  Downloaded[0m phf_codegen v0.13.1
+2026-10-16T02:11:31.2989851Z [1m[92m  Downloaded[0m urlpattern v0.6.0
+2026-10-16T02:11:31.3234645Z [1m[92m  Downloaded[0m cssparser-macros v0.7.1
+2026-10-16T02:11:31.3307344Z [1m[92m  Downloaded[0m httparse v1.10.1
+2026-10-16T02:11:31.3508010Z [1m[92m  Downloaded[0m futures-task v0.3.34
+2026-10-16T02:11:31.3633166Z [1m[92m  Downloaded[0m alloc-no-stdlib v3.0.0
+2026-10-16T02:11:31.3804645Z [1m[92m  Downloaded[0m cfb v0.14.0
+2026-10-16T02:11:31.4189819Z [1m[92m  Downloaded[0m untrusted v0.9.0
+2026-10-16T02:11:31.4356202Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4358902Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4361737Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4364584Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4367197Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4369715Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4372200Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4374657Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4377075Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4379930Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4382520Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4385060Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4387595Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4390073Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4392561Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4395066Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4397948Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4400769Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4403285Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4405004Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4406406Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4407778Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4409276Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4410616Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4411959Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4413300Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4414651Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4415997Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4417419Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4419141Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4421078Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4422454Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4424094Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4425786Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4427179Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4429831Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4431482Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4432835Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4434311Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4436089Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4437477Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4438809Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4441115Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4442620Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4443955Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4445609Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4447240Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4448585Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4450953Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4452425Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4453785Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4455296Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4457127Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4458483Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4459983Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4462004Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4463347Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4464673Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4466036Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4467357Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4468701Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4470512Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4471920Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4473251Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4474575Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4475888Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4477215Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4478534Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4479846Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4481157Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4482480Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4483795Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4485645Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4487166Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4488664Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4490822Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4492339Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4493667Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4495331Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4496992Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4498320Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4500187Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4501828Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4503157Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4505051Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4506524Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4507870Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4509814Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4511528Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4513016Z [1m[93mwarning[0m: spurious network error (2 tries remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:31.4514149Z [1m[92m  Downloaded[0m schemars v0.8.22
+2026-10-16T02:11:31.5790351Z [1m[92m  Downloaded[0m glob v0.3.4
+2026-10-16T02:11:31.5919850Z [1m[92m  Downloaded[0m potential_utf v0.1.6
+2026-10-16T02:11:31.6003058Z [1m[92m  Downloaded[0m indexmap v1.9.3
+2026-10-16T02:11:31.6285840Z [1m[92m  Downloaded[0m dirs-sys v0.5.0
+2026-10-16T02:11:31.6375485Z [1m[92m  Downloaded[0m sync_wrapper v1.0.2
+2026-10-16T02:11:31.6444900Z [1m[92m  Downloaded[0m windows-future v0.3.2
+2026-10-16T02:11:31.6582333Z [1m[92m  Downloaded[0m dirs v7.0.0
+2026-10-16T02:11:31.6696922Z [1m[92m  Downloaded[0m phf v0.13.1
+2026-10-16T02:11:31.6806835Z [1m[92m  Downloaded[0m digest v0.10.7
+2026-10-16T02:11:31.6971319Z [1m[92m  Downloaded[0m raw-window-handle v0.6.2
+2026-10-16T02:11:31.7136801Z [1m[92m  Downloaded[0m ctor v1.0.13
+2026-10-16T02:11:31.7367435Z [1m[92m  Downloaded[0m windows-targets v0.52.6
+2026-10-16T02:11:31.7436092Z [1m[92m  Downloaded[0m cssparser v0.37.0
+2026-10-16T02:11:31.7620987Z [1m[92m  Downloaded[0m cc v1.6.0
+2026-10-16T02:11:31.7907574Z [1m[92m  Downloaded[0m zmij v1.0.23
+2026-10-16T02:11:31.8037608Z [1m[92m  Downloaded[0m jsonptr v0.7.1
+2026-10-16T02:11:31.8295954Z [1m[92m  Downloaded[0m toml v1.1.6+spec-1.1.0
+2026-10-16T02:11:31.8661802Z [1m[92m  Downloaded[0m dpi v0.1.2
+2026-10-16T02:11:31.8758547Z [1m[92m  Downloaded[0m windows-version v0.1.7
+2026-10-16T02:11:31.8846323Z [1m[92m  Downloaded[0m synstructure v0.14.0
+2026-10-16T02:11:31.8936866Z [1m[92m  Downloaded[0m http-body v1.1.0
+2026-10-16T02:11:31.9467377Z [1m[92m  Downloaded[0m aes v0.8.4
+2026-10-16T02:11:31.9737488Z [1m[92m  Downloaded[0m hyper-rustls v0.27.10
+2026-10-16T02:11:31.9852192Z [1m[92m  Downloaded[0m toml_datetime v0.7.5+spec-1.1.0
+2026-10-16T02:11:31.9948372Z [1m[92m  Downloaded[0m ref-cast-impl v1.0.27
+2026-10-16T02:11:32.0070244Z [1m[92m  Downloaded[0m pin-project-lite v0.2.17
+2026-10-16T02:11:32.0927874Z [1m[92m  Downloaded[0m chrono v0.4.45
+2026-10-16T02:11:32.1381898Z [1m[92m  Downloaded[0m opaque-debug v0.3.1
+2026-10-16T02:11:32.1462484Z [1m[92m  Downloaded[0m ref-cast v1.0.27
+2026-10-16T02:11:32.1800280Z [1m[92m  Downloaded[0m darling_core v0.24.1
+2026-10-16T02:11:32.2537730Z [1m[92m  Downloaded[0m rustls-platform-verifier v0.7.1
+2026-10-16T02:11:32.2917437Z [1m[92m  Downloaded[0m try-lock v0.2.5
+2026-10-16T02:11:32.2994709Z [1m[92m  Downloaded[0m rustls-native-certs v0.8.4
+2026-10-16T02:11:32.3096818Z [1m[92m  Downloaded[0m tokio-rustls v0.26.6
+2026-10-16T02:11:32.3217844Z [1m[92m  Downloaded[0m schannel v0.1.29
+2026-10-16T02:11:32.3377771Z [1m[92m  Downloaded[0m tokio-util v0.7.19
+2026-10-16T02:11:32.4167841Z [1m[92m  Downloaded[0m embed-resource v3.0.11
+2026-10-16T02:11:32.4347769Z [1m[92m  Downloaded[0m hex v0.4.3
+2026-10-16T02:11:32.9835579Z [1m[92m  Downloaded[0m percent-encoding v2.3.2
+2026-10-16T02:11:33.0517789Z [1m[92m  Downloaded[0m tauri-codegen v2.7.1
+2026-10-16T02:11:33.0621958Z [1m[92m  Downloaded[0m unsafe-libyaml v0.2.11
+2026-10-16T02:11:33.0887073Z [1m[92m  Downloaded[0m quinn-udp v0.5.16
+2026-10-16T02:11:33.1014894Z [1m[92m  Downloaded[0m serde_derive v1.0.229
+2026-10-16T02:11:33.1327239Z [1m[92m  Downloaded[0m muda v0.20.0
+2026-10-16T02:11:33.1712377Z [1m[92m  Downloaded[0m image v0.25.10
+2026-10-16T02:11:33.2366527Z [1m[92m  Downloaded[0m tinyvec v1.13.3
+2026-10-16T02:11:33.2641462Z [1m[92m  Downloaded[0m ring v0.17.14
+2026-10-16T02:11:33.5788666Z [1m[92m  Downloaded[0m ppv-lite86 v0.2.21
+2026-10-16T02:11:33.5949608Z [1m[92m  Downloaded[0m num-conv v0.2.2
+2026-10-16T02:11:33.6019795Z [1m[92m  Downloaded[0m hyper-util v0.1.21
+2026-10-16T02:11:33.6498642Z [1m[92m  Downloaded[0m derive_more v2.1.1
+2026-10-16T02:11:33.7872851Z [1m[92m  Downloaded[0m proc-macro2 v1.0.107
+2026-10-16T02:11:34.2176912Z [1m[92m  Downloaded[0m zerotrie v0.2.5
+2026-10-16T02:11:34.2509294Z [1m[92m  Downloaded[0m version_check v0.9.5
+2026-10-16T02:11:34.2645001Z [1m[92m  Downloaded[0m schemars v1.2.2
+2026-10-16T02:11:34.4342499Z [1m[92m  Downloaded[0m bytemuck v1.25.2
+2026-10-16T02:11:34.4639260Z [1m[92m  Downloaded[0m webview2-com-macros v0.8.1
+2026-10-16T02:11:34.4704358Z [1m[92m  Downloaded[0m serde_repr v0.1.21
+2026-10-16T02:11:34.4884330Z [1m[92m  Downloaded[0m regex v1.13.1
+2026-10-16T02:11:34.5333077Z [1m[92m  Downloaded[0m phf_shared v0.13.1
+2026-10-16T02:11:34.5412762Z [1m[92m  Downloaded[0m rfd v0.16.0
+2026-10-16T02:11:34.5831300Z [1m[92m  Downloaded[0m getrandom v0.2.17
+2026-10-16T02:11:34.6093697Z [1m[92m  Downloaded[0m universal-hash v0.5.1
+2026-10-16T02:11:34.6180575Z [1m[92m  Downloaded[0m tauri-build v2.7.1
+2026-10-16T02:11:34.6345679Z [1m[92m  Downloaded[0m serde_with_macros v3.24.0
+2026-10-16T02:11:34.6550480Z [1m[92m  Downloaded[0m png v0.17.16
+2026-10-16T02:11:34.6850378Z [1m[92m  Downloaded[0m icu_properties v2.3.0
+2026-10-16T02:11:34.7062114Z [1m[92m  Downloaded[0m icu_normalizer v2.3.0
+2026-10-16T02:11:34.7454742Z [1m[92m  Downloaded[0m zerofrom v0.1.8
+2026-10-16T02:11:34.7529112Z [1m[92m  Downloaded[0m rand_pcg v0.10.2
+2026-10-16T02:11:34.7713383Z [1m[92m  Downloaded[0m adler2 v2.0.1
+2026-10-16T02:11:34.7838721Z [1m[92m  Downloaded[0m simd-adler32 v0.3.10
+2026-10-16T02:11:34.8015046Z [1m[92m  Downloaded[0m cargo_toml v1.0.1
+2026-10-16T02:11:34.8116973Z [1m[92m  Downloaded[0m cipher v0.4.4
+2026-10-16T02:11:34.8244967Z [1m[92m  Downloaded[0m rand_core v0.10.1
+2026-10-16T02:11:34.8385672Z [1m[92m  Downloaded[0m defmt-macros v1.1.1
+2026-10-16T02:11:34.8739548Z [1m[92m  Downloaded[0m uuid v1.27.0
+2026-10-16T02:11:34.8957932Z [1m[92m  Downloaded[0m serde_with v3.24.0
+2026-10-16T02:11:35.0179927Z [1m[92m  Downloaded[0m zerovec v0.11.8
+2026-10-16T02:11:35.0698872Z [1m[92m  Downloaded[0m zlib-rs v0.6.8
+2026-10-16T02:11:35.1107462Z [1m[92m  Downloaded[0m getrandom v0.3.4
+2026-10-16T02:11:35.1429926Z [1m[92m  Downloaded[0m darling_macro v0.24.1
+2026-10-16T02:11:35.1490253Z [1m[92m  Downloaded[0m toml_parser v1.1.3+spec-1.1.0
+2026-10-16T02:11:35.2171058Z [1m[92m  Downloaded[0m typeid v1.0.3
+2026-10-16T02:11:35.6037896Z [1m[92m  Downloaded[0m futures-sink v0.3.34
+2026-10-16T02:11:35.6108880Z [1m[92m  Downloaded[0m async-trait v0.1.92
+2026-10-16T02:11:35.6542636Z [1m[92m  Downloaded[0m webview2-com v0.39.1
+2026-10-16T02:11:35.6634210Z [1m[92m  Downloaded[0m softbuffer v0.4.8
+2026-10-16T02:11:35.6939755Z [1m[92m  Downloaded[0m aho-corasick v1.1.5
+2026-10-16T02:11:35.7332406Z [1m[92m  Downloaded[0m flate2 v1.1.10
+2026-10-16T02:11:35.7786077Z [1m[92m  Downloaded[0m zip v4.6.1
+2026-10-16T02:11:35.8114878Z [1m[92m  Downloaded[0m window-vibrancy v0.8.1
+2026-10-16T02:11:35.8461006Z [1m[92m  Downloaded[0m tauri-runtime v2.12.1
+2026-10-16T02:11:35.8582447Z [1m[92m  Downloaded[0m rustls-webpki v0.103.15
+2026-10-16T02:11:35.8829701Z [1m[92m  Downloaded[0m atomic-waker v1.1.2
+2026-10-16T02:11:35.8922474Z [1m[92m  Downloaded[0m tempfile v3.27.0
+2026-10-16T02:11:35.9107104Z [1m[92m  Downloaded[0m shlex v2.0.1
+2026-10-16T02:11:35.9210270Z [1m[92m  Downloaded[0m zerocopy v0.8.59
+2026-10-16T02:11:36.1209209Z [1m[92m  Downloaded[0m keyboard-types v0.8.3
+2026-10-16T02:11:36.1444963Z [1m[92m  Downloaded[0m winnow v0.7.15
+2026-10-16T02:11:36.2203934Z [1m[92m  Downloaded[0m toml_datetime v1.1.1+spec-1.1.0
+2026-10-16T02:11:36.2299628Z [1m[92m  Downloaded[0m tinystr v0.8.4
+2026-10-16T02:11:36.2479862Z [1m[92m  Downloaded[0m rustc-hash v2.1.3
+2026-10-16T02:11:36.2590280Z [1m[92m  Downloaded[0m cpufeatures v0.2.17
+2026-10-16T02:11:36.2744585Z [1m[92m  Downloaded[0m windows-collections v0.3.2
+2026-10-16T02:11:36.2852322Z [1m[92m  Downloaded[0m bit-vec v0.8.0
+2026-10-16T02:11:36.2985294Z [1m[92m  Downloaded[0m want v0.3.1
+2026-10-16T02:11:36.3066099Z [1m[92m  Downloaded[0m fdeflate v0.3.7
+2026-10-16T02:11:36.3224445Z [1m[92m  Downloaded[0m itoa v1.0.18
+2026-10-16T02:11:36.3356217Z [1m[92m  Downloaded[0m tauri-macros v2.7.1
+2026-10-16T02:11:36.3469298Z [1m[92m  Downloaded[0m windows-strings v0.5.1
+2026-10-16T02:11:36.3616778Z [1m[92m  Downloaded[0m serde_core v1.0.229
+2026-10-16T02:11:36.3828929Z [1m[92m  Downloaded[0m regex-syntax v0.8.11
+2026-10-16T02:11:36.4181774Z [1m[92m  Downloaded[0m strsim v0.11.1
+2026-10-16T02:11:36.4310222Z [1m[92m  Downloaded[0m erased-serde v0.4.10
+2026-10-16T02:11:36.4521800Z [1m[92m  Downloaded[0m rand v0.9.5
+2026-10-16T02:11:36.4831993Z [1m[92m  Downloaded[0m ryu v1.0.23
+2026-10-16T02:11:36.5121570Z [1m[92m  Downloaded[0m libc v0.2.190
+2026-10-16T02:11:37.3102972Z [1m[92m  Downloaded[0m html5ever v0.39.0
+2026-10-16T02:11:37.3390868Z [1m[92m  Downloaded[0m fastrand v2.5.0
+2026-10-16T02:11:37.3501649Z [1m[92m  Downloaded[0m autocfg v1.5.1
+2026-10-16T02:11:37.3678099Z [1m[92m  Downloaded[0m futures-macro v0.3.34
+2026-10-16T02:11:37.3790446Z [1m[92m  Downloaded[0m rand_core v0.9.5
+2026-10-16T02:11:37.3894836Z [1m[92m  Downloaded[0m windows-threading v0.2.1
+2026-10-16T02:11:37.3977684Z [1m[92m  Downloaded[0m base64 v0.22.1
+2026-10-16T02:11:37.4258064Z [1m[92m  Downloaded[0m json-patch v4.2.0
+2026-10-16T02:11:37.4358126Z [1m[92m  Downloaded[0m dirs v6.0.0
+2026-10-16T02:11:37.4472619Z [1m[92m  Downloaded[0m winreg v0.55.0
+2026-10-16T02:11:37.4755044Z [1m[92m  Downloaded[0m cpufeatures v0.3.1
+2026-10-16T02:11:37.4867251Z [1m[92m  Downloaded[0m defmt v1.1.1
+2026-10-16T02:11:37.5364092Z [1m[92m  Downloaded[0m windows-sys v0.60.2
+2026-10-16T02:11:37.8592856Z [1m[92m  Downloaded[0m polyval v0.6.2
+2026-10-16T02:11:37.8722262Z [1m[92m  Downloaded[0m cargo-platform v0.1.9
+2026-10-16T02:11:37.8827494Z [1m[92m  Downloaded[0m http-body-util v0.1.5
+2026-10-16T02:11:38.3147345Z [1m[92m  Downloaded[0m indexmap v2.14.2
+2026-10-16T02:11:38.3487971Z [1m[92m  Downloaded[0m jiff-core v0.1.1
+2026-10-16T02:11:38.3735627Z [1m[92m  Downloaded[0m alloc-stdlib v0.3.0
+2026-10-16T02:11:38.3853622Z [1m[92m  Downloaded[0m new_debug_unreachable v1.0.6
+2026-10-16T02:11:38.3949495Z [1m[92m  Downloaded[0m same-file v1.0.6
+2026-10-16T02:11:38.4090879Z [1m[92m  Downloaded[0m rustc_version v0.4.1
+2026-10-16T02:11:38.4193304Z [1m[92m  Downloaded[0m tauri v2.12.1
+2026-10-16T02:11:38.5463157Z [1m[92m  Downloaded[0m tower-layer v0.3.3
+2026-10-16T02:11:38.5548648Z [1m[92m  Downloaded[0m lru-slab v0.1.3
+2026-10-16T02:11:38.5620239Z [1m[92m  Downloaded[0m tower v0.5.3
+2026-10-16T02:11:38.9023378Z [1m[92m  Downloaded[0m webview2-com-sys v0.39.1
+2026-10-16T02:11:38.9959394Z [1m[92m  Downloaded[0m tao v0.37.1
+2026-10-16T02:11:39.0853944Z [1m[93mwarning[0m: spurious network error (1 try remaining): [16] Error in the HTTP2 framing layer
+2026-10-16T02:11:39.0855388Z [1m[92m  Downloaded[0m walkdir v2.5.0
+2026-10-16T02:11:39.1027304Z [1m[92m  Downloaded[0m anyhow v1.0.104
+2026-10-16T02:11:39.1461398Z [1m[92m  Downloaded[0m string_cache v0.9.0
+2026-10-16T02:11:39.1611689Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1614324Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1617004Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1619958Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1622458Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1624931Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1627392Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1629813Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1633526Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1637085Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1639045Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1640424Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1642066Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1643489Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1644809Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1646357Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1647706Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1649017Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1650326Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1651622Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1652926Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1654218Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1655518Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1656825Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1658762Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1660138Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1661455Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1662761Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1664255Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1665570Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1666882Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1668467Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1669820Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1671128Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1672425Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1674391Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1675797Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1677113Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1678652Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1680184Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1681495Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1682808Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1684412Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1685773Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1687080Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1688389Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1689686Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1690982Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1692478Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1693793Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1695411Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1696723Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1698035Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1699711Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1701019Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1702740Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1704226Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1705542Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1706845Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1708138Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1709441Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1711041Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1712615Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1713948Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1715250Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1716553Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1717855Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1719509Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1720991Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1722298Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1723595Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:39.1725084Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1726141Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1727169Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1728175Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1729346Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1730380Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1731704Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1732710Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1733927Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1735113Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1736255Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1737432Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1738444Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1739785Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1740814Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1741820Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1742824Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1743840Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1744842Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1745843Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1747375Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1748399Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1749405Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1750413Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1751426Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1752733Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1753803Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1755249Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1756487Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1758059Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1759471Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1760516Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1761527Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1762527Z [1m[93mwarning[0m: spurious network error (1 try remaining): [55] Failed sending data to the peer (Send failure: Connection was reset)
+2026-10-16T02:11:39.1763170Z [1m[92m  Downloaded[0m reqwest v0.12.28
+2026-10-16T02:11:39.2150096Z [1m[92m  Downloaded[0m heck v0.5.0
+2026-10-16T02:11:39.2277456Z [1m[92m  Downloaded[0m precomputed-hash v0.1.1
+2026-10-16T02:11:39.2337075Z [1m[92m  Downloaded[0m bitflags v1.3.2
+2026-10-16T02:11:39.6135319Z [1m[92m  Downloaded[0m base64 v0.23.1
+2026-10-16T02:11:39.6446647Z [1m[92m  Downloaded[0m futures-channel v0.3.34
+2026-10-16T02:11:39.6605448Z [1m[92m  Downloaded[0m aes-gcm v0.10.3
+2026-10-16T02:11:39.6766152Z [1m[92m  Downloaded[0m password-hash v0.5.0
+2026-10-16T02:11:39.6923655Z [1m[92m  Downloaded[0m tauri-winres v0.3.6
+2026-10-16T02:11:39.7064574Z [1m[92m  Downloaded[0m tauri-utils v2.10.1
+2026-10-16T02:11:39.7338050Z [1m[92m  Downloaded[0m serialize-to-javascript v0.1.2
+2026-10-16T02:11:39.7443153Z [1m[92m  Downloaded[0m sha2 v0.10.9
+2026-10-16T02:11:39.7704057Z [1m[92m  Downloaded[0m semver v1.0.28
+2026-10-16T02:11:39.7911145Z [1m[92m  Downloaded[0m tar v0.4.46
+2026-10-16T02:11:39.8146574Z [1m[92m  Downloaded[0m zerovec-derive v0.11.6
+2026-10-16T02:11:39.8325469Z [1m[92m  Downloaded[0m cfg_aliases v0.2.2
+2026-10-16T02:11:39.8411371Z [1m[92m  Downloaded[0m infer v0.22.0
+2026-10-16T02:11:39.8607058Z [1m[92m  Downloaded[0m num-traits v0.2.19
+2026-10-16T02:11:39.8841158Z [1m[92m  Downloaded[0m chacha20 v0.10.2
+2026-10-16T02:11:39.9032984Z [1m[92m  Downloaded[0m fnv v1.0.7
+2026-10-16T02:11:39.9105597Z [1m[92m  Downloaded[0m tracing v0.1.44
+2026-10-16T02:11:40.0071064Z [1m[92m  Downloaded[0m windows-implement v0.60.2
+2026-10-16T02:11:40.0188793Z [1m[92m  Downloaded[0m zerofrom-derive v0.1.8
+2026-10-16T02:11:40.0292381Z [1m[92m  Downloaded[0m socket2 v0.6.5
+2026-10-16T02:11:40.0437659Z [1m[92m  Downloaded[0m bs58 v0.5.1
+2026-10-16T02:11:40.0625779Z [1m[92m  Downloaded[0m serde v1.0.229
+2026-10-16T02:11:40.0886521Z [1m[92m  Downloaded[0m idna_adapter v1.2.2
+2026-10-16T02:11:40.0989381Z [1m[92m  Downloaded[0m quinn-proto v0.11.19
+2026-10-16T02:11:42.2987676Z [1m[92m  Downloaded[0m stable_deref_trait v1.2.1
+2026-10-16T02:11:45.8324307Z [1m[91merror[0m: failed to download from `https://static.crates.io/crates/phf_generator/0.13.1/download`
+2026-10-16T02:11:45.8325220Z 
+2026-10-16T02:11:45.8325393Z Caused by:
+2026-10-16T02:11:45.8326381Z   [55] Failed sending data to the peer (Failed receiving HTTP2 data: 56(Failure when receiving data from the peer))
+2026-10-16T02:11:45.9564738Z ##[error]Process completed with exit code 1.
+2026-10-16T02:11:45.9755597Z ##[group]Run $outputDirectory = "../../../test/out/windows-backend"
+2026-10-16T02:11:45.9756197Z [36;1m$outputDirectory = "../../../test/out/windows-backend"[0m
+2026-10-16T02:11:45.9756680Z [36;1mNew-Item -ItemType Directory -Force $outputDirectory | Out-Null[0m
+2026-10-16T02:11:45.9757059Z [36;1m[ordered]@{[0m
+2026-10-16T02:11:45.9757287Z [36;1m  runner = $env:RUNNER_NAME[0m
+2026-10-16T02:11:45.9757552Z [36;1m  image = $env:ImageOS[0m
+2026-10-16T02:11:45.9757811Z [36;1m  imageVersion = $env:ImageVersion[0m
+2026-10-16T02:11:45.9758163Z [36;1m  os = [System.Environment]::OSVersion.VersionString[0m
+2026-10-16T02:11:45.9758552Z [36;1m  rust = (rustc --version 2>&1 | Out-String).Trim()[0m
+2026-10-16T02:11:45.9758909Z [36;1m  cargo = (cargo --version 2>&1 | Out-String).Trim()[0m
+2026-10-16T02:11:45.9759252Z [36;1m  node = (node --version 2>&1 | Out-String).Trim()[0m
+2026-10-16T02:11:45.9759735Z [36;1m} | ConvertTo-Json | Set-Content (Join-Path $outputDirectory "environment.json")[0m
+2026-10-16T02:11:45.9760379Z [36;1mcargo metadata --locked --format-version 1 > (Join-Path $outputDirectory "cargo-metadata.json") 2>&1[0m
+2026-10-16T02:11:45.9760993Z [36;1mcargo tree --locked > (Join-Path $outputDirectory "cargo-tree.txt") 2>&1[0m
+2026-10-16T02:11:45.9761651Z [36;1m$testExecutable = Get-ChildItem "target/debug/deps/opencodex_desktop_lib-*.exe" -ErrorAction SilentlyContinue |[0m
+2026-10-16T02:11:45.9762288Z [36;1m  Sort-Object LastWriteTime -Descending | Select-Object -First 1[0m
+2026-10-16T02:11:45.9762665Z [36;1mif ($testExecutable) {[0m
+2026-10-16T02:11:45.9763085Z [36;1m  Copy-Item $testExecutable.FullName (Join-Path $outputDirectory $testExecutable.Name)[0m
+2026-10-16T02:11:45.9763619Z [36;1m  Get-FileHash $testExecutable.FullName -Algorithm SHA256 |[0m
+2026-10-16T02:11:45.9764151Z [36;1m    ConvertTo-Json | Set-Content (Join-Path $outputDirectory "test-executable-sha256.json")[0m
+2026-10-16T02:11:45.9764788Z [36;1m  $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'[0m
+2026-10-16T02:11:45.9765231Z [36;1m  $dumpbin = $null[0m
+2026-10-16T02:11:45.9765449Z [36;1m  $mt = $null[0m
+2026-10-16T02:11:45.9765728Z [36;1m  if (Test-Path $vswhere) {[0m
+2026-10-16T02:11:45.9766756Z [36;1m    $vsInstall = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath |[0m
+2026-10-16T02:11:45.9767391Z [36;1m      Select-Object -First 1[0m
+2026-10-16T02:11:45.9767642Z [36;1m    if ($vsInstall) {[0m
+2026-10-16T02:11:45.9768172Z [36;1m      $dumpbin = Get-ChildItem (Join-Path $vsInstall 'VC\Tools\MSVC\*\bin\Hostx64\x64\dumpbin.exe') -ErrorAction SilentlyContinue |[0m
+2026-10-16T02:11:45.9768799Z [36;1m        Sort-Object FullName | Select-Object -Last 1[0m
+2026-10-16T02:11:45.9769097Z [36;1m    }[0m
+2026-10-16T02:11:45.9769270Z [36;1m  }[0m
+2026-10-16T02:11:45.9769615Z [36;1m  if (-not $dumpbin) { $dumpbin = Get-Command dumpbin -ErrorAction SilentlyContinue }[0m
+2026-10-16T02:11:45.9770308Z [36;1m  $mt = Get-ChildItem (Join-Path ${env:ProgramFiles(x86)} 'Windows Kits\10\bin\*\x64\mt.exe') -ErrorAction SilentlyContinue |[0m
+2026-10-16T02:11:45.9771133Z [36;1m    Sort-Object FullName | Select-Object -Last 1[0m
+2026-10-16T02:11:45.9771443Z [36;1m  if ($dumpbin) {[0m
+2026-10-16T02:11:45.9771838Z [36;1m    $dumpbinPath = if ($dumpbin.FullName) { $dumpbin.FullName } else { $dumpbin.Source }[0m
+2026-10-16T02:11:45.9772580Z [36;1m    & $dumpbinPath /DEPENDENTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-dependents.txt") 2>&1[0m
+2026-10-16T02:11:45.9773428Z [36;1m    & $dumpbinPath /IMPORTS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-imports.txt") 2>&1[0m
+2026-10-16T02:11:45.9774261Z [36;1m    & $dumpbinPath /HEADERS $testExecutable.FullName > (Join-Path $outputDirectory "test-executable-headers.txt") 2>&1[0m
+2026-10-16T02:11:45.9776307Z [36;1m  } else {[0m
+2026-10-16T02:11:45.9776817Z [36;1m    "dumpbin was not found on PATH" | Set-Content (Join-Path $outputDirectory "dumpbin-unavailable.txt")[0m
+2026-10-16T02:11:45.9777311Z [36;1m  }[0m
+2026-10-16T02:11:45.9777493Z [36;1m  if ($mt) {[0m
+2026-10-16T02:11:45.9777854Z [36;1m    $manifestPath = Join-Path $outputDirectory "test-executable.manifest.xml"[0m
+2026-10-16T02:11:45.9778326Z [36;1m    $resource = "$($testExecutable.FullName);#1"[0m
+2026-10-16T02:11:45.9778960Z [36;1m    & $mt.FullName "-inputresource:$resource" "-out:$manifestPath" > (Join-Path $outputDirectory "test-executable-manifest.txt") 2>&1[0m
+2026-10-16T02:11:45.9779532Z [36;1m  } else {[0m
+2026-10-16T02:11:45.9779952Z [36;1m    "mt.exe was not found in Windows SDK" | Set-Content (Join-Path $outputDirectory "mt-unavailable.txt")[0m
+2026-10-16T02:11:45.9780419Z [36;1m  }[0m
+2026-10-16T02:11:45.9780594Z [36;1m} else {[0m
+2026-10-16T02:11:45.9781112Z [36;1m  "Windows backend test executable was not produced" | Set-Content (Join-Path $outputDirectory "test-executable-unavailable.txt")[0m
+2026-10-16T02:11:45.9781676Z [36;1m}[0m
+2026-10-16T02:11:45.9782326Z [36;1m$webViewLoader = Get-ChildItem "${env:ProgramFiles(x86)}\Microsoft\EdgeWebView\Application\*\EBWebView\x64\EmbeddedBrowserWebView.dll" -ErrorAction SilentlyContinue[0m
+2026-10-16T02:11:45.9783557Z [36;1mif ($webViewLoader) { $webViewLoader | Select-Object -ExpandProperty FullName | Set-Content (Join-Path $outputDirectory "webview2-runtime-files.txt") }[0m
+2026-10-16T02:11:45.9784861Z [36;1mGet-ItemProperty "HKLM:\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\*" -ErrorAction SilentlyContinue |[0m
+2026-10-16T02:11:45.9785677Z [36;1m  Select-Object name, pv, version | ConvertTo-Json | Set-Content (Join-Path $outputDirectory "webview2-registry.json")[0m
+2026-10-16T02:11:45.9786436Z [36;1mGet-ItemProperty "HKLM:\SOFTWARE\Microsoft\EdgeUpdate\Clients\*" -ErrorAction SilentlyContinue |[0m
+2026-10-16T02:11:45.9787194Z [36;1m  Select-Object name, pv, version | ConvertTo-Json | Add-Content (Join-Path $outputDirectory "webview2-registry.json")[0m
+2026-10-16T02:11:45.9860837Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T02:11:45.9861190Z env:
+2026-10-16T02:11:45.9861396Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:11:45.9861665Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:11:45.9861880Z   CARGO_TERM_COLOR: always
+2026-10-16T02:11:45.9862094Z ##[endgroup]
+2026-10-16T02:12:13.7688751Z ##[group]Run actions/upload-artifact@v4
+2026-10-16T02:12:13.7689118Z with:
+2026-10-16T02:12:13.7689332Z   name: windows-startup-evidence
+2026-10-16T02:12:13.7689934Z   path: test/out/windows-startup
+test/out/windows-backend
+test/out/windows-query-etw
+test/runtime/ci-bd2-query-etw/capture
+
+2026-10-16T02:12:13.7690504Z   if-no-files-found: warn
+2026-10-16T02:12:13.7690734Z   compression-level: 6
+2026-10-16T02:12:13.7690941Z   overwrite: false
+2026-10-16T02:12:13.7691150Z   include-hidden-files: false
+2026-10-16T02:12:13.7691376Z env:
+2026-10-16T02:12:13.7691562Z   CARGO_HOME: C:\Users\runneradmin\.cargo
+2026-10-16T02:12:13.7691834Z   CARGO_INCREMENTAL: 0
+2026-10-16T02:12:13.7692275Z   CARGO_TERM_COLOR: always
+2026-10-16T02:12:13.7692494Z ##[endgroup]
+2026-10-16T02:12:13.9764424Z (node:5304) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T02:12:13.9765323Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T02:12:13.9863245Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-10-16T02:12:13.9868505Z The least common ancestor is D:\a\opencodex-desktop\opencodex-desktop\test. This will be the root directory of the artifact
+2026-10-16T02:12:13.9870200Z With the provided path, there will be 6 files uploaded
+2026-10-16T02:12:13.9875258Z Artifact name is valid!
+2026-10-16T02:12:13.9876843Z Root directory input is valid!
+2026-10-16T02:12:14.3742524Z Beginning upload of artifact content to blob storage
+2026-10-16T02:12:14.4463157Z (node:5304) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T02:12:14.9886379Z Uploaded bytes 249512
+2026-10-16T02:12:15.0670709Z Finished uploading artifact content to blob storage!
+2026-10-16T02:12:15.0676351Z SHA256 digest of uploaded artifact zip is 760ed579418c822a6cfcc0e66e387c269f225dda93b7004378edf2ed9736e2d7
+2026-10-16T02:12:15.0677248Z Finalizing artifact upload
+2026-10-16T02:12:15.3421146Z Artifact windows-startup-evidence.zip successfully finalized. Artifact ID 12019729608
+2026-10-16T02:12:15.3422757Z Artifact windows-startup-evidence has been successfully uploaded! Final size is 249512 bytes. Artifact ID is 12019729608
+2026-10-16T02:12:15.3435376Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/38838964154/artifacts/12019729608
+2026-10-16T02:12:15.3803260Z Post job cleanup.
+2026-10-16T02:12:15.5777191Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-16T02:12:15.6161247Z git version 2.56.0.windows.2
+2026-10-16T02:12:15.6240840Z Temporarily overriding HOME='D:\a\_temp\59ccc56b-d658-4db2-a501-a02c6a3df548' before making global git config changes
+2026-10-16T02:12:15.6242249Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T02:12:15.6257549Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-16T02:12:15.6716874Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T02:12:15.7130350Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-16T02:12:16.2889927Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T02:12:16.3244924Z http.https://github.com/.extraheader
+2026-10-16T02:12:16.3294711Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-16T02:12:16.3700386Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-16T02:12:16.9667919Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T02:12:17.0057035Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-16T02:12:17.5753915Z Cleaning up orphan processes
+2026-10-16T02:12:17.6294726Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
