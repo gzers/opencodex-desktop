@@ -1,0 +1,62 @@
+{
+  "atUtc": "2026-10-16T00:23:28.811075+00:00",
+  "source": "7704a17902c98ceed047cc3dec2a361937b5e1f7",
+  "tree": "67ab7ebceae427904e3b141a6d5501d9da8a3bda",
+  "runId": 38826901050,
+  "runAttempt": 1,
+  "wholeCiSucceeded": true,
+  "originalCheckoutAndJobsVerified": true,
+  "requiredJobs": [
+    "backend",
+    "backend-windows",
+    "frontend",
+    "release-tools",
+    "windows-smoke-evidence"
+  ],
+  "jobs": [
+    {
+      "name": "frontend",
+      "jobId": 116736357606,
+      "actualCheckout": "7704a17902c98ceed047cc3dec2a361937b5e1f7",
+      "counts": {
+        "files": 99,
+        "passed": 535,
+        "failed": 0
+      },
+      "log": "ci-38826901050-frontend.original.log",
+      "bytes": 39794,
+      "sha256": "4c66925cdb8de1e7c3898a478cb7743bd2810637dc084ef7c38371e1e0f06218"
+    },
+    {
+      "name": "backend",
+      "jobId": 116736357727,
+      "actualCheckout": "7704a17902c98ceed047cc3dec2a361937b5e1f7",
+      "counts": {
+        "suites": 35,
+        "passed": 923,
+        "failed": 0,
+        "ignored": 6
+      },
+      "log": "ci-38826901050-backend.original.log",
+      "bytes": 224737,
+      "sha256": "fb337279d22cd9866f2aa849b087f4b72648a7cb2ef897cf8f616d410cbffc84"
+    },
+    {
+      "name": "backend-windows",
+      "jobId": 116736357541,
+      "actualCheckout": "7704a17902c98ceed047cc3dec2a361937b5e1f7",
+      "counts": {
+        "suites": 35,
+        "passed": 648,
+        "failed": 0,
+        "ignored": 7
+      },
+      "log": "ci-38826901050-backend-windows.original.log",
+      "bytes": 344867,
+      "sha256": "e6eb6f7e79a4d7436b8c1c365b0668dc03972b24b9bc187fb6a0e3bc1cf9839c"
+    }
+  ],
+  "recordingStarted": false,
+  "historicalFailureCleared": false,
+  "releaseAdmission": false
+}

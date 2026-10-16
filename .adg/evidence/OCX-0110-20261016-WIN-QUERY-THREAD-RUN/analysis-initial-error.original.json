@@ -1,0 +1,9 @@
+{
+  "phase": "post-capture-analysis",
+  "errorType": "ValueError",
+  "message": "too many values to unpack (expected 1)",
+  "reason": "Analyzer selected all later stops with the same bare TID, including later generations.",
+  "originalRecordingRepeated": false,
+  "captureRawChanged": false,
+  "correction": "Bind the latest thread start before the exact name event and first subsequent stop."
+}

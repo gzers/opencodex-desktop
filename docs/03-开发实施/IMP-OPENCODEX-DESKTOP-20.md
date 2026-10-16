@@ -1760,3 +1760,11 @@ d94产品PR整轮CI38824151573已success：五个必需job成功，main专用bui
 08:18:10 d94伴随push38824163566终态failure，唯一失败为Mac backend；GitHub原始注释托管runner失联，最后工具链安装尚进行，cargo fmt/Clippy/test未执行。原日志HTTP404缺失，保存API终态/check-run/jobs/两注释和8份清单，独立verifier通过；不据注释推断失联根因，不改标通过或重跑。完整PR成功证据另存，候选38827408691仍沿单次构建，08:20:17进行中；诊断7704 CI38826901050仍在最终Windows release构建，未准入或开始录制。新增失败不解除原bd2或Windows/Mac性能failed及任何门禁，TASK/IMP保持未完成。
 
 08:22:38 d94单次候选38827408691已成功，原package日志checkout d94、35组648passed/7ignored、MSI/NSIS runner新装首屏卸载子集通过。两artifact API摘要/大小/CRC/载荷与回执核对，宿主只读MSI/CAB提取0.1.10/8806400bytes/EXE SHA b2284ba66a20c7ef11b61fea328f7aa960cd6530011d6e7a09fc78e782c5b224。29项清单与独立verify通过，绑定完整PR准入，未把伴随push失败改标；native0、日常/TASK摘要和d94代码干净保持，未安装/启动宿主产品。原Windows RSS+33.249280MiB、Macfailed及所有未完门禁继续开放，d94新EXE待新前台窗口实测；原存储/调度证据按实际来源和等价范围复用，未关闭或发布。
+
+### 2026-10-16 命名查询线程的单次真实ETW结果
+
+独立录制器7704的push38826901050完整success，五必需job成功；三原日志checkout7704、frontend99/535、Mac35组923/6ignored、Windows35组648/7ignored核验。首次日志DNS读取失败后只重取相同job，没有重跑。沿持续管理员后台授权单次派发query-etw/isolated-replay38829382543，原bd2失败库497814ca…/官方Node ba4e6d11…、原并发/捕获/2/4/5/8秒/120秒/64MiB/32768均保持，原库无参数且不预热。隔离runner提升true/type1，不算本机产品双令牌；未使用本机UAC/前台/产品，未声称原环境完全相同。
+
+08:25:49–08:26:04一次原库exit0、530passed/4ignored、七查询ok，目标失败未复现。19058原事件/7412205bytes，七个真实ThreadSetName，根命名查询线程1128进出调度/113ready/320create/138read-write/458完成；31进程及953线程开始/结束匹配，丢失/解码/已知后代与命名缺口0，自有会话正常停止排空、未强清理。其它根热点仍省略154100调度/287011文件发起，命名前与其它根工作线程不补，v5等待语义未核验，不声称完整根因窗口。
+
+后处理裸TID对应多次stop的失败保留，改按start/name/首次stop代际审计，不改原事件或再执行；57项清单/verifier独立重算通过。08:30:48native0、双代码干净、五共享文件一致、日常/TASK摘要保持。详见[查询线程ETW结果](../04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261016-Windows查询线程ETW准备/README.md)及`.adg/evidence/OCX-0110-20261016-WIN-QUERY-THREAD-RUN/`。实际bd2查询失败窗口和根因仍未取得，历史失败不解除，不继续重放碰运气；d94新EXE内存/原预算及其余八门禁、Macfailed保持，TASK/IMP未完成，无合并/签名/晋升/发布。
