@@ -10,7 +10,10 @@ struct State {
     frozen: bool,
 }
 #[derive(Default)]
-pub(crate) struct WriterGate(Mutex<State>);
+pub(crate) struct WriterGate(
+    Mutex<State>,
+    #[cfg(test)] tokio::sync::Notify,
+);
 impl WriterGate {
     pub(crate) fn admit(self: &Arc<Self>) -> AppResult<Admission> {
         let mut state = self.0.lock().map_err(|_| closed())?;
@@ -34,6 +37,21 @@ impl WriterGate {
     pub(crate) fn frozen(&self) -> bool {
         self.0.lock().map_or(true, |state| state.frozen)
     }
+    /// Test observers await the real final admission drop without repeatedly
+    /// taking the same mutex needed by that drop. Production has no notifier.
+    #[cfg(test)]
+    pub(crate) async fn wait_until_idle_for_test(&self) -> AppResult<()> {
+        loop {
+            let notified = self.1.notified();
+            tokio::pin!(notified);
+            notified.as_mut().enable();
+            let idle = { self.0.lock().map_err(|_| closed())?.active == 0 };
+            if idle {
+                return Ok(());
+            }
+            notified.await;
+        }
+    }
 }
 pub(crate) fn global() -> Arc<WriterGate> {
     static GATE: OnceLock<Arc<WriterGate>> = OnceLock::new();
@@ -50,6 +68,14 @@ impl Drop for Admission {
     fn drop(&mut self) {
         if let Ok(mut state) = self.0 .0.lock() {
             state.active -= 1;
+            #[cfg(test)]
+            {
+                let idle = state.active == 0;
+                drop(state);
+                if idle {
+                    self.0 .1.notify_waiters();
+                }
+            }
         }
     }
 }
@@ -116,5 +142,38 @@ mod tests {
             let admission = worker.join().unwrap();
             assert!(!(save.is_some() && admission.is_ok()));
         }
+    }
+
+    #[test]
+    fn idle_observer_wakes_after_final_admission_without_releasing_it() {
+        use std::future::Future;
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::task::{Context, Poll, Wake, Waker};
+
+        struct Counter(AtomicUsize);
+        impl Wake for Counter {
+            fn wake(self: Arc<Self>) {
+                self.0.fetch_add(1, Ordering::SeqCst);
+            }
+        }
+
+        let gate = Arc::new(WriterGate::default());
+        let first = gate.admit().unwrap();
+        let last = gate.admit().unwrap();
+        let counter = Arc::new(Counter(AtomicUsize::new(0)));
+        let waker = Waker::from(counter.clone());
+        let mut context = Context::from_waker(&waker);
+        let mut idle = std::pin::pin!(gate.wait_until_idle_for_test());
+        assert!(matches!(idle.as_mut().poll(&mut context), Poll::Pending));
+        drop(first);
+        assert_eq!(counter.0.load(Ordering::SeqCst), 0);
+        assert!(gate.freeze().unwrap().is_none());
+        drop(last);
+        assert!(counter.0.load(Ordering::SeqCst) > 0);
+        assert!(matches!(
+            idle.as_mut().poll(&mut context),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(gate.freeze().unwrap().is_some());
     }
 }
