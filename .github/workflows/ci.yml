@@ -34,6 +34,9 @@ jobs:
       - name: Verify read-only WPR allocation profile preparation
         shell: pwsh
         run: ./test/smoke/windows-memory-profile.test.ps1 -OutputDirectory test/out/windows-process-token/memory-profile
+      - name: Verify retained read-only memory target bindings
+        shell: pwsh
+        run: ./test/smoke/windows-memory-target.test.ps1 -OutputDirectory test/out/windows-process-token/memory-target
       - name: Verify controlled self-process memory allocation capture
         shell: pwsh
         run: |
