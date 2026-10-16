@@ -1,0 +1,33 @@
+{
+  "censusSelftestInitialFailure": {
+    "assertion": "live child is retained",
+    "fault": "The test expected exactly two family members. A complete live census includes conhost descendants.",
+    "originalFailureReturnedByTool": true,
+    "testScriptBeforeCorrection": "selftest-before-census-assumption.ps1",
+    "correctedRequirement": "The bound root and controlled child generations must each appear exactly once; all observed descendants remain counted.",
+    "fullCensusRecord": "census-before-members.original.json"
+  },
+  "defaultAndBundledPythonYamlImport": {
+    "status": "unavailable",
+    "errorsRetained": [
+      "workflow-parsing.original.log",
+      "workflow-parsing-bundled.original.log"
+    ],
+    "dependencyInstalled": false,
+    "workflowAcceptanceSource": "GitHub exact-source CI API response"
+  },
+  "performanceOrProductRerun": false,
+  "historicalFailuresCleared": false,
+  "ciEvidenceReaderCorrection": {
+    "initialFailure": "The collector expected the configured workflow step name in raw job text; GitHub logs label this run block by command.",
+    "correction": "Verify the named completed step in job metadata and the 55-check result in the original log and artifact.",
+    "jobRerunRequested": false,
+    "rawLogsRewritten": false
+  },
+  "readOnlyNetworkRetry": {
+    "failedStage": "GitHub API GET after helper correction",
+    "error": "Read-only TLS/network fallback failed",
+    "sameJobArtifactRetrySucceeded": true,
+    "mutationOrCiRerun": false
+  }
+}

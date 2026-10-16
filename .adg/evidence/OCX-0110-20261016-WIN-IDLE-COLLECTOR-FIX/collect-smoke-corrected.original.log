@@ -1,0 +1,66 @@
+Traceback (most recent call last):
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\urllib\request.py", line 1344, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\http\client.py", line 1338, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\http\client.py", line 1384, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\http\client.py", line 1333, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\http\client.py", line 1093, in _send_output
+    self.send(msg)
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\http\client.py", line 1037, in send
+    self.connect()
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\http\client.py", line 1479, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\ssl.py", line 1041, in _create
+    self.do_handshake()
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\ssl.py", line 1319, in do_handshake
+    self._sslobj.do_handshake()
+ssl.SSLEOFError: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261015-WIN-ANCHOR-PERSISTENCE\github-read.py", line 38, in request
+    with urllib.request.build_opener(NoRedirect()).open(query, timeout=25) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\urllib\request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\urllib\request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\urllib\request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\urllib\request.py", line 1392, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\urllib\request.py", line 1347, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261015-WIN-MESH-BUFFER-DIAG\github-reader.py", line 16, in request
+    return original.request(path, token, payload, method)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261015-WIN-ANCHOR-PERSISTENCE\github-read.py", line 59, in request
+    raise RuntimeError("Native read transport failed without changing remote state")
+RuntimeError: Native read transport failed without changing remote state
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261016-WIN-IDLE-COLLECTOR-FIX\collect-smoke.py", line 25, in <module>
+    _, run = api.request("actions/runs/38834762492", token)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261015-WIN-MESH-BUFFER-DIAG\github-reader.py", line 34, in request
+    raise RuntimeError("Read-only Git curl fallback failed; no remote state changed")
+RuntimeError: Read-only Git curl fallback failed; no remote state changed
