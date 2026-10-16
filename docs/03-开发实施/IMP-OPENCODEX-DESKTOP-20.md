@@ -2004,3 +2004,9 @@ fdb7e3cb已推送读回，只读绑定方法本机和首次CI38930174628 Windows
 失败制品12059460774/7d536e17…/8875175字节及原库0490fb14…已只读验CRC/摘要并私有保存，未执行；它不同于原bd2固定库497814ca…，不替代或解除原失败。独立feature/0.1.10-windows-ipc-idle-signal从b4提交测试专用许可释放通知，替换指定两项热轮询，原24处2秒期限、默认并发、审计/终态断言全部保留；ea8首次CI格式失败原件保持，ca89fbac仅按rustfmt要求修正一行，新SHA首轮CI38933650482已过Windows格式/Clippy/回归步骤，整轮终态仍待核。本机未装Rust，未声称本机编译通过。
 
 证据`.adg/evidence/OCX-0110-20261017-WIN-BINDING-IPC-FAILURE/`分别封存方法通过、整轮失败、源码边界及修订阶段状态。此修订不被写成根因已证实或旧失败已清除；原RSS/退出失败、bd2实际失败窗口、严格恢复、Mac及全部其余预算/周期/八检查保持。TASK revision2/in_progress/pending、原配置恢复、DPI取消，不合并、关闭、签名、晋升或发布。
+
+### 2026-10-17 IPC测试通知修订首次完整CI通过
+
+ca89fbac首次push CI38933650482/attempt1整轮success，五必需job原日志actual checkout均同SHA，main-only build正常skip。Windows35组651passed/0failed/7ignored、Mac35组924passed/0failed/6ignored，前端99文件538passed；原两项取消观察测试及新增最终许可通知用例均有明确ok行。Windows库554passed/0failed/4ignored，最终EXE冒烟步骤通过；以上属于runner验证，不代替本机原生门禁。
+
+制品12060483211/30672f57…/9583894字节只读核API摘要、成员摘要及CRC，修订库a3c4afd1…保留在私有忽略目录且未执行，不替换fdb失败库或原bd2库。`.adg/evidence/OCX-0110-20261017-WIN-IPC-IDLE-FULL-CI/`保存终态、五份原日志、制品身份与独立复核；上一档“当时整轮待核”原件保持。修订保留2秒期限、默认并发、终态及审计断言，未证明旧失败的调度/I/O因果。无重派CI或宿主产品启动；RSS超预算、退出失败、bd2实际失败窗口、严格恢复、Mac及其余原门禁保持，TASK revision2/in_progress/pending、DPI取消，不合并、关闭或发布。

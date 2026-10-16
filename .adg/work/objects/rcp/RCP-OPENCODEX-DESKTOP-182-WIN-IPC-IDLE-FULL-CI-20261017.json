@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-IPC-IDLE-FULL-CI-20261017",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-IPC-IDLE-FULL-CI",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-IPC-IDLE-FULL-CI-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-ipc-idle-revision-full-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-IPC-IDLE-FULL-CI/verification.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "0c98255c48584b45c5b8ca7c814a3249def598bcff31990004d97d4585161270",
+      "summary": "ca89首次完整CI与五份同SHA原日志通过，指定两失败测试和最终许可通知用例通过；未证明旧失败因果或解除原门禁。"
+    }
+  ],
+  "completed_at": "2026-10-16T17:04:49.239209+00:00",
+  "summary": "IPC测试专用通知修订首次完整CI通过，首轮失败及原预算/周期保持。",
+  "revision": 1,
+  "summary_digest": "e94df5281b26eee451085f8c1e966cc6482d658beaa8331f82d2ec46ab42a3d8",
+  "content_digest": "b2e602cc52d4d9614989f13bc9c78335275b6d7e1d22ababb424540e4640452d"
+}

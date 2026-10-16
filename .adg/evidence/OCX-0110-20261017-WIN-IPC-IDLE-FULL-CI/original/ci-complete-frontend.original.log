@@ -1,0 +1,377 @@
+﻿2026-10-16T16:39:32.1390360Z Current runner version: '2.337.0'
+2026-10-16T16:39:32.1407160Z ##[group]Runner Image Provisioner
+2026-10-16T16:39:32.1407770Z Hosted Compute Agent
+2026-10-16T16:39:32.1408130Z Version: 20260828.587
+2026-10-16T16:39:32.1408590Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-10-16T16:39:32.1409080Z Build Date: 2026-08-28T16:44:25Z
+2026-10-16T16:39:32.1409510Z Worker ID: {08f9a844-0642-4938-9536-2938142a15c2}
+2026-10-16T16:39:32.1409950Z Azure Region: westus
+2026-10-16T16:39:32.1410310Z ##[endgroup]
+2026-10-16T16:39:32.1411190Z ##[group]Operating System
+2026-10-16T16:39:32.1411570Z macOS
+2026-10-16T16:39:32.1411880Z 14.8.9
+2026-10-16T16:39:32.1412200Z 23J631
+2026-10-16T16:39:32.1412550Z ##[endgroup]
+2026-10-16T16:39:32.1412960Z ##[group]Runner Image
+2026-10-16T16:39:32.1413320Z Image: macos-14-arm64
+2026-10-16T16:39:32.1413680Z Version: 20260831.0302.1
+2026-10-16T16:39:32.1414530Z Included Software: https://github.com/actions/runner-images/blob/macos-14-arm64/20260831.0302/images/macos/macos-14-arm64-Readme.md
+2026-10-16T16:39:32.1416060Z Image Release: https://github.com/actions/runner-images/releases/tag/macos-14-arm64%2F20260831.0302
+2026-10-16T16:39:32.1417060Z ##[endgroup]
+2026-10-16T16:39:32.1419320Z ##[group]GITHUB_TOKEN Permissions
+2026-10-16T16:39:32.1422710Z Actions: write
+2026-10-16T16:39:32.1423760Z ArtifactMetadata: write
+2026-10-16T16:39:32.1425060Z Attestations: write
+2026-10-16T16:39:32.1425450Z Checks: write
+2026-10-16T16:39:32.1426330Z CodeQuality: write
+2026-10-16T16:39:32.1426790Z Contents: write
+2026-10-16T16:39:32.1427140Z CopilotRequests: write
+2026-10-16T16:39:32.1427520Z Deployments: write
+2026-10-16T16:39:32.1428050Z Discussions: write
+2026-10-16T16:39:32.1428400Z Drives: write
+2026-10-16T16:39:32.1428770Z Issues: write
+2026-10-16T16:39:32.1429160Z Metadata: read
+2026-10-16T16:39:32.1429610Z Models: read
+2026-10-16T16:39:32.1429950Z Packages: write
+2026-10-16T16:39:32.1430290Z Pages: write
+2026-10-16T16:39:32.1430630Z PullRequests: write
+2026-10-16T16:39:32.1431020Z RepositoryProjects: write
+2026-10-16T16:39:32.1431420Z SecurityEvents: write
+2026-10-16T16:39:32.1431780Z Statuses: write
+2026-10-16T16:39:32.1432230Z VulnerabilityAlerts: read
+2026-10-16T16:39:32.1432610Z ##[endgroup]
+2026-10-16T16:39:32.1434550Z Secret source: Actions
+2026-10-16T16:39:32.1435140Z Cache mode: write
+2026-10-16T16:39:32.1435580Z Prepare workflow directory
+2026-10-16T16:39:32.1826210Z Prepare all required actions
+2026-10-16T16:39:32.1872860Z Getting action download info
+2026-10-16T16:39:32.6261870Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-16T16:39:33.0290180Z Download action repository 'actions/setup-node@v5' (SHA:a0853c24544627f65ddf259abe73b1d18a591444)
+2026-10-16T16:39:33.3006390Z Complete job name: frontend
+2026-10-16T16:39:33.3828020Z ##[group]Run actions/checkout@v5
+2026-10-16T16:39:33.3829710Z with:
+2026-10-16T16:39:33.3830190Z   repository: gzers/opencodex-desktop
+2026-10-16T16:39:33.3833460Z   token: ***
+2026-10-16T16:39:33.3833820Z   ssh-strict: true
+2026-10-16T16:39:33.3834200Z   ssh-user: git
+2026-10-16T16:39:33.3834580Z   persist-credentials: true
+2026-10-16T16:39:33.3835000Z   clean: true
+2026-10-16T16:39:33.3835380Z   sparse-checkout-cone-mode: true
+2026-10-16T16:39:33.3835780Z   fetch-depth: 1
+2026-10-16T16:39:33.3836100Z   fetch-tags: false
+2026-10-16T16:39:33.3836420Z   show-progress: true
+2026-10-16T16:39:33.3836780Z   lfs: false
+2026-10-16T16:39:33.3837150Z   submodules: false
+2026-10-16T16:39:33.3837480Z   set-safe-directory: true
+2026-10-16T16:39:33.3837900Z   allow-unsafe-pr-checkout: false
+2026-10-16T16:39:33.3838810Z ##[endgroup]
+2026-10-16T16:39:33.8316490Z Syncing repository: gzers/opencodex-desktop
+2026-10-16T16:39:33.8321420Z ##[group]Getting Git version info
+2026-10-16T16:39:33.8323790Z Working directory is '/Users/runner/work/opencodex-desktop/opencodex-desktop'
+2026-10-16T16:39:33.8326790Z [command]/opt/homebrew/bin/git version
+2026-10-16T16:39:33.8736800Z git version 2.55.0
+2026-10-16T16:39:33.8776460Z ##[endgroup]
+2026-10-16T16:39:33.8791300Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/487f1ed0-b3a9-4849-9ed9-a07c4d43e2c6/.gitconfig'
+2026-10-16T16:39:33.8793070Z Temporarily overriding HOME='/Users/runner/work/_temp/487f1ed0-b3a9-4849-9ed9-a07c4d43e2c6' before making global git config changes
+2026-10-16T16:39:33.8799590Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T16:39:33.8800990Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/opencodex-desktop/opencodex-desktop
+2026-10-16T16:39:33.8941500Z Deleting the contents of '/Users/runner/work/opencodex-desktop/opencodex-desktop'
+2026-10-16T16:39:33.8953570Z ##[group]Initializing the repository
+2026-10-16T16:39:33.8957420Z [command]/opt/homebrew/bin/git init /Users/runner/work/opencodex-desktop/opencodex-desktop
+2026-10-16T16:39:33.9270100Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-16T16:39:33.9271030Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-16T16:39:33.9272600Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-16T16:39:33.9273970Z hint: call:
+2026-10-16T16:39:33.9274340Z hint:
+2026-10-16T16:39:33.9274900Z hint: 	git config --global init.defaultBranch <name>
+2026-10-16T16:39:33.9275380Z hint:
+2026-10-16T16:39:33.9275880Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-16T16:39:33.9276610Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-16T16:39:33.9277190Z hint:
+2026-10-16T16:39:33.9277530Z hint: 	git branch -m <name>
+2026-10-16T16:39:33.9278650Z hint:
+2026-10-16T16:39:33.9279310Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-16T16:39:33.9280290Z Initialized empty Git repository in /Users/runner/work/opencodex-desktop/opencodex-desktop/.git/
+2026-10-16T16:39:33.9282180Z [command]/opt/homebrew/bin/git remote add origin https://github.com/gzers/opencodex-desktop
+2026-10-16T16:39:33.9399670Z ##[endgroup]
+2026-10-16T16:39:33.9400570Z ##[group]Disabling automatic garbage collection
+2026-10-16T16:39:33.9403710Z [command]/opt/homebrew/bin/git config --local gc.auto 0
+2026-10-16T16:39:33.9480110Z ##[endgroup]
+2026-10-16T16:39:33.9480790Z ##[group]Setting up auth
+2026-10-16T16:39:33.9496430Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T16:39:33.9568180Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-16T16:39:34.0704130Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T16:39:34.0772010Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-16T16:39:34.1589310Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T16:39:34.1661170Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-16T16:39:34.3145170Z [command]/opt/homebrew/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-16T16:39:34.3234400Z ##[endgroup]
+2026-10-16T16:39:34.3237350Z ##[group]Fetching the repository
+2026-10-16T16:39:34.3242130Z [command]/opt/homebrew/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ca89fbac763d2376c6bfafcdfab4c256359d2a6b:refs/remotes/origin/feature/0.1.10-windows-ipc-idle-signal
+2026-10-16T16:39:35.0049290Z From https://github.com/gzers/opencodex-desktop
+2026-10-16T16:39:35.0052310Z  * [new ref]         ca89fbac763d2376c6bfafcdfab4c256359d2a6b -> origin/feature/0.1.10-windows-ipc-idle-signal
+2026-10-16T16:39:35.0056300Z ##[endgroup]
+2026-10-16T16:39:35.0071300Z ##[group]Determining the checkout info
+2026-10-16T16:39:35.0079840Z ##[endgroup]
+2026-10-16T16:39:35.0086480Z [command]/opt/homebrew/bin/git sparse-checkout disable
+2026-10-16T16:39:35.0211750Z [command]/opt/homebrew/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-16T16:39:35.0288550Z ##[group]Checking out the ref
+2026-10-16T16:39:35.0295670Z [command]/opt/homebrew/bin/git checkout --progress --force -B feature/0.1.10-windows-ipc-idle-signal refs/remotes/origin/feature/0.1.10-windows-ipc-idle-signal
+2026-10-16T16:39:35.1372890Z Switched to a new branch 'feature/0.1.10-windows-ipc-idle-signal'
+2026-10-16T16:39:35.1376120Z branch 'feature/0.1.10-windows-ipc-idle-signal' set up to track 'origin/feature/0.1.10-windows-ipc-idle-signal'.
+2026-10-16T16:39:35.1382960Z ##[endgroup]
+2026-10-16T16:39:35.1488050Z [command]/opt/homebrew/bin/git log -1 --format=%H
+2026-10-16T16:39:35.1545060Z ca89fbac763d2376c6bfafcdfab4c256359d2a6b
+2026-10-16T16:39:35.2066460Z ##[group]Run actions/setup-node@v5
+2026-10-16T16:39:35.2067450Z with:
+2026-10-16T16:39:35.2068170Z   node-version: 24
+2026-10-16T16:39:35.2068990Z   always-auth: false
+2026-10-16T16:39:35.2069740Z   check-latest: false
+2026-10-16T16:39:35.2088210Z   token: ***
+2026-10-16T16:39:35.2090050Z   package-manager-cache: true
+2026-10-16T16:39:35.2091810Z ##[endgroup]
+2026-10-16T16:39:35.3955500Z Found in cache @ /Users/runner/hostedtoolcache/node/24.20.0/arm64
+2026-10-16T16:39:35.3957780Z (node:3156) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T16:39:35.3959680Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T16:39:35.3961510Z ##[group]Environment details
+2026-10-16T16:39:36.2335760Z node: v24.20.0
+2026-10-16T16:39:36.2336680Z npm: 11.19.0
+2026-10-16T16:39:36.2337060Z yarn: 1.22.22
+2026-10-16T16:39:36.2337900Z ##[endgroup]
+2026-10-16T16:39:36.2470830Z ##[group]Run node --test test/smoke/windows-cdp.test.mjs
+2026-10-16T16:39:36.2472090Z [36;1mnode --test test/smoke/windows-cdp.test.mjs[0m
+2026-10-16T16:39:36.2556170Z shell: /bin/bash -e {0}
+2026-10-16T16:39:36.2556540Z ##[endgroup]
+2026-10-16T16:39:36.5244890Z ✔ retries until the main page appears; ignores embedded or unrelated pages (82.557042ms)
+2026-10-16T16:39:38.5244780Z ✔ HTTP errors are preserved instead of being swallowed (2006.753083ms)
+2026-10-16T16:39:40.5284570Z ✔ malformed target JSON fails with parse evidence (2002.745917ms)
+2026-10-16T16:39:44.5386520Z ✔ non-array responses and empty target lists never count as rendered UI (4007.930208ms)
+2026-10-16T16:39:44.6928750Z ✔ stalled responses are bounded by both request and discovery deadlines (153.855625ms)
+2026-10-16T16:39:46.6963860Z ✔ connection refusal retains the underlying network error (2002.4535ms)
+2026-10-16T16:39:46.6966140Z ✔ refuses non-loopback endpoints before making a request (0.827958ms)
+2026-10-16T16:39:46.7176720Z ℹ tests 7
+2026-10-16T16:39:46.7177590Z ℹ suites 0
+2026-10-16T16:39:46.7180220Z ℹ pass 7
+2026-10-16T16:39:46.7192710Z ℹ fail 0
+2026-10-16T16:39:46.7194170Z ℹ cancelled 0
+2026-10-16T16:39:46.7195210Z ℹ skipped 0
+2026-10-16T16:39:46.7196380Z ℹ todo 0
+2026-10-16T16:39:46.7198300Z ℹ duration_ms 10362.629125
+2026-10-16T16:39:46.7293390Z ##[group]Run npm --prefix apps/desktop/ui ci
+2026-10-16T16:39:46.7293870Z [36;1mnpm --prefix apps/desktop/ui ci[0m
+2026-10-16T16:39:46.7488330Z shell: /bin/bash -e {0}
+2026-10-16T16:39:46.7489170Z ##[endgroup]
+2026-10-16T16:39:48.6896250Z npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-10-16T16:39:51.0347620Z 
+2026-10-16T16:39:51.0365490Z added 147 packages, and audited 148 packages in 4s
+2026-10-16T16:39:51.0409240Z npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+2026-10-16T16:39:51.0410350Z 
+2026-10-16T16:39:51.0460440Z npm warn install-scripts   fsevents@2.3.3 (install: (install scripts present))
+2026-10-16T16:39:51.0474300Z 27 packages are looking for funding
+2026-10-16T16:39:51.0475120Z npm warn install-scripts
+2026-10-16T16:39:51.0475850Z npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+2026-10-16T16:39:51.0477200Z   run `npm fund` for details
+2026-10-16T16:39:51.0477470Z 
+2026-10-16T16:39:51.0477700Z found 0 vulnerabilities
+2026-10-16T16:39:51.2052530Z ##[group]Run npm --prefix apps/desktop/ui run typecheck
+2026-10-16T16:39:51.2053080Z [36;1mnpm --prefix apps/desktop/ui run typecheck[0m
+2026-10-16T16:39:51.2178940Z shell: /bin/bash -e {0}
+2026-10-16T16:39:51.2179230Z ##[endgroup]
+2026-10-16T16:39:51.4429450Z 
+2026-10-16T16:39:51.4531480Z > opencodex-desktop-ui@0.1.10 typecheck
+2026-10-16T16:39:51.4635270Z > vue-tsc --noEmit
+2026-10-16T16:39:51.4804330Z 
+2026-10-16T16:39:58.6517270Z ##[group]Run npm --prefix apps/desktop/ui run test -- --run
+2026-10-16T16:39:58.6517890Z [36;1mnpm --prefix apps/desktop/ui run test -- --run[0m
+2026-10-16T16:39:58.6692980Z shell: /bin/bash -e {0}
+2026-10-16T16:39:58.6693700Z ##[endgroup]
+2026-10-16T16:39:58.9590730Z 
+2026-10-16T16:39:58.9591610Z > opencodex-desktop-ui@0.1.10 test
+2026-10-16T16:39:58.9592330Z > vitest --run
+2026-10-16T16:39:58.9593160Z 
+2026-10-16T16:39:59.6680220Z 
+2026-10-16T16:39:59.6682960Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.0 [39m[90m/Users/runner/work/opencodex-desktop/opencodex-desktop/apps/desktop/ui[39m
+2026-10-16T16:39:59.6683480Z 
+2026-10-16T16:40:02.8450060Z  [32m✓[39m tests/runtime-source.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+2026-10-16T16:40:03.2164260Z  [32m✓[39m tests/overview-motion.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 401[2mms[22m[39m
+2026-10-16T16:40:04.2125240Z  [32m✓[39m tests/panel.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 662[2mms[22m[39m
+2026-10-16T16:40:04.3788990Z  [32m✓[39m tests/extension-detail.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 529[2mms[22m[39m
+2026-10-16T16:40:05.1056310Z  [32m✓[39m tests/ui-tree-table.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 228[2mms[22m[39m
+2026-10-16T16:40:05.1619140Z  [32m✓[39m tests/update-center.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 345[2mms[22m[39m
+2026-10-16T16:40:05.9323010Z  [32m✓[39m tests/process-action.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+2026-10-16T16:40:06.2215220Z  [32m✓[39m tests/settings-uninstall.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 357[2mms[22m[39m
+2026-10-16T16:40:06.8221400Z  [32m✓[39m tests/settings-codex-shim.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 202[2mms[22m[39m
+2026-10-16T16:40:06.8425240Z  [32m✓[39m tests/data-root.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+2026-10-16T16:40:07.7732120Z  [32m✓[39m tests/runtime-protection.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 249[2mms[22m[39m
+2026-10-16T16:40:07.9224980Z  [32m✓[39m tests/settings-skills-source.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 383[2mms[22m[39m
+2026-10-16T16:40:08.4908220Z  [32m✓[39m tests/release-notes.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 104[2mms[22m[39m
+2026-10-16T16:40:08.8921410Z  [32m✓[39m tests/startup-preferences.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 373[2mms[22m[39m
+2026-10-16T16:40:09.4202830Z  [32m✓[39m tests/preferences.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+2026-10-16T16:40:09.5016030Z  [32m✓[39m tests/log-categories.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 319[2mms[22m[39m
+2026-10-16T16:40:09.9793330Z  [32m✓[39m tests/extensions.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+2026-10-16T16:40:10.1225480Z  [32m✓[39m tests/overview-mesh-center.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 130[2mms[22m[39m
+2026-10-16T16:40:10.6073270Z  [32m✓[39m tests/update-scheduler.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-16T16:40:10.8860630Z  [32m✓[39m tests/settings-data-root-migration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 230[2mms[22m[39m
+2026-10-16T16:40:11.5423980Z  [32m✓[39m tests/environment-gate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+2026-10-16T16:40:11.5630780Z  [32m✓[39m tests/app-modal.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 273[2mms[22m[39m
+2026-10-16T16:40:12.4642560Z  [32m✓[39m tests/effects.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 216[2mms[22m[39m
+2026-10-16T16:40:12.6758240Z  [32m✓[39m tests/global-refresh.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 382[2mms[22m[39m
+2026-10-16T16:40:13.1565650Z  [32m✓[39m tests/notifications.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+2026-10-16T16:40:14.2889780Z  [32m✓[39m tests/settings-install-path.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 447[2mms[22m[39m
+2026-10-16T16:40:14.5489880Z  [32m✓[39m tests/interface-scale.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1157[2mms[22m[39m
+2026-10-16T16:40:14.5595710Z    [32m✓[39m settings · 界面缩放真正生效 [2m(4)[22m
+2026-10-16T16:40:14.5730690Z      [33m[2m✓[22m[39m previews instantly and persists only the final value of a rapid drag[33m 592[2mms[22m[39m
+2026-10-16T16:40:14.5847680Z      [33m[2m✓[22m[39m keeps the displayed value, real ratio and persisted value consistent on failure[33m 404[2mms[22m[39m
+2026-10-16T16:40:14.8481720Z  [32m✓[39m tests/mesh-performance.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-10-16T16:40:15.6699010Z  [32m✓[39m tests/settings-install-feedback.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 380[2mms[22m[39m
+2026-10-16T16:40:16.1328870Z  [32m✓[39m tests/extensions-pagination.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 525[2mms[22m[39m
+2026-10-16T16:40:16.5581810Z  [32m✓[39m tests/backup-management.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 151[2mms[22m[39m
+2026-10-16T16:40:17.0834700Z  [32m✓[39m tests/overview-status-announce.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 204[2mms[22m[39m
+2026-10-16T16:40:17.4469810Z  [32m✓[39m tests/sync.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 305[2mms[22m[39m
+2026-10-16T16:40:18.1278050Z  [32m✓[39m tests/notification-center.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 316[2mms[22m[39m
+2026-10-16T16:40:18.1452220Z  [32m✓[39m tests/error-boundary.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 93[2mms[22m[39m
+2026-10-16T16:40:18.5569390Z  [32m✓[39m tests/startup-route.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-16T16:40:18.7496010Z  [32m✓[39m tests/status-snapshot.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 99[2mms[22m[39m
+2026-10-16T16:40:19.1382650Z  [32m✓[39m tests/ui-components.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+2026-10-16T16:40:19.5663220Z  [32m✓[39m tests/sync-conflict-default.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 262[2mms[22m[39m
+2026-10-16T16:40:20.0148640Z  [32m✓[39m tests/settings-update-retry.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 245[2mms[22m[39m
+2026-10-16T16:40:20.3031760Z  [32m✓[39m tests/update-release-details-flow.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+2026-10-16T16:40:20.6810490Z  [32m✓[39m tests/backup-files.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 139[2mms[22m[39m
+2026-10-16T16:40:20.8945650Z  [32m✓[39m tests/process-progress-labels.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-16T16:40:21.2580890Z [90mstderr[2m | tests/open-data.test.ts[2m > [22m[2moverview direct data root actions[2m > [22m[2mopens active data root and home through the whitelisted managed path command
+2026-10-16T16:40:21.2711220Z [22m[39m[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.2713710Z  [32m✓[39m tests/open-data.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-16T16:40:21.2817580Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.2915900Z 
+2026-10-16T16:40:21.4165390Z  [32m✓[39m tests/update-install-ownership.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-16T16:40:21.7752860Z [90mstderr[2m | tests/restore.test.ts[2m > [22m[2mofficial restore guidance[2m > [22m[2mshows risks, creates the gate backup, then shows official-only guidance
+2026-10-16T16:40:21.7755740Z [22m[39m[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.7759280Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.7761340Z [Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.7763330Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.7764800Z 
+2026-10-16T16:40:21.8299590Z [90mstderr[2m | tests/restore.test.ts[2m > [22m[2mofficial restore guidance[2m > [22m[2mblocks the guidance when the summary is unavailable
+2026-10-16T16:40:21.8301760Z [22m[39m[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8305770Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8320620Z [Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8323740Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8324670Z 
+2026-10-16T16:40:21.8325590Z [90mstderr[2m | tests/restore.test.ts[2m > [22m[2mofficial restore guidance[2m > [22m[2mblocks guidance and preserves configuration when the gate backup fails
+2026-10-16T16:40:21.8327340Z [22m[39m[Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8329130Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8331570Z [Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8333410Z [Vue warn]: onUnmounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+2026-10-16T16:40:21.8334410Z 
+2026-10-16T16:40:21.8745960Z  [32m✓[39m tests/migration.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+2026-10-16T16:40:21.8855500Z  [32m✓[39m tests/restore.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 120[2mms[22m[39m
+2026-10-16T16:40:22.3934610Z  [32m✓[39m tests/page-surface-material.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-16T16:40:22.4306190Z  [32m✓[39m tests/update-query-ownership.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+2026-10-16T16:40:22.9924340Z  [32m✓[39m tests/overview-glow-host.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+2026-10-16T16:40:23.2163220Z  [32m✓[39m tests/upgrade-auto-backup.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 189[2mms[22m[39m
+2026-10-16T16:40:23.5825450Z  [32m✓[39m tests/idle-ipc.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-10-16T16:40:23.6593430Z Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+2026-10-16T16:40:23.6595290Z Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+2026-10-16T16:40:23.6597840Z  [32m✓[39m tests/glow-render.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-16T16:40:24.2283660Z  [32m✓[39m tests/settings-readonly.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 139[2mms[22m[39m
+2026-10-16T16:40:24.6128490Z  [32m✓[39m tests/motion-performance.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 548[2mms[22m[39m
+2026-10-16T16:40:24.6214990Z    [32m✓[39m unchanged visual frames and stopped background rendering [2m(2)[22m
+2026-10-16T16:40:24.6240620Z      [33m[2m✓[22m[39m matches the pre-optimization output for all nine states and transitions[33m 531[2mms[22m[39m
+2026-10-16T16:40:25.0002170Z  [32m✓[39m tests/topbar.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 211[2mms[22m[39m
+2026-10-16T16:40:25.3456920Z  [32m✓[39m tests/overview-mods.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 230[2mms[22m[39m
+2026-10-16T16:40:25.6380340Z  [32m✓[39m tests/technical-input-autocapitalize.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+2026-10-16T16:40:25.7549200Z  [32m✓[39m tests/runtime-presentation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-16T16:40:26.1640520Z  [32m✓[39m tests/extension-errors.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+2026-10-16T16:40:26.4351790Z  [32m✓[39m tests/select-menu.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 86[2mms[22m[39m
+2026-10-16T16:40:26.8686010Z  [32m✓[39m tests/cli-ipc.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+2026-10-16T16:40:27.1250180Z  [32m✓[39m tests/workspace.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+2026-10-16T16:40:27.3819320Z  [32m✓[39m tests/update.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+2026-10-16T16:40:27.6335940Z  [32m✓[39m tests/tray-events.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 28[2mms[22m[39m
+2026-10-16T16:40:27.9487390Z  [32m✓[39m tests/tray-bridge-failure.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 35[2mms[22m[39m
+2026-10-16T16:40:28.0799570Z  [32m✓[39m tests/doctor.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-16T16:40:28.4140360Z  [32m✓[39m tests/about.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+2026-10-16T16:40:28.5025730Z  [32m✓[39m tests/scale.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-16T16:40:28.9175110Z  [32m✓[39m tests/native-foreground.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 39[2mms[22m[39m
+2026-10-16T16:40:28.9561690Z  [32m✓[39m tests/notification-refresh.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 6[2mms[22m[39m
+2026-10-16T16:40:29.3380380Z  [32m✓[39m tests/navigation.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+2026-10-16T16:40:29.4630480Z  [32m✓[39m tests/upgrade.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+2026-10-16T16:40:29.7525120Z  [32m✓[39m tests/window-drag.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-16T16:40:29.8756750Z  [32m✓[39m tests/component-style-rules.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+2026-10-16T16:40:30.2705570Z  [32m✓[39m tests/tray-bridge.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-16T16:40:30.4275860Z  [32m✓[39m tests/logs-ordering.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 18[2mms[22m[39m
+2026-10-16T16:40:30.7811500Z  [32m✓[39m tests/settings-windows-cli.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 46[2mms[22m[39m
+2026-10-16T16:40:30.8638180Z  [32m✓[39m tests/client-icons.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-16T16:40:31.4216610Z  [32m✓[39m tests/app-store.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+2026-10-16T16:40:31.4487610Z  [32m✓[39m tests/native-window.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-16T16:40:31.8508060Z  [32m✓[39m tests/no-wrap-labels.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+2026-10-16T16:40:32.0644310Z  [32m✓[39m tests/settings-guide-listener.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 71[2mms[22m[39m
+2026-10-16T16:40:32.4376420Z  [32m✓[39m tests/panel-update-progress.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 54[2mms[22m[39m
+2026-10-16T16:40:32.5351770Z  [32m✓[39m tests/notification-actions.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-16T16:40:32.9685010Z  [32m✓[39m tests/feedback-registry.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+2026-10-16T16:40:33.0651480Z  [32m✓[39m tests/markdown-content.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+2026-10-16T16:40:33.4766200Z  [32m✓[39m tests/update-version.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+2026-10-16T16:40:33.5672770Z  [32m✓[39m tests/logs.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-16T16:40:33.9516230Z  [32m✓[39m tests/panel-idle.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-16T16:40:34.0940770Z  [32m✓[39m tests/environment-refresh.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-16T16:40:34.4720350Z  [32m✓[39m tests/tray-exit.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+2026-10-16T16:40:34.6167470Z  [32m✓[39m tests/startup-deadline.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+2026-10-16T16:40:34.9176830Z  [32m✓[39m tests/window-address.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 2[2mms[22m[39m
+2026-10-16T16:40:35.1661790Z  [32m✓[39m tests/overlay-surfaces.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-16T16:40:35.3711720Z  [32m✓[39m tests/notification-time.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+2026-10-16T16:40:35.6133840Z  [32m✓[39m tests/effects-runtime.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 8[2mms[22m[39m
+2026-10-16T16:40:35.7330300Z  [32m✓[39m tests/discovery-command.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-16T16:40:36.0043590Z  [32m✓[39m tests/app-status.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-16T16:40:36.0102770Z 
+2026-10-16T16:40:36.0107290Z [2m Test Files [22m [1m[32m99 passed[39m[22m[90m (99)[39m
+2026-10-16T16:40:36.0109000Z [2m      Tests [22m [1m[32m538 passed[39m[22m[90m (538)[39m
+2026-10-16T16:40:36.0109640Z [2m   Start at [22m 16:39:59
+2026-10-16T16:40:36.0118340Z [2m   Duration [22m 36.31s[2m (environment 57%, tests 20%, import 12%, transform 9%, worker 1%)[22m
+2026-10-16T16:40:36.0121580Z 
+2026-10-16T16:40:36.0123530Z [2mEnvironment [22m [33mjsdom was created 99 times[39m[2m · 36.03s total, 57% of tracked time[22m
+2026-10-16T16:40:36.0125230Z [2m            [22m [2mcreate it once per worker with [22m[33mpool: 'vmThreads'[39m[2m (keeps per-file isolation) or [22m[33misolate: false[39m[2m (shares it across files)[22m
+2026-10-16T16:40:36.0126450Z [2m            [22m [2mlearn more: https://vitest.dev/guide/improving-performance#test-environments[22m
+2026-10-16T16:40:36.0126830Z 
+2026-10-16T16:40:36.1161290Z ##[group]Run npm --prefix apps/desktop/ui run build
+2026-10-16T16:40:36.1161870Z [36;1mnpm --prefix apps/desktop/ui run build[0m
+2026-10-16T16:40:36.1270870Z shell: /bin/bash -e {0}
+2026-10-16T16:40:36.1271240Z ##[endgroup]
+2026-10-16T16:40:36.4497110Z 
+2026-10-16T16:40:36.4497750Z > opencodex-desktop-ui@0.1.10 build
+2026-10-16T16:40:36.4498410Z > vue-tsc --noEmit && vite build
+2026-10-16T16:40:36.4498750Z 
+2026-10-16T16:40:42.3110330Z [36mvite v8.3.0 [32mbuilding client environment for production...[36m[39m
+2026-10-16T16:40:42.3520810Z transforming...
+2026-10-16T16:40:42.7897880Z ✓ 175 modules transformed.
+2026-10-16T16:40:42.9146780Z rendering chunks...
+2026-10-16T16:40:42.9555450Z computing gzip size...
+2026-10-16T16:40:42.9622680Z dist/index.html                   0.40 kB │ gzip:   0.27 kB
+2026-10-16T16:40:42.9623500Z dist/assets/index-B-qY97h4.css   96.18 kB │ gzip:  17.55 kB
+2026-10-16T16:40:42.9624700Z dist/assets/index-B0J8-UrC.js   454.83 kB │ gzip: 148.27 kB
+2026-10-16T16:40:42.9625090Z 
+2026-10-16T16:40:42.9638250Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/core.js is dynamically imported by src/app/appearance/effects.ts, src/contracts/runtimeStatus.ts, src/features/about/api.ts, src/features/backup/api.ts, src/features/codex-shim/api.ts, ... but also statically imported by node_modules/@tauri-apps/api/event.js, node_modules/@tauri-apps/plugin-dialog/dist-js/index.js, node_modules/@tauri-apps/plugin-process/dist-js/index.js, src/app/appearance/nativeWindow.ts, src/features/runtime/api.ts, ..., dynamic import will not move module into another chunk.
+2026-10-16T16:40:42.9640450Z [39m
+2026-10-16T16:40:42.9642450Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+2026-10-16T16:40:42.9643910Z [32m✓ built in 653ms[39m
+2026-10-16T16:40:42.9644200Z [39m
+2026-10-16T16:40:42.9667740Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+2026-10-16T16:40:42.9670680Z [39m
+2026-10-16T16:40:42.9679210Z [33m[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, src/features/tray/api.ts but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+2026-10-16T16:40:42.9685350Z [39m
+2026-10-16T16:40:43.0136000Z Post job cleanup.
+2026-10-16T16:40:43.2898080Z (node:4206) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T16:40:43.2898980Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T16:40:43.3041640Z Post job cleanup.
+2026-10-16T16:40:43.3877710Z [command]/opt/homebrew/bin/git version
+2026-10-16T16:40:43.4077640Z git version 2.55.0
+2026-10-16T16:40:43.4099690Z Copying '/Users/runner/.gitconfig' to '/Users/runner/work/_temp/3e854700-384d-48b3-9f7b-4f8e4345981a/.gitconfig'
+2026-10-16T16:40:43.4107890Z Temporarily overriding HOME='/Users/runner/work/_temp/3e854700-384d-48b3-9f7b-4f8e4345981a' before making global git config changes
+2026-10-16T16:40:43.4109270Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T16:40:43.4113000Z [command]/opt/homebrew/bin/git config --global --add safe.directory /Users/runner/work/opencodex-desktop/opencodex-desktop
+2026-10-16T16:40:43.4208510Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T16:40:43.4263390Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-16T16:40:43.6057420Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T16:40:43.6108600Z http.https://github.com/.extraheader
+2026-10-16T16:40:43.6115300Z [command]/opt/homebrew/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-16T16:40:43.6167610Z [command]/opt/homebrew/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-16T16:40:43.6780750Z [command]/opt/homebrew/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T16:40:43.6832960Z [command]/opt/homebrew/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-16T16:40:43.8016460Z Cleaning up orphan processes
