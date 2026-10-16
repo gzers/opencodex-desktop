@@ -1,0 +1,54 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-B4-IDLE-ROLES-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-B4-IDLE-ROLES-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-b4-actual-role-accounting",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    },
+    {
+      "name": "local:windows-b4-completed-counter-spans",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/verification.json"
+    },
+    {
+      "name": "local:windows-test-profile-restoration",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/cleanup-final-readback.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/candidate0110-exit.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "e55f9d5a9c8404e541e700e74d118fedf52e3799f7585c188f7792e5e1f95c2c",
+      "summary": "两版各597完整600秒计数与实际角色匹配完成；RSS+20.040155MiB失败，GPU角色+24.086376，候选退出和配置还原待处理，完整门禁不通过。"
+    }
+  ],
+  "completed_at": "2026-10-16T13:29:04.785328+00:00",
+  "summary": "本轮完成计数与实际角色证据有效，CPU−3.532407pp但RSS+20.040155MiB失败；候选关闭未赶上授权窗口，退出观察超时且原配置待native0还原，不关闭发布。",
+  "revision": 1,
+  "summary_digest": "2d94f3f73d758d41c1082d7a08b75f4db2b85f083ba3da7b0bc6b332be43b71b",
+  "content_digest": "e134a1df763578536c03236129220f17fe7ff1dd29de1dc64c540994572bc705"
+}

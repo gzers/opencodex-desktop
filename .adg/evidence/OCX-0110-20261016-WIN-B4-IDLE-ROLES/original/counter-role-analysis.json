@@ -1,0 +1,160 @@
+{
+  "status": "completed-counter-subset-and-actual-role-accounting-only",
+  "versions": {
+    "baseline019": {
+      "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "exeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+      "samples": 597,
+      "spanSeconds": 600.2231132000001,
+      "rawSha256": "8421cadb821e4c93755c0479fe5b5dfe62f1131dca7f7821e92bf2c08b2a1bd8",
+      "cpuOneLogicalProcessorPercent": 25.303090910695037,
+      "meanRssMiB": 568.3884134212731,
+      "meanRssMiBByActualRole": {
+        "gpu": 209.91516174623115,
+        "native-root": 36.39576790201005,
+        "browser-no-type-flag": 141.24607412060303,
+        "renderer": 106.94257092755444,
+        "utility": 59.287943624371856,
+        "crash-handler": 14.600895100502512
+      },
+      "firstCounterAtUtc": "2026-10-16T12:48:29.9115614+00:00",
+      "lastCounterAtUtc": "2026-10-16T12:58:30.1702919+00:00",
+      "processCreationUtc": "2026-10-16T12:44:19.7393809Z",
+      "actualGenerationRoleBindings": [
+        {
+          "pid": 54368,
+          "creationUtc": "2026-10-16T12:44:19.7393809Z",
+          "role": "native-root"
+        },
+        {
+          "pid": 83304,
+          "creationUtc": "2026-10-16T12:44:19.8465056Z",
+          "role": "browser-no-type-flag"
+        },
+        {
+          "pid": 33676,
+          "creationUtc": "2026-10-16T12:44:19.8735293Z",
+          "role": "crash-handler"
+        },
+        {
+          "pid": 62332,
+          "creationUtc": "2026-10-16T12:44:20.1972039Z",
+          "role": "gpu"
+        },
+        {
+          "pid": 82324,
+          "creationUtc": "2026-10-16T12:44:20.1997626Z",
+          "role": "utility"
+        },
+        {
+          "pid": 37352,
+          "creationUtc": "2026-10-16T12:44:20.2197280Z",
+          "role": "utility"
+        },
+        {
+          "pid": 20372,
+          "creationUtc": "2026-10-16T12:44:20.2754458Z",
+          "role": "renderer"
+        }
+      ]
+    },
+    "candidate0110": {
+      "source": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+      "exeSha256": "f3fab9d6840c105e426a7dc90efe94fe839e283e47af3929d251d82a6e8675db",
+      "samples": 597,
+      "spanSeconds": 600.0758786,
+      "rawSha256": "6450db6225db27603a18dc403a3750cb0d15d8ed02ae4c9a9a935bcb454db640",
+      "cpuOneLogicalProcessorPercent": 21.770684284925697,
+      "meanRssMiB": 588.4285686243719,
+      "meanRssMiBByActualRole": {
+        "gpu": 234.00153763609714,
+        "native-root": 37.06620995603015,
+        "browser-no-type-flag": 140.54903423366835,
+        "renderer": 102.88136646775544,
+        "utility": 59.33465504606365,
+        "crash-handler": 14.59576528475712
+      },
+      "firstCounterAtUtc": "2026-10-16T13:03:10.8644499+00:00",
+      "lastCounterAtUtc": "2026-10-16T13:13:10.9767863+00:00",
+      "processCreationUtc": "2026-10-16T13:00:18.1400051Z",
+      "actualGenerationRoleBindings": [
+        {
+          "pid": 76372,
+          "creationUtc": "2026-10-16T13:00:18.1400051Z",
+          "role": "native-root"
+        },
+        {
+          "pid": 49436,
+          "creationUtc": "2026-10-16T13:00:18.2904593Z",
+          "role": "browser-no-type-flag"
+        },
+        {
+          "pid": 84476,
+          "creationUtc": "2026-10-16T13:00:18.3122152Z",
+          "role": "crash-handler"
+        },
+        {
+          "pid": 17236,
+          "creationUtc": "2026-10-16T13:00:18.4261052Z",
+          "role": "gpu"
+        },
+        {
+          "pid": 62700,
+          "creationUtc": "2026-10-16T13:00:18.4286943Z",
+          "role": "utility"
+        },
+        {
+          "pid": 79976,
+          "creationUtc": "2026-10-16T13:00:18.4600997Z",
+          "role": "utility"
+        },
+        {
+          "pid": 76324,
+          "creationUtc": "2026-10-16T13:00:18.5475518Z",
+          "role": "renderer"
+        }
+      ]
+    }
+  },
+  "cpuIncreasePercentagePoints": -3.5324066257693403,
+  "meanRssIncreaseMiB": 20.040155203098834,
+  "roleRssDifferenceMiB": {
+    "browser-no-type-flag": -0.6970398869346752,
+    "crash-handler": -0.005129815745393174,
+    "gpu": 24.08637588986599,
+    "native-root": 0.6704420540200999,
+    "renderer": -4.061204459799001,
+    "utility": 0.04671142169179632
+  },
+  "budgets": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "cpuCounterSubsetBudgetPassed": true,
+  "rssCounterSubsetBudgetPassed": false,
+  "metricFormulaUnchanged": true,
+  "rolesJoinedByActualPidAndCreation": true,
+  "sizeUsedToGuessRoles": false,
+  "roleAccountingIsCausalAllocationAttribution": false,
+  "gpuSharedUsageAddedToRss": false,
+  "historicalPidsAssignedRoles": false,
+  "candidateExitDeadline": {
+    "atUtc": "2026-10-16T13:15:38.0772142+00:00",
+    "pid": 76372,
+    "exitObserved": false,
+    "exitCode": null,
+    "retainedHandle": true,
+    "forcedTermination": false,
+    "kernelTimes": null,
+    "nativeCount": 1,
+    "closeMethod": "Actual close action must be recorded separately",
+    "uiInputInjected": false,
+    "extendedObservationChangesNoAcceptanceDeadline": true
+  },
+  "candidatePostspanRolesTaken": false,
+  "foregroundCloseActionSent": false,
+  "formalPairLifecycleAdmitted": false,
+  "fullPerformanceGatePassed": false,
+  "historicalFailuresCleared": false,
+  "releaseAccepted": false
+}
