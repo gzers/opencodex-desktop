@@ -1990,3 +1990,9 @@ WPR只读盘点取得VirtualAllocation/GPU/ResidentSet配置，默认组合缓�
 本机普通令牌实际拒绝录制，10外层/20编译守卫通过。首次push CI38925613291 Windows方法作业117056254920在实际管理员令牌下15外层/20编译守卫通过，actual checkout a5、制品摘要/大小/CRC、提取原件与原日志核验。取得1217条/723913字节自进程事件，8MiB分配及对应栈1对，释放成功，丢失/遗漏/解码错误0，会话停止、读取线程自然排空。CI未执行普通令牌分支，不把两侧令牌检查混称产品双令牌验收。
 
 核验时a5整轮CI仍运行；真实GPU目标绑定入口与产品分配根因未准入。`.adg/evidence/OCX-0110-20261016-WIN-CONTROLLED-MEMORY-PROOF/`独立复算原事件、源码/CI及关闭证据；CRLF/LF提交检查拒绝与元数据表述修订的原日志/私有快照保留。23:44:09native0、已恢复原配置/指针/TASK摘要保持，无宿主录制或产品启动。原RSS超预算、退出失败、bd2实际失败窗口缺失、Mac及其余全部预算/周期/八检查保持；DPI取消，TASK revision2/in_progress/pending，不合并、关闭、签名、晋升或发布。
+
+### 2026-10-16 a5首次完整工具CI通过，原产品失败保持
+
+a5a1aba2首次push CI38925613291/attempt1整轮success，五必需job原日志actual checkout均为同一a5，main-only build正常skip；前端99/535、Mac35组923/6ignored、Windows35组648/7ignored及最终EXE冒烟通过。仅沿原运行取得API run/jobs与五份原日志，没有重派/重试CI或追加查询回放。
+
+完整核验见`.adg/evidence/OCX-0110-20261016-WIN-MEMORY-TOOL-FULL-CI/`；旧受控方法档中“当时整轮仍运行”及currentToolWholeCiAdmitted:false保持，不倒改时序。只准入完整工具CI，真实GPU目标绑定与产品根因仍未准入，RSS+20.040155MiB超+10MiB、原退出失败、bd2实际失败窗口、Mac及其余全部预算/周期/八检查继续保持。TASK revision2/in_progress/pending、原配置恢复、DPI取消及禁止合并/关闭/签名/晋升/发布不变。
