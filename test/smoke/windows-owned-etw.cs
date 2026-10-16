@@ -19,6 +19,51 @@ using Microsoft.Diagnostics.Tracing.Session;
 
 namespace OpenCodex.Diagnostics
 {
+    // Preserve the decoder's scheduling-field bytes without copying the
+    // new/old TID prefix or an unrecognized payload tail. This is not a
+    // version-specific interpretation or a claim of complete payload capture.
+    public static class OwnedEtwSchedulingBytes
+    {
+        public static string Extract(byte[] payload)
+        {
+            if (payload == null || payload.Length < 16 || payload.Length > 64)
+                throw new ArgumentException("Unsupported CSwitch payload length.");
+            var window = new byte[8];
+            Buffer.BlockCopy(payload, 8, window, 0, window.Length);
+            return Convert.ToBase64String(window);
+        }
+
+        public static int SelfTest()
+        {
+            int checks = 0;
+            Action<bool> require = value => {
+                if (!value) throw new InvalidOperationException("CSwitch raw byte window contract.");
+                checks++;
+            };
+            var payload = Enumerable.Range(0, 24).Select(value => (byte)value).ToArray();
+            string captured = Extract(payload);
+            require(Convert.FromBase64String(captured).SequenceEqual(payload.Skip(8).Take(8)));
+            require(Convert.FromBase64String(captured).Length == 8);
+            Array.Fill(payload, (byte)255, 0, 8);
+            require(Extract(payload) == captured);
+            Array.Fill(payload, (byte)254, 16, 8);
+            require(Extract(payload) == captured);
+            payload[8] ^= 1;
+            require(Extract(payload) != captured);
+            require(Convert.FromBase64String(captured)[0] == 8);
+            require(Convert.FromBase64String(Extract(new byte[16])).Length == 8);
+            require(Convert.FromBase64String(Extract(new byte[64])).Length == 8);
+            foreach (var invalid in new byte[][] { null, new byte[0], new byte[15], new byte[65] })
+            {
+                bool rejected = false;
+                try { Extract(invalid); }
+                catch (ArgumentException) { rejected = true; }
+                require(rejected);
+            }
+            return checks;
+        }
+    }
+
     // Generation intervals use original ETW QPC timestamps. Never use delayed
     // callback arrival or a bare PID/TID as process identity.
     public sealed class OwnedEtwScope
@@ -835,7 +880,7 @@ namespace OpenCodex.Diagnostics
             int dropped = 0, recorded = 0, callbackErrors = 0, rootStartSeen = 0;
             int knownImageChildrenNotAdmitted = 0;
             var lineBudget = new OwnedEtwLineBudget(64L * 1024 * 1024);
-            long omittedRootScheduling = 0, omittedRootFileIo = 0;
+            long omittedRootScheduling = 0, omittedRootFileIo = 0, eventsWithRawSchedulingWindow = 0;
             var namedQueryFixtures = new HashSet<string>(StringComparer.Ordinal);
             int namedQueryThreadEvents = 0;
             var pendingIo = new Dictionary<ulong, PendingIo>();
@@ -976,13 +1021,28 @@ namespace OpenCodex.Diagnostics
                 kernel.ThreadCSwitch += data => guarded(data, () => {
                     int? incoming = scope?.ThreadOwner(data.NewThreadID, OriginalQpc(data));
                     int? outgoing = scope?.ThreadOwner(data.OldThreadID, OriginalQpc(data));
-                    if (incoming.HasValue && scope.ThreadHotEventsOwned(incoming.Value, data.NewThreadID, OriginalQpc(data)))
+                    bool incomingHot = incoming.HasValue
+                        && scope.ThreadHotEventsOwned(incoming.Value, data.NewThreadID, OriginalQpc(data));
+                    bool outgoingHot = outgoing.HasValue
+                        && scope.ThreadHotEventsOwned(outgoing.Value, data.OldThreadID, OriginalQpc(data));
+                    object rawSchedulingWindow = null;
+                    if (incomingHot || outgoingHot)
+                    {
+                        rawSchedulingWindow = new {
+                            payloadLength = data.EventDataLength, byteOffset = 8, byteLength = 8,
+                            bytesBase64 = OwnedEtwSchedulingBytes.Extract(data.EventData()),
+                            threadIdPrefixExcluded = true, unrecognizedTailExcluded = true,
+                            completePayloadRetained = false, versionSpecificSemanticsVerified = false
+                        };
+                        eventsWithRawSchedulingWindow++;
+                    }
+                    if (incomingHot)
                         emit(new { kind = "owned-thread-scheduled-in", original = Header(data), pid = incoming.Value,
                             tid = data.NewThreadID, priority = data.NewThreadPriority, waitTime = data.NewThreadWaitTime,
                             fixture = scope.QueryFixture(data.NewThreadID, OriginalQpc(data)),
-                            counterpartThreadIdSaved = false });
+                            rawSchedulingWindow, counterpartThreadIdSaved = false });
                     else if (incoming.HasValue) omittedRootScheduling++;
-                    if (outgoing.HasValue && scope.ThreadHotEventsOwned(outgoing.Value, data.OldThreadID, OriginalQpc(data)))
+                    if (outgoingHot)
                         emit(new { kind = "owned-thread-scheduled-out", original = Header(data), pid = outgoing.Value,
                             tid = data.OldThreadID, priority = data.OldThreadPriority,
                             waitReason = data.OldThreadWaitReason.ToString(), waitMode = data.OldThreadWaitMode.ToString(),
@@ -991,7 +1051,8 @@ namespace OpenCodex.Diagnostics
                             stateDecodedRaw = (int)data.OldThreadState,
                             versionSpecificWaitSemanticsVerified = false,
                             fixture = scope.QueryFixture(data.OldThreadID, OriginalQpc(data)),
-                            state = data.OldThreadState.ToString(), counterpartThreadIdSaved = false });
+                            state = data.OldThreadState.ToString(), rawSchedulingWindow,
+                            counterpartThreadIdSaved = false });
                     else if (outgoing.HasValue) omittedRootScheduling++;
                 });
                 kernel.DispatcherReadyThread += data => guarded(data, () => {
@@ -1217,6 +1278,8 @@ namespace OpenCodex.Diagnostics
                     runnerRegressionEnvironment, fixtureTemporaryDirectory = temporaryDirectory,
                     runnerProfilePreserved = runnerRegressionEnvironment,
                     pinnedDecoderVersion = "3.1.21", versionSpecificWaitSemanticsVerified = false,
+                    eventsWithRawSchedulingWindow, rawSchedulingByteOffset = 8, rawSchedulingByteLength = 8,
+                    completeCswitchPayloadRetained = false, counterpartThreadIdPrefixRetained = false,
                     firstCargoRegression,
                     executedLibraryArguments = firstCargoRegression ? new[] { "--show-output" } : Array.Empty<string>(),
                     nodePrewarmed = false, performanceAcceptanceClaimed = false,

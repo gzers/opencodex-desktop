@@ -23,6 +23,7 @@ if ($taskResult.status -ne 'prepared-only' -or $taskResult.pureScopeChecks -ne 3
     $taskResult.executableAdmissionChecks -ne 13 -or
     $taskResult.runnerEnvironmentChecks -ne 10 -or
     $taskResult.regressionEventChecks -ne 7 -or
+    $taskResult.rawSchedulingByteWindowChecks -ne 12 -or
     $taskResult.etwSessionStarted -or $taskResult.testOrNodeStarted -or $taskResult.recordingApproved) {
     throw 'Default invocation must prepare and exercise pure scope contracts only'
 }
@@ -76,6 +77,7 @@ if (Test-Path -LiteralPath $OutputRoot) { throw 'Preparation or negative guards 
     executableAdmissionChecks=13
     runnerEnvironmentChecks=10
     regressionEventChecks=7
+    rawSchedulingByteWindowChecks=12
     digestGuard='passed';outputScopeGuard='passed'
     runnerEnvironmentHostAndEventGuard=$taskRunnerGuard
     ordinaryPrivilegeGuard=$taskOrdinaryGuard

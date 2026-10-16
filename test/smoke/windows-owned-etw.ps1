@@ -68,6 +68,7 @@ $taskLineBudgetChecks = [OpenCodex.Diagnostics.OwnedEtwLineBudget]::SelfTest()
 $taskExecutableAdmissionChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestExecutableAdmission()
 $taskRunnerEnvironmentChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestRunnerEnvironment()
 $taskRegressionEventChecks = [OpenCodex.Diagnostics.OwnedEtwRecorder]::SelfTestRegressionEvent()
+$taskSchedulingByteChecks = [OpenCodex.Diagnostics.OwnedEtwSchedulingBytes]::SelfTest()
 if (!$RecordApproved) {
     [ordered]@{
         status='prepared-only';pureScopeChecks=$taskScopeChecks
@@ -79,6 +80,7 @@ if (!$RecordApproved) {
         executableAdmissionChecks=$taskExecutableAdmissionChecks
         runnerEnvironmentChecks=$taskRunnerEnvironmentChecks
         regressionEventChecks=$taskRegressionEventChecks
+        rawSchedulingByteWindowChecks=$taskSchedulingByteChecks
         testSha256=$ExpectedTestSha256;nodeSha256=$ExpectedNodeSha256
         compiler='PowerShell Add-Type';controllerElevated=[Microsoft.Diagnostics.Tracing.Session.TraceEventSession]::IsElevated()
         etwSessionStarted=$false;testOrNodeStarted=$false;recordingApproved=$false
