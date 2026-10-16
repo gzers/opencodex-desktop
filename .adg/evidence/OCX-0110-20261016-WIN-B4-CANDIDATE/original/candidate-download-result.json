@@ -1,0 +1,1617 @@
+{
+  "atUtc": "2026-10-16T11:51:27.838204+00:00",
+  "source": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "runId": 38893610415,
+  "destination": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-b4d487-38893610415",
+  "artifacts": [
+    {
+      "artifactId": 12043624213,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-b4d487-38893610415\\installers.original.zip",
+      "bytes": 7667032,
+      "sha256": "f424026dba42b32136d25e6a7b42e9593040b658dc813b6a72ba968844d612ab",
+      "entries": [
+        {
+          "path": "apps/desktop/tauri/target/release/bundle/nsis/OpenCodeX Desktop_0.1.10_x64-setup.exe",
+          "bytes": 3284288,
+          "sha256": "76fa3dec1fa081192c305ea26bd04e497872da775381980a679c71ecdf670dc8"
+        },
+        {
+          "path": "apps/desktop/tauri/target/release/bundle/msi/OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+          "bytes": 4591616,
+          "sha256": "291e62b9c1170d27fe9a946e9bfa1e94ce7f63594fc1142bbc4705a2e63c309a"
+        },
+        {
+          "path": "test/out/windows-candidate/installer-verification.json",
+          "bytes": 1970,
+          "sha256": "b5cc5ec25f375fc808ade37faa3ad7411ca9b4cb51c2c1c9d0c151c7d2e6e9e0"
+        }
+      ],
+      "safePathsAndCrcVerified": true
+    },
+    {
+      "artifactId": 12044305610,
+      "name": "windows-candidate-evidence",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-b4d487-38893610415\\runner-evidence.original.zip",
+      "bytes": 1694754,
+      "sha256": "01336f9b13f3a71e814bb6496fc9cf7f2aa6dd883b6c136a06db2c1147fe7f75",
+      "entries": [
+        {
+          "path": "cargo-metadata.json",
+          "bytes": 2809743,
+          "sha256": "892393d627493801e1d304d2349b27db82777f3f38691de440b272af8b890884"
+        },
+        {
+          "path": "cargo-tree.txt",
+          "bytes": 90694,
+          "sha256": "bb4e9c271d07fa7deb517ddf87e5e1a12e1ad142844a16ed8f45d6b14bf44220"
+        },
+        {
+          "path": "Cargo.lock",
+          "bytes": 140827,
+          "sha256": "f7be175dc8a55c139781d3076b1eb79bb0af38ecb5664a77aaa8f2a87af9d8ab"
+        },
+        {
+          "path": "environment.json",
+          "bytes": 298,
+          "sha256": "3e00175078a990802a7f97375c43a07660818be5a6307332be47c5ccea504a86"
+        },
+        {
+          "path": "installer-verification.json",
+          "bytes": 1970,
+          "sha256": "b5cc5ec25f375fc808ade37faa3ad7411ca9b4cb51c2c1c9d0c151c7d2e6e9e0"
+        },
+        {
+          "path": "msi-install.log",
+          "bytes": 109514,
+          "sha256": "28eb886d0507b5f3c872321817936635937bcc17dbaf95729a5e5a6a0c741f82"
+        },
+        {
+          "path": "msi-startup/cdp-diagnostics.json",
+          "bytes": 1745,
+          "sha256": "b1be335631ed7bd2727352e1a67130a552351a07e2f1a37539d1cc0a804cbda3"
+        },
+        {
+          "path": "msi-startup/main-window.png",
+          "bytes": 565760,
+          "sha256": "0b66813c90c9da0545f3f336625e860eb5eeaa1f0343262d6ca48f18d52b548a"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/BrowserMetrics/BrowserMetrics-6AD20E79-1B18.pma",
+          "bytes": 1310720,
+          "sha256": "826e9fbf5b96e5f46e3b77d1a03f16a01b053e51f25050852fa83c2c388e8d40"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/component_crx_cache/metadata.json",
+          "bytes": 13,
+          "sha256": "2771d13c637c267132afff9db67537bef95708534b79ae8d954254c4e64e4e0f"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Crashpad/metadata",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Crashpad/settings.dat",
+          "bytes": 288,
+          "sha256": "3903cae2301047a6f6a6096c09d30a29335a12333600828fec1823ebc9006cab"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Crashpad/throttle_store.dat",
+          "bytes": 20,
+          "sha256": "41c91a9c93d76295746a149dce7ebb3b9ee2cb551d84365fff108e59a61cc304"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/ClientCertificates/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/ClientCertificates/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Code Cache/js/dc58d2d9ef264b2d_0",
+          "bytes": 256,
+          "sha256": "fb66b02a11f5c5801314991f530999c4f26bd6d369f06d647ab6303152061c7f"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Code Cache/js/index",
+          "bytes": 24,
+          "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Code Cache/js/index-dir/the-real-index",
+          "bytes": 72,
+          "sha256": "362f9c1f4039bb796779c411574efb4a917166cd79fb17741578263a159b97d1"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Code Cache/wasm/index",
+          "bytes": 24,
+          "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Code Cache/wasm/index-dir/the-real-index",
+          "bytes": 48,
+          "sha256": "e58124c5d58c1311afff6e426afd36234ed396d91a8859a0a17113e637d15d21"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/commerce_subscription_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/commerce_subscription_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnGraphiteCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnGraphiteCache/data_1",
+          "bytes": 270336,
+          "sha256": "902f30c1fb0597d0734bc34b979ec5d131f8f39a4b71b338083821216ec8d61b"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnGraphiteCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnGraphiteCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnGraphiteCache/index",
+          "bytes": 262512,
+          "sha256": "631f8c196893cf0d02f01f78f0d479f1be84843bde6d76c3dfd3c3becc965e4a"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnWebGPUCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnWebGPUCache/data_1",
+          "bytes": 270336,
+          "sha256": "902f30c1fb0597d0734bc34b979ec5d131f8f39a4b71b338083821216ec8d61b"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnWebGPUCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnWebGPUCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/DawnWebGPUCache/index",
+          "bytes": 262512,
+          "sha256": "59ce24a95573f94ff43b0f1734b884203ca0b859420f33c13a27b71aacffcbf0"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/declarative_performance_observer.db",
+          "bytes": 32768,
+          "sha256": "eda4c9567974174f08a1dbcd8badf4d6199a7e9a8b78b8826548f49e20e7badf"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/declarative_performance_observer.db-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/discounts_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/discounts_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/discount_infos_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/discount_infos_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Rules/000003.log",
+          "bytes": 38,
+          "sha256": "1c43a1bda1e458863c46dfae7fb43bfb3e27802169f37320399b1dd799a819ac"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Rules/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Rules/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Rules/LOG",
+          "bytes": 455,
+          "sha256": "be61fe2d4914b94331d9e3d77b9a68a6d99cb714c50ce1b1391f5f881268950f"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Rules/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Scripts/000003.log",
+          "bytes": 38,
+          "sha256": "1c43a1bda1e458863c46dfae7fb43bfb3e27802169f37320399b1dd799a819ac"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Scripts/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Scripts/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Scripts/LOG",
+          "bytes": 459,
+          "sha256": "1a352bdece9e1fcaac8a0d0281d33eb8fde38a2bed62dc1936e77b8527a9a193"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension Scripts/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension State/000003.log",
+          "bytes": 114,
+          "sha256": "e2610960c3757d1757f206c7b84378efa22d86dcf161a98096a5f0e56e1a367e"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension State/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension State/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension State/LOG",
+          "bytes": 455,
+          "sha256": "81c5a3a62ae51ec30f24199d98b9819ea2996f336061b3608d7d6b2b6bf78357"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Extension State/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Favicons",
+          "bytes": 20480,
+          "sha256": "1fbc7ea9722b2154b0d69c9d0ed80b6c0c98c5d389cf31ac1a2b8db030724840"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Favicons-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/GPUCache/data_0",
+          "bytes": 45056,
+          "sha256": "df9d5f5e96fa4a66100b11ac5431e159e51a7cbd0307a262322d517459f05f50"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/GPUCache/data_1",
+          "bytes": 270336,
+          "sha256": "e2df5d93ffa71ac9b1778b594d7ec7805a710a974d02e566adc63f0ebe78b1f0"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/GPUCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/GPUCache/data_3",
+          "bytes": 4202496,
+          "sha256": "3acda4377cde21a7e3bb7b19593021f52c891839179df09a40a83ad39bb85d74"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/GPUCache/index",
+          "bytes": 262512,
+          "sha256": "9cc830b55e32ef0117c6c5b2877ae4557d33ddb3f23d132d76b883c85e8cad5a"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/History",
+          "bytes": 212992,
+          "sha256": "01c28b6d37e7e42965e7e8cc10095fb9aff253c7a194544fa946343b62ce7142"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/History-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Local Storage/leveldb/000003.log",
+          "bytes": 179,
+          "sha256": "74a90f29a08c9f710be6c7072f7e37a02d9e0a62c0ede8efbc6141c2f11a8067"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Local Storage/leveldb/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Local Storage/leveldb/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Local Storage/leveldb/LOG",
+          "bytes": 465,
+          "sha256": "c04c0ea55a67367c789bf63eb2abc7f43206978c3d5f95c84f4f11820aaa383f"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Local Storage/leveldb/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Login Data",
+          "bytes": 43008,
+          "sha256": "3a8415fcec60041b0f9f8f3f2ea48a84002a0a169e9c56f07f4415ff2f81cfe5"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Login Data For Account",
+          "bytes": 43008,
+          "sha256": "3a8415fcec60041b0f9f8f3f2ea48a84002a0a169e9c56f07f4415ff2f81cfe5"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Login Data For Account-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Login Data-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Cookies",
+          "bytes": 20480,
+          "sha256": "8da294027e6ff01d4253e19f529e9af6f4ddf89ae08a4b50225a007ddffb43e4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Cookies-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Device Bound Sessions",
+          "bytes": 20480,
+          "sha256": "6a22ff7ca6e53a73bc4578271e5f5bf34cdd7c1c9e8e13aea5db31ae5b2618d2"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Device Bound Sessions-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Network Persistent State",
+          "bytes": 59,
+          "sha256": "226eec4486509917aa336afebd6ff65777b75b65f1fb06891d2a857a9421a974"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/NetworkDataMigrated",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Reporting and NEL",
+          "bytes": 36864,
+          "sha256": "2d6dada0da20730019917ab502a8189099aa5ad98a1b23cd30715d6f9689ef11"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Reporting and NEL-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/SCT Auditing Pending Reports",
+          "bytes": 2,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Sdch Dictionaries",
+          "bytes": 40,
+          "sha256": "6028bd681dbf11a0a58dde8a0cd884115c04caa59d080ba51bde1b086ce0079d"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Trust Tokens",
+          "bytes": 36864,
+          "sha256": "88bafa2a265212152b2405502209d64438a416ff594a040e666f031ef442a812"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Network/Trust Tokens-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/parcel_tracking_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/parcel_tracking_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/PersistentOriginTrials/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/PersistentOriginTrials/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Preferences",
+          "bytes": 7559,
+          "sha256": "0d0e4791f15571249620e36ab845687773d2923a5037840487cfc3c65970293f"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/README",
+          "bytes": 182,
+          "sha256": "a0c9abae18599f0a65fc654ad36251f6330794bea66b718a09d8b297f3e38e87"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Secure Preferences",
+          "bytes": 9856,
+          "sha256": "388b1d5d4b152d3e030dc47a45d3f6d0f00fabb86262a5ddcef7bbf85b1cb1ae"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/ServerCertificate",
+          "bytes": 20480,
+          "sha256": "180ffbc2a4f10b5563f5a7bfe62d23909f0aa77572a06e59a9be4c6fca7176f7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/ServerCertificate-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Session Storage/000003.log",
+          "bytes": 49,
+          "sha256": "ffd700cf04be6fe8d51e2ffb8a2e37bc3fa95a6679a4102fa35e8494c2350eae"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Session Storage/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Session Storage/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Session Storage/LOG",
+          "bytes": 455,
+          "sha256": "acb6a8bf6d113b4b4346cc5f6d1cac2c1d2c91138e0781bacab51980cacde946"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Session Storage/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Shared Dictionary/cache/index",
+          "bytes": 24,
+          "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Shared Dictionary/cache/index-dir/the-real-index",
+          "bytes": 48,
+          "sha256": "ea9f36506741a24d360abca95e410ef20ca0927d002b5ebe0b8cc41225e679ca"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Shared Dictionary/db",
+          "bytes": 45056,
+          "sha256": "0d6287fecedbc44ed9f51ded9de88629ec9f385ecff5da9a34e47e96fd5a9cba"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Shared Dictionary/db-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/000003.log",
+          "bytes": 19,
+          "sha256": "ab5c71347d95f319781df230012713c7819ac0d69373e8c9a7302cae3f9a04b7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/LOG",
+          "bytes": 455,
+          "sha256": "b94f54dd614714090288f2035a44fe62cd13ee75af4bc0c42235fb8d711275ba"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/metadata/000003.log",
+          "bytes": 474,
+          "sha256": "455ac94bacde3805024999b9a63bbb959b7084b47cb573a2376e0890873628c6"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/metadata/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOG",
+          "bytes": 473,
+          "sha256": "250d112462e87cbe25e56275bd80c88fcb2485f6f481129f577ecc2c5a990dd5"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/shared_proto_db/metadata/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Site Characteristics Database/000003.log",
+          "bytes": 40,
+          "sha256": "f096bc366a931fba656bdcd77b24af15a5f29fc53281a727c79f82c608ecfab8"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Site Characteristics Database/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Site Characteristics Database/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Site Characteristics Database/LOG",
+          "bytes": 483,
+          "sha256": "12a54ff1c4fd95476fa63b3b89a2ce524f60bca5829c73939c77566c2f9761e7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Site Characteristics Database/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Sync Data/LevelDB/000003.log",
+          "bytes": 65,
+          "sha256": "8ff00d859349a3ea206706cdd3fa2762ae7c8efe2fdd33a95a72fee45aac6bc4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Sync Data/LevelDB/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOG",
+          "bytes": 459,
+          "sha256": "1ac72f0a76119e0973256b94ca7342d85d9c2f9c855b0cbc47c6a5169d48df9c"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Sync Data/LevelDB/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Vpn Tokens",
+          "bytes": 28672,
+          "sha256": "0750267321d06309dfd0bc3957b29483fe4f76cdb105e02e64dbe9ec240ddc03"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Vpn Tokens-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Web Data",
+          "bytes": 223232,
+          "sha256": "95799af3c36cd9c308351c17684b7798c9860c516786ff086a37b3f40b0d1b0d"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Default/Web Data-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/H6POMLZSBZPTMTLBCTMXRDH27BAKUDTA/cache.db",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/H6POMLZSBZPTMTLBCTMXRDH27BAKUDTA/cache.db-wal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/H6POMLZSBZPTMTLBCTMXRDH27BAKUDTA/cache.journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GrShaderCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GrShaderCache/data_1",
+          "bytes": 270336,
+          "sha256": "902f30c1fb0597d0734bc34b979ec5d131f8f39a4b71b338083821216ec8d61b"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GrShaderCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GrShaderCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/GrShaderCache/index",
+          "bytes": 262512,
+          "sha256": "224c9b6431614b172ead751f55b90b1b0a7c34cf11ff1da743a9a93dd1b31af3"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Last Version",
+          "bytes": 13,
+          "sha256": "099280939ebb903a46ed22c326c81d66ed9d265a3877288bb5ad4befcf56bf04"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Local State",
+          "bytes": 4226,
+          "sha256": "fb7d38e3599777ee3ea95e6216c894fe9516e7b8259f4f396de3511b5016c45e"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/ShaderCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/ShaderCache/data_1",
+          "bytes": 270336,
+          "sha256": "902f30c1fb0597d0734bc34b979ec5d131f8f39a4b71b338083821216ec8d61b"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/ShaderCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/ShaderCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/ShaderCache/index",
+          "bytes": 262512,
+          "sha256": "6b804742a3b1506ec65c3c6e8cb538452daad1d93c04583857c5c8a77c3bd538"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/Variations",
+          "bytes": 86,
+          "sha256": "f7b24f2eb3d5eb0550527490395d2f61c3d2fe74bb9cb345197dad81b58b5fed"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/VariationsRuntimeSeedV2",
+          "bytes": 19,
+          "sha256": "1560b22b2264f7cb6b7f6910164813f76c5e8a06fb1acf85b375e687ee49c1ad"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/VariationsSafeSeedV2",
+          "bytes": 19,
+          "sha256": "1560b22b2264f7cb6b7f6910164813f76c5e8a06fb1acf85b375e687ee49c1ad"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/EBWebView/EBWebView/VariationsSeedV2",
+          "bytes": 11,
+          "sha256": "b4cc4174735c28360b9081be3c3d0552d8a4b3cdb54431ac00ed0d622bab6296"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/logs/app.log",
+          "bytes": 252,
+          "sha256": "48445a9c8af48be583412a8f12b3fc2b6e21c781a1f308ef0e9a85d920238bc8"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/app.lock",
+          "bytes": 40,
+          "sha256": "71f35c342001659238d978a333f9bc54cf4c2d76666e02d424d7a5a2ae4c828d"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/data-root.json",
+          "bytes": 30,
+          "sha256": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/event-scope.json",
+          "bytes": 325,
+          "sha256": "ad4ec301f69e2b28633ccd53055e5d04b1d9a3269ec119783875371d6d4f4aef"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/event-scope.lock",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/notifications.json",
+          "bytes": 666,
+          "sha256": "4d82f01ae800a1ee4faf3434b35f788601001f76f2d151c27d4dce9957310a15"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/runtime.json",
+          "bytes": 153,
+          "sha256": "5908a54765ab416029a65ed1d1be80a2c736646d7c2660ccc25ba1b1a4c76ea0"
+        },
+        {
+          "path": "msi-startup/sandbox-c1d6ab9016564555bdfb2a1e1a724e7e/manager-state/structure.lock",
+          "bytes": 6,
+          "sha256": "14493f5f5470ed48c3f103d917ec52ae9005fa3913128031d0fac2a49ac3cc41"
+        },
+        {
+          "path": "msi-startup/startup-diagnostics.json",
+          "bytes": 8972,
+          "sha256": "79532017ca3b16a7c7f357037a780b1de9f529e3f71e80fa91f6d2126ed2db2a"
+        },
+        {
+          "path": "msi-startup/startup-stderr.log",
+          "bytes": 2,
+          "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+        },
+        {
+          "path": "msi-startup/startup-stdout.log",
+          "bytes": 2,
+          "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+        },
+        {
+          "path": "msi-startup/startup.json",
+          "bytes": 1415,
+          "sha256": "48dbe489279b93049fe684781af0b33f322663b5ccf9f0b4fa1e6fb1b83c5375"
+        },
+        {
+          "path": "msi-startup/webview.json",
+          "bytes": 698,
+          "sha256": "7327fce7979a8bda22c224c89815430159cd421e005a75d3fc2bccedddfa6b99"
+        },
+        {
+          "path": "msi-uninstall.log",
+          "bytes": 103126,
+          "sha256": "c271d01f916ecb6bea71c8a6ea9f3914c3365caa1b502df40634fe7a1df860cf"
+        },
+        {
+          "path": "nsis-startup/cdp-diagnostics.json",
+          "bytes": 1745,
+          "sha256": "23eededc554b1e84d52d136372f3f39838b984fb4500c51d98f593f1cd3c82b6"
+        },
+        {
+          "path": "nsis-startup/main-window.png",
+          "bytes": 521607,
+          "sha256": "46a6163ce030b4b676bb089d94a75685036813e8b6f74721bbc1da427154f493"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/BrowserMetrics/BrowserMetrics-6AD20E9C-17E4.pma",
+          "bytes": 1310720,
+          "sha256": "0ce0b09974453cb33bfc92599e58891b5feb0de0d63ac2773c44ecdd399fbe47"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/component_crx_cache/metadata.json",
+          "bytes": 13,
+          "sha256": "2771d13c637c267132afff9db67537bef95708534b79ae8d954254c4e64e4e0f"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Crashpad/metadata",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Crashpad/settings.dat",
+          "bytes": 288,
+          "sha256": "cad7a51c83664f5be31597f4cb9ec3001b4e3fd058fd01fb266d36cd02544331"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Crashpad/throttle_store.dat",
+          "bytes": 20,
+          "sha256": "41c91a9c93d76295746a149dce7ebb3b9ee2cb551d84365fff108e59a61cc304"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/ClientCertificates/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/ClientCertificates/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Code Cache/js/dc58d2d9ef264b2d_0",
+          "bytes": 256,
+          "sha256": "2faa712a6e564dcc0a6856a759530903b5bde05ceff1244816fb6f9185681fa1"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Code Cache/js/index",
+          "bytes": 24,
+          "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Code Cache/js/index-dir/the-real-index",
+          "bytes": 72,
+          "sha256": "3762cb01d1061e46eebcff8c28e51abad0b76ca0edb424d566fb3bc3bd209c37"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Code Cache/wasm/index",
+          "bytes": 24,
+          "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Code Cache/wasm/index-dir/the-real-index",
+          "bytes": 48,
+          "sha256": "3c3ab09f5fda0eec779e26131362a0e85f66181c30b5e59ae7f6800b560b86fa"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/commerce_subscription_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/commerce_subscription_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnGraphiteCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnGraphiteCache/data_1",
+          "bytes": 270336,
+          "sha256": "b1e963d702392fb7224786e7d56d43973e9b9efd1b89c17814d7c558ffc0cdec"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnGraphiteCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnGraphiteCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnGraphiteCache/index",
+          "bytes": 262512,
+          "sha256": "eb986f07d5df8e872d0df711c7876fdfa2300af25ba6e3b8993e7affc2eea5e2"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnWebGPUCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnWebGPUCache/data_1",
+          "bytes": 270336,
+          "sha256": "b1e963d702392fb7224786e7d56d43973e9b9efd1b89c17814d7c558ffc0cdec"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnWebGPUCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnWebGPUCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/DawnWebGPUCache/index",
+          "bytes": 262512,
+          "sha256": "2e9b292c46f38ebd76d726a11bf7c64fe9233f3917378abc1434047b5ef63f2c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/declarative_performance_observer.db",
+          "bytes": 32768,
+          "sha256": "eda4c9567974174f08a1dbcd8badf4d6199a7e9a8b78b8826548f49e20e7badf"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/declarative_performance_observer.db-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/discounts_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/discounts_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/discount_infos_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/discount_infos_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Rules/000003.log",
+          "bytes": 38,
+          "sha256": "1c43a1bda1e458863c46dfae7fb43bfb3e27802169f37320399b1dd799a819ac"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Rules/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Rules/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Rules/LOG",
+          "bytes": 457,
+          "sha256": "bd25b9a4fa40c48feb4e75a3285ae08549b0b8ce97cd194787834d22e328f908"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Rules/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Scripts/000003.log",
+          "bytes": 38,
+          "sha256": "1c43a1bda1e458863c46dfae7fb43bfb3e27802169f37320399b1dd799a819ac"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Scripts/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Scripts/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Scripts/LOG",
+          "bytes": 461,
+          "sha256": "161601dbb29311665bae53e5a0a7947ec84015507fb7f886c1c32ed6396d0cb4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension Scripts/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension State/000003.log",
+          "bytes": 114,
+          "sha256": "e2610960c3757d1757f206c7b84378efa22d86dcf161a98096a5f0e56e1a367e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension State/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension State/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension State/LOG",
+          "bytes": 457,
+          "sha256": "047fd68a6ae594095010ec5c59b2700e76b48e513e7f22c0f5ed6de9edb54fc7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Extension State/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Favicons",
+          "bytes": 20480,
+          "sha256": "1fbc7ea9722b2154b0d69c9d0ed80b6c0c98c5d389cf31ac1a2b8db030724840"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Favicons-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/GPUCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/GPUCache/data_1",
+          "bytes": 270336,
+          "sha256": "b1e963d702392fb7224786e7d56d43973e9b9efd1b89c17814d7c558ffc0cdec"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/GPUCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/GPUCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/GPUCache/index",
+          "bytes": 262512,
+          "sha256": "c59a042c3d34c25c2ec0d288a3651cbf2c8ea7b58af189792777fc2587c614a5"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/History",
+          "bytes": 212992,
+          "sha256": "54a357fc45a87e9bc4f9931e470e4f59447f5a1987c1f12fba35a86739ab67d1"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/History-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Local Storage/leveldb/000003.log",
+          "bytes": 179,
+          "sha256": "981dd5e573ff987147c127d033e518fb389585a7c9af38be4811c3d9cd2d83cf"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Local Storage/leveldb/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Local Storage/leveldb/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Local Storage/leveldb/LOG",
+          "bytes": 469,
+          "sha256": "a84cfbc4926e6a013f4b96830b1168109e4ea5f648890fe2c81547e9d3f0a2d9"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Local Storage/leveldb/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Login Data",
+          "bytes": 43008,
+          "sha256": "3a8415fcec60041b0f9f8f3f2ea48a84002a0a169e9c56f07f4415ff2f81cfe5"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Login Data For Account",
+          "bytes": 43008,
+          "sha256": "3a8415fcec60041b0f9f8f3f2ea48a84002a0a169e9c56f07f4415ff2f81cfe5"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Login Data For Account-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Login Data-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Cookies",
+          "bytes": 20480,
+          "sha256": "8da294027e6ff01d4253e19f529e9af6f4ddf89ae08a4b50225a007ddffb43e4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Cookies-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Device Bound Sessions",
+          "bytes": 20480,
+          "sha256": "6a22ff7ca6e53a73bc4578271e5f5bf34cdd7c1c9e8e13aea5db31ae5b2618d2"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Device Bound Sessions-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Network Persistent State",
+          "bytes": 59,
+          "sha256": "226eec4486509917aa336afebd6ff65777b75b65f1fb06891d2a857a9421a974"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/NetworkDataMigrated",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Reporting and NEL",
+          "bytes": 36864,
+          "sha256": "2d6dada0da20730019917ab502a8189099aa5ad98a1b23cd30715d6f9689ef11"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Reporting and NEL-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/SCT Auditing Pending Reports",
+          "bytes": 2,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Sdch Dictionaries",
+          "bytes": 40,
+          "sha256": "6028bd681dbf11a0a58dde8a0cd884115c04caa59d080ba51bde1b086ce0079d"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Trust Tokens",
+          "bytes": 36864,
+          "sha256": "88bafa2a265212152b2405502209d64438a416ff594a040e666f031ef442a812"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Network/Trust Tokens-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/parcel_tracking_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/parcel_tracking_db/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/PersistentOriginTrials/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/PersistentOriginTrials/LOG",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Preferences",
+          "bytes": 7560,
+          "sha256": "b91132b6ac95235a1f4c7276be946e5dfb152f513512711ae839cf20e3a92a8c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/README",
+          "bytes": 182,
+          "sha256": "a0c9abae18599f0a65fc654ad36251f6330794bea66b718a09d8b297f3e38e87"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Secure Preferences",
+          "bytes": 9856,
+          "sha256": "c260e3ff4d7a11f643adb8ad6b75ca37850effb91ca65e0cae0092dd648681f3"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/ServerCertificate",
+          "bytes": 20480,
+          "sha256": "180ffbc2a4f10b5563f5a7bfe62d23909f0aa77572a06e59a9be4c6fca7176f7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/ServerCertificate-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Session Storage/000003.log",
+          "bytes": 30,
+          "sha256": "ace9875fef7e1426d3590993377bc2e4af93c1c323a00266cdca240e91c0c82a"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Session Storage/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Session Storage/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Session Storage/LOG",
+          "bytes": 457,
+          "sha256": "be1b31ac8946b41f310e18e7e0570d9189f9e6c821d05babae3378758a8c47c3"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Session Storage/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Shared Dictionary/cache/index",
+          "bytes": 24,
+          "sha256": "fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Shared Dictionary/cache/index-dir/the-real-index",
+          "bytes": 48,
+          "sha256": "45a3ff39f26b2938453e8e4901d865d0dc63d49c49d60c6765cab5d098337f55"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Shared Dictionary/db",
+          "bytes": 45056,
+          "sha256": "0d6287fecedbc44ed9f51ded9de88629ec9f385ecff5da9a34e47e96fd5a9cba"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Shared Dictionary/db-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/000003.log",
+          "bytes": 19,
+          "sha256": "ab5c71347d95f319781df230012713c7819ac0d69373e8c9a7302cae3f9a04b7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/LOG",
+          "bytes": 457,
+          "sha256": "75489c8825110e091651fc8f54a52afa329972d4464c0193ada0335990180d64"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/metadata/000003.log",
+          "bytes": 474,
+          "sha256": "12d6263a32530cdf17e4a4f0c92109346720d91d3fa508a47e6497fd3c3b4a7b"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/metadata/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/metadata/LOG",
+          "bytes": 475,
+          "sha256": "c1fc1748ba8c0d30305491ec446f9f39c2d2db76437db8974876b865cc7c6e52"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/shared_proto_db/metadata/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Site Characteristics Database/000003.log",
+          "bytes": 40,
+          "sha256": "f096bc366a931fba656bdcd77b24af15a5f29fc53281a727c79f82c608ecfab8"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Site Characteristics Database/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Site Characteristics Database/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Site Characteristics Database/LOG",
+          "bytes": 483,
+          "sha256": "54f722af0a64461d3fd5cc44c73f77588880ed561278845d6c16a9df0413c89e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Site Characteristics Database/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Sync Data/LevelDB/000003.log",
+          "bytes": 65,
+          "sha256": "8ff00d859349a3ea206706cdd3fa2762ae7c8efe2fdd33a95a72fee45aac6bc4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Sync Data/LevelDB/CURRENT",
+          "bytes": 16,
+          "sha256": "0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOCK",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Sync Data/LevelDB/LOG",
+          "bytes": 461,
+          "sha256": "54ba30bf295425cefad50ab88c1e9f04a27b38f9833e9c123eade1bd9076878c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Sync Data/LevelDB/MANIFEST-000001",
+          "bytes": 41,
+          "sha256": "f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Vpn Tokens",
+          "bytes": 28672,
+          "sha256": "0750267321d06309dfd0bc3957b29483fe4f76cdb105e02e64dbe9ec240ddc03"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Vpn Tokens-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Web Data",
+          "bytes": 223232,
+          "sha256": "95799af3c36cd9c308351c17684b7798c9860c516786ff086a37b3f40b0d1b0d"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Default/Web Data-journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/H6POMLZSBZPTMTLBCTMXRDH27BAKUDTA/cache.db",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/H6POMLZSBZPTMTLBCTMXRDH27BAKUDTA/cache.db-wal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GPUPersistentCache/DawnGraphiteCache/H6POMLZSBZPTMTLBCTMXRDH27BAKUDTA/cache.journal",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GrShaderCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GrShaderCache/data_1",
+          "bytes": 270336,
+          "sha256": "902f30c1fb0597d0734bc34b979ec5d131f8f39a4b71b338083821216ec8d61b"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GrShaderCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GrShaderCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/GrShaderCache/index",
+          "bytes": 262512,
+          "sha256": "86aa2471bc9ab654f53f78c5ba68843cff1a0b2fdb03a2eec49d93ca263540e0"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Last Version",
+          "bytes": 13,
+          "sha256": "099280939ebb903a46ed22c326c81d66ed9d265a3877288bb5ad4befcf56bf04"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Local State",
+          "bytes": 4227,
+          "sha256": "e654e86463bb1f509170172e91effbeff2a24fdf420b841cbfb4f26d75fe555e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/ShaderCache/data_0",
+          "bytes": 8192,
+          "sha256": "d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/ShaderCache/data_1",
+          "bytes": 270336,
+          "sha256": "902f30c1fb0597d0734bc34b979ec5d131f8f39a4b71b338083821216ec8d61b"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/ShaderCache/data_2",
+          "bytes": 8192,
+          "sha256": "ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/ShaderCache/data_3",
+          "bytes": 8192,
+          "sha256": "e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/ShaderCache/index",
+          "bytes": 262512,
+          "sha256": "f0bc520b36cdcc25c8b2948dfa3ca01f520f8fb62a15042167a4cfb197ecbb25"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/Variations",
+          "bytes": 86,
+          "sha256": "f7b24f2eb3d5eb0550527490395d2f61c3d2fe74bb9cb345197dad81b58b5fed"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/VariationsRuntimeSeedV2",
+          "bytes": 19,
+          "sha256": "1560b22b2264f7cb6b7f6910164813f76c5e8a06fb1acf85b375e687ee49c1ad"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/VariationsSafeSeedV2",
+          "bytes": 19,
+          "sha256": "1560b22b2264f7cb6b7f6910164813f76c5e8a06fb1acf85b375e687ee49c1ad"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/logs/app.log",
+          "bytes": 252,
+          "sha256": "6fb74428394423cdebe3c52b11d145fe0d840c2e68a09326e822080017a74d15"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/EBWebView/EBWebView/VariationsSeedV2",
+          "bytes": 11,
+          "sha256": "b4cc4174735c28360b9081be3c3d0552d8a4b3cdb54431ac00ed0d622bab6296"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/app.lock",
+          "bytes": 40,
+          "sha256": "a7b35e93c45e302d58dac24223f0cd041382f9134fb0d60907424c7587627675"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/data-root.json",
+          "bytes": 30,
+          "sha256": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/event-scope.json",
+          "bytes": 325,
+          "sha256": "7334dc5131f2366c7b5466124b128fdeb18adf715651d56f06c3c1df863378d3"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/event-scope.lock",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/notifications.json",
+          "bytes": 663,
+          "sha256": "d1f57abb955f67969d1321c03b1e5aa324db46547eb2c4f7db425ad2c19cf67e"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/runtime.json",
+          "bytes": 153,
+          "sha256": "594fa1f2eb28a294576831878eac5ddbde2b6d1f30272517375b5941ae6d59ce"
+        },
+        {
+          "path": "nsis-startup/sandbox-1ba062234bc54b9494fb8022a3b44359/manager-state/structure.lock",
+          "bytes": 6,
+          "sha256": "14493f5f5470ed48c3f103d917ec52ae9005fa3913128031d0fac2a49ac3cc41"
+        },
+        {
+          "path": "nsis-startup/startup-diagnostics.json",
+          "bytes": 8962,
+          "sha256": "0c72ef873c301105185ca5413ad63fa71c58011f6194e4a6e9de5a98458db5a8"
+        },
+        {
+          "path": "nsis-startup/startup-stderr.log",
+          "bytes": 2,
+          "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+        },
+        {
+          "path": "nsis-startup/startup-stdout.log",
+          "bytes": 2,
+          "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+        },
+        {
+          "path": "nsis-startup/startup.json",
+          "bytes": 1418,
+          "sha256": "8569a153625ac25158e51d8361c02d74b518851911ad36d2c4a7f57423225cfc"
+        },
+        {
+          "path": "nsis-startup/webview.json",
+          "bytes": 698,
+          "sha256": "7327fce7979a8bda22c224c89815430159cd421e005a75d3fc2bccedddfa6b99"
+        },
+        {
+          "path": "process-token/process-token.json",
+          "bytes": 2628,
+          "sha256": "3d24068216c72216b109897efbf5052ee2a2521eb7bc87f6dfc661cbb1278f53"
+        }
+      ],
+      "safePathsAndCrcVerified": true
+    }
+  ],
+  "hostInstallerExecuted": false,
+  "hostProductStarted": false,
+  "fullVersionGatePassed": false,
+  "releaseRequested": false
+}

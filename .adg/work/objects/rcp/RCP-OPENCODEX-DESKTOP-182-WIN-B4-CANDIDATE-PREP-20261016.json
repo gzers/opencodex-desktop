@@ -1,0 +1,49 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-B4-CANDIDATE-PREP-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-B4-CANDIDATE-PREP-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-b4-exact-candidate",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-CANDIDATE/verification.json"
+    },
+    {
+      "name": "local:windows-b4-foreground-preparation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-FRONT-PREP/verification.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-MSI-RUN/recovery/recovery-process-order.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "911f05be4138bd207b1f0c336312c50d6862e5de9f802c53f024477b3c5efbaa",
+      "summary": "b4精确候选与原生配对入口准备完成，未启动宿主产品或重新测量RSS，原性能和严格恢复失败及全部门禁保持。"
+    }
+  ],
+  "completed_at": "2026-10-16T12:04:19.081438+00:00",
+  "summary": "唯一b4候选验真通过；9语法/4无人工信号拒绝/缺输入拒绝及配置保护完成，尚未原生测量，完整任务仍失败且不关闭发布。",
+  "revision": 1,
+  "summary_digest": "09e3201102b27f2da03fa3dab8fecb70b5a41ea166e3b4ab96d84bcd83ebcac9",
+  "content_digest": "9ad0fb0e7f6763c3347125b991e9647e05eefa0c98b73d0b9fa6eb81f50234fe"
+}

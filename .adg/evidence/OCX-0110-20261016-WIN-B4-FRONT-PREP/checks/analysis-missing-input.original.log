@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261016-WIN-B4-FRONT-PREP\analyze-pair.py", line 44, in <module>
+    human = read(RUN / "human-window.json")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.adg\evidence\OCX-0110-20261016-WIN-B4-FRONT-PREP\analyze-pair.py", line 18, in read
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Software\Develop\PyEnv-Win\versions\3.12.10\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\b4-front-preparation-guard-20261016T200013\\human-window.json'
