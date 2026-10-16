@@ -33,6 +33,14 @@ try{
     Assert-Target ($taskOne.rootToken.status -ceq 'observed' -and $taskOne.rootToken.processId -eq $PID) 'Actual primary token observation required'
     Assert-Target ($taskOne.controlledSelf -and !$taskOne.gpuRoleVerified) 'Controlled proof must not pretend to bind a GPU'
     Assert-Target (!$taskOne.rawSidSaved -and !$taskOne.rawCommandLineSaved -and !$taskOne.tracingStarted -and !$taskOne.productStarted -and !$taskOne.recordingExecutionAdmitted) 'Metadata scope changed'
+    # The actual GPU entry revalidates after Open returns. Dependencies loaded
+    # only inside Open disappear at that boundary; self leases used to miss it.
+    Assert-Target ($null -ne (Get-Command Get-WindowsProcessToken -CommandType Function -ErrorAction SilentlyContinue)) 'Token reader disappeared after opening the lease'
+    $taskTokenAfterOpen=Get-WindowsProcessToken -Process $taskSelf -ExpectedExecutable $taskLaunch.executable
+    Assert-Target ($taskTokenAfterOpen.status -ceq 'observed' -and $taskTokenAfterOpen.processId -eq $PID -and
+        ([datetimeoffset]$taskTokenAfterOpen.creationTimeUtc).UtcTicks -eq ([datetimeoffset]$taskLaunch.creationTimeUtc).UtcTicks) 'Token reader could not observe the retained harness after Open returned'
+    Assert-Target ($null -ne (Get-Command Get-WindowsWebViewRole -CommandType Function -ErrorAction SilentlyContinue)) 'Role reader disappeared after opening the lease'
+    Assert-Target ((Get-WindowsWebViewRole -CommandLine ('"'+$taskLaunch.executable+'" --type=gpu-process')) -ceq 'gpu') 'Role parser unavailable after Open returned'
     $taskReadAgain=Assert-WindowsMemoryTargetBinding -LeaseId $taskOne.leaseId
     Assert-Target ($taskReadAgain.targetCreationUtc -ceq $taskLaunch.creationTimeUtc -and $taskReadAgain.targetExeSha256 -ceq $taskLaunch.exeSha256) 'Retained identity changed'
     Assert-TargetRefusal {Invoke-WindowsGpuMemoryRecording -LeaseId $taskOne.leaseId -OutputDirectory (Join-Path $taskOutput 'not-a-gpu-capture') -RecordApproved} 'actual GPU metadata lease'
@@ -60,6 +68,8 @@ try{
     $taskOne | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $taskOutput 'controlled-binding.original.json') -Encoding utf8
     [ordered]@{passed=$true;checks=$taskChecks;actualCurrentTokenUserMatched=$true
         independentRetainedLeasesTested=$true;generationTickMismatchRefused=$true
+        helpersAvailableAfterOpenReturns=$true;actualHarnessTokenRereadAfterOpen=$true
+        roleParserCheckedAfterOpen=$true
         productGpuBindingExecuted=$false;tracingStarted=$false;productStarted=$false
         recordingExecutionAdmitted=$false;rawSidSaved=$false;rawCommandLineSaved=$false
         sourceMethodSha256=(Get-FileHash -LiteralPath (Join-Path $PSScriptRoot 'windows-memory-target.ps1')).Hash.ToLowerInvariant()} |

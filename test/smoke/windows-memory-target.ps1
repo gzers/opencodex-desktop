@@ -1,5 +1,9 @@
 # Retained metadata leases for a future allocation recorder. No process launch,
 # ETW session, target-memory read/write, or configuration mutation here.
+# Keep companion functions in the same caller scope as every lease operation.
+# Loading them inside Open hides them when a later Assert or Invoke runs.
+. (Join-Path $PSScriptRoot 'windows-process-token.ps1')
+. (Join-Path $PSScriptRoot 'windows-gpu-resource.ps1')
 if(!$script:OcxMemoryTargetLeases){
     $script:OcxMemoryTargetLeases=[Collections.Generic.Dictionary[string,object]]::new()
 }
@@ -77,7 +81,6 @@ function Open-WindowsMemoryTargetBinding {
     )
     $ErrorActionPreference='Stop'
     Initialize-WindowsMemoryTargetOwner
-    . (Join-Path $PSScriptRoot 'windows-process-token.ps1')
     $taskItems=[Collections.Generic.List[object]]::new()
     try{
         $taskNative=@(Get-CimInstance Win32_Process -Filter "Name='opencodex-desktop.exe' OR Name='ocxd.exe'")
@@ -127,7 +130,6 @@ function Open-WindowsMemoryTargetBinding {
                 if($taskParent.process.StartTime.ToUniversalTime() -gt $taskCurrent.process.StartTime.ToUniversalTime()){throw 'Parent generation is newer than child'}
                 $taskCurrent=$taskParent
             }
-            . (Join-Path $PSScriptRoot 'windows-gpu-resource.ps1')
             $taskCommand=Get-CimInstance -Query "SELECT CommandLine FROM Win32_Process WHERE ProcessId=$([int]$Launch.pid)"
             if((Get-WindowsWebViewRole -CommandLine $taskCommand.CommandLine) -cne 'gpu'){throw 'Bound WebView is not the actual GPU role'}
             $taskGpuRole=$true
