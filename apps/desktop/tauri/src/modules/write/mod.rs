@@ -454,6 +454,9 @@ fn empty_failed_transaction(
 
 fn failure_text(error: &AppError) -> String {
     match error {
+        AppError::DataRootWriteDenied { operation } => {
+            format!("data root write permission denied: {operation}")
+        }
         AppError::NotConfigured => "action is not configured".to_string(),
         AppError::FileSystem { detail, .. } => format!("file system error: {detail}"),
         AppError::InstanceLockConflict => "instance lock conflict".to_string(),

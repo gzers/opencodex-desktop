@@ -7,7 +7,7 @@
 // - 高档且可见 → 连续动画；中档 → 静态目标（状态改变重绘）；低档 → 静态目标且光场由 CSS 关闭。
 // - 选 WEBGL 且设备支持 → 网格着色器层；否则回退纯 CSS 极光（同一套投影配色与运动模型）。
 // 组件不再各自监听系统媒体查询，也不各自探测设备能力，避免覆盖与重复实现。
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { MotionStateId } from '../motion/projection'
 import { createMotionScene, type MotionSceneHandle } from '../motion/scene'
 import { createMeshGlow, type MeshGlowHandle } from '../motion/meshGlow'
@@ -29,6 +29,8 @@ const backdropTarget = ref<HTMLElement | null>(null)
 let scene: MotionSceneHandle | null = null
 let mesh: MeshGlowHandle | null = null
 let lastGlowColors: readonly string[] = []
+let layoutReady = false
+let disposed = false
 
 // 中/低档为静态目标；自由运行只在高档且可见时开启。
 const reduced = computed(() => effects.strategy.effective !== 'high')
@@ -38,7 +40,7 @@ const lightActive = computed(() => effects.strategy.lightAllowed && (props.activ
 const meshEnabled = computed(() => glowRender.mode === 'mesh' && effects.strategy.effective !== 'low')
 
 function mountMesh(): void {
-  if (mesh || !meshHostEl.value) return
+  if (!layoutReady || disposed || mesh || !meshHostEl.value) return
   const handle = createMeshGlow(meshHostEl.value, {
     getDark: () => document.documentElement.getAttribute('data-theme') === 'dark',
     centerAnchor: markEl.value?.querySelector('svg') ?? undefined,
@@ -73,7 +75,12 @@ onMounted(() => {
   scene.setReduced(reduced.value)
   scene.setState(props.state, true)
   scene.setActive(animating.value)
-  if (meshEnabled.value) mountMesh()
+  // Teleport 先落到页面，再按最终尺寸创建缓冲，避免为旧容器分配一次大画布。
+  void nextTick(() => {
+    if (disposed) return
+    layoutReady = true
+    if (meshEnabled.value) mountMesh()
+  })
 })
 
 watch(
@@ -103,6 +110,8 @@ watch(
 )
 
 onBeforeUnmount(() => {
+  disposed = true
+  layoutReady = false
   unmountMesh()
   scene?.destroy()
   scene = null
