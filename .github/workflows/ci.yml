@@ -31,6 +31,9 @@ jobs:
       - name: Verify bound read-only working-set metadata
         shell: pwsh
         run: ./test/smoke/windows-working-set.test.ps1 -OutputDirectory test/out/windows-process-token/working-set
+      - name: Verify read-only WPR allocation profile preparation
+        shell: pwsh
+        run: ./test/smoke/windows-memory-profile.test.ps1 -OutputDirectory test/out/windows-process-token/memory-profile
       - uses: actions/upload-artifact@v4
         if: always()
         with:
