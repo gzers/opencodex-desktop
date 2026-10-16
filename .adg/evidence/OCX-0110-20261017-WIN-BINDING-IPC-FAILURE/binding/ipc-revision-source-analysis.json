@@ -1,0 +1,20 @@
+{
+  "failedSource": "fdb7e3cb5363b0bf17ee6402035668703078eab0",
+  "base": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "revision": "ca89fbac763d2376c6bfafcdfab4c256359d2a6b",
+  "failedAndB4ServiceBytesEqual": true,
+  "serviceBeforeSha256": "f32dc9f7307dda1bc6a239fa74fb754ba062c0df0857fd8eaa42e8b8861ce2da",
+  "serviceAfterSha256": "24b55c5937d46ca6904689b06b7d1c349e34b05179a685f8cddfd048a9aa3214",
+  "onlyNamedWaitLoopsChanged": [
+    "cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result",
+    "cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit"
+  ],
+  "twoSecondTimeoutCountBefore": 24,
+  "twoSecondTimeoutCountAfter": 24,
+  "auditAndTerminalAssertionsPreserved": true,
+  "defaultTestConcurrencyOverridden": false,
+  "localRustCompilerAvailable": false,
+  "localRustCompilationPerformed": false,
+  "rootCauseEstablished": false,
+  "oldCiRerunRequested": false
+}

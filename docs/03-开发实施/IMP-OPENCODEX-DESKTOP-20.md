@@ -1996,3 +1996,11 @@ WPR只读盘点取得VirtualAllocation/GPU/ResidentSet配置，默认组合缓�
 a5a1aba2首次push CI38925613291/attempt1整轮success，五必需job原日志actual checkout均为同一a5，main-only build正常skip；前端99/535、Mac35组923/6ignored、Windows35组648/7ignored及最终EXE冒烟通过。仅沿原运行取得API run/jobs与五份原日志，没有重派/重试CI或追加查询回放。
 
 完整核验见`.adg/evidence/OCX-0110-20261016-WIN-MEMORY-TOOL-FULL-CI/`；旧受控方法档中“当时整轮仍运行”及currentToolWholeCiAdmitted:false保持，不倒改时序。只准入完整工具CI，真实GPU目标绑定与产品根因仍未准入，RSS+20.040155MiB超+10MiB、原退出失败、bd2实际失败窗口、Mac及其余全部预算/周期/八检查继续保持。TASK revision2/in_progress/pending、原配置恢复、DPI取消及禁止合并/关闭/签名/晋升/发布不变。
+
+### 2026-10-17 fdb只读绑定方法通过，IPC两项超时及独立夹具修订待验
+
+fdb7e3cb已推送读回，只读绑定方法本机和首次CI38930174628 Windows方法作业各16项通过，actual checkout/制品摘要/CRC及LF/CRLF身份核验；真实产品GPU分支未执行，录制未准入。同一CI的Windows库回归549passed/2failed/4ignored，两项取消同步/备份观察测试在门闩释放后等待终态的2秒处Elapsed。isolated query panic属另项夹具预期输出，不当作失败根因；原线程/调度/I/O根因未取得，不重跑旧CI。
+
+失败制品12059460774/7d536e17…/8875175字节及原库0490fb14…已只读验CRC/摘要并私有保存，未执行；它不同于原bd2固定库497814ca…，不替代或解除原失败。独立feature/0.1.10-windows-ipc-idle-signal从b4提交测试专用许可释放通知，替换指定两项热轮询，原24处2秒期限、默认并发、审计/终态断言全部保留；ea8首次CI格式失败原件保持，ca89fbac仅按rustfmt要求修正一行，新SHA首轮CI38933650482已过Windows格式/Clippy/回归步骤，整轮终态仍待核。本机未装Rust，未声称本机编译通过。
+
+证据`.adg/evidence/OCX-0110-20261017-WIN-BINDING-IPC-FAILURE/`分别封存方法通过、整轮失败、源码边界及修订阶段状态。此修订不被写成根因已证实或旧失败已清除；原RSS/退出失败、bd2实际失败窗口、严格恢复、Mac及全部其余预算/周期/八检查保持。TASK revision2/in_progress/pending、原配置恢复、DPI取消，不合并、关闭、签名、晋升或发布。

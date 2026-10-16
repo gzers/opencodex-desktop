@@ -1,0 +1,13 @@
+# fdb绑定方法通过与原始IPC回归失败
+
+fdb7e3cb只读目标绑定方法在本机与首次CI38930174628的Windows方法作业中各16项通过，包括实际TokenUser摘要、独立保留句柄及100ns差异拒绝。源码Git LF与CI CRLF身份、制品摘要/大小/CRC和实际checkout核对；只通过方法自进程与拒绝分支，真实产品GPU分支未执行，不准入录制。
+
+同一CI的Windows backend regression失败：库回归549passed/2failed/4ignored，两项为cancelled_sync_observer_keeps_admissions_until_terminal_and_audit_for_each_result及cancelled_backup_observer_keeps_admission_through_real_terminal_and_audit。均在工作门闩释放后等待终态的2秒期限处Elapsed。另一个测试输出的isolated query panic为预期夹具，不列为这两项失败根因。原日志、API状态与失败库制品摘要均保留，根因尚未由线程/调度/I/O原件确认。
+
+失败制品12059460774、ZIP SHA7d536e17…/8875175字节已验CRC；库SHA0490fb14…，与原bd2固定库497814ca…不同。原ZIP保留忽略运行目录，不解包执行、不用它替代原bd2失败证据，也未重跑此CI。
+
+独立feature/0.1.10-windows-ipc-idle-signal从b4基线准备修订：仅测试构建增加最后一个写入许可释放通知，两个测试使用通知等待，保留2秒期限、默认并发和全部终态/审计断言；新增确定性Waker检查不在最后许可释放前唤醒。ea8d3595首次CI因rustfmt字段排版失败，原日志保留；ca89fbac只修这一行格式后新SHA首轮CI38933650482的Windows格式/Clippy/回归步骤通过，完整构建终态尚未准入。本机无Rust工具链，未冒称本机编译或回归通过。
+
+源码比较确认失败版本与b4的service.rs相同，修订仅替换指定两个等待循环，24处2秒期限及全部审计/终态断言保持。减少夹具热轮询是待验证修订方向，不将一次阶段通过写成根因已证实或旧失败被覆盖。
+
+TASK revision2/in_progress/pending保持；原RSS+20.040155MiB超+10MiB、原退出失败、bd2实际失败窗口、严格恢复、Mac及其余原预算/周期/八检查未解除。原配置保持恢复，DPI取消，无本机产品或ETW启动，不合并、关闭、签名、晋升或发布。
