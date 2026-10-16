@@ -22,6 +22,15 @@ _, artifacts = api.request(f"actions/runs/{handle['runId']}/artifacts?per_page=1
 assert run["head_sha"] == handle["source"] and run["run_attempt"] == 1
 assert run["event"] == "workflow_dispatch" and run["path"] == ".github/workflows/windows-candidate.yml"
 assert jobs["total_count"] == len(jobs["jobs"])
+expected_artifacts = {"opencodex-desktop-0.1.10-windows-x64-candidate", "windows-candidate-evidence"}
+artifact_names = {a["name"] for a in artifacts["artifacts"]}
+if run["status"] == "completed" and (
+    run["conclusion"] != "success" or expected_artifacts <= artifact_names
+):
+    terminal = ROOT / "candidate-terminal.json"
+    if not terminal.exists():
+        terminal.write_text(json.dumps(
+            {"run": run, "jobs": jobs, "artifacts": artifacts}, indent=2) + "\n", encoding="utf-8")
 stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 (ROOT / f"candidate-{stamp}.original.json").write_text(
     json.dumps({"run": run, "jobs": jobs, "artifacts": artifacts}, indent=2) + "\n", encoding="utf-8")

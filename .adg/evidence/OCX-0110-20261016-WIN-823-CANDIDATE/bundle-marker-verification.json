@@ -1,0 +1,24 @@
+{
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "runId": 38841117656,
+  "rejectedExtraAssumptions": [
+    "all formats have identical EXE hashes",
+    "receipt offset points to suffix",
+    "marker prefix is unique in the installed EXE"
+  ],
+  "markerStartOffset": 8148597,
+  "markerSuffixOffset": 8148621,
+  "observedPrefixOccurrences": 6,
+  "markerPrefix": "__TAURI_BUNDLE_TYPE_VAR_",
+  "msiMarker": "MSI",
+  "nsisMarker": "NSS",
+  "msiExeSha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53",
+  "inMemoryNssVariantSha256": "01330c205ba8ed18d6666a66a9a87d027c40a91964747887960ad6fe23aabf67",
+  "runnerNssExpectedAndActualMatch": true,
+  "differencesLimitedToExactThreeByteBundleSuffix": true,
+  "checkerGitBlobSha256": "69993d9f772cea27dca4424d895866a4ebf093fb7c52f855603334e4e4c9f482",
+  "originalExeWritten": false,
+  "hostInstallerExecuted": false,
+  "hostProductStarted": false,
+  "fullInstallerGatePassed": false
+}

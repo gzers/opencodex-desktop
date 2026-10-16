@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "scope": "prepared 823/019 foreground controllers, no-human refusal and controlled kernel-time evidence; no real foreground grant or native acceptance",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "analysis-missing-input.original.log",
+      "bytes": 1225,
+      "sha256": "f2d748207eb392bee1c04995180b8e1b5f188d5b1e20dfb4ae0a7bc80b3b8dce"
+    },
+    {
+      "path": "analyze-pair.py",
+      "bytes": 6852,
+      "sha256": "bfa14b1f6bbb1094ff77451d495131d989a4fb02cf7e9beef32a6c39af7f9f97"
+    },
+    {
+      "path": "analyzer-checks.json",
+      "bytes": 395,
+      "sha256": "13eef8dd186e49b61433d1b5ca05131ed329a93de430dee32683d406848288f3"
+    },
+    {
+      "path": "check-preparation.ps1",
+      "bytes": 4360,
+      "sha256": "16168844bb4b81b3727b21d6bf4bab0e50e506a7677189133e3792107fd07bc2"
+    },
+    {
+      "path": "check-retained-times.ps1",
+      "bytes": 4715,
+      "sha256": "6fa62407c35d129cbcdad1654a42c56914e518b4a54bf08b5f86871d2aa0a775"
+    },
+    {
+      "path": "contract.json",
+      "bytes": 3527,
+      "sha256": "e897ae07d8c7427a955384fa67bb8a398c6bf0cd2cf4f2e2c33d05f1ea0fb178"
+    },
+    {
+      "path": "controlled-times-result.original.json",
+      "bytes": 1885,
+      "sha256": "6b5015418833538063ecb57c77958ed656a6f905f1d53c431c97afa1215f3738"
+    },
+    {
+      "path": "controlled-times.original.log",
+      "bytes": 1887,
+      "sha256": "bb36e62ed2178c962a2a84a5b6423c30356ef5a52414630ee0423a1c1741b199"
+    },
+    {
+      "path": "controller-methods.json",
+      "bytes": 3509,
+      "sha256": "94e365d0f8d6bb116d87eeb77107bf9eb47cd1b97b7727d7671d565b10406a15"
+    },
+    {
+      "path": "filetime-roundtrip-input.json",
+      "bytes": 545,
+      "sha256": "b1781dfd0c84e36e815f441c4a3de568dc6956a7bf6707d9120538394988427e"
+    },
+    {
+      "path": "final-protection.json",
+      "bytes": 521,
+      "sha256": "b69a7dcf0d5b8a4a86d8dac320af7bd7638ef4b535f9c7d329fb00d36de8571a"
+    },
+    {
+      "path": "guard-first-invocation-diagnostic.json",
+      "bytes": 414,
+      "sha256": "12d3fb4314ee5ccf8208729a4c102eeace2ba0e848bf0da4e4effe9f3aaf70df"
+    },
+    {
+      "path": "human-window.template.json",
+      "bytes": 366,
+      "sha256": "0132d7c4e54ee58896c34d010e1d29e756b5c75d185dd9fe0d4165a4c7aa5d00"
+    },
+    {
+      "path": "launch-recovery.ps1",
+      "bytes": 6528,
+      "sha256": "2d5970cec4353c89d31362394733a748f79159c97958003fa23c357f309f07f3"
+    },
+    {
+      "path": "launch.ps1",
+      "bytes": 3952,
+      "sha256": "c45afee6f4953fb8b1ece256bf65bd9abd376421c60834f1895daef27979e34c"
+    },
+    {
+      "path": "observe-exit.ps1",
+      "bytes": 2353,
+      "sha256": "c5e87e0343acc6bd986b3eafe9f8f955f28f5dc753af2d2c4c9741f31d4ceff9"
+    },
+    {
+      "path": "observe.ps1",
+      "bytes": 1600,
+      "sha256": "332fdc734bc11e190acdcb166dcd33b1e445293e0d480d9a07712f8ff5f67800"
+    },
+    {
+      "path": "plan.md",
+      "bytes": 2880,
+      "sha256": "08b3bdd2650c76dc30a73e0a059118774a46f0cc9a513dc5a22893726ca8a9e3"
+    },
+    {
+      "path": "preparation-checks.json",
+      "bytes": 3253,
+      "sha256": "8a5be0f87b96cc383d765ffe595129531788559a3fc664415fe7ff199008846e"
+    },
+    {
+      "path": "preparation-checks.original.log",
+      "bytes": 78,
+      "sha256": "b6405060b35907ae0ffe170819687461a74ba5e33e6f18166e4d9b4218ed09cb"
+    },
+    {
+      "path": "preparation-readback.json",
+      "bytes": 1313,
+      "sha256": "cca0279624c1c552182076f8c5ff152a6c8469ff4bee08a6c87f59a75cc88de1"
+    },
+    {
+      "path": "prepare-fixture.ps1",
+      "bytes": 3945,
+      "sha256": "5d7506f82c0dbf086b5473ef4605a181782a600bc320eef629522dbd58dafcf2"
+    },
+    {
+      "path": "prepare-recovery.ps1",
+      "bytes": 3247,
+      "sha256": "01950fbbe5dbc6a38d45899f5201e3170f7dec359f95b108730d4e8e1152aa92"
+    },
+    {
+      "path": "readiness-recipe.md",
+      "bytes": 3143,
+      "sha256": "ad3a527e8d8f0815f9d208b5780cc5c1a89ed6fdd5316c03c87d57f526825f10"
+    },
+    {
+      "path": "restore-recovery.ps1",
+      "bytes": 2125,
+      "sha256": "63b73fbb3dcb9097d7d5ebf58bd350765edd01804830f401d92ce91481004204"
+    },
+    {
+      "path": "retained-process-times.ps1",
+      "bytes": 3577,
+      "sha256": "e556649ffafb211128fa2cda4a02156970b88f65408034be9cf38325be6d3a9e"
+    },
+    {
+      "path": "run-binding.ps1",
+      "bytes": 3985,
+      "sha256": "a8dd00a12fdfb29e81416b8f0e13554a44826dee61a6f9d8eb22539f0504e073"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 6253,
+      "sha256": "90b95a041a8606efb65f78d8ebcb2ce47aa54b308a6f396537bfa4ed23dfb326"
+    }
+  ]
+}

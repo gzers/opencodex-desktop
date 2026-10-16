@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 1,
+  "scope": "exact 823 candidate with API-verified archives and read-only MSI payload; per-format marker identity retained; no host install or launch",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "admission-manifest.json",
+      "bytes": 1259,
+      "sha256": "7e10bf80f0ce80ef5fe4ad9df840c4a7bb26d46bf2a311dd77a87889af976097"
+    },
+    {
+      "path": "admission-verification.json",
+      "bytes": 426,
+      "sha256": "774fecaa88cf1b102bccdce489b3a666ff0819aa16e5d3c38c84119606191991"
+    },
+    {
+      "path": "at-rest-protection.json",
+      "bytes": 463,
+      "sha256": "643962f379f4b4e6561716f2e855747eaebfcef74dabb186c6848cd5429059ed"
+    },
+    {
+      "path": "bundle-marker-verification.json",
+      "bytes": 980,
+      "sha256": "85db3159ecb2511719c60a07677ce2f7a90fab795c65cad40c2744937938de00"
+    },
+    {
+      "path": "candidate-20261016T023803Z.original.json",
+      "bytes": 24897,
+      "sha256": "f6333bf3d227c8ea77dc78170d6de0166372772961f1511b44f3a53f2cee77d3"
+    },
+    {
+      "path": "candidate-20261016T024205Z.original.json",
+      "bytes": 24940,
+      "sha256": "881bead807ccb86c0775e10c9c789d1b1bb3bd2aa18e86ab64d61c9239c63eca"
+    },
+    {
+      "path": "candidate-20261016T024423Z.original.json",
+      "bytes": 24940,
+      "sha256": "881bead807ccb86c0775e10c9c789d1b1bb3bd2aa18e86ab64d61c9239c63eca"
+    },
+    {
+      "path": "candidate-20261016T024927Z.original.json",
+      "bytes": 27442,
+      "sha256": "3684b111bfd7506d39014b551a18bff54dba285af36f56eb7736ef16e0a96633"
+    },
+    {
+      "path": "candidate-descriptor.json",
+      "bytes": 762,
+      "sha256": "7b3d336df7e50c77e3c5d87174ee71f8305c34f4cd1206b56bc64aa58f6acaf7"
+    },
+    {
+      "path": "candidate-dispatch-readback.original.json",
+      "bytes": 15770,
+      "sha256": "e57faa5406112a4ec52c76ccf4a9e63c6894836bdf0b093dcce6e7aa8c3030cb"
+    },
+    {
+      "path": "candidate-download-result.json",
+      "bytes": 82679,
+      "sha256": "81f22ec0961be751f59487cdfd305053a31cf81402a471e51b897ca90984dff4"
+    },
+    {
+      "path": "candidate-environment.raw.original.json",
+      "bytes": 298,
+      "sha256": "7f127e7a7926324bc31388cd17838be8b8b96b6f1f648d1a9c52ee4b802217e4"
+    },
+    {
+      "path": "candidate-handle.json",
+      "bytes": 277,
+      "sha256": "ac310076b9d34d65b7fcdb466c0517a099a0b3c98f060ccb00be97221758110b"
+    },
+    {
+      "path": "candidate-progress.json",
+      "bytes": 1391,
+      "sha256": "235b0da750f67dd845aac99cab9cea655ebe67997f49bd40c6f355af372cf38c"
+    },
+    {
+      "path": "candidate-terminal.json",
+      "bytes": 27442,
+      "sha256": "3684b111bfd7506d39014b551a18bff54dba285af36f56eb7736ef16e0a96633"
+    },
+    {
+      "path": "ci-build-admission.json",
+      "bytes": 340,
+      "sha256": "5155290dd4f82710e68f0c37460ace08f8ce436dc4a8cd68620f75b18c8001c8"
+    },
+    {
+      "path": "collect-package-log.py",
+      "bytes": 2472,
+      "sha256": "68d99e94151becdebab8d95ea38915b43965742054bc1bdf7701945831b8e96f"
+    },
+    {
+      "path": "dispatch-attempt.json",
+      "bytes": 450,
+      "sha256": "aa2bd208aa4670ec716613f0cb95ffc95aa75d3c26dbf87284d2604ab05f866f"
+    },
+    {
+      "path": "dispatch-request.json",
+      "bytes": 100,
+      "sha256": "1d5ee93a67687b4f5075f1008393934849cfcd31d31bfae963d2d030850d29e6"
+    },
+    {
+      "path": "dispatch-result.json",
+      "bytes": 175,
+      "sha256": "0029b3121f15c6c003f7e4897791ede3d841104a7637572f015d38fdd652f6bb"
+    },
+    {
+      "path": "dispatch.py",
+      "bytes": 4463,
+      "sha256": "d946a670802a5fc9d8de291edc8b6e763558704d1398162879c97426954418cc"
+    },
+    {
+      "path": "extract-payload.original.log",
+      "bytes": 762,
+      "sha256": "7b3d336df7e50c77e3c5d87174ee71f8305c34f4cd1206b56bc64aa58f6acaf7"
+    },
+    {
+      "path": "extract-payload.ps1",
+      "bytes": 3256,
+      "sha256": "1750a43498723eb519c657ee843ab61afaed5aff9a398f2a46894caf19d4e4b9"
+    },
+    {
+      "path": "first-read-observation.json",
+      "bytes": 314,
+      "sha256": "befd348f806e7513e151fefd107da576e0c9a487f794310641697e802f3e418a"
+    },
+    {
+      "path": "installer-verification.raw.original.json",
+      "bytes": 1970,
+      "sha256": "24bdb0e4d78b53e461ec255f1709a4c7359dfd50485a4e1c0227ee478c8c0fb5"
+    },
+    {
+      "path": "method-preparation.json",
+      "bytes": 1237,
+      "sha256": "a02b645aa0cc774e76f2073c380e940359d9bc55d9ae7bcd40df8ec2f2791aa6"
+    },
+    {
+      "path": "msi-readonly.original.json",
+      "bytes": 2119,
+      "sha256": "5fac842a67f4e45bdd823aaaa58a2d8cbb25bb966e3fb93f167c0d9a00585b86"
+    },
+    {
+      "path": "package-job-download.json",
+      "bytes": 106,
+      "sha256": "58b2719924fda0a8e80c4671aaa3176224e4117cba55653217629223aa2fbd81"
+    },
+    {
+      "path": "package-job.original.log",
+      "bytes": 151214,
+      "sha256": "a6fe8e7421a0fc91d3b739bc9b10b481137c41348732c900d10f201fa37fbf8f"
+    },
+    {
+      "path": "package-log-read.original.log",
+      "bytes": 381,
+      "sha256": "04b0fb4c718c1401de52409e13d8299745c89ead0b811b80d3fe98bb4fc82759"
+    },
+    {
+      "path": "package-log-verification.json",
+      "bytes": 420,
+      "sha256": "62c626b97b989dcbf13da6a445f82da9c98697f6616907347a4a130e5ed2fbee"
+    },
+    {
+      "path": "read-candidate.py",
+      "bytes": 2696,
+      "sha256": "fa20a8f984a496cc05faa0f5dbb4379ba9b16402767da183c9d63f32c547d622"
+    },
+    {
+      "path": "read-retry.original.log",
+      "bytes": 652,
+      "sha256": "6a0fd7e938c07166422141256be05c76e6570b46f995a67ba2f0ad4be4f98dc5"
+    },
+    {
+      "path": "retrieve.original.log",
+      "bytes": 100,
+      "sha256": "4dee54de953638f216a93275273a2472e2ee710890bf16d0cb71d4a1fa4a2f08"
+    },
+    {
+      "path": "retrieve.py",
+      "bytes": 6105,
+      "sha256": "bf7cb64bd0b568efa7297953f84b4b918b69fae89f31dbc27d8de875c0634ad0"
+    },
+    {
+      "path": "runner-evidence.original.zip",
+      "bytes": 1686864,
+      "sha256": "32ef213b165575cf82f5af2b4e71703bea84c46c2414d10595473d0f8ea83a3e"
+    },
+    {
+      "path": "verify-admission.py",
+      "bytes": 2688,
+      "sha256": "ebd45da8303b42934e86a3051803f9f42736b32890ec6f2502ca2f999655c13c"
+    },
+    {
+      "path": "verify.py",
+      "bytes": 6245,
+      "sha256": "69ada917892180611661e4a0e50e0715152b6e408d946472bb470c63f23367ae"
+    }
+  ]
+}

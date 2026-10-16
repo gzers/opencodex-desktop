@@ -1,15 +1,15 @@
 {
-  "observedAtUtc": "2026-10-16T02:38:03.586081+00:00",
+  "observedAtUtc": "2026-10-16T03:01:53.846137+00:00",
   "source": "823a8a0615153068594daef530c2e80f1d95fc29",
   "runId": 38841117656,
-  "status": "in_progress",
-  "conclusion": null,
+  "status": "completed",
+  "conclusion": "success",
   "jobs": [
     {
       "id": 116781179910,
       "name": "package",
-      "status": "in_progress",
-      "conclusion": null
+      "status": "completed",
+      "conclusion": "success"
     },
     {
       "id": 116781181257,
@@ -24,11 +24,28 @@
       "conclusion": "skipped"
     }
   ],
-  "artifacts": [],
+  "artifacts": [
+    {
+      "id": 12021831089,
+      "name": "opencodex-desktop-0.1.10-windows-x64-candidate",
+      "size_in_bytes": 7668310,
+      "digest": "sha256:fd64bb5f0667ba0add9d86cd1050c707ce27d7269e63e86a191daa037113c851",
+      "expired": false
+    },
+    {
+      "id": 12021294599,
+      "name": "windows-candidate-evidence",
+      "size_in_bytes": 1686864,
+      "digest": "sha256:32ef213b165575cf82f5af2b4e71703bea84c46c2414d10595473d0f8ea83a3e",
+      "expired": false
+    }
+  ],
   "newDispatchRequested": false,
-  "artifactAdmitted": false,
-  "executableAdmitted": false,
+  "artifactAdmitted": true,
+  "executableAdmitted": true,
   "productStartedLocally": false,
   "nativeRecoveryGatePassed": false,
-  "releaseRequested": false
+  "releaseRequested": false,
+  "phase": "verified-readonly-candidate",
+  "memoryBudgetPassed": false
 }

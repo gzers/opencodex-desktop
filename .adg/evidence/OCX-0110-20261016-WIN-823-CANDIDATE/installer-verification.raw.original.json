@@ -1,0 +1,45 @@
+{
+  "scope": "ephemeral runner fresh NSIS/MSI install, final EXE first-screen and uninstall; no human upgrade/DPI/OTA acceptance",
+  "sourceCommit": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "builtExecutableSha256": "a9054f7785b90dddb0985fa28944b761aaccfb36021c0337fc215db3f269e244",
+  "version": "0.1.10",
+  "codeSigned": false,
+  "releaseAccepted": false,
+  "result": "pass",
+  "installers": [
+    {
+      "kind": "msi",
+      "name": "OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "bytes": 4591616,
+      "sha256": "e64491715bc5e510d06eb8a18f723b6700be800e4555a44c4e2207059bf0318c",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-msi-76252c6e937b4b9faa36b7d8b972490b",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53",
+      "expectedInstalledExecutableSha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53",
+      "bundleMarker": "MSI",
+      "bundleMarkerOffset": 8148597,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    },
+    {
+      "kind": "nsis",
+      "name": "OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "bytes": 3285785,
+      "sha256": "b70c4718c5841bf835dc2020935ab60c8897ee8ca5df17ddbda617da940a2960",
+      "installDirectory": "D:\\a\\_temp\\ocxd-candidate-nsis-1cede0e5d2df45a7b4604605d1b2f99d",
+      "result": "pass",
+      "installExitCode": 0,
+      "installedExecutableSha256": "01330c205ba8ed18d6666a66a9a87d027c40a91964747887960ad6fe23aabf67",
+      "expectedInstalledExecutableSha256": "01330c205ba8ed18d6666a66a9a87d027c40a91964747887960ad6fe23aabf67",
+      "bundleMarker": "NSS",
+      "bundleMarkerOffset": 8148597,
+      "productVersion": "0.1.10",
+      "firstScreen": "pass",
+      "uninstallExitCode": 0,
+      "uninstallRemovedExecutable": true
+    }
+  ]
+}

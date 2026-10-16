@@ -1,0 +1,100 @@
+{
+  "atUtc": "2026-10-16T03:20:10.4177048+00:00",
+  "status": "passed",
+  "parsedFiles": [
+    {
+      "path": "check-preparation.ps1",
+      "errors": 0,
+      "sha256": "16168844bb4b81b3727b21d6bf4bab0e50e506a7677189133e3792107fd07bc2"
+    },
+    {
+      "path": "check-retained-times.ps1",
+      "errors": 0,
+      "sha256": "6fa62407c35d129cbcdad1654a42c56914e518b4a54bf08b5f86871d2aa0a775"
+    },
+    {
+      "path": "launch-recovery.ps1",
+      "errors": 0,
+      "sha256": "2d5970cec4353c89d31362394733a748f79159c97958003fa23c357f309f07f3"
+    },
+    {
+      "path": "launch.ps1",
+      "errors": 0,
+      "sha256": "c45afee6f4953fb8b1ece256bf65bd9abd376421c60834f1895daef27979e34c"
+    },
+    {
+      "path": "observe-exit.ps1",
+      "errors": 0,
+      "sha256": "c5e87e0343acc6bd986b3eafe9f8f955f28f5dc753af2d2c4c9741f31d4ceff9"
+    },
+    {
+      "path": "observe.ps1",
+      "errors": 0,
+      "sha256": "332fdc734bc11e190acdcb166dcd33b1e445293e0d480d9a07712f8ff5f67800"
+    },
+    {
+      "path": "prepare-fixture.ps1",
+      "errors": 0,
+      "sha256": "5d7506f82c0dbf086b5473ef4605a181782a600bc320eef629522dbd58dafcf2"
+    },
+    {
+      "path": "prepare-recovery.ps1",
+      "errors": 0,
+      "sha256": "01950fbbe5dbc6a38d45899f5201e3170f7dec359f95b108730d4e8e1152aa92"
+    },
+    {
+      "path": "restore-recovery.ps1",
+      "errors": 0,
+      "sha256": "63b73fbb3dcb9097d7d5ebf58bd350765edd01804830f401d92ce91481004204"
+    },
+    {
+      "path": "retained-process-times.ps1",
+      "errors": 0,
+      "sha256": "e556649ffafb211128fa2cda4a02156970b88f65408034be9cf38325be6d3a9e"
+    },
+    {
+      "path": "run-binding.ps1",
+      "errors": 0,
+      "sha256": "a8dd00a12fdfb29e81416b8f0e13554a44826dee61a6f9d8eb22539f0504e073"
+    }
+  ],
+  "rejectedWithoutHuman": [
+    {
+      "exceptionType": "System.Management.Automation.ItemNotFoundException",
+      "reason": "missing human-window.json",
+      "rejected": true,
+      "path": "launch.ps1"
+    },
+    {
+      "exceptionType": "System.Management.Automation.ItemNotFoundException",
+      "reason": "missing human-window.json",
+      "rejected": true,
+      "path": "prepare-fixture.ps1"
+    },
+    {
+      "exceptionType": "System.Management.Automation.ItemNotFoundException",
+      "reason": "missing human-window.json",
+      "rejected": true,
+      "path": "prepare-recovery.ps1"
+    },
+    {
+      "exceptionType": "System.Management.Automation.ItemNotFoundException",
+      "reason": "missing human-window.json",
+      "rejected": true,
+      "path": "launch-recovery.ps1"
+    }
+  ],
+  "invocation": "explicit named-parameter hashtable splats",
+  "candidateSource": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "candidateExeSha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "pointerUnchanged": true,
+  "aclUnchanged": true,
+  "actionRecordsWritten": false,
+  "profileMoved": false,
+  "productStarted": false,
+  "foregroundActivated": false,
+  "freshHumanWindowGranted": false,
+  "nativeRecoveryGatePassed": false,
+  "fullPerformanceGatePassed": false
+}

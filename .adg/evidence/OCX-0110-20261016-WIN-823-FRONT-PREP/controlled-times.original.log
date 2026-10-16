@@ -1,0 +1,49 @@
+{
+  "status": "passed",
+  "scope": "two controlled PowerShell processes only",
+  "live": {
+    "observedAtUtc": "2026-10-16T02:49:23.0772478+00:00",
+    "pid": 53888,
+    "creationFileTime": "134365925628686596",
+    "exitFileTime": null,
+    "exited": false,
+    "retainedHandle": true,
+    "timeSource": "GetProcessTimes and WaitForSingleObject on the same retained handle",
+    "int64TimesSerializedAsDecimalStrings": true,
+    "sourceMethodSha256": "e556649ffafb211128fa2cda4a02156970b88f65408034be9cf38325be6d3a9e",
+    "productAcceptanceClaimed": false
+  },
+  "exited": {
+    "observedAtUtc": "2026-10-16T02:49:23.1098625+00:00",
+    "pid": 53888,
+    "creationFileTime": "134365925628686596",
+    "exitFileTime": "134365925631028388",
+    "exited": true,
+    "retainedHandle": true,
+    "timeSource": "GetProcessTimes and WaitForSingleObject on the same retained handle",
+    "int64TimesSerializedAsDecimalStrings": true,
+    "sourceMethodSha256": "e556649ffafb211128fa2cda4a02156970b88f65408034be9cf38325be6d3a9e",
+    "productAcceptanceClaimed": false
+  },
+  "next": {
+    "observedAtUtc": "2026-10-16T02:49:23.2518716+00:00",
+    "pid": 83448,
+    "creationFileTime": "134365925631146507",
+    "exitFileTime": null,
+    "exited": false,
+    "retainedHandle": true,
+    "timeSource": "GetProcessTimes and WaitForSingleObject on the same retained handle",
+    "int64TimesSerializedAsDecimalStrings": true,
+    "sourceMethodSha256": "e556649ffafb211128fa2cda4a02156970b88f65408034be9cf38325be6d3a9e",
+    "productAcceptanceClaimed": false
+  },
+  "wrongGenerationRejected": true,
+  "liveExitClaimRejected": true,
+  "exitTimeMatchesFramework": true,
+  "nextCreatedAtOrAfterParentKernelExit": true,
+  "forcedFixtureTermination": false,
+  "productStarted": false,
+  "foregroundActivated": false,
+  "nativeRecoveryGatePassed": false
+}
+
