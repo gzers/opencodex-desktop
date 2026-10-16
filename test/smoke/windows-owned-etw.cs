@@ -497,10 +497,11 @@ namespace OpenCodex.Diagnostics
         private static extern uint ControlTrace(ulong handle, string name, IntPtr properties, uint controlCode);
         private static void RequireOwnName(string name)
         {
-            const string prefix = "OpenCodex-BD2-";
-            if (name == null || !name.StartsWith(prefix, StringComparison.Ordinal)
-                || !Guid.TryParseExact(name.Substring(prefix.Length), "N", out _))
-                throw new ArgumentException("Only the unique task-created session can be stopped.");
+            foreach (string prefix in new[] { "OpenCodex-BD2-", "OpenCodex-Memory-" })
+                if (name != null && name.StartsWith(prefix, StringComparison.Ordinal)
+                    && Guid.TryParseExact(name.Substring(prefix.Length), "N", out _))
+                    return;
+            throw new ArgumentException("Only the unique task-created session can be stopped.");
         }
         private static IntPtr Buffer(string name)
         {
@@ -546,7 +547,7 @@ namespace OpenCodex.Diagnostics
             require(Marshal.SizeOf<Wnode>() == 48);
             require(Marshal.SizeOf<Properties>() == 120);
             require(Marshal.OffsetOf<Properties>(nameof(Properties.LoggerNameOffset)).ToInt32() == 116);
-            foreach (string rejected in new[] { "NT Kernel Logger", "OpenCodex-BD2-not-a-guid" }) {
+            foreach (string rejected in new[] { "NT Kernel Logger", "OpenCodex-BD2-not-a-guid", "OpenCodex-Memory-not-a-guid" }) {
                 bool denied = false;
                 try { RequireOwnName(rejected); } catch (ArgumentException) { denied = true; }
                 require(denied);
@@ -561,6 +562,9 @@ namespace OpenCodex.Diagnostics
                 require(Marshal.PtrToStringUni(IntPtr.Add(buffer, (int)properties.LoggerNameOffset)) == name);
             }
             finally { Marshal.FreeHGlobal(buffer); }
+            IntPtr memoryBuffer = Buffer("OpenCodex-Memory-" + Guid.NewGuid().ToString("N"));
+            try { require(Marshal.PtrToStructure<Properties>(memoryBuffer).Wnode.BufferSize == 4216); }
+            finally { Marshal.FreeHGlobal(memoryBuffer); }
             return checks; // No ControlTrace call or Windows session in these tests.
         }
     }

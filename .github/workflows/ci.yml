@@ -34,6 +34,12 @@ jobs:
       - name: Verify read-only WPR allocation profile preparation
         shell: pwsh
         run: ./test/smoke/windows-memory-profile.test.ps1 -OutputDirectory test/out/windows-process-token/memory-profile
+      - name: Verify controlled self-process memory allocation capture
+        shell: pwsh
+        run: |
+          python test/smoke/windows-memory-decoder.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./test/smoke/windows-controlled-memory.test.ps1 -DecoderDirectory test/runtime/controlled-memory-decoder -OutputDirectory test/out/windows-process-token/controlled-memory -RecordControlledSelf
       - uses: actions/upload-artifact@v4
         if: always()
         with:
