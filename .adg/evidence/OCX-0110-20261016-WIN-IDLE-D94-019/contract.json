@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "scope": "same-host fresh-process foreground idle pair after final-target mesh allocation fix",
+  "candidateSource": "d94c215d869c0560717d79dc02881ce8858afe88",
+  "candidateExeSha256": "b2284ba66a20c7ef11b61fea328f7aa960cd6530011d6e7a09fc78e782c5b224",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "order": [
+    "baseline019",
+    "candidate0110"
+  ],
+  "settleSecondsPerVersion": 60,
+  "measurementSecondsPerVersion": 600,
+  "deadlineRule": "last completed counter observation minus first completed counter observation >= 600 seconds",
+  "theme": "light",
+  "visualEffects": "high",
+  "glowRender": "mesh",
+  "interfaceScale": 100,
+  "bothVersionsNewProcess": true,
+  "identicalOwnedManagerFixtureClone": true,
+  "singleNativeInstance": true,
+  "foregroundLossStopsAttempt": true,
+  "cpuUnit": "one logical processor percent from retained observed process-family handles",
+  "rssUnit": "summed live WorkingSet64, shared pages not deduplicated",
+  "budgetsUnchanged": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "shortLivedChildrenFullyCovered": false,
+  "fullPerformanceGatePassed": false
+}

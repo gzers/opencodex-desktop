@@ -1,0 +1,23 @@
+{
+  "source": "d94c215d869c0560717d79dc02881ce8858afe88",
+  "candidateExeSha256": "b2284ba66a20c7ef11b61fea328f7aa960cd6530011d6e7a09fc78e782c5b224",
+  "humanAuthorization": "\u5f00\u59cb\u524d\u53f0\u9a8c\u8bc1",
+  "maximumRunsPerVersion": 1,
+  "measurementSecondsPerVersion": 600,
+  "bothFreshProcesses": true,
+  "bothSameReadinessObserver": "Computer Use sky",
+  "settleSecondsMinimum": 60,
+  "closeMethod": "bound Computer Use Alt+F4 after measurement",
+  "priorBaselineRetained": true,
+  "priorSamplesUsedInNewComparison": false,
+  "reasonForNewBaseline": "Same foreground window and observer for the changed candidate; old baseline was several hours earlier.",
+  "oldCollectorSha256": "a8728ac9588bd6e9a1c9fcfc546344626f000ac67b366fef7a71b4babfbf13d9",
+  "newCollectorSha256": "f46b8de7c8ada8888798b4fbda11c5f56866aae9c91c71950bec427b4417c668",
+  "noUiInputDuringCollection": true,
+  "noBuildOrEtwDuringCollection": true,
+  "budgets": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "fullPerformanceGatePassed": false
+}

@@ -1,0 +1,67 @@
+{
+  "atUtc": "2026-10-16T00:54:39.0372309+00:00",
+  "version": "candidate0110",
+  "source": "d94c215d869c0560717d79dc02881ce8858afe88",
+  "sampleElapsedSeconds": 145.8971704,
+  "members": [
+    {
+      "utilitySubtype": null,
+      "pid": 86920,
+      "role": "renderer",
+      "parentPid": 58760,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:30.1924352Z"
+    },
+    {
+      "utilitySubtype": null,
+      "pid": 82124,
+      "role": "crashpad-handler",
+      "parentPid": 58760,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:29.7553018Z"
+    },
+    {
+      "utilitySubtype": null,
+      "pid": 83652,
+      "role": "gpu-process",
+      "parentPid": 58760,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:30.0704347Z"
+    },
+    {
+      "utilitySubtype": "storage.mojom.StorageService",
+      "pid": 46384,
+      "role": "utility",
+      "parentPid": 58760,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:30.1004859Z"
+    },
+    {
+      "utilitySubtype": null,
+      "pid": 58760,
+      "role": "browser",
+      "parentPid": 84544,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:29.7345452Z"
+    },
+    {
+      "utilitySubtype": "network.mojom.NetworkService",
+      "pid": 84836,
+      "role": "utility",
+      "parentPid": 58760,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:30.0737151Z"
+    },
+    {
+      "utilitySubtype": null,
+      "pid": 84544,
+      "role": "application",
+      "parentPid": 80792,
+      "commandLinePublished": false,
+      "creationUtc": "2026-10-16T00:50:29.4885659Z"
+    }
+  ],
+  "inputInjected": false,
+  "counterSamplingChanged": false,
+  "originalCommandLinesPublished": false
+}
