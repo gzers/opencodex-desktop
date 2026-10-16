@@ -1,0 +1,51 @@
+--- 823a8a0615153068594daef530c2e80f1d95fc29/apps/desktop/ui/src/features/runtime/motion/meshGlow.ts
++++ rejected-crop-transform/apps/desktop/ui/src/features/runtime/motion/meshGlow.ts
+@@ -78,6 +78,8 @@
+   getDark: () => boolean
+   /** Logo 的实际元素；光层 Teleport 后仍用此锚点定位，并监听其布局尺寸变化。 */
+   centerAnchor?: Element
++  /** 已有 overflow 裁切容器；不为它裁掉的顶部整行像素分配 drawing buffer。 */
++  clipTopAt?: Element
+   /** 可覆盖锚点测量的纵向比例（0–1）；未提供可测锚点时回落到 173/660。 */
+   getCenterFraction?: () => number
+ }
+@@ -194,8 +196,30 @@
+     const dpr = Math.min(1.6, window.devicePixelRatio || 1)
+     const width = Math.max(1, Math.round(rect.width * dpr))
+     const height = Math.max(1, Math.round(rect.height * dpr))
++    const clipTop = options.clipTopAt?.getBoundingClientRect().top
++    const croppedRows = typeof clipTop === 'number' && Number.isFinite(clipTop) && rect.height > 0
++      ? Math.min(height - 1, Math.max(0, Math.floor((clipTop - rect.top) * height / rect.height)))
++      : 0
++    const bufferHeight = height - croppedRows
++    if (croppedRows) {
++      // 只去掉已经不可见的完整顶行。底边及像素/CSS 比例保持原样；
++      // WebGL 的底部原点与 u_res 仍使用完整光场，保留部分的着色器坐标不变。
++      canvas.style.top = 'auto'
++      canvas.style.bottom = '0'
++      // CSS 布局高度会按子像素网格取整。整数像素盒 + 底边缩放保留
++      // 原 drawing-buffer/CSS 比例，避免取整后改变可见纹理的采样位置。
++      canvas.style.height = `${bufferHeight}px`
++      canvas.style.transformOrigin = '50% 100%'
++      canvas.style.transform = `scaleY(${rect.height / height})`
++    } else {
++      canvas.style.removeProperty('top')
++      canvas.style.removeProperty('bottom')
++      canvas.style.removeProperty('height')
++      canvas.style.removeProperty('transform-origin')
++      canvas.style.removeProperty('transform')
++    }
+     if (canvas.width !== width) canvas.width = width
+-    if (canvas.height !== height) canvas.height = height
++    if (canvas.height !== bufferHeight) canvas.height = bufferHeight
+     gl.uniform2f(loc.res, width, height)
+     gl.viewport(0, 0, canvas.width, canvas.height)
+     gl.uniform1f(loc.cy, centerFraction(rect))
+@@ -247,6 +271,7 @@
+   // 就绪 / 准备与标准 / 紧凑切换可能只改变 Logo 尺寸，不改变页面光层尺寸。
+   // 复用一个布局观察器；连续动画帧仍不读取几何。
+   if (options.centerAnchor) observer?.observe(options.centerAnchor)
++  if (options.clipTopAt) observer?.observe(options.clipTopAt)
+ 
+   return {
+     setColors(next) {

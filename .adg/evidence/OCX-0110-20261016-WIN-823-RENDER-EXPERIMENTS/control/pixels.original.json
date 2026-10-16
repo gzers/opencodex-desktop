@@ -1,0 +1,561 @@
+{
+  "baseline": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "control": true,
+  "originalSourceSha256": "6991a6898ae798bf4c97c0aa5f8d67dbb920768032050057e2d0efd6d05e0f1d",
+  "candidateSourceSha256": "6991a6898ae798bf4c97c0aa5f8d67dbb920768032050057e2d0efd6d05e0f1d",
+  "nodeVersion": "v24.21.0",
+  "browserVersion": "154.0.4258.62",
+  "results": [
+    {
+      "input": {
+        "name": "observed-839",
+        "width": 935,
+        "height": 839,
+        "cropTop": 80,
+        "dpr": 2
+      },
+      "cases": [
+        {
+          "dark": false,
+          "frameTime": 1000,
+          "fullWidth": 1496,
+          "fullHeight": 1342,
+          "retainedWidth": 1496,
+          "retainedHeight": 1342,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 7169819,
+          "rgbaSha256": [
+            "f45be5ef18b11b3f493700d810f420d1f11386cfe01f74e3faf0a949f0238136",
+            "f45be5ef18b11b3f493700d810f420d1f11386cfe01f74e3faf0a949f0238136"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1016,
+          "fullWidth": 1496,
+          "fullHeight": 1342,
+          "retainedWidth": 1496,
+          "retainedHeight": 1342,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 7166752,
+          "rgbaSha256": [
+            "a9e477b8c59618e176115b092c9583471f4da5e3f83001e1b9db549bb8d5ad7a",
+            "a9e477b8c59618e176115b092c9583471f4da5e3f83001e1b9db549bb8d5ad7a"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1066,
+          "fullWidth": 1496,
+          "fullHeight": 1342,
+          "retainedWidth": 1496,
+          "retainedHeight": 1342,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 7157755,
+          "rgbaSha256": [
+            "870f224088035f256ec2e1be3959d6c66778e6f7202461b7f37ddc05f1b964ff",
+            "870f224088035f256ec2e1be3959d6c66778e6f7202461b7f37ddc05f1b964ff"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1000,
+          "fullWidth": 1496,
+          "fullHeight": 1342,
+          "retainedWidth": 1496,
+          "retainedHeight": 1342,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 6982850,
+          "rgbaSha256": [
+            "f596bd56d1bc9628124ebc6b3f715cfbf845a5f74712614c164d92cc94d825fc",
+            "f596bd56d1bc9628124ebc6b3f715cfbf845a5f74712614c164d92cc94d825fc"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1016,
+          "fullWidth": 1496,
+          "fullHeight": 1342,
+          "retainedWidth": 1496,
+          "retainedHeight": 1342,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 6979341,
+          "rgbaSha256": [
+            "487112173bcf4a92d97e450d8ecc113533f901cbd180b295dbd3a5b62e7807be",
+            "487112173bcf4a92d97e450d8ecc113533f901cbd180b295dbd3a5b62e7807be"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1066,
+          "fullWidth": 1496,
+          "fullHeight": 1342,
+          "retainedWidth": 1496,
+          "retainedHeight": 1342,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 6968522,
+          "rgbaSha256": [
+            "6749e618c898b1ff593845c33e9a00b57516950420f7f54c34f963fbc0c986f3",
+            "6749e618c898b1ff593845c33e9a00b57516950420f7f54c34f963fbc0c986f3"
+          ]
+        }
+      ],
+      "geometry": {
+        "reference": {
+          "x": 0,
+          "y": -80,
+          "width": 935,
+          "height": 839,
+          "bottom": 759
+        },
+        "candidate": {
+          "x": 0,
+          "y": -80,
+          "width": 935,
+          "height": 839,
+          "bottom": 759
+        },
+        "clip": {
+          "x": 0,
+          "y": 0,
+          "width": 935,
+          "height": 759,
+          "bottom": 759
+        },
+        "attributes": {
+          "alpha": true,
+          "antialias": false,
+          "depth": false,
+          "desynchronized": false,
+          "failIfMajorPerformanceCaveat": false,
+          "powerPreference": "default",
+          "premultipliedAlpha": false,
+          "preserveDrawingBuffer": false,
+          "stencil": false,
+          "xrCompatible": false
+        },
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "input": {
+        "name": "standard-840",
+        "width": 935,
+        "height": 840,
+        "cropTop": 80,
+        "dpr": 2
+      },
+      "cases": [
+        {
+          "dark": false,
+          "frameTime": 1000,
+          "fullWidth": 1496,
+          "fullHeight": 1344,
+          "retainedWidth": 1496,
+          "retainedHeight": 1344,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 7177928,
+          "rgbaSha256": [
+            "dd97daaecba58e7a7b951f9032b76fdd4c4b013661738016c5d3cee4fd0d88f6",
+            "dd97daaecba58e7a7b951f9032b76fdd4c4b013661738016c5d3cee4fd0d88f6"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1016,
+          "fullWidth": 1496,
+          "fullHeight": 1344,
+          "retainedWidth": 1496,
+          "retainedHeight": 1344,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 7174926,
+          "rgbaSha256": [
+            "abf2a650a89119d13de2cbb14148e2a69aed69e28c1ce0f4c9e091b8a91be749",
+            "abf2a650a89119d13de2cbb14148e2a69aed69e28c1ce0f4c9e091b8a91be749"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1066,
+          "fullWidth": 1496,
+          "fullHeight": 1344,
+          "retainedWidth": 1496,
+          "retainedHeight": 1344,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 7165733,
+          "rgbaSha256": [
+            "9bd69e6e2c8a73928b98d5cbe250075475528d5f8afc6b51257ca3537672437d",
+            "9bd69e6e2c8a73928b98d5cbe250075475528d5f8afc6b51257ca3537672437d"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1000,
+          "fullWidth": 1496,
+          "fullHeight": 1344,
+          "retainedWidth": 1496,
+          "retainedHeight": 1344,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 6990505,
+          "rgbaSha256": [
+            "310ea2c68d2dde060451a33031d3f7cb0a70aacffc67dca7f7e5f0b4fafd3692",
+            "310ea2c68d2dde060451a33031d3f7cb0a70aacffc67dca7f7e5f0b4fafd3692"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1016,
+          "fullWidth": 1496,
+          "fullHeight": 1344,
+          "retainedWidth": 1496,
+          "retainedHeight": 1344,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 6986912,
+          "rgbaSha256": [
+            "ae8d78ffcb75730499004952a3561d8f5adc75f4581d5b17413c8ff176890f7a",
+            "ae8d78ffcb75730499004952a3561d8f5adc75f4581d5b17413c8ff176890f7a"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1066,
+          "fullWidth": 1496,
+          "fullHeight": 1344,
+          "retainedWidth": 1496,
+          "retainedHeight": 1344,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 6976095,
+          "rgbaSha256": [
+            "904317264415f9c4e06c1aba30fdf7f02d8d2c6d98a3150cd46bd4e6b912cc35",
+            "904317264415f9c4e06c1aba30fdf7f02d8d2c6d98a3150cd46bd4e6b912cc35"
+          ]
+        }
+      ],
+      "geometry": {
+        "reference": {
+          "x": 0,
+          "y": -80,
+          "width": 935,
+          "height": 840,
+          "bottom": 760
+        },
+        "candidate": {
+          "x": 0,
+          "y": -80,
+          "width": 935,
+          "height": 840,
+          "bottom": 760
+        },
+        "clip": {
+          "x": 0,
+          "y": 0,
+          "width": 935,
+          "height": 760,
+          "bottom": 760
+        },
+        "attributes": {
+          "alpha": true,
+          "antialias": false,
+          "depth": false,
+          "desynchronized": false,
+          "failIfMajorPerformanceCaveat": false,
+          "powerPreference": "default",
+          "premultipliedAlpha": false,
+          "preserveDrawingBuffer": false,
+          "stencil": false,
+          "xrCompatible": false
+        },
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "input": {
+        "name": "compact-1x",
+        "width": 703,
+        "height": 660,
+        "cropTop": 80,
+        "dpr": 1
+      },
+      "cases": [
+        {
+          "dark": false,
+          "frameTime": 1000,
+          "fullWidth": 703,
+          "fullHeight": 660,
+          "retainedWidth": 703,
+          "retainedHeight": 660,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 1636505,
+          "rgbaSha256": [
+            "c5ea4098955786a647f86e949f8f7b02908596363a6427ef71382741c714da93",
+            "c5ea4098955786a647f86e949f8f7b02908596363a6427ef71382741c714da93"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1016,
+          "fullWidth": 703,
+          "fullHeight": 660,
+          "retainedWidth": 703,
+          "retainedHeight": 660,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 1635718,
+          "rgbaSha256": [
+            "4c647311f397f6a744111719e49a8d74e7e399bd17e1574b93f7dee2dad59ee6",
+            "4c647311f397f6a744111719e49a8d74e7e399bd17e1574b93f7dee2dad59ee6"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1066,
+          "fullWidth": 703,
+          "fullHeight": 660,
+          "retainedWidth": 703,
+          "retainedHeight": 660,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 1633293,
+          "rgbaSha256": [
+            "8c143f6db99de0c5cdb0e00c4d8f5e3ad33ccd5aa79cc99677c11f969c72ecbb",
+            "8c143f6db99de0c5cdb0e00c4d8f5e3ad33ccd5aa79cc99677c11f969c72ecbb"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1000,
+          "fullWidth": 703,
+          "fullHeight": 660,
+          "retainedWidth": 703,
+          "retainedHeight": 660,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 1596421,
+          "rgbaSha256": [
+            "ad440f60a6dc839ee4df1715e9d1fcff95a3ef180915ea290e08f80f481fcfd8",
+            "ad440f60a6dc839ee4df1715e9d1fcff95a3ef180915ea290e08f80f481fcfd8"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1016,
+          "fullWidth": 703,
+          "fullHeight": 660,
+          "retainedWidth": 703,
+          "retainedHeight": 660,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 1595538,
+          "rgbaSha256": [
+            "dc975e5e7647419d663e604ff0a2ccf06b58295b266f18906afd722d7fd11dad",
+            "dc975e5e7647419d663e604ff0a2ccf06b58295b266f18906afd722d7fd11dad"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1066,
+          "fullWidth": 703,
+          "fullHeight": 660,
+          "retainedWidth": 703,
+          "retainedHeight": 660,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 1592616,
+          "rgbaSha256": [
+            "769c5e65cfb34410d42fc6cfbaacb9aef9b6f3b6bf4154575ee3c8fffea9ef0b",
+            "769c5e65cfb34410d42fc6cfbaacb9aef9b6f3b6bf4154575ee3c8fffea9ef0b"
+          ]
+        }
+      ],
+      "geometry": {
+        "reference": {
+          "x": 0,
+          "y": -80,
+          "width": 703,
+          "height": 660,
+          "bottom": 580
+        },
+        "candidate": {
+          "x": 0,
+          "y": -80,
+          "width": 703,
+          "height": 660,
+          "bottom": 580
+        },
+        "clip": {
+          "x": 0,
+          "y": 0,
+          "width": 703,
+          "height": 580,
+          "bottom": 580
+        },
+        "attributes": {
+          "alpha": true,
+          "antialias": false,
+          "depth": false,
+          "desynchronized": false,
+          "failIfMajorPerformanceCaveat": false,
+          "powerPreference": "default",
+          "premultipliedAlpha": false,
+          "preserveDrawingBuffer": false,
+          "stencil": false,
+          "xrCompatible": false
+        },
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    },
+    {
+      "input": {
+        "name": "fractional-125",
+        "width": 703.25,
+        "height": 839.5,
+        "cropTop": 80,
+        "dpr": 1.25
+      },
+      "cases": [
+        {
+          "dark": false,
+          "frameTime": 1000,
+          "fullWidth": 879,
+          "fullHeight": 1049,
+          "retainedWidth": 879,
+          "retainedHeight": 1049,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 3016538,
+          "rgbaSha256": [
+            "46a5d505f2ea176aa0b8ec3e13d9ede875f08f853b6da296edd4ba9cbac608d1",
+            "46a5d505f2ea176aa0b8ec3e13d9ede875f08f853b6da296edd4ba9cbac608d1"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1016,
+          "fullWidth": 879,
+          "fullHeight": 1049,
+          "retainedWidth": 879,
+          "retainedHeight": 1049,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 3014654,
+          "rgbaSha256": [
+            "660767142ba42e131340187e2c7339e590f546270de8ffccccfc8e92382b6a0f",
+            "660767142ba42e131340187e2c7339e590f546270de8ffccccfc8e92382b6a0f"
+          ]
+        },
+        {
+          "dark": false,
+          "frameTime": 1066,
+          "fullWidth": 879,
+          "fullHeight": 1049,
+          "retainedWidth": 879,
+          "retainedHeight": 1049,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 3009172,
+          "rgbaSha256": [
+            "ddd59be812c5c5a8c1002c0aa85d01750a7acb28e969e3dee9c2962b4ef66b76",
+            "ddd59be812c5c5a8c1002c0aa85d01750a7acb28e969e3dee9c2962b4ef66b76"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1000,
+          "fullWidth": 879,
+          "fullHeight": 1049,
+          "retainedWidth": 879,
+          "retainedHeight": 1049,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 2949689,
+          "rgbaSha256": [
+            "019381d7e8cf9d34596130c567a57c9a42d738392b31ff750a5508f5a9aa6099",
+            "019381d7e8cf9d34596130c567a57c9a42d738392b31ff750a5508f5a9aa6099"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1016,
+          "fullWidth": 879,
+          "fullHeight": 1049,
+          "retainedWidth": 879,
+          "retainedHeight": 1049,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 2947888,
+          "rgbaSha256": [
+            "2b7f7596f9f462a9ba17e1915615bf855312a344bf259019c9160d0650e4dc49",
+            "2b7f7596f9f462a9ba17e1915615bf855312a344bf259019c9160d0650e4dc49"
+          ]
+        },
+        {
+          "dark": true,
+          "frameTime": 1066,
+          "fullWidth": 879,
+          "fullHeight": 1049,
+          "retainedWidth": 879,
+          "retainedHeight": 1049,
+          "differentBytes": 0,
+          "maxDifference": 0,
+          "nonzeroBytes": 2942300,
+          "rgbaSha256": [
+            "424423edbd8ecb544b0c4c28eb53631b5220c40950aeebfd23e61334d108f852",
+            "424423edbd8ecb544b0c4c28eb53631b5220c40950aeebfd23e61334d108f852"
+          ]
+        }
+      ],
+      "geometry": {
+        "reference": {
+          "x": 0,
+          "y": -80,
+          "width": 703.25,
+          "height": 839.5,
+          "bottom": 759.5
+        },
+        "candidate": {
+          "x": 0,
+          "y": -80,
+          "width": 703.25,
+          "height": 839.5,
+          "bottom": 759.5
+        },
+        "clip": {
+          "x": 0,
+          "y": 0,
+          "width": 703.25,
+          "height": 759.5,
+          "bottom": 759.5
+        },
+        "attributes": {
+          "alpha": true,
+          "antialias": false,
+          "depth": false,
+          "desynchronized": false,
+          "failIfMajorPerformanceCaveat": false,
+          "powerPreference": "default",
+          "premultipliedAlpha": false,
+          "preserveDrawingBuffer": false,
+          "stencil": false,
+          "xrCompatible": false
+        },
+        "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 770 (0x00004680) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+      }
+    }
+  ],
+  "hostProductStarted": false,
+  "nativePerformanceGatePassed": false,
+  "foregroundInputInjected": false
+}
