@@ -10,10 +10,7 @@ struct State {
     frozen: bool,
 }
 #[derive(Default)]
-pub(crate) struct WriterGate(
-    Mutex<State>,
-    #[cfg(test)] tokio::sync::Notify,
-);
+pub(crate) struct WriterGate(Mutex<State>, #[cfg(test)] tokio::sync::Notify);
 impl WriterGate {
     pub(crate) fn admit(self: &Arc<Self>) -> AppResult<Admission> {
         let mut state = self.0.lock().map_err(|_| closed())?;
