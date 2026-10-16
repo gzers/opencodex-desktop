@@ -1,0 +1,118 @@
+{
+  "verification": "passed",
+  "completedPairAdmitted": true,
+  "cpuIncreasePercentagePoints": -5.311682963708577,
+  "meanRssIncreaseMiB": 29.221360698766375,
+  "cpuBudgetPassed": true,
+  "meanRssBudgetPassed": false,
+  "versions": {
+    "baseline019": {
+      "samples": 557,
+      "counterSpanSeconds": 600.8922176,
+      "cpuPercentOneLogicalCore": 45.09960223522123,
+      "meanFamilyRssMiB": 548.6648409447936,
+      "meanNativeRootRssMiB": 33.89508527827648,
+      "meanDescendantRssMiB": 514.7697556665171,
+      "members": [
+        {
+          "pid": 37396,
+          "creationUtc": "2026-10-16T04:59:23.3088913Z",
+          "name": "opencodex-desktop",
+          "meanRssMiB": 33.89508527827648
+        },
+        {
+          "pid": 44192,
+          "creationUtc": "2026-10-16T04:59:23.4869837Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 133.78344507405745
+        },
+        {
+          "pid": 39756,
+          "creationUtc": "2026-10-16T04:59:23.5331399Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 12.971912870287253
+        },
+        {
+          "pid": 82468,
+          "creationUtc": "2026-10-16T04:59:23.9266747Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 205.18132854578096
+        },
+        {
+          "pid": 52040,
+          "creationUtc": "2026-10-16T04:59:23.9266885Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 37.349851324057454
+        },
+        {
+          "pid": 38244,
+          "creationUtc": "2026-10-16T04:59:23.9490462Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 19.601225875224415
+        },
+        {
+          "pid": 73292,
+          "creationUtc": "2026-10-16T04:59:24.0584479Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 105.88199197710952
+        }
+      ]
+    },
+    "candidate0110": {
+      "samples": 559,
+      "counterSpanSeconds": 600.7633834,
+      "cpuPercentOneLogicalCore": 39.78791927151265,
+      "meanFamilyRssMiB": 577.88620164356,
+      "meanNativeRootRssMiB": 35.31087880143113,
+      "meanDescendantRssMiB": 542.5753228421288,
+      "members": [
+        {
+          "pid": 83604,
+          "creationUtc": "2026-10-16T05:12:55.9344175Z",
+          "name": "opencodex-desktop",
+          "meanRssMiB": 35.31087880143113
+        },
+        {
+          "pid": 56940,
+          "creationUtc": "2026-10-16T05:12:56.1396652Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 133.1776260621646
+        },
+        {
+          "pid": 77728,
+          "creationUtc": "2026-10-16T05:12:56.1713882Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 12.982278622540251
+        },
+        {
+          "pid": 75020,
+          "creationUtc": "2026-10-16T05:12:56.3570577Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 231.4114280523256
+        },
+        {
+          "pid": 69372,
+          "creationUtc": "2026-10-16T05:12:56.3601045Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 37.450078264758496
+        },
+        {
+          "pid": 45896,
+          "creationUtc": "2026-10-16T05:12:56.3924192Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 19.938415418157422
+        },
+        {
+          "pid": 76352,
+          "creationUtc": "2026-10-16T05:12:56.5254034Z",
+          "name": "msedgewebview2.exe",
+          "meanRssMiB": 107.61549642218247
+        }
+      ]
+    }
+  },
+  "causalAttributionEstablished": false,
+  "nativeRecoveryExecuted": false,
+  "fullPerformanceGatePassed": false,
+  "releaseAccepted": false
+}

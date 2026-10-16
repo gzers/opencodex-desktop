@@ -1,0 +1,150 @@
+{
+  "atUtc": "2026-10-16T05:02:47.9719110+00:00",
+  "scope": "read-only fixture and preservation readback",
+  "fixtures": [
+    {
+      "root": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+      "preferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+      "preferences": {
+        "appearance": {
+          "glow_render": "mesh",
+          "interface_scale": 100,
+          "theme": "light",
+          "visual_effects": "high"
+        },
+        "backup": {
+          "auto_backup_import": true,
+          "auto_backup_sync": true,
+          "auto_backup_upgrade": true,
+          "backup_before_overwrite": true,
+          "backup_include_mcp": true,
+          "backup_include_skills": true,
+          "backup_integrity": "sha-256",
+          "backup_retention": "10",
+          "export_include_mcp": true,
+          "export_include_skills": true
+        },
+        "cli": {
+          "cli_enabled": false
+        },
+        "extensions": {
+          "mcp_conflict_policy": "ask",
+          "mcp_mask": true
+        },
+        "maintenance": {
+          "cleanup_backup_summary": true,
+          "log_retention": "30d-10000",
+          "notification_retention": "30",
+          "startup_cleanup": false
+        },
+        "network": {
+          "network_no_proxy": "",
+          "network_proxy_host": "",
+          "network_proxy_mode": "none",
+          "network_proxy_scheme": "http"
+        },
+        "schema_version": 2,
+        "shell": {
+          "auto_panel": false,
+          "keep_proxy_on_close": false,
+          "launch_main": true,
+          "launch_with_codex": false,
+          "lifecycle_notifications": true,
+          "panel_mode": "embedded"
+        },
+        "sync": {
+          "cold_sync": true,
+          "sync_conflict_alerts": true,
+          "sync_conflict_policy": "ask"
+        },
+        "updates": {
+          "app_update_auto_check": false,
+          "app_update_channel": "stable",
+          "app_update_check_interval_seconds": 86400
+        }
+      },
+      "runtime": {
+        "schema_version": 1,
+        "source": "unresolved",
+        "path": null,
+        "resolved_version": null,
+        "resolved_at": "2026-10-16T04:59:24Z",
+        "history": []
+      }
+    },
+    {
+      "root": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\data",
+      "preferencesSha256": "2d612148a55152e05047d1f13c4587a3b75f2740b1a51cc2c0f64f30a767495e",
+      "preferences": {
+        "appearance": {
+          "glow_render": "mesh",
+          "interface_scale": 100,
+          "theme": "light",
+          "visual_effects": "high"
+        },
+        "backup": {
+          "auto_backup_import": true,
+          "auto_backup_sync": true,
+          "auto_backup_upgrade": true,
+          "backup_before_overwrite": true,
+          "backup_include_mcp": true,
+          "backup_include_skills": true,
+          "backup_integrity": "sha-256",
+          "backup_retention": "10",
+          "export_include_mcp": true,
+          "export_include_skills": true
+        },
+        "cli": {
+          "cli_enabled": false
+        },
+        "extensions": {
+          "mcp_conflict_policy": "ask",
+          "mcp_mask": true
+        },
+        "maintenance": {
+          "cleanup_backup_summary": true,
+          "log_retention": "30d-10000",
+          "notification_retention": "30",
+          "startup_cleanup": false
+        },
+        "network": {
+          "network_no_proxy": "",
+          "network_proxy_host": "",
+          "network_proxy_mode": "none",
+          "network_proxy_scheme": "http"
+        },
+        "schema_version": 2,
+        "shell": {
+          "auto_panel": false,
+          "keep_proxy_on_close": false,
+          "launch_main": true,
+          "launch_with_codex": false,
+          "lifecycle_notifications": true,
+          "panel_mode": "embedded"
+        },
+        "sync": {
+          "cold_sync": true,
+          "sync_conflict_alerts": true,
+          "sync_conflict_policy": "ask"
+        },
+        "updates": {
+          "app_update_auto_check": false,
+          "app_update_channel": "stable",
+          "app_update_check_interval_seconds": 86400
+        }
+      },
+      "runtime": {
+        "schema_version": 1,
+        "source": "unresolved",
+        "path": null,
+        "resolved_version": null,
+        "resolved_at": "2026-10-16T00:50:30Z",
+        "history": []
+      }
+    }
+  ],
+  "dailyExecutableSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "productHead": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "diagnosticHead": "f2271f361b9da562b62c71afcdbeb15e61d183e2"
+}

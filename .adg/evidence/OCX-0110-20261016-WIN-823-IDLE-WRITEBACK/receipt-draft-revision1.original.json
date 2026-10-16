@@ -1,0 +1,45 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-823-IDLE-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-823-IDLE-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-09-12-桌面管理器需求梳理与原型验证/05-运行维护/20261009-概览升级入口与备份通知策略/验证/20261016-Windows恢复交接等待退出/README.md"
+  ],
+  "checks": [
+    {
+      "name": "local:win-823-idle-cpu-budget",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    },
+    {
+      "name": "local:win-823-idle-pair-integrity",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/verification.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "6ce57fe928b16f69c7c51a3c95e0e3070927c560ef4b3cf465f7a6c11186c2e7",
+      "summary": "记录正式019/823各600秒配对及RSS超预算；严格恢复交接和原全部未完门禁保持。"
+    }
+  ],
+  "completed_at": "2026-10-16T05:30:56.162001+00:00",
+  "summary": "结果回写回执：019/823完整空闲配对CPU差−5.311683pp，平均RSS差+29.221361MiB超过+10MiB；两版正常exit0/native0，不关闭TASK或发布。",
+  "revision": 1,
+  "summary_digest": "592a09aab19c4dcd3dbbd79fe49ff85eb5b524ce86f6cb1eb1c691862372a757",
+  "content_digest": "3a0b5993747c54fbbe266477d6a01e0baa983ded28151295c9d51c8a1491c5f1"
+}
