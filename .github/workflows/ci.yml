@@ -17,6 +17,14 @@ jobs:
       - name: Verify isolated acceptance Profile admission
         shell: pwsh
         run: ./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile
+      - name: Verify idle counter integrity without a desktop instance
+        shell: pwsh
+        run: |
+          ./test/smoke/windows-idle-family.test.ps1 -OutputDirectory test/runtime/windows-idle-family-check
+          if (!$?) { throw 'Idle family integrity regression failed' }
+          New-Item -ItemType Directory -Force test/out/windows-process-token/idle-family | Out-Null
+          Copy-Item -LiteralPath test/runtime/windows-idle-family-check/result.json -Destination test/out/windows-process-token/idle-family/result.json
+          Copy-Item -LiteralPath test/runtime/windows-idle-family-check/failure-records.original.jsonl -Destination test/out/windows-process-token/idle-family/failure-records.original.jsonl
       - uses: actions/upload-artifact@v4
         if: always()
         with:
