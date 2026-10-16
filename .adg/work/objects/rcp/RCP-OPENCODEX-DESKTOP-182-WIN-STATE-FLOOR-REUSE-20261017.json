@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-STATE-FLOOR-REUSE-20261017",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-STATE-FLOOR-REUSE",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-STATE-FLOOR-REUSE-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-real-state-error-floor-scope-reuse",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-STATE-FLOOR-REUSE/verification.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "34c64e9691cadd163675e0d06a0502044ec1fbfb58b788043535b9c5045b3460",
+      "summary": "57份既有真实30分钟下限原件核验，四调度blob在02/b4/fde相同；按已声明子集复用，不重计时或提升完整门禁。"
+    }
+  ],
+  "completed_at": "2026-10-16T18:29:26.751743+00:00",
+  "summary": "复用真实状态错误30分钟下限子集，保留实际旧EXE身份及所有其它调度/周期/性能缺口。",
+  "revision": 1,
+  "summary_digest": "24e48d21a54110c5f4daf7ef04d2607d1dae049f9c2b24cd2311289c808ac1e4",
+  "content_digest": "40c7b7c851d48757f3e787fd579920eb0728d50c021e3c99b5f013f17e68ac42"
+}

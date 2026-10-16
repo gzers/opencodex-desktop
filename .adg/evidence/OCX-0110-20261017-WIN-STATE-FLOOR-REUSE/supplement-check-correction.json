@@ -1,0 +1,9 @@
+{
+  "kind": "derived-validator-error-record",
+  "originalNativeEvidenceModified": false,
+  "initialSupplementVerifierResult": "AssertionError before writing source binding or receipt",
+  "cause": "Rounded human-readable literal 1800007.100000024 was not exactly equal to the original JSON binary64 value 1800007.1000000238.",
+  "correction": "Compare event subtraction with both the original result and frozen verification value; independently retain the original >=1800000 millisecond acceptance floor.",
+  "minimumMillisecondsChanged": false,
+  "newProductExecutionPerformed": false
+}
