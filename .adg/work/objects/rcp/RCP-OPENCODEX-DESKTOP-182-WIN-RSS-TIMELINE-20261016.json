@@ -1,0 +1,39 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-RSS-TIMELINE-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-RSS-TIMELINE-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-existing-rss-sample-decomposition",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RSS-TIMELINE/analysis.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "480160697c919bd6891e6444e7e884f10f12413b1a58da6675dc1b7093bfba61",
+      "summary": "原有效样本描述性分解将89.8%差额收窄到各自最大WebView成员，角色/根因未建立，原RSS失败不变。"
+    }
+  ],
+  "completed_at": "2026-10-16T09:56:05.099406+00:00",
+  "summary": "复用有效样本定位内存差额分布，无新配对；按大小最大WebView差26.23MiB，仍未证明角色或根因，原预算保持failed。",
+  "revision": 1,
+  "summary_digest": "5ddbe6c0ba05aa77f3da8e3c7707a2ecbb0b25b7d0c8e3722076c83643295a5d",
+  "content_digest": "3d5ee1856aafe921bd20b45b3327a1522e6fbbaf51b05fdadcbf2b3b9b072ad2"
+}

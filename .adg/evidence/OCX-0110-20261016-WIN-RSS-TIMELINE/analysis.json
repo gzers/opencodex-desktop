@@ -1,0 +1,370 @@
+{
+  "status": "descriptive-existing-sample-analysis",
+  "inputArchive": "OCX-0110-20261016-WIN-823-IDLE-PAIR",
+  "inputSampleFiles": {
+    "baseline019/samples.original.jsonl": {
+      "sha256": "64963878537c9a036cc458791ca2b0d738b68465c653dd045b05e1b252894217",
+      "bytes": 703373
+    },
+    "candidate0110/samples.original.jsonl": {
+      "sha256": "b5c403d538f30eda38ac88e7bc833fb882f31b84d659b552786a49a55065af28",
+      "bytes": 706444
+    }
+  },
+  "versions": {
+    "baseline019": {
+      "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "exeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+      "samples": 557,
+      "counterSpanSeconds": 600.8922176,
+      "originalSampleMeanRssMiB": 548.6648409447936,
+      "ordinaryLeastSquaresSlopeMiBPerMinute": 1.6617342951216643,
+      "firstSampleRssMiB": 536.17578125,
+      "lastSampleRssMiB": 557.81640625,
+      "largestBySizeWebView": {
+        "pid": 82468,
+        "creationUtc": "2026-10-16T04:59:23.9266747Z",
+        "name": "msedgewebview2.exe",
+        "actualRole": null,
+        "meanRssMiB": 205.18132854578096,
+        "ordinaryLeastSquaresSlopeMiBPerMinute": 1.156317072687427,
+        "firstSampleRssMiB": 195.109375,
+        "lastSampleRssMiB": 211.73828125
+      },
+      "otherFamilyMeanRssMiB": 343.4835123990126,
+      "timeWeightedTrapezoidMeanMiBDescriptiveOnly": 548.6657461299694,
+      "minuteBins": [
+        {
+          "relativeSecondsStartInclusive": 0,
+          "relativeSecondsEndExclusive": 60,
+          "samples": 57,
+          "meanFamilyRssMiB": 540.1545367324561,
+          "meanLargestBySizeWebViewRssMiB": 199.43338815789474
+        },
+        {
+          "relativeSecondsStartInclusive": 60,
+          "relativeSecondsEndExclusive": 120,
+          "samples": 56,
+          "meanFamilyRssMiB": 543.7926897321429,
+          "meanLargestBySizeWebViewRssMiB": 202.10902622767858
+        },
+        {
+          "relativeSecondsStartInclusive": 120,
+          "relativeSecondsEndExclusive": 180,
+          "samples": 56,
+          "meanFamilyRssMiB": 546.1631556919643,
+          "meanLargestBySizeWebViewRssMiB": 203.24358258928572
+        },
+        {
+          "relativeSecondsStartInclusive": 180,
+          "relativeSecondsEndExclusive": 240,
+          "samples": 54,
+          "meanFamilyRssMiB": 547.9746817129629,
+          "meanLargestBySizeWebViewRssMiB": 203.72041377314815
+        },
+        {
+          "relativeSecondsStartInclusive": 240,
+          "relativeSecondsEndExclusive": 300,
+          "samples": 54,
+          "meanFamilyRssMiB": 546.2709780092592,
+          "meanLargestBySizeWebViewRssMiB": 204.18894675925927
+        },
+        {
+          "relativeSecondsStartInclusive": 300,
+          "relativeSecondsEndExclusive": 360,
+          "samples": 54,
+          "meanFamilyRssMiB": 547.6470630787037,
+          "meanLargestBySizeWebViewRssMiB": 204.59367766203704
+        },
+        {
+          "relativeSecondsStartInclusive": 360,
+          "relativeSecondsEndExclusive": 420,
+          "samples": 57,
+          "meanFamilyRssMiB": 549.0163788377193,
+          "meanLargestBySizeWebViewRssMiB": 205.07997532894737
+        },
+        {
+          "relativeSecondsStartInclusive": 420,
+          "relativeSecondsEndExclusive": 480,
+          "samples": 57,
+          "meanFamilyRssMiB": 553.0298108552631,
+          "meanLargestBySizeWebViewRssMiB": 208.19195449561403
+        },
+        {
+          "relativeSecondsStartInclusive": 480,
+          "relativeSecondsEndExclusive": 540,
+          "samples": 56,
+          "meanFamilyRssMiB": 554.8043387276786,
+          "meanLargestBySizeWebViewRssMiB": 209.44231305803572
+        },
+        {
+          "relativeSecondsStartInclusive": 540,
+          "relativeSecondsEndExclusive": 600,
+          "samples": 55,
+          "meanFamilyRssMiB": 557.7142045454545,
+          "meanLargestBySizeWebViewRssMiB": 211.75234375
+        }
+      ],
+      "samplesAfterRelative600SecondsIncludedInWholeMean": 1,
+      "members": [
+        {
+          "pid": 37396,
+          "creationUtc": "2026-10-16T04:59:23.3088913Z",
+          "name": "opencodex-desktop",
+          "actualRole": "native-root",
+          "meanRssMiB": 33.89508527827648,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.021891052477405193,
+          "firstSampleRssMiB": 33.71875,
+          "lastSampleRssMiB": 33.95703125
+        },
+        {
+          "pid": 38244,
+          "creationUtc": "2026-10-16T04:59:23.9490462Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 19.601225875224415,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.006304485835185649,
+          "firstSampleRssMiB": 19.52734375,
+          "lastSampleRssMiB": 19.5859375
+        },
+        {
+          "pid": 39756,
+          "creationUtc": "2026-10-16T04:59:23.5331399Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 12.971912870287253,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.010283131625544402,
+          "firstSampleRssMiB": 12.921875,
+          "lastSampleRssMiB": 13.0078125
+        },
+        {
+          "pid": 44192,
+          "creationUtc": "2026-10-16T04:59:23.4869837Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 133.78344507405745,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": -0.002680225031235408,
+          "firstSampleRssMiB": 133.53125,
+          "lastSampleRssMiB": 133.4765625
+        },
+        {
+          "pid": 52040,
+          "creationUtc": "2026-10-16T04:59:23.9266885Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 37.349851324057454,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": -0.007006529426589851,
+          "firstSampleRssMiB": 37.33984375,
+          "lastSampleRssMiB": 37.30859375
+        },
+        {
+          "pid": 73292,
+          "creationUtc": "2026-10-16T04:59:24.0584479Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 105.88199197710952,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.4766253069539274,
+          "firstSampleRssMiB": 104.02734375,
+          "lastSampleRssMiB": 108.7421875
+        },
+        {
+          "pid": 82468,
+          "creationUtc": "2026-10-16T04:59:23.9266747Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 205.18132854578096,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 1.156317072687427,
+          "firstSampleRssMiB": 195.109375,
+          "lastSampleRssMiB": 211.73828125
+        }
+      ]
+    },
+    "candidate0110": {
+      "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+      "exeSha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53",
+      "samples": 559,
+      "counterSpanSeconds": 600.7633834,
+      "originalSampleMeanRssMiB": 577.88620164356,
+      "ordinaryLeastSquaresSlopeMiBPerMinute": 2.0572054678398493,
+      "firstSampleRssMiB": 566.3046875,
+      "lastSampleRssMiB": 582.921875,
+      "largestBySizeWebView": {
+        "pid": 75020,
+        "creationUtc": "2026-10-16T05:12:56.3570577Z",
+        "name": "msedgewebview2.exe",
+        "actualRole": null,
+        "meanRssMiB": 231.4114280523256,
+        "ordinaryLeastSquaresSlopeMiBPerMinute": 1.2455671202477,
+        "firstSampleRssMiB": 224.84765625,
+        "lastSampleRssMiB": 235.97265625
+      },
+      "otherFamilyMeanRssMiB": 346.47477359123434,
+      "timeWeightedTrapezoidMeanMiBDescriptiveOnly": 577.8637137106034,
+      "minuteBins": [
+        {
+          "relativeSecondsStartInclusive": 0,
+          "relativeSecondsEndExclusive": 60,
+          "samples": 55,
+          "meanFamilyRssMiB": 566.7318181818182,
+          "meanLargestBySizeWebViewRssMiB": 224.8390625
+        },
+        {
+          "relativeSecondsStartInclusive": 60,
+          "relativeSecondsEndExclusive": 120,
+          "samples": 55,
+          "meanFamilyRssMiB": 570.2380681818182,
+          "meanLargestBySizeWebViewRssMiB": 227.42329545454547
+        },
+        {
+          "relativeSecondsStartInclusive": 120,
+          "relativeSecondsEndExclusive": 180,
+          "samples": 57,
+          "meanFamilyRssMiB": 572.504180372807,
+          "meanLargestBySizeWebViewRssMiB": 228.84484649122808
+        },
+        {
+          "relativeSecondsStartInclusive": 180,
+          "relativeSecondsEndExclusive": 240,
+          "samples": 55,
+          "meanFamilyRssMiB": 575.303125,
+          "meanLargestBySizeWebViewRssMiB": 229.8364346590909
+        },
+        {
+          "relativeSecondsStartInclusive": 240,
+          "relativeSecondsEndExclusive": 300,
+          "samples": 55,
+          "meanFamilyRssMiB": 578.8844460227273,
+          "meanLargestBySizeWebViewRssMiB": 230.87954545454545
+        },
+        {
+          "relativeSecondsStartInclusive": 300,
+          "relativeSecondsEndExclusive": 360,
+          "samples": 56,
+          "meanFamilyRssMiB": 579.9847237723214,
+          "meanLargestBySizeWebViewRssMiB": 232.07756696428572
+        },
+        {
+          "relativeSecondsStartInclusive": 360,
+          "relativeSecondsEndExclusive": 420,
+          "samples": 58,
+          "meanFamilyRssMiB": 580.1593480603449,
+          "meanLargestBySizeWebViewRssMiB": 231.49602640086206
+        },
+        {
+          "relativeSecondsStartInclusive": 420,
+          "relativeSecondsEndExclusive": 480,
+          "samples": 55,
+          "meanFamilyRssMiB": 584.4169034090909,
+          "meanLargestBySizeWebViewRssMiB": 235.4348721590909
+        },
+        {
+          "relativeSecondsStartInclusive": 480,
+          "relativeSecondsEndExclusive": 540,
+          "samples": 56,
+          "meanFamilyRssMiB": 587.0669642857143,
+          "meanLargestBySizeWebViewRssMiB": 237.10916573660714
+        },
+        {
+          "relativeSecondsStartInclusive": 540,
+          "relativeSecondsEndExclusive": 600,
+          "samples": 56,
+          "meanFamilyRssMiB": 583.25,
+          "meanLargestBySizeWebViewRssMiB": 235.98046875
+        }
+      ],
+      "samplesAfterRelative600SecondsIncludedInWholeMean": 1,
+      "members": [
+        {
+          "pid": 45896,
+          "creationUtc": "2026-10-16T05:12:56.3924192Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 19.938415418157422,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.08397900591900331,
+          "firstSampleRssMiB": 19.546875,
+          "lastSampleRssMiB": 20.1015625
+        },
+        {
+          "pid": 56940,
+          "creationUtc": "2026-10-16T05:12:56.1396652Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 133.1776260621646,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.1131829419774371,
+          "firstSampleRssMiB": 132.54296875,
+          "lastSampleRssMiB": 132.98828125
+        },
+        {
+          "pid": 69372,
+          "creationUtc": "2026-10-16T05:12:56.3601045Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 37.450078264758496,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.05120752891215198,
+          "firstSampleRssMiB": 37.16015625,
+          "lastSampleRssMiB": 37.48828125
+        },
+        {
+          "pid": 75020,
+          "creationUtc": "2026-10-16T05:12:56.3570577Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 231.4114280523256,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 1.2455671202477,
+          "firstSampleRssMiB": 224.84765625,
+          "lastSampleRssMiB": 235.97265625
+        },
+        {
+          "pid": 76352,
+          "creationUtc": "2026-10-16T05:12:56.5254034Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 107.61549642218247,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.5141371825593158,
+          "firstSampleRssMiB": 104.06640625,
+          "lastSampleRssMiB": 108.0234375
+        },
+        {
+          "pid": 77728,
+          "creationUtc": "2026-10-16T05:12:56.1713882Z",
+          "name": "msedgewebview2.exe",
+          "actualRole": null,
+          "meanRssMiB": 12.982278622540251,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.013344945540880379,
+          "firstSampleRssMiB": 12.984375,
+          "lastSampleRssMiB": 12.99609375
+        },
+        {
+          "pid": 83604,
+          "creationUtc": "2026-10-16T05:12:55.9344175Z",
+          "name": "opencodex-desktop",
+          "actualRole": "native-root",
+          "meanRssMiB": 35.31087880143113,
+          "ordinaryLeastSquaresSlopeMiBPerMinute": 0.035786742683360746,
+          "firstSampleRssMiB": 35.15625,
+          "lastSampleRssMiB": 35.3515625
+        }
+      ]
+    }
+  },
+  "originalMeanRssIncreaseMiB": 29.221360698766375,
+  "originalBudgetMiB": 10,
+  "originalBudgetPassed": false,
+  "largestBySizeWebViewMeanRssDifferenceMiB": 26.230099506544633,
+  "largestBySizeDifferenceFractionOfTotal": 0.8976344317755188,
+  "otherFamilyMeanRssDifferenceMiB": 2.991261192221714,
+  "firstRelativeMinuteGapMiB": 26.57728144936209,
+  "tenthRelativeMinuteGapMiB": 25.53579545454545,
+  "familySlopeDifferenceMiBPerMinute": 0.395471172718185,
+  "timeWeightedDifferenceDescriptiveOnlyMiB": 29.197967580633986,
+  "crossVersionRolesMatched": false,
+  "gpuOrRendererRoleInferredFromRssSize": false,
+  "sizeAccountingIsCausalAttribution": false,
+  "memoryLeakConfirmedOrExcluded": false,
+  "fullPerformanceGatePassed": false,
+  "acceptanceMetricChanged": false,
+  "newNativeSamplesTaken": false,
+  "productLaunched": false,
+  "historicalFailuresCleared": false,
+  "nextDiagnosticTarget": "Bind actual live WebView roles and generation before allocation/resource inspection; do not reuse historical PIDs or repeat unchanged formal idle pair."
+}
