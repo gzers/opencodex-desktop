@@ -1,0 +1,55 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-TOOL-CI-BUILD-VERSIONS-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261016-WIN-TOOL-CI-BUILD-VERSIONS",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-TOOL-CI-BUILD-VERSIONS-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-working-set-tool-full-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-TOOL-CI-BUILD-VERSIONS/original/ci/admission.json"
+    },
+    {
+      "name": "local:windows-original-graphics-build-versions",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-TOOL-CI-BUILD-VERSIONS/verification.json"
+    },
+    {
+      "name": "local:windows-test-profile-restoration",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-TOOL-CI-BUILD-VERSIONS/original/baseline-build/cleanup-followup.original.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/candidate0110-exit.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "001425da830049448d01fd437cebe25ff0eb33923ae22cc04419aeab64e81006",
+      "summary": "工具首次完整CI成功，019/b4七核心包原始编译版本相同；不混称产品门禁或解除RSS失败，配置仍待正常退出后恢复。"
+    }
+  ],
+  "completed_at": "2026-10-16T14:13:16.144501+00:00",
+  "summary": "补全3a2工具首次全CI及正式019/b4原始编译版本证据；原RSS超预算、退出超时、配置未还原及其余门禁保持。",
+  "revision": 1,
+  "summary_digest": "65763c2a3fc2efd894075dd1decccda569b0986155873f44b4c8dde05f73007b",
+  "content_digest": "7dbe626cdd42f12d9f248a3fc1e4d1e058ab9b1072b97b720baadec28b9bede6"
+}

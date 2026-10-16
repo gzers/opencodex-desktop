@@ -1,0 +1,25 @@
+{
+  "kind": "observed-offline-parser-failures",
+  "source": "exec_command returned tracebacks; these are observations, not independently saved original logs",
+  "failures": [
+    {
+      "controller": "read-release-job.py",
+      "exitCode": 1,
+      "stage": "require original compiled graphics package names",
+      "cause": "ANSI color sequences split the Compiling token from package names",
+      "correction": "Parse the already downloaded original bytes offline with ANSI removal; do not redownload or rerun CI."
+    },
+    {
+      "controller": "analyze-builds-before-asset-name-correction.py",
+      "exitCode": 1,
+      "stage": "require API asset filename to appear verbatim in the original upload log",
+      "apiAssetName": "OpenCodeX.Desktop_0.1.9_x64_en-US.msi",
+      "actualUploadLogFilename": "OpenCodeX Desktop_0.1.9_x64_en-US.msi",
+      "correction": "Bind the exact two observed filenames, original tag/source/job time and the existing exact asset ID/digest; do not claim identical filename spelling."
+    }
+  ],
+  "rawLogsChanged": false,
+  "productStarted": false,
+  "ciRerunRequested": false,
+  "signingOrPublicationRequested": false
+}

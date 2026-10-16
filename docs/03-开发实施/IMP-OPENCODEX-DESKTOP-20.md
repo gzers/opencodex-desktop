@@ -1948,3 +1948,11 @@ GPU只读伴随方法本机47144dbe已提交、21项纯检查通过，含真实W
 21:51:20在正式计数之外，仅一次读取仍存活的b4 GPU PID17236/原创建时刻，同一root76372、实际GPU角色/祖先/普通令牌及native1守卫通过；无产品启动、UI输入或目标内存内容读取。61,230页/250,798,080字节复核有效，private/image/mapped区域分别173.675781/60.468750/5.035156MiB。进程工作集与枚举差65,536字节，非原子及Shareable“可共享”语义显式保留，不称唯一物理量、回收量或GL分配栈。没有019对应页分类、当前场景未重观测，不能回填原600秒或解释+20.040155MiB差值。
 
 33份原件、源码与先前冻结证据绑定及独立复算见`.adg/evidence/OCX-0110-20261016-WIN-WORKING-SET-POINT/`。21:54:09候选仍为原代际，原目录ID/创建时刻、当前测量克隆及HKCU指针/TASK摘要保持，还原未执行；原两次退出超时/正常退出码未知不改。需正常退出后另档恢复结果，不重跑本场景取样或原配对。原+10MiB预算继续failed，b4/823及Mac失败、bd2实际失败窗口缺失、严格恢复与其余全部预算/周期/八门禁保持；DPI专项取消，TASK revision2/in_progress/pending、禁止合并/关闭/签名/晋升/发布不变。
+
+### 2026-10-16 工具完整CI终态与正式019原始构建版本补证
+
+同3a2ff08a首次push CI38910385568/attempt1整轮success，五必需job原日志actual checkout均同源；前端99/535、Mac35组923/6ignored、Windows35组648/7ignored及最终EXE冒烟通过，main-only build正常skip。该终态晚于21:51快照，上一档方法准入时wholeCiAdmitted:false保留，不倒改时序，也不混称b4候选或宿主门禁通过。
+
+只读取得正式019/de6862d4原Release37871899116 Windows作业原日志，与既有asset623593980/b33dd0c8及原b4候选package日志绑定。七核心包Compiling行实际相同：tauri/runtime/runtime-wry2.12.1、tao0.37.1、wry0.57.0、webview2-com/sys0.39.1；未从下载行或缺失旧Cargo.lock推断。原生updater2.13.2→2.13.1及其它依赖差异保留，不能称所有依赖/特征/二进制相同；019实际WebView子映像当时未采集，不补历史PID身份。证据收窄“核心框架版本升级”假设，不解释具体GL分配或解除RSS失败。
+
+21份副本、原ANSI及文件名拼写解析错误/修订、全CI与依赖独立复核见`.adg/evidence/OCX-0110-20261016-WIN-TOOL-CI-BUILD-VERSIONS/`。22:10:21原候选仍存活，原目录/克隆身份、指针及TASK摘要保持，还原未执行；原退出超时和正常退出码未知不改。原+20.040155MiB相对+10MiB继续failed，原b4/823及Mac失败、bd2实际失败窗口、严格恢复和其余全部预算/周期/八检查保持。无新产品启动、前台输入、查询回放、签名或发布；DPI专项取消，TASK revision2/in_progress/pending、不合并/关闭状态不变。
