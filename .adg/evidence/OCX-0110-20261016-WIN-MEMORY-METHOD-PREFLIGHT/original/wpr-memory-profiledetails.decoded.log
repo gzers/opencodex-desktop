@@ -1,0 +1,72 @@
+
+Microsoft Windows Performance Recorder Version 10.0.26100 (CoreSystem)
+Copyright (c) 2024 Microsoft Corporation. All rights reserved.
+
+Profile			: ResidentSet.Verbose.File, VirtualAllocation.Verbose.File, GPU.Verbose.File
+
+
+Collector Name		: WPR_initiated_WprApp_WPR System Collector
+Buffer Size (KB)	: 1024
+Number of Buffers	: 1259
+Providers
+System Keywords
+	AllFaults
+	CpuConfig
+	CSwitch
+	DiskIO
+	DPC
+	HardFaults
+	IdealProcessor
+	Interrupt
+	Loader
+	Memory
+	MemoryInfo
+	MemoryInfoWS
+	Power
+	ProcessThread
+	ReadyThread
+	SampledProfile
+	Session
+	SystemCall
+	ThreadPriority
+	VirtualAllocation
+	VAMap
+	WDFDPC
+	WDFInterrupt
+System Stacks
+	PagefaultHard
+	VirtualAllocation
+	ProcessCreate
+	ThreadCreate
+	ThreadDCEnd
+	CSwitch
+	SampledProfile
+
+Collector Name		: WPR_initiated_WprApp_WPR Event Collector
+Buffer Size (KB)	: 1024
+Number of Buffers	: 513
+Providers
+	a688ee40-d8d9-4736-b6f9-6b74935ba3b1: 0xffff: 0x05     
+	b7a19fcd-15ba-41ba-a3d7-dc352d5f79ba: : 0xff     
+	DX: 0x2f: 0xff     
+	Microsoft-JScript: 0x1: 0xff     
+	Microsoft-Windows-BrokerInfrastructure: 0x1: 0xff     
+	Microsoft-Windows-D3D10Level9: 0x1: 0xff     
+	Microsoft-Windows-Direct3D11: 0xf: 0x06 : Stack    
+	Microsoft-Windows-DotNETRuntime: 0x20098: 0x05     
+	Microsoft-Windows-DXGI: 0xf: 0x06 : Stack    
+	Microsoft-Windows-DxgKrnl: 0x277: 0x05 : Stack    
+	Microsoft-Windows-Kernel-EventTracing: 0x40: 0x0f     
+	Microsoft-Windows-Performance-Recorder-Control: 0x10000: 0xff     
+	Microsoft-Windows-ProcessStateManager: : 0xff     
+	Win32HeapRanges: : 0xff     
+CaptureState Providers on Save
+	Microsoft-JScript: 0x4: 0xff
+	Microsoft-Windows-DotNETRuntime: 0x20118: 0x05
+	Microsoft-Windows-DotNETRuntimeRundown: 0x20118: 0xff
+CaptureState Providers on Start
+	a688ee40-d8d9-4736-b6f9-6b74935ba3b1: 0xffff: 0x05
+	Microsoft-Windows-D3D10Level9: 0x1: 0xff
+	Microsoft-Windows-Direct3D11: 0xf: 0x06
+	Microsoft-Windows-DXGI: 0xf: 0x06
+	Microsoft-Windows-DxgKrnl: 0x277: 0x05

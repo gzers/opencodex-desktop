@@ -1968,3 +1968,9 @@ GPU只读伴随方法本机47144dbe已提交、21项纯检查通过，含真实W
 收到用户“已退出”后22:41:22确认native0，沿冻结恢复脚本执行一次，22:42:01恢复原Roaming目录并保留测量克隆为baseline-measured。22:43:55只读复核原目录ID/创建时刻/实际LocalCache路径、原偏好和HKCU指针摘要与测试前相同，克隆ID/创建时刻保持；两版已记录14个进程代际均结束、前后native0，无产品启动/UI输入/强杀或数据删除。
 
 `.adg/evidence/OCX-0110-20261016-WIN-B4-RESTORATION/`保存恢复标记原字节、独立读回、冻结来源绑定与新回执。仅配置恢复和当前代际清理子集通过，不改写旧档当时的未恢复事实；候选退出码及确切内核退出时刻仍未知，原两次退出超时、完整配对未准入和RSS+20.040155MiB超+10MiB继续保持。严格产品恢复交接、bd2实际失败窗口、Mac历史失败及其余全部预算/周期/八检查未完成；TASK revision2/in_progress/pending、DPI取消及禁止合并/关闭/签名/晋升/发布不变。
+
+### 2026-10-16 独立组件转储方法在录制前停止，PR已同步恢复状态
+
+22:51仅一次独立后台Edge方法检查，根保留句柄先绑定；在Tracing.getCategories返回值的类别前置处拒绝，未调用Tracing.start、取得转储、创建合成纹理或运行产品/已撤回原型，未自动重试。类别数组及Browser.getVersion返回值未在断言前保存，不能补原件或推断真实产品WebView能力。根同代际内核退出/exit0及观察器exit0核验，完整后代集合未取，不冒称全后代清理；后续native0及已恢复偏好/指针/TASK摘要保持，具体分配根因仍缺。
+
+WPR只读盘点取得VirtualAllocation/GPU/ResidentSet配置，默认组合缓冲配置1772MiB仅为配置量，未采用为轻量采集、未录制/停止/取消会话。草稿PR6一次正文更新并GET读回，已将配置未恢复的过时状态改为22:42恢复及14代际结束，保留RSS失败、退出超时/退出码未知，仍draft/open/unmerged。证据见`.adg/evidence/OCX-0110-20261016-WIN-MEMORY-METHOD-PREFLIGHT/`；未修改产品、重跑配对/查询或降低门禁，TASK revision2/in_progress/pending、Mac及全部其它原依赖/预算/周期保持，不关闭或发布。
