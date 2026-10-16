@@ -77,17 +77,20 @@ function Select-WindowsOwnedGpuRows {
     }
 }
 
-function Get-WindowsGpuResourceSnapshot {
+# Shared read-only binding reader. Controlled probes require native0; the
+# desktop entry below retains the stricter image, mode and native1 boundary.
+function Get-WindowsBoundGpuResourceSnapshot {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]$Launch,
-        [Parameter(Mandatory)][ValidateSet('ordinary','administrator')][string]$Mode
+        [Parameter(Mandatory)][ValidateSet('any','ordinary','administrator')][string]$Mode,
+        [switch]$RequireDesktopInstance
     )
     $ErrorActionPreference = 'Stop'
     if (!$IsWindows -or $PSVersionTable.PSVersion.Major -ne 7) { throw 'Windows PowerShell 7 required' }
     if ($Launch.exeSha256 -notmatch '^[0-9a-f]{64}$' -or
-        [IO.Path]::GetFileName([string]$Launch.executable) -cne 'opencodex-desktop.exe') {
-        throw 'An explicit desktop launch image and digest are required'
+        [string]::IsNullOrWhiteSpace([string]$Launch.executable)) {
+        throw 'An explicit bound launch image and digest are required'
     }
     if ((Get-FileHash -LiteralPath $Launch.executable).Hash.ToLowerInvariant() -cne $Launch.exeSha256) {
         throw 'Bound launch image digest changed'
@@ -105,8 +108,12 @@ function Get-WindowsGpuResourceSnapshot {
         Assert-WindowsProcessMode -Observation $taskToken -Mode $Mode
         $taskRows = @(Get-CimInstance -Query 'SELECT ProcessId,ParentProcessId,CreationDate,Name FROM Win32_Process')
         $taskNative = @($taskRows | Where-Object Name -in @('opencodex-desktop.exe','ocxd.exe'))
-        if ($taskNative.Count -ne 1 -or $taskNative[0].ProcessId -ne $taskRoot.Id) {
-            throw 'A single bound native instance is required'
+        if ($RequireDesktopInstance) {
+            if ($taskNative.Count -ne 1 -or $taskNative[0].ProcessId -ne $taskRoot.Id) {
+                throw 'A single bound native instance is required'
+            }
+        } elseif ($taskNative.Count) {
+            throw 'Controlled probes require no desktop product instance'
         }
         $taskFamily = @{}
         $taskRootRow = @($taskRows | Where-Object ProcessId -eq $taskRoot.Id)
@@ -140,7 +147,9 @@ function Get-WindowsGpuResourceSnapshot {
                 throw 'Descendant generation changed'
             }
             $taskRole = 'other-owned-process'
-            if ($taskId -eq $taskRoot.Id) { $taskRole = 'native-root' }
+            if ($taskId -eq $taskRoot.Id) {
+                $taskRole = if ($RequireDesktopInstance) {'native-root'} else {'controlled-root'}
+            }
             elseif ($taskRow.Name -ceq 'msedgewebview2.exe') {
                 if ([IO.Path]::GetFileName($taskProcess.MainModule.FileName) -ine 'msedgewebview2.exe') {
                     throw 'Owned WebView image changed'
@@ -152,8 +161,17 @@ function Get-WindowsGpuResourceSnapshot {
             $taskMembers.Add([pscustomobject]@{pid=$taskId;creationUtc=$taskCreated.ToString('o')
                 role=$taskRole;workingSetBytes=$taskProcess.WorkingSet64})
         }
-        $taskCounters = @(Select-WindowsOwnedGpuRows -OwnedPids @($taskFamily.Keys) -Rows @(
-            Get-CimInstance -ClassName Win32_PerfFormattedData_GPUPerformanceCounters_GPUProcessMemory))
+        $taskCounterStatus = 'available'
+        $taskCounters = $null
+        try {
+            $taskCounters = @(Select-WindowsOwnedGpuRows -OwnedPids @($taskFamily.Keys) -Rows @(
+                Get-CimInstance -ClassName Win32_PerfFormattedData_GPUPerformanceCounters_GPUProcessMemory))
+        } catch [Microsoft.Management.Infrastructure.CimException] {
+            if ([string]$_.Exception.StatusCode -cne 'InvalidClass') { throw }
+            # GPU-less CI hosts may not expose this performance provider.
+            # Missing provider data remains null, never a zero-memory sample.
+            $taskCounterStatus = 'unavailable-class'
+        }
         foreach ($taskProcess in $taskHandles) {
             if ($taskProcess.HasExited) { throw 'Owned process exited during the snapshot' }
         }
@@ -162,6 +180,8 @@ function Get-WindowsGpuResourceSnapshot {
             rootPid=$taskRoot.Id;rootCreationUtc=$Launch.creationTimeUtc;exeSha256=$Launch.exeSha256
             actualRootToken=$taskToken;members=$taskMembers.ToArray();gpuCounterInstances=$taskCounters
             gpuCounterClass='Win32_PerfFormattedData_GPUPerformanceCounters_GPUProcessMemory'
+            gpuCounterReadStatus=$taskCounterStatus;desktopRootVerified=[bool]$RequireDesktopInstance
+            controlledSnapshotOnly=(!$RequireDesktopInstance)
             missingCounterInstancesAreNotZero=$true;rawCommandLinesSaved=$false
             unrelatedProcessRowsSerialized=$false;retainedHandlesUsed=$true
             shortLivedChildrenFullyCovered=$false;individualGlBuffersAttributed=$false
@@ -171,4 +191,17 @@ function Get-WindowsGpuResourceSnapshot {
     } finally {
         foreach ($taskProcess in $taskHandles) { $taskProcess.Dispose() }
     }
+}
+
+function Get-WindowsGpuResourceSnapshot {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]$Launch,
+        [Parameter(Mandatory)][ValidateSet('ordinary','administrator')][string]$Mode
+    )
+    if ($Launch.exeSha256 -notmatch '^[0-9a-f]{64}$' -or
+        [IO.Path]::GetFileName([string]$Launch.executable) -cne 'opencodex-desktop.exe') {
+        throw 'An explicit desktop launch image and digest are required'
+    }
+    Get-WindowsBoundGpuResourceSnapshot -Launch $Launch -Mode $Mode -RequireDesktopInstance
 }
