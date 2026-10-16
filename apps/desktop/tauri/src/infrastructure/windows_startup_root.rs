@@ -572,11 +572,21 @@ mod native {
                                     persist_choice);
                                 match result {
                                     Ok(Some(retained_root_locks)) => {
-                                        // Tauri starts the replacement before exiting this process.
-                                        // No business service is running in this recovery process.
+                                        let handoff = crate::infrastructure::windows_restart::prepare_current_restart()
+                                            .and_then(|handoff| handoff.commit());
                                         drop(retained_root_locks);
                                         drop(selection_lease);
-                                        after_pick.restart()
+                                        match handoff {
+                                            Ok(()) => after_pick.exit(0),
+                                            Err(_) => {
+                                                let exit_handle = after_pick.clone();
+                                                after_pick.dialog().message(
+                                                    "数据目录已保存，但未能准备自动重启。请退出后重新打开应用；本次未移动或删除数据。"
+                                                ).title("请重新打开应用")
+                                                    .kind(MessageDialogKind::Error)
+                                                    .show(move |_| exit_handle.exit(1));
+                                            }
+                                        }
                                     }
                                     Ok(None) => after_pick.exit(0),
                                     Err(error) => explain(&after_pick, &error),

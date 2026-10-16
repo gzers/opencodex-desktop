@@ -17,6 +17,9 @@ jobs:
       - name: Verify isolated acceptance Profile admission
         shell: pwsh
         run: ./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile
+      - name: Verify recovery restart waits for the old process exit
+        shell: pwsh
+        run: ./test/smoke/windows-restart-handoff.test.ps1 -OutputDirectory test/out/windows-process-token/restart-handoff
       - uses: actions/upload-artifact@v4
         if: always()
         with:
