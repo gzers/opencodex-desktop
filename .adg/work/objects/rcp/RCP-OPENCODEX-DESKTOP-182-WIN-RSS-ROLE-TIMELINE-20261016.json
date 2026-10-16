@@ -1,0 +1,55 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-RSS-ROLE-TIMELINE-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261016-WIN-RSS-ROLE-TIMELINE",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-RSS-ROLE-TIMELINE-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-rss-role-timeline",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RSS-ROLE-TIMELINE/verification.json"
+    },
+    {
+      "name": "local:windows-b4-rss-budget",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    },
+    {
+      "name": "local:windows-test-profile-restoration",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/cleanup-final-readback.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/candidate0110-exit.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "5ab7e14f492e352d8e852510aed243f0a8d364e6ef8c9a1773370db55d8f7221",
+      "summary": "GPU增量在计数初段已存在且末段未持续上升；仅收窄为启动/资源构成方向，不归因具体分配，RSS门禁继续失败。"
+    }
+  ],
+  "completed_at": "2026-10-16T14:21:20.126363+00:00",
+  "summary": "离线重算冻结597+597样本角色时间线，GPU均值差+24.086376MiB、初段+24.895378MiB、末段+21.276172MiB；不解除RSS或完整门禁。",
+  "revision": 1,
+  "summary_digest": "59cdf114f8c46740b889000d8f38d43a274a28bea569de76d8a8edd3e6cf640f",
+  "content_digest": "1abe376ec2e4ca73745331e4d866ac9925740d8fcc82e8e0512f456cacccd749"
+}

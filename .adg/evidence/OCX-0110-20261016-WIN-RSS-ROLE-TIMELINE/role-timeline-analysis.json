@@ -1,0 +1,202 @@
+{
+  "atUtc": "2026-10-16T14:20:03.597801+00:00",
+  "kind": "offline-role-timeline",
+  "priorEvidence": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-IDLE-ROLES",
+  "priorManifestSha256": "676d3c81b39f8170b7718e6df64dfa21cf23627d0fee0cfa5f170fa2f20e02ef",
+  "priorVerificationSha256": "95264f97c5fed335c29443f16132fef4256d0b272d2bdd6a266f0e2f7fe63824",
+  "baseline": {
+    "version": "baseline019",
+    "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+    "samples": 597,
+    "spanSeconds": 600.2231132000001,
+    "sampleFile": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-b4-pair-20261016T204338\\baseline019\\samples.original.jsonl",
+    "sampleFileSha256": "8421cadb821e4c93755c0479fe5b5dfe62f1131dca7f7821e92bf2c08b2a1bd8",
+    "roleFile": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-b4-pair-20261016T204338\\baseline019-settled-roles.original.json",
+    "roleFileSha256": "1c0b60cc08a2b314e649fe73a89671c62048c571ba7e2c047b137e364ca820a4",
+    "roles": {
+      "browser-no-type-flag": {
+        "meanMiB": 141.24607412060303,
+        "firstSampleMiB": 140.84375,
+        "lastSampleMiB": 140.99609375,
+        "minMiB": 140.5,
+        "maxMiB": 142.0,
+        "first60MeanMiB": 140.89205729166667,
+        "last60MeanMiB": 140.96315104166666,
+        "slopeMiBPerMinute": 0.01522871212217757
+      },
+      "crash-handler": {
+        "meanMiB": 14.600895100502512,
+        "firstSampleMiB": 14.4921875,
+        "lastSampleMiB": 14.5625,
+        "minMiB": 14.4921875,
+        "maxMiB": 14.78515625,
+        "first60MeanMiB": 14.5185546875,
+        "last60MeanMiB": 14.562239583333334,
+        "slopeMiBPerMinute": 0.007028636364081955
+      },
+      "gpu": {
+        "meanMiB": 209.91516174623115,
+        "firstSampleMiB": 207.42578125,
+        "lastSampleMiB": 219.2265625,
+        "minMiB": 202.58203125,
+        "maxMiB": 219.2265625,
+        "first60MeanMiB": 208.12766927083334,
+        "last60MeanMiB": 213.24908854166668,
+        "slopeMiBPerMinute": 1.1796394697717547
+      },
+      "native-root": {
+        "meanMiB": 36.39576790201005,
+        "firstSampleMiB": 36.125,
+        "lastSampleMiB": 36.38671875,
+        "minMiB": 36.09765625,
+        "maxMiB": 36.50390625,
+        "first60MeanMiB": 36.16673177083333,
+        "last60MeanMiB": 36.36953125,
+        "slopeMiBPerMinute": 0.026162146466305054
+      },
+      "renderer": {
+        "meanMiB": 106.94257092755444,
+        "firstSampleMiB": 103.84375,
+        "lastSampleMiB": 108.16796875,
+        "minMiB": 102.22265625,
+        "maxMiB": 111.1484375,
+        "first60MeanMiB": 105.11263020833333,
+        "last60MeanMiB": 108.31419270833334,
+        "slopeMiBPerMinute": 0.43226113639104025
+      },
+      "utility": {
+        "meanMiB": 59.287943624371856,
+        "firstSampleMiB": 59.15234375,
+        "lastSampleMiB": 59.08984375,
+        "minMiB": 59.07421875,
+        "maxMiB": 59.44921875,
+        "first60MeanMiB": 59.183203125,
+        "last60MeanMiB": 59.08958333333333,
+        "slopeMiBPerMinute": -0.006247676768072849
+      }
+    }
+  },
+  "candidate": {
+    "version": "candidate0110",
+    "source": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+    "samples": 597,
+    "spanSeconds": 600.0758786,
+    "sampleFile": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-b4-pair-20261016T204338\\candidate0110\\samples.original.jsonl",
+    "sampleFileSha256": "6450db6225db27603a18dc403a3750cb0d15d8ed02ae4c9a9a935bcb454db640",
+    "roleFile": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-b4-pair-20261016T204338\\candidate0110-settled-roles.original.json",
+    "roleFileSha256": "991123dea1dffe753b5fa2f4576e235c37c0f6c45f1c38613e15c82843eb4b75",
+    "roles": {
+      "browser-no-type-flag": {
+        "meanMiB": 140.54903423366835,
+        "firstSampleMiB": 139.8515625,
+        "lastSampleMiB": 140.4375,
+        "minMiB": 139.5,
+        "maxMiB": 141.26953125,
+        "first60MeanMiB": 139.84251302083334,
+        "last60MeanMiB": 140.33854166666666,
+        "slopeMiBPerMinute": 0.05858634091745343
+      },
+      "crash-handler": {
+        "meanMiB": 14.59576528475712,
+        "firstSampleMiB": 14.52734375,
+        "lastSampleMiB": 14.57421875,
+        "minMiB": 14.484375,
+        "maxMiB": 14.79296875,
+        "first60MeanMiB": 14.513411458333334,
+        "last60MeanMiB": 14.573893229166666,
+        "slopeMiBPerMinute": 0.004686907273396275
+      },
+      "gpu": {
+        "meanMiB": 234.00153763609714,
+        "firstSampleMiB": 229.46875,
+        "lastSampleMiB": 227.203125,
+        "minMiB": 221.77734375,
+        "maxMiB": 250.0546875,
+        "first60MeanMiB": 233.023046875,
+        "last60MeanMiB": 234.52526041666667,
+        "slopeMiBPerMinute": -0.22653385154748662
+      },
+      "native-root": {
+        "meanMiB": 37.06620995603015,
+        "firstSampleMiB": 36.8671875,
+        "lastSampleMiB": 37.0078125,
+        "minMiB": 36.8671875,
+        "maxMiB": 37.2734375,
+        "first60MeanMiB": 36.88821614583333,
+        "last60MeanMiB": 37.0015625,
+        "slopeMiBPerMinute": 0.014060721820188823
+      },
+      "renderer": {
+        "meanMiB": 102.88136646775544,
+        "firstSampleMiB": 100.91796875,
+        "lastSampleMiB": 103.52734375,
+        "minMiB": 95.75390625,
+        "maxMiB": 105.28515625,
+        "first60MeanMiB": 101.47428385416667,
+        "last60MeanMiB": 103.1986328125,
+        "slopeMiBPerMinute": 0.260904504885726
+      },
+      "utility": {
+        "meanMiB": 59.33465504606365,
+        "firstSampleMiB": 59.171875,
+        "lastSampleMiB": 59.265625,
+        "minMiB": 59.1640625,
+        "maxMiB": 59.51953125,
+        "first60MeanMiB": 59.185611979166666,
+        "last60MeanMiB": 59.211263020833336,
+        "slopeMiBPerMinute": 0.00937381454679255
+      }
+    }
+  },
+  "roleDeltaCandidateMinusBaseline": {
+    "browser-no-type-flag": {
+      "meanMiB": -0.6970398869346752,
+      "first60MeanMiB": -1.0495442708333371,
+      "last60MeanMiB": -0.6246093750000057,
+      "startToEndDeltaMiB": 0.43359375
+    },
+    "crash-handler": {
+      "meanMiB": -0.005129815745393174,
+      "first60MeanMiB": -0.00514322916666643,
+      "last60MeanMiB": 0.011653645833332504,
+      "startToEndDeltaMiB": -0.0234375
+    },
+    "gpu": {
+      "meanMiB": 24.08637588986599,
+      "first60MeanMiB": 24.89537760416667,
+      "last60MeanMiB": 21.27617187499999,
+      "startToEndDeltaMiB": -14.06640625
+    },
+    "native-root": {
+      "meanMiB": 0.6704420540200999,
+      "first60MeanMiB": 0.7214843750000028,
+      "last60MeanMiB": 0.6320312499999972,
+      "startToEndDeltaMiB": -0.12109375
+    },
+    "renderer": {
+      "meanMiB": -4.061204459799001,
+      "first60MeanMiB": -3.638346354166657,
+      "last60MeanMiB": -5.115559895833343,
+      "startToEndDeltaMiB": -1.71484375
+    },
+    "utility": {
+      "meanMiB": 0.04671142169179632,
+      "first60MeanMiB": 0.0024088541666671404,
+      "last60MeanMiB": 0.12167968750000568,
+      "startToEndDeltaMiB": 0.15625
+    }
+  },
+  "gpuMeanDeltaMiB": 24.08637588986599,
+  "gpuFirst60DeltaMiB": 24.89537760416667,
+  "gpuLast60DeltaMiB": 21.27617187499999,
+  "candidateGpuStartToEndMiB": -2.265625,
+  "baselineGpuStartToEndMiB": 11.80078125,
+  "roleAccountingMatchesPriorRss": true,
+  "interpretation": "The candidate GPU role starts higher and does not grow monotonically across the frozen span; this narrows the observation toward startup/resource composition but does not identify an allocation cause.",
+  "formalRssBudgetMiB": 10,
+  "formalRssIncreaseMiB": 20.040155203098834,
+  "formalRssBudgetPassed": false,
+  "individualAllocationAttributed": false,
+  "queryReplayRequested": false,
+  "newProductStarted": false
+}
