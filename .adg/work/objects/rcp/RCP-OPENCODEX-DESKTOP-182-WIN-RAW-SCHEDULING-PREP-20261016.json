@@ -1,0 +1,54 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-RAW-SCHEDULING-PREP-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-RAW-SCHEDULING-PREP-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-gpu-resource-method",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-BYTES/gpu-method-checks.original.json"
+    },
+    {
+      "name": "local:windows-raw-ci-log-admission",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-BYTES/host-transfer-blocker.json"
+    },
+    {
+      "name": "local:windows-raw-scheduling-ci-api",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-BYTES/ci-terminal.original.json"
+    },
+    {
+      "name": "local:windows-raw-scheduling-method",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RAW-SCHEDULING-BYTES/pure-checks.original.log"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-823-IDLE-PAIR/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "e6d8d8e1f94e82463a3bc77b7321b03c973685d58c9f37f2d09ec2f92c1001d8",
+      "summary": "记录549原始调度字节方法与整轮CI状态、47144 GPU只读方法本地检查，以及网络阻塞前未准入或派发录制。"
+    }
+  ],
+  "completed_at": "2026-10-16T06:47:47.231545+00:00",
+  "summary": "结果回写：159项ETW纯检查、整轮CI状态及21项GPU方法检查通过；原CI字节日志未全取得，录制未准入，原失败和全部门禁保持。",
+  "revision": 1,
+  "summary_digest": "2a1afc140168b795f59e32db208f7d03eb6070540508e3b764fa81a5506e3fa6",
+  "content_digest": "e4f0aa6b746f2de01167b057a0f5be4186395363c0ba86b0c96534739d7f9cc4"
+}

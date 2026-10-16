@@ -1,0 +1,151 @@
+{
+  "schemaVersion": 1,
+  "scope": "raw scheduling and GPU method preparation; whole CI status verified; raw log admission and new recording blocked",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "admit-ci.py",
+      "bytes": 4542,
+      "sha256": "2a75b13a0f3f88e713e4ff01c476abf66f3898b24e24e9dd970e2a9869585cf8"
+    },
+    {
+      "path": "ci-binding.json",
+      "bytes": 121,
+      "sha256": "487d07bbfba5e05b06187868c50df8a45c76536242c1ca14a0012cb44fe48fc1"
+    },
+    {
+      "path": "ci-check-20261016T061620Z.original.json",
+      "bytes": 35646,
+      "sha256": "8b96ef1308589613def91384ec7e6c71b45539e9c27512a0e2006011fbec406c"
+    },
+    {
+      "path": "ci-jobs-20261016T060236298784Z.original.json",
+      "bytes": 18595,
+      "sha256": "57ec3a63f204d4facbb5888d8611f3c0a200c43e6bf601c69a57c4b6aec9f2b6"
+    },
+    {
+      "path": "ci-list-20261016T060236298784Z.original.json",
+      "bytes": 14781,
+      "sha256": "1a678a0e62bd49e817b0119f0bc683365dfdd1cba46231e4fa16633583fc7eee"
+    },
+    {
+      "path": "ci-progress.json",
+      "bytes": 917,
+      "sha256": "7e55e5a5364a4afddf3febccd7c38c81989214efdb57a39895b81c49040bd0f5"
+    },
+    {
+      "path": "ci-run-20261016T060236298784Z.original.json",
+      "bytes": 13836,
+      "sha256": "3a96804c1506892d93d50befbbdc004bedd349103c0b86448050167f39ef536c"
+    },
+    {
+      "path": "ci-terminal.json",
+      "bytes": 917,
+      "sha256": "7e55e5a5364a4afddf3febccd7c38c81989214efdb57a39895b81c49040bd0f5"
+    },
+    {
+      "path": "ci-terminal.original.json",
+      "bytes": 37305,
+      "sha256": "a9c54bece6652234f6fe16f3d895e51733686f0c2738e45f9b139c540e9c9eaf"
+    },
+    {
+      "path": "code-provenance.json",
+      "bytes": 860,
+      "sha256": "959019cca6c21fa323a85fc3b0ac379d1355b041b5699d0d33fef0bab4ac04f3"
+    },
+    {
+      "path": "dispatch-once.py",
+      "bytes": 5264,
+      "sha256": "bc0716b6508d0e1f3149a36e533a7add7a6c3bcf2879bac361534a9340f99ea4"
+    },
+    {
+      "path": "download-ci-logs.py",
+      "bytes": 4587,
+      "sha256": "f3a50d53defea0a7fd75fbdd7d16b60f3268ff46e81469aed3440dfd2bc6c79b"
+    },
+    {
+      "path": "final-protection-readback.json",
+      "bytes": 478,
+      "sha256": "1fb23cf2cfc184ba45ffb4ae18c93e7f6f46b1f570b3622e47dc8474bc569aa9"
+    },
+    {
+      "path": "fixed-inputs-readback.json",
+      "bytes": 680,
+      "sha256": "db102fa2a9d4b592823416cba8e8983d03ab75468159f691109b712a1b1a7fcb"
+    },
+    {
+      "path": "frontend-connector-observation.json",
+      "bytes": 428,
+      "sha256": "c04ebee54a1d810a0fabd516c30332c1d376a9f89800892bcc8b695e12b7a0db"
+    },
+    {
+      "path": "frontend-transfer-20261016T062457485736Z.original.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "frontend-transfer-failure-20261016T062348749644Z.json",
+      "bytes": 303,
+      "sha256": "7f0d7ec2687363047609bdd090b12ebe5aa6bb07df994f2deb542a5bf21b270e"
+    },
+    {
+      "path": "frontend-transfer-failure-20261016T062457485736Z.json",
+      "bytes": 331,
+      "sha256": "3b9793cd530ca112b68b37b69697b738b2f357e0edfd900f439885fff9145ee4"
+    },
+    {
+      "path": "gpu-method-checks.original.json",
+      "bytes": 189,
+      "sha256": "97ed4eff86c101b8136eb4ac5f87da15283ea1d88b91071e25f354bacdbacb60"
+    },
+    {
+      "path": "gpu-method-provenance.json",
+      "bytes": 824,
+      "sha256": "abe532c4484a3b5d45fb2af17b766de7d61877dd31cf045dba1ec7511a176b87"
+    },
+    {
+      "path": "head-commit.original.json",
+      "bytes": 1371,
+      "sha256": "eac01ced0c9cd98f8eeeb0b827ecf4656948e6a5cfe800b5bdf5df91c34399a0"
+    },
+    {
+      "path": "host-transfer-blocker.json",
+      "bytes": 403,
+      "sha256": "cb05133636705d4ce8f2a2bc6bec157e6484d68371d44d7f28dcb6e18627d9e2"
+    },
+    {
+      "path": "intermediate-readback-retention.json",
+      "bytes": 6007,
+      "sha256": "66c08eee4d10bdfaadcb3f1f153926c32f71790ca27bdd1039268682f8929ddf"
+    },
+    {
+      "path": "poll-ci.py",
+      "bytes": 2269,
+      "sha256": "04872064b1289ba8e1b8cc82c2256681cc3e9a4a306f122f15c82064de3d6142"
+    },
+    {
+      "path": "pure-checks.original.log",
+      "bytes": 688,
+      "sha256": "76fbd6c1accf97e5d41a213813fd74ea2288c503c3c3365f2e439e789845781e"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2401,
+      "sha256": "f7600e0df6d3b3d8cda7b2ca88d18450d927d9bed311cdd8b2e0158411c00967"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 470,
+      "sha256": "0b97803d0b94a7a2ac4a5d459dd155ba3b60ef4e02ec3f30b83e0a6a2a81f4cf"
+    },
+    {
+      "path": "verify-preparation.py",
+      "bytes": 4711,
+      "sha256": "9b357eab3552c35a8ae14df671dd9dc696a92cf5d48d5223261fffb0612a1a70"
+    }
+  ]
+}
