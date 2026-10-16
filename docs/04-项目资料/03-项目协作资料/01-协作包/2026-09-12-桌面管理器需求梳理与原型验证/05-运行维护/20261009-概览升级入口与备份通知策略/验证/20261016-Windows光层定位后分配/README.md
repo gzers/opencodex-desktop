@@ -24,4 +24,8 @@
 
 同SHA push `38824163566` / PR `38824151573` 沿各自首次CI执行；07:35:40两轮仍在进行。完整终态和实际checkout/tree日志核验通过后，才允许单次请求新候选。PR5已按最终范围更新读回，仍draft/open、未合并/无自动合并。GitHub连接器更新被403拒绝后，先用现有本机Git身份读取原值，再只作一次正常PATCH并核对回读；没有改变账户权限。
 
+08:04完整PR `38824151573` 已success并完成原始日志独立核验：五个必需作业全部成功，main专用build在特性PR中按工作流正常skip；前端99文件/535项、Mac35组923passed/6ignored、Windows35组648passed/7ignored。实际PR checkout `f2c5f1bd8ed827897255e2aaf174c23a3de7fbf9` 与head d94的整个tree均 `f8e4654cdd13ae40fe7ae29bb61f5b0d5638d668`，未假定EXE字节相同。16份冻结原件及独立verifier在 `.adg/evidence/OCX-0110-20261016-WIN-D94-CI/admitted-pr/`；首版把main-only skip误拒绝的准入脚本失败日志保留。这里只用一轮完整同源CI作为候选构建准入，没有合并不同轮局部job来替代整轮成功。另一轮push的Windows已完成，Mac工具链仍未结束，继续保持该轮pending，终态不反写此快照。
+
+按上述准入只请求一次候选 `38827408691`，固定source d94、run_attempt1、purpose=candidate。08:13:05 package仍进行，query-etw和retention预期skip；下载、实际安装载荷和原生补测尚未完成，不能把候选请求当成制品通过。后续原件在 `.adg/evidence/OCX-0110-20261016-WIN-D94-CANDIDATE/`。
+
 019冷/热各20、p95≤100ms且≤5%、CPU≤+0.5pp、平均RSS≤+10MiB、主线程50ms及完整请求/周期预算不变。DPI仍待验，真实更新/来源、安装保留、树表/事件、历史bd2失败窗口、严格单EXE恢复交接和Mac CPU/RSS继续未闭合。TASK-182/IMP-20不关闭，不合并、签名、晋升或发布。

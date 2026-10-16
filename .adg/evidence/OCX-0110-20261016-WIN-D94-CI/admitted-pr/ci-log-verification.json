@@ -1,0 +1,64 @@
+{
+  "source": "d94c215d869c0560717d79dc02881ce8858afe88",
+  "tree": "f8e4654cdd13ae40fe7ae29bb61f5b0d5638d668",
+  "runs": [
+    {
+      "id": 38824151573,
+      "event": "pull_request",
+      "jobs": [
+        {
+          "name": "frontend",
+          "id": 116727538589,
+          "actualCheckout": "f2c5f1bd8ed827897255e2aaf174c23a3de7fbf9",
+          "tree": "f8e4654cdd13ae40fe7ae29bb61f5b0d5638d668",
+          "counts": {
+            "files": 99,
+            "passed": 535,
+            "failed": 0
+          },
+          "log": "ci-38824151573-frontend.original.log",
+          "bytes": 39536,
+          "sha256": "a14e4ab38e3b9988ba9fb5bfe1ba427cd1b6dfb4e73c81bff7a6ed7fa463a340"
+        },
+        {
+          "name": "backend",
+          "id": 116727538178,
+          "actualCheckout": "f2c5f1bd8ed827897255e2aaf174c23a3de7fbf9",
+          "tree": "f8e4654cdd13ae40fe7ae29bb61f5b0d5638d668",
+          "counts": {
+            "suites": 35,
+            "passed": 923,
+            "failed": 0,
+            "ignored": 6
+          },
+          "log": "ci-38824151573-backend.original.log",
+          "bytes": 224491,
+          "sha256": "c4e5b524da868256e73a55d90e0d1e2792cf027957ad3d0392ec874200401fbf"
+        },
+        {
+          "name": "backend-windows",
+          "id": 116727538606,
+          "actualCheckout": "f2c5f1bd8ed827897255e2aaf174c23a3de7fbf9",
+          "tree": "f8e4654cdd13ae40fe7ae29bb61f5b0d5638d668",
+          "counts": {
+            "suites": 35,
+            "passed": 648,
+            "failed": 0,
+            "ignored": 7
+          },
+          "log": "ci-38824151573-backend-windows.original.log",
+          "bytes": 348882,
+          "sha256": "1d8388e0743a734a41c284093c8b0c5622497f4a8d1d2b64a5049425bd793a01"
+        }
+      ],
+      "requiredJobsAllPassed": true,
+      "expectedMainOnlyBuildSkipped": true
+    }
+  ],
+  "actualCheckoutTreesEqual": true,
+  "runAttempt": 1,
+  "wholeCiAdmitted": true,
+  "historicalQueryFailureCleared": false,
+  "memoryGatePassed": false,
+  "allObservedRunsCompleted": false
+}

@@ -1,0 +1,580 @@
+{
+  "total_count": 6,
+  "jobs": [
+    {
+      "id": 116727538178,
+      "run_id": 38824151573,
+      "workflow_name": "CI",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38824151573",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbLYDiAg",
+      "head_sha": "d94c215d869c0560717d79dc02881ce8858afe88",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116727538178",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38824151573/job/116727538178",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T23:32:09Z",
+      "started_at": "2026-10-15T23:32:16Z",
+      "completed_at": "2026-10-15T23:38:23Z",
+      "name": "backend",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T23:32:16Z",
+          "completed_at": "2026-10-15T23:32:17Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T23:32:17Z",
+          "completed_at": "2026-10-15T23:32:19Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T23:32:19Z",
+          "completed_at": "2026-10-15T23:32:26Z"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T23:32:26Z",
+          "completed_at": "2026-10-15T23:32:27Z"
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T23:32:27Z",
+          "completed_at": "2026-10-15T23:34:06Z"
+        },
+        {
+          "name": "Run cargo test --locked --workspace --features integration-test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T23:34:06Z",
+          "completed_at": "2026-10-15T23:38:19Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-15T23:38:19Z",
+          "completed_at": "2026-10-15T23:38:20Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-15T23:38:20Z",
+          "completed_at": "2026-10-15T23:38:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116727538178",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000001174,
+      "runner_name": "GitHub Actions 1000001174",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116727538589,
+      "run_id": 38824151573,
+      "workflow_name": "CI",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38824151573",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbLYDjnQ",
+      "head_sha": "d94c215d869c0560717d79dc02881ce8858afe88",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116727538589",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38824151573/job/116727538589",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T23:32:09Z",
+      "started_at": "2026-10-15T23:32:14Z",
+      "completed_at": "2026-10-15T23:33:05Z",
+      "name": "frontend",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T23:32:14Z",
+          "completed_at": "2026-10-15T23:32:15Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T23:32:15Z",
+          "completed_at": "2026-10-15T23:32:16Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T23:32:16Z",
+          "completed_at": "2026-10-15T23:32:17Z"
+        },
+        {
+          "name": "Windows CDP protocol regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T23:32:17Z",
+          "completed_at": "2026-10-15T23:32:27Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T23:32:27Z",
+          "completed_at": "2026-10-15T23:32:29Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run typecheck",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T23:32:29Z",
+          "completed_at": "2026-10-15T23:32:33Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T23:32:33Z",
+          "completed_at": "2026-10-15T23:32:58Z"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-15T23:32:58Z",
+          "completed_at": "2026-10-15T23:33:02Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-15T23:33:02Z",
+          "completed_at": "2026-10-15T23:33:03Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-15T23:33:03Z",
+          "completed_at": "2026-10-15T23:33:03Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-15T23:33:03Z",
+          "completed_at": "2026-10-15T23:33:03Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116727538589",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": 1000001175,
+      "runner_name": "GitHub Actions 1000001175",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116727538606,
+      "run_id": 38824151573,
+      "workflow_name": "CI",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38824151573",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbLYDjrg",
+      "head_sha": "d94c215d869c0560717d79dc02881ce8858afe88",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116727538606",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38824151573/job/116727538606",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T23:32:09Z",
+      "started_at": "2026-10-15T23:32:12Z",
+      "completed_at": "2026-10-15T23:52:27Z",
+      "name": "backend-windows",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T23:32:13Z",
+          "completed_at": "2026-10-15T23:32:15Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T23:32:15Z",
+          "completed_at": "2026-10-15T23:32:20Z"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T23:32:20Z",
+          "completed_at": "2026-10-15T23:32:26Z"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T23:32:26Z",
+          "completed_at": "2026-10-15T23:32:48Z"
+        },
+        {
+          "name": "Run npm --prefix ../ui ci",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T23:32:48Z",
+          "completed_at": "2026-10-15T23:32:57Z"
+        },
+        {
+          "name": "Run npm --prefix ../ui run build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T23:32:57Z",
+          "completed_at": "2026-10-15T23:33:07Z"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-15T23:33:07Z",
+          "completed_at": "2026-10-15T23:33:09Z"
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-15T23:33:09Z",
+          "completed_at": "2026-10-15T23:35:55Z"
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-15T23:35:55Z",
+          "completed_at": "2026-10-15T23:36:09Z"
+        },
+        {
+          "name": "Windows backend regression",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-15T23:36:09Z",
+          "completed_at": "2026-10-15T23:42:13Z"
+        },
+        {
+          "name": "Collect Windows native dependency diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-15T23:42:13Z",
+          "completed_at": "2026-10-15T23:42:59Z"
+        },
+        {
+          "name": "Run cargo build --locked --release --features custom-protocol --bins",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-15T23:42:59Z",
+          "completed_at": "2026-10-15T23:51:32Z"
+        },
+        {
+          "name": "Windows final EXE smoke",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-15T23:51:32Z",
+          "completed_at": "2026-10-15T23:52:12Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-15T23:52:12Z",
+          "completed_at": "2026-10-15T23:52:21Z"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 27,
+          "started_at": "2026-10-15T23:52:21Z",
+          "completed_at": "2026-10-15T23:52:21Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 28,
+          "started_at": "2026-10-15T23:52:21Z",
+          "completed_at": "2026-10-15T23:52:25Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 29,
+          "started_at": "2026-10-15T23:52:25Z",
+          "completed_at": "2026-10-15T23:52:25Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116727538606",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000001177,
+      "runner_name": "GitHub Actions 1000001177",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116727538662,
+      "run_id": 38824151573,
+      "workflow_name": "CI",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38824151573",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbLYDj5g",
+      "head_sha": "d94c215d869c0560717d79dc02881ce8858afe88",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116727538662",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38824151573/job/116727538662",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T23:32:09Z",
+      "started_at": "2026-10-15T23:32:12Z",
+      "completed_at": "2026-10-15T23:32:27Z",
+      "name": "release-tools",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T23:32:13Z",
+          "completed_at": "2026-10-15T23:32:14Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T23:32:14Z",
+          "completed_at": "2026-10-15T23:32:15Z"
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T23:32:15Z",
+          "completed_at": "2026-10-15T23:32:24Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T23:32:24Z",
+          "completed_at": "2026-10-15T23:32:24Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T23:32:24Z",
+          "completed_at": "2026-10-15T23:32:24Z"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-15T23:32:24Z",
+          "completed_at": "2026-10-15T23:32:24Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-15T23:32:24Z",
+          "completed_at": "2026-10-15T23:32:25Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-15T23:32:25Z",
+          "completed_at": "2026-10-15T23:32:25Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116727538662",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000001178,
+      "runner_name": "GitHub Actions 1000001178",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116727538682,
+      "run_id": 38824151573,
+      "workflow_name": "CI",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38824151573",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbLYDj-g",
+      "head_sha": "d94c215d869c0560717d79dc02881ce8858afe88",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116727538682",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38824151573/job/116727538682",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-15T23:32:09Z",
+      "started_at": "2026-10-15T23:32:12Z",
+      "completed_at": "2026-10-15T23:32:38Z",
+      "name": "windows-smoke-evidence",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-15T23:32:13Z",
+          "completed_at": "2026-10-15T23:32:14Z"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-15T23:32:14Z",
+          "completed_at": "2026-10-15T23:32:19Z"
+        },
+        {
+          "name": "Verify Windows process-token evidence and smoke syntax",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-15T23:32:19Z",
+          "completed_at": "2026-10-15T23:32:33Z"
+        },
+        {
+          "name": "Verify isolated acceptance Profile admission",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-15T23:32:33Z",
+          "completed_at": "2026-10-15T23:32:33Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-15T23:32:33Z",
+          "completed_at": "2026-10-15T23:32:34Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-15T23:32:34Z",
+          "completed_at": "2026-10-15T23:32:36Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-15T23:32:36Z",
+          "completed_at": "2026-10-15T23:32:36Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116727538682",
+      "labels": [
+        "windows-latest"
+      ],
+      "runner_id": 1000001176,
+      "runner_name": "GitHub Actions 1000001176",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 116734003801,
+      "run_id": 38824151573,
+      "workflow_name": "CI",
+      "head_branch": "feature/0.1.10-windows-query-etw",
+      "run_url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/38824151573",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUZxf888AAAAbLeOKWQ",
+      "head_sha": "d94c215d869c0560717d79dc02881ce8858afe88",
+      "url": "https://api.github.com/repos/gzers/opencodex-desktop/actions/jobs/116734003801",
+      "html_url": "https://github.com/gzers/opencodex-desktop/actions/runs/38824151573/job/116734003801",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-10-15T23:52:28Z",
+      "started_at": "2026-10-15T23:52:28Z",
+      "completed_at": "2026-10-15T23:52:27Z",
+      "name": "build",
+      "steps": [],
+      "check_run_url": "https://api.github.com/repos/gzers/opencodex-desktop/check-runs/116734003801",
+      "labels": [
+        "macos-14"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}
