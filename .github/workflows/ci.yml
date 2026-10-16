@@ -25,6 +25,9 @@ jobs:
           New-Item -ItemType Directory -Force test/out/windows-process-token/idle-family | Out-Null
           Copy-Item -LiteralPath test/runtime/windows-idle-family-check/result.json -Destination test/out/windows-process-token/idle-family/result.json
           Copy-Item -LiteralPath test/runtime/windows-idle-family-check/failure-records.original.jsonl -Destination test/out/windows-process-token/idle-family/failure-records.original.jsonl
+      - name: Verify read-only GPU resource evidence helpers
+        shell: pwsh
+        run: ./test/smoke/windows-gpu-resource.test.ps1 -OutputDirectory test/out/windows-process-token/gpu-resource
       - uses: actions/upload-artifact@v4
         if: always()
         with:
