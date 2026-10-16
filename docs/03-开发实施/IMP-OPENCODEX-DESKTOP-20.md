@@ -1842,3 +1842,11 @@ GPU只读伴随方法本机47144dbe已提交、21项纯检查通过，含真实W
 独立工具分支768e2318已推送读回，保持ETW待录制分支549不变。本机37项检查含真实PowerShell根/子代保留句柄与正常退出，控制代际均已消失、native0；GPU实例为空不视为零显存，不当作桌面产品快照。首次push38864269467于15:17:42全CI成功，五必需作业通过、main-only build正常skip，原run/jobs API核对；完整job原日志仍未取得。初版UTC字符串尾零比较失败与修订校验器保留，原件未改。
 
 证据`.adg/evidence/OCX-0110-20261016-WIN-GPU-BOUND-PROBE/`独立校验通过，只证明受控方法及CI状态。后续真实人工窗口的823恢复/GPU执行另档，不回改准备时事实。Windows RSS+29.221361MiB、原Mac/Windows失败、bd2实际失败窗口缺失及全部原预算/周期/八门禁保持；TASK revision2/in_progress/pending、DPI待验与禁止发布状态不变。
+
+### 2026-10-16 823恢复前置遗漏，取得一次真实GPU快照
+
+用户15:18:26新前台窗口内只启一次823精确EXE，实际普通false/type3、原同SID，未用sandbox/CDP或重复配对。因已有Codex应用容器LocalCache/Roaming管理器测试根，生产按default_anchor规则进入原根；准备只清除HKCU/拒绝install-d创建，遗漏实际平台根前置。240秒485次原计数最大native1、无替换代次，恢复子集未通过，不建立产品恢复缺陷，不自动重试或强杀。
+
+同一实际产品代际由768e2318工具保留句柄取得7成员/1GPU/2计数器实例，共享GPU使用191668224字节、GPU进程RSS246169600字节；只是一时快照，不相加、不倒推历史性能PID或归因GL缓冲。工具首次全CI在窗口前成功，原job日志未完整核验。15:25:35正常Alt+F4/exit0/native0；冻结restore先恢复ACL再因自动登记的平台根指针拒绝，随后核当前原字节/实际UI/native0后精确恢复原指针，ACL及指针读回相同，原拒绝保留。
+
+17份运行原件与独立验证见`.adg/evidence/OCX-0110-20261016-WIN-823-RECOVERY-GPU/`，私有SDDL/原SID不发布。15:32:09日常/TASK摘要和真实旁存存在性保持，前台已释放，无重启或数据移动/删除。下一恢复准备须核实际平台根并隔离自有夹具后另取人工窗口；本次失败不清除。+29.221361MiB RSS、Mac/Windows历史失败、bd2失败窗口与全部原预算/周期/八检查保持；DPI待验，TASK revision2/in_progress/pending、IMP未完成及禁止发布不变。
