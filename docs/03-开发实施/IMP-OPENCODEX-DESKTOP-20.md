@@ -2010,3 +2010,13 @@ fdb7e3cb已推送读回，只读绑定方法本机和首次CI38930174628 Windows
 ca89fbac首次push CI38933650482/attempt1整轮success，五必需job原日志actual checkout均同SHA，main-only build正常skip。Windows35组651passed/0failed/7ignored、Mac35组924passed/0failed/6ignored，前端99文件538passed；原两项取消观察测试及新增最终许可通知用例均有明确ok行。Windows库554passed/0failed/4ignored，最终EXE冒烟步骤通过；以上属于runner验证，不代替本机原生门禁。
 
 制品12060483211/30672f57…/9583894字节只读核API摘要、成员摘要及CRC，修订库a3c4afd1…保留在私有忽略目录且未执行，不替换fdb失败库或原bd2库。`.adg/evidence/OCX-0110-20261017-WIN-IPC-IDLE-FULL-CI/`保存终态、五份原日志、制品身份与独立复核；上一档“当时整轮待核”原件保持。修订保留2秒期限、默认并发、终态及审计断言，未证明旧失败的调度/I/O因果。无重派CI或宿主产品启动；RSS超预算、退出失败、bd2实际失败窗口、严格恢复、Mac及其余原门禁保持，TASK revision2/in_progress/pending、DPI取消，不合并、关闭或发布。
+
+### 2026-10-17 绑定GPU采集入口完整工具CI通过，真实产品诊断尚未执行
+
+工具391e7097已提交推送，首次push CI38934816693/attempt1整轮success，五必需job原日志actual checkout均同SHA；前端99文件535passed、Mac35组923passed/6ignored、Windows35组648passed/7ignored及最终EXE冒烟通过。该工具分支未合入ca89测试通知修订，不能用本次成功清除fdb历史失败或证明其原因。方法制品12059879326/62f039d7…/76710字节核API摘要、CRC及11份提取文本原件；LF/CRLF源码身份分别核验。
+
+本机普通令牌10外层/20编译守卫、18绑定检查及8入口拒绝检查通过；CI实际管理员令牌15外层/20编译守卫和18绑定检查通过，受控自进程取得1225条/746512字节事件、8MiB分配与对应栈1对，丢失/遗漏/解码错误0，探针释放、自有会话消失、读取线程自然排空。只证明自进程链路和准备守卫，真实产品GPU绑定/录制未执行；GPU模式即使质量通过也可能无分配事件，必须另查allocationEvidenceObserved，不能把空记录解释为零RSS或已获根因。
+
+`.adg/evidence/OCX-0110-20261017-WIN-BOUND-GPU-PREP/`封存完整CI、方法原件、宿主只读前置和下一诊断计划。01:08:44核native0、原Roaming目录ID/创建时刻/偏好、原HKCU指针、隔离根及精确b4/f3 EXE与固定解码器；未启动产品、移动原配置或录制。下一次仅安排一个b4实例、约15分钟前台、单次30秒录制（上限45秒），当代实际普通产品令牌及GPU代际/角色/祖先绑定，正常设置→概览返回一次以触发既有mesh销毁重建，并提前正常退出/保留退出观察。实际控制器当前非管理员，仍需实际管理员采集器及新的直接人工前台信号，准备和CI通过均不授予执行窗口。
+
+原019/b4计数不重做，RSS+20.040155MiB超+10MiB、退出超时/退出码未知、bd2实际失败窗口、严格恢复、Mac及其它全部原预算/周期/八检查保持。TASK revision2/in_progress/pending、原配置恢复和DPI取消不变，不合并、关闭、签名、晋升或发布。

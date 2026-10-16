@@ -1,0 +1,45 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-BOUND-GPU-PREP-20261017",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-BOUND-GPU-PREP",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-BOUND-GPU-PREP-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-bound-gpu-tool-full-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-BOUND-GPU-PREP/verification.json"
+    },
+    {
+      "name": "local:windows-bound-gpu-diagnostic-preparation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-BOUND-GPU-PREP/original/diagnostic-preflight.original.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "6f376f5c1d7d5a174d6d993919e108a92d7c3dc453ec5c326b9fbabef1989a01",
+      "summary": "391首次完整工具CI、受控自进程链路及只读前置通过；真实GPU未录制，下一15分钟计划需新人工信号和实际管理员采集器。"
+    }
+  ],
+  "completed_at": "2026-10-16T17:12:07.522953+00:00",
+  "summary": "GPU入口准备与完整工具CI通过，真实产品分配证据、RSS及原门禁未解除。",
+  "revision": 1,
+  "summary_digest": "957803b9880455dc365e9bdcb884791a9c757ecfa779a9213ba46e8f9e693c19",
+  "content_digest": "e48c98cc031b696b79134954ea9db900d84577fe8d717993c33b2d57894225ed"
+}

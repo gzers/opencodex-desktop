@@ -1,0 +1,70 @@
+{
+  "atUtc": "2026-10-16T17:09:20.917200+00:00",
+  "preparationOnly": true,
+  "foregroundAuthorityGranted": false,
+  "freshDirectHumanSignalRequired": true,
+  "maximumHumanWindowMinutes": 30,
+  "plannedForegroundMinutes": 15,
+  "scope": "one-b4-gpu-allocation-diagnostic",
+  "toolSource": "391e70979ffbb32a548c0d05bdeeb62160d942d3",
+  "toolCiRunId": 38934816693,
+  "exactCompletedToolCiRequiredAtExecution": true,
+  "productSource": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "productExecutable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-b4d487-38893610415\\msi-readonly\\opencodex-desktop.exe",
+  "productExeSha256": "f3fab9d6840c105e426a7dc90efe94fe839e283e47af3929d251d82a6e8675db",
+  "candidateEvidenceDirectory": ".adg/evidence/OCX-0110-20261016-WIN-B4-CANDIDATE",
+  "isolatedFixture": {
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\data",
+    "fileId": "0ebd4e59-00110000000d26c6",
+    "finalPath": "\\\\?\\C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\data",
+    "creationFileTime": "134365469952338974",
+    "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+  },
+  "startupPointerSha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+  "originalProfileMovesPlanned": false,
+  "sandboxOrCdpPlanned": false,
+  "productTokenRequired": "actual ordinary token and same TokenUser; never infer from controller",
+  "recordingControllerRequired": "actual elevated controller under existing background ETW authorization",
+  "actualControllerReady": false,
+  "selfElevationPerformed": false,
+  "decoderDirectory": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\bd2-etw-preparation-20261014",
+  "recorderEntry": "test/smoke/windows-bound-gpu-memory.ps1",
+  "captureSeconds": 30,
+  "maximumCaptureSeconds": 45,
+  "configuredEtwBufferMiB": 32,
+  "maximumSerializedBytes": 4194304,
+  "maximumRecords": 4096,
+  "stages": [
+    {
+      "minutes": "0-3",
+      "action": "Recheck current human window, native0, exact source/EXE, isolated anchor and restored profile; launch one b4 ordinary instance and immediately retain exit observer."
+    },
+    {
+      "minutes": "3-5",
+      "action": "Bind newly observed root and actual GPU role using exact PID, 100ns creation time, full image path/SHA, TokenUser/elevation and ancestry; generate fresh launch packets; run prepare-only entry before recording."
+    },
+    {
+      "minutes": "5-6",
+      "action": "Use the explicitly approved elevated background recorder once for 30 seconds. After its recording-ready marker, perform one Settings-to-Overview return to exercise normal mesh destruction/recreation; record actual action timing and current scene."
+    },
+    {
+      "minutes": "6-8",
+      "action": "Verify capture result, before/after generation binding, losses/omissions, own session absence and naturally drained reader. Normally exit while the foreground window still has substantial margin; retain exact exit-code/kernel-time observation."
+    },
+    {
+      "minutes": "8-15",
+      "action": "Read back native0, original profile/pointer preservation and fixture status; preserve first failures and all unknowns, with no automatic retry or forced termination."
+    }
+  ],
+  "resourceRecreationSource": "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue: onBeforeUnmount destroys mesh; onMounted/nextTick creates it again",
+  "qualityPassMayContainZeroAllocations": true,
+  "allocationEvidenceObservedRequiredBeforeAllocationClaim": true,
+  "zeroEventsDoNotProveZeroRssOrRootCause": true,
+  "sameVersionFormalPerformancePairPlanned": false,
+  "officialQueryNodeOrBd2LibraryExecutionPlanned": false,
+  "dpiAcceptancePlanned": false,
+  "originalBudgetsAndCyclesChanged": false,
+  "historicalFailuresCleared": false,
+  "fullProductGatePassed": false,
+  "releaseAccepted": false
+}

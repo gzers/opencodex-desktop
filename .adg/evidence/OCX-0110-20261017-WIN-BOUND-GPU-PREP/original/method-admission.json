@@ -1,0 +1,74 @@
+{
+  "atUtc": "2026-10-16T17:01:50.446297+00:00",
+  "source": "391e70979ffbb32a548c0d05bdeeb62160d942d3",
+  "runId": 38934816693,
+  "jobId": 117087534121,
+  "actualCheckout": "391e70979ffbb32a548c0d05bdeeb62160d942d3",
+  "artifactId": 12059879326,
+  "artifactSha256": "62f039d713e53d586e1b5ddf01c286cb88ba5dc735f12d183c9e51bc2c7254d1",
+  "artifactBytes": 76710,
+  "zipCrcVerified": true,
+  "localOrdinaryOuterChecks": 10,
+  "ciAdministratorOuterChecks": 15,
+  "compiledGuardChecks": 20,
+  "bindingChecksEach": 18,
+  "entryRefusalChecks": 8,
+  "sourceFiles": [
+    {
+      "role": "recorder",
+      "path": "test/smoke/windows-controlled-memory.cs",
+      "git-lf": "831c1abf6d86697958aa713528739b9730aad4d1eb6c8c5998f9e62f09df2ccb",
+      "git-checkout-crlf": "3fd07ab33e23168a8a0a21d3f1efa8ab4798f079eff3899aa79311b1719940a9"
+    },
+    {
+      "role": "sharedNativeStop",
+      "path": "test/smoke/windows-owned-etw.cs",
+      "git-lf": "50b2b7634838ca6e19270546357c583d76ecf89a63a7780faee0497e8d2a1349",
+      "git-checkout-crlf": "9822fd95edc7970f14eb13c6ceeefd7b58e871232e9d2b00542ac6fb04ac9284"
+    },
+    {
+      "role": "wrapper",
+      "path": "test/smoke/windows-controlled-memory.ps1",
+      "git-lf": "382e09f9379940e94ee1aa6782b71ca829ce39b0ab590814548646fea966cdc5",
+      "git-checkout-crlf": "e65c740614e5e376e542b49715fa2fcc90d31eb0af8a45c9f32246d22ed5b980"
+    },
+    {
+      "role": "binding",
+      "path": "test/smoke/windows-memory-target.ps1",
+      "git-lf": "f17a01c8e62bb629bc380c81a2519f8c0282046d42db95abdb3f2d49e898a4a7",
+      "git-checkout-crlf": "165dcb695dfce1ff8b8af023623f47caeb10aef162b47991f77df74c09b7365b"
+    },
+    {
+      "role": "loader",
+      "path": "test/smoke/windows-memory-recorder-loader.ps1",
+      "git-lf": "9c6bb6401ac696a4fcc5a0eb4e35453303cf7815e538bfee60d5ade7fadd9080",
+      "git-checkout-crlf": "05c5bb945a79bebda571850a56749a436f2ed5cc1efe1c0f58b6276793e6aad2"
+    },
+    {
+      "role": "entry",
+      "path": "test/smoke/windows-bound-gpu-memory.ps1",
+      "git-lf": "696e90c921ef546af2130280ef3d34ec3a613aefc70711f573815659864c7804",
+      "git-checkout-crlf": "b1580b7b98a367b403dfd851105da06f5827e8e297c41964128a11138ea89d0d"
+    },
+    {
+      "role": "workflow",
+      "path": ".github/workflows/ci.yml",
+      "git-lf": "38fc7684ed9bd3a899bb308a117986f5dfb870c19463c93d5579252def9e13f8",
+      "git-checkout-crlf": "5fbaa63f1aeddf27f1ab18367a850731be29884282c38e342507824d7f32ac91"
+    }
+  ],
+  "controlledSelfRecords": 1225,
+  "controlledSelfBytes": 746512,
+  "probeAllocationStackPairs": 1,
+  "controlledSelfSessionCleaned": true,
+  "wholeCiStatusAtFrozenRead": "in_progress",
+  "wholeCiConclusionAtFrozenRead": null,
+  "wholeCiAdmitted": false,
+  "actualProductGpuBindingExecuted": false,
+  "hostProductStarted": false,
+  "hostTracingStarted": false,
+  "productAllocationCauseAttributed": false,
+  "originalRssFailureCleared": false,
+  "fullProductGatePassed": false,
+  "ciRerunRequested": false
+}
