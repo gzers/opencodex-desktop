@@ -1,0 +1,45 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-GPU-SCOPE-FULL-CI-20261017",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-GPU-SCOPE-FULL-CI",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-GPU-SCOPE-FULL-CI-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-gpu-scope-repair-full-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-GPU-SCOPE-FULL-CI/verification.json"
+    },
+    {
+      "name": "local:windows-gpu-next-window-preparation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-GPU-SCOPE-FULL-CI/preparation/validation.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "215d50328850f8e0f668cdbe5c0e48b71e862e0054267ab5c60fcbb3089e182a",
+      "summary": "fde首次完整CI五必需job及原日志同SHA核验；下一前台入口绑定新源/完整CI，独立Prepare保留双流，实际GPU未重试。"
+    }
+  ],
+  "completed_at": "2026-10-16T18:42:01.435724+00:00",
+  "summary": "采集工具作用域修复完整CI通过，下一窗口准备完成，原产品分配/RSS及全部门禁保持。",
+  "revision": 1,
+  "summary_digest": "22bd82a6b5348f767ff37778d166d4e1c30d27d721f9af2f9d5b203ea02716cc",
+  "content_digest": "c3667fa19fce48362866816aa2a061be3bd71de7e48995f96bae37a23cdd8567"
+}
