@@ -1,0 +1,117 @@
+{
+  "atUtc": "2026-10-16T10:47:18.2392473+00:00",
+  "source": null,
+  "nativeCount": 0,
+  "registry": [
+    {
+      "productCode": "{7069DA97-F262-4585-98CA-AE416E6833A5}",
+      "hklm64Present": false,
+      "hklm32Present": false,
+      "hkcuPresent": false
+    },
+    {
+      "productCode": "{7C063778-E6A6-4D0E-9770-4C4349101866}",
+      "hklm64Present": false,
+      "hklm32Present": false,
+      "hkcuPresent": false
+    },
+    {
+      "productCode": "{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}",
+      "hklm64Present": false,
+      "hklm32Present": false,
+      "hkcuPresent": false
+    }
+  ],
+  "priorExePresent": false,
+  "testInstalledExePresent": false,
+  "stepCount": 6,
+  "exitCodes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "logs": [
+    {
+      "step": "uninstall-existing-local-019",
+      "bytes": 100852,
+      "sha256": "155491224cf1b585bf72e3d29bd93dba49c07bd67a929bd4e223925bed46aa71",
+      "mainEngineExit0": true
+    },
+    {
+      "step": "install-official-019",
+      "bytes": 112288,
+      "sha256": "27079520502049398a99d8c3a77bd30e88c343809a4eab15b4af559a7375daaf",
+      "mainEngineExit0": true
+    },
+    {
+      "step": "upgrade-to-823",
+      "bytes": 208114,
+      "sha256": "6826dc2f6586ad8f55f15ccfdd32c47e258de03fc76054ed87977a7f8c6a8e4e",
+      "mainEngineExit0": true
+    },
+    {
+      "step": "default-uninstall-823",
+      "bytes": 102820,
+      "sha256": "5b51a14de002544d47673bc8857a9cf826eb23d3a95c94d03cd3f1acb855752c",
+      "mainEngineExit0": true
+    },
+    {
+      "step": "reinstall-823",
+      "bytes": 116376,
+      "sha256": "3a9439721329fdae4baa01be7ea69009c028a88df8c330fd59db05bed8b7a377",
+      "mainEngineExit0": true
+    },
+    {
+      "step": "final-default-uninstall-823",
+      "bytes": 102844,
+      "sha256": "68a1fd9e1cf739a309d53665f9cde46fff64ec76a35e83faa8d3dcda4e998063",
+      "mainEngineExit0": true
+    }
+  ],
+  "retainedFiles": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\manager-state\\preferences.json",
+      "bytes": 96,
+      "sha256": "00331a972b3d880cf3024c968094b99690967e01e1d16d6ae7241cfe36f53230",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\backup-manifest.json",
+      "bytes": 103,
+      "sha256": "64601391f14854598d26057b24ef38db80655a7f72f277f4dd55f58f77612d43",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\preferences.json",
+      "bytes": 99,
+      "sha256": "62e6853427c5bae93b1c1fc7176e7f80024886fa3170a36c71ef9e9c92350327",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\manager-state\\preferences.json",
+      "bytes": 83,
+      "sha256": "da74e23449c64f16c7c62fd7bc31ec971d134ffadbe69927572a76e18f8c1448",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\backups\\retained-payload.json",
+      "bytes": 82,
+      "sha256": "9a2447d64f316f8c6687eca32361914ef643ac4dbb167c94a21a9f6087f84c97",
+      "matches": true
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\outside-root.sentinel",
+      "bytes": 62,
+      "sha256": "4320f389b8cfe645b79174e9eb06ddaf5c6d7ec035947a80d10790b4b3ce3c44",
+      "matches": true
+    }
+  ],
+  "fullInstallerGatePassed": false,
+  "nativeCustomRootBindingTested": false,
+  "explicitPurgeTested": false,
+  "nsisTested": false,
+  "releaseAccepted": false
+}

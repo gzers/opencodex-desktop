@@ -1,0 +1,255 @@
+{
+  "atUtc": "2026-10-16T10:46:51.0686668+00:00",
+  "result": "pass",
+  "planSha256": "9acb0771ffe35d0dc95fd7b530a295acade6a0804d9984fc258ca69601da3b72",
+  "actualAdministratorToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7212,
+    "creationTimeUtc": "2026-10-16T10:46:49.8435768Z",
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "elevated": true,
+    "elevationType": 2,
+    "sidSha256": "373954eb0fac4c7c274e7e4bacc1f7c5b170657bab283f87d84f5b35eb572310",
+    "sidSource": "GetTokenInformation(TokenUser), retained target process handle",
+    "rawSidPublished": false,
+    "collectedAtUtc": "2026-10-16T10:46:50.9881450+00:00",
+    "sourceMethodSha256": "0072ea451bedc8b75d7e9eea6660286dec374e546d5cc0d296e93cf77794b072",
+    "nativeRootAcceptanceClaimed": false,
+    "launchPermissionGranted": false
+  },
+  "steps": [
+    {
+      "name": "uninstall-existing-local-019",
+      "exitCode": 0,
+      "atUtc": "2026-10-16T10:46:51.9366920+00:00"
+    },
+    {
+      "name": "install-official-019",
+      "exitCode": 0,
+      "atUtc": "2026-10-16T10:46:52.6782608+00:00"
+    },
+    {
+      "name": "install-official-019-image",
+      "version": "0.1.9",
+      "sha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608"
+    },
+    {
+      "files": [
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\manager-state\\preferences.json",
+          "sha256": "00331a972b3d880cf3024c968094b99690967e01e1d16d6ae7241cfe36f53230",
+          "bytes": 96
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\backup-manifest.json",
+          "sha256": "64601391f14854598d26057b24ef38db80655a7f72f277f4dd55f58f77612d43",
+          "bytes": 103
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\preferences.json",
+          "sha256": "62e6853427c5bae93b1c1fc7176e7f80024886fa3170a36c71ef9e9c92350327",
+          "bytes": 99
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\manager-state\\preferences.json",
+          "sha256": "da74e23449c64f16c7c62fd7bc31ec971d134ffadbe69927572a76e18f8c1448",
+          "bytes": 83
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\backups\\retained-payload.json",
+          "sha256": "9a2447d64f316f8c6687eca32361914ef643ac4dbb167c94a21a9f6087f84c97",
+          "bytes": 82
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\outside-root.sentinel",
+          "sha256": "4320f389b8cfe645b79174e9eb06ddaf5c6d7ec035947a80d10790b4b3ce3c44",
+          "bytes": 62
+        }
+      ],
+      "allSeededFixturesUnchanged": true,
+      "name": "before-upgrade"
+    },
+    {
+      "name": "upgrade-to-823",
+      "exitCode": 0,
+      "atUtc": "2026-10-16T10:46:53.9435857+00:00"
+    },
+    {
+      "name": "upgrade-to-823-image",
+      "version": "0.1.10",
+      "sha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53"
+    },
+    {
+      "files": [
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\manager-state\\preferences.json",
+          "sha256": "00331a972b3d880cf3024c968094b99690967e01e1d16d6ae7241cfe36f53230",
+          "bytes": 96
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\backup-manifest.json",
+          "sha256": "64601391f14854598d26057b24ef38db80655a7f72f277f4dd55f58f77612d43",
+          "bytes": 103
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\preferences.json",
+          "sha256": "62e6853427c5bae93b1c1fc7176e7f80024886fa3170a36c71ef9e9c92350327",
+          "bytes": 99
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\manager-state\\preferences.json",
+          "sha256": "da74e23449c64f16c7c62fd7bc31ec971d134ffadbe69927572a76e18f8c1448",
+          "bytes": 83
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\backups\\retained-payload.json",
+          "sha256": "9a2447d64f316f8c6687eca32361914ef643ac4dbb167c94a21a9f6087f84c97",
+          "bytes": 82
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\outside-root.sentinel",
+          "sha256": "4320f389b8cfe645b79174e9eb06ddaf5c6d7ec035947a80d10790b4b3ce3c44",
+          "bytes": 62
+        }
+      ],
+      "allSeededFixturesUnchanged": true,
+      "name": "after-upgrade"
+    },
+    {
+      "name": "default-uninstall-823",
+      "exitCode": 0,
+      "atUtc": "2026-10-16T10:46:54.9603178+00:00"
+    },
+    {
+      "files": [
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\manager-state\\preferences.json",
+          "sha256": "00331a972b3d880cf3024c968094b99690967e01e1d16d6ae7241cfe36f53230",
+          "bytes": 96
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\backup-manifest.json",
+          "sha256": "64601391f14854598d26057b24ef38db80655a7f72f277f4dd55f58f77612d43",
+          "bytes": 103
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\preferences.json",
+          "sha256": "62e6853427c5bae93b1c1fc7176e7f80024886fa3170a36c71ef9e9c92350327",
+          "bytes": 99
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\manager-state\\preferences.json",
+          "sha256": "da74e23449c64f16c7c62fd7bc31ec971d134ffadbe69927572a76e18f8c1448",
+          "bytes": 83
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\backups\\retained-payload.json",
+          "sha256": "9a2447d64f316f8c6687eca32361914ef643ac4dbb167c94a21a9f6087f84c97",
+          "bytes": 82
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\outside-root.sentinel",
+          "sha256": "4320f389b8cfe645b79174e9eb06ddaf5c6d7ec035947a80d10790b4b3ce3c44",
+          "bytes": 62
+        }
+      ],
+      "allSeededFixturesUnchanged": true,
+      "name": "after-default-uninstall"
+    },
+    {
+      "name": "reinstall-823",
+      "exitCode": 0,
+      "atUtc": "2026-10-16T10:46:55.7567084+00:00"
+    },
+    {
+      "name": "reinstall-823-image",
+      "version": "0.1.10",
+      "sha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53"
+    },
+    {
+      "files": [
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\manager-state\\preferences.json",
+          "sha256": "00331a972b3d880cf3024c968094b99690967e01e1d16d6ae7241cfe36f53230",
+          "bytes": 96
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\backup-manifest.json",
+          "sha256": "64601391f14854598d26057b24ef38db80655a7f72f277f4dd55f58f77612d43",
+          "bytes": 103
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\preferences.json",
+          "sha256": "62e6853427c5bae93b1c1fc7176e7f80024886fa3170a36c71ef9e9c92350327",
+          "bytes": 99
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\manager-state\\preferences.json",
+          "sha256": "da74e23449c64f16c7c62fd7bc31ec971d134ffadbe69927572a76e18f8c1448",
+          "bytes": 83
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\backups\\retained-payload.json",
+          "sha256": "9a2447d64f316f8c6687eca32361914ef643ac4dbb167c94a21a9f6087f84c97",
+          "bytes": 82
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\outside-root.sentinel",
+          "sha256": "4320f389b8cfe645b79174e9eb06ddaf5c6d7ec035947a80d10790b4b3ce3c44",
+          "bytes": 62
+        }
+      ],
+      "allSeededFixturesUnchanged": true,
+      "name": "after-reinstall"
+    },
+    {
+      "name": "final-default-uninstall-823",
+      "exitCode": 0,
+      "atUtc": "2026-10-16T10:46:56.7784472+00:00"
+    },
+    {
+      "files": [
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\manager-state\\preferences.json",
+          "sha256": "00331a972b3d880cf3024c968094b99690967e01e1d16d6ae7241cfe36f53230",
+          "bytes": 96
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\backup-manifest.json",
+          "sha256": "64601391f14854598d26057b24ef38db80655a7f72f277f4dd55f58f77612d43",
+          "bytes": 103
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces\\data\\backups\\retained\\preferences.json",
+          "sha256": "62e6853427c5bae93b1c1fc7176e7f80024886fa3170a36c71ef9e9c92350327",
+          "bytes": 99
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\manager-state\\preferences.json",
+          "sha256": "da74e23449c64f16c7c62fd7bc31ec971d134ffadbe69927572a76e18f8c1448",
+          "bytes": 83
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root\\backups\\retained-payload.json",
+          "sha256": "9a2447d64f316f8c6687eca32361914ef643ac4dbb167c94a21a9f6087f84c97",
+          "bytes": 82
+        },
+        {
+          "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\outside-root.sentinel",
+          "sha256": "4320f389b8cfe645b79174e9eb06ddaf5c6d7ec035947a80d10790b4b3ce3c44",
+          "bytes": 62
+        }
+      ],
+      "allSeededFixturesUnchanged": true,
+      "name": "after-final-default-uninstall"
+    }
+  ],
+  "productLaunched": false,
+  "explicitDataPurgeTested": false,
+  "customRootIsSeededSiblingNotApplicationBinding": true,
+  "fullInstallerGatePassed": false,
+  "releaseAccepted": false,
+  "finishedAtUtc": "2026-10-16T10:46:56.9734793+00:00",
+  "installerStateMustBeReadBeforeAnyNextAction": true
+}

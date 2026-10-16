@@ -1,0 +1,12 @@
+{
+  "atUtc": "2026-10-16T10:51:58.4628841+00:00",
+  "originalVerifier": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-MSI-RUN/verify-window.py",
+  "originalVerifierSha256": "db64f8052595920c11500f2f7070c61141f9200b627af1a010b32d30ad88e66b",
+  "exceptionType": "KeyError",
+  "missingField": "status",
+  "cause": "Offline verifier incorrectly assumed a status field instead of the frozen preflight boolean/count fields",
+  "runtimeEvidenceChanged": false,
+  "productOrInstallerReexecuted": false,
+  "originalFailurePreserved": true,
+  "correctedVerifier": "verify-window.py"
+}

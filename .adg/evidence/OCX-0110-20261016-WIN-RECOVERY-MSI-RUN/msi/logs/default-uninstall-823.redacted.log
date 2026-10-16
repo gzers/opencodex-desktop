@@ -1,0 +1,599 @@
+=== Verbose logging started: 2026/10/16  18:46:54  Build type: SHIP UNICODE 5.00.10011.00  Calling process: C:\WINDOWS\System32\msiexec.exe ===
+MSI (c) (C4:40) [18:46:54:319]: Resetting cached policy values
+MSI (c) (C4:40) [18:46:54:319]: Machine policy value 'Debug' is 0
+MSI (c) (C4:40) [18:46:54:319]: ******* RunEngine:
+           ******* Product: {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}
+           ******* Action: 
+           ******* CommandLine: **********
+MSI (c) (C4:40) [18:46:54:320]: Client-side and UI is none or basic: Running entire install on the server.
+MSI (c) (C4:40) [18:46:54:322]: Grabbed execution mutex.
+MSI (c) (C4:40) [18:46:54:324]: Cloaking enabled.
+MSI (c) (C4:40) [18:46:54:324]: Attempting to enable all disabled privileges before calling Install on Server
+MSI (c) (C4:40) [18:46:54:326]: Incrementing counter to disable shutdown. Counter after increment: 0
+MSI (s) (EC:4C) [18:46:54:331]: Running installation inside multi-package transaction {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}
+MSI (s) (EC:4C) [18:46:54:331]: Grabbed execution mutex.
+MSI (s) (EC:20) [18:46:54:333]: Resetting cached policy values
+MSI (s) (EC:20) [18:46:54:333]: Machine policy value 'Debug' is 0
+MSI (s) (EC:20) [18:46:54:333]: ******* RunEngine:
+           ******* Product: {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}
+           ******* Action: 
+           ******* CommandLine: **********
+MSI (s) (EC:20) [18:46:54:333]: Machine policy value 'DisableUserInstalls' is 0
+MSI (s) (EC:20) [18:46:54:334]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:334]: SRSetRestorePoint skipped for this transaction.
+MSI (s) (EC:20) [18:46:54:334]: MSCOREE not loaded loading copy from system32
+MSI (s) (EC:20) [18:46:54:337]: End dialog not enabled
+MSI (s) (EC:20) [18:46:54:338]: Original package ==> C:\WINDOWS\Installer\fe74a20.msi
+MSI (s) (EC:20) [18:46:54:338]: Package we're running from ==> C:\WINDOWS\Installer\fe74a20.msi
+MSI (s) (EC:20) [18:46:54:338]: APPCOMPAT: Uninstall Flags override found.
+MSI (s) (EC:20) [18:46:54:338]: APPCOMPAT: Uninstall VersionNT override found.
+MSI (s) (EC:20) [18:46:54:338]: APPCOMPAT: Uninstall ServicePackLevel override found.
+MSI (s) (EC:20) [18:46:54:339]: APPCOMPAT: looking for appcompat database entry with ProductCode '{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}'.
+MSI (s) (EC:20) [18:46:54:339]: APPCOMPAT: no matching ProductCode found in database.
+MSI (s) (EC:20) [18:46:54:347]: Note: 1: 2205 2:  3: MsiFileHash 
+MSI (s) (EC:20) [18:46:54:347]: Machine policy value 'DisablePatch' is 0
+MSI (s) (EC:20) [18:46:54:347]: Machine policy value 'AllowLockdownPatch' is 0
+MSI (s) (EC:20) [18:46:54:347]: Machine policy value 'DisableLUAPatching' is 0
+MSI (s) (EC:20) [18:46:54:347]: Machine policy value 'DisableFlyWeightPatching' is 0
+MSI (s) (EC:20) [18:46:54:349]: APPCOMPAT: looking for appcompat database entry with ProductCode '{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}'.
+MSI (s) (EC:20) [18:46:54:350]: APPCOMPAT: no matching ProductCode found in database.
+MSI (s) (EC:20) [18:46:54:350]: Transforms are not secure.
+MSI (s) (EC:20) [18:46:54:350]: PROPERTY CHANGE: Adding MsiLogFileLocation property. Its value is 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\default-uninstall-823.original.log'.
+MSI (s) (EC:20) [18:46:54:350]: Command Line: REBOOT=ReallySuppress AUTOLAUNCHAPP= REMOVE=ALL CURRENTDIRECTORY=D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop CLIENTUILEVEL=3 CLIENTPROCESSID=63684 
+MSI (s) (EC:20) [18:46:54:350]: PROPERTY CHANGE: Adding PackageCode property. Its value is '{0F479880-5F68-4773-A198-C4541F21D4BB}'.
+MSI (s) (EC:20) [18:46:54:350]: Product Code passed to Engine.Initialize:           '{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}'
+MSI (s) (EC:20) [18:46:54:350]: Product Code from property table before transforms: '{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}'
+MSI (s) (EC:20) [18:46:54:350]: Product Code from property table after transforms:  '{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}'
+MSI (s) (EC:20) [18:46:54:350]: Product registered: entering maintenance mode
+MSI (s) (EC:20) [18:46:54:350]: Determined that existing product (either this product or the product being upgraded with a patch) is installed per-machine.
+MSI (s) (EC:20) [18:46:54:350]: Product {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF} is admin assigned: LocalSystem owns the publish key.
+MSI (s) (EC:20) [18:46:54:350]: Product {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF} is managed.
+MSI (s) (EC:20) [18:46:54:350]: MSI_LUA: Credential prompt not required, user is an admin
+MSI (s) (EC:20) [18:46:54:350]: PROPERTY CHANGE: Adding ProductState property. Its value is '5'.
+MSI (s) (EC:20) [18:46:54:350]: PROPERTY CHANGE: Adding ProductToBeRegistered property. Its value is '1'.
+MSI (s) (EC:20) [18:46:54:351]: Package name retrieved from configuration data: 'OpenCodeX Desktop_0.1.10_x64_en-US.msi'
+MSI (s) (EC:20) [18:46:54:351]: Note: 1: 2205 2:  3: Error 
+MSI (s) (EC:20) [18:46:54:352]: Note: 1: 2262 2: AdminProperties 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:354]: Machine policy value 'DisableMsi' is 1
+MSI (s) (EC:20) [18:46:54:354]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (EC:20) [18:46:54:354]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (EC:20) [18:46:54:354]: Product {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF} is admin assigned: LocalSystem owns the publish key.
+MSI (s) (EC:20) [18:46:54:354]: Product {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF} is managed.
+MSI (s) (EC:20) [18:46:54:354]: Running product '{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}' with elevated privileges: Product is assigned.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding REBOOT property. Its value is 'ReallySuppress'.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding REMOVE property. Its value is 'ALL'.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding CURRENTDIRECTORY property. Its value is 'D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop'.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding CLIENTUILEVEL property. Its value is '3'.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding CLIENTPROCESSID property. Its value is '63684'.
+MSI (s) (EC:20) [18:46:54:354]: Machine policy value 'DisableAutomaticApplicationShutdown' is 0
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding MsiRestartManagerSessionKey property. Its value is '3427614be88a0444a4825947d2d7fcb6'.
+MSI (s) (EC:20) [18:46:54:354]: RESTART MANAGER: Session opened.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding MsiSystemRebootPending property. Its value is '1'.
+MSI (s) (EC:20) [18:46:54:354]: TRANSFORMS property is now: 
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding PRODUCTLANGUAGE property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:354]: PROPERTY CHANGE: Adding VersionDatabase property. Its value is '450'.
+MSI (s) (EC:20) [18:46:54:356]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming
+MSI (s) (EC:20) [18:46:54:357]: SHELL32::SHGetFolderPath returned: C:\Users\15119\Favorites
+MSI (s) (EC:20) [18:46:54:358]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Network Shortcuts
+MSI (s) (EC:20) [18:46:54:359]: SHELL32::SHGetFolderPath returned: D:\Users\15119\Documents
+MSI (s) (EC:20) [18:46:54:360]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Printer Shortcuts
+MSI (s) (EC:20) [18:46:54:361]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Recent
+MSI (s) (EC:20) [18:46:54:361]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\SendTo
+MSI (s) (EC:20) [18:46:54:362]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Templates
+MSI (s) (EC:20) [18:46:54:362]: SHELL32::SHGetFolderPath returned: C:\ProgramData
+MSI (s) (EC:20) [18:46:54:364]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Local
+MSI (s) (EC:20) [18:46:54:364]: SHELL32::SHGetFolderPath returned: D:\Users\15119\Pictures
+MSI (s) (EC:20) [18:46:54:366]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+MSI (s) (EC:20) [18:46:54:368]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup
+MSI (s) (EC:20) [18:46:54:369]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs
+MSI (s) (EC:20) [18:46:54:370]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu
+MSI (s) (EC:20) [18:46:54:370]: SHELL32::SHGetFolderPath returned: C:\Users\Public\Desktop
+MSI (s) (EC:20) [18:46:54:374]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Administrative Tools
+MSI (s) (EC:20) [18:46:54:376]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+MSI (s) (EC:20) [18:46:54:377]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Start Menu\Programs
+MSI (s) (EC:20) [18:46:54:378]: SHELL32::SHGetFolderPath returned: C:\Users\15119\AppData\Roaming\Microsoft\Windows\Start Menu
+MSI (s) (EC:20) [18:46:54:379]: SHELL32::SHGetFolderPath returned: D:\Users\15119\Desktop
+MSI (s) (EC:20) [18:46:54:380]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Templates
+MSI (s) (EC:20) [18:46:54:380]: SHELL32::SHGetFolderPath returned: C:\WINDOWS\Fonts
+MSI (s) (EC:20) [18:46:54:381]: Note: 1: 2898 2: MS Sans Serif 3: MS Sans Serif 4: 0 5: 16 
+MSI (s) (EC:20) [18:46:54:389]: MSI_LUA: Setting AdminUser property to 1 because the product is already installed managed and per-machine
+MSI (s) (EC:20) [18:46:54:389]: MSI_LUA: Setting MsiRunningElevated property to 1 because the install is already running elevated.
+MSI (s) (EC:20) [18:46:54:389]: PROPERTY CHANGE: Adding MsiRunningElevated property. Its value is '1'.
+MSI (s) (EC:20) [18:46:54:389]: PROPERTY CHANGE: Adding Privileged property. Its value is '1'.
+MSI (s) (EC:20) [18:46:54:389]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\MS Setup (ACME)\User Info 3: 2 
+MSI (s) (EC:20) [18:46:54:389]: Note: 1: 1402 2: HKEY_CURRENT_USER\Software\Microsoft\MS Setup (ACME)\User Info 3: 2 
+MSI (s) (EC:20) [18:46:54:389]: PROPERTY CHANGE: Adding Installed property. Its value is '00:00:00'.
+MSI (s) (EC:20) [18:46:54:389]: PROPERTY CHANGE: Adding DATABASE property. Its value is 'C:\WINDOWS\Installer\fe74a20.msi'.
+MSI (s) (EC:20) [18:46:54:389]: PROPERTY CHANGE: Adding OriginalDatabase property. Its value is 'C:\WINDOWS\Installer\fe74a20.msi'.
+MSI (s) (EC:20) [18:46:54:389]: Machine policy value 'MsiDisableEmbeddedUI' is 0
+MSI (s) (EC:20) [18:46:54:389]: EEUI - Disabling MsiEmbeddedUI for service because it's not a quiet/basic install
+MSI (s) (EC:20) [18:46:54:390]: Note: 1: 2205 2:  3: PatchPackage 
+MSI (s) (EC:20) [18:46:54:390]: Machine policy value 'DisableRollback' is 0
+MSI (s) (EC:20) [18:46:54:390]: User policy value 'DisableRollback' is 0
+MSI (s) (EC:20) [18:46:54:390]: PROPERTY CHANGE: Adding UILevel property. Its value is '2'.
+=== Logging started: 2026/10/16  18:46:54 ===
+MSI (s) (EC:20) [18:46:54:391]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:391]: PROPERTY CHANGE: Adding Preselected property. Its value is '1'.
+MSI (s) (EC:20) [18:46:54:391]: Note: 1: 2205 2:  3: LaunchCondition 
+MSI (s) (EC:20) [18:46:54:391]: Note: 1: 2228 2:  3: LaunchCondition 4: SELECT `Condition` FROM `LaunchCondition` 
+MSI (s) (EC:20) [18:46:54:391]: APPCOMPAT: [DetectVersionLaunchCondition] Failed to initialize pRecErr.
+MSI (s) (EC:20) [18:46:54:391]: PROPERTY CHANGE: Adding ACTION property. Its value is 'INSTALL'.
+MSI (s) (EC:20) [18:46:54:391]: Doing action: INSTALL
+MSI (s) (EC:20) [18:46:54:391]: Note: 1: 2205 2:  3: ActionText 
+Action start 18:46:54: INSTALL.
+MSI (s) (EC:20) [18:46:54:392]: Running ExecuteSequence
+MSI (s) (EC:20) [18:46:54:392]: Doing action: FindRelatedProducts
+MSI (s) (EC:20) [18:46:54:392]: Note: 1: 2205 2:  3: ActionText 
+MSI (s) (EC:20) [18:46:54:393]: Skipping FindRelatedProducts action: not run in maintenance mode
+Action start 18:46:54: FindRelatedProducts.
+MSI (s) (EC:20) [18:46:54:394]: Doing action: AppSearch
+MSI (s) (EC:20) [18:46:54:394]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: FindRelatedProducts. Return value 0.
+Action start 18:46:54: AppSearch.
+MSI (s) (EC:20) [18:46:54:396]: Note: 1: 2262 2: Signature 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:397]: Note: 1: 2262 2: Signature 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:397]: PROPERTY CHANGE: Adding INSTALLDIR property. Its value is 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\'.
+MSI (s) (EC:20) [18:46:54:397]: Note: 1: 2262 2: Signature 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:397]: PROPERTY CHANGE: Adding INSTALLED_WEBVIEW2_VERSION property. Its value is '155.0.4283.45'.
+MSI (s) (EC:20) [18:46:54:398]: Note: 1: 2262 2: Signature 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:398]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5} 3: 2 
+MSI (s) (EC:20) [18:46:54:398]: Note: 1: 2262 2: Signature 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:398]: Note: 1: 1402 2: HKEY_CURRENT_USER\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5} 3: 2 
+MSI (s) (EC:20) [18:46:54:399]: Doing action: ValidateProductID
+MSI (s) (EC:20) [18:46:54:399]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: AppSearch. Return value 1.
+Action start 18:46:54: ValidateProductID.
+MSI (s) (EC:20) [18:46:54:400]: Doing action: CostInitialize
+MSI (s) (EC:20) [18:46:54:400]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: ValidateProductID. Return value 1.
+MSI (s) (EC:20) [18:46:54:401]: Machine policy value 'MaxPatchCacheSize' is 10
+MSI (s) (EC:20) [18:46:54:403]: PROPERTY CHANGE: Adding ROOTDRIVE property. Its value is 'D:\'.
+MSI (s) (EC:20) [18:46:54:403]: PROPERTY CHANGE: Adding CostingComplete property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: Patch 
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: PatchPackage 
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: MsiPatchHeaders 
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: __MsiPatchFileList 
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: PatchPackage 
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2228 2:  3: PatchPackage 4: SELECT `DiskId`, `PatchId`, `LastSequence` FROM `Media`, `PatchPackage` WHERE `Media`.`DiskId`=`PatchPackage`.`Media_` ORDER BY `DiskId`  
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: Patch 
+Action start 18:46:54: CostInitialize.
+MSI (s) (EC:20) [18:46:54:403]: Doing action: FileCost
+MSI (s) (EC:20) [18:46:54:403]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: CostInitialize. Return value 1.
+MSI (s) (EC:20) [18:46:54:404]: Note: 1: 2205 2:  3: MsiAssembly 
+MSI (s) (EC:20) [18:46:54:404]: Note: 1: 2205 2:  3: Class 
+MSI (s) (EC:20) [18:46:54:404]: Note: 1: 2205 2:  3: Extension 
+MSI (s) (EC:20) [18:46:54:404]: Note: 1: 2205 2:  3: TypeLib 
+Action start 18:46:54: FileCost.
+MSI (s) (EC:20) [18:46:54:405]: Doing action: CostFinalize
+MSI (s) (EC:20) [18:46:54:405]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: FileCost. Return value 1.
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Adding OutOfDiskSpace property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Adding OutOfNoRbDiskSpace property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceAvailable property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceRequired property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Adding PrimaryVolumeSpaceRemaining property. Its value is '0'.
+MSI (s) (EC:20) [18:46:54:405]: Note: 1: 2205 2:  3: MsiAssembly 
+MSI (s) (EC:20) [18:46:54:405]: Note: 1: 2228 2:  3: MsiAssembly 4:  SELECT `MsiAssembly`.`Attributes`, `MsiAssembly`.`File_Application`, `MsiAssembly`.`File_Manifest`,  `Component`.`KeyPath` FROM `MsiAssembly`, `Component` WHERE  `MsiAssembly`.`Component_` = `Component`.`Component` AND `MsiAssembly`.`Component_` = ? 
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Modifying INSTALLDIR property. Its current value is 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\'. Its new value: 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces'.
+MSI (s) (EC:20) [18:46:54:405]: Note: 1: 2205 2:  3: Patch 
+MSI (s) (EC:20) [18:46:54:405]: Note: 1: 2205 2:  3: Condition 
+MSI (s) (EC:20) [18:46:54:405]: PROPERTY CHANGE: Adding TARGETDIR property. Its value is 'D:\'.
+MSI (s) (EC:20) [18:46:54:407]: PROPERTY CHANGE: Adding ApplicationProgramsFolder property. Its value is 'C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\'.
+MSI (s) (EC:20) [18:46:54:407]: PROPERTY CHANGE: Modifying INSTALLDIR property. Its current value is 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces'. Its new value: 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\'.
+MSI (s) (EC:20) [18:46:54:407]: Target path resolution complete. Dumping Directory table...
+MSI (s) (EC:20) [18:46:54:407]: Note: target paths subject to change (via custom actions or browsing)
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: TARGETDIR	, Object: D:\
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: WindowsFolder	, Object: C:\WINDOWS\
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: ProgramMenuFolder	, Object: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: ApplicationProgramsFolder	, Object: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: DesktopFolder	, Object: C:\Users\Public\Desktop\
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: ProgramFiles64Folder	, Object: C:\Program Files\
+MSI (s) (EC:20) [18:46:54:407]: Dir (target): Key: INSTALLDIR	, Object: C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\
+MSI (s) (EC:20) [18:46:54:407]: PROPERTY CHANGE: Adding INSTALLLEVEL property. Its value is '1'.
+Action start 18:46:54: CostFinalize.
+MSI (s) (EC:20) [18:46:54:407]: Doing action: SetARPINSTALLLOCATION
+MSI (s) (EC:20) [18:46:54:407]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: CostFinalize. Return value 1.
+MSI (s) (EC:20) [18:46:54:410]: PROPERTY CHANGE: Adding ARPINSTALLLOCATION property. Its value is 'C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\'.
+Action start 18:46:54: SetARPINSTALLLOCATION.
+MSI (s) (EC:20) [18:46:54:410]: Doing action: MigrateFeatureStates
+MSI (s) (EC:20) [18:46:54:410]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: SetARPINSTALLLOCATION. Return value 1.
+MSI (s) (EC:20) [18:46:54:411]: Skipping MigrateFeatureStates action: not run in maintenance mode
+Action start 18:46:54: MigrateFeatureStates.
+MSI (s) (EC:20) [18:46:54:412]: Doing action: InstallValidate
+MSI (s) (EC:20) [18:46:54:412]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: MigrateFeatureStates. Return value 0.
+MSI (s) (EC:20) [18:46:54:413]: PROPERTY CHANGE: Deleting MsiRestartManagerSessionKey property. Its current value is '3427614be88a0444a4825947d2d7fcb6'.
+MSI (s) (EC:20) [18:46:54:413]: Feature: ShortcutsFeature; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Feature: MainProgram; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Feature: Environment; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Feature: External; Installed: Null;   Request: Null;   Action: Null
+MSI (s) (EC:20) [18:46:54:413]: Component: ApplicationShortcutDesktop; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: RegistryEntries; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: Path; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: ocxd; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: CMP_UninstallShortcut; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: ApplicationShortcut; Installed: Local;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: __ApplicationShortcutDesktop65; Installed: Null;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: __RegistryEntries65; Installed: Null;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: __CMP_UninstallShortcut65; Installed: Null;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Component: __ApplicationShortcut65; Installed: Null;   Request: Absent;   Action: Absent
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: BindImage 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: ProgId 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: PublishComponent 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: SelfReg 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: Extension 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: Font 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: Class 
+MSI (s) (EC:20) [18:46:54:413]: Note: 1: 2205 2:  3: TypeLib 
+Action start 18:46:54: InstallValidate.
+MSI (s) (EC:20) [18:46:54:415]: Note: 1: 2205 2:  3: _RemoveFilePath 
+MSI (s) (EC:20) [18:46:54:421]: PROPERTY CHANGE: Modifying CostingComplete property. Its current value is '0'. Its new value: '1'.
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: BindImage 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: ProgId 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: PublishComponent 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: SelfReg 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: Extension 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: Font 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: Class 
+MSI (s) (EC:20) [18:46:54:421]: Note: 1: 2205 2:  3: TypeLib 
+MSI (s) (EC:20) [18:46:54:422]: Note: 1: 2727 2:  
+MSI (s) (EC:20) [18:46:54:422]: Note: 1: 2205 2:  3: FilesInUse 
+MSI (s) (EC:20) [18:46:54:432]: Note: 1: 2727 2:  
+MSI (s) (EC:20) [18:46:54:433]: Doing action: SetARPNOMODIFY
+MSI (s) (EC:20) [18:46:54:433]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: InstallValidate. Return value 1.
+Action start 18:46:54: SetARPNOMODIFY.
+MSI (s) (EC:20) [18:46:54:434]: Doing action: InstallInitialize
+MSI (s) (EC:20) [18:46:54:434]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: SetARPNOMODIFY. Return value 1.
+MSI (s) (EC:20) [18:46:54:435]: Machine policy value 'AlwaysInstallElevated' is 0
+MSI (s) (EC:20) [18:46:54:435]: User policy value 'AlwaysInstallElevated' is 0
+MSI (s) (EC:20) [18:46:54:435]: BeginTransaction: Locking Server
+MSI (s) (EC:20) [18:46:54:435]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:435]: SRSetRestorePoint skipped for this transaction.
+MSI (s) (EC:20) [18:46:54:435]: Note: 1: 2203 2: C:\WINDOWS\Installer\inprogressinstallinfo.ipi 3: -2147287038 
+MSI (s) (EC:20) [18:46:54:435]: Server not locked: locking for product {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}
+MSI (s) (EC:20) [18:46:54:440]: Note: 1: 2205 2:  3: ActionText 
+MSI (s) (EC:20) [18:46:54:440]: Note: 1: 2205 2:  3: ActionText 
+MSI (s) (EC:20) [18:46:54:442]: Note: 1: 2205 2:  3: ActionText 
+Action start 18:46:54: InstallInitialize.
+MSI (s) (EC:20) [18:46:54:445]: PROPERTY CHANGE: Deleting ProductToBeRegistered property. Its current value is '1'.
+MSI (s) (EC:20) [18:46:54:446]: Note: 1: 2205 2:  3: Class 
+MSI (s) (EC:20) [18:46:54:446]: Note: 1: 2228 2:  3: Class 4: SELECT `CLSID` FROM `Class` WHERE `Icon_`=? AND `Class`.`Attributes`=1 
+MSI (s) (EC:20) [18:46:54:446]: Note: 1: 2205 2:  3: Class 
+MSI (s) (EC:20) [18:46:54:446]: Note: 1: 2228 2:  3: Class 4: SELECT `Component`,`CLSID` FROM `Component`,`Class` WHERE `Component`=`Component_` AND `Icon_`=? AND  (`Component`.`Installed` <> 0 AND `Component`.`Action` <> 0) 
+MSI (s) (EC:20) [18:46:54:446]: Note: 1: 2205 2:  3: Extension 
+MSI (s) (EC:20) [18:46:54:446]: Note: 1: 2228 2:  3: Extension 4: SELECT `Component`,`Extension` FROM `Component`,`Extension`,`ProgId` WHERE `Component`.`Component`=`Extension`.`Component_` AND `ProgId`.`ProgId`=`Extension`.`ProgId_` AND `ProgId`.`Icon_`=? AND  (`Component`.`Installed` <> 0 AND `Component`.`Action` <> 0) 
+MSI (s) (EC:20) [18:46:54:446]: 'ProductIcon' icon will be removed.
+MSI (s) (EC:20) [18:46:54:447]: Doing action: RemoveExistingProducts
+MSI (s) (EC:20) [18:46:54:447]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: InstallInitialize. Return value 1.
+MSI (s) (EC:20) [18:46:54:449]: Skipping RemoveExistingProducts action: current configuration is maintenance mode or an uninstall
+Action start 18:46:54: RemoveExistingProducts.
+MSI (s) (EC:20) [18:46:54:449]: Doing action: ProcessComponents
+MSI (s) (EC:20) [18:46:54:449]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: RemoveExistingProducts. Return value 0.
+Action start 18:46:54: ProcessComponents.
+MSI (s) (EC:20) [18:46:54:457]: Doing action: UnpublishFeatures
+MSI (s) (EC:20) [18:46:54:457]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: ProcessComponents. Return value 1.
+Action start 18:46:54: UnpublishFeatures.
+MSI (s) (EC:20) [18:46:54:460]: Doing action: RemoveRegistryValues
+MSI (s) (EC:20) [18:46:54:460]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: UnpublishFeatures. Return value 1.
+Action start 18:46:54: RemoveRegistryValues.
+MSI (s) (EC:20) [18:46:54:465]: Doing action: RemoveShortcuts
+MSI (s) (EC:20) [18:46:54:465]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: RemoveRegistryValues. Return value 1.
+Action start 18:46:54: RemoveShortcuts.
+MSI (s) (EC:20) [18:46:54:470]: Doing action: RemoveFiles
+MSI (s) (EC:20) [18:46:54:470]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: RemoveShortcuts. Return value 1.
+Action start 18:46:54: RemoveFiles.
+MSI (s) (EC:20) [18:46:54:473]: Counted 3 foreign folders to be removed.
+MSI (s) (EC:20) [18:46:54:473]: Removing foreign folder: C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\
+MSI (s) (EC:20) [18:46:54:474]: Removing foreign folder: C:\Users\Public\Desktop\
+MSI (s) (EC:20) [18:46:54:474]: Removing foreign folder: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\
+MSI (s) (EC:20) [18:46:54:474]: Doing action: InstallFiles
+MSI (s) (EC:20) [18:46:54:474]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: RemoveFiles. Return value 1.
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2205 2:  3: Patch 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2228 2:  3: Patch 4: SELECT `Patch`.`File_`, `Patch`.`Header`, `Patch`.`Attributes`, `Patch`.`Sequence`, `Patch`.`StreamRef_` FROM `Patch` WHERE `Patch`.`File_` = ? AND `Patch`.`#_MsiActive`=? ORDER BY `Patch`.`Sequence` 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2205 2:  3: Error 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1302 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2205 2:  3: MsiSFCBypass 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2228 2:  3: MsiSFCBypass 4: SELECT `File_` FROM `MsiSFCBypass` WHERE `File_` = ? 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2205 2:  3: MsiPatchHeaders 
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2228 2:  3: MsiPatchHeaders 4: SELECT `Header` FROM `MsiPatchHeaders` WHERE `StreamRef` = ? 
+Action start 18:46:54: InstallFiles.
+MSI (s) (EC:20) [18:46:54:476]: Doing action: CreateShortcuts
+MSI (s) (EC:20) [18:46:54:476]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: InstallFiles. Return value 1.
+Action start 18:46:54: CreateShortcuts.
+MSI (s) (EC:20) [18:46:54:479]: Doing action: WriteRegistryValues
+MSI (s) (EC:20) [18:46:54:479]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: CreateShortcuts. Return value 1.
+Action start 18:46:54: WriteRegistryValues.
+MSI (s) (EC:20) [18:46:54:481]: Doing action: RegisterUser
+MSI (s) (EC:20) [18:46:54:481]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: WriteRegistryValues. Return value 1.
+Action start 18:46:54: RegisterUser.
+MSI (s) (EC:20) [18:46:54:482]: Doing action: RegisterProduct
+MSI (s) (EC:20) [18:46:54:482]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: RegisterUser. Return value 0.
+Action start 18:46:54: RegisterProduct.
+MSI (s) (EC:20) [18:46:54:483]: Doing action: PublishFeatures
+MSI (s) (EC:20) [18:46:54:483]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: RegisterProduct. Return value 1.
+Action start 18:46:54: PublishFeatures.
+MSI (s) (EC:20) [18:46:54:485]: Doing action: PublishProduct
+MSI (s) (EC:20) [18:46:54:485]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: PublishFeatures. Return value 1.
+Action start 18:46:54: PublishProduct.
+MSI (s) (EC:20) [18:46:54:489]: Skipping action: DownloadAndInvokeBootstrapper (condition is false)
+MSI (s) (EC:20) [18:46:54:489]: Doing action: InstallFinalize
+MSI (s) (EC:20) [18:46:54:489]: Note: 1: 2205 2:  3: ActionText 
+Action ended 18:46:54: PublishProduct. Return value 1.
+MSI (s) (EC:20) [18:46:54:489]: Running Script: C:\WINDOWS\Installer\MSIA700.tmp
+MSI (s) (EC:20) [18:46:54:489]: PROPERTY CHANGE: Adding UpdateStarted property. Its value is '1'.
+MSI (s) (EC:20) [18:46:54:492]: Note: 1: 2265 2:  3: -2147287035 
+MSI (s) (EC:20) [18:46:54:493]: Machine policy value 'DisableRollback' is 0
+MSI (s) (EC:20) [18:46:54:493]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:494]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:495]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2 
+MSI (s) (EC:20) [18:46:54:495]: Executing op: Header(Signature=1397708873,Version=500,Timestamp=1565562332,LangId=0,Platform=589824,ScriptType=1,ScriptMajorVersion=21,ScriptMinorVersion=4,ScriptAttributes=1)
+Action start 18:46:54: InstallFinalize.
+MSI (s) (EC:20) [18:46:54:495]: Executing op: ProductInfo(ProductKey={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF},ProductName=OpenCodeX Desktop,PackageName=OpenCodeX Desktop_0.1.10_x64_en-US.msi,Language=0,Version=65546,Assignment=1,ObsoleteArg=0,ProductIcon=ProductIcon,,PackageCode={0F479880-5F68-4773-A198-C4541F21D4BB},,,InstanceType=0,LUASetting=0,RemoteURTInstalls=0,ProductDeploymentFlags=3)
+MSI (s) (EC:20) [18:46:54:495]: Executing op: DialogInfo(Type=0,Argument=0)
+MSI (s) (EC:20) [18:46:54:495]: Executing op: DialogInfo(Type=1,Argument=OpenCodeX Desktop)
+MSI (s) (EC:20) [18:46:54:496]: Executing op: RollbackInfo(,RollbackAction=Rollback,RollbackDescription=Rolling back action: [1],,CleanupAction=RollbackCleanup,CleanupDescription=Removing backup files File: [1],)
+MSI (s) (EC:20) [18:46:54:496]: Executing op: SetBaseline(Baseline=0,)
+MSI (s) (EC:20) [18:46:54:496]: Executing op: SetBaseline(Baseline=1,)
+MSI (s) (EC:20) [18:46:54:496]: Executing op: ActionStart(Name=InstallInitialize,,)
+MSI (s) (EC:20) [18:46:54:497]: Executing op: ProductUnregister(UpgradeCode={30FC0B19-5C02-5849-A234-D548E7AFC0DE})
+MSI (s) (EC:20) [18:46:54:497]: Note: 1: 1402 2: UNKNOWN\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA\Transforms 3: 2 
+MSI (s) (EC:20) [18:46:54:497]: Note: 1: 1402 2: UNKNOWN\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA\Transforms 3: 2 
+MSI (s) (EC:20) [18:46:54:497]: Scheduling file 'C:\WINDOWS\Installer\fe74a20.msi' for deletion during post-install cleanup (not post-reboot).
+MSI (s) (EC:20) [18:46:54:509]: Note: 1: 1402 2: UNKNOWN\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA\Usage 3: 2 
+MSI (s) (EC:20) [18:46:54:510]: Executing op: ProductCPDisplayInfoUnregister()
+MSI (s) (EC:20) [18:46:54:511]: Executing op: ProductUnpublish(PackageKey={0F479880-5F68-4773-A198-C4541F21D4BB})
+MSI (s) (EC:20) [18:46:54:513]: Executing op: UpgradeCodeUnpublish(UpgradeCode={30FC0B19-5C02-5849-A234-D548E7AFC0DE})
+MSI (s) (EC:20) [18:46:54:515]: Executing op: IconRemove(Icon=ProductIcon,)
+MSI (s) (EC:20) [18:46:54:515]: Scheduling file 'C:\WINDOWS\Installer\{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}\ProductIcon' for deletion during post-install cleanup (not post-reboot).
+MSI (s) (EC:20) [18:46:54:515]: Executing op: ProductUnpublishClient(,,)
+MSI (s) (EC:20) [18:46:54:515]: Note: 1: 1402 2: UNKNOWN\Installer\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA 3: 2 
+MSI (s) (EC:20) [18:46:54:515]: Executing op: SourceListUnpublish(,)
+MSI (s) (EC:20) [18:46:54:515]: Note: 1: 1402 2: UNKNOWN\Installer\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA\SourceList 3: 2 
+MSI (s) (EC:20) [18:46:54:515]: Executing op: ActionStart(Name=ProcessComponents,Description=Updating component registration,)
+MSI (s) (EC:20) [18:46:54:517]: Executing op: ProgressTotal(Total=6,Type=1,ByteEquivalent=24000)
+MSI (s) (EC:20) [18:46:54:517]: Executing op: UnregisterSharedComponentProvider(Component={C3F10F4C-0818-5270-ADDC-6F1357B8B2D9},ProductCode={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF})
+MSI (s) (EC:20) [18:46:54:517]: Executing op: ComponentUnregister(ComponentId={C3F10F4C-0818-5270-ADDC-6F1357B8B2D9},,BinaryType=1,)
+MSI (s) (EC:20) [18:46:54:517]: Executing op: UnregisterSharedComponentProvider(Component={26FD65D9-1253-5394-A4BD-0690B098BF8C},ProductCode={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF})
+MSI (s) (EC:20) [18:46:54:517]: Executing op: ComponentUnregister(ComponentId={26FD65D9-1253-5394-A4BD-0690B098BF8C},,BinaryType=1,)
+MSI (s) (EC:20) [18:46:54:519]: Executing op: UnregisterSharedComponentProvider(Component={4F79C528-4B03-580B-947C-4C6F103FC98E},ProductCode={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF})
+MSI (s) (EC:20) [18:46:54:519]: Executing op: ComponentUnregister(ComponentId={4F79C528-4B03-580B-947C-4C6F103FC98E},,BinaryType=1,)
+MSI (s) (EC:20) [18:46:54:519]: Executing op: UnregisterSharedComponentProvider(Component={18BBEE9E-EB74-4DD7-82A8-CDFCD9667C47},ProductCode={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF})
+MSI (s) (EC:20) [18:46:54:519]: Executing op: ComponentUnregister(ComponentId={18BBEE9E-EB74-4DD7-82A8-CDFCD9667C47},,BinaryType=1,)
+MSI (s) (EC:20) [18:46:54:521]: Executing op: UnregisterSharedComponentProvider(Component={9F494C2B-895E-5860-B464-27455CE4E315},ProductCode={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF})
+MSI (s) (EC:20) [18:46:54:521]: Executing op: ComponentUnregister(ComponentId={9F494C2B-895E-5860-B464-27455CE4E315},,BinaryType=1,)
+MSI (s) (EC:20) [18:46:54:522]: Executing op: UnregisterSharedComponentProvider(Component={7366BE85-5B94-5EA2-9CD6-C5A71258DF0F},ProductCode={FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF})
+MSI (s) (EC:20) [18:46:54:522]: Executing op: ComponentUnregister(ComponentId={7366BE85-5B94-5EA2-9CD6-C5A71258DF0F},,BinaryType=1,)
+MSI (s) (EC:20) [18:46:54:523]: Executing op: ActionStart(Name=UnpublishFeatures,Description=Unpublishing Product Features Feature: [1],)
+MSI (s) (EC:20) [18:46:54:524]: Executing op: FeatureUnpublish(Feature=ShortcutsFeature,Parent=MainProgram,Absent=2,Component=5=v{gau+RB1c~8)p-?{n0w3VA*j=ADJWWjK{RitU.fT4[t}FJDX_57=cG$&*F1_*MoaAKF_8Gw^'Q]+()
+MSI (s) (EC:20) [18:46:54:524]: Note: 1: 1402 2: UNKNOWN\Installer\Features\E1F0E3FFDF4C5F94A80EACF614D08AFA 3: 2 
+MSI (s) (EC:20) [18:46:54:525]: Executing op: FeatureUnpublish(Feature=MainProgram,,Absent=2,Component=2U1U0vv=rBwJ_@Vii*8U)
+MSI (s) (EC:20) [18:46:54:525]: Note: 1: 1402 2: UNKNOWN\Installer\Features\E1F0E3FFDF4C5F94A80EACF614D08AFA 3: 2 
+MSI (s) (EC:20) [18:46:54:526]: Executing op: FeatureUnpublish(Feature=Environment,Parent=MainProgram,Absent=2,Component=0w3VA*j=ADJWWjK{RitU07ey*XeZ$At3B9z'yv{=)
+MSI (s) (EC:20) [18:46:54:527]: Note: 1: 1402 2: UNKNOWN\Installer\Features\E1F0E3FFDF4C5F94A80EACF614D08AFA 3: 2 
+MSI (s) (EC:20) [18:46:54:528]: Executing op: FeatureUnpublish(Feature=External,,Absent=2,)
+MSI (s) (EC:20) [18:46:54:528]: Note: 1: 1402 2: UNKNOWN\Installer\Features\E1F0E3FFDF4C5F94A80EACF614D08AFA 3: 2 
+MSI (s) (EC:20) [18:46:54:529]: Executing op: ActionStart(Name=RemoveRegistryValues,Description=Removing system registry values Key: [1], Name: [2],)
+MSI (s) (EC:20) [18:46:54:530]: Executing op: ProgressTotal(Total=4,Type=1,ByteEquivalent=13200)
+MSI (s) (EC:20) [18:46:54:530]: Executing op: RegOpenKey(Root=-2147483647,Key=Software\gzers\OpenCodeX Desktop,,BinaryType=1,,)
+MSI (s) (EC:20) [18:46:54:531]: Executing op: RegRemoveValue(Name=Desktop Shortcut,Value=#1,)
+MSI (s) (EC:20) [18:46:54:531]: Executing op: RegRemoveValue(Name=InstallDir,Value=[INSTALLDIR],)
+MSI (s) (EC:20) [18:46:54:532]: Executing op: RegRemoveValue(Name=Uninstaller Shortcut,Value=#1,)
+MSI (s) (EC:20) [18:46:54:533]: Executing op: RegRemoveValue(Name=Start Menu Shortcut,Value=#1,)
+MSI (s) (EC:20) [18:46:54:534]: Executing op: ActionStart(Name=RemoveShortcuts,Description=Removing shortcuts Shortcut: [1],)
+MSI (s) (EC:20) [18:46:54:534]: Executing op: SetTargetFolder(Folder=23\OpenCodeX Desktop\)
+MSI (s) (EC:20) [18:46:54:537]: SHELL32::SHGetFolderPath returned: C:\ProgramData\Microsoft\Windows\Start Menu\Programs
+MSI (s) (EC:20) [18:46:54:537]: Executing op: ShortcutRemove(Name=kl_b57eh|OpenCodeX Desktop)
+MSI (s) (EC:20) [18:46:54:541]: Verifying accessibility of file: OpenCodeX Desktop.lnk
+MSI (s) (EC:20) [18:46:54:541]: Using source file security for destination.
+MSI (s) (EC:20) [18:46:54:541]: Note: 1: 2318 2: C:\Config.Msi\fe74a24.rbf 
+MSI (s) (EC:20) [18:46:54:626]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:630]: Executing op: SetTargetFolder(Folder=25)
+MSI (s) (EC:20) [18:46:54:632]: SHELL32::SHGetFolderPath returned: C:\Users\Public\Desktop
+MSI (s) (EC:20) [18:46:54:632]: Executing op: ShortcutRemove(Name=usodqigf|OpenCodeX Desktop)
+MSI (s) (EC:20) [18:46:54:635]: Verifying accessibility of file: OpenCodeX Desktop.lnk
+MSI (s) (EC:20) [18:46:54:636]: Using source file security for destination.
+MSI (s) (EC:20) [18:46:54:636]: Note: 1: 2318 2: C:\Config.Msi\fe74a25.rbf 
+MSI (s) (EC:20) [18:46:54:712]: Executing op: SetTargetFolder(Folder=C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\)
+MSI (s) (EC:20) [18:46:54:712]: Executing op: ShortcutRemove(Name=kmcqt9co|Uninstall OpenCodeX Desktop)
+MSI (s) (EC:20) [18:46:54:714]: Verifying accessibility of file: Uninstall OpenCodeX Desktop.lnk
+MSI (s) (EC:20) [18:46:54:714]: Using source file security for destination.
+MSI (s) (EC:20) [18:46:54:715]: Note: 1: 2318 2: C:\Config.Msi\fe74a26.rbf 
+MSI (s) (EC:20) [18:46:54:836]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:837]: Executing op: ActionStart(Name=RemoveFiles,Description=Removing files File: [1], Directory: [9],)
+MSI (s) (EC:20) [18:46:54:837]: Executing op: ProgressTotal(Total=2,Type=1,ByteEquivalent=175000)
+MSI (s) (EC:20) [18:46:54:838]: Executing op: SetTargetFolder(Folder=C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\)
+MSI (s) (EC:20) [18:46:54:838]: Executing op: FileRemove(,FileName=opencodex-desktop.exe,,ComponentId={4F79C528-4B03-580B-947C-4C6F103FC98E})
+MSI (s) (EC:20) [18:46:54:840]: Verifying accessibility of file: opencodex-desktop.exe
+MSI (s) (EC:20) [18:46:54:841]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:841]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:842]: Executing op: FileRemove(,FileName=ocxd.exe,,ComponentId={18BBEE9E-EB74-4DD7-82A8-CDFCD9667C47})
+MSI (s) (EC:20) [18:46:54:843]: Verifying accessibility of file: ocxd.exe
+MSI (s) (EC:20) [18:46:54:844]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:845]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:845]: Executing op: ProgressTotal(Total=3,Type=1,ByteEquivalent=175000)
+MSI (s) (EC:20) [18:46:54:845]: Executing op: FolderRemove(Folder=C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\,Foreign=1)
+MSI (s) (EC:20) [18:46:54:847]: Executing op: FolderRemove(Folder=C:\Users\Public\Desktop\,Foreign=1)
+MSI (s) (EC:20) [18:46:54:847]: Executing op: FolderRemove(Folder=C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\,Foreign=1)
+MSI (s) (EC:20) [18:46:54:849]: Executing op: ActionStart(Name=PublishProduct,Description=Publishing product information,)
+MSI (s) (EC:20) [18:46:54:849]: Executing op: CleanupConfigData()
+MSI (s) (EC:20) [18:46:54:849]: Executing op: RegisterPatchOrder(Continue=0,SequenceType=0,Remove=1)
+MSI (s) (EC:20) [18:46:54:849]: Note: 1: 1402 2: UNKNOWN\Installer\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA\Patches 3: 2 
+MSI (s) (EC:20) [18:46:54:849]: Executing op: RegisterPatchOrder(Continue=0,SequenceType=1,Remove=1)
+MSI (s) (EC:20) [18:46:54:849]: Executing op: CleanupConfigData(RemovingProduct=1)
+MSI (s) (EC:20) [18:46:54:849]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\UserData\[REDACTED_WINDOWS_SID]\Products\E1F0E3FFDF4C5F94A80EACF614D08AFA\Patches 3: 2 
+MSI (s) (EC:20) [18:46:54:849]: Executing op: End(Checksum=0,ProgressTotalHDWord=0,ProgressTotalLDWord=1071800)
+MSI (s) (EC:20) [18:46:54:854]: Note: 1: 2265 2:  3: -2147287035 
+MSI (s) (EC:20) [18:46:54:855]: User policy value 'DisableRollback' is 0
+MSI (s) (EC:20) [18:46:54:855]: Machine policy value 'DisableRollback' is 0
+MSI (s) (EC:20) [18:46:54:857]: Note: 1: 2265 2:  3: -2147287035 
+MSI (s) (EC:20) [18:46:54:862]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:875]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:876]: Note: 1: 2318 2:  
+MSI (s) (EC:20) [18:46:54:879]: No System Restore sequence number for this installation.
+MSI (s) (EC:20) [18:46:54:879]: Unlocking Server
+MSI (s) (EC:20) [18:46:54:880]: PROPERTY CHANGE: Deleting UpdateStarted property. Its current value is '1'.
+MSI (s) (EC:20) [18:46:54:881]: Skipping action: LaunchApplication (condition is false)
+Action ended 18:46:54: InstallFinalize. Return value 1.
+Action ended 18:46:54: INSTALL. Return value 1.
+Property(S): UpgradeCode = {30FC0B19-5C02-5849-A234-D548E7AFC0DE}
+Property(S): INSTALLDIR = C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\
+Property(S): INSTALLED_WEBVIEW2_VERSION = 155.0.4283.45
+Property(S): WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1
+Property(S): DesktopFolder = C:\Users\Public\Desktop\
+Property(S): ApplicationProgramsFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\OpenCodeX Desktop\
+Property(S): WIXUI_INSTALLDIR = INSTALLDIR
+Property(S): WixUIRMOption = UseRM
+Property(S): ALLUSERS = 1
+Property(S): ARPNOMODIFY = 1
+Property(S): ARPNOREPAIR = yes
+Property(S): ARPINSTALLLOCATION = C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\install with spaces\
+Property(S): TARGETDIR = D:\
+Property(S): ProgramFiles64Folder = C:\Program Files\
+Property(S): ProgramMenuFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\
+Property(S): REINSTALLMODE = amus
+Property(S): ARPPRODUCTICON = ProductIcon
+Property(S): WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT = Launch OpenCodeX Desktop
+Property(S): Manufacturer = gzers
+Property(S): ProductCode = {FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}
+Property(S): ProductLanguage = 1033
+Property(S): ProductName = OpenCodeX Desktop
+Property(S): ProductVersion = 0.1.10
+Property(S): DefaultUIFont = WixUI_Font_Normal
+Property(S): WixUI_Mode = InstallDir
+Property(S): ErrorDialog = ErrorDlg
+Property(S): SecureCustomProperties = ARPNOREPAIR;AUTOLAUNCHAPP;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED
+Property(S): MsiLogFileLocation = C:\Users\15119\.codex\worktrees\windows-etw-query-threads\opencodex-desktop\test\runtime\host-msi-prepared-20261016T1740\default-uninstall-823.original.log
+Property(S): PackageCode = {0F479880-5F68-4773-A198-C4541F21D4BB}
+Property(S): ProductState = 5
+Property(S): REBOOT = ReallySuppress
+Property(S): REMOVE = ALL
+Property(S): CURRENTDIRECTORY = D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop
+Property(S): CLIENTUILEVEL = 3
+Property(S): CLIENTPROCESSID = 63684
+Property(S): MsiSystemRebootPending = 1
+Property(S): PRODUCTLANGUAGE = 0
+Property(S): VersionDatabase = 450
+Property(S): VersionMsi = 5.00
+Property(S): VersionNT = 603
+Property(S): VersionNT64 = 603
+Property(S): WindowsBuild = 9600
+Property(S): ServicePackLevel = 0
+Property(S): ServicePackLevelMinor = 0
+Property(S): MsiNTProductType = 3
+Property(S): MsiNTSuiteDataCenter = 1
+Property(S): WindowsFolder = C:\WINDOWS\
+Property(S): WindowsVolume = C:\
+Property(S): System64Folder = C:\WINDOWS\system32\
+Property(S): SystemFolder = C:\WINDOWS\SysWOW64\
+Property(S): TerminalServer = 1
+Property(S): TempFolder = C:\Users\15119\AppData\Local\Temp\
+Property(S): ProgramFilesFolder = C:\Program Files (x86)\
+Property(S): CommonFilesFolder = C:\Program Files (x86)\Common Files\
+Property(S): CommonFiles64Folder = C:\Program Files\Common Files\
+Property(S): AppDataFolder = C:\Users\15119\AppData\Roaming\
+Property(S): FavoritesFolder = C:\Users\15119\Favorites\
+Property(S): NetHoodFolder = C:\Users\15119\AppData\Roaming\Microsoft\Windows\Network Shortcuts\
+Property(S): PersonalFolder = D:\Users\15119\Documents\
+Property(S): PrintHoodFolder = C:\Users\15119\AppData\Roaming\Microsoft\Windows\Printer Shortcuts\
+Property(S): RecentFolder = C:\Users\15119\AppData\Roaming\Microsoft\Windows\Recent\
+Property(S): SendToFolder = C:\Users\15119\AppData\Roaming\Microsoft\Windows\SendTo\
+Property(S): TemplateFolder = C:\ProgramData\Microsoft\Windows\Templates\
+Property(S): CommonAppDataFolder = C:\ProgramData\
+Property(S): LocalAppDataFolder = C:\Users\15119\AppData\Local\
+Property(S): MyPicturesFolder = D:\Users\15119\Pictures\
+Property(S): AdminToolsFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Administrative Tools\
+Property(S): StartupFolder = C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\
+Property(S): StartMenuFolder = C:\ProgramData\Microsoft\Windows\Start Menu\
+Property(S): FontsFolder = C:\WINDOWS\Fonts\
+Property(S): GPTSupport = 1
+Property(S): OLEAdvtSupport = 1
+Property(S): ShellAdvtSupport = 1
+Property(S): MsiAMD64 = 6
+Property(S): Msix64 = 6
+Property(S): Intel = 6
+Property(S): PhysicalMemory = 32530
+Property(S): VirtualMemory = 25925
+Property(S): AdminUser = 1
+Property(S): MsiTrueAdminUser = 1
+Property(S): LogonUser = 15119
+Property(S): UserSID = [REDACTED_WINDOWS_SID]
+Property(S): UserLanguageID = 2052
+Property(S): ComputerName = EZIO-MINI
+Property(S): SystemLanguageID = 2052
+Property(S): ScreenX = 1024
+Property(S): ScreenY = 768
+Property(S): CaptionHeight = 23
+Property(S): BorderTop = 1
+Property(S): BorderSide = 1
+Property(S): TextHeight = 16
+Property(S): TextInternalLeading = 3
+Property(S): ColorBits = 32
+Property(S): TTCSupport = 1
+Property(S): Time = 18:46:54
+Property(S): Date = 2026/10/16
+Property(S): MsiNetAssemblySupport = 4.8.9221.0
+Property(S): MsiWin32AssemblySupport = 6.3.26100.33438
+Property(S): RedirectedDllSupport = 2
+Property(S): MsiRunningElevated = 1
+Property(S): Privileged = 1
+Property(S): Installed = 00:00:00
+Property(S): DATABASE = C:\WINDOWS\Installer\fe74a20.msi
+Property(S): UILevel = 2
+Property(S): OriginalDatabase = C:\WINDOWS\Installer\fe74a20.msi
+Property(S): Preselected = 1
+Property(S): ACTION = INSTALL
+Property(S): ROOTDRIVE = D:\
+Property(S): CostingComplete = 1
+Property(S): OutOfDiskSpace = 0
+Property(S): OutOfNoRbDiskSpace = 0
+Property(S): PrimaryVolumeSpaceAvailable = 0
+Property(S): PrimaryVolumeSpaceRequired = 0
+Property(S): PrimaryVolumeSpaceRemaining = 0
+Property(S): INSTALLLEVEL = 1
+MSI (s) (EC:20) [18:46:54:928]: Note: 1: 1724 
+MSI (s) (EC:20) [18:46:54:928]: Note: 1: 2205 2:  3: Error 
+MSI (s) (EC:20) [18:46:54:928]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1724 
+MSI (s) (EC:20) [18:46:54:928]: Note: 1: 2205 2:  3: Error 
+MSI (s) (EC:20) [18:46:54:928]: Note: 1: 2228 2:  3: Error 4: SELECT `Message` FROM `Error` WHERE `Error` = 1709 
+MSI (s) (EC:20) [18:46:54:928]: Product: OpenCodeX Desktop -- Removal completed successfully.
+
+MSI (s) (EC:20) [18:46:54:929]: Windows Installer 已删除产品。产品名称: OpenCodeX Desktop。产品版本: 0.1.10。产品语言: 1033。制造商: gzers。删除成功或错误状态: 0。
+
+MSI (s) (EC:20) [18:46:54:931]: Deferring clean up of packages/files, if any exist
+MSI (s) (EC:20) [18:46:54:931]: MainEngineThread is returning 0
+MSI (s) (EC:4C) [18:46:54:932]: RESTART MANAGER: Session closed.
+MSI (s) (EC:4C) [18:46:54:932]: No System Restore sequence number for this installation.
+=== Logging stopped: 2026/10/16  18:46:54 ===
+MSI (s) (EC:4C) [18:46:54:935]: User policy value 'DisableRollback' is 0
+MSI (s) (EC:4C) [18:46:54:935]: Machine policy value 'DisableRollback' is 0
+MSI (s) (EC:4C) [18:46:54:935]: Incrementing counter to disable shutdown. Counter after increment: 0
+MSI (s) (EC:4C) [18:46:54:935]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2 
+MSI (s) (EC:4C) [18:46:54:937]: Note: 1: 2265 2:  3: -2147287035 
+MSI (s) (EC:4C) [18:46:54:937]: Note: 1: 1402 2: HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Installer\Rollback\Scripts 3: 2 
+MSI (s) (EC:4C) [18:46:54:938]: Decrementing counter to disable shutdown. If counter >= 0, shutdown will be denied.  Counter after decrement: -1
+MSI (s) (EC:4C) [18:46:54:938]: Post-install cleanup: removing installer file 'C:\WINDOWS\Installer\fe74a20.msi'
+MSI (s) (EC:4C) [18:46:54:938]: Post-install cleanup: removing installer file 'C:\WINDOWS\Installer\{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}\ProductIcon'
+MSI (s) (EC:4C) [18:46:54:938]: Post-install cleanup: removing installer folder 'C:\WINDOWS\Installer\{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}\' (if empty)
+MSI (s) (EC:4C) [18:46:54:938]: Note: 1: 2318 2:  
+MSI (c) (C4:40) [18:46:54:940]: Decrementing counter to disable shutdown. If counter >= 0, shutdown will be denied.  Counter after decrement: -1
+MSI (c) (C4:40) [18:46:54:942]: MainEngineThread is returning 0
+=== Verbose logging stopped: 2026/10/16  18:46:54 ===
+

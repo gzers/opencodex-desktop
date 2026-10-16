@@ -1,0 +1,49 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-RECOVERY-MSI-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-RECOVERY-MSI-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-host-msi-seeded-retention",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-MSI-RUN/msi/execution-result.json"
+    },
+    {
+      "name": "local:windows-recovery-prerequisites-restored",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-MSI-RUN/recovery/final-protection-readback.json"
+    },
+    {
+      "name": "review:installer-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-MSI-RUN/scope.json"
+    },
+    {
+      "name": "review:native-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-MSI-RUN/recovery/recovery-process-order.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "fd272d3466f04d3a1e6264502798e2d59a90e747efaddae3a0e8a455345c2db9",
+      "summary": "真实宿主MSI升级和种子默认保留子集通过；恢复选择器受工具阻塞未通过，已还原配置；完整门禁不提升。"
+    }
+  ],
+  "completed_at": "2026-10-16T10:51:23.364577+00:00",
+  "summary": "本机MSI六步0退出与六文件保留通过；恢复240秒未交接且正常退出码未知，原配置精确恢复，TASK完整原生及安装门禁仍未通过。",
+  "revision": 1,
+  "summary_digest": "78841c4a1d5540f047a4f585bd63eaf60ae4c4a96342061c983074f17b2cac21",
+  "content_digest": "13fcc2cc17735831cbbe0dad382653c61e262d126ed22f9955eea7ffb1f72d4e"
+}
