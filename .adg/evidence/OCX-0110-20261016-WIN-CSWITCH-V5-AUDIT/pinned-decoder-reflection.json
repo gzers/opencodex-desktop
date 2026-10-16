@@ -1,0 +1,151 @@
+{
+  "atUtc": "2026-10-16T03:49:23.7792081+00:00",
+  "assemblyName": "Microsoft.Diagnostics.Tracing.TraceEvent, Version=3.1.21.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+  "informationalVersion": [
+    "3.1.21+04132a81a0b2c147d48661d2b104f4ab7d136cd5"
+  ],
+  "decoderSha256": "401e948dac99d0f9756ef96d5a8b8e4736e19e9f82ce8cdd744495951e3a94bb",
+  "properties": [
+    {
+      "property": "NewThreadID",
+      "returnType": "System.Int32",
+      "getterIlHex": "0228840400062a",
+      "enumValues": []
+    },
+    {
+      "property": "OldThreadID",
+      "returnType": "System.Int32",
+      "getterIlHex": "021a28bb0400062a",
+      "enumValues": []
+    },
+    {
+      "property": "OldThreadWaitReason",
+      "returnType": "System.Diagnostics.ThreadWaitReason",
+      "getterIlHex": "021f0c28b90400062a",
+      "enumValues": [
+        {
+          "value": 0,
+          "name": "Executive"
+        },
+        {
+          "value": 1,
+          "name": "FreePage"
+        },
+        {
+          "value": 2,
+          "name": "PageIn"
+        },
+        {
+          "value": 3,
+          "name": "SystemAllocation"
+        },
+        {
+          "value": 4,
+          "name": "ExecutionDelay"
+        },
+        {
+          "value": 5,
+          "name": "Suspended"
+        },
+        {
+          "value": 6,
+          "name": "UserRequest"
+        },
+        {
+          "value": 7,
+          "name": "EventPairHigh"
+        },
+        {
+          "value": 8,
+          "name": "EventPairLow"
+        },
+        {
+          "value": 9,
+          "name": "LpcReceive"
+        },
+        {
+          "value": 10,
+          "name": "LpcReply"
+        },
+        {
+          "value": 11,
+          "name": "VirtualMemory"
+        },
+        {
+          "value": 12,
+          "name": "PageOut"
+        },
+        {
+          "value": 13,
+          "name": "Unknown"
+        }
+      ]
+    },
+    {
+      "property": "OldThreadWaitMode",
+      "returnType": "Microsoft.Diagnostics.Tracing.Parsers.Kernel.CSwitchTraceData+ThreadWaitMode",
+      "getterIlHex": "021f0d28b90400062a",
+      "enumValues": [
+        {
+          "value": 0,
+          "name": "NonSwap"
+        },
+        {
+          "value": 1,
+          "name": "Swappable"
+        }
+      ]
+    },
+    {
+      "property": "OldThreadState",
+      "returnType": "System.Diagnostics.ThreadState",
+      "getterIlHex": "021f0e28b90400062a",
+      "enumValues": [
+        {
+          "value": 0,
+          "name": "Initialized"
+        },
+        {
+          "value": 1,
+          "name": "Ready"
+        },
+        {
+          "value": 2,
+          "name": "Running"
+        },
+        {
+          "value": 3,
+          "name": "Standby"
+        },
+        {
+          "value": 4,
+          "name": "Terminated"
+        },
+        {
+          "value": 5,
+          "name": "Wait"
+        },
+        {
+          "value": 6,
+          "name": "Transition"
+        },
+        {
+          "value": 7,
+          "name": "Unknown"
+        }
+      ]
+    },
+    {
+      "property": "NewThreadWaitTime",
+      "returnType": "System.Int32",
+      "getterIlHex": "021f1028bb0400062a",
+      "enumValues": []
+    }
+  ],
+  "scope": "reflection metadata and getter IL only",
+  "etwSessionStarted": false,
+  "testLibraryExecuted": false,
+  "productStarted": false,
+  "frontendActivated": false,
+  "v5SemanticsClaimedVerified": false
+}

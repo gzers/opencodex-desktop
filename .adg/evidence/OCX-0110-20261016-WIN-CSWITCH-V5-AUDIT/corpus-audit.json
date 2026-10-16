@@ -1,0 +1,143 @@
+{
+  "sourceCollector": "7704a17902c98ceed047cc3dec2a361937b5e1f7",
+  "originalFailedSource": "bd2f6eb10d58115235e35d575507bb69f44666da",
+  "successfulReplayRun": 38829382543,
+  "originalFailedRun": 38537166560,
+  "pinnedDecoder": "Microsoft.Diagnostics.Tracing.TraceEvent, Version=3.1.21.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+  "decoderInformationalVersion": [
+    "3.1.21+04132a81a0b2c147d48661d2b104f4ab7d136cd5"
+  ],
+  "decoderSha256": "401e948dac99d0f9756ef96d5a8b8e4736e19e9f82ce8cdd744495951e3a94bb",
+  "directGetterOffsets": [
+    {
+      "property": "OldThreadWaitReason",
+      "byteOffset": 12,
+      "callDeclaringType": "Microsoft.Diagnostics.Tracing.TraceEvent",
+      "callName": "GetByteAt",
+      "returnType": "System.Int32",
+      "signature": "Int32 GetByteAt(Int32)",
+      "versionConditionalInGetter": false,
+      "bitMaskInGetter": false
+    },
+    {
+      "property": "OldThreadWaitMode",
+      "byteOffset": 13,
+      "callDeclaringType": "Microsoft.Diagnostics.Tracing.TraceEvent",
+      "callName": "GetByteAt",
+      "returnType": "System.Int32",
+      "signature": "Int32 GetByteAt(Int32)",
+      "versionConditionalInGetter": false,
+      "bitMaskInGetter": false
+    },
+    {
+      "property": "OldThreadState",
+      "byteOffset": 14,
+      "callDeclaringType": "Microsoft.Diagnostics.Tracing.TraceEvent",
+      "callName": "GetByteAt",
+      "returnType": "System.Int32",
+      "signature": "Int32 GetByteAt(Int32)",
+      "versionConditionalInGetter": false,
+      "bitMaskInGetter": false
+    }
+  ],
+  "groups": {
+    "named-root-query-threads": {
+      "count": 564,
+      "versions": {
+        "5": 564
+      },
+      "reason": {
+        "6": 19,
+        "15": 15,
+        "17": 14,
+        "27": 19,
+        "28": 34,
+        "30": 3,
+        "31": 348,
+        "32": 100,
+        "34": 2,
+        "37": 10
+      },
+      "mode": {
+        "0": 391,
+        "1": 131,
+        "16": 2,
+        "80": 5,
+        "96": 31,
+        "97": 4
+      },
+      "state": {
+        "1": 448,
+        "2": 3,
+        "3": 10,
+        "5": 98,
+        "7": 5
+      },
+      "outsidePinnedReasonEnum": 545,
+      "outsidePinnedModeEnum": 42,
+      "outsidePinnedStateEnum": 0
+    },
+    "owned-descendants": {
+      "count": 3095,
+      "versions": {
+        "5": 3095
+      },
+      "reason": {
+        "0": 381,
+        "4": 15,
+        "5": 19,
+        "6": 148,
+        "9": 271,
+        "13": 15,
+        "15": 222,
+        "17": 176,
+        "27": 23,
+        "28": 34,
+        "30": 11,
+        "31": 1096,
+        "32": 236,
+        "34": 15,
+        "37": 433
+      },
+      "mode": {
+        "0": 1546,
+        "1": 1310,
+        "16": 5,
+        "80": 18,
+        "81": 7,
+        "96": 99,
+        "97": 110
+      },
+      "state": {
+        "1": 1313,
+        "2": 8,
+        "3": 256,
+        "5": 1446,
+        "7": 72
+      },
+      "outsidePinnedReasonEnum": 2246,
+      "outsidePinnedModeEnum": 239,
+      "outsidePinnedStateEnum": 0
+    }
+  },
+  "fullRawCswitchPayloadRecords": 0,
+  "etlAvailableInPreservedCapture": false,
+  "referenceHashes": {
+    "priorManifest": "0a19d15b53912e00f9064b315182cf5880be5721e09a5fd4d3d1460192d9fbb5",
+    "priorAnalysis": "89bd95224d9576c8c8f970098230659a4541bcd7dccf04334c4be3356d6c4df2",
+    "rawEvents": "6370fe5178825c459f86b5e6c049fd2f0a25a537aaf536d55f8cbc64da6afc79",
+    "captureResult": "e242e8f5fc0c60043ef386a3f7c747a12fb57fe38a345ee02873ca28d4efd1ff"
+  },
+  "finding": "Selected integers come from fixed byte offsets through the pinned decoder; no v5-specific semantics established.",
+  "doNotInferMaskOrWaitCause": true,
+  "managedEnumMembershipIsNotKernelSchemaValidation": true,
+  "allOriginalSemanticsFlagsRetainedFalse": true,
+  "v5SemanticsVerified": false,
+  "newRecordingStarted": false,
+  "originalLibraryReplayed": false,
+  "productStarted": false,
+  "actualFailedQueryWindowObtained": false,
+  "historicalFailureCleared": false,
+  "performanceGatePassed": false,
+  "releaseAccepted": false
+}
