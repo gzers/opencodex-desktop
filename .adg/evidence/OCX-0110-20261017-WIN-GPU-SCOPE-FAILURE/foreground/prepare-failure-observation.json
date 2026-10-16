@@ -1,0 +1,20 @@
+{
+  "recordKind": "derived-observation-of-tool-output",
+  "rawStderrFileSaved": false,
+  "observedFailureAt": "Assert-WindowsMemoryTargetBinding, windows-memory-target.ps1:224",
+  "observedMessage": "The term 'Get-WindowsProcessToken' is not recognized as a name of a cmdlet, function, script file, or executable",
+  "invocation": "windows-bound-gpu-memory.ps1 with actual fresh root/GPU packets, default Prepare mode, ordinary product, 30-second declared maximum observation",
+  "toolSource": "391e70979ffbb32a548c0d05bdeeb62160d942d3",
+  "productSource": "b4d487e4e04cd4c80fd5570663e1ed21dd483b19",
+  "recordApprovedPassedToEntry": false,
+  "prepareOutputFileCreated": false,
+  "actualGpuLeaseInitialOpenReached": true,
+  "initialOpenBindingWitnessPersisted": false,
+  "recordRequestCreatedAfterFailure": "cancel-only: recordApproved=false, seconds=0",
+  "captureOutputDirectoryCreated": false,
+  "etwRecordingStarted": false,
+  "automaticRetry": false,
+  "causeValidatedBySeparateBeforeAfterRegression": true,
+  "productDefectProven": false,
+  "rssFailureCleared": false
+}

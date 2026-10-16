@@ -1,0 +1,31 @@
+{
+  "atUtc": "2026-10-16T18:20:31.398832+00:00",
+  "failedToolSource": "391e70979ffbb32a548c0d05bdeeb62160d942d3",
+  "fixedToolSource": "fde1dbb5b1731c056bbfa72a420bf930133671ea",
+  "changedFiles": [
+    {
+      "path": "test/smoke/windows-memory-target.ps1",
+      "beforeSha256": "f17a01c8e62bb629bc380c81a2519f8c0282046d42db95abdb3f2d49e898a4a7",
+      "afterSha256": "7098c028fe61c4b7dd22582f3746cb05505e0cdff2c4373c84effbd2ab4cb289"
+    },
+    {
+      "path": "test/smoke/windows-memory-target.test.ps1",
+      "beforeSha256": "6cfbb4ef8e3659431a08352f1c96d8b05b7e54b0ebe65db85d66553aacfb4d33",
+      "afterSha256": "452c00cc4221435a8e0c70285f22e14044977ed0e314d594cdd830f4930c3caa"
+    }
+  ],
+  "productApplicationTreeBefore": "41cce33b2148619a1cac7525f803c0defe86b6c1",
+  "productApplicationTreeAfter": "41cce33b2148619a1cac7525f803c0defe86b6c1",
+  "productApplicationChanged": false,
+  "originalNewRegressionFailedBeforeFix": true,
+  "fixedLocalChecks": 22,
+  "helperLoadMovedToSharedCallerScope": true,
+  "leaseValidationAndIdentityAssertionsPreserved": true,
+  "gpuRecorderNativeCoreChanged": false,
+  "cliOrCaptureCapsChanged": false,
+  "actualProductGpuReplayAfterFix": false,
+  "localEtwRecordingPerformed": false,
+  "originalRssFailureCleared": false,
+  "originalBd2FailureCleared": false,
+  "rootCauseScope": "PowerShell helper lifetime only; no claim about product memory or old IPC timing failures"
+}
