@@ -1,0 +1,76 @@
+{
+  "atUtc": "2026-10-16T09:38:50.5303121+00:00",
+  "packages": [
+    {
+      "launchSequence": [
+        {
+          "action": "LaunchApplication",
+          "sequence": "6601",
+          "condition": "AUTOLAUNCHAPP AND NOT Installed"
+        }
+      ],
+      "bytes": 4030464,
+      "sha256": "b33dd0c890511467e72a453daaceb4b60b6f5af64dcae5dba54f69ed46bbad6a",
+      "kind": "official019-msi",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\OpenCodeX.Desktop_0.1.9_x64_en-US.msi",
+      "databaseMode": "read-only",
+      "properties": {
+        "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+        "ALLUSERS": "1",
+        "ProductCode": "{7C063778-E6A6-4D0E-9770-4C4349101866}",
+        "ProductVersion": "0.1.9",
+        "SecureCustomProperties": "ARPNOREPAIR;AUTOLAUNCHAPP;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED"
+      }
+    },
+    {
+      "launchSequence": [
+        {
+          "action": "LaunchApplication",
+          "sequence": "6601",
+          "condition": "AUTOLAUNCHAPP AND NOT Installed"
+        }
+      ],
+      "bytes": 4591616,
+      "sha256": "e64491715bc5e510d06eb8a18f723b6700be800e4555a44c4e2207059bf0318c",
+      "kind": "candidate823-msi",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-823a8a-38841117656\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "databaseMode": "read-only",
+      "properties": {
+        "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+        "ALLUSERS": "1",
+        "ProductCode": "{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}",
+        "ProductVersion": "0.1.10",
+        "SecureCustomProperties": "ARPNOREPAIR;AUTOLAUNCHAPP;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED"
+      }
+    }
+  ],
+  "installedMsi": {
+    "productCode": "{7069DA97-F262-4585-98CA-AE416E6833A5}",
+    "version": "0.1.9",
+    "installLocation": "D:\\Software\\Develop\\OpenCodeX Desktop\\",
+    "cachedPackage": "C:\\WINDOWS\\Installer\\6dfb1063.msi",
+    "cachedPackageSha256": "1a5a894863904970e835ce7e425ccc74aa9ae0f0810c88ed1cd0b23080a8aa81"
+  },
+  "installedExe": {
+    "path": "D:\\Software\\Develop\\OpenCodeX Desktop\\opencodex-desktop.exe",
+    "version": "0.1.9",
+    "sha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67"
+  },
+  "actualObservationHarnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 35008,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-16T09:38:49.4719022Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-16T09:38:50.5275200Z"
+  },
+  "packageRegistryOnlyNotProductRootAcceptance": true,
+  "nativeCount": 0,
+  "installerExecuted": false,
+  "productLaunched": false,
+  "registryWritten": false,
+  "currentShellAdministrator": false,
+  "hostInstallerGatePassed": false
+}

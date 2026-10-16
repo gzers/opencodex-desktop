@@ -1,0 +1,39 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-HOST-MSI-PREP-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-HOST-MSI-PREP-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-host-msi-ordinary-token-refusal",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-HOST-MSI-PREP/ordinary-execution-refusal.original.json"
+    },
+    {
+      "name": "local:windows-host-msi-plan-identity",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-HOST-MSI-PREP/verification.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "e702b5a9377c62aa8d2e4d1be0870ebfd7fb25a634143ba5c0060ee57cd28a7a",
+      "summary": "本机MSI身份链与一次性执行计划准备完成，普通令牌拒绝已核验；实际安装及完整门禁未执行。"
+    }
+  ],
+  "completed_at": "2026-10-16T09:45:35.147148+00:00",
+  "summary": "仅本机MSI准备/普通令牌拒绝通过，未调用安装器或启动产品；真实管理员执行与TASK完整门禁保持待验。",
+  "revision": 1,
+  "summary_digest": "ab8817a5520a3f1b42127b1e389899b9e8c5853fa49cd89609f9a78f4d0dffcf",
+  "content_digest": "cf248930b4187d11c87a989a6452e070284d73a45642c8b5e169a502921eb3ca"
+}

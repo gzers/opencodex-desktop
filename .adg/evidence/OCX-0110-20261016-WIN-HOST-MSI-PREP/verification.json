@@ -1,0 +1,67 @@
+{
+  "status": "verified-host-msi-preparation-only",
+  "originalCopies": [
+    {
+      "path": "inventory.original.json",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\host-msi-preparation-20261016T1739\\msi-host-inventory.original.json",
+      "bytes": 3094,
+      "sha256": "e53473190f79eb40a5a3a254831d49d1ef0b9be326790f3fcda57e636ce06096"
+    },
+    {
+      "path": "methods/inventory.original.ps1",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\read-host-msi-inventory-20261016T1739.ps1",
+      "bytes": 4635,
+      "sha256": "9b0178269c4bd5276f94c66c208afa4fdee4a20c8ca2cc7c6d4854f9f78e73d6"
+    },
+    {
+      "path": "methods/execution-prepared.original.ps1",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-execution-20261016T1740.ps1",
+      "bytes": 12509,
+      "sha256": "6720ec2f89f5af03df15e9924bfef5808a554d2e5d12ac97b176a5454af3e734"
+    },
+    {
+      "path": "methods/refusal-validation.original.ps1",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\validate-ordinary-refusal.ps1",
+      "bytes": 2653,
+      "sha256": "c1978fa2048d4c9f483ece84e3f6d4512a1b1adef3c07c301e450f7bc342d951"
+    },
+    {
+      "path": "execution-plan.original.json",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\execution-plan.json",
+      "bytes": 2528,
+      "sha256": "9acb0771ffe35d0dc95fd7b530a295acade6a0804d9984fc258ca69601da3b72"
+    },
+    {
+      "path": "plan-preparation.original.json",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\plan-preparation.original.json",
+      "bytes": 661,
+      "sha256": "5c6b06a9f529313b214021714e57868df91daf13fbcd34a45284aca34aafcda9"
+    },
+    {
+      "path": "ordinary-execution-refusal.original.json",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\ordinary-execution-refusal.original.json",
+      "bytes": 1180,
+      "sha256": "d52828cdf5c0177cbc01bb0a4d94263859e54cd50e83c585a0cee380c9708375"
+    },
+    {
+      "path": "initial-preparation-refusal.json",
+      "sourceRuntimePath": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\initial-preparation-refusal.json",
+      "bytes": 367,
+      "sha256": "1db720e2fad7b15b9bdb55725538aecfdacab1bfb0fa483792ee1051b60a0aaa"
+    }
+  ],
+  "existingLocal019IsOfficialBaseline": false,
+  "officialBaselineAndCandidatePackagesPinned": true,
+  "perMachineMsiRequiresAdministrator": true,
+  "actualOrdinaryTokenExecutionRejected": true,
+  "currentInstallationUnchangedAtRefusal": true,
+  "executionPlanUnchanged": true,
+  "productLaunched": false,
+  "installerExecuted": false,
+  "administratorExecutionTested": false,
+  "fullInstallerGatePassed": false,
+  "explicitPurgeTested": false,
+  "nsisTested": false,
+  "actualApplicationRootBindingTested": false,
+  "releaseAccepted": false
+}

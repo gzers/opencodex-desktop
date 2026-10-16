@@ -1,0 +1,44 @@
+{
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "packages": {
+    "baseline": {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\OpenCodeX.Desktop_0.1.9_x64_en-US.msi",
+      "productCode": "{7C063778-E6A6-4D0E-9770-4C4349101866}",
+      "version": "0.1.9",
+      "sha256": "b33dd0c890511467e72a453daaceb4b60b6f5af64dcae5dba54f69ed46bbad6a",
+      "installedExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608"
+    },
+    "candidate": {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\candidate-823a8a-38841117656\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+      "productCode": "{FF3E0F1E-C4FD-49F5-8AE0-CA6F410DA8AF}",
+      "version": "0.1.10",
+      "sha256": "e64491715bc5e510d06eb8a18f723b6700be800e4555a44c4e2207059bf0318c",
+      "installedExeSha256": "2614489ff3a7c62110fb74fd288432b37c3abeaa5cdaa3119551d66c97640e53"
+    }
+  },
+  "priorLocalProductCode": "{7069DA97-F262-4585-98CA-AE416E6833A5}",
+  "priorInstallLocation": "D:\\Software\\Develop\\OpenCodeX Desktop",
+  "priorLocalExeSha256": "43e06bc3bd6e7f633bf3928e7f58b2ad9dbd9b2a8573ea197251c4bbd4401e67",
+  "priorCachedPackage": "C:\\WINDOWS\\Installer\\6dfb1063.msi",
+  "priorCachedPackageSha256": "1a5a894863904970e835ce7e425ccc74aa9ae0f0810c88ed1cd0b23080a8aa81",
+  "installDirectory": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\install with spaces",
+  "customRootFixture": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\host-msi-prepared-20261016T1740\\custom-root",
+  "steps": [
+    "uninstall-existing-local-019",
+    "install-official-019",
+    "upgrade-to-823",
+    "default-uninstall-823",
+    "reinstall-823",
+    "final-default-uninstall-823"
+  ],
+  "argumentsCommon": "/qn /norestart AUTOLAUNCHAPP=\"\"",
+  "maximumSecondsPerStep": 120,
+  "expectedInstallSuccessExitCode": 0,
+  "automaticRetry": false,
+  "productLaunchAllowed": false,
+  "evidenceScope": "host MSI bytes/upgrade/default-uninstall retention with seeded fixtures; no application root/first-screen acceptance",
+  "seededCustomRootIsNotAnApplicationBinding": true,
+  "explicitPurgeTested": false,
+  "administratorAndNewHumanWindowRequiredForExecute": true,
+  "releaseAccepted": false
+}
