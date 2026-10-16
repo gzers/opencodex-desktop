@@ -30,4 +30,8 @@
 
 08:18:10伴随push `38824163566` 终态为failure。唯一失败job是Mac backend，GitHub check-run注释为“The hosted runner lost communication with the server”，另有macOS arm64容量提示；job最后状态停在Rust工具链安装，cargo fmt/Clippy/test均pending、未执行，不归为源码测试失败，也不把该轮改标成功。作业原日志下载HTTP404“specified blob does not exist”，缺失如实保留；注释只说明runner失联，实际根因未确定。未重跑或取消任何作业；此前一轮完整PR成功及由其准入的单次候选保持各自身份。8份原件、终态、jobs/check-run/annotations与独立verifier归`.adg/evidence/OCX-0110-20261016-WIN-D94-CI/push-runner-failure/`。截至08:20:17候选仍进行，未启动宿主产品。
 
+08:22:38单次候选 `38827408691` 成功。原package job核验实际checkout为d94，35组/648passed/7ignored；MSI/NSIS在隔离runner的新装、首屏、卸载子集成功。两个artifact API摘要、大小、ZIP CRC、安全条目与安装回执独立匹配。宿主只读MSI数据库、提取CAB并核对runner实装载荷，未执行宿主安装器、启动产品或替换日常版。
+
+准备好的MSI EXE为0.1.10、8806400字节，SHA256 `b2284ba66a20c7ef11b61fea328f7aa960cd6530011d6e7a09fc78e782c5b224`，路径为产品worktree的`test/software/candidate-d94c21-38827408691/msi-readonly/opencodex-desktop.exe`。29项清单与独立verifier通过，显式绑定完整PR CI准入，伴随push失败不改标。08:26:42保护读回native0、产品源码d94且干净、日常与TASK摘要保持。候选已就绪不等于内存预算通过，仍保留8be +33.249280 MiB失败，新EXE须经新的前台窗口实测；不需要重跑未受影响的纯存储局部证据，也不能把其实际02 EXE身份改标。
+
 019冷/热各20、p95≤100ms且≤5%、CPU≤+0.5pp、平均RSS≤+10MiB、主线程50ms及完整请求/周期预算不变。DPI仍待验，真实更新/来源、安装保留、树表/事件、历史bd2失败窗口、严格单EXE恢复交接和Mac CPU/RSS继续未闭合。TASK-182/IMP-20不关闭，不合并、签名、晋升或发布。
