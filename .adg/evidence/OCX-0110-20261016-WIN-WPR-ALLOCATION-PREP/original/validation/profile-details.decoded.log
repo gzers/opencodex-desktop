@@ -1,0 +1,32 @@
+
+Microsoft Windows Performance Recorder Version 10.0.26100 (CoreSystem)
+Copyright (c) 2024 Microsoft Corporation. All rights reserved.
+
+Profile			: OcxGpuAllocation.Verbose.File
+
+
+Collector Name		: WPR_initiated_WprApp_WPR System Collector
+Buffer Size (KB)	: 256
+Number of Buffers	: 64
+Providers
+System Keywords
+	Loader
+	MemoryInfo
+	MemoryInfoWS
+	ProcessThread
+	VirtualAllocation
+System Stacks
+	VirtualAllocation
+	ProcessCreate
+
+Collector Name		: WPR_initiated_WprApp_OcxAllocationGraphics
+Buffer Size (KB)	: 256
+Number of Buffers	: 64
+Providers
+	Microsoft-Windows-Direct3D11: 0xf: 0x06 : Stack    
+	Microsoft-Windows-DXGI: 0xf: 0x06 : Stack    
+	Microsoft-Windows-DxgKrnl: 0x277: 0x05 : Stack    
+CaptureState Providers on Start
+	Microsoft-Windows-Direct3D11: 0xf: 0x06
+	Microsoft-Windows-DXGI: 0xf: 0x06
+	Microsoft-Windows-DxgKrnl: 0x277: 0x05

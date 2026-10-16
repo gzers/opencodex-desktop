@@ -1,0 +1,63 @@
+<WindowsPerformanceRecorder Version="1.0">
+  <Profiles>
+    <SystemCollector Id="OcxAllocationSystem" Name="OcxAllocationSystem">
+      <BufferSize Value="256" />
+      <Buffers Value="64" />
+    </SystemCollector>
+    <EventCollector Id="OcxAllocationGraphics" Name="OcxAllocationGraphics">
+      <BufferSize Value="256" />
+      <Buffers Value="64" />
+    </EventCollector>
+    <SystemProvider Id="OcxAllocationKernel">
+      <Keywords>
+        <Keyword Value="ProcessThread" />
+        <Keyword Value="Loader" />
+        <Keyword Value="VirtualAllocation" />
+        <Keyword Value="MemoryInfo" />
+        <Keyword Value="MemoryInfoWS" />
+      </Keywords>
+      <Stacks>
+        <Stack Value="VirtualAllocation" />
+        <Stack Value="ProcessCreate" />
+      </Stacks>
+    </SystemProvider>
+    <EventProvider Id="OcxD3D11" Name="ca11c036-0102-4a2d-a6ad-f03cfed5d3c9" NonPagedMemory="true" Stack="true" Level="6">
+      <Keywords>
+        <Keyword Value="0x000000000000000f" />
+      </Keywords>
+      <CaptureStateOnStart Timeout="30">
+        <Keyword Value="0x000000000000000f" />
+      </CaptureStateOnStart>
+    </EventProvider>
+    <EventProvider Id="OcxDXGI" Name="db6f6ddb-ac77-4e88-8253-819df9bbf140" NonPagedMemory="true" Stack="true" Level="6">
+      <Keywords>
+        <Keyword Value="0x000000000000000f" />
+      </Keywords>
+      <CaptureStateOnStart Timeout="30">
+        <Keyword Value="0x000000000000000f" />
+      </CaptureStateOnStart>
+    </EventProvider>
+    <EventProvider Id="OcxDxgKrnl" Name="802ec45a-1e99-4b83-9920-87c98277ba9d" NonPagedMemory="true" Stack="true" Level="5" Strict="true">
+      <Keywords>
+        <Keyword Value="0x0000000000000277" />
+      </Keywords>
+      <CaptureStateOnStart Timeout="30">
+        <Keyword Value="0x0000000000000277" />
+      </CaptureStateOnStart>
+    </EventProvider>
+    <Profile Name="OcxGpuAllocation" Description="Diagnostic GPU and virtual allocation stacks; never a performance acceptance run" DetailLevel="Verbose" Id="OcxGpuAllocation.Verbose.File" LoggingMode="File">
+      <Collectors>
+        <SystemCollectorId Value="OcxAllocationSystem">
+          <SystemProviderId Value="OcxAllocationKernel" />
+        </SystemCollectorId>
+        <EventCollectorId Value="OcxAllocationGraphics">
+          <EventProviders>
+            <EventProviderId Value="OcxD3D11" />
+            <EventProviderId Value="OcxDXGI" />
+            <EventProviderId Value="OcxDxgKrnl" />
+          </EventProviders>
+        </EventCollectorId>
+      </Collectors>
+    </Profile>
+  </Profiles>
+</WindowsPerformanceRecorder>

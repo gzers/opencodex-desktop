@@ -1,0 +1,457 @@
+﻿2026-10-16T15:04:36.1149802Z Current runner version: '2.337.0'
+2026-10-16T15:04:36.1176037Z ##[group]Runner Image Provisioner
+2026-10-16T15:04:36.1176856Z Hosted Compute Agent
+2026-10-16T15:04:36.1177375Z Version: 20261002.596
+2026-10-16T15:04:36.1177958Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-16T15:04:36.1178622Z Build Date: 2026-10-02T22:28:27Z
+2026-10-16T15:04:36.1179219Z Worker ID: {cc587479-f2c4-41f0-a2bc-1d0d7069651e}
+2026-10-16T15:04:36.1179885Z Region: westus3
+2026-10-16T15:04:36.1180362Z Cloud: Azure
+2026-10-16T15:04:36.1180846Z ##[endgroup]
+2026-10-16T15:04:36.1182211Z ##[group]Operating System
+2026-10-16T15:04:36.1182799Z Microsoft Windows Server 2025
+2026-10-16T15:04:36.1183367Z 10.0.26100
+2026-10-16T15:04:36.1183831Z Datacenter
+2026-10-16T15:04:36.1184383Z ##[endgroup]
+2026-10-16T15:04:36.1185089Z ##[group]Runner Image
+2026-10-16T15:04:36.1185874Z Image: windows-2025-vs2026
+2026-10-16T15:04:36.1186433Z Version: 20261007.264.1
+2026-10-16T15:04:36.1187869Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261007.264/images/windows/Windows2025-VS2026-Readme.md
+2026-10-16T15:04:36.1189383Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261007.264
+2026-10-16T15:04:36.1190268Z ##[endgroup]
+2026-10-16T15:04:36.1193214Z ##[group]GITHUB_TOKEN Permissions
+2026-10-16T15:04:36.1195328Z Actions: write
+2026-10-16T15:04:36.1195909Z ArtifactMetadata: write
+2026-10-16T15:04:36.1196447Z Attestations: write
+2026-10-16T15:04:36.1196934Z Checks: write
+2026-10-16T15:04:36.1197419Z CodeQuality: write
+2026-10-16T15:04:36.1197904Z Contents: write
+2026-10-16T15:04:36.1198396Z CopilotRequests: write
+2026-10-16T15:04:36.1198956Z Deployments: write
+2026-10-16T15:04:36.1199450Z Discussions: write
+2026-10-16T15:04:36.1199956Z Drives: write
+2026-10-16T15:04:36.1200427Z Issues: write
+2026-10-16T15:04:36.1200970Z Metadata: read
+2026-10-16T15:04:36.1201447Z Models: read
+2026-10-16T15:04:36.1201929Z Packages: write
+2026-10-16T15:04:36.1202678Z Pages: write
+2026-10-16T15:04:36.1203499Z PullRequests: write
+2026-10-16T15:04:36.1204087Z RepositoryProjects: write
+2026-10-16T15:04:36.1204638Z SecurityEvents: write
+2026-10-16T15:04:36.1205132Z Statuses: write
+2026-10-16T15:04:36.1205652Z VulnerabilityAlerts: read
+2026-10-16T15:04:36.1206185Z ##[endgroup]
+2026-10-16T15:04:36.1208372Z Secret source: Actions
+2026-10-16T15:04:36.1209211Z Cache mode: write
+2026-10-16T15:04:36.1209860Z Prepare workflow directory
+2026-10-16T15:04:36.1584417Z Prepare all required actions
+2026-10-16T15:04:36.1633883Z Getting action download info
+2026-10-16T15:04:36.4653065Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-16T15:04:36.5943116Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-10-16T15:04:36.9530957Z Complete job name: windows-smoke-evidence
+2026-10-16T15:04:37.1196227Z ##[group]Run actions/checkout@v5
+2026-10-16T15:04:37.1198204Z with:
+2026-10-16T15:04:37.1198833Z   repository: gzers/opencodex-desktop
+2026-10-16T15:04:37.1203837Z   token: ***
+2026-10-16T15:04:37.1204347Z   ssh-strict: true
+2026-10-16T15:04:37.1204831Z   ssh-user: git
+2026-10-16T15:04:37.1205326Z   persist-credentials: true
+2026-10-16T15:04:37.1205875Z   clean: true
+2026-10-16T15:04:37.1206380Z   sparse-checkout-cone-mode: true
+2026-10-16T15:04:37.1206970Z   fetch-depth: 1
+2026-10-16T15:04:37.1207448Z   fetch-tags: false
+2026-10-16T15:04:37.1207946Z   show-progress: true
+2026-10-16T15:04:37.1208443Z   lfs: false
+2026-10-16T15:04:37.1208926Z   submodules: false
+2026-10-16T15:04:37.1209440Z   set-safe-directory: true
+2026-10-16T15:04:37.1210024Z   allow-unsafe-pr-checkout: false
+2026-10-16T15:04:37.1211042Z ##[endgroup]
+2026-10-16T15:04:37.2763554Z Syncing repository: gzers/opencodex-desktop
+2026-10-16T15:04:37.2766808Z ##[group]Getting Git version info
+2026-10-16T15:04:37.2768126Z Working directory is 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-10-16T15:04:37.3904129Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-16T15:04:37.7206860Z git version 2.56.0.windows.2
+2026-10-16T15:04:37.7264134Z ##[endgroup]
+2026-10-16T15:04:37.7283733Z Temporarily overriding HOME='D:\a\_temp\8475d11b-5252-4e11-b6b0-35ebec298b7c' before making global git config changes
+2026-10-16T15:04:37.7286780Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T15:04:37.7295332Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-16T15:04:37.7998860Z Deleting the contents of 'D:\a\opencodex-desktop\opencodex-desktop'
+2026-10-16T15:04:37.8005732Z ##[group]Initializing the repository
+2026-10-16T15:04:37.8014438Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\opencodex-desktop\opencodex-desktop
+2026-10-16T15:04:37.8940675Z Initialized empty Git repository in D:/a/opencodex-desktop/opencodex-desktop/.git/
+2026-10-16T15:04:37.8994390Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/gzers/opencodex-desktop
+2026-10-16T15:04:37.9747040Z ##[endgroup]
+2026-10-16T15:04:37.9749529Z ##[group]Disabling automatic garbage collection
+2026-10-16T15:04:37.9757643Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-16T15:04:38.0179221Z ##[endgroup]
+2026-10-16T15:04:38.0181667Z ##[group]Setting up auth
+2026-10-16T15:04:38.0184215Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T15:04:38.0577110Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-16T15:04:40.2444902Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T15:04:40.2846126Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-16T15:04:40.8789396Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T15:04:40.9200649Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-16T15:04:41.5588669Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-16T15:04:41.6030656Z ##[endgroup]
+2026-10-16T15:04:41.6031398Z ##[group]Fetching the repository
+2026-10-16T15:04:41.6046451Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +494fc830e30cc6b56cf62f34884d44e23bfb763d:refs/remotes/origin/feature/0.1.10-windows-working-set-pages
+2026-10-16T15:04:43.4029795Z From https://github.com/gzers/opencodex-desktop
+2026-10-16T15:04:43.4030893Z  * [new ref]         494fc830e30cc6b56cf62f34884d44e23bfb763d -> origin/feature/0.1.10-windows-working-set-pages
+2026-10-16T15:04:43.4082230Z ##[endgroup]
+2026-10-16T15:04:43.4082843Z ##[group]Determining the checkout info
+2026-10-16T15:04:43.4086830Z ##[endgroup]
+2026-10-16T15:04:43.4096588Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-16T15:04:43.4666226Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-16T15:04:43.5063933Z ##[group]Checking out the ref
+2026-10-16T15:04:43.5075058Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B feature/0.1.10-windows-working-set-pages refs/remotes/origin/feature/0.1.10-windows-working-set-pages
+2026-10-16T15:04:43.7123925Z Switched to a new branch 'feature/0.1.10-windows-working-set-pages'
+2026-10-16T15:04:43.7181850Z branch 'feature/0.1.10-windows-working-set-pages' set up to track 'origin/feature/0.1.10-windows-working-set-pages'.
+2026-10-16T15:04:43.7775994Z ##[endgroup]
+2026-10-16T15:04:43.7782046Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-16T15:04:44.3232086Z 494fc830e30cc6b56cf62f34884d44e23bfb763d
+2026-10-16T15:04:44.8762834Z ##[group]Run ./test/smoke/windows-process-token.test.ps1 -OutputDirectory test/out/windows-process-token
+2026-10-16T15:04:44.8764275Z [36;1m./test/smoke/windows-process-token.test.ps1 -OutputDirectory test/out/windows-process-token[0m
+2026-10-16T15:04:47.6168947Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T15:04:47.6169335Z ##[endgroup]
+2026-10-16T15:04:52.4230826Z ##[group]Run ./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile
+2026-10-16T15:04:52.4232008Z [36;1m./test/smoke/windows-acceptance-profile.test.ps1 -OutputDirectory test/out/windows-process-token/profile[0m
+2026-10-16T15:04:52.4299075Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T15:04:52.4299462Z ##[endgroup]
+2026-10-16T15:04:52.9923506Z {
+2026-10-16T15:04:52.9924784Z   "result": "pass",
+2026-10-16T15:04:52.9925647Z   "scope": "Offline profile admission predicates only; native test-account acceptance unproven",
+2026-10-16T15:04:52.9926445Z   "checks": [
+2026-10-16T15:04:52.9926754Z     {
+2026-10-16T15:04:52.9927077Z       "name": "ordinary-isolated-profile",
+2026-10-16T15:04:52.9927521Z       "admitted": true,
+2026-10-16T15:04:52.9927859Z       "reasons": [],
+2026-10-16T15:04:52.9928178Z       "result": "pass"
+2026-10-16T15:04:52.9928465Z     },
+2026-10-16T15:04:52.9928832Z     {
+2026-10-16T15:04:52.9929111Z       "name": "daily-account",
+2026-10-16T15:04:52.9929462Z       "admitted": false,
+2026-10-16T15:04:52.9929778Z       "reasons": [
+2026-10-16T15:04:52.9930072Z         "daily-account",
+2026-10-16T15:04:52.9930429Z         "unexpected-account"
+2026-10-16T15:04:52.9930768Z       ],
+2026-10-16T15:04:52.9931027Z       "result": "pass"
+2026-10-16T15:04:52.9931271Z     },
+2026-10-16T15:04:52.9931498Z     {
+2026-10-16T15:04:52.9931777Z       "name": "unexpected-account",
+2026-10-16T15:04:52.9932161Z       "admitted": false,
+2026-10-16T15:04:52.9932477Z       "reasons": [
+2026-10-16T15:04:52.9932798Z         "unexpected-account"
+2026-10-16T15:04:52.9933121Z       ],
+2026-10-16T15:04:52.9933378Z       "result": "pass"
+2026-10-16T15:04:52.9934045Z     },
+2026-10-16T15:04:52.9934290Z     {
+2026-10-16T15:04:52.9934566Z       "name": "filtered-administrator",
+2026-10-16T15:04:52.9935549Z       "admitted": false,
+2026-10-16T15:04:52.9935895Z       "reasons": [
+2026-10-16T15:04:52.9936330Z         "ordinary-nonadministrator-account-required"
+2026-10-16T15:04:52.9936811Z       ],
+2026-10-16T15:04:52.9937085Z       "result": "pass"
+2026-10-16T15:04:52.9937394Z     },
+2026-10-16T15:04:52.9937665Z     {
+2026-10-16T15:04:52.9937978Z       "name": "elevated-administrator",
+2026-10-16T15:04:52.9938383Z       "admitted": false,
+2026-10-16T15:04:52.9938690Z       "reasons": [
+2026-10-16T15:04:52.9939091Z         "ordinary-nonadministrator-account-required"
+2026-10-16T15:04:52.9939544Z       ],
+2026-10-16T15:04:52.9939776Z       "result": "pass"
+2026-10-16T15:04:52.9940022Z     },
+2026-10-16T15:04:52.9940241Z     {
+2026-10-16T15:04:52.9940501Z       "name": "string-false-is-not-evidence",
+2026-10-16T15:04:52.9940896Z       "admitted": false,
+2026-10-16T15:04:52.9941281Z       "reasons": [
+2026-10-16T15:04:52.9941716Z         "ordinary-nonadministrator-account-required"
+2026-10-16T15:04:52.9942211Z       ],
+2026-10-16T15:04:52.9942421Z       "result": "pass"
+2026-10-16T15:04:52.9942667Z     },
+2026-10-16T15:04:52.9942867Z     {
+2026-10-16T15:04:52.9943114Z       "name": "string-type-is-not-evidence",
+2026-10-16T15:04:52.9943444Z       "admitted": false,
+2026-10-16T15:04:52.9943708Z       "reasons": [
+2026-10-16T15:04:52.9944141Z         "ordinary-nonadministrator-account-required"
+2026-10-16T15:04:52.9944827Z       ],
+2026-10-16T15:04:52.9945046Z       "result": "pass"
+2026-10-16T15:04:52.9945296Z     },
+2026-10-16T15:04:52.9945491Z     {
+2026-10-16T15:04:52.9945716Z       "name": "unconfirmed-account",
+2026-10-16T15:04:52.9946056Z       "admitted": false,
+2026-10-16T15:04:52.9946314Z       "reasons": [
+2026-10-16T15:04:52.9946569Z         "local-account-unconfirmed"
+2026-10-16T15:04:52.9946869Z       ],
+2026-10-16T15:04:52.9947108Z       "result": "pass"
+2026-10-16T15:04:52.9947418Z     },
+2026-10-16T15:04:52.9947613Z     {
+2026-10-16T15:04:52.9947872Z       "name": "string-account-confirmation",
+2026-10-16T15:04:52.9948223Z       "admitted": false,
+2026-10-16T15:04:52.9950895Z       "reasons": [
+2026-10-16T15:04:52.9951252Z         "local-account-unconfirmed"
+2026-10-16T15:04:52.9951490Z       ],
+2026-10-16T15:04:52.9951655Z       "result": "pass"
+2026-10-16T15:04:52.9951830Z     },
+2026-10-16T15:04:52.9951979Z     {
+2026-10-16T15:04:52.9952152Z       "name": "impersonating-thread",
+2026-10-16T15:04:52.9952406Z       "admitted": false,
+2026-10-16T15:04:52.9952595Z       "reasons": [
+2026-10-16T15:04:52.9952778Z         "thread-impersonation"
+2026-10-16T15:04:52.9952995Z       ],
+2026-10-16T15:04:52.9953146Z       "result": "pass"
+2026-10-16T15:04:52.9953313Z     },
+2026-10-16T15:04:52.9953459Z     {
+2026-10-16T15:04:52.9953627Z       "name": "string-impersonation",
+2026-10-16T15:04:52.9953862Z       "admitted": false,
+2026-10-16T15:04:52.9954043Z       "reasons": [
+2026-10-16T15:04:52.9954227Z         "thread-impersonation"
+2026-10-16T15:04:52.9954428Z       ],
+2026-10-16T15:04:52.9954581Z       "result": "pass"
+2026-10-16T15:04:52.9954774Z     },
+2026-10-16T15:04:52.9955001Z     {
+2026-10-16T15:04:52.9955266Z       "name": "missing-directory",
+2026-10-16T15:04:52.9955690Z       "admitted": false,
+2026-10-16T15:04:52.9955879Z       "reasons": [
+2026-10-16T15:04:52.9956082Z         "profile-directories-unverified"
+2026-10-16T15:04:52.9956332Z       ],
+2026-10-16T15:04:52.9956493Z       "result": "pass"
+2026-10-16T15:04:52.9956670Z     },
+2026-10-16T15:04:52.9956824Z     {
+2026-10-16T15:04:52.9957027Z       "name": "string-directory-confirmation",
+2026-10-16T15:04:52.9957286Z       "admitted": false,
+2026-10-16T15:04:52.9957472Z       "reasons": [
+2026-10-16T15:04:52.9957668Z         "profile-directories-unverified"
+2026-10-16T15:04:52.9957907Z       ],
+2026-10-16T15:04:52.9958064Z       "result": "pass"
+2026-10-16T15:04:52.9958242Z     },
+2026-10-16T15:04:52.9958387Z     {
+2026-10-16T15:04:52.9958562Z       "name": "reparse-path",
+2026-10-16T15:04:52.9958895Z       "admitted": false,
+2026-10-16T15:04:52.9959182Z       "reasons": [
+2026-10-16T15:04:52.9959469Z         "reparse-boundary-unverified"
+2026-10-16T15:04:52.9959794Z       ],
+2026-10-16T15:04:52.9960061Z       "result": "pass"
+2026-10-16T15:04:52.9960323Z     },
+2026-10-16T15:04:52.9960545Z     {
+2026-10-16T15:04:52.9960794Z       "name": "string-reparse-confirmation",
+2026-10-16T15:04:52.9961058Z       "admitted": false,
+2026-10-16T15:04:52.9961257Z       "reasons": [
+2026-10-16T15:04:52.9961445Z         "reparse-boundary-unverified"
+2026-10-16T15:04:52.9961673Z       ],
+2026-10-16T15:04:52.9961831Z       "result": "pass"
+2026-10-16T15:04:52.9962002Z     },
+2026-10-16T15:04:52.9962148Z     {
+2026-10-16T15:04:52.9962304Z       "name": "live-desktop",
+2026-10-16T15:04:52.9962508Z       "admitted": false,
+2026-10-16T15:04:52.9962688Z       "reasons": [
+2026-10-16T15:04:52.9962873Z         "native-instances-not-zero"
+2026-10-16T15:04:52.9963089Z       ],
+2026-10-16T15:04:52.9963242Z       "result": "pass"
+2026-10-16T15:04:52.9963425Z     },
+2026-10-16T15:04:52.9963573Z     {
+2026-10-16T15:04:52.9963741Z       "name": "unknown-desktop-count",
+2026-10-16T15:04:52.9963972Z       "admitted": false,
+2026-10-16T15:04:52.9964154Z       "reasons": [
+2026-10-16T15:04:52.9964347Z         "native-instances-not-zero"
+2026-10-16T15:04:52.9964560Z       ],
+2026-10-16T15:04:52.9964965Z       "result": "pass"
+2026-10-16T15:04:52.9965141Z     },
+2026-10-16T15:04:52.9965287Z     {
+2026-10-16T15:04:52.9965469Z       "name": "known-profile-still-daily",
+2026-10-16T15:04:52.9965715Z       "admitted": false,
+2026-10-16T15:04:52.9965912Z       "reasons": [
+2026-10-16T15:04:52.9966128Z         "known-profile-outside-fixture"
+2026-10-16T15:04:52.9966366Z       ],
+2026-10-16T15:04:52.9966526Z       "result": "pass"
+2026-10-16T15:04:52.9966701Z     },
+2026-10-16T15:04:52.9966846Z     {
+2026-10-16T15:04:52.9967021Z       "name": "same-prefix-neighbor",
+2026-10-16T15:04:52.9967395Z       "admitted": false,
+2026-10-16T15:04:52.9967678Z       "reasons": [
+2026-10-16T15:04:52.9968777Z         "known-roaming-outside-fixture"
+2026-10-16T15:04:52.9969198Z       ],
+2026-10-16T15:04:52.9969457Z       "result": "pass"
+2026-10-16T15:04:52.9969781Z     },
+2026-10-16T15:04:52.9970017Z     {
+2026-10-16T15:04:52.9970276Z       "name": "local-data-outside",
+2026-10-16T15:04:52.9970641Z       "admitted": false,
+2026-10-16T15:04:52.9970948Z       "reasons": [
+2026-10-16T15:04:52.9971248Z         "known-local-outside-fixture"
+2026-10-16T15:04:52.9971617Z       ],
+2026-10-16T15:04:52.9971880Z       "result": "pass"
+2026-10-16T15:04:52.9972153Z     },
+2026-10-16T15:04:52.9972374Z     {
+2026-10-16T15:04:52.9972615Z       "name": "relative-known-folder",
+2026-10-16T15:04:52.9972947Z       "admitted": false,
+2026-10-16T15:04:52.9973225Z       "reasons": [
+2026-10-16T15:04:52.9973483Z         "invalid-known-folder-path"
+2026-10-16T15:04:52.9973801Z       ],
+2026-10-16T15:04:52.9974036Z       "result": "pass"
+2026-10-16T15:04:52.9974300Z     },
+2026-10-16T15:04:52.9974523Z     {
+2026-10-16T15:04:52.9974758Z       "name": "dot-escape",
+2026-10-16T15:04:52.9975056Z       "admitted": false,
+2026-10-16T15:04:52.9975348Z       "reasons": [
+2026-10-16T15:04:52.9975873Z         "invalid-known-folder-path"
+2026-10-16T15:04:52.9976230Z       ],
+2026-10-16T15:04:52.9976468Z       "result": "pass"
+2026-10-16T15:04:52.9976779Z     },
+2026-10-16T15:04:52.9977008Z     {
+2026-10-16T15:04:52.9977340Z       "name": "case-insensitive-and-forward-separators",
+2026-10-16T15:04:52.9977786Z       "admitted": true,
+2026-10-16T15:04:52.9978083Z       "reasons": [],
+2026-10-16T15:04:52.9978364Z       "result": "pass"
+2026-10-16T15:04:52.9978615Z     },
+2026-10-16T15:04:52.9978824Z     {
+2026-10-16T15:04:52.9979078Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9979443Z       "result": "pass"
+2026-10-16T15:04:52.9979733Z     },
+2026-10-16T15:04:52.9979969Z     {
+2026-10-16T15:04:52.9980245Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9980610Z       "result": "pass"
+2026-10-16T15:04:52.9980880Z     },
+2026-10-16T15:04:52.9981213Z     {
+2026-10-16T15:04:52.9981476Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9981842Z       "result": "pass"
+2026-10-16T15:04:52.9982128Z     },
+2026-10-16T15:04:52.9982342Z     {
+2026-10-16T15:04:52.9982592Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9982932Z       "result": "pass"
+2026-10-16T15:04:52.9983176Z     },
+2026-10-16T15:04:52.9983388Z     {
+2026-10-16T15:04:52.9983635Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9983988Z       "result": "pass"
+2026-10-16T15:04:52.9984261Z     },
+2026-10-16T15:04:52.9984493Z     {
+2026-10-16T15:04:52.9984763Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9985147Z       "result": "pass"
+2026-10-16T15:04:52.9985442Z     },
+2026-10-16T15:04:52.9985667Z     {
+2026-10-16T15:04:52.9985938Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9986316Z       "result": "pass"
+2026-10-16T15:04:52.9986599Z     },
+2026-10-16T15:04:52.9986837Z     {
+2026-10-16T15:04:52.9987113Z       "name": "reject-invalid-path",
+2026-10-16T15:04:52.9987486Z       "result": "pass"
+2026-10-16T15:04:52.9987753Z     }
+2026-10-16T15:04:52.9987991Z   ],
+2026-10-16T15:04:52.9988258Z   "checksPassed": 31,
+2026-10-16T15:04:52.9988837Z   "methodSha256": "85d2c91b59883676adb10e546103bd70f24a7283f65159a31574689a0a6195f2",
+2026-10-16T15:04:52.9990639Z   "nativeProfileProbeExecuted": false,
+2026-10-16T15:04:52.9991068Z   "syntheticAccountCreated": false,
+2026-10-16T15:04:52.9991446Z   "productStarted": false,
+2026-10-16T15:04:52.9991829Z   "installerIsolationProved": false,
+2026-10-16T15:04:52.9992246Z   "fullVersionGatePassed": false
+2026-10-16T15:04:52.9992622Z }
+2026-10-16T15:04:53.0724424Z ##[group]Run ./test/smoke/windows-idle-family.test.ps1 -OutputDirectory test/runtime/windows-idle-family-check
+2026-10-16T15:04:53.0725271Z [36;1m./test/smoke/windows-idle-family.test.ps1 -OutputDirectory test/runtime/windows-idle-family-check[0m
+2026-10-16T15:04:53.0725825Z [36;1mif (!$?) { throw 'Idle family integrity regression failed' }[0m
+2026-10-16T15:04:53.0726335Z [36;1mNew-Item -ItemType Directory -Force test/out/windows-process-token/idle-family | Out-Null[0m
+2026-10-16T15:04:53.0727356Z [36;1mCopy-Item -LiteralPath test/runtime/windows-idle-family-check/result.json -Destination test/out/windows-process-token/idle-family/result.json[0m
+2026-10-16T15:04:53.0728482Z [36;1mCopy-Item -LiteralPath test/runtime/windows-idle-family-check/failure-records.original.jsonl -Destination test/out/windows-process-token/idle-family/failure-records.original.jsonl[0m
+2026-10-16T15:04:53.0798927Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T15:04:53.0799333Z ##[endgroup]
+2026-10-16T15:04:54.6707880Z {
+2026-10-16T15:04:54.6708187Z   "status": "passed",
+2026-10-16T15:04:54.6708433Z   "checks": 55,
+2026-10-16T15:04:54.6708627Z   "failureRecords": 7,
+2026-10-16T15:04:54.6708869Z   "controlledPowershellChildrenStarted": 1,
+2026-10-16T15:04:54.6709155Z   "productStarted": false,
+2026-10-16T15:04:54.6709366Z   "etwStarted": false,
+2026-10-16T15:04:54.6709564Z   "foregroundActivated": false,
+2026-10-16T15:04:54.6709791Z   "longMeasurementRun": false,
+2026-10-16T15:04:54.6710032Z   "fixtureForceTerminated": false,
+2026-10-16T15:04:54.6710368Z   "injectedMissingPidAndGenerationSnapshotsUsed": true,
+2026-10-16T15:04:54.6710710Z   "originalPerformanceBudgetChanged": false,
+2026-10-16T15:04:54.6710993Z   "fullPerformanceGatePassed": false
+2026-10-16T15:04:54.6711217Z }
+2026-10-16T15:04:54.7607976Z ##[group]Run ./test/smoke/windows-gpu-resource.test.ps1 -OutputDirectory test/out/windows-process-token/gpu-resource
+2026-10-16T15:04:54.7608853Z [36;1m./test/smoke/windows-gpu-resource.test.ps1 -OutputDirectory test/out/windows-process-token/gpu-resource[0m
+2026-10-16T15:04:54.7677315Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T15:04:54.7677670Z ##[endgroup]
+2026-10-16T15:04:58.4456925Z {
+2026-10-16T15:04:58.4457221Z   "status": "passed",
+2026-10-16T15:04:58.4457539Z   "checks": 37,
+2026-10-16T15:04:58.4457821Z   "productStarted": false,
+2026-10-16T15:04:58.4458216Z   "controlledSnapshotExecutionTested": true,
+2026-10-16T15:04:58.4458610Z   "controlledNormalExit": true,
+2026-10-16T15:04:58.4459001Z   "nativeSnapshotExecutionTested": false,
+2026-10-16T15:04:58.4459410Z   "gpuBuffersAttributed": false,
+2026-10-16T15:04:58.4459819Z   "fullPerformanceGatePassed": false
+2026-10-16T15:04:58.4460171Z }
+2026-10-16T15:04:58.5649834Z ##[group]Run ./test/smoke/windows-working-set.test.ps1 -OutputDirectory test/out/windows-process-token/working-set
+2026-10-16T15:04:58.5650693Z [36;1m./test/smoke/windows-working-set.test.ps1 -OutputDirectory test/out/windows-process-token/working-set[0m
+2026-10-16T15:04:58.5721591Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T15:04:58.5721938Z ##[endgroup]
+2026-10-16T15:04:59.6708591Z {
+2026-10-16T15:04:59.6710979Z   "checks": 34,
+2026-10-16T15:04:59.6712393Z   "passed": true,
+2026-10-16T15:04:59.6713424Z   "ownControlledPagesOnly": true,
+2026-10-16T15:04:59.6714639Z   "nativeProductStarted": false,
+2026-10-16T15:04:59.6715740Z   "externalTargetMemoryReadOrWritten": false,
+2026-10-16T15:04:59.6716883Z   "uiInputInjected": false,
+2026-10-16T15:04:59.6718389Z   "controlledHarnessPagesAllocatedAndTouched": true,
+2026-10-16T15:04:59.6720651Z   "pageProbeOwnAllocationsReleased": true,
+2026-10-16T15:04:59.6722828Z   "productSnapshotTaken": false,
+2026-10-16T15:04:59.6724448Z   "fullPerformanceGatePassed": false
+2026-10-16T15:04:59.6726132Z }
+2026-10-16T15:04:59.8009759Z ##[group]Run ./test/smoke/windows-memory-profile.test.ps1 -OutputDirectory test/out/windows-process-token/memory-profile
+2026-10-16T15:04:59.8010675Z [36;1m./test/smoke/windows-memory-profile.test.ps1 -OutputDirectory test/out/windows-process-token/memory-profile[0m
+2026-10-16T15:04:59.8078402Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-16T15:04:59.8078767Z ##[endgroup]
+2026-10-16T15:05:00.8922498Z {
+2026-10-16T15:05:00.8922803Z   "checks": 18,
+2026-10-16T15:05:00.8923108Z   "passed": true,
+2026-10-16T15:05:00.8923454Z   "readOnlyWprParserValidated": true,
+2026-10-16T15:05:00.8923872Z   "configuredBufferBytes": 33554432,
+2026-10-16T15:05:00.8924491Z   "exportSha256": "94f991c6e582521733fac7249529851dded3d763205df833afb5b0a793c5f33c",
+2026-10-16T15:05:00.8925375Z   "generatedProfileSha256": "153f8e4e1ae35f106cd48b5cb74ab576e353bbef05666a4d236d4e3232bbbdb8",
+2026-10-16T15:05:00.8926475Z   "sourceMethodSha256": "7c1985b75dcdbeaaabc9bafb994ed7964f157efade80a0b813eeb831d6b7050d",
+2026-10-16T15:05:00.8927416Z   "outputTextEncoding": "UTF-8 transcripts decoded by PowerShell; not raw stdout bytes",
+2026-10-16T15:05:00.8928052Z   "recordingStarted": false,
+2026-10-16T15:05:00.8928411Z   "eventLossVerified": false,
+2026-10-16T15:05:00.8928881Z   "fileGrowthBoundEnforced": false,
+2026-10-16T15:05:00.8929234Z   "executionAdmitted": false,
+2026-10-16T15:05:00.8929605Z   "desktopProductStarted": false,
+2026-10-16T15:05:00.8929971Z   "queryReplayed": false,
+2026-10-16T15:05:00.8930361Z   "fullPerformanceGatePassed": false
+2026-10-16T15:05:00.8930731Z }
+2026-10-16T15:05:00.9756388Z ##[group]Run actions/upload-artifact@v4
+2026-10-16T15:05:00.9756766Z with:
+2026-10-16T15:05:00.9756978Z   name: windows-process-token-evidence
+2026-10-16T15:05:00.9757247Z   path: test/out/windows-process-token
+2026-10-16T15:05:00.9757496Z   if-no-files-found: error
+2026-10-16T15:05:00.9757727Z   compression-level: 6
+2026-10-16T15:05:00.9757919Z   overwrite: false
+2026-10-16T15:05:00.9758116Z   include-hidden-files: false
+2026-10-16T15:05:00.9758336Z ##[endgroup]
+2026-10-16T15:05:01.1793567Z (node:7144) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-16T15:05:01.1794666Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-16T15:05:01.1953710Z With the provided path, there will be 17 files uploaded
+2026-10-16T15:05:01.1960697Z Artifact name is valid!
+2026-10-16T15:05:01.1961999Z Root directory input is valid!
+2026-10-16T15:05:01.5516113Z Beginning upload of artifact content to blob storage
+2026-10-16T15:05:01.5978687Z (node:7144) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-16T15:05:01.7950856Z Uploaded bytes 10701
+2026-10-16T15:05:01.8529950Z Finished uploading artifact content to blob storage!
+2026-10-16T15:05:01.8530917Z SHA256 digest of uploaded artifact zip is 704510ff43cebdc9ea9665138c7db1cebbd30bce86c15427444ad2b4e9360d4a
+2026-10-16T15:05:01.8533659Z Finalizing artifact upload
+2026-10-16T15:05:03.0174956Z Artifact windows-process-token-evidence.zip successfully finalized. Artifact ID 12054204767
+2026-10-16T15:05:03.0176839Z Artifact windows-process-token-evidence has been successfully uploaded! Final size is 10701 bytes. Artifact ID is 12054204767
+2026-10-16T15:05:03.0187700Z Artifact download URL: https://github.com/gzers/opencodex-desktop/actions/runs/38920950285/artifacts/12054204767
+2026-10-16T15:05:03.0590011Z Post job cleanup.
+2026-10-16T15:05:03.2379320Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-16T15:05:03.2827758Z git version 2.56.0.windows.2
+2026-10-16T15:05:03.2913046Z Temporarily overriding HOME='D:\a\_temp\6bbcb0c8-e90e-42db-940b-f398b78559d2' before making global git config changes
+2026-10-16T15:05:03.2914228Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-16T15:05:03.2927655Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\opencodex-desktop\opencodex-desktop
+2026-10-16T15:05:03.3420051Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-16T15:05:03.3862126Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-16T15:05:03.9738306Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-16T15:05:04.0082134Z http.https://github.com/.extraheader
+2026-10-16T15:05:04.0135936Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+2026-10-16T15:05:04.0531239Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-16T15:05:04.6279530Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-16T15:05:04.6699007Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-16T15:05:05.2568425Z Cleaning up orphan processes
+2026-10-16T15:05:05.3360467Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

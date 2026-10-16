@@ -1974,3 +1974,11 @@ GPU只读伴随方法本机47144dbe已提交、21项纯检查通过，含真实W
 22:51仅一次独立后台Edge方法检查，根保留句柄先绑定；在Tracing.getCategories返回值的类别前置处拒绝，未调用Tracing.start、取得转储、创建合成纹理或运行产品/已撤回原型，未自动重试。类别数组及Browser.getVersion返回值未在断言前保存，不能补原件或推断真实产品WebView能力。根同代际内核退出/exit0及观察器exit0核验，完整后代集合未取，不冒称全后代清理；后续native0及已恢复偏好/指针/TASK摘要保持，具体分配根因仍缺。
 
 WPR只读盘点取得VirtualAllocation/GPU/ResidentSet配置，默认组合缓冲配置1772MiB仅为配置量，未采用为轻量采集、未录制/停止/取消会话。草稿PR6一次正文更新并GET读回，已将配置未恢复的过时状态改为22:42恢复及14代际结束，保留RSS失败、退出超时/退出码未知，仍draft/open/unmerged。证据见`.adg/evidence/OCX-0110-20261016-WIN-MEMORY-METHOD-PREFLIGHT/`；未修改产品、重跑配对/查询或降低门禁，TASK revision2/in_progress/pending、Mac及全部其它原依赖/预算/周期保持，不关闭或发布。
+
+### 2026-10-16 独立WPR分配配置准备与同源Windows方法通过
+
+工具494fc830已在feature/0.1.10-windows-working-set-pages提交推送读回，只增test/smoke生成器/校验与CI步骤，未改产品。由本机系统导出构建独立File配置，两collector共32MiB缓冲配置，保留进程/映像/虚拟分配与分配栈、三图形provider原参数。配置量不是实际全进程内存或ETL上限，不替换原RSS/CPU等预算。
+
+本机18项及首次push CI38920950285的Windows方法作业117040410248均通过；actual checkout494、制品摘要/大小/CRC、六份提取文件与原日志核验，源码LF/CRLF身份分别绑定。核验时整轮仍运行，仅只读准备通过；事件丢失、文件增长、实际分配/目标代际与会话独占收尾均未证明，录制执行未准入，不以本通过自动申请或延长前台。
+
+`.adg/evidence/OCX-0110-20261016-WIN-WPR-ALLOCATION-PREP/`保存运行原件、实现引用和独立XML/CI核对。23:07:43native0、已恢复原目录/偏好/指针/TASK摘要保持，无ETW/产品/查询执行。原RSS+20.040155MiB超+10MiB及退出失败、bd2实际失败窗口、严格恢复、Mac和全部其它原预算/周期/八检查保持；DPI取消，TASK revision2/in_progress/pending，不合并、关闭、签名、晋升或发布。

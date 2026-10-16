@@ -1,0 +1,45 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-WPR-ALLOCATION-PREP-20261016",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261016-WIN-WPR-ALLOCATION-PREP",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-WPR-ALLOCATION-PREP-20261016.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-read-only-wpr-profile-preparation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-WPR-ALLOCATION-PREP/verification.json"
+    },
+    {
+      "name": "local:windows-wpr-recording-execution-admission",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-WPR-ALLOCATION-PREP/original/method-admission.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "f705d5481fdac117d5e10f0185f85147e2adf0c18042cee49f916db50040a6f1",
+      "summary": "494只读WPR配置32MiB及三图形provider准备完成，本机和同源CI方法各18项通过；整轮CI/真实录制未准入，原失败保持。"
+    }
+  ],
+  "completed_at": "2026-10-16T15:09:56.599670+00:00",
+  "summary": "仅只读WPR分配配置准备通过；尚缺真实录制、文件增长/丢事件证明，RSS及完整门禁未通过。",
+  "revision": 1,
+  "summary_digest": "83d06cfed4cf7a8108b9c5cee6f076a2b729171444b1f3379b680a676844f4db",
+  "content_digest": "a35eac9fa572a43353745f847cbfd1f89a31643b636aa916f3acc3a0247e8904"
+}
