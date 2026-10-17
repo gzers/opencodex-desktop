@@ -84,7 +84,7 @@ fn inspect_tree(root: &Path) -> AppResult<()> {
                 .map_err(|_| failure("data directory entry cannot be read"))?
                 .path();
             count += 1;
-            if count > 100_000 {
+            if count > super::migration::MAX_ENTRIES {
                 return Err(failure("data inventory exceeds the supported bound"));
             }
             let metadata = std::fs::symlink_metadata(&path)
