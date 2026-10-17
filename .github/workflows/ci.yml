@@ -20,6 +20,9 @@ jobs:
       - name: Verify recovery restart waits for the old process exit
         shell: pwsh
         run: ./test/smoke/windows-restart-handoff.test.ps1 -OutputDirectory test/out/windows-process-token/restart-handoff
+      - name: Verify startup-pair authorization and fixture restoration without launching the product
+        shell: pwsh
+        run: ./test/smoke/windows-startup-pair-state.test.ps1 -OutputDirectory test/out/windows-process-token/startup-pair-state
       - uses: actions/upload-artifact@v4
         if: always()
         with:
