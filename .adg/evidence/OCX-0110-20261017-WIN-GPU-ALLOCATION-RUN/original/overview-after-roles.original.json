@@ -1,0 +1,89 @@
+{
+  "startedAtUtc": "2026-10-17T00:50:04.4705507+00:00",
+  "finishedAtUtc": "2026-10-17T00:50:06.4653015+00:00",
+  "rootPid": 33300,
+  "rootCreationUtc": "2026-10-17T00:47:26.2431512Z",
+  "exeSha256": "f3fab9d6840c105e426a7dc90efe94fe839e283e47af3929d251d82a6e8675db",
+  "actualRootToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 33300,
+    "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-b4d487-38893610415\\msi-readonly\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-17T00:47:26.2431512Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-17T00:50:04.9165637Z"
+  },
+  "members": [
+    {
+      "pid": 33300,
+      "creationUtc": "2026-10-17T00:47:26.2431512Z",
+      "role": "native-root",
+      "workingSetBytes": 36507648
+    },
+    {
+      "pid": 46524,
+      "creationUtc": "2026-10-17T00:47:26.3720802Z",
+      "role": "browser-no-type-flag",
+      "workingSetBytes": 134385664
+    },
+    {
+      "pid": 80200,
+      "creationUtc": "2026-10-17T00:47:26.3923514Z",
+      "role": "crash-handler",
+      "workingSetBytes": 14004224
+    },
+    {
+      "pid": 65996,
+      "creationUtc": "2026-10-17T00:47:26.4823191Z",
+      "role": "gpu",
+      "workingSetBytes": 239390720
+    },
+    {
+      "pid": 53812,
+      "creationUtc": "2026-10-17T00:47:26.4849383Z",
+      "role": "utility",
+      "workingSetBytes": 39448576
+    },
+    {
+      "pid": 65156,
+      "creationUtc": "2026-10-17T00:47:26.5050463Z",
+      "role": "utility",
+      "workingSetBytes": 20717568
+    },
+    {
+      "pid": 16256,
+      "creationUtc": "2026-10-17T00:47:26.5431753Z",
+      "role": "renderer",
+      "workingSetBytes": 113618944
+    }
+  ],
+  "gpuCounterInstances": [
+    {
+      "pid": 65996,
+      "instance": "pid_65996_luid_0x00000000_0x0000E7BB_phys_0",
+      "DedicatedUsage": "0",
+      "SharedUsage": "175820800",
+      "TotalCommitted": "178212864",
+      "LocalUsage": "175783936",
+      "NonLocalUsage": "0",
+      "Timestamp_Sys100NS": null,
+      "Frequency_Sys100NS": null
+    }
+  ],
+  "gpuCounterClass": "Win32_PerfFormattedData_GPUPerformanceCounters_GPUProcessMemory",
+  "gpuCounterReadStatus": "available",
+  "desktopRootVerified": true,
+  "controlledSnapshotOnly": false,
+  "missingCounterInstancesAreNotZero": true,
+  "rawCommandLinesSaved": false,
+  "unrelatedProcessRowsSerialized": false,
+  "retainedHandlesUsed": true,
+  "shortLivedChildrenFullyCovered": false,
+  "individualGlBuffersAttributed": false,
+  "snapshotOnly": true,
+  "formalIdleSpanMeasured": false,
+  "uiInputInjected": false,
+  "processesStartedOrStopped": false,
+  "fullPerformanceGatePassed": false
+}

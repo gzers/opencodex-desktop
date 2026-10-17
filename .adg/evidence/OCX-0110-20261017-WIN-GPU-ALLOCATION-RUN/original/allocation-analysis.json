@@ -1,0 +1,482 @@
+{
+  "status": "verified-actual-bound-gpu-allocation-stack-observation",
+  "targetPid": 65996,
+  "rootPid": 33300,
+  "captureStartedAtUtc": "2026-10-17T00:48:49.5132154Z",
+  "captureFinishedAtUtc": "2026-10-17T00:49:20.7831347Z",
+  "readyAtUtc": "2026-10-17T00:48:49.9270516Z",
+  "returnActionAtUtc": "2026-10-17T00:49:07.322Z",
+  "firstOverviewObservationAtUtc": "2026-10-17T00:49:15.552Z",
+  "eventsSha256": "f9a14a854ae6cae853c68df6556bd0be5ee56d58faa7bc677b2498b330b86bcb",
+  "records": 581,
+  "serializedBytes": 269538,
+  "allocationStackPairs": 231,
+  "freeEvents": 119,
+  "allocationEventLengthSum": 76189696,
+  "freeEventLengthSum": 19161088,
+  "allocationFlagsCounts": {
+    "4096": 231
+  },
+  "phases": {
+    "before-return-action": {
+      "allocationEvents": 2,
+      "eventLengthSum": 24576,
+      "freeEvents": 3
+    },
+    "return-action-through-first-overview-observation": {
+      "allocationEvents": 209,
+      "eventLengthSum": 76075008,
+      "freeEvents": 105
+    },
+    "after-first-overview-observation": {
+      "allocationEvents": 20,
+      "eventLengthSum": 90112,
+      "freeEvents": 11
+    }
+  },
+  "inclusiveModulePresence": {
+    "combase.dll": {
+      "stackPairs": 2,
+      "eventLengthSum": 16384
+    },
+    "ntdll.dll": {
+      "stackPairs": 231,
+      "eventLengthSum": 76189696
+    },
+    "KERNEL32.DLL": {
+      "stackPairs": 231,
+      "eventLengthSum": 76189696
+    },
+    "msedge.dll": {
+      "stackPairs": 227,
+      "eventLengthSum": 76165120
+    },
+    "KERNELBASE.dll": {
+      "stackPairs": 142,
+      "eventLengthSum": 3534848
+    },
+    "d3d11.dll": {
+      "stackPairs": 82,
+      "eventLengthSum": 72609792
+    },
+    "win32u.dll": {
+      "stackPairs": 19,
+      "eventLengthSum": 72273920
+    },
+    "dxcore.dll": {
+      "stackPairs": 17,
+      "eventLengthSum": 72265728
+    },
+    "igd10um64xe.DLL": {
+      "stackPairs": 57,
+      "eventLengthSum": 72507392
+    },
+    "msedgewebview2.exe": {
+      "stackPairs": 128,
+      "eventLengthSum": 74821632
+    },
+    "ucrtbase.dll": {
+      "stackPairs": 4,
+      "eventLengthSum": 16384
+    },
+    "uiautomationcore.dll": {
+      "stackPairs": 5,
+      "eventLengthSum": 20480
+    },
+    "dxgi.dll": {
+      "stackPairs": 3,
+      "eventLengthSum": 12288
+    },
+    "USER32.dll": {
+      "stackPairs": 2,
+      "eventLengthSum": 8192
+    }
+  },
+  "exclusiveModuleGroups": {
+    "other-observed-module-ranges": {
+      "stackPairs": 144,
+      "eventLengthSum": 3559424
+    },
+    "contains-recorded-driver-module-range": {
+      "stackPairs": 57,
+      "eventLengthSum": 72507392
+    },
+    "contains-graphics-runtime-range-without-recorded-driver-range": {
+      "stackPairs": 25,
+      "eventLengthSum": 102400
+    },
+    "contains-uiautomation-range-without-graphics-range": {
+      "stackPairs": 5,
+      "eventLengthSum": 20480
+    }
+  },
+  "largestAllocations": [
+    {
+      "atUtc": "2026-10-17T00:49:07.6358043Z",
+      "length": 8454144,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6186969Z",
+      "length": 8380416,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.5423131Z",
+      "length": 8323072,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6383556Z",
+      "length": 8323072,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6411578Z",
+      "length": 8323072,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6325291Z",
+      "length": 7929856,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6224856Z",
+      "length": 4313088,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6300011Z",
+      "length": 3801088,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6340246Z",
+      "length": 3801088,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6346835Z",
+      "length": 3801088,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6313591Z",
+      "length": 3219456,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    },
+    {
+      "atUtc": "2026-10-17T00:49:07.6344495Z",
+      "length": 2818048,
+      "tid": 16356,
+      "phase": "return-action-through-first-overview-observation",
+      "moduleSequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ]
+    }
+  ],
+  "topModuleSequences": [
+    {
+      "sequence": [
+        "ntdll.dll",
+        "KERNELBASE.dll",
+        "msedge.dll",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 90
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "KERNELBASE.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 52
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 31
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 25
+    },
+    {
+      "sequence": [
+        "win32u.dll",
+        "dxcore.dll",
+        "d3d11.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 17
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "msedge.dll",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 6
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "ucrtbase.dll",
+        "uiautomationcore.dll",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 3
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "dxgi.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 2
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "combase.dll",
+        "ntdll.dll",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 1
+    },
+    {
+      "sequence": [
+        "msedge.dll",
+        "ntdll.dll",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 1
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "igd10um64xe.DLL",
+        "d3d11.dll",
+        "dxgi.dll",
+        "d3d11.dll",
+        "msedge.dll",
+        "msedgewebview2.exe",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 1
+    },
+    {
+      "sequence": [
+        "ntdll.dll",
+        "combase.dll",
+        "uiautomationcore.dll",
+        "USER32.dll",
+        "ntdll.dll",
+        "win32u.dll",
+        "USER32.dll",
+        "msedge.dll",
+        "KERNEL32.DLL",
+        "ntdll.dll"
+      ],
+      "stackPairs": 1
+    }
+  ],
+  "distinctInstructionPointers": 744,
+  "matchedPostCaptureModuleRanges": 705,
+  "unresolvedKernelRangeIps": 39,
+  "unmappedNonKernelIps": 0,
+  "moduleMapCapturedAtUtc": "2026-10-17T00:50:04.3936566+00:00",
+  "moduleMapIsEventTimeLoaderProof": false,
+  "symbolFunctionNamesResolved": false,
+  "gpuPointWorkingSetBefore": 264118272,
+  "gpuPointWorkingSetAfter": 239390720,
+  "gpuPointWorkingSetDifference": -24727552,
+  "gpuPointSharedUsageBefore": "212209664",
+  "gpuPointSharedUsageAfter": "175820800",
+  "pointSnapshotsAreFormalIdleAverage": false,
+  "lengthSumsAreNetCommittedOrResidentMemory": false,
+  "allocationAndFreeIdentityCanBeMatched": false,
+  "inclusiveModuleGroupsAreAdditive": false,
+  "observationOverheadAbsent": false,
+  "allEventsAreCausedByWebgl": false,
+  "rssDifferenceCauseEstablished": false,
+  "originalRssFailureCleared": false,
+  "fullProductGatePassed": false
+}

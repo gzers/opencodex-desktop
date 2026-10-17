@@ -1,0 +1,9 @@
+{
+  "kind": "derived-validator-error-record",
+  "initialSupplementVerifierResult": "AssertionError comparing raw Prepare JSON output and its PowerShell round-trip copy before sealing",
+  "cause": "PowerShell converted binding.atUtc from 00:48:46.6612303+00:00 to the same instant 08:48:46.6612303+08:00.",
+  "correction": "Compare exact integer FILETIME including all seven fractional digits, allowing only the verified binding.atUtc timezone representation change; all other fields must match.",
+  "originalFilesOverwritten": false,
+  "captureOrProductRetried": false,
+  "acceptanceCriteriaChanged": false
+}
