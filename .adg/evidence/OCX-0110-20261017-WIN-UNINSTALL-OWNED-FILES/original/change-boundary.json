@@ -1,0 +1,24 @@
+{
+  "atUtc": "2026-10-17T12:20:29.118276+00:00",
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "base": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+  "paths": [
+    "apps/desktop/tauri/src/modules/backup/manager.rs",
+    "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+    "test/smoke/windows-uninstall-data.ps1"
+  ],
+  "confirmedDefect": "uninstaller rejected valid own root-level backup lock and IPC audit files",
+  "reuseSourceContracts": [
+    "backup::manager::LOCK_FILE_NAME",
+    "ipc::audit::AUDIT_LOG_FILE_NAME",
+    "ipc::AUDIT_LOG_ROTATIONS"
+  ],
+  "newCrossPlatformTests": 3,
+  "queryProductionFixtureAndIpcWaitsUnchanged": true,
+  "oldUnknownFutureAndLinkRefusalsKept": true,
+  "backupTransactionsRequireNonblockingLockBeforeAnyDeletion": true,
+  "expectedMacTestsPassed": 938,
+  "expectedWindowsTestsPassed": 667,
+  "localRustCompilerAvailable": false,
+  "hostProductStarted": false
+}

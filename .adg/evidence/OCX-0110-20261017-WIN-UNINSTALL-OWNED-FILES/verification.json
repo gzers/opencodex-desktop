@@ -1,0 +1,28 @@
+{
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "firstCiRunId": 39032153138,
+  "firstCiConclusion": "success",
+  "sameSourceFullCiAdmitted": true,
+  "backendCoreResults": {
+    "backend": {
+      "conclusion": "success",
+      "newCoreCasesPassed": [
+        "real_backup_lock_and_owned_audit_rotations_do_not_block_confirmed_removal",
+        "active_backup_transaction_preserves_data_until_its_real_lock_is_released",
+        "reserved_names_must_be_regular_files_and_unknown_rotations_are_retained"
+      ]
+    },
+    "backend-windows": {
+      "conclusion": "success",
+      "newCoreCasesPassed": [
+        "real_backup_lock_and_owned_audit_rotations_do_not_block_confirmed_removal",
+        "active_backup_transaction_preserves_data_until_its_real_lock_is_released",
+        "reserved_names_must_be_regular_files_and_unknown_rotations_are_retained"
+      ]
+    }
+  },
+  "hostCleanupExecuted": false,
+  "historicalQueryRootCauseProved": false,
+  "fullInstallerGatePassed": false,
+  "releaseAccepted": false
+}
