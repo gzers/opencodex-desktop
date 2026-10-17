@@ -2415,9 +2415,8 @@ mod tests {
                 .unwrap();
             release.send(()).unwrap();
             tokio::time::timeout(Duration::from_secs(2), async {
-                while writers.freeze().unwrap().is_none() {
-                    tokio::task::yield_now().await;
-                }
+                writers.wait_until_idle_for_test().await.unwrap();
+                assert!(writers.freeze().unwrap().is_some());
             })
             .await
             .unwrap();
@@ -2560,12 +2559,8 @@ mod tests {
                 assert!(writers.freeze().unwrap().is_none());
                 release.send(()).unwrap();
                 tokio::time::timeout(Duration::from_secs(2), async {
-                    loop {
-                        if writers.freeze().unwrap().is_some() {
-                            break;
-                        }
-                        tokio::task::yield_now().await;
-                    }
+                    writers.wait_until_idle_for_test().await.unwrap();
+                    assert!(writers.freeze().unwrap().is_some());
                 })
                 .await
                 .unwrap();
