@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-UNINSTALL-CI-20261017",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/ci",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-UNINSTALL-CI-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-uninstall-data-whole-same-source-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/ci/verification.json"
+    },
+    {
+      "name": "local:windows-uninstall-data-host-smoke-refusal",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/ci/host-smoke-refusal.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "dcd36717729003016ac8daf754e7e837502bca0a7b44c9f08bb9ff7934ddf64c",
+      "summary": "1dcc完整CI39011042117成功，Mac935/Windows664及确认参数实际通过；本机守卫拒绝、唯一候选39012344655在构建，实装及原生缺测保持。"
+    }
+  ],
+  "completed_at": "2026-10-17T07:08:11.114139+00:00",
+  "revision": 1,
+  "summary": "核验显式清理修复完整同SHA CI并派发唯一候选，保留安装器和本机验收边界。",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "summary_digest": "8b0a86e4a7d301dfabba455d9a8b36ae7f74f13acc0dc63f0a57506756a6bf14",
+  "content_digest": "5e72814052de627c2caed7979234ca410bf0e352d1fd5d42ab79cec859141345"
+}

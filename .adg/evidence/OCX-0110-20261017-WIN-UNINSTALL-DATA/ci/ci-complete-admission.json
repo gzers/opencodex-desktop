@@ -1,0 +1,493 @@
+{
+  "atUtc": "2026-10-17T07:05:29.635209+00:00",
+  "source": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "runId": 39011042117,
+  "attempt": 1,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "snapshot": "ci-terminal-check-20261017T070514323271Z.original.json",
+  "requiredJobLogs": [
+    {
+      "job": "backend",
+      "jobId": 117333451421,
+      "conclusion": "success",
+      "actualCheckout": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+      "path": "ci-complete-backend.original.log",
+      "sha256": "8f10117cbf1340ce16a4123ed0b64e026bc59e8b2cd87e266a16e931434f4363",
+      "bytes": 226323,
+      "rustResults": [
+        [
+          "ok",
+          "767",
+          "0",
+          "4"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "9",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "33",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "39",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "7",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "8",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "job": "backend-windows",
+      "jobId": 117333451572,
+      "conclusion": "success",
+      "actualCheckout": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+      "path": "ci-complete-backend-windows.original.log",
+      "sha256": "afe599a1d7fa47acdf587c303512a98b58796de07c2263360ff3bfa1963093d9",
+      "bytes": 348034,
+      "rustResults": [
+        [
+          "ok",
+          "564",
+          "0",
+          "4"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "32",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "8",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "job": "frontend",
+      "jobId": 117333451580,
+      "conclusion": "success",
+      "actualCheckout": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+      "path": "ci-complete-frontend.original.log",
+      "sha256": "c647cd735359d42a57c3c91bf90f60797a194bff41e5c286ef2f1d42e33a035b",
+      "bytes": 39897,
+      "rustResults": []
+    },
+    {
+      "job": "release-tools",
+      "jobId": 117333451585,
+      "conclusion": "success",
+      "actualCheckout": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+      "path": "ci-complete-release-tools.original.log",
+      "sha256": "4a2342274a25d5093f26ca7f62bb2e3e585569112f5a3feda2668614a816f01e",
+      "bytes": 27090,
+      "rustResults": []
+    },
+    {
+      "job": "windows-smoke-evidence",
+      "jobId": 117333451610,
+      "conclusion": "success",
+      "actualCheckout": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+      "path": "ci-complete-windows-smoke-evidence.original.log",
+      "sha256": "e24c2dcb59fa937df3c02bb74fdf4e06be06e0bb020a1522034cee28709b7638",
+      "bytes": 28883,
+      "rustResults": []
+    }
+  ],
+  "wholeToolCiAdmitted": true,
+  "hostProductStarted": false,
+  "hostTracingStarted": false,
+  "oldFailureCausalityProved": false,
+  "originalBd2FailureCleared": false,
+  "rssFailureCleared": false,
+  "fullProductGateAccepted": false,
+  "newDispatchRequested": false,
+  "ciRerunRequested": false
+}
