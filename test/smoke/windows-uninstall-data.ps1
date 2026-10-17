@@ -30,7 +30,15 @@ $taskEncoding=[Text.UTF8Encoding]::new($false)
 [IO.File]::WriteAllText((Join-Path $taskCustom 'manager-state/data-root.json'),'{"structure_version":"1"}',$taskEncoding)
 [IO.File]::WriteAllText((Join-Path $taskRoot 'manager-state/data-root.json'),
     ([ordered]@{structure_version='1';active_data_root=$taskCustom;opencodex_home_mode='external';opencodex_home_path=$taskHome} | ConvertTo-Json -Compress),$taskEncoding)
-$taskSentinels=@(Join-Path $taskRoot 'manager-state/preferences.json';Join-Path $taskCustom 'backups/owned-payload';Join-Path $taskHome 'outside.sentinel')
+$taskSentinels=@(
+    Join-Path $taskRoot 'manager-state/preferences.json'
+    Join-Path $taskCustom 'backups/owned-payload'
+    Join-Path $taskHome 'outside.sentinel'
+    Join-Path $taskRoot '.backup-w2.lock'
+    Join-Path $taskRoot 'audit.log'
+    Join-Path $taskRoot 'audit.log.1'
+    Join-Path $taskCustom 'audit.log.5'
+)
 foreach($taskPath in $taskSentinels){[IO.File]::WriteAllText($taskPath,'explicit cleanup runner fixture',$taskEncoding)}
 $taskExpected=@($taskSentinels | ForEach-Object {[ordered]@{path=$_;sha256=(Get-FileHash -LiteralPath $_).Hash.ToLowerInvariant()}})
 New-Item -Path $taskKey -Force | Out-Null

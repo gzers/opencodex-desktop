@@ -102,6 +102,18 @@ fn inspect_tree(root: &Path) -> AppResult<()> {
     Ok(())
 }
 
+fn owned_root_file(name: &std::ffi::OsStr) -> bool {
+    use crate::modules::backup::manager::LOCK_FILE_NAME;
+    use crate::modules::ipc::{audit::AUDIT_LOG_FILE_NAME, AUDIT_LOG_ROTATIONS};
+
+    let Some(name) = name.to_str() else {
+        return false;
+    };
+    name == LOCK_FILE_NAME
+        || name == AUDIT_LOG_FILE_NAME
+        || (1..=AUDIT_LOG_ROTATIONS).any(|index| name == format!("{AUDIT_LOG_FILE_NAME}.{index}"))
+}
+
 /// A plan contains only the verified startup-anchor chain. It never includes
 /// arbitrary caller paths, sibling directories, or an external OpenCodex HOME.
 #[derive(Debug, PartialEq, Eq)]
@@ -128,9 +140,14 @@ impl RemovalPlan {
                 std::fs::read_dir(&root).map_err(|_| failure("data root inventory failed"))?
             {
                 let entry = entry.map_err(|_| failure("data root entry cannot be read"))?;
-                if !PARTITIONS
+                let metadata = std::fs::symlink_metadata(entry.path())
+                    .map_err(|_| failure("data root entry cannot be inspected"))?;
+                let partition = PARTITIONS
                     .iter()
-                    .any(|(_, name)| entry.file_name() == *name)
+                    .any(|(_, name)| entry.file_name() == *name);
+                if is_link(&metadata)
+                    || !(partition && metadata.is_dir()
+                        || owned_root_file(&entry.file_name()) && metadata.is_file())
                 {
                     return Err(failure(
                         "unrecognized content in data root; retain all data",
@@ -184,6 +201,11 @@ impl RemovalPlan {
             .roots
             .iter()
             .map(|root| AppInstanceLock::acquire(root))
+            .collect::<AppResult<Vec<_>>>()?;
+        let _backup_locks = self
+            .roots
+            .iter()
+            .map(|root| crate::modules::backup::manager::try_lock_for_removal(root))
             .collect::<AppResult<Vec<_>>>()?;
         if Self::prepare(anchor, install)? != self {
             return Err(failure("data root binding changed before removal"));
@@ -242,6 +264,75 @@ mod tests {
             before
         );
         assert!(!root.join("manager-state/app.lock").exists());
+    }
+
+    #[test]
+    fn real_backup_lock_and_owned_audit_rotations_do_not_block_confirmed_removal() {
+        use crate::modules::ipc::{audit::AUDIT_LOG_FILE_NAME, AUDIT_LOG_ROTATIONS};
+
+        let (_temp, install, root) = fixture();
+        std::fs::write(root.join("manager-state/preferences.json"), b"{}").unwrap();
+        let guard =
+            crate::modules::backup::manager::begin_preferences_protection(&root, true).unwrap();
+        assert!(guard.backup.is_some());
+        drop(guard);
+        std::fs::write(root.join(AUDIT_LOG_FILE_NAME), b"owned audit").unwrap();
+        for index in 1..=AUDIT_LOG_ROTATIONS {
+            std::fs::write(
+                root.join(format!("{AUDIT_LOG_FILE_NAME}.{index}")),
+                b"owned rotation",
+            )
+            .unwrap();
+        }
+        RemovalPlan::prepare(&root, &install)
+            .unwrap()
+            .remove(&root, &install)
+            .unwrap();
+        assert!(!root.exists() && install.is_dir());
+    }
+
+    #[test]
+    fn active_backup_transaction_preserves_data_until_its_real_lock_is_released() {
+        let (_temp, install, root) = fixture();
+        let preferences = root.join("manager-state/preferences.json");
+        std::fs::write(&preferences, b"{}").unwrap();
+        let guard =
+            crate::modules::backup::manager::begin_preferences_protection(&root, true).unwrap();
+        assert!(RemovalPlan::prepare(&root, &install)
+            .unwrap()
+            .remove(&root, &install)
+            .is_err());
+        assert_eq!(std::fs::read(&preferences).unwrap(), b"{}");
+        assert!(root.join(super::super::METADATA_RELATIVE_PATH).is_file());
+        drop(guard);
+        RemovalPlan::prepare(&root, &install)
+            .unwrap()
+            .remove(&root, &install)
+            .unwrap();
+        assert!(!root.exists());
+    }
+
+    #[test]
+    fn reserved_names_must_be_regular_files_and_unknown_rotations_are_retained() {
+        use crate::modules::backup::manager::LOCK_FILE_NAME;
+        use crate::modules::ipc::{audit::AUDIT_LOG_FILE_NAME, AUDIT_LOG_ROTATIONS};
+
+        for name in [LOCK_FILE_NAME, AUDIT_LOG_FILE_NAME] {
+            let (_temp, install, root) = fixture();
+            std::fs::create_dir(root.join(name)).unwrap();
+            assert!(RemovalPlan::prepare(&root, &install).is_err());
+            assert!(root.join(name).is_dir());
+        }
+        for name in [
+            format!("{AUDIT_LOG_FILE_NAME}.{}", AUDIT_LOG_ROTATIONS + 1),
+            format!("{AUDIT_LOG_FILE_NAME}.01"),
+            format!("{AUDIT_LOG_FILE_NAME}.unknown"),
+        ] {
+            let (_temp, install, root) = fixture();
+            std::fs::write(root.join(&name), b"retain unknown").unwrap();
+            assert!(RemovalPlan::prepare(&root, &install).is_err());
+            assert_eq!(std::fs::read(root.join(name)).unwrap(), b"retain unknown");
+        }
     }
 
     #[test]

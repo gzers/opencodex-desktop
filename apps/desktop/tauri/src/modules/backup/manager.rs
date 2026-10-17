@@ -46,6 +46,7 @@ pub trait MaintenanceObserver {
 }
 impl MaintenanceObserver for () {}
 const SOURCE_UNAVAILABLE: &[u8] = b"preferences-source-unavailable";
+pub(crate) const LOCK_FILE_NAME: &str = ".backup-w2.lock";
 
 fn observed_lock(
     root: &Path,
@@ -56,10 +57,20 @@ fn observed_lock(
 }
 
 fn lock(root: &Path) -> AppResult<File> {
-    let path = root.join(".backup-w2.lock");
+    let path = root.join(LOCK_FILE_NAME);
     safety::check_path(root, &path, true)?;
     let file = safety::open_file(&path, true)?;
     file.lock().map_err(|e| fail(e.to_string()))?;
+    Ok(file)
+}
+/// Uninstall must refuse a live backup transaction instead of waiting for it.
+#[cfg(any(windows, test))]
+pub(crate) fn try_lock_for_removal(root: &Path) -> AppResult<File> {
+    let path = root.join(LOCK_FILE_NAME);
+    safety::check_path(root, &path, true)?;
+    let file = safety::open_file(&path, true)?;
+    file.try_lock()
+        .map_err(|_| safety::fail("backup mutation is active during removal"))?;
     Ok(file)
 }
 /// Cooperative cross-process guard. Keep alive through the entire mutation.
