@@ -6,6 +6,11 @@
     }
   },
   "bundle": {
+    "windows": {
+      "nsis": {
+        "installerHooks": "windows/installer-hooks.nsh"
+      }
+    },
     "icon": [
       "icons/windows/32x32.png",
       "icons/windows/64x64.png",

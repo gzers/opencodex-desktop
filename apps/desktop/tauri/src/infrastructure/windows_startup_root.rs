@@ -305,9 +305,9 @@ mod native {
         Security::{GetLengthSid, GetTokenInformation, TokenUser, TOKEN_QUERY, TOKEN_USER},
         System::{
             Registry::{
-                RegCloseKey, RegCreateKeyExW, RegFlushKey, RegGetValueW, RegSetValueExW,
-                HKEY_CURRENT_USER, KEY_QUERY_VALUE, KEY_SET_VALUE, REG_OPTION_NON_VOLATILE, REG_SZ,
-                RRF_RT_REG_SZ,
+                RegCloseKey, RegCreateKeyExW, RegDeleteValueW, RegFlushKey, RegGetValueW, RegOpenKeyExW,
+                RegSetValueExW, HKEY_CURRENT_USER, KEY_QUERY_VALUE, KEY_SET_VALUE,
+                REG_OPTION_NON_VOLATILE, REG_SZ, RRF_RT_REG_SZ,
             },
             Threading::{
                 CreateSemaphoreW, GetCurrentProcess, OpenProcessToken, ReleaseSemaphore,
@@ -516,6 +516,74 @@ mod native {
         Ok(())
     }
 
+    /// Called only by ocxd's explicit installer command. Retain the same
+    /// per-user startup lease until all data and the exact pointer are removed.
+    pub(super) fn remove_for_uninstall() -> AppResult<()> {
+        if crate::modules::test_sandbox::enabled() {
+            return Err(failure("installer cleanup is not a sandbox command"));
+        }
+        let _lease = lease()?;
+        let choice = read_choice()?;
+        let executable = std::env::current_exe()
+            .map_err(|_| failure("installed cleanup executable cannot be resolved"))?;
+        let install = executable
+            .parent()
+            .ok_or_else(|| failure("installation directory is unavailable"))?;
+        let platform = std::env::var_os("APPDATA")
+            .map(PathBuf::from)
+            .filter(|path| path.is_absolute())
+            .ok_or_else(|| failure("application data directory is unavailable"))?
+            .join("com.gzers.opencodex.desktop");
+        let anchor = match &choice {
+            Some(path) => path.clone(),
+            None => bootstrap::default_anchor(&platform, &executable, true)?,
+        };
+        // An app which was never opened has no initialized data to remove.
+        // A saved but missing root likewise needs only pointer removal.
+        match std::fs::symlink_metadata(&anchor) {
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            Err(_) => return Err(failure("saved data root cannot be inspected")),
+            Ok(_) => {
+                let plan =
+                    crate::modules::data_root::uninstall::RemovalPlan::prepare(&anchor, install)?;
+                if read_choice()? != choice {
+                    return Err(failure("startup choice changed before removal"));
+                }
+                plan.remove(&anchor, install)?;
+            }
+        }
+        if read_choice()? != choice {
+            return Err(failure("startup choice changed during removal"));
+        }
+        if choice.is_some() {
+            let key_name = wide(KEY);
+            let value = wide(VALUE);
+            let mut key = std::ptr::null_mut();
+            // SAFETY: open only the existing application-owned HKCU key.
+            let status = unsafe {
+                RegOpenKeyExW(
+                    HKEY_CURRENT_USER,
+                    key_name.as_ptr(),
+                    0,
+                    KEY_QUERY_VALUE | KEY_SET_VALUE,
+                    &mut key,
+                )
+            };
+            if status != ERROR_SUCCESS {
+                return Err(failure("startup choice cannot be cleared"));
+            }
+            // SAFETY: remove only this app's saved startup value; the handle
+            // and UTF-16 value are locally owned and always released.
+            let status = unsafe { RegDeleteValueW(key, value.as_ptr()) };
+            let flush = unsafe { RegFlushKey(key) };
+            unsafe { RegCloseKey(key) };
+            if status != ERROR_SUCCESS || flush != ERROR_SUCCESS || read_choice()?.is_some() {
+                return Err(failure("startup choice removal requires verification"));
+            }
+        }
+        Ok(())
+    }
+
     fn explain<R: Runtime>(app: &tauri::AppHandle<R>, error: &AppError) {
         let message = match error {
             AppError::InstanceLockConflict => "已有管理器或目录选择正在运行。请先关闭原实例后再试；本次未切换数据目录。",
@@ -606,6 +674,8 @@ mod native {
 
 #[cfg(windows)]
 pub(crate) use native::prepare;
+#[cfg(windows)]
+pub(crate) use native::remove_for_uninstall;
 
 #[cfg(test)]
 mod tests {

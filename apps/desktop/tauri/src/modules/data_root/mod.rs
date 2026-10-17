@@ -5,6 +5,8 @@
 
 pub mod bootstrap;
 pub mod migration;
+#[cfg(any(windows, test))]
+pub mod uninstall;
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
