@@ -1,0 +1,82 @@
+{
+  "observedAtUtc": "2026-10-17T16:32:22.393766+00:00",
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "references": [
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-STARTUP-PAIR-PREP/method.json",
+      "bytes": 1623,
+      "sha256": "c6e2d4c2e546462e495f04b960a931236aaea8491cb25b73c55df02756e5944f"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-STARTUP-PAIR-PREP/measure.ps1",
+      "bytes": 14139,
+      "sha256": "1286fcadec83611d82142ce5857eb40c447a0ee94a1ee952293f0e2100730171"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-STARTUP-PAIR-PREP/analyze.py",
+      "bytes": 2084,
+      "sha256": "13e708ed2c0adda0ebdb6158fb409aade8058c28c6342e09df141029d452037c"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-STARTUP-PAIR-PREP/preparation-validation.json",
+      "bytes": 183,
+      "sha256": "88a36f2ecf5df70e241f37f8fb9b12f60f1dd21c9cbd75448927d1963545e1ca"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-STARTUP-PAIR-PREP/manifest.json",
+      "bytes": 817,
+      "sha256": "1518a1a158212c4e9b5d6a66f785b1fefc6860196b394e85d42853fbc7ff9464"
+    }
+  ],
+  "oldPreparationManifestVerifiedFiles": 5,
+  "originalDefinitions": {
+    "cacheCold": "new WebView disk profile, unchanged owned manager data, no previous product or associated WebView process alive",
+    "processWarm": "normal exit then new process using the same just-populated WebView disk profile and manager data",
+    "osCold": "not measured: no OS reboot, standby-list purge or machine cache reset",
+    "samplesPerVersionPerMode": 20,
+    "totalSamples": 80,
+    "nearestRankP95": true,
+    "bothDeltaBudgetsRequired": {
+      "p95IncreaseMsMaximum": 100,
+      "p95IncreaseFractionMaximum": 0.05
+    }
+  },
+  "oldMeasurementNotExecutableAsIs": {
+    "boundToOld8beCandidate": true,
+    "oldCandidateDataRootReferenced": true,
+    "newHumanWindowAndThirtyMinuteDeadlineGuardAbsent": true,
+    "preferenceWritesBeforeMeasurementTry": true,
+    "normalAndFailureRestorationFinallyAbsent": true,
+    "writesNewSamplesIntoSealedOriginalEvidenceDirectory": true,
+    "directWindowsUiaInputPresent": true,
+    "currentWindowsUiOwner": "computer-use node_repl + @oai/sky; do not run an alternate UI driver"
+  },
+  "existingIdleScope": {
+    "acceptedCpuRssIsNotColdHotStartup": true,
+    "oneSecondDescendantSamplingCanMissSubsecondChildren": true,
+    "cannotProveRawRequestByteOrQueryChildZeroCounts": true
+  },
+  "remainingCollectionNeeds": [
+    "bind current admitted8e and official019 images without rebuilding",
+    "fresh private run and original configuration preservation before setup",
+    "current human window and no sample starts after cleanup margin",
+    "retain normal exit handles and restore originals on success/failure",
+    "respect original20+20 per version and nearest-rank100ms/5percent checks",
+    "raw automatic-query and process-count method must be bound before100route/10restart execution"
+  ],
+  "toolAuditCorrection": "Initial inline absence-of-finally assertion also matched embedded C# thread-input finally; corrected to outer PowerShell cleanup tail before any project write. Old source unchanged.",
+  "noNewThresholdOrSampleReduction": true,
+  "oldMethodsEdited": false,
+  "measurementRun": false,
+  "productsStarted": 0,
+  "foregroundUsed": false,
+  "ciDispatched": false,
+  "originalProtection": {
+    "preferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+    "pointerUtf8Sha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+    "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93"
+  },
+  "fullPerformanceGatePassed": false,
+  "taskClosed": false,
+  "releaseAccepted": false
+}
