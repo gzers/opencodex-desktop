@@ -1,0 +1,45 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-CE-DATA-ROOT-20261017",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-CE-DATA-ROOT-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-actual-default-data-restart-and-uninstall-retention",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT/verification.json"
+    },
+    {
+      "name": "local:empty-data-root-product-fix-frontend",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT/fix/test-result.json"
+    },
+    {
+      "name": "review:storage-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT/original/recovery-process-order.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "d9c920c032195b1724a9023a467ecd9826e2788a2acfab678ed2e56d8781c285",
+      "summary": "实际默认data、真实备份、两次exit0及卸载四文件保留通过；恢复工具限制/迁移安全阻止留证，修复空根初始化edead4c5，542前端通过、完整CI待核。"
+    }
+  ],
+  "completed_at": "2026-10-17T05:25:39.847151+00:00",
+  "revision": 1,
+  "summary": "推进实际安装数据验收并修复现场空目录初始化缺口，不重复默认根测试或已接受性能。",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "summary_digest": "1c00f110ff3348ccf4e1fffc04b2256e9f6f2ca599a42b070da711a5c4a2b47a",
+  "content_digest": "a482af25073b95cc6993306a8016de64865238e7f1666b0e585363aee23b1e12"
+}

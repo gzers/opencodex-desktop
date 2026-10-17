@@ -1,0 +1,34 @@
+
+ RUN  v5.0.0 C:/Users/15119/.codex/worktrees/windows-mesh-initial-size/opencodex-desktop/apps/desktop/ui
+
+ ❯ tests/data-root.test.ts (14 tests | 1 failed) 81ms
+   ❯ data root integration (14)
+     × initializes an empty directory without treating it as damaged 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/data-root.test.ts > data root integration > initializes an empty directory without treating it as damaged
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/data-root.test.ts:49:59
+     47|     })
+     48|     const app = useAppStore()
+     49|     await expect(app.saveDataRoot('/fixtures/empty-root')).resolves.to…
+       |                                                           ^
+     50|     expect(invoke).toHaveBeenCalledWith('initialize_data_root', {
+     51|       request: { rootPath: '/fixtures/empty-root' },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  13:19:44
+   Duration  1.04s (environment 49%, transform 32%, import 10%, tests 9%)
+
