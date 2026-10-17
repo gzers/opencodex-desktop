@@ -1,0 +1,55 @@
+
+ RUN  v5.0.0 C:/Users/15119/.codex/worktrees/windows-mesh-initial-size/opencodex-desktop/apps/desktop/ui
+
+ × tests/webgl-lifetime.test.ts > WebGL context ownership > releases the capability probe immediately instead of retaining a second GPU context 8ms
+   → expected [ 300, 150 ] to deeply equal [ 1, 1 ]
+ × tests/webgl-lifetime.test.ts > WebGL context ownership > keeps mesh capability when an owned canvas is deliberately disposed 10ms
+   → expected 'css' to be 'mesh' // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/webgl-lifetime.test.ts > WebGL context ownership > releases the capability probe immediately instead of retaining a second GPU context
+AssertionError: expected [ 300, 150 ] to deeply equal [ 1, 1 ]
+
+- Expected
++ Received
+
+  [
+-   1,
+-   1,
++   300,
++   150,
+  ]
+
+ ❯ tests/webgl-lifetime.test.ts:32:43
+     30|     })
+     31|     expect(detectWebglSupport()).toBe(true)
+     32|     expect([probe!.width, probe!.height]).toEqual([1, 1])
+       |                                           ^
+     33|     expect(getExtension).toHaveBeenCalledWith('WEBGL_lose_context')
+     34|     expect(loseContext).toHaveBeenCalledTimes(1)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/webgl-lifetime.test.ts > WebGL context ownership > keeps mesh capability when an owned canvas is deliberately disposed
+AssertionError: expected 'css' to be 'mesh' // Object.is equality
+
+Expected: "mesh"
+Received: "css"
+
+ ❯ tests/webgl-lifetime.test.ts:70:24
+     68|     expect(loseContext).toHaveBeenCalledTimes(1)
+     69|     expect(host.children).toHaveLength(0)
+     70|     expect(store.mode).toBe('mesh')
+       |                        ^
+     71|     expect(store.fellBack).toBe(false)
+     72|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  10:24:39
+   Duration  995ms (environment 86%, import 6%, transform 5%, tests 2%)
+
