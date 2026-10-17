@@ -1,5 +1,6 @@
 //! Shared Windows query/short-probe process fixtures. Only the explicitly
-//! supplied test Node binary and their own temporary directories are used.
+//! supplied test Node binary and their own temporary directories are used for
+//! the queried tree. An unrelated control is cmd.exe blocked on its own stdin.
 use crate::modules::process::EnvironmentPolicy;
 use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle};
 use std::os::windows::process::CommandExt;
@@ -28,7 +29,7 @@ function publishPhase(name) {
   fs.renameSync(temporary, destination);
 }
 if (process.argv[2] === '--sleep') {
-  publishPhase(process.argv[3] === '--control' ? 'control-started' : 'descendant-started');
+  publishPhase('descendant-started');
   setInterval(() => {}, 1000);
 } else {
   publishPhase('parent-started');
@@ -66,14 +67,7 @@ struct ControlProcess(std::process::Child);
 impl ControlProcess {
     /// Observe only the retained handle created by this fixture. Never wait for
     /// Node to warm up or reinterpret a failed production query as a pass.
-    fn trace(
-        &self,
-        label: &str,
-        mode: &str,
-        point: &str,
-        started: std::time::Instant,
-        root: &Path,
-    ) {
+    fn trace(&self, label: &str, mode: &str, point: &str, started: std::time::Instant) {
         let handle = self.0.as_raw_handle();
         // SAFETY: Child retains this process handle until its own cleanup below.
         let wait_status = unsafe { WaitForSingleObject(handle, 0) };
@@ -106,8 +100,6 @@ impl ControlProcess {
                 "exit_code": (exit_ok != 0).then_some(exit_code), "exit_error": exit_error,
             })
         );
-        let marker = std::fs::read_to_string(root.join("control-started.json"));
-        eprintln!("query fixture {label}/{mode}: control-marker-at={point}, evidence={marker:?}");
     }
 }
 impl Drop for ControlProcess {
@@ -220,14 +212,17 @@ pub(crate) fn process_case(
         ),
     )
     .unwrap();
+    // Keep an unrelated, retained process alive without starting another Node.
+    // No readiness wait or warm-up is performed before the actual cold query.
+    let control_command = crate::infrastructure::platform::system_path_dirs()
+        .into_iter()
+        .next()
+        .expect("Windows system directory")
+        .join("cmd.exe");
     let mut control = ControlProcess(
-        std::process::Command::new(&node)
-            .args([
-                fixture.as_os_str(),
-                std::ffi::OsStr::new("--sleep"),
-                std::ffi::OsStr::new("--control"),
-            ])
-            .stdin(Stdio::null())
+        std::process::Command::new(control_command)
+            .args(["/d", "/c", "set /p OCX_QUERY_FIXTURE_CONTROL="])
+            .stdin(Stdio::piped())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .creation_flags(0x0800_0000)
@@ -288,13 +283,13 @@ pub(crate) fn process_case(
         path: Some(node.parent().unwrap().as_os_str().to_owned()),
         ..Default::default()
     };
-    control.trace(label, mode, "before-query", fixture_started, root.path());
+    control.trace(label, mode, "before-query", fixture_started);
     let query_started = std::time::Instant::now();
     let result = execute(&npm, root.path(), environment);
     let query_elapsed = query_started.elapsed();
     eprintln!("query fixture {label}/{mode}: elapsed={query_elapsed:?}, result={result:?}");
     let _ = query_completed.send(());
-    control.trace(label, mode, "query-returned", fixture_started, root.path());
+    control.trace(label, mode, "query-returned", fixture_started);
     // Evidence only: never wait for/prewarm Node, extend the query deadline or
     // replace a failed outcome. Each marker belongs to this temporary fixture.
     eprintln!(
@@ -304,7 +299,6 @@ pub(crate) fn process_case(
         control.0.id()
     );
     for phase in [
-        "control-started",
         "parent-started",
         "before-child-spawn",
         "after-child-spawn",
@@ -318,13 +312,7 @@ pub(crate) fn process_case(
     let observed = observer.join();
     // Preserve the control's state after the original observer deadline even
     // when it failed before opening query handles. Cleanup/assertions stay intact.
-    control.trace(
-        label,
-        mode,
-        "observer-returned",
-        fixture_started,
-        root.path(),
-    );
+    control.trace(label, mode, "observer-returned", fixture_started);
     let (descendant, parent, watchdog_cleanup) =
         observed.expect("fixture handle observation failed");
     let stopped = descendant.as_ref().is_none_or(ObservedChild::stopped);
