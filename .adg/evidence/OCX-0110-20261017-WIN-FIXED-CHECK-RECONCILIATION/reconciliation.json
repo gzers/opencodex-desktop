@@ -378,6 +378,19 @@
         "reconcile_clock/plan/reserve/complete"
       ],
       "remainingChanges": "bounded storage safety and tests"
+    },
+    {
+      "scope": "backup-manager",
+      "oldSource": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "path": "apps/desktop/tauri/src/modules/backup/manager.rs",
+      "diffBytes": 1497,
+      "diffSha256": "19cd0fe9f614376d46de39caa4ca8cbe3a43a22a62361413a7df1c440448f2cd",
+      "reviewedChanges": [
+        "extract unchanged lock filename into a constant",
+        "add nonblocking removal lock; normal backup lock semantics unchanged"
+      ],
+      "sourceCopiedToDocs": false
     }
   ],
   "protection": {

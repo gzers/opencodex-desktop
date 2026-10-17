@@ -167,7 +167,12 @@ def build():
                     "reconcile_clock/plan/reserve/complete"], "remainingChanges": "bounded storage safety and tests"})
     backup_diff = git("diff", "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff", SOURCE, "--",
                       "apps/desktop/tauri/src/modules/backup/manager.rs")
-    (ROOT / "backup-manager-impact.diff").write_bytes(backup_diff)
+    impacts.append({"scope": "backup-manager", "oldSource": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+                    "currentSource": SOURCE, "path": "apps/desktop/tauri/src/modules/backup/manager.rs",
+                    "diffBytes": len(backup_diff), "diffSha256": sha(backup_diff),
+                    "reviewedChanges": ["extract unchanged lock filename into a constant",
+                                        "add nonblocking removal lock; normal backup lock semantics unchanged"],
+                    "sourceCopiedToDocs": False})
     prefs = Path(r"C:\Users\15119\AppData\Roaming\com.gzers.opencodex.desktop\manager-state\preferences.json")
     with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Software\com.gzers.opencodex.desktop") as key:
         pointer, kind = winreg.QueryValueEx(key, "StartupDataRootV1")
