@@ -1,0 +1,61 @@
+{
+  "atUtc": "2026-10-17T06:41:14.379606+00:00",
+  "source": "0e81500f262289a9bf0cf722c3ca9fa70471c1b0",
+  "branch": "feature/0.1.10-windows-uninstall-data",
+  "base": "99a62e4ad35e9404cb08922571ad8b77f89214dd",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 12535,
+      "sha256": "15a7b54b647bd4a8f0dfbe6d34f6139032a6e0b74d98b853190fdaabe55ead80"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 48832,
+      "sha256": "952e7fdbc33d086953168e478b963e921f44382ffdc73d53f5888ed2671ce0cc"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/migration.rs",
+      "bytes": 32844,
+      "sha256": "c866145412912090da534c4d0adea3dd9ed780d455c40a44e02cd6c5fbbbee65"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/mod.rs",
+      "bytes": 36141,
+      "sha256": "de793e1226eca7939cd407922b69f6b31ffe8e969cc2a6e2eb6a4b6dd637de83"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+      "bytes": 13984,
+      "sha256": "ad464ba3c5f558b26a5b99613f1fbbc773bf010adf86db5c69a2ed1d55de0b22"
+    },
+    {
+      "path": "apps/desktop/tauri/tauri.windows.conf.json",
+      "bytes": 470,
+      "sha256": "a6f3f4e91e7631bbf1c2d5fd5ec0f524ba536a7e30e826fed2672e8c3d9b47cd"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/installer-hooks.nsh",
+      "bytes": 1074,
+      "sha256": "66e8591be04f3378d0fb890180a31fa5675c7fa8c7add18d89260c09289e7164"
+    },
+    {
+      "path": "test/smoke/windows-installer.ps1",
+      "bytes": 6644,
+      "sha256": "b04d48d07db6135763179d193849ebf58ba3c4dbc20c67820172e033c10a123f"
+    },
+    {
+      "path": "test/smoke/windows-uninstall-data.ps1",
+      "bytes": 5633,
+      "sha256": "fd138041cca08b6f637cf5fe522d3bcb65996cd8872d3fdb88364b4e4e8fc73f"
+    }
+  ],
+  "scope": "NSIS checkbox invokes a confirmed internal helper; validates and removes registered manager root chain, preserves external HOME; default uninstall and updates retain data",
+  "msiDataDeletionUiAdded": false,
+  "runnerOnlySeededHelperSmokeAdded": true,
+  "originalSourceFailurePreserved": true,
+  "hostProductStarted": false,
+  "hostUninstallOrCleanupExecuted": false,
+  "fullCiAdmitted": false,
+  "newCandidateDispatched": false
+}

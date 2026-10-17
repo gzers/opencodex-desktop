@@ -1,0 +1,71 @@
+{
+  "atUtc": "2026-10-17T06:22:25.972532+00:00",
+  "source": "3d9634ac830a207513dfd7368ab7b8c8bf4f5107",
+  "runId": 39009491390,
+  "attempt": 1,
+  "event": "push",
+  "status": "completed",
+  "conclusion": "failure",
+  "snapshot": "ci-terminal-check-20261017T062210639802Z.original.json",
+  "requiredJobLogs": [
+    {
+      "job": "frontend",
+      "jobId": 117328732310,
+      "conclusion": "success",
+      "actualCheckout": "3d9634ac830a207513dfd7368ab7b8c8bf4f5107",
+      "path": "ci-complete-frontend.original.log",
+      "sha256": "77eb29e8d3618b6b5f64a3abb74119b4d8471037e8f7920779467e7883b3e976",
+      "bytes": 39912,
+      "rustResults": []
+    },
+    {
+      "job": "release-tools",
+      "jobId": 117328732390,
+      "conclusion": "success",
+      "actualCheckout": "3d9634ac830a207513dfd7368ab7b8c8bf4f5107",
+      "path": "ci-complete-release-tools.original.log",
+      "sha256": "377adbe91636cb91d9b79fcbd3a32ecadc2cca091f17c6d0708c13a70657ff6e",
+      "bytes": 27090,
+      "rustResults": []
+    },
+    {
+      "job": "backend-windows",
+      "jobId": 117328732406,
+      "conclusion": "failure",
+      "actualCheckout": "3d9634ac830a207513dfd7368ab7b8c8bf4f5107",
+      "path": "ci-complete-backend-windows.original.log",
+      "sha256": "d183991373db58c554e5a918a50438db366198148264faa4fb9bbe1c47139eaf",
+      "bytes": 47531,
+      "rustResults": []
+    },
+    {
+      "job": "backend",
+      "jobId": 117328732481,
+      "conclusion": "failure",
+      "actualCheckout": "3d9634ac830a207513dfd7368ab7b8c8bf4f5107",
+      "path": "ci-complete-backend.original.log",
+      "sha256": "f70eaff08af170007f57f3daa38ad7f194166dd2daae4e968431083e41c0d8da",
+      "bytes": 33048,
+      "rustResults": []
+    },
+    {
+      "job": "windows-smoke-evidence",
+      "jobId": 117328732560,
+      "conclusion": "success",
+      "actualCheckout": "3d9634ac830a207513dfd7368ab7b8c8bf4f5107",
+      "path": "ci-complete-windows-smoke-evidence.original.log",
+      "sha256": "3386a92a734a036783e82f673185493db82c471853330d3baa8f06e5c992024c",
+      "bytes": 28883,
+      "rustResults": []
+    }
+  ],
+  "wholeToolCiAdmitted": false,
+  "hostProductStarted": false,
+  "hostTracingStarted": false,
+  "oldFailureCausalityProved": false,
+  "originalBd2FailureCleared": false,
+  "rssFailureCleared": false,
+  "fullProductGateAccepted": false,
+  "newDispatchRequested": false,
+  "ciRerunRequested": false
+}

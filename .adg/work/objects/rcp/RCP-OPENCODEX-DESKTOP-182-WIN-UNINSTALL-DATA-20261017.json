@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-UNINSTALL-DATA-20261017",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-UNINSTALL-DATA-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:explicit-uninstall-data-scoped-implementation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/original/source-boundary.json"
+    },
+    {
+      "name": "local:explicit-uninstall-data-core-ci-checkpoint",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/verification.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "dc62c2cf6a43fdbd2f0b91cfa3919a704b72048787b16c39b9a9854c611f90ae",
+      "summary": "补NSIS显式确认清理根链/持久指针并保护外置HOME；阶段0e Mac935/清理8项及Windows回归步骤通过，最新1dcc完整CI、实装和本机验收待核。"
+    }
+  ],
+  "completed_at": "2026-10-17T06:48:17.067089+00:00",
+  "revision": 1,
+  "summary": "推进明确卸载清理真实实现；保留早期格式/编译失败及最新同SHA CI和原生验收缺口。",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "summary_digest": "0be2c819c527e288947f2ff5566feabac1588c0e99008e8420df61168cd0a276",
+  "content_digest": "e4886febae94135f266e91731c10c879102860104d5f134b06038eafff0c961d"
+}
