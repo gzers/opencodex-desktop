@@ -1,0 +1,26 @@
+{
+  "atUtc": "2026-10-17T16:55:22.729476+00:00",
+  "driverSha256": "bc206e74d5daaf45875e40efbfe76a5e8f5381cdc70035cd101c5884374e5748",
+  "planSha256": "fc18d3d331b067ad0407cee5990970bbb3a14fc174053c98ef037b82a9418597",
+  "nativeReadinessFragmentSha256": "133ed62a4b4505319d4a1556f40d8310be06e2c45fdd68c42fd00313cf92670b",
+  "nativeReadinessFragmentByteEqualToOriginal": true,
+  "guards": [
+    {
+      "name": "final-no-execute",
+      "exitCode": 1,
+      "expectedRefusal": "Prepared only"
+    },
+    {
+      "name": "final-unapproved-driver",
+      "exitCode": 1,
+      "expectedRefusal": "Standalone native UIA driver has not been approved"
+    }
+  ],
+  "newRunCreated": false,
+  "productsStarted": 0,
+  "nativeUiaInputExecuted": false,
+  "sampleCount": 0,
+  "requiresHumanDriverExceptionAndNewWindow": true,
+  "restorePreparedButNotExecuted": true,
+  "fullGoalPassed": false
+}
