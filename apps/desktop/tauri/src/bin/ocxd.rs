@@ -264,7 +264,7 @@ fn main() -> ExitCode {
     }
 }
 
-#[cfg(all(unix, test))]
+#[cfg(test)]
 mod tests {
     use super::*;
 
