@@ -1,0 +1,11 @@
+{
+  "source": "Observed tool execution output, not a reconstructed raw stdout stream",
+  "command": "pwsh -NoProfile -NonInteractive -File test/smoke/windows-cache-query-state.test.ps1 -OutputDirectory test/runtime/cache-query-state-prep-20261018/final-synthetic-method-test",
+  "status": "passed",
+  "checks": 11,
+  "onlyOwnedSyntheticFixtureUsed": true,
+  "realCacheResponsesWritten": false,
+  "productStarted": false,
+  "foregroundAuthorized": false,
+  "zeroAutomaticQueryGatePassed": false
+}

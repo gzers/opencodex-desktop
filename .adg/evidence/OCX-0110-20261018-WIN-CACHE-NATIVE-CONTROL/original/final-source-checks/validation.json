@@ -1,0 +1,46 @@
+{
+  "atUtc": "2026-10-17T20:43:50.423783+00:00",
+  "steps": [
+    {
+      "name": "observer-and-publication",
+      "exitCode": 0,
+      "argv": [
+        "node",
+        "--test",
+        "test/smoke/windows-scheduler-observer.test.mjs",
+        "test/smoke/windows-cache-query-observe.test.mjs",
+        "test/smoke/windows-observation-files.test.mjs",
+        "test/smoke/windows-scheduler-observer.browser.test.mjs"
+      ]
+    },
+    {
+      "name": "calibration-guards-and-ordinary-mechanism",
+      "exitCode": 0,
+      "argv": [
+        "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "test/smoke/windows-query-calibration.test.ps1",
+        "-OutputDirectory",
+        "test/runtime/cache-query-state-prep-20261018/final-calibration-method-check"
+      ]
+    },
+    {
+      "name": "native-compile-and-rules",
+      "exitCode": 0,
+      "argv": [
+        "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-File",
+        "test/smoke/windows-query-counters.ps1",
+        "-DecoderDirectory",
+        "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\query-thread-preparation\\decoder"
+      ]
+    }
+  ],
+  "productStarted": false,
+  "foregroundUsed": false,
+  "etwSessionStarted": false
+}

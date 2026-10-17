@@ -1,0 +1,69 @@
+{
+  "atUtc": "2026-10-17T20:49:39.791605+00:00",
+  "source": "869692ce00298cede276ac05dc0a69a7ea7dac29",
+  "remoteHeadVerified": true,
+  "branch": "feature/0.1.10-windows-query-observer",
+  "appsUnchangedFromAdmitted8e": true,
+  "newCandidateDispatched": false,
+  "ci": {
+    "0852": {
+      "runId": 39062488018,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "0d37": {
+      "runId": 39063634995,
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "current": {
+      "runId": 39068216529,
+      "attempt": 1,
+      "status": "in_progress",
+      "conclusion": null
+    }
+  },
+  "localValidation": {
+    "nodeObserverAssessmentAtomicPublicationAndRealChromiumTests": 9,
+    "passed": 9,
+    "counterRules": 30,
+    "existingScopeRules": 38,
+    "nativeStopRules": 8,
+    "ordinaryMechanismChildren": 20,
+    "ownedLoopbackRequests": 4,
+    "loopbackBodyBytes": 1024,
+    "ordinaryMechanismExitCode": 0,
+    "nativeDeclarationCompiled": true,
+    "expiredDefaultsAndOwnerGuardsPassed": true,
+    "nativeActivationOrUiInputMethodsInvoked": false
+  },
+  "reviewCorrection": {
+    "initialSessionInfoClass": 14,
+    "correctSessionInfoClassWtsConnectState": 8,
+    "correctedBeforeAnyProductLaunch": true,
+    "sdkReturnSizeRequiredBytes": 4,
+    "source": "Microsoft WTS_INFO_CLASS enumeration; initial compile-only observation preserved"
+  },
+  "originalContractPreserved": {
+    "requiredGenerations": 10,
+    "actualTransitionsPerGeneration": 10,
+    "originalStartupGraceSeconds": 45,
+    "normalCloseTargetMinutes": 25,
+    "foregroundMaximumMinutes": 30
+  },
+  "missingGenerationContinuationSupportedWithoutAutomaticReplay": true,
+  "ordinaryProductAndElevatedRecorderRemainSeparate": true,
+  "driverSource": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\smoke\\windows-cache-query-run.ps1",
+  "reviewableFutureEntry": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\cache-query-state-prep-20261018\\execute-next-cache-window.ps1",
+  "actualElevatedEtwPositiveControlExecuted": false,
+  "actualProduct100Route10RestartScenarioExecuted": false,
+  "productStarted": false,
+  "foregroundUsed": false,
+  "platformProfilesMoved": false,
+  "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "fullPerformanceGatePassed": false,
+  "fullWindowsGatePassed": false,
+  "releaseAccepted": false
+}

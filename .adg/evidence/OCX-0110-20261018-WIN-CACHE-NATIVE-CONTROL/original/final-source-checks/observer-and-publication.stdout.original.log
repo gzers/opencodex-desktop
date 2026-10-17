@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: requires ten actual transitions plus a fulfilled real startup planner, not a quick restart
+ok 1 - requires ten actual transitions plus a fulfilled real startup planner, not a quick restart
+  ---
+  duration_ms: 3.1722
+  ...
+# Subtest: concurrent marker publication keeps exactly one complete observation without overwrite
+ok 2 - concurrent marker publication keeps exactly one complete observation without overwrite
+  ---
+  duration_ms: 9.0232
+  ...
+# Subtest: real Chromium observes frozen bridge calls and an actual >50ms task without page reload
+ok 3 - real Chromium observes frozen bridge calls and an actual >50ms task without page reload
+  ---
+  duration_ms: 716.97
+  ...
+# Subtest: expired, future and automatic windows cannot authorize observation
+ok 4 - expired, future and automatic windows cannot authorize observation
+  ---
+  duration_ms: 2.339
+  ...
+# Subtest: a zero count with lost records, changed hooks or debugger pauses is rejected
+ok 5 - a zero count with lost records, changed hooks or debugger pauses is rejected
+  ---
+  duration_ms: 0.7319
+  ...
+# Subtest: real V8 function-call logpoints capture sub-millisecond calls without replacing the frozen bridge
+ok 6 - real V8 function-call logpoints capture sub-millisecond calls without replacing the frozen bridge
+  ---
+  duration_ms: 136.413
+  ...
+# Subtest: real logpoint overflow fails closed and still removes observation
+ok 7 - real logpoint overflow fails closed and still removes observation
+  ---
+  duration_ms: 114.5779
+  ...
+# Subtest: asynchronous call completion survives drained batches without duplicating old records
+ok 8 - asynchronous call completion survives drained batches without duplicating old records
+  ---
+  duration_ms: 120.9302
+  ...
+# Subtest: a closed target rejects new commands immediately without dangling cleanup deadlines
+ok 9 - a closed target rejects new commands immediately without dangling cleanup deadlines
+  ---
+  duration_ms: 98.8021
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 826.0967
