@@ -1,0 +1,40 @@
+{
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-CE-NSIS-HOST",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-CE-NSIS-HOST-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-host-nsis-019-ce-upgrade-retention",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-NSIS-HOST/verification.json"
+    },
+    {
+      "name": "local:windows-host-nsis-final-configuration-protection",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-NSIS-HOST/original/final-state-readback.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "16cfcf120cb8b90c25225455f4b9aa77855f6133816c0a8164148b3a824d01ed",
+      "summary": "本机NSIS普通令牌完成019到ce五步，默认卸载/重装六份种子保留及原配置保护通过；实际根绑定和显式清理仍待验，不重做种子测试。"
+    }
+  ],
+  "completed_at": "2026-10-17T04:25:20.163246+00:00",
+  "summary": "补齐本机NSIS安装器保留子集；原用户性能接受有效，不将局部结果算作完整安装门禁。",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-CE-NSIS-HOST-20261017",
+  "kind": "RCP",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "revision": 1,
+  "summary_digest": "e5c2e6b0befbfc23f4d5f63b04ad3365d32cd61c5ca3207499238cce452984d2",
+  "content_digest": "376feff68c564aab78953eefed35cdded7a835f8bb40207dd970e7ab148a0909"
+}

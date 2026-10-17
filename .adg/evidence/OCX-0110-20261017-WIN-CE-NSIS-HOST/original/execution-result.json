@@ -1,0 +1,341 @@
+{
+  "source": "ce670ce76bb1c29f70989ee54838d5b31e97059c",
+  "candidateRunId": 38996189227,
+  "kind": "nsis",
+  "scope": "host silent installer bytes/019 upgrade/default-uninstall/reinstall with seeded data; no app binding/UI acceptance",
+  "controllerToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 50500,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-17T04:20:48.7174072Z",
+    "elevated": false,
+    "elevationType": 3,
+    "collectedAtUtc": "2026-10-17T04:20:49.7377418Z"
+  },
+  "beforeProtection": {
+    "startupPointerSha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+    "originalPreferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+    "boundFixturePreferencesSha256": "2d612148a55152e05047d1f13c4587a3b75f2740b1a51cc2c0f64f30a767495e"
+  },
+  "installDirectory": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces",
+  "customSiblingIsNotAnApplicationBinding": true,
+  "productLaunched": false,
+  "explicitPurgeTested": false,
+  "uiInputInjected": false,
+  "automaticRetry": false,
+  "result": "pass",
+  "steps": [
+    {
+      "name": "install-official-019",
+      "startedAtUtc": "2026-10-17T04:20:50.0475830+00:00",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\baseline019-setup.exe",
+      "arguments": "/S /NS /D=C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces",
+      "result": "pass",
+      "processId": 72344,
+      "actualToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 72344,
+        "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\baseline019-setup.exe",
+        "creationTimeUtc": "2026-10-17T04:20:50.1060997Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-10-17T04:20:50.1243842Z"
+      },
+      "exitCode": 0,
+      "finishedAtUtc": "2026-10-17T04:20:50.4155219+00:00"
+    },
+    {
+      "name": "before-upgrade",
+      "atUtc": "2026-10-17T04:20:50.6189404+00:00",
+      "allFixtureBytesUnchanged": true,
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "sha256": "4b6cd4ab13b6c92f315f2a5180510d23f9306e60cdf36d5f179d36b1fa96015f",
+          "bytes": 82
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "sha256": "0e5f7361f6c5869c1c2f271e3ab7b1c66cf414c1773a8dcc8bc420e863a86f08",
+          "bytes": 89
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "sha256": "6f2b051215d23947c886f454db721d7ea5472e31bce01ea7d0ca0fec4a3db886",
+          "bytes": 85
+        },
+        {
+          "relative": "custom-root-seeded-only/manager-state/preferences.json",
+          "sha256": "d935e15feee743cdbbaae05d53b0867ab81fd7ec1323bfa9816f6b16ab3888d0",
+          "bytes": 81
+        },
+        {
+          "relative": "custom-root-seeded-only/backups/retained-payload.json",
+          "sha256": "45c77d3ef969931650a66b7a50311c3010116b2aed69cb6c5f83367c6e5c7f36",
+          "bytes": 80
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "sha256": "29fda171b566e19d38ebb3fde0168ba4a75517550b6832c7d137f5932da148bf",
+          "bytes": 48
+        }
+      ]
+    },
+    {
+      "name": "upgrade-to-ce",
+      "startedAtUtc": "2026-10-17T04:20:50.7466862+00:00",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-ce670c-38996189227\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\nsis\\OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "arguments": "/S /NS /D=C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces",
+      "result": "pass",
+      "processId": 58856,
+      "actualToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 58856,
+        "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-ce670c-38996189227\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\nsis\\OpenCodeX Desktop_0.1.10_x64-setup.exe",
+        "creationTimeUtc": "2026-10-17T04:20:50.7542704Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-10-17T04:20:50.7644371Z"
+      },
+      "exitCode": 0,
+      "finishedAtUtc": "2026-10-17T04:20:51.0642006+00:00"
+    },
+    {
+      "name": "after-upgrade",
+      "atUtc": "2026-10-17T04:20:51.2201954+00:00",
+      "allFixtureBytesUnchanged": true,
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "sha256": "4b6cd4ab13b6c92f315f2a5180510d23f9306e60cdf36d5f179d36b1fa96015f",
+          "bytes": 82
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "sha256": "0e5f7361f6c5869c1c2f271e3ab7b1c66cf414c1773a8dcc8bc420e863a86f08",
+          "bytes": 89
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "sha256": "6f2b051215d23947c886f454db721d7ea5472e31bce01ea7d0ca0fec4a3db886",
+          "bytes": 85
+        },
+        {
+          "relative": "custom-root-seeded-only/manager-state/preferences.json",
+          "sha256": "d935e15feee743cdbbaae05d53b0867ab81fd7ec1323bfa9816f6b16ab3888d0",
+          "bytes": 81
+        },
+        {
+          "relative": "custom-root-seeded-only/backups/retained-payload.json",
+          "sha256": "45c77d3ef969931650a66b7a50311c3010116b2aed69cb6c5f83367c6e5c7f36",
+          "bytes": 80
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "sha256": "29fda171b566e19d38ebb3fde0168ba4a75517550b6832c7d137f5932da148bf",
+          "bytes": 48
+        }
+      ]
+    },
+    {
+      "name": "default-uninstall-ce",
+      "startedAtUtc": "2026-10-17T04:20:51.3479513+00:00",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces\\uninstall.exe",
+      "arguments": "/S",
+      "result": "pass",
+      "processId": 7792,
+      "actualToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 7792,
+        "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces\\uninstall.exe",
+        "creationTimeUtc": "2026-10-17T04:20:51.3561322Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-10-17T04:20:51.3678968Z"
+      },
+      "exitCode": 0,
+      "finishedAtUtc": "2026-10-17T04:20:51.4074922+00:00"
+    },
+    {
+      "name": "after-default-uninstall",
+      "atUtc": "2026-10-17T04:20:51.5698829+00:00",
+      "allFixtureBytesUnchanged": true,
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "sha256": "4b6cd4ab13b6c92f315f2a5180510d23f9306e60cdf36d5f179d36b1fa96015f",
+          "bytes": 82
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "sha256": "0e5f7361f6c5869c1c2f271e3ab7b1c66cf414c1773a8dcc8bc420e863a86f08",
+          "bytes": 89
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "sha256": "6f2b051215d23947c886f454db721d7ea5472e31bce01ea7d0ca0fec4a3db886",
+          "bytes": 85
+        },
+        {
+          "relative": "custom-root-seeded-only/manager-state/preferences.json",
+          "sha256": "d935e15feee743cdbbaae05d53b0867ab81fd7ec1323bfa9816f6b16ab3888d0",
+          "bytes": 81
+        },
+        {
+          "relative": "custom-root-seeded-only/backups/retained-payload.json",
+          "sha256": "45c77d3ef969931650a66b7a50311c3010116b2aed69cb6c5f83367c6e5c7f36",
+          "bytes": 80
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "sha256": "29fda171b566e19d38ebb3fde0168ba4a75517550b6832c7d137f5932da148bf",
+          "bytes": 48
+        }
+      ]
+    },
+    {
+      "name": "reinstall-ce",
+      "startedAtUtc": "2026-10-17T04:20:51.6974477+00:00",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-ce670c-38996189227\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\nsis\\OpenCodeX Desktop_0.1.10_x64-setup.exe",
+      "arguments": "/S /NS /D=C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces",
+      "result": "pass",
+      "processId": 77360,
+      "actualToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 77360,
+        "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-ce670c-38996189227\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\nsis\\OpenCodeX Desktop_0.1.10_x64-setup.exe",
+        "creationTimeUtc": "2026-10-17T04:20:51.7036288Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-10-17T04:20:51.7087667Z"
+      },
+      "exitCode": 0,
+      "finishedAtUtc": "2026-10-17T04:20:52.0077974+00:00"
+    },
+    {
+      "name": "after-reinstall",
+      "atUtc": "2026-10-17T04:20:52.1603935+00:00",
+      "allFixtureBytesUnchanged": true,
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "sha256": "4b6cd4ab13b6c92f315f2a5180510d23f9306e60cdf36d5f179d36b1fa96015f",
+          "bytes": 82
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "sha256": "0e5f7361f6c5869c1c2f271e3ab7b1c66cf414c1773a8dcc8bc420e863a86f08",
+          "bytes": 89
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "sha256": "6f2b051215d23947c886f454db721d7ea5472e31bce01ea7d0ca0fec4a3db886",
+          "bytes": 85
+        },
+        {
+          "relative": "custom-root-seeded-only/manager-state/preferences.json",
+          "sha256": "d935e15feee743cdbbaae05d53b0867ab81fd7ec1323bfa9816f6b16ab3888d0",
+          "bytes": 81
+        },
+        {
+          "relative": "custom-root-seeded-only/backups/retained-payload.json",
+          "sha256": "45c77d3ef969931650a66b7a50311c3010116b2aed69cb6c5f83367c6e5c7f36",
+          "bytes": 80
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "sha256": "29fda171b566e19d38ebb3fde0168ba4a75517550b6832c7d137f5932da148bf",
+          "bytes": 48
+        }
+      ]
+    },
+    {
+      "name": "final-default-uninstall-ce",
+      "startedAtUtc": "2026-10-17T04:20:52.2833377+00:00",
+      "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces\\uninstall.exe",
+      "arguments": "/S",
+      "result": "pass",
+      "processId": 63864,
+      "actualToken": {
+        "schemaVersion": 1,
+        "status": "observed",
+        "processId": 63864,
+        "executable": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\runtime\\host-nsis-20261017T1220\\install with spaces\\uninstall.exe",
+        "creationTimeUtc": "2026-10-17T04:20:52.2895245Z",
+        "elevated": false,
+        "elevationType": 3,
+        "collectedAtUtc": "2026-10-17T04:20:52.2986317Z"
+      },
+      "exitCode": 0,
+      "finishedAtUtc": "2026-10-17T04:20:52.3357494+00:00"
+    },
+    {
+      "name": "after-final-default-uninstall",
+      "atUtc": "2026-10-17T04:20:52.4896452+00:00",
+      "allFixtureBytesUnchanged": true,
+      "files": [
+        {
+          "relative": "install with spaces/data/manager-state/preferences.json",
+          "sha256": "4b6cd4ab13b6c92f315f2a5180510d23f9306e60cdf36d5f179d36b1fa96015f",
+          "bytes": 82
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/backup-manifest.json",
+          "sha256": "0e5f7361f6c5869c1c2f271e3ab7b1c66cf414c1773a8dcc8bc420e863a86f08",
+          "bytes": 89
+        },
+        {
+          "relative": "install with spaces/data/backups/retained/preferences.json",
+          "sha256": "6f2b051215d23947c886f454db721d7ea5472e31bce01ea7d0ca0fec4a3db886",
+          "bytes": 85
+        },
+        {
+          "relative": "custom-root-seeded-only/manager-state/preferences.json",
+          "sha256": "d935e15feee743cdbbaae05d53b0867ab81fd7ec1323bfa9816f6b16ab3888d0",
+          "bytes": 81
+        },
+        {
+          "relative": "custom-root-seeded-only/backups/retained-payload.json",
+          "sha256": "45c77d3ef969931650a66b7a50311c3010116b2aed69cb6c5f83367c6e5c7f36",
+          "bytes": 80
+        },
+        {
+          "relative": "outside-root.sentinel",
+          "sha256": "29fda171b566e19d38ebb3fde0168ba4a75517550b6832c7d137f5932da148bf",
+          "bytes": 48
+        }
+      ]
+    }
+  ],
+  "fullInstallerGatePassed": false,
+  "releaseAccepted": false,
+  "baselineImage": {
+    "version": "0.1.9",
+    "sha256": "238067b78fac14c6c0633555357ff21af5d6e964f5f65319e0f469acebb4e22d",
+    "bytes": 7619584
+  },
+  "candidateImage": {
+    "version": "0.1.10",
+    "sha256": "059bc70d158e66863cab0aa0b828c4107806724e3b13e2b2cd337fc33ccf77a5",
+    "bytes": 8830976
+  },
+  "reinstalledImage": {
+    "version": "0.1.10",
+    "sha256": "059bc70d158e66863cab0aa0b828c4107806724e3b13e2b2cd337fc33ccf77a5",
+    "bytes": 8830976
+  },
+  "afterProtection": {
+    "startupPointerSha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+    "originalPreferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+    "boundFixturePreferencesSha256": "2d612148a55152e05047d1f13c4587a3b75f2740b1a51cc2c0f64f30a767495e"
+  },
+  "finishedAtUtc": "2026-10-17T04:20:52.4932249+00:00",
+  "finalExecutablePresent": false,
+  "finalUninstallEntryPresent": false,
+  "nativeCount": 0
+}
