@@ -827,8 +827,8 @@ mod tests {
     #[test]
     fn corrupted_or_missing_metadata_is_blocked() {
         let temp = tempfile::tempdir().expect("create temporary root parent");
-        let root = temp.path().join("empty");
-        std::fs::create_dir(&root).expect("create empty root");
+        let root = temp.path().join("incomplete");
+        std::fs::create_dir_all(root.join("manager-state")).expect("create incomplete root");
         assert_eq!(
             validate_structure(&root).expect("validate"),
             StructureValidation::Corrupted
