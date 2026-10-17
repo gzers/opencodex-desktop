@@ -1,0 +1,51 @@
+{
+  "samples": 80,
+  "comparisons": {
+    "cache-cold": {
+      "versions": {
+        "baseline019": {
+          "count": 20,
+          "p95Ms": 1354.5511,
+          "medianMs": 1183.1467499999999,
+          "minimumMs": 1093.1485,
+          "maximumMs": 3756.6696
+        },
+        "candidate0110": {
+          "count": 20,
+          "p95Ms": 1273.119,
+          "medianMs": 1182.67345,
+          "minimumMs": 1108.6023,
+          "maximumMs": 1282.0107
+        }
+      },
+      "p95IncreaseMs": -81.43209999999999,
+      "p95IncreaseFraction": -0.060117407161678876,
+      "withinOriginal100MsAnd5PercentBudget": true
+    },
+    "process-warm": {
+      "versions": {
+        "baseline019": {
+          "count": 20,
+          "p95Ms": 1111.7454,
+          "medianMs": 1007.8375,
+          "minimumMs": 897.6302,
+          "maximumMs": 3696.8587
+        },
+        "candidate0110": {
+          "count": 20,
+          "p95Ms": 1103.4023,
+          "medianMs": 981.75385,
+          "minimumMs": 884.5257,
+          "maximumMs": 1158.7812
+        }
+      },
+      "p95IncreaseMs": -8.34310000000005,
+      "p95IncreaseFraction": -0.007504505977717605,
+      "withinOriginal100MsAnd5PercentBudget": true
+    }
+  },
+  "osColdStartupClaimed": false,
+  "sourceMethod": "native Settings interaction, disk-profile cold/process warm, unchanged manager data",
+  "fullPerformanceGatePassed": false,
+  "memoryBudgetFailureCleared": false
+}

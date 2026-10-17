@@ -1,0 +1,149 @@
+{
+  "atUtc": "2026-10-17T17:27:06.982490+00:00",
+  "authorization": {
+    "origin": "human",
+    "userText": "原生UIA采样驱动＋新30分钟前台",
+    "explicitHumanStart": true,
+    "automaticContinuation": false,
+    "scope": "startup-pair-cold-warm",
+    "authorizedAtUtc": "2026-10-17T17:15:33.9752287+00:00",
+    "expiresAtUtc": "2026-10-17T17:45:33.9752287+00:00",
+    "closeByUtc": "2026-10-17T17:40:33.9752287+00:00",
+    "nativeUiaDriverExplicitlyApproved": true,
+    "windowMinutes": 30
+  },
+  "source": {
+    "baseline": "de6862d40389d527527b9db8ef52e186a58b625f",
+    "candidate": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+    "driverStateCode": "26840e1ba7751a247004d0fe5b106226bbbe9f6d"
+  },
+  "productImagesReusedWithoutRebuild": true,
+  "ci": {
+    "runId": 39050729429,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "26840e1ba7751a247004d0fe5b106226bbbe9f6d",
+    "jobs": [
+      {
+        "name": "backend",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "backend-windows",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "windows-smoke-evidence",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "release-tools",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "frontend",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "build",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ]
+  },
+  "samples": 80,
+  "schedule": "20 alternating rounds; per version cache-cold then process-warm",
+  "readyEndpoint": "Process.Start -> enabled native Settings button -> UIA Invoke -> native Settings route text",
+  "startupBoundSeconds": 30,
+  "cacheDefinition": "fresh application WebView disk profile / reuse profile after normal process exit",
+  "osCachePurged": false,
+  "p95": "nearest-rank ceil(0.95 * 20)",
+  "originalBudget": {
+    "maximumIncreaseMs": 100,
+    "maximumIncreaseFraction": 0.05,
+    "bothRequired": true
+  },
+  "comparison": {
+    "cache-cold": {
+      "versions": {
+        "baseline019": {
+          "count": 20,
+          "p95Ms": 1354.5511,
+          "medianMs": 1183.1467499999999,
+          "minimumMs": 1093.1485,
+          "maximumMs": 3756.6696
+        },
+        "candidate0110": {
+          "count": 20,
+          "p95Ms": 1273.119,
+          "medianMs": 1182.67345,
+          "minimumMs": 1108.6023,
+          "maximumMs": 1282.0107
+        }
+      },
+      "p95IncreaseMs": -81.43209999999999,
+      "p95IncreaseFraction": -0.060117407161678876,
+      "withinOriginal100MsAnd5PercentBudget": true
+    },
+    "process-warm": {
+      "versions": {
+        "baseline019": {
+          "count": 20,
+          "p95Ms": 1111.7454,
+          "medianMs": 1007.8375,
+          "minimumMs": 897.6302,
+          "maximumMs": 3696.8587
+        },
+        "candidate0110": {
+          "count": 20,
+          "p95Ms": 1103.4023,
+          "medianMs": 981.75385,
+          "minimumMs": 884.5257,
+          "maximumMs": 1158.7812
+        }
+      },
+      "p95IncreaseMs": -8.34310000000005,
+      "p95IncreaseFraction": -0.007504505977717605,
+      "withinOriginal100MsAnd5PercentBudget": true
+    }
+  },
+  "startupSubgatePassed": true,
+  "allNormalExit0": true,
+  "sameOrdinaryToken": true,
+  "cdpOrSandboxUsed": false,
+  "sequentialNative0GuardBetweenSamples": true,
+  "firstStartedAtUtc": "2026-10-17T17:20:48.3246183+00:00",
+  "samplesCompletedAtUtc": "2026-10-17T17:23:21.8076196+00:00",
+  "configurationRestoredAtUtc": "2026-10-17T17:24:14.4933457+00:00",
+  "foregroundReleasedBeforeCloseTarget": true,
+  "driverProcessExitCode": 1,
+  "cleanup": {
+    "initialPreferenceRollbackRefusedUnexpectedBytes": true,
+    "baselineNormalizedJsonWithExactlySameValuesAsCandidateSeed": true,
+    "seededCandidateStillExactBytes": true,
+    "unexpectedBaselineBytesPreserved": true,
+    "fallback": "native0; preserve new fixture directories; restore both original physical directories and private original registry pointer",
+    "fallbackCompletedAndIndependentlyVerified": true,
+    "originalPointerOrPreferenceContentsPublished": false
+  },
+  "taskUnchanged": {
+    "revision": 2,
+    "state": "in_progress",
+    "result": "pending",
+    "sha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93"
+  },
+  "scope": {
+    "cpuAndRssAlreadyAcceptedNotRemeasured": true,
+    "dpiCancelled": true,
+    "fullPerformanceGatePassed": false,
+    "fullWindowsGatePassed": false,
+    "releaseAccepted": false,
+    "noMergeTaskClosureSigningPromotionReleaseOrFz50": true
+  }
+}
