@@ -1,0 +1,65 @@
+{
+  "source": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "successfulCiRun": 39011042117,
+  "failedCandidateRun": 39012344655,
+  "successfulCiCases": {
+    "nonzero": {
+      "elapsedSeconds": 0.6947949999999999,
+      "result": "Failure"
+    },
+    "success": {
+      "elapsedSeconds": 0.6634457,
+      "result": "Success"
+    }
+  },
+  "failedCandidateCases": {
+    "success": {
+      "elapsedSeconds": 2.010677,
+      "result": "Timeout"
+    },
+    "nonzero": {
+      "elapsedSeconds": 2.003915,
+      "result": "Timeout"
+    }
+  },
+  "sourceBindings": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "gitBlobSha256": "802526b02a89a1962658a3302ca91a52c447928974ef19b9383f4bfbaf285306",
+      "workingTreeIdenticalAfterOnlyLineEndingNormalization": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "gitBlobSha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02",
+      "workingTreeIdenticalAfterOnlyLineEndingNormalization": true
+    }
+  ],
+  "sourceLogs": [
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261017-WIN-UNINSTALL-DATA\\ci\\ci-complete-backend-windows.original.log",
+      "bytes": 348034,
+      "sha256": "afe599a1d7fa47acdf587c303512a98b58796de07c2263360ff3bfa1963093d9"
+    },
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261017-WIN-UNINSTALL-DATA\\candidate-failure\\candidate-failed-package.original.log",
+      "bytes": 212190,
+      "sha256": "35763088fe366f2a5c38ec3e8e90df98e4bdf406c44874b3742e1485820e61a1"
+    }
+  ],
+  "observedFacts": [
+    "both failed actual queries returned Timeout at their two-second production budget",
+    "both failed observers saw no parent-pid or child-pid within their existing five-second limit",
+    "retained unrelated Node handles remained live, and their start markers appeared only after the original observer deadline"
+  ],
+  "provedProductDefectCausingFailure": false,
+  "provedOsSchedulingOrIoRootCause": false,
+  "currentFixtureStartsAnAdditionalUnrelatedNodePerCase": true,
+  "proposedControl": "explicit system cmd.exe blocked on retained stdin; actual queried Node and its child unchanged",
+  "proposalChangesSimultaneousColdNodeWorkload": true,
+  "testConcurrencyAndAssertionCountInProposedTextRetained": true,
+  "mechanismTestIsNotAProductionQueryOrRegressionPass": true,
+  "sourcePatchApplied": false,
+  "newCiOrCandidateDispatched": false,
+  "humanDecisionRequiredBeforeApplyingWorkloadChange": true,
+  "fullWindowsGatePassed": false
+}
