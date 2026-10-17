@@ -39,11 +39,12 @@ export const useDataRootStore = defineStore('data-root', {
       this.error = ''
       try {
         this.lastValidation = await validateDataRootStructure(path)
-        if (this.lastValidation !== 'valid') {
+        if (this.lastValidation !== 'valid' && this.lastValidation !== 'uninitialized') {
           this.error = '目标目录结构不是当前版本，已停止初始化。'
           return false
         }
         this.lastResult = await initializeDataRoot(path)
+        this.lastValidation = 'valid'
         this.path = path
         return true
       } catch {

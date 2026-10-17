@@ -1182,6 +1182,7 @@ function restoreGeneralDefaults() {
           <button class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyDataRootSwitch(false)">{{ app.dataRootSwitching ? '切换中…' : '仅切换引用' }}</button>
           <button class="btn ghost" data-testid="data-root-migrate" :disabled="dataRootBindingDisabled" @click="confirmDataRootMigration">迁移数据…</button>
           <span v-if="app.dataRootLastValidation === 'valid'" class="tag">结构有效</span>
+          <span v-else-if="app.dataRootLastValidation === 'uninitialized'" class="tag">尚未初始化</span>
           <span v-else-if="app.dataRootLastValidation === 'future_version'" class="tag">版本过新</span>
           <span v-else-if="app.dataRootLastValidation === 'corrupted'" class="tag">结构损坏</span>
           <span v-if="app.dataRootError" class="tag">未完成</span>
