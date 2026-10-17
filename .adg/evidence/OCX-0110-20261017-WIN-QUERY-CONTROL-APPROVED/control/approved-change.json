@@ -1,0 +1,28 @@
+{
+  "atUtc": "2026-10-17T11:40:06.762128+00:00",
+  "humanDecision": "允许",
+  "approvedChange": "Replace unrelated cold Node with cmd blocked on owned stdin; actual cold query and descendant unchanged",
+  "reviewedPatchSha256": "84be32b5c84770c63bbb66c1e525ce93f64d5b262a9d41c2c60961af8a70779f",
+  "baseSource": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+  "assertionMacrosAndBodiesIdentical": true,
+  "assertionCount": 16,
+  "durationLiteralsIdentical": true,
+  "durationLiterals": [
+    "Duration::from_secs(5)",
+    "Duration::from_millis(5)",
+    "Duration::from_secs(8)",
+    "Duration::from_secs(4)"
+  ],
+  "rustTestConcurrencyChanged": false,
+  "productionQuerySourceChanged": false,
+  "formattingOnlyAfterExactProposal": [
+    "collapse shortened trace signature",
+    "collapse shortened observer trace call"
+  ],
+  "workingSourceSha256": "2817d5674e22314612446710bcfa89da5dac0e8824b4702fbec892e691485059",
+  "localRustCompilerAvailable": false,
+  "historicalFailureRetained": true,
+  "productionRootCauseProved": false,
+  "firstVerificationGuardRejectedRegexBodyCount13InsteadOf16": true
+}

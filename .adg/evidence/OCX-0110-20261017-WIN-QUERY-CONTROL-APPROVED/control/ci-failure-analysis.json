@@ -1,0 +1,407 @@
+{
+  "source": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+  "runId": 39029801652,
+  "jobId": 117387810920,
+  "windowsLibrary": {
+    "passed": 555,
+    "failed": 9,
+    "ignored": 4
+  },
+  "failures": [
+    "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+    "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process",
+    "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+    "modules::about::remote::windows_tests::metadata_nonzero_exit_cleans_descendant",
+    "modules::about::remote::windows_tests::metadata_output_overflow_cleans_descendant",
+    "modules::about::remote::windows_tests::metadata_success_also_reaps_its_owned_helper_tree",
+    "modules::about::remote::windows_tests::metadata_timeout_cleans_descendant_and_preserves_unrelated_process",
+    "modules::ipc::service::tests::cli_update_query_survives_disconnect_through_commit_and_terminal_audit",
+    "modules::ipc::service::tests::cli_queries_survive_disconnect_and_audit_only_admitted_roots"
+  ],
+  "queryCases": [
+    {
+      "label": "version",
+      "mode": "nonzero",
+      "elapsedSeconds": 2.0140994,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 58,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 5504,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546003352,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2072,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 5504,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546003352,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5059,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 5504,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546003352,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    },
+    {
+      "label": "version",
+      "mode": "timeout",
+      "elapsedSeconds": 2.0795736,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 59,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 7848,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546602106,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2139,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 7848,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546602106,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5081,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 7848,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546602106,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    },
+    {
+      "label": "version",
+      "mode": "success",
+      "elapsedSeconds": 2.0770048,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 105,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 7420,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546623560,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2182,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 7420,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546623560,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5135,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 7420,
+          "process_times": {
+            "creation_filetime_100ns": 134367115546623560,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    },
+    {
+      "label": "metadata",
+      "mode": "nonzero",
+      "elapsedSeconds": 2.0713917,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 25,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 4580,
+          "process_times": {
+            "creation_filetime_100ns": 134367115597168025,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2096,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 4580,
+          "process_times": {
+            "creation_filetime_100ns": 134367115597168025,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5030,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 4580,
+          "process_times": {
+            "creation_filetime_100ns": 134367115597168025,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    },
+    {
+      "label": "metadata",
+      "mode": "overflow",
+      "elapsedSeconds": 2.0560444,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 14,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 3836,
+          "process_times": {
+            "creation_filetime_100ns": 134367115597320095,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2071,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 3836,
+          "process_times": {
+            "creation_filetime_100ns": 134367115597320095,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5024,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 3836,
+          "process_times": {
+            "creation_filetime_100ns": 134367115597320095,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    },
+    {
+      "label": "metadata",
+      "mode": "success",
+      "elapsedSeconds": 2.1353816,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 129,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 6772,
+          "process_times": {
+            "creation_filetime_100ns": 134367115598575274,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2265,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 6772,
+          "process_times": {
+            "creation_filetime_100ns": 134367115598575274,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5131,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 6772,
+          "process_times": {
+            "creation_filetime_100ns": 134367115598575274,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 156250,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    },
+    {
+      "label": "metadata",
+      "mode": "timeout",
+      "elapsedSeconds": 2.0487206,
+      "result": "Timeout",
+      "controlSnapshots": [
+        {
+          "elapsed_ms": 60,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 9264,
+          "process_times": {
+            "creation_filetime_100ns": 134367115599442488,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2108,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 9264,
+          "process_times": {
+            "creation_filetime_100ns": 134367115599442488,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5063,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 9264,
+          "process_times": {
+            "creation_filetime_100ns": 134367115599442488,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ]
+    }
+  ],
+  "queryStartupMarkerMissingCases": 7,
+  "ipcTerminationWaitTimeoutCases": 2,
+  "controlledProcessStaysAliveObserved": true,
+  "additionalUnrelatedColdNodeRemoved": true,
+  "approvedAdjustmentMadeTheQueryCasesPass": false,
+  "productionQueryRootCauseProved": false,
+  "specificSchedulingOrIoCauseProved": false,
+  "testDeadlinesChanged": false,
+  "newCandidateDispatched": false,
+  "sameShaRerunRequested": false,
+  "finalExecutableBuildAndSmokeSkipped": true,
+  "logSha256": "c813b72af2f1ef2d15d83f2f87ebaba339212d72540983d572bf4ebf2550195b",
+  "logBytes": 283872
+}

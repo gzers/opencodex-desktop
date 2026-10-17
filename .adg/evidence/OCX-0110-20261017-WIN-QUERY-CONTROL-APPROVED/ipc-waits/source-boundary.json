@@ -1,0 +1,57 @@
+{
+  "source": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+  "base": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+  "onlyChangedPath": "apps/desktop/tauri/src/modules/ipc/service.rs",
+  "onlyChangedFunctions": [
+    "cli_update_query_survives_disconnect_through_commit_and_terminal_audit",
+    "cli_queries_survive_disconnect_and_audit_only_admitted_roots"
+  ],
+  "otherSourceAndProductionSectionsIdentical": true,
+  "allDurationLiteralsIdentical": true,
+  "queryFixtureAndProductionUnchanged": true,
+  "criticalFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02",
+      "bytes": 6903,
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "sha256": "0cc42c3eb30b333f6b799f4924ef47e2c54f05ff31917ee860d04b62687b9341",
+      "bytes": 5987,
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "sha256": "2817d5674e22314612446710bcfa89da5dac0e8824b4702fbec892e691485059",
+      "bytes": 14404,
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/storage_writers.rs",
+      "sha256": "57019c3d27797cff2d25187e82e413bb0762964ccd2081bdf8495dc7750b8622",
+      "bytes": 6049,
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+      "sha256": "ad464ba3c5f558b26a5b99613f1fbbc773bf010adf86db5c69a2ed1d55de0b22",
+      "bytes": 13984,
+      "unchangedFromBase": true
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "e87ba83b92cbc6e1f359072103a0d426c929687638672ef5ed832d963bce5996",
+      "bytes": 12507,
+      "unchangedFromBase": true
+    },
+    {
+      "path": ".github/workflows/windows-candidate.yml",
+      "sha256": "fb66bf33296f4b6eb5b9cd4d5056d35559aba9f33c2ad67179cf92dab44c6010",
+      "bytes": 14667,
+      "unchangedFromBase": true
+    }
+  ],
+  "ciRunId": 39030636608
+}

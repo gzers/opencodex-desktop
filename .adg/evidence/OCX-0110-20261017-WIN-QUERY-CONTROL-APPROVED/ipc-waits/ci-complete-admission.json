@@ -1,0 +1,486 @@
+{
+  "source": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+  "runId": 39030636608,
+  "status": "completed",
+  "conclusion": "success",
+  "attempt": 1,
+  "event": "push",
+  "wholeToolCiAdmitted": true,
+  "requiredJobLogs": [
+    {
+      "job": "frontend",
+      "jobId": 117390203401,
+      "conclusion": "success",
+      "actualCheckout": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+      "path": "ci-complete-frontend.original.log",
+      "sha256": "9d79d3fe5115a1d98fa2ad9e58fc5c4d0fc2503b4abf5c055175da4fbab18641",
+      "bytes": 40641,
+      "rustResults": []
+    },
+    {
+      "job": "windows-smoke-evidence",
+      "jobId": 117390203488,
+      "conclusion": "success",
+      "actualCheckout": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+      "path": "ci-complete-windows-smoke-evidence.original.log",
+      "sha256": "5f070d6954cfbb5adfc73bf529bd33c56aaae74d50fafe500050fa1399122ce2",
+      "bytes": 28883,
+      "rustResults": []
+    },
+    {
+      "job": "backend",
+      "jobId": 117390203617,
+      "conclusion": "success",
+      "actualCheckout": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+      "path": "ci-complete-backend.original.log",
+      "sha256": "603751fa3a61b34316d14fb63041617829a6c2df83192eee0549a0fdf0be5d16",
+      "bytes": 226321,
+      "rustResults": [
+        [
+          "ok",
+          "767",
+          "0",
+          "4"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "9",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "33",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "39",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "7",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "8",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "job": "release-tools",
+      "jobId": 117390203646,
+      "conclusion": "success",
+      "actualCheckout": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+      "path": "ci-complete-release-tools.original.log",
+      "sha256": "e14c53dce0e416a94e21b1f2f33c9333c5f149b66c75b629b97b3e4124825073",
+      "bytes": 27083,
+      "rustResults": []
+    },
+    {
+      "job": "backend-windows",
+      "jobId": 117390203705,
+      "conclusion": "success",
+      "actualCheckout": "644fcf35f3f18bbbb46da1e6fed1995c8a572b8c",
+      "path": "ci-complete-backend-windows.original.log",
+      "sha256": "9f42895f62e143b6f5e2b8cdcce7de557249314ae4004eb827c5e0dfa96e78bb",
+      "bytes": 343434,
+      "rustResults": [
+        [
+          "ok",
+          "564",
+          "0",
+          "4"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "32",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "8",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    }
+  ],
+  "hostProductStarted": false,
+  "historicalRootCauseProved": false,
+  "rerunRequested": false
+}

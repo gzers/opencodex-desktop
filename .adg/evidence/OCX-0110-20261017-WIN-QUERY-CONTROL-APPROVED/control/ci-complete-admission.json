@@ -1,0 +1,282 @@
+{
+  "source": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+  "runId": 39029801652,
+  "status": "completed",
+  "conclusion": "failure",
+  "attempt": 1,
+  "event": "push",
+  "wholeToolCiAdmitted": false,
+  "requiredJobLogs": [
+    {
+      "job": "windows-smoke-evidence",
+      "jobId": 117387810739,
+      "conclusion": "success",
+      "actualCheckout": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+      "path": "ci-complete-windows-smoke-evidence.original.log",
+      "sha256": "4410d86e95bc105a7b7571ff6f521514b404547c89ef00c27a0b84e9028ccd86",
+      "bytes": 28890,
+      "rustResults": []
+    },
+    {
+      "job": "backend-windows",
+      "jobId": 117387810920,
+      "conclusion": "failure",
+      "actualCheckout": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+      "path": "ci-complete-backend-windows.original.log",
+      "sha256": "c813b72af2f1ef2d15d83f2f87ebaba339212d72540983d572bf4ebf2550195b",
+      "bytes": 283872,
+      "rustResults": [
+        [
+          "FAILED",
+          "555",
+          "9",
+          "4"
+        ]
+      ]
+    },
+    {
+      "job": "release-tools",
+      "jobId": 117387810950,
+      "conclusion": "success",
+      "actualCheckout": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+      "path": "ci-complete-release-tools.original.log",
+      "sha256": "c48e883edf0914aed42ee7fbf363a7016b8017060d8558dcd3f4f69512593d38",
+      "bytes": 27085,
+      "rustResults": []
+    },
+    {
+      "job": "frontend",
+      "jobId": 117387810990,
+      "conclusion": "success",
+      "actualCheckout": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+      "path": "ci-complete-frontend.original.log",
+      "sha256": "b047f6a9ac8d211b845bc8f0eab31de9eb4afe86f2920210e5df17ebfd960cbf",
+      "bytes": 39900,
+      "rustResults": []
+    },
+    {
+      "job": "backend",
+      "jobId": 117387811000,
+      "conclusion": "success",
+      "actualCheckout": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+      "path": "ci-complete-backend.original.log",
+      "sha256": "6aa1e4d0b6ec074756506d2d2e081c3c845e1f11ce5533c9f692752ee4633794",
+      "bytes": 226318,
+      "rustResults": [
+        [
+          "ok",
+          "767",
+          "0",
+          "4"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "9",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "33",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "39",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "5",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "7",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "8",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "1"
+        ],
+        [
+          "ok",
+          "3",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "4",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "2",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "6",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "1",
+          "0",
+          "0"
+        ],
+        [
+          "ok",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    }
+  ],
+  "hostProductStarted": false,
+  "historicalRootCauseProved": false,
+  "rerunRequested": false
+}

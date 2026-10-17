@@ -1,0 +1,64 @@
+{
+  "source": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+  "base": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "onlyChangedPaths": [
+    "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs"
+  ],
+  "unchangedCriticalFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "gitBlobBytes": 6903,
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02",
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "gitBlobBytes": 5987,
+      "sha256": "0cc42c3eb30b333f6b799f4924ef47e2c54f05ff31917ee860d04b62687b9341",
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/about/remote.rs",
+      "gitBlobBytes": 15415,
+      "sha256": "e20ab50d1a61213ba72be3812102b875bf9885c163044fe5e03a9a8829598b20",
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/about/remote_windows_tests.rs",
+      "gitBlobBytes": 1399,
+      "sha256": "532bf86300316d7b186124bcf5b508910d26c8d3c95c3adb105f126defe8aa63",
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+      "gitBlobBytes": 13984,
+      "sha256": "ad464ba3c5f558b26a5b99613f1fbbc773bf010adf86db5c69a2ed1d55de0b22",
+      "unchangedFromBase": true
+    },
+    {
+      "path": "apps/desktop/tauri/windows/installer-hooks.nsh",
+      "gitBlobBytes": 1074,
+      "sha256": "66e8591be04f3378d0fb890180a31fa5675c7fa8c7add18d89260c09289e7164",
+      "unchangedFromBase": true
+    },
+    {
+      "path": "test/smoke/windows-uninstall-data.ps1",
+      "gitBlobBytes": 5633,
+      "sha256": "fd138041cca08b6f637cf5fe522d3bcb65996cd8872d3fdb88364b4e4e8fc73f",
+      "unchangedFromBase": true
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "gitBlobBytes": 12507,
+      "sha256": "e87ba83b92cbc6e1f359072103a0d426c929687638672ef5ed832d963bce5996",
+      "unchangedFromBase": true
+    },
+    {
+      "path": ".github/workflows/windows-candidate.yml",
+      "gitBlobBytes": 14667,
+      "sha256": "fb66bf33296f4b6eb5b9cd4d5056d35559aba9f33c2ad67179cf92dab44c6010",
+      "unchangedFromBase": true
+    }
+  ],
+  "fullProductGateAccepted": false
+}

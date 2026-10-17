@@ -1,0 +1,20 @@
+{
+  "atUtc": "2026-10-17T11:56:36.208098+00:00",
+  "base": "ee0111e423867e1c3b304d4fe9fd7d4380384df0",
+  "previousFailedCi": 39029801652,
+  "modifiedTests": [
+    "cli_update_query_survives_disconnect_through_commit_and_terminal_audit",
+    "cli_queries_survive_disconnect_and_audit_only_admitted_roots"
+  ],
+  "path": "apps/desktop/tauri/src/modules/ipc/service.rs",
+  "productionWorkersUnchanged": true,
+  "allDurationLiteralsPreserved": true,
+  "existingTestOnlyNotificationReused": true,
+  "allOriginalTerminalAuditAndCancellationAssertionsRetained": true,
+  "finalFreezeAssertAdded": true,
+  "queryFixtureChangedAgain": false,
+  "queryTimeoutRootCauseClaimed": false,
+  "newTestsOrLowerConcurrency": false,
+  "sourceSha256": "01b8c10c51b625f9fbbe489561cfcb67439f7cdac8024d9a83055bde5a9f4773",
+  "localRustCompilerAvailable": false
+}

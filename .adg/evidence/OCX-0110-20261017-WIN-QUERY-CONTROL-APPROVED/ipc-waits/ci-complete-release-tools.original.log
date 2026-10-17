@@ -1,0 +1,289 @@
+﻿2026-10-17T11:57:19.6541650Z Current runner version: '2.337.0'
+2026-10-17T11:57:19.6566243Z ##[group]Runner Image Provisioner
+2026-10-17T11:57:19.6567412Z Hosted Compute Agent
+2026-10-17T11:57:19.6568035Z Version: 20261012.601
+2026-10-17T11:57:19.6568672Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-17T11:57:19.6569503Z Build Date: 2026-10-12T17:48:21Z
+2026-10-17T11:57:19.6570206Z Worker ID: {ae146e9c-fdca-4bcd-ba6d-3fc4d819e47c}
+2026-10-17T11:57:19.6570961Z Region: eastus
+2026-10-17T11:57:19.6571559Z Cloud: Azure
+2026-10-17T11:57:19.6572074Z ##[endgroup]
+2026-10-17T11:57:19.6573989Z ##[group]Operating System
+2026-10-17T11:57:19.6574645Z Ubuntu
+2026-10-17T11:57:19.6575234Z 24.04.5
+2026-10-17T11:57:19.6575769Z LTS
+2026-10-17T11:57:19.6576297Z ##[endgroup]
+2026-10-17T11:57:19.6577113Z ##[group]Runner Image
+2026-10-17T11:57:19.6577733Z Image: ubuntu-24.04
+2026-10-17T11:57:19.6578285Z Version: 20261012.334.1
+2026-10-17T11:57:19.6579619Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-17T11:57:19.6581301Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-17T11:57:19.6582315Z ##[endgroup]
+2026-10-17T11:57:19.6585476Z ##[group]GITHUB_TOKEN Permissions
+2026-10-17T11:57:19.6588882Z Actions: write
+2026-10-17T11:57:19.6589643Z ArtifactMetadata: write
+2026-10-17T11:57:19.6590245Z Attestations: write
+2026-10-17T11:57:19.6590888Z Checks: write
+2026-10-17T11:57:19.6591446Z CodeQuality: write
+2026-10-17T11:57:19.6592036Z Contents: write
+2026-10-17T11:57:19.6592695Z CopilotRequests: write
+2026-10-17T11:57:19.6593269Z Deployments: write
+2026-10-17T11:57:19.6593868Z Discussions: write
+2026-10-17T11:57:19.6594416Z Drives: write
+2026-10-17T11:57:19.6595002Z Issues: write
+2026-10-17T11:57:19.6595690Z Metadata: read
+2026-10-17T11:57:19.6596234Z Models: read
+2026-10-17T11:57:19.6596826Z Packages: write
+2026-10-17T11:57:19.6597570Z Pages: write
+2026-10-17T11:57:19.6598096Z PullRequests: write
+2026-10-17T11:57:19.6598793Z RepositoryProjects: write
+2026-10-17T11:57:19.6599422Z SecurityEvents: write
+2026-10-17T11:57:19.6600054Z Statuses: write
+2026-10-17T11:57:19.6600686Z VulnerabilityAlerts: read
+2026-10-17T11:57:19.6601329Z ##[endgroup]
+2026-10-17T11:57:19.6603408Z Secret source: Actions
+2026-10-17T11:57:19.6604323Z Cache mode: write
+2026-10-17T11:57:19.6605554Z Prepare workflow directory
+2026-10-17T11:57:19.6933154Z Prepare all required actions
+2026-10-17T11:57:19.6981053Z Getting action download info
+2026-10-17T11:57:19.9139815Z Download action repository 'actions/checkout@v5' (SHA:fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09)
+2026-10-17T11:57:20.1049608Z Complete job name: release-tools
+2026-10-17T11:57:20.1950947Z ##[group]Run actions/checkout@v5
+2026-10-17T11:57:20.1951826Z with:
+2026-10-17T11:57:20.1952277Z   repository: gzers/opencodex-desktop
+2026-10-17T11:57:20.1956357Z   token: ***
+2026-10-17T11:57:20.1956793Z   ssh-strict: true
+2026-10-17T11:57:20.1957602Z   ssh-user: git
+2026-10-17T11:57:20.1958114Z   persist-credentials: true
+2026-10-17T11:57:20.1958623Z   clean: true
+2026-10-17T11:57:20.1959058Z   sparse-checkout-cone-mode: true
+2026-10-17T11:57:20.1959571Z   fetch-depth: 1
+2026-10-17T11:57:20.1960002Z   fetch-tags: false
+2026-10-17T11:57:20.1960444Z   show-progress: true
+2026-10-17T11:57:20.1960886Z   lfs: false
+2026-10-17T11:57:20.1961301Z   submodules: false
+2026-10-17T11:57:20.1961747Z   set-safe-directory: true
+2026-10-17T11:57:20.1962248Z   allow-unsafe-pr-checkout: false
+2026-10-17T11:57:20.1963160Z ##[endgroup]
+2026-10-17T11:57:20.3014190Z Syncing repository: gzers/opencodex-desktop
+2026-10-17T11:57:20.3017225Z ##[group]Getting Git version info
+2026-10-17T11:57:20.3018796Z Working directory is '/home/runner/work/opencodex-desktop/opencodex-desktop'
+2026-10-17T11:57:20.3020679Z [command]/usr/bin/git version
+2026-10-17T11:57:20.3074252Z git version 2.55.0
+2026-10-17T11:57:20.3098520Z ##[endgroup]
+2026-10-17T11:57:20.3112868Z Temporarily overriding HOME='/home/runner/work/_temp/8255684a-fcc2-4768-adc0-ec62a7fb8830' before making global git config changes
+2026-10-17T11:57:20.3119507Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-17T11:57:20.3121330Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/opencodex-desktop/opencodex-desktop
+2026-10-17T11:57:20.3171689Z Deleting the contents of '/home/runner/work/opencodex-desktop/opencodex-desktop'
+2026-10-17T11:57:20.3191202Z ##[group]Initializing the repository
+2026-10-17T11:57:20.3192960Z [command]/usr/bin/git init /home/runner/work/opencodex-desktop/opencodex-desktop
+2026-10-17T11:57:20.3291692Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-17T11:57:20.3293888Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-17T11:57:20.3295791Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-17T11:57:20.3296813Z hint: call:
+2026-10-17T11:57:20.3297957Z hint:
+2026-10-17T11:57:20.3299103Z hint: 	git config --global init.defaultBranch <name>
+2026-10-17T11:57:20.3300700Z hint:
+2026-10-17T11:57:20.3302159Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-17T11:57:20.3303847Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-17T11:57:20.3305082Z hint:
+2026-10-17T11:57:20.3305754Z hint: 	git branch -m <name>
+2026-10-17T11:57:20.3306534Z hint:
+2026-10-17T11:57:20.3307832Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-17T11:57:20.3309713Z Initialized empty Git repository in /home/runner/work/opencodex-desktop/opencodex-desktop/.git/
+2026-10-17T11:57:20.3313635Z [command]/usr/bin/git remote add origin https://github.com/gzers/opencodex-desktop
+2026-10-17T11:57:20.3364967Z ##[endgroup]
+2026-10-17T11:57:20.3366229Z ##[group]Disabling automatic garbage collection
+2026-10-17T11:57:20.3369715Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-17T11:57:20.3402795Z ##[endgroup]
+2026-10-17T11:57:20.3403806Z ##[group]Setting up auth
+2026-10-17T11:57:20.3410548Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-17T11:57:20.3444066Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-17T11:57:20.3853371Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-17T11:57:20.3893879Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-17T11:57:20.4143794Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-17T11:57:20.4181152Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-17T11:57:20.4401532Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-17T11:57:20.4442182Z ##[endgroup]
+2026-10-17T11:57:20.4443232Z ##[group]Fetching the repository
+2026-10-17T11:57:20.4452764Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +644fcf35f3f18bbbb46da1e6fed1995c8a572b8c:refs/remotes/origin/feature/0.1.10-windows-uninstall-data
+2026-10-17T11:57:20.8497663Z From https://github.com/gzers/opencodex-desktop
+2026-10-17T11:57:20.8500042Z  * [new ref]         644fcf35f3f18bbbb46da1e6fed1995c8a572b8c -> origin/feature/0.1.10-windows-uninstall-data
+2026-10-17T11:57:20.8504183Z ##[endgroup]
+2026-10-17T11:57:20.8505823Z ##[group]Determining the checkout info
+2026-10-17T11:57:20.8508047Z ##[endgroup]
+2026-10-17T11:57:20.8514376Z [command]/usr/bin/git sparse-checkout disable
+2026-10-17T11:57:20.8568988Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-17T11:57:20.8600863Z ##[group]Checking out the ref
+2026-10-17T11:57:20.8607282Z [command]/usr/bin/git checkout --progress --force -B feature/0.1.10-windows-uninstall-data refs/remotes/origin/feature/0.1.10-windows-uninstall-data
+2026-10-17T11:57:20.9114782Z Switched to a new branch 'feature/0.1.10-windows-uninstall-data'
+2026-10-17T11:57:20.9122938Z branch 'feature/0.1.10-windows-uninstall-data' set up to track 'origin/feature/0.1.10-windows-uninstall-data'.
+2026-10-17T11:57:20.9127463Z ##[endgroup]
+2026-10-17T11:57:20.9179524Z [command]/usr/bin/git log -1 --format=%H
+2026-10-17T11:57:20.9202976Z 644fcf35f3f18bbbb46da1e6fed1995c8a572b8c
+2026-10-17T11:57:20.9467157Z ##[group]Run sudo apt-get update && sudo apt-get install -y minisign
+2026-10-17T11:57:20.9468433Z [36;1msudo apt-get update && sudo apt-get install -y minisign[0m
+2026-10-17T11:57:20.9717517Z shell: /usr/bin/bash -e {0}
+2026-10-17T11:57:20.9718296Z ##[endgroup]
+2026-10-17T11:57:21.0485495Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-17T11:57:21.0832289Z Hit:2 http://azure.archive.ubuntu.com/ubuntu noble InRelease
+2026-10-17T11:57:21.0835420Z Get:6 https://packages.microsoft.com/ubuntu/24.04/prod noble InRelease [3600 B]
+2026-10-17T11:57:21.0844155Z Get:3 http://azure.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-10-17T11:57:21.0885106Z Get:4 http://azure.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-10-17T11:57:21.0922469Z Get:5 http://azure.archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-10-17T11:57:21.2119119Z Get:7 https://packages.microsoft.com/ubuntu/24.04/prod noble/main armhf Packages [12.4 kB]
+2026-10-17T11:57:21.2207248Z Get:8 https://packages.microsoft.com/ubuntu/24.04/prod noble/main amd64 Packages [617 kB]
+2026-10-17T11:57:21.2268346Z Get:9 https://packages.microsoft.com/ubuntu/24.04/prod noble/main arm64 Packages [556 kB]
+2026-10-17T11:57:21.2636171Z Get:10 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1397 kB]
+2026-10-17T11:57:21.2706527Z Get:11 http://azure.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [308 kB]
+2026-10-17T11:57:21.2730390Z Get:12 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1704 kB]
+2026-10-17T11:57:21.2814444Z Get:13 http://azure.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [342 kB]
+2026-10-17T11:57:21.2840810Z Get:14 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [1805 kB]
+2026-10-17T11:57:21.2949092Z Get:15 http://azure.archive.ubuntu.com/ubuntu noble-updates/restricted Translation-en [411 kB]
+2026-10-17T11:57:21.3789391Z Get:16 http://azure.archive.ubuntu.com/ubuntu noble-security/main amd64 Packages [1144 kB]
+2026-10-17T11:57:21.3849561Z Get:17 http://azure.archive.ubuntu.com/ubuntu noble-security/main Translation-en [231 kB]
+2026-10-17T11:57:21.3869889Z Get:18 http://azure.archive.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1222 kB]
+2026-10-17T11:57:21.3931119Z Get:19 http://azure.archive.ubuntu.com/ubuntu noble-security/universe Translation-en [246 kB]
+2026-10-17T11:57:21.4401885Z Get:20 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1713 kB]
+2026-10-17T11:57:21.4487262Z Get:21 http://azure.archive.ubuntu.com/ubuntu noble-security/restricted Translation-en [392 kB]
+2026-10-17T11:57:24.3353998Z Fetched 12.5 MB in 1s (9893 kB/s)
+2026-10-17T11:57:25.2228037Z Reading package lists...
+2026-10-17T11:57:25.2533825Z Reading package lists...
+2026-10-17T11:57:25.4348582Z Building dependency tree...
+2026-10-17T11:57:25.4356232Z Reading state information...
+2026-10-17T11:57:25.5863061Z The following NEW packages will be installed:
+2026-10-17T11:57:25.5878423Z   minisign
+2026-10-17T11:57:25.6032779Z 0 upgraded, 1 newly installed, 0 to remove and 44 not upgraded.
+2026-10-17T11:57:25.6033625Z Need to get 18.1 kB of archives.
+2026-10-17T11:57:25.6034487Z After this operation, 58.4 kB of additional disk space will be used.
+2026-10-17T11:57:25.6035363Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-17T11:57:25.7845456Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble/universe amd64 minisign amd64 0.11-1 [18.1 kB]
+2026-10-17T11:57:26.1081322Z Fetched 18.1 kB in 0s (65.8 kB/s)
+2026-10-17T11:57:26.1299744Z Selecting previously unselected package minisign.
+2026-10-17T11:57:26.1581396Z (Reading database ... 
+2026-10-17T11:57:26.1582262Z (Reading database ... 5%
+2026-10-17T11:57:26.1583118Z (Reading database ... 10%
+2026-10-17T11:57:26.1583770Z (Reading database ... 15%
+2026-10-17T11:57:26.1584218Z (Reading database ... 20%
+2026-10-17T11:57:26.1584651Z (Reading database ... 25%
+2026-10-17T11:57:26.1585223Z (Reading database ... 30%
+2026-10-17T11:57:26.1585527Z (Reading database ... 35%
+2026-10-17T11:57:26.1585824Z (Reading database ... 40%
+2026-10-17T11:57:26.1586108Z (Reading database ... 45%
+2026-10-17T11:57:26.1586379Z (Reading database ... 50%
+2026-10-17T11:57:26.1632330Z (Reading database ... 55%
+2026-10-17T11:57:26.2894521Z (Reading database ... 60%
+2026-10-17T11:57:26.4982683Z (Reading database ... 65%
+2026-10-17T11:57:26.7007820Z (Reading database ... 70%
+2026-10-17T11:57:26.8897575Z (Reading database ... 75%
+2026-10-17T11:57:27.0553344Z (Reading database ... 80%
+2026-10-17T11:57:27.2451242Z (Reading database ... 85%
+2026-10-17T11:57:27.4426059Z (Reading database ... 90%
+2026-10-17T11:57:27.6594368Z (Reading database ... 95%
+2026-10-17T11:57:27.6595101Z (Reading database ... 100%
+2026-10-17T11:57:27.6596044Z (Reading database ... 203540 files and directories currently installed.)
+2026-10-17T11:57:27.6659129Z Preparing to unpack .../minisign_0.11-1_amd64.deb ...
+2026-10-17T11:57:27.6686427Z Unpacking minisign (0.11-1) ...
+2026-10-17T11:57:27.7073317Z Setting up minisign (0.11-1) ...
+2026-10-17T11:57:27.7096081Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-17T11:57:27.7117969Z Not building database; man-db/auto-update is not 'true'.
+2026-10-17T11:57:28.3385824Z 
+2026-10-17T11:57:28.3386321Z Running kernel seems to be up-to-date.
+2026-10-17T11:57:28.3386703Z 
+2026-10-17T11:57:28.3387115Z No services need to be restarted.
+2026-10-17T11:57:28.3387463Z 
+2026-10-17T11:57:28.3387636Z No containers need to be restarted.
+2026-10-17T11:57:28.3387936Z 
+2026-10-17T11:57:28.3388143Z No user sessions are running outdated binaries.
+2026-10-17T11:57:28.3388500Z 
+2026-10-17T11:57:28.3388827Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-17T11:57:29.1731293Z ##[group]Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v
+2026-10-17T11:57:29.1731918Z [36;1mpython3 -B -m unittest discover -s test -p 'test_publish_release.py' -v[0m
+2026-10-17T11:57:29.1797470Z shell: /usr/bin/bash -e {0}
+2026-10-17T11:57:29.1797764Z ##[endgroup]
+2026-10-17T11:57:29.3823291Z test_all_real_signatures_verified_and_duplicate_assets_downloaded_once (test_publish_release.ArtifactSignatureTests.test_all_real_signatures_verified_and_duplicate_assets_downloaded_once) ... ok
+2026-10-17T11:57:29.3913035Z test_draft_asset_bytes_verified_with_original_manifest_signatures (test_publish_release.ArtifactSignatureTests.test_draft_asset_bytes_verified_with_original_manifest_signatures) ... ok
+2026-10-17T11:57:29.3965958Z test_same_size_tampering_rejected_even_without_server_digest (test_publish_release.ArtifactSignatureTests.test_same_size_tampering_rejected_even_without_server_digest) ... ok
+2026-10-17T11:57:29.4004960Z test_server_digest_mismatch_rejected (test_publish_release.ArtifactSignatureTests.test_server_digest_mismatch_rejected) ... ok
+2026-10-17T11:57:29.4068859Z test_signature_for_another_key_rejected (test_publish_release.ArtifactSignatureTests.test_signature_for_another_key_rejected) ... ok
+2026-10-17T11:57:29.4107917Z test_truncated_download_rejected (test_publish_release.ArtifactSignatureTests.test_truncated_download_rejected) ... ok
+2026-10-17T11:57:29.4143378Z test_wrong_tagged_version_rejected_before_download (test_publish_release.ArtifactSignatureTests.test_wrong_tagged_version_rejected_before_download) ... ok
+2026-10-17T11:57:29.4152060Z test_anonymous_verification_retries_until_expected_manifest (test_publish_release.PublicEndpointTests.test_anonymous_verification_retries_until_expected_manifest) ... ok
+2026-10-17T11:57:29.4164069Z test_persistent_404_or_wrong_content_fails (test_publish_release.PublicEndpointTests.test_persistent_404_or_wrong_content_fails) ... ok
+2026-10-17T11:57:29.4187507Z test_already_latest_is_idempotent_and_verifies_stable_alias (test_publish_release.PublishTests.test_already_latest_is_idempotent_and_verifies_stable_alias) ... ok
+2026-10-17T11:57:29.4198825Z test_anonymous_verification_failure_is_nonzero (test_publish_release.PublishTests.test_anonymous_verification_failure_is_nonzero) ... ok
+2026-10-17T11:57:29.4207582Z test_auth_error_does_not_become_missing_latest (test_publish_release.PublishTests.test_auth_error_does_not_become_missing_latest) ... ok
+2026-10-17T11:57:29.4220723Z test_draft_resolution_does_not_use_public_tag_lookup (test_publish_release.PublishTests.test_draft_resolution_does_not_use_public_tag_lookup) ... ok
+2026-10-17T11:57:29.4233504Z test_draft_untagged_urls_match_final_manifest_urls (test_publish_release.PublishTests.test_draft_untagged_urls_match_final_manifest_urls) ... ok
+2026-10-17T11:57:29.4249770Z test_draft_urls_still_require_matching_repo_tag_and_filename (test_publish_release.PublishTests.test_draft_urls_still_require_matching_repo_tag_and_filename) ... ok
+2026-10-17T11:57:29.4259042Z test_duplicate_asset_names_are_rejected (test_publish_release.PublishTests.test_duplicate_asset_names_are_rejected) ... ok
+2026-10-17T11:57:29.4269379Z test_edit_failure_is_nonzero_and_does_not_restore_or_report_success (test_publish_release.PublishTests.test_edit_failure_is_nonzero_and_does_not_restore_or_report_success) ... ok
+2026-10-17T11:57:29.4285430Z test_first_release_requires_explicit_stable_mode (test_publish_release.PublishTests.test_first_release_requires_explicit_stable_mode) ... ok
+2026-10-17T11:57:29.4354475Z test_invalid_manifests_fail_before_any_edit (test_publish_release.PublishTests.test_invalid_manifests_fail_before_any_edit) ... ok
+2026-10-17T11:57:29.4355906Z test_invalid_signature_blocks_all_publication (test_publish_release.PublishTests.test_invalid_signature_blocks_all_publication) ... ok
+2026-10-17T11:57:29.4357269Z test_latest_mismatch_is_not_success (test_publish_release.PublishTests.test_latest_mismatch_is_not_success) ... ok
+2026-10-17T11:57:29.4361708Z test_missing_empty_or_unfinished_asset_fails_before_edit (test_publish_release.PublishTests.test_missing_empty_or_unfinished_asset_fails_before_edit) ... ok
+2026-10-17T11:57:29.4376251Z test_preserves_existing_latest (test_publish_release.PublishTests.test_preserves_existing_latest) ... ok
+2026-10-17T11:57:29.4385849Z test_public_release_cannot_use_draft_urls (test_publish_release.PublishTests.test_public_release_cannot_use_draft_urls) ... ok
+2026-10-17T11:57:29.4396639Z test_release_lookup_rejects_wrong_identity_before_edit (test_publish_release.PublishTests.test_release_lookup_rejects_wrong_identity_before_edit) ... ok
+2026-10-17T11:57:29.4407916Z test_restore_latest_failure_is_nonzero (test_publish_release.PublishTests.test_restore_latest_failure_is_nonzero) ... ok
+2026-10-17T11:57:29.4417130Z test_stable_downgrade_uses_numeric_version_order (test_publish_release.PublishTests.test_stable_downgrade_uses_numeric_version_order) ... ok
+2026-10-17T11:57:29.4430140Z test_stable_promotes_target_and_verifies_both_endpoints (test_publish_release.PublishTests.test_stable_promotes_target_and_verifies_both_endpoints) ... ok
+2026-10-17T11:57:29.6120671Z test_real_workflow_shell_propagates_script_failure_through_tee (test_publish_release.WorkflowExitTests.test_real_workflow_shell_propagates_script_failure_through_tee) ... ok
+2026-10-17T11:57:29.6121776Z 
+2026-10-17T11:57:29.6122014Z ----------------------------------------------------------------------
+2026-10-17T11:57:29.6122544Z Ran 29 tests in 0.240s
+2026-10-17T11:57:29.6122764Z 
+2026-10-17T11:57:29.6122886Z OK
+2026-10-17T11:57:29.6320901Z ##[group]Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v
+2026-10-17T11:57:29.6321773Z [36;1mpython3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v[0m
+2026-10-17T11:57:29.6401376Z shell: /usr/bin/bash -e {0}
+2026-10-17T11:57:29.6401808Z ##[endgroup]
+2026-10-17T11:57:29.7255673Z test_archive_traversal_windows_drive_backslash_and_symlink_are_rejected (test_windows_etw_ci.AdmissionTests.test_archive_traversal_windows_drive_backslash_and_symlink_are_rejected) ... ok
+2026-10-17T11:57:29.7258182Z test_case_colliding_archive_entries_are_rejected (test_windows_etw_ci.AdmissionTests.test_case_colliding_archive_entries_are_rejected) ... ok
+2026-10-17T11:57:29.7260737Z test_current_first_regression_accepts_a_new_product_tree_without_relabelling_replay (test_windows_etw_ci.AdmissionTests.test_current_first_regression_accepts_a_new_product_tree_without_relabelling_replay) ... ok
+2026-10-17T11:57:29.7263182Z test_exact_ci_and_original_failure_are_admitted_independently (test_windows_etw_ci.AdmissionTests.test_exact_ci_and_original_failure_are_admitted_independently) ... ok
+2026-10-17T11:57:29.7265251Z test_first_regression_and_replay_events_cannot_be_interchanged (test_windows_etw_ci.AdmissionTests.test_first_regression_and_replay_events_cannot_be_interchanged) ... ok
+2026-10-17T11:57:29.7267495Z test_foreign_expired_wrong_digest_size_and_run_artifact_are_rejected (test_windows_etw_ci.AdmissionTests.test_foreign_expired_wrong_digest_size_and_run_artifact_are_rejected) ... ok
+2026-10-17T11:57:29.7269761Z test_missing_failed_duplicate_or_truncated_job_is_rejected (test_windows_etw_ci.AdmissionTests.test_missing_failed_duplicate_or_truncated_job_is_rejected) ... ok
+2026-10-17T11:57:29.7271312Z test_non_https_or_embedded_credential_redirect_is_rejected (test_windows_etw_ci.AdmissionTests.test_non_https_or_embedded_credential_redirect_is_rejected) ... ok
+2026-10-17T11:57:29.7272784Z test_original_failure_cannot_be_replaced_with_success (test_windows_etw_ci.AdmissionTests.test_original_failure_cannot_be_replaced_with_success) ... ok
+2026-10-17T11:57:29.7274387Z test_other_commit_pr_success_and_unfinished_run_cannot_admit_recording (test_windows_etw_ci.AdmissionTests.test_other_commit_pr_success_and_unfinished_run_cannot_admit_recording) ... ok
+2026-10-17T11:57:29.7276391Z test_post_build_path_requires_unchanged_original_application_tree (test_windows_etw_ci.AdmissionTests.test_post_build_path_requires_unchanged_original_application_tree) ... ok
+2026-10-17T11:57:29.7278121Z test_redirect_never_forwards_api_authorization_to_signed_download_host (test_windows_etw_ci.AdmissionTests.test_redirect_never_forwards_api_authorization_to_signed_download_host) ... ok
+2026-10-17T11:57:29.7279371Z test_safe_archive_and_crc_are_checked (test_windows_etw_ci.AdmissionTests.test_safe_archive_and_crc_are_checked) ... ok
+2026-10-17T11:57:29.7279882Z 
+2026-10-17T11:57:29.7280036Z ----------------------------------------------------------------------
+2026-10-17T11:57:29.7280404Z Ran 13 tests in 0.007s
+2026-10-17T11:57:29.7280540Z 
+2026-10-17T11:57:29.7280631Z OK
+2026-10-17T11:57:29.7395806Z ##[group]Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v
+2026-10-17T11:57:29.7396540Z [36;1mpython3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v[0m
+2026-10-17T11:57:29.7462831Z shell: /usr/bin/bash -e {0}
+2026-10-17T11:57:29.7463151Z ##[endgroup]
+2026-10-17T11:57:29.8260046Z test_artifact_source_size_digest_and_expiry_are_independent (test_windows_retention_ci.InstallerAdmissionTests.test_artifact_source_size_digest_and_expiry_are_independent) ... ok
+2026-10-17T11:57:29.8262693Z test_baseline_asset_and_download_source_cannot_drift (test_windows_retention_ci.InstallerAdmissionTests.test_baseline_asset_and_download_source_cannot_drift) ... ok
+2026-10-17T11:57:29.8265339Z test_baseline_release_tag_attachment_and_publication_must_match (test_windows_retention_ci.InstallerAdmissionTests.test_baseline_release_tag_attachment_and_publication_must_match) ... ok
+2026-10-17T11:57:29.8268567Z test_current_harness_sha_cannot_replace_candidate_identity (test_windows_retention_ci.InstallerAdmissionTests.test_current_harness_sha_cannot_replace_candidate_identity) ... ok
+2026-10-17T11:57:29.8271356Z test_fixed_candidate_and_both_official_baselines (test_windows_retention_ci.InstallerAdmissionTests.test_fixed_candidate_and_both_official_baselines) ... ok
+2026-10-17T11:57:29.8273599Z test_msi_and_nsis_are_not_interchangeable (test_windows_retention_ci.InstallerAdmissionTests.test_msi_and_nsis_are_not_interchangeable) ... ok
+2026-10-17T11:57:29.8274894Z 
+2026-10-17T11:57:29.8275627Z ----------------------------------------------------------------------
+2026-10-17T11:57:29.8276237Z Ran 6 tests in 0.001s
+2026-10-17T11:57:29.8276471Z 
+2026-10-17T11:57:29.8276599Z OK
+2026-10-17T11:57:29.8473891Z Post job cleanup.
+2026-10-17T11:57:29.9353830Z [command]/usr/bin/git version
+2026-10-17T11:57:29.9396463Z git version 2.55.0
+2026-10-17T11:57:29.9435526Z Temporarily overriding HOME='/home/runner/work/_temp/06e545de-b4f9-4a98-b5cb-0c91b216a176' before making global git config changes
+2026-10-17T11:57:29.9436808Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-17T11:57:29.9441756Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/opencodex-desktop/opencodex-desktop
+2026-10-17T11:57:29.9479591Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-17T11:57:29.9514923Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-17T11:57:29.9777137Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-17T11:57:29.9797513Z http.https://github.com/.extraheader
+2026-10-17T11:57:29.9820251Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-10-17T11:57:29.9850598Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-17T11:57:30.0131599Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-17T11:57:30.0170525Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-17T11:57:30.0560792Z Cleaning up orphan processes

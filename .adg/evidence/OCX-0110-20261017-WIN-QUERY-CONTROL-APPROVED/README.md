@@ -1,0 +1,15 @@
+# 已批准的控制进程调整与首轮CI失败
+
+用户明确回复“允许”，批准将无关控制Node换为System32/cmd.exe等待自有stdin，并接受同时冷启动Node数量减少这一处负载变化。查询及其真实子Node、原Rust测试并行度、16处断言及2/4/5/8秒原期限保留。实现ee0111e4只有Windows测试夹具变化；后续644fcf35仅修订两个IPC测试的终态等待。
+
+普通Git HTTPS传输遇到TLS失败；经既有凭据和GitHub Git数据库API上传同一blob、tree、commit，核验本地/远端SHA完全相同后，以force=false更新原feature分支。没有重写提交、关闭证书校验或改变系统网络。两次均以API读回证明上传完成，按各自新SHA只执行首轮push CI。
+
+ee首次CI39029801652整轮failure：macOS 35组935passed/6ignored，前端100文件542项及方法/发布工具检查成功；Windows库555passed/9failed/4ignored。七项真实版本/元数据查询全部在约2.014–2.135秒返回Timeout，五秒观察均未见parent-pid/child-pid/ownership-ready；控制cmd同代句柄在三次快照均存活。另两项IPC测试在放行后的两秒终态等待Elapsed。最终EXE构建和冒烟跳过，没有候选派发。
+
+因此控制进程调整没有使这轮查询通过；不能从控制cmd仍活、CPU时间较少、其它测试也超时等现象认定线程调度/I/O根因。旧1dcc候选两项失败及bd2历史失败均不解除。本轮没有原库回放、预热、降低并发、加时、删除断言或新增ETW。
+
+失败诊断artifact12099538424、8913482字节、SHA256 `243032e48a6d59d6a2c2db97ade7bbc90433c09d9779bc0c50058cfa30a0bb44`的API身份、12成员摘要及CRC已只读核验；ZIP仅保留在忽略的test/software目录，没有提取或执行载荷，不含安装包。
+
+两项IPC失败的源码仍在热循环中重复freeze/yield；仓库已经有只在测试编译的wait_until_idle_for_test通知接口。644fcf35仅对该两处复用通知，随后明确断言freeze可得；原两秒期限、取消、缓存、审计及终态断言保留，生产函数和查询夹具逐字节未改。它消除了测试主动反复竞争许可mutex的路径，但不能宣称解释或修复七项查询超时，结果须以644首次完整CI39030636608为准。
+
+原件分别位于control/与ipc-waits/，源码只记录提交与摘要，不在文档分支复制实现。record.py核对复制字节、同源五作业日志、失败分析、私有惰性ZIP、源码边界与原配置保护。两轮结果不互相替代；完整Windows门禁与发布均未通过。
