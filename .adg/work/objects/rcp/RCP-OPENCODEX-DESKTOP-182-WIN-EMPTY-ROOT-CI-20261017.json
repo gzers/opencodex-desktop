@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-EMPTY-ROOT-CI-20261017",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT/ci",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-EMPTY-ROOT-CI-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:empty-root-fix-whole-same-source-ci",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT/ci/verification.json"
+    },
+    {
+      "name": "local:empty-root-candidate-single-dispatch",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-DATA-ROOT/ci/candidate-handle.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "a6e58b27122eb5c48c3e2876e0b3d33c4ca6ce91dd5f1b4387198f29ff51d2c2",
+      "summary": "99a62e4a完整同SHA CI39006330384通过，542前端及Mac927/Windows654回归；保留首次旧空目录断言失败，唯一候选39007300430构建中。"
+    }
+  ],
+  "completed_at": "2026-10-17T05:45:48.578834+00:00",
+  "revision": 1,
+  "summary": "核验空目录初始化修复的完整CI并派发唯一候选，原生补测与制品尚未准入。",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "summary_digest": "e13706b2689a58d0b72bc39867ce3290b84b70a1979b702ea2adbb9df082806f",
+  "content_digest": "7761eb4d4b3e603091776d2f255e0cfa3b64767fa12350d2de5d3ad85dedb1b8"
+}
