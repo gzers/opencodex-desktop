@@ -187,6 +187,7 @@ export class ObservationCdp {
     return new ObservationCdp(socket)
   }
   call(method, params = {}) {
+    if (this.socket.readyState !== WebSocket.OPEN) return Promise.reject(Error('Observation target disconnected'))
     const id = ++this.sequence
     return new Promise((resolveCall, reject) => {
       const timer = setTimeout(() => { this.pending.delete(id); reject(Error(`CDP deadline ${method}`)) }, 10_000)

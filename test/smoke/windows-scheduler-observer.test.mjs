@@ -44,7 +44,7 @@ test('a zero count with lost records, changed hooks or debugger pauses is reject
 
 async function inspectorTarget(t) {
   const child = fork(fileURLToPath(new URL('./fixtures/windows-observer-target.mjs', import.meta.url)), {
-    silent: true, execArgv: ['--inspect=127.0.0.1:0'], env: { ...process.env, NODE_OPTIONS: '' },
+    silent: true, windowsHide: true, execArgv: ['--inspect=127.0.0.1:0'], env: { ...process.env, NODE_OPTIONS: '' },
   })
   let client
   const exited = once(child, 'exit')
@@ -125,4 +125,13 @@ test('asynchronous call completion survives drained batches without duplicating 
   assert.equal(second.delta.events[0].phase, 'end')
   assert.equal((await observer.snapshot()).delta.events.length, 0)
   assert.equal((await observer.cleanup()).observerRemoved, true)
+})
+
+test('a closed target rejects new commands immediately without dangling cleanup deadlines', async t => {
+  const { client } = await inspectorTarget(t)
+  const closed = new Promise(resolve => client.socket.addEventListener('close', resolve, { once: true }))
+  client.socket.close()
+  await closed
+  await assert.rejects(client.call('Debugger.disable'), /disconnected/)
+  assert.equal(client.pending.size, 0)
 })

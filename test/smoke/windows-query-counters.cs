@@ -10,6 +10,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.Diagnostics.Tracing;
 using Microsoft.Diagnostics.Tracing.Parsers;
@@ -19,6 +20,24 @@ namespace OpenCodex.Diagnostics
 {
     public static class QueryCounterRules
     {
+        public static string ChildKind(string imageBasename, string commandLine)
+        {
+            if (String.Equals(imageBasename, "msedgewebview2.exe", StringComparison.OrdinalIgnoreCase))
+                return "browser-runtime";
+            if (String.Equals(imageBasename, "conhost.exe", StringComparison.OrdinalIgnoreCase))
+                return "console-host";
+            bool command = new[] { "node.exe", "cmd.exe", "powershell.exe", "pwsh.exe" }
+                .Contains(imageBasename, StringComparer.OrdinalIgnoreCase);
+            if (!command) return "other-owned-process";
+            string text = commandLine ?? "";
+            if (text.IndexOf("npm", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                Regex.IsMatch(text, @"(?:^|[\s""'])view(?=[\s""']|$)", RegexOptions.IgnoreCase))
+                return "remote-metadata-query";
+            if (Regex.IsMatch(text, @"(?:^|[\s""'])(?:--version|-v)(?=[\s""']|$)", RegexOptions.IgnoreCase))
+                return "local-version-probe";
+            return "unclassified-command";
+        }
+
         public static bool DebugTransport(IPAddress source, int sourcePort,
                                           IPAddress destination, int destinationPort, int debugPort) =>
             debugPort > 0 && debugPort <= 65535
@@ -67,6 +86,12 @@ namespace OpenCodex.Diagnostics
             check(!scope.ProcessOwned(2, 103));
             check(!scope.ProcessStart(2, 99, 110, false, null));
             check(!scope.ProcessOwned(2, 111));
+            check(ChildKind("cmd.exe", @"""C:\Windows\cmd.exe"" /c npm.cmd view package version") == "remote-metadata-query");
+            check(ChildKind("node.exe", @"""C:\node.exe"" ""C:\npm-cli.js"" ""view"" ""package""") == "remote-metadata-query");
+            check(ChildKind("node.exe", @"""C:\view\node.exe"" --version") == "local-version-probe");
+            check(ChildKind("cmd.exe", @"""C:\Windows\cmd.exe"" /d /c exit 0") == "unclassified-command");
+            check(ChildKind("msedgewebview2.exe", "browser command line not serialized") == "browser-runtime");
+            check(ChildKind("other.exe", "--version") == "other-owned-process");
             return count;
         }
     }
@@ -201,6 +226,7 @@ namespace OpenCodex.Diagnostics
                             parentPid = data.ParentID, rootPid = existing.Pid,
                             generation = existing.Scope.ProcessGeneration(data.ProcessID, qpc),
                             imageBasename = Path.GetFileName(data.ImageFileName), uniqueProcessKey = data.UniqueProcessKey,
+                            invocationKind = QueryCounterRules.ChildKind(Path.GetFileName(data.ImageFileName), data.CommandLine),
                             fullCommandLineOrSidSaved = false, identity = "ETW owned-parent lifetime" });
                     }
                     if (!exactRoot) return;

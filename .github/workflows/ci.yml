@@ -26,6 +26,9 @@ jobs:
       - name: Verify cache-query fixture keeps original deadlines and enables automatic checks
         shell: pwsh
         run: ./test/smoke/windows-cache-query-state.test.ps1 -OutputDirectory test/out/windows-process-token/cache-query-state
+      - name: Verify calibration default and expired-window guards
+        shell: pwsh
+        run: ./test/smoke/windows-query-calibration.test.ps1 -OutputDirectory test/out/windows-process-token/query-calibration
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -50,7 +53,7 @@ jobs:
         with:
           node-version: 24
       - name: Windows CDP protocol and passive scheduler observation regression
-        run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-scheduler-observer.test.mjs
+        run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-scheduler-observer.test.mjs test/smoke/windows-cache-query-observe.test.mjs test/smoke/windows-observation-files.test.mjs
       - run: npm --prefix apps/desktop/ui ci
       - run: npm --prefix apps/desktop/ui run typecheck
       - run: npm --prefix apps/desktop/ui run test -- --run
