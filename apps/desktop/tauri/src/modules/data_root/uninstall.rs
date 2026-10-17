@@ -77,8 +77,8 @@ fn inspect_tree(root: &Path) -> AppResult<()> {
     let mut pending = vec![root.to_path_buf()];
     let mut count = 0;
     while let Some(directory) = pending.pop() {
-        for entry in std::fs::read_dir(&directory)
-            .map_err(|_| failure("data directory inventory failed"))?
+        for entry in
+            std::fs::read_dir(&directory).map_err(|_| failure("data directory inventory failed"))?
         {
             let path = entry
                 .map_err(|_| failure("data directory entry cannot be read"))?
@@ -124,15 +124,17 @@ impl RemovalPlan {
             if super::validate_structure(&root)? != StructureValidation::Valid {
                 return Err(failure("only a current manager data root may be removed"));
             }
-            for entry in std::fs::read_dir(&root)
-                .map_err(|_| failure("data root inventory failed"))?
+            for entry in
+                std::fs::read_dir(&root).map_err(|_| failure("data root inventory failed"))?
             {
                 let entry = entry.map_err(|_| failure("data root entry cannot be read"))?;
                 if !PARTITIONS
                     .iter()
                     .any(|(_, name)| entry.file_name() == *name)
                 {
-                    return Err(failure("unrecognized content in data root; retain all data"));
+                    return Err(failure(
+                        "unrecognized content in data root; retain all data",
+                    ));
                 }
             }
             inspect_tree(&root)?;
@@ -170,7 +172,9 @@ impl RemovalPlan {
             }
             current = next;
         }
-        Err(failure("data root binding chain exceeds the supported depth"))
+        Err(failure(
+            "data root binding chain exceeds the supported depth",
+        ))
     }
 
     pub(crate) fn remove(self, anchor: &Path, install: &Path) -> AppResult<()> {

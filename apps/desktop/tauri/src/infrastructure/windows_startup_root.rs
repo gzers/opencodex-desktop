@@ -305,8 +305,8 @@ mod native {
         Security::{GetLengthSid, GetTokenInformation, TokenUser, TOKEN_QUERY, TOKEN_USER},
         System::{
             Registry::{
-                RegCloseKey, RegCreateKeyExW, RegDeleteValueW, RegFlushKey, RegGetValueW, RegOpenKeyExW,
-                RegSetValueExW, HKEY_CURRENT_USER, KEY_QUERY_VALUE, KEY_SET_VALUE,
+                RegCloseKey, RegCreateKeyExW, RegDeleteValueW, RegFlushKey, RegGetValueW,
+                RegOpenKeyExW, RegSetValueExW, HKEY_CURRENT_USER, KEY_QUERY_VALUE, KEY_SET_VALUE,
                 REG_OPTION_NON_VOLATILE, REG_SZ, RRF_RT_REG_SZ,
             },
             Threading::{

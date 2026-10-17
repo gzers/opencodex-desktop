@@ -192,8 +192,8 @@ fn main() -> ExitCode {
             return ExitCode::from(2);
         }
         Ok(true) => {
-            let result =
-                opencodex_desktop_lib::modules::data_root::uninstall::remove_from_windows_installer();
+            use opencodex_desktop_lib::modules::data_root::uninstall;
+            let result = uninstall::remove_from_windows_installer();
             return match result {
                 Ok(()) => ExitCode::SUCCESS,
                 Err(_) => {
