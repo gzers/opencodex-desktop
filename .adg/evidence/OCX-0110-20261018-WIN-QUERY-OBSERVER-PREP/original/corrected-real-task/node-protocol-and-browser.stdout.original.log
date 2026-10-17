@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: retries until the main page appears; ignores embedded or unrelated pages
+ok 1 - retries until the main page appears; ignores embedded or unrelated pages
+  ---
+  duration_ms: 55.3694
+  ...
+# Subtest: HTTP errors are preserved instead of being swallowed
+ok 2 - HTTP errors are preserved instead of being swallowed
+  ---
+  duration_ms: 2009.1886
+  ...
+# Subtest: malformed target JSON fails with parse evidence
+ok 3 - malformed target JSON fails with parse evidence
+  ---
+  duration_ms: 2014.173
+  ...
+# Subtest: non-array responses and empty target lists never count as rendered UI
+ok 4 - non-array responses and empty target lists never count as rendered UI
+  ---
+  duration_ms: 4010.527
+  ...
+# Subtest: stalled responses are bounded by both request and discovery deadlines
+ok 5 - stalled responses are bounded by both request and discovery deadlines
+  ---
+  duration_ms: 153.9259
+  ...
+# Subtest: connection refusal retains the underlying network error
+ok 6 - connection refusal retains the underlying network error
+  ---
+  duration_ms: 2005.2788
+  ...
+# Subtest: refuses non-loopback endpoints before making a request
+ok 7 - refuses non-loopback endpoints before making a request
+  ---
+  duration_ms: 0.2737
+  ...
+# Subtest: real Chromium observes frozen bridge calls and an actual >50ms task without page reload
+ok 8 - real Chromium observes frozen bridge calls and an actual >50ms task without page reload
+  ---
+  duration_ms: 655.432
+  ...
+# Subtest: expired, future and automatic windows cannot authorize observation
+ok 9 - expired, future and automatic windows cannot authorize observation
+  ---
+  duration_ms: 2.4152
+  ...
+# Subtest: a zero count with lost records, changed hooks or debugger pauses is rejected
+ok 10 - a zero count with lost records, changed hooks or debugger pauses is rejected
+  ---
+  duration_ms: 1.1678
+  ...
+# Subtest: real V8 function-call logpoints capture sub-millisecond calls without replacing the frozen bridge
+ok 11 - real V8 function-call logpoints capture sub-millisecond calls without replacing the frozen bridge
+  ---
+  duration_ms: 106.9351
+  ...
+# Subtest: real logpoint overflow fails closed and still removes observation
+ok 12 - real logpoint overflow fails closed and still removes observation
+  ---
+  duration_ms: 81.1125
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10334.0155

@@ -1,0 +1,62 @@
+{
+  "atUtc": "2026-10-17T19:27:38.793883+00:00",
+  "source": "0852b7ee6f3b58fb5439bf66cbea97c4b7982a3a",
+  "branch": "feature/0.1.10-windows-query-observer",
+  "remoteHeadVerified": true,
+  "appsUnchangedFromAdmitted8e": true,
+  "productBuildOrNewCandidateRequested": false,
+  "changedPaths": [
+    ".github/workflows/ci.yml",
+    "test/smoke/fixtures/windows-observer-target.mjs",
+    "test/smoke/windows-observation-binding.ps1",
+    "test/smoke/windows-query-counters.cs",
+    "test/smoke/windows-query-counters.ps1",
+    "test/smoke/windows-query-observation.md",
+    "test/smoke/windows-scheduler-observer.browser.test.mjs",
+    "test/smoke/windows-scheduler-observer.mjs",
+    "test/smoke/windows-scheduler-observer.test.mjs"
+  ],
+  "localMethodValidation": {
+    "nodeProtocolTests": 13,
+    "passed": 13,
+    "failed": 0,
+    "realV8LogpointsAndActualChromiumTaskObserved": true,
+    "delayedCallbacksAcrossStreamedBatchesObserved": true,
+    "overflowAndExpiredWindowRejected": true,
+    "nativeCompiled": true,
+    "counterRules": 24,
+    "existingScopeRules": 38,
+    "existingStopRules": 8,
+    "ordinaryTokenCannotStartKernelSession": true
+  },
+  "ci": {
+    "runId": 39062488018,
+    "attempt": 1,
+    "status": "in_progress",
+    "conclusion": null,
+    "headSha": "0852b7ee6f3b58fb5439bf66cbea97c4b7982a3a"
+  },
+  "methodFailuresPreserved": [
+    "Exact fixture target preceded its inline bridge script; added explicit fixture readiness.",
+    "DevTools evaluation did not create a browser event-loop longtask; moved only the fixture workload into a real queued task."
+  ],
+  "collectorScope": {
+    "actualNativeIpcCommandsAndCallbacks": true,
+    "rawRafIntervalsAndLongTasks": true,
+    "processStartStopEventsAndKernelTransportSizes": true,
+    "diagnosticLoopbackPortSeparatelyMarked": true,
+    "otherLoopbackProxyTrafficRetained": true,
+    "bridgeResponseClockOrRafReplaced": false,
+    "networkEventsMislabelledAsHttpRequestCount": false,
+    "rawKernelPositiveCalibrationCompleted": false,
+    "realProductMeasurementCompleted": false,
+    "newHumanWindowRequiredForProduct": true
+  },
+  "productStarted": false,
+  "foregroundUsed": false,
+  "etwSessionStarted": false,
+  "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "fullPerformanceGatePassed": false,
+  "fullWindowsGatePassed": false,
+  "releaseAccepted": false
+}

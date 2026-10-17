@@ -1,0 +1,10 @@
+{
+  "atUtc": "2026-10-17T19:18:41.1147548+00:00",
+  "scope": "instrumentation fixture, not product",
+  "source": "tool command output",
+  "test": "real Chromium observes frozen bridge calls and an actual >50ms task without page reload",
+  "observedFailure": "Original native IPC bridge unavailable",
+  "cause": "Exact fixture target appeared before its inline bridge script executed",
+  "productionMeasurementAttempted": false,
+  "assertionsRelaxed": false
+}

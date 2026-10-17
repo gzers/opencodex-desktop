@@ -1,0 +1,49 @@
+{
+  "atUtc": "2026-10-17T19:30:28.530533+00:00",
+  "source": "0852b7ee6f3b58fb5439bf66cbea97c4b7982a3a",
+  "allMethodReferencesMatch": true,
+  "rawLocalValidationBytesMatch": true,
+  "nodeChecksPassed": 13,
+  "nativeCounterChecks": 24,
+  "existingScopeChecks": 38,
+  "nativeStopChecks": 8,
+  "originalConfigurationAndTaskPreserved": true,
+  "productStarted": false,
+  "foregroundUsed": false,
+  "etwSessionStarted": false,
+  "ci": {
+    "runId": 39062488018,
+    "attempt": 1,
+    "status": "in_progress",
+    "conclusion": null,
+    "jobs": [
+      {
+        "name": "windows-smoke-evidence",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "backend",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "name": "backend-windows",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "name": "release-tools",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "name": "frontend",
+        "status": "completed",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "rawKernelPositiveControlCompleted": false,
+  "productAcceptancePassed": false
+}

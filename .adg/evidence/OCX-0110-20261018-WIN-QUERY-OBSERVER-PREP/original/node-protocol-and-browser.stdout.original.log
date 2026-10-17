@@ -1,0 +1,86 @@
+TAP version 13
+# Subtest: retries until the main page appears; ignores embedded or unrelated pages
+ok 1 - retries until the main page appears; ignores embedded or unrelated pages
+  ---
+  duration_ms: 53.9185
+  ...
+# Subtest: HTTP errors are preserved instead of being swallowed
+ok 2 - HTTP errors are preserved instead of being swallowed
+  ---
+  duration_ms: 2018.5751
+  ...
+# Subtest: malformed target JSON fails with parse evidence
+ok 3 - malformed target JSON fails with parse evidence
+  ---
+  duration_ms: 2010.1458
+  ...
+# Subtest: non-array responses and empty target lists never count as rendered UI
+ok 4 - non-array responses and empty target lists never count as rendered UI
+  ---
+  duration_ms: 4011.2898
+  ...
+# Subtest: stalled responses are bounded by both request and discovery deadlines
+ok 5 - stalled responses are bounded by both request and discovery deadlines
+  ---
+  duration_ms: 159.02
+  ...
+# Subtest: connection refusal retains the underlying network error
+ok 6 - connection refusal retains the underlying network error
+  ---
+  duration_ms: 2003.136
+  ...
+# Subtest: refuses non-loopback endpoints before making a request
+ok 7 - refuses non-loopback endpoints before making a request
+  ---
+  duration_ms: 0.2692
+  ...
+# Subtest: real Chromium observes frozen bridge calls and an actual >50ms task without page reload
+not ok 8 - real Chromium observes frozen bridge calls and an actual >50ms task without page reload
+  ---
+  duration_ms: 670.3049
+  location: 'C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\smoke\\windows-scheduler-observer.browser.test.mjs:13:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert(summary.mainThreadTasksOver50Ms >= 1)
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/15119/.codex/worktrees/windows-mesh-initial-size/opencodex-desktop/test/smoke/windows-scheduler-observer.browser.test.mjs:94:5)
+    async Test.run (node:internal/test_runner/test:935:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: expired, future and automatic windows cannot authorize observation
+ok 9 - expired, future and automatic windows cannot authorize observation
+  ---
+  duration_ms: 2.3329
+  ...
+# Subtest: a zero count with lost records, changed hooks or debugger pauses is rejected
+ok 10 - a zero count with lost records, changed hooks or debugger pauses is rejected
+  ---
+  duration_ms: 0.7041
+  ...
+# Subtest: real V8 function-call logpoints capture sub-millisecond calls without replacing the frozen bridge
+ok 11 - real V8 function-call logpoints capture sub-millisecond calls without replacing the frozen bridge
+  ---
+  duration_ms: 100.9478
+  ...
+# Subtest: real logpoint overflow fails closed and still removes observation
+ok 12 - real logpoint overflow fails closed and still removes observation
+  ---
+  duration_ms: 77.829
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10339.436
