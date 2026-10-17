@@ -1,0 +1,82 @@
+{
+  "atUtc": "2026-10-17T09:24:33.7339993+00:00",
+  "authorization": "2026-10-16 user allows this-machine OpenCodex/Desktop uninstall and configuration cleanup",
+  "scope": "four verified logical app paths grouped by native directory ID; preserve each physical directory once",
+  "aliases": [
+    {
+      "name": "ordinary-roaming",
+      "path": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+      "identity": {
+        "path": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+        "fileId": "0ebd4e59-001000000005cf4b",
+        "finalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop",
+        "creationFileTime": "134366003622018367",
+        "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+      }
+    },
+    {
+      "name": "ordinary-local",
+      "path": "C:\\Users\\15119\\AppData\\Local\\com.gzers.opencodex.desktop",
+      "identity": {
+        "path": "C:\\Users\\15119\\AppData\\Local\\com.gzers.opencodex.desktop",
+        "fileId": "0ebd4e59-000b0000000d26d4",
+        "finalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop",
+        "creationFileTime": "134365470690127926",
+        "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+      }
+    },
+    {
+      "name": "package-roaming",
+      "path": "C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop",
+      "identity": {
+        "path": "C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop",
+        "fileId": "0ebd4e59-001000000005cf4b",
+        "finalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop",
+        "creationFileTime": "134366003622018367",
+        "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+      }
+    },
+    {
+      "name": "package-local",
+      "path": "C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop",
+      "identity": {
+        "path": "C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop",
+        "fileId": "0ebd4e59-000b0000000d26d4",
+        "finalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop",
+        "creationFileTime": "134365470690127926",
+        "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+      }
+    }
+  ],
+  "physicalProfiles": [
+    {
+      "name": "ordinary-local",
+      "source": "C:\\Users\\15119\\AppData\\Local\\com.gzers.opencodex.desktop",
+      "destination": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-99-roots-20261017T172126\\saved-ordinary-local",
+      "fileId": "0ebd4e59-000b0000000d26d4",
+      "creationFileTime": "134365470690127926",
+      "originalFinalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop",
+      "logicalPaths": [
+        "C:\\Users\\15119\\AppData\\Local\\com.gzers.opencodex.desktop",
+        "C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop"
+      ]
+    },
+    {
+      "name": "ordinary-roaming",
+      "source": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+      "destination": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-99-roots-20261017T172126\\saved-ordinary-roaming",
+      "fileId": "0ebd4e59-001000000005cf4b",
+      "creationFileTime": "134366003622018367",
+      "originalFinalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop",
+      "logicalPaths": [
+        "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+        "C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop"
+      ]
+    }
+  ],
+  "startupPointerSha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+  "source": "823a8a0615153068594daef530c2e80f1d95fc29",
+  "foregroundAuthorizationGranted": false,
+  "productLaunchAllowed": false,
+  "rawSidOrSddlPublished": false
+}
