@@ -1,0 +1,62 @@
+{
+  "status": "valid-completed-idle-pair-both-original-budgets-failed",
+  "versions": {
+    "baseline019": {
+      "samples": 597,
+      "spanSeconds": 600.2428945,
+      "cpuOneLogicalProcessorPercent": 13.778276387410031,
+      "meanRssMiB": 544.7094718383585,
+      "meanRssMiBByActualRole": {
+        "native-root": 33.749869137353436,
+        "browser-no-type-flag": 129.4511816896985,
+        "crash-handler": 14.097904889028475,
+        "gpu": 205.9976641017588,
+        "utility": 58.79332207914573,
+        "renderer": 102.61952994137353
+      },
+      "roleUnknownGenerations": []
+    },
+    "candidate0110": {
+      "samples": 597,
+      "spanSeconds": 600.3273912,
+      "cpuOneLogicalProcessorPercent": 14.44003743136217,
+      "meanRssMiB": 564.9033383061139,
+      "meanRssMiBByActualRole": {
+        "native-root": 34.332711735762146,
+        "browser-no-type-flag": 128.2406825795645,
+        "crash-handler": 14.04826868718593,
+        "gpu": 229.22392561767168,
+        "utility": 59.01625968383585,
+        "renderer": 100.04149000209381,
+        "not-in-pre-span-role-snapshot": 0.0
+      },
+      "roleUnknownGenerations": [
+        {
+          "pid": 34556,
+          "creationUtc": "2026-10-17T03:47:06.2266676Z",
+          "name": "msedgewebview2.exe"
+        }
+      ]
+    }
+  },
+  "cpuIncreasePercentagePoints": 0.6617610439521382,
+  "meanRssIncreaseMiB": 20.19386646775547,
+  "roleRssDifferenceMiB": {
+    "browser-no-type-flag": -1.210499110134009,
+    "crash-handler": -0.0496362018425458,
+    "gpu": 23.22626151591288,
+    "native-root": 0.5828425984087104,
+    "not-in-pre-span-role-snapshot": 0.0,
+    "renderer": -2.5780399392797193,
+    "utility": 0.2229376046901166
+  },
+  "bothNormalExitsWithinHumanWindow": true,
+  "configurationRestored": true,
+  "decimalArithmeticMatchesOriginalAnalysis": true,
+  "causalAllocationAttribution": false,
+  "priorSamplesUsed": false,
+  "fullPerformanceGatePassed": false,
+  "historicalFailuresCleared": false,
+  "taskClosed": false,
+  "releaseAccepted": false
+}

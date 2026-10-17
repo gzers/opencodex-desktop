@@ -1,0 +1,43 @@
+{
+  "versions": {
+    "baseline019": {
+      "source": "de6862d40389d527527b9db8ef52e186a58b625f",
+      "exeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+      "samples": 597,
+      "counterSpanSeconds": 600.2428945,
+      "rawSha256": "9bb5d13709655906af6a93234abb7f32afa4f1a81abf1189ccd700f8ac7948c7",
+      "cpuOneLogicalProcessorPercent": 13.77827638741003,
+      "meanRssMiB": 544.7094718383585,
+      "creationFileTime": "134366815877541244",
+      "exitFileTime": "134366822969308518",
+      "collectorCpuSeconds": 57.71875
+    },
+    "candidate0110": {
+      "source": "ce670ce76bb1c29f70989ee54838d5b31e97059c",
+      "exeSha256": "4fe09bce265b51860da17f2cd1466a50430513e5ed29050f85caf5d913652bb5",
+      "samples": 597,
+      "counterSpanSeconds": 600.3273912,
+      "rawSha256": "9e6789441649e04cc910016d4872605b8cb08b890b2d5387cd8b92e2725710b0",
+      "cpuOneLogicalProcessorPercent": 14.44003743136217,
+      "meanRssMiB": 564.9033383061139,
+      "creationFileTime": "134366823059106932",
+      "exitFileTime": "134366830084127431",
+      "collectorCpuSeconds": 62.046875
+    }
+  },
+  "validPairForRecordedSubset": true,
+  "priorSamplesUsed": false,
+  "cpuIncreasePercentagePoints": 0.66176104395214,
+  "meanRssIncreaseMiB": 20.19386646775547,
+  "cpuBudgetPassed": false,
+  "meanRssBudgetPassed": false,
+  "budgets": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "sharedResidentPagesDeduplicated": false,
+  "shortLivedChildrenFullyCovered": false,
+  "fullPerformanceGatePassed": false,
+  "historicalFailuresCleared": false,
+  "releaseAccepted": false
+}
