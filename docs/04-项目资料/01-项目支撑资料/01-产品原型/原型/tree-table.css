@@ -36,6 +36,8 @@
 /* 原生 table 与 grid 树表消费相同行距；多行名称 / 描述随内容增高。 */
 .proto-tree table{font:inherit}
 .proto-tree table th,.proto-tree table td{padding:var(--tree-padding-y) var(--tree-padding-x);vertical-align:top}
+/* 操作保留自身命中尺寸，中心与名称首行对齐；百分比取按钮自身高度。 */
+.proto-tree table tbody td:last-child>.btn{translate:0 calc((var(--tree-line-height) - 100%) / 2)}
 
 /* 保存配置的分组变更表：原生 details 提供展开语义，不需要图标或选择列。 */
 .mp-changes .mp-draft-group{padding:0}

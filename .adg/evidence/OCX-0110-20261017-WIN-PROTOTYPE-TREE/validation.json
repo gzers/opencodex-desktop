@@ -1,0 +1,54 @@
+{
+  "observedAtUtc": "2026-10-17T15:13:07.379661+00:00",
+  "existingTests": {
+    "command": [
+      "node",
+      "--test",
+      "prototype-annotation-contract.test.cjs",
+      "maintenance-ui.test.cjs"
+    ],
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "resultOrigin": "actual exec terminal observation",
+    "rawOutputFileSaved": false
+  },
+  "methodCorrection": {
+    "originalResult": "remaining-before/result.json",
+    "correctedRedResult": "remaining-before-visible/result.json",
+    "reason": "exclude display-none rows and intentionally hidden spacer controls from layout geometry; visible first-line tolerance remains1px",
+    "hiddenNodesPreviouslyTreatedAsVisible": true,
+    "originalMethodFailureRetained": true
+  },
+  "visualInspection": [
+    "1600-light-high-file.png",
+    "1050-dark-low-webdav.png",
+    "remaining-before/1180-light-high-backup.png",
+    "remaining-before/1180-light-high-import-compare.png",
+    "remaining-after/1180-light-high-backup.png",
+    "remaining-after/900-dark-low-model-policy-compare.png",
+    "remaining-extras/900-dark-low-template-save-compare.png",
+    "remaining-extras/1180-light-high-disabled-dependency.png"
+  ],
+  "protection": {
+    "nativeCount": 0,
+    "originalHashesUnchanged": true,
+    "hashes": {
+      "preferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+      "startupPointerUtf8Sha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+      "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93"
+    },
+    "foregroundUsed": false,
+    "systemDpiChanged": false,
+    "ciDispatched": false,
+    "fZ50Executed": false
+  },
+  "sourceIdentity": "initial e79ef136 docs source plus two-line prototype CSS fix; application source8e unchanged",
+  "toolIdentityObservedAfterRuns": {
+    "nodeSha256": "3602f2bb1a10f2cbab4c36886218a33c1ab3db87290e73b033c46c77147d0237",
+    "edgeSha256": "d366716ba3cd2cc67d92d9b712b129fea4c8df769961d1e04b037ce034780ad0"
+  },
+  "fullNativeGatePassed": false,
+  "taskClosed": false,
+  "releaseAccepted": false
+}
