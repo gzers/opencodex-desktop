@@ -23,6 +23,9 @@ jobs:
       - name: Verify startup-pair authorization and fixture restoration without launching the product
         shell: pwsh
         run: ./test/smoke/windows-startup-pair-state.test.ps1 -OutputDirectory test/out/windows-process-token/startup-pair-state
+      - name: Verify cache-query fixture keeps original deadlines and enables automatic checks
+        shell: pwsh
+        run: ./test/smoke/windows-cache-query-state.test.ps1 -OutputDirectory test/out/windows-process-token/cache-query-state
       - uses: actions/upload-artifact@v4
         if: always()
         with:
