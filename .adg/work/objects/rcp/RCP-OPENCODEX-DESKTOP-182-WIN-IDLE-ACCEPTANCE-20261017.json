@@ -1,0 +1,39 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-IDLE-ACCEPTANCE-20261017",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-IDLE-ACCEPTANCE-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-ce-observed-idle-variance-human-acceptance",
+      "status": "passed",
+      "evidence": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+    },
+    {
+      "name": "local:windows-ce-original-measurement-preserved",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-IDLE-PAIR/original/comparison.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "4f459d0d87c92b9180822cdf86b68a7eb591c93273033777289be38fc991d264",
+      "summary": "用户明确接受本轮ce空闲CPU+0.661761个百分点/RSS+20.193866MiB，停止该项优化与配对循环；原失败不改写，其余门禁继续。"
+    }
+  ],
+  "completed_at": "2026-10-17T04:13:15.623807+00:00",
+  "summary": "记录用户对本轮Windows空闲资源增量的人工接受，不宣称完整调度性能或发布门禁通过。",
+  "revision": 1,
+  "summary_digest": "3dd35fa5300b1230af80cf905bd9823bcd6898df62b19e72e8362e1edf4ea6a6",
+  "content_digest": "750627f376598fcc66afac43e36eeaddbac0fee725daf198b79eccb33eab86bc"
+}
