@@ -1,0 +1,32 @@
+{
+  "atUtc": "2026-10-17T16:08:21.8522439+00:00",
+  "root": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-8e-native-prepared-20261017T2320\\native-data",
+  "files": [
+    {
+      "path": "manager-state\\data-root.json",
+      "bytes": 30,
+      "sha256": "8ae75370e9f9966182caddd12ef094f16449c88119e66012a8a4a99a0c1f0e25"
+    },
+    {
+      "path": "manager-state\\preferences.json",
+      "bytes": 1434,
+      "sha256": "772474a61e04662c206f3594e8ebb06eb6788cea081155bce54fa6b4b7d6480a"
+    },
+    {
+      "path": "logs\\app.log",
+      "bytes": 3523,
+      "sha256": "b9a585017ab6b4475f67a23978f26355120dbecff4aacf5d50277259f459383c"
+    },
+    {
+      "path": "backups\\2026\\10\\manual-preferences\\bk_20261017133409_c058f8a4\\backup-manifest.json",
+      "bytes": 664,
+      "sha256": "583f465141844a6ff640f28e7ea9fd1c7e3bf3f6034f03dda269f51c3f248740"
+    },
+    {
+      "path": "backups\\2026\\10\\manual-preferences\\bk_20261017133409_c058f8a4\\preferences.json",
+      "bytes": 1372,
+      "sha256": "da3f8cb9004a140fb77de5037e872125e8562fe2c8d267cbb22f2035c78f9a6d"
+    }
+  ],
+  "scope": "bounded exact data/backup/log snapshot; app log may continue changing before normal exit"
+}

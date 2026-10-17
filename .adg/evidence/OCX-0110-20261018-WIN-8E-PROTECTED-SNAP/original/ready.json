@@ -1,0 +1,41 @@
+{
+  "preparedAtUtc": "2026-10-17T15:18:14.4651877+00:00",
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "sameSourceFullCi": 39032153138,
+  "candidateRun": 39033532953,
+  "installer": "C:\\Users\\15119\\.codex\\worktrees\\windows-etw-query-threads\\opencodex-desktop\\test\\runtime\\foreground-8e-native-prepared-20261017T2320\\candidate-8e-setup.exe",
+  "installerSha256": "d7016d62f5e14e2784b01cb5c5494e69fcdb711843f9c03849637173e9088acc",
+  "expectedInstalledExeSha256": "b948fb7e6601aa606551e72bb3afc15f0cf8cbc02b7c46584e69584f6565c1a8",
+  "protectedInstallTarget": "C:\\Program Files\\OpenCodeX Desktop Gate 8e-20261017",
+  "protectedInstallTargetAbsent": true,
+  "originalPhysicalDirectories": 2,
+  "logicalAppPaths": 4,
+  "originalPreferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+  "originalPointerSha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+  "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "humanAuthorizationPresent": false,
+  "authorizationStartUtc": null,
+  "authorizationDeadlineUtc": null,
+  "productStarted": false,
+  "installerExecuted": false,
+  "profilesMoved": false,
+  "registryOrAclChanged": false,
+  "nativeCount": 0,
+  "steps": [
+    "fresh human foreground start, at most30min; revalidate originals and package",
+    "actual NSIS protected-target install; sequential ordinary and administrator first-screen/token remaining combinations",
+    "only missing Snap actual layout and tray quit; existing maximize/minimize/tray reopen results retained",
+    "native tree leaf-focus and untested visual combinations as remaining time permits",
+    "normal product exit no later than minute25, verify native0, uninstall test install without explicit data clearing, restore original directories/pointer by preserved identities"
+  ],
+  "rollbackMethods": [
+    ".adg/evidence/OCX-0110-20261016-WIN-RECOVERY-PLATFORM-PREP/restore-platform-roots.ps1",
+    ".adg/evidence/OCX-0110-20261017-WIN-8E-NATIVE-CLEAR/original/restore-after-clear.ps1"
+  ],
+  "rollbackMethodsRequireFreshRunBindings": true,
+  "noAutomaticRetry": true,
+  "cpuRssDpiOrStorageRetestsPlanned": false,
+  "readinessIsNotNativeAcceptance": true,
+  "taskClosed": false,
+  "releaseAccepted": false
+}

@@ -1,0 +1,46 @@
+{
+  "atUtc": "2026-10-17T15:42:07.3931153+00:00",
+  "phase": "install",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 42160,
+    "executable": "C:\\Users\\15119\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\powershell\\pwsh.exe",
+    "creationTimeUtc": "2026-10-17T15:42:06.4664035Z",
+    "elevated": true,
+    "elevationType": 2,
+    "collectedAtUtc": "2026-10-17T15:42:07.2021640Z"
+  },
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "target": "C:\\Program Files\\OpenCodeX Desktop Gate 8e-20261017",
+  "result": "installed-exact-protected-payload",
+  "forcedTermination": false,
+  "actualAdminAppDirectories": [
+    {
+      "path": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+      "fileId": "0ebd4e59-001000000005cf4b",
+      "finalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Roaming\\com.gzers.opencodex.desktop",
+      "creationFileTime": "134366003622018367",
+      "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+    },
+    {
+      "path": "C:\\Users\\15119\\AppData\\Local\\com.gzers.opencodex.desktop",
+      "fileId": "0ebd4e59-000b0000000d26d4",
+      "finalPath": "\\\\?\\C:\\Users\\15119\\AppData\\Local\\Packages\\OpenAI.Codex_2p2nqsd0c76g0\\LocalCache\\Local\\com.gzers.opencodex.desktop",
+      "creationFileTime": "134365470690127926",
+      "source": "GetFileInformationByHandle/GetFinalPathNameByHandle"
+    }
+  ],
+  "installerPid": 45512,
+  "exitCode": 0,
+  "installedExeSha256": "b948fb7e6601aa606551e72bb3afc15f0cf8cbc02b7c46584e69584f6565c1a8",
+  "finishedAtUtc": "2026-10-17T15:42:08.2114935+00:00",
+  "redaction": {
+    "removedField": "protectedAcl",
+    "reason": "raw user SID in security descriptor; private original preserved locally",
+    "originalBytes": 2193,
+    "originalSha256": "16523b53d555bbcd24d991c36955c9722a0ea64733ed25b0695b36db5227aea4",
+    "removedUtf8Sha256": "d41917b3076b15a0174ff861afc6ec3f7d4f27e38d811c90eef70693092d6bc3",
+    "isOriginal": false
+  }
+}
