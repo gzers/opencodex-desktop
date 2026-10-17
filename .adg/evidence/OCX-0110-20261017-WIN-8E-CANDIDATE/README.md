@@ -1,0 +1,13 @@
+# 8e唯一候选已核验，待新人工前台窗口
+
+源码8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b的首轮完整CI39032153138全绿后，只派发一次候选39033532953/attempt1。package117398708696实际checkout相同，35组667passed/0failed/7ignored；NSIS钩子和MSI均构建成功，runner两种安装器的真实实装、最终EXE首屏与卸载全部exit0，其它purpose作业跳过。
+
+两种安装载荷中，真实ocxd助手均在缺--confirm时exit2并保留七份种子/指针；确认后exit0，删除锚点及活动自定义根、解除指针，外部HOME哨兵保持，应用文件保留。随后默认卸载保留新写数据、移除主EXE。此为一次性runner专用种子，applicationRootBindingTested和hostAcceptanceClaimed均false；没有把它写成本机原生卸载复选框或真实UI根选择通过，也没有新增MSI原生清理复选框。
+
+安装器ZIP12101766414，7729981字节，SHA256 `26a206fb4ede180878c263774dd3b99e8222e86c4ccfda421884635032b5dd51`；runner证据ZIP12101038569，1653736字节，SHA256 `67466dd77809f93575ef903b0296299a8a822a4cd02527e3cb9a316d060b2f57`。API身份、全部成员摘要与CRC一致，私有ZIP保留在test/software/candidate-8e69ff-39033532953。
+
+本机只有下载、只读MSI数据库与惰性载荷提取。8832000字节的0.1.10主EXE摘要870cb30c…匹配runner MSI实装；实际8149749偏移的三字节包后缀只在内存转换，精确匹配NSIS载荷b948fb7e…和构建载荷f4ee7588…，原EXE未改。只读提取方法沿已提交98a35f58…复用，没有调用安装器、产品或清理助手。descriptor中的memoryBudgetPassed=false为沿用方法的未测标记，本轮未重新测量或推翻已接受的CPU/RSS。
+
+下次前台使用精确NSIS包：3309326字节，SHA256 `d7016d62f5e14e2784b01cb5c5494e69fcdb711843f9c03849637173e9088acc`；实际实装EXE须匹配b948fb7e6601aa606551e72bb3afc15f0cf8cbc02b7c46584e69584f6565c1a8。先补已有自定义根的普通重启回读与窗口内正常退出，再按本机真实卸载界面明确清理专用测试数据；不重做99已通过的初始化/恢复选择、默认保留、性能配对或DPI。
+
+原前台窗口已于2026-10-17 17:51:26+08:00结束，本档不产生新前台授权。原偏好、指针和TASK不变、native0；原退出观察超时、旧CI失败和外部依赖继续保留，其它固定清单仍按原范围处理。完整Windows门禁、TASK关闭、合并、签名、晋升与发布均未执行。record.py --verify核对全部绑定、原件和私有制品。

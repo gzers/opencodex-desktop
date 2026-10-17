@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "collectedAtUtc": "2026-10-17T13:01:52.2316942Z",
+  "package": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-8e69ff-39033532953\\installers\\apps\\desktop\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.1.10_x64_en-US.msi",
+  "packageSha256": "187d1bf7367cfe42e8fb7ecc5b43b16f669483f53670b60a94d842be118793e2",
+  "databaseMode": "read-only",
+  "installerExecuted": false,
+  "properties": {
+    "ProductCode": "{01D91462-E07E-4EAF-9E7F-FC56CD25E273}",
+    "ALLUSERS": "1",
+    "ProductName": "OpenCodeX Desktop",
+    "UpgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+    "ProductVersion": "0.1.10"
+  },
+  "media": [
+    {
+      "diskId": "1",
+      "cabinet": "#app.cab",
+      "lastSequence": "2"
+    }
+  ],
+  "files": [
+    {
+      "id": "Path",
+      "fileName": "3iewmbpe.exe|opencodex-desktop.exe",
+      "bytes": "8832000",
+      "sequence": "2"
+    },
+    {
+      "id": "Bin_ocxd",
+      "fileName": "ocxd.exe",
+      "bytes": "351744",
+      "sequence": "1"
+    }
+  ],
+  "upgrades": [
+    {
+      "upgradeCode": "{30FC0B19-5C02-5849-A234-D548E7AFC0DE}",
+      "versionMin": "0",
+      "versionMax": "",
+      "attributes": "257",
+      "actionProperty": "WIX_UPGRADE_DETECTED"
+    }
+  ],
+  "extractedExecutables": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-8e69ff-39033532953\\msi-readonly\\opencodex-desktop.exe",
+      "name": "opencodex-desktop.exe",
+      "bytes": 8832000,
+      "sha256": "870cb30c62c0cf563edacf7fe30a35d3b66cbffbb574beeb6b354ed2c7fab15a",
+      "productVersion": "0.1.10"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\windows-mesh-initial-size\\opencodex-desktop\\test\\software\\candidate-8e69ff-39033532953\\msi-readonly\\ocxd.exe",
+      "name": "ocxd.exe",
+      "bytes": 351744,
+      "sha256": "4b1b0e15c05eca66999eae79bece43a1fde4c7d93bf413bbe01081fb7a6b167a",
+      "productVersion": "0.1.10"
+    }
+  ],
+  "result": "pass"
+}
