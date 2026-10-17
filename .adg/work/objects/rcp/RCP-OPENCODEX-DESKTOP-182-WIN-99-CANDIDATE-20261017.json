@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-99-CANDIDATE-20261017",
+  "result": "succeeded",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-99-CANDIDATE",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-99-CANDIDATE-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-99-exact-ci-candidate-artifacts",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-99-CANDIDATE/verification.json"
+    },
+    {
+      "name": "local:windows-99-readonly-payload-matches-runner",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-99-CANDIDATE/original/candidate-descriptor.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "29e073f038ff7c3c959da7759ad6847f4b558351856f5e7399cd981c8d6987af",
+      "summary": "唯一99a62e4a候选39007300430完整成功，两个ZIP及43e6deb5实际载荷与runner匹配；本机未启动，空根与自定义根原生补测待新窗口。"
+    }
+  ],
+  "completed_at": "2026-10-17T06:09:59.297329+00:00",
+  "revision": 1,
+  "summary": "准入空目录修复候选的同源CI/制品与runner冒烟，保留本机验收及其它原检查缺口。",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "summary_digest": "f23f84ebecb641266432a19eb107251fd8394f68bde16cee506148f5c567bc15",
+  "content_digest": "b2eb729c3faf969b3ba884421c7de806e1fcf0d03527bd22b9e514dc2c69b637"
+}
