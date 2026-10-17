@@ -7,6 +7,8 @@
 //
 // 说明：这是装饰层实现，不采集状态、不推定操作成功。
 
+import { releaseWebglContext } from '@/lib/webglContext'
+
 const VERT = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 
 const NOISE = `
@@ -143,6 +145,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     if (vertex) gl.deleteShader(vertex)
     if (fragment) gl.deleteShader(fragment)
     if (program) gl.deleteProgram(program)
+    releaseWebglContext(canvas, gl)
     canvas.remove()
     return null
   }
@@ -153,6 +156,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     gl.deleteShader(vertex)
     gl.deleteShader(fragment)
     gl.deleteProgram(program)
+    releaseWebglContext(canvas, gl)
     canvas.remove()
     return null
   }
@@ -161,6 +165,12 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   gl.useProgram(program)
 
   const buffer = gl.createBuffer()
+  if (!buffer) {
+    gl.deleteProgram(program)
+    releaseWebglContext(canvas, gl)
+    canvas.remove()
+    return null
+  }
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
   const position = gl.getAttribLocation(program, 'p')
@@ -277,13 +287,13 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
       else stop()
     },
     destroy() {
+      if (destroyed) return
       destroyed = true
       stop()
       observer?.disconnect()
       gl.deleteBuffer(buffer)
       gl.deleteProgram(program)
-      const lose = gl.getExtension('WEBGL_lose_context')
-      lose?.loseContext()
+      releaseWebglContext(canvas, gl)
       canvas.remove()
     },
   }
