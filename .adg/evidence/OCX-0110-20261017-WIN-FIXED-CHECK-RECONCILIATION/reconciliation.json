@@ -1,0 +1,397 @@
+{
+  "observedAtUtc": "2026-10-17T14:50:39.046749+00:00",
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "scope": "existing evidence reconciliation only; concrete claims and remaining items are in README and IMP-20",
+  "taskRequiredChecks": [
+    "review:backup-tree-0110",
+    "review:event-coverage-0110",
+    "review:installer-0110",
+    "review:native-0110",
+    "review:scheduler-performance-0110",
+    "review:scope-0110",
+    "review:storage-0110",
+    "review:updates-0110"
+  ],
+  "references": [
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-BACKUP-PREFLIGHT/foreground-verification.json",
+      "bytes": 1744,
+      "sha256": "7a671f0492d9e2b0d3eb029ee1b0d0183213a131cd3150454fef8894403dc26c"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/archive-complete-verification.json",
+      "bytes": 588,
+      "sha256": "7cd877ea0085805af32a8236127e06b80b66feb9dab8ceb7eab7e63c48d1bf36"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/archive-verification.json",
+      "bytes": 1730,
+      "sha256": "290a9082e509dff0f71dd6a7e195e0684402be08d221f52faf86c9803f1496cd"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-EVENT-RETRY-02/result.json",
+      "bytes": 991,
+      "sha256": "258269f2d23954efc08e32ed01a24a73884f14a2c032ee71db9b69c578b167bb"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261012-WIN-RESTORE-EVENT-SCOPE/archive-verification.json",
+      "bytes": 549,
+      "sha256": "ca6a533c1b3c92bcdc4c4b6bc166944bacd76c25594f5b2cafb2489ca166da88"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261012-WIN-EAE-RESTORE-EVENT/archive-verification.json",
+      "bytes": 566,
+      "sha256": "7dac28674ef0859baeda916746e05fb0faa378eb9bb133d0923c679ba559ab94"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261011-TREE-EVENT-AUDIT/result-summary.json",
+      "bytes": 3513,
+      "sha256": "57cad5e69a526ff38fafdd6bccb2d737895c15526bc2c3fc846fe36b2427dd63"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261011-TREE-EVENT-AUDIT/manifest.json",
+      "bytes": 5329,
+      "sha256": "026698f5013e08c190055e547a2f6593c91945578ec882c413132f6accf78209"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/archive-verification.json",
+      "bytes": 973,
+      "sha256": "a359caf5427330eeff241164062580e41439cf7fd7cf4cbac9c91fd1e0b50f8b"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261012-WIN-REAL-TIMER-BACKOFF/archive-verification.json",
+      "bytes": 723,
+      "sha256": "ab27e2552f6a0429eaaefd5ebccb479b04bf43a76952fd42b43efe972fb948ba"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-TRAY-ADMIN/foreground-resume-verification-20261015.json",
+      "bytes": 953,
+      "sha256": "74d5b00c883e6ebba62c55d9c19fac7385227a26cc8e20ac228fb4e7c5202400"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-CONTINUE/checkpoint-verification.json",
+      "bytes": 1453,
+      "sha256": "a47057f667d92617e57e79808016422732368d9e1ee411dc570aa155f7dbd750"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-CONTINUE/session-analysis.json",
+      "bytes": 1285,
+      "sha256": "5ad68b734e69a2b8e33928db7e805b0ed49896ed3ffd8db761e60605c8380f9f"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-MANUAL-WINDOW/verification.json",
+      "bytes": 1034,
+      "sha256": "0265df09fd076c4dc1bc4d4dbf83ff334d9d078d1ffc0191eb05226c8f34bca4"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261012-WIN-ADMIN-TOKEN/archive-verification.json",
+      "bytes": 362,
+      "sha256": "8a9fe14fdb78ef47c5f2f18931227da95a3a16da196f0333beb1a8077782da32"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261017-WIN-8E-CANDIDATE/verification.json",
+      "bytes": 801,
+      "sha256": "f04d34df0bc9702baed0e3c5b2b94c6f2b0a9ab4759ee3afa5b809414fa2957c"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261017-WIN-8E-NATIVE-CLEAR/verification.json",
+      "bytes": 825,
+      "sha256": "95af22e694a2ef338d2c6cf37bee93213ed52d03fc4800b05287a77328925d51"
+    },
+    {
+      "path": ".adg/evidence/OCX-0110-20261016-WIN-UPDATE-SOURCE-PRECONDITIONS/source-conditions.json",
+      "bytes": 3861,
+      "sha256": "5d67f59b6f50da8a6be3f62f793f782c878e072cb6defcfa836af57507a551a1"
+    }
+  ],
+  "manifestChecks": [
+    {
+      "manifest": {
+        "path": ".adg/evidence/OCX-0110-20261015-WIN-EVENT-RETRY-02/manifest.json",
+        "bytes": 4438,
+        "sha256": "a00ae12163a29a9354286e9f039ebc65f7934ca2bbf53b95cb16e6b1ae5a79a0"
+      },
+      "verifiedListedFiles": 27
+    },
+    {
+      "manifest": {
+        "path": ".adg/evidence/OCX-0110-20261012-WIN-RESTORE-EVENT-SCOPE/manifest.json",
+        "bytes": 2674,
+        "sha256": "e819e312d17a7ada9ea64c3718e017248f167a54e0fcf588d0806388abe83d47"
+      },
+      "verifiedListedFiles": 16
+    },
+    {
+      "manifest": {
+        "path": ".adg/evidence/OCX-0110-20261012-WIN-EAE-RESTORE-EVENT/manifest.json",
+        "bytes": 2653,
+        "sha256": "801afebffd909e9d68d199984e7d40e01099e21d0f21ca4c31ece48c70a82320"
+      },
+      "verifiedListedFiles": 16
+    },
+    {
+      "manifest": {
+        "path": ".adg/evidence/OCX-0110-20261012-WIN-REAL-TIMER-BACKOFF/manifest.json",
+        "bytes": 16533,
+        "sha256": "33ff8c14880dbafeed83a01982d152d2e9e0f1f72c9a048021e8ebd16672e499"
+      },
+      "verifiedListedFiles": 104
+    },
+    {
+      "manifest": {
+        "path": ".adg/evidence/OCX-0110-20261017-WIN-8E-CANDIDATE/manifest.json",
+        "bytes": 3675,
+        "sha256": "43d98e2c34f61b4141e53cfe7b3e339e20de538ce8c8c6ed9d63607855552f9f"
+      },
+      "verifiedListedFiles": 22
+    },
+    {
+      "manifest": {
+        "path": ".adg/evidence/OCX-0110-20261017-WIN-8E-NATIVE-CLEAR/manifest.json",
+        "bytes": 5804,
+        "sha256": "1ce88bb6e62f6c7da4c6e58857df95a5ba32adea4f2cca5e933d44c06702cf06"
+      },
+      "verifiedListedFiles": 35
+    }
+  ],
+  "offlineReplays": [
+    {
+      "method": {
+        "path": ".adg/evidence/OCX-0110-20261015-WIN-BACKUP-PREFLIGHT/verify-foreground-backup.py",
+        "bytes": 20576,
+        "sha256": "d6620d90a35082c549930eafe67e48da47b5bcfe5d00bd58132e0ebe8752b227"
+      },
+      "exitCode": 0,
+      "temporaryByteIdenticalReplay": false,
+      "stdout": "{\"archiveIntegrity\": \"passed\", \"scope\": \"Bounded native backup session only\", \"source\": \"ca26e771b0808b8b1b58c7ffadf5d1bad46189ff\", \"exeSha256\": \"f43e81a9d96f25a29a937a54d2c779ce2459c3ecb30a73b131c57729f70cb929\", \"manifestFiles\": 582, \"snapshots\": 18, \"validPayloadDigestChecks\": 193, \"expectedCorruptPayloadSnapshots\": [{\"phase\": \"corrupt-restore-rejected\", \"backupId\": \"bk_20261015015618_1393e76a\"}, {\"phase\": \"unrelated-success\", \"backupId\": \"bk_20261015015618_1393e76a\"}], \"uiStateArtifacts\": 29, \"ordinaryApplicationTokensVerified\": 2, \"sequentialInstances\": 2, \"nativeInstancesAtFinalCheckpoint\": 0, \"bothObservedExitCodes\": [0, 0], \"darkLightDarkBytesVerified\": true, \"manualCleanupRemoved\": [\"bk_20261015015159_1cc59ec0\", \"bk_20261015015200_df084d8f\"], \"automaticCleanupRemoved\": \"bk_20261015015201_a254f99c\", \"policySaveDeletedNothing\": true, \"pinnedSynthetic90DayBackupRetained\": true, \"unpinRepinPersistedWithoutDeletion\": true, \"corruptRestoreRejectedWithoutOverwrite\": true, \"sameLocalEventResolved\": true, \"unrelatedSuccessDidNotResolve\": true, \"restartPersistenceVerified\": true, \"priorFailedGuardStillActive\": true, \"timestampTypeRegressionChecks\": 10, \"treeKeyboardExpansionAndRefreshObserved\": true, \"treePixelAlignmentMeasured\": false, \"treeRefreshFocusRetentionVerified\": false, \"prototypeCheckboxCoverageVerified\": false, \"physicalDpiVerified\": false, \"managerChannelIsolationVerified\": false, \"realCycleVerified\": false, \"pairedPerformanceVerified\": false, \"installerRetentionVerified\": false, \"fullVersionGatePassed\": false}\r\n",
+      "stderr": ""
+    },
+    {
+      "method": {
+        "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/verify-complete-archive.py",
+        "bytes": 4039,
+        "sha256": "866704f36789ec8cb65b3ca2b4a6fd7c8c43cf41b6bfe350155e561f40b5827f"
+      },
+      "exitCode": 0,
+      "temporaryByteIdenticalReplay": false,
+      "stdout": "{\"archiveIntegrity\": \"passed\", \"scope\": \"Complete raw archive plus unchanged prior UI verification\", \"manifestFiles\": 222, \"source\": \"493da80675e6508e46e0fd83d86ee7216abf96fe\", \"historicalSubsetManifestFiles\": 209, \"historicalManifestAndReportUnchanged\": true, \"nestedMigrationManifestsIncludedDirectly\": 9, \"nestedMigrationManifestsAlsoVerifiedBySnapshots\": true, \"allExistingFilesExceptTwoExactRootOutputsIncluded\": true, \"nativeCountAtHistoricalCheckpoint\": 1, \"restartExitObservedAtHistoricalCheckpoint\": false, \"fullVersionGatePassed\": false}\r\n",
+      "stderr": ""
+    },
+    {
+      "method": {
+        "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-TRAY-ADMIN/verify-resume-checkpoint.py",
+        "bytes": 7310,
+        "sha256": "7505485409e3759a02df0e319d895b85d9d516c7341512a37f65721abb1cf971"
+      },
+      "exitCode": 0,
+      "temporaryByteIdenticalReplay": false,
+      "stdout": "{\"archiveIntegrity\": \"passed\", \"manifestFiles\": 54, \"source\": \"e6a4b32f8b60e362911cc02bc67fc0a2f82e7963\", \"ordinaryUserAssistedTrayReopenVerified\": true, \"ordinaryBackdropRestored\": true, \"ordinaryNormalExitVerified\": true, \"ordinaryExitCode\": 0, \"nativeCountBeforeAdministrator\": 0, \"sameConfiguredSandboxRoot\": true, \"administratorProductRealTokenVerified\": true, \"administratorNativeSingleTitleBarObserved\": true, \"administratorWindowSamples\": 239, \"administratorMaximizeRestoreObserved\": false, \"administratorMinimizeRestoreObserved\": false, \"administratorActiveMicaObserved\": false, \"administratorProductExitedDuringTransitions\": false, \"administratorExitResultOutsideThisCheckpoint\": true, \"trayQuitVerified\": false, \"physicalDpiVerified\": false, \"snapVerified\": false, \"performanceGatePassed\": false, \"fullNativeGatePassed\": false, \"taskOrVersionCompletionClaimed\": false}\r\n",
+      "stderr": ""
+    },
+    {
+      "method": {
+        "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-MANUAL-WINDOW/verify-manual-window.py",
+        "bytes": 8670,
+        "sha256": "725c3e57582d59a97455e284059df2c7c023d1b8807595f937692ba820461fca"
+      },
+      "exitCode": 0,
+      "temporaryByteIdenticalReplay": false,
+      "stdout": "{\r\n  \"archiveIntegrity\": \"passed\",\r\n  \"source\": \"493da80675e6508e46e0fd83d86ee7216abf96fe\",\r\n  \"manifestFiles\": 38,\r\n  \"humanMaximizeMinimizeReportAccepted\": true,\r\n  \"screenshotDimensions\": [\r\n    3437,\r\n    1885\r\n  ],\r\n  \"screenshotSha256\": \"7b296a6ea34320a73984dcdabc87edad8d77d94ed0bbd305424882d192c9144a\",\r\n  \"sameAdministratorProcessAndHwndReadBack\": true,\r\n  \"windowRestoredAtFollowup\": true,\r\n  \"administratorMicaSuccessLogLinesAfterOldSampler\": 5,\r\n  \"administratorInactiveLogLines\": 6,\r\n  \"concurrentForegroundDwmMicaReadbackClaimed\": false,\r\n  \"oldSamplerCheckpointUnchangedAndVerified\": true,\r\n  \"persistentFilesVerified\": 11,\r\n  \"runtimeTimestampOnlyChanges\": [\r\n    \"manager-state/notifications.json\",\r\n    \"manager-state/runtime.json\"\r\n  ],\r\n  \"nativeCountAtFollowup\": 1,\r\n  \"administratorExitObserved\": false,\r\n  \"administratorExitCode\": null,\r\n  \"historicalFailuresCleared\": false,\r\n  \"administratorFullUiGatePassed\": false,\r\n  \"fullVersionGatePassed\": false,\r\n  \"taskClosed\": false,\r\n  \"releaseRequested\": false\r\n}\r\n\r\n",
+      "stderr": ""
+    },
+    {
+      "method": {
+        "path": ".adg/evidence/OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/verify-evidence.py",
+        "bytes": 9808,
+        "sha256": "5739329de0e4e52f4e04910a82c93380bdc444dfe5e3e7a9ed680dff3c01a01c"
+      },
+      "exitCode": 0,
+      "temporaryByteIdenticalReplay": true,
+      "stdout": "{\"archiveIntegrity\": \"passed\", \"files\": 45, \"crossStartupPersistedNextSuccess\": true, \"focusReturnNativeAccepted\": false, \"realFullCycleMatrixAccepted\": false, \"fullNativeAccepted\": false}\r\n",
+      "stderr": ""
+    },
+    {
+      "method": {
+        "path": ".adg/evidence/OCX-0110-20261012-WIN-ADMIN-TOKEN/verify-evidence.py",
+        "bytes": 5037,
+        "sha256": "e3bda7f72fd5a0c2db1ab799963428011a4339ae66fe5e0e122d385d4da58bbb"
+      },
+      "exitCode": 0,
+      "temporaryByteIdenticalReplay": true,
+      "stdout": "{\"archiveIntegrity\": \"passed\", \"files\": 23}\r\n",
+      "stderr": ""
+    }
+  ],
+  "sourceImpact": [
+    {
+      "scope": "backup-tree-ui",
+      "oldSource": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "changedPaths": [],
+      "paths": [
+        {
+          "path": "apps/desktop/ui/src/features/backup",
+          "oldObject": "33d043b60eec40d1a9a0529f5f66208faa5ae994",
+          "currentObject": "33d043b60eec40d1a9a0529f5f66208faa5ae994"
+        },
+        {
+          "path": "apps/desktop/ui/src/components/ui/UiTreeTable.vue",
+          "oldObject": "7bbbf479e61c45d2ea30b082ad80b3db2758bf58",
+          "currentObject": "7bbbf479e61c45d2ea30b082ad80b3db2758bf58"
+        },
+        {
+          "path": "apps/desktop/ui/src/components/ui/treeTable.ts",
+          "oldObject": "6a2f4da13c30ab001a247a0e9cb6fae202e354fa",
+          "currentObject": "6a2f4da13c30ab001a247a0e9cb6fae202e354fa"
+        }
+      ]
+    },
+    {
+      "scope": "backup-safety-policy-browser",
+      "oldSource": "ca26e771b0808b8b1b58c7ffadf5d1bad46189ff",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "changedPaths": [],
+      "paths": [
+        {
+          "path": "apps/desktop/tauri/src/modules/backup/safety.rs",
+          "oldObject": "7c5bba6ddf41676c29c8cf526df4f8600c0ca6a1",
+          "currentObject": "7c5bba6ddf41676c29c8cf526df4f8600c0ca6a1"
+        },
+        {
+          "path": "apps/desktop/tauri/src/modules/backup/policy.rs",
+          "oldObject": "5519881d87b77fd771f73cad90240c7b0f3d6484",
+          "currentObject": "5519881d87b77fd771f73cad90240c7b0f3d6484"
+        },
+        {
+          "path": "apps/desktop/tauri/src/modules/backup/browser.rs",
+          "oldObject": "183b9e336730d695e4aba2fddd8be4312af1858f",
+          "currentObject": "183b9e336730d695e4aba2fddd8be4312af1858f"
+        },
+        {
+          "path": "apps/desktop/tauri/src/commands/backup.rs",
+          "oldObject": "15ddafe8a43b72e269ae0f4af2ae23cd993cafde",
+          "currentObject": "15ddafe8a43b72e269ae0f4af2ae23cd993cafde"
+        }
+      ]
+    },
+    {
+      "scope": "updates-and-notifications",
+      "oldSource": "493da80675e6508e46e0fd83d86ee7216abf96fe",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "changedPaths": [],
+      "paths": [
+        {
+          "path": "apps/desktop/ui/src/features/updates",
+          "oldObject": "a2b0ec799bd68f981e70016bc379b0f7ff36d52e",
+          "currentObject": "a2b0ec799bd68f981e70016bc379b0f7ff36d52e"
+        },
+        {
+          "path": "apps/desktop/ui/src/features/notifications",
+          "oldObject": "558c720341cf02cb6d9d51d03549c3ee373a4fd9",
+          "currentObject": "558c720341cf02cb6d9d51d03549c3ee373a4fd9"
+        },
+        {
+          "path": "apps/desktop/tauri/src/modules/update",
+          "oldObject": "8afc8ff1b33faaa8dc882ccf95b4c92b2ac7c231",
+          "currentObject": "8afc8ff1b33faaa8dc882ccf95b4c92b2ac7c231"
+        },
+        {
+          "path": "apps/desktop/tauri/src/modules/notifications",
+          "oldObject": "5ab525ec7a4ea1a014b605d0678f010393ba821f",
+          "currentObject": "5ab525ec7a4ea1a014b605d0678f010393ba821f"
+        },
+        {
+          "path": "apps/desktop/tauri/src/commands/event_delivery.rs",
+          "oldObject": "7f8e5e838af1b231565a287fb36ee3ec66997b81",
+          "currentObject": "7f8e5e838af1b231565a287fb36ee3ec66997b81"
+        },
+        {
+          "path": "apps/desktop/tauri/config/event-registry.json",
+          "oldObject": "43b0b724107554cc08944f344ae888698d516c5e",
+          "currentObject": "43b0b724107554cc08944f344ae888698d516c5e"
+        }
+      ]
+    },
+    {
+      "scope": "native-window-tray",
+      "oldSource": "e6a4b32f8b60e362911cc02bc67fc0a2f82e7963",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "changedPaths": [],
+      "paths": [
+        {
+          "path": "apps/desktop/tauri/src/modules/tray",
+          "oldObject": "6f61b630b00dab3c151f998bd13a71ce51989946",
+          "currentObject": "6f61b630b00dab3c151f998bd13a71ce51989946"
+        },
+        {
+          "path": "apps/desktop/tauri/src/commands/tray.rs",
+          "oldObject": "30c319090d047f5b8663c5e15394fea031355433",
+          "currentObject": "30c319090d047f5b8663c5e15394fea031355433"
+        },
+        {
+          "path": "apps/desktop/tauri/src/commands/window.rs",
+          "oldObject": "ebe978aa82fbc4639a54be1a554834def4dde1b9",
+          "currentObject": "ebe978aa82fbc4639a54be1a554834def4dde1b9"
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/window_appearance.rs",
+          "oldObject": "600e0cf72cbf1022fd41fc61d733fe94fd714849",
+          "currentObject": "600e0cf72cbf1022fd41fc61d733fe94fd714849"
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/tray_controller.rs",
+          "oldObject": "53715936586556797c84435c6c29e74e5719aa33",
+          "currentObject": "53715936586556797c84435c6c29e74e5719aa33"
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+          "oldObject": "6e03f22d76f67bdf25ede90fa3d09ef6f6935301",
+          "currentObject": "6e03f22d76f67bdf25ede90fa3d09ef6f6935301"
+        }
+      ]
+    },
+    {
+      "scope": "cycle-ui-scheduler",
+      "oldSource": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "changedPaths": [],
+      "paths": [
+        {
+          "path": "apps/desktop/ui/src/features/updates/scheduler.ts",
+          "oldObject": "a754c2933535860b6d21e298d4f319e6db731900",
+          "currentObject": "a754c2933535860b6d21e298d4f319e6db731900"
+        },
+        {
+          "path": "apps/desktop/ui/src/features/updates/useUpdateScheduler.ts",
+          "oldObject": "e480ae798408a6a3ee76263fe7ee893c6bebe539",
+          "currentObject": "e480ae798408a6a3ee76263fe7ee893c6bebe539"
+        }
+      ]
+    },
+    {
+      "scope": "cycle-native-scheduler",
+      "oldSource": "be7395acfce0ec1e36b83300b576db408f8c35bb",
+      "currentSource": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+      "unchanged": [
+        "cadence/startup constants",
+        "Target interval/backoff",
+        "reconcile_clock/plan/reserve/complete"
+      ],
+      "remainingChanges": "bounded storage safety and tests"
+    }
+  ],
+  "protection": {
+    "preferencesSha256": "07fcccd25b7e7dcc6ee6c752092e22659460929d770eef8c28f84bc4eb00bb0d",
+    "startupPointerUtf8Sha256": "f62b7543fbb2b258dcaf15324dae91fea96c83d95c969065bfbf10428ac7012c",
+    "taskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93"
+  },
+  "productsStarted": 0,
+  "foregroundAuthorizationCreated": false,
+  "ciDispatched": false,
+  "storageAlreadyCompleted": true,
+  "cpuRssAccepted": true,
+  "dpiCancelled": true,
+  "fullWindowsGatePassed": false,
+  "taskClosed": false,
+  "releaseAccepted": false
+}

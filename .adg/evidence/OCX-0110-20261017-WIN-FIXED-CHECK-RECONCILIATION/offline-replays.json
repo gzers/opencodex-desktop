@@ -1,0 +1,68 @@
+[
+  {
+    "method": {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-BACKUP-PREFLIGHT/verify-foreground-backup.py",
+      "bytes": 20576,
+      "sha256": "d6620d90a35082c549930eafe67e48da47b5bcfe5d00bd58132e0ebe8752b227"
+    },
+    "exitCode": 0,
+    "temporaryByteIdenticalReplay": false,
+    "stdout": "{\"archiveIntegrity\": \"passed\", \"scope\": \"Bounded native backup session only\", \"source\": \"ca26e771b0808b8b1b58c7ffadf5d1bad46189ff\", \"exeSha256\": \"f43e81a9d96f25a29a937a54d2c779ce2459c3ecb30a73b131c57729f70cb929\", \"manifestFiles\": 582, \"snapshots\": 18, \"validPayloadDigestChecks\": 193, \"expectedCorruptPayloadSnapshots\": [{\"phase\": \"corrupt-restore-rejected\", \"backupId\": \"bk_20261015015618_1393e76a\"}, {\"phase\": \"unrelated-success\", \"backupId\": \"bk_20261015015618_1393e76a\"}], \"uiStateArtifacts\": 29, \"ordinaryApplicationTokensVerified\": 2, \"sequentialInstances\": 2, \"nativeInstancesAtFinalCheckpoint\": 0, \"bothObservedExitCodes\": [0, 0], \"darkLightDarkBytesVerified\": true, \"manualCleanupRemoved\": [\"bk_20261015015159_1cc59ec0\", \"bk_20261015015200_df084d8f\"], \"automaticCleanupRemoved\": \"bk_20261015015201_a254f99c\", \"policySaveDeletedNothing\": true, \"pinnedSynthetic90DayBackupRetained\": true, \"unpinRepinPersistedWithoutDeletion\": true, \"corruptRestoreRejectedWithoutOverwrite\": true, \"sameLocalEventResolved\": true, \"unrelatedSuccessDidNotResolve\": true, \"restartPersistenceVerified\": true, \"priorFailedGuardStillActive\": true, \"timestampTypeRegressionChecks\": 10, \"treeKeyboardExpansionAndRefreshObserved\": true, \"treePixelAlignmentMeasured\": false, \"treeRefreshFocusRetentionVerified\": false, \"prototypeCheckboxCoverageVerified\": false, \"physicalDpiVerified\": false, \"managerChannelIsolationVerified\": false, \"realCycleVerified\": false, \"pairedPerformanceVerified\": false, \"installerRetentionVerified\": false, \"fullVersionGatePassed\": false}\r\n",
+    "stderr": ""
+  },
+  {
+    "method": {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-UPDATES-TREE/verify-complete-archive.py",
+      "bytes": 4039,
+      "sha256": "866704f36789ec8cb65b3ca2b4a6fd7c8c43cf41b6bfe350155e561f40b5827f"
+    },
+    "exitCode": 0,
+    "temporaryByteIdenticalReplay": false,
+    "stdout": "{\"archiveIntegrity\": \"passed\", \"scope\": \"Complete raw archive plus unchanged prior UI verification\", \"manifestFiles\": 222, \"source\": \"493da80675e6508e46e0fd83d86ee7216abf96fe\", \"historicalSubsetManifestFiles\": 209, \"historicalManifestAndReportUnchanged\": true, \"nestedMigrationManifestsIncludedDirectly\": 9, \"nestedMigrationManifestsAlsoVerifiedBySnapshots\": true, \"allExistingFilesExceptTwoExactRootOutputsIncluded\": true, \"nativeCountAtHistoricalCheckpoint\": 1, \"restartExitObservedAtHistoricalCheckpoint\": false, \"fullVersionGatePassed\": false}\r\n",
+    "stderr": ""
+  },
+  {
+    "method": {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-TRAY-ADMIN/verify-resume-checkpoint.py",
+      "bytes": 7310,
+      "sha256": "7505485409e3759a02df0e319d895b85d9d516c7341512a37f65721abb1cf971"
+    },
+    "exitCode": 0,
+    "temporaryByteIdenticalReplay": false,
+    "stdout": "{\"archiveIntegrity\": \"passed\", \"manifestFiles\": 54, \"source\": \"e6a4b32f8b60e362911cc02bc67fc0a2f82e7963\", \"ordinaryUserAssistedTrayReopenVerified\": true, \"ordinaryBackdropRestored\": true, \"ordinaryNormalExitVerified\": true, \"ordinaryExitCode\": 0, \"nativeCountBeforeAdministrator\": 0, \"sameConfiguredSandboxRoot\": true, \"administratorProductRealTokenVerified\": true, \"administratorNativeSingleTitleBarObserved\": true, \"administratorWindowSamples\": 239, \"administratorMaximizeRestoreObserved\": false, \"administratorMinimizeRestoreObserved\": false, \"administratorActiveMicaObserved\": false, \"administratorProductExitedDuringTransitions\": false, \"administratorExitResultOutsideThisCheckpoint\": true, \"trayQuitVerified\": false, \"physicalDpiVerified\": false, \"snapVerified\": false, \"performanceGatePassed\": false, \"fullNativeGatePassed\": false, \"taskOrVersionCompletionClaimed\": false}\r\n",
+    "stderr": ""
+  },
+  {
+    "method": {
+      "path": ".adg/evidence/OCX-0110-20261015-WIN-FG-493-MANUAL-WINDOW/verify-manual-window.py",
+      "bytes": 8670,
+      "sha256": "725c3e57582d59a97455e284059df2c7c023d1b8807595f937692ba820461fca"
+    },
+    "exitCode": 0,
+    "temporaryByteIdenticalReplay": false,
+    "stdout": "{\r\n  \"archiveIntegrity\": \"passed\",\r\n  \"source\": \"493da80675e6508e46e0fd83d86ee7216abf96fe\",\r\n  \"manifestFiles\": 38,\r\n  \"humanMaximizeMinimizeReportAccepted\": true,\r\n  \"screenshotDimensions\": [\r\n    3437,\r\n    1885\r\n  ],\r\n  \"screenshotSha256\": \"7b296a6ea34320a73984dcdabc87edad8d77d94ed0bbd305424882d192c9144a\",\r\n  \"sameAdministratorProcessAndHwndReadBack\": true,\r\n  \"windowRestoredAtFollowup\": true,\r\n  \"administratorMicaSuccessLogLinesAfterOldSampler\": 5,\r\n  \"administratorInactiveLogLines\": 6,\r\n  \"concurrentForegroundDwmMicaReadbackClaimed\": false,\r\n  \"oldSamplerCheckpointUnchangedAndVerified\": true,\r\n  \"persistentFilesVerified\": 11,\r\n  \"runtimeTimestampOnlyChanges\": [\r\n    \"manager-state/notifications.json\",\r\n    \"manager-state/runtime.json\"\r\n  ],\r\n  \"nativeCountAtFollowup\": 1,\r\n  \"administratorExitObserved\": false,\r\n  \"administratorExitCode\": null,\r\n  \"historicalFailuresCleared\": false,\r\n  \"administratorFullUiGatePassed\": false,\r\n  \"fullVersionGatePassed\": false,\r\n  \"taskClosed\": false,\r\n  \"releaseRequested\": false\r\n}\r\n\r\n",
+    "stderr": ""
+  },
+  {
+    "method": {
+      "path": ".adg/evidence/OCX-0110-20261013-WIN-RESTART-DUE-NATIVE/verify-evidence.py",
+      "bytes": 9808,
+      "sha256": "5739329de0e4e52f4e04910a82c93380bdc444dfe5e3e7a9ed680dff3c01a01c"
+    },
+    "exitCode": 0,
+    "temporaryByteIdenticalReplay": true,
+    "stdout": "{\"archiveIntegrity\": \"passed\", \"files\": 45, \"crossStartupPersistedNextSuccess\": true, \"focusReturnNativeAccepted\": false, \"realFullCycleMatrixAccepted\": false, \"fullNativeAccepted\": false}\r\n",
+    "stderr": ""
+  },
+  {
+    "method": {
+      "path": ".adg/evidence/OCX-0110-20261012-WIN-ADMIN-TOKEN/verify-evidence.py",
+      "bytes": 5037,
+      "sha256": "e3bda7f72fd5a0c2db1ab799963428011a4339ae66fe5e0e122d385d4da58bbb"
+    },
+    "exitCode": 0,
+    "temporaryByteIdenticalReplay": true,
+    "stdout": "{\"archiveIntegrity\": \"passed\", \"files\": 23}\r\n",
+    "stderr": ""
+  }
+]
