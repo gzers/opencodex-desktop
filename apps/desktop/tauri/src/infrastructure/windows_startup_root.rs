@@ -518,7 +518,7 @@ mod native {
 
     /// Called only by ocxd's explicit installer command. Retain the same
     /// per-user startup lease until all data and the exact pointer are removed.
-    pub(super) fn remove_for_uninstall() -> AppResult<()> {
+    pub(crate) fn remove_for_uninstall() -> AppResult<()> {
         if crate::modules::test_sandbox::enabled() {
             return Err(failure("installer cleanup is not a sandbox command"));
         }
