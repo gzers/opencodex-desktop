@@ -1,0 +1,40 @@
+{
+  "atUtc": "2026-10-17T03:13:17.2836729+00:00",
+  "cases": [
+    {
+      "entry": "prepare-fixture.ps1",
+      "log": "prepare-missing-human.original.log",
+      "missingHumanReceiptRefused": true,
+      "logSha256": "6f2f292d9fa76bcf49edcf5a161875297188077266b9a53005390db36ad473c7",
+      "exitCode": 1
+    },
+    {
+      "entry": "launch.ps1",
+      "log": "launch-missing-human.original.log",
+      "missingHumanReceiptRefused": true,
+      "logSha256": "6f2f292d9fa76bcf49edcf5a161875297188077266b9a53005390db36ad473c7",
+      "exitCode": 1
+    },
+    {
+      "entry": "observe.ps1",
+      "log": "observe-missing-human.original.log",
+      "missingHumanReceiptRefused": true,
+      "logSha256": "6f2f292d9fa76bcf49edcf5a161875297188077266b9a53005390db36ad473c7",
+      "exitCode": 1
+    },
+    {
+      "entry": "capture-roles.ps1",
+      "log": "roles-missing-human.original.log",
+      "missingHumanReceiptRefused": true,
+      "logSha256": "6f2f292d9fa76bcf49edcf5a161875297188077266b9a53005390db36ad473c7",
+      "exitCode": 1
+    }
+  ],
+  "beforeAfterProtectionEqual": true,
+  "humanReceiptCreated": false,
+  "productStarted": false,
+  "configurationMoved": false,
+  "registryOrAclChanged": false,
+  "nativeCount": 0,
+  "fullNativeGatePassed": false
+}

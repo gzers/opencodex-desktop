@@ -1,0 +1,13 @@
+{
+  "stage": "pre-extraction helper byte check",
+  "initialObservedResult": "AssertionError before extraction child started",
+  "expectedLfSha256": "078cc55a61ad49234c8d83d1562b9d7fb62b95344caa998d9e95370dcfe4ecea",
+  "actualWorkingFileSha256": "b9be0bf3380fadf3c670fd4ef9c45230d4897dea31a8ed2c1ec3df6a3b45efa8",
+  "lfNormalizedWorkingFileSha256": "078cc55a61ad49234c8d83d1562b9d7fb62b95344caa998d9e95370dcfe4ecea",
+  "cause": "Python text output converted LF to CRLF on Windows; normalized script matches prepared identity",
+  "scriptChanged": false,
+  "downloadedArtifactsChanged": false,
+  "installerExecuted": false,
+  "productStarted": false,
+  "extractionStartedBeforeCheck": false
+}

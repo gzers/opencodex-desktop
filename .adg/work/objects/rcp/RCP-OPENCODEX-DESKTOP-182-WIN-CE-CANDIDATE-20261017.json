@@ -1,0 +1,46 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-CE-CANDIDATE-20261017",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-CE-CANDIDATE",
+    ".adg/evidence/OCX-0110-20261017-WIN-CE-FRONT-PREP",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-CE-CANDIDATE-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-ce-exact-candidate",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-CANDIDATE/verification.json"
+    },
+    {
+      "name": "local:windows-ce-rss-pair-preparation",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-CE-FRONT-PREP/verification.json"
+    },
+    {
+      "name": "review:scheduler-performance-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261016-WIN-B4-IDLE-ROLES/original/counter-role-analysis.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "ef7aa2b83a7718d3c8078ef26cea016bb367dfae860a1d405264f15c43fec188",
+      "summary": "ce唯一候选同SHA完整CI/651回归/两ZIP及4fe09bce实际载荷核验；原方法27分钟前台准备就绪，实际RSS收益未测。"
+    }
+  ],
+  "completed_at": "2026-10-17T03:15:27.453614+00:00",
+  "revision": 1,
+  "summary": "产品修复候选核验完成，复用原方法准备受影响RSS对照，不降低10MiB预算或清除旧失败。",
+  "summary_digest": "1a3eaf4e2d6031e5e4602771ee2b341504d1bd517be99e03d25527172ee86a21",
+  "content_digest": "18abc4b160cd95d525081a2c4a4dbfcd06c87de7ea96eb16b8fde2370227f46d"
+}
