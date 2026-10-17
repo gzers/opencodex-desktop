@@ -1,0 +1,40 @@
+{
+  "kind": "RCP",
+  "id": "RCP-OPENCODEX-DESKTOP-182-WIN-UNINSTALL-CANDIDATE-FAILURE-20261017",
+  "result": "failed",
+  "changed_paths": [
+    ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/candidate-failure",
+    ".adg/work/objects/rcp/RCP-OPENCODEX-DESKTOP-182-WIN-UNINSTALL-CANDIDATE-FAILURE-20261017.json",
+    "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md"
+  ],
+  "checks": [
+    {
+      "name": "local:windows-uninstall-single-candidate-failure-evidence",
+      "status": "passed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/candidate-failure/verification.json"
+    },
+    {
+      "name": "review:installer-0110",
+      "status": "failed",
+      "evidence": ".adg/evidence/OCX-0110-20261017-WIN-UNINSTALL-DATA/candidate-failure/candidate-failed-terminal.original.json"
+    }
+  ],
+  "acceptance_results": [],
+  "fact_impacts": [
+    {
+      "target": "imp-20",
+      "path": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+      "after_digest": "0884cdb8dd1004a02e81c9224aae849dcaa2fcc4451b9e46bd7c60a6d95bf6b9",
+      "summary": "唯一1dcc候选39012344655在2秒版本查询成功/非零退出用例失败，安装器和实装清理未执行；封存原日志/诊断ZIP，不重派、不改预算或推断环境原因。"
+    }
+  ],
+  "completed_at": "2026-10-17T07:24:55.061480+00:00",
+  "revision": 1,
+  "summary": "保留清理候选回归失败及真实准入阻塞，不用同SHA完整CI成功或重复构建掩盖。",
+  "task_id": "TASK-OPENCODEX-DESKTOP-182",
+  "task_digest": "23908e0d312409d81886b6f0f570c39581d8f9fc413ac67b0d043102eecfc29c",
+  "task_summary_digest": "299e06b9c8cbfae8af09310811a42a90aaab151617f929e58199754a479a33b1",
+  "baseline_digest": "92b05e94a28d13bb4a79aaab54bd5aa1a11a022ef148ba1ff0b55f1816c40362",
+  "summary_digest": "9b2215f510190a172db41b3ed35a1719b9eb9a08b6ea09262d0a53f33dd35d99",
+  "content_digest": "40af37683b21c54e2ffd835a3341b1dc7fba792ef39d442612f128e7882f47c5"
+}

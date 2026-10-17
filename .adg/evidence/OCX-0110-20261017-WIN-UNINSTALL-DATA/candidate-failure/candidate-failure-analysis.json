@@ -1,0 +1,150 @@
+{
+  "source": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "runId": 39012344655,
+  "jobId": 117337352360,
+  "actualCheckout": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "logSha256": "35763088fe366f2a5c38ec3e8e90df98e4bdf406c44874b3742e1485820e61a1",
+  "logBytes": 212190,
+  "libTestsPassed": 562,
+  "libTestsFailed": 2,
+  "libTestsIgnored": 4,
+  "failures": [
+    "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+    "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output"
+  ],
+  "cases": {
+    "success": {
+      "queryElapsedSeconds": 2.010677,
+      "queryResult": "Timeout",
+      "controlProcessRetainedSnapshots": [
+        {
+          "elapsed_ms": 18,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 8172,
+          "process_times": {
+            "creation_filetime_100ns": 134366948843239911,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2030,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 8172,
+          "process_times": {
+            "creation_filetime_100ns": 134366948843239911,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 781250,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5021,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 8172,
+          "process_times": {
+            "creation_filetime_100ns": 134366948843239911,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 1093750,
+            "user_cpu_100ns": 156250
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "queryReadinessMarkersObserved": false,
+      "controlMarkerObservedAfterOriginalObserverDeadline": true
+    },
+    "nonzero": {
+      "queryElapsedSeconds": 2.003915,
+      "queryResult": "Timeout",
+      "controlProcessRetainedSnapshots": [
+        {
+          "elapsed_ms": 75,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "before-query",
+          "process_id": 4176,
+          "process_times": {
+            "creation_filetime_100ns": 134366948843780025,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 0,
+            "user_cpu_100ns": 0
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 2079,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "query-returned",
+          "process_id": 4176,
+          "process_times": {
+            "creation_filetime_100ns": 134366948843780025,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 781250,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        },
+        {
+          "elapsed_ms": 5076,
+          "exit_code": 259,
+          "exit_error": null,
+          "point": "observer-returned",
+          "process_id": 4176,
+          "process_times": {
+            "creation_filetime_100ns": 134366948843780025,
+            "exit_filetime_100ns": 0,
+            "kernel_cpu_100ns": 937500,
+            "user_cpu_100ns": 312500
+          },
+          "times_error": null,
+          "wait_status": 258
+        }
+      ],
+      "queryReadinessMarkersObserved": false,
+      "controlMarkerObservedAfterOriginalObserverDeadline": true
+    }
+  },
+  "sourceBindings": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "sha256": "802526b02a89a1962658a3302ca91a52c447928974ef19b9383f4bfbaf285306",
+      "bytes": 14484
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_version_source.rs",
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02",
+      "bytes": 6903
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/data_root/uninstall.rs",
+      "sha256": "ad464ba3c5f558b26a5b99613f1fbbc773bf010adf86db5c69a2ed1d55de0b22",
+      "bytes": 13984
+    }
+  ],
+  "sameSourceFullCiRunId": 39011042117,
+  "sameSourceFullCiStillSuccess": true,
+  "installerBuildExecuted": false,
+  "installedCleanupHelperExecuted": false,
+  "candidateAdmitted": false,
+  "rootCauseOrSchedulingIoCausalityProved": false,
+  "originalBd2FailureEvidenceReplaced": false,
+  "testBudgetChanged": false,
+  "candidateRerunRequested": false,
+  "hostProductStarted": false
+}

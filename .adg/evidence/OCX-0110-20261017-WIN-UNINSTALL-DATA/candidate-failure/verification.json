@@ -1,0 +1,26 @@
+{
+  "status": "single-candidate-failed-before-installer-build",
+  "source": "1dccf22ec3b93a0b08115eaf794fb45ec9814d2a",
+  "runId": 39012344655,
+  "jobId": 117337352360,
+  "sameSourceFullCiStillSuccess": true,
+  "libTestsPassed": 562,
+  "libTestsFailed": 2,
+  "libTestsIgnored": 4,
+  "failedVersionQueryCases": [
+    "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+    "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output"
+  ],
+  "queryReadinessMarkersAbsent": true,
+  "rootCauseProved": false,
+  "installerBuilt": false,
+  "installedCleanupHelperTested": false,
+  "diagnosticZipVerified": true,
+  "candidateAdmitted": false,
+  "sameShaRerunRequested": false,
+  "testBudgetChanged": false,
+  "originalBd2FailureReplaced": false,
+  "hostProductOrCleanupStarted": false,
+  "taskClosed": false,
+  "releaseAccepted": false
+}
