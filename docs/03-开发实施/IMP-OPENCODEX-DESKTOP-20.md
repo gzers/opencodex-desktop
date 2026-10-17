@@ -2081,3 +2081,7 @@ fde1dbb5首次push CI38946198178/attempt1整轮success，五必需job原日志ac
 本轮直接修复可复现的生产缺口：能力探测先创建1×1无深度/模板缓冲的上下文，得到结果后主动释放；用WeakSet标记主动销毁的canvas，使全局contextlost/restored监听不将正常销毁判作设备故障，活跃上下文真实故障仍回退CSS；shader/程序/顶点缓冲创建失败也释放上下文，destroy幂等。两项新增回归在旧实现分别复现300×150探针未释放与正常销毁后意外CSS降级，修复后相关25项、完整100文件540项、类型与构建通过。复用既有后台Edge像素对照，四布局×两主题×三个时刻共24组RGBA和合成PNG逐字节相同，着色器、最终分辨率、CSS光层范围及三档策略未改。
 
 产品代码ce670ce7基于ca89，已推送feature/0.1.10-windows-webgl-lifetime并读回；首次CI38995008914正在运行，完整CI和新候选尚未准入。本轮无原生产品启动/配对或官方查询Node/bd2回放。资源释放缺口已修复不等于原+20MiB根因被证明或内存预算通过；完整CI后只构建一个新候选，在新人工窗口测实际收益，再处理本表其它缺口。证据见`.adg/evidence/OCX-0110-20261017-WIN-WEBGL-LIFETIME/`。TASK revision2/in_progress/pending、原失败和禁止合并/关闭/签名/晋升/发布保持。
+
+ce首次CI38995008914现已整轮success，五份必需job原日志actual checkout均ce；前端100/540、Mac35组924/6ignored、Windows35组651/7ignored及最终EXE冒烟通过。仅请求一次候选38996189227/attempt1，package作业117289165536正在运行，query-etw/retention按purpose跳过，尚无候选EXE准入，不重发。新候选与正式019将沿原方法各稳定60秒、完整计数600秒，以原CPU+0.5pp/RSS+10MiB判断；下次约27分钟前台，计数结束立即正常关闭，预留配置恢复余量。本轮仍native0。
+
+同时更正上一段故障表述的强度：真实后台Edge检查中，loseContext后立即移除canvas，target收到一次异步丢失事件，但document捕获为0；canvas仍连接时document捕获为1。因此单元测试“正常销毁误降级”只复现同步模拟事件或仍连接节点的策略风险，不能宣称已证实原生卸载时会意外降级，更不能解释原RSS差值。WeakSet属于防御性修正；探测上下文原来未主动释放是确定的源码缺口，其实际回收幅度仍待候选实测。规范推荐loseContext释放底层图形资源，但未给出本应用RSS保证。该限定、真实事件时序原件和同源完整CI保存于原证据目录的terminal子档；旧阶段快照不改写。

@@ -1,0 +1,103 @@
+{
+  "atUtc": "2026-10-17T02:41:38.568888+00:00",
+  "preparationOnly": true,
+  "candidateSource": "ce670ce76bb1c29f70989ee54838d5b31e97059c",
+  "candidateExeIdentity": "pending candidate success and artifact admission",
+  "baselineSource": "de6862d40389d527527b9db8ef52e186a58b625f",
+  "baselineExecutable": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\software\\acceptance-kit-02a0d4-20261015\\bin\\baseline019\\opencodex-desktop.exe",
+  "baselineExeSha256": "626d63ad6aa15c6ccd2a18eb683b5c3164e57a265da00ee7886d261d28296608",
+  "collectorSource": "f2271f361b9da562b62c71afcdbeb15e61d183e2",
+  "collectorCiRunId": 38834762492,
+  "collectorMethods": {
+    "test/smoke/windows-idle-family.ps1": "e937aaa1f7a572ae382c31916b2718138ee1ea14e16b50e1d93047d1ab41ab66",
+    "test/smoke/windows-idle-observe.ps1": "e0b489cc907d992f82e4f8ef52f2da41943463b7946ae56cf3fd0ebc04a6dfda",
+    "test/smoke/windows-process-token.ps1": "2c3512b4ad51127883a8fee6a37ee53ced616fea286a9825876eec54c7c9feca"
+  },
+  "reuseMethods": {
+    "prepare-fixture.ps1": {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-FRONT-PREP\\prepare-fixture.ps1",
+      "sha256": "29c3c89be1633c2c9e5e171266ab4993e4c1cfa3d9118c939fb36b75693b6758"
+    },
+    "restore-fixture.ps1": {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-FRONT-PREP\\restore-fixture.ps1",
+      "sha256": "b2926776b512451bb82140e9c29db6f3f2e8081a4ed8fc12a09e847df2ba458a"
+    },
+    "observe.ps1": {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-FRONT-PREP\\observe.ps1",
+      "sha256": "332fdc734bc11e190acdcb166dcd33b1e445293e0d480d9a07712f8ff5f67800"
+    },
+    "observe-exit.ps1": {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-FRONT-PREP\\observe-exit.ps1",
+      "sha256": "64889af7078f8cc69585ec23a3fba26a0e95fa00e4b789c94dd7e785cb053b7f"
+    },
+    "retained-process-times.ps1": {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-FRONT-PREP\\retained-process-times.ps1",
+      "sha256": "e556649ffafb211128fa2cda4a02156970b88f65408034be9cf38325be6d3a9e"
+    },
+    "analyze-pair.py": {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.adg\\evidence\\OCX-0110-20261016-WIN-B4-FRONT-PREP\\analyze-pair.py",
+      "sha256": "a1bd209f2f984105668ed4531b485f39d1b3d23c0f7775b523286848f823587d"
+    }
+  },
+  "fixtureSource": "C:\\Users\\15119\\.codex\\worktrees\\0110-windows-gates\\opencodex-desktop\\test\\runtime\\foreground-02-current-20261015\\install-a\\data",
+  "originalProfile": "C:\\Users\\15119\\AppData\\Roaming\\com.gzers.opencodex.desktop",
+  "originalProfileId": "0ebd4e59-001000000005cf4b",
+  "originalProfileCreationFileTime": "134366003622018367",
+  "freshDirectHumanSignalRequired": true,
+  "maximumWindowMinutes": 30,
+  "estimatedForegroundMinutes": 27,
+  "plannedOrder": [
+    "formal019",
+    "new-ce670-candidate"
+  ],
+  "settleRealSecondsPerVersion": 60,
+  "minimumCounterSpanPerVersionSeconds": 600,
+  "clientWidth": 2360,
+  "clientHeight": 1520,
+  "theme": "light",
+  "visualEffects": "high",
+  "glowRender": "mesh",
+  "interfaceScale": 100,
+  "budgets": {
+    "cpuIncreasePercentagePoints": 0.5,
+    "rssIncreaseMiB": 10
+  },
+  "maximumNativeInstances": 1,
+  "normalCloseTargetMinutesFromStart": 25,
+  "latestBeginCandidateCounterRemainingSeconds": 750,
+  "stages": [
+    {
+      "windowMinutes": "0-1",
+      "action": "Verify exact approved identities and existing profile; preserve original profile and clone existing common fixture; launch baseline and retain exit observer."
+    },
+    {
+      "windowMinutes": "1-12",
+      "action": "Observe actual baseline scene after >=60 real seconds, then collect original complete >=600-second counter span."
+    },
+    {
+      "windowMinutes": "12-13",
+      "action": "Normal baseline close; verify retained-handle exit0 and native0, launch candidate with its own retained exit observer."
+    },
+    {
+      "windowMinutes": "13-24",
+      "action": "Observe same candidate scene after >=60 real seconds, collect original complete >=600-second counter span; never start if insufficient closing margin remains."
+    },
+    {
+      "windowMinutes": "24-27",
+      "action": "Normal candidate close while human window remains; verify exact exit0/native0 and restore original profile, preserving measured clone."
+    }
+  ],
+  "originalPairOrCountersOverwritten": false,
+  "priorSamplesSpliced": false,
+  "oldUnmodifiedB4PairRepeated": false,
+  "officialBd2LibraryOrQueryNodeReplayPlanned": false,
+  "etwDuringCounterSpanPlanned": false,
+  "dpiSpecialAcceptancePlanned": false,
+  "measurementStarted": false,
+  "humanReceiptCreated": false,
+  "candidateLaunched": false,
+  "normalCloseIsToolInputAndRequiresLiveHumanWindow": true,
+  "counterThresholdsChanged": false,
+  "newPerformanceAcceptanceMetricAdded": false,
+  "insufficientWindowAction": "Do not start a partial pair or shorten either 600-second span; preserve state and arrange a new human slot."
+}
