@@ -21,5 +21,6 @@ export function installModelFixtures() {
   modelApi.latestPolicy=async()=>null
   modelTransferApi.loadRemoteScope=async()=>({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
   importedConnectionApi.list=async()=>({baseline:'explicit-visual-fixture',items:[]})
+  modelTransferApi.extensionCatalog=async()=>({skills:['fixture-review-skill'],mcps:['fixture-review-mcp']})
   const store=useModelsStore();store.snapshot=structuredClone(snapshot);store.restoreChannels()
 }

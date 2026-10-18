@@ -7,14 +7,14 @@ import { modelTransferApi, scopeFor, type ModelPackage } from '@/features/sync/m
 import { useModelsStore } from '@/features/models/store'
 import { emptyContent, type ModelSnapshot } from '@/features/models/api'
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn().mockResolvedValue('/fixture/models.json') }))
-vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn()} }))
+vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),extensionCatalog:vi.fn()} }))
 function snapshot(): ModelSnapshot {
   return { library:{schemaVersion:1,templates:[{id:'family',label:'测试族',source:'user',defaultRevision:null,revisions:[{id:'revision-1',createdAt:'2026-10-18T00:00:00Z',savedLabel:'测试族',content:emptyContent(),digest:'digest',baseRevision:null,changes:[]}]}]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' }
 }
 const pack = (): ModelPackage => ({format:'OCXD_MODEL_CONFIG',formatVersion:1,schemaVersion:1,createdAt:'2026-10-18T00:00:00Z',digest:'frozen-digest',payload:{templates:snapshot().library.templates,policy:null}})
 const dialog = defineComponent({ props:['open'], template:'<section v-if="open"><slot/><slot name="actions"/></section>' })
 function render(remote = false) { return mount(ModelTransfer, {props:{remote},global:{stubs:{UiDialog:dialog,UiSelectField:true}}}) }
-beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
+beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
   it('exports the reviewed frozen plan instead of rebuilding from later editor content', async () => {
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'frozen-plan',package:pack()})
@@ -99,5 +99,17 @@ describe('model transfer review', () => {
   it('restores the persisted upload and queries its original publication instead of preparing another plan',async()=>{
     vi.mocked(modelTransferApi.latestUpload).mockResolvedValue({id:'original-remote-plan',phase:'publishing',package:pack()});vi.mocked(modelTransferApi.publish).mockResolvedValue({id:'original-remote-plan',phase:'published',package:pack()})
     const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='查看原上传计划')!.trigger('click');await flushPromises();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();await wrapper.findAll('button').find(b=>b.text()==='核对原上传')!.trigger('click');await flushPromises();expect(modelTransferApi.publish).toHaveBeenCalledExactlyOnceWith('original-remote-plan');expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();wrapper.unmount()
+  })
+  it('requires review of chosen custom assets and freezes their separate credential choice into the file plan',async()=>{
+    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'asset-file',package:pack(),protected:false,credentialCount:0,assets:{skills:[{name:'fixture-skill',digest:'skill-digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[]}})
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');const labels=()=>wrapper.findAll('label');await labels().find(label=>label.text()==='Skill · fixture-skill')!.get('input').setValue(true)
+    expect(wrapper.findAll('button').find(b=>b.text()==='预览清单')!.attributes('disabled')).toBeDefined();await labels().find(label=>label.text().startsWith('已检查所选Skill'))!.get('input').setValue(true);await wrapper.findAll('button').find(b=>b.text()==='预览清单')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({skillNames:['fixture-skill'],mcpNames:[],extensionCredentials:false,assetsReviewed:true}));expect(wrapper.text()).toContain('2 文件');expect(modelTransferApi.export).not.toHaveBeenCalled();wrapper.unmount()
+  })
+  it('keeps the temporary file password for an encrypted Skill even when no credential was included',async()=>{
+    const original={id:'asset-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],protected:true,assets:{skills:[{name:'fixture-skill',digest:'digest',files:2,bytes:100,warnings:[],protected:false}],mcps:[]}}
+    vi.mocked(modelTransferApi.receive).mockRejectedValueOnce({code:'passphrase_required'}).mockResolvedValue(original);vi.mocked(modelTransferApi.accept).mockResolvedValue(snapshot())
+    const wrapper=render();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await flushPromises();await wrapper.get('input[type=password]').setValue('fixture-assets-password');await wrapper.findAll('button').find(b=>b.text()==='解密并比较')!.trigger('click');await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='采用到本机')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.accept).toHaveBeenCalledExactlyOnceWith('asset-incoming',{adoptKeys:false,passphrase:'fixture-assets-password'});wrapper.unmount()
   })
 })

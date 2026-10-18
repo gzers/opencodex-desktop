@@ -1,29 +1,32 @@
 import { invoke } from '@tauri-apps/api/core'
 import type { ChannelPolicy, ModelSnapshot, Template, TemplateRef } from '@/features/models/api'
 export interface TransferScope { includePolicy: boolean; channelIds: string[]; templateRefs: TemplateRef[]; includeGlobal: boolean }
-export interface ManagerScope {preferences:boolean;extensions:boolean;webdav:boolean;webdavPasswords:boolean}
+export interface ManagerScope {preferences:boolean;extensions:boolean;webdav:boolean;webdavPasswords:boolean;skillNames?:string[];mcpNames?:string[];extensionCredentials?:boolean;assetsReviewed?:boolean}
+export interface AssetSummary {skills:{name:string;digest:string;files:number;bytes:number;warnings:string[];protected:boolean}[];mcps:{name:string;digest:string;secretFields:string[];warnings:string[]}[]}
 export interface PortableEndpoint {id:string;url:string;remotePath:string;username:string;conflictPolicy:string}
 export interface ManagerSettings {preferences:Record<string,unknown>|null;extensions:{skills:string[];servers:string[];sync_method:string}|null;webdav:PortableEndpoint[]}
 export interface ModelPackage { format: string; formatVersion: number; schemaVersion: number; createdAt: string; digest: string; payload: { templates: Template[]; policy: { templateRefs: TemplateRef[] | null; channelOrder: string[] | null; channels: Pick<ChannelPolicy, 'id' | 'label' | 'selection'>[] } | null } }
-export interface FilePlan { id: string; package: ModelPackage;protected?:boolean;fileDigest?:string;credentialCount?:number;manager?:ManagerSettings|null }
+export interface FilePlan { id: string; package: ModelPackage;protected?:boolean;fileDigest?:string;credentialCount?:number;manager?:ManagerSettings|null;assets?:AssetSummary|null }
 export interface UploadPlan extends FilePlan { phase: string }
-export interface IncomingPlan extends FilePlan { expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];adoption?:{keys:boolean;webdav:boolean;completed:boolean}|null }
-export interface ReceiveScope {templateRefs:TemplateRef[];channelIds:string[];includeGlobal:boolean;preferences?:boolean;extensions?:boolean;endpointIds?:string[]}
-export interface RemoteScope {templateIds:string[];channelIds:string[];includeGlobal:boolean;preferences:boolean;extensions:boolean;includeKeys:boolean}
-export function remoteScope(scope:TransferScope,options?:{preferences:boolean;extensions:boolean;includeKeys:boolean}):RemoteScope{return {templateIds:[...new Set(scope.templateRefs.map(reference=>reference.templateId))],channelIds:scope.channelIds,includeGlobal:scope.includeGlobal,preferences:options?.preferences??true,extensions:options?.extensions??true,includeKeys:options?.includeKeys??false}}
+export interface IncomingPlan extends FilePlan { expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];availableExtensionCredentials?:boolean;adoption?:{keys:boolean;webdav:boolean;completed:boolean;extensionCredentials?:boolean}|null }
+export interface ReceiveScope {templateRefs:TemplateRef[];channelIds:string[];includeGlobal:boolean;preferences?:boolean;extensions?:boolean;endpointIds?:string[];skillNames?:string[];mcpNames?:string[]}
+export interface RemoteScope {templateIds:string[];channelIds:string[];includeGlobal:boolean;preferences:boolean;extensions:boolean;includeKeys:boolean;skillNames?:string[];mcpNames?:string[];extensionCredentials?:boolean;assetsReviewed?:boolean;allTemplates?:boolean;allChannels?:boolean;allSkills?:boolean;allMcps?:boolean}
+export interface RemoteOptions {preferences:boolean;extensions:boolean;includeKeys:boolean;skillNames?:string[];mcpNames?:string[];extensionCredentials?:boolean;assetsReviewed?:boolean;allTemplates?:boolean;allChannels?:boolean;allSkills?:boolean;allMcps?:boolean;passphrase?:string}
+export function remoteScope(scope:TransferScope,options?:RemoteOptions):RemoteScope{return {templateIds:[...new Set(scope.templateRefs.map(reference=>reference.templateId))],channelIds:scope.channelIds,includeGlobal:scope.includeGlobal,preferences:options?.preferences??true,extensions:options?.extensions??true,includeKeys:options?.includeKeys??false,...(options?.skillNames?{skillNames:options.skillNames}:{}),...(options?.mcpNames?{mcpNames:options.mcpNames}:{}),...(options?.extensionCredentials!==undefined?{extensionCredentials:options.extensionCredentials,assetsReviewed:options.assetsReviewed}:{}),...(options?.allTemplates!==undefined?{allTemplates:options.allTemplates,allChannels:options.allChannels,allSkills:options.allSkills,allMcps:options.allMcps}:{})}}
 export interface ExportedModels { path: string; digest: string; templates: number; channels: number }
 export const modelTransferApi = {
   prepare: (scope: TransferScope,passphrase?:string,includeKeys=false,managerScope?:ManagerScope) => invoke<FilePlan>('model_transfer_prepare', { scope,passphrase:passphrase??null,includeKeys,managerScope:managerScope??null }),
   export: (planId: string) => invoke<ExportedModels>('model_transfer_export', { planId }),
   receive: (path: string,passphrase?:string) => invoke<IncomingPlan>('model_transfer_receive', { path,passphrase:passphrase??null }),
-  accept: (incomingId: string,options?:{adoptKeys:boolean;adoptWebdavPasswords?:boolean;passphrase?:string}) => invoke<ModelSnapshot>('model_transfer_accept', { incomingId,adoptKeys:options?.adoptKeys??false,passphrase:options?.passphrase??null,adoptWebdavPasswords:options?.adoptWebdavPasswords??false }),
-  select:(incomingId:string,scope:ReceiveScope)=>invoke<IncomingPlan>('model_transfer_select',{incomingId,scope}),
+  accept: (incomingId: string,options?:{adoptKeys:boolean;adoptWebdavPasswords?:boolean;adoptExtensionCredentials?:boolean;passphrase?:string}) => invoke<ModelSnapshot>('model_transfer_accept', { incomingId,adoptKeys:options?.adoptKeys??false,passphrase:options?.passphrase??null,adoptWebdavPasswords:options?.adoptWebdavPasswords??false,adoptExtensionCredentials:options?.adoptExtensionCredentials??false }),
+  select:(incomingId:string,scope:ReceiveScope,passphrase?:string)=>invoke<IncomingPlan>('model_transfer_select',{incomingId,scope,passphrase:passphrase??null}),
+  extensionCatalog:()=>invoke<{skills:string[];mcps:string[]}>('portable_extension_catalog'),
   latestIncoming:()=>invoke<IncomingPlan|null>('portable_latest_incoming'),
   recompare:(incomingId:string,passphrase?:string)=>invoke<IncomingPlan>('portable_recompare',{incomingId,passphrase:passphrase??null}),
   openReceived:(incomingId:string,passphrase?:string)=>invoke<IncomingPlan>('portable_open_received',{incomingId,passphrase:passphrase??null}),
   loadRemoteScope:()=>invoke<RemoteScope>('config_sync_scope'),
   saveRemoteScope:(scope:RemoteScope)=>invoke<RemoteScope>('config_sync_save_scope',{scope}),
-  prepareUpload: (scope: TransferScope,options?:{preferences:boolean;extensions:boolean;includeKeys:boolean;passphrase?:string}) => invoke<UploadPlan>('config_sync_prepare', { scope:remoteScope(scope,options),passphrase:options?.passphrase??null }),
+  prepareUpload: (scope: TransferScope,options?:RemoteOptions) => invoke<UploadPlan>('config_sync_prepare', { scope:remoteScope(scope,options),passphrase:options?.passphrase??null }),
   publish: (planId: string) => invoke<UploadPlan>('config_sync_publish', { planId }),
   download: (passphrase?:string) => invoke<IncomingPlan>('config_sync_download',{passphrase:passphrase??null}),
   latestUpload:()=>invoke<UploadPlan|null>('config_sync_latest_upload'),
