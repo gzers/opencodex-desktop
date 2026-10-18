@@ -13,6 +13,7 @@ pub mod instance;
 pub mod ipc;
 pub mod logs;
 pub mod migration;
+pub mod model_config;
 pub mod network_defaults;
 pub mod notifications;
 pub mod preferences;

@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import AppTopbar from '@/components/AppTopbar.vue'
+import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
@@ -1069,9 +1070,9 @@ function restoreGeneralDefaults() {
   <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active">
     <AppTopbar />
-    <div class="settings-tabs" role="tablist">
+    <StickyTabs><div class="settings-tabs" role="tablist">
       <button v-for="item in settingsSections" :key="item" :class="{ active: section === item }" @click="routes.go('settings', { section: item })">{{ sectionLabels[item] }}</button>
-    </div>
+    </div></StickyTabs>
 
     <section v-if="section === 'general'" class="settings-panel active">
       <UiCard>

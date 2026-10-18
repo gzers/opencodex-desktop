@@ -518,6 +518,11 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::model_config::model_config_snapshot,
+            commands::model_config::model_template_save,
+            commands::model_config::model_template_set_default,
+            commands::model_config::model_template_delete,
+            commands::model_config::model_match_preview,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,

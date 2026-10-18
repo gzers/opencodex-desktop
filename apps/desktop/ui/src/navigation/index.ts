@@ -12,6 +12,7 @@ export interface RouteMeta {
 export const ROUTE_NAMES: readonly RouteName[] = [
   'overview',
   'panel',
+  'models',
   'extensions',
   'logs',
   'settings',
@@ -19,6 +20,7 @@ export const ROUTE_NAMES: readonly RouteName[] = [
 ]
 
 export const routeMetadata: Record<RouteName, RouteMeta> = {
+  models: { title: '模型配置', subtitle: '管理渠道模型、模版与选择器顺序。' },
   overview: { title: '概览', subtitle: '运行状态与常用操作；环境明细收进运行详情。' },
   panel: { title: '面板', subtitle: '窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。' },
   extensions: { title: '扩展管理', subtitle: '集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。' },

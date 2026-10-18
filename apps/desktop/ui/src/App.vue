@@ -9,6 +9,7 @@ import OverviewRoute from '@/routes/OverviewRoute.vue'
 import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
 import LogsRoute from '@/routes/LogsRoute.vue'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
+import ModelsRoute from '@/routes/ModelsRoute.vue'
 import TrayRoute from '@/routes/TrayRoute.vue'
 import AppModal from '@/components/AppModal.vue'
 import ToastHost from '@/components/ToastHost.vue'
@@ -43,6 +44,7 @@ const component = computed(() => {
     case 'extensions': return ExtensionsRoute
     case 'logs': return LogsRoute
     case 'settings': return SettingsRoute
+    case 'models': return ModelsRoute
     default: return undefined
   }
 })

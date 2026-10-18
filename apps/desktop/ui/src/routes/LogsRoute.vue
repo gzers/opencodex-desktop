@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
+import StickyTabs from '@/components/layout/StickyTabs.vue'
 import NotificationItem from '@/features/notifications/components/NotificationItem.vue'
 import { useAppController } from '@/composables/useAppController'
 import { useAppStore } from '@/stores/app'
@@ -100,11 +101,11 @@ function openClearReadNotificationsModal() {
 <template>
   <section class="route-section active">
     <AppTopbar />
-    <div class="diag-tabs" role="tablist">
+    <StickyTabs><div class="diag-tabs" role="tablist">
       <button :class="{ active: routes.diagnosticsTab === 'doctor' }" @click="routes.go('logs', { tab: 'doctor' })">环境诊断</button>
       <button :class="{ active: routes.diagnosticsTab === 'logs' }" @click="routes.go('logs', { tab: 'logs' })">日志历史</button>
       <button :class="{ active: routes.diagnosticsTab === 'notifications' }" @click="routes.go('logs', { tab: 'notifications' })">通知历史</button>
-    </div>
+    </div></StickyTabs>
     <article class="card">
       <div v-if="routes.diagnosticsTab === 'doctor'" class="diag-view active">
         <div class="card-head">

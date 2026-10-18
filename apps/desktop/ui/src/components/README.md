@@ -33,4 +33,14 @@
 
 开发态预览：`gallery.html`（Vite dev 下 `/gallery.html`），直接引用生产组件；正式构建只打包 `index.html`，不含该页。
 
+## 0.2.0模型切片新增接入
+
+| 专题稳定ID | 正式实现 | 当前消费者与边界 |
+| --- | --- | --- |
+| choice.select | ui/UiSelectField + 既有UiSelectMenu | 模版版本/规则字段及gallery；modelValue/options/label/disabled与sm/md，复用菜单定位与键盘，不自动保存 |
+| overlay.dialog | ui/UiDialog | 模版版本管理/匹配预览及gallery；原生dialog焦点约束、Escape/遮罩、busy防止误关，表单数据由feature拥有 |
+| navigation.tabs / navigation.anchor | layout/StickyTabs | 模型/设置/扩展/诊断主Tab及gallery；容器sticky、ResizeObserver量高，详情/锚点消费--page-tabs-height；不接概览/面板 |
+
+尺寸、材质、语义层级沿styles与既有专题；新增组件不读store/IPC，ModelRuleFields保留业务feature职责。实现/单元检查不等于完整实屏指标通过，后续模型选择器及消费者迁移继续登记。
+
 后续（阶段 C 续）：`UiCardBody/UiCardFooter`（现有实现无 `.card-body`/`.card-footer`，需先形成视觉/结构决定，见 IMP-04 §7.5）、`patterns/InlineNotice`（当前无 `.notice` 消费者，待出现真实使用再提取）、组件规则检查（限制组件内新增颜色/字号/字重/层级）。

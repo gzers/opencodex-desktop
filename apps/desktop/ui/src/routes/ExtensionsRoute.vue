@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
+import StickyTabs from '@/components/layout/StickyTabs.vue'
 import ExtensionDetailModal from '@/features/extensions/components/ExtensionDetailModal.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
@@ -551,10 +552,10 @@ onUpdated(markClampedDescriptions)
 <template>
   <section class="route-section active">
     <AppTopbar />
-    <div class="ext-tabs" role="tablist">
+    <StickyTabs><div class="ext-tabs" role="tablist">
       <button :class="{ active: tab === 'skills' }" @click="routes.go('extensions', { tab: 'skills' })">Skills</button>
       <button :class="{ active: tab === 'mcp' }" @click="routes.go('extensions', { tab: 'mcp' })">MCP</button>
-    </div>
+    </div></StickyTabs>
 
     <div v-if="tab === 'skills'" class="ext-view active">
       <UiCard>
