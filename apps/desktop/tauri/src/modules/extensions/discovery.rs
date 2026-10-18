@@ -131,7 +131,28 @@ pub fn discover(
     // 源目录优先，管理器写入区作为补充（导入 / 恢复的 Skill 只存在于数据根内）。
     let store_dir = skills_store_dir(data_root);
     let skills = discover_skills(source_dir, &store_dir, targets)?;
-    let servers = discover_servers(targets)?;
+    let mut servers = discover_servers(targets)?;
+    for definition in crate::modules::sync::portable_assets::stored_public(data_root)
+        .map_err(|_| DiscoveryError::FileSystem)?
+    {
+        if servers.iter().any(|server| server.name == definition.name) {
+            continue;
+        }
+        let root = serde_json::json!({"mcpServers":{definition.name.clone():definition.value}});
+        for entry in extract_server_entries(&root, "mcpServers") {
+            servers.push(DiscoveredServer {
+                id: entry.name.clone(),
+                name: entry.name,
+                transport: entry.transport,
+                command: entry.command,
+                args: entry.args,
+                env_keys: entry.env_keys,
+                description: entry.description,
+                clients: vec![],
+                updated_at: None,
+            });
+        }
+    }
     Ok(ExtensionDiscovery { skills, servers })
 }
 

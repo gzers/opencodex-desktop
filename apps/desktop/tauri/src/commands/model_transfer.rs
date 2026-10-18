@@ -91,14 +91,17 @@ pub async fn config_sync_prepare(
     scope: config_remote::Scope,
     passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<config_remote::UploadView> {
     let root = data_root.0.clone();
+    let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let password = passphrase.map(zeroize::Zeroizing::new);
         remote_operation(&root, |transport, config, binding, unchanged| {
-            let scope = config_remote::save_scope(&root, scope)?;
+            let mut scope = config_remote::save_scope(&root, scope)?;
+            scope.local_home = Some(local_home);
             tauri::async_runtime::block_on(config_remote::prepare(
                 &root,
                 transport,
@@ -137,8 +140,10 @@ pub async fn config_sync_publish(
 pub async fn config_sync_download(
     passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<IncomingPlan> {
     let root = data_root.0.clone();
+    let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
@@ -149,11 +154,12 @@ pub async fn config_sync_download(
             true,
             || {
                 remote_operation(&root, |transport, config, _, unchanged| {
-                    tauri::async_runtime::block_on(config_remote::download(
+                    tauri::async_runtime::block_on(config_remote::download_context(
                         &root,
                         transport,
                         config,
                         password.as_deref().map(|p| p.as_str()),
+                        Some(&local_home),
                         unchanged,
                     ))
                 })
@@ -226,18 +232,22 @@ pub async fn model_transfer_prepare(
     include_keys: Option<bool>,
     manager_scope: Option<crate::modules::sync::portable_manager::Scope>,
     data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<FileExportPlan> {
     let root = data_root.0.clone();
+    let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        let mut manager_scope = manager_scope.unwrap_or_default();
+        manager_scope.local_home = Some(local_home);
         transfer::prepare_file_scope(
             &root,
             scope,
             passphrase.as_deref().map(|p| p.as_str()),
             include_keys.unwrap_or(false),
-            &manager_scope.unwrap_or_default(),
+            &manager_scope,
         )
     })
     .await
@@ -248,8 +258,10 @@ pub async fn model_transfer_receive(
     path: String,
     passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<IncomingPlan> {
     let root = data_root.0.clone();
+    let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
@@ -264,10 +276,11 @@ pub async fn model_transfer_receive(
                 }
                 let bytes = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
                 let passphrase = passphrase.map(zeroize::Zeroizing::new);
-                crate::modules::model_config::file_objects::receive(
+                crate::modules::model_config::file_objects::receive_context(
                     &root,
                     &bytes,
                     passphrase.as_deref().map(|p| p.as_str()),
+                    Some(&local_home),
                 )
             },
         )
@@ -281,6 +294,7 @@ pub async fn model_transfer_accept(
     adopt_keys: Option<bool>,
     passphrase: Option<String>,
     adopt_webdav_passwords: Option<bool>,
+    adopt_extension_credentials: Option<bool>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<Snapshot> {
     let root = data_root.0.clone();
@@ -289,11 +303,12 @@ pub async fn model_transfer_accept(
         let _admission = admission;
         crate::modules::model_config::feedback::transfer(&root, &incoming_id, false, || {
             let passphrase = passphrase.map(zeroize::Zeroizing::new);
-            crate::modules::model_config::file_objects::accept_manager(
+            crate::modules::model_config::file_objects::accept_extended(
                 &root,
                 &incoming_id,
                 adopt_keys.unwrap_or(false),
                 adopt_webdav_passwords.unwrap_or(false),
+                adopt_extension_credentials.unwrap_or(false),
                 passphrase.as_deref().map(|p| p.as_str()),
             )
         })
@@ -305,13 +320,20 @@ pub async fn model_transfer_accept(
 pub async fn model_transfer_select(
     incoming_id: String,
     scope: crate::modules::model_config::transfer::ReceiveScope,
+    passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<IncomingPlan> {
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        transfer::select_received(&root, &incoming_id, scope)
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        transfer::select_received_context(
+            &root,
+            &incoming_id,
+            scope,
+            passphrase.as_deref().map(|p| p.as_str()),
+        )
     })
     .await
     .map_err(|_| invalid("transfer_worker", "接收范围比较中断，配置未采用"))?
@@ -368,4 +390,17 @@ pub async fn portable_open_received(
     })
     .await
     .map_err(|_| invalid("transfer_worker", "原文件核对中断，未采用"))?
+}
+#[tauri::command]
+pub async fn portable_extension_catalog(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    home: tauri::State<'_, crate::state::SharedHomeDir>,
+) -> ModelResult<crate::modules::sync::portable_assets::Catalog> {
+    let root = data_root.0.clone();
+    let home = home.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::sync::portable_assets::catalog(&root, &home)
+    })
+    .await
+    .map_err(|_| invalid("asset_discovery", "扩展资源列表读取中断"))?
 }

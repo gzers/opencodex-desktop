@@ -27,6 +27,16 @@ pub struct Scope {
     pub extensions: bool,
     pub webdav: bool,
     pub webdav_passwords: bool,
+    #[serde(default)]
+    pub skill_names: Vec<String>,
+    #[serde(default)]
+    pub mcp_names: Vec<String>,
+    #[serde(default)]
+    pub extension_credentials: bool,
+    #[serde(default)]
+    pub assets_reviewed: bool,
+    #[serde(skip)]
+    pub local_home: Option<PathBuf>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]

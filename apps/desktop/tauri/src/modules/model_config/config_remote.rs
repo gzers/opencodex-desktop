@@ -35,6 +35,24 @@ pub struct Scope {
     pub preferences: bool,
     pub extensions: bool,
     pub include_keys: bool,
+    #[serde(default)]
+    pub skill_names: Vec<String>,
+    #[serde(default)]
+    pub mcp_names: Vec<String>,
+    #[serde(default)]
+    pub extension_credentials: bool,
+    #[serde(default, skip_serializing)]
+    pub assets_reviewed: bool,
+    #[serde(default)]
+    pub all_templates: bool,
+    #[serde(default)]
+    pub all_channels: bool,
+    #[serde(default)]
+    pub all_skills: bool,
+    #[serde(default)]
+    pub all_mcps: bool,
+    #[serde(skip)]
+    pub local_home: Option<PathBuf>,
 }
 impl Default for Scope {
     fn default() -> Self {
@@ -45,6 +63,15 @@ impl Default for Scope {
             preferences: true,
             extensions: true,
             include_keys: false,
+            skill_names: vec![],
+            mcp_names: vec![],
+            extension_credentials: false,
+            assets_reviewed: false,
+            all_templates: false,
+            all_channels: false,
+            all_skills: false,
+            all_mcps: false,
+            local_home: None,
         }
     }
 }
@@ -60,7 +87,7 @@ impl Scope {
         for id in self.template_ids.iter().chain(&self.channel_ids) {
             require_uuid(id)?;
         }
-        if self.include_keys && self.channel_ids.is_empty() {
+        if self.include_keys && self.channel_ids.is_empty() && !self.all_channels {
             return Err(invalid("sync_scope", "携带Key前请选择渠道"));
         }
         if self.template_ids.is_empty()
@@ -68,8 +95,24 @@ impl Scope {
             && !self.include_global
             && !self.preferences
             && !self.extensions
+            && self.skill_names.is_empty()
+            && self.mcp_names.is_empty()
+            && !self.all_templates
+            && !self.all_channels
+            && !self.all_skills
+            && !self.all_mcps
         {
             return Err(invalid("sync_scope", "请选择至少一个参与同步的类别"));
+        }
+        if self.skill_names.len() > 500
+            || self.mcp_names.len() > 1000
+            || self
+                .skill_names
+                .iter()
+                .chain(&self.mcp_names)
+                .any(|name| !crate::modules::extensions::discovery::is_safe_skill_name(name))
+        {
+            return Err(invalid("sync_scope", "扩展范围名称或数量无效"));
         }
         Ok(())
     }
@@ -79,12 +122,27 @@ impl Scope {
             extensions: self.extensions,
             webdav: false,
             webdav_passwords: false,
+            skill_names: self.skill_names.clone(),
+            mcp_names: self.mcp_names.clone(),
+            extension_credentials: self.extension_credentials,
+            assets_reviewed: self.assets_reviewed,
+            local_home: self.local_home.clone(),
         }
     }
     fn export(&self, root: &Path) -> ModelResult<ExportScope> {
         let snapshot = ModelStore::new(root).load()?;
         let mut refs = vec![];
-        for id in &self.template_ids {
+        let template_ids = if self.all_templates {
+            snapshot
+                .library
+                .templates
+                .iter()
+                .map(|template| template.id.clone())
+                .collect::<Vec<_>>()
+        } else {
+            self.template_ids.clone()
+        };
+        for id in &template_ids {
             let family = snapshot
                 .library
                 .templates
@@ -96,16 +154,28 @@ impl Scope {
                 revision_id: r.id.clone(),
             }));
         }
-        if self
-            .channel_ids
-            .iter()
-            .any(|id| !snapshot.policy.channels.iter().any(|c| &c.id == id))
+        if !self.all_channels
+            && self
+                .channel_ids
+                .iter()
+                .any(|id| !snapshot.policy.channels.iter().any(|c| &c.id == id))
         {
             return Err(invalid("sync_scope", "范围中的渠道尚未提交或已不存在"));
         }
         Ok(ExportScope {
-            include_policy: self.include_global || !self.channel_ids.is_empty(),
-            channel_ids: self.channel_ids.clone(),
+            include_policy: self.include_global
+                || !self.channel_ids.is_empty()
+                || self.all_channels,
+            channel_ids: if self.all_channels {
+                snapshot
+                    .policy
+                    .channels
+                    .iter()
+                    .map(|channel| channel.id.clone())
+                    .collect()
+            } else {
+                self.channel_ids.clone()
+            },
             template_refs: refs,
             include_global: self.include_global,
         })
@@ -151,6 +221,8 @@ pub struct UploadView {
     pub manager: Settings,
     pub credential_count: usize,
     pub protected: bool,
+    #[serde(default)]
+    pub assets: crate::modules::sync::portable_assets::Summary,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -201,17 +273,28 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     unchanged: F,
 ) -> ModelResult<UploadView> {
     scope.validate()?;
-    if load_scope(root)? != scope {
+    if scope_digest(&load_scope(root)?)? != scope_digest(&scope)? {
         return Err(invalid("sync_scope", "先明确保存本设备范围，再准备上传"));
     }
     let export = scope.export(root)?;
-    let local = transfer::prepare_file_scope(
-        root,
-        export,
-        passphrase,
-        scope.include_keys,
-        &scope.manager(),
-    )?;
+    let mut manager = scope.manager();
+    if scope.all_skills || scope.all_mcps {
+        let catalog = crate::modules::sync::portable_assets::catalog(
+            root,
+            scope
+                .local_home
+                .as_deref()
+                .ok_or_else(|| invalid("asset_home", "同步扩展前需绑定本机主目录"))?,
+        )?;
+        if scope.all_skills {
+            manager.skill_names = catalog.skills;
+        }
+        if scope.all_mcps {
+            manager.mcp_names = catalog.mcps;
+        }
+    }
+    let local =
+        transfer::prepare_file_scope(root, export, passphrase, scope.include_keys, &manager)?;
     let local_bytes = transfer::file_bytes(root, &local.id)?;
     let baseline = remote::pointer_for(remote::CONFIG, transport, config).await?;
     unchanged()?;
@@ -233,6 +316,7 @@ pub async fn prepare<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         manager: summary.manager,
         credential_count: summary.credential_count,
         protected: summary.protected,
+        assets: summary.assets,
     };
     let plan = Plan {
         view: view.clone(),
@@ -320,6 +404,16 @@ pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     passphrase: Option<&str>,
     unchanged: F,
 ) -> ModelResult<IncomingPlan> {
+    download_context(root, transport, config, passphrase, None, unchanged).await
+}
+pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
+    root: &Path,
+    transport: &T,
+    config: &WebDavConfig,
+    passphrase: Option<&str>,
+    home: Option<&Path>,
+    unchanged: F,
+) -> ModelResult<IncomingPlan> {
     let scope = load_scope(root)?;
     let base = remote::pointer_for(remote::CONFIG, transport, config)
         .await?
@@ -349,7 +443,7 @@ pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         .payload
         .templates
         .iter()
-        .filter(|t| scope.template_ids.contains(&t.id))
+        .filter(|t| scope.all_templates || scope.template_ids.contains(&t.id))
         .flat_map(|t| {
             t.revisions.iter().map(|r| TemplateRef {
                 template_id: t.id.clone(),
@@ -357,17 +451,52 @@ pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
             })
         })
         .collect();
+    let mut manager = scope.manager();
+    manager.local_home = home.map(Path::to_path_buf);
+    if scope.all_skills {
+        manager.skill_names = summary
+            .assets
+            .skills
+            .iter()
+            .map(|skill| skill.name.clone())
+            .collect();
+    }
+    if scope.all_mcps {
+        manager.mcp_names = summary
+            .assets
+            .mcps
+            .iter()
+            .map(|mcp| mcp.name.clone())
+            .collect();
+    }
+    let channel_ids = if scope.all_channels {
+        summary
+            .package
+            .payload
+            .policy
+            .as_ref()
+            .map(|policy| {
+                policy
+                    .channels
+                    .iter()
+                    .map(|channel| channel.id.clone())
+                    .collect()
+            })
+            .unwrap_or_default()
+    } else {
+        scope.channel_ids.clone()
+    };
     file_objects::select_remote(
         root,
         &bytes,
         passphrase,
         &ExportScope {
-            include_policy: scope.include_global || !scope.channel_ids.is_empty(),
-            channel_ids: scope.channel_ids.clone(),
+            include_policy: scope.include_global || !channel_ids.is_empty(),
+            channel_ids,
             template_refs,
             include_global: scope.include_global,
         },
-        &scope.manager(),
+        &manager,
         scope.include_keys,
     )
 }
@@ -376,6 +505,86 @@ pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
 mod tests {
     use super::super::remote::tests::Memory;
     use super::*;
+    #[tokio::test]
+    async fn actual_skill_resources_follow_saved_device_scope_and_remain_pending_until_asset_adoption(
+    ) {
+        let transport = Memory::default();
+        let source = tempfile::tempdir().unwrap();
+        let source_home = tempfile::tempdir().unwrap();
+        let skill = source_home.path().join(".agents/skills/fixture");
+        std::fs::create_dir_all(&skill).unwrap();
+        std::fs::write(skill.join("SKILL.md"), "# fixture portable resource").unwrap();
+        std::fs::write(skill.join("data.txt"), "fixture-resource").unwrap();
+        let scope = save_scope(
+            source.path(),
+            Scope {
+                preferences: false,
+                extensions: false,
+                skill_names: vec!["fixture".into()],
+                assets_reviewed: true,
+                local_home: Some(source_home.path().into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let plan = prepare(
+            source.path(),
+            &transport,
+            &config(),
+            "bound",
+            scope,
+            None,
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(plan.assets.skills[0].files, 2);
+        publish(
+            source.path(),
+            &transport,
+            &config(),
+            &plan.id,
+            "bound",
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let target_home = tempfile::tempdir().unwrap();
+        save_scope(
+            target.path(),
+            Scope {
+                preferences: false,
+                extensions: false,
+                skill_names: vec!["fixture".into()],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let incoming = download_context(
+            target.path(),
+            &transport,
+            &config(),
+            None,
+            Some(target_home.path()),
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        let destination = target
+            .path()
+            .join("manager-state/skills-store/fixture/data.txt");
+        assert!(!destination.exists());
+        assert!(incoming.preview_error.is_none());
+        assert_eq!(incoming.assets.as_ref().unwrap().skills[0].name, "fixture");
+        file_objects::accept_extended(target.path(), &incoming.id, false, false, false, None)
+            .unwrap();
+        assert_eq!(
+            std::fs::read_to_string(destination).unwrap(),
+            "fixture-resource"
+        );
+        assert!(!target_home.path().join(".codex").exists());
+    }
     fn config() -> WebDavConfig {
         WebDavConfig {
             base_url: "https://fixture.invalid".into(),

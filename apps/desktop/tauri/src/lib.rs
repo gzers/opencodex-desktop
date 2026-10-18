@@ -529,6 +529,7 @@ pub fn run() {
             commands::model_transfer::portable_latest_incoming,
             commands::model_transfer::portable_recompare,
             commands::model_transfer::portable_open_received,
+            commands::model_transfer::portable_extension_catalog,
             commands::model_transfer::config_sync_scope,
             commands::model_transfer::config_sync_save_scope,
             commands::model_transfer::config_sync_prepare,

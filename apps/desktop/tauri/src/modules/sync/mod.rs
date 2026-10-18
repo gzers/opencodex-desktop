@@ -5,6 +5,7 @@
 
 pub mod config;
 pub mod engine;
+pub mod portable_assets;
 pub mod portable_file;
 pub mod portable_manager;
 pub mod runner;

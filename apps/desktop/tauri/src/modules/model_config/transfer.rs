@@ -66,6 +66,10 @@ pub struct ReceiveScope {
     pub extensions: bool,
     #[serde(default)]
     pub endpoint_ids: Vec<String>,
+    #[serde(default)]
+    pub skill_names: Vec<String>,
+    #[serde(default)]
+    pub mcp_names: Vec<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -90,6 +94,12 @@ pub struct IncomingPlan {
     pub available_webdav_passwords: Vec<String>,
     #[serde(default)]
     pub adoption: Option<ImportAdoption>,
+    #[serde(default)]
+    pub assets: Option<crate::modules::sync::portable_assets::Summary>,
+    #[serde(default)]
+    pub available_extension_credentials: bool,
+    #[serde(default)]
+    pub protected: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -97,6 +107,8 @@ pub struct ImportAdoption {
     pub keys: bool,
     pub webdav: bool,
     pub completed: bool,
+    #[serde(default)]
+    pub extension_credentials: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -109,6 +121,8 @@ pub struct FileExportPlan {
     pub credential_count: usize,
     #[serde(default)]
     pub manager: Option<crate::modules::sync::portable_manager::Settings>,
+    #[serde(default)]
+    pub assets: Option<crate::modules::sync::portable_assets::Summary>,
 }
 fn export_plan_path(root: &Path, id: &str) -> ModelResult<std::path::PathBuf> {
     require_uuid(id)?;
@@ -149,13 +163,17 @@ pub fn prepare_file_scope(
     let id = uuid::Uuid::new_v4().to_string();
     let no_models = !scope.include_policy
         && scope.template_refs.is_empty()
-        && (manager_scope.preferences || manager_scope.extensions || manager_scope.webdav);
+        && (manager_scope.preferences
+            || manager_scope.extensions
+            || manager_scope.webdav
+            || !manager_scope.skill_names.is_empty()
+            || !manager_scope.mcp_names.is_empty());
     let mut package = export(root, scope)?;
     if no_models {
         package.payload.templates.clear();
         package.digest = sha256(&serde_json::to_vec(&package.payload)?);
     }
-    let (bytes, credential_count, manager) = super::file_objects::seal_manager(
+    let (bytes, credential_count, manager, assets) = super::file_objects::seal_manager(
         root,
         &id,
         &package,
@@ -170,6 +188,7 @@ pub fn prepare_file_scope(
         file_digest: sha256(&bytes),
         credential_count,
         manager: Some(manager),
+        assets: Some(assets),
     };
     let payload = export_plan_path(root, &plan.id)?.with_extension("ocxdconf");
     crate::modules::backup::safety::check_path(root, &payload, true)?;
@@ -677,6 +696,9 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
         manager: None,
         available_webdav_passwords: vec![],
         adoption: None,
+        assets: None,
+        available_extension_credentials: false,
+        protected: false,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {
@@ -690,6 +712,14 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
     Ok(plan)
 }
 pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResult<IncomingPlan> {
+    select_received_context(root, id, scope, None)
+}
+pub fn select_received_context(
+    root: &Path,
+    id: &str,
+    scope: ReceiveScope,
+    passphrase: Option<&str>,
+) -> ModelResult<IncomingPlan> {
     if super::file_objects::has_adoption(root, id)? {
         return Err(invalid(
             "import_in_progress",
@@ -723,6 +753,8 @@ pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResul
         && !scope.preferences
         && !scope.extensions
         && scope.endpoint_ids.is_empty()
+        && scope.skill_names.is_empty()
+        && scope.mcp_names.is_empty()
     {
         return Err(invalid("import_scope", "请选择至少一个接收对象"));
     }
@@ -832,7 +864,16 @@ pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResul
         )?;
     }
     super::file_objects::copy_source(root, &original, &mut selected)?;
+    super::file_objects::select_asset_subset(
+        root,
+        &original,
+        &mut selected,
+        &scope.skill_names,
+        &scope.mcp_names,
+        passphrase,
+    )?;
     write_incoming(root, &selected)?;
+    super::file_objects::remember_incoming(root, &selected.id)?;
     Ok(selected)
 }
 pub fn accept(root: &Path, id: &str) -> ModelResult<Snapshot> {
