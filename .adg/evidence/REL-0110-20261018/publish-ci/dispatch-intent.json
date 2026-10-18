@@ -1,0 +1,20 @@
+{
+  "source": "2578e11ba36fc133dda3a899b8085b94ad047044",
+  "tag": "v0.1.10",
+  "mode": "stable",
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "publish-release.yml",
+    "--ref",
+    "main",
+    "-f",
+    "tag=v0.1.10",
+    "-f",
+    "mode=stable"
+  ],
+  "requestedAtUtc": "2026-10-18T04:58:35.410854+00:00",
+  "attempt": 1,
+  "status": "single-dispatch-about-to-issue"
+}

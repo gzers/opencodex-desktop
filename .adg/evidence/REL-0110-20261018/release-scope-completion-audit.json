@@ -1,0 +1,81 @@
+{
+  "atUtc": "2026-10-18T05:05:16.156010+00:00",
+  "version": "0.1.10",
+  "releaseId": 416235919,
+  "latest": "v0.1.10",
+  "main": "2578e11ba36fc133dda3a899b8085b94ad047044",
+  "tagCommit": "2578e11ba36fc133dda3a899b8085b94ad047044",
+  "remoteRefs": {
+    "refs/heads/main": "2578e11ba36fc133dda3a899b8085b94ad047044",
+    "refs/tags/v0.1.10": "343d8e34c257f5c2bcf35100f60e0cf128398011",
+    "refs/tags/v0.1.10^{}": "2578e11ba36fc133dda3a899b8085b94ad047044"
+  },
+  "checks": [
+    {
+      "requirement": "fixed product baseline and integration",
+      "status": "proved",
+      "evidence": "source-binding.json; ci/main-terminal-verification.json"
+    },
+    {
+      "requirement": "Windows reused, CPU/RSS accepted, DPI cancelled, no new collectors/sampling",
+      "status": "proved-by-source-and-authorization-scope",
+      "evidence": "authorization.json; accepted-exception-disposition.json; original Windows closeout b2e4ff59"
+    },
+    {
+      "requirement": "Mac actual closeout and needed regression",
+      "status": "proved-in-approved-scope",
+      "evidence": "Mac8e closeout docs9af58e6b; main/PR CI; postrelease-native/verification.json; uncovered matrix explicitly accepted"
+    },
+    {
+      "requirement": "core facts, release notes, evidence and requirement/task disposition",
+      "status": "written-and-verified; final-doc-push-pending",
+      "evidence": "core-writeback-verification.json; demand-writeback.json; REL-10/RUN; accepted-exception-disposition.json"
+    },
+    {
+      "requirement": "final user publication and stable confirmation",
+      "status": "proved",
+      "evidence": "authorization.json"
+    },
+    {
+      "requirement": "main merge and version tag",
+      "status": "proved",
+      "evidence": "source-binding.json; remote refs match 2578e11ba36fc133dda3a899b8085b94ad047044"
+    },
+    {
+      "requirement": "dual platform release and actual updater cryptography",
+      "status": "proved",
+      "evidence": "release-ci/terminal-verification.json; prepublish-assets/prepublish-all-assets-verification.json"
+    },
+    {
+      "requirement": "public Release and stable promotion",
+      "status": "proved",
+      "evidence": "publish-ci/verification.json; public/latest-release.original.json"
+    },
+    {
+      "requirement": "anonymous endpoints, installer downloads and post-release run",
+      "status": "proved-in-approved-scope",
+      "evidence": "public/anonymous-download-verification.json; postrelease-native/verification.json"
+    },
+    {
+      "requirement": "real-data/daily protection and single isolated instance",
+      "status": "proved-in-observed-scope",
+      "evidence": "postrelease-native/verification.json; native final0 and daily PID57186; no FZ50"
+    },
+    {
+      "requirement": "unverified original AC and historical failure fidelity",
+      "status": "preserved; explicit version exceptions",
+      "evidence": "accepted-exception-disposition.json; original TASK sha unchanged; no full-AC completion certificate"
+    }
+  ],
+  "mainCiSuccess": true,
+  "releaseBuildSuccess": true,
+  "publicationSuccess": true,
+  "postreleaseVerificationSuccess": true,
+  "sourceCodeDirtyTracked": false,
+  "sharedFilesMainDocsMatch": true,
+  "originalTaskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "originalTaskFullAcceptanceNotClaimed": true,
+  "remainingOriginalRequirementsExplicitlyAcceptedForThisVersion": true,
+  "finalDocumentationCommitAndPushStillPending": true,
+  "goalCompleteClaimNotYetMade": true
+}

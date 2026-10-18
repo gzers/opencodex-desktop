@@ -1,0 +1,16 @@
+{
+  "tag": "v0.1.10",
+  "source": "2578e11ba36fc133dda3a899b8085b94ad047044",
+  "workflow": "publish-release.yml",
+  "mode": "stable",
+  "ref": "main",
+  "guards": [
+    "main CI39097338564 completed success, six jobs",
+    "Release39097612293 both platforms success",
+    "three actual uploaded updater packages verified with old key",
+    "draft Release416235919 version/platforms match",
+    "authorization.json explicit stable and exceptions"
+  ],
+  "dispatchIssued": false,
+  "noSameRunRerunAllowed": true
+}

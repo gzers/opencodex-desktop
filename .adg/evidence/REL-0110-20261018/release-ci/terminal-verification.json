@@ -1,0 +1,26 @@
+{
+  "runId": 39097612293,
+  "source": "2578e11ba36fc133dda3a899b8085b94ad047044",
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "success",
+  "platforms": [
+    {
+      "jobId": 117587199325,
+      "name": "release (windows-latest, x86_64-pc-windows-msvc)",
+      "conclusion": "success",
+      "checkout": "2578e11ba36fc133dda3a899b8085b94ad047044",
+      "logBytes": 95094,
+      "sha256": "5f960f3bd36113a94698af5b4ef7b62de165f7b311a80ac2f4787497da9fc9ed"
+    },
+    {
+      "jobId": 117587199381,
+      "name": "release (macos-14, aarch64-apple-darwin, --target aarch64-apple-darwin)",
+      "conclusion": "success",
+      "checkout": "2578e11ba36fc133dda3a899b8085b94ad047044",
+      "logBytes": 92826,
+      "sha256": "21f1d0ed5d339862bb8ab9f2734a2361eb0dad70e68f2ecd05979d21496be96d"
+    }
+  ],
+  "publicReleaseStillPending": true
+}

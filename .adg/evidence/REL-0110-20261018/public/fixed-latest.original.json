@@ -1,0 +1,27 @@
+{
+  "version": "0.1.10",
+  "notes": "桌面管理器运行维护更新（macOS Apple Silicon / Windows x64）。\n\n- 概览和设置共用更新中心，可分别查看管理器与OpenCodex面板的版本、更新说明、网页详情和更新阶段；详情切换后保留键盘焦点。说明按精确候选核验并缓存，获取失败可独立重试。\n- 自动检查集中管理持久截止和失败退避；管理器稳定通道24小时、测试通道6小时，面板24小时。切换管理器通道保留面板状态，手动检查复用在途查询，检查结果持久化后再共享。\n- 增加管理器偏好备份、文件目录树、固定保留、清理预览与恢复前保护。按用途保留最近10份或30天内的备份，满足任一条件即保留；固定项额外保留。\n- macOS保留系统默认数据位置；Windows新安装基于实际软件安装目录保存数据，已有合法绑定继续使用。不可写目录提供选择恢复，空目录可显式校验并初始化，迁移不自动删除旧根。\n- Windows默认卸载保留数据；明确选择清理时核验数据根及实例/备份锁，只清理自有范围，外置OpenCodex HOME保留。\n- 统一事件注册、通知投递与异常解除边界；同对象、动作、阶段、通道和候选的核验结果用于解除对应异常，已读与已解决分别管理。\n- 概览背景光覆盖正文顶部和两侧边距，标准按钮取消高光，树表使用统一组件；画质由软件档位决定。修复WebGL探测/销毁资源释放，并完善Windows透明应用及浅深托盘图标、安装向导阶段和路径反馈。\n\n### 使用边界\n\n- 管理器偏好备份不包含OpenCodex完整配置、会话或登录态；导入、同步和安装等事务另有各自保护范围。\n- 软件安装包仍按当前测试分发策略提供，未做操作系统正式代码签名/Apple公证；自更新资产需由发布流程签名并校验，两类签名不能混称。\n- CPU/RSS增量按用户已接受的例外处理，DPI专项取消；真实更新、原生组合及调度剩余未验项作为本版明确例外接受，详见发布记录；不宣称完整设备矩阵通过。\n\n---\n\n### 安装\n- macOS（Apple Silicon）：下载 `.dmg`，拖入「应用程序」。\n- Windows（x64）：下载 `*-setup.exe`（NSIS）安装包。\n- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。",
+  "pub_date": "2026-10-18T04:46:28.986Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUtadjg0QlNHN1JoaTJCTTRKOFJUVzJyUUVEMjFhd0RFaUk0R0p6aE04US9BTU9uQkhDVUNrbDZ3Tk5YcTFHaVk0TTNkUFQxQWFnQjFWbWZqNlZZOEFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMjk4NTg4CWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negl2ZXJzaW9uOjAuMS4xMApsV3lmd2V3Z1V3eDlSL3JEVFJXUDBIQ0Rlb3hyRzRCcDJGWjZqakJwYjhTZWo2d0l1eEhKY1V3aldvUTAzamRMQkxmNTVEV2JiWlN4OWNudDdDL2xBdz09Cg==",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.10/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "darwin-aarch64-app": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUtadjg0QlNHN1JoaTJCTTRKOFJUVzJyUUVEMjFhd0RFaUk0R0p6aE04US9BTU9uQkhDVUNrbDZ3Tk5YcTFHaVk0TTNkUFQxQWFnQjFWbWZqNlZZOEFvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMjk4NTg4CWZpbGU6T3BlbkNvZGVYIERlc2t0b3AuYXBwLnRhci5negl2ZXJzaW9uOjAuMS4xMApsV3lmd2V3Z1V3eDlSL3JEVFJXUDBIQ0Rlb3hyRzRCcDJGWjZqakJwYjhTZWo2d0l1eEhKY1V3aldvUTAzamRMQkxmNTVEV2JiWlN4OWNudDdDL2xBdz09Cg==",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.10/OpenCodeX.Desktop_aarch64.app.tar.gz"
+    },
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUtKRnRId1ZGTnZWY0tDQkw2VjZ2NlZ3YVBIZUlxY2dJMjc0R1JlYm43VmJ0a3JLV1F0Sys3ZnM0VEtMd2ZObzJtVThKZHhXOVlvWXVkWFZVTjhiK0FrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMjk4Nzg1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4xLjEwX3g2NF9lbi1VUy5tc2kJdmVyc2lvbjowLjEuMTAKVVlzVFBHaHRqSXpkUzlFdlB1Y1FsQ3orckhqZkk4d2ZkamE4eTZYUnFCOCtURi9Wb0hRSUMycWpsaVhmbjl4SWF6TmtqMG10TFBhYmI5OTgwNXNIQXc9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.10/OpenCodeX.Desktop_0.1.10_x64_en-US.msi"
+    },
+    "windows-x86_64-msi": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUtKRnRId1ZGTnZWY0tDQkw2VjZ2NlZ3YVBIZUlxY2dJMjc0R1JlYm43VmJ0a3JLV1F0Sys3ZnM0VEtMd2ZObzJtVThKZHhXOVlvWXVkWFZVTjhiK0FrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMjk4Nzg1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4xLjEwX3g2NF9lbi1VUy5tc2kJdmVyc2lvbjowLjEuMTAKVVlzVFBHaHRqSXpkUzlFdlB1Y1FsQ3orckhqZkk4d2ZkamE4eTZYUnFCOCtURi9Wb0hRSUMycWpsaVhmbjl4SWF6TmtqMG10TFBhYmI5OTgwNXNIQXc9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.10/OpenCodeX.Desktop_0.1.10_x64_en-US.msi"
+    },
+    "windows-x86_64-nsis": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVSblU3d1cvSFdiRUF3cUNEcG5kcE5JK1VMdnFwbW5PeWZndmFMM0QrZkdLYzhvNkpxUEkreXhnUkhEcFVaVVUxZHJ3WWd6VFF1bnV5ZGh3S04vWkRmZUhQZlVvWG9xZnc0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyMjk4Nzg1CWZpbGU6T3BlbkNvZGVYIERlc2t0b3BfMC4xLjEwX3g2NC1zZXR1cC5leGUJdmVyc2lvbjowLjEuMTAKQkFXT0lyTWFtVEwxMkVxM08rWTlucVgzeEU2QmQ4YldsRllsdHlNWmNOZnp3cVovSGd0aUhsTDByS2FDajZjb2x2MlNTS2Qva09aaG9SM21EaVhWQlE9PQo=",
+      "url": "https://github.com/gzers/opencodex-desktop/releases/download/v0.1.10/OpenCodeX.Desktop_0.1.10_x64-setup.exe"
+    }
+  }
+}
