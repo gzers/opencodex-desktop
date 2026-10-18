@@ -1,0 +1,66 @@
+{
+  "kind": "provider-live-assessment-summary",
+  "local_management_read_count": 1,
+  "live_proxy_version": "2.84.0",
+  "provider": "Krill-1",
+  "checks": [
+    {
+      "name": "configured_and_tutorial_compact_return_native_shape",
+      "result": "verified-short-input",
+      "evidence": [
+        200,
+        200
+      ],
+      "compaction_counts": [
+        1,
+        1
+      ]
+    },
+    {
+      "name": "proxy_compact_returns_text_summary",
+      "result": "observed",
+      "output_types": [
+        "message",
+        "message"
+      ],
+      "compaction_items": 0
+    },
+    {
+      "name": "tutorial_canonical_window_replay",
+      "result": "verified-short-input",
+      "completed": true,
+      "marker_present": true,
+      "limitation": "Returned window retains user messages; marker recall is not proof of opaque-state fidelity."
+    },
+    {
+      "name": "ultrafast_grant",
+      "result": "unconfirmed",
+      "proxy_echo": "default",
+      "direct_echo": "default"
+    },
+    {
+      "name": "history_notes_success",
+      "result": "not-established",
+      "direct_status": 200,
+      "direct_error": "Unable to perform operation: this thread has no stored context yet.",
+      "proxy_status": 404
+    },
+    {
+      "name": "management_wire_log",
+      "result": "unavailable-without-additional-authentication",
+      "status": 401
+    }
+  ],
+  "not_tested": [
+    "native background concurrency",
+    "history/notes storage and writes",
+    "runtime mutual exclusion",
+    "long-context quality",
+    "billing multiplier"
+  ],
+  "no_daily_config_or_installation_writes_by_probe": true,
+  "request_count": 12,
+  "direct_upstream_requests": 7,
+  "proxy_requests": 5,
+  "request_count_scope": "Client-initiated probe requests; does not count unobserved internal proxy sends or retries."
+}

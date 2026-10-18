@@ -1,0 +1,333 @@
+{
+  "kind": "provider-live-observations",
+  "provider": "Krill-1",
+  "session": "986214c4-c2f7-435e-a25c-a31dd486fc82",
+  "calls": [
+    {
+      "label": "proxy-model-directory",
+      "url": "http://127.0.0.1:10100/v1/models",
+      "method": "GET",
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_bytes": 80025,
+      "response": {
+        "object": "list",
+        "model_count": 126,
+        "selected_model_metadata": [
+          {
+            "id": "gpt-6.1-sol",
+            "context_window": 872000
+          },
+          {
+            "id": "Krill-1/gpt-6.1-sol",
+            "context_window": 1000000
+          }
+        ]
+      },
+      "elapsed_seconds": 2.826
+    },
+    {
+      "label": "configured-krill-model-directory",
+      "url": "https://api.krill-code.net/codex/v1/models",
+      "method": "GET",
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_bytes": 586,
+      "response": {
+        "object": "list",
+        "model_count": 7,
+        "selected_model_metadata": [
+          {
+            "id": "gpt-6.1-sol"
+          }
+        ]
+      },
+      "elapsed_seconds": 1.033
+    },
+    {
+      "label": "tutorial-krill-model-directory",
+      "url": "https://api.krill-code.net/backend-api/codex/models",
+      "method": "GET",
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_bytes": 445943,
+      "response": {
+        "model_count": 7,
+        "selected_model_metadata": [
+          {
+            "slug": "gpt-6.1-sol",
+            "supports_experimental_context": false,
+            "service_tiers": [
+              {
+                "id": "priority",
+                "name": "Fast",
+                "description": "2x speed, increased usage"
+              },
+              {
+                "id": "ultrafast",
+                "name": "Ultrafast",
+                "description": "The fastest available responses for latency-sensitive work."
+              }
+            ],
+            "additional_speed_tiers": [
+              "fast",
+              "ultrafast"
+            ],
+            "context_window": 500000
+          }
+        ]
+      },
+      "elapsed_seconds": 1.799
+    },
+    {
+      "label": "proxy-standard-inference",
+      "url": "http://127.0.0.1:10100/v1/responses",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "text/event-stream; charset=utf-8",
+      "response_bytes": 9419,
+      "event_types": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.metadata",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "id": "resp_0eacffc1ea0e4bf4016ad1efd9e55087d0a4a037edbd751803",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "service_tier": "default",
+        "object": "response",
+        "usage": {
+          "input_tokens": 4661,
+          "output_tokens": 9,
+          "total_tokens": 4670
+        },
+        "output_types": [
+          "message"
+        ],
+        "compaction_items": 0,
+        "state_formats": [],
+        "expected_marker_present": true,
+        "text_characters": 12
+      },
+      "elapsed_seconds": 3.071
+    },
+    {
+      "label": "proxy-ultrafast-inference",
+      "url": "http://127.0.0.1:10100/v1/responses",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "text/event-stream; charset=utf-8",
+      "response_bytes": 9064,
+      "event_types": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.metadata",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "id": "resp_022c694c4b3772e3016ad1efdc56f08191bda53674a807ae49",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "service_tier": "default",
+        "object": "response",
+        "usage": {
+          "input_tokens": 4661,
+          "output_tokens": 9,
+          "total_tokens": 4670
+        },
+        "output_types": [
+          "message"
+        ],
+        "compaction_items": 0,
+        "state_formats": [],
+        "expected_marker_present": true,
+        "text_characters": 12
+      },
+      "elapsed_seconds": 2.32
+    },
+    {
+      "label": "tutorial-ultrafast-inference",
+      "url": "https://api.krill-code.net/backend-api/codex/responses",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "text/event-stream; charset=utf-8",
+      "response_bytes": 9355,
+      "event_types": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.metadata",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "id": "resp_0c49067f1d67e294016ad1efdfde408191b07f9a504bd51bf8",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "service_tier": "default",
+        "object": "response",
+        "usage": {
+          "input_tokens": 4661,
+          "output_tokens": 9,
+          "total_tokens": 4670
+        },
+        "output_types": [
+          "message"
+        ],
+        "compaction_items": 0,
+        "state_formats": [],
+        "expected_marker_present": true,
+        "text_characters": 12
+      },
+      "elapsed_seconds": 3.594
+    },
+    {
+      "label": "configured-direct-standalone-compact",
+      "url": "https://api.krill-code.net/codex/v1/responses/compact",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "response_bytes": 3644,
+      "response": {
+        "output_types": [
+          null,
+          "compaction"
+        ],
+        "compaction_items": 1,
+        "state_formats": [
+          "opaque"
+        ],
+        "expected_marker_present": true,
+        "text_characters": 165
+      },
+      "elapsed_seconds": 5.458
+    },
+    {
+      "label": "tutorial-direct-standalone-compact",
+      "url": "https://api.krill-code.net/backend-api/codex/responses/compact",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "application/json; charset=utf-8",
+      "response_bytes": 3708,
+      "response": {
+        "output_types": [
+          null,
+          "compaction"
+        ],
+        "compaction_items": 1,
+        "state_formats": [
+          "opaque"
+        ],
+        "expected_marker_present": true,
+        "text_characters": 165
+      },
+      "elapsed_seconds": 5.308
+    },
+    {
+      "label": "proxy-standalone-compact",
+      "url": "http://127.0.0.1:10100/v1/responses/compact",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_bytes": 1124,
+      "response": {
+        "output_types": [
+          "message",
+          "message"
+        ],
+        "compaction_items": 0,
+        "state_formats": [],
+        "expected_marker_present": true,
+        "text_characters": 954
+      },
+      "elapsed_seconds": 4.648
+    },
+    {
+      "label": "tutorial-history-list",
+      "url": "https://api.krill-code.net/backend-api/codex/alpha/history/v2/list_windows",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "application/json",
+      "response_bytes": 79,
+      "response": {
+        "error": "Unable to perform operation: this thread has no stored context yet."
+      },
+      "elapsed_seconds": 1.043
+    },
+    {
+      "label": "proxy-history-list",
+      "url": "http://127.0.0.1:10100/v1/alpha/history/v2/list_windows",
+      "method": "POST",
+      "http_status": 404,
+      "content_type": "application/json",
+      "response_bytes": 118,
+      "response": {
+        "error": {
+          "type": "not_found",
+          "code": "not_found",
+          "message": "Unknown endpoint: POST /v1/alpha/history/v2/list_windows"
+        }
+      },
+      "elapsed_seconds": 0.024
+    },
+    {
+      "label": "tutorial-native-compaction-replay",
+      "url": "https://api.krill-code.net/backend-api/codex/responses",
+      "method": "POST",
+      "http_status": 200,
+      "content_type": "text/event-stream; charset=utf-8",
+      "response_bytes": 9414,
+      "event_types": [
+        "response.completed",
+        "response.content_part.added",
+        "response.content_part.done",
+        "response.created",
+        "response.in_progress",
+        "response.metadata",
+        "response.output_item.added",
+        "response.output_item.done",
+        "response.output_text.delta",
+        "response.output_text.done"
+      ],
+      "response": {
+        "id": "resp_093809e0e450aee4016ad1f01d085087d08e399b23a2a0388d",
+        "model": "gpt-6.1-sol",
+        "status": "completed",
+        "service_tier": "default",
+        "object": "response",
+        "usage": {
+          "input_tokens": 4850,
+          "output_tokens": 9,
+          "total_tokens": 4859
+        },
+        "output_types": [
+          "message"
+        ],
+        "compaction_items": 0,
+        "state_formats": [],
+        "expected_marker_present": true,
+        "text_characters": 12
+      },
+      "elapsed_seconds": 3.758
+    }
+  ],
+  "limitations": []
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "isolated-client-config-contract-controls",
+  "cases": [
+    {
+      "name": "remote-local-valid",
+      "exit_code": 1,
+      "expected_accepted": true,
+      "result": "failed",
+      "stderr": "Error: failed to load bootstrap configuration\n\nCaused by:\n    model_providers.fixture: provider name must not be empty\n    in `model_providers`\n    \n"
+    },
+    {
+      "name": "remote-protocol-invalid-control",
+      "exit_code": 1,
+      "expected_accepted": false,
+      "result": "passed",
+      "stderr": "Error: failed to load bootstrap configuration\n\nCaused by:\n    unknown variant `fixture-invalid`, expected `unsupported` or `v2`\n    in `model_providers.fixture.capabilities.remote_compaction`\n    \n"
+    },
+    {
+      "name": "async-type-invalid-control",
+      "exit_code": 1,
+      "expected_accepted": false,
+      "result": "passed",
+      "stderr": "Error: failed to load bootstrap configuration\n\nCaused by:\n    data did not match any variant of untagged enum FeatureToml\n    in `features.async_compaction`\n    \n"
+    }
+  ],
+  "passed": 2,
+  "failed": 1,
+  "scope": "Config parsing only; no model turn, login or provider request."
+}

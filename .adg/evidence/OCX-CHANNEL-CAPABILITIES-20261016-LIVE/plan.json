@@ -1,0 +1,27 @@
+{
+  "kind": "provider-live-assessment-plan",
+  "authorization": "2026-10-16 user: 可以开始验证; minimal isolated Krill and proxy probes for this topic",
+  "provider": "Krill-1",
+  "credential_source": "Existing provider credential, read in process memory only",
+  "allowed_targets": [
+    "https://api.krill-code.net",
+    "http://127.0.0.1:10100"
+  ],
+  "model": "gpt-6.1-sol",
+  "max_requests": 12,
+  "additional_local_read_limit": 2,
+  "additional_local_read_paths": [
+    "/api/logs",
+    "/healthz"
+  ],
+  "input_scope": "Synthetic short prompts and a fresh test session; no project or historical conversation content",
+  "mutations": "No daily config, auth file, installation or login changes. Requests can appear in existing request and usage logs.",
+  "not_implied": [
+    "Production implementation",
+    "Core changes",
+    "Credential export",
+    "Long conversation or billing benchmark"
+  ],
+  "max_output_tokens_per_ordinary_inference": 128,
+  "compact_scope": "Short fixed input; compact endpoint output length is not an ordinary inference token-limit setting."
+}

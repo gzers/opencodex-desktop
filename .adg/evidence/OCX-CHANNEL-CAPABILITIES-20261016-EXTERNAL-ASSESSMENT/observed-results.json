@@ -1,0 +1,76 @@
+{
+  "kind": "isolated-pure-function-observation",
+  "date": "2026-10-16",
+  "package": "@bitkyc08/opencodex",
+  "version": "2.84.0",
+  "provenance": "Recorded from the completed exec_command result in this chat: exit_code=0, all 12 PASS lines. The mjs is the exact previously executed inline source and was saved afterward without rerunning.",
+  "runtime": "package-bundled Bun",
+  "passed": 12,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "responses inherit preserves ultrafast",
+      "result": "passed"
+    },
+    {
+      "name": "forced Fast becomes priority",
+      "result": "passed"
+    },
+    {
+      "name": "forced default removes tier",
+      "result": "passed"
+    },
+    {
+      "name": "unsupported removes tier",
+      "result": "passed"
+    },
+    {
+      "name": "wire disallows foreign tiers",
+      "result": "passed"
+    },
+    {
+      "name": "unclassified keeps caller tier",
+      "result": "passed"
+    },
+    {
+      "name": "chat without opt-in removes tier",
+      "result": "passed"
+    },
+    {
+      "name": "chat explicit opt-in preserves tier",
+      "result": "passed"
+    },
+    {
+      "name": "opt-in retains supplied catalog tier",
+      "result": "passed"
+    },
+    {
+      "name": "opt-out removes catalog tier",
+      "result": "passed"
+    },
+    {
+      "name": "opt-in does not create catalog tier",
+      "result": "passed"
+    },
+    {
+      "name": "fresh template is not operator declaration",
+      "result": "passed"
+    }
+  ],
+  "scope": [
+    "Original pure Fast policy functions",
+    "Original pure operator tier preservation function"
+  ],
+  "not_verified": [
+    "Krill requests",
+    "Desktop picker availability",
+    "Authentication",
+    "Native compaction",
+    "history/notes",
+    "Running proxy version",
+    "Upgrade behavior"
+  ],
+  "no_live_service_or_credentials_used": true,
+  "source_manifest": "source-manifest.json",
+  "script": "pure-policy-checks.mjs"
+}

@@ -1,0 +1,117 @@
+{
+  "kind": "isolated-original-component-probe",
+  "packageVersion": "2.84.0",
+  "passed": 20,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "normal Responses serialization preserves inherited ultrafast",
+      "result": "passed"
+    },
+    {
+      "name": "custom Responses outlet path is used",
+      "result": "passed"
+    },
+    {
+      "name": "adapter serializes forced priority",
+      "result": "passed"
+    },
+    {
+      "name": "adapter removes dropped caller tier",
+      "result": "passed"
+    },
+    {
+      "name": "parser identifies remote-v2 compaction trigger",
+      "result": "passed"
+    },
+    {
+      "name": "routed outlet removes native compaction trigger",
+      "result": "passed"
+    },
+    {
+      "name": "routed outlet asks for plaintext checkpoint summary",
+      "result": "passed"
+    },
+    {
+      "name": "routed summary outlet removes callable tools",
+      "result": "passed"
+    },
+    {
+      "name": "blob replay opt-in does not preserve native trigger",
+      "result": "passed"
+    },
+    {
+      "name": "custom relay has no native standalone compact eligibility",
+      "result": "passed"
+    },
+    {
+      "name": "blob replay flag does not enable standalone compact",
+      "result": "passed"
+    },
+    {
+      "name": "routed catalog removes experimental context assertion",
+      "result": "passed"
+    },
+    {
+      "name": "context gate recognizes boolean form",
+      "result": "passed"
+    },
+    {
+      "name": "context gate recognizes table form",
+      "result": "passed"
+    },
+    {
+      "name": "history endpoint is recognized",
+      "result": "passed"
+    },
+    {
+      "name": "Krill-only config cannot select native history destination",
+      "result": "passed"
+    },
+    {
+      "name": "rejected history never reaches channel outlet",
+      "result": "passed"
+    },
+    {
+      "name": "loopback mock receives final ultrafast request",
+      "result": "passed"
+    },
+    {
+      "name": "unparsed local SSE payload remains unchanged in raw fetch",
+      "result": "passed"
+    },
+    {
+      "name": "no external fetch attempted",
+      "result": "passed"
+    }
+  ],
+  "observations": {
+    "historyRefusal": {
+      "status": 400,
+      "body": {
+        "error": {
+          "message": "History and notes require the native ChatGPT forward provider",
+          "type": "invalid_request_error",
+          "code": "invalid_request_error"
+        }
+      }
+    },
+    "sseScope": "Adapter-built request and raw fetch only; no production egress component or whole-proxy stream acceptance tested.",
+    "mockRequests": [
+      {
+        "path": "/backend-api/codex/responses",
+        "serviceTier": "ultrafast"
+      }
+    ]
+  },
+  "forbiddenFetches": 0,
+  "notVerified": [
+    "Krill acceptance",
+    "Native background concurrency",
+    "History/notes success",
+    "Desktop picker",
+    "Billing",
+    "All combinations",
+    "Whole running proxy"
+  ]
+}

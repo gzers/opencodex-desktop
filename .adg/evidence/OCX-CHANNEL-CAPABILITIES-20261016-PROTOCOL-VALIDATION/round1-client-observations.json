@@ -1,0 +1,72 @@
+{
+  "version": "codex-cli 0.163.0-alpha.10.2",
+  "version_exit_code": 0,
+  "cases": [
+    {
+      "name": "baseline",
+      "exit_code": 0,
+      "selected_features": [
+        "async_compaction                         under development  false",
+        "context_management                       under development  false",
+        "fast_mode                                stable             true",
+        "token_budget                             under development  false",
+        "ultrafast_mode                           stable             true"
+      ],
+      "stderr": "",
+      "meaning": "Parsing and feature listing only; unknown keys may be ignored."
+    },
+    {
+      "name": "async-enabled",
+      "exit_code": 0,
+      "selected_features": [
+        "async_compaction                         under development  true",
+        "context_management                       under development  false",
+        "fast_mode                                stable             true",
+        "token_budget                             under development  false",
+        "ultrafast_mode                           stable             true"
+      ],
+      "stderr": "",
+      "meaning": "Parsing and feature listing only; unknown keys may be ignored."
+    },
+    {
+      "name": "history-notes-enabled",
+      "exit_code": 0,
+      "selected_features": [
+        "async_compaction                         under development  false",
+        "context_management                       under development  true",
+        "fast_mode                                stable             true",
+        "token_budget                             under development  true",
+        "ultrafast_mode                           stable             true"
+      ],
+      "stderr": "",
+      "meaning": "Parsing and feature listing only; unknown keys may be ignored."
+    },
+    {
+      "name": "all-enabled-parse-only",
+      "exit_code": 0,
+      "selected_features": [
+        "async_compaction                         under development  true",
+        "context_management                       under development  true",
+        "fast_mode                                stable             true",
+        "token_budget                             under development  true",
+        "ultrafast_mode                           stable             true"
+      ],
+      "stderr": "",
+      "meaning": "Parsing and feature listing only; unknown keys may be ignored."
+    },
+    {
+      "name": "remote-v2-parse-only",
+      "exit_code": 0,
+      "selected_features": [
+        "async_compaction                         under development  false",
+        "context_management                       under development  false",
+        "fast_mode                                stable             true",
+        "token_budget                             under development  false",
+        "ultrafast_mode                           stable             true"
+      ],
+      "stderr": "",
+      "meaning": "Parsing and feature listing only; unknown keys may be ignored."
+    }
+  ],
+  "scope": "No agent turn or provider request"
+}

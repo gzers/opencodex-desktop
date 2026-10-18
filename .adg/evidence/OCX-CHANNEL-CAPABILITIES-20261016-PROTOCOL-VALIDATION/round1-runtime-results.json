@@ -1,0 +1,32 @@
+{
+  "kind": "probe-failure",
+  "passedBeforeFailure": 6,
+  "checks": [
+    {
+      "name": "normal Responses serialization preserves inherited ultrafast",
+      "result": "passed"
+    },
+    {
+      "name": "custom Responses outlet path is used",
+      "result": "passed"
+    },
+    {
+      "name": "adapter serializes forced priority",
+      "result": "passed"
+    },
+    {
+      "name": "adapter removes dropped caller tier",
+      "result": "passed"
+    },
+    {
+      "name": "parser identifies remote-v2 compaction trigger",
+      "result": "passed"
+    },
+    {
+      "name": "routed outlet removes native compaction trigger",
+      "result": "passed"
+    }
+  ],
+  "error": "AssertionError [ERR_ASSERTION]: false == true\n    at check (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.adg/evidence/OCX-CHANNEL-CAPABILITIES-20261016-PROTOCOL-VALIDATION/runtime-probe.mjs:9:31)\n    at /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.adg/evidence/OCX-CHANNEL-CAPABILITIES-20261016-PROTOCOL-VALIDATION/runtime-probe.mjs:65:3",
+  "forbiddenFetches": 0
+}
