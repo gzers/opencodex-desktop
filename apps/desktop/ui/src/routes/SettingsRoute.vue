@@ -6,6 +6,7 @@ import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
 const ModelTransfer = defineAsyncComponent(() => import('@/features/sync/ModelTransfer.vue'))
+const ImportedConnections=defineAsyncComponent(()=>import('@/features/sync/ImportedConnections.vue'))
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -351,7 +352,7 @@ function refreshEnvironment() {
 }
 
 const sectionLabels: Record<string, string> = {
-  general: '通用', installation: '安装配置', backup: '数据与备份', extensions: '扩展管理', migration: '配置迁移', sync: 'WebDAV 同步', cleanup: '日志与通知', cli: 'CLI 控制面', upgrade: '版本升级', about: '关于',
+  general: '通用', installation: '安装配置', backup: '数据与备份', extensions: '扩展管理', migration: '文件同步', sync: 'WebDAV 同步', cleanup: '日志与通知', cli: 'CLI 控制面', upgrade: '版本升级', about: '关于',
 }
 const scaleTicks = [
   { value: 50, pos: '0%' },
@@ -646,58 +647,6 @@ async function copyAgentPrompt() {
   }
 }
 
-// 新容器不含额外口令：导出只需落到数据根 exports 分区。
-function exportMigration() {
-  void app.exportMigration().then(success => {
-    if (success) {
-      const sections = app.migrationLastExport?.sections ?? []
-      app.showToast(sections.length ? `配置已导出（${sections.join('、')}）。` : '配置已导出到数据目录 exports 分区。')
-    } else {
-      app.showToast(app.migrationError || '配置导出失败。')
-    }
-  })
-}
-
-// 导入先按新格式直接执行；只有旧版加密容器才回退到「输入原口令」。
-function importMigration() {
-  app.openModal({
-    title: '导入配置',
-    body: '将校验容器、备份当前配置并应用桌面壳设置。容器内的凭据只保留引用，不包含日志与缓存。',
-    confirmLabel: '导入配置',
-    onConfirm: () => {
-      void runImport()
-    },
-  })
-}
-
-async function runImport(passphrase = '') {
-  const success = await app.importMigration(passphrase)
-  if (success) {
-    const applied = app.migrationLastImport?.appliedSections ?? []
-    app.showToast(applied.length ? `配置已导入（${applied.join('、')}）。` : '配置已导入。')
-    return
-  }
-  if ((app.migrationError || '').includes('原口令')) {
-    openLegacyPassphraseModal()
-    return
-  }
-  app.showToast(app.migrationError || '配置导入失败。')
-}
-
-function openLegacyPassphraseModal() {
-  const field = { key: 'passphrase', label: '旧容器口令', type: 'password' as const }
-  app.openModal({
-    title: '这是旧版加密容器',
-    body: '<p>旧版导出文件仍由用户口令保护；请输入导出时使用的原口令。口令只在本次导入使用，不会保存。</p>',
-    fields: [field],
-    confirmLabel: '用原口令导入',
-    onConfirm: (values?: Record<string, string>) => {
-      void runImport(values?.passphrase ?? '')
-    },
-  })
-}
-
-
 async function copyPath(path: string) {
   try {
     await navigator.clipboard.writeText(path)
@@ -711,11 +660,6 @@ function openPath(path: string | undefined, label: string) {
   void app.openManagedPath(path).then(success => {
     if (!success) app.showToast(`${label}不可用；已保留当前状态。`)
   })
-}
-
-function openManagedTarget(key: 'manager_state' | 'backups' | 'logs' | 'exports' | 'cache' | 'sync_state') {
-  // 先加载路径投影再打开；未加载时此前会静默无反应。
-  void app.openManagedPathByKey(key)
 }
 
 // FZ-23：源目录是配置值——默认为共享目录，可改为自定义目录。
@@ -1236,23 +1180,11 @@ function restoreGeneralDefaults() {
 
     <section v-else-if="section === 'migration'" class="settings-panel active">
       <ModelTransfer />
-      <article class="card"><div class="card-head"><div><h2>配置迁移</h2><p>导出 / 导入管理器自有配置；文件为未加密配置，真实凭据仍在系统钥匙串，只携带引用。</p></div></div>
-        <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">导出范围</div><div class="setting-desc">偏好、扩展配置（Skills 清单、MCP 清单、客户端开关、分发方式）与 WebDAV 端点配置；受上方「导出包含」开关控制。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'exportScope' }"><button class="select-trigger" :aria-expanded="openSelect === 'exportScope' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="导出范围" @click="toggleSelect('exportScope')"><span class="select-value">管理器配置</span></button><UiSelectMenu :open="openSelect === 'exportScope'" @close="openSelect = ''" role="listbox" aria-label="导出范围"><button class="select-option selected" type="button" role="option" aria-selected="true" @click="app.showToast('范围固定为管理器自有配置：偏好、扩展配置与 WebDAV 端点配置。')">管理器配置</button></UiSelectMenu></div></div></div>
-          <div class="setting-row"><div><div class="setting-title">文件保护方式</div><div class="setting-desc">未加密配置 + SHA-256 完整性校验；只用于检测损坏，不是端到端加密，请自行保管导出文件。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'exportEncryption' }"><button class="select-trigger" :aria-expanded="openSelect === 'exportEncryption' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="文件保护方式" @click="toggleSelect('exportEncryption')"><span class="select-value">完整性校验</span></button><UiSelectMenu :open="openSelect === 'exportEncryption'" @close="openSelect = ''" role="listbox" aria-label="文件保护方式"><button class="select-option selected" type="button" role="option" aria-selected="true" @click="app.showToast('当前为明文配置 + SHA-256 完整性校验，不含额外口令。')">完整性校验</button></UiSelectMenu></div></div></div>
-          <div class="setting-row"><div><div class="setting-title">导入流程</div><div class="setting-desc">校验格式 → 备份当前配置 → 用户确认 → 应用；旧版加密容器会单独索要原口令。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'importFlow' }"><button class="select-trigger" :aria-expanded="openSelect === 'importFlow' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="导入流程" @click="toggleSelect('importFlow')"><span class="select-value">严格校验</span></button><UiSelectMenu :open="openSelect === 'importFlow'" @close="openSelect = ''" role="listbox" aria-label="导入流程"><button class="select-option selected" type="button" role="option" aria-selected="true" @click="app.showToast('当前流程固定为严格校验、备份确认与失败保留。')">严格校验</button></UiSelectMenu></div></div></div>
-        </div>
-        <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">容器不含以下内容</div><div class="setting-desc">{{ (app.migrationLastExport?.excluded ?? app.migrationLastImport?.excluded ?? []).join('；') || '钥匙串口令密文、MCP 环境变量值、Skills 文件内容、官方运行配置。' }}</div></div></div>
-          <div v-if="app.migrationLastExport || app.migrationLastImport" class="setting-row"><div><div class="setting-title">最近迁移结果</div><div class="setting-desc">只显示格式、区段、备份编号与文档摘要，不展示文件内容。</div></div><div class="controls"><code v-if="app.migrationLastExport">导出 v{{ app.migrationLastExport.formatVersion }} · {{ app.migrationLastExport.sections.join('、') }} · {{ app.migrationLastExport.backupId ?? '无备份' }}</code><code v-if="app.migrationLastImport">导入 v{{ app.migrationLastImport.formatVersion }} · {{ app.migrationLastImport.appliedSections.join('、') }}</code></div></div>
-          <div v-if="app.migrationLastImport?.skippedSections?.length" class="setting-row"><div><div class="setting-title">未应用的区段</div><div class="setting-desc">{{ app.migrationLastImport.skippedSections.map(item => `${item.section}：${item.reason}`).join('；') }}</div></div></div>
-        </div>
-        <div class="controls"><button class="btn" :disabled="app.migrationExporting || app.migrationImporting" @click="exportMigration()">{{ app.migrationExporting ? '导出中…' : '导出配置' }}</button><button class="btn" :disabled="app.migrationExporting || app.migrationImporting" @click="importMigration()">{{ app.migrationImporting ? '导入中…' : '导入配置' }}</button><button class="btn ghost" @click="openManagedTarget('exports')">打开导出目录</button></div>
-      </article>
     </section>
 
     <section v-else-if="section === 'sync'" class="settings-panel active">
       <ModelTransfer remote />
+      <ImportedConnections @activated="app.loadSyncConfig" />
       <article class="card"><div class="card-head"><div><h2>WebDAV 同步</h2><p>端点、服务端认证凭据与冲突策略集中在设置里维护；同步载荷为未加密配置 + 完整性校验。</p></div></div>
         <div class="field-grid">
           <div class="field"><label>服务地址</label><input v-model="syncEndpointInput.baseUrl" class="input" placeholder="https://dav.example.com/opencodex/" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
