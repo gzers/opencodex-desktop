@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-10-18T18:59:22.755468+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "19df27984c910fabaa0b2001ee1d558b3a088e40",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "d59fba233e4329a1b973333d45ad1a98f717ac13081c10c53582b92959adf0d6",
+    "apps/desktop/tauri/src/modules/model_config/management.rs": "619ea7273246c95c4522b3cf0d4830ab8a18638331b13dce793f8f75623e750e",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "def6a11ececf0b7eb3c8a7e6ed41437c47499e05e092c5a9d907ed0d275fe7a5",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": "b31dfe175eb9bd9e018172e6feaf6ce1edb337f3e79e0468ff6cd57ff9f17236",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "f9365c4cea08a3a5181b3d476c301226a164d021455b62acf377391cbeb1947b",
+    "apps/desktop/tauri/src/modules/model_config/upstream.rs": "5bb8fc6f35e22eb4e461bed1630853df6b9e0ff6a41bd22fb9658bbe7d914cd0",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "825a348d9eb30a2d6ad58010c6c440cd6bdd1b4d0d2eec9e9c4789f584f81670",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "560be2b93bf2e38357ba7f0af3305d1240d2762a19fdb51ecead052ed6b3f5a8",
+    "apps/desktop/ui/src/features/models/api.ts": "9977d42b84ae669f92c9f85e9bd1d90fe66a498f67c4b2d478bf930de341c208"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 37565,
+      "passed": 65,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets -- -D warnings",
+      "session": 13488,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 62060,
+      "result": "passed",
+      "passed": 1,
+      "installedOfficial": "2.84.0",
+      "catalogSequence": [
+        2,
+        2,
+        0,
+        1
+      ],
+      "terminalPhases": [
+        "committed",
+        "committed",
+        "committed"
+      ],
+      "protocolGroupIdentityStable": true,
+      "generationRequests": 0,
+      "isolation": [
+        "temporary HOME",
+        "temporary CODEX_HOME",
+        "temporary OPENCODEX_HOME",
+        "in-memory test credential backend",
+        "loopback-only fixture model service"
+      ],
+      "scope": "real installed official executable/CLI and authenticated management API plus persisted catalog; native manager UI/client loaded and Windows not covered"
+    },
+    {
+      "command": "npm run typecheck",
+      "session": 36804,
+      "result": "passed"
+    }
+  ],
+  "remaining": [
+    "channel full lifecycle/history to draft and native client loading verification",
+    "source attribution and durable continuous conversations",
+    "protected unified transfer/account and secret scopes/subset import",
+    "all UI/platform gates and release"
+  ]
+}
