@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-10-18T19:18:29.926406+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "5c537cffd43b8d6e9d309e6a888e0b153e4ae4e1",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_transfer.rs": "5628e051d04e9ef1b248078aabe0582400ba7e55b181fce8cb39ca57180c7e19",
+    "apps/desktop/tauri/src/lib.rs": "620e05c2f1a304547fe25cf4d66a762cceb19a88bdaca271af4cb9cc69e43cd4",
+    "apps/desktop/tauri/src/modules/migration/mod.rs": "e705a9a1536e110254a6db87fa8db122482e37d0282a146c54996cf6b246352b",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "5ca52e7c2eef92afcd5c638c9931fe170a8202ea1fd0cd75217c4f4af06e31c4",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "8f8dda981b72709f63c3c1eb9e836fbe19decc0e9d6f7992e1db54012dd1ea00",
+    "apps/desktop/tauri/src/modules/sync/mod.rs": "288a4e8f2b29dd23899aa16d2b19c4c9f4ee4d867485e375d95798e6ebf9f5af",
+    "apps/desktop/tauri/src/modules/sync/portable_file.rs": "b8e6043d9382bdc4e9316c9040ee9e48e8e0324292ed7e6e3c806474972caac9",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "caa86b95ee4aa43f816b1445c62f814a59fc44a71f4c70a6553970dccf13f25c",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "afefe9bb4f4bdf316b217ae36d07e3a6d4a5bc55397d2cabebae58e83c25e7d1",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "14f231ac144d8a811e1a7f45f19826ab5e04cc1c7b5fa5eb2990933a9227c27e",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "293db8df967fc0e6d33102066577c284f3fc0d1e14223262693c8ae9248307d4"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config::transfer --no-default-features",
+      "session": 6414,
+      "passed": 6,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib modules::sync::portable_file --no-default-features",
+      "session": 32604,
+      "passed": 2,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib protected_file_export --no-default-features",
+      "session": 8285,
+      "passed": 1,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib legacy_container_needs_original_passphrase --no-default-features",
+      "session": 57307,
+      "passed": 1,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run tests/model-transfer.test.ts",
+      "passed": 6,
+      "files": 1,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets -- -D warnings",
+      "session": 37175,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 91664,
+      "result": "passed"
+    }
+  ],
+  "remaining": [
+    "unified manager/model object document and full secret/account scope restoration",
+    "persistent device sync scope and all-object conditional remote publication",
+    "channel complete lifecycle/history/client-loaded evidence",
+    "UI/platform/release gates"
+  ]
+}
