@@ -14,6 +14,7 @@ export const useModelsStore = defineStore('model-config', () => {
   const status = ref('')
   const selected = ref<Record<string, string>>({})
   const notificationTarget = ref<{taskId:string;submissionId:string} | null>(null)
+  const policyNotificationTarget=ref<{planId:string}|null>(null)
   const channelDraft = ref<ModelPolicy | null>(null)
   const channelClean = ref('')
   const channelBaseline = ref('')
@@ -100,5 +101,5 @@ export const useModelsStore = defineStore('model-config', () => {
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { snapshot, draft, draftSession, notificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+  return { snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
 })

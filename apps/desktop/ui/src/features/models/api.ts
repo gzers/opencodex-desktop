@@ -36,6 +36,8 @@ export interface ModelSnapshot {
 }
 export interface TemplateRef { templateId: string; revisionId: string }
 export interface ServiceNode { id: string; name: string; url: string }
+export interface NodeMeasurement {nodeId:string;elapsedMs:number|null;modelCount:number|null;error:string|null}
+export interface NodeMeasurementSet {runId:string;stopped:boolean;results:NodeMeasurement[]}
 export interface DiscoveredModel { id: string; label: string; rules: ModelRules }
 export type ModelSelection = { mode: 'all' | 'none' } | { mode: 'whitelist'; models: string[] }
 export interface ChannelPolicy {
@@ -74,10 +76,13 @@ export const modelApi = {
   preparePolicy: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace}),
   applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),
   policyResult: (planId:string) => invoke<SavePlan>('model_policy_result',{planId}),
+  latestPolicy: () => invoke<SavePlan|null>('model_policy_latest'),
   compensatePolicy: (planId:string) => invoke<SavePlan>('model_policy_compensate',{planId}),
   upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
   discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
   forgetCredential: (reference:string) => invoke<void>('model_channel_forget_credential',{reference}),
+  measureNodes:(request:{runId:string;protocol:string;nodes:ServiceNode[];apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean})=>invoke<NodeMeasurementSet>('model_node_measure',{request}),
+  stopNodeMeasurement:(runId:string)=>invoke<void>('model_node_measure_stop',{runId}),
   external: (request: ExternalTaskRequest) => invoke<TaskBundle>('model_external_task', { request }),
   activate: (grant: TaskGrant) => invoke<void>('model_external_activate', { grant }),
   externalResult: (taskId: string, submissionId: string) => invoke<OwnerTaskResult>('model_external_result', { taskId, submissionId }),

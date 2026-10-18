@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import type { Field, ModelRules } from './api'
-const props = defineProps<{ modelValue: ModelRules; disabled?: boolean; hideProtocol?: boolean }>()
-const emit = defineEmits<{ 'update:modelValue': [rules: ModelRules] }>()
+const props = defineProps<{ modelValue: ModelRules; disabled?: boolean; hideProtocol?: boolean; lockedFields?:string[] }>()
+const emit = defineEmits<{ 'update:modelValue': [rules: ModelRules];'update:lockedFields':[fields:string[]] }>()
+const lockNames=[['protocol','协议'],['contextWindow','上下文'],['inputModalities','模态'],['reasoningEfforts','可选档位'],['defaultEffort','默认档位'],['fast','Fast']] as const
+function lock(field:string){const current=props.lockedFields??[];emit('update:lockedFields',current.includes(field)?current.filter(f=>f!==field):[...current,field])}
 function update<K extends keyof ModelRules>(key: K, value: ModelRules[K]) { emit('update:modelValue', { ...props.modelValue, [key]: value }) }
 function selected<T>(field: Field<T>): string { return field.mode === 'inherit' ? 'inherit' : String(field.value) }
 function scalar(key: 'protocol' | 'defaultEffort', value: string) { update(key, value === 'inherit' ? { mode: 'inherit' } : { mode: 'custom', value }) }
@@ -29,5 +31,6 @@ function checked(key: 'inputModalities' | 'reasoningEfforts', value: string) { c
     </div>
     <label>默认推理档位<UiSelectField :model-value="selected(modelValue.defaultEffort)" :options="[{ value: 'inherit', label: '继承' }, ...efforts.map(value => ({ value, label: value }))]" label="默认推理档位" :disabled="disabled" @update:model-value="scalar('defaultEffort', $event)" /></label>
     <label>Fast支持<UiSelectField :model-value="selected(modelValue.fast)" :options="[{ value: 'inherit', label: '继承' }, { value: 'true', label: '支持' }, { value: 'false', label: '不支持' }]" label="Fast支持" :disabled="disabled" @update:model-value="update('fast', $event === 'inherit' ? { mode: 'inherit' } : { mode: 'custom', value: $event === 'true' })" /></label>
+    <details v-if="lockedFields" class="model-field-wide"><summary>人工锁</summary><div class="model-inline"><label v-for="item in lockNames.filter(item=>!hideProtocol||item[0]!=='protocol')" :key="item[0]"><input type="checkbox" :checked="lockedFields.includes(item[0])" @change="lock(item[0])" />{{ item[1] }}</label></div></details>
   </fieldset>
 </template>

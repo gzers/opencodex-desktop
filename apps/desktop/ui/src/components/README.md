@@ -38,6 +38,9 @@
 | 专题稳定ID | 正式实现 | 当前消费者与边界 |
 | --- | --- | --- |
 | choice.select | ui/UiSelectField + 既有UiSelectMenu | 模版版本/规则字段及gallery；modelValue/options/label/disabled与sm/md，复用菜单定位与键盘，不自动保存 |
+| choice.slider | ui/UiDiscreteSlider | gallery及模型选择器连续设置；只在调用方真实离散集合吸附，支持默认/未知、键盘/滚轮、恢复默认，不读取型号或推断能力 |
+| model.selection | features/models/ModelPicker + ModelChoiceOptions | 纯数据/事件组件；渠道/模型分别查询、表格原序/升降序、跨范围临时选择、失效引用、逐项推理/Fast及确认；业务adapter持有目录/保存边界 |
+| node.selection | features/models/ChannelEditor + useNodeMeasurements | 共享渠道认证及手动当前节点；单/批模型清单检测和取消，输入变化作废结果，不自动切换，不调用生成；计时只描述清单请求 |
 | overlay.dialog | ui/UiDialog | 模版版本管理/匹配预览及gallery；原生dialog焦点约束、Escape/遮罩、busy防止误关，表单数据由feature拥有 |
 | navigation.tabs / navigation.anchor | layout/StickyTabs | 模型/设置/扩展/诊断主Tab及gallery；容器sticky、ResizeObserver量高，详情/锚点消费--page-tabs-height；不接概览/面板 |
 

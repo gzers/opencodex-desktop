@@ -11,6 +11,7 @@ describe('notification action label contract', () => {
     const frozen = [
       'restore',
       'models',
+      'model_policy',
       'upgrade',
       'app_update',
       'sync',

@@ -1,12 +1,17 @@
 import { defineStore } from 'pinia'
 import { events, jobs } from '../../../../tauri/config/event-registry.json'
-export type ModelOperationKind = 'generation' | 'research' | 'external_submit' | 'policy_save' | 'transfer'
+export type ModelOperationKind = 'generation' | 'research' | 'external_submit' | 'policy_save' | 'transfer' | 'node_measurement'
 export type ModelOperationPhase = 'running' | 'review' | 'succeeded' | 'failed' | 'stopped'
 export interface OperationTask { id: string; kind: ModelOperationKind; phase: ModelOperationPhase; collapsed: boolean }
 const owner = jobs.find(job => job.id === 'model_config')
 const registered = owner?.availability === 'active' && events.some(event => event.id === 'model-operation-progress' && event.job === owner.id && event.fact === 'signal' && event.availability === 'active' && event.policy === null)
-export const operationTitles: Record<ModelOperationKind,string> = { generation:'模版生成',research:'在线资料检索',external_submit:'外部模版提交',policy_save:'渠道配置保存',transfer:'模型配置传输' }
+export const operationTitles: Record<ModelOperationKind,string> = { generation:'模版生成',research:'在线资料检索',external_submit:'外部模版提交',policy_save:'渠道配置保存',transfer:'模型配置传输',node_measurement:'节点连接检测' }
 export const operationPhases: Record<ModelOperationPhase,string> = { running:'正在执行',review:'结果待比较，尚未保存',succeeded:'已完成',failed:'未完成，请查看对应操作',stopped:'已停止等待' }
+export function operationPhaseText(task: OperationTask):string {
+  if(task.phase==='review'&&task.kind==='policy_save')return '已写入，待客户端核对'
+  if(task.phase==='review'&&task.kind==='transfer')return '已接收，待比较采用'
+  return operationPhases[task.phase]
+}
 export const useOperationTasks = defineStore('operation-tasks', {
   state: () => ({ tasks: [] as OperationTask[] }),
   actions: {

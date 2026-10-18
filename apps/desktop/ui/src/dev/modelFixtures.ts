@@ -16,5 +16,6 @@ export function installModelFixtures() {
   modelApi.preview=async(content,_channel,model)=>({matched:content.matching.include.some(p=>model.startsWith(p.value)),reason:'显式DEV样例',variantId:null,rules:content.rules})
   modelApi.project=async policy=>({rows:policy.channels.flatMap(c=>c.discovered.map(m=>({channelId:c.id,providerId:c.connection.providerId,modelId:m.id,label:m.label,enabled:c.connection.enabled,selected:true,discovered:true,templateRef:null,rules:m.rules,source:{protocol:'渠道默认'}}))),knownActiveModels:36,exactCatalogCount:null,notices:['显式DEV数据，不连接真实运行服务']})
   modelApi.agentSettings=async()=>null
+  modelApi.latestPolicy=async()=>null
   const store=useModelsStore();store.snapshot=structuredClone(snapshot);store.restoreChannels()
 }

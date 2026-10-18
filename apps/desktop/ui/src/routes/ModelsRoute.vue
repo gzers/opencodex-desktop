@@ -25,6 +25,7 @@ watch(detailHead, head => {
 })
 onBeforeUnmount(() => headerObserver?.disconnect())
 const tab = ref<'channels' | 'templates'>('channels')
+watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
 const agentOpen = ref(false)
 const externalOpen = ref(false)
 const receiptOpen = ref(false)
@@ -80,6 +81,9 @@ function choices(t: Template) {
   return [...t.revisions].reverse().filter(r => ids.has(r.id)).map(r => ({ value: r.id, label: versionLabel(r, t.source === 'builtin' && r === t.revisions[0]) }))
 }
 function manage(t: Template) { managerId.value = t.id; selectedIds.value = []; historySearch.value = ''; confirmDelete.value = false; deletion.value = null; historyError.value = '' }
+const commonLocks=computed(()=>draft.value?.content.lockedFields.filter(key=>key.startsWith('rules.')).map(key=>key.slice(6))??[])
+function setCommonLocks(values:string[]){if(draft.value)draft.value.content.lockedFields=[...draft.value.content.lockedFields.filter(key=>!key.startsWith('rules.')),...values.map(key=>'rules.'+key)]}
+function contentLock(field:string){if(!draft.value)return;const fields=draft.value.content.lockedFields;draft.value.content.lockedFields=fields.includes(field)?fields.filter(key=>key!==field):[...fields,field]}
 function protectedReason(t: Template, r: Revision) {
   if (t.source === 'builtin' && r === t.revisions[0]) return '内置基线'
   if (t.defaultRevision === r.id) return '默认版本'
@@ -121,10 +125,10 @@ function prepareDelete() {
 <template>
   <section ref="page" class="models-page">
     <AppTopbar />
-    <StickyTabs><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div></StickyTabs>
+    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><div id="model-tabs-actions"></div></div></StickyTabs>
     <p v-if="models.error" class="model-error" role="alert">{{ models.error }}</p>
     <div v-if="!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
-    <ChannelsView v-else-if="tab === 'channels'" />
+    <ChannelsView v-else-if="tab === 'channels'" actions-target="#model-tabs-actions" />
     <template v-else-if="!draft">
       <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
       <div class="model-table-scroll"><table class="model-table"><thead><tr><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
@@ -136,18 +140,18 @@ function prepareDelete() {
     <template v-else>
       <header ref="detailHead" class="model-detail-head"><UiButton variant="ghost" @click="continueAfterDiscard(models.leave)">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span><UiButton :disabled="models.busy" @click="agentOpen = true">Agent自动填充</UiButton><UiButton :disabled="models.busy" @click="externalOpen = true">外部任务</UiButton><UiButton :disabled="models.busy" @click="previewOpen = true">匹配预览</UiButton><UiButton variant="primary" :loading="models.busy" :disabled="!models.dirty && !!draft.templateId" @click="models.save">保存</UiButton></header>
       <div class="model-editor"><nav class="model-anchors" aria-label="模版分区"><a v-for="item in [['basic','基本信息'],['matching','匹配规则'],['rules','通用配置'],['variants','版本或后缀'],['source','来源与版本']]" :key="item[0]" :href="`#model-${item[0]}`" @click.prevent="anchor(item[0]!)">{{ item[1] }}</a></nav><div class="model-form">
-        <section id="model-basic"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label></section>
+        <section id="model-basic"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label><label class="model-inline"><input type="checkbox" :checked="draft.content.lockedFields.includes('description')" :disabled="models.busy" @change="contentLock('description')" />锁定说明</label></section>
         <section id="model-matching"><h2>匹配规则</h2><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
           <div v-for="(p, i) in draft.content.matching[kind]" :key="i" class="model-pattern"><UiSelectField :model-value="p.kind" :options="kinds" label="匹配类型" :disabled="models.busy" @update:model-value="p.kind = $event as Pattern['kind']" /><input class="input" v-model="p.value" :aria-label="`${kind}规则${i + 1}`" placeholder="原始模型ID或匹配文本" :disabled="models.busy" /><UiButton size="sm" variant="ghost" :disabled="models.busy" @click="draft.content.matching[kind].splice(i, 1)">移除</UiButton></div></div>
           <label class="model-inline"><input v-model="draft.content.matching.caseSensitive" type="checkbox" :disabled="models.busy" />区分大小写</label>
           <div class="model-columns"><label>渠道范围<UiSelectField :model-value="draft.content.matching.channelMode" :options="[{value:'all',label:'全部渠道'},{value:'whitelist',label:'仅所选渠道'},{value:'blacklist',label:'排除所选渠道'}]" label="渠道范围" :disabled="models.busy" @update:model-value="draft.content.matching.channelMode = $event as 'all' | 'whitelist' | 'blacklist'" /></label><label>优先级<input class="input" v-model.number="draft.content.matching.priority" type="number" :disabled="models.busy" /></label></div>
           <fieldset v-if="draft.content.matching.channelMode !== 'all'"><legend>选择渠道</legend><label v-for="channel in models.channelDraft?.channels ?? []" :key="channel.id" class="model-inline"><input v-model="draft.content.matching.channels" type="checkbox" :value="channel.id" :disabled="models.busy" />{{ channel.label }}</label><p v-if="!models.channelDraft?.channels.length" class="model-muted">暂无渠道，可先保存规则。</p><p v-for="id in draft.content.matching.channels.filter(id => !models.channelDraft?.channels.some(c => c.id === id))" :key="id" class="model-muted">已失效渠道引用 · {{ id.slice(0,8) }}</p></fieldset>
         </section>
-        <section id="model-rules"><h2>通用配置</h2><ModelRuleFields v-model="draft.content.rules" :disabled="models.busy" /></section>
+        <section id="model-rules"><h2>通用配置</h2><ModelRuleFields v-model="draft.content.rules" :locked-fields="commonLocks" :disabled="models.busy" @update:locked-fields="setCommonLocks" /></section>
         <section id="model-variants"><div class="model-field-title"><h2>版本或后缀</h2><UiButton size="sm" :disabled="models.busy" @click="addVariant">新增版本或后缀</UiButton></div><p v-if="!draft.content.variants.length" class="model-muted">暂无型号差异规则</p>
-          <article v-for="(v, i) in draft.content.variants" :key="v.id" class="model-variant"><div class="model-columns"><label>名称<input class="input" v-model="v.name" :disabled="models.busy" /></label><label>原始ID字面后缀<input class="input" v-model="v.suffix" :disabled="models.busy" /></label></div><ModelRuleFields v-model="v.rules" :disabled="models.busy" /><UiButton size="sm" variant="danger" :disabled="models.busy" @click="draft.content.variants.splice(i, 1)">移除此项</UiButton></article>
+          <article v-for="(v, i) in draft.content.variants" :key="v.id" class="model-variant"><div class="model-columns"><label>名称<input class="input" v-model="v.name" :disabled="models.busy" /></label><label>原始ID字面后缀<input class="input" v-model="v.suffix" :disabled="models.busy" /></label></div><ModelRuleFields v-model="v.rules" v-model:locked-fields="v.lockedFields" :disabled="models.busy" /><UiButton size="sm" variant="danger" :disabled="models.busy" @click="draft.content.variants.splice(i, 1)">移除此项</UiButton></article>
         </section>
-        <section id="model-source"><h2>来源与版本</h2><p>{{ draft.templateId ? '基于已保存版本编辑；保存产生独立版本。' : '自建模版，保存后生成独立身份。' }}</p><p v-if="draft.baseRevision" class="mono">{{ draft.baseRevision }}</p></section>
+        <section id="model-source"><h2>来源与版本</h2><p>{{ draft.templateId ? '基于已保存版本编辑；保存产生独立版本。' : '自建模版，保存后生成独立身份。' }}</p><p v-if="draft.baseRevision" class="mono">{{ draft.baseRevision }}</p><details v-for="(source,index) in draft.content.sources" :key="index" class="model-source-record"><summary>{{ source.field }} · {{ source.recordedAt.slice(0,10) }}</summary><p v-if="source.url" class="mono">{{ source.url }}</p><p>{{ source.note }}</p></details></section>
       </div></div>
     </template>
     <UiDialog :open="!!manager" :title="`版本管理 · ${manager?.label ?? ''}`" :busy="models.busy" wide @close="managerId = ''"><template v-if="manager">
@@ -164,6 +168,13 @@ function prepareDelete() {
 <style>
 .model-tabs,.model-detail-head{position:sticky;z-index:8;display:flex;align-items:center;gap:var(--space-2);background:var(--page,var(--panel));border-bottom:1px solid var(--border);padding:10px 0}
 .model-tabs{position:static;min-height:48px}
+.model-tabs-line{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap}
+.model-policy-actions{justify-content:flex-end;padding:6px 0}
+.model-policy-state{display:inline-flex;align-items:center;gap:6px;min-height:var(--control-md);padding:0 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:var(--text-caption);white-space:nowrap;background:var(--surface-panel-bg,var(--panel))}
+.model-policy-state[data-tone=warning]{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 30%,var(--border))}
+.model-policy-state[data-tone=danger]{color:var(--red);border-color:color-mix(in srgb,var(--red) 30%,var(--border))}
+.model-policy-state[data-tone=success]{color:var(--green)}
+.model-source-record{padding:10px 0}.model-source-record p{white-space:pre-wrap;overflow-wrap:anywhere}
 .model-detail-head{top:var(--page-tabs-height,48px);flex-wrap:wrap}
 .model-name{flex:1;min-width:160px;font-weight:650}
 .model-toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin:20px 0;flex-wrap:wrap}
