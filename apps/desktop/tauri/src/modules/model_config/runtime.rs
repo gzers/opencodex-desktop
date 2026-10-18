@@ -21,6 +21,35 @@ const PLAN_DIR: &str = "manager-state/model-save-plans";
 const OWNERSHIP: &str = "manager-state/model-runtime-ownership.json";
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CredentialChange {
+    provider: String,
+    reference: String,
+    before: super::management::KeyState,
+    intended_id: String,
+    intended_digest: String,
+    observed: Option<super::management::KeyState>,
+}
+impl CredentialChange {
+    fn intended(&self) -> super::management::KeyState {
+        let mut next = self.before.clone();
+        next.ids.insert(self.intended_id.clone());
+        next.active_id = Some(self.intended_id.clone());
+        next
+    }
+    fn compensation_owned(&self, current: &super::management::KeyState) -> bool {
+        if current == &self.before {
+            return true;
+        }
+        let Some(observed) = &self.observed else {
+            return false;
+        };
+        let mut restoring = observed.clone();
+        restoring.active_id = self.before.active_id.clone();
+        current == observed || current == &restoring
+    }
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct OwnedField {
     provider: String,
     key: String,
@@ -50,6 +79,8 @@ pub struct RuntimePlan {
     pub observed_providers: Value,
     pub observed_order: Vec<String>,
     pub observed_disabled: Vec<String>,
+    #[serde(default)]
+    pub credential_changes: Vec<CredentialChange>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -92,10 +123,100 @@ fn save(root: &Path, plan: &RuntimePlan) -> ModelResult<()> {
     Ok(())
 }
 fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
-    Ok(serde_json::from_slice(&safety::read_file(
-        &path(root, id)?,
-        256 * 1024 * 1024,
-    )?)?)
+    let plan: RuntimePlan =
+        serde_json::from_slice(&safety::read_file(&path(root, id)?, 256 * 1024 * 1024)?)?;
+    if plan.id != id {
+        return Err(invalid("plan_identity", "保存计划的完整身份不一致"));
+    }
+    Ok(plan)
+}
+fn execution_lock(root: &Path) -> ModelResult<TargetFileLock> {
+    let target = root.join("manager-state/model-runtime-transaction");
+    safety::check_path(root, &target, true)?;
+    safety::check_path(
+        root,
+        &crate::infrastructure::locking::lock_path_for(&target),
+        true,
+    )?;
+    Ok(TargetFileLock::lock(&target)?)
+}
+fn plan_ids(root: &Path) -> ModelResult<Vec<String>> {
+    let directory = root.join(PLAN_DIR);
+    safety::check_path(root, &directory, true)?;
+    if !directory.exists() {
+        return Ok(vec![]);
+    }
+    let mut ids = vec![];
+    for entry in std::fs::read_dir(directory)? {
+        let entry = entry?;
+        let name = entry.file_name();
+        let name = name.to_string_lossy();
+        let Some(id) = name.strip_suffix(".json") else {
+            continue;
+        };
+        if uuid::Uuid::parse_str(id).is_err() {
+            continue;
+        }
+        require_uuid(id)?;
+        if !entry.file_type()?.is_file() {
+            return Err(invalid("plan_path", "保存计划路径不是普通文件"));
+        }
+        ids.push(id.into());
+        if ids.len() > 10000 {
+            return Err(invalid("plan_limit", "保存计划过多，需核对后再继续"));
+        }
+    }
+    Ok(ids)
+}
+pub fn latest(root: &Path) -> ModelResult<Option<SavePlanView>> {
+    let mut latest = None;
+    for id in plan_ids(root)? {
+        let plan = load(root, &id)?;
+        if ["prepared", "compensated"].contains(&plan.phase.as_str()) {
+            continue;
+        }
+        let created = chrono::DateTime::parse_from_rfc3339(&plan.created_at)
+            .map_err(|_| invalid("plan_time", "保存计划时间无效"))?;
+        if latest.as_ref().is_none_or(|(time, _)| &created > time) {
+            latest = Some((created, plan.view()));
+        }
+    }
+    Ok(latest.map(|(_, view)| view))
+}
+fn reject_incomplete(root: &Path) -> ModelResult<()> {
+    for id in plan_ids(root)? {
+        let plan = load(root, &id)?;
+        if !["prepared", "committed", "compensated"].contains(&plan.phase.as_str()) {
+            return Err(invalid(
+                "plan_incomplete",
+                "已有保存计划待核对，请先核对原计划或撤回其未完成写入",
+            ));
+        }
+    }
+    Ok(())
+}
+pub(super) fn recovery_uses(root: &Path, template: &str, revision: &str) -> ModelResult<bool> {
+    for id in plan_ids(root)? {
+        let plan = load(root, &id)?;
+        if ["prepared", "compensated"].contains(&plan.phase.as_str()) {
+            continue;
+        }
+        if plan
+            .policy
+            .template_refs
+            .iter()
+            .chain(
+                plan.policy
+                    .channels
+                    .iter()
+                    .flat_map(|c| c.template_refs.iter().chain(c.model_refs.values())),
+            )
+            .any(|r| r.template_id == template && r.revision_id == revision)
+        {
+            return Ok(true);
+        }
+    }
+    Ok(false)
 }
 fn rows(snapshot: &UpstreamSnapshot) -> ModelResult<&Vec<Value>> {
     snapshot
@@ -465,6 +586,8 @@ pub async fn prepare(
     expected_policy: String,
     expected_workspace: String,
 ) -> ModelResult<SavePlanView> {
+    let _execution = execution_lock(root)?;
+    reject_incomplete(root)?;
     let local = ModelStore::new(root).load()?;
     if local.library_digest != expected_library
         || local.policy_digest != expected_policy
@@ -497,6 +620,44 @@ pub async fn prepare(
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
     let observed_providers = before.providers.clone();
     let observed_order = string_array(&before.order["pickerOrder"])?;
+    let mut credential_changes = vec![];
+    let mut management = None;
+    for channel in &policy.channels {
+        let Some(reference) = &channel.connection.credential_ref else {
+            continue;
+        };
+        if local
+            .policy
+            .channels
+            .iter()
+            .any(|c| c.id == channel.id && c.connection.credential_ref.as_ref() == Some(reference))
+        {
+            continue;
+        }
+        let key = super::discovery::credential(reference)?;
+        let intended_digest = super::store::sha256(key.trim().as_bytes());
+        let intended_id = intended_digest.trim_start_matches("sha256:")[..8].to_owned();
+        let provider = &channel.connection.provider_id;
+        let keys = if before.providers["providers"].get(provider).is_some() {
+            if management.is_none() {
+                management = Some(super::management::Management::bind(context).await?);
+            }
+            management.as_ref().unwrap().key_state(provider).await?
+        } else {
+            super::management::KeyState {
+                active_id: None,
+                ids: BTreeSet::new(),
+            }
+        };
+        credential_changes.push(CredentialChange {
+            provider: provider.clone(),
+            reference: reference.clone(),
+            before: keys,
+            intended_id,
+            intended_digest,
+            observed: None,
+        });
+    }
     let plan = RuntimePlan {
         id: uuid::Uuid::new_v4().to_string(),
         phase: "prepared".into(),
@@ -517,6 +678,7 @@ pub async fn prepare(
         observed_order,
         observed_disabled: disabled_before.clone(),
         disabled_before,
+        credential_changes,
     };
     save(root, &plan)?;
     Ok(plan.view())
@@ -529,6 +691,7 @@ pub async fn reconcile(
     context: &ProcessContext,
     id: &str,
 ) -> ModelResult<SavePlanView> {
+    let _execution = execution_lock(root)?;
     let file = path(root, id)?;
     safety::check_path(
         root,
@@ -544,6 +707,26 @@ pub async fn reconcile(
         return Err(invalid("runtime_binding", "运行来源改变，原计划仍保留"));
     }
     let actual = upstream::snapshot(context).await?;
+    if !plan.credential_changes.is_empty() {
+        let management = super::management::Management::bind(context).await?;
+        for change in &mut plan.credential_changes {
+            if actual.providers["providers"]
+                .get(&change.provider)
+                .is_none()
+            {
+                continue;
+            }
+            let current = management.key_state(&change.provider).await?;
+            if current == change.intended() {
+                change.observed = Some(current);
+            } else if current != change.before {
+                return Err(invalid(
+                    "credential_drift",
+                    "密钥集合有无法归于本次保存的变化，未更新本地策略",
+                ));
+            }
+        }
+    }
     let disabled =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
     let mut staged = plan.before.providers.clone();
@@ -600,6 +783,10 @@ pub async fn reconcile(
     if actual.providers == plan.next_providers
         && actual_order == plan.next_order
         && catalog_slugs(&actual)? == plan.expected_slugs
+        && plan
+            .credential_changes
+            .iter()
+            .all(|change| change.observed.as_ref() == Some(&change.intended()))
     {
         ModelStore::new(root).commit_runtime_policy(
             &plan.expected_library,
@@ -623,6 +810,8 @@ pub async fn reconcile(
     Ok(plan.view())
 }
 pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResult<SavePlanView> {
+    let _execution = execution_lock(root)?;
+    reject_incomplete(root)?;
     let bound_executable = context.executable()?;
     let frozen = ProcessContext {
         runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
@@ -740,20 +929,6 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
             }
             plan.phase = "new_registered".into();
             save(root, &plan)?;
-            if new_channels
-                .iter()
-                .any(|c| c.connection.credential_ref.is_some())
-            {
-                let management = super::management::Management::bind(&frozen).await?;
-                for channel in &new_channels {
-                    if let Some(reference) = &channel.connection.credential_ref {
-                        let key = super::discovery::credential(reference)?;
-                        management
-                            .add_key(&channel.connection.provider_id, &key)
-                            .await?;
-                    }
-                }
-            }
             let current =
                 upstream::read(&frozen, upstream::ReadOperation::ProviderSnapshot).await?;
             if current != staged {
@@ -770,6 +945,36 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
                 0o600,
             )?;
             plan.phase = "credentials_registered".into();
+            save(root, &plan)?;
+        }
+        if !plan.credential_changes.is_empty() {
+            let management = super::management::Management::bind(&frozen).await?;
+            for index in 0..plan.credential_changes.len() {
+                let change = plan.credential_changes[index].clone();
+                if management.key_state(&change.provider).await? != change.before {
+                    return Err(invalid(
+                        "credential_drift",
+                        "确认后活动密钥或集合改变，未覆盖",
+                    ));
+                }
+                let key = super::discovery::credential(&change.reference)?;
+                if super::store::sha256(key.trim().as_bytes()) != change.intended_digest {
+                    return Err(invalid("credential_drift", "本机密钥引用内容变化，未发送"));
+                }
+                plan.phase = "writing_credentials".into();
+                save(root, &plan)?;
+                management.add_key(&change.provider, &key).await?;
+                let observed = management.key_state(&change.provider).await?;
+                if observed != change.intended() {
+                    return Err(invalid(
+                        "credential_readback",
+                        "密钥写后状态不同，原计划待核对",
+                    ));
+                }
+                plan.credential_changes[index].observed = Some(observed);
+                save(root, &plan)?;
+            }
+            plan.phase = "credentials_verified".into();
             save(root, &plan)?;
         }
         let providers = upstream::write(
@@ -998,6 +1203,7 @@ pub async fn compensate(
     context: &ProcessContext,
     id: &str,
 ) -> ModelResult<SavePlanView> {
+    let _execution = execution_lock(root)?;
     let file = path(root, id)?;
     safety::check_path(
         root,
@@ -1032,6 +1238,43 @@ pub async fn compensate(
             "compensation_drift",
             "当前运行态不同于本次最后核验的副作用；为保留后来修改，拒绝自动补偿",
         ));
+    }
+    if !plan.credential_changes.is_empty() {
+        let management = super::management::Management::bind(context).await?;
+        for change in &plan.credential_changes {
+            if current["providers"].get(&change.provider).is_none() {
+                continue;
+            }
+            let state = management.key_state(&change.provider).await?;
+            if !change.compensation_owned(&state) {
+                return Err(invalid(
+                    "credential_drift",
+                    "密钥存在后来修改或未核验副作用，拒绝自动补偿",
+                ));
+            }
+        }
+        for change in &plan.credential_changes {
+            if current["providers"].get(&change.provider).is_none() {
+                continue;
+            }
+            if management.key_state(&change.provider).await? == change.before {
+                continue;
+            }
+            if let Some(active) = &change.before.active_id {
+                management.activate_key(&change.provider, active).await?;
+            }
+            if !change.before.ids.contains(&change.intended_id) {
+                management
+                    .remove_key(&change.provider, &change.intended_id)
+                    .await?;
+            }
+            if management.key_state(&change.provider).await? != change.before {
+                return Err(invalid(
+                    "credential_compensation",
+                    "密钥补偿读回不一致，保留原计划",
+                ));
+            }
+        }
     }
     let baseline = root
         .join(PLAN_DIR)
@@ -1113,6 +1356,34 @@ pub async fn compensate(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn credential_compensation_accepts_its_known_intermediate_but_refuses_new_keys_or_selection() {
+        let before = super::super::management::KeyState {
+            active_id: Some("old".into()),
+            ids: BTreeSet::from(["old".into()]),
+        };
+        let mut change = CredentialChange {
+            provider: "fixture".into(),
+            reference: uuid::Uuid::new_v4().to_string(),
+            before: before.clone(),
+            intended_id: "new".into(),
+            intended_digest: "fixture-digest".into(),
+            observed: None,
+        };
+        let intended = change.intended();
+        assert!(!change.compensation_owned(&intended));
+        change.observed = Some(intended.clone());
+        assert!(change.compensation_owned(&intended));
+        assert!(change.compensation_owned(&before));
+        let mut intermediate = intended.clone();
+        intermediate.active_id = before.active_id.clone();
+        assert!(change.compensation_owned(&intermediate));
+        let mut later = intended;
+        later.ids.insert("operator-key".into());
+        assert!(!change.compensation_owned(&later));
+        later.active_id = Some("operator-key".into());
+        assert!(!change.compensation_owned(&later));
+    }
     use std::collections::BTreeMap;
     fn fixture() -> (UpstreamSnapshot, Policy) {
         let node = ServiceNode {
@@ -1399,6 +1670,22 @@ else:sys.exit(7)
         let partial = apply(root.path(), &context, &plan.id).await.unwrap();
         assert_eq!(partial.phase, "visibility_written");
         assert_eq!(partial.error.as_deref(), Some("order_write"));
+        assert_eq!(latest(root.path()).unwrap().unwrap().id, plan.id);
+        let pending = ModelStore::new(root.path()).load().unwrap();
+        assert_eq!(
+            prepare(
+                root.path(),
+                &context,
+                pending.workspace.as_ref().unwrap().policy.clone(),
+                pending.library_digest,
+                pending.policy_digest,
+                pending.workspace_digest
+            )
+            .await
+            .unwrap_err()
+            .code,
+            "plan_incomplete"
+        );
         assert!(!root.path().join(POLICY_PATH).exists());
         assert_eq!(
             apply(root.path(), &context, &plan.id)
@@ -1438,6 +1725,7 @@ else:sys.exit(7)
         assert_eq!(partial.phase, "visibility_written");
         let restored = compensate(root.path(), &context, &plan.id).await.unwrap();
         assert_eq!(restored.phase, "compensated");
+        assert!(latest(root.path()).unwrap().is_none());
         assert!(!root.path().join(POLICY_PATH).exists());
         assert_eq!(
             upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)

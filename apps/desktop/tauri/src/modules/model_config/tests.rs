@@ -409,6 +409,10 @@ fn projection_keeps_channel_group_order_and_missing_selection_without_claiming_c
 fn capability_and_protocol_priorities_differ_and_explicit_false_survives() {
     let mut library = seed_library();
     let template = &mut library.templates[0];
+    template.revisions[0].content.matching.include = vec![Pattern {
+        kind: MatchKind::Exact,
+        value: "gpt-a".into(),
+    }];
     template.revisions[0].content.rules.protocol = Field::Custom("openai-responses".into());
     template.revisions[0].content.rules.context_window = Field::Custom(8000);
     template.revisions[0].content.rules.fast = Field::Custom(true);

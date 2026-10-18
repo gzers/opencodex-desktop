@@ -101,7 +101,12 @@ pub async fn model_policy_apply(
     context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
     let _admission = crate::infrastructure::storage_writers::global().admit()?;
-    crate::modules::model_config::runtime::apply(&data_root.0, &context, &plan_id).await
+    observe_policy(
+        &data_root.0,
+        &plan_id,
+        crate::modules::model_config::runtime::apply(&data_root.0, &context, &plan_id),
+    )
+    .await
 }
 #[tauri::command]
 pub async fn model_policy_result(
@@ -110,7 +115,23 @@ pub async fn model_policy_result(
     context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
     let _admission = crate::infrastructure::storage_writers::global().admit()?;
-    crate::modules::model_config::runtime::reconcile(&data_root.0, &context, &plan_id).await
+    observe_policy(
+        &data_root.0,
+        &plan_id,
+        crate::modules::model_config::runtime::reconcile(&data_root.0, &context, &plan_id),
+    )
+    .await
+}
+#[tauri::command]
+pub async fn model_policy_latest(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<crate::modules::model_config::runtime::SavePlanView>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::runtime::latest(&root)
+    })
+    .await
+    .map_err(|_| invalid("plan_worker", "读取原保存计划中断"))?
 }
 #[tauri::command]
 pub async fn model_policy_compensate(
@@ -119,7 +140,46 @@ pub async fn model_policy_compensate(
     context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
     let _admission = crate::infrastructure::storage_writers::global().admit()?;
-    crate::modules::model_config::runtime::compensate(&data_root.0, &context, &plan_id).await
+    observe_policy(
+        &data_root.0,
+        &plan_id,
+        crate::modules::model_config::runtime::compensate(&data_root.0, &context, &plan_id),
+    )
+    .await
+}
+async fn observe_policy(
+    root: &std::path::Path,
+    id: &str,
+    operation: impl std::future::Future<
+        Output = ModelResult<crate::modules::model_config::runtime::SavePlanView>,
+    >,
+) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
+    use crate::modules::model_config::feedback::{self, OperationKind, OperationPhase};
+    let observation = uuid::Uuid::new_v4().to_string();
+    feedback::progress(
+        root,
+        &observation,
+        OperationKind::PolicySave,
+        OperationPhase::Running,
+    );
+    let result = operation.await;
+    let success = result
+        .as_ref()
+        .is_ok_and(|plan| ["committed", "compensated"].contains(&plan.phase.as_str()));
+    let phase = if result.as_ref().is_ok_and(|plan| plan.phase == "committed") {
+        OperationPhase::Review
+    } else if success {
+        OperationPhase::Succeeded
+    } else {
+        OperationPhase::Failed
+    };
+    feedback::progress(root, &observation, OperationKind::PolicySave, phase);
+    if crate::modules::model_config::runtime::query(root, id)
+        .is_ok_and(|plan| plan.phase != "prepared")
+    {
+        feedback::policy_terminal(root, id, success);
+    }
+    result
 }
 #[tauri::command]
 pub fn model_match_preview(
@@ -161,6 +221,32 @@ pub async fn model_channel_forget_credential(reference: String) -> ModelResult<(
     })
     .await
     .map_err(|_| invalid("credential_store", "凭据清理未完成"))?
+}
+#[tauri::command]
+pub async fn model_node_measure(
+    request: crate::modules::model_config::measurements::Request,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::measurements::ResultSet> {
+    use crate::modules::model_config::feedback::{self, OperationKind, OperationPhase};
+    let id = request.run_id.clone();
+    feedback::progress(
+        &data_root.0,
+        &id,
+        OperationKind::NodeMeasurement,
+        OperationPhase::Running,
+    );
+    let result = crate::modules::model_config::measurements::measure(request).await;
+    let phase = match &result {
+        Ok(value) if value.stopped => OperationPhase::Stopped,
+        Ok(value) if value.results.iter().all(|r| r.error.is_none()) => OperationPhase::Succeeded,
+        _ => OperationPhase::Failed,
+    };
+    feedback::progress(&data_root.0, &id, OperationKind::NodeMeasurement, phase);
+    result
+}
+#[tauri::command]
+pub fn model_node_measure_stop(run_id: String) -> ModelResult<()> {
+    crate::modules::model_config::measurements::stop(&run_id)
 }
 #[tauri::command]
 pub async fn model_external_task(

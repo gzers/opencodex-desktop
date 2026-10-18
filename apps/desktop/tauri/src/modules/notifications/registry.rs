@@ -184,6 +184,7 @@ pub enum Fact {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PolicyId {
+    ModelPolicyFailure,
     ModelExternalFailure,
     StartFailure,
     StopFailure,
@@ -571,6 +572,10 @@ pub struct EmissionSite {
 
 #[derive(Debug, Deserialize)]
 enum SupportedEvent {
+    #[serde(rename = "model-policy-save-failed")]
+    ModelPolicySaveFailed,
+    #[serde(rename = "model-policy-save-succeeded")]
+    ModelPolicySaveSucceeded,
     #[serde(rename = "model-config-changed")]
     ModelConfigChanged,
     #[serde(rename = "model-operation-progress")]

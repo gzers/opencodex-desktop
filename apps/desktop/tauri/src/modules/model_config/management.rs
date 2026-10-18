@@ -4,10 +4,16 @@ use super::schema::*;
 use crate::{modules::backup::safety, state::ProcessContext};
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine};
 use hmac::{Hmac, Mac};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use sha2::Sha256;
 use std::time::Duration;
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct KeyState {
+    pub active_id: Option<String>,
+    pub ids: std::collections::BTreeSet<String>,
+}
 #[derive(Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct RuntimeRecord {
@@ -15,6 +21,7 @@ struct RuntimeRecord {
     port: u16,
     attestation_secret: Option<String>,
 }
+
 fn read_record(context: &ProcessContext) -> ModelResult<RuntimeRecord> {
     let path = context.opencodex_home.join("runtime-port.json");
     safety::check_path(&context.opencodex_home, &path, false)?;
@@ -122,6 +129,7 @@ impl Management {
     ) -> ModelResult<Value> {
         if ![
             "/api/providers/keys",
+            "/api/providers/keys/active",
             "/api/providers",
             "/api/disabled-models",
         ]
@@ -193,5 +201,257 @@ impl Management {
         )
         .await?;
         Ok(())
+    }
+    pub async fn key_state(&self, provider: &str) -> ModelResult<KeyState> {
+        let mut url = reqwest::Url::parse("http://127.0.0.1/api/providers/keys")
+            .map_err(|_| invalid("key_state", "密钥状态请求无效"))?;
+        url.query_pairs_mut().append_pair("name", provider);
+        let path = format!("{}?{}", url.path(), url.query().unwrap_or(""));
+        let value = self.request(reqwest::Method::GET, &path, None).await?;
+        let active_id = match &value["activeId"] {
+            Value::Null => None,
+            Value::String(id) => Some(id.clone()),
+            _ => return Err(invalid("key_state", "官方活动密钥身份无效")),
+        };
+        let rows = value["keys"]
+            .as_array()
+            .ok_or_else(|| invalid("key_state", "官方密钥集合无效"))?;
+        let ids: std::collections::BTreeSet<String> = rows
+            .iter()
+            .map(|row| {
+                row["id"]
+                    .as_str()
+                    .map(str::to_owned)
+                    .ok_or_else(|| invalid("key_state", "官方密钥身份缺失"))
+            })
+            .collect::<ModelResult<_>>()?;
+        if ids.len() != rows.len()
+            || ids
+                .iter()
+                .any(|id| id.len() != 8 || !id.bytes().all(|c| c.is_ascii_hexdigit()))
+            || active_id.as_ref().is_some_and(|id| !ids.contains(id))
+        {
+            return Err(invalid("key_state", "官方密钥身份不能核对"));
+        }
+        Ok(KeyState { active_id, ids })
+    }
+    pub async fn activate_key(&self, provider: &str, id: &str) -> ModelResult<()> {
+        self.request(
+            reqwest::Method::PUT,
+            "/api/providers/keys/active",
+            Some(serde_json::json!({"name":provider,"id":id})),
+        )
+        .await?;
+        Ok(())
+    }
+    pub async fn remove_key(&self, provider: &str, id: &str) -> ModelResult<()> {
+        self.request(
+            reqwest::Method::DELETE,
+            "/api/providers/keys",
+            Some(serde_json::json!({"name":provider,"id":id})),
+        )
+        .await?;
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{extract::State, http::HeaderMap, routing::get, Json, Router};
+    use std::{
+        collections::BTreeSet,
+        sync::{
+            atomic::{AtomicUsize, Ordering},
+            Arc, Mutex,
+        },
+    };
+    #[derive(Clone)]
+    struct Fixture {
+        pid: u32,
+        port: u16,
+        secret: String,
+        valid: bool,
+        pool: Arc<Mutex<KeyState>>,
+        calls: Arc<AtomicUsize>,
+    }
+    async fn health(State(state): State<Fixture>, headers: HeaderMap) -> (HeaderMap, Json<Value>) {
+        let challenge = headers
+            .get("x-opencodex-attestation-challenge")
+            .unwrap()
+            .to_str()
+            .unwrap();
+        let mut mac = Hmac::<Sha256>::new_from_slice(if state.valid {
+            state.secret.as_bytes()
+        } else {
+            b"wrong-proof"
+        })
+        .unwrap();
+        mac.update(
+            format!(
+                "opencodex-local-management-v1\n{challenge}\n{}\n{}",
+                state.pid, state.port
+            )
+            .as_bytes(),
+        );
+        let mut response = HeaderMap::new();
+        response.insert(
+            "x-opencodex-attestation-proof",
+            URL_SAFE_NO_PAD
+                .encode(mac.finalize().into_bytes())
+                .parse()
+                .unwrap(),
+        );
+        (
+            response,
+            Json(serde_json::json!({"service":"opencodex","pid":state.pid})),
+        )
+    }
+    fn admission(state: &Fixture, headers: &HeaderMap) {
+        assert_eq!(
+            headers.get("authorization").unwrap().to_str().unwrap(),
+            format!("Bearer ocx_admin_{}", "t".repeat(43))
+        );
+        state.calls.fetch_add(1, Ordering::SeqCst);
+    }
+    async fn keys(State(state): State<Fixture>, headers: HeaderMap) -> Json<Value> {
+        admission(&state, &headers);
+        let pool = state.pool.lock().unwrap();
+        Json(
+            serde_json::json!({"activeId":pool.active_id,"keys":pool.ids.iter().map(|id|serde_json::json!({"id":id,"masked":"do-not-return-to-webview"})).collect::<Vec<_>>()}),
+        )
+    }
+    async fn add(
+        State(state): State<Fixture>,
+        headers: HeaderMap,
+        Json(body): Json<Value>,
+    ) -> Json<Value> {
+        admission(&state, &headers);
+        let key = body["key"].as_str().unwrap();
+        let id = super::super::store::sha256(key.as_bytes()).trim_start_matches("sha256:")[..8]
+            .to_string();
+        let mut pool = state.pool.lock().unwrap();
+        pool.ids.insert(id.clone());
+        pool.active_id = Some(id.clone());
+        Json(serde_json::json!({"ok":true,"id":id}))
+    }
+    async fn activate(
+        State(state): State<Fixture>,
+        headers: HeaderMap,
+        Json(body): Json<Value>,
+    ) -> Json<Value> {
+        admission(&state, &headers);
+        let id = body["id"].as_str().unwrap();
+        let mut pool = state.pool.lock().unwrap();
+        assert!(pool.ids.contains(id));
+        pool.active_id = Some(id.into());
+        Json(serde_json::json!({"ok":true}))
+    }
+    async fn remove(
+        State(state): State<Fixture>,
+        headers: HeaderMap,
+        Json(body): Json<Value>,
+    ) -> Json<Value> {
+        admission(&state, &headers);
+        let id = body["id"].as_str().unwrap();
+        let mut pool = state.pool.lock().unwrap();
+        pool.ids.remove(id);
+        if pool.active_id.as_deref() == Some(id) {
+            pool.active_id = pool.ids.iter().next().cloned();
+        }
+        Json(serde_json::json!({"ok":true}))
+    }
+    async fn fixture(
+        root: &std::path::Path,
+        valid: bool,
+    ) -> (ProcessContext, Fixture, tokio::task::JoinHandle<()>) {
+        let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
+            .await
+            .unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let state = Fixture {
+            pid: std::process::id(),
+            port,
+            secret: "s".repeat(43),
+            valid,
+            pool: Arc::new(Mutex::new(KeyState {
+                active_id: Some("aabbccdd".into()),
+                ids: BTreeSet::from(["aabbccdd".into()]),
+            })),
+            calls: Arc::new(AtomicUsize::new(0)),
+        };
+        let context = ProcessContext {
+            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
+                root.join("unused-ocx"),
+            ),
+            working_directory: root.into(),
+            opencodex_home: root.into(),
+        };
+        crate::infrastructure::atomic_write::atomic_write(
+            &root.join("runtime-port.json"),
+            &serde_json::to_vec(
+                &serde_json::json!({"pid":state.pid,"port":port,"attestationSecret":state.secret}),
+            )
+            .unwrap(),
+            0o600,
+        )
+        .unwrap();
+        crate::infrastructure::atomic_write::atomic_write(
+            &root.join("admin-api-token"),
+            format!("ocx_admin_{}", "t".repeat(43)).as_bytes(),
+            0o600,
+        )
+        .unwrap();
+        let router = Router::new()
+            .route("/healthz", get(health))
+            .route("/api/providers/keys", get(keys).post(add).delete(remove))
+            .route("/api/providers/keys/active", axum::routing::put(activate))
+            .with_state(state.clone());
+        let server = tokio::spawn(async move {
+            axum::serve(listener, router).await.unwrap();
+        });
+        (context, state, server)
+    }
+    #[tokio::test]
+    async fn official_key_pool_selection_can_be_verified_and_restored_without_exporting_secrets() {
+        let root = tempfile::tempdir().unwrap();
+        let (context, state, server) = fixture(root.path(), true).await;
+        let manager = Management::bind(&context).await.unwrap();
+        let before = manager.key_state("test").await.unwrap();
+        manager
+            .add_key("test", "replacement-key-fixture")
+            .await
+            .unwrap();
+        let after = manager.key_state("test").await.unwrap();
+        assert_eq!(after.ids.len(), 2);
+        assert_ne!(after.active_id, before.active_id);
+        manager
+            .activate_key("test", before.active_id.as_deref().unwrap())
+            .await
+            .unwrap();
+        manager
+            .remove_key("test", after.active_id.as_deref().unwrap())
+            .await
+            .unwrap();
+        assert_eq!(manager.key_state("test").await.unwrap(), before);
+        let public = serde_json::to_string(&after).unwrap();
+        assert!(!public.contains("replacement-key") && !public.contains("masked"));
+        assert!(state.calls.load(Ordering::SeqCst) > 0);
+        server.abort();
+    }
+    #[tokio::test]
+    async fn wrong_listener_proof_and_changed_runtime_record_never_receive_admin_credentials() {
+        let root = tempfile::tempdir().unwrap();
+        let (context, state, server) = fixture(root.path(), false).await;
+        assert!(Management::bind(&context).await.is_err());
+        assert_eq!(state.calls.load(Ordering::SeqCst), 0);
+        server.abort();
+        let second = tempfile::tempdir().unwrap();
+        let (context, state, server) = fixture(second.path(), true).await;
+        let manager = Management::bind(&context).await.unwrap();
+        crate::infrastructure::atomic_write::atomic_write(&second.path().join("runtime-port.json"),&serde_json::to_vec(&serde_json::json!({"pid":state.pid+1,"port":state.port,"attestationSecret":state.secret})).unwrap(),0o600).unwrap();
+        assert!(manager.key_state("test").await.is_err());
+        assert_eq!(state.calls.load(Ordering::SeqCst), 0);
+        server.abort();
     }
 }

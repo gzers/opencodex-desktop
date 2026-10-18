@@ -1561,6 +1561,36 @@
       "resolves": [
         "model-template-external-failed"
       ]
+    },
+    {
+      "id": "model-policy-save-failed",
+      "job": "model_config",
+      "object": "configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "failure",
+      "availability": "active",
+      "policy": "model_policy_failure",
+      "resolves": []
+    },
+    {
+      "id": "model-policy-save-succeeded",
+      "job": "model_config",
+      "object": "configuration",
+      "action": "save",
+      "phase": "execution",
+      "channels": [
+        "local"
+      ],
+      "fact": "success",
+      "availability": "active",
+      "policy": null,
+      "resolves": [
+        "model-policy-save-failed"
+      ]
     }
   ],
   "notification_policies": [
@@ -1897,6 +1927,18 @@
       "body": "结果尚未保存；请核对任务范围、编辑基准和字段校验后重试。",
       "action": "models",
       "dedupe": "model-template:external-failed",
+      "lifecycle_preference": false,
+      "cooldown_seconds": 86400
+    },
+    {
+      "id": "model_policy_failure",
+      "level": "warning",
+      "category": "system",
+      "source": "user_action",
+      "title": "渠道配置保存需要核对",
+      "body": "本次保存未完成或结果尚未确认。请核对原保存计划；不会自动重复写入或覆盖后续修改。",
+      "action": "model_policy",
+      "dedupe": "model-policy:save-failed",
       "lifecycle_preference": false,
       "cooldown_seconds": 86400
     }
@@ -2355,6 +2397,16 @@
     {
       "event": "model-template-external-succeeded",
       "source": "modules/model_config/feedback.rs owned model operation; generation and authenticated external submission callbacks",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "model-policy-save-failed",
+      "source": "commands/model_config.rs::observe_policy verified plan commit/compensation versus incomplete result; one plan identity",
+      "wiring": "scoped_terminal"
+    },
+    {
+      "event": "model-policy-save-succeeded",
+      "source": "commands/model_config.rs::observe_policy verified plan commit/compensation versus incomplete result; one plan identity",
       "wiring": "scoped_terminal"
     }
   ],

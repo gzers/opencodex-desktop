@@ -677,7 +677,10 @@ mod tests {
             .unwrap();
         assert_eq!(first.outcomes, again.outcomes);
         let library = ModelStore::new(root.path()).load().unwrap().library;
-        assert_eq!(library.templates.len(), 4);
+        assert_eq!(
+            library.templates.len(),
+            super::super::store::seed_library().templates.len() + 1
+        );
         let mut changed = request;
         changed.proposals[0].label = "不同内容".into();
         assert_eq!(

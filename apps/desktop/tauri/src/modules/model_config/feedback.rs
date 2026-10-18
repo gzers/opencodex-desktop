@@ -16,6 +16,7 @@ pub enum OperationKind {
     ExternalSubmit,
     PolicySave,
     Transfer,
+    NodeMeasurement,
 }
 #[derive(Debug, Clone, Copy, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -86,6 +87,33 @@ pub fn external_terminal(root: &Path, task: &str, submission: &str, success: boo
 fn diagnostic(root: &Path) {
     let _ = crate::infrastructure::runtime_log::RuntimeLog::new(root)
         .append_event("registered model operation delivery failed");
+}
+pub fn policy_terminal(root: &Path, id: &str, success: bool) {
+    let Some(app) = APP.get() else {
+        return;
+    };
+    let Ok(object_id) = OpaqueId::parse(id) else {
+        return;
+    };
+    let identity = EventIdentity {
+        object: ObjectKind::Configuration,
+        object_id: object_id.clone(),
+        action: Action::Save,
+        phase: Phase::Execution,
+        channel: Channel::Local,
+        candidate: object_id,
+    };
+    crate::commands::event_delivery::publish(
+        app,
+        root,
+        if success {
+            "model-policy-save-succeeded"
+        } else {
+            "model-policy-save-failed"
+        },
+        Some(identity),
+        Trigger::Commit,
+    );
 }
 pub fn registered() -> bool {
     registry::validate_signal(

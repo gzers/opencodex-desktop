@@ -16,6 +16,8 @@ const JOURNAL_PATH: &str = "manager-state/model-config-journal.json";
 #[serde(deny_unknown_fields)]
 struct PendingFiles {
     expected_policy: String,
+    #[serde(default)]
+    runtime_commit: bool,
     files: Vec<PendingFile>,
 }
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -25,27 +27,24 @@ struct PendingFile {
     before: Option<Vec<u8>>,
     after: Vec<u8>,
 }
-// The release seed owns identities, independent of installation time or locale.
-const SEEDS: [(&str, &str, &str, &str); 3] = [
-    (
-        "837c8133-76e9-4bdf-a68c-9637331c4d43",
-        "2f415ab0-e93f-400d-b4a8-8539bfc87903",
-        "GPT",
-        "gpt-",
-    ),
-    (
-        "961df482-3cbe-421d-a268-caa768de2fc6",
-        "51acc742-419e-43b2-898e-cdf05760554d",
-        "Claude",
-        "claude-",
-    ),
-    (
-        "e4182850-f6b6-4597-b06a-935a23fc19de",
-        "049145b7-8227-4c03-aec6-1915e84f7ce6",
-        "Gemini",
-        "gemini-",
-    ),
-];
+// The release catalog owns fixed full identities and provenance. Production
+// never imports the documentation tree or expands display names into API IDs.
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct SeedCatalog {
+    format: String,
+    source_sha256: String,
+    reviewed_at: String,
+    families: Vec<SeedFamily>,
+}
+#[derive(serde::Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct SeedFamily {
+    id: String,
+    revision_id: String,
+    label: String,
+    content: TemplateContent,
+}
 
 pub fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
@@ -61,38 +60,47 @@ pub fn content_digest(label: &str, content: &TemplateContent) -> ModelResult<Str
     )?))
 }
 pub fn seed_library() -> Library {
-    Library {
-        schema_version: SCHEMA_VERSION,
-        submission_receipts: Default::default(),
-        templates: SEEDS
-            .iter()
-            .map(|(id, revision, label, prefix)| {
-                let mut content = TemplateContent::default();
-                content.matching.include.push(Pattern {
-                    kind: MatchKind::Prefix,
-                    value: (*prefix).into(),
-                });
-                content.description = "内置匹配起点；能力字段默认继承，实际渠道需核验".into();
-                let digest = content_digest(label, &content).expect("static seed is serializable");
-                Template {
-                    id: (*id).into(),
-                    label: (*label).into(),
-                    source: TemplateSource::Builtin,
-                    default_revision: Some((*revision).into()),
-                    revisions: vec![Revision {
-                        id: (*revision).into(),
-                        created_at: "2026-10-18T00:00:00Z".into(),
-                        saved_label: (*label).into(),
-                        content,
-                        digest,
-                        base_revision: None,
-                        changes: vec![],
-                        origin: SaveOrigin::Builtin,
-                    }],
-                }
-            })
-            .collect(),
-    }
+    static CATALOG: std::sync::OnceLock<Library> = std::sync::OnceLock::new();
+    CATALOG
+        .get_or_init(|| {
+            let catalog: SeedCatalog = serde_json::from_str(include_str!("seed-catalog.json"))
+                .expect("validated release seed catalog");
+            assert_eq!(catalog.format, "ocxd-builtin-models-v1");
+            assert_eq!(catalog.source_sha256.len(), 64);
+            let created_at = format!("{}T00:00:00Z", catalog.reviewed_at);
+            Library {
+                schema_version: SCHEMA_VERSION,
+                submission_receipts: Default::default(),
+                templates: catalog
+                    .families
+                    .into_iter()
+                    .map(|seed| {
+                        let mut content = seed.content;
+                        content.normalize();
+                        content.validate().expect("validated seed content");
+                        let digest = content_digest(&seed.label, &content)
+                            .expect("static seed is serializable");
+                        Template {
+                            id: seed.id,
+                            label: seed.label.clone(),
+                            source: TemplateSource::Builtin,
+                            default_revision: Some(seed.revision_id.clone()),
+                            revisions: vec![Revision {
+                                id: seed.revision_id,
+                                created_at: created_at.clone(),
+                                saved_label: seed.label,
+                                content,
+                                digest,
+                                base_revision: None,
+                                changes: vec![],
+                                origin: SaveOrigin::Builtin,
+                            }],
+                        }
+                    })
+                    .collect(),
+            }
+        })
+        .clone()
 }
 
 pub fn validate_library(library: &Library) -> ModelResult<()> {
@@ -245,7 +253,12 @@ impl ModelStore {
         if journal.files.is_empty()
             || journal.files.len() > 2
             || journal.files.iter().any(|f| {
-                ![LIBRARY_PATH, DRAFT_PATH].contains(&f.path.as_str())
+                !(if journal.runtime_commit {
+                    [POLICY_PATH, DRAFT_PATH]
+                } else {
+                    [LIBRARY_PATH, DRAFT_PATH]
+                })
+                .contains(&f.path.as_str())
                     || f.after.len() as u64 > MAX_DOCUMENT
                     || f.before
                         .as_ref()
@@ -261,8 +274,10 @@ impl ModelStore {
         {
             return Err(invalid("journal", "模型导入事务记录无效，未覆盖任何文件"));
         }
-        if sha256(self.bytes(POLICY_PATH)?.as_deref().unwrap_or_default())
-            != journal.expected_policy
+        let current_policy = self.bytes(POLICY_PATH)?;
+        let intended_policy = journal.files.iter().find(|f| f.path == POLICY_PATH);
+        if sha256(current_policy.as_deref().unwrap_or_default()) != journal.expected_policy
+            && intended_policy.is_none_or(|f| current_policy.as_deref() != Some(f.after.as_slice()))
         {
             return Err(invalid(
                 "journal_drift",
@@ -289,9 +304,19 @@ impl ModelStore {
                 .unwrap_or_else(seed_library),
         };
         validate_library(&library)?;
+        let workspace_base = if journal.runtime_commit {
+            let policy_file =
+                intended_policy.ok_or_else(|| invalid("journal", "运行提交事务缺少策略产物"))?;
+            let policy: Policy = serde_json::from_slice(&policy_file.after)?;
+            validate_policy(&library, &policy)?;
+            super::compiler::project(&library, &policy)?;
+            sha256(&policy_file.after)
+        } else {
+            journal.expected_policy.clone()
+        };
         if let Some(file) = journal.files.iter().find(|f| f.path == DRAFT_PATH) {
             let workspace: PolicyDraft = serde_json::from_slice(&file.after)?;
-            if workspace.base_policy != journal.expected_policy {
+            if workspace.base_policy != workspace_base {
                 return Err(invalid("journal", "导入事务的草稿基准不一致"));
             }
             validate_policy(&library, &workspace.policy)?;
@@ -369,6 +394,7 @@ impl ModelStore {
         }
         let journal = PendingFiles {
             expected_policy: expected_policy.into(),
+            runtime_commit: false,
             files,
         };
         atomic_write(
@@ -590,6 +616,12 @@ impl ModelStore {
     ) -> ModelResult<Snapshot> {
         let _guard = self.lock()?;
         let (snapshot, _) = self.load_unlocked()?;
+        let bytes = serde_json::to_vec_pretty(&policy)?;
+        // A verified runtime result may be reconciled after the local pair was
+        // committed but its plan receipt was not. Preserve any later editor.
+        if snapshot.policy == policy && snapshot.policy_digest == sha256(&bytes) {
+            return Ok(snapshot);
+        }
         if snapshot.library_digest != expected_library
             || snapshot.policy_digest != expected_policy
             || snapshot.workspace_digest != expected_workspace
@@ -612,7 +644,6 @@ impl ModelStore {
                 Some("渠道策略提交前保护".into()),
             )?;
         }
-        let bytes = serde_json::to_vec_pretty(&policy)?;
         if bytes.len() as u64 > MAX_DOCUMENT {
             return Err(invalid("limit", "渠道策略超过文件上限"));
         }
@@ -622,16 +653,33 @@ impl ModelStore {
         {
             return Err(invalid("stale_baseline", "写前本地基准已变化，未覆盖"));
         }
-        atomic_write(&path, &bytes, 0o600)?;
-        if self.bytes(POLICY_PATH)?.as_deref() != Some(bytes.as_slice()) {
-            return Err(invalid("readback", "渠道策略保存后待核对"));
-        }
         let workspace = PolicyDraft {
             base_policy: sha256(&bytes),
             policy,
         };
         let workspace_bytes = serde_json::to_vec_pretty(&workspace)?;
-        atomic_write(&self.path(DRAFT_PATH)?, &workspace_bytes, 0o600)?;
+        let journal = PendingFiles {
+            expected_policy: expected_policy.into(),
+            runtime_commit: true,
+            files: vec![
+                PendingFile {
+                    path: POLICY_PATH.into(),
+                    before: self.bytes(POLICY_PATH)?,
+                    after: bytes,
+                },
+                PendingFile {
+                    path: DRAFT_PATH.into(),
+                    before: self.bytes(DRAFT_PATH)?,
+                    after: workspace_bytes,
+                },
+            ],
+        };
+        atomic_write(
+            &self.path(JOURNAL_PATH)?,
+            &serde_json::to_vec(&journal)?,
+            0o600,
+        )?;
+        self.recover_pending()?;
         self.load_unlocked().map(|v| v.0)
     }
     pub fn set_default(
@@ -691,7 +739,10 @@ impl ModelStore {
                 return Err(invalid("not_found", "所选版本不存在，整批未删除"));
             }
             if target.default_revision.as_ref() == Some(id)
-                || SEEDS.iter().any(|(t, r, _, _)| *t == template && *r == id)
+                || seed_library()
+                    .templates
+                    .iter()
+                    .any(|t| t.id == template && t.revisions.iter().any(|r| r.id == *id))
             {
                 return Err(invalid(
                     "protected_revision",
@@ -722,7 +773,7 @@ impl ModelStore {
                     )
                     .any(|r| r.template_id == template && r.revision_id == *id)
             });
-            if used || draft_used {
+            if used || draft_used || super::runtime::recovery_uses(&self.root, template, id)? {
                 return Err(invalid(
                     "protected_revision",
                     "保存策略仍引用所选版本，整批未删除",
@@ -848,6 +899,54 @@ fn change_facts(
 #[cfg(test)]
 mod journal_tests {
     use super::*;
+    #[test]
+    fn release_seeds_are_exact_sourced_unadopted_and_do_not_promote_unknown_alias_capabilities() {
+        let library = seed_library();
+        validate_library(&library).unwrap();
+        assert_eq!(library.templates.len(), 17);
+        for family in &library.templates {
+            require_uuid(&family.id).unwrap();
+            let revision = &family.revisions[0];
+            require_uuid(&revision.id).unwrap();
+            assert!(revision
+                .content
+                .matching
+                .include
+                .iter()
+                .all(|pattern| pattern.kind == MatchKind::Exact));
+            assert!(!revision.content.sources.is_empty());
+            assert_eq!(revision.content.rules, ModelRules::default());
+            assert!(revision
+                .content
+                .variants
+                .iter()
+                .all(|variant| variant.rules.fast == Field::Inherit));
+        }
+        let gpt = &library.templates[0].revisions[0].content;
+        assert!(
+            !matching::preview(gpt, "any", "gpt-unresearched")
+                .unwrap()
+                .matched
+        );
+        assert_eq!(
+            matching::preview(gpt, "any", "gpt-6.1-sol")
+                .unwrap()
+                .rules
+                .context_window,
+            Field::Custom(1_050_000)
+        );
+        let mistral = library
+            .templates
+            .iter()
+            .find(|t| t.label.contains("Mistral"))
+            .unwrap();
+        assert!(mistral.revisions[0].content.variants.is_empty());
+        assert!(
+            matching::resolve(&library, &Policy::default(), "any", "gpt-6.1-sol")
+                .unwrap()
+                .is_none()
+        );
+    }
     fn fixture(root: &Path) -> PendingFiles {
         let mut library = seed_library();
         let mut user = library.templates[0].clone();
@@ -866,6 +965,7 @@ mod journal_tests {
         };
         let journal = PendingFiles {
             expected_policy: sha256(b""),
+            runtime_commit: false,
             files: vec![
                 PendingFile {
                     path: LIBRARY_PATH.into(),
@@ -891,6 +991,90 @@ mod journal_tests {
         )
         .unwrap();
         journal
+    }
+    #[test]
+    fn interrupted_runtime_policy_and_draft_pair_recovers_after_the_first_file() {
+        let root = tempfile::tempdir().unwrap();
+        let store = ModelStore::new(root.path());
+        let library = seed_library();
+        let policy = Policy {
+            template_refs: vec![TemplateRef {
+                template_id: library.templates[0].id.clone(),
+                revision_id: library.templates[0].revisions[0].id.clone(),
+            }],
+            ..Default::default()
+        };
+        let bytes = serde_json::to_vec_pretty(&policy).unwrap();
+        let draft = PolicyDraft {
+            base_policy: sha256(&bytes),
+            policy: policy.clone(),
+        };
+        let journal = PendingFiles {
+            expected_policy: sha256(b""),
+            runtime_commit: true,
+            files: vec![
+                PendingFile {
+                    path: POLICY_PATH.into(),
+                    before: None,
+                    after: bytes.clone(),
+                },
+                PendingFile {
+                    path: DRAFT_PATH.into(),
+                    before: None,
+                    after: serde_json::to_vec(&draft).unwrap(),
+                },
+            ],
+        };
+        atomic_write(
+            &store.path(JOURNAL_PATH).unwrap(),
+            &serde_json::to_vec(&journal).unwrap(),
+            0o600,
+        )
+        .unwrap();
+        atomic_write(&store.path(POLICY_PATH).unwrap(), &bytes, 0o600).unwrap();
+        let snapshot = store.load().unwrap();
+        assert_eq!(snapshot.policy, policy);
+        assert_eq!(snapshot.workspace.unwrap(), draft);
+        assert!(!store.path(JOURNAL_PATH).unwrap().exists());
+    }
+    #[test]
+    fn reconcile_of_already_committed_policy_preserves_a_later_draft() {
+        let root = tempfile::tempdir().unwrap();
+        let store = ModelStore::new(root.path());
+        let before = store.load().unwrap();
+        let seed = &before.library.templates[0];
+        let policy = Policy {
+            template_refs: vec![TemplateRef {
+                template_id: seed.id.clone(),
+                revision_id: seed.revisions[0].id.clone(),
+            }],
+            ..Default::default()
+        };
+        let committed = store
+            .commit_runtime_policy(
+                &before.library_digest,
+                &before.policy_digest,
+                &before.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let next = store
+            .stage_policy(
+                &committed.policy_digest,
+                &committed.workspace_digest,
+                Policy::default(),
+            )
+            .unwrap();
+        let repeated = store
+            .commit_runtime_policy(
+                &before.library_digest,
+                &before.policy_digest,
+                &before.workspace_digest,
+                policy,
+            )
+            .unwrap();
+        assert_eq!(repeated, next);
+        assert!(repeated.workspace.unwrap().policy.template_refs.is_empty());
     }
     #[test]
     fn interrupted_pair_rolls_forward_only_its_original_or_intended_bytes() {

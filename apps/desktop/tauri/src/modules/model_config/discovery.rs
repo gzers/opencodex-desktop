@@ -41,7 +41,16 @@ pub struct DiscoveryResult {
     pub credential_ref: Option<String>,
     pub elapsed_ms: u64,
 }
-pub async fn discover(mut request: DiscoveryRequest) -> ModelResult<DiscoveryResult> {
+pub async fn discover(request: DiscoveryRequest) -> ModelResult<DiscoveryResult> {
+    discover_inner(request, true).await
+}
+pub(super) async fn readonly(request: DiscoveryRequest) -> ModelResult<DiscoveryResult> {
+    discover_inner(request, false).await
+}
+async fn discover_inner(
+    mut request: DiscoveryRequest,
+    persist_credential: bool,
+) -> ModelResult<DiscoveryResult> {
     let started = std::time::Instant::now();
     if ![
         "openai-chat",
@@ -132,10 +141,17 @@ pub async fn discover(mut request: DiscoveryRequest) -> ModelResult<DiscoveryRes
     let mut target = url.clone();
     target.set_path(&models_path);
     let mut next: Option<String> = None;
+    let mut pages = BTreeSet::new();
     let mut seen = BTreeSet::new();
     let mut models = vec![];
     for page in 0..20 {
         if let Some(value) = &next {
+            if value.is_empty() || value.len() > 4096 || !pages.insert(value.clone()) {
+                return Err(invalid(
+                    "discovery_pagination",
+                    "分页游标重复或无效，未报告完整成功",
+                ));
+            }
             target.set_query(None);
             target.query_pairs_mut().append_pair(
                 if request.protocol == "google" {
@@ -158,15 +174,23 @@ pub async fn discover(mut request: DiscoveryRequest) -> ModelResult<DiscoveryRes
                 _ => query.bearer_auth(secret),
             };
         }
-        let mut response = query.send().await.map_err(|_| {
+        let mut response = query.send().await.map_err(|error| {
             invalid(
-                "discovery_failed",
+                if error.is_timeout() {
+                    "discovery_timeout"
+                } else {
+                    "discovery_failed"
+                },
                 "读取模型失败；连接和选择保留，未注册渠道",
             )
         })?;
         if !response.status().is_success() {
             return Err(invalid(
-                "discovery_failed",
+                if [401, 403].contains(&response.status().as_u16()) {
+                    "discovery_auth"
+                } else {
+                    "discovery_failed"
+                },
                 format!(
                     "发现接口返回HTTP{}，没有执行生成请求",
                     response.status().as_u16()
@@ -250,7 +274,9 @@ pub async fn discover(mut request: DiscoveryRequest) -> ModelResult<DiscoveryRes
             ));
         }
     }
-    let reference = if let Some(provided) = provided {
+    let reference = if !persist_credential {
+        request.credential_ref
+    } else if let Some(provided) = provided {
         if provided.is_empty() {
             None
         } else {
