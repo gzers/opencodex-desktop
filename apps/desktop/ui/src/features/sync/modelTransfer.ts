@@ -9,6 +9,8 @@ export interface FilePlan { id: string; package: ModelPackage;protected?:boolean
 export interface UploadPlan extends FilePlan { phase: string }
 export interface IncomingPlan extends FilePlan { expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];adoption?:{keys:boolean;webdav:boolean;completed:boolean}|null }
 export interface ReceiveScope {templateRefs:TemplateRef[];channelIds:string[];includeGlobal:boolean;preferences?:boolean;extensions?:boolean;endpointIds?:string[]}
+export interface RemoteScope {templateIds:string[];channelIds:string[];includeGlobal:boolean;preferences:boolean;extensions:boolean;includeKeys:boolean}
+export function remoteScope(scope:TransferScope,options?:{preferences:boolean;extensions:boolean;includeKeys:boolean}):RemoteScope{return {templateIds:[...new Set(scope.templateRefs.map(reference=>reference.templateId))],channelIds:scope.channelIds,includeGlobal:scope.includeGlobal,preferences:options?.preferences??true,extensions:options?.extensions??true,includeKeys:options?.includeKeys??false}}
 export interface ExportedModels { path: string; digest: string; templates: number; channels: number }
 export const modelTransferApi = {
   prepare: (scope: TransferScope,passphrase?:string,includeKeys=false,managerScope?:ManagerScope) => invoke<FilePlan>('model_transfer_prepare', { scope,passphrase:passphrase??null,includeKeys,managerScope:managerScope??null }),
@@ -19,9 +21,12 @@ export const modelTransferApi = {
   latestIncoming:()=>invoke<IncomingPlan|null>('portable_latest_incoming'),
   recompare:(incomingId:string,passphrase?:string)=>invoke<IncomingPlan>('portable_recompare',{incomingId,passphrase:passphrase??null}),
   openReceived:(incomingId:string,passphrase?:string)=>invoke<IncomingPlan>('portable_open_received',{incomingId,passphrase:passphrase??null}),
-  prepareUpload: (scope: TransferScope) => invoke<UploadPlan>('model_remote_prepare', { scope }),
-  publish: (planId: string) => invoke<UploadPlan>('model_remote_publish', { planId }),
-  download: () => invoke<IncomingPlan>('model_remote_download'),
+  loadRemoteScope:()=>invoke<RemoteScope>('config_sync_scope'),
+  saveRemoteScope:(scope:RemoteScope)=>invoke<RemoteScope>('config_sync_save_scope',{scope}),
+  prepareUpload: (scope: TransferScope,options?:{preferences:boolean;extensions:boolean;includeKeys:boolean;passphrase?:string}) => invoke<UploadPlan>('config_sync_prepare', { scope:remoteScope(scope,options),passphrase:options?.passphrase??null }),
+  publish: (planId: string) => invoke<UploadPlan>('config_sync_publish', { planId }),
+  download: (passphrase?:string) => invoke<IncomingPlan>('config_sync_download',{passphrase:passphrase??null}),
+  latestUpload:()=>invoke<UploadPlan|null>('config_sync_latest_upload'),
 }
 
 export function scopeFor(snapshot: ModelSnapshot, templateIds: string[], channelIds: string[], global: boolean, versions: Record<string,string>): TransferScope {

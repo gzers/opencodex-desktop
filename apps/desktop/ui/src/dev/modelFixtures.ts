@@ -1,6 +1,8 @@
 // Explicit DEV visual fixtures: no fallback on a real IPC failure, no disk or API.
 import { emptyContent, emptyRules, modelApi, type ModelSnapshot, type ChannelPolicy } from '@/features/models/api'
 import { useModelsStore } from '@/features/models/store'
+import {modelTransferApi} from '@/features/sync/modelTransfer'
+import {importedConnectionApi} from '@/features/sync/api'
 export function installModelFixtures() {
   const channels:ChannelPolicy[]=Array.from({length:24},(_,i)=>{
     const id=crypto.randomUUID();const node=crypto.randomUUID();
@@ -17,5 +19,7 @@ export function installModelFixtures() {
   modelApi.project=async policy=>({rows:policy.channels.flatMap(c=>c.discovered.map(m=>({channelId:c.id,providerId:c.connection.providerId,modelId:m.id,label:m.label,enabled:c.connection.enabled,selected:true,discovered:true,templateRef:null,rules:m.rules,source:{protocol:'渠道默认'}}))),knownActiveModels:36,exactCatalogCount:null,notices:['显式DEV数据，不连接真实运行服务']})
   modelApi.agentSettings=async()=>null
   modelApi.latestPolicy=async()=>null
+  modelTransferApi.loadRemoteScope=async()=>({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
+  importedConnectionApi.list=async()=>({baseline:'explicit-visual-fixture',items:[]})
   const store=useModelsStore();store.snapshot=structuredClone(snapshot);store.restoreChannels()
 }

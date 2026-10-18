@@ -710,11 +710,7 @@ async function resyncSkills() {
   else app.showToast('重新对齐失败；已保留现有落点。')
 }
 
-function runSyncNow() {
-  void app.runSyncNow().then(success => {
-    if (!success) app.showToast(app.syncStatus?.message || '同步未执行；已保留本地内容。')
-  })
-}
+
 
 function cleanupLogs() {
   void app.cleanupLocalLogs().then(success => {
@@ -1185,7 +1181,7 @@ function restoreGeneralDefaults() {
     <section v-else-if="section === 'sync'" class="settings-panel active">
       <ModelTransfer remote />
       <ImportedConnections @activated="app.loadSyncConfig" />
-      <article class="card"><div class="card-head"><div><h2>WebDAV 同步</h2><p>端点、服务端认证凭据与冲突策略集中在设置里维护；同步载荷为未加密配置 + 完整性校验。</p></div></div>
+      <article class="card"><div class="card-head"><div><h2>连接设置</h2><p>维护当前活动服务器；配置传输与接收范围在上方选择。</p></div></div>
         <div class="field-grid">
           <div class="field"><label>服务地址</label><input v-model="syncEndpointInput.baseUrl" class="input" placeholder="https://dav.example.com/opencodex/" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
           <div class="field"><label>远端目录</label><input v-model="syncEndpointInput.remotePath" class="input" placeholder="/desktop-sync/current" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
@@ -1195,14 +1191,10 @@ function restoreGeneralDefaults() {
                仍按技术型输入保留关自动大写三属性，避免日后误改成可编辑时被 WKWebView 首字母大写。 -->
           <div class="field"><label>冲突策略</label><input class="input" readonly aria-readonly="true" aria-label="冲突策略" value="每次询问" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
         </div>
-        <div class="setting-list">
-          <div class="setting-row"><div><div class="setting-title">冷同步</div><div class="setting-desc">运行中不直接写关键文件；覆盖前需要用户确认。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.coldSync" @click="toggle('coldSync', '冷同步')"></button></div></div>
-          <div class="setting-row"><div><div class="setting-title">载荷保护方式</div><div class="setting-desc">远端保存未加密配置，用 SHA-256 校验完整性；WebDAV 认证口令保存在系统钥匙串，请自行选择可信远端并确保 HTTPS。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'payloadProtection' }"><button class="select-trigger" :aria-expanded="openSelect === 'payloadProtection' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="载荷保护方式" @click="toggleSelect('payloadProtection')"><span class="select-value">完整性校验</span></button><UiSelectMenu :open="openSelect === 'payloadProtection'" @close="openSelect = ''" role="listbox" aria-label="载荷保护方式"><button class="select-option selected" type="button" role="option" aria-selected="true" @click="app.showToast('当前为明文载荷 + SHA-256 完整性校验，不含额外加密口令。')">完整性校验</button></UiSelectMenu></div></div></div>
-          <div class="setting-row"><div><div class="setting-title">覆盖前备份</div><div class="setting-desc">保留被覆盖侧快照，冲突时可恢复。</div></div><div class="controls"><button class="toggle" role="switch" :aria-checked="preferences.backupBeforeOverwrite" @click="toggle('backupBeforeOverwrite', '覆盖前备份')"></button></div></div>
-        </div>
+        <div class="setting-list"><div class="setting-row"><div><div class="setting-title">配置保护与采用</div><div class="setting-desc">含凭据的快照使用独立口令保护，下载后比较并确认采用；采用前执行保护备份。</div></div></div></div>
         <div v-if="app.syncConfig?.endpoint" class="setting-row"><div><div class="setting-title">已配置端点</div><div class="setting-desc">{{ app.syncConfig.endpoint.url }} · {{ app.syncConfig.endpoint.remotePath }} · 凭据引用 {{ app.syncConfig.endpoint.credentialRefId.slice(0, 12) }}</div></div><div class="controls"><button class="btn danger" :disabled="app.syncSaving" @click="app.deleteSyncEndpoint(true)">删除端点</button></div></div>
         <div v-if="app.syncStatus" class="setting-row"><div><div class="setting-title">最近连接结果</div><div class="setting-desc">{{ app.syncStatus.message || '连接状态已更新。' }}</div></div><div class="controls"><span class="tag">{{ app.syncStatus.connectionState === 'synced' ? '成功' : app.syncStatus.connectionState === 'failed' ? '失败' : app.syncStatus.connectionState }}</span></div></div>
-        <div class="controls"><button class="btn" :disabled="app.syncSaving || app.syncTesting" @click="saveSyncEndpoint()">{{ app.syncSaving ? '保存中…' : '保存端点' }}</button><button class="btn ghost" :disabled="app.syncTesting || app.syncSaving" @click="app.testSyncConnection()">{{ app.syncTesting ? '测试中…' : '测试连接' }}</button><button class="btn ghost" :disabled="app.syncRunning" @click="runSyncNow()">立即同步</button></div>
+        <div class="controls"><button class="btn" :disabled="app.syncSaving || app.syncTesting" @click="saveSyncEndpoint()">{{ app.syncSaving ? '保存中…' : '保存端点' }}</button><button class="btn ghost" :disabled="app.syncTesting || app.syncSaving" @click="app.testSyncConnection()">{{ app.syncTesting ? '测试中…' : '测试连接' }}</button></div>
       </article>
     </section>
 

@@ -66,8 +66,9 @@ export async function getSyncConfig(): Promise<SyncConfigDto> {
   return invoke<SyncConfigDto>('get_sync_config')
 }
 export interface ImportedConnection {id:string;endpoint:{id:string;url:string;remotePath:string;username:string;conflictPolicy:string};hasPassword:boolean}
-export async function listImportedConnections():Promise<{baseline:string;items:ImportedConnection[]}>{return (await import('@tauri-apps/api/core')).invoke('list_imported_sync_connections')}
-export async function activateImportedConnection(candidateId:string,expectedBaseline:string):Promise<void>{return (await import('@tauri-apps/api/core')).invoke('activate_imported_sync_connection',{candidateId,expectedBaseline})}
+export const importedConnectionApi={list:async():Promise<{baseline:string;items:ImportedConnection[]}>=>(await import('@tauri-apps/api/core')).invoke('list_imported_sync_connections'),activate:async(candidateId:string,expectedBaseline:string):Promise<void>=>(await import('@tauri-apps/api/core')).invoke('activate_imported_sync_connection',{candidateId,expectedBaseline})}
+export async function listImportedConnections():Promise<{baseline:string;items:ImportedConnection[]}>{return importedConnectionApi.list()}
+export async function activateImportedConnection(candidateId:string,expectedBaseline:string):Promise<void>{return importedConnectionApi.activate(candidateId,expectedBaseline)}
 
 export async function saveSyncEndpoint(request: SaveSyncEndpointRequest): Promise<SyncConfigDto> {
   const invoke = (await import('@tauri-apps/api/core')).invoke
