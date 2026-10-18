@@ -1,0 +1,50 @@
+{
+  "kind": "release-exception-disposition",
+  "version": "0.1.10",
+  "authority": "authorization.json",
+  "originalTaskId": "TASK-OPENCODEX-DESKTOP-182",
+  "originalTaskSha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+  "taskStateUnchanged": "in_progress",
+  "taskResultUnchanged": "pending",
+  "requiredChecksUnchanged": true,
+  "acceptanceBindingsUnchanged": true,
+  "oldReceiptOrFailureRewritten": false,
+  "testPassesInvented": false,
+  "completionCertificateIssued": false,
+  "scope": "Only this version public/stable release decision; not future automatic exception inheritance",
+  "items": {
+    "review:scope-0110": {
+      "disposition": "reviewed-source-and-accepted-version-exceptions",
+      "remaining": "Final publication/source/artifact identity still must be verified; no expansion into 0.2.0"
+    },
+    "review:storage-0110": {
+      "disposition": "reuse-verified-windows-and-mac-subsets",
+      "remaining": "Historical unknown exit and interruption evidence retained; no retrospective result filling"
+    },
+    "review:installer-0110": {
+      "disposition": "reuse-approved-installer-evidence-and-accept-untested-native-combinations",
+      "remaining": "OS code signing/notarization absent; final Release package identity/download still required"
+    },
+    "review:updates-0110": {
+      "disposition": "accepted-version-exception-for-real-update-chain",
+      "remaining": "Real manager/panel apply/version-handoff and related event matrix not fully proved; no FZ50 authority"
+    },
+    "review:backup-tree-0110": {
+      "disposition": "reuse-verified-subsets-and-accept-listed-uncovered-native-branches",
+      "remaining": "Uncovered native boundary/related cleanup/async leaf-focus and appearance combinations remain untested"
+    },
+    "review:event-coverage-0110": {
+      "disposition": "core-facts-written-and-uncovered-update-events-accepted-as-exception",
+      "remaining": "Registration does not establish all observed behavior; exact untested update candidate/phase events retained"
+    },
+    "review:native-0110": {
+      "disposition": "reuse-proven-operations-and-accept-listed-native-combinations",
+      "remaining": "DPI cancelled, not passed; remaining unverified ready-state/density/quality combinations retained"
+    },
+    "review:scheduler-performance-0110": {
+      "disposition": "accepted-cpu-rss-and-listed-untested-scheduler-performance-scope",
+      "remaining": "No new sampling/collector expansion; frame/50ms/cache100/10/process-network/sleep/unproved cycle remain untested"
+    }
+  },
+  "goalReleaseAndPostVerificationStillRequired": true
+}
