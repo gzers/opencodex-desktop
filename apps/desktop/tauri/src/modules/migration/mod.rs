@@ -556,6 +556,20 @@ fn open_legacy_document(
     let key = derive_key_for_test(passphrase.as_bytes(), &salt)?;
     open_document_for_test(payload_b64, header, &key)
 }
+pub(crate) fn read_portable_legacy(
+    bytes: &[u8],
+    passphrase: Option<&str>,
+) -> Result<ContainerDocument, MigrationError> {
+    let document = match parse_container(bytes)? {
+        ParsedContainer::Legacy {
+            header,
+            payload_b64,
+        } => open_legacy_document(&header, &payload_b64, passphrase)?,
+        ParsedContainer::Plaintext(document) => document,
+    };
+    container::validate_document(&document).map_err(map_container_error)?;
+    Ok(document)
+}
 
 /// Captured export ownership, separate from the planned generic migration job.
 /// Begin runs after the target lock is acquired; completed runs before it drops.

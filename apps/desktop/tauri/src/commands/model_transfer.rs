@@ -4,7 +4,7 @@ use crate::modules::model_config::remote::{self, UploadPlan};
 use crate::{
     modules::model_config::{
         schema::*,
-        transfer::{self, ExportScope, FileExportPlan, IncomingPlan, ModelPackage},
+        transfer::{self, ExportScope, FileExportPlan, IncomingPlan},
     },
     state::SharedDataRoot,
 };
@@ -181,6 +181,8 @@ pub async fn model_transfer_export(
 pub async fn model_transfer_prepare(
     scope: ExportScope,
     passphrase: Option<String>,
+    include_keys: Option<bool>,
+    manager_scope: Option<crate::modules::sync::portable_manager::Scope>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<FileExportPlan> {
     let root = data_root.0.clone();
@@ -188,7 +190,13 @@ pub async fn model_transfer_prepare(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
-        transfer::prepare_file(&root, scope, passphrase.as_deref().map(|p| p.as_str()))
+        transfer::prepare_file_scope(
+            &root,
+            scope,
+            passphrase.as_deref().map(|p| p.as_str()),
+            include_keys.unwrap_or(false),
+            &manager_scope.unwrap_or_default(),
+        )
     })
     .await
     .map_err(|_| invalid("transfer_worker", "导出准备中断"))?
@@ -214,30 +222,11 @@ pub async fn model_transfer_receive(
                 }
                 let bytes = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
                 let passphrase = passphrase.map(zeroize::Zeroizing::new);
-                let format: serde_json::Value = serde_json::from_slice(&bytes)
-                    .map_err(|_| invalid("import_format", "所选配置文件不是有效JSON"))?;
-                let plaintext = if format["format"] == "OCXDCONF" {
-                    let opened = crate::modules::sync::portable_file::open(
-                        &bytes,
-                        passphrase.as_deref().map(|p| p.as_str()),
-                    )?;
-                    if opened.manifest.sections != ["models"] {
-                        return Err(invalid(
-                            "import_scope",
-                            "文件包含尚未支持的配置类别；为避免截断，整份文件未导入",
-                        ));
-                    }
-                    opened.document
-                } else {
-                    zeroize::Zeroizing::new(bytes)
-                };
-                let package: ModelPackage = serde_json::from_slice(&plaintext).map_err(|_| {
-                    invalid(
-                        "import_format",
-                        "所选文件不是受支持的模型配置包；原文件和本机配置保持",
-                    )
-                })?;
-                transfer::receive(&root, package)
+                crate::modules::model_config::file_objects::receive(
+                    &root,
+                    &bytes,
+                    passphrase.as_deref().map(|p| p.as_str()),
+                )
             },
         )
     })
@@ -247,6 +236,9 @@ pub async fn model_transfer_receive(
 #[tauri::command]
 pub async fn model_transfer_accept(
     incoming_id: String,
+    adopt_keys: Option<bool>,
+    passphrase: Option<String>,
+    adopt_webdav_passwords: Option<bool>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<Snapshot> {
     let root = data_root.0.clone();
@@ -254,7 +246,14 @@ pub async fn model_transfer_accept(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         crate::modules::model_config::feedback::transfer(&root, &incoming_id, false, || {
-            transfer::accept(&root, &incoming_id)
+            let passphrase = passphrase.map(zeroize::Zeroizing::new);
+            crate::modules::model_config::file_objects::accept_manager(
+                &root,
+                &incoming_id,
+                adopt_keys.unwrap_or(false),
+                adopt_webdav_passwords.unwrap_or(false),
+                passphrase.as_deref().map(|p| p.as_str()),
+            )
         })
     })
     .await
@@ -274,4 +273,57 @@ pub async fn model_transfer_select(
     })
     .await
     .map_err(|_| invalid("transfer_worker", "接收范围比较中断，配置未采用"))?
+}
+#[tauri::command]
+pub async fn portable_latest_incoming(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<IncomingPlan>> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::file_objects::latest(&root)
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "上次接收记录读取中断"))?
+}
+#[tauri::command]
+pub async fn portable_recompare(
+    incoming_id: String,
+    passphrase: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<IncomingPlan> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        crate::modules::model_config::file_objects::recompare(
+            &root,
+            &incoming_id,
+            passphrase.as_deref().map(|p| p.as_str()),
+        )
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "原文件重新比较中断，未采用"))?
+}
+#[tauri::command]
+pub async fn portable_open_received(
+    incoming_id: String,
+    passphrase: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<IncomingPlan> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        crate::modules::model_config::file_objects::open_received(
+            &root,
+            &incoming_id,
+            passphrase.as_deref().map(|p| p.as_str()),
+        )
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "原文件核对中断，未采用"))?
 }

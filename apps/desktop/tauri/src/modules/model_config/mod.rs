@@ -5,6 +5,7 @@ pub mod broker;
 pub mod compiler;
 pub mod discovery;
 pub mod feedback;
+pub mod file_objects;
 pub mod management;
 pub mod matching;
 pub mod measurements;

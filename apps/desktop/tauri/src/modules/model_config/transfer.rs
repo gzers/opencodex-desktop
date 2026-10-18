@@ -54,12 +54,18 @@ pub struct ExportScope {
     pub template_refs: Vec<TemplateRef>,
     pub include_global: bool,
 }
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReceiveScope {
     pub template_refs: Vec<TemplateRef>,
     pub channel_ids: Vec<String>,
     pub include_global: bool,
+    #[serde(default)]
+    pub preferences: bool,
+    #[serde(default)]
+    pub extensions: bool,
+    #[serde(default)]
+    pub endpoint_ids: Vec<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -74,6 +80,23 @@ pub struct IncomingPlan {
     pub notices: Vec<String>,
     #[serde(default)]
     pub preview_error: Option<String>,
+    #[serde(default)]
+    pub available_keys: Vec<String>,
+    #[serde(default)]
+    pub file_digest: Option<String>,
+    #[serde(default)]
+    pub manager: Option<crate::modules::sync::portable_manager::Settings>,
+    #[serde(default)]
+    pub available_webdav_passwords: Vec<String>,
+    #[serde(default)]
+    pub adoption: Option<ImportAdoption>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ImportAdoption {
+    pub keys: bool,
+    pub webdav: bool,
+    pub completed: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -82,6 +105,10 @@ pub struct FileExportPlan {
     pub package: ModelPackage,
     pub protected: bool,
     pub file_digest: String,
+    #[serde(default)]
+    pub credential_count: usize,
+    #[serde(default)]
+    pub manager: Option<crate::modules::sync::portable_manager::Settings>,
 }
 fn export_plan_path(root: &Path, id: &str) -> ModelResult<std::path::PathBuf> {
     require_uuid(id)?;
@@ -96,24 +123,53 @@ pub fn prepare_file(
     scope: ExportScope,
     passphrase: Option<&str>,
 ) -> ModelResult<FileExportPlan> {
-    let id = uuid::Uuid::new_v4().to_string();
-    let package = export(root, scope)?;
-    let bytes = crate::modules::sync::portable_file::seal(
-        crate::modules::sync::portable_file::Manifest {
-            id: id.clone(),
-            created_at: package.created_at.clone(),
-            sections: vec!["models".into()],
-            secret_objects: 0,
-            document_digest: String::new(),
-        },
-        &serde_json::to_vec(&package)?,
+    prepare_file_with_keys(root, scope, passphrase, false)
+}
+pub fn prepare_file_with_keys(
+    root: &Path,
+    scope: ExportScope,
+    passphrase: Option<&str>,
+    include_keys: bool,
+) -> ModelResult<FileExportPlan> {
+    prepare_file_scope(
+        root,
+        scope,
         passphrase,
+        include_keys,
+        &crate::modules::sync::portable_manager::Scope::default(),
+    )
+}
+pub fn prepare_file_scope(
+    root: &Path,
+    scope: ExportScope,
+    passphrase: Option<&str>,
+    include_keys: bool,
+    manager_scope: &crate::modules::sync::portable_manager::Scope,
+) -> ModelResult<FileExportPlan> {
+    let id = uuid::Uuid::new_v4().to_string();
+    let no_models = !scope.include_policy
+        && scope.template_refs.is_empty()
+        && (manager_scope.preferences || manager_scope.extensions || manager_scope.webdav);
+    let mut package = export(root, scope)?;
+    if no_models {
+        package.payload.templates.clear();
+        package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    }
+    let (bytes, credential_count, manager) = super::file_objects::seal_manager(
+        root,
+        &id,
+        &package,
+        include_keys,
+        passphrase,
+        manager_scope,
     )?;
     let plan = FileExportPlan {
         id,
         package,
         protected: passphrase.is_some(),
         file_digest: sha256(&bytes),
+        credential_count,
+        manager: Some(manager),
     };
     let payload = export_plan_path(root, &plan.id)?.with_extension("ocxdconf");
     crate::modules::backup::safety::check_path(root, &payload, true)?;
@@ -168,7 +224,7 @@ fn revision_refs(policy: &PortablePolicy) -> Vec<&TemplateRef> {
         )
         .collect()
 }
-fn portable(channel: &ChannelPolicy) -> PortableChannel {
+pub(super) fn portable(channel: &ChannelPolicy) -> PortableChannel {
     PortableChannel {
         id: channel.id.clone(),
         label: channel.label.clone(),
@@ -616,6 +672,11 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
         merged_policy,
         notices,
         preview_error,
+        available_keys: vec![],
+        file_digest: None,
+        manager: None,
+        available_webdav_passwords: vec![],
+        adoption: None,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {
@@ -629,6 +690,12 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
     Ok(plan)
 }
 pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResult<IncomingPlan> {
+    if super::file_objects::has_adoption(root, id)? {
+        return Err(invalid(
+            "import_in_progress",
+            "原导入已开始采用，请先核对其结果，不改变原范围",
+        ));
+    }
     let original: IncomingPlan = serde_json::from_slice(
         &crate::modules::backup::safety::read_file(&incoming_path(root, id)?, 64 * 1024 * 1024)?,
     )?;
@@ -650,10 +717,16 @@ pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResul
             "接收后本机基准已变化，请重新比较原文件",
         ));
     }
-    if scope.template_refs.is_empty() && scope.channel_ids.is_empty() && !scope.include_global {
+    if scope.template_refs.is_empty()
+        && scope.channel_ids.is_empty()
+        && !scope.include_global
+        && !scope.preferences
+        && !scope.extensions
+        && scope.endpoint_ids.is_empty()
+    {
         return Err(invalid("import_scope", "请选择至少一个接收对象"));
     }
-    let mut package = original.package;
+    let mut package = original.package.clone();
     validate_package(&package)?;
     if scope.channel_ids.iter().any(|id| {
         package
@@ -714,18 +787,178 @@ pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResul
         .templates
         .retain(|template| !template.revisions.is_empty());
     package.digest = sha256(&serde_json::to_vec(&package.payload)?);
-    receive(root, package)
+    let mut selected = receive(root, package)?;
+    if let Some(manager) = &original.manager {
+        if scope.preferences && manager.preferences.is_none()
+            || scope.extensions && manager.extensions.is_none()
+            || scope
+                .endpoint_ids
+                .iter()
+                .any(|id| !manager.webdav.iter().any(|e| &e.id == id))
+        {
+            return Err(invalid("import_scope", "选择了包内不存在的管理器配置"));
+        }
+        selected.manager = Some(crate::modules::sync::portable_manager::Settings {
+            preferences: if scope.preferences {
+                manager.preferences.clone()
+            } else {
+                None
+            },
+            extensions: if scope.extensions {
+                manager.extensions.clone()
+            } else {
+                None
+            },
+            webdav: manager
+                .webdav
+                .iter()
+                .filter(|e| scope.endpoint_ids.contains(&e.id))
+                .cloned()
+                .collect(),
+        });
+        selected.available_webdav_passwords = original
+            .available_webdav_passwords
+            .iter()
+            .filter(|id| scope.endpoint_ids.contains(id))
+            .cloned()
+            .collect();
+        crate::modules::sync::portable_manager::select(
+            root,
+            id,
+            &selected.id,
+            scope.preferences,
+            scope.extensions,
+            &scope.endpoint_ids,
+        )?;
+    }
+    super::file_objects::copy_source(root, &original, &mut selected)?;
+    write_incoming(root, &selected)?;
+    Ok(selected)
 }
 pub fn accept(root: &Path, id: &str) -> ModelResult<Snapshot> {
-    let path = incoming_path(root, id)?;
+    accept_with_credentials(root, id, &BTreeMap::new())
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct AcceptanceReceipt {
+    id: String,
+    package_digest: String,
+    intent_digest: String,
+}
+pub(super) fn verify_acceptance(
+    root: &Path,
+    plan: &IncomingPlan,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<bool> {
+    let path = incoming_path(root, &plan.id)?.with_extension("accepted.json");
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    if !path.exists() {
+        return Ok(false);
+    }
+    let receipt: AcceptanceReceipt =
+        serde_json::from_slice(&crate::modules::backup::safety::read_file(&path, 4096)?)?;
+    if receipt.id != plan.id
+        || receipt.package_digest != plan.package.digest
+        || receipt.intent_digest != sha256(&serde_json::to_vec(credentials)?)
+    {
+        return Err(invalid(
+            "import_replay_conflict",
+            "该接收操作已确认其他范围或凭据选择，请重新比较",
+        ));
+    }
+    Ok(true)
+}
+pub(super) fn accepted(root: &Path, plan: &IncomingPlan) -> ModelResult<bool> {
+    let path = incoming_path(root, &plan.id)?.with_extension("accepted.json");
+    crate::modules::backup::safety::check_path(root, &path, true)?;
+    if !path.exists() {
+        return Ok(false);
+    }
+    let receipt: AcceptanceReceipt =
+        serde_json::from_slice(&crate::modules::backup::safety::read_file(&path, 4096)?)?;
+    if receipt.id != plan.id || receipt.package_digest != plan.package.digest {
+        return Err(invalid("incoming_identity", "原接收回执与清单不同"));
+    }
+    Ok(true)
+}
+pub(super) fn intended_applied(
+    root: &Path,
+    plan: &IncomingPlan,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<bool> {
+    let local = ModelStore::new(root).load()?;
+    let mut policy = plan.merged_policy.clone();
+    bind_credentials(&mut policy, credentials)?;
+    Ok(plan.preview_error.is_none()
+        && local.library == plan.merged_library
+        && policy.as_ref().is_none_or(|policy| {
+            local
+                .workspace
+                .as_ref()
+                .is_some_and(|w| &w.policy == policy)
+        }))
+}
+pub(super) fn read_incoming(root: &Path, id: &str) -> ModelResult<IncomingPlan> {
     let plan: IncomingPlan = serde_json::from_slice(&crate::modules::backup::safety::read_file(
-        &path,
+        &incoming_path(root, id)?,
         64 * 1024 * 1024,
     )?)?;
     if plan.id != id {
         return Err(invalid("incoming_identity", "接收记录身份不一致"));
     }
+    validate_package(&plan.package)?;
+    Ok(plan)
+}
+pub(super) fn write_incoming(root: &Path, plan: &IncomingPlan) -> ModelResult<()> {
+    crate::infrastructure::atomic_write::atomic_write(
+        &incoming_path(root, &plan.id)?,
+        &serde_json::to_vec(plan)?,
+        0o600,
+    )?;
+    Ok(())
+}
+pub(super) fn accept_with_credentials(
+    root: &Path,
+    id: &str,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<Snapshot> {
+    let path = incoming_path(root, id)?;
+    crate::modules::backup::safety::check_path(
+        root,
+        &crate::infrastructure::locking::lock_path_for(&path),
+        true,
+    )?;
+    let _guard = crate::infrastructure::locking::TargetFileLock::lock(&path)?;
+    let plan = read_incoming(root, id)?;
     let local = ModelStore::new(root).load()?;
+    for (channel, reference) in credentials {
+        require_uuid(reference)?;
+        if plan
+            .package
+            .payload
+            .policy
+            .as_ref()
+            .is_none_or(|p| !p.channels.iter().any(|c| &c.id == channel))
+        {
+            return Err(invalid("credential_scope", "凭据目标不在已选接收渠道内"));
+        }
+    }
+    let intent_digest = sha256(&serde_json::to_vec(credentials)?);
+    let receipt_path = path.with_extension("accepted.json");
+    crate::modules::backup::safety::check_path(root, &receipt_path, true)?;
+    if verify_acceptance(root, &plan, credentials)? {
+        return Ok(local);
+    }
+    let mut intended_policy = plan.merged_policy.clone();
+    bind_credentials(&mut intended_policy, credentials)?;
+    let already_applied = plan.preview_error.is_none()
+        && local.library == plan.merged_library
+        && intended_policy.as_ref().is_none_or(|policy| {
+            local
+                .workspace
+                .as_ref()
+                .is_some_and(|w| &w.policy == policy)
+        });
     if (
         local.library_digest.as_str(),
         local.policy_digest.as_str(),
@@ -734,20 +967,49 @@ pub fn accept(root: &Path, id: &str) -> ModelResult<Snapshot> {
         plan.expected_library.as_str(),
         plan.expected_policy.as_str(),
         plan.expected_workspace.as_str(),
-    ) {
+    ) && !already_applied
+    {
         return Err(invalid(
             "stale_baseline",
             "接收后本地内容已变化，请重新比较导入",
         ));
     }
-    let (library, policy, _) = merge(&local, &plan.package)?;
-    ModelStore::new(root).accept_import(
-        &plan.expected_library,
-        &plan.expected_policy,
-        &plan.expected_workspace,
-        library,
-        policy,
-    )
+    let snapshot = if already_applied {
+        local
+    } else {
+        let (library, mut policy, _) = merge(&local, &plan.package)?;
+        bind_credentials(&mut policy, credentials)?;
+        ModelStore::new(root).accept_import(
+            &plan.expected_library,
+            &plan.expected_policy,
+            &plan.expected_workspace,
+            library,
+            policy,
+        )?
+    };
+    crate::infrastructure::atomic_write::atomic_write(
+        &receipt_path,
+        &serde_json::to_vec(&AcceptanceReceipt {
+            id: id.into(),
+            package_digest: plan.package.digest,
+            intent_digest,
+        })?,
+        0o600,
+    )?;
+    Ok(snapshot)
+}
+fn bind_credentials(
+    policy: &mut Option<Policy>,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<()> {
+    for (id, reference) in credentials {
+        let channel = policy
+            .as_mut()
+            .and_then(|p| p.channels.iter_mut().find(|c| &c.id == id))
+            .ok_or_else(|| invalid("credential_scope", "接收草稿缺少凭据目标"))?;
+        channel.connection.credential_ref = Some(reference.clone());
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -795,7 +1057,8 @@ mod tests {
         let opened =
             crate::modules::sync::portable_file::open(&bytes, Some("fixture-export-passphrase"))
                 .unwrap();
-        let package: ModelPackage = serde_json::from_slice(&opened.document).unwrap();
+        let payload: serde_json::Value = serde_json::from_slice(&opened.document).unwrap();
+        let package: ModelPackage = serde_json::from_value(payload["models"].clone()).unwrap();
         assert_eq!(package.digest, plan.package.digest);
         assert!(package
             .payload
@@ -990,6 +1253,7 @@ mod tests {
                 template_refs: vec![],
                 channel_ids: vec![channel.id],
                 include_global: false,
+                ..Default::default()
             },
         )
         .unwrap();
@@ -1032,6 +1296,7 @@ mod tests {
                 }],
                 channel_ids: vec![],
                 include_global: false,
+                ..Default::default()
             },
         )
         .unwrap();
@@ -1048,7 +1313,8 @@ mod tests {
                 ReceiveScope {
                     template_refs: vec![],
                     channel_ids: vec![],
-                    include_global: true
+                    include_global: true,
+                    ..Default::default()
                 }
             )
             .unwrap_err()

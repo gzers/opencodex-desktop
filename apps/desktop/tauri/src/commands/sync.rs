@@ -245,6 +245,106 @@ pub(crate) fn webdav_config(config: &SyncEndpointConfig) -> AppResult<WebDavConf
         password,
     })
 }
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImportedConnectionView {
+    id: String,
+    endpoint: crate::modules::sync::portable_manager::Endpoint,
+    has_password: bool,
+}
+#[derive(serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ImportedConnections {
+    baseline: String,
+    items: Vec<ImportedConnectionView>,
+}
+fn imported_connection_baseline(root: &std::path::Path) -> AppResult<String> {
+    let config = SyncConfigStore::new(root).load()?;
+    let secret = config.active().map(webdav_config).transpose()?;
+    let bytes = zeroize::Zeroizing::new(
+        serde_json::to_vec(&(config, secret.as_ref().map(|value| value.password.as_str())))
+            .map_err(|_| AppError::NotConfigured)?,
+    );
+    Ok(crate::modules::model_config::store::sha256(&bytes))
+}
+#[tauri::command]
+pub async fn list_imported_sync_connections(
+    data_root: State<'_, SharedDataRoot>,
+) -> AppResult<ImportedConnections> {
+    let root = data_root.0.clone();
+    crate::commands::run_blocking("list imported sync connections", move || {
+        let candidates = crate::modules::sync::portable_manager::load_candidates(&root)
+            .map_err(|_| AppError::NotConfigured)?;
+        let mut items = vec![];
+        for candidate in candidates {
+            let has_password = match candidate.credential_ref.as_deref() {
+                Some(reference) => keychain::load_optional_keychain_password(
+                    keychain::WEBDAV_CREDENTIAL_PURPOSE,
+                    reference,
+                )?
+                .is_some(),
+                None => false,
+            };
+            items.push(ImportedConnectionView {
+                id: candidate.id,
+                endpoint: candidate.endpoint,
+                has_password,
+            });
+        }
+        Ok(ImportedConnections {
+            baseline: imported_connection_baseline(&root)?,
+            items,
+        })
+    })
+    .await
+}
+#[tauri::command]
+pub async fn activate_imported_sync_connection(
+    candidate_id: String,
+    expected_baseline: String,
+    data_root: State<'_, SharedDataRoot>,
+    app: tauri::AppHandle,
+) -> AppResult<()> {
+    let root = data_root.0.clone();
+    run_owned_sync("activate imported sync connection", move || {
+        let active = SyncConfigStore::new(&root).load()?.active().cloned();
+        let _active_sync = active
+            .as_ref()
+            .map(|endpoint| {
+                crate::modules::sync::engine::SyncEndpointLocks::global()
+                    .acquire(&endpoint.endpoint_id)
+            })
+            .transpose()
+            .map_err(|_| AppError::NotConfigured)?;
+        if imported_connection_baseline(&root)? != expected_baseline {
+            return Err(AppError::NotConfigured);
+        }
+        let candidates = crate::modules::sync::portable_manager::load_candidates(&root)
+            .map_err(|_| AppError::NotConfigured)?;
+        let candidate = candidates
+            .iter()
+            .find(|candidate| candidate.id == candidate_id)
+            .ok_or(AppError::NotConfigured)?;
+        let password = zeroize::Zeroizing::new(keychain::load_webdav_password(
+            candidate
+                .credential_ref
+                .as_deref()
+                .ok_or(AppError::NotConfigured)?,
+        )?);
+        let input = SyncEndpointInput {
+            base_url: candidate.endpoint.url.clone(),
+            remote_path: candidate.endpoint.remote_path.clone(),
+            username: candidate.endpoint.username.clone(),
+            password: password.to_string(),
+            conflict_policy: candidate.endpoint.conflict_policy.clone(),
+        };
+        SyncConfigStore::new(&root).save_endpoint_observed(&input, |scope, success| {
+            publish_endpoint_result(&app, &root, "sync-endpoint-save", scope, success)
+        })?;
+        Ok(())
+    })
+    .await
+}
 
 fn status_guard<'a>(
     status: &'a State<'_, SharedSyncStatus>,

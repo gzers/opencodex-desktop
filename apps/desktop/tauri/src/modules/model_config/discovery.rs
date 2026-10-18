@@ -19,6 +19,34 @@ pub fn credential(reference: &str) -> ModelResult<Zeroizing<String>> {
         .map(Zeroizing::new)
         .map_err(|_| invalid("credential_store", "渠道密钥尚未配置或无法读取，请重新输入"))
 }
+pub(super) fn import_credential(reference: &str, value: &str) -> ModelResult<()> {
+    if value.is_empty() || value.len() > 8192 || value.contains(['\r', '\n']) {
+        return Err(invalid("credential", "导入密钥格式无效"));
+    }
+    let entry = entry(reference)?;
+    match entry.get_password() {
+        Ok(current) if current == value => return Ok(()),
+        Ok(_) => {
+            return Err(invalid(
+                "credential_collision",
+                "新凭据引用已有不同内容，未替换",
+            ))
+        }
+        Err(keyring::Error::NoEntry) => {}
+        Err(_) => return Err(invalid("credential_store", "系统凭据存储不可用")),
+    }
+    entry
+        .set_password(value)
+        .map_err(|_| invalid("credential_store", "导入密钥未安全保存"))?;
+    if entry
+        .get_password()
+        .map_err(|_| invalid("credential_readback", "导入密钥尚未读回确认"))?
+        != value
+    {
+        return Err(invalid("credential_readback", "导入密钥读回不一致"));
+    }
+    Ok(())
+}
 pub fn forget(reference: &str) -> ModelResult<()> {
     match entry(reference)?.delete_credential() {
         Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
