@@ -191,8 +191,16 @@ pub fn derive_key_for_test(
     passphrase: &[u8],
     salt: &[u8],
 ) -> Result<Zeroizing<[u8; 32]>, MigrationError> {
+    // v1 compatibility used the encoded salt bytes. Keep that historical
+    // contract isolated; new portable envelopes use the raw random salt.
     let salt = argon2::password_hash::SaltString::encode_b64(salt)
         .map_err(|_| MigrationError::ContainerFormat)?;
+    derive_portable_key(passphrase, salt.as_str().as_bytes())
+}
+pub(crate) fn derive_portable_key(
+    passphrase: &[u8],
+    salt: &[u8],
+) -> Result<Zeroizing<[u8; 32]>, MigrationError> {
     let argon = Argon2::new(
         argon2::Algorithm::Argon2id,
         argon2::Version::V0x13,
@@ -206,7 +214,7 @@ pub fn derive_key_for_test(
     );
     let mut key = Zeroizing::new([0_u8; 32]);
     argon
-        .hash_password_into(passphrase, salt.as_str().as_bytes(), key.as_mut())
+        .hash_password_into(passphrase, salt, key.as_mut())
         .map_err(|_| MigrationError::ContainerFormat)?;
     Ok(key)
 }

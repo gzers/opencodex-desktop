@@ -5,6 +5,7 @@
 
 pub mod config;
 pub mod engine;
+pub mod portable_file;
 pub mod runner;
 
 use chrono::{DateTime, SecondsFormat, Utc};

@@ -151,9 +151,12 @@ pub async fn model_transfer_export(
             let package = transfer::file_package(&root, &plan_id)?;
             let directory = root.join("exports");
             crate::modules::backup::safety::check_path(&root, &directory, true)?;
-            let path = directory.join(format!("model-config-{}.ocxd.json", uuid::Uuid::new_v4()));
+            let path = directory.join(format!(
+                "opencodex-config-{}.ocxdconf",
+                uuid::Uuid::new_v4()
+            ));
             crate::modules::backup::safety::check_path(&root, &path, true)?;
-            let bytes = serde_json::to_vec_pretty(&package)?;
+            let bytes = transfer::file_bytes(&root, &plan_id)?;
             crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;
             if crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)? != bytes {
                 return Err(invalid("export_readback", "导出文件读回失败"));
@@ -177,13 +180,15 @@ pub async fn model_transfer_export(
 #[tauri::command]
 pub async fn model_transfer_prepare(
     scope: ExportScope,
+    passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<FileExportPlan> {
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        transfer::prepare_file(&root, scope)
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        transfer::prepare_file(&root, scope, passphrase.as_deref().map(|p| p.as_str()))
     })
     .await
     .map_err(|_| invalid("transfer_worker", "导出准备中断"))?
@@ -191,6 +196,7 @@ pub async fn model_transfer_prepare(
 #[tauri::command]
 pub async fn model_transfer_receive(
     path: String,
+    passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<IncomingPlan> {
     let root = data_root.0.clone();
@@ -207,7 +213,25 @@ pub async fn model_transfer_receive(
                     return Err(invalid("import_path", "请选择绝对文件路径"));
                 }
                 let bytes = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
-                let package: ModelPackage = serde_json::from_slice(&bytes).map_err(|_| {
+                let passphrase = passphrase.map(zeroize::Zeroizing::new);
+                let format: serde_json::Value = serde_json::from_slice(&bytes)
+                    .map_err(|_| invalid("import_format", "所选配置文件不是有效JSON"))?;
+                let plaintext = if format["format"] == "OCXDCONF" {
+                    let opened = crate::modules::sync::portable_file::open(
+                        &bytes,
+                        passphrase.as_deref().map(|p| p.as_str()),
+                    )?;
+                    if opened.manifest.sections != ["models"] {
+                        return Err(invalid(
+                            "import_scope",
+                            "文件包含尚未支持的配置类别；为避免截断，整份文件未导入",
+                        ));
+                    }
+                    opened.document
+                } else {
+                    zeroize::Zeroizing::new(bytes)
+                };
+                let package: ModelPackage = serde_json::from_slice(&plaintext).map_err(|_| {
                     invalid(
                         "import_format",
                         "所选文件不是受支持的模型配置包；原文件和本机配置保持",
@@ -235,4 +259,19 @@ pub async fn model_transfer_accept(
     })
     .await
     .map_err(|_| invalid("transfer_worker", "接受导入结果待核对"))?
+}
+#[tauri::command]
+pub async fn model_transfer_select(
+    incoming_id: String,
+    scope: crate::modules::model_config::transfer::ReceiveScope,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<IncomingPlan> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        transfer::select_received(&root, &incoming_id, scope)
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "接收范围比较中断，配置未采用"))?
 }

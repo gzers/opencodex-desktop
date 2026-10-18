@@ -525,6 +525,7 @@ pub fn run() {
             commands::model_transfer::model_transfer_prepare,
             commands::model_transfer::model_transfer_receive,
             commands::model_transfer::model_transfer_accept,
+            commands::model_transfer::model_transfer_select,
             commands::model_transfer::model_remote_prepare,
             commands::model_transfer::model_remote_publish,
             commands::model_transfer::model_remote_download,
