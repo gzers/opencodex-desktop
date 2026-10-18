@@ -1,0 +1,94 @@
+{
+  "recordedAt": "2026-10-18T21:21:13.135375+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "2702df6abb55704b291df8eb5978e0c9c5fef45c",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_transfer.rs": "b30156deb1724dabb96f5ff9a331aa0fc749662ae20ce5fbc16d262c5e83a306",
+    "apps/desktop/tauri/src/infrastructure/webdav_client.rs": "4c71b54dcded4828106d3f8bca22779d8614a805358207fd87f5092fa1d84464",
+    "apps/desktop/tauri/src/lib.rs": "a33af71eda49c143b893870710b4b3521bbfa0cf023ba2603a35b4416a3743c7",
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "96f54290b118137b9b1ad6c0bc00d170600bb318a95d09bd65df0c65b6cbe23e",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "cba68e94e19bd080d474da85827f67c4bf4b5db004247290176682fe417c79d4",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "6b4b0ab1288a8ed0a62cb040a0f7448de16b03cbfaaeb3cf19f8f73239ddff60",
+    "apps/desktop/tauri/src/modules/model_config/remote.rs": "236035a63d07fa70e384a1966789b52e9c9855d98aff5fc69d29c951f8ef08d4",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "df9c04846f9741c64500dde63b4e110fd271ceb351bff378b5ce64a867600b3d",
+    "apps/desktop/tauri/tests/config_sync_webdav_real.rs": "8a6a8ec49195e3cc5230aa3ad8ec24113713e038adf4759d5697b5abcaf1dadb",
+    "apps/desktop/tauri/tests/support/local_webdav.py": "650cd474d5ad733caf49193577f6832e0905587063b4d001420d68797d62ccb1",
+    "apps/desktop/tauri/tests/support/webdav-requirements.txt": "ff5e525a1247b4b8c5791b39021ab7024a085f1df364aafafc79d0aaf7ac0f6c",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "747fc41e2f6b5d2e2c21e82a80eac23c30776c5b5f989c875dfb307e45f83800",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "31047676b83241ed8f7dfb8e320e9d8499aa2de82705155cf23884b8d8e4df24",
+    "apps/desktop/ui/src/features/sync/api.ts": "869f2b770e4ee9d082d15f66109b2bb5815aa02f3554de0d6368ca79674c0008",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "60e118d27d4777dab77922c30cb022648d50c54e61fc4e19a5842fa1ce6341b3",
+    "apps/desktop/ui/src/routes/SettingsRoute.vue": "ebe116aad3f1a9990259cd0028149d4af1fa27f20dd25c3a8c6dfe94a3eaae2a",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "72944ae0fef10678ae05e4a436affe8764130a1c34fcb34aed6cb2c21e8cf978"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib config_remote --no-default-features",
+      "session": 6380,
+      "passed": 3,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib model_config::remote --no-default-features",
+      "session": 87512,
+      "passed": 4,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --test config_sync_webdav_real --features integration-test -- --ignored --nocapture --test-threads=1",
+      "passed": 1,
+      "failed": 0,
+      "result": "passed",
+      "server": {
+        "kind": "owned local TLS WsgiDAV",
+        "wsgidav": "4.3.3",
+        "cheroot": "11.1.2",
+        "trust": "test-specific explicit CA, signed leaf cert, hostname validation enabled",
+        "systemTrustChanged": false,
+        "stopped": true,
+        "remoteDeletes": 0
+      },
+      "scope": [
+        "conditional create/update/readback",
+        "competing stale plan refuses",
+        "partial upload preserves unrelated objects",
+        "device-scoped review/adoption",
+        "old latest.txt preserved"
+      ]
+    },
+    {
+      "command": "npx vitest run tests/model-transfer.test.ts tests/imported-sync-connections.test.ts",
+      "session": 41782,
+      "passed": 13,
+      "files": 2,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run tests/settings-readonly.test.ts tests/sync-conflict-default.test.ts tests/model-transfer.test.ts",
+      "session": 71372,
+      "passed": 17,
+      "files": 3,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 33586,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 48443,
+      "result": "passed"
+    }
+  ],
+  "remaining": [
+    "account typed portability/expiry/refresh and real availability evidence",
+    "actual Skill resource/MCP definition and protected extension credentials",
+    "complete upstream original channel fields and portable node binding",
+    "history-to-draft/client-loaded/platform/UI full acceptance",
+    "final release gates and authorized publication"
+  ]
+}
