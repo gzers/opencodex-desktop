@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { useOperationTasks, operationTitles, operationPhases } from '@/app/feedback/tasks'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 import { runtimeLabel } from '@/lib/labels'
@@ -7,6 +8,13 @@ import type { LifecycleAction } from '@/types/ui'
 
 const app = useAppStore()
 const routes = useRouteStore()
+const operations = useOperationTasks()
+let stopOperations: (() => void) | undefined
+let disposed = false
+onMounted(async () => {
+  try { const { listen } = await import('@tauri-apps/api/event');const stop = await listen('model-operation-progress',event => operations.apply(event.payload));if(disposed)stop();else stopOperations=stop } catch { /* IPC availability is reported by the owning command. */ }
+})
+onBeforeUnmount(() => { disposed=true;stopOperations?.() })
 
 const processAction = computed(() => app.processProgressAction)
 const processRuntime = computed(() => app.statusSnapshot?.matrix.runtime ?? app.runtimeState)
@@ -101,5 +109,10 @@ function collapse() {
           {{ app.processActionBusy ? '后台运行' : '关闭' }}
         </button>
       </div>
+  </section>
+  <section v-for="task in operations.tasks.filter(t => !t.collapsed)" :key="task.id" class="process-progress" :class="{ done: task.phase !== 'running', error: task.phase === 'failed' }" role="status" aria-live="polite">
+    <div class="process-progress-head"><div><h3>{{ operationTitles[task.kind] }}</h3><p>{{ operationPhases[task.phase] }}</p></div><button class="notify-min" type="button" aria-label="收起任务到通知入口" @click="operations.collapse(task.id)">⌄</button></div>
+    <div v-if="task.phase === 'running'" class="process-progress-track" aria-hidden="true"></div>
+    <div class="process-progress-actions"><button class="btn ghost notif-ctl" @click="operations.collapse(task.id)">收起</button><button class="btn notif-ctl" @click="routes.go('models')">查看模型配置</button></div>
   </section>
 </template>

@@ -10,7 +10,7 @@ function choose(value: string) { emit('update:modelValue', value); open.value = 
 <template>
   <div class="select" :class="{ 'select-sm': size === 'sm' }">
     <button type="button" class="select-trigger" :disabled="disabled" :aria-label="label" aria-haspopup="listbox" :aria-expanded="open" @click="open = !open">
-      <span>{{ selected }}</span><span aria-hidden="true">⌄</span>
+      <span>{{ selected }}</span>
     </button>
     <UiSelectMenu :open="open" role="listbox" :aria-label="label" @close="open = false">
       <button v-for="option in options" :key="option.value" type="button" role="option" class="select-option" :class="{ selected: option.value === modelValue }" :aria-selected="option.value === modelValue" :disabled="option.disabled" @click="choose(option.value)">{{ option.label }}</button>

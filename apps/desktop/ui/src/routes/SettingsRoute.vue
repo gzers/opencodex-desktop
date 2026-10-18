@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
+const ModelTransfer = defineAsyncComponent(() => import('@/features/sync/ModelTransfer.vue'))
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -1234,6 +1235,7 @@ function restoreGeneralDefaults() {
     </section>
 
     <section v-else-if="section === 'migration'" class="settings-panel active">
+      <ModelTransfer />
       <article class="card"><div class="card-head"><div><h2>配置迁移</h2><p>导出 / 导入管理器自有配置；文件为未加密配置，真实凭据仍在系统钥匙串，只携带引用。</p></div></div>
         <div class="setting-list">
           <div class="setting-row"><div><div class="setting-title">导出范围</div><div class="setting-desc">偏好、扩展配置（Skills 清单、MCP 清单、客户端开关、分发方式）与 WebDAV 端点配置；受上方「导出包含」开关控制。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'exportScope' }"><button class="select-trigger" :aria-expanded="openSelect === 'exportScope' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="导出范围" @click="toggleSelect('exportScope')"><span class="select-value">管理器配置</span></button><UiSelectMenu :open="openSelect === 'exportScope'" @close="openSelect = ''" role="listbox" aria-label="导出范围"><button class="select-option selected" type="button" role="option" aria-selected="true" @click="app.showToast('范围固定为管理器自有配置：偏好、扩展配置与 WebDAV 端点配置。')">管理器配置</button></UiSelectMenu></div></div></div>
@@ -1250,6 +1252,7 @@ function restoreGeneralDefaults() {
     </section>
 
     <section v-else-if="section === 'sync'" class="settings-panel active">
+      <ModelTransfer remote />
       <article class="card"><div class="card-head"><div><h2>WebDAV 同步</h2><p>端点、服务端认证凭据与冲突策略集中在设置里维护；同步载荷为未加密配置 + 完整性校验。</p></div></div>
         <div class="field-grid">
           <div class="field"><label>服务地址</label><input v-model="syncEndpointInput.baseUrl" class="input" placeholder="https://dav.example.com/opencodex/" autocapitalize="off" autocorrect="off" spellcheck="false"></div>

@@ -8,7 +8,7 @@ vi.mock('@/features/models/api', async importOriginal => {
   return { ...actual, modelApi: { load: vi.fn(), save: vi.fn(), setDefault: vi.fn(), delete: vi.fn(), preview: vi.fn() } }
 })
 const revision = (): Revision => ({ id: '2f415ab0-e93f-400d-b4a8-8539bfc87903', createdAt: '2026-10-18T00:00:00Z', savedLabel: '测试', content: emptyContent(), digest: 'digest', baseRevision: null, changes: [] })
-const snapshot = (): ModelSnapshot => ({ library: { schemaVersion: 1, templates: [{ id: 'template', source: 'user', label: '测试', defaultRevision: null, revisions: [revision()] }] }, libraryDigest: 'base', policyDigest: 'policy' })
+const snapshot = (): ModelSnapshot => ({ library: { schemaVersion: 1, templates: [{ id: 'template', source: 'user', label: '测试', defaultRevision: null, revisions: [revision()] }] }, policy: { schemaVersion: 1, templateRefs: [], channels: [] }, libraryDigest: 'base', policyDigest: 'policy', workspace: null, workspaceDigest: 'workspace' })
 beforeEach(() => { setActivePinia(createPinia()); vi.clearAllMocks() })
 describe('model template working buffer', () => {
   it('refreshes saved facts without replacing uncommitted input', async () => {

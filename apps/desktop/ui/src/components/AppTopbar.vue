@@ -4,6 +4,7 @@ import { useRouteStore } from '@/stores/routes'
 import { useThemeStore } from '@/app/appearance/theme'
 import { useAppController } from '@/composables/useAppController'
 import { useNotificationsStore } from '@/features/notifications/store'
+import { useOperationTasks } from '@/app/feedback/tasks'
 import type { NotificationItem } from '@/types/ui'
 
 const routes = useRouteStore()
@@ -58,6 +59,7 @@ function onDocumentClick(event: MouseEvent) {
 }
 
 function togglePanel() {
+  useOperationTasks().expandAll()
   panelOpen.value = !panelOpen.value
   if (panelOpen.value) document.addEventListener('click', onDocumentClick)
   else document.removeEventListener('click', onDocumentClick)

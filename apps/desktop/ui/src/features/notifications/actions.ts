@@ -10,6 +10,7 @@ type NotificationAction = NonNullable<NotificationItem['action']>
  * （`settings-installation`），导致多词动作查不到按钮，通知详情只剩「关闭」。
  */
 export const notificationConfirmLabels: Record<NotificationAction, string> = {
+  models: '查看模型配置',
   restore: '前往处理',
   upgrade: '前往处理',
   app_update: '前往处理',

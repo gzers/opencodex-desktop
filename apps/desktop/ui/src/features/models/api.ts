@@ -19,7 +19,7 @@ export interface MatchRules {
   priority: number
 }
 export interface Variant { id: string; name: string; suffix: string; rules: ModelRules; lockedFields: string[] }
-export interface TemplateContent { description: string; matching: MatchRules; rules: ModelRules; variants: Variant[]; lockedFields: string[] }
+export interface TemplateContent { description: string; matching: MatchRules; rules: ModelRules; variants: Variant[]; lockedFields: string[]; sources: { field: string; url: string | null; note: string; recordedAt: string }[] }
 export interface ChangeFact { field: string; before: unknown; after: unknown }
 export interface Revision {
   id: string; createdAt: string; savedLabel: string; content: TemplateContent
@@ -28,20 +28,65 @@ export interface Revision {
 export interface Template { id: string; label: string; source: 'builtin' | 'user'; defaultRevision: string | null; revisions: Revision[] }
 export interface ModelSnapshot {
   library: { schemaVersion: number; templates: Template[] }
+  policy: ModelPolicy
   libraryDigest: string
   policyDigest: string
+  workspace: { basePolicy: string; policy: ModelPolicy } | null
+  workspaceDigest: string
 }
+export interface TemplateRef { templateId: string; revisionId: string }
+export interface ServiceNode { id: string; name: string; url: string }
+export interface DiscoveredModel { id: string; label: string; rules: ModelRules }
+export type ModelSelection = { mode: 'all' | 'none' } | { mode: 'whitelist'; models: string[] }
+export interface ChannelPolicy {
+  id: string; label: string; templateRefs: TemplateRef[]; modelRefs: Record<string, TemplateRef>
+  connection: { providerId: string; protocol: string; nodes: ServiceNode[]; activeNodeId: string; credentialRef: string | null; enabled: boolean; allowPrivateNetwork: boolean }
+  selection: ModelSelection; modelOrder: string[]; discovered: DiscoveredModel[]
+  defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
+}
+export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[] }
+export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
+export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
+export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null }
+export type ExternalScene = 'from_sources' | 'update_models' | 'audit_and_revise' | 'private_models' | 'preferences' | 'check_only'
+export interface ExternalTaskRequest { scene: ExternalScene; targets: TemplateRef[]; allowNew: boolean; requirements: string; expectedLibrary: string; buffers: { templateId: string; baseRevision: string; label: string; content: TemplateContent }[] }
+export interface TaskGrant { task: { id: string; contractVersion: number; scene: ExternalScene; targets: unknown[]; allowNew: boolean; requirements: string; expectedLibrary: string; expiresAt: string; revoked: boolean }; token: string }
+export interface TaskBundle { taskId: string; content: string; grant: TaskGrant }
+export interface AgentSettings { providerId: string; modelId: string; reasoningEffort: string | null; fast: boolean | null }
+export interface ResearchSource { url: string; retrievedAt: string; text: string; links?: string[] }
+export interface Proposal { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
+export interface Submission { submissionId: string; contractVersion: number; proposals: Proposal[]; report: string | null }
+export interface OwnerTaskResult { task: { id: string; targets: { templateId: string; label: string }[]; requirements: string }; receipt: { submissionId: string; state: string; outcomes: {templateId:string;revisionId:string;changed:boolean}[]; report: string | null } | null }
+export interface UpstreamSnapshot { version: string; providers: unknown; models: unknown; order: unknown }
 export interface TemplateDraft { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
 export interface Commit { snapshot: ModelSnapshot; templateId: string; revisionId: string; changed: boolean }
 export interface MatchPreview { matched: boolean; reason: string; variantId: string | null; rules: ModelRules }
 export const emptyRules = (): ModelRules => ({ protocol: { mode: 'inherit' }, contextWindow: { mode: 'inherit' }, inputModalities: { mode: 'inherit' }, reasoningEfforts: { mode: 'inherit' }, defaultEffort: { mode: 'inherit' }, fast: { mode: 'inherit' } })
-export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [] })
+export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [], sources: [] })
 export const modelApi = {
   load: () => invoke<ModelSnapshot>('model_config_snapshot'),
   save: (draft: TemplateDraft, expectedLibrary: string) => invoke<Commit>('model_template_save', { request: { ...draft, expectedLibrary } }),
   setDefault: (expectedLibrary: string, templateId: string, revisionId: string) => invoke<ModelSnapshot>('model_template_set_default', { expectedLibrary, templateId, revisionId }),
-  delete: (expectedLibrary: string, expectedPolicy: string, templateId: string, revisionIds: string[]) => invoke<ModelSnapshot>('model_template_delete', { expectedLibrary, expectedPolicy, templateId, revisionIds }),
+  delete: (expectedLibrary: string, expectedPolicy: string, expectedWorkspace: string, templateId: string, revisionIds: string[]) => invoke<ModelSnapshot>('model_template_delete', { expectedLibrary, expectedPolicy, expectedWorkspace, templateId, revisionIds }),
   preview: (content: TemplateContent, channelId: string, modelId: string) => invoke<MatchPreview>('model_match_preview', { content, channelId, modelId }),
+  project: (policy: ModelPolicy) => invoke<DraftProjection>('model_policy_preview', { policy }),
+  stage: (expectedPolicy: string, expectedWorkspace: string, policy: ModelPolicy) => invoke<ModelSnapshot>('model_policy_stage', { expectedPolicy, expectedWorkspace, policy }),
+  preparePolicy: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace}),
+  applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),
+  policyResult: (planId:string) => invoke<SavePlan>('model_policy_result',{planId}),
+  compensatePolicy: (planId:string) => invoke<SavePlan>('model_policy_compensate',{planId}),
+  upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
+  discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),
+  forgetCredential: (reference:string) => invoke<void>('model_channel_forget_credential',{reference}),
+  external: (request: ExternalTaskRequest) => invoke<TaskBundle>('model_external_task', { request }),
+  activate: (grant: TaskGrant) => invoke<void>('model_external_activate', { grant }),
+  externalResult: (taskId: string, submissionId: string) => invoke<OwnerTaskResult>('model_external_result', { taskId, submissionId }),
+  agentSettings: () => invoke<AgentSettings | null>('model_agent_preferences'),
+  saveAgentSettings: (settings: AgentSettings) => invoke<AgentSettings>('model_agent_preferences_save', { settings }),
+  research: (urls: string[]) => invoke<ResearchSource[]>('model_research_sources', { urls }),
+  searchSources: (query: string) => invoke<ResearchSource[]>('model_research_search', { query }),
+  generate: (runId: string, task: ExternalTaskRequest, sources: ResearchSource[]) => invoke<Submission>('model_agent_generate', { request: { runId, task, sources } }),
+  stopGeneration: (runId: string) => invoke<void>('model_agent_stop', { runId }),
 }
 
 export function errorText(error: unknown): string {

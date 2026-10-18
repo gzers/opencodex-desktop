@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import type { RouteName, SettingsSection } from '@/types/ui'
 import {
   normalizeDiagnosticsTab,
@@ -14,6 +14,7 @@ import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
 import LogsRoute from '@/routes/LogsRoute.vue'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
 import TrayRoute from '@/routes/TrayRoute.vue'
+const ModelsRoute = defineAsyncComponent(() => import('@/routes/ModelsRoute.vue'))
 
 export const useRouteStore = defineStore('routes', () => {
   const route = ref<RouteName>(readHash().route)
@@ -35,6 +36,7 @@ export const useRouteStore = defineStore('routes', () => {
       case 'extensions': return ExtensionsRoute
       case 'logs': return LogsRoute
       case 'settings': return SettingsRoute
+      case 'models': return ModelsRoute
       case 'tray': return TrayRoute
     }
   })

@@ -4,7 +4,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 defineOptions({ inheritAttrs: false })
-const props = defineProps<{ open: boolean }>()
+const props = withDefaults(defineProps<{ open: boolean; closeOnSelect?: boolean }>(), { closeOnSelect: true })
 const emit = defineEmits<{ close: [] }>()
 const anchor = ref<HTMLElement | null>(null)
 const menu = ref<HTMLElement | null>(null)
@@ -18,7 +18,7 @@ let observer: ResizeObserver | undefined
 function place() {
   const button = trigger()
   if (!button || !menu.value) return
-  const zoom = Number(getComputedStyle(button.closest('.app-window') ?? document.documentElement).zoom) || 1
+  const zoom = Number(getComputedStyle(button.closest('dialog, .app-window') ?? document.documentElement).zoom) || 1
   const bounds = button.getBoundingClientRect()
   const viewportWidth = window.innerWidth / zoom
   const viewportHeight = window.innerHeight / zoom
@@ -29,9 +29,10 @@ function place() {
   const upwards = below < height && above > below
   const available = Math.max(30, upwards ? above : below)
   const shownHeight = Math.min(height, available)
+  const host = target.value instanceof HTMLDialogElement ? target.value.getBoundingClientRect() : null
   position.value = {
-    left: `${Math.max(12, Math.min(bounds.right / zoom - width, viewportWidth - width - 12))}px`,
-    top: `${upwards ? Math.max(12, bounds.top / zoom - shownHeight - 6) : bounds.bottom / zoom + 6}px`,
+    left: `${Math.max(12, Math.min(bounds.right / zoom - width, viewportWidth - width - 12)) - (host?.left ?? 0) / zoom}px`,
+    top: `${(upwards ? Math.max(12, bounds.top / zoom - shownHeight - 6) : bounds.bottom / zoom + 6) - (host?.top ?? 0) / zoom}px`,
     minWidth: `${Math.min(bounds.width / zoom, viewportWidth - 24)}px`,
     maxWidth: `${viewportWidth - 24}px`,
     maxHeight: `${Math.min(260, available)}px`,
@@ -98,7 +99,7 @@ watch(visible, async open => {
   }
 })
 onMounted(() => {
-  target.value = anchor.value?.closest('.app-window') as HTMLElement ?? document.body
+  target.value = anchor.value?.closest('dialog, .app-window') as HTMLElement ?? document.body
   window.addEventListener('pointerdown', outside)
   window.addEventListener('keydown', keydown)
   window.addEventListener('resize', place)
@@ -118,7 +119,7 @@ const id = `select-menu-${Math.random().toString(36).slice(2)}`
   <span ref="anchor" hidden></span>
   <Teleport :to="target">
     <div v-if="visible" :id="id" ref="menu" v-bind="$attrs" class="select-menu select-menu-portal"
-      :style="position" @click="close(true)">
+      :style="position" @click="props.closeOnSelect !== false && close(true)">
       <slot />
     </div>
   </Teleport>

@@ -10,6 +10,7 @@ describe('notification action label contract', () => {
   it('covers every frozen backend action value', () => {
     const frozen = [
       'restore',
+      'models',
       'upgrade',
       'app_update',
       'sync',

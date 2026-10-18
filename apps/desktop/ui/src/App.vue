@@ -4,12 +4,6 @@ import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 import AppSidebar from '@/components/AppSidebar.vue'
 import { useAppController } from '@/composables/useAppController'
-import PanelRoute from '@/routes/PanelRoute.vue'
-import OverviewRoute from '@/routes/OverviewRoute.vue'
-import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
-import LogsRoute from '@/routes/LogsRoute.vue'
-import SettingsRoute from '@/routes/SettingsRoute.vue'
-import ModelsRoute from '@/routes/ModelsRoute.vue'
 import TrayRoute from '@/routes/TrayRoute.vue'
 import AppModal from '@/components/AppModal.vue'
 import ToastHost from '@/components/ToastHost.vue'
@@ -37,17 +31,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onFaultKeydown))
 // Overlay keeps the native macOS window buttons above the web content.
 const isMacOS = /^Mac/.test(navigator.platform)
 const isWindows = /^Win/.test(navigator.platform)
-const component = computed(() => {
-  switch (routes.current) {
-    case 'panel': return PanelRoute
-    case 'overview': return OverviewRoute
-    case 'extensions': return ExtensionsRoute
-    case 'logs': return LogsRoute
-    case 'settings': return SettingsRoute
-    case 'models': return ModelsRoute
-    default: return undefined
-  }
-})
+const component = computed(() => routes.current === 'tray' ? undefined : routes.component)
 </script>
 
 <template>
