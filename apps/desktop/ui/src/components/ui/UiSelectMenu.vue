@@ -4,7 +4,7 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 defineOptions({ inheritAttrs: false })
-const props = withDefaults(defineProps<{ open: boolean; closeOnSelect?: boolean }>(), { closeOnSelect: true })
+const props = withDefaults(defineProps<{ open: boolean; closeOnSelect?: boolean; manageFocus?: boolean }>(), { closeOnSelect: true, manageFocus:true })
 const emit = defineEmits<{ close: [] }>()
 const anchor = ref<HTMLElement | null>(null)
 const menu = ref<HTMLElement | null>(null)
@@ -48,6 +48,7 @@ function outside(event: PointerEvent) {
   if (!menu.value?.contains(node) && !anchor.value?.closest('.select')?.contains(node)) close()
 }
 function keydown(event: KeyboardEvent) {
+  if(!props.manageFocus)return
   const button = trigger()
   const inside = menu.value?.contains(event.target as Node)
   if (!inside && event.target !== button) return
@@ -61,7 +62,7 @@ function keydown(event: KeyboardEvent) {
   }
   const items = options()
   const index = items.indexOf(document.activeElement as HTMLButtonElement)
-  if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+  if (items.length && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
     event.preventDefault()
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1
       : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length

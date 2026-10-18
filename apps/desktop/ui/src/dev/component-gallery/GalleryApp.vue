@@ -11,6 +11,8 @@ import Inline from '@/components/layout/Inline.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
+import UiDiscreteSlider from '@/components/ui/UiDiscreteSlider.vue'
+const effortExample=ref<string|undefined>()
 
 const theme = ref<'light' | 'dark'>('light')
 const effects = ref<'high' | 'mid' | 'low'>('high')
@@ -54,6 +56,8 @@ function setEffects(next: 'high' | 'mid' | 'low') {
         <UiCardHeader><h2>选择字段与弹窗</h2><p>真实选择字段复用浮层、键盘和边缘定位；弹窗沿同一材质及焦点约束。</p></UiCardHeader>
         <Inline><UiSelectField v-model="selectedExample" label="标准选择字段" :options="[{ value: 'one', label: '默认选项' }, { value: 'long', label: '较长的中文与 English 模型版本说明' }]" /><UiSelectField v-model="selectedExample" size="sm" label="小号选择字段" :options="[{ value: 'one', label: '小号' }, { value: 'long', label: '长值' }]" /><UiButton @click="dialogOpen = true">打开弹窗</UiButton></Inline>
         <UiDialog :open="dialogOpen" title="组件弹窗" @close="dialogOpen = false"><p>确认、关闭、Escape及焦点返回共用该控件。</p><template #actions><UiButton variant="primary" @click="dialogOpen = false">确定</UiButton></template></UiDialog>
+        <UiDiscreteSlider v-model="effortExample" :values="['none','low','high','max']" default-value="high" label="离散推理档位" />
+        <UiDiscreteSlider :values="[]" label="未知档位" disabled />
       </UiCard>
       <UiCard>
         <UiCardHeader><h2>主Tab固定容器</h2><p>到滚动顶部固定，换行后自动更新下层标题偏移。</p></UiCardHeader>

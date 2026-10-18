@@ -2,49 +2,92 @@
 import { computed, ref, watch } from 'vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiButton from '@/components/ui/UiButton.vue'
-import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
+import ModelChoiceOptions from './ModelChoiceOptions.vue'
 import type { ModelProjection } from './api'
 export interface ModelChoice { channelId: string; modelId: string; reasoningEffort?: string; fast?: boolean }
-const props = defineProps<{ open: boolean; rows: ModelProjection[]; channels: { id: string; label: string }[]; multiple?: boolean; reasoning?: boolean; current?: ModelChoice[]; title?: string }>()
+const props = defineProps<{ open: boolean; rows: ModelProjection[]; channels: { id: string; label: string }[]; multiple?: boolean; ordered?: boolean; reasoning?: boolean; current?: ModelChoice[]; title?: string }>()
 const emit = defineEmits<{ close: []; confirm: [choices: ModelChoice[]] }>()
-const search = ref(''); const channel = ref(''); const picks = ref<ModelChoice[]>([]); const focused = ref('')
-const key = (row: { channelId: string; modelId: string }) => JSON.stringify([row.channelId, row.modelId])
-watch(() => props.open, value => { if (value) { picks.value = props.current?.map(item => ({ ...item })) ?? []; search.value = ''; channel.value = ''; focused.value = '' } }, { immediate: true })
-const rows = computed(() => props.rows.filter(row => (!channel.value || row.channelId === channel.value) && `${row.label} ${row.modelId}`.toLowerCase().includes(search.value.toLowerCase())))
-const chosen = (row: ModelProjection) => picks.value.some(item => key(item) === key(row))
-function toggle(row: ModelProjection) {
-  if (!row.enabled || !row.discovered) return
-  if (chosen(row)) { picks.value = picks.value.filter(item => key(item) !== key(row)); return }
-  if (!props.multiple) picks.value = []
-  picks.value.push({ channelId: row.channelId, modelId: row.modelId })
-  focused.value = key(row)
+const search=ref('');const channelSearch=ref('');const channel=ref('');const picks=ref<ModelChoice[]>([]);const focused=ref('');const table=ref<HTMLElement|null>(null)
+type SortColumn='model'|'channel'|'context'|'effort'|'state'
+const sorting=ref<SortColumn|null>(null);const descending=ref(false)
+const heads=[['model','模型'],['channel','渠道'],['context','上下文'],['effort','推理档位'],['state','状态']] as const
+let floatingBefore:ModelChoice[]=[]
+watch(focused,value=>{if(value)floatingBefore=picks.value.map(p=>({...p}))})
+function closeOptions(instance:string){if(focused.value===instance)focused.value=''}
+function revertOptions(){picks.value=floatingBefore.map(p=>({...p}));focused.value=''}
+const key=(row:{channelId:string;modelId:string})=>JSON.stringify([row.channelId,row.modelId])
+const channelLabel=(id:string)=>props.channels.find(c=>c.id===id)?.label??id
+const available=(row:ModelProjection)=>row.enabled&&row.discovered
+const chosen=(row:ModelProjection)=>picks.value.some(p=>key(p)===key(row))
+watch(()=>props.open,value=>{if(value){picks.value=props.current?.map(p=>({...p}))??[];search.value='';channelSearch.value='';channel.value='';focused.value='';sorting.value=null;descending.value=false}},{immediate:true})
+const channelRows=computed(()=>props.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase())))
+function effort(row:ModelProjection){return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
+function sortValue(row:ModelProjection,column:SortColumn):string|number|undefined{
+ if(column==='model')return row.label
+ if(column==='channel')return channelLabel(row.channelId)
+ if(column==='context')return row.rules.contextWindow.mode==='custom'?row.rules.contextWindow.value:undefined
+ if(column==='state')return available(row)?0:1
+ const rank=['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(effort(row)??'');return rank<0?undefined:rank
 }
-function option(row: ModelProjection, field: 'reasoningEffort' | 'fast', value?: string | boolean) {
-  if (!chosen(row)) toggle(row)
-  const choice = picks.value.find(item => key(item) === key(row)); if (!choice) return
-  if (value === undefined) { delete choice[field]; return }
-  if (field === 'fast' && typeof value === 'boolean') choice.fast = value
-  if (field === 'reasoningEffort' && typeof value === 'string') choice.reasoningEffort = value
+const rows=computed(()=>{
+ const values=props.rows.filter(row=>(!channel.value||row.channelId===channel.value)&&(row.label+' '+row.modelId+' '+channelLabel(row.channelId)).toLowerCase().includes(search.value.toLowerCase()))
+ const column=sorting.value;if(!column)return values
+ return values.map((row,index)=>({row,index})).sort((a,b)=>{
+  const left=sortValue(a.row,column);const right=sortValue(b.row,column)
+  if(left===undefined||right===undefined)return left===right?a.index-b.index:left===undefined?1:-1
+  const value=typeof left==='number'&&typeof right==='number'?left-right:String(left).localeCompare(String(right),'zh-CN',{numeric:true})
+  return value?(descending.value?-value:value):a.index-b.index
+ }).map(item=>item.row)
+})
+function sort(column:SortColumn){if(sorting.value!==column){sorting.value=column;descending.value=false}else if(!descending.value)descending.value=true;else sorting.value=null;focused.value=''}
+function sortState(column:SortColumn):'none'|'ascending'|'descending'{return sorting.value!==column?'none':descending.value?'descending':'ascending'}
+function toggle(row:ModelProjection){
+ if(!available(row))return
+ if(chosen(row)){picks.value=picks.value.filter(p=>key(p)!==key(row));return}
+ if(!props.multiple)picks.value=[]
+ picks.value.push({channelId:row.channelId,modelId:row.modelId})
 }
-function closeOptions(event: FocusEvent) {
-  const target = event.currentTarget as HTMLElement
-  if (!target.contains(event.relatedTarget as Node | null)) focused.value = ''
+function chooseRow(row:ModelProjection){if(!available(row))return;if(props.multiple){toggle(row);return}if(!chosen(row))toggle(row);focused.value='row:'+key(row)}
+const selectable=computed(()=>rows.value.filter(available))
+const allSelected=computed(()=>selectable.value.length>0&&selectable.value.every(chosen))
+function selectResults(){const ids=new Set(selectable.value.map(key));if(allSelected.value)picks.value=picks.value.filter(p=>!ids.has(key(p)));else for(const row of selectable.value)if(!chosen(row))picks.value.push({channelId:row.channelId,modelId:row.modelId})}
+function problem(pick:ModelChoice):string{
+ const row=props.rows.find(row=>key(row)===key(pick));if(!row)return '型号已缺失'
+ if(!row.enabled)return '渠道停用';if(!row.discovered)return '型号未发现'
+ if(props.reasoning&&pick.reasoningEffort&&(row.rules.reasoningEfforts.mode!=='custom'||!row.rules.reasoningEfforts.value.includes(pick.reasoningEffort)))return '原推理档位已不支持'
+ if(props.reasoning&&pick.fast===true&&(row.rules.fast.mode!=='custom'||!row.rules.fast.value))return 'Fast能力已变化'
+ return ''
+}
+const invalid=computed(()=>picks.value.some(p=>problem(p)))
+function movePick(index:number,direction:number){const to=index+direction;if(to<0||to>=picks.value.length)return;const [pick]=picks.value.splice(index,1);picks.value.splice(to,0,pick!)}
+function confirm(){if(invalid.value||(!props.multiple&&!picks.value.length))return;emit('confirm',picks.value.map(item=>props.reasoning?({...item}):({channelId:item.channelId,modelId:item.modelId})))}
+function focusRow(index:number){const values=table.value?.querySelectorAll<HTMLElement>('.model-picker-row');values?.[Math.max(0,Math.min(index,(values?.length??1)-1))]?.focus()}
+function rowKey(event:KeyboardEvent,row:ModelProjection,index:number){if(event.target!==event.currentTarget)return;if(['ArrowDown','ArrowUp','Home','End'].includes(event.key)){event.preventDefault();focusRow(event.key==='Home'?0:event.key==='End'?rows.value.length-1:index+(event.key==='ArrowDown'?1:-1))}else if(event.key==='Enter'||event.key===' '){event.preventDefault();chooseRow(row)}}
+function option(row:ModelProjection,field:'reasoningEffort'|'fast',value?:string|boolean){
+ if(!chosen(row))toggle(row)
+ const pick=picks.value.find(p=>key(p)===key(row));if(!pick)return
+ if(value===undefined){delete pick[field];return}
+ if(field==='fast'&&typeof value==='boolean')pick.fast=value
+ if(field==='reasoningEffort'&&typeof value==='string')pick.reasoningEffort=value
 }
 </script>
 <template>
-  <UiDialog :open="open" :title="title ?? '选择渠道模型'" wide @close="emit('close')">
-    <div class="model-picker"><nav aria-label="渠道"><UiButton :variant="!channel ? 'primary' : 'ghost'" @click="channel = ''">全部渠道</UiButton><UiButton v-for="c in channels" :key="c.id" :variant="channel === c.id ? 'primary' : 'ghost'" @click="channel = c.id">{{ c.label }}</UiButton></nav><div><input class="input" v-model="search" type="search" aria-label="搜索模型" placeholder="搜索型号或原始ID" /><div class="model-picker-list" role="group" aria-label="可选模型"><article v-for="row in rows" :key="key(row)" class="model-picker-row">
-      <label><input :type="multiple ? 'checkbox' : 'radio'" name="model-picker-selection" :checked="chosen(row)" :disabled="!row.enabled || !row.discovered" @change="toggle(row)" /><span><strong>{{ row.label }}</strong><small>{{ row.modelId }}{{ !row.enabled ? ' · 渠道停用' : !row.discovered ? ' · 未发现' : '' }}</small></span></label>
-      <div v-if="reasoning" class="select"><UiButton class="select-trigger" size="sm" :disabled="!row.enabled || !row.discovered" @click="focused = focused === key(row) ? '' : key(row)">推理 / Fast</UiButton>
-      <UiSelectMenu :open="focused === key(row)" :close-on-select="false" role="group" aria-label="推理与Fast" @close="focused = ''"><div class="model-picker-options" tabindex="-1" @focusout="closeOptions($event)" @keydown.esc.stop.prevent="focused = ''">
-        <div class="model-inline"><span>推理</span><UiButton size="sm" @click="option(row, 'reasoningEffort')">默认</UiButton><template v-if="row.rules.reasoningEfforts.mode === 'custom'"><UiButton v-for="effort in row.rules.reasoningEfforts.value" :key="effort" size="sm" :variant="picks.find(p => key(p) === key(row))?.reasoningEffort === effort ? 'primary' : 'ghost'" @click="option(row, 'reasoningEffort', effort)">{{ effort }}</UiButton></template><span v-else class="model-muted">可选档位未知</span></div>
-        <div class="model-inline"><span>Fast</span><UiButton size="sm" @click="option(row, 'fast')">默认</UiButton><UiButton size="sm" :variant="picks.find(p => key(p) === key(row))?.fast === false ? 'primary' : 'ghost'" @click="option(row, 'fast', false)">关闭</UiButton><UiButton size="sm" :disabled="row.rules.fast.mode !== 'custom' || !row.rules.fast.value" :variant="picks.find(p => key(p) === key(row))?.fast === true ? 'primary' : 'ghost'" @click="option(row, 'fast', true)">开启</UiButton></div>
-      </div></UiSelectMenu></div>
-    </article><p v-if="!rows.length">没有可选模型</p></div></div></div>
-    <div class="model-picker-summary"><span v-for="pick in picks" :key="key(pick)" class="tag">{{ pick.modelId }}{{ pick.reasoningEffort ? ` · ${pick.reasoningEffort}` : '' }}{{ pick.fast === undefined ? '' : pick.fast ? ' · Fast开' : ' · Fast关' }}</span></div>
-    <template #actions><span>已选 {{ picks.length }} 项</span><UiButton @click="emit('close')">取消</UiButton><UiButton variant="primary" :disabled="!picks.length" @click="emit('confirm', picks.map(item => ({ ...item })))">确定选择</UiButton></template>
-  </UiDialog>
+ <UiDialog :open="open" :title="title??'选择渠道模型'" wide @close="emit('close')">
+  <div class="model-picker">
+   <nav aria-label="渠道"><h3>渠道</h3><input class="input" v-model="channelSearch" type="search" aria-label="搜索渠道" placeholder="搜索渠道" /><div class="model-picker-channels"><UiButton :variant="!channel?'primary':'ghost'" @click="channel='';focused=''">全部渠道</UiButton><UiButton v-for="c in channelRows" :key="c.id" :variant="channel===c.id?'primary':'ghost'" @click="channel=c.id;focused=''">{{ c.label }}</UiButton></div></nav>
+   <div class="model-picker-browser"><h3>模型 <small>{{ rows.length }} 个结果</small></h3><input class="input" v-model="search" type="search" aria-label="搜索模型" placeholder="搜索型号或原始ID" @input="focused=''" @keydown.down.prevent="focusRow(0)" />
+    <div class="model-picker-list" @scroll="focused=''"><table ref="table" class="model-picker-table" role="grid" :aria-label="(channel?channelLabel(channel):'全部渠道')+'模型'"><thead><tr><th v-if="multiple"><input type="checkbox" :checked="allSelected" :disabled="!selectable.length" :aria-label="'全选当前结果 '+selectable.length+' 项'" @change="selectResults" /></th><th v-for="head in heads" :key="head[0]" :aria-sort="sortState(head[0])"><button type="button" @click="sort(head[0])">{{ head[1] }} {{ sorting===head[0]?descending?'↓':'↑':'↕' }}</button></th><th v-if="reasoning">设置</th></tr></thead><tbody>
+     <tr v-for="(row,index) in rows" :key="key(row)" class="model-picker-row" :class="{'is-selected':chosen(row),'is-unavailable':!available(row)}" tabindex="0" :aria-selected="chosen(row)" @click="chooseRow(row)" @keydown="rowKey($event,row,index)">
+      <td v-if="multiple"><input type="checkbox" :aria-label="'选择 '+channelLabel(row.channelId)+' / '+row.label" :checked="chosen(row)" :disabled="!available(row)" @click.stop @change="toggle(row)" /></td><td><strong>{{ row.label }}</strong><span v-if="chosen(row)" class="model-picker-chosen">✓ 已选</span><small>{{ row.modelId }}</small></td><td>{{ channelLabel(row.channelId) }}</td><td>{{ row.rules.contextWindow.mode==='custom'?row.rules.contextWindow.value.toLocaleString():'未知' }}</td><td>{{ effort(row)??'未知' }}</td><td>{{ !row.enabled?'渠道停用':!row.discovered?'未发现':'可选' }}</td>
+      <td v-if="reasoning" @click.stop><ModelChoiceOptions :row="row" :choice="picks.find(p=>key(p)===key(row))" :open="focused==='row:'+key(row)" :another-open="!!focused" :disabled="!available(row)" label="推理 / Fast" @open="focused='row:'+key(row)" @close="closeOptions('row:'+key(row))" @select="!chosen(row)&&toggle(row)" @revert="revertOptions" @option="(field,value)=>option(row,field,value)" /></td>
+     </tr>
+    </tbody></table><p v-if="!rows.length">没有可选模型</p></div>
+   </div>
+  </div>
+  <section class="model-picker-picked" aria-label="已选模型"><div class="model-inline"><strong>已选模型 · {{ picks.length }}</strong><UiButton v-if="multiple&&picks.length" size="sm" variant="ghost" @click="picks=[]">清空</UiButton></div><div class="model-picker-summary"><div v-for="(pick,index) in picks" :key="key(pick)" class="model-picker-chip" :class="{'is-invalid':problem(pick)}"><ModelChoiceOptions v-if="reasoning&&props.rows.find(r=>key(r)===key(pick))" :row="props.rows.find(r=>key(r)===key(pick))!" :choice="pick" :open="focused==='chip:'+key(pick)" :another-open="!!focused" :disabled="!available(props.rows.find(r=>key(r)===key(pick))!)" :label="channelLabel(pick.channelId)+' / '+pick.modelId+' · '+(pick.reasoningEffort??effort(props.rows.find(r=>key(r)===key(pick))!)??'未知')+(pick.fast===true?' · Fast':'')" @open="focused='chip:'+key(pick)" @close="closeOptions('chip:'+key(pick))" @revert="revertOptions" @option="(field,value)=>option(props.rows.find(r=>key(r)===key(pick))!,field,value)" /><span v-else>✓ {{ channelLabel(pick.channelId) }} / {{ pick.modelId }}{{ pick.reasoningEffort?' · '+pick.reasoningEffort:'' }}{{ pick.fast===undefined?'':pick.fast?' · Fast开':' · Fast关' }}<small v-if="problem(pick)">{{ problem(pick) }}</small></span><small v-if="reasoning&&problem(pick)">{{ problem(pick) }}</small><template v-if="multiple"><UiButton v-if="ordered" size="sm" variant="ghost" :disabled="index===0" :aria-label="pick.modelId+'上移'" @click="movePick(index,-1)">↑</UiButton><UiButton v-if="ordered" size="sm" variant="ghost" :disabled="index===picks.length-1" :aria-label="pick.modelId+'下移'" @click="movePick(index,1)">↓</UiButton><UiButton size="sm" variant="ghost" :aria-label="'移除 '+pick.modelId" @click="picks.splice(index,1)">×</UiButton></template></div></div></section>
+  <template #actions><span>已选 {{ picks.length }} 项</span><UiButton @click="emit('close')">取消</UiButton><UiButton variant="primary" :disabled="invalid||(!multiple&&!picks.length)" @click="confirm">确定选择</UiButton></template>
+ </UiDialog>
 </template>
 <style scoped>
-.model-picker{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px}.model-picker nav{display:grid;gap:6px;align-content:start}.model-picker input[type=search]{width:100%;margin-bottom:12px}.model-picker-list{max-height:440px;overflow:auto}.model-picker-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}.model-picker-row>label{display:flex;align-items:center;gap:10px;min-width:0}.model-picker-row small{display:block;color:var(--muted);overflow-wrap:anywhere}.model-picker-options{display:grid;gap:12px;width:100%;background:var(--surface-panel-bg,var(--panel));padding:12px;border-radius:var(--radius)}.model-picker-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}@media(max-width:700px){.model-picker{grid-template-columns:minmax(0,1fr)}.model-picker nav{display:flex;flex-wrap:wrap}}
+.model-picker{display:grid;grid-template-columns:160px minmax(0,1fr);gap:20px}.model-picker nav,.model-picker-browser{min-width:0}.model-picker h3{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;font-size:var(--text-body)}.model-picker h3 small{color:var(--muted);font-weight:400}.model-picker input[type=search]{width:100%;margin-bottom:12px}.model-picker-channels{display:grid;gap:6px;max-height:360px;overflow:auto;align-content:start}.model-picker-list{max-height:360px;overflow:auto}.model-picker-table{width:100%;border-collapse:collapse;font-size:var(--text-caption)}.model-picker-table th{position:sticky;top:0;background:var(--surface-panel-bg,var(--panel));z-index:1;font-weight:500;text-align:left;white-space:nowrap}.model-picker-table th button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}.model-picker-table td,.model-picker-table th{padding:10px 8px;border-bottom:1px solid var(--border)}.model-picker-row{cursor:pointer}.model-picker-row.is-selected{background:color-mix(in srgb,var(--accent) 10%,transparent);box-shadow:inset 3px 0 var(--accent)}.model-picker-row:hover{background:var(--hover)}.model-picker-row.is-selected:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}.model-picker-row.is-unavailable{color:var(--muted)}.model-picker-row small{display:block;color:var(--muted);overflow-wrap:anywhere}.model-picker-chosen{margin-left:6px;color:var(--accent);white-space:nowrap}.model-picker-options{display:grid;gap:12px;width:100%;background:var(--surface-panel-bg,var(--panel));padding:12px;border-radius:var(--radius)}.model-picker-picked{border-top:1px solid var(--border);margin-top:16px;padding-top:12px}.model-picker-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;max-height:130px;overflow:auto}.model-picker-chip{display:flex;gap:6px;align-items:center;padding:6px 8px;background:var(--surface-panel-bg,var(--panel));border:1px solid var(--border);border-radius:7px;font-size:var(--text-caption);overflow-wrap:anywhere}.model-picker-chip small{display:block;color:var(--red)}.model-picker-chip.is-invalid{border-color:var(--red)}@media(max-width:700px){.model-picker{grid-template-columns:120px minmax(0,1fr);gap:12px}}
 </style>
