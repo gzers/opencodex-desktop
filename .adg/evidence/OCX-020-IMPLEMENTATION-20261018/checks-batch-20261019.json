@@ -1,0 +1,60 @@
+{
+  "recordedAt": "2026-10-18T18:16:41.476617+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "e121918099770d9a2f7b246d31881f79006d2517",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "e65a24e65ccfd788e650987e190b05b67c537a90e0f3392dc9c8183f9909a0d5",
+    "apps/desktop/tauri/src/lib.rs": "892aa745dce10e4c196b4eabf1893fc37eb53f8a50410a38cf4fca58e33e91d5",
+    "apps/desktop/tauri/src/modules/model_config/agent.rs": "e4d4f9cbdfb3466993f26cfe744e2f5cf5eb572eeae743361a3d853826f26965",
+    "apps/desktop/tauri/src/modules/model_config/measurements.rs": "f76ef439a81db3672810c2c76dab9eefdb2195fd794370fab7fe9e625959eea6",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "285a9de19b6afe2ba77b3cdaf445ad51467ff7dbe08f862ce0904dc67bba4263",
+    "apps/desktop/tauri/src/modules/model_config/operations.rs": "c49b79b92978552b4050ad0f831a8f6807975649dd2584577e38e60aed1c93f1",
+    "apps/desktop/tauri/src/modules/model_config/schema.rs": "d62ebceebeaed78e5e6360866f805ad816df59502fcbed58cb53b5f86e62713d",
+    "apps/desktop/tauri/src/modules/model_config/store.rs": "58a40c1a89e799243b58cbda620456f6e0a1bda1405669623a4eb873a613de29",
+    "apps/desktop/tauri/src/modules/model_config/tasks.rs": "ce31e82418aa909a20543a5b475e098d48cfe80c024dcc8ccc30c52734d462f2",
+    "apps/desktop/ui/src/features/models/AgentExecutionField.vue": "442638d1ce28e30ef58af92e2c0360a7c175a3edf6826447f09977ee24f83d28",
+    "apps/desktop/ui/src/features/models/AgentPanel.vue": "3a73f6e73858ca7b54ea4117b73deaa29ce3098f08c7cf249af3b63bfce90e2b",
+    "apps/desktop/ui/src/features/models/BatchAgentDialog.vue": "8810bd459b0617b2c3ddc81e6fd3f481c018f0fca37b36f7d3434276a7aa680d",
+    "apps/desktop/ui/src/features/models/api.ts": "4aeaa349f7286574649d087f7e20fef6993d0653bb3506caa8dec0f4f4e8764a",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "58ef1c40f76771eee58ab87cab83a60f273b19b9698c9ec97faff151eab696dd",
+    "apps/desktop/ui/tests/model-agent-batch.test.ts": "4f7bade5ddfb3b69ad9ec786fb5782ccaf3e620c0c8b8d1c526f1453d29c77fc",
+    "apps/desktop/ui/tests/model-agent-restore.test.ts": "a5a8b03319c6000311769a5c9cb781e1349723c7f6f1946e97752b7d1c496846"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 66645,
+      "passed": 62,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run tests/model-agent-batch.test.ts tests/model-agent-restore.test.ts",
+      "passed": 5,
+      "files": 2,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 92117,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets -- -D warnings",
+      "session": 7295,
+      "result": "passed"
+    }
+  ],
+  "visualEvidence": {
+    "file": "model-batch-agent-layout-light.jpg",
+    "scope": "DEV-only layout, no selected execution model, no real generation"
+  },
+  "remaining": [
+    "cross-protocol stable runtime mapping",
+    "protected unified transfer/account and secret scopes/subset merge",
+    "full continuous sessions and source attribution",
+    "channel complete lifecycle/client loaded evidence",
+    "all UI/platform acceptance and authorized publication"
+  ]
+}
