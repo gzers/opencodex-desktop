@@ -1,0 +1,103 @@
+{
+  "sourceHead": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "base": "eae85322ebca3b755c034db97cbebf2ea5bf71fc",
+  "pr": 7,
+  "runId": 39095241645,
+  "event": "pull_request",
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "success",
+  "syntheticCheckout": "48cff7dd7079e6872e804709cd1da6c87ab1e126",
+  "jobs": [
+    {
+      "jobId": 117580206590,
+      "name": "release-tools",
+      "conclusion": "success",
+      "actualSyntheticCheckout": "48cff7dd7079e6872e804709cd1da6c87ab1e126",
+      "bytes": 27916,
+      "sha256": "ff1cfe049b58a7dc7094f2e7f8cb15a5ab6e15b3b064cc19a6e8337dfcc9a277",
+      "rustGroups": 0,
+      "rustTotals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      "ui542Passed": false
+    },
+    {
+      "jobId": 117580206759,
+      "name": "backend",
+      "conclusion": "success",
+      "actualSyntheticCheckout": "48cff7dd7079e6872e804709cd1da6c87ab1e126",
+      "bytes": 226551,
+      "sha256": "e2b68f464f2910eb351d85670e5dc298a3664836d10ed4a9fc4e24b26efa97d6",
+      "rustGroups": 35,
+      "rustTotals": {
+        "passed": 938,
+        "failed": 0,
+        "ignored": 6
+      },
+      "ui542Passed": false
+    },
+    {
+      "jobId": 117580206830,
+      "name": "backend-windows",
+      "conclusion": "success",
+      "actualSyntheticCheckout": "48cff7dd7079e6872e804709cd1da6c87ab1e126",
+      "bytes": 345525,
+      "sha256": "8ccc23e01a998f1b1faba74943c64c6cd6d802ec469330645b10c8dfd55002b3",
+      "rustGroups": 35,
+      "rustTotals": {
+        "passed": 667,
+        "failed": 0,
+        "ignored": 7
+      },
+      "ui542Passed": false
+    },
+    {
+      "jobId": 117580206835,
+      "name": "frontend",
+      "conclusion": "success",
+      "actualSyntheticCheckout": "48cff7dd7079e6872e804709cd1da6c87ab1e126",
+      "bytes": 40911,
+      "sha256": "45730635b170c063d7ff796ddc15ea5be87aad90d5c84fa95ab06865c3b3845a",
+      "rustGroups": 0,
+      "rustTotals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      "ui542Passed": true
+    },
+    {
+      "jobId": 117580206890,
+      "name": "windows-smoke-evidence",
+      "conclusion": "success",
+      "actualSyntheticCheckout": "48cff7dd7079e6872e804709cd1da6c87ab1e126",
+      "bytes": 29734,
+      "sha256": "c6b1bd25a2b0d98ac641a8671a0227d31beb2cc06a54b38bcc0bde46bfeed582",
+      "rustGroups": 0,
+      "rustTotals": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0
+      },
+      "ui542Passed": false
+    }
+  ],
+  "mainOnlyBuildSkipped": true,
+  "oldFailuresCleared": false,
+  "productResampled": false,
+  "candidateRebuilt": false,
+  "mainMerged": false,
+  "releaseAuthorized": false,
+  "published": false,
+  "sharedReadmeAddendum": {
+    "initialIdentityPreserved": true,
+    "priorBytesReconstructedByRemovingOnlyNewSectionAndHashMatched": true,
+    "updatedProposalIdentityIn": "current-proposal-identities.json"
+  },
+  "publicationPreflight": ".adg/evidence/OCX-0110-20261018-RELEASE-PREP/preflight.original.json",
+  "finalConfirmationRequested": false,
+  "stableCorePromoted": false
+}
