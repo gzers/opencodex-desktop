@@ -21,7 +21,7 @@
 > [!IMPORTANT]
 > This is an **independent, third-party desktop manager**. It is not part of the official OpenCodex project and has **no affiliation, authorization, or endorsement** relationship with it or its rights holders. It is a graphical host only — it **does not rewrite the OpenCodex core and does not bypass the official API**. See [Attribution and license](#attribution-and-license).
 >
-> The project is still in **testing, with no official release published yet**; current builds are **unsigned test packages (macOS Apple Silicon first)**, intended for evaluation and internal testing only — not a public release.
+> Public test releases are available for macOS Apple Silicon and Windows x64. Installers have no formal OS code signature or Apple notarization; updater assets are verified separately. See Releases for the versions actually published.
 
 ---
 
@@ -53,12 +53,12 @@
 | Item | Requirement |
 |---|---|
 | OS | macOS (Apple Silicon, officially supported) / Windows x64 (test build) |
-| OpenCodex | An existing official OpenCodex install (`ocx`). The manager only **discovers** it — it never installs it for you; the UI guides you when it is missing |
+| OpenCodex | Node.js/npm and official OpenCodex; select an existing install or explicitly approve a private-prefix managed install or an official offline package. Third-party lifecycle scripts require separate permission |
 
 ### Download
 
 > [!NOTE]
-> The project is still in **testing and has no official release yet**, so no version number is hard-coded here. The links below **always point to the latest release**: once an official version is published they jump straight to it; until then they land on the Releases list.
+> The link below points to the currently public Latest release. Candidate branches and draft Releases do not automatically enter the stable channel. See Releases for historical versions and their limitations.
 
 <p align="center">
   <a href="https://github.com/gzers/opencodex-desktop/releases/latest"><b>⬇ Get the latest version</b></a>
@@ -114,7 +114,7 @@ open "/Applications/OpenCodeX Desktop.app"
 1. Download `*_x64-setup.exe` (or `.msi`) and run it.
 2. If the blue **SmartScreen** dialog appears, click *More info* → *Run anyway*.
 
-> The Windows build is an **unsigned test build**: the cross-platform work is done and passes the CI compile gate, but it has not been verified on real hardware — features and visuals may be incomplete.
+> Windows installers have no Authenticode signature. Release records state the normal/admin, installation and data-retention scenarios actually verified. Default uninstall preserves data; explicit NSIS cleanup removes only validated owned roots and preserves external HOME.
 
 ---
 
@@ -163,19 +163,19 @@ Test isolation: development and automated tests run under a separate sandbox ide
 
 | Capability | Description |
 |---|---|
-| **Installation discovery** | Detects, displays, and validates an existing install only; **does not manage npm** — no install, uninstall, or dependency resolution |
+| **Installation discovery** | Discovers existing installs and manages official packages in a private prefix after explicit confirmation, without writing the global npm prefix. Lifecycle scripts require separate permission |
 | **Process control** | Hosts the official start/stop subprocesses directly; does not install or manage launchd and does not take over `codex-shim` |
 | **Status observation** | Run / connection / operation dimensions that can hold simultaneously; actions render per status |
 | **Logs and diagnostics** | Read-only logs with masked secrets; read-only `ocx doctor` summary; states clearly when live logs are unavailable |
 | **Official panel** | Hosts the official web panel in a runtime child WebView — no restyling, no injection, and the official assets are not bundled |
 | **Notification center** | Shares one data source with *Diagnostics → Notification history*; detail dialog and per-item deletion |
 | **Configuration migration** | Full export into a **passphrase-protected encrypted container**; validate, back up automatically, confirm explicitly, roll back on failure |
-| **WebDAV sync** | Content is **encrypted client-side** before upload; recoverable backup before overwrite; conflicts go to a pending state |
+| **WebDAV sync** | Stores configuration payloads and integrity metadata on a trusted HTTPS service; credentials remain in the OS credential store. Backs up before overwrite and requires conflict confirmation. File export containers are separately passphrase-encrypted |
 | **Extension management** | Skills discovery/import/update/uninstall/restore; MCP import/add/edit/delete; multi-client targets |
 | **Appearance** | Three visual effects tiers; overview background light field (WebGL grid gradient + grain shader, CSS aurora fallback) and glass materials |
-| **Two upgrade tracks** | OpenCodex itself via the official `ocx update`; the app updates independently (signature check, restart to apply, rollback — endpoints are still placeholders) |
+| **Two upgrade tracks** | Manager and panel updates have separate confirmation. App updates use this repository's actual release manifests and verify updater signatures; panel updates use protected official-package installation |
 | **Tray and menus** | Tray actions limited to the manager's own domain; native macOS menu entries |
-| **CLI control plane (optional)** | `ocxd`, **off by default**; delegates to the running instance over local IPC |
+| **CLI control plane (optional)** | `ocxd` is off by default; when enabled on macOS it delegates over local IPC. Windows product preferences still disable CLI access |
 
 ### What it deliberately does not do (security boundaries)
 
@@ -212,7 +212,7 @@ The build is unsigned. Click *More info* → *Run anyway*; signing is planned fo
 <details>
 <summary><b>Overview says "OpenCodex not found"</b></summary>
 
-The manager only discovers — it never installs. Install the official OpenCodex first (so `ocx` is available), then retry. Missing prerequisites (Node / npm) are surfaced with their own guidance on the page.
+Follow Overview to provide Node.js/npm, then select an existing OpenCodex install or explicitly approve a private-prefix install/offline import. Third-party lifecycle scripts require separate permission.
 </details>
 
 <details>
@@ -248,13 +248,13 @@ Sync and migration credentials are stored in the macOS Keychain (service name `O
 <details>
 <summary><b>Where are the logs and data?</b></summary>
 
-The default data root is `~/Library/Application Support/OpenCodex Desktop/`, with logs under `logs/`. The Settings page opens both directories for you.
+The macOS default is `~/Library/Application Support/com.gzers.opencodex.desktop/`. New Windows installs use `data` under the actual installation directory; valid existing bindings are retained. Settings shows actual paths, with logs under `logs/`. Preference backups exclude full panel configuration, sessions and login state.
 </details>
 
 <details>
 <summary><b>App auto-update does nothing</b></summary>
 
-The app's own update endpoints are still placeholders and not wired up yet; download and reinstall the new version manually.
+Use software-update settings to check manually and inspect the error and network configuration. Stable reads this repository's Latest manifest; no higher candidate means there is nothing to install. Automatic checks only check and notify, without automatic download or restart; installation requires signature verification.
 </details>
 
 ---
@@ -365,9 +365,9 @@ When documenting implementation status, only reference the implementation branch
 
 ## Project status and known limitations
 
-- **Still in testing, with no official release yet.** `0.1.0` is an unsigned test package: macOS Apple Silicon first, with an unsigned Windows x64 test build.
+- Public test versions exist; Releases Latest identifies the actual stable delivery. Candidate branches and draft Releases do not count as public publication.
 - Requirements, prototype, and implementation contracts are finalized and passed the review gates; all 13 capability domains are implemented, with multiple rounds of real-device acceptance on macOS.
-- **Known limitations**: no code signing or notarization; no auto-update; Windows runtime tests and real-device verification are incomplete; Intel macOS builds are disabled; non-macOS-arm64 platforms are handled separately per the authorization boundary.
+- **Known limitations**: no formal OS code signing or Apple notarization; Intel macOS builds are disabled; Windows CLI remains disabled. Release records retain unverified update, native and scheduling scenarios and accepted resource exceptions.
 
 ---
 
