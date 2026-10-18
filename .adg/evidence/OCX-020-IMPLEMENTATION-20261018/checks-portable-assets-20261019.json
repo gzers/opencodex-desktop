@@ -1,0 +1,74 @@
+{
+  "recordedAt": "2026-10-18T22:27:57.181279+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "c9dcf5fe9e210b92b8e3cb4a07fc1a347c5cf00e",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/extensions.rs": "787946d564e3d425fee4bfbdc0f9f739612599b9f7f0f8d9f10ac3b1752cbcce",
+    "apps/desktop/tauri/src/commands/model_transfer.rs": "65a953c8e5b7b49c850f5c7e75ac902e81b4045d6d7b7ace4cbd86ea333a38d1",
+    "apps/desktop/tauri/src/lib.rs": "139cd587a7a3933ec61be938fce7304e98e97508aaa9e4e5832843af96629cb4",
+    "apps/desktop/tauri/src/modules/extensions/discovery.rs": "d131021adccb335a206903c2585e1257027421d7e062d7e9952a685b83b57a6f",
+    "apps/desktop/tauri/src/modules/extensions/projection.rs": "960a4f5657066c58456f63853db65c01fcb64788beea168241bafbd4b23e91a2",
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "f33f77aaa606c6852e583b32f826a76be09ff53710f87eb55a0269f39a4542f1",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "13808ebf39cc34edf9fc689370d94dbf00535445da1b429488be36abc7924b46",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "869f2f35056f0267ab652fd568cafa52e7cf6380861473e2511d8e8a7e33f2cc",
+    "apps/desktop/tauri/src/modules/sync/mod.rs": "b32c3b573180120c62fd09b79c0138344cbdcdd9f28d3078a42435485d330a1e",
+    "apps/desktop/tauri/src/modules/sync/portable_assets.rs": "ae67199af30593de35356e81c6cdd8e90af80c962d6f88aa344dc222cd7e94de",
+    "apps/desktop/tauri/src/modules/sync/portable_manager.rs": "dfffa778ec300adb3384b557ac54cea0bfd7068cd0283dd2aca35093a9d90485",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "8ab1d91b6e00c94fff5cace2d197304200a11ebb23e756435fd852c31ae203c1",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "5c830d630fe360b127287a35ac22f081c3d8c102f965df30abaa7b5703767fa8",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "4bfe85ad1effc14455eac519ce9912529d9aeb017d1b950c0d2fb1c4f9e21ae6",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "b44f2984da8fc48ed0049afafd4eb2affb4765dc298b48da8e2584ff7bf9af62"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 48761,
+      "passed": 80,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib portable_assets --no-default-features",
+      "session": 62863,
+      "passed": 6,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --test extensions --features integration-test",
+      "session": 9253,
+      "passed": 39,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run tests/model-transfer.test.ts tests/imported-sync-connections.test.ts",
+      "passed": 15,
+      "files": 2,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 6512,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 7955,
+      "result": "passed"
+    }
+  ],
+  "visualEvidence": {
+    "file": "portable-extension-assets-scope-light.jpg",
+    "scope": "DEV-only skill/MCP selection, separate protected credential toggle and custom-content review",
+    "doesNotProve": "real daily resources, native IPC or cross-platform secure store"
+  },
+  "remaining": [
+    "typed account portability/expiry/refresh and actual availability evidence",
+    "asset rename/mapping and broader size/platform UI acceptance",
+    "complete original upstream channel fields and portable node binding",
+    "save history to draft/client loaded state",
+    "final integration/platform and authorized publication"
+  ]
+}
