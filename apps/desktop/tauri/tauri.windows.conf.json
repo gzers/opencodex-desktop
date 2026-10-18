@@ -1,0 +1,23 @@
+{
+  "app": {
+    "trayIcon": {
+      "iconPath": "icons/windows/tray-dark-32.png",
+      "iconAsTemplate": false
+    }
+  },
+  "bundle": {
+    "windows": {
+      "nsis": {
+        "installerHooks": "windows/installer-hooks.nsh"
+      }
+    },
+    "icon": [
+      "icons/windows/32x32.png",
+      "icons/windows/64x64.png",
+      "icons/windows/128x128.png",
+      "icons/windows/256x256.png",
+      "icons/windows/512x512.png",
+      "icons/windows/icon.ico"
+    ]
+  }
+}

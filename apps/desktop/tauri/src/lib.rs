@@ -71,11 +71,16 @@ pub fn run() {
     use tauri::Manager;
     let context = tauri::generate_context!();
     #[cfg(windows)]
-    let (context, smoke_window) = {
+    let (context, smoke_window, startup_window) = {
         let mut context = context;
         let smoke = crate::infrastructure::windows_smoke::from_environment(context.config_mut())
             .expect("invalid Windows smoke configuration");
-        (context, smoke)
+        let startup_window = if smoke.is_none() && !crate::modules::test_sandbox::enabled() {
+            crate::infrastructure::windows_startup_root::defer_main(context.config_mut())
+        } else {
+            None
+        };
+        (context, smoke, startup_window)
     };
 
     tauri::Builder::default()
@@ -98,28 +103,22 @@ pub fn run() {
                     detail: error.to_string(),
                 }) as Box<dyn std::error::Error>
             })?;
-            // 测试沙箱身份（配置规划§10）：启用时强制使用独立沙箱根；根缺失/非法即停止，
-            // 绝不回退到日常目录。未启用时行为与此前一致。
-            let bootstrap_root = if crate::modules::test_sandbox::enabled() {
-                default_root.clone()
+            let executable = std::env::current_exe()?;
+            // 沙箱完全绕过个人启动选择；普通 Windows 在任何业务状态注册前完成恢复准入。
+            #[cfg(windows)]
+            let resolution = if crate::modules::test_sandbox::enabled() {
+                crate::modules::data_root::bootstrap::resolve_default_startup(&default_root, &executable)?
             } else {
-                crate::modules::data_root::bootstrap::default_anchor(
-                    &default_root, &std::env::current_exe()?, cfg!(windows),
-                )?
+                match crate::infrastructure::windows_startup_root::prepare(app.handle(), &default_root, &executable)? {
+                    Some(resolution) => resolution,
+                    None => return Ok(()), // 仅保留原生选择/错误对话框，业务服务尚未启动。
+                }
             };
-            let anchor = crate::modules::test_sandbox::resolve_data_root(&bootstrap_root)
-                .map_err(|detail| {
-                    Box::new(crate::errors::AppError::FileSystem {
-                        operation: "resolve sandbox data root".to_string(),
-                        detail,
-                    }) as Box<dyn std::error::Error>
-                })?;
-            // FZ-02 首次启动先初始化或引用当前版本的数据根；失败阻断启动。
-            let sandbox_boundary = crate::modules::test_sandbox::resolve_boundary(&anchor)
-                .map_err(std::io::Error::other)?;
-            let (runtime_config, locks) = crate::modules::data_root::bootstrap::resolve_locked_with_boundary(
-                &anchor, sandbox_boundary.as_deref(),
-            )?;
+            #[cfg(not(windows))]
+            let resolution = crate::modules::data_root::bootstrap::resolve_default_startup(&default_root, &executable)?;
+            let crate::modules::data_root::bootstrap::StartupResolution {
+                anchor, sandbox_boundary, runtime_config, locks,
+            } = resolution;
             let data_root = runtime_config.active_data_root.clone();
             app.manage(crate::state::SharedDataRootAnchor(anchor));
             app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
@@ -131,6 +130,10 @@ pub fn run() {
                 record_window_event(&data_root, &format!("config migration: {error}"));
             }
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
+            #[cfg(windows)]
+            if let Some(config) = startup_window {
+                tauri::WebviewWindowBuilder::from_config(app, &config)?.build()?;
+            }
             // 启动事件附构建来源：维护事故可把本机安装映射回提交（F-09）。
             record_startup_event(&data_root, &app.package_info().version.to_string());
             app.manage(std::sync::Mutex::new(
@@ -294,12 +297,9 @@ pub fn run() {
                 }
             }
             if let Some(tray) = app.tray_by_id(crate::modules::tray::TRAY_ID) {
-                // Windows 托盘不会像 macOS 模板图标那样按主题反色，使用应用彩色图标。
+                // Windows notification-area artwork is independent of the app icon.
                 #[cfg(windows)]
-                if let Some(icon) = app.default_window_icon() {
-                    tray.set_icon(Some(icon.clone()))?;
-                    tray.set_icon_as_template(false)?;
-                }
+                crate::infrastructure::windows_tray_icon::install(app.handle())?;
                 tray.set_menu(Some(tray_menu.clone()))?;
             }
             // Windows keeps one system caption row. Product actions stay in the
@@ -532,6 +532,7 @@ pub fn run() {
             commands::update::install_update,
             commands::update::restart_after_update,
             commands::update::get_update_status,
+            commands::release_details::update_release_details,
             commands::update::set_update_channel,
             commands::update_schedule::update_schedule_plan,
             commands::update_schedule::official_remote_cache,
@@ -619,6 +620,9 @@ pub fn run() {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 if window.label() != "main" {
                     return;
+                }
+                if window.app_handle().try_state::<crate::state::SharedDataRoot>().is_none() {
+                    return; // 启动未准入时不隐藏到尚不存在的业务托盘流程。
                 }
                 // 「关闭窗口后保持代理运行」为默认开启：关闭窗口应只隐藏桌面壳，
                 // 托盘与托管代理继续存活。此前这里没有任何处理，点关闭按钮会直接

@@ -53,7 +53,31 @@ pub async fn official_remote_latest(
     trigger: Option<crate::commands::event_delivery::QueryTrigger>,
     app: tauri::AppHandle,
 ) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
-    let _storage = crate::infrastructure::storage_writers::global().admit()?;
+    run_panel_query_owned(
+        crate::infrastructure::storage_writers::global(),
+        move || official_remote_latest_owned(trigger, app),
+    )
+    .await
+}
+
+async fn run_panel_query_owned<T, F, Fut>(
+    gate: Arc<crate::infrastructure::storage_writers::WriterGate>,
+    task: F,
+) -> AppResult<T>
+where
+    T: Send + 'static,
+    F: FnOnce() -> Fut + Send + 'static,
+    Fut: std::future::Future<Output = AppResult<T>> + Send + 'static,
+{
+    // Reuse the manager's admitted query owner: metadata, durable completion and
+    // terminal delivery belong to the worker, not to the disconnected observer.
+    super::update::run_check_owned(gate, task).await
+}
+
+async fn official_remote_latest_owned(
+    trigger: Option<crate::commands::event_delivery::QueryTrigger>,
+    app: tauri::AppHandle,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest> {
     use crate::commands::update_schedule::{self, SharedPanelQuery};
     use crate::modules::update::schedule::Target;
     use std::sync::atomic::Ordering;
@@ -62,7 +86,7 @@ pub async fn official_remote_latest(
     let sequence = gate.1.load(Ordering::Acquire);
     let mut query = gate.0.lock().await;
     if query.sequence != sequence {
-        return query.value.clone().ok_or(AppError::NotConfigured);
+        return query.completed_result();
     }
     if app
         .state::<crate::state::SharedRuntimeInstall>()
@@ -83,30 +107,59 @@ pub async fn official_remote_latest(
     })
     .await?;
     let result = query_panel_metadata(&app).await;
-    query.sequence = query.sequence.wrapping_add(1);
-    query.value = result.as_ref().ok().cloned();
-    gate.1.store(query.sequence, Ordering::Release);
-    let value = query.value.clone();
     let succeeded = result.is_ok();
     let commit_app = app.clone();
-    crate::commands::run_blocking("commit panel query", move || {
-        update_schedule::complete(&commit_app, &query_root, Target::Panel, value.as_ref())?;
-        crate::commands::event_delivery::publish(
-            &commit_app,
-            &query_root,
-            if succeeded {
-                "panel-check-succeeded"
-            } else {
-                "panel-check-failed"
-            },
-            identity,
-            trigger.unwrap_or_default().into(),
-        );
-        Ok(())
+    commit_panel_query_result(&mut query, &gate.1, result, move |value| async move {
+        crate::commands::run_blocking("commit panel query", move || {
+            update_schedule::complete(&commit_app, &query_root, Target::Panel, value.as_ref())?;
+            crate::commands::event_delivery::publish(
+                &commit_app,
+                &query_root,
+                if succeeded {
+                    "panel-check-succeeded"
+                } else {
+                    "panel-check-failed"
+                },
+                identity,
+                trigger.unwrap_or_default().into(),
+            );
+            Ok(())
+        })
+        .await
     })
-    .await?;
-    result
+    .await
 }
+
+async fn commit_panel_query_result<F, Fut>(
+    query: &mut crate::commands::update_schedule::PanelQuery,
+    sequence: &std::sync::atomic::AtomicU64,
+    result: AppResult<crate::modules::about::remote::OfficialRemoteLatest>,
+    commit: F,
+) -> AppResult<crate::modules::about::remote::OfficialRemoteLatest>
+where
+    F: FnOnce(Option<crate::modules::about::remote::OfficialRemoteLatest>) -> Fut,
+    Fut: std::future::Future<Output = AppResult<()>>,
+{
+    // Await the durable completion before releasing any result to waiters.
+    // Publish failure as a completed attempt too, so already waiting callers
+    // neither expose old success nor silently start a duplicate metadata query.
+    let next_value = result.as_ref().ok().cloned();
+    let completed = match commit(next_value.clone()).await {
+        Ok(()) => {
+            query.value = next_value;
+            result
+        }
+        Err(error) => Err(error),
+    };
+    query.error = completed.as_ref().err().cloned();
+    query.sequence = query.sequence.wrapping_add(1);
+    sequence.store(query.sequence, std::sync::atomic::Ordering::Release);
+    completed
+}
+
+#[cfg(test)]
+#[path = "about_query_ownership_tests.rs"]
+mod query_ownership_tests;
 
 async fn query_panel_metadata(
     app: &tauri::AppHandle,

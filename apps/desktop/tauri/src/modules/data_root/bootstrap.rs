@@ -4,6 +4,47 @@ use std::collections::HashSet;
 
 pub const MAX_BINDING_DEPTH: usize = 8;
 
+pub(crate) struct StartupResolution {
+    pub anchor: PathBuf,
+    pub sandbox_boundary: Option<PathBuf>,
+    pub runtime_config: DataRootRuntimeConfig,
+    pub locks: Vec<crate::modules::instance::AppInstanceLock>,
+}
+
+/// Sandboxes resolve without consulting any per-user Windows startup choice.
+pub(crate) fn resolve_default_startup(
+    platform_root: &Path,
+    executable: &Path,
+) -> Result<StartupResolution, AppError> {
+    let bootstrap_root = if crate::modules::test_sandbox::enabled() {
+        platform_root.to_path_buf()
+    } else {
+        default_anchor(platform_root, executable, cfg!(windows))?
+    };
+    let anchor =
+        crate::modules::test_sandbox::resolve_data_root(&bootstrap_root).map_err(|detail| {
+            AppError::FileSystem {
+                operation: "resolve sandbox data root".into(),
+                detail,
+            }
+        })?;
+    let sandbox_boundary =
+        crate::modules::test_sandbox::resolve_boundary(&anchor).map_err(|detail| {
+            AppError::FileSystem {
+                operation: "resolve sandbox boundary".into(),
+                detail,
+            }
+        })?;
+    let (runtime_config, locks) =
+        resolve_locked_with_boundary(&anchor, sandbox_boundary.as_deref())?;
+    Ok(StartupResolution {
+        anchor,
+        sandbox_boundary,
+        runtime_config,
+        locks,
+    })
+}
+
 /// Existing Windows data wins, including malformed data: never silently abandon it.
 pub fn default_anchor(
     platform_root: &Path,

@@ -15,6 +15,7 @@ pub mod network;
 pub mod notifications;
 pub mod panel;
 pub mod preferences;
+pub mod release_details;
 pub mod runtime;
 pub mod sync;
 pub mod tray;

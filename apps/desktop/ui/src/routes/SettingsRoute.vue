@@ -18,7 +18,9 @@ import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import type { SyncConflictPolicy } from '@/features/sync/api'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
+import { useEffectsStore } from '@/app/appearance/effects'
 import type { InstallSourceKind, ProxyScheme } from '@/features/runtime/api'
+import { installPrefixIssue, prefixInsideDataRoot } from '@/features/runtime/installPath'
 import {
   installPhaseLabel,
   offlineSteps,
@@ -817,21 +819,10 @@ const uninstallDone = ref(false)
 const runtimeSourceLabel = computed(() =>
   app.runtimeSource ? sourceKindLabel(app.runtimeSource.kind) : '未解析',
 )
-const installPrefixError = computed(() => {
-  const value = installPrefix.value.trim()
-  if (!value) return ''
-  if (!value.startsWith('/')) return '安装位置必须是绝对路径'
-  const protectedRoots = ['/', '/bin', '/sbin', '/usr', '/etc', '/System', '/Library', '/private', '/Applications']
-  if (protectedRoots.some(root => value === root || (root !== '/' && value.startsWith(`${root}/`)))) {
-    return '安装位置落在系统保护目录内，已拒绝'
-  }
-  return ''
-})
+const installPrefixError = computed(() => installPrefixIssue(installPrefix.value, app.aboutApp?.platform))
 const installLandingText = computed(() => {
-  const root = app.dataRootConfig?.currentDataRoot ?? ''
-  const value = installPrefix.value.trim()
-  if (!root || !value) return ''
-  return value.startsWith(root) ? '落点：数据根内' : '落点：数据根外'
+  const inside = prefixInsideDataRoot(app.dataRootConfig?.currentDataRoot ?? '', installPrefix.value, app.aboutApp?.platform)
+  return inside === null ? '' : inside ? '落点：数据根内' : '落点：数据根外'
 })
 const proxyHint = computed(() => {
   const host = installProxy.value.host.trim()
@@ -848,6 +839,14 @@ const installCanAdvance = computed(() => {
   return true
 })
 const installProgress = computed(() => app.runtimeInstall)
+const installEffects = useEffectsStore()
+const installCompleted = computed(() => !app.runtimeInstalling && !app.runtimeInstallError
+  && !!app.runtimeInstallOutcome && installProgress.value?.phase === 'done')
+const installStatusLabel = computed(() => {
+  if (app.runtimeInstallError || installProgress.value?.phase === 'failed') return '安装失败'
+  if (installProgress.value?.phase === 'done' && !installCompleted.value) return '正在核对安装结果'
+  return installPhaseLabel(installProgress.value?.phase ?? 'preparing')
+})
 const offlineStepList = computed(() => offlineSteps(app.runtimeInstall?.phase ?? 'preparing'))
 const showInstallCommandLine = computed(() =>
   installSource.value === 'registry' && phaseShowsCommandLine(app.runtimeInstall?.phase ?? 'preparing'),
@@ -1183,6 +1182,7 @@ function restoreGeneralDefaults() {
           <button class="btn ghost" :disabled="dataRootBindingDisabled" @click="applyDataRootSwitch(false)">{{ app.dataRootSwitching ? '切换中…' : '仅切换引用' }}</button>
           <button class="btn ghost" data-testid="data-root-migrate" :disabled="dataRootBindingDisabled" @click="confirmDataRootMigration">迁移数据…</button>
           <span v-if="app.dataRootLastValidation === 'valid'" class="tag">结构有效</span>
+          <span v-else-if="app.dataRootLastValidation === 'uninitialized'" class="tag">尚未初始化</span>
           <span v-else-if="app.dataRootLastValidation === 'future_version'" class="tag">版本过新</span>
           <span v-else-if="app.dataRootLastValidation === 'corrupted'" class="tag">结构损坏</span>
           <span v-if="app.dataRootError" class="tag">未完成</span>
@@ -1456,11 +1456,15 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
       </div>
 
       <div v-else class="wiz-body">
-        <div class="wiz-progress"><div class="wiz-progress-bar" :style="{ width: `${installProgress?.percent ?? 0}%` }"></div></div>
+        <div v-if="!app.runtimeInstallError && installProgress?.phase !== 'failed'" class="wiz-progress" role="progressbar" aria-label="OpenCodex 安装进度"
+          :aria-valuenow="installCompleted ? 100 : undefined" :aria-valuemin="0" :aria-valuemax="100"
+          :aria-valuetext="installCompleted ? '安装已完成' : installStatusLabel + '，等待实际完成'">
+          <div class="wiz-progress-bar" :class="{ 'is-indeterminate': !installCompleted, 'is-animated': !installCompleted && installEffects.strategy.animated, 'is-complete': installCompleted }"></div>
+        </div>
         <p class="wiz-status" data-testid="wiz-status">
-          {{ installPhaseLabel(installProgress?.phase ?? 'preparing') }}
+          {{ installStatusLabel }}
           <template v-if="app.runtimeInstallOutcome"> · {{ app.runtimeInstallOutcome.version }} · {{ installSource === 'registry' ? '联网安装' : '离线导入' }}</template>
-          · {{ installProgress?.percent ?? 0 }}%
+
         </p>
         <pre v-if="showInstallCommandLine" class="wiz-console" data-testid="wiz-console">{{ app.runtimeInstallLines.join('\n') || '等待 npm 输出…' }}</pre>
         <ul v-else class="wiz-substeps" data-testid="wiz-substeps">

@@ -42,6 +42,8 @@ try {
             sha256 = (Get-FileHash -LiteralPath $package.FullName -Algorithm SHA256).Hash.ToLower()
             installDirectory = $installRoot; result = 'fail'
         }
+        $retentionFile = $null
+        $retentionHash = $null
         $taskResult.installers += $entry
         $installed = Join-Path $installRoot 'opencodex-desktop.exe'
         $installLog = Join-Path $taskOutput ($kind + '-install.log')
@@ -65,6 +67,13 @@ try {
             if ($version -cne $taskVersion) { throw "Unexpected version $version; expected $taskVersion from tauri.conf.json" }
             & (Join-Path $PSScriptRoot 'windows-startup.ps1') -Executable $installed -Node $Node -OutputDirectory (Join-Path $taskOutput ($kind + '-startup')) -ExpectedCommit $taskSource
             $entry.firstScreen = 'pass'
+            $entry.explicitCleanupHelper = & (Join-Path $PSScriptRoot 'windows-uninstall-data.ps1') -InstallDirectory $installRoot
+            # After confirmed cleanup, default uninstall must still retain data
+            # written later. This fixture is never treated as an app binding.
+            $retentionFile = Join-Path $installRoot 'data/default-uninstall-retain.sentinel'
+            New-Item -ItemType Directory -Path (Split-Path -Parent $retentionFile) -Force | Out-Null
+            [IO.File]::WriteAllText($retentionFile,'default uninstall retains data',[Text.UTF8Encoding]::new($false))
+            $retentionHash = (Get-FileHash -LiteralPath $retentionFile).Hash.ToLowerInvariant()
         } finally {
             if ($kind -eq 'nsis') {
                 $uninstaller = Join-Path $installRoot 'uninstall.exe'
@@ -77,6 +86,12 @@ try {
             while ((Test-Path -LiteralPath $installed) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 250 }
             if (Test-Path -LiteralPath $installed) { throw 'Uninstall left the main executable behind' }
             $entry.uninstallRemovedExecutable = $true
+            if ($retentionFile) {
+                if ((Get-FileHash -LiteralPath $retentionFile).Hash.ToLowerInvariant() -cne $retentionHash) {
+                    throw 'Default uninstall changed retained data'
+                }
+                $entry.defaultUninstallRetainedData = $true
+            }
         }
         $entry.result = 'pass'
     }

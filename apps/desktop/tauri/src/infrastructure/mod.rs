@@ -23,5 +23,11 @@ pub mod window_appearance;
 pub(crate) mod windows_query_fixture;
 #[cfg(windows)]
 pub(crate) mod windows_query_job;
+#[cfg(windows)]
+pub(crate) mod windows_restart;
 #[cfg(any(windows, test))]
 pub(crate) mod windows_smoke;
+#[cfg(any(windows, test))]
+pub(crate) mod windows_startup_root;
+#[cfg(any(windows, test))]
+pub(crate) mod windows_tray_icon;

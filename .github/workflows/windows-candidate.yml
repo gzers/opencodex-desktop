@@ -4,12 +4,28 @@ on:
   push:
     branches: [feature/0.1.8-windows-package, feature/0.1.9-windows-appearance, feature/0.1.10-maintenance]
   workflow_dispatch:
+    inputs:
+      purpose:
+        description: Package a candidate, or run one bounded diagnostic without a desktop/package
+        type: choice
+        options: [candidate, query-etw, installer-retention]
+        default: candidate
+      admission_run:
+        description: Successful exact-head push CI run required for query-etw
+        type: string
+        default: ''
+      diagnostic_path:
+        description: Original artifact replay, or one first execution after normal build on runner TEMP volume
+        type: choice
+        options: [isolated-replay, post-build-runner-temp]
+        default: isolated-replay
 
 permissions:
   contents: read
 
 jobs:
   package:
+    if: github.event_name != 'workflow_dispatch' || inputs.purpose == 'candidate'
     runs-on: windows-latest
     timeout-minutes: 45
     defaults:
@@ -96,3 +112,167 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           path: test/out/windows-candidate
+
+  query-etw:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'query-etw' && github.repository == 'gzers/opencodex-desktop'
+    runs-on: windows-latest
+    # Build preparation needs its normal CI budget. The original library still
+    # has the unchanged 120s outer capture and 2/4/5/8s fixture deadlines.
+    timeout-minutes: ${{ inputs.diagnostic_path == 'post-build-runner-temp' && 45 || 15 }}
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Admit exact-head CI, original failed bd2 artifact and pinned offline dependencies
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENCODEX_ETW_ADMISSION_RUN: ${{ inputs.admission_run }}
+          OPENCODEX_ETW_DIAGNOSTIC_PATH: ${{ inputs.diagnostic_path || 'isolated-replay' }}
+        run: python test/smoke/windows-etw-ci-admit.py
+      - name: Verify collector guards without starting the original library or Node
+        shell: pwsh
+        run: |
+          $taskAdmission = Get-Content -LiteralPath test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
+          $taskNodeSignature = Get-AuthenticodeSignature -LiteralPath $taskAdmission.node
+          if ($taskNodeSignature.Status -ne 'Valid' -or $taskNodeSignature.SignerCertificate.Subject -notlike '*OpenJS*') {
+            throw 'Pinned official Node signature is not valid'
+          }
+          & test/smoke/windows-owned-etw.test.ps1 `
+            -DecoderDirectory $taskAdmission.decoder `
+            -TestExecutable $taskAdmission.testExecutable -ExpectedTestSha256 $taskAdmission.testSha256 `
+            -Node $taskAdmission.node -ExpectedNodeSha256 $taskAdmission.nodeSha256 `
+            -OutputRoot $taskAdmission.outputRoot |
+            Tee-Object -FilePath test/out/windows-query-etw/pure-guards.original.json
+      - uses: actions/setup-node@v5
+        if: inputs.diagnostic_path == 'post-build-runner-temp'
+        with:
+          node-version: 24.21.0
+      - uses: dtolnay/rust-toolchain@1.99.0
+        if: inputs.diagnostic_path == 'post-build-runner-temp'
+        with:
+          components: rustfmt, clippy
+      - name: Prepare the original regression build stage without running a test
+        if: inputs.diagnostic_path == 'post-build-runner-temp'
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: |
+          $taskStarted = [datetimeoffset]::UtcNow.ToString('o')
+          # These are the ordinary pre-test build steps, not a CPU/disk stress
+          # loop. The admitted original test EXE and Node are not launched here.
+          npm --prefix ../ui ci
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          npm --prefix ../ui run build
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo fmt --all -- --check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo clippy --locked --workspace --all-targets -- -D warnings
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          cargo test --locked --workspace --features integration-test --no-run
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          [ordered]@{
+            startedAtUtc = $taskStarted
+            finishedAtUtc = [datetimeoffset]::UtcNow.ToString('o')
+            source = (git rev-parse HEAD).Trim()
+            applicationTree = (git rev-parse HEAD:apps/desktop).Trim()
+            logicalProcessors = [Environment]::ProcessorCount
+            runnerTemporaryDirectory = [IO.Path]::GetTempPath()
+            runnerImage = $env:ImageOS
+            runnerImageVersion = $env:ImageVersion
+            rust = (rustc --version)
+            diagnosticPath = 'post-build-runner-temp'
+            originalArtifactOrNodeExecutedDuringBuild = $false
+            originalLibraryRunsAllowed = 1
+            originalFixtureDeadlinesChanged = $false
+            artificialStressOrPrewarm = $false
+            exactHistoricalEnvironmentReproduced = $false
+          } | ConvertTo-Json | Set-Content ../../../test/out/windows-query-etw/post-build-context.original.json
+      - name: Record one original unfiltered library run with owned-family ETW
+        shell: pwsh
+        run: |
+          $taskAdmission = Get-Content -LiteralPath test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
+          $taskRunnerEnvironment = $taskAdmission.diagnosticPath -ceq 'post-build-runner-temp'
+          if ($taskRunnerEnvironment) {
+            $taskBuild = Get-Content -LiteralPath test/out/windows-query-etw/post-build-context.original.json -Raw | ConvertFrom-Json
+            if ($taskBuild.source -cne $taskAdmission.collectorSource -or
+                $taskBuild.applicationTree -cne $taskAdmission.applicationTree -or
+                $taskBuild.originalArtifactOrNodeExecutedDuringBuild -or $taskBuild.artificialStressOrPrewarm) {
+              throw 'Post-build condition admission failed before original test execution'
+            }
+          }
+          # No original test deadline, parallelism, assertion, or collector
+          # scope is changed. Do not let a CI credential enter the child.
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName, $null, 'Process')
+          }
+          & test/smoke/windows-owned-etw.ps1 `
+            -DecoderDirectory $taskAdmission.decoder `
+            -TestExecutable $taskAdmission.testExecutable -ExpectedTestSha256 $taskAdmission.testSha256 `
+            -Node $taskAdmission.node -ExpectedNodeSha256 $taskAdmission.nodeSha256 `
+            -OutputRoot $taskAdmission.outputRoot -RecordApproved -RunnerRegressionEnvironment:$taskRunnerEnvironment |
+            Tee-Object -FilePath test/out/windows-query-etw/invocation.original.json
+          $taskCapture = Get-Content -LiteralPath (Join-Path $taskAdmission.outputRoot 'capture/capture-result.json') -Raw | ConvertFrom-Json
+          if (!$taskCapture.originalLibraryCompleted -or !$taskCapture.ownedRootExited -or
+              !$taskCapture.rootProcessStartSeen -or !$taskCapture.processTraceJoined -or
+              !$taskCapture.writerJoined -or !$taskCapture.ownedSessionStopSucceeded -or
+              !$taskCapture.serializedBytesWithinLimit -or $taskCapture.droppedRecords -ne 0 -or
+              $taskCapture.kernelEventsLost -ne 0 -or $taskCapture.decoderCallbackErrors -ne 0 -or
+              $taskCapture.nativeOwnedSessionStop.Status -ne 0 -or
+              $taskCapture.nativeOwnedSessionStop.FinalEventsLost -ne 0 -or
+              $taskCapture.nativeOwnedSessionStop.FinalRealTimeBuffersLost -ne 0 -or
+              $taskCapture.knownImageCoverageGap -or $taskCapture.captureError -or $taskCapture.runError -or
+              $taskCapture.writerError -or $taskCapture.cleanupErrors.Count -ne 0) {
+            throw 'Bounded capture incomplete; original records retained, no automatic retry'
+          }
+          if ($taskCapture.testExitCode -ne 0) {
+            throw "Original library exit $($taskCapture.testExitCode); failure retained, not a version acceptance"
+          }
+      - name: Preserve diagnostic evidence including failure and partial cleanup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-query-etw-${{ github.sha }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            test/out/windows-query-etw
+            test/runtime/ci-bd2-query-etw/capture
+
+  retention:
+    if: github.event_name == 'workflow_dispatch' && inputs.purpose == 'installer-retention' && github.repository == 'gzers/opencodex-desktop'
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [msi, nsis]
+    runs-on: windows-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+      - name: Admit exact harness CI, official 019 and fixed 431 candidate
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          OPENCODEX_RETENTION_ADMISSION_RUN: ${{ inputs.admission_run }}
+        run: python test/smoke/windows-retention-ci-admit.py ${{ matrix.kind }}
+      - name: Verify installer scope without installation
+        shell: pwsh
+        run: ./test/smoke/windows-installer-retention.ps1 -AdmissionPath test/out/windows-installer-retention/admission.json
+      - name: Install 019, upgrade, verify default-uninstall and reinstall retention
+        shell: pwsh
+        run: |
+          foreach ($taskName in @('GITHUB_TOKEN','GH_TOKEN','ACTIONS_RUNTIME_TOKEN','ACTIONS_ID_TOKEN_REQUEST_TOKEN')) {
+            [Environment]::SetEnvironmentVariable($taskName,$null,'Process')
+          }
+          ./test/smoke/windows-installer-retention.ps1 -AdmissionPath test/out/windows-installer-retention/admission.json -Execute
+      - name: Preserve successful or failed retention evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-retention-${{ matrix.kind }}-${{ github.sha }}
+          retention-days: 14
+          if-no-files-found: error
+          path: test/out/windows-installer-retention

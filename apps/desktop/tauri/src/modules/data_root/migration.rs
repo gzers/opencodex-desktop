@@ -15,7 +15,7 @@ use serde::Serialize;
 use std::fs::{self, File, OpenOptions};
 use std::path::{Component, Path, PathBuf};
 
-const MAX_ENTRIES: usize = 1_000_000;
+pub(super) const MAX_ENTRIES: usize = 1_000_000;
 const MAX_DEPTH: usize = 128;
 pub const RECEIPT_PATH: &str = "manager-state/data-root-migration.json";
 pub const UNPUBLISHED_MARKER: &str = ".data-root-migration-incomplete";

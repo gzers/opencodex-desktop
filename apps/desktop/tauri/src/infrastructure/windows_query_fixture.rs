@@ -1,5 +1,6 @@
 //! Shared Windows query/short-probe process fixtures. Only the explicitly
-//! supplied test Node binary and their own temporary directories are used.
+//! supplied test Node binary and their own temporary directories are used for
+//! the queried tree. An unrelated control is cmd.exe blocked on its own stdin.
 use crate::modules::process::EnvironmentPolicy;
 use std::os::windows::io::{AsRawHandle, FromRawHandle, OwnedHandle};
 use std::os::windows::process::CommandExt;
@@ -7,7 +8,7 @@ use std::path::{Path, PathBuf};
 use std::process::Stdio;
 use windows_sys::Win32::Foundation::{FILETIME, WAIT_OBJECT_0};
 use windows_sys::Win32::System::Threading::{
-    GetProcessTimes, OpenProcess, QueryFullProcessImageNameW, TerminateProcess,
+    GetExitCodeProcess, GetProcessTimes, OpenProcess, QueryFullProcessImageNameW, TerminateProcess,
     WaitForSingleObject, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_SYNCHRONIZE, PROCESS_TERMINATE,
 };
 
@@ -21,34 +22,86 @@ function publishPid(name, pid) {
   fs.writeFileSync(temporary, String(pid));
   fs.renameSync(temporary, destination);
 }
+function publishPhase(name) {
+  const destination = path.join(__dirname, name + '.json');
+  const temporary = destination + '.pending';
+  fs.writeFileSync(temporary, JSON.stringify({ pid: process.pid, atUnixMs: Date.now() }));
+  fs.renameSync(temporary, destination);
+}
 if (process.argv[2] === '--sleep') {
+  publishPhase('descendant-started');
   setInterval(() => {}, 1000);
 } else {
+  publishPhase('parent-started');
   publishPid('parent-pid', process.pid);
   const mode = fs.readFileSync(path.join(__dirname, 'mode'), 'utf8');
+  publishPhase('before-child-spawn');
   const child = spawn(process.execPath, [__filename, '--sleep'], {
     windowsHide: true,
     detached: true,
     stdio: ['ignore', mode === 'timeout' ? 'inherit' : 'ignore', 'ignore'],
   });
   publishPid('child-pid', child.pid);
+  publishPhase('after-child-spawn');
   const readyDeadline = Date.now() + 10000;
   while (!fs.existsSync(path.join(__dirname, 'ownership-ready'))) {
     if (Date.now() > readyDeadline) process.exit(12);
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 5);
   }
+  publishPhase('ownership-ready-seen');
   if (mode === 'overflow') process.stdout.write('x'.repeat(17000));
   if (mode === 'success') {
     process.stdout.write(fs.readFileSync(path.join(__dirname, 'success-output'), 'utf8'),
       () => process.exit(0));
   }
-  if (mode === 'nonzero') process.exit(9);
+  if (mode === 'nonzero') {
+    publishPhase('before-nonzero-exit');
+    process.exit(9);
+  }
   setInterval(() => {}, 1000);
 }
 "#;
 
 struct ObservedChild(OwnedHandle);
 struct ControlProcess(std::process::Child);
+impl ControlProcess {
+    /// Observe only the retained handle created by this fixture. Never wait for
+    /// Node to warm up or reinterpret a failed production query as a pass.
+    fn trace(&self, label: &str, mode: &str, point: &str, started: std::time::Instant) {
+        let handle = self.0.as_raw_handle();
+        // SAFETY: Child retains this process handle until its own cleanup below.
+        let wait_status = unsafe { WaitForSingleObject(handle, 0) };
+        let mut creation = FILETIME::default();
+        let mut exit = FILETIME::default();
+        let mut kernel = FILETIME::default();
+        let mut user = FILETIME::default();
+        // SAFETY: all output pointers refer to live initialized FILETIMEs.
+        let times_ok =
+            unsafe { GetProcessTimes(handle, &mut creation, &mut exit, &mut kernel, &mut user) };
+        let times_error = (times_ok == 0).then(|| std::io::Error::last_os_error().raw_os_error());
+        let ticks = |value: FILETIME| {
+            (u64::from(value.dwHighDateTime) << 32) | u64::from(value.dwLowDateTime)
+        };
+        let times = (times_ok != 0).then(|| {
+            serde_json::json!({
+                "creation_filetime_100ns": ticks(creation), "exit_filetime_100ns": ticks(exit),
+                "kernel_cpu_100ns": ticks(kernel), "user_cpu_100ns": ticks(user),
+            })
+        });
+        let mut exit_code = 0_u32;
+        // SAFETY: output points at a live u32; handle is the same owned process.
+        let exit_ok = unsafe { GetExitCodeProcess(handle, &mut exit_code) };
+        let exit_error = (exit_ok == 0).then(|| std::io::Error::last_os_error().raw_os_error());
+        eprintln!(
+            "query fixture {label}/{mode}: control-snapshot={}",
+            serde_json::json!({
+                "point": point, "process_id": self.0.id(), "elapsed_ms": started.elapsed().as_millis(),
+                "wait_status": wait_status, "process_times": times, "times_error": times_error,
+                "exit_code": (exit_ok != 0).then_some(exit_code), "exit_error": exit_error,
+            })
+        );
+    }
+}
 impl Drop for ControlProcess {
     fn drop(&mut self) {
         let _ = self.0.kill();
@@ -136,6 +189,11 @@ pub(crate) fn process_case(
     success_output: &str,
     execute: impl FnOnce(&Path, &Path, EnvironmentPolicy) -> QueryOutcome,
 ) {
+    let fixture_started = std::time::Instant::now();
+    let fixture_started_unix_ms = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
     let node =
         PathBuf::from(std::env::var_os("OPENCODEX_TEST_NODE").expect("explicit test Node path"));
     assert!(node.is_absolute() && node.is_file());
@@ -154,10 +212,17 @@ pub(crate) fn process_case(
         ),
     )
     .unwrap();
+    // Keep an unrelated, retained process alive without starting another Node.
+    // No readiness wait or warm-up is performed before the actual cold query.
+    let control_command = crate::infrastructure::platform::system_path_dirs()
+        .into_iter()
+        .next()
+        .expect("Windows system directory")
+        .join("cmd.exe");
     let mut control = ControlProcess(
-        std::process::Command::new(&node)
-            .args([fixture.as_os_str(), std::ffi::OsStr::new("--sleep")])
-            .stdin(Stdio::null())
+        std::process::Command::new(control_command)
+            .args(["/d", "/c", "set /p OCX_QUERY_FIXTURE_CONTROL="])
+            .stdin(Stdio::piped())
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .creation_flags(0x0800_0000)
@@ -174,7 +239,11 @@ pub(crate) fn process_case(
         while !child_pid_file.is_file() {
             assert!(
                 std::time::Instant::now() < ready_deadline,
-                "fixture descendant did not start"
+                "fixture descendant did not start: root={}, parent-pid={}, child-pid={}, ownership-ready={}",
+                observer_root.display(),
+                observer_root.join("parent-pid").is_file(),
+                child_pid_file.is_file(),
+                observer_root.join("ownership-ready").is_file()
             );
             std::thread::sleep(std::time::Duration::from_millis(5));
         }
@@ -214,13 +283,38 @@ pub(crate) fn process_case(
         path: Some(node.parent().unwrap().as_os_str().to_owned()),
         ..Default::default()
     };
+    control.trace(label, mode, "before-query", fixture_started);
     let query_started = std::time::Instant::now();
     let result = execute(&npm, root.path(), environment);
     let query_elapsed = query_started.elapsed();
     eprintln!("query fixture {label}/{mode}: elapsed={query_elapsed:?}, result={result:?}");
     let _ = query_completed.send(());
+    control.trace(label, mode, "query-returned", fixture_started);
+    // Evidence only: never wait for/prewarm Node, extend the query deadline or
+    // replace a failed outcome. Each marker belongs to this temporary fixture.
+    eprintln!(
+        "query fixture {label}/{mode}: started-unix-ms={fixture_started_unix_ms}, total-elapsed={:?}, node={}, control-pid={}",
+        fixture_started.elapsed(),
+        node.display(),
+        control.0.id()
+    );
+    for phase in [
+        "parent-started",
+        "before-child-spawn",
+        "after-child-spawn",
+        "descendant-started",
+        "ownership-ready-seen",
+        "before-nonzero-exit",
+    ] {
+        let evidence = std::fs::read_to_string(root.path().join(format!("{phase}.json")));
+        eprintln!("query fixture {label}/{mode}: phase={phase}, evidence={evidence:?}");
+    }
+    let observed = observer.join();
+    // Preserve the control's state after the original observer deadline even
+    // when it failed before opening query handles. Cleanup/assertions stay intact.
+    control.trace(label, mode, "observer-returned", fixture_started);
     let (descendant, parent, watchdog_cleanup) =
-        observer.join().expect("fixture handle observation failed");
+        observed.expect("fixture handle observation failed");
     let stopped = descendant.as_ref().is_none_or(ObservedChild::stopped);
     let parent_stopped = parent.as_ref().is_none_or(ObservedChild::stopped);
     let control_live = control.0.try_wait().unwrap().is_none();

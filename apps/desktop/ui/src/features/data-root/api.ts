@@ -1,4 +1,4 @@
-export type DataRootValidation = 'valid' | 'future_version' | 'corrupted'
+export type DataRootValidation = 'valid' | 'uninitialized' | 'future_version' | 'corrupted'
 
 export interface DataRootInitialization {
   created: boolean

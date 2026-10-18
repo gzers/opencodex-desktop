@@ -5,6 +5,8 @@
 
 pub mod bootstrap;
 pub mod migration;
+#[cfg(any(windows, test))]
+pub mod uninstall;
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
@@ -68,6 +70,7 @@ pub enum DataRootSwitchBlocked {
 #[serde(rename_all = "snake_case")]
 pub enum StructureValidation {
     Valid,
+    Uninitialized,
     FutureVersion,
     Corrupted,
 }
@@ -172,7 +175,18 @@ pub fn validate_structure(root: &Path) -> Result<StructureValidation, AppError> 
     }
     let metadata = root.join(METADATA_RELATIVE_PATH);
     if !metadata.is_file() {
-        return Ok(StructureValidation::Corrupted);
+        let mut entries = std::fs::read_dir(root).map_err(|error| AppError::FileSystem {
+            operation: "inspect data root".to_string(),
+            detail: error.to_string(),
+        })?;
+        return match entries.next() {
+            None => Ok(StructureValidation::Uninitialized),
+            Some(Ok(_)) => Ok(StructureValidation::Corrupted),
+            Some(Err(error)) => Err(AppError::FileSystem {
+                operation: "inspect data root entry".to_string(),
+                detail: error.to_string(),
+            }),
+        };
     }
     if root.join("manager-state").is_dir() {
         read_and_validate_metadata(&metadata)
@@ -545,6 +559,53 @@ fn set_private_directory(path: &Path) -> Result<(), AppError> {
     })
 }
 
+#[cfg(test)]
+mod empty_root_tests {
+    use super::*;
+
+    #[test]
+    fn empty_directory_is_uninitialized_until_partitions_are_created() {
+        let root = tempfile::tempdir().expect("empty directory");
+        assert_eq!(
+            validate_structure(root.path()).expect("validate empty directory"),
+            StructureValidation::Uninitialized
+        );
+        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 0);
+        assert!(initialize(root.path()).expect("initialize empty directory"));
+        assert_eq!(
+            validate_structure(root.path()).expect("validate initialized directory"),
+            StructureValidation::Valid
+        );
+    }
+
+    #[test]
+    fn nonempty_directory_without_metadata_remains_corrupted() {
+        let root = tempfile::tempdir().expect("directory");
+        let sentinel = root.path().join("existing-file");
+        std::fs::write(&sentinel, b"must remain").unwrap();
+        assert_eq!(
+            validate_structure(root.path()).expect("validate nonempty directory"),
+            StructureValidation::Corrupted
+        );
+        assert_eq!(std::fs::read(&sentinel).unwrap(), b"must remain");
+        assert_eq!(std::fs::read_dir(root.path()).unwrap().count(), 1);
+    }
+
+    #[test]
+    fn empty_directory_cannot_be_referenced_as_an_active_root() {
+        let source = tempfile::tempdir().expect("source");
+        initialize(source.path()).unwrap();
+        let target = tempfile::tempdir().expect("empty target");
+        let result = switch_reference(
+            source.path(),
+            target.path(),
+            DataRootSwitchMode::ReferenceOnly,
+        );
+        assert!(result.is_err());
+        assert_eq!(std::fs::read_dir(target.path()).unwrap().count(), 0);
+    }
+}
+
 #[cfg(all(test, unix))]
 mod tests {
     use super::*;
@@ -768,8 +829,8 @@ mod tests {
     #[test]
     fn corrupted_or_missing_metadata_is_blocked() {
         let temp = tempfile::tempdir().expect("create temporary root parent");
-        let root = temp.path().join("empty");
-        std::fs::create_dir(&root).expect("create empty root");
+        let root = temp.path().join("incomplete");
+        std::fs::create_dir_all(root.join("manager-state")).expect("create incomplete root");
         assert_eq!(
             validate_structure(&root).expect("validate"),
             StructureValidation::Corrupted

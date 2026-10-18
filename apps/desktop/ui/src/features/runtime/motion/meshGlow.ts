@@ -7,6 +7,8 @@
 //
 // 说明：这是装饰层实现，不采集状态、不推定操作成功。
 
+import { releaseWebglContext } from '@/lib/webglContext'
+
 const VERT = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
 
 const NOISE = `
@@ -97,8 +99,25 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   canvas.setAttribute('aria-hidden', 'true')
   host.append(canvas)
 
+  function sizeCanvas(rect: DOMRect): { width: number; height: number } {
+    const dpr = Math.min(1.6, window.devicePixelRatio || 1)
+    const width = Math.max(1, Math.round(rect.width * dpr))
+    const height = Math.max(1, Math.round(rect.height * dpr))
+    if (canvas.width !== width) canvas.width = width
+    if (canvas.height !== height) canvas.height = height
+    return { width, height }
+  }
+  // Size the backing store before creating its context, avoiding a default-size
+  // context followed by two initialization resizes. Keep the same final pixels.
+  const initialRect = host.getBoundingClientRect()
+  sizeCanvas(initialRect)
+
   const context = canvas.getContext('webgl', {
     antialias: false,
+    // This full-screen color pass never uses depth or stencil testing.
+    // Do not allocate auxiliary buffers at the canvas's full pixel size.
+    depth: false,
+    stencil: false,
     alpha: true,
     premultipliedAlpha: false,
     preserveDrawingBuffer: false,
@@ -126,6 +145,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     if (vertex) gl.deleteShader(vertex)
     if (fragment) gl.deleteShader(fragment)
     if (program) gl.deleteProgram(program)
+    releaseWebglContext(canvas, gl)
     canvas.remove()
     return null
   }
@@ -136,6 +156,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     gl.deleteShader(vertex)
     gl.deleteShader(fragment)
     gl.deleteProgram(program)
+    releaseWebglContext(canvas, gl)
     canvas.remove()
     return null
   }
@@ -144,6 +165,12 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   gl.useProgram(program)
 
   const buffer = gl.createBuffer()
+  if (!buffer) {
+    gl.deleteProgram(program)
+    releaseWebglContext(canvas, gl)
+    canvas.remove()
+    return null
+  }
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
   const position = gl.getAttribLocation(program, 'p')
@@ -185,13 +212,8 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
     gl.uniform1f(loc.sat, dark ? 1.28 : 1.18)
   }
 
-  function resize(): void {
-    const rect = host.getBoundingClientRect()
-    const dpr = Math.min(1.6, window.devicePixelRatio || 1)
-    const width = Math.max(1, Math.round(rect.width * dpr))
-    const height = Math.max(1, Math.round(rect.height * dpr))
-    if (canvas.width !== width) canvas.width = width
-    if (canvas.height !== height) canvas.height = height
+  function resize(rect = host.getBoundingClientRect()): void {
+    const { width, height } = sizeCanvas(rect)
     gl.uniform2f(loc.res, width, height)
     gl.viewport(0, 0, canvas.width, canvas.height)
     gl.uniform1f(loc.cy, centerFraction(rect))
@@ -231,7 +253,7 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
   }
 
   applyLook()
-  resize()
+  resize(initialRect)
   frame = requestAnimationFrame(loop)
   // resize 会清空 drawing buffer，高/中档都必须重新画；后台 wake 仍受 active 限制。
   const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(() => {
@@ -265,13 +287,13 @@ export function createMeshGlow(host: HTMLElement, options: MeshGlowOptions): Mes
       else stop()
     },
     destroy() {
+      if (destroyed) return
       destroyed = true
       stop()
       observer?.disconnect()
       gl.deleteBuffer(buffer)
       gl.deleteProgram(program)
-      const lose = gl.getExtension('WEBGL_lose_context')
-      lose?.loseContext()
+      releaseWebglContext(canvas, gl)
       canvas.remove()
     },
   }

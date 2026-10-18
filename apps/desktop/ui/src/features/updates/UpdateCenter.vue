@@ -18,6 +18,7 @@ function sessionFor(app: object) {
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiCard from '@/components/ui/UiCard.vue'
+import ReleaseNotes from './ReleaseNotes.vue'
 import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { useUpdatesStore } from './store'
@@ -78,19 +79,6 @@ function bytes(value: number) {
   if (value < 1024) return value + ' B'
   if (value < 1024 * 1024) return (value / 1024).toFixed(1) + ' KB'
   return (value / (1024 * 1024)).toFixed(1) + ' MB'
-}
-function safeHttps(value: string | null | undefined): string | null {
-  if (!value || !/^https:\/\//i.test(value) || /[\s\\]/.test(value)) return null
-  try {
-    const url = new URL(value)
-    return url.protocol === 'https:' && url.hostname && !url.username && !url.password ? url.href : null
-  } catch { return null }
-}
-const releaseUrl = computed(() => safeHttps(status.value?.releaseUrl))
-async function openRelease(url: string | null) {
-  const safe = safeHttps(url)
-  if (!safe) return
-  if (!await app.openExternalLink(safe)) app.showToast('网页详情打开失败，请稍后重试。')
 }
 async function check() {
   if (busy.value) return
@@ -163,6 +151,17 @@ function onKeydown(event: KeyboardEvent) {
   }
 }
 watch(() => props.target, target => { selected.value = target })
+watch(selected, async () => {
+  const label = dialog.value?.contains(document.activeElement)
+    ? document.activeElement?.getAttribute('aria-label')
+    : null
+  await nextTick()
+  if (!props.open || !dialog.value || dialog.value.contains(document.activeElement)) return
+  // Returning to all updates removes its focused back button. Keep modal focus
+  // inside, preserving a labelled control if the render replaced that control.
+  const replacement = label ? focusables().find(element => element.getAttribute('aria-label') === label) : null
+  ;(replacement ?? dialog.value).focus()
+})
 watch(() => props.open, async open => {
   if (open) {
     selected.value = props.target
@@ -199,9 +198,7 @@ defineExpose({ check })
             <div class="update-versions"><span>当前 <b>{{ status?.currentVersion ?? app.aboutApp?.version ?? '未知' }}</b></span><span aria-hidden="true">→</span><span>可用 <b>{{ status?.availableVersion ?? '—' }}</b></span></div>
             <p v-if="session.managerCheckError || status?.error" class="update-error" role="status">{{ session.managerCheckError || status?.error }}</p>
             <div v-if="selected === 'manager'" class="update-detail">
-              <div class="update-detail-head"><h4>更新说明</h4><time v-if="status?.publishedAt">{{ status.publishedAt }}</time></div>
-              <pre class="update-notes" tabindex="0" aria-label="桌面管理器更新说明">{{ status?.notes || '发行方尚未提供更新说明。可打开网页详情查看发行信息。' }}</pre>
-              <UiButton v-if="releaseUrl" variant="ghost" @click="openRelease(releaseUrl)">查看网页详情 ↗</UiButton>
+              <ReleaseNotes target="manager" :channel="status?.channel ?? 'stable'" :version="status?.availableVersion ?? null" :updater-notes="status?.notes" />
               <p class="update-hint">更新包通过签名校验后准备应用；准备完成后可选择重启时机。</p>
             </div>
             <div v-if="managerBusy || pendingRestart || progress?.stage === 'failed'" class="update-progress" aria-live="polite">
@@ -226,8 +223,7 @@ defineExpose({ check })
             <div class="update-versions"><span>当前 <b>{{ app.officialProject?.version ?? '未知' }}</b></span><span aria-hidden="true">→</span><span>可用 <b>{{ app.officialRemote?.version ?? '—' }}</b></span></div>
             <p v-if="app.officialRemoteError || app.officialProjectError" class="update-error" role="status">版本查询失败，请检查网络或运行来源后重试。</p>
             <div v-if="selected === 'official'" class="update-detail">
-              <h4>更新说明</h4><pre class="update-notes" tabindex="0" aria-label="OpenCodex 面板更新说明">当前版本查询未提供发布说明。请查看官方网页详情，确认版本变化后再安装。</pre>
-              <UiButton variant="ghost" @click="openRelease('https://www.npmjs.com/package/@bitkyc08/opencodex?activeTab=versions')">查看官方网页详情 ↗</UiButton>
+              <ReleaseNotes target="official" channel="official" :version="app.officialRemote?.version ?? null" />
             </div>
             <p class="update-hint">面板升级前必须备份配置；备份成功后才会安装选定版本。更新完成后如需重启运行中的代理，将另行提示。</p>
             <div v-if="officialBusy || session.officialSucceeded && runtime.installOutcome?.version === session.officialCandidate" class="update-progress" aria-live="polite">

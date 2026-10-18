@@ -39,6 +39,31 @@ describe('data root integration', () => {
     expect(app.dataRootPath).toBe('')
   })
 
+  it('initializes an empty directory without treating it as damaged', async () => {
+    invoke.mockImplementation(async (command: string) => {
+      if (command === 'validate_data_root_structure') return 'uninitialized'
+      if (command === 'initialize_data_root') return { created: true, structureVersion: '1' }
+      throw new Error(`unexpected command: ${command}`)
+    })
+    const app = useAppStore()
+    await expect(app.saveDataRoot('/fixtures/empty-root')).resolves.toBe(true)
+    expect(invoke).toHaveBeenCalledWith('initialize_data_root', {
+      request: { rootPath: '/fixtures/empty-root' },
+    })
+    expect(app.dataRootLastValidation).toBe('valid')
+    expect(app.dataRootLastResult?.created).toBe(true)
+    expect(app.dataRootError).toBe('')
+  })
+
+  it('keeps future-version directories outside initialization', async () => {
+    invoke.mockResolvedValue('future_version')
+    const app = useAppStore()
+    await expect(app.saveDataRoot('/fixtures/future-root')).resolves.toBe(false)
+    expect(invoke).toHaveBeenCalledTimes(1)
+    expect(app.dataRootLastValidation).toBe('future_version')
+    expect(app.dataRootPath).toBe('')
+  })
+
   it('reports failure without modifying target', async () => {
     invoke.mockRejectedValue(new Error('backend unavailable'))
     const app = useAppStore()

@@ -168,8 +168,44 @@ fn connect_stream() -> Result<std::fs::File, IpcErrorCode> {
         .map_err(|_| IpcErrorCode::InstanceOffline)
 }
 
+#[cfg(windows)]
+fn installer_cleanup_requested(argv: &[String]) -> Result<bool, ()> {
+    if !argv
+        .first()
+        .is_some_and(|arg| arg == "--uninstall-manager-data")
+    {
+        return Ok(false);
+    }
+    if argv.len() == 2 && argv[1] == "--confirm" {
+        Ok(true)
+    } else {
+        Err(())
+    }
+}
+
 fn main() -> ExitCode {
     let argv: Vec<String> = std::env::args().skip(1).collect();
+    #[cfg(windows)]
+    match installer_cleanup_requested(&argv) {
+        Err(()) => {
+            eprintln!("Manager data cleanup requires explicit installer confirmation.");
+            return ExitCode::from(2);
+        }
+        Ok(true) => {
+            use opencodex_desktop_lib::modules::data_root::uninstall;
+            let result = uninstall::remove_from_windows_installer();
+            return match result {
+                Ok(()) => ExitCode::SUCCESS,
+                Err(_) => {
+                    eprintln!(
+                        "Manager data cleanup was not completed; existing installation retained."
+                    );
+                    ExitCode::from(1)
+                }
+            };
+        }
+        Ok(false) => {}
+    }
     let request_id = format!("req_{}", uuid::Uuid::new_v4());
     match parse(&argv, request_id) {
         CliOutcome::Help => {
@@ -228,12 +264,35 @@ fn main() -> ExitCode {
     }
 }
 
-#[cfg(all(unix, test))]
+#[cfg(test)]
 mod tests {
     use super::*;
 
     fn argv(values: &[&str]) -> Vec<String> {
         values.iter().map(|value| value.to_string()).collect()
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn installer_cleanup_requires_only_the_exact_confirmed_internal_command() {
+        assert_eq!(installer_cleanup_requested(&argv(&["status"])), Ok(false));
+        assert_eq!(
+            installer_cleanup_requested(&argv(&["--uninstall-manager-data"])),
+            Err(())
+        );
+        assert_eq!(
+            installer_cleanup_requested(&argv(&["--uninstall-manager-data", "--confirm"])),
+            Ok(true)
+        );
+        assert_eq!(
+            installer_cleanup_requested(&argv(&[
+                "--uninstall-manager-data",
+                "--confirm",
+                "--target",
+                "C:\\unrelated",
+            ])),
+            Err(())
+        );
     }
 
     fn request(values: &[&str]) -> IpcRequest {

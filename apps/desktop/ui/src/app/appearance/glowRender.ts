@@ -5,6 +5,7 @@
 // 这里是 `data-glow-render` 的**唯一**写入点。
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
+import { isReleasedWebglCanvas, releaseWebglContext } from '@/lib/webglContext'
 
 export const GLOW_RENDERS = ['mesh', 'css'] as const
 export type GlowRenderSetting = (typeof GLOW_RENDERS)[number]
@@ -21,11 +22,19 @@ export function clampGlowRender(value: unknown): GlowRenderSetting {
 /** 探测当前环境是否可用 WEBGL；失败或异常一律视为不支持。 */
 export function detectWebglSupport(): boolean {
   if (typeof document === 'undefined') return false
+  const canvas = document.createElement('canvas')
+  // Capability probing needs no full-size color/depth buffers.
+  canvas.width = canvas.height = 1
+  let context: WebGLRenderingContext | null = null
   try {
-    const canvas = document.createElement('canvas')
-    return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    context = (canvas.getContext('webgl', { antialias: false, depth: false, stencil: false })
+      || canvas.getContext('experimental-webgl')) as WebGLRenderingContext | null
+    return context !== null
   } catch {
     return false
+  } finally {
+    if (context) releaseWebglContext(canvas, context)
+    canvas.remove()
   }
 }
 
@@ -77,7 +86,8 @@ export function installGlowRenderContextGuard(): void {
   if (typeof document === 'undefined') return
   document.addEventListener(
     'webglcontextlost',
-    () => {
+    (event) => {
+      if (isReleasedWebglCanvas(event.target)) return
       // 只有当前确实在用 WEBGL 时才回退，避免用户显式选 CSS 时被误判。
       const store = useGlowRenderStore()
       if (store.mode === 'mesh') store.setWebglSupported(false)
@@ -86,7 +96,9 @@ export function installGlowRenderContextGuard(): void {
   )
   document.addEventListener(
     'webglcontextrestored',
-    () => useGlowRenderStore().setWebglSupported(detectWebglSupport()),
+    (event) => {
+      if (!isReleasedWebglCanvas(event.target)) useGlowRenderStore().setWebglSupported(detectWebglSupport())
+    },
     true,
   )
 }
