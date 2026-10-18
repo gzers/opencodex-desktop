@@ -1,0 +1,90 @@
+{
+  "kind": "windows-execution-closeout",
+  "date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "authority": {
+    "origin": "human",
+    "instruction": "同意，现在我们得收尾了，不能无限这样下去。",
+    "scope": "End this Windows execution round, reuse completed evidence, stop sampling and collector expansion, retain untested requirements."
+  },
+  "implementation_authority": "docs/03-开发实施/IMP-OPENCODEX-DESKTOP-20.md",
+  "task": {
+    "path": ".adg/work/objects/task/TASK-OPENCODEX-DESKTOP-182.json",
+    "sha256": "bc7965b44343391c0de831b2e49c630bcd93a4569e7396652b03cb6930f8ff93",
+    "modified": false,
+    "observed_revision": 2,
+    "observed_state": "in_progress",
+    "observed_result": "pending",
+    "required_checks_changed": false,
+    "closed": false
+  },
+  "source": {
+    "docs_base": "cac2282a766f4285a8ed9eb94e7e15987ba80991",
+    "code_branch": "feature/0.1.10-windows-query-observer",
+    "code_head": "869692ce00298cede276ac05dc0a69a7ea7dac29",
+    "admitted_product_source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+    "head_apps_tree": "80a4d3d29d26899e14e1324b69c8e2866f1dc2d9",
+    "admitted_apps_tree": "80a4d3d29d26899e14e1324b69c8e2866f1dc2d9",
+    "product_source_changed_by_recent_tool_commits": false,
+    "remote_code_head_matched": true,
+    "remote_docs_base_matched": true,
+    "merged_to_main_this_round": false
+  },
+  "ci": {
+    "snapshot_kind": "Selected fields from live GitHub Actions REST responses; not a raw-response archive.",
+    "observed_at": "2026-10-18T08:10:45.5342146+08:00",
+    "run_endpoint": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/39068216529",
+    "jobs_endpoint": "https://api.github.com/repos/gzers/opencodex-desktop/actions/runs/39068216529/jobs?per_page=100",
+    "id": 39068216529,
+    "head_sha": "869692ce00298cede276ac05dc0a69a7ea7dac29",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "updated_at": "2026-10-17T21:08:47Z",
+    "jobs": [
+      { "id": 117500192672, "name": "backend-windows", "status": "completed", "conclusion": "success" },
+      { "id": 117500192779, "name": "windows-smoke-evidence", "status": "completed", "conclusion": "success" },
+      { "id": 117500192845, "name": "backend", "status": "completed", "conclusion": "success" },
+      { "id": 117500192854, "name": "release-tools", "status": "completed", "conclusion": "success" },
+      { "id": 117500192890, "name": "frontend", "status": "completed", "conclusion": "success" },
+      { "id": 117504552035, "name": "build", "status": "completed", "conclusion": "skipped" }
+    ],
+    "rerun_dispatched": false,
+    "new_candidate_dispatched": false,
+    "previous_same_sha_artifact_record": ".adg/evidence/OCX-0110-20261018-WIN-869-HOSTED-METHODS/record.json",
+    "local_product_acceptance_inferred_from_hosted_methods": false
+  },
+  "reused_evidence": {
+    "startup_pair": ".adg/evidence/OCX-0110-20261018-WIN-STARTUP-PAIR/record.json",
+    "fixed_check_reconciliation": ".adg/evidence/OCX-0110-20261017-WIN-FIXED-CHECK-RECONCILIATION/",
+    "remaining_scope": "The fixed eight-row table in IMP-20 remains the sole detailed list; no new review lifecycle or replacement acceptance result is created."
+  },
+  "local_observations": {
+    "product_process_checked_at": "2026-10-18T08:10:05.2977385+08:00",
+    "product_process_count": 0,
+    "known_capture_runners_checked_at": "2026-10-18T08:11:24.8697371+08:00",
+    "known_capture_runner_count": 0,
+    "runner_names_checked": [
+      "execute-next-cache-window.ps1",
+      "windows-cache-query-run.ps1",
+      "windows-query-calibration.ps1",
+      "windows-query-counters.ps1"
+    ],
+    "product_started_this_round": false,
+    "etw_started_this_round": false,
+    "foreground_used_this_round": false,
+    "configuration_modified_this_round": false
+  },
+  "disposition": {
+    "this_windows_execution_round_ended": true,
+    "automatic_sampling_continues": false,
+    "collector_expansion_continues": false,
+    "untested_requirements_removed": false,
+    "untested_marked_passed": false,
+    "full_windows_acceptance_claimed": false,
+    "release_readiness_claimed": false,
+    "mac_and_external_dependencies_separate": true,
+    "release_or_promotion_performed": false,
+    "fz50_performed": false
+  }
+}
