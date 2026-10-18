@@ -1,0 +1,104 @@
+{
+  "recordedAt": "2026-10-18T17:35:02.722260+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "0acc4e37211133f00a3bbb7c1956c4e2a0d8b83f",
+  "sourceSha256": {
+    "apps/desktop/tauri/config/event-registry.json": "3c6de080e1a12320d4ba87b03c3fd7133736b796e28ac38b1d9e66d38e293707",
+    "apps/desktop/tauri/src/commands/model_config.rs": "9baf7c808f230da39bee729c1e210936163af81b4de2174e981ee5e990d2cda5",
+    "apps/desktop/tauri/src/lib.rs": "ca728c886779b26f8cae41e760ed4e1e3cc3c95c9888874a8a35dab6c43bb7b1",
+    "apps/desktop/tauri/src/modules/model_config/discovery.rs": "554107e7f5abe109614bf6cf0247808989d0adf1ea5e1a6b568acca9d8f543df",
+    "apps/desktop/tauri/src/modules/model_config/feedback.rs": "758b5c925372f214b05039ae0b7bb55b47737abee528273c33ed9bda1a7dad2b",
+    "apps/desktop/tauri/src/modules/model_config/management.rs": "062151f8641da6d6a595cc6ddd1cfdf2d4726916be28961f01f2a2c23f4bfbef",
+    "apps/desktop/tauri/src/modules/model_config/measurements.rs": "3d3aec32c1313c1fd063a07354a0e45d588fd9838ff1cf81e2a8aadef1a8cb82",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "170c2fd981625d48496b33e6d63d743ac72a3cf56a91e5701acdd384639f5a85",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "f5109470dd6963e6ef5e7bf20955be745360f3eb0e98801242ecdab76b2412f2",
+    "apps/desktop/tauri/src/modules/model_config/seed-catalog.json": "a5a1159359a26103eb3dbb499b44c8a326fb10c80e7057a7aac2ebb7acd04abf",
+    "apps/desktop/tauri/src/modules/model_config/store.rs": "cb5d28f9a09b4a8f4f34377af305e664b26ee0a8a9a1f585b91d05d2f6090ae1",
+    "apps/desktop/tauri/src/modules/model_config/tasks.rs": "00aa39d28698b3eeb961ad16a84cac04c3876f610006cf0974b3aa137bb17f03",
+    "apps/desktop/tauri/src/modules/model_config/tests.rs": "175515cb8954b851d23446b76a24f868bb4586ec05889dc24ec83f70fe701e0f",
+    "apps/desktop/tauri/src/modules/notifications/mod.rs": "da449d5ed1f7fb97601064c0f8dcf6f18d9bd116f665587d70471bdc352887b2",
+    "apps/desktop/tauri/src/modules/notifications/registry.rs": "8b1cf79f473976a207b3f5a16bd503140dd8ca3363d848e03be079dac60b661d",
+    "apps/desktop/tauri/tests/event_registry.rs": "576dbe4cd254abc64a1680bf8e4165b248021a1430b2b7cbcea9d5cb8ed30b8f",
+    "apps/desktop/ui/src/app/feedback/tasks.ts": "46c441981e88b8eeee8e585d5a59f3f2761aab32eccd58833beaa4e6b4356011",
+    "apps/desktop/ui/src/components/README.md": "bb7195452a11d3c2ae08aacfc9fd430269d765d912a9b47ff639bf8bdebd4756",
+    "apps/desktop/ui/src/components/TaskProgressHost.vue": "2cc60989ab530fc298157b498b0169bf092d4c940f4a82346cc4f589ffcc610f",
+    "apps/desktop/ui/src/components/ui/UiDiscreteSlider.vue": "c0b90a289e76f7ed183dcf0f76545fcc088c5613a900ab8fd45a6d1cf5844e52",
+    "apps/desktop/ui/src/components/ui/UiSelectMenu.vue": "6af88a90e73a612fef44845863579a9e88b1ce120576ea61c303f68e1a8649f1",
+    "apps/desktop/ui/src/composables/useAppController.ts": "7a267155d5c029678d9e2b518bdd7c860c0457d4aa07622bc808321e45f71fd5",
+    "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue": "cdb0e737c33cd218e989ec0d01274765a96e4dc697d21174f690ecfb9e257961",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "4076d7e5a6843562f3d27ed1328e25366a9207dae82be89eee41aff0dc38f9a4",
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue": "22b47a31c1c68244d0d2ab472a345bdc6b855ddf8cf118d10b4d985ec066d2b3",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "baa9610cffa22f88df4f0565169d84f5186231fc018b1639230264d53a807083",
+    "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue": "2286b76ad95d02514fcaac54c30797dd82b803e58a7f670f1852dec879f6ba8d",
+    "apps/desktop/ui/src/features/models/ModelPicker.vue": "74e8e9df91d0944086fa27360bf61fa328a10fc2be8666232b5daf47b9feabdc",
+    "apps/desktop/ui/src/features/models/ModelRuleFields.vue": "bcc8092c12bc49dcfc4094576173d6b3858835b5874b893b8a447dcfb8b60906",
+    "apps/desktop/ui/src/features/models/api.ts": "b4883e08d4a4ed67394f926ccfb970286388bb53eb198d0b181b97dd2afa12b1",
+    "apps/desktop/ui/src/features/models/store.ts": "bcdc44e3236bebad4d395ca2feff7a8b869bf7b4f891a16238e9a6e7ef3a4f17",
+    "apps/desktop/ui/src/features/models/useNodeMeasurements.ts": "83052888d6987047e0be9d27b2f5180400d1b704011100465f0d7bdb795a7569",
+    "apps/desktop/ui/src/features/notifications/actions.ts": "191f29137aa3f1de17456efa1615d9e4b65d0016ea52c6dbd9f46c031c5303ca",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "53008c70d24865a6864122ffa8d2ca1963aacea2380430baaca47685079147bf",
+    "apps/desktop/ui/src/types/ui.ts": "b2be8aa9986925daa82487f2c5c2e91c87f1f5458bc76db7bc1d310c73cdcd88",
+    "apps/desktop/ui/tests/discrete-slider.test.ts": "5768d028225bbea548939676ba238b40ddfbbeb765855c64848ba6c2ad98d3d5",
+    "apps/desktop/ui/tests/model-node-measurements.test.ts": "ffb841d599a82f0ddea2345672b4e7696449d045925c297592f8fda6ca1a7418",
+    "apps/desktop/ui/tests/model-save-recovery.test.ts": "84ea611f969e989aa03b105897c1375deed69221e9a89807091e3564ed4f4e8e",
+    "apps/desktop/ui/tests/model-selection.test.ts": "772526f21fb4dbe3b6c637ad75df034f04b0f6f45185b60b149aa0623638543f",
+    "apps/desktop/ui/tests/notification-actions.test.ts": "1a016261f7a1e1ff7b71e9cdf4c78669a41ac02858f4dcca10d993fd1fde241c"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 13967,
+      "passed": 58,
+      "failed": 0,
+      "result": "passed",
+      "scope": "local storage/recovery/seeds and model services; real loopback fixtures; no daily runtime writes"
+    },
+    {
+      "command": "cargo test --test event_registry --features integration-test",
+      "session": 63288,
+      "passed": 35,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run targeted model/notification/slider files",
+      "session": 39189,
+      "files": 9,
+      "passed": 32,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run tests/model-save-recovery.test.ts tests/model-selection.test.ts tests/model-node-measurements.test.ts",
+      "session": 20400,
+      "files": 3,
+      "passed": 11,
+      "failed": 0,
+      "result": "passed",
+      "scope": "later affected UI; overlaps earlier results"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets -- -D warnings",
+      "session": 21552,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 61844,
+      "result": "passed"
+    }
+  ],
+  "visualEvidence": {
+    "file": "model-picker-unknown-capability-light.jpg",
+    "scope": "DEV-only directory fixture, light/high, unknown reasoning/Fast displayed without invented options",
+    "notEvidenceFor": "native IPC, paid generation, platform release acceptance"
+  },
+  "remaining": [
+    "stable cross-protocol provider mappings and full channel copy/delete recovery",
+    "internal batch generation and durable continuous sessions/provenance",
+    "unified protected portable file including account/secret scopes and subset import",
+    "real client loaded confirmation and applicable platform/UI evidence",
+    "final integration and authorized publication"
+  ]
+}
