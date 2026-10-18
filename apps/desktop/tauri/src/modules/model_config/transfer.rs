@@ -46,7 +46,7 @@ pub struct ModelPackage {
     pub digest: String,
     pub payload: TransferPayload,
 }
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExportScope {
     pub include_policy: bool,

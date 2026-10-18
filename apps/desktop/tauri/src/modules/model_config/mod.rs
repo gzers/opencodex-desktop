@@ -3,6 +3,7 @@
 pub mod agent;
 pub mod broker;
 pub mod compiler;
+pub mod config_remote;
 pub mod discovery;
 pub mod feedback;
 pub mod file_objects;
@@ -11,7 +12,7 @@ pub mod matching;
 pub mod measurements;
 mod operations;
 mod protocol_groups;
-pub mod remote;
+mod remote;
 pub mod runtime;
 pub mod schema;
 pub mod store;

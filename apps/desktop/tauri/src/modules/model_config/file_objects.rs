@@ -323,6 +323,176 @@ fn cache_path(root: &Path, id: &str, extension: &str) -> ModelResult<PathBuf> {
     safety::check_path(root, &path, true)?;
     Ok(path)
 }
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RemoteSummary {
+    pub package: ModelPackage,
+    pub manager: Settings,
+    pub credential_count: usize,
+    pub protected: bool,
+}
+fn remote_objects(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<(Objects, bool)> {
+    let opened = portable_file::open(bytes, passphrase)?;
+    let objects = decode(&opened.document)?;
+    if !objects.manager.webdav.is_empty() || !objects.webdav_passwords.0.is_empty() {
+        return Err(invalid(
+            "sync_self_scope",
+            "WebDAV连接及密码不能进入配置自同步",
+        ));
+    }
+    if opened.manifest.sections != sections(&objects)
+        || opened.manifest.secret_objects != objects.channel_keys.0.len()
+    {
+        return Err(invalid("portable_manifest", "远端清单与对象不同"));
+    }
+    Ok((objects, opened.protected))
+}
+pub fn remote_summary(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<RemoteSummary> {
+    let (objects, protected) = remote_objects(bytes, passphrase)?;
+    Ok(RemoteSummary {
+        package: objects.models,
+        manager: objects.manager,
+        credential_count: objects.channel_keys.0.len(),
+        protected,
+    })
+}
+pub fn merge_remote(
+    remote_bytes: &[u8],
+    local_bytes: &[u8],
+    passphrase: Option<&str>,
+    operation_id: &str,
+) -> ModelResult<Vec<u8>> {
+    let (mut remote, remote_protected) = remote_objects(remote_bytes, passphrase)?;
+    let (local, local_protected) = remote_objects(local_bytes, passphrase)?;
+    remote.models = transfer::merge_packages(remote.models, local.models)?;
+    if local.manager.preferences.is_some() {
+        remote.manager.preferences = local.manager.preferences;
+    }
+    if let Some(incoming) = local.manager.extensions {
+        if let Some(existing) = remote.manager.extensions.as_mut() {
+            for name in incoming.skills {
+                if !existing.skills.contains(&name) {
+                    existing.skills.push(name);
+                }
+            }
+            for name in incoming.servers {
+                if !existing.servers.contains(&name) {
+                    existing.servers.push(name);
+                }
+            }
+            existing.enablement.extend(incoming.enablement);
+            existing.skill_targets.extend(incoming.skill_targets);
+            existing.sync_method = incoming.sync_method;
+        } else {
+            remote.manager.extensions = Some(incoming);
+        }
+    }
+    for (channel, key) in &local.channel_keys.0 {
+        remote.channel_keys.0.insert(channel.clone(), key.clone());
+    }
+    validate(&remote)?;
+    let document = Zeroizing::new(serde_json::to_vec(&remote)?);
+    let password =
+        if remote_protected || local_protected || !remote.channel_keys.0.is_empty() {
+            Some(passphrase.ok_or_else(|| {
+                invalid("passphrase_required", "远端文件受保护，请输入配置同步口令")
+            })?)
+        } else {
+            passphrase
+        };
+    portable_file::seal(
+        portable_file::Manifest {
+            id: operation_id.into(),
+            created_at: chrono::Utc::now().to_rfc3339(),
+            sections: sections(&remote),
+            secret_objects: remote.channel_keys.0.len(),
+            document_digest: String::new(),
+        },
+        &document,
+        password,
+    )
+}
+pub fn select_remote(
+    root: &Path,
+    bytes: &[u8],
+    passphrase: Option<&str>,
+    models: &transfer::ExportScope,
+    manager: &ManagerScope,
+    include_keys: bool,
+) -> ModelResult<IncomingPlan> {
+    let (mut objects, _) = remote_objects(bytes, passphrase)?;
+    let channels = objects
+        .models
+        .payload
+        .policy
+        .as_ref()
+        .map(|p| {
+            p.channels
+                .iter()
+                .filter(|channel| models.include_policy && models.channel_ids.contains(&channel.id))
+                .map(|channel| channel.id.clone())
+                .collect::<Vec<_>>()
+        })
+        .unwrap_or_default();
+    objects
+        .channel_keys
+        .0
+        .retain(|channel, _| include_keys && channels.contains(channel));
+    if !manager.preferences {
+        objects.manager.preferences = None;
+    }
+    if !manager.extensions {
+        objects.manager.extensions = None;
+    }
+    let id = uuid::Uuid::new_v4().to_string();
+    let document = Zeroizing::new(serde_json::to_vec(&objects)?);
+    let selected_file = portable_file::seal(
+        portable_file::Manifest {
+            id,
+            created_at: chrono::Utc::now().to_rfc3339(),
+            sections: sections(&objects),
+            secret_objects: objects.channel_keys.0.len(),
+            document_digest: String::new(),
+        },
+        &document,
+        passphrase,
+    )?;
+    let incoming = receive(root, &selected_file, passphrase)?;
+    let template_refs = models
+        .template_refs
+        .iter()
+        .filter(|reference| {
+            incoming.package.payload.templates.iter().any(|template| {
+                template.id == reference.template_id
+                    && template
+                        .revisions
+                        .iter()
+                        .any(|revision| revision.id == reference.revision_id)
+            })
+        })
+        .cloned()
+        .collect();
+    transfer::select_received(
+        root,
+        &incoming.id,
+        transfer::ReceiveScope {
+            template_refs,
+            channel_ids: channels,
+            include_global: models.include_global,
+            preferences: manager.preferences
+                && incoming
+                    .manager
+                    .as_ref()
+                    .is_some_and(|settings| settings.preferences.is_some()),
+            extensions: manager.extensions
+                && incoming
+                    .manager
+                    .as_ref()
+                    .is_some_and(|settings| settings.extensions.is_some()),
+            endpoint_ids: vec![],
+        },
+    )
+}
 pub fn receive(root: &Path, bytes: &[u8], passphrase: Option<&str>) -> ModelResult<IncomingPlan> {
     let format: serde_json::Value = serde_json::from_slice(bytes)
         .map_err(|_| invalid("import_format", "所选配置文件不是有效JSON"))?;

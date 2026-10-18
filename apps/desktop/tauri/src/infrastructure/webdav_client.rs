@@ -234,6 +234,20 @@ impl ReqwestWebDavTransport {
                 .expect("WebDAV client should use frozen timeouts"),
         }
     }
+    /// Integration fixtures trust their own ephemeral CA without mutating the
+    /// machine trust store. Ordinary application builds do not expose this API.
+    #[cfg(feature = "integration-test")]
+    pub fn with_test_root_certificate(pem: &[u8]) -> Result<Self, WebDavError> {
+        let certificate = reqwest::Certificate::from_pem(pem).map_err(|_| WebDavError::Tls)?;
+        let client = Client::builder()
+            .connect_timeout(connect_timeout())
+            .timeout(item_timeout())
+            .redirect(reqwest::redirect::Policy::none())
+            .add_root_certificate(certificate)
+            .build()
+            .map_err(|_| WebDavError::Tls)?;
+        Ok(Self { client })
+    }
 }
 
 impl Default for ReqwestWebDavTransport {

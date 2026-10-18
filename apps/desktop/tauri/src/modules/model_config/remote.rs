@@ -1,23 +1,22 @@
-//! New model domain, disjoint from the 0.1.x latest.txt and strict containers.
+//! Shared conditional publication, disjoint from 0.1.x latest.txt containers.
 //! Objects are immutable; a strong conditional pointer is the only commit point.
-use super::{
-    schema::*,
-    store::sha256,
-    transfer::{self, ExportScope, IncomingPlan, ModelPackage},
+#[cfg(test)]
+use super::transfer::{self, ExportScope, IncomingPlan, ModelPackage};
+use super::{schema::*, store::sha256};
+use crate::infrastructure::webdav_client::{
+    WebDavConfig, WebDavError, WebDavMethod, WebDavTransport,
 };
-use crate::infrastructure::{
-    atomic_write::atomic_write,
-    webdav_client::{WebDavConfig, WebDavError, WebDavMethod, WebDavTransport},
-};
-use crate::modules::backup::safety;
+#[cfg(test)]
+use crate::{infrastructure::atomic_write::atomic_write, modules::backup::safety};
 use serde::{Deserialize, Serialize};
+#[cfg(test)]
 use std::path::{Path, PathBuf};
-
+#[cfg(test)]
 const POINTER: &str = "models-v1-latest.json";
 const LIMIT: usize = 64 * 1024 * 1024;
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-struct Pointer {
+pub(super) struct Pointer {
     format: String,
     version: u32,
     operation_id: String,
@@ -25,10 +24,28 @@ struct Pointer {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
-struct Baseline {
-    pointer: Pointer,
+pub(super) struct Baseline {
+    pub pointer: Pointer,
     etag: String,
 }
+#[derive(Clone, Copy)]
+pub(super) struct Domain {
+    pointer: &'static str,
+    prefix: &'static str,
+    format: &'static str,
+}
+#[cfg(test)]
+const MODELS: Domain = Domain {
+    pointer: POINTER,
+    prefix: "models-v1",
+    format: "OCXD_MODELS_POINTER",
+};
+pub(super) const CONFIG: Domain = Domain {
+    pointer: "config-v1-latest.json",
+    prefix: "config-v1",
+    format: "OCXD_CONFIG_POINTER",
+};
+#[cfg(test)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct UploadPlan {
@@ -44,20 +61,21 @@ fn transport_error(error: WebDavError) -> ModelError {
         error.user_message(crate::infrastructure::webdav_client::WebDavOperation::Upload),
     )
 }
-fn object_path(pointer: &Pointer) -> ModelResult<String> {
+fn object_path_for(domain: Domain, pointer: &Pointer) -> ModelResult<String> {
     require_uuid(&pointer.operation_id)?;
     let Some(hash) = pointer.digest.strip_prefix("sha256:") else {
         return Err(invalid("remote_digest", "远端清单摘要格式无效"));
     };
     if hash.len() != 64
         || !hash.bytes().all(|b| b.is_ascii_hexdigit())
-        || pointer.format != "OCXD_MODELS_POINTER"
+        || pointer.format != domain.format
         || pointer.version != 1
     {
-        return Err(invalid("remote_pointer", "远端模型域版本或摘要无效"));
+        return Err(invalid("remote_pointer", "远端配置域版本或摘要无效"));
     }
-    Ok(format!("models-v1-{hash}.ocxd"))
+    Ok(format!("{}-{hash}.ocxd", domain.prefix))
 }
+#[cfg(test)]
 fn plan_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
     let path = root
@@ -66,6 +84,7 @@ fn plan_path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     safety::check_path(root, &path, true)?;
     Ok(path)
 }
+#[cfg(test)]
 fn persist(root: &Path, plan: &UploadPlan) -> ModelResult<()> {
     let bytes = serde_json::to_vec(plan)?;
     if bytes.len() > LIMIT {
@@ -74,6 +93,7 @@ fn persist(root: &Path, plan: &UploadPlan) -> ModelResult<()> {
     atomic_write(&plan_path(root, &plan.id)?, &bytes, 0o600)?;
     Ok(())
 }
+#[cfg(test)]
 pub fn read_plan(root: &Path, id: &str, binding: &str) -> ModelResult<UploadPlan> {
     let plan: UploadPlan =
         serde_json::from_slice(&safety::read_file(&plan_path(root, id)?, LIMIT as u64)?)?;
@@ -86,66 +106,79 @@ pub fn read_plan(root: &Path, id: &str, binding: &str) -> ModelResult<UploadPlan
     transfer::validate_package(&plan.package)?;
     Ok(plan)
 }
+#[cfg(test)]
 async fn pointer<T: WebDavTransport>(
     transport: &T,
     config: &WebDavConfig,
 ) -> ModelResult<Option<Baseline>> {
+    pointer_for(MODELS, transport, config).await
+}
+pub(super) async fn pointer_for<T: WebDavTransport>(
+    domain: Domain,
+    transport: &T,
+    config: &WebDavConfig,
+) -> ModelResult<Option<Baseline>> {
     match transport
-        .request(config, WebDavMethod::Get, POINTER, None)
+        .request(config, WebDavMethod::Get, domain.pointer, None)
         .await
     {
         Err(WebDavError::NotFound) => Ok(None),
         Err(error) => Err(transport_error(error)),
         Ok(response) => {
             if response.body.len() > 4096 {
-                return Err(invalid("remote_pointer", "远端模型指针超过上限"));
+                return Err(invalid("remote_pointer", "远端配置指针超过上限"));
             }
             let pointer: Pointer = serde_json::from_slice(&response.body)
-                .map_err(|_| invalid("remote_pointer", "远端模型指针无效"))?;
-            object_path(&pointer)?;
+                .map_err(|_| invalid("remote_pointer", "远端配置指针无效"))?;
+            object_path_for(domain, &pointer)?;
             let etag = response
                 .etag
                 .filter(|s| {
                     s.starts_with('"') && s.ends_with('"') && s.len() >= 2 && s.len() <= 1024
                 })
                 .ok_or_else(|| {
-                    invalid(
-                        "etag_required",
-                        "该WebDAV未提供强ETag，不能安全发布模型配置",
-                    )
+                    invalid("etag_required", "该WebDAV未提供强ETag，不能安全发布配置")
                 })?;
             Ok(Some(Baseline { pointer, etag }))
         }
     }
 }
+#[cfg(test)]
 async fn fetch<T: WebDavTransport>(
     transport: &T,
     config: &WebDavConfig,
     pointer: &Pointer,
 ) -> ModelResult<ModelPackage> {
+    let bytes = fetch_for(MODELS, transport, config, pointer).await?;
+    let package: ModelPackage = serde_json::from_slice(&bytes)
+        .map_err(|_| invalid("remote_package", "远端配置包无法解析"))?;
+    transfer::validate_package(&package)?;
+    Ok(package)
+}
+pub(super) async fn fetch_for<T: WebDavTransport>(
+    domain: Domain,
+    transport: &T,
+    config: &WebDavConfig,
+    pointer: &Pointer,
+) -> ModelResult<Vec<u8>> {
     let response = transport
-        .request(config, WebDavMethod::Get, &object_path(pointer)?, None)
+        .request(
+            config,
+            WebDavMethod::Get,
+            &object_path_for(domain, pointer)?,
+            None,
+        )
         .await
         .map_err(transport_error)?;
     if response.body.len() > LIMIT || sha256(&response.body) != pointer.digest {
         return Err(invalid(
             "remote_digest",
-            "远端模型包不完整或摘要不符，未采用",
+            "远端配置包不完整或摘要不符，未采用",
         ));
     }
-    let package: ModelPackage = serde_json::from_slice(&response.body)
-        .map_err(|_| invalid("remote_package", "远端模型包无法解析"))?;
-    transfer::validate_package(&package)?;
-    Ok(package)
+    Ok(response.body)
 }
-fn intended(plan: &UploadPlan) -> ModelResult<Pointer> {
-    Ok(Pointer {
-        format: "OCXD_MODELS_POINTER".into(),
-        version: 1,
-        operation_id: plan.id.clone(),
-        digest: sha256(&serde_json::to_vec(&plan.package)?),
-    })
-}
+#[cfg(test)]
 pub async fn prepare<T: WebDavTransport>(
     root: &Path,
     transport: &T,
@@ -174,6 +207,7 @@ pub async fn prepare<T: WebDavTransport>(
 }
 /// A retry first resolves the original operation. It never creates a new ID or
 /// writes against a refreshed remote baseline behind the user's confirmation.
+#[cfg(test)]
 pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     root: &Path,
     transport: &T,
@@ -185,57 +219,99 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     let mut plan = read_plan(root, id, binding)?;
     let lock_path = plan_path(root, id)?;
     let _lock = crate::infrastructure::locking::TargetFileLock::lock(&lock_path)?;
-    let next = intended(&plan)?;
-    let current = pointer(transport, config).await?;
-    if current.as_ref().is_some_and(|base| base.pointer == next) {
-        fetch(transport, config, &next).await?;
-        unchanged()?;
-        plan.phase = "published".into();
-        persist(root, &plan)?;
-        return Ok(plan);
+    let baseline = plan.baseline.clone();
+    let published = plan.phase == "published";
+    let body = serde_json::to_vec(&plan.package)?;
+    publish_blob(
+        MODELS,
+        transport,
+        config,
+        id,
+        baseline.as_ref(),
+        body,
+        published,
+        |phase| {
+            plan.phase = phase.into();
+            persist(root, &plan)
+        },
+        unchanged,
+    )
+    .await?;
+    Ok(plan)
+}
+#[allow(clippy::too_many_arguments)]
+pub(super) async fn publish_blob<
+    T: WebDavTransport,
+    F: Fn() -> ModelResult<()>,
+    S: FnMut(&str) -> ModelResult<()>,
+>(
+    domain: Domain,
+    transport: &T,
+    config: &WebDavConfig,
+    id: &str,
+    baseline: Option<&Baseline>,
+    body: Vec<u8>,
+    published: bool,
+    mut stage: S,
+    unchanged: F,
+) -> ModelResult<()> {
+    require_uuid(id)?;
+    config.validate().map_err(transport_error)?;
+    if body.len() > LIMIT {
+        return Err(invalid("remote_limit", "配置载荷超过64MiB"));
     }
-    if plan.phase == "published" {
+    let next = Pointer {
+        format: domain.format.into(),
+        version: 1,
+        operation_id: id.into(),
+        digest: sha256(&body),
+    };
+    let current = pointer_for(domain, transport, config).await?;
+    if current.as_ref().is_some_and(|head| head.pointer == next) {
+        if fetch_for(domain, transport, config, &next).await? != body {
+            return Err(invalid("remote_readback", "已发布载荷不同，未宣称成功"));
+        }
+        unchanged()?;
+        stage("published")?;
+        return Ok(());
+    }
+    if published {
         return Err(invalid(
             "remote_advanced",
             "该操作曾发布，远端已有后续版本；未重复覆盖",
         ));
     }
-    if serde_json::to_value(&current)? != serde_json::to_value(&plan.baseline)? {
+    if serde_json::to_value(&current)? != serde_json::to_value(baseline)? {
         return Err(invalid(
             "remote_changed",
-            "远端模型内容已变化，请重新比较；原计划未覆盖远端",
+            "远端配置已变化，请重新比较；原计划未覆盖远端",
         ));
     }
     unchanged()?;
-    let body = serde_json::to_vec(&plan.package)?;
-    let path = object_path(&next)?;
-    plan.phase = "uploading".into();
-    persist(root, &plan)?;
-    // Even identical content uses conditional create; an existing object must
-    // prove byte equality instead of trusting its content-addressed filename.
+    let path = object_path_for(domain, &next)?;
+    stage("uploading")?;
     let response = transport
         .put_conditional(config, &path, body.clone(), None)
         .await
         .map_err(transport_error)?;
     if response.status != 412 && ![200, 201, 204].contains(&response.status) {
-        return Err(invalid("remote_write", "模型载荷上传未确认"));
+        return Err(invalid("remote_write", "配置载荷上传未确认"));
     }
     let stored = transport
         .request(config, WebDavMethod::Get, &path, None)
         .await
         .map_err(transport_error)?;
     if stored.body != body {
-        return Err(invalid("remote_readback", "模型载荷读回不一致，未发布清单"));
+        return Err(invalid("remote_readback", "配置载荷读回不一致，未发布清单"));
     }
     unchanged()?;
-    plan.phase = "publishing".into();
-    persist(root, &plan)?;
+    stage("publishing")?;
     let response = transport
         .put_conditional(
             config,
-            POINTER,
+            domain.pointer,
             serde_json::to_vec(&next)?,
-            plan.baseline.as_ref().map(|b| b.etag.as_str()),
+            baseline.map(|head| head.etag.as_str()),
         )
         .await
         .map_err(transport_error)?;
@@ -248,18 +324,21 @@ pub async fn publish<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     if ![200, 201, 204].contains(&response.status) {
         return Err(invalid("remote_write", "清单发布结果待核对"));
     }
-    let observed = pointer(transport, config).await?;
-    if !observed.as_ref().is_some_and(|base| base.pointer == next) {
+    if !pointer_for(domain, transport, config)
+        .await?
+        .as_ref()
+        .is_some_and(|head| head.pointer == next)
+    {
         return Err(invalid(
             "remote_changed",
             "清单发布后已有后续变化，未宣称成功",
         ));
     }
     unchanged()?;
-    plan.phase = "published".into();
-    persist(root, &plan)?;
-    Ok(plan)
+    stage("published")?;
+    Ok(())
 }
+#[cfg(test)]
 pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
     root: &Path,
     transport: &T,
@@ -290,13 +369,21 @@ pub async fn download<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
     use crate::infrastructure::webdav_client::WebDavResponse;
     use std::{collections::BTreeMap, sync::Mutex};
     #[derive(Default)]
-    struct Memory {
+    pub(crate) struct Memory {
         state: Mutex<State>,
+    }
+    impl Memory {
+        pub fn lose_reply(&self) {
+            self.state.lock().unwrap().drop_pointer_reply = true;
+        }
+        pub fn writes(&self) -> Vec<String> {
+            self.state.lock().unwrap().writes.clone()
+        }
     }
     #[derive(Default)]
     struct State {
@@ -337,7 +424,8 @@ mod tests {
             expected: Option<&str>,
         ) -> Result<WebDavResponse, WebDavError> {
             let mut state = self.state.lock().unwrap();
-            if path == POINTER {
+            let pointer = path.ends_with("-latest.json");
+            if pointer {
                 if let Some(other) = state.race.take() {
                     state.files.insert(path.into(), (other, "\"raced\"".into()));
                 }
@@ -353,11 +441,11 @@ mod tests {
             state.generation += 1;
             let etag = format!("\"{}\"", state.generation);
             state.writes.push(path.into());
-            if state.corrupt_object && path != POINTER {
+            if state.corrupt_object && !pointer {
                 body = b"truncated".to_vec();
             }
             state.files.insert(path.into(), (body, etag.clone()));
-            if path == POINTER && state.drop_pointer_reply {
+            if pointer && state.drop_pointer_reply {
                 state.drop_pointer_reply = false;
                 return Err(WebDavError::Network);
             }

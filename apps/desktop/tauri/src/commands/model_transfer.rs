@@ -1,6 +1,6 @@
 //! File transfer stays in the unified sync domain; received policy is a draft.
 use crate::infrastructure::webdav_client::{ReqwestWebDavTransport, WebDavConfig};
-use crate::modules::model_config::remote::{self, UploadPlan};
+use crate::modules::model_config::config_remote;
 use crate::{
     modules::model_config::{
         schema::*,
@@ -64,71 +64,113 @@ fn remote_operation<T>(
     Ok(result)
 }
 #[tauri::command]
-pub async fn model_remote_prepare(
-    scope: ExportScope,
+pub async fn config_sync_scope(
     data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<UploadPlan> {
+) -> ModelResult<config_remote::Scope> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || config_remote::load_scope(&root))
+        .await
+        .map_err(|_| invalid("sync_scope", "设备范围读取中断"))?
+}
+#[tauri::command]
+pub async fn config_sync_save_scope(
+    scope: config_remote::Scope,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<config_remote::Scope> {
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        remote_operation(&root, |transport, config, binding, _| {
-            tauri::async_runtime::block_on(remote::prepare(
-                &root, transport, config, binding, scope,
+        config_remote::save_scope(&root, scope)
+    })
+    .await
+    .map_err(|_| invalid("sync_scope", "设备范围保存中断，请核对原范围"))?
+}
+#[tauri::command]
+pub async fn config_sync_prepare(
+    scope: config_remote::Scope,
+    passphrase: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<config_remote::UploadView> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let password = passphrase.map(zeroize::Zeroizing::new);
+        remote_operation(&root, |transport, config, binding, unchanged| {
+            let scope = config_remote::save_scope(&root, scope)?;
+            tauri::async_runtime::block_on(config_remote::prepare(
+                &root,
+                transport,
+                config,
+                binding,
+                scope,
+                password.as_deref().map(|p| p.as_str()),
+                unchanged,
             ))
         })
     })
     .await
-    .map_err(|_| invalid("transfer_worker", "模型上传准备中断"))?
+    .map_err(|_| invalid("transfer_worker", "配置上传准备中断"))?
 }
 #[tauri::command]
-pub async fn model_remote_publish(
+pub async fn config_sync_publish(
     plan_id: String,
     data_root: tauri::State<'_, SharedDataRoot>,
-) -> ModelResult<UploadPlan> {
+) -> ModelResult<config_remote::UploadView> {
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         crate::modules::model_config::feedback::transfer(&root, &plan_id, false, || {
             remote_operation(&root, |transport, config, binding, unchanged| {
-                tauri::async_runtime::block_on(remote::publish(
+                tauri::async_runtime::block_on(config_remote::publish(
                     &root, transport, config, &plan_id, binding, unchanged,
                 ))
             })
         })
     })
     .await
-    .map_err(|_| {
-        invalid(
-            "transfer_worker",
-            "模型上传结果待核对，请使用原操作重新核对",
-        )
-    })?
+    .map_err(|_| invalid("transfer_worker", "配置上传结果待核对，请保留原计划"))?
 }
 #[tauri::command]
-pub async fn model_remote_download(
+pub async fn config_sync_download(
+    passphrase: Option<String>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<IncomingPlan> {
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
+        let password = passphrase.map(zeroize::Zeroizing::new);
         crate::modules::model_config::feedback::transfer(
             &root,
             &uuid::Uuid::new_v4().to_string(),
             true,
             || {
                 remote_operation(&root, |transport, config, _, unchanged| {
-                    tauri::async_runtime::block_on(remote::download(
-                        &root, transport, config, unchanged,
+                    tauri::async_runtime::block_on(config_remote::download(
+                        &root,
+                        transport,
+                        config,
+                        password.as_deref().map(|p| p.as_str()),
+                        unchanged,
                     ))
                 })
             },
         )
     })
     .await
-    .map_err(|_| invalid("transfer_worker", "模型下载中断，本机配置未采用"))?
+    .map_err(|_| invalid("transfer_worker", "统一配置下载中断，未采用"))?
+}
+#[tauri::command]
+pub async fn config_sync_latest_upload(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<config_remote::UploadView>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || config_remote::latest_upload(&root))
+        .await
+        .map_err(|_| invalid("transfer_worker", "原配置上传记录读取中断"))?
 }
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
