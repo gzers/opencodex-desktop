@@ -303,17 +303,68 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert!(order
         .iter()
         .any(|slug| slug.as_str() == Some(&format!("{mapped}/fixture-anthropic"))));
-    let stable_group=plan.protocol_groups[0].clone();
-    let mut hidden_policy=policy.clone();hidden_policy.channels[0].selection=ModelSelection::None;
-    let current=store.load().unwrap();let staged=store.stage_policy(&current.policy_digest,&current.workspace_digest,hidden_policy.clone()).unwrap();
-    let hidden_plan=runtime::prepare(&manager,&context,hidden_policy.clone(),staged.library_digest,staged.policy_digest,staged.workspace_digest).await.unwrap();
-    assert_eq!(hidden_plan.protocol_groups[0],stable_group);assert_eq!(hidden_plan.catalog_count,0);
-    let hidden=runtime::apply(&manager,&context,&hidden_plan.id).await.unwrap();assert_eq!(hidden.phase,"committed","hide result {:?}",hidden.error);
-    let hidden_snapshot=upstream::snapshot(&context).await.unwrap();assert_eq!(hidden_snapshot.catalog["models"].as_array().unwrap().len(),0);
-    let mut restored_policy=policy;restored_policy.channels[0].selection=ModelSelection::Whitelist(vec!["fixture-base".into()]);
-    let current=store.load().unwrap();let staged=store.stage_policy(&current.policy_digest,&current.workspace_digest,restored_policy.clone()).unwrap();
-    let restore_plan=runtime::prepare(&manager,&context,restored_policy,staged.library_digest,staged.policy_digest,staged.workspace_digest).await.unwrap();assert_eq!(restore_plan.protocol_groups[0],stable_group);assert_eq!(restore_plan.catalog_count,1);
-    let restored=runtime::apply(&manager,&context,&restore_plan.id).await.unwrap();assert_eq!(restored.phase,"committed","restore result {:?}",restored.error);
+    let stable_group = plan.protocol_groups[0].clone();
+    let mut hidden_policy = policy.clone();
+    hidden_policy.channels[0].selection = ModelSelection::None;
+    let current = store.load().unwrap();
+    let staged = store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            hidden_policy.clone(),
+        )
+        .unwrap();
+    let hidden_plan = runtime::prepare(
+        &manager,
+        &context,
+        hidden_policy.clone(),
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    assert_eq!(hidden_plan.protocol_groups[0], stable_group);
+    assert_eq!(hidden_plan.catalog_count, 0);
+    let hidden = runtime::apply(&manager, &context, &hidden_plan.id)
+        .await
+        .unwrap();
+    assert_eq!(hidden.phase, "committed", "hide result {:?}", hidden.error);
+    let hidden_snapshot = upstream::snapshot(&context).await.unwrap();
+    assert_eq!(
+        hidden_snapshot.catalog["models"].as_array().unwrap().len(),
+        0
+    );
+    let mut restored_policy = policy;
+    restored_policy.channels[0].selection = ModelSelection::Whitelist(vec!["fixture-base".into()]);
+    let current = store.load().unwrap();
+    let staged = store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            restored_policy.clone(),
+        )
+        .unwrap();
+    let restore_plan = runtime::prepare(
+        &manager,
+        &context,
+        restored_policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    assert_eq!(restore_plan.protocol_groups[0], stable_group);
+    assert_eq!(restore_plan.catalog_count, 1);
+    let restored = runtime::apply(&manager, &context, &restore_plan.id)
+        .await
+        .unwrap();
+    assert_eq!(
+        restored.phase, "committed",
+        "restore result {:?}",
+        restored.error
+    );
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),
         0,

@@ -989,11 +989,37 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
         // Clearing a whitelist must not briefly publish every model. Hide the
         // frozen known rows first; new discoveries remain off under the provider
         // policy, and every effect is journaled for exact compensation.
-        let none_channels=plan.execution_policy().channels.iter().filter(|c|matches!(c.selection,ModelSelection::None)).map(|c|c.connection.provider_id.clone()).collect::<BTreeSet<_>>();
-        let hidden=rows(&plan.before)?.iter().filter(|row|row["native"]!=true&&row["disabled"]!=true&&row["provider"].as_str().is_some_and(|provider|none_channels.contains(provider))).filter_map(|row|row["namespaced"].as_str().map(str::to_owned)).collect::<Vec<_>>();
-        if !hidden.is_empty(){
-            plan.phase="hiding_none_selection".into();save(root,&plan)?;
-            for slug in hidden {let receipt=upstream::write(&frozen,WriteOperation::DisableModel(&slug)).await?;if !receipt.success{return Err(invalid("visibility_write","隐藏当前模型结果待核对，未清空白名单"));}observe(root,&frozen,&mut plan).await?;}
+        let none_channels = plan
+            .execution_policy()
+            .channels
+            .iter()
+            .filter(|c| matches!(c.selection, ModelSelection::None))
+            .map(|c| c.connection.provider_id.clone())
+            .collect::<BTreeSet<_>>();
+        let hidden = rows(&plan.before)?
+            .iter()
+            .filter(|row| {
+                row["native"] != true
+                    && row["disabled"] != true
+                    && row["provider"]
+                        .as_str()
+                        .is_some_and(|provider| none_channels.contains(provider))
+            })
+            .filter_map(|row| row["namespaced"].as_str().map(str::to_owned))
+            .collect::<Vec<_>>();
+        if !hidden.is_empty() {
+            plan.phase = "hiding_none_selection".into();
+            save(root, &plan)?;
+            for slug in hidden {
+                let receipt = upstream::write(&frozen, WriteOperation::DisableModel(&slug)).await?;
+                if !receipt.success {
+                    return Err(invalid(
+                        "visibility_write",
+                        "隐藏当前模型结果待核对，未清空白名单",
+                    ));
+                }
+                observe(root, &frozen, &mut plan).await?;
+            }
         }
         let new_channels: Vec<_> = plan
             .execution_policy()
