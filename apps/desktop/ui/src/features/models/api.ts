@@ -58,6 +58,7 @@ export interface AgentSettings { providerId: string; modelId: string; reasoningE
 export interface ResearchSource { url: string; retrievedAt: string; text: string; links?: string[] }
 export interface Proposal { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
 export interface Submission { submissionId: string; contractVersion: number; proposals: Proposal[]; report: string | null }
+export interface PendingSuggestion {runId:string;createdAt:string;expectedLibrary:string;scene:ExternalScene;targets:{templateId:string;label:string;revision:Revision;buffer:TemplateDraft|null}[];result:Submission;reviewed:boolean}
 export interface OwnerTaskResult { task: { id: string; targets: { templateId: string; label: string }[]; requirements: string }; receipt: { submissionId: string; state: string; outcomes: {templateId:string;revisionId:string;changed:boolean}[]; report: string | null } | null }
 export interface UpstreamSnapshot { version: string; providers: unknown; models: unknown; order: unknown }
 export interface TemplateDraft { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
@@ -92,6 +93,8 @@ export const modelApi = {
   searchSources: (query: string) => invoke<ResearchSource[]>('model_research_search', { query }),
   generate: (runId: string, task: ExternalTaskRequest, sources: ResearchSource[]) => invoke<Submission>('model_agent_generate', { request: { runId, task, sources } }),
   stopGeneration: (runId: string) => invoke<void>('model_agent_stop', { runId }),
+  acceptAgentReview:(request:{runId:string;expectedLibrary:string;proposals:Proposal[]})=>invoke<{snapshot:ModelSnapshot;outcomes:{templateId:string;revisionId:string;changed:boolean}[]}>('model_agent_accept_review',{request}),
+  latestAgentResult:(templateId:string|null)=>invoke<PendingSuggestion|null>('model_agent_latest_result',{templateId}),
 }
 
 export function errorText(error: unknown): string {

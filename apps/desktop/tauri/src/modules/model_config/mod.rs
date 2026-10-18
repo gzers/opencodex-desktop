@@ -8,6 +8,7 @@ pub mod feedback;
 pub mod management;
 pub mod matching;
 pub mod measurements;
+mod operations;
 pub mod remote;
 pub mod runtime;
 pub mod schema;

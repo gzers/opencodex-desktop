@@ -535,6 +535,31 @@ impl ModelStore {
         requests: Vec<SaveTemplate>,
         submission: Option<(&str, &str)>,
     ) -> ModelResult<BatchCommit> {
+        self.save_with_origin(expected, requests, submission, None)
+    }
+    pub(super) fn save_internal_review(
+        &self,
+        expected: &str,
+        requests: Vec<SaveTemplate>,
+        operation: &str,
+        digest: &str,
+        run_id: &str,
+    ) -> ModelResult<BatchCommit> {
+        require_uuid(run_id)?;
+        self.save_with_origin(
+            expected,
+            requests,
+            Some((operation, digest)),
+            Some(SaveOrigin::InternalAgent(run_id.into())),
+        )
+    }
+    fn save_with_origin(
+        &self,
+        expected: &str,
+        requests: Vec<SaveTemplate>,
+        submission: Option<(&str, &str)>,
+        origin: Option<SaveOrigin>,
+    ) -> ModelResult<BatchCommit> {
         let _guard = self.lock()?;
         let (snapshot, _) = self.load_unlocked()?;
         if let Some((id, digest)) = submission {
@@ -584,8 +609,9 @@ impl ModelStore {
                         .find(|t| t.id == outcome.template_id)
                         .and_then(|t| t.revisions.iter_mut().find(|r| r.id == outcome.revision_id))
                     {
-                        revision.origin =
-                            SaveOrigin::ExternalTask(id.split('/').next().unwrap_or(id).into());
+                        revision.origin = origin.clone().unwrap_or_else(|| {
+                            SaveOrigin::ExternalTask(id.split('/').next().unwrap_or(id).into())
+                        });
                     }
                 }
             }

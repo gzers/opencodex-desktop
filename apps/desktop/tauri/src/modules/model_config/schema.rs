@@ -353,6 +353,7 @@ pub enum SaveOrigin {
     Manual,
     Builtin,
     ExternalTask(String),
+    InternalAgent(String),
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]

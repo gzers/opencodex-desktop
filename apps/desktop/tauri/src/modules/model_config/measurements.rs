@@ -2,12 +2,8 @@
 //! credential persistence, automatic switching or retry is performed.
 use super::{discovery, schema::*};
 use serde::{Deserialize, Serialize};
-use std::{
-    collections::{BTreeMap, BTreeSet},
-    sync::{Mutex, OnceLock},
-};
-use tokio::sync::watch;
-static RUNS: OnceLock<Mutex<BTreeMap<String, watch::Sender<bool>>>> = OnceLock::new();
+use std::{collections::BTreeSet, sync::OnceLock};
+static RUNS: OnceLock<super::operations::Registry> = OnceLock::new();
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Request {
@@ -33,24 +29,8 @@ pub struct ResultSet {
     pub stopped: bool,
     pub results: Vec<Measurement>,
 }
-struct Run(String);
-impl Drop for Run {
-    fn drop(&mut self) {
-        if let Ok(mut runs) = RUNS.get_or_init(Default::default).lock() {
-            runs.remove(&self.0);
-        }
-    }
-}
 pub fn stop(id: &str) -> ModelResult<()> {
-    require_uuid(id)?;
-    let runs = RUNS
-        .get_or_init(Default::default)
-        .lock()
-        .map_err(|_| invalid("node_run", "检测状态不可用"))?;
-    if let Some(sender) = runs.get(id) {
-        let _ = sender.send(true);
-    }
-    Ok(())
+    RUNS.get_or_init(Default::default).stop(id)
 }
 pub async fn measure(mut request: Request) -> ModelResult<ResultSet> {
     require_uuid(&request.run_id)?;
@@ -64,18 +44,7 @@ pub async fn measure(mut request: Request) -> ModelResult<ResultSet> {
             return Err(invalid("node_scope", "检测节点身份重复"));
         }
     }
-    let (sender, mut cancel) = watch::channel(false);
-    {
-        let mut runs = RUNS
-            .get_or_init(Default::default)
-            .lock()
-            .map_err(|_| invalid("node_run", "检测状态不可用"))?;
-        if runs.contains_key(&request.run_id) {
-            return Err(invalid("node_run", "该检测已在运行"));
-        }
-        runs.insert(request.run_id.clone(), sender);
-    }
-    let _run = Run(request.run_id.clone());
+    let (mut cancel, _run) = RUNS.get_or_init(Default::default).start(&request.run_id)?;
     let key = request.api_key.take().map(zeroize::Zeroizing::new);
     let mut results = vec![];
     let mut stopped = false;
@@ -187,7 +156,6 @@ mod tests {
             .iter()
             .all(|r| r.model_count == Some(1) && r.error.is_none()));
         assert_eq!(calls.load(Ordering::SeqCst), 2);
-        assert!(!RUNS.get().unwrap().lock().unwrap().contains_key(&run_id));
         server.abort();
     }
     #[tokio::test]

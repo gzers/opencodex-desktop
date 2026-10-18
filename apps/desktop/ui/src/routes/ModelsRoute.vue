@@ -9,6 +9,7 @@ import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import ChannelsView from '@/features/models/ChannelsView.vue'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
 import AgentPanel from '@/features/models/AgentPanel.vue'
+import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
 import { useModelsStore } from '@/features/models/store'
 import { emptyRules, errorText, modelApi, versionLabel, type MatchPreview, type Pattern, type Revision, type Template, type OwnerTaskResult } from '@/features/models/api'
 import { useModalStore } from '@/app/modal/store'
@@ -27,6 +28,7 @@ onBeforeUnmount(() => headerObserver?.disconnect())
 const tab = ref<'channels' | 'templates'>('channels')
 watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
 const agentOpen = ref(false)
+const batchOpen=ref(false)
 const externalOpen = ref(false)
 const receiptOpen = ref(false)
 const receiptResult = ref<OwnerTaskResult | null>(null)
@@ -130,7 +132,7 @@ function prepareDelete() {
     <div v-if="!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
     <ChannelsView v-else-if="tab === 'channels'" actions-target="#model-tabs-actions" />
     <template v-else-if="!draft">
-      <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
+      <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
       <div class="model-table-scroll"><table class="model-table"><thead><tr><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
         <td><label class="model-inline"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="`勾选${t.label}`" /><strong>{{ t.label }}</strong></label><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
         <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" @update:model-value="models.selected[t.id] = $event" /></td>
@@ -163,6 +165,7 @@ function prepareDelete() {
     <AgentPanel v-if="models.snapshot && models.draft" :key="models.draftSession" v-show="agentOpen" :draft="models.draft" :snapshot="models.snapshot" @close="agentOpen = false" @apply="models.draft = $event" />
     <UiDialog :open="receiptOpen" title="外部任务结果" @close="receiptOpen = false"><p v-if="receiptError" class="model-error" role="alert">{{ receiptError }}</p><template v-if="receiptResult"><p>目标：{{ receiptResult.task.targets.map(t => t.label).join('、') || '新建模版' }}</p><p>状态：{{ !receiptResult.receipt ? '结果待核对' : ({saved:'已保存',unchanged:'无内容变化',report:'检查报告',rejected:'提交被拒绝，未保存'}[receiptResult.receipt.state] ?? '待核对') }}</p><p v-if="receiptResult.receipt?.report" class="model-task-report">{{ receiptResult.receipt.report }}</p><p v-for="outcome in receiptResult.receipt?.outcomes ?? []" :key="outcome.revisionId">保存版本 · {{ outcome.revisionId }}</p></template></UiDialog>
     <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="models.draft" :dirty="models.dirty" :selected="selectedTemplates" @close="externalOpen = false" />
+    <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="selectedTemplates" :versions="models.selected" @close="batchOpen=false" />
   </section>
 </template>
 <style>

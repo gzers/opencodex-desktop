@@ -554,6 +554,8 @@ pub fn run() {
             commands::model_config::model_research_search,
             commands::model_config::model_agent_generate,
             commands::model_config::model_agent_stop,
+            commands::model_config::model_agent_accept_review,
+            commands::model_config::model_agent_latest_result,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,

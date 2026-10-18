@@ -338,7 +338,12 @@ impl Tasks {
         self.context(id, token)?;
         Ok(contract_definition())
     }
-    fn validate(&self, task: &Task, submission: &Submission) -> ModelResult<()> {
+    fn validate(
+        &self,
+        task: &Task,
+        submission: &Submission,
+        require_current: bool,
+    ) -> ModelResult<()> {
         require_uuid(&submission.submission_id)?;
         if submission.contract_version != 1 {
             return Err(invalid("contract_version", "任务契约版本不受支持"));
@@ -396,8 +401,9 @@ impl Tasks {
                 return Err(invalid("task_scope", "任务未授权新增或新建基准非法"));
             }
         }
-        let snapshot = ModelStore::new(&self.root).load()?;
-        if snapshot.library_digest != task.expected_library {
+        if require_current
+            && ModelStore::new(&self.root).load()?.library_digest != task.expected_library
+        {
             return Err(invalid(
                 "stale_baseline",
                 "任务基准已变化，请保留结果并重新比较",
@@ -407,11 +413,19 @@ impl Tasks {
     }
     pub fn validate_prepared(&self, task: &Task, submission: &Submission) -> ModelResult<()> {
         Self::active(task)?;
-        self.validate(task, submission)
+        self.validate(task, submission, true)
+    }
+    pub(super) fn validate_generated(
+        &self,
+        task: &Task,
+        submission: &Submission,
+    ) -> ModelResult<()> {
+        Self::active(task)?;
+        self.validate(task, submission, false)
     }
     pub fn preflight(&self, id: &str, token: &str, submission: &Submission) -> ModelResult<Value> {
         let task = self.context(id, token)?;
-        self.validate(&task, submission)?;
+        self.validate(&task, submission, true)?;
         Ok(
             json!({"valid":true,"writes":task.scene != Scene::CheckOnly,"targets":submission.proposals.len(),"saved":false}),
         )
@@ -514,7 +528,7 @@ impl Tasks {
             }
             return Ok(receipt);
         }
-        if let Err(error) = self.validate(&task, &submission) {
+        if let Err(error) = self.validate(&task, &submission, true) {
             let rejected = Receipt {
                 submission_id: submission.submission_id.clone(),
                 digest,

@@ -238,6 +238,7 @@ pub async fn model_node_measure(
     let result = crate::modules::model_config::measurements::measure(request).await;
     let phase = match &result {
         Ok(value) if value.stopped => OperationPhase::Stopped,
+        Err(error) if error.code=="operation_stopped" => OperationPhase::Stopped,
         Ok(value) if value.results.iter().all(|r| r.error.is_none()) => OperationPhase::Succeeded,
         _ => OperationPhase::Failed,
     };
@@ -247,6 +248,41 @@ pub async fn model_node_measure(
 #[tauri::command]
 pub fn model_node_measure_stop(run_id: String) -> ModelResult<()> {
     crate::modules::model_config::measurements::stop(&run_id)
+}
+#[tauri::command]
+pub async fn model_agent_accept_review(
+    request: crate::modules::model_config::agent::ReviewRequest,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<BatchCommit> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let result = crate::modules::model_config::agent::accept_review(&root, request)?;
+        crate::modules::model_config::broker::announce(&root);
+        Ok(result)
+    })
+    .await
+    .map_err(|_| {
+        invalid(
+            "agent_review_worker",
+            "建议保存结果待核对，请保留原确认身份",
+        )
+    })?
+}
+#[tauri::command]
+pub async fn model_agent_latest_result(
+    template_id: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<crate::modules::model_config::agent::PendingSuggestion>> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::agent::latest_result(&root, template_id.as_deref())
+    })
+    .await
+    .map_err(|_| invalid("agent_result_worker", "上次建议读取中断"))?
 }
 #[tauri::command]
 pub async fn model_external_task(
@@ -378,7 +414,7 @@ pub async fn model_agent_generate(
         OperationKind::Generation,
         match &result {
             Ok(_) => OperationPhase::Review,
-            Err(error) if error.code == "agent_stopped" => OperationPhase::Stopped,
+            Err(error) if ["agent_stopped","operation_stopped"].contains(&error.code.as_str()) => OperationPhase::Stopped,
             Err(_) => OperationPhase::Failed,
         },
     );

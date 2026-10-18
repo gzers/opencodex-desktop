@@ -2,7 +2,7 @@
 //! source research and generation require explicit user commands, never a timer.
 use super::{
     schema::*,
-    tasks::{CreateTask, Submission, Tasks},
+    tasks::{CreateTask, Proposal, Scene, Submission, Task, Tasks},
     upstream,
 };
 use crate::{
@@ -14,13 +14,7 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use std::{
-    collections::BTreeMap,
-    path::Path,
-    sync::{Mutex, OnceLock},
-    time::Duration,
-};
-use tokio::sync::watch;
+use std::{path::Path, sync::OnceLock, time::Duration};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -96,6 +90,197 @@ pub struct ResearchSource {
     pub text: String,
     #[serde(default)]
     pub links: Vec<String>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct GeneratedRecord {
+    run_id: String,
+    created_at: String,
+    task: Task,
+    result: Submission,
+}
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PendingSuggestion {
+    pub run_id: String,
+    pub created_at: String,
+    pub expected_library: String,
+    pub targets: Vec<super::tasks::Target>,
+    pub scene: Scene,
+    pub result: Submission,
+    pub reviewed: bool,
+}
+fn latest_path(root: &Path, template: Option<&str>) -> ModelResult<std::path::PathBuf> {
+    if let Some(id) = template {
+        require_uuid(id)?;
+    }
+    let path = root
+        .join("manager-state/model-agent-latest")
+        .join(format!("{}.json", template.unwrap_or("latest")));
+    safety::check_path(root, &path, true)?;
+    Ok(path)
+}
+pub fn latest_result(
+    root: &Path,
+    template: Option<&str>,
+) -> ModelResult<Option<PendingSuggestion>> {
+    let index = latest_path(root, template)?;
+    if !index.exists() {
+        return Ok(None);
+    }
+    let id: String = serde_json::from_slice(&safety::read_file(&index, 1024)?)?;
+    let record: GeneratedRecord = serde_json::from_slice(&safety::read_file(
+        &result_path(root, &id)?,
+        16 * 1024 * 1024,
+    )?)?;
+    if record.run_id != id
+        || record.result.submission_id != id
+        || template.is_some_and(|id| !record.task.targets.iter().any(|t| t.template_id == id))
+    {
+        return Err(invalid("agent_result_identity", "上次建议的目标身份不一致"));
+    }
+    let reviewed = super::ModelStore::new(root)
+        .load()?
+        .library
+        .submission_receipts
+        .contains_key(&format!("internal/{}", record.run_id));
+    Ok(Some(PendingSuggestion {
+        run_id: record.run_id,
+        created_at: record.created_at,
+        expected_library: record.task.expected_library,
+        targets: record.task.targets,
+        scene: record.task.scene,
+        result: record.result,
+        reviewed,
+    }))
+}
+#[derive(Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ReviewRequest {
+    pub run_id: String,
+    pub expected_library: String,
+    pub proposals: Vec<Proposal>,
+}
+fn result_path(root: &Path, id: &str) -> ModelResult<std::path::PathBuf> {
+    require_uuid(id)?;
+    let path = root
+        .join("manager-state/model-agent-results")
+        .join(format!("{id}.json"));
+    safety::check_path(root, &path, true)?;
+    Ok(path)
+}
+fn persist_result(root: &Path, run_id: &str, task: Task, result: Submission) -> ModelResult<()> {
+    let path = result_path(root, run_id)?;
+    let targets = task
+        .targets
+        .iter()
+        .map(|t| t.template_id.clone())
+        .collect::<Vec<_>>();
+    let bytes = serde_json::to_vec(&GeneratedRecord {
+        run_id: run_id.into(),
+        created_at: chrono::Utc::now().to_rfc3339(),
+        task,
+        result,
+    })?;
+    if bytes.len() > 16 * 1024 * 1024 {
+        return Err(invalid(
+            "agent_result_limit",
+            "制模结果记录超过上限，未保存建议",
+        ));
+    }
+    if path.exists() {
+        return Err(invalid("agent_run", "该执行身份已有结果，请先核对原建议"));
+    }
+    crate::infrastructure::atomic_write::atomic_write(&path, &bytes, 0o600)?;
+    for target in std::iter::once(None).chain(targets.iter().map(|id| Some(id.as_str()))) {
+        if let Err(_error) = latest_path(root, target).and_then(|path| {
+            crate::infrastructure::atomic_write::atomic_write(
+                &path,
+                &serde_json::to_vec(run_id)?,
+                0o600,
+            )?;
+            Ok(())
+        }) {
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(root).append_event(
+                "model suggestion latest index update failed; generated record retained",
+            );
+        }
+    }
+    Ok(())
+}
+pub fn accept_review(root: &Path, request: ReviewRequest) -> ModelResult<BatchCommit> {
+    let record: GeneratedRecord = serde_json::from_slice(&safety::read_file(
+        &result_path(root, &request.run_id)?,
+        16 * 1024 * 1024,
+    )?)?;
+    if record.run_id != request.run_id || record.result.submission_id != request.run_id {
+        return Err(invalid("agent_result_identity", "内部建议的完整身份不一致"));
+    }
+    if record.task.scene == Scene::CheckOnly {
+        return Err(invalid("read_only_task", "只检查结果不能保存任何模版版本"));
+    }
+    if request.expected_library != record.task.expected_library {
+        return Err(invalid(
+            "stale_baseline",
+            "确认基准不是原建议基准，未另存版本",
+        ));
+    }
+    let submission = Submission {
+        submission_id: request.run_id.clone(),
+        contract_version: record.result.contract_version,
+        proposals: request.proposals,
+        report: None,
+    };
+    let operation = format!("internal/{}", request.run_id);
+    let digest = super::store::sha256(&serde_json::to_vec(&submission)?);
+    let saves = submission
+        .proposals
+        .into_iter()
+        .map(|proposal| SaveTemplate {
+            expected_library: request.expected_library.clone(),
+            template_id: proposal.template_id,
+            base_revision: proposal.base_revision,
+            label: proposal.label,
+            content: proposal.content,
+        })
+        .collect();
+    let store = super::ModelStore::new(root);
+    if store
+        .load()?
+        .library
+        .submission_receipts
+        .contains_key(&operation)
+    {
+        return store.save_internal_review(
+            &request.expected_library,
+            saves,
+            &operation,
+            &digest,
+            &request.run_id,
+        );
+    }
+    let verified = Submission {
+        submission_id: request.run_id.clone(),
+        contract_version: record.result.contract_version,
+        proposals: saves
+            .iter()
+            .map(|request: &SaveTemplate| Proposal {
+                template_id: request.template_id.clone(),
+                base_revision: request.base_revision.clone(),
+                label: request.label.clone(),
+                content: request.content.clone(),
+            })
+            .collect(),
+        report: None,
+    };
+    Tasks::new(root).validate_prepared(&record.task, &verified)?;
+    store.save_internal_review(
+        &request.expected_library,
+        saves,
+        &operation,
+        &digest,
+        &request.run_id,
+    )
 }
 pub async fn research(urls: Vec<String>) -> ModelResult<Vec<ResearchSource>> {
     if urls.is_empty() || urls.len() > 5 {
@@ -311,24 +496,9 @@ fn plain_text(html: &str) -> String {
     result.split_whitespace().collect::<Vec<_>>().join(" ")
 }
 
-type Runs = Mutex<BTreeMap<String, watch::Sender<bool>>>;
-static RUNS: OnceLock<Runs> = OnceLock::new();
-struct ActiveRun(String);
-impl Drop for ActiveRun {
-    fn drop(&mut self) {
-        if let Ok(mut runs) = RUNS.get_or_init(Default::default).lock() {
-            runs.remove(&self.0);
-        }
-    }
-}
+static RUNS: OnceLock<super::operations::Registry> = OnceLock::new();
 pub fn stop(id: &str) -> ModelResult<()> {
-    require_uuid(id)?;
-    if let Ok(runs) = RUNS.get_or_init(Default::default).lock() {
-        if let Some(cancel) = runs.get(id) {
-            let _ = cancel.send(true);
-        }
-    }
-    Ok(())
+    RUNS.get_or_init(Default::default).stop(id)
 }
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -343,18 +513,10 @@ pub async fn generate(
     request: GenerateRequest,
 ) -> ModelResult<Submission> {
     require_uuid(&request.run_id)?;
-    let (sender, mut cancel) = watch::channel(false);
-    {
-        let mut runs = RUNS
-            .get_or_init(Default::default)
-            .lock()
-            .map_err(|_| invalid("agent_run", "执行状态不可用"))?;
-        if runs.contains_key(&request.run_id) {
-            return Err(invalid("agent_run", "同一执行身份已在运行"));
-        }
-        runs.insert(request.run_id.clone(), sender);
+    if result_path(root, &request.run_id)?.exists() {
+        return Err(invalid("agent_run", "该执行身份已有结果，请先核对原建议"));
     }
-    let _run = ActiveRun(request.run_id.clone());
+    let (mut cancel, _run) = RUNS.get_or_init(Default::default).start(&request.run_id)?;
 
     let settings = settings(root)?.ok_or_else(|| invalid("agent_settings", "请先配置执行模型"))?;
     if settings.provider_id.to_ascii_lowercase().contains("a6api") {
@@ -463,7 +625,8 @@ pub async fn generate(
         .map_err(|_| invalid("agent_result", "生成结果未通过结构校验；原人工内容保留"))?;
         result.submission_id = request.run_id.clone();
         management.verify_binding()?;
-        Tasks::new(root).validate_prepared(&grant.task, &result)?;
+        Tasks::new(root).validate_generated(&grant.task, &result)?;
+        persist_result(root, &request.run_id, grant.task.clone(), result.clone())?;
         Ok(result)
     };
     tokio::select! { result = execution => result, _ = cancel.changed() => Err(invalid("agent_stopped", "已停止等待；迟到结果不会保存")) }
@@ -472,6 +635,143 @@ pub async fn generate(
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn reviewed_fixture(root: &Path, scene: Scene) -> (ReviewRequest, super::super::Snapshot) {
+        let snapshot = super::super::ModelStore::new(root).load().unwrap();
+        let targets = snapshot
+            .library
+            .templates
+            .iter()
+            .take(2)
+            .map(|t| TemplateRef {
+                template_id: t.id.clone(),
+                revision_id: t.revisions[0].id.clone(),
+            })
+            .collect();
+        let grant = Tasks::new(root)
+            .prepare(CreateTask {
+                scene,
+                targets,
+                allow_new: false,
+                requirements: "测试批量建议".into(),
+                expected_library: Some(snapshot.library_digest.clone()),
+                buffers: vec![],
+            })
+            .unwrap();
+        let proposals = grant
+            .task
+            .targets
+            .iter()
+            .map(|target| {
+                let mut content = target.revision.content.clone();
+                content.description = "经比较的内部建议".into();
+                Proposal {
+                    template_id: Some(target.template_id.clone()),
+                    base_revision: Some(target.revision.id.clone()),
+                    label: target.label.clone(),
+                    content,
+                }
+            })
+            .collect::<Vec<_>>();
+        let run_id = uuid::Uuid::new_v4().to_string();
+        persist_result(
+            root,
+            &run_id,
+            grant.task,
+            Submission {
+                submission_id: run_id.clone(),
+                contract_version: 1,
+                proposals: proposals.clone(),
+                report: None,
+            },
+        )
+        .unwrap();
+        (
+            ReviewRequest {
+                run_id,
+                expected_library: snapshot.library_digest.clone(),
+                proposals,
+            },
+            snapshot,
+        )
+    }
+    #[test]
+    fn reviewed_internal_batch_is_atomic_provenance_bound_and_idempotent_after_reloading() {
+        let root = tempfile::tempdir().unwrap();
+        let (request, before) = reviewed_fixture(root.path(), Scene::UpdateModels);
+        let pending = latest_result(root.path(), request.proposals[0].template_id.as_deref())
+            .unwrap()
+            .unwrap();
+        assert_eq!(pending.run_id, request.run_id);
+        assert!(!pending.reviewed);
+        let result = accept_review(root.path(), request.clone()).unwrap();
+        assert!(latest_result(root.path(), None).unwrap().unwrap().reviewed);
+        assert_eq!(result.outcomes.len(), 2);
+        for (index, outcome) in result.outcomes.iter().enumerate() {
+            let family = result
+                .snapshot
+                .library
+                .templates
+                .iter()
+                .find(|t| t.id == outcome.template_id)
+                .unwrap();
+            assert_eq!(
+                family.revisions[0],
+                before.library.templates[index].revisions[0]
+            );
+            assert_eq!(family.revisions.len(), 2);
+            assert_eq!(
+                family.revisions[1].origin,
+                SaveOrigin::InternalAgent(request.run_id.clone())
+            );
+            assert_eq!(
+                family.default_revision,
+                before.library.templates[index].default_revision
+            );
+        }
+        assert_eq!(result.snapshot.policy, before.policy);
+        let again = accept_review(root.path(), request.clone()).unwrap();
+        assert_eq!(again.outcomes, result.outcomes);
+        assert_eq!(again.snapshot, result.snapshot);
+        let mut changed = request;
+        changed.proposals[0].label = "不同的复用提交".into();
+        assert_eq!(
+            accept_review(root.path(), changed).unwrap_err().code,
+            "submission_conflict"
+        );
+    }
+    #[test]
+    fn a_stale_internal_batch_or_check_only_record_never_partially_saves() {
+        let root = tempfile::tempdir().unwrap();
+        let (request, before) = reviewed_fixture(root.path(), Scene::UpdateModels);
+        let store = super::super::ModelStore::new(root.path());
+        let first = &before.library.templates[0];
+        let mut content = first.revisions[0].content.clone();
+        content.description = "后来人工保存".into();
+        let saved = store
+            .save(SaveTemplate {
+                expected_library: before.library_digest,
+                template_id: Some(first.id.clone()),
+                base_revision: Some(first.revisions[0].id.clone()),
+                label: first.label.clone(),
+                content,
+            })
+            .unwrap();
+        assert_eq!(
+            accept_review(root.path(), request).unwrap_err().code,
+            "stale_baseline"
+        );
+        assert_eq!(store.load().unwrap(), saved.snapshot);
+        let other = tempfile::tempdir().unwrap();
+        let (request, before) = reviewed_fixture(other.path(), Scene::CheckOnly);
+        assert_eq!(
+            accept_review(other.path(), request).unwrap_err().code,
+            "read_only_task"
+        );
+        assert_eq!(
+            super::super::ModelStore::new(other.path()).load().unwrap(),
+            before
+        );
+    }
     #[test]
     fn execution_preferences_stay_local_and_portable_preferences_never_replace_them() {
         let root = tempfile::tempdir().unwrap();
