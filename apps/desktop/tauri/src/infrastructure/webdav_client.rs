@@ -193,6 +193,16 @@ pub trait WebDavTransport: Send + Sync {
         path: &str,
         body: Option<Vec<u8>>,
     ) -> Result<WebDavResponse, WebDavError>;
+    /// Conditional publication is opt-in. Never silently downgrade to PUT.
+    async fn put_conditional(
+        &self,
+        _config: &WebDavConfig,
+        _path: &str,
+        _body: Vec<u8>,
+        _expected_etag: Option<&str>,
+    ) -> Result<WebDavResponse, WebDavError> {
+        Err(WebDavError::Protocol)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -219,6 +229,7 @@ impl ReqwestWebDavTransport {
             client: Client::builder()
                 .connect_timeout(connect_timeout())
                 .timeout(item_timeout())
+                .redirect(reqwest::redirect::Policy::none())
                 .build()
                 .expect("WebDAV client should use frozen timeouts"),
         }
@@ -239,6 +250,34 @@ impl WebDavTransport for ReqwestWebDavTransport {
         method: WebDavMethod,
         path: &str,
         body: Option<Vec<u8>>,
+    ) -> Result<WebDavResponse, WebDavError> {
+        self.request_impl(config, method, path, body, None).await
+    }
+    async fn put_conditional(
+        &self,
+        config: &WebDavConfig,
+        path: &str,
+        body: Vec<u8>,
+        expected_etag: Option<&str>,
+    ) -> Result<WebDavResponse, WebDavError> {
+        self.request_impl(
+            config,
+            WebDavMethod::Put,
+            path,
+            Some(body),
+            Some(expected_etag),
+        )
+        .await
+    }
+}
+impl ReqwestWebDavTransport {
+    async fn request_impl(
+        &self,
+        config: &WebDavConfig,
+        method: WebDavMethod,
+        path: &str,
+        body: Option<Vec<u8>>,
+        condition: Option<Option<&str>>,
     ) -> Result<WebDavResponse, WebDavError> {
         let remote = normalize_remote_path(&config.remote_path)?;
         let base = trim_base_url(&config.base_url)?;
@@ -265,24 +304,42 @@ impl WebDavTransport for ReqwestWebDavTransport {
                 }
             }
         };
-        let response = request
+        let request = match condition {
+            Some(Some(etag)) if !etag.starts_with('"') || !etag.ends_with('"') => {
+                return Err(WebDavError::Protocol)
+            }
+            Some(Some(etag)) => request.header(reqwest::header::IF_MATCH, etag),
+            Some(None) => request.header(reqwest::header::IF_NONE_MATCH, "*"),
+            None => request,
+        };
+        let mut response = request
             .basic_auth(config.username.trim(), Some(&config.password))
             .send()
             .await
             .map_err(|error| map_request_error(&error, WebDavOperation::Probe))?;
         let status = response.status();
+        if !(status.is_success() || condition.is_some() && status.as_u16() == 412) {
+            return Err(map_status(status));
+        }
         let etag = response
             .headers()
             .get("etag")
             .and_then(|value| value.to_str().ok())
             .map(|value| value.to_string());
-        let payload = response
-            .bytes()
+        let limit = crate::modules::sync::PAYLOAD_MAX_BYTES;
+        if response.content_length().is_some_and(|len| len > limit) {
+            return Err(WebDavError::Protocol);
+        }
+        let mut payload = Vec::new();
+        while let Some(chunk) = response
+            .chunk()
             .await
             .map_err(|error| map_request_error(&error, WebDavOperation::Probe))?
-            .to_vec();
-        if !status.is_success() {
-            return Err(map_status(status));
+        {
+            if payload.len() as u64 + chunk.len() as u64 > limit {
+                return Err(WebDavError::Protocol);
+            }
+            payload.extend_from_slice(&chunk);
         }
         Ok(WebDavResponse {
             status: status.as_u16(),

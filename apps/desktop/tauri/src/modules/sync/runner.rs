@@ -202,7 +202,8 @@ pub(crate) async fn run_sync_observed(
     )? {
         local_payloads.push((
             crate::modules::preferences::PREFERENCES_RELATIVE_PATH.to_string(),
-            preference_payload,
+            crate::modules::preferences::strip_model_agent(&preference_payload)
+                .map_err(|_| SyncRunFailure::NotConfigured)?,
         ));
     }
     if let Some(extension_payload) = read_optional_file(
@@ -354,7 +355,24 @@ async fn run_prepared_sync<T: WebDavTransport>(
             if !payload_is_json(payload) {
                 return Err(SyncRunFailure::NotConfigured);
             }
-            let migrated = migrate_incoming_preferences(name, payload)?;
+            let mut migrated = migrate_incoming_preferences(name, payload)?;
+            if name == crate::modules::preferences::PREFERENCES_RELATIVE_PATH {
+                let bytes = migrated.as_deref().unwrap_or(payload);
+                let mut document: serde_json::Value =
+                    serde_json::from_slice(bytes).map_err(|_| SyncRunFailure::NotConfigured)?;
+                let before = document.clone();
+                crate::modules::preferences::preserve_model_agent(
+                    &data_root.join(name),
+                    &mut document,
+                )
+                .map_err(|_| SyncRunFailure::NotConfigured)?;
+                if before != document {
+                    migrated = Some(
+                        serde_json::to_vec_pretty(&document)
+                            .map_err(|_| SyncRunFailure::NotConfigured)?,
+                    );
+                }
+            }
             let write_bytes = migrated.clone().unwrap_or_else(|| payload.clone());
             staged.push((
                 target_path(data_root, name)?,

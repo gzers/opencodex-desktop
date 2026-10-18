@@ -236,7 +236,7 @@ fn publish_endpoint_result(
     crate::commands::event_delivery::publish(app, root, &event, identity, Trigger::User);
 }
 
-fn webdav_config(config: &SyncEndpointConfig) -> AppResult<WebDavConfig> {
+pub(crate) fn webdav_config(config: &SyncEndpointConfig) -> AppResult<WebDavConfig> {
     let password = keychain::load_webdav_password(&config.credential_ref.ref_id)?;
     Ok(WebDavConfig {
         base_url: config.url.clone(),

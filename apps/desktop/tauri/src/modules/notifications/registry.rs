@@ -28,6 +28,7 @@ pub enum Trigger {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Job {
+    ModelConfig,
     Start,
     Stop,
     Restart,
@@ -183,6 +184,7 @@ pub enum Fact {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum PolicyId {
+    ModelExternalFailure,
     StartFailure,
     StopFailure,
     RestartFailure,
@@ -569,6 +571,14 @@ pub struct EmissionSite {
 
 #[derive(Debug, Deserialize)]
 enum SupportedEvent {
+    #[serde(rename = "model-config-changed")]
+    ModelConfigChanged,
+    #[serde(rename = "model-operation-progress")]
+    ModelOperationProgress,
+    #[serde(rename = "model-template-external-failed")]
+    ModelTemplateExternalFailed,
+    #[serde(rename = "model-template-external-succeeded")]
+    ModelTemplateExternalSucceeded,
     #[serde(rename = "extension-config-save-failed")]
     ExtensionConfigSaveFailed,
     #[serde(rename = "extension-config-save-succeeded")]

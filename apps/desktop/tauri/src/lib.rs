@@ -89,6 +89,8 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(move |app| {
+            crate::modules::model_config::feedback::configure(app.handle().clone());
+            crate::modules::model_config::broker::configure(app.handle().clone());
             use tauri::Manager;
             #[cfg(windows)]
             if let Some(smoke) = smoke_window {
@@ -361,6 +363,7 @@ pub fn run() {
                 working_directory: home.clone(),
                 opencodex_home,
             });
+            crate::modules::model_config::broker::resume(data_root.clone());
 
             app.manage(crate::infrastructure::app_activity::AppActivity::default());
             app.manage(crate::commands::panel::PanelLifetime::default());
@@ -518,11 +521,36 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::model_transfer::model_transfer_export,
+            commands::model_transfer::model_transfer_prepare,
+            commands::model_transfer::model_transfer_receive,
+            commands::model_transfer::model_transfer_accept,
+            commands::model_transfer::model_remote_prepare,
+            commands::model_transfer::model_remote_publish,
+            commands::model_transfer::model_remote_download,
             commands::model_config::model_config_snapshot,
             commands::model_config::model_template_save,
             commands::model_config::model_template_set_default,
             commands::model_config::model_template_delete,
             commands::model_config::model_match_preview,
+            commands::model_config::model_policy_preview,
+            commands::model_config::model_policy_stage,
+            commands::model_config::model_policy_prepare,
+            commands::model_config::model_policy_apply,
+            commands::model_config::model_policy_result,
+            commands::model_config::model_policy_compensate,
+            commands::model_config::model_upstream_snapshot,
+            commands::model_config::model_channel_discover,
+            commands::model_config::model_channel_forget_credential,
+            commands::model_config::model_external_task,
+            commands::model_config::model_external_activate,
+            commands::model_config::model_external_result,
+            commands::model_config::model_agent_preferences,
+            commands::model_config::model_agent_preferences_save,
+            commands::model_config::model_research_sources,
+            commands::model_config::model_research_search,
+            commands::model_config::model_agent_generate,
+            commands::model_config::model_agent_stop,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,

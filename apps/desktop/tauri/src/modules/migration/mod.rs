@@ -754,7 +754,12 @@ fn import_preferences(
     crate::modules::preferences::validate(&preferences)
         .map_err(|_| MigrationError::CorruptedDocument)?;
     // C 阶段：导入落盘为分域结构（与偏好存储一致），而不是写回 legacy 扁平文件。
-    let document = crate::modules::preferences::document_from_preferences(&preferences);
+    let mut document = crate::modules::preferences::document_from_preferences(&preferences);
+    crate::modules::preferences::preserve_model_agent(
+        &data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
+        &mut document,
+    )
+    .map_err(|_| MigrationError::Preferences)?;
     Ok(AppliedSection {
         changed_paths: vec![data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)],
         document: serde_json::to_vec_pretty(&document).map_err(|_| MigrationError::Preferences)?,

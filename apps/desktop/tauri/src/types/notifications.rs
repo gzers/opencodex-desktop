@@ -39,6 +39,10 @@ pub struct NotificationDto {
     pub resolved_at: Option<String>,
     pub expires_at: Option<String>,
     pub operation_id: Option<String>,
+    #[serde(default)]
+    pub object_id: Option<String>,
+    #[serde(default)]
+    pub candidate_id: Option<String>,
     pub dedupe_key: Option<String>,
     pub occurrence_count: u32,
     pub last_observed_at: Option<String>,
@@ -61,6 +65,14 @@ impl NotificationDto {
             resolved_at: value.resolved_at.clone(),
             expires_at: value.expires_at.clone(),
             operation_id: value.operation_id.clone(),
+            object_id: value
+                .event_identity
+                .as_ref()
+                .map(|id| String::from(id.object_id.clone())),
+            candidate_id: value
+                .event_identity
+                .as_ref()
+                .map(|id| String::from(id.candidate.clone())),
             dedupe_key: value.dedupe_key.clone(),
             occurrence_count: value.occurrence_count,
             last_observed_at: value.last_observed_at.clone(),

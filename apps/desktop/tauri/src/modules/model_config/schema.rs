@@ -1,11 +1,13 @@
+use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub const SCHEMA_VERSION: u32 = 1;
 pub const LIBRARY_PATH: &str = "manager-state/model-family-templates.json";
 pub const POLICY_PATH: &str = "manager-state/model-policy.json";
+pub const DRAFT_PATH: &str = "manager-state/model-config-draft.json";
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, thiserror::Error)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, thiserror::Error)]
 #[error("{message}")]
 #[serde(rename_all = "camelCase")]
 pub struct ModelError {
@@ -36,7 +38,7 @@ impl From<serde_json::Error> for ModelError {
 }
 
 /// Explicit false/empty custom values are distinct from inheritance.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
 #[serde(
     tag = "mode",
     content = "value",
@@ -57,7 +59,7 @@ impl<T: Clone> Field<T> {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
 pub struct ModelRules {
     pub protocol: Field<String>,
@@ -128,7 +130,10 @@ impl ModelRules {
         }
         if let Field::Custom(values) = &self.reasoning_efforts {
             if values.iter().any(|v| {
-                !["none", "minimal", "low", "medium", "high", "xhigh"].contains(&v.as_str())
+                ![
+                    "none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra",
+                ]
+                .contains(&v.as_str())
             }) {
                 return Err(invalid("reasoning", "包含未知推理档位"));
             }
@@ -139,7 +144,11 @@ impl ModelRules {
             }
         }
         if let Field::Custom(value) = &self.default_effort {
-            if !["none", "minimal", "low", "medium", "high", "xhigh"].contains(&value.as_str()) {
+            if ![
+                "none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra",
+            ]
+            .contains(&value.as_str())
+            {
                 return Err(invalid("reasoning", "未知默认推理档位"));
             }
         }
@@ -147,20 +156,20 @@ impl ModelRules {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum MatchKind {
     Exact,
     Prefix,
     Glob,
 }
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct Pattern {
     pub kind: MatchKind,
     pub value: String,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum ChannelMode {
     #[default]
@@ -168,7 +177,7 @@ pub enum ChannelMode {
     Whitelist,
     Blacklist,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]
 pub struct MatchRules {
     pub include: Vec<Pattern>,
@@ -190,7 +199,7 @@ impl Default for MatchRules {
         }
     }
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Variant {
     pub id: String,
@@ -200,7 +209,7 @@ pub struct Variant {
     #[serde(default)]
     pub locked_fields: BTreeSet<String>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TemplateContent {
     pub description: String,
@@ -210,6 +219,16 @@ pub struct TemplateContent {
     pub variants: Vec<Variant>,
     #[serde(default)]
     pub locked_fields: BTreeSet<String>,
+    #[serde(default)]
+    pub sources: Vec<SourceEvidence>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SourceEvidence {
+    pub field: String,
+    pub url: Option<String>,
+    pub note: String,
+    pub recorded_at: String,
 }
 impl TemplateContent {
     pub fn normalize(&mut self) {
@@ -227,6 +246,27 @@ impl TemplateContent {
     }
     pub fn validate(&self) -> ModelResult<()> {
         let patterns = self.matching.include.iter().chain(&self.matching.exclude);
+        if self.sources.len() > 128 || self.description.len() > 32768 {
+            return Err(invalid("source_limit", "模版说明或来源条目过多"));
+        }
+        for source in &self.sources {
+            if source.note.len() > 8192
+                || source.field.len() > 256
+                || chrono::DateTime::parse_from_rfc3339(&source.recorded_at).is_err()
+            {
+                return Err(invalid("source", "来源记录缺少有效字段或时间"));
+            }
+            if let Some(url) = &source.url {
+                let url =
+                    reqwest::Url::parse(url).map_err(|_| invalid("source", "来源地址无效"))?;
+                if !["http", "https"].contains(&url.scheme())
+                    || !url.username().is_empty()
+                    || url.password().is_some()
+                {
+                    return Err(invalid("source", "来源地址不能含凭据或非HTTP协议"));
+                }
+            }
+        }
         if self.matching.include.is_empty()
             || patterns
                 .clone()
@@ -243,9 +283,30 @@ impl TemplateContent {
             return Err(invalid("limit", "规则或后缀项超过单模版上限"));
         }
         self.rules.validate()?;
+        let rule_locks = [
+            "protocol",
+            "contextWindow",
+            "inputModalities",
+            "reasoningEfforts",
+            "defaultEffort",
+            "fast",
+        ];
+        if self.locked_fields.iter().any(|v| {
+            !["description", "matching", "rules", "variants"].contains(&v.as_str())
+                && !rule_locks.iter().any(|key| v == &format!("rules.{key}"))
+        }) {
+            return Err(invalid("locked_field", "人工锁包含未知字段路径"));
+        }
         let mut ids = BTreeSet::new();
         let mut suffixes = BTreeSet::new();
         for variant in &self.variants {
+            if variant
+                .locked_fields
+                .iter()
+                .any(|v| !rule_locks.contains(&v.as_str()))
+            {
+                return Err(invalid("locked_field", "型号人工锁包含未知字段路径"));
+            }
             require_uuid(&variant.id)?;
             let suffix = if self.matching.case_sensitive {
                 variant.suffix.clone()
@@ -267,7 +328,7 @@ pub fn require_uuid(value: &str) -> ModelResult<()> {
     }
     Ok(())
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Revision {
     pub id: String,
@@ -277,21 +338,36 @@ pub struct Revision {
     pub digest: String,
     pub base_revision: Option<String>,
     pub changes: Vec<ChangeFact>,
+    #[serde(default)]
+    pub origin: SaveOrigin,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
+#[serde(
+    tag = "kind",
+    content = "taskId",
+    rename_all = "snake_case",
+    deny_unknown_fields
+)]
+pub enum SaveOrigin {
+    #[default]
+    Manual,
+    Builtin,
+    ExternalTask(String),
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ChangeFact {
     pub field: String,
     pub before: serde_json::Value,
     pub after: serde_json::Value,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "snake_case")]
 pub enum TemplateSource {
     Builtin,
     User,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Template {
     pub id: String,
@@ -300,27 +376,81 @@ pub struct Template {
     pub default_revision: Option<String>,
     pub revisions: Vec<Revision>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Library {
     pub schema_version: u32,
     pub templates: Vec<Template>,
+    #[serde(default)]
+    pub submission_receipts: BTreeMap<String, SubmissionReceipt>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TemplateRef {
     pub template_id: String,
     pub revision_id: String,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ChannelPolicy {
     pub id: String,
     pub label: String,
     pub template_refs: Vec<TemplateRef>,
     pub model_refs: BTreeMap<String, TemplateRef>,
+    #[serde(default)]
+    pub connection: ChannelConnection,
+    #[serde(default)]
+    pub selection: ModelSelection,
+    #[serde(default)]
+    pub model_order: Vec<String>,
+    #[serde(default)]
+    pub discovered: Vec<DiscoveredModel>,
+    #[serde(default)]
+    pub defaults: ModelRules,
+    #[serde(default)]
+    pub overrides: BTreeMap<String, ModelRules>,
+    #[serde(default)]
+    pub family_overrides: BTreeMap<String, ModelRules>,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
+#[serde(default, rename_all = "camelCase", deny_unknown_fields)]
+pub struct ChannelConnection {
+    pub provider_id: String,
+    pub protocol: String,
+    pub nodes: Vec<ServiceNode>,
+    pub active_node_id: String,
+    pub credential_ref: Option<String>,
+    pub enabled: bool,
+    pub allow_private_network: bool,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ServiceNode {
+    pub id: String,
+    pub name: String,
+    pub url: String,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct DiscoveredModel {
+    pub id: String,
+    pub label: String,
+    pub rules: ModelRules,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
+#[serde(
+    tag = "mode",
+    content = "models",
+    rename_all = "snake_case",
+    deny_unknown_fields
+)]
+pub enum ModelSelection {
+    All,
+    #[default]
+    None,
+    Whitelist(Vec<String>),
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Policy {
     pub schema_version: u32,
@@ -336,7 +466,7 @@ impl Default for Policy {
         }
     }
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct SaveTemplate {
     pub expected_library: String,
@@ -345,18 +475,47 @@ pub struct SaveTemplate {
     pub label: String,
     pub content: TemplateContent,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Snapshot {
     pub library: Library,
+    pub policy: Policy,
     pub library_digest: String,
     pub policy_digest: String,
+    pub workspace: Option<PolicyDraft>,
+    pub workspace_digest: String,
 }
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct PolicyDraft {
+    pub base_policy: String,
+    pub policy: Policy,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase")]
 pub struct Commit {
     pub snapshot: Snapshot,
     pub template_id: String,
     pub revision_id: String,
     pub changed: bool,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct CommitIdentity {
+    pub template_id: String,
+    pub revision_id: String,
+    pub changed: bool,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct BatchCommit {
+    pub snapshot: Snapshot,
+    pub outcomes: Vec<CommitIdentity>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SubmissionReceipt {
+    pub digest: String,
+    pub outcomes: Vec<CommitIdentity>,
+    pub saved_at: String,
 }
