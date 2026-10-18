@@ -49,7 +49,7 @@ export interface ChannelPolicy {
 export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[] }
 export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
-export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null }
+export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[] }
 export type ExternalScene = 'from_sources' | 'update_models' | 'audit_and_revise' | 'private_models' | 'preferences' | 'check_only'
 export interface ExternalTaskRequest { scene: ExternalScene; targets: TemplateRef[]; allowNew: boolean; requirements: string; expectedLibrary: string; buffers: { templateId: string; baseRevision: string; label: string; content: TemplateContent }[] }
 export interface TaskGrant { task: { id: string; contractVersion: number; scene: ExternalScene; targets: unknown[]; allowNew: boolean; requirements: string; expectedLibrary: string; expiresAt: string; revoked: boolean }; token: string }

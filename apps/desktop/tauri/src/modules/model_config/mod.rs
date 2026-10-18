@@ -9,6 +9,7 @@ pub mod management;
 pub mod matching;
 pub mod measurements;
 mod operations;
+mod protocol_groups;
 pub mod remote;
 pub mod runtime;
 pub mod schema;

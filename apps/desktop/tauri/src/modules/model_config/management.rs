@@ -132,6 +132,7 @@ impl Management {
             "/api/providers/keys/active",
             "/api/providers",
             "/api/disabled-models",
+            "/api/subagent-models",
         ]
         .contains(&path.split('?').next().unwrap_or(""))
         {

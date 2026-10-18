@@ -81,6 +81,10 @@ pub struct RuntimePlan {
     pub observed_disabled: Vec<String>,
     #[serde(default)]
     pub credential_changes: Vec<CredentialChange>,
+    #[serde(default)]
+    pub execution_policy: Option<Policy>,
+    #[serde(default)]
+    pub route_changes: Vec<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -91,6 +95,8 @@ pub struct SavePlanView {
     pub current_catalog_count: usize,
     pub changed_channels: Vec<String>,
     pub error: Option<String>,
+    pub protocol_groups: Vec<String>,
+    pub route_changes: Vec<String>,
 }
 impl RuntimePlan {
     fn view(&self) -> SavePlanView {
@@ -109,7 +115,34 @@ impl RuntimePlan {
                 .map(|c| c.label.clone())
                 .collect(),
             error: self.error.clone(),
+            protocol_groups: self
+                .execution_policy
+                .as_ref()
+                .map(|policy| {
+                    policy
+                        .channels
+                        .iter()
+                        .filter(|c| {
+                            !self.policy.channels.iter().any(|original| {
+                                original.connection.provider_id == c.connection.provider_id
+                            })
+                        })
+                        .map(|c| {
+                            format!(
+                                "{} · {} → {}",
+                                c.label, c.connection.protocol, c.connection.provider_id
+                            )
+                        })
+                        .collect()
+                })
+                .unwrap_or_default(),
+            route_changes: self.route_changes.clone(),
         }
+    }
+}
+impl RuntimePlan {
+    fn execution_policy(&self) -> &Policy {
+        self.execution_policy.as_ref().unwrap_or(&self.policy)
     }
 }
 fn path(root: &Path, id: &str) -> ModelResult<PathBuf> {
@@ -381,6 +414,15 @@ fn compile_owned(
             .ok_or_else(|| invalid("provider", "渠道绑定不存在"))?;
         provider["baseUrl"] = json!(node.url);
         provider["adapter"] = json!(channel.connection.protocol);
+        let mut declared = provider["models"].as_array().cloned().unwrap_or_default();
+        for model in &channel.discovered {
+            if !declared.iter().any(|id| id.as_str() == Some(&model.id)) {
+                declared.push(json!(model.id));
+            }
+        }
+        if !declared.is_empty() {
+            provider["models"] = json!(declared);
+        }
         provider["disabled"] = json!(!channel.connection.enabled);
         if channel.connection.allow_private_network {
             provider["allowPrivateNetwork"] = json!(true);
@@ -434,8 +476,7 @@ fn compile_owned(
                         .as_str()
                         .ok_or_else(|| invalid("model_identity", "官方模型缺少路由身份"))?
                         .to_string()
-                } else if prior.is_none() && channel.discovered.iter().any(|m| m.id == row.model_id)
-                {
+                } else if channel.discovered.iter().any(|m| m.id == row.model_id) {
                     format!("{provider_id}/{}", row.model_id.replace('/', "-"))
                 } else {
                     return Err(invalid(
@@ -525,14 +566,6 @@ fn compile_owned(
                 }
             }
         }
-        if prior.is_some_and(|p| p["liveModels"] == false)
-            && channel
-                .discovered
-                .iter()
-                .any(|m| !known.iter().any(|v| v["id"].as_str() == Some(&m.id)))
-        {
-            return Err(invalid("discovery", "发现基准已变化"));
-        }
     }
     if next["providers"]
         .get(next["defaultProvider"].as_str().unwrap_or(""))
@@ -613,16 +646,83 @@ pub async fn prepare(
     } else {
         vec![]
     };
-    let (next_providers, next_order, expected_slugs) =
-        compile_owned(&before, &local.library, &policy, &previous)?;
-    let ownership = next_ownership(&before.providers, &next_providers, &previous, &policy)?;
+    let mappings = super::protocol_groups::mappings(root, &local.library, &policy)?;
+    let execution_policy =
+        super::protocol_groups::expand(&before, &local.library, &policy, &mappings)?;
+    let (mut next_providers, next_order, expected_slugs) =
+        compile_owned(&before, &local.library, &execution_policy, &previous)?;
+    let next_order = super::protocol_groups::order(
+        &before,
+        &local.library,
+        &policy,
+        &execution_policy,
+        &mappings,
+        next_order,
+        &expected_slugs,
+    )?;
+    let before_catalog = catalog_slugs(&before)?;
+    let mut route_changes = vec![];
+    for channel in &execution_policy.channels {
+        let parent = policy
+            .channels
+            .iter()
+            .find(|c| c.id == channel.id)
+            .or_else(|| {
+                mappings
+                    .iter()
+                    .find(|m| m.id == channel.id)
+                    .and_then(|m| policy.channels.iter().find(|c| c.id == m.channel_id))
+            });
+        let Some(parent) = parent else {
+            continue;
+        };
+        let providers = std::iter::once(parent.connection.provider_id.as_str())
+            .chain(
+                mappings
+                    .iter()
+                    .filter(|m| m.channel_id == parent.id)
+                    .map(|m| m.provider_id.as_str()),
+            )
+            .collect::<BTreeSet<_>>();
+        for model in &channel.discovered {
+            let next = format!(
+                "{}/{}",
+                channel.connection.provider_id,
+                model.id.replace('/', "-")
+            );
+            if let Some(previous) = rows(&before)?
+                .iter()
+                .find(|row| {
+                    row["id"].as_str() == Some(&model.id)
+                        && row["provider"]
+                            .as_str()
+                            .is_some_and(|provider| providers.contains(provider))
+                        && row["namespaced"]
+                            .as_str()
+                            .is_some_and(|slug| before_catalog.contains(slug))
+                })
+                .and_then(|row| row["namespaced"].as_str())
+            {
+                if previous != next {
+                    route_changes.push(format!("{}：{} → {}", model.id, previous, next));
+                }
+            }
+        }
+    }
+    super::protocol_groups::decorate(&mut next_providers, &policy, &mappings);
+    let ownership = next_ownership(
+        &before.providers,
+        &next_providers,
+        &previous,
+        &execution_policy,
+    )?;
     let disabled_before =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
     let observed_providers = before.providers.clone();
     let observed_order = string_array(&before.order["pickerOrder"])?;
     let mut credential_changes = vec![];
     let mut management = None;
-    for channel in &policy.channels {
+    for channel in &execution_policy.channels {
         let Some(reference) = &channel.connection.credential_ref else {
             continue;
         };
@@ -679,6 +779,8 @@ pub async fn prepare(
         observed_disabled: disabled_before.clone(),
         disabled_before,
         credential_changes,
+        execution_policy: Some(execution_policy),
+        route_changes,
     };
     save(root, &plan)?;
     Ok(plan.view())
@@ -714,23 +816,23 @@ pub async fn reconcile(
                 .get(&change.provider)
                 .is_none()
             {
+                change.observed = Some(change.before.clone());
                 continue;
             }
             let current = management.key_state(&change.provider).await?;
-            if current == change.intended() {
-                change.observed = Some(current);
-            } else if current != change.before {
+            if current != change.intended() && current != change.before {
                 return Err(invalid(
                     "credential_drift",
                     "密钥集合有无法归于本次保存的变化，未更新本地策略",
                 ));
             }
+            change.observed = Some(current);
         }
     }
     let disabled =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
     let mut staged = plan.before.providers.clone();
-    for channel in &plan.policy.channels {
+    for channel in &plan.execution_policy().channels {
         if plan.before.providers["providers"]
             .get(&channel.connection.provider_id)
             .is_none()
@@ -760,7 +862,7 @@ pub async fn reconcile(
     let model_slugs: BTreeSet<_> = rows(&plan.before)?
         .iter()
         .filter(|m| {
-            plan.policy
+            plan.execution_policy()
                 .channels
                 .iter()
                 .any(|c| m["provider"].as_str() == Some(&c.connection.provider_id))
@@ -802,6 +904,10 @@ pub async fn reconcile(
     } else if actual.providers == plan.before.providers
         && actual_order == original_order
         && plan.observed_disabled == plan.disabled_before
+        && plan
+            .credential_changes
+            .iter()
+            .all(|change| change.observed.as_ref() == Some(&change.before))
     {
         plan.phase = "compensated".into();
         plan.error = None;
@@ -880,8 +986,17 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
     plan.phase = "applying".into();
     save(root, &plan)?;
     let result: ModelResult<()> = async {
+        // Clearing a whitelist must not briefly publish every model. Hide the
+        // frozen known rows first; new discoveries remain off under the provider
+        // policy, and every effect is journaled for exact compensation.
+        let none_channels=plan.execution_policy().channels.iter().filter(|c|matches!(c.selection,ModelSelection::None)).map(|c|c.connection.provider_id.clone()).collect::<BTreeSet<_>>();
+        let hidden=rows(&plan.before)?.iter().filter(|row|row["native"]!=true&&row["disabled"]!=true&&row["provider"].as_str().is_some_and(|provider|none_channels.contains(provider))).filter_map(|row|row["namespaced"].as_str().map(str::to_owned)).collect::<Vec<_>>();
+        if !hidden.is_empty(){
+            plan.phase="hiding_none_selection".into();save(root,&plan)?;
+            for slug in hidden {let receipt=upstream::write(&frozen,WriteOperation::DisableModel(&slug)).await?;if !receipt.success{return Err(invalid("visibility_write","隐藏当前模型结果待核对，未清空白名单"));}observe(root,&frozen,&mut plan).await?;}
+        }
         let new_channels: Vec<_> = plan
-            .policy
+            .execution_policy()
             .channels
             .iter()
             .filter(|c| {
@@ -994,7 +1109,7 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
         plan.phase = "providers_written".into();
         observe(root, &frozen, &mut plan).await?;
         save(root, &plan)?;
-        let visibility_channels = plan.policy.channels.clone();
+        let visibility_channels = plan.execution_policy().channels.clone();
         let visibility_rows = rows(&plan.before)?.clone();
         for channel in &visibility_channels {
             if !channel.connection.enabled {
@@ -1522,6 +1637,8 @@ mod tests {
     }
     #[cfg(unix)]
     fn cli_fixture(root: &Path, snapshot: &UpstreamSnapshot) -> ProcessContext {
+        use base64::Engine;
+        use hmac::Mac;
         use std::os::unix::fs::PermissionsExt;
         for (name, value) in [
             ("providers", &snapshot.providers),
@@ -1548,7 +1665,7 @@ elif args[:2]==['provider','snapshot']:print(json.dumps(read('providers')))
 elif args[:2]==['models','live']:print(json.dumps(read('models')))
 elif args[:3]==['models','order','status']:print(json.dumps(read('order')))
 elif args[:2]==['inspect','catalog']:print(json.dumps(read('catalog')))
-elif args[:3]==['config','get','disabledModels']:print(json.dumps(read('disabled')))
+elif args[:2]==['config','show']:print(json.dumps({'disabledModels':read('disabled')}))
 elif args[:3]==['config','set','disabledModels']:save('disabled',json.loads(args[3]));print('{}')
 elif args[:2]==['provider','apply']:
  baseline=json.loads(Path(args[args.index('--baseline')+1]).read_text())
@@ -1577,6 +1694,115 @@ elif args==['sync']:
 else:sys.exit(7)
 "#).unwrap();
         std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o700)).unwrap();
+        let home = root.join("home");
+        std::fs::create_dir_all(&home).unwrap();
+        let listener = std::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0)).unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let pid = std::process::id();
+        let secret = "s".repeat(43);
+        atomic_write(
+            &home.join("runtime-port.json"),
+            &serde_json::to_vec(&json!({"pid":pid,"port":port,"attestationSecret":secret}))
+                .unwrap(),
+            0o600,
+        )
+        .unwrap();
+        atomic_write(
+            &home.join("admin-api-token"),
+            format!("ocx_admin_{}", "t".repeat(43)).as_bytes(),
+            0o600,
+        )
+        .unwrap();
+        let order_root = root.to_path_buf();
+        let disable_root = root.to_path_buf();
+        let app = axum::Router::new()
+            .route(
+                "/healthz",
+                axum::routing::get(move |headers: axum::http::HeaderMap| {
+                    let secret = secret.clone();
+                    async move {
+                        let challenge = headers
+                            .get("x-opencodex-attestation-challenge")
+                            .unwrap()
+                            .to_str()
+                            .unwrap();
+                        let mut mac =
+                            hmac::Hmac::<sha2::Sha256>::new_from_slice(secret.as_bytes()).unwrap();
+                        mac.update(
+                            format!("opencodex-local-management-v1\n{challenge}\n{pid}\n{port}")
+                                .as_bytes(),
+                        );
+                        let mut response = axum::http::HeaderMap::new();
+                        response.insert(
+                            "x-opencodex-attestation-proof",
+                            base64::engine::general_purpose::URL_SAFE_NO_PAD
+                                .encode(mac.finalize().into_bytes())
+                                .parse()
+                                .unwrap(),
+                        );
+                        (
+                            response,
+                            axum::Json(json!({"service":"opencodex","pid":pid})),
+                        )
+                    }
+                }),
+            )
+            .route(
+                "/api/subagent-models",
+                axum::routing::put(
+                    move |headers: axum::http::HeaderMap, axum::Json(body): axum::Json<Value>| {
+                        let root = order_root.clone();
+                        async move {
+                            assert_eq!(
+                                headers.get("authorization").unwrap(),
+                                format!("Bearer ocx_admin_{}", "t".repeat(43)).as_str()
+                            );
+                            if root.join("fail-order").exists() {
+                                return (
+                                    axum::http::StatusCode::INTERNAL_SERVER_ERROR,
+                                    axum::Json(json!({"error":"fixture-order"})),
+                                );
+                            }
+                            let mut order: Value = serde_json::from_slice(
+                                &std::fs::read(root.join("order.json")).unwrap(),
+                            )
+                            .unwrap();
+                            order["pickerOrder"] = body["pickerOrder"].clone();
+                            std::fs::write(
+                                root.join("order.json"),
+                                serde_json::to_vec(&order).unwrap(),
+                            )
+                            .unwrap();
+                            (axum::http::StatusCode::OK, axum::Json(order))
+                        }
+                    },
+                ),
+            )
+            .route(
+                "/api/disabled-models",
+                axum::routing::put(
+                    move |headers: axum::http::HeaderMap, axum::Json(body): axum::Json<Value>| {
+                        let root = disable_root.clone();
+                        async move {
+                            assert_eq!(
+                                headers.get("authorization").unwrap(),
+                                format!("Bearer ocx_admin_{}", "t".repeat(43)).as_str()
+                            );
+                            std::fs::write(
+                                root.join("disabled.json"),
+                                serde_json::to_vec(&body["models"]).unwrap(),
+                            )
+                            .unwrap();
+                            axum::Json(json!({"ok":true}))
+                        }
+                    },
+                ),
+            );
+        let listener = tokio::net::TcpListener::from_std(listener).unwrap();
+        tokio::spawn(async move {
+            let _ = axum::serve(listener, app).await;
+        });
         ProcessContext {
             runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
                 executable,
@@ -1669,7 +1895,7 @@ else:sys.exit(7)
         std::fs::write(root.path().join("fail-order"), b"1").unwrap();
         let partial = apply(root.path(), &context, &plan.id).await.unwrap();
         assert_eq!(partial.phase, "visibility_written");
-        assert_eq!(partial.error.as_deref(), Some("order_write"));
+        assert_eq!(partial.error.as_deref(), Some("management_rejected"));
         assert_eq!(latest(root.path()).unwrap().unwrap().id, plan.id);
         let pending = ModelStore::new(root.path()).load().unwrap();
         assert_eq!(

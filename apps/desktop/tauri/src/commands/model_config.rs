@@ -238,7 +238,7 @@ pub async fn model_node_measure(
     let result = crate::modules::model_config::measurements::measure(request).await;
     let phase = match &result {
         Ok(value) if value.stopped => OperationPhase::Stopped,
-        Err(error) if error.code=="operation_stopped" => OperationPhase::Stopped,
+        Err(error) if error.code == "operation_stopped" => OperationPhase::Stopped,
         Ok(value) if value.results.iter().all(|r| r.error.is_none()) => OperationPhase::Succeeded,
         _ => OperationPhase::Failed,
     };
@@ -414,7 +414,9 @@ pub async fn model_agent_generate(
         OperationKind::Generation,
         match &result {
             Ok(_) => OperationPhase::Review,
-            Err(error) if ["agent_stopped","operation_stopped"].contains(&error.code.as_str()) => OperationPhase::Stopped,
+            Err(error) if ["agent_stopped", "operation_stopped"].contains(&error.code.as_str()) => {
+                OperationPhase::Stopped
+            }
             Err(_) => OperationPhase::Failed,
         },
     );

@@ -40,7 +40,9 @@ impl ReadOperation {
             Self::ModelOrder => &["models", "order", "status", "--json"],
             Self::Catalog => &["inspect", "catalog", "--json"],
             Self::Status => &["status", "--json"],
-            Self::DisabledModels => &["config", "get", "disabledModels", "--json"],
+            // The official get verb rejects an absent optional key. A successful
+            // redacted show proves absence without treating command failure as [].
+            Self::DisabledModels => &["config", "show", "--json"],
         }
     }
 }
@@ -142,10 +144,15 @@ pub async fn read_command(
             let text =
                 String::from_utf8(bytes).map_err(|_| invalid("upstream_output", "版本输出无效"))?;
             Ok(Value::String(text.trim().into()))
-        } else if matches!(operation, ReadOperation::DisabledModels)
-            && bytes.as_slice() == b"undefined\n"
-        {
-            Ok(serde_json::json!([]))
+        } else if matches!(operation, ReadOperation::DisabledModels) {
+            let config: Value = serde_json::from_slice(&bytes)?;
+            if !config.is_object() {
+                return Err(invalid("upstream_output", "官方配置只读投影结构无效"));
+            }
+            Ok(config
+                .get("disabledModels")
+                .cloned()
+                .unwrap_or_else(|| serde_json::json!([])))
         } else {
             Ok(serde_json::from_slice(&bytes)?)
         }
@@ -228,6 +235,26 @@ pub async fn write(
     context: &ProcessContext,
     operation: WriteOperation<'_>,
 ) -> ModelResult<OfficialWrite> {
+    let management = match &operation {
+        WriteOperation::Order(values) => Some((
+            "/api/subagent-models",
+            serde_json::json!({"pickerOrder":values,"pickerOrderMode":null}),
+        )),
+        WriteOperation::DisabledModels(values) => {
+            Some(("/api/disabled-models", serde_json::json!({"models":values})))
+        }
+        _ => None,
+    };
+    if let Some((path, body)) = management {
+        let management = super::management::Management::bind(context).await?;
+        let receipt = management
+            .request(reqwest::Method::PUT, path, Some(body))
+            .await?;
+        return Ok(OfficialWrite {
+            success: true,
+            receipt,
+        });
+    }
     let executable = context.executable()?;
     if !executable.is_absolute()
         || !context.opencodex_home.is_absolute()
@@ -238,7 +265,7 @@ pub async fn write(
             "官方保存的运行来源或数据根尚未绑定",
         ));
     }
-    let (args, input) = match operation {
+    let (args, input): (Vec<String>, Option<Vec<u8>>) = match operation {
         WriteOperation::Providers { baseline, next } => (
             vec![
                 "provider".into(),
@@ -254,16 +281,9 @@ pub async fn write(
             ],
             Some(serde_json::to_vec(next)?),
         ),
-        WriteOperation::Order(order) => (
-            vec![
-                "config".into(),
-                "set".into(),
-                "modelPickerOrder".into(),
-                serde_json::to_string(order)?,
-                "--json".into(),
-            ],
-            None,
-        ),
+        WriteOperation::Order(_) => {
+            unreachable!("picker writes use the authenticated live management API")
+        }
         WriteOperation::Sync => (vec!["sync".into()], None),
         WriteOperation::EnableModel(selector) => (
             vec![
@@ -283,16 +303,9 @@ pub async fn write(
             ],
             None,
         ),
-        WriteOperation::DisabledModels(values) => (
-            vec![
-                "config".into(),
-                "set".into(),
-                "disabledModels".into(),
-                serde_json::to_string(values)?,
-                "--json".into(),
-            ],
-            None,
-        ),
+        WriteOperation::DisabledModels(_) => {
+            unreachable!("visibility restore uses the authenticated live management API")
+        }
     };
     let mut command = tokio::process::Command::new(executable);
     command
