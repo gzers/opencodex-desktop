@@ -1,0 +1,20 @@
+{
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "command": [
+    "cargo",
+    "tauri",
+    "build",
+    "--ci",
+    "--no-sign",
+    "--bundles",
+    "app,dmg",
+    "--",
+    "--locked",
+    "--offline"
+  ],
+  "cwd": "apps/desktop/tauri",
+  "startedAtUtc": "2026-10-18T03:28:04.824526+00:00",
+  "formalSigningRequested": false,
+  "publicationRequested": false,
+  "priorFilesPreserved": 5
+}

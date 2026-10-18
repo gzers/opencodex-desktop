@@ -1,0 +1,27 @@
+{
+  "reason": "Moved worktree retained build-script executable compiled with old CARGO_MANIFEST_DIR; current source defaults exist and build.rs matches HEAD",
+  "cleanCommand": [
+    "cargo",
+    "clean",
+    "--package",
+    "opencodex-desktop",
+    "--release"
+  ],
+  "newBuildCommand": [
+    "cargo",
+    "tauri",
+    "build",
+    "--ci",
+    "--no-sign",
+    "--bundles",
+    "app,dmg",
+    "--",
+    "--locked",
+    "--offline"
+  ],
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "startedAtUtc": "2026-10-18T03:28:57.378167+00:00",
+  "cleanExitCode": 0,
+  "exitCode": 1,
+  "finishedAtUtc": "2026-10-18T03:29:05.792334+00:00"
+}

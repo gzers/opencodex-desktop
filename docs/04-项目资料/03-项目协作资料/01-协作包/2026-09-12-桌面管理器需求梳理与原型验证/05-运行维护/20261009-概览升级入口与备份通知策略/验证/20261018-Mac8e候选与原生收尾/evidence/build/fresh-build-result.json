@@ -1,0 +1,21 @@
+{
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "command": [
+    "cargo",
+    "tauri",
+    "build",
+    "--ci",
+    "--no-sign",
+    "--bundles",
+    "app,dmg",
+    "--",
+    "--locked",
+    "--offline"
+  ],
+  "cargoTargetDir": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/fresh-target",
+  "reason": "Cached Tauri/plugin permission outputs also contain old absolute paths; use a fresh target to rebuild all path-sensitive metadata without altering source or preserved old outputs",
+  "startedAtUtc": "2026-10-18T03:29:41.909484+00:00",
+  "formalSigningRequested": false,
+  "exitCode": 0,
+  "finishedAtUtc": "2026-10-18T03:32:09.030296+00:00"
+}

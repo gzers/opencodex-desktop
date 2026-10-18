@@ -1,0 +1,32 @@
+The following is a diff from the previous accessibility tree for Window: "" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 107-113, 115-120, 124-179
+~		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview
+~				96 heading 概览, Value: 1
+~					97 text 概览
+~				98 text 完成启动前的环境准备，再继续运行操作。
+~				103 button 刷新状态
+~				104 button (collapsed) 1, Help: 通知, Secondary Actions: Expand
+~				105 button (disabled) 待接入，环境准备中, Help: 当前运行状态；请先完成环境准备
+~				106 container 启动条件未满足 · 请按下方指引处理
++					107 text 启动条件未满足 · 请按下方指引处理
++				108 heading 尚未接入 OpenCodex, Value: 2
++					109 text 尚未接入 OpenCodex
++				110 text 补全启动条件后，即可继续使用 OpenCodex。 2 / 3 项通过
++				111 container 环境检查结果
++					112 container
++						113 text 01 Node.js 已发现
++					114 container
++						115 text 02 npm 已发现
++					116 container
++						117 text 03 OpenCodex 未发现
++				118 heading 接入 OpenCodex, Value: 3
++					119 text 接入 OpenCodex
++				120 text 可以把官方包装进数据根内的私有前缀（联网安装，或导入官方离线包）；安装完成后由应用重新解析运行来源。 官方 npm 命令（终端备选）
++				121 button npm install -g @bitkyc08/opencodex 复制
++				122 button 安装 OpenCodex
++				123 button 导入离线包
++				124 button 重新检查
++				125 text 安装仅写管理器数据目录；已有安装可在设置中指定来源。
++				126 button 完整指引 ›
++				127 text 应用不读取 PATH；不执行全局 npm 安装、不写系统目录与全局 npm 前缀，也不修改 OpenCodex 配置。托管安装只写自有数据根内的私有前缀。
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#overview

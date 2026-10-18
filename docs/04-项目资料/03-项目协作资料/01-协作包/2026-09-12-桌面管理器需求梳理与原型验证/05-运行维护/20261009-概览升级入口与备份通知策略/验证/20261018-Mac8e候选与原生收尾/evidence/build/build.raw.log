@@ -1,0 +1,46 @@
+        Warn --no-sign flag detected: Signing will be skipped.
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+
+> opencodex-desktop-ui@0.1.10 build
+> vue-tsc --noEmit && vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 176 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.40 kB │ gzip:   0.27 kB
+dist/assets/index-B-qY97h4.css   96.18 kB │ gzip:  17.55 kB
+dist/assets/index-DzVAZKkf.js   455.32 kB │ gzip: 148.41 kB
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/core.js is dynamically imported by src/app/appearance/effects.ts, src/contracts/runtimeStatus.ts, src/features/about/api.ts, src/features/backup/api.ts, src/features/codex-shim/api.ts, ... but also statically imported by node_modules/@tauri-apps/api/event.js, node_modules/@tauri-apps/plugin-dialog/dist-js/index.js, node_modules/@tauri-apps/plugin-process/dist-js/index.js, src/app/appearance/nativeWindow.ts, src/features/runtime/api.ts, ..., dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, src/features/tray/api.ts but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+
+✓ built in 255ms
+   Compiling reqwest v0.12.28
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri)
+error: failed to run custom build command for `opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri)`
+
+Caused by:
+  process didn't exit successfully: `/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/target/release/build/opencodex-desktop-ec9835d1f7ed5369/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-changed=/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/../ui/dist
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.git/worktrees/ocx-0110-main/HEAD
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.git/packed-refs
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.git/refs/heads/feature/0.1.10-integration-candidate
+  cargo:rustc-env=OPENCODEX_BUILD_COMMIT=8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b
+  cargo:rerun-if-changed=/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/config/preferences.defaults.json
+
+  --- stderr
+
+  thread 'main' (15525063) panicked at build.rs:42:13:
+  固化默认配置缺失: preferences.defaults.json
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+warning: build failed, waiting for other jobs to finish...
+       Error failed to build app: failed to build app

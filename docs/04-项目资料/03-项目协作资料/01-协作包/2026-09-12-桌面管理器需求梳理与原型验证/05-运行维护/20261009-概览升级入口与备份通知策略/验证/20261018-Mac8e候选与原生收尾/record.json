@@ -1,0 +1,137 @@
+{
+  "date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "appsTree": "80a4d3d29d26899e14e1324b69c8e2866f1dc2d9",
+  "macCandidate": [
+    {
+      "path": "fresh-target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7997248,
+      "sha256": "d6df4df009c3bf55f6cde863407d6851e7b24f45a32810e505cf7ca98b41a37a"
+    },
+    {
+      "path": "fresh-target/release/bundle/macos/OpenCodeX Desktop.app/Contents/Info.plist",
+      "bytes": 1002,
+      "sha256": "80f28d5ee5bbb972e9ff1f4b0b92d437f72abb53df70923f1b45f3bb4f8f47e5"
+    },
+    {
+      "path": "fresh-target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4444116,
+      "sha256": "9cd02a39b86fd7db3661c5fe654806c374f32548028d99e11cf8430fe1a741b6"
+    }
+  ],
+  "build": {
+    "initialAndPackageOnlyCacheCleanFailed": true,
+    "cause": "moved-worktree absolute paths in cached build script and Tauri permission metadata",
+    "freshTargetBuildSucceeded": true,
+    "sourceModified": false,
+    "formalSigningPerformed": false,
+    "strictSignatureExitCode": 1
+  },
+  "native": {
+    "launches": [
+      {
+        "sequence": 1,
+        "pid": 42603,
+        "executable": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/installed/OpenCodeX 0.1.10 Test.app/Contents/MacOS/opencodex-desktop",
+        "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+        "executableSha256": "d6df4df009c3bf55f6cde863407d6851e7b24f45a32810e505cf7ca98b41a37a",
+        "startedAtUtc": "2026-10-18T03:33:33.038192+00:00",
+        "environmentOverrides": {
+          "OPENCODEX_SANDBOX": "1",
+          "OPENCODEX_SANDBOX_ROOT": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/runtime/macos-0110-closeout-20261018/isolated/data",
+          "OPENCODEX_SANDBOX_BOUNDARY": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/runtime/macos-0110-closeout-20261018/isolated"
+        },
+        "dailyInstancesPreserved": [
+          {
+            "pid": 57186,
+            "ppid": 1,
+            "executable": "/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+          }
+        ],
+        "onlyOneOwnedInstanceStarted": true,
+        "performanceSampling": false
+      },
+      {
+        "sequence": 2,
+        "pid": 44644,
+        "executable": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/installed/OpenCodeX 0.1.10 Test.app/Contents/MacOS/opencodex-desktop",
+        "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+        "executableSha256": "d6df4df009c3bf55f6cde863407d6851e7b24f45a32810e505cf7ca98b41a37a",
+        "startedAtUtc": "2026-10-18T03:38:52.872060+00:00",
+        "dataRoot": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/runtime/macos-0110-closeout-20261018/isolated/data",
+        "previousInstanceExitCode": 0,
+        "onlyOneOwnedInstanceStarted": true,
+        "performanceSampling": false
+      }
+    ],
+    "exits": [
+      {
+        "sequence": 1,
+        "pid": 42603,
+        "exitCode": 0,
+        "exitedAtUtc": "2026-10-18T03:38:24.051265+00:00",
+        "agentSentKillOrSignal": false
+      },
+      {
+        "sequence": 2,
+        "pid": 44644,
+        "exitCode": 0,
+        "exitedAtUtc": "2026-10-18T03:45:45.686160+00:00",
+        "agentSentKillOrSignal": false
+      }
+    ],
+    "launchesSequentialWithOwnedZeroBeforeRestart": true,
+    "finalOwnedCount": 0,
+    "dailyPidPreserved": 57186,
+    "dailySelectedFilesByteUnchanged": true,
+    "dataRootAndBackupPayloadManifestByteUnchangedAcrossRestart": true,
+    "osWebViewIdentityUsesDerivedTestPlist": true,
+    "machOBytesUnchangedByTestIdentity": true,
+    "scope": [
+      "readonly DMG mount and isolated installation",
+      "real preference backup and pinned flag persisted",
+      "dark preference and root/backup reread after normal quit/restart",
+      "manager/panel details return into dialog, Tab/Shift-Tab containment",
+      "keyboard Escape returns to manager-details opener",
+      "real exact 2.88.0 release notes with internal scrolling and fixed header/footer",
+      "mid/low software quality changes and low solid overview",
+      "notification center displays unresolved runtime setup event"
+    ],
+    "limitations": [
+      "close-button followed by CUA observation immediately triggered dock:reopen; hidden interval not independently proven",
+      "only preparation state at default window/density; full ready-state/compact tree matrix not proved",
+      "no trusted higher manager candidate, no manager download/apply/restart-version verification",
+      "no official package installation/update or FZ50 lifecycle scripts",
+      "no actual external release webpage opened",
+      "no native backup restore/damaged/related cleanup branch or async leaf focus completed this round",
+      "no resource/startup/frame/cache/long-cycle sampling this round"
+    ]
+  },
+  "panelNotes": {
+    "version": "2.88.0",
+    "source": "github_release",
+    "url": "https://github.com/lidge-jun/opencodex/releases/tag/v2.88.0",
+    "manualCheck": true,
+    "localPanelAbsentAndInstallationDisabled": true
+  },
+  "evidenceNotes": [
+    "JPEG screenshot payloads are saved with .jpg extensions",
+    "Some AX records are incremental/no-change focus records; 01/05/07/17 are explicit full snapshots",
+    "Original binaries/DMG, config payloads, WebView profile and npm content cache remain outside archive"
+  ],
+  "goal": {
+    "untilPublishedAndPostReleaseVerified": true,
+    "finalReleaseConfirmationRequired": true,
+    "currentState": "active",
+    "noGoalCompletionClaimed": true
+  },
+  "windowsEvidenceRerun": false,
+  "performanceSampling": false,
+  "collectorExpanded": false,
+  "dpiTested": false,
+  "taskOriginalBytesUnchanged": true,
+  "fullGatePromoted": false,
+  "mainMerged": false,
+  "published": false
+}

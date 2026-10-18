@@ -1,0 +1,65 @@
+        Warn --no-sign flag detected: Signing will be skipped.
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `npm --prefix ui run build`
+
+> opencodex-desktop-ui@0.1.10 build
+> vue-tsc --noEmit && vite build
+
+vite v8.3.0 building client environment for production...
+transforming...
+✓ 176 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.40 kB │ gzip:   0.27 kB
+dist/assets/index-B-qY97h4.css   96.18 kB │ gzip:  17.55 kB
+dist/assets/index-DzVAZKkf.js   455.32 kB │ gzip: 148.41 kB
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/core.js is dynamically imported by src/app/appearance/effects.ts, src/contracts/runtimeStatus.ts, src/features/about/api.ts, src/features/backup/api.ts, src/features/codex-shim/api.ts, ... but also statically imported by node_modules/@tauri-apps/api/event.js, node_modules/@tauri-apps/plugin-dialog/dist-js/index.js, node_modules/@tauri-apps/plugin-process/dist-js/index.js, src/app/appearance/nativeWindow.ts, src/features/runtime/api.ts, ..., dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/preferences/store.ts is dynamically imported by src/components/AppTopbar.vue?vue&type=script&setup=true&lang.ts but also statically imported by src/features/migration/store.ts, src/features/updates/useUpdateScheduler.ts, src/stores/app.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0msrc/features/updates/update.ts is dynamically imported by src/features/updates/store.ts but also statically imported by src/features/backup/BackupManagement.vue?vue&type=script&setup=true&lang.ts, src/features/updates/UpdateCenter.vue?vue&type=script&setup=true&lang.ts, src/features/updates/useUpdateScheduler.ts, src/routes/OverviewRoute.vue?vue&type=script&setup=true&lang.ts, dynamic import will not move module into another chunk.
+
+[33m[INEFFECTIVE_DYNAMIC_IMPORT] [0mnode_modules/@tauri-apps/api/event.js is dynamically imported by src/app/appearance/effects.ts, src/app/lifecycle/store.ts, src/features/notifications/store.ts, src/features/runtime/store.ts, src/features/tray/api.ts but also statically imported by src/app/appearance/nativeWindow.ts, dynamic import will not move module into another chunk.
+
+✓ built in 210ms
+   Compiling tray-icon v0.25.1
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri)
+   Compiling tauri v2.12.1
+warning: opencodex-desktop@0.1.10: STATIC_VCRUNTIME is deprecated; use build.windows.staticVCRuntime in tauri.conf.json or tauri_build::WindowsAttributes::static_vc_runtime instead.
+error: failed to run custom build command for `opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri)`
+
+Caused by:
+  process didn't exit successfully: `/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/target/release/build/opencodex-desktop-ec9835d1f7ed5369/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/../ui/dist
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/../ui/dist/assets/index-B-qY97h4.css
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/../ui/dist/assets/index-DzVAZKkf.js
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/../ui/dist/index.html
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.git/worktrees/ocx-0110-main/HEAD
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.git/packed-refs
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/.git/refs/heads/feature/0.1.10-integration-candidate
+  cargo:rustc-env=OPENCODEX_BUILD_COMMIT=8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/config/preferences.defaults.json
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/config/runtime.defaults.json
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/config/network.defaults.json
+  cargo:rerun-if-env-changed=TAURI_CONFIG
+  cargo:rustc-check-cfg=cfg(desktop)
+  cargo:rustc-cfg=desktop
+  cargo:rustc-check-cfg=cfg(mobile)
+  cargo:rerun-if-changed=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/apps/desktop/tauri/tauri.conf.json
+  cargo:warning=STATIC_VCRUNTIME is deprecated; use build.windows.staticVCRuntime in tauri.conf.json or tauri_build::WindowsAttributes::static_vc_runtime instead.
+  cargo:rustc-env=TAURI_ANDROID_PACKAGE_NAME_APP_NAME=desktop
+  cargo:rustc-env=TAURI_ANDROID_PACKAGE_NAME_PREFIX=com_gzers_opencodex
+  cargo:rustc-check-cfg=cfg(dev)
+
+  --- stderr
+
+  thread 'main' (15528999) panicked at build.rs:13:6:
+  failed to run tauri-build: failed to read plugin permissions
+
+  Caused by:
+      failed to read file '/Users/ezio/.codex/worktrees/ocx-0110-main/apps/desktop/tauri/target/release/build/tauri-741032687b32698c/out/permissions/app/autogenerated/commands/app_hide.toml': No such file or directory (os error 2)
+  note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+warning: build failed, waiting for other jobs to finish...
+       Error failed to build app: failed to build app

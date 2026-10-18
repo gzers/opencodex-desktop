@@ -1,0 +1,49 @@
+{
+  "source": "8e69ff6db69ea13b8cb29feb9f7a1abacd202a7b",
+  "atUtc": "2026-10-18T03:32:37.048569+00:00",
+  "version": "0.1.10",
+  "bundleIdentifier": "com.gzers.opencodex.desktop",
+  "files": [
+    {
+      "path": "fresh-target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop",
+      "bytes": 7997248,
+      "sha256": "d6df4df009c3bf55f6cde863407d6851e7b24f45a32810e505cf7ca98b41a37a"
+    },
+    {
+      "path": "fresh-target/release/bundle/macos/OpenCodeX Desktop.app/Contents/Info.plist",
+      "bytes": 1002,
+      "sha256": "80f28d5ee5bbb972e9ff1f4b0b92d437f72abb53df70923f1b45f3bb4f8f47e5"
+    },
+    {
+      "path": "fresh-target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg",
+      "bytes": 4444116,
+      "sha256": "9cd02a39b86fd7db3661c5fe654806c374f32548028d99e11cf8430fe1a741b6"
+    }
+  ],
+  "embeddedSourceMatches": true,
+  "checks": {
+    "architecture": {
+      "exitCode": 0,
+      "stdout": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/fresh-target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop: Mach-O 64-bit executable arm64\n",
+      "stderr": ""
+    },
+    "dmg-verify": {
+      "exitCode": 0,
+      "stdout": "正在检查“Protective Master Boot Record（MBR：0）”的校验和…\nProtective Master Boot Record（MBR：0）：已验证CRC32 $F1A6DCD4\n正在检查“GPT Header（Primary GPT Header：1）”的校验和…\n    GPT Header（Primary GPT Header：1）：已验证CRC32 $921E90D9\n正在检查“GPT Partition Data（Primary GPT Table：2）”的校验和…\nGPT Partition Data（Primary GPT Table：已验证CRC32 $AA9CDDA8\n正在检查“（Apple_Free：3）”的校验和…\n                      （Apple_Free：3）：已验证CRC32 $00000000\n正在检查“disk image（Apple_HFS：4）”的校验和…\n             disk image（Apple_HFS：4）：已验证CRC32 $8024441F\n正在检查“（Apple_Free：5）”的校验和…\n                      （Apple_Free：5）：已验证CRC32 $00000000\n正在检查“GPT Partition Data（Backup GPT Table：6）”的校验和…\nGPT Partition Data（Backup GPT Table：：已验证CRC32 $AA9CDDA8\n正在检查“GPT Header（Backup GPT Header：7）”的校验和…\n     GPT Header（Backup GPT Header：7）：已验证CRC32 $3C202E58\n已验证CRC32 $004B051F\n",
+      "stderr": "hdiutil: verify: checksum of \"/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/fresh-target/release/bundle/dmg/OpenCodeX Desktop_0.1.10_aarch64.dmg\" is VALID\n"
+    },
+    "signature-display": {
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": "Executable=/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/fresh-target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop\nIdentifier=opencodex_desktop-558e3a5b5cdc6709\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20400 size=62152 flags=0x20002(adhoc,linker-signed) hashes=1938+0 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=1769472\nHash type=sha256 size=32\nCandidateCDHash sha256=d5ff4dd5c11bef1a5240f4003b6ae4363cac9ccc\nCandidateCDHashFull sha256=d5ff4dd5c11bef1a5240f4003b6ae4363cac9ccc34dfc822fae839b568f9decf\nHash choices=sha256\nCMSDigest=d5ff4dd5c11bef1a5240f4003b6ae4363cac9ccc34dfc822fae839b568f9decf\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=7618560\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=d5ff4dd5c11bef1a5240f4003b6ae4363cac9ccc\nSignature=adhoc\nInfo.plist=not bound\nTeamIdentifier=not set\nSealed Resources=none\nInternal requirements=none\n"
+    },
+    "signature-verify": {
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-0110-main/test/software/macos-0110-8e-20261018/fresh-target/release/bundle/macos/OpenCodeX Desktop.app: code has no resources but signature indicates they must be present\n"
+    }
+  },
+  "formalSigningPerformed": false,
+  "published": false,
+  "nativeStarted": false
+}
