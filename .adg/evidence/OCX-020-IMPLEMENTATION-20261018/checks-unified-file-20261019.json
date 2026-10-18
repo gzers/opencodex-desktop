@@ -1,0 +1,75 @@
+{
+  "recordedAt": "2026-10-18T20:40:40.947135+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "268349d75a64d36c1fd1d4e35f66de18c096b21a",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_transfer.rs": "c92fd8df7258f039be806e24b36e0a00ba37e546d7ad6362b1b3be67b9d6b67a",
+    "apps/desktop/tauri/src/commands/sync.rs": "a286514de3fd90c3192ab53bf8f5156166a65d200550d12f890018b86da28c83",
+    "apps/desktop/tauri/src/lib.rs": "851be432b90556b78b28916188c1fa5889b11af72db5e601407d523f815c929a",
+    "apps/desktop/tauri/src/modules/migration/mod.rs": "8e949b36ad3ab287cda2610d87cb695109bff99df7b4bc00da61c2cf0d28c9be",
+    "apps/desktop/tauri/src/modules/model_config/discovery.rs": "82828d284daca2e837b211f22d2be061192bdad882c10e6bfbc578c9e48c7847",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "69728edb9341fab7aa09ea9b6a841472cabbefe83c21af6b301c6148aa2721fc",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "016e8ccf83e0748713d17123188c010feb2c7b4009ba03f1664d7c67e9229e00",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "cb5fa726321f004a6df23fe53540ea7109e3531fe15d6606fcc976366c96fe9c",
+    "apps/desktop/tauri/src/modules/sync/mod.rs": "599f99734e0f5fe294ef05378b819351c8351f8c71a7cbb296cc99107516ef1f",
+    "apps/desktop/tauri/src/modules/sync/portable_manager.rs": "54a1b89da8128f94d56810d99f23954d04a726558a92600f1d9f54a909008096",
+    "apps/desktop/ui/src/features/sync/ImportedConnections.vue": "b753cf9048d2476f1eb08b4838852a394741744b8358738ab7aa60ea226dd702",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "6c098b8c5689b5cb04fa34759770cbd8190d46eeced7e3719fa19d70d6fe1116",
+    "apps/desktop/ui/src/features/sync/api.ts": "239d8ef832b0953112975ac0b9af42388257767c77b50fa65eb782a3df89448f",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "c6f78f287df8e74650ecf010edce58c272a3906d5b571341559a4aba18a9edf8",
+    "apps/desktop/ui/src/routes/SettingsRoute.vue": "48fd6439ea82643ea27bf83ecb04c665586c1cb9c1d22fb129c5252266aed83a",
+    "apps/desktop/ui/tests/imported-sync-connections.test.ts": "7bff2efc49c58174f7e81c8267c45fcdadff28f9b15bf95ab2e8a0f084431a4e",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "26f0cf5d8b91e56eaadb777e5b7214f6b0d93967ce354bc8e560fd3ffe10f5ed"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 27776,
+      "passed": 74,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib portable_manager --no-default-features",
+      "session": 45418,
+      "passed": 3,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --test event_registry --features integration-test",
+      "session": 16050,
+      "passed": 35,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "npx vitest run tests/model-transfer.test.ts tests/imported-sync-connections.test.ts",
+      "passed": 10,
+      "files": 2,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets -- -D warnings",
+      "session": 78159,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 68215,
+      "result": "passed"
+    }
+  ],
+  "visualEvidence": {
+    "file": "unified-portable-export-scope-light.jpg",
+    "scope": "DEV-only light/high export selection; real IPC/secrets were not used"
+  },
+  "remaining": [
+    "all-object WebDAV scope/protected conditional publication",
+    "account typed identity/credential portability and availability evidence",
+    "actual Skill assets and MCP definitions/credential migration",
+    "upstream complete portable original-channel fields",
+    "all UI/platform/client loaded tests and authorized release"
+  ]
+}
