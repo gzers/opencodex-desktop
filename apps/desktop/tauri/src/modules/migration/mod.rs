@@ -776,12 +776,8 @@ fn import_preferences(
     crate::modules::preferences::validate(&preferences)
         .map_err(|_| MigrationError::CorruptedDocument)?;
     // C 阶段：导入落盘为分域结构（与偏好存储一致），而不是写回 legacy 扁平文件。
-    let mut document = crate::modules::preferences::document_from_preferences(&preferences);
-    crate::modules::preferences::preserve_model_agent(
-        &data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH),
-        &mut document,
-    )
-    .map_err(|_| MigrationError::Preferences)?;
+    let document = crate::modules::preferences::document_from_preferences(&preferences);
+
     Ok(AppliedSection {
         changed_paths: vec![data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)],
         document: serde_json::to_vec_pretty(&document).map_err(|_| MigrationError::Preferences)?,
@@ -909,7 +905,7 @@ fn import_with_parsed_verified(
 
     // Incoming validation precedes admission. Existing-file capture, backup,
     // mutation, readback and terminal share the same owned lock scope.
-    let preferences_section = import_preferences(data_root, &document)?;
+    let mut preferences_section = import_preferences(data_root, &document)?;
     if !home.is_absolute() || !home.is_dir() {
         return Err(MigrationError::NotConfigured.into());
     }
@@ -948,6 +944,19 @@ fn import_with_parsed_verified(
     observer.begin(&document_sha256, home);
     let result = (|| {
         let previous_preferences = previous_import_file(data_root, preferences_path)?;
+        // Preserve local execution bindings only under the admitted target
+        // locks and registered operation. An unreadable existing file is a
+        // terminal import failure, never a pre-admission empty configuration.
+        let mut preferences_document: serde_json::Value =
+            serde_json::from_slice(&preferences_section.document)
+                .map_err(|_| MigrationError::Preferences)?;
+        crate::modules::preferences::preserve_model_agent(
+            preferences_path,
+            &mut preferences_document,
+        )
+        .map_err(|_| MigrationError::Preferences)?;
+        preferences_section.document = serde_json::to_vec_pretty(&preferences_document)
+            .map_err(|_| MigrationError::Preferences)?;
         let previous_sync = if has_sync {
             previous_import_file(data_root, &sync_path)?
         } else {
