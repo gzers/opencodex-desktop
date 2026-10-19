@@ -347,6 +347,32 @@ pub async fn model_agent_latest_result(
     .map_err(|_| invalid("agent_result_worker", "上次建议读取中断"))?
 }
 #[tauri::command]
+pub async fn model_agent_conversation(
+    template_id: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Option<crate::modules::model_config::agent_conversation::Saved>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::agent_conversation::load(&root, template_id.as_deref())
+    })
+    .await
+    .map_err(|_| invalid("agent_conversation", "读取本机对话中断"))?
+}
+#[tauri::command]
+pub async fn model_agent_conversation_save(
+    request: crate::modules::model_config::agent_conversation::Request,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::agent_conversation::Saved> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::agent_conversation::save(&root, request)
+    })
+    .await
+    .map_err(|_| invalid("agent_conversation", "对话保存结果待重新读取核对"))?
+}
+#[tauri::command]
 pub async fn model_external_task(
     request: crate::modules::model_config::tasks::CreateTask,
     data_root: tauri::State<'_, SharedDataRoot>,
@@ -414,7 +440,12 @@ pub async fn model_research_sources(
         OperationKind::Research,
         OperationPhase::Running,
     );
-    let result = crate::modules::model_config::agent::research(urls).await;
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
+    let result = crate::modules::model_config::agent::research(urls)
+        .await
+        .and_then(|sources| {
+            crate::modules::model_config::agent::record_sources(&data_root.0, sources)
+        });
     feedback::progress(
         &data_root.0,
         &id,
@@ -440,7 +471,12 @@ pub async fn model_research_search(
         OperationKind::Research,
         OperationPhase::Running,
     );
-    let result = crate::modules::model_config::agent::search(query).await;
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
+    let result = crate::modules::model_config::agent::search(query)
+        .await
+        .and_then(|sources| {
+            crate::modules::model_config::agent::record_sources(&data_root.0, sources)
+        });
     feedback::progress(
         &data_root.0,
         &id,

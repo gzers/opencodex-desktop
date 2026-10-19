@@ -570,6 +570,8 @@ pub fn run() {
             commands::model_config::model_agent_stop,
             commands::model_config::model_agent_accept_review,
             commands::model_config::model_agent_latest_result,
+            commands::model_config::model_agent_conversation,
+            commands::model_config::model_agent_conversation_save,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,

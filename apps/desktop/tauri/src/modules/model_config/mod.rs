@@ -1,6 +1,7 @@
 //! Model configuration owns immutable template snapshots and precise adoption.
 //! No runtime, credentials, discovery or provider calls occur in the local store.
 pub mod agent;
+pub mod agent_conversation;
 pub mod broker;
 pub(crate) mod channel_actions;
 pub mod client_state;
@@ -17,6 +18,7 @@ mod protocol_groups;
 pub mod provider_auth;
 pub mod recovery;
 mod remote;
+mod research_receipts;
 pub mod runtime;
 pub mod schema;
 pub mod store;

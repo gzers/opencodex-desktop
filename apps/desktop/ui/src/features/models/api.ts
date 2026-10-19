@@ -59,10 +59,13 @@ export interface ExternalTaskRequest { scene: ExternalScene; targets: TemplateRe
 export interface TaskGrant { task: { id: string; contractVersion: number; scene: ExternalScene; targets: unknown[]; allowNew: boolean; requirements: string; expectedLibrary: string; expiresAt: string; revoked: boolean }; token: string }
 export interface TaskBundle { taskId: string; content: string; grant: TaskGrant }
 export interface AgentSettings { providerId: string; modelId: string; reasoningEffort: string | null; fast: boolean | null }
-export interface ResearchSource { url: string; retrievedAt: string; text: string; links?: string[] }
+export interface AgentConversationContent {baseRevision:string|null;input:string;history:AgentMessage[];sources:ResearchSource[]}
+export interface AgentConversation {templateId:string|null;digest:string;content:AgentConversationContent}
+export interface AgentMessage {role:'user'|'assistant';text:string}
+export interface ResearchSource {receiptId?:string|null;contentDigest?:string|null; url: string; retrievedAt: string; text: string; links?: string[] }
 export interface Proposal { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
 export interface Submission { submissionId: string; contractVersion: number; proposals: Proposal[]; report: string | null }
-export interface PendingSuggestion {runId:string;createdAt:string;expectedLibrary:string;scene:ExternalScene;targets:{templateId:string;label:string;revision:Revision;buffer:TemplateDraft|null}[];result:Submission;reviewed:boolean}
+export interface PendingSuggestion {history?:AgentMessage[];sources?:ResearchSource[];runId:string;createdAt:string;expectedLibrary:string;scene:ExternalScene;targets:{templateId:string;label:string;revision:Revision;buffer:TemplateDraft|null}[];result:Submission;reviewed:boolean}
 export interface OwnerTaskResult { task: { id: string; targets: { templateId: string; label: string }[]; requirements: string }; receipt: { submissionId: string; state: string; outcomes: {templateId:string;revisionId:string;changed:boolean}[]; report: string | null } | null }
 export interface UpstreamSnapshot {readId?:string; version: string; providers: unknown; models: unknown; order: unknown }
 export interface TemplateDraft { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
@@ -100,9 +103,11 @@ export const modelApi = {
   saveAgentSettings: (settings: AgentSettings) => invoke<AgentSettings>('model_agent_preferences_save', { settings }),
   research: (urls: string[]) => invoke<ResearchSource[]>('model_research_sources', { urls }),
   searchSources: (query: string) => invoke<ResearchSource[]>('model_research_search', { query }),
-  generate: (runId: string, task: ExternalTaskRequest, sources: ResearchSource[]) => invoke<Submission>('model_agent_generate', { request: { runId, task, sources } }),
+  generate: (runId: string, task: ExternalTaskRequest, sources: ResearchSource[], history:AgentMessage[]=[]) => invoke<Submission>('model_agent_generate', { request: { runId, task, sources,history } }),
   stopGeneration: (runId: string) => invoke<void>('model_agent_stop', { runId }),
   acceptAgentReview:(request:{runId:string;expectedLibrary:string;proposals:Proposal[]})=>invoke<{snapshot:ModelSnapshot;outcomes:{templateId:string;revisionId:string;changed:boolean}[]}>('model_agent_accept_review',{request}),
+  agentConversation:(templateId:string|null)=>invoke<AgentConversation|null>('model_agent_conversation',{templateId}),
+  saveAgentConversation:(request:{templateId:string|null;expectedDigest:string|null;content:AgentConversationContent})=>invoke<AgentConversation>('model_agent_conversation_save',{request}),
   latestAgentResult:(templateId:string|null)=>invoke<PendingSuggestion|null>('model_agent_latest_result',{templateId}),
 }
 
