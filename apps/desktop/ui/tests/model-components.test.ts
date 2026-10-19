@@ -3,9 +3,15 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
+import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
+import {defineComponent,ref} from 'vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 afterEach(() => { document.body.innerHTML = ''; vi.unstubAllGlobals(); vi.restoreAllMocks() })
 describe('model page public primitives', () => {
+  it('action menus use the shared keyboard traversal and restore the trigger on Escape',async()=>{
+    const sample=defineComponent({components:{UiSelectMenu},setup(){return {open:ref(false)}},template:'<div class="select"><button class="select-trigger" @click="open=!open">动作</button><UiSelectMenu :open="open" role="menu" @close="open=false"><button role="menuitem">查看</button><button role="menuitem" disabled>禁用</button><button role="menuitem">复制</button></UiSelectMenu></div>'})
+    const wrapper=mount(sample,{attachTo:document.body});await wrapper.get('.select-trigger').trigger('click');await nextTick();const items=[...document.querySelectorAll<HTMLButtonElement>('[role=menuitem]')];items[0]!.focus();items[0]!.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));expect(document.activeElement).toBe(items[2]);items[2]!.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));await nextTick();expect(document.querySelector('[role=menu]')).toBeNull();expect(document.activeElement).toBe(wrapper.get('.select-trigger').element);wrapper.unmount()
+  })
   it('selection emits the value, closes the menu and restores trigger focus', async () => {
     const wrapper = mount(UiSelectField, { attachTo: document.body, props: { modelValue: 'a', label: '保存版本', options: [{ value: 'a', label: '版本A' }, { value: 'b', label: '版本B' }] } })
     await wrapper.get('button').trigger('click'); await nextTick()

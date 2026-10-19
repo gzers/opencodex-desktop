@@ -11,7 +11,7 @@ describe('component specification source map',()=>{
   expect(componentRegistry.find(c=>c.id==='overlay.annotation')).toMatchObject({kind:'prototype_only',implementations:[],consumers:[]})
  })
  it('keeps gallery and registry out of app startup and links only real gallery anchors',()=>{
-  const gallery=fs.readFileSync(path.join(src,'dev/component-gallery/GalleryApp.vue'),'utf8')
+  const gallery=fs.readFileSync(path.join(src,'dev/component-gallery/GalleryApp.vue'),'utf8')+fs.readFileSync(path.join(src,'dev/component-gallery/FoundationExamples.vue'),'utf8')
   for(const entry of componentRegistry.filter(c=>c.gallery))expect(gallery).toContain('id="'+entry.gallery+'"')
   for(const name of ['main.ts','App.vue'])expect(fs.readFileSync(path.join(src,name),'utf8')).not.toMatch(/components\/registry|component-gallery/)
  })

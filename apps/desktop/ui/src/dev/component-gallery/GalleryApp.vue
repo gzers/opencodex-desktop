@@ -3,6 +3,7 @@
 // 不触发真实 IPC；数据是本地固定样例，不代表生产默认值。
 import { computed,ref } from 'vue'
 import {componentRegistry} from '@/components/registry'
+import FoundationExamples from './FoundationExamples.vue'
 import ModelPicker,{type ModelChoice} from '@/features/models/ModelPicker.vue'
 import {emptyRules,type ModelProjection} from '@/features/models/api'
 import UiButton from '@/components/ui/UiButton.vue'
@@ -64,6 +65,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
 
     <div class="gallery-layout"><nav class="gallery-nav" aria-label="组件与规格目录"><strong>组件目录</strong><a v-for="item in componentRegistry" :key="item.id" :href="'#'+(item.gallery??'entry-'+item.id)">{{ item.name }}</a></nav>
     <Stack>
+      <FoundationExamples />
       <UiCard id="fields">
         <UiCardHeader><h2>选择字段与弹窗</h2><p>真实选择字段复用浮层、键盘和边缘定位；弹窗沿同一材质及焦点约束。</p></UiCardHeader>
         <Inline><UiSelectField v-model="selectedExample" label="标准选择字段" :options="[{ value: 'one', label: '默认选项' }, { value: 'long', label: '较长的中文与 English 模型版本说明' }]" /><UiSelectField v-model="selectedExample" size="sm" label="小号选择字段" :options="[{ value: 'one', label: '小号' }, { value: 'long', label: '长值' }]" /><UiButton @click="dialogOpen = true">打开弹窗</UiButton></Inline>
@@ -106,7 +108,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
         <p>正文直接作为卡片内容流动，不在卡片的每个内容块上重复内边距。</p>
       </UiCard>
 
-      <UiCard surface="overlay">
+      <UiCard id="materials" surface="overlay">
         <UiCardHeader>
           <h2>表面 variant</h2>
           <p>panel（默认）/ plain / overlay 与 density=compact；低档下 overlay 退实底。</p>

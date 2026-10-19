@@ -11,9 +11,10 @@ const menu = ref<HTMLElement | null>(null)
 const target = ref<HTMLElement | string>('body')
 const position = ref({ left: '0px', top: '0px', minWidth: '0px', maxWidth: '320px', maxHeight: '260px' })
 const trigger = () => anchor.value?.closest('.select')?.querySelector<HTMLButtonElement>('.select-trigger')
-const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled)') ?? [])]
+const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled),[role="menuitem"]:not(:disabled)') ?? [])]
 const visible = computed(() => props.open)
 let observer: ResizeObserver | undefined
+let disposed=false
 
 function place() {
   const button = trigger()
@@ -85,10 +86,12 @@ function keydown(event: KeyboardEvent) {
 }
 watch(visible, async open => {
   await nextTick()
+  if(disposed||visible.value!==open)return
   if (open) {
+    const element=menu.value;if(!element)return
     place()
     const button = trigger()
-    button?.setAttribute('aria-controls', menu.value!.id)
+    button?.setAttribute('aria-controls', element.id)
     observer?.disconnect()
     if (typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(place)
@@ -107,6 +110,7 @@ onMounted(() => {
   window.addEventListener('scroll', place, true)
 })
 onBeforeUnmount(() => {
+  disposed=true;trigger()?.removeAttribute('aria-controls')
   observer?.disconnect()
   window.removeEventListener('pointerdown', outside)
   window.removeEventListener('keydown', keydown)

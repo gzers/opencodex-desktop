@@ -56,3 +56,10 @@ registry.ts按专题43个稳定ID记录规格来源、当前实现/配方、实�
 设置14处开关共用ui/UiSwitch.vue，传受控值与必填label，上报update:modelValue，不在基础层读store/IPC；原受控保存者继续决定何时更新。视觉轨道38×22、点击高度28，令牌承载尺寸/拇指/阴影。普通按钮沿UiButton的sm28/md34/lg40，页面选择size，不覆盖最终高度/内距/字号；进行中保持原slot宽度，使用覆盖式装饰spinner与aria-busy，不改变可访问名称。
 
 本轮117处原btn消费已迁移至UiButton；路径行、分页和最近事件次操作明确sm。原生caption/托盘、图标按钮、文本复制按钮及轻量HTML表单保持各自用途和登记，尚需逐项规格/尺寸与原生证据，不能因此视为普通btn的样式例外已验。
+
+
+## 0.2.0反馈纯视图与基础样例
+
+UiIconButton统一普通32与通知24两档，名称必填、原生禁用/忙碌；顶栏刷新、通知删除和反馈收起沿同一部件。TaskProgressCard/FeedbackToast为纯视图，应用TaskProgressHost/ToastHost仍是原状态与事件的唯一承接者，gallery只传固定样例，不创建第二个生产通知入口。NotificationItem仍由通知feature负责条目语义。
+
+FoundationExamples直接引用品牌/平台资产、受限Markdown、原生表单配方、真实UiTreeTable/UiSelectMenu及反馈视图，基础元素不为组件数量机械封装。字段sm/md/lg沿28/34/40令牌，平台caption/托盘的原生行为仍单独验收。动作菜单键盘导航识别menuitem并跳过禁用，异步开闭在卸载后不写失效DOM。

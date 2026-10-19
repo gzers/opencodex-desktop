@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
+import TaskProgressCard from '@/components/patterns/TaskProgressCard.vue'
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useOperationTasks, operationTitles, operationPhaseText } from '@/app/feedback/tasks'
 import { useAppStore } from '@/stores/app'
@@ -24,10 +25,6 @@ const processActionLabel = computed(() => {
   return processAction.value ? labels[processAction.value] : '处理'
 })
 const processRuntimeLabel = computed(() => runtimeLabel(processRuntime.value, '检查中'))
-const processProgressClass = computed(() => ({
-  done: app.processProgressCompleted,
-  error: Boolean(app.processProgressError),
-}))
 const processProgressTitle = computed(() => {
   if (app.processProgressError) return `${processActionLabel.value}未完成`
   if (app.processProgressCompleted) return `${processActionLabel.value}已完成`
@@ -72,48 +69,12 @@ function collapse() {
 }
 </script>
 
+
 <template>
-  <section
-    v-if="processAction && app.processProgressOpen"
-    class="process-progress"
-    :class="processProgressClass"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-  >
-      <div class="process-progress-head">
-        <div>
-          <h3>{{ processProgressTitle }}</h3>
-          <p>{{ processProgressMessage }}</p>
-        </div>
-        <button
-          class="notify-min"
-          type="button"
-          title="收起到铃铛"
-          aria-label="收起任务卡到铃铛"
-          @click="collapse"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9A6 6 0 0 0 6 9c0 6-2.5 7-2.5 7h17S18 15 18 9Z"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/></svg>
-        </button>
-      </div>
-      <div class="process-progress-track" aria-hidden="true"></div>
-      <ol class="process-progress-steps">
-        <li
-          v-for="step in processProgressSteps"
-          :key="step.label"
-          class="process-progress-step"
-          :class="step.state"
-        >{{ step.label }}</li>
-      </ol>
-      <div class="process-progress-actions">
-        <UiButton class="btn ghost notif-ctl" type="button" @click="app.dismissProcessProgress()">
-          {{ app.processActionBusy ? '后台运行' : '关闭' }}
-        </UiButton>
-      </div>
-  </section>
-  <section v-for="task in operations.tasks.filter(t => !t.collapsed)" :key="task.id" class="process-progress" :class="{ done: task.phase !== 'running', error: task.phase === 'failed' }" role="status" aria-live="polite">
-    <div class="process-progress-head"><div><h3>{{ operationTitles[task.kind] }}</h3><p>{{ operationPhaseText(task) }}</p></div><button class="notify-min" type="button" aria-label="收起任务到通知入口" @click="operations.collapse(task.id)">⌄</button></div>
-    <div v-if="task.phase === 'running'" class="process-progress-track" aria-hidden="true"></div>
-    <div class="process-progress-actions"><UiButton class="btn ghost notif-ctl" @click="operations.collapse(task.id)">收起</UiButton><UiButton class="btn notif-ctl" @click="routes.go('models')">查看模型配置</UiButton></div>
-  </section>
+  <TaskProgressCard v-if="processAction&&app.processProgressOpen" :title="processProgressTitle" :message="processProgressMessage" :phase="app.processProgressError?'error':app.processProgressCompleted?'done':'running'" :steps="processProgressSteps" @collapse="collapse">
+   <template #actions><UiButton class="ghost notif-ctl" @click="app.dismissProcessProgress()">{{ app.processActionBusy?'后台运行':'关闭' }}</UiButton></template>
+  </TaskProgressCard>
+  <TaskProgressCard v-for="task in operations.tasks.filter(t=>!t.collapsed)" :key="task.id" :title="operationTitles[task.kind]" :message="operationPhaseText(task)" :phase="task.phase==='failed'?'error':task.phase==='running'?'running':'done'" :show-track="task.phase==='running'" collapse-label="收起任务到通知入口" @collapse="operations.collapse(task.id)">
+   <template #actions><UiButton class="ghost notif-ctl" @click="operations.collapse(task.id)">收起</UiButton><UiButton class="notif-ctl" @click="routes.go('models')">查看模型配置</UiButton></template>
+  </TaskProgressCard>
 </template>
