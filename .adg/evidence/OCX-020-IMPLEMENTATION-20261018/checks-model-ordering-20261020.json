@@ -1,0 +1,51 @@
+{
+  "recordedAt": "2026-10-19T16:31:30.278477+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "8ae7b2bed00823f82d869dbd490fb44f696b87ba",
+  "sourceSha256": {
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue": "f3131a2745d16730f3129bae3e97d7167cfd4f676508db62983e4da13694c972",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "94c54c18395f848a3f474a230c32fe5b090a3c30ae77e7787d911071d3d9afa4",
+    "apps/desktop/ui/src/features/models/store.ts": "ebcfe2b7f071c419f452d06f7ce97a3146c74505e6759cb2e608473e3cf0ab76",
+    "apps/desktop/ui/src/features/models/ordering.ts": "d2f2450f51ae47c785587781606fad7a8c3e229aa9576efffc7db7fc748fb674",
+    "apps/desktop/ui/tests/model-ordering-history.test.ts": "9de89100a9ed26b622849e616dc8a222c2ea203401bb0d9b7c897b8f2c212118"
+  },
+  "checks": [
+    {
+      "command": "npm test -- --run tests/model-ordering-history.test.ts tests/model-save-recovery.test.ts && npm run build",
+      "session": 78327,
+      "passed": 8,
+      "files": 2,
+      "build": "passed"
+    },
+    {
+      "command": "npm test -- --run",
+      "session": 65505,
+      "files": 128,
+      "passed": 641,
+      "unhandledErrors": 0,
+      "log": "model-ordering-ui-full-20261020.txt",
+      "boundary": "two jsdom Canvas diagnostics; not GPU evidence"
+    }
+  ],
+  "browser": {
+    "source": "production ChannelsView / ChannelEditor and store with DEV fixed fixture",
+    "observed": [
+      "A6api pin changes first3 to A6api/NewApi/AiMaMi",
+      "undo restores NewApi/A6api/AiMaMi; redo becomes available",
+      "channel search disables drag/up/down/top",
+      "raw model search gpt-demo-10 shows1/12 and disables model reordering",
+      "document has no horizontal overflow"
+    ],
+    "screenshots": [
+      "model-search-sort-guard-light.png"
+    ],
+    "boundary": "pin/cancel/filter behavior observed; physical HTML5 drag not exercised; not native IPC"
+  },
+  "remaining": [
+    "family filter/complete per-field effective-source editing and new-channel cancellation/step boundary",
+    "remaining all-AC requirement mapping and actual platform consumers",
+    "account-specific support boundaries",
+    "final integration/version/release"
+  ]
+}
