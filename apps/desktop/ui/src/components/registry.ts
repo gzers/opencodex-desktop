@@ -35,7 +35,7 @@ const entries:Array<Omit<ComponentRegistration,'specification'|'verification'>> 
  {"id":"menu.actions","name":"动作菜单","section":"menus-tabs","kind":"component","implementations":["components/ui/UiSelectMenu.vue"],"consumers":["routes/SettingsRoute.vue"],"gallery":"action-menu"},
  {"id":"navigation.tabs","name":"Tab分区","section":"menus-tabs","kind":"component","implementations":["components/layout/StickyTabs.vue"],"consumers":["routes/SettingsRoute.vue","routes/ExtensionsRoute.vue","routes/LogsRoute.vue","routes/ModelsRoute.vue","routes/SyncRoute.vue"],"gallery":"tabs"},
  {"id":"data.table","name":"数据表","section":"data","kind":"recipe","implementations":["styles/base.css"],"consumers":["features/models/ChannelsView.vue"],"gallery":"data"},
- {"id":"data.tree","name":"树表","section":"data","kind":"component","implementations":["components/ui/UiTreeTable.vue"],"consumers":["features/backup/BackupFiles.vue"],"gallery":"data"},
+ {"id":"data.tree","name":"树表","section":"data","kind":"component","implementations":["components/ui/UiTreeTable.vue"],"consumers":["features/backup/BackupFiles.vue","features/sync/ObjectScopeTree.vue"],"gallery":"data"},
  {"id":"data.status","name":"状态标签","section":"data","kind":"recipe","implementations":["styles/base.css"],"consumers":["features/models/ChannelsView.vue"],"gallery":"data"},
  {"id":"overlay.dialog","name":"Dialog/Modal","section":"overlays","kind":"component","implementations":["components/ui/UiDialog.vue"],"consumers":["features/sync/ModelTransfer.vue"],"gallery":"fields"},
  {"id":"overlay.annotation","name":"原型注释","section":"overlays","kind":"prototype_only","implementations":[],"consumers":[],"gallery":null,"reason":"原型说明只在文档工作台存在，正式软件不导入"},
