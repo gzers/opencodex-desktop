@@ -85,7 +85,9 @@ pub async fn read_command(
         .kill_on_drop(true);
     crate::infrastructure::platform::apply_user_environment(
         command.as_std_mut(),
-        std::env::var_os("HOME").as_deref(),
+        crate::infrastructure::platform::home_dir()
+            .as_deref()
+            .map(Path::as_os_str),
     );
     for key in [
         "PATH",
@@ -324,7 +326,9 @@ pub async fn write(
         .kill_on_drop(true);
     crate::infrastructure::platform::apply_user_environment(
         command.as_std_mut(),
-        std::env::var_os("HOME").as_deref(),
+        crate::infrastructure::platform::home_dir()
+            .as_deref()
+            .map(Path::as_os_str),
     );
     for key in [
         "PATH",

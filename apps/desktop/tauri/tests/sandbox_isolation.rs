@@ -55,6 +55,10 @@ fn sandbox_writes_never_touch_daily_root_and_missing_root_fails_closed() {
     let resolved = opencodex_desktop_lib::modules::test_sandbox::resolve_data_root(daily.path())
         .expect("sandbox root");
     assert_eq!(resolved, sandbox.path());
+    assert_eq!(
+        opencodex_desktop_lib::infrastructure::platform::home_dir(),
+        Some(sandbox.path().join("home"))
+    );
 
     // 1) 偏好保存：写入沙箱 manager-state，而不是日常根。
     let store = opencodex_desktop_lib::modules::preferences::PreferencesStore::new(&resolved);

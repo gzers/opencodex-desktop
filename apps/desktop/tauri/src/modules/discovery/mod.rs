@@ -146,9 +146,8 @@ impl EnvironmentDiscovery {
     fn is_brew_available(&self) -> bool {
         #[cfg(target_os = "macos")]
         {
-            std::env::var_os("HOME")
-                .filter(|home| !home.is_empty())
-                .map(|home| Path::new(&home).join(".brew/bin/brew").is_file())
+            crate::infrastructure::platform::home_dir()
+                .map(|home| home.join(".brew/bin/brew").is_file())
                 .unwrap_or(false)
         }
         #[cfg(not(target_os = "macos"))]
