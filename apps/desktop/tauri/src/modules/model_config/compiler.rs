@@ -203,19 +203,31 @@ pub fn project(library: &Library, policy: &Policy) -> ModelResult<DraftProjectio
             overlay_sources(&mut source, &rules, "上游声明");
             source.insert("protocol".into(), "渠道默认".into());
             let adopted = matching::resolve(library, policy, &channel.id, &id)?;
-            if let Some((_, template)) = &adopted {
+            if let Some((reference, template)) = &adopted {
                 rules = template.overlay(&rules);
-                overlay_sources(&mut source, template, "已采用模版");
+                let revision = matching::revision(library, reference)?;
+                overlay_sources(&mut source, &revision.content.rules, "模版通用");
+                let (variant, _) = matching::composed(&revision.content, &id)?;
+                if let Some(variant) = revision
+                    .content
+                    .variants
+                    .iter()
+                    .find(|v| Some(&v.id) == variant.as_ref())
+                {
+                    overlay_sources(
+                        &mut source,
+                        &variant.rules,
+                        &format!("具体型号 · {}", variant.name),
+                    );
+                }
             }
             let protocol = rules.protocol.clone();
+            let protocol_source = source.get("protocol").cloned();
             rules = channel.defaults.overlay(&rules);
             overlay_sources(&mut source, &channel.defaults, "渠道默认");
             rules.protocol = protocol;
-            if adopted
-                .as_ref()
-                .is_some_and(|(_, r)| !matches!(r.protocol, Field::Inherit))
-            {
-                source.insert("protocol".into(), "已采用模版".into());
+            if let Some(value) = protocol_source {
+                source.insert("protocol".into(), value);
             }
             if let Some((reference, _)) = &adopted {
                 if let Some(overrides) = channel.family_overrides.get(&reference.template_id) {

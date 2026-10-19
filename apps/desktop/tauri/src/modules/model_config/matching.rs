@@ -101,7 +101,10 @@ pub fn preview(content: &TemplateContent, channel: &str, model: &str) -> ModelRe
         rules,
     })
 }
-fn composed(content: &TemplateContent, model: &str) -> ModelResult<(Option<String>, ModelRules)> {
+pub(super) fn composed(
+    content: &TemplateContent,
+    model: &str,
+) -> ModelResult<(Option<String>, ModelRules)> {
     let model = folded(model, content.matching.case_sensitive);
     let variant = content
         .variants

@@ -457,6 +457,69 @@ fn capability_and_protocol_priorities_differ_and_explicit_false_survives() {
     );
 }
 #[test]
+fn effective_sources_distinguish_template_variant_family_and_single_model_without_changing_protocol_precedence(
+) {
+    let mut library = seed_library();
+    let template = &mut library.templates[0];
+    template.revisions[0].content.matching.include = vec![Pattern {
+        kind: MatchKind::Prefix,
+        value: "raw".into(),
+    }];
+    template.revisions[0].content.rules.context_window = Field::Custom(8000);
+    template.revisions[0].content.variants = vec![Variant {
+        id: uuid::Uuid::new_v4().to_string(),
+        name: "Concrete".into(),
+        suffix: "/a".into(),
+        rules: ModelRules {
+            protocol: Field::Custom("anthropic".into()),
+            fast: Field::Custom(true),
+            ..Default::default()
+        },
+        locked_fields: Default::default(),
+    }];
+    let reference = TemplateRef {
+        template_id: template.id.clone(),
+        revision_id: template.revisions[0].id.clone(),
+    };
+    let mut c = channel(&uuid::Uuid::new_v4().to_string());
+    c.template_refs = vec![reference.clone()];
+    c.defaults.protocol = Field::Custom("google".into());
+    c.family_overrides.insert(
+        reference.template_id,
+        ModelRules {
+            context_window: Field::Custom(16000),
+            ..Default::default()
+        },
+    );
+    c.overrides.insert(
+        "raw/a".into(),
+        ModelRules {
+            default_effort: Field::Custom("low".into()),
+            ..Default::default()
+        },
+    );
+    c.discovered = vec![DiscoveredModel {
+        id: "raw/a".into(),
+        label: "a".into(),
+        rules: Default::default(),
+    }];
+    c.model_order = vec!["raw/a".into()];
+    let result = super::compiler::project(
+        &library,
+        &Policy {
+            channels: vec![c],
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    let row = &result.rows[0];
+    assert_eq!(row.rules.protocol, Field::Custom("anthropic".into()));
+    assert_eq!(row.source["protocol"], "具体型号 · Concrete");
+    assert_eq!(row.source["fast"], "具体型号 · Concrete");
+    assert_eq!(row.source["contextWindow"], "渠道族覆盖");
+    assert_eq!(row.source["defaultEffort"], "单模型覆盖");
+}
+#[test]
 fn node_validation_and_zero_selection_never_turn_into_all() {
     let mut c = channel(&uuid::Uuid::new_v4().to_string());
     c.discovered.push(DiscoveredModel {
