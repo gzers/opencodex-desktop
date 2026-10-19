@@ -343,3 +343,14 @@ Keychain迁移保留官方原pool id、顺序、label及addedAt，校验引用�
 新增独立opt-in provider_auth_native集成测试，只有显式OPENCODEX_SANDBOX=1准入；不安装内存credential builder，使用本机构建的keyring apple-native。源引用账户使用随机provider完整UUID前缀，写入前精确NoEntry才允许创建；机器保护键只使用OpenCodex Desktop Sandbox服务，文件/运行上下文在临时根。保留测试条目清理guard，按本次暂存包UUID枚举自己创建的保护键，结束逐条删除并核对NoEntry，未读取或修改日常账户。
 
 本机macOS实测0.60秒通过：两条源Keychain引用解析、完整便携授权、机器密钥加密暂存及运行根绑定、密文无原Key、保护键缺失拒绝恢复，以及全部自有测试账户清理；不发网络。Clippy全目标通过，证据checks-native-keychain-20261019.json绑定源码。此前内存Keyring测试的边界仍保留，本次仅补macOS系统存储现场；不证明Windows凭据管理器、真实OAuth免登录迁移/刷新或实际Codex加载。
+
+
+### 历史服务方向与对应授权成对恢复
+
+普通Key/本机渠道历史目标的baseUrl/adapter/authMode/apiKeyTransport发生变化时，原成功记录、当前独立授权保护和目标公开字段共同形成冻结方向。授权journal增加可选fromPublic/toPublic，原记录缺该字段仍兼容；执行/重放核对原operation、目标provider、完整私有摘要与明确公开方向，不能用后来字段替换已确认方向。先以目标端点/协议及其对应pool/headers作同一官方provider POST，保持停用和精确非空型号，再明确恢复活动Key，最终公开batch才恢复默认与启用状态；别名overlay沿原owner，在中间态保留当前值，最后由public CAS恢复目标。
+
+历史差异细分到provider/身份/字段，baseUrl等变化可直接审阅，授权预览仍无秘密。首次/中断/已发暂态与最终值分别匹配；后来未知私有变化拒绝。失败补偿先把原服务方向与原授权作为成对写入恢复，之后公开CAS完成原启用/默认/顺序，不先把原地址套在目标凭据上。不同provider分步暂态按每个已确认公开行核对，不把任意整份快照当所有权。保护恢复方向也校验与原授权一致。OAuth/native/forward仍保留专用适配边界。
+
+验证：provider12、runtime/history16及Clippy全目标通过。安装官方2.84.0隔离完整链216.01秒通过：已有管理渠道切节点后从成功历史转草稿并普通保存恢复旧端点；最终sync失败注入后补偿完整回原端点/授权；默认渠道中间停用后最终恢复；anthropic+bearer与openai-responses不同adapter/transport成对转换与逆向恢复，原补偿重放不重复写；生成POST=0。最终仅journal身份/补偿方向拒绝保护随后由provider12和Clippy复核。证据checks-history-direction-20261019.json绑定源码。该链内存Keyring，系统存储证据沿上一批macOS独立原生测试，未推导客户端/Windows已验。
+
+已读取远端main后续ce2ada4b7为治理忽略/交接资料；其Windows CI39099660040仍有7项旧query helper清理失败，保留失败事实，与0.1.10例外不能合并写为0.2.0通过。后续0.2.0需自己的平台结果，仍未发布。

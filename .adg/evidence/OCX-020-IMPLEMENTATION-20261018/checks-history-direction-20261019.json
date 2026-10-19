@@ -1,0 +1,54 @@
+{
+  "recordedAt": "2026-10-19T12:12:40.677604+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "540b5751d915514e6352c00bb04369adaad1adf5",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/provider_auth.rs": "26dd12251ecda79f2e4a835a7f86e45fe307f6a3fcaa657942284f5a538a7f58",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "4269b13631e6dd9c4444da127dd8e0572f45cf22fb83b3d505983656a7e3f246",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "f1ed365aa12a85a648634dc25ccc30c9ca3c496e1350ebe498e42bb15d9ef696"
+  },
+  "checks": [
+    {
+      "command": "cargo test --features integration-test --lib modules::model_config::provider_auth -- --test-threads=1; cargo clippy --all-targets --features integration-test -- -D warnings",
+      "session": 1969,
+      "result": "passed",
+      "passed": 12
+    },
+    {
+      "command": "cargo test --features integration-test --lib modules::model_config::runtime -- --test-threads=1; cargo clippy --all-targets --features integration-test -- -D warnings",
+      "session": 80576,
+      "result": "passed",
+      "passed": 16
+    },
+    {
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 30417,
+      "result": "passed",
+      "passed": 1,
+      "testSeconds": 216.01,
+      "upstreamVersion": "2.84.0",
+      "observed": [
+        "successful managed node change then history to draft to normal save restores old service",
+        "final sync injected failure compensates original current endpoint and full auth",
+        "default provider stays off during intermediate direction then final batch restores enabled/default",
+        "explicit adapter anthropic -> openai-responses with bearer key transport removal; reverse restores adapter and bearer together",
+        "repeat original compensation is no-op",
+        "no generation POST"
+      ],
+      "boundary": "Temporary HOME/CODEX_HOME/OPENCODEX_HOME; local fixtures and memory keyring. Final journal identity checks (non-write guards) followed by provider tests and Clippy."
+    }
+  ],
+  "limitations": [
+    "Public single-provider POST paired with private fields has immediate before/readback validation, not server-side private CAS",
+    "Only ordinary key/local historical directions; native/OAuth/forward still require account adapter",
+    "Actual client loaded, Windows/native platform, account portability and release remain open"
+  ],
+  "upstreamMainObserved": "ce2ada4b7abd57b9f7717358c709ee1f3975d050",
+  "previousWindowsRun": {
+    "id": 39099660040,
+    "result": "failed",
+    "failures": 7,
+    "scope": "old 0.1.10 windows_query_fixture helper cleanup tests; retained as historical result, not passed for 0.2.0"
+  }
+}
