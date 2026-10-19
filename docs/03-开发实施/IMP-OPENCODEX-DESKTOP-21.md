@@ -282,4 +282,14 @@ Agent配置弹窗修正为选择器确定仅回设置缓冲，“保存共用设
 
 后续继续既有渠道授权回退/系统引用池、原配置完整便携、剩余组件样例/消费者及窗口缩放/native平台、最终集成和发布。目标仍在执行，版本未变更。
 
+### 正式基础样例与反馈纯视图部件
+
+DEV基础样例补正式品牌/两平台应用及托盘素材、字体栈/受限Markdown、原生输入/多行/复选/半选/单选配方、数据表/真实树表、动作菜单、图标键与正式反馈条目。registry锚点指向实际样例，不新增运行时docs依赖。图标32/通知24统一UiIconButton，顶栏刷新、通知删除及任务/Toast收起实际采用；保留名称、title、aria-expanded、disabled/busy及原事件owner。全量回归发现顶栏原aria-busy=false缺失，已保持原明确false契约后复核。
+
+TaskProgressCard/FeedbackToast为纯视图，TaskProgressHost/ToastHost继续是现有状态/事件/路由与收起语义的唯一宿主，未重新实现页面通知或发布器。gallery直接传固定数据，无应用store/IPC。真实NotificationItem继续由通知feature拥有，样例分别呈现未读、已读未解决和已解决。公共输入配方明确字体继承及行高18，sm28/md34/lg40；样例Grid按内容顶对齐，避免拉伸制造假尺寸。没有固定高度裁切长文本。动作菜单复用UiSelectMenu并支持menuitem方向/Home/End及禁用跳过，卸载/迟到开闭不写失效DOM。
+
+浏览器实测：正式资产小尺寸20项均加载（随后补亮/暗背景展示，mac Template白色只作浏览器滤镜模拟）；普通图标键32×32、通知内图标24×24，正式反馈样例实屏shared-feedback-gallery-light.jpg。输入修正后sm/md/lg28/34/40、只读/禁用/错误均34，字体为正式栈；foundation-fields-browser-20261019.json记录最终测量。树表实际ArrowLeft/Right及失败重试恢复，动作菜单ArrowDown→End到复制、Escape回原触发器均通过。网页样例不等于native caption/托盘现场，本批平台样例只引用素材及实际native实现，不伪造第二窗口。
+
+检查：受影响通知/任务/顶栏/组件13文件43项通过；随后全量120文件620项运行，619通过、1项发现顶栏aria-busy false契约差异；修正后相应3文件10项及生产构建通过。无未处理异步异常，原jsdom Canvas提示仍非真实画质证据。生产dist无新增基础/选择器样例或gallery入口。全部环境/缩放、系统Keychain/原生平台、授权回退与原字段便携及最终发布门继续实施。
+
 当前未发布，未生成本版验收完成或发布证书。

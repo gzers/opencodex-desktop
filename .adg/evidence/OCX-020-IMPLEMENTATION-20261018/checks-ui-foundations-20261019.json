@@ -1,0 +1,77 @@
+{
+  "recordedAt": "2026-10-19T06:55:39.427786+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "4701fe25a3c4bec86d2d3ddabccb815f44a746ba",
+  "sourceSha256": {
+    "apps/desktop/ui/src/components/AppTopbar.vue": "90fdc95a35d0faebc26c5c669d5b10f35d2b4ec4a4bc7c95ef0a8a3ecf198c22",
+    "apps/desktop/ui/src/components/README.md": "fb469ff5d5fdea40cc85888d53931dba38468d890df23872bd8be0a20d2fd08d",
+    "apps/desktop/ui/src/components/TaskProgressHost.vue": "567273e38c6d47433f82a007c39e96f98020310e86d2919fa65ffcb57f253357",
+    "apps/desktop/ui/src/components/ToastHost.vue": "e2ed18454fd3cc13705d6822ad82bcea628e774d10a123048909f700f8d72fef",
+    "apps/desktop/ui/src/components/patterns/FeedbackToast.vue": "4b8192449eb5a2904381413664d448789fe686552bf4363b780569082d056239",
+    "apps/desktop/ui/src/components/patterns/TaskProgressCard.vue": "6cbe2ea3adb9cd6d08277e3c309dff2fea336addc71e8d8ba50bca78cecce38c",
+    "apps/desktop/ui/src/components/registry.ts": "a5dcd8abf7c736d0d789c686705d62b194a37243fa715cf86eb13d59f0701c54",
+    "apps/desktop/ui/src/components/ui/UiIconButton.vue": "583f322175c13fe5450617ffe9ceca4a1d0483b5210c0cbd464de189db297b24",
+    "apps/desktop/ui/src/components/ui/UiSelectMenu.vue": "978a46bb18985896758694d287f39b0e21dfbfd77bb580ec233ef0ed15a72236",
+    "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue": "0cab60f08056cf5235a4e898cfc3ae7546d5bc9e7d9123b9ea363d5f89821013",
+    "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue": "88f87174846fe04905a6e82f7280742fccdce63c9571cd6add2c4406e45b97d7",
+    "apps/desktop/ui/src/features/notifications/components/NotificationItem.vue": "b732229fd7f96b3cd46a6b44d4b312740b6826e886dff698eb5d8fff54e829fa",
+    "apps/desktop/ui/src/styles/base.css": "1b4f57ee4dc96b38dd9df85724e78459a9040590a1b0293dc0aa8389a2d99b3d",
+    "apps/desktop/ui/src/styles/tokens.css": "c3422a5db327ace8056f219e8cfbd134fe100a666839787b725a102fcdba6032",
+    "apps/desktop/ui/tests/component-registry.test.ts": "c175b44667b874f252560860c5a799f63e95647481b195d6ca1820d72ae17bba",
+    "apps/desktop/ui/tests/feedback-primitives.test.ts": "1b1e6f303844f3bae0299de42dc8a6de2d04ac6161daee6bb9c844ef5a5631ae",
+    "apps/desktop/ui/tests/model-components.test.ts": "940c2f6872d12474ebe94a84304dd48eb876cff96443645ca9a37aa36f0c084f"
+  },
+  "checks": [
+    {
+      "command": "npm run test -- --run tests/feedback-primitives.test.ts tests/notification-*.test.ts tests/notifications.test.ts tests/process-progress-labels.test.ts tests/model-operation-tasks.test.ts tests/topbar.test.ts tests/feedback-registry.test.ts tests/component-*.test.ts tests/model-components.test.ts",
+      "session": 33074,
+      "files": 13,
+      "passed": 43,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run",
+      "session": 83747,
+      "files": 120,
+      "passed": 619,
+      "failed": 1,
+      "result": "failed",
+      "failure": "global-refresh expects explicit aria-busy=false; fixed and retested below"
+    },
+    {
+      "command": "npm run test -- --run tests/global-refresh.test.ts tests/feedback-primitives.test.ts tests/topbar.test.ts",
+      "session": 47238,
+      "files": 3,
+      "passed": 10,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 47238,
+      "result": "passed"
+    }
+  ],
+  "browserEvidence": [
+    "shared-feedback-gallery-light.jpg",
+    "foundation-fields-browser-20261019.json"
+  ],
+  "browserObserved": [
+    "regular icon32x32, notification icon24x24",
+    "input28/34/40 with proper font stack, readonly/disabled/error34",
+    "actual tree ArrowLeft/Right and error retry",
+    "menu ArrowDown/End skips disabled, Escape returns trigger",
+    "20 original platform assets loaded at requested logical sizes; later light/dark samples added"
+  ],
+  "notProven": [
+    "native OS caption/tray behavior",
+    "complete all-controls/window/zoom/quality matrix",
+    "system Keychain platform acceptance"
+  ],
+  "remaining": [
+    "authorization epoch replacement and exact identity-preserving references",
+    "portable full original upstream config",
+    "all public consumers/environment/native gates",
+    "final integration release/postpublish"
+  ]
+}
