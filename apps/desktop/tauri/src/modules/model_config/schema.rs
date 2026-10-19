@@ -465,6 +465,8 @@ pub struct Policy {
     pub default_channel_id: Option<String>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub pending_removals: Vec<SourceRemoval>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub recovery_id: Option<String>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -478,6 +480,7 @@ impl Policy {
     pub fn published(&self) -> Self {
         let mut policy = self.clone();
         policy.pending_removals.clear();
+        policy.recovery_id = None;
         policy
     }
 }
@@ -489,6 +492,7 @@ impl Default for Policy {
             channels: vec![],
             default_channel_id: None,
             pending_removals: vec![],
+            recovery_id: None,
         }
     }
 }

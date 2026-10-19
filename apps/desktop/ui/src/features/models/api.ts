@@ -46,14 +46,14 @@ export interface ChannelPolicy {
   selection: ModelSelection; modelOrder: string[]; discovered: DiscoveredModel[]
   defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
 }
-export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
+export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;recoveryId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
 export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
-export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[] }
+export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
 export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
 export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
 export interface ModelRecoveryRequest {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expectedLibrary:string;expectedPolicy:string;expectedWorkspace:string}
-export interface ModelRecoveryPreview {id:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:ChangeFact[];defaultChanges:ChangeFact[];channelLabels:string[];notices:string[]}
+export interface ModelRecoveryPreview {requiresRuntimeReview?:boolean;id:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:ChangeFact[];defaultChanges:ChangeFact[];channelLabels:string[];notices:string[]}
 export type ExternalScene = 'from_sources' | 'update_models' | 'audit_and_revise' | 'private_models' | 'preferences' | 'check_only'
 export interface ExternalTaskRequest { scene: ExternalScene; targets: TemplateRef[]; allowNew: boolean; requirements: string; expectedLibrary: string; buffers: { templateId: string; baseRevision: string; label: string; content: TemplateContent }[] }
 export interface TaskGrant { task: { id: string; contractVersion: number; scene: ExternalScene; targets: unknown[]; allowNew: boolean; requirements: string; expectedLibrary: string; expiresAt: string; revoked: boolean }; token: string }

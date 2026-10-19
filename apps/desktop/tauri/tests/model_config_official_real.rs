@@ -216,6 +216,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let channel_id = uuid::Uuid::new_v4().to_string();
     let mut policy = Policy {
         pending_removals: vec![],
+        recovery_id: None,
         default_channel_id: None,
         schema_version: SCHEMA_VERSION,
         template_refs: vec![],
@@ -502,7 +503,45 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert!(actual.providers["providers"].get(mapped).is_none());
     assert_eq!(actual.providers["defaultProvider"], "fixture-keep");
     assert_eq!(actual.catalog["models"].as_array().unwrap().len(), 1);
-    // Recreate public rows disabled, then restore only their protected owned authorization.
+    // Exercise the public successful-history → draft → normal save → readback path.
+    let current = store.load().unwrap();
+    let recovery = runtime::prepare_recovery(
+        &manager,
+        model_config::recovery::Request {
+            source_id: removal.id.clone(),
+            side: model_config::recovery::Side::Before,
+            scope: model_config::recovery::Scope::Affected,
+            restore_defaults: false,
+            expected_library: current.library_digest,
+            expected_policy: current.policy_digest,
+            expected_workspace: current.workspace_digest,
+        },
+    )
+    .unwrap();
+    let staged = runtime::accept_recovery(&manager, &recovery.id).unwrap();
+    let historical = runtime::prepare(
+        &manager,
+        &context,
+        staged.workspace.unwrap().policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        historical.history_source.as_deref(),
+        Some(removal.id.as_str())
+    );
+    let historical_result = runtime::apply(&manager, &context, &historical.id)
+        .await
+        .unwrap();
+    assert_eq!(
+        historical_result.phase, "committed",
+        "{:?}",
+        historical_result.error
+    );
+    let actual = upstream::snapshot(&context).await.unwrap();
     let stored: serde_json::Value = serde_json::from_slice(
         &std::fs::read(
             manager
@@ -512,61 +551,38 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap(),
     )
     .unwrap();
-    let backups = stored["removedKeys"]
+    assert_eq!(actual.providers, stored["before"]["providers"]);
+    assert_eq!(
+        management.key_state("fixture").await.unwrap(),
+        key_pool_before
+    );
+    for backup in stored["removedKeys"]
         .as_array()
         .unwrap()
         .iter()
         .filter_map(|r| r.get("backup"))
         .filter(|v| !v.is_null())
-        .map(|v| serde_json::from_value::<model_config::provider_auth::Backup>(v.clone()).unwrap())
-        .collect::<Vec<_>>();
-    assert_eq!(backups.len(), 2);
-    let baseline = root.path().join("public-restore-baseline.json");
-    std::fs::write(&baseline, serde_json::to_vec(&actual.providers).unwrap()).unwrap();
-    let mut restored_public = actual.providers.clone();
-    for provider in &removal.removed_providers {
-        let mut row = stored["before"]["providers"]["providers"][provider].clone();
-        row["disabled"] = json!(true);
-        row["newModelPolicy"] = json!("off");
-        row["selectedModels"] = json!(["fixture-base"]);
-        restored_public["providers"][provider] = row;
-    }
-    assert!(
-        upstream::write(
-            &context,
-            upstream::WriteOperation::Providers {
-                baseline: &baseline,
-                next: &restored_public
-            }
-        )
-        .await
-        .unwrap()
-        .success
-    );
-    for backup in &backups {
-        model_config::provider_auth::restore(&manager, &context, backup)
-            .await
-            .unwrap();
-        model_config::provider_auth::restore(&manager, &context, backup)
+    {
+        let backup: model_config::provider_auth::Backup =
+            serde_json::from_value(backup.clone()).unwrap();
+        model_config::provider_auth::verify(&manager, &context, &backup)
             .await
             .unwrap();
     }
     assert_eq!(
-        management.key_state("fixture").await.unwrap(),
-        key_pool_before
-    );
-    for backup in &backups {
-        model_config::provider_auth::verify(&manager, &context, backup)
+        runtime::apply(&manager, &context, &historical.id)
             .await
-            .unwrap();
-    }
+            .unwrap()
+            .phase,
+        "committed"
+    );
 
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),
         0,
         "discovery/save cannot generate text"
     );
-    println!("official={} models={} catalog={}→{}→{}→{} phases={}/{}/{} protocol-groups={} stable-group=true new-default=true removal-including-owned-group=true multi-key-header-restored=true no-generation=true",snapshot.version,discovered_count(&after.models),plan.current_catalog_count,plan.catalog_count,hidden_plan.catalog_count,restore_plan.catalog_count,saved.phase,hidden.phase,restored.phase,plan.protocol_groups.len());
+    println!("official={} models={} catalog={}→{}→{}→{} phases={}/{}/{} protocol-groups={} stable-group=true new-default=true removal-including-owned-group=true history-to-normal-save=true multi-key-header-restored=true no-generation=true",snapshot.version,discovered_count(&after.models),plan.current_catalog_count,plan.catalog_count,hidden_plan.catalog_count,restore_plan.catalog_count,saved.phase,hidden.phase,restored.phase,plan.protocol_groups.len());
     let _ = child.kill().await;
     let _ = child.wait().await;
     capture.abort();

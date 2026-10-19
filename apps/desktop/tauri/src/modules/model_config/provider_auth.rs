@@ -9,6 +9,12 @@ use crate::{
     modules::{backup::safety, sync::portable_file},
     state::ProcessContext,
 };
+use aes_gcm::{
+    aead::{Aead, KeyInit, Payload},
+    Aes256Gcm, Nonce,
+};
+use base64::{engine::general_purpose::STANDARD, Engine};
+use rand::RngCore;
 use serde::{
     de::{DeserializeSeed, IgnoredAny, MapAccess, Visitor},
     Deserialize, Serialize,
@@ -19,10 +25,30 @@ use std::{
     path::{Path, PathBuf},
 };
 use zeroize::{Zeroize, Zeroizing};
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct LocalEnvelope {
+    format: String,
+    version: u32,
+    id: String,
+    provider: String,
+    binding: String,
+    nonce_b64: String,
+    ciphertext_b64: String,
+}
+fn local_aad(id: &str, provider: &str, binding: &str) -> ModelResult<Vec<u8>> {
+    Ok(serde_json::to_vec(
+        &serde_json::json!({"format":"OCXD_LOCAL_AUTH","version":1,"id":id,"provider":provider,"binding":binding}),
+    )?)
+}
 
 #[derive(Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 struct Auth {
+    base_url: Option<String>,
+    adapter: Option<String>,
+    auth_mode: Option<String>,
+    api_key_transport: Option<String>,
     api_key: Option<String>,
     #[serde(default)]
     api_key_pool: Vec<Slot>,
@@ -309,29 +335,37 @@ fn freeze(
     credentials: &impl SafeStore,
 ) -> ModelResult<Backup> {
     let id = uuid::Uuid::new_v4().to_string();
-    let password = Zeroizing::new(format!(
-        "{}{}",
-        uuid::Uuid::new_v4().simple(),
-        uuid::Uuid::new_v4().simple()
-    ));
+    let mut key = Zeroizing::new([0_u8; 32]);
+    let mut nonce = [0_u8; 12];
+    rand::rng().fill_bytes(key.as_mut());
+    rand::rng().fill_bytes(&mut nonce);
     let document = Zeroizing::new(serde_json::to_vec(value)?);
-    let bytes = portable_file::seal(
-        portable_file::Manifest {
-            id: id.clone(),
-            created_at: chrono::Utc::now().to_rfc3339(),
-            sections: vec!["providerAuthorization".into()],
-            secret_objects: value
-                .auth
-                .api_key_pool
-                .len()
-                .max(usize::from(value.auth.api_key.is_some()))
-                + value.auth.headers.len(),
-            document_digest: String::new(),
-        },
-        &document,
-        Some(password.as_str()),
-    )?;
-    credentials.put(&account(&id), password.as_str())?;
+    if document.len() > 4 * 1024 * 1024 {
+        return Err(invalid("provider_auth_limit", "本机授权保护正文超过4MiB"));
+    }
+    let cipher = Aes256Gcm::new_from_slice(key.as_ref())
+        .map_err(|_| invalid("provider_auth_cipher", "本机授权保护未就绪"))?;
+    let aad = local_aad(&id, provider, &value.binding)?;
+    let ciphertext = cipher
+        .encrypt(
+            Nonce::from_slice(&nonce),
+            Payload {
+                msg: &document,
+                aad: &aad,
+            },
+        )
+        .map_err(|_| invalid("provider_auth_cipher", "本机授权保护失败"))?;
+    let bytes = serde_json::to_vec(&LocalEnvelope {
+        format: "OCXD_LOCAL_AUTH".into(),
+        version: 1,
+        id: id.clone(),
+        provider: provider.into(),
+        binding: value.binding.clone(),
+        nonce_b64: STANDARD.encode(nonce),
+        ciphertext_b64: STANDARD.encode(ciphertext),
+    })?;
+    let encoded_key = Zeroizing::new(STANDARD.encode(key.as_ref()));
+    credentials.put(&account(&id), encoded_key.as_str())?;
     atomic_write(&path(root, &id)?, &bytes, 0o600)?;
     let backup = Backup {
         id,
@@ -351,15 +385,64 @@ fn unseal(root: &Path, backup: &Backup, credentials: &impl SafeStore) -> ModelRe
     let password = credentials
         .get(&account(&backup.id))?
         .ok_or_else(|| invalid("provider_auth_keychain", "授权恢复密钥不存在"))?;
-    let opened = portable_file::open(&bytes, Some(password.as_str()))?;
-    if !opened.protected
-        || opened.manifest.id != backup.id
-        || opened.manifest.sections != vec!["providerAuthorization"]
-        || sha256(&opened.document) != backup.digest
+    let document = if serde_json::from_slice::<serde_json::Value>(&bytes)
+        .map_err(|_| invalid("provider_auth_source", "授权保护文件无法解析"))?["format"]
+        == "OCXD_LOCAL_AUTH"
     {
-        return Err(invalid("provider_auth_digest", "授权保护身份或内容改变"));
+        let envelope: LocalEnvelope = serde_json::from_slice(&bytes)
+            .map_err(|_| invalid("provider_auth_source", "本机授权保护格式未知"))?;
+        if envelope.version != 1
+            || envelope.id != backup.id
+            || envelope.provider != backup.provider
+            || envelope.ciphertext_b64.len() > 6 * 1024 * 1024
+        {
+            return Err(invalid(
+                "provider_auth_scope",
+                "本机授权保护身份、版本或大小不同",
+            ));
+        }
+        let key = Zeroizing::new(
+            STANDARD
+                .decode(password.as_bytes())
+                .map_err(|_| invalid("provider_auth_keychain", "本机保护密钥编码无效"))?,
+        );
+        let nonce = STANDARD
+            .decode(&envelope.nonce_b64)
+            .map_err(|_| invalid("provider_auth_cipher", "保护随机数无效"))?;
+        if key.len() != 32 || nonce.len() != 12 {
+            return Err(invalid("provider_auth_cipher", "保护密钥或随机数长度无效"));
+        }
+        let ciphertext = STANDARD
+            .decode(&envelope.ciphertext_b64)
+            .map_err(|_| invalid("provider_auth_cipher", "保护载荷编码无效"))?;
+        let cipher = Aes256Gcm::new_from_slice(&key)
+            .map_err(|_| invalid("provider_auth_cipher", "保护密钥无效"))?;
+        let aad = local_aad(&envelope.id, &envelope.provider, &envelope.binding)?;
+        Zeroizing::new(
+            cipher
+                .decrypt(
+                    Nonce::from_slice(&nonce),
+                    Payload {
+                        msg: &ciphertext,
+                        aad: &aad,
+                    },
+                )
+                .map_err(|_| invalid("provider_auth_cipher", "本机授权保护标签校验失败"))?,
+        )
+    } else {
+        let opened = portable_file::open(&bytes, Some(password.as_str()))?;
+        if !opened.protected
+            || opened.manifest.id != backup.id
+            || opened.manifest.sections != vec!["providerAuthorization"]
+        {
+            return Err(invalid("provider_auth_digest", "旧保护文件身份不同"));
+        }
+        opened.document
+    };
+    if sha256(&document) != backup.digest {
+        return Err(invalid("provider_auth_digest", "授权保护正文摘要改变"));
     }
-    let value: Protected = serde_json::from_slice(&opened.document)
+    let value: Protected = serde_json::from_slice(&document)
         .map_err(|_| invalid("provider_auth_source", "授权保护文档无法解析"))?;
     validate(&value.auth)?;
     if value.provider != backup.provider {
@@ -453,6 +536,14 @@ pub async fn verify(root: &Path, context: &ProcessContext, backup: &Backup) -> M
     Ok(())
 }
 fn is_owned_subset(current: &Auth, expected: &Auth) -> bool {
+    if current.base_url != expected.base_url
+        || current.adapter != expected.adapter
+        || current.auth_mode.as_deref().unwrap_or("key")
+            != expected.auth_mode.as_deref().unwrap_or("key")
+        || current.api_key_transport != expected.api_key_transport
+    {
+        return false;
+    }
     let expected_key = |id: &str, key: &str| {
         expected
             .api_key_pool
@@ -574,6 +665,10 @@ mod tests {
         let a = "fixture-first-SECRET";
         let b = "fixture-second-SECRET";
         Auth {
+            base_url: Some("https://fixture.example.test/v1".into()),
+            adapter: Some("openai-chat".into()),
+            auth_mode: Some("key".into()),
+            api_key_transport: None,
             api_key: Some(b.into()),
             api_key_pool: vec![
                 Slot {
@@ -589,6 +684,81 @@ mod tests {
             ],
             headers: BTreeMap::from([("X-Authorization".into(), "fixture-header-SECRET".into())]),
         }
+    }
+    #[test]
+    fn local_machine_key_aad_rejects_binding_tampering_even_when_file_checksum_is_recomputed() {
+        let root = tempfile::tempdir().unwrap();
+        let store = Memory::default();
+        let value = Protected {
+            provider: "selected".into(),
+            binding: "fixture-root".into(),
+            auth: auth(),
+            reference_digests: Default::default(),
+        };
+        let mut backup = freeze(root.path(), "selected", &value, &store).unwrap();
+        let file = path(root.path(), &backup.id).unwrap();
+        let mut envelope: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(&file).unwrap()).unwrap();
+        envelope["binding"] = json!("another-runtime-root");
+        let bytes = serde_json::to_vec(&envelope).unwrap();
+        backup.file_digest = sha256(&bytes);
+        std::fs::write(&file, &bytes).unwrap();
+        assert_eq!(
+            unseal(root.path(), &backup, &store).err().unwrap().code,
+            "provider_auth_cipher"
+        );
+        envelope["version"] = json!(500);
+        let bytes = serde_json::to_vec(&envelope).unwrap();
+        backup.file_digest = sha256(&bytes);
+        std::fs::write(file, bytes).unwrap();
+        assert_eq!(
+            unseal(root.path(), &backup, &store).err().unwrap().code,
+            "provider_auth_scope"
+        );
+    }
+    #[test]
+    fn previous_password_protected_local_backups_remain_readable() {
+        let root = tempfile::tempdir().unwrap();
+        let store = Memory::default();
+        let value = Protected {
+            provider: "selected".into(),
+            binding: "fixture-root".into(),
+            auth: auth(),
+            reference_digests: Default::default(),
+        };
+        let id = uuid::Uuid::new_v4().to_string();
+        let document = Zeroizing::new(serde_json::to_vec(&value).unwrap());
+        let bytes = portable_file::seal(
+            portable_file::Manifest {
+                id: id.clone(),
+                created_at: chrono::Utc::now().to_rfc3339(),
+                sections: vec!["providerAuthorization".into()],
+                secret_objects: 3,
+                document_digest: String::new(),
+            },
+            &document,
+            Some("fixture-legacy-machine-passphrase"),
+        )
+        .unwrap();
+        store
+            .put(&account(&id), "fixture-legacy-machine-passphrase")
+            .unwrap();
+        atomic_write(&path(root.path(), &id).unwrap(), &bytes, 0o600).unwrap();
+        let backup = Backup {
+            id,
+            provider: "selected".into(),
+            digest: sha256(&document),
+            file_digest: sha256(&bytes),
+            state: state(&value.auth),
+        };
+        assert_eq!(
+            unseal(root.path(), &backup, &store)
+                .unwrap()
+                .auth
+                .api_key_pool
+                .len(),
+            2
+        );
     }
     #[test]
     fn protects_exact_pool_order_labels_active_selection_and_headers_without_plaintext_in_files_or_metadata(
@@ -650,6 +820,10 @@ mod tests {
     {
         let expected = auth();
         let mut partial = Auth {
+            base_url: expected.base_url.clone(),
+            adapter: expected.adapter.clone(),
+            auth_mode: expected.auth_mode.clone(),
+            api_key_transport: expected.api_key_transport.clone(),
             api_key: Some(expected.api_key_pool[0].key.clone()),
             api_key_pool: vec![Slot {
                 id: expected.api_key_pool[0].id.clone(),
@@ -665,6 +839,9 @@ mod tests {
         partial
             .headers
             .insert("X-Later".into(), "new-SECRET".into());
+        assert!(!is_owned_subset(&partial, &expected));
+        partial.headers.clear();
+        partial.base_url = Some("https://other.example.test/v1".into());
         assert!(!is_owned_subset(&partial, &expected));
     }
     #[test]

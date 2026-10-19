@@ -196,7 +196,7 @@ pub async fn check(root: &Path, context: &ProcessContext, request: Request) -> M
         && current.order["pickerOrder"] == serde_json::to_value(&plan.next_order)?
         && runtime::catalog_slugs(&current)? == plan.expected_slugs
         && disabled == serde_json::to_value(&plan.observed_disabled)?
-        && runtime::verify_committed_credentials(&plan, &frozen).await?;
+        && runtime::verify_committed_credentials(root, &plan, &frozen).await?;
     if context.executable()? != executable {
         return Err(invalid("runtime_binding", "核对期间运行来源改变"));
     }

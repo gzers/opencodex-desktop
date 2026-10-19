@@ -155,6 +155,9 @@ pub fn validate_library(library: &Library) -> ModelResult<()> {
     Ok(())
 }
 fn validate_policy(library: &Library, policy: &Policy) -> ModelResult<()> {
+    if let Some(id) = &policy.recovery_id {
+        require_uuid(id)?;
+    }
     if policy.schema_version != SCHEMA_VERSION {
         return Err(invalid("schema_version", "不支持的策略结构版本"));
     }

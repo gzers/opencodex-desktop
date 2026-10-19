@@ -14,11 +14,19 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::{
-    collections::BTreeSet,
+    collections::{BTreeMap, BTreeSet},
     path::{Path, PathBuf},
 };
 const PLAN_DIR: &str = "manager-state/model-save-plans";
 const OWNERSHIP: &str = "manager-state/model-runtime-ownership.json";
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct HistoryRestoration {
+    pub source_id: String,
+    pub projection: super::runtime_history::Projection,
+    pub authorizations: BTreeMap<String, Option<super::provider_auth::Backup>>,
+    pub registration_models: BTreeMap<String, Vec<String>>,
+}
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CredentialChange {
@@ -104,6 +112,14 @@ pub struct RuntimePlan {
     pub removed_providers: Vec<String>,
     #[serde(default)]
     pub removed_keys: Vec<RemovedKey>,
+    #[serde(default)]
+    pub committed_snapshot: Option<UpstreamSnapshot>,
+    #[serde(default)]
+    pub authorization_before: BTreeMap<String, Option<super::provider_auth::Backup>>,
+    #[serde(default)]
+    pub authorization_after: BTreeMap<String, Option<super::provider_auth::Backup>>,
+    #[serde(default)]
+    pub history_restoration: Option<HistoryRestoration>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -117,6 +133,8 @@ pub struct SavePlanView {
     pub protocol_groups: Vec<String>,
     pub route_changes: Vec<String>,
     pub removed_providers: Vec<String>,
+    pub history_source: Option<String>,
+    pub runtime_changes: Vec<ChangeFact>,
 }
 impl RuntimePlan {
     fn view(&self) -> SavePlanView {
@@ -158,6 +176,52 @@ impl RuntimePlan {
                 .unwrap_or_default(),
             route_changes: self.route_changes.clone(),
             removed_providers: self.removed_providers.clone(),
+            history_source: self
+                .history_restoration
+                .as_ref()
+                .map(|h| h.source_id.clone()),
+            runtime_changes: self
+                .history_restoration
+                .as_ref()
+                .map(|history| {
+                    let mut values = vec![];
+                    for provider in &history.projection.affected {
+                        let before = &self.before.providers["providers"][provider];
+                        let after = &self.next_providers["providers"][provider];
+                        if before != after {
+                            values.push(ChangeFact {
+                                field: format!("provider/{provider}"),
+                                before: before.clone(),
+                                after: after.clone(),
+                            });
+                        }
+                    }
+                    if self.before.providers["defaultProvider"]
+                        != self.next_providers["defaultProvider"]
+                    {
+                        values.push(ChangeFact {
+                            field: "defaultProvider".into(),
+                            before: self.before.providers["defaultProvider"].clone(),
+                            after: self.next_providers["defaultProvider"].clone(),
+                        });
+                    }
+                    if self.before.order["pickerOrder"] != json!(self.next_order) {
+                        values.push(ChangeFact {
+                            field: "pickerOrder".into(),
+                            before: self.before.order["pickerOrder"].clone(),
+                            after: json!(self.next_order),
+                        });
+                    }
+                    if self.disabled_before != history.projection.disabled {
+                        values.push(ChangeFact {
+                            field: "disabledModels".into(),
+                            before: json!(self.disabled_before),
+                            after: json!(history.projection.disabled),
+                        });
+                    }
+                    values
+                })
+                .unwrap_or_default(),
         }
     }
 }
@@ -178,9 +242,21 @@ pub(super) fn credential_runtime_changed(plan: &RuntimePlan) -> bool {
         .any(|c| c.before != c.intended())
 }
 pub(super) async fn verify_committed_credentials(
+    root: &Path,
     plan: &RuntimePlan,
     context: &ProcessContext,
 ) -> ModelResult<bool> {
+    if let Some(history) = &plan.history_restoration {
+        for (provider, backup) in &history.authorizations {
+            if plan.next_providers["providers"].get(provider).is_none() {
+                continue;
+            }
+            match backup {
+                Some(backup) => super::provider_auth::verify(root, context, backup).await?,
+                None => super::provider_auth::verify_absent(context, provider)?,
+            }
+        }
+    }
     if plan.credential_changes.is_empty() {
         return Ok(true);
     }
@@ -267,6 +343,17 @@ pub(super) fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
     }
     if let Some(baseline) = &plan.recovery {
         baseline.validate()?;
+    }
+    if let Some(snapshot) = &plan.committed_snapshot {
+        if snapshot.providers != plan.next_providers
+            || snapshot.order["pickerOrder"] != serde_json::to_value(&plan.next_order)?
+            || catalog_slugs(snapshot)? != plan.expected_slugs
+        {
+            return Err(invalid(
+                "plan_readback",
+                "成功保存快照与冻结目标不同，未采用历史",
+            ));
+        }
     }
     Ok(plan)
 }
@@ -864,6 +951,10 @@ pub async fn prepare(
     } else {
         vec![]
     };
+    if let Some(id) = &policy.recovery_id {
+        let request = super::recovery::selected_request(root, id, &policy)?;
+        return prepare_history(root, context, local, before, policy, previous, request).await;
+    }
     let mappings = super::protocol_groups::mappings(root, &local.library, &policy)?;
     let execution_policy =
         super::protocol_groups::expand(&before, &local.library, &policy, &mappings)?;
@@ -1002,6 +1093,32 @@ pub async fn prepare(
         &recovery_local,
         before.providers["defaultProvider"].as_str(),
     )?;
+    let managed = execution_policy
+        .channels
+        .iter()
+        .map(|c| c.connection.provider_id.clone())
+        .chain(removed.iter().cloned())
+        .collect::<BTreeSet<_>>();
+    let mut authorization_before = BTreeMap::new();
+    for provider in managed.into_iter().filter(|provider| {
+        before.providers["providers"].get(provider) != next_providers["providers"].get(provider)
+            || credential_changes.iter().any(|c| &c.provider == provider)
+    }) {
+        if let Some(removed) = removed_keys.iter().find(|r| r.provider == provider) {
+            authorization_before.insert(provider, removed.backup.clone());
+        } else if before.providers["providers"].get(&provider).is_none() {
+            authorization_before.insert(provider, None);
+        } else if !super::channel_actions::protected(&before, &provider) {
+            if management.is_none() {
+                management = Some(super::management::Management::bind(context).await?);
+            }
+            let keys = management.as_ref().unwrap().key_state(&provider).await?;
+            authorization_before.insert(
+                provider.clone(),
+                super::provider_auth::capture(root, context, &provider, &keys).await?,
+            );
+        }
+    }
     let plan = RuntimePlan {
         id: uuid::Uuid::new_v4().to_string(),
         phase: "prepared".into(),
@@ -1029,12 +1146,361 @@ pub async fn prepare(
         runtime_binding: Some(runtime_binding(context)?),
         removed_providers: removed.into_iter().collect(),
         removed_keys,
+        committed_snapshot: None,
+        authorization_before,
+        authorization_after: BTreeMap::new(),
+        history_restoration: None,
     };
     save(root, &plan)?;
     Ok(plan.view())
 }
 pub fn query(root: &Path, id: &str) -> ModelResult<SavePlanView> {
     Ok(load(root, id)?.view())
+}
+async fn capture_after(
+    root: &Path,
+    context: &ProcessContext,
+    plan: &mut RuntimePlan,
+) -> ModelResult<()> {
+    let snapshot = plan
+        .committed_snapshot
+        .as_ref()
+        .ok_or_else(|| invalid("history_snapshot", "成功运行读回缺失"))?;
+    let mut values = BTreeMap::new();
+    let mut management = None;
+    for provider in plan.authorization_before.keys() {
+        if snapshot.providers["providers"].get(provider).is_none() {
+            values.insert(provider.clone(), None);
+            continue;
+        }
+        if super::channel_actions::protected(snapshot, provider) {
+            continue;
+        }
+        if management.is_none() {
+            management = Some(super::management::Management::bind(context).await?);
+        }
+        let keys = management.as_ref().unwrap().key_state(provider).await?;
+        values.insert(
+            provider.clone(),
+            super::provider_auth::capture(root, context, provider, &keys).await?,
+        );
+    }
+    plan.authorization_after = values;
+    save(root, plan)
+}
+async fn apply_history_effects(
+    root: &Path,
+    context: &ProcessContext,
+    plan: &mut RuntimePlan,
+    before_path: &Path,
+) -> ModelResult<()> {
+    let history = plan.history_restoration.as_ref().unwrap().clone();
+    let mut baseline = before_path.to_path_buf();
+    if !history.registration_models.is_empty() {
+        let mut staged = plan.before.providers.clone();
+        for (provider, models) in &history.registration_models {
+            let mut row = plan.next_providers["providers"][provider].clone();
+            row["disabled"] = json!(true);
+            row["newModelPolicy"] = json!("off");
+            row["selectedModels"] = json!(models);
+            staged["providers"][provider] = row;
+        }
+        plan.phase = "history_registering".into();
+        save(root, plan)?;
+        if !upstream::write(
+            context,
+            WriteOperation::Providers {
+                baseline: &baseline,
+                next: &staged,
+            },
+        )
+        .await?
+        .success
+        {
+            return Err(invalid(
+                "history_registration",
+                "历史停用渠道注册结果待核对",
+            ));
+        }
+        observe(root, context, plan).await?;
+        if plan.observed_providers != staged {
+            return Err(invalid(
+                "history_readback",
+                "历史停用注册读回不同，未发送授权",
+            ));
+        }
+        baseline = root
+            .join(PLAN_DIR)
+            .join(format!("{}-history-registered.json", plan.id));
+        safety::check_path(root, &baseline, true)?;
+        atomic_write(&baseline, &serde_json::to_vec(&staged)?, 0o600)?;
+    }
+    plan.phase = "history_authorizations".into();
+    save(root, plan)?;
+    for (provider, backup) in &history.authorizations {
+        if plan.next_providers["providers"].get(provider).is_none() {
+            continue;
+        }
+        if let Some(backup) = backup {
+            super::provider_auth::restore(root, context, backup).await?;
+        } else {
+            super::provider_auth::verify_absent(context, provider)?;
+        }
+        observe(root, context, plan).await?;
+    }
+    plan.phase = "history_providers".into();
+    save(root, plan)?;
+    if !upstream::write(
+        context,
+        WriteOperation::Providers {
+            baseline: &baseline,
+            next: &plan.next_providers,
+        },
+    )
+    .await?
+    .success
+    {
+        return Err(invalid(
+            "history_provider_write",
+            "历史公开字段写入结果待核对",
+        ));
+    }
+    observe(root, context, plan).await?;
+    if plan.observed_providers != plan.next_providers {
+        return Err(invalid("history_readback", "历史公开字段未准确读回"));
+    }
+    if !upstream::write(
+        context,
+        WriteOperation::DisabledModels(&history.projection.disabled),
+    )
+    .await?
+    .success
+    {
+        return Err(invalid("history_visibility", "历史可见性结果待核对"));
+    }
+    observe(root, context, plan).await?;
+    if plan.observed_disabled != history.projection.disabled {
+        return Err(invalid("history_visibility", "历史可见性读回不同"));
+    }
+    if !upstream::write(context, WriteOperation::Order(&plan.next_order))
+        .await?
+        .success
+    {
+        return Err(invalid("history_order", "历史顺序结果待核对"));
+    }
+    observe(root, context, plan).await?;
+    plan.phase = "order_written".into();
+    save(root, plan)
+}
+async fn prepare_history(
+    root: &Path,
+    context: &ProcessContext,
+    local: Snapshot,
+    before: UpstreamSnapshot,
+    policy: Policy,
+    previous: Vec<OwnedField>,
+    request: super::recovery::Request,
+) -> ModelResult<SavePlanView> {
+    let source = load(root, &request.source_id)?;
+    if source.phase != "committed"
+        || source.runtime_binding.as_ref() != Some(&runtime_binding(context)?)
+    {
+        return Err(invalid(
+            "history_binding",
+            "历史记录不属于当前成功运行来源，未生成保存计划",
+        ));
+    }
+    let after = source.committed_snapshot.as_ref().ok_or_else(|| {
+        invalid(
+            "history_snapshot",
+            "旧记录缺少成功后的完整官方快照，不能推算完整运行恢复",
+        )
+    })?;
+    let managed = source
+        .policy
+        .channels
+        .iter()
+        .map(|c| c.connection.provider_id.clone())
+        .chain(source.recovery.iter().flat_map(|b| {
+            b.policy
+                .channels
+                .iter()
+                .map(|c| c.connection.provider_id.clone())
+        }))
+        .chain(
+            source
+                .execution_policy
+                .iter()
+                .flat_map(|p| p.channels.iter().map(|c| c.connection.provider_id.clone())),
+        )
+        .chain(source.removed_providers.iter().cloned())
+        .collect::<BTreeSet<_>>();
+    let disabled =
+        string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
+    let projection = super::runtime_history::project(
+        &before,
+        &source.before,
+        after,
+        [
+            &disabled,
+            &source.disabled_before,
+            &source.observed_disabled,
+        ],
+        request.side,
+        &managed,
+        request.scope == super::recovery::Scope::All,
+    )?;
+    let target = if request.side == super::recovery::Side::Before {
+        &source.before
+    } else {
+        after
+    };
+    let authorizations = if request.side == super::recovery::Side::Before {
+        &source.authorization_before
+    } else {
+        &source.authorization_after
+    };
+    let mut target_auth = BTreeMap::new();
+    let mut before_auth = BTreeMap::new();
+    let mut removed_keys = vec![];
+    let mut registration_models = BTreeMap::new();
+    let management = super::management::Management::bind(context).await?;
+    for provider in &projection.affected {
+        if super::channel_actions::protected(target, provider)
+            || super::channel_actions::protected(&before, provider)
+        {
+            return Err(invalid(
+                "history_protected",
+                "此历史范围涉及原生或专用授权来源，不能作为普通自建渠道恢复",
+            ));
+        }
+        let current = before.providers["providers"].get(provider);
+        let desired = target.providers["providers"].get(provider);
+        if let Some(backup) = authorizations.get(provider) {
+            target_auth.insert(provider.clone(), backup.clone());
+        } else if desired.is_some() && current != desired {
+            return Err(invalid(
+                "history_authorization",
+                "历史目标缺少完整授权保护事实，请选择具备完整保护的成功记录",
+            ));
+        }
+        if current == desired && !target_auth.contains_key(provider) {
+            continue;
+        }
+        if current.is_some() {
+            let keys = management.key_state(provider).await?;
+            let backup = super::provider_auth::capture(root, context, provider, &keys).await?;
+            if desired.is_none() {
+                removed_keys.push(RemovedKey {
+                    provider: provider.clone(),
+                    before: keys,
+                    reference: None,
+                    backup: backup.clone(),
+                });
+            }
+            before_auth.insert(provider.clone(), backup);
+        } else {
+            before_auth.insert(provider.clone(), None);
+        }
+        if let Some(Some(backup)) = target_auth.get(provider) {
+            super::provider_auth::check_backup(root, backup)?;
+            if current.is_some() && !super::provider_auth::inspect_target(root, context, backup)? {
+                return Err(invalid(
+                    "history_authorization_conflict",
+                    "目标渠道仍有另一授权选择，请先核对当前授权方向",
+                ));
+            }
+        } else if target_auth.contains_key(provider) && current.is_some() && desired.is_some() {
+            super::provider_auth::verify_absent(context, provider)?;
+        }
+        if let Some(row) = desired.filter(|_| current.is_none()) {
+            let values = row["selectedModels"]
+                .as_array()
+                .or_else(|| row["models"].as_array())
+                .map(|values| {
+                    values
+                        .iter()
+                        .filter_map(Value::as_str)
+                        .map(str::to_owned)
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default();
+            let values = if values.is_empty() {
+                target
+                    .models
+                    .as_array()
+                    .into_iter()
+                    .flatten()
+                    .filter(|m| m["provider"] == provider.as_str())
+                    .filter_map(|m| m["id"].as_str().map(str::to_owned))
+                    .collect()
+            } else {
+                values
+            };
+            if values.is_empty() {
+                return Err(invalid(
+                    "history_registration",
+                    "历史渠道没有可核对的精确型号，无法执行停用注册",
+                ));
+            }
+            registration_models.insert(provider.clone(), values);
+        }
+    }
+    let recovery = super::recovery::Baseline::capture_runtime(
+        &local,
+        before.providers["defaultProvider"].as_str(),
+    )?;
+    let plan = RuntimePlan {
+        id: uuid::Uuid::new_v4().to_string(),
+        phase: "prepared".into(),
+        expected_library: local.library_digest,
+        expected_policy: local.policy_digest,
+        expected_workspace: local.workspace_digest,
+        policy,
+        before: before.clone(),
+        next_providers: projection.providers.clone(),
+        next_order: projection.order.clone(),
+        expected_slugs: projection.catalog.clone(),
+        runtime_executable: context.executable()?.to_string_lossy().into_owned(),
+        error: None,
+        created_at: chrono::Utc::now().to_rfc3339(),
+        ownership: previous
+            .iter()
+            .filter(|f| !projection.affected.contains(&f.provider))
+            .cloned()
+            .collect(),
+        previous_ownership: previous,
+        disabled_before: disabled.clone(),
+        observed_providers: before.providers.clone(),
+        observed_order: string_array(&before.order["pickerOrder"])?,
+        observed_disabled: disabled,
+        credential_changes: vec![],
+        execution_policy: None,
+        route_changes: vec![],
+        recovery: Some(recovery),
+        runtime_binding: Some(runtime_binding(context)?),
+        removed_providers: projection
+            .affected
+            .iter()
+            .filter(|p| {
+                projection.providers["providers"].get(*p).is_none()
+                    && before.providers["providers"].get(*p).is_some()
+            })
+            .cloned()
+            .collect(),
+        removed_keys,
+        committed_snapshot: None,
+        authorization_before: before_auth,
+        authorization_after: BTreeMap::new(),
+        history_restoration: Some(HistoryRestoration {
+            source_id: source.id,
+            projection,
+            authorizations: target_auth,
+            registration_models,
+        }),
+    };
+    save(root, &plan)?;
+    Ok(plan.view())
 }
 pub async fn reconcile(
     root: &Path,
@@ -1101,6 +1567,15 @@ pub async fn reconcile(
                 .insert(channel.connection.provider_id.clone(), value);
         }
     }
+    if let Some(history) = &plan.history_restoration {
+        for (provider, models) in &history.registration_models {
+            let mut row = plan.next_providers["providers"][provider].clone();
+            row["disabled"] = json!(true);
+            row["newModelPolicy"] = json!("off");
+            row["selectedModels"] = json!(models);
+            staged["providers"][provider] = row;
+        }
+    }
     let attributable = actual.providers == plan.before.providers
         || actual.providers == plan.next_providers
         || actual.providers == staged;
@@ -1113,7 +1588,7 @@ pub async fn reconcile(
         .symmetric_difference(&plan.disabled_before.iter().cloned().collect())
         .cloned()
         .collect();
-    let model_slugs: BTreeSet<_> = rows(&plan.before)?
+    let mut model_slugs: BTreeSet<_> = rows(&plan.before)?
         .iter()
         .filter(|m| {
             plan.execution_policy()
@@ -1123,6 +1598,23 @@ pub async fn reconcile(
         })
         .filter_map(|m| m["namespaced"].as_str().map(str::to_owned))
         .collect();
+    if let Some(history) = &plan.history_restoration {
+        model_slugs.extend(history.projection.disabled.iter().cloned());
+        model_slugs.extend(
+            plan.disabled_before
+                .iter()
+                .filter(|slug| {
+                    slug.split_once('/').is_some_and(|(p, _)| {
+                        history
+                            .projection
+                            .affected
+                            .iter()
+                            .any(|provider| provider == p)
+                    })
+                })
+                .cloned(),
+        );
+    }
     if !attributable
         || ![&original_order, &plan.next_order].contains(&&actual_order)
         || !changed.is_subset(&model_slugs)
@@ -1140,10 +1632,17 @@ pub async fn reconcile(
         && actual_order == plan.next_order
         && catalog_slugs(&actual)? == plan.expected_slugs
         && plan
+            .history_restoration
+            .as_ref()
+            .is_none_or(|h| h.projection.disabled == plan.observed_disabled)
+        && plan
             .credential_changes
             .iter()
             .all(|change| change.observed.as_ref() == Some(&change.intended()))
     {
+        plan.committed_snapshot = Some(actual.clone());
+        verify_committed_credentials(root, &plan, context).await?;
+        capture_after(root, context, &mut plan).await?;
         ModelStore::new(root).commit_runtime_policy(
             &plan.expected_library,
             &plan.expected_policy,
@@ -1217,6 +1716,15 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
         ));
     }
     let current = upstream::snapshot(&frozen).await?;
+    for (provider, backup) in &plan.authorization_before {
+        if plan.before.providers["providers"].get(provider).is_none() {
+            continue;
+        }
+        match backup {
+            Some(backup) => super::provider_auth::verify(root, &frozen, backup).await?,
+            None => super::provider_auth::verify_absent(&frozen, provider)?,
+        }
+    }
     if !plan.removed_keys.is_empty() {
         let management = super::management::Management::bind(&frozen).await?;
         for removed in &plan.removed_keys {
@@ -1261,221 +1769,227 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
     plan.phase = "applying".into();
     save(root, &plan)?;
     let result: ModelResult<()> = async {
-        // Clearing a whitelist must not briefly publish every model. Hide the
-        // frozen known rows first; new discoveries remain off under the provider
-        // policy, and every effect is journaled for exact compensation.
-        let none_channels = plan
-            .execution_policy()
-            .channels
-            .iter()
-            .filter(|c| matches!(c.selection, ModelSelection::None))
-            .map(|c| c.connection.provider_id.clone())
-            .collect::<BTreeSet<_>>();
-        let hidden = rows(&plan.before)?
-            .iter()
-            .filter(|row| {
-                row["native"] != true
-                    && row["disabled"] != true
-                    && row["provider"]
-                        .as_str()
-                        .is_some_and(|provider| none_channels.contains(provider))
-            })
-            .filter_map(|row| row["namespaced"].as_str().map(str::to_owned))
-            .collect::<Vec<_>>();
-        if !hidden.is_empty() {
-            plan.phase = "hiding_none_selection".into();
-            save(root, &plan)?;
-            for slug in hidden {
-                let receipt = upstream::write(&frozen, WriteOperation::DisableModel(&slug)).await?;
-                if !receipt.success {
-                    return Err(invalid(
-                        "visibility_write",
-                        "隐藏当前模型结果待核对，未清空白名单",
-                    ));
-                }
-                observe(root, &frozen, &mut plan).await?;
-            }
-        }
-        let new_channels: Vec<_> = plan
-            .execution_policy()
-            .channels
-            .iter()
-            .filter(|c| {
-                plan.before.providers["providers"]
-                    .get(&c.connection.provider_id)
-                    .is_none()
-            })
-            .collect();
-        let mut final_baseline = before_path.clone();
-        if !new_channels.is_empty() {
-            let mut staged = plan.before.providers.clone();
-            for channel in &new_channels {
-                let mut value =
-                    plan.next_providers["providers"][&channel.connection.provider_id].clone();
-                value["disabled"] = json!(true);
-                value["newModelPolicy"] = json!("off");
-                staged["providers"]
-                    .as_object_mut()
-                    .ok_or_else(|| invalid("provider", "渠道结构无效"))?
-                    .insert(channel.connection.provider_id.clone(), value);
-            }
-            plan.phase = "registering_new".into();
-            save(root, &plan)?;
-            let result = upstream::write(
-                &frozen,
-                WriteOperation::Providers {
-                    baseline: &before_path,
-                    next: &staged,
-                },
-            )
-            .await?;
-            if !result.success {
-                return Err(invalid(
-                    "registration_unknown",
-                    "新渠道注册结果待核对，未按成功继续",
-                ));
-            }
-            let readback =
-                upstream::read(&frozen, upstream::ReadOperation::ProviderSnapshot).await?;
-            if readback != staged {
-                return Err(invalid(
-                    "registration_readback",
-                    "新渠道停用注册的读回不同，未发送密钥",
-                ));
-            }
-            plan.phase = "new_registered".into();
-            save(root, &plan)?;
-            let current =
-                upstream::read(&frozen, upstream::ReadOperation::ProviderSnapshot).await?;
-            if current != staged {
-                return Err(invalid(
-                    "registration_drift",
-                    "密钥接入期间官方渠道字段改变，未启用新渠道",
-                ));
-            }
-            final_baseline = root.join(PLAN_DIR).join(format!("{id}-registered.json"));
-            safety::check_path(root, &final_baseline, true)?;
-            atomic_write(
-                &final_baseline,
-                &serde_json::to_vec_pretty(&current)?,
-                0o600,
-            )?;
-            plan.phase = "credentials_registered".into();
-            save(root, &plan)?;
-        }
-        if !plan.credential_changes.is_empty() {
-            let management = super::management::Management::bind(&frozen).await?;
-            for index in 0..plan.credential_changes.len() {
-                let change = plan.credential_changes[index].clone();
-                if management.key_state(&change.provider).await? != change.before {
-                    return Err(invalid(
-                        "credential_drift",
-                        "确认后活动密钥或集合改变，未覆盖",
-                    ));
-                }
-                let key = super::discovery::credential(&change.reference)?;
-                if super::store::sha256(key.trim().as_bytes()) != change.intended_digest {
-                    return Err(invalid("credential_drift", "本机密钥引用内容变化，未发送"));
-                }
-                plan.phase = "writing_credentials".into();
+        if plan.history_restoration.is_some() {
+            apply_history_effects(root, &frozen, &mut plan, &before_path).await?;
+        } else {
+            // Clearing a whitelist must not briefly publish every model. Hide the
+            // frozen known rows first; new discoveries remain off under the provider
+            // policy, and every effect is journaled for exact compensation.
+            let none_channels = plan
+                .execution_policy()
+                .channels
+                .iter()
+                .filter(|c| matches!(c.selection, ModelSelection::None))
+                .map(|c| c.connection.provider_id.clone())
+                .collect::<BTreeSet<_>>();
+            let hidden = rows(&plan.before)?
+                .iter()
+                .filter(|row| {
+                    row["native"] != true
+                        && row["disabled"] != true
+                        && row["provider"]
+                            .as_str()
+                            .is_some_and(|provider| none_channels.contains(provider))
+                })
+                .filter_map(|row| row["namespaced"].as_str().map(str::to_owned))
+                .collect::<Vec<_>>();
+            if !hidden.is_empty() {
+                plan.phase = "hiding_none_selection".into();
                 save(root, &plan)?;
-                management.add_key(&change.provider, &key).await?;
-                let observed = management.key_state(&change.provider).await?;
-                if observed != change.intended() {
-                    return Err(invalid(
-                        "credential_readback",
-                        "密钥写后状态不同，原计划待核对",
-                    ));
+                for slug in hidden {
+                    let receipt =
+                        upstream::write(&frozen, WriteOperation::DisableModel(&slug)).await?;
+                    if !receipt.success {
+                        return Err(invalid(
+                            "visibility_write",
+                            "隐藏当前模型结果待核对，未清空白名单",
+                        ));
+                    }
+                    observe(root, &frozen, &mut plan).await?;
                 }
-                plan.credential_changes[index].observed = Some(observed);
+            }
+            let new_channels: Vec<_> = plan
+                .execution_policy()
+                .channels
+                .iter()
+                .filter(|c| {
+                    plan.before.providers["providers"]
+                        .get(&c.connection.provider_id)
+                        .is_none()
+                })
+                .collect();
+            let mut final_baseline = before_path.clone();
+            if !new_channels.is_empty() {
+                let mut staged = plan.before.providers.clone();
+                for channel in &new_channels {
+                    let mut value =
+                        plan.next_providers["providers"][&channel.connection.provider_id].clone();
+                    value["disabled"] = json!(true);
+                    value["newModelPolicy"] = json!("off");
+                    staged["providers"]
+                        .as_object_mut()
+                        .ok_or_else(|| invalid("provider", "渠道结构无效"))?
+                        .insert(channel.connection.provider_id.clone(), value);
+                }
+                plan.phase = "registering_new".into();
                 save(root, &plan)?;
-            }
-            plan.phase = "credentials_verified".into();
-            save(root, &plan)?;
-        }
-        let providers = upstream::write(
-            &frozen,
-            WriteOperation::Providers {
-                baseline: &final_baseline,
-                next: &plan.next_providers,
-            },
-        )
-        .await?;
-        if !providers.success {
-            return Err(invalid(
-                "provider_write",
-                "官方渠道写入返回未完成；请按原计划核对，不盲目重试",
-            ));
-        }
-        plan.phase = "providers_written".into();
-        observe(root, &frozen, &mut plan).await?;
-        save(root, &plan)?;
-        let visibility_channels = plan.execution_policy().channels.clone();
-        let visibility_rows = rows(&plan.before)?.clone();
-        for channel in &visibility_channels {
-            if !channel.connection.enabled {
-                continue;
-            }
-            for row in visibility_rows.iter().filter(|r| {
-                r["provider"].as_str() == Some(&channel.connection.provider_id)
-                    && r["native"] != true
-            }) {
-                let id = row["id"]
-                    .as_str()
-                    .ok_or_else(|| invalid("model_identity", "模型原始身份缺失"))?;
-                let enable = match &channel.selection {
-                    ModelSelection::All => true,
-                    ModelSelection::None => false,
-                    ModelSelection::Whitelist(values) => values.iter().any(|v| v == id),
-                };
-                // A whitelist already excludes unselected IDs; only none needs explicit disables.
-                if !enable && !matches!(channel.selection, ModelSelection::None) {
-                    continue;
-                }
-                if enable && row["disabled"] == false {
-                    continue;
-                }
-                if !enable && row["disabled"] == true {
-                    continue;
-                }
-                let slug = row["namespaced"]
-                    .as_str()
-                    .ok_or_else(|| invalid("model_identity", "模型缺少官方路由身份"))?;
                 let result = upstream::write(
                     &frozen,
-                    if enable {
-                        WriteOperation::EnableModel(slug)
-                    } else {
-                        WriteOperation::DisableModel(slug)
+                    WriteOperation::Providers {
+                        baseline: &before_path,
+                        next: &staged,
                     },
                 )
                 .await?;
                 if !result.success {
                     return Err(invalid(
-                        "visibility_write",
-                        "模型可见性更新未完成，结果待核对",
+                        "registration_unknown",
+                        "新渠道注册结果待核对，未按成功继续",
                     ));
                 }
-                observe(root, &frozen, &mut plan).await?;
+                let readback =
+                    upstream::read(&frozen, upstream::ReadOperation::ProviderSnapshot).await?;
+                if readback != staged {
+                    return Err(invalid(
+                        "registration_readback",
+                        "新渠道停用注册的读回不同，未发送密钥",
+                    ));
+                }
+                plan.phase = "new_registered".into();
+                save(root, &plan)?;
+                let current =
+                    upstream::read(&frozen, upstream::ReadOperation::ProviderSnapshot).await?;
+                if current != staged {
+                    return Err(invalid(
+                        "registration_drift",
+                        "密钥接入期间官方渠道字段改变，未启用新渠道",
+                    ));
+                }
+                final_baseline = root.join(PLAN_DIR).join(format!("{id}-registered.json"));
+                safety::check_path(root, &final_baseline, true)?;
+                atomic_write(
+                    &final_baseline,
+                    &serde_json::to_vec_pretty(&current)?,
+                    0o600,
+                )?;
+                plan.phase = "credentials_registered".into();
+                save(root, &plan)?;
             }
+            if !plan.credential_changes.is_empty() {
+                let management = super::management::Management::bind(&frozen).await?;
+                for index in 0..plan.credential_changes.len() {
+                    let change = plan.credential_changes[index].clone();
+                    if management.key_state(&change.provider).await? != change.before {
+                        return Err(invalid(
+                            "credential_drift",
+                            "确认后活动密钥或集合改变，未覆盖",
+                        ));
+                    }
+                    let key = super::discovery::credential(&change.reference)?;
+                    if super::store::sha256(key.trim().as_bytes()) != change.intended_digest {
+                        return Err(invalid("credential_drift", "本机密钥引用内容变化，未发送"));
+                    }
+                    plan.phase = "writing_credentials".into();
+                    save(root, &plan)?;
+                    management.add_key(&change.provider, &key).await?;
+                    let observed = management.key_state(&change.provider).await?;
+                    if observed != change.intended() {
+                        return Err(invalid(
+                            "credential_readback",
+                            "密钥写后状态不同，原计划待核对",
+                        ));
+                    }
+                    plan.credential_changes[index].observed = Some(observed);
+                    save(root, &plan)?;
+                }
+                plan.phase = "credentials_verified".into();
+                save(root, &plan)?;
+            }
+            let providers = upstream::write(
+                &frozen,
+                WriteOperation::Providers {
+                    baseline: &final_baseline,
+                    next: &plan.next_providers,
+                },
+            )
+            .await?;
+            if !providers.success {
+                return Err(invalid(
+                    "provider_write",
+                    "官方渠道写入返回未完成；请按原计划核对，不盲目重试",
+                ));
+            }
+            plan.phase = "providers_written".into();
+            observe(root, &frozen, &mut plan).await?;
+            save(root, &plan)?;
+            let visibility_channels = plan.execution_policy().channels.clone();
+            let visibility_rows = rows(&plan.before)?.clone();
+            for channel in &visibility_channels {
+                if !channel.connection.enabled {
+                    continue;
+                }
+                for row in visibility_rows.iter().filter(|r| {
+                    r["provider"].as_str() == Some(&channel.connection.provider_id)
+                        && r["native"] != true
+                }) {
+                    let id = row["id"]
+                        .as_str()
+                        .ok_or_else(|| invalid("model_identity", "模型原始身份缺失"))?;
+                    let enable = match &channel.selection {
+                        ModelSelection::All => true,
+                        ModelSelection::None => false,
+                        ModelSelection::Whitelist(values) => values.iter().any(|v| v == id),
+                    };
+                    // A whitelist already excludes unselected IDs; only none needs explicit disables.
+                    if !enable && !matches!(channel.selection, ModelSelection::None) {
+                        continue;
+                    }
+                    if enable && row["disabled"] == false {
+                        continue;
+                    }
+                    if !enable && row["disabled"] == true {
+                        continue;
+                    }
+                    let slug = row["namespaced"]
+                        .as_str()
+                        .ok_or_else(|| invalid("model_identity", "模型缺少官方路由身份"))?;
+                    let result = upstream::write(
+                        &frozen,
+                        if enable {
+                            WriteOperation::EnableModel(slug)
+                        } else {
+                            WriteOperation::DisableModel(slug)
+                        },
+                    )
+                    .await?;
+                    if !result.success {
+                        return Err(invalid(
+                            "visibility_write",
+                            "模型可见性更新未完成，结果待核对",
+                        ));
+                    }
+                    observe(root, &frozen, &mut plan).await?;
+                }
+            }
+            plan.phase = "visibility_written".into();
+            save(root, &plan)?;
+            let observed_order =
+                upstream::read(&frozen, upstream::ReadOperation::ModelOrder).await?;
+            if observed_order["pickerOrder"] != plan.before.order["pickerOrder"]
+                || observed_order["pickerOrderMode"] != plan.before.order["pickerOrderMode"]
+            {
+                return Err(invalid("order_drift", "保存期间检测到外部排序修改，未覆盖"));
+            }
+            if !upstream::write(&frozen, WriteOperation::Order(&plan.next_order))
+                .await?
+                .success
+            {
+                return Err(invalid("order_write", "选择器顺序更新未完成，结果待核对"));
+            }
+            plan.phase = "order_written".into();
+            observe(root, &frozen, &mut plan).await?;
+            save(root, &plan)?;
         }
-        plan.phase = "visibility_written".into();
-        save(root, &plan)?;
-        let observed_order = upstream::read(&frozen, upstream::ReadOperation::ModelOrder).await?;
-        if observed_order["pickerOrder"] != plan.before.order["pickerOrder"]
-            || observed_order["pickerOrderMode"] != plan.before.order["pickerOrderMode"]
-        {
-            return Err(invalid("order_drift", "保存期间检测到外部排序修改，未覆盖"));
-        }
-        if !upstream::write(&frozen, WriteOperation::Order(&plan.next_order))
-            .await?
-            .success
-        {
-            return Err(invalid("order_write", "选择器顺序更新未完成，结果待核对"));
-        }
-        plan.phase = "order_written".into();
-        observe(root, &frozen, &mut plan).await?;
-        save(root, &plan)?;
         if !upstream::write(&frozen, WriteOperation::Sync)
             .await?
             .success
@@ -1507,8 +2021,11 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
                 "写后顺序与确认内容不同，结果待核对",
             ));
         }
+        verify_committed_credentials(root, &plan, &frozen).await?;
         plan.phase = "runtime_verified".into();
+        plan.committed_snapshot = Some(actual.clone());
         save(root, &plan)?;
+        capture_after(root, &frozen, &mut plan).await?;
         let ownership_path = root.join(OWNERSHIP);
         safety::check_path(root, &ownership_path, true)?;
         atomic_write(
@@ -2336,6 +2853,61 @@ else:sys.exit(7)
             json!(["native", "unmanaged/a"])
         );
         assert_eq!(store.load().unwrap().policy, intended);
+        let local = store.load().unwrap();
+        let recovery = prepare_recovery(
+            root.path(),
+            super::super::recovery::Request {
+                source_id: plan.id.clone(),
+                side: super::super::recovery::Side::Before,
+                scope: super::super::recovery::Scope::Affected,
+                restore_defaults: false,
+                expected_library: local.library_digest,
+                expected_policy: local.policy_digest,
+                expected_workspace: local.workspace_digest,
+            },
+        )
+        .unwrap();
+        let draft = accept_recovery(root.path(), &recovery.id).unwrap();
+        assert_eq!(
+            draft
+                .workspace
+                .as_ref()
+                .unwrap()
+                .policy
+                .recovery_id
+                .as_deref(),
+            Some(recovery.id.as_str())
+        );
+        let history_plan = prepare(
+            root.path(),
+            &context,
+            draft.workspace.unwrap().policy,
+            draft.library_digest,
+            draft.policy_digest,
+            draft.workspace_digest,
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            history_plan.history_source.as_deref(),
+            Some(plan.id.as_str())
+        );
+        let history_saved = apply(root.path(), &context, &history_plan.id)
+            .await
+            .unwrap();
+        assert_eq!(
+            history_saved.phase, "committed",
+            "{:?}",
+            history_saved.error
+        );
+        let actual = upstream::snapshot(&context).await.unwrap();
+        assert_eq!(actual.providers, snapshot.providers);
+        assert_eq!(
+            catalog_slugs(&actual).unwrap(),
+            catalog_slugs(&snapshot).unwrap()
+        );
+        assert!(store.load().unwrap().policy.recovery_id.is_none());
+
         // First-read rows need not be saved once merely to authorize their deletion.
         let initial_root = tempfile::tempdir().unwrap();
         let initial_context = cli_fixture(initial_root.path(), &snapshot);
@@ -2425,6 +2997,10 @@ else:sys.exit(7)
         assert!(!root.path().join(POLICY_PATH).exists());
         let committed = apply(root.path(), &context, &plan.id).await.unwrap();
         assert_eq!(committed.phase, "committed");
+        assert!(load(root.path(), &plan.id)
+            .unwrap()
+            .committed_snapshot
+            .is_some());
         assert_eq!(store.load().unwrap().policy, policy);
         assert!(root.path().join("backups").is_dir());
         assert_eq!(
@@ -2545,7 +3121,10 @@ else:sys.exit(7)
         assert_eq!(restored.policy, policy);
         let mut recovered_policy = policy.clone();
         recovered_policy.default_channel_id = Some(policy.channels[0].id.clone());
-        assert_eq!(restored.workspace.unwrap().policy, recovered_policy);
+        assert_eq!(
+            restored.workspace.unwrap().policy.published(),
+            recovered_policy
+        );
         let mut source = load(root.path(), &plan.id).unwrap();
         source.phase = "compensated".into();
         save(root.path(), &source).unwrap();

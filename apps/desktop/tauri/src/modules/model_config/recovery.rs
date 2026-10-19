@@ -85,6 +85,8 @@ pub struct Preview {
     pub default_changes: Vec<ChangeFact>,
     pub channel_labels: Vec<String>,
     pub notices: Vec<String>,
+    #[serde(default)]
+    pub requires_runtime_review: bool,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -399,6 +401,9 @@ pub(super) fn prepare(
         if workspace.base_policy != local.policy_digest {
             return Err(invalid("draft_conflict", "当前草稿基准已过期，请先处理"));
         }
+        if !workspace.policy.pending_removals.is_empty() {
+            return Err(invalid("draft_conflict","当前有首次读取渠道的待删除操作，请先保存或还原该操作后再生成历史恢复草稿；当前输入保持"));
+        }
         for draft in &workspace.policy.channels {
             let committed = local.policy.channels.iter().find(|c| c.id == draft.id);
             if Some(draft) == committed {
@@ -492,6 +497,7 @@ pub(super) fn prepare(
         side: request.side,
         scope: request.scope,
         restore_defaults: request.restore_defaults,
+        requires_runtime_review: true,
         changes,
         default_changes,
         channel_labels: intended
@@ -505,6 +511,7 @@ pub(super) fn prepare(
             "本机连接与凭据引用需在保存前核对，历史客户端状态不迁移。".into(),
         ],
     };
+    intended.recovery_id = Some(view.id.clone());
     let digest = sha256(&serde_json::to_vec(&(&library, &intended))?);
     atomic_write(
         &path(root, &view.id)?,
@@ -519,6 +526,21 @@ pub(super) fn prepare(
         0o600,
     )?;
     Ok(view)
+}
+pub(super) fn selected_request(root: &Path, id: &str, policy: &Policy) -> ModelResult<Request> {
+    let plan: Plan =
+        serde_json::from_slice(&safety::read_file(&path(root, id)?, 128 * 1024 * 1024)?)?;
+    if plan.view.id != id
+        || !plan.completed
+        || plan.digest != sha256(&serde_json::to_vec(&(&plan.library, &plan.policy))?)
+        || policy.published() != plan.policy.published()
+    {
+        return Err(invalid(
+            "recovery_candidate_changed",
+            "恢复草稿已修改或尚未采用，请重新比较历史目标后再保存",
+        ));
+    }
+    Ok(plan.request)
 }
 pub(super) fn accept(root: &Path, id: &str) -> ModelResult<Snapshot> {
     let file = path(root, id)?;

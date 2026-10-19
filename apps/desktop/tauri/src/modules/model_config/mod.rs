@@ -20,6 +20,7 @@ pub mod recovery;
 mod remote;
 mod research_receipts;
 pub mod runtime;
+pub mod runtime_history;
 pub mod schema;
 pub mod store;
 pub mod tasks;
