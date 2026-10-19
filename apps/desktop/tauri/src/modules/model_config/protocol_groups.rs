@@ -155,7 +155,10 @@ pub fn expand(
 ) -> ModelResult<Policy> {
     let projection = compiler::project(library, policy)?;
     let desired = desired(library, policy)?;
-    let mut result = Policy::default();
+    let mut result = Policy {
+        default_channel_id: policy.default_channel_id.clone(),
+        ..Default::default()
+    };
     for channel in &policy.channels {
         let own = mappings
             .iter()
@@ -399,6 +402,8 @@ mod tests {
             id: uuid::Uuid::new_v4().to_string(),
             label: "mixed".into(),
             connection: ChannelConnection {
+                auth_mode: None,
+                source_read_id: None,
                 provider_id: "mixed".into(),
                 protocol: "openai-responses".into(),
                 nodes: vec![node.clone()],

@@ -423,6 +423,10 @@ pub struct ChannelConnection {
     pub credential_ref: Option<String>,
     pub enabled: bool,
     pub allow_private_network: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub auth_mode: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub source_read_id: Option<String>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -457,6 +461,25 @@ pub struct Policy {
     pub schema_version: u32,
     pub template_refs: Vec<TemplateRef>,
     pub channels: Vec<ChannelPolicy>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_channel_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub pending_removals: Vec<SourceRemoval>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SourceRemoval {
+    pub read_id: String,
+    pub channel_id: String,
+    pub provider_id: String,
+    pub credential_ref: Option<String>,
+}
+impl Policy {
+    pub fn published(&self) -> Self {
+        let mut policy = self.clone();
+        policy.pending_removals.clear();
+        policy
+    }
 }
 impl Default for Policy {
     fn default() -> Self {
@@ -464,6 +487,8 @@ impl Default for Policy {
             schema_version: SCHEMA_VERSION,
             template_refs: vec![],
             channels: vec![],
+            default_channel_id: None,
+            pending_removals: vec![],
         }
     }
 }

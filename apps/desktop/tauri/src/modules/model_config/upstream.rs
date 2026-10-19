@@ -278,6 +278,7 @@ pub async fn write(
                 "--file".into(),
                 "-".into(),
                 "--json".into(),
+                "--yes".into(),
             ],
             Some(serde_json::to_vec(next)?),
         ),

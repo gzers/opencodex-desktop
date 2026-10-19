@@ -19,6 +19,22 @@ pub struct Baseline {
     pub digest: String,
 }
 impl Baseline {
+    pub fn capture_runtime(
+        snapshot: &Snapshot,
+        default_provider: Option<&str>,
+    ) -> ModelResult<Self> {
+        let mut baseline = Self::capture(snapshot)?;
+        if baseline.policy.default_channel_id.is_none() {
+            baseline.policy.default_channel_id = baseline
+                .policy
+                .channels
+                .iter()
+                .find(|c| Some(c.connection.provider_id.as_str()) == default_provider)
+                .map(|c| c.id.clone());
+        }
+        baseline.digest = sha256(&serde_json::to_vec(&(&baseline.library, &baseline.policy))?);
+        Ok(baseline)
+    }
     pub fn capture(snapshot: &Snapshot) -> ModelResult<Self> {
         Ok(Self {
             library: snapshot.library.clone(),
@@ -241,6 +257,13 @@ fn channel_diff(current: &Policy, target: &Policy) -> ModelResult<Vec<ChangeFact
             });
         }
     }
+    if current.default_channel_id != target.default_channel_id {
+        changes.push(ChangeFact {
+            field: "defaultChannelId".into(),
+            before: serde_json::to_value(&current.default_channel_id)?,
+            after: serde_json::to_value(&target.default_channel_id)?,
+        });
+    }
     if current.template_refs != target.template_refs {
         changes.push(ChangeFact {
             field: "globalTemplateRefs".into(),
@@ -321,6 +344,9 @@ pub(super) fn prepare(
         target.clone()
     } else {
         let mut policy = local.policy.clone();
+        if baseline.policy.default_channel_id != after.default_channel_id {
+            policy.default_channel_id = target.default_channel_id.clone();
+        }
         policy.channels.retain(|c| !affected.contains(&c.id));
         policy.channels.extend(
             target
@@ -409,6 +435,14 @@ pub(super) fn prepare(
                 return Err(invalid("draft_conflict", "恢复范围与草稿删除重叠"));
             }
             intended.channels.retain(|c| c.id != committed.id);
+        }
+        if workspace.policy.default_channel_id != local.policy.default_channel_id {
+            if intended.default_channel_id != local.policy.default_channel_id
+                && intended.default_channel_id != workspace.policy.default_channel_id
+            {
+                return Err(invalid("draft_conflict", "默认渠道与恢复重叠"));
+            }
+            intended.default_channel_id = workspace.policy.default_channel_id.clone();
         }
         if workspace.policy.template_refs != local.policy.template_refs {
             if intended.template_refs != local.policy.template_refs
@@ -593,6 +627,8 @@ mod tests {
             template_refs: vec![],
             model_refs: BTreeMap::new(),
             connection: ChannelConnection {
+                auth_mode: None,
+                source_read_id: None,
                 provider_id: format!("fixture_{name}"),
                 protocol: "openai-chat".into(),
                 active_node_id: node.id.clone(),

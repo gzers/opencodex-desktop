@@ -19,11 +19,11 @@ export function mergeUpstream(snapshot: UpstreamSnapshot, existing: ChannelPolic
       if (typeof row.fastRowAvailable === 'boolean') rules.fast = { mode: 'custom', value: row.fastRowAvailable }
       return { id: String(row.id), label: record(raw.modelDisplayNames)&&typeof raw.modelDisplayNames[String(row.id)]==='string'?String(raw.modelDisplayNames[String(row.id)]):typeof row.displayName === 'string' ? row.displayName : String(row.id), rules }
     })
-    if (old) { result.push({ ...old, discovered }); continue }
+    if (old) { result.push({ ...old, connection:{...old.connection,sourceReadId:snapshot.readId??old.connection.sourceReadId,authMode:typeof raw.authMode==='string'?raw.authMode:old.connection.authMode}, discovered }); continue }
     const node = { id: crypto.randomUUID(), name: '当前节点', url: raw.baseUrl }
     const selected = strings(raw.selectedModels)
     const visible = rows.filter(row => row.disabled !== true && row.initialSelectionPending !== true).map(row => String(row.id))
-    result.push({ id: crypto.randomUUID(), label: providerId, templateRefs: [], modelRefs: {}, connection: { providerId, protocol: raw.adapter, nodes: [node], activeNodeId: node.id, credentialRef: null, enabled: raw.disabled !== true, allowPrivateNetwork: raw.allowPrivateNetwork === true }, selection: selected.length ? { mode: 'whitelist', models: selected } : visible.length === rows.length && rows.length ? { mode: 'all' } : visible.length ? { mode: 'whitelist', models: visible } : { mode: 'none' }, modelOrder: discovered.map(row => row.id), discovered, defaults: emptyRules(), overrides: {}, familyOverrides: {} })
+    result.push({ id: crypto.randomUUID(), label: providerId, templateRefs: [], modelRefs: {}, connection: { sourceReadId:snapshot.readId,authMode:typeof raw.authMode==='string'?raw.authMode:'key',providerId, protocol: raw.adapter, nodes: [node], activeNodeId: node.id, credentialRef: null, enabled: raw.disabled !== true, allowPrivateNetwork: raw.allowPrivateNetwork === true }, selection: selected.length ? { mode: 'whitelist', models: selected } : visible.length === rows.length && rows.length ? { mode: 'all' } : visible.length ? { mode: 'whitelist', models: visible } : { mode: 'none' }, modelOrder: discovered.map(row => row.id), discovered, defaults: emptyRules(), overrides: {}, familyOverrides: {} })
   }
   // A temporarily missing upstream channel is not a deletion instruction.
   for (const old of existing) if (!result.some(c => c.connection.providerId === old.connection.providerId)) result.push(old)

@@ -31,6 +31,13 @@ pub fn validate_channel(channel: &ChannelPolicy) -> ModelResult<()> {
         return Err(invalid("channel", "渠道名称无效"));
     }
     let connection = &channel.connection;
+    if connection
+        .auth_mode
+        .as_deref()
+        .is_some_and(|mode| !["key", "local", "oauth", "forward"].contains(&mode))
+    {
+        return Err(invalid("auth_mode", "渠道认证方式无效"));
+    }
     if connection.provider_id.is_empty()
         || connection.provider_id.len() > 128
         || !connection

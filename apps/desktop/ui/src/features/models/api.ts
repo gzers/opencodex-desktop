@@ -42,14 +42,14 @@ export interface DiscoveredModel { id: string; label: string; rules: ModelRules 
 export type ModelSelection = { mode: 'all' | 'none' } | { mode: 'whitelist'; models: string[] }
 export interface ChannelPolicy {
   id: string; label: string; templateRefs: TemplateRef[]; modelRefs: Record<string, TemplateRef>
-  connection: { providerId: string; protocol: string; nodes: ServiceNode[]; activeNodeId: string; credentialRef: string | null; enabled: boolean; allowPrivateNetwork: boolean }
+  connection: { providerId: string; protocol: string; nodes: ServiceNode[]; activeNodeId: string; credentialRef: string | null; enabled: boolean; allowPrivateNetwork: boolean; authMode?:string|null;sourceReadId?:string|null }
   selection: ModelSelection; modelOrder: string[]; discovered: DiscoveredModel[]
   defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
 }
-export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[] }
+export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
 export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
-export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[] }
+export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[] }
 export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
 export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
 export interface ModelRecoveryRequest {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expectedLibrary:string;expectedPolicy:string;expectedWorkspace:string}
@@ -64,7 +64,7 @@ export interface Proposal { templateId: string | null; baseRevision: string | nu
 export interface Submission { submissionId: string; contractVersion: number; proposals: Proposal[]; report: string | null }
 export interface PendingSuggestion {runId:string;createdAt:string;expectedLibrary:string;scene:ExternalScene;targets:{templateId:string;label:string;revision:Revision;buffer:TemplateDraft|null}[];result:Submission;reviewed:boolean}
 export interface OwnerTaskResult { task: { id: string; targets: { templateId: string; label: string }[]; requirements: string }; receipt: { submissionId: string; state: string; outcomes: {templateId:string;revisionId:string;changed:boolean}[]; report: string | null } | null }
-export interface UpstreamSnapshot { version: string; providers: unknown; models: unknown; order: unknown }
+export interface UpstreamSnapshot {readId?:string; version: string; providers: unknown; models: unknown; order: unknown }
 export interface TemplateDraft { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
 export interface Commit { snapshot: ModelSnapshot; templateId: string; revisionId: string; changed: boolean }
 export interface MatchPreview { matched: boolean; reason: string; variantId: string | null; rules: ModelRules }

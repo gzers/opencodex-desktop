@@ -29,6 +29,13 @@ pub struct CredentialChange {
     intended_digest: String,
     observed: Option<super::management::KeyState>,
 }
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RemovedKey {
+    provider: String,
+    before: super::management::KeyState,
+    reference: Option<String>,
+}
 impl CredentialChange {
     fn intended(&self) -> super::management::KeyState {
         let mut next = self.before.clone();
@@ -91,6 +98,10 @@ pub struct RuntimePlan {
     pub recovery: Option<super::recovery::Baseline>,
     #[serde(default)]
     pub runtime_binding: Option<String>,
+    #[serde(default)]
+    pub removed_providers: Vec<String>,
+    #[serde(default)]
+    pub removed_keys: Vec<RemovedKey>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -103,6 +114,7 @@ pub struct SavePlanView {
     pub error: Option<String>,
     pub protocol_groups: Vec<String>,
     pub route_changes: Vec<String>,
+    pub removed_providers: Vec<String>,
 }
 impl RuntimePlan {
     fn view(&self) -> SavePlanView {
@@ -143,6 +155,7 @@ impl RuntimePlan {
                 })
                 .unwrap_or_default(),
             route_changes: self.route_changes.clone(),
+            removed_providers: self.removed_providers.clone(),
         }
     }
 }
@@ -177,6 +190,43 @@ pub(super) async fn verify_committed_credentials(
     }
     Ok(true)
 }
+async fn removed_key_states(
+    plan: &RuntimePlan,
+    context: &ProcessContext,
+    providers: &Value,
+) -> ModelResult<bool> {
+    if plan.removed_keys.is_empty() {
+        return Ok(true);
+    }
+    let management = super::management::Management::bind(context).await?;
+    let mut matches = true;
+    for removed in &plan.removed_keys {
+        if let (Some(reference), Some(active)) = (&removed.reference, &removed.before.active_id) {
+            let secret = super::discovery::credential(reference)?;
+            let hash = super::store::sha256(secret.trim().as_bytes());
+            if &hash.trim_start_matches("sha256:")[..8] != active {
+                return Err(invalid("removal_key_backup", "恢复Key不可核对，未继续"));
+            }
+        }
+        if providers["providers"].get(&removed.provider).is_none() {
+            matches = false;
+            continue;
+        }
+        let current = management.key_state(&removed.provider).await?;
+        if current == removed.before {
+            continue;
+        }
+        if !current.ids.is_empty() {
+            return Err(invalid(
+                "credential_drift",
+                "删除目标的Key池出现后来修改，未覆盖",
+            ));
+        }
+        matches = false;
+    }
+    Ok(matches)
+}
+
 fn path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
     let p = root.join(PLAN_DIR).join(format!("{id}.json"));
@@ -310,7 +360,18 @@ pub fn prepare_recovery(
             "该旧记录缺少组合恢复基线，保留为核对记录",
         )
     })?;
-    super::recovery::prepare(root, baseline, &source.policy, request)
+    let mut after = source.policy.published();
+    if after.default_channel_id.is_none() {
+        after.default_channel_id = after
+            .channels
+            .iter()
+            .find(|c| {
+                Some(c.connection.provider_id.as_str())
+                    == source.next_providers["defaultProvider"].as_str()
+            })
+            .map(|c| c.id.clone());
+    }
+    super::recovery::prepare(root, baseline, &after, request)
 }
 pub fn accept_recovery(root: &Path, id: &str) -> ModelResult<Snapshot> {
     let _guard = execution_lock(root)?;
@@ -702,6 +763,7 @@ fn compile_owned(
             }
         }
     }
+    super::channel_actions::default_provider(policy, &mut next)?;
     if next["providers"]
         .get(next["defaultProvider"].as_str().unwrap_or(""))
         .is_some_and(|p| p["disabled"] == true)
@@ -774,6 +836,10 @@ pub async fn prepare(
         ));
     }
     let before = upstream::snapshot(context).await?;
+    let initial_removals =
+        super::channel_actions::initial_removals(root, context, &before, &local.policy, &policy)?;
+    let mut prior_policy = local.policy.clone();
+    prior_policy.channels.extend(initial_removals);
     let ownership_path = root.join(OWNERSHIP);
     safety::check_path(root, &ownership_path, true)?;
     let previous: Vec<OwnedField> = if ownership_path.exists() {
@@ -784,8 +850,69 @@ pub async fn prepare(
     let mappings = super::protocol_groups::mappings(root, &local.library, &policy)?;
     let execution_policy =
         super::protocol_groups::expand(&before, &local.library, &policy, &mappings)?;
-    let (mut next_providers, next_order, expected_slugs) =
-        compile_owned(&before, &local.library, &execution_policy, &previous)?;
+    let removed = super::channel_actions::removals(&before, &prior_policy, &policy, &mappings)?;
+    let mut removed_keys = vec![];
+    if !removed.is_empty() {
+        let management = super::management::Management::bind(context).await?;
+        for provider in &removed {
+            let keys = management.key_state(provider).await?;
+            if keys.ids.len() > 1 {
+                return Err(invalid(
+                    "removal_key_pool",
+                    "此渠道有多个Key；完整密钥池保护尚未核对，未执行删除",
+                ));
+            }
+            if !keys.ids.is_empty() && keys.active_id.is_none() {
+                return Err(invalid(
+                    "removal_key_pool",
+                    "Key池没有可核对的活动选择，未执行删除",
+                ));
+            }
+            let channel = prior_policy
+                .channels
+                .iter()
+                .find(|c| &c.connection.provider_id == provider)
+                .or_else(|| {
+                    mappings
+                        .iter()
+                        .find(|m| &m.provider_id == provider)
+                        .and_then(|m| prior_policy.channels.iter().find(|c| c.id == m.channel_id))
+                });
+            let reference = if let Some(active) = &keys.active_id {
+                let reference = channel
+                    .and_then(|c| c.connection.credential_ref.as_ref())
+                    .ok_or_else(|| {
+                        invalid(
+                            "removal_key_backup",
+                            "删除前须先在此渠道接入可恢复的本机Key；未删除官方配置",
+                        )
+                    })?;
+                let secret = super::discovery::credential(reference)?;
+                let id = super::store::sha256(secret.trim().as_bytes());
+                if &id.trim_start_matches("sha256:")[..8] != active {
+                    return Err(invalid(
+                        "removal_key_backup",
+                        "本机恢复Key与官方活动Key身份不同，未执行删除",
+                    ));
+                }
+                Some(reference.clone())
+            } else {
+                None
+            };
+            removed_keys.push(RemovedKey {
+                provider: provider.clone(),
+                before: keys,
+                reference,
+            });
+        }
+    }
+    let projection_baseline = super::channel_actions::projection(&before, &removed)?;
+    let (mut next_providers, next_order, expected_slugs) = compile_owned(
+        &projection_baseline,
+        &local.library,
+        &execution_policy,
+        &previous,
+    )?;
     let next_order = super::protocol_groups::order(
         &before,
         &local.library,
@@ -893,6 +1020,12 @@ pub async fn prepare(
             observed: None,
         });
     }
+    let mut recovery_local = local.clone();
+    recovery_local.policy = prior_policy;
+    let recovery = super::recovery::Baseline::capture_runtime(
+        &recovery_local,
+        before.providers["defaultProvider"].as_str(),
+    )?;
     let plan = RuntimePlan {
         id: uuid::Uuid::new_v4().to_string(),
         phase: "prepared".into(),
@@ -916,8 +1049,10 @@ pub async fn prepare(
         credential_changes,
         execution_policy: Some(execution_policy),
         route_changes,
-        recovery: Some(super::recovery::Baseline::capture(&local)?),
+        recovery: Some(recovery),
         runtime_binding: Some(runtime_binding(context)?),
+        removed_providers: removed.into_iter().collect(),
+        removed_keys,
     };
     save(root, &plan)?;
     Ok(plan.view())
@@ -973,6 +1108,7 @@ pub async fn reconcile(
     }
     let disabled =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
+    let removed_match = removed_key_states(&plan, context, &actual.providers).await?;
     let mut staged = plan.before.providers.clone();
     for channel in &plan.execution_policy().channels {
         if plan.before.providers["providers"]
@@ -1036,14 +1172,15 @@ pub async fn reconcile(
             &plan.expected_library,
             &plan.expected_policy,
             &plan.expected_workspace,
-            plan.policy.clone(),
+            plan.policy.published(),
         )?;
         let ownership = root.join(OWNERSHIP);
         safety::check_path(root, &ownership, true)?;
         atomic_write(&ownership, &serde_json::to_vec(&plan.ownership)?, 0o600)?;
         plan.phase = "committed".into();
         plan.error = None;
-    } else if actual.providers == plan.before.providers
+    } else if removed_match
+        && actual.providers == plan.before.providers
         && actual_order == original_order
         && plan.observed_disabled == plan.disabled_before
         && plan
@@ -1104,6 +1241,17 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
         ));
     }
     let current = upstream::snapshot(&frozen).await?;
+    if !plan.removed_keys.is_empty() {
+        let management = super::management::Management::bind(&frozen).await?;
+        for removed in &plan.removed_keys {
+            if management.key_state(&removed.provider).await? != removed.before {
+                return Err(invalid(
+                    "removal_key_drift",
+                    "删除确认后Key池或活动选择改变，未删除",
+                ));
+            }
+        }
+    }
     if current.providers != plan.before.providers
         || current.order != plan.before.order
         || catalog_slugs(&current)? != catalog_slugs(&plan.before)?
@@ -1392,7 +1540,7 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
             &plan.expected_library,
             &plan.expected_policy,
             &plan.expected_workspace,
-            plan.policy.clone(),
+            plan.policy.published(),
         )?;
         plan.phase = "committed".into();
         save(root, &plan)?;
@@ -1420,6 +1568,7 @@ fn next_ownership(
                 .iter()
                 .any(|c| c.connection.provider_id == f.provider)
         })
+        .filter(|f| after["providers"].get(&f.provider).is_some())
         .cloned()
         .collect();
     for channel in &policy.channels {
@@ -1518,6 +1667,7 @@ pub async fn compensate(
         return Err(invalid("runtime_binding", "运行来源改变，补偿已拒绝"));
     }
     let current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
+    removed_key_states(&plan, context, &current).await?;
     let order = string_array(
         &upstream::read(context, upstream::ReadOperation::ModelOrder).await?["pickerOrder"],
     )?;
@@ -1591,6 +1741,30 @@ pub async fn compensate(
             return Err(invalid("compensation_failed", "渠道补偿未完成，保留原计划"));
         }
         observe(root, context, &mut plan).await?;
+        if !plan.removed_keys.is_empty() {
+            let management = super::management::Management::bind(context).await?;
+            for removed in &plan.removed_keys {
+                let current = management.key_state(&removed.provider).await?;
+                if current == removed.before {
+                    continue;
+                }
+                if !current.ids.is_empty() {
+                    return Err(invalid("credential_drift", "恢复时发现新的Key，未覆盖"));
+                }
+                if let Some(reference) = &removed.reference {
+                    let secret = super::discovery::credential(reference)?;
+                    management
+                        .add_key(&removed.provider, secret.as_str())
+                        .await?;
+                }
+                if management.key_state(&removed.provider).await? != removed.before {
+                    return Err(invalid(
+                        "credential_compensation",
+                        "恢复Key未读回原选择，保留原计划",
+                    ));
+                }
+            }
+        }
         if plan.observed_disabled != plan.disabled_before
             && !upstream::write(
                 context,
@@ -1760,6 +1934,8 @@ mod tests {
             template_refs: vec![],
             model_refs: BTreeMap::new(),
             connection: ChannelConnection {
+                auth_mode: None,
+                source_read_id: None,
                 provider_id: "test".into(),
                 protocol: "openai-chat".into(),
                 nodes: vec![node.clone()],
@@ -1922,9 +2098,10 @@ elif args[:2]==['provider','apply']:
  next_value=json.load(sys.stdin);old=read('providers');models=read('models')
  for name,provider in next_value['providers'].items():
   if name not in old['providers']:
-   assert provider.get('disabled') is True and provider.get('selectedModels'), 'new provider exposed all models'
+   if 'compensation-baseline' not in args[args.index('--baseline')+1]:assert provider.get('disabled') is True and provider.get('selectedModels'), 'new provider exposed all models'
    (root/'safe-registration').write_text('disabled with nonempty allowlist')
    for model in provider.get('models',[]):models.append({'provider':name,'id':model,'namespaced':name+'/'+model.replace('/','-'),'disabled':False})
+ models=[row for row in models if row['provider'] in next_value['providers']]
  save('models',models);save('providers',next_value);print('{}')
 elif args[:3]==['config','set','modelPickerOrder']:
  if (root/'fail-order').exists():sys.exit(6)
@@ -1966,6 +2143,10 @@ else:sys.exit(7)
         let order_root = root.to_path_buf();
         let disable_root = root.to_path_buf();
         let app = axum::Router::new()
+            .route(
+                "/api/providers/keys",
+                axum::routing::get(|| async { axum::Json(json!({"activeId":null,"keys":[]})) }),
+            )
             .route(
                 "/healthz",
                 axum::routing::get(move |headers: axum::http::HeaderMap| {
@@ -2059,6 +2240,169 @@ else:sys.exit(7)
             working_directory: root.into(),
             opencodex_home: root.join("home"),
         }
+    }
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn removing_committed_custom_channel_switches_default_and_reads_back_actual_absence() {
+        let root = tempfile::tempdir().unwrap();
+        let (mut snapshot, mut original) = fixture();
+        let mut keep = original.channels[0].clone();
+        keep.id = uuid::Uuid::new_v4().to_string();
+        keep.label = "保留渠道".into();
+        keep.connection.provider_id = "unmanaged".into();
+        keep.connection.nodes[0].url = "https://other.test".into();
+        keep.selection = ModelSelection::Whitelist(vec!["a".into()]);
+        keep.discovered.retain(|m| m.id == "a");
+        keep.model_order = vec!["a".into()];
+        snapshot.providers["providers"]["unmanaged"]["models"] = json!(["a"]);
+        snapshot.models.as_array_mut().unwrap().push(
+            json!({"provider":"unmanaged","id":"a","namespaced":"unmanaged/a","disabled":false}),
+        );
+        snapshot.catalog["models"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!({"slug":"unmanaged/a"}));
+        snapshot.order["pickerOrder"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!("unmanaged/a"));
+        original.channels.push(keep.clone());
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let initial = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &initial.library_digest,
+                &initial.policy_digest,
+                &initial.workspace_digest,
+                original,
+            )
+            .unwrap();
+        let current = store.load().unwrap();
+        let intended = Policy {
+            channels: vec![keep.clone()],
+            default_channel_id: Some(keep.id.clone()),
+            ..Default::default()
+        };
+        let staged = store
+            .stage_policy(
+                &current.policy_digest,
+                &current.workspace_digest,
+                intended.clone(),
+            )
+            .unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            intended.clone(),
+            staged.library_digest,
+            staged.policy_digest,
+            staged.workspace_digest,
+        )
+        .await
+        .unwrap();
+        assert_eq!(plan.removed_providers, vec!["test"]);
+        assert!(snapshot.providers["providers"].get("test").is_some());
+        std::fs::write(root.path().join("fail-order"), b"fixture").unwrap();
+        let partial = apply(root.path(), &context, &plan.id).await.unwrap();
+        assert_eq!(partial.phase, "visibility_written");
+        assert!(
+            upstream::snapshot(&context).await.unwrap().providers["providers"]
+                .get("test")
+                .is_none()
+        );
+        std::fs::remove_file(root.path().join("fail-order")).unwrap();
+        assert_eq!(
+            compensate(root.path(), &context, &plan.id)
+                .await
+                .unwrap()
+                .phase,
+            "compensated"
+        );
+        assert_eq!(
+            upstream::snapshot(&context).await.unwrap().providers,
+            snapshot.providers
+        );
+        let local = store.load().unwrap();
+        let plan = prepare(
+            root.path(),
+            &context,
+            intended.clone(),
+            local.library_digest,
+            local.policy_digest,
+            local.workspace_digest,
+        )
+        .await
+        .unwrap();
+        let result = apply(root.path(), &context, &plan.id).await.unwrap();
+        assert_eq!(result.phase, "committed", "{:?}", result.error);
+        let actual = upstream::snapshot(&context).await.unwrap();
+        assert!(actual.providers["providers"].get("test").is_none());
+        assert_eq!(actual.providers["defaultProvider"], "unmanaged");
+        assert_eq!(
+            actual.order["pickerOrder"],
+            json!(["native", "unmanaged/a"])
+        );
+        assert_eq!(store.load().unwrap().policy, intended);
+        // First-read rows need not be saved once merely to authorize their deletion.
+        let initial_root = tempfile::tempdir().unwrap();
+        let initial_context = cli_fixture(initial_root.path(), &snapshot);
+        let read = super::super::channel_actions::remember(
+            initial_root.path(),
+            &initial_context,
+            snapshot.clone(),
+        )
+        .unwrap();
+        let initial_store = ModelStore::new(initial_root.path());
+        let local = initial_store.load().unwrap();
+        let mut pending = intended.clone();
+        pending.pending_removals.push(SourceRemoval {
+            read_id: read.read_id,
+            channel_id: uuid::Uuid::new_v4().to_string(),
+            provider_id: "test".into(),
+            credential_ref: None,
+        });
+        let staged = initial_store
+            .stage_policy(
+                &local.policy_digest,
+                &local.workspace_digest,
+                pending.clone(),
+            )
+            .unwrap();
+        let plan = prepare(
+            initial_root.path(),
+            &initial_context,
+            pending,
+            staged.library_digest,
+            staged.policy_digest,
+            staged.workspace_digest,
+        )
+        .await
+        .unwrap();
+        assert_eq!(plan.removed_providers, vec!["test"]);
+        assert_eq!(
+            apply(initial_root.path(), &initial_context, &plan.id)
+                .await
+                .unwrap()
+                .phase,
+            "committed"
+        );
+        let committed = initial_store.load().unwrap();
+        assert!(committed.policy.pending_removals.is_empty());
+        assert!(upstream::snapshot(&initial_context)
+            .await
+            .unwrap()
+            .providers["providers"]
+            .get("test")
+            .is_none());
+        let historical = load(initial_root.path(), &plan.id).unwrap();
+        assert!(historical
+            .recovery
+            .unwrap()
+            .policy
+            .channels
+            .iter()
+            .any(|c| c.connection.provider_id == "test"));
     }
     #[cfg(unix)]
     #[tokio::test]
@@ -2207,7 +2551,9 @@ else:sys.exit(7)
         .unwrap();
         let restored = accept_recovery(root.path(), &preview.id).unwrap();
         assert_eq!(restored.policy, policy);
-        assert_eq!(restored.workspace.unwrap().policy, policy);
+        let mut recovered_policy = policy.clone();
+        recovered_policy.default_channel_id = Some(policy.channels[0].id.clone());
+        assert_eq!(restored.workspace.unwrap().policy, recovered_policy);
         let mut source = load(root.path(), &plan.id).unwrap();
         source.phase = "compensated".into();
         save(root.path(), &source).unwrap();

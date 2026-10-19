@@ -158,7 +158,24 @@ fn validate_policy(library: &Library, policy: &Policy) -> ModelResult<()> {
     if policy.schema_version != SCHEMA_VERSION {
         return Err(invalid("schema_version", "不支持的策略结构版本"));
     }
+    if policy.pending_removals.len() > 256 {
+        return Err(invalid("removal_scope", "删除范围超过上限"));
+    }
+    for removal in &policy.pending_removals {
+        require_uuid(&removal.read_id)?;
+        require_uuid(&removal.channel_id)?;
+        if let Some(reference) = &removal.credential_ref {
+            require_uuid(reference)?;
+        }
+    }
     let mut channel_ids = BTreeSet::new();
+    if policy
+        .default_channel_id
+        .as_ref()
+        .is_some_and(|id| !policy.channels.iter().any(|c| &c.id == id))
+    {
+        return Err(invalid("default_provider", "默认渠道身份不在本机策略内"));
+    }
     for channel in &policy.channels {
         if channel.id.is_empty() || !channel_ids.insert(&channel.id) {
             return Err(invalid("channel", "渠道身份为空或重复"));

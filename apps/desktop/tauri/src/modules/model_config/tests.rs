@@ -354,6 +354,8 @@ fn channel(id: &str) -> ChannelPolicy {
         template_refs: vec![],
         model_refs: BTreeMap::new(),
         connection: ChannelConnection {
+            auth_mode: None,
+            source_read_id: None,
             provider_id: format!("provider-{}", &id[..4]),
             protocol: "openai-chat".into(),
             nodes: vec![node.clone()],

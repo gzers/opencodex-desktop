@@ -1998,6 +1998,8 @@ mod tests {
             id: id.into(),
             label: "fixture channel".into(),
             connection: ChannelConnection {
+                auth_mode: None,
+                source_read_id: None,
                 provider_id: "fixture".into(),
                 protocol: "openai-chat".into(),
                 nodes: vec![node.clone()],

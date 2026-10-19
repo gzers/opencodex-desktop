@@ -2,6 +2,7 @@
 //! No runtime, credentials, discovery or provider calls occur in the local store.
 pub mod agent;
 pub mod broker;
+pub(crate) mod channel_actions;
 pub mod client_state;
 pub mod compiler;
 pub mod config_remote;

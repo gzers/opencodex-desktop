@@ -5,7 +5,7 @@ import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from './ModelRuleFields.vue'
 import { useNodeMeasurements } from './useNodeMeasurements'
 import { emptyRules, modelApi, errorText, type ChannelPolicy, type Template } from './api'
-const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean }>()
+const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean }>()
 const emit = defineEmits<{ close: [] }>()
 const existingModelIds=new Set(props.channel.discovered.map(model=>model.id).filter(Boolean))
 const apiKey=ref('');const discovering=ref(false);const discoveryError=ref('');let generation=0
@@ -46,7 +46,7 @@ function adopt(t: Template, revision: string) {
 <template>
   <div class="model-form">
     <header class="model-field-title"><UiButton @click="emit('close')">返回渠道列表</UiButton><strong>{{ channel.label || '新渠道' }}</strong></header>
-    <section><h2>渠道配置</h2><div class="model-columns"><label>名称<input class="input" v-model="channel.label" :disabled="busy" /></label><label>运行渠道标识<input class="input" v-model="channel.connection.providerId" :disabled="busy" /></label></div>
+    <section><h2>渠道配置</h2><div class="model-columns"><label>名称<input class="input" v-model="channel.label" :disabled="busy" /></label><label>运行渠道标识<input class="input" v-model="channel.connection.providerId" :disabled="busy || existing" /></label></div>
       <label>默认协议<UiSelectField v-model="channel.connection.protocol" label="渠道默认协议" :options="['openai-responses','openai-chat','anthropic','google','ollama-native'].map(value => ({ value, label: value }))" :disabled="busy" /></label>
       <label>API Key<input v-model="apiKey" class="input" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false" :disabled="busy || discovering" :placeholder="channel.connection.credentialRef ? '已安全配置；留空保持' : '无需认证可留空'" /></label><label class="model-inline"><input v-model="channel.connection.allowPrivateNetwork" type="checkbox" :disabled="busy" />允许此渠道访问可信私有网络</label><div class="model-inline"><UiButton :loading="discovering" :disabled="busy" @click="discover">获取并确认模型</UiButton><UiButton v-if="discovering" @click="generation++; discovering = false">停止等待</UiButton></div><p v-if="discoveryError" class="model-error" role="alert">{{ discoveryError }}</p>
       <label class="model-inline"><input v-model="channel.connection.enabled" type="checkbox" :disabled="busy" />启用渠道</label>

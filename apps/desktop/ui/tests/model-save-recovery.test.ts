@@ -4,12 +4,23 @@ import { createPinia, setActivePinia } from 'pinia'
 import ChannelsView from '@/features/models/ChannelsView.vue'
 import { useModelsStore } from '@/features/models/store'
 import { modelApi, type ModelSnapshot } from '@/features/models/api'
+import {useModalStore} from '@/app/modal/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{latestPolicy:vi.fn(),policyResult:vi.fn(),applyPolicy:vi.fn(),stage:vi.fn(),load:vi.fn()}}))
 const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
 const plan=(id='original')=>({id,phase:'visibility_written',catalogCount:3,currentCatalogCount:2,changedChannels:['测试渠道'],error:'order_write'})
 function render(){return mount(ChannelsView,{global:{stubs:{UiDialog:dialog,ClientLoadStatus:true,ChannelEditor:true,ModelPicker:true,UiSelectField:true}}})}
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();const store=useModelsStore();store.snapshot={library:{schemaVersion:1,templates:[]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspaceDigest:'workspace',workspace:null} as ModelSnapshot})
 describe('recovering a saved operation',()=>{
+ it('selects only editable channels and deletion waits for an exact-current-draft confirmation',async()=>{
+   const store=useModelsStore();const make=(id:string,providerId:string)=>({id,label:id,templateRefs:[],modelRefs:{},connection:{providerId,protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'none' as const},modelOrder:[],discovered:[],defaults:{protocol:{mode:'inherit' as const},contextWindow:{mode:'inherit' as const},inputModalities:{mode:'inherit' as const},reasoningEfforts:{mode:'inherit' as const},defaultEffort:{mode:'inherit' as const},fast:{mode:'inherit' as const}},overrides:{},familyOverrides:{}})
+   const custom=make('custom','custom');const native=make('native','openai');store.snapshot!.policy.channels=[custom,native];store.restoreChannels()
+   vi.mocked(modelApi.latestPolicy).mockResolvedValue(null)
+   const wrapper=render();await flushPromises();await wrapper.get('input[aria-label="选择当前结果中的可编辑渠道"]').setValue(true)
+   expect(wrapper.text()).toContain('已选 1 个渠道');expect(wrapper.get('input[aria-label="选择渠道 native"]').attributes('disabled')).toBeDefined()
+   await wrapper.findAll('button').find(b=>b.text()==='删除所选渠道')!.trigger('click');expect(store.channelDraft!.channels.length).toBe(2)
+   store.channelDraft!.channels[0]!.label='later';useModalStore().resolve('confirm');await flushPromises();expect(store.channelDraft!.channels.length).toBe(2);expect(wrapper.text()).toContain('删除确认已过期')
+   await wrapper.findAll('button').find(b=>b.text()==='删除所选渠道')!.trigger('click');useModalStore().resolve('confirm');await flushPromises();expect(store.channelDraft!.channels.map(c=>c.id)).toEqual(['native']);expect(store.snapshot!.policy.channels.length).toBe(2);wrapper.unmount()
+ })
  it('querying a committed original preserves a later persisted workspace and its next write baseline',async()=>{
    const store=useModelsStore();const saved={...store.snapshot!,workspaceDigest:'later-draft',workspace:{basePolicy:'policy',policy:{schemaVersion:1,templateRefs:[],channels:[]}}}
    vi.mocked(modelApi.latestPolicy).mockResolvedValue(plan())

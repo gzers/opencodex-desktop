@@ -36,11 +36,9 @@ fn portable_connection(channel: &ChannelPolicy) -> Option<PortableConnection> {
     })
 }
 fn package_version(payload: &TransferPayload) -> u32 {
-    if payload
-        .policy
-        .as_ref()
-        .is_some_and(|p| p.channels.iter().any(|c| c.connection.is_some()))
-    {
+    if payload.policy.as_ref().is_some_and(|p| {
+        p.default_channel_id.is_some() || p.channels.iter().any(|c| c.connection.is_some())
+    }) {
         2
     } else {
         1
@@ -52,6 +50,8 @@ pub struct PortablePolicy {
     pub template_refs: Option<Vec<TemplateRef>>,
     pub channel_order: Option<Vec<String>>,
     pub channels: Vec<PortableChannel>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_channel_id: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -323,6 +323,11 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
             .map(portable)
             .collect();
         Some(PortablePolicy {
+            default_channel_id: if scope.include_global {
+                snapshot.policy.default_channel_id.clone()
+            } else {
+                None
+            },
             template_refs: if scope.include_global {
                 Some(snapshot.policy.template_refs.clone())
             } else {
@@ -348,6 +353,10 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
     if let Some(policy) = &policy {
         for reference in revision_refs(policy) {
             wanted.insert((reference.template_id.clone(), reference.revision_id.clone()));
+        }
+        if let Some(id) = &policy.default_channel_id {
+            require_uuid(id)?;
+            // A global-only package may refer to an existing target channel.
         }
     }
     let full_library = !scope.include_policy && scope.template_refs.is_empty();
@@ -438,6 +447,9 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
         }
     }
     if let Some(policy) = &package.payload.policy {
+        if let Some(id) = &policy.default_channel_id {
+            require_uuid(id)?;
+        }
         let mut channels = BTreeSet::new();
         for channel in &policy.channels {
             require_uuid(&channel.id)?;
@@ -455,6 +467,8 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                     template_refs: vec![],
                     model_refs: BTreeMap::new(),
                     connection: ChannelConnection {
+                        auth_mode: None,
+                        source_read_id: None,
                         provider_id: "portable-validation".into(),
                         protocol: channel.protocol.clone(),
                         nodes: connection.nodes.clone(),
@@ -595,6 +609,9 @@ fn merge(
             .as_ref()
             .map(|w| w.policy.clone())
             .unwrap_or_else(|| local.policy.clone());
+        if let Some(default) = &incoming.default_channel_id {
+            policy.default_channel_id = Some(default.clone());
+        }
         if let Some(global) = &incoming.template_refs {
             if local
                 .workspace
@@ -702,6 +719,16 @@ fn merge(
                 .sort_by_key(|c| rank.get(&c.id).copied().unwrap_or(usize::MAX));
         }
         notices.push("渠道策略仅进入本机草稿；运行保存、预算和重启核对仍须明确执行".into());
+        if policy
+            .default_channel_id
+            .as_ref()
+            .is_some_and(|id| !policy.channels.iter().any(|c| &c.id == id))
+        {
+            return Err(invalid(
+                "default_provider",
+                "所选默认渠道未包含且本机没有对应绑定，请选择该渠道或跳过全局字段",
+            ));
+        }
         Some(policy)
     } else {
         None
@@ -742,6 +769,9 @@ pub(super) fn merge_packages(
             }
             if incoming.channel_order.is_some() {
                 existing.channel_order = incoming.channel_order;
+            }
+            if incoming.default_channel_id.is_some() {
+                existing.default_channel_id = incoming.default_channel_id;
             }
             for channel in incoming.channels {
                 if let Some(index) = existing.channels.iter().position(|c| c.id == channel.id) {
@@ -908,6 +938,16 @@ fn mapped_package(
             }
         }
     }
+    if let Some(id) = result
+        .payload
+        .policy
+        .as_mut()
+        .and_then(|p| p.default_channel_id.as_mut())
+    {
+        if let Some(binding) = bindings.get(id) {
+            *id = binding.target_id.clone();
+        }
+    }
     result.format_version = package_version(&result.payload);
     result.digest = sha256(&serde_json::to_vec(&result.payload)?);
     validate_package(&result)?;
@@ -999,6 +1039,7 @@ pub fn select_received_context(
         if !scope.include_global {
             policy.template_refs = None;
             policy.channel_order = None;
+            policy.default_channel_id = None;
         }
         for reference in revision_refs(policy) {
             wanted.insert((reference.template_id.clone(), reference.revision_id.clone()));
@@ -1006,6 +1047,7 @@ pub fn select_received_context(
         if policy.channels.is_empty()
             && policy.template_refs.is_none()
             && policy.channel_order.is_none()
+            && policy.default_channel_id.is_none()
         {
             package.payload.policy = None;
         }
@@ -1490,6 +1532,8 @@ mod tests {
             template_refs: vec![],
             model_refs: BTreeMap::new(),
             connection: ChannelConnection {
+                auth_mode: None,
+                source_read_id: None,
                 provider_id: "source-machine-provider".into(),
                 protocol: "openai-chat".into(),
                 active_node_id: nodes[1].id.clone(),
@@ -1857,6 +1901,7 @@ mod tests {
             family_overrides: BTreeMap::new(),
         };
         package.payload.policy = Some(PortablePolicy {
+            default_channel_id: None,
             template_refs: None,
             channel_order: None,
             channels: vec![channel.clone()],

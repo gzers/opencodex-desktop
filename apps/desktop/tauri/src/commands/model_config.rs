@@ -264,8 +264,11 @@ pub async fn model_policy_preview(
 #[tauri::command]
 pub async fn model_upstream_snapshot(
     context: tauri::State<'_, crate::state::SharedProcessContext>,
-) -> ModelResult<super::super::modules::model_config::upstream::UpstreamSnapshot> {
-    crate::modules::model_config::upstream::snapshot(&context).await
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::channel_actions::ReadView> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
+    let snapshot = crate::modules::model_config::upstream::snapshot(&context).await?;
+    crate::modules::model_config::channel_actions::remember(&data_root.0, &context, snapshot)
 }
 #[tauri::command]
 pub async fn model_channel_discover(

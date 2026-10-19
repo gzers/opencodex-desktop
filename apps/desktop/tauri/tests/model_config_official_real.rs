@@ -215,12 +215,16 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let node_id = uuid::Uuid::new_v4().to_string();
     let channel_id = uuid::Uuid::new_v4().to_string();
     let mut policy = Policy {
+        pending_removals: vec![],
+        default_channel_id: None,
         schema_version: SCHEMA_VERSION,
         template_refs: vec![],
         channels: vec![ChannelPolicy {
             id: channel_id,
             label: "本机协议分组fixture".into(),
             connection: ChannelConnection {
+                auth_mode: None,
+                source_read_id: None,
                 provider_id: "fixture".into(),
                 protocol: "openai-responses".into(),
                 nodes: vec![ServiceNode {
@@ -410,12 +414,84 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             .get("fixture-base")
             .is_none()
     );
+    // Register an independent default, then remove the former channel and owned partition.
+    let current = store.load().unwrap();
+    let mut next = current.policy.clone();
+    let mut copy = next.channels[0].clone();
+    copy.id = uuid::Uuid::new_v4().to_string();
+    copy.label = "删除后保留fixture".into();
+    copy.connection.provider_id = "fixture-keep".into();
+    for node in &mut copy.connection.nodes {
+        node.id = uuid::Uuid::new_v4().to_string();
+    }
+    copy.connection.active_node_id = copy.connection.nodes[0].id.clone();
+    copy.overrides.clear();
+    copy.discovered.retain(|m| m.id == "fixture-base");
+    copy.model_order = vec!["fixture-base".into()];
+    copy.template_refs.clear();
+    copy.model_refs.clear();
+    copy.family_overrides.clear();
+    next.default_channel_id = Some(copy.id.clone());
+    next.channels.push(copy.clone());
+    let staged = store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            next.clone(),
+        )
+        .unwrap();
+    let add = runtime::prepare(
+        &manager,
+        &context,
+        next,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let added = runtime::apply(&manager, &context, &add.id).await.unwrap();
+    assert_eq!(added.phase, "committed", "{:?}", added.error);
+    let current = store.load().unwrap();
+    let next = Policy {
+        channels: vec![copy.clone()],
+        default_channel_id: Some(copy.id),
+        ..Default::default()
+    };
+    let staged = store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            next.clone(),
+        )
+        .unwrap();
+    let removal = runtime::prepare(
+        &manager,
+        &context,
+        next,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    assert!(removal.removed_providers.contains(&"fixture".to_string()));
+    assert_eq!(removal.removed_providers.len(), 2);
+    let removed = runtime::apply(&manager, &context, &removal.id)
+        .await
+        .unwrap();
+    assert_eq!(removed.phase, "committed", "{:?}", removed.error);
+    let actual = upstream::snapshot(&context).await.unwrap();
+    assert!(actual.providers["providers"].get("fixture").is_none());
+    assert!(actual.providers["providers"].get(mapped).is_none());
+    assert_eq!(actual.providers["defaultProvider"], "fixture-keep");
+    assert_eq!(actual.catalog["models"].as_array().unwrap().len(), 1);
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),
         0,
         "discovery/save cannot generate text"
     );
-    println!("official={} models={} catalog={}→{}→{}→{} phases={}/{}/{} protocol-groups={} stable-group=true no-generation=true",snapshot.version,discovered_count(&after.models),plan.current_catalog_count,plan.catalog_count,hidden_plan.catalog_count,restore_plan.catalog_count,saved.phase,hidden.phase,restored.phase,plan.protocol_groups.len());
+    println!("official={} models={} catalog={}→{}→{}→{} phases={}/{}/{} protocol-groups={} stable-group=true new-default=true removal-including-owned-group=true no-generation=true",snapshot.version,discovered_count(&after.models),plan.current_catalog_count,plan.catalog_count,hidden_plan.catalog_count,restore_plan.catalog_count,saved.phase,hidden.phase,restored.phase,plan.protocol_groups.len());
     let _ = child.kill().await;
     let _ = child.wait().await;
     capture.abort();
