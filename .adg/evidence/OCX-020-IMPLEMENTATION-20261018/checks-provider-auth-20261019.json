@@ -1,0 +1,49 @@
+{
+  "recordedAt": "2026-10-19T04:07:12.059047+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "405848149409d6a2bed0226242d30c4c428a7e8a",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/management.rs": "b9b3f3d717079bb1e4c0cf577ee450964298f37601fcc4a96010ca189cc1d777",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "e1f982c1b7e5edc9b8f53556cbc55aeaa5bde8009693c9b251f223b3663811a8",
+    "apps/desktop/tauri/src/modules/model_config/provider_auth.rs": "6a4eb7a7d3b22d54ca3c0f2e23bab357f831905d12107d7cdc0b7b98b5ae4090",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "c5fa02d2bfa94b7ff43b8ff6b6d2032a2d66743ca7347f90f21590b8a18a29d3",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "f3183a34ee1b2bfe5ce1556c29807512aa5e9dcdfe40cf772ae07ff24b0877d9"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib provider_auth --no-default-features",
+      "session": 92952,
+      "passed": 5,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib removing_committed_custom --no-default-features",
+      "session": 33542,
+      "passed": 1,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 92952,
+      "result": "passed"
+    },
+    {
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 2459,
+      "passed": 1,
+      "result": "passed",
+      "elapsedTestSeconds": 120.43,
+      "kind": "isolated installed official 2.84.0 with temporary auth roots and memory Keyring",
+      "observed": "multi-key-header-restored=true; original pool ids/order/labels/active verified; repeated restore; stable group deletion and new default; no-generation=true"
+    }
+  ],
+  "incomplete": [
+    "successful history must still connect public-field and auth restoration through same save path",
+    "migrated keychain pool ids/reference preservation contracts",
+    "actual system Keychain on supported platforms",
+    "portable full original provider fields",
+    "Agent durable conversation/source checks and resource remapping",
+    "all component consumers, native/platform/release gates"
+  ]
+}
