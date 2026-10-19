@@ -1,7 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { mount, enableAutoUnmount, type VueWrapper } from '@vue/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import App from '@/App.vue'
+import WebDavConnection from '@/features/sync/WebDavConnection.vue'
 import { useRouteStore } from '@/stores/routes'
 import type { PreferencesDto } from '@/features/preferences/api'
 import type { SyncConfigDto, SyncConflictPolicy } from '@/features/sync/api'
@@ -94,7 +94,7 @@ async function mountSyncSection(preferences: PreferencesDto, config: SyncConfigD
   })
   const pinia = createPinia()
   setActivePinia(pinia)
-  const wrapper = mount(App, { global: { plugins: [pinia], stubs:{ModelTransfer:true,ImportedConnections:true} } })
+  const wrapper = mount(WebDavConnection, { global: { plugins: [pinia], stubs:{ModelTransfer:true,ImportedConnections:true} } })
   useRouteStore().go('settings', { section: 'sync' })
   await flush(wrapper)
   return wrapper

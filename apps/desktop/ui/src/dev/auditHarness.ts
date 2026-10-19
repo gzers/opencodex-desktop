@@ -295,7 +295,7 @@ export async function installAuditHarness() {
 
   const requestedRoute = params.get('route')
   if (requestedRoute) {
-    const valid: RouteName[] = ['overview', 'panel', 'models', 'extensions', 'logs', 'settings', 'tray']
+    const valid: RouteName[] = ['overview', 'panel', 'models', 'extensions', 'sync', 'logs', 'settings', 'tray']
     if (valid.includes(requestedRoute as RouteName)) {
       const next = requestedRoute as RouteName
       const routeParams: Record<string, string> = {}

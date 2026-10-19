@@ -11,11 +11,15 @@ import {
 describe('navigation parse/serialize', () => {
   it('解析路由、设置分区与两个 Tab（同一 tab 参数按上下文归一到各自默认）', () => {
     expect(parseHash('#settings?section=sync')).toEqual({
-      route: 'settings',
-      section: 'sync',
+      route:'sync',
+      section:'general',
+      syncTab:'webdav',
       extensionTab: 'skills',
       diagnosticsTab: 'doctor',
     })
+    expect(parseHash('#settings?section=migration').syncTab).toBe('file')
+    expect(parseHash('#sync?tab=webdav').route).toBe('sync')
+    expect(parseHash('#sync?tab=unknown').syncTab).toBe('file')
     expect(parseHash('#logs?tab=doctor').diagnosticsTab).toBe('doctor')
     expect(parseHash('#logs?tab=logs').diagnosticsTab).toBe('logs')
     expect(parseHash('#extensions?tab=mcp').extensionTab).toBe('mcp')
@@ -24,12 +28,14 @@ describe('navigation parse/serialize', () => {
   it('空哈希与未知取值回到默认：overview / general / skills / doctor', () => {
     expect(parseHash('')).toEqual({
       route: 'overview',
+      syncTab:'file',
       section: 'general',
       extensionTab: 'skills',
       diagnosticsTab: 'doctor',
     })
     expect(parseHash('#nope?section=unknown&tab=zzz')).toEqual({
       route: 'overview',
+      syncTab:'file',
       section: 'general',
       extensionTab: 'skills',
       diagnosticsTab: 'doctor',
@@ -37,7 +43,7 @@ describe('navigation parse/serialize', () => {
   })
 
   it('序列化保持参数顺序，且无参数时不带问号', () => {
-    expect(serializeHash('settings', { section: 'sync' })).toBe('#settings?section=sync')
+    expect(serializeHash('settings', { section: 'sync' })).toBe('#sync?tab=webdav')
     expect(serializeHash('overview')).toBe('#overview')
   })
 

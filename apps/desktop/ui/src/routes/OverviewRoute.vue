@@ -232,8 +232,8 @@ const mods = computed(() => [
       { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
     ],
   },
-  { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('settings', { section: 'migration' }) }, { label: '导入配置', cls: 'btn', run: () => routes.go('settings', { section: 'migration' }) }] },
-  { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('settings', { section: 'sync' }) })) },
+  { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }, { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }] },
+  { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('sync',{tab:'webdav'}) })) },
 ])
 </script>
 

@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import UiButton from '@/components/ui/UiButton.vue'
 import UiSwitch from '@/components/ui/UiSwitch.vue'
-import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { open } from '@tauri-apps/plugin-dialog'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
-const ModelTransfer = defineAsyncComponent(() => import('@/features/sync/ModelTransfer.vue'))
-const ImportedConnections=defineAsyncComponent(()=>import('@/features/sync/ImportedConnections.vue'))
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -20,7 +18,6 @@ import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
-import type { SyncConflictPolicy } from '@/features/sync/api'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
 import { useEffectsStore } from '@/app/appearance/effects'
@@ -190,36 +187,6 @@ function openUpdates(target: 'manager' | 'official' | null = null, check = false
   updateOpen.value = true
   if (check) void updateCenter.value?.check()
 }
-const SYNC_CONFLICT_POLICY_ASK: SyncConflictPolicy = 'ask'
-const syncEndpointInput = ref({
-  baseUrl: '',
-  remotePath: '',
-  username: '',
-  password: '',
-  // 冲突策略只有「每次询问」一种真实行为（引擎不读四档），界面固定只读；见下方 watch 注释。
-  conflictPolicy: SYNC_CONFLICT_POLICY_ASK,
-})
-watch(() => app.syncConfig?.endpoint, endpoint => {
-  if (!endpoint) {
-    // 未配置端点：空表单。冲突策略固定「每次询问」，不再由「同步冲突策略」偏好驱动——
-    // 该偏好四档从未在同步引擎落码，让它左右表单等于把无效果的承诺摆到界面上（§26.1）。
-    syncEndpointInput.value.conflictPolicy = SYNC_CONFLICT_POLICY_ASK
-    return
-  }
-  syncEndpointInput.value = {
-    baseUrl: endpoint.url,
-    remotePath: endpoint.remotePath,
-    username: endpoint.username,
-    password: '',
-    // 只读固定值：无论历史端点里存过哪一档，界面与保存都回到真实行为「每次询问」。
-    conflictPolicy: SYNC_CONFLICT_POLICY_ASK,
-  }
-}, { immediate: true })
-
-async function saveSyncEndpoint() {
-  await app.saveSyncEndpoint(syncEndpointInput.value)
-}
-
 // 设置页每次进入都会重新挂载，而偏好通常在启动阶段就已加载完成；
 // 若只监听「变化」，挂载后再也不会触发，界面会停留在默认值（100）而与实际/持久化值不符。
 // 因此立即同步一次已有的偏好，保证「显示值 = 实际比例 = 持久化值」。
@@ -1174,30 +1141,6 @@ function restoreGeneralDefaults() {
       </article>
       <article class="card"><div class="card-head"><div><h2>Skills 路径</h2><p>集中查看并打开各客户端 Skills 目录。</p></div></div><div class="agent-path-list"><div v-for="row in skillsPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code>{{ row[1] }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} Skills`)">打开目录</UiButton></div></div></div></article>
       <article class="card"><div class="card-head"><div><h2>MCP 路径</h2><p>集中查看并打开各客户端 MCP 配置。</p></div></div><div class="agent-path-list"><div v-for="row in mcpPaths" :key="row[1]" class="agent-path-row"><div class="agent-path-app"><span>{{ row[0] }}</span></div><button class="cli-copy-btn agent-path-copy" @click="copyPath(row[1])"><code>{{ row[1] }}</code></button><div class="agent-path-actions"><UiButton size="sm" class="btn ghost" @click="openPath(row[1], `${row[0]} MCP 配置`)">打开配置</UiButton></div></div></div></article>
-    </section>
-
-    <section v-else-if="section === 'migration'" class="settings-panel active">
-      <ModelTransfer />
-    </section>
-
-    <section v-else-if="section === 'sync'" class="settings-panel active">
-      <ModelTransfer remote />
-      <ImportedConnections @activated="app.loadSyncConfig" />
-      <article class="card"><div class="card-head"><div><h2>连接设置</h2><p>维护当前活动服务器；配置传输与接收范围在上方选择。</p></div></div>
-        <div class="field-grid">
-          <div class="field"><label>服务地址</label><input v-model="syncEndpointInput.baseUrl" class="input" placeholder="https://dav.example.com/opencodex/" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-          <div class="field"><label>远端目录</label><input v-model="syncEndpointInput.remotePath" class="input" placeholder="/desktop-sync/current" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-          <div class="field"><label>账号</label><input v-model="syncEndpointInput.username" class="input" placeholder="账号" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-          <div class="field"><label>应用密码</label><input v-model="syncEndpointInput.password" class="input" type="password" autocomplete="new-password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="输入应用密码"></div>
-          <!-- 只读展示：引擎只实现「每次询问」，四档静默策略从未落码，不能让用户以为可改（§26.1）。
-               仍按技术型输入保留关自动大写三属性，避免日后误改成可编辑时被 WKWebView 首字母大写。 -->
-          <div class="field"><label>冲突策略</label><input class="input" readonly aria-readonly="true" aria-label="冲突策略" value="每次询问" autocapitalize="off" autocorrect="off" spellcheck="false"></div>
-        </div>
-        <div class="setting-list"><div class="setting-row"><div><div class="setting-title">配置保护与采用</div><div class="setting-desc">含凭据的快照使用独立口令保护，下载后比较并确认采用；采用前执行保护备份。</div></div></div></div>
-        <div v-if="app.syncConfig?.endpoint" class="setting-row"><div><div class="setting-title">已配置端点</div><div class="setting-desc">{{ app.syncConfig.endpoint.url }} · {{ app.syncConfig.endpoint.remotePath }} · 凭据引用 {{ app.syncConfig.endpoint.credentialRefId.slice(0, 12) }}</div></div><div class="controls"><UiButton class="btn danger" :disabled="app.syncSaving" @click="app.deleteSyncEndpoint(true)">删除端点</UiButton></div></div>
-        <div v-if="app.syncStatus" class="setting-row"><div><div class="setting-title">最近连接结果</div><div class="setting-desc">{{ app.syncStatus.message || '连接状态已更新。' }}</div></div><div class="controls"><span class="tag">{{ app.syncStatus.connectionState === 'synced' ? '成功' : app.syncStatus.connectionState === 'failed' ? '失败' : app.syncStatus.connectionState }}</span></div></div>
-        <div class="controls"><UiButton class="btn" :disabled="app.syncSaving || app.syncTesting" @click="saveSyncEndpoint()">{{ app.syncSaving ? '保存中…' : '保存端点' }}</UiButton><UiButton class="btn ghost" :disabled="app.syncTesting || app.syncSaving" @click="app.testSyncConnection()">{{ app.syncTesting ? '测试中…' : '测试连接' }}</UiButton></div>
-      </article>
     </section>
 
     <section v-else-if="section === 'cleanup'" class="settings-panel active">
