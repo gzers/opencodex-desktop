@@ -1,0 +1,63 @@
+{
+  "recordedAt": "2026-10-19T15:32:53.961198+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "7ca2f93d2607f9111391f92e8f624075277ba31d",
+  "sourceSha256": {
+    "apps/desktop/ui/src/components/registry.ts": "6e864c8231be13037c552f4b7b0d1b329e7c09fb47d1ecf982f46d684774e7be",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "38996673afc9debe1f6326a13f2dc8bdf3e4bb72e318f6c67b0960ed355e796c",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "fbd6dc038d075d7876fe5161288beedf1b462f45e3233259560108f391ba7adc",
+    "apps/desktop/ui/src/features/sync/ObjectScopeTree.vue": "9db804f045894378a3454cea9de737999bf34a60c74f5bd7adef650e4b9eb0c8",
+    "apps/desktop/ui/tests/sync-object-tree.test.ts": "181f5268f842d49d858d0f9c4bf5a7c130acb67772aa9fd868a935c5d48e2c4c"
+  },
+  "checks": [
+    {
+      "command": "npm run test -- --run tests/model-transfer.test.ts tests/sync-object-tree.test.ts; npm run build",
+      "session": 54971,
+      "result": "passed",
+      "files": 2,
+      "passed": 23,
+      "build": "passed"
+    },
+    {
+      "command": "npm run test -- --run; npm run build",
+      "session": 3398,
+      "result": "passed",
+      "files": 126,
+      "passed": 635,
+      "unhandledErrors": 0,
+      "notes": "two jsdom Canvas unavailable diagnostics; existing build import warnings"
+    }
+  ],
+  "browser": {
+    "source": "production ObjectScopeTree/UiTreeTable and ModelTransfer with DEV fixed catalogue",
+    "screenshots": [
+      "sync-scope-tree-light.png",
+      "sync-scope-search-hidden-light.png"
+    ],
+    "observed": [
+      "six categories start collapsed",
+      "all configuration first file default selected42 objects; channel/extension secrets off",
+      "individual channel unselect produces checked state mixed and41 total",
+      "search Skill retains40 selected outside filter and1 visible",
+      "dialog client/scroll848 no horizontal overflow"
+    ],
+    "boundary": "Not real file/native IPC or all responsive/platform acceptance"
+  },
+  "behavior": [
+    "one shared controlled tree for receive/export",
+    "independent expansion/check; no selected loss during filter",
+    "header/category choose matching enabled objects only",
+    "all/share/device/custom presets; custom asset review remains mandatory",
+    "read catalogue before freezing first all-config default; existing WebDAV device scope not silently enlarged",
+    "WebDAV secret detail excludes password or reselect resets default include",
+    "per-version selection/channel target mapping/Skill-MCP rename preserve original services",
+    "encrypted receive passphrase retained during scope selection even without extension assets"
+  ],
+  "remaining": [
+    "per-channel model subset detail and complete source/field preview",
+    "remaining consumer/platform acceptance",
+    "account type support/evidence boundaries",
+    "final release integration/version/artifacts/publication"
+  ]
+}
