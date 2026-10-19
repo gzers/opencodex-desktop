@@ -1,0 +1,64 @@
+{
+  "recordedAt": "2026-10-19T17:57:53.493579+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "ee8260f9c732330d824d5d17b8028bcb7268ca27",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs": "c2acaf6834dc30d5d7238127981c1a5bbe96696fc6289d17fbdd62bee1524a13",
+    "apps/desktop/tauri/src/modules/model_config/matching.rs": "743a9c510380e9aa18f5bf782bdc63cd0938943f5e4cc74421be486b2f7a930d",
+    "apps/desktop/tauri/src/modules/model_config/tests.rs": "184c454bf984e41df0dc001a17d6621c1ecf8527af62dd1e1c95c8900e2ac5f2",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "1ea25a37dc9c244284a9ebf3dc9b5852c08d65469e772b80403838f278cc1214",
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue": "5d5040c40a4746dac3059755096ae3cf0f1d079c3fa9ee6816bdbf61e04f7106",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "a4bab1ed48fb366d60596caca360b765094307e3802b54f88e17e9bb1f067b53",
+    "apps/desktop/ui/src/features/models/ModelRuleFields.vue": "20a38194d0df9325af5116dfdbabeeba95775f52ba94e5b71c63c131bdc2db55",
+    "apps/desktop/ui/tests/model-effective-source.test.ts": "06f87d054041ccc1103fd6f650781c535edbe30a7cde37b0a4ec05de83abb7f7",
+    "apps/desktop/ui/tests/model-projection-owner.test.ts": "8e53a1088dac8634c26c106fad09f0777ee08afe6375ee5f36e84b28732bd2c5"
+  },
+  "checks": [
+    {
+      "session": 87680,
+      "commands": [
+        "cargo test --lib effective_sources_distinguish_template_variant_family_and_single_model_without_changing_protocol_precedence --no-default-features",
+        "cargo test --lib capability_and_protocol_priorities_differ_and_explicit_false_survives --no-default-features",
+        "cargo clippy --workspace --all-targets --features integration-test -- -D warnings"
+      ],
+      "passed": 2,
+      "clippy": "passed",
+      "logs": [
+        "effective-source-rust-20261020.txt",
+        "effective-source-clippy-20261020.txt"
+      ]
+    },
+    {
+      "session": 19064,
+      "files": 3,
+      "passed": 7,
+      "boundary": "tests passed; first build failed because fixture defaults was {}, corrected to emptyRules before final build"
+    },
+    {
+      "session": 36420,
+      "command": "npm run build && npm test -- --run",
+      "files": 131,
+      "passed": 649,
+      "build": "passed",
+      "unhandledErrors": 0,
+      "log": "effective-source-ui-full-20261020.txt"
+    }
+  ],
+  "browser": {
+    "source": "production ChannelEditor and ModelRuleFields with explicit DEV fixed upstream source",
+    "observed": [
+      "single-model source table names all6 base fields",
+      "protocol effective openai-responses/channel default; other inherited undeclared values explicitly unknown",
+      "exact raw-ID search shows1/12; internal table client/scroll1234 and no document horizontal overflow"
+    ],
+    "screenshot": "model-effective-source-light.png",
+    "boundary": "not full family-service/native IPC proof; family/variant precedence is in Rust service test"
+  },
+  "remaining": [
+    "full advanced reasoning schema/UI/runtime and new naming/alias proposal compile",
+    "context/navigation and scoped partial save flows",
+    "per-account portable login and actual consumer/platform matrices",
+    "final integration/version/artifacts/publication"
+  ]
+}
