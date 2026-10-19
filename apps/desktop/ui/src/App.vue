@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
@@ -42,8 +43,8 @@ const component = computed(() => routes.current === 'tray' ? undefined : routes.
         <h3>界面出现异常</h3>
         <p class="ui-fault-text">{{ app.uiFault }}</p>
         <div class="ui-fault-actions">
-          <button class="btn ghost" type="button" @click="app.clearUiFault()">关闭提示</button>
-          <button class="btn" type="button" @click="reloadUi()">重新加载界面</button>
+          <UiButton class="btn ghost" type="button" @click="app.clearUiFault()">关闭提示</UiButton>
+          <UiButton class="btn" type="button" @click="reloadUi()">重新加载界面</UiButton>
         </div>
       </div>
     </div>

@@ -1,6 +1,15 @@
 /* OpenCodeX Desktop design tokens.
    Light and dark values are aligned with the frozen prototype token sheet. */
 :root {
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --button-spinner-size:13px;
+  --switch-width: 38px;
+  --switch-track-height: 22px;
+  --switch-thumb-size: 16px;
+  --switch-thumb-inset: 3px;
+  --switch-thumb-fill: #fff;
+  --switch-thumb-shadow: 0 1px 2px #00000033;
   color-scheme: light dark;
 
   /* 界面缩放因子（50%–200% → 0.5–2）。由 `src/scale.ts` 在启动与偏好变更时写到根元素；

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { onMounted, ref } from 'vue'
 import UiTreeTable from '@/components/ui/UiTreeTable.vue'
 import { initialTreeExpansion, type TreeTableNode } from '@/components/ui/treeTable'
@@ -39,7 +40,7 @@ onMounted(() => { void refresh() })
   <section class="backup-files" aria-labelledby="backup-files-title">
     <div class="backup-files-head">
       <h3 id="backup-files-title">备份文件与目录</h3>
-      <button class="btn ghost" type="button" :aria-disabled="loading || undefined" :aria-busy="loading || undefined" @click="refresh">{{ loading ? '正在读取…' : '刷新' }}</button>
+      <UiButton class="btn ghost" type="button" :aria-disabled="loading || undefined" :aria-busy="loading || undefined" @click="refresh">{{ loading ? '正在读取…' : '刷新' }}</UiButton>
     </div>
     <p v-if="rootPath" class="backup-root">{{ rootPath }}</p>
     <UiTreeTable v-model:expanded-ids="expanded" :nodes="nodes" :loading="loading" :error="error" label="备份文件与目录" empty-label="尚无备份文件" :columns="[{ key: 'purpose', label: '用途' }, { key: 'action', label: '操作', kind: 'action' }]" @retry="refresh">
@@ -49,7 +50,7 @@ onMounted(() => { void refresh() })
       </template>
       <template #cell-purpose="{ node }"><span class="backup-purpose">{{ file(node).purpose }}</span></template>
       <template #cell-action="{ node }">
-        <button class="btn ghost backup-open" type="button" :disabled="!file(node).canOpen" :aria-label="(file(node).directory ? '打开目录 ' : '打开文件 ') + node.label" @click="emit('open', file(node))">{{ file(node).directory ? '打开目录' : '打开文件' }}</button>
+        <UiButton class="btn ghost backup-open" type="button" :disabled="!file(node).canOpen" :aria-label="(file(node).directory ? '打开目录 ' : '打开文件 ') + node.label" @click="emit('open', file(node))">{{ file(node).directory ? '打开目录' : '打开文件' }}</UiButton>
       </template>
     </UiTreeTable>
   </section>

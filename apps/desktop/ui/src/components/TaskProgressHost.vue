@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useOperationTasks, operationTitles, operationPhaseText } from '@/app/feedback/tasks'
 import { useAppStore } from '@/stores/app'
@@ -105,14 +106,14 @@ function collapse() {
         >{{ step.label }}</li>
       </ol>
       <div class="process-progress-actions">
-        <button class="btn ghost notif-ctl" type="button" @click="app.dismissProcessProgress()">
+        <UiButton class="btn ghost notif-ctl" type="button" @click="app.dismissProcessProgress()">
           {{ app.processActionBusy ? '后台运行' : '关闭' }}
-        </button>
+        </UiButton>
       </div>
   </section>
   <section v-for="task in operations.tasks.filter(t => !t.collapsed)" :key="task.id" class="process-progress" :class="{ done: task.phase !== 'running', error: task.phase === 'failed' }" role="status" aria-live="polite">
     <div class="process-progress-head"><div><h3>{{ operationTitles[task.kind] }}</h3><p>{{ operationPhaseText(task) }}</p></div><button class="notify-min" type="button" aria-label="收起任务到通知入口" @click="operations.collapse(task.id)">⌄</button></div>
     <div v-if="task.phase === 'running'" class="process-progress-track" aria-hidden="true"></div>
-    <div class="process-progress-actions"><button class="btn ghost notif-ctl" @click="operations.collapse(task.id)">收起</button><button class="btn notif-ctl" @click="routes.go('models')">查看模型配置</button></div>
+    <div class="process-progress-actions"><UiButton class="btn ghost notif-ctl" @click="operations.collapse(task.id)">收起</UiButton><UiButton class="btn notif-ctl" @click="routes.go('models')">查看模型配置</UiButton></div>
   </section>
 </template>

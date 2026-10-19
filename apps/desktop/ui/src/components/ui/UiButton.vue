@@ -38,6 +38,7 @@ const classes = computed(() => [
   props.size !== 'md' ? `btn-${props.size}` : '',
   props.density === 'compact' ? 'btn-compact' : '',
   props.surface === 'plain' ? 'btn-plain' : '',
+  props.loading ? 'is-loading' : '',
 ])
 </script>
 
@@ -49,6 +50,6 @@ const classes = computed(() => [
     :aria-busy="loading ? 'true' : undefined"
   >
     <span v-if="loading" class="btn-spinner" aria-hidden="true"></span>
-    <slot />
+    <span class="btn-content"><slot /></span>
   </button>
 </template>

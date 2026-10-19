@@ -6,19 +6,21 @@ const emit = defineEmits<{ close: [] }>()
 const dialog = ref<HTMLDialogElement | null>(null)
 const titleId = useId()
 let origin: HTMLElement | null = null
+let disposed=false
 watch(() => props.open, async open => {
   await nextTick()
+  if(disposed||props.open!==open)return
   const element = dialog.value
   if (!element) return
   if (open && !element.open) { origin = document.activeElement instanceof HTMLElement ? document.activeElement : null; element.showModal() }
-  else if (!open && element.open) { element.close(); origin?.focus() }
+  else if (!open && element.open) { element.close(); origin?.focus();origin=null }
 }, { immediate: true })
 function close() { if (!props.busy) emit('close') }
 function backdrop(event: MouseEvent) {
   const box = dialog.value?.getBoundingClientRect()
   if (event.target === dialog.value && box && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom)) close()
 }
-onBeforeUnmount(() => { dialog.value?.close(); origin?.focus() })
+onBeforeUnmount(() => {disposed=true;if(dialog.value?.open){dialog.value.close();origin?.focus()}origin=null})
 </script>
 <template>
   <Teleport to="body">

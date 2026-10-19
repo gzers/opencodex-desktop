@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 import { useAppStore } from '@/stores/app'
 
@@ -120,17 +121,17 @@ onBeforeUnmount(() => {
         </label>
       </div>
       <div class="modal-actions">
-        <button
+        <UiButton
           v-if="modal.resolveLabel"
           class="btn ghost"
           @click="app.resolveModal('resolve')"
-        >{{ modal.resolveLabel }}</button>
-        <button
+        >{{ modal.resolveLabel }}</UiButton>
+        <UiButton
           v-if="modal.deleteLabel"
           class="btn ghost"
           @click="app.resolveModal('delete')"
-        >{{ modal.deleteLabel }}</button>
-        <button class="btn ghost" @click="cancel">{{ modal.cancelLabel }}</button>
+        >{{ modal.deleteLabel }}</UiButton>
+        <UiButton class="btn ghost" @click="cancel">{{ modal.cancelLabel }}</UiButton>
         <button v-if="modal.confirmLabel" :class="primaryClass" @click="confirm()">{{ modal.confirmLabel }}</button>
       </div>
     </div>

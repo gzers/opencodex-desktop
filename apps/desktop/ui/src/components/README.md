@@ -47,3 +47,12 @@
 尺寸、材质、语义层级沿styles与既有专题；新增组件不读store/IPC，ModelRuleFields保留业务feature职责。实现/单元检查不等于完整实屏指标通过，后续模型选择器及消费者迁移继续登记。
 
 后续（阶段 C 续）：`UiCardBody/UiCardFooter`（现有实现无 `.card-body`/`.card-footer`，需先形成视觉/结构决定，见 IMP-04 §7.5）、`patterns/InlineNotice`（当前无 `.notice` 消费者，待出现真实使用再提取）、组件规则检查（限制组件内新增颜色/字号/字重/层级）。
+
+
+## 0.2.0公共入口及源映射
+
+registry.ts按专题43个稳定ID记录规格来源、当前实现/配方、实际消费者和DEV样例锚点；由gallery消费，正式入口不导入。原型注释仅适用于文档，原生平台另行检查；所有条目的完整矩阵仍待验收，不用“源文件存在”代表已适配完成。
+
+设置14处开关共用ui/UiSwitch.vue，传受控值与必填label，上报update:modelValue，不在基础层读store/IPC；原受控保存者继续决定何时更新。视觉轨道38×22、点击高度28，令牌承载尺寸/拇指/阴影。普通按钮沿UiButton的sm28/md34/lg40，页面选择size，不覆盖最终高度/内距/字号；进行中保持原slot宽度，使用覆盖式装饰spinner与aria-busy，不改变可访问名称。
+
+本轮117处原btn消费已迁移至UiButton；路径行、分页和最近事件次操作明确sm。原生caption/托盘、图标按钮、文本复制按钮及轻量HTML表单保持各自用途和登记，尚需逐项规格/尺寸与原生证据，不能因此视为普通btn的样式例外已验。

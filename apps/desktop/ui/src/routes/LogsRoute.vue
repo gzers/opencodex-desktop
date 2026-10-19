@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, onMounted } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
@@ -110,7 +111,7 @@ function openClearReadNotificationsModal() {
       <div v-if="routes.diagnosticsTab === 'doctor'" class="diag-view active">
         <div class="card-head">
           <div><h2>运行环境诊断</h2><p>调用官方 <code>ocx doctor</code>：默认只读，不修改配置、不设置代理、不改网络。</p></div>
-          <div class="toolbar"><button class="btn" :disabled="controller.doctorLoading.value" @click="controller.runDoctor()">{{ controller.doctorLoading.value ? '诊断中…' : '环境诊断' }}</button></div>
+          <div class="toolbar"><UiButton class="btn" :disabled="controller.doctorLoading.value" @click="controller.runDoctor()">{{ controller.doctorLoading.value ? '诊断中…' : '环境诊断' }}</UiButton></div>
         </div>
         <pre class="doctor-out" :class="{ show: controller.doctorShown.value }">{{ controller.doctorReportText.value }}</pre>
         <p class="doctor-hint">写入型修复需要先停止代理并显式确认；本应用只展示只读摘要。</p>
@@ -118,7 +119,7 @@ function openClearReadNotificationsModal() {
         <div class="selfcheck">
           <div class="card-head">
             <div><h3>界面异常自检</h3><p>主动触发一次界面异常，验证兜底条与恢复动作。仅本次会话生效，不改配置或数据。</p></div>
-            <div class="toolbar"><button class="btn ghost" id="uiSelfCheckBtn" type="button" @click="runUiSelfCheck()">界面诊断</button></div>
+            <div class="toolbar"><UiButton class="btn ghost" id="uiSelfCheckBtn" type="button" @click="runUiSelfCheck()">界面诊断</UiButton></div>
           </div>
         </div>
       </div>
@@ -140,9 +141,9 @@ function openClearReadNotificationsModal() {
         <div class="logbar">
           <span class="history-meta">{{ logsMeta }}</span>
           <div class="toolbar">
-            <button class="btn ghost" @click="routes.go('panel')">面板请求日志</button>
-            <button class="btn ghost" @click="openClearLogsModal()">清理日志</button>
-            <button class="btn" @click="openLogsDirectory()">打开日志目录</button>
+            <UiButton class="btn ghost" @click="routes.go('panel')">面板请求日志</UiButton>
+            <UiButton class="btn ghost" @click="openClearLogsModal()">清理日志</UiButton>
+            <UiButton class="btn" @click="openLogsDirectory()">打开日志目录</UiButton>
           </div>
         </div>
         <pre class="log">{{ logText }}</pre>
@@ -151,8 +152,8 @@ function openClearReadNotificationsModal() {
         <div class="logbar">
           <span class="history-meta">{{ historyMeta }}</span>
           <div class="toolbar">
-            <button class="btn ghost" :disabled="!app.notifications.length" @click="openClearResolvedNotificationsModal()">清理已解决</button>
-            <button class="btn ghost" :disabled="!app.notifications.some(item => item.read)" @click="openClearReadNotificationsModal()">清理已读</button>
+            <UiButton class="btn ghost" :disabled="!app.notifications.length" @click="openClearResolvedNotificationsModal()">清理已解决</UiButton>
+            <UiButton class="btn ghost" :disabled="!app.notifications.some(item => item.read)" @click="openClearReadNotificationsModal()">清理已读</UiButton>
           </div>
         </div>
         <div class="history-list">

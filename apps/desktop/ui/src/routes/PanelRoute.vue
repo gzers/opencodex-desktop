@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { syncEmbeddedPanel, type PanelBounds } from '@/features/panel/api'
 import { useAppStore } from '@/stores/app'
@@ -312,8 +313,8 @@ watch(requiredOverlays, visible => {
         <p v-if="panelLoading">正在将官方面板嵌入主窗口…</p>
         <p v-else>{{ panelError }}</p>
         <div v-if="panelError" class="panel-state-actions">
-          <button class="btn" type="button" @click="void loadPanel()">重试</button>
-          <button class="btn" type="button" @click="void openBrowserFallback()">在浏览器打开</button>
+          <UiButton class="btn" type="button" @click="void loadPanel()">重试</UiButton>
+          <UiButton class="btn" type="button" @click="void openBrowserFallback()">在浏览器打开</UiButton>
         </div>
       </div>
       <p v-if="panelReady" class="panel-embedded-note">官方面板已嵌入主窗口</p>
