@@ -1,0 +1,59 @@
+{
+  "recordedAt": "2026-10-19T03:01:12.424264+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "5e7cea6c7380e202fbcbc2f65a01a35e5e5a4803",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs": "d2d6f21f844be37e51f044d580d0d4059897c4d8c9438af65b1db3bcfa154fd9",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "37786835918e1f793f828e64f72f2688d297ae527224be829c4ddbf34dc0f79a",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "894a45c0b8c5967c9ba02ae0583c00f08d7927edd02dd55fa78b0024c60a839d",
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue": "7a5b9708b814b83971c7fbcd52f917223a5ad39e535222676ceedf6319e32553",
+    "apps/desktop/ui/src/features/models/upstream.ts": "872b68e057bca1bd9a4e61d74bb641563b7ad2a739dbdfe8c8943dd1650f4216",
+    "apps/desktop/ui/tests/model-selection.test.ts": "877fb177483bc8e05e6ede4f9e49d06c3c5c284c776df07b657c5069d05fac73"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config::runtime::tests --no-default-features",
+      "session": 15740,
+      "passed": 11,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-selection.test.ts tests/model-node-measurements.test.ts",
+      "session": 24951,
+      "passed": 10,
+      "files": 2,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 24951,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 28837,
+      "result": "passed"
+    },
+    {
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 38617,
+      "passed": 1,
+      "result": "passed",
+      "kind": "installed official 2.84.0 isolated live process",
+      "observed": "display names on base and protocol group read back; explicit display removal read back; catalog 2→2→0→1; committed/committed/committed; stable-group=true; no-generation=true; client state pending_verification only"
+    }
+  ],
+  "doesNotProve": [
+    "daily Keychain behavior",
+    "actual Codex client model selector loading",
+    "Windows native UI or platform release"
+  ],
+  "remaining": [
+    "channel copy/delete/default/native editing policy",
+    "first historical baseline and Key pool restoration",
+    "full original upstream portability",
+    "agent conversation/source evidence",
+    "asset mappings and shared UI consumers/platform/release"
+  ]
+}
