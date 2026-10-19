@@ -4,6 +4,11 @@ import { acceptProposal, proposalFields } from '@/features/models/proposals'
 const draft = (): TemplateDraft => ({ templateId: null, baseRevision: null, label: '当前模版', content: emptyContent() })
 const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v))
 describe('three-way generation proposals', () => {
+  it('compares optional advanced fields without a fake old-schema change and preserves explicit locks',()=>{
+    const base=draft();delete base.content.rules.pinnedEffort;delete base.content.rules.effortMap;const same:Proposal=clone(base);same.content.rules.pinnedEffort={mode:'inherit'};same.content.rules.effortMap={mode:'inherit'};expect(proposalFields(base,base,same)).toEqual([]);
+    const current=clone(base);current.content.lockedFields=['rules.pinnedEffort'];const generated:Proposal=clone(base);generated.content.rules.pinnedEffort={mode:'custom',value:'high'};generated.content.rules.effortMap={mode:'custom',value:{high:'__omit__'}};
+    const fields=proposalFields(base,current,generated);expect(fields.find(f=>f.path.at(-1)==='pinnedEffort')?.locked).toBe(true);const result=acceptProposal(current,fields,fields.map(f=>f.path.join('.')));expect(result.content.rules.pinnedEffort).toBeUndefined();expect(result.content.rules.effortMap).toEqual({mode:'custom',value:{high:'__omit__'}})
+  })
   it('marks concurrent human edits and preserves unselected fields', () => {
     const base = draft(); const current = clone(base); const generated: Proposal = clone(base)
     current.content.description = '人工刚修改'; generated.content.description = '助手描述'; generated.content.rules.fast = { mode:'custom',value:false }

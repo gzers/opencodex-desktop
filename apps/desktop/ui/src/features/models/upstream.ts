@@ -17,6 +17,10 @@ export function mergeUpstream(snapshot: UpstreamSnapshot, existing: ChannelPolic
       if (Array.isArray(row.reasoningEfforts)) rules.reasoningEfforts = { mode: 'custom', value: strings(row.reasoningEfforts) }
       if (typeof row.defaultReasoningEffort === 'string') rules.defaultEffort = { mode: 'custom', value: row.defaultReasoningEffort }
       if (typeof row.fastRowAvailable === 'boolean') rules.fast = { mode: 'custom', value: row.fastRowAvailable }
+      const pin=record(raw.modelPinnedReasoningEfforts)?raw.modelPinnedReasoningEfforts[String(row.id)]??raw.pinnedReasoningEffort:raw.pinnedReasoningEffort
+      if(typeof pin==='string')rules.pinnedEffort={mode:'custom',value:pin}
+      const map=record(raw.modelReasoningEffortMap)?raw.modelReasoningEffortMap[String(row.id)]??raw.reasoningEffortMap:raw.reasoningEffortMap
+      if(record(map)&&Object.values(map).every(value=>typeof value==='string'))rules.effortMap={mode:'custom',value:map as Record<string,string>}
       return { id: String(row.id), label: record(raw.modelDisplayNames)&&typeof raw.modelDisplayNames[String(row.id)]==='string'?String(raw.modelDisplayNames[String(row.id)]):typeof row.displayName === 'string' && row.displayName!==row.namespaced ? row.displayName : String(row.id), rules }
     })
     if (old) { result.push({ ...old, connection:{...old.connection,sourceReadId:snapshot.readId??old.connection.sourceReadId,authMode:typeof raw.authMode==='string'?raw.authMode:old.connection.authMode}, discovered }); continue }

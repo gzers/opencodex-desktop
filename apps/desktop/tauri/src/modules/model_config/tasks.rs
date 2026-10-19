@@ -763,6 +763,30 @@ mod tests {
         );
     }
     #[test]
+    fn advanced_reasoning_fields_use_the_same_external_lock_boundary() {
+        let mut content = proposal().content;
+        content.rules.pinned_effort = Field::Custom("high".into());
+        content.rules.effort_map = Field::Custom(std::collections::BTreeMap::from([(
+            "high".into(),
+            "__omit__".into(),
+        )]));
+        content.locked_fields.insert("rules.pinnedEffort".into());
+        content.locked_fields.insert("rules.effortMap".into());
+        content.validate().unwrap();
+        let mut changed = content.clone();
+        changed.rules.pinned_effort = Field::Custom("low".into());
+        assert_eq!(
+            super::check_locks(&content, &changed).unwrap_err().code,
+            "locked_field"
+        );
+        let mut changed = content.clone();
+        changed.rules.effort_map = Field::Custom(Default::default());
+        assert_eq!(
+            super::check_locks(&content, &changed).unwrap_err().code,
+            "locked_field"
+        );
+    }
+    #[test]
     fn external_proposals_cannot_change_locked_values_or_expand_scope() {
         let root = tempfile::tempdir().unwrap();
         let store = ModelStore::new(root.path());

@@ -520,6 +520,39 @@ fn effective_sources_distinguish_template_variant_family_and_single_model_withou
     assert_eq!(row.source["defaultEffort"], "单模型覆盖");
 }
 #[test]
+fn advanced_pin_map_keep_old_serialization_and_semantic_digest_but_validate_independent_controls() {
+    let base = ModelRules::default();
+    let value = serde_json::to_value(&base).unwrap();
+    assert!(value.get("pinnedEffort").is_none());
+    assert!(value.get("effortMap").is_none());
+    let mut rules: ModelRules = serde_json::from_value(value.clone()).unwrap();
+    assert_eq!(rules, base);
+    assert_eq!(serde_json::to_value(&rules).unwrap(), value);
+    rules.reasoning_efforts = Field::Custom(vec!["low".into(), "high".into()]);
+    rules.default_effort = Field::Custom("low".into());
+    rules.pinned_effort = Field::Custom("high".into());
+    rules.effort_map = Field::Custom(std::collections::BTreeMap::from([(
+        "high".into(),
+        "__omit__".into(),
+    )]));
+    rules.validate().unwrap();
+    assert_eq!(rules.default_effort, Field::Custom("low".into()));
+    let parent = rules.clone();
+    rules.pinned_effort = Field::Inherit;
+    rules.effort_map = Field::Custom(Default::default());
+    let final_rules = rules.overlay(&parent);
+    assert_eq!(final_rules.pinned_effort, parent.pinned_effort);
+    assert_eq!(final_rules.effort_map, Field::Custom(Default::default()));
+    rules.pinned_effort = Field::Custom("max".into());
+    assert_eq!(rules.validate().unwrap_err().code, "pinned_effort");
+    rules.pinned_effort = Field::Inherit;
+    rules.effort_map = Field::Custom(std::collections::BTreeMap::from([(
+        "high".into(),
+        "secret\nvalue".into(),
+    )]));
+    assert_eq!(rules.validate().unwrap_err().code, "effort_map");
+}
+#[test]
 fn node_validation_and_zero_selection_never_turn_into_all() {
     let mut c = channel(&uuid::Uuid::new_v4().to_string());
     c.discovered.push(DiscoveredModel {

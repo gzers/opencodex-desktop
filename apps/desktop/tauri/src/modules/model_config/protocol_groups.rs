@@ -145,6 +145,16 @@ fn explicit_rules(row: &compiler::ModelProjection) -> ModelRules {
     if row.source.get("fast").is_none_or(|s| s == "上游声明") {
         rules.fast = Field::Inherit;
     }
+    if row
+        .source
+        .get("pinnedEffort")
+        .is_none_or(|s| s == "上游声明")
+    {
+        rules.pinned_effort = Field::Inherit;
+    }
+    if row.source.get("effortMap").is_none_or(|s| s == "上游声明") {
+        rules.effort_map = Field::Inherit;
+    }
     rules
 }
 pub fn expand(

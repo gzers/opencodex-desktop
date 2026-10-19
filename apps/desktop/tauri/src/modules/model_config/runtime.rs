@@ -856,6 +856,45 @@ fn compile_materials(
                 }
             }
             let fields = &row.rules;
+            if let Field::Custom(pin) = &fields.pinned_effort {
+                if !matches!(&fields.reasoning_efforts,Field::Custom(values) if values.contains(pin))
+                {
+                    return Err(invalid(
+                        "pinned_effort",
+                        "目标型号尚无包含强制档的可核验推理列表",
+                    ));
+                }
+                if row
+                    .source
+                    .get("pinnedEffort")
+                    .is_some_and(|s| s != "上游声明")
+                {
+                    set_map(
+                        provider,
+                        "modelPinnedReasoningEfforts",
+                        &row.model_id,
+                        json!(pin),
+                    )?;
+                }
+            }
+            if let Field::Custom(map) = &fields.effort_map {
+                if !map.is_empty()
+                    && !matches!(&fields.reasoning_efforts,Field::Custom(values) if map.keys().all(|key|values.contains(key)))
+                {
+                    return Err(invalid(
+                        "effort_map",
+                        "目标型号的推理列表未知，不能确认标签映射",
+                    ));
+                }
+                if row.source.get("effortMap").is_some_and(|s| s != "上游声明") {
+                    set_map(
+                        provider,
+                        "modelReasoningEffortMap",
+                        &row.model_id,
+                        json!(map),
+                    )?;
+                }
+            }
             if let Field::Custom(value) = &fields.protocol {
                 if value != &channel.connection.protocol {
                     if !["openai-chat", "openai-responses"].contains(&value.as_str()) {
@@ -2544,6 +2583,8 @@ fn next_ownership(
             "modelReasoningEfforts",
             "modelDefaultReasoningEfforts",
             "modelSupportsServiceTier",
+            "modelPinnedReasoningEfforts",
+            "modelReasoningEffortMap",
         ] {
             let old = before["providers"][provider][key].as_object();
             let new = after["providers"][provider][key].as_object();
@@ -2888,6 +2929,63 @@ pub async fn compensate(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn explicit_reasoning_pin_and_label_map_compile_and_restore_original_without_resetting_default()
+    {
+        let (mut snapshot, mut policy) = fixture();
+        snapshot.providers["providers"]["test"]["modelPinnedReasoningEfforts"] = json!({"b":"low"});
+        snapshot.providers["providers"]["test"]["modelReasoningEffortMap"] =
+            json!({"b":{"high":"legacy-high"},"other":{"high":"keep"}});
+        let channel = &mut policy.channels[0];
+        channel.overrides.insert(
+            "b".into(),
+            ModelRules {
+                reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
+                default_effort: Field::Custom("low".into()),
+                pinned_effort: Field::Custom("high".into()),
+                effort_map: Field::Custom(BTreeMap::from([("high".into(), "__omit__".into())])),
+                ..Default::default()
+            },
+        );
+        let library = super::super::store::seed_library();
+        let (next, _, _) = compile(&snapshot, &library, &policy).unwrap();
+        assert_eq!(
+            next["providers"]["test"]["modelPinnedReasoningEfforts"]["b"],
+            "high"
+        );
+        assert_eq!(
+            next["providers"]["test"]["modelDefaultReasoningEfforts"]["b"],
+            "low"
+        );
+        assert_eq!(
+            next["providers"]["test"]["modelReasoningEffortMap"]["b"]["high"],
+            "__omit__"
+        );
+        assert_eq!(
+            next["providers"]["test"]["modelReasoningEffortMap"]["other"]["high"],
+            "keep"
+        );
+        let ownership = next_ownership(&snapshot.providers, &next, &[], &policy).unwrap();
+        snapshot.providers = next;
+        policy.channels[0].overrides.clear();
+        let (restored, _, _) = compile_owned(&snapshot, &library, &policy, &ownership).unwrap();
+        assert_eq!(
+            restored["providers"]["test"]["modelPinnedReasoningEfforts"]["b"],
+            "low"
+        );
+        assert_eq!(
+            restored["providers"]["test"]["modelReasoningEffortMap"]["b"]["high"],
+            "legacy-high"
+        );
+        snapshot.providers["providers"]["test"]["modelReasoningEffortMap"]["b"]["high"] =
+            json!("later-edit");
+        assert_eq!(
+            compile_owned(&snapshot, &library, &policy, &ownership)
+                .unwrap_err()
+                .code,
+            "field_drift"
+        );
+    }
     #[test]
     fn display_names_use_official_display_field_preserve_routing_aliases_and_track_explicit_removal(
     ) {

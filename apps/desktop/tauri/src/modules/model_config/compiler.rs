@@ -166,6 +166,11 @@ fn overlay_sources(target: &mut BTreeMap<String, String>, rules: &ModelRules, so
             !matches!(rules.default_effort, Field::Inherit),
         ),
         ("fast", !matches!(rules.fast, Field::Inherit)),
+        (
+            "pinnedEffort",
+            !matches!(rules.pinned_effort, Field::Inherit),
+        ),
+        ("effortMap", !matches!(rules.effort_map, Field::Inherit)),
     ] {
         if custom {
             target.insert(key.into(), source.into());

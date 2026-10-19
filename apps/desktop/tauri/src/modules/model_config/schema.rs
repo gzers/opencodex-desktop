@@ -68,6 +68,13 @@ pub struct ModelRules {
     pub reasoning_efforts: Field<Vec<String>>,
     pub default_effort: Field<String>,
     pub fast: Field<bool>,
+    #[serde(skip_serializing_if = "is_inherit")]
+    pub pinned_effort: Field<String>,
+    #[serde(skip_serializing_if = "is_inherit")]
+    pub effort_map: Field<BTreeMap<String, String>>,
+}
+fn is_inherit<T>(value: &Field<T>) -> bool {
+    matches!(value, Field::Inherit)
 }
 impl ModelRules {
     pub fn overlay(&self, parent: &Self) -> Self {
@@ -78,6 +85,8 @@ impl ModelRules {
             reasoning_efforts: self.reasoning_efforts.overlay(&parent.reasoning_efforts),
             default_effort: self.default_effort.overlay(&parent.default_effort),
             fast: self.fast.overlay(&parent.fast),
+            pinned_effort: self.pinned_effort.overlay(&parent.pinned_effort),
+            effort_map: self.effort_map.overlay(&parent.effort_map),
         }
     }
     pub fn normalize(&mut self) {
@@ -89,6 +98,43 @@ impl ModelRules {
         }
     }
     pub fn validate(&self) -> ModelResult<()> {
+        let effort = |value: &str| {
+            [
+                "none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra",
+            ]
+            .contains(&value)
+        };
+        if let Field::Custom(pin) = &self.pinned_effort {
+            if !effort(pin)
+                || matches!(&self.reasoning_efforts,Field::Custom(values) if !values.contains(pin))
+            {
+                return Err(invalid(
+                    "pinned_effort",
+                    "强制推理档必须属于最终可选列表，不能用默认档代替",
+                ));
+            }
+        }
+        if let Field::Custom(map) = &self.effort_map {
+            if map.len() > 8
+                || map.iter().any(|(key, value)| {
+                    !effort(key)
+                        || value.is_empty()
+                        || value.len() > 64
+                        || !value
+                            .bytes()
+                            .all(|c| c.is_ascii_alphanumeric() || b"_.-".contains(&c))
+                })
+            {
+                return Err(invalid(
+                    "effort_map",
+                    "推理映射只接受已声明档位与64字节内的上游标签；__omit__表示不发送参数",
+                ));
+            }
+            if matches!(&self.reasoning_efforts,Field::Custom(values) if map.keys().any(|key|!values.contains(key)))
+            {
+                return Err(invalid("effort_map", "推理映射包含最终列表以外的档位"));
+            }
+        }
         if matches!(self.context_window, Field::Custom(0)) {
             return Err(invalid("context_window", "上下文窗口必须大于0"));
         }
@@ -290,6 +336,8 @@ impl TemplateContent {
             "reasoningEfforts",
             "defaultEffort",
             "fast",
+            "pinnedEffort",
+            "effortMap",
         ];
         if self.locked_fields.iter().any(|v| {
             !["description", "matching", "rules", "variants"].contains(&v.as_str())

@@ -291,6 +291,16 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             family_overrides: BTreeMap::new(),
         }],
     };
+    policy.channels[0].overrides.insert(
+        "fixture-base".into(),
+        ModelRules {
+            reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
+            default_effort: Field::Custom("low".into()),
+            pinned_effort: Field::Custom("high".into()),
+            effort_map: Field::Custom(BTreeMap::from([("high".into(), "__omit__".into())])),
+            ..Default::default()
+        },
+    );
     for model in &mut policy.channels[0].discovered {
         model.label = if model.id == "fixture-base" {
             "基础型号"
@@ -345,6 +355,18 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     );
     assert_eq!(store.load().unwrap().policy, policy);
     let after = upstream::snapshot(&context).await.unwrap();
+    assert_eq!(
+        after.providers["providers"]["fixture"]["modelPinnedReasoningEfforts"]["fixture-base"],
+        "high"
+    );
+    assert_eq!(
+        after.providers["providers"]["fixture"]["modelReasoningEffortMap"]["fixture-base"]["high"],
+        "__omit__"
+    );
+    assert_eq!(
+        after.providers["providers"]["fixture"]["modelDefaultReasoningEfforts"]["fixture-base"],
+        "low"
+    );
     let order = after.order["pickerOrder"].as_array().unwrap();
     let mapped = plan.protocol_groups[0].split(" → ").last().unwrap();
     assert!(order
