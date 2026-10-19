@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-10-19T04:24:16.589927+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "4a68fac93c0483fda265be5ab9be5fa9f5238467",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "12ccafc4b172d185e0090625a03c3023d74c79031364c9268c3d419c475a87f6",
+    "apps/desktop/tauri/src/lib.rs": "b67eb3db9aafe5e56fd21306d7b365aeb760dba08022aa54c89f462e84b40c1f",
+    "apps/desktop/tauri/src/modules/model_config/agent.rs": "32641c744cc17606b3f00904881c7dbb21faa12e4fdecc61e2514b5a8fe7e069",
+    "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs": "361e41fc3aa532aac6aa2eb4406e0c02993eafbc0beef45001320e4af54e1061",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "830b4d2caa78600e3d48a42b6eb9c43e53eb1bb4382757d4f67f1b9be42e623c",
+    "apps/desktop/tauri/src/modules/model_config/research_receipts.rs": "18fd4efcdd3c9b97fcfc2d00aaa8c2e8ab602adde6c9e814075570c1c235febd",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "ae21ed35fc599068226669279540437dbb5b587e05264915c740156784f0ee7f",
+    "apps/desktop/ui/src/features/models/AgentPanel.vue": "a0c7db2f472f76b3e49278dc0cc54ec1da4c11513081fbc49f9becac463be9d8",
+    "apps/desktop/ui/src/features/models/api.ts": "b49e3995aab018eb0c4106c20b1b6387d7d55ed4260a485f672a4dbd800524fb",
+    "apps/desktop/ui/tests/model-agent-restore.test.ts": "2afdbcb1a6bd75b3c4eb4ee74eaf2b01d7d1fdf1cd31cd4a13dd4381f881dc01"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config::agent --no-default-features",
+      "session": 45628,
+      "passed": 7,
+      "result": "passed",
+      "includes": "local conversation CAS and unsent input; actual loopback generation record context"
+    },
+    {
+      "command": "cargo test --lib research_receipts --no-default-features",
+      "session": 45628,
+      "passed": 2,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 45628,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-agent-restore.test.ts tests/model-agent-batch.test.ts",
+      "session": 73851,
+      "files": 2,
+      "passed": 6,
+      "result": "passed"
+    },
+    {
+      "command": "npm run typecheck",
+      "session": 73851,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 12437,
+      "result": "passed",
+      "scope": "before final UI unmount guard and context notice; typecheck rerun after guard"
+    }
+  ],
+  "scope": [
+    "local conversation and unsent user input retained separately from templates and sync",
+    "explicit restore keeps current manual form",
+    "retrieved source UUID/hash receipt, URL/body/time verification",
+    "new proposed URL only from fetched sources; fetched timestamp authoritative",
+    "old source snapshots remain historical evidence, not automatic current truth"
+  ],
+  "remaining": [
+    "real source retrieval/client UI acceptance and proposal semantic quality",
+    "successful historical runtime/auth complete wiring",
+    "system-reference Key pool preservation contract",
+    "extension remapping/full public consumer/platform gates",
+    "release and postpublish verification"
+  ]
+}
