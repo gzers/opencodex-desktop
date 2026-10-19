@@ -359,3 +359,14 @@ Keychain迁移保留官方原pool id、顺序、label及addedAt，校验引用�
 ### 启动本版远端平台CI
 
 CI的backend-windows增加独立opt-in provider_auth_native步骤，显式Sandbox且串行运行，原后端全量回归保留。该步骤即使全量旧测试失败也执行并分别记录，不覆盖原job结论；随机自有系统账户的准入/清理由同一测试负责。当前仅登记执行入口，Windows结果待本特性分支推送后的实际run，不能写成通过。原0.1.10七项helper清理失败及发布例外沿原证据处理，不拿重跑掩盖。
+
+
+### 本版远端CI首轮结果与回归修正
+
+feature/0.2.0-model-config已推送，CI39250663907绑定e720c1ed：前端、release-tools及windows-smoke通过。macOS后端914通过/3失败/4忽略，Windows700通过/2失败/4忽略，整体失败；两平台共同失败为自动备份fixture，macOS另有旧导入损坏源终态。Windows独立provider_auth_native使用windows-native实际通过0.08秒，随机自有源引用、机器保护/运行根重绑、缺失键拒绝与条目清理均完成，无网络，补齐该系统存储专项；不代表Windows全量/实屏通过。
+
+普通偏好Save为保留modelTemplateAgent而拒绝覆盖损坏原文件是既定保护，两项旧备份测试却在写invalid后直接Save作fixture修复。现明确断言原invalid保留，再只删除测试临时坏文件后重建，生产保护未放宽。旧导入只校验传入偏好在准入前，本机modelTemplateAgent保存移到操作已注册且持目标锁后读取/合成；不可读/损坏本机源在同一操作下发布失败终态，完整保留原字节。新增向量验证本机执行绑定保持、坏源终态false及零覆盖。
+
+真实macOS隔离WebView读取20个fixture渠道、长表滚动Tab固定与节点GET检测已观察；首次runner错放测试偏好导致默认面板启动，停止后修正隔离根层级，首轮画面不作验收。读入模型的displayName有上游生成namespace时此前被误当用户显示名，现只有明确modelDisplayNames/真正不同的displayName参与显示，namespace原样作为路由事实保留；不会把test/native-id写成用户名称。单测保留原模型ID及真实用户名称。
+
+本地复核：备份两项、旧导入21项、后续本机绑定/坏源1项、Clippy全目标通过；前端选择12项及生产构建通过。修正后远端结果仍待下一run，不把本地通过回填为前一失败run成功。证据checks-ci-corrections-20261019.json绑定本批源码。

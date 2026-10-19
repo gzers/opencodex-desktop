@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-10-19T12:55:23.297926+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "e720c1ed8f4b885ad192420b1a24c768395018d3",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/backup/manager.rs": "7ef905834ab4dcafbe86ba350262f13a13e3af4f2834361edcf926ffb282034d",
+    "apps/desktop/tauri/src/modules/migration/mod.rs": "50b0b1cf530ae01c9a414aa0d12f3b26a2f014676439acc746af3a53160a5630",
+    "apps/desktop/tauri/src/modules/migration/tests.rs": "75c75ff8b4b330c90fd3d5fd77bc21a1b9f1442168dc983c41cfc2e27262c525",
+    "apps/desktop/ui/src/features/models/upstream.ts": "871246f240f188ee0f0bb48e841473420aa684a71e0994cfaf7cc0a95cd2ad7b",
+    "apps/desktop/ui/tests/model-selection.test.ts": "a39872a1ee13170a0f0bb7af238fbf0575497e4e758dff116912ad09b8efd89f"
+  },
+  "remoteRun": {
+    "id": 39250663907,
+    "sha": "e720c1ed8f4b885ad192420b1a24c768395018d3",
+    "overall": "failure",
+    "frontend": "passed",
+    "releaseTools": "passed",
+    "windowsSmoke": "passed",
+    "macBackend": {
+      "passed": 914,
+      "failed": 3,
+      "ignored": 4,
+      "scope": "2 backup fixture corrupted-source repair expectations; 1 migration pre-admission terminal gap"
+    },
+    "windowsBackend": {
+      "passed": 700,
+      "failed": 2,
+      "ignored": 4,
+      "scope": "same 2 backup fixtures"
+    },
+    "windowsNativeCredential": {
+      "result": "passed",
+      "seconds": 0.08,
+      "observed": "windows-native default, sandbox-only, original reference resolved, machine protection/rebind, missing key refused, owned entries cleaned"
+    }
+  },
+  "checks": [
+    {
+      "command": "cargo test --features integration-test --lib modules::backup::manager::tests::automatic_cleanup_is_opt_in -- --test-threads=1; cargo test --features integration-test --lib modules::backup::manager::tests::persisted_automatic -- --test-threads=1; cargo test --features integration-test --lib modules::migration::tests -- --test-threads=1; cargo clippy --all-targets --features integration-test -- -D warnings",
+      "session": 62477,
+      "result": "passed",
+      "groups": [
+        1,
+        1,
+        21
+      ]
+    },
+    {
+      "command": "cargo test --features integration-test --lib modules::migration::tests::import_keeps_local_agent -- --test-threads=1",
+      "session": 41990,
+      "result": "passed",
+      "passed": 1
+    },
+    {
+      "command": "npm run test -- --run tests/model-selection.test.ts; npm run build",
+      "session": 14628,
+      "result": "passed",
+      "passed": 12,
+      "build": "passed"
+    }
+  ],
+  "remaining": [
+    "corrected remote CI not yet observed",
+    "native UI actual Save/node/notification/platform evidence",
+    "account portability and final integration/release"
+  ]
+}
