@@ -35,6 +35,8 @@ pub struct RemovedKey {
     provider: String,
     before: super::management::KeyState,
     reference: Option<String>,
+    #[serde(default)]
+    backup: Option<super::provider_auth::Backup>,
 }
 impl CredentialChange {
     fn intended(&self) -> super::management::KeyState {
@@ -191,6 +193,7 @@ pub(super) async fn verify_committed_credentials(
     Ok(true)
 }
 async fn removed_key_states(
+    root: &Path,
     plan: &RuntimePlan,
     context: &ProcessContext,
     providers: &Value,
@@ -201,6 +204,17 @@ async fn removed_key_states(
     let management = super::management::Management::bind(context).await?;
     let mut matches = true;
     for removed in &plan.removed_keys {
+        if let Some(backup) = &removed.backup {
+            super::provider_auth::check_backup(root, backup)?;
+            if providers["providers"].get(&removed.provider).is_none() {
+                matches = false;
+                continue;
+            }
+            if !super::provider_auth::inspect_target(root, context, backup)? {
+                matches = false;
+            }
+            continue;
+        }
         if let (Some(reference), Some(active)) = (&removed.reference, &removed.before.active_id) {
             let secret = super::discovery::credential(reference)?;
             let hash = super::store::sha256(secret.trim().as_bytes());
@@ -213,6 +227,9 @@ async fn removed_key_states(
             continue;
         }
         let current = management.key_state(&removed.provider).await?;
+        if removed.before.ids.is_empty() && removed.reference.is_none() {
+            super::provider_auth::verify_absent(context, &removed.provider)?;
+        }
         if current == removed.before {
             continue;
         }
@@ -856,53 +873,12 @@ pub async fn prepare(
         let management = super::management::Management::bind(context).await?;
         for provider in &removed {
             let keys = management.key_state(provider).await?;
-            if keys.ids.len() > 1 {
-                return Err(invalid(
-                    "removal_key_pool",
-                    "此渠道有多个Key；完整密钥池保护尚未核对，未执行删除",
-                ));
-            }
-            if !keys.ids.is_empty() && keys.active_id.is_none() {
-                return Err(invalid(
-                    "removal_key_pool",
-                    "Key池没有可核对的活动选择，未执行删除",
-                ));
-            }
-            let channel = prior_policy
-                .channels
-                .iter()
-                .find(|c| &c.connection.provider_id == provider)
-                .or_else(|| {
-                    mappings
-                        .iter()
-                        .find(|m| &m.provider_id == provider)
-                        .and_then(|m| prior_policy.channels.iter().find(|c| c.id == m.channel_id))
-                });
-            let reference = if let Some(active) = &keys.active_id {
-                let reference = channel
-                    .and_then(|c| c.connection.credential_ref.as_ref())
-                    .ok_or_else(|| {
-                        invalid(
-                            "removal_key_backup",
-                            "删除前须先在此渠道接入可恢复的本机Key；未删除官方配置",
-                        )
-                    })?;
-                let secret = super::discovery::credential(reference)?;
-                let id = super::store::sha256(secret.trim().as_bytes());
-                if &id.trim_start_matches("sha256:")[..8] != active {
-                    return Err(invalid(
-                        "removal_key_backup",
-                        "本机恢复Key与官方活动Key身份不同，未执行删除",
-                    ));
-                }
-                Some(reference.clone())
-            } else {
-                None
-            };
+            let backup = super::provider_auth::capture(root, context, provider, &keys).await?;
             removed_keys.push(RemovedKey {
                 provider: provider.clone(),
                 before: keys,
-                reference,
+                reference: None,
+                backup,
             });
         }
     }
@@ -1108,7 +1084,7 @@ pub async fn reconcile(
     }
     let disabled =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
-    let removed_match = removed_key_states(&plan, context, &actual.providers).await?;
+    let removed_match = removed_key_states(root, &plan, context, &actual.providers).await?;
     let mut staged = plan.before.providers.clone();
     for channel in &plan.execution_policy().channels {
         if plan.before.providers["providers"]
@@ -1244,11 +1220,15 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
     if !plan.removed_keys.is_empty() {
         let management = super::management::Management::bind(&frozen).await?;
         for removed in &plan.removed_keys {
-            if management.key_state(&removed.provider).await? != removed.before {
+            if let Some(backup) = &removed.backup {
+                super::provider_auth::verify(root, &frozen, backup).await?;
+            } else if management.key_state(&removed.provider).await? != removed.before {
                 return Err(invalid(
                     "removal_key_drift",
                     "删除确认后Key池或活动选择改变，未删除",
                 ));
+            } else if removed.before.ids.is_empty() && removed.reference.is_none() {
+                super::provider_auth::verify_absent(&frozen, &removed.provider)?;
             }
         }
     }
@@ -1667,7 +1647,7 @@ pub async fn compensate(
         return Err(invalid("runtime_binding", "运行来源改变，补偿已拒绝"));
     }
     let current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
-    removed_key_states(&plan, context, &current).await?;
+    removed_key_states(root, &plan, context, &current).await?;
     let order = string_array(
         &upstream::read(context, upstream::ReadOperation::ModelOrder).await?["pickerOrder"],
     )?;
@@ -1744,6 +1724,11 @@ pub async fn compensate(
         if !plan.removed_keys.is_empty() {
             let management = super::management::Management::bind(context).await?;
             for removed in &plan.removed_keys {
+                if let Some(backup) = &removed.backup {
+                    super::provider_auth::restore(root, context, backup).await?;
+                    continue;
+                }
+
                 let current = management.key_state(&removed.provider).await?;
                 if current == removed.before {
                     continue;
@@ -2084,7 +2069,9 @@ import json,os,sys
 from pathlib import Path
 root=Path.cwd();args=sys.argv[1:]
 def read(name):return json.loads((root/(name+'.json')).read_text())
-def save(name,value):(root/(name+'.json')).write_text(json.dumps(value))
+def save(name,value):
+ (root/(name+'.json')).write_text(json.dumps(value))
+ if name=='providers':(Path(os.environ['OPENCODEX_HOME'])/'config.json').write_text(json.dumps(value))
 if args==['--version']:print('2.84.0')
 elif args[:2]==['provider','snapshot']:print(json.dumps(read('providers')))
 elif args[:2]==['models','live']:print(json.dumps(read('models')))
@@ -2122,6 +2109,11 @@ else:sys.exit(7)
         std::fs::set_permissions(&executable, std::fs::Permissions::from_mode(0o700)).unwrap();
         let home = root.join("home");
         std::fs::create_dir_all(&home).unwrap();
+        std::fs::write(
+            home.join("config.json"),
+            serde_json::to_vec(&snapshot.providers).unwrap(),
+        )
+        .unwrap();
         let listener = std::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0)).unwrap();
         listener.set_nonblocking(true).unwrap();
         let port = listener.local_addr().unwrap().port();

@@ -452,6 +452,22 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     .unwrap();
     let added = runtime::apply(&manager, &context, &add.id).await.unwrap();
     assert_eq!(added.phase, "committed", "{:?}", added.error);
+    let management = model_config::management::Management::bind(&context)
+        .await
+        .unwrap();
+    management
+        .add_key_labeled("fixture", "fixture-second-local-key", Some("secondary"))
+        .await
+        .unwrap();
+    management
+        .patch_headers(
+            "fixture",
+            &BTreeMap::from([("X-Fixture-Auth".into(), "fixture-private-header".into())]),
+        )
+        .await
+        .unwrap();
+    let key_pool_before = management.key_state("fixture").await.unwrap();
+    assert_eq!(key_pool_before.ids.len(), 2);
     let current = store.load().unwrap();
     let next = Policy {
         channels: vec![copy.clone()],
@@ -486,12 +502,71 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert!(actual.providers["providers"].get(mapped).is_none());
     assert_eq!(actual.providers["defaultProvider"], "fixture-keep");
     assert_eq!(actual.catalog["models"].as_array().unwrap().len(), 1);
+    // Recreate public rows disabled, then restore only their protected owned authorization.
+    let stored: serde_json::Value = serde_json::from_slice(
+        &std::fs::read(
+            manager
+                .join("manager-state/model-save-plans")
+                .join(format!("{}.json", removal.id)),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    let backups = stored["removedKeys"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(|r| r.get("backup"))
+        .filter(|v| !v.is_null())
+        .map(|v| serde_json::from_value::<model_config::provider_auth::Backup>(v.clone()).unwrap())
+        .collect::<Vec<_>>();
+    assert_eq!(backups.len(), 2);
+    let baseline = root.path().join("public-restore-baseline.json");
+    std::fs::write(&baseline, serde_json::to_vec(&actual.providers).unwrap()).unwrap();
+    let mut restored_public = actual.providers.clone();
+    for provider in &removal.removed_providers {
+        let mut row = stored["before"]["providers"]["providers"][provider].clone();
+        row["disabled"] = json!(true);
+        row["newModelPolicy"] = json!("off");
+        row["selectedModels"] = json!(["fixture-base"]);
+        restored_public["providers"][provider] = row;
+    }
+    assert!(
+        upstream::write(
+            &context,
+            upstream::WriteOperation::Providers {
+                baseline: &baseline,
+                next: &restored_public
+            }
+        )
+        .await
+        .unwrap()
+        .success
+    );
+    for backup in &backups {
+        model_config::provider_auth::restore(&manager, &context, backup)
+            .await
+            .unwrap();
+        model_config::provider_auth::restore(&manager, &context, backup)
+            .await
+            .unwrap();
+    }
+    assert_eq!(
+        management.key_state("fixture").await.unwrap(),
+        key_pool_before
+    );
+    for backup in &backups {
+        model_config::provider_auth::verify(&manager, &context, backup)
+            .await
+            .unwrap();
+    }
+
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),
         0,
         "discovery/save cannot generate text"
     );
-    println!("official={} models={} catalog={}→{}→{}→{} phases={}/{}/{} protocol-groups={} stable-group=true new-default=true removal-including-owned-group=true no-generation=true",snapshot.version,discovered_count(&after.models),plan.current_catalog_count,plan.catalog_count,hidden_plan.catalog_count,restore_plan.catalog_count,saved.phase,hidden.phase,restored.phase,plan.protocol_groups.len());
+    println!("official={} models={} catalog={}→{}→{}→{} phases={}/{}/{} protocol-groups={} stable-group=true new-default=true removal-including-owned-group=true multi-key-header-restored=true no-generation=true",snapshot.version,discovered_count(&after.models),plan.current_catalog_count,plan.catalog_count,hidden_plan.catalog_count,restore_plan.catalog_count,saved.phase,hidden.phase,restored.phase,plan.protocol_groups.len());
     let _ = child.kill().await;
     let _ = child.wait().await;
     capture.abort();

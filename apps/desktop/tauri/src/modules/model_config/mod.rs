@@ -14,6 +14,7 @@ pub mod matching;
 pub mod measurements;
 mod operations;
 mod protocol_groups;
+pub mod provider_auth;
 pub mod recovery;
 mod remote;
 pub mod runtime;

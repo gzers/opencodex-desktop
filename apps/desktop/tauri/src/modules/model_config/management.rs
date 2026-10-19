@@ -195,10 +195,34 @@ impl Management {
         Ok(value)
     }
     pub async fn add_key(&self, provider: &str, key: &str) -> ModelResult<()> {
+        self.add_key_labeled(provider, key, None).await
+    }
+    pub async fn add_key_labeled(
+        &self,
+        provider: &str,
+        key: &str,
+        label: Option<&str>,
+    ) -> ModelResult<()> {
         self.request(
             reqwest::Method::POST,
             "/api/providers/keys",
-            Some(serde_json::json!({"name":provider,"key":key})),
+            Some(serde_json::json!({"name":provider,"key":key,"label":label})),
+        )
+        .await?;
+        Ok(())
+    }
+    pub async fn patch_headers(
+        &self,
+        provider: &str,
+        headers: &std::collections::BTreeMap<String, String>,
+    ) -> ModelResult<()> {
+        let mut url = reqwest::Url::parse("http://127.0.0.1/api/providers")
+            .map_err(|_| invalid("provider_headers", "认证头目标无效"))?;
+        url.query_pairs_mut().append_pair("name", provider);
+        self.request(
+            reqwest::Method::PATCH,
+            &format!("{}?{}", url.path(), url.query().unwrap_or("")),
+            Some(serde_json::json!({"headers":headers})),
         )
         .await?;
         Ok(())
