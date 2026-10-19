@@ -1242,6 +1242,226 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     );
     println!("original-official-inventory=true protected-full-pool-transfer=true original-public-fields-exact=true imported-disabled=true separate-enable-with-alias-budget=true import-replay-preserves-later-save=true existing-import-replaces-explicit-private-generation=true imported-private-generation-compensated=true");
 
+    let current = receiving_store.load().unwrap();
+    let mut make_default = current.policy.clone();
+    make_default.channels[0].connection.enabled = true;
+    make_default.default_channel_id = Some(make_default.channels[0].id.clone());
+    let staged = receiving_store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            make_default.clone(),
+        )
+        .unwrap();
+    let default_plan = runtime::prepare(
+        &recipient,
+        &context,
+        make_default,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        runtime::apply(&recipient, &context, &default_plan.id)
+            .await
+            .unwrap()
+            .phase,
+        "committed"
+    );
+    // A successful managed node change records both exact service directions.
+    // Restoring it must replace endpoint and matching auth together, including
+    // compensation after the final sync fails.
+    let current = receiving_store.load().unwrap();
+    let mut other_direction = current.policy.clone();
+    let node = &mut other_direction.channels[0].connection.nodes[0];
+    let original_url = node.url.clone();
+    let alternate_url = format!("{}/alternate", original_url.trim_end_matches('/'));
+    node.url = alternate_url.clone();
+    let staged = receiving_store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            other_direction.clone(),
+        )
+        .unwrap();
+    let direction_save = runtime::prepare(
+        &recipient,
+        &context,
+        other_direction,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let changed = runtime::apply(&recipient, &context, &direction_save.id)
+        .await
+        .unwrap();
+    assert_eq!(changed.phase, "committed", "{:?}", changed.error);
+    let recovery_direction = history_plan(&recipient, &context, &direction_save.id).await;
+    assert!(recovery_direction
+        .runtime_changes
+        .iter()
+        .any(|fact| fact.field.contains("baseUrl")));
+    std::fs::write(&fail_sync, b"owned direction failure injection").unwrap();
+    let partial = runtime::apply(&recipient, &context, &recovery_direction.id)
+        .await
+        .unwrap();
+    assert_ne!(partial.phase, "committed");
+    assert!(partial.error.is_some());
+    let actual = upstream::snapshot(&context).await.unwrap();
+    assert_eq!(
+        actual.providers["providers"][&receiving_provider]["baseUrl"],
+        original_url
+    );
+    std::fs::remove_file(&fail_sync).unwrap();
+    let compensated = runtime::compensate(&recipient, &context, &recovery_direction.id)
+        .await
+        .unwrap();
+    assert_eq!(compensated.phase, "compensated", "{:?}", compensated.error);
+    let actual = upstream::snapshot(&context).await.unwrap();
+    assert_eq!(
+        actual.providers["providers"][&receiving_provider]["baseUrl"],
+        alternate_url
+    );
+    assert_eq!(
+        management.key_state(&receiving_provider).await.unwrap(),
+        original_keys
+    );
+    assert_eq!(
+        runtime::compensate(&recipient, &context, &recovery_direction.id)
+            .await
+            .unwrap()
+            .phase,
+        "compensated"
+    );
+    let recovery_direction = history_plan(&recipient, &context, &direction_save.id).await;
+    let restored_direction = runtime::apply(&recipient, &context, &recovery_direction.id)
+        .await
+        .unwrap();
+    assert_eq!(
+        restored_direction.phase, "committed",
+        "{:?}",
+        restored_direction.error
+    );
+    let actual = upstream::snapshot(&context).await.unwrap();
+    assert_eq!(
+        actual.providers["providers"][&receiving_provider]["baseUrl"],
+        original_url
+    );
+    assert_eq!(
+        management.key_state(&receiving_provider).await.unwrap(),
+        original_keys
+    );
+    let current_public = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+        .await
+        .unwrap();
+    let public_before_wire = current_public["providers"][&receiving_provider].clone();
+    let keys_before_wire = management.key_state(&receiving_provider).await.unwrap();
+    let auth_before_wire = model_config::provider_auth::capture(
+        &recipient,
+        &context,
+        &receiving_provider,
+        &keys_before_wire,
+    )
+    .await
+    .unwrap()
+    .unwrap();
+    let raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
+    let mut target_wire = public_before_wire.clone();
+    target_wire["adapter"] = json!("openai-responses");
+    target_wire["disabled"] = json!(true);
+    target_wire["newModelPolicy"] = json!("off");
+    target_wire
+        .as_object_mut()
+        .unwrap()
+        .remove("apiKeyTransport");
+    let authorization:model_config::provider_auth::PortableAuthorization=serde_json::from_value(json!({"activeId":keys_before_wire.active_id,"fields":{"apiKeyPool":raw["providers"][&receiving_provider]["apiKeyPool"],"headers":raw["providers"][&receiving_provider]["headers"]}})).unwrap();
+    let mut wire_channel = receiving_store.load().unwrap().policy.channels[0].clone();
+    wire_channel.connection.protocol = "openai-responses".into();
+    let wire_reference = model_config::provider_import::stage(
+        &recipient,
+        &wire_channel,
+        &target_wire,
+        Some(&authorization),
+    )
+    .unwrap();
+    let wire_material =
+        model_config::provider_import::load(&recipient, &wire_channel, &wire_reference).unwrap();
+    let auth_wire =
+        model_config::provider_import::authorization(&recipient, &context, &wire_material)
+            .unwrap()
+            .unwrap();
+    let wire_direction = model_config::provider_auth::Direction {
+        from_public: public_before_wire.clone(),
+        to_public: target_wire.clone(),
+    };
+    model_config::provider_auth::review_direction(
+        &recipient,
+        &context,
+        &receiving_provider,
+        Some(&auth_before_wire),
+        Some(&auth_wire),
+        &wire_direction,
+    )
+    .unwrap();
+    let wire_operation = uuid::Uuid::new_v4().to_string();
+    model_config::provider_auth::change_direction(
+        &recipient,
+        &context,
+        &wire_operation,
+        &receiving_provider,
+        Some(&auth_before_wire),
+        Some(&auth_wire),
+        &wire_direction,
+    )
+    .await
+    .unwrap();
+    model_config::provider_auth::verify(&recipient, &context, &auth_wire)
+        .await
+        .unwrap();
+    let wire_public = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+        .await
+        .unwrap();
+    assert_eq!(wire_public["providers"][&receiving_provider], target_wire);
+    let mut restore_wire = public_before_wire.clone();
+    restore_wire["disabled"] = json!(true);
+    model_config::provider_auth::rollback_direction(
+        &recipient,
+        &context,
+        &wire_operation,
+        &receiving_provider,
+        Some(&auth_before_wire),
+        Some(&auth_wire),
+        &wire_direction,
+        &restore_wire,
+    )
+    .await
+    .unwrap();
+    model_config::provider_auth::verify(&recipient, &context, &auth_before_wire)
+        .await
+        .unwrap();
+    let baseline_public = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+        .await
+        .unwrap();
+    std::fs::write(&baseline, serde_json::to_vec(&baseline_public).unwrap()).unwrap();
+    assert!(
+        upstream::write(
+            &context,
+            upstream::WriteOperation::Providers {
+                baseline: &baseline,
+                next: &current_public
+            }
+        )
+        .await
+        .unwrap()
+        .success
+    );
+    println!("history-service-direction-restored=true paired-authorization-compensation=true direction-replay=true default-provider-direction=true adapter-and-key-transport-restored-together=true");
+
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),
         0,

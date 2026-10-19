@@ -918,6 +918,67 @@ pub fn review_change(
     }
     Ok(())
 }
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Direction {
+    pub from_public: serde_json::Value,
+    pub to_public: serde_json::Value,
+}
+pub fn different_direction(from: &serde_json::Value, to: &serde_json::Value) -> ModelResult<bool> {
+    let left: Auth = serde_json::from_value(from.clone())?;
+    let right: Auth = serde_json::from_value(to.clone())?;
+    Ok(!transport_matches(&left, &right))
+}
+fn direction_auth(
+    root: &Path,
+    context: &ProcessContext,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+    direction: &Direction,
+) -> ModelResult<(Auth, Auth)> {
+    super::provider_fields::validate_public(&direction.from_public)?;
+    super::provider_fields::validate_public(&direction.to_public)?;
+    let from_transport: Auth = serde_json::from_value(direction.from_public.clone())?;
+    let to_transport: Auth = serde_json::from_value(direction.to_public.clone())?;
+    if [&from_transport, &to_transport].iter().any(|a| {
+        a.auth_mode
+            .as_deref()
+            .is_some_and(|m| ["oauth", "forward"].contains(&m))
+    }) {
+        return Err(invalid(
+            "provider_auth_direction",
+            "原生或OAuth方向必须使用专用账户适配，未发送授权",
+        ));
+    }
+    let original = from_backup(root, context, provider, before, &from_transport)?;
+    let desired = from_backup(root, context, provider, target, &to_transport)?;
+    if !transport_matches(&original, &from_transport) || !transport_matches(&desired, &to_transport)
+    {
+        return Err(invalid(
+            "provider_auth_direction",
+            "历史授权与明确选择的服务方向不同，未发送",
+        ));
+    }
+    Ok((original, desired))
+}
+pub fn review_direction(
+    root: &Path,
+    context: &ProcessContext,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+    direction: &Direction,
+) -> ModelResult<()> {
+    let (original, _) = direction_auth(root, context, provider, before, target, direction)?;
+    if auth_digest(&read(context, provider)?)? != auth_digest(&original)? {
+        return Err(invalid(
+            "provider_auth_drift",
+            "服务恢复比较期间授权改变，请重新比较",
+        ));
+    }
+    Ok(())
+}
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct Transition {
@@ -927,6 +988,8 @@ struct Transition {
     target_digest: String,
     pool_digest: String,
     phase: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    direction: Option<Direction>,
 }
 fn change_path(
     root: &Path,
@@ -1000,6 +1063,7 @@ fn read_change(
     }
     Ok(Some(record))
 }
+#[allow(clippy::too_many_arguments)]
 async fn write_change(
     root: &Path,
     context: &ProcessContext,
@@ -1008,6 +1072,7 @@ async fn write_change(
     from: &Auth,
     target: &Auth,
     rollback: bool,
+    direction: Option<&Direction>,
 ) -> ModelResult<()> {
     let file = change_path(root, operation, provider, rollback)?;
     safety::check_path(
@@ -1017,7 +1082,7 @@ async fn write_change(
     )?;
     let _guard = crate::infrastructure::locking::TargetFileLock::lock(&file)?;
     let mut current = read(context, provider)?;
-    if !transport_matches(&current, target) {
+    if direction.is_none() && !transport_matches(&current, target) {
         return Err(invalid(
             "provider_auth_direction",
             "目标连接在授权回退前改变，未发送旧授权",
@@ -1030,7 +1095,14 @@ async fn write_change(
         target_digest: auth_digest(target)?,
         pool_digest: pool_digest(target)?,
         phase: "prepared".into(),
+        direction: direction.cloned(),
     });
+    if record.direction.as_ref() != direction {
+        return Err(invalid(
+            "provider_auth_direction",
+            "原计划服务方向已改变，请沿原操作核对",
+        ));
+    }
     let actual = auth_digest(&current)?;
     if !phase_allows(
         &record.phase,
@@ -1056,6 +1128,14 @@ async fn write_change(
         let public =
             super::upstream::read(context, super::upstream::ReadOperation::ProviderSnapshot)
                 .await?;
+        if let Some(direction) = direction {
+            if public["providers"][provider] != direction.from_public {
+                return Err(invalid(
+                    "provider_auth_drift",
+                    "明确恢复前的公开字段已改变，未覆盖",
+                ));
+            }
+        }
         if auth_digest(&read(context, provider)?)? != actual {
             return Err(invalid(
                 "provider_auth_drift",
@@ -1065,11 +1145,24 @@ async fn write_change(
         management
             .restore_authorization_fields(
                 provider,
-                &public["providers"][provider],
+                direction
+                    .map(|d| &d.to_public)
+                    .unwrap_or(&public["providers"][provider]),
                 private_fields(target)?,
             )
             .await?;
         current = read(context, provider)?;
+        if let Some(direction) = direction {
+            let observed =
+                super::upstream::read(context, super::upstream::ReadOperation::ProviderSnapshot)
+                    .await?;
+            if observed["providers"][provider] != direction.to_public {
+                return Err(invalid(
+                    "provider_auth_readback",
+                    "服务方向公开字段未按明确目标读回，保留原计划",
+                ));
+            }
+        }
         if auth_digest(&current)? != record.pool_digest {
             return Err(invalid(
                 "provider_auth_readback",
@@ -1113,7 +1206,7 @@ pub async fn change(
     let original = from_backup(root, context, provider, before, &current)?;
     let desired = from_backup(root, context, provider, target, &current)?;
     write_change(
-        root, context, operation, provider, &original, &desired, false,
+        root, context, operation, provider, &original, &desired, false, None,
     )
     .await
 }
@@ -1128,17 +1221,30 @@ pub fn inspect_change(
     let current = read(context, provider)?;
     let original = from_backup(root, context, provider, before, &current)?;
     let desired = from_backup(root, context, provider, target, &current)?;
+    inspect_values(root, context, operation, provider, &original, &desired)
+}
+fn inspect_values(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    original: &Auth,
+    desired: &Auth,
+) -> ModelResult<()> {
+    let current = read(context, provider)?;
     let file = change_path(root, operation, provider, false)?;
     let actual = auth_digest(&current)?;
     let reverse = change_path(root, operation, provider, true)?;
     if reverse.exists() {
         let record: Transition = serde_json::from_slice(&safety::read_file(&reverse, 16384)?)?;
-        let from = if record.from_digest == pool_digest(&desired)? {
-            pool_auth(&desired)?
+        let from = if record.from_digest == pool_digest(desired)? {
+            pool_auth(desired)?
+        } else if record.from_digest == auth_digest(original)? {
+            serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(original)?))?
         } else {
-            from_backup(root, context, provider, target, &current)?
+            serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(desired)?))?
         };
-        let record = read_change(&reverse, operation, provider, &from, &original)?
+        let record = read_change(&reverse, operation, provider, &from, original)?
             .ok_or_else(|| invalid("provider_auth_transition", "补偿日志缺失"))?;
         if !phase_allows(
             &record.phase,
@@ -1154,7 +1260,7 @@ pub fn inspect_change(
         }
         return Ok(());
     }
-    if let Some(record) = read_change(&file, operation, provider, &original, &desired)? {
+    if let Some(record) = read_change(&file, operation, provider, original, desired)? {
         if !phase_allows(
             &record.phase,
             &actual,
@@ -1167,7 +1273,7 @@ pub fn inspect_change(
                 "原授权回退后存在无法归属的后来修改，拒绝补偿",
             ));
         }
-    } else if actual != auth_digest(&original)? {
+    } else if actual != auth_digest(original)? {
         return Err(invalid(
             "provider_auth_drift",
             "授权在回退开始前已经改变，未覆盖",
@@ -1199,14 +1305,126 @@ pub async fn rollback_change(
                 key.zeroize();
             }
         }
-        return write_change(root, context, operation, provider, &from, &original, true).await;
+        return write_change(
+            root, context, operation, provider, &from, &original, true, None,
+        )
+        .await;
     }
     inspect_change(root, context, operation, provider, before, target)?;
     if auth_digest(&current)? == auth_digest(&original)? {
         return Ok(());
     }
     write_change(
-        root, context, operation, provider, &current, &original, true,
+        root, context, operation, provider, &current, &original, true, None,
+    )
+    .await
+}
+
+#[allow(clippy::too_many_arguments)]
+pub async fn change_direction(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+    direction: &Direction,
+) -> ModelResult<()> {
+    let (original, desired) = direction_auth(root, context, provider, before, target, direction)?;
+    write_change(
+        root,
+        context,
+        operation,
+        provider,
+        &original,
+        &desired,
+        false,
+        Some(direction),
+    )
+    .await
+}
+pub fn inspect_direction(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+    direction: &Direction,
+) -> ModelResult<()> {
+    let (original, desired) = direction_auth(root, context, provider, before, target, direction)?;
+    let file = change_path(root, operation, provider, false)?;
+    if let Some(record) = read_change(&file, operation, provider, &original, &desired)? {
+        if record.direction.as_ref() != Some(direction) {
+            return Err(invalid(
+                "provider_auth_direction",
+                "原计划明确的服务方向与核对目标不同",
+            ));
+        }
+    }
+    inspect_values(root, context, operation, provider, &original, &desired)
+}
+#[allow(clippy::too_many_arguments)]
+pub async fn rollback_direction(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+    direction: &Direction,
+    restore_public: &serde_json::Value,
+) -> ModelResult<()> {
+    let (original, desired) = direction_auth(root, context, provider, before, target, direction)?;
+    super::provider_fields::validate_public(restore_public)?;
+    let restore_transport: Auth = serde_json::from_value(restore_public.clone())?;
+    if !transport_matches(&restore_transport, &original) {
+        return Err(invalid(
+            "provider_auth_direction",
+            "补偿公开字段与原授权服务不同，未发送",
+        ));
+    }
+    inspect_direction(
+        root, context, operation, provider, before, target, direction,
+    )?;
+    let current = read(context, provider)?;
+    let file = change_path(root, operation, provider, true)?;
+    let (from, reverse) = if file.exists() {
+        let record: Transition = serde_json::from_slice(&safety::read_file(&file, 16384)?)?;
+        let from = if record.from_digest == pool_digest(&desired)? {
+            pool_auth(&desired)?
+        } else if record.from_digest == auth_digest(&original)? {
+            serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(&original)?))?
+        } else {
+            serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(&desired)?))?
+        };
+        (
+            from,
+            record
+                .direction
+                .ok_or_else(|| invalid("provider_auth_direction", "原补偿方向记录缺失"))?,
+        )
+    } else {
+        let public =
+            super::upstream::read(context, super::upstream::ReadOperation::ProviderSnapshot)
+                .await?;
+        (
+            current,
+            Direction {
+                from_public: public["providers"][provider].clone(),
+                to_public: restore_public.clone(),
+            },
+        )
+    };
+    write_change(
+        root,
+        context,
+        operation,
+        provider,
+        &from,
+        &original,
+        true,
+        Some(&reverse),
     )
     .await
 }
@@ -1546,6 +1764,54 @@ mod tests {
         assert!(export_portable(root.path(), "selected", &public).is_err());
     }
     #[test]
+    fn explicit_history_direction_checks_current_auth_and_refuses_mixed_or_oauth_sources_before_network(
+    ) {
+        let root = tempfile::tempdir().unwrap();
+        let context = ProcessContext {
+            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(
+                root.path().join("unused-ocx"),
+            ),
+            working_directory: root.path().into(),
+            opencodex_home: root.path().into(),
+        };
+        let from = json!({"adapter":"openai-chat","authMode":"key","baseUrl":"https://current.example.test/v1"});
+        let to = json!({"adapter":"openai-responses","authMode":"key","baseUrl":"https://historical.example.test/v1"});
+        let mut direction = Direction {
+            from_public: from.clone(),
+            to_public: to.clone(),
+        };
+        std::fs::write(
+            root.path().join("config.json"),
+            serde_json::to_vec(&json!({"providers":{"p":from}})).unwrap(),
+        )
+        .unwrap();
+        review_direction(root.path(), &context, "p", None, None, &direction).unwrap();
+        assert!(different_direction(&from, &to).unwrap());
+        let mut changed = from.clone();
+        changed["headers"] = json!({"X-Later":"later-SECRET"});
+        std::fs::write(
+            root.path().join("config.json"),
+            serde_json::to_vec(&json!({"providers":{"p":changed}})).unwrap(),
+        )
+        .unwrap();
+        assert_eq!(
+            review_direction(root.path(), &context, "p", None, None, &direction)
+                .unwrap_err()
+                .code,
+            "provider_auth_drift"
+        );
+        direction.to_public["authMode"] = json!("oauth");
+        assert_eq!(
+            review_direction(root.path(), &context, "p", None, None, &direction)
+                .unwrap_err()
+                .code,
+            "provider_auth_direction"
+        );
+        direction.to_public = to;
+        direction.to_public["headers"] = json!({"Authorization":"not-public-SECRET"});
+        assert!(review_direction(root.path(), &context, "p", None, None, &direction).is_err());
+    }
+    #[test]
     fn transition_phases_only_admit_the_exact_issued_write_or_active_choice() {
         let expected = [
             ("prepared", vec!["from"]),
@@ -1587,6 +1853,7 @@ mod tests {
                 target_digest: auth_digest(&target).unwrap(),
                 pool_digest: pool_digest(&target).unwrap(),
                 phase: "pending_active".into(),
+                direction: None,
             },
         )
         .unwrap();

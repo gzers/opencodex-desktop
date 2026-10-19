@@ -26,6 +26,8 @@ pub struct HistoryRestoration {
     pub projection: super::runtime_history::Projection,
     pub authorizations: BTreeMap<String, Option<super::provider_auth::Backup>>,
     pub registration_models: BTreeMap<String, Vec<String>>,
+    #[serde(default)]
+    pub directions: BTreeMap<String, super::provider_auth::Direction>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -191,11 +193,14 @@ impl RuntimePlan {
                         let before = &self.before.providers["providers"][provider];
                         let after = &self.next_providers["providers"][provider];
                         if before != after {
-                            values.push(ChangeFact {
-                                field: format!("provider/{provider}"),
-                                before: before.clone(),
-                                after: after.clone(),
-                            });
+                            if before.is_object() && after.is_object(){
+                                let fields=before.as_object().unwrap().keys().chain(after.as_object().unwrap().keys()).collect::<BTreeSet<_>>();
+                                for field in fields {
+                                    if before.get(field)!=after.get(field){values.push(ChangeFact{field:format!("provider/{provider}/{field}"),before:before.get(field).cloned().unwrap_or(Value::Null),after:after.get(field).cloned().unwrap_or(Value::Null)});}
+                                }
+                            }else{
+                                values.push(ChangeFact{field:format!("provider/{provider}"),before:before.clone(),after:after.clone()});
+                            }
                         }
                     }
                     for (provider,target) in &history.authorizations {
@@ -1309,6 +1314,80 @@ async fn capture_after(
     plan.authorization_after = values;
     save(root, plan)
 }
+fn direction_public(
+    provider: &str,
+    current: &Value,
+    target: &Value,
+    models: &Value,
+) -> ModelResult<Value> {
+    let mut staged = target.clone();
+    for key in ["alias", "modelAliases", "defaultAliases"] {
+        if let Some(value) = current["providers"][provider].get(key) {
+            staged[key] = value.clone();
+        } else {
+            staged
+                .as_object_mut()
+                .ok_or_else(|| invalid("history_direction", "历史渠道字段无效"))?
+                .remove(key);
+        }
+    }
+    let exact = target["selectedModels"]
+        .as_array()
+        .or_else(|| target["models"].as_array())
+        .map(|v| {
+            v.iter()
+                .filter_map(Value::as_str)
+                .map(str::to_owned)
+                .collect::<Vec<_>>()
+        })
+        .filter(|v| !v.is_empty())
+        .unwrap_or_else(|| {
+            models
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter(|m| m["provider"] == provider)
+                .filter_map(|m| m["id"].as_str().map(str::to_owned))
+                .collect()
+        });
+    if exact.is_empty() {
+        return Err(invalid(
+            "history_direction",
+            "历史服务方向缺少可核对的精确型号",
+        ));
+    }
+    staged["selectedModels"] = json!(exact);
+    staged["newModelPolicy"] = json!("off");
+    // The single-provider mutation may temporarily disable the default row.
+    // Keeping every direction staged off prevents intermediate alias/model
+    // publication from exceeding the already-reviewed final catalogue budget.
+    // The final provider batch restores the chosen default and enabled state.
+    staged["disabled"] = json!(true);
+    Ok(staged)
+}
+fn inspect_history_authorization(
+    root: &Path,
+    context: &ProcessContext,
+    plan: &RuntimePlan,
+    provider: &str,
+    target: Option<&super::provider_auth::Backup>,
+) -> ModelResult<()> {
+    let before = plan
+        .authorization_before
+        .get(provider)
+        .and_then(Option::as_ref);
+    if let Some(direction) = plan
+        .history_restoration
+        .as_ref()
+        .and_then(|h| h.directions.get(provider))
+    {
+        super::provider_auth::inspect_direction(
+            root, context, &plan.id, provider, before, target, direction,
+        )
+    } else {
+        super::provider_auth::inspect_change(root, context, &plan.id, provider, before, target)
+    }
+}
 async fn apply_history_effects(
     root: &Path,
     context: &ProcessContext,
@@ -1363,23 +1442,62 @@ async fn apply_history_effects(
             continue;
         }
         if plan.before.providers["providers"].get(provider).is_some() {
-            super::provider_auth::change(
-                root,
-                context,
-                &plan.id,
-                provider,
-                plan.authorization_before
-                    .get(provider)
-                    .and_then(Option::as_ref),
-                backup.as_ref(),
-            )
-            .await?;
+            if let Some(direction) = history.directions.get(provider) {
+                super::provider_auth::change_direction(
+                    root,
+                    context,
+                    &plan.id,
+                    provider,
+                    plan.authorization_before
+                        .get(provider)
+                        .and_then(Option::as_ref),
+                    backup.as_ref(),
+                    direction,
+                )
+                .await?;
+            } else {
+                super::provider_auth::change(
+                    root,
+                    context,
+                    &plan.id,
+                    provider,
+                    plan.authorization_before
+                        .get(provider)
+                        .and_then(Option::as_ref),
+                    backup.as_ref(),
+                )
+                .await?;
+            }
         } else if let Some(backup) = backup {
             super::provider_auth::restore(root, context, backup).await?;
         } else {
             super::provider_auth::verify_absent(context, provider)?;
         }
         observe(root, context, plan).await?;
+    }
+    if !history.directions.is_empty() {
+        let mut expected = plan.before.providers.clone();
+        for (provider, models) in &history.registration_models {
+            let mut row = plan.next_providers["providers"][provider].clone();
+            row["disabled"] = json!(true);
+            row["newModelPolicy"] = json!("off");
+            row["selectedModels"] = json!(models);
+            expected["providers"][provider] = row;
+        }
+        for (provider, direction) in &history.directions {
+            expected["providers"][provider] = direction.to_public.clone();
+        }
+        if plan.observed_providers != expected {
+            return Err(invalid(
+                "history_direction_drift",
+                "服务方向恢复后存在其他公开字段变化，未继续",
+            ));
+        }
+        baseline = root
+            .join(PLAN_DIR)
+            .join(format!("{}-history-direction.json", plan.id));
+        safety::check_path(root, &baseline, true)?;
+        atomic_write(&baseline, &serde_json::to_vec(&expected)?, 0o600)?;
     }
     plan.phase = "history_providers".into();
     save(root, plan)?;
@@ -1518,6 +1636,7 @@ async fn prepare_history(
     let mut before_auth = BTreeMap::new();
     let mut removed_keys = vec![];
     let mut registration_models = BTreeMap::new();
+    let mut directions = BTreeMap::new();
     let management = super::management::Management::bind(context).await?;
     for provider in &projection.affected {
         if super::channel_actions::protected(target, provider)
@@ -1559,14 +1678,34 @@ async fn prepare_history(
         if let Some(Some(backup)) = target_auth.get(provider) {
             super::provider_auth::check_backup(root, backup)?;
         }
-        if current.is_some() && desired.is_some() && target_auth.contains_key(provider) {
-            super::provider_auth::review_change(
-                root,
-                context,
-                provider,
-                before_auth.get(provider).and_then(Option::as_ref),
-                target_auth.get(provider).and_then(Option::as_ref),
-            )?;
+        if let (Some(current), Some(desired), true) =
+            (current, desired, target_auth.contains_key(provider))
+        {
+            if super::provider_auth::different_direction(current, desired)? {
+                let staged =
+                    direction_public(provider, &before.providers, desired, &target.models)?;
+                let direction = super::provider_auth::Direction {
+                    from_public: current.clone(),
+                    to_public: staged,
+                };
+                super::provider_auth::review_direction(
+                    root,
+                    context,
+                    provider,
+                    before_auth.get(provider).and_then(Option::as_ref),
+                    target_auth.get(provider).and_then(Option::as_ref),
+                    &direction,
+                )?;
+                directions.insert(provider.clone(), direction);
+            } else {
+                super::provider_auth::review_change(
+                    root,
+                    context,
+                    provider,
+                    before_auth.get(provider).and_then(Option::as_ref),
+                    target_auth.get(provider).and_then(Option::as_ref),
+                )?;
+            }
         }
         if let Some(row) = desired.filter(|_| current.is_none()) {
             let values = row["selectedModels"]
@@ -1653,6 +1792,7 @@ async fn prepare_history(
             projection,
             authorizations: target_auth,
             registration_models,
+            directions,
         }),
     };
     save(root, &plan)?;
@@ -1751,16 +1891,7 @@ pub async fn reconcile(
             if plan.before.providers["providers"].get(provider).is_some()
                 && plan.next_providers["providers"].get(provider).is_some()
             {
-                super::provider_auth::inspect_change(
-                    root,
-                    context,
-                    &plan.id,
-                    provider,
-                    plan.authorization_before
-                        .get(provider)
-                        .and_then(Option::as_ref),
-                    target.as_ref(),
-                )?;
+                inspect_history_authorization(root, context, &plan, provider, target.as_ref())?;
             }
         }
     }
@@ -1840,9 +1971,41 @@ pub async fn reconcile(
             staged["providers"][provider] = row;
         }
     }
+    let directional = if let Some(history) = &plan.history_restoration {
+        if history.directions.is_empty() {
+            false
+        } else {
+            let all = provider_map(&plan.before.providers)?
+                .keys()
+                .chain(provider_map(&plan.next_providers)?.keys())
+                .cloned()
+                .collect::<BTreeSet<_>>();
+            provider_map(&actual.providers)?
+                .keys()
+                .all(|p| all.contains(p))
+                && all.iter().all(|provider| {
+                    let row = actual.providers["providers"].get(provider);
+                    row == plan.before.providers["providers"].get(provider)
+                        || row == plan.next_providers["providers"].get(provider)
+                        || row == staged["providers"].get(provider)
+                        || history
+                            .directions
+                            .get(provider)
+                            .is_some_and(|d| row == Some(&d.to_public))
+                })
+                && [
+                    plan.before.providers.get("defaultProvider"),
+                    plan.next_providers.get("defaultProvider"),
+                ]
+                .contains(&actual.providers.get("defaultProvider"))
+        }
+    } else {
+        false
+    };
     let attributable = actual.providers == plan.before.providers
         || actual.providers == plan.next_providers
-        || actual.providers == staged;
+        || actual.providers == staged
+        || directional;
     let original_order = string_array(&plan.before.order["pickerOrder"])?;
     let actual_order = string_array(&actual.order["pickerOrder"])?;
     let changed: BTreeSet<_> = disabled
@@ -2466,7 +2629,7 @@ pub async fn compensate(
     {
         return Err(invalid("runtime_binding", "运行来源改变，补偿已拒绝"));
     }
-    let current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
+    let mut current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
     removed_key_states(root, &plan, context, &current).await?;
     for backup in plan.imported_authorizations.values() {
         if current["providers"].get(&backup.provider).is_some() {
@@ -2487,16 +2650,7 @@ pub async fn compensate(
             if plan.before.providers["providers"].get(provider).is_some()
                 && plan.next_providers["providers"].get(provider).is_some()
             {
-                super::provider_auth::inspect_change(
-                    root,
-                    context,
-                    &plan.id,
-                    provider,
-                    plan.authorization_before
-                        .get(provider)
-                        .and_then(Option::as_ref),
-                    target.as_ref(),
-                )?;
+                inspect_history_authorization(root, context, &plan, provider, target.as_ref())?;
             }
         }
     }
@@ -2552,6 +2706,41 @@ pub async fn compensate(
             }
         }
     }
+    if let Some(history) = plan.history_restoration.clone() {
+        for (provider, direction) in &history.directions {
+            let restore = direction_public(
+                provider,
+                &current,
+                &plan.before.providers["providers"][provider],
+                &plan.before.models,
+            )?;
+            plan.phase = "compensating_direction".into();
+            save(root, &plan)?;
+            let result = super::provider_auth::rollback_direction(
+                root,
+                context,
+                &plan.id,
+                provider,
+                plan.authorization_before
+                    .get(provider)
+                    .and_then(Option::as_ref),
+                history
+                    .authorizations
+                    .get(provider)
+                    .and_then(Option::as_ref),
+                direction,
+                &restore,
+            )
+            .await;
+            observe(root, context, &mut plan).await?;
+            if let Err(error) = result {
+                plan.error = Some(error.code);
+                save(root, &plan)?;
+                return Ok(plan.view());
+            }
+            current = plan.observed_providers.clone();
+        }
+    }
     let baseline = root
         .join(PLAN_DIR)
         .join(format!("{id}-compensation-baseline.json"));
@@ -2594,7 +2783,8 @@ pub async fn compensate(
         }
         if let Some(history) = &plan.history_restoration {
             for (provider, target) in &history.authorizations {
-                if plan.before.providers["providers"].get(provider).is_some()
+                if !history.directions.contains_key(provider)
+                    && plan.before.providers["providers"].get(provider).is_some()
                     && plan.next_providers["providers"].get(provider).is_some()
                 {
                     super::provider_auth::rollback_change(
@@ -2769,6 +2959,36 @@ mod tests {
         );
     }
     use super::*;
+    #[test]
+    fn historical_direction_stage_pairs_target_service_with_exact_models_and_current_alias_ownership(
+    ) {
+        let mut current = json!({"defaultProvider":"p","providers":{"p":{"adapter":"openai-chat","baseUrl":"https://new.example.test","alias":"current-alias","modelAliases":{"a":"current-a"},"defaultAliases":false}}});
+        let target = json!({"adapter":"openai-responses","authMode":"key","baseUrl":"https://old.example.test","alias":"historical-alias","modelAliases":{"a":"historical-a"},"models":["a","b"],"newModelPolicy":"on","disabled":false});
+        let staged = direction_public("p", &current, &target, &json!([])).unwrap();
+        assert_eq!(staged["baseUrl"], "https://old.example.test");
+        assert_eq!(staged["adapter"], "openai-responses");
+        assert_eq!(staged["selectedModels"], json!(["a", "b"]));
+        assert_eq!(staged["newModelPolicy"], "off");
+        assert_eq!(staged["alias"], "current-alias");
+        assert_eq!(
+            staged["modelAliases"],
+            current["providers"]["p"]["modelAliases"]
+        );
+        assert_eq!(staged["disabled"], true);
+        assert_eq!(target["alias"], "historical-alias");
+        current["defaultProvider"] = json!("keep");
+        assert_eq!(
+            direction_public("p", &current, &target, &json!([])).unwrap()["disabled"],
+            true
+        );
+        assert!(direction_public(
+            "p",
+            &current,
+            &json!({"adapter":"openai-chat","baseUrl":"https://old.example.test"}),
+            &json!([])
+        )
+        .is_err());
+    }
     #[test]
     fn credential_compensation_accepts_its_known_intermediate_but_refuses_new_keys_or_selection() {
         let before = super::super::management::KeyState {
