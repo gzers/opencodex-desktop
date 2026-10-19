@@ -21,6 +21,7 @@ export function installModelFixtures() {
   modelApi.latestPolicy=async()=>null
   modelTransferApi.loadRemoteScope=async()=>({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
   importedConnectionApi.list=async()=>({baseline:'explicit-visual-fixture',items:[]})
+  modelTransferApi.accountCatalog=async()=>[{account:{id:crypto.randomUUID(),provider:'chatgpt',subject:'fixture-subject',label:'账户信息样例',email:'fixture@example.test'},loginTransfer:'manualImportDisabled',localSource:true}]
   modelTransferApi.extensionCatalog=async()=>({skills:['fixture-review-skill'],mcps:['fixture-review-mcp']})
   const store=useModelsStore();store.snapshot=structuredClone(snapshot);store.restoreChannels()
 }

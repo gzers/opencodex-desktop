@@ -14,6 +14,8 @@ pub struct PortableChannel {
     pub id: String,
     pub label: String,
     pub protocol: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub connection: Option<PortableConnection>,
     pub selection: ModelSelection,
     pub model_order: Vec<String>,
     pub discovered: Vec<DiscoveredModel>,
@@ -22,6 +24,27 @@ pub struct PortableChannel {
     pub defaults: ModelRules,
     pub overrides: BTreeMap<String, ModelRules>,
     pub family_overrides: BTreeMap<String, ModelRules>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct PortableConnection {
+    pub nodes: Vec<ServiceNode>,
+}
+fn portable_connection(channel: &ChannelPolicy) -> Option<PortableConnection> {
+    (!channel.connection.nodes.is_empty()).then(|| PortableConnection {
+        nodes: channel.connection.nodes.clone(),
+    })
+}
+fn package_version(payload: &TransferPayload) -> u32 {
+    if payload
+        .policy
+        .as_ref()
+        .is_some_and(|p| p.channels.iter().any(|c| c.connection.is_some()))
+    {
+        2
+    } else {
+        1
+    }
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -72,6 +95,26 @@ pub struct ReceiveScope {
     pub skill_names: Vec<String>,
     #[serde(default)]
     pub mcp_names: Vec<String>,
+    #[serde(default)]
+    pub channel_mappings: BTreeMap<String, ChannelMapping>,
+}
+#[derive(Debug, Clone, Deserialize)]
+#[serde(
+    tag = "mode",
+    rename_all = "snake_case",
+    rename_all_fields = "camelCase",
+    deny_unknown_fields
+)]
+pub enum ChannelMapping {
+    New { label: String },
+    Local { target_id: String },
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ChannelBinding {
+    pub target_id: String,
+    pub keep_local_connection: bool,
+    pub label: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -102,6 +145,8 @@ pub struct IncomingPlan {
     pub available_extension_credentials: bool,
     #[serde(default)]
     pub protected: bool,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub channel_bindings: BTreeMap<String, ChannelBinding>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -251,6 +296,7 @@ pub(super) fn portable(channel: &ChannelPolicy) -> PortableChannel {
         id: channel.id.clone(),
         label: channel.label.clone(),
         protocol: channel.connection.protocol.clone(),
+        connection: portable_connection(channel),
         selection: channel.selection.clone(),
         model_order: channel.model_order.clone(),
         discovered: channel.discovered.clone(),
@@ -335,7 +381,7 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
     let digest = sha256(&serde_json::to_vec(&payload)?);
     Ok(ModelPackage {
         format: "OCXD_MODEL_CONFIG".into(),
-        format_version: 1,
+        format_version: package_version(&payload),
         schema_version: SCHEMA_VERSION,
         created_at: chrono::Utc::now().to_rfc3339(),
         digest,
@@ -344,7 +390,8 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
 }
 pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
     if package.format != "OCXD_MODEL_CONFIG"
-        || package.format_version != 1
+        || ![1, 2].contains(&package.format_version)
+        || (package.format_version == 1 && package_version(&package.payload) != 1)
         || package.schema_version != SCHEMA_VERSION
     {
         return Err(invalid("package_version", "模型配置文件格式/版本不受支持"));
@@ -400,6 +447,32 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                 || channel.protocol.len() > 128
             {
                 return Err(invalid("channel", "包内渠道身份重复"));
+            }
+            if let Some(connection) = &channel.connection {
+                let probe = ChannelPolicy {
+                    id: channel.id.clone(),
+                    label: channel.label.clone(),
+                    template_refs: vec![],
+                    model_refs: BTreeMap::new(),
+                    connection: ChannelConnection {
+                        provider_id: "portable-validation".into(),
+                        protocol: channel.protocol.clone(),
+                        nodes: connection.nodes.clone(),
+                        active_node_id: connection
+                            .nodes
+                            .first()
+                            .map(|n| n.id.clone())
+                            .unwrap_or_default(),
+                        ..Default::default()
+                    },
+                    selection: ModelSelection::None,
+                    model_order: vec![],
+                    discovered: vec![],
+                    defaults: Default::default(),
+                    overrides: Default::default(),
+                    family_overrides: Default::default(),
+                };
+                super::compiler::validate_channel(&probe)?;
             }
             let unique = |ids: &[String]| {
                 ids.iter().collect::<BTreeSet<_>>().len() == ids.len()
@@ -553,9 +626,37 @@ fn merge(
                 .or(committed)
                 .map(|c| c.connection.clone())
                 .unwrap_or_default();
+            if (working.is_some() || committed.is_some()) && connection.protocol != channel.protocol
+            {
+                return Err(invalid(
+                    "channel_endpoint_conflict",
+                    "同一渠道的协议不同，请先映射或跳过；未复用本机Key",
+                ));
+            }
+            if let Some(incoming_connection) = &channel.connection {
+                if working.is_some() || committed.is_some() {
+                    if connection.protocol != channel.protocol
+                        || connection.nodes != incoming_connection.nodes
+                    {
+                        return Err(invalid("channel_endpoint_conflict", "同一渠道的协议或服务节点不同，请先映射渠道或跳过该对象；未改变本机连接或Key"));
+                    }
+                } else {
+                    connection.provider_id = format!("ocxd_import_{}", channel.id.replace('-', ""));
+                    connection.nodes = incoming_connection.nodes.clone();
+                    connection.active_node_id = connection.nodes[0].id.clone();
+                    // Staged candidates never inherit the source's enabled state,
+                    // active runtime provider, Keychain reference or private-network permission.
+                    connection.enabled = false;
+                    connection.allow_private_network = false;
+                    connection.credential_ref = None;
+                }
+            }
             connection.protocol = channel.protocol.clone();
             if working.is_none() {
-                notices.push(format!("{}：跨机渠道待配置本机连接，未启用", channel.label));
+                notices.push(format!(
+                    "{}：新增渠道草稿，服务节点需确认，保持停用且未绑定运行渠道",
+                    channel.label
+                ));
             }
             let next = ChannelPolicy {
                 id: channel.id.clone(),
@@ -655,7 +756,7 @@ pub(super) fn merge_packages(
     }
     let result = ModelPackage {
         format: "OCXD_MODEL_CONFIG".into(),
-        format_version: 1,
+        format_version: package_version(&payload),
         schema_version: SCHEMA_VERSION,
         created_at: chrono::Utc::now().to_rfc3339(),
         digest: sha256(&serde_json::to_vec(&payload)?),
@@ -673,17 +774,33 @@ fn incoming_path(root: &Path, id: &str) -> ModelResult<std::path::PathBuf> {
     Ok(path)
 }
 pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> {
+    receive_bound(root, package, BTreeMap::new())
+}
+fn receive_bound(
+    root: &Path,
+    package: ModelPackage,
+    bindings: BTreeMap<String, ChannelBinding>,
+) -> ModelResult<IncomingPlan> {
     validate_package(&package)?;
     let local = ModelStore::new(root).load()?;
-    let (merged_library, merged_policy, notices, preview_error) = match merge(&local, &package) {
-        Ok((library, policy, notices)) => (library, policy, notices, None),
-        Err(error) => (
-            local.library.clone(),
-            None,
-            vec![error.message],
-            Some(error.code),
-        ),
-    };
+    let effective = mapped_package(&local, &package, &bindings)?;
+    let (merged_library, merged_policy, mut notices, preview_error) =
+        match merge(&local, &effective) {
+            Ok((library, policy, notices)) => (library, policy, notices, None),
+            Err(error) => (
+                local.library.clone(),
+                None,
+                vec![error.message],
+                Some(error.code),
+            ),
+        };
+    for (source, binding) in &bindings {
+        notices.push(if binding.keep_local_connection {
+            format!("渠道 {source} → {}：采用模型规则，保留本机协议、节点、当前节点和Key；不采用来源Key", binding.target_id)
+        } else {
+            format!("渠道 {source} → {}：建立独立停用草稿；模版中原有渠道匹配范围保持，保存前请检查匹配", binding.target_id)
+        });
+    }
     let plan = IncomingPlan {
         id: uuid::Uuid::new_v4().to_string(),
         expected_library: local.library_digest,
@@ -702,6 +819,7 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
         assets: None,
         available_extension_credentials: false,
         protected: false,
+        channel_bindings: bindings,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {
@@ -713,6 +831,94 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
         0o600,
     )?;
     Ok(plan)
+}
+fn mapped_package(
+    local: &Snapshot,
+    source: &ModelPackage,
+    bindings: &BTreeMap<String, ChannelBinding>,
+) -> ModelResult<ModelPackage> {
+    let mut result = source.clone();
+    let mut targets = BTreeSet::new();
+    let local_policy = local
+        .workspace
+        .as_ref()
+        .map(|w| &w.policy)
+        .unwrap_or(&local.policy);
+    for (id, binding) in bindings {
+        require_uuid(id)?;
+        require_uuid(&binding.target_id)?;
+        let index = source
+            .payload
+            .policy
+            .as_ref()
+            .and_then(|p| p.channels.iter().position(|c| &c.id == id))
+            .ok_or_else(|| invalid("channel_mapping", "映射的渠道不在所选范围"))?;
+        let channel = &mut result.payload.policy.as_mut().unwrap().channels[index];
+        if binding.keep_local_connection {
+            let target = local_policy
+                .channels
+                .iter()
+                .find(|c| c.id == binding.target_id)
+                .ok_or_else(|| invalid("channel_mapping", "映射的本机渠道已不存在"))?;
+            if binding.label.is_some() {
+                return Err(invalid("channel_mapping", "保留本机连接不能重命名渠道"));
+            }
+            channel.label = target.label.clone();
+            channel.protocol = target.connection.protocol.clone();
+            channel.connection = portable_connection(target);
+        } else {
+            if local_policy
+                .channels
+                .iter()
+                .any(|c| c.id == binding.target_id)
+                || source
+                    .payload
+                    .policy
+                    .iter()
+                    .flat_map(|p| &p.channels)
+                    .any(|c| c.id == binding.target_id)
+                || channel.connection.is_none()
+                || binding.label.as_ref().is_none_or(|s| {
+                    s.trim().is_empty() || s.len() > 256 || s.chars().any(char::is_control)
+                })
+            {
+                return Err(invalid(
+                    "channel_mapping",
+                    "新渠道须有独立身份、名称及来源节点",
+                ));
+            }
+            channel.label = binding.label.as_ref().unwrap().clone();
+        }
+        channel.id = binding.target_id.clone();
+    }
+    for channel in result.payload.policy.iter().flat_map(|p| &p.channels) {
+        if !targets.insert(&channel.id) {
+            return Err(invalid("channel_mapping", "多个来源渠道不能映射到同一目标"));
+        }
+    }
+    if let Some(order) = result
+        .payload
+        .policy
+        .as_mut()
+        .and_then(|p| p.channel_order.as_mut())
+    {
+        for id in order {
+            if let Some(binding) = bindings.get(id) {
+                *id = binding.target_id.clone();
+            }
+        }
+    }
+    result.format_version = package_version(&result.payload);
+    result.digest = sha256(&serde_json::to_vec(&result.payload)?);
+    validate_package(&result)?;
+    Ok(result)
+}
+pub(super) fn key_target<'a>(plan: &'a IncomingPlan, source: &'a str) -> Option<&'a str> {
+    match plan.channel_bindings.get(source) {
+        Some(binding) if binding.keep_local_connection => None,
+        Some(binding) => Some(&binding.target_id),
+        None => Some(source),
+    }
 }
 pub fn select_received(root: &Path, id: &str, scope: ReceiveScope) -> ModelResult<IncomingPlan> {
     select_received_context(root, id, scope, None)
@@ -823,7 +1029,31 @@ pub fn select_received_context(
         .templates
         .retain(|template| !template.revisions.is_empty());
     package.digest = sha256(&serde_json::to_vec(&package.payload)?);
-    let mut selected = receive(root, package)?;
+    let mut bindings = BTreeMap::new();
+    for (source, action) in scope.channel_mappings {
+        if !scope.channel_ids.contains(&source) {
+            return Err(invalid("channel_mapping", "映射仅适用于已选择渠道"));
+        }
+        let binding = match action {
+            ChannelMapping::Local { target_id } => ChannelBinding {
+                target_id,
+                keep_local_connection: true,
+                label: None,
+            },
+            ChannelMapping::New { label } => ChannelBinding {
+                target_id: original
+                    .channel_bindings
+                    .get(&source)
+                    .filter(|b| !b.keep_local_connection && b.label.as_ref() == Some(&label))
+                    .map(|b| b.target_id.clone())
+                    .unwrap_or_else(|| uuid::Uuid::new_v4().to_string()),
+                keep_local_connection: false,
+                label: Some(label),
+            },
+        };
+        bindings.insert(source, binding);
+    }
+    let mut selected = receive_bound(root, package, bindings)?;
     if !scope.account_ids.is_empty() && original.manager.is_none() {
         return Err(invalid("import_scope", "选择了包内不存在的账户信息"));
     }
@@ -904,6 +1134,17 @@ struct AcceptanceReceipt {
     package_digest: String,
     intent_digest: String,
 }
+fn intent_digest(
+    plan: &IncomingPlan,
+    credentials: &BTreeMap<String, String>,
+) -> ModelResult<String> {
+    let bytes = if plan.channel_bindings.is_empty() {
+        serde_json::to_vec(credentials)?
+    } else {
+        serde_json::to_vec(&(credentials, &plan.channel_bindings))?
+    };
+    Ok(sha256(&bytes))
+}
 pub(super) fn verify_acceptance(
     root: &Path,
     plan: &IncomingPlan,
@@ -918,7 +1159,7 @@ pub(super) fn verify_acceptance(
         serde_json::from_slice(&crate::modules::backup::safety::read_file(&path, 4096)?)?;
     if receipt.id != plan.id
         || receipt.package_digest != plan.package.digest
-        || receipt.intent_digest != sha256(&serde_json::to_vec(credentials)?)
+        || receipt.intent_digest != intent_digest(plan, credentials)?
     {
         return Err(invalid(
             "import_replay_conflict",
@@ -992,17 +1233,15 @@ pub(super) fn accept_with_credentials(
     let local = ModelStore::new(root).load()?;
     for (channel, reference) in credentials {
         require_uuid(reference)?;
-        if plan
-            .package
-            .payload
-            .policy
-            .as_ref()
-            .is_none_or(|p| !p.channels.iter().any(|c| &c.id == channel))
-        {
+        if plan.package.payload.policy.as_ref().is_none_or(|p| {
+            !p.channels
+                .iter()
+                .any(|c| key_target(&plan, &c.id) == Some(channel.as_str()))
+        }) {
             return Err(invalid("credential_scope", "凭据目标不在已选接收渠道内"));
         }
     }
-    let intent_digest = sha256(&serde_json::to_vec(credentials)?);
+    let intent_digest = intent_digest(&plan, credentials)?;
     let receipt_path = path.with_extension("accepted.json");
     crate::modules::backup::safety::check_path(root, &receipt_path, true)?;
     if verify_acceptance(root, &plan, credentials)? {
@@ -1036,7 +1275,8 @@ pub(super) fn accept_with_credentials(
     let snapshot = if already_applied {
         local
     } else {
-        let (library, mut policy, _) = merge(&local, &plan.package)?;
+        let effective = mapped_package(&local, &plan.package, &plan.channel_bindings)?;
+        let (library, mut policy, _) = merge(&local, &effective)?;
         bind_credentials(&mut policy, credentials)?;
         ModelStore::new(root).accept_import(
             &plan.expected_library,
@@ -1074,6 +1314,325 @@ fn bind_credentials(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn explicit_channel_mapping_preserves_local_connection_or_creates_a_separate_draft() {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let original = channel_fixture(source.path());
+        let mut local = channel_fixture(target.path());
+        local.id = original.id.clone();
+        local.connection.nodes[0].url = "https://local.example.test/v1".into();
+        local.connection.protocol = "openai-responses".into();
+        commit_fixture(target.path(), local.clone());
+        let incoming =
+            receive(target.path(), channel_package(source.path(), &original.id)).unwrap();
+        assert_eq!(
+            incoming.preview_error.as_deref(),
+            Some("channel_endpoint_conflict")
+        );
+        let mapped = select_received(
+            target.path(),
+            &incoming.id,
+            ReceiveScope {
+                channel_ids: vec![original.id.clone()],
+                channel_mappings: BTreeMap::from([(
+                    original.id.clone(),
+                    ChannelMapping::Local {
+                        target_id: local.id.clone(),
+                    },
+                )]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(mapped.preview_error.is_none());
+        assert_eq!(key_target(&mapped, &original.id), None);
+        let result = accept(target.path(), &mapped.id).unwrap();
+        let draft = &result.workspace.as_ref().unwrap().policy.channels[0];
+        assert_eq!(draft.connection, local.connection);
+        assert_eq!(draft.selection, original.selection);
+        // A new comparison uses the current baseline, never silently rewrites an old confirmed plan.
+        let incoming =
+            receive(target.path(), channel_package(source.path(), &original.id)).unwrap();
+        let mapped = select_received(
+            target.path(),
+            &incoming.id,
+            ReceiveScope {
+                channel_ids: vec![original.id.clone()],
+                channel_mappings: BTreeMap::from([(
+                    original.id.clone(),
+                    ChannelMapping::New {
+                        label: "独立副本".into(),
+                    },
+                )]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let target_id = mapped.channel_bindings[&original.id].target_id.clone();
+        assert_ne!(target_id, local.id);
+        assert_eq!(key_target(&mapped, &original.id), Some(target_id.as_str()));
+        let result = accept(target.path(), &mapped.id).unwrap();
+        let channels = &result.workspace.as_ref().unwrap().policy.channels;
+        assert_eq!(channels.len(), 2);
+        assert_eq!(channels[0].connection, local.connection);
+        let new = channels.iter().find(|c| c.id == target_id).unwrap();
+        assert!(!new.connection.enabled);
+        assert_eq!(new.label, "独立副本");
+    }
+    #[test]
+    fn channel_mapping_rejects_unselected_sources_duplicate_targets_and_drift() {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let original = channel_fixture(source.path());
+        let local = channel_fixture(target.path());
+        let mut package = channel_package(source.path(), &original.id);
+        let mut second = package.payload.policy.as_ref().unwrap().channels[0].clone();
+        second.id = uuid::Uuid::new_v4().to_string();
+        package
+            .payload
+            .policy
+            .as_mut()
+            .unwrap()
+            .channels
+            .push(second.clone());
+        package.digest = sha256(&serde_json::to_vec(&package.payload).unwrap());
+        let incoming = receive(target.path(), package).unwrap();
+        let mappings = BTreeMap::from([
+            (
+                original.id.clone(),
+                ChannelMapping::Local {
+                    target_id: local.id.clone(),
+                },
+            ),
+            (
+                second.id.clone(),
+                ChannelMapping::Local {
+                    target_id: local.id.clone(),
+                },
+            ),
+        ]);
+        assert_eq!(
+            select_received(
+                target.path(),
+                &incoming.id,
+                ReceiveScope {
+                    channel_ids: vec![original.id.clone()],
+                    channel_mappings: mappings.clone(),
+                    ..Default::default()
+                }
+            )
+            .unwrap_err()
+            .code,
+            "channel_mapping"
+        );
+        assert_eq!(
+            select_received(
+                target.path(),
+                &incoming.id,
+                ReceiveScope {
+                    channel_ids: vec![original.id.clone(), second.id],
+                    channel_mappings: mappings,
+                    ..Default::default()
+                }
+            )
+            .unwrap_err()
+            .code,
+            "channel_mapping"
+        );
+        let mapped = select_received(
+            target.path(),
+            &incoming.id,
+            ReceiveScope {
+                channel_ids: vec![original.id.clone()],
+                channel_mappings: BTreeMap::from([(
+                    original.id,
+                    ChannelMapping::Local {
+                        target_id: local.id.clone(),
+                    },
+                )]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let mut edited = local;
+        edited.label = "后来修改".into();
+        commit_fixture(target.path(), edited.clone());
+        assert_eq!(
+            accept(target.path(), &mapped.id).unwrap_err().code,
+            "stale_baseline"
+        );
+        assert_eq!(
+            ModelStore::new(target.path())
+                .load()
+                .unwrap()
+                .policy
+                .channels[0],
+            edited
+        );
+    }
+    fn channel_fixture(root: &Path) -> ChannelPolicy {
+        let nodes = vec![
+            ServiceNode {
+                id: uuid::Uuid::new_v4().to_string(),
+                name: "主站".into(),
+                url: "https://source.example.test/v1".into(),
+            },
+            ServiceNode {
+                id: uuid::Uuid::new_v4().to_string(),
+                name: "备用".into(),
+                url: "https://backup.example.test/v1".into(),
+            },
+        ];
+        let channel = ChannelPolicy {
+            id: uuid::Uuid::new_v4().to_string(),
+            label: "便携渠道".into(),
+            template_refs: vec![],
+            model_refs: BTreeMap::new(),
+            connection: ChannelConnection {
+                provider_id: "source-machine-provider".into(),
+                protocol: "openai-chat".into(),
+                active_node_id: nodes[1].id.clone(),
+                nodes,
+                credential_ref: Some(uuid::Uuid::new_v4().to_string()),
+                enabled: true,
+                allow_private_network: true,
+            },
+            selection: ModelSelection::Whitelist(vec!["model-a".into()]),
+            model_order: vec![],
+            discovered: vec![],
+            defaults: Default::default(),
+            overrides: Default::default(),
+            family_overrides: Default::default(),
+        };
+        commit_fixture(root, channel.clone());
+        channel
+    }
+    fn commit_fixture(root: &Path, channel: ChannelPolicy) {
+        let store = ModelStore::new(root);
+        let snapshot = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &snapshot.library_digest,
+                &snapshot.policy_digest,
+                &snapshot.workspace_digest,
+                Policy {
+                    channels: vec![channel],
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+    }
+    fn channel_package(root: &Path, id: &str) -> ModelPackage {
+        export(
+            root,
+            ExportScope {
+                include_policy: true,
+                channel_ids: vec![id.into()],
+                template_refs: vec![],
+                include_global: false,
+            },
+        )
+        .unwrap()
+    }
+    #[test]
+    fn portable_nodes_restore_as_disabled_draft_with_new_local_binding_and_no_runtime_or_secret_refs(
+    ) {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let original = channel_fixture(source.path());
+        let package = channel_package(source.path(), &original.id);
+        assert_eq!(package.format_version, 2);
+        let encoded = serde_json::to_string(&package).unwrap();
+        assert!(!encoded.contains(&original.connection.provider_id));
+        assert!(!encoded.contains(original.connection.credential_ref.as_deref().unwrap()));
+        assert!(
+            !encoded.contains("activeNodeId")
+                && !encoded.contains("allowPrivateNetwork")
+                && !encoded.contains("credentialRef")
+        );
+        let incoming = receive(target.path(), package).unwrap();
+        assert!(incoming.preview_error.is_none());
+        let adopted = accept(target.path(), &incoming.id).unwrap();
+        assert!(adopted.policy.channels.is_empty());
+        let draft = &adopted.workspace.as_ref().unwrap().policy.channels[0];
+        assert_eq!(draft.connection.nodes, original.connection.nodes);
+        assert_ne!(
+            draft.connection.provider_id,
+            original.connection.provider_id
+        );
+        assert!(!draft.connection.enabled && !draft.connection.allow_private_network);
+        assert!(draft.connection.credential_ref.is_none());
+        assert_ne!(
+            draft.connection.active_node_id,
+            original.connection.active_node_id
+        );
+        super::super::compiler::validate_channel(draft).unwrap();
+    }
+    #[test]
+    fn same_identity_different_endpoint_is_review_conflict_and_same_endpoint_keeps_local_selection()
+    {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let original = channel_fixture(source.path());
+        let mut local = original.clone();
+        local.connection.active_node_id = local.connection.nodes[0].id.clone();
+        local.connection.provider_id = "local-provider".into();
+        local.connection.credential_ref = Some(uuid::Uuid::new_v4().to_string());
+        commit_fixture(target.path(), local.clone());
+        let incoming =
+            receive(target.path(), channel_package(source.path(), &original.id)).unwrap();
+        let adopted = accept(target.path(), &incoming.id).unwrap();
+        assert_eq!(
+            adopted.workspace.as_ref().unwrap().policy.channels[0].connection,
+            local.connection
+        );
+        let other = tempfile::tempdir().unwrap();
+        local.connection.nodes[0].url = "https://other.example.test/v1".into();
+        commit_fixture(other.path(), local.clone());
+        let incoming = receive(other.path(), channel_package(source.path(), &original.id)).unwrap();
+        assert_eq!(
+            incoming.preview_error.as_deref(),
+            Some("channel_endpoint_conflict")
+        );
+        assert_eq!(
+            accept(other.path(), &incoming.id).unwrap_err().code,
+            "channel_endpoint_conflict"
+        );
+        assert_eq!(
+            ModelStore::new(other.path())
+                .load()
+                .unwrap()
+                .policy
+                .channels[0],
+            local
+        );
+    }
+    #[test]
+    fn old_packages_keep_their_original_digest_and_new_nodes_cannot_masquerade_as_format_one() {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let channel = channel_fixture(source.path());
+        let mut package = channel_package(source.path(), &channel.id);
+        package.format_version = 1;
+        assert_eq!(
+            validate_package(&package).unwrap_err().code,
+            "package_version"
+        );
+        package.payload.policy.as_mut().unwrap().channels[0].connection = None;
+        package.digest = sha256(&serde_json::to_vec(&package.payload).unwrap());
+        let bytes = serde_json::to_vec(&package).unwrap();
+        assert!(!String::from_utf8_lossy(&bytes).contains("connection"));
+        let parsed: ModelPackage = serde_json::from_slice(&bytes).unwrap();
+        validate_package(&parsed).unwrap();
+        let incoming = receive(target.path(), parsed).unwrap();
+        assert!(incoming.preview_error.is_none());
+        let result = accept(target.path(), &incoming.id).unwrap();
+        assert!(result.workspace.unwrap().policy.channels[0]
+            .connection
+            .nodes
+            .is_empty());
+    }
     fn create(root: &Path) -> Commit {
         let store = ModelStore::new(root);
         let snapshot = store.load().unwrap();
@@ -1283,6 +1842,7 @@ mod tests {
         let channel = PortableChannel {
             id: uuid::Uuid::new_v4().to_string(),
             label: "依赖渠道".into(),
+            connection: None,
             protocol: "openai-chat".into(),
             selection: ModelSelection::None,
             model_order: vec![],

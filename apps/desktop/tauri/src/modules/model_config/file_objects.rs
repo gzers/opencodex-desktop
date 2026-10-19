@@ -129,12 +129,11 @@ fn validate(objects: &Objects) -> ModelResult<()> {
         if key.is_empty()
             || key.len() > 8192
             || key.contains(['\r', '\n'])
-            || objects
-                .models
-                .payload
-                .policy
-                .as_ref()
-                .is_none_or(|p| !p.channels.iter().any(|c| &c.id == channel))
+            || objects.models.payload.policy.as_ref().is_none_or(|p| {
+                !p.channels
+                    .iter()
+                    .any(|c| &c.id == channel && c.connection.is_some())
+            })
         {
             return Err(invalid(
                 "credential_scope",
@@ -408,6 +407,27 @@ pub fn merge_remote(
 ) -> ModelResult<Vec<u8>> {
     let (mut remote, remote_protected) = remote_objects(remote_bytes, passphrase)?;
     let (local, local_protected) = remote_objects(local_bytes, passphrase)?;
+    for incoming in local.models.payload.policy.iter().flat_map(|p| &p.channels) {
+        if remote.channel_keys.0.contains_key(&incoming.id)
+            && !local.channel_keys.0.contains_key(&incoming.id)
+        {
+            let previous = remote
+                .models
+                .payload
+                .policy
+                .iter()
+                .flat_map(|p| &p.channels)
+                .find(|c| c.id == incoming.id);
+            if previous.is_none_or(|c| {
+                c.protocol != incoming.protocol || c.connection != incoming.connection
+            }) {
+                return Err(invalid(
+                    "channel_credential_binding",
+                    "远端渠道含Key，新的协议或节点未携对应凭据；未把旧Key绑定到新服务",
+                ));
+            }
+        }
+    }
     remote.models = transfer::merge_packages(remote.models, local.models)?;
     if local.manager.preferences.is_some() {
         remote.manager.preferences = local.manager.preferences;
@@ -622,6 +642,7 @@ pub fn select_remote(
         root,
         &incoming.id,
         transfer::ReceiveScope {
+            channel_mappings: BTreeMap::new(),
             account_ids: manager
                 .account_ids
                 .iter()
@@ -947,12 +968,13 @@ pub(super) fn copy_source(
         .available_keys
         .iter()
         .filter(|id| {
-            selected
-                .package
-                .payload
-                .policy
-                .as_ref()
-                .is_some_and(|p| p.channels.iter().any(|c| &c.id == *id))
+            transfer::key_target(selected, id).is_some()
+                && selected
+                    .package
+                    .payload
+                    .policy
+                    .as_ref()
+                    .is_some_and(|p| p.channels.iter().any(|c| &c.id == *id))
         })
         .cloned()
         .collect();
@@ -1336,6 +1358,12 @@ fn accept_with(
         .into_iter()
         .flat_map(|p| p.channels.iter())
     {
+        if !plan.available_keys.contains(&channel.id) {
+            continue;
+        }
+        let Some(target) = transfer::key_target(&plan, &channel.id) else {
+            continue;
+        };
         if let Some(value) = objects.channel_keys.0.get(&channel.id) {
             if !objects.models.payload.policy.as_ref().is_some_and(|p| {
                 p.channels.iter().any(|original| {
@@ -1345,7 +1373,7 @@ fn accept_with(
             }) {
                 return Err(invalid("credential_scope", "凭据源渠道与所选配置不一致"));
             }
-            wanted.insert(channel.id.clone(), value);
+            wanted.insert(target.to_string(), value);
         }
     }
     if wanted.is_empty() {
@@ -1962,7 +1990,7 @@ mod tests {
     }
     fn fixture(root: &Path, id: &str, reference: &str) -> ChannelPolicy {
         let node = ServiceNode {
-            id: uuid::Uuid::new_v4().to_string(),
+            id: id.into(),
             name: "main".into(),
             url: "https://fixture.example.test/v1".into(),
         };
@@ -2001,6 +2029,233 @@ mod tests {
             )
             .unwrap();
         channel
+    }
+    #[test]
+    fn mapping_keeps_source_key_out_of_local_connection_and_binds_new_keys_only_to_new_channel() {
+        use transfer::{ChannelMapping, ReceiveScope};
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        let reference = uuid::Uuid::new_v4().to_string();
+        let local_ref = uuid::Uuid::new_v4().to_string();
+        fixture(source.path(), &id, &reference);
+        let mut local = fixture(target.path(), &id, &local_ref);
+        local.connection.nodes[0].url = "https://local.example.test/v1".into();
+        let store = ModelStore::new(target.path());
+        let before = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &before.library_digest,
+                &before.policy_digest,
+                &before.workspace_digest,
+                Policy {
+                    channels: vec![local.clone()],
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+        let keys = Memory::default();
+        keys.values
+            .lock()
+            .unwrap()
+            .insert(reference, "fixture-source-key".into());
+        keys.values
+            .lock()
+            .unwrap()
+            .insert(local_ref.clone(), "fixture-local-key".into());
+        let package = transfer::export(
+            source.path(),
+            transfer::ExportScope {
+                include_policy: true,
+                channel_ids: vec![id.clone()],
+                template_refs: vec![],
+                include_global: false,
+            },
+        )
+        .unwrap();
+        let bytes = seal_with(
+            source.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            &package,
+            true,
+            Some("fixture-password"),
+            &keys,
+        )
+        .unwrap()
+        .0;
+        let original = receive(target.path(), &bytes, Some("fixture-password")).unwrap();
+        let kept = transfer::select_received(
+            target.path(),
+            &original.id,
+            ReceiveScope {
+                channel_ids: vec![id.clone()],
+                channel_mappings: BTreeMap::from([(
+                    id.clone(),
+                    ChannelMapping::Local {
+                        target_id: id.clone(),
+                    },
+                )]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(kept.available_keys.is_empty());
+        assert_eq!(
+            accept_with(
+                target.path(),
+                &kept.id,
+                true,
+                Some("fixture-password"),
+                &keys
+            )
+            .unwrap_err()
+            .code,
+            "credential_scope"
+        );
+        let adopted = accept_with(target.path(), &kept.id, false, None, &keys).unwrap();
+        assert_eq!(
+            adopted.workspace.as_ref().unwrap().policy.channels[0].connection,
+            local.connection
+        );
+        assert_eq!(*keys.writes.lock().unwrap(), 0);
+        let original = receive(target.path(), &bytes, Some("fixture-password")).unwrap();
+        let new = transfer::select_received(
+            target.path(),
+            &original.id,
+            ReceiveScope {
+                channel_ids: vec![id.clone()],
+                channel_mappings: BTreeMap::from([(
+                    id.clone(),
+                    ChannelMapping::New {
+                        label: "独立新渠道".into(),
+                    },
+                )]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(new.available_keys, vec![id.clone()]);
+        let target_id = new.channel_bindings[&id].target_id.clone();
+        let adopted = accept_with(
+            target.path(),
+            &new.id,
+            true,
+            Some("fixture-password"),
+            &keys,
+        )
+        .unwrap();
+        let channels = &adopted.workspace.as_ref().unwrap().policy.channels;
+        assert_eq!(
+            channels.iter().find(|c| c.id == id).unwrap().connection,
+            local.connection
+        );
+        let new_channel = channels.iter().find(|c| c.id == target_id).unwrap();
+        let new_ref = new_channel.connection.credential_ref.as_deref().unwrap();
+        assert_ne!(new_ref, local_ref);
+        assert_eq!(keys.read(new_ref).unwrap().as_str(), "fixture-source-key");
+        assert!(!new_channel.connection.enabled);
+        accept_with(
+            target.path(),
+            &new.id,
+            true,
+            Some("fixture-password"),
+            &keys,
+        )
+        .unwrap();
+        assert_eq!(*keys.writes.lock().unwrap(), 1);
+    }
+    #[test]
+    fn remote_endpoint_change_without_new_key_never_reuses_the_old_remote_credential() {
+        let source = tempfile::tempdir().unwrap();
+        let changed = tempfile::tempdir().unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        let reference = uuid::Uuid::new_v4().to_string();
+        fixture(source.path(), &id, &reference);
+        let mut next = fixture(changed.path(), &id, &reference);
+        next.connection.nodes[0].url = "https://new.example.test/v1".into();
+        let store = ModelStore::new(changed.path());
+        let snapshot = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &snapshot.library_digest,
+                &snapshot.policy_digest,
+                &snapshot.workspace_digest,
+                Policy {
+                    channels: vec![next],
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+        let keys = Memory::default();
+        keys.values
+            .lock()
+            .unwrap()
+            .insert(reference, "fixture-original-key".into());
+        let package = |root: &Path| {
+            transfer::export(
+                root,
+                transfer::ExportScope {
+                    include_policy: true,
+                    channel_ids: vec![id.clone()],
+                    template_refs: vec![],
+                    include_global: false,
+                },
+            )
+            .unwrap()
+        };
+        let remote = seal_with(
+            source.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            &package(source.path()),
+            true,
+            Some("fixture-password"),
+            &keys,
+        )
+        .unwrap()
+        .0;
+        let local = seal_with(
+            changed.path(),
+            &uuid::Uuid::new_v4().to_string(),
+            &package(changed.path()),
+            false,
+            None,
+            &keys,
+        )
+        .unwrap()
+        .0;
+        assert_eq!(
+            merge_remote(
+                &remote,
+                &local,
+                Some("fixture-password"),
+                &uuid::Uuid::new_v4().to_string()
+            )
+            .unwrap_err()
+            .code,
+            "channel_credential_binding"
+        );
+        let target = tempfile::tempdir().unwrap();
+        let incoming = receive(target.path(), &remote, Some("fixture-password")).unwrap();
+        let restored = accept_with(
+            target.path(),
+            &incoming.id,
+            true,
+            Some("fixture-password"),
+            &keys,
+        )
+        .unwrap();
+        let channel = &restored.workspace.as_ref().unwrap().policy.channels[0];
+        assert_eq!(
+            channel.connection.nodes[0].url,
+            "https://fixture.example.test/v1"
+        );
+        assert!(!channel.connection.enabled);
+        assert_eq!(
+            keys.read(channel.connection.credential_ref.as_deref().unwrap())
+                .unwrap()
+                .as_str(),
+            "fixture-original-key"
+        );
     }
     #[test]
     fn exported_keys_are_protected_and_explicit_adoption_only_creates_a_new_draft_reference() {
