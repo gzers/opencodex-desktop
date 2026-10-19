@@ -1,0 +1,40 @@
+{
+  "recordedAt": "2026-10-19T11:23:06.750484+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "4fc9ed99fa294109a4dbc81ab9c75167467aa0ed",
+  "sourceSha256": {
+    "apps/desktop/tauri/tests/provider_auth_native.rs": "c011baadaca5a8403d0dadd76c747c337519d19e5c0846c0d995ac3f6f308c7e"
+  },
+  "checks": [
+    {
+      "command": "OPENCODEX_SANDBOX=1 cargo test --test provider_auth_native -- --ignored --test-threads=1 --nocapture",
+      "session": 71617,
+      "result": "passed",
+      "passed": 1,
+      "testSeconds": 0.6,
+      "platform": "macos",
+      "backend": "keyring apple-native default (no mock credential builder)",
+      "observed": [
+        "two randomly named original provider reference accounts confirmed absent before write",
+        "actual source keychain values resolve into portable protected authorization",
+        "machine-key protected staging and runtime-root rebind read back",
+        "encrypted files contain no raw test key",
+        "deleting owned protector key refuses backup opening",
+        "all owned fixture accounts deleted and absent readback"
+      ],
+      "network": false,
+      "dailyCredentialsReadOrChanged": false,
+      "limitations": [
+        "not Windows credential manager",
+        "not real OAuth login portability or refresh",
+        "not complete native client loading"
+      ]
+    },
+    {
+      "command": "cargo clippy --all-targets --features integration-test -- -D warnings",
+      "session": 86774,
+      "result": "passed"
+    }
+  ]
+}

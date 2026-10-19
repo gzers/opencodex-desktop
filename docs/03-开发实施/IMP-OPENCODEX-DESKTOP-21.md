@@ -336,3 +336,10 @@ Keychain迁移保留官方原pool id、顺序、label及addedAt，校验引用�
 受影响交互13项、菜单/模型/Modal/登记27项通过。全量122文件624断言首次虽全部绿色但有2条测试结束后异步加载错误，未当通过；定位到旧sync-conflict-default仅测试只读冲突策略却保留App及无关异步资源。该测试明确stub无关迁移组件并自动卸载，复核后全量122文件624项通过且无未处理异步异常。两条jsdom Canvas未实现提示仍不代表真实WebGL；最后发现/检测阻断分离后节点4项及生产构建通过，DEV样例/目录未进入dist。
 
 后续继续真实消费者滚动/缩放/键盘与原生平台、账户/历史方向及发布；本版未发布，registry完整矩阵状态仍保持待验。证据checks-nodes-modal-matrix-20261019.json绑定本批源码。
+
+
+### macOS原生系统凭据保护现场
+
+新增独立opt-in provider_auth_native集成测试，只有显式OPENCODEX_SANDBOX=1准入；不安装内存credential builder，使用本机构建的keyring apple-native。源引用账户使用随机provider完整UUID前缀，写入前精确NoEntry才允许创建；机器保护键只使用OpenCodex Desktop Sandbox服务，文件/运行上下文在临时根。保留测试条目清理guard，按本次暂存包UUID枚举自己创建的保护键，结束逐条删除并核对NoEntry，未读取或修改日常账户。
+
+本机macOS实测0.60秒通过：两条源Keychain引用解析、完整便携授权、机器密钥加密暂存及运行根绑定、密文无原Key、保护键缺失拒绝恢复，以及全部自有测试账户清理；不发网络。Clippy全目标通过，证据checks-native-keychain-20261019.json绑定源码。此前内存Keyring测试的边界仍保留，本次仅补macOS系统存储现场；不证明Windows凭据管理器、真实OAuth免登录迁移/刷新或实际Codex加载。
