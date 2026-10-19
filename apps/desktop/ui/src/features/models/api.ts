@@ -117,6 +117,16 @@ export function errorText(error: unknown): string {
   if (typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string') return error.message
   return typeof error === 'string' ? error : '操作未完成，请重新读取并核对。'
 }
+export function savePlanErrorText(code:string|null|undefined):string {
+  if(!code)return ''
+  if(code==='catalog_write')return '模型目录刷新结果尚未确认，请核对原计划。'
+  if(code==='catalog_readback'||code==='catalog_projection')return '模型目录与确认内容不同，请核对原计划和当前模型范围。'
+  if(code.includes('drift')||code.startsWith('stale_'))return '检测到后来的配置修改，已停止继续写入；请核对原计划。'
+  if(code.startsWith('credential_')||code.startsWith('provider_auth_'))return '渠道认证配置未完成核对，请检查系统凭据与原保存计划。'
+  if(code==='provider_readback'||code==='registration_readback'||code==='history_readback')return '渠道配置读回与确认内容不同，请核对原计划。'
+  if(code==='upstream_write_unknown'||code==='management_unknown')return '官方接口结果尚未确认，可能已有部分写入；请核对原计划。'
+  return '本次保存未完成，请核对原计划；已保留执行记录。'
+}
 export function versionLabel(revision: Revision, baseline = false): string {
   const date = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(new Date(revision.createdAt))
   return `${date} · ${revision.id.slice(0, 4).toUpperCase()}${baseline ? ' · 内置基线' : ''}`

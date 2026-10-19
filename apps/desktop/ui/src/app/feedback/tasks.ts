@@ -20,7 +20,7 @@ export const useOperationTasks = defineStore('operation-tasks', {
       const value = payload as Record<string,unknown>
       if (Object.keys(value).some(key => !['id','kind','phase'].includes(key)) || typeof value.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value.id) || typeof value.kind !== 'string' || !Object.hasOwn(operationTitles,value.kind) || typeof value.phase !== 'string' || !Object.hasOwn(operationPhases,value.phase)) return
       const previous = this.tasks.find(t => t.id === value.id)
-      if (previous) { if (previous.kind !== value.kind || previous.phase !== 'running') return; previous.phase = value.phase as ModelOperationPhase }
+      if (previous) { if(previous.kind!==value.kind)return; if(previous.kind==='policy_save'&&value.phase==='running'){previous.phase='running';previous.collapsed=false;return} if(previous.phase!=='running')return;previous.phase=value.phase as ModelOperationPhase }
       else this.tasks.push({ id:value.id,kind:value.kind as ModelOperationKind,phase:value.phase as ModelOperationPhase,collapsed:false })
       while (this.tasks.length > 24) { const index=this.tasks.findIndex(t => t.phase !== 'running'); if(index < 0) break;this.tasks.splice(index,1) }
     },

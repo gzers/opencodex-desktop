@@ -8,6 +8,12 @@ describe('registered model task observations', () => {
     tasks.apply({id,kind:'unknown',phase:'running'});tasks.apply({id,kind:'generation',phase:'running',prompt:'private'})
     expect(tasks.tasks).toHaveLength(0)
   })
+  it('reuses the same policy plan task when readback resolves a prior failure',()=>{
+    const tasks=useOperationTasks();const id=crypto.randomUUID()
+    tasks.apply({id,kind:'policy_save',phase:'running'});tasks.apply({id,kind:'policy_save',phase:'failed'});tasks.collapse(id)
+    tasks.apply({id,kind:'policy_save',phase:'running'});expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]).toMatchObject({phase:'running',collapsed:false})
+    tasks.apply({id,kind:'policy_save',phase:'review'});expect(tasks.tasks).toHaveLength(1);expect(tasks.tasks[0]!.phase).toBe('review')
+  })
   it('keeps concurrent tasks separate and collapse does not cancel or lose terminal facts', () => {
     const tasks=useOperationTasks();const a=crypto.randomUUID();const b=crypto.randomUUID()
     tasks.apply({id:a,kind:'generation',phase:'running'});tasks.apply({id:b,kind:'external_submit',phase:'running'})

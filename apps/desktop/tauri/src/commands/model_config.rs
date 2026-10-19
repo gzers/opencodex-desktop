@@ -214,10 +214,10 @@ async fn observe_policy(
     >,
 ) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
     use crate::modules::model_config::feedback::{self, OperationKind, OperationPhase};
-    let observation = uuid::Uuid::new_v4().to_string();
+    let observation = id;
     feedback::progress(
         root,
-        &observation,
+        observation,
         OperationKind::PolicySave,
         OperationPhase::Running,
     );
@@ -232,7 +232,7 @@ async fn observe_policy(
     } else {
         OperationPhase::Failed
     };
-    feedback::progress(root, &observation, OperationKind::PolicySave, phase);
+    feedback::progress(root, observation, OperationKind::PolicySave, phase);
     if crate::modules::model_config::runtime::query(root, id)
         .is_ok_and(|plan| plan.phase != "prepared")
     {
