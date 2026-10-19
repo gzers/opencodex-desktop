@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 import AppSidebar from '@/components/AppSidebar.vue'
+import {useShellLayout} from '@/components/layout/useShellLayout'
 import { useAppController } from '@/composables/useAppController'
 import TrayRoute from '@/routes/TrayRoute.vue'
 import AppModal from '@/components/AppModal.vue'
@@ -12,6 +13,7 @@ import TaskProgressHost from '@/components/TaskProgressHost.vue'
 import NotificationCenter from '@/features/notifications/components/NotificationCenter.vue'
 import { useNotificationsStore } from '@/features/notifications/store'
 
+const compactShell=useShellLayout()
 const app = useAppStore()
 const routes = useRouteStore()
 const notifications = useNotificationsStore()
@@ -36,7 +38,7 @@ const component = computed(() => routes.current === 'tray' ? undefined : routes.
 </script>
 
 <template>
-  <div class="app-window" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS, 'is-windows': isWindows }">
+  <div class="app-window" :data-compact="compactShell?'true':undefined" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS, 'is-windows': isWindows }">
     <div v-if="app.uiFault" class="ui-fault-modal" role="alertdialog" aria-modal="true" aria-label="界面出现异常">
       <div class="ui-fault-mask" @click="app.clearUiFault()"></div>
       <div class="ui-fault">
