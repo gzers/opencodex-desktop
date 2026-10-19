@@ -56,6 +56,8 @@ pub struct OwnedField {
     model: String,
     original: Option<Value>,
     written: Value,
+    #[serde(default)]
+    removed: bool,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -443,7 +445,11 @@ fn compile_owned(
             .any(|c| c.connection.provider_id == field.provider)
         {
             if next["providers"][&field.provider][&field.key].get(&field.model)
-                != Some(&field.written)
+                != if field.removed {
+                    None
+                } else {
+                    Some(&field.written)
+                }
             {
                 return Err(invalid(
                     "field_drift",
@@ -511,8 +517,38 @@ fn compile_owned(
         let provider = next["providers"]
             .get_mut(provider_id)
             .ok_or_else(|| invalid("provider", "渠道绑定不存在"))?;
+        if prior.is_some_and(|p| {
+            p["authMode"]
+                .as_str()
+                .is_some_and(|mode| ["oauth", "forward"].contains(&mode))
+        }) && (provider["baseUrl"] != json!(node.url)
+            || provider["adapter"] != json!(channel.connection.protocol))
+        {
+            return Err(invalid(
+                "provider_auth_boundary",
+                "OAuth或转发认证的服务/协议不能作为普通Key渠道迁移，请保持官方绑定",
+            ));
+        }
         provider["baseUrl"] = json!(node.url);
         provider["adapter"] = json!(channel.connection.protocol);
+        for model in &channel.discovered {
+            if model.label.is_empty() || model.label == model.id {
+                if let Some(names) = provider
+                    .get_mut("modelDisplayNames")
+                    .and_then(Value::as_object_mut)
+                {
+                    names.remove(&model.id);
+                    if names.is_empty() {
+                        provider
+                            .as_object_mut()
+                            .unwrap()
+                            .remove("modelDisplayNames");
+                    }
+                }
+            } else {
+                set_map(provider, "modelDisplayNames", &model.id, json!(model.label))?;
+            }
+        }
         let mut declared = provider["models"].as_array().cloned().unwrap_or_default();
         for model in &channel.discovered {
             if !declared.iter().any(|id| id.as_str() == Some(&model.id)) {
@@ -1389,6 +1425,7 @@ fn next_ownership(
     for channel in &policy.channels {
         let provider = &channel.connection.provider_id;
         for key in [
+            "modelDisplayNames",
             "modelAdapters",
             "modelContextWindows",
             "modelInputModalities",
@@ -1413,15 +1450,14 @@ fn next_ownership(
                     .map(|f| f.original.clone())
                     .unwrap_or_else(|| a.cloned());
                 if b != original.as_ref() {
-                    if let Some(written) = b {
-                        result.push(OwnedField {
-                            provider: provider.clone(),
-                            key: key.into(),
-                            model: model.clone(),
-                            original,
-                            written: written.clone(),
-                        });
-                    }
+                    result.push(OwnedField {
+                        provider: provider.clone(),
+                        key: key.into(),
+                        model: model.clone(),
+                        original,
+                        written: b.cloned().unwrap_or(Value::Null),
+                        removed: b.is_none(),
+                    });
                 }
             }
         }
@@ -1612,6 +1648,76 @@ pub async fn compensate(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn display_names_use_official_display_field_preserve_routing_aliases_and_track_explicit_removal(
+    ) {
+        let (mut snapshot, mut policy) = fixture();
+        snapshot.providers["providers"]["test"]["modelAliases"] = json!({"b":"route-b"});
+        snapshot.providers["providers"]["test"]["modelDisplayNames"] = json!({"b":"原显示名"});
+        let original = snapshot.providers.clone();
+        policy.channels[0]
+            .discovered
+            .iter_mut()
+            .find(|m| m.id == "b")
+            .unwrap()
+            .label = "".into();
+        let (next, _, _) =
+            compile(&snapshot, &super::super::store::seed_library(), &policy).unwrap();
+        assert_eq!(
+            next["providers"]["test"]["modelAliases"],
+            original["providers"]["test"]["modelAliases"]
+        );
+        assert!(next["providers"]["test"]["modelDisplayNames"]
+            .get("b")
+            .is_none());
+        let ownership = next_ownership(&snapshot.providers, &next, &[], &policy).unwrap();
+        assert!(ownership
+            .iter()
+            .any(|f| f.key == "modelDisplayNames" && f.model == "b" && f.removed));
+        snapshot.providers = next.clone();
+        compile_owned(
+            &snapshot,
+            &super::super::store::seed_library(),
+            &policy,
+            &ownership,
+        )
+        .unwrap();
+        snapshot.providers["providers"]["test"]["modelDisplayNames"]["b"] = json!("外部后来修改");
+        assert_eq!(
+            compile_owned(
+                &snapshot,
+                &super::super::store::seed_library(),
+                &policy,
+                &ownership
+            )
+            .unwrap_err()
+            .code,
+            "field_drift"
+        );
+        policy.channels[0].discovered[0].label = "invalid/label".into();
+        assert_eq!(
+            compile(&snapshot, &super::super::store::seed_library(), &policy)
+                .unwrap_err()
+                .code,
+            "model_label"
+        );
+    }
+    #[test]
+    fn oauth_or_forward_binding_cannot_be_retargeted_to_a_new_service() {
+        let (mut snapshot, mut policy) = fixture();
+        snapshot.providers["providers"]["test"]["authMode"] = json!("oauth");
+        policy.channels[0].connection.nodes[0].url = "https://different.example.test/v1".into();
+        assert_eq!(
+            compile(&snapshot, &super::super::store::seed_library(), &policy)
+                .unwrap_err()
+                .code,
+            "provider_auth_boundary"
+        );
+        assert_eq!(
+            snapshot.providers["providers"]["test"]["baseUrl"],
+            "https://example.test/v1"
+        );
+    }
     use super::*;
     #[test]
     fn credential_compensation_accepts_its_known_intermediate_but_refuses_new_keys_or_selection() {
@@ -1755,6 +1861,7 @@ mod tests {
             model: "b".into(),
             original: Some(json!(4000)),
             written: json!(8000),
+            removed: false,
         }];
         let (next, _, _) = compile_owned(
             &snapshot,

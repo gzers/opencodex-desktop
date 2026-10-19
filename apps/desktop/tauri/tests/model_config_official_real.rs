@@ -214,7 +214,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert_eq!(discovered.models.len(), 2);
     let node_id = uuid::Uuid::new_v4().to_string();
     let channel_id = uuid::Uuid::new_v4().to_string();
-    let policy = Policy {
+    let mut policy = Policy {
         schema_version: SCHEMA_VERSION,
         template_refs: vec![],
         channels: vec![ChannelPolicy {
@@ -252,6 +252,14 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             family_overrides: BTreeMap::new(),
         }],
     };
+    for model in &mut policy.channels[0].discovered {
+        model.label = if model.id == "fixture-base" {
+            "基础型号"
+        } else {
+            "协议型号"
+        }
+        .into();
+    }
     let store = model_config::ModelStore::new(&manager);
     let local = store.load().unwrap();
     let staged = store
@@ -303,6 +311,30 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     assert!(order
         .iter()
         .any(|slug| slug.as_str() == Some(&format!("{mapped}/fixture-anthropic"))));
+    assert_eq!(
+        after.providers["providers"]["fixture"]["modelDisplayNames"]["fixture-base"],
+        "基础型号"
+    );
+    assert_eq!(
+        after.providers["providers"][mapped]["modelDisplayNames"]["fixture-anthropic"],
+        "协议型号"
+    );
+    let client = model_config::client_state::check(
+        &manager,
+        &context,
+        model_config::client_state::Request {
+            plan_id: plan.id.clone(),
+            confirmation_check: None,
+        },
+    )
+    .await
+    .unwrap();
+    assert!(client.runtime_matches);
+    assert!(matches!(
+        client.status,
+        model_config::client_state::Status::PendingVerification
+    ));
+    assert!(!client.automatic_client_verification);
     let stable_group = plan.protocol_groups[0].clone();
     let mut hidden_policy = policy.clone();
     hidden_policy.channels[0].selection = ModelSelection::None;
@@ -336,6 +368,13 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         0
     );
     let mut restored_policy = policy;
+    restored_policy.channels[0]
+        .discovered
+        .iter_mut()
+        .find(|m| m.id == "fixture-base")
+        .unwrap()
+        .label
+        .clear();
     restored_policy.channels[0].selection = ModelSelection::Whitelist(vec!["fixture-base".into()]);
     let current = store.load().unwrap();
     let staged = store
@@ -364,6 +403,12 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         restored.phase, "committed",
         "restore result {:?}",
         restored.error
+    );
+    let restored_snapshot = upstream::snapshot(&context).await.unwrap();
+    assert!(
+        restored_snapshot.providers["providers"]["fixture"]["modelDisplayNames"]
+            .get("fixture-base")
+            .is_none()
     );
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),

@@ -17,7 +17,7 @@ export function mergeUpstream(snapshot: UpstreamSnapshot, existing: ChannelPolic
       if (Array.isArray(row.reasoningEfforts)) rules.reasoningEfforts = { mode: 'custom', value: strings(row.reasoningEfforts) }
       if (typeof row.defaultReasoningEffort === 'string') rules.defaultEffort = { mode: 'custom', value: row.defaultReasoningEffort }
       if (typeof row.fastRowAvailable === 'boolean') rules.fast = { mode: 'custom', value: row.fastRowAvailable }
-      return { id: String(row.id), label: typeof row.displayName === 'string' ? row.displayName : String(row.id), rules }
+      return { id: String(row.id), label: record(raw.modelDisplayNames)&&typeof raw.modelDisplayNames[String(row.id)]==='string'?String(raw.modelDisplayNames[String(row.id)]):typeof row.displayName === 'string' ? row.displayName : String(row.id), rules }
     })
     if (old) { result.push({ ...old, discovered }); continue }
     const node = { id: crypto.randomUUID(), name: '当前节点', url: raw.baseUrl }

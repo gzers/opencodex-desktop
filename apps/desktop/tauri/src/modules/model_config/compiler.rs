@@ -109,6 +109,18 @@ pub fn validate_channel(channel: &ChannelPolicy) -> ModelResult<()> {
             return Err(invalid("models", "发现清单包含空或重复模型"));
         }
         model.rules.validate()?;
+        if model.label != model.id
+            && !model.label.is_empty()
+            && (model.label.trim() != model.label
+                || model.label.chars().count() > 128
+                || model.label.contains('/')
+                || model.label.chars().any(char::is_control))
+        {
+            return Err(invalid(
+                "model_label",
+                "模型显示名称须为128字符以内、不含斜线或控制字符的文本；留空使用原模型ID",
+            ));
+        }
     }
     channel.defaults.validate()?;
     for rules in channel

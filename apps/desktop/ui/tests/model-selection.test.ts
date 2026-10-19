@@ -7,6 +7,10 @@ const row = (id: string): ModelProjection => ({ channelId: 'channel', providerId
 const menu = { props: ['open'], template: '<div v-if="open"><slot/></div>' }
 const dialog = { template: '<div><slot/><slot name="actions"/></div>' }
 describe('public model selection', () => {
+  it('uses the public display-name field while leaving the exact native model id intact',()=>{
+    const result=mergeUpstream({version:'2.84.0',providers:{providers:{test:{adapter:'openai-chat',baseUrl:'https://example.test/v1',modelDisplayNames:{'native/id':'我的显示名'},modelAliases:{'native/id':'routing-alias'}}}},models:[{provider:'test',id:'native/id',displayName:'上游名称'}],order:{}},[])
+    expect(result[0]!.discovered[0]).toMatchObject({id:'native/id',label:'我的显示名'})
+  })
   it('keeps effort and Fast changes pending until the main confirmation', async () => {
     const wrapper = mount(ModelPicker, { props: { open: false, rows: [row('model-a')], channels: [{ id: 'channel', label: '测试渠道' }], reasoning: true }, global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } } })
     await wrapper.setProps({ open: true })
