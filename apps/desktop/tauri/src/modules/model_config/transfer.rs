@@ -15,6 +15,8 @@ pub struct PortableChannel {
     pub label: String,
     pub protocol: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model_subset: Option<Vec<String>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub connection: Option<PortableConnection>,
     pub selection: ModelSelection,
     pub model_order: Vec<String>,
@@ -64,12 +66,9 @@ pub(super) fn same_destination(left: &PortableChannel, right: &PortableChannel) 
     }
 }
 fn package_version(payload: &TransferPayload) -> u32 {
-    if payload
-        .policy
-        .iter()
-        .flat_map(|p| &p.channels)
-        .any(|c| c.connection.as_ref().is_some_and(|v| v.provider.is_some()))
-    {
+    if payload.policy.iter().flat_map(|p| &p.channels).any(|c| {
+        c.model_subset.is_some() || c.connection.as_ref().is_some_and(|v| v.provider.is_some())
+    }) {
         return 3;
     }
     if payload.policy.as_ref().is_some_and(|p| {
@@ -108,6 +107,8 @@ pub struct ModelPackage {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ExportScope {
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub channel_models: BTreeMap<String, Vec<String>>,
     pub include_policy: bool,
     pub channel_ids: Vec<String>,
     pub template_refs: Vec<TemplateRef>,
@@ -116,6 +117,8 @@ pub struct ExportScope {
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ReceiveScope {
+    #[serde(default)]
+    pub channel_models: BTreeMap<String, Vec<String>>,
     pub template_refs: Vec<TemplateRef>,
     pub channel_ids: Vec<String>,
     pub include_global: bool,
@@ -345,6 +348,7 @@ pub(super) fn portable(channel: &ChannelPolicy) -> PortableChannel {
         id: channel.id.clone(),
         label: channel.label.clone(),
         protocol: channel.connection.protocol.clone(),
+        model_subset: None,
         connection: portable_connection(channel),
         selection: channel.selection.clone(),
         model_order: channel.model_order.clone(),
@@ -356,6 +360,123 @@ pub(super) fn portable(channel: &ChannelPolicy) -> PortableChannel {
         family_overrides: channel.family_overrides.clone(),
     }
 }
+pub(super) fn restrict_models(
+    channel: &PortableChannel,
+    ids: &[String],
+) -> ModelResult<PortableChannel> {
+    let available = channel
+        .discovered
+        .iter()
+        .map(|m| m.id.as_str())
+        .chain(channel.model_order.iter().map(String::as_str))
+        .chain(channel.model_refs.keys().map(String::as_str))
+        .chain(
+            channel
+                .connection
+                .iter()
+                .flat_map(|c| c.provider.iter())
+                .flat_map(|p| p["models"].as_array().into_iter().flatten())
+                .filter_map(serde_json::Value::as_str),
+        )
+        .collect::<BTreeSet<_>>();
+    let wanted = ids.iter().collect::<BTreeSet<_>>();
+    if ids.len() > 10000
+        || wanted.len() != ids.len()
+        || ids
+            .iter()
+            .any(|id| !available.contains(id.as_str()) || id.is_empty())
+    {
+        return Err(invalid(
+            "model_scope",
+            "所选型号不属于源渠道或存在重复，请重新比较",
+        ));
+    }
+    let mut result = channel.clone();
+    let mut stable = ids.to_vec();
+    stable.sort();
+    result.model_subset = Some(stable.clone());
+    result.discovered.retain(|m| wanted.contains(&m.id));
+    result.model_order.retain(|id| wanted.contains(id));
+    result.model_refs.retain(|id, _| wanted.contains(id));
+    result.overrides.retain(|id, _| wanted.contains(id));
+    let selected = match &channel.selection {
+        ModelSelection::All => stable.clone(),
+        ModelSelection::None => vec![],
+        ModelSelection::Whitelist(values) => values
+            .iter()
+            .filter(|id| wanted.contains(id))
+            .cloned()
+            .collect(),
+    };
+    result.selection = if selected.is_empty() {
+        ModelSelection::None
+    } else {
+        ModelSelection::Whitelist(selected)
+    };
+    if let Some(public) = result.connection.as_mut().and_then(|c| c.provider.as_mut()) {
+        let fields = public
+            .as_object_mut()
+            .ok_or_else(|| invalid("model_scope", "原渠道字段无效"))?;
+        for (key, value) in fields.iter_mut() {
+            if key.starts_with("model") && value.is_object() {
+                value
+                    .as_object_mut()
+                    .unwrap()
+                    .retain(|id, _| wanted.contains(id));
+            }
+        }
+        fields.insert("models".into(), serde_json::json!(stable));
+        fields.insert("newModelPolicy".into(), serde_json::json!("off"));
+        fields.insert(
+            "selectedModels".into(),
+            serde_json::json!(match &result.selection {
+                ModelSelection::Whitelist(v) => v.clone(),
+                _ => vec![],
+            }),
+        );
+        if fields
+            .get("defaultModel")
+            .and_then(serde_json::Value::as_str)
+            .is_some_and(|id| !ids.iter().any(|v| v == id))
+        {
+            fields.remove("defaultModel");
+        }
+    }
+    Ok(result)
+}
+pub(super) fn is_scoped_channel(
+    source: &PortableChannel,
+    selected: &PortableChannel,
+) -> ModelResult<bool> {
+    let expected = if let Some(ids) = &selected.model_subset {
+        restrict_models(source, ids)?
+    } else {
+        source.clone()
+    };
+    Ok(serde_json::to_value(expected)? == serde_json::to_value(selected)?)
+}
+pub(super) fn scope_models(
+    package: &mut ModelPackage,
+    selected: &[String],
+    scopes: &BTreeMap<String, Vec<String>>,
+) -> ModelResult<()> {
+    if scopes.keys().any(|id| !selected.contains(id)) {
+        return Err(invalid("model_scope", "不能限定未选择的渠道型号"));
+    }
+    for channel in package
+        .payload
+        .policy
+        .iter_mut()
+        .flat_map(|p| &mut p.channels)
+    {
+        if let Some(ids) = scopes.get(&channel.id) {
+            *channel = restrict_models(channel, ids)?;
+        }
+    }
+    package.format_version = package_version(&package.payload);
+    package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    Ok(())
+}
 pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
     let snapshot = ModelStore::new(root).load()?;
     let mut wanted: BTreeSet<(String, String)> = scope
@@ -363,7 +484,7 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
         .iter()
         .map(|r| (r.template_id.clone(), r.revision_id.clone()))
         .collect();
-    let policy = if scope.include_policy {
+    let mut policy = if scope.include_policy {
         let channels = snapshot
             .policy
             .channels
@@ -399,6 +520,18 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
     } else {
         None
     };
+    if scope
+        .channel_models
+        .keys()
+        .any(|id| !scope.channel_ids.contains(id))
+    {
+        return Err(invalid("model_scope", "不能限定未选择的渠道型号"));
+    }
+    for channel in policy.iter_mut().flat_map(|p| &mut p.channels) {
+        if let Some(ids) = scope.channel_models.get(&channel.id) {
+            *channel = restrict_models(channel, ids)?;
+        }
+    }
     if let Some(policy) = &policy {
         for reference in revision_refs(policy) {
             wanted.insert((reference.template_id.clone(), reference.revision_id.clone()));
@@ -508,6 +641,12 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                 || channel.protocol.len() > 128
             {
                 return Err(invalid("channel", "包内渠道身份重复"));
+            }
+            if let Some(ids) = &channel.model_subset {
+                let canonical = restrict_models(channel, ids)?;
+                if serde_json::to_value(&canonical)? != serde_json::to_value(channel)? {
+                    return Err(invalid("model_scope", "型号子集含未选声明或字段，未接收"));
+                }
             }
             if let Some(connection) = &channel.connection {
                 if let Some(provider) = &connection.provider {
@@ -691,9 +830,8 @@ fn merge(
             let committed = local.policy.channels.iter().find(|c| c.id == channel.id);
             let working = policy.channels.iter().find(|c| c.id == channel.id);
             if working != committed
-                && working.is_some_and(|c| {
-                    serde_json::to_value(portable(c)).ok() != serde_json::to_value(channel).ok()
-                })
+                && working
+                    .is_some_and(|c| !is_scoped_channel(&portable(c), channel).unwrap_or(false))
             {
                 return Err(invalid(
                     "draft_conflict",
@@ -736,7 +874,7 @@ fn merge(
                     channel.label
                 ));
             }
-            let next = ChannelPolicy {
+            let mut next = ChannelPolicy {
                 id: channel.id.clone(),
                 label: channel.label.clone(),
                 connection,
@@ -749,6 +887,35 @@ fn merge(
                 overrides: channel.overrides.clone(),
                 family_overrides: channel.family_overrides.clone(),
             };
+            if let (Some(ids), Some(previous)) = (&channel.model_subset, working.or(committed)) {
+                let mut kept = previous.clone();
+                for id in ids {
+                    kept.discovered.retain(|m| &m.id != id);
+                    kept.discovered
+                        .extend(channel.discovered.iter().filter(|m| &m.id == id).cloned());
+                    match channel.model_refs.get(id) {
+                        Some(value) => {
+                            kept.model_refs.insert(id.clone(), value.clone());
+                        }
+                        None => {
+                            kept.model_refs.remove(id);
+                        }
+                    }
+                    match channel.overrides.get(id) {
+                        Some(value) => {
+                            kept.overrides.insert(id.clone(), value.clone());
+                        }
+                        None => {
+                            kept.overrides.remove(id);
+                        }
+                    }
+                    if !kept.model_order.contains(id) {
+                        kept.model_order.push(id.clone());
+                    }
+                }
+                notices.push(format!("{}：仅接收所选型号的声明、明确覆盖和版本引用；本机渠道共用设置、公开范围、排序及其他型号保持",channel.label));
+                next = kept;
+            }
             if let Some(index) = policy.channels.iter().position(|c| c.id == channel.id) {
                 policy.channels[index] = next;
             } else {
@@ -798,6 +965,104 @@ fn merge(
 }
 /// Partial uploads preserve every unrelated remote object. The caller still
 /// freezes the remote ETag and publishes with a conditional pointer update.
+fn merge_model_subset(
+    previous: &PortableChannel,
+    incoming: &PortableChannel,
+) -> ModelResult<PortableChannel> {
+    let Some(ids) = &incoming.model_subset else {
+        return Ok(incoming.clone());
+    };
+    if !same_destination(previous, incoming) {
+        return Err(invalid(
+            "model_scope_direction",
+            "型号子集不能改变远端已有渠道的共用连接，请先明确完整渠道方向",
+        ));
+    }
+    let mut result = previous.clone();
+    for id in ids {
+        result.discovered.retain(|m| &m.id != id);
+        result
+            .discovered
+            .extend(incoming.discovered.iter().filter(|m| &m.id == id).cloned());
+        match incoming.model_refs.get(id) {
+            Some(v) => {
+                result.model_refs.insert(id.clone(), v.clone());
+            }
+            None => {
+                result.model_refs.remove(id);
+            }
+        }
+        match incoming.overrides.get(id) {
+            Some(v) => {
+                result.overrides.insert(id.clone(), v.clone());
+            }
+            None => {
+                result.overrides.remove(id);
+            }
+        }
+        if !result.model_order.contains(id) {
+            result.model_order.push(id.clone());
+        }
+    }
+    if let Some(old) = &mut result.model_subset {
+        old.extend(ids.clone());
+        old.sort();
+        old.dedup();
+    }
+    if let (Some(target), Some(source)) = (
+        result.connection.as_mut().and_then(|c| c.provider.as_mut()),
+        incoming
+            .connection
+            .as_ref()
+            .and_then(|c| c.provider.as_ref()),
+    ) {
+        let keys = target
+            .as_object()
+            .unwrap()
+            .keys()
+            .chain(source.as_object().unwrap().keys())
+            .filter(|k| {
+                k.starts_with("model")
+                    && (target.get(*k).is_some_and(serde_json::Value::is_object)
+                        || source.get(*k).is_some_and(serde_json::Value::is_object))
+            })
+            .cloned()
+            .collect::<BTreeSet<_>>();
+        for key in keys {
+            let map = target
+                .as_object_mut()
+                .unwrap()
+                .entry(key.clone())
+                .or_insert_with(|| serde_json::json!({}))
+                .as_object_mut()
+                .ok_or_else(|| invalid("model_scope", "远端型号覆盖字段不是映射"))?;
+            for id in ids {
+                map.remove(id);
+                if let Some(value) = source[&key].get(id) {
+                    map.insert(id.clone(), value.clone());
+                }
+            }
+            if map.is_empty() {
+                target.as_object_mut().unwrap().remove(&key);
+            }
+        }
+        let declared = target
+            .as_object_mut()
+            .unwrap()
+            .entry("models")
+            .or_insert_with(|| serde_json::json!([]))
+            .as_array_mut()
+            .ok_or_else(|| invalid("model_scope", "远端型号声明不是列表"))?;
+        // A declared raw ID may not have a discovery observation yet. The
+        // explicit mask, rather than discovery, owns this migration scope.
+        for id in ids {
+            if !declared.iter().any(|v| v == id) {
+                declared.push(serde_json::json!(id));
+            }
+        }
+    }
+    Ok(result)
+}
 pub(super) fn merge_packages(
     remote: ModelPackage,
     local: ModelPackage,
@@ -836,7 +1101,8 @@ pub(super) fn merge_packages(
             }
             for channel in incoming.channels {
                 if let Some(index) = existing.channels.iter().position(|c| c.id == channel.id) {
-                    existing.channels[index] = channel;
+                    existing.channels[index] =
+                        merge_model_subset(&existing.channels[index], &channel)?;
                 } else {
                     existing.channels.push(channel);
                 }
@@ -870,10 +1136,30 @@ pub fn receive(root: &Path, package: ModelPackage) -> ModelResult<IncomingPlan> 
 fn receive_bound(
     root: &Path,
     package: ModelPackage,
-    bindings: BTreeMap<String, ChannelBinding>,
+    mut bindings: BTreeMap<String, ChannelBinding>,
 ) -> ModelResult<IncomingPlan> {
     validate_package(&package)?;
     let local = ModelStore::new(root).load()?;
+    let policy = local
+        .workspace
+        .as_ref()
+        .map(|w| &w.policy)
+        .unwrap_or(&local.policy);
+    for channel in package.payload.policy.iter().flat_map(|p| &p.channels) {
+        if channel.model_subset.is_some()
+            && !bindings.contains_key(&channel.id)
+            && policy.channels.iter().any(|c| c.id == channel.id)
+        {
+            bindings.insert(
+                channel.id.clone(),
+                ChannelBinding {
+                    target_id: channel.id.clone(),
+                    keep_local_connection: true,
+                    label: None,
+                },
+            );
+        }
+    }
     let effective = mapped_package(&local, &package, &bindings)?;
     let (merged_library, merged_policy, mut notices, preview_error) =
         match merge(&local, &effective) {
@@ -1103,6 +1389,18 @@ pub fn select_received_context(
             policy.template_refs = None;
             policy.channel_order = None;
             policy.default_channel_id = None;
+        }
+        if scope
+            .channel_models
+            .keys()
+            .any(|id| !scope.channel_ids.contains(id))
+        {
+            return Err(invalid("model_scope", "不能限定未选择的接收渠道"));
+        }
+        for channel in &mut policy.channels {
+            if let Some(ids) = scope.channel_models.get(&channel.id) {
+                *channel = restrict_models(channel, ids)?;
+            }
         }
         for reference in revision_refs(policy) {
             wanted.insert((reference.template_id.clone(), reference.revision_id.clone()));
@@ -1724,6 +2022,7 @@ mod tests {
         export(
             root,
             ExportScope {
+                channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.into()],
                 template_refs: vec![],
@@ -1848,8 +2147,155 @@ mod tests {
             })
             .unwrap()
     }
+    #[test]
+    fn model_subset_filters_declared_ids_overrides_and_keeps_other_local_models_on_acceptance() {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let mut policy = Policy::default();
+        let id = uuid::Uuid::new_v4().to_string();
+        let node = uuid::Uuid::new_v4().to_string();
+        let mut channel = ChannelPolicy {
+            id: id.clone(),
+            label: "source".into(),
+            template_refs: vec![],
+            model_refs: BTreeMap::new(),
+            connection: ChannelConnection {
+                provider_id: "p".into(),
+                protocol: "openai-chat".into(),
+                nodes: vec![ServiceNode {
+                    id: node.clone(),
+                    name: "primary".into(),
+                    url: "https://source.example.test".into(),
+                }],
+                active_node_id: node,
+                ..Default::default()
+            },
+            selection: ModelSelection::All,
+            model_order: vec!["a".into(), "b".into()],
+            discovered: vec![
+                DiscoveredModel {
+                    id: "a".into(),
+                    label: "a source".into(),
+                    rules: ModelRules::default(),
+                },
+                DiscoveredModel {
+                    id: "b".into(),
+                    label: "b source".into(),
+                    rules: ModelRules::default(),
+                },
+            ],
+            defaults: ModelRules::default(),
+            overrides: BTreeMap::new(),
+            family_overrides: BTreeMap::new(),
+        };
+        let rule = ModelRules {
+            fast: Field::Custom(false),
+            ..Default::default()
+        };
+        channel.overrides.insert("a".into(), rule.clone());
+        channel.overrides.insert("b".into(), rule);
+        policy.channels.push(channel.clone());
+        let store = ModelStore::new(source.path());
+        let v = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &v.library_digest,
+                &v.policy_digest,
+                &v.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let mut scope = ExportScope {
+            channel_models: BTreeMap::from([(id.clone(), vec!["a".into()])]),
+            include_policy: true,
+            channel_ids: vec![id.clone()],
+            template_refs: vec![],
+            include_global: false,
+        };
+        let package = export(source.path(), scope.clone()).unwrap();
+        assert_eq!(package.format_version, 3);
+        let selected = &package.payload.policy.as_ref().unwrap().channels[0];
+        assert_eq!(selected.model_subset, Some(vec!["a".into()]));
+        assert_eq!(selected.discovered.len(), 1);
+        assert!(!selected.overrides.contains_key("b"));
+        let mut public = portable(&channel);
+        public.connection.as_mut().unwrap().provider = Some(
+            serde_json::json!({"adapter":"openai-chat","baseUrl":"https://source.example.test","models":["a","b"],"modelDisplayNames":{"a":"A","b":"B"},"modelAliases":{"a":"alias-a","b":"alias-b"},"modelReasoningEfforts":{"a":["low"],"b":["high"]},"note":"shared"}),
+        );
+        let narrowed = restrict_models(&public, &["a".into()]).unwrap();
+        let fields = narrowed
+            .connection
+            .as_ref()
+            .unwrap()
+            .provider
+            .as_ref()
+            .unwrap();
+        assert_eq!(fields["models"], serde_json::json!(["a"]));
+        assert!(fields["modelAliases"].get("b").is_none());
+        assert_eq!(fields["note"], "shared");
+        assert!(restrict_models(&narrowed, &["b".into()]).is_err());
+        assert!(restrict_models(&public, &["a".into(), "a".into()]).is_err());
+        let target_store = ModelStore::new(target.path());
+        let v = target_store.load().unwrap();
+        policy.channels[0].discovered[1].label = "later local B".into();
+        policy.channels[0].defaults.fast = Field::Custom(true);
+        target_store
+            .commit_runtime_policy(
+                &v.library_digest,
+                &v.policy_digest,
+                &v.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let incoming = receive(target.path(), package.clone()).unwrap();
+        assert!(incoming.channel_bindings[&id].keep_local_connection);
+        assert!(key_target(&incoming, &id).is_none());
+        let adopted = accept(target.path(), &incoming.id).unwrap();
+        let actual = &adopted.workspace.unwrap().policy.channels[0];
+        assert_eq!(
+            actual
+                .discovered
+                .iter()
+                .find(|m| m.id == "b")
+                .unwrap()
+                .label,
+            "later local B"
+        );
+        assert_eq!(actual.selection, ModelSelection::All);
+        assert_eq!(actual.defaults, policy.channels[0].defaults);
+        assert_eq!(actual.model_order, policy.channels[0].model_order);
+        assert!(actual.overrides.contains_key("b"));
+        let merged = merge_model_subset(&public, &narrowed).unwrap();
+        assert_eq!(merged.discovered.len(), 2);
+        assert!(merged.connection.unwrap().provider.unwrap()["modelAliases"]
+            .get("b")
+            .is_some());
+        let mut declarations_only = public.clone();
+        declarations_only.discovered.clear();
+        let first = restrict_models(&declarations_only, &["a".into()]).unwrap();
+        let second = restrict_models(&declarations_only, &["b".into()]).unwrap();
+        let joined = merge_model_subset(&first, &second).unwrap();
+        assert_eq!(joined.model_subset, Some(vec!["a".into(), "b".into()]));
+        assert!(is_scoped_channel(&joined, &joined).unwrap());
+        scope.channel_models.insert(id.clone(), vec![]);
+        assert_eq!(
+            export(source.path(), scope.clone())
+                .unwrap()
+                .payload
+                .policy
+                .unwrap()
+                .channels[0]
+                .selection,
+            ModelSelection::None
+        );
+        scope
+            .channel_models
+            .insert(uuid::Uuid::new_v4().to_string(), vec![]);
+        assert!(export(source.path(), scope).is_err());
+    }
     fn all() -> ExportScope {
         ExportScope {
+            channel_models: Default::default(),
             include_policy: false,
             channel_ids: vec![],
             template_refs: vec![],
@@ -1992,6 +2438,7 @@ mod tests {
         let package = export(
             source.path(),
             ExportScope {
+                channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2037,6 +2484,7 @@ mod tests {
         let saved = create(source.path());
         let mut package = export(source.path(), all()).unwrap();
         let channel = PortableChannel {
+            model_subset: None,
             id: uuid::Uuid::new_v4().to_string(),
             label: "依赖渠道".into(),
             connection: None,

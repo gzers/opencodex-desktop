@@ -46,14 +46,16 @@ describe('model transfer review', () => {
     expect((wrapper.findAll('label').find(l=>l.text()==='包含连接密码')!.get('input').element as HTMLInputElement).checked).toBe(true);wrapper.unmount();vi.mocked(sync.getSyncConfig).mockRestore()
   })
   it('lists saved original channels independently of the Desktop policy and exports their exact selected identity',async()=>{
-    const original={id:'official-channel',label:'原有官方渠道',templateRefs:[],modelRefs:{},connection:{providerId:'official-source',protocol:'openai-chat',nodes:[{id:'service',name:'主站',url:'https://official.example.test'}],activeNodeId:'service',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'whitelist' as const,models:['original/model']},modelOrder:['original/model'],discovered:[],defaults:{},overrides:{},familyOverrides:{}};
+    const original={id:'official-channel',label:'原有官方渠道',templateRefs:[],modelRefs:{},connection:{providerId:'official-source',protocol:'openai-chat',nodes:[{id:'service',name:'主站',url:'https://official.example.test'}],activeNodeId:'service',credentialRef:null,enabled:true,allowPrivateNetwork:false},selection:{mode:'whitelist' as const,models:['original/model']},modelOrder:['original/model','original/other'],discovered:[{id:'original/model',label:'模型A',rules:{}},{id:'original/other',label:'模型B',rules:{}}],defaults:{},overrides:{},familyOverrides:{}};
     vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([original as never]);
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'original-export',package:pack()});
     const wrapper=render();await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await customExportScope(wrapper);await flushPromises();
     expect(useModelsStore().snapshot!.policy.channels).toHaveLength(0);
     await chooseExport(wrapper,'原有官方渠道');
+    await wrapper.get('input[aria-label="导出配置对象搜索"]').setValue('原有官方渠道');
+    await wrapper.get('input[aria-label="原有官方渠道范围内型号 original/other"]').setValue(false);
     await wrapper.findAll('button').find(b=>b.text()==='预览清单')!.trigger('click');await flushPromises();
-    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.objectContaining({includePolicy:true,channelIds:['official-channel']}),undefined,false,expect.any(Object));
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.objectContaining({includePolicy:true,channelIds:['official-channel'],channelModels:{'official-channel':['original/model']}}),undefined,false,expect.any(Object));
     wrapper.unmount();
   })
 

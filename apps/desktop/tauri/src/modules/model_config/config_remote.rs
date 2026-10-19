@@ -31,6 +31,8 @@ const SCOPE: &str = "manager-state/config-sync-scope.json";
 pub struct Scope {
     pub template_ids: Vec<String>,
     pub channel_ids: Vec<String>,
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub channel_models: std::collections::BTreeMap<String, Vec<String>>,
     pub include_global: bool,
     pub preferences: bool,
     pub extensions: bool,
@@ -68,6 +70,7 @@ impl Default for Scope {
         Self {
             template_ids: vec![],
             channel_ids: vec![],
+            channel_models: Default::default(),
             include_global: false,
             preferences: true,
             extensions: true,
@@ -96,6 +99,19 @@ impl Scope {
             || self.channel_ids.iter().collect::<BTreeSet<_>>().len() != self.channel_ids.len()
         {
             return Err(invalid("sync_scope", "本设备同步范围重复或超过上限"));
+        }
+        if self.channel_models.len() > 256
+            || self.channel_models.iter().any(|(id, models)| {
+                (!self.all_channels && !self.channel_ids.contains(id))
+                    || models.len() > 10000
+                    || models.iter().collect::<BTreeSet<_>>().len() != models.len()
+                    || models.iter().any(|m| m.is_empty())
+            })
+        {
+            return Err(invalid(
+                "sync_scope",
+                "型号子集不属于本设备渠道范围或格式无效",
+            ));
         }
         for id in self.template_ids.iter().chain(&self.channel_ids) {
             require_uuid(id)?;
@@ -194,6 +210,7 @@ impl Scope {
             return Err(invalid("sync_scope", "范围中的渠道尚未提交或已不存在"));
         }
         Ok(ExportScope {
+            channel_models: self.channel_models.clone(),
             include_policy: self.include_global
                 || !self.channel_ids.is_empty()
                 || self.all_channels,
@@ -556,6 +573,12 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         &bytes,
         passphrase,
         &ExportScope {
+            channel_models: scope
+                .channel_models
+                .iter()
+                .filter(|(id, _)| channel_ids.contains(id))
+                .map(|(id, models)| (id.clone(), models.clone()))
+                .collect(),
             include_policy: scope.include_global || !channel_ids.is_empty(),
             channel_ids,
             template_refs,

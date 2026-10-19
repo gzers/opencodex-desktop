@@ -178,6 +178,7 @@ pub fn export(
             policy.channel_order = Some(channels.iter().map(|c| c.id.clone()).collect());
         }
     }
+    transfer::scope_models(&mut package, &scope.channel_ids, &scope.channel_models)?;
     package.format_version = if package
         .payload
         .policy
@@ -235,6 +236,7 @@ mod tests {
         let package = export(
             source.path(),
             ExportScope {
+                channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
                 template_refs: vec![],

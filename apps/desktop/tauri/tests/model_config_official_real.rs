@@ -989,6 +989,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let export = model_config::transfer::prepare_file_scope(
         &manager,
         model_config::transfer::ExportScope {
+            channel_models: Default::default(),
             include_policy: true,
             channel_ids: vec![original_id.clone()],
             template_refs: vec![],

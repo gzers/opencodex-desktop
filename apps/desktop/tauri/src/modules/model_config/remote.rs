@@ -466,6 +466,7 @@ pub(super) mod tests {
     }
     fn scope() -> ExportScope {
         ExportScope {
+            channel_models: Default::default(),
             include_policy: false,
             channel_ids: vec![],
             template_refs: vec![],

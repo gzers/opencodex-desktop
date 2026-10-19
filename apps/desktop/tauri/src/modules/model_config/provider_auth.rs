@@ -1553,13 +1553,21 @@ pub fn export_portable(
     provider: &str,
     public: &serde_json::Value,
 ) -> ModelResult<PortableAuthorization> {
+    export_portable_scoped(root, provider, public, public)
+}
+pub(super) fn export_portable_scoped(
+    root: &Path,
+    provider: &str,
+    public: &serde_json::Value,
+    source_public: &serde_json::Value,
+) -> ModelResult<PortableAuthorization> {
     let mut raw = source_row(root, provider)?;
     let actual_public = super::provider_fields::public_from_raw(&raw)?;
     if actual_public
         .as_object()
         .unwrap()
         .iter()
-        .any(|(key, value)| public.get(key) != Some(value))
+        .any(|(key, value)| source_public.get(key) != Some(value))
     {
         erase_value(&mut raw);
         return Err(invalid(
@@ -1719,6 +1727,14 @@ mod tests {
         std::fs::write(root.path().join("config.json"),serde_json::to_vec(&json!({"providers":{"selected":selected,"unrelated":{"apiKey":"unrelated-SECRET"}}})).unwrap()).unwrap();
         let public = super::super::provider_fields::public_from_raw(&selected).unwrap();
         let portable = export_portable(root.path(), "selected", &public).unwrap();
+        let mut scoped_public = public.clone();
+        scoped_public["models"] = json!(["single-model"]);
+        export_portable_scoped(root.path(), "selected", &scoped_public, &public).unwrap();
+        let mut stale_source = public.clone();
+        stale_source["modelAliases"] = json!({"later":"changed"});
+        assert!(
+            export_portable_scoped(root.path(), "selected", &scoped_public, &stale_source).is_err()
+        );
         let restored = portable_auth(&public, &portable).unwrap();
         assert_eq!(restored.api_key_pool.len(), 2);
         assert_eq!(restored.api_key.as_deref(), Some("fixture-second-SECRET"));

@@ -292,7 +292,7 @@ fn seal_scope(
     if let (Some(snapshot), Some(source)) = (&scope.upstream_snapshot, &scope.upstream_root) {
         let catalog = super::portable_channels::catalog(root, snapshot)?;
         for channel in package.payload.policy.iter().flat_map(|p| &p.channels) {
-            if let Some(public) = channel
+            if let Some(_public) = channel
                 .connection
                 .as_ref()
                 .and_then(|c| c.provider.as_ref())
@@ -301,15 +301,19 @@ fn seal_scope(
                     .iter()
                     .find(|c| c.id == channel.id)
                     .ok_or_else(|| invalid("provider_scope", "原渠道已不存在"))?;
+                let mut expected = transfer::portable(original);
+                expected.connection.as_mut().unwrap().provider =
+                    Some(snapshot.providers["providers"][&original.connection.provider_id].clone());
+                if !transfer::is_scoped_channel(&expected, channel)? {
+                    return Err(invalid("provider_scope", "所选型号字段不属于冻结源渠道"));
+                }
                 let raw =
                     super::provider_auth::source_row(source, &original.connection.provider_id)?;
                 let actual = super::provider_fields::public_from_raw(&raw)?;
-                if actual
-                    .as_object()
-                    .unwrap()
-                    .iter()
-                    .any(|(key, value)| public.get(key) != Some(value))
-                {
+                if actual.as_object().unwrap().iter().any(|(key, value)| {
+                    snapshot.providers["providers"][&original.connection.provider_id].get(key)
+                        != Some(value)
+                }) {
                     return Err(invalid(
                         "provider_source_drift",
                         "原渠道字段在比较后改变，未混合导出",
@@ -358,10 +362,11 @@ fn seal_scope(
                 }
                 authorizations.insert(
                     channel.id.clone(),
-                    super::provider_auth::export_portable(
+                    super::provider_auth::export_portable_scoped(
                         upstream_root,
                         &original.connection.provider_id,
                         public,
+                        &upstream.providers["providers"][&original.connection.provider_id],
                     )?,
                 );
                 continue;
@@ -372,7 +377,7 @@ fn seal_scope(
                 .iter()
                 .find(|c| c.id == channel.id)
                 .ok_or_else(|| invalid("stale_baseline", "冻结导出后渠道已改变"))?;
-            if serde_json::to_value(transfer::portable(source))? != serde_json::to_value(channel)? {
+            if !transfer::is_scoped_channel(&transfer::portable(source), channel)? {
                 return Err(invalid(
                     "stale_baseline",
                     "导出配置与当前已提交渠道不同，未携带较新凭据",
@@ -772,6 +777,7 @@ pub fn select_remote(
         root,
         &incoming.id,
         transfer::ReceiveScope {
+            channel_models: models.channel_models.clone(),
             asset_mappings: Default::default(),
             channel_mappings: BTreeMap::new(),
             account_ids: manager
@@ -948,6 +954,7 @@ pub fn receive_context(
             .0
             .keys()
             .chain(objects.channel_authorizations.keys())
+            .filter(|id| transfer::key_target(&plan, id).is_some())
             .cloned()
             .collect();
     }
@@ -1321,10 +1328,26 @@ fn stage_provider_materials(
         else {
             return Err(invalid("provider_import_scope", "原渠道接收目标缺失"));
         };
-        let original = super::portable_channels::provider(&objects.models, &source.id)
-            .ok_or_else(|| invalid("provider_import_scope", "原文件缺少完整原渠道字段"))?;
-        if original != public {
+        let original = objects
+            .models
+            .payload
+            .policy
+            .iter()
+            .flat_map(|p| &p.channels)
+            .find(|c| c.id == source.id)
+            .ok_or_else(|| invalid("provider_import_scope", "原文件缺少所选源渠道"))?;
+        if !transfer::is_scoped_channel(original, &source)? {
             return Err(invalid("provider_import_scope", "原字段不属于所选源渠道"));
+        }
+        if source.model_subset.is_some()
+            && ModelStore::new(root)
+                .load()?
+                .policy
+                .channels
+                .iter()
+                .any(|c| c.id == target)
+        {
+            continue;
         }
         let reference = if let Some(reference) = bindings.get(&target) {
             let staged = super::provider_import::load(root, channel, reference)?;
@@ -1600,7 +1623,7 @@ fn accept_with(
             if !objects.models.payload.policy.as_ref().is_some_and(|p| {
                 p.channels.iter().any(|original| {
                     original.id == channel.id
-                        && serde_json::to_value(original).ok() == serde_json::to_value(channel).ok()
+                        && transfer::is_scoped_channel(original, channel).unwrap_or(false)
                 })
             }) {
                 return Err(invalid("credential_scope", "凭据源渠道与所选配置不一致"));
@@ -1695,6 +1718,101 @@ fn accept_with(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn protected_original_channel_model_subset_uses_full_source_auth_and_only_selected_public_fields(
+    ) {
+        use super::super::upstream::UpstreamSnapshot;
+        let source = tempfile::tempdir().unwrap();
+        let upstream = tempfile::tempdir().unwrap();
+        let receiver = tempfile::tempdir().unwrap();
+        let public = serde_json::json!({"adapter":"openai-chat","authMode":"key","baseUrl":"https://source.example.test/v1","models":["a","b"],"selectedModels":["a","b"],"modelAliases":{"a":"alias-a","b":"alias-b"},"modelDisplayNames":{"a":"A","b":"B"},"note":"shared source"});
+        let mut raw = public.clone();
+        raw["apiKey"] = serde_json::json!("fixture-portable-subset-SECRET");
+        raw["headers"] = serde_json::json!({"X-Auth":"fixture-header-SECRET"});
+        std::fs::write(
+            upstream.path().join("config.json"),
+            serde_json::to_vec(
+                &serde_json::json!({"providers":{"p":raw,"unrelated":{"unparsed":"irrelevant"}}}),
+            )
+            .unwrap(),
+        )
+        .unwrap();
+        let snapshot = UpstreamSnapshot {
+            version: "2.84.0".into(),
+            providers: serde_json::json!({"defaultProvider":"p","providers":{"p":public}}),
+            models: serde_json::json!([{"provider":"p","id":"a","namespaced":"p/a"},{"provider":"p","id":"b","namespaced":"p/b"}]),
+            order: serde_json::json!({"pickerOrder":["p/a","p/b"]}),
+            catalog: serde_json::json!({"models":[{"slug":"p/a"},{"slug":"p/b"}]}),
+        };
+        let id = super::super::portable_channels::catalog(source.path(), &snapshot).unwrap()[0]
+            .id
+            .clone();
+        let plan = transfer::prepare_file_scope(
+            source.path(),
+            transfer::ExportScope {
+                channel_models: BTreeMap::from([(id.clone(), vec!["a".into()])]),
+                include_policy: true,
+                channel_ids: vec![id.clone()],
+                template_refs: vec![],
+                include_global: false,
+            },
+            Some("fixture-subset-password"),
+            true,
+            &ManagerScope {
+                upstream_root: Some(upstream.path().into()),
+                upstream_snapshot: Some(snapshot),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let bytes = transfer::file_bytes(source.path(), &plan.id).unwrap();
+        assert!(!String::from_utf8_lossy(&bytes).contains("SECRET"));
+        assert_eq!(plan.credential_count, 1);
+        let package = &plan.package;
+        let channel = &package.payload.policy.as_ref().unwrap().channels[0];
+        assert_eq!(channel.model_subset, Some(vec!["a".into()]));
+        assert_eq!(channel.discovered.len(), 1);
+        let fields = channel
+            .connection
+            .as_ref()
+            .unwrap()
+            .provider
+            .as_ref()
+            .unwrap();
+        assert_eq!(fields["models"], serde_json::json!(["a"]));
+        assert!(fields["modelAliases"].get("b").is_none());
+        let incoming = receive(receiver.path(), &bytes, Some("fixture-subset-password")).unwrap();
+        assert_eq!(incoming.available_keys, vec![id.clone()]);
+        let selected = transfer::select_received_context(
+            receiver.path(),
+            &incoming.id,
+            transfer::ReceiveScope {
+                channel_ids: vec![id.clone()],
+                channel_models: BTreeMap::from([(id.clone(), vec![])]),
+                ..Default::default()
+            },
+            Some("fixture-subset-password"),
+        )
+        .unwrap();
+        let result = accept(
+            receiver.path(),
+            &selected.id,
+            false,
+            Some("fixture-subset-password"),
+        )
+        .unwrap();
+        let target = &result.workspace.unwrap().policy.channels[0];
+        assert!(target.discovered.is_empty());
+        assert!(!target.connection.enabled);
+        let staged = super::super::provider_import::load(
+            receiver.path(),
+            target,
+            target.connection.imported_config.as_ref().unwrap(),
+        )
+        .unwrap();
+        assert!(staged.authorization.is_none());
+        assert_eq!(staged.public["models"], serde_json::json!([]));
+    }
     use super::*;
     use std::{collections::BTreeSet, sync::Mutex};
     #[test]
@@ -1715,6 +1833,7 @@ mod tests {
         let package = super::super::portable_channels::export(
             root.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
                 template_refs: vec![],
@@ -1873,6 +1992,7 @@ mod tests {
         let plan = transfer::prepare_file_scope(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2045,6 +2165,7 @@ mod tests {
         let plan = transfer::prepare_file_scope(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2109,6 +2230,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2189,6 +2311,7 @@ mod tests {
         let package = transfer::export(
             root.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2251,6 +2374,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2437,6 +2561,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2506,6 +2631,7 @@ mod tests {
         let package = transfer::export(
             root.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
@@ -2643,6 +2769,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
                 template_refs: vec![],
@@ -2772,6 +2899,7 @@ mod tests {
             transfer::export(
                 root,
                 transfer::ExportScope {
+                    channel_models: Default::default(),
                     include_policy: true,
                     channel_ids: vec![id.clone()],
                     template_refs: vec![],
@@ -2855,6 +2983,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
                 template_refs: vec![],
@@ -2969,6 +3098,7 @@ mod tests {
         let package = transfer::export(
             root.path(),
             transfer::ExportScope {
+                channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
                 template_refs: vec![],
