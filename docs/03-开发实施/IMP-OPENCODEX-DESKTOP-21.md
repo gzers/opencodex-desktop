@@ -370,3 +370,20 @@ feature/0.2.0-model-config已推送，CI39250663907绑定e720c1ed：前端、rel
 真实macOS隔离WebView读取20个fixture渠道、长表滚动Tab固定与节点GET检测已观察；首次runner错放测试偏好导致默认面板启动，停止后修正隔离根层级，首轮画面不作验收。读入模型的displayName有上游生成namespace时此前被误当用户显示名，现只有明确modelDisplayNames/真正不同的displayName参与显示，namespace原样作为路由事实保留；不会把test/native-id写成用户名称。单测保留原模型ID及真实用户名称。
 
 本地复核：备份两项、旧导入21项、后续本机绑定/坏源1项、Clippy全目标通过；前端选择12项及生产构建通过。修正后远端结果仍待下一run，不把本地通过回填为前一失败run成功。证据checks-ci-corrections-20261019.json绑定本批源码。
+
+
+### 双平台CI通过、原生消费者与隔离客户端真实加载
+
+CI39255967327绑定a59f84ea全部适用job成功：macOS/Windows后端、前端、release-tools、Windows smoke；feature分支build按规则skipped，未产生发布包。ci-a59f84ea-20261019.json保留逐step结果。此前失败run保留，不改为成功；下述后续源码仍需独立CI。
+
+真实macOS独立Sandbox应用以Tauri打包生产dist，官方2.84.0在临时数据根运行，20个原有fixture渠道经真实IPC进入草稿，实际模型目录预算6/100。长表滚动后主Tab固定；节点检测仅GET模型清单返回88ms/15型号（v2源构建），相关截图绑定当时构建。v3正常Save实际committed；保存保持待重启/客户端核对，不伪造用户确认。
+
+原生带授权的再次保存暴露macOS在改写进程HOME后找不到默认钥匙串，系统拒绝发生在prepare保护阶段，未写运行态。现所有平台业务home沿显式Sandbox root/home，CLI socket、受控工具/扩展源及模型官方子命令都用该home；macOS进程HOME保留系统值，keychain仍只用Sandbox服务和随机账户。缺Sandbox root不回退真实业务home。home纯测试2、隔离集成1、原生凭据测试1与Clippy通过，不关闭系统安全检查或改写日常凭据。
+
+修正后v4真实应用完成秘密保护：改变fixture显示名，注入最终sync命令失败，保留order_written/catalog_write和同计划UUID通知。铃铛展示“渠道配置保存需要核对”，打开通知→查看保存结果回原计划；实际目录/字段已经收敛，reconcile读回同计划committed，自动解决原通知，不重复写入。native-save-outcome及失败/已解决截图保留身份、状态与构建摘要。这次是失败回执后核对成功，不能拿它替代前面独立真实补偿证据。
+
+独立Codex app-server 0.163.0-alpha.10.2使用相同临时CODEX_HOME，initialize/model/list完整读取6个fixture模型，包含全部3渠道×2型号；未启动turn、未关闭日常Codex进程。native-client-loaded-20261019.json绑定CLI二进制摘要、应用保存plan与读取结果。证明该客户端进程加载本次目录，不声称日常桌面选择器或全部能力已核对，也不自动记录用户已确认。
+
+200%真实WebView发现侧栏宽占一半、标题逐字换行，最初CSS container修正仍未生效；不计为通过。改由useShellLayout以viewport/当前保存缩放计算≤760逻辑px收起侧栏，MutationObserver/resize响应并卸载清理；最终v6暗色200%显示图标侧栏、完整模型标题与保存区，能prepare/apply到committed，截图native-models-dark-200-compact/native-save-dark-200-single-task。通知列独立滚动，未知错误码改可操作中文。原核对每次随机任务ID造成多卡，现policy_save统一使用plan UUID，同计划重新观察更新原卡，其余任务不允许旧终态变回运行。正式store回归覆盖，原生最终同计划仅一张任务卡。
+
+最终前端124文件628项通过、无未处理异步异常，生产构建通过；两条jsdom Canvas提示保持模拟限制。home/缩放/反馈受影响向量见checks-native-consumers-20261019.json。停止自有应用/官方子进程，精确删除并核对本批2个Sandbox保护键NoEntry，未动其他账户。原生主目录修正和布局/反馈后续CI仍待推送；账户逐型、其余消费者/Windows实屏与最终发布未完成。

@@ -1,0 +1,94 @@
+{
+  "recordedAt": "2026-10-19T14:43:18.923352+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "a59f84ea38d2f3216b860c128fa8c01babe3dd08",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/bin/ocxd.rs": "7be8b2cc483b3772943a6614617029f6894a9d9827ee38a49d748a3e502d3e1d",
+    "apps/desktop/tauri/src/commands/model_config.rs": "52bc2a865d3cadf54a49a49c3d4cbbd0031c889381d702dfb717121763f6a9f7",
+    "apps/desktop/tauri/src/infrastructure/platform.rs": "4e39b27a1888c30e7a15bb804947d31d31018e581685c07e769991296b93442f",
+    "apps/desktop/tauri/src/modules/discovery/mod.rs": "775ef88790b34506000eae8d2002fcfe2c667407e7a6b8f7f8b4b3acc0b5cdb7",
+    "apps/desktop/tauri/src/modules/model_config/upstream.rs": "92b670a27f2979aead231447b42a121d166d73f0182394d9e697e7645c1bce9d",
+    "apps/desktop/tauri/tests/sandbox_isolation.rs": "901f9748609cbd5bf661946610104d406b0408b468a580c32772b655f1265ee2",
+    "apps/desktop/ui/src/App.vue": "1a6e48ccd83295add7ab5d2837652309eb020477054fba342814c739ef0d0fe2",
+    "apps/desktop/ui/src/app/feedback/tasks.ts": "d8bbb8353a7ba6e11b470dcf5e7d2328a747ff9a24d3c95b049762de904f7475",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "6bdbf44d9fd6c1548798bb9d36c94475ac120066ec5a708ab067ed4ed2ae4225",
+    "apps/desktop/ui/src/features/models/api.ts": "8cb5e594a44656f85b97f18202bd67c43ebf2a63033fe81b497735cadda822f8",
+    "apps/desktop/ui/src/styles/base.css": "78b511c6a09f57bf9d2b9a622f60c1b9d25c13c6a9e5adb2b7812f886b257df5",
+    "apps/desktop/ui/tests/model-operation-tasks.test.ts": "70fda3dd98716ac17eec98ec9da03a4ef570d1a123649f227965ce391c7d49c9",
+    "apps/desktop/ui/src/components/layout/useShellLayout.ts": "8b7a8443ab2625b50d1972821ff0c981c116066b7351d4fceb40f8c1da827e30",
+    "apps/desktop/ui/tests/model-save-errors.test.ts": "d56fff675940655a787e083edaa623db77ec6cdd1e26e2449a41731eaac2b209",
+    "apps/desktop/ui/tests/shell-layout.test.ts": "ad5498ca1c1d2c1d1fa96840a1c1f4540eb804661b02473499e0a2c78a6ad883"
+  },
+  "ci": {
+    "runId": 39255967327,
+    "sha": "a59f84ea38d2f3216b860c128fa8c01babe3dd08",
+    "result": "success",
+    "receipt": "ci-a59f84ea-20261019.json",
+    "boundary": "before current home/layout/task adjustments; those require subsequent CI"
+  },
+  "checks": [
+    {
+      "command": "cargo test --features integration-test --lib infrastructure::platform::home_tests; cargo test --test sandbox_isolation; OPENCODEX_SANDBOX=1 cargo test --test provider_auth_native -- --ignored --test-threads=1 --nocapture",
+      "session": 81716,
+      "result": "passed",
+      "groups": [
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "command": "cargo clippy --all-targets --features integration-test -- -D warnings",
+      "session": 82023,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run",
+      "session": 49924,
+      "result": "passed",
+      "files": 124,
+      "passed": 628,
+      "unhandledErrors": 0,
+      "notes": "two jsdom canvas unavailable diagnostics; actual GPU acceptance separate"
+    },
+    {
+      "command": "npm run test -- --run tests/shell-layout.test.ts tests/model-operation-tasks.test.ts tests/interface-scale.test.ts; npm run build",
+      "session": 92281,
+      "result": "passed",
+      "passed": 8,
+      "build": "passed"
+    }
+  ],
+  "nativeEvidence": {
+    "identity": "com.gzers.opencodex.desktop.sandbox, explicit isolated roots",
+    "officialVersion": "2.84.0",
+    "read20Channels": true,
+    "nodeGetObserved": "88ms / 15 models on owned service in v2",
+    "stickyTabsScreenshot": "native-model-tabs-sticky-light.png",
+    "actualSave": "native-save-outcome-20261019.json",
+    "clientRead": "native-client-loaded-20261019.json",
+    "clientVersion": "0.163.0-alpha.10.2",
+    "modelListCount": 6,
+    "turnsStarted": 0,
+    "saveFailureNotification": "native-save-failure-notification.png",
+    "samePlanAutoResolved": "native-save-notification-resolved.png",
+    "latestCompact200Save": "native-compact-save-20261019.json",
+    "latestScreenshot": "native-models-dark-200-compact.png",
+    "latestSingleTaskScreenshot": "native-save-dark-200-single-task.png",
+    "cleanup": "native-fixture-cleanup-20261019.json"
+  },
+  "findingsResolved": [
+    "macOS native keychain unavailable when process HOME was reassigned; sandbox business home now derives root/home while system HOME preserved",
+    "same policy plan observations reuse plan ID instead of appending task cards",
+    "root logical width uses viewport/saved scale due native WebKit CSS query mismatch; compact navigation at<=760 logical px",
+    "notification column bounded scroll",
+    "plan error codes translated into actionable Chinese text"
+  ],
+  "remaining": [
+    "current adjusted source remote CI",
+    "complete real business consumer interactions and Windows rendered matrix",
+    "portable account support/evidence per documented type boundary",
+    "final scope audit/version/artifacts/publish/postpublish"
+  ]
+}

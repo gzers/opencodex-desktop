@@ -1,0 +1,263 @@
+{
+  "runId": 39255967327,
+  "url": "https://github.com/gzers/opencodex-desktop/actions/runs/39255967327",
+  "sourceCommit": "a59f84ea38d2f3216b860c128fa8c01babe3dd08",
+  "status": "completed",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "backend-windows",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm --prefix ../ui ci",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm --prefix ../ui run build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare first-regression ETW only on the Windows diagnostic branch",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Windows backend regression",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify isolated native credential protection",
+          "conclusion": "success"
+        },
+        {
+          "name": "Collect Windows native dependency diagnostics",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo build --locked --release --features custom-protocol --bins",
+          "conclusion": "success"
+        },
+        {
+          "name": "Windows final EXE smoke",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "windows-smoke-evidence",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify Windows process-token evidence and smoke syntax",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify isolated acceptance Profile admission",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify recovery restart waits for the old process exit",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "frontend",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Windows CDP protocol regression",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui ci",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run typecheck",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run test -- --run",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run npm --prefix apps/desktop/ui run build",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "backend",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run dtolnay/rust-toolchain@stable",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo fmt --all -- --check",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo clippy --locked --workspace --all-targets -- -D warnings",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run cargo test --locked --workspace --features integration-test",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "release-tools",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y minisign",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_etw_ci.py' -v",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python3 -B -m unittest discover -s test -p 'test_windows_retention_ci.py' -v",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v5",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "build",
+      "status": "completed",
+      "conclusion": "skipped",
+      "steps": []
+    }
+  ],
+  "boundary": "Source-specific CI on a59f84ea; later sandbox/layout adjustments require their own CI. build job skipped intentionally for feature branch; not release artifacts."
+}
