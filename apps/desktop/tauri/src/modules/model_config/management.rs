@@ -130,6 +130,7 @@ impl Management {
         if ![
             "/api/providers/keys",
             "/api/providers/keys/active",
+            "/api/providers/keychain",
             "/api/providers",
             "/api/disabled-models",
             "/api/subagent-models",
@@ -160,6 +161,9 @@ impl Management {
         if let Some(body) = body {
             request = request.json(&body);
         }
+        self.receive(request).await
+    }
+    async fn receive(&self, request: reqwest::RequestBuilder) -> ModelResult<Value> {
         let mut response = request.send().await.map_err(|_| {
             invalid(
                 "management_unknown",
@@ -270,10 +274,110 @@ impl Management {
         Ok(())
     }
     pub async fn remove_key(&self, provider: &str, id: &str) -> ModelResult<()> {
+        let mut url = reqwest::Url::parse("http://127.0.0.1/api/providers/keys")
+            .map_err(|_| invalid("key_state", "密钥删除目标无效"))?;
+        url.query_pairs_mut()
+            .append_pair("name", provider)
+            .append_pair("id", id);
         self.request(
             reqwest::Method::DELETE,
-            "/api/providers/keys",
-            Some(serde_json::json!({"name":provider,"id":id})),
+            &format!("{}?{}", url.path(), url.query().unwrap_or("")),
+            None,
+        )
+        .await?;
+        Ok(())
+    }
+    /// Official process-scoped capability reloads one persisted row and its
+    /// live merge baseline. No admin bearer or configuration body is forwarded.
+    pub async fn reload_provider(&self, provider: &str) -> ModelResult<()> {
+        if provider.is_empty()
+            || provider.len() > 64
+            || !provider
+                .bytes()
+                .all(|b| b.is_ascii_alphanumeric() || b"._-".contains(&b))
+            || !provider.as_bytes()[0].is_ascii_alphanumeric()
+            || !provider.as_bytes()[provider.len() - 1].is_ascii_alphanumeric()
+        {
+            return Err(invalid("provider_auth_scope", "授权重载目标无效"));
+        }
+        self.unchanged()?;
+        let path = "/api/providers/reload";
+        let nonce = URL_SAFE_NO_PAD.encode(
+            [
+                uuid::Uuid::new_v4().as_bytes().as_slice(),
+                uuid::Uuid::new_v4().as_bytes().as_slice(),
+            ]
+            .concat(),
+        );
+        let expires = chrono::Utc::now().timestamp_millis() + 10_000;
+        let secret = self
+            .record
+            .attestation_secret
+            .as_ref()
+            .ok_or_else(|| invalid("runtime_attestation", "运行证明密钥缺失"))?;
+        let mut mac = Hmac::<Sha256>::new_from_slice(secret.as_bytes())
+            .map_err(|_| invalid("runtime_attestation", "运行证明密钥无效"))?;
+        mac.update(format!("opencodex-local-provider-reload-v1\n{nonce}\nPOST\n{path}\n{provider}\n{}\n{}\n{expires}", self.record.pid, self.record.port).as_bytes());
+        let capability = URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes());
+        self.receive(
+            self.client
+                .post(format!("{}{path}", self.base))
+                .header(reqwest::header::CONTENT_LENGTH, "0")
+                .header(
+                    "x-opencodex-provider-reload-expected-pid",
+                    self.record.pid.to_string(),
+                )
+                .header("x-opencodex-provider-reload-nonce", nonce)
+                .header(
+                    "x-opencodex-provider-reload-expires-at",
+                    expires.to_string(),
+                )
+                .header("x-opencodex-provider-reload-name", provider)
+                .header("x-opencodex-provider-reload-capability", capability),
+        )
+        .await?;
+        Ok(())
+    }
+    pub async fn restore_authorization_fields(
+        &self,
+        provider: &str,
+        public: &Value,
+        protected_fields: Value,
+    ) -> ModelResult<()> {
+        let mut row = public
+            .as_object()
+            .cloned()
+            .ok_or_else(|| invalid("provider_auth_source", "官方公开渠道结构无效"))?;
+        let fields = protected_fields
+            .as_object()
+            .ok_or_else(|| invalid("provider_auth_source", "受保护授权字段结构无效"))?;
+        if fields
+            .keys()
+            .any(|key| !["apiKeyPool", "headers"].contains(&key.as_str()))
+        {
+            return Err(invalid("provider_auth_scope", "授权恢复请求含未授权字段"));
+        }
+        row.extend(
+            fields
+                .iter()
+                .map(|(key, value)| (key.clone(), value.clone())),
+        );
+        // Omit apiKey to avoid the official add-key side effect that hashes the
+        // reference itself. Active choice is restored by its explicit API.
+        row.remove("apiKey");
+        self.request(
+            reqwest::Method::POST,
+            "/api/providers",
+            Some(serde_json::json!({"name":provider,"provider":row})),
+        )
+        .await?;
+        Ok(())
+    }
+    pub async fn store_provider_keychain(&self, provider: &str) -> ModelResult<()> {
+        self.request(
+            reqwest::Method::POST,
+            "/api/providers/keychain",
+            Some(serde_json::json!({"name":provider,"action":"store"})),
         )
         .await?;
         Ok(())
@@ -375,16 +479,52 @@ mod tests {
     async fn remove(
         State(state): State<Fixture>,
         headers: HeaderMap,
-        Json(body): Json<Value>,
+        axum::extract::Query(query): axum::extract::Query<
+            std::collections::BTreeMap<String, String>,
+        >,
     ) -> Json<Value> {
         admission(&state, &headers);
-        let id = body["id"].as_str().unwrap();
+        assert_eq!(query.get("name").map(String::as_str), Some("test"));
+        let id = query.get("id").unwrap().as_str();
         let mut pool = state.pool.lock().unwrap();
         pool.ids.remove(id);
         if pool.active_id.as_deref() == Some(id) {
             pool.active_id = pool.ids.iter().next().cloned();
         }
         Json(serde_json::json!({"ok":true}))
+    }
+    async fn reload(State(state): State<Fixture>, headers: HeaderMap) -> Json<Value> {
+        assert!(headers.get("authorization").is_none());
+        assert_eq!(headers["content-length"], "0");
+        assert!(headers.get("transfer-encoding").is_none());
+        assert_eq!(headers["x-opencodex-provider-reload-name"], "test");
+        assert_eq!(
+            headers["x-opencodex-provider-reload-expected-pid"],
+            state.pid.to_string()
+        );
+        let nonce = headers["x-opencodex-provider-reload-nonce"]
+            .to_str()
+            .unwrap();
+        assert_eq!(URL_SAFE_NO_PAD.decode(nonce).unwrap().len(), 32);
+        let expires = headers["x-opencodex-provider-reload-expires-at"]
+            .to_str()
+            .unwrap()
+            .parse::<i64>()
+            .unwrap();
+        let now = chrono::Utc::now().timestamp_millis();
+        assert!(expires > now && expires <= now + 10_000);
+        let mut mac = Hmac::<Sha256>::new_from_slice(state.secret.as_bytes()).unwrap();
+        mac.update(format!("opencodex-local-provider-reload-v1\n{nonce}\nPOST\n/api/providers/reload\ntest\n{}\n{}\n{expires}", state.pid, state.port).as_bytes());
+        let capability = URL_SAFE_NO_PAD
+            .decode(
+                headers["x-opencodex-provider-reload-capability"]
+                    .to_str()
+                    .unwrap(),
+            )
+            .unwrap();
+        mac.verify_slice(&capability).unwrap();
+        state.calls.fetch_add(1, Ordering::SeqCst);
+        Json(serde_json::json!({"success":true}))
     }
     async fn fixture(
         root: &std::path::Path,
@@ -429,6 +569,7 @@ mod tests {
         .unwrap();
         let router = Router::new()
             .route("/healthz", get(health))
+            .route("/api/providers/reload", axum::routing::post(reload))
             .route("/api/providers/keys", get(keys).post(add).delete(remove))
             .route("/api/providers/keys/active", axum::routing::put(activate))
             .with_state(state.clone());
@@ -462,6 +603,18 @@ mod tests {
         let public = serde_json::to_string(&after).unwrap();
         assert!(!public.contains("replacement-key") && !public.contains("masked"));
         assert!(state.calls.load(Ordering::SeqCst) > 0);
+        server.abort();
+    }
+    #[tokio::test]
+    async fn provider_reload_is_one_row_process_bound_bodyless_and_never_forwards_admin_token() {
+        let root = tempfile::tempdir().unwrap();
+        let (context, state, server) = fixture(root.path(), true).await;
+        let manager = Management::bind(&context).await.unwrap();
+        std::fs::remove_file(root.path().join("admin-api-token")).unwrap();
+        manager.reload_provider("test").await.unwrap();
+        assert_eq!(state.calls.load(Ordering::SeqCst), 1);
+        assert!(manager.reload_provider("test/other").await.is_err());
+        assert_eq!(state.calls.load(Ordering::SeqCst), 1);
         server.abort();
     }
     #[tokio::test]

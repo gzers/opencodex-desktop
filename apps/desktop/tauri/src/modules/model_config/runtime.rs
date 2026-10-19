@@ -196,6 +196,13 @@ impl RuntimePlan {
                             });
                         }
                     }
+                    for (provider,target) in &history.authorizations {
+                        let current=self.authorization_before.get(provider).and_then(Option::as_ref);
+                        if current.map(|b|b.digest.as_str())!=target.as_ref().map(|b|b.digest.as_str()) {
+                            let summary=|backup:Option<&super::provider_auth::Backup>|json!({"Key数量":backup.map(|b|b.state.ids.len()).unwrap_or(0),"活动项":backup.and_then(|b|b.state.active_id.clone()),"范围":"Key池原顺序、标签与自定义认证头"});
+                            values.push(ChangeFact{field:format!("授权选择/{provider}"),before:summary(current),after:summary(target.as_ref())});
+                        }
+                    }
                     if self.before.providers["defaultProvider"]
                         != self.next_providers["defaultProvider"]
                     {
@@ -240,6 +247,15 @@ pub(super) fn credential_runtime_changed(plan: &RuntimePlan) -> bool {
     plan.credential_changes
         .iter()
         .any(|c| c.before != c.intended())
+        || plan.history_restoration.as_ref().is_some_and(|history| {
+            history.authorizations.iter().any(|(provider, target)| {
+                plan.authorization_before
+                    .get(provider)
+                    .and_then(Option::as_ref)
+                    .map(|b| &b.digest)
+                    != target.as_ref().map(|b| &b.digest)
+            })
+        })
 }
 pub(super) async fn verify_committed_credentials(
     root: &Path,
@@ -1241,7 +1257,19 @@ async fn apply_history_effects(
         if plan.next_providers["providers"].get(provider).is_none() {
             continue;
         }
-        if let Some(backup) = backup {
+        if plan.before.providers["providers"].get(provider).is_some() {
+            super::provider_auth::change(
+                root,
+                context,
+                &plan.id,
+                provider,
+                plan.authorization_before
+                    .get(provider)
+                    .and_then(Option::as_ref),
+                backup.as_ref(),
+            )
+            .await?;
+        } else if let Some(backup) = backup {
             super::provider_auth::restore(root, context, backup).await?;
         } else {
             super::provider_auth::verify_absent(context, provider)?;
@@ -1337,6 +1365,24 @@ async fn prepare_history(
         .collect::<BTreeSet<_>>();
     let disabled =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
+    let authorization_changes = source
+        .authorization_before
+        .keys()
+        .chain(source.authorization_after.keys())
+        .filter(|provider| {
+            source
+                .authorization_before
+                .get(*provider)
+                .and_then(Option::as_ref)
+                .map(|b| &b.digest)
+                != source
+                    .authorization_after
+                    .get(*provider)
+                    .and_then(Option::as_ref)
+                    .map(|b| &b.digest)
+        })
+        .cloned()
+        .collect::<BTreeSet<_>>();
     let projection = super::runtime_history::project(
         &before,
         &source.before,
@@ -1347,8 +1393,11 @@ async fn prepare_history(
             &source.observed_disabled,
         ],
         request.side,
-        &managed,
-        request.scope == super::recovery::Scope::All,
+        super::runtime_history::RecoveryScope {
+            managed: &managed,
+            authorization_changes: &authorization_changes,
+            all: request.scope == super::recovery::Scope::All,
+        },
     )?;
     let target = if request.side == super::recovery::Side::Before {
         &source.before
@@ -1404,14 +1453,15 @@ async fn prepare_history(
         }
         if let Some(Some(backup)) = target_auth.get(provider) {
             super::provider_auth::check_backup(root, backup)?;
-            if current.is_some() && !super::provider_auth::inspect_target(root, context, backup)? {
-                return Err(invalid(
-                    "history_authorization_conflict",
-                    "目标渠道仍有另一授权选择，请先核对当前授权方向",
-                ));
-            }
-        } else if target_auth.contains_key(provider) && current.is_some() && desired.is_some() {
-            super::provider_auth::verify_absent(context, provider)?;
+        }
+        if current.is_some() && desired.is_some() && target_auth.contains_key(provider) {
+            super::provider_auth::review_change(
+                root,
+                context,
+                provider,
+                before_auth.get(provider).and_then(Option::as_ref),
+                target_auth.get(provider).and_then(Option::as_ref),
+            )?;
         }
         if let Some(row) = desired.filter(|_| current.is_none()) {
             let values = row["selectedModels"]
@@ -1502,6 +1552,45 @@ async fn prepare_history(
     save(root, &plan)?;
     Ok(plan.view())
 }
+async fn history_auth_matches(
+    root: &Path,
+    context: &ProcessContext,
+    plan: &RuntimePlan,
+    providers: &Value,
+    before: bool,
+) -> ModelResult<bool> {
+    let Some(history) = &plan.history_restoration else {
+        return Ok(true);
+    };
+    for (provider, target) in &history.authorizations {
+        let expected_rows = if before {
+            &plan.before.providers
+        } else {
+            &plan.next_providers
+        };
+        let exists = providers["providers"].get(provider).is_some();
+        if !exists {
+            if expected_rows["providers"].get(provider).is_some() {
+                return Ok(false);
+            }
+            continue;
+        }
+        if expected_rows["providers"].get(provider).is_none() {
+            return Ok(false);
+        }
+        let backup = if before {
+            plan.authorization_before
+                .get(provider)
+                .and_then(Option::as_ref)
+        } else {
+            target.as_ref()
+        };
+        if !super::provider_auth::matches(root, context, provider, backup).await? {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
 pub async fn reconcile(
     root: &Path,
     context: &ProcessContext,
@@ -1551,6 +1640,28 @@ pub async fn reconcile(
     let disabled =
         string_array(&upstream::read(context, upstream::ReadOperation::DisabledModels).await?)?;
     let removed_match = removed_key_states(root, &plan, context, &actual.providers).await?;
+    if let Some(history) = &plan.history_restoration {
+        for (provider, target) in &history.authorizations {
+            if plan.before.providers["providers"].get(provider).is_some()
+                && plan.next_providers["providers"].get(provider).is_some()
+            {
+                super::provider_auth::inspect_change(
+                    root,
+                    context,
+                    &plan.id,
+                    provider,
+                    plan.authorization_before
+                        .get(provider)
+                        .and_then(Option::as_ref),
+                    target.as_ref(),
+                )?;
+            }
+        }
+    }
+    let history_target_matches =
+        history_auth_matches(root, context, &plan, &actual.providers, false).await?;
+    let history_before_matches =
+        history_auth_matches(root, context, &plan, &actual.providers, true).await?;
     let mut staged = plan.before.providers.clone();
     for channel in &plan.execution_policy().channels {
         if plan.before.providers["providers"]
@@ -1628,7 +1739,8 @@ pub async fn reconcile(
     plan.observed_order = actual_order.clone();
     plan.observed_disabled = disabled;
     plan.phase = "verified_partial".into();
-    if actual.providers == plan.next_providers
+    if history_target_matches
+        && actual.providers == plan.next_providers
         && actual_order == plan.next_order
         && catalog_slugs(&actual)? == plan.expected_slugs
         && plan
@@ -1655,6 +1767,7 @@ pub async fn reconcile(
         plan.phase = "committed".into();
         plan.error = None;
     } else if removed_match
+        && history_before_matches
         && actual.providers == plan.before.providers
         && actual_order == original_order
         && plan.observed_disabled == plan.disabled_before
@@ -2165,6 +2278,25 @@ pub async fn compensate(
     }
     let current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
     removed_key_states(root, &plan, context, &current).await?;
+    if let Some(history) = &plan.history_restoration {
+        for (provider, target) in &history.authorizations {
+            if plan.before.providers["providers"].get(provider).is_some()
+                && plan.next_providers["providers"].get(provider).is_some()
+            {
+                super::provider_auth::inspect_change(
+                    root,
+                    context,
+                    &plan.id,
+                    provider,
+                    plan.authorization_before
+                        .get(provider)
+                        .and_then(Option::as_ref),
+                    target.as_ref(),
+                )?;
+            }
+        }
+    }
+
     let order = string_array(
         &upstream::read(context, upstream::ReadOperation::ModelOrder).await?["pickerOrder"],
     )?;
@@ -2238,6 +2370,26 @@ pub async fn compensate(
             return Err(invalid("compensation_failed", "渠道补偿未完成，保留原计划"));
         }
         observe(root, context, &mut plan).await?;
+        if let Some(history) = &plan.history_restoration {
+            for (provider, target) in &history.authorizations {
+                if plan.before.providers["providers"].get(provider).is_some()
+                    && plan.next_providers["providers"].get(provider).is_some()
+                {
+                    super::provider_auth::rollback_change(
+                        root,
+                        context,
+                        &plan.id,
+                        provider,
+                        plan.authorization_before
+                            .get(provider)
+                            .and_then(Option::as_ref),
+                        target.as_ref(),
+                    )
+                    .await?;
+                }
+            }
+        }
+
         if !plan.removed_keys.is_empty() {
             let management = super::management::Management::bind(context).await?;
             for removed in &plan.removed_keys {

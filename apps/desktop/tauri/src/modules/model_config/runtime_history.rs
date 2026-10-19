@@ -14,6 +14,11 @@ pub struct Projection {
     pub disabled: Vec<String>,
     pub affected: Vec<String>,
 }
+pub struct RecoveryScope<'a> {
+    pub managed: &'a BTreeSet<String>,
+    pub authorization_changes: &'a BTreeSet<String>,
+    pub all: bool,
+}
 fn map(snapshot: &UpstreamSnapshot) -> ModelResult<&serde_json::Map<String, Value>> {
     snapshot.providers["providers"]
         .as_object()
@@ -141,9 +146,13 @@ pub fn project(
     after: &UpstreamSnapshot,
     disabled_sets: [&[String]; 3],
     side: Side,
-    managed: &BTreeSet<String>,
-    all: bool,
+    scope: RecoveryScope<'_>,
 ) -> ModelResult<Projection> {
+    let RecoveryScope {
+        managed,
+        authorization_changes,
+        all,
+    } = scope;
     let [current_disabled, before_disabled, after_disabled] = disabled_sets;
     let before_map = map(before)?;
     let after_map = map(after)?;
@@ -151,7 +160,11 @@ pub fn project(
     let row_changes = affected_rows(before, after)?;
     let mut affected = managed
         .iter()
-        .filter(|id| all || before_map.get(*id) != after_map.get(*id) || row_changes.contains(*id))
+        .filter(|id| {
+            all || authorization_changes.contains(*id)
+                || before_map.get(*id) != after_map.get(*id)
+                || row_changes.contains(*id)
+        })
         .cloned()
         .collect::<BTreeSet<_>>();
     if before.order["pickerOrder"] != after.order["pickerOrder"] {
@@ -341,8 +354,11 @@ mod tests {
             &after,
             [&["later/hidden".into()], &["removed/hidden".into()], &[]],
             Side::Before,
-            &BTreeSet::from(["removed".into()]),
-            false,
+            RecoveryScope {
+                managed: &BTreeSet::from(["removed".into()]),
+                authorization_changes: &BTreeSet::new(),
+                all: false,
+            },
         )
         .unwrap();
         assert_eq!(
@@ -364,6 +380,30 @@ mod tests {
         assert_eq!(result.disabled, vec!["later/hidden", "removed/hidden"]);
     }
     #[test]
+    fn private_authorization_changes_remain_affected_when_public_configuration_is_identical() {
+        let saved = snapshot(
+            json!({"defaultProvider":"p","providers":{"p":{"adapter":"openai-chat"},"unrelated":{}}}),
+            json!([{"provider":"p","id":"a","namespaced":"p/a"}]),
+            vec!["p/a"],
+            vec!["p/a"],
+        );
+        let result = project(
+            &saved,
+            &saved,
+            &saved,
+            [&[], &[], &[]],
+            Side::Before,
+            RecoveryScope {
+                managed: &BTreeSet::from(["p".into(), "unrelated".into()]),
+                authorization_changes: &BTreeSet::from(["p".into()]),
+                all: false,
+            },
+        )
+        .unwrap();
+        assert_eq!(result.affected, vec!["p".to_string()]);
+        assert_eq!(result.providers, saved.providers);
+    }
+    #[test]
     fn affected_external_edits_and_unknown_new_discoveries_require_explicit_recomparison() {
         let before = snapshot(
             json!({"defaultProvider":"p","providers":{"p":{"note":"before"}}}),
@@ -382,8 +422,11 @@ mod tests {
                 &after,
                 [&[], &[], &[]],
                 Side::Before,
-                &BTreeSet::from(["p".into()]),
-                false
+                RecoveryScope {
+                    managed: &BTreeSet::from(["p".into()]),
+                    authorization_changes: &BTreeSet::new(),
+                    all: false,
+                }
             )
             .unwrap_err()
             .code,
@@ -402,8 +445,11 @@ mod tests {
                 &after,
                 [&[], &[], &[]],
                 Side::Before,
-                &BTreeSet::from(["p".into()]),
-                false
+                RecoveryScope {
+                    managed: &BTreeSet::from(["p".into()]),
+                    authorization_changes: &BTreeSet::new(),
+                    all: false,
+                }
             )
             .unwrap_err()
             .code,

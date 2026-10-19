@@ -84,6 +84,38 @@ fn free_port() -> u16 {
         .port()
 }
 
+async fn history_plan(
+    manager: &Path,
+    context: &ProcessContext,
+    source_id: &str,
+) -> runtime::SavePlanView {
+    let store = model_config::store::ModelStore::new(manager);
+    let current = store.load().unwrap();
+    let recovery = runtime::prepare_recovery(
+        manager,
+        model_config::recovery::Request {
+            source_id: source_id.into(),
+            side: model_config::recovery::Side::Before,
+            scope: model_config::recovery::Scope::Affected,
+            restore_defaults: false,
+            expected_library: current.library_digest,
+            expected_policy: current.policy_digest,
+            expected_workspace: current.workspace_digest,
+        },
+    )
+    .unwrap();
+    let staged = runtime::accept_recovery(manager, &recovery.id).unwrap();
+    runtime::prepare(
+        manager,
+        context,
+        staged.workspace.unwrap().policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap()
+}
 #[tokio::test]
 #[ignore = "requires explicit OCXD_TEST_OFFICIAL_ENTRY and OCXD_TEST_OFFICIAL_NODE; runs installed official in temporary HOME"]
 async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
@@ -125,7 +157,8 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     )
     .unwrap();
     let wrapper = root.path().join("ocx");
-    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&node),quote(&entry))).unwrap();
+    let fail_sync = root.path().join("fail-sync");
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&fail_sync),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
     command
@@ -468,6 +501,8 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .await
         .unwrap();
     let key_pool_before = management.key_state("fixture").await.unwrap();
+    let historical_private: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
     assert_eq!(key_pool_before.ids.len(), 2);
     let current = store.load().unwrap();
     let next = Policy {
@@ -576,6 +611,264 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             .phase,
         "committed"
     );
+
+    // Replace an existing authorization generation through the actual public
+    // history -> draft -> normal Save path, and compensate an injected final-sync failure.
+    management
+        .add_key_labeled("fixture", "fixture-query-delete-key", Some("delete check"))
+        .await
+        .unwrap();
+    let with_extra = management.key_state("fixture").await.unwrap();
+    let disposable = with_extra
+        .ids
+        .difference(&key_pool_before.ids)
+        .next()
+        .unwrap()
+        .clone();
+    management.remove_key("fixture", &disposable).await.unwrap();
+    assert_eq!(
+        management.key_state("fixture").await.unwrap().ids,
+        key_pool_before.ids
+    );
+    management
+        .add_key_labeled("fixture", "fixture-third-local-key", Some("new generation"))
+        .await
+        .unwrap();
+    for id in &key_pool_before.ids {
+        management.remove_key("fixture", id).await.unwrap();
+    }
+    management
+        .patch_headers(
+            "fixture",
+            &BTreeMap::from([("X-Fixture-Auth".into(), "fixture-third-header".into())]),
+        )
+        .await
+        .unwrap();
+    let third_state = management.key_state("fixture").await.unwrap();
+    assert_eq!(third_state.ids.len(), 1);
+    let third = model_config::provider_auth::capture(&manager, &context, "fixture", &third_state)
+        .await
+        .unwrap()
+        .unwrap();
+    let replacement = history_plan(&manager, &context, &removal.id).await;
+    assert!(replacement
+        .runtime_changes
+        .iter()
+        .any(|c| c.field == "授权选择/fixture"));
+    std::fs::write(&fail_sync, b"owned failure injection").unwrap();
+    let partial = runtime::apply(&manager, &context, &replacement.id)
+        .await
+        .unwrap();
+    assert_ne!(partial.phase, "committed");
+    assert!(partial.error.is_some());
+    assert_eq!(
+        management.key_state("fixture").await.unwrap(),
+        key_pool_before
+    );
+    std::fs::remove_file(&fail_sync).unwrap();
+    // Later private changes must reject compensation before any public write.
+    management
+        .patch_headers(
+            "fixture",
+            &BTreeMap::from([("X-Fixture-Auth".into(), "fixture-later-header".into())]),
+        )
+        .await
+        .unwrap();
+    assert_eq!(
+        runtime::compensate(&manager, &context, &replacement.id)
+            .await
+            .unwrap_err()
+            .code,
+        "provider_auth_drift"
+    );
+    management
+        .patch_headers(
+            "fixture",
+            &BTreeMap::from([("X-Fixture-Auth".into(), "fixture-private-header".into())]),
+        )
+        .await
+        .unwrap();
+    let compensated = runtime::compensate(&manager, &context, &replacement.id)
+        .await
+        .unwrap();
+    assert_eq!(compensated.phase, "compensated", "{:?}", compensated.error);
+    model_config::provider_auth::verify(&manager, &context, &third)
+        .await
+        .unwrap();
+    assert_eq!(
+        runtime::compensate(&manager, &context, &replacement.id)
+            .await
+            .unwrap()
+            .phase,
+        "compensated"
+    );
+    let replacement = history_plan(&manager, &context, &removal.id).await;
+    let result = runtime::apply(&manager, &context, &replacement.id)
+        .await
+        .unwrap();
+    if result.phase != "committed" {
+        let actual: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap())
+                .unwrap();
+        for provider in ["fixture", mapped] {
+            let changed: Vec<_> = [
+                "baseUrl",
+                "adapter",
+                "authMode",
+                "apiKeyTransport",
+                "apiKey",
+                "apiKeyPool",
+                "headers",
+            ]
+            .into_iter()
+            .filter(|key| {
+                actual["providers"][provider][key] != historical_private["providers"][provider][key]
+            })
+            .collect();
+            eprintln!("private readback differs: provider={provider} fields={changed:?}");
+        }
+        for entry in
+            std::fs::read_dir(manager.join("manager-state/provider-auth-transitions")).unwrap()
+        {
+            let file = entry.unwrap().path();
+            if file.extension().and_then(|s| s.to_str()) == Some("json") {
+                eprintln!(
+                    "nonsecret transition: {}",
+                    std::fs::read_to_string(file).unwrap()
+                );
+            }
+        }
+    }
+    assert_eq!(result.phase, "committed", "{:?}", result.error);
+    assert_eq!(
+        management.key_state("fixture").await.unwrap(),
+        key_pool_before
+    );
+    assert_eq!(
+        runtime::apply(&manager, &context, &replacement.id)
+            .await
+            .unwrap()
+            .phase,
+        "committed"
+    );
+    // A successful existing->existing auth-only save must itself be restorable;
+    // its public before/after rows are equal, so private scope cannot be omitted.
+    let auth_only = history_plan(&manager, &context, &replacement.id).await;
+    assert!(auth_only
+        .runtime_changes
+        .iter()
+        .any(|c| c.field == "授权选择/fixture"));
+    let result = runtime::apply(&manager, &context, &auth_only.id)
+        .await
+        .unwrap();
+    assert_eq!(result.phase, "committed", "{:?}", result.error);
+    model_config::provider_auth::verify(&manager, &context, &third)
+        .await
+        .unwrap();
+    let client = model_config::client_state::status(&manager).unwrap();
+    assert_eq!(client.plan_id.as_deref(), Some(auth_only.id.as_str()));
+    let replacement = history_plan(&manager, &context, &removal.id).await;
+    assert_eq!(
+        runtime::apply(&manager, &context, &replacement.id)
+            .await
+            .unwrap()
+            .phase,
+        "committed"
+    );
+
+    // Simulate official Keychain migration with the same service/account contract
+    // in the owned in-memory keyring; this is not a native Keychain availability test.
+    let config: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
+    let mut pool = config["providers"]["fixture"]["apiKeyPool"]
+        .as_array()
+        .unwrap()
+        .clone();
+    for slot in &mut pool {
+        let id = slot["id"].as_str().unwrap().to_owned();
+        let account = format!("fixture/{id}");
+        keyring::Entry::new("opencodex.provider-api-key.v1", &account)
+            .unwrap()
+            .set_password(slot["key"].as_str().unwrap())
+            .unwrap();
+        slot["key"] = json!(format!("keychain:{account}"));
+    }
+    management.reload_provider("fixture").await.unwrap();
+    let public = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+        .await
+        .unwrap();
+    management
+        .restore_authorization_fields(
+            "fixture",
+            &public["providers"]["fixture"],
+            json!({"apiKeyPool":pool,"headers":config["providers"]["fixture"]["headers"]}),
+        )
+        .await
+        .unwrap();
+    management
+        .activate_key("fixture", key_pool_before.active_id.as_ref().unwrap())
+        .await
+        .unwrap();
+    assert_eq!(
+        management.key_state("fixture").await.unwrap(),
+        key_pool_before
+    );
+    let referenced =
+        model_config::provider_auth::capture(&manager, &context, "fixture", &key_pool_before)
+            .await
+            .unwrap()
+            .unwrap();
+    let operation = uuid::Uuid::new_v4().to_string();
+    model_config::provider_auth::change(
+        &manager,
+        &context,
+        &operation,
+        "fixture",
+        Some(&referenced),
+        Some(&third),
+    )
+    .await
+    .unwrap();
+    model_config::provider_auth::change(
+        &manager,
+        &context,
+        &operation,
+        "fixture",
+        Some(&referenced),
+        Some(&third),
+    )
+    .await
+    .unwrap();
+    model_config::provider_auth::rollback_change(
+        &manager,
+        &context,
+        &operation,
+        "fixture",
+        Some(&referenced),
+        Some(&third),
+    )
+    .await
+    .unwrap();
+    model_config::provider_auth::rollback_change(
+        &manager,
+        &context,
+        &operation,
+        "fixture",
+        Some(&referenced),
+        Some(&third),
+    )
+    .await
+    .unwrap();
+    model_config::provider_auth::verify(&manager, &context, &referenced)
+        .await
+        .unwrap();
+    let restored_config: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
+    assert_eq!(
+        restored_config["providers"]["fixture"]["apiKeyPool"],
+        json!(pool)
+    );
+    println!("existing-auth-generation=true query-delete=true history-auth-only=true injected-failure-compensated=true later-private-drift-rejected=true keychain-reference-identities-preserved=true native-keychain-not-tested=true");
 
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),

@@ -60,6 +60,8 @@ struct Slot {
     id: String,
     key: String,
     label: Option<String>,
+    #[serde(default, rename = "addedAt", skip_serializing_if = "Option::is_none")]
+    added_at: Option<u64>,
 }
 impl Drop for Auth {
     fn drop(&mut self) {
@@ -136,6 +138,7 @@ fn parse(bytes: &[u8], provider: &str) -> ModelResult<Auth> {
                 id: key_id(key),
                 key: key.clone(),
                 label: None,
+                added_at: None,
             });
         }
     }
@@ -173,7 +176,12 @@ fn validate(auth: &Auth) -> ModelResult<()> {
     let mut ids = BTreeSet::new();
     for slot in &auth.api_key_pool {
         if !key_ok(&slot.key)
-            || slot.id != key_id(&slot.key)
+            || slot.id.len() != 8
+            || !slot
+                .id
+                .bytes()
+                .all(|b| b.is_ascii_digit() || matches!(b, b'a'..=b'f'))
+            || (slot.id != key_id(&slot.key) && !slot.key.starts_with("keychain:"))
             || !ids.insert(&slot.id)
             || slot
                 .label
@@ -187,7 +195,7 @@ fn validate(auth: &Auth) -> ModelResult<()> {
         && auth
             .api_key
             .as_ref()
-            .is_none_or(|key| !auth.api_key_pool.iter().any(|s| &s.key == key))
+            .is_some_and(|key| !auth.api_key_pool.iter().any(|s| &s.key == key))
     {
         return Err(invalid(
             "provider_auth_source",
@@ -216,6 +224,7 @@ fn state(auth: &Auth) -> KeyState {
         .api_key_pool
         .iter()
         .find(|s| Some(&s.key) == auth.api_key.as_ref())
+        .or_else(|| auth.api_key_pool.first())
         .map(|s| s.id.clone())
         .or_else(|| auth.api_key.as_ref().map(|key| key_id(key)));
     KeyState { ids, active_id }
@@ -263,6 +272,14 @@ impl SafeStore for System {
     }
 }
 fn reference_digests(auth: &Auth, provider: &str) -> ModelResult<BTreeMap<String, String>> {
+    for slot in &auth.api_key_pool {
+        if slot.id != key_id(&slot.key) && slot.key != format!("keychain:{provider}/{}", slot.id) {
+            return Err(invalid(
+                "provider_auth_reference",
+                "安全引用与原Key池身份不对应，未读取",
+            ));
+        }
+    }
     let mut digests = BTreeMap::new();
     for raw in auth
         .api_key
@@ -557,10 +574,14 @@ fn is_owned_subset(current: &Auth, expected: &Auth) -> bool {
         .api_key_pool
         .iter()
         .all(|s| expected_key(&s.id, &s.key))
-        && current
-            .api_key
-            .as_ref()
-            .is_none_or(|key| expected_key(&key_id(key), key));
+        && current.api_key.as_ref().is_none_or(|key| {
+            current
+                .api_key_pool
+                .iter()
+                .find(|s| &s.key == key)
+                .map(|s| expected_key(&s.id, key))
+                .unwrap_or_else(|| expected_key(&key_id(key), key))
+        });
     current_ok
         && (current.api_key.is_none()
             || current.api_key == expected.api_key
@@ -569,10 +590,9 @@ fn is_owned_subset(current: &Auth, expected: &Auth) -> bool {
                 .last()
                 .is_some_and(|slot| Some(&slot.key) == current.api_key.as_ref()))
         && current.api_key_pool.iter().enumerate().all(|(i, slot)| {
-            expected
-                .api_key_pool
-                .get(i)
-                .is_some_and(|s| s.id == slot.id && s.label == slot.label)
+            expected.api_key_pool.get(i).is_some_and(|s| {
+                s.id == slot.id && s.label == slot.label && s.added_at == slot.added_at
+            })
         })
         && current
             .headers
@@ -621,28 +641,401 @@ pub async fn restore(root: &Path, context: &ProcessContext, backup: &Backup) -> 
         return verify(root, context, backup).await;
     }
     let management = Management::bind(context).await?;
-    if value.auth.api_key_pool.is_empty() {
-        if let Some(key) = &value.auth.api_key {
-            management.add_key(&backup.provider, key).await?;
-        }
-    } else {
-        for slot in &value.auth.api_key_pool {
-            if !current.api_key_pool.iter().any(|s| s.id == slot.id) {
-                management
-                    .add_key_labeled(&backup.provider, &slot.key, slot.label.as_deref())
-                    .await?;
-            }
-        }
+    management.reload_provider(&backup.provider).await?;
+    let public =
+        super::upstream::read(context, super::upstream::ReadOperation::ProviderSnapshot).await?;
+    let fresh = read(context, &backup.provider)?;
+    if !is_owned_subset(&fresh, &value.auth) {
+        return Err(invalid(
+            "provider_auth_drift",
+            "授权恢复前目标又发生变化，未写入",
+        ));
     }
-    if let Some(active) = &backup.state.active_id {
-        management.activate_key(&backup.provider, active).await?;
-    }
-    if !value.auth.headers.is_empty() {
-        management
-            .patch_headers(&backup.provider, &value.auth.headers)
-            .await?;
+    management
+        .restore_authorization_fields(
+            &backup.provider,
+            &public["providers"][&backup.provider],
+            serde_json::json!({"apiKeyPool":value.auth.api_key_pool,"headers":value.auth.headers}),
+        )
+        .await?;
+    if value.auth.api_key.is_some() {
+        if let Some(active) = &backup.state.active_id {
+            management.activate_key(&backup.provider, active).await?;
+        }
     }
     verify(root, context, backup).await
+}
+
+fn auth_digest(auth: &Auth) -> ModelResult<String> {
+    Ok(sha256(&Zeroizing::new(serde_json::to_vec(auth)?)))
+}
+fn transport_matches(left: &Auth, right: &Auth) -> bool {
+    left.base_url == right.base_url
+        && left.adapter == right.adapter
+        && left.auth_mode.as_deref().unwrap_or("key") == right.auth_mode.as_deref().unwrap_or("key")
+        && left.api_key_transport == right.api_key_transport
+}
+fn empty_auth(transport: &Auth) -> Auth {
+    Auth {
+        base_url: transport.base_url.clone(),
+        adapter: transport.adapter.clone(),
+        auth_mode: transport.auth_mode.clone(),
+        api_key_transport: transport.api_key_transport.clone(),
+        api_key: None,
+        api_key_pool: vec![],
+        headers: BTreeMap::new(),
+    }
+}
+fn from_backup(
+    root: &Path,
+    context: &ProcessContext,
+    provider: &str,
+    backup: Option<&Backup>,
+    transport: &Auth,
+) -> ModelResult<Auth> {
+    let Some(backup) = backup else {
+        return Ok(empty_auth(transport));
+    };
+    if backup.provider != provider {
+        return Err(invalid("provider_auth_scope", "授权回退目标不属于当前渠道"));
+    }
+    let value = unseal(root, backup, &System)?;
+    if value.binding != super::runtime::runtime_binding(context)? {
+        return Err(invalid("provider_auth_scope", "授权回退所属运行根不同"));
+    }
+    references_match(&value, provider)?;
+    let auth = serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(&value.auth)?))
+        .map_err(|_| invalid("provider_auth_source", "受保护授权无法重建"))?;
+    Ok(auth)
+}
+pub async fn matches(
+    root: &Path,
+    context: &ProcessContext,
+    provider: &str,
+    backup: Option<&Backup>,
+) -> ModelResult<bool> {
+    let current = read(context, provider)?;
+    let expected = from_backup(root, context, provider, backup, &current)?;
+    Ok(auth_digest(&current)? == auth_digest(&expected)?
+        && Management::bind(context).await?.key_state(provider).await? == state(&expected))
+}
+/// Called during the review, before allowing a historical private direction to
+/// replace an existing pool. The current materials are independently protected.
+pub fn review_change(
+    root: &Path,
+    context: &ProcessContext,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+) -> ModelResult<()> {
+    let current = read(context, provider)?;
+    let original = from_backup(root, context, provider, before, &current)?;
+    let desired = from_backup(root, context, provider, target, &current)?;
+    if auth_digest(&current)? != auth_digest(&original)? {
+        return Err(invalid(
+            "provider_auth_drift",
+            "授权比较期间当前选择已改变，请重新比较",
+        ));
+    }
+    if !transport_matches(&current, &desired) {
+        return Err(invalid(
+            "provider_auth_direction",
+            "恢复前后服务或认证方式不同，请先明确映射到正确连接，未发送旧授权",
+        ));
+    }
+    Ok(())
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct Transition {
+    operation: String,
+    provider: String,
+    from_digest: String,
+    target_digest: String,
+    pool_digest: String,
+    phase: String,
+}
+fn change_path(
+    root: &Path,
+    operation: &str,
+    provider: &str,
+    rollback: bool,
+) -> ModelResult<PathBuf> {
+    require_uuid(operation)?;
+    let slug = sha256(provider.as_bytes());
+    let slug = slug.trim_start_matches("sha256:");
+    let path = root
+        .join("manager-state/provider-auth-transitions")
+        .join(format!(
+            "{operation}-{slug}-{}.json",
+            if rollback { "rollback" } else { "forward" }
+        ));
+    safety::check_path(root, &path, true)?;
+    Ok(path)
+}
+fn save_change(file: &Path, value: &Transition) -> ModelResult<()> {
+    let bytes = serde_json::to_vec(value)?;
+    atomic_write(file, &bytes, 0o600)?;
+    if safety::read_file(file, 16384)? != bytes {
+        return Err(invalid("provider_auth_transition", "授权回退日志未读回"));
+    }
+    Ok(())
+}
+fn phase_allows(phase: &str, current: &str, from: &str, target: &str, pool: &str) -> bool {
+    match phase {
+        "prepared" => current == from,
+        "pending_pool" => current == from || current == pool,
+        "pool_written" => current == pool,
+        "pending_active" => current == pool || current == target,
+        "done" => current == target,
+        _ => false,
+    }
+}
+fn pool_auth(auth: &Auth) -> ModelResult<Auth> {
+    let mut value: Auth = serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(auth)?))
+        .map_err(|_| invalid("provider_auth_source", "授权暂态无法解析"))?;
+    if let Some(mut key) = value.api_key.take() {
+        key.zeroize();
+    }
+    Ok(value)
+}
+fn pool_digest(auth: &Auth) -> ModelResult<String> {
+    auth_digest(&pool_auth(auth)?)
+}
+
+fn read_change(
+    file: &Path,
+    operation: &str,
+    provider: &str,
+    from: &Auth,
+    target: &Auth,
+) -> ModelResult<Option<Transition>> {
+    if !file.exists() {
+        return Ok(None);
+    }
+    let record: Transition = serde_json::from_slice(&safety::read_file(file, 16384)?)?;
+    if record.operation != operation
+        || record.provider != provider
+        || record.from_digest != auth_digest(from)?
+        || record.target_digest != auth_digest(target)?
+        || record.pool_digest != pool_digest(target)?
+    {
+        return Err(invalid(
+            "provider_auth_transition",
+            "原授权回退范围或目标已改变，请沿原计划核对",
+        ));
+    }
+    Ok(Some(record))
+}
+async fn write_change(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    from: &Auth,
+    target: &Auth,
+    rollback: bool,
+) -> ModelResult<()> {
+    let file = change_path(root, operation, provider, rollback)?;
+    safety::check_path(
+        root,
+        &crate::infrastructure::locking::lock_path_for(&file),
+        true,
+    )?;
+    let _guard = crate::infrastructure::locking::TargetFileLock::lock(&file)?;
+    let mut current = read(context, provider)?;
+    if !transport_matches(&current, target) {
+        return Err(invalid(
+            "provider_auth_direction",
+            "目标连接在授权回退前改变，未发送旧授权",
+        ));
+    }
+    let mut record = read_change(&file, operation, provider, from, target)?.unwrap_or(Transition {
+        operation: operation.into(),
+        provider: provider.into(),
+        from_digest: auth_digest(from)?,
+        target_digest: auth_digest(target)?,
+        pool_digest: pool_digest(target)?,
+        phase: "prepared".into(),
+    });
+    let actual = auth_digest(&current)?;
+    if !phase_allows(
+        &record.phase,
+        &actual,
+        &record.from_digest,
+        &record.target_digest,
+        &record.pool_digest,
+    ) {
+        return Err(invalid(
+            "provider_auth_drift",
+            "当前授权不属于本次回退已核验的副作用，拒绝覆盖后来修改",
+        ));
+    }
+    if actual == record.target_digest {
+        record.phase = "done".into();
+        return save_change(&file, &record);
+    }
+    let management = Management::bind(context).await?;
+    management.reload_provider(provider).await?;
+    if actual != record.pool_digest {
+        record.phase = "pending_pool".into();
+        save_change(&file, &record)?;
+        let public =
+            super::upstream::read(context, super::upstream::ReadOperation::ProviderSnapshot)
+                .await?;
+        if auth_digest(&read(context, provider)?)? != actual {
+            return Err(invalid(
+                "provider_auth_drift",
+                "授权写入前检测到后来修改，未覆盖",
+            ));
+        }
+        management
+            .restore_authorization_fields(
+                provider,
+                &public["providers"][provider],
+                serde_json::json!({"apiKeyPool":target.api_key_pool,"headers":target.headers}),
+            )
+            .await?;
+        current = read(context, provider)?;
+        if auth_digest(&current)? != record.pool_digest {
+            return Err(invalid(
+                "provider_auth_readback",
+                "授权池和认证头未读回本次目标，原计划待核对",
+            ));
+        }
+    }
+    record.phase = "pool_written".into();
+    save_change(&file, &record)?;
+    if let Some(active) = state(target).active_id.filter(|_| target.api_key.is_some()) {
+        record.phase = "pending_active".into();
+        save_change(&file, &record)?;
+        if auth_digest(&read(context, provider)?)? != record.pool_digest {
+            return Err(invalid(
+                "provider_auth_drift",
+                "恢复活动选择前授权又改变，未覆盖",
+            ));
+        }
+        management.activate_key(provider, &active).await?;
+    }
+    if auth_digest(&read(context, provider)?)? != record.target_digest
+        || management.key_state(provider).await? != state(target)
+    {
+        return Err(invalid(
+            "provider_auth_readback",
+            "授权回退或活动选择读回不同，保留原执行记录",
+        ));
+    }
+    record.phase = "done".into();
+    save_change(&file, &record)
+}
+pub async fn change(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+) -> ModelResult<()> {
+    let current = read(context, provider)?;
+    let original = from_backup(root, context, provider, before, &current)?;
+    let desired = from_backup(root, context, provider, target, &current)?;
+    write_change(
+        root, context, operation, provider, &original, &desired, false,
+    )
+    .await
+}
+pub fn inspect_change(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+) -> ModelResult<()> {
+    let current = read(context, provider)?;
+    let original = from_backup(root, context, provider, before, &current)?;
+    let desired = from_backup(root, context, provider, target, &current)?;
+    let file = change_path(root, operation, provider, false)?;
+    let actual = auth_digest(&current)?;
+    let reverse = change_path(root, operation, provider, true)?;
+    if reverse.exists() {
+        let record: Transition = serde_json::from_slice(&safety::read_file(&reverse, 16384)?)?;
+        let from = if record.from_digest == pool_digest(&desired)? {
+            pool_auth(&desired)?
+        } else {
+            from_backup(root, context, provider, target, &current)?
+        };
+        let record = read_change(&reverse, operation, provider, &from, &original)?
+            .ok_or_else(|| invalid("provider_auth_transition", "补偿日志缺失"))?;
+        if !phase_allows(
+            &record.phase,
+            &actual,
+            &record.from_digest,
+            &record.target_digest,
+            &record.pool_digest,
+        ) {
+            return Err(invalid(
+                "provider_auth_drift",
+                "授权补偿后存在后来修改，拒绝重放",
+            ));
+        }
+        return Ok(());
+    }
+    if let Some(record) = read_change(&file, operation, provider, &original, &desired)? {
+        if !phase_allows(
+            &record.phase,
+            &actual,
+            &record.from_digest,
+            &record.target_digest,
+            &record.pool_digest,
+        ) {
+            return Err(invalid(
+                "provider_auth_drift",
+                "原授权回退后存在无法归属的后来修改，拒绝补偿",
+            ));
+        }
+    } else if actual != auth_digest(&original)? {
+        return Err(invalid(
+            "provider_auth_drift",
+            "授权在回退开始前已经改变，未覆盖",
+        ));
+    }
+    Ok(())
+}
+pub async fn rollback_change(
+    root: &Path,
+    context: &ProcessContext,
+    operation: &str,
+    provider: &str,
+    before: Option<&Backup>,
+    target: Option<&Backup>,
+) -> ModelResult<()> {
+    let current = read(context, provider)?;
+    let original = from_backup(root, context, provider, before, &current)?;
+    let desired = from_backup(root, context, provider, target, &current)?;
+    let rollback = change_path(root, operation, provider, true)?;
+    if rollback.exists() {
+        // Resume the reverse intent from its own frozen digests. Its starting
+        // snapshot was the forward target or exact pool-written intermediate.
+        let record: Transition = serde_json::from_slice(&safety::read_file(&rollback, 16384)?)?;
+        let mut from =
+            serde_json::from_slice::<Auth>(&Zeroizing::new(serde_json::to_vec(&desired)?))
+                .map_err(|_| invalid("provider_auth_source", "授权回退暂态无效"))?;
+        if record.from_digest == pool_digest(&desired)? {
+            if let Some(mut key) = from.api_key.take() {
+                key.zeroize();
+            }
+        }
+        return write_change(root, context, operation, provider, &from, &original, true).await;
+    }
+    inspect_change(root, context, operation, provider, before, target)?;
+    if auth_digest(&current)? == auth_digest(&original)? {
+        return Ok(());
+    }
+    write_change(
+        root, context, operation, provider, &current, &original, true,
+    )
+    .await
 }
 
 #[cfg(test)]
@@ -672,11 +1065,13 @@ mod tests {
             api_key: Some(b.into()),
             api_key_pool: vec![
                 Slot {
+                    added_at: None,
                     id: key_id(a),
                     key: a.into(),
                     label: Some("first".into()),
                 },
                 Slot {
+                    added_at: None,
                     id: key_id(b),
                     key: b.into(),
                     label: Some("second".into()),
@@ -684,6 +1079,73 @@ mod tests {
             ],
             headers: BTreeMap::from([("X-Authorization".into(), "fixture-header-SECRET".into())]),
         }
+    }
+    #[test]
+    fn transition_phases_only_admit_the_exact_issued_write_or_active_choice() {
+        let expected = [
+            ("prepared", vec!["from"]),
+            ("pending_pool", vec!["from", "pool"]),
+            ("pool_written", vec!["pool"]),
+            ("pending_active", vec!["pool", "target"]),
+            ("done", vec!["target"]),
+            ("invalid", vec![]),
+        ];
+        for (phase, allowed) in expected {
+            for actual in ["from", "pool", "target", "later"] {
+                assert_eq!(
+                    phase_allows(phase, actual, "from", "target", "pool"),
+                    allowed.contains(&actual),
+                    "{phase}/{actual}"
+                );
+            }
+        }
+        let target = auth();
+        let mut pool = pool_auth(&target).unwrap();
+        assert!(pool.api_key.is_none());
+        assert_eq!(auth_digest(&pool).unwrap(), pool_digest(&target).unwrap());
+        pool.api_key_pool[0].label = Some("later label".into());
+        assert_ne!(auth_digest(&pool).unwrap(), pool_digest(&target).unwrap());
+    }
+    #[test]
+    fn transition_log_binds_operation_provider_full_pool_and_direction() {
+        let root = tempfile::tempdir().unwrap();
+        let operation = uuid::Uuid::new_v4().to_string();
+        let target = auth();
+        let original = empty_auth(&target);
+        let file = change_path(root.path(), &operation, "selected", false).unwrap();
+        save_change(
+            &file,
+            &Transition {
+                operation: operation.clone(),
+                provider: "selected".into(),
+                from_digest: auth_digest(&original).unwrap(),
+                target_digest: auth_digest(&target).unwrap(),
+                pool_digest: pool_digest(&target).unwrap(),
+                phase: "pending_active".into(),
+            },
+        )
+        .unwrap();
+        assert!(
+            read_change(&file, &operation, "selected", &original, &target)
+                .unwrap()
+                .is_some()
+        );
+        assert!(read_change(&file, &operation, "other", &original, &target).is_err());
+        assert!(read_change(
+            &file,
+            &uuid::Uuid::new_v4().to_string(),
+            "selected",
+            &original,
+            &target
+        )
+        .is_err());
+        assert!(read_change(&file, &operation, "selected", &target, &original).is_err());
+        let mut later = auth();
+        later.api_key_pool[0].added_at = Some(555);
+        assert!(read_change(&file, &operation, "selected", &original, &later).is_err());
+        assert!(!String::from_utf8(std::fs::read(file).unwrap())
+            .unwrap()
+            .contains("SECRET"));
     }
     #[test]
     fn local_machine_key_aad_rejects_binding_tampering_even_when_file_checksum_is_recomputed() {
@@ -826,6 +1288,7 @@ mod tests {
             api_key_transport: expected.api_key_transport.clone(),
             api_key: Some(expected.api_key_pool[0].key.clone()),
             api_key_pool: vec![Slot {
+                added_at: None,
                 id: expected.api_key_pool[0].id.clone(),
                 key: expected.api_key_pool[0].key.clone(),
                 label: expected.api_key_pool[0].label.clone(),
@@ -843,6 +1306,54 @@ mod tests {
         partial.headers.clear();
         partial.base_url = Some("https://other.example.test/v1".into());
         assert!(!is_owned_subset(&partial, &expected));
+    }
+    #[test]
+    fn keychain_migrated_pool_identity_is_preserved_instead_of_hashing_the_reference() {
+        let first = "keychain:selected/0123abcd";
+        let second = "keychain:selected/8765dcba";
+        let value = Auth {
+            api_key: Some(second.into()),
+            api_key_pool: vec![
+                Slot {
+                    id: "0123abcd".into(),
+                    key: first.into(),
+                    label: Some("original first".into()),
+                    added_at: Some(100),
+                },
+                Slot {
+                    id: "8765dcba".into(),
+                    key: second.into(),
+                    label: None,
+                    added_at: Some(200),
+                },
+            ],
+            base_url: None,
+            adapter: None,
+            auth_mode: None,
+            api_key_transport: None,
+            headers: BTreeMap::new(),
+        };
+        validate(&value).unwrap();
+        assert_eq!(state(&value).active_id.as_deref(), Some("8765dcba"));
+        assert_ne!(key_id(first), "0123abcd");
+        assert!(is_owned_subset(&value, &value));
+        let root = tempfile::tempdir().unwrap();
+        let store = Memory::default();
+        let backup = freeze(
+            root.path(),
+            "selected",
+            &Protected {
+                provider: "selected".into(),
+                binding: "fixture".into(),
+                auth: value,
+                reference_digests: BTreeMap::new(),
+            },
+            &store,
+        )
+        .unwrap();
+        let restored = unseal(root.path(), &backup, &store).unwrap();
+        assert_eq!(restored.auth.api_key_pool[0].id, "0123abcd");
+        assert_eq!(restored.auth.api_key_pool[0].added_at, Some(100));
     }
     #[test]
     fn a_new_private_header_on_previously_empty_auth_invalidates_deletion() {
