@@ -133,6 +133,14 @@ jobs:
           } else {
             cargo test --locked --workspace --features integration-test -- --show-output
           }
+      - name: Verify isolated native credential protection
+        if: always()
+        shell: pwsh
+        run: |
+          $env:OPENCODEX_SANDBOX = '1'
+          cargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Collect Windows native dependency diagnostics
         if: always()
         shell: pwsh
