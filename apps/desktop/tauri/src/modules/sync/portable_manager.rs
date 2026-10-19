@@ -1,6 +1,7 @@
 //! Portable manager settings share the file manifest with model objects.
 //! Imported connections are inactive candidates; live connection selection is
 //! a separate existing endpoint-owner action.
+use super::portable_accounts::{self, AccountInfo};
 use crate::{
     infrastructure::{atomic_write::atomic_write, locking::TargetFileLock},
     modules::model_config::{schema::*, store::sha256},
@@ -35,6 +36,10 @@ pub struct Scope {
     pub extension_credentials: bool,
     #[serde(default)]
     pub assets_reviewed: bool,
+    #[serde(default)]
+    pub account_ids: Vec<String>,
+    #[serde(skip)]
+    pub upstream_root: Option<PathBuf>,
     #[serde(skip)]
     pub local_home: Option<PathBuf>,
 }
@@ -53,6 +58,8 @@ pub struct Settings {
     pub preferences: Option<Preferences>,
     pub extensions: Option<ExtensionConfig>,
     pub webdav: Vec<Endpoint>,
+    #[serde(default)]
+    pub accounts: Vec<AccountInfo>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -151,6 +158,7 @@ fn validate_endpoint(endpoint: &Endpoint) -> ModelResult<()> {
     Ok(())
 }
 pub fn validate(settings: &Settings) -> ModelResult<()> {
+    portable_accounts::validate(&settings.accounts)?;
     if let Some(prefs) = &settings.preferences {
         preferences::validate(prefs)
             .map_err(|_| invalid("portable_preferences", "导入偏好包含无效值"))?;
@@ -224,6 +232,11 @@ pub fn export(root: &Path, scope: &Scope) -> ModelResult<Settings> {
         vec![]
     };
     let result = Settings {
+        accounts: portable_accounts::export(
+            root,
+            scope.upstream_root.as_deref(),
+            &scope.account_ids,
+        )?,
         preferences: prefs,
         extensions,
         webdav,
@@ -233,6 +246,9 @@ pub fn export(root: &Path, scope: &Scope) -> ModelResult<Settings> {
 }
 pub fn sections(settings: &Settings) -> Vec<String> {
     let mut items = vec![];
+    if !settings.accounts.is_empty() {
+        items.push("accountInfo".into());
+    }
     if settings.preferences.is_some() {
         items.push("preferences".into());
     }
@@ -247,6 +263,16 @@ pub fn sections(settings: &Settings) -> Vec<String> {
 pub fn prepare(root: &Path, id: &str, settings: &Settings) -> ModelResult<()> {
     validate(settings)?;
     let mut files = vec![];
+    if !settings.accounts.is_empty() {
+        let before = bytes(root, portable_accounts::IMPORTED)?;
+        let merged =
+            portable_accounts::merge(portable_accounts::imported(root)?, &settings.accounts)?;
+        files.push(File {
+            path: portable_accounts::IMPORTED.into(),
+            before,
+            after: serde_json::to_vec(&merged)?,
+        });
+    }
     if let Some(prefs) = &settings.preferences {
         let mut value = preferences::document_from_preferences(prefs);
         preferences::preserve_model_agent(
@@ -347,11 +373,26 @@ pub fn select(
     preferences: bool,
     extensions: bool,
     endpoint_ids: &[String],
+    account_ids: &[String],
 ) -> ModelResult<()> {
     let plan = load(root, original)?;
     let mut files = vec![];
     for mut file in plan.files {
         match file.path.as_str() {
+            portable_accounts::IMPORTED if !account_ids.is_empty() => {
+                let before: Vec<AccountInfo> = file
+                    .before
+                    .as_ref()
+                    .map(|b| serde_json::from_slice(b))
+                    .transpose()?
+                    .unwrap_or_default();
+                let mut after: Vec<AccountInfo> = serde_json::from_slice(&file.after)?;
+                after.retain(|a| {
+                    before.iter().any(|old| old.id == a.id) || account_ids.contains(&a.id)
+                });
+                file.after = serde_json::to_vec(&after)?;
+                files.push(file);
+            }
             preferences::PREFERENCES_RELATIVE_PATH if preferences => files.push(file),
             projection::CONFIG_RELATIVE_PATH if extensions => files.push(file),
             CANDIDATES => {
@@ -388,12 +429,13 @@ fn load(root: &Path, id: &str) -> ModelResult<Plan> {
         64 * 1024 * 1024,
     )?)?;
     if plan.id != id
-        || plan.files.len() > 3
+        || plan.files.len() > 4
         || plan.files.iter().any(|f| {
             ![
                 preferences::PREFERENCES_RELATIVE_PATH,
                 projection::CONFIG_RELATIVE_PATH,
                 CANDIDATES,
+                portable_accounts::IMPORTED,
             ]
             .contains(&f.path.as_str())
                 || f.after.len() as u64 > LIMIT
@@ -410,6 +452,10 @@ fn load(root: &Path, id: &str) -> ModelResult<Plan> {
     }
     for file in &plan.files {
         match file.path.as_str() {
+            portable_accounts::IMPORTED => {
+                let values: Vec<AccountInfo> = serde_json::from_slice(&file.after)?;
+                portable_accounts::validate(&values)?;
+            }
             preferences::PREFERENCES_RELATIVE_PATH => {
                 let document: serde_json::Value = serde_json::from_slice(&file.after)?;
                 preferences::preferences_from_document(&document)
@@ -570,6 +616,7 @@ mod tests {
             ..Default::default()
         };
         Settings {
+            accounts: vec![],
             preferences: Some(preferences),
             extensions: Some(ExtensionConfig {
                 skills: vec!["fixture-skill".into()],
@@ -696,7 +743,7 @@ mod tests {
         let original = uuid::Uuid::new_v4().to_string();
         let selected = uuid::Uuid::new_v4().to_string();
         prepare(root.path(), &original, &settings()).unwrap();
-        select(root.path(), &original, &selected, false, true, &[]).unwrap();
+        select(root.path(), &original, &selected, false, true, &[], &[]).unwrap();
         apply(root.path(), &selected).unwrap();
         assert!(!root
             .path()

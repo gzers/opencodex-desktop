@@ -74,9 +74,11 @@ pub async fn config_sync_scope(
 }
 #[tauri::command]
 pub async fn config_sync_save_scope(
-    scope: config_remote::Scope,
+    mut scope: config_remote::Scope,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> ModelResult<config_remote::Scope> {
+    scope.upstream_root = Some(context.opencodex_home.clone());
     let root = data_root.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
@@ -90,9 +92,11 @@ pub async fn config_sync_save_scope(
 pub async fn config_sync_prepare(
     scope: config_remote::Scope,
     passphrase: Option<String>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<config_remote::UploadView> {
+    let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
@@ -100,8 +104,10 @@ pub async fn config_sync_prepare(
         let _admission = admission;
         let password = passphrase.map(zeroize::Zeroizing::new);
         remote_operation(&root, |transport, config, binding, unchanged| {
-            let mut scope = config_remote::save_scope(&root, scope)?;
+            let mut scope = scope;
             scope.local_home = Some(local_home);
+            scope.upstream_root = Some(upstream_root);
+            let scope = config_remote::save_scope(&root, scope)?;
             tauri::async_runtime::block_on(config_remote::prepare(
                 &root,
                 transport,
@@ -231,9 +237,11 @@ pub async fn model_transfer_prepare(
     passphrase: Option<String>,
     include_keys: Option<bool>,
     manager_scope: Option<crate::modules::sync::portable_manager::Scope>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<FileExportPlan> {
+    let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
     let admission = crate::infrastructure::storage_writers::global().admit()?;
@@ -242,6 +250,7 @@ pub async fn model_transfer_prepare(
         let passphrase = passphrase.map(zeroize::Zeroizing::new);
         let mut manager_scope = manager_scope.unwrap_or_default();
         manager_scope.local_home = Some(local_home);
+        manager_scope.upstream_root = Some(upstream_root);
         transfer::prepare_file_scope(
             &root,
             scope,
@@ -403,4 +412,20 @@ pub async fn portable_extension_catalog(
     })
     .await
     .map_err(|_| invalid("asset_discovery", "扩展资源列表读取中断"))?
+}
+
+#[tauri::command]
+pub async fn portable_account_catalog(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<Vec<crate::modules::sync::portable_accounts::CatalogEntry>> {
+    let root = data_root.0.clone();
+    let upstream = context.opencodex_home.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::sync::portable_accounts::catalog(&root, &upstream)
+    })
+    .await
+    .map_err(|_| invalid("account_source", "账户信息读取中断"))?
 }

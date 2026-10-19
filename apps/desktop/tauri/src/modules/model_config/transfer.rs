@@ -67,6 +67,8 @@ pub struct ReceiveScope {
     #[serde(default)]
     pub endpoint_ids: Vec<String>,
     #[serde(default)]
+    pub account_ids: Vec<String>,
+    #[serde(default)]
     pub skill_names: Vec<String>,
     #[serde(default)]
     pub mcp_names: Vec<String>,
@@ -167,7 +169,8 @@ pub fn prepare_file_scope(
             || manager_scope.extensions
             || manager_scope.webdav
             || !manager_scope.skill_names.is_empty()
-            || !manager_scope.mcp_names.is_empty());
+            || !manager_scope.mcp_names.is_empty()
+            || !manager_scope.account_ids.is_empty());
     let mut package = export(root, scope)?;
     if no_models {
         package.payload.templates.clear();
@@ -753,6 +756,7 @@ pub fn select_received_context(
         && !scope.preferences
         && !scope.extensions
         && scope.endpoint_ids.is_empty()
+        && scope.account_ids.is_empty()
         && scope.skill_names.is_empty()
         && scope.mcp_names.is_empty()
     {
@@ -820,8 +824,15 @@ pub fn select_received_context(
         .retain(|template| !template.revisions.is_empty());
     package.digest = sha256(&serde_json::to_vec(&package.payload)?);
     let mut selected = receive(root, package)?;
+    if !scope.account_ids.is_empty() && original.manager.is_none() {
+        return Err(invalid("import_scope", "选择了包内不存在的账户信息"));
+    }
     if let Some(manager) = &original.manager {
-        if scope.preferences && manager.preferences.is_none()
+        if scope
+            .account_ids
+            .iter()
+            .any(|id| !manager.accounts.iter().any(|a| &a.id == id))
+            || scope.preferences && manager.preferences.is_none()
             || scope.extensions && manager.extensions.is_none()
             || scope
                 .endpoint_ids
@@ -831,6 +842,12 @@ pub fn select_received_context(
             return Err(invalid("import_scope", "选择了包内不存在的管理器配置"));
         }
         selected.manager = Some(crate::modules::sync::portable_manager::Settings {
+            accounts: manager
+                .accounts
+                .iter()
+                .filter(|a| scope.account_ids.contains(&a.id))
+                .cloned()
+                .collect(),
             preferences: if scope.preferences {
                 manager.preferences.clone()
             } else {
@@ -861,6 +878,7 @@ pub fn select_received_context(
             scope.preferences,
             scope.extensions,
             &scope.endpoint_ids,
+            &scope.account_ids,
         )?;
     }
     super::file_objects::copy_source(root, &original, &mut selected)?;

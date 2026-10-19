@@ -41,6 +41,13 @@ pub struct Scope {
     pub mcp_names: Vec<String>,
     #[serde(default)]
     pub extension_credentials: bool,
+    #[serde(default)]
+    pub account_ids: Vec<String>,
+    #[serde(default)]
+    /// Recomputed from the bound local source by save_scope, never trusted from IPC.
+    pub account_identities: Vec<crate::modules::sync::portable_accounts::AccountInfo>,
+    #[serde(skip)]
+    pub upstream_root: Option<PathBuf>,
     #[serde(default, skip_serializing)]
     pub assets_reviewed: bool,
     #[serde(default)]
@@ -66,6 +73,9 @@ impl Default for Scope {
             skill_names: vec![],
             mcp_names: vec![],
             extension_credentials: false,
+            account_ids: vec![],
+            account_identities: vec![],
+            upstream_root: None,
             assets_reviewed: false,
             all_templates: false,
             all_channels: false,
@@ -87,6 +97,15 @@ impl Scope {
         for id in self.template_ids.iter().chain(&self.channel_ids) {
             require_uuid(id)?;
         }
+        if self.account_ids.len() > 1000
+            || self.account_ids.iter().collect::<BTreeSet<_>>().len() != self.account_ids.len()
+        {
+            return Err(invalid("sync_scope", "账户同步范围重复或超过上限"));
+        }
+        for id in &self.account_ids {
+            require_uuid(id)?;
+        }
+        crate::modules::sync::portable_accounts::validate(&self.account_identities)?;
         if self.include_keys && self.channel_ids.is_empty() && !self.all_channels {
             return Err(invalid("sync_scope", "携带Key前请选择渠道"));
         }
@@ -95,6 +114,7 @@ impl Scope {
             && !self.include_global
             && !self.preferences
             && !self.extensions
+            && self.account_ids.is_empty()
             && self.skill_names.is_empty()
             && self.mcp_names.is_empty()
             && !self.all_templates
@@ -126,6 +146,8 @@ impl Scope {
             mcp_names: self.mcp_names.clone(),
             extension_credentials: self.extension_credentials,
             assets_reviewed: self.assets_reviewed,
+            account_ids: self.account_ids.clone(),
+            upstream_root: self.upstream_root.clone(),
             local_home: self.local_home.clone(),
         }
     }
@@ -181,6 +203,24 @@ impl Scope {
         })
     }
 }
+fn remote_account_ids(
+    scope: &Scope,
+    remote: &[crate::modules::sync::portable_accounts::AccountInfo],
+) -> Vec<String> {
+    remote
+        .iter()
+        .filter(|account| {
+            scope.account_ids.contains(&account.id)
+                || scope.account_identities.iter().any(|local| {
+                    local.provider == account.provider
+                        && local.subject.is_some()
+                        && local.subject == account.subject
+                })
+        })
+        .map(|account| account.id.clone())
+        .collect()
+}
+
 pub fn load_scope(root: &Path) -> ModelResult<Scope> {
     let path = root.join(SCOPE);
     safety::check_path(root, &path, true)?;
@@ -190,10 +230,27 @@ pub fn load_scope(root: &Path) -> ModelResult<Scope> {
         Scope::default()
     };
     Scope::validate(&scope)?;
+    if scope.account_ids.iter().collect::<BTreeSet<_>>()
+        != scope
+            .account_identities
+            .iter()
+            .map(|a| &a.id)
+            .collect::<BTreeSet<_>>()
+    {
+        return Err(invalid(
+            "sync_scope",
+            "账户同步范围缺少身份绑定，请重新保存范围",
+        ));
+    }
     Ok(scope)
 }
-pub fn save_scope(root: &Path, scope: Scope) -> ModelResult<Scope> {
+pub fn save_scope(root: &Path, mut scope: Scope) -> ModelResult<Scope> {
     scope.validate()?;
+    scope.account_identities = crate::modules::sync::portable_accounts::export(
+        root,
+        scope.upstream_root.as_deref(),
+        &scope.account_ids,
+    )?;
     let path = root.join(SCOPE);
     safety::check_path(root, &path, true)?;
     safety::check_path(
@@ -453,6 +510,7 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         .collect();
     let mut manager = scope.manager();
     manager.local_home = home.map(Path::to_path_buf);
+    manager.account_ids = remote_account_ids(&scope, &summary.manager.accounts);
     if scope.all_skills {
         manager.skill_names = summary
             .assets
@@ -505,6 +563,125 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
 mod tests {
     use super::super::remote::tests::Memory;
     use super::*;
+    #[tokio::test]
+    async fn account_only_sync_is_reviewed_and_preserves_an_existing_local_login_store() {
+        use crate::modules::sync::portable_accounts;
+        let remote = Memory::default();
+        let first = tempfile::tempdir().unwrap();
+        let first_auth = tempfile::tempdir().unwrap();
+        let second = tempfile::tempdir().unwrap();
+        let second_auth = tempfile::tempdir().unwrap();
+        let document=serde_json::to_vec(&serde_json::json!({"google-antigravity":{"accounts":[{"id":"slot","credential":{"accountId":"same-subject","email":"fixture@example.test","refresh":"DO-NOT-TRANSFER"}}]}})).unwrap();
+        for source in [&first_auth, &second_auth] {
+            std::fs::write(source.path().join("auth.json"), &document).unwrap();
+        }
+        let a = portable_accounts::catalog(first.path(), first_auth.path()).unwrap()[0]
+            .account
+            .id
+            .clone();
+        let b = portable_accounts::catalog(second.path(), second_auth.path()).unwrap()[0]
+            .account
+            .id
+            .clone();
+        assert_ne!(a, b);
+        let scope = save_scope(
+            first.path(),
+            Scope {
+                account_ids: vec![a.clone()],
+                upstream_root: Some(first_auth.path().into()),
+                preferences: false,
+                extensions: false,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let upload = prepare(
+            first.path(),
+            &remote,
+            &config(),
+            "bound",
+            scope,
+            None,
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        assert_eq!(upload.credential_count, 0);
+        publish(
+            first.path(),
+            &remote,
+            &config(),
+            &upload.id,
+            "bound",
+            || Ok(()),
+        )
+        .await
+        .unwrap();
+        save_scope(
+            second.path(),
+            Scope {
+                account_ids: vec![b.clone()],
+                upstream_root: Some(second_auth.path().into()),
+                preferences: false,
+                extensions: false,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let incoming = download(second.path(), &remote, &config(), None, || Ok(()))
+            .await
+            .unwrap();
+        assert_eq!(incoming.manager.as_ref().unwrap().accounts[0].id, a);
+        assert!(portable_accounts::imported(second.path())
+            .unwrap()
+            .is_empty());
+        file_objects::accept_extended(second.path(), &incoming.id, false, false, false, None)
+            .unwrap();
+        assert_eq!(
+            std::fs::read(second_auth.path().join("auth.json")).unwrap(),
+            document
+        );
+        let catalog = portable_accounts::catalog(second.path(), second_auth.path()).unwrap();
+        assert_eq!(catalog.len(), 1);
+        assert_eq!(catalog[0].account.id, b);
+        assert!(catalog[0].local_source);
+    }
+    #[test]
+    fn account_participation_matches_subject_across_devices_and_never_matches_email() {
+        use crate::modules::sync::portable_accounts::AccountInfo;
+        let local = AccountInfo {
+            id: uuid::Uuid::new_v4().to_string(),
+            provider: "google-antigravity".into(),
+            subject: Some("subject".into()),
+            label: "设备一".into(),
+            email: Some("fixture@example.test".into()),
+        };
+        let mut same = local.clone();
+        same.id = uuid::Uuid::new_v4().to_string();
+        same.label = "设备二".into();
+        let mut other = same.clone();
+        other.id = uuid::Uuid::new_v4().to_string();
+        other.subject = Some("other-subject".into());
+        let scope = Scope {
+            account_ids: vec![local.id.clone()],
+            account_identities: vec![local.clone()],
+            ..Default::default()
+        };
+        assert_eq!(
+            remote_account_ids(&scope, &[same.clone(), other.clone()]),
+            vec![same.id.clone()]
+        );
+        let mut unidentified = local;
+        unidentified.subject = None;
+        let scope = Scope {
+            account_ids: vec![unidentified.id.clone()],
+            account_identities: vec![unidentified],
+            ..Default::default()
+        };
+        same.subject = None;
+        other.subject = None;
+        assert!(remote_account_ids(&scope, &[same, other]).is_empty());
+    }
     #[tokio::test]
     async fn actual_skill_resources_follow_saved_device_scope_and_remain_pending_until_asset_adoption(
     ) {

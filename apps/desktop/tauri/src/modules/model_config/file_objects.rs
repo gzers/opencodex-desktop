@@ -431,6 +431,10 @@ pub fn merge_remote(
             remote.manager.extensions = Some(incoming);
         }
     }
+    remote.manager.accounts = crate::modules::sync::portable_accounts::merge(
+        remote.manager.accounts,
+        &local.manager.accounts,
+    )?;
     for (channel, key) in &local.channel_keys.0 {
         remote.channel_keys.0.insert(channel.clone(), key.clone());
     }
@@ -543,6 +547,10 @@ pub fn select_remote(
         .channel_keys
         .0
         .retain(|channel, _| include_keys && channels.contains(channel));
+    objects
+        .manager
+        .accounts
+        .retain(|a| manager.account_ids.contains(&a.id));
     if !manager.preferences {
         objects.manager.preferences = None;
     }
@@ -614,6 +622,17 @@ pub fn select_remote(
         root,
         &incoming.id,
         transfer::ReceiveScope {
+            account_ids: manager
+                .account_ids
+                .iter()
+                .filter(|id| {
+                    incoming
+                        .manager
+                        .as_ref()
+                        .is_some_and(|m| m.accounts.iter().any(|a| &a.id == *id))
+                })
+                .cloned()
+                .collect(),
             template_refs,
             channel_ids: channels,
             include_global: models.include_global,
@@ -716,6 +735,7 @@ pub fn receive_context(
                 preferences,
                 extensions,
                 webdav,
+                accounts: vec![],
             },
             webdav_passwords: Default::default(),
             assets: Default::default(),
@@ -1403,6 +1423,72 @@ fn accept_with(
 mod tests {
     use super::*;
     use std::{collections::BTreeSet, sync::Mutex};
+    #[test]
+    fn account_info_round_trip_selects_only_requested_identity_without_login_material() {
+        use crate::modules::sync::portable_accounts;
+        let source = tempfile::tempdir().unwrap();
+        let upstream = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        std::fs::write(upstream.path().join("auth.json"), serde_json::to_vec(&serde_json::json!({
+            "google-antigravity": {"accounts":[
+                {"id":"a","credential":{"accountId":"subject-a","email":"a@example.test","refresh":"NEVER-EXPORT-SECRET"}},
+                {"id":"b","credential":{"accountId":"subject-b","email":"b@example.test","access":"NEVER-EXPORT-SECRET"}}
+            ]}
+        })).unwrap()).unwrap();
+        let catalog = portable_accounts::catalog(source.path(), upstream.path()).unwrap();
+        let scope = ManagerScope {
+            account_ids: catalog.iter().map(|a| a.account.id.clone()).collect(),
+            upstream_root: Some(upstream.path().to_path_buf()),
+            ..Default::default()
+        };
+        let plan = transfer::prepare_file_scope(
+            source.path(),
+            transfer::ExportScope {
+                include_policy: false,
+                channel_ids: vec![],
+                template_refs: vec![],
+                include_global: false,
+            },
+            None,
+            false,
+            &scope,
+        )
+        .unwrap();
+        let bytes = transfer::file_bytes(source.path(), &plan.id).unwrap();
+        assert!(!String::from_utf8_lossy(&bytes).contains("NEVER-EXPORT-SECRET"));
+        let incoming = receive(target.path(), &bytes, None).unwrap();
+        assert_eq!(incoming.manager.as_ref().unwrap().accounts.len(), 2);
+        assert!(portable_accounts::imported(target.path())
+            .unwrap()
+            .is_empty());
+        let selected = transfer::select_received(
+            target.path(),
+            &incoming.id,
+            transfer::ReceiveScope {
+                account_ids: vec![catalog[0].account.id.clone()],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(selected.manager.as_ref().unwrap().accounts.len(), 1);
+        accept_extended(target.path(), &selected.id, false, false, false, None).unwrap();
+        assert_eq!(
+            portable_accounts::imported(target.path()).unwrap(),
+            vec![catalog[0].account.clone()]
+        );
+        // A completed replay must not replace later edits, even for metadata.
+        let mut later = portable_accounts::imported(target.path()).unwrap();
+        later[0].label = "后来修改".into();
+        std::fs::write(
+            target.path().join(portable_accounts::IMPORTED),
+            serde_json::to_vec(&later).unwrap(),
+        )
+        .unwrap();
+        accept_extended(target.path(), &selected.id, false, false, false, None).unwrap();
+        assert_eq!(portable_accounts::imported(target.path()).unwrap(), later);
+        assert!(!target.path().join("auth.json").exists());
+        assert!(!target.path().join("codex-accounts.json").exists());
+    }
     #[test]
     fn unified_file_carries_skill_resources_and_mcp_definitions_with_explicit_subset_adoption() {
         let source = tempfile::tempdir().unwrap();
