@@ -1,0 +1,113 @@
+{
+  "recordedAt": "2026-10-19T11:16:35.427783+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "6a7cca81b43e317859179491e6ffcc12ee590d45",
+  "sourceSha256": {
+    "apps/desktop/ui/src/components/AppModal.vue": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91",
+    "apps/desktop/ui/src/components/registry.ts": "6da25fe74c232f06eb4a20198753a99658701b84740f85d52268b78aaac8c789",
+    "apps/desktop/ui/src/components/ui/UiSelectMenu.vue": "8500e4fea6712a0aff83b3f37852bffa0dad1c717e1685851572ead2b1d8bbba",
+    "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue": "7ee426e966f148ebe1e30e2cbfa26bb65ea4d393ba27033a5b52721cfabc6843",
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue": "fc5e3094577641c9c21154116b1e0d3df8e726c2ef3d91f57e663dcaae47ad98",
+    "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue": "f5aa89e0d1fc21b93d53e49be5474c2ed7d704b5b1d5d9ad37f7a9af09b734d7",
+    "apps/desktop/ui/src/stores/app.ts": "7391d399aa66b20920092b5cc6ba562a4d6d6cfb7882f4809318064215f8f027",
+    "apps/desktop/ui/src/styles/base.css": "50942bb566f8c6e69aa742659a39541f27e5e38b71173eb6d6e05fd4c4fda945",
+    "apps/desktop/ui/tests/component-registry.test.ts": "afb09ac1cebba35a25c028df3767c860a9d07ab4e86e246a10e2debe8eed225f",
+    "apps/desktop/ui/tests/sync-conflict-default.test.ts": "b8c3cdd7d89c561a3d40aeacb9f9a66d21775af3545b7f592399d25b03d1e288",
+    "apps/desktop/ui/src/components/patterns/ModalContent.vue": "aa793b8a61e73d38648634664a27355fac3ebca6360b5d4c4c986233f4ab50fb",
+    "apps/desktop/ui/src/components/patterns/modalContent.ts": "e9f1d7a74c2998f71fcc90ba20c2d1333b5df057a30873dba75dd6cf14582828",
+    "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue": "f518c14a30a448f7b728d72aa722d428703ff2d77a8737d26f19a3228030bb36",
+    "apps/desktop/ui/src/features/models/NodePicker.vue": "4a05239bf808a12077fa3ba93247341beba735fa99befc3de2b1e26507f289c4",
+    "apps/desktop/ui/tests/model-choice-options.test.ts": "943e1930e8e2957b0647e6b34e54e9bb6fd1efa45ce5bf541929979da84a5c0e",
+    "apps/desktop/ui/tests/model-node-picker.test.ts": "7ce695df7c2ee0e78f4b91d3eace95f412a34248dbd716381421dee3eea2e0f9"
+  },
+  "checks": [
+    {
+      "command": "npm run test -- --run tests/app-modal.test.ts tests/model-node-measurements.test.ts tests/model-node-picker.test.ts",
+      "session": 39274,
+      "result": "passed",
+      "passed": 13
+    },
+    {
+      "command": "npm run test -- --run tests/model-choice-options.test.ts tests/model-selection.test.ts tests/select-menu.test.ts tests/app-modal.test.ts tests/component-registry.test.ts tests/model-node-picker.test.ts",
+      "session": 26443,
+      "result": "passed",
+      "passed": 27
+    },
+    {
+      "command": "npm run test -- --run",
+      "session": 97022,
+      "result": "failed_async_errors",
+      "filesPassed": 122,
+      "assertionsPassed": 624,
+      "reason": "sync-conflict-default left App mounted and unrelated async components loaded after environment teardown"
+    },
+    {
+      "command": "npm run test -- --run tests/sync-conflict-default.test.ts; npm run test -- --run",
+      "session": 16806,
+      "result": "passed",
+      "passed": 624,
+      "files": 122,
+      "unhandledErrors": 0,
+      "notes": "jsdom Canvas getContext unavailable (2 informational diagnostics); not WebGL acceptance"
+    },
+    {
+      "command": "npm run test -- --run tests/model-node-picker.test.ts tests/model-node-measurements.test.ts; npm run build",
+      "session": 66335,
+      "result": "passed",
+      "passed": 4,
+      "build": "passed",
+      "scope": "after separating discovery measurement blocking from active cancellation"
+    },
+    {
+      "command": "rg DEV-only node/modal/gallery strings dist",
+      "result": "no matches"
+    },
+    {
+      "command": "CUA production gallery physical sample width matrix",
+      "result": "passed_static_geometry",
+      "matrix": "shared-component-width-scale-matrix-20261019.json",
+      "cases": 48,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "effects": [
+        "high",
+        "mid",
+        "low"
+      ],
+      "scalePercent": [
+        50,
+        100,
+        150,
+        200
+      ],
+      "samplePhysicalWidths": [
+        900,
+        1180
+      ],
+      "boundary": "Sample content widths in a 1201x1218 browser, not actual native windows. Browser viewport override had no observed effect and was reset. Interactive states/consumers separate."
+    },
+    {
+      "command": "CUA high-zoom node/menu/selector/input sample interactions",
+      "result": "passed",
+      "observed": [
+        "node 200% width900 logical416 scroll416; container query stacks columns382px",
+        "state menu under trigger at 200% inside viewport",
+        "cancellation retains42/85ms completed results and timeout",
+        "selector alias search one matching model",
+        "reasoning trigger Escape reverts only nested options; open dialog remains1, options0, trigger focused",
+        "model confirm returns choice and closes",
+        "modal content name input confirms sample value"
+      ],
+      "screenshot": "shared-nodes-dark-low-200.png"
+    }
+  ],
+  "remaining": [
+    "All actual business consumer focus/scroll/scale checks",
+    "Native platform secure store/tray/caption and Windows evidence",
+    "Account and historical-direction completion",
+    "Release integration/publication"
+  ]
+}

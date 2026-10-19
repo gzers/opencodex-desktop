@@ -321,3 +321,18 @@ Keychain迁移保留官方原pool id、顺序、label及addedAt，校验引用�
 安装官方2.84.0完整隔离链172.12秒通过：未被Desktop接管的原渠道目录、132字段适配中实际fixture覆盖的alias/modelAliases/adapter/transport/池策略/display及覆盖字段精确读回，两个Key顺序/标签/addedAt/活动选择及认证头受保护迁至独立接收根，经正常Save保存为停用后启用并核对别名预算；同身份后续替换第三代Key/头、最终sync失败补偿恢复原第三代、重新比较保存通过。生成POST=0。字段白名单共132不等于每个复杂字段均有真实专项向量；proxy/MCP/Executor保护往返为单元向量。旧格式摘要、映射/本机Key保持等沿受影响测试复核，不声称系统Keychain、跨设备真实账户或Windows已验。绑定源码摘要的细项见checks-original-channels-20261019.json。
 
 后续仍需OAuth/原生目标连接映射与逐类登录态可移植性证据、不同历史连接方向恢复、全组件/窗口/缩放/native平台及集成发布。未把受限类型拒绝门或此切片通过当作整个0.2.0已交付；版本仍0.1.10，尚未发布。
+
+
+### 节点公共视图、Modal内容复用与样例缩放矩阵
+
+渠道服务节点抽取NodePicker纯视图，ChannelEditor继续拥有发现/检测取消、API Key缓冲和持久状态；通过受控nodes/activeId与measure/stop意图消费，测量不自动切节点。结果、取消保留、失败、禁用和空态在DEV gallery直接引用该组件，编辑与选取有明确可访问名称。发现进行时只禁用检测入口，不冒出无实际run可取消的按钮。逻辑容器≤600px时字段改单列，200%物理900样例中实际采用单列382px，内部宽/scroll均416，无裁切撑宽。
+
+应用弹窗的内容/输入/动作抽为ModalContent与独立展示类型；AppModal继续唯一负责应用store、解析回调、焦点环与来源恢复。主操作迁入同一UiButton，取消/危险语义与焦点优先规则沿原契约；多动作允许换行。gallery仅传固定资料演示内容，通过现有UiDialog展示，不新建第二个应用宿主。组件登记补node.selection和overlay.modal-host实际来源/样例；原生caption/tray链接到平台说明，不用网页文字冒充原生验收。
+
+组件页新增50/100/150/200%缩放、900/1180物理样例宽及长文本；样例与teleport浮层沿同一data-ui-overlay-root缩放，菜单重新按该缩放根计算位置。实际CUA矩阵48组静态样例布局均无article/section内部或文档横向撑出；此处是1201×1218浏览器内样例宽度，不是48次原生窗口验收。尝试浏览器viewport override未观察到尺寸改变，已reset，不能把该调用当900×600现场证据。
+
+实屏发现推理选项触发按钮的Escape穿透native dialog，导致整个模型选择器退出；现触发器/浮层都阻止默认cancel并撤回当前选项，恢复触发器焦点时不重新打开。回归fixture和真实浏览器均证明openDialogs=1/options=0且焦点在“推理/Fast”，随后别名搜索、选择确认和Modal输入确认通过。节点暗色低档200%截图shared-nodes-dark-low-200.png，矩阵保留具体宽度/溢出结果；仍不能由静态测量宣告全部43项交互/平台指标已验。
+
+受影响交互13项、菜单/模型/Modal/登记27项通过。全量122文件624断言首次虽全部绿色但有2条测试结束后异步加载错误，未当通过；定位到旧sync-conflict-default仅测试只读冲突策略却保留App及无关异步资源。该测试明确stub无关迁移组件并自动卸载，复核后全量122文件624项通过且无未处理异步异常。两条jsdom Canvas未实现提示仍不代表真实WebGL；最后发现/检测阻断分离后节点4项及生产构建通过，DEV样例/目录未进入dist。
+
+后续继续真实消费者滚动/缩放/键盘与原生平台、账户/历史方向及发布；本版未发布，registry完整矩阵状态仍保持待验。证据checks-nodes-modal-matrix-20261019.json绑定本批源码。
