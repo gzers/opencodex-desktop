@@ -1,0 +1,71 @@
+{
+  "recordedAt": "2026-10-19T02:51:20.217852+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "3e43220d46c99bc1c082c9509253a88ca7d4a166",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "cd3c0b72f6b4e517da98344b6591b2a56f77371f98bb28cce0272042995558d3",
+    "apps/desktop/tauri/src/lib.rs": "bd9dbe32b34d881ada3c9e62d7f4742cf1e5e7c07b342a0ec7eb8274a566cdee",
+    "apps/desktop/tauri/src/modules/model_config/client_state.rs": "76034e20d81cdaaa54c01c292b1162f4f086e0a5dc0bdb4737384c634670ae8e",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "044fb6ed767f9127c6f6227657d5c9981aa737c393068507ccb611f58ecb46a9",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "6e1c893314d6393616bd8eeb212de6f8fc5f2cef92045ebcccc6c8baa62d4314",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "e7b988f91a802c33207d77fb9034842d41b626398a7307b9162a24f908976dc3",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "14f3f69d4cc4354ceed6ea183d7222fe40e754635d254cf202f8daeb938cdfe7",
+    "apps/desktop/ui/src/features/models/ClientLoadStatus.vue": "47e97f9e43a33b59f8639297c8fdd5dd177af209f5278ae5cd40f8ef53870504",
+    "apps/desktop/ui/src/features/models/api.ts": "98d467f640fa6014fdc44d10c4b64e4664b463f537fa6da1a71600a77b13b3b4",
+    "apps/desktop/ui/src/features/models/store.ts": "8a55b6a69a6369db765e8febbcffec8cc4a03132bdcd2f07735a2d62d4154600",
+    "apps/desktop/ui/tests/model-client-state.test.ts": "15d575fdd54cbdd7633b0c962ed413d5c5502067fce39443e7ec2bd2f4adc388",
+    "apps/desktop/ui/tests/model-save-recovery.test.ts": "6234a87aad4dc452ee5380413af7da3dc7ce9e6a77d3bb82ac672322d6b4304b"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 71399,
+      "passed": 96,
+      "result": "passed",
+      "scope": "preceded last binding-only revision; affected runtime retested below"
+    },
+    {
+      "command": "cargo test --lib model_config::runtime::tests --no-default-features",
+      "session": 27779,
+      "passed": 9,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 27779,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-client-state.test.ts tests/model-history.test.ts tests/model-save-recovery.test.ts tests/backup-management.test.ts",
+      "session": 24661,
+      "files": 4,
+      "passed": 17,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 24661,
+      "result": "passed"
+    }
+  ],
+  "scope": [
+    "pending client target separate from new drafts",
+    "no-op runtime save preserves earlier restart target",
+    "readback != client loaded; explicit user confirmation bound to fresh recheck",
+    "external runtime drift removes old confirmation; executable and data root binding",
+    "querying original committed save preserves later workspace and CAS"
+  ],
+  "visualEvidence": {
+    "file": "client-readback-pending-light.jpg",
+    "kind": "DEV fixture, light/high; runtime agrees but checkbox off",
+    "notProven": "real Codex client restart/model-list reachability or native IPC"
+  },
+  "remaining": [
+    "actual isolated client loaded evidence",
+    "first-adoption/deleted-channel recovery effects",
+    "full original upstream channels fields and list actions",
+    "extension mappings, agent conversation/source checks and shared UI/platform gates",
+    "release/postpublication"
+  ]
+}
