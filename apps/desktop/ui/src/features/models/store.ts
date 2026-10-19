@@ -21,6 +21,37 @@ export const useModelsStore = defineStore('model-config', () => {
   const workspaceBaseline = ref('')
   const channelError = ref('')
   const staging = ref(false)
+  const undoHistory = ref<string[]>([])
+  const redoHistory = ref<string[]>([])
+  let historyCurrent = ''
+  function resetChannelHistory() {
+    historyCurrent = JSON.stringify(channelDraft.value)
+    undoHistory.value = []; redoHistory.value = []
+  }
+  const canUndoChannels = computed(() => !busy.value && undoHistory.value.length > 0)
+  const canRedoChannels = computed(() => !busy.value && redoHistory.value.length > 0)
+  function undoChannels() {
+    if (!canUndoChannels.value) return
+    redoHistory.value.push(historyCurrent)
+    historyCurrent = undoHistory.value.pop()!
+    channelDraft.value = JSON.parse(historyCurrent)
+  }
+  function redoChannels() {
+    if (!canRedoChannels.value) return
+    undoHistory.value.push(historyCurrent)
+    historyCurrent = redoHistory.value.pop()!
+    channelDraft.value = JSON.parse(historyCurrent)
+  }
+  watch(channelDraft, value => {
+    const current = JSON.stringify(value)
+    if (current === historyCurrent) return
+    if (historyCurrent && historyCurrent !== 'null') {
+      undoHistory.value.push(historyCurrent)
+      // Bound memory as well as edit count for large catalogues.
+      while (undoHistory.value.length > 50 || undoHistory.value.reduce((size, item) => size + item.length * 2, 0) > 8 * 1024 * 1024) undoHistory.value.shift()
+    }
+    historyCurrent = current; redoHistory.value = []
+  }, { deep: true })
   let stageWork: Promise<void> | undefined
   let stageTimer: ReturnType<typeof setTimeout> | undefined
   function persistDraft(): Promise<void> {
@@ -62,6 +93,7 @@ export const useModelsStore = defineStore('model-config', () => {
         channelClean.value = JSON.stringify(snapshot.value.policy)
         channelBaseline.value = snapshot.value.workspace?.basePolicy ?? snapshot.value.policyDigest
         workspaceBaseline.value = snapshot.value.workspaceDigest
+        resetChannelHistory()
       }
     } catch (cause) { error.value = errorText(cause) } finally { busy.value = false }
   }
@@ -92,6 +124,7 @@ export const useModelsStore = defineStore('model-config', () => {
     channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.policy))
     channelClean.value = JSON.stringify(channelDraft.value); channelBaseline.value = snapshot.value.policyDigest
     workspaceBaseline.value = snapshot.value.workspaceDigest
+    resetChannelHistory()
     queueDraft(true)
   }
   function acceptTransfer(saved: ModelSnapshot) {
@@ -100,7 +133,8 @@ export const useModelsStore = defineStore('model-config', () => {
     channelClean.value = JSON.stringify(saved.policy)
     channelBaseline.value = saved.workspace?.basePolicy ?? saved.policyDigest
     workspaceBaseline.value = saved.workspaceDigest
+    resetChannelHistory()
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+  return { snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, canUndoChannels, canRedoChannels, undoChannels, redoChannels, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
 })
