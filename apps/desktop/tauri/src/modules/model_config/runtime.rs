@@ -85,6 +85,8 @@ pub struct RuntimePlan {
     pub execution_policy: Option<Policy>,
     #[serde(default)]
     pub route_changes: Vec<String>,
+    #[serde(default)]
+    pub recovery: Option<super::recovery::Baseline>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -152,7 +154,12 @@ fn path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     Ok(p)
 }
 fn save(root: &Path, plan: &RuntimePlan) -> ModelResult<()> {
-    atomic_write(&path(root, &plan.id)?, &serde_json::to_vec(plan)?, 0o600)?;
+    let path = path(root, &plan.id)?;
+    let bytes = serde_json::to_vec(plan)?;
+    atomic_write(&path, &bytes, 0o600)?;
+    if safety::read_file(&path, 256 * 1024 * 1024)? != bytes {
+        return Err(invalid("plan_readback", "保存计划写后读回不一致，未继续"));
+    }
     Ok(())
 }
 fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
@@ -160,6 +167,9 @@ fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
         serde_json::from_slice(&safety::read_file(&path(root, id)?, 256 * 1024 * 1024)?)?;
     if plan.id != id {
         return Err(invalid("plan_identity", "保存计划的完整身份不一致"));
+    }
+    if let Some(baseline) = &plan.recovery {
+        baseline.validate()?;
     }
     Ok(plan)
 }
@@ -216,6 +226,67 @@ pub fn latest(root: &Path) -> ModelResult<Option<SavePlanView>> {
     }
     Ok(latest.map(|(_, view)| view))
 }
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HistoryEntry {
+    pub id: String,
+    pub created_at: String,
+    pub phase: String,
+    pub channel_labels: Vec<String>,
+    pub recoverable: bool,
+}
+pub fn history(root: &Path) -> ModelResult<Vec<HistoryEntry>> {
+    let mut values = vec![];
+    for id in plan_ids(root)? {
+        let plan = load(root, &id)?;
+        if plan.phase == "prepared" {
+            continue;
+        }
+        if let Some(baseline) = &plan.recovery {
+            baseline.validate()?;
+        }
+        values.push(HistoryEntry {
+            id,
+            created_at: plan.created_at,
+            phase: plan.phase.clone(),
+            channel_labels: plan
+                .policy
+                .channels
+                .iter()
+                .map(|c| c.label.clone())
+                .collect(),
+            recoverable: plan.phase == "committed" && plan.recovery.is_some(),
+        });
+    }
+    values.sort_by(|a, b| b.created_at.cmp(&a.created_at).then(a.id.cmp(&b.id)));
+    Ok(values)
+}
+pub fn prepare_recovery(
+    root: &Path,
+    request: super::recovery::Request,
+) -> ModelResult<super::recovery::Preview> {
+    let _guard = execution_lock(root)?;
+    reject_incomplete(root)?;
+    let source = load(root, &request.source_id)?;
+    if source.phase != "committed" {
+        return Err(invalid(
+            "recovery_source",
+            "仅成功保存记录可生成恢复草稿；未完成记录请核对原计划",
+        ));
+    }
+    let baseline = source.recovery.as_ref().ok_or_else(|| {
+        invalid(
+            "recovery_source",
+            "该旧记录缺少组合恢复基线，保留为核对记录",
+        )
+    })?;
+    super::recovery::prepare(root, baseline, &source.policy, request)
+}
+pub fn accept_recovery(root: &Path, id: &str) -> ModelResult<Snapshot> {
+    let _guard = execution_lock(root)?;
+    reject_incomplete(root)?;
+    super::recovery::accept(root, id)
+}
 fn reject_incomplete(root: &Path) -> ModelResult<()> {
     for id in plan_ids(root)? {
         let plan = load(root, &id)?;
@@ -234,16 +305,16 @@ pub(super) fn recovery_uses(root: &Path, template: &str, revision: &str) -> Mode
         if ["prepared", "compensated"].contains(&plan.phase.as_str()) {
             continue;
         }
-        if plan
-            .policy
-            .template_refs
-            .iter()
-            .chain(
-                plan.policy
-                    .channels
-                    .iter()
-                    .flat_map(|c| c.template_refs.iter().chain(c.model_refs.values())),
-            )
+        if std::iter::once(&plan.policy)
+            .chain(plan.recovery.as_ref().map(|b| &b.policy))
+            .flat_map(|policy| {
+                policy.template_refs.iter().chain(
+                    policy
+                        .channels
+                        .iter()
+                        .flat_map(|c| c.template_refs.iter().chain(c.model_refs.values())),
+                )
+            })
             .any(|r| r.template_id == template && r.revision_id == revision)
         {
             return Ok(true);
@@ -781,6 +852,7 @@ pub async fn prepare(
         credential_changes,
         execution_policy: Some(execution_policy),
         route_changes,
+        recovery: Some(super::recovery::Baseline::capture(&local)?),
     };
     save(root, &plan)?;
     Ok(plan.view())
@@ -1872,6 +1944,30 @@ else:sys.exit(7)
             apply(root.path(), &context, &plan.id).await.unwrap().phase,
             "committed"
         );
+        let entries = history(root.path()).unwrap();
+        assert_eq!(entries.len(), 1);
+        assert!(entries[0].recoverable);
+        let current = store.load().unwrap();
+        let preview = prepare_recovery(
+            root.path(),
+            super::super::recovery::Request {
+                source_id: plan.id.clone(),
+                side: super::super::recovery::Side::After,
+                scope: super::super::recovery::Scope::Affected,
+                restore_defaults: false,
+                expected_library: current.library_digest,
+                expected_policy: current.policy_digest,
+                expected_workspace: current.workspace_digest,
+            },
+        )
+        .unwrap();
+        let restored = accept_recovery(root.path(), &preview.id).unwrap();
+        assert_eq!(restored.policy, policy);
+        assert_eq!(restored.workspace.unwrap().policy, policy);
+        let mut source = load(root.path(), &plan.id).unwrap();
+        source.phase = "compensated".into();
+        save(root.path(), &source).unwrap();
+        assert!(!history(root.path()).unwrap()[0].recoverable);
     }
     #[cfg(unix)]
     #[tokio::test]

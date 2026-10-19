@@ -50,6 +50,9 @@ export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[
 export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
 export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[] }
+export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
+export interface ModelRecoveryRequest {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expectedLibrary:string;expectedPolicy:string;expectedWorkspace:string}
+export interface ModelRecoveryPreview {id:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:ChangeFact[];defaultChanges:ChangeFact[];channelLabels:string[];notices:string[]}
 export type ExternalScene = 'from_sources' | 'update_models' | 'audit_and_revise' | 'private_models' | 'preferences' | 'check_only'
 export interface ExternalTaskRequest { scene: ExternalScene; targets: TemplateRef[]; allowNew: boolean; requirements: string; expectedLibrary: string; buffers: { templateId: string; baseRevision: string; label: string; content: TemplateContent }[] }
 export interface TaskGrant { task: { id: string; contractVersion: number; scene: ExternalScene; targets: unknown[]; allowNew: boolean; requirements: string; expectedLibrary: string; expiresAt: string; revoked: boolean }; token: string }
@@ -78,6 +81,9 @@ export const modelApi = {
   applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),
   policyResult: (planId:string) => invoke<SavePlan>('model_policy_result',{planId}),
   latestPolicy: () => invoke<SavePlan|null>('model_policy_latest'),
+  policyHistory:()=>invoke<ModelHistoryEntry[]>('model_policy_history'),
+  prepareRecovery:(request:ModelRecoveryRequest)=>invoke<ModelRecoveryPreview>('model_policy_recovery_prepare',{request}),
+  acceptRecovery:(planId:string)=>invoke<ModelSnapshot>('model_policy_recovery_accept',{planId}),
   compensatePolicy: (planId:string) => invoke<SavePlan>('model_policy_compensate',{planId}),
   upstream: () => invoke<UpstreamSnapshot>('model_upstream_snapshot'),
   discover: (request:{protocol:string;url:string;apiKey:string|null;credentialRef:string|null;allowPrivateNetwork:boolean}) => invoke<{models:DiscoveredModel[];credentialRef:string|null;elapsedMs:number}>('model_channel_discover',{request}),

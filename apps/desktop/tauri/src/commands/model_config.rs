@@ -134,6 +134,45 @@ pub async fn model_policy_latest(
     .map_err(|_| invalid("plan_worker", "读取原保存计划中断"))?
 }
 #[tauri::command]
+pub async fn model_policy_history(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Vec<crate::modules::model_config::runtime::HistoryEntry>> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::runtime::history(&root)
+    })
+    .await
+    .map_err(|_| invalid("history_worker", "读取保存记录中断"))?
+}
+#[tauri::command]
+pub async fn model_policy_recovery_prepare(
+    request: crate::modules::model_config::recovery::Request,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::recovery::Preview> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::runtime::prepare_recovery(&root, request)
+    })
+    .await
+    .map_err(|_| invalid("history_worker", "恢复比较中断，未写入运行配置"))?
+}
+#[tauri::command]
+pub async fn model_policy_recovery_accept(
+    plan_id: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Snapshot> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        crate::modules::model_config::runtime::accept_recovery(&root, &plan_id)
+    })
+    .await
+    .map_err(|_| invalid("history_worker", "恢复草稿结果需重新核对，请保留原计划"))?
+}
+#[tauri::command]
 pub async fn model_policy_compensate(
     plan_id: String,
     data_root: tauri::State<'_, SharedDataRoot>,

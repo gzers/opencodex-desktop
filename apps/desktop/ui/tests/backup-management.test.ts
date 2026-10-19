@@ -7,7 +7,7 @@ vi.mock('../src/stores/app', () => ({ useAppStore: () => mocks }))
 vi.mock('../src/features/updates/update', () => ({ getUpdateStatus: mocks.getUpdateStatus }))
 const policy = { schema_version: 1, mode: 'manual', keep_recent: 10, keep_days: 30 }
 const preview = { token: 'owned-preview', createdAt: '2026-10-10', candidateIds: ['old'], candidateBytes: 500, retainedCount: 10, keepRecent: 10, keepDays: 30 }
-async function setup() { const w = mount(BackupManagement, { global: { stubs: { BackupFiles: true } } }); await flushPromises(); return w }
+async function setup() { const w = mount(BackupManagement, { global: { stubs: { BackupFiles: true, ModelSaveHistory: true } } }); await flushPromises(); return w }
 function button(w: Awaited<ReturnType<typeof setup>>, label: string) { const b = w.findAll('button').find(b => b.text() === label); if (!b) throw Error(label); return b }
 describe('backup transactions', () => {
   beforeEach(() => {

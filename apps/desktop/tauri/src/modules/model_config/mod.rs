@@ -12,6 +12,7 @@ pub mod matching;
 pub mod measurements;
 mod operations;
 mod protocol_groups;
+pub mod recovery;
 mod remote;
 pub mod runtime;
 pub mod schema;

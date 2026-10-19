@@ -19,6 +19,10 @@ export function installModelFixtures() {
   modelApi.project=async policy=>({rows:policy.channels.flatMap(c=>c.discovered.map(m=>({channelId:c.id,providerId:c.connection.providerId,modelId:m.id,label:m.label,enabled:c.connection.enabled,selected:true,discovered:true,templateRef:null,rules:m.rules,source:{protocol:'渠道默认'}}))),knownActiveModels:36,exactCatalogCount:null,notices:['显式DEV数据，不连接真实运行服务']})
   modelApi.agentSettings=async()=>null
   modelApi.latestPolicy=async()=>null
+  const historyId=crypto.randomUUID()
+  modelApi.policyHistory=async()=>[{id:historyId,createdAt:'2026-10-19T00:00:00Z',phase:'committed',channelLabels:['NewApi'],recoverable:true}]
+  modelApi.prepareRecovery=async request=>({id:crypto.randomUUID(),sourceId:request.sourceId,side:request.side,scope:request.scope,restoreDefaults:request.restoreDefaults,changes:[{field:'channel/fixture/selection',before:{mode:'all'},after:{mode:'whitelist',models:['gpt-demo-0','gpt-demo-1']}}],defaultChanges:[],channelLabels:['NewApi'],notices:['恢复后仍需在模型页预览并保存。']})
+  modelApi.acceptRecovery=async()=>structuredClone(snapshot)
   modelTransferApi.loadRemoteScope=async()=>({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
   importedConnectionApi.list=async()=>({baseline:'explicit-visual-fixture',items:[]})
   modelTransferApi.accountCatalog=async()=>[{account:{id:crypto.randomUUID(),provider:'chatgpt',subject:'fixture-subject',label:'账户信息样例',email:'fixture@example.test'},loginTransfer:'manualImportDisabled',localSource:true}]

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
 import BackupFiles from './BackupFiles.vue'
+const ModelSaveHistory = defineAsyncComponent(() => import('./ModelSaveHistory.vue'))
 import { createBackup, executeCleanup, getBackupPolicy, listBackups, openBackupFile, pinBackup, previewCleanup, restoreBackup, saveBackupPolicy, type BackupFileNode, type BackupPolicy, type PreferencesBackup } from './api'
 import { useAppStore } from '@/stores/app'
 import { getUpdateStatus } from '@/features/updates/update'
@@ -141,6 +142,7 @@ onMounted(() => { void refresh() })
         <div class="controls"><button class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="setPinned(record)">{{ record.pinned ? '取消固定' : '固定保留' }}</button><button class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="restore(record)">恢复</button></div>
       </li>
     </ul>
+    <ModelSaveHistory />
   </section>
 </template>
 
