@@ -1,0 +1,88 @@
+{
+  "recordedAt": "2026-10-19T01:18:53.428218+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "fa030c5bd2c02d3e197e8ffd46f17d8add0cfc46",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_transfer.rs": "d6ba80b73e3b2f185b913cf842c985a79fc92c125a9a65922ebd24ffe591096f",
+    "apps/desktop/tauri/src/lib.rs": "935149d55a4658685e293266424cdf74eb1eb3db2535dd4a531a418cd657a57c",
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "793dbb5dadd78bd30d6debd656b983c4f7f47c4f6c6babf119e2c19924db4a73",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "3ddf8f71c013aa2204af61c151e4ab364938716b880d83fe6304e94e93df8d7d",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "ed5ee31f48b17722a3de78d3481f2a695f6ce999e564b136819c0de5dfccc2d8",
+    "apps/desktop/tauri/src/modules/sync/mod.rs": "953517ee68e218457c15131370f269480f8095f33985cfdf0b0ab637929415d3",
+    "apps/desktop/tauri/src/modules/sync/portable_accounts.rs": "df3ddb8a4f87f25617eea0cc31879aac11418fef0158358c233cfcce92362667",
+    "apps/desktop/tauri/src/modules/sync/portable_manager.rs": "0473fb9576094bedb206693e7a4aa6062cbcb475d90449bfc28f57a01b9002ec",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "0034637fec0aeeaf082251e42c55a1966e57f55363906fdf5179d08f847ee792",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "afdba68b771c2fb5e9b0ed753b136fe58c09fb50b027400e63570d163d226cde",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "aef1943fd6600af9096cb53d8f1318457d518b20b89dadb8041c15aa41fe8689"
+  },
+  "upstreamInspection": {
+    "version": "2.84.0",
+    "kind": "source-interface evidence, not live account portability acceptance",
+    "files": {
+      "src/oauth/account-import/registry.ts": "70b34ada3942e835108a369377f010eeedb51d040036875a926ab74f79db81fa",
+      "src/oauth/account-import/google-antigravity-adapter.ts": "3989c5cb9436468f839d245b967d8feb55015eae11ff25b3e0ad004ee0f77e35",
+      "src/oauth/account-import/service.ts": "b11410b3370118af33d0e40a01fd3ea0f1f96d80b71924f55fdb017c784eec87",
+      "src/oauth/store.ts": "9ea43a5f7e2144bb5535d9ffb0943a3d3c59fd539787929c7c1d55576bcf0b91",
+      "src/codex/auth-api/account-list.ts": "7f58b2b13dadb83b91c45375660fd660e41d62009feaa177f59e41b761816ab8",
+      "src/codex/account-store.ts": "5ff40b2960a690ba95e8c6789de47c709ea5940dd1d4d9c11106bcb2d661c8b5",
+      "src/types/accounts.ts": "cbbb70d201a303a0070d9777da4c7f0edfa7ea1617c8289b3ee657b5d5545f56"
+    }
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 18979,
+      "passed": 83,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib portable_ --no-default-features",
+      "session": 59910,
+      "passed": 18,
+      "failed": 0,
+      "result": "passed",
+      "overlapsPrevious": true
+    },
+    {
+      "command": "npm run test -- --run tests/model-transfer.test.ts tests/imported-sync-connections.test.ts",
+      "passed": 17,
+      "files": 2,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 30130,
+      "result": "passed"
+    },
+    {
+      "command": "cargo fmt --all --check",
+      "session": 18979,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 33951,
+      "result": "passed"
+    }
+  ],
+  "scope": [
+    "explicit metadata selection; no auth/refresh values in objects or IPC",
+    "same-subject two-device scope resolution; email-only identity never merged",
+    "subset/replay keeps later edits and original official login file",
+    "strict unknown fields and symlink refusal"
+  ],
+  "notProven": [
+    "live OAuth import and expired-token refresh",
+    "new-device login restoration and original-device continuing availability",
+    "actual secure store/platform UI acceptance"
+  ],
+  "remaining": [
+    "per-type login support only after official capability plus actual cross-device evidence",
+    "complete upstream channel fields and portable nodes",
+    "save history/client loaded state",
+    "asset rename/mapping and UI consumer/platform gates",
+    "release and postpublish verification"
+  ]
+}
