@@ -642,6 +642,7 @@ pub fn select_remote(
         root,
         &incoming.id,
         transfer::ReceiveScope {
+            asset_mappings: Default::default(),
             channel_mappings: BTreeMap::new(),
             account_ids: manager
                 .account_ids
@@ -792,6 +793,7 @@ pub fn receive_context(
     if legacy {
         plan.notices.push("已按旧容器实际区段转换；旧文件不含模型库、真实登录态或Key。扩展名清单不表示资源/凭据已恢复。".into());
     }
+    plan.extension_source = objects.manager.extensions.clone();
     plan.manager = Some(objects.manager.clone());
     plan.available_webdav_passwords = objects.webdav_passwords.0.keys().cloned().collect();
     portable_manager::prepare(root, &plan.id, &objects.manager)?;
@@ -826,15 +828,20 @@ pub(super) fn remember_incoming(root: &Path, id: &str) -> ModelResult<()> {
     atomic_write(&index, &serde_json::to_vec(id)?, 0o600)?;
     Ok(())
 }
+#[allow(clippy::too_many_arguments)]
 pub(super) fn select_asset_subset(
     root: &Path,
     original: &IncomingPlan,
     selected: &mut IncomingPlan,
     skills: &[String],
     mcps: &[String],
+    mappings: &portable_assets::NameMappings,
     passphrase: Option<&str>,
 ) -> ModelResult<()> {
     if skills.is_empty() && mcps.is_empty() {
+        if !mappings.is_empty() {
+            return Err(invalid("asset_mapping", "未选择扩展时不能设置目标名称"));
+        }
         return Ok(());
     }
     let summary = original
@@ -865,7 +872,8 @@ pub(super) fn select_asset_subset(
             .collect(),
     };
     let mut objects = open_source(root, original, passphrase)?;
-    let assets = selected_assets(&mut objects, &selected_summary)?;
+    let assets =
+        portable_assets::remap(&selected_assets(&mut objects, &selected_summary)?, mappings)?;
     let home: PathBuf = serde_json::from_slice(&safety::read_file(
         &cache_path(root, &original.id, "asset-home.json")?,
         32768,
@@ -880,6 +888,10 @@ pub(super) fn select_asset_subset(
         selected.notices.push(error.message);
     }
     selected.assets = Some(selected_summary);
+    selected.asset_mappings = mappings.clone();
+    if !mappings.is_empty() {
+        selected.notices.push("扩展目标名称已映射；资源正文、脚本和命令参数保持原内容。内部写死的名称或路径需在使用前检查。".into());
+    }
     selected.available_extension_credentials = portable_assets::secret_count(&assets) > 0;
     Ok(())
 }
@@ -1211,7 +1223,10 @@ fn accept_domains(
             None
         } else {
             let mut objects = open_source(root, &plan, passphrase)?;
-            let assets = selected_assets(&mut objects, summary)?;
+            let assets = portable_assets::remap(
+                &selected_assets(&mut objects, summary)?,
+                &plan.asset_mappings,
+            )?;
             portable_assets::verify(root, id, &assets)?;
             Some(assets)
         }
@@ -1451,6 +1466,219 @@ fn accept_with(
 mod tests {
     use super::*;
     use std::{collections::BTreeSet, sync::Mutex};
+    #[test]
+    fn named_asset_conflicts_can_be_remapped_with_settings_without_overwriting_existing_sources() {
+        use crate::modules::{
+            extensions::{
+                self,
+                projection::{ExtensionProjection, CONFIG_RELATIVE_PATH},
+                ProjectionFingerprint,
+            },
+            sync::portable_assets::NameMappings,
+        };
+        let source = tempfile::tempdir().unwrap();
+        let source_home = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let target_home = tempfile::tempdir().unwrap();
+        for (home, body, command) in [
+            (source_home.path(), "# incoming fixture", "incoming-command"),
+            (target_home.path(), "# local must remain", "local-command"),
+        ] {
+            std::fs::create_dir_all(home.join(".agents/skills/fixture")).unwrap();
+            std::fs::write(home.join(".agents/skills/fixture/SKILL.md"), body).unwrap();
+            std::fs::create_dir_all(home.join(".codex")).unwrap();
+            std::fs::write(
+                home.join(".codex/config.toml"),
+                format!("[mcp_servers.fixture]\ncommand = '{command}'\n"),
+            )
+            .unwrap();
+        }
+        let mut source_config = extensions::ExtensionConfig {
+            skills: vec!["fixture".into()],
+            servers: vec!["fixture".into()],
+            ..Default::default()
+        };
+        source_config
+            .skill_targets
+            .insert("fixture".into(), vec![extensions::ClientId::Codex]);
+        let write_config = |root: &Path, config: extensions::ExtensionConfig| {
+            let value = ExtensionProjection {
+                fingerprint: ProjectionFingerprint::create(
+                    config.fingerprint(),
+                    chrono::Utc::now(),
+                ),
+                config,
+            };
+            atomic_write(
+                &root.join(CONFIG_RELATIVE_PATH),
+                &serde_json::to_vec(&value).unwrap(),
+                0o600,
+            )
+            .unwrap();
+        };
+        write_config(source.path(), source_config);
+        write_config(
+            target.path(),
+            extensions::ExtensionConfig {
+                skills: vec!["fixture".into(), "local-other".into()],
+                servers: vec!["fixture".into()],
+                ..Default::default()
+            },
+        );
+        let plan = transfer::prepare_file_scope(
+            source.path(),
+            transfer::ExportScope {
+                include_policy: false,
+                channel_ids: vec![],
+                template_refs: vec![],
+                include_global: false,
+            },
+            None,
+            false,
+            &ManagerScope {
+                extensions: true,
+                skill_names: vec!["fixture".into()],
+                mcp_names: vec!["fixture".into()],
+                assets_reviewed: true,
+                local_home: Some(source_home.path().into()),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let bytes = transfer::file_bytes(source.path(), &plan.id).unwrap();
+        let incoming =
+            receive_context(target.path(), &bytes, None, Some(target_home.path())).unwrap();
+        assert_eq!(incoming.preview_error.as_deref(), Some("asset_conflict"));
+        let selected = transfer::select_received(
+            target.path(),
+            &incoming.id,
+            transfer::ReceiveScope {
+                extensions: true,
+                skill_names: vec!["fixture".into()],
+                mcp_names: vec!["fixture".into()],
+                asset_mappings: NameMappings {
+                    skills: BTreeMap::from([("fixture".into(), "received-skill".into())]),
+                    mcps: BTreeMap::from([("fixture".into(), "received-mcp".into())]),
+                },
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(selected.preview_error.is_none());
+        let reselected = transfer::select_received(
+            target.path(),
+            &selected.id,
+            transfer::ReceiveScope {
+                extensions: true,
+                skill_names: vec!["fixture".into()],
+                mcp_names: vec!["fixture".into()],
+                asset_mappings: NameMappings {
+                    skills: BTreeMap::from([("fixture".into(), "second-target".into())]),
+                    mcps: BTreeMap::from([("fixture".into(), "second-mcp".into())]),
+                },
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            reselected
+                .manager
+                .as_ref()
+                .unwrap()
+                .extensions
+                .as_ref()
+                .unwrap()
+                .skills,
+            vec!["second-target"]
+        );
+        assert!(reselected
+            .manager
+            .as_ref()
+            .unwrap()
+            .extensions
+            .as_ref()
+            .unwrap()
+            .skill_targets
+            .contains_key("second-target"));
+        assert_eq!(selected.file_digest, incoming.file_digest);
+        assert_eq!(selected.assets.as_ref().unwrap().skills[0].name, "fixture");
+        let manager = selected
+            .manager
+            .as_ref()
+            .unwrap()
+            .extensions
+            .as_ref()
+            .unwrap();
+        assert_eq!(manager.skills, vec!["received-skill"]);
+        assert!(manager.skill_targets.contains_key("received-skill"));
+        accept_extended(target.path(), &selected.id, false, false, false, None).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(
+                target
+                    .path()
+                    .join("manager-state/skills-store/received-skill/SKILL.md")
+            )
+            .unwrap(),
+            "# incoming fixture"
+        );
+        assert_eq!(
+            std::fs::read_to_string(target_home.path().join(".agents/skills/fixture/SKILL.md"))
+                .unwrap(),
+            "# local must remain"
+        );
+        assert!(
+            std::fs::read_to_string(target_home.path().join(".codex/config.toml"))
+                .unwrap()
+                .contains("local-command")
+        );
+        assert_eq!(
+            portable_assets::stored_names(target.path()).unwrap(),
+            vec!["received-mcp"]
+        );
+        let applied: ExtensionProjection = serde_json::from_slice(
+            &std::fs::read(target.path().join(CONFIG_RELATIVE_PATH)).unwrap(),
+        )
+        .unwrap();
+        assert!(
+            applied.config.skills.contains(&"fixture".into())
+                && applied.config.skills.contains(&"local-other".into())
+                && applied.config.skills.contains(&"received-skill".into())
+        );
+        assert!(
+            applied.config.servers.contains(&"fixture".into())
+                && applied.config.servers.contains(&"received-mcp".into())
+        );
+        std::fs::write(
+            target
+                .path()
+                .join("manager-state/skills-store/received-skill/SKILL.md"),
+            "# later edit",
+        )
+        .unwrap();
+        accept_extended(target.path(), &selected.id, false, false, false, None).unwrap();
+        assert_eq!(
+            std::fs::read_to_string(
+                target
+                    .path()
+                    .join("manager-state/skills-store/received-skill/SKILL.md")
+            )
+            .unwrap(),
+            "# later edit"
+        );
+        assert_eq!(
+            transfer::select_received(
+                target.path(),
+                &selected.id,
+                transfer::ReceiveScope {
+                    skill_names: vec!["fixture".into()],
+                    ..Default::default()
+                }
+            )
+            .unwrap_err()
+            .code,
+            "import_in_progress"
+        );
+    }
     #[test]
     fn account_info_round_trip_selects_only_requested_identity_without_login_material() {
         use crate::modules::sync::portable_accounts;

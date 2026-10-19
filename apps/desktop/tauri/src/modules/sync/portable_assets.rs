@@ -75,6 +75,62 @@ pub struct Assets {
 }
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct NameMappings {
+    #[serde(default)]
+    pub skills: BTreeMap<String, String>,
+    #[serde(default)]
+    pub mcps: BTreeMap<String, String>,
+}
+impl NameMappings {
+    pub fn is_empty(&self) -> bool {
+        self.skills.is_empty() && self.mcps.is_empty()
+    }
+}
+pub fn remap(assets: &Assets, mappings: &NameMappings) -> ModelResult<Assets> {
+    for (map, available) in [
+        (
+            &mappings.skills,
+            assets
+                .skills
+                .iter()
+                .map(|s| s.name.as_str())
+                .collect::<BTreeSet<_>>(),
+        ),
+        (
+            &mappings.mcps,
+            assets.mcps.iter().map(|m| m.name.as_str()).collect(),
+        ),
+    ] {
+        if map.len() > 1000 {
+            return Err(invalid("asset_mapping", "扩展映射超过数量上限"));
+        }
+        for (source, target) in map {
+            if !available.contains(source.as_str()) {
+                return Err(invalid("asset_mapping", "仅允许映射已选扩展"));
+            }
+            name(source)?;
+            relative(target)?;
+            if target.contains('/') {
+                return Err(invalid("asset_mapping", "扩展目标名称不能是路径"));
+            }
+        }
+    }
+    let mut result = assets.clone();
+    for skill in &mut result.skills {
+        if let Some(target) = mappings.skills.get(&skill.name) {
+            skill.name = target.clone();
+        }
+    }
+    for mcp in &mut result.mcps {
+        if let Some(target) = mappings.mcps.get(&mcp.name) {
+            mcp.name = target.clone();
+        }
+    }
+    validate(&result)?;
+    Ok(result)
+}
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Summary {
     pub skills: Vec<SkillSummary>,
     pub mcps: Vec<McpSummary>,
@@ -945,6 +1001,31 @@ pub fn verify(root: &Path, id: &str, assets: &Assets) -> ModelResult<()> {
     if plan.digest != sha256(&serde_json::to_vec(assets)?) {
         return Err(invalid("asset_plan", "所选扩展与原采用计划不同"));
     }
+    if !assets.mcps.is_empty()
+        && plan.adopt_credentials.is_none()
+        && sha256(store_bytes(root)?.as_deref().unwrap_or_default()) != plan.store_before
+    {
+        return Err(invalid(
+            "mcp_drift",
+            "接收后本机MCP定义源改变，请重新比较原文件",
+        ));
+    }
+    let targets =
+        CLIENT_IDS.map(|client| ClientTarget::user_target(client, &plan.home, true, true));
+    for mcp in &assets.mcps {
+        for target in &targets {
+            if let Some(current) = discovery::read_server_definition(target, &mcp.name)
+                .map_err(|_| invalid("mcp_read", "本机MCP目标无法安全核对"))?
+            {
+                if split_mcp(current, false, true)?.definition != mcp.definition {
+                    return Err(invalid(
+                        "mcp_drift",
+                        "所选MCP目标的客户端定义在确认前不同，未采用",
+                    ));
+                }
+            }
+        }
+    }
     let source = source_dir(root, &plan.home)?;
     for skill in &assets.skills {
         if skill_digest(&source.join(&skill.name), skill)?
@@ -1193,6 +1274,117 @@ pub fn remove_stored(root: &Path, label: &str) -> ModelResult<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn renamed_mcp_secrets_bind_only_to_new_definition_and_later_destination_edits_refuse() {
+        let root = tempfile::tempdir().unwrap();
+        let home = tempfile::tempdir().unwrap();
+        std::fs::create_dir_all(home.path().join(".codex")).unwrap();
+        std::fs::write(home.path().join(".codex/config.toml"),"[mcp_servers.fixture]\ncommand = 'local-command'\n[mcp_servers.fixture.env]\nTOKEN = 'local-SECRET'\n").unwrap();
+        let source=Assets{skills:vec![],mcps:vec![split_mcp(discovery::RawServerDefinition{name:"fixture".into(),value:serde_json::json!({"command":"incoming-command","env":{"TOKEN":"incoming-SECRET"}})},true,true).unwrap()]};
+        let mapped = remap(
+            &source,
+            &NameMappings {
+                mcps: BTreeMap::from([("fixture".into(), "new-definition".into())]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &mapped).unwrap();
+        let credentials = Memory::default();
+        apply_with(root.path(), &id, &mapped, true, &credentials).unwrap();
+        let targets = CLIENT_IDS.map(|id| ClientTarget::user_target(id, home.path(), true, true));
+        let restored = resolve_mcp_with(root.path(), "new-definition", &targets, &credentials)
+            .unwrap()
+            .unwrap();
+        assert_eq!(restored.value["env"]["TOKEN"], "incoming-SECRET");
+        assert_eq!(
+            discovery::read_server_definition(
+                targets
+                    .iter()
+                    .find(|t| t.client_id == extensions::ClientId::Codex)
+                    .unwrap(),
+                "fixture"
+            )
+            .unwrap()
+            .unwrap()
+            .value["env"]["TOKEN"],
+            "local-SECRET"
+        );
+        let id = uuid::Uuid::new_v4().to_string();
+        prepare(root.path(), home.path(), &id, &mapped).unwrap();
+        let mut stored = mcp_store(root.path()).unwrap();
+        stored[0].definition["command"] = serde_json::json!("later-command");
+        atomic_write(
+            &root.path().join(MCP_STORE),
+            &serde_json::to_vec(&stored).unwrap(),
+            0o600,
+        )
+        .unwrap();
+        assert!(verify(root.path(), &id, &mapped).is_err());
+    }
+    #[test]
+    fn mapping_rejects_paths_platform_names_duplicate_targets_and_unselected_sources() {
+        let mcp = |name: &str| {
+            split_mcp(
+                discovery::RawServerDefinition {
+                    name: name.into(),
+                    value: serde_json::json!({"command":"fixture-command"}),
+                },
+                false,
+                true,
+            )
+            .unwrap()
+        };
+        let assets = Assets {
+            skills: vec![],
+            mcps: vec![mcp("first"), mcp("second")],
+        };
+        for target in ["../escape", "nested/name", "CON", "name."] {
+            assert!(remap(
+                &assets,
+                &NameMappings {
+                    mcps: BTreeMap::from([("first".into(), target.into())]),
+                    ..Default::default()
+                }
+            )
+            .is_err());
+        }
+        assert!(remap(
+            &assets,
+            &NameMappings {
+                mcps: BTreeMap::from([
+                    ("first".into(), "same".into()),
+                    ("second".into(), "SAME".into())
+                ]),
+                ..Default::default()
+            }
+        )
+        .is_err());
+        assert_eq!(
+            remap(
+                &assets,
+                &NameMappings {
+                    mcps: BTreeMap::from([("unselected".into(), "target".into())]),
+                    ..Default::default()
+                }
+            )
+            .err()
+            .unwrap()
+            .code,
+            "asset_mapping"
+        );
+        let moved = remap(
+            &assets,
+            &NameMappings {
+                mcps: BTreeMap::from([("first".into(), "received".into())]),
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(moved.mcps[0].name, "received");
+        assert_eq!(moved.mcps[0].definition, assets.mcps[0].definition);
+    }
     #[derive(Default)]
     struct Memory(std::sync::Mutex<BTreeMap<String, String>>);
     impl Credentials for Memory {

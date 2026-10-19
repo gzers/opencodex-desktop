@@ -288,44 +288,7 @@ pub fn prepare(root: &Path, id: &str, settings: &Settings) -> ModelResult<()> {
     }
     if let Some(incoming) = &settings.extensions {
         let before = bytes(root, projection::CONFIG_RELATIVE_PATH)?;
-        let mut current = before
-            .as_ref()
-            .map(|bytes| serde_json::from_slice::<ExtensionProjection>(bytes))
-            .transpose()?
-            .map(|value| {
-                if value.fingerprint.fingerprint != value.config.fingerprint() {
-                    return Err(invalid(
-                        "portable_extensions",
-                        "本机扩展设置指纹不一致，未覆盖",
-                    ));
-                }
-                Ok(value.config)
-            })
-            .transpose()?
-            .unwrap_or_default();
-        for name in &incoming.skills {
-            if !current.skills.contains(name) {
-                current.skills.push(name.clone());
-            }
-        }
-        for name in &incoming.servers {
-            if !current.servers.contains(name) {
-                current.servers.push(name.clone());
-            }
-        }
-        current.enablement.extend(incoming.enablement.clone());
-        current.skill_targets.extend(incoming.skill_targets.clone());
-        current.sync_method = incoming.sync_method.clone();
-        current.bump_revision();
-        let fingerprint = ProjectionFingerprint::create(current.fingerprint(), chrono::Utc::now());
-        files.push(File {
-            path: projection::CONFIG_RELATIVE_PATH.into(),
-            before,
-            after: serde_json::to_vec_pretty(&ExtensionProjection {
-                config: current,
-                fingerprint,
-            })?,
-        });
+        files.push(extension_file(before, incoming)?);
     }
     if !settings.webdav.is_empty() {
         let before = bytes(root, CANDIDATES)?;
@@ -365,6 +328,95 @@ pub fn prepare(root: &Path, id: &str, settings: &Settings) -> ModelResult<()> {
         0o600,
     )?;
     Ok(())
+}
+fn extension_file(before: Option<Vec<u8>>, incoming: &ExtensionConfig) -> ModelResult<File> {
+    let mut current = before
+        .as_ref()
+        .map(|bytes| serde_json::from_slice::<ExtensionProjection>(bytes))
+        .transpose()?
+        .map(|value| {
+            if value.fingerprint.fingerprint != value.config.fingerprint() {
+                return Err(invalid(
+                    "portable_extensions",
+                    "本机扩展设置指纹不一致，未覆盖",
+                ));
+            }
+            Ok(value.config)
+        })
+        .transpose()?
+        .unwrap_or_default();
+    for name in &incoming.skills {
+        if !current.skills.contains(name) {
+            current.skills.push(name.clone());
+        }
+    }
+    for name in &incoming.servers {
+        if !current.servers.contains(name) {
+            current.servers.push(name.clone());
+        }
+    }
+    current.enablement.extend(incoming.enablement.clone());
+    current.skill_targets.extend(incoming.skill_targets.clone());
+    current.sync_method = incoming.sync_method.clone();
+    current.bump_revision();
+    let fingerprint = ProjectionFingerprint::create(current.fingerprint(), chrono::Utc::now());
+    Ok(File {
+        path: projection::CONFIG_RELATIVE_PATH.into(),
+        before,
+        after: serde_json::to_vec_pretty(&ExtensionProjection {
+            config: current,
+            fingerprint,
+        })?,
+    })
+}
+pub fn remap_extensions(root: &Path, id: &str, incoming: &ExtensionConfig) -> ModelResult<()> {
+    let mut plan = load(root, id)?;
+    if plan.completed {
+        return Err(invalid(
+            "import_in_progress",
+            "扩展设置已采用，不再更改导入映射",
+        ));
+    }
+    if let Some(file) = plan
+        .files
+        .iter_mut()
+        .find(|f| f.path == projection::CONFIG_RELATIVE_PATH)
+    {
+        *file = extension_file(file.before.clone(), incoming)?;
+    } else {
+        return Err(invalid("asset_mapping", "映射目标缺少已选择扩展设置计划"));
+    }
+    atomic_write(&state_path(root, id)?, &serde_json::to_vec(&plan)?, 0o600)?;
+    Ok(())
+}
+pub fn mapped_extensions(
+    config: &ExtensionConfig,
+    mappings: &super::portable_assets::NameMappings,
+) -> ModelResult<ExtensionConfig> {
+    let mut result = config.clone();
+    for item in &mut result.skills {
+        if let Some(target) = mappings.skills.get(item) {
+            *item = target.clone();
+        }
+    }
+    for item in &mut result.servers {
+        if let Some(target) = mappings.mcps.get(item) {
+            *item = target.clone();
+        }
+    }
+    result.skills.sort();
+    result.skills.dedup();
+    result.servers.sort();
+    result.servers.dedup();
+    let mut targets = BTreeMap::new();
+    for (name, clients) in &config.skill_targets {
+        let name = mappings.skills.get(name).unwrap_or(name);
+        if targets.insert(name.clone(), clients.clone()).is_some() {
+            return Err(invalid("asset_mapping", "多个Skill分发设置映射到同一名称"));
+        }
+    }
+    result.skill_targets = targets;
+    Ok(result)
 }
 pub fn select(
     root: &Path,

@@ -97,6 +97,8 @@ pub struct ReceiveScope {
     pub mcp_names: Vec<String>,
     #[serde(default)]
     pub channel_mappings: BTreeMap<String, ChannelMapping>,
+    #[serde(default)]
+    pub asset_mappings: crate::modules::sync::portable_assets::NameMappings,
 }
 #[derive(Debug, Clone, Deserialize)]
 #[serde(
@@ -147,6 +149,13 @@ pub struct IncomingPlan {
     pub protected: bool,
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub channel_bindings: BTreeMap<String, ChannelBinding>,
+    #[serde(
+        default,
+        skip_serializing_if = "crate::modules::sync::portable_assets::NameMappings::is_empty"
+    )]
+    pub asset_mappings: crate::modules::sync::portable_assets::NameMappings,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub extension_source: Option<crate::modules::extensions::ExtensionConfig>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -850,6 +859,8 @@ fn receive_bound(
         available_extension_credentials: false,
         protected: false,
         channel_bindings: bindings,
+        asset_mappings: Default::default(),
+        extension_source: None,
     };
     let bytes = serde_json::to_vec_pretty(&plan)?;
     if bytes.len() > 64 * 1024 * 1024 {
@@ -1126,7 +1137,17 @@ pub fn select_received_context(
                 None
             },
             extensions: if scope.extensions {
-                manager.extensions.clone()
+                original
+                    .extension_source
+                    .as_ref()
+                    .or(manager.extensions.as_ref())
+                    .map(|config| {
+                        crate::modules::sync::portable_manager::mapped_extensions(
+                            config,
+                            &scope.asset_mappings,
+                        )
+                    })
+                    .transpose()?
             } else {
                 None
             },
@@ -1137,6 +1158,14 @@ pub fn select_received_context(
                 .cloned()
                 .collect(),
         });
+        selected.extension_source = if scope.extensions {
+            original
+                .extension_source
+                .clone()
+                .or(manager.extensions.clone())
+        } else {
+            None
+        };
         selected.available_webdav_passwords = original
             .available_webdav_passwords
             .iter()
@@ -1152,6 +1181,13 @@ pub fn select_received_context(
             &scope.endpoint_ids,
             &scope.account_ids,
         )?;
+        if let Some(config) = selected
+            .manager
+            .as_ref()
+            .and_then(|m| m.extensions.as_ref())
+        {
+            crate::modules::sync::portable_manager::remap_extensions(root, &selected.id, config)?;
+        }
     }
     super::file_objects::copy_source(root, &original, &mut selected)?;
     super::file_objects::select_asset_subset(
@@ -1160,6 +1196,7 @@ pub fn select_received_context(
         &mut selected,
         &scope.skill_names,
         &scope.mcp_names,
+        &scope.asset_mappings,
         passphrase,
     )?;
     write_incoming(root, &selected)?;
@@ -1180,6 +1217,13 @@ fn intent_digest(
     plan: &IncomingPlan,
     credentials: &BTreeMap<String, String>,
 ) -> ModelResult<String> {
+    if !plan.asset_mappings.is_empty() {
+        return Ok(sha256(&serde_json::to_vec(&(
+            credentials,
+            &plan.channel_bindings,
+            &plan.asset_mappings,
+        ))?));
+    }
     let bytes = if plan.channel_bindings.is_empty() {
         serde_json::to_vec(credentials)?
     } else {
