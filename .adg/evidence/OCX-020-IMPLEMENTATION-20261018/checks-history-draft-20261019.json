@@ -1,0 +1,73 @@
+{
+  "recordedAt": "2026-10-19T02:37:31.018277+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "210594c909bf9454d690e5a4b8850f8ed0273456",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "583dd5a1a7d34bfa5fdb6939eb96bd318653799d0ee3d8db971aa933bff8cade",
+    "apps/desktop/tauri/src/lib.rs": "986efa4dc5967dc29e19db741ff4928667c229bb1f9edaa9218655707088c260",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "09e78f06849d6c27ef8c66f6a742e5af2a8045b2c7520a87d9520200b735794a",
+    "apps/desktop/tauri/src/modules/model_config/recovery.rs": "78c06299dff2347bdfd5785857312db499bb5b94ec8c9e94d55ebf5bf68b4203",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "8a1e452d2d10a0a7e2d67abf73eeaec6ee0bd39f90ce0e1c3b93a1c1345290cb",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "d09127a024cc9a425b620c3b6bfc7b7636ad7f0a020b1a978157c5ffe38fceb4",
+    "apps/desktop/ui/src/features/backup/BackupManagement.vue": "cf200397870e9635a1fc6d10b736c68df6301df016491a9bfd019ecaf3b42ce5",
+    "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue": "23919cdbaf8d63a6e60a2603e380c381dd3c9b3a36301272823fff47ce618378",
+    "apps/desktop/ui/src/features/models/api.ts": "fb8fef17cb5e2dc447b4140d736a7039def296815769b7964f39aee43e760986",
+    "apps/desktop/ui/tests/backup-management.test.ts": "5ce4b45b80db912b49f7d68a5eaf031c6dd8ee8c61f71edd2726603c9ef6c839",
+    "apps/desktop/ui/tests/model-history.test.ts": "ff31b331d9e586cb3d288de0ad2f401e22611693507abb3b79b105e708e690b8"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 30436,
+      "passed": 94,
+      "failed": 0,
+      "result": "passed",
+      "scope": "before latest dependency-preservation fix; related retest below"
+    },
+    {
+      "command": "cargo test --lib model_config::recovery --no-default-features",
+      "session": 36550,
+      "passed": 5,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib official_save_plan_freezes --no-default-features",
+      "session": 45517,
+      "passed": 1,
+      "result": "passed",
+      "scope": "explicit CLI/management fixture, not installed upstream"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 36550,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-history.test.ts tests/model-save-recovery.test.ts tests/backup-management.test.ts",
+      "session": 54979,
+      "files": 3,
+      "passed": 14,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 54979,
+      "result": "passed"
+    }
+  ],
+  "visualEvidence": {
+    "file": "model-history-recovery-light.jpg",
+    "scope": "DEV fixture, light/high, settings backup history and readable restore-to-draft diff",
+    "notProven": "native IPC, actual original configuration restoration, client loaded state"
+  },
+  "incomplete": [
+    "first official-adoption baseline restoration",
+    "deleted provider fields and original Key pool selection restoration",
+    "actual client loaded evidence",
+    "full upstream editable fields and all affected UI consumers",
+    "per-type live portable-login proof for any supported adapter",
+    "asset rename/mapping, platform and publication"
+  ]
+}
