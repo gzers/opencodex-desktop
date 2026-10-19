@@ -387,3 +387,12 @@ CI39255967327绑定a59f84ea全部适用job成功：macOS/Windows后端、前端�
 200%真实WebView发现侧栏宽占一半、标题逐字换行，最初CSS container修正仍未生效；不计为通过。改由useShellLayout以viewport/当前保存缩放计算≤760逻辑px收起侧栏，MutationObserver/resize响应并卸载清理；最终v6暗色200%显示图标侧栏、完整模型标题与保存区，能prepare/apply到committed，截图native-models-dark-200-compact/native-save-dark-200-single-task。通知列独立滚动，未知错误码改可操作中文。原核对每次随机任务ID造成多卡，现policy_save统一使用plan UUID，同计划重新观察更新原卡，其余任务不允许旧终态变回运行。正式store回归覆盖，原生最终同计划仅一张任务卡。
 
 最终前端124文件628项通过、无未处理异步异常，生产构建通过；两条jsdom Canvas提示保持模拟限制。home/缩放/反馈受影响向量见checks-native-consumers-20261019.json。停止自有应用/官方子进程，精确删除并核对本批2个Sandbox保护键NoEntry，未动其他账户。原生主目录修正和布局/反馈后续CI仍待推送；账户逐型、其余消费者/Windows实屏与最终发布未完成。
+
+
+### 独立同步导航与旧设置入口归一
+
+对照已确认配置同步方案发现此前实际仍在设置内，未满足独立一级同步菜单；现将同一ModelTransfer/ImportedConnections与原连接表单移到SyncRoute，侧栏位于拓展与诊断之间。两个主Tab为文件同步/WebDAV同步，共用StickyTabs；旧settings?section=migration/sync和程序内旧go调用分别规范重定向#sync?tab=file/webdav。设置不再保留重复同步Tab/表单，概览快捷入口、同步通知与顶栏刷新均到同一路由。
+
+原连接配置拆为WebDavConnection展示/适配组件，保存/删除/测试继续沿既有app/sync服务，无新同步实现或通知宿主。字段补明确label绑定及技术输入关闭自动更正；冲突策略每次询问保持只读。两面板挂载保留Tab缓冲，不因切换丢范围或连接未保存输入；离开页面清连接密码，分享/导出保护规则不变。
+
+验证：导航/旧重定向、侧栏顺序、切Tab输入、旧只读冲突与技术字段、全局刷新5文件15项及构建通过；全量125文件630项通过，无未处理异步异常，两条jsdom Canvas提示不作GPU证据。浏览器DEV固定资料直接使用正式SyncRoute，hash正确、连接表单仅1个，切Tab仍保留测试URL，设置8个分区无重复同步；截图top-level-sync-webdav-light.png。当前导航通过不代表范围树/预设或账户全部条件已完，继续按原同步方案补齐。

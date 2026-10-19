@@ -1,0 +1,75 @@
+{
+  "recordedAt": "2026-10-19T14:59:08.848036+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "d6bc824c3b5e1e71983cb79eceddf356f8321f12",
+  "sourceSha256": {
+    "apps/desktop/ui/src/components/AppSidebar.vue": "7e24c1ccbf7a8bb4a8619fd16afce65fc945ce20d911b00c919740c5cc68e15a",
+    "apps/desktop/ui/src/components/registry.ts": "7386a2d9c004ec865891318341c2f7f8d4783d3ebaeb5d9393554e4c175322d7",
+    "apps/desktop/ui/src/composables/useAppController.ts": "a7b945e1510195397f80e2ed432931ec6b8f65916f1cebdf6d229e99a1156f5b",
+    "apps/desktop/ui/src/dev/auditHarness.ts": "ba61e829faca3752cf5161b79c9045e63c53e1ff869f4654dce0c7c93c619ab9",
+    "apps/desktop/ui/src/navigation/index.ts": "9363ad972b2fb470a4fc756ffa50906c5d79bd2465e463b46779bf29e2f4c39d",
+    "apps/desktop/ui/src/routes/OverviewRoute.vue": "0825f7aa6543bdbd5103d926d7f000218f9d95ac41002c0b90a3857eabe1f8ce",
+    "apps/desktop/ui/src/routes/SettingsRoute.vue": "599d606c68aaff9c42d53baa5d05a1ab1d118b1164edf6eb2b0fb34efcc3f582",
+    "apps/desktop/ui/src/stores/routes.ts": "983fc0b9a13ae815f468b7f0f06bbd1ea15c40be17a83627e821dd33cc0aee6b",
+    "apps/desktop/ui/src/types/ui.ts": "48c92f67f6e85f298a59216cb8af2747054841cf6a416f6c0ba7a08982f5e86d",
+    "apps/desktop/ui/tests/navigation.test.ts": "92a8a5f40f6704c753472654d91b771e9db1f008d1f7d26c1dcfbaf387b96398",
+    "apps/desktop/ui/tests/sync-conflict-default.test.ts": "9ccc508e38d00f3a3862352125e6a2b6c530a29087da6eea3efdb1319b7ed9cf",
+    "apps/desktop/ui/tests/technical-input-autocapitalize.test.ts": "d8d6cdcc9f84ca4babd959ae51302a69b744921f055b9f6afc185897670cb186",
+    "apps/desktop/ui/src/features/sync/WebDavConnection.vue": "058691d0d975d048b9da70441a73bc704c720873aff4a9a33c1555229f3b2651",
+    "apps/desktop/ui/src/routes/SyncRoute.vue": "b9417730c2fcab1c2b2b7a3d355be85c3ae9e49acd029d44b45052dfcfa2dd64",
+    "apps/desktop/ui/tests/sync-route.test.ts": "4a1c34e2b6a767cafdb5f895be3af1ca370b578de10286f5766f13e50f11cecd"
+  },
+  "checks": [
+    {
+      "command": "npm run test -- --run tests/navigation.test.ts tests/sync-route.test.ts tests/sync-conflict-default.test.ts tests/technical-input-autocapitalize.test.ts tests/global-refresh.test.ts; npm run build",
+      "session": 31731,
+      "result": "passed",
+      "files": 5,
+      "passed": 15,
+      "build": "passed"
+    },
+    {
+      "command": "npm run test -- --run",
+      "session": 67902,
+      "result": "passed",
+      "files": 125,
+      "passed": 630,
+      "unhandledErrors": 0,
+      "notes": "jsdom canvas unavailable diagnostics retained"
+    }
+  ],
+  "browser": {
+    "screenshot": "top-level-sync-webdav-light.png",
+    "source": "production route/components with DEV fixed models and connections",
+    "observed": {
+      "sidebarOrder": [
+        "overview",
+        "panel",
+        "models",
+        "extensions",
+        "sync",
+        "logs",
+        "settings"
+      ],
+      "hash": "#sync?tab=webdav",
+      "connectionForms": 1,
+      "tabInputRetained": "https://fixture.example.test/dav",
+      "settingsSyncDuplicates": 0
+    },
+    "boundary": "No actual WebDAV network or native IPC from this browser sample"
+  },
+  "scope": [
+    "top-level Sync route",
+    "file/WebDAV tabs",
+    "legacy settings?section=migration/sync canonical redirects",
+    "existing shared connection and transfer owner retained",
+    "tab buffers retain values; password cleared on owning route disposal",
+    "global refresh and notification action target top-level route"
+  ],
+  "remaining": [
+    "scope object tree search/selection/presets",
+    "remaining actual consumer/platform acceptance",
+    "account adapter boundaries and final delivery audit/release"
+  ]
+}
