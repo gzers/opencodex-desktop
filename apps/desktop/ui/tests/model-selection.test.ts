@@ -30,6 +30,10 @@ describe('public model selection', () => {
     const result=mergeUpstream({version:'2.84.0',providers:{providers:{test:{adapter:'openai-chat',baseUrl:'https://example.test/v1',modelDisplayNames:{'native/id':'我的显示名'},modelAliases:{'native/id':'routing-alias'}}}},models:[{provider:'test',id:'native/id',displayName:'上游名称'}],order:{}},[])
     expect(result[0]!.discovered[0]).toMatchObject({id:'native/id',label:'我的显示名'})
   })
+  it('does not turn a generated namespaced routing label into an edited display name',()=>{
+    const value=mergeUpstream({version:'2.84.0',providers:{providers:{test:{adapter:'openai-chat',baseUrl:'https://example.test/v1'}}},models:[{provider:'test',id:'native/id',namespaced:'test/native-id',displayName:'test/native-id'},{provider:'test',id:'b',namespaced:'test/b',displayName:'用户定义名称'}],order:{}},[])
+    expect(value[0]!.discovered.map(m=>({id:m.id,label:m.label}))).toEqual([{id:'native/id',label:'native/id'},{id:'b',label:'用户定义名称'}])
+  })
   it('keeps effort and Fast changes pending until the main confirmation', async () => {
     const wrapper = mount(ModelPicker, { props: { open: false, rows: [row('model-a')], channels: [{ id: 'channel', label: '测试渠道' }], reasoning: true }, global: { stubs: { UiDialog: dialog, UiSelectMenu: menu } } })
     await wrapper.setProps({ open: true })
