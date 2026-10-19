@@ -293,3 +293,16 @@ TaskProgressCard/FeedbackToast为纯视图，TaskProgressHost/ToastHost继续是
 检查：受影响通知/任务/顶栏/组件13文件43项通过；随后全量120文件620项运行，619通过、1项发现顶栏aria-busy false契约差异；修正后相应3文件10项及生产构建通过。无未处理异步异常，原jsdom Canvas提示仍非真实画质证据。生产dist无新增基础/选择器样例或gallery入口。全部环境/缩放、系统Keychain/原生平台、授权回退与原字段便携及最终发布门继续实施。
 
 当前未发布，未生成本版验收完成或发布证书。
+
+
+### 既有渠道授权替换、精确补偿与引用型Key池身份
+
+成功历史恢复现在可明确替换同一连接的另一代Key池和认证头。比较时独立保护当前完整授权，预览只列数量、活动项及范围；执行绑定原计划和运行根，持久记录prepared/pending_pool/pool_written/pending_active/done的精确摘要。未知私有变化不被当成本次副作用，先拒绝补偿；正向或逆向重放只接受已记录起点、精确池暂态或最终目标。仅授权变化也纳入历史影响范围，成功历史可再转草稿恢复，并成为独立的待重启/客户端确认目标；原计划核对分别比较目标/原授权，不能凭相同公开字段错误提交或认定已补偿。
+
+Keychain迁移保留官方原pool id、顺序、label及addedAt，校验引用归属后读取所选安全账户；不把引用字符串重新哈希为新槽位。恢复用官方完整provider POST只带原公开字段及受保护pool/headers，省略apiKey以避免官方add-key副作用，再用明确活动选择API恢复。无显式活动字段的池保留其原状态，不擅自增加活动字段。Key删除改为官方query name/id契约，原JSON body fixture已纠正。
+
+真实链发现官方长驻内存合并基准与CLI磁盘状态不同时，重复POST旧pool会被旧基准还原。现用官方/api/providers/reload的单渠道、进程/端口/有效期绑定HMAC capability同步原行及基准，bodyless且Content-Length=0，不转发admin bearer；之后再次核对源材料才写。该接口只采用原磁盘行，不替代配置写入服务；秘密POST仍没有上游原子private CAS，立即复查和读回不能宣称提供服务端CAS。
+
+验证：模型服务121项通过（最终reload/核对补充前），受影响runtime/history15项、管理接口3项及Clippy全目标随后通过。安装官方2.84.0隔离真实链121.18秒通过：删除后重建、多Key/header恢复、现存第三代授权替换、最终sync失败注入与精确回滚、后来私有头拒绝、重放、纯授权历史再次恢复与客户端目标，以及Keychain引用原身份保留；生成POST=0。证据checks-auth-generation-20261019.json绑定源码摘要。失败诊断仅打印字段名和非秘密journal，不打印Key/认证头正文。
+
+真实链仍是临时数据根和内存Keyring，不证明系统Keychain、Windows或实际Codex已加载。不同历史端点/认证方式的明确映射、原上游字段完整便携、其余组件指标/平台与最终发布继续实施。仓库.git误移废纸篓后已按用户明确授权恢复，开发和文档分支/未提交内容保留；未纳入其他协作包正在修改的资料。本版尚未发布。
