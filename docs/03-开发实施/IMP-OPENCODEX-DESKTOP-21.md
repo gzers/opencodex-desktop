@@ -354,3 +354,8 @@ Keychain迁移保留官方原pool id、顺序、label及addedAt，校验引用�
 验证：provider12、runtime/history16及Clippy全目标通过。安装官方2.84.0隔离完整链216.01秒通过：已有管理渠道切节点后从成功历史转草稿并普通保存恢复旧端点；最终sync失败注入后补偿完整回原端点/授权；默认渠道中间停用后最终恢复；anthropic+bearer与openai-responses不同adapter/transport成对转换与逆向恢复，原补偿重放不重复写；生成POST=0。最终仅journal身份/补偿方向拒绝保护随后由provider12和Clippy复核。证据checks-history-direction-20261019.json绑定源码。该链内存Keyring，系统存储证据沿上一批macOS独立原生测试，未推导客户端/Windows已验。
 
 已读取远端main后续ce2ada4b7为治理忽略/交接资料；其Windows CI39099660040仍有7项旧query helper清理失败，保留失败事实，与0.1.10例外不能合并写为0.2.0通过。后续0.2.0需自己的平台结果，仍未发布。
+
+
+### 启动本版远端平台CI
+
+CI的backend-windows增加独立opt-in provider_auth_native步骤，显式Sandbox且串行运行，原后端全量回归保留。该步骤即使全量旧测试失败也执行并分别记录，不覆盖原job结论；随机自有系统账户的准入/清理由同一测试负责。当前仅登记执行入口，Windows结果待本特性分支推送后的实际run，不能写成通过。原0.1.10七项helper清理失败及发布例外沿原证据处理，不拿重跑掩盖。
