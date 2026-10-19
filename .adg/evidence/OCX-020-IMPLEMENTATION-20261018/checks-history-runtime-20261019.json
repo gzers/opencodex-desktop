@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-10-19T05:03:07.564361+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "c1874d072b666d90524d32baed783617ef2adc3e",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/client_state.rs": "c74d34c4342d4e32af14fb465b1f8a01473eab5cb1d35a8fab4842237ab46e8a",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "92a98067b80489a4a8e06b123c8d4a6ea39db1ada6187249218d32c307e0ed52",
+    "apps/desktop/tauri/src/modules/model_config/provider_auth.rs": "12bb922e317b0d400366103b717141606fe31ea0741b68016eca09e46132fc6f",
+    "apps/desktop/tauri/src/modules/model_config/recovery.rs": "ca982265fb95f2c1e92557deb29901c997074df05210a404afd065ba331a8efd",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "afff266ee31d9c0b8e4f33b6895a2d1ee20d26df36e955b60a35f5612c50ad76",
+    "apps/desktop/tauri/src/modules/model_config/runtime_history.rs": "e7634d6a20eef07c00b414b5d9d073a518d5bf6c26a6ed66983dfc1173852306",
+    "apps/desktop/tauri/src/modules/model_config/schema.rs": "d858525ab0f9b9da0e5767700546a47408faa4869cfb073c527cdd9da2508969",
+    "apps/desktop/tauri/src/modules/model_config/store.rs": "75c369a6cad287af110451c6e4cf1aa4435e6e1131c649e338166090abe620f3",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "966a5fbbf548daccba6f03418372f39410f77dae20e7e3d61319afd769f891f8",
+    "apps/desktop/ui/src/features/backup/ModelSaveHistory.vue": "656ae8ae4eb0b47329147ec2b0410e5d886c75328c97de3b10896b53ec582e73",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "3f7e5f32a4d61146caad0eb4e1385bff65e1892bf32539237f59e6918985378c",
+    "apps/desktop/ui/src/features/models/api.ts": "c7c1d95364465e2b6cd8c48bbe2f6cd29fa3a24ce650ac9ca11b0e3257ab4df7"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 98457,
+      "passed": 114,
+      "result": "passed",
+      "scope": "before last scoped/no-new-auth and independent-pending-removal guard; related retests below"
+    },
+    {
+      "command": "cargo test --lib model_config::runtime::tests --no-default-features",
+      "session": 38512,
+      "passed": 12,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib model_config::recovery --no-default-features",
+      "session": 38424,
+      "passed": 5,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib provider_auth --no-default-features",
+      "session": 43383,
+      "passed": 7,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 29925,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-history.test.ts tests/model-save-recovery.test.ts tests/model-client-state.test.ts",
+      "session": 83817,
+      "files": 3,
+      "passed": 9,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 83817,
+      "result": "passed"
+    },
+    {
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 67068,
+      "passed": 1,
+      "result": "passed",
+      "testSeconds": 68.2,
+      "observed": "history-to-normal-save=true multi-key-header-restored=true stable-group=true removal-including-owned-group=true new-default=true no-generation=true",
+      "doesNotProve": "real Codex client loaded state, daily credentials, native Keychain or Windows UI"
+    }
+  ],
+  "remaining": [
+    "explicit existing-account authorization replacement and exact compensation",
+    "migrated keychain pool identity-preserving adapter",
+    "all original provider fields portable and selector consumers",
+    "asset remapping and all shared UI/platform gates",
+    "release and postpublish verification"
+  ]
+}
