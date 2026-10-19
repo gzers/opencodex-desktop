@@ -1,8 +1,10 @@
 <script setup lang="ts">
 // 开发态组件预览：直接引用生产公共组件，展示变体、状态、亮暗主题与长文本。
 // 不触发真实 IPC；数据是本地固定样例，不代表生产默认值。
-import { ref } from 'vue'
+import { computed,ref } from 'vue'
 import {componentRegistry} from '@/components/registry'
+import ModelPicker,{type ModelChoice} from '@/features/models/ModelPicker.vue'
+import {emptyRules,type ModelProjection} from '@/features/models/api'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiSwitch from '@/components/ui/UiSwitch.vue'
 import UiCard from '@/components/ui/UiCard.vue'
@@ -15,6 +17,11 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiDiscreteSlider from '@/components/ui/UiDiscreteSlider.vue'
 const switchExample=ref(false)
+const pickerOpen=ref(false);const pickerMultiple=ref(false);const pickerState=ref('normal');const galleryChoice=ref<ModelChoice[]>([])
+const pickerStates=[{value:'normal',label:'正常完整目录'},{value:'empty',label:'空目录'},{value:'loading',label:'读取中'},{value:'error',label:'读取失败'},{value:'missing',label:'已选引用缺失'}]
+const pickerChannels=[{id:'native',label:'官方 / 原生'},{id:'primary',label:'自建渠道'},{id:'long',label:'较长名称 English 与中文渠道'}]
+const pickerRows=computed<ModelProjection[]>(()=>pickerState.value==='empty'||pickerState.value==='error'?[]:Array.from({length:18},(_,i)=>({channelId:i===0?'native':i%2?'primary':'long',providerId:i===0?'openai':'provider-'+(i%2),modelId:i===0?'gpt-native':('model/'+i),label:i===0?'原生模型':i===3?'较长的中文与 English 型号展示名称':'型号 '+i,enabled:i!==4,selected:i<3,discovered:true,templateRef:null,rules:{...emptyRules(),...(i%3===0?{contextWindow:{mode:'custom' as const,value:128000},reasoningEfforts:{mode:'custom' as const,value:['none','low','high']},defaultEffort:{mode:'custom' as const,value:'high'},fast:{mode:'custom' as const,value:true}}:{})},source:{},...(i===0?{nativeModelId:'gpt-native'}:{}),...(i===4?{unavailableReason:'调用方明确标为不可用'}:{}),aliases:i===3?['short-alias']:[]})))
+function showPicker(multiple:boolean){pickerMultiple.value=multiple;galleryChoice.value=pickerState.value==='missing'?[{channelId:'removed',modelId:'missing'}]:[];pickerOpen.value=true}
 const effortExample=ref<string|undefined>()
 
 const theme = ref<'light' | 'dark'>('light')
@@ -145,6 +152,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
         <UiCardHeader><h2>长文本与溢出</h2><p>长路径应可读、可复制，不撑破容器。</p></UiCardHeader>
         <p class="mono gallery-path" :title="longPath">{{ longPath }}</p>
       </UiCard>
+      <UiCard id="model-picker"><UiCardHeader><h2>公共模型选择器</h2><p>真实组件的原生身份、渠道引用、未知能力、失效选择、明确推荐、读取失败与临时组合；下面的固定样例不连接服务。</p></UiCardHeader><Inline><UiSelectField v-model="pickerState" label="模型选择器样例状态" :options="pickerStates" /><UiButton @click="showPicker(false)">单选打样</UiButton><UiButton @click="showPicker(true)">多选与优先级打样</UiButton></Inline><p>返回：{{ galleryChoice.length?galleryChoice:'尚未确认' }}</p><ModelPicker :open="pickerOpen" :multiple="pickerMultiple" ordered reasoning :rows="pickerRows" :channels="pickerChannels" :current="galleryChoice" :recommendations="[{channelId:'primary',modelId:'model/3'},{nativeModelId:'gpt-native'}]" :loading="pickerState==='loading'" :error="pickerState==='error'?'固定读取失败样例，已选项保持':undefined" @close="pickerOpen=false" @confirm="galleryChoice=$event;pickerOpen=false" @retry="pickerState='normal'" /></UiCard>
       <UiCard id="registration"><UiCardHeader><h2>规格与采用登记</h2><p>43项稳定ID对应真实源码。已有配方、实际组件、平台实现和原型专用说明分别记录；完整尺寸/主题/画质/原生验证尚未全部完成。</p></UiCardHeader><div class="gallery-registry-scroll"><table><thead><tr><th>组件</th><th>正式来源</th><th>实际消费者</th><th>检查状态</th></tr></thead><tbody><tr v-for="item in componentRegistry" :id="'entry-'+item.id" :key="item.id"><th scope="row">{{ item.name }}<small>{{ item.id }}</small><small>{{ item.specification.document }}</small></th><td><code v-for="file in item.implementations" :key="file">{{ file }}</code><span v-if="item.reason">{{ item.reason }}</span></td><td><code v-for="file in item.consumers" :key="file">{{ file }}</code></td><td>完整矩阵待验证{{ item.gallery?' · 有组件样例':' · 样例待补/原生独立核验' }}</td></tr></tbody></table></div></UiCard>
     </Stack></div>
   </main>

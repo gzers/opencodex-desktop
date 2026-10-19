@@ -563,6 +563,7 @@ pub fn run() {
             commands::model_config::model_external_activate,
             commands::model_config::model_external_result,
             commands::model_config::model_agent_preferences,
+            commands::model_config::model_agent_directory,
             commands::model_config::model_agent_preferences_save,
             commands::model_config::model_research_sources,
             commands::model_config::model_research_search,

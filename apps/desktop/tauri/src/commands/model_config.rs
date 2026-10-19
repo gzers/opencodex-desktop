@@ -420,12 +420,37 @@ pub async fn model_agent_preferences(
 pub async fn model_agent_preferences_save(
     settings: crate::modules::model_config::agent::AgentSettings,
     data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::agent::AgentSettings> {
+    if settings.channel_id.is_none() || settings.connection_digest.is_none() {
+        return Err(invalid(
+            "agent_binding",
+            "请先从当前目录重新选择执行模型，建立稳定渠道与服务绑定",
+        ));
+    }
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
     let root = data_root.0.clone();
+    let snapshot = crate::modules::model_config::upstream::snapshot(&context).await?;
+    let settings = crate::modules::model_config::execution_directory::bind(
+        &root, &context, &snapshot, settings,
+    )?;
     execute(root.clone(), move |_| {
         crate::modules::model_config::agent::save_settings(&root, settings)
     })
     .await
+}
+#[tauri::command]
+pub async fn model_agent_directory(
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<crate::modules::model_config::execution_directory::Directory> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
+    let snapshot = crate::modules::model_config::upstream::snapshot(&context).await?;
+    crate::modules::model_config::execution_directory::bound_directory(
+        &data_root.0,
+        &context,
+        &snapshot,
+    )
 }
 #[tauri::command]
 pub async fn model_research_sources(

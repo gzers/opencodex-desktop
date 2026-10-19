@@ -23,6 +23,10 @@ pub struct AgentSettings {
     pub model_id: String,
     pub reasoning_effort: Option<String>,
     pub fast: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub channel_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub connection_digest: Option<String>,
 }
 pub fn settings(root: &Path) -> ModelResult<Option<AgentSettings>> {
     let path = root.join(preferences::PREFERENCES_RELATIVE_PATH);
@@ -592,6 +596,7 @@ pub async fn generate(
     }
     let grant = Tasks::new(root).prepare(request.task)?;
     let snapshot = upstream::snapshot(context).await?;
+    super::execution_directory::validate_binding(root, context, &snapshot, &settings)?;
     let model = snapshot
         .models
         .as_array()
@@ -600,7 +605,6 @@ pub async fn generate(
                 r["provider"].as_str() == Some(&settings.provider_id)
                     && r["id"].as_str() == Some(&settings.model_id)
                     && r["native"] != true
-                    && r["disabled"] != true
                     && r["initialSelectionPending"] != true
             })
         })
@@ -860,6 +864,8 @@ mod tests {
     fn execution_preferences_stay_local_and_portable_preferences_never_replace_them() {
         let root = tempfile::tempdir().unwrap();
         let value = AgentSettings {
+            channel_id: None,
+            connection_digest: None,
             provider_id: "test".into(),
             model_id: "model-1".into(),
             reasoning_effort: Some("none".into()),
@@ -974,12 +980,14 @@ mod tests {
             );
         let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
         let script = root.path().join("ocx");
-        let source = format!("#!/bin/sh\ncase \"$1 $2\" in\n'--version ') echo '2.84.0';;\n'provider snapshot') echo '{{\"defaultProvider\":\"test\",\"providers\":{{}}}}';;\n'models live') echo '[{{\"provider\":\"test\",\"id\":\"model-a\",\"namespaced\":\"test/model-a\",\"reasoningEfforts\":[\"none\"],\"disabled\":false}}]';;\n'models order') echo '{{}}';;\n'inspect catalog') echo '{{}}';;\n'status --json') echo '{{\"port\":{port},\"pid\":42}}';;\n*) exit 3;;\nesac\n");
+        let source = format!("#!/bin/sh\ncase \"$1 $2\" in\n'--version ') echo '2.84.0';;\n'provider snapshot') echo '{{\"defaultProvider\":\"test\",\"providers\":{{\"test\":{{\"adapter\":\"openai-chat\",\"baseUrl\":\"https://example.test/v1\",\"authMode\":\"key\"}}}}}}';;\n'models live') echo '[{{\"provider\":\"test\",\"id\":\"model-a\",\"namespaced\":\"test/model-a\",\"reasoningEfforts\":[\"none\"],\"disabled\":true}}]';;\n'models order') echo '{{}}';;\n'inspect catalog') echo '{{}}';;\n'status --json') echo '{{\"port\":{port},\"pid\":42}}';;\n*) exit 3;;\nesac\n");
         std::fs::write(&script, source).unwrap();
         std::fs::set_permissions(&script, std::fs::Permissions::from_mode(0o700)).unwrap();
         save_settings(
             root.path(),
             AgentSettings {
+                channel_id: None,
+                connection_digest: None,
                 provider_id: "test".into(),
                 model_id: "model-a".into(),
                 reasoning_effort: Some("none".into()),
@@ -992,6 +1000,12 @@ mod tests {
             working_directory: root.path().into(),
             opencodex_home: root.path().join("home"),
         };
+        let actual = upstream::snapshot(&context).await.unwrap();
+        let configured = settings(root.path()).unwrap().unwrap();
+        let configured =
+            super::super::execution_directory::bind(root.path(), &context, &actual, configured)
+                .unwrap();
+        save_settings(root.path(), configured).unwrap();
         let run_id = uuid::Uuid::new_v4().to_string();
         let result = generate(
             root.path(),

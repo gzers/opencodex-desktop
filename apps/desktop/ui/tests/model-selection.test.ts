@@ -7,6 +7,25 @@ const row = (id: string): ModelProjection => ({ channelId: 'channel', providerId
 const menu = { props: ['open'], template: '<div v-if="open"><slot/></div>' }
 const dialog = { template: '<div><slot/><slot name="actions"/></div>' }
 describe('public model selection', () => {
+  it('keeps a selected identity during load/error, blocks stale submission and delegates retry to the caller',async()=>{
+    const wrapper=mount(ModelPicker,{props:{open:true,rows:[row('a')],channels:[],multiple:true,current:[{channelId:'channel',modelId:'a'}],loading:true},global:{stubs:{UiDialog:dialog,UiSelectMenu:menu}}})
+    expect(wrapper.text()).toContain('已选模型 · 1');expect(wrapper.text()).toContain('正在读取模型目录');expect(wrapper.findAll('button').find(b=>b.text()==='确定选择')!.attributes('disabled')).toBeDefined()
+    await wrapper.setProps({loading:false,error:'服务读取失败'});await wrapper.findAll('button').find(b=>b.text()==='重新读取目录')!.trigger('click');expect(wrapper.emitted('retry')).toHaveLength(1);expect(wrapper.emitted('confirm')).toBeUndefined()
+    await wrapper.setProps({error:undefined});await wrapper.findAll('button').find(b=>b.text()==='确定选择')!.trigger('click');expect(wrapper.emitted('confirm')?.[0]).toEqual([[{channelId:'channel',modelId:'a'}]]);wrapper.unmount()
+  })
+  it('preserves native identity without inventing a channel reference and respects caller unavailability',async()=>{
+    const native={...row('native-id'),channelId:'native-display-group',nativeModelId:'native-id'}
+    const wrapper=mount(ModelPicker,{props:{open:true,rows:[native],channels:[{id:'native-display-group',label:'官方 / 原生'}]},global:{stubs:{UiDialog:dialog,UiSelectMenu:menu}}})
+    await wrapper.get('.model-picker-row').trigger('click');await wrapper.findAll('button').find(b=>b.text()==='确定选择')!.trigger('click')
+    expect(wrapper.emitted('confirm')?.[0]).toEqual([[{nativeModelId:'native-id'}]])
+    await wrapper.setProps({rows:[{...native,unavailableReason:'原生目录尚无管理器执行绑定'}]});expect(wrapper.text()).toContain('原生目录尚无管理器执行绑定');expect(wrapper.findAll('button').find(b=>b.text()==='确定选择')!.attributes('disabled')).toBeDefined();wrapper.unmount()
+  })
+  it('shows and sorts recommendations only when caller supplies exact identities, without changing picked priority',async()=>{
+    const wrapper=mount(ModelPicker,{props:{open:true,rows:[row('a'),row('b')],channels:[],multiple:true,ordered:true,recommendations:[{channelId:'channel',modelId:'b'}],current:[{channelId:'channel',modelId:'a'},{channelId:'channel',modelId:'b'}]},global:{stubs:{UiDialog:dialog,UiSelectMenu:menu}}})
+    await wrapper.findAll('th button').find(b=>b.text().includes('推荐'))!.trigger('click');expect(wrapper.findAll('.model-picker-row strong').map(r=>r.text())).toEqual(['b','a'])
+    await wrapper.findAll('button').find(b=>b.text()==='确定选择')!.trigger('click');expect(wrapper.emitted('confirm')?.[0]).toEqual([[{channelId:'channel',modelId:'a'},{channelId:'channel',modelId:'b'}]])
+    await wrapper.setProps({recommendations:[]});expect(wrapper.findAll('th button').some(b=>b.text().includes('推荐'))).toBe(false);wrapper.unmount()
+  })
   it('uses the public display-name field while leaving the exact native model id intact',()=>{
     const result=mergeUpstream({version:'2.84.0',providers:{providers:{test:{adapter:'openai-chat',baseUrl:'https://example.test/v1',modelDisplayNames:{'native/id':'我的显示名'},modelAliases:{'native/id':'routing-alias'}}}},models:[{provider:'test',id:'native/id',displayName:'上游名称'}],order:{}},[])
     expect(result[0]!.discovered[0]).toMatchObject({id:'native/id',label:'我的显示名'})

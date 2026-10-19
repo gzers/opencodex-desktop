@@ -690,6 +690,8 @@ mod tests {
         crate::modules::model_config::agent::save_settings(
             root.path(),
             crate::modules::model_config::agent::AgentSettings {
+                channel_id: None,
+                connection_digest: None,
                 provider_id: "local-model".into(),
                 model_id: "fixture".into(),
                 reasoning_effort: None,

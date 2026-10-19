@@ -47,7 +47,7 @@ export interface ChannelPolicy {
   defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
 }
 export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;recoveryId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
-export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
+export interface ModelProjection {connectionDigest?:string|null;nativeModelId?:string|null;unavailableReason?:string|null;aliases?:string[]; channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
 export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
 export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
@@ -58,7 +58,8 @@ export type ExternalScene = 'from_sources' | 'update_models' | 'audit_and_revise
 export interface ExternalTaskRequest { scene: ExternalScene; targets: TemplateRef[]; allowNew: boolean; requirements: string; expectedLibrary: string; buffers: { templateId: string; baseRevision: string; label: string; content: TemplateContent }[] }
 export interface TaskGrant { task: { id: string; contractVersion: number; scene: ExternalScene; targets: unknown[]; allowNew: boolean; requirements: string; expectedLibrary: string; expiresAt: string; revoked: boolean }; token: string }
 export interface TaskBundle { taskId: string; content: string; grant: TaskGrant }
-export interface AgentSettings { providerId: string; modelId: string; reasoningEffort: string | null; fast: boolean | null }
+export interface ExecutionDirectory {channels:{id:string;label:string;providerId:string}[];rows:ModelProjection[]}
+export interface AgentSettings {channelId?:string|null;connectionDigest?:string|null; providerId: string; modelId: string; reasoningEffort: string | null; fast: boolean | null }
 export interface AgentConversationContent {baseRevision:string|null;input:string;history:AgentMessage[];sources:ResearchSource[]}
 export interface AgentConversation {templateId:string|null;digest:string;content:AgentConversationContent}
 export interface AgentMessage {role:'user'|'assistant';text:string}
@@ -99,6 +100,7 @@ export const modelApi = {
   external: (request: ExternalTaskRequest) => invoke<TaskBundle>('model_external_task', { request }),
   activate: (grant: TaskGrant) => invoke<void>('model_external_activate', { grant }),
   externalResult: (taskId: string, submissionId: string) => invoke<OwnerTaskResult>('model_external_result', { taskId, submissionId }),
+  executionDirectory:()=>invoke<ExecutionDirectory>('model_agent_directory'),
   agentSettings: () => invoke<AgentSettings | null>('model_agent_preferences'),
   saveAgentSettings: (settings: AgentSettings) => invoke<AgentSettings>('model_agent_preferences_save', { settings }),
   research: (urls: string[]) => invoke<ResearchSource[]>('model_research_sources', { urls }),
