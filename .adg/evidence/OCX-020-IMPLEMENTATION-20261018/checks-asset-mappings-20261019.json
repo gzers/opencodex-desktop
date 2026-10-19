@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-10-19T05:22:47.299997+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "f243c1094d68c528922680c0a57572b9965c91d9",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "147ac1beff7d4c795e00bdaaae672bc95708498b095cdc95b0a772ae62fe5c18",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "4a769a2ade33e8219e5e7ac1908f2c0ceec68eabb227504f9c1d3a68094294d8",
+    "apps/desktop/tauri/src/modules/sync/portable_assets.rs": "159412691ff1d0c5f8b9cd99add6c7429a49c297a8f64d9adefa633e17b78d8e",
+    "apps/desktop/tauri/src/modules/sync/portable_manager.rs": "f872cf82b7069109e7a08506c7b9d54dcccd11201ddfe1093e55c1f629e39e1d",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "667a76598dcc69c9d03c8fd7660985ef2534a47310611346bde55d255c46b53d",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "ab110e0c484e999d32728f09842a9a2b3d07227a069b4e7c92ca2eba779bf027",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "2ab95c0d871621e418cc73f91c1ac1f3f201d5ffd0825a0f412a359ba48e7b82"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 56104,
+      "passed": 115,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib portable_assets --no-default-features",
+      "session": 53460,
+      "passed": 8,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib portable_manager --no-default-features",
+      "session": 53460,
+      "passed": 3,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib named_asset_conflicts --no-default-features",
+      "session": 65913,
+      "passed": 1,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 65913,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-*.test.ts tests/imported-sync-connections.test.ts",
+      "session": 1487,
+      "files": 15,
+      "passed": 63,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 17137,
+      "result": "passed"
+    }
+  ],
+  "scope": [
+    "selection-only validated target names, original protected file/digests retained",
+    "source skill/MCP and existing credentials untouched; new assets restore under mapped names",
+    "settings name/skill client-target mappings preserve local unrelated settings and baseline",
+    "metadata keeps original extension setting names for changing a prior mapping",
+    "early MCP storage/client definition drift checks; completed replay leaves later edits"
+  ],
+  "notProven": [
+    "real system Keychain on both platforms",
+    "large-resource native UI acceptance",
+    "all component consumers and platform release"
+  ],
+  "remaining": [
+    "existing authorization replacement and system-reference identities",
+    "portable original provider fields",
+    "all shared UI registration/consumers and appearance/size/zoom checks",
+    "native/platform integration, release and postpublish verification"
+  ]
+}
