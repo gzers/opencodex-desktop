@@ -1,0 +1,86 @@
+{
+  "recordedAt": "2026-10-19T03:41:56.144604+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "74e5251171a37a702c2e757df15cf17fca05a397",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "40a5be3c6ae807086a859b57835d4cb9212b41e31122d98d39c4992d28cf646f",
+    "apps/desktop/tauri/src/modules/model_config/channel_actions.rs": "339e7b04a854e7715a7753cbc142202cbf683271131733b724befb189d4fe5d2",
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs": "a2f429bd09df0826b749cdfb638d885e44bd56f5fceff2977128e10f5be51365",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "42432d1f72dfb850373ff16d42d3a49f35aa17c096b58eff0f805590c3ae4327",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "5e60153759f26d25acf9a5ea7b3c05badd9079a6e4e687e5b3f620e757b29560",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": "6420a8daf9bbdab7498b8e3ed03448b31bfe806cdab5e8697ba8cad507a82b44",
+    "apps/desktop/tauri/src/modules/model_config/recovery.rs": "ca91c56420ba5f5ed9fc294ca671e549091518f7d85efc78d8479e2f0984a4d7",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "4048b01b0b7ace7611588ab6b18a5fc52b7755385e134275a853031623c770dc",
+    "apps/desktop/tauri/src/modules/model_config/schema.rs": "01d035ec9286063449d33aafcd7ce68ed8d41a867b4cc027815dac6cd96ec94a",
+    "apps/desktop/tauri/src/modules/model_config/store.rs": "7fdf30f4383f886660f7bcd63339b2174c2fae15c49cd95265aede5d3497da2b",
+    "apps/desktop/tauri/src/modules/model_config/tests.rs": "fa06e15a373e29740cbe5818e14ce410f0c63c58e7ae7db8453b9f7141d16d5f",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "c5999e53ddef646e83db8195b6e580d5e2e44dbd26c25fa1231cb6ea7748a8b8",
+    "apps/desktop/tauri/src/modules/model_config/upstream.rs": "01c09196ae835def78b8abbabde1b3986db232ed5a5204acd5d2e8e4a9642b35",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "989263865bd565c016ba074a8fe54420aed29d5193f8e044792955cab4d47678",
+    "apps/desktop/ui/src/features/models/ChannelEditor.vue": "a0c7a52f6c444ee475cfd03f1b5109085ff3d8bbfd95661a5db546bfcc13c040",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "d1d88f124c4e6da1e060dfa0dbc54a2d59423ad7500558e9f3407953d739075c",
+    "apps/desktop/ui/src/features/models/api.ts": "18b4aa1f8d15186f99b5ba9542448ecac4bf47a5089e9f12cd459bff2bb547aa",
+    "apps/desktop/ui/src/features/models/channelActions.ts": "ac2ce9d9f70c2abe95d53c5d1983b9e062ee0bbf8fcd60cc37355b9a68c28fe8",
+    "apps/desktop/ui/src/features/models/upstream.ts": "e152ee1e0bf3f59887d3d9a00d421d294914c00dedb5e0de02c8ce0f1a921889",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "0fa04486841d93176ffc393a5f5a75a1496fba27989772174d6c432e71b6f658",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "375f937e127ab345a3e0de34403c732cd8ed777694842331e0de2a43c798e363",
+    "apps/desktop/ui/tests/model-channel-actions.test.ts": "2a7580adfb1b648d1498e471499a50728fc75ca6ca532a888f6c7d1fa5d62146",
+    "apps/desktop/ui/tests/model-save-recovery.test.ts": "e8876cf39b0cee1478206ce9c9534ca93d112af525f22d822277141b0b4f853d"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 28763,
+      "passed": 101,
+      "result": "passed",
+      "scope": "last subsequent source-receipt negative test is separate below"
+    },
+    {
+      "command": "cargo test --lib channel_actions --no-default-features",
+      "session": 80627,
+      "passed": 3,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib removing_committed_custom --no-default-features",
+      "session": 30628,
+      "passed": 1,
+      "result": "passed",
+      "scope": "CLI/live management fixture; explicit deletion after partial compensation and unsaved source-read removal"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 80627,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-channel-actions.test.ts tests/model-selection.test.ts tests/model-save-recovery.test.ts tests/model-transfer.test.ts",
+      "session": 3008,
+      "passed": 30,
+      "files": 4,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 3008,
+      "result": "passed"
+    },
+    {
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 80834,
+      "passed": 1,
+      "result": "passed",
+      "kind": "installed 2.84.0 temp HOME/CODEX_HOME/OPENCODEX_HOME and local-only mock upstream; memory Keyring",
+      "observed": "stable-group=true new-default=true removal-including-owned-group=true no-generation=true; actual catalog final1, original and owned group absent"
+    }
+  ],
+  "remaining": [
+    "multi-Key pool and custom-header capture/restoration; currently refuses unsupported destructive deletion",
+    "full portable original upstream fields and first-adoption historical runtime reconstruction",
+    "supported account adapter evidence",
+    "asset mappings and agent durable conversation/source checks",
+    "all shared consumers and platform native acceptance",
+    "release and postpublish verification"
+  ]
+}
