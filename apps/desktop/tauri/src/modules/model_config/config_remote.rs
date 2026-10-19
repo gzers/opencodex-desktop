@@ -48,6 +48,8 @@ pub struct Scope {
     pub account_identities: Vec<crate::modules::sync::portable_accounts::AccountInfo>,
     #[serde(skip)]
     pub upstream_root: Option<PathBuf>,
+    #[serde(skip)]
+    pub upstream_snapshot: Option<super::upstream::UpstreamSnapshot>,
     #[serde(default, skip_serializing)]
     pub assets_reviewed: bool,
     #[serde(default)]
@@ -76,6 +78,7 @@ impl Default for Scope {
             account_ids: vec![],
             account_identities: vec![],
             upstream_root: None,
+            upstream_snapshot: None,
             assets_reviewed: false,
             all_templates: false,
             all_channels: false,
@@ -148,6 +151,7 @@ impl Scope {
             assets_reviewed: self.assets_reviewed,
             account_ids: self.account_ids.clone(),
             upstream_root: self.upstream_root.clone(),
+            upstream_snapshot: self.upstream_snapshot.clone(),
             local_home: self.local_home.clone(),
         }
     }
@@ -176,11 +180,16 @@ impl Scope {
                 revision_id: r.id.clone(),
             }));
         }
+        let channel_inventory = if let Some(upstream) = &self.upstream_snapshot {
+            super::portable_channels::catalog(root, upstream)?
+        } else {
+            snapshot.policy.channels.clone()
+        };
         if !self.all_channels
             && self
                 .channel_ids
                 .iter()
-                .any(|id| !snapshot.policy.channels.iter().any(|c| &c.id == id))
+                .any(|id| !channel_inventory.iter().any(|c| &c.id == id))
         {
             return Err(invalid("sync_scope", "范围中的渠道尚未提交或已不存在"));
         }
@@ -189,9 +198,7 @@ impl Scope {
                 || !self.channel_ids.is_empty()
                 || self.all_channels,
             channel_ids: if self.all_channels {
-                snapshot
-                    .policy
-                    .channels
+                channel_inventory
                     .iter()
                     .map(|channel| channel.id.clone())
                     .collect()

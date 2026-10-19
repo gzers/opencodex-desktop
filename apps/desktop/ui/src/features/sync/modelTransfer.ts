@@ -15,7 +15,7 @@ export interface AssetNameMappings {skills:Record<string,string>;mcps:Record<str
 export interface AssetSummary {skills:{name:string;digest:string;files:number;bytes:number;warnings:string[];protected:boolean}[];mcps:{name:string;digest:string;secretFields:string[];warnings:string[]}[]}
 export interface PortableEndpoint {id:string;url:string;remotePath:string;username:string;conflictPolicy:string}
 export interface ManagerSettings {preferences:Record<string,unknown>|null;extensions:{skills:string[];servers:string[];sync_method:string}|null;webdav:PortableEndpoint[];accounts?:PortableAccount[]}
-export interface ModelPackage { format: string; formatVersion: number; schemaVersion: number; createdAt: string; digest: string; payload: { templates: Template[]; policy: { templateRefs: TemplateRef[] | null; channelOrder: string[] | null;defaultChannelId?:string|null; channels: (Pick<ChannelPolicy, 'id' | 'label' | 'selection'> & {connection?:{nodes:{id:string;name:string;url:string}[]}|null})[] } | null } }
+export interface ModelPackage { format: string; formatVersion: number; schemaVersion: number; createdAt: string; digest: string; payload: { templates: Template[]; policy: { templateRefs: TemplateRef[] | null; channelOrder: string[] | null;defaultChannelId?:string|null; channels: (Pick<ChannelPolicy, 'id' | 'label' | 'selection'> & {connection?:{nodes:{id:string;name:string;url:string}[];provider?:Record<string,unknown>|null}|null})[] } | null } }
 export interface FilePlan { id: string; package: ModelPackage;protected?:boolean;fileDigest?:string;credentialCount?:number;manager?:ManagerSettings|null;assets?:AssetSummary|null }
 export interface UploadPlan extends FilePlan { phase: string }
 export interface IncomingPlan extends FilePlan { expectedLibrary: string; expectedPolicy: string; expectedWorkspace: string; notices: string[];previewError?:string|null;availableKeys?:string[];availableWebdavPasswords?:string[];availableExtensionCredentials?:boolean;assetMappings?:AssetNameMappings;channelBindings?:Record<string,{targetId:string;keepLocalConnection:boolean;label:string|null}>;adoption?:{keys:boolean;webdav:boolean;completed:boolean;extensionCredentials?:boolean}|null }
@@ -31,6 +31,7 @@ export const modelTransferApi = {
   receive: (path: string,passphrase?:string) => invoke<IncomingPlan>('model_transfer_receive', { path,passphrase:passphrase??null }),
   accept: (incomingId: string,options?:{adoptKeys:boolean;adoptWebdavPasswords?:boolean;adoptExtensionCredentials?:boolean;passphrase?:string}) => invoke<ModelSnapshot>('model_transfer_accept', { incomingId,adoptKeys:options?.adoptKeys??false,passphrase:options?.passphrase??null,adoptWebdavPasswords:options?.adoptWebdavPasswords??false,adoptExtensionCredentials:options?.adoptExtensionCredentials??false }),
   select:(incomingId:string,scope:ReceiveScope,passphrase?:string)=>invoke<IncomingPlan>('model_transfer_select',{incomingId,scope,passphrase:passphrase??null}),
+  channelCatalog:()=>invoke<ChannelPolicy[]>('portable_channel_catalog'),
   accountCatalog:()=>invoke<AccountCatalogEntry[]>('portable_account_catalog'),
   extensionCatalog:()=>invoke<{skills:string[];mcps:string[]}>('portable_extension_catalog'),
   latestIncoming:()=>invoke<IncomingPlan|null>('portable_latest_incoming'),

@@ -427,7 +427,16 @@ pub struct ChannelConnection {
     pub auth_mode: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub source_read_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub imported_config: Option<ImportedProviderRef>,
 }
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ImportedProviderRef {
+    pub id: String,
+    pub digest: String,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct ServiceNode {

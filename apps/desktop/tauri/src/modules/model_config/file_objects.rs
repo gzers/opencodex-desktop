@@ -37,6 +37,8 @@ struct Objects {
     version: u32,
     models: ModelPackage,
     channel_keys: SecretValues,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    channel_authorizations: BTreeMap<String, super::provider_auth::PortableAuthorization>,
     #[serde(default)]
     manager: Settings,
     #[serde(default)]
@@ -94,6 +96,7 @@ impl Credentials for SystemCredentials {
 }
 fn secret_objects(objects: &Objects) -> usize {
     objects.channel_keys.0.len()
+        + objects.channel_authorizations.len()
         + objects.webdav_passwords.0.len()
         + portable_assets::secret_count(&objects.assets)
 }
@@ -101,6 +104,9 @@ fn sections(objects: &Objects) -> Vec<String> {
     let mut names = vec!["models".into()];
     if !objects.channel_keys.0.is_empty() {
         names.push("channelKeys".into());
+    }
+    if !objects.channel_authorizations.is_empty() {
+        names.push("channelAuthorizations".into());
     }
     names.extend(portable_manager::sections(&objects.manager));
     if !objects.webdav_passwords.0.is_empty() {
@@ -118,12 +124,23 @@ fn sections(objects: &Objects) -> Vec<String> {
     names
 }
 fn validate(objects: &Objects) -> ModelResult<()> {
-    if objects.format != "OCXD_CONFIG_OBJECTS" || objects.version != 1 {
+    if objects.format != "OCXD_CONFIG_OBJECTS"
+        || ![1, 2].contains(&objects.version)
+        || (objects.version == 1 && !objects.channel_authorizations.is_empty())
+    {
         return Err(invalid("portable_objects", "不支持的配置对象文档版本"));
     }
     transfer::validate_package(&objects.models)?;
     portable_manager::validate(&objects.manager)?;
     portable_assets::validate(&objects.assets)?;
+    for (channel, auth) in &objects.channel_authorizations {
+        if objects.channel_keys.0.contains_key(channel) {
+            return Err(invalid("credential_scope", "同一渠道不能包含两套授权载荷"));
+        }
+        let public = super::portable_channels::provider(&objects.models, channel)
+            .ok_or_else(|| invalid("credential_scope", "渠道授权缺少同范围原字段"))?;
+        super::provider_auth::validate_portable(public, auth)?;
+    }
     for (channel, key) in &objects.channel_keys.0 {
         require_uuid(channel)?;
         if key.is_empty()
@@ -184,6 +201,7 @@ fn decode(bytes: &[u8]) -> ModelResult<Objects> {
             version: 1,
             models: serde_json::from_slice(bytes)?,
             channel_keys: Default::default(),
+            channel_authorizations: Default::default(),
             manager: Settings::default(),
             webdav_passwords: Default::default(),
             assets: Default::default(),
@@ -248,7 +266,60 @@ fn seal_scope(
             "携带渠道Key时须设置独立文件保护口令",
         ));
     }
+    let upstream_source = if package
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .any(|c| c.connection.as_ref().is_some_and(|v| v.provider.is_some()))
+    {
+        let source = scope
+            .upstream_root
+            .as_deref()
+            .ok_or_else(|| invalid("provider_source", "原渠道导出尚未绑定官方数据根"))?;
+        let file = source.join("config.json");
+        safety::check_path(source, &file, false)?;
+        Some((
+            file,
+            sha256(&Zeroizing::new(safety::read_file(
+                &source.join("config.json"),
+                16 * 1024 * 1024,
+            )?)),
+        ))
+    } else {
+        None
+    };
+    if let (Some(snapshot), Some(source)) = (&scope.upstream_snapshot, &scope.upstream_root) {
+        let catalog = super::portable_channels::catalog(root, snapshot)?;
+        for channel in package.payload.policy.iter().flat_map(|p| &p.channels) {
+            if let Some(public) = channel
+                .connection
+                .as_ref()
+                .and_then(|c| c.provider.as_ref())
+            {
+                let original = catalog
+                    .iter()
+                    .find(|c| c.id == channel.id)
+                    .ok_or_else(|| invalid("provider_scope", "原渠道已不存在"))?;
+                let raw =
+                    super::provider_auth::source_row(source, &original.connection.provider_id)?;
+                let actual = super::provider_fields::public_from_raw(&raw)?;
+                if actual
+                    .as_object()
+                    .unwrap()
+                    .iter()
+                    .any(|(key, value)| public.get(key) != Some(value))
+                {
+                    return Err(invalid(
+                        "provider_source_drift",
+                        "原渠道字段在比较后改变，未混合导出",
+                    ));
+                }
+            }
+        }
+    }
     let mut keys = SecretValues::default();
+    let mut authorizations = BTreeMap::new();
     if include_keys {
         let snapshot = ModelStore::new(root).load()?;
         let channels = package
@@ -264,6 +335,37 @@ fn seal_scope(
             ));
         }
         for channel in channels {
+            if let (Some(public), Some(upstream), Some(upstream_root)) = (
+                channel
+                    .connection
+                    .as_ref()
+                    .and_then(|c| c.provider.as_ref()),
+                &scope.upstream_snapshot,
+                &scope.upstream_root,
+            ) {
+                let catalog = super::portable_channels::catalog(root, upstream)?;
+                let original = catalog
+                    .iter()
+                    .find(|c| c.id == channel.id)
+                    .ok_or_else(|| invalid("credential_scope", "所选原渠道已不存在"))?;
+                if public["authMode"]
+                    .as_str()
+                    .is_some_and(|m| ["oauth", "forward"].contains(&m))
+                {
+                    // Login material belongs to the separately selected account
+                    // domain; a bulk channel export must not convert it to keys.
+                    continue;
+                }
+                authorizations.insert(
+                    channel.id.clone(),
+                    super::provider_auth::export_portable(
+                        upstream_root,
+                        &original.connection.provider_id,
+                        public,
+                    )?,
+                );
+                continue;
+            }
             let source = snapshot
                 .policy
                 .channels
@@ -296,9 +398,10 @@ fn seal_scope(
     }
     let mut objects = Objects {
         format: "OCXD_CONFIG_OBJECTS".into(),
-        version: 1,
+        version: if authorizations.is_empty() { 1 } else { 2 },
         models: package.clone(),
         channel_keys: keys,
+        channel_authorizations: authorizations,
         manager: portable_manager::export(root, scope)?,
         webdav_passwords: Default::default(),
         assets: if scope.skill_names.is_empty() && scope.mcp_names.is_empty() {
@@ -331,6 +434,14 @@ fn seal_scope(
                     .read_webdav(&current.credential_ref.ref_id)?
                     .to_string(),
             );
+        }
+    }
+    if let Some((file, expected)) = upstream_source {
+        if sha256(&Zeroizing::new(safety::read_file(&file, 16 * 1024 * 1024)?)) != expected {
+            return Err(invalid(
+                "provider_source_drift",
+                "导出期间原渠道源已改变，请重新比较",
+            ));
         }
     }
     validate(&objects)?;
@@ -382,6 +493,7 @@ fn remote_objects(bytes: &[u8], passphrase: Option<&str>) -> ModelResult<(Object
     }
     if opened.manifest.sections != sections(&objects)
         || opened.manifest.secret_objects != secret_objects(&objects)
+        || (secret_objects(&objects) > 0 && !opened.protected)
     {
         return Err(invalid("portable_manifest", "远端清单与对象不同"));
     }
@@ -408,8 +520,10 @@ pub fn merge_remote(
     let (mut remote, remote_protected) = remote_objects(remote_bytes, passphrase)?;
     let (local, local_protected) = remote_objects(local_bytes, passphrase)?;
     for incoming in local.models.payload.policy.iter().flat_map(|p| &p.channels) {
-        if remote.channel_keys.0.contains_key(&incoming.id)
+        if (remote.channel_keys.0.contains_key(&incoming.id)
+            || remote.channel_authorizations.contains_key(&incoming.id))
             && !local.channel_keys.0.contains_key(&incoming.id)
+            && !local.channel_authorizations.contains_key(&incoming.id)
         {
             let previous = remote
                 .models
@@ -418,9 +532,7 @@ pub fn merge_remote(
                 .iter()
                 .flat_map(|p| &p.channels)
                 .find(|c| c.id == incoming.id);
-            if previous.is_none_or(|c| {
-                c.protocol != incoming.protocol || c.connection != incoming.connection
-            }) {
+            if previous.is_none_or(|c| !transfer::same_destination(c, incoming)) {
                 return Err(invalid(
                     "channel_credential_binding",
                     "远端渠道含Key，新的协议或节点未携对应凭据；未把旧Key绑定到新服务",
@@ -456,8 +568,18 @@ pub fn merge_remote(
         &local.manager.accounts,
     )?;
     for (channel, key) in &local.channel_keys.0 {
+        remote.channel_authorizations.remove(channel);
         remote.channel_keys.0.insert(channel.clone(), key.clone());
     }
+    for (channel, auth) in local.channel_authorizations {
+        remote.channel_keys.0.remove(&channel);
+        remote.channel_authorizations.insert(channel, auth);
+    }
+    remote.version = if remote.channel_authorizations.is_empty() {
+        1
+    } else {
+        2
+    };
     for mut skill in local.assets.skills {
         if let Some(index) = remote
             .assets
@@ -567,6 +689,14 @@ pub fn select_remote(
         .channel_keys
         .0
         .retain(|channel, _| include_keys && channels.contains(channel));
+    objects
+        .channel_authorizations
+        .retain(|channel, _| include_keys && channels.contains(channel));
+    objects.version = if objects.channel_authorizations.is_empty() {
+        1
+    } else {
+        2
+    };
     objects
         .manager
         .accounts
@@ -753,6 +883,7 @@ pub fn receive_context(
                 payload,
             },
             channel_keys: Default::default(),
+            channel_authorizations: Default::default(),
             manager: Settings {
                 preferences,
                 extensions,
@@ -812,7 +943,13 @@ pub fn receive_context(
         plan.available_extension_credentials = portable_assets::secret_count(&objects.assets) > 0;
     }
     if credential_count > 0 {
-        plan.available_keys = objects.channel_keys.0.keys().cloned().collect();
+        plan.available_keys = objects
+            .channel_keys
+            .0
+            .keys()
+            .chain(objects.channel_authorizations.keys())
+            .cloned()
+            .collect();
     }
     atomic_write(&cache_path(root, &plan.id, "ocxdconf")?, bytes, 0o600)?;
     plan.file_digest = Some(sha256(bytes));
@@ -1143,6 +1280,85 @@ fn selected_assets(
         .retain(|mcp| summary.mcps.iter().any(|item| item.name == mcp.name));
     Ok(objects.assets.clone())
 }
+fn stage_provider_materials(
+    root: &Path,
+    plan: &mut IncomingPlan,
+    adopt_keys: bool,
+    passphrase: Option<&str>,
+) -> ModelResult<()> {
+    let channels = plan
+        .package
+        .payload
+        .policy
+        .as_ref()
+        .map(|p| p.channels.clone())
+        .unwrap_or_default();
+    if !channels
+        .iter()
+        .any(|c| c.connection.as_ref().is_some_and(|v| v.provider.is_some()))
+    {
+        return Ok(());
+    }
+    let objects = open_source(root, plan, passphrase)?;
+    let file = cache_path(root, &plan.id, "provider-bindings.json")?;
+    let mut bindings: BTreeMap<String, ImportedProviderRef> = if file.exists() {
+        serde_json::from_slice(&safety::read_file(&file, 1024 * 1024)?)?
+    } else {
+        BTreeMap::new()
+    };
+    let mut changed = false;
+    for source in channels {
+        let Some(public) = source.connection.as_ref().and_then(|c| c.provider.as_ref()) else {
+            continue;
+        };
+        let Some(target) = transfer::key_target(plan, &source.id).map(str::to_owned) else {
+            continue;
+        };
+        let Some(channel) = plan
+            .merged_policy
+            .as_mut()
+            .and_then(|p| p.channels.iter_mut().find(|c| c.id == target))
+        else {
+            return Err(invalid("provider_import_scope", "原渠道接收目标缺失"));
+        };
+        let original = super::portable_channels::provider(&objects.models, &source.id)
+            .ok_or_else(|| invalid("provider_import_scope", "原文件缺少完整原渠道字段"))?;
+        if original != public {
+            return Err(invalid("provider_import_scope", "原字段不属于所选源渠道"));
+        }
+        let reference = if let Some(reference) = bindings.get(&target) {
+            let staged = super::provider_import::load(root, channel, reference)?;
+            if staged.public != *public
+                || staged.authorization.is_some()
+                    != (adopt_keys && objects.channel_authorizations.contains_key(&source.id))
+            {
+                return Err(invalid(
+                    "provider_import_scope",
+                    "原渠道接收范围已冻结，请沿原操作核对",
+                ));
+            }
+            reference.clone()
+        } else {
+            let authorization = if adopt_keys {
+                objects.channel_authorizations.get(&source.id)
+            } else {
+                None
+            };
+            let reference = super::provider_import::stage(root, channel, public, authorization)?;
+            bindings.insert(target, reference.clone());
+            atomic_write(&file, &serde_json::to_vec(&bindings)?, 0o600)?;
+            reference
+        };
+        channel.connection.imported_config = Some(reference);
+        channel.connection.auth_mode = public["authMode"].as_str().map(str::to_owned);
+        channel.connection.enabled = false;
+        changed = true;
+    }
+    if changed {
+        transfer::write_incoming(root, plan)?;
+    }
+    Ok(())
+}
 #[allow(clippy::too_many_arguments)]
 fn accept_domains(
     root: &Path,
@@ -1153,7 +1369,7 @@ fn accept_domains(
     passphrase: Option<&str>,
     credentials: &impl Credentials,
 ) -> ModelResult<Snapshot> {
-    let plan = transfer::read_incoming(root, id)?;
+    let mut plan = transfer::read_incoming(root, id)?;
     if let Some(error) = &plan.preview_error {
         return Err(invalid(error, "所选配置或资源仍有冲突，请比较后再采用"));
     }
@@ -1300,6 +1516,7 @@ fn accept_domains(
         portable_manager::bind_passwords(root, id, &bindings)?;
     }
     atomic_write(&record_path, &serde_json::to_vec(&record)?, 0o600)?;
+    stage_provider_materials(root, &mut plan, adopt_keys, passphrase)?;
     let result = accept_with(root, id, adopt_keys, passphrase, credentials)?;
     if let Some(assets) = &assets {
         portable_assets::apply(root, id, assets, adopt_extensions).map_err(|error| {
@@ -1392,6 +1609,20 @@ fn accept_with(
         }
     }
     if wanted.is_empty() {
+        if plan
+            .package
+            .payload
+            .policy
+            .iter()
+            .flat_map(|p| &p.channels)
+            .any(|c| {
+                plan.available_keys.contains(&c.id)
+                    && transfer::key_target(&plan, &c.id).is_some()
+                    && objects.channel_authorizations.contains_key(&c.id)
+            })
+        {
+            return transfer::accept_with_credentials(root, id, &BTreeMap::new());
+        }
         return Err(invalid("credential_scope", "没有与所选渠道匹配的Key"));
     }
     let mut bindings: BTreeMap<String, String> = if bindings_path.exists() {
@@ -1466,6 +1697,120 @@ fn accept_with(
 mod tests {
     use super::*;
     use std::{collections::BTreeSet, sync::Mutex};
+    #[test]
+    fn partial_remote_original_config_updates_keep_bound_private_pool_and_refuse_endpoint_retargeting(
+    ) {
+        use super::super::upstream::UpstreamSnapshot;
+        let root = tempfile::tempdir().unwrap();
+        let snapshot = UpstreamSnapshot {
+            version: "2.84.0".into(),
+            providers: serde_json::json!({"defaultProvider":"p","providers":{"p":{"adapter":"openai-chat","baseUrl":"https://source.example.test/v1","models":["a"],"newModelPolicy":"off","note":"before"}}}),
+            models: serde_json::json!([{"provider":"p","id":"a","namespaced":"p/a"}]),
+            order: serde_json::json!({"pickerOrder":["p/a"]}),
+            catalog: serde_json::json!({"models":[{"slug":"p/a"}]}),
+        };
+        let id = super::super::portable_channels::catalog(root.path(), &snapshot).unwrap()[0]
+            .id
+            .clone();
+        let package = super::super::portable_channels::export(
+            root.path(),
+            transfer::ExportScope {
+                include_policy: true,
+                channel_ids: vec![id.clone()],
+                template_refs: vec![],
+                include_global: false,
+            },
+            &snapshot,
+        )
+        .unwrap();
+        let key = "fixture-remote-portable-SECRET";
+        let digest = sha256(key.as_bytes());
+        let key_id = &digest.trim_start_matches("sha256:")[..8];
+        let auth:super::super::provider_auth::PortableAuthorization=serde_json::from_value(serde_json::json!({"activeId":key_id,"fields":{"apiKeyPool":[{"id":key_id,"key":key,"label":"original","addedAt":100}],"headers":{"X-Auth":"fixture-header-SECRET"}}})).unwrap();
+        let remote = Objects {
+            format: "OCXD_CONFIG_OBJECTS".into(),
+            version: 2,
+            models: package.clone(),
+            channel_keys: Default::default(),
+            channel_authorizations: BTreeMap::from([(id.clone(), auth)]),
+            manager: Default::default(),
+            webdav_passwords: Default::default(),
+            assets: Default::default(),
+        };
+        fn bytes(objects: &Objects) -> Vec<u8> {
+            portable_file::seal(
+                portable_file::Manifest {
+                    id: uuid::Uuid::new_v4().to_string(),
+                    created_at: chrono::Utc::now().to_rfc3339(),
+                    sections: sections(objects),
+                    secret_objects: secret_objects(objects),
+                    document_digest: String::new(),
+                },
+                &Zeroizing::new(serde_json::to_vec(objects).unwrap()),
+                Some("fixture-remote-password"),
+            )
+            .unwrap()
+        }
+        let remote_bytes = bytes(&remote);
+        let mut local = Objects {
+            format: "OCXD_CONFIG_OBJECTS".into(),
+            version: 1,
+            models: package,
+            channel_keys: Default::default(),
+            channel_authorizations: Default::default(),
+            manager: Default::default(),
+            webdav_passwords: Default::default(),
+            assets: Default::default(),
+        };
+        local.models.payload.policy.as_mut().unwrap().channels[0]
+            .connection
+            .as_mut()
+            .unwrap()
+            .provider
+            .as_mut()
+            .unwrap()["note"] = serde_json::json!("later nonsecret edit");
+        local.models.digest = sha256(&serde_json::to_vec(&local.models.payload).unwrap());
+        let merged = merge_remote(
+            &remote_bytes,
+            &bytes(&local),
+            Some("fixture-remote-password"),
+            &uuid::Uuid::new_v4().to_string(),
+        )
+        .unwrap();
+        let (opened, protected) = remote_objects(&merged, Some("fixture-remote-password")).unwrap();
+        assert!(protected);
+        assert_eq!(secret_objects(&opened), 1);
+        assert_eq!(
+            super::super::portable_channels::provider(&opened.models, &id).unwrap()["note"],
+            "later nonsecret edit"
+        );
+        assert!(serde_json::to_string(&opened.channel_authorizations)
+            .unwrap()
+            .contains(key));
+        assert!(!String::from_utf8_lossy(&merged).contains(key));
+        let channel = &mut local.models.payload.policy.as_mut().unwrap().channels[0];
+        channel.connection.as_mut().unwrap().nodes[0].url =
+            "https://different.example.test/v1".into();
+        channel
+            .connection
+            .as_mut()
+            .unwrap()
+            .provider
+            .as_mut()
+            .unwrap()["baseUrl"] = serde_json::json!("https://different.example.test/v1");
+        local.models.digest = sha256(&serde_json::to_vec(&local.models.payload).unwrap());
+        assert_eq!(
+            merge_remote(
+                &remote_bytes,
+                &bytes(&local),
+                Some("fixture-remote-password"),
+                &uuid::Uuid::new_v4().to_string()
+            )
+            .unwrap_err()
+            .code,
+            "channel_credential_binding"
+        );
+    }
     #[test]
     fn named_asset_conflicts_can_be_remapped_with_settings_without_overwriting_existing_sources() {
         use crate::modules::{
@@ -2173,6 +2518,7 @@ mod tests {
             version: 1,
             models: package,
             channel_keys: Default::default(),
+            channel_authorizations: Default::default(),
             webdav_passwords: Default::default(),
             assets: Default::default(),
             manager: Settings {
@@ -2228,6 +2574,7 @@ mod tests {
             connection: ChannelConnection {
                 auth_mode: None,
                 source_read_id: None,
+                imported_config: None,
                 provider_id: "fixture".into(),
                 protocol: "openai-chat".into(),
                 nodes: vec![node.clone()],
@@ -2634,6 +2981,7 @@ mod tests {
             version: 1,
             models: package,
             channel_keys: SecretValues::default(),
+            channel_authorizations: Default::default(),
             manager: Settings::default(),
             webdav_passwords: Default::default(),
             assets: Default::default(),

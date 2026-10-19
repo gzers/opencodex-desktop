@@ -182,6 +182,7 @@ pub fn initial_removals(
                 allow_private_network: original["allowPrivateNetwork"] == true,
                 auth_mode: original["authMode"].as_str().map(str::to_owned),
                 source_read_id: Some(request.read_id.clone()),
+                imported_config: None,
             },
             selection,
             model_order: discovered.iter().map(|m| m.id.clone()).collect(),

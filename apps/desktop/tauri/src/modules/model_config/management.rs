@@ -353,7 +353,7 @@ impl Management {
             .ok_or_else(|| invalid("provider_auth_source", "受保护授权字段结构无效"))?;
         if fields
             .keys()
-            .any(|key| !["apiKeyPool", "headers"].contains(&key.as_str()))
+            .any(|key| !super::provider_fields::PRIVATE.contains(&key.as_str()) || key == "apiKey")
         {
             return Err(invalid("provider_auth_scope", "授权恢复请求含未授权字段"));
         }

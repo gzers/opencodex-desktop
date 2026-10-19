@@ -41,6 +41,8 @@ pub struct Scope {
     #[serde(skip)]
     pub upstream_root: Option<PathBuf>,
     #[serde(skip)]
+    pub upstream_snapshot: Option<crate::modules::model_config::upstream::UpstreamSnapshot>,
+    #[serde(skip)]
     pub local_home: Option<PathBuf>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]

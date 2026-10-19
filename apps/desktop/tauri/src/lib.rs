@@ -531,6 +531,7 @@ pub fn run() {
             commands::model_transfer::portable_open_received,
             commands::model_transfer::portable_extension_catalog,
             commands::model_transfer::portable_account_catalog,
+            commands::model_transfer::portable_channel_catalog,
             commands::model_transfer::config_sync_scope,
             commands::model_transfer::config_sync_save_scope,
             commands::model_transfer::config_sync_prepare,

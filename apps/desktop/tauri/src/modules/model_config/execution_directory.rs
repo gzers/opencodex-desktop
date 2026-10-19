@@ -44,8 +44,8 @@ pub struct Directory {
 }
 #[derive(Default, Serialize, Deserialize)]
 #[serde(transparent)]
-struct Ids(BTreeMap<String, String>);
-fn stable_ids(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Ids> {
+pub(super) struct Ids(pub BTreeMap<String, String>);
+pub(super) fn stable_ids(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Ids> {
     let path = root.join("manager-state/model-execution-source-ids.json");
     safety::check_path(root, &path, true)?;
     safety::check_path(

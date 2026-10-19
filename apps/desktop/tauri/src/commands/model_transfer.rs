@@ -96,6 +96,12 @@ pub async fn config_sync_prepare(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<config_remote::UploadView> {
+    let upstream_snapshot =
+        if scope.all_channels || !scope.channel_ids.is_empty() || scope.include_global {
+            Some(crate::modules::model_config::upstream::snapshot(&context).await?)
+        } else {
+            None
+        };
     let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
@@ -107,6 +113,7 @@ pub async fn config_sync_prepare(
             let mut scope = scope;
             scope.local_home = Some(local_home);
             scope.upstream_root = Some(upstream_root);
+            scope.upstream_snapshot = upstream_snapshot;
             let scope = config_remote::save_scope(&root, scope)?;
             tauri::async_runtime::block_on(config_remote::prepare(
                 &root,
@@ -241,6 +248,11 @@ pub async fn model_transfer_prepare(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<FileExportPlan> {
+    let upstream_snapshot = if scope.include_policy {
+        Some(crate::modules::model_config::upstream::snapshot(&context).await?)
+    } else {
+        None
+    };
     let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
@@ -251,6 +263,7 @@ pub async fn model_transfer_prepare(
         let mut manager_scope = manager_scope.unwrap_or_default();
         manager_scope.local_home = Some(local_home);
         manager_scope.upstream_root = Some(upstream_root);
+        manager_scope.upstream_snapshot = upstream_snapshot;
         transfer::prepare_file_scope(
             &root,
             scope,
@@ -428,4 +441,13 @@ pub async fn portable_account_catalog(
     })
     .await
     .map_err(|_| invalid("account_source", "账户信息读取中断"))?
+}
+
+#[tauri::command]
+pub async fn portable_channel_catalog(
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<Vec<ChannelPolicy>> {
+    let snapshot = crate::modules::model_config::upstream::snapshot(&context).await?;
+    crate::modules::model_config::portable_channels::catalog(&data_root.0, &snapshot)
 }

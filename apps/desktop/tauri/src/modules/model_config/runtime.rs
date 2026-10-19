@@ -120,6 +120,8 @@ pub struct RuntimePlan {
     pub authorization_after: BTreeMap<String, Option<super::provider_auth::Backup>>,
     #[serde(default)]
     pub history_restoration: Option<HistoryRestoration>,
+    #[serde(default)]
+    pub imported_authorizations: BTreeMap<String, super::provider_auth::Backup>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -247,6 +249,7 @@ pub(super) fn credential_runtime_changed(plan: &RuntimePlan) -> bool {
     plan.credential_changes
         .iter()
         .any(|c| c.before != c.intended())
+        || !plan.imported_authorizations.is_empty()
         || plan.history_restoration.as_ref().is_some_and(|history| {
             history.authorizations.iter().any(|(provider, target)| {
                 plan.authorization_before
@@ -262,6 +265,9 @@ pub(super) async fn verify_committed_credentials(
     plan: &RuntimePlan,
     context: &ProcessContext,
 ) -> ModelResult<bool> {
+    for backup in plan.imported_authorizations.values() {
+        super::provider_auth::verify(root, context, backup).await?;
+    }
     if let Some(history) = &plan.history_restoration {
         for (provider, backup) in &history.authorizations {
             if plan.next_providers["providers"].get(provider).is_none() {
@@ -597,6 +603,15 @@ fn compile_owned(
     policy: &Policy,
     ownership: &[OwnedField],
 ) -> ModelResult<(Value, Vec<String>, BTreeSet<String>)> {
+    compile_materials(snapshot, library, policy, ownership, &BTreeMap::new())
+}
+fn compile_materials(
+    snapshot: &UpstreamSnapshot,
+    library: &Library,
+    policy: &Policy,
+    ownership: &[OwnedField],
+    materials: &BTreeMap<String, Value>,
+) -> ModelResult<(Value, Vec<String>, BTreeSet<String>)> {
     let projection = compiler::project(library, policy)?;
     let source_rows = rows(snapshot)?;
     let before = provider_map(&snapshot.providers)?;
@@ -668,26 +683,45 @@ fn compile_owned(
     for channel in &policy.channels {
         let provider_id = &channel.connection.provider_id;
         let prior = before.get(provider_id);
+        let imported = materials.get(provider_id);
         if prior.is_none() {
+            if imported.is_some() && channel.connection.enabled {
+                return Err(invalid(
+                    "provider_import_activation",
+                    "首次保存原渠道配置须保持停用；读回完整目录与别名后再确认启用",
+                ));
+            }
             if ["openai", "chatgpt", "openai-multi", "combo"].contains(&provider_id.as_str()) {
                 return Err(invalid(
                     "reserved_provider",
                     "此运行渠道身份保留，请使用新的自建标识",
                 ));
             }
-            if !matches!(&channel.selection,ModelSelection::Whitelist(values) if !values.is_empty())
+            if imported.is_none()
+                && !matches!(&channel.selection,ModelSelection::Whitelist(values) if !values.is_empty())
             {
                 return Err(invalid(
                     "new_channel_selection",
                     "新增渠道须明确勾选至少一个模型，不能以空白名单注册",
                 ));
             }
-            if channel.connection.protocol != "ollama-native"
+            if imported.is_none()
+                && channel.connection.protocol != "ollama-native"
                 && channel.connection.credential_ref.is_none()
             {
                 return Err(invalid("credential", "新增渠道尚未配置经过发现确认的密钥"));
             }
             next["providers"].as_object_mut().ok_or_else(||invalid("provider","渠道结构无效"))?.insert(provider_id.clone(),json!({"adapter":channel.connection.protocol,"baseUrl":"","authMode":if channel.connection.protocol=="ollama-native"{"local"}else{"key"},"models":channel.discovered.iter().map(|m|m.id.clone()).collect::<Vec<_>>(),"liveModels":true}));
+        }
+        if let Some(original) = imported {
+            if channel.connection.enabled {
+                return Err(invalid(
+                    "provider_import_activation",
+                    "采用原渠道字段时须保持停用，读回实际目录与别名后再启用",
+                ));
+            }
+            super::provider_fields::validate_public(original)?;
+            next["providers"][provider_id] = original.clone();
         }
         let node = channel
             .connection
@@ -787,26 +821,34 @@ fn compile_owned(
                 .iter()
                 .find(|r| r["id"].as_str() == Some(&row.model_id));
             if row.enabled && row.selected {
-                let slug = if let Some(model) = source {
-                    model["namespaced"]
-                        .as_str()
-                        .ok_or_else(|| invalid("model_identity", "官方模型缺少路由身份"))?
-                        .to_string()
+                let slugs = if source.is_some() {
+                    known
+                        .iter()
+                        .filter(|r| r["id"] == row.model_id)
+                        .map(|r| {
+                            r["namespaced"]
+                                .as_str()
+                                .map(str::to_owned)
+                                .ok_or_else(|| invalid("model_identity", "官方模型缺少路由身份"))
+                        })
+                        .collect::<ModelResult<BTreeSet<_>>>()?
                 } else if channel.discovered.iter().any(|m| m.id == row.model_id) {
-                    format!("{provider_id}/{}", row.model_id.replace('/', "-"))
+                    BTreeSet::from([format!("{provider_id}/{}", row.model_id.replace('/', "-"))])
                 } else {
                     return Err(invalid(
                         "model_unverified",
                         "所选模型未在当前发现清单中核对",
                     ));
                 };
-                if !expected.insert(slug.clone()) {
-                    return Err(invalid(
-                        "model_identity_collision",
-                        "模型原始身份编码发生碰撞，请调整选择",
-                    ));
+                for slug in slugs {
+                    if !expected.insert(slug.clone()) {
+                        return Err(invalid(
+                            "model_identity_collision",
+                            "模型原始身份编码发生碰撞，请调整选择",
+                        ));
+                    }
+                    desired_order.push(slug);
                 }
-                desired_order.push(slug);
             }
             let fields = &row.rules;
             if let Field::Custom(value) = &fields.protocol {
@@ -990,11 +1032,58 @@ pub async fn prepare(
         }
     }
     let projection_baseline = super::channel_actions::projection(&before, &removed)?;
-    let (mut next_providers, next_order, expected_slugs) = compile_owned(
+    let mut imported_materials = BTreeMap::new();
+    let mut imported_authorizations = BTreeMap::new();
+    for channel in &policy.channels {
+        if local.policy.channels.iter().any(|c| {
+            c.id == channel.id && c.connection.imported_config == channel.connection.imported_config
+        }) && before.providers["providers"]
+            .get(&channel.connection.provider_id)
+            .is_some()
+        {
+            continue;
+        }
+        if let Some(reference) = &channel.connection.imported_config {
+            if super::channel_actions::protected(&before, &channel.connection.provider_id) {
+                return Err(invalid(
+                    "provider_auth_boundary",
+                    "原生或OAuth来源不能作为普通渠道接收目标，请明确账户映射",
+                ));
+            }
+            let material = super::provider_import::load(root, channel, reference)?;
+            let node = channel
+                .connection
+                .nodes
+                .iter()
+                .find(|n| n.id == channel.connection.active_node_id)
+                .ok_or_else(|| invalid("node", "当前节点不存在"))?;
+            if material.public["baseUrl"] != node.url {
+                return Err(invalid(
+                    "provider_import_direction",
+                    "导入授权所属服务与当前节点不同，未发送",
+                ));
+            }
+            if material.public["authMode"]
+                .as_str()
+                .is_some_and(|m| ["oauth", "forward"].contains(&m))
+            {
+                return Err(invalid(
+                    "provider_auth_boundary",
+                    "原生或OAuth渠道须先完成账户连接映射，未注册为普通Key渠道",
+                ));
+            }
+            if let Some(backup) = super::provider_import::authorization(root, context, &material)? {
+                imported_authorizations.insert(channel.connection.provider_id.clone(), backup);
+            }
+            imported_materials.insert(channel.connection.provider_id.clone(), material.public);
+        }
+    }
+    let (mut next_providers, next_order, expected_slugs) = compile_materials(
         &projection_baseline,
         &local.library,
         &execution_policy,
         &previous,
+        &imported_materials,
     )?;
     let next_order = super::protocol_groups::order(
         &before,
@@ -1068,6 +1157,9 @@ pub async fn prepare(
     let mut credential_changes = vec![];
     let mut management = None;
     for channel in &execution_policy.channels {
+        if imported_authorizations.contains_key(&channel.connection.provider_id) {
+            continue;
+        }
         let Some(reference) = &channel.connection.credential_ref else {
             continue;
         };
@@ -1119,6 +1211,7 @@ pub async fn prepare(
     for provider in managed.into_iter().filter(|provider| {
         before.providers["providers"].get(provider) != next_providers["providers"].get(provider)
             || credential_changes.iter().any(|c| &c.provider == provider)
+            || imported_authorizations.contains_key(provider)
     }) {
         if let Some(removed) = removed_keys.iter().find(|r| r.provider == provider) {
             authorization_before.insert(provider, removed.backup.clone());
@@ -1133,6 +1226,17 @@ pub async fn prepare(
                 provider.clone(),
                 super::provider_auth::capture(root, context, &provider, &keys).await?,
             );
+        }
+    }
+    for (provider, target) in &imported_authorizations {
+        if before.providers["providers"].get(provider).is_some() {
+            super::provider_auth::review_change(
+                root,
+                context,
+                provider,
+                authorization_before.get(provider).and_then(Option::as_ref),
+                Some(target),
+            )?;
         }
     }
     let plan = RuntimePlan {
@@ -1166,6 +1270,7 @@ pub async fn prepare(
         authorization_before,
         authorization_after: BTreeMap::new(),
         history_restoration: None,
+        imported_authorizations,
     };
     save(root, &plan)?;
     Ok(plan.view())
@@ -1542,6 +1647,7 @@ async fn prepare_history(
         committed_snapshot: None,
         authorization_before: before_auth,
         authorization_after: BTreeMap::new(),
+        imported_authorizations: BTreeMap::new(),
         history_restoration: Some(HistoryRestoration {
             source_id: source.id,
             projection,
@@ -1662,6 +1768,46 @@ pub async fn reconcile(
         history_auth_matches(root, context, &plan, &actual.providers, false).await?;
     let history_before_matches =
         history_auth_matches(root, context, &plan, &actual.providers, true).await?;
+    let mut imported_target_matches = true;
+    let mut imported_before_matches = true;
+    for backup in plan.imported_authorizations.values() {
+        if actual.providers["providers"]
+            .get(&backup.provider)
+            .is_some()
+        {
+            super::provider_auth::inspect_change(
+                root,
+                context,
+                &plan.id,
+                &backup.provider,
+                plan.authorization_before
+                    .get(&backup.provider)
+                    .and_then(Option::as_ref),
+                Some(backup),
+            )?;
+            imported_target_matches &=
+                super::provider_auth::matches(root, context, &backup.provider, Some(backup))
+                    .await?;
+            imported_before_matches &= plan.before.providers["providers"]
+                .get(&backup.provider)
+                .is_some()
+                && super::provider_auth::matches(
+                    root,
+                    context,
+                    &backup.provider,
+                    plan.authorization_before
+                        .get(&backup.provider)
+                        .and_then(Option::as_ref),
+                )
+                .await?;
+        } else {
+            imported_target_matches = false;
+            imported_before_matches &= plan.before.providers["providers"]
+                .get(&backup.provider)
+                .is_none();
+        }
+    }
+
     let mut staged = plan.before.providers.clone();
     for channel in &plan.execution_policy().channels {
         if plan.before.providers["providers"]
@@ -1672,6 +1818,13 @@ pub async fn reconcile(
                 plan.next_providers["providers"][&channel.connection.provider_id].clone();
             value["disabled"] = json!(true);
             value["newModelPolicy"] = json!("off");
+            if channel.connection.imported_config.is_some() {
+                value["selectedModels"] = json!(channel
+                    .discovered
+                    .iter()
+                    .map(|m| m.id.clone())
+                    .collect::<Vec<_>>());
+            }
             staged["providers"]
                 .as_object_mut()
                 .ok_or_else(|| invalid("provider", "渠道结构无效"))?
@@ -1740,6 +1893,7 @@ pub async fn reconcile(
     plan.observed_disabled = disabled;
     plan.phase = "verified_partial".into();
     if history_target_matches
+        && imported_target_matches
         && actual.providers == plan.next_providers
         && actual_order == plan.next_order
         && catalog_slugs(&actual)? == plan.expected_slugs
@@ -1768,6 +1922,7 @@ pub async fn reconcile(
         plan.error = None;
     } else if removed_match
         && history_before_matches
+        && imported_before_matches
         && actual.providers == plan.before.providers
         && actual_order == original_order
         && plan.observed_disabled == plan.disabled_before
@@ -1829,6 +1984,9 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
         ));
     }
     let current = upstream::snapshot(&frozen).await?;
+    for backup in plan.imported_authorizations.values() {
+        super::provider_auth::check_backup(root, backup)?;
+    }
     for (provider, backup) in &plan.authorization_before {
         if plan.before.providers["providers"].get(provider).is_none() {
             continue;
@@ -1939,6 +2097,20 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
                         plan.next_providers["providers"][&channel.connection.provider_id].clone();
                     value["disabled"] = json!(true);
                     value["newModelPolicy"] = json!("off");
+                    if channel.connection.imported_config.is_some() {
+                        let exact = channel
+                            .discovered
+                            .iter()
+                            .map(|m| m.id.clone())
+                            .collect::<Vec<_>>();
+                        if exact.is_empty() {
+                            return Err(invalid(
+                                "provider_import_models",
+                                "导入原渠道没有可核对的精确型号，请先补充型号",
+                            ));
+                        }
+                        value["selectedModels"] = json!(exact);
+                    }
                     staged["providers"]
                         .as_object_mut()
                         .ok_or_else(|| invalid("provider", "渠道结构无效"))?
@@ -1987,6 +2159,24 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
                 )?;
                 plan.phase = "credentials_registered".into();
                 save(root, &plan)?;
+            }
+            if !plan.imported_authorizations.is_empty() {
+                plan.phase = "writing_imported_authorizations".into();
+                save(root, &plan)?;
+                for backup in plan.imported_authorizations.values() {
+                    super::provider_auth::change(
+                        root,
+                        &frozen,
+                        &plan.id,
+                        &backup.provider,
+                        plan.authorization_before
+                            .get(&backup.provider)
+                            .and_then(Option::as_ref),
+                        Some(backup),
+                    )
+                    .await?;
+                }
+                observe(root, &frozen, &mut plan).await?;
             }
             if !plan.credential_changes.is_empty() {
                 let management = super::management::Management::bind(&frozen).await?;
@@ -2278,6 +2468,20 @@ pub async fn compensate(
     }
     let current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
     removed_key_states(root, &plan, context, &current).await?;
+    for backup in plan.imported_authorizations.values() {
+        if current["providers"].get(&backup.provider).is_some() {
+            super::provider_auth::inspect_change(
+                root,
+                context,
+                &plan.id,
+                &backup.provider,
+                plan.authorization_before
+                    .get(&backup.provider)
+                    .and_then(Option::as_ref),
+                Some(backup),
+            )?;
+        }
+    }
     if let Some(history) = &plan.history_restoration {
         for (provider, target) in &history.authorizations {
             if plan.before.providers["providers"].get(provider).is_some()
@@ -2370,6 +2574,24 @@ pub async fn compensate(
             return Err(invalid("compensation_failed", "渠道补偿未完成，保留原计划"));
         }
         observe(root, context, &mut plan).await?;
+        for backup in plan.imported_authorizations.values() {
+            if plan.before.providers["providers"]
+                .get(&backup.provider)
+                .is_some()
+            {
+                super::provider_auth::rollback_change(
+                    root,
+                    context,
+                    &plan.id,
+                    &backup.provider,
+                    plan.authorization_before
+                        .get(&backup.provider)
+                        .and_then(Option::as_ref),
+                    Some(backup),
+                )
+                .await?;
+            }
+        }
         if let Some(history) = &plan.history_restoration {
             for (provider, target) in &history.authorizations {
                 if plan.before.providers["providers"].get(provider).is_some()
@@ -2590,6 +2812,7 @@ mod tests {
             connection: ChannelConnection {
                 auth_mode: None,
                 source_read_id: None,
+                imported_config: None,
                 provider_id: "test".into(),
                 protocol: "openai-chat".into(),
                 nodes: vec![node.clone()],

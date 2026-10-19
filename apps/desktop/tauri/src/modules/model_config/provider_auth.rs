@@ -54,6 +54,12 @@ struct Auth {
     api_key_pool: Vec<Slot>,
     #[serde(default)]
     headers: BTreeMap<String, String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    proxy: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    mcp_servers: Option<serde_json::Value>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    desktop_executor: Option<serde_json::Value>,
 }
 #[derive(Serialize, Deserialize)]
 struct Slot {
@@ -62,6 +68,14 @@ struct Slot {
     label: Option<String>,
     #[serde(default, rename = "addedAt", skip_serializing_if = "Option::is_none")]
     added_at: Option<u64>,
+}
+pub(super) fn erase_value(value: &mut serde_json::Value) {
+    match value {
+        serde_json::Value::String(s) => s.zeroize(),
+        serde_json::Value::Array(values) => values.iter_mut().for_each(erase_value),
+        serde_json::Value::Object(values) => values.values_mut().for_each(erase_value),
+        _ => {}
+    }
 }
 impl Drop for Auth {
     fn drop(&mut self) {
@@ -73,6 +87,15 @@ impl Drop for Auth {
         }
         for value in self.headers.values_mut() {
             value.zeroize();
+        }
+        if let Some(value) = &mut self.proxy {
+            value.zeroize();
+        }
+        if let Some(value) = &mut self.mcp_servers {
+            erase_value(value);
+        }
+        if let Some(value) = &mut self.desktop_executor {
+            erase_value(value);
         }
     }
 }
@@ -148,6 +171,75 @@ fn parse(bytes: &[u8], provider: &str) -> ModelResult<Auth> {
     validate(&auth)?;
     Ok(auth)
 }
+#[derive(Serialize)]
+#[serde(transparent)]
+pub(super) struct SourceRow(serde_json::Value);
+impl std::ops::Deref for SourceRow {
+    type Target = serde_json::Value;
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+impl std::ops::DerefMut for SourceRow {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+impl Drop for SourceRow {
+    fn drop(&mut self) {
+        erase_value(&mut self.0);
+    }
+}
+pub(super) fn source_row(root: &Path, provider: &str) -> ModelResult<SourceRow> {
+    struct Select<'a> {
+        provider: &'a str,
+        providers: bool,
+    }
+    impl<'de> DeserializeSeed<'de> for Select<'_> {
+        type Value = Option<serde_json::Value>;
+        fn deserialize<D: serde::Deserializer<'de>>(self, d: D) -> Result<Self::Value, D::Error> {
+            d.deserialize_map(self)
+        }
+    }
+    impl<'de> Visitor<'de> for Select<'_> {
+        type Value = Option<serde_json::Value>;
+        fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
+            f.write_str("selected provider source")
+        }
+        fn visit_map<M: MapAccess<'de>>(self, mut map: M) -> Result<Self::Value, M::Error> {
+            let mut found = None;
+            let mut names = BTreeSet::new();
+            while let Some(name) = map.next_key::<String>()? {
+                if !names.insert(name.clone()) {
+                    return Err(serde::de::Error::custom("duplicate source field"));
+                }
+                if self.providers && name == self.provider {
+                    found = Some(map.next_value()?);
+                } else if !self.providers && name == "providers" {
+                    found = map.next_value_seed(Select {
+                        provider: self.provider,
+                        providers: true,
+                    })?;
+                } else {
+                    map.next_value::<IgnoredAny>()?;
+                }
+            }
+            Ok(found)
+        }
+    }
+    let path = root.join("config.json");
+    safety::check_path(root, &path, false)?;
+    let bytes = Zeroizing::new(safety::read_file(&path, 16 * 1024 * 1024)?);
+    let mut decoder = serde_json::Deserializer::from_slice(&bytes);
+    let value = Select {
+        provider,
+        providers: false,
+    }
+    .deserialize(&mut decoder)?
+    .ok_or_else(|| invalid("provider_fields", "所选源渠道已不存在"))?;
+    decoder.end()?;
+    Ok(SourceRow(value))
+}
 fn read(context: &ProcessContext, provider: &str) -> ModelResult<Auth> {
     let path = context.opencodex_home.join("config.json");
     safety::check_path(&context.opencodex_home, &path, false)?;
@@ -167,6 +259,12 @@ fn validate(auth: &Auth) -> ModelResult<()> {
     if auth.api_key.as_ref().is_some_and(|key| !key_ok(key))
         || auth.api_key_pool.len() > 256
         || auth.headers.len() > 128
+        || auth
+            .proxy
+            .as_ref()
+            .is_some_and(|v| v.len() > 16384 || v.chars().any(char::is_control))
+        || serde_json::to_vec(&auth.mcp_servers)?.len() > 1024 * 1024
+        || serde_json::to_vec(&auth.desktop_executor)?.len() > 1024 * 1024
     {
         return Err(invalid(
             "provider_auth_source",
@@ -271,6 +369,37 @@ impl SafeStore for System {
         Ok(())
     }
 }
+fn referenced_strings<'a>(value: &'a serde_json::Value, values: &mut Vec<&'a String>) {
+    match value {
+        serde_json::Value::String(s) if s.starts_with('$') || s.starts_with("keychain:") => {
+            values.push(s)
+        }
+        serde_json::Value::Array(a) => a.iter().for_each(|v| referenced_strings(v, values)),
+        serde_json::Value::Object(o) => o.values().for_each(|v| referenced_strings(v, values)),
+        _ => {}
+    }
+}
+fn resolve_nested(value: &mut serde_json::Value, provider: &str) -> ModelResult<()> {
+    match value {
+        serde_json::Value::String(s) if s.starts_with('$') || s.starts_with("keychain:") => {
+            let replacement = resolve_portable(s, provider)?;
+            s.zeroize();
+            *s = replacement.to_string();
+        }
+        serde_json::Value::Array(a) => {
+            for v in a {
+                resolve_nested(v, provider)?;
+            }
+        }
+        serde_json::Value::Object(o) => {
+            for v in o.values_mut() {
+                resolve_nested(v, provider)?;
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
 fn reference_digests(auth: &Auth, provider: &str) -> ModelResult<BTreeMap<String, String>> {
     for slot in &auth.api_key_pool {
         if slot.id != key_id(&slot.key) && slot.key != format!("keychain:{provider}/{}", slot.id) {
@@ -280,12 +409,18 @@ fn reference_digests(auth: &Auth, provider: &str) -> ModelResult<BTreeMap<String
             ));
         }
     }
+    let mut nested = vec![];
+    for value in auth.mcp_servers.iter().chain(auth.desktop_executor.iter()) {
+        referenced_strings(value, &mut nested);
+    }
     let mut digests = BTreeMap::new();
     for raw in auth
         .api_key
         .iter()
         .chain(auth.api_key_pool.iter().map(|s| &s.key))
         .chain(auth.headers.values())
+        .chain(auth.proxy.iter())
+        .chain(nested)
     {
         if let Some(name) = raw.strip_prefix('$') {
             let name = name
@@ -492,7 +627,12 @@ pub async fn capture(
             "官方授权源与活动Key池不同，未删除",
         ));
     }
-    if expected.ids.is_empty() && auth.headers.is_empty() {
+    if expected.ids.is_empty()
+        && auth.headers.is_empty()
+        && auth.proxy.is_none()
+        && auth.mcp_servers.is_none()
+        && auth.desktop_executor.is_none()
+    {
         return Ok(None);
     }
     let reference_digests = reference_digests(&auth, provider)?;
@@ -515,7 +655,12 @@ pub fn check_backup(root: &Path, backup: &Backup) -> ModelResult<()> {
 }
 pub fn verify_absent(context: &ProcessContext, provider: &str) -> ModelResult<()> {
     let current = read(context, provider)?;
-    if current.api_key.is_some() || !current.api_key_pool.is_empty() || !current.headers.is_empty()
+    if current.api_key.is_some()
+        || !current.api_key_pool.is_empty()
+        || !current.headers.is_empty()
+        || current.proxy.is_some()
+        || current.mcp_servers.is_some()
+        || current.desktop_executor.is_some()
     {
         return Err(invalid(
             "provider_auth_drift",
@@ -598,6 +743,18 @@ fn is_owned_subset(current: &Auth, expected: &Auth) -> bool {
             .headers
             .iter()
             .all(|(name, value)| expected.headers.get(name) == Some(value))
+        && current
+            .proxy
+            .as_ref()
+            .is_none_or(|v| expected.proxy.as_ref() == Some(v))
+        && current
+            .mcp_servers
+            .as_ref()
+            .is_none_or(|v| expected.mcp_servers.as_ref() == Some(v))
+        && current
+            .desktop_executor
+            .as_ref()
+            .is_none_or(|v| expected.desktop_executor.as_ref() == Some(v))
 }
 pub fn inspect_target(root: &Path, context: &ProcessContext, backup: &Backup) -> ModelResult<bool> {
     let expected = unseal(root, backup, &System)?;
@@ -655,7 +812,7 @@ pub async fn restore(root: &Path, context: &ProcessContext, backup: &Backup) -> 
         .restore_authorization_fields(
             &backup.provider,
             &public["providers"][&backup.provider],
-            serde_json::json!({"apiKeyPool":value.auth.api_key_pool,"headers":value.auth.headers}),
+            private_fields(&value.auth)?,
         )
         .await?;
     if value.auth.api_key.is_some() {
@@ -666,6 +823,19 @@ pub async fn restore(root: &Path, context: &ProcessContext, backup: &Backup) -> 
     verify(root, context, backup).await
 }
 
+fn private_fields(auth: &Auth) -> ModelResult<serde_json::Value> {
+    let mut value = serde_json::json!({"apiKeyPool":auth.api_key_pool,"headers":auth.headers});
+    if let Some(proxy) = &auth.proxy {
+        value["proxy"] = serde_json::json!(proxy);
+    }
+    if let Some(servers) = &auth.mcp_servers {
+        value["mcpServers"] = servers.clone();
+    }
+    if let Some(executor) = &auth.desktop_executor {
+        value["desktopExecutor"] = executor.clone();
+    }
+    Ok(value)
+}
 fn auth_digest(auth: &Auth) -> ModelResult<String> {
     Ok(sha256(&Zeroizing::new(serde_json::to_vec(auth)?)))
 }
@@ -684,6 +854,9 @@ fn empty_auth(transport: &Auth) -> Auth {
         api_key: None,
         api_key_pool: vec![],
         headers: BTreeMap::new(),
+        proxy: None,
+        mcp_servers: None,
+        desktop_executor: None,
     }
 }
 fn from_backup(
@@ -893,7 +1066,7 @@ async fn write_change(
             .restore_authorization_fields(
                 provider,
                 &public["providers"][provider],
-                serde_json::json!({"apiKeyPool":target.api_key_pool,"headers":target.headers}),
+                private_fields(target)?,
             )
             .await?;
         current = read(context, provider)?;
@@ -1038,6 +1211,239 @@ pub async fn rollback_change(
     .await
 }
 
+/// Serialized only inside the shared protected file, never a WebView DTO.
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct PortableAuthorization {
+    active_id: Option<String>,
+    fields: serde_json::Value,
+}
+impl Drop for PortableAuthorization {
+    fn drop(&mut self) {
+        erase_value(&mut self.fields);
+    }
+}
+fn resolve_portable(value: &str, provider: &str) -> ModelResult<Zeroizing<String>> {
+    let raw = value.trim();
+    if let Some(account) = raw.strip_prefix("keychain:") {
+        if account != provider && !account.starts_with(&format!("{provider}/")) {
+            return Err(invalid(
+                "provider_auth_reference",
+                "凭据引用属于其他渠道，未导出",
+            ));
+        }
+        return keyring::Entry::new("opencodex.provider-api-key.v1", account)
+            .map_err(|_| invalid("provider_auth_reference", "官方安全凭据不可用"))?
+            .get_password()
+            .map(Zeroizing::new)
+            .map_err(|_| invalid("provider_auth_reference", "官方安全凭据无法读取"));
+    }
+    let name = raw
+        .strip_prefix(concat!("$", "{"))
+        .and_then(|v| v.strip_suffix('}'))
+        .or_else(|| raw.strip_prefix('$'));
+    if let Some(name) = name {
+        if name.is_empty() || !name.bytes().all(|b| b.is_ascii_alphanumeric() || b == b'_') {
+            return Err(invalid("provider_auth_reference", "环境凭据引用格式无效"));
+        }
+        return std::env::var(name).map(Zeroizing::new).map_err(|_| {
+            invalid(
+                "provider_auth_reference",
+                "环境凭据未定义，未携带未解析引用",
+            )
+        });
+    }
+    Ok(Zeroizing::new(value.into()))
+}
+fn portable_auth(public: &serde_json::Value, value: &PortableAuthorization) -> ModelResult<Auth> {
+    super::provider_fields::validate_public(public)?;
+    if public["authMode"]
+        .as_str()
+        .is_some_and(|mode| ["oauth", "forward"].contains(&mode))
+    {
+        return Err(invalid(
+            "provider_auth_portable",
+            "OAuth或转发身份必须由专用账户适配处理",
+        ));
+    }
+    let fields = value
+        .fields
+        .as_object()
+        .ok_or_else(|| invalid("provider_auth_portable", "受保护渠道授权结构无效"))?;
+    if fields
+        .keys()
+        .any(|key| !super::provider_fields::PRIVATE.contains(&key.as_str()) || key == "apiKey")
+    {
+        return Err(invalid(
+            "provider_auth_portable",
+            "受保护渠道授权包含范围外字段",
+        ));
+    }
+    let mut row = public.clone();
+    row.as_object_mut()
+        .unwrap()
+        .extend(fields.iter().map(|(k, v)| (k.clone(), v.clone())));
+    let mut auth: Auth = serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(&row)?))?;
+    if let Some(active) = &value.active_id {
+        auth.api_key = Some(
+            auth.api_key_pool
+                .iter()
+                .find(|s| &s.id == active)
+                .ok_or_else(|| invalid("provider_auth_portable", "活动授权不在原池内"))?
+                .key
+                .clone(),
+        );
+    }
+    let mut unresolved = vec![];
+    for value in auth.mcp_servers.iter().chain(auth.desktop_executor.iter()) {
+        referenced_strings(value, &mut unresolved);
+    }
+    if !unresolved.is_empty()
+        || auth
+            .headers
+            .values()
+            .chain(auth.proxy.iter())
+            .any(|s| s.starts_with('$') || s.starts_with("keychain:"))
+        || auth
+            .api_key_pool
+            .iter()
+            .any(|s| s.key.starts_with("keychain:") || s.key.starts_with('$'))
+    {
+        return Err(invalid(
+            "provider_auth_portable",
+            "便携授权不能携带源机器Keychain或环境引用",
+        ));
+    }
+    let transport: Auth = serde_json::from_value(public.clone())?;
+    if !transport_matches(&auth, &transport) {
+        return Err(invalid(
+            "provider_auth_portable",
+            "受保护字段不能改变原服务或认证方式",
+        ));
+    }
+    validate(&auth)?;
+    Ok(auth)
+}
+pub fn validate_portable(
+    public: &serde_json::Value,
+    value: &PortableAuthorization,
+) -> ModelResult<()> {
+    portable_auth(public, value).map(|_| ())
+}
+pub fn export_portable(
+    root: &Path,
+    provider: &str,
+    public: &serde_json::Value,
+) -> ModelResult<PortableAuthorization> {
+    let mut raw = source_row(root, provider)?;
+    let actual_public = super::provider_fields::public_from_raw(&raw)?;
+    if actual_public
+        .as_object()
+        .unwrap()
+        .iter()
+        .any(|(key, value)| public.get(key) != Some(value))
+    {
+        erase_value(&mut raw);
+        return Err(invalid(
+            "provider_auth_drift",
+            "原渠道字段在导出比较后改变，未携带凭据",
+        ));
+    }
+    let private_bytes = Zeroizing::new(serde_json::to_vec(
+        &serde_json::json!({"providers":{provider:&raw}}),
+    )?);
+    let mut auth = parse(&private_bytes, provider)?;
+    erase_value(&mut raw);
+    let transport: Auth = serde_json::from_value(public.clone())?;
+    if !transport_matches(&auth, &transport) {
+        return Err(invalid(
+            "provider_auth_drift",
+            "导出比较后渠道连接改变，未读取旧方向凭据",
+        ));
+    }
+    reference_digests(&auth, provider)?;
+    for slot in &mut auth.api_key_pool {
+        slot.key = resolve_portable(&slot.key, provider)?.to_string();
+        slot.id = key_id(&slot.key);
+    }
+    if let Some(active) = &auth.api_key {
+        auth.api_key = Some(resolve_portable(active, provider)?.to_string());
+    }
+    for value in auth.headers.values_mut() {
+        *value = resolve_portable(value, provider)?.to_string();
+    }
+    if let Some(proxy) = &auth.proxy {
+        auth.proxy = Some(resolve_portable(proxy, provider)?.to_string());
+    }
+    for value in auth
+        .mcp_servers
+        .iter_mut()
+        .chain(auth.desktop_executor.iter_mut())
+    {
+        resolve_nested(value, provider)?;
+    }
+    validate(&auth)?;
+    let value = PortableAuthorization {
+        active_id: state(&auth).active_id.filter(|_| auth.api_key.is_some()),
+        fields: private_fields(&auth)?,
+    };
+    validate_portable(public, &value)?;
+    Ok(value)
+}
+pub(super) fn stage_portable(
+    root: &Path,
+    id: &str,
+    provider: &str,
+    public: &serde_json::Value,
+    value: &PortableAuthorization,
+) -> ModelResult<Backup> {
+    require_uuid(id)?;
+    let auth = portable_auth(public, value)?;
+    freeze(
+        root,
+        provider,
+        &Protected {
+            provider: provider.into(),
+            binding: format!("channel-import/{id}"),
+            auth,
+            reference_digests: BTreeMap::new(),
+        },
+        &System,
+    )
+}
+pub(super) fn bind_portable(
+    root: &Path,
+    context: &ProcessContext,
+    id: &str,
+    provider: &str,
+    public: &serde_json::Value,
+    backup: &Backup,
+) -> ModelResult<Backup> {
+    require_uuid(id)?;
+    let value = unseal(root, backup, &System)?;
+    let transport: Auth = serde_json::from_value(public.clone())?;
+    if backup.provider != provider
+        || value.binding != format!("channel-import/{id}")
+        || !transport_matches(&transport, &value.auth)
+    {
+        return Err(invalid(
+            "provider_auth_scope",
+            "导入授权与当前渠道、服务或协议不同，未采用",
+        ));
+    }
+    references_match(&value, provider)?;
+    freeze(
+        root,
+        provider,
+        &Protected {
+            provider: provider.into(),
+            binding: super::runtime::runtime_binding(context)?,
+            auth: serde_json::from_slice(&Zeroizing::new(serde_json::to_vec(&value.auth)?))?,
+            reference_digests: BTreeMap::new(),
+        },
+        &System,
+    )
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1078,7 +1484,66 @@ mod tests {
                 },
             ],
             headers: BTreeMap::from([("X-Authorization".into(), "fixture-header-SECRET".into())]),
+            proxy: None,
+            mcp_servers: None,
+            desktop_executor: None,
         }
+    }
+    #[test]
+    fn portable_pool_is_complete_and_private_blocks_never_enter_public_fields() {
+        let root = tempfile::tempdir().unwrap();
+        let mut selected = serde_json::to_value(auth()).unwrap();
+        selected["proxy"] = json!("http://fixture:proxy-SECRET@proxy.example.test:8080");
+        selected["mcpServers"] =
+            json!({"tools":{"command":"fixture-tool","env":{"AUTH":"mcp-SECRET"}}});
+        selected["desktopExecutor"] = json!({"env":{"AUTH":"executor-SECRET"}});
+        selected["modelAliases"] = json!({"a":"alias-a"});
+        std::fs::write(root.path().join("config.json"),serde_json::to_vec(&json!({"providers":{"selected":selected,"unrelated":{"apiKey":"unrelated-SECRET"}}})).unwrap()).unwrap();
+        let public = super::super::provider_fields::public_from_raw(&selected).unwrap();
+        let portable = export_portable(root.path(), "selected", &public).unwrap();
+        let restored = portable_auth(&public, &portable).unwrap();
+        assert_eq!(restored.api_key_pool.len(), 2);
+        assert_eq!(restored.api_key.as_deref(), Some("fixture-second-SECRET"));
+        assert_eq!(restored.headers["X-Authorization"], "fixture-header-SECRET");
+        assert_eq!(
+            restored.proxy,
+            selected["proxy"].as_str().map(str::to_owned)
+        );
+        assert_eq!(restored.mcp_servers.as_ref(), Some(&selected["mcpServers"]));
+        assert_eq!(
+            restored.desktop_executor.as_ref(),
+            Some(&selected["desktopExecutor"])
+        );
+        assert!(!serde_json::to_string(&portable)
+            .unwrap()
+            .contains("unrelated-SECRET"));
+        assert!(!serde_json::to_string(&public).unwrap().contains("SECRET"));
+        let mut wrong = public.clone();
+        wrong["baseUrl"] = json!("https://changed.example.test/v1");
+        assert!(export_portable(root.path(), "selected", &wrong).is_err());
+        let mut nested: PortableAuthorization =
+            serde_json::from_value(serde_json::to_value(&portable).unwrap()).unwrap();
+        nested.fields["mcpServers"]["tools"]["env"]["AUTH"] =
+            json!("keychain:selected/source-machine");
+        assert!(validate_portable(&public, &nested).is_err());
+        let variable = format!("OCXD_PORTABLE_AUTH_{}", uuid::Uuid::new_v4().simple());
+        std::env::set_var(&variable, "resolved-fixture-SECRET");
+        let mut references = json!({"env":{"AUTH":format!("{}{}",'$',variable)}});
+        resolve_nested(&mut references, "selected").unwrap();
+        std::env::remove_var(&variable);
+        assert_eq!(references["env"]["AUTH"], "resolved-fixture-SECRET");
+        erase_value(&mut references);
+        let mut invalid: PortableAuthorization =
+            serde_json::from_value(serde_json::to_value(&portable).unwrap()).unwrap();
+        invalid.fields["apiKeyPool"][0]["key"] = json!("keychain:selected/not-portable");
+        assert!(validate_portable(&public, &invalid).is_err());
+        selected["newSecretField"] = json!("future-SECRET");
+        std::fs::write(
+            root.path().join("config.json"),
+            serde_json::to_vec(&json!({"providers":{"selected":selected}})).unwrap(),
+        )
+        .unwrap();
+        assert!(export_portable(root.path(), "selected", &public).is_err());
     }
     #[test]
     fn transition_phases_only_admit_the_exact_issued_write_or_active_choice() {
@@ -1294,6 +1759,9 @@ mod tests {
                 label: expected.api_key_pool[0].label.clone(),
             }],
             headers: BTreeMap::new(),
+            proxy: None,
+            mcp_servers: None,
+            desktop_executor: None,
         };
         assert!(is_owned_subset(&partial, &expected));
         partial.api_key_pool[0].label = Some("later edit".into());
@@ -1332,6 +1800,9 @@ mod tests {
             auth_mode: None,
             api_key_transport: None,
             headers: BTreeMap::new(),
+            proxy: None,
+            mcp_servers: None,
+            desktop_executor: None,
         };
         validate(&value).unwrap();
         assert_eq!(state(&value).active_id.as_deref(), Some("8765dcba"));

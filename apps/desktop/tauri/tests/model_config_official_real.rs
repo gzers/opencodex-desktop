@@ -259,6 +259,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             connection: ChannelConnection {
                 auth_mode: None,
                 source_read_id: None,
+                imported_config: None,
                 provider_id: "fixture".into(),
                 protocol: "openai-responses".into(),
                 nodes: vec![ServiceNode {
@@ -869,6 +870,377 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         json!(pool)
     );
     println!("existing-auth-generation=true query-delete=true history-auth-only=true injected-failure-compensated=true later-private-drift-rejected=true keychain-reference-identities-preserved=true native-keychain-not-tested=true");
+
+    // An original official-only channel participates without first being saved
+    // as a Desktop policy. The source and receiving manager roots are independent.
+    let original_name = "fixture-original";
+    let public_before = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+        .await
+        .unwrap();
+    let mut public_next = public_before.clone();
+    let mut original = public_before["providers"]["fixture"].clone();
+    original["alias"] = json!("fixture-original-alias");
+    original["modelAliases"] = json!({"fixture-base":"friendly-base"});
+    original["modelDisplayNames"] = json!({"fixture-base":"Portable base"});
+    original["models"] = json!(["fixture-base"]);
+    original["selectedModels"] = json!(["fixture-base"]);
+    original["modelAdapters"] = json!({"fixture-base":"openai-chat"});
+    original["apiKeyPoolStrategy"] = json!("fill-first");
+    original["adapter"] = json!("anthropic");
+    original["apiKeyTransport"] = json!("bearer");
+    original["note"] = json!("original configuration overlay");
+    original["liveModels"] = json!(false);
+    public_next["providers"][original_name] = original;
+    let baseline = root.path().join("original-provider-baseline.json");
+    std::fs::write(&baseline, serde_json::to_vec(&public_before).unwrap()).unwrap();
+    let original_write = upstream::write(
+        &context,
+        upstream::WriteOperation::Providers {
+            baseline: &baseline,
+            next: &public_next,
+        },
+    )
+    .await
+    .unwrap();
+    if !original_write.success {
+        use tokio::io::AsyncWriteExt;
+        let mut diagnostic = tokio::process::Command::new(context.executable().unwrap());
+        diagnostic
+            .args([
+                "provider",
+                "apply",
+                "--baseline",
+                baseline.to_str().unwrap(),
+                "--file",
+                "-",
+                "--yes",
+                "--json",
+            ])
+            .env_clear()
+            .env("OPENCODEX_HOME", &upstream_home)
+            .env("PATH", node.parent().unwrap())
+            .current_dir(root.path())
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::piped())
+            .stderr(std::process::Stdio::piped());
+        let mut process = diagnostic.spawn().unwrap();
+        process
+            .stdin
+            .take()
+            .unwrap()
+            .write_all(&serde_json::to_vec(&public_next).unwrap())
+            .await
+            .unwrap();
+        let output = process.wait_with_output().await.unwrap();
+        panic!(
+            "owned public-only original registration diagnostic: {} {}",
+            String::from_utf8_lossy(&output.stdout),
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+    management
+        .add_key_labeled(original_name, "portable-key-one", Some("first portable"))
+        .await
+        .unwrap();
+    management
+        .add_key_labeled(original_name, "portable-key-two", Some("second portable"))
+        .await
+        .unwrap();
+    management
+        .patch_headers(
+            original_name,
+            &BTreeMap::from([("X-Portable-Auth".into(), "portable-private-header".into())]),
+        )
+        .await
+        .unwrap();
+    assert!(
+        upstream::write(&context, upstream::WriteOperation::Sync)
+            .await
+            .unwrap()
+            .success
+    );
+    let original_snapshot = upstream::snapshot(&context).await.unwrap();
+    let original_keys = management.key_state(original_name).await.unwrap();
+    let original_raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
+    let inventory = model_config::portable_channels::catalog(&manager, &original_snapshot).unwrap();
+    let original_id = inventory
+        .iter()
+        .find(|c| c.connection.provider_id == original_name)
+        .unwrap()
+        .id
+        .clone();
+    assert!(!store
+        .load()
+        .unwrap()
+        .policy
+        .channels
+        .iter()
+        .any(|c| c.id == original_id));
+    assert_eq!(
+        model_config::portable_channels::catalog(&manager, &original_snapshot)
+            .unwrap()
+            .iter()
+            .find(|c| c.connection.provider_id == original_name)
+            .unwrap()
+            .id,
+        original_id
+    );
+    let export = model_config::transfer::prepare_file_scope(
+        &manager,
+        model_config::transfer::ExportScope {
+            include_policy: true,
+            channel_ids: vec![original_id.clone()],
+            template_refs: vec![],
+            include_global: false,
+        },
+        Some("fixture-portable-password"),
+        true,
+        &opencodex_desktop_lib::modules::sync::portable_manager::Scope {
+            upstream_root: Some(upstream_home.clone()),
+            upstream_snapshot: Some(original_snapshot.clone()),
+            ..Default::default()
+        },
+    )
+    .unwrap();
+    assert_eq!(export.package.format_version, 3);
+    let bytes = model_config::transfer::file_bytes(&manager, &export.id).unwrap();
+    assert!(!String::from_utf8_lossy(&bytes).contains("portable-key-one"));
+    assert!(!serde_json::to_string(&export)
+        .unwrap()
+        .contains("portable-private-header"));
+    let mut removed_original = original_snapshot.providers.clone();
+    removed_original["providers"]
+        .as_object_mut()
+        .unwrap()
+        .remove(original_name);
+    std::fs::write(
+        &baseline,
+        serde_json::to_vec(&original_snapshot.providers).unwrap(),
+    )
+    .unwrap();
+    assert!(
+        upstream::write(
+            &context,
+            upstream::WriteOperation::Providers {
+                baseline: &baseline,
+                next: &removed_original
+            }
+        )
+        .await
+        .unwrap()
+        .success
+    );
+    let recipient = root.path().join("receiving-manager");
+    std::fs::create_dir_all(&recipient).unwrap();
+    let incoming =
+        model_config::file_objects::receive(&recipient, &bytes, Some("fixture-portable-password"))
+            .unwrap();
+    assert_eq!(incoming.available_keys, vec![original_id.clone()]);
+    let adopted = model_config::file_objects::accept(
+        &recipient,
+        &incoming.id,
+        true,
+        Some("fixture-portable-password"),
+    )
+    .unwrap();
+    let mut policy = adopted.workspace.unwrap().policy;
+    let imported = policy
+        .channels
+        .iter_mut()
+        .find(|c| c.id == original_id)
+        .unwrap();
+    assert!(!imported.connection.enabled && imported.connection.credential_ref.is_none());
+    assert!(imported.connection.imported_config.is_some());
+    imported.connection.allow_private_network = true; // explicit loopback permission for this owned fixture
+    let receiving_provider = imported.connection.provider_id.clone();
+    let receiving_store = model_config::store::ModelStore::new(&recipient);
+    let current = receiving_store.load().unwrap();
+    let staged = receiving_store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            policy.clone(),
+        )
+        .unwrap();
+    let save = runtime::prepare(
+        &recipient,
+        &context,
+        policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let saved_import = runtime::apply(&recipient, &context, &save.id)
+        .await
+        .unwrap();
+    assert_eq!(saved_import.phase, "committed", "{:?}", saved_import.error);
+    let received_public = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+        .await
+        .unwrap();
+    let mut expected = original_snapshot.providers["providers"][original_name].clone();
+    expected["disabled"] = json!(true);
+    assert_eq!(received_public["providers"][&receiving_provider], expected);
+    assert_eq!(
+        management.key_state(&receiving_provider).await.unwrap(),
+        original_keys
+    );
+    let received_raw: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(upstream_home.join("config.json")).unwrap()).unwrap();
+    assert_eq!(
+        received_raw["providers"][&receiving_provider]["apiKeyPool"],
+        original_raw["providers"][original_name]["apiKeyPool"]
+    );
+    assert_eq!(
+        received_raw["providers"][&receiving_provider]["headers"],
+        original_raw["providers"][original_name]["headers"]
+    );
+    let current = receiving_store.load().unwrap();
+    let mut enabled = current.policy.clone();
+    enabled.channels[0].connection.enabled = true;
+    let staged = receiving_store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            enabled.clone(),
+        )
+        .unwrap();
+    let enable = runtime::prepare(
+        &recipient,
+        &context,
+        enabled,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let enabled = runtime::apply(&recipient, &context, &enable.id)
+        .await
+        .unwrap();
+    assert_eq!(enabled.phase, "committed", "{:?}", enabled.error);
+    assert!(
+        upstream::snapshot(&context).await.unwrap().catalog["models"]
+            .as_array()
+            .unwrap()
+            .len()
+            > original_snapshot.catalog["models"]
+                .as_array()
+                .unwrap()
+                .len()
+                - 1
+    );
+    assert!(
+        model_config::file_objects::accept(
+            &recipient,
+            &incoming.id,
+            true,
+            Some("fixture-portable-password")
+        )
+        .unwrap()
+        .policy
+        .channels[0]
+            .connection
+            .enabled
+    );
+    management
+        .add_key_labeled(
+            &receiving_provider,
+            "recipient-later-key",
+            Some("later local credential"),
+        )
+        .await
+        .unwrap();
+    management
+        .patch_headers(
+            &receiving_provider,
+            &BTreeMap::from([("X-Portable-Auth".into(), "recipient-later-header".into())]),
+        )
+        .await
+        .unwrap();
+    let later_keys = management.key_state(&receiving_provider).await.unwrap();
+    assert_eq!(later_keys.ids.len(), 3);
+    let incoming_again =
+        model_config::file_objects::receive(&recipient, &bytes, Some("fixture-portable-password"))
+            .unwrap();
+    let adopted_again = model_config::file_objects::accept(
+        &recipient,
+        &incoming_again.id,
+        true,
+        Some("fixture-portable-password"),
+    )
+    .unwrap();
+    let policy_again = adopted_again.workspace.unwrap().policy;
+    assert!(!policy_again.channels[0].connection.enabled);
+    let current = receiving_store.load().unwrap();
+    let replace = runtime::prepare(
+        &recipient,
+        &context,
+        policy_again,
+        current.library_digest,
+        current.policy_digest,
+        current.workspace_digest,
+    )
+    .await
+    .unwrap();
+    std::fs::write(&fail_sync, b"owned import failure injection").unwrap();
+    let partial_import = runtime::apply(&recipient, &context, &replace.id)
+        .await
+        .unwrap();
+    assert_ne!(partial_import.phase, "committed");
+    assert!(partial_import.error.is_some());
+    assert_eq!(
+        management.key_state(&receiving_provider).await.unwrap(),
+        original_keys
+    );
+    std::fs::remove_file(&fail_sync).unwrap();
+    let compensated_import = runtime::compensate(&recipient, &context, &replace.id)
+        .await
+        .unwrap();
+    assert_eq!(
+        compensated_import.phase, "compensated",
+        "{:?}",
+        compensated_import.error
+    );
+    assert_eq!(
+        management.key_state(&receiving_provider).await.unwrap(),
+        later_keys
+    );
+    let current = receiving_store.load().unwrap();
+    let retry = runtime::prepare(
+        &recipient,
+        &context,
+        current.workspace.unwrap().policy,
+        current.library_digest,
+        current.policy_digest,
+        current.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let replaced = runtime::apply(&recipient, &context, &retry.id)
+        .await
+        .unwrap();
+    assert_eq!(replaced.phase, "committed", "{:?}", replaced.error);
+    assert_eq!(
+        management.key_state(&receiving_provider).await.unwrap(),
+        original_keys
+    );
+    let repeated = model_config::file_objects::accept(
+        &recipient,
+        &incoming_again.id,
+        true,
+        Some("fixture-portable-password"),
+    )
+    .unwrap();
+    assert_eq!(
+        repeated.policy.channels[0].connection.imported_config,
+        receiving_store.load().unwrap().policy.channels[0]
+            .connection
+            .imported_config
+    );
+    println!("original-official-inventory=true protected-full-pool-transfer=true original-public-fields-exact=true imported-disabled=true separate-enable-with-alias-budget=true import-replay-preserves-later-save=true existing-import-replaces-explicit-private-generation=true imported-private-generation-compensated=true");
 
     assert_eq!(
         generation.load(std::sync::atomic::Ordering::SeqCst),

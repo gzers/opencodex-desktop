@@ -651,6 +651,7 @@ mod tests {
             connection: ChannelConnection {
                 auth_mode: None,
                 source_read_id: None,
+                imported_config: None,
                 provider_id: format!("fixture_{name}"),
                 protocol: "openai-chat".into(),
                 active_node_id: node.id.clone(),

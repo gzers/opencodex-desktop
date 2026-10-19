@@ -26,6 +26,13 @@ pub struct DraftProjection {
     pub notices: Vec<String>,
 }
 pub fn validate_channel(channel: &ChannelPolicy) -> ModelResult<()> {
+    if let Some(reference) = &channel.connection.imported_config {
+        require_uuid(&reference.id)?;
+        if !reference.digest.starts_with("sha256:") || reference.digest.len() != 71 {
+            return Err(invalid("provider_import_digest", "原渠道接收引用摘要无效"));
+        }
+    }
+
     require_uuid(&channel.id)?;
     if channel.label.trim().is_empty() || channel.label.len() > 256 {
         return Err(invalid("channel", "渠道名称无效"));

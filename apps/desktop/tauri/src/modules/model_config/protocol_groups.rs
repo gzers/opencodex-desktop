@@ -404,6 +404,7 @@ mod tests {
             connection: ChannelConnection {
                 auth_mode: None,
                 source_read_id: None,
+                imported_config: None,
                 provider_id: "mixed".into(),
                 protocol: "openai-responses".into(),
                 nodes: vec![node.clone()],

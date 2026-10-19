@@ -356,6 +356,7 @@ fn channel(id: &str) -> ChannelPolicy {
         connection: ChannelConnection {
             auth_mode: None,
             source_read_id: None,
+            imported_config: None,
             provider_id: format!("provider-{}", &id[..4]),
             protocol: "openai-chat".into(),
             nodes: vec![node.clone()],

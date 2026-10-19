@@ -29,13 +29,49 @@ pub struct PortableChannel {
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct PortableConnection {
     pub nodes: Vec<ServiceNode>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub provider: Option<serde_json::Value>,
 }
 fn portable_connection(channel: &ChannelPolicy) -> Option<PortableConnection> {
     (!channel.connection.nodes.is_empty()).then(|| PortableConnection {
         nodes: channel.connection.nodes.clone(),
+        provider: None,
     })
 }
+pub(super) fn same_destination(left: &PortableChannel, right: &PortableChannel) -> bool {
+    if left.protocol != right.protocol {
+        return false;
+    }
+    match (&left.connection, &right.connection) {
+        (Some(a), Some(b)) => {
+            a.nodes == b.nodes
+                && [
+                    "adapter",
+                    "baseUrl",
+                    "authMode",
+                    "apiKeyTransport",
+                    "responsesPath",
+                    "chatCompletionsPath",
+                ]
+                .iter()
+                .all(|key| {
+                    a.provider.as_ref().and_then(|p| p.get(*key))
+                        == b.provider.as_ref().and_then(|p| p.get(*key))
+                })
+        }
+        (None, None) => true,
+        _ => false,
+    }
+}
 fn package_version(payload: &TransferPayload) -> u32 {
+    if payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .any(|c| c.connection.as_ref().is_some_and(|v| v.provider.is_some()))
+    {
+        return 3;
+    }
     if payload.policy.as_ref().is_some_and(|p| {
         p.default_channel_id.is_some() || p.channels.iter().any(|c| c.connection.is_some())
     }) {
@@ -225,7 +261,11 @@ pub fn prepare_file_scope(
             || !manager_scope.skill_names.is_empty()
             || !manager_scope.mcp_names.is_empty()
             || !manager_scope.account_ids.is_empty());
-    let mut package = export(root, scope)?;
+    let mut package = if let Some(snapshot) = &manager_scope.upstream_snapshot {
+        super::portable_channels::export(root, scope, snapshot)?
+    } else {
+        export(root, scope)?
+    };
     if no_models {
         package.payload.templates.clear();
         package.digest = sha256(&serde_json::to_vec(&package.payload)?);
@@ -408,8 +448,8 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
 }
 pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
     if package.format != "OCXD_MODEL_CONFIG"
-        || ![1, 2].contains(&package.format_version)
-        || (package.format_version == 1 && package_version(&package.payload) != 1)
+        || ![1, 2, 3].contains(&package.format_version)
+        || (package.format_version < package_version(&package.payload))
         || package.schema_version != SCHEMA_VERSION
     {
         return Err(invalid("package_version", "模型配置文件格式/版本不受支持"));
@@ -470,6 +510,17 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                 return Err(invalid("channel", "包内渠道身份重复"));
             }
             if let Some(connection) = &channel.connection {
+                if let Some(provider) = &connection.provider {
+                    super::provider_fields::validate_public(provider)?;
+                    if provider["adapter"] != channel.protocol
+                        || !connection
+                            .nodes
+                            .iter()
+                            .any(|node| provider["baseUrl"] == node.url)
+                    {
+                        return Err(invalid("provider_fields", "原渠道字段与协议或节点不对应"));
+                    }
+                }
                 let probe = ChannelPolicy {
                     id: channel.id.clone(),
                     label: channel.label.clone(),
@@ -478,6 +529,7 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                     connection: ChannelConnection {
                         auth_mode: None,
                         source_read_id: None,
+                        imported_config: None,
                         provider_id: "portable-validation".into(),
                         protocol: channel.protocol.clone(),
                         nodes: connection.nodes.clone(),
@@ -1217,6 +1269,25 @@ fn intent_digest(
     plan: &IncomingPlan,
     credentials: &BTreeMap<String, String>,
 ) -> ModelResult<String> {
+    let imported = plan
+        .merged_policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter_map(|c| {
+            c.connection
+                .imported_config
+                .as_ref()
+                .map(|reference| (&c.id, reference))
+        })
+        .collect::<BTreeMap<_, _>>();
+    if !imported.is_empty() {
+        return Ok(sha256(&serde_json::to_vec(&(
+            credentials,
+            &plan.channel_bindings,
+            &plan.asset_mappings,
+            imported,
+        ))?));
+    }
     if !plan.asset_mappings.is_empty() {
         return Ok(sha256(&serde_json::to_vec(&(
             credentials,
@@ -1363,7 +1434,44 @@ pub(super) fn accept_with_credentials(
     } else {
         let effective = mapped_package(&local, &plan.package, &plan.channel_bindings)?;
         let (library, mut policy, _) = merge(&local, &effective)?;
+        for intended in plan.merged_policy.iter().flat_map(|p| &p.channels) {
+            let Some(reference) = &intended.connection.imported_config else {
+                continue;
+            };
+            let source = plan
+                .package
+                .payload
+                .policy
+                .iter()
+                .flat_map(|p| &p.channels)
+                .find(|source| key_target(&plan, &source.id) == Some(intended.id.as_str()))
+                .and_then(|source| source.connection.as_ref())
+                .and_then(|c| c.provider.as_ref());
+            let Some(source) = source else {
+                continue;
+            };
+            let target = policy
+                .as_mut()
+                .and_then(|p| p.channels.iter_mut().find(|c| c.id == intended.id))
+                .ok_or_else(|| invalid("provider_import_scope", "重算接收目标缺失"))?;
+            let staged = super::provider_import::load(root, target, reference)?;
+            if staged.public != *source {
+                return Err(invalid(
+                    "provider_import_scope",
+                    "受保护原字段不属于当前源渠道",
+                ));
+            }
+            target.connection.imported_config = Some(reference.clone());
+            target.connection.auth_mode = source["authMode"].as_str().map(str::to_owned);
+            target.connection.enabled = false;
+        }
         bind_credentials(&mut policy, credentials)?;
+        if library != plan.merged_library || policy != intended_policy {
+            return Err(invalid(
+                "incoming_intent",
+                "采用重算与已确认范围不同，未写入",
+            ));
+        }
         ModelStore::new(root).accept_import(
             &plan.expected_library,
             &plan.expected_policy,
@@ -1578,6 +1686,7 @@ mod tests {
             connection: ChannelConnection {
                 auth_mode: None,
                 source_read_id: None,
+                imported_config: None,
                 provider_id: "source-machine-provider".into(),
                 protocol: "openai-chat".into(),
                 active_node_id: nodes[1].id.clone(),

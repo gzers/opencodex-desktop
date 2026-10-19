@@ -164,7 +164,7 @@ pub async fn read_command(
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct UpstreamSnapshot {
     pub version: String,
@@ -404,7 +404,7 @@ pub async fn write(
         )
     })?
 }
-fn reject_secrets(value: &Value) -> ModelResult<()> {
+pub(super) fn reject_secrets(value: &Value) -> ModelResult<()> {
     match value {
         Value::Object(values) => {
             for (key, value) in values {

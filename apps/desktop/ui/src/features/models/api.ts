@@ -42,7 +42,7 @@ export interface DiscoveredModel { id: string; label: string; rules: ModelRules 
 export type ModelSelection = { mode: 'all' | 'none' } | { mode: 'whitelist'; models: string[] }
 export interface ChannelPolicy {
   id: string; label: string; templateRefs: TemplateRef[]; modelRefs: Record<string, TemplateRef>
-  connection: { providerId: string; protocol: string; nodes: ServiceNode[]; activeNodeId: string; credentialRef: string | null; enabled: boolean; allowPrivateNetwork: boolean; authMode?:string|null;sourceReadId?:string|null }
+  connection: { providerId: string; protocol: string; nodes: ServiceNode[]; activeNodeId: string; credentialRef: string | null; enabled: boolean; allowPrivateNetwork: boolean; authMode?:string|null;sourceReadId?:string|null;importedConfig?:{id:string;digest:string}|null }
   selection: ModelSelection; modelOrder: string[]; discovered: DiscoveredModel[]
   defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
 }
