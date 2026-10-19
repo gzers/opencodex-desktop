@@ -1,0 +1,31 @@
+{
+  "recordedAt": "2026-10-19T16:41:06.697120+00:00",
+  "run": 39283873766,
+  "source": "8ae7b2bed00823f82d869dbd490fb44f696b87ba",
+  "result": "failure",
+  "failedJob": "backend-windows",
+  "failedStep": "Windows backend regression",
+  "passed": 701,
+  "failed": 3,
+  "ignored": 4,
+  "failedTests": [
+    "infrastructure::official_version_source::windows_tests::version_nonzero_exit_reaps_owned_helper",
+    "infrastructure::official_version_source::windows_tests::version_success_reaps_owned_helper_and_preserves_version_output",
+    "infrastructure::official_version_source::windows_tests::version_timeout_cleans_owned_tree_and_preserves_unrelated_process"
+  ],
+  "observation": [
+    "all three failed before fixture parent/child markers were published",
+    "actual query returned Timeout near2seconds; observer reached original5seconds and failed",
+    "retained unrelated cmd control still live; trace reports zero/negligible CPU; does not prove scheduler root cause",
+    "native Windows secure-store protection passed separately"
+  ],
+  "unchanged": [
+    "no query deadline extension",
+    "no Node prewarm",
+    "no excluded test or changed pass condition",
+    "no manual rerun to seek green"
+  ],
+  "rawLog": "ci-8ae7b2be-windows-failure-20261020.txt",
+  "rawSha256": "31813ac371cd6c5708e477484e52e1e1ccf80d94404b376df2dc5bdc870af834",
+  "remaining": "precise root cause unresolved; e21e0e6c has its independently triggered CI pending; old successful run does not erase this failure"
+}

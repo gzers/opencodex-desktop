@@ -437,3 +437,10 @@ CI39255967327绑定a59f84ea全部适用job成功：macOS/Windows后端、前端�
 受影响8项、生产构建通过，store影响下全量128文件641项通过且无未处理异步异常；两条Canvas诊断仍是jsdom限制。DEV正式页面实测A6api置顶、撤销原顺序、渠道搜索禁用全部排序、型号搜索1/12且排序禁用，文档无横向溢出；截图model-search-sort-guard-light.png。未执行鼠标实体HTML5拖动，不把函数/DOM事件单测报作物理拖动验收。checks-model-ordering-20261020.json绑定源。
 
 CI39278943909（b076464b）现已全部适用job成功，后续8ae7b2be已推送而其CI仍在队列，不以旧run覆盖本批未提交排序源码。族筛选/有效值来源明细、新建取消/两步边界、逐AC映射及全部消费者/平台继续补齐，未发布0.2.0。
+
+
+### 子集提交Windows CI失败保留
+
+8ae7b2be的CI39283873766整体failure。前端/macOS后端/release-tools通过；Windows后端701通过、3失败、4忽略，失败均为未变动的official_version_source版本查询helper fixture（success/nonzero/timeout）。Windows系统凭据专项单独成功，后续最终EXE构建/首屏因前置失败跳过，不能声称制品首屏通过。
+
+原日志显示三例约2秒返回Timeout，5秒观察期内parent/child/ownership marker均未建立，所留无关cmd控制进程仍存活且CPU为零或极少。这里只是观测，不能据此认定调度根因或用前次b076464b成功解除。未延长deadline、预热Node、跳测试、改并发或手动重跑寻绿；当前e21e0e6c已有代码提交自然触发的下一run待结果。精确失败原件和绑定见ci-8ae7b2be-failure-20261020.json及原日志。该未决门保留，继续独立完成已发现业务缺口，不回到0.1.10长期性能/ETW/日常OTA采样。
