@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-10-19T17:40:17.580373+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "e21e0e6cc423203cb04548ec2663d853115ffd0c",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "89852e4051604cc29ec584160c1fb3723193f5a59d85875b470ab9d0d07afdf1",
+    "apps/desktop/tauri/src/lib.rs": "eafc9ccb6cebd927becca6d4f5e824482fb7b2b4722f281da33924a7712779f2",
+    "apps/desktop/tauri/src/modules/model_config/discovery.rs": "06efd2b63664c254724985629a2bcab2cee94e746f08bf25fe2d3399bbfca2bf",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "b557cf8254920825c6c26eaefe7b78c7d53d0cce312b4767660a2733e84fb320",
+    "apps/desktop/tauri/src/modules/model_config/store.rs": "c5761ce2c337ad57983597f90cc4f74d733306714aba518e4b79462a6845654d",
+    "apps/desktop/ui/src/components/registry.ts": "ea809e65cf00ff6f5ab487268b86194d7dc70eb77717f158e7e3a3e8c1044e02",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "051f146fc1a83da2e0e4546a602900c9603acee9c05098e08e913c935e009330",
+    "apps/desktop/ui/src/features/models/ChannelsView.vue": "56cae4e7b5d1ffa3e8a74064bf6a9da4a5fdbcaf68ecaa516f3012cb8faef766",
+    "apps/desktop/ui/src/features/models/api.ts": "625ebf7108026b4cad2df9151c80ce7748e53d28065edbd5bdfd350a47aa7f17",
+    "apps/desktop/ui/src/features/models/store.ts": "8a55b6a69a6369db765e8febbcffec8cc4a03132bdcd2f07735a2d62d4154600",
+    "apps/desktop/tauri/src/modules/model_config/new_channel.rs": "b3b1ed2205be4b0561abb72a94bc7eef3b0deb0cd4e7101d8035a084022acde7",
+    "apps/desktop/ui/src/features/models/NewChannelDialog.vue": "f1edc7562d3ef506cfd94f31c7c340f64ff208054d02a2c9ac325448c401346f",
+    "apps/desktop/ui/tests/model-draft-ordering.test.ts": "7ab1a0150345da80e0738f0ea8ac4a8963d5b0e2b780c91ea310b5b5285dc1bc",
+    "apps/desktop/ui/tests/new-channel-dialog.test.ts": "aa8891686798105ef0ff429e9b8bcf012d5c4720d72684b9951abd15d3f4839f"
+  },
+  "checks": [
+    {
+      "session": 67274,
+      "commands": [
+        "cargo test --lib modules::model_config::new_channel::tests:: --no-default-features",
+        "cargo test --lib new_channel_preview_with_a_key_never_stores_a_credential_reference --no-default-features",
+        "cargo clippy --workspace --all-targets --features integration-test -- -D warnings"
+      ],
+      "passed": {
+        "newChannel": 5,
+        "readonlyPreview": 1
+      },
+      "clippy": "passed",
+      "logs": [
+        "new-channel-rust-20261020.txt",
+        "new-channel-clippy-20261020.txt"
+      ]
+    },
+    {
+      "session": 68023,
+      "command": "npm test -- --run tests/new-channel-dialog.test.ts tests/model-draft-ordering.test.ts tests/model-save-recovery.test.ts && npm run build",
+      "files": 3,
+      "passed": 12,
+      "build": "passed"
+    },
+    {
+      "session": 46442,
+      "command": "npm test -- --run",
+      "files": 129,
+      "passed": 645,
+      "unhandledErrors": 0,
+      "log": "new-channel-ui-full-20261020.txt",
+      "notes": "2 jsdom Canvas diagnostics retained"
+    }
+  ],
+  "browser": {
+    "source": "production NewChannelDialog/UiDialog with explicit DEV-only catalogue",
+    "observed": [
+      "step1 validates without fetching; step2 initially0/0",
+      "fetch12 has0selected; search raw gpt-demo-10 and select1",
+      "dialog client/scroll848",
+      "no test Key in body text",
+      "close leaves24 rows and no new row; focuses 新增渠道"
+    ],
+    "screenshots": [
+      "new-channel-models-light.png"
+    ],
+    "boundary": "not native IPC/system Key creation proof"
+  },
+  "requirementCorrection": {
+    "authority": "模型页交互细化.md 2026-10-14用户最终确认，无撤销/重做入口",
+    "removed": "e21e0e6c draft undo/redo store/UI/test; earlier evidence remains historical"
+  },
+  "remaining": [
+    "family filtering/overrides/effective-source details",
+    "remaining requirement/consumer/native platform verification",
+    "per-account portable login adapters/live evidence",
+    "version/integration/artifact release"
+  ]
+}
