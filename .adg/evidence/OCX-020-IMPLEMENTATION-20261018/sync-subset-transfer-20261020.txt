@@ -1,0 +1,26 @@
+   Compiling tauri v2.12.1
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/apps/desktop/tauri)
+   Compiling tauri-plugin-fs v2.6.0
+   Compiling tauri-plugin-process v2.4.0
+   Compiling tauri-plugin-updater v2.13.1
+   Compiling tauri-plugin-dialog v2.8.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 29.59s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-fb6fc1656ee72b0b)
+
+running 13 tests
+test modules::model_config::transfer::tests::a_changed_local_baseline_invalidates_old_import_confirmation ... ok
+test modules::model_config::transfer::tests::channel_mapping_rejects_unselected_sources_duplicate_targets_and_drift ... ok
+test modules::model_config::transfer::tests::explicit_channel_mapping_preserves_local_connection_or_creates_a_separate_draft ... ok
+test modules::model_config::transfer::tests::importing_versions_is_reviewed_and_preserves_local_defaults_and_runtime ... ok
+test modules::model_config::transfer::tests::mismatched_identity_or_digest_is_rejected_without_modifying_the_library ... ok
+test modules::model_config::transfer::tests::model_subset_filters_declared_ids_overrides_and_keeps_other_local_models_on_acceptance ... ok
+test modules::model_config::transfer::tests::old_packages_keep_their_original_digest_and_new_nodes_cannot_masquerade_as_format_one ... ok
+test modules::model_config::transfer::tests::policy_package_carries_exact_dependencies_but_never_local_node_or_keychain_references ... ok
+test modules::model_config::transfer::tests::portable_nodes_restore_as_disabled_draft_with_new_local_binding_and_no_runtime_or_secret_refs ... ok
+test modules::model_config::transfer::tests::protected_file_export_freezes_bytes_and_never_records_the_passphrase ... ok
+test modules::model_config::transfer::tests::receive_subset_keeps_other_objects_and_adds_exact_channel_dependencies ... ok
+test modules::model_config::transfer::tests::same_identity_different_endpoint_is_review_conflict_and_same_endpoint_keeps_local_selection ... ok
+test modules::model_config::transfer::tests::unrelated_conflicting_revision_can_be_skipped_but_cannot_be_accepted_or_silently_rebased ... ok
+
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 911 filtered out; finished in 12.23s
+

@@ -1,0 +1,69 @@
+{
+  "recordedAt": "2026-10-19T16:12:22.836802+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "b076464becf6d15eba60aadff5b7b1510a2d4dd0",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "6074ccfaa9a60b6a0b8726d89aeef007229447dd789e6dfb8587703ad367e2ad",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "8cf3a8ed96423fc5d8042c93daa38e9314e3f2cc0e5333c09e1d8136f66b1ba1",
+    "apps/desktop/tauri/src/modules/model_config/portable_channels.rs": "69e2df30379518f67d320d328be7c74aff8949b5cf6e808bb76bce63c178dfe4",
+    "apps/desktop/tauri/src/modules/model_config/provider_auth.rs": "7559a6d4989b5748daa295d809a005423a382adb0026283e07ed49e5262bd1c6",
+    "apps/desktop/tauri/src/modules/model_config/remote.rs": "b4c491e8600569c2722b6a0c1fa8e7961391addc4a0cbbc205a87a4599ee7ae7",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "6b04d9fa536893f2af2ba4c801a789624222b310c73a65818cdb1247eee1b46e",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "ba6c0fef1bdd4d05689d4477e44ac50323e38eec498ea47e6598cd26f9b6a0db",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "2a718ccdbcba2e1516dc8a340021790d269d4f3742808e2166be9f91e6305be1",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "adf68a53ef6f2359719316f0a87a487561db6d3d5f1be648a2b76ededdf44625",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "4ea66886ded8803c5c2026edc27b51642c49f87760a3ae1cbce866444b8d85d4",
+    "apps/desktop/ui/src/features/sync/ChannelModelScope.vue": "7e613e9b3a2cc23b7f225da72eb9e5e2f2d09e488b1114bb337579156bd3436b",
+    "apps/desktop/ui/tests/sync-model-scope.test.ts": "aa37e0bb8bc22f68b901f99b1e759769c9543975fe989033ee2faa8310b1b39a"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config",
+      "session": 44564,
+      "passed": 129,
+      "boundary": "before final protected subset vector and declaration-only merge assertion"
+    },
+    {
+      "command": "cargo test --lib protected_original_channel_model_subset_uses_full_source_auth_and_only_selected_public_fields; cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 71951,
+      "passed": 1,
+      "clippy": "passed"
+    },
+    {
+      "command": "cargo fmt --check && cargo test --lib modules::model_config::transfer::tests:: -- --test-threads=1",
+      "session": 70044,
+      "passed": 13,
+      "log": "sync-subset-transfer-20261020.txt"
+    },
+    {
+      "command": "npm test -- --run",
+      "session": 2816,
+      "files": 127,
+      "passed": 637,
+      "log": "sync-subset-ui-full-20261020.txt",
+      "notes": "before final owner-test addition and sourceModels union; no unhandled errors, two jsdom Canvas diagnostics"
+    },
+    {
+      "command": "npm test -- --run tests/model-transfer.test.ts tests/sync-model-scope.test.ts && npm run build",
+      "session": 13315,
+      "files": 2,
+      "passed": 22,
+      "build": "passed",
+      "notes": "final export-owner forwards actual checkbox-selected raw-ID mask"
+    }
+  ],
+  "browser": {
+    "screenshot": "sync-channel-model-subset-light.png",
+    "observed": [
+      "production component with DEV fixed12model source, filtered cancel last ID retains11",
+      "dialog client/scroll848, no horizontal overflow"
+    ],
+    "boundary": "not native IPC or a full platform matrix"
+  },
+  "remaining": [
+    "full requirement mapping/consumer platform checks",
+    "per-account live portability or explicit unsupported/failure boundaries",
+    "final integration/version/artifacts/publication"
+  ]
+}
