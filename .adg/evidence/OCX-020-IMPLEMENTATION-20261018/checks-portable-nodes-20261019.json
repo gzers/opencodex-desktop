@@ -1,0 +1,58 @@
+{
+  "recordedAt": "2026-10-19T02:05:10.157300+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "815b1c402ccd9321cd3b401a0650ba85e1ec27fe",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "6431b85382cf4f188b76ec65b531c961e81ead242daf61e8cccd7fb2cf83fe94",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "23fc8b8c7349051a87564ad8642476b04ca7cdfc3c72e5bb7d8f1124bdc842df",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "f54e946a5b47d9a076c4a56e9bb2cc670bc5ea90943705791b7de550264daccc",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "475588257039206c0a8bb7e2ae5bc99eb1bdf73ae1c0b22ea31f97eb15a8d1d0",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "96057c3bb267ca5a4aa5d14c4552f0301fcc7e77cc5baee66064379356858df9",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "802ea5667c77ffb0cf9e5f5493b318b98d219650101754b9670bdb7583e9c401"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib model_config --no-default-features",
+      "session": 36847,
+      "passed": 90,
+      "failed": 0,
+      "result": "passed"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 36847,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-transfer.test.ts tests/imported-sync-connections.test.ts",
+      "session": 97533,
+      "files": 2,
+      "passed": 18,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 97533,
+      "result": "passed"
+    }
+  ],
+  "scope": [
+    "portable service nodes; old package digest and unknown-version rejection",
+    "explicit local/new mappings, source package retained, duplicate target and stale confirmation refusal",
+    "source Key cannot bind existing local endpoint; new Key binds only new channel; exact replay",
+    "partial remote endpoint changes do not silently reuse remote secrets"
+  ],
+  "visualEvidence": {
+    "file": "account-info-scope-light.jpg",
+    "kind": "explicit DEV fixture, light/high only",
+    "notProven": "native IPC, daily account credentials, cross-platform secure store"
+  },
+  "remaining": [
+    "original upstream full fields and actual runtime client loading",
+    "save history baseline/restore-to-draft",
+    "asset name mappings and full public UI consumer acceptance",
+    "live per-account login portability evidence for any supported type",
+    "platform, release and postpublish verification"
+  ]
+}
