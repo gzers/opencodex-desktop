@@ -252,4 +252,18 @@ Key删除保护先实现单Key：删除前核对官方Key池身份和可读本�
 
 后续仍需完成已有渠道不同授权/系统引用型池恢复、完整原配置便携映射、公共组件全部登记消费者/实屏矩阵、原生/平台与发布。目标保持执行，未转为“功能已全交付”。
 
+### 公共组件源登记、普通按钮与设置开关迁移
+
+正式components/registry.ts沿专题43项稳定ID登记规格、实际实现/公共配方、业务消费者、DEV锚点，原型专用注释独立说明，原生来源链接真实native代码/制品路径；全部verification仍为pending_full_matrix，不把真实路径存在当成完成适配。既有gallery.html改为左锚点目录、右正式组件样例/采用表，亮暗/三档仍共用实际组件，不增加产品非功能业务菜单，也不从docs import运行。样例待补与native独立证据均可见。
+
+普通btn迁移12文件117处（概览、设置、扩展、诊断、面板自有入口、App/Modal/任务/备份/环境与扩展详情），动作/disabled/type/data属性及现有owner保持。路径行/分页/最近事件次操作明确sm，其余用md或既有规格；去除页面后代的普通按钮min-height/padding/font-size覆盖，未拿原生caption/托盘或内部图标控件套普通btn。UiButton加载spinner改绝对覆盖，原slot保持几何和可访问名称；disabled/busy跟真实状态。离散滑杆字重由Token拥有，内部档位点击区域用sm最小高度。
+
+设置14处开关统一UiSwitch，必填label、受控modelValue、update意图由原业务owner保存/回退；标准原生button提供Space/Enter。视觉38×22和16px拇指沿原配方，命中高度28；尺寸/阴影改Token。没有新增服务调用、系统设置或独立通知。
+
+整轮前端初检609断言通过但8异步错误，未按绿色断言算通过；定位到未识别扩展目录赋空与未打开Dialog卸载调用close。修正目录DTO在赋值前严格校验、Dialog卸载仅关闭已打开表面且异步open/close守护卸载与后续prop；4文件25项复核后再整轮，118文件612项通过且无未处理异步错误，生产构建通过。jsdom两条Canvas未实现提示仍是受限模拟信息，不当作真实WebGL验证。
+
+真实开发浏览器1280×720测量亮暗×三档：btn小/中/大28/34/40、各variant/compact尺寸一致，switch命中38×28/轨道22，当前gallery无横向溢出；同一按钮loading前后96.984375×34，aria-busy/disabled正确；空格键实际切换样例true。实际设置页四个可见开关有对应业务名称，尺寸38×28，实屏settings-shared-switch-light.jpg；public-buttons-dark-low.jpg为暗色低档样例。matrix/geometry JSON记录实际DOM测量，不能以截图物理像素替代逻辑px。生产dist无gallery.html、登记表/样例/DEV fixture标记；后续registry压缩仅改变源码表示，相关5项及类型/构建复核通过。
+
+尚需全部其他控件样例与消费者、长文本/各窗口/50～200%缩放、native托盘/Windows及客户端实际加载；普通输入/checkbox等继续按轻量原生配方登记，不机械包装为组件数。完整授权世代回退/系统引用池、上游全字段便携、最终平台与发布门仍继续。
+
 当前未发布，未生成本版验收完成或发布证书。

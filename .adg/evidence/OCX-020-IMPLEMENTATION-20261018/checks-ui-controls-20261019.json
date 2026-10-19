@@ -1,0 +1,85 @@
+{
+  "recordedAt": "2026-10-19T05:57:26.616218+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "d36cb72ecda6c467ce617ef1b8d3cf5fe0241011",
+  "sourceSha256": {
+    "apps/desktop/ui/src/App.vue": "68b64e9a3efa503f5248db2021bbac0d476072226238222fb287e68ec4950298",
+    "apps/desktop/ui/src/components/AppModal.vue": "7171fe3539ac1ad5a6a9136d9facd2a6c485a286c8830fc94e5d3a2d246735a5",
+    "apps/desktop/ui/src/components/README.md": "e659b14afcba0f865588ac00d82bd2bbeb65d79181f6134f6b3d31ded7804f2f",
+    "apps/desktop/ui/src/components/TaskProgressHost.vue": "45a898d5fc076d1659d6ef09db929ee0fe0a450a9212c73f2fda94f735a314d0",
+    "apps/desktop/ui/src/components/registry.ts": "5b740d1002e77c173997f2aa6e408333f2735a0cda9dbab3985a8b273512d1b8",
+    "apps/desktop/ui/src/components/ui/UiButton.vue": "0c5ffc08988ca329f0aafcc9de4a3aee09a822087e8ea7cd26a6093affad66f9",
+    "apps/desktop/ui/src/components/ui/UiDialog.vue": "0b469560dc2c257c13755bd2ff37658c9c2c37c8dc861bd99559aee325faef1b",
+    "apps/desktop/ui/src/components/ui/UiDiscreteSlider.vue": "6119de3354ca471d6b6f39543635637eb7da7452ffe537350a9c198a53ef138d",
+    "apps/desktop/ui/src/components/ui/UiSwitch.vue": "5683aff3256bdd2f3aaa9e7b8d913441cc67c7a5effe1da742db019a61808253",
+    "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue": "f033551b895d79cd1dcc7607de3f411ff2b6f55834e583c643fb12ba0fdbd499",
+    "apps/desktop/ui/src/features/backup/BackupFiles.vue": "a8838b6551c5554b024b916479c4455ab06923a27174d61e6e6e118cf3383ac5",
+    "apps/desktop/ui/src/features/backup/BackupManagement.vue": "dd8652e521bfd8490570161f9cdcdc2704dc502143cf53c41e2ff80f6e85dfb1",
+    "apps/desktop/ui/src/features/environment/components/EnvironmentGate.vue": "900c48f367128f5fc33c92d1b0343da6987e1e730f6f0aff50ec4b9e5837ba88",
+    "apps/desktop/ui/src/features/extensions/components/ExtensionDetailModal.vue": "5fc71090870192e26669f1bbce8f5c846d393821d7cdf5e408cd22fb7dd1c5c5",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "713516e74f4889430436f76f6fd3dcc2e9cc018b0d456c4bcb9a0edc96050ad5",
+    "apps/desktop/ui/src/routes/ExtensionsRoute.vue": "1cf149f5238098516d5324ce18fd0db7afe1d79dcaa310641a51ee72aec4d078",
+    "apps/desktop/ui/src/routes/LogsRoute.vue": "cd501873f29c0b83f902d7a519a914501c6c53af9cb56632dde1b37e9ce2cc01",
+    "apps/desktop/ui/src/routes/OverviewRoute.vue": "98c91084029c65c5f5c28269b950890aca670807e4dfef44ff7f8bea8db5f40f",
+    "apps/desktop/ui/src/routes/PanelRoute.vue": "c8ba4ba11ed571877384809297ec7dd20a7be8273d623f65e54cb65f9cb18500",
+    "apps/desktop/ui/src/routes/SettingsRoute.vue": "9a94b90c7aeb50ba054e1db340b43fa8135a01a2c1669e8cd9359947fa632c54",
+    "apps/desktop/ui/src/styles/base.css": "094b40e798a4a3c40560c6c8056f6c9d965f1c23705125b0fe6b27a23b72b429",
+    "apps/desktop/ui/src/styles/tokens.css": "dcc5479748b77e480d2ebdf11be0b9344e371718dacc8c33204130910d4c6f33",
+    "apps/desktop/ui/tests/component-registry.test.ts": "4be71cbfecd3988856d0cec13ac1d4c894cdb290c07668c19f898aa7cbd51d76",
+    "apps/desktop/ui/tests/ui-switch.test.ts": "4c4dd9f458571b8163945eb64c98f8b2fde83d7224aeeef49ba16019d35ae8d0"
+  },
+  "checks": [
+    {
+      "command": "npm run test -- --run",
+      "session": 71250,
+      "files": 118,
+      "passed": 612,
+      "unhandledErrors": 0,
+      "result": "passed",
+      "scope": "registry later source representation compacted, related5 retested"
+    },
+    {
+      "command": "npm run test -- --run tests/component-registry.test.ts tests/component-style-rules.test.ts",
+      "session": 20748,
+      "files": 2,
+      "passed": 5,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 20748,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/settings-install-path.test.ts tests/settings-skills-source.test.ts tests/component-registry.test.ts tests/component-style-rules.test.ts",
+      "session": 75757,
+      "passed": 32,
+      "files": 4,
+      "result": "passed"
+    }
+  ],
+  "browserEvidence": [
+    "button-switch-browser-matrix-20261019.json",
+    "button-loading-geometry-20261019.json",
+    "public-buttons-dark-low.jpg",
+    "settings-shared-switch-light.jpg"
+  ],
+  "browserScope": "actual production components in DEV browser at1280x720; light/dark x high/mid/low size invariants; settings visible consumer; no native claim",
+  "productionExclusion": {
+    "galleryHtmlAbsent": true,
+    "developmentMarkersAbsent": [
+      "规格与采用登记",
+      "可切换样例",
+      "OpenCodeX公共UI",
+      "fixture-review-skill"
+    ]
+  },
+  "remaining": [
+    "full43 rendered examples/consumers and unregistered new discoveries",
+    "window/zoom/long-content/keyboard matrices for all applicable controls",
+    "native caption/tray/client-loaded/platform evidence",
+    "existing authorization generation replacement and identity-preserving Keychain pool",
+    "all upstream portable fields, final integration/release/postpublish"
+  ]
+}
