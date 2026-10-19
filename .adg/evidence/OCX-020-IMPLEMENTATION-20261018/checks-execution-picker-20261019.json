@@ -1,0 +1,72 @@
+{
+  "recordedAt": "2026-10-19T06:23:28.074267+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "736af35fd629b54658db834569ebea24ef14f779",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_config.rs": "f5d873c36fc4a08c8df241bb934a3aaf51a1c0ff1abf275961c456815fc5fec2",
+    "apps/desktop/tauri/src/lib.rs": "4fd204ea6d512d9a9635bb5fe73735823a378f3036a8dc37ae54b3dfae46989c",
+    "apps/desktop/tauri/src/modules/model_config/agent.rs": "7ec01cc913013c63873a02f2c8cbfd7e2dce8f583d413a733f960884341fd67e",
+    "apps/desktop/tauri/src/modules/model_config/execution_directory.rs": "c429cc6c7e78bce8ccf8eaa3d669697bd98c465e141718feee384f3d6514420f",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "77eddb07eba79b06c31728692a4904021368970b7692e23c0800a7d61df87263",
+    "apps/desktop/tauri/src/modules/sync/portable_manager.rs": "f7e8e3fd4e05febdaca14c09a5df136a48e5a846c29c6d44542662fe18754d78",
+    "apps/desktop/ui/src/components/registry.ts": "989e00d4b3a599149dda9b67b50a05397f4b0eccc356d376c49039a5916856a3",
+    "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue": "5c2503b9e22f703959c6216f9d98304261ace34263910f43019141b326fa9fbf",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "7569dd25a4c75dcb62334dea16e3331abc2823e09015292801b159b6fcb279aa",
+    "apps/desktop/ui/src/features/models/AgentExecutionField.vue": "2fe2f57b07b26937d2c8b07ac043ea388fdd421b71831d8caa3f075630d96c20",
+    "apps/desktop/ui/src/features/models/ModelPicker.vue": "d600f887be03db94898e0243b6593d15702bc510dc21b719329d21e28c5a143b",
+    "apps/desktop/ui/src/features/models/api.ts": "49766e7ffe408651592a0b98a49031a7ebddedff3432e1da32089f1bb5a31cea",
+    "apps/desktop/ui/tests/model-execution-field.test.ts": "261a5f76a9c691ba52551abe63bcd9203941ac941ed7b2f128c7458a6ba555d2",
+    "apps/desktop/ui/tests/model-selection.test.ts": "04deb7cb96f8918d2af183719f5b0352185b464f6f00ba74f75e3616de64165f"
+  },
+  "checks": [
+    {
+      "command": "cargo test --lib execution_directory --no-default-features",
+      "session": 78389,
+      "passed": 2,
+      "result": "passed"
+    },
+    {
+      "command": "cargo test --lib model_config::agent --no-default-features",
+      "session": 81700,
+      "passed": 7,
+      "result": "passed",
+      "scope": "includes real loopback generation with bound stable provider and hidden source row"
+    },
+    {
+      "command": "cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "session": 78389,
+      "result": "passed"
+    },
+    {
+      "command": "npm run test -- --run tests/model-execution-field.test.ts tests/model-selection.test.ts tests/model-components.test.ts tests/component-registry.test.ts",
+      "session": 41624,
+      "files": 4,
+      "passed": 19,
+      "result": "passed"
+    },
+    {
+      "command": "npm run build",
+      "session": 41624,
+      "result": "passed"
+    }
+  ],
+  "visualEvidence": {
+    "file": "public-picker-mixed-directory-light.jpg",
+    "kind": "DEV fixtures, production pure components at1280x720 light",
+    "dialogLogicalSize": [
+      850,
+      673
+    ],
+    "contentLogicalWidth": 848,
+    "listLogicalWidth": 628,
+    "horizontalOverflow": false,
+    "notProven": "native runtime execution/IPC, Windows, complete small/zoom matrix"
+  },
+  "remaining": [
+    "all existing-auth direction/history and machine-reference pool contracts",
+    "portable original provider fields",
+    "complete public consumer/window/zoom/platform matrix",
+    "final integration, release and postpublish verification"
+  ]
+}
