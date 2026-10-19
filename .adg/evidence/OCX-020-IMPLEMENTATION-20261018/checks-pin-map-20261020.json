@@ -1,0 +1,80 @@
+{
+  "recordedAt": "2026-10-19T18:21:09.682247+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "49ab801f08e2c00c8342fca57fffee0ee835fece",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs": "9abf646a563872f1a6560e37c031e24c249c0dc3edd54f3d49ef6241d748f319",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": "12ed8046d4225c6b5b623caf26d7e9dfd96605b2d30a6783f4e81b51f9243c84",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "196da572b1cf0b7f1189fa108b0fc60f5e4a1016769accd860f37925de24575f",
+    "apps/desktop/tauri/src/modules/model_config/schema.rs": "09c990f94151ee1e10be5ed22202db3404cde5ed23c3972c0a7e1959b76d7f2f",
+    "apps/desktop/tauri/src/modules/model_config/tasks.rs": "0c9b5fd806a9a32b90c457f08f9e22b2b1669ca3326da4ea282987d4d2f12bc4",
+    "apps/desktop/tauri/src/modules/model_config/tests.rs": "b95b1f6529734a01980aafecedffdf0e6bc074573eee599532605498eb4ad739",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "16566d26a62fbbd251d7a3140ceea7b22174894125ee1a0fba4699ecbf1cd82c",
+    "apps/desktop/ui/src/features/models/ModelRuleFields.vue": "3911f46512e0e80b4adcd6df4e1206b62840bb33119c613174cac1b48b193737",
+    "apps/desktop/ui/src/features/models/api.ts": "1f46288972544673df93cd78bc9fca8eb8f767847ee5bb6c84a533d8189f6f61",
+    "apps/desktop/ui/src/features/models/proposals.ts": "c15754f36d77f4667f29bf4bb155cdd13fa49189f4ae3e4406f22529ee548a93",
+    "apps/desktop/ui/src/features/models/upstream.ts": "dade487caa9200738e0c5a3845a076652c772e47cb9b1d25e0204d5ca3fef3d9",
+    "apps/desktop/ui/tests/model-proposals.test.ts": "27a1e77d2ebbb10f6bcc464fad436f1c130066666dc4a32b8abec95867256b84",
+    "apps/desktop/ui/tests/model-advanced-reasoning.test.ts": "e2a955c6426a4beb985d5868c41335b11f26c408b77df32e7de43e408fbb077f"
+  },
+  "upstream": {
+    "version": "2.84.0",
+    "sourceSha256": {
+      "src/types/provider.ts": "5b405dfd19a009ee931f55fd927542071c04e0ccc5d1f39558489f04b32bc689",
+      "src/reasoning-effort.ts": "a64922cc70a109e9a1df8fc1c8cae9d75c5ed4e43ba60c9912ad95a394890d68",
+      "src/config/provider-validation.ts": "ac84672e220549503d23b38cbfae2b2b331fb258acc3b818350c7d331aa5bc03",
+      "src/config/schema/leaf-validators.ts": "20111295132b30c93a9743d3742273961a69c651f877648eeb5a78577f18ea9f"
+    }
+  },
+  "checks": [
+    {
+      "session": 34767,
+      "command": "cargo test --lib modules::model_config --no-default-features && cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "passed": 140,
+      "clippy": "passed",
+      "log": "pin-map-model-full-20261020.txt"
+    },
+    {
+      "session": 47036,
+      "command": "npm test -- --run",
+      "files": 131,
+      "passed": 650,
+      "unhandledErrors": 0,
+      "log": "pin-map-ui-full-20261020.txt",
+      "notes": "before adding one extra UI form test; source same; 2 jsdom Canvas diagnostics retained"
+    },
+    {
+      "session": 10122,
+      "command": "npm test -- --run tests/model-advanced-reasoning.test.ts tests/model-proposals.test.ts && npm run build",
+      "files": 2,
+      "passed": 7,
+      "build": "passed"
+    },
+    {
+      "session": 91615,
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "passed": 1,
+      "seconds": 223.59,
+      "log": "pin-map-official-20261020.txt",
+      "scope": "actual saved/readback modelPinnedReasoningEfforts=high, independent modelDefaultReasoningEfforts=low, modelReasoningEffortMap high=__omit__; existing full official isolated chain",
+      "boundary": "memory credentials; temporary runtime roots; generationPOST=0; not actual inference-wire or native keyring"
+    }
+  ],
+  "browser": {
+    "source": "production ModelRuleFields / ChannelEditor with DEV fixed source",
+    "screenshot": "model-pin-map-light.png",
+    "observed": [
+      "expand Advanced separately",
+      "uncheck inherit mapping, high input accepts __omit__",
+      "same input remains focused while projection updates"
+    ],
+    "boundary": "not native IPC or actual inference"
+  },
+  "remaining": [
+    "explicit noReasoning/authoritative/Fast wire schema and final protocol scope",
+    "new naming/alias proposals and collision compilation",
+    "consumer/platform and supported account portability evidence",
+    "version/integration/release artifacts/publication"
+  ]
+}

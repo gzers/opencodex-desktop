@@ -1,0 +1,19 @@
+
+> opencodex-desktop-ui@0.1.10 test
+> vitest --run
+
+
+ RUN  v5.0.0 /Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/apps/desktop/ui
+
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+Not implemented: HTMLCanvasElement's getContext() method: without installing the canvas npm package
+
+ Test Files  131 passed (131)
+      Tests  650 passed (650)
+   Start at  02:12:15
+   Duration  7.62s (environment 58%, tests 16%, transform 15%, import 10%, worker 1%)
+
+Environment  jsdom was created 131 times · 62.54s total, 58% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+

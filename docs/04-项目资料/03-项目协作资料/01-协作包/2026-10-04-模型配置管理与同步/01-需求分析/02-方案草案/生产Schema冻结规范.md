@@ -74,3 +74,12 @@
 内容摘要采用命名合同`model-content-v1`：TemplateContent先按集合/有序语义规范化，再组成`{label,content}`的serde_json::Value；对象键按Map顺序输出UTF-8紧凑JSON，数值字段仅允许schema中的有界整数，最后SHA-256并加sha256:前缀。没有实现通用浮点JCS，不宣称RFC8785完全支持。当前Rust/TS类型共同维护接口，后续外部契约必须由正式类型同源投影，不能复制旧示例充当协议。
 
 已在隔离临时目录执行12项服务测试，包括不可变旧版/无变化/过期基准/默认与内置及策略依赖保护/坏摘要/备份失败/路径链接及匹配冲突。前端相关9项测试与构建、后端clippy通过；这些是首批局部证据，不代表首切片全部指标或WP-06/上游/同步已验收。后续采用变化按[IMP-21](../../../../../../03-开发实施/IMP-OPENCODEX-DESKTOP-21.md)跟踪。
+
+
+## 8. 强制推理档与标签映射实施合同（2026-10-20）
+
+ModelRules新增可选pinnedEffort:Field<string>与effortMap:Field<有序键映射>，省略等同inherit，继承态不序列化，旧内容/包摘要不因新增默认键改变。自定义强制档与defaultEffort独立，采用/运行时须属于最终可核验reasoningEfforts；未知列表不能确认强制值。effortMap的键为声明档位，值为64字节内ASCII标签，__omit__沿上游2.84.0表示不发送推理参数。inherit沿上层，custom:{}为明确不映射，不能互换；none沿上游pin契约表达不发送强制参数，不等于默认档/隐藏控件。
+
+字段进入不可变快照、语义摘要、逐项来源、通用/具体型号/渠道/族/单型号解析及人工锁（rules.pinnedEffort / rules.effortMap，型号锁用同名键），外部契约由正式Submission JsonSchema同源输出。三方比较把旧缺键与inherit标准化，不制造假改动；map一次整体选择，锁定内容不可被Agent覆盖。公开运行map为modelPinnedReasoningEfforts和modelReasoningEffortMap，沿原ownership记录原值、受管写入及外部漂移拒绝，恢复继承还原原字段，不盲删上游已有设置。
+
+实际范围和检查沿IMP-21及checks-pin-map-20261020；本节不表示noReasoning/authoritative/fastWire或naming全部完成。模板、文件与外部任务的未知新字段仍严格拒绝，旧实现不能假称读懂新自定义内容；0.2.0尚未公开，不编造已发布旧库迁移。

@@ -468,3 +468,14 @@ CI39286270791在e21e0e6c自然触发轮全部适用job成功；此前8ae7b2be的
 受影响服务2项与Clippy通过；前端字段/族/晚回/输入DOM3文件7项通过，首轮构建因测试fixture defaults={}类型错误失败，修正为真实emptyRules后最终build和全量131文件649项通过、无未处理异步异常。浏览器DEV正式字段表展示6字段、协议渠道默认，其余继承无声明明确未知，rawID搜索1/12，内部tableclient/scroll1234无文档横向溢出。截图model-effective-source-light.png及checks-effective-source-20261020.json绑定本源；不是全平台/实际IPC族合成证明。
 
 同时源核对发现前序索引M08/M80/M84/M94表述过宽：ModelRules只有六项，原渠道完整字段保留/别名目录读回不等于新高级规则或naming候选编辑/编译。当前索引已纠正，pin/映射/不传参数/authoritative/fastWire及新路由别名继续是本版真实缺口，不静默改成只兼容原字段。开始只读核验已安装上游2.84.0类型与校验器，后续沿现有Schema/共同候选服务补，不另写平行配置器。新建批次ee8260f9已推送、其后续CI待结果；版本仍0.1.10，发布未完成。
+
+
+### 强制推理档、标签映射与隔离官方保存读回
+
+按安装上游2.84.0的types/provider、reasoning-effort、provider-validation及leaf-validators只读证据实现pinnedEffort/effortMap，未引用其私有模块运行。新增规则省略=继承、继承不序列化，旧种子/保存包摘要不因默认字段变化；BTreeMap稳定键顺序。强制档独立于默认，最终未知或越列表拒绝；标签映射为明确上游标签，__omit__不发送参数，custom空映射区别继承。普通选择推理列表不自动启用pin或权威声明。
+
+共同编辑器高级区、字段来源、人工锁、内部三方建议和外部正式schema/锁验证同步接入。协议分组不把上游声明误晋升单模型覆盖；运行字段精确写modelPinnedReasoningEfforts/modelReasoningEffortMap，进入既有ownership，恢复继承还原原值、保留其他型号和后来外部改动拒绝。界面表单验证保留输入，未另造通知；事件仍由正常保存owner发布。
+
+模型模块140项通过，包含旧格式摘要、pin/map语义/锁和运行恢复/漂移，Clippy全目标通过。前端全量131文件650项通过，无未处理异步异常；再补高级区正式控件1项后，相关2文件7项与build通过。浏览器DEV真实公共表单展开高级区、关闭映射继承并连续输入high=__omit__，投影更新不丢输入焦点，截图model-pin-map-light.png；非native IPC。
+
+显式installed Node/CLI执行隔离真实链223.59秒通过：原模型fixture-base明确low/high、默认low、强制high、映射high->__omit__，实际官方公开字段保存/读回与精确别名/历史/授权链均成功；固定源runtime/Home仅临时目录，内存credential builder，生成POST=0。不是实际推理wire请求或系统Keychain证明。checks-pin-map-20261020.json绑定源、上游四文件摘要及原日志。noReasoning、authoritative、fastWire、新naming/别名、其余消费者/账户/平台及发布仍未完成，继续原范围。
