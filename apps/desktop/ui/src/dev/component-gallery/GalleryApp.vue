@@ -4,6 +4,7 @@
 import { computed,ref } from 'vue'
 import {componentRegistry} from '@/components/registry'
 import FoundationExamples from './FoundationExamples.vue'
+import NodeExamples from './NodeExamples.vue'
 import ModelPicker,{type ModelChoice} from '@/features/models/ModelPicker.vue'
 import {emptyRules,type ModelProjection} from '@/features/models/api'
 import UiButton from '@/components/ui/UiButton.vue'
@@ -17,6 +18,8 @@ import UiSelectField from '@/components/ui/UiSelectField.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiDiscreteSlider from '@/components/ui/UiDiscreteSlider.vue'
+const scale=ref('100');const width=ref('auto');const long=ref(false)
+function setScale(value:string){scale.value=value;document.documentElement.style.setProperty('--ui-zoom',String(Number(value)/100))}
 const switchExample=ref(false)
 const pickerOpen=ref(false);const pickerMultiple=ref(false);const pickerState=ref('normal');const galleryChoice=ref<ModelChoice[]>([])
 const pickerStates=[{value:'normal',label:'正常完整目录'},{value:'empty',label:'空目录'},{value:'loading',label:'读取中'},{value:'error',label:'读取失败'},{value:'missing',label:'已选引用缺失'}]
@@ -30,7 +33,7 @@ const effects = ref<'high' | 'mid' | 'low'>('high')
 const selectedExample = ref('one')
 const dialogOpen = ref(false)
 const loadingExample=ref(false)
-const longPath = ref('/Users/example/Library/Application Support/OpenCodex/data-root/logs/2026-09-27-application.log')
+const longPath = computed(()=>long.value?'/Users/example/Library/Application Support/OpenCodex/较长的中文与 English 项目工作区及配置资料路径/data-root/logs/2026-09-27-application-very-long-name.log':'/Users/example/Library/Application Support/OpenCodex/data-root/logs/2026-09-27-application.log')
 
 function setTheme(next: 'light' | 'dark') {
   theme.value = next
@@ -60,12 +63,14 @@ function setEffects(next: 'high' | 'mid' | 'low') {
           <UiButton :variant="effects === 'mid' ? 'primary' : 'default'" @click="setEffects('mid')">中</UiButton>
           <UiButton :variant="effects === 'low' ? 'primary' : 'default'" @click="setEffects('low')">低</UiButton>
         </Inline>
+        <Inline><UiSelectField :model-value="scale" label="样例缩放" :options="[50,100,150,200].map(value=>({value:String(value),label:value+'%'}))" @update:model-value="setScale" /><UiSelectField v-model="width" label="样例物理宽度" :options="[{value:'auto',label:'自适应'},{value:'1180',label:'1180 px'},{value:'900',label:'900 px'}]" /><label><input v-model="long" type="checkbox" />长文本</label></Inline>
       </Stack>
     </header>
 
     <div class="gallery-layout"><nav class="gallery-nav" aria-label="组件与规格目录"><strong>组件目录</strong><a v-for="item in componentRegistry" :key="item.id" :href="'#'+(item.gallery??'entry-'+item.id)">{{ item.name }}</a></nav>
-    <Stack>
+    <div class="gallery-stage"><Stack class="gallery-samples" data-ui-overlay-root :style="{width:width==='auto'?'auto':Number(width)/(Number(scale)/100)+'px',zoom:Number(scale)/100}">
       <FoundationExamples />
+      <NodeExamples :long="long" />
       <UiCard id="fields">
         <UiCardHeader><h2>选择字段与弹窗</h2><p>真实选择字段复用浮层、键盘和边缘定位；弹窗沿同一材质及焦点约束。</p></UiCardHeader>
         <Inline><UiSelectField v-model="selectedExample" label="标准选择字段" :options="[{ value: 'one', label: '默认选项' }, { value: 'long', label: '较长的中文与 English 模型版本说明' }]" /><UiSelectField v-model="selectedExample" size="sm" label="小号选择字段" :options="[{ value: 'one', label: '小号' }, { value: 'long', label: '长值' }]" /><UiButton @click="dialogOpen = true">打开弹窗</UiButton></Inline>
@@ -156,7 +161,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
       </UiCard>
       <UiCard id="model-picker"><UiCardHeader><h2>公共模型选择器</h2><p>真实组件的原生身份、渠道引用、未知能力、失效选择、明确推荐、读取失败与临时组合；下面的固定样例不连接服务。</p></UiCardHeader><Inline><UiSelectField v-model="pickerState" label="模型选择器样例状态" :options="pickerStates" /><UiButton @click="showPicker(false)">单选打样</UiButton><UiButton @click="showPicker(true)">多选与优先级打样</UiButton></Inline><p>返回：{{ galleryChoice.length?galleryChoice:'尚未确认' }}</p><ModelPicker :open="pickerOpen" :multiple="pickerMultiple" ordered reasoning :rows="pickerRows" :channels="pickerChannels" :current="galleryChoice" :recommendations="[{channelId:'primary',modelId:'model/3'},{nativeModelId:'gpt-native'}]" :loading="pickerState==='loading'" :error="pickerState==='error'?'固定读取失败样例，已选项保持':undefined" @close="pickerOpen=false" @confirm="galleryChoice=$event;pickerOpen=false" @retry="pickerState='normal'" /></UiCard>
       <UiCard id="registration"><UiCardHeader><h2>规格与采用登记</h2><p>43项稳定ID对应真实源码。已有配方、实际组件、平台实现和原型专用说明分别记录；完整尺寸/主题/画质/原生验证尚未全部完成。</p></UiCardHeader><div class="gallery-registry-scroll"><table><thead><tr><th>组件</th><th>正式来源</th><th>实际消费者</th><th>检查状态</th></tr></thead><tbody><tr v-for="item in componentRegistry" :id="'entry-'+item.id" :key="item.id"><th scope="row">{{ item.name }}<small>{{ item.id }}</small><small>{{ item.specification.document }}</small></th><td><code v-for="file in item.implementations" :key="file">{{ file }}</code><span v-if="item.reason">{{ item.reason }}</span></td><td><code v-for="file in item.consumers" :key="file">{{ file }}</code></td><td>完整矩阵待验证{{ item.gallery?' · 有组件样例':' · 样例待补/原生独立核验' }}</td></tr></tbody></table></div></UiCard>
-    </Stack></div>
+    </Stack></div></div>
   </main>
 </template>
 
@@ -166,6 +171,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
   margin: 0 auto;
   padding: 24px 22px;
 }
+.gallery-stage{min-width:0;overflow-x:auto}.gallery-samples{min-width:0}.gallery-head{flex-wrap:wrap}.gallery-head label{display:flex;gap:var(--space-2);align-items:center}
 .gallery-layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:24px}.gallery-nav{position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;display:grid;gap:8px;font-size:var(--text-label)}.gallery-nav a{padding:6px;border-radius:var(--radius-sm);text-decoration:none}.gallery-nav a:hover,.gallery-nav a:focus-visible{background:var(--hover)}.gallery-registry-scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:var(--text-small)}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--border);padding:12px;min-width:140px}code,small{display:block;overflow-wrap:anywhere}small{color:var(--muted)}[id]{scroll-margin-top:20px}@media(max-width:850px){.gallery-layout{grid-template-columns:1fr}.gallery-nav{position:static;max-height:180px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}}
 .gallery-head {
   display: flex;

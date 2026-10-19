@@ -315,7 +315,7 @@ html[data-native-material="solid"][data-theme="dark"] body { background: #20242c
 .modal-field .input { width: 100%; }
 .modal p { color: var(--muted); margin: 0 0 15px; font-size: var(--text-body); }
 .modal-code { margin: 0; font-family: var(--font-code); font-size: var(--text-caption); line-height: 1.7; white-space: pre-wrap; word-break: break-word; color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--rail); padding: 10px; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .process-progress {
   width: 100%;
   padding: 16px;

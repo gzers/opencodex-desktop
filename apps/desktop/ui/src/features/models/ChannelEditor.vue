@@ -3,6 +3,7 @@ import { computed, reactive, ref, watch, onBeforeUnmount } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from './ModelRuleFields.vue'
+import NodePicker from './NodePicker.vue'
 import { useNodeMeasurements } from './useNodeMeasurements'
 import { emptyRules, modelApi, errorText, type ChannelPolicy, type Template } from './api'
 const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean }>()
@@ -22,7 +23,7 @@ async function discover(){
 }
 const selectionMode = computed(() => props.channel.selection.mode)
 const measurement=reactive(useNodeMeasurements(()=>props.channel,()=>apiKey.value))
-const measurementErrors:Record<string,string>={discovery_dns:'地址解析失败',discovery_private:'请先确认允许可信私有网络',discovery_auth:'认证失败',discovery_timeout:'请求超时',discovery_failed:'连接或清单请求失败',discovery_pagination:'分页未完整',discovery_shape:'服务未返回模型清单',discovery_limit:'响应超过上限',discovery_protocol:'该协议需专用连接',node_url:'节点地址无效',credential_store:'系统凭据不可用'}
+
 function mode(value: string) { props.channel.selection = value === 'whitelist' ? { mode: 'whitelist', models: [] } : { mode: value === 'all' ? 'all' : 'none' } }
 function select(id: string) {
   const current = props.channel.selection
@@ -51,10 +52,7 @@ function adopt(t: Template, revision: string) {
       <label>API Key<input v-model="apiKey" class="input" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false" :disabled="busy || discovering" :placeholder="channel.connection.credentialRef ? '已安全配置；留空保持' : '无需认证可留空'" /></label><label class="model-inline"><input v-model="channel.connection.allowPrivateNetwork" type="checkbox" :disabled="busy" />允许此渠道访问可信私有网络</label><div class="model-inline"><UiButton :loading="discovering" :disabled="busy" @click="discover">获取并确认模型</UiButton><UiButton v-if="discovering" @click="generation++; discovering = false">停止等待</UiButton></div><p v-if="discoveryError" class="model-error" role="alert">{{ discoveryError }}</p>
       <label class="model-inline"><input v-model="channel.connection.enabled" type="checkbox" :disabled="busy" />启用渠道</label>
     </section>
-    <section><div class="model-field-title"><h2>服务节点</h2><div class="model-inline"><UiButton size="sm" :disabled="busy||!!measurement.run||discovering" @click="measurement.measure(channel.connection.nodes.map(n=>n.id))">检测全部节点</UiButton><UiButton v-if="measurement.run" size="sm" @click="measurement.stop">取消检测</UiButton><UiButton size="sm" :disabled="busy" @click="addNode">新增节点</UiButton></div></div>
-      <p class="model-muted">检测模型清单请求的耗时；当前节点由你手动选择。</p><p v-if="measurement.error" class="model-error" role="alert">{{ measurement.error }}</p><p v-if="measurement.stopped" class="model-muted">检测已取消，已完成结果保留。</p>
-      <article v-for="node in channel.connection.nodes" :key="node.id" class="model-variant"><div class="model-columns"><label>名称<input class="input" v-model="node.name" :disabled="busy" /></label><label>服务基地址<input class="input" v-model="node.url" type="url" :disabled="busy" placeholder="https://api.example.com/v1" /></label></div><p v-if="measurement.results[node.id]" class="model-muted">{{ measurement.results[node.id]!.error ? (measurementErrors[measurement.results[node.id]!.error!]??"检测未完成，请检查连接") : measurement.results[node.id]!.elapsedMs+" ms · "+measurement.results[node.id]!.modelCount+" 个模型" }}</p><div class="model-inline"><UiButton size="sm" :loading="measurement.pending.includes(node.id)" :disabled="busy||!!measurement.run||discovering" @click="measurement.measure([node.id])">检测节点</UiButton><UiButton size="sm" :disabled="busy || channel.connection.activeNodeId === node.id" @click="channel.connection.activeNodeId = node.id">{{ channel.connection.activeNodeId === node.id ? '当前节点' : '设为当前' }}</UiButton><UiButton size="sm" variant="danger" :disabled="busy || channel.connection.nodes.length === 1 || channel.connection.activeNodeId === node.id" @click="channel.connection.nodes = channel.connection.nodes.filter(n => n.id !== node.id)">删除</UiButton></div></article>
-    </section>
+    <NodePicker v-model:nodes="channel.connection.nodes" v-model:active-id="channel.connection.activeNodeId" :disabled="busy" :measuring="!!measurement.run" :measurement-disabled="discovering" :pending="measurement.pending" :results="measurement.results" :error="measurement.error" :stopped="measurement.stopped" @measure="measurement.measure" @stop="measurement.stop" @add="addNode" />
     <section><h2>模型默认</h2><ModelRuleFields v-model="channel.defaults" hide-protocol :disabled="busy" /></section>
     <section><h2>采用模版</h2><label v-for="t in templates" :key="t.id">{{ t.label }}<UiSelectField :model-value="channel.templateRefs.find(r => r.templateId === t.id)?.revisionId ?? ''" :label="`采用${t.label}版本`" :options="[{ value: '', label: '不设置渠道引用' }, ...t.revisions.map(r => ({ value: r.id, label: `${r.createdAt} · ${r.id.slice(0,4)}` }))]" :disabled="busy" @update:model-value="adopt(t, $event)" /></label></section>
     <section><div class="model-field-title"><h2>模型列表</h2><UiButton size="sm" :disabled="busy" @click="addModel">手动添加ID</UiButton></div><UiSelectField :model-value="selectionMode" label="模型公开范围" :options="[{ value: 'none', label: '全部隐藏' }, { value: 'all', label: '全部模型（含未来发现）' }, { value: 'whitelist', label: '仅所选模型' }]" :disabled="busy" @update:model-value="mode" />

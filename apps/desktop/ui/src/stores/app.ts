@@ -38,29 +38,13 @@ import type { EnvironmentReport } from "@/features/environment/api"
 import type { ConnectionState, RuntimeState } from "@/types/ui"
 import type { SaveSyncEndpointRequest } from "@/features/sync/api"
 
-export interface ModalState {
-  title: string
-  body: string
-  confirmLabel?: string
-  primaryKind?: "primary" | "danger"
-  cancelLabel?: string
-  deleteLabel?: string
-  resolveLabel?: string
-  wide?: boolean
-  // 需要文本输入时使用；确认时把各字段取值一并回传。
-  fields?: ModalField[]
-  onConfirm?: (values?: Record<string, string>) => void
-  onCancel?: () => void
-  onDelete?: () => void
-  onResolve?: () => void
-}
-
-export interface ModalField {
-  key: string
-  label: string
-  placeholder?: string
-  value?: string
-  type?: "text" | "password"
+export type { ModalField } from '@/components/patterns/modalContent'
+import type { ModalContentSpec } from '@/components/patterns/modalContent'
+export interface ModalState extends ModalContentSpec {
+  onConfirm?: (values?: Record<string,string>)=>void
+  onCancel?: ()=>void
+  onDelete?: ()=>void
+  onResolve?: ()=>void
 }
 
 /** 受管目录分区键 → 中文名称（路径投影缺失时的兜底文案，避免泄漏英文 key）。 */

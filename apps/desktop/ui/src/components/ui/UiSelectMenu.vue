@@ -19,7 +19,7 @@ let disposed=false
 function place() {
   const button = trigger()
   if (!button || !menu.value) return
-  const zoom = Number(getComputedStyle(button.closest('dialog, .app-window') ?? document.documentElement).zoom) || 1
+  const zoom = Number(getComputedStyle(button.closest('dialog, .app-window, [data-ui-overlay-root]') ?? document.documentElement).zoom) || 1
   const bounds = button.getBoundingClientRect()
   const viewportWidth = window.innerWidth / zoom
   const viewportHeight = window.innerHeight / zoom
@@ -103,7 +103,7 @@ watch(visible, async open => {
   }
 })
 onMounted(() => {
-  target.value = anchor.value?.closest('dialog, .app-window') as HTMLElement ?? document.body
+  target.value = anchor.value?.closest('dialog, .app-window, [data-ui-overlay-root]') as HTMLElement ?? document.body
   window.addEventListener('pointerdown', outside)
   window.addEventListener('keydown', keydown)
   window.addEventListener('resize', place)

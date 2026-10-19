@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import UiButton from '@/components/ui/UiButton.vue'
+import ModalContent from '@/components/patterns/ModalContent.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue'
 import { useAppStore } from '@/stores/app'
 
 const app = useAppStore()
 const modal = computed(() => app.modal)
-const primaryClass = computed(() => modal.value?.primaryKind === 'danger' ? 'btn danger' : 'btn primary')
 // 标题 id 用于 aria-labelledby；同一时刻只会渲染一个对话框。
 const titleId = `modal-title-${useId()}`
 
@@ -102,38 +101,7 @@ onBeforeUnmount(() => {
       :aria-labelledby="titleId"
       tabindex="-1"
     >
-      <h3 :id="titleId">{{ modal.title }}</h3>
-      <div class="modal-body" v-html="modal.body"></div>
-      <div v-if="modal.fields?.length" class="modal-fields">
-        <label v-for="field in modal.fields" :key="field.key" class="modal-field">
-          <span class="modal-field-label">{{ field.label }}</span>
-          <input
-            class="input"
-            :type="field.type ?? 'text'"
-            :placeholder="field.placeholder"
-            :aria-label="field.label"
-            v-model="inputValues[field.key]"
-            autocapitalize="off"
-            autocorrect="off"
-            spellcheck="false"
-            @keydown.enter.prevent="confirm()"
-          />
-        </label>
-      </div>
-      <div class="modal-actions">
-        <UiButton
-          v-if="modal.resolveLabel"
-          class="btn ghost"
-          @click="app.resolveModal('resolve')"
-        >{{ modal.resolveLabel }}</UiButton>
-        <UiButton
-          v-if="modal.deleteLabel"
-          class="btn ghost"
-          @click="app.resolveModal('delete')"
-        >{{ modal.deleteLabel }}</UiButton>
-        <UiButton class="btn ghost" @click="cancel">{{ modal.cancelLabel }}</UiButton>
-        <button v-if="modal.confirmLabel" :class="primaryClass" @click="confirm()">{{ modal.confirmLabel }}</button>
-      </div>
+      <ModalContent :modal="modal" :title-id="titleId" :values="inputValues" @field="(key,value)=>inputValues[key]=value" @confirm="confirm" @cancel="cancel" @resolve="app.resolveModal('resolve')" @delete="app.resolveModal('delete')" />
     </div>
   </div>
 </template>
