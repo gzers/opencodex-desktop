@@ -4,10 +4,11 @@ import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ChannelEditor from './ChannelEditor.vue'
+import ClientLoadStatus from './ClientLoadStatus.vue'
 import ModelPicker from './ModelPicker.vue'
 import { mergeUpstream } from './upstream'
 import { useModelsStore } from './store'
-import { emptyRules, errorText, modelApi, type ChannelPolicy, type DraftProjection, type SavePlan } from './api'
+import { emptyRules, errorText, modelApi, type ChannelPolicy, type DraftProjection, type SavePlan, type ModelClientState } from './api'
 import { useModalStore } from '@/app/modal/store'
 defineProps<{actionsTarget?:string}>()
 const models = useModelsStore(); const modal = useModalStore()
@@ -15,7 +16,9 @@ const search = ref(''); const editorId = ref(''); const preview = ref<DraftProje
 const editor = computed(() => models.channelDraft?.channels.find(c => c.id === editorId.value))
 const pickerOpen = ref(false)
 const savePlan=ref<SavePlan|null>(null);const saveOpen=ref(false);const saving=ref(false)
-const policyStatus=computed(()=>saving.value?{label:'正在核对',tone:'warning'}:savePlan.value&&!['prepared','committed','compensated'].includes(savePlan.value.phase)?{label:'保存待核对',tone:'danger'}:models.channelDirty?{label:'未保存修改',tone:'warning'}:savePlan.value?.phase==='committed'?{label:'已写入 · 待客户端核对',tone:'success'}:savePlan.value?.phase==='compensated'?{label:'已撤回本次写入',tone:'neutral'}:{label:'未修改',tone:'neutral'})
+const clientState=ref<ModelClientState|null>(null)
+const clientLabel=computed(()=>clientState.value?.status==='user_confirmed'?'已写入 · 用户已确认':clientState.value?.status==='pending_verification'?'已写入 · 待客户端验证':clientState.value?.status==='runtime_changed'?'运行配置变化 · 待核对':clientState.value?.status==='not_required'?'已写入 · 无需新增重启':'已写入 · 待重启 Codex')
+const policyStatus=computed(()=>saving.value?{label:'正在核对',tone:'warning'}:savePlan.value&&!['prepared','committed','compensated'].includes(savePlan.value.phase)?{label:'保存待核对',tone:'danger'}:models.channelDirty?{label:'未保存修改',tone:'warning'}:savePlan.value?.phase==='committed'?{label:clientLabel.value,tone:'success'}:savePlan.value?.phase==='compensated'?{label:'已撤回本次写入',tone:'neutral'}:{label:'未修改',tone:'neutral'})
 let disposed=false
 onBeforeUnmount(()=>{disposed=true})
 onMounted(async()=>{try {const plan=await modelApi.latestPolicy();if(!disposed&&!models.policyNotificationTarget)savePlan.value=plan}catch(cause){if(!disposed)error.value=errorText(cause)}})
@@ -37,7 +40,7 @@ async function applySave(){
   if(!savePlan.value||saving.value)return
   saving.value=true;models.busy=true;error.value=''
   try{savePlan.value=await modelApi.applyPolicy(savePlan.value.id)
-    if(savePlan.value.phase==='committed'){const snapshot=await modelApi.load();models.snapshot=snapshot;models.restoreChannels()}
+    if(savePlan.value.phase==='committed')models.acceptTransfer(await modelApi.load())
   }catch(cause){error.value=errorText(cause);try{savePlan.value=await modelApi.policyResult(savePlan.value.id)}catch{/* The original plan id remains visible for explicit readback. */}}
   finally{saving.value=false;models.busy=false}
 }
@@ -46,7 +49,7 @@ const compensationConfirm=ref(false)
 async function querySave(){
  if(!savePlan.value)return
  saving.value=true;error.value=''
- try{savePlan.value=await modelApi.policyResult(savePlan.value.id);if(savePlan.value.phase==='committed'){models.snapshot=await modelApi.load();models.restoreChannels()}}
+ try{savePlan.value=await modelApi.policyResult(savePlan.value.id);if(savePlan.value.phase==='committed')models.acceptTransfer(await modelApi.load())}
  catch(cause){error.value=errorText(cause)}finally{saving.value=false}
 }
 async function compensate(){
@@ -102,7 +105,8 @@ async function showPreview() {
     <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索渠道" aria-label="搜索渠道" /><div class="model-inline"><UiButton :loading="upstreamBusy" :disabled="models.busy||saving" @click="readUpstream">读取现有渠道</UiButton><UiButton :disabled="models.busy||saving" @click="create">新增渠道</UiButton></div></div>
     <Teleport defer :to="actionsTarget??'body'" :disabled="!actionsTarget"><div class="model-inline model-policy-actions"><UiButton :loading="previewBusy" @click="showPreview">预览选择器</UiButton><span class="model-policy-state" :data-tone="policyStatus.tone" role="status">● {{ policyStatus.label }}</span><UiButton :disabled="!models.channelDirty||models.busy||saving" @click="restore">还原修改</UiButton><UiButton :variant="models.channelDirty?'primary':'default'" :disabled="!models.channelDirty || models.staging||saving" :loading="models.busy" @click="prepareSave">保存</UiButton></div></Teleport>
     <p v-if="upstreamVersion" class="model-muted">来源：{{ upstreamVersion }} · 已读取到草稿</p>
-    <div v-if="savePlan && !['prepared','compensated'].includes(savePlan.phase)" class="model-inline"><span class="tag">{{ savePlan.phase === 'committed' ? '最近保存已写入 · 待客户端核对' : '上次保存尚未完成核对' }}</span><UiButton size="sm" @click="saveOpen=true">查看原保存结果</UiButton></div>
+    <ClientLoadStatus @change="clientState=$event" :refresh-key="(models.snapshot?.policyDigest??'')+':'+(savePlan?.phase??'')" />
+    <div v-if="savePlan && !['prepared','compensated'].includes(savePlan.phase)" class="model-inline"><span class="tag">{{ savePlan.phase === 'committed' ? '最近保存已写入' : '上次保存尚未完成核对' }}</span><UiButton size="sm" @click="saveOpen=true">查看原保存结果</UiButton></div>
     <p v-if="error || models.channelError" class="model-error" role="alert">{{ error || models.channelError }}</p><p v-if="models.staging" class="model-muted" role="status">正在暂存渠道草稿…</p>
     <ChannelEditor v-if="editor" :channel="editor" :templates="models.snapshot?.library.templates ?? []" :busy="models.busy" @close="editorId = ''" />
     <template v-else><div class="model-table-scroll"><table class="model-table"><thead><tr><th>渠道</th><th>服务节点</th><th>模型</th><th>操作</th></tr></thead><tbody><tr v-for="c in channels" :key="c.id"><td><strong>{{ c.label || '未命名渠道' }}</strong><small>{{ c.connection.nodes.length }} 节点 · {{ c.connection.enabled ? '启用' : '停用' }}</small></td><td><UiSelectField v-model="c.connection.activeNodeId" :label="`${c.label}当前节点`" :options="c.connection.nodes.map(n => ({ value: n.id, label: n.name || '未命名节点' }))" size="sm" /></td><td>{{ c.selection.mode === 'all' ? c.discovered.length : c.selection.mode === 'whitelist' ? c.selection.models.length : 0 }} / {{ c.discovered.length }}</td><td><div class="model-inline"><UiButton size="sm" @click="editorId = c.id">编辑</UiButton><UiButton size="sm" variant="ghost" :aria-label="`${c.label}上移`" @click="move(c.id,-1)">↑</UiButton><UiButton size="sm" variant="ghost" :aria-label="`${c.label}下移`" @click="move(c.id,1)">↓</UiButton></div></td></tr></tbody></table></div><p v-if="!channels.length" class="model-empty">暂无渠道</p></template>

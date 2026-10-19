@@ -87,6 +87,8 @@ pub struct RuntimePlan {
     pub route_changes: Vec<String>,
     #[serde(default)]
     pub recovery: Option<super::recovery::Baseline>,
+    #[serde(default)]
+    pub runtime_binding: Option<String>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -147,6 +149,32 @@ impl RuntimePlan {
         self.execution_policy.as_ref().unwrap_or(&self.policy)
     }
 }
+pub(super) fn runtime_binding(context: &ProcessContext) -> ModelResult<String> {
+    Ok(super::store::sha256(&serde_json::to_vec(&(
+        context.executable()?,
+        &context.opencodex_home,
+    ))?))
+}
+pub(super) fn credential_runtime_changed(plan: &RuntimePlan) -> bool {
+    plan.credential_changes
+        .iter()
+        .any(|c| c.before != c.intended())
+}
+pub(super) async fn verify_committed_credentials(
+    plan: &RuntimePlan,
+    context: &ProcessContext,
+) -> ModelResult<bool> {
+    if plan.credential_changes.is_empty() {
+        return Ok(true);
+    }
+    let management = super::management::Management::bind(context).await?;
+    for change in &plan.credential_changes {
+        if management.key_state(&change.provider).await? != change.intended() {
+            return Ok(false);
+        }
+    }
+    Ok(true)
+}
 fn path(root: &Path, id: &str) -> ModelResult<PathBuf> {
     require_uuid(id)?;
     let p = root.join(PLAN_DIR).join(format!("{id}.json"));
@@ -162,7 +190,7 @@ fn save(root: &Path, plan: &RuntimePlan) -> ModelResult<()> {
     }
     Ok(())
 }
-fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
+pub(super) fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
     let plan: RuntimePlan =
         serde_json::from_slice(&safety::read_file(&path(root, id)?, 256 * 1024 * 1024)?)?;
     if plan.id != id {
@@ -173,7 +201,7 @@ fn load(root: &Path, id: &str) -> ModelResult<RuntimePlan> {
     }
     Ok(plan)
 }
-fn execution_lock(root: &Path) -> ModelResult<TargetFileLock> {
+pub(super) fn execution_lock(root: &Path) -> ModelResult<TargetFileLock> {
     let target = root.join("manager-state/model-runtime-transaction");
     safety::check_path(root, &target, true)?;
     safety::check_path(
@@ -183,7 +211,7 @@ fn execution_lock(root: &Path) -> ModelResult<TargetFileLock> {
     )?;
     Ok(TargetFileLock::lock(&target)?)
 }
-fn plan_ids(root: &Path) -> ModelResult<Vec<String>> {
+pub(super) fn plan_ids(root: &Path) -> ModelResult<Vec<String>> {
     let directory = root.join(PLAN_DIR);
     safety::check_path(root, &directory, true)?;
     if !directory.exists() {
@@ -287,7 +315,7 @@ pub fn accept_recovery(root: &Path, id: &str) -> ModelResult<Snapshot> {
     reject_incomplete(root)?;
     super::recovery::accept(root, id)
 }
-fn reject_incomplete(root: &Path) -> ModelResult<()> {
+pub(super) fn reject_incomplete(root: &Path) -> ModelResult<()> {
     for id in plan_ids(root)? {
         let plan = load(root, &id)?;
         if !["prepared", "committed", "compensated"].contains(&plan.phase.as_str()) {
@@ -328,7 +356,7 @@ fn rows(snapshot: &UpstreamSnapshot) -> ModelResult<&Vec<Value>> {
         .as_array()
         .ok_or_else(|| invalid("runtime_models", "官方模型清单无效"))
 }
-fn catalog_slugs(snapshot: &UpstreamSnapshot) -> ModelResult<BTreeSet<String>> {
+pub(super) fn catalog_slugs(snapshot: &UpstreamSnapshot) -> ModelResult<BTreeSet<String>> {
     let models = snapshot.catalog["models"]
         .as_array()
         .ok_or_else(|| invalid("runtime_catalog", "官方持久目录不可核对"))?;
@@ -853,6 +881,7 @@ pub async fn prepare(
         execution_policy: Some(execution_policy),
         route_changes,
         recovery: Some(super::recovery::Baseline::capture(&local)?),
+        runtime_binding: Some(runtime_binding(context)?),
     };
     save(root, &plan)?;
     Ok(plan.view())
@@ -877,7 +906,12 @@ pub async fn reconcile(
     if ["committed", "compensated", "prepared"].contains(&plan.phase.as_str()) {
         return Ok(plan.view());
     }
-    if context.executable()?.to_string_lossy() != plan.runtime_executable {
+    if context.executable()?.to_string_lossy() != plan.runtime_executable
+        || plan
+            .runtime_binding
+            .as_ref()
+            .is_some_and(|binding| runtime_binding(context).as_ref() != Ok(binding))
+    {
         return Err(invalid("runtime_binding", "运行来源改变，原计划仍保留"));
     }
     let actual = upstream::snapshot(context).await?;
@@ -1015,7 +1049,12 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
             "此计划已有执行记录，请先核对原结果，不重复写入",
         ));
     }
-    if context.executable()?.to_string_lossy() != plan.runtime_executable {
+    if context.executable()?.to_string_lossy() != plan.runtime_executable
+        || plan
+            .runtime_binding
+            .as_ref()
+            .is_some_and(|binding| runtime_binding(context).as_ref() != Ok(binding))
+    {
         return Err(invalid("runtime_binding", "运行来源已变化，确认过期"));
     }
     let local = ModelStore::new(root).load()?;
@@ -1434,7 +1473,12 @@ pub async fn compensate(
             "此计划无需失败补偿；已提交配置请经历史转草稿恢复",
         ));
     }
-    if context.executable()?.to_string_lossy() != plan.runtime_executable {
+    if context.executable()?.to_string_lossy() != plan.runtime_executable
+        || plan
+            .runtime_binding
+            .as_ref()
+            .is_some_and(|binding| runtime_binding(context).as_ref() != Ok(binding))
+    {
         return Err(invalid("runtime_binding", "运行来源改变，补偿已拒绝"));
     }
     let current = upstream::read(context, upstream::ReadOperation::ProviderSnapshot).await?;
@@ -1947,6 +1991,99 @@ else:sys.exit(7)
         let entries = history(root.path()).unwrap();
         assert_eq!(entries.len(), 1);
         assert!(entries[0].recoverable);
+        use super::super::client_state::{self, Request as ClientRequest, Status as ClientStatus};
+        assert!(matches!(
+            client_state::status(root.path()).unwrap().status,
+            ClientStatus::RestartRequired
+        ));
+        assert_eq!(
+            client_state::check(
+                root.path(),
+                &context,
+                ClientRequest {
+                    plan_id: plan.id.clone(),
+                    confirmation_check: Some(uuid::Uuid::new_v4().to_string())
+                }
+            )
+            .await
+            .unwrap_err()
+            .code,
+            "client_confirmation"
+        );
+        let checked = client_state::check(
+            root.path(),
+            &context,
+            ClientRequest {
+                plan_id: plan.id.clone(),
+                confirmation_check: None,
+            },
+        )
+        .await
+        .unwrap();
+        assert!(matches!(checked.status, ClientStatus::PendingVerification));
+        assert!(!checked.automatic_client_verification);
+        let confirmed = client_state::check(
+            root.path(),
+            &context,
+            ClientRequest {
+                plan_id: plan.id.clone(),
+                confirmation_check: checked.check_id,
+            },
+        )
+        .await
+        .unwrap();
+        assert!(matches!(confirmed.status, ClientStatus::UserConfirmed));
+        let current = store.load().unwrap();
+        let label_only = policy.clone();
+        let staged = store
+            .stage_policy(
+                &current.policy_digest,
+                &current.workspace_digest,
+                label_only.clone(),
+            )
+            .unwrap();
+        let metadata_plan = prepare(
+            root.path(),
+            &context,
+            label_only,
+            staged.library_digest.clone(),
+            staged.policy_digest.clone(),
+            staged.workspace_digest.clone(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(
+            apply(root.path(), &context, &metadata_plan.id)
+                .await
+                .unwrap()
+                .phase,
+            "committed"
+        );
+        let retained = client_state::status(root.path()).unwrap();
+        assert_eq!(retained.plan_id.as_deref(), Some(plan.id.as_str()));
+        assert!(matches!(retained.status, ClientStatus::UserConfirmed));
+        let mut drift = serde_json::from_slice::<Value>(
+            &std::fs::read(root.path().join("providers.json")).unwrap(),
+        )
+        .unwrap();
+        drift["providers"]["test"]["note"] = json!("later external edit");
+        std::fs::write(
+            root.path().join("providers.json"),
+            serde_json::to_vec(&drift).unwrap(),
+        )
+        .unwrap();
+        let changed = client_state::check(
+            root.path(),
+            &context,
+            ClientRequest {
+                plan_id: plan.id.clone(),
+                confirmation_check: None,
+            },
+        )
+        .await
+        .unwrap();
+        assert!(matches!(changed.status, ClientStatus::RuntimeChanged));
+        assert!(changed.confirmed_at.is_none());
         let current = store.load().unwrap();
         let preview = prepare_recovery(
             root.path(),
@@ -1967,7 +2104,14 @@ else:sys.exit(7)
         let mut source = load(root.path(), &plan.id).unwrap();
         source.phase = "compensated".into();
         save(root.path(), &source).unwrap();
-        assert!(!history(root.path()).unwrap()[0].recoverable);
+        assert!(
+            !history(root.path())
+                .unwrap()
+                .iter()
+                .find(|entry| entry.id == plan.id)
+                .unwrap()
+                .recoverable
+        );
     }
     #[cfg(unix)]
     #[tokio::test]

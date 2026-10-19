@@ -91,6 +91,7 @@ export const useModelsStore = defineStore('model-config', () => {
     if (!snapshot.value) return
     channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.policy))
     channelClean.value = JSON.stringify(channelDraft.value); channelBaseline.value = snapshot.value.policyDigest
+    workspaceBaseline.value = snapshot.value.workspaceDigest
     queueDraft(true)
   }
   function acceptTransfer(saved: ModelSnapshot) {

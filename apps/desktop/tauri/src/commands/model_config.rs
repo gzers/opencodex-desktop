@@ -145,6 +145,26 @@ pub async fn model_policy_history(
     .map_err(|_| invalid("history_worker", "读取保存记录中断"))?
 }
 #[tauri::command]
+pub async fn model_policy_client_status(
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::client_state::View> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::client_state::status(&root)
+    })
+    .await
+    .map_err(|_| invalid("client_state", "读取客户端核对状态中断"))?
+}
+#[tauri::command]
+pub async fn model_policy_client_check(
+    request: crate::modules::model_config::client_state::Request,
+    data_root: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, crate::state::SharedProcessContext>,
+) -> ModelResult<crate::modules::model_config::client_state::View> {
+    let _admission = crate::infrastructure::storage_writers::global().admit()?;
+    crate::modules::model_config::client_state::check(&data_root.0, &context, request).await
+}
+#[tauri::command]
 pub async fn model_policy_recovery_prepare(
     request: crate::modules::model_config::recovery::Request,
     data_root: tauri::State<'_, SharedDataRoot>,

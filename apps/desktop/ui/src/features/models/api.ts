@@ -50,6 +50,7 @@ export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[
 export interface ModelProjection { channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
 export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[] }
+export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
 export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
 export interface ModelRecoveryRequest {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expectedLibrary:string;expectedPolicy:string;expectedWorkspace:string}
 export interface ModelRecoveryPreview {id:string;sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;changes:ChangeFact[];defaultChanges:ChangeFact[];channelLabels:string[];notices:string[]}
@@ -81,6 +82,8 @@ export const modelApi = {
   applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),
   policyResult: (planId:string) => invoke<SavePlan>('model_policy_result',{planId}),
   latestPolicy: () => invoke<SavePlan|null>('model_policy_latest'),
+  clientStatus:()=>invoke<ModelClientState>('model_policy_client_status'),
+  checkClient:(planId:string,confirmationCheck?:string)=>invoke<ModelClientState>('model_policy_client_check',{request:{planId,confirmationCheck:confirmationCheck??null}}),
   policyHistory:()=>invoke<ModelHistoryEntry[]>('model_policy_history'),
   prepareRecovery:(request:ModelRecoveryRequest)=>invoke<ModelRecoveryPreview>('model_policy_recovery_prepare',{request}),
   acceptRecovery:(planId:string)=>invoke<ModelSnapshot>('model_policy_recovery_accept',{planId}),

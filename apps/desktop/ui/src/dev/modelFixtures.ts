@@ -19,6 +19,10 @@ export function installModelFixtures() {
   modelApi.project=async policy=>({rows:policy.channels.flatMap(c=>c.discovered.map(m=>({channelId:c.id,providerId:c.connection.providerId,modelId:m.id,label:m.label,enabled:c.connection.enabled,selected:true,discovered:true,templateRef:null,rules:m.rules,source:{protocol:'渠道默认'}}))),knownActiveModels:36,exactCatalogCount:null,notices:['显式DEV数据，不连接真实运行服务']})
   modelApi.agentSettings=async()=>null
   modelApi.latestPolicy=async()=>null
+  const clientPlan=crypto.randomUUID()
+  let clientState:import('@/features/models/api').ModelClientState={planId:clientPlan,status:'restart_required',checkedAt:null,checkId:null,confirmedAt:null,runtimeMatches:false,automaticClientVerification:false}
+  modelApi.clientStatus=async()=>structuredClone(clientState)
+  modelApi.checkClient=async(_plan,confirmation)=>{clientState={...clientState,status:confirmation?'user_confirmed':'pending_verification',checkedAt:new Date().toISOString(),checkId:crypto.randomUUID(),confirmedAt:confirmation?new Date().toISOString():null,runtimeMatches:true};return structuredClone(clientState)}
   const historyId=crypto.randomUUID()
   modelApi.policyHistory=async()=>[{id:historyId,createdAt:'2026-10-19T00:00:00Z',phase:'committed',channelLabels:['NewApi'],recoverable:true}]
   modelApi.prepareRecovery=async request=>({id:crypto.randomUUID(),sourceId:request.sourceId,side:request.side,scope:request.scope,restoreDefaults:request.restoreDefaults,changes:[{field:'channel/fixture/selection',before:{mode:'all'},after:{mode:'whitelist',models:['gpt-demo-0','gpt-demo-1']}}],defaultChanges:[],channelLabels:['NewApi'],notices:['恢复后仍需在模型页预览并保存。']})

@@ -549,6 +549,8 @@ pub fn run() {
             commands::model_config::model_policy_result,
             commands::model_config::model_policy_latest,
             commands::model_config::model_policy_history,
+            commands::model_config::model_policy_client_status,
+            commands::model_config::model_policy_client_check,
             commands::model_config::model_policy_recovery_prepare,
             commands::model_config::model_policy_recovery_accept,
             commands::model_config::model_policy_compensate,
