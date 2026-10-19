@@ -429,6 +429,13 @@ impl ModelStore {
         let _guard = self.lock()?;
         Ok(self.load_unlocked()?.0)
     }
+    pub(super) fn with_locked_snapshot<T>(
+        &self,
+        work: impl FnOnce(&Snapshot) -> ModelResult<T>,
+    ) -> ModelResult<T> {
+        let _guard = self.lock()?;
+        work(&self.load_unlocked()?.0)
+    }
     fn persist(&self, library: &Library, expected: &Snapshot) -> ModelResult<Snapshot> {
         validate_library(library)?;
         let before = self.bytes(LIBRARY_PATH)?;

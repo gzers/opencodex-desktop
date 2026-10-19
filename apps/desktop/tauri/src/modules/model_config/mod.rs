@@ -14,6 +14,7 @@ pub mod file_objects;
 pub mod management;
 pub mod matching;
 pub mod measurements;
+pub mod new_channel;
 mod operations;
 pub mod portable_channels;
 mod protocol_groups;

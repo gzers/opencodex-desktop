@@ -72,6 +72,9 @@ pub struct DiscoveryResult {
 pub async fn discover(request: DiscoveryRequest) -> ModelResult<DiscoveryResult> {
     discover_inner(request, true).await
 }
+pub async fn preview(request: DiscoveryRequest) -> ModelResult<DiscoveryResult> {
+    discover_inner(request, false).await
+}
 pub(super) async fn readonly(request: DiscoveryRequest) -> ModelResult<DiscoveryResult> {
     discover_inner(request, false).await
 }
@@ -327,6 +330,34 @@ async fn discover_inner(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn new_channel_preview_with_a_key_never_stores_a_credential_reference() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let app = axum::Router::new().route(
+            "/v1/models",
+            axum::routing::get(|headers: axum::http::HeaderMap| async move {
+                assert_eq!(
+                    headers.get("authorization").unwrap(),
+                    "Bearer fixture-preview-only-SECRET"
+                );
+                axum::Json(serde_json::json!({"data":[{"id":"raw/preview"}]}))
+            }),
+        );
+        let server = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+        let result = preview(DiscoveryRequest {
+            protocol: "openai-chat".into(),
+            url: format!("http://127.0.0.1:{port}/v1"),
+            api_key: Some("fixture-preview-only-SECRET".into()),
+            credential_ref: None,
+            allow_private_network: true,
+        })
+        .await
+        .unwrap();
+        assert!(result.credential_ref.is_none());
+        assert_eq!(result.models[0].id, "raw/preview");
+        server.abort();
+    }
     #[tokio::test]
     async fn unsaved_models_discovery_never_registers_or_calls_generation() {
         let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();

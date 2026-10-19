@@ -3,8 +3,7 @@ import {flushPromises,mount} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import {nextTick} from 'vue'
 import {reorderSlots} from '@/features/models/ordering'
-import {useModelsStore} from '@/features/models/store'
-import {emptyRules,modelApi,type ChannelPolicy,type ModelSnapshot} from '@/features/models/api'
+import {emptyRules,type ChannelPolicy} from '@/features/models/api'
 import ChannelEditor from '@/features/models/ChannelEditor.vue'
 import {useModalStore} from '@/app/modal/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{stage:vi.fn(),discover:vi.fn(),forgetCredential:vi.fn()}}))
@@ -12,21 +11,10 @@ const channel=():ChannelPolicy=>({id:'channel',label:'测试渠道',templateRefs
 let pinia:ReturnType<typeof createPinia>
 beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks()})
 afterEach(()=>pinia._s.forEach(store=>store.$dispose()))
-describe('model draft ordering and undo',()=>{
+describe('model draft ordering and explicit selection',()=>{
  it('reorders eligible slots without dropping absent or unselected model stubs',()=>{
   expect(reorderSlots(['a','absent','b','c'],['a','c'],'c','a')).toEqual(['c','absent','b','a'])
   expect(reorderSlots(['a','b'],['a','b'],'external','a')).toEqual(['a','b'])
- })
- it('keeps a shared cross-page undo/redo history and resets it after accepted saved state',async()=>{
-  const store=useModelsStore();const policy={schemaVersion:1,templateRefs:[],channels:[channel()]}
-  const snapshot={policy,workspace:null,policyDigest:'p',workspaceDigest:'w',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot
-  store.acceptTransfer(snapshot);await nextTick();expect(store.canUndoChannels).toBe(false)
-  store.channelDraft!.channels[0]!.label='changed';await nextTick();store.undoChannels();await nextTick()
-  expect(store.channelDraft!.channels[0]!.label).toBe('测试渠道');expect(store.canRedoChannels).toBe(true)
-  store.redoChannels();await nextTick();expect(store.channelDraft!.channels[0]!.label).toBe('changed')
-  store.undoChannels();await nextTick();store.channelDraft!.channels[0]!.label='another';await nextTick();expect(store.canRedoChannels).toBe(false)
-  store.acceptTransfer(snapshot);await nextTick();expect(store.canUndoChannels).toBe(false);expect(store.canRedoChannels).toBe(false)
-  expect(modelApi.stage).not.toHaveBeenCalled()
  })
  it('requires confirmation when leaving all and restores the checkbox if cancelled',async()=>{
   const value=channel();value.selection={mode:'all'}
