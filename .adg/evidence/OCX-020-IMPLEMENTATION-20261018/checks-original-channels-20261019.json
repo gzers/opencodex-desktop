@@ -1,0 +1,146 @@
+{
+  "recordedAt": "2026-10-19T10:46:48.335012+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "758225aba0e4333f086f734b9e2de0ed2cebb085",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/commands/model_transfer.rs": "bc07c2597959b4df3b105d16f32f9ed1edd301e2dac75ecb1d40f6c900d6dc9d",
+    "apps/desktop/tauri/src/lib.rs": "4bbe475c009d5ea89d4862fb4d1eba8fb35e12ad30667bea19aa312bd50b004c",
+    "apps/desktop/tauri/src/modules/model_config/channel_actions.rs": "e5708fbbfec1e83873b3950e1eef6b1d3cf9dd360029b9bfc3566221bcd662b5",
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs": "6394f8b045c180d538641e7f1a5cfe40c9dfca0d8740e470df030a2f37bc5e1e",
+    "apps/desktop/tauri/src/modules/model_config/config_remote.rs": "067ba2fa9c4cfc12a3ba202e70b2f4cd47a22ec834239b876b10a4fd7b8d3146",
+    "apps/desktop/tauri/src/modules/model_config/execution_directory.rs": "7e9bad8b62494a601fdd50d80c7cb0281d77337b3eee933b2eb46e684ee01a73",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "35554006949d38d1d5184eeb1a471fe1e0bc8aed5cc9e8715b5aa2922e26f6d7",
+    "apps/desktop/tauri/src/modules/model_config/management.rs": "76a77896556391e1337b39a9f8b075b3c5b488ee43a5bbc25d15855b82899f9e",
+    "apps/desktop/tauri/src/modules/model_config/mod.rs": "d13b560e7fa191704b3e2af69700539f5c4508b41872dd4d2eaba236740bf300",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": "fb4522a94c14098ace157eb94eb4a777769956d23dc377fcc5f6a2bf34735447",
+    "apps/desktop/tauri/src/modules/model_config/provider_auth.rs": "e35bbff7f49c7922a4d2927ebbc654695c7a11bd2b8166964b1eb19d620d263b",
+    "apps/desktop/tauri/src/modules/model_config/recovery.rs": "632d10f5bb0ecc77a3c46bc7764058ee34cc2850b37df20b1c8bf1678bea394d",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "cba7485279497346722a521869de088f0ab9d3894d5d45b86e41146be60fb058",
+    "apps/desktop/tauri/src/modules/model_config/schema.rs": "7f42927aef14a7e3a894dcba632a35da70c6d598c25fbd008e25d2bdf07b5fa8",
+    "apps/desktop/tauri/src/modules/model_config/tests.rs": "10a518661821a6424c5970078a9ecaf668a115b844846d9e95447e687ba3e5dc",
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "fbe568e096de9e917068c177db92edd9c87cc01b964960cbf10723c0335ba006",
+    "apps/desktop/tauri/src/modules/model_config/upstream.rs": "9b7090b96e6ee6c4fcf441b8a394f516825d8755c4c74ffd83dd26d65f1cf602",
+    "apps/desktop/tauri/src/modules/sync/portable_manager.rs": "05cba02ee684e4bfd2adb446cd00a9fb1f89e5cfc3f93cf5c7e737640c739c0e",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "fe6402801b311ee97744a3d46d1b345df798a4d4d82d2f037b6b10de07020a60",
+    "apps/desktop/ui/src/dev/modelFixtures.ts": "bcb855885472202524acf7273a2d649e58ebd8afe03fc4b2e3abd4e3fd3d4351",
+    "apps/desktop/ui/src/features/models/api.ts": "af86f152f4b0c64dc51585fa41ca4c7c6ea147269b96a5205b8785fd3f403bb6",
+    "apps/desktop/ui/src/features/models/channelActions.ts": "cfc8049d0c87f3bb561861967c9a0e02ea5c6c5ed621161b68c5f8b6f15a71e6",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "c6d7f7f7568b5265126a86ff24a96e5d1e1c9c294f86b37b34c6bd74dd9bc1be",
+    "apps/desktop/ui/src/features/sync/modelTransfer.ts": "cea3c29edcf06ba41497155ea7958993432909ad411bcddd204bb460ba1805c1",
+    "apps/desktop/ui/tests/model-channel-actions.test.ts": "218ef7f733dbbabd3c22c4d18dd733c683b94d8d0880c3e4f51cd6907d27ab00",
+    "apps/desktop/ui/tests/model-transfer.test.ts": "6c4d577fac9e909a7912d18368194e991c58658f63cecb752ed11712d3f962da",
+    "apps/desktop/tauri/src/modules/model_config/portable_channels.rs": "efd1292e52716e0da6aa36942d34aaf5743475e3d874659280756838d1d14b1e",
+    "apps/desktop/tauri/src/modules/model_config/provider_fields.rs": "7ff8db1a5b12af6251eb0103ceb436bd800b54e07471ff3f2c0b6f2be001d749",
+    "apps/desktop/tauri/src/modules/model_config/provider_import.rs": "9a6c8aa1ece43e43934f8dcb9ff94a57fde0f05828dfc90e41c4cce84b23f97d"
+  },
+  "checks": [
+    {
+      "command": "cargo test --features integration-test --lib modules::model_config -- --test-threads=1",
+      "session": 69388,
+      "result": "passed",
+      "passed": 124,
+      "testSeconds": 169.93,
+      "scope": "before final immutable material/reconcile/nested references additions; affected tests below"
+    },
+    {
+      "command": "cargo test --features integration-test --lib modules::model_config::portable_channels -- --test-threads=1",
+      "session": 51821,
+      "result": "passed",
+      "passed": 1,
+      "scope": "official-only inventory; format3 refusing downgrade; no-secret public source staging; direction/digest refusal; replay preserves later draft"
+    },
+    {
+      "command": "cargo test --features integration-test --lib modules::model_config::file_objects::tests::partial_remote_original_config_updates -- --test-threads=1",
+      "session": 49265,
+      "result": "passed",
+      "passed": 1,
+      "testSeconds": 38.98,
+      "scope": "nonsecret field update preserves encrypted remote pool; different destination without matching secret refuses"
+    },
+    {
+      "command": "cargo test --features integration-test --lib modules::model_config::{transfer,runtime,provider} -- --test-threads=1 (three separate filters)",
+      "session": 71728,
+      "result": "passed",
+      "groups": [
+        12,
+        15,
+        12
+      ]
+    },
+    {
+      "command": "cargo clippy --all-targets --features integration-test -- -D warnings",
+      "session": 50687,
+      "result": "passed"
+    },
+    {
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "session": 29488,
+      "result": "passed",
+      "passed": 1,
+      "testSeconds": 172.12,
+      "officialVersion": "2.84.0",
+      "observed": [
+        "original official-only inventory stable UUID",
+        "format3 public original fields roundtrip exact (adapter, alias, model aliases, display names, transport, overlays, pool strategy)",
+        "encrypted full two-key pool/labels/addedAt/active plus header export to independent receiving manager",
+        "normal Save disabled first registration then explicit activation with actual alias catalog budget",
+        "same identity explicit replacement of a later credential generation",
+        "final-sync injection compensation restores later credential generation; reprepare succeeds",
+        "original import replay preserves later successful save",
+        "no generation POST"
+      ],
+      "limitations": [
+        "temporary runtime roots",
+        "memory keyring only",
+        "not actual native client load or platform secure store"
+      ]
+    },
+    {
+      "command": "npm run test -- --run tests/model-transfer.test.ts tests/model-channel-actions.test.ts; npm run build",
+      "session": 99553,
+      "result": "passed",
+      "files": 2,
+      "passed": 20,
+      "build": "passed",
+      "warnings": "existing ineffective dynamic imports"
+    },
+    {
+      "command": "CUA actual production components with explicit DEV fixture",
+      "result": "passed",
+      "screenshot": "original-channel-fields-light.png",
+      "viewport": {
+        "width": 1201,
+        "height": 1218
+      },
+      "dialog": {
+        "width": 850,
+        "height": 705.984375,
+        "client": 848,
+        "scroll": 848
+      },
+      "fields": {
+        "client": 754,
+        "scroll": 754
+      },
+      "scope": "original-only source in export catalog, selected UUID, expandable public raw fields; does not prove native IPC"
+    },
+    {
+      "command": "rg DEV sample markers apps/desktop/ui/dist",
+      "result": "no matches"
+    }
+  ],
+  "format": {
+    "modelPackage": 3,
+    "configObjects": 2,
+    "outerEnvelope": 3,
+    "remoteDomain": "config-v1",
+    "publicProviderFields": 132
+  },
+  "remaining": [
+    "OAuth/native target account mappings and portable login refresh evidence per type",
+    "different historical endpoint/auth direction restoration",
+    "full component matrix/native and Windows gates",
+    "final integration version bump artifacts publication verification"
+  ]
+}
