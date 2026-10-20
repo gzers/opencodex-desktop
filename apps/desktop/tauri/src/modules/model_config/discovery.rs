@@ -196,11 +196,13 @@ async fn discover_inner(
             );
         }
         let mut query = client.get(target.clone());
+        // Protocol version is part of the request even for an auth-free relay.
+        if request.protocol == "anthropic" {
+            query = query.header("anthropic-version", "2023-06-01");
+        }
         if let Some(secret) = secret {
             query = match request.protocol.as_str() {
-                "anthropic" => query
-                    .header("x-api-key", secret)
-                    .header("anthropic-version", "2023-06-01"),
+                "anthropic" => query.header("x-api-key", secret),
                 "google" => query.header("x-goog-api-key", secret),
                 _ => query.bearer_auth(secret),
             };
@@ -280,6 +282,18 @@ async fn discover_inner(
             if models.len() > 5000 {
                 return Err(invalid("discovery_limit", "模型条目超过5000，未截断为成功"));
             }
+        }
+        if response["has_more"] == true
+            && response.get("last_id").and_then(Value::as_str).is_none()
+            && response
+                .get("nextPageToken")
+                .and_then(Value::as_str)
+                .is_none()
+        {
+            return Err(invalid(
+                "discovery_pagination",
+                "接口表示仍有模型但缺少分页游标，未报告完整成功",
+            ));
         }
         next = response
             .get("nextPageToken")
@@ -414,3 +428,7 @@ mod tests {
         );
     }
 }
+
+#[cfg(test)]
+#[path = "discovery_contract_tests.rs"]
+mod contract_tests;

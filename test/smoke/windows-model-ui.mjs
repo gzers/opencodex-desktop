@@ -20,7 +20,11 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assertModelSandbox(facts,expected)
  async function evaluate(expression){const result=await call('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});assert(!result.exceptionDetails,JSON.stringify(result.exceptionDetails));return result.result.value}
  const invoke=(command,args={})=>evaluate('window.__TAURI_INTERNALS__.invoke('+JSON.stringify(command)+','+JSON.stringify(args)+')')
- async function wait(expression,label){for(let n=0;n<100;n++){const value=await evaluate(expression);if(value)return value;await new Promise(resolve=>setTimeout(resolve,100))}throw Error('Native model UI timeout: '+label)}
+ async function wait(expression,label){
+  for(let n=0;n<100;n++){const value=await evaluate(expression);if(value)return value;await new Promise(resolve=>setTimeout(resolve,100))}
+  try{const scene=await evaluate("({url:location.href,heading:document.querySelector('h1')?.textContent,rows:[...document.querySelectorAll('.models-page .model-table tbody tr')].map(e=>e.textContent),alerts:[...document.querySelectorAll('.models-page [role=alert]')].map(e=>e.textContent)})");await writeFile(join(output,'model-ui-timeout.json'),JSON.stringify({label,scene},null,2)+'\n');const shot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-ui-timeout.png'),Buffer.from(shot.data,'base64'))}catch{}
+  throw Error('Native model UI timeout: '+label)
+ }
  const visible="e.getClientRects().length>0"
  async function click(text,selector='.models-page'){const done=await evaluate("(()=>{const root=document.querySelector("+JSON.stringify(selector)+");const button=[...root?.querySelectorAll('button')??[]].find(e=>e.textContent.trim()==="+JSON.stringify(text)+"&&"+visible+"&&!e.disabled);if(!button)return false;button.click();return true})()");assert(done,'Native visible action missing: '+text)}
  const label='Windows native fixture '+randomUUID().slice(0,8),firstDescription='source version',secondDescription='edited through native Vue handler'
@@ -66,11 +70,10 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  const channel={id:channelId,label:'Native sort fixture',templateRefs:[],modelRefs:{},selection:{mode:'none'},modelOrder:modelIds,discovered:modelIds.map(id=>({id,label:id,rules:content.rules})),defaults:content.rules,overrides:{},familyOverrides:{},connection:{providerId:'native-sort-fixture',protocol:'openai-chat',nodes:[{id:nodeId,name:'Fixture only',url:'https://example.test/v1'}],activeNodeId:nodeId,credentialRef:null,enabled:false,allowPrivateNetwork:false,authMode:'none'}}
  const staged=await invoke('model_policy_stage',{expectedPolicy:adopted.policyDigest,expectedWorkspace:adopted.workspaceDigest,policy:{...adopted.policy,channels:[...adopted.policy.channels,channel]}})
  assert.deepEqual(staged.policy,adopted.policy,'staging must not commit runtime policy')
- await evaluate("(()=>{[...document.querySelectorAll('aside button')].find(e=>e.textContent.trim()==='设置').click();return true})()")
- await wait("!document.querySelector('.models-page')",'leave model route')
- await evaluate("(()=>{[...document.querySelectorAll('aside button')].find(e=>e.textContent.trim()==='模型').click();return true})()")
- await wait("!!document.querySelector('.models-page')",'restore staged model route')
- await click('渠道模型');await wait("[...document.querySelectorAll('.model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'staged channel visible')
+ // A route return intentionally retains the user's existing in-memory draft.
+ // Reload this isolated WebView to read the explicitly staged fixture like a new startup.
+ await call('Page.reload',{ignoreCache:true})
+ await wait("document.readyState==='complete'&&[...document.querySelectorAll('.models-page .model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'staged channel visible after full reload')
  await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes('Native sort fixture'));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='编辑').click();return true})()")
  await wait("document.querySelectorAll('.channel-model-table tr[data-model]').length===3",'three actual model rows')
  const points=await evaluate("(()=>{const rows=[...document.querySelectorAll('.channel-model-table tr[data-model]')];const from=rows[0].querySelector('button[draggable=true]');from.scrollIntoView({block:'center'});const a=from.getBoundingClientRect(),b=rows[1].querySelector('strong').getBoundingClientRect();return {from:{x:a.x+a.width/2,y:a.y+a.height/2},to:{x:b.x+b.width/2,y:b.y+b.height/2},width:innerWidth,height:innerHeight,before:rows.map(e=>e.dataset.model)}})()")

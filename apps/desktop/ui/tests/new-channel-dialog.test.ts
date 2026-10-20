@@ -2,7 +2,7 @@ import {afterEach,beforeEach,describe,expect,it,vi} from 'vitest'
 import {flushPromises,mount} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import NewChannelDialog from '@/features/models/NewChannelDialog.vue'
-import {modelApi,type ModelSnapshot,type NewChannelOutcome} from '@/features/models/api'
+import {emptyRules,modelApi,type ModelSnapshot,type NewChannelOutcome} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{latestNewChannel:vi.fn(),previewNewChannel:vi.fn(),addNewChannel:vi.fn(),newChannelResult:vi.fn(),stage:vi.fn(),discover:vi.fn(),forgetCredential:vi.fn()}}))
 const dialog={props:['open'],template:'<section v-if="open"><slot/><slot name="actions"/></section>'}
@@ -14,6 +14,22 @@ let pinia:ReturnType<typeof createPinia>
 beforeEach(()=>{pinia=createPinia();setActivePinia(pinia);vi.clearAllMocks();vi.mocked(modelApi.latestNewChannel).mockResolvedValue(null);const snapshot={policy:{schemaVersion:1,templateRefs:[],channels:[]},workspace:null,workspaceDigest:'w',policyDigest:'p',libraryDigest:'l',library:{schemaVersion:1,templates:[]}} as ModelSnapshot;useModelsStore().acceptTransfer(snapshot);vi.spyOn(useModelsStore(),'persistDraft').mockResolvedValue()})
 afterEach(()=>pinia._s.forEach(store=>store.$dispose()))
 describe('new channel two-step buffer',()=>{
+ it.each([[30,17],[104,32]])('retains a full %i-row discovery while explicitly adding only %i selected IDs',async(total,count)=>{
+  const rows=Array.from({length:total},(_,i)=>({id:'exact/'+i.toString().padStart(3,'0'),label:'Model '+i,rules:emptyRules()}));vi.mocked(modelApi.previewNewChannel).mockResolvedValue({models:rows,credentialRef:null,elapsedMs:3})
+  vi.mocked(modelApi.addNewChannel).mockImplementation(async request=>({id:request.id,channel:request.channel,phase:'committed',error:null,snapshot:{...useModelsStore().snapshot!,workspace:{basePolicy:'p',policy:{...useModelsStore().snapshot!.policy,channels:[request.channel]}},workspaceDigest:'joined'}}))
+  const wrapper=render();await flushPromises();await firstStep(wrapper);await button(wrapper,'获取模型列表').trigger('click');await flushPromises()
+  expect(wrapper.text()).toContain('已选 0 / '+total);for(const row of rows.slice(0,count))await wrapper.get('input[aria-label="选择新渠道型号 '+row.id+'"]').setValue(true)
+  await wrapper.get('input[aria-label="新渠道型号搜索"]').setValue('exact/'+(total-1).toString().padStart(3,'0'));expect(wrapper.text()).toContain('已选 '+count+' / '+total);expect(wrapper.text()).toContain('当前显示 1 项')
+  await button(wrapper,'加入草稿').trigger('click');await flushPromises();const request=vi.mocked(modelApi.addNewChannel).mock.calls[0]![0]
+  expect(request.channel.discovered.map(m=>m.id)).toEqual(rows.map(m=>m.id));expect(request.channel.selection).toEqual({mode:'whitelist',models:rows.slice(0,count).map(m=>m.id)});expect(request.channel.connection.enabled).toBe(false);expect(request.channel.connection.credentialRef).toBeNull();expect(modelApi.discover).not.toHaveBeenCalled();wrapper.unmount()
+ })
+ it('keeps explicit selection on pending/error and distinguishes a successful empty refresh without erasing a temporarily absent selected ID',async()=>{
+  const row={id:'manual/exact',label:'Manual',rules:emptyRules()};vi.mocked(modelApi.previewNewChannel).mockResolvedValueOnce({models:[row],credentialRef:null,elapsedMs:1}).mockRejectedValueOnce({code:'discovery_failed',message:'发现接口返回HTTP409，没有执行生成请求'}).mockResolvedValueOnce({models:[],credentialRef:null,elapsedMs:1})
+  const wrapper=render();await flushPromises();await firstStep(wrapper);await button(wrapper,'获取模型列表').trigger('click');await flushPromises();await wrapper.get('input[aria-label="选择新渠道型号 manual/exact"]').setValue(true)
+  await button(wrapper,'获取模型列表').trigger('click');await flushPromises();expect(wrapper.get('[role=alert]').text()).toContain('HTTP409');expect(wrapper.text()).toContain('已选 1 / 1')
+  await button(wrapper,'获取模型列表').trigger('click');await flushPromises();expect(wrapper.find('[role=alert]').exists()).toBe(false);expect(wrapper.text()).toContain('清单为空');expect(wrapper.text()).toContain('已选 1 / 1');expect(wrapper.get<HTMLInputElement>('input[aria-label="选择新渠道型号 manual/exact"]').element.checked).toBe(true);expect(modelApi.addNewChannel).not.toHaveBeenCalled();wrapper.unmount()
+ })
+
  it('next validates locally and closing never inserts an empty channel or persists a key',async()=>{
   const wrapper=render();await flushPromises();await firstStep(wrapper)
   expect(wrapper.text()).toContain('2 / 2');expect(modelApi.previewNewChannel).not.toHaveBeenCalled();expect(modelApi.addNewChannel).not.toHaveBeenCalled();expect(modelApi.discover).not.toHaveBeenCalled()
