@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "d43e3844",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/commands/model_config.rs",
+      "sha256": "85afeb56ce09aee72f3e42c4fd6a984282c411eac9a621cafc285d9ca227e399"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "1fbed146fe8d10a0545e082dd554ad4debe0a3dbe50748b5abc9017ff9e2966d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/mod.rs",
+      "sha256": "32948cfb860fcd27c595fa951c8c982fc4edffd5e9247ba50f46329507286802"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "f11bda3881797f04f46ac59b1fd5d3bc8137eb37ebadce110b6f10ce9300c8c6"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "76347c69ac342868b7b226cc5591a587a05e679ce851c9d8dbce82b029366711"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "1c43c8600bdbddeec46b45de8f84301e6df43f4a938f7f5f6b9ab46baf6fae2f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/usage.rs",
+      "sha256": "947865f845e3667f2a14bf20a926f35ea41d4446ee48e873f61c67bc9a08cca1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/TemplateUsageDialog.vue",
+      "sha256": "901644899da364987ff27fad5207e714f375a109f755515a442adf01e4cf7e3b"
+    },
+    {
+      "path": "apps/desktop/ui/tests/template-usage.test.ts",
+      "sha256": "b10509bfff2e758609b5c306b03c754fbf396f9e3ef61eb2e1ea9b081a72749b"
+    }
+  ],
+  "checks": {
+    "service": "1 passed; exact match unadopted / exact modelRef adopted while rule not matching / saved and draft separate / stale library rejected / no state changes",
+    "store": "5 passed; existing journal/reconcile guards",
+    "frontend": "135 files / 670 passed before separate literal-key fixture; related usage2/context2 passed",
+    "build": "passed",
+    "clippy": "all targets -D warnings passed before final extra test-only nonmatching explicit adoption assertion; fmt applied"
+  },
+  "logs": [
+    {
+      "path": "template-usage-rust-final-20261020.log.gz",
+      "rawSHA256": "502b0ea2b0533053a01bf0948cd4cf20a0f31575782cdd0a28b98e697552fb7a"
+    },
+    {
+      "path": "template-usage-rust-final3-20261020.log.gz",
+      "rawSHA256": "6c27027971d8bf288bf62716778f711589cfbc857725e493128561f4ed16382f"
+    },
+    {
+      "path": "template-usage-store-20261020.log.gz",
+      "rawSHA256": "0a38c4f18fc088bd646a57b586aa0e560ef084283be3baf9ddcaef46a2229b1a"
+    },
+    {
+      "path": "template-usage-clippy-20261020.log.gz",
+      "rawSHA256": "36b9288a1a0db7f9de729d91ce0b8ad82ccb12f954de2b6b3b2ea99c12221221"
+    },
+    {
+      "path": "template-usage-ui-full-20261020.log.gz",
+      "rawSHA256": "704741f694aa21855ed76e10a561cdf24216b190eaa795a1a3489a51b539095c"
+    },
+    {
+      "path": "template-usage-ui-20261020.log.gz",
+      "rawSHA256": "e23028faaabb0973406e3a0e2e346e5e50d6acc2432d45f96280f7872039f1e2"
+    },
+    {
+      "path": "template-usage-build-20261020.log.gz",
+      "rawSHA256": "62d37f1c8ae1289a9131bba0d834d3843e33248f9d57fbb7aa4765307955a8fe"
+    }
+  ],
+  "browser": {
+    "fixture": "formal Vue DEV audit; independent common matcher service tested on temporary files",
+    "flow": "template list direct Matching and Usage > GPT saved revision > matched rows show adopted No > searchNewApi yields12/288 > close",
+    "screenshot": "template-usage-light.png",
+    "documentOverflow": false
+  },
+  "limitations": [
+    "Query observes saved versions and persisted accepted workspace, not unconfirmed row/editor buffers or runtime activation.",
+    "No new platform/auth/network write from query.",
+    "Resource boundary20k known rows rejects incomplete results; does not silently truncate.",
+    "Initial service fixture assumed broad gpt prefix, but release seed deliberately uses exact known model IDs. Changed fixture to declared gpt-6-astra, preserved failed test log."
+  ]
+}
