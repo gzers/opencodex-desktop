@@ -21,6 +21,8 @@ pub struct Request {
     pub expected_workspace: String,
     pub channel: ChannelPolicy,
     pub api_key: Option<String>,
+    #[serde(default)]
+    pub replace: Option<ChannelPolicy>,
 }
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -31,6 +33,8 @@ struct Record {
     expected_workspace: String,
     request_digest: String,
     channel: ChannelPolicy,
+    #[serde(default)]
+    replace: Option<ChannelPolicy>,
     phase: String,
     error: Option<ModelError>,
     #[serde(default)]
@@ -168,6 +172,7 @@ fn reconcile(root: &Path, mut record: Record, vault: &impl Vault) -> ModelResult
             c.id == record.channel.id
                 && c.connection.credential_ref == record.channel.connection.credential_ref
                 && c.connection.provider_id == record.channel.connection.provider_id
+                && (record.replace.is_none() || c == &record.channel)
         });
     if adopted {
         record.phase = "committed".into();
@@ -202,7 +207,19 @@ fn reconcile(root: &Path, mut record: Record, vault: &impl Vault) -> ModelResult
             .as_ref()
             .map(|w| w.policy.clone())
             .unwrap_or_else(|| snapshot.policy.clone());
-        policy.channels.push(record.channel.clone());
+        if record.replace.is_some() {
+            let target = policy
+                .channels
+                .iter_mut()
+                .find(|c| c.id == record.channel.id)
+                .ok_or_else(|| invalid("connection_edit", "原渠道已不存在，未恢复连接修改"))?;
+            if Some(&*target) != record.replace.as_ref() {
+                return Err(invalid("connection_edit", "原连接草稿已变化，未继续替换"));
+            }
+            *target = record.channel.clone();
+        } else {
+            policy.channels.push(record.channel.clone());
+        }
         match ModelStore::new(root).stage_policy(
             &record.expected_policy,
             &record.expected_workspace,
@@ -277,7 +294,7 @@ fn add_with(root: &Path, mut request: Request, vault: &impl Vault) -> ModelResul
     if request.channel.connection.credential_ref.is_some()
         || request.channel.connection.imported_config.is_some()
         || request.channel.connection.source_read_id.is_some()
-        || request.channel.connection.enabled
+        || request.replace.is_none() && request.channel.connection.enabled
         || ["oauth", "forward"].contains(
             &request
                 .channel
@@ -318,9 +335,11 @@ fn add_with(root: &Path, mut request: Request, vault: &impl Vault) -> ModelResul
             "请输入此渠道的有效API Key；手动型号同样需要认证",
         ));
     }
-    let digest = sha256(&serde_json::to_vec(
-        &serde_json::json!({"channel":request.channel,"policy":request.expected_policy,"workspace":request.expected_workspace}),
-    )?);
+    let mut public_request = serde_json::json!({"channel":request.channel,"policy":request.expected_policy,"workspace":request.expected_workspace});
+    if let Some(replace) = &request.replace {
+        public_request["replace"] = serde_json::to_value(replace)?;
+    }
+    let digest = sha256(&serde_json::to_vec(&public_request)?);
     let _guard = lock(root)?;
     if location(root, &request.id)?.exists() {
         let record = read(root, &request.id)?;
@@ -353,14 +372,36 @@ fn add_with(root: &Path, mut request: Request, vault: &impl Vault) -> ModelResul
         .as_ref()
         .map(|w| w.policy.clone())
         .unwrap_or_else(|| snapshot.policy.clone());
+    if let Some(previous) = &request.replace {
+        if policy.channels.iter().find(|c| c.id == previous.id) != Some(previous)
+            || previous.id != request.channel.id
+            || previous.connection.provider_id != request.channel.connection.provider_id
+            || previous.label != request.channel.label
+            || previous.connection.enabled != request.channel.connection.enabled
+            || previous.template_refs != request.channel.template_refs
+            || previous.model_refs != request.channel.model_refs
+            || previous.defaults != request.channel.defaults
+            || previous.overrides != request.channel.overrides
+            || previous.family_overrides != request.channel.family_overrides
+            || previous.naming != request.channel.naming
+            || ["oauth", "forward"]
+                .contains(&previous.connection.auth_mode.as_deref().unwrap_or("key"))
+        {
+            return Err(invalid(
+                "connection_edit",
+                "连接编辑只替换当前自定义渠道的连接与重新选择的型号，其他草稿和稳定身份须保持",
+            ));
+        }
+    }
     if policy.channels.iter().any(|c| {
-        c.id == request.channel.id
-            || c.connection
-                .provider_id
-                .eq_ignore_ascii_case(&request.channel.connection.provider_id)
-            || c.label
-                .trim()
-                .eq_ignore_ascii_case(request.channel.label.trim())
+        (request.replace.as_ref().is_none_or(|old| old.id != c.id))
+            && (c.id == request.channel.id
+                || c.connection
+                    .provider_id
+                    .eq_ignore_ascii_case(&request.channel.connection.provider_id)
+                || c.label
+                    .trim()
+                    .eq_ignore_ascii_case(request.channel.label.trim()))
     }) {
         return Err(invalid("new_channel_duplicate", "渠道名称或运行标识已存在"));
     }
@@ -374,6 +415,7 @@ fn add_with(root: &Path, mut request: Request, vault: &impl Vault) -> ModelResul
         expected_workspace: request.expected_workspace,
         request_digest: digest,
         channel: request.channel.clone(),
+        replace: request.replace.clone(),
         phase: "prepared".into(),
         error: None,
         no_write_proven: true,
@@ -389,7 +431,15 @@ fn add_with(root: &Path, mut request: Request, vault: &impl Vault) -> ModelResul
     record.no_write_proven = false;
     record.phase = "staging".into();
     write(root, &record)?;
-    policy.channels.push(request.channel);
+    if let Some(previous) = request.replace {
+        *policy
+            .channels
+            .iter_mut()
+            .find(|c| c.id == previous.id)
+            .unwrap() = request.channel;
+    } else {
+        policy.channels.push(request.channel);
+    }
     match store.stage_policy(&record.expected_policy, &record.expected_workspace, policy) {
         Ok(saved) => {
             record.phase = "committed".into();
@@ -414,6 +464,98 @@ fn add_with(root: &Path, mut request: Request, vault: &impl Vault) -> ModelResul
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn connection_edit_replaces_only_frozen_channel_and_preserves_saved_login_and_later_edits() {
+        let root = tempfile::tempdir().unwrap();
+        let store = ModelStore::new(root.path());
+        let initial = store.load().unwrap();
+        let vault = FakeVault::default();
+        let first = add_with(root.path(), request(&initial), &vault).unwrap();
+        let original = first.channel;
+        let key = original.connection.credential_ref.clone().unwrap();
+        let before = store.load().unwrap();
+        let mut policy = before.workspace.as_ref().unwrap().policy.clone();
+        policy.channels[0].connection.enabled = true;
+        let mut unrelated = policy.channels[0].clone();
+        unrelated.id = uuid::Uuid::new_v4().to_string();
+        unrelated.label = "Other".into();
+        unrelated.connection.provider_id = "other".into();
+        policy.channels.push(unrelated.clone());
+        let staged = store
+            .stage_policy(&before.policy_digest, &before.workspace_digest, policy)
+            .unwrap();
+        let original = staged.workspace.as_ref().unwrap().policy.channels[0].clone();
+        let mut changed = original.clone();
+        changed.connection.nodes[0].url = "https://another.example.test/v1".into();
+        changed.connection.credential_ref = None;
+        changed.discovered = vec![DiscoveredModel {
+            id: "new-exact".into(),
+            label: "new-exact".into(),
+            rules: Default::default(),
+        }];
+        changed.selection = ModelSelection::Whitelist(vec!["new-exact".into()]);
+        changed.model_order.push("new-exact".into());
+        let id = uuid::Uuid::new_v4().to_string();
+        let request = Request {
+            id: id.clone(),
+            expected_policy: staged.policy_digest.clone(),
+            expected_workspace: staged.workspace_digest.clone(),
+            channel: changed.clone(),
+            api_key: Some("new-connection-SECRET".into()),
+            replace: Some(original.clone()),
+        };
+        let saved = add_with(root.path(), request, &vault).unwrap();
+        assert_eq!(saved.phase, "committed");
+        assert_ne!(
+            saved.channel.connection.credential_ref.as_ref().unwrap(),
+            &key
+        );
+        let snapshot = saved.snapshot.unwrap();
+        assert_eq!(
+            snapshot.workspace.as_ref().unwrap().policy.channels.len(),
+            2
+        );
+        assert_eq!(
+            snapshot.workspace.as_ref().unwrap().policy.channels[1],
+            unrelated
+        );
+        assert!(
+            snapshot.workspace.as_ref().unwrap().policy.channels[0]
+                .connection
+                .enabled
+        );
+        assert_eq!(snapshot.policy, staged.policy);
+        assert!(vault.values.lock().unwrap().contains_key(&key));
+        assert_eq!(vault.values.lock().unwrap().len(), 2);
+        let record = std::fs::read_to_string(location(root.path(), &id).unwrap()).unwrap();
+        assert!(!record.contains("SECRET"));
+        let mut later = snapshot.workspace.unwrap().policy;
+        later.channels[0].label = "Later".into();
+        let later = store
+            .stage_policy(&snapshot.policy_digest, &snapshot.workspace_digest, later)
+            .unwrap();
+        assert_eq!(
+            reconcile(root.path(), read(root.path(), &id).unwrap(), &vault)
+                .unwrap()
+                .snapshot
+                .unwrap()
+                .workspace,
+            later.workspace
+        );
+        let stale = Request {
+            id: uuid::Uuid::new_v4().to_string(),
+            expected_policy: later.policy_digest,
+            expected_workspace: later.workspace_digest,
+            channel: changed,
+            api_key: Some("not-installed".into()),
+            replace: Some(original),
+        };
+        assert_eq!(
+            add_with(root.path(), stale, &vault).err().unwrap().code,
+            "connection_edit"
+        );
+        assert_eq!(vault.values.lock().unwrap().len(), 2);
+    }
     use std::{collections::BTreeMap, sync::Mutex};
     #[derive(Default)]
     struct FakeVault {
@@ -472,6 +614,7 @@ mod tests {
                 family_overrides: Default::default(),
             },
             api_key: Some("fixture-owned-new-channel-SECRET".into()),
+            replace: None,
         }
     }
     #[test]
@@ -566,6 +709,7 @@ mod tests {
             expected_policy: req.expected_policy,
             expected_workspace: req.expected_workspace,
             request_digest: "fixture".into(),
+            replace: None,
             channel,
             phase: "prepared".into(),
             error: None,
@@ -613,6 +757,7 @@ mod tests {
             expected_policy: req.expected_policy,
             expected_workspace: req.expected_workspace,
             request_digest: "fixture".into(),
+            replace: None,
             channel,
             phase: "staging".into(),
             error: None,

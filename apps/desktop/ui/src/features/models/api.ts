@@ -83,7 +83,7 @@ export interface Commit { snapshot: ModelSnapshot; templateId: string; revisionI
 export interface MatchPreview { matched: boolean; reason: string; variantId: string | null; rules: ModelRules }
 export const emptyRules = (): ModelRules => ({ protocol: { mode: 'inherit' }, contextWindow: { mode: 'inherit' }, inputModalities: { mode: 'inherit' }, reasoningEfforts: { mode: 'inherit' }, defaultEffort: { mode: 'inherit' }, fast: { mode: 'inherit' }, pinnedEffort:{mode:'inherit'}, effortMap:{mode:'inherit'}, noReasoning:{mode:'inherit'},reasoningAuthoritative:{mode:'inherit'},fastWire:{mode:'inherit'} })
 export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [], sources: [] })
-export interface NewChannelRequest {id:string;expectedPolicy:string;expectedWorkspace:string;channel:ChannelPolicy;apiKey:string|null}
+export interface NewChannelRequest {id:string;expectedPolicy:string;expectedWorkspace:string;channel:ChannelPolicy;apiKey:string|null;replace?:ChannelPolicy}
 export interface NewChannelOutcome {id:string;channel:ChannelPolicy;phase:'prepared'|'staging'|'committed'|'failed'|'conflict'|'cleanup_pending';error:{code:string;message:string}|null;snapshot:ModelSnapshot|null}
 export const modelApi = {
   previewNewChannel:(request:{protocol:string;url:string;apiKey:string|null;credentialRef:null;allowPrivateNetwork:boolean})=>invoke<{models:DiscoveredModel[];credentialRef:null;elapsedMs:number}>('model_new_channel_preview',{request}),

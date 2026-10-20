@@ -4,6 +4,7 @@ import UiButton from '@/components/ui/UiButton.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from './ModelRuleFields.vue'
 import NodePicker from './NodePicker.vue'
+import NewChannelDialog from './NewChannelDialog.vue'
 import { useNodeMeasurements } from './useNodeMeasurements'
 import {reorderSlots} from './ordering'
 import {useModalStore} from '@/app/modal/store'
@@ -14,6 +15,9 @@ const modal=useModalStore()
 const modelKeys=new WeakMap<DiscoveredModel,string>()
 function modelKey(model:DiscoveredModel){let key=modelKeys.get(model);if(!key){key=crypto.randomUUID();modelKeys.set(model,key)}return key}
 const existingModelIds=new Set(props.channel.discovered.map(model=>model.id).filter(Boolean))
+watch(()=>props.channel.discovered,models=>{for(const model of models)if(model.id)existingModelIds.add(model.id)})
+const connectionOpen=ref(false);const connectionOriginal=ref<ChannelPolicy>();
+function editConnection(){connectionOriginal.value=JSON.parse(JSON.stringify(props.channel));connectionOpen.value=true}
 const apiKey=ref('');const discovering=ref(false);const discoveryError=ref('');let generation=0
 watch(()=>[props.channel.id,props.channel.connection.protocol,props.channel.connection.activeNodeId,props.channel.connection.nodes.find(n=>n.id===props.channel.connection.activeNodeId)?.url],()=>{generation++;discovering.value=false;discoveryError.value=''})
 onBeforeUnmount(()=>{generation++;apiKey.value=''})
@@ -22,7 +26,9 @@ async function discover(){
  const sequence=++generation;discovering.value=true;discoveryError.value=''
  try{const result=await modelApi.discover({protocol:props.channel.connection.protocol,url:node.url,apiKey:apiKey.value||null,credentialRef:props.channel.connection.credentialRef,allowPrivateNetwork:props.channel.connection.allowPrivateNetwork})
   if(sequence!==generation){if(result.credentialRef&&result.credentialRef!==props.channel.connection.credentialRef)void modelApi.forgetCredential(result.credentialRef);return}
+  const previousModels=props.channel.discovered
   props.channel.connection.credentialRef=result.credentialRef;apiKey.value='';props.channel.discovered=result.models.map(model=>{existingModelIds.add(model.id);const previous=props.channel.discovered.find(item=>item.id===model.id);return previous?{...model,label:previous.label}:model})
+  for(const previous of previousModels)if(chosen(previous.id)&&!props.channel.discovered.some(m=>m.id===previous.id))props.channel.discovered.push(previous)
   for(const model of result.models)if(!props.channel.modelOrder.includes(model.id))props.channel.modelOrder.push(model.id)
  }catch(cause){if(sequence===generation)discoveryError.value=errorText(cause)}finally{if(sequence===generation)discovering.value=false}
 }
@@ -75,11 +81,11 @@ function adopt(t: Template, revision: string) {
   <div class="model-form">
     <header class="model-field-title"><UiButton @click="emit('close')">返回渠道列表</UiButton><strong>{{ channel.label || '新渠道' }}</strong></header>
     <section><h2>渠道配置</h2><div class="model-columns"><label>名称<input class="input" v-model="channel.label" :disabled="busy" /></label><label>运行渠道标识<input class="input" v-model="channel.connection.providerId" :disabled="busy || existing" /></label></div>
-      <label>默认协议<UiSelectField v-model="channel.connection.protocol" label="渠道默认协议" :options="['openai-responses','openai-chat','anthropic','google','ollama-native'].map(value => ({ value, label: value }))" :disabled="busy" /></label>
-      <label>API Key<input v-model="apiKey" class="input" type="password" autocomplete="new-password" autocapitalize="off" spellcheck="false" :disabled="busy || discovering" :placeholder="channel.connection.credentialRef ? '已安全配置；留空保持' : '无需认证可留空'" /></label><label class="model-inline"><input v-model="channel.connection.allowPrivateNetwork" type="checkbox" :disabled="busy" />允许此渠道访问可信私有网络</label><div class="model-inline"><UiButton :loading="discovering" :disabled="busy" @click="discover">获取并确认模型</UiButton><UiButton v-if="discovering" @click="generation++; discovering = false">停止等待</UiButton></div><p v-if="discoveryError" class="model-error" role="alert">{{ discoveryError }}</p>
+      <div class="model-inline"><span>默认协议：{{ channel.connection.protocol }}</span><UiButton :disabled="busy||discovering" @click="editConnection">编辑连接</UiButton><UiButton :loading="discovering" :disabled="busy" @click="discover">获取并确认模型</UiButton><UiButton v-if="discovering" @click="generation++; discovering=false">停止等待</UiButton></div><p v-if="discoveryError" class="model-error" role="alert">{{ discoveryError }}</p>
       <label class="model-inline"><input v-model="channel.connection.enabled" type="checkbox" :disabled="busy" />启用渠道</label>
     </section>
-    <NodePicker v-model:nodes="channel.connection.nodes" v-model:active-id="channel.connection.activeNodeId" :disabled="busy" :measuring="!!measurement.run" :measurement-disabled="discovering" :pending="measurement.pending" :results="measurement.results" :error="measurement.error" :stopped="measurement.stopped" @measure="measurement.measure" @stop="measurement.stop" @add="addNode" />
+    <NodePicker readonly v-model:nodes="channel.connection.nodes" v-model:active-id="channel.connection.activeNodeId" :disabled="busy" :measuring="!!measurement.run" :measurement-disabled="discovering" :pending="measurement.pending" :results="measurement.results" :error="measurement.error" :stopped="measurement.stopped" @measure="measurement.measure" @stop="measurement.stop" @add="addNode" />
+    <NewChannelDialog v-if="connectionOpen&&connectionOriginal" :original="connectionOriginal" @close="connectionOpen=false" />
     <section><h2>模型默认</h2><ModelRuleFields v-model="channel.defaults" hide-protocol :disabled="busy" /></section>
     <section><h2>采用模版</h2><label v-for="t in templates" :key="t.id">{{ t.label }}<UiSelectField :model-value="channel.templateRefs.find(r => r.templateId === t.id)?.revisionId ?? ''" :label="`采用${t.label}版本`" :options="[{ value: '', label: '不设置渠道引用' }, ...t.revisions.map(r => ({ value: r.id, label: `${r.createdAt} · ${r.id.slice(0,4)}` }))]" :disabled="busy" @update:model-value="adopt(t, $event)" /></label></section>
     <section v-if="adoptedFamilies.length"><h2>渠道族覆盖</h2><details v-for="family in adoptedFamilies" :key="family.id"><summary>{{ family.label }}</summary><ModelRuleFields :model-value="channel.familyOverrides[family.id]??emptyRules()" :disabled="busy" @update:model-value="channel.familyOverrides[family.id]=$event" /><UiButton size="sm" variant="ghost" :disabled="busy||!channel.familyOverrides[family.id]" @click="delete channel.familyOverrides[family.id]">恢复此族继承</UiButton></details></section>

@@ -3,6 +3,12 @@ import {describe,it,expect} from 'vitest'
 import NodePicker from '@/features/models/NodePicker.vue'
 const nodes=[{id:'one',name:'主节点',url:'https://one.example.test'},{id:'two',name:'备用节点',url:'https://two.example.test'}]
 describe('pure node selection view',()=>{
+ it('readonly connection summary keeps trusted node selection and measurement but cannot edit addresses',async()=>{
+  const wrapper=mount(NodePicker,{props:{nodes,activeId:'one',readonly:true}})
+  expect(wrapper.get('input[aria-label="节点1服务基地址"]').attributes('disabled')).toBeDefined();expect(wrapper.get('input[aria-label="节点1名称"]').attributes('disabled')).toBeDefined()
+  expect(wrapper.findAll('button').some(b=>b.text()==='新增节点'||b.text()==='删除')).toBe(false)
+  await wrapper.get('button[aria-label="设节点2为当前"]').trigger('click');expect(wrapper.emitted('update:activeId')).toEqual([['two']]);expect(wrapper.emitted('update:nodes')).toBeUndefined();wrapper.unmount()
+ })
  it('emits manual selection and bounded edits without mutating inputs or switching after a measurement',async()=>{
   const wrapper=mount(NodePicker,{props:{nodes:structuredClone(nodes),activeId:'one',results:{two:{nodeId:'two',elapsedMs:20,modelCount:5,error:null}}}})
   expect(wrapper.text()).toContain('20 ms · 5 个模型');expect(wrapper.emitted('update:activeId')).toBeUndefined()
