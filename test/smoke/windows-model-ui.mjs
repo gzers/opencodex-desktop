@@ -37,6 +37,19 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assert(await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes("+JSON.stringify(label)+"));const button=[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='编辑');button.click();return true})()"))
  await wait("!!document.querySelector('#model-basic textarea')",'continuous editor')
  await evaluate("(()=>{const input=document.querySelector('#model-basic textarea');input.value="+JSON.stringify(secondDescription)+";input.dispatchEvent(new Event('input',{bubbles:true}));return true})()")
+ await click('与版本比较')
+ const comparison=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('与版本比较'));return dialog&&dialog.textContent.includes("+JSON.stringify(firstDescription)+")&&dialog.textContent.includes("+JSON.stringify(secondDescription)+")?{rows:dialog.querySelectorAll('.model-comparison-row').length}:null})()",'native readonly comparison shows source and current buffer')
+ assert.equal(comparison.rows,1)
+ await click('关闭','dialog[open]')
+ const beforeSave=await invoke('model_config_snapshot');assert.equal(beforeSave.library.templates.find(t=>t.id===created.templateId).revisions.length,1,'comparison must not save')
+ await click('Agent自动填充')
+ await wait("!!document.querySelector('.model-agent-panel [aria-label=\"导出上下文\"]')",'assistant context tools visible')
+ await click('导出上下文','.model-agent-panel')
+ const externalContext=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('外部任务')),text=dialog?.querySelector('textarea[readonly]')?.value;if(!text||!text.includes('discoveryFile'))return null;const pack=JSON.parse(text.slice(text.indexOf('{')));return {targets:pack.task.targets.map(t=>({templateId:t.templateId,revisionId:t.revision.id,description:t.buffer?.content.description})),scopeNew:pack.task.allowNew,contract:!!pack.contract,hasTransport:!!pack.transport,hasPrivateChat:Object.hasOwn(pack,'conversation')}})()",'actual external task bundle from current buffer')
+ assert.deepEqual(externalContext.targets,[{templateId:created.templateId,revisionId:created.revisionId,description:secondDescription}]);assert.equal(externalContext.scopeNew,false);assert.equal(externalContext.contract,true);assert.equal(externalContext.hasTransport,true);assert.equal(externalContext.hasPrivateChat,false)
+ await click('关闭','dialog[open]')
+ await evaluate("(()=>{document.querySelector('.model-agent-panel button[aria-label=\"收起\"]').click();return true})()")
+ await writeFile(join(output,'model-editor-context-native.json'),JSON.stringify({result:'pass',comparisonRows:comparison.rows,comparisonDidNotSave:true,externalCurrentTargetCount:externalContext.targets.length,exactBufferDescription:true,includesSharedContractAndTransport:true,privateChatExcluded:true,taskActivated:false,generationRequests:0},null,2)+'\n')
  await click('保存')
  const changed=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_config_snapshot');const t=s.library.templates.find(t=>t.id==="+JSON.stringify(created.templateId)+");return t?.revisions.length===2?{snapshot:s,template:t}:null})()",'native save persisted new revision')
  assert.equal(changed.template.revisions[0].content.description,firstDescription)
@@ -89,6 +102,6 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
- const result={result:'pass',scope:'native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true}
+ const result={result:'pass',scope:'native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,readonlyComparison:true,externalContextBundle:true}
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }
