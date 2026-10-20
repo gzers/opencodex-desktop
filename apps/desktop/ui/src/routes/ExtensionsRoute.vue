@@ -4,7 +4,6 @@ import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import ExtensionDetailModal from '@/features/extensions/components/ExtensionDetailModal.vue'
-import UiCard from '@/components/ui/UiCard.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
@@ -559,7 +558,7 @@ onUpdated(markClampedDescriptions)
     </div></StickyTabs>
 
     <div v-if="tab === 'skills'" class="ext-view active">
-      <UiCard>
+      <article class="extension-content">
         <UiCardHeader>
           <h2>Skills 管理</h2><p>发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。</p>
           <template #actions>
@@ -639,11 +638,11 @@ onUpdated(markClampedDescriptions)
             <UiButton size="sm" class="btn ghost" :disabled="skillsPage >= skillsPageCount" aria-label="末页" @click="goSkillsPage(skillsPageCount)">»</UiButton>
           </div>
         </div>
-      </UiCard>
+      </article>
     </div>
 
     <div v-else class="ext-view active">
-      <UiCard>
+      <article class="extension-content">
         <UiCardHeader>
           <h2>MCP 服务器管理</h2><p>把同一个 MCP 服务器按需同步到各客户端配置；只写对应配置节点。</p>
           <template #actions>
@@ -719,7 +718,7 @@ onUpdated(markClampedDescriptions)
             <UiButton size="sm" class="btn ghost" :disabled="mcpPage >= serversPageCount" aria-label="末页" @click="goServersPage(serversPageCount)">»</UiButton>
           </div>
         </div>
-      </UiCard>
+      </article>
     </div>
 
     <ExtensionDetailModal
