@@ -1,0 +1,46 @@
+{
+  "scope": "Windows最终EXE模型UI/IPC专项准入",
+  "status": "implemented-local-guards-passed-native-remote-pending",
+  "checks": {
+    "localNodeTests": 9,
+    "syntax": "passed",
+    "WindowsRuntimeResult": "not-run-yet"
+  },
+  "logs": [
+    {
+      "path": "windows-model-ui-guards-20261020.log.gz",
+      "rawSha256": "cf2dec78d9d2ecd8812c8b2ba1df5e9c58c7cb9ebc1ccbd579a8380aa241d192"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "test/smoke/windows-model-ui.mjs",
+      "sha256": "e451e9a685e4d2bb408f7c1437cb2cdb5fda753ab9bdc96000bf013858666557"
+    },
+    {
+      "path": "test/smoke/windows-model-ui.test.mjs",
+      "sha256": "72e42c7ebc5bcecf0034c91a6809bc164220ff38fdf81e4bf03d6624ca694e05"
+    },
+    {
+      "path": "test/smoke/windows-webview.mjs",
+      "sha256": "a7ee6c986aa849e0c5d0f1c4e71ab344ffc570a2589de01fb6e70d60be8ea6a4"
+    },
+    {
+      "path": "test/smoke/windows-startup.ps1",
+      "sha256": "2b7d68b80ac4fbe5efc0f039395679b4ee7bb8a714a26b47badf1aedec5a6f97"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "8eafa9f12b588d95db2b29ed3d36a04032e6527b20dafe3cc35c55779317de77"
+    },
+    {
+      "path": "test/README.md",
+      "sha256": "51a27649350dbc91c70d6c6a9bbfa0050564f699e79d65712a723659a1952a3f"
+    }
+  ],
+  "limitations": [
+    "本机macOS guard/syntax不替代Windows原生结果",
+    "已存在appearance/托盘工具未扩建，未自动采纳0.1.10未验例外",
+    "完整0.2.0发布验收仍待后续"
+  ]
+}

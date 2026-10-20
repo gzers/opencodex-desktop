@@ -676,3 +676,12 @@ UiSelectMenu键盘选项纳入menuitemradio；跨portal focusout按relatedTarget
 CUA当前gallery长内容48组（亮暗×高/中/低×50/100/150/200%×900/1180物理样例宽）实际布局测量：样例卡片无内部横溢/图片均加载、文字按钮28/34/40逻辑盒高及字体/行高/内距逐项保留、开关命中28/拇指16不变。初探把before误标轨道，已回读样式确认before拇指、after轨道；另六主题档位实际回读轨道38×22，不伪报48次轨道采样。三档材质分别0.52/0.56玻璃和低档白/38实底无blur。新增节点触发器发现手工箭头与公共伪元素重复、长名称折行，现只沿公共箭头，名称省略/延迟单行，200%只读菜单边缘与六档触发器重新核对。样例宽不是原生窗口，不以该矩阵替代每个业务/平台交互。
 
 复核默认确认原生层次发现版本管理UiDialog仍open时应用AppModal位于其下会不可操作，现先关版本管理、nextTick后公共确认，取消/结束回原管理状态；过期拒绝仍保持。正式组件测试含返回/取消/已采用不升级，实际DEV第二保存版确认窗口可见且原生dialog open0，主按钮焦点正确，取消后恢复版本管理open1/default1。默认写服务没改。源码测试初用jsdom URL构造与stub标题误判已修，失败原件保留。最终全量141文件696项、构建及来源图门通过；证据checks-current-component-coverage-20261020.json。registry全部矩阵状态不据本轮静态图自动晋升，后续收口实际消费者与Windows受影响流程。
+
+
+### Windows最终EXE模型IPC/界面专项准入（待远端运行）
+
+复用现有windows-startup的最终EXE、受控进程token、去HOME环境、随机sandbox根和WebView2回环CDP，不新增原生宿主/窗口工具。startup把本次显式根传给windows-webview，可选调用windows-model-ui：先检查Windows facts、immutable currentDataRoot与saved activeDataRoot均等于已准入根且runtimeActive，处理驱动器/UNC长路径前缀；不符合在任何写命令前停止。旧appearance/native只传两参数，继续原首屏流程，避免重复改平台底座或所有长期采样。
+
+专项使用真实model_template_save建独立测试模版，再正式DOM编辑说明/保存新版本、读回旧版未变、返回列表→版本管理→默认确认（必须原生dialog open0、AppModal可见）→回原管理，验证仅默认指针变化不改渠道策略。仅该模版精确版文件准备/导出/接收/采用仍走真实Tauri IPC，导出路径必须在本次sandbox exports，渠道策略和本机默认保持。无DEV store注入/资料夹具、无运行配置或网络生成。输出model-ui.json/model-template-native.png单独绑定该EXE。
+
+本机Node准入与CDP回归9项、语法及diff检查通过，含错误平台/根/未激活/相对路径在调用IPC前拒绝；这些不作为Windows现场。已接入原CI frontend脚本检查和backend-windows最终EXE smoke，真实业务结果须由新源CI完成后读取，当前本节仅“验证路径已实施、远端待运行”，不得报通过。证据checks-windows-model-ui-admission-20261020.json。
