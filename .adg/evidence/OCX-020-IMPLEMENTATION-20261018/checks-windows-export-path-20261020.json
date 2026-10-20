@@ -1,0 +1,49 @@
+{
+  "scope": "Windows真实EXE首轮模型流程失败定位和路径断言修正",
+  "ci": {
+    "run": 39419001884,
+    "head": "ec7663c4feefc5a337f545aead16d690a597cb92",
+    "overall": "failure",
+    "failed": "model export containment assertion",
+    "precedingNativeSteps": "edit/save/default confirmation reached; not full smoke pass"
+  },
+  "artifactId": 12264112520,
+  "readback": [
+    {
+      "id": "db2437be-f122-49b3-8355-54872f9c0e1d",
+      "defaultRevision": "8ed7db56-059c-406e-8a0f-c86c6f642fb4",
+      "revisions": [
+        {
+          "id": "51550c78-6706-4ad3-9276-5f3da415d557",
+          "description": "source version"
+        },
+        {
+          "id": "8ed7db56-059c-406e-8a0f-c86c6f642fb4",
+          "description": "edited through native Vue handler"
+        }
+      ]
+    }
+  ],
+  "exportsInActualSandbox": [
+    "sandbox-aba29aa693e940d1a657b8c39589c698/exports/opencodex-config-eb9e6c8d-5eb0-4021-a541-923ca99669b6.ocxdconf"
+  ],
+  "correction": "admission already stripped extended drive/UNC prefixes; export guard did not. Reuse same normalized absolute path identity for strict exports descendant test; retain different-root, sibling, traversal and relative rejection. Next actual run still required.",
+  "tests": {
+    "node": 10,
+    "syntax": "passed"
+  },
+  "logs": [
+    {
+      "path": "windows-model-first-failure-20261020.log.gz",
+      "rawSha256": "7483ab8744794c8250df207c6f2444ee918677c805da9fefd561f9836712d9c2"
+    },
+    {
+      "path": "windows-model-export-path-20261020.log.gz",
+      "rawSha256": "83fe5ebbc2a5912333392bea71260285aadb33876651da1ff527cf639f3bd59e"
+    }
+  ],
+  "sources": {
+    "test/smoke/windows-model-ui.mjs": "25d868ebb559fa92dae80aa49818643c9f2f8830b4958732122900e245cb97b3",
+    "test/smoke/windows-model-ui.test.mjs": "97d05edc0495ea2769b36360c24bfe23512b36f0acb16cb1eff1ee5ee7918f53"
+  }
+}
