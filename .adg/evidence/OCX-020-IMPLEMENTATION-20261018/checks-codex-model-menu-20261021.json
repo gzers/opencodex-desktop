@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-21",
+  "source": "b19b01e202df895bd72cc173ff0303e84cb8e85b",
+  "officialVersion": "2.84.0",
+  "clientVersion": "0.163.0-alpha.10.2",
+  "clientSha256": "1afb28c01d7d49e892bd75f11076b10f1451e34e0ee308a95e5ab7f69f9c84fe",
+  "client": "actual CLI TUI, separate HOME/CODEX_HOME",
+  "menuModels": [
+    "fixture-one/claude-fable-5-1",
+    "fixture-one/gpt-6-astra",
+    "fixture-two/claude-fable-5-1",
+    "fixture-two/gpt-6-astra"
+  ],
+  "unselectedRawModelAbsent": true,
+  "selectedModel": "fixture-one/gpt-6-astra",
+  "selectedEffort": "medium",
+  "counts": {
+    "modelsGet": 0,
+    "generationPost": 0
+  },
+  "initialization": "First login onboarding was immediately cancelled; synthetic API key was initialized only for the owned isolated root, then actual TUI onboarding completed with that synthetic key. No real account or generation turn.",
+  "limits": [
+    "No daily desktop client modified or restarted.",
+    "Current menu loaded explicitly synced local fixture providers; prior native manager save plus app-server six-model read remains its separate evidence.",
+    "Does not claim every third-party desktop client menu/version is supported."
+  ]
+}

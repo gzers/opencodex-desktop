@@ -1,0 +1,1776 @@
+{
+  "scope": "static import graph includes types/dynamic dependencies; reach is not runtime execution; visual/functional/platform acceptance separate",
+  "registryCount": 43,
+  "publicSourceCount": 22,
+  "unregistered": [],
+  "missingImplementations": [],
+  "components": [
+    {
+      "id": "brand.logo",
+      "kind": "platform",
+      "gallery": "brand",
+      "declaredConsumers": [
+        "components/AppSidebar.vue"
+      ],
+      "directConsumers": [
+        "components/AppSidebar.vue",
+        "dev/component-gallery/FoundationExamples.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "components/AppSidebar.vue",
+        "main.ts"
+      ],
+      "developmentReach": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/BrandMark.vue",
+          "exists": true,
+          "sha256": "b5eaff1b5b0812a79f95b0af0063a48661187b664b783d944a8635f9c8c8c14c"
+        }
+      ]
+    },
+    {
+      "id": "brand.app-macos",
+      "kind": "platform",
+      "gallery": "brand",
+      "declaredConsumers": [
+        "../tauri/tauri.conf.json"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "../tauri/icons/icon.icns",
+          "exists": true,
+          "sha256": "3a89852efb32d8e0169a0dfdbef6efec53dccb47cfedd9b1445dfc802d180357"
+        }
+      ]
+    },
+    {
+      "id": "brand.app-windows",
+      "kind": "platform",
+      "gallery": "brand",
+      "declaredConsumers": [
+        "../tauri/tauri.conf.json"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "../tauri/icons/windows/icon.ico",
+          "exists": true,
+          "sha256": "6093b7f46ccb8db92d3a064c8694f1cbae22b781410b9679de0e7beb4fda5813"
+        }
+      ]
+    },
+    {
+      "id": "brand.tray-macos",
+      "kind": "platform",
+      "gallery": "brand",
+      "declaredConsumers": [
+        "../tauri/src/lib.rs"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "../tauri/src/infrastructure/tray_controller.rs",
+          "exists": true,
+          "sha256": "0f3c050ee710ae59d1b53b9957de0ba3c13ea1551457cb2c40124817c1511bc1"
+        }
+      ]
+    },
+    {
+      "id": "brand.tray-windows",
+      "kind": "platform",
+      "gallery": "brand",
+      "declaredConsumers": [
+        "../tauri/src/infrastructure/tray_controller.rs"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "../tauri/src/infrastructure/windows_tray_icon.rs",
+          "exists": true,
+          "sha256": "d7dc620967cc02ef624f696390b5d9caad9eb9cefb1e65e685fac50f0ee09f64"
+        }
+      ]
+    },
+    {
+      "id": "type.scale",
+      "kind": "recipe",
+      "gallery": "typography",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/tokens.css",
+          "exists": true,
+          "sha256": "c3422a5db327ace8056f219e8cfbd134fe100a666839787b725a102fcdba6032"
+        }
+      ]
+    },
+    {
+      "id": "content.markdown",
+      "kind": "component",
+      "gallery": "typography",
+      "declaredConsumers": [
+        "features/extensions/components/ExtensionDetailModal.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "features/extensions/components/ExtensionDetailModal.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/extensions/components/ExtensionDetailModal.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/patterns/MarkdownContent.vue",
+          "exists": true,
+          "sha256": "cc586cd00d6057c743d5c914469189641fc2ee50970540adbe4550e33ffb2679"
+        }
+      ]
+    },
+    {
+      "id": "surface.recipe",
+      "kind": "recipe",
+      "gallery": "materials",
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/materials.css",
+          "exists": true,
+          "sha256": "44bc8fd8796d401342c2d0a30d95ca79af7ca902b0a09f3e77d0543de5d8c1fe"
+        }
+      ]
+    },
+    {
+      "id": "appearance.effects",
+      "kind": "recipe",
+      "gallery": "materials",
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "directConsumers": [
+        "dev/auditHarness.ts",
+        "features/preferences/store.ts",
+        "features/runtime/components/RuntimeMotionMark.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/PanelRoute.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/bootstrap.ts",
+        "app/errors.ts",
+        "app/modal/store.ts",
+        "app/surfaces.ts",
+        "app/useLifecycleController.ts",
+        "components/AppModal.vue",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/diagnostics/useDiagnosticsController.ts",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/migration/store.ts",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/preferences/store.ts",
+        "features/runtime/components/RuntimeMotionMark.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/sync/WebDavConnection.vue",
+        "features/updates/ReleaseNotes.vue",
+        "features/updates/UpdateCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/PanelRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/app.ts",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts"
+      ],
+      "implementations": [
+        {
+          "path": "app/appearance/effects.ts",
+          "exists": true,
+          "sha256": "f9aedbd6f3be18d8c05c552cad45f5f335b390ee8462dde8edaabc4eb079b1fb"
+        }
+      ]
+    },
+    {
+      "id": "icon.scale",
+      "kind": "recipe",
+      "gallery": "typography",
+      "declaredConsumers": [
+        "components/AppTopbar.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/tokens.css",
+          "exists": true,
+          "sha256": "c3422a5db327ace8056f219e8cfbd134fe100a666839787b725a102fcdba6032"
+        }
+      ]
+    },
+    {
+      "id": "layout.stack",
+      "kind": "component",
+      "gallery": "layout",
+      "declaredConsumers": [
+        "dev/component-gallery/GalleryApp.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue"
+      ],
+      "applicationReach": [],
+      "developmentReach": [
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/layout/Stack.vue",
+          "exists": true,
+          "sha256": "86e2f931965a08ba1e1d8369acb7cfd787479d37932dd60a01959ffdecd2aadf"
+        }
+      ]
+    },
+    {
+      "id": "layout.inline",
+      "kind": "component",
+      "gallery": "layout",
+      "declaredConsumers": [
+        "dev/component-gallery/GalleryApp.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue"
+      ],
+      "applicationReach": [],
+      "developmentReach": [
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/layout/Inline.vue",
+          "exists": true,
+          "sha256": "c9d8e8fea90c095643ee5fba65e0e67d2ebc83d7136409fe7e2607bd7bc6fcad"
+        }
+      ]
+    },
+    {
+      "id": "layout.split",
+      "kind": "recipe",
+      "gallery": "layout",
+      "declaredConsumers": [
+        "routes/ModelsRoute.vue",
+        "App.vue"
+      ],
+      "directConsumers": [
+        "App.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "main.ts"
+      ],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        },
+        {
+          "path": "components/layout/useShellLayout.ts",
+          "exists": true,
+          "sha256": "8b7a8443ab2625b50d1972821ff0c981c116066b7351d4fceb40f8c1da827e30"
+        }
+      ]
+    },
+    {
+      "id": "navigation.anchor",
+      "kind": "component",
+      "gallery": "tabs",
+      "declaredConsumers": [
+        "routes/ModelsRoute.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "features/models/ChannelEditor.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelsView.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/layout/StickyTabs.vue",
+          "exists": true,
+          "sha256": "3be9bfd2c6ee3e0410bfd038883e147676e52187bc6e9eeec13ae9b6d73dc34b"
+        },
+        {
+          "path": "components/layout/DetailWorkspace.vue",
+          "exists": true,
+          "sha256": "754ba7583293e6127e5f6edad5ea85a948ef341b1257330ebda93d305f030f87"
+        }
+      ]
+    },
+    {
+      "id": "button.text",
+      "kind": "component",
+      "gallery": "buttons",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "directConsumers": [
+        "App.vue",
+        "components/TaskProgressHost.vue",
+        "components/layout/DetailWorkspace.vue",
+        "components/patterns/ModalContent.vue",
+        "components/ui/UiDialog.vue",
+        "components/ui/UiDiscreteSlider.vue",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "features/backup/BackupFiles.vue",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/extensions/components/ExtensionDetailModal.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ClientLoadStatus.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/NodePicker.vue",
+        "features/models/PolicyDraftDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/models/TemplateUsageDialog.vue",
+        "features/sync/ChannelModelScope.vue",
+        "features/sync/ImportedConnections.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/sync/WebDavConnection.vue",
+        "features/updates/ReleaseNotes.vue",
+        "features/updates/UpdateCenter.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/PanelRoute.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppModal.vue",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "components/layout/DetailWorkspace.vue",
+        "components/patterns/ModalContent.vue",
+        "components/ui/UiDialog.vue",
+        "components/ui/UiDiscreteSlider.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupFiles.vue",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/extensions/components/ExtensionDetailModal.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ClientLoadStatus.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/NodePicker.vue",
+        "features/models/PolicyDraftDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/models/TemplateUsageDialog.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/sync/ChannelModelScope.vue",
+        "features/sync/ImportedConnections.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/sync/WebDavConnection.vue",
+        "features/updates/ReleaseNotes.vue",
+        "features/updates/UpdateCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/PanelRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiButton.vue",
+          "exists": true,
+          "sha256": "0c5ffc08988ca329f0aafcc9de4a3aee09a822087e8ea7cd26a6093affad66f9"
+        }
+      ]
+    },
+    {
+      "id": "button.icon",
+      "kind": "component",
+      "gallery": "typography",
+      "declaredConsumers": [
+        "components/AppTopbar.vue",
+        "features/notifications/components/NotificationItem.vue"
+      ],
+      "directConsumers": [
+        "components/AppTopbar.vue",
+        "components/patterns/FeedbackToast.vue",
+        "components/patterns/TaskProgressCard.vue",
+        "dev/component-gallery/FoundationExamples.vue",
+        "features/models/AgentPanel.vue",
+        "features/notifications/components/NotificationItem.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "components/patterns/FeedbackToast.vue",
+        "components/patterns/TaskProgressCard.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/AgentPanel.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/notifications/components/NotificationItem.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiIconButton.vue",
+          "exists": true,
+          "sha256": "583f322175c13fe5450617ffe9ceca4a1d0483b5210c0cbd464de189db297b24"
+        }
+      ]
+    },
+    {
+      "id": "field.input",
+      "kind": "recipe",
+      "gallery": "native-fields",
+      "declaredConsumers": [
+        "features/models/ChannelEditor.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "field.textarea",
+      "kind": "recipe",
+      "gallery": "native-fields",
+      "declaredConsumers": [
+        "features/models/AgentPanel.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "choice.checkbox",
+      "kind": "recipe",
+      "gallery": "native-fields",
+      "declaredConsumers": [
+        "features/models/ModelPicker.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "choice.radio",
+      "kind": "recipe",
+      "gallery": "native-fields",
+      "declaredConsumers": [
+        "features/models/BatchAgentDialog.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "choice.switch",
+      "kind": "component",
+      "gallery": "switches",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiSwitch.vue",
+          "exists": true,
+          "sha256": "5683aff3256bdd2f3aaa9e7b8d913441cc67c7a5effe1da742db019a61808253"
+        }
+      ]
+    },
+    {
+      "id": "choice.slider",
+      "kind": "component",
+      "gallery": "fields",
+      "declaredConsumers": [
+        "features/models/ModelChoiceOptions.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "features/models/ModelChoiceOptions.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiDiscreteSlider.vue",
+          "exists": true,
+          "sha256": "6119de3354ca471d6b6f39543635637eb7da7452ffe537350a9c198a53ef138d"
+        }
+      ]
+    },
+    {
+      "id": "choice.select",
+      "kind": "component",
+      "gallery": "fields",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "routes/ModelsRoute.vue"
+      ],
+      "directConsumers": [
+        "components/ui/UiSelectField.vue",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelRuleFields.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/sync/ChannelModelScope.vue",
+        "features/sync/ModelTransfer.vue",
+        "routes/ModelsRoute.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "components/ui/UiSelectField.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/models/ModelRuleFields.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/sync/ChannelModelScope.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiSelectField.vue",
+          "exists": true,
+          "sha256": "b024333f4fd345d263202342a03d4cc09bb2ca6b76b595c734d75ce7779ae210"
+        },
+        {
+          "path": "components/ui/UiSelectMenu.vue",
+          "exists": true,
+          "sha256": "7f34b14838be00a3a8bb37eca4c1fa79b41058b4886261afa41df1edbce4ec0d"
+        }
+      ]
+    },
+    {
+      "id": "menu.actions",
+      "kind": "component",
+      "gallery": "action-menu",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue"
+      ],
+      "directConsumers": [
+        "components/ui/UiSelectField.vue",
+        "dev/component-gallery/FoundationExamples.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "components/ui/UiSelectField.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/models/ModelRuleFields.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/sync/ChannelModelScope.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiSelectMenu.vue",
+          "exists": true,
+          "sha256": "7f34b14838be00a3a8bb37eca4c1fa79b41058b4886261afa41df1edbce4ec0d"
+        }
+      ]
+    },
+    {
+      "id": "navigation.tabs",
+      "kind": "component",
+      "gallery": "tabs",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/SyncRoute.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/layout/StickyTabs.vue",
+          "exists": true,
+          "sha256": "3be9bfd2c6ee3e0410bfd038883e147676e52187bc6e9eeec13ae9b6d73dc34b"
+        }
+      ]
+    },
+    {
+      "id": "data.table",
+      "kind": "recipe",
+      "gallery": "data",
+      "declaredConsumers": [
+        "features/models/ChannelsView.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "directConsumers": [
+        "features/models/ChannelEditor.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelsView.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts"
+      ],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        },
+        {
+          "path": "features/models/ChannelModelTable.vue",
+          "exists": true,
+          "sha256": "2acab39304b5ad2a6b9b3648fad54b777bbcf24c9355c697c076048e9c752095"
+        }
+      ]
+    },
+    {
+      "id": "data.tree",
+      "kind": "component",
+      "gallery": "data",
+      "declaredConsumers": [
+        "features/backup/BackupFiles.vue",
+        "features/sync/ObjectScopeTree.vue"
+      ],
+      "directConsumers": [
+        "components/ui/UiTreeTable.vue",
+        "dev/component-gallery/FoundationExamples.vue",
+        "features/backup/BackupFiles.vue",
+        "features/backup/api.ts",
+        "features/sync/ObjectScopeTree.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "components/ui/UiTreeTable.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupFiles.vue",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/backup/api.ts",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/sync/ObjectScopeTree.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiTreeTable.vue",
+          "exists": true,
+          "sha256": "7fe97fc20ff86e3e7a22944e1783cb7378d299ad8ed29e2d359ea0cfb20244f1"
+        },
+        {
+          "path": "components/ui/treeTable.ts",
+          "exists": true,
+          "sha256": "833aa945f33b9a524cba2009da7460efa2c67b19b608b319d49518ab3de5afd4"
+        }
+      ]
+    },
+    {
+      "id": "data.status",
+      "kind": "recipe",
+      "gallery": "data",
+      "declaredConsumers": [
+        "features/models/ChannelsView.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "overlay.dialog",
+      "kind": "component",
+      "gallery": "fields",
+      "declaredConsumers": [
+        "features/sync/ModelTransfer.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/PolicyDraftDialog.vue",
+        "features/models/TemplateComparisonDialog.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ClientLoadStatus.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelPicker.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/PolicyDraftDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/models/TemplateUsageDialog.vue",
+        "features/sync/ImportedConnections.vue",
+        "features/sync/ModelTransfer.vue",
+        "routes/ModelsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ClientLoadStatus.vue",
+        "features/models/ExternalTaskDialog.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/PolicyDraftDialog.vue",
+        "features/models/TemplateComparisonDialog.vue",
+        "features/models/TemplateUsageDialog.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/sync/ImportedConnections.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiDialog.vue",
+          "exists": true,
+          "sha256": "0b469560dc2c257c13755bd2ff37658c9c2c37c8dc861bd99559aee325faef1b"
+        }
+      ]
+    },
+    {
+      "id": "overlay.annotation",
+      "kind": "prototype_only",
+      "gallery": null,
+      "declaredConsumers": [],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": []
+    },
+    {
+      "id": "feedback.local",
+      "kind": "recipe",
+      "gallery": "data",
+      "declaredConsumers": [
+        "features/models/ChannelsView.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "feedback.steps",
+      "kind": "recipe",
+      "gallery": "feedback",
+      "declaredConsumers": [
+        "components/TaskProgressHost.vue"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ]
+    },
+    {
+      "id": "model.selection",
+      "kind": "component",
+      "gallery": "model-picker",
+      "declaredConsumers": [
+        "features/models/AgentExecutionField.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/AgentExecutionField.vue",
+        "features/models/AgentPanel.vue",
+        "features/models/BatchAgentDialog.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/ModelChoiceOptions.vue",
+        "features/models/ModelPicker.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "features/models/ModelPicker.vue",
+          "exists": true,
+          "sha256": "d9960dcbc173c795241f67442855fdf9d82a86dbc3f58592c6610adfc9f00585"
+        },
+        {
+          "path": "features/models/ModelChoiceOptions.vue",
+          "exists": true,
+          "sha256": "641600fcd5b7a229d52471da35c38c31fe42bf85e7abd26f2f9e816df57eb401"
+        }
+      ]
+    },
+    {
+      "id": "node.selection",
+      "kind": "component",
+      "gallery": "nodes",
+      "declaredConsumers": [
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/NodeExamples.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/NodePicker.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelNodeSelect.vue",
+        "features/models/ChannelsView.vue",
+        "features/models/NodePicker.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "features/models/NodePicker.vue",
+          "exists": true,
+          "sha256": "dadcb5ff58199f7c2feb3fea0efa05696cd275f2994084990802db1021845ca2"
+        },
+        {
+          "path": "features/models/useNodeMeasurements.ts",
+          "exists": true,
+          "sha256": "0688a33e0dbed570f98cbe705265769426e2492e1a00dbd89b806d98fb84e49b"
+        },
+        {
+          "path": "features/models/ChannelNodeSelect.vue",
+          "exists": true,
+          "sha256": "b7a9a2e38141b8c2fe2b09db1e6834cbf31de21ce4168fc8fd0f34da598dd316"
+        }
+      ]
+    },
+    {
+      "id": "feedback.toast",
+      "kind": "component",
+      "gallery": "feedback",
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "directConsumers": [
+        "App.vue",
+        "components/ToastHost.vue",
+        "dev/component-gallery/FoundationExamples.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "components/ToastHost.vue",
+        "main.ts"
+      ],
+      "developmentReach": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/patterns/FeedbackToast.vue",
+          "exists": true,
+          "sha256": "4b8192449eb5a2904381413664d448789fe686552bf4363b780569082d056239"
+        },
+        {
+          "path": "components/ToastHost.vue",
+          "exists": true,
+          "sha256": "e2ed18454fd3cc13705d6822ad82bcea628e774d10a123048909f700f8d72fef"
+        }
+      ]
+    },
+    {
+      "id": "feedback.task",
+      "kind": "component",
+      "gallery": "feedback",
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "directConsumers": [
+        "App.vue",
+        "components/TaskProgressHost.vue",
+        "dev/component-gallery/FoundationExamples.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "components/TaskProgressHost.vue",
+        "main.ts"
+      ],
+      "developmentReach": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/patterns/TaskProgressCard.vue",
+          "exists": true,
+          "sha256": "6cbe2ea3adb9cd6d08277e3c309dff2fea336addc71e8d8ba50bca78cecce38c"
+        },
+        {
+          "path": "components/TaskProgressHost.vue",
+          "exists": true,
+          "sha256": "567273e38c6d47433f82a007c39e96f98020310e86d2919fa65ffcb57f253357"
+        }
+      ]
+    },
+    {
+      "id": "feedback.notification",
+      "kind": "component",
+      "gallery": "feedback",
+      "declaredConsumers": [
+        "features/notifications/components/NotificationCenter.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "routes/LogsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "features/notifications/components/NotificationItem.vue",
+          "exists": true,
+          "sha256": "b732229fd7f96b3cd46a6b44d4b312740b6826e886dff698eb5d8fff54e829fa"
+        }
+      ]
+    },
+    {
+      "id": "platform.caption",
+      "kind": "platform",
+      "gallery": "platform-boundary",
+      "declaredConsumers": [
+        "../tauri/src/lib.rs"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "../tauri/src/infrastructure/window_appearance.rs",
+          "exists": true,
+          "sha256": "f4d318555bc1764dcdfbd5e311d99137a2fe5b15d1257cfda4f12f783032b6cc"
+        }
+      ]
+    },
+    {
+      "id": "platform.tray",
+      "kind": "platform",
+      "gallery": "platform-boundary",
+      "declaredConsumers": [
+        "../tauri/src/lib.rs"
+      ],
+      "directConsumers": [],
+      "applicationReach": [],
+      "developmentReach": [],
+      "implementations": [
+        {
+          "path": "../tauri/src/modules/tray/mod.rs",
+          "exists": true,
+          "sha256": "7baef7a6729850f82054bfc62914d350b0a1750be28adb4e6a5cca7dea2b5273"
+        },
+        {
+          "path": "../tauri/src/infrastructure/tray_controller.rs",
+          "exists": true,
+          "sha256": "0f3c050ee710ae59d1b53b9957de0ba3c13ea1551457cb2c40124817c1511bc1"
+        }
+      ]
+    },
+    {
+      "id": "pattern.setting",
+      "kind": "component",
+      "gallery": "settings",
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/GalleryApp.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/patterns/SettingRow.vue",
+          "exists": true,
+          "sha256": "5a75b4ed3a669716e08c821398488174ab92a2cfb7c8a729629a7a7783890ce0"
+        }
+      ]
+    },
+    {
+      "id": "pattern.card",
+      "kind": "component",
+      "gallery": "cards",
+      "declaredConsumers": [
+        "routes/OverviewRoute.vue",
+        "routes/ExtensionsRoute.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "features/updates/UpdateCenter.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/UpdateCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiCard.vue",
+          "exists": true,
+          "sha256": "f05f99ef3bf02ae810f4ed5935c7f4fb98cbfc6f410c08bdd05ceec08a8d5146"
+        }
+      ]
+    },
+    {
+      "id": "pattern.card-header",
+      "kind": "component",
+      "gallery": "cards",
+      "declaredConsumers": [
+        "routes/OverviewRoute.vue",
+        "routes/ExtensionsRoute.vue"
+      ],
+      "directConsumers": [
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/SettingsRoute.vue"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/useLifecycleController.ts",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/FoundationExamples.vue",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/ui/UiCardHeader.vue",
+          "exists": true,
+          "sha256": "6cf1bad6c06de90a3ecb6cbd9becfe9c5067cb90e54037eafab22a5a9f503ebb"
+        }
+      ]
+    },
+    {
+      "id": "overlay.modal-host",
+      "kind": "component",
+      "gallery": "modal-content",
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "directConsumers": [
+        "App.vue",
+        "components/AppModal.vue",
+        "components/patterns/ModalContent.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "stores/app.ts"
+      ],
+      "applicationReach": [
+        "App.vue",
+        "app/bootstrap.ts",
+        "app/errors.ts",
+        "app/modal/store.ts",
+        "app/surfaces.ts",
+        "app/useLifecycleController.ts",
+        "components/AppModal.vue",
+        "components/AppSidebar.vue",
+        "components/AppTopbar.vue",
+        "components/TaskProgressHost.vue",
+        "components/ToastHost.vue",
+        "components/patterns/ModalContent.vue",
+        "composables/useAppController.ts",
+        "features/backup/BackupManagement.vue",
+        "features/backup/ModelSaveHistory.vue",
+        "features/diagnostics/useDiagnosticsController.ts",
+        "features/environment/components/EnvironmentGate.vue",
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue",
+        "features/notifications/components/NotificationCenter.vue",
+        "features/sync/ModelTransfer.vue",
+        "features/sync/WebDavConnection.vue",
+        "features/updates/ReleaseNotes.vue",
+        "features/updates/UpdateCenter.vue",
+        "features/updates/useUpdateScheduler.ts",
+        "main.ts",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "routes/PanelRoute.vue",
+        "routes/SettingsRoute.vue",
+        "routes/SyncRoute.vue",
+        "routes/TrayRoute.vue",
+        "stores/app.ts",
+        "stores/routes.ts"
+      ],
+      "developmentReach": [
+        "dev/auditHarness.ts",
+        "dev/component-gallery/GalleryApp.vue",
+        "dev/component-gallery/NodeExamples.vue",
+        "dev/component-gallery/main.ts"
+      ],
+      "implementations": [
+        {
+          "path": "components/AppModal.vue",
+          "exists": true,
+          "sha256": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91"
+        },
+        {
+          "path": "components/patterns/ModalContent.vue",
+          "exists": true,
+          "sha256": "aa793b8a61e73d38648634664a27355fac3ebca6360b5d4c4c986233f4ab50fb"
+        },
+        {
+          "path": "components/patterns/modalContent.ts",
+          "exists": true,
+          "sha256": "e9f1d7a74c2998f71fcc90ba20c2d1333b5df057a30873dba75dd6cf14582828"
+        }
+      ]
+    }
+  ]
+}

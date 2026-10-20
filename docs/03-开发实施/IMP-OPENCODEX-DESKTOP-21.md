@@ -885,3 +885,14 @@ PR8的base为ce2ada4b（0.1.10后远端既有交接与治理忽略提交），�
 ### 2026-10-21 Windows真实编辑上下文与完整CI
 
 PR CI39451396439/763372578已完整success。真实Windows EXE只读比较准确显示1项未保存说明差异且未写版本，正式Agent导出上下文得到当前精确template/revision和未保存内容、共同契约与传输说明，排除私聊、未激活任务且生成请求0；随后版本保存/默认确认/精确文件往返、实际鼠标型号排序及持久草稿读回均通过。checks-windows-editor-current-20261021.json保存源绑定、artifact12280667256、白名单报告与原始PNG，不复制含Bearer的broker或浏览器目录。宿主token为elevated，不冒称普通用户身份。最后复制/取消新建b19b01e2仍有自己的CI，不把该旧源结果覆盖最后两项新增交互；macOS补核遇锁屏，等待用户解锁期间继续资料与CI工作，不报新现场通过。
+
+
+### 2026-10-21 最后特性源完整CI与隔离客户端实际菜单
+
+PR8最后head b19b01e2，PR检出4831c60a的CI39455864253已完整success：前端143文件710项/typecheck/build、Linux后端39结果组1127 passed（11 ignored，含既有忽略及另有专项证据的opt-in）、Windows41结果组843 passed（10 ignored，含单独native专项）；Windows原始冷探测3项先执行、剩余库737项保留既有4忽略。Fmt/Clippy/发布器及原生凭据检查均通过，不能把ignored并入通过。真实最终EXE SHA1c9c7e48…，版本/源绑定、只读比较、准确外部任务包、版本保存/默认确认/文件往返与实际型号拖动均通过，宿主为elevated。checks-final-feature-ci-20261021.json、原始日志压缩及artifact12281907174白名单报告绑定实际检出，不以push重复取消项充当通过。
+
+当前本地b19生产构建26项文本资产没有已知DEV sentinel/gallery输出；43登记/22公共来源、未登记及失效实现0。checks-final-ui-output-20261021.json保存逐字节摘要，仍不冒称最终tag包或全渲染矩阵。最后新建复制/取消的710项回归已纳入此完整CI，不再沿早前708项计数。
+
+隔离官方2.84.0配置经ocx sync写入专用HOME/CODEX_HOME，以实际Codex CLI0.163.0-alpha.10.2打开/model：fixture-one及fixture-two各Claude/GPT共4行顺序可见，未选择raw-long-id不出现；实际选择fixture-one/gpt-6-astra后显示推理菜单，再选medium，客户端明确提示Model changed且隔离config读回一致，生成请求0。checks-codex-model-menu-20261021.json及原始菜单回放绑定实际二进制。首次空账户初始化误进入登录流程时已立即退出，未登录真实账户；之后只给自有隔离根配置虚构Key，未发生成或修改日常客户端。此为实际CLI菜单证据，不冒称日常桌面软件下拉、所有版本或该新root已由管理器运行保存；此前管理器保存后app-server6型号读取仍按各自证据组合核对。
+
+剩余现场清单收窄为：当前b19原生同步树/字段来源及多域状态、批量多模版建议审阅，以及最后复制/取消新建入口的原生补核；Mac工具报告锁屏，已请求用户解锁。既有自动/服务/48组gallery/36组业务视觉及平台未变来源证据保留，不无依据重启旧版长性能/DPI/OTA矩阵。main集成、tag、真实签名制品/安装、公开/stable及匿名验证均尚未执行，不从CI全绿直接关闭目标。
