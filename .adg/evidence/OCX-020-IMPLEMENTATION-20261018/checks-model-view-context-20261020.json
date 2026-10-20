@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "ec92d53b",
+  "sources": [
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "a39a1c263899e8b700135943048072ddbb2d09e3b1e08fffbbfc0658b3fca2a3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "083f04b316088b2465f554ac00aeeef2de97c9954308f8f177579efa546b9ddb"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "8b39098ec9076b25c2d1f80ec1882f7001e2b359bdd679fc9592a5efc7518ba4"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "e61b6982e158b609584e0e5bfe66f105f4179e543bdf51da19e73c3188b675ca"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-config.test.ts",
+      "sha256": "2a1dd2dad812374c226dcc3cce66b378fd13c65133dcf45e9551537e8a282d65"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/useViewPosition.ts",
+      "sha256": "cd7fbd469f724222e1b6ed6c2322eafd41e20fd1df384941bbbf6a4ba385b8a5"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-view-context.test.ts",
+      "sha256": "5697ae3d6ea49737fc34b4820bca132ce7477b5649c5361202f0940613beaaac"
+    }
+  ],
+  "checks": {
+    "frontend": "133 files / 658 passed",
+    "build": "passed; preexisting dynamic-import warnings",
+    "targeted": "2 files / 8 passed",
+    "browser": "formal DEV: NewApi search/list trigger focus restored, model gpt-demo-10 filter restored; template description kept after Back/Continue/route Sync→Models; no document horizontal overflow"
+  },
+  "logs": [
+    {
+      "file": "context-ui-full-20261020.log.gz",
+      "rawSHA256": "0c3181f6485f6b442c5d0fdc910dd92620d63f2fe6a5acbf42d84c3ce1378c33"
+    },
+    {
+      "file": "context-ui-build-final-20261020.log.gz",
+      "rawSHA256": "46da4957f7469caa3c8f513df84620f6c1f6b585635f96daac07fdd2e4ff8e91"
+    },
+    {
+      "file": "context-tests-20261020.log.gz",
+      "rawSHA256": "411ff60f0026873252d5a4bc02d8ad2cbc510ec46c10a12779b571b0002bae06"
+    },
+    {
+      "file": "context-tests-final-20261020.log.gz",
+      "rawSHA256": "9078143767bb32a6244d8f40f6a9c7fe8d5b919d071e2225b3925ddc77b2c0fe"
+    }
+  ],
+  "screenshot": "model-context-retained-light.png",
+  "limitations": [
+    "Session-only template buffers; not restart persistence",
+    "Native advanced details expansion/caret, Agent per-target chat and full approved table UX still tracked separately",
+    "Backend save code unchanged; no old official/credential chain repeated",
+    "The new test initially had escaping and proxy structuredClone errors; final corrected fixture uses JSON clone and valid template string"
+  ],
+  "ciPrior": {
+    "naming": 39364556426,
+    "uiMaterial": 39363000848,
+    "sharedRules": 39351998897
+  }
+}
