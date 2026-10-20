@@ -804,3 +804,12 @@ CI39432110685/a0adea48并未进入最终EXE排序，实际失败仍是原officia
 CI39435891819/a2f89fa1全部适用job success，feature build skipped；下载artifact12274765953读回完整结果。原冷查询3项保留原2秒截止/4秒清理断言且2.06秒完成，余Windows lib735通过/4既有忽略/3已执行过滤，其他workspace及真实隔离凭据保护成功。该事实证明分组执行有效，不把负载假设泛化为唯一根因或承诺所有设备2秒启动。原失败均保留，无重试同源直到绿。
 
 最终EXE SHA7ec31c471b38204c949fd0d6d5263eea1704131879832c5ed894dafb827b26e9，0.2.0/expectedCommit匹配，真实模型模板保存/默认确认/文件往返再次通过。Page.reload读持久隔离测试渠道后，CDP鼠标在视口1028×749内从(483.7,374.6)到(633.4,499.8)拖动实际型号手柄，后台workspace读回alpha/beta/gamma→beta/alpha/gamma，已提交policy不变、未执行runtime Save。model-sort-native/原坐标/截图/进程身份及原CI日志见checks-windows-sort-native-pass-20261020.json。mode=any且runner实际提升，不冒报normal-user；Windows原生鼠标结果不替代Mac物理指针，新增助手底栏/比较UI还须当前源CI，最终tag制品与发布门保持。
+
+
+### 只读保存版本比较及预算精确边界
+
+对照最终模型页交互§5及现行原型templateCompare，补正式编辑侧栏“与版本比较”，首版未保存时禁用且有原因；已保存模版默认预选默认版（否则当前编辑base），可选择任意保存版。复用UiDialog/UiSelectField，打开时冻结当前缓冲和版本快照，库后来变化只提示重新查看，不挪动正在比较内容。逐项展示名称/说明/完整匹配/11规则/具体型号/人工锁/来源的保存值与当前值，HTML作为文本转义、缺省高级继承不误当变更；不提供应用按钮、不写入、不改默认或采用。沿overlay.dialog原登记补业务消费者，未另造公共组件类型。
+
+3项新行为验证完整差异、默认预选/库漂移冻结、继承/恶意文本安全，相关9项、全量143文件708项及构建通过；最初新测试时间字段误用retrievedAt，按现有模板provenance recordedAt修正，未改DTO。DEV实际说明改动→比较默认版1项差异→关闭仍留缓冲，dialog1/对比区808无横溢/文档无横溢；checks-template-comparison-budget-20261020.json绑定源/日志/截图。
+
+另按AC-M31补99/100/101/108四个精确完整目录向量（含隐藏及非受管占用）：99/100保持精确数量，101/108拒catalog_budget且保留所有输入，无截断/阈值改动。1项新后端边界检查通过；不把此前163项与本次1项相加泛称当前全模块已重跑，后续当前CI继续绑定。

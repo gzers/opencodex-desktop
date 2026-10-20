@@ -1,0 +1,63 @@
+{
+  "scope": "最终方案的只读保存版本比较与兼容预算精确边界",
+  "sourceBase": "9c1177c0",
+  "behavior": [
+    "sidebar one comparison entry; new/unsaved-first no reference disabled",
+    "default revision preselection or current base fallback; choose among saved revisions",
+    "freeze current draft and saved versions while open; library drift prompts reread, no writes",
+    "name/description/full matching/11rule fields/variants/locks/sources compared with escaped text and separate before/current",
+    "does not change defaults/adoption/channel policy or editor content"
+  ],
+  "checks": {
+    "affectedTests": 9,
+    "uiFullFiles": 143,
+    "uiFullTests": 708,
+    "build": "passed",
+    "newBudgetTest": 1,
+    "budgetVectors": [
+      99,
+      100,
+      101,
+      108
+    ]
+  },
+  "budget": "hidden and non-managed catalog occupancy included;99/100 preserve exact count,101/108 reject catalog_budget without input mutation or truncation; no production threshold change",
+  "browser": {
+    "environment": "formal DEV fixed fixtures",
+    "nativeDialogCount": 1,
+    "differenceCount": 1,
+    "bufferDescription": "当前未保存说明 · 比较不会改变默认或采用",
+    "comparisonWidth": 808,
+    "comparisonScrollWidth": 808,
+    "documentOverflow": false,
+    "screenshot": "template-comparison-20261020.png",
+    "closePreservedBuffer": true
+  },
+  "initialTypeFix": "fixture used ResearchSource.retrievedAt where template field provenance requires recordedAt; corrected before successful build, no DTO change",
+  "sources": {
+    "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue": "eae3c47718aca9bfb968dceb70edc6d3e936bcba127a7e20f763fa71a30d0164",
+    "apps/desktop/ui/src/features/models/templateChanges.ts": "f56d985d4065077d187f5735b141090e8341edfd003da3c7af750efc9b424322",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "cac18b113814d363926ed811ad1882ed2d9a1471825a8390abd27c1dced5bf1e",
+    "apps/desktop/ui/src/components/registry.ts": "ebc6e6fe6b5e061a3d7ab0c04f19d09fddd346bff778f336e0acdb11e6c96fca",
+    "apps/desktop/ui/tests/template-comparison.test.ts": "07a90e8715459d9ee64d121601b98a3026a02725bf6521f6955c6eabbe38cee1",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "33b6145aa8bdc7a858d902a0469d23be60f93f98361913b0b23d6257821e6f63"
+  },
+  "logs": [
+    {
+      "path": "template-comparison-tests-20261020.log.gz",
+      "rawSha256": "55884cc460693b23e83486b1d97165317cc3707ef54aaaa910692d3d34f5846d"
+    },
+    {
+      "path": "template-comparison-full-20261020.log.gz",
+      "rawSha256": "6014fb695c212f6e5997cf8bcce4128d81be784bdd2b541346d021b9f9fb8890"
+    },
+    {
+      "path": "template-comparison-build-20261020.log.gz",
+      "rawSha256": "70dcbb2fe2e30f83c4c7a6d637a2c8175872ece32f8ade667933e7b8e7af87ca"
+    },
+    {
+      "path": "budget-boundary-20261020.log.gz",
+      "rawSha256": "452a9705136ab9928d608b118d83aa6506e35de5099421441cd1e27b7a4fd6f6"
+    }
+  ]
+}
