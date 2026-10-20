@@ -9,6 +9,11 @@ export function assertModelExportPath(path,expected){
  const file=normalize(path),directory=normalize(win32.join(expected,'exports'))
  assert(file.startsWith(directory+win32.sep),'export escaped admitted root')
 }
+export function parseTaskContent(text){
+ const marker=text.indexOf('\n\n{')
+ if(marker<0)throw Error('task content JSON boundary missing')
+ return JSON.parse(text.slice(marker+2))
+}
 export function assertModelSandbox(facts,expected){
  assert(facts?.about?.platform==='Windows','Windows native facts required')
  assert(typeof expected==='string'&&win32.isAbsolute(expected),'explicit absolute startup sandbox required')
@@ -45,7 +50,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await click('Agent自动填充')
  await wait("!!document.querySelector('.model-agent-panel [aria-label=\"导出上下文\"]')",'assistant context tools visible')
  await click('导出上下文','.model-agent-panel')
- const externalContext=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('外部任务')),text=dialog?.querySelector('textarea[readonly]')?.value;if(!text||!text.includes('discoveryFile'))return null;const pack=JSON.parse(text.slice(text.indexOf('{')));return {targets:pack.task.targets.map(t=>({templateId:t.templateId,revisionId:t.revision.id,description:t.buffer?.content.description})),scopeNew:pack.task.allowNew,contract:!!pack.contract,hasTransport:!!pack.transport,hasPrivateChat:Object.hasOwn(pack,'conversation')}})()",'actual external task bundle from current buffer')
+ const externalContext=await wait("(()=>{const dialog=[...document.querySelectorAll('dialog[open]')].find(e=>e.textContent.includes('外部任务')),text=dialog?.querySelector('textarea[readonly]')?.value;if(!text||!text.includes('discoveryFile'))return null;const pack=("+parseTaskContent.toString()+")(text);return {targets:pack.task.targets.map(t=>({templateId:t.templateId,revisionId:t.revision.id,description:t.buffer?.content.description})),scopeNew:pack.task.allowNew,contract:!!pack.contract,hasTransport:!!pack.transport,hasPrivateChat:Object.hasOwn(pack,'conversation')}})()",'actual external task bundle from current buffer')
  assert.deepEqual(externalContext.targets,[{templateId:created.templateId,revisionId:created.revisionId,description:secondDescription}]);assert.equal(externalContext.scopeNew,false);assert.equal(externalContext.contract,true);assert.equal(externalContext.hasTransport,true);assert.equal(externalContext.hasPrivateChat,false)
  await click('关闭','dialog[open]')
  await evaluate("(()=>{document.querySelector('.model-agent-panel button[aria-label=\"收起\"]').click();return true})()")
