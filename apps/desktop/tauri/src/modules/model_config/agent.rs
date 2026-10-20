@@ -346,8 +346,42 @@ pub async fn research(urls: Vec<String>) -> ModelResult<Vec<ResearchSource>> {
     }
     let mut sources = vec![];
     for value in urls {
+        sources.push(research_page(value, false).await?);
+    }
+    Ok(sources)
+}
+fn search_host(host: &str) -> bool {
+    host == "bing.com" || host.ends_with(".bing.com")
+}
+fn search_redirect_target(from: &reqwest::Url, location: &str) -> ModelResult<reqwest::Url> {
+    let target = from
+        .join(location)
+        .map_err(|_| invalid("research_redirect", "检索跳转地址无效"))?;
+    if !from.host_str().is_some_and(search_host)
+        || !target.host_str().is_some_and(search_host)
+        || target.scheme() != "https"
+        || !target.username().is_empty()
+        || target.password().is_some()
+        || target.port().is_some_and(|port| port != 443)
+    {
+        return Err(invalid(
+            "research_redirect",
+            "检索仅允许公开HTTPS搜索站点内跳转",
+        ));
+    }
+    Ok(target)
+}
+async fn research_page(value: String, search_redirects: bool) -> ModelResult<ResearchSource> {
+    let mut current = value;
+    let mut visited = std::collections::BTreeSet::new();
+    // Initial request plus at most three first-party regional search redirects.
+    // Each hop resolves and validates DNS independently; no cookies, proxy or auth.
+    for _ in 0..4 {
+        if !visited.insert(current.clone()) {
+            return Err(invalid("research_redirect", "检索入口重复跳转，未继续请求"));
+        }
         let url =
-            reqwest::Url::parse(&value).map_err(|_| invalid("research_url", "资料地址无效"))?;
+            reqwest::Url::parse(&current).map_err(|_| invalid("research_url", "资料地址无效"))?;
         if url.scheme() != "https"
             || !url.username().is_empty()
             || url.password().is_some()
@@ -386,6 +420,15 @@ pub async fn research(urls: Vec<String>) -> ModelResult<Vec<ResearchSource>> {
             client.get(url.clone()).send().await.map_err(|_| {
                 invalid("research_failed", "资料读取失败，请提供其他地址或手工资料")
             })?;
+        if search_redirects && response.status().is_redirection() {
+            let location = response
+                .headers()
+                .get(reqwest::header::LOCATION)
+                .and_then(|value| value.to_str().ok())
+                .ok_or_else(|| invalid("research_redirect", "检索跳转缺少有效地址"))?;
+            current = search_redirect_target(&url, location)?.to_string();
+            continue;
+        }
         if !response.status().is_success() {
             return Err(invalid(
                 "research_failed",
@@ -417,7 +460,7 @@ pub async fn research(urls: Vec<String>) -> ModelResult<Vec<ResearchSource>> {
         let html = String::from_utf8_lossy(&bytes);
         let links = source_links(&html);
         let text = plain_text(&html);
-        sources.push(ResearchSource {
+        return Ok(ResearchSource {
             receipt_id: None,
             content_digest: None,
             url: url.to_string(),
@@ -426,7 +469,7 @@ pub async fn research(urls: Vec<String>) -> ModelResult<Vec<ResearchSource>> {
             links,
         });
     }
-    Ok(sources)
+    Err(invalid("research_redirect", "检索跳转超过三次，未报告成功"))
 }
 pub async fn search(query: String) -> ModelResult<Vec<ResearchSource>> {
     if query.trim().is_empty() || query.len() > 1024 {
@@ -435,7 +478,7 @@ pub async fn search(query: String) -> ModelResult<Vec<ResearchSource>> {
     let mut url = reqwest::Url::parse("https://www.bing.com/search")
         .map_err(|_| invalid("research_search", "检索入口无效"))?;
     url.query_pairs_mut().append_pair("q", query.trim());
-    let pages = research(vec![url.to_string()]).await?;
+    let pages = [research_page(url.to_string(), true).await?];
     let links: Vec<_> = pages
         .iter()
         .flat_map(|p| p.links.iter())
@@ -443,11 +486,7 @@ pub async fn search(query: String) -> ModelResult<Vec<ResearchSource>> {
             reqwest::Url::parse(link)
                 .ok()
                 .and_then(|u| u.host_str().map(str::to_owned))
-                .is_some_and(|host| {
-                    host != "www.bing.com"
-                        && host != "bing.com"
-                        && !host.ends_with(".microsoft.com")
-                })
+                .is_some_and(|host| !search_host(&host) && !host.ends_with(".microsoft.com"))
         })
         .take(3)
         .cloned()
@@ -482,11 +521,7 @@ fn source_links(html: &str) -> Vec<String> {
         let Ok(url) = reqwest::Url::parse(&raw) else {
             continue;
         };
-        let target = if url
-            .host_str()
-            .is_some_and(|h| h == "www.bing.com" || h == "bing.com")
-            && url.path() == "/ck/a"
-        {
+        let target = if url.host_str().is_some_and(search_host) && url.path() == "/ck/a" {
             url.query_pairs()
                 .find(|(k, _)| k == "u")
                 .and_then(|(_, v)| v.strip_prefix("a1").map(str::to_owned))
@@ -723,6 +758,53 @@ pub async fn generate(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn search_regional_redirects_remain_first_party_https_and_decode_regional_result_links() {
+        let from = reqwest::Url::parse("https://www.bing.com/search?q=public").unwrap();
+        assert_eq!(
+            search_redirect_target(&from, "https://cn.bing.com/search?q=public")
+                .unwrap()
+                .host_str(),
+            Some("cn.bing.com")
+        );
+        assert!(search_redirect_target(&from, "/search?q=other").is_ok());
+        for target in [
+            "http://cn.bing.com/search",
+            "https://bing.com.attacker.test/search",
+            "https://attackerbing.com/search",
+            "https://127.0.0.1/search",
+            "https://user:password@cn.bing.com/search",
+            "https://cn.bing.com:444/search",
+            "https://example.test/search",
+        ] {
+            assert_eq!(
+                search_redirect_target(&from, target).unwrap_err().code,
+                "research_redirect"
+            );
+        }
+        assert!(search_redirect_target(
+            &reqwest::Url::parse("https://example.test").unwrap(),
+            "https://cn.bing.com/search"
+        )
+        .is_err());
+        use base64::Engine;
+        let target = "https://www.rfc-editor.org/rfc/rfc8259.txt";
+        let encoded = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(target);
+        let html=format!("<a href='https://cn.bing.com/ck/a?u=a1{encoded}'>public</a><a href='https://cn.bing.com/search'>search</a>");
+        let links = source_links(&html);
+        assert_eq!(links[0], target);
+        assert!(
+            links
+                .iter()
+                .filter(|link| reqwest::Url::parse(link)
+                    .unwrap()
+                    .host_str()
+                    .is_some_and(search_host))
+                .count()
+                == 1
+        );
+    }
+
     fn reviewed_fixture(root: &Path, scene: Scene) -> (ReviewRequest, super::super::Snapshot) {
         let snapshot = super::super::ModelStore::new(root).load().unwrap();
         let targets = snapshot
