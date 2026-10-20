@@ -636,7 +636,6 @@ input.input:focus-visible, .select-trigger:focus-visible, .toggle:focus-visible 
 .ext-tabs button.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
 .ext-view { display: none; }
 .ext-view.active { display: grid; gap: 16px; }
-.extension-content { position: relative; min-width: 0; padding-block: 16px; }
 .skills-metrics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .skills-chip { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; border: 1px solid var(--border); background: var(--panel); color: var(--muted); border-radius: var(--radius-pill); padding: 5px 11px; font: inherit; font-size: var(--text-label); cursor: pointer; transition: background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast); }
 .skills-chip:hover { background: var(--hover); color: var(--text); }
