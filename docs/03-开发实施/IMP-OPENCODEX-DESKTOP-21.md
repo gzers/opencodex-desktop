@@ -861,3 +861,8 @@ PR8的base为ce2ada4b（0.1.10后远端既有交接与治理忽略提交），�
 ### 实际字段三态与默认独立的浏览器补验
 
 当前冻结UI通过真实控件操作继承→inputModalities text/image、reasoningEfforts明确空集合和Fast明确不支持，比较与保存版继承逐项显示准确mode/value。再选列表high及默认high，单独把默认恢复继承，差异仍保留列表high；最后列表恢复继承，high选项退出且默认保持继承。无文档横溢、未点击保存或发IPC/model请求。rule-tristate-browser-20261020.json保留实际差异文本，补AC-M07/42/44的控件可达/三态表达，服务越界/最终协议校验仍沿原测试，不从页面可编辑推导目标能力。无应用源码变化，不为本补验重启全量CI。
+
+
+### 实际发布草稿Windows安装制品准入
+
+既有Release工作流只创建草稿并上传包，最终公开由Publish独立控制。为本版新制品补精确验收：Tauri出包后Windows直接调用已有windows-installer.ps1检查该次NSIS/MSI及built EXE的隔离首次安装/正式首屏/源码版本与卸载保留，始终保存release-windows-installer-evidence。失败仍保留私有草稿，不将上传成功当安装通过。无新安装工具、不碰日常安装，不重开旧DPI/CPU/RSS/长期生命周期；updater清单/资产密码学验签仍由既有发布器独立执行，OS签名边界不变。YAML语法与29项发布器离线回归通过，实际安装结论等待最终tag的真实工作流，checks-release-installer-admission-20261020.json绑定workflow。

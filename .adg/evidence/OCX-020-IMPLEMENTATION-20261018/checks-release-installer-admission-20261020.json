@@ -1,0 +1,17 @@
+{
+  "scope": "private draft release actual Windows installer verification using existing owned-runner smoke",
+  "sourceBase": "76337257810a3fe3ffdb671061eae38bc2bb71a4",
+  "change": "after Tauri signed updater/package upload to draft, run existing windows-installer.ps1 on current target/release NSIS+MSI and built EXE; always preserve evidence artifact. Release stays draft; publish channel still separately validates manifest/signatures.",
+  "checks": {
+    "yamlSyntax": "passed",
+    "publisherRegression": 29,
+    "actualReleaseInstall": "pending actual tag build; no pass claim"
+  },
+  "unchangedScopes": [
+    "no new installer tooling",
+    "no daily installation or data migration",
+    "no old DPI/resource/lifecycle resampling",
+    "updater crypto signature and OS signature remain separate"
+  ],
+  "workflowSha256": "f37330645e1fdf034a8db9fca05e57ad19f0e1fe0b3d89736bd8018e3c426910"
+}
