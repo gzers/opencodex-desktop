@@ -1,0 +1,165 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "e5d67d2e2",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/channel_actions.rs",
+      "sha256": "eb1611aa3a5ea92549e0c0414b7e7fdd5f306322d9c98b2a10cb7e2a8e0bc96d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/compiler.rs",
+      "sha256": "97ddb3f4e78b62b3bac87fb8df381c1e332ad6b12ab48e32152c737f3c78785b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/execution_directory.rs",
+      "sha256": "5deedf21918da07591ca3ee4760b520297a28970a9fd3134ca74c0e2f6c0cc96"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+      "sha256": "1014c4c892a36a20c307073ee3fffb111eb39b7f304136c3e4d81a65ddab0cba"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/new_channel.rs",
+      "sha256": "905d72f761e4de0beb895891c1d6382859ac1227b23fe4b27340b64200cefc3d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/portable_channels.rs",
+      "sha256": "c5cabbe69739ca3169e159c6790d372850c04703b798a78ff7ec483b369f9f48"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+      "sha256": "96e54ecc01bf4eb1dd9b3ee6772ff32bf6c7d066656ff5a82531807000a9add2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/recovery.rs",
+      "sha256": "1ca30dddbbfca49e2b96acac45ba7e561bd618b041599a57d3b81a8a4c9f2f6a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+      "sha256": "2be4dc9a8717cc0a6b0093db182642fa17a1b4fc5e29fde23875fa98f516e47c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/schema.rs",
+      "sha256": "3b2ef93dae7d42048b98c2ac7d4c2e75e730bc761a7b0be868ec9172b038dac8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/tests.rs",
+      "sha256": "4602fde69329077eef8448f2094bf66ed7c52a74da3e217d9960073853b532d2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+      "sha256": "026aa2ee26144d38503a2e8c8d0c23fb6d2799e3172fa5d38229fbc7af86d1d1"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/model_config_official_real.rs",
+      "sha256": "f819f2bbd581eccf696f5bdd66a68602bdb726e7630a2bfea6604a03e80bcb74"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/provider_auth_native.rs",
+      "sha256": "e2d0bb0d1a94f09578f8916631e5f777984e16554226b404eb18cb201a0301b7"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "e1aeb8667b4ae01bdd094fe95cd10cf317fd15b38df802587f38e2f5eab1556a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "ccb6728d6332a6523c886ca96b547d3f7e5c22391417ed7ad4011949537d59a4"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "a43993096568da751c8945b7413cc38adda548f8a89738c7fdd82aa97d97fa5b"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+      "sha256": "9f96f273a0bb31904b4cf420b8f8df597576c398e8cd812f24d2f9118f9a01e0"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-effective-source.test.ts",
+      "sha256": "ae2c19c9176ab3f2a710f0f3406de55fd9e6d52f0a6e493448e39b9a7e115810"
+    }
+  ],
+  "checks": [
+    {
+      "name": "runtime naming semantic tests",
+      "result": "passed",
+      "tests": 2,
+      "log": "naming-rust-final2-20261020.log.gz"
+    },
+    {
+      "name": "model subset and old digest",
+      "result": "passed",
+      "tests": 2,
+      "log": "naming-rust-final-20261020.log.gz"
+    },
+    {
+      "name": "frontend before UI material slice",
+      "result": "passed",
+      "files": 132,
+      "tests": 654,
+      "log": "naming-ui-full-20261020.log.gz"
+    },
+    {
+      "name": "clippy all targets",
+      "result": "passed",
+      "log": "naming-clippy-final-20261020.log.gz"
+    },
+    {
+      "name": "installed official isolated chain",
+      "result": "passed",
+      "seconds": 232.94,
+      "log": "naming-official-corrected-20261020.log.gz",
+      "generationPOST": 0,
+      "officialVersion": "2.84.0"
+    },
+    {
+      "name": "cargo fmt --check",
+      "result": "passed"
+    }
+  ],
+  "failurePreserved": {
+    "log": "naming-official-final-20261020.log.gz",
+    "reason": "Old route-change count expected one before alias-change preview was added. Replaced with exact protocol and alias content assertions, not a production skip."
+  },
+  "browser": {
+    "fixture": "DEV audit, formal ChannelEditor",
+    "rawId": "gpt-demo-0",
+    "rawIdDisabled": true,
+    "displayName": "基础型号",
+    "alias": "local-short",
+    "documentOverflow": false,
+    "screenshot": "model-naming-light.png"
+  },
+  "limitations": [
+    "No paid generation/wire capability assertion",
+    "Native Keychain not covered by the in-memory builder",
+    "Row pending validation/blur rollback, context/navigation and full approved model-table UX remain separate consumer work",
+    "Alias budget follows actual installed catalog; no arbitrary global alias resolver guarantee"
+  ],
+  "rawLogDigests": {
+    "naming-clippy-final-20261020.log": {
+      "rawSHA256": "8293bca559138df25542fd94871b8a5144b112eedb89ba0c584e031ba90d5770",
+      "bytes": 205
+    },
+    "naming-rust-final-20261020.log": {
+      "rawSHA256": "ee43f95de8c5f20e93625cf138a0ec8af86c5407dd13723b0b6d7c246f0158ff",
+      "bytes": 1645
+    },
+    "naming-ui-full-20261020.log": {
+      "rawSHA256": "5dd25885ac73fa43dfe96735e7890247866512edf8091128df30b6251adffd7e",
+      "bytes": 815
+    },
+    "naming-official-final-20261020.log": {
+      "rawSHA256": "e40d2a126d7bf6ab4c89481b1adb4581671bba0fc455cdda1e65d737c195a5f7",
+      "bytes": 943
+    },
+    "naming-official-corrected-20261020.log": {
+      "rawSHA256": "096b671b246ca62bce72f8c5633a1dbfd2eaa65e6c1ab4aed5617c36acae4822",
+      "bytes": 1578
+    },
+    "naming-rust-final2-20261020.log": {
+      "rawSHA256": "5b4ab2fe37b5b77bba9fddf3401bb6894071891ca6d6ebf6faac00acaaff006e",
+      "bytes": 677
+    }
+  }
+}
