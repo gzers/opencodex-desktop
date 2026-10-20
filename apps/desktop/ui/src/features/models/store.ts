@@ -81,8 +81,10 @@ export const useModelsStore = defineStore('model-config', () => {
   }
   function edit(template?: Template, revisionId?: string, copy = false) {
     const revision = template?.revisions.find(item => item.id === revisionId) ?? template?.revisions.at(-1)
+    const nextKey=JSON.stringify([template?.id??'new',revision?.id??'',copy])
+    if((copy||!template)&&hasNewTemplate.value&&nextKey!==bufferKey&&!buffers.has(nextKey)){error.value='请先保存或放弃已有的新建模版，再创建';return}
     retainTemplate()
-    bufferKey=JSON.stringify([template?.id??'new',revision?.id??'',copy])
+    bufferKey=nextKey
     const retained=buffers.get(bufferKey)
     if(retained){draft.value=JSON.parse(JSON.stringify(retained.draft));clean.value=retained.clean;editBaseline.value=retained.baseline;draftSession.value=retained.session;error.value='';status.value='';return}
     draftSession.value = crypto.randomUUID()

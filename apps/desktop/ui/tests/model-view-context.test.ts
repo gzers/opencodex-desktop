@@ -3,6 +3,7 @@ import {mount,flushPromises} from '@vue/test-utils'
 import {createPinia,setActivePinia} from 'pinia'
 import {defineComponent,nextTick,ref} from 'vue'
 import ModelsRoute from '@/routes/ModelsRoute.vue'
+import {useModalStore} from '@/app/modal/store'
 import {useModelsStore} from '@/features/models/store'
 import {useModelViewPosition} from '@/features/models/useViewPosition'
 import {emptyContent,modelApi,type ModelSnapshot} from '@/features/models/api'
@@ -12,6 +13,14 @@ const snapshot=():ModelSnapshot=>({library:{schemaVersion:1,templates:[{id:'fami
 beforeEach(()=>{setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelApi.load).mockResolvedValue(snapshot())})
 const button=(wrapper:ReturnType<typeof mount>,label:string)=>wrapper.findAll('button').find(b=>b.text()===label)!
 describe('model view context',()=>{
+ it('cancels a new copy only after current confirmation, retaining the source and refusing a stale discard',async()=>{
+  const pinia=createPinia();setActivePinia(pinia);const store=useModelsStore(),modal=useModalStore();store.view.tab='templates';const wrapper=mount(ModelsRoute,{global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,TemplateComparisonDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}});await flushPromises()
+  await button(wrapper,'编辑').trigger('click');await wrapper.get('textarea').setValue('原缓冲保持');await wrapper.get('[aria-label="复制模版"]').trigger('click');expect(store.draft!.templateId).toBeNull();await wrapper.get('[aria-label="取消新建"]').trigger('click');modal.resolve('cancel');expect(store.draft).not.toBeNull()
+  await wrapper.get('[aria-label="取消新建"]').trigger('click');store.draft!.label='确认期间后来输入';modal.resolve('confirm');expect(store.draft!.label).toBe('确认期间后来输入');expect(store.error).toContain('过期')
+  await wrapper.get('[aria-label="取消新建"]').trigger('click');modal.resolve('confirm');await flushPromises();expect(store.draft).toBeNull();expect(store.view.templateEditor).toBe(false);expect(store.hasNewTemplate).toBe(false);expect(modelApi.save).not.toHaveBeenCalled()
+  await button(wrapper,'编辑').trigger('click');expect(store.draft!.content.description).toBe('原缓冲保持');wrapper.unmount()
+ })
+
  it('returns to the template list without discarding dirty input and restores it after route remount',async()=>{
   const pinia=createPinia();setActivePinia(pinia);const store=useModelsStore();store.view.tab='templates'
   const options={global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}}

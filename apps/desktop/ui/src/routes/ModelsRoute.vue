@@ -83,6 +83,11 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => { disposed = true; stopChanges?.() })
 function edit(t?: Template, revisionId?: string, copy = false) { if(models.busy)return;models.edit(t, revisionId, copy);models.view.templatePosition=models.draftSession;models.view.templateEditor=true;managerId.value='' }
+function cancelNewTemplate(){
+ if(!draft.value||draft.value.templateId||models.busy)return
+ const baseline=JSON.stringify(draft.value),session=models.draftSession
+ modal.open({title:'取消新建模版',body:'放弃当前未保存的新建内容？原模版、其他编辑缓冲和渠道草稿保持。',confirmLabel:'放弃新建',onConfirm:()=>{if(models.busy||JSON.stringify(models.draft)!==baseline||models.draftSession!==session){models.error='取消确认已过期，当前输入保留';return}models.leave()}})
+}
 function restoreTemplate(){
   const baseline=JSON.stringify(models.draft),session=models.draftSession
   modal.open({title:'还原模版修改',body:'还原当前模版到本次编辑的起点？其他模版与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(JSON.stringify(models.draft)!==baseline||models.draftSession!==session){models.error='还原确认已过期，请重新核对';return}models.restoreTemplate()}})
@@ -165,6 +170,7 @@ function prepareDelete() {
        <UiButton class="model-editor-action" size="sm" aria-label="匹配预览" title="匹配预览" :disabled="models.busy" @click="previewOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span v-if="!collapsed">匹配预览</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="与版本比较" :title="compareTemplate?'比较当前缓冲与保存版本':'保存首版后可比较'" :disabled="!compareTemplate||models.busy" @click="compareOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 6H3v12h5M16 6h5v12h-5"/></svg><span v-if="!collapsed">与版本比较</span></UiButton>
        <UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton>
+       <UiButton v-if="!draft.templateId" class="model-editor-action" size="sm" variant="ghost" aria-label="取消新建" title="放弃当前未保存的新建模版" :disabled="models.busy" @click="cancelNewTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg><span v-if="!collapsed">取消新建</span></UiButton>
        <UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton>
       </template>
       <div class="model-form">
