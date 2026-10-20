@@ -1,0 +1,173 @@
+{
+  "scope": "助手逐编辑会话输入/选区/滚动连续性",
+  "date": "2026-10-20",
+  "checks": {
+    "uiFullFiles": 141,
+    "uiFullTests": 699,
+    "affectedTests": 13,
+    "build": "passed"
+  },
+  "browser": [
+    {
+      "input": "当前会话里尚未发送的纠偏输入",
+      "messages": 20,
+      "nativeDialogs": 0,
+      "overflow": false,
+      "panel": {
+        "bottom": 708,
+        "height": 672,
+        "left": 868,
+        "right": 1268,
+        "top": 36,
+        "width": 400,
+        "x": 868,
+        "y": 36
+      },
+      "view": "assistant-reopened"
+    },
+    {
+      "dialogOpen": 0,
+      "input": "当前会话里尚未发送的纠偏输入",
+      "messages": 20,
+      "view": "assistant-route-return"
+    },
+    {
+      "button": {
+        "bottom": 554,
+        "height": 68,
+        "left": 753.5078125,
+        "right": 854,
+        "top": 486,
+        "width": 100.4921875,
+        "x": 753.5078125,
+        "y": 486
+      },
+      "chat": {
+        "bottom": 420,
+        "height": 122,
+        "left": 78,
+        "right": 874,
+        "top": 298,
+        "width": 796,
+        "x": 78,
+        "y": 298
+      },
+      "footer": {
+        "bottom": 574,
+        "height": 154,
+        "left": 78,
+        "right": 874,
+        "top": 420,
+        "width": 796,
+        "x": 78,
+        "y": 420
+      },
+      "input": {
+        "bottom": 554,
+        "height": 112,
+        "left": 98,
+        "right": 737.5078125,
+        "top": 442,
+        "width": 639.5078125,
+        "x": 98,
+        "y": 442
+      },
+      "modal": 0,
+      "overflow": false,
+      "panel": {
+        "bottom": 576,
+        "height": 504,
+        "left": 76,
+        "right": 876,
+        "top": 72,
+        "width": 800,
+        "x": 76,
+        "y": 72
+      },
+      "zoom": "2",
+      "view": "assistant-900-200-final"
+    },
+    {
+      "footer": {
+        "bottom": 574,
+        "height": 154,
+        "left": 26,
+        "right": 874,
+        "top": 420,
+        "width": 848,
+        "x": 26,
+        "y": 420
+      },
+      "modal": 0,
+      "overflow": false,
+      "panel": {
+        "bottom": 576,
+        "height": 504,
+        "left": 24,
+        "right": 876,
+        "top": 72,
+        "width": 852,
+        "x": 24,
+        "y": 72
+      },
+      "view": "assistant-maximized-900-200"
+    }
+  ],
+  "screenshots": [
+    "agent-reopened-input-20261020.png",
+    "agent-900-200-compact-20261020.png"
+  ],
+  "logs": [
+    {
+      "path": "agent-view-typecheck-20261020.log.gz",
+      "rawSha256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
+    },
+    {
+      "path": "agent-view-save-continuity-20261020.log.gz",
+      "rawSha256": "76e5cdfca91843e96fe584d0f5793dea1d501e983ff367c236d2773c8d2f32fa"
+    },
+    {
+      "path": "agent-context-ui-final-20261020.log.gz",
+      "rawSha256": "a141f1372143359ea656c06b433669cff561b820b98f03672fd2da9f29b0478e"
+    },
+    {
+      "path": "agent-context-ui-build-final-20261020.log.gz",
+      "rawSha256": "e5d0eb3241fa6fe84e00c1923c1432c162b2c142fd9779824220d9f5ee09da5f"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "a2719b6a67737cbd759ad0961cc78a7f5160ec88f1906a32976dc1c0bb060b0c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/AgentPanel.vue",
+      "sha256": "2166fb4d1346f2a8fe3557a44d7d9c3ca6375ad10e73d9d24bdd58ed8e9af752"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "0d24948e9b6c16250b30e798e9ac94312d689509f078328f7c3b433d51ca8b1c"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "8796f26a089d65a8dfc52fecf469a5fd9a9ad4bd45cb735cfbf6b81ca1cef821"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-agent-restore.test.ts",
+      "sha256": "cf1817205f2c3ad10f1ee7a1c863347f83e2be69d9ffc387dc02744d0ca79b47"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-config.test.ts",
+      "sha256": "d7ddae757d51150902d4ba49196604f147b35235123ee89c37837295ab9fa24d"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/agentView.ts",
+      "sha256": "957f8609199a87ad85c1062711e90bc2aa527c6e2634f6d66ee20076da5dd15d"
+    }
+  ],
+  "limitations": [
+    "明确DEV20消息/本机恢复固定资料，不调用执行模型",
+    "无多轮付费生成或跨平台原生证明",
+    "整体原型启动器/动效与完整消费者平台矩阵仍单列，0.2.0未发布"
+  ]
+}

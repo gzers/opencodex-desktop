@@ -685,3 +685,12 @@ CUA当前gallery长内容48组（亮暗×高/中/低×50/100/150/200%×900/1180�
 专项使用真实model_template_save建独立测试模版，再正式DOM编辑说明/保存新版本、读回旧版未变、返回列表→版本管理→默认确认（必须原生dialog open0、AppModal可见）→回原管理，验证仅默认指针变化不改渠道策略。仅该模版精确版文件准备/导出/接收/采用仍走真实Tauri IPC，导出路径必须在本次sandbox exports，渠道策略和本机默认保持。无DEV store注入/资料夹具、无运行配置或网络生成。输出model-ui.json/model-template-native.png单独绑定该EXE。
 
 本机Node准入与CDP回归9项、语法及diff检查通过，含错误平台/根/未激活/相对路径在调用IPC前拒绝；这些不作为Windows现场。已接入原CI frontend脚本检查和backend-windows最终EXE smoke，真实业务结果须由新源CI完成后读取，当前本节仅“验证路径已实施、远端待运行”，不得报通过。证据checks-windows-model-ui-admission-20261020.json。
+
+
+### 助手逐编辑会话输入/选区/滚动连续性
+
+按AC-M93补会话内AgentViewContext，由models.view按draftSession保存输入、资料/检索词、消息、待比较建议/原基准、选择字段、聊天scrollTop/输入选区及放大状态；不进入policy/便携文件/执行设置。AgentPanel用props接此视图，仍独立本机conversation服务维持跨启动CAS；会话内重开/路由重挂载不要求重新手工恢复，跨启动的恢复入口继续明确。保存同逻辑编辑产生新revision时复制当前会话视图，新对象会话独立；旧建议保留旧base并由sameTarget门拒绝自动套到新版本。未发输入/选区和滚动在编辑/scroll/select/隐藏/卸载捕获，恢复仅在可见时返回原输入焦点，不改人工模版字段。
+
+面板执行模型区移到固定顶部，聊天/资料/建议中部独立滚动，新增放大/还原且无modal遮罩。窗口宽高按实际ui-zoom布局单位约束；实屏900×600/200%发现footer继承space-between网格只剩145px输入、发送超出底部，现按原型输入+发送同排（textarea56–96逻辑高度），发送按钮/输入均落在面板内，聊天仍122物理px可滚。该变化不调用生成或保存Agent配置。
+
+新增3项行为覆盖会话hide/remount输入/选区/滚动/焦点、两个新建会话不互漏、保存新版本仍留本会话而不自动应用旧建议；原恢复/ModelStore/视图3文件13项及最终全量141文件699项/构建通过。DEV20条本机固定历史→恢复→输入→收起重开→Sync往返重开仍20条/原输入，原生dialog0，无文档溢出；200%面板800×504位于(76,72)–(876,576)，发送(753.5,486)–(854,554)和输入均在内部，放大不锁页面。仅内存fixture、不配置执行模型、不发生成；未据此宣称真实多轮模型输出或完整动效/启动器/平台验收。证据checks-agent-view-continuity-20261020.json。
