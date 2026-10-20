@@ -832,3 +832,10 @@ CI39435891819/a2f89fa1全部适用job success，feature build skipped；下载ar
 工具原生drag连续未触发重排，按实际缺口请用户在OpenCodeX 020 Final隔离窗口操作，不点保存。用户明确回复“已成功拖动”；随后读取持久model-config-draft：fixture-one由claude/fixture-raw/gpt变为claude/gpt/fixture-raw，fixture-two完全不变，原生AX行顺序同样一致；policy文件仍不存在，该轮fixture生成0。当前DND/ordering源摘要与真实bundle/before/after/screenshot保留checks-macos-manual-sort-20261020.json，不把此前工具失败改成通过，也不冒称最终tag制品。用户完成后只退出已核命令/PID的本次app/runner，由runner停自有官方子进程，日常应用保持。
 
 Windows39444326645/0378a69e在新上下文专项报“找不到导出上下文可见动作”；前一步只读比较已到达，现有按钮是UiIconButton，以aria-label命名没有正文文字，而测试helper只按textContent查找。helper现匹配准确正文或aria-label，仍要求可见且未禁用，不改产品或豁免断言。Node准入3项/语法成功，新实际外部任务内容与全链结果仍待后续CI，checks-editor-icon-selector-20261020.json保留原失败和源码。
+
+
+### 当前macOS构建的比较与外部上下文正式入口
+
+从b6d95619精确源码重建0.2.0 sandbox，沿Windows→Mac单模板根打开正式编辑，说明改“macOS 当前缓冲专项 · 不保存”→只读比较1项，保存版原说明与当前值均可见，关闭保持表单/库。正式Agent底栏→导出上下文打开同一个外部任务弹窗，完整任务就绪；原生AX会截断长文本，未把授权正文或Bearer输出/截图进资料。改经正式“复制完整任务”按钮激活隔离本地grant，UI变“再次复制完整任务”，再从持久task记录只提取目标/精确revision/缓冲说明/allowNew=false等安全字段。唯一目标和当前未保存说明准确，模板库SHA与此前完全相同、policy仍不存在，无submit或模型请求。
+
+checks-macos-current-editor-20261020.json绑定源码/真实二进制/安全字段与比较截图，构建原日志压缩保留。该复制动作只激活本地测试root的授权，不代表外部Agent已经提交或真实模型语义质量；共同broker预检/提交另有回环证据。已关闭命令/PID精确匹配的本次app，原任务材料留隔离根、服务不再运行，日常app保持。当前Windows后续仍须自己的实际结果。

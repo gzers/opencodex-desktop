@@ -1,0 +1,43 @@
+{
+  "scope": "current0.2.0 macOS native readonly comparison and actual external task activation",
+  "source": "b6d95619575b50752f67adf2dae0e3274ff3ac77",
+  "nativeSha256": "12c48928d590b6e092bc7d59fec1aa55a21ed68bb25f897e0b06545944764db4",
+  "comparison": {
+    "differences": 1,
+    "savedDescription": "edited through native Vue handler",
+    "currentDescription": "macOS 当前缓冲专项 · 不保存",
+    "libraryUnchanged": true,
+    "screenshot": "macos-current-comparison-20261020.jpg"
+  },
+  "external": {
+    "safeTasks": [
+      {
+        "taskId": "13c7f361-93f9-4a64-84aa-fa30cfc9f82b",
+        "targets": [
+          {
+            "templateId": "4b1af61b-5f20-40e8-a747-ef6ea8caf517",
+            "revisionId": "162baf54-dceb-4209-9ede-517050b39620",
+            "bufferDescription": "macOS 当前缓冲专项 · 不保存"
+          }
+        ],
+        "allowNew": false,
+        "revoked": false
+      }
+    ],
+    "libraryUnchanged": true,
+    "policyExists": false,
+    "activation": "formal copy button; no submission/model call"
+  },
+  "uiCopyButton": "再次复制完整任务",
+  "tokenHandling": "no raw task body/Bearer was printed or recorded; native AX truncates long task text, so validated safe fields from durable activated record after explicit formal copy button",
+  "submission": false,
+  "modelRequests": 0,
+  "scopeBoundary": "single test template, no execution model/account/node; prepared same existing external dialog, copying only activates scoped local grant",
+  "sources": {
+    "apps/desktop/ui/src/features/models/AgentPanel.vue": "0f140bf2b147b2f01da6d55362280062329c5c8483c7c49960297c2f0f5ef092",
+    "apps/desktop/ui/src/features/models/ExternalTaskDialog.vue": "86218d96349dfdbd41349e1c1b7a151705a4711b6a823aea0d4eb3041b529213",
+    "apps/desktop/ui/src/features/models/TemplateComparisonDialog.vue": "eae3c47718aca9bfb968dceb70edc6d3e936bcba127a7e20f763fa71a30d0164",
+    "apps/desktop/tauri/src/modules/model_config/broker.rs": "3f216db2f21346a9a37facff2373eaa382475b8ae7797b0ce2802a140a146dd7",
+    "apps/desktop/tauri/src/modules/model_config/tasks.rs": "f4b331ddab5cf95648bc38eaf8a5c37ab6ab388477e24818dcf9353415263657"
+  }
+}
