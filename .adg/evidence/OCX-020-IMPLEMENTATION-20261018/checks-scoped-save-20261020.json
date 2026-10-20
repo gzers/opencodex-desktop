@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "4bf58c89",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/commands/model_config.rs",
+      "sha256": "84dfb8713e03b06e1d027fcfd2c8ad17482488ca7d9af786ee58866482036480"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+      "sha256": "51d5c7c683c65cdf293a07623b388749b20858699ffd46f91c682ade75ded094"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/store.rs",
+      "sha256": "057d2698cdcb6414dc95603f5d0982e959f8a72e31ce3cf1892e20a6efdd02fa"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "6bee7e6ff525b6b954412bae423ddaf0c273da9b3b8bf3787c1e06ac601cfaee"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "83dc1199b80d676a6838ac031754ccba1d6423327980a36cfbcb18af4668e02a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "42c8be3a8e3867ab024a3487f434b85012cd699507ed4b976d3a063931377cd8"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-save-recovery.test.ts",
+      "sha256": "6b814736e293317be268f66952c4f86bd743e75b3a4808b9c7529cb956c48946"
+    }
+  ],
+  "checks": {
+    "scoped": "2 passed including loopback CLI/API prepare→apply→local rebase→readback→idempotent later-edit preservation",
+    "modelModule": "150 passed",
+    "frontend": "133 files / 660 passed",
+    "build": "passed",
+    "clippy": "all targets -D warnings passed"
+  },
+  "logs": [
+    {
+      "file": "scoped-save-rust-20261020.log.gz",
+      "rawSHA256": "8ce69f2021e5d5bb2c925bd478352cc97713308717803139c2ca111705d869e6"
+    },
+    {
+      "file": "scoped-save-module-20261020.log.gz",
+      "rawSHA256": "2b4434a782339d184cd2d4ca528849969b1938d3dd50bcc9d377c28744b8b075"
+    },
+    {
+      "file": "scoped-save-clippy-20261020.log.gz",
+      "rawSHA256": "eaf223947f42e4d2b150fb10181c10219d116191b5e88820a0c3959815fdbb5b"
+    },
+    {
+      "file": "scoped-save-ui-full-20261020.log.gz",
+      "rawSHA256": "5358d8752b172b2264f792abca64f59eb60e4117c07d1c457cc34c359687d480"
+    },
+    {
+      "file": "scoped-save-build-final-20261020.log.gz",
+      "rawSHA256": "20bf33a51b2839702e7ef375d392f6adc82a5aa282168e04130e93d813627698"
+    },
+    {
+      "file": "scoped-save-ui-final-20261020.log.gz",
+      "rawSHA256": "0bc902ef240319d19d9648582e9e27b5ce75defbc3617600d8cc267daec9801d"
+    },
+    {
+      "file": "scoped-save-ui-final2-20261020.log.gz",
+      "rawSHA256": "60122ece9376a7bb2411c420464b461828e9acc551c0ef05b9b3951aceb6f9c9"
+    }
+  ],
+  "browser": {
+    "fixture": "formal Vue DEV, no real save invoked",
+    "flow": "edit two channels > save preview > adjust range > explicitly uncheck one > compare > only selected + deferred list, Escape cancels",
+    "overflow": false,
+    "screenshot": "scoped-save-review-light.png"
+  },
+  "limitations": [
+    "Public upstream verbs exercised through controlled CLI/API fixture, not another installed-official/native run this slice",
+    "Full approved channel connection/table UX and real native consumer matrix still open",
+    "No paid or daily account access"
+  ],
+  "ciVerified": [
+    {
+      "sha": "ec92d53b9",
+      "run": 39367956094,
+      "result": "all applicable jobs successful, release build skipped for feature branch"
+    },
+    {
+      "sha": "18584625f",
+      "run": 39369016960,
+      "result": "all applicable jobs successful, release build skipped for feature branch"
+    }
+  ],
+  "earlierFailure": "New standalone consumer test exposed Vue Boolean active default false from context slice; default corrected to true, explicit tab binding still controls production hidden actions."
+}
