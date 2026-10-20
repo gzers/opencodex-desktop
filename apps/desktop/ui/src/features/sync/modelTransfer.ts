@@ -1,9 +1,22 @@
 import { invoke } from '@tauri-apps/api/core'
 import type { ChannelPolicy, ModelSnapshot, Template, TemplateRef, DiscoveredModel } from '@/features/models/api'
 export interface TransferScope {channelModels?:Record<string,string[]>; includePolicy: boolean; channelIds: string[]; templateRefs: TemplateRef[]; includeGlobal: boolean }
-export interface PortableAccount {id:string;provider:string;subject:string|null;label:string;email:string|null}
+export interface AccountOrigin {version:number;accountPlatform:string;owner:string;authKind:string;sourceNamespace:string;sourceAccountId:string;tenant:string|null}
+export interface PortableAccount {id:string;provider:string;subject:string|null;label:string;email:string|null;origin?:AccountOrigin}
 export type LoginTransfer = 'manualImportDisabled'|'crossDeviceEvidenceMissing'|'dedicatedAdapterRequired'|'unsupportedProvider'
-export interface AccountCatalogEntry {account:PortableAccount;loginTransfer:LoginTransfer;localSource:boolean}
+export interface AccountCatalogEntry {account:PortableAccount;loginTransfer:LoginTransfer;localSource:boolean;informationSupported:boolean}
+export const accountPlatforms:Record<string,string>={chatgpt:'ChatGPT',antigravity:'Google Antigravity',kiro:'Kiro',muse:'Muse'}
+export function accountInformationSupported(account:PortableAccount):boolean {
+  const expected=({chatgpt:'chatgpt','google-antigravity':'antigravity',kiro:'kiro',muse:'muse'} as Record<string,string>)[account.provider]
+  if(!expected)return false
+  const origin=account.origin;if(!origin)return true
+  return origin.version===1&&origin.accountPlatform===expected&&origin.owner==='opencodex'&&origin.sourceNamespace===(account.provider==='chatgpt'?'codex-account-pool':'oauth-account-pool')&&(account.provider==='kiro'?['unknown','kiro_desktop','aws_sso_oidc'].includes(origin.authKind):origin.authKind==='oauth')
+}
+export function accountInformationLabel(account:PortableAccount):string {
+  const origin=account.origin
+  const label=origin?[(accountPlatforms[origin.accountPlatform]??origin.accountPlatform),account.email].filter(Boolean).join(' · '):'旧格式 · 来源未登记'
+  return label+' · '+(accountInformationSupported(account)?'仅账户信息 · 新设备需登录':'暂不支持此来源的信息同步')
+}
 export function accountTransferLabel(provider:string):string {
   if(provider==='chatgpt')return '需重新登录 · 官方不支持手工导入登录态'
   if(provider==='google-antigravity')return '需重新登录 · 免登录迁移尚未验证'

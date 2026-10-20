@@ -28,6 +28,87 @@ pub struct AccountInfo {
     pub subject: Option<String>,
     pub label: String,
     pub email: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub origin: Option<AccountOrigin>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct AccountOrigin {
+    pub version: u32,
+    pub account_platform: String,
+    pub owner: String,
+    pub auth_kind: String,
+    pub source_namespace: String,
+    pub source_account_id: String,
+    pub tenant: Option<String>,
+}
+fn platform(provider: &str) -> Option<&'static str> {
+    match provider {
+        "chatgpt" => Some("chatgpt"),
+        "google-antigravity" => Some("antigravity"),
+        "kiro" => Some("kiro"),
+        "muse" => Some("muse"),
+        _ => None,
+    }
+}
+pub fn information_supported(account: &AccountInfo) -> bool {
+    let Some(expected) = platform(&account.provider) else {
+        return false;
+    };
+    // Old information-only records remain readable without inventing their owner.
+    account.origin.as_ref().is_none_or(|origin| {
+        origin.version == 1
+            && origin.account_platform == expected
+            && origin.owner == "opencodex"
+            && origin.source_namespace
+                == if account.provider == "chatgpt" {
+                    "codex-account-pool"
+                } else {
+                    "oauth-account-pool"
+                }
+            && match account.provider.as_str() {
+                "kiro" => {
+                    ["unknown", "kiro_desktop", "aws_sso_oidc"].contains(&origin.auth_kind.as_str())
+                }
+                _ => origin.auth_kind == "oauth",
+            }
+    })
+}
+/// Cross-device association needs a known subject and the same origin domain.
+/// Labels, email, raw slot IDs and absent origin never identify a new-format account.
+pub fn same_subject(a: &AccountInfo, b: &AccountInfo) -> bool {
+    if a.provider != b.provider || a.subject.is_none() || a.subject != b.subject {
+        return false;
+    }
+    match (&a.origin, &b.origin) {
+        (Some(a), Some(b)) => {
+            a.version == b.version
+                && a.account_platform == b.account_platform
+                && a.owner == b.owner
+                && a.auth_kind == b.auth_kind
+                && a.source_namespace == b.source_namespace
+                && a.tenant == b.tenant
+        }
+        // Exact old object identity is preserved; no cross-ID legacy inference.
+        _ => a.id == b.id,
+    }
+}
+fn same_object(a: &AccountInfo, b: &AccountInfo) -> bool {
+    a.provider == b.provider
+        && a.subject == b.subject
+        && match (&a.origin, &b.origin) {
+            (Some(left), Some(right)) => {
+                if a.subject.is_some() {
+                    same_subject(a, b)
+                } else {
+                    left == right
+                }
+            }
+            _ => a.id == b.id,
+        }
+}
+pub fn same_identity(a: &AccountInfo, b: &AccountInfo) -> bool {
+    (a.id == b.id && same_object(a, b)) || same_subject(a, b)
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -51,6 +132,7 @@ pub struct CatalogEntry {
     pub account: AccountInfo,
     pub login_transfer: LoginTransfer,
     pub local_source: bool,
+    pub information_supported: bool,
 }
 fn text_ok(value: &str, max: usize) -> bool {
     !value.trim().is_empty() && value.len() <= max && !value.chars().any(char::is_control)
@@ -75,12 +157,38 @@ pub fn validate(accounts: &[AccountInfo]) -> ModelResult<()> {
                 .email
                 .as_ref()
                 .is_some_and(|s| !text_ok(s, 254) || !s.contains('@'))
-            || account
-                .subject
-                .as_ref()
-                .is_some_and(|s| !identities.insert((&account.provider, s)))
+            || account.subject.as_ref().is_some_and(|s| {
+                !identities.insert((
+                    &account.provider,
+                    s,
+                    account.origin.as_ref().map(|o| {
+                        (
+                            &o.account_platform,
+                            &o.owner,
+                            &o.auth_kind,
+                            &o.source_namespace,
+                            &o.tenant,
+                        )
+                    }),
+                ))
+            })
         {
             return Err(invalid("account_info", "账户身份重复或显示信息无效"));
+        }
+        if let Some(origin) = &account.origin {
+            if origin.version != 1
+                || !text_ok(&origin.account_platform, 128)
+                || !text_ok(&origin.owner, 128)
+                || !text_ok(&origin.auth_kind, 128)
+                || !text_ok(&origin.source_namespace, 128)
+                || !text_ok(&origin.source_account_id, 512)
+                || origin
+                    .tenant
+                    .as_ref()
+                    .is_some_and(|value| !text_ok(value, 512))
+            {
+                return Err(invalid("account_origin", "账户平台或来源信息无效"));
+            }
         }
     }
     Ok(())
@@ -115,16 +223,20 @@ pub fn merge(
     validate(&local)?;
     validate(incoming)?;
     for account in incoming {
+        if !information_supported(account) {
+            return Err(invalid(
+                "account_capability",
+                "尚未支持此账户平台或来源的信息采用",
+            ));
+        }
         if let Some(existing) = local.iter().find(|a| a.id == account.id) {
-            if existing.provider != account.provider || existing.subject != account.subject {
+            if !same_object(existing, account) {
                 return Err(invalid(
                     "account_identity_conflict",
                     "相同账户标识指向不同身份，未覆盖",
                 ));
             }
-        } else if !local.iter().any(|a| {
-            a.provider == account.provider && a.subject.is_some() && a.subject == account.subject
-        }) {
+        } else if !local.iter().any(|a| same_subject(a, account)) {
             local.push(account.clone());
         }
     }
@@ -139,6 +251,12 @@ pub fn merge(
 struct CredentialInfo {
     account_id: Option<String>,
     email: Option<String>,
+    kiro: Option<KiroInfo>,
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct KiroInfo {
+    auth_type: Option<String>,
 }
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -176,6 +294,12 @@ struct CodexInfo {
 #[serde(rename_all = "camelCase")]
 struct CodexRecord {
     deleted_at: Option<u64>,
+    credential: Option<CodexCredentialIdentity>,
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct CodexCredentialIdentity {
+    source_subject: Option<String>,
 }
 struct SourceInfo {
     provider: String,
@@ -183,6 +307,9 @@ struct SourceInfo {
     subject: Option<String>,
     label: String,
     email: Option<String>,
+    auth_kind: String,
+    tenant: Option<String>,
+    legacy_subject: Option<String>,
 }
 fn source_infos(upstream: &Path) -> ModelResult<Vec<SourceInfo>> {
     let mut infos = vec![];
@@ -209,11 +336,22 @@ fn source_infos(upstream: &Path) -> ModelResult<Vec<SourceInfo>> {
                     credential: CredentialInfo {
                         account_id: value.account_id,
                         email: value.email,
+                        kiro: None,
                     },
                 }]
             };
             for account in accounts {
                 let subject = account.credential.account_id;
+                let legacy_subject = subject.clone();
+                let auth_kind = if provider == "kiro" {
+                    account
+                        .credential
+                        .kiro
+                        .and_then(|k| k.auth_type)
+                        .unwrap_or_else(|| "unknown".into())
+                } else {
+                    "oauth".into()
+                };
                 let email = account.credential.email;
                 let label = account
                     .alias
@@ -221,10 +359,13 @@ fn source_infos(upstream: &Path) -> ModelResult<Vec<SourceInfo>> {
                     .unwrap_or_else(|| provider.clone());
                 infos.push(SourceInfo {
                     provider: provider.clone(),
-                    source_id: account.id,
+                    source_id: account.id.clone(),
                     subject,
                     label,
                     email,
+                    auth_kind,
+                    tenant: None,
+                    legacy_subject,
                 });
             }
         }
@@ -246,13 +387,19 @@ fn source_infos(upstream: &Path) -> ModelResult<Vec<SourceInfo>> {
             }
             infos.push(SourceInfo {
                 provider: "chatgpt".into(),
-                source_id: account.id,
-                subject: account.chatgpt_account_id,
+                source_id: account.id.clone(),
+                subject: records
+                    .get(&account.id)
+                    .and_then(|r| r.credential.as_ref())
+                    .and_then(|c| c.source_subject.clone()),
+                tenant: account.chatgpt_account_id.clone(),
+                legacy_subject: account.chatgpt_account_id,
                 label: account
                     .alias
                     .or_else(|| account.email.clone())
                     .unwrap_or_else(|| "ChatGPT".into()),
                 email: account.email,
+                auth_kind: "oauth".into(),
             });
         }
     }
@@ -289,41 +436,79 @@ pub fn catalog(root: &Path, upstream: &Path) -> ModelResult<Vec<CatalogEntry>> {
         if !text_ok(&source.source_id, 512) {
             return Err(invalid("account_source", "官方账户标识无效"));
         }
-        let identity = sha256(&serde_json::to_vec(&(
+        let legacy_identity = sha256(&serde_json::to_vec(&(
             &source.provider,
-            if source.subject.is_some() {
+            if source.legacy_subject.is_some() {
                 "subject"
             } else {
                 "source"
             },
-            source.subject.as_ref().unwrap_or(&source.source_id),
-            if source.subject.is_none() {
+            source.legacy_subject.as_ref().unwrap_or(&source.source_id),
+            if source.legacy_subject.is_none() {
                 Some((upstream, &source.email))
             } else {
                 None
             },
         ))?);
+        let origin = AccountOrigin {
+            version: 1,
+            account_platform: platform(&source.provider).unwrap_or("unknown").into(),
+            owner: "opencodex".into(),
+            auth_kind: source.auth_kind,
+            source_namespace: if source.provider == "chatgpt" {
+                "codex-account-pool"
+            } else {
+                "oauth-account-pool"
+            }
+            .into(),
+            source_account_id: source.source_id.clone(),
+            tenant: source.tenant,
+        };
+        let identity = sha256(&serde_json::to_vec(&(
+            "account-origin-v1",
+            &source.provider,
+            &origin.account_platform,
+            &origin.owner,
+            &origin.auth_kind,
+            &origin.source_namespace,
+            &origin.tenant,
+            &source.subject,
+            if source.subject.is_none() {
+                Some((upstream, &source.source_id))
+            } else {
+                None
+            },
+        ))?);
+        let mut account = AccountInfo {
+            id: String::new(),
+            provider: source.provider,
+            subject: source.subject,
+            label: source.label,
+            email: source.email,
+            origin: Some(origin),
+        };
+        let old_id = ids
+            .get(&legacy_identity)
+            .filter(|id| {
+                !local.iter().any(|a: &AccountInfo| &a.id == *id)
+                    && !imported.iter().any(|a| {
+                        &a.id == *id
+                            && (a.provider != account.provider || a.subject != account.subject)
+                    })
+            })
+            .cloned();
         let id = ids
             .entry(identity)
             .or_insert_with(|| {
                 imported
                     .iter()
-                    .find(|a| {
-                        a.provider == source.provider
-                            && source.subject.is_some()
-                            && a.subject == source.subject
-                    })
+                    .find(|a| same_subject(a, &account))
                     .map(|a| a.id.clone())
+                    .or(old_id)
                     .unwrap_or_else(|| uuid::Uuid::new_v4().to_string())
             })
             .clone();
-        let account = AccountInfo {
-            id,
-            provider: source.provider,
-            subject: source.subject,
-            label: source.label,
-            email: source.email,
-        };
+        account.id = id;
         if let Some(previous) = local.iter().find(|a: &&AccountInfo| a.id == account.id) {
             if previous != &account {
                 return Err(invalid(
@@ -336,7 +521,20 @@ pub fn catalog(root: &Path, upstream: &Path) -> ModelResult<Vec<CatalogEntry>> {
         }
     }
     validate(&local)?;
-    let all = merge(local.clone(), &imported)?;
+    let supported: Vec<_> = imported
+        .iter()
+        .filter(|a| information_supported(a))
+        .cloned()
+        .collect();
+    let mut all = merge(local.clone(), &supported)?;
+    // Keep old, unavailable metadata visible but never make it selectable by a preset.
+    all.extend(
+        imported
+            .iter()
+            .filter(|a| !information_supported(a))
+            .cloned(),
+    );
+    validate(&all)?;
     if ids.len() > 20000 {
         return Err(invalid("account_registry", "账户标识登记超过上限"));
     }
@@ -348,6 +546,7 @@ pub fn catalog(root: &Path, upstream: &Path) -> ModelResult<Vec<CatalogEntry>> {
         .map(|account| CatalogEntry {
             login_transfer: login_transfer(&account.provider),
             local_source: local.iter().any(|a| a.id == account.id),
+            information_supported: information_supported(&account),
             account,
         })
         .collect())
@@ -373,6 +572,7 @@ pub fn export(
             accounts
                 .iter()
                 .find(|entry| &entry.account.id == id)
+                .filter(|entry| entry.information_supported)
                 .map(|entry| entry.account.clone())
                 .ok_or_else(|| invalid("account_scope", "所选账户已不存在，请重新选择"))
         })
@@ -390,7 +590,89 @@ mod tests {
             subject: subject.map(str::to_string),
             label: "测试账户".into(),
             email: Some("fixture@example.test".into()),
+            origin: None,
         }
+    }
+    fn origin(platform: &str, namespace: &str, slot: &str) -> AccountOrigin {
+        AccountOrigin {
+            version: 1,
+            account_platform: platform.into(),
+            owner: "opencodex".into(),
+            auth_kind: "oauth".into(),
+            source_namespace: namespace.into(),
+            source_account_id: slot.into(),
+            tenant: None,
+        }
+    }
+    #[test]
+    fn chatgpt_shared_tenant_and_email_do_not_collapse_two_source_accounts() {
+        let root = tempfile::tempdir().unwrap();
+        let source = tempfile::tempdir().unwrap();
+        write(
+            source.path(),
+            "config.json",
+            json!({"codexAccounts":[
+            {"id":"personal","email":"same@example.test","chatgptAccountId":"shared-tenant"},
+            {"id":"work","email":"same@example.test","chatgptAccountId":"shared-tenant"}]}),
+        );
+        let rows = catalog(root.path(), source.path()).unwrap();
+        assert_eq!(rows.len(), 2);
+        assert_ne!(rows[0].account.id, rows[1].account.id);
+        assert!(rows
+            .iter()
+            .all(|row| row.account.subject.is_none() && row.information_supported));
+        let chosen = export(
+            root.path(),
+            Some(source.path()),
+            &[rows[1].account.id.clone()],
+        )
+        .unwrap();
+        assert_eq!(chosen.len(), 1);
+        assert_eq!(chosen[0].origin.as_ref().unwrap().source_account_id, "work");
+        let again = catalog(root.path(), source.path()).unwrap();
+        assert_eq!(rows[0].account.id, again[0].account.id);
+        assert_eq!(rows[1].account.id, again[1].account.id);
+        write(
+            source.path(),
+            "codex-accounts.json",
+            json!({"personal":{"credential":{"sourceSubject":"subject-p","refreshToken":"NEVER-EXPORT"}},"work":{"credential":{"sourceSubject":"subject-w"}}}),
+        );
+        let identified = catalog(root.path(), source.path()).unwrap();
+        assert_eq!(identified[0].account.subject.as_deref(), Some("subject-p"));
+        assert_eq!(identified[1].account.subject.as_deref(), Some("subject-w"));
+        assert!(!serde_json::to_string(&identified)
+            .unwrap()
+            .contains("NEVER-EXPORT"));
+    }
+    #[test]
+    fn origin_tenant_and_capability_bind_merge_and_old_records_remain_unclassified() {
+        let legacy = info("chatgpt", Some("subject"));
+        let encoded = serde_json::to_value(&legacy).unwrap();
+        assert!(encoded.get("origin").is_none());
+        let mut a = legacy.clone();
+        a.id = uuid::Uuid::new_v4().to_string();
+        a.origin = Some(origin("chatgpt", "codex-account-pool", "slot"));
+        assert_eq!(merge(vec![legacy.clone()], &[a.clone()]).unwrap().len(), 2);
+        let mut other = a.clone();
+        other.id = uuid::Uuid::new_v4().to_string();
+        other.origin.as_mut().unwrap().tenant = Some("another-tenant".into());
+        assert_eq!(merge(vec![a.clone()], &[other.clone()]).unwrap().len(), 2);
+        assert!(!same_identity(&a, &other));
+        other.origin.as_mut().unwrap().account_platform = "kiro".into();
+        assert!(!information_supported(&other));
+        assert_eq!(
+            merge(vec![a.clone()], &[other]).unwrap_err().code,
+            "account_capability"
+        );
+        let mut unsupported = a;
+        unsupported.origin.as_mut().unwrap().owner = "platform-native".into();
+        assert_eq!(
+            merge(vec![], &[unsupported]).unwrap_err().code,
+            "account_capability"
+        );
+        let mut old_other = legacy.clone();
+        old_other.id = uuid::Uuid::new_v4().to_string();
+        assert!(!same_identity(&legacy, &old_other));
     }
     fn write(root: &Path, name: &str, value: serde_json::Value) {
         std::fs::create_dir_all(root).unwrap();
@@ -453,7 +735,11 @@ mod tests {
         );
         let found = catalog(root.path(), source.path()).unwrap();
         assert_eq!(found.len(), 1);
-        assert_eq!(found[0].account.subject.as_deref(), Some("subject-a"));
+        assert_eq!(found[0].account.subject, None);
+        assert_eq!(
+            found[0].account.origin.as_ref().unwrap().tenant.as_deref(),
+            Some("subject-a")
+        );
         assert_eq!(found[0].login_transfer, LoginTransfer::ManualImportDisabled);
     }
     #[test]
@@ -475,7 +761,8 @@ mod tests {
     fn same_subject_keeps_local_label_and_ids_and_never_writes_official_stores() {
         let root = tempfile::tempdir().unwrap();
         let source = tempfile::tempdir().unwrap();
-        let local = info("google-antigravity", Some("subject"));
+        let mut local = info("google-antigravity", Some("subject"));
+        local.origin = Some(origin("antigravity", "oauth-account-pool", "old-slot"));
         std::fs::create_dir_all(root.path().join("manager-state")).unwrap();
         write(root.path(), IMPORTED, json!([local]));
         let value = json!({"google-antigravity":{"accounts":[{"id":"upstream","alias":"本机官方别名","credential":{"accountId":"subject"}}]}});

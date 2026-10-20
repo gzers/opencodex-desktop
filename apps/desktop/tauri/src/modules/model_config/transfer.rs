@@ -1483,6 +1483,15 @@ pub fn select_received_context(
         return Err(invalid("import_scope", "选择了包内不存在的账户信息"));
     }
     if let Some(manager) = &original.manager {
+        if manager.accounts.iter().any(|a| {
+            scope.account_ids.contains(&a.id)
+                && !crate::modules::sync::portable_accounts::information_supported(a)
+        }) {
+            return Err(invalid(
+                "account_capability",
+                "所选账户平台或来源尚未支持信息采用",
+            ));
+        }
         if scope
             .account_ids
             .iter()

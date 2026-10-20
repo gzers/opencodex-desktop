@@ -39,7 +39,12 @@ export function installModelFixtures() {
   modelApi.acceptRecovery=async()=>structuredClone(snapshot)
   modelTransferApi.loadRemoteScope=async()=>({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false})
   importedConnectionApi.list=async()=>({baseline:'explicit-visual-fixture',items:[]})
-  modelTransferApi.accountCatalog=async()=>[{account:{id:crypto.randomUUID(),provider:'chatgpt',subject:'fixture-subject',label:'账户信息样例',email:'fixture@example.test'},loginTransfer:'manualImportDisabled',localSource:true}]
+  const accountFixtures:import('@/features/sync/modelTransfer').AccountCatalogEntry[]=[
+    ...['personal','work'].map(kind=>({account:{id:crypto.randomUUID(),provider:'chatgpt',subject:'fixture-'+kind,label:'ChatGPT · '+(kind==='personal'?'个人账户':'工作账户'),email:kind+'@example.test',origin:{version:1,accountPlatform:'chatgpt',owner:'opencodex',authKind:'oauth',sourceNamespace:'codex-account-pool',sourceAccountId:'fixture-'+kind,tenant:kind}},loginTransfer:'manualImportDisabled' as const,localSource:true,informationSupported:true})),
+    {account:{id:crypto.randomUUID(),provider:'google-antigravity',subject:'fixture-gravity',label:'Google Antigravity · 工作账户',email:'gravity@example.test',origin:{version:1,accountPlatform:'antigravity',owner:'opencodex',authKind:'oauth',sourceNamespace:'oauth-account-pool',sourceAccountId:'gravity',tenant:null}},loginTransfer:'crossDeviceEvidenceMissing',localSource:true,informationSupported:true},
+    {account:{id:crypto.randomUUID(),provider:'chatgpt',subject:'fixture-native',label:'原生来源 · 尚未适配',email:null,origin:{version:1,accountPlatform:'chatgpt',owner:'platform-native',authKind:'oauth',sourceNamespace:'native',sourceAccountId:'native',tenant:null}},loginTransfer:'unsupportedProvider',localSource:false,informationSupported:false},
+  ]
+  modelTransferApi.accountCatalog=async()=>structuredClone(accountFixtures)
   modelTransferApi.extensionCatalog=async()=>({skills:['fixture-review-skill'],mcps:['fixture-review-mcp']})
   const originalChannel:ChannelPolicy={...structuredClone(channels[0]!),id:crypto.randomUUID(),label:'原有渠道 · 完整配置迁移样例',connection:{...structuredClone(channels[0]!.connection),providerId:'official-original',authMode:'key'},selection:{mode:'whitelist',models:['gpt-demo-0']}}
   modelTransferApi.channelCatalog=async()=>structuredClone([...snapshot.policy.channels,originalChannel])

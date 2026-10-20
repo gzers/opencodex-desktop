@@ -234,11 +234,9 @@ fn remote_account_ids(
     remote
         .iter()
         .filter(|account| {
-            scope.account_ids.contains(&account.id)
-                || scope.account_identities.iter().any(|local| {
-                    local.provider == account.provider
-                        && local.subject.is_some()
-                        && local.subject == account.subject
+            crate::modules::sync::portable_accounts::information_supported(account)
+                && scope.account_identities.iter().any(|local| {
+                    crate::modules::sync::portable_accounts::same_identity(local, account)
                 })
         })
         .map(|account| account.id.clone())
@@ -685,6 +683,15 @@ mod tests {
             subject: Some("subject".into()),
             label: "设备一".into(),
             email: Some("fixture@example.test".into()),
+            origin: Some(crate::modules::sync::portable_accounts::AccountOrigin {
+                version: 1,
+                account_platform: "antigravity".into(),
+                owner: "opencodex".into(),
+                auth_kind: "oauth".into(),
+                source_namespace: "oauth-account-pool".into(),
+                source_account_id: "fixture-slot".into(),
+                tenant: None,
+            }),
         };
         let mut same = local.clone();
         same.id = uuid::Uuid::new_v4().to_string();
@@ -701,6 +708,11 @@ mod tests {
             remote_account_ids(&scope, &[same.clone(), other.clone()]),
             vec![same.id.clone()]
         );
+        let mut reused_id = local.clone();
+        reused_id.origin.as_mut().unwrap().tenant = Some("another-tenant".into());
+        assert!(remote_account_ids(&scope, &[reused_id.clone()]).is_empty());
+        reused_id.origin.as_mut().unwrap().owner = "platform-native".into();
+        assert!(remote_account_ids(&scope, &[reused_id]).is_empty());
         let mut unidentified = local;
         unidentified.subject = None;
         let scope = Scope {

@@ -85,13 +85,30 @@ describe('model transfer review', () => {
     expect(modelTransferApi.accept).not.toHaveBeenCalled();expect(wrapper.text()).toContain('独立停用草稿');wrapper.unmount()
   })
   it('exports only explicitly selected account information and explains unsupported login migration',async()=>{
-    vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([{account:{id:'fixture-account',provider:'chatgpt',subject:'fixture-subject',label:'测试账户',email:'fixture@example.test'},loginTransfer:'manualImportDisabled',localSource:true}])
+    vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([{account:{id:'fixture-account',provider:'chatgpt',subject:'fixture-subject',label:'测试账户',email:'fixture@example.test'},loginTransfer:'manualImportDisabled',localSource:true,informationSupported:true}])
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'account-file',package:pack()})
     const wrapper=render();await flushPromises();expect(modelTransferApi.accountCatalog).not.toHaveBeenCalled()
     await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await customExportScope(wrapper);await flushPromises()
     await wrapper.get('input[aria-label="导出配置对象搜索"]').setValue('测试账户');expect(wrapper.text()).toContain('官方不支持手工导入登录态');expect((wrapper.get('input[aria-label="选择 测试账户"]').element as HTMLInputElement).checked).toBe(false)
     await chooseExport(wrapper,'测试账户');await wrapper.findAll('button').find(b=>b.text()==='预览清单')!.trigger('click');await flushPromises()
     expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({accountIds:['fixture-account']}));wrapper.unmount()
+  })
+  it('keeps two accounts independently selected across platform filtering and excludes an unsupported source',async()=>{
+    const origin={version:1,accountPlatform:'chatgpt',owner:'opencodex',authKind:'oauth',sourceNamespace:'codex-account-pool',sourceAccountId:'slot',tenant:'shared'}
+    vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([
+      {account:{id:'personal',provider:'chatgpt',subject:'personal-sub',label:'个人账户',email:'same@example.test',origin:{...origin,sourceAccountId:'personal'}},loginTransfer:'manualImportDisabled',localSource:true,informationSupported:true},
+      {account:{id:'work',provider:'chatgpt',subject:'work-sub',label:'工作账户',email:'same@example.test',origin:{...origin,sourceAccountId:'work'}},loginTransfer:'manualImportDisabled',localSource:true,informationSupported:true},
+      {account:{id:'unsupported',provider:'chatgpt',subject:'unavailable',label:'未支持来源',email:null,origin:{...origin,owner:'platform-native'}},loginTransfer:'unsupportedProvider',localSource:false,informationSupported:false},
+    ])
+    vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'accounts-selected',package:pack()})
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await customExportScope(wrapper)
+    await chooseExport(wrapper,'工作账户');const filter=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='账户平台筛选')!
+    filter.vm.$emit('update:modelValue','antigravity');await flushPromises();expect(wrapper.text()).toContain('筛选外仍有')
+    filter.vm.$emit('update:modelValue','chatgpt');await flushPromises();await wrapper.get('input[aria-label="导出配置对象搜索"]').setValue('工作账户')
+    expect((wrapper.get('input[aria-label="选择 工作账户"]').element as HTMLInputElement).checked).toBe(true)
+    await wrapper.get('input[aria-label="导出配置对象搜索"]').setValue('未支持来源');expect((wrapper.get('input[aria-label="选择 未支持来源"]').element as HTMLInputElement).disabled).toBe(true)
+    await wrapper.get('input[aria-label="导出配置对象搜索"]').setValue('');await wrapper.findAll('button').find(b=>b.text()==='预览清单')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.prepare).toHaveBeenCalledWith(expect.anything(),undefined,false,expect.objectContaining({accountIds:['work']}));wrapper.unmount()
   })
   it('lets incoming account information be excluded without touching credential adoption',async()=>{
     const original={id:'account-incoming',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:pack(),notices:[],manager:{preferences:null,extensions:null,webdav:[],accounts:[{id:'a',provider:'chatgpt',subject:'subject',label:'测试账户',email:null}]}}

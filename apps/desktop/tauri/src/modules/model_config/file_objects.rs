@@ -123,10 +123,19 @@ fn sections(objects: &Objects) -> Vec<String> {
     }
     names
 }
+fn object_version(objects: &Objects) -> u32 {
+    if objects.manager.accounts.iter().any(|a| a.origin.is_some()) {
+        3
+    } else if !objects.channel_authorizations.is_empty() {
+        2
+    } else {
+        1
+    }
+}
 fn validate(objects: &Objects) -> ModelResult<()> {
     if objects.format != "OCXD_CONFIG_OBJECTS"
-        || ![1, 2].contains(&objects.version)
-        || (objects.version == 1 && !objects.channel_authorizations.is_empty())
+        || ![1, 2, 3].contains(&objects.version)
+        || objects.version < object_version(objects)
     {
         return Err(invalid("portable_objects", "不支持的配置对象文档版本"));
     }
@@ -449,6 +458,7 @@ fn seal_scope(
             ));
         }
     }
+    objects.version = object_version(&objects);
     validate(&objects)?;
     let count = secret_objects(&objects);
     let plaintext = Zeroizing::new(serde_json::to_vec(&objects)?);
@@ -580,11 +590,7 @@ pub fn merge_remote(
         remote.channel_keys.0.remove(&channel);
         remote.channel_authorizations.insert(channel, auth);
     }
-    remote.version = if remote.channel_authorizations.is_empty() {
-        1
-    } else {
-        2
-    };
+    remote.version = object_version(&remote);
     for mut skill in local.assets.skills {
         if let Some(index) = remote
             .assets
@@ -697,15 +703,11 @@ pub fn select_remote(
     objects
         .channel_authorizations
         .retain(|channel, _| include_keys && channels.contains(channel));
-    objects.version = if objects.channel_authorizations.is_empty() {
-        1
-    } else {
-        2
-    };
     objects
         .manager
         .accounts
         .retain(|a| manager.account_ids.contains(&a.id));
+    objects.version = object_version(&objects);
     if !manager.preferences {
         objects.manager.preferences = None;
     }
@@ -933,7 +935,18 @@ pub fn receive_context(
     plan.extension_source = objects.manager.extensions.clone();
     plan.manager = Some(objects.manager.clone());
     plan.available_webdav_passwords = objects.webdav_passwords.0.keys().cloned().collect();
-    portable_manager::prepare(root, &plan.id, &objects.manager)?;
+    if let Err(error) = portable_manager::prepare(root, &plan.id, &objects.manager) {
+        if error.code != "account_capability" {
+            return Err(error);
+        }
+        plan.notices.push(error.message);
+        plan.preview_error = Some(error.code);
+        let mut supported = objects.manager.clone();
+        supported
+            .accounts
+            .retain(crate::modules::sync::portable_accounts::information_supported);
+        portable_manager::prepare(root, &plan.id, &supported)?;
+    }
     if !objects.assets.skills.is_empty() || !objects.assets.mcps.is_empty() {
         let home = home.ok_or_else(|| invalid("asset_home", "接收扩展资源需绑定本机主目录"))?;
         atomic_write(
@@ -2178,6 +2191,76 @@ mod tests {
         .unwrap();
         let bytes = transfer::file_bytes(source.path(), &plan.id).unwrap();
         assert!(!String::from_utf8_lossy(&bytes).contains("NEVER-EXPORT-SECRET"));
+        let opened = portable_file::open(&bytes, None).unwrap();
+        let mut objects: Objects = serde_json::from_slice(&opened.document).unwrap();
+        assert_eq!(objects.version, 3);
+        assert_eq!(
+            objects.manager.accounts[0]
+                .origin
+                .as_ref()
+                .unwrap()
+                .account_platform,
+            "antigravity"
+        );
+        objects.version = 2;
+        assert_eq!(
+            decode(&serde_json::to_vec(&objects).unwrap())
+                .err()
+                .unwrap()
+                .code,
+            "portable_objects"
+        );
+        objects.version = 3;
+        objects.manager.accounts[0].origin.as_mut().unwrap().owner = "platform-native".into();
+        let mut manifest = opened.manifest;
+        manifest.id = uuid::Uuid::new_v4().to_string();
+        let unsupported_bytes =
+            portable_file::seal(manifest, &serde_json::to_vec(&objects).unwrap(), None).unwrap();
+        let isolated = tempfile::tempdir().unwrap();
+        let unavailable = receive(isolated.path(), &unsupported_bytes, None).unwrap();
+        assert_eq!(
+            unavailable.preview_error.as_deref(),
+            Some("account_capability")
+        );
+        assert!(portable_accounts::imported(isolated.path())
+            .unwrap()
+            .is_empty());
+        assert_eq!(
+            transfer::select_received(
+                isolated.path(),
+                &unavailable.id,
+                transfer::ReceiveScope {
+                    account_ids: vec![catalog[0].account.id.clone()],
+                    ..Default::default()
+                }
+            )
+            .unwrap_err()
+            .code,
+            "account_capability"
+        );
+        let available_only = transfer::select_received(
+            isolated.path(),
+            &unavailable.id,
+            transfer::ReceiveScope {
+                account_ids: vec![catalog[1].account.id.clone()],
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(available_only.preview_error.is_none());
+        accept_extended(
+            isolated.path(),
+            &available_only.id,
+            false,
+            false,
+            false,
+            None,
+        )
+        .unwrap();
+        assert_eq!(
+            portable_accounts::imported(isolated.path()).unwrap(),
+            vec![catalog[1].account.clone()]
+        );
         let incoming = receive(target.path(), &bytes, None).unwrap();
         assert_eq!(incoming.manager.as_ref().unwrap().accounts.len(), 2);
         assert!(portable_accounts::imported(target.path())
