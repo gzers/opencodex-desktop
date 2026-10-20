@@ -11,7 +11,7 @@ const menu = ref<HTMLElement | null>(null)
 const target = ref<HTMLElement | string>('body')
 const position = ref({ left: '0px', top: '0px', minWidth: '0px', maxWidth: '320px', maxHeight: '260px' })
 const trigger = () => anchor.value?.closest('.select')?.querySelector<HTMLButtonElement>('.select-trigger')
-const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled),[role="menuitem"]:not(:disabled)') ?? [])]
+const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled),[role="menuitem"]:not(:disabled),[role="menuitemradio"]:not(:disabled)') ?? [])]
 const visible = computed(() => props.open)
 let observer: ResizeObserver | undefined
 let disposed=false
