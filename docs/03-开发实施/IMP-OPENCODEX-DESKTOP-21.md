@@ -896,3 +896,10 @@ PR8最后head b19b01e2，PR检出4831c60a的CI39455864253已完整success：前�
 隔离官方2.84.0配置经ocx sync写入专用HOME/CODEX_HOME，以实际Codex CLI0.163.0-alpha.10.2打开/model：fixture-one及fixture-two各Claude/GPT共4行顺序可见，未选择raw-long-id不出现；实际选择fixture-one/gpt-6-astra后显示推理菜单，再选medium，客户端明确提示Model changed且隔离config读回一致，生成请求0。checks-codex-model-menu-20261021.json及原始菜单回放绑定实际二进制。首次空账户初始化误进入登录流程时已立即退出，未登录真实账户；之后只给自有隔离根配置虚构Key，未发生成或修改日常客户端。此为实际CLI菜单证据，不冒称日常桌面软件下拉、所有版本或该新root已由管理器运行保存；此前管理器保存后app-server6型号读取仍按各自证据组合核对。
 
 剩余现场清单收窄为：当前b19原生同步树/字段来源及多域状态、批量多模版建议审阅，以及最后复制/取消新建入口的原生补核；Mac工具报告锁屏，已请求用户解锁。既有自动/服务/48组gallery/36组业务视觉及平台未变来源证据保留，不无依据重启旧版长性能/DPI/OTA矩阵。main集成、tag、真实签名制品/安装、公开/stable及匿名验证均尚未执行，不从CI全绿直接关闭目标。
+
+
+### 2026-10-21核心通知入口与当前源码对齐
+
+再次核对发现核心《统一事件与通知》仍将0.1.10注册表当当前来源，只追加了transfer身份规则，未完整维护0.2.0的6事件/2策略。现保留基线并标明当前b19注册源/摘要，补model_config任务、实际broker/feedback/observe发出点、model_policy原计划动作、严格解除/安全载荷和任务保留边界。当前总量40任务/87事件/29策略/93发出点，非新增应用代码或并行注册表。checks-notification-doc-alignment-20261021绑定真实定义/调用点/测试源；当前CI已覆盖，不为纯文档投影重跑应用测试或冒称原生全矩阵。Mac仍锁屏，第二个连续目标轮次已复核；本轮在该等待期间完成这一真实主线缺口修正，未提前合并发布。
+
+同一范围复核纠正《数据与状态》§6/6.6仍称生产未实施的过时当前状态，并将只检查权限表达对齐真实scene=check_only/allowNew=false、空proposals与非空report；早期allowCreate/allowRevision不是正式字段，不能把概念写作接口。已核tasks.rs::validate及check_only_service_rejects_any_version_write_and_only_records_a_report，原真实回执/当前CI证据复用，未修改服务或扩大任务权限。

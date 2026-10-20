@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-21",
+  "change": "authoritative notification document aligned to current existing code; no app changes",
+  "source": "b19b01e202df895bd72cc173ff0303e84cb8e85b",
+  "registrySha256": "dd69da8b5c86d00de1f1348b41602f5a12adda14bbd653d2456a7421854ca550",
+  "counts": {
+    "triggers": 8,
+    "jobs": 40,
+    "events": 87,
+    "notification_policies": 29,
+    "emission_sites": 93,
+    "scheduling_sites": 8,
+    "ui_feedback_sites": 9,
+    "paths": 12,
+    "cleanup_policies": 4
+  },
+  "sourceSha256": {
+    "apps/desktop/tauri/config/event-registry.json": "dd69da8b5c86d00de1f1348b41602f5a12adda14bbd653d2456a7421854ca550",
+    "apps/desktop/tauri/src/modules/model_config/feedback.rs": "0912c3f878f340f976993566ce6dc385055366abb3b7c10a074a3eb982e4bab5",
+    "apps/desktop/tauri/src/modules/model_config/broker.rs": "3f216db2f21346a9a37facff2373eaa382475b8ae7797b0ce2802a140a146dd7",
+    "apps/desktop/tauri/src/commands/model_config.rs": "85afeb56ce09aee72f3e42c4fd6a984282c411eac9a621cafc285d9ca227e399",
+    "apps/desktop/tauri/tests/event_registry.rs": "576dbe4cd254abc64a1680bf8e4165b248021a1430b2b7cbcea9d5cb8ed30b8f",
+    "apps/desktop/ui/src/app/feedback/tasks.ts": "ab42c28f562e312eebd138488d84b81224739798e3130ac3611c28397226e163"
+  },
+  "verification": "Read all six added event definitions, two policies, actual emit/observe handlers and corresponding existing registry/operation tests. Final CI39455864253 already executes those sources; no redundant app test rerun for this doc-only projection.",
+  "limitations": [
+    "Does not promote all native notification combinations to pass.",
+    "Mac native final Sync/batch UI remains blocked by locked screen; this is the second consecutive goal turn encountering it.",
+    "No merge/tag/release performed."
+  ],
+  "stateDocumentCorrection": {
+    "file": "docs/02-项目核心/数据与状态.md",
+    "scope": "Removed stale current not-implemented prose, retained acceptance boundary; check-only production contract uses scene/check_only+allowNew and empty proposals, not invented permission fields.",
+    "taskSourceSha256": "f4b331ddab5cf95648bc38eaf8a5c37ab6ab388477e24818dcf9353415263657"
+  }
+}
