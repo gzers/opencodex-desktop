@@ -31,6 +31,7 @@ pub mod store;
 pub mod tasks;
 pub mod transfer;
 pub mod upstream;
+pub mod usage;
 
 pub use schema::*;
 pub use store::ModelStore;

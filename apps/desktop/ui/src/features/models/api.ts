@@ -57,6 +57,7 @@ export interface ChannelPolicy {
 export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;recoveryId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
 export interface ModelProjection {connectionDigest?:string|null;nativeModelId?:string|null;unavailableReason?:string|null;aliases?:string[]; channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
+export interface TemplateUsage {templateId:string;revisionId:string;libraryDigest:string;policyDigest:string;workspaceDigest:string;references:{state:string;location:string}[];models:{state:string;channelId:string;channelLabel:string;modelId:string;matched:boolean;reason:string;adopted:boolean;resolutionError:string|null}[];historicalDependency:boolean}
 export interface SaveScope {channelIds:string[];includeShared:boolean}
 export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];deferredChannels?:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
 export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
@@ -94,6 +95,7 @@ export const modelApi = {
   save: (draft: TemplateDraft, expectedLibrary: string) => invoke<Commit>('model_template_save', { request: { ...draft, expectedLibrary } }),
   setDefault: (expectedLibrary: string, templateId: string, revisionId: string) => invoke<ModelSnapshot>('model_template_set_default', { expectedLibrary, templateId, revisionId }),
   delete: (expectedLibrary: string, expectedPolicy: string, expectedWorkspace: string, templateId: string, revisionIds: string[]) => invoke<ModelSnapshot>('model_template_delete', { expectedLibrary, expectedPolicy, expectedWorkspace, templateId, revisionIds }),
+  templateUsage:(templateId:string,revisionId:string,expectedLibrary:string)=>invoke<TemplateUsage>('model_template_usage',{templateId,revisionId,expectedLibrary}),
   preview: (content: TemplateContent, channelId: string, modelId: string) => invoke<MatchPreview>('model_match_preview', { content, channelId, modelId }),
   project: (policy: ModelPolicy) => invoke<DraftProjection>('model_policy_preview', { policy }),
   stage: (expectedPolicy: string, expectedWorkspace: string, policy: ModelPolicy) => invoke<ModelSnapshot>('model_policy_stage', { expectedPolicy, expectedWorkspace, policy }),

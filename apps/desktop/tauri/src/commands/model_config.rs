@@ -24,6 +24,25 @@ pub async fn model_config_snapshot(
     execute(data_root.0.clone(), |store| store.load()).await
 }
 #[tauri::command]
+pub async fn model_template_usage(
+    template_id: String,
+    revision_id: String,
+    expected_library: String,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<crate::modules::model_config::usage::Report> {
+    let root = data_root.0.clone();
+    tauri::async_runtime::spawn_blocking(move || {
+        crate::modules::model_config::usage::report(
+            &root,
+            &template_id,
+            &revision_id,
+            &expected_library,
+        )
+    })
+    .await
+    .map_err(|_| invalid("usage_worker", "匹配与使用查询中断"))?
+}
+#[tauri::command]
 pub async fn model_template_save(
     request: SaveTemplate,
     data_root: tauri::State<'_, SharedDataRoot>,

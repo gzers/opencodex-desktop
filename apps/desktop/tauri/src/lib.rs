@@ -541,6 +541,7 @@ pub fn run() {
             commands::model_transfer::config_sync_latest_upload,
             commands::model_config::model_config_snapshot,
             commands::model_config::model_template_save,
+            commands::model_config::model_template_usage,
             commands::model_config::model_template_set_default,
             commands::model_config::model_template_delete,
             commands::model_config::model_match_preview,

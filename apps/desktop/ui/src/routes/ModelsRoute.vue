@@ -7,6 +7,7 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import ChannelsView from '@/features/models/ChannelsView.vue'
+import TemplateUsageDialog from '@/features/models/TemplateUsageDialog.vue'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
 import AgentPanel from '@/features/models/AgentPanel.vue'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
@@ -46,6 +47,7 @@ const selectedTemplates = toRef(models.view,'selectedTemplates')
 const search = toRef(models.view,'templateSearch')
 const draft = computed(() => models.draft)
 const templates = computed(() => models.snapshot?.library.templates.filter(t => t.label.toLowerCase().includes(search.value.toLowerCase())) ?? [])
+const usage=ref<{templateId:string;revisionId:string}>()
 const managerId = ref('')
 const manager = computed(() => models.snapshot?.library.templates.find(t => t.id === managerId.value))
 const selectedIds = ref<string[]>([])
@@ -91,6 +93,7 @@ function protectedReason(t: Template, r: Revision) {
   if (t.source === 'builtin' && r === t.revisions[0]) return '内置基线'
   if (t.defaultRevision === r.id) return '默认版本'
   if (models.protectsRevision(t.id,r.id)) return '未保存编辑基准'
+  for(const [name,policy] of [['已提交策略',models.snapshot?.policy],['工作区草稿',models.channelDraft]] as const){if(policy&&[...policy.templateRefs,...policy.channels.flatMap(c=>[...c.templateRefs,...Object.values(c.modelRefs)])].some(ref=>ref.templateId===t.id&&ref.revisionId===r.id))return name+'引用'}
   return ''
 }
 async function makeDefault(t: Template, r: Revision) {
@@ -137,7 +140,7 @@ function prepareDelete() {
       <div class="model-table-scroll"><table class="model-table"><thead><tr><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
         <td><label class="model-inline"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="`勾选${t.label}`" /><strong>{{ t.label }}</strong></label><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
         <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" @update:model-value="models.selected[t.id] = $event" /></td>
-        <td><div class="model-inline"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton></div></td>
+        <td><div class="model-inline"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton><UiButton size="sm" @click="usage={templateId:t.id,revisionId:current(t).id}">匹配与使用</UiButton></div></td>
       </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p>
     </template>
     <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
@@ -157,6 +160,7 @@ function prepareDelete() {
         <section id="model-source"><h2>来源与版本</h2><p>{{ draft.templateId ? '基于已保存版本编辑；保存产生独立版本。' : '自建模版，保存后生成独立身份。' }}</p><p v-if="draft.baseRevision" class="mono">{{ draft.baseRevision }}</p><details v-for="(source,index) in draft.content.sources" :key="index" class="model-source-record"><summary>{{ source.field }} · {{ source.recordedAt.slice(0,10) }}</summary><p v-if="source.url" class="mono">{{ source.url }}</p><p>{{ source.note }}</p></details></section>
       </div></div>
     </template>
+    <TemplateUsageDialog v-if="usage" :template-id="usage.templateId" :revision-id="usage.revisionId" @close="usage=undefined" />
     <UiDialog :open="!!manager" :title="`版本管理 · ${manager?.label ?? ''}`" :busy="models.busy" wide @close="managerId = ''"><template v-if="manager">
       <p v-if="historyError" role="alert" class="model-error">{{ historyError }}</p>
       <template v-if="confirmDelete"><h3>确认删除所选版本？</h3><ul><li v-for="r in selectedVersions" :key="r.id">{{ versionLabel(r) }}</li></ul><p>确认后删除这些版本，已有依赖会再次核对。</p></template>
