@@ -1,0 +1,96 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "18584625f",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/commands/model_transfer.rs",
+      "sha256": "e91b41d16dd8c157631efac4b795b6f920d3a5cc468c84c2bf87c3445563152c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "a84f9526a5404350be3f8d7b3f74b4e22909c44c93e2c572495340a6210412be"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+      "sha256": "c54e3ec1acafded80569a6e33e4fdcf85f09e81dac0d0227d79a9cba1804905b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+      "sha256": "7d92bf7ddfafdd2602905d71110943f2f0a32800cbb53c44decb685088d868e1"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "3d1efa0ff3d6fa57fc8dc828712edffc27655ffaccc8b4af51c7e5c78fd93fea"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "sha256": "6ffb1ba6a1b7d0aea810aa44a761ca28b503c234ceeab69f25e5dd9103b812b6"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+      "sha256": "d24ee948a7ef2936978a1c18581270d8874e42708c45ec61d8f059ca8b188ab4"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-transfer.test.ts",
+      "sha256": "73f501ef281271b0bc10e29849d66f831e735e9aec62ff52d119c95d4628d135"
+    }
+  ],
+  "checks": {
+    "transfer": "14 passed, includes candidate freeze/scoped exact dependencies/old digest/no-runtime adoption",
+    "finalCandidate": "1 passed after additional marker digest tamper assertion",
+    "frontend": "3 files / 27 passed",
+    "build": "passed",
+    "clippy": "all targets -D warnings passed before final test-only tamper assertion; no blanket lint suppression"
+  },
+  "logs": [
+    {
+      "path": "draft-export-final-20261020.log.gz",
+      "rawSHA256": "6b9d5dd82c849f53a5772cb534abd5a561f0f7591b3689b35769701d7afd26cd"
+    },
+    {
+      "path": "draft-export-transfer-20261020.log.gz",
+      "rawSHA256": "65b82a09beb0ebb3b5552c23d7931d7d928e6aac5827c66993751fa69214a14d"
+    },
+    {
+      "path": "draft-export-clippy-final-20261020.log.gz",
+      "rawSHA256": "28a4a2caf25ee0e946403a0ba279068d4fe22cf7643b5b0855ec1effa783bbc4"
+    },
+    {
+      "path": "draft-export-ui-final2-20261020.log.gz",
+      "rawSHA256": "a0e0049d52d5a9662dd9803b29d621bb4a764a21aafe7a3eba43bb2f0f2b69e5"
+    },
+    {
+      "path": "draft-export-build-final2-20261020.log.gz",
+      "rawSHA256": "963fbd06c9f4ad565e3834484d19eca0a3a29b93b8ed2819ce2b3a668fba2b30"
+    },
+    {
+      "path": "draft-export-clippy-20261020.log.gz",
+      "rawSHA256": "b1e67e21fcfe727e76f4b8a95aab75dd1e3806919c8765b05cfcebabd98d7657"
+    },
+    {
+      "path": "draft-export-ui-20261020.log.gz",
+      "rawSHA256": "9810dff57850303245880ab664804327e97c865592d787d53baae597b87f31cc"
+    }
+  ],
+  "browser": {
+    "fixture": "formal Vue via DEV audit, no live IPC/network",
+    "steps": [
+      "rename channel only in draft",
+      "Sync > file > export > draft source",
+      "zero objects selected, no credentials controls",
+      "choose one exact channel, preview candidate label and count",
+      "Escape cancels generation"
+    ],
+    "screenshot": "draft-export-preview-light.png",
+    "documentOverflow": false
+  },
+  "limitations": [
+    "No actual native dialog/file write in browser; real frozen-file and receiver chain exercised in Rust temporary roots",
+    "Only staged channel workspace plus saved exact template dependencies; unsaved template editor buffers are not exported by this entry",
+    "Scoped family/shared-field selection and full matrices remain tracked; no false whole AC-M65 completion"
+  ],
+  "earlierFailures": [
+    "New UI assertion expected wording not present in stubbed Select; made product candidate status explicit.",
+    "Command parameter count lint: split explicit draft command with no credential/upstream inputs; regular command signature retained."
+  ]
+}
