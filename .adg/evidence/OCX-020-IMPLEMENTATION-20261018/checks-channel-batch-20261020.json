@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-20",
+  "scope": "渠道族批量、精确采用与启用独立列",
+  "checks": {
+    "uiFullBeforeLastStopTest": 684,
+    "uiFullFiles": 137,
+    "finalRelatedTests": 10,
+    "newBatchBehaviorTests": 7,
+    "build": "passed"
+  },
+  "logs": [
+    {
+      "path": "channel-batch-typecheck-20261020.log.gz",
+      "rawSha256": "bbab3fc32f4c1b8d84d7a3a4ac1ac8d64af500d257145f303efa22d774ce037b"
+    },
+    {
+      "path": "channel-batch-verified-20261020.log.gz",
+      "rawSha256": "b13d4477a5e461fd095c0f330bf8fb7bbb3b3e31cf0afbd57b85fc10f9f49c02"
+    },
+    {
+      "path": "channel-batch-ui-all-20261020.log.gz",
+      "rawSha256": "5e669bbb4853170ca4d5bece98fb3b4b0c1fa6821cc3a977fbf82fc2f802bd7d"
+    },
+    {
+      "path": "channel-batch-final-build-20261020.log.gz",
+      "rawSha256": "f9b8046a2e5e61573e762da49ea97e1b3a86bdb98a853bb8e0c77a449617b4fc"
+    },
+    {
+      "path": "channel-batch-last-tests-20261020.log.gz",
+      "rawSha256": "f44d3e1dda71e3da60d8b3f0a3c7fbfc53d81c34a3d1da48a0f77576a4cfed02"
+    }
+  ],
+  "screenshots": [
+    "channel-batch-adopt-light-20261020.png",
+    "channel-batch-family-light-20261020.png",
+    "channel-list-switch-light-20261020.png"
+  ],
+  "browser": {
+    "mode": "explicit DEV fixtures only",
+    "targets": [
+      "NewApi",
+      "A6api"
+    ],
+    "hiddenSearchTarget": "A6api",
+    "adoptionPreviewChanges": 2,
+    "familyMatchesPerChannel": 12,
+    "overflow": false,
+    "savedRuntime": false
+  },
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "09f52e3a020efd7a094dbedcf4fae40e83b3eab6fb01a6c10de595e526dd41ae"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "99b2ec81ed0751e5ded631dcd7c6c4e8ed7d03e3f229fc1a2bf77911caa6b60f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "68fdf2d5d08df405dd40a50e2625052299031203661e00c404be5af74ce57cc1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "sha256": "0e905635d9174b26e6f13c70258a3da240830ee1fa8dc4d205fbbb2b96dac0ff"
+    },
+    {
+      "path": "apps/desktop/ui/tests/channel-batch.test.ts",
+      "sha256": "57931d0fcedcc364427005df643a3791c4e81d467075e4a9afbf7536dc041756"
+    }
+  ],
+  "limitations": [
+    "DEV目录和数量为夹具，不作为实际运行能力证据",
+    "批量仅入草稿，后续统一保存/原生集成与发布门仍在"
+  ]
+}
