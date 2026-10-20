@@ -627,3 +627,18 @@ ed9869d4 CI39388534118、77a7c3ec CI39388168722、027ee913 CI39385579545、dc8d9
 比较冻结完整工作区/模版摘要/暂存基准和选项，最后共同project全部候选再重验，确认后一次替换渠道草稿；任一非法/漂移/晚回/未确认行输入整批不改，取消/停止不产生草稿结果。比较只读，不调用保存/运行/默认指针。按型号预览有明确数量上限拒绝，不截断。新增独立启用列复用UiSwitch，停用保留模型选择/规则，原生来源显示官方管理；批量栏补清除选择与搜索外计数。
 
 新7项正式组件行为检查：精确版改变两目标/他目标与默认保持、明确全局不改本地引用、只清匹配覆盖且保留精确引用与命名、族指定字段/过期确认、晚回与pending拒绝、停止后晚回不采用、任一校验失败整批保持。全量137文件684项通过后增停止专项，最终相关2文件10项及构建通过；未据局部末测重报全量685。最初typecheck未使用类型错误已清，不降校验。浏览器DEV两渠道（搜索只见NewApi但A6api继续入范围）→精确GPT→2项差异→加入草稿→按族Fast恢复继承→各12型号清单→取消，独立启用切换保留12/12；无文档溢出。DEV解析夹具现按内存精确引用回读，不冒充真实能力/计数验证。未点真实保存、无网络/日常凭据副作用。证据checks-channel-batch-20261020.json，下一步按主线继续受影响集成/组件平台验收及发布。
+
+
+### 当前macOS隔离原生保存与族片段文件链
+
+在dc5f8fcc后源码构建独立OpenCodeX 020 Final debug app（sandbox标识），新测试anchor/业务home及回环清单服务，保持进程真实HOME以使用系统安全框架。安装的OpenCodex2.84.0单独临时根启动；首次目录未初始化返回catalog not found，明确建立隔离Codex目录并执行同一官方sync后重读成功，不回退日常数据。原生真实IPC读取2测试渠道→键盘选择GPT保存版→整批比较/采用入草稿→应用重启保留→确认保存，计划5ceadf9e-4408-4465-8664-1dbfe867c327 committed/error null，真实目录4→4，UI待客户端核对，不冒报已加载。
+
+同一原生链导出fixture-one所选GPT：OCXDCONF/3保护容器内模型格式5，1版本/1型号，familyScope共享选项false、无connection/全局引用/顺序，共用默认继承。系统文件选择器接收相同文件→比较→采用到本机草稿，已提交model-policy与官方config两个摘要均不变，两渠道/Key/节点/选择顺序保持；重复接收/采用仍保持。原生模型详情锚点/贴顶头可达，物理型号拖动尝试未产生权威顺序变化，不记通过；浏览器DEV实际渠道拖动从NewApi/A6api变为A6api/NewApi有观察，范围不可互代。
+
+现场发现并修复两个消费者问题：批量字段只有选值缺可见标签，已补11字段标签；接收用临时任务ID而采用用incomingId，导致完成后遗留review卡，现公共已注册信号以previousId将临时在途transfer绑定到真实接收ID，采用/重试更新同卡，其他任务和已有终态受保护。新增2项task行为、原生重启后真实接收→采用只有1张已完成卡通过。前端全量137文件687项、最后任务/注册7项、Clippy全目标及debug包通过；本批未更改运行保存/保护算法，不复跑未受影响旧门。两个既有提交CI39399987164(dc5f8fcc)/39398726705(6220aadf)全部适用job成功，feature build跳过仍不是发布制品。
+
+请求计数原生链modelsGet0/generationPost0；未使用日常账户或向真实模型发生成。只停止本次核对过PID/路径的native、官方测试进程和fixture runner，正常退出，日常应用保持。数据保留在忽略测试根。证据checks-native-current-transfer-20261020.json绑定二进制/源/截图与读回；不是全部原生消费者/Windows/发布验收。
+
+### 回环实际wire专项初次发现（未收口）
+
+新增独立opt-in请求专项正在本地开发，所有generation形请求只终止于临时127.0.0.1静态服务，不付费。首次测试误从provider.models寻找Anthropic身份，源provider包含额外未发布声明导致选错；已改从真实pickerOrder取发布身份。此后实际3个HTTP均成功，别名回到原始ID、Chat pin+map high→low、Responses/Chat service_tier priority、Anthropic messages/speed fast均观察到；但Responses noReasoning=true仍送reasoning.effort=high，Anthropic noReasoning=true仍送thinking。这是当前2.84.0真实参数语义缺口，不能用先前字段保存读回来覆盖。测试断言保持失败，后续须进一步核对请求路径/上游能力并在共同保存能力门或适配中解决，不把未核验协议报支持；当前未提交该专项测试源码，版本不能发布。原始失败诊断单列checks-wire-investigation-20261020.json。

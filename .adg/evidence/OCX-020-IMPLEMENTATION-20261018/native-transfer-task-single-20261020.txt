@@ -1,0 +1,44 @@
+The following is a diff from the previous accessibility tree for Window: "" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 13-56
++			60 container 窗口控制区
++			61 container
++				62 image OpenCodeX logo
++				63 text OpenCodeX-Desktop Desktop Manager
++				64 button 概览
++				65 button 面板
++				66 button 模型
++				67 button 拓展
++				68 button 同步
++				69 button 诊断
++				70 button 设置
++			71 container
++				72 heading 配置同步, Value: 1
++					73 text 配置同步
++				74 text 文件导入导出与WebDAV同步；明确选择范围、比较后采用。
++				75 container 主题
++					76 button 浅色
++					77 button 深色
++					78 button 跟随系统
++				79 text 运行中
++				80 button 刷新状态
++				81 button (collapsed) Description: 通知, Secondary Actions: Expand
++				82 tab group (selectable) 配置同步
++					83 tab (selected) 文件同步
++					84 tab (selectable) WebDAV 同步
++				85 container 文件同步
++					86 container 文件同步
++						87 heading 文件同步, Value: 2
++							88 text 文件同步
++						89 text 导入导出管理器配置和模型；模型采用后进入本机草稿。
++						90 button 导出配置
++						91 button 导入配置
++						92 button 恢复上次接收
++						93 button 重新读取
++			94 container
++				95 heading 模型配置传输, Value: 3
++					96 text 模型配置传输
++				97 text 已完成
++				98 button 收起任务到通知入口
++				99 button 收起
++				100 button 查看模型配置
+The focused UI element is 12 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#sync

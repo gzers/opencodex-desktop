@@ -1,0 +1,181 @@
+{
+  "date": "2026-10-20",
+  "scope": "当前macOS隔离原生保存、族片段文件及接收任务观察闭环",
+  "state": "affected-native-chain-passed-other-gates-incomplete",
+  "native": {
+    "session": {
+      "anchor": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/test/runtime/ocx020-native-final-20261020/anchor",
+      "user": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/test/runtime/ocx020-native-final-20261020/anchor/home",
+      "wrapper": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/test/runtime/ocx020-native-final-20261020/anchor/home/.local/bin/ocx",
+      "entry": "/Users/ezio/Library/Application Support/com.gzers.opencodex.desktop/runtime/opencodex/node_modules/@bitkyc08/opencodex/bin/ocx.mjs",
+      "source": "dc5f8fcc245dcbf2bbeaf86a335341aa3b3cf73c",
+      "officialPid": 29935,
+      "modelPort": 49711,
+      "servicePort": 49712,
+      "runnerPid": 29904,
+      "nativePid": 51613,
+      "app": "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/apps/desktop/tauri/target/debug/bundle/macos/OpenCodeX 020 Final.app",
+      "appSha256": "c7771f5fd84c8d258b36ed22db8ff2cf79d8bb00155170d29f0d8e115d225114"
+    },
+    "plans": [
+      {
+        "id": "5ceadf9e-4408-4465-8664-1dbfe867c327",
+        "phase": "committed",
+        "error": null
+      }
+    ],
+    "export": {
+      "format": 5,
+      "candidate": null,
+      "global": null,
+      "order": null,
+      "templates": 1,
+      "channels": [
+        {
+          "id": "711ace0a-7009-4f86-92a6-1b5c0c447cc8",
+          "family": {
+            "templateIds": [
+              "837c8133-76e9-4bdf-a68c-9637331c4d43"
+            ],
+            "includeChannelDefaults": false
+          },
+          "models": [
+            "gpt-6-astra"
+          ],
+          "connection": null,
+          "defaults": {
+            "protocol": {
+              "mode": "inherit"
+            },
+            "contextWindow": {
+              "mode": "inherit"
+            },
+            "inputModalities": {
+              "mode": "inherit"
+            },
+            "reasoningEfforts": {
+              "mode": "inherit"
+            },
+            "defaultEffort": {
+              "mode": "inherit"
+            },
+            "fast": {
+              "mode": "inherit"
+            }
+          }
+        }
+      ]
+    },
+    "importKeepsCommittedAndRuntime": {
+      "anchor/manager-state/model-policy.json": true,
+      "anchor/opencodex-home/config.json": true
+    },
+    "importedPolicyEqualsSaved": true,
+    "requestCounts": {
+      "modelsGet": 0,
+      "generationPost": 0
+    },
+    "taskReceiptClosedOnSameCard": true,
+    "nativeDrag": "attempted; no authoritative order change; not passed",
+    "browserPhysicalDrag": {
+      "before": [
+        "NewApi",
+        "A6api",
+        "AiMaMi"
+      ],
+      "after": [
+        "A6api",
+        "NewApi",
+        "AiMaMi"
+      ],
+      "mode": "DEV actual pointer; not native claim"
+    }
+  },
+  "checks": {
+    "frontendFull": 687,
+    "files": 137,
+    "finalRegistryTasks": 7,
+    "clippyAllTargets": "passed",
+    "debugAppBundle": "passed"
+  },
+  "screenshots": [
+    "native-save-final-20261020.png",
+    "native-detail-anchors-20261020.png",
+    "native-family-export-plan-20261020.png",
+    "native-family-import-review-20261020.png",
+    "native-transfer-task-single-20261020.png"
+  ],
+  "logs": [
+    {
+      "path": "native-final-build-20261020.log.gz",
+      "rawSha256": "fd1b141ab2d176e8372ed421f795f9642c0187badabe1018dae284ecc32da2d0"
+    },
+    {
+      "path": "native-final-rebuild-20261020.log.gz",
+      "rawSha256": "734d18b21a44fedfba14c31ed6e45e8dcba922b0bcb8cb107b10214b4302fe55"
+    },
+    {
+      "path": "native-batch-label-tests-20261020.log.gz",
+      "rawSha256": "a53cc43fa3691df6ba5805c61cb4af242893b6a0cec0f26274e6462f31ccc94c"
+    },
+    {
+      "path": "native-transfer-task-tests-20261020.log.gz",
+      "rawSha256": "358af7fae280464161da81d18fd0bbe2a7bc344e380be7ae6013337204e0d914"
+    },
+    {
+      "path": "native-transfer-task-clippy-20261020.log.gz",
+      "rawSha256": "d53677968f17f3beff2192b0763494f39215ad2f3f34d18f2f16cea6fab08c01"
+    },
+    {
+      "path": "native-transfer-task-build-20261020.log.gz",
+      "rawSha256": "f077d2923c9350692f4040a9fc6ef2bfd2aeae0c46c8298bdf1475bb22e25f63"
+    },
+    {
+      "path": "native-task-ui-final-20261020.log.gz",
+      "rawSha256": "47503bf8ffd34f79ffd9586be3982d4ec30e796f8cbebd45dc94ff82e1d72851"
+    },
+    {
+      "path": "native-task-registry-final-20261020.log.gz",
+      "rawSha256": "63ebe08a722fc74b1a098bd3f091717cf3d07b19b48f302eb79dbfcbed2312dc"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/tauri/config/event-registry.json",
+      "sha256": "dd69da8b5c86d00de1f1348b41602f5a12adda14bbd653d2456a7421854ca550"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/model_transfer.rs",
+      "sha256": "9e9c7344855734458207f4e8dada492b253ef302389eb2b6cbd3ca0f6bd41792"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/feedback.rs",
+      "sha256": "0912c3f878f340f976993566ce6dc385055366abb3b7c10a074a3eb982e4bab5"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/feedback/tasks.ts",
+      "sha256": "6233ff27aa8c451278fe23b1ac372f4127413bc74c75004430a7e018e393cbfd"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelBatchDialog.vue",
+      "sha256": "04d3da5a7320e732be24a3bf6fd83b6aed220a0674dedc1afde3e74adcab1665"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+      "sha256": "5de7fdf5ddd1998693af249eb251aadb5386a1ebd15118955b9c5cf668b864cf"
+    }
+  ],
+  "sourceBase": "dc5f8fcc245dcbf2bbeaf86a335341aa3b3cf73c plus listed native-feedback/label source changes",
+  "cleanup": {
+    "ownedNativeAppStopped": true,
+    "ownedOfficialAndFixtureRunnerStopped": true,
+    "dailyAppStoppedOrChanged": false,
+    "testDataRetained": true
+  },
+  "limitations": [
+    "独立sandbox应用/数据/官方服务，无日常配置或账户；不是签名发布制品",
+    "新wire专项另有真实失败，不能据配置读回宣称全部请求语义通过",
+    "原生物理拖动未取得顺序变化，不记通过；DEV实际渠道拖动有单独观察",
+    "完整组件/平台/客户端加载及最终发布门仍未完成"
+  ]
+}

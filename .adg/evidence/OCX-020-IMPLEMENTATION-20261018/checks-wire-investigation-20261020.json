@@ -1,0 +1,33 @@
+{
+  "status": "failed-investigation-active",
+  "official": "2.84.0",
+  "source": "uncommitted opt-in isolated_official_saved_protocol_alias_reasoning_and_fast_wire",
+  "generationDestination": "owned loopback only; static fixture responses",
+  "observedSuccess": [
+    "three successful proxy HTTP responses",
+    "exact published selector identity",
+    "alias to raw ID",
+    "Chat pinned high mapped low",
+    "Responses/Chat service_tier priority",
+    "Anthropic messages/speed fast"
+  ],
+  "observedFailure": [
+    "Responses noReasoningModels still forwards reasoning.effort=high",
+    "Anthropic noReasoningModels still forwards thinking enabled"
+  ],
+  "next": "investigate adapter semantics and implement precise capability admission; do not relax assertions to claim these settings work",
+  "logs": [
+    {
+      "path": "wire-real-first-20261020.log.gz",
+      "rawSha256": "2dc327094c8eb6a6d2a0a483f69f23e48497459bf1c8aeeae952ae6e432a9bcc"
+    },
+    {
+      "path": "wire-real-diagnostic-20261020.log.gz",
+      "rawSha256": "a615bae38b880384b500f4150f17fad8979108eb1efb534d8bacdce66e3601c7"
+    },
+    {
+      "path": "wire-real-directory-20261020.log.gz",
+      "rawSha256": "0651f684d65578daad8d6fd5f93b884b44d6acbe55c59abe21e41a8d7359e686"
+    }
+  ]
+}
