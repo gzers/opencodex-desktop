@@ -1,0 +1,41 @@
+{
+  "scope": "0.2.0候选版本标识与生成任务事实文案",
+  "published": false,
+  "tagCreated": false,
+  "mainIntegrated": false,
+  "sourceBase": "cc5c6eb71be0a54c46994eaeebd6adb7fc484569",
+  "versions": {
+    "cargo": "0.2.0",
+    "tauri": "0.2.0",
+    "npm": "0.2.0",
+    "locks": "0.2.0"
+  },
+  "checks": {
+    "registryTasks": 10,
+    "uiBuild": "passed",
+    "cargoCheckLockedBins": "passed"
+  },
+  "notificationCorrection": "generation review只说建议已生成可查看，不继续断言尚未保存；后续可能已接受入缓冲/另存，现有信号不能据此推断是否已保存。保留同一注册观察与阶段，不伪造新成功事件。",
+  "logs": [
+    {
+      "path": "version-tasks-20261020.log.gz",
+      "rawSha256": "5bae2e6ec16d4a08bdd137b6f8e7fec5c8c647c92afc395d5b11a2813f13b96d"
+    },
+    {
+      "path": "version-build-20261020.log.gz",
+      "rawSha256": "4913baded38d2092737b8b431b8729283c94c2c74e3f2e4874b0021dec4364d3"
+    },
+    {
+      "path": "version-cargo-20261020.log.gz",
+      "rawSha256": "b7130bbb849645b3ad89e8c7fb4ca1aa21b85fa2fcc151dcaf5de5fa74e0b53b"
+    }
+  ],
+  "sources": {
+    "apps/desktop/tauri/Cargo.toml": "d5dfcc1d789238f33724415344a37e3e8c07b5a2905643290bc96c2b8ccd7f58",
+    "apps/desktop/tauri/Cargo.lock": "890a0242288666ed41ce1b65ae6ae0123610aeeb55312e85a87ae171d6755a2c",
+    "apps/desktop/tauri/tauri.conf.json": "907c01a132008ada9aae2aea9026fd58450366d8b1e8dfb68f25b3f3042a396f",
+    "apps/desktop/ui/package.json": "cd7ed50c671f7e8b1472b0a307c80c909dba28c02849bb3b76322e7a5f4fea49",
+    "apps/desktop/ui/package-lock.json": "f689fcc7006f6a9a567949d8b134b5ae8d5ab329d89b1bdf02ee684ae6770117",
+    "apps/desktop/ui/src/app/feedback/tasks.ts": "39e0689d387c0e587307ddc722419dba39ee8c751f550df4b4b50cea922b94a5"
+  }
+}
