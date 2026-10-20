@@ -1,0 +1,205 @@
+{
+  "date": "2026-10-20",
+  "scope": "Tab无色玻璃与Skills/MCP外卡片移除",
+  "status": "affected-checks-passed",
+  "checks": {
+    "uiBuild": "passed",
+    "extensionsTests": 9,
+    "prototypeStickyTests": 6
+  },
+  "browser": {
+    "prototype": [
+      {
+        "effects": "high",
+        "overflow": false,
+        "surface": [
+          {
+            "bg": "rgba(0, 0, 0, 0)",
+            "border": "0px",
+            "id": "card-ext-skills",
+            "shadow": "none"
+          },
+          {
+            "bg": "rgba(0, 0, 0, 0)",
+            "border": "0px",
+            "id": "card-ext-mcp",
+            "shadow": "none"
+          }
+        ],
+        "tabs": [
+          {
+            "bg": "rgba(244, 245, 249, 0.52)",
+            "blur": "saturate(1.5) blur(8px)",
+            "image": "none"
+          }
+        ],
+        "theme": "light"
+      },
+      {
+        "bg": "rgba(34, 36, 42, 0.56)",
+        "blur": "saturate(1.5) blur(8px)",
+        "effects": "high",
+        "image": "none",
+        "theme": "dark"
+      },
+      {
+        "bg": "rgba(34, 36, 42, 0.56)",
+        "blur": "saturate(1.5) blur(8px)",
+        "effects": "mid",
+        "image": "none",
+        "theme": "dark"
+      },
+      {
+        "bg": "rgb(38, 38, 38)",
+        "blur": "none",
+        "effects": "low",
+        "image": "none",
+        "theme": "dark"
+      },
+      {
+        "effects": "high",
+        "overflow": false,
+        "route": "models",
+        "tabs": [
+          {
+            "bg": "rgba(244, 245, 249, 0.52)",
+            "blur": "saturate(1.5) blur(8px)",
+            "image": "none"
+          }
+        ],
+        "theme": "light"
+      },
+      {
+        "effects": "high",
+        "overflow": false,
+        "route": "sync",
+        "tabs": [
+          {
+            "bg": "rgba(244, 245, 249, 0.52)",
+            "blur": "saturate(1.5) blur(8px)",
+            "image": "none"
+          }
+        ],
+        "theme": "light"
+      },
+      {
+        "effects": "high",
+        "overflow": false,
+        "route": "logs",
+        "tabs": [
+          {
+            "bg": "rgba(244, 245, 249, 0.52)",
+            "blur": "saturate(1.5) blur(8px)",
+            "image": "none"
+          }
+        ],
+        "theme": "light"
+      },
+      {
+        "effects": "high",
+        "overflow": false,
+        "route": "settings",
+        "tabs": [
+          {
+            "bg": "rgba(244, 245, 249, 0.52)",
+            "blur": "saturate(1.5) blur(8px)",
+            "image": "none"
+          }
+        ],
+        "theme": "light"
+      },
+      {
+        "effects": "high",
+        "overflow": false,
+        "route": "extensions",
+        "tabs": [
+          {
+            "bg": "rgba(244, 245, 249, 0.52)",
+            "blur": "saturate(1.5) blur(8px)",
+            "image": "none"
+          }
+        ],
+        "theme": "light"
+      }
+    ],
+    "formal": [
+      {
+        "bg": "rgba(34, 36, 42, 0.56)",
+        "blur": "saturate(1.5) blur(8px)",
+        "effects": "high",
+        "image": "none",
+        "overflow": false,
+        "surface": [
+          {
+            "bg": "rgba(0, 0, 0, 0)",
+            "border": "0px",
+            "shadow": "none"
+          }
+        ],
+        "theme": "dark"
+      },
+      {
+        "bg": "rgba(244, 245, 249, 0.52)",
+        "blur": "saturate(1.5) blur(8px)",
+        "effects": "high",
+        "image": "none",
+        "overflow": false,
+        "surface": [
+          {
+            "bg": "rgba(0, 0, 0, 0)",
+            "border": "0px",
+            "shadow": "none"
+          }
+        ],
+        "theme": "light"
+      }
+    ]
+  },
+  "screenshots": [
+    "extensions-prototype-light-20261020.png",
+    "extensions-prototype-dark-mcp-20261020.png",
+    "extensions-prototype-dark-low-20261020.png",
+    "extensions-formal-dark-mcp-20261020.png",
+    "extensions-formal-light-20261020.png"
+  ],
+  "logs": [
+    {
+      "path": "extensions-style-build-20261020.log.gz",
+      "rawSha256": "4947db52d9de09ef043b200e27d714a86e078f7865edfa20b584fac494c3e3bf"
+    },
+    {
+      "path": "extensions-style-tests-20261020.log.gz",
+      "rawSha256": "aaa61bf672a6c17fdb4437d132e4e5fc86f2d466e503569562745246ca1e0046"
+    },
+    {
+      "path": "extensions-style-prototype-20261020.log.gz",
+      "rawSha256": "7bd06e3d0dec9da996b5f4272ee16271f2fadd12b1f516da5ce14b445f434a2a"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "root": "governance-main",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/glass-tokens.css",
+      "sha256": "476586951d0326033ab15e6542988b2256e6fad2e24bfa73d016c79e7709298e"
+    },
+    {
+      "root": "governance-main",
+      "path": "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html",
+      "sha256": "a859ed6223926c6506d85d337e7198d3bf4ee4ba0dd6dbe203d989cd5fcdbb0d"
+    },
+    {
+      "root": "ocx-020-model-config",
+      "path": "apps/desktop/ui/src/routes/ExtensionsRoute.vue",
+      "sha256": "a6cfef38bb0a4c6a42ccb34fbdb4316e6354ca3de109b78d05527f87d473acd7"
+    },
+    {
+      "root": "ocx-020-model-config",
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "sha256": "d77a191c4c4f91d210aed1ea84c5d62eda714d2f21779e0a64683c636f5a9d6d"
+    }
+  ],
+  "limitations": [
+    "DEV扩展发现失败；只核对布局材质，不代表真实发现/同步通过",
+    "未重跑未受影响0.1.10业务或原生矩阵；0.2.0整体仍未完成/发布"
+  ]
+}

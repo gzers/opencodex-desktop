@@ -25,7 +25,7 @@
   --glass-fill-clear:rgba(244,248,255,.16);
   --glass-blur-glass:saturate(1.5) blur(8px);
   --glass-blur-clear:none;
-  --sticky-surface-bg:linear-gradient(158deg,var(--notif-tint-a,#0000),#0000 62%),linear-gradient(24deg,var(--notif-tint-b,#0000),#0000 58%),var(--glass-fill,var(--panel));
+  --sticky-surface-bg:var(--glass-fill,var(--panel));
   --sticky-surface-blur:var(--glass-blur-notif,none);
   --glass-fill:var(--glass-fill-glass);
   --glass-blur-notif:var(--glass-blur-glass);
