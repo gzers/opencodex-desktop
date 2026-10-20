@@ -1,0 +1,76 @@
+{
+  "scope": "复用状态图形引擎的透明助手入口及当前验收索引纠正",
+  "date": "2026-10-20",
+  "sourceBase": "ccd6bb96374b40d017972e9a69a272768bdf5047",
+  "checks": {
+    "affectedTests": 34,
+    "fullFiles": 142,
+    "fullTests": 701,
+    "build": "passed",
+    "sourceInventory": "43 stable IDs; no unregistered public sources"
+  },
+  "browser": {
+    "environment": "formal Vue DEV with explicit fixtures; no native or generation claim",
+    "theme": "light",
+    "effects": "high",
+    "button": [
+      56,
+      56
+    ],
+    "graphic": [
+      36,
+      36
+    ],
+    "insets": [
+      10,
+      10
+    ],
+    "background": "rgba(0, 0, 0, 0)",
+    "border": "0px",
+    "boxShadow": "none",
+    "canvas": 0,
+    "dialogOpen": 0,
+    "focusAfterCollapse": "打开Agent助手",
+    "overflow": false,
+    "screenshot": "agent-launcher-20261020.png"
+  },
+  "behavior": [
+    "shared engine independent SVG identities",
+    "mid/low static with no scheduled frames",
+    "background or inactive stops frames; unmount disposes",
+    "front/floating triggers share the same nonmodal panel",
+    "editor/tab hides panel while view persists"
+  ],
+  "correction": "Initial lifecycle assertion exposed Vue optional Boolean default false; active now defaults true. Existing hero golden frames unchanged.",
+  "remaining": [
+    "Windows final-EXE model UI smoke running",
+    "complete requirement/consumer/native acceptance and version/release remain active"
+  ],
+  "logs": [
+    {
+      "path": "agent-launcher-test-20261020.log.gz",
+      "rawSha256": "a354f59ba65a989e480f389984800e541642f8460506a9ae5c0710b1b2799b10"
+    },
+    {
+      "path": "agent-launcher-full-20261020.log.gz",
+      "rawSha256": "4fd8435b4a4a00eedc3f73de8f480e270fd5807ce8576c611cc87592b32e5db5"
+    },
+    {
+      "path": "agent-launcher-build-20261020.log.gz",
+      "rawSha256": "9c7e5411a421366329f57ef306291fb6a4764606b03ff1dc6f8533f52659743e"
+    },
+    {
+      "path": "agent-launcher-inventory-20261020.log.gz",
+      "rawSha256": "b517f8d62ea6c63027799092ff7822c21dbcce68742c113aa9fbdbbdc54263c8"
+    }
+  ],
+  "sources": {
+    "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue": "ab569c117c3d7d7e0bb4c4b5856bc3de9bae453cd260dc5f2c2274661856620c",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "d979d02b3171f7f9800b373d0480ece5c74673c31b273150655318a52c884c02",
+    "apps/desktop/ui/src/features/models/AgentPanel.vue": "f7b112dea6933cd34dc47b104881ed373a663d914aa1b92dace4d9b7dea1bbea",
+    "apps/desktop/ui/src/components/registry.ts": "97857c9fd165e316de9bc70e3564b75613b8b7ddb7f2328d66111324cde24f52",
+    "apps/desktop/ui/src/dev/component-gallery/FoundationExamples.vue": "168311980cdccae96f71b8aaa7c7b10e3e78be82e0350d7b6df4ec0b9fdaa2e5",
+    "apps/desktop/ui/tests/model-agent-launcher.test.ts": "aacde34222fc5d124de943a2d07f601a7d136379651c4dd727d5b68c02397e03",
+    "apps/desktop/ui/tests/model-view-context.test.ts": "6021efe0f43f7040fa8b17d351c171342594cf1d01b6107c1aff26097b642b60"
+  }
+}
