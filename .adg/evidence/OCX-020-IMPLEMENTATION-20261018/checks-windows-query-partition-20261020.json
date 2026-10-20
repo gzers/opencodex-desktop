@@ -1,0 +1,75 @@
+{
+  "scope": "Windows CI冷版本探测与工作区负载分组，不修改生产或夹具语义",
+  "sourceBase": "464a9384b1a3f1b2d6f9918fbb54fc8a070e9a79",
+  "failures": [
+    {
+      "run": 39425573425,
+      "head": "edb522fd",
+      "group": "three official_version_source windows tests"
+    },
+    {
+      "run": 39426060324,
+      "head": "cc5c6eb7",
+      "group": "same three tests"
+    },
+    {
+      "run": 39432110685,
+      "head": "a0adea48",
+      "passed": 735,
+      "failed": 3,
+      "ignored": 4,
+      "group": "same three tests before native smoke"
+    }
+  ],
+  "observed": "query returned Timeout around2s with no parent/child fixture marker; retained unrelated control still live; no native pointer result yet",
+  "hypothesis": "two-second cold process scheduling competes with the enlarged workspace test load; unproven until new grouped CI runs",
+  "change": "normal CI first runs original official_version_source windows_tests with integration-test, fails immediately if nonzero; remainder full workspace excludes exactly that already-executed module. ETW diagnostic full first run unchanged.",
+  "preserved": [
+    "default test worker count",
+    "2s production probe",
+    "4s cleanup bound",
+    "fresh fixture processes, no prewarm or retry",
+    "original child/parent ownership/control assertions",
+    "each test once, no acceptance waiver"
+  ],
+  "checks": {
+    "yamlSyntax": "passed",
+    "existingETWGuards": 13,
+    "existingRetentionGuards": 6,
+    "windowsEffectiveness": "pending"
+  },
+  "initialInvocation": "python -m unittest resolved stdlib test package and failed discovery; actual two repository test files executed directly and19passed; initial failure retained",
+  "unchangedProductAndFixtures": {
+    "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs": {
+      "sameAs0110": true,
+      "sha256": "2817d5674e22314612446710bcfa89da5dac0e8824b4702fbec892e691485059"
+    },
+    "apps/desktop/tauri/src/infrastructure/official_version_source.rs": {
+      "sameAs0110": true,
+      "sha256": "e6314a2d0f22bb237030e74ae4cf5e922f551c327e734117d1c3ab23724fde02"
+    }
+  },
+  "workflowSha256": "c4b970e53814782c327be4550c58d9f2b1a9ad0c5e59600b781a1cdc257010c2",
+  "logs": [
+    {
+      "path": "query-group-cc5-failure-20261020.log.gz",
+      "rawSha256": "a72b31d5a29836932d5eef365f1d83818f83e6fb098d59f1fafd9fc22662bc4f"
+    },
+    {
+      "path": "query-group-edb-failure-20261020.log.gz",
+      "rawSha256": "1c4e77d647f9f76909cf2afdb8543822d6dd9f629ae508b49fdfdce8fbef3b9f"
+    },
+    {
+      "path": "query-group-a0-failure-20261020.log.gz",
+      "rawSha256": "0625f96c8e578f3308f1492e90481cedf743fd07d3b2dabe988ef905ec92ae8c"
+    },
+    {
+      "path": "query-partition-initial-command-20261020.log.gz",
+      "rawSha256": "2bca9b011027f025504876f6406ef71f398cd9e3327a7bf6729df467588b78b6"
+    },
+    {
+      "path": "query-partition-guards-20261020.log.gz",
+      "rawSha256": "21690fcd7e30cc5ee7b70a82255e924c9b9eda62678e01284329a5e749762ea7"
+    }
+  ]
+}
