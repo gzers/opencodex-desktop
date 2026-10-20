@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "dc8d93db",
+  "sources": [
+    {
+      "path": "apps/desktop/ui/src/features/models/modelRows.ts",
+      "sha256": "a41bd9b88993f8ff3381d80442f7988079b9474fcb3edbf7e96cc4e1a5cf80b1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "sha256": "2acab39304b5ad2a6b9b3648fad54b777bbcf24c9355c697c076048e9c752095"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-table-workspace.test.ts",
+      "sha256": "dd70280cecac01957c97365901af62e6581413b8be76ccb4210efacd015b26b0"
+    }
+  ],
+  "checks": "row workspace7 + separate usage2 passed; typecheck passed",
+  "logs": [
+    {
+      "path": "model-raw-keys-usage-final-20261020.log.gz",
+      "rawSHA256": "163641586abd66bdd9b33011f0318d7d2d9a45bc32a1966937d1222710e871a0"
+    },
+    {
+      "path": "model-raw-keys-types-20261020.log.gz",
+      "rawSHA256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
+    }
+  ],
+  "boundary": "Literal raw IDs remain unchanged. Buffer dictionary has null prototype; accepted row field reads use own keys and writes use computed-key object creation. No backend/auth changes."
+}

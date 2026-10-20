@@ -563,3 +563,8 @@ installed2.84.0临时用户/数据根真实链223.91秒通过：同协议新组�
 全量134文件668项通过后，最后caption/当前显示名及预设对齐再跑受影响与构建（原日志见checks-model-table-20261020.json）。首次新fixture错误及旧卡片定位失败保留，不降校验。DEV实际选择gpt-demo-0不改All启用，输入32768只留行buffer→Save禁用，收起重开仍32768→Join后pending0/Save可用；亮暗和900宽窄窗无文档横溢，表内client609/scroll645，默认client/scroll989一致，已复位viewport。有效值说明区分已加入草稿与缓冲；DEV的project fixture未替代真实IPC能力。截图model-table-light/dark/dark-900/pending-light，非完整native或物理拖动验收。
 
 公共登记沿既有data.table/choice.switch/overlay.dialog/local-feedback，业务状态和公共纯视图职责分开。渠道整体左导航/完整批量采用族片段/原生所有消费者仍未据表格完成；后续继续这些要求和发布前完整核对。0.2.0未发布。
+
+
+### 行缓冲任意原始ID字典边界
+
+复核新表格原始ID映射发现plain object继承属性不能当行数据。缓冲改null-prototype字典，原rules/naming/modelRefs读取只取own key，写回用计算键生成新对象，保留__proto__/constructor等原ID不改写或拒绝。新增用例确认实际own key与对象原型保持；行工作区7项和独立使用查询2项通过，类型检查通过。证据checks-model-raw-keys-20261020.json。本切片不改服务/凭据，不重跑旧官方链。
