@@ -18,9 +18,17 @@ export const useOperationTasks = defineStore('operation-tasks', {
     apply(payload: unknown) {
       if (!registered || typeof payload !== 'object' || payload === null) return
       const value = payload as Record<string,unknown>
-      if (Object.keys(value).some(key => !['id','kind','phase'].includes(key)) || typeof value.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value.id) || typeof value.kind !== 'string' || !Object.hasOwn(operationTitles,value.kind) || typeof value.phase !== 'string' || !Object.hasOwn(operationPhases,value.phase)) return
+      if (Object.keys(value).some(key => !['id','kind','phase','previousId'].includes(key)) || typeof value.id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value.id) || typeof value.kind !== 'string' || !Object.hasOwn(operationTitles,value.kind) || typeof value.phase !== 'string' || !Object.hasOwn(operationPhases,value.phase)) return
+      if(value.previousId!==undefined){
+        if(value.kind!=='transfer'||value.phase!=='review'||typeof value.previousId!=='string'||!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(value.previousId)||value.previousId===value.id)return
+        const pending=this.tasks.find(t=>t.id===value.previousId)
+        const receipt=this.tasks.find(t=>t.id===value.id)
+        if(pending?.kind!=='transfer'||pending.phase!=='running')return
+        if(receipt){if(receipt.kind!=='transfer')return;this.tasks.splice(this.tasks.indexOf(pending),1);return}
+        pending.id=value.id;pending.phase='review';return
+      }
       const previous = this.tasks.find(t => t.id === value.id)
-      if (previous) { if(previous.kind!==value.kind)return; if(previous.kind==='policy_save'&&value.phase==='running'){previous.phase='running';previous.collapsed=false;return} if(previous.phase!=='running')return;previous.phase=value.phase as ModelOperationPhase }
+      if (previous) { if(previous.kind!==value.kind)return; if((previous.kind==='policy_save'||previous.kind==='transfer')&&value.phase==='running'){previous.phase='running';previous.collapsed=false;return} if(previous.phase!=='running')return;previous.phase=value.phase as ModelOperationPhase }
       else this.tasks.push({ id:value.id,kind:value.kind as ModelOperationKind,phase:value.phase as ModelOperationPhase,collapsed:false })
       while (this.tasks.length > 24) { const index=this.tasks.findIndex(t => t.phase !== 'running'); if(index < 0) break;this.tasks.splice(index,1) }
     },

@@ -33,12 +33,25 @@ struct Signal<'a> {
     id: &'a str,
     kind: OperationKind,
     phase: OperationPhase,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    previous_id: Option<&'a str>,
 }
 pub fn progress(root: &Path, id: &str, kind: OperationKind, phase: OperationPhase) {
+    progress_linked(root, id, kind, phase, None);
+}
+fn progress_linked(
+    root: &Path,
+    id: &str,
+    kind: OperationKind,
+    phase: OperationPhase,
+    previous_id: Option<&str>,
+) {
     let Some(app) = APP.get() else {
         return;
     };
-    if OpaqueId::parse(id).is_err() {
+    if OpaqueId::parse(id).is_err()
+        || previous_id.is_some_and(|previous| OpaqueId::parse(previous).is_err())
+    {
         return;
     }
     if crate::commands::event_delivery::emit_signal(
@@ -47,7 +60,12 @@ pub fn progress(root: &Path, id: &str, kind: OperationKind, phase: OperationPhas
         Job::ModelConfig,
         Trigger::Commit,
         Channel::Local,
-        Signal { id, kind, phase },
+        Signal {
+            id,
+            kind,
+            phase,
+            previous_id,
+        },
     )
     .is_err()
     {
@@ -144,5 +162,38 @@ pub fn transfer<T>(
             OperationPhase::Succeeded
         },
     );
+    result
+}
+
+/// Receiving creates its durable identity only after the file/remote document
+/// validates. Rebind the transient observation to that exact receipt, so later
+/// adoption/retries update it instead of leaving a permanent review card.
+pub fn receive_transfer(
+    root: &Path,
+    action: impl FnOnce() -> super::schema::ModelResult<super::transfer::IncomingPlan>,
+) -> super::schema::ModelResult<super::transfer::IncomingPlan> {
+    let pending = uuid::Uuid::new_v4().to_string();
+    progress(
+        root,
+        &pending,
+        OperationKind::Transfer,
+        OperationPhase::Running,
+    );
+    let result = action();
+    match &result {
+        Ok(receipt) => progress_linked(
+            root,
+            &receipt.id,
+            OperationKind::Transfer,
+            OperationPhase::Review,
+            Some(&pending),
+        ),
+        Err(_) => progress(
+            root,
+            &pending,
+            OperationKind::Transfer,
+            OperationPhase::Failed,
+        ),
+    }
     result
 }

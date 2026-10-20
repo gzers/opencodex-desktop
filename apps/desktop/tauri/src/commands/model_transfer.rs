@@ -166,23 +166,18 @@ pub async fn config_sync_download(
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
         let password = passphrase.map(zeroize::Zeroizing::new);
-        crate::modules::model_config::feedback::transfer(
-            &root,
-            &uuid::Uuid::new_v4().to_string(),
-            true,
-            || {
-                remote_operation(&root, |transport, config, _, unchanged| {
-                    tauri::async_runtime::block_on(config_remote::download_context(
-                        &root,
-                        transport,
-                        config,
-                        password.as_deref().map(|p| p.as_str()),
-                        Some(&local_home),
-                        unchanged,
-                    ))
-                })
-            },
-        )
+        crate::modules::model_config::feedback::receive_transfer(&root, || {
+            remote_operation(&root, |transport, config, _, unchanged| {
+                tauri::async_runtime::block_on(config_remote::download_context(
+                    &root,
+                    transport,
+                    config,
+                    password.as_deref().map(|p| p.as_str()),
+                    Some(&local_home),
+                    unchanged,
+                ))
+            })
+        })
     })
     .await
     .map_err(|_| invalid("transfer_worker", "统一配置下载中断，未采用"))?
@@ -320,25 +315,20 @@ pub async fn model_transfer_receive(
     let admission = crate::infrastructure::storage_writers::global().admit()?;
     tauri::async_runtime::spawn_blocking(move || {
         let _admission = admission;
-        crate::modules::model_config::feedback::transfer(
-            &root,
-            &uuid::Uuid::new_v4().to_string(),
-            true,
-            || {
-                let path = std::path::PathBuf::from(path);
-                if !path.is_absolute() {
-                    return Err(invalid("import_path", "请选择绝对文件路径"));
-                }
-                let bytes = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
-                let passphrase = passphrase.map(zeroize::Zeroizing::new);
-                crate::modules::model_config::file_objects::receive_context(
-                    &root,
-                    &bytes,
-                    passphrase.as_deref().map(|p| p.as_str()),
-                    Some(&local_home),
-                )
-            },
-        )
+        crate::modules::model_config::feedback::receive_transfer(&root, || {
+            let path = std::path::PathBuf::from(path);
+            if !path.is_absolute() {
+                return Err(invalid("import_path", "请选择绝对文件路径"));
+            }
+            let bytes = crate::modules::backup::safety::read_file(&path, 64 * 1024 * 1024)?;
+            let passphrase = passphrase.map(zeroize::Zeroizing::new);
+            crate::modules::model_config::file_objects::receive_context(
+                &root,
+                &bytes,
+                passphrase.as_deref().map(|p| p.as_str()),
+                Some(&local_home),
+            )
+        })
     })
     .await
     .map_err(|_| invalid("transfer_worker", "读取导入任务中断"))?

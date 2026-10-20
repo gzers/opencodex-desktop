@@ -95,7 +95,7 @@ onBeforeUnmount(()=>{disposed=true;generation++})
   </template>
   <template v-else>
    <p>按已经采用的精确版本匹配；只修改所选族的指定字段。未调整字段、单模型例外、选择和顺序保持。</p>
-   <div class="model-columns"><UiSelectField v-for="[key,label] in fields" :key="key" :model-value="modes[key]??'keep'" :label="label+'批量操作'" :options="[{value:'keep',label:'不修改'},{value:'inherit',label:'恢复继承'},{value:'custom',label:'自定义'}]" :disabled="busy" @update:model-value="modes[key]=$event" /></div>
+   <div class="model-columns"><label v-for="[key,label] in fields" :key="key" class="model-batch-field">{{ label }}<UiSelectField :model-value="modes[key]??'keep'" :label="label+'批量操作'" :options="[{value:'keep',label:'不修改'},{value:'inherit',label:'恢复继承'},{value:'custom',label:'自定义'}]" :disabled="busy" @update:model-value="modes[key]=$event" /></label></div>
    <ModelRuleFields v-if="fields.some(([key])=>modes[key]==='custom')" v-model="rules" :disabled="busy" />
   </template>
   <div v-if="review&&review.settings===settings()" class="model-batch-review"><h3>确认本次范围</h3><p v-if="!review.changes.length">与当前草稿一致，没有配置变化。</p><details v-else><summary>完整字段差异（{{ review.changes.length }} 项）</summary><article v-for="change in review.changes" :key="change.field"><strong>{{ change.field }}</strong><pre>当前：{{ JSON.stringify(change.before,null,2) }}</pre><pre>拟修改：{{ JSON.stringify(change.after,null,2) }}</pre></article></details><p>完整草稿激活数 {{ review.projection.knownActiveModels }} / 100；实际目录 {{ review.projection.exactCatalogCount??'保存前核对' }}。这里只加入草稿，运行配置在页级保存时写入。</p><details v-for="item in review.matches" :key="item.channel"><summary>{{ item.channel }} · {{ item.ids.length }} 个型号</summary><code v-for="id in item.ids" :key="id">{{ id }}</code></details><p v-if="mode==='adopt'">精确版本：{{ revisionId }}；{{ scope==='global'?'全局族默认':'所选渠道' }}；{{ clearOverrides?'明确清除匹配型号规则覆盖':'保留单模型例外' }}</p></div>
@@ -103,5 +103,5 @@ onBeforeUnmount(()=>{disposed=true;generation++})
  </UiDialog>
 </template>
 <style scoped>
-label{display:flex;align-items:flex-start;gap:var(--space-2);margin-block:var(--space-3)}.model-batch-review{border-top:1px solid var(--border);padding-top:var(--space-4);margin-top:var(--space-4)}code{display:block;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere}p{overflow-wrap:anywhere}
+label.model-batch-field{display:grid;align-items:stretch;gap:var(--space-2);margin:0}label{display:flex;align-items:flex-start;gap:var(--space-2);margin-block:var(--space-3)}.model-batch-review{border-top:1px solid var(--border);padding-top:var(--space-4);margin-top:var(--space-4)}code{display:block;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere}p{overflow-wrap:anywhere}
 </style>
