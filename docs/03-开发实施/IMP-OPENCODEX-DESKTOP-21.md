@@ -851,3 +851,8 @@ checks-macos-current-editor-20261020.json绑定源码/真实二进制/安全字�
 ### 外部任务专项按真实结构边界读取
 
 对真实broker任务开头进一步核对，说明本身含/receipts/{submissionId}占位符，Windows测试旧text.indexOf('{')会把说明当JSON。现按真实空行+JSON对象起点读取，补带花括号说明/无结构正文回归，4项Node准入与解析、语法通过；不改变产品任务内容/授权边界，不输出任务令牌，实际原生断言仍等新源CI。checks-task-content-parser-20261020.json绑定最终测试源码。
+
+
+### 整合远端已有main基线
+
+PR8的base为ce2ada4b（0.1.10后远端既有交接与治理忽略提交），不是最初2578e11b。已核apps/.github/test两基线严格无差异，后续将origin/main以普通merge合入feature/0.2.0-model-config，保留远端所有已有提交与交接文件，不reset/重写历史或删除本地他人未跟踪内容。此整合只推进审阅基线，仍是草稿PR，不能解释为公开发布或免除当前平台/制品门；应用未变部分不重跑旧版专项。
