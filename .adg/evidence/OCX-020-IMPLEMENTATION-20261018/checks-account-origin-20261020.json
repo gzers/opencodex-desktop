@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "4e338844d",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+      "sha256": "df7a778041ea8888d88d993d6f8d085ff58e2978265c8909bc4feed499761aef"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+      "sha256": "0eeec5d1e0fea5fa23794550bba541bd6d38fd8df7b906f57c0bbb296f694026"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+      "sha256": "25a6121d80db3431ffd9da7cd8ae31d72f6dc2f959001551580c74229c895753"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/sync/portable_accounts.rs",
+      "sha256": "94aa145141dc785ba98ee2f4b770f39140c37dc91df0f4fd9898f5d577b3283a"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "96a0a8e86a37562dbaa19dbb5846d558af744e7b4034e7e68bb028855c6b9293"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "sha256": "468b52a1793c86f712563c549ffbfc7afe8c22601868838cc96c37d6ae26a73a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+      "sha256": "a6bc6749c3dc243346b9650d9296d377487819e23bda9aaa942076d97aa6761e"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-transfer.test.ts",
+      "sha256": "84d889e2423b4f831055d2c88eb0018ce1066de9d94b22ea61e5e98c31853cb7"
+    }
+  ],
+  "upstreamReadOnly": [
+    {
+      "path": "types/accounts.ts",
+      "sha256": "cbbb70d201a303a0070d9777da4c7f0edfa7ea1617c8289b3ee657b5d5545f56"
+    },
+    {
+      "path": "oauth/types.ts",
+      "sha256": "0d53dfb7116c454096ce8954f13a42ec0eff3b2d5f9f1a81235bf2ee9c1178e2"
+    }
+  ],
+  "logs": [
+    {
+      "log": "account-origin-metadata-final-20261020.log.gz",
+      "rawSHA256": "78b8ce9387df995c17376a2cebe055fdf1f6e7a8c8a9a4d3dac9a547aa3cfa41"
+    },
+    {
+      "log": "account-origin-final-20261020.log.gz",
+      "rawSHA256": "aec174f6791478800d53a779b202ea55da990172b4f216807a3c63a371d910ff"
+    },
+    {
+      "log": "account-origin-ui-full-20261020.log.gz",
+      "rawSHA256": "18d13de6f3b462ad0b665290f6e6d3284dab9ddbb59e3a9da03584c1e407805d"
+    },
+    {
+      "log": "account-origin-ui-details-20261020.log.gz",
+      "rawSHA256": "411af034650cfdc1ee5e8373802c34ffaf67954511341127bedcd2e732078c05"
+    },
+    {
+      "log": "account-origin-build-details-20261020.log.gz",
+      "rawSHA256": "41b2cc2dc418e10dcd602a9b7111a5fe1b207a279732cd5af11963d723304ee9"
+    },
+    {
+      "log": "account-origin-model-module-20261020.log.gz",
+      "rawSHA256": "651bbe99b10c05b26cd4de9f5fe2c5892c80f5eed1ebbacc6946544bc7879b3f"
+    },
+    {
+      "log": "account-origin-rust-20261020.log.gz",
+      "rawSHA256": "458d49a5a02013f251c9f5a9d9731c7875b61c132996353e8d942768d8172e27"
+    },
+    {
+      "log": "account-origin-rust-final-20261020.log.gz",
+      "rawSHA256": "e8561b2b01744eaaddc1146fc176d249217fa953ad96935d933965e781b7445e"
+    },
+    {
+      "log": "account-origin-build-20261020.log.gz",
+      "rawSHA256": "4b695c0c1c4095e232315c8a9e7f60e7b25fe00257b319d20e4f2ebff89dff03"
+    },
+    {
+      "log": "account-origin-clippy-final-20261020.log.gz",
+      "rawSHA256": "6955663d2eb9c4622a732d98c2797659f0e681558dcda00ce42b10f429fdfd67"
+    }
+  ],
+  "checks": {
+    "accountMetadata": "8 passed",
+    "accountFilter": "4 passed; includes one unchanged key-shape test",
+    "modelModule": "147 passed before final test-only assertions",
+    "frontendFull": "132 files / 655 passed before final detail markup",
+    "finalComponent": "21 passed after detail markup",
+    "build": "passed after detail markup; existing dynamic-import warnings",
+    "clippy": "all targets -D warnings passed; cargo fmt --check passed"
+  },
+  "behavior": [
+    "Object document version3 for origin metadata; old1/2 readable; no origin fields serialized into old account metadata",
+    "ChatGPT tenant/account ID kept separate from explicit sourceSubject; absent subject never inferred from email or tenant",
+    "Independent same-platform accounts and capability gate shared across export, adoption and WebDAV identity selection",
+    "Unsupported origin can be reviewed and excluded; direct adoption/selected unavailable account rejects",
+    "No login material export or refresh; original auth files preserved"
+  ],
+  "browser": {
+    "fixture": "formal Vue DEV audit, no IPC account access",
+    "personalSelected": false,
+    "workSelected": true,
+    "unavailableDisabled": true,
+    "documentOverflow": false,
+    "screenshots": [
+      "account-origin-formal-light.png",
+      "account-origin-formal-details.png"
+    ]
+  },
+  "limitations": [
+    "No actual cross-device account authorization claimed",
+    "Full native/scale/theme matrix remains",
+    "Old format sources remain labelled unknown; no guessed platform-native adapter"
+  ],
+  "previousFailureRetained": "Old metadata subject-only fixture assumption corrected to a registered origin; the newly added unavailable-plan case exposed a missing original manager plan, fixed by caching supported subplan and rejecting unsupported re-selection. Earlier build failed due missing fixture capability flag, corrected."
+}
