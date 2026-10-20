@@ -1,0 +1,40 @@
+{
+  "scope": "当前未保存新建的正式取消出口及跨创建入口保护",
+  "sourceBase": "19159ed963191abefcf81d372efff9e31c362c2d",
+  "behavior": [
+    "new/copy editor exposes cancel-new, shared confirmation only discards that session; cancel confirmation keeps input",
+    "frozen session+content checked at confirm; later editing or busy refuses stale discard",
+    "original source buffers/channel policy/defaults unchanged; no IPC save or empty persistent object",
+    "all creation intents in ModelStore.edit also refuse a different new template while another unfinished one exists; same retained new key resumes rather than overwrites"
+  ],
+  "checks": {
+    "affectedFiles": 4,
+    "tests": 14,
+    "build": "passed"
+  },
+  "browser": {
+    "copyEnabled": true,
+    "description": "取消副本后原编辑内容保持",
+    "dialogs": 2,
+    "label": "GPT",
+    "overflow": false,
+    "visibleDialogs": 0
+  },
+  "browserScope": "explicit DEV UI only; existing hidden modal/dialog hosts counted separately from visible0; formal product cancel/confirm executed, no save",
+  "sources": {
+    "apps/desktop/ui/src/features/models/store.ts": "e89c5878e560d2f2962d1838e9e38ff296797f46b751ee653fa0fd4925245973",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "c96e5f36ac46e1c7e21495fd24c091d6f3a0f1bb368cc09664199929fdf0e184",
+    "apps/desktop/ui/tests/model-config.test.ts": "1db7835f2784bbcbf1b08eb2a9db4bf7f1c9013d365bf2a0e409c7c589398f1b",
+    "apps/desktop/ui/tests/model-view-context.test.ts": "798a492e83fc37a6d2c50b85f8fd4bb21c34324c3eb4ce1e07ad9a0d69529198"
+  },
+  "logs": [
+    {
+      "path": "new-template-cancel-tests-20261021.log.gz",
+      "rawSha256": "001e920e8e892aab01a5601e2c95f6459f52113b5e368eda5c2de2ad50cd4909"
+    },
+    {
+      "path": "new-template-cancel-build-20261021.log.gz",
+      "rawSha256": "94191136f08c1032b9c278b7f874a78ff63eee1fdeaa88e2c0c8d724acea73eb"
+    }
+  ]
+}
