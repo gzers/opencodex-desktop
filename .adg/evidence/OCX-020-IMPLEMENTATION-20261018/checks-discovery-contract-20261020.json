@@ -1,0 +1,65 @@
+{
+  "scope": "完整发现的分页/认证合同与Windows排序准备阶段修正",
+  "sourceBase": "4cc311d573dda8f461eca3e34855796fc8b7f99f",
+  "findings": [
+    "has_more true without cursor incorrectly ended as complete; now discovery_pagination, no partial success",
+    "Anthropic protocol version was tied to API Key presence; auth-free relay now receives version header too",
+    "native sort fixture was durably staged but route remount intentionally retained existing frontend buffer; use full isolated WebView reload instead of changing product buffer protection"
+  ],
+  "checks": {
+    "discovery": 7,
+    "modelModule": 163,
+    "uiAffected": 24,
+    "clippyAllTargets": "passed",
+    "nativeSmokeAdmission": 3,
+    "nativeSmokeSyntax": "passed"
+  },
+  "httpVectors": [
+    "OpenAI Chat104/Responses30, Anthropic108, Google101 and Ollama3 IDs with exact auth/path/raw IDs/unknown capability",
+    "proper second-page query including reserved-character cursor; no generation or credential persistence",
+    "missing/repeating cursor rejects incomplete success; 409/401/403/500 distinct from empty; hostile body does not reach error text"
+  ],
+  "uiVectors": [
+    "30 discovered/17 selected and104/32 preserve full list while search hides chosen items; explicit whitelist/disabled channel at add",
+    "pending failure retains selection; successful empty refresh preserves explicitly selected temporarily missing item"
+  ],
+  "ciFailure": {
+    "run": 39427429484,
+    "artifactId": 12267927334,
+    "failure": "staged channel visible timeout before any pointer drag",
+    "policyDraftPresent": true,
+    "nativeSort": "not yet passed; full-reload revision awaits next CI"
+  },
+  "logs": [
+    {
+      "path": "discovery-contract-20261020.log.gz",
+      "rawSha256": "fd1d15aabfb104946cc2c79881648313dd669d4d18b271aeb278f89f030ad824"
+    },
+    {
+      "path": "discovery-model-suite-20261020.log.gz",
+      "rawSha256": "60a2baebe99dfb3d46acad5153613fcfd8bf2b280595136738737c0df3d3cc0e"
+    },
+    {
+      "path": "discovery-ui-20261020.log.gz",
+      "rawSha256": "b5d73c3750352d90f8cceb83ea20aa9dc8071170b72d9865a7aea794ca5bf1f8"
+    },
+    {
+      "path": "discovery-clippy-20261020.log.gz",
+      "rawSha256": "aebf3c4b983c34e29805ad865b46857f227e9ec0f72e5a4bf50a799182b4783f"
+    },
+    {
+      "path": "native-sort-first-failure-20261020.log.gz",
+      "rawSha256": "824948e88463c1920144c8cfb7ca525ad4bc06f4ede35ed76ee3f55ac34309bf"
+    },
+    {
+      "path": "native-sort-reload-admission-20261020.log.gz",
+      "rawSha256": "367617651ff3fe314d84f7a98400547a6dd3d749de36fa7d31b8184377ba2c88"
+    }
+  ],
+  "sources": {
+    "apps/desktop/tauri/src/modules/model_config/discovery.rs": "6f38be2eb0cd8d63e4c17bd1e2252e63a79dd27a3381e3e4f213826042d31968",
+    "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs": "0ccf2c232266ae878322cf576b6fbb0bc9606e8938a0d0e56de6074178b36803",
+    "apps/desktop/ui/tests/new-channel-dialog.test.ts": "bbe93c84cdb4b8f5272f3c03c6de91165a66285fbe1fee2fe87568e8283f583f",
+    "test/smoke/windows-model-ui.mjs": "50ed3bfc1d83f0022929967d3ecc631a1d4af6ee423128313759d4a347a1dcfb"
+  }
+}
