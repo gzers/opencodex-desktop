@@ -790,3 +790,10 @@ CI39432110685/a0adea48并未进入最终EXE排序，实际失败仍是原officia
 ### 正式前端输出隔离检查
 
 当前0.2.0生产Vite构建26个实际资产逐文件摘要登记，已知DEV专题/fixture标记explicit-dev-sample、fixture-review-skill、fixture-gravity、__audit及gallery输出均未出现，正式应用不依赖docs或DEV工作台。checks-production-ui-output-20261020.json仅证明该本地前端产物边界；最终tag包/签名/安装另验，不以源文件guard代替实际制品检查。当前Windows39435891819仍在等价分组回归，前端job已成功；运行中日志API不提供原日志，尚未据它填写测试数量或整轮通过。
+
+
+### 助手底栏按现行原型补齐
+
+复核最终模型页交互§5及现行assistantHTML，发现缺资料/锁定人工上下文/导出上下文和图标窗口操作；补在原非模态面板内，不恢复悬浮入口。资料按钮打开并仅定位原内部资料区；锁默认开启，只对本轮内部请求中已有自定义contextWindow加入临时锁，服务校验与UI选择均保护，接受不把临时锁写进表单。已有永久人工锁保持且不受该开关解除。导出复用同一ExternalTaskDialog，冻结当前编辑快照/已有永久锁并预选当前或仅新建，不携带私密聊天/内部执行偏好，也不把内部临时保护变成外部模板永久锁。header用公共UiIconButton，面板role=dialog/aria-modal=false、聊天role=log及增量播报。
+
+新增实际组件请求/临时锁/接受保持/导出快照/会话开关及语义检查，受影响8项、最终全量142文件705项和构建通过；类型检查首次抓到新fixture缺required report，补null后成功，未放宽类型。DEV实际底栏控件与900×600/200%测量：panel(76,72)800×504，输入/发送/工具均在内部、无文档横溢；默认400宽聊天319高，资料只滚面板。导出打开单一现有弹窗当前范围，但DEV未实现native外部接口会报不可用，如实保留且未点复制，不当作外部提交成功；真实服务/授权仍复用原证据。checks-agent-context-footer-20261020.json绑定最终源/日志/截图，预览恢复100%与默认viewport。

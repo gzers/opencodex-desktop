@@ -1,0 +1,106 @@
+{
+  "scope": "补齐已确认助手底栏、图标操作与外部上下文入口",
+  "sourceBase": "a2f89fa125611f34ed9be108333974ac0d8c3d5b",
+  "requirements": "模型页交互细化§5与现行原型assistantHTML的资料/锁定上下文/导出及图标放大收起；不恢复悬浮启动器",
+  "behavior": [
+    "资料按钮只打开并定位助手内现有资料区，不重建聊天或主页面",
+    "内部context lock默认开启；只在本轮请求的自定义人工上下文上加入临时保护，接受后模板永久锁保持；原有永久锁不可解除",
+    "导出当前编辑快照和已有永久锁到现有ExternalTaskDialog，预选当前/新建，不夹带私密聊天或内部执行偏好；不把内部临时锁写成永久外部模板锁",
+    "header采用UiIconButton，非模态dialog/角色log名称与增量播报；原关闭/焦点/缩放连续性保持"
+  ],
+  "checks": {
+    "fullFiles": 142,
+    "fullTests": 705,
+    "affectedTests": 8,
+    "build": "passed"
+  },
+  "browser": {
+    "environment": "formal Vue DEV with explicit fixtures; no native/backend completion claim",
+    "normal": {
+      "panel": [
+        400,
+        554
+      ],
+      "chatHeight": 319,
+      "footerHeight": 117,
+      "nativeDialogs": 0,
+      "documentOverflow": false
+    },
+    "boundary": {
+      "chat": {
+        "bottom": 362,
+        "height": 56,
+        "left": 78,
+        "right": 874,
+        "top": 306,
+        "width": 796,
+        "x": 78,
+        "y": 306
+      },
+      "input": {
+        "bottom": 576,
+        "height": 112,
+        "left": 98,
+        "right": 737.5078125,
+        "top": 464,
+        "width": 639.5078125,
+        "x": 98,
+        "y": 464
+      },
+      "overflow": false,
+      "panel": {
+        "bottom": 576,
+        "height": 504,
+        "left": 76,
+        "right": 876,
+        "top": 72,
+        "width": 800,
+        "x": 76,
+        "y": 72
+      },
+      "send": {
+        "bottom": 576,
+        "height": 68,
+        "left": 753.5078125,
+        "right": 854,
+        "top": 508,
+        "width": 100.4921875,
+        "x": 753.5078125,
+        "y": 508
+      },
+      "viewport": [
+        900,
+        600
+      ],
+      "zoom": "2"
+    },
+    "externalDialog": "single existing dialog preselects current; browser DEV lacks IPC so task prepare shows native invoke unavailable and is not marked valid/copy-ready",
+    "viewportRestored": true,
+    "scaleRestored": 100,
+    "screenshots": [
+      "agent-context-footer-20261020.png",
+      "agent-context-900-200-20261020.png"
+    ]
+  },
+  "initialCheckCorrection": "new fixture omitted required Submission.report; typecheck caught it, report:null added before successful final build",
+  "sources": {
+    "apps/desktop/ui/src/features/models/AgentPanel.vue": "0f140bf2b147b2f01da6d55362280062329c5c8483c7c49960297c2f0f5ef092",
+    "apps/desktop/ui/src/features/models/agentView.ts": "ce59a13a9b65622383e1e14004ac07985544e5577192b82695b7cd2bcf8070ca",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "8f0c0e51b340d824d3acc6f9b3c61bbc64949d5aeadb491015f614ee5818b496",
+    "apps/desktop/ui/tests/model-agent-restore.test.ts": "afd67ade2480dd32c136f1c0d8762601061e596401d03aa635c21645118123c5"
+  },
+  "logs": [
+    {
+      "path": "agent-context-tests-20261020.log.gz",
+      "rawSha256": "a0b1ab2bfa36762b5ef22c5fca993644c2ee483f976cdbd70195560427370dc6"
+    },
+    {
+      "path": "agent-context-full-20261020.log.gz",
+      "rawSha256": "01083147b85f6a06d48cfa172fb1aff87d54614a3de42cea1646ff0e080ab6b7"
+    },
+    {
+      "path": "agent-context-build-20261020.log.gz",
+      "rawSha256": "2c161899bc6608022985278b10c1baaf257266aabca5fe631d6e1e0f1c2c73a4"
+    }
+  ]
+}
