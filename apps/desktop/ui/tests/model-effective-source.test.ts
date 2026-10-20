@@ -17,6 +17,13 @@ function fixture(){
  return {channel,template,rows}
 }
 describe('model family and effective sources',()=>{
+ it('keeps naming edits scoped by raw ID and restores original alias intent without deleting an upstream value',async()=>{
+  const {channel,template,rows}=fixture();const wrapper=mount(ChannelEditor,{props:{channel,templates:[template],projection:rows},global:{stubs:{NodePicker:true,ModelRuleFields:true,UiSelectField:true}}})
+  const article=wrapper.findAll('article.model-variant')[0]!;const native=article.get('input').element as HTMLInputElement;expect(native.value).toBe('raw/a');expect(native.disabled).toBe(true)
+  await article.findAll('label').find(l=>l.text()==='路由别名')!.get('input').setValue('short-a');await article.findAll('label').find(l=>l.text()==='显示名称')!.get('input').setValue('显示A')
+  expect(channel.naming?.['raw/a']).toEqual({alias:'short-a',displayName:'显示A'});expect(channel.discovered[0]!.id).toBe('raw/a');expect(channel.selection).toEqual({mode:'whitelist',models:['raw/a','raw/b']})
+  await article.findAll('button').find(b=>b.text()==='还原别名修改')!.trigger('click');expect(channel.naming?.['raw/a']).toEqual({displayName:'显示A'});expect(channel.naming?.['raw/b']).toBeUndefined();wrapper.unmount()
+ })
  it('uses the resolved adopted family for filtering and keeps rows while a new projection is pending',async()=>{
   const {channel,template,rows}=fixture();const wrapper=mount(ChannelEditor,{props:{channel,templates:[template],projection:rows},global:{stubs:{NodePicker:true,ModelRuleFields:true,UiSelectField:true}}})
   const selector=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='渠道内型号族筛选')!

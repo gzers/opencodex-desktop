@@ -644,6 +644,7 @@ mod tests {
             url: "https://fixture.example.test/v1".into(),
         };
         ChannelPolicy {
+            naming: Default::default(),
             id: uuid::Uuid::new_v4().to_string(),
             label: name.into(),
             template_refs: vec![],

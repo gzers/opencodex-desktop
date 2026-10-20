@@ -16,6 +16,8 @@ pub struct ModelProjection {
     pub template_ref: Option<TemplateRef>,
     pub rules: ModelRules,
     pub source: BTreeMap<String, String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub aliases: Vec<String>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -26,6 +28,36 @@ pub struct DraftProjection {
     pub notices: Vec<String>,
 }
 pub fn validate_channel(channel: &ChannelPolicy) -> ModelResult<()> {
+    let known = channel
+        .discovered
+        .iter()
+        .map(|m| m.id.as_str())
+        .chain(channel.model_order.iter().map(String::as_str))
+        .collect::<BTreeSet<_>>();
+    let mut aliases = BTreeSet::new();
+    for (id, naming) in &channel.naming {
+        if !known.contains(id.as_str()) {
+            return Err(invalid(
+                "model_naming_scope",
+                "命名提案须属于本渠道已知精确型号",
+            ));
+        }
+        naming.validate()?;
+        if let Some(alias) = naming.alias.as_ref().filter(|v| !v.is_empty()) {
+            let lower = alias.to_ascii_lowercase();
+            if !aliases.insert(lower.clone())
+                || known.iter().any(|id| {
+                    id.to_ascii_lowercase() == lower
+                        || id.replace('/', "-").to_ascii_lowercase() == lower
+                })
+            {
+                return Err(invalid(
+                    "model_alias_collision",
+                    "路由别名与另一别名或原型号身份冲突",
+                ));
+            }
+        }
+    }
     if let Some(reference) = &channel.connection.imported_config {
         require_uuid(&reference.id)?;
         if !reference.digest.starts_with("sha256:") || reference.digest.len() != 71 {
@@ -266,7 +298,29 @@ pub fn project(library: &Library, policy: &Policy) -> ModelResult<DraftProjectio
                 channel_id: channel.id.clone(),
                 provider_id: channel.connection.provider_id.clone(),
                 model_id: id.clone(),
-                label: discovered.map(|m| m.label.clone()).unwrap_or(id),
+                label: channel
+                    .naming
+                    .get(&id)
+                    .and_then(|n| n.display_name.as_ref())
+                    .map(|value| {
+                        if value.is_empty() {
+                            id.clone()
+                        } else {
+                            value.clone()
+                        }
+                    })
+                    .unwrap_or_else(|| {
+                        discovered
+                            .map(|m| m.label.clone())
+                            .unwrap_or_else(|| id.clone())
+                    }),
+                aliases: channel
+                    .naming
+                    .get(&id)
+                    .and_then(|n| n.alias.clone())
+                    .filter(|value| !value.is_empty())
+                    .into_iter()
+                    .collect(),
                 enabled: channel.connection.enabled,
                 selected,
                 discovered: discovered.is_some(),

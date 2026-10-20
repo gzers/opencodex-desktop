@@ -115,6 +115,7 @@ fn native_protection_reference_resolution_rebind_and_missing_key_refusal() {
     assert!(serialized.contains(&first) && serialized.contains(&second));
     assert!(!serialized.contains("keychain:"));
     let channel = ChannelPolicy {
+        naming: Default::default(),
         id: uuid::Uuid::new_v4().to_string(),
         label: "native fixture".into(),
         template_refs: vec![],

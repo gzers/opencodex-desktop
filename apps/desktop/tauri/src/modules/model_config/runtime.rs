@@ -595,6 +595,88 @@ fn set_map(provider: &mut Value, key: &str, model: &str, value: Value) -> ModelR
     map.insert(model.into(), value);
     Ok(())
 }
+fn apply_naming(
+    provider: &mut Value,
+    channel: &ChannelPolicy,
+    snapshot: &UpstreamSnapshot,
+) -> ModelResult<()> {
+    for (id, naming) in &channel.naming {
+        naming.validate()?;
+        if let Some(alias) = &naming.alias {
+            if alias.is_empty() {
+                if provider
+                    .get("modelAliases")
+                    .is_some_and(|value| !value.is_object())
+                {
+                    return Err(invalid(
+                        "model_alias",
+                        "原路由别名字段不是映射，未当作已清除",
+                    ));
+                }
+                if let Some(map) = provider
+                    .get_mut("modelAliases")
+                    .and_then(Value::as_object_mut)
+                {
+                    map.remove(id);
+                }
+            } else {
+                set_map(provider, "modelAliases", id, json!(alias))?;
+            }
+        }
+    }
+    let known = channel
+        .discovered
+        .iter()
+        .map(|m| m.id.clone())
+        .chain(channel.model_order.iter().cloned())
+        .chain(
+            rows(snapshot)?
+                .iter()
+                .filter(|row| row["provider"] == channel.connection.provider_id)
+                .filter_map(|row| row["id"].as_str().map(str::to_owned)),
+        )
+        .collect::<BTreeSet<_>>();
+    let mut claims = BTreeSet::new();
+    for (id, value) in provider
+        .get("modelAliases")
+        .and_then(Value::as_object)
+        .into_iter()
+        .flatten()
+    {
+        let Some(alias) = value.as_str() else {
+            return Err(invalid("model_alias", "原路由别名不是字符串，未混合覆盖"));
+        };
+        let lower = alias.to_ascii_lowercase();
+        if !claims.insert(lower.clone()) {
+            return Err(invalid(
+                "model_alias_collision",
+                "别名与同运行渠道其他型号冲突",
+            ));
+        }
+        if channel
+            .naming
+            .get(id)
+            .is_some_and(|n| n.alias.as_ref().is_some_and(|v| !v.is_empty()))
+            && (known.iter().any(|native| {
+                native.to_ascii_lowercase() == lower
+                    || native.replace('/', "-").to_ascii_lowercase() == lower
+            }) || rows(snapshot)?.iter().any(|row| {
+                (row["native"] == true || row["provider"] == "combo")
+                    && row["id"]
+                        .as_str()
+                        .is_some_and(|id| id.to_ascii_lowercase() == lower)
+            }) || catalog_slugs(snapshot)?
+                .iter()
+                .any(|slug| !slug.contains('/') && slug.to_ascii_lowercase() == lower))
+        {
+            return Err(invalid(
+                "model_alias_collision",
+                "路由别名与实际原始、原生或组合目录身份冲突",
+            ));
+        }
+    }
+    Ok(())
+}
 fn compile_shared_rules(
     provider: &mut Value,
     channel: &ChannelPolicy,
@@ -870,8 +952,14 @@ fn compile_materials(
         }
         provider["baseUrl"] = json!(node.url);
         provider["adapter"] = json!(channel.connection.protocol);
+        apply_naming(provider, channel, snapshot)?;
         for model in &channel.discovered {
-            if model.label.is_empty() || model.label == model.id {
+            let label = channel
+                .naming
+                .get(&model.id)
+                .and_then(|n| n.display_name.as_deref())
+                .unwrap_or(&model.label);
+            if label.is_empty() || label == model.id {
                 if let Some(names) = provider
                     .get_mut("modelDisplayNames")
                     .and_then(Value::as_object_mut)
@@ -885,7 +973,7 @@ fn compile_materials(
                     }
                 }
             } else {
-                set_map(provider, "modelDisplayNames", &model.id, json!(model.label))?;
+                set_map(provider, "modelDisplayNames", &model.id, json!(label))?;
             }
         }
         let mut declared = provider["models"].as_array().cloned().unwrap_or_default();
@@ -1350,6 +1438,26 @@ pub async fn prepare(
             {
                 if previous != next {
                     route_changes.push(format!("{}：{} → {}", model.id, previous, next));
+                }
+            }
+            if channel
+                .naming
+                .get(&model.id)
+                .is_some_and(|n| n.alias.is_some())
+            {
+                let before = before.providers["providers"][&channel.connection.provider_id]
+                    ["modelAliases"][&model.id]
+                    .as_str();
+                let after = next_providers["providers"][&channel.connection.provider_id]
+                    ["modelAliases"][&model.id]
+                    .as_str();
+                if before != after {
+                    route_changes.push(format!(
+                        "{}：自定义快捷入口 {} → {}（原始ID保持；使用旧别名的会话需重新选择）",
+                        model.id,
+                        before.unwrap_or("无"),
+                        after.unwrap_or("已移除")
+                    ));
                 }
             }
         }
@@ -2770,6 +2878,7 @@ fn next_ownership(
         }
         for key in [
             "modelDisplayNames",
+            "modelAliases",
             "modelAdapters",
             "modelContextWindows",
             "modelInputModalities",
@@ -3131,6 +3240,104 @@ mod tests {
         }
     }
     #[test]
+    fn naming_proposals_preserve_raw_identity_and_restore_previous_alias_on_inheritance() {
+        let (mut snapshot, mut policy) = fixture();
+        let library = super::super::store::seed_library();
+        snapshot.providers["providers"]["test"]["modelAliases"] = json!({"b":"previous-short"});
+        policy.channels[0].naming.insert(
+            "b".into(),
+            ModelNaming {
+                alias: Some("new-short".into()),
+                display_name: Some("新的名称".into()),
+            },
+        );
+        let (next, order, slugs) = compile(&snapshot, &library, &policy).unwrap();
+        assert_eq!(next["providers"]["test"]["modelAliases"]["b"], "new-short");
+        assert_eq!(
+            next["providers"]["test"]["modelDisplayNames"]["b"],
+            "新的名称"
+        );
+        assert_eq!(next["providers"]["test"]["selectedModels"], json!(["b"]));
+        assert!(slugs.contains("test/b"));
+        assert!(order.contains(&"test/b".into()));
+        let projected = compiler::project(&library, &policy).unwrap();
+        let row = projected.rows.iter().find(|r| r.model_id == "b").unwrap();
+        assert_eq!(row.model_id, "b");
+        assert_eq!(row.label, "新的名称");
+        assert_eq!(row.aliases, vec!["new-short"]);
+        let ownership = next_ownership(&snapshot.providers, &next, &[], &policy).unwrap();
+        snapshot.providers = next;
+        policy.channels[0].naming.clear();
+        let (restored, _, _) = compile_owned(&snapshot, &library, &policy, &ownership).unwrap();
+        assert_eq!(
+            restored["providers"]["test"]["modelAliases"]["b"],
+            "previous-short"
+        );
+        policy.channels[0].naming.insert(
+            "b".into(),
+            ModelNaming {
+                alias: Some("".into()),
+                display_name: Some("".into()),
+            },
+        );
+        let (removed, _, _) = compile_owned(&snapshot, &library, &policy, &ownership).unwrap();
+        assert!(removed["providers"]["test"]["modelAliases"]
+            .get("b")
+            .is_none());
+        assert!(removed["providers"]["test"]["modelDisplayNames"]
+            .get("b")
+            .is_none());
+        snapshot.providers["providers"]["test"]["modelAliases"]["b"] = json!("operator-later");
+        assert_eq!(
+            compile_owned(&snapshot, &library, &policy, &ownership)
+                .unwrap_err()
+                .code,
+            "field_drift"
+        );
+    }
+    #[test]
+    fn naming_rejects_reserved_duplicate_native_combo_and_original_model_id_collisions() {
+        let (mut snapshot, mut policy) = fixture();
+        let library = super::super::store::seed_library();
+        for alias in ["GPT-9", "codex-any", "a", "a/b", "native"] {
+            policy.channels[0].naming.insert(
+                "b".into(),
+                ModelNaming {
+                    alias: Some(alias.into()),
+                    display_name: None,
+                },
+            );
+            assert!(compile(&snapshot, &library, &policy).is_err(), "{alias}");
+        }
+        policy.channels[0].naming.insert(
+            "a".into(),
+            ModelNaming {
+                alias: Some("Short".into()),
+                display_name: None,
+            },
+        );
+        policy.channels[0].naming.insert(
+            "b".into(),
+            ModelNaming {
+                alias: Some("short".into()),
+                display_name: None,
+            },
+        );
+        assert_eq!(
+            compile(&snapshot, &library, &policy).unwrap_err().code,
+            "model_alias_collision"
+        );
+        policy.channels[0].naming.remove("a");
+        snapshot.models.as_array_mut().unwrap().push(
+            json!({"provider":"combo","id":"virtual-short","namespaced":"combo/virtual-short"}),
+        );
+        policy.channels[0].naming.get_mut("b").unwrap().alias = Some("virtual-short".into());
+        assert_eq!(
+            compile(&snapshot, &library, &policy).unwrap_err().code,
+            "model_alias_collision"
+        );
+    }
+    #[test]
     fn shared_reasoning_and_fast_wire_validate_scope_and_restore_original_provider_fields() {
         let (mut snapshot, mut policy) = fixture();
         let library = super::super::store::seed_library();
@@ -3459,6 +3666,7 @@ mod tests {
             url: "https://example.test/v1".into(),
         };
         let channel = ChannelPolicy {
+            naming: Default::default(),
             id: uuid::Uuid::new_v4().to_string(),
             label: "测试渠道".into(),
             template_refs: vec![],

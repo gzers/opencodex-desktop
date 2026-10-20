@@ -523,6 +523,53 @@ pub struct ChannelPolicy {
     pub overrides: BTreeMap<String, ModelRules>,
     #[serde(default)]
     pub family_overrides: BTreeMap<String, ModelRules>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub naming: BTreeMap<String, ModelNaming>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
+#[serde(default, rename_all = "camelCase", deny_unknown_fields)]
+pub struct ModelNaming {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub alias: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub display_name: Option<String>,
+}
+impl ModelNaming {
+    pub fn validate(&self) -> ModelResult<()> {
+        if let Some(value) = &self.alias {
+            let lower = value.to_ascii_lowercase();
+            if !value.is_empty()
+                && (value.len() > 128
+                    || !value
+                        .bytes()
+                        .next()
+                        .is_some_and(|c| c.is_ascii_alphanumeric())
+                    || !value
+                        .bytes()
+                        .all(|c| c.is_ascii_alphanumeric() || b"._-".contains(&c))
+                    || ["gpt-", "o1-", "o3-", "o4-", "codex-"]
+                        .iter()
+                        .any(|prefix| lower.starts_with(prefix))
+                    || ["combo", "policy", "__proto__", "prototype", "constructor"]
+                        .contains(&lower.as_str()))
+            {
+                return Err(invalid("model_alias","路由别名须为128字节内字母数字开头的字母/数字/点/下划线/连字符，且不使用保留身份或前缀"));
+            }
+        }
+        if self.display_name.as_ref().is_some_and(|value| {
+            !value.is_empty()
+                && (value.trim() != value
+                    || value.chars().count() > 128
+                    || value.contains('/')
+                    || value.chars().any(char::is_control))
+        }) {
+            return Err(invalid(
+                "model_label",
+                "显示名称须为128字符内且不含斜线、控制字符或首尾空白；空值清除显示名",
+            ));
+        }
+        Ok(())
+    }
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema, Default)]
 #[serde(default, rename_all = "camelCase", deny_unknown_fields)]

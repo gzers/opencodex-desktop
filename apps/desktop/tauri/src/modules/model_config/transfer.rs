@@ -26,6 +26,8 @@ pub struct PortableChannel {
     pub defaults: ModelRules,
     pub overrides: BTreeMap<String, ModelRules>,
     pub family_overrides: BTreeMap<String, ModelRules>,
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub naming: BTreeMap<String, ModelNaming>,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -358,6 +360,7 @@ pub(super) fn portable(channel: &ChannelPolicy) -> PortableChannel {
         defaults: channel.defaults.clone(),
         overrides: channel.overrides.clone(),
         family_overrides: channel.family_overrides.clone(),
+        naming: channel.naming.clone(),
     }
 }
 pub(super) fn restrict_models(
@@ -399,6 +402,7 @@ pub(super) fn restrict_models(
     result.model_order.retain(|id| wanted.contains(id));
     result.model_refs.retain(|id, _| wanted.contains(id));
     result.overrides.retain(|id, _| wanted.contains(id));
+    result.naming.retain(|id, _| wanted.contains(id));
     let selected = match &channel.selection {
         ModelSelection::All => stable.clone(),
         ModelSelection::None => vec![],
@@ -661,6 +665,7 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                     }
                 }
                 let probe = ChannelPolicy {
+                    naming: channel.naming.clone(),
                     id: channel.id.clone(),
                     label: channel.label.clone(),
                     template_refs: vec![],
@@ -680,8 +685,8 @@ pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
                         ..Default::default()
                     },
                     selection: ModelSelection::None,
-                    model_order: vec![],
-                    discovered: vec![],
+                    model_order: channel.model_order.clone(),
+                    discovered: channel.discovered.clone(),
                     defaults: Default::default(),
                     overrides: Default::default(),
                     family_overrides: Default::default(),
@@ -886,10 +891,19 @@ fn merge(
                 defaults: channel.defaults.clone(),
                 overrides: channel.overrides.clone(),
                 family_overrides: channel.family_overrides.clone(),
+                naming: channel.naming.clone(),
             };
             if let (Some(ids), Some(previous)) = (&channel.model_subset, working.or(committed)) {
                 let mut kept = previous.clone();
                 for id in ids {
+                    match channel.naming.get(id) {
+                        Some(value) => {
+                            kept.naming.insert(id.clone(), value.clone());
+                        }
+                        None => {
+                            kept.naming.remove(id);
+                        }
+                    }
                     kept.discovered.retain(|m| &m.id != id);
                     kept.discovered
                         .extend(channel.discovered.iter().filter(|m| &m.id == id).cloned());
@@ -980,6 +994,14 @@ fn merge_model_subset(
     }
     let mut result = previous.clone();
     for id in ids {
+        match incoming.naming.get(id) {
+            Some(value) => {
+                result.naming.insert(id.clone(), value.clone());
+            }
+            None => {
+                result.naming.remove(id);
+            }
+        }
         result.discovered.retain(|m| &m.id != id);
         result
             .discovered
@@ -1977,6 +1999,7 @@ mod tests {
             },
         ];
         let channel = ChannelPolicy {
+            naming: Default::default(),
             id: uuid::Uuid::new_v4().to_string(),
             label: "便携渠道".into(),
             template_refs: vec![],
@@ -2155,6 +2178,7 @@ mod tests {
         let id = uuid::Uuid::new_v4().to_string();
         let node = uuid::Uuid::new_v4().to_string();
         let mut channel = ChannelPolicy {
+            naming: Default::default(),
             id: id.clone(),
             label: "source".into(),
             template_refs: vec![],
@@ -2194,6 +2218,21 @@ mod tests {
         };
         channel.overrides.insert("a".into(), rule.clone());
         channel.overrides.insert("b".into(), rule);
+        channel.naming.insert(
+            "a".into(),
+            ModelNaming {
+                alias: Some("a-route".into()),
+                display_name: Some("A label".into()),
+            },
+        );
+        channel.naming.insert(
+            "b".into(),
+            ModelNaming {
+                alias: Some("b-route".into()),
+                display_name: None,
+            },
+        );
+
         policy.channels.push(channel.clone());
         let store = ModelStore::new(source.path());
         let v = store.load().unwrap();
@@ -2218,6 +2257,9 @@ mod tests {
         assert_eq!(selected.model_subset, Some(vec!["a".into()]));
         assert_eq!(selected.discovered.len(), 1);
         assert!(!selected.overrides.contains_key("b"));
+        assert!(selected.naming.contains_key("a"));
+        assert!(!selected.naming.contains_key("b"));
+
         let mut public = portable(&channel);
         public.connection.as_mut().unwrap().provider = Some(
             serde_json::json!({"adapter":"openai-chat","baseUrl":"https://source.example.test","models":["a","b"],"modelDisplayNames":{"a":"A","b":"B"},"modelAliases":{"a":"alias-a","b":"alias-b"},"modelReasoningEfforts":{"a":["low"],"b":["high"]},"note":"shared"}),
@@ -2265,6 +2307,9 @@ mod tests {
         assert_eq!(actual.defaults, policy.channels[0].defaults);
         assert_eq!(actual.model_order, policy.channels[0].model_order);
         assert!(actual.overrides.contains_key("b"));
+        assert_eq!(actual.naming["a"].alias.as_deref(), Some("a-route"));
+        assert_eq!(actual.naming["b"].alias.as_deref(), Some("b-route"));
+
         let merged = merge_model_subset(&public, &narrowed).unwrap();
         assert_eq!(merged.discovered.len(), 2);
         assert!(merged.connection.unwrap().provider.unwrap()["modelAliases"]
@@ -2484,6 +2529,7 @@ mod tests {
         let saved = create(source.path());
         let mut package = export(source.path(), all()).unwrap();
         let channel = PortableChannel {
+            naming: Default::default(),
             model_subset: None,
             id: uuid::Uuid::new_v4().to_string(),
             label: "依赖渠道".into(),

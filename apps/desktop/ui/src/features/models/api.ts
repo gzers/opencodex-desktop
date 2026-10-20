@@ -46,10 +46,12 @@ export interface NodeMeasurement {nodeId:string;elapsedMs:number|null;modelCount
 export interface NodeMeasurementSet {runId:string;stopped:boolean;results:NodeMeasurement[]}
 export interface DiscoveredModel { id: string; label: string; rules: ModelRules }
 export type ModelSelection = { mode: 'all' | 'none' } | { mode: 'whitelist'; models: string[] }
+export interface ModelNaming {alias?:string;displayName?:string}
 export interface ChannelPolicy {
   id: string; label: string; templateRefs: TemplateRef[]; modelRefs: Record<string, TemplateRef>
   connection: { providerId: string; protocol: string; nodes: ServiceNode[]; activeNodeId: string; credentialRef: string | null; enabled: boolean; allowPrivateNetwork: boolean; authMode?:string|null;sourceReadId?:string|null;importedConfig?:{id:string;digest:string}|null }
   selection: ModelSelection; modelOrder: string[]; discovered: DiscoveredModel[]
+  naming?:Record<string,ModelNaming>
   defaults: ModelRules; overrides: Record<string, ModelRules>; familyOverrides: Record<string, ModelRules>
 }
 export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;recoveryId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }

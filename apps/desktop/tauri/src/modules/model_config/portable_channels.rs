@@ -47,6 +47,7 @@ pub fn catalog(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Vec<Chan
             }
         }
         let mut channel = saved.cloned().unwrap_or_else(|| ChannelPolicy {
+            naming: Default::default(),
             id: id.clone(),
             label: provider.clone(),
             template_refs: vec![],

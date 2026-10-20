@@ -254,6 +254,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         schema_version: SCHEMA_VERSION,
         template_refs: vec![],
         channels: vec![ChannelPolicy {
+            naming: Default::default(),
             id: channel_id,
             label: "本机协议分组fixture".into(),
             connection: ChannelConnection {
@@ -321,6 +322,13 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         foreign_caller_tiers: "drop".into(),
         betas: vec![],
     }));
+    policy.channels[0].naming.insert(
+        "fixture-base".into(),
+        ModelNaming {
+            alias: Some("local-base".into()),
+            display_name: Some("基础型号".into()),
+        },
+    );
     for model in &mut policy.channels[0].discovered {
         model.label = if model.id == "fixture-base" {
             "基础型号"
@@ -350,7 +358,14 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     .await
     .unwrap();
     assert_eq!(plan.protocol_groups.len(), 1);
-    assert_eq!(plan.route_changes.len(), 1);
+    assert_eq!(plan.route_changes.len(), 2, "{:?}", plan.route_changes);
+    assert!(plan
+        .route_changes
+        .iter()
+        .any(|change| { change.starts_with("fixture-anthropic：") && change.contains(" → ") }));
+    assert!(plan.route_changes.iter().any(|change| {
+        change == "fixture-base：自定义快捷入口 无 → local-base（原始ID保持；使用旧别名的会话需重新选择）"
+    }));
     let saved = runtime::apply(&manager, &context, &plan.id).await.unwrap();
     if saved.phase != "committed" {
         let stored: serde_json::Value = serde_json::from_slice(
@@ -392,6 +407,16 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap()
         .iter()
         .any(|id| id == "fixture-base"));
+    assert_eq!(
+        after.providers["providers"]["fixture"]["modelAliases"]["fixture-base"],
+        "local-base"
+    );
+    assert!(after
+        .models
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|row| row["provider"] == "fixture" && row["id"] == "fixture-base"));
     let order = after.order["pickerOrder"].as_array().unwrap();
     let mapped = plan.protocol_groups[0].split(" → ").last().unwrap();
     assert_eq!(
@@ -474,6 +499,13 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         .unwrap()
         .label
         .clear();
+    // Explicit naming overrides the discovered label; clear the edited display
+    // intent through the same new field the real form now edits.
+    restored_policy.channels[0]
+        .naming
+        .get_mut("fixture-base")
+        .unwrap()
+        .display_name = Some(String::new());
     restored_policy.channels[0].selection = ModelSelection::Whitelist(vec!["fixture-base".into()]);
     let current = store.load().unwrap();
     let staged = store

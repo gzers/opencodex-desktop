@@ -2695,6 +2695,7 @@ mod tests {
             url: "https://fixture.example.test/v1".into(),
         };
         let channel = ChannelPolicy {
+            naming: Default::default(),
             id: id.into(),
             label: "fixture channel".into(),
             connection: ChannelConnection {

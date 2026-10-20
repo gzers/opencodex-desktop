@@ -182,6 +182,7 @@ pub fn build(root: &Path, snapshot: &UpstreamSnapshot) -> ModelResult<Directory>
         rows.push(Row {
             connection_digest: None,
             model: ModelProjection {
+                aliases: vec![],
                 channel_id: channel.into(),
                 provider_id: provider.into(),
                 model_id: id.into(),

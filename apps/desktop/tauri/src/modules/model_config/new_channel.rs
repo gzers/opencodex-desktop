@@ -444,6 +444,7 @@ mod tests {
             expected_policy: snapshot.policy_digest.clone(),
             expected_workspace: snapshot.workspace_digest.clone(),
             channel: ChannelPolicy {
+                naming: Default::default(),
                 id,
                 label: "New channel".into(),
                 template_refs: vec![],

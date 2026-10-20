@@ -168,6 +168,7 @@ pub fn initial_removals(
             }
         };
         let channel = ChannelPolicy {
+            naming: Default::default(),
             id: request.channel_id.clone(),
             label: request.provider_id.clone(),
             template_refs: vec![],
@@ -386,6 +387,7 @@ mod tests {
     }
     fn setup() -> (UpstreamSnapshot, Policy, Policy) {
         let channel = |id: &str, provider: &str| ChannelPolicy {
+            naming: Default::default(),
             id: id.into(),
             label: provider.into(),
             template_refs: vec![],

@@ -288,6 +288,8 @@ pub fn expand(
             next.family_overrides.clear();
             next.defaults = ModelRules::default();
             next.model_order = rows.iter().map(|row| row.model_id.clone()).collect();
+            next.naming
+                .retain(|id, _| rows.iter().any(|row| row.model_id == *id));
             next.discovered = channel
                 .discovered
                 .iter()
@@ -426,6 +428,7 @@ mod tests {
             url: "https://fixture.example.test/v1".into(),
         };
         let channel = ChannelPolicy {
+            naming: Default::default(),
             id: uuid::Uuid::new_v4().to_string(),
             label: "mixed".into(),
             connection: ChannelConnection {

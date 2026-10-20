@@ -308,6 +308,7 @@ fn resolver_uses_only_adopted_versions_and_rejects_ties() {
         "matching_conflict"
     );
     policy.channels.push(ChannelPolicy {
+        naming: Default::default(),
         id: "channel".into(),
         label: "测试".into(),
         template_refs: vec![],
@@ -349,6 +350,7 @@ fn channel(id: &str) -> ChannelPolicy {
         url: "https://example.test/v1".into(),
     };
     ChannelPolicy {
+        naming: Default::default(),
         id: id.into(),
         label: "测试渠道".into(),
         template_refs: vec![],
