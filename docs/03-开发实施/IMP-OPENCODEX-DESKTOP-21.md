@@ -710,3 +710,12 @@ CUA当前gallery长内容48组（亮暗×高/中/低×50/100/150/200%×900/1180�
 CI39419001884/ec7663的后端/前端/发布工具均成功，Windows最终EXE首屏及模版编辑→新版本保存→默认确认已执行，导出边界断言失败；整轮仍记失败。下载实际artifact12264112520，固定资料库确认旧source version/新edited through native Vue handler两个不可变版本与新默认，导出文件实际位于该sandbox/exports；未据此前步骤宣称接收/采用完成。
 
 准入根比较已处理Windows扩展驱动器/UNC前缀，但导出路径断言遗漏同样正规化。现两个检查共用绝对路径正规化，仍严格要求exports目录下文件；新增驱动器/UNC扩展前缀、大小写、同名前缀目录/根文件/路径上跳/相对路径拒绝回归，Node合计10项及语法通过。新增model-export-boundary诊断保留下一轮实际路径以便判定，不降低边界或忽略断言。checks-windows-export-path-20261020.json保存真实失败及数据读回；需新源Windows实际重跑后方可记整链通过。
+
+
+### macOS正式助手两轮建议、人工冲突和停止晚回
+
+从0d2ed027构建独立sandbox app，新ocx020-native-agent根/fixture-one、fixture-two和安装2.84.0，执行模型通过正式公共选择器→本机偏好保存取得。第一轮真实IPC/官方代理→回环固定JSON建议，人工说明在返回/比较期间改变，说明默认不选并标冲突，contextWindow默认可选；只接受上下文后值132096，人工说明保留且库/策略/运行均未写。第二轮实际请求携带第一轮user/assistant/接受记录及当前人工说明+132096编辑缓冲，返回后明确取消说明、只接受contextWindow=133120。随后点击保存产生一个新revision，原内置基线/defaultRevision保持，策略/官方config摘要不变。
+
+第三轮实际请求在回环暂缓后点击停止，再释放服务晚回；未新增第三轮建议/已保存revision，当前输入保留，公共任务如实已停止。总3个generation形请求均到本次回环固定服务、付费0；不能把固定回复称为真实大模型语义质量。两轮持久记录、第三轮停止、二进制/来源摘要和截图见checks-agent-native-multiturn-20261020.json，独立fixture源码及构建原日志压缩保留。仅关闭核对命令匹配的本次app/runner，runner负责自有官方子进程，日常app/proxy未停。
+
+型号物理拖动本轮仍未获得权威顺序变化，原生截图原尺寸与呈现坐标不一致造成指针落点不可靠，保持未验。另核安装tauri-utils2.10.1/config.rs明确Windows前端HTML5拖放必须关闭原生drag-drop handler；项目未消费原生文件拖放事件但主窗默认开启，下一切片显式关闭以恢复业务排序，系统文件选择入口保持。此依据不冒充Windows鼠标验收。

@@ -1,0 +1,96 @@
+{
+  "source": "0d2ed02785bc62305a398271d953ef6426003339",
+  "nativePid": 88509,
+  "requests": {
+    "modelsGet": 0,
+    "generationPost": 3
+  },
+  "unchanged": {
+    "anchor/manager-state/model-family-templates.json": false,
+    "anchor/manager-state/model-policy.json": true,
+    "anchor/opencodex-home/config.json": true
+  },
+  "results": [
+    {
+      "runId": "c23f0076-b686-4996-96a9-d1db428d1152",
+      "baseRevision": "2f415ab0-e93f-400d-b4a8-8539bfc87903",
+      "bufferDescription": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+      "bufferContext": {
+        "mode": "inherit"
+      },
+      "historyRoles": [
+        "user",
+        "assistant"
+      ],
+      "report": "回环固定建议第1轮，等待明确接受"
+    },
+    {
+      "runId": "50ad9855-ae0b-4783-ae83-c0a292b953ca",
+      "baseRevision": "2f415ab0-e93f-400d-b4a8-8539bfc87903",
+      "bufferDescription": "等待建议期间保留的人工说明",
+      "bufferContext": {
+        "mode": "custom",
+        "value": 132096
+      },
+      "historyRoles": [
+        "user",
+        "assistant",
+        "assistant",
+        "user",
+        "assistant"
+      ],
+      "report": "回环固定建议第2轮，等待明确接受"
+    }
+  ],
+  "saved": {
+    "templateId": "837c8133-76e9-4bdf-a68c-9637331c4d43",
+    "source": "builtin",
+    "defaultRevision": "2f415ab0-e93f-400d-b4a8-8539bfc87903",
+    "revisions": [
+      {
+        "id": "2f415ab0-e93f-400d-b4a8-8539bfc87903",
+        "baseRevision": null,
+        "description": "基于2026-10-13官方资料的匹配候选。API ID逐型号登记；未核实别名、显示名和权重仓库身份只记录精确文本，能力全继承，不能据此证明可调用。未知与服务范围差异不自动取值，不自动采用。",
+        "contextWindow": {
+          "mode": "inherit"
+        }
+      },
+      {
+        "id": "be56ffd7-b1aa-4d5d-be17-74b11bba4406",
+        "baseRevision": "2f415ab0-e93f-400d-b4a8-8539bfc87903",
+        "description": "等待建议期间保留的人工说明",
+        "contextWindow": {
+          "mode": "custom",
+          "value": 133120
+        }
+      }
+    ]
+  },
+  "nativeSha256": "d2ac2c1d215f11f4fe24cfef57a858b3cbf126bca682e3f9fb45c7940833566c",
+  "stoppedThirdRound": {
+    "lateReturnNotDisplayed": true,
+    "savedVersionUnchanged": true,
+    "generationRequests": 3,
+    "thirdResultPersisted": false
+  },
+  "beforeExplicitSave": {
+    "libraryNotWritten": true,
+    "policyAndRuntimeUnchanged": true,
+    "digests": {
+      "anchor/manager-state/model-family-templates.json": null,
+      "anchor/manager-state/model-policy.json": null,
+      "anchor/opencodex-home/config.json": "a26295a89254232645f5c4667a09710b6b899746bdde82be90a5fd4dc6d1a92f"
+    }
+  },
+  "scope": "formal macOS sandbox Vue/IPC plus installed official 2.84.0 to static loopback responses; paid0; no semantic quality claim",
+  "drag": {
+    "nativePointerAttempts": "no authoritative order change; screenshot dimensions mapping uncertain; not passed",
+    "windowsSourceFinding": "tauri-utils 2.10.1 config.rs requires disabling native drop interception for frontend HTML5 DND; no native DragDropEvent consumer found"
+  },
+  "screenshot": "agent-native-two-round-stop-20261020.png",
+  "sources": {
+    "apps/desktop/ui/src/features/models/AgentPanel.vue": "f7b112dea6933cd34dc47b104881ed373a663d914aa1b92dace4d9b7dea1bbea",
+    "apps/desktop/ui/src/features/models/AgentExecutionField.vue": "2fe2f57b07b26937d2c8b07ac043ea388fdd421b71831d8caa3f075630d96c20",
+    "apps/desktop/tauri/src/modules/model_config/agent.rs": "7ec01cc913013c63873a02f2c8cbfd7e2dce8f583d413a733f960884341fd67e"
+  }
+}
