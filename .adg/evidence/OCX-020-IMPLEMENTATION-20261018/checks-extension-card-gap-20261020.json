@@ -1,0 +1,19 @@
+{
+  "scope": "扩展原型Tab与卡片上边距恢复",
+  "browser": [
+    {
+      "gapLayoutPx": 16,
+      "view": "Skills",
+      "wrapperGap": "16px"
+    },
+    {
+      "gapLayoutPx": 16,
+      "view": "MCP",
+      "wrapperGap": "16px"
+    }
+  ],
+  "screenshot": "extension-card-gap-skills-20261020.png",
+  "sourceSha256": "a6fe72b11baa97508fc0b8f26825dc1477a9297cafe627172ad4a1a0e928783b",
+  "rule": "可见legacy容器恢复display:grid/gap16；hidden分支不受覆盖",
+  "production": "保持当前软件的父级16px间距，本批未改正式页面"
+}
