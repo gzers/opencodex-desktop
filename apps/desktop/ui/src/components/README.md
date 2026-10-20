@@ -63,3 +63,8 @@ registry.ts按专题43个稳定ID记录规格来源、当前实现/配方、实�
 UiIconButton统一普通32与通知24两档，名称必填、原生禁用/忙碌；顶栏刷新、通知删除和反馈收起沿同一部件。TaskProgressCard/FeedbackToast为纯视图，应用TaskProgressHost/ToastHost仍是原状态与事件的唯一承接者，gallery只传固定样例，不创建第二个生产通知入口。NotificationItem仍由通知feature负责条目语义。
 
 FoundationExamples直接引用品牌/平台资产、受限Markdown、原生表单配方、真实UiTreeTable/UiSelectMenu及反馈视图，基础元素不为组件数量机械封装。字段sm/md/lg沿28/34/40令牌，平台caption/托盘的原生行为仍单独验收。动作菜单键盘导航识别menuitem并跳过禁用，异步开闭在卸载后不写失效DOM。
+
+
+## 完整来源图核对
+
+执行 npm run inventory:components -- /绝对证据路径.json 读取src代码导入图，按43项稳定ID输出直接消费者/应用和DEV可达消费者、实现摘要及漏登记项。公共ui/layout/patterns的组件和辅助契约都必须归入已有登记或新增规格；测试将漏登记/失效实现视为失败。消费者清单由实际导入生成，手写consumers为规格所指重点页面，不能代替完整图。此检查不启动软件、不证明视觉或业务验收。gallery的只读节点下拉展示正式ChannelNodeSelect且不调用IPC，测量交互通过既有NodePicker示例/正式业务消费者与行为测试分别核对。

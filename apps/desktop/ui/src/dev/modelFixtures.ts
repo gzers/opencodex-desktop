@@ -19,6 +19,10 @@ export function installModelFixtures() {
   }
   modelApi.measureNodes=async request=>({runId:request.runId,stopped:false,results:request.nodes.map((node,index)=>({nodeId:node.id,elapsedMs:42+index*11,modelCount:12,error:null}))})
   modelApi.stopNodeMeasurement=async()=>{}
+  if(new URLSearchParams(location.search).get('versionReview')==='1'){
+    const template=snapshot.library.templates[0]!,original=template.revisions[0]!
+    template.revisions.push({...structuredClone(original),id:crypto.randomUUID(),createdAt:'2026-10-20T00:00:00Z',content:{...structuredClone(original.content),description:'显式DEV第二保存版'},digest:'explicit-second-version-fixture'})
+  }
   modelApi.load=async()=>structuredClone(snapshot)
   modelApi.stage=async(_policy,_workspace,policy)=>{snapshot={...snapshot,workspace:{basePolicy:snapshot.policyDigest,policy:structuredClone(policy)},workspaceDigest:'visual-workspace'};return structuredClone(snapshot)}
   const visualPlan=(policy:import('@/features/models/api').ModelPolicy,scope?:import('@/features/models/api').SaveScope):import('@/features/models/api').SavePlan=>{const changed=policy.channels.filter(c=>JSON.stringify(c)!==JSON.stringify(snapshot.policy.channels.find(old=>old.id===c.id)));return{id:crypto.randomUUID(),phase:'prepared',catalogCount:36,currentCatalogCount:36,changedChannels:changed.filter(c=>!scope||scope.channelIds.includes(c.id)).map(c=>c.label),deferredChannels:scope?changed.filter(c=>!scope.channelIds.includes(c.id)).map(c=>c.label):[],error:null}}

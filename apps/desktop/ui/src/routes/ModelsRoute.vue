@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {escapeHtml} from '@/lib/html'
-import { computed, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
@@ -93,14 +93,15 @@ function protectedReason(t: Template, r: Revision) {
   for(const [name,policy] of [['已提交策略',models.snapshot?.policy],['工作区草稿',models.channelDraft]] as const){if(policy&&[...policy.templateRefs,...policy.channels.flatMap(c=>[...c.templateRefs,...Object.values(c.modelRefs)])].some(ref=>ref.templateId===t.id&&ref.revisionId===r.id))return name+'引用'}
   return ''
 }
-function makeDefault(t:Template,r:Revision){
+async function makeDefault(t:Template,r:Revision){
  if(!models.snapshot||models.busy)return
  const baseline=models.snapshot.libraryDigest,template=t.id,revision=r.id
- modal.open({title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onConfirm:async()=>{
-  if(!models.snapshot||models.snapshot.libraryDigest!==baseline||!models.snapshot.library.templates.some(t=>t.id===template&&t.revisions.some(r=>r.id===revision))){historyError.value='默认版本确认已过期，请重新核对';return}
+ const reopen=managerId.value===template;managerId.value='';await nextTick()
+ modal.open({title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onCancel:()=>{if(reopen)managerId.value=template},onConfirm:async()=>{
+  if(!models.snapshot||models.snapshot.libraryDigest!==baseline||!models.snapshot.library.templates.some(t=>t.id===template&&t.revisions.some(r=>r.id===revision))){historyError.value='默认版本确认已过期，请重新核对';if(reopen)managerId.value=template;return}
   if(models.busy)return
   models.busy=true;historyError.value=''
-  try{models.snapshot=await modelApi.setDefault(baseline,template,revision)}catch(cause){historyError.value=errorText(cause)}finally{models.busy=false}
+  try{models.snapshot=await modelApi.setDefault(baseline,template,revision)}catch(cause){historyError.value=errorText(cause)}finally{models.busy=false;if(reopen)managerId.value=template}
  }})
 }
 async function remove() {

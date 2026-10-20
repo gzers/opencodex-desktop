@@ -22,8 +22,8 @@ describe('template browser/default version separation',()=>{
  })
  it('confirms default changes with an escaped label and rejects a stale confirmation without upgrading adoption',async()=>{
   const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='版本管理')!.trigger('click');await flushPromises()
-  const button=wrapper.findAll('button').find(b=>b.text()==='设为默认')!;await button.trigger('click');const modal=useModalStore();expect(modelApi.setDefault).not.toHaveBeenCalled();expect(modal.current!.body).toContain('&lt;img src=x&gt;');expect(modal.current!.body).not.toContain('<img')
+  const button=wrapper.findAll('button').find(b=>b.text()==='设为默认')!;await button.trigger('click');await flushPromises();const modal=useModalStore();expect(wrapper.text()).not.toContain('当前默认');expect(modelApi.setDefault).not.toHaveBeenCalled();expect(modal.current!.body).toContain('&lt;img src=x&gt;');expect(modal.current!.body).not.toContain('<img')
   const store=useModelsStore();store.snapshot!.libraryDigest='later';modal.resolve('confirm');await flushPromises();expect(modelApi.setDefault).not.toHaveBeenCalled();expect(wrapper.text()).toContain('确认已过期')
-  store.snapshot!.libraryDigest='library';await button.trigger('click');modal.resolve('confirm');await flushPromises();expect(modelApi.setDefault).toHaveBeenCalledWith('library','family','new');expect(store.snapshot!.policy.templateRefs).toEqual([{templateId:'family',revisionId:'old'}]);wrapper.unmount()
+  store.snapshot!.libraryDigest='library';await wrapper.findAll('button').find(b=>b.text()==='设为默认')!.trigger('click');await flushPromises();modal.resolve('cancel');await flushPromises();expect(wrapper.text()).toContain('当前默认');await wrapper.findAll('button').find(b=>b.text()==='设为默认')!.trigger('click');await flushPromises();modal.resolve('confirm');await flushPromises();expect(modelApi.setDefault).toHaveBeenCalledWith('library','family','new');expect(store.snapshot!.policy.templateRefs).toEqual([{templateId:'family',revisionId:'old'}]);wrapper.unmount()
  })
 })
