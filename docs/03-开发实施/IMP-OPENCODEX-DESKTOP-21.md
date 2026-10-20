@@ -846,3 +846,8 @@ checks-macos-current-editor-20261020.json绑定源码/真实二进制/安全字�
 当前b6d95619来源图再核43稳定ID、22公共源，未登记和失效实现均0；逐实现保存实际路径/摘要并与v0.1.10字节比较，逐ID记录实际静态消费者及app可达性。component-source-reuse-20261020.json关联当前48组gallery、36组真实页面材质、新详情/助手/比较的适用证据，以及Mac/Windows正式交互片段；明确源可达/相同字节只证明复用资格，不自动让行为/原生或REL-10未验例外通过。旧未变安装/验签/托盘生命周期只复用真实有效边界，不重开无关长矩阵；新tag制品仍须自己的身份/验签/安装及公开投递。registry pending_full_matrix不据来源图一次性晋升，逐条件沿原验收入口，不新造平行AC。
 
 已创建并附加草稿PR8（feature/0.2.0-model-config→main，head b6d95619）集中审阅，当前未标ready/合并/建立tag。远端main的ce2ada4比0.1.10多交接文档与.gitignore，apps/.github/test严格无差异；整合时保留这些已有提交，不重置或删除他人资料。本地main未跟踪test/codex-collaboration内容也不纳入本版提交。
+
+
+### 外部任务专项按真实结构边界读取
+
+对真实broker任务开头进一步核对，说明本身含/receipts/{submissionId}占位符，Windows测试旧text.indexOf('{')会把说明当JSON。现按真实空行+JSON对象起点读取，补带花括号说明/无结构正文回归，4项Node准入与解析、语法通过；不改变产品任务内容/授权边界，不输出任务令牌，实际原生断言仍等新源CI。checks-task-content-parser-20261020.json绑定最终测试源码。

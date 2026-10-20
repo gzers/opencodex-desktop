@@ -1,0 +1,15 @@
+{
+  "scope": "Windows外部任务内容的测试读取边界",
+  "sourceBase": "b6d95619575b50752f67adf2dae0e3274ff3ac77",
+  "finding": "真实任务开头说明含GET /receipts/{submissionId}；旧测试从第一个{截取会把说明占位符当JSON",
+  "fix": "沿真实broker格式的空行+JSON对象边界解析，测试含花括号说明并拒无结构正文；不改产品包、凭据处理或断言",
+  "checks": {
+    "nodeAdmissionAndParser": 4,
+    "syntax": "passed",
+    "actualWindows": "pending new CI"
+  },
+  "sources": {
+    "test/smoke/windows-model-ui.mjs": "c08245042ccfc336da9365d5f2560231d3f3a2cff36f69648494c250124529c2",
+    "test/smoke/windows-model-ui.test.mjs": "500a9e9abb39d91573acafd2a32a1709d4aaf22dc0d8f8b012e8d323bf41ad78"
+  }
+}
