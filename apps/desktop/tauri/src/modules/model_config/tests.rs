@@ -520,6 +520,41 @@ fn effective_sources_distinguish_template_variant_family_and_single_model_withou
     assert_eq!(row.source["defaultEffort"], "单模型覆盖");
 }
 #[test]
+fn shared_advanced_rules_preserve_legacy_shape_validate_declarations_and_keep_null_distinct() {
+    let old = serde_json::to_value(ModelRules::default()).unwrap();
+    for key in ["noReasoning", "reasoningAuthoritative", "fastWire"] {
+        assert!(old.get(key).is_none())
+    }
+    let mut rules = ModelRules {
+        fast_wire: Field::Custom(None),
+        ..Default::default()
+    };
+    rules.validate().unwrap();
+    let encoded = serde_json::to_value(&rules).unwrap();
+    assert!(encoded["fastWire"]["value"].is_null());
+    assert_eq!(
+        serde_json::from_value::<ModelRules>(encoded).unwrap(),
+        rules
+    );
+    rules.fast = Field::Custom(true);
+    assert_eq!(rules.validate().unwrap_err().code, "fast_wire");
+    rules.fast = Field::Inherit;
+    rules.fast_wire = Field::Custom(Some(FastWire {
+        kind: "service-tier".into(),
+        canonical_to_wire: std::collections::BTreeMap::from([(
+            "priority".into(),
+            "priority".into(),
+        )]),
+        foreign_caller_tiers: "drop".into(),
+        betas: vec![],
+    }));
+    rules.validate().unwrap();
+    if let Field::Custom(Some(wire)) = &mut rules.fast_wire {
+        wire.kind = "model-variant".into()
+    };
+    assert_eq!(rules.validate().unwrap_err().code, "fast_wire");
+}
+#[test]
 fn advanced_pin_map_keep_old_serialization_and_semantic_digest_but_validate_independent_controls() {
     let base = ModelRules::default();
     let value = serde_json::to_value(&base).unwrap();

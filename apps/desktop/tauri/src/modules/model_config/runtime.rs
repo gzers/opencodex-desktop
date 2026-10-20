@@ -595,6 +595,111 @@ fn set_map(provider: &mut Value, key: &str, model: &str, value: Value) -> ModelR
     map.insert(model.into(), value);
     Ok(())
 }
+fn compile_shared_rules(
+    provider: &mut Value,
+    channel: &ChannelPolicy,
+    projection: &compiler::DraftProjection,
+) -> ModelResult<()> {
+    let rows = projection
+        .rows
+        .iter()
+        .filter(|row| row.channel_id == channel.id)
+        .collect::<Vec<_>>();
+    for (field, key) in [
+        (
+            "reasoningAuthoritative",
+            "modelReasoningEffortsAuthoritative",
+        ),
+        ("fastWire", "fastWire"),
+    ] {
+        let declared = |row: &compiler::ModelProjection| -> ModelResult<Option<Value>> {
+            Ok(match field {
+                "reasoningAuthoritative" => match &row.rules.reasoning_authoritative {
+                    Field::Custom(value) => Some(json!(value)),
+                    _ => None,
+                },
+                _ => match &row.rules.fast_wire {
+                    Field::Custom(value) => Some(serde_json::to_value(value)?),
+                    _ => None,
+                },
+            })
+        };
+        let mut intended = None;
+        for row in &rows {
+            if row
+                .source
+                .get(field)
+                .is_some_and(|source| source != "上游声明")
+            {
+                if let Some(value) = declared(row)? {
+                    if intended.as_ref().is_some_and(|old| old != &value) {
+                        return Err(invalid("shared_rule_scope","权威声明和Fast wire由同一运行协议分组共用，组内值不同不能静默扩展作用范围"));
+                    }
+                    intended = Some(value)
+                }
+            }
+        }
+        let Some(value) = intended else { continue };
+        for row in &rows {
+            if declared(row)?.as_ref() != Some(&value) && provider.get(key) != Some(&value) {
+                return Err(invalid("shared_rule_scope","此字段由运行协议分组共用，请在渠道默认设置或使组内全部型号保持一致；不对其他型号静默套用"));
+            }
+            let protocol = match &row.rules.protocol {
+                Field::Custom(value) => value.as_str(),
+                _ => channel.connection.protocol.as_str(),
+            };
+            if field == "reasoningAuthoritative"
+                && value == true
+                && !matches!(&row.rules.reasoning_efforts, Field::Custom(_))
+            {
+                return Err(invalid(
+                    "reasoning_authoritative",
+                    "权威声明需要每个受影响型号都有明确推理列表",
+                ));
+            }
+            if field == "fastWire" {
+                if value.is_null() {
+                    if row.rules.fast == Field::Custom(true) {
+                        return Err(invalid("fast_wire", "禁用Fast wire与型号Fast能力冲突"));
+                    }
+                } else {
+                    let supported = match value["kind"].as_str() {
+                        Some("service-tier") => {
+                            ["openai-chat", "openai-responses", "azure", "azure-openai"]
+                                .contains(&protocol)
+                        }
+                        Some("anthropic-speed") => protocol == "anthropic",
+                        Some("cursor-variant") => protocol == "cursor",
+                        _ => false,
+                    };
+                    if !supported {
+                        return Err(invalid(
+                            "fast_wire_protocol",
+                            "所选Fast wire不适用于该型号最终协议",
+                        ));
+                    }
+                }
+            }
+        }
+        if field == "fastWire"
+            && value.is_null()
+            && (provider["supportsServiceTier"] == true
+                || provider["modelSupportsServiceTier"]
+                    .as_object()
+                    .is_some_and(|map| map.values().any(|v| v == true)))
+        {
+            return Err(invalid(
+                "fast_wire",
+                "上游仍声明Fast能力，禁用wire前须明确调整能力，不能仅隐藏入口",
+            ));
+        }
+        provider
+            .as_object_mut()
+            .ok_or_else(|| invalid("provider", "渠道结构无效"))?
+            .insert(key.into(), value);
+    }
+    Ok(())
+}
 pub fn compile(
     snapshot: &UpstreamSnapshot,
     library: &Library,
@@ -645,13 +750,15 @@ fn compile_materials(
             .iter()
             .any(|c| c.connection.provider_id == field.provider)
         {
-            if next["providers"][&field.provider][&field.key].get(&field.model)
-                != if field.removed {
-                    None
-                } else {
-                    Some(&field.written)
-                }
-            {
+            if (if field.model.is_empty() {
+                next["providers"][&field.provider].get(&field.key)
+            } else {
+                next["providers"][&field.provider][&field.key].get(&field.model)
+            }) != if field.removed {
+                None
+            } else {
+                Some(&field.written)
+            } {
                 return Err(invalid(
                     "field_drift",
                     "受管模型字段已被外部修改，请显式比较后再保存",
@@ -660,7 +767,19 @@ fn compile_materials(
             let provider = next["providers"]
                 .get_mut(&field.provider)
                 .ok_or_else(|| invalid("provider", "受管渠道缺失"))?;
-            if let Some(map) = provider.get_mut(&field.key).and_then(Value::as_object_mut) {
+            if field.model.is_empty() {
+                let object = provider
+                    .as_object_mut()
+                    .ok_or_else(|| invalid("provider", "渠道结构无效"))?;
+                match &field.original {
+                    Some(value) => {
+                        object.insert(field.key.clone(), value.clone());
+                    }
+                    None => {
+                        object.remove(&field.key);
+                    }
+                }
+            } else if let Some(map) = provider.get_mut(&field.key).and_then(Value::as_object_mut) {
                 match &field.original {
                     Some(value) => {
                         map.insert(field.model.clone(), value.clone());
@@ -856,8 +975,54 @@ fn compile_materials(
                 }
             }
             let fields = &row.rules;
+            if let Field::Custom(value) = fields.no_reasoning {
+                if row
+                    .source
+                    .get("noReasoning")
+                    .is_some_and(|s| s != "上游声明")
+                {
+                    let mut ids = match provider.get("noReasoningModels") {
+                        Some(value) => string_array(value)?,
+                        None => vec![],
+                    };
+                    if value
+                        && !row.model_id.contains(':')
+                        && source_rows.iter().any(|other| {
+                            other["provider"] == provider_id.as_str()
+                                && other["id"]
+                                    .as_str()
+                                    .is_some_and(|id| id.starts_with(&format!("{}:", row.model_id)))
+                        })
+                    {
+                        return Err(invalid("no_reasoning_scope","上游分类会同时影响带规格后缀的型号，请逐项设置完整ID，不能把基础ID当单型号覆盖"));
+                    }
+                    if !value
+                        && row
+                            .model_id
+                            .split_once(':')
+                            .is_some_and(|(family, _)| ids.iter().any(|id| id == family))
+                    {
+                        return Err(invalid("no_reasoning_scope","上游族级不传参数规则覆盖此型号，不能以单型号false伪称已允许；请先明确调整原族规则"));
+                    }
+                    if value && !ids.contains(&row.model_id) {
+                        ids.push(row.model_id.clone());
+                        provider["noReasoningModels"] = json!(ids);
+                    } else if !value && ids.contains(&row.model_id) {
+                        ids.retain(|id| id != &row.model_id);
+                        if ids.is_empty() {
+                            provider
+                                .as_object_mut()
+                                .unwrap()
+                                .remove("noReasoningModels");
+                        } else {
+                            provider["noReasoningModels"] = json!(ids);
+                        }
+                    }
+                }
+            }
             if let Field::Custom(pin) = &fields.pinned_effort {
-                if !matches!(&fields.reasoning_efforts,Field::Custom(values) if values.contains(pin))
+                if fields.no_reasoning != Field::Custom(true)
+                    && !matches!(&fields.reasoning_efforts,Field::Custom(values) if values.contains(pin))
                 {
                     return Err(invalid(
                         "pinned_effort",
@@ -878,7 +1043,8 @@ fn compile_materials(
                 }
             }
             if let Field::Custom(map) = &fields.effort_map {
-                if !map.is_empty()
+                if fields.no_reasoning != Field::Custom(true)
+                    && !map.is_empty()
                     && !matches!(&fields.reasoning_efforts,Field::Custom(values) if map.keys().all(|key|values.contains(key)))
                 {
                     return Err(invalid(
@@ -968,6 +1134,7 @@ fn compile_materials(
                 }
             }
         }
+        compile_shared_rules(provider, channel, &projection)?;
     }
     super::channel_actions::default_provider(policy, &mut next)?;
     if next["providers"]
@@ -2575,6 +2742,32 @@ fn next_ownership(
         .collect();
     for channel in &policy.channels {
         let provider = &channel.connection.provider_id;
+        // Empty model is a reserved provider-field slot: real raw IDs are nonempty.
+        // Whole-list ownership keeps order and absence exact and refuses later edits.
+        for key in [
+            "noReasoningModels",
+            "modelReasoningEffortsAuthoritative",
+            "fastWire",
+        ] {
+            let old = before["providers"][provider].get(key);
+            let new = after["providers"][provider].get(key);
+            let prior = previous
+                .iter()
+                .find(|f| f.provider == *provider && f.key == key && f.model.is_empty());
+            let original = prior
+                .map(|f| f.original.clone())
+                .unwrap_or_else(|| old.cloned());
+            if new != original.as_ref() {
+                result.push(OwnedField {
+                    provider: provider.clone(),
+                    key: key.into(),
+                    model: String::new(),
+                    original,
+                    written: new.cloned().unwrap_or(Value::Null),
+                    removed: new.is_none(),
+                });
+            }
+        }
         for key in [
             "modelDisplayNames",
             "modelAdapters",
@@ -2929,6 +3122,149 @@ pub async fn compensate(
 
 #[cfg(test)]
 mod tests {
+    fn service_wire() -> FastWire {
+        FastWire {
+            kind: "service-tier".into(),
+            canonical_to_wire: BTreeMap::from([("priority".into(), "priority".into())]),
+            foreign_caller_tiers: "drop".into(),
+            betas: vec![],
+        }
+    }
+    #[test]
+    fn shared_reasoning_and_fast_wire_validate_scope_and_restore_original_provider_fields() {
+        let (mut snapshot, mut policy) = fixture();
+        let library = super::super::store::seed_library();
+        snapshot.providers["providers"]["test"]["modelReasoningEffortsAuthoritative"] =
+            json!(false);
+        policy.channels[0].overrides.insert(
+            "b".into(),
+            ModelRules {
+                reasoning_authoritative: Field::Custom(true),
+                reasoning_efforts: Field::Custom(vec!["low".into()]),
+                ..Default::default()
+            },
+        );
+        assert_eq!(
+            compile(&snapshot, &library, &policy).unwrap_err().code,
+            "shared_rule_scope"
+        );
+        policy.channels[0].overrides.clear();
+        policy.channels[0].defaults = ModelRules {
+            reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
+            reasoning_authoritative: Field::Custom(true),
+            fast_wire: Field::Custom(Some(service_wire())),
+            ..Default::default()
+        };
+        let (next, _, _) = compile(&snapshot, &library, &policy).unwrap();
+        assert_eq!(
+            next["providers"]["test"]["modelReasoningEffortsAuthoritative"],
+            true
+        );
+        assert_eq!(
+            next["providers"]["test"]["fastWire"]["kind"],
+            "service-tier"
+        );
+        let ownership = next_ownership(&snapshot.providers, &next, &[], &policy).unwrap();
+        snapshot.providers = next;
+        policy.channels[0].defaults = ModelRules::default();
+        let (restored, _, _) = compile_owned(&snapshot, &library, &policy, &ownership).unwrap();
+        assert_eq!(
+            restored["providers"]["test"]["modelReasoningEffortsAuthoritative"],
+            false
+        );
+        assert!(restored["providers"]["test"].get("fastWire").is_none());
+        snapshot.providers["providers"]["test"]["fastWire"]["foreignCallerTiers"] =
+            json!("verbatim");
+        assert_eq!(
+            compile_owned(&snapshot, &library, &policy, &ownership)
+                .unwrap_err()
+                .code,
+            "field_drift"
+        );
+        policy.channels[0].defaults.fast_wire = Field::Custom(Some(FastWire {
+            kind: "anthropic-speed".into(),
+            ..service_wire()
+        }));
+        assert_eq!(
+            compile(&snapshot, &library, &policy).unwrap_err().code,
+            "fast_wire_protocol"
+        );
+    }
+    #[test]
+    fn no_reasoning_false_cannot_silently_override_an_upstream_family_classification() {
+        let (mut snapshot, mut policy) = fixture();
+        policy.channels[0].discovered[0].id = "family:tag".into();
+        policy.channels[0].model_order = vec!["family:tag".into()];
+        policy.channels[0].selection = ModelSelection::Whitelist(vec!["family:tag".into()]);
+        snapshot.models[0]["id"] = json!("family:tag");
+        snapshot.models[0]["namespaced"] = json!("test/family-tag");
+        snapshot.catalog["models"] = json!([{"slug":"native"},{"slug":"control"},{"slug":"test/family-tag"},{"slug":"test/b"}]);
+        snapshot.providers["providers"]["test"]["noReasoningModels"] = json!(["family"]);
+        policy.channels[0].overrides.insert(
+            "family:tag".into(),
+            ModelRules {
+                no_reasoning: Field::Custom(false),
+                ..Default::default()
+            },
+        );
+        assert_eq!(
+            compile(&snapshot, &super::super::store::seed_library(), &policy)
+                .unwrap_err()
+                .code,
+            "no_reasoning_scope"
+        );
+    }
+    #[test]
+    fn no_reasoning_rule_preserves_other_models_and_tracks_exact_list_for_inheritance_and_drift() {
+        let (mut snapshot, mut policy) = fixture();
+        snapshot.providers["providers"]["test"]["noReasoningModels"] = json!(["other"]);
+        policy.channels[0].overrides.insert(
+            "b".into(),
+            ModelRules {
+                no_reasoning: Field::Custom(true),
+                ..Default::default()
+            },
+        );
+        let library = super::super::store::seed_library();
+        let (next, _, _) = compile(&snapshot, &library, &policy).unwrap();
+        assert_eq!(
+            next["providers"]["test"]["noReasoningModels"],
+            json!(["other", "b"])
+        );
+        let ownership = next_ownership(&snapshot.providers, &next, &[], &policy).unwrap();
+        assert!(ownership
+            .iter()
+            .any(|v| v.key == "noReasoningModels" && v.model.is_empty()));
+        snapshot.providers = next;
+        policy.channels[0].overrides.clear();
+        let (restored, _, _) = compile_owned(&snapshot, &library, &policy, &ownership).unwrap();
+        assert_eq!(
+            restored["providers"]["test"]["noReasoningModels"],
+            json!(["other"])
+        );
+        policy.channels[0].overrides.insert(
+            "b".into(),
+            ModelRules {
+                no_reasoning: Field::Custom(false),
+                ..Default::default()
+            },
+        );
+        let (allowed, _, _) = compile(&snapshot, &library, &policy).unwrap();
+        assert_eq!(
+            allowed["providers"]["test"]["noReasoningModels"],
+            json!(["other"])
+        );
+        snapshot.providers["providers"]["test"]["noReasoningModels"]
+            .as_array_mut()
+            .unwrap()
+            .push(json!("later"));
+        assert_eq!(
+            compile_owned(&snapshot, &library, &policy, &ownership)
+                .unwrap_err()
+                .code,
+            "field_drift"
+        );
+    }
     #[test]
     fn explicit_reasoning_pin_and_label_map_compile_and_restore_original_without_resetting_default()
     {

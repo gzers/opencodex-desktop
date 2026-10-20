@@ -1,7 +1,7 @@
 import type { Proposal, TemplateDraft } from './api'
 export interface ProposalField { path: string[]; label: string; before: unknown; current: unknown; after: unknown; conflict: boolean; locked: boolean }
-function at(value: unknown, path: string[]): unknown { const result=path.reduce<unknown>((v,k) => Array.isArray(v) ? v.find(item => item && typeof item === 'object' && item.id === k) : typeof v === 'object' && v !== null ? (v as Record<string,unknown>)[k] : undefined, value);return result===undefined&&['pinnedEffort','effortMap'].includes(path.at(-1)??'')?{mode:'inherit'}:result }
-const rules = ['protocol','contextWindow','inputModalities','reasoningEfforts','defaultEffort','fast','pinnedEffort','effortMap']
+function at(value: unknown, path: string[]): unknown { const result=path.reduce<unknown>((v,k) => Array.isArray(v) ? v.find(item => item && typeof item === 'object' && item.id === k) : typeof v === 'object' && v !== null ? (v as Record<string,unknown>)[k] : undefined, value);return result===undefined&&['pinnedEffort','effortMap','noReasoning','reasoningAuthoritative','fastWire'].includes(path.at(-1)??'')?{mode:'inherit'}:result }
+const rules = ['protocol','contextWindow','inputModalities','reasoningEfforts','defaultEffort','fast','pinnedEffort','effortMap','noReasoning','reasoningAuthoritative','fastWire']
 export function proposalFields(base: TemplateDraft, current: TemplateDraft, proposal: Proposal): ProposalField[] {
   const fields = [['label','名称'],['content.description','说明'],['content.matching','匹配规则'],...rules.map(key => ['content.rules.'+key,key]),['content.sources','资料来源']]
   const ids = new Set([...base.content.variants,...proposal.content.variants].map(v => v.id))

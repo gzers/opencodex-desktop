@@ -155,6 +155,23 @@ fn explicit_rules(row: &compiler::ModelProjection) -> ModelRules {
     if row.source.get("effortMap").is_none_or(|s| s == "上游声明") {
         rules.effort_map = Field::Inherit;
     }
+    if row
+        .source
+        .get("noReasoning")
+        .is_none_or(|s| s == "上游声明")
+    {
+        rules.no_reasoning = Field::Inherit;
+    }
+    if row
+        .source
+        .get("reasoningAuthoritative")
+        .is_none_or(|s| s == "上游声明")
+    {
+        rules.reasoning_authoritative = Field::Inherit;
+    }
+    if row.source.get("fastWire").is_none_or(|s| s == "上游声明") {
+        rules.fast_wire = Field::Inherit;
+    }
     rules
 }
 pub fn expand(

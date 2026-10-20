@@ -9,7 +9,7 @@ const props=defineProps<{row:ModelProjection;choice?:ModelChoice;open:boolean;an
 const emit=defineEmits<{open:[];close:[];select:[];revert:[];option:[field:'reasoningEffort'|'fast',value?:string|boolean]}>()
 const panel=ref<HTMLElement|null>(null)
 const trigger=ref<HTMLElement|null>(null)
-const levels=computed(()=>props.row.rules.reasoningEfforts.mode==='custom'?[...props.row.rules.reasoningEfforts.value].sort((a,b)=>['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(a)-['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(b)):[])
+const levels=computed(()=>props.row.rules.noReasoning?.mode==='custom'&&props.row.rules.noReasoning.value?[]:props.row.rules.reasoningEfforts.mode==='custom'?[...props.row.rules.reasoningEfforts.value].sort((a,b)=>['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(a)-['none','minimal','low','medium','high','xhigh','max','ultra'].indexOf(b)):[])
 let restoringFocus=false
 let enter:ReturnType<typeof setTimeout>|undefined
 let leave:ReturnType<typeof setTimeout>|undefined

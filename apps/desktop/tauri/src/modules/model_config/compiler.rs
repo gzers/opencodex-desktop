@@ -171,6 +171,12 @@ fn overlay_sources(target: &mut BTreeMap<String, String>, rules: &ModelRules, so
             !matches!(rules.pinned_effort, Field::Inherit),
         ),
         ("effortMap", !matches!(rules.effort_map, Field::Inherit)),
+        ("noReasoning", !matches!(rules.no_reasoning, Field::Inherit)),
+        (
+            "reasoningAuthoritative",
+            !matches!(rules.reasoning_authoritative, Field::Inherit),
+        ),
+        ("fastWire", !matches!(rules.fast_wire, Field::Inherit)),
     ] {
         if custom {
             target.insert(key.into(), source.into());

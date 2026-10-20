@@ -297,10 +297,30 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
             reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
             default_effort: Field::Custom("low".into()),
             pinned_effort: Field::Custom("high".into()),
+            no_reasoning: Field::Custom(true),
             effort_map: Field::Custom(BTreeMap::from([("high".into(), "__omit__".into())])),
             ..Default::default()
         },
     );
+    policy.channels[0].defaults.reasoning_efforts =
+        Field::Custom(vec!["low".into(), "high".into()]);
+    policy.channels[0].defaults.reasoning_authoritative = Field::Custom(true);
+    policy.channels[0].defaults.fast_wire = Field::Custom(Some(FastWire {
+        kind: "service-tier".into(),
+        canonical_to_wire: BTreeMap::from([("priority".into(), "priority".into())]),
+        foreign_caller_tiers: "drop".into(),
+        betas: vec![],
+    }));
+    policy.channels[0]
+        .overrides
+        .get_mut("fixture-anthropic")
+        .unwrap()
+        .fast_wire = Field::Custom(Some(FastWire {
+        kind: "anthropic-speed".into(),
+        canonical_to_wire: BTreeMap::from([("priority".into(), "fast".into())]),
+        foreign_caller_tiers: "drop".into(),
+        betas: vec![],
+    }));
     for model in &mut policy.channels[0].discovered {
         model.label = if model.id == "fixture-base" {
             "基础型号"
@@ -367,8 +387,26 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
         after.providers["providers"]["fixture"]["modelDefaultReasoningEfforts"]["fixture-base"],
         "low"
     );
+    assert!(after.providers["providers"]["fixture"]["noReasoningModels"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|id| id == "fixture-base"));
     let order = after.order["pickerOrder"].as_array().unwrap();
     let mapped = plan.protocol_groups[0].split(" → ").last().unwrap();
+    assert_eq!(
+        after.providers["providers"]["fixture"]["modelReasoningEffortsAuthoritative"],
+        true
+    );
+    assert_eq!(
+        after.providers["providers"]["fixture"]["fastWire"]["kind"],
+        "service-tier"
+    );
+    assert_eq!(
+        after.providers["providers"][mapped]["fastWire"]["kind"],
+        "anthropic-speed"
+    );
+
     assert!(order
         .iter()
         .any(|slug| slug.as_str() == Some(&format!("{mapped}/fixture-anthropic"))));

@@ -763,6 +763,35 @@ mod tests {
         );
     }
     #[test]
+    fn no_reasoning_and_shared_rule_locks_reject_external_widening() {
+        let mut content = proposal().content;
+        content.rules.no_reasoning = Field::Custom(true);
+        content.rules.reasoning_authoritative = Field::Custom(false);
+        content.rules.fast_wire = Field::Custom(None);
+        for key in ["noReasoning", "reasoningAuthoritative", "fastWire"] {
+            content.locked_fields.insert(format!("rules.{key}"));
+        }
+        content.validate().unwrap();
+        let mut changed = content.clone();
+        changed.rules.no_reasoning = Field::Custom(false);
+        assert_eq!(
+            super::check_locks(&content, &changed).unwrap_err().code,
+            "locked_field"
+        );
+        let mut changed = content.clone();
+        changed.rules.reasoning_authoritative = Field::Custom(true);
+        assert_eq!(
+            super::check_locks(&content, &changed).unwrap_err().code,
+            "locked_field"
+        );
+        let mut changed = content.clone();
+        changed.rules.fast_wire = Field::Inherit;
+        assert_eq!(
+            super::check_locks(&content, &changed).unwrap_err().code,
+            "locked_field"
+        );
+    }
+    #[test]
     fn advanced_reasoning_fields_use_the_same_external_lock_boundary() {
         let mut content = proposal().content;
         content.rules.pinned_effort = Field::Custom("high".into());

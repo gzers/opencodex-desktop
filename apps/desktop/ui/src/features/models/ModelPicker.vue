@@ -24,7 +24,7 @@ const available=(row:ModelProjection)=>!props.loading&&!props.error&&row.enabled
 const chosen=(row:ModelProjection)=>picks.value.some(p=>key(p)===key(row))
 watch(()=>props.open,value=>{if(value){picks.value=props.current?.map(p=>({...p}))??[];search.value='';channelSearch.value='';channel.value='';focused.value='';sorting.value=null;descending.value=false}},{immediate:true})
 const channelRows=computed(()=>props.channels.filter(c=>(c.label+' '+c.id).toLowerCase().includes(channelSearch.value.toLowerCase())))
-function effort(row:ModelProjection){return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
+function effort(row:ModelProjection){if(row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)return undefined;return (props.reasoning?picks.value.find(p=>key(p)===key(row))?.reasoningEffort:undefined)??(row.rules.defaultEffort.mode==='custom'?row.rules.defaultEffort.value:undefined)}
 function sortValue(row:ModelProjection,column:SortColumn):string|number|undefined{
  if(column==='recommendation'){const index=props.recommendations?.findIndex(p=>key(p)===key(row));return index!==undefined&&index>=0?index:undefined}
  if(column==='model')return row.label
@@ -61,7 +61,7 @@ function problem(pick:ModelChoice):string{
  const row=props.rows.find(row=>key(row)===key(pick));if(!row)return '型号已缺失'
  if(row.unavailableReason)return row.unavailableReason;
  if(!row.enabled)return '渠道停用';if(!row.discovered)return '型号未发现'
- if(props.reasoning&&pick.reasoningEffort&&(row.rules.reasoningEfforts.mode!=='custom'||!row.rules.reasoningEfforts.value.includes(pick.reasoningEffort)))return '原推理档位已不支持'
+ if(props.reasoning&&pick.reasoningEffort&&((row.rules.noReasoning?.mode==='custom'&&row.rules.noReasoning.value)||row.rules.reasoningEfforts.mode!=='custom'||!row.rules.reasoningEfforts.value.includes(pick.reasoningEffort)))return '原推理档位已不支持'
  if(props.reasoning&&pick.fast===true&&(row.rules.fast.mode!=='custom'||!row.rules.fast.value))return 'Fast能力已变化'
  return ''
 }

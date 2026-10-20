@@ -17,6 +17,9 @@ export function mergeUpstream(snapshot: UpstreamSnapshot, existing: ChannelPolic
       if (Array.isArray(row.reasoningEfforts)) rules.reasoningEfforts = { mode: 'custom', value: strings(row.reasoningEfforts) }
       if (typeof row.defaultReasoningEffort === 'string') rules.defaultEffort = { mode: 'custom', value: row.defaultReasoningEffort }
       if (typeof row.fastRowAvailable === 'boolean') rules.fast = { mode: 'custom', value: row.fastRowAvailable }
+      if(Array.isArray(raw.noReasoningModels))rules.noReasoning={mode:'custom',value:raw.noReasoningModels.includes(String(row.id))||(String(row.id).includes(':')&&raw.noReasoningModels.includes(String(row.id).split(':')[0]))}
+      if(typeof raw.modelReasoningEffortsAuthoritative==='boolean')rules.reasoningAuthoritative={mode:'custom',value:raw.modelReasoningEffortsAuthoritative}
+      if(raw.fastWire===null||record(raw.fastWire))rules.fastWire={mode:'custom',value:raw.fastWire as import('./api').FastWire|null}
       const pin=record(raw.modelPinnedReasoningEfforts)?raw.modelPinnedReasoningEfforts[String(row.id)]??raw.pinnedReasoningEffort:raw.pinnedReasoningEffort
       if(typeof pin==='string')rules.pinnedEffort={mode:'custom',value:pin}
       const map=record(raw.modelReasoningEffortMap)?raw.modelReasoningEffortMap[String(row.id)]??raw.reasoningEffortMap:raw.reasoningEffortMap

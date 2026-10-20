@@ -72,6 +72,21 @@ pub struct ModelRules {
     pub pinned_effort: Field<String>,
     #[serde(skip_serializing_if = "is_inherit")]
     pub effort_map: Field<BTreeMap<String, String>>,
+    #[serde(skip_serializing_if = "is_inherit")]
+    pub no_reasoning: Field<bool>,
+    #[serde(skip_serializing_if = "is_inherit")]
+    pub reasoning_authoritative: Field<bool>,
+    #[serde(skip_serializing_if = "is_inherit")]
+    pub fast_wire: Field<Option<FastWire>>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct FastWire {
+    pub kind: String,
+    pub canonical_to_wire: BTreeMap<String, String>,
+    pub foreign_caller_tiers: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub betas: Vec<String>,
 }
 fn is_inherit<T>(value: &Field<T>) -> bool {
     matches!(value, Field::Inherit)
@@ -87,6 +102,11 @@ impl ModelRules {
             fast: self.fast.overlay(&parent.fast),
             pinned_effort: self.pinned_effort.overlay(&parent.pinned_effort),
             effort_map: self.effort_map.overlay(&parent.effort_map),
+            no_reasoning: self.no_reasoning.overlay(&parent.no_reasoning),
+            reasoning_authoritative: self
+                .reasoning_authoritative
+                .overlay(&parent.reasoning_authoritative),
+            fast_wire: self.fast_wire.overlay(&parent.fast_wire),
         }
     }
     pub fn normalize(&mut self) {
@@ -98,6 +118,44 @@ impl ModelRules {
         }
     }
     pub fn validate(&self) -> ModelResult<()> {
+        if let Field::Custom(Some(wire)) = &self.fast_wire {
+            if !["service-tier", "anthropic-speed", "cursor-variant"].contains(&wire.kind.as_str())
+                || !["verbatim", "drop"].contains(&wire.foreign_caller_tiers.as_str())
+                || !wire.canonical_to_wire.contains_key("priority")
+                || wire.canonical_to_wire.len() > 16
+            {
+                return Err(invalid(
+                    "fast_wire",
+                    "Fast wire类型、外来档位策略或priority映射无效",
+                ));
+            }
+            let mut values = BTreeSet::new();
+            if wire.canonical_to_wire.iter().any(|(key, value)| {
+                key.trim().is_empty()
+                    || key.len() > 64
+                    || key.chars().any(char::is_control)
+                    || value.trim().is_empty()
+                    || value.len() > 64
+                    || value.chars().any(char::is_control)
+                    || !values.insert(value.trim())
+            }) || wire.betas.len() > 16
+                || wire.betas.iter().any(|value| {
+                    value.trim().is_empty()
+                        || value.len() > 128
+                        || value.chars().any(char::is_control)
+                })
+                || wire.betas.iter().collect::<BTreeSet<_>>().len() != wire.betas.len()
+            {
+                return Err(invalid(
+                    "fast_wire",
+                    "Fast wire映射或beta包含空白、重复或过长值",
+                ));
+            }
+        }
+        if self.fast_wire == Field::Custom(None) && self.fast == Field::Custom(true) {
+            return Err(invalid("fast_wire", "禁用Fast wire与声明支持Fast冲突"));
+        }
+
         let effort = |value: &str| {
             [
                 "none", "minimal", "low", "medium", "high", "xhigh", "max", "ultra",
@@ -106,7 +164,8 @@ impl ModelRules {
         };
         if let Field::Custom(pin) = &self.pinned_effort {
             if !effort(pin)
-                || matches!(&self.reasoning_efforts,Field::Custom(values) if !values.contains(pin))
+                || self.no_reasoning != Field::Custom(true)
+                    && matches!(&self.reasoning_efforts,Field::Custom(values) if !values.contains(pin))
             {
                 return Err(invalid(
                     "pinned_effort",
@@ -130,7 +189,8 @@ impl ModelRules {
                     "推理映射只接受已声明档位与64字节内的上游标签；__omit__表示不发送参数",
                 ));
             }
-            if matches!(&self.reasoning_efforts,Field::Custom(values) if map.keys().any(|key|!values.contains(key)))
+            if self.no_reasoning != Field::Custom(true)
+                && matches!(&self.reasoning_efforts,Field::Custom(values) if map.keys().any(|key|!values.contains(key)))
             {
                 return Err(invalid("effort_map", "推理映射包含最终列表以外的档位"));
             }
@@ -338,6 +398,9 @@ impl TemplateContent {
             "fast",
             "pinnedEffort",
             "effortMap",
+            "noReasoning",
+            "reasoningAuthoritative",
+            "fastWire",
         ];
         if self.locked_fields.iter().any(|v| {
             !["description", "matching", "rules", "variants"].contains(&v.as_str())

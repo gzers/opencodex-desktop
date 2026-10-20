@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core'
 
 export type Field<T> = { mode: 'inherit' } | { mode: 'custom'; value: T }
+export interface FastWire {kind:'service-tier'|'anthropic-speed'|'cursor-variant';canonicalToWire:Record<string,string>;foreignCallerTiers:'verbatim'|'drop';betas?:string[]}
 export interface ModelRules {
   protocol: Field<string>
   contextWindow: Field<number>
@@ -9,6 +10,9 @@ export interface ModelRules {
   defaultEffort: Field<string>
   fast: Field<boolean>
   pinnedEffort?: Field<string>
+  reasoningAuthoritative?:Field<boolean>
+  fastWire?:Field<FastWire|null>
+  noReasoning?: Field<boolean>
   effortMap?: Field<Record<string,string>>
 }
 export interface Pattern { kind: 'exact' | 'prefix' | 'glob'; value: string }
@@ -74,7 +78,7 @@ export interface UpstreamSnapshot {readId?:string; version: string; providers: u
 export interface TemplateDraft { templateId: string | null; baseRevision: string | null; label: string; content: TemplateContent }
 export interface Commit { snapshot: ModelSnapshot; templateId: string; revisionId: string; changed: boolean }
 export interface MatchPreview { matched: boolean; reason: string; variantId: string | null; rules: ModelRules }
-export const emptyRules = (): ModelRules => ({ protocol: { mode: 'inherit' }, contextWindow: { mode: 'inherit' }, inputModalities: { mode: 'inherit' }, reasoningEfforts: { mode: 'inherit' }, defaultEffort: { mode: 'inherit' }, fast: { mode: 'inherit' }, pinnedEffort:{mode:'inherit'}, effortMap:{mode:'inherit'} })
+export const emptyRules = (): ModelRules => ({ protocol: { mode: 'inherit' }, contextWindow: { mode: 'inherit' }, inputModalities: { mode: 'inherit' }, reasoningEfforts: { mode: 'inherit' }, defaultEffort: { mode: 'inherit' }, fast: { mode: 'inherit' }, pinnedEffort:{mode:'inherit'}, effortMap:{mode:'inherit'}, noReasoning:{mode:'inherit'},reasoningAuthoritative:{mode:'inherit'},fastWire:{mode:'inherit'} })
 export const emptyContent = (): TemplateContent => ({ description: '', matching: { include: [{ kind: 'prefix', value: '' }], exclude: [], caseSensitive: false, channelMode: 'all', channels: [], priority: 0 }, rules: emptyRules(), variants: [], lockedFields: [], sources: [] })
 export interface NewChannelRequest {id:string;expectedPolicy:string;expectedWorkspace:string;channel:ChannelPolicy;apiKey:string|null}
 export interface NewChannelOutcome {id:string;channel:ChannelPolicy;phase:'prepared'|'staging'|'committed'|'failed'|'conflict'|'cleanup_pending';error:{code:string;message:string}|null;snapshot:ModelSnapshot|null}
