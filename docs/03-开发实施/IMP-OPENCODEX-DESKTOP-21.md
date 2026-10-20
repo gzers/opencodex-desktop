@@ -797,3 +797,10 @@ CI39432110685/a0adea48并未进入最终EXE排序，实际失败仍是原officia
 复核最终模型页交互§5及现行assistantHTML，发现缺资料/锁定人工上下文/导出上下文和图标窗口操作；补在原非模态面板内，不恢复悬浮入口。资料按钮打开并仅定位原内部资料区；锁默认开启，只对本轮内部请求中已有自定义contextWindow加入临时锁，服务校验与UI选择均保护，接受不把临时锁写进表单。已有永久人工锁保持且不受该开关解除。导出复用同一ExternalTaskDialog，冻结当前编辑快照/已有永久锁并预选当前或仅新建，不携带私密聊天/内部执行偏好，也不把内部临时保护变成外部模板永久锁。header用公共UiIconButton，面板role=dialog/aria-modal=false、聊天role=log及增量播报。
 
 新增实际组件请求/临时锁/接受保持/导出快照/会话开关及语义检查，受影响8项、最终全量142文件705项和构建通过；类型检查首次抓到新fixture缺required report，补null后成功，未放宽类型。DEV实际底栏控件与900×600/200%测量：panel(76,72)800×504，输入/发送/工具均在内部、无文档横溢；默认400宽聊天319高，资料只滚面板。导出打开单一现有弹窗当前范围，但DEV未实现native外部接口会报不可用，如实保留且未点复制，不当作外部提交成功；真实服务/授权仍复用原证据。checks-agent-context-footer-20261020.json绑定最终源/日志/截图，预览恢复100%与默认viewport。
+
+
+### Windows原冷查询分组和真实型号鼠标排序通过
+
+CI39435891819/a2f89fa1全部适用job success，feature build skipped；下载artifact12274765953读回完整结果。原冷查询3项保留原2秒截止/4秒清理断言且2.06秒完成，余Windows lib735通过/4既有忽略/3已执行过滤，其他workspace及真实隔离凭据保护成功。该事实证明分组执行有效，不把负载假设泛化为唯一根因或承诺所有设备2秒启动。原失败均保留，无重试同源直到绿。
+
+最终EXE SHA7ec31c471b38204c949fd0d6d5263eea1704131879832c5ed894dafb827b26e9，0.2.0/expectedCommit匹配，真实模型模板保存/默认确认/文件往返再次通过。Page.reload读持久隔离测试渠道后，CDP鼠标在视口1028×749内从(483.7,374.6)到(633.4,499.8)拖动实际型号手柄，后台workspace读回alpha/beta/gamma→beta/alpha/gamma，已提交policy不变、未执行runtime Save。model-sort-native/原坐标/截图/进程身份及原CI日志见checks-windows-sort-native-pass-20261020.json。mode=any且runner实际提升，不冒报normal-user；Windows原生鼠标结果不替代Mac物理指针，新增助手底栏/比较UI还须当前源CI，最终tag制品与发布门保持。

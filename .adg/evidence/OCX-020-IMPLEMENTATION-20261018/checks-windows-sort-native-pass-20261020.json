@@ -1,0 +1,170 @@
+{
+  "scope": "Windows原冷查询等价分组及正式鼠标型号拖动实际通过",
+  "ci": {
+    "run": 39435891819,
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/39435891819",
+    "source": "a2f89fa125611f34ed9be108333974ac0d8c3d5b",
+    "result": "success",
+    "artifactId": 12274765953,
+    "featureBuild": "skipped, not release artifacts"
+  },
+  "coldQueryGroup": {
+    "passed": 3,
+    "failed": 0,
+    "seconds": 2.06,
+    "originalDeadlineAndCleanupAssertionsUnchanged": true,
+    "restOfWindowsLib": {
+      "passed": 735,
+      "ignored": 4,
+      "filteredAlreadyExecuted": 3
+    },
+    "nativeCredentialTest": "passed",
+    "interpretation": "same cold fixtures passed under isolated scheduling; this proves grouped run, not universal root cause or eliminated production latency"
+  },
+  "native": {
+    "result": "pass",
+    "input": "WebView2 CDP mouse press/move/release, not synthetic DOM drag events",
+    "channelId": "82d20314-f764-4e74-9007-3bde8ee55ea7",
+    "before": [
+      "fixture-alpha",
+      "fixture-beta",
+      "fixture-gamma"
+    ],
+    "after": [
+      "fixture-beta",
+      "fixture-alpha",
+      "fixture-gamma"
+    ],
+    "policyUnchanged": true,
+    "runtimeSave": false
+  },
+  "templateFile": {
+    "result": "pass",
+    "scope": "native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation",
+    "templateId": "d4d53ac1-0b11-4e98-b9ec-beb65a41ba02",
+    "revisionId": "4879f3c1-6161-45eb-9242-26c048246a33",
+    "immutablePriorRevision": true,
+    "channelPolicyUnchanged": true,
+    "defaultSeparateFromAdoption": true,
+    "confirmationLeftNativeTopLayer": true,
+    "returnedToVersionManager": true,
+    "exportedWithinSandbox": true,
+    "fileRoundtrip": true,
+    "nativePointerModelSort": true
+  },
+  "startup": {
+    "schemaVersion": 2,
+    "mode": "any",
+    "harnessToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 5420,
+      "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "creationTimeUtc": "2026-10-20T14:38:08.8275168Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-10-20T14:38:17.5890728Z"
+    },
+    "applicationToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 3264,
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+      "creationTimeUtc": "2026-10-20T14:38:17.6043654Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-10-20T14:38:51.3042480Z"
+    },
+    "applicationTokenVerified": true,
+    "applicationModeMatched": false,
+    "result": "pass",
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+    "sha256": "7ec31c471b38204c949fd0d6d5263eea1704131879832c5ed894dafb827b26e9",
+    "homeRemoved": true,
+    "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-2c7dc7ff654248babde8b9256ff19e09",
+    "observedSeconds": 30,
+    "cdpPort": 56240,
+    "expectedCommit": "a2f89fa125611f34ed9be108333974ac0d8c3d5b",
+    "sourceCommitMatched": true,
+    "mainWindowPresent": true,
+    "pid": 3264,
+    "responding": true
+  },
+  "windowsRegressionSummaries": [
+    "2026-10-20T14:13:08.1517945Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 739 filtered out; finished in 2.06s",
+    "2026-10-20T14:22:33.7303256Z test result: ok. 735 passed; 0 failed; 4 ignored; 0 measured; 3 filtered out; finished in 360.10s",
+    "2026-10-20T14:22:33.7311522Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:33.7312665Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:33.7314425Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:33.7516867Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "2026-10-20T14:22:33.7665464Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:33.7833614Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:40.5135069Z test result: ok. 2 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 6.70s",
+    "2026-10-20T14:22:40.5429725Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:40.5580246Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:40.5931124Z test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:40.6086289Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.1642179Z test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.44s",
+    "2026-10-20T14:22:51.1788385Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.1935248Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.3637025Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.14s",
+    "2026-10-20T14:22:51.3904270Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.6656762Z test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s",
+    "2026-10-20T14:22:51.6845137Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.6993416Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.7143288Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.7326977Z test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.8255302Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.8830502Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.10s",
+    "2026-10-20T14:22:51.9096309Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:51.9697482Z test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:54.6599288Z test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.67s",
+    "2026-10-20T14:22:54.6789419Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:54.7089611Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "2026-10-20T14:22:54.7246446Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:22:54.7440816Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:23:09.9040363Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.13s",
+    "2026-10-20T14:23:09.9254538Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+    "2026-10-20T14:23:09.9859869Z test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s",
+    "2026-10-20T14:23:10.0354740Z test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s",
+    "2026-10-20T14:23:10.4767804Z test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.41s",
+    "2026-10-20T14:23:10.5031903Z test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "2026-10-20T14:23:15.2919959Z test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+  ],
+  "logs": {
+    "path": "windows-partition-native-39435891819.log.gz",
+    "rawSha256": "73970aa0e22265f57ab1b9744e7741a2141ee7b082699040f46a290d4980eb0e"
+  },
+  "files": [
+    {
+      "file": "windows-sort-pass-39435891819-model-ui.json",
+      "sha256": "9988315c133474bcaba728c3dd7585f696ceecc153a33e09f71b69dd514c93b5"
+    },
+    {
+      "file": "windows-sort-pass-39435891819-model-sort-native.json",
+      "sha256": "82e19355e12cc1e26313a5fffe270dd4b5ce0c6c60b3c63f78ad68e767680ba3"
+    },
+    {
+      "file": "windows-sort-pass-39435891819-model-sort-pointer.json",
+      "sha256": "5c2a2d6453da9bfbe87587ac3c0a43644ca93c178a77c735db873ece2e2b85b0"
+    },
+    {
+      "file": "windows-sort-pass-39435891819-model-template-native.png",
+      "rawFile": "windows-sort-pass-39435891819-model-template-native.png.raw.gz",
+      "rawSha256": "39aa5dae562f57b6690ef5b1f22134282f38175ef7e5c95bad2740ea09025006",
+      "displayTransform": "CRLF->LF"
+    },
+    {
+      "file": "windows-sort-pass-39435891819-startup.json",
+      "rawFile": "windows-sort-pass-39435891819-startup.json.raw.gz",
+      "rawSha256": "4927045c50a8c6b8502bb734ec8b4502242191ad3272e87bc12a44b03dbe97a2",
+      "displayTransform": "CRLF->LF"
+    }
+  ],
+  "limits": [
+    "mode any, elevated runner; not normal-user device proof",
+    "Windows pointer result does not substitute macOS physical pointer result",
+    "new Agent footer/compare UI changes need their own current CI; source freeze remains future",
+    "not tag/installers/updater verification"
+  ]
+}
