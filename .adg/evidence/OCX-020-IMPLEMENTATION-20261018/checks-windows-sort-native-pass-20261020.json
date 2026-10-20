@@ -150,9 +150,8 @@
     },
     {
       "file": "windows-sort-pass-39435891819-model-template-native.png",
-      "rawFile": "windows-sort-pass-39435891819-model-template-native.png.raw.gz",
-      "rawSha256": "39aa5dae562f57b6690ef5b1f22134282f38175ef7e5c95bad2740ea09025006",
-      "displayTransform": "CRLF->LF"
+      "sha256": "39aa5dae562f57b6690ef5b1f22134282f38175ef7e5c95bad2740ea09025006",
+      "binaryUnchanged": true
     },
     {
       "file": "windows-sort-pass-39435891819-startup.json",
@@ -166,5 +165,6 @@
     "Windows pointer result does not substitute macOS physical pointer result",
     "new Agent footer/compare UI changes need their own current CI; source freeze remains future",
     "not tag/installers/updater verification"
-  ]
+  ],
+  "evidenceCorrection": "PNG kept byte-for-byte; CRLF normalization applies only to JSON display. Prior accidental binary display transform corrected from exact artifact; raw gzip retained as original."
 }
