@@ -1,0 +1,16 @@
+{
+  "scope": "HTML5业务拖放的Tauri主窗准入",
+  "sourceBase": "91d8a585755775b93f70e36dd5c2a8531fbb5a62",
+  "config": {
+    "path": "apps/desktop/tauri/tauri.conf.json",
+    "sha256": "f83411f755fb7fd7f8cf6b0dcda71c3cdb3f619ec34a93f3fb2555077db7e06b",
+    "dragDropEnabled": false
+  },
+  "basis": "tauri-utils 2.10.1 src/config.rs drag_drop_enabled docs: disabling required for HTML5 drag/drop on Windows; project has no onDragDropEvent/native drop consumer",
+  "check": {
+    "command": "cargo check --locked --bins",
+    "result": "passed",
+    "rawSha256": "c4ecbc96b12999a9cb91f1e8c380df245940078282663f0935b81bb8531db670"
+  },
+  "notClaimed": "native mouse reorder; current macOS attempts had uncertain screenshot coordinate mapping. DOM handlers/keyboard reorder existing tests remain valid."
+}

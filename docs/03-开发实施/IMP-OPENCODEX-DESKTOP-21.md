@@ -719,3 +719,8 @@ CI39419001884/ec7663的后端/前端/发布工具均成功，Windows最终EXE首
 第三轮实际请求在回环暂缓后点击停止，再释放服务晚回；未新增第三轮建议/已保存revision，当前输入保留，公共任务如实已停止。总3个generation形请求均到本次回环固定服务、付费0；不能把固定回复称为真实大模型语义质量。两轮持久记录、第三轮停止、二进制/来源摘要和截图见checks-agent-native-multiturn-20261020.json，独立fixture源码及构建原日志压缩保留。仅关闭核对命令匹配的本次app/runner，runner负责自有官方子进程，日常app/proxy未停。
 
 型号物理拖动本轮仍未获得权威顺序变化，原生截图原尺寸与呈现坐标不一致造成指针落点不可靠，保持未验。另核安装tauri-utils2.10.1/config.rs明确Windows前端HTML5拖放必须关闭原生drag-drop handler；项目未消费原生文件拖放事件但主窗默认开启，下一切片显式关闭以恢复业务排序，系统文件选择入口保持。此依据不冒充Windows鼠标验收。
+
+
+### 主窗前端拖放准入修正
+
+沿上一节安装SDK的明确Windows要求，主窗dragDropEnabled=false，停止由Tauri原生处理器拦截前端HTML5拖放。当前没有原生文件drop事件消费者，导入仍用系统选择器；业务渠道/型号排序沿原DOM handler，未新增第三套排序。cargo check --locked --bins成功解析配置并完成编译，checks-native-drag-config-20261020.json绑定最终文件和日志。不把该配置门或未命中的macOS指针操作称作物理拖动通过；后续当前源最终Windows/宿主验收继续取证。
