@@ -741,3 +741,10 @@ CI39419001884/ec7663的后端/前端/发布工具均成功，Windows最终EXE首
 ### 候选标识验证及生成任务文案校准
 
 Cargo/Tauri/npm及两锁文件均为0.2.0，locked bins编译与前端构建成功。原生两轮过程中生成任务观察仍留“结果待比较，尚未保存”，后续接受/普通另存后旧观察无法证明当前未保存；现generation/review只陈述“建议已生成，可在模版编辑中查看”，不伪造模板已保存或新增成功通知。仍沿同一已注册任务信号/宿主，其他传输/保存语义不变。受影响任务/注册10项通过，checks-version-candidate-20261020.json绑定版本/文案及原日志。无tag/main集成/公开投递，当前平台门仍继续。
+
+
+### Windows正式型号行指针排序专项接线
+
+继续沿windows-startup精确根准入，模版文件往返后用正式model_policy_stage建立一个停用/none、无Key的明确测试渠道及3型号，连接仅example.test静态定义、不发检测/生成；通过正式路由重载/渠道编辑显示实际表格。读取当前DOM矩形并核验均在视口，使用WebView2 CDP鼠标press/move/release经过12步移动，不直接派发DOM drag/drop或调排序函数；等后台model_config_snapshot读回workspace的beta/alpha/gamma，再断言已提交policy仍与原快照相同，从未点运行Save。
+
+输出model-sort-pointer与model-sort-native保留坐标/前后实际顺序；原最终EXE、受控进程、截图与模板链保持。Node准入3项和语法成功，只表示测试接线可运行，真正指针/持久化结论待当前源Windows CI。checks-native-sort-admission-20261020.json绑定源码，未把本地脚本断言或先前未命中Mac拖动记通过。

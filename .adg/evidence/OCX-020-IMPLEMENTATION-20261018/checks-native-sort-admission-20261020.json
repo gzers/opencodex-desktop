@@ -1,0 +1,18 @@
+{
+  "scope": "Windows正式型号行鼠标排序验收接线",
+  "sourceBase": "088e3970",
+  "sourceSha256": "3bcbb6fc09123aaa68c475b823ddec7867c510f0f45520b2eb8aa6016fad2758",
+  "checks": {
+    "nodeAdmission": 3,
+    "syntax": "passed"
+  },
+  "native": "pending CI; not passed",
+  "behavior": "精确根准入和模板往返后，经model_policy_stage建立一个停用、none、无Key/网络的显式测试渠道及3型号；正式路由重载/编辑，读取实际DOM矩形后WebView2 CDP mouse press/move/release拖动，从model_config_snapshot读workspace顺序beta/alpha/gamma；policy保持原值，未调用runtime Save。",
+  "evidenceOutputs": [
+    "model-sort-pointer.json",
+    "model-sort-native.json",
+    "model-ui.json",
+    "model-template-native.png"
+  ],
+  "boundary": "只扩已有Windows startup专项，不创建新浏览器/宿主或GUI工具；不是DOM合成drag/drop直接调用排序函数；本地Node通过仅准入，须等实际远端。"
+}
