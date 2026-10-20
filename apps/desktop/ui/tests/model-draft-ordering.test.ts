@@ -19,19 +19,20 @@ describe('model draft ordering and explicit selection',()=>{
  it('requires confirmation when leaving all and restores the checkbox if cancelled',async()=>{
   const value=channel();value.selection={mode:'all'}
   const wrapper=mount(ChannelEditor,{props:{channel:value,templates:[]},global:{stubs:{ModelRuleFields:true,NodePicker:true,UiSelectField:true}}})
-  const checkbox=wrapper.findAll('article.model-variant')[1]!.get<HTMLInputElement>('input[type=checkbox]')
-  await checkbox.setValue(false);expect(value.selection).toEqual({mode:'all'});expect(checkbox.element.checked).toBe(true)
+  const checkbox=wrapper.get('button[aria-label="b启用状态"]')
+  await checkbox.trigger('click');expect(value.selection).toEqual({mode:'all'});expect(checkbox.attributes('aria-checked')).toBe('true')
   const modal=useModalStore();expect(modal.current?.title).toBe('改为仅公开所选型号')
   await modal.current?.onConfirm?.();await nextTick();expect(value.selection).toEqual({mode:'whitelist',models:['a','c']})
   wrapper.unmount()
  })
- it('blocks reordering searched results and preserves hidden slots when ordering the complete selected view',async()=>{
+ it('blocks reordering while search or an enabled-only filter is active and retains absent slots',async()=>{
   const value=channel();const wrapper=mount(ChannelEditor,{props:{channel:value,templates:[]},global:{stubs:{ModelRuleFields:true,NodePicker:true,UiSelectField:true}}})
   await wrapper.get('input[aria-label="搜索渠道内型号"]').setValue('c')
   expect(wrapper.get('button[aria-label="c置顶"]').attributes('disabled')).toBeDefined();expect(value.modelOrder).toEqual(['a','absent','b','c'])
   await wrapper.get('input[aria-label="搜索渠道内型号"]').setValue('')
-  await wrapper.findAll('label').find(label=>label.text()==='仅已选')!.get('input').setValue(true)
-  await wrapper.get('button[aria-label="c置顶"]').trigger('click');expect(value.modelOrder).toEqual(['c','absent','b','a'])
+  await wrapper.findAll('label').find(label=>label.text()==='仅启用')!.get('input').setValue(true)
+  expect(wrapper.get('button[aria-label="c置顶"]').attributes('disabled')).toBeDefined();expect(value.modelOrder).toEqual(['a','absent','b','c'])
+  await wrapper.findAll('label').find(label=>label.text()==='仅启用')!.get('input').setValue(false);await wrapper.get('button[aria-label="c置顶"]').trigger('click');expect(value.modelOrder).toEqual(['c','absent','a','b'])
   expect(value.selection).toEqual({mode:'whitelist',models:['a','c']});await flushPromises();wrapper.unmount()
  })
 })

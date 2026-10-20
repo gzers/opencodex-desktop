@@ -1,9 +1,12 @@
 import { computed, onScopeDispose, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
+import {pendingModelRows,type ModelRowsState} from './modelRows'
 import { emptyContent, errorText, modelApi, type ModelSnapshot, type ModelPolicy, type Template, type TemplateDraft } from './api'
 
 // Route changes retain drafts; a refresh never discards an editor buffer.
 export const useModelsStore = defineStore('model-config', () => {
+  const modelRows=ref<Record<string,ModelRowsState>>({})
+  const pendingRows=computed(()=>Object.entries(modelRows.value).flatMap(([channel,state])=>pendingModelRows(state).map(model=>({channel,model}))))
   const snapshot = ref<ModelSnapshot | null>(null)
   const draft = ref<TemplateDraft | null>(null)
   const draftSession = ref('')
@@ -107,6 +110,7 @@ export const useModelsStore = defineStore('model-config', () => {
     } catch (cause) { error.value = errorText(cause) } finally { busy.value = false }
   }
   function restoreChannels() {
+    modelRows.value={}
     if (!snapshot.value) return
     channelDraft.value = JSON.parse(JSON.stringify(snapshot.value.policy))
     channelClean.value = JSON.stringify(channelDraft.value); channelBaseline.value = snapshot.value.policyDigest
@@ -121,5 +125,5 @@ export const useModelsStore = defineStore('model-config', () => {
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { view, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+  return { modelRows, pendingRows, view, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
 })
