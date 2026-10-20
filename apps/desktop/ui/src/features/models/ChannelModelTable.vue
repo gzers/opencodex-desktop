@@ -61,7 +61,7 @@ async function acceptAlias(id:string){
  if(JSON.stringify(rowFields(props.channel,id))!==JSON.stringify(value.base)){value.error='本行已改变，请还原后编辑';return}
  if(!await validate(candidate,baseline)){if(value.naming.alias===attempted){if(value.base.naming.alias===undefined)delete value.naming.alias;else value.naming.alias=value.base.naming.alias}value.error=error.value;return}
  if(value.naming.alias!==attempted){value.error='别名校验期间输入已变化，请再次离开输入框确认';return}
- props.channel.naming??={};props.channel.naming[id]=copy(fields.naming);value.base.naming=copy(fields.naming);value.error=''
+ props.channel.naming??={};props.channel.naming={...props.channel.naming,[id]:copy(fields.naming)};value.base.naming=copy(fields.naming);value.error=''
 }
 function restore(id:string){const fields=rowFields(props.channel,id);state.buffers[id]={...copy(fields),base:copy(fields),error:''}}
 function expand(id:string){buffer(id);state.expanded=state.expanded.includes(id)?state.expanded.filter(value=>value!==id):[...state.expanded,id]}

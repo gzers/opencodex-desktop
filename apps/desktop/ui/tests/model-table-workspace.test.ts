@@ -5,7 +5,7 @@ import {reactive} from 'vue'
 import ChannelModelTable from '@/features/models/ChannelModelTable.vue'
 import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
-import {createModelRowsState,pendingModelRows} from '@/features/models/modelRows'
+import {createModelRowsState,pendingModelRows,rowFields,writeRow} from '@/features/models/modelRows'
 import {emptyRules,modelApi,type ChannelPolicy,type DraftProjection} from '@/features/models/api'
 import {useModelsStore} from '@/features/models/store'
 vi.mock('@/features/models/api',async original=>({...await original<typeof import('@/features/models/api')>(),modelApi:{project:vi.fn()}}))
@@ -45,6 +45,9 @@ describe('channel model row workspace',()=>{
   const {wrapper,channel,state}=render();await button(wrapper.get('tr[data-model="raw/a"]') as never,'展开编辑').trigger('click');wrapper.findComponent(ModelRuleFields).vm.$emit('update:modelValue',{...emptyRules(),fast:{mode:'custom',value:false}});await flushPromises()
   await button(wrapper.get('tr[data-model="raw/a"]') as never,'编辑明细').trigger('click');await button(wrapper,'取消').trigger('click');expect(state.buffers['raw/a']!.rules.fast).toEqual({mode:'custom',value:false})
   let finish!:(value:DraftProjection)=>void;vi.mocked(modelApi.project).mockReturnValue(new Promise(resolve=>{finish=resolve}));await button(wrapper,'加入草稿').trigger('click');channel.defaults.fast={mode:'custom',value:true};finish(result());await flushPromises();expect(channel.overrides['raw/a']).toBeUndefined();expect(wrapper.text()).toContain('配置基准已变化');expect(pendingModelRows(state)).toEqual(['raw/a']);wrapper.unmount()
+ })
+ it('treats prototype-shaped raw IDs as literal dictionary keys without changing object prototypes',()=>{
+  const channel=fixture(),state=createModelRowsState();for(const id of ['__proto__','constructor']){channel.discovered.push({id,label:id,rules:emptyRules()});const fields=rowFields(channel,id);fields.rules.fast={mode:'custom',value:false};fields.naming.displayName='Literal ID';writeRow(channel,id,fields);expect(Object.hasOwn(channel.overrides,id)).toBe(true);expect(rowFields(channel,id).rules.fast).toEqual({mode:'custom',value:false});expect(Object.getPrototypeOf(channel.overrides)).toBe(Object.prototype);expect(state.buffers[id]).toBeUndefined()}
  })
  it('exposes pending row ownership to global save without changing submitted policy or rule references',()=>{
   const store=useModelsStore();const state=reactive(createModelRowsState());state.buffers.a={rules:{...emptyRules(),fast:{mode:'custom',value:false}},naming:{},reference:null,base:{rules:emptyRules(),naming:{},reference:null},error:''};store.modelRows.channel=state;expect(store.pendingRows).toEqual([{channel:'channel',model:'a'}]);state.buffers.a.rules=emptyRules();expect(store.pendingRows).toEqual([])
