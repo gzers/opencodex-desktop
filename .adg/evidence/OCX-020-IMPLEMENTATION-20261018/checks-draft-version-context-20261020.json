@@ -1,0 +1,70 @@
+{
+  "scope": "完整工作区草稿查看与默认指针确认",
+  "date": "2026-10-20",
+  "checks": {
+    "uiFull": 694,
+    "files": 140,
+    "finalRelated": 4,
+    "build": "passed"
+  },
+  "logs": [
+    {
+      "path": "draft-version-typecheck-20261020.log.gz",
+      "rawSha256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
+    },
+    {
+      "path": "draft-version-all-20261020.log.gz",
+      "rawSha256": "7f27c093c6a25e18cdf75589ceb09902f885ab495f31d85a9260596a7d9f5313"
+    },
+    {
+      "path": "draft-version-final-tests-20261020.log.gz",
+      "rawSha256": "9e1b76bb76db8098c8e6a3b741c753ffa3dcec06b7c8a149332fe699cc7b7762"
+    },
+    {
+      "path": "draft-version-verified-build-20261020.log.gz",
+      "rawSha256": "c823fa47e8f4ae14b6eb1c3508ad0b24a253a80a2cbb010eaba7a358ddb75b26"
+    }
+  ],
+  "screenshots": [
+    "draft-review-search-outside-20261020.png",
+    "version-manager-shortcut-20261020.png"
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "30503af935ea547609d0b2e5063b0ec578895c1ab9c692fc76b9f1788e40f6d2"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "3d1b8fa737d2914d6cf723f369812e970a10b467fda3c2e1b1963ae3b1f7c3c1"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "ab8d47ddea2caedabf9085acbaf24e579ee7cad0a8b32ef26da65a66ce2c0d09"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/PolicyDraftDialog.vue",
+      "sha256": "d1c0bdc7bdb4acf7f7349199c2ae3f8cc55bc4f4f7bb2f20afe4aa0f5fcab743"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/policyChanges.ts",
+      "sha256": "458896f947fa0b6bf4a6d30d1bb1e1f73d76d35d01d7bff1bcfce98bda0b6223"
+    },
+    {
+      "path": "apps/desktop/ui/src/lib/html.ts",
+      "sha256": "2bcc60f048946e764d216605d3ebb67a0ba8916bc612640c1c1c9c0408087129"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-template-version-context.test.ts",
+      "sha256": "b8960a890cd5cd33c2dc82ac35fbf8e9935ee9f72b0f87ce9394fe5ea6e42ec7"
+    },
+    {
+      "path": "apps/desktop/ui/tests/policy-draft-review.test.ts",
+      "sha256": "66e1f9d845342695634e7a3c2eeff192264bff63264675c9d41fa3a0ff216938"
+    }
+  ],
+  "limitations": [
+    "DEV截图仅布局/只读流程；真实默认service与删除门沿既有证据",
+    "完整模型/公共组件原生矩阵及发布仍未完成"
+  ]
+}

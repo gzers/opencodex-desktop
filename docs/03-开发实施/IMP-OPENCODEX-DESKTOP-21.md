@@ -658,3 +658,12 @@ ed9869d4 CI39388534118、77a7c3ec CI39388168722、027ee913 CI39385579545、dc8d9
 确认节点增删本已位于安全两步编辑连接（原Key不自动发新URL），本轮不旁路改写；补实际缺失的列表集成节点下拉ChannelNodeSelect，复用UiSelectMenu顶层浮层/useNodeMeasurements及同一个测量IPC。触发器显示当前名称/检测摘要和全文title，菜单逐节点名称/URL/结果与独立检测、全部检测/停止；只有名称选择才改activeNode，检测不自动选择/重排或改变认证。官方管理readonly同时禁改选择/检测。URL/协议/认证/私网变化清旧结果、停止旧run并拒晚回；关闭下拉不取消后台检测，路由组件释放沿既有scope停止。错误文案与NodePicker共用，未知不猜可用。
 
 UiSelectMenu键盘选项纳入menuitemradio；跨portal focusout按relatedTarget归属判断，实屏发现原延迟读取activeElement会在聚焦检测按钮前落BODY而提前收起，已修复并补跨portal焦点回归。新3项测试含独立检测不选/菜单保持/手动选择回焦点、URL漂移晚回/readonly门、Escape归还；连原节点/菜单共4文件9项通过，前端全量138文件690项后最后错误文案共用再跑9项及构建通过，不凭局部重复泛报整体验收。浏览器DEV NewApi打开→独立检测→42ms在触发器与原菜单同步，菜单保持、无文档横溢→Escape；计时是明确DEV夹具，非真实延迟/调用能力。证据checks-channel-node-menu-20261020.json。node.selection原登记补实际消费者，全部gallery/平台矩阵仍留后续。
+
+
+### 完整工作区草稿查看与版本指针确认
+
+逐项对照交互细化补缺：新增只读PolicyDraftDialog/纯policyChanges，比最近成功提交与当前全部已接受草稿，列全局族采用/默认/渠道顺序/恢复与待移除项、渠道增删/名称/节点/启停/白名单/型号顺序/发现/默认/族/单型号引用与覆盖/naming，不受搜索/勾选限制。认证/接收/读取本机引用仅用变化摘要，不暴露Keychain UUID或保护引用。未确认行输入另计数，不冒充草稿差异；管理回同渠道编辑、去保存走共同prepareSave，pending/忙碌门继续生效，无变化显示空态，查看不写入或清状态。
+
+模版行初次显示默认版（缺默认才最新），短列表补“版本管理…”复用同窗；有脏编辑基准则锁行版本，handler也拒伪触发。设默认经应用公共确认，冻结库摘要/目标再调原service，取消或过期零写，不影响精确采用。新增动态确认中的模版/渠道名称统一HTML转义，正文仍沿唯一应用Modal，不把名称当HTML。
+
+新4项正式组件/纯行为检查覆盖全字段/全域与删除/增量范围、本机引用不显示、pending/管理只出意图、默认初选/脏基准锁/确认取消过期与既有引用保持。全量140文件694项通过后移除启停在连接摘要的重复显示，最终2文件4项及构建通过。DEV实际NewApi停用、搜索A6api→查看仍列NewApi启用true/false→继续编辑；短下拉→版本管理同窗，截图draft-review-search-outside/version-manager-shortcut。只是DEV视觉，不代替后端/原生全部组合。证据checks-draft-version-context-20261020.json。
