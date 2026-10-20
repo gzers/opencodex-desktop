@@ -238,7 +238,7 @@ pub fn removals(
         }
         for mapping in mappings.iter().filter(|m| m.channel_id == channel.id) {
             if let Some(actual) = before.providers["providers"].get(&mapping.provider_id) {
-                if actual["note"] != protocol_groups::marker(&channel.id, &mapping.protocol) {
+                if actual["note"] != protocol_groups::mapping_marker(mapping) {
                     return Err(invalid(
                         "provider_drift",
                         "被删除渠道的协议分组归属改变，未移除",

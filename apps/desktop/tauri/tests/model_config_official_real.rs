@@ -158,7 +158,8 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     .unwrap();
     let wrapper = root.path().join("ocx");
     let fail_sync = root.path().join("fail-sync");
-    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&fail_sync),quote(&node),quote(&entry))).unwrap();
+    let provider_receipt = root.path().join("provider-apply-receipt.txt");
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nif [ \"$1\" = sync ] && [ -f {} ]; then exit 17; fi\nif [ \"$1\" = provider ] && [ \"$2\" = apply ]; then {} {} \"$@\" >{} 2>&1; result=$?; /bin/cat {}; exit $result; fi\nexec {} {} \"$@\"\n",quote(&user),quote(&codex),quote(&xdg),quote(&fail_sync),quote(&node),quote(&entry),quote(&provider_receipt),quote(&provider_receipt),quote(&node),quote(&entry))).unwrap();
     std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
     let mut command = tokio::process::Command::new(&wrapper);
     command
@@ -460,6 +461,152 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     ));
     assert!(!client.automatic_client_verification);
     let stable_group = plan.protocol_groups[0].clone();
+    // Same wire protocol can still need distinct provider-wide rule values.
+    // Use the real installed owner's save/readback, then restore the original
+    // product policy for the remaining history/auth scenarios below.
+    let mut split_policy = policy.clone();
+    let special = split_policy.channels[0]
+        .overrides
+        .get_mut("fixture-anthropic")
+        .unwrap();
+    special.protocol = Field::Custom("openai-responses".into());
+    special.reasoning_authoritative = Field::Custom(false);
+    special.fast_wire = Field::Custom(Some(FastWire {
+        kind: "service-tier".into(),
+        canonical_to_wire: BTreeMap::from([("priority".into(), "priority".into())]),
+        foreign_caller_tiers: "verbatim".into(),
+        betas: vec![],
+    }));
+    let current = store.load().unwrap();
+    let staged = store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            split_policy.clone(),
+        )
+        .unwrap();
+    let split = runtime::prepare(
+        &manager,
+        &context,
+        split_policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let same_group = split
+        .protocol_groups
+        .iter()
+        .find(|g| g.contains("openai-responses →"))
+        .unwrap()
+        .split(" → ")
+        .last()
+        .unwrap()
+        .to_owned();
+    let result = runtime::apply(&manager, &context, &split.id).await.unwrap();
+    if result.phase != "committed" {
+        eprintln!(
+            "same-protocol-provider-receipt {}",
+            std::fs::read_to_string(&provider_receipt).unwrap_or_default()
+        );
+        let registered: serde_json::Value = serde_json::from_slice(
+            &std::fs::read(
+                manager
+                    .join("manager-state/model-save-plans")
+                    .join(format!("{}-registered.json", split.id)),
+            )
+            .unwrap(),
+        )
+        .unwrap();
+        let current = upstream::read(&context, upstream::ReadOperation::ProviderSnapshot)
+            .await
+            .unwrap();
+        fn differences(
+            path: &str,
+            before: &serde_json::Value,
+            after: &serde_json::Value,
+            out: &mut Vec<String>,
+        ) {
+            if before == after {
+                return;
+            }
+            if before.is_object() && after.is_object() {
+                let keys = before
+                    .as_object()
+                    .unwrap()
+                    .keys()
+                    .chain(after.as_object().unwrap().keys())
+                    .collect::<std::collections::BTreeSet<_>>();
+                for key in keys {
+                    differences(&format!("{path}/{key}"), &before[key], &after[key], out);
+                }
+            } else {
+                out.push(format!("{path}: {before} -> {after}"));
+            }
+        }
+        let mut changed = vec![];
+        differences("", &registered, &current, &mut changed);
+        eprintln!("same-protocol-baseline-diff {:?}", changed);
+    }
+    assert_eq!(result.phase, "committed", "{:?}", result.error);
+    let actual = upstream::snapshot(&context).await.unwrap();
+    assert_eq!(
+        actual.providers["providers"]["fixture"]["modelReasoningEffortsAuthoritative"],
+        true
+    );
+    assert_eq!(
+        actual.providers["providers"][&same_group]["modelReasoningEffortsAuthoritative"],
+        false
+    );
+    assert_eq!(
+        actual.providers["providers"][&same_group]["adapter"],
+        "openai-responses"
+    );
+    assert_eq!(
+        actual.providers["providers"][&same_group]["fastWire"]["foreignCallerTiers"],
+        "verbatim"
+    );
+    assert_eq!(
+        actual.providers["providers"]["fixture"]["fastWire"]["foreignCallerTiers"],
+        "drop"
+    );
+    assert!(actual.catalog["models"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|row| row["slug"] == format!("{same_group}/fixture-anthropic")));
+    let current = store.load().unwrap();
+    let staged = store
+        .stage_policy(
+            &current.policy_digest,
+            &current.workspace_digest,
+            policy.clone(),
+        )
+        .unwrap();
+    let restore = runtime::prepare(
+        &manager,
+        &context,
+        policy.clone(),
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let result = runtime::apply(&manager, &context, &restore.id)
+        .await
+        .unwrap();
+    assert_eq!(result.phase, "committed", "{:?}", result.error);
+    let actual = upstream::snapshot(&context).await.unwrap();
+    assert!(!actual.catalog["models"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|row| row["slug"]
+            .as_str()
+            .is_some_and(|s| s.starts_with(&format!("{same_group}/")))));
+    eprintln!("same-protocol-shared-fields-partitioned=true parent-retained=true exact-runtime-readback=true retired-group-hidden=true");
     let mut hidden_policy = policy.clone();
     hidden_policy.channels[0].selection = ModelSelection::None;
     let current = store.load().unwrap();
@@ -621,7 +768,18 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     .await
     .unwrap();
     assert!(removal.removed_providers.contains(&"fixture".to_string()));
-    assert_eq!(removal.removed_providers.len(), 2);
+    assert_eq!(
+        removal
+            .removed_providers
+            .iter()
+            .cloned()
+            .collect::<std::collections::BTreeSet<_>>(),
+        std::collections::BTreeSet::from([
+            "fixture".to_string(),
+            mapped.to_string(),
+            same_group.clone()
+        ])
+    );
     let removed = runtime::apply(&manager, &context, &removal.id)
         .await
         .unwrap();
@@ -629,6 +787,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     let actual = upstream::snapshot(&context).await.unwrap();
     assert!(actual.providers["providers"].get("fixture").is_none());
     assert!(actual.providers["providers"].get(mapped).is_none());
+    assert!(actual.providers["providers"].get(&same_group).is_none());
     assert_eq!(actual.providers["defaultProvider"], "fixture-keep");
     assert_eq!(actual.catalog["models"].as_array().unwrap().len(), 1);
     // Exercise the public successful-history → draft → normal save → readback path.

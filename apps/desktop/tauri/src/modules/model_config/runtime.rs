@@ -775,10 +775,11 @@ fn compile_shared_rules(
         }
         if field == "fastWire"
             && value.is_null()
-            && (provider["supportsServiceTier"] == true
-                || provider["modelSupportsServiceTier"]
-                    .as_object()
-                    .is_some_and(|map| map.values().any(|v| v == true)))
+            && rows.iter().any(|row| {
+                provider["modelSupportsServiceTier"][&row.model_id]
+                    .as_bool()
+                    .unwrap_or(provider["supportsServiceTier"] == true)
+            })
         {
             return Err(invalid(
                 "fast_wire",
@@ -805,14 +806,22 @@ fn compile_owned(
     policy: &Policy,
     ownership: &[OwnedField],
 ) -> ModelResult<(Value, Vec<String>, BTreeSet<String>)> {
-    compile_materials(snapshot, library, policy, ownership, &BTreeMap::new())
+    compile_materials(
+        snapshot,
+        library,
+        policy,
+        ownership,
+        &BTreeMap::new(),
+        &BTreeMap::new(),
+    )
 }
-fn compile_materials(
+pub(super) fn compile_materials(
     snapshot: &UpstreamSnapshot,
     library: &Library,
     policy: &Policy,
     ownership: &[OwnedField],
     materials: &BTreeMap<String, Value>,
+    group_seeds: &BTreeMap<String, Value>,
 ) -> ModelResult<(Value, Vec<String>, BTreeSet<String>)> {
     let projection = compiler::project(library, policy)?;
     let source_rows = rows(snapshot)?;
@@ -928,6 +937,10 @@ fn compile_materials(
                 return Err(invalid("credential", "新增渠道尚未配置经过发现确认的密钥"));
             }
             next["providers"].as_object_mut().ok_or_else(||invalid("provider","渠道结构无效"))?.insert(provider_id.clone(),json!({"adapter":channel.connection.protocol,"baseUrl":"","authMode":if channel.connection.protocol=="ollama-native"{"local"}else{"key"},"models":channel.discovered.iter().map(|m|m.id.clone()).collect::<Vec<_>>(),"liveModels":true}));
+            if let Some(seed) = group_seeds.get(provider_id) {
+                super::provider_fields::validate_public(seed)?;
+                next["providers"][provider_id] = seed.clone();
+            }
         }
         if let Some(original) = imported {
             if channel.connection.enabled {
@@ -1530,12 +1543,20 @@ pub async fn prepare_scoped(
             imported_materials.insert(channel.connection.provider_id.clone(), material.public);
         }
     }
+    let group_seeds = super::protocol_groups::seeds(
+        &before,
+        &policy,
+        &execution_policy,
+        &mappings,
+        &imported_materials,
+    )?;
     let (mut next_providers, next_order, expected_slugs) = compile_materials(
         &projection_baseline,
         &local.library,
         &execution_policy,
         &previous,
         &imported_materials,
+        &group_seeds,
     )?;
     let next_order = super::protocol_groups::order(
         &before,
