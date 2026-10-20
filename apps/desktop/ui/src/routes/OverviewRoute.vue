@@ -309,8 +309,8 @@ const mods = computed(() => [
         </div>
         <div class="mod-status">
           <template v-if="mod.key === 'upgrade'">
-            <UiButton class="btn ghost overview-update-row" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')"><span>桌面管理器</span><b>{{ managerUpdateStatus?.currentVersion ?? app.aboutApp?.version ?? '—' }}</b><span aria-hidden="true">›</span></UiButton>
-            <UiButton class="btn ghost overview-update-row" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')"><span>OpenCodex 面板</span><b>{{ app.officialProject?.version ?? '—' }}</b><span aria-hidden="true">›</span></UiButton>
+            <UiButton class="overview-update-row" variant="ghost" surface="plain" size="sm" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')"><span>桌面管理器</span><b>{{ managerUpdateStatus?.currentVersion ?? app.aboutApp?.version ?? '—' }}</b><span aria-hidden="true">›</span></UiButton>
+            <UiButton class="overview-update-row" variant="ghost" surface="plain" size="sm" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')"><span>OpenCodex 面板</span><b>{{ app.officialProject?.version ?? '—' }}</b><span aria-hidden="true">›</span></UiButton>
           </template>
           <template v-else><span v-for="row in mod.rows" :key="row[0]">{{ row[0] }} <b>{{ row[1] }}</b></span></template>
         </div>
@@ -437,6 +437,7 @@ const mods = computed(() => [
 </template>
 
 <style scoped>
-.overview-update-row { display: flex; justify-content: space-between; width: 100%; gap: var(--space-2); min-height: 26px; padding: var(--space-1) 0; font-size: var(--text-label); }
-.overview-update-row > b { margin-left: auto; overflow-wrap: anywhere; }
+.overview-update-row { display: block; width: 100%; padding: var(--space-1) 0; color: inherit; font: inherit; text-align: left; }
+.overview-update-row :deep(.btn-content) { display: flex; align-items: baseline; width: 100%; gap: var(--space-2); }
+.overview-update-row :deep(b) { margin-left: auto; overflow-wrap: anywhere; }
 </style>

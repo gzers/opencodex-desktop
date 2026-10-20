@@ -169,8 +169,8 @@ function prepareDelete() {
   </section>
 </template>
 <style>
-.model-tabs,.model-detail-head{position:sticky;z-index:8;display:flex;align-items:center;gap:var(--space-2);background:var(--page,var(--panel));border-bottom:1px solid var(--border);padding:10px 0}
-.model-tabs{position:static;min-height:48px}
+.model-tabs,.model-detail-head{display:flex;align-items:center;gap:var(--space-2);border-bottom:1px solid var(--border);padding:10px 0}
+.model-tabs{position:static;min-height:48px;background:transparent}
 .model-tabs-line{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap}
 .model-policy-actions{justify-content:flex-end;padding:6px 0}
 .model-policy-state{display:inline-flex;align-items:center;gap:6px;min-height:var(--control-md);padding:0 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:var(--text-caption);white-space:nowrap;background:var(--surface-panel-bg,var(--panel))}
@@ -178,7 +178,8 @@ function prepareDelete() {
 .model-policy-state[data-tone=danger]{color:var(--red);border-color:color-mix(in srgb,var(--red) 30%,var(--border))}
 .model-policy-state[data-tone=success]{color:var(--green)}
 .model-source-record{padding:10px 0}.model-source-record p{white-space:pre-wrap;overflow-wrap:anywhere}
-.model-detail-head{top:var(--page-tabs-height,48px);flex-wrap:wrap}
+.model-detail-head{position:sticky;z-index:8;top:var(--page-tabs-height,48px);flex-wrap:wrap;background:var(--surface-sticky-bg,var(--surface-panel-bg));-webkit-backdrop-filter:var(--surface-sticky-blur);backdrop-filter:var(--surface-sticky-blur)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.model-detail-head{background:var(--panel)}}
 .model-name{flex:1;min-width:160px;font-weight:650}
 .model-toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin:20px 0;flex-wrap:wrap}
 .model-toolbar input{flex:1;max-width:360px;min-width:180px}
