@@ -1,0 +1,43 @@
+{
+  "scope": "现行原型编辑侧栏复制当前模版缓冲",
+  "date": "2026-10-21",
+  "sourceBase": "fcd3f4d19bb426a8dd0b19ce1769577d6faf9ff0",
+  "behavior": [
+    "copies current unsaved name/content/rules/variants/provenance/permanent locks, not just selected saved body",
+    "new null template/base revision and independent view session; no default/adoption/runtime write",
+    "retains original buffer and its optimistic baseline",
+    "any existing unfinished new template prevents another copy; handler and visible disabled state protect it",
+    "same source/revision copy session key as list copy, so existing copy can resume from the original list action; leave removes its buffer and allows copy again"
+  ],
+  "checks": {
+    "affectedFiles": 4,
+    "affectedTests": 13,
+    "build": "passed"
+  },
+  "browser": {
+    "kind": "formal DEV fixture only",
+    "copiedLabel": "GPT 副本",
+    "copiedDescription": "复制应携带这段尚未保存的说明",
+    "returnedSourceLabel": "GPT",
+    "returnedSourceDescriptionPreserved": true,
+    "copyDisabledWithExistingNew": true,
+    "overflow": false,
+    "saveClicked": false,
+    "screenshot": "template-editor-copy-20261021.png"
+  },
+  "sources": {
+    "apps/desktop/ui/src/features/models/store.ts": "010200ec24b845c41846bbce1943118c98bdd4933eafdc32e3e068251d1251f4",
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "91adf0baa0e19c8f5196571071db171d66f185183fc191579c6496a7f047c811",
+    "apps/desktop/ui/tests/model-config.test.ts": "194e7d5eb6624820207be952d5f3f0284ab2c55dcd41d3ac9ae2319507e0402d"
+  },
+  "logs": [
+    {
+      "path": "editor-copy-tests-20261021.log.gz",
+      "rawSha256": "853ad594b73817031518caf02abe63c6e4b4dff9628973b552f621277d56099d"
+    },
+    {
+      "path": "editor-copy-build-20261021.log.gz",
+      "rawSha256": "7c38a94b4846b1524ecb1c3fe916c7b622f86471f074526f11528de7a5e32bf5"
+    }
+  ]
+}
