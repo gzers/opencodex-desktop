@@ -9,6 +9,7 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import ChannelsView from '@/features/models/ChannelsView.vue'
+import TemplateComparisonDialog from '@/features/models/TemplateComparisonDialog.vue'
 import TemplateUsageDialog from '@/features/models/TemplateUsageDialog.vue'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
 import AgentPanel from '@/features/models/AgentPanel.vue'
@@ -61,6 +62,8 @@ const deletion = ref<{ library: string; policy: string; workspace: string; templ
 const historyError = ref('')
 const versions = computed(() => [...(manager.value?.revisions ?? [])].reverse().filter(r => versionLabel(r).includes(historySearch.value) || r.changes.some(c => c.field.includes(historySearch.value))))
 const selectedVersions = computed(() => manager.value?.revisions.filter(r => (deletion.value?.ids ?? selectedIds.value).includes(r.id)) ?? [])
+const compareOpen=ref(false)
+const compareTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===draft.value?.templateId)??null)
 const previewOpen = ref(false)
 const sampleChannel = ref('')
 const sampleModel = ref('')
@@ -159,6 +162,7 @@ function prepareDelete() {
        <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="openAgent" :aria-expanded="agentOpen" aria-controls="model-agent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="匹配预览" title="匹配预览" :disabled="models.busy" @click="previewOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span v-if="!collapsed">匹配预览</span></UiButton>
+       <UiButton class="model-editor-action" size="sm" aria-label="与版本比较" :title="compareTemplate?'比较当前缓冲与保存版本':'保存首版后可比较'" :disabled="!compareTemplate||models.busy" @click="compareOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 6H3v12h5M16 6h5v12h-5"/></svg><span v-if="!collapsed">与版本比较</span></UiButton>
        <UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton>
        <UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton>
       </template>
@@ -186,6 +190,7 @@ function prepareDelete() {
     <UiDialog :open="previewOpen" title="匹配预览" @close="previewOpen = false"><div class="model-form"><label>渠道ID<input class="input" v-model="sampleChannel" /></label><label>原始模型ID<input class="input" v-model="sampleModel" /></label><p v-if="previewError" class="model-error" role="alert">{{ previewError }}</p><p v-if="preview" role="status">{{ preview.reason }}{{ preview.variantId ? ' · 已叠加最长后缀规则' : '' }}</p></div><template #actions><UiButton variant="primary" :loading="previewBusy" :disabled="!sampleModel" @click="checkMatch">检查匹配</UiButton></template></UiDialog>
     <AgentPanel v-if="models.snapshot && models.draft" :key="models.draftSession" v-show="agentVisible" :draft="models.draft" :snapshot="models.snapshot" :active="agentVisible" :view-context="agentView" @close="closeAgent" @apply="models.draft = $event" @external="openExternalContext" />
     <UiDialog :open="receiptOpen" title="外部任务结果" @close="receiptOpen = false"><p v-if="receiptError" class="model-error" role="alert">{{ receiptError }}</p><template v-if="receiptResult"><p>目标：{{ receiptResult.task.targets.map(t => t.label).join('、') || '新建模版' }}</p><p>状态：{{ !receiptResult.receipt ? '结果待核对' : ({saved:'已保存',unchanged:'无内容变化',report:'检查报告',rejected:'提交被拒绝，未保存'}[receiptResult.receipt.state] ?? '待核对') }}</p><p v-if="receiptResult.receipt?.report" class="model-task-report">{{ receiptResult.receipt.report }}</p><p v-for="outcome in receiptResult.receipt?.outcomes ?? []" :key="outcome.revisionId">保存版本 · {{ outcome.revisionId }}</p></template></UiDialog>
+    <TemplateComparisonDialog :open="compareOpen" :template="compareTemplate" :draft="draft" :library-digest="models.snapshot?.libraryDigest??''" @close="compareOpen=false" />
     <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="externalDraft??models.draft" :dirty="!!externalDraft||models.dirty" :selected="selectedTemplates" @close="externalOpen = false" />
     <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="selectedTemplates" :versions="models.selected" @close="batchOpen=false" />
   </section>

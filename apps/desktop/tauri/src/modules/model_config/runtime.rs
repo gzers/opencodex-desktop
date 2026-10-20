@@ -4180,6 +4180,32 @@ mod tests {
         );
     }
     #[test]
+    fn full_catalog_compatibility_budget_is_exact_at_99_100_101_and_108_without_truncation() {
+        for total in [99_usize, 100, 101, 108] {
+            let (mut snapshot, policy) = fixture();
+            // Two non-managed rows (one hidden) plus the one selected managed model.
+            for index in 0..total - 3 {
+                snapshot.catalog["models"].as_array_mut().unwrap().push(
+                    json!({"slug":format!("native-boundary-{index}"),"visibility":if index%2==0{"hide"}else{"list"}}),
+                );
+            }
+            let before = serde_json::to_value((&snapshot, &policy)).unwrap();
+            let result = compile(&snapshot, &super::super::store::seed_library(), &policy);
+            if total <= 100 {
+                let (target, order, ids) = result.unwrap();
+                assert_eq!(ids.len(), total);
+                assert!(ids.contains("control"), "hidden occupancy must count");
+                assert_eq!(order, vec!["native", "test/b"]);
+                assert_eq!(target["providers"]["test"]["selectedModels"], json!(["b"]));
+            } else {
+                let error = result.unwrap_err();
+                assert_eq!(error.code, "catalog_budget");
+                assert!(error.message.contains(&total.to_string()));
+            }
+            assert_eq!(serde_json::to_value((&snapshot, &policy)).unwrap(), before);
+        }
+    }
+    #[test]
     fn managed_inheritance_restores_original_values_but_external_edits_fail_closed() {
         let (mut snapshot, policy) = fixture();
         snapshot.providers["providers"]["test"]["modelContextWindows"] = json!({"b":8000});
