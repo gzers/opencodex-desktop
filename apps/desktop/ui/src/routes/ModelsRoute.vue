@@ -11,6 +11,7 @@ import ModelRuleFields from '@/features/models/ModelRuleFields.vue'
 import ChannelsView from '@/features/models/ChannelsView.vue'
 import TemplateUsageDialog from '@/features/models/TemplateUsageDialog.vue'
 import ExternalTaskDialog from '@/features/models/ExternalTaskDialog.vue'
+import RuntimeMotionMark from '@/features/runtime/components/RuntimeMotionMark.vue'
 import AgentPanel from '@/features/models/AgentPanel.vue'
 import {createAgentViewContext} from '@/features/models/agentView'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
@@ -25,6 +26,10 @@ const tab = toRef(models.view,'tab')
 useModelViewPosition(page,()=>tab.value==='templates'?(models.view.templateEditor&&models.draft?'template:'+models.view.templatePosition:'templates'):(models.view.channelEditor?'channel:'+models.view.channelEditor:'channels'))
 watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
 const agentOpen = ref(false)
+const agentTrigger = ref<HTMLElement | null>(null)
+function openAgent(event:MouseEvent){agentTrigger.value=event.currentTarget as HTMLElement;agentOpen.value=true}
+async function closeAgent(){agentOpen.value=false;await nextTick();const trigger=agentTrigger.value?.isConnected?agentTrigger.value:page.value?.querySelector<HTMLElement>('.model-agent-launcher');trigger?.focus({preventScroll:true})}
+const agentVisible=computed(()=>agentOpen.value&&tab.value==='templates'&&models.view.templateEditor)
 const batchOpen=ref(false)
 const externalOpen = ref(false)
 const receiptOpen = ref(false)
@@ -149,7 +154,7 @@ function prepareDelete() {
     <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
       <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
       <template #actions="{collapsed}">
-       <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="agentOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
+       <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="openAgent" :aria-expanded="agentOpen" aria-controls="model-agent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="匹配预览" title="匹配预览" :disabled="models.busy" @click="previewOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span v-if="!collapsed">匹配预览</span></UiButton>
        <UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton>
@@ -177,13 +182,18 @@ function prepareDelete() {
       <template v-else><div class="model-toolbar"><input class="input" v-model="historySearch" type="search" placeholder="搜索时间、标识或变更字段" aria-label="搜索版本" /><span>已选 {{ selectedIds.length }} 项</span></div><article v-for="r in versions" :key="r.id" class="model-version"><label><input v-model="selectedIds" type="checkbox" :value="r.id" :disabled="!!protectedReason(manager, r) || models.busy" /><span>{{ versionLabel(r, manager.source === 'builtin' && r === manager.revisions[0]) }}<small>{{ protectedReason(manager,r) || r.changes.map(c => c.field).join('、') || '内容变更依据缺失' }}</small></span></label><div class="model-inline"><UiButton size="sm" :disabled="models.busy" @click="edit(manager, r.id)">编辑</UiButton><UiButton size="sm" :disabled="models.busy || manager.defaultRevision === r.id" @click="makeDefault(manager,r)">{{ manager.defaultRevision === r.id ? '当前默认' : '设为默认' }}</UiButton></div></article></template>
     </template><template #actions><UiButton v-if="confirmDelete" :disabled="models.busy" @click="confirmDelete = false; deletion = null">取消</UiButton><UiButton variant="danger" :disabled="!selectedIds.length" :loading="models.busy" @click="confirmDelete ? remove() : prepareDelete()">{{ confirmDelete ? '确认删除' : '删除所选版本' }}</UiButton></template></UiDialog>
     <UiDialog :open="previewOpen" title="匹配预览" @close="previewOpen = false"><div class="model-form"><label>渠道ID<input class="input" v-model="sampleChannel" /></label><label>原始模型ID<input class="input" v-model="sampleModel" /></label><p v-if="previewError" class="model-error" role="alert">{{ previewError }}</p><p v-if="preview" role="status">{{ preview.reason }}{{ preview.variantId ? ' · 已叠加最长后缀规则' : '' }}</p></div><template #actions><UiButton variant="primary" :loading="previewBusy" :disabled="!sampleModel" @click="checkMatch">检查匹配</UiButton></template></UiDialog>
-    <AgentPanel v-if="models.snapshot && models.draft" :key="models.draftSession" v-show="agentOpen" :draft="models.draft" :snapshot="models.snapshot" :active="agentOpen" :view-context="agentView" @close="agentOpen = false" @apply="models.draft = $event" />
+    <button v-if="models.snapshot&&draft&&models.view.templateEditor&&tab==='templates'&&!agentOpen" class="model-agent-launcher" aria-label="打开Agent助手" title="Agent助手" aria-controls="model-agent-panel" :aria-expanded="agentOpen" :disabled="models.busy" @click="openAgent"><RuntimeMotionMark state="running" compact /></button>
+    <AgentPanel v-if="models.snapshot && models.draft" :key="models.draftSession" v-show="agentVisible" :draft="models.draft" :snapshot="models.snapshot" :active="agentVisible" :view-context="agentView" @close="closeAgent" @apply="models.draft = $event" />
     <UiDialog :open="receiptOpen" title="外部任务结果" @close="receiptOpen = false"><p v-if="receiptError" class="model-error" role="alert">{{ receiptError }}</p><template v-if="receiptResult"><p>目标：{{ receiptResult.task.targets.map(t => t.label).join('、') || '新建模版' }}</p><p>状态：{{ !receiptResult.receipt ? '结果待核对' : ({saved:'已保存',unchanged:'无内容变化',report:'检查报告',rejected:'提交被拒绝，未保存'}[receiptResult.receipt.state] ?? '待核对') }}</p><p v-if="receiptResult.receipt?.report" class="model-task-report">{{ receiptResult.receipt.report }}</p><p v-for="outcome in receiptResult.receipt?.outcomes ?? []" :key="outcome.revisionId">保存版本 · {{ outcome.revisionId }}</p></template></UiDialog>
     <ExternalTaskDialog v-if="models.snapshot" :open="externalOpen" :snapshot="models.snapshot" :draft="models.draft" :dirty="models.dirty" :selected="selectedTemplates" @close="externalOpen = false" />
     <BatchAgentDialog v-if="models.snapshot" :open="batchOpen" :snapshot="models.snapshot" :selected="selectedTemplates" :versions="models.selected" @close="batchOpen=false" />
   </section>
 </template>
 <style>
+.model-agent-launcher{position:fixed;right:12px;bottom:12px;z-index:var(--z-overlay);display:grid;place-items:center;width:56px;height:56px;min-width:56px;padding:0;background:transparent;border:0;box-shadow:none;border-radius:var(--radius-sm);cursor:pointer}
+.model-agent-launcher:hover,.model-agent-launcher:active{background:transparent;box-shadow:none}
+.model-agent-launcher:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.model-agent-launcher:disabled{opacity:.5;cursor:default}
 .model-tabs{display:flex;align-items:center;gap:var(--space-2);border-bottom:1px solid var(--border);padding:10px 0}
 .model-tabs{position:static;min-height:48px;background:transparent}
 .model-tabs-line{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap}
