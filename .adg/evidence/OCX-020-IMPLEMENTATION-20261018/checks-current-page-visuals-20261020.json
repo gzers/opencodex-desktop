@@ -1,0 +1,135 @@
+{
+  "scope": "six formal Vue routes x two themes x three tiers; visual geometry only",
+  "source": "4cc311d573dda8f461eca3e34855796fc8b7f99f",
+  "viewport": [
+    1280,
+    720
+  ],
+  "zoom": 1,
+  "samples": 36,
+  "documentOverflow": 0,
+  "tabRecipes": [
+    "dark/high:rgba(34, 36, 42, 0.56) saturate(1.5) blur(8px)",
+    "dark/low:rgb(38, 38, 38) none",
+    "dark/mid:rgba(34, 36, 42, 0.56) saturate(1.5) blur(8px)",
+    "light/high:rgba(244, 245, 249, 0.52) saturate(1.5) blur(8px)",
+    "light/low:rgb(255, 255, 255) none",
+    "light/mid:rgba(244, 245, 249, 0.52) saturate(1.5) blur(8px)"
+  ],
+  "extensionDarkMid": {
+    "outerBorder": "1px",
+    "cardGap": 16,
+    "cardBackground": "rgba(34, 36, 42, 0.56)",
+    "tabBackground": "rgba(34, 36, 42, 0.56)"
+  },
+  "screenshot": "current-extension-dark-mid-20261020.png",
+  "alerts": [
+    {
+      "alerts": [
+        "Cannot read properties of undefined (reading 'invoke')"
+      ],
+      "effects": "high",
+      "heading": "配置同步",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "background": "rgba(244, 245, 249, 0.52)",
+          "blur": "saturate(1.5) blur(8px)",
+          "image": "none"
+        }
+      ],
+      "theme": "light"
+    },
+    {
+      "alerts": [
+        "Cannot read properties of undefined (reading 'invoke')"
+      ],
+      "effects": "mid",
+      "heading": "配置同步",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "background": "rgba(244, 245, 249, 0.52)",
+          "blur": "saturate(1.5) blur(8px)",
+          "image": "none"
+        }
+      ],
+      "theme": "light"
+    },
+    {
+      "alerts": [
+        "Cannot read properties of undefined (reading 'invoke')"
+      ],
+      "effects": "low",
+      "heading": "配置同步",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "background": "rgb(255, 255, 255)",
+          "blur": "none",
+          "image": "none"
+        }
+      ],
+      "theme": "light"
+    },
+    {
+      "alerts": [
+        "Cannot read properties of undefined (reading 'invoke')"
+      ],
+      "effects": "high",
+      "heading": "配置同步",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "background": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "image": "none"
+        }
+      ],
+      "theme": "dark"
+    },
+    {
+      "alerts": [
+        "Cannot read properties of undefined (reading 'invoke')"
+      ],
+      "effects": "mid",
+      "heading": "配置同步",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "background": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "image": "none"
+        }
+      ],
+      "theme": "dark"
+    },
+    {
+      "alerts": [
+        "Cannot read properties of undefined (reading 'invoke')"
+      ],
+      "effects": "low",
+      "heading": "配置同步",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "background": "rgb(38, 38, 38)",
+          "blur": "none",
+          "image": "none"
+        }
+      ],
+      "theme": "dark"
+    }
+  ],
+  "limits": [
+    "Sync browser DEV lacks a native invoke path; error is retained, this does not pass Sync functional state",
+    "not all intra-page tabs, states, keyboard/native/platform combinations",
+    "first long batch timed out/reset before retained file; retained36 are bounded subsequent observations, not a claim about lost intermediate samples"
+  ]
+}

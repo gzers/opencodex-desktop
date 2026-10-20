@@ -748,3 +748,10 @@ Cargo/Tauri/npm及两锁文件均为0.2.0，locked bins编译与前端构建成�
 继续沿windows-startup精确根准入，模版文件往返后用正式model_policy_stage建立一个停用/none、无Key的明确测试渠道及3型号，连接仅example.test静态定义、不发检测/生成；通过正式路由重载/渠道编辑显示实际表格。读取当前DOM矩形并核验均在视口，使用WebView2 CDP鼠标press/move/release经过12步移动，不直接派发DOM drag/drop或调排序函数；等后台model_config_snapshot读回workspace的beta/alpha/gamma，再断言已提交policy仍与原快照相同，从未点运行Save。
 
 输出model-sort-pointer与model-sort-native保留坐标/前后实际顺序；原最终EXE、受控进程、截图与模板链保持。Node准入3项和语法成功，只表示测试接线可运行，真正指针/持久化结论待当前源Windows CI。checks-native-sort-admission-20261020.json绑定源码，未把本地脚本断言或先前未命中Mac拖动记通过。
+
+
+### Windows模版整链实际通过与当前六页材质读数
+
+CI39423439909/91d8a585所有适用job成功，feature build按原规则skipped；artifact12265913502已下载读回。最终EXE SHA78da9e876664608526c28d406f77f0c577b610501bd2963dc995e4b8f4432763，expectedCommit/source匹配、沙箱根/HOME移除保持；正式模版编辑保存产生独立revision、旧版不变/默认null，默认确认原生dialog先关/公共Modal可见/确认后回管理，policy保持；精确版导出→receive→accept保持默认与policy均通过。实际导出路径确为Windows扩展驱动器前缀，正规化修正未放松目录边界。checks-windows-model-native-pass-20261020.json保存原model-ui/startup/boundary/webview及截图。该轮mode=any、runner实际提升，版本仍0.1.10；不泛称normal-user或最终0.2.0制品已验。新增型号指针排序在后续4cc311d5，仍等当前CI。
+
+另对当前正式DEV概览/设置/同步/诊断/扩展/模型六页各取亮暗×高中低，共36组1280×720/100%实际读数：文档无横溢，5个Tab消费者均无背景图；高/中亮0.52、暗0.56中性玻璃+8px blur，低档白/38实底无blur。扩展正式外卡1px且Tab下间距16px。原始current-page-visuals及checks-current-page-visuals-20261020.json/暗中档截图保留。Sync在纯浏览器DEV显示缺native invoke错误，如实记录，不以本次布局读取冒称功能成功；功能沿已有原生传输/服务证据。这是页面材质采样，未把所有子Tab/状态/键盘或平台组合预填通过。

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 2,
+  "mode": "any",
+  "harnessToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 7152,
+    "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+    "creationTimeUtc": "2026-10-20T13:05:55.5048772Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-20T13:06:00.1041359Z"
+  },
+  "applicationToken": {
+    "schemaVersion": 1,
+    "status": "observed",
+    "processId": 6580,
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+    "creationTimeUtc": "2026-10-20T13:06:00.1114872Z",
+    "elevated": true,
+    "elevationType": 1,
+    "collectedAtUtc": "2026-10-20T13:06:33.2398960Z"
+  },
+  "applicationTokenVerified": true,
+  "applicationModeMatched": false,
+  "result": "pass",
+  "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+  "sha256": "78da9e876664608526c28d406f77f0c577b610501bd2963dc995e4b8f4432763",
+  "homeRemoved": true,
+  "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-3a4f50779ec04882a9634041270d9de2",
+  "observedSeconds": 30,
+  "cdpPort": 56465,
+  "expectedCommit": "91d8a585755775b93f70e36dd5c2a8531fbb5a62",
+  "sourceCommitMatched": true,
+  "mainWindowPresent": true,
+  "pid": 6580,
+  "responding": true
+}

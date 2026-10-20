@@ -1,0 +1,93 @@
+{
+  "scope": "Windows最终EXE模版编辑保存/default确认/精确模板文件往返实际通过",
+  "ci": {
+    "run": 39423439909,
+    "url": "https://github.com/gzers/opencodex-desktop/actions/runs/39423439909",
+    "head": "91d8a585755775b93f70e36dd5c2a8531fbb5a62",
+    "conclusion": "success",
+    "artifactId": 12265913502
+  },
+  "native": {
+    "result": "pass",
+    "scope": "native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation",
+    "templateId": "fbd44e14-76ee-481b-a385-88e2114243fe",
+    "revisionId": "9605958a-1218-4912-acb9-491764940114",
+    "immutablePriorRevision": true,
+    "channelPolicyUnchanged": true,
+    "defaultSeparateFromAdoption": true,
+    "confirmationLeftNativeTopLayer": true,
+    "returnedToVersionManager": true,
+    "exportedWithinSandbox": true,
+    "fileRoundtrip": true
+  },
+  "process": {
+    "schemaVersion": 2,
+    "mode": "any",
+    "harnessToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 7152,
+      "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "creationTimeUtc": "2026-10-20T13:05:55.5048772Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-10-20T13:06:00.1041359Z"
+    },
+    "applicationToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 6580,
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+      "creationTimeUtc": "2026-10-20T13:06:00.1114872Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-10-20T13:06:33.2398960Z"
+    },
+    "applicationTokenVerified": true,
+    "applicationModeMatched": false,
+    "result": "pass",
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+    "sha256": "78da9e876664608526c28d406f77f0c577b610501bd2963dc995e4b8f4432763",
+    "homeRemoved": true,
+    "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-3a4f50779ec04882a9634041270d9de2",
+    "observedSeconds": 30,
+    "cdpPort": 56465,
+    "expectedCommit": "91d8a585755775b93f70e36dd5c2a8531fbb5a62",
+    "sourceCommitMatched": true,
+    "mainWindowPresent": true,
+    "pid": 6580,
+    "responding": true
+  },
+  "actualExtendedExport": {
+    "admittedRoot": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-3a4f50779ec04882a9634041270d9de2",
+    "exportedPath": "\\\\?\\D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-3a4f50779ec04882a9634041270d9de2\\exports\\opencodex-config-86ca434f-5610-4ada-8124-ad73b4da09f9.ocxdconf"
+  },
+  "files": [
+    {
+      "file": "windows-model-pass-39423439909-model-ui.json",
+      "sha256": "48e2361d8be1fe14b3cf10dd5201248078acb5452eeb67c3f4cfdd1535a60923"
+    },
+    {
+      "file": "windows-model-pass-39423439909-model-export-boundary.json",
+      "sha256": "f2bb5f0d8bd826ada3571c2f14cde1ce9f480f84f99baf1a1c8c54cd35a32cd7"
+    },
+    {
+      "file": "windows-model-pass-39423439909-startup.json",
+      "sha256": "52d3a37125be7a12a5be7921d6e60c627cce8a32f599184534828309b1f98d92"
+    },
+    {
+      "file": "windows-model-pass-39423439909-webview.json",
+      "sha256": "72cf1df15ad1dea3a4a6fd4903d540c652e11dc4992138a4b2b86800bd0303a4"
+    },
+    {
+      "file": "windows-model-pass-39423439909-model-template-native.png",
+      "sha256": "5eb449454e59758dc3c2061612cd9021705282f8639c44f515bdaff5acf716a8"
+    }
+  ],
+  "limits": [
+    "actual startup mode any/elevated runner; not independent normal-user admission claim",
+    "0.1.10 source version identity at 91d8a585; not final0.2.0 artifact",
+    "new pointer-model-sort check added later, still pending current CI",
+    "no runtime configuration or generation in this Windows smoke"
+  ]
+}
