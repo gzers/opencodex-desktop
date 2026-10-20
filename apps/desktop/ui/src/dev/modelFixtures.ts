@@ -40,6 +40,12 @@ export function installModelFixtures() {
   modelApi.saveAgentSettings=async settings=>structuredClone(settings)
   modelApi.agentSettings=async()=>null
   const conversations=new Map<string,import('@/features/models/api').AgentConversation>()
+  if(new URLSearchParams(location.search).get('agentView')==='1'){
+    const template=snapshot.library.templates[0]!
+    conversations.set(template.id,{templateId:template.id,digest:'explicit-conversation-fixture',content:{baseRevision:template.revisions[0]!.id,input:'尚未发送的纠偏输入',history:Array.from({length:20},(_,index)=>({role:index%2?'assistant' as const:'user' as const,text:'本机会话样例 '+index+' · 较长的中文与 English 上下文，不连接模型服务。'})),sources:[]}})
+    modelApi.latestAgentResult=async()=>null
+  }
+
   modelApi.agentConversation=async id=>structuredClone(conversations.get(id??'new')??null)
   modelApi.saveAgentConversation=async request=>{const saved={templateId:request.templateId,digest:crypto.randomUUID(),content:structuredClone(request.content)};conversations.set(request.templateId??'new',saved);return saved}
   const newChannelResults=new Map<string,import('@/features/models/api').NewChannelOutcome>()

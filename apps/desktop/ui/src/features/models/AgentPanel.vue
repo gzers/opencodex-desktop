@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import AgentExecutionField from './AgentExecutionField.vue'
+import type {AgentViewContext} from './agentView'
 import { modelApi, errorText, type AgentSettings, type ModelSnapshot, type Proposal, type ResearchSource, type TemplateDraft } from './api'
 import { acceptProposal, proposalFields } from './proposals'
-const props = defineProps<{ draft: TemplateDraft; snapshot: ModelSnapshot }>()
+const props = withDefaults(defineProps<{ draft: TemplateDraft; snapshot: ModelSnapshot;active?:boolean;viewContext?:AgentViewContext }>(),{active:true})
 const emit = defineEmits<{ close: []; apply: [draft: TemplateDraft] }>()
 const prompt = ref(''); const urls = ref(''); const sources = ref<ResearchSource[]>([]); const settings = ref<AgentSettings | null>(null)
 const query = ref('')
@@ -12,6 +13,18 @@ const restoreStatus=ref('')
 const error = ref(''); const busy = ref(false); const researching = ref(false)
 const run = ref(''); const result = ref<Proposal | null>(null); const base = ref<TemplateDraft | null>(null); const chosen = ref<string[]>([])
 const history = ref<{ role: string; text: string }[]>([])
+const panel=ref<HTMLElement|null>(null),chat=ref<HTMLElement|null>(null),input=ref<HTMLTextAreaElement|null>(null),maximized=ref(false)
+const copy=<T,>(value:T):T=>JSON.parse(JSON.stringify(value)) as T
+if(props.viewContext?.initialized){const view=props.viewContext;prompt.value=view.input;urls.value=view.urls;query.value=view.query;history.value=copy(view.history);sources.value=copy(view.sources);base.value=copy(view.base);result.value=copy(view.proposal);chosen.value=[...view.chosen];maximized.value=view.maximized}
+function captureView(wasActive=props.active){
+ const view=props.viewContext;if(!view)return
+ Object.assign(view,{initialized:true,input:prompt.value,urls:urls.value,query:query.value,history:copy(history.value),sources:copy(sources.value),scrollTop:chat.value?.scrollTop??view.scrollTop,selectionStart:input.value?.selectionStart??view.selectionStart,selectionEnd:input.value?.selectionEnd??view.selectionEnd,focusInput:wasActive&&!!panel.value?.contains(document.activeElement)||view.focusInput,base:copy(base.value),proposal:copy(result.value),chosen:[...chosen.value],maximized:maximized.value})
+}
+watch([prompt,history,sources,urls,query,base,result,chosen,maximized],()=>captureView(),{deep:true,flush:'sync'})
+async function restoreView(){await nextTick();if(panelDisposed||!props.active)return;const view=props.viewContext;if(!view?.initialized)return;if(chat.value)chat.value.scrollTop=view.scrollTop;if(input.value){input.value.setSelectionRange(view.selectionStart,view.selectionEnd);if(view.focusInput)input.value.focus({preventScroll:true})}}
+function collapse(){captureView();emit('close')}
+watch(()=>props.active,(active,previous)=>{if(active)void restoreView();else captureView(previous)})
+
 const sameTarget = computed(() => !!base.value && base.value.templateId === props.draft.templateId && base.value.baseRevision === props.draft.baseRevision)
 const fields = computed(() => base.value && result.value && sameTarget.value ? proposalFields(base.value, props.draft, result.value) : [])
 watch(fields, values => { chosen.value = chosen.value.filter(path => values.some(field => field.path.join('.') === path && !field.conflict && !field.locked)) })
@@ -24,9 +37,9 @@ async function persistConversation(){
  return conversationWrite
 }
 watch([prompt,history,sources],()=>{conversationDirty=true;if(conversationTimer)clearTimeout(conversationTimer);conversationTimer=setTimeout(()=>void persistConversation(),350)},{deep:true})
-onMounted(async()=>{try{const previous=await modelApi.agentConversation(props.draft.templateId);if(panelDisposed)return;conversationDigest=previous?.digest??null;conversationReady=true;if(conversationDirty)void persistConversation()}catch(cause){if(!panelDisposed)error.value=errorText(cause)}})
+onMounted(async()=>{void restoreView();try{const previous=await modelApi.agentConversation(props.draft.templateId);if(panelDisposed)return;conversationDigest=previous?.digest??null;conversationReady=true;if(conversationDirty)void persistConversation()}catch(cause){if(!panelDisposed)error.value=errorText(cause)}})
 let sequence = 0;let researchSequence=0
-onBeforeUnmount(() => { if(conversationTimer)clearTimeout(conversationTimer);void persistConversation();panelDisposed=true;sequence++;researchSequence++; if (run.value) void modelApi.stopGeneration(run.value) })
+onBeforeUnmount(() => { captureView();if(conversationTimer)clearTimeout(conversationTimer);void persistConversation();panelDisposed=true;sequence++;researchSequence++; if (run.value) void modelApi.stopGeneration(run.value) })
 async function readSources() {
   const current=++researchSequence;researching.value = true; error.value = ''
   try { const found=await modelApi.research(urls.value.split('\n').map(v => v.trim()).filter(Boolean));if(current===researchSequence)sources.value=found }
@@ -71,8 +84,8 @@ async function stop() { const id = run.value; sequence++; busy.value = false; ru
 function accept() { if (sameTarget.value) { emit('apply', acceptProposal(props.draft, fields.value, chosen.value)); result.value = null; history.value.push({ role:'助手',text:'所选建议已放入表单，仍需保存。' }) } }
 </script>
 <template>
-  <aside class="model-agent-panel" aria-label="模版助手"><header><strong>模版助手</strong><UiButton size="sm" variant="ghost" @click="emit('close')">收起</UiButton></header>
-    <div class="model-agent-scroll"><AgentExecutionField v-model="settings" /><UiButton size="sm" :disabled="busy" @click="restoreSuggestion">恢复上次对话与建议</UiButton>
+  <aside ref="panel" class="model-agent-panel" :class="{'is-maximized':maximized}" aria-label="模版助手"><header><strong>模版助手</strong><div class="model-inline"><UiButton size="sm" variant="ghost" :aria-pressed="maximized" @click="maximized=!maximized">{{ maximized?'还原大小':'放大' }}</UiButton><UiButton size="sm" variant="ghost" @click="collapse">收起</UiButton></div></header>
+    <div class="model-agent-execution"><AgentExecutionField v-model="settings" /></div><div ref="chat" class="model-agent-scroll" @scroll.passive="captureView()"><UiButton size="sm" :disabled="busy" @click="restoreSuggestion">恢复上次对话与建议</UiButton>
       <p v-if="restoreStatus" class="model-muted" role="status">{{ restoreStatus }}</p>
       <details><summary>在线资料</summary><label>检索关键词<input class="input" v-model="query" /></label><UiButton size="sm" :loading="researching" :disabled="!query.trim()" @click="searchSources">检索公开资料</UiButton><label>公开HTTPS资料地址（每行一个）<textarea class="input" v-model="urls" rows="3" /></label><UiButton size="sm" :loading="researching" @click="readSources">读取在线资料</UiButton><p v-for="source in sources" :key="source.url" class="model-muted">{{ source.url }} · {{ source.retrievedAt }}</p></details>
       <div v-for="(item,i) in history" :key="i" class="model-agent-message"><strong>{{ item.role }}</strong><p>{{ item.text }}</p></div>
@@ -80,9 +93,9 @@ function accept() { if (sameTarget.value) { emit('apply', acceptProposal(props.d
       <template v-if="result"><p v-if="!sameTarget" class="model-error">该建议属于先前编辑对象，未应用到当前表单。</p><article v-for="field in fields" :key="field.path.join('.')" class="model-agent-diff"><label><input v-model="chosen" type="checkbox" :value="field.path.join('.')" :disabled="field.locked" />{{ field.label }}{{ field.locked ? ' · 人工锁' : field.conflict ? ' · 生成期间有人工修改，默认保留' : '' }}</label><details><summary>查看前后内容</summary><pre>{{ JSON.stringify(field.current,null,2) }}</pre><pre>{{ JSON.stringify(field.after,null,2) }}</pre></details></article><UiButton :disabled="!sameTarget || !chosen.length" @click="accept">接受所选建议</UiButton></template>
       <p v-if="error" role="alert" class="model-error">{{ error }}</p>
     </div>
-    <footer><textarea class="input" v-model="prompt" rows="3" placeholder="填写资料或继续纠偏" aria-label="制模要求" /><div class="model-inline"><UiButton v-if="busy" @click="stop">停止</UiButton><UiButton v-else variant="primary" :disabled="!settings || researching" @click="generate">发送</UiButton></div></footer>
+    <footer><textarea ref="input" class="input" v-model="prompt" rows="2" placeholder="填写资料或继续纠偏" aria-label="制模要求" @select="captureView()" @keyup="captureView()" @blur="captureView()" /><div class="model-inline"><UiButton v-if="busy" @click="stop">停止</UiButton><UiButton v-else variant="primary" :disabled="!settings || researching" @click="generate">发送</UiButton></div></footer>
   </aside>
 </template>
 <style scoped>
-.model-agent-panel{position:fixed;right:24px;bottom:24px;z-index:var(--z-overlay);width:min(400px,calc(100vw - 48px));max-height:calc(100vh - 90px);display:flex;flex-direction:column;background:var(--surface-overlay-bg,var(--panel));backdrop-filter:var(--surface-overlay-blur);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}.model-agent-panel>header,.model-agent-panel>footer{padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between}.model-agent-panel>header{border-bottom:1px solid var(--border)}.model-agent-panel>footer{border-top:1px solid var(--border);display:grid}.model-agent-scroll{padding:14px;overflow:auto;display:grid;gap:14px}.model-agent-scroll label{display:grid;gap:6px}.model-agent-message p{white-space:pre-wrap;overflow-wrap:anywhere}.model-agent-diff{padding:10px 0;border-bottom:1px solid var(--border)}.model-agent-diff label{display:flex;align-items:center;gap:8px}.model-agent-diff pre{white-space:pre-wrap;max-height:160px;overflow:auto}.model-agent-panel textarea{width:100%;resize:vertical}
+.model-agent-panel{position:fixed;right:12px;bottom:12px;z-index:var(--z-overlay);width:min(400px,calc(100vw / var(--ui-zoom) - 24px));max-height:calc(100vh / var(--ui-zoom) - 48px);display:flex;flex-direction:column;background:var(--surface-overlay-bg,var(--panel));backdrop-filter:var(--surface-overlay-blur);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}.model-agent-panel.is-maximized{width:calc(100vw / var(--ui-zoom) - 24px);height:calc(100vh / var(--ui-zoom) - 48px)}.model-agent-panel>header,.model-agent-panel>footer{flex:none;padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between}.model-agent-panel>header{border-bottom:1px solid var(--border)}.model-agent-panel>footer{border-top:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) auto;justify-content:normal;align-items:end;gap:8px;padding:10px}.model-agent-panel>footer>.model-inline{justify-self:end}.model-agent-execution{padding:10px 14px;border-bottom:1px solid var(--border);flex:none}.model-agent-scroll{min-height:0;flex:1;padding:14px;overflow:auto;display:grid;gap:14px}.model-agent-scroll label{display:grid;gap:6px}.model-agent-message p{white-space:pre-wrap;overflow-wrap:anywhere}.model-agent-diff{padding:10px 0;border-bottom:1px solid var(--border)}.model-agent-diff label{display:flex;align-items:center;gap:8px}.model-agent-diff pre{white-space:pre-wrap;max-height:160px;overflow:auto}.model-agent-panel textarea{width:100%;min-height:56px;max-height:96px;resize:vertical}
 </style>

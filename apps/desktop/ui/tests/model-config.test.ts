@@ -1,3 +1,4 @@
+import {createAgentViewContext} from '@/features/models/agentView'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
 import { useModelsStore } from '@/features/models/store'
@@ -39,6 +40,15 @@ describe('model template working buffer', () => {
     const saved = snapshot(); saved.library.templates[0]!.label = '新建'
     finish({ snapshot: saved, templateId: 'template', revisionId: revision().id, changed: true }); await first
     expect(store.dirty).toBe(false); expect(store.draft!.templateId).toBe('template'); expect(store.status).toBe('已保存')
+  })
+  it('carries this logical editor conversation into its newly saved version without applying old proposals',async()=>{
+    const store=useModelsStore();await store.load();const template=store.snapshot!.library.templates[0]!;store.edit(template,template.revisions[0]!.id)
+    const oldSession=store.draftSession,context=createAgentViewContext();context.initialized=true;context.input='未发送的纠偏';context.scrollTop=150;context.selectionStart=2;context.selectionEnd=4
+    store.view.agentViews[oldSession]=context;store.draft!.label='saved new name'
+    const saved=JSON.parse(JSON.stringify(store.snapshot!));const previous=saved.library.templates[0].revisions[0];saved.library.templates[0].revisions.push({...previous,id:'new-revision',savedLabel:'saved new name'});saved.libraryDigest='new-library'
+    vi.mocked(modelApi.save).mockResolvedValue({snapshot:saved,templateId:template.id,revisionId:'new-revision',changed:true});await store.save()
+    expect(store.draftSession).not.toBe(oldSession);expect(store.view.agentViews[store.draftSession]).toMatchObject({input:'未发送的纠偏',scrollTop:150,selectionStart:2,selectionEnd:4});expect(store.view.agentViews[store.draftSession]).not.toBe(context)
+    expect(store.draft!.baseRevision).toBe('new-revision');expect(store.dirty).toBe(false)
   })
   it('retains separate target buffers and their original optimistic baselines when switching templates',async()=>{
     const store=useModelsStore();store.snapshot=snapshot();const first=store.snapshot.library.templates[0]!

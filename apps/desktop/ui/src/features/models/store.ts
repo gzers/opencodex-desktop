@@ -1,3 +1,4 @@
+import type {AgentViewContext} from './agentView'
 import { computed, onScopeDispose, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import {pendingModelRows,type ModelRowsState} from './modelRows'
@@ -16,7 +17,7 @@ export const useModelsStore = defineStore('model-config', () => {
   const error = ref('')
   const status = ref('')
   const selected = ref<Record<string, string>>({})
-  const view = ref({tab:'channels' as 'channels'|'templates',templateSearch:'',selectedTemplates:[] as string[],templateEditor:false,templatePosition:'',channelSearch:'',channelEditor:'',selectedChannels:[] as string[],channelFilters:{} as Record<string,{search:string;selectedOnly:boolean;family:string}>,navigation:{} as Record<string,{collapsed:boolean;activeId:string}>,positions:{} as Record<string,{top:number;focus:string|null}>})
+  const view = ref({tab:'channels' as 'channels'|'templates',templateSearch:'',selectedTemplates:[] as string[],templateEditor:false,templatePosition:'',channelSearch:'',channelEditor:'',selectedChannels:[] as string[],channelFilters:{} as Record<string,{search:string;selectedOnly:boolean;family:string}>,agentViews:{} as Record<string,AgentViewContext>,navigation:{} as Record<string,{collapsed:boolean;activeId:string}>,positions:{} as Record<string,{top:number;focus:string|null}>})
   let bufferKey = ''
   const buffers = new Map<string,{draft:TemplateDraft;clean:string;baseline:string;session:string}>()
   function retainTemplate() {
@@ -98,6 +99,7 @@ export const useModelsStore = defineStore('model-config', () => {
     if (!snapshot.value || !draft.value || busy.value) return
     const request = JSON.parse(JSON.stringify(draft.value)) as TemplateDraft
     const expected = editBaseline.value
+    const agentContext=view.value.agentViews[draftSession.value]
     busy.value = true; error.value = ''
     try {
       const result = await modelApi.save(request, expected)
@@ -105,6 +107,7 @@ export const useModelsStore = defineStore('model-config', () => {
       const template = result.snapshot.library.templates.find(item => item.id === result.templateId)
       buffers.delete(bufferKey);draft.value=null
       edit(template, result.revisionId)
+      if(agentContext?.initialized)view.value.agentViews[draftSession.value]=JSON.parse(JSON.stringify(agentContext))
       selected.value[result.templateId] = result.revisionId
       status.value = result.changed ? '已保存' : '无内容变化'
     } catch (cause) { error.value = errorText(cause) } finally { busy.value = false }
