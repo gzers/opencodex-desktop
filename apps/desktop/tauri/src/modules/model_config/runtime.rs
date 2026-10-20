@@ -87,6 +87,12 @@ pub struct RuntimePlan {
     pub expected_policy: String,
     pub expected_workspace: String,
     pub policy: Policy,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub deferred_policy: Option<Policy>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scope: Option<SaveScope>,
+    #[serde(default)]
+    pub deferred_channels: Vec<String>,
     pub before: UpstreamSnapshot,
     pub next_providers: Value,
     pub next_order: Vec<String>,
@@ -133,6 +139,7 @@ pub struct SavePlanView {
     pub catalog_count: usize,
     pub current_catalog_count: usize,
     pub changed_channels: Vec<String>,
+    pub deferred_channels: Vec<String>,
     pub error: Option<String>,
     pub protocol_groups: Vec<String>,
     pub route_changes: Vec<String>,
@@ -154,8 +161,11 @@ impl RuntimePlan {
                 .policy
                 .channels
                 .iter()
+                .filter(|c| self.scope.as_ref().is_none_or(|scope|scope.include_shared||scope.channel_ids.contains(&c.id)))
                 .map(|c| c.label.clone())
+                .chain(self.recovery.iter().flat_map(|baseline|baseline.policy.channels.iter()).filter(|old|!self.policy.channels.iter().any(|c|c.id==old.id)&&self.scope.as_ref().is_none_or(|scope|scope.channel_ids.contains(&old.id))).map(|old|old.label.clone()))
                 .collect(),
+            deferred_channels: self.deferred_channels.clone(),
             error: self.error.clone(),
             protocol_groups: self
                 .execution_policy
@@ -1269,6 +1279,120 @@ fn compile_materials(
     order.retain(|slug| dedupe.insert(slug.clone()));
     Ok((next, order, expected))
 }
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct SaveScope {
+    pub channel_ids: Vec<String>,
+    pub include_shared: bool,
+}
+fn select_save_scope(
+    saved: &Policy,
+    draft: &Policy,
+    scope: &SaveScope,
+) -> ModelResult<(Policy, Option<Policy>)> {
+    let ids: BTreeSet<_> = scope.channel_ids.iter().cloned().collect();
+    if ids.len() != scope.channel_ids.len()
+        || ids.len() > 256
+        || ids.iter().any(|id| {
+            !saved
+                .channels
+                .iter()
+                .chain(&draft.channels)
+                .any(|c| &c.id == id)
+                && !draft.pending_removals.iter().any(|r| &r.channel_id == id)
+        })
+    {
+        return Err(invalid(
+            "save_scope",
+            "本次渠道范围重复或已失效，请重新选择",
+        ));
+    }
+    if draft.recovery_id.is_some() {
+        return Err(invalid(
+            "save_scope",
+            "成功历史恢复须按原恢复范围完整核对，不能拆开提交",
+        ));
+    }
+    let mut result = saved.clone();
+    result.pending_removals = draft
+        .pending_removals
+        .iter()
+        .filter(|r| ids.contains(&r.channel_id))
+        .cloned()
+        .collect();
+    result.channels = saved
+        .channels
+        .iter()
+        .filter_map(|old| {
+            if ids.contains(&old.id) {
+                draft.channels.iter().find(|c| c.id == old.id).cloned()
+            } else {
+                Some(old.clone())
+            }
+        })
+        .collect();
+    for channel in draft
+        .channels
+        .iter()
+        .filter(|c| ids.contains(&c.id) && !saved.channels.iter().any(|old| old.id == c.id))
+    {
+        result.channels.push(channel.clone());
+    }
+    if scope.include_shared {
+        result.template_refs = draft.template_refs.clone();
+        result.default_channel_id = draft.default_channel_id.clone();
+        let positions: BTreeMap<_, _> = draft
+            .channels
+            .iter()
+            .enumerate()
+            .map(|(i, c)| (&c.id, i))
+            .collect();
+        result
+            .channels
+            .sort_by_key(|c| positions.get(&c.id).copied().unwrap_or(usize::MAX));
+    }
+    if result.published() == saved.published() && result.pending_removals.is_empty() {
+        return Err(invalid("save_scope", "所选范围没有可提交修改"));
+    }
+    let mut remaining = draft.clone();
+    remaining
+        .pending_removals
+        .retain(|r| !ids.contains(&r.channel_id));
+    let remaining = (remaining != result.published()).then_some(remaining);
+    Ok((result, remaining))
+}
+fn deferred_names(saved: &Policy, draft: &Policy, scope: &SaveScope) -> Vec<String> {
+    let ids: BTreeSet<_> = saved
+        .channels
+        .iter()
+        .chain(&draft.channels)
+        .map(|c| &c.id)
+        .collect();
+    let mut names = vec![];
+    for id in ids {
+        let old = saved.channels.iter().find(|c| &c.id == id);
+        let next = draft.channels.iter().find(|c| &c.id == id);
+        if old != next && !scope.channel_ids.contains(id) {
+            names.push(next.or(old).unwrap().label.clone());
+        }
+    }
+    for removal in draft
+        .pending_removals
+        .iter()
+        .filter(|r| !scope.channel_ids.contains(&r.channel_id))
+    {
+        names.push(removal.provider_id.clone());
+    }
+    if !scope.include_shared
+        && (saved.template_refs != draft.template_refs
+            || saved.default_channel_id != draft.default_channel_id
+            || saved.channels.iter().map(|c| &c.id).collect::<Vec<_>>()
+                != draft.channels.iter().map(|c| &c.id).collect::<Vec<_>>())
+    {
+        names.push("全局模版采用、默认渠道或渠道顺序".into());
+    }
+    names
+}
 pub async fn prepare(
     root: &Path,
     context: &ProcessContext,
@@ -1276,6 +1400,26 @@ pub async fn prepare(
     expected_library: String,
     expected_policy: String,
     expected_workspace: String,
+) -> ModelResult<SavePlanView> {
+    prepare_scoped(
+        root,
+        context,
+        policy,
+        expected_library,
+        expected_policy,
+        expected_workspace,
+        None,
+    )
+    .await
+}
+pub async fn prepare_scoped(
+    root: &Path,
+    context: &ProcessContext,
+    policy: Policy,
+    expected_library: String,
+    expected_policy: String,
+    expected_workspace: String,
+    scope: Option<SaveScope>,
 ) -> ModelResult<SavePlanView> {
     let _execution = execution_lock(root)?;
     reject_incomplete(root)?;
@@ -1296,6 +1440,15 @@ pub async fn prepare(
             "当前草稿尚未暂存完成，请稍后重试",
         ));
     }
+    let deferred_channels = scope
+        .as_ref()
+        .map(|scope| deferred_names(&local.policy, &policy, scope))
+        .unwrap_or_default();
+    let (policy, deferred_policy) = if let Some(scope) = &scope {
+        select_save_scope(&local.policy, &policy, scope)?
+    } else {
+        (policy, None)
+    };
     let before = upstream::snapshot(context).await?;
     let initial_removals =
         super::channel_actions::initial_removals(root, context, &before, &local.policy, &policy)?;
@@ -1565,6 +1718,9 @@ pub async fn prepare(
         expected_policy,
         expected_workspace,
         policy,
+        deferred_policy,
+        scope,
+        deferred_channels,
         before,
         next_providers,
         next_order,
@@ -2065,6 +2221,9 @@ async fn prepare_history(
         expected_policy: local.policy_digest,
         expected_workspace: local.workspace_digest,
         policy,
+        deferred_policy: None,
+        scope: None,
+        deferred_channels: vec![],
         before: before.clone(),
         next_providers: projection.providers.clone(),
         next_order: projection.order.clone(),
@@ -2386,11 +2545,12 @@ pub async fn reconcile(
         plan.committed_snapshot = Some(actual.clone());
         verify_committed_credentials(root, &plan, context).await?;
         capture_after(root, context, &mut plan).await?;
-        ModelStore::new(root).commit_runtime_policy(
+        ModelStore::new(root).commit_runtime_scope(
             &plan.expected_library,
             &plan.expected_policy,
             &plan.expected_workspace,
             plan.policy.published(),
+            plan.deferred_policy.as_ref(),
         )?;
         let ownership = root.join(OWNERSHIP);
         safety::check_path(root, &ownership, true)?;
@@ -2813,11 +2973,12 @@ pub async fn apply(root: &Path, context: &ProcessContext, id: &str) -> ModelResu
             &serde_json::to_vec(&plan.ownership)?,
             0o600,
         )?;
-        ModelStore::new(root).commit_runtime_policy(
+        ModelStore::new(root).commit_runtime_scope(
             &plan.expected_library,
             &plan.expected_policy,
             &plan.expected_workspace,
             plan.policy.published(),
+            plan.deferred_policy.as_ref(),
         )?;
         plan.phase = "committed".into();
         save(root, &plan)?;
@@ -3231,6 +3392,166 @@ pub async fn compensate(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn scoped_save_keeps_unselected_changes_and_requires_explicit_shared_scope() {
+        let (_, mut saved) = fixture();
+        let first = saved.channels[0].id.clone();
+        let mut other = saved.channels[0].clone();
+        other.id = uuid::Uuid::new_v4().to_string();
+        other.connection.provider_id = "other".into();
+        other.label = "以后再改".into();
+        saved.channels.push(other.clone());
+        let mut draft = saved.clone();
+        draft.channels[0].label = "本次修改".into();
+        draft.channels[1].label = "暂缓修改".into();
+        draft.channels.reverse();
+        draft.default_channel_id = Some(other.id.clone());
+        let (selected, remaining) = select_save_scope(
+            &saved,
+            &draft,
+            &SaveScope {
+                channel_ids: vec![first.clone()],
+                include_shared: false,
+            },
+        )
+        .unwrap();
+        assert_eq!(selected.channels[0].label, "本次修改");
+        assert_eq!(selected.channels[1], other);
+        assert_eq!(selected.default_channel_id, saved.default_channel_id);
+        assert_eq!(remaining, Some(draft.clone()));
+        let (shared, _) = select_save_scope(
+            &saved,
+            &draft,
+            &SaveScope {
+                channel_ids: vec![first.clone()],
+                include_shared: true,
+            },
+        )
+        .unwrap();
+        assert_eq!(shared.default_channel_id, draft.default_channel_id);
+        assert_eq!(shared.channels[0].id, other.id);
+        assert_eq!(
+            select_save_scope(
+                &saved,
+                &draft,
+                &SaveScope {
+                    channel_ids: vec![first.clone(), first],
+                    include_shared: false
+                }
+            )
+            .unwrap_err()
+            .code,
+            "save_scope"
+        );
+        draft.recovery_id = Some(uuid::Uuid::new_v4().to_string());
+        assert_eq!(
+            select_save_scope(
+                &saved,
+                &draft,
+                &SaveScope {
+                    channel_ids: vec![],
+                    include_shared: true
+                }
+            )
+            .unwrap_err()
+            .code,
+            "save_scope"
+        );
+    }
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn scoped_save_defers_unbound_channel_and_atomically_rebases_remaining_workspace() {
+        let root = tempfile::tempdir().unwrap();
+        let (snapshot, saved) = fixture();
+        let context = cli_fixture(root.path(), &snapshot);
+        let store = ModelStore::new(root.path());
+        let initial = store.load().unwrap();
+        store
+            .commit_runtime_policy(
+                &initial.library_digest,
+                &initial.policy_digest,
+                &initial.workspace_digest,
+                saved.clone(),
+            )
+            .unwrap();
+        let mut draft = saved.clone();
+        draft.channels[0].naming.insert(
+            "b".into(),
+            ModelNaming {
+                alias: None,
+                display_name: Some("本次名称".into()),
+            },
+        );
+        let mut blocked = saved.channels[0].clone();
+        blocked.id = uuid::Uuid::new_v4().to_string();
+        blocked.label = "待补连接".into();
+        blocked.connection.provider_id = "deferred".into();
+        blocked.connection.credential_ref = None;
+        blocked.connection.enabled = false;
+        draft.channels.push(blocked.clone());
+        let baseline = store.load().unwrap();
+        let staged = store
+            .stage_policy(
+                &baseline.policy_digest,
+                &baseline.workspace_digest,
+                draft.clone(),
+            )
+            .unwrap();
+        let full = prepare(
+            root.path(),
+            &context,
+            draft.clone(),
+            staged.library_digest.clone(),
+            staged.policy_digest.clone(),
+            staged.workspace_digest.clone(),
+        )
+        .await
+        .unwrap_err();
+        assert_eq!(full.code, "credential");
+        let plan = prepare_scoped(
+            root.path(),
+            &context,
+            draft.clone(),
+            staged.library_digest.clone(),
+            staged.policy_digest.clone(),
+            staged.workspace_digest.clone(),
+            Some(SaveScope {
+                channel_ids: vec![saved.channels[0].id.clone()],
+                include_shared: false,
+            }),
+        )
+        .await
+        .unwrap();
+        assert!(plan.deferred_channels.contains(&blocked.label));
+        assert_eq!(plan.changed_channels, vec![saved.channels[0].label.clone()]);
+        let applied = apply(root.path(), &context, &plan.id).await.unwrap();
+        assert_eq!(applied.phase, "committed", "{:?}", applied.error);
+        let now = store.load().unwrap();
+        assert_eq!(now.policy.channels.len(), 1);
+        assert_eq!(
+            now.policy.channels[0].naming["b"].display_name.as_deref(),
+            Some("本次名称")
+        );
+        let remaining = now.workspace.as_ref().unwrap();
+        assert_eq!(remaining.base_policy, now.policy_digest);
+        assert_eq!(remaining.policy, draft);
+        let upstream = upstream::snapshot(&context).await.unwrap();
+        assert!(upstream.providers["providers"].get("deferred").is_none());
+        assert_eq!(
+            upstream.providers["providers"]["test"]["modelDisplayNames"]["b"],
+            "本次名称"
+        );
+        let mut later = remaining.policy.clone();
+        later.channels[1].label = "后来编辑".into();
+        let later = store
+            .stage_policy(&now.policy_digest, &now.workspace_digest, later)
+            .unwrap();
+        assert_eq!(
+            apply(root.path(), &context, &plan.id).await.unwrap().phase,
+            "committed"
+        );
+        assert_eq!(store.load().unwrap().workspace, later.workspace);
+    }
     fn service_wire() -> FastWire {
         FastWire {
             kind: "service-tier".into(),

@@ -667,6 +667,22 @@ impl ModelStore {
         expected_workspace: &str,
         policy: Policy,
     ) -> ModelResult<Snapshot> {
+        self.commit_runtime_scope(
+            expected_library,
+            expected_policy,
+            expected_workspace,
+            policy,
+            None,
+        )
+    }
+    pub fn commit_runtime_scope(
+        &self,
+        expected_library: &str,
+        expected_policy: &str,
+        expected_workspace: &str,
+        policy: Policy,
+        remaining: Option<&Policy>,
+    ) -> ModelResult<Snapshot> {
         let _guard = self.lock()?;
         let (snapshot, _) = self.load_unlocked()?;
         let bytes = serde_json::to_vec_pretty(&policy)?;
@@ -686,6 +702,9 @@ impl ModelStore {
         }
         validate_policy(&snapshot.library, &policy)?;
         super::compiler::project(&snapshot.library, &policy)?;
+        if let Some(remaining) = remaining {
+            validate_policy(&snapshot.library, remaining)?;
+        }
         let path = self.path(POLICY_PATH)?;
         if let Some(before) = self.bytes(POLICY_PATH)? {
             backup_file(
@@ -708,7 +727,7 @@ impl ModelStore {
         }
         let workspace = PolicyDraft {
             base_policy: sha256(&bytes),
-            policy,
+            policy: remaining.cloned().unwrap_or(policy),
         };
         let workspace_bytes = serde_json::to_vec_pretty(&workspace)?;
         let journal = PendingFiles {

@@ -57,7 +57,8 @@ export interface ChannelPolicy {
 export interface ModelPolicy { schemaVersion: number; templateRefs: TemplateRef[]; channels: ChannelPolicy[];defaultChannelId?:string|null;recoveryId?:string|null;pendingRemovals?:{readId:string;channelId:string;providerId:string;credentialRef:string|null}[] }
 export interface ModelProjection {connectionDigest?:string|null;nativeModelId?:string|null;unavailableReason?:string|null;aliases?:string[]; channelId: string; providerId: string; modelId: string; label: string; enabled: boolean; selected: boolean; discovered: boolean; templateRef: TemplateRef | null; rules: ModelRules; source: Record<string, string> }
 export interface DraftProjection { rows: ModelProjection[]; knownActiveModels: number; exactCatalogCount: number | null; notices: string[] }
-export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
+export interface SaveScope {channelIds:string[];includeShared:boolean}
+export interface SavePlan { id:string;phase:string;catalogCount:number;currentCatalogCount:number;changedChannels:string[];deferredChannels?:string[];error:string|null;protocolGroups?:string[];routeChanges?:string[];removedProviders?:string[];historySource?:string|null;runtimeChanges?:ChangeFact[] }
 export interface ModelClientState {planId:string|null;status:'not_required'|'restart_required'|'pending_verification'|'user_confirmed'|'runtime_changed';checkedAt:string|null;checkId:string|null;confirmedAt:string|null;runtimeMatches:boolean;automaticClientVerification:boolean}
 export interface ModelHistoryEntry {id:string;createdAt:string;phase:string;channelLabels:string[];recoverable:boolean}
 export interface ModelRecoveryRequest {sourceId:string;side:'before'|'after';scope:'affected'|'all';restoreDefaults:boolean;expectedLibrary:string;expectedPolicy:string;expectedWorkspace:string}
@@ -97,6 +98,7 @@ export const modelApi = {
   project: (policy: ModelPolicy) => invoke<DraftProjection>('model_policy_preview', { policy }),
   stage: (expectedPolicy: string, expectedWorkspace: string, policy: ModelPolicy) => invoke<ModelSnapshot>('model_policy_stage', { expectedPolicy, expectedWorkspace, policy }),
   preparePolicy: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace}),
+  preparePolicyScoped: (policy:ModelPolicy,expectedLibrary:string,expectedPolicy:string,expectedWorkspace:string,scope:SaveScope) => invoke<SavePlan>('model_policy_prepare',{policy,expectedLibrary,expectedPolicy,expectedWorkspace,scope}),
   applyPolicy: (planId:string) => invoke<SavePlan>('model_policy_apply',{planId}),
   policyResult: (planId:string) => invoke<SavePlan>('model_policy_result',{planId}),
   latestPolicy: () => invoke<SavePlan|null>('model_policy_latest'),

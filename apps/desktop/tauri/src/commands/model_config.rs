@@ -76,6 +76,7 @@ pub async fn model_policy_stage(
 }
 #[tauri::command]
 pub async fn model_policy_prepare(
+    scope: Option<crate::modules::model_config::runtime::SaveScope>,
     policy: Policy,
     expected_library: String,
     expected_policy: String,
@@ -84,13 +85,14 @@ pub async fn model_policy_prepare(
     context: tauri::State<'_, crate::state::SharedProcessContext>,
 ) -> ModelResult<crate::modules::model_config::runtime::SavePlanView> {
     let _admission = crate::infrastructure::storage_writers::global().admit()?;
-    crate::modules::model_config::runtime::prepare(
+    crate::modules::model_config::runtime::prepare_scoped(
         &data_root.0,
         &context,
         policy,
         expected_library,
         expected_policy,
         expected_workspace,
+        scope,
     )
     .await
 }
