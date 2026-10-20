@@ -1,0 +1,88 @@
+{
+  "date": "2026-10-20",
+  "scope": "渠道列表集成节点选择和检测",
+  "checks": {
+    "fullBeforeLastSharedErrors": 690,
+    "files": 138,
+    "finalAffectedTests": 9,
+    "build": "passed"
+  },
+  "browser": {
+    "menuVisible": true,
+    "overflow": false,
+    "rect": {
+      "bottom": 530.796875,
+      "height": 135.5,
+      "left": 443,
+      "right": 803,
+      "top": 395.296875,
+      "width": 360,
+      "x": 443,
+      "y": 395.296875
+    },
+    "text": "服务节点检测全部节点✓ 默认节点https://example.test/v142 ms检测点击节点名称才切换草稿；检测不自动选择。所有节点共用当前渠道认证。",
+    "trigger": "默认节点42 ms⌄"
+  },
+  "screenshot": "channel-node-dropdown-light-20261020.png",
+  "logs": [
+    {
+      "path": "channel-node-select-typecheck-20261020.log.gz",
+      "rawSha256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
+    },
+    {
+      "path": "channel-node-select-tests-20261020.log.gz",
+      "rawSha256": "cfc47ae2e3d8d6f438c9fa5b64d4e8f061a23ead3129332b80e4d60df945b1de"
+    },
+    {
+      "path": "channel-node-all-20261020.log.gz",
+      "rawSha256": "d36575d6befa0342412fea16ce22d6ccdc6529029b803b6ac0a614a56eb487ad"
+    },
+    {
+      "path": "channel-node-last-tests-20261020.log.gz",
+      "rawSha256": "8558bec70d05782376f9f0b49c8faa8495bff37f002fe66f6c56718bd343aa8c"
+    },
+    {
+      "path": "channel-node-last-build-20261020.log.gz",
+      "rawSha256": "f93f79438bf4bc55395a44e8df25105c668fa8ff0069962d7835292bc6855b25"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "e4f06dd1c148b3f26f7dd6ebaf01bdc2edd230e6cd64ad3b8ce9eb54ee868334"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/ui/UiSelectMenu.vue",
+      "sha256": "7f34b14838be00a3a8bb37eca4c1fa79b41058b4886261afa41df1edbce4ec0d"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "cb18547c8012e16e784cbac090852c6425292c4f46e76188a40f4aa356086de2"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "716034d458156caa5961ffcd1c964243f892c1e811b153c187d0fc09262ea5a3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NodePicker.vue",
+      "sha256": "dadcb5ff58199f7c2feb3fea0efa05696cd275f2994084990802db1021845ca2"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/useNodeMeasurements.ts",
+      "sha256": "0688a33e0dbed570f98cbe705265769426e2492e1a00dbd89b806d98fb84e49b"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelNodeSelect.vue",
+      "sha256": "0864bf859708fa079bcbd52211e0b2951e52d014985c8288c1c552f204746782"
+    },
+    {
+      "path": "apps/desktop/ui/tests/channel-node-select.test.ts",
+      "sha256": "3077c406b4d8e0110d66c6c4138ddecf0ffa22d4ddf953a5a89df0e5d16d07d6"
+    }
+  ],
+  "limitations": [
+    "明确DEV计时夹具，只证明交互/布局，不是实际节点延迟",
+    "正式测量owner复用前序服务/真实链，未重跑未变动认证层",
+    "完整43组件/消费者/原生矩阵和发布仍未完成"
+  ]
+}

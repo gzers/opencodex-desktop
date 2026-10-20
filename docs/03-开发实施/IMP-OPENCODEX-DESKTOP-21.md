@@ -651,3 +651,10 @@ ed9869d4 CI39388534118、77a7c3ec CI39388168722、027ee913 CI39385579545、dc8d9
 独立opt-in wire实测：先共同保存成功，再从真实目录选provider而非从含未发布声明的models猜目标；Responses/Chat/Anthropic各1次请求成功，别名恢复rawID，Chat pin high经map成为low，Responses/Chat service_tier priority、Anthropic messages speed fast及beta准确。第二次保存仅Chat noReasoning true，再请求确认reasoning_effort缺席；共4次generation形请求全部终止于临时回环静态服务，付费0。Responses/Anthropic正常caller推理保留是正向路径事实，不再断言不支持的剥离已实现。初始失败日志保留，不降低未兑现语义。
 
 模型模块159项通过、Clippy全目标-D warnings及前端构建通过。旧同协议分组fixture仅验证落盘元数据，现对要求authority的base指定最终Chat；产品分组能力不变。旧installed完整保存/None/恢复/复制删除/授权历史链也改用已支持Chat测试请求约束，复制清空override时不再遗留Responses authority真，完整回归253.88秒通过且generation0；既有无关历史/保护证据复用。首次Clippy指出MutexGuard跨await，已改克隆回执后释放锁，无豁免。checks-wire-capability-20261020.json绑定最终源和全部原始日志。0.2.0仍须全部组件/消费者/平台与最终集成发布，不因本切片支持范围闭合提前发布。
+
+
+### 渠道列表集成节点选择与检测
+
+确认节点增删本已位于安全两步编辑连接（原Key不自动发新URL），本轮不旁路改写；补实际缺失的列表集成节点下拉ChannelNodeSelect，复用UiSelectMenu顶层浮层/useNodeMeasurements及同一个测量IPC。触发器显示当前名称/检测摘要和全文title，菜单逐节点名称/URL/结果与独立检测、全部检测/停止；只有名称选择才改activeNode，检测不自动选择/重排或改变认证。官方管理readonly同时禁改选择/检测。URL/协议/认证/私网变化清旧结果、停止旧run并拒晚回；关闭下拉不取消后台检测，路由组件释放沿既有scope停止。错误文案与NodePicker共用，未知不猜可用。
+
+UiSelectMenu键盘选项纳入menuitemradio；跨portal focusout按relatedTarget归属判断，实屏发现原延迟读取activeElement会在聚焦检测按钮前落BODY而提前收起，已修复并补跨portal焦点回归。新3项测试含独立检测不选/菜单保持/手动选择回焦点、URL漂移晚回/readonly门、Escape归还；连原节点/菜单共4文件9项通过，前端全量138文件690项后最后错误文案共用再跑9项及构建通过，不凭局部重复泛报整体验收。浏览器DEV NewApi打开→独立检测→42ms在触发器与原菜单同步，菜单保持、无文档横溢→Escape；计时是明确DEV夹具，非真实延迟/调用能力。证据checks-channel-node-menu-20261020.json。node.selection原登记补实际消费者，全部gallery/平台矩阵仍留后续。
