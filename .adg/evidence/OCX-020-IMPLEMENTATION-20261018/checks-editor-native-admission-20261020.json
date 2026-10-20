@@ -1,0 +1,16 @@
+{
+  "scope": "Windows正式编辑比较与助手外部上下文集成验收接线",
+  "sourceBase": "3511955ac9bb79e935e1e7afaa4e2ee951435090",
+  "nativeResult": "pending new CI, no pass claim",
+  "steps": [
+    "在保存第二版前通过正式只读比较确认source/current说明及1差异，读库仍1revision",
+    "正式Agent入口→导出上下文→同一外部任务弹窗，读取真实broker任务包的目标/baseRevision/当前缓冲说明/共同contract/transport",
+    "不输出Bearer、任务包正文或私密资料，只写安全断言回执；不复制/activate/submit或发生成",
+    "关闭原弹窗/助手后原保存/默认/文件/指针链继续"
+  ],
+  "checks": {
+    "nodeAdmission": 3,
+    "syntax": "passed"
+  },
+  "sourceSha256": "e94d2222cdf355bfa978843f3f047d44c43affce84cff5b493e5a1462a714d8a"
+}

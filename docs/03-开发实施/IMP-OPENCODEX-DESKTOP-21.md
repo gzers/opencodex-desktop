@@ -813,3 +813,8 @@ CI39435891819/a2f89fa1全部适用job success，feature build skipped；下载ar
 3项新行为验证完整差异、默认预选/库漂移冻结、继承/恶意文本安全，相关9项、全量143文件708项及构建通过；最初新测试时间字段误用retrievedAt，按现有模板provenance recordedAt修正，未改DTO。DEV实际说明改动→比较默认版1项差异→关闭仍留缓冲，dialog1/对比区808无横溢/文档无横溢；checks-template-comparison-budget-20261020.json绑定源/日志/截图。
 
 另按AC-M31补99/100/101/108四个精确完整目录向量（含隐藏及非受管占用）：99/100保持精确数量，101/108拒catalog_budget且保留所有输入，无截断/阈值改动。1项新后端边界检查通过；不把此前163项与本次1项相加泛称当前全模块已重跑，后续当前CI继续绑定。
+
+
+### 当前Windows编辑比较与助手上下文集成接线
+
+沿原最终EXE模型专项，在写第二保存版前实际打开只读比较，断言一项说明前后差异且model_config_snapshot仍只有首版；再从正式Agent入口点导出上下文，读取真实broker返回的单弹窗任务包，核对当前唯一目标/精确baseRevision/未保存说明及共同contract/transport、无conversation。只输出安全布尔与计数，不保存Bearer或完整任务包；不复制、不激活、不提交、不发生成。关闭同一模态/助手后继续原模板保存/默认/文件/真实鼠标排序。Node准入3项和语法通过，真实Windows结果待新源CI，checks-editor-native-admission-20261020.json绑定测试源码。
