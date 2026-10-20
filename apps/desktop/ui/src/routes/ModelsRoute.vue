@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {escapeHtml} from '@/lib/html'
 import { computed, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
@@ -74,10 +75,12 @@ function restoreTemplate(){
   const baseline=JSON.stringify(models.draft),session=models.draftSession
   modal.open({title:'还原模版修改',body:'还原当前模版到本次编辑的起点？其他模版与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(JSON.stringify(models.draft)!==baseline||models.draftSession!==session){models.error='还原确认已过期，请重新核对';return}models.restoreTemplate()}})
 }
-function current(t: Template) { return t.revisions.find(r => r.id === models.selected[t.id]) ?? t.revisions[t.revisions.length - 1]! }
+function current(t: Template) { return t.revisions.find(r=>r.id===models.selected[t.id])??t.revisions.find(r=>r.id===t.defaultRevision)??t.revisions.at(-1)! }
+function versionLocked(t:Template){return models.busy||t.revisions.some(r=>models.protectsRevision(t.id,r.id))}
+function chooseVersion(t:Template,id:string){if(versionLocked(t))return;if(id==='__manage__'){manage(t);return}if(t.revisions.some(r=>r.id===id))models.selected[t.id]=id}
 function choices(t: Template) {
   const ids = new Set([...t.revisions.slice(-5).map(r => r.id), current(t).id, t.defaultRevision])
-  return [...t.revisions].reverse().filter(r => ids.has(r.id)).map(r => ({ value: r.id, label: versionLabel(r, t.source === 'builtin' && r === t.revisions[0]) }))
+  return [...t.revisions].reverse().filter(r => ids.has(r.id)).map(r => ({ value: r.id, label: versionLabel(r,t.source==='builtin'&&r===t.revisions[0])+(t.defaultRevision===r.id&&!(t.source==='builtin'&&r===t.revisions[0])?' · 默认':'') })).concat([{value:'__manage__',label:'版本管理…'}])
 }
 function manage(t: Template) { managerId.value = t.id; selectedIds.value = []; historySearch.value = ''; confirmDelete.value = false; deletion.value = null; historyError.value = '' }
 const commonLocks=computed(()=>draft.value?.content.lockedFields.filter(key=>key.startsWith('rules.')).map(key=>key.slice(6))??[])
@@ -90,11 +93,15 @@ function protectedReason(t: Template, r: Revision) {
   for(const [name,policy] of [['已提交策略',models.snapshot?.policy],['工作区草稿',models.channelDraft]] as const){if(policy&&[...policy.templateRefs,...policy.channels.flatMap(c=>[...c.templateRefs,...Object.values(c.modelRefs)])].some(ref=>ref.templateId===t.id&&ref.revisionId===r.id))return name+'引用'}
   return ''
 }
-async function makeDefault(t: Template, r: Revision) {
-  if (!models.snapshot || models.busy) return
-  models.busy = true; historyError.value = ''
-  try { models.snapshot = await modelApi.setDefault(models.snapshot.libraryDigest, t.id, r.id) }
-  catch (e) { historyError.value = errorText(e) } finally { models.busy = false }
+function makeDefault(t:Template,r:Revision){
+ if(!models.snapshot||models.busy)return
+ const baseline=models.snapshot.libraryDigest,template=t.id,revision=r.id
+ modal.open({title:'设为默认版本',body:'以后选择采用「'+escapeHtml(t.label)+'」时默认选择 '+versionLabel(r)+'；当前浏览版本、已有渠道和单模型精确引用保持。',confirmLabel:'设为默认',onConfirm:async()=>{
+  if(!models.snapshot||models.snapshot.libraryDigest!==baseline||!models.snapshot.library.templates.some(t=>t.id===template&&t.revisions.some(r=>r.id===revision))){historyError.value='默认版本确认已过期，请重新核对';return}
+  if(models.busy)return
+  models.busy=true;historyError.value=''
+  try{models.snapshot=await modelApi.setDefault(baseline,template,revision)}catch(cause){historyError.value=errorText(cause)}finally{models.busy=false}
+ }})
 }
 async function remove() {
   if (!models.snapshot || !manager.value || models.busy) return
@@ -132,7 +139,7 @@ function prepareDelete() {
       <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton v-if="draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
       <div class="model-table-scroll"><table class="model-table"><thead><tr><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
         <td><label class="model-inline"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="`勾选${t.label}`" /><strong>{{ t.label }}</strong></label><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
-        <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" @update:model-value="models.selected[t.id] = $event" /></td>
+        <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" :disabled="versionLocked(t)" @update:model-value="chooseVersion(t,$event)" /></td>
         <td><div class="model-inline"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton><UiButton size="sm" @click="usage={templateId:t.id,revisionId:current(t).id}">匹配与使用</UiButton></div></td>
       </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p>
     </template>
