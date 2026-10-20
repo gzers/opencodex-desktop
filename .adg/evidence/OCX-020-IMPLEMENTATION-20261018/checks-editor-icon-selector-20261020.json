@@ -1,0 +1,28 @@
+{
+  "scope": "Windows icon action selector uses actual accessible name",
+  "sourceBase": "ba265149a85aa11783ef961ac144b052634446e0",
+  "failure": {
+    "ci": 39444326645,
+    "source": "0378a69e30f1d05627c13f1fd144db6f39f14de8",
+    "artifact": 12277027933,
+    "step": "Native visible action missing: 导出上下文",
+    "meaning": "read-only comparison had reached, icon-only export has aria-label but no textContent; no external context result yet"
+  },
+  "fix": "visible enabled action matches exact textContent or exact aria-label; no product mutation or acceptance relaxation",
+  "checks": {
+    "nodeAdmission": 3,
+    "syntax": "passed",
+    "actualWindows": "pending new CI"
+  },
+  "sourceSha256": "ce620aad461b02048c6d1a038cc522d853fa91122eb59e419571279939b3d668",
+  "logs": [
+    {
+      "path": "editor-icon-first-failure-20261020.log.gz",
+      "rawSha256": "afe4c160f8ef46c09dd5178f3936d03d6f3a0ab5f33fec2b19239970da692a99"
+    },
+    {
+      "path": "editor-icon-admission-20261020.log.gz",
+      "rawSha256": "68ad96db39e8e8cb125f10928b2a7b176ed34851797b62c5b7619e0a893543d1"
+    }
+  ]
+}

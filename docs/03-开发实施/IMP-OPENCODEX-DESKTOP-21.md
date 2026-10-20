@@ -825,3 +825,10 @@ CI39435891819/a2f89fa1全部适用job success，feature build skipped；下载ar
 新增明确opt-in且默认ignored的model_research_real：临时源store、只访问公开资料/检索，无账户/Key/模型调用。正式research读取RFC8259文本和服务端UUID/摘要回执成功；初次search因www.bing.com→cn.bing.com区域302被普通不跳转策略拒绝，失败日志保留。现仅搜索页允许最多3次Bing自有HTTPS域内跳转，每跳重新DNS/公网地址校验、TLS有效，无代理/Cookie/认证；跨域、HTTP、用户凭据、非443、伪后缀域、回环拒绝，循环/超限拒绝。普通资料URL仍不自动跳转。区域结果的Bing链接解码和自有域排除同步支持子域。
 
 真实公共专项1项6.05秒通过，取得RFC正文、RFC首页及1篇公共CSDN页面快照/回执；来源事实不等于任意模型能力或检索相关性正确，仍由审阅决定。8项Agent/会话检查及全目标Clippy通过，首lint useless_vec已改array、未豁免。未创建template/policy或付费调用，不将真实检索和静态回环生成混称为模型语义质量。checks-public-research-real-20261020.json及成功/失败原日志绑定最终源。排查有一次shell通配符错误展开文件名造成额外同名公开域请求，无文件正文读取/发送，已改subprocess固定参数且只输出HTTP/location；不把响应Cookie复制到资料。
+
+
+### macOS人工实际型号拖动及Windows图标专项选择器
+
+工具原生drag连续未触发重排，按实际缺口请用户在OpenCodeX 020 Final隔离窗口操作，不点保存。用户明确回复“已成功拖动”；随后读取持久model-config-draft：fixture-one由claude/fixture-raw/gpt变为claude/gpt/fixture-raw，fixture-two完全不变，原生AX行顺序同样一致；policy文件仍不存在，该轮fixture生成0。当前DND/ordering源摘要与真实bundle/before/after/screenshot保留checks-macos-manual-sort-20261020.json，不把此前工具失败改成通过，也不冒称最终tag制品。用户完成后只退出已核命令/PID的本次app/runner，由runner停自有官方子进程，日常应用保持。
+
+Windows39444326645/0378a69e在新上下文专项报“找不到导出上下文可见动作”；前一步只读比较已到达，现有按钮是UiIconButton，以aria-label命名没有正文文字，而测试helper只按textContent查找。helper现匹配准确正文或aria-label，仍要求可见且未禁用，不改产品或豁免断言。Node准入3项/语法成功，新实际外部任务内容与全链结果仍待后续CI，checks-editor-icon-selector-20261020.json保留原失败和源码。

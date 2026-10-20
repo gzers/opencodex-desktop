@@ -1,0 +1,61 @@
+{
+  "scope": "macOS formal model drag verified by human plus authoritative persisted workspace",
+  "humanReply": "已成功拖动",
+  "before": {
+    "channels": {
+      "865ef102-7dd5-4519-937e-7417d8eba2bd": {
+        "label": "fixture-one",
+        "modelOrder": [
+          "claude-fable-5-1",
+          "fixture-raw-long-id",
+          "gpt-6-astra"
+        ]
+      },
+      "a63f536d-452e-4a60-8d2a-57b2798612cd": {
+        "label": "fixture-two",
+        "modelOrder": [
+          "claude-fable-5-1",
+          "fixture-raw-long-id",
+          "gpt-6-astra"
+        ]
+      }
+    },
+    "draftSha256": "9407d342c4e5c6a44eb6fc4f6581cbbd6d041e74c43aa4c9908034049dd986e8",
+    "appSha256": "4f9d7247b98218e942a19eaf35c5c34c45e37d27388010b8e3e29c846f176da7"
+  },
+  "after": {
+    "channels": {
+      "865ef102-7dd5-4519-937e-7417d8eba2bd": {
+        "label": "fixture-one",
+        "modelOrder": [
+          "claude-fable-5-1",
+          "gpt-6-astra",
+          "fixture-raw-long-id"
+        ]
+      },
+      "a63f536d-452e-4a60-8d2a-57b2798612cd": {
+        "label": "fixture-two",
+        "modelOrder": [
+          "claude-fable-5-1",
+          "fixture-raw-long-id",
+          "gpt-6-astra"
+        ]
+      }
+    },
+    "draftSha256": "108e47b585498c0764098418188382359f6ac883953034366a4045a92a18b22d"
+  },
+  "expectedChangedChannel": "fixture-one",
+  "otherChannelUnchanged": true,
+  "policyFileExists": false,
+  "fixtureRequests": {
+    "modelsGet": 0,
+    "generationPost": 0
+  },
+  "sourceScope": "previous0.2.0 debug sandbox built from4cc311d5 plus discovery patch; current DND frontend/ordering source hashes checked separately, no claim final release artifact",
+  "sources": {
+    "apps/desktop/ui/src/features/models/ChannelModelTable.vue": "2acab39304b5ad2a6b9b3648fad54b777bbcf24c9355c697c076048e9c752095",
+    "apps/desktop/ui/src/features/models/ordering.ts": "d2f2450f51ae47c785587781606fad7a8c3e229aa9576efffc7db7fc748fb674"
+  },
+  "screenshot": "macos-manual-model-sort-20261020.jpg",
+  "limits": "prior CUA pointer attempts did not reorder; do not relabel them passed. Only the human operation and subsequent actual draft readback establish this outcome."
+}
