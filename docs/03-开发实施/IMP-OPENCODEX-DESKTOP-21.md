@@ -771,3 +771,10 @@ Windows39427429484实际模板往返后model_policy_stage成功，artifact122679
 从Windows39427429484/4cc311d5已实际导出的模板文件取原字节（SHA39827ccd4c035db9ce3b91b6403f1087761940424712971dcb38afcaf652760e），在新独立macOS测试根、0.2.0 sandbox app通过Sync→导入配置→系统文件选择器→比较→采用到本机，正式模板列表可检索到Windows native fixture 4db1cc13。采用前library/policy/runtime均不存在，采用后只有模板库；完整保存revision逐字段及digest与Windows原导出package一致，templateId4b1af61b-5f20-40e8-a747-ef6ea8caf517/revision162baf54-dceb-4209-9ede-517050b39620不重派生。源默认该revision，接收方defaultRevision=null，未自动采用、未创建model-policy或OpenCodex config。
 
 Info.plist版本0.2.0、sandbox标识和真实二进制摘要已绑定；bundle构建基于4cc311d5含提交前discovery修正，各传输源摘要另列，不冒称最终tag制品。Windows整轮后来在指针准备失败，原导出已存在且独立核验，本节只采信实际文件片段。checks-windows-file-macos-20261020.json及原读回/构建日志/实屏证明真实双平台单模板传输，不泛化所有对象或WebDAV。仅退出命令匹配的本次原生PID，日常应用保持。
+
+
+### 统一任务观察保留及主线入口时间语境
+
+按AC-N04/06/07收口发现任务列表超过24会移除任意非running项，误伤待审review和失败待处理项。现历史预算仅清理明确succeeded/stopped记录，待审/失败/进行中即使收起也保留，铃铛展开还原原任务，不新建队列或通知事实。新增26待审+失败+进行中+已完成混合行为检查，相关任务/注册/客户端10项与构建通过。policy_save观察文案只陈述“已写入；客户端结果请在核对入口查看”，避免后来核验已完成时旧观察仍重复一份可过时的待核对状态；状态owner仍为client_state。证据checks-task-retention-20261020.json。
+
+同时更新协作包根、COL摘要及需求/实施/发布入口的当前状态：正式实施/候选版本0.2.0与历史准备“未开始”分清，WP-06全部三项已确认不再当作待冻结选项，代码分支按用户feature/0.2.0-*。原历史段落保留，未将任何AC/制品预填通过。

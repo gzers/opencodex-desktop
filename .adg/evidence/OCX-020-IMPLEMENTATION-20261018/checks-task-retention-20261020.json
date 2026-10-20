@@ -1,0 +1,15 @@
+{
+  "scope": "统一已注册任务观察不按数量丢待处理项",
+  "sourceBase": "a0adea488153ad2c2b06d3d8d7d6efbb1c87d976",
+  "change": "24条历史预算仅移除succeeded/stopped，running/review/failed即使收起也不按数量丢；铃铛展开恢复原观察。policy-save旧观察只陈述写入事实，客户端状态仍由原client_state owner核对，不复制可过时的待核对结论。",
+  "checks": {
+    "affectedFiles": 3,
+    "affectedTests": 10,
+    "build": "passed"
+  },
+  "scopeLimits": "session task observation, not a new persistent queue/notification store or a claim all restart recovery is proved",
+  "sources": {
+    "apps/desktop/ui/src/app/feedback/tasks.ts": "ab42c28f562e312eebd138488d84b81224739798e3130ac3611c28397226e163",
+    "apps/desktop/ui/tests/model-operation-tasks.test.ts": "d593a98ee1bb2908cf8be5d469c92bc3dcbd9401453934df5fc40cb26f02a87f"
+  }
+}
