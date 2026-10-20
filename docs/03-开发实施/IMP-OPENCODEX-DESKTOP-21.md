@@ -764,3 +764,10 @@ CI39423439909/91d8a585所有适用job成功，feature build按原规则skipped�
 发现服务在has_more=true却无last_id/nextPageToken时原会当完整成功，现返回discovery_pagination，保留原连接/选择，不截断后报成功。Anthropic版本头独立于Key，可信无认证转发也保留协议版本。新增真实回环HTTP逐协议路径/认证、30/104/108/101/3清单及保留原始ID、保留字符游标的下一页、未知能力继承、缺/重复游标与401/403/409/500不泄漏错误正文。7项发现、163项模型模块及全目标Clippy通过；24项受影响前端含30→17/104→32全量发现与明确子集、筛选外选择保留、409失败/成功空刷新分开。本地夹具不作为真实NewApi/A6api调用，未发付费请求或日常配置写入。
 
 Windows39427429484实际模板往返后model_policy_stage成功，artifact12267927334确有测试渠道草稿；但ModelStore.load按已确认规则保留原channelDraft，单纯离开/返回路由不把外部测试写入覆盖当前编辑，所以“staged channel visible”超时发生在拖动前。测试改Page.reload模拟重新启动，等已落盘行可见；不改产品缓冲保护。超时时补对应场景/行名单/截图，准入3项及语法通过，真正拖动仍待下一源CI。checks-discovery-contract-20261020.json绑定源与全部成功/失败原日志。
+
+
+### Windows实际模板文件到macOS0.2.0原生接收
+
+从Windows39427429484/4cc311d5已实际导出的模板文件取原字节（SHA39827ccd4c035db9ce3b91b6403f1087761940424712971dcb38afcaf652760e），在新独立macOS测试根、0.2.0 sandbox app通过Sync→导入配置→系统文件选择器→比较→采用到本机，正式模板列表可检索到Windows native fixture 4db1cc13。采用前library/policy/runtime均不存在，采用后只有模板库；完整保存revision逐字段及digest与Windows原导出package一致，templateId4b1af61b-5f20-40e8-a747-ef6ea8caf517/revision162baf54-dceb-4209-9ede-517050b39620不重派生。源默认该revision，接收方defaultRevision=null，未自动采用、未创建model-policy或OpenCodex config。
+
+Info.plist版本0.2.0、sandbox标识和真实二进制摘要已绑定；bundle构建基于4cc311d5含提交前discovery修正，各传输源摘要另列，不冒称最终tag制品。Windows整轮后来在指针准备失败，原导出已存在且独立核验，本节只采信实际文件片段。checks-windows-file-macos-20261020.json及原读回/构建日志/实屏证明真实双平台单模板传输，不泛化所有对象或WebDAV。仅退出命令匹配的本次原生PID，日常应用保持。

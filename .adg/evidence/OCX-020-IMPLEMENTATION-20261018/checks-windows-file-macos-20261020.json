@@ -1,0 +1,37 @@
+{
+  "scope": "real Windows EXE exact template export -> real macOS0.2.0 system file receiver/adoption",
+  "sourceWindowsCI": 39427429484,
+  "sourceWindowsCommit": "4cc311d573dda8f461eca3e34855796fc8b7f99f",
+  "sourceFileSha256": "39827ccd4c035db9ce3b91b6403f1087761940424712971dcb38afcaf652760e",
+  "nativeSha256": "4f9d7247b98218e942a19eaf35c5c34c45e37d27388010b8e3e29c846f176da7",
+  "macBundleVersion": "0.2.0",
+  "macBundleIdentifier": "com.gzers.opencodex.desktop.sandbox",
+  "macBundleBuildBase": "4cc311d5 plus discovery patch before commit",
+  "templateId": "4b1af61b-5f20-40e8-a747-ef6ea8caf517",
+  "revisionId": "162baf54-dceb-4209-9ede-517050b39620",
+  "revisionDigest": "sha256:b24cdc909fd2687dc8c2532191b207920566fe900b64f3ea5905e7dcd79ff2e3",
+  "sameSavedRevision": true,
+  "sourceDefault": "162baf54-dceb-4209-9ede-517050b39620",
+  "targetDefault": null,
+  "beforeAdopt": {
+    "anchor/manager-state/model-family-templates.json": null,
+    "anchor/manager-state/model-policy.json": null,
+    "anchor/opencodex-home/config.json": null
+  },
+  "afterAdopt": {
+    "policyFileExists": false,
+    "runtimeConfigExists": false,
+    "templateVisibleInNativeList": true
+  },
+  "screenshot": "windows-file-macos-candidate-20261020.jpg",
+  "limits": [
+    "one exact template, no policy/accounts/credentials, not all object kinds or WebDAV synchronization",
+    "Windows whole job later failed at pointer setup; preceding file export/readback is actual preserved artifact, not claim whole run passed",
+    "macOS debug sandbox app, not final release distribution artifact"
+  ],
+  "sourceHashes": {
+    "apps/desktop/tauri/src/modules/model_config/transfer.rs": "d477956730745e85324b06c6db8fac81479ee812dfbc1ec0c7a4dcbdd059af23",
+    "apps/desktop/tauri/src/modules/model_config/file_objects.rs": "95be600fb8d9a8513bca4cd36dc2a69e3b882802c6bd8ee311e49ca459f1375a",
+    "apps/desktop/ui/src/features/sync/ModelTransfer.vue": "bd5d743512e8d6a65a346065f47a7ba84b14beec0941f9bdec61b2083050c384"
+  }
+}
