@@ -83,3 +83,14 @@ ModelRules新增可选pinnedEffort:Field<string>与effortMap:Field<有序键映�
 字段进入不可变快照、语义摘要、逐项来源、通用/具体型号/渠道/族/单型号解析及人工锁（rules.pinnedEffort / rules.effortMap，型号锁用同名键），外部契约由正式Submission JsonSchema同源输出。三方比较把旧缺键与inherit标准化，不制造假改动；map一次整体选择，锁定内容不可被Agent覆盖。公开运行map为modelPinnedReasoningEfforts和modelReasoningEffortMap，沿原ownership记录原值、受管写入及外部漂移拒绝，恢复继承还原原字段，不盲删上游已有设置。
 
 实际范围和检查沿IMP-21及checks-pin-map-20261020；本节不表示noReasoning/authoritative/fastWire或naming全部完成。模板、文件与外部任务的未知新字段仍严格拒绝，旧实现不能假称读懂新自定义内容；0.2.0尚未公开，不编造已发布旧库迁移。
+
+
+## 9. 不传参数、权威声明与Fast wire实施（2026-10-20）
+
+新增noReasoning:Field<bool>、reasoningAuthoritative:Field<bool>、fastWire:Field<FastWire|null>，缺省/继承不序列化，旧摘要不因默认字段改变；锁路径、同源外部schema、三方比较及全部继承层沿共同ModelRules。fastWire的Custom(null)是明确禁用，与inherit区别；对象按上游2.84.0严格kind/service-tier或anthropic-speed或cursor-variant、priority映射、verbatim/drop与有界唯一betas校验，不接受内部model-variant。声明wire不自动开启Fast支持。
+
+noReasoning=true明确优先于默认/强制/映射，选择器隐藏推理档，原控制保留供恢复；false是本层允许按规则传参，不是推理能力承诺。实际写noReasoningModels时保留其他ID及顺序；上游按冒号前family分类，单型号false不能撤销原族分类，写基础ID若影响已知带规格型号也拒绝，须先明确原范围，不能报单型号已生效。
+
+reasoningAuthoritative与fastWire在上游属于运行provider字段。当前同一协议分组只允许最终一致值或已有相同上游值；部分型号会改变其他型号时拒绝shared_rule_scope。界面明确现有/未来型号作用范围，权威true需各型号明确推理列表，wire按最终协议校验，wire禁用与Fast支持冲突拒绝。暂不以自动拆同协议/配置分组绕过身份变更审阅；若完整需求要求这些差异，仍需实施稳定映射并提供迁移/预算/旧会话证据，不能把拒绝门当全部支持。
+
+上述provider字段及完整noReasoning列表以原ownership的保留空model槽记录before/written/removed；真实raw ID非空，所以不冲突。恢复在同一漂移核对后还原原值/不存在状态，外部后来改列表/共用字段时拒绝。实际验证及限制沿IMP-21和checks-shared-rules-20261020，不将字段保存读回称作推理请求wire或模型支持已验证。

@@ -479,3 +479,12 @@ CI39286270791在e21e0e6c自然触发轮全部适用job成功；此前8ae7b2be的
 模型模块140项通过，包含旧格式摘要、pin/map语义/锁和运行恢复/漂移，Clippy全目标通过。前端全量131文件650项通过，无未处理异步异常；再补高级区正式控件1项后，相关2文件7项与build通过。浏览器DEV真实公共表单展开高级区、关闭映射继承并连续输入high=__omit__，投影更新不丢输入焦点，截图model-pin-map-light.png；非native IPC。
 
 显式installed Node/CLI执行隔离真实链223.59秒通过：原模型fixture-base明确low/high、默认low、强制high、映射high->__omit__，实际官方公开字段保存/读回与精确别名/历史/授权链均成功；固定源runtime/Home仅临时目录，内存credential builder，生成POST=0。不是实际推理wire请求或系统Keychain证明。checks-pin-map-20261020.json绑定源、上游四文件摘要及原日志。noReasoning、authoritative、fastWire、新naming/别名、其余消费者/账户/平台及发布仍未完成，继续原范围。
+
+
+### 不传推理参数及共用高级规则
+
+沿共同ModelRules新增noReasoning、reasoningAuthoritative、fastWire，默认继承省略保持旧摘要；内外schema、锁、逐字段三方比较和通用/具体型号/渠道/族/单模型继承一致。noReasoning明确优先，隐藏档位并阻止携原已失效推理选择确认；默认/强制/映射不误删，恢复false或inherit仍按最终规则校验。上游noReasoningModels的冒号family匹配不能作为精确型号false覆盖，本批拒绝隐藏扩大作用范围。
+
+权威声明/Fast wire真实为provider范围，分协议后共用。组内不同最终值或部分显式值扩及其他型号时拒绝，未静默改其他型号；界面明确现有/未来型号，权威true须可核验列表，wire匹配最终协议且null与Fast支持冲突拒绝。原ownership增加共用字段槽，before/target和不存在状态完整，继承恢复原字节值，后来外部编辑拒绝。旧原生/专用绑定不假装普通Key支持。当前未自动拆同协议配置分组，差异需求仍留技术门，不能因安全拒绝算全支持。
+
+受影响Rust shared_7项/no_reasoning_3项通过，有重叠且含旧scope测试不相加；Clippy通过（前一次单元素loop lint失败已改结构，不降门）。前端相关3文件21项与构建通过，最终132文件653项且无未处理异步异常。实际安装2.84.0在临时根/本机服务链209.56秒通过：fixture-base不传列表、权威true、service-tier，独立Anthropic协议分组wire=anthropic-speed均由官方接口写入读回；原历史/授权/别名链继续通过，生成POST=0。不是实际推理wire或Fast已可用证明。checks-shared-rules-20261020.json含源/上游摘要及日志。继续新naming提案、共用差异的范围处理、完整消费者/账户/平台与发布，版本仍0.1.10。

@@ -1,0 +1,26 @@
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 29.56s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-edac49c1be4c5679)
+
+running 7 tests
+test commands::sync::tests::shared_sync_preserves_gui_setup_and_upload_failure_contracts ... ok
+test state::mutation_tests::lease_retains_shared_reservation_and_cancellation_until_worker_finishes ... ok
+test modules::model_config::tasks::tests::no_reasoning_and_shared_rule_locks_reject_external_widening ... ok
+test modules::model_config::tests::shared_advanced_rules_preserve_legacy_shape_validate_declarations_and_keep_null_distinct ... ok
+test modules::model_config::runtime::tests::shared_reasoning_and_fast_wire_validate_scope_and_restore_original_provider_fields ... ok
+test commands::about::query_ownership_tests::failed_durable_commit_is_shared_with_waiters_without_requery ... ok
+test modules::backup::manager::tests::protection_helper_keeps_raw_bytes_and_holds_shared_lock ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 932 filtered out; finished in 0.07s
+
+   Compiling opencodex-desktop v0.1.10 (/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/ocx-020-model-config/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.81s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-edac49c1be4c5679)
+
+running 3 tests
+test modules::model_config::tasks::tests::no_reasoning_and_shared_rule_locks_reject_external_widening ... ok
+test modules::model_config::runtime::tests::no_reasoning_false_cannot_silently_override_an_upstream_family_classification ... ok
+test modules::model_config::runtime::tests::no_reasoning_rule_preserves_other_models_and_tracks_exact_list_for_inheritance_and_drift ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 936 filtered out; finished in 0.02s
+

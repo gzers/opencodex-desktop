@@ -1,0 +1,77 @@
+{
+  "recordedAt": "2026-10-20T01:09:32.878643+00:00",
+  "state": "implementation_in_progress",
+  "releaseReady": false,
+  "sourceBase": "d800f081c06d12e6090dfcb48ccefe24361c7964",
+  "sourceSha256": {
+    "apps/desktop/tauri/src/modules/model_config/compiler.rs": "5fafe4e5f6dfcc4e3e02cbeb461a71b498cc7498b3d9afba80995ad92c3d4632",
+    "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs": "67cff43aaa2402c3d57a8a27ce847dcfc09078b875be636055fc6bae5a16f71a",
+    "apps/desktop/tauri/src/modules/model_config/runtime.rs": "e52b047dffed52609987fa73f92146156356477652057b87f98800ab352b4ca6",
+    "apps/desktop/tauri/src/modules/model_config/schema.rs": "4d7cc3f5b00d552ef2566ebe9b56c3e46d67104c86cf12aefb7f5a811c01df46",
+    "apps/desktop/tauri/src/modules/model_config/tasks.rs": "f4b331ddab5cf95648bc38eaf8a5c37ab6ab388477e24818dcf9353415263657",
+    "apps/desktop/tauri/src/modules/model_config/tests.rs": "d02cefca30c76acf83055bfdd34c8a98b69d87390e519b4b592b2f684a67838d",
+    "apps/desktop/tauri/tests/model_config_official_real.rs": "9c8893afe471e553ed19d3ff77a8e98f7ffdf52f67044ea11f3feff0a9bf6a90",
+    "apps/desktop/ui/src/features/models/ModelChoiceOptions.vue": "641600fcd5b7a229d52471da35c38c31fe42bf85e7abd26f2f9e816df57eb401",
+    "apps/desktop/ui/src/features/models/ModelPicker.vue": "d9960dcbc173c795241f67442855fdf9d82a86dbc3f58592c6610adfc9f00585",
+    "apps/desktop/ui/src/features/models/ModelRuleFields.vue": "e62caede0c9ae68811350382595b22e9d8a299de5a56155c3c5d3a4677be715c",
+    "apps/desktop/ui/src/features/models/api.ts": "0ff9e7d6f4095f46664804020d49868d3104f5f465786e6e5859c85d8b434e1b",
+    "apps/desktop/ui/src/features/models/proposals.ts": "3eea3b61d7d31011da04a8c177af8727cc71deec6c62e2ecbbad2290c7475b95",
+    "apps/desktop/ui/src/features/models/upstream.ts": "bb6f403edd4b912ec76328c266f1d63945845a59856797387d434d0047e6a72c",
+    "apps/desktop/ui/tests/model-advanced-reasoning.test.ts": "a4c9c2384bc89c4e792d2d26476ff91df6effbe69be05b892cca4ef943fda8d1"
+  },
+  "upstream": {
+    "version": "2.84.0",
+    "sourceSha256": {
+      "src/types/provider.ts": "5b405dfd19a009ee931f55fd927542071c04e0ccc5d1f39558489f04b32bc689",
+      "src/types/tools.ts": "a35218e30012e843d8b36c6e2a706c84e327d9b7549a90073d13267d7387cde2",
+      "src/providers/fastwire.ts": "eb55cf546c8535ddef6535133ffb036a0281e1067900ae00d1c0153fd9189d25",
+      "src/providers/resolved-model-policy.ts": "006f2766af22ccfb33fd09eb0f592d845293656ef9c240eba0b866f007e0a40f",
+      "src/reasoning-effort.ts": "a64922cc70a109e9a1df8fc1c8cae9d75c5ed4e43ba60c9912ad95a394890d68"
+    }
+  },
+  "checks": [
+    {
+      "session": 5351,
+      "command": "cargo test --lib shared_ --no-default-features; cargo test --lib no_reasoning_ --no-default-features; cargo clippy --workspace --all-targets --features integration-test -- -D warnings",
+      "groups": [
+        7,
+        3
+      ],
+      "overlap": true,
+      "clippy": "passed",
+      "note": "shared_ includes4 unaffected existing tests; new model vectors cover schema/lock/shared-scope/ownership/list effects",
+      "log": "shared-rules-rust-20261020.txt"
+    },
+    {
+      "session": 88898,
+      "command": "npm test -- --run tests/model-advanced-reasoning.test.ts tests/model-proposals.test.ts tests/model-selection.test.ts && npm run build",
+      "files": 3,
+      "passed": 21,
+      "build": "passed"
+    },
+    {
+      "session": 41296,
+      "command": "npm test -- --run",
+      "files": 132,
+      "passed": 653,
+      "unhandledErrors": 0,
+      "log": "shared-rules-ui-full-20261020.txt",
+      "notes": "2 jsdom Canvas diagnostics"
+    },
+    {
+      "session": 29396,
+      "command": "OCXD_TEST_OFFICIAL_NODE=<installed-node> OCXD_TEST_OFFICIAL_ENTRY=<installed-package>/bin/ocx.mjs cargo test --test model_config_official_real -- --ignored --test-threads=1 --nocapture",
+      "passed": 1,
+      "seconds": 209.56,
+      "log": "shared-rules-official-20261020.txt",
+      "scope": "actual2.84.0 reads noReasoningModels fixture-base; authoritative=true and service-tier Fast wire base group; anthropic-speed wire distinct protocol group",
+      "boundary": "temporary roots, memory credentials; generationPOST=0; no inference serialization or real upstream capability proof"
+    }
+  ],
+  "remaining": [
+    "shared differing-value per-model requests currently rejected if upstream provider scope cannot represent them; no silent widening",
+    "actual serialization/capability evidence separate from config readback",
+    "new naming/alias proposal UI/compile and old-session effects",
+    "remaining consumer/platform/account portability/version/release"
+  ]
+}
