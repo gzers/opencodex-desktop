@@ -16,7 +16,7 @@ export const useModelsStore = defineStore('model-config', () => {
   const error = ref('')
   const status = ref('')
   const selected = ref<Record<string, string>>({})
-  const view = ref({tab:'channels' as 'channels'|'templates',templateSearch:'',selectedTemplates:[] as string[],templateEditor:false,templatePosition:'',channelSearch:'',channelEditor:'',selectedChannels:[] as string[],channelFilters:{} as Record<string,{search:string;selectedOnly:boolean;family:string}>,positions:{} as Record<string,{top:number;focus:string|null}>})
+  const view = ref({tab:'channels' as 'channels'|'templates',templateSearch:'',selectedTemplates:[] as string[],templateEditor:false,templatePosition:'',channelSearch:'',channelEditor:'',selectedChannels:[] as string[],channelFilters:{} as Record<string,{search:string;selectedOnly:boolean;family:string}>,navigation:{} as Record<string,{collapsed:boolean;activeId:string}>,positions:{} as Record<string,{top:number;focus:string|null}>})
   let bufferKey = ''
   const buffers = new Map<string,{draft:TemplateDraft;clean:string;baseline:string;session:string}>()
   function retainTemplate() {

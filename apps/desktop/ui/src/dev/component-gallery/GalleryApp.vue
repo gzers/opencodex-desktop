@@ -17,6 +17,7 @@ import Inline from '@/components/layout/Inline.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
+import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
 import UiDiscreteSlider from '@/components/ui/UiDiscreteSlider.vue'
 const scale=ref('100');const width=ref('auto');const long=ref(false)
 function setScale(value:string){scale.value=value;document.documentElement.style.setProperty('--ui-zoom',String(Number(value)/100))}
@@ -27,6 +28,7 @@ const pickerChannels=[{id:'native',label:'官方 / 原生'},{id:'primary',label:
 const pickerRows=computed<ModelProjection[]>(()=>pickerState.value==='empty'||pickerState.value==='error'?[]:Array.from({length:18},(_,i)=>({channelId:i===0?'native':i%2?'primary':'long',providerId:i===0?'openai':'provider-'+(i%2),modelId:i===0?'gpt-native':('model/'+i),label:i===0?'原生模型':i===3?'较长的中文与 English 型号展示名称':'型号 '+i,enabled:i!==4,selected:i<3,discovered:true,templateRef:null,rules:{...emptyRules(),...(i%3===0?{contextWindow:{mode:'custom' as const,value:128000},reasoningEfforts:{mode:'custom' as const,value:['none','low','high']},defaultEffort:{mode:'custom' as const,value:'high'},fast:{mode:'custom' as const,value:true}}:{})},source:{},...(i===0?{nativeModelId:'gpt-native'}:{}),...(i===4?{unavailableReason:'调用方明确标为不可用'}:{}),aliases:i===3?['short-alias']:[]})))
 function showPicker(multiple:boolean){pickerMultiple.value=multiple;galleryChoice.value=pickerState.value==='missing'?[{channelId:'removed',modelId:'missing'}]:[];pickerOpen.value=true}
 const effortExample=ref<string|undefined>()
+const detailCollapsed=ref(false),detailActive=ref('gallery-section-one')
 
 const theme = ref<'light' | 'dark'>('light')
 const effects = ref<'high' | 'mid' | 'low'>('high')
@@ -81,6 +83,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
       <UiCard id="tabs">
         <UiCardHeader><h2>主Tab固定容器</h2><p>到滚动顶部固定，换行后自动更新下层标题偏移。</p></UiCardHeader>
         <StickyTabs><div role="tablist" class="diag-tabs"><button class="active" role="tab" aria-selected="true">当前分区</button><button role="tab" aria-selected="false">长中文 English 分区名称</button></div></StickyTabs>
+        <div class="main gallery-detail-scroll"><DetailWorkspace v-model:collapsed="detailCollapsed" v-model:active-id="detailActive" label="样例分区导航" :sections="[{id:'gallery-section-one',label:'基础设置'},{id:'gallery-section-two',label:long?'较长中文 English 设置分区名称':'完整内容'}]"><template #header><strong>详情固定标题</strong><UiButton size="sm">样例操作</UiButton></template><section id="gallery-section-one" tabindex="-1"><h3>基础设置</h3><p>滚动与展开收起只改变视图。</p><div style="height:280px"></div></section><section id="gallery-section-two" tabindex="-1"><h3>完整内容</h3><p>点击锚点和手动滚动使用相同高亮。</p><div style="height:280px"></div></section></DetailWorkspace></div>
       </UiCard>
       <UiCard id="buttons">
         <UiCardHeader>
@@ -195,3 +198,5 @@ function setEffects(next: 'high' | 'mid' | 'low') {
   align-self: center;
 }
 </style>
+
+<style scoped>.gallery-detail-scroll{height:360px;overflow:auto;position:relative;padding:12px;--page-tabs-height:0px}</style>

@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
+import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiDialog from '@/components/ui/UiDialog.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
@@ -18,15 +19,6 @@ import { useModalStore } from '@/app/modal/store'
 const models = useModelsStore()
 const modal=useModalStore()
 const page = ref<HTMLElement | null>(null)
-const detailHead = ref<HTMLElement | null>(null)
-let headerObserver: ResizeObserver | undefined
-watch(detailHead, head => {
-  headerObserver?.disconnect()
-  const measure = () => page.value?.style.setProperty('--model-header-height', `${head?.offsetHeight ?? 0}px`)
-  if (head && typeof ResizeObserver !== 'undefined') { headerObserver = new ResizeObserver(measure); headerObserver.observe(head) }
-  measure()
-})
-onBeforeUnmount(() => headerObserver?.disconnect())
 const tab = toRef(models.view,'tab')
 useModelViewPosition(page,()=>tab.value==='templates'?(models.view.templateEditor&&models.draft?'template:'+models.view.templatePosition:'templates'):(models.view.channelEditor?'channel:'+models.view.channelEditor:'channels'))
 watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
@@ -46,6 +38,8 @@ watch(() => models.notificationTarget, async target => {
 const selectedTemplates = toRef(models.view,'selectedTemplates')
 const search = toRef(models.view,'templateSearch')
 const draft = computed(() => models.draft)
+const templateNavigation=computed(()=>models.view.navigation['template:'+models.draftSession]??={collapsed:false,activeId:'model-basic'})
+const templateSections=[{id:'model-basic',label:'基本信息'},{id:'model-matching',label:'匹配规则'},{id:'model-rules',label:'通用配置'},{id:'model-variants',label:'版本或后缀'},{id:'model-source',label:'来源与版本'}]
 const templates = computed(() => models.snapshot?.library.templates.filter(t => t.label.toLowerCase().includes(search.value.toLowerCase())) ?? [])
 const usage=ref<{templateId:string;revisionId:string}>()
 const managerId = ref('')
@@ -120,7 +114,6 @@ async function checkMatch() {
   try { preview.value = await modelApi.preview(JSON.parse(JSON.stringify(draft.value.content)), sampleChannel.value, sampleModel.value) }
   catch (e) { previewError.value = errorText(e) } finally { previewBusy.value = false }
 }
-function anchor(id: string) { document.getElementById(`model-${id}`)?.scrollIntoView({ block: 'start' }) }
 function addVariant() { draft.value?.content.variants.push({ id: crypto.randomUUID(), name: '', suffix: '', rules: emptyRules(), lockedFields: [] }) }
 function prepareDelete() {
   if (!models.snapshot || !manager.value) return
@@ -144,21 +137,28 @@ function prepareDelete() {
       </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p>
     </template>
     <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
-      <header ref="detailHead" class="model-detail-head"><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span><UiButton :disabled="models.busy" @click="agentOpen = true">Agent自动填充</UiButton><UiButton :disabled="models.busy" @click="externalOpen = true">外部任务</UiButton><UiButton :disabled="models.busy" @click="previewOpen = true">匹配预览</UiButton><UiButton variant="ghost" :disabled="!models.dirty||models.busy" @click="restoreTemplate">还原修改</UiButton><UiButton variant="primary" :loading="models.busy" :disabled="!models.dirty && !!draft.templateId" @click="models.save">保存</UiButton></header>
-      <div class="model-editor"><nav class="model-anchors" aria-label="模版分区"><a v-for="item in [['basic','基本信息'],['matching','匹配规则'],['rules','通用配置'],['variants','版本或后缀'],['source','来源与版本']]" :key="item[0]" :href="`#model-${item[0]}`" @click.prevent="anchor(item[0]!)">{{ item[1] }}</a></nav><div class="model-form">
-        <section id="model-basic"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label><label class="model-inline"><input type="checkbox" :checked="draft.content.lockedFields.includes('description')" :disabled="models.busy" @change="contentLock('description')" />锁定说明</label></section>
-        <section id="model-matching"><h2>匹配规则</h2><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
+      <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
+      <template #actions="{collapsed}">
+       <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="agentOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
+       <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
+       <UiButton class="model-editor-action" size="sm" aria-label="匹配预览" title="匹配预览" :disabled="models.busy" @click="previewOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span v-if="!collapsed">匹配预览</span></UiButton>
+       <UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton>
+       <UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton>
+      </template>
+      <div class="model-form">
+        <section id="model-basic" tabindex="-1"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label><label class="model-inline"><input type="checkbox" :checked="draft.content.lockedFields.includes('description')" :disabled="models.busy" @change="contentLock('description')" />锁定说明</label></section>
+        <section id="model-matching" tabindex="-1"><h2>匹配规则</h2><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
           <div v-for="(p, i) in draft.content.matching[kind]" :key="i" class="model-pattern"><UiSelectField :model-value="p.kind" :options="kinds" label="匹配类型" :disabled="models.busy" @update:model-value="p.kind = $event as Pattern['kind']" /><input class="input" v-model="p.value" :aria-label="`${kind}规则${i + 1}`" placeholder="原始模型ID或匹配文本" :disabled="models.busy" /><UiButton size="sm" variant="ghost" :disabled="models.busy" @click="draft.content.matching[kind].splice(i, 1)">移除</UiButton></div></div>
           <label class="model-inline"><input v-model="draft.content.matching.caseSensitive" type="checkbox" :disabled="models.busy" />区分大小写</label>
           <div class="model-columns"><label>渠道范围<UiSelectField :model-value="draft.content.matching.channelMode" :options="[{value:'all',label:'全部渠道'},{value:'whitelist',label:'仅所选渠道'},{value:'blacklist',label:'排除所选渠道'}]" label="渠道范围" :disabled="models.busy" @update:model-value="draft.content.matching.channelMode = $event as 'all' | 'whitelist' | 'blacklist'" /></label><label>优先级<input class="input" v-model.number="draft.content.matching.priority" type="number" :disabled="models.busy" /></label></div>
           <fieldset v-if="draft.content.matching.channelMode !== 'all'"><legend>选择渠道</legend><label v-for="channel in models.channelDraft?.channels ?? []" :key="channel.id" class="model-inline"><input v-model="draft.content.matching.channels" type="checkbox" :value="channel.id" :disabled="models.busy" />{{ channel.label }}</label><p v-if="!models.channelDraft?.channels.length" class="model-muted">暂无渠道，可先保存规则。</p><p v-for="id in draft.content.matching.channels.filter(id => !models.channelDraft?.channels.some(c => c.id === id))" :key="id" class="model-muted">已失效渠道引用 · {{ id.slice(0,8) }}</p></fieldset>
         </section>
-        <section id="model-rules"><h2>通用配置</h2><ModelRuleFields v-model="draft.content.rules" :locked-fields="commonLocks" :disabled="models.busy" @update:locked-fields="setCommonLocks" /></section>
-        <section id="model-variants"><div class="model-field-title"><h2>版本或后缀</h2><UiButton size="sm" :disabled="models.busy" @click="addVariant">新增版本或后缀</UiButton></div><p v-if="!draft.content.variants.length" class="model-muted">暂无型号差异规则</p>
+        <section id="model-rules" tabindex="-1"><h2>通用配置</h2><ModelRuleFields v-model="draft.content.rules" :locked-fields="commonLocks" :disabled="models.busy" @update:locked-fields="setCommonLocks" /></section>
+        <section id="model-variants" tabindex="-1"><div class="model-field-title"><h2>版本或后缀</h2><UiButton size="sm" :disabled="models.busy" @click="addVariant">新增版本或后缀</UiButton></div><p v-if="!draft.content.variants.length" class="model-muted">暂无型号差异规则</p>
           <article v-for="(v, i) in draft.content.variants" :key="v.id" class="model-variant"><div class="model-columns"><label>名称<input class="input" v-model="v.name" :disabled="models.busy" /></label><label>原始ID字面后缀<input class="input" v-model="v.suffix" :disabled="models.busy" /></label></div><ModelRuleFields v-model="v.rules" v-model:locked-fields="v.lockedFields" :disabled="models.busy" /><UiButton size="sm" variant="danger" :disabled="models.busy" @click="draft.content.variants.splice(i, 1)">移除此项</UiButton></article>
         </section>
-        <section id="model-source"><h2>来源与版本</h2><p>{{ draft.templateId ? '基于已保存版本编辑；保存产生独立版本。' : '自建模版，保存后生成独立身份。' }}</p><p v-if="draft.baseRevision" class="mono">{{ draft.baseRevision }}</p><details v-for="(source,index) in draft.content.sources" :key="index" class="model-source-record"><summary>{{ source.field }} · {{ source.recordedAt.slice(0,10) }}</summary><p v-if="source.url" class="mono">{{ source.url }}</p><p>{{ source.note }}</p></details></section>
-      </div></div>
+        <section id="model-source" tabindex="-1"><h2>来源与版本</h2><p>{{ draft.templateId ? '基于已保存版本编辑；保存产生独立版本。' : '自建模版，保存后生成独立身份。' }}</p><p v-if="draft.baseRevision" class="mono">{{ draft.baseRevision }}</p><details v-for="(source,index) in draft.content.sources" :key="index" class="model-source-record"><summary>{{ source.field }} · {{ source.recordedAt.slice(0,10) }}</summary><p v-if="source.url" class="mono">{{ source.url }}</p><p>{{ source.note }}</p></details></section>
+      </div></DetailWorkspace>
     </template>
     <TemplateUsageDialog v-if="usage" :template-id="usage.templateId" :revision-id="usage.revisionId" @close="usage=undefined" />
     <UiDialog :open="!!manager" :title="`版本管理 · ${manager?.label ?? ''}`" :busy="models.busy" wide @close="managerId = ''"><template v-if="manager">
@@ -174,7 +174,7 @@ function prepareDelete() {
   </section>
 </template>
 <style>
-.model-tabs,.model-detail-head{display:flex;align-items:center;gap:var(--space-2);border-bottom:1px solid var(--border);padding:10px 0}
+.model-tabs{display:flex;align-items:center;gap:var(--space-2);border-bottom:1px solid var(--border);padding:10px 0}
 .model-tabs{position:static;min-height:48px;background:transparent}
 .model-tabs-line{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap}
 .model-policy-actions{justify-content:flex-end;padding:6px 0}
@@ -183,8 +183,7 @@ function prepareDelete() {
 .model-policy-state[data-tone=danger]{color:var(--red);border-color:color-mix(in srgb,var(--red) 30%,var(--border))}
 .model-policy-state[data-tone=success]{color:var(--green)}
 .model-source-record{padding:10px 0}.model-source-record p{white-space:pre-wrap;overflow-wrap:anywhere}
-.model-detail-head{position:sticky;z-index:8;top:var(--page-tabs-height,48px);flex-wrap:wrap;background:var(--surface-sticky-bg,var(--surface-panel-bg));-webkit-backdrop-filter:var(--surface-sticky-blur);backdrop-filter:var(--surface-sticky-blur)}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.model-detail-head{background:var(--panel)}}
+.model-editor-action{width:100%}.model-editor-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
 .model-name{flex:1;min-width:160px;font-weight:650}
 .model-toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin:20px 0;flex-wrap:wrap}
 .model-toolbar input{flex:1;max-width:360px;min-width:180px}
@@ -197,12 +196,8 @@ function prepareDelete() {
 .model-table .tag{margin-left:8px}
 .model-table small,.model-version small{display:block;margin-top:5px;color:var(--muted)}
 .model-inline{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
-.model-editor{display:grid;grid-template-columns:145px minmax(0,1fr);gap:28px;margin-top:20px}
-.model-anchors{position:sticky;top:calc(var(--page-tabs-height,48px) + var(--model-header-height,48px) + 20px);align-self:start;display:grid;gap:4px}
-.model-anchors a{color:var(--muted);padding:8px;border-radius:var(--radius-sm);text-decoration:none}
-.model-anchors a:hover{color:var(--text);background:var(--hover)}
 .model-form{display:grid;gap:20px}
-.model-form section{scroll-margin-top:calc(var(--page-tabs-height,48px) + var(--model-header-height,48px) + 20px);padding-bottom:24px;border-bottom:1px solid var(--border)}
+.model-form section{scroll-margin-top:calc(var(--page-tabs-height,48px) + var(--detail-header-height,48px) + 12px);padding-bottom:24px;border-bottom:1px solid var(--border)}
 .model-form h2{font-size:var(--text-title);margin:0 0 16px}
 .model-form label,.model-rule-fields>label,.model-columns>label{display:grid;gap:7px}
 .model-form label.model-inline,.model-inline label{display:flex;align-items:center;gap:7px}
@@ -219,9 +214,12 @@ function prepareDelete() {
 .model-empty{padding:32px 0;text-align:center;color:var(--muted)}
 .model-muted{color:var(--muted)}
 .model-version{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;padding:16px 0;border-bottom:1px solid var(--border)}
-.model-version>label{display:flex;align-items:center;gap:10px}@media(max-width:800px){.model-editor{grid-template-columns:minmax(0,1fr)}
-.model-anchors{position:static;display:flex;flex-wrap:wrap}
+.model-version>label{display:flex;align-items:center;gap:10px}@media(max-width:800px){
 .model-rule-fields,.model-columns{grid-template-columns:minmax(0,1fr)}
 .model-pattern{grid-template-columns:90px minmax(0,1fr)}
 .model-pattern>button{justify-self:end;grid-column:2}}
+</style>
+
+<style>
+@container detail-content (max-width:520px){.model-rule-fields,.model-columns{grid-template-columns:minmax(0,1fr)}.model-pattern{grid-template-columns:minmax(0,1fr)}.model-pattern>button{justify-self:end}}
 </style>
