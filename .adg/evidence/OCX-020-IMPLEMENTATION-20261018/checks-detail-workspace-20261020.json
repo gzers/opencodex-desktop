@@ -1,0 +1,332 @@
+{
+  "date": "2026-10-20",
+  "scope": "连续详情148/42导航、侧栏操作、公共Tab内距与锚点几何",
+  "checks": {
+    "uiFullFiles": 136,
+    "uiFullTests": 678,
+    "build": "passed",
+    "componentStyleRules": "passed",
+    "newBehaviorTests": 4
+  },
+  "browser": [
+    {
+      "fieldColumns": "minmax(0px, 1fr)",
+      "headBottom": 243,
+      "nav": {
+        "bottom": 559,
+        "height": 292,
+        "left": 156,
+        "right": 452,
+        "top": 267,
+        "width": 296,
+        "x": 156,
+        "y": 267
+      },
+      "overflow": false,
+      "targetTop": 267,
+      "view": "template-900x600-scale200-final",
+      "zoom": "2"
+    },
+    {
+      "active": "#model-rules",
+      "focus": "展开模版导航",
+      "headBottom": 243,
+      "navWidth": 84,
+      "targetTop": 267,
+      "view": "template-native-collapse-200-final"
+    },
+    {
+      "effects": "low",
+      "head": [
+        {
+          "bg": "rgb(38, 38, 38)",
+          "blur": "none",
+          "bottom": 242.5
+        }
+      ],
+      "overflow": false,
+      "targetTop": 800.5,
+      "theme": "dark",
+      "view": "template-dark-low-verified"
+    },
+    {
+      "effects": "mid",
+      "overflow": false,
+      "route": "#models",
+      "tabs": [
+        {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "left": "-22px",
+          "right": "-22px"
+        }
+      ],
+      "theme": "dark",
+      "view": "shared-tab-consumer-mid"
+    },
+    {
+      "effects": "mid",
+      "overflow": false,
+      "route": "#sync",
+      "tabs": [
+        {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "left": "-22px",
+          "right": "-22px"
+        }
+      ],
+      "theme": "dark",
+      "view": "shared-tab-consumer-mid"
+    },
+    {
+      "effects": "mid",
+      "overflow": false,
+      "route": "#logs",
+      "tabs": [
+        {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "left": "-22px",
+          "right": "-22px"
+        }
+      ],
+      "theme": "dark",
+      "view": "shared-tab-consumer-mid"
+    },
+    {
+      "effects": "mid",
+      "overflow": false,
+      "route": "#extensions",
+      "tabs": [
+        {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "left": "-22px",
+          "right": "-22px"
+        }
+      ],
+      "theme": "dark",
+      "view": "shared-tab-consumer-mid"
+    },
+    {
+      "effects": "mid",
+      "overflow": false,
+      "route": "#settings",
+      "tabs": [
+        {
+          "bg": "rgba(34, 36, 42, 0.56)",
+          "blur": "saturate(1.5) blur(8px)",
+          "left": "-22px",
+          "right": "-22px"
+        }
+      ],
+      "theme": "dark",
+      "view": "shared-tab-consumer-mid"
+    },
+    {
+      "effects": "high",
+      "headBottom": 128.5,
+      "navWidth": 148,
+      "overflow": false,
+      "targetTop": 140.5,
+      "theme": "light",
+      "view": "template-final"
+    }
+  ],
+  "gallery": {
+    "head": 246.421875,
+    "nav": "#gallery-section-two",
+    "overflow": false,
+    "target": 258.6171875
+  },
+  "screenshots": [
+    "template-detail-final-20261020.png",
+    "template-detail-900-scale200-final-20261020.png",
+    "template-detail-dark-low-verified-20261020.png",
+    "detail-gallery-20261020.png"
+  ],
+  "logs": [
+    {
+      "path": "detail-layout-typecheck-20261020.log.gz",
+      "rawSha256": "a831ef9df5f01b6271bcb9443bf08f0c780cb46e776f70a8b1901bee3e4f1714"
+    },
+    {
+      "path": "detail-layout-typecheck-fixed-20261020.log.gz",
+      "rawSha256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
+    },
+    {
+      "path": "detail-ui-verified-20261020.log.gz",
+      "rawSha256": "a027e2f6d1e477af3b79b7293c76d994ec429f205e1415062849f23c17fd72c2"
+    },
+    {
+      "path": "detail-ui-final-20261020.log.gz",
+      "rawSha256": "95522e1e1f4ebcb1c03e9365f788f9fdde4af5bd5f0eae6d298efb48265f07b4"
+    },
+    {
+      "path": "detail-ui-final-build-20261020.log.gz",
+      "rawSha256": "56f7e96646e908eb9e93e14532ed83f557c6b62b9154db4121aa3bf000aad065"
+    },
+    {
+      "path": "detail-final-state-tests-20261020.log.gz",
+      "rawSha256": "44015a840c93c0b45cc036a8a1b37252a61428bbafdfb11ad3989c7e7dd8eb6e"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/ui/src/components/layout/StickyTabs.vue",
+      "sha256": "3be9bfd2c6ee3e0410bfd038883e147676e52187bc6e9eeec13ae9b6d73dc34b"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "f3f82c3235d46135276326a61186d85d6dc00af57efbbcc671987b136bf19009"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/GalleryApp.vue",
+      "sha256": "d858eebd23d289026798b3adfdea4c4e788599ea7e115f8f92b38c4ae47787a3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "503525c3e024a2f914e2ace370fd74c8446de6c9d5d61772e9743ea1332013f5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "061bfbe3d72ff550966b8328ae0267a54a2c93b8942e59459f94f60a94b68e6a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "b5dcbf0e8b0006adf1967e11021477a417e48188758c90e5e1a5268e5e5160de"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "3fa4ee481cdda58977879438acaebd1bca10abe71e8a6218c50c860e903cc3e9"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/DetailWorkspace.vue",
+      "sha256": "754ba7583293e6127e5f6edad5ea85a948ef341b1257330ebda93d305f030f87"
+    },
+    {
+      "path": "apps/desktop/ui/tests/detail-workspace.test.ts",
+      "sha256": "c7735b524ea16d27f88dadebb364bb894a51fffea02c13d7f2b322b30f35cbd5"
+    }
+  ],
+  "limitations": [
+    "网页DEV及仅内存偏好，不是原生IPC或日常配置修改证据",
+    "未覆盖全部43组件/消费者或完整平台矩阵",
+    "原生/字段能力/最终集成及发布仍需后续逐项核对"
+  ],
+  "browserHistoricalExplorations": [
+    {
+      "active": "04模型列表",
+      "head": {
+        "bottom": 128.5,
+        "height": 55,
+        "left": 246,
+        "right": 1279,
+        "top": 73.5,
+        "width": 1033,
+        "x": 246,
+        "y": 73.5
+      },
+      "main": 14.5,
+      "nav": {
+        "bottom": 455,
+        "height": 314.5,
+        "left": 268,
+        "right": 416,
+        "top": 140.5,
+        "width": 148,
+        "x": 268,
+        "y": 140.5
+      },
+      "overflow": false,
+      "tabs": {
+        "bottom": 73,
+        "height": 57.5,
+        "left": 246,
+        "right": 1279,
+        "top": 15.5,
+        "width": 1033,
+        "x": 246,
+        "y": 15.5
+      },
+      "target": 140.640625,
+      "view": "channel-expanded"
+    },
+    {
+      "active": "#channel-models",
+      "focus": "展开渠道导航",
+      "headBottom": 128.5,
+      "overflow": false,
+      "targetTop": 140.640625,
+      "view": "channel-native-collapse",
+      "width": 42
+    },
+    {
+      "head": {
+        "bottom": 128.5,
+        "height": 55,
+        "left": 246,
+        "right": 1279,
+        "top": 73.5,
+        "width": 1033,
+        "x": 246,
+        "y": 73.5
+      },
+      "nav": {
+        "bottom": 367,
+        "height": 226.5,
+        "left": 268,
+        "right": 416,
+        "top": 140.5,
+        "width": 148,
+        "x": 268,
+        "y": 140.5
+      },
+      "overflow": false,
+      "target": 140.5,
+      "view": "template-expanded"
+    },
+    {
+      "head": {
+        "bottom": 170.5,
+        "height": 97,
+        "left": 246,
+        "right": 899,
+        "top": 73.5,
+        "width": 653,
+        "x": 246,
+        "y": 73.5
+      },
+      "height": 600,
+      "nav": {
+        "bottom": 409,
+        "height": 226.5,
+        "left": 268,
+        "right": 416,
+        "top": 182.5,
+        "width": 148,
+        "x": 268,
+        "y": 182.5
+      },
+      "overflow": false,
+      "targetTop": 182.5,
+      "view": "template-900x600",
+      "width": 900
+    },
+    {
+      "active": "#model-rules",
+      "focus": "展开模版导航",
+      "headBottom": 170.5,
+      "navWidth": 42,
+      "overflow": false,
+      "targetTop": 182.5,
+      "view": "template-native-collapse-900"
+    }
+  ],
+  "historicalScreenshots": [
+    "channel-detail-anchors-light-20261020.png",
+    "channel-detail-collapsed-light-20261020.png"
+  ],
+  "evidenceBoundary": "当前测量在模版操作移至侧栏及容器单列调整后取得；较早渠道/窄窗探索单列历史，不能据其头高代替最终源码现场。当前行为另由全量678项及4项公共布局测试验证。"
+}
