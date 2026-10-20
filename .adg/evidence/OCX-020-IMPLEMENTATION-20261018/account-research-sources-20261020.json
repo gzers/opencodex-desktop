@@ -1,0 +1,71 @@
+{
+  "method": "read-only public source review; no provider/auth execution",
+  "sources": [
+    {
+      "project": "cc-switch",
+      "commit": "f92ff0b03964188f1cd011d9302ab8869d7a8219",
+      "files": [
+        {
+          "path": "docs/guides/codex-official-auth-preservation-guide-zh.md",
+          "sha256": "2ac0066f471e3da68fdbb9844132694f7b42d200c5f555120a677c873f61eb1e"
+        },
+        {
+          "path": "src-tauri/src/commands/codex_oauth.rs",
+          "sha256": "3d2f7d21c9b93b71fba61f6aa528d56c166ac4865a44d4185735bfee213daf98"
+        },
+        {
+          "path": "src-tauri/src/services/webdav_sync/archive.rs",
+          "sha256": "2fa89ae2286214ecbf3e0ae7f28288204b1a53fc182921251b65d05ff6218a9d"
+        },
+        {
+          "path": "src-tauri/src/services/webdav_sync.rs",
+          "sha256": "9dc189b1f0eff10260d35ef0888f1269c24a7e02dfac34fe03a7694b6748c247"
+        }
+      ]
+    },
+    {
+      "project": "CLIProxyAPI",
+      "commit": "ae3ee3be303fb07fb8173279923413005bf32177",
+      "files": [
+        {
+          "path": "internal/api/handlers/management/auth_files_crud.go",
+          "sha256": "b33bdab41ed29b2555cb97b64726212fafbaf709808eda2e1ab5610799de78dc"
+        },
+        {
+          "path": "internal/api/handlers/management/auth_files_refresh.go",
+          "sha256": "522038537731163ead73091a7519978f698aef033dbacec297ad7ffa606f7ad3"
+        },
+        {
+          "path": "internal/auth/antigravity/auth.go",
+          "sha256": "3b404e602c991c897fd439a09808f086c803938777219ba139da8f7d715ee922"
+        },
+        {
+          "path": "internal/auth/claude/token.go",
+          "sha256": "abec537e05a94ebd8168b8e6c85745edc917fe5642c149dead17d260d7d8d222"
+        }
+      ]
+    },
+    {
+      "project": "Antigravity-Manager",
+      "commit": "9f8e4f24d61b33fa80b8078d104c942752a5fa0b",
+      "files": [
+        {
+          "path": "src-tauri/src/models/account.rs",
+          "sha256": "6ac686fa866aff4acbbe2dbf15c86c7e1a9cd6391fc7be20f08de39cf971ee65"
+        },
+        {
+          "path": "src-tauri/src/models/token.rs",
+          "sha256": "179ef2b50770fed4db60df5223439251ebdb2b6beaf3a01a07c1d7bf70b0f150"
+        },
+        {
+          "path": "src-tauri/src/modules/account_service.rs",
+          "sha256": "9e1380d04427d0ae62757e799e35cd9fda12a41e1d0693a4981a399c4ed3ac01"
+        },
+        {
+          "path": "src-tauri/src/modules/oauth.rs",
+          "sha256": "21385936b607a5a696da6f8dd7b48bce8220919038939263bff43bbc61fe41da"
+        }
+      ]
+    }
+  ]
+}
