@@ -12,6 +12,15 @@ const revision = (): Revision => ({ id: '2f415ab0-e93f-400d-b4a8-8539bfc87903', 
 const snapshot = (): ModelSnapshot => ({ library: { schemaVersion: 1, templates: [{ id: 'template', source: 'user', label: '测试', defaultRevision: null, revisions: [revision()] }] }, policy: { schemaVersion: 1, templateRefs: [], channels: [] }, libraryDigest: 'base', policyDigest: 'policy', workspace: null, workspaceDigest: 'workspace' })
 beforeEach(() => { setActivePinia(createPinia()); vi.clearAllMocks() })
 describe('model template working buffer', () => {
+  it('copies the current unsaved editor independently while preserving its source buffer, then refuses to overwrite an existing new template',()=>{
+    const store=useModelsStore();store.snapshot=snapshot();const template=store.snapshot.library.templates[0]!;store.edit(template);const originalSession=store.draftSession
+    store.draft!.content.description='当前未保存说明';store.draft!.content.rules.fast={mode:'custom',value:false};store.draft!.content.lockedFields=['description'];store.copyCurrentTemplate()
+    expect(store.draft!.templateId).toBeNull();expect(store.draft!.baseRevision).toBeNull();expect(store.draft!.label).toBe('测试 副本');expect(store.draft!.content.description).toBe('当前未保存说明');expect(store.draft!.content.rules.fast).toEqual({mode:'custom',value:false});expect(store.draft!.content.lockedFields).toEqual(['description']);expect(store.draftSession).not.toBe(originalSession)
+    store.draft!.content.description='独立副本编辑';store.edit(template);expect(store.draftSession).toBe(originalSession);expect(store.draft!.content.description).toBe('当前未保存说明');expect(store.hasNewTemplate).toBe(true)
+    store.copyCurrentTemplate();expect(store.draft!.templateId).toBe(template.id);expect(store.error).toContain('已有的新建模版');expect(modelApi.save).not.toHaveBeenCalled();expect(store.snapshot.policy.channels).toHaveLength(0);expect(template.defaultRevision).toBeNull()
+    store.edit(template,revision().id,true);expect(store.draft!.templateId).toBeNull();expect(store.draft!.content.description).toBe('独立副本编辑');store.leave();store.edit(template);expect(store.hasNewTemplate).toBe(false);expect(store.draft!.content.description).toBe('当前未保存说明')
+  })
+
   it('refreshes saved facts without replacing uncommitted input', async () => {
     const store = useModelsStore(); store.snapshot = snapshot(); store.edit(store.snapshot.library.templates[0])
     store.draft!.label = '保留人工输入'

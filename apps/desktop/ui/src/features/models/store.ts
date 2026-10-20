@@ -90,6 +90,15 @@ export const useModelsStore = defineStore('model-config', () => {
     clean.value = JSON.stringify(draft.value); error.value = ''; status.value = ''
     editBaseline.value = snapshot.value?.libraryDigest ?? ''
   }
+  const hasNewTemplate=computed(()=>draft.value?.templateId===null||[...buffers.values()].some(buffer=>buffer.draft.templateId===null))
+  function copyCurrentTemplate(){
+    if(busy.value||!draft.value?.templateId)return
+    if(hasNewTemplate.value){error.value='请先保存或放弃已有的新建模版，再复制';return}
+    const current=JSON.parse(JSON.stringify(draft.value)) as TemplateDraft
+    retainTemplate();bufferKey=JSON.stringify([current.templateId,current.baseRevision??'',true]);draftSession.value=crypto.randomUUID()
+    draft.value={templateId:null,baseRevision:null,label:current.label+' 副本',content:current.content}
+    clean.value=JSON.stringify(draft.value);editBaseline.value=snapshot.value?.libraryDigest??'';error.value='';status.value=''
+  }
   function leave() { buffers.delete(bufferKey);bufferKey='';draft.value = null; clean.value = ''; status.value = ''; error.value = '';view.value.templateEditor=false }
   function restoreTemplate(){
     if(!draft.value||busy.value||!clean.value)return
@@ -128,5 +137,5 @@ export const useModelsStore = defineStore('model-config', () => {
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { modelRows, pendingRows, view, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+  return { modelRows, pendingRows, view, hasNewTemplate, copyCurrentTemplate, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
 })
