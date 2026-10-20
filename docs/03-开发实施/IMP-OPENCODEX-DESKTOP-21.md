@@ -785,3 +785,8 @@ Info.plist版本0.2.0、sandbox标识和真实二进制摘要已绑定；bundle�
 CI39432110685/a0adea48并未进入最终EXE排序，实际失败仍是原official_version_source三项：735通过/3失败/4忽略，约2秒Timeout且parent/child/ownership均未出现；此前edb/cc5同类原始失败保留。两个相关生产/夹具文件逐字节与v0.1.10相同。不能把这些错误改名为模型排序失败，也不重跑旧源等待偶然绿灯。
 
 普通Windows CI先执行原三项windows_tests，再执行仅排除该已执行分组的其余workspace；首组非零立即失败，所有测试每项一次。默认Rust线程数、原2秒生产截止、4秒清理界、全新进程、子/父句柄回收与无关控制存活断言均保持；无预热、重试或增加成功豁免。原ETW诊断分支完整首次运行保持。本次只检验“新增重负载影响时序”假设，不将它提前记成已证实原因或已修好；需后续实际Windows结果。YAML语法、原ETW13/retention6离线准入通过，初次unittest模块发现误进stdlib test的失败与更正命令均记录。checks-windows-query-partition-20261020.json绑定原失败、源摘要与调度修改。
+
+
+### 正式前端输出隔离检查
+
+当前0.2.0生产Vite构建26个实际资产逐文件摘要登记，已知DEV专题/fixture标记explicit-dev-sample、fixture-review-skill、fixture-gravity、__audit及gallery输出均未出现，正式应用不依赖docs或DEV工作台。checks-production-ui-output-20261020.json仅证明该本地前端产物边界；最终tag包/签名/安装另验，不以源文件guard代替实际制品检查。当前Windows39435891819仍在等价分组回归，前端job已成功；运行中日志API不提供原日志，尚未据它填写测试数量或整轮通过。
