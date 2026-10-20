@@ -4,10 +4,14 @@ import assert from 'node:assert/strict'
 import {win32,join} from 'node:path'
 import {randomUUID} from 'node:crypto'
 import {writeFile} from 'node:fs/promises'
+function normalize(value){assert(typeof value==='string'&&win32.isAbsolute(value),'absolute active root required');const canonical=value.startsWith('\\\\?\\UNC\\')?'\\\\'+value.slice(8):value.replace(/^\\\\\?\\/,'');return win32.resolve(canonical).toLowerCase()}
+export function assertModelExportPath(path,expected){
+ const file=normalize(path),directory=normalize(win32.join(expected,'exports'))
+ assert(file.startsWith(directory+win32.sep),'export escaped admitted root')
+}
 export function assertModelSandbox(facts,expected){
  assert(facts?.about?.platform==='Windows','Windows native facts required')
  assert(typeof expected==='string'&&win32.isAbsolute(expected),'explicit absolute startup sandbox required')
- const normalize=value=>{assert(typeof value==='string'&&win32.isAbsolute(value),'absolute active root required');const canonical=value.startsWith('\\\\?\\UNC\\')?'\\\\'+value.slice(8):value.replace(/^\\\\\?\\/,'');return win32.resolve(canonical).toLowerCase()}
  assert.equal(normalize(facts.dataRoot.currentDataRoot),normalize(expected),'immutable startup root differs from admitted sandbox')
  assert.equal(normalize(facts.dataRoot.activeDataRoot),normalize(expected),'saved root differs from startup sandbox')
  assert.equal(facts.dataRoot.runtimeActive,true,'startup root is not active')
@@ -50,7 +54,8 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  const plan=await invoke('model_transfer_prepare',{scope,passphrase:null,includeKeys:false,managerScope:{preferences:false,extensions:false,webdav:false,webdavPasswords:false}})
  assert.equal(plan.package.payload.templates.length,1)
  const file=await invoke('model_transfer_export',{planId:plan.id})
- assert(win32.resolve(file.path).toLowerCase().startsWith(win32.resolve(expected,'exports').toLowerCase()+win32.sep),'export escaped admitted root')
+ await writeFile(join(output,'model-export-boundary.json'),JSON.stringify({admittedRoot:expected,exportedPath:file.path},null,2)+'\n')
+ assertModelExportPath(file.path,expected)
  const incoming=await invoke('model_transfer_receive',{path:file.path,passphrase:null})
  assert.equal(incoming.package.payload.templates[0].id,created.templateId)
  const adopted=await invoke('model_transfer_accept',{incomingId:incoming.id,adoptKeys:false,adoptWebdavPasswords:false,adoptExtensionCredentials:false,passphrase:null})
