@@ -152,17 +152,46 @@ pub fn export(
     scope: ExportScope,
     snapshot: &UpstreamSnapshot,
 ) -> ModelResult<ModelPackage> {
-    let channels = catalog(root, snapshot)?;
     let mut package = transfer::export(root, scope.clone())?;
+    if !scope.include_global
+        && scope
+            .channel_ids
+            .iter()
+            .all(|id| scope.channel_families.contains_key(id))
+    {
+        return Ok(package);
+    }
+    let local = super::store::ModelStore::new(root).load()?;
+    let channels = catalog(root, snapshot)?;
+    let scoped_channels = package
+        .payload
+        .policy
+        .as_ref()
+        .map(|p| {
+            p.channels
+                .iter()
+                .map(|c| (c.id.clone(), c.clone()))
+                .collect::<std::collections::BTreeMap<_, _>>()
+        })
+        .unwrap_or_default();
     if let Some(policy) = package.payload.policy.as_mut() {
         policy.channels = scope
             .channel_ids
             .iter()
             .map(|id| {
+                if scope.channel_families.contains_key(id) {
+                    return scoped_channels
+                        .get(id)
+                        .cloned()
+                        .ok_or_else(|| invalid("family_scope", "所选族片段已不存在"));
+                }
                 let channel = channels.iter().find(|c| &c.id == id).ok_or_else(|| {
                     invalid("provider_scope", "所选实际渠道已不存在，请重新读取范围")
                 })?;
-                let mut portable = transfer::portable(channel);
+                let mut portable = transfer::adopted_portable(channel, &local.policy.template_refs);
+                if let Some(scoped) = scoped_channels.get(id) {
+                    portable.template_refs = scoped.template_refs.clone();
+                }
                 if let Some(connection) = portable.connection.as_mut() {
                     connection.provider = Some(
                         snapshot.providers["providers"][&channel.connection.provider_id].clone(),
@@ -179,18 +208,9 @@ pub fn export(
             policy.channel_order = Some(channels.iter().map(|c| c.id.clone()).collect());
         }
     }
+    transfer::complete_dependencies(&mut package, &local.library)?;
     transfer::scope_models(&mut package, &scope.channel_ids, &scope.channel_models)?;
-    package.format_version = if package
-        .payload
-        .policy
-        .iter()
-        .flat_map(|p| &p.channels)
-        .any(|c| c.connection.as_ref().is_some_and(|v| v.provider.is_some()))
-    {
-        3
-    } else {
-        package.format_version
-    };
+    package.format_version = transfer::package_version(&package.payload);
     package.digest = super::store::sha256(&serde_json::to_vec(&package.payload)?);
     transfer::validate_package(&package)?;
     Ok(package)
@@ -237,6 +257,7 @@ mod tests {
         let package = export(
             source.path(),
             ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
@@ -288,6 +309,44 @@ mod tests {
         assert_eq!(
             replay.workspace.unwrap().policy.channels[0].label,
             "later edit"
+        );
+        let store = ModelStore::new(source.path());
+        let current = store.load().unwrap();
+        let family = &current.library.templates[0];
+        let reference = super::super::schema::TemplateRef {
+            template_id: family.id.clone(),
+            revision_id: family.revisions[0].id.clone(),
+        };
+        let mut policy = current.policy.clone();
+        policy.template_refs = vec![reference.clone()];
+        store
+            .commit_runtime_policy(
+                &current.library_digest,
+                &current.policy_digest,
+                &current.workspace_digest,
+                policy,
+            )
+            .unwrap();
+        let package = export(
+            source.path(),
+            ExportScope {
+                channel_families: Default::default(),
+                channel_models: Default::default(),
+                include_policy: true,
+                channel_ids: vec![id],
+                template_refs: vec![],
+                include_global: false,
+            },
+            &snapshot,
+        )
+        .unwrap();
+        let policy = package.payload.policy.as_ref().unwrap();
+        assert!(policy.template_refs.is_none() && policy.channel_order.is_none());
+        assert_eq!(policy.channels[0].template_refs, vec![reference.clone()]);
+        assert_eq!(package.payload.templates.len(), 1);
+        assert_eq!(
+            package.payload.templates[0].revisions[0].id,
+            reference.revision_id
         );
     }
 }

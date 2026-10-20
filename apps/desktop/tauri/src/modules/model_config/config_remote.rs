@@ -29,6 +29,8 @@ const SCOPE: &str = "manager-state/config-sync-scope.json";
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct Scope {
+    #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
+    pub channel_families: std::collections::BTreeMap<String, transfer::FamilyScope>,
     pub template_ids: Vec<String>,
     pub channel_ids: Vec<String>,
     #[serde(default, skip_serializing_if = "std::collections::BTreeMap::is_empty")]
@@ -68,6 +70,7 @@ pub struct Scope {
 impl Default for Scope {
     fn default() -> Self {
         Self {
+            channel_families: Default::default(),
             template_ids: vec![],
             channel_ids: vec![],
             channel_models: Default::default(),
@@ -99,6 +102,18 @@ impl Scope {
             || self.channel_ids.iter().collect::<BTreeSet<_>>().len() != self.channel_ids.len()
         {
             return Err(invalid("sync_scope", "本设备同步范围重复或超过上限"));
+        }
+        if self.channel_families.len() > 256
+            || self.channel_families.iter().any(|(id, scope)| {
+                (!self.all_channels && !self.channel_ids.contains(id))
+                    || self.channel_models.contains_key(id)
+                    || scope.template_ids.is_empty()
+                    || scope.template_ids.len() > 5000
+                    || scope.template_ids.iter().collect::<BTreeSet<_>>().len()
+                        != scope.template_ids.len()
+            })
+        {
+            return Err(invalid("sync_scope", "族片段范围无效或与型号子集重复"));
         }
         if self.channel_models.len() > 256
             || self.channel_models.iter().any(|(id, models)| {
@@ -210,6 +225,7 @@ impl Scope {
             return Err(invalid("sync_scope", "范围中的渠道尚未提交或已不存在"));
         }
         Ok(ExportScope {
+            channel_families: self.channel_families.clone(),
             channel_models: self.channel_models.clone(),
             include_policy: self.include_global
                 || !self.channel_ids.is_empty()
@@ -571,6 +587,12 @@ pub async fn download_context<T: WebDavTransport, F: Fn() -> ModelResult<()>>(
         &bytes,
         passphrase,
         &ExportScope {
+            channel_families: scope
+                .channel_families
+                .iter()
+                .filter(|(id, _)| channel_ids.contains(id))
+                .map(|(id, value)| (id.clone(), value.clone()))
+                .collect(),
             channel_models: scope
                 .channel_models
                 .iter()

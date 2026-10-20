@@ -3,7 +3,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { defineComponent } from 'vue'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
-import { modelTransferApi, scopeFor, type ModelPackage } from '@/features/sync/modelTransfer'
+import { modelTransferApi, scopeFor, remoteScope, type ModelPackage } from '@/features/sync/modelTransfer'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import { useModelsStore } from '@/features/models/store'
 import { emptyContent, emptyRules, type ChannelPolicy, type ModelSnapshot } from '@/features/models/api'
@@ -25,6 +25,47 @@ async function customExportScope(wrapper:ReturnType<typeof render>){
 
 beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
+  it('selects exact families instead of a model subset, carries shared fields only when checked, and serializes the same WebDAV scope',async()=>{
+    const store=useModelsStore();const c:ChannelPolicy={id:'family-channel',label:'族范围渠道',templateRefs:[],modelRefs:{},connection:{providerId:'p',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:['raw-a','raw-b'],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}
+    store.snapshot!.policy.channels=[c];store.snapshot!.policy.templateRefs=[{templateId:'family',revisionId:'revision-1'}]
+    vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([c]);vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'family-file',package:pack()})
+    const wrapper=render();await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await customExportScope(wrapper);await chooseExport(wrapper,'族范围渠道');await wrapper.get('input[aria-label="导出配置对象搜索"]').setValue('族范围渠道')
+    await wrapper.get('input[aria-label="族范围渠道范围内型号 raw-b"]').setValue(false)
+    const granularity=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='族范围渠道策略范围')!
+    granularity.vm.$emit('update:modelValue','families');await flushPromises()
+    expect(wrapper.findAll('button').find(b=>b.text()==='预览清单')!.attributes('disabled')).toBeDefined()
+    await wrapper.get('input[aria-label="族范围渠道范围内模型族 测试族"]').setValue(true)
+    expect((wrapper.get('input[aria-label="族范围渠道包含渠道共用默认字段"]').element as HTMLInputElement).checked).toBe(false)
+    expect(wrapper.find('input[aria-label="族范围渠道范围内型号 raw-a"]').exists()).toBe(false)
+    await wrapper.get('input[aria-label="族范围渠道包含渠道共用默认字段"]').setValue(true)
+    await wrapper.findAll('button').find(b=>b.text()==='预览清单')!.trigger('click');await flushPromises()
+    const scope=vi.mocked(modelTransferApi.prepare).mock.calls.at(-1)![0]
+    expect(scope.channelFamilies).toEqual({'family-channel':{templateIds:['family'],includeChannelDefaults:true}})
+    expect(scope.channelModels).toBeUndefined();expect(scope.includeGlobal).toBe(false)
+    expect(remoteScope(scope).channelFamilies).toEqual(scope.channelFamilies)
+    wrapper.unmount()
+  })
+  it('restores and saves the same explicit family scope for this WebDAV device',async()=>{
+    const c:ChannelPolicy={id:'remote-channel',label:'本设备渠道',templateRefs:[{templateId:'family',revisionId:'revision-1'}],modelRefs:{},connection:{providerId:'p',protocol:'openai-chat',nodes:[],activeNodeId:'',credentialRef:null,enabled:false,allowPrivateNetwork:false},selection:{mode:'all'},modelOrder:[],discovered:[],defaults:emptyRules(),overrides:{},familyOverrides:{}}
+    useModelsStore().snapshot!.policy.channels=[c]
+    const mask={'remote-channel':{templateIds:['family'],includeChannelDefaults:false}}
+    vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([c]);vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:['remote-channel'],channelFamilies:mask,includeGlobal:false,preferences:false,extensions:false,includeKeys:false})
+    vi.mocked(modelTransferApi.saveRemoteScope).mockImplementation(async scope=>scope)
+    const wrapper=render(true);await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='选择本设备范围')!.trigger('click');await flushPromises()
+    await wrapper.findAll('button').find(b=>b.text()==='仅保存范围')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.saveRemoteScope).toHaveBeenCalledWith(expect.objectContaining({channelIds:['remote-channel'],channelFamilies:mask,includeGlobal:false,includeKeys:false}))
+    expect(modelTransferApi.publish).not.toHaveBeenCalled();expect(wrapper.text()).toContain('尚未上传');wrapper.unmount()
+  })
+  it('does not offer a received family fragment as whole model or independent channel material',async()=>{
+    const source=pack();source.formatVersion=5;source.payload.policy={templateRefs:null,channelOrder:null,channels:[{id:'fragment',label:'族片段',familyScope:{templateIds:['family'],includeChannelDefaults:false},modelSubset:[],selection:{mode:'none'}}]}
+    vi.mocked(modelTransferApi.receive).mockResolvedValue({id:'received-family',expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace',package:source,notices:[]})
+    const wrapper=render();await wrapper.findAll('button').find(b=>b.text()==='导入配置')!.trigger('click');await flushPromises();await wrapper.get('button[aria-label="展开 渠道与模型"]').trigger('click')
+    expect(wrapper.text()).toContain('共用默认字段沿本机值解析');expect(wrapper.text()).toContain('仅合并所选族')
+    expect(wrapper.find('input[aria-label="族片段型号范围搜索"]').exists()).toBe(false)
+    const mapping=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='族片段接收方式')!
+    expect(mapping.props('options')).not.toEqual(expect.arrayContaining([expect.objectContaining({value:'new'})]));wrapper.unmount()
+  })
+
   it('exports an explicitly selected staged draft as a candidate without manager objects or credentials',async()=>{
     const store=useModelsStore();const channel:ChannelPolicy={id:'draft-channel',label:'未提交渠道',connection:{providerId:'draft',protocol:'openai-chat',nodes:[{id:'node',name:'主站',url:'https://example.test'}],activeNodeId:'node',credentialRef:'local-secret-ref',enabled:false,allowPrivateNetwork:false},selection:{mode:'whitelist',models:['raw']},modelOrder:['raw'],discovered:[{id:'raw',label:'raw',rules:emptyRules()}],templateRefs:[],modelRefs:{},defaults:emptyRules(),overrides:{},familyOverrides:{}}
     store.channelDraft={...store.snapshot!.policy,channels:[channel]}

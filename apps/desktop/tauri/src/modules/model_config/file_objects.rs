@@ -300,6 +300,7 @@ fn seal_scope(
     };
     if let (Some(snapshot), Some(source)) = (&scope.upstream_snapshot, &scope.upstream_root) {
         let catalog = super::portable_channels::catalog(root, snapshot)?;
+        let local = ModelStore::new(root).load()?;
         for channel in package.payload.policy.iter().flat_map(|p| &p.channels) {
             if let Some(_public) = channel
                 .connection
@@ -310,7 +311,8 @@ fn seal_scope(
                     .iter()
                     .find(|c| c.id == channel.id)
                     .ok_or_else(|| invalid("provider_scope", "原渠道已不存在"))?;
-                let mut expected = transfer::portable(original);
+                let mut expected =
+                    transfer::adopted_portable(original, &local.policy.template_refs);
                 expected.connection.as_mut().unwrap().provider =
                     Some(snapshot.providers["providers"][&original.connection.provider_id].clone());
                 if !transfer::is_scoped_channel(&expected, channel)? {
@@ -348,6 +350,9 @@ fn seal_scope(
             ));
         }
         for channel in channels {
+            if channel.family_scope.is_some() {
+                continue;
+            }
             if let (Some(public), Some(upstream), Some(upstream_root)) = (
                 channel
                     .connection
@@ -683,6 +688,7 @@ pub fn select_remote(
     include_keys: bool,
 ) -> ModelResult<IncomingPlan> {
     let (mut objects, _) = remote_objects(bytes, passphrase)?;
+    transfer::scope_families(&mut objects.models, &models.channel_families)?;
     let channels = objects
         .models
         .payload
@@ -696,13 +702,21 @@ pub fn select_remote(
                 .collect::<Vec<_>>()
         })
         .unwrap_or_default();
-    objects
-        .channel_keys
-        .0
-        .retain(|channel, _| include_keys && channels.contains(channel));
-    objects
-        .channel_authorizations
-        .retain(|channel, _| include_keys && channels.contains(channel));
+    let key_channels = objects
+        .models
+        .payload
+        .policy
+        .iter()
+        .flat_map(|p| &p.channels)
+        .filter(|c| c.family_scope.is_none())
+        .map(|c| c.id.clone())
+        .collect::<Vec<_>>();
+    objects.channel_keys.0.retain(|channel, _| {
+        include_keys && channels.contains(channel) && key_channels.contains(channel)
+    });
+    objects.channel_authorizations.retain(|channel, _| {
+        include_keys && channels.contains(channel) && key_channels.contains(channel)
+    });
     objects
         .manager
         .accounts
@@ -1764,6 +1778,7 @@ mod tests {
         let plan = transfer::prepare_file_scope(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: BTreeMap::from([(id.clone(), vec!["a".into()])]),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
@@ -1844,9 +1859,10 @@ mod tests {
         let id = super::super::portable_channels::catalog(root.path(), &snapshot).unwrap()[0]
             .id
             .clone();
-        let package = super::super::portable_channels::export(
+        let mut package = super::super::portable_channels::export(
             root.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
@@ -1856,6 +1872,17 @@ mod tests {
             &snapshot,
         )
         .unwrap();
+        let library = ModelStore::new(root.path()).load().unwrap().library;
+        let template = &library.templates[0];
+        let reference = super::super::schema::TemplateRef {
+            template_id: template.id.clone(),
+            revision_id: template.revisions[0].id.clone(),
+        };
+        package.payload.policy.as_mut().unwrap().channels[0]
+            .model_refs
+            .insert("a".into(), reference.clone());
+        transfer::complete_dependencies(&mut package, &library).unwrap();
+        package.digest = sha256(&serde_json::to_vec(&package.payload).unwrap());
         let key = "fixture-remote-portable-SECRET";
         let digest = sha256(key.as_bytes());
         let key_id = &digest.trim_start_matches("sha256:")[..8];
@@ -1921,6 +1948,63 @@ mod tests {
             .unwrap()
             .contains(key));
         assert!(!String::from_utf8_lossy(&merged).contains(key));
+        let mut family_package = local.models.clone();
+        transfer::scope_families(
+            &mut family_package,
+            &BTreeMap::from([(
+                id.clone(),
+                transfer::FamilyScope {
+                    template_ids: vec![reference.template_id],
+                    include_channel_defaults: false,
+                },
+            )]),
+        )
+        .unwrap();
+        let family_objects = Objects {
+            format: "OCXD_CONFIG_OBJECTS".into(),
+            version: 1,
+            models: family_package,
+            channel_keys: Default::default(),
+            channel_authorizations: Default::default(),
+            manager: Default::default(),
+            webdav_passwords: Default::default(),
+            assets: Default::default(),
+        };
+        let family_bytes = merge_remote(
+            &remote_bytes,
+            &bytes(&family_objects),
+            Some("fixture-remote-password"),
+            &uuid::Uuid::new_v4().to_string(),
+        )
+        .unwrap();
+        let (family_result, protected) =
+            remote_objects(&family_bytes, Some("fixture-remote-password")).unwrap();
+        assert!(protected);
+        assert_eq!(secret_objects(&family_result), 1);
+        assert_eq!(
+            serde_json::to_value(&family_result.channel_authorizations).unwrap(),
+            serde_json::to_value(&remote.channel_authorizations).unwrap()
+        );
+        assert_eq!(
+            family_result
+                .models
+                .payload
+                .policy
+                .as_ref()
+                .unwrap()
+                .channels[0]
+                .connection,
+            remote.models.payload.policy.as_ref().unwrap().channels[0].connection
+        );
+        assert!(family_result
+            .models
+            .payload
+            .policy
+            .as_ref()
+            .unwrap()
+            .channels[0]
+            .family_scope
+            .is_none());
         let channel = &mut local.models.payload.policy.as_mut().unwrap().channels[0];
         channel.connection.as_mut().unwrap().nodes[0].url =
             "https://different.example.test/v1".into();
@@ -2006,6 +2090,7 @@ mod tests {
         let plan = transfer::prepare_file_scope(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2179,6 +2264,7 @@ mod tests {
         let plan = transfer::prepare_file_scope(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2314,6 +2400,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2395,6 +2482,7 @@ mod tests {
         let package = transfer::export(
             root.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2458,6 +2546,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2645,6 +2734,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2715,6 +2805,7 @@ mod tests {
         let package = transfer::export(
             root.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],
@@ -2854,6 +2945,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
@@ -2984,6 +3076,7 @@ mod tests {
             transfer::export(
                 root,
                 transfer::ExportScope {
+                    channel_families: Default::default(),
                     channel_models: Default::default(),
                     include_policy: true,
                     channel_ids: vec![id.clone()],
@@ -3068,6 +3161,7 @@ mod tests {
         let package = transfer::export(
             source.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: true,
                 channel_ids: vec![id.clone()],
@@ -3183,6 +3277,7 @@ mod tests {
         let package = transfer::export(
             root.path(),
             transfer::ExportScope {
+                channel_families: Default::default(),
                 channel_models: Default::default(),
                 include_policy: false,
                 channel_ids: vec![],

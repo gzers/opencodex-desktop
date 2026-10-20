@@ -13,6 +13,10 @@ export function installModelFixtures() {
     const revision={id:crypto.randomUUID(),createdAt:'2026-10-18T00:00:00Z',savedLabel:label,content,digest:'visual-fixture',baseRevision:null,changes:[]}
     return{id:crypto.randomUUID(),label,source:'builtin',defaultRevision:revision.id,revisions:[revision]}
   })},policy:{schemaVersion:1,templateRefs:[],channels},libraryDigest:'visual-library',policyDigest:'visual-policy',workspace:null,workspaceDigest:'visual-workspace'}
+  // Opt-in family scope screen; ordinary audit fixtures retain their previous state.
+  if(new URLSearchParams(location.search).get('familyScope')==='1') {
+    const family=snapshot.library.templates[0]!;snapshot.policy.channels[0]!.templateRefs=[{templateId:family.id,revisionId:family.revisions[0]!.id}]
+  }
   modelApi.load=async()=>structuredClone(snapshot)
   modelApi.stage=async(_policy,_workspace,policy)=>{snapshot={...snapshot,workspace:{basePolicy:snapshot.policyDigest,policy:structuredClone(policy)},workspaceDigest:'visual-workspace'};return structuredClone(snapshot)}
   const visualPlan=(policy:import('@/features/models/api').ModelPolicy,scope?:import('@/features/models/api').SaveScope):import('@/features/models/api').SavePlan=>{const changed=policy.channels.filter(c=>JSON.stringify(c)!==JSON.stringify(snapshot.policy.channels.find(old=>old.id===c.id)));return{id:crypto.randomUUID(),phase:'prepared',catalogCount:36,currentCatalogCount:36,changedChannels:changed.filter(c=>!scope||scope.channelIds.includes(c.id)).map(c=>c.label),deferredChannels:scope?changed.filter(c=>!scope.channelIds.includes(c.id)).map(c=>c.label):[],error:null}}
@@ -54,6 +58,22 @@ export function installModelFixtures() {
   modelTransferApi.channelCatalog=async()=>structuredClone([...snapshot.policy.channels,originalChannel])
   modelTransferApi.prepare=async(scope,_password,includeKeys)=>({id:crypto.randomUUID(),protected:!!_password,credentialCount:includeKeys?scope.channelIds.length:0,package:{format:'OCXD_MODEL_CONFIG',formatVersion:3,schemaVersion:1,createdAt:new Date().toISOString(),digest:'explicit-dev-sample',payload:{templates:snapshot.library.templates.filter(t=>scope.templateRefs.some(r=>r.templateId===t.id)),policy:scope.includePolicy?{templateRefs:null,channelOrder:null,channels:[...snapshot.policy.channels,originalChannel].filter(c=>scope.channelIds.includes(c.id)).map(c=>({id:c.id,label:c.label,selection:c.selection,connection:{nodes:c.connection.nodes,provider:{adapter:c.connection.protocol,authMode:'key',baseUrl:c.connection.nodes[0]!.url,modelAliases:{'gpt-demo-0':'friendly-gpt'},apiKeyPoolStrategy:'fill-first',modelDisplayNames:{'gpt-demo-0':'GPT示例'},defaultAliases:false,disabled:!c.connection.enabled}}}))}:null}}})
 
+  const ordinaryPrepare=modelTransferApi.prepare
+  modelTransferApi.prepare=async(scope,password,includeKeys,manager)=>{
+    const result=await ordinaryPrepare(scope,password,includeKeys,manager)
+    const fragments=Object.entries(scope.channelFamilies??{})
+    if(!fragments.length)return result
+    result.package.formatVersion=5
+    for(const [id,familyScope] of fragments){
+      const channel=result.package.payload.policy?.channels.find(c=>c.id===id)
+      const source=snapshot.policy.channels.find(c=>c.id===id);if(!channel||!source)continue
+      channel.familyScope=familyScope;channel.connection=null;channel.selection={mode:'none'}
+      channel.modelSubset=source.discovered.filter(model=>familyScope.templateIds.some(id=>snapshot.library.templates.find(t=>t.id===id)?.revisions[0]?.content.matching.include.some(p=>model.id.startsWith(p.value)))).map(m=>m.id)
+      for(const familyId of familyScope.templateIds){const template=snapshot.library.templates.find(t=>t.id===familyId);if(template&&!result.package.payload.templates.some(t=>t.id===familyId))result.package.payload.templates.push(structuredClone(template))}
+    }
+    result.credentialCount=includeKeys?scope.channelIds.filter(id=>!scope.channelFamilies?.[id]).length:0
+    return result
+  }
   modelTransferApi.prepareDraft=async(scope,candidate)=>({id:crypto.randomUUID(),credentialCount:0,package:{format:'OCXD_MODEL_CONFIG',formatVersion:4,schemaVersion:1,createdAt:new Date().toISOString(),digest:'explicit-draft-fixture',payload:{candidate,templates:[],policy:{templateRefs:null,channelOrder:null,channels:(snapshot.workspace?.policy.channels??[]).filter(c=>scope.channelIds.includes(c.id)).map(c=>({id:c.id,label:c.label,selection:c.selection,naming:c.naming,connection:{nodes:c.connection.nodes}}))}}}})
   const store=useModelsStore();store.snapshot=structuredClone(snapshot);store.restoreChannels()
 }

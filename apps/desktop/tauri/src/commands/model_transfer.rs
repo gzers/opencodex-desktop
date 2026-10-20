@@ -96,12 +96,17 @@ pub async fn config_sync_prepare(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<config_remote::UploadView> {
-    let upstream_snapshot =
-        if scope.all_channels || !scope.channel_ids.is_empty() || scope.include_global {
-            Some(crate::modules::model_config::upstream::snapshot(&context).await?)
-        } else {
-            None
-        };
+    let upstream_snapshot = if scope.all_channels
+        || scope
+            .channel_ids
+            .iter()
+            .any(|id| !scope.channel_families.contains_key(id))
+        || scope.include_global
+    {
+        Some(crate::modules::model_config::upstream::snapshot(&context).await?)
+    } else {
+        None
+    };
     let upstream_root = context.opencodex_home.clone();
     let root = data_root.0.clone();
     let local_home = home.0.clone();
@@ -270,7 +275,13 @@ pub async fn model_transfer_prepare(
     data_root: tauri::State<'_, SharedDataRoot>,
     home: tauri::State<'_, crate::state::SharedHomeDir>,
 ) -> ModelResult<FileExportPlan> {
-    let upstream_snapshot = if scope.include_policy {
+    let upstream_snapshot = if scope.include_policy
+        && (scope.include_global
+            || scope
+                .channel_ids
+                .iter()
+                .any(|id| !scope.channel_families.contains_key(id)))
+    {
         Some(crate::modules::model_config::upstream::snapshot(&context).await?)
     } else {
         None
