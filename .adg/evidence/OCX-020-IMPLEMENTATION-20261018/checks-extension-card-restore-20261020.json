@@ -1,0 +1,20 @@
+{
+  "scope": "用户同日修订：恢复Skills/MCP外层公共卡片",
+  "build": "passed",
+  "buildRawSha256": "aae9942ff9599aa4f036b0f78e95f8fc7dce791379b61dddb46916349a241e07",
+  "prototype": {
+    "cards": [
+      "card-ext-skills",
+      "card-ext-mcp"
+    ],
+    "class": "card",
+    "border": "1px",
+    "tabsBackgroundImage": "none"
+  },
+  "formalDev": {
+    "outerClass": "card",
+    "tabsBackgroundImage": "none"
+  },
+  "screenshot": "extension-card-restored-20261020.png",
+  "supersedes": "前一批去外卡片布局；无色Tab规则保留"
+}

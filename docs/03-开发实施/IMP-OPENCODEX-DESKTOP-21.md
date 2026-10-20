@@ -582,3 +582,10 @@ installed2.84.0临时用户/数据根真实链223.91秒通过：同协议新组�
 按2026-10-20浏览器反馈，原型sticky-surface-bg移除通知蓝绿色渐变，只消费glass-fill；所有已登记页面Tab和模型固定详情头共用。实际StickyTabs前序已沿无色panel材质，未再叠页面覆盖。原型和实际ExtensionsRoute均移除Skills/MCP外层Card，改为无表面的语义article，保留标题操作/条目/锚点及浮动注释，正文与页面对齐。未开展多平台新增扩展业务。
 
 前端构建与扩展9项、原型Tab6项通过。浏览器实际核对原型亮高的模型/同步/诊断/设置/扩展5页，背景image均none、透明度0.52、无文档横溢；暗高/中为0.56玻璃，暗低为实底且无模糊。原型Skills/MCP及实际DEV亮Skills/暗MCP外层无底色/描边/阴影；DEV扩展发现失败只用于布局核对，不作为真实扩展发现/同步证据。截图及源摘要见checks-extensions-style-20261020.json。浏览器旧查询缓存曾保留色纱，已更新公共令牌引用版本并确认重新加载。后续继续模型族片段及整体0.2.0验收，未发布。
+
+
+### 扩展外层卡片恢复（同日用户修订）
+
+用户比较其他页面后撤回去外卡片决定：总原型Skills/MCP恢复card，正式ExtensionsRoute恢复UiCard，删除临时extension-content布局类；Tab无色玻璃令牌及其他前序修正保持。UI规范与原版本记录已明确替代关系，前一批截图/证据保留为历史，不再代表当前卡片结构。本轮只做布局恢复和浏览器回看，不重复未受影响业务测试。
+
+构建通过，浏览器确认原型两个外层card与1px边框恢复，正式DEV外层class为card，两者Tab的background-image仍为none。截图与构建摘要见checks-extension-card-restore-20261020.json。
