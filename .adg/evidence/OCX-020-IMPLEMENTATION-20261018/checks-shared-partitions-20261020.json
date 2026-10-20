@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "a88454505",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/channel_actions.rs",
+      "sha256": "7464bb427e15a3c2d73ae578521a86b5e49abdab5fbc7948fe25db9390abc72f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+      "sha256": "41396ac64e9cd26e86b01a01ed6f159fa6ff001919eb1a827d42c5ca829696f8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+      "sha256": "c4ac93340d918872367bbd3fb3ffed699dcf9c9e5cee60746ca4e2045bbda0be"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/model_config_official_real.rs",
+      "sha256": "dd6e366be18f2228ee2224d09a0a04d0697473e6894972f744fd8152ed94bdec"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelRuleFields.vue",
+      "sha256": "6b0c2550f938b255f584e4520a168cf30bdb87be6bb96293dc0d3c6beeb511f4"
+    }
+  ],
+  "checks": {
+    "installedOfficial": {
+      "version": "2.84.0",
+      "passed": true,
+      "seconds": 223.91,
+      "generatedRequests": 0,
+      "sameProtocolExactFields": true,
+      "parentRetained": true,
+      "retiredGroupHidden": true,
+      "allOwnedGroupsRemoved": true
+    },
+    "rustFull": "945 passed, 4 existing ignored, 0 failed",
+    "protocolGroupTests": "5 passed",
+    "module": "152 passed before final additional disabled-wire test",
+    "sharedFilter": "9 passed; includes unrelated shared-name tests, not nine new rule tests",
+    "frontendFull": "133 files, 662 passed",
+    "build": "passed; existing dynamic-import warnings",
+    "clippy": "all-targets -D warnings passed; fmt check passed"
+  },
+  "logs": [
+    {
+      "path": "shared-partitions-official-20261020.log.gz",
+      "rawSHA256": "d162b5e8ad0ef3e231ae8d1110baa22920de3c690915a86ca32b500478d4cf2d"
+    },
+    {
+      "path": "shared-partitions-official-diagnostic-20261020.log.gz",
+      "rawSHA256": "ffa89a4c0d20bec10f9728d4162e18bb5882ebf36d35431b36213c4929d69ea9"
+    },
+    {
+      "path": "shared-partitions-official-diff-20261020.log.gz",
+      "rawSHA256": "8507d82004fa55d4c7c65f9a978973b4f7c427b275f787f254082285bfcb2908"
+    },
+    {
+      "path": "shared-partitions-official-final-20261020.log.gz",
+      "rawSHA256": "277cdd5174b5de5c61023f8bf6406c8765b40d9f1156251f1a4d905ad240a414"
+    },
+    {
+      "path": "shared-partitions-official-final2-20261020.log.gz",
+      "rawSHA256": "ecd8bb3f7f8676122fa4fb34cdea284289522979522d73d07afe6e5a77075ea5"
+    },
+    {
+      "path": "shared-partitions-rust-full-20261020.log.gz",
+      "rawSHA256": "8dc7f697fb0d402b6cdd067ee35d2834682f4aed5a1671200e8711067ba2d381"
+    },
+    {
+      "path": "shared-partitions-rust-final2-20261020.log.gz",
+      "rawSHA256": "9defb1306304756a4032139a948e9bc1589463b55ed4fdb58dd88fab280bd5be"
+    },
+    {
+      "path": "shared-partitions-module-20261020.log.gz",
+      "rawSHA256": "062a99bdaa1a18f04f8a1885699ce8f9c03ffb6a1ea25edafa813807a30c374c"
+    },
+    {
+      "path": "shared-partitions-guards-20261020.log.gz",
+      "rawSHA256": "44b453e985c4c5c0d76cd834f1208a7c3b00beed313505456724fa82a8e278e4"
+    },
+    {
+      "path": "shared-partitions-clippy-final3-20261020.log.gz",
+      "rawSHA256": "722d47d8ecaea4e58b7755cc5837bdfe1de376510e62c166ce61f206d9b1ff1e"
+    },
+    {
+      "path": "shared-partitions-ui-full-20261020.log.gz",
+      "rawSHA256": "2a9fd22617149debd42a27ffd42ec095f8a3ad52521b0a1bba9625702662c3ee"
+    },
+    {
+      "path": "shared-partitions-build-20261020.log.gz",
+      "rawSHA256": "cd6f424a0ed31bfac909bed19ab745c3a1f1921bfcc3c5de4e603dfda433e8ca"
+    }
+  ],
+  "failureDisposition": [
+    "Initial same-protocol actual apply rejected a stale provider baseline after key registration. Diagnostic CLI wrapper captured only isolated test output and compared public snapshots. Difference was filtered modelPinnedReasoningEfforts:{} becoming absent after upstream normalization. Seed generation now drops empty per-model mappings before registration and filters noReasoning/noVision family lists to target IDs.",
+    "After actual split/readback passed, later removal assertion expected two old providers. Added same-protocol group makes three owned providers; changed assertion to exact parent/old-protocol/new-same-protocol identities and verified all absent."
+  ],
+  "semantics": [
+    "Partitions keyed by protocol and canonical provider-wide authority/wire signature; logical channel, nodes and credential remain one source.",
+    "Existing mapping identities without variant remain compatible; variant mappings UUID/provider and ownership note validated. Hiding, node changes and ordering do not alter signature.",
+    "Original parent declaration seeded via allowlisted public fields and exact model subset. Private header/pool is not cloned by this helper.",
+    "Wire null validation respects exact model fast:false rather than rejecting due to sibling/provider default fast:true.",
+    "Groups keep full budget, authorization, drift/recovery and old-entry change preview checks."
+  ],
+  "limitations": [
+    "No paid inference/wire performance proof; installed chain is configuration roundtrip in temporary user/upstream roots with in-memory test vault.",
+    "No full native UI/Windows consumer matrix from this slice.",
+    "Primary signature can change when rule configuration changes; affected route entries are listed for re-selection."
+  ]
+}

@@ -543,3 +543,12 @@ ec92d53b账户CI39367956094、18584625上下文CI39369016960均全部适用job�
 移除详情直接改协议/节点地址进入工作区的路径，复用两步新增弹窗处理已有连接：先局部修改，再只读获取/手动精确型号和明确勾选，确认才沿共同恢复事务替换当前channel。平台保留稳定ID、启停和所有非连接规则；新Key重新输入，旧Key不自动发往新地址或删除，已有保存态不动。Request.replace绑定完整旧对象与两个CAS摘要，记录不含rawKey、持久结果同ID核对，失败清理仅本次独有材料。32节点上限沿公共服务，详情保留手动切已知节点/测速，名称地址只读。正常同目标刷新保留暂缺已选存根与顺序；native/OAuth专用路径不开放通用Key假支持。
 
 new_channel模块6项（含新增replacement身份/原Key/其他草稿/后来编辑与旧基准拒绝）和Clippy全目标通过；前端全量133文件661项后，浏览器发现节点URL还有一个旧可编辑绑定，已补readonly输入及handler保护；最后相关3文件13项和构建通过，含纯节点只读/已知节点选择行为。DEV替换fixture最后修成同ID替换而非新增，属无生产影响的fixture修正。首轮构建implicit-any/template crypto错误已修，不降检查。DEV实际新地址未输Key被拒，输fixture后第二步0项→mock清单12项仍零选，关闭原地址/12型号/未修改状态保持，无横向溢出；截图connection-edit-reselect-light.png，非真实Key/HTTP/native IPC。checks-connection-edit-20261020.json绑定源。4bf58c89候选CI39370311527已全部适用job成功，发布构建按feature跳过。继续共享高级字段差异分组、完整批准表格/行缓冲与所有消费者/平台；0.2.0未发布。
+
+
+### 同协议高级字段差异运行分组
+
+协议分组扩展到provider级reasoningAuthoritative/fastWire不同组合，variant摘要与本机稳定UUID映射，旧映射兼容；节点/选择/排序不进分组摘要。产品仍一个渠道，共同Key/节点，显式单模型设置不再只能拒绝同协议差异；组内校验继续保留。新同协议组从父组公开声明精确收窄，不复制秘密、全provider alias/default，过滤后空型号映射/范围外noReasoning/noVision标记清除。禁用wire判断使用组内型号有效Fast覆盖，保留兄弟模型能力。
+
+installed2.84.0临时用户/数据根真实链223.91秒通过：同协议新组权威false、wire verbatim，父组权威true、wire drop分别准确读回；恢复原产品策略后旧同协议组不再发布，删除时parent/原协议组/同协议组三个精确归属provider均不存在，后续历史/认证/补偿链全部通过，生成POST=0、测试Key在内存vault。最初写失败保留：上游Key注册将过滤后空modelPinnedReasoningEfforts:{}正规化为空缺，导致旧公开baseline拒绝；已从seed移空并回归。随后删除测试旧计数2与新增第三组不符，已改精确身份集合及实际缺席断言，不跳过。原日志/摘要见checks-shared-partitions-20261020.json。
+
+全量Rust945通过、4既有忽略；分组5项、共享名筛选9项（含未改域不算新增规则项）、Clippy全目标-D warnings/fmt通过；前端133文件662项、构建通过，既有Canvas/dynamic-import诊断保留。改动只涉及字段说明无新UI流程，不重复旧原生外壳门；不把配置读回当付费wire现场。a88454505 CI39373693094和daccf093 CI39372057167现均全部适用job成功。继续已确认完整模型表格/行缓冲、批量操作、族片段和所有消费者指标/native矩阵，版本仍0.1.10，未发布。
