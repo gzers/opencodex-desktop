@@ -1,0 +1,10 @@
+{
+  "environment": "formal DEV fixture only",
+  "comparisonText": "与版本比较\n关闭\n\nGPT · 当前编辑缓冲\n\n比较基准\n2026-10-18 08:00:00 · C517 · 默认\n\n共 4 项差异\n\n说明\n保存版本\n\"\"\n当前缓冲\n\"当前未保存说明 · 比较不会改变默认或采用\"\n通用配置 · inputModalities\n保存版本\n{\n  \"mode\": \"inherit\"\n}\n当前缓冲\n{\n  \"mode\": \"custom\",\n  \"value\": [\n    \"text\",\n    \"image\"\n  ]\n}\n通用配置 · reasoningEfforts\n保存版本\n{\n  \"mode\": \"inherit\"\n}\n当前缓冲\n{\n  \"mode\": \"custom\",\n  \"value\": []\n}\n通用配置 · fast\n保存版本\n{\n  \"mode\": \"inherit\"\n}\n当前缓冲\n{\n  \"mode\": \"custom\",\n  \"value\": false\n}\n关闭",
+  "actualActions": [
+    "input modalities inherit->custom text+image",
+    "effort inherit->explicit custom empty",
+    "Fast inherit->explicit false"
+  ],
+  "saved": false
+}

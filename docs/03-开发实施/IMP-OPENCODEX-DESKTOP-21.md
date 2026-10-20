@@ -856,3 +856,8 @@ checks-macos-current-editor-20261020.json绑定源码/真实二进制/安全字�
 ### 整合远端已有main基线
 
 PR8的base为ce2ada4b（0.1.10后远端既有交接与治理忽略提交），不是最初2578e11b。已核apps/.github/test两基线严格无差异，后续将origin/main以普通merge合入feature/0.2.0-model-config，保留远端所有已有提交与交接文件，不reset/重写历史或删除本地他人未跟踪内容。此整合只推进审阅基线，仍是草稿PR，不能解释为公开发布或免除当前平台/制品门；应用未变部分不重跑旧版专项。
+
+
+### 实际字段三态与默认独立的浏览器补验
+
+当前冻结UI通过真实控件操作继承→inputModalities text/image、reasoningEfforts明确空集合和Fast明确不支持，比较与保存版继承逐项显示准确mode/value。再选列表high及默认high，单独把默认恢复继承，差异仍保留列表high；最后列表恢复继承，high选项退出且默认保持继承。无文档横溢、未点击保存或发IPC/model请求。rule-tristate-browser-20261020.json保留实际差异文本，补AC-M07/42/44的控件可达/三态表达，服务越界/最终协议校验仍沿原测试，不从页面可编辑推导目标能力。无应用源码变化，不为本补验重启全量CI。
