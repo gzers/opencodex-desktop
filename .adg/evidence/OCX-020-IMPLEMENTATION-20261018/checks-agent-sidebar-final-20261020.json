@@ -1,0 +1,38 @@
+{
+  "scope": "按最终模型页交互撤回已取消的右下助手入口",
+  "sourceBase": "edb522fd",
+  "basis": "模型页交互细化§5明确只从左侧Agent自动填充打开，移除顶部重复条及右下动态图形启动器；20261004记录的36/56为被替代历史条件。",
+  "correction": "0d2ed027错误沿旧AC补了悬浮入口；本次移除该入口/compact动效扩展/gallery变体和对应登记。保留侧栏单入口控制同一非模态面板、收起回焦、切Tab隐藏及会话连续性。",
+  "checks": {
+    "affected": 7,
+    "fullFiles": 142,
+    "fullTests": 700,
+    "build": "passed"
+  },
+  "browser": {
+    "floating": 0,
+    "focusAfterCollapse": "Agent自动填充",
+    "overflow": false,
+    "screenshot": "agent-sidebar-final-20261020.png"
+  },
+  "nativeReuse": "两轮生成/冲突/接受/保存/停止只改变入口展现，不变AgentPanel/服务。先前native多轮证据仍有效；先前存在launcher的截图不当最终布局。",
+  "logs": [
+    {
+      "path": "sidebar-agent-test-20261020.log.gz",
+      "rawSha256": "fc50693a5217b074053b59dfdbc25c934097db2c5b6e0d112e2a28c66b7f7445"
+    },
+    {
+      "path": "sidebar-agent-build-20261020.log.gz",
+      "rawSha256": "81c79b26bdb48f4a6de2fe5136ba228351195634fc3b945093eb4b6ec5fe1525"
+    },
+    {
+      "path": "sidebar-agent-full-20261020.log.gz",
+      "rawSha256": "8d8a8981e2d17b88a27e7dcd647320e8d6169cb92741de014abd92fdc5bb3c11"
+    }
+  ],
+  "sources": {
+    "apps/desktop/ui/src/routes/ModelsRoute.vue": "71d015f5a8e54516ca1a1ab4774faa19aaa9ce53152e4be6e08037458e3c4550",
+    "apps/desktop/ui/tests/model-agent-entry.test.ts": "0b063816e15f60530316a8096278dc30c946e68e964b5128406b7c189caf7e9e",
+    "apps/desktop/ui/src/features/runtime/components/RuntimeMotionMark.vue": "c71d27c913240c50e4b7355e18b1194555c59a9ebd503c2a1cb7931c1f53892f"
+  }
+}

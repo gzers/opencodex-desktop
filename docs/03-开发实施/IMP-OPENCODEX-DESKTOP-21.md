@@ -724,3 +724,10 @@ CI39419001884/ec7663的后端/前端/发布工具均成功，Windows最终EXE首
 ### 主窗前端拖放准入修正
 
 沿上一节安装SDK的明确Windows要求，主窗dragDropEnabled=false，停止由Tauri原生处理器拦截前端HTML5拖放。当前没有原生文件drop事件消费者，导入仍用系统选择器；业务渠道/型号排序沿原DOM handler，未新增第三套排序。cargo check --locked --bins成功解析配置并完成编译，checks-native-drag-config-20261020.json绑定最终文件和日志。不把该配置门或未命中的macOS指针操作称作物理拖动通过；后续当前源最终Windows/宿主验收继续取证。
+
+
+### 按最终交互撤回助手悬浮入口
+
+进一步核对《模型页交互细化》§5发现最终文字明确移除顶部重复条与右下启动器，只保留左侧Agent自动填充；早期AC-M93/G-11与本轮摘要仍留36/56，0d2ed027误按历史条件增加了被撤销入口。本次直接按已有最终决定撤回悬浮按钮、RuntimeMotionMark compact扩展、gallery变体和登记；保留侧栏单入口、aria-controls/expanded、收起回焦和切Tab隐藏同会话。没有再向用户引入新决定，原错误提交/证据保留并在当前索引明确失效。
+
+当前AC-M93/G-11和UI规范同步标注最终入口，避免后续再按历史条件开发。新正式组件测试验证无悬浮入口、侧栏打开同一非模态面板/收起回焦/切Tab隐藏保留；相关7项及最终全量142文件700项、构建通过。DEV单入口打开→收起，floating0/焦点Agent自动填充/无文档溢出，checks-agent-sidebar-final-20261020.json。原生多轮链仅入口展现不同，服务/AgentPanel未改，复用真实两轮及停止证据；旧launcher截图不当最终布局。
