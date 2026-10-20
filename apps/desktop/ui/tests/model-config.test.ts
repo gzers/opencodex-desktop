@@ -40,6 +40,15 @@ describe('model template working buffer', () => {
     finish({ snapshot: saved, templateId: 'template', revisionId: revision().id, changed: true }); await first
     expect(store.dirty).toBe(false); expect(store.draft!.templateId).toBe('template'); expect(store.status).toBe('已保存')
   })
+  it('retains separate target buffers and their original optimistic baselines when switching templates',async()=>{
+    const store=useModelsStore();store.snapshot=snapshot();const first=store.snapshot.library.templates[0]!
+    const second={...JSON.parse(JSON.stringify(first)),id:'second',label:'另一模版'};store.snapshot.library.templates.push(second)
+    store.edit(first);const session=store.draftSession;store.draft!.content.description='第一处未保存'
+    store.snapshot.libraryDigest='later';store.edit(second);store.draft!.content.description='第二处未保存'
+    store.edit(first);expect(store.protectsRevision(first.id,first.revisions[0]!.id)).toBe(true);expect(store.protectsRevision(second.id,second.revisions[0]!.id)).toBe(true);expect(store.draft!.content.description).toBe('第一处未保存');expect(store.draftSession).toBe(session);expect(store.dirty).toBe(true)
+    vi.mocked(modelApi.save).mockRejectedValue({message:'基准已变化'});await store.save();expect(modelApi.save).toHaveBeenCalledWith(expect.anything(),'base')
+    store.edit(second);expect(store.draft!.content.description).toBe('第二处未保存');store.leave();store.edit(second);expect(store.draft!.content.description).toBe('')
+  })
   it('copies the complete selected content to a fresh identity without defaults', () => {
     const store = useModelsStore(); const source = snapshot().library.templates[0]!
     source.defaultRevision = revision().id; source.revisions[0]!.content.rules.fast = { mode: 'custom', value: false }

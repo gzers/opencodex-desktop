@@ -13,6 +13,16 @@ export const useModelsStore = defineStore('model-config', () => {
   const error = ref('')
   const status = ref('')
   const selected = ref<Record<string, string>>({})
+  const view = ref({tab:'channels' as 'channels'|'templates',templateSearch:'',selectedTemplates:[] as string[],templateEditor:false,templatePosition:'',channelSearch:'',channelEditor:'',selectedChannels:[] as string[],channelFilters:{} as Record<string,{search:string;selectedOnly:boolean;family:string}>,positions:{} as Record<string,{top:number;focus:string|null}>})
+  let bufferKey = ''
+  const buffers = new Map<string,{draft:TemplateDraft;clean:string;baseline:string;session:string}>()
+  function retainTemplate() {
+    if (draft.value && bufferKey) buffers.set(bufferKey,{draft:JSON.parse(JSON.stringify(draft.value)),clean:clean.value,baseline:editBaseline.value,session:draftSession.value})
+  }
+  function protectsRevision(templateId:string,revisionId:string){
+    if(dirty.value&&draft.value?.templateId===templateId&&draft.value.baseRevision===revisionId)return true
+    return [...buffers.values()].some(buffer=>buffer.draft.templateId===templateId&&buffer.draft.baseRevision===revisionId&&JSON.stringify(buffer.draft)!==buffer.clean)
+  }
   const notificationTarget = ref<{taskId:string;submissionId:string} | null>(null)
   const policyNotificationTarget=ref<{planId:string}|null>(null)
   const channelDraft = ref<ModelPolicy | null>(null)
@@ -66,13 +76,21 @@ export const useModelsStore = defineStore('model-config', () => {
     } catch (cause) { error.value = errorText(cause) } finally { busy.value = false }
   }
   function edit(template?: Template, revisionId?: string, copy = false) {
-    draftSession.value = crypto.randomUUID()
     const revision = template?.revisions.find(item => item.id === revisionId) ?? template?.revisions.at(-1)
+    retainTemplate()
+    bufferKey=JSON.stringify([template?.id??'new',revision?.id??'',copy])
+    const retained=buffers.get(bufferKey)
+    if(retained){draft.value=JSON.parse(JSON.stringify(retained.draft));clean.value=retained.clean;editBaseline.value=retained.baseline;draftSession.value=retained.session;error.value='';status.value='';return}
+    draftSession.value = crypto.randomUUID()
     draft.value = { templateId: copy ? null : template?.id ?? null, baseRevision: copy ? null : revision?.id ?? null, label: template ? `${template.label}${copy ? ' 副本' : ''}` : '', content: revision ? JSON.parse(JSON.stringify(revision.content)) : emptyContent() }
     clean.value = JSON.stringify(draft.value); error.value = ''; status.value = ''
     editBaseline.value = snapshot.value?.libraryDigest ?? ''
   }
-  function leave() { draft.value = null; clean.value = ''; status.value = ''; error.value = '' }
+  function leave() { buffers.delete(bufferKey);bufferKey='';draft.value = null; clean.value = ''; status.value = ''; error.value = '';view.value.templateEditor=false }
+  function restoreTemplate(){
+    if(!draft.value||busy.value||!clean.value)return
+    draft.value=JSON.parse(clean.value);buffers.delete(bufferKey);draftSession.value=crypto.randomUUID();error.value='';status.value=''
+  }
   async function save() {
     if (!snapshot.value || !draft.value || busy.value) return
     const request = JSON.parse(JSON.stringify(draft.value)) as TemplateDraft
@@ -82,6 +100,7 @@ export const useModelsStore = defineStore('model-config', () => {
       const result = await modelApi.save(request, expected)
       snapshot.value = result.snapshot
       const template = result.snapshot.library.templates.find(item => item.id === result.templateId)
+      buffers.delete(bufferKey);draft.value=null
       edit(template, result.revisionId)
       selected.value[result.templateId] = result.revisionId
       status.value = result.changed ? '已保存' : '无内容变化'
@@ -102,5 +121,5 @@ export const useModelsStore = defineStore('model-config', () => {
     workspaceBaseline.value = saved.workspaceDigest
     // The template editor keeps its original buffer and optimistic baseline.
   }
-  return { snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
+  return { view, protectsRevision, restoreTemplate, snapshot, draft, draftSession, notificationTarget, policyNotificationTarget, dirty, busy, error, status, selected, channelDraft, channelDirty, channelBaseline, channelError, staging, persistDraft, acceptTransfer, load, edit, leave, save, restoreChannels }
 })

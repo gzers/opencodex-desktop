@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch, onBeforeUnmount } from 'vue'
+import { computed, reactive, ref, watch, onBeforeUnmount, toRef } from 'vue'
 import UiButton from '@/components/ui/UiButton.vue'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import ModelRuleFields from './ModelRuleFields.vue'
@@ -8,7 +8,7 @@ import { useNodeMeasurements } from './useNodeMeasurements'
 import {reorderSlots} from './ordering'
 import {useModalStore} from '@/app/modal/store'
 import { emptyRules, modelApi, errorText, type ChannelPolicy, type Template, type TemplateRef, type ModelProjection, type DiscoveredModel, type ModelNaming } from './api'
-const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean;globalRefs?:TemplateRef[];projection?:ModelProjection[];projectionBusy?:boolean;projectionError?:string }>()
+const props = defineProps<{ channel: ChannelPolicy; templates: Template[]; busy?: boolean;existing?:boolean;globalRefs?:TemplateRef[];projection?:ModelProjection[];projectionBusy?:boolean;projectionError?:string;viewState?:{search:string;selectedOnly:boolean;family:string} }>()
 const emit = defineEmits<{ close: [] }>()
 const modal=useModalStore()
 const modelKeys=new WeakMap<DiscoveredModel,string>()
@@ -45,7 +45,8 @@ function chosen(id: string) { return props.channel.selection.mode === 'all' || (
 function addNode() { props.channel.connection.nodes.push({ id: crypto.randomUUID(), name: '', url: '' }) }
 function addModel() { props.channel.discovered.push({ id: '', label: '', rules: emptyRules() }) }
 const orderedModels=computed(()=>{const rank=new Map(props.channel.modelOrder.map((id,index)=>[id,index]));return [...props.channel.discovered].sort((a,b)=>(rank.get(a.id)??Number.MAX_SAFE_INTEGER)-(rank.get(b.id)??Number.MAX_SAFE_INTEGER))})
-const modelSearch=ref('');const selectedOnly=ref(false);const familyFilter=ref('all');const draggedModel=ref('')
+const filters=props.viewState??reactive({search:'',selectedOnly:false,family:'all'})
+const modelSearch=toRef(filters,'search');const selectedOnly=toRef(filters,'selectedOnly');const familyFilter=toRef(filters,'family');const draggedModel=ref('')
 const adoptedFamilies=computed(()=>props.templates.filter(t=>(props.globalRefs??[]).some(r=>r.templateId===t.id)||props.channel.templateRefs.some(r=>r.templateId===t.id)||Object.values(props.channel.modelRefs).some(r=>r.templateId===t.id)||t.id in props.channel.familyOverrides))
 const projectionById=computed(()=>new Map((props.projection??[]).map(row=>[row.modelId,row])))
 const familyOptions=computed(()=>[{value:'all',label:'全部族'},{value:'unmatched',label:'未采用模版匹配'},...adoptedFamilies.value.map(t=>({value:t.id,label:t.label}))])

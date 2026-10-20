@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiButton from '@/components/ui/UiButton.vue'
@@ -12,9 +12,10 @@ import AgentPanel from '@/features/models/AgentPanel.vue'
 import BatchAgentDialog from '@/features/models/BatchAgentDialog.vue'
 import { useModelsStore } from '@/features/models/store'
 import { emptyRules, errorText, modelApi, versionLabel, type MatchPreview, type Pattern, type Revision, type Template, type OwnerTaskResult } from '@/features/models/api'
+import { useModelViewPosition } from '@/features/models/useViewPosition'
 import { useModalStore } from '@/app/modal/store'
 const models = useModelsStore()
-const modal = useModalStore()
+const modal=useModalStore()
 const page = ref<HTMLElement | null>(null)
 const detailHead = ref<HTMLElement | null>(null)
 let headerObserver: ResizeObserver | undefined
@@ -25,7 +26,8 @@ watch(detailHead, head => {
   measure()
 })
 onBeforeUnmount(() => headerObserver?.disconnect())
-const tab = ref<'channels' | 'templates'>('channels')
+const tab = toRef(models.view,'tab')
+useModelViewPosition(page,()=>tab.value==='templates'?(models.view.templateEditor&&models.draft?'template:'+models.view.templatePosition:'templates'):(models.view.channelEditor?'channel:'+models.view.channelEditor:'channels'))
 watch(()=>models.policyNotificationTarget,target=>{if(target)tab.value='channels'},{immediate:true})
 const agentOpen = ref(false)
 const batchOpen=ref(false)
@@ -40,8 +42,8 @@ watch(() => models.notificationTarget, async target => {
   try { const result = await modelApi.externalResult(target.taskId,target.submissionId); if (sequence === receiptSequence) receiptResult.value = result }
   catch (cause) { if (sequence === receiptSequence) receiptError.value = errorText(cause) }
 }, { immediate: true })
-const selectedTemplates = ref<string[]>([])
-const search = ref('')
+const selectedTemplates = toRef(models.view,'selectedTemplates')
+const search = toRef(models.view,'templateSearch')
 const draft = computed(() => models.draft)
 const templates = computed(() => models.snapshot?.library.templates.filter(t => t.label.toLowerCase().includes(search.value.toLowerCase())) ?? [])
 const managerId = ref('')
@@ -71,12 +73,11 @@ onMounted(async () => {
   } catch { /* Explicit IPC errors remain visible through the saved-state read. */ }
 })
 onBeforeUnmount(() => { disposed = true; stopChanges?.() })
-function continueAfterDiscard(action: () => void) {
-  if (models.busy) return
-  if (!models.dirty) return action()
-  modal.open({ title: '处理未保存修改', body: '放弃当前模版的未保存修改后继续？', confirmLabel: '放弃修改', primaryKind: 'danger', onConfirm: action })
+function edit(t?: Template, revisionId?: string, copy = false) { if(models.busy)return;models.edit(t, revisionId, copy);models.view.templatePosition=models.draftSession;models.view.templateEditor=true;managerId.value='' }
+function restoreTemplate(){
+  const baseline=JSON.stringify(models.draft),session=models.draftSession
+  modal.open({title:'还原模版修改',body:'还原当前模版到本次编辑的起点？其他模版与渠道草稿保持。',confirmLabel:'还原修改',onConfirm:()=>{if(JSON.stringify(models.draft)!==baseline||models.draftSession!==session){models.error='还原确认已过期，请重新核对';return}models.restoreTemplate()}})
 }
-function edit(t?: Template, revisionId?: string, copy = false) { continueAfterDiscard(() => { models.edit(t, revisionId, copy); managerId.value = '' }) }
 function current(t: Template) { return t.revisions.find(r => r.id === models.selected[t.id]) ?? t.revisions[t.revisions.length - 1]! }
 function choices(t: Template) {
   const ids = new Set([...t.revisions.slice(-5).map(r => r.id), current(t).id, t.defaultRevision])
@@ -89,7 +90,7 @@ function contentLock(field:string){if(!draft.value)return;const fields=draft.val
 function protectedReason(t: Template, r: Revision) {
   if (t.source === 'builtin' && r === t.revisions[0]) return '内置基线'
   if (t.defaultRevision === r.id) return '默认版本'
-  if (models.dirty && draft.value?.baseRevision === r.id) return '未保存编辑基准'
+  if (models.protectsRevision(t.id,r.id)) return '未保存编辑基准'
   return ''
 }
 async function makeDefault(t: Template, r: Revision) {
@@ -130,17 +131,17 @@ function prepareDelete() {
     <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><div id="model-tabs-actions"></div></div></StickyTabs>
     <p v-if="models.error" class="model-error" role="alert">{{ models.error }}</p>
     <div v-if="!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
-    <ChannelsView v-else-if="tab === 'channels'" actions-target="#model-tabs-actions" />
-    <template v-else-if="!draft">
-      <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
+    <ChannelsView v-if="models.snapshot" v-show="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
+    <template v-if="models.snapshot&&tab==='templates'&&(!draft||!models.view.templateEditor)">
+      <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton v-if="draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
       <div class="model-table-scroll"><table class="model-table"><thead><tr><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
         <td><label class="model-inline"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="`勾选${t.label}`" /><strong>{{ t.label }}</strong></label><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
         <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" @update:model-value="models.selected[t.id] = $event" /></td>
-        <td><div class="model-inline"><UiButton size="sm" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton></div></td>
+        <td><div class="model-inline"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton></div></td>
       </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p>
     </template>
-    <template v-else>
-      <header ref="detailHead" class="model-detail-head"><UiButton variant="ghost" @click="continueAfterDiscard(models.leave)">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span><UiButton :disabled="models.busy" @click="agentOpen = true">Agent自动填充</UiButton><UiButton :disabled="models.busy" @click="externalOpen = true">外部任务</UiButton><UiButton :disabled="models.busy" @click="previewOpen = true">匹配预览</UiButton><UiButton variant="primary" :loading="models.busy" :disabled="!models.dirty && !!draft.templateId" @click="models.save">保存</UiButton></header>
+    <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
+      <header ref="detailHead" class="model-detail-head"><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span><UiButton :disabled="models.busy" @click="agentOpen = true">Agent自动填充</UiButton><UiButton :disabled="models.busy" @click="externalOpen = true">外部任务</UiButton><UiButton :disabled="models.busy" @click="previewOpen = true">匹配预览</UiButton><UiButton variant="ghost" :disabled="!models.dirty||models.busy" @click="restoreTemplate">还原修改</UiButton><UiButton variant="primary" :loading="models.busy" :disabled="!models.dirty && !!draft.templateId" @click="models.save">保存</UiButton></header>
       <div class="model-editor"><nav class="model-anchors" aria-label="模版分区"><a v-for="item in [['basic','基本信息'],['matching','匹配规则'],['rules','通用配置'],['variants','版本或后缀'],['source','来源与版本']]" :key="item[0]" :href="`#model-${item[0]}`" @click.prevent="anchor(item[0]!)">{{ item[1] }}</a></nav><div class="model-form">
         <section id="model-basic"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label><label class="model-inline"><input type="checkbox" :checked="draft.content.lockedFields.includes('description')" :disabled="models.busy" @change="contentLock('description')" />锁定说明</label></section>
         <section id="model-matching"><h2>匹配规则</h2><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
