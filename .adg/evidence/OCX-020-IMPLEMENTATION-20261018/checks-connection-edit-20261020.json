@@ -40,7 +40,8 @@
     "clippy": "all targets -D warnings passed",
     "frontendFull": "133 files / 661 passed before readonly address follow-up",
     "finalAffected": "3 files / 13 passed including readonly node summary; new/edit two-step fixture, selection, identity/rules preserved",
-    "build": "passed after readonly follow-up; final DEV fixture replacing rather than adding is a fixture-only correction after build"
+    "build": "passed after readonly follow-up; final DEV fixture replacing rather than adding is a fixture-only correction after build",
+    "finalFixtureTypecheck": "passed after DEV replacement fixture correction"
   },
   "logs": [
     {
@@ -66,6 +67,10 @@
     {
       "file": "connection-edit-build-first-20261020.log.gz",
       "rawSHA256": "b332c4ec533bd5be6c6e6f34beee59101e4a8ad85ffbb668c382958bfbf14481"
+    },
+    {
+      "file": "connection-edit-dev-typecheck-20261020.log.gz",
+      "rawSHA256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
     }
   ],
   "browser": {
