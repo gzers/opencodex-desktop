@@ -667,3 +667,12 @@ UiSelectMenu键盘选项纳入menuitemradio；跨portal focusout按relatedTarget
 模版行初次显示默认版（缺默认才最新），短列表补“版本管理…”复用同窗；有脏编辑基准则锁行版本，handler也拒伪触发。设默认经应用公共确认，冻结库摘要/目标再调原service，取消或过期零写，不影响精确采用。新增动态确认中的模版/渠道名称统一HTML转义，正文仍沿唯一应用Modal，不把名称当HTML。
 
 新4项正式组件/纯行为检查覆盖全字段/全域与删除/增量范围、本机引用不显示、pending/管理只出意图、默认初选/脏基准锁/确认取消过期与既有引用保持。全量140文件694项通过后移除启停在连接摘要的重复显示，最终2文件4项及构建通过。DEV实际NewApi停用、搜索A6api→查看仍列NewApi启用true/false→继续编辑；短下拉→版本管理同窗，截图draft-review-search-outside/version-manager-shortcut。只是DEV视觉，不代替后端/原生全部组合。证据checks-draft-version-context-20261020.json。
+
+
+### 完整公共来源图与当前组合实测
+
+增加qa/component-inventory.mjs：读取实际src导入依赖，按既有43稳定ID输出直接消费者及应用/DEV可达图、实现SHA和漏登记/失效路径；明确含类型/动态导入的静态图不等于运行采样。首次发现useShellLayout、treeTable和modalContent三个公共辅助契约未列入来源，现归原layout.split/data.tree/overlay.modal-host，不新增无依据ID。22个公共组件/辅助源全部有归属，源码门将未来漏登记或失效实现拒绝。NodeExamples补真实ChannelNodeSelect只读样例，不能调用真实检测；业务检测样例/服务证据单列。
+
+CUA当前gallery长内容48组（亮暗×高/中/低×50/100/150/200%×900/1180物理样例宽）实际布局测量：样例卡片无内部横溢/图片均加载、文字按钮28/34/40逻辑盒高及字体/行高/内距逐项保留、开关命中28/拇指16不变。初探把before误标轨道，已回读样式确认before拇指、after轨道；另六主题档位实际回读轨道38×22，不伪报48次轨道采样。三档材质分别0.52/0.56玻璃和低档白/38实底无blur。新增节点触发器发现手工箭头与公共伪元素重复、长名称折行，现只沿公共箭头，名称省略/延迟单行，200%只读菜单边缘与六档触发器重新核对。样例宽不是原生窗口，不以该矩阵替代每个业务/平台交互。
+
+复核默认确认原生层次发现版本管理UiDialog仍open时应用AppModal位于其下会不可操作，现先关版本管理、nextTick后公共确认，取消/结束回原管理状态；过期拒绝仍保持。正式组件测试含返回/取消/已采用不升级，实际DEV第二保存版确认窗口可见且原生dialog open0，主按钮焦点正确，取消后恢复版本管理open1/default1。默认写服务没改。源码测试初用jsdom URL构造与stub标题误判已修，失败原件保留。最终全量141文件696项、构建及来源图门通过；证据checks-current-component-coverage-20261020.json。registry全部矩阵状态不据本轮静态图自动晋升，后续收口实际消费者与Windows受影响流程。

@@ -1,0 +1,127 @@
+{
+  "scope": "组件来源完整性/当前48组静态几何与默认确认弹层",
+  "date": "2026-10-20",
+  "sourceInventory": {
+    "registrations": 43,
+    "publicSources": 22,
+    "unregistered": 0,
+    "missingImplementations": 0,
+    "contract": "static imports include type/dynamic references; not proof of executed runtime consumers"
+  },
+  "matrix": {
+    "cases": 48,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "effects": [
+      "high",
+      "mid",
+      "low"
+    ],
+    "scale": [
+      50,
+      100,
+      150,
+      200
+    ],
+    "physicalSampleWidths": [
+      900,
+      1180
+    ],
+    "longText": true,
+    "sampleOverflowCases": 0,
+    "brokenImages": 0,
+    "buttonLogicalHeights": [
+      28,
+      34,
+      40
+    ],
+    "switchHitLogicalHeight": 28,
+    "switchThumbLogicalHeight": 16,
+    "trackDimensionsSeparateSixThemeTierMeasurements": "38x22",
+    "boundary": "sample physical widths, not native window dimensions; 48 captures precede node single-line tweak; final six theme/tier plus 200% menu rechecked"
+  },
+  "defaultLayer": {
+    "confirmationVisible": true,
+    "focused": "设为默认",
+    "overflow": false,
+    "visibleNativeDialogs": 0,
+    "afterCancel": {
+      "currentDefault": 1,
+      "nativeOpen": [
+        "版本管理 · GPT"
+      ]
+    }
+  },
+  "checks": {
+    "frontFullFiles": 141,
+    "frontTests": 696,
+    "build": "passed"
+  },
+  "logs": [
+    {
+      "path": "component-inventory-tests-20261020.log.gz",
+      "rawSha256": "e89c916d0000585841f945e0335fee29554f8440a9ba3048001f83c63deaf422"
+    },
+    {
+      "path": "inventory-modal-final-tests-20261020.log.gz",
+      "rawSha256": "7c81deba099f8812d28366435bc17de69ca57a15ff97622cee3c891be72c1f21"
+    },
+    {
+      "path": "inventory-final-ui-20261020.log.gz",
+      "rawSha256": "0404ee878f42e0f0c9f71a7d034a1772e8c5fa700866c9aa9a95da0e4d7ff9c9"
+    },
+    {
+      "path": "inventory-final-build-20261020.log.gz",
+      "rawSha256": "a983d68d8dc845e9958cb1c06555262ab2a24a51b03df9dce31ec0129cb77247"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/ui/package.json",
+      "sha256": "2162db5a8007e6fdd393b60bfd3fd0689d6415e36c4a6017c31d114249fb48be"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/README.md",
+      "sha256": "39bf78e33041e8742b74f1e815ec55bc2a5de2ab19323a0a37e0999014df345d"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "61c16306e3389a6ceec690370e111642821a961a3db8bf3625d0acd67a204ec8"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/component-gallery/NodeExamples.vue",
+      "sha256": "4a3f1f15a8bae82bab543d8376f7235e212c7885d656db055964620e848b78cd"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "3fa8571676c6feb9ef65512fd19120e09a7975cf76728a2069d48f24f3597870"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelNodeSelect.vue",
+      "sha256": "b7a9a2e38141b8c2fe2b09db1e6834cbf31de21ce4168fc8fd0f34da598dd316"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "79705453baa5e516aa0bceee53300989904fd58a22611d6a9888e4094cc44527"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-template-version-context.test.ts",
+      "sha256": "4a8168e3ae11818d458e19bba4e73aeeb63a98917f830d22c8fd2deec656e316"
+    },
+    {
+      "path": "apps/desktop/ui/qa/component-inventory.mjs",
+      "sha256": "74d3dadcfbe5cf202a839babe294402123cb0333596a526c3420154f65ce8a91"
+    },
+    {
+      "path": "apps/desktop/ui/tests/component-inventory.test.mjs",
+      "sha256": "cec3a337a3ddaa57d4cf009768a82a192f52ea386f5a8968013740944cbe2077"
+    }
+  ],
+  "limitations": [
+    "not full functional/keyboard/native matrix for every consumer",
+    "platform-specific sources are unchanged from0.1.10 but final platform artifact validation still separate",
+    "componentRegistry retains pending_full_matrix; this receipt does not promote all items to passed"
+  ]
+}
