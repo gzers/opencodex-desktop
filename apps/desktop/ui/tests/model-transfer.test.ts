@@ -6,9 +6,9 @@ import ModelTransfer from '@/features/sync/ModelTransfer.vue'
 import { modelTransferApi, scopeFor, type ModelPackage } from '@/features/sync/modelTransfer'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
 import { useModelsStore } from '@/features/models/store'
-import { emptyContent, type ModelSnapshot } from '@/features/models/api'
+import { emptyContent, emptyRules, type ChannelPolicy, type ModelSnapshot } from '@/features/models/api'
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn().mockResolvedValue('/fixture/models.json') }))
-vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
+vi.mock('@/features/sync/modelTransfer', async original => ({ ...await original<typeof import('@/features/sync/modelTransfer')>(), modelTransferApi: {prepareDraft:vi.fn(),prepare:vi.fn(),export:vi.fn(),receive:vi.fn(),accept:vi.fn(),select:vi.fn(),prepareUpload:vi.fn(),publish:vi.fn(),download:vi.fn(),latestIncoming:vi.fn(),recompare:vi.fn(),openReceived:vi.fn(),loadRemoteScope:vi.fn(),saveRemoteScope:vi.fn(),latestUpload:vi.fn(),accountCatalog:vi.fn(),channelCatalog:vi.fn(),extensionCatalog:vi.fn()} }))
 function snapshot(): ModelSnapshot {
   return { library:{schemaVersion:1,templates:[{id:'family',label:'测试族',source:'user',defaultRevision:null,revisions:[{id:'revision-1',createdAt:'2026-10-18T00:00:00Z',savedLabel:'测试族',content:emptyContent(),digest:'digest',baseRevision:null,changes:[]}]}]},policy:{schemaVersion:1,channels:[],templateRefs:[]},libraryDigest:'library',policyDigest:'policy',workspace:null,workspaceDigest:'workspace' }
 }
@@ -25,6 +25,18 @@ async function customExportScope(wrapper:ReturnType<typeof render>){
 
 beforeEach(() => { setActivePinia(createPinia());vi.clearAllMocks();vi.mocked(modelTransferApi.accountCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.channelCatalog).mockResolvedValue([]);vi.mocked(modelTransferApi.extensionCatalog).mockResolvedValue({skills:['fixture-skill'],mcps:['fixture-mcp']});vi.mocked(modelTransferApi.loadRemoteScope).mockResolvedValue({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:true,includeKeys:false});useModelsStore().snapshot=snapshot() })
 describe('model transfer review', () => {
+  it('exports an explicitly selected staged draft as a candidate without manager objects or credentials',async()=>{
+    const store=useModelsStore();const channel:ChannelPolicy={id:'draft-channel',label:'未提交渠道',connection:{providerId:'draft',protocol:'openai-chat',nodes:[{id:'node',name:'主站',url:'https://example.test'}],activeNodeId:'node',credentialRef:'local-secret-ref',enabled:false,allowPrivateNetwork:false},selection:{mode:'whitelist',models:['raw']},modelOrder:['raw'],discovered:[{id:'raw',label:'raw',rules:emptyRules()}],templateRefs:[],modelRefs:{},defaults:emptyRules(),overrides:{},familyOverrides:{}}
+    store.channelDraft={...store.snapshot!.policy,channels:[channel]}
+    vi.spyOn(store,'persistDraft').mockResolvedValue(undefined)
+    vi.mocked(modelTransferApi.prepareDraft).mockResolvedValue({id:'candidate',package:{...pack(),formatVersion:4,payload:{...pack().payload,candidate:{expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace'}}}})
+    const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
+    const source=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='导出来源')!;source.vm.$emit('update:modelValue','draft');await flushPromises()
+    expect(wrapper.text()).toContain('未提交草稿');expect(wrapper.text()).not.toContain('携带所选渠道的Key池');expect(wrapper.findAll('button').find(b=>b.text()==='预览清单')!.attributes('disabled')).toBeDefined()
+    await chooseExport(wrapper,'未提交渠道');await wrapper.findAll('button').find(b=>b.text()==='预览清单')!.trigger('click');await flushPromises()
+    expect(modelTransferApi.prepareDraft).toHaveBeenCalledWith(expect.objectContaining({includePolicy:true,channelIds:['draft-channel'],includeGlobal:false}),{expectedLibrary:'library',expectedPolicy:'policy',expectedWorkspace:'workspace'},undefined)
+    expect(modelTransferApi.prepare).not.toHaveBeenCalled();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(wrapper.text()).toContain('未提交草稿候选');wrapper.unmount()
+  })
   it('share and device-transfer presets freeze separate protected selections and still require custom asset review',async()=>{
     vi.mocked(modelTransferApi.prepare).mockResolvedValue({id:'preset',package:pack()});const wrapper=render();await flushPromises();await wrapper.findAll('button').find(b=>b.text()==='导出配置')!.trigger('click');await flushPromises()
     const preset=wrapper.findAllComponents(UiSelectField).find(c=>c.props('label')==='配置范围预设')!

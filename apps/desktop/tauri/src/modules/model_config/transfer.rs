@@ -68,6 +68,9 @@ pub(super) fn same_destination(left: &PortableChannel, right: &PortableChannel) 
     }
 }
 fn package_version(payload: &TransferPayload) -> u32 {
+    if payload.candidate.is_some() {
+        return 4;
+    }
     if payload.policy.iter().flat_map(|p| &p.channels).any(|c| {
         c.model_subset.is_some() || c.connection.as_ref().is_some_and(|v| v.provider.is_some())
     }) {
@@ -95,6 +98,15 @@ pub struct PortablePolicy {
 pub struct TransferPayload {
     pub templates: Vec<Template>,
     pub policy: Option<PortablePolicy>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub candidate: Option<DraftCandidate>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct DraftCandidate {
+    pub expected_library: String,
+    pub expected_policy: String,
+    pub expected_workspace: String,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -275,6 +287,16 @@ pub fn prepare_file_scope(
         package.payload.templates.clear();
         package.digest = sha256(&serde_json::to_vec(&package.payload)?);
     }
+    freeze_file_package(root, id, package, passphrase, include_keys, manager_scope)
+}
+fn freeze_file_package(
+    root: &Path,
+    id: String,
+    package: ModelPackage,
+    passphrase: Option<&str>,
+    include_keys: bool,
+    manager_scope: &crate::modules::sync::portable_manager::Scope,
+) -> ModelResult<FileExportPlan> {
     let (bytes, credential_count, manager, assets) = super::file_objects::seal_manager(
         root,
         &id,
@@ -301,6 +323,51 @@ pub fn prepare_file_scope(
         0o600,
     )?;
     Ok(plan)
+}
+pub fn prepare_draft_file(
+    root: &Path,
+    scope: ExportScope,
+    expected: DraftCandidate,
+    passphrase: Option<&str>,
+) -> ModelResult<FileExportPlan> {
+    let mut snapshot = ModelStore::new(root).load()?;
+    if snapshot.library_digest != expected.expected_library
+        || snapshot.policy_digest != expected.expected_policy
+        || snapshot.workspace_digest != expected.expected_workspace
+    {
+        return Err(invalid(
+            "stale_baseline",
+            "渠道工作区已变化，请重新核对导出范围",
+        ));
+    }
+    let workspace = snapshot
+        .workspace
+        .take()
+        .ok_or_else(|| invalid("draft_export", "没有已暂存的渠道工作区草稿"))?;
+    if !scope.include_policy || scope.channel_ids.is_empty() {
+        return Err(invalid("draft_export", "请明确选择至少一个草稿渠道"));
+    }
+    if scope
+        .channel_ids
+        .iter()
+        .any(|id| !workspace.policy.channels.iter().any(|c| &c.id == id))
+    {
+        return Err(invalid("draft_export", "所选渠道不在当前工作区"));
+    }
+    snapshot.policy = workspace.policy;
+    let mut package = export_snapshot(&snapshot, scope)?;
+    package.payload.candidate = Some(expected);
+    package.format_version = 4;
+    package.digest = sha256(&serde_json::to_vec(&package.payload)?);
+    validate_package(&package)?;
+    freeze_file_package(
+        root,
+        uuid::Uuid::new_v4().to_string(),
+        package,
+        passphrase,
+        false,
+        &Default::default(),
+    )
 }
 pub fn file_bytes(root: &Path, id: &str) -> ModelResult<Vec<u8>> {
     let plan: FileExportPlan = serde_json::from_slice(&crate::modules::backup::safety::read_file(
@@ -483,6 +550,9 @@ pub(super) fn scope_models(
 }
 pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
     let snapshot = ModelStore::new(root).load()?;
+    export_snapshot(&snapshot, scope)
+}
+fn export_snapshot(snapshot: &Snapshot, scope: ExportScope) -> ModelResult<ModelPackage> {
     let mut wanted: BTreeSet<(String, String)> = scope
         .template_refs
         .iter()
@@ -572,7 +642,11 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
             return Err(invalid("missing_dependency", "导出范围缺少精确保存版本"));
         }
     }
-    let payload = TransferPayload { templates, policy };
+    let payload = TransferPayload {
+        templates,
+        policy,
+        candidate: None,
+    };
     let digest = sha256(&serde_json::to_vec(&payload)?);
     Ok(ModelPackage {
         format: "OCXD_MODEL_CONFIG".into(),
@@ -585,11 +659,24 @@ pub fn export(root: &Path, scope: ExportScope) -> ModelResult<ModelPackage> {
 }
 pub(super) fn validate_package(package: &ModelPackage) -> ModelResult<()> {
     if package.format != "OCXD_MODEL_CONFIG"
-        || ![1, 2, 3].contains(&package.format_version)
+        || ![1, 2, 3, 4].contains(&package.format_version)
         || (package.format_version < package_version(&package.payload))
         || package.schema_version != SCHEMA_VERSION
     {
         return Err(invalid("package_version", "模型配置文件格式/版本不受支持"));
+    }
+    if let Some(candidate) = &package.payload.candidate {
+        if [
+            &candidate.expected_library,
+            &candidate.expected_policy,
+            &candidate.expected_workspace,
+        ]
+        .iter()
+        .any(|v| !v.starts_with("sha256:") || v.len() != 71)
+            || package.payload.policy.is_none()
+        {
+            return Err(invalid("draft_export", "草稿候选缺少有效源基准或渠道范围"));
+        }
     }
     if sha256(&serde_json::to_vec(&package.payload)?) != package.digest {
         return Err(invalid("package_digest", "模型配置文件摘要不匹配，未接受"));
@@ -766,6 +853,11 @@ fn merge(
     let mut library = local.library.clone();
     let seeds = seed_library();
     let mut notices = vec![];
+    if package.payload.candidate.is_some() {
+        notices.push(
+            "这是未提交渠道草稿候选；接收只进入本机工作区，不代表源端或本机运行配置已保存".into(),
+        );
+    }
     for incoming in &package.payload.templates {
         if let Some(existing) = library.templates.iter_mut().find(|t| t.id == incoming.id) {
             for revision in &incoming.revisions {
@@ -1091,6 +1183,12 @@ pub(super) fn merge_packages(
 ) -> ModelResult<ModelPackage> {
     validate_package(&remote)?;
     validate_package(&local)?;
+    if remote.payload.candidate.is_some() || local.payload.candidate.is_some() {
+        return Err(invalid(
+            "draft_remote",
+            "未提交候选不能作为WebDAV已提交配置合并",
+        ));
+    }
     let mut payload = remote.payload;
     for incoming in local.payload.templates {
         if let Some(existing) = payload.templates.iter_mut().find(|t| t.id == incoming.id) {
@@ -1837,6 +1935,121 @@ fn bind_credentials(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn draft_export_freezes_scoped_candidate_without_committing_or_publishing_it() {
+        let source = tempfile::tempdir().unwrap();
+        let target = tempfile::tempdir().unwrap();
+        let original = channel_fixture(source.path());
+        let store = ModelStore::new(source.path());
+        let before = store.load().unwrap();
+        let mut policy = before.policy.clone();
+        policy.channels[0].label = "尚未提交的新名称".into();
+        policy.channels[0].defaults.fast = Field::Custom(false);
+        let template = &before.library.templates[0];
+        let reference = TemplateRef {
+            template_id: template.id.clone(),
+            revision_id: template.revisions[0].id.clone(),
+        };
+        policy.channels[0].template_refs = vec![reference.clone()];
+        let staged = store
+            .stage_policy(
+                &before.policy_digest,
+                &before.workspace_digest,
+                policy.clone(),
+            )
+            .unwrap();
+        let scope = ExportScope {
+            channel_models: Default::default(),
+            include_policy: true,
+            channel_ids: vec![original.id.clone()],
+            template_refs: vec![],
+            include_global: false,
+        };
+        let expected = DraftCandidate {
+            expected_library: staged.library_digest.clone(),
+            expected_policy: staged.policy_digest.clone(),
+            expected_workspace: staged.workspace_digest.clone(),
+        };
+        let ordinary = export(source.path(), scope.clone()).unwrap();
+        assert_eq!(
+            ordinary.payload.policy.as_ref().unwrap().channels[0].label,
+            original.label
+        );
+        assert!(ordinary.payload.candidate.is_none());
+        let plan =
+            prepare_draft_file(source.path(), scope.clone(), expected.clone(), None).unwrap();
+        assert_eq!(plan.package.format_version, 4);
+        assert_eq!(plan.credential_count, 0);
+        assert!(plan.manager.as_ref().unwrap().accounts.is_empty());
+        let packaged = plan.package.payload.policy.as_ref().unwrap();
+        assert_eq!(packaged.channels.len(), 1);
+        assert_eq!(packaged.channels[0].label, "尚未提交的新名称");
+        assert!(packaged.template_refs.is_none() && packaged.channel_order.is_none());
+        assert_eq!(plan.package.payload.templates.len(), 1);
+        assert_eq!(plan.package.payload.templates[0].revisions.len(), 1);
+        let encoded = serde_json::to_string(&plan.package).unwrap();
+        assert!(!encoded.contains(original.connection.credential_ref.as_ref().unwrap()));
+        assert_eq!(store.load().unwrap().policy, before.policy);
+        assert_eq!(store.load().unwrap().workspace, staged.workspace);
+        let bytes = file_bytes(source.path(), &plan.id).unwrap();
+        let mut later = policy;
+        later.channels[0].label = "导出后的修改".into();
+        store
+            .stage_policy(&before.policy_digest, &staged.workspace_digest, later)
+            .unwrap();
+        assert_eq!(file_bytes(source.path(), &plan.id).unwrap(), bytes);
+        assert_eq!(
+            prepare_draft_file(source.path(), scope, expected, None)
+                .unwrap_err()
+                .code,
+            "stale_baseline"
+        );
+        let mut downgraded = plan.package.clone();
+        downgraded.format_version = 3;
+        assert_eq!(
+            validate_package(&downgraded).unwrap_err().code,
+            "package_version"
+        );
+        let mut forged = plan.package.clone();
+        forged.payload.candidate.as_mut().unwrap().expected_policy = sha256(b"another-policy");
+        assert_eq!(
+            validate_package(&forged).unwrap_err().code,
+            "package_digest"
+        );
+        assert_eq!(
+            merge_packages(ordinary, plan.package.clone())
+                .unwrap_err()
+                .code,
+            "draft_remote"
+        );
+        let incoming = super::super::file_objects::receive(target.path(), &bytes, None).unwrap();
+        assert!(incoming
+            .notices
+            .iter()
+            .any(|n| n.contains("未提交渠道草稿候选")));
+        assert!(ModelStore::new(target.path())
+            .load()
+            .unwrap()
+            .policy
+            .channels
+            .is_empty());
+        super::super::file_objects::accept_extended(
+            target.path(),
+            &incoming.id,
+            false,
+            false,
+            false,
+            None,
+        )
+        .unwrap();
+        let received = ModelStore::new(target.path()).load().unwrap();
+        assert!(received.policy.channels.is_empty());
+        assert_eq!(
+            received.workspace.unwrap().policy.channels[0].label,
+            "尚未提交的新名称"
+        );
+        assert!(!target.path().join("providers.json").exists());
+    }
     #[test]
     fn explicit_channel_mapping_preserves_local_connection_or_creates_a_separate_draft() {
         let source = tempfile::tempdir().unwrap();

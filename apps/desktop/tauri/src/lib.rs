@@ -523,6 +523,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::model_transfer::model_transfer_export,
             commands::model_transfer::model_transfer_prepare,
+            commands::model_transfer::model_transfer_prepare_draft,
             commands::model_transfer::model_transfer_receive,
             commands::model_transfer::model_transfer_accept,
             commands::model_transfer::model_transfer_select,

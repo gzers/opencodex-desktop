@@ -239,6 +239,28 @@ pub async fn model_transfer_export(
     .map_err(|_| invalid("transfer_worker", "导出任务中断"))?
 }
 #[tauri::command]
+pub async fn model_transfer_prepare_draft(
+    scope: ExportScope,
+    draft: transfer::DraftCandidate,
+    passphrase: Option<String>,
+    data_root: tauri::State<'_, SharedDataRoot>,
+) -> ModelResult<FileExportPlan> {
+    let root = data_root.0.clone();
+    let admission = crate::infrastructure::storage_writers::global().admit()?;
+    tauri::async_runtime::spawn_blocking(move || {
+        let _admission = admission;
+        let passphrase = passphrase.map(zeroize::Zeroizing::new);
+        transfer::prepare_draft_file(
+            &root,
+            scope,
+            draft,
+            passphrase.as_deref().map(|p| p.as_str()),
+        )
+    })
+    .await
+    .map_err(|_| invalid("transfer_worker", "草稿候选导出准备中断"))?
+}
+#[tauri::command]
 pub async fn model_transfer_prepare(
     scope: ExportScope,
     passphrase: Option<String>,

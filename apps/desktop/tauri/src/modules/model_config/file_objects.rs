@@ -876,6 +876,7 @@ pub fn receive_context(
             })
             .collect();
         let payload = transfer::TransferPayload {
+            candidate: None,
             templates: vec![],
             policy: None,
         };
