@@ -1,0 +1,146 @@
+{
+  "date": "2026-10-20",
+  "scope": "AC-M65所选族片段、共享字段独立选择与文件/WebDAV统一投影",
+  "status": "affected-checks-passed",
+  "checks": {
+    "rustAll": {
+      "passed": 950,
+      "existingIgnored": 4
+    },
+    "modelModule": 158,
+    "lastOfficialClosureCheck": 1,
+    "uiAllBeforeLastScopeTest": 673,
+    "finalUiScopeTests": 27,
+    "uiBuild": "passed",
+    "clippyAllTargets": "passed"
+  },
+  "proof": [
+    "精确版本闭包及源快照不变；不带连接/Key/共用默认",
+    "仅单型号采用保留modelRefs，不扩大为族级采用；空匹配可传规则",
+    "范围内规则/声明/有效全局采用草稿冲突拒绝，无关草稿合并",
+    "默认不改他族/连接/Key/选择/已有顺序；明确共享选项才改共用默认",
+    "完整远端文件先收窄族范围后选Key，族Key跳过；远端已有授权池/headers和连接保持",
+    "原渠道有效全局采用明确成渠道引用并带精确依赖",
+    "Vue型号/族互斥、空族阻止预览、共享默认独立选择、WebDAV范围恢复与保存不上传"
+  ],
+  "browser": {
+    "url": "http://127.0.0.1:5179/?__audit=1&route=models&familyScope=1&theme=light&effects=high#sync",
+    "fixture": "explicit DEV opt-in, no runtime or remote calls",
+    "observed": [
+      "NewApi只选GPT，Key选项禁用",
+      "预览1族/1保存版本，不展示节点或整渠道启用范围",
+      "暗色共享选项明确全部型号影响",
+      "无文档横溢"
+    ]
+  },
+  "screenshots": [
+    "family-scope-light-20261020.png",
+    "family-preview-light-20261020.png",
+    "family-scope-shared-dark-20261020.png"
+  ],
+  "logs": [
+    {
+      "path": "family-fragment-current-20261020.log.gz",
+      "rawSha256": "6b69a9bdd514f9009f310642c69bcd8864413468b6996b70672e5fa9a6385b50"
+    },
+    {
+      "path": "family-fragment-tests-20261020.log.gz",
+      "rawSha256": "1236681354d084fd7f25c8516a732f858d8f7a15aacebd082cc3d8da934e168a"
+    },
+    {
+      "path": "family-ui-tests-20261020.log.gz",
+      "rawSha256": "6f28e4b31bf4c2798d6e159848ac9d61cacdfe86ebfae60d06f4bb638feb8501"
+    },
+    {
+      "path": "family-ui-final-20261020.log.gz",
+      "rawSha256": "cbbb25b51eb398ac88ba5d29fb02db4b3d806ed75a9156d8218b6ce863b0c34a"
+    },
+    {
+      "path": "family-ui-verified-20261020.log.gz",
+      "rawSha256": "53d0c0543b7d2a9a57fb4840eab868c7e415a3d39baf687ccdf3e95a0b01e63e"
+    },
+    {
+      "path": "family-ui-all-20261020.log.gz",
+      "rawSha256": "62f8b8330d6a7e195f6617b76f9f6ad9db57637c84ed4d25cd71e228d675ad1b"
+    },
+    {
+      "path": "family-ui-build-final-20261020.log.gz",
+      "rawSha256": "ab2fc4dde528bd16886340b0f767d9a0b08b795f86b96656e1058dfdd14a2dc9"
+    },
+    {
+      "path": "family-model-verified-20261020.log.gz",
+      "rawSha256": "1143741d937106ed0f3cf7f06ad46cb5d4b5b684c899d325956aa3d8893f0e67"
+    },
+    {
+      "path": "family-rust-all-20261020.log.gz",
+      "rawSha256": "c606c491531f3d926d04befbb5fba0170df65a28394d94f51d6716bda8f089c3"
+    },
+    {
+      "path": "family-official-scope-20261020.log.gz",
+      "rawSha256": "0e25b2e07970ac3d6a6617acb4745d988f90dab954828bff31681fc22ff38282"
+    },
+    {
+      "path": "family-clippy-final-20261020.log.gz",
+      "rawSha256": "d63364e83c6145cdcb70168fa4f33b821cf2744522390591e6806198a240824c"
+    },
+    {
+      "path": "family-clippy-final-source-20261020.log.gz",
+      "rawSha256": "299f16a2c523be18fef769975d2df00e0505521db047540feea3a74b94666887"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/tauri/src/commands/model_transfer.rs",
+      "sha256": "397b664e88ba39f3696fc9ffa77c127cf272fb717b10ab1c6f6025587d1b2b76"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+      "sha256": "e27ee25f3b7a5db27657d52ff785cf7b7271f3a8ab45b10b132f823d3a68229f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+      "sha256": "95be600fb8d9a8513bca4cd36dc2a69e3b882802c6bd8ee311e49ca459f1375a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/portable_channels.rs",
+      "sha256": "41319d9bc92c45dc238651914561bbc15e7c8184a7bee1a1a283c0cea3fc8907"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/remote.rs",
+      "sha256": "e9cc2a3969c214662733ddea47563838e5056e7c6492c0f1fba6e1666cff516e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+      "sha256": "d477956730745e85324b06c6db8fac81479ee812dfbc1ec0c7a4dcbdd059af23"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/model_config_official_real.rs",
+      "sha256": "32bcae05625b78387b38f553aec533a2810669798e7195c4ca10c6977c1cb3cd"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "d68d5910c56eb50b75189ec8a44b0450667887ef9b88dad8a872cb78eccc068a"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ChannelModelScope.vue",
+      "sha256": "4c74e9d2d385dbefbc51016f7685ea1b73554ee17d2085c089c22bcd85b09cda"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/ModelTransfer.vue",
+      "sha256": "bd5d743512e8d6a65a346065f47a7ba84b14beec0941f9bdec61b2083050c384"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/sync/modelTransfer.ts",
+      "sha256": "cfe4027cc34fa15c58c9d2ffccfa62126aef45bbc826218a68543ff776b2aed9"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-transfer.test.ts",
+      "sha256": "da627a4e515d1791e220dff9d693a38db8ae1dc3d04ff8f56867d083445f847e"
+    }
+  ],
+  "limitations": [
+    "浏览器DEV不作为原生IPC/真实上传下载证据",
+    "未重跑未受影响的付费推理或日常账户/配置",
+    "AC-M65整体消费者门、其他UI/原生平台和0.2.0发布仍未完成"
+  ]
+}
