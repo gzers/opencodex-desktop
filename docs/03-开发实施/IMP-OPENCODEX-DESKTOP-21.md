@@ -642,3 +642,12 @@ ed9869d4 CI39388534118、77a7c3ec CI39388168722、027ee913 CI39385579545、dc8d9
 ### 回环实际wire专项初次发现（未收口）
 
 新增独立opt-in请求专项正在本地开发，所有generation形请求只终止于临时127.0.0.1静态服务，不付费。首次测试误从provider.models寻找Anthropic身份，源provider包含额外未发布声明导致选错；已改从真实pickerOrder取发布身份。此后实际3个HTTP均成功，别名回到原始ID、Chat pin+map high→low、Responses/Chat service_tier priority、Anthropic messages/speed fast均观察到；但Responses noReasoning=true仍送reasoning.effort=high，Anthropic noReasoning=true仍送thinking。这是当前2.84.0真实参数语义缺口，不能用先前字段保存读回来覆盖。测试断言保持失败，后续须进一步核对请求路径/上游能力并在共同保存能力门或适配中解决，不把未核验协议报支持；当前未提交该专项测试源码，版本不能发布。原始失败诊断单列checks-wire-investigation-20261020.json。
+
+
+### 实际请求能力门与支持范围收口
+
+沿前节真实失败继续核对安装源码及精确published pickerOrder，未修改安装包。noReasoningModels在2.84.0 Responses/Anthropic请求路径确未去caller推理参数；不是测试空对象。共同runtime编译在生成运行写入计划之前校验最终逐模型协议，显式noReasoning true/pin/非空map/authority true仅准入已核实Chat路径，其他返回reasoning_wire_unsupported并保留候选/工作区；不自动换协议。继承/移除约束及上游原字段在无关编辑中保持，新增12组合+旧值保持行为检查。候选定义的可复用规则不被删。ModelRuleFields高级区已说明该支持边界，契约字段与协议方案同步回写。
+
+独立opt-in wire实测：先共同保存成功，再从真实目录选provider而非从含未发布声明的models猜目标；Responses/Chat/Anthropic各1次请求成功，别名恢复rawID，Chat pin high经map成为low，Responses/Chat service_tier priority、Anthropic messages speed fast及beta准确。第二次保存仅Chat noReasoning true，再请求确认reasoning_effort缺席；共4次generation形请求全部终止于临时回环静态服务，付费0。Responses/Anthropic正常caller推理保留是正向路径事实，不再断言不支持的剥离已实现。初始失败日志保留，不降低未兑现语义。
+
+模型模块159项通过、Clippy全目标-D warnings及前端构建通过。旧同协议分组fixture仅验证落盘元数据，现对要求authority的base指定最终Chat；产品分组能力不变。旧installed完整保存/None/恢复/复制删除/授权历史链也改用已支持Chat测试请求约束，复制清空override时不再遗留Responses authority真，完整回归253.88秒通过且generation0；既有无关历史/保护证据复用。首次Clippy指出MutexGuard跨await，已改克隆回执后释放锁，无豁免。checks-wire-capability-20261020.json绑定最终源和全部原始日志。0.2.0仍须全部组件/消费者/平台与最终集成发布，不因本切片支持范围闭合提前发布。

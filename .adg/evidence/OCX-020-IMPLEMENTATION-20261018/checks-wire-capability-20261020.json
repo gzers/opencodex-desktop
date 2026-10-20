@@ -1,0 +1,107 @@
+{
+  "date": "2026-10-20",
+  "scope": "按实际2.84.0请求语义约束高级推理能力准入",
+  "status": "supported-wire-and-rejection-gate-passed",
+  "official": "2.84.0",
+  "positive": {
+    "savedPolicy": "committed",
+    "exactPublishedDirectoryIdentity": true,
+    "aliasRestoresRawId": true,
+    "requestProtocols": [
+      "/v1/responses",
+      "/v1/chat/completions",
+      "/v1/messages"
+    ],
+    "chatPinnedAndMap": "high -> low",
+    "chatNoReasoning": "reasoning_effort absent",
+    "fast": [
+      "Responses/Chat service_tier=priority",
+      "Anthropic speed=fast + fast-mode-2026-02-01 beta"
+    ],
+    "loopbackStaticGenerationRequests": 4,
+    "paidRequests": 0
+  },
+  "negative": {
+    "observedBeforeGate": [
+      "Responses noReasoning true did not strip caller reasoning",
+      "Anthropic noReasoning true did not strip thinking"
+    ],
+    "gate": "Explicit noReasoning=true / pin / nonempty map / authoritative=true on final non-Chat protocol returns reasoning_wire_unsupported before runtime writes",
+    "legacy": "unrelated edits retain upstream public fields; not a new product runtime guarantee",
+    "candidate": "full generic template rules remain preservable; concrete save checks supported scope"
+  },
+  "checks": {
+    "newCapabilityMatrix": "12 combinations plus legacy preservation",
+    "modelModulePassed": 159,
+    "clippyAllTargets": "passed",
+    "frontTaskChecks": 5,
+    "uiBuild": "passed",
+    "affectedInstalledConfigRecovery": "passed253.88s; generation0",
+    "focusedWire": "passed19.08s"
+  },
+  "logs": [
+    {
+      "path": "wire-real-supported-20261020.log.gz",
+      "rawSha256": "43f6632da6a42bc2c5ab38906ad15af7e3cf577052a8cf9e469dd2bc210d08ed"
+    },
+    {
+      "path": "wire-gate-models-20261020.log.gz",
+      "rawSha256": "6a54124e4ff3f18cace73441a7187c42971e2ac8d933d13b85b3923d546b51a0"
+    },
+    {
+      "path": "wire-gate-models-final-20261020.log.gz",
+      "rawSha256": "e1bcab70bf5ddc949db90d7d5b981119920516b2a08662ce2170401d045b93ba"
+    },
+    {
+      "path": "wire-gate-clippy-20261020.log.gz",
+      "rawSha256": "6c5f227f663ec142d64895368a9d34782f4b6208c17acbd6f15513e53f8221c9"
+    },
+    {
+      "path": "wire-gate-clippy-complete-20261020.log.gz",
+      "rawSha256": "5ae9499ea4ca96738605bc7d41ba1540c745bbb1dc161c90ba1831948f4fe36a"
+    },
+    {
+      "path": "wire-gate-partition-fixed-20261020.log.gz",
+      "rawSha256": "21462f32b6a2dfb16ba886b9bec7584ec327b4d5031a620b2d787c443928ca44"
+    },
+    {
+      "path": "official-gate-regression-20261020.log.gz",
+      "rawSha256": "9d00da37e9626533a4213ed7c42173b166b31d1978bbaf318ea420dac036f3ef"
+    },
+    {
+      "path": "official-gate-regression-fixed-20261020.log.gz",
+      "rawSha256": "ba8dd9e58590751e8221d4de890de9249fdf3fc6f1f991be625b7ec41bbf399b"
+    },
+    {
+      "path": "wire-ui-fields-20261020.log.gz",
+      "rawSha256": "ca58e243d53c1ec9c8f85599621b672819db05d9e63dbdad56846537ff678dfd"
+    },
+    {
+      "path": "wire-ui-build-20261020.log.gz",
+      "rawSha256": "07440414876d0daf4a971894360ef3ef4ed795ac4527f89d81d44efa0c2078ea"
+    }
+  ],
+  "sourceReceipts": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+      "sha256": "ab19c1ecdfa7e575799b0df5aa48fc0635708fff04e193fae20e6b0555170107"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/protocol_groups.rs",
+      "sha256": "4d2e107fac7b3d16f8ef2d4caa26c1aab4b4292f0ecfff94f92e33314bc12184"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/model_config_official_real.rs",
+      "sha256": "52c054ec519a112d293d96fa2b582d9ec1398714094e6f1080c074d6d29a5de5"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelRuleFields.vue",
+      "sha256": "75c605dee50d0878d3bb78646b9f6bdd1629964e90ad21a06377087fb92f3c60"
+    }
+  ],
+  "limitations": [
+    "exact installed2.84.0 and owned loopback endpoints only",
+    "not paid upstream model capability or all protocols/wire modes",
+    "not whole0.2.0 platform/consumer/release acceptance"
+  ]
+}
