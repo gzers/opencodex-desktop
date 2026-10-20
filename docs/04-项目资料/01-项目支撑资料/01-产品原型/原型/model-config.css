@@ -154,7 +154,7 @@
 .mp-template-name{padding:0;width:100%}
 /* 标题背景延伸到内容区两侧边缘，等量内距补偿保持控件与下方正文对齐。 */
 .mp-editor-head{position:sticky;top:var(--mp-editor-top,0px);z-index:5;display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:12px;box-sizing:border-box;margin-bottom:14px;margin-left:calc(-1 * var(--mp-header-inset-left,0px));margin-right:calc(-1 * var(--mp-header-inset-right,0px));padding:10px var(--mp-header-inset-right,0px) 10px var(--mp-header-inset-left,0px);border-bottom:1px solid var(--border)}
-.mp-tabs-bar,.mp-editor-head{background:linear-gradient(158deg,var(--notif-tint-a,#0000),#0000 62%),linear-gradient(24deg,var(--notif-tint-b,#0000),#0000 58%),var(--glass-fill,var(--panel));-webkit-backdrop-filter:var(--glass-blur-notif,none);backdrop-filter:var(--glass-blur-notif,none);}
+.mp-tabs-bar,.mp-editor-head{background:var(--sticky-surface-bg);-webkit-backdrop-filter:var(--sticky-surface-blur);backdrop-filter:var(--sticky-surface-blur);}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.mp-tabs-bar,.mp-editor-head{background:var(--panel)}}
 .mp-editor-heading{min-width:0}
 .mp-editor-head h2{margin:0;min-width:0;font-size:var(--text-subtitle)}

@@ -1,0 +1,120 @@
+{
+  "date": "2026-10-20",
+  "branch": "feature/0.2.0-model-config",
+  "baseCommit": "d975dc48b",
+  "sources": [
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "sha256": "840f5c62bff9dcc60402767a0a1192845f3707f09dc0ef998fddc4a488465ebf"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/ModelsRoute.vue",
+      "sha256": "740ecba0c08fb95cfac50007b08cb4a81c37a72db033dbded96c019ae45f901b"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/base.css",
+      "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+    },
+    {
+      "path": "apps/desktop/ui/src/styles/materials.css",
+      "sha256": "44bc8fd8796d401342c2d0a30d95ca79af7ca902b0a09f3e77d0543de5d8c1fe"
+    },
+    {
+      "path": "apps/desktop/ui/src/components/layout/StickyTabs.vue",
+      "sha256": "beb2450e2a88ef67f90c9adba81ea1320e00c21c1cc62b0e512dfdf15e83f4ef"
+    }
+  ],
+  "checks": [
+    {
+      "command": "npm test -- --run tests/overview-mods.test.ts tests/ui-components.test.ts tests/component-style-rules.test.ts && npm run build",
+      "workdir": "apps/desktop/ui",
+      "result": "passed",
+      "files": 3,
+      "tests": 14,
+      "source": "completed command session 55346; result retained in preceding execution context; no unrelated full-suite repeat",
+      "limitations": "Existing dynamic-import build warnings retained."
+    }
+  ],
+  "browser": {
+    "overview": {
+      "effects": "high",
+      "otherCard": [
+        {
+          "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, \"Noto Sans KR\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px"
+        },
+        {
+          "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, \"Noto Sans KR\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px"
+        }
+      ],
+      "overflow": false,
+      "rows": [
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "contentDisplay": "flex",
+          "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, \"Noto Sans KR\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px"
+        },
+        {
+          "background": "rgba(0, 0, 0, 0)",
+          "contentDisplay": "flex",
+          "fontFamily": "\"OpenAI Sans\", \"Pretendard Variable\", Pretendard, \"Noto Sans KR\", \"Apple SD Gothic Neo\", \"Malgun Gothic\", -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"PingFang SC\", \"Microsoft YaHei\", system-ui, sans-serif",
+          "fontSize": "12px",
+          "fontWeight": "400",
+          "lineHeight": "18px"
+        }
+      ],
+      "theme": "light"
+    },
+    "sticky": {
+      "highLight": {
+        "background": "rgba(244,245,249,0.52)",
+        "blur": "saturate(1.5) blur(8px)"
+      },
+      "highDark": {
+        "background": "rgba(34,36,42,0.56)",
+        "blur": "saturate(1.5) blur(8px)"
+      },
+      "midLight": {
+        "background": "rgba(244,245,249,0.52)",
+        "blur": "saturate(1.5) blur(8px)"
+      },
+      "lowLight": {
+        "background": "rgb(255,255,255)",
+        "blur": "none"
+      },
+      "inner": "transparent",
+      "scrollCheck": {
+        "mainScrollTop": 1198.5,
+        "stickyTop": 50
+      }
+    },
+    "prototype": {
+      "sharedCSSLoaded": true,
+      "scrollTop": 940.5,
+      "stickyTop": 30,
+      "theme": "dark",
+      "effects": "high"
+    }
+  },
+  "screenshots": [
+    "overview-upgrade-material-fixed.png",
+    "tabs-sticky-glass-fixed.png",
+    "tabs-sticky-dark-fixed.png",
+    "tabs-sticky-mid-fixed.png",
+    "tabs-sticky-low-fixed.png",
+    "prototype-tabs-material-fixed.png"
+  ],
+  "limitations": [
+    "DEV fixed fixtures, no real update transaction",
+    "Not full native macOS/Windows matrix",
+    "Backdrop unsupported fallback inspected in source; not emulated in browser"
+  ]
+}
