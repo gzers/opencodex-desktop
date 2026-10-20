@@ -15,7 +15,7 @@ import { useEffectsStore } from '@/app/appearance/effects'
 import { useGlowRenderStore } from '@/app/appearance/glowRender'
 import { useThemeStore } from '@/app/appearance/theme'
 
-const props = withDefaults(defineProps<{ state: MotionStateId; active?: boolean; compact?: boolean }>(), { active: true, compact: false })
+const props = defineProps<{ state: MotionStateId; active?: boolean }>()
 const effects = useEffectsStore()
 const glowRender = useGlowRenderStore()
 const theme = useThemeStore()
@@ -37,7 +37,7 @@ const reduced = computed(() => effects.strategy.effective !== 'high')
 const animating = computed(() => effects.strategy.animated && (props.active ?? true))
 const lightActive = computed(() => effects.strategy.lightAllowed && (props.active ?? true))
 // 低档无光场，不创建着色器层（与 CSS 侧 `html[data-effects="low"] .motion-ambient{display:none}` 对齐）。
-const meshEnabled = computed(() => !props.compact && glowRender.mode === 'mesh' && effects.strategy.effective !== 'low')
+const meshEnabled = computed(() => glowRender.mode === 'mesh' && effects.strategy.effective !== 'low')
 
 function mountMesh(): void {
   if (!layoutReady || disposed || mesh || !meshHostEl.value) return
@@ -63,7 +63,7 @@ function unmountMesh(): void {
 
 onMounted(() => {
   if (!ambientEl.value || !markEl.value) return
-  backdropTarget.value = props.compact ? null : ambientEl.value.closest<HTMLElement>('.route-section.ov')
+  backdropTarget.value = ambientEl.value.closest<HTMLElement>('.route-section.ov')
   scene = createMotionScene({
     ambient: ambientEl.value,
     markHost: markEl.value,
@@ -119,9 +119,8 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div :class="compact ? 'motion-glyph' : 'motion-mark'" aria-hidden="true">
-    <div v-if="compact" ref="ambientEl" hidden></div>
-    <Teleport v-if="!compact" :to="backdropTarget ?? 'body'" :disabled="!backdropTarget">
+  <div class="motion-mark" aria-hidden="true">
+    <Teleport :to="backdropTarget ?? 'body'" :disabled="!backdropTarget">
       <div class="motion-backdrop" aria-hidden="true">
         <div ref="meshHostEl" class="motion-mesh-host"></div>
         <div ref="ambientEl" class="motion-ambient">
@@ -133,10 +132,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </Teleport>
-    <div ref="markEl" :class="compact ? 'motion-glyph-mark' : 'motion-hero'"></div>
+    <div ref="markEl" class="motion-hero"></div>
   </div>
 </template>
-<style scoped>
-.motion-glyph,.motion-glyph-mark{display:block;width:36px;height:36px;background:transparent;border:0;box-shadow:none;pointer-events:none}
-.motion-glyph-mark :deep(svg){display:block;width:100%;height:100%;overflow:visible}
-</style>

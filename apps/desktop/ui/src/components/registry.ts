@@ -18,7 +18,7 @@ const entries:Array<Omit<ComponentRegistration,'specification'|'verification'>> 
  {"id":"content.markdown","name":"代码与富文本","section":"typography","kind":"component","implementations":["components/patterns/MarkdownContent.vue"],"consumers":["features/extensions/components/ExtensionDetailModal.vue"],"gallery":"typography"},
  {"id":"surface.recipe","name":"语义材质","section":"materials","kind":"recipe","implementations":["styles/materials.css"],"consumers":["App.vue"],"gallery":"materials"},
  {"id":"appearance.effects","name":"画质与主题","section":"materials","kind":"recipe","implementations":["app/appearance/effects.ts"],"consumers":["App.vue"],"gallery":"materials"},
- {"id":"icon.scale","name":"图标与点击区域","section":"icons-spacing","kind":"recipe","implementations":["styles/tokens.css","features/runtime/components/RuntimeMotionMark.vue"],"consumers":["components/AppTopbar.vue","routes/ModelsRoute.vue"],"gallery":"typography"},
+ {"id":"icon.scale","name":"图标与点击区域","section":"icons-spacing","kind":"recipe","implementations":["styles/tokens.css"],"consumers":["components/AppTopbar.vue"],"gallery":"typography"},
  {"id":"layout.stack","name":"纵向排列","section":"layout","kind":"component","implementations":["components/layout/Stack.vue"],"consumers":["dev/component-gallery/GalleryApp.vue"],"gallery":"layout"},
  {"id":"layout.inline","name":"横向排列","section":"layout","kind":"component","implementations":["components/layout/Inline.vue"],"consumers":["dev/component-gallery/GalleryApp.vue"],"gallery":"layout"},
  {"id":"layout.split","name":"分栏与响应式","section":"layout","kind":"recipe","implementations":["styles/base.css","components/layout/useShellLayout.ts"],"consumers":["routes/ModelsRoute.vue","App.vue"],"gallery":"layout"},

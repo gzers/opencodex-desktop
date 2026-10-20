@@ -14,7 +14,7 @@ const button=(wrapper:ReturnType<typeof mount>,label:string)=>wrapper.findAll('b
 describe('model view context',()=>{
  it('returns to the template list without discarding dirty input and restores it after route remount',async()=>{
   const pinia=createPinia();setActivePinia(pinia);const store=useModelsStore();store.view.tab='templates'
-  const options={global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,RuntimeMotionMark:true,BatchAgentDialog:true,ExternalTaskDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}}
+  const options={global:{plugins:[pinia],stubs:{AppTopbar:true,ChannelsView:true,AgentPanel:true,BatchAgentDialog:true,ExternalTaskDialog:true,ModelRuleFields:true,UiDialog:true,UiSelectField:true}}}
   let wrapper=mount(ModelsRoute,options);await flushPromises();await button(wrapper,'编辑').trigger('click');await wrapper.get('input[aria-label="模版名称"]').setValue('保留输入')
   await button(wrapper,'返回').trigger('click');expect(button(wrapper,'继续编辑').exists()).toBe(true);expect(store.dirty).toBe(true);expect(store.draft!.label).toBe('保留输入')
   wrapper.unmount();wrapper=mount(ModelsRoute,options);await flushPromises();await button(wrapper,'编辑').trigger('click');expect((wrapper.get('input[aria-label="模版名称"]').element as HTMLInputElement).value).toBe('保留输入');expect(modelApi.save).not.toHaveBeenCalled();wrapper.unmount()
