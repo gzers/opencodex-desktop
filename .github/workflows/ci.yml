@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: 24
       - name: Windows CDP protocol regression
-        run: node --test test/smoke/windows-cdp.test.mjs
+        run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-model-ui.test.mjs
       - run: npm --prefix apps/desktop/ui ci
       - run: npm --prefix apps/desktop/ui run typecheck
       - run: npm --prefix apps/desktop/ui run test -- --run

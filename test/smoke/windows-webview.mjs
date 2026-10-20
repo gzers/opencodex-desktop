@@ -4,7 +4,8 @@ import assert from 'node:assert/strict'
 import { writeFile, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { describeError, discoverMainTarget } from './windows-cdp.mjs'
-const [endpoint, output] = process.argv.slice(2)
+import {verifyWindowsModelUi} from './windows-model-ui.mjs'
+const [endpoint, output, modelSandbox] = process.argv.slice(2)
 assert(endpoint && output, 'Usage: node windows-webview.mjs <loopback CDP endpoint> <output directory>')
 assert.equal(new URL(endpoint).hostname, '127.0.0.1')
 const diagnostics = {}
@@ -96,6 +97,7 @@ try {
     about: facts.about, discovery: facts.discovery, cliEnabled: facts.preferences.cliEnabled,
     sandboxDataRootInitialized: true,
   }, null, 2) + '\n')
+  if(modelSandbox){diagnostics.phase='model-native-ui';await verifyWindowsModelUi(call,output,facts,modelSandbox)}
   diagnostics.result = 'pass'
   diagnostics.phase = 'complete'
   await saveDiagnostics(diagnostics)
