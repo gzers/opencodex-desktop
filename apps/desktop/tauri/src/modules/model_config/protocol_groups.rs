@@ -571,6 +571,7 @@ mod tests {
         policy.channels[0].overrides.insert(
             "base-model".into(),
             ModelRules {
+                protocol: Field::Custom("openai-chat".into()),
                 reasoning_efforts: Field::Custom(vec!["high".into()]),
                 reasoning_authoritative: Field::Custom(true),
                 fast_wire: Field::Custom(Some(FastWire {

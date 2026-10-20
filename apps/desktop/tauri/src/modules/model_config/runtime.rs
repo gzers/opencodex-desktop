@@ -1086,6 +1086,30 @@ pub(super) fn compile_materials(
                 }
             }
             let fields = &row.rules;
+            // 2.84.0 reads these request controls on the OpenAI Chat path. Its
+            // Responses/Anthropic adapters can persist the same provider keys
+            // while leaving caller reasoning untouched. Do not turn metadata
+            // readback into a claim that explicit runtime constraints work.
+            let protocol = match &fields.protocol {
+                Field::Custom(protocol) => protocol.as_str(),
+                Field::Inherit => channel.connection.protocol.as_str(),
+            };
+            let explicit = |field: &str| {
+                row.source
+                    .get(field)
+                    .is_some_and(|source| source != "上游声明")
+            };
+            if protocol != "openai-chat"
+                && (fields.no_reasoning == Field::Custom(true) && explicit("noReasoning")
+                    || matches!(&fields.pinned_effort, Field::Custom(_))
+                        && explicit("pinnedEffort")
+                    || matches!(&fields.effort_map,Field::Custom(map) if !map.is_empty())
+                        && explicit("effortMap")
+                    || fields.reasoning_authoritative == Field::Custom(true)
+                        && explicit("reasoningAuthoritative"))
+            {
+                return Err(invalid("reasoning_wire_unsupported",format!("{} / {}：当前2.84.0仅核实OpenAI Chat支持不传推理参数、强制档、标签映射与请求权威约束；{}尚未核实，保留草稿，请恢复这些字段的继承或选用已支持的协议",channel.label,row.model_id,protocol)));
+            }
             if let Field::Custom(value) = fields.no_reasoning {
                 if row
                     .source
@@ -3762,6 +3786,53 @@ mod tests {
                 .code,
             "no_reasoning_scope"
         );
+    }
+    #[test]
+    fn unsupported_request_constraints_fail_before_writes_instead_of_claiming_metadata_is_effective(
+    ) {
+        let library = super::super::store::seed_library();
+        // Retain legacy upstream metadata during an unrelated product edit;
+        // it is not an explicit promise of supported request constraints.
+        let (mut original, mut unrelated) = fixture();
+        original.providers["providers"]["test"]["noReasoningModels"] = json!(["b"]);
+        unrelated.channels[0].connection.protocol = "openai-responses".into();
+        original.providers["providers"]["test"]["adapter"] = json!("openai-responses");
+        unrelated.channels[0].label = "unrelated display edit".into();
+        assert_eq!(
+            compile(&original, &library, &unrelated).unwrap().0["providers"]["test"]
+                ["noReasoningModels"],
+            json!(["b"])
+        );
+        for protocol in ["openai-responses", "anthropic", "google"] {
+            for kind in [
+                "noReasoning",
+                "pinnedEffort",
+                "effortMap",
+                "reasoningAuthoritative",
+            ] {
+                let (snapshot, mut policy) = fixture();
+                let mut rules = ModelRules {
+                    protocol: Field::Custom(protocol.into()),
+                    reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
+                    ..Default::default()
+                };
+                match kind {
+                    "noReasoning" => rules.no_reasoning = Field::Custom(true),
+                    "pinnedEffort" => rules.pinned_effort = Field::Custom("high".into()),
+                    "effortMap" => {
+                        rules.effort_map =
+                            Field::Custom(BTreeMap::from([("high".into(), "low".into())]))
+                    }
+                    _ => rules.reasoning_authoritative = Field::Custom(true),
+                }
+                policy.channels[0].overrides.insert("b".into(), rules);
+                assert_eq!(
+                    compile(&snapshot, &library, &policy).unwrap_err().code,
+                    "reasoning_wire_unsupported",
+                    "{protocol}/{kind}"
+                );
+            }
+        }
     }
     #[test]
     fn no_reasoning_rule_preserves_other_models_and_tracks_exact_list_for_inheritance_and_drift() {

@@ -296,6 +296,9 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     policy.channels[0].overrides.insert(
         "fixture-base".into(),
         ModelRules {
+            // Request constraints are verified on the actual Chat adapter;
+            // provider-key readback alone did not prove Responses honored them.
+            protocol: Field::Custom("openai-chat".into()),
             reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
             default_effort: Field::Custom("low".into()),
             pinned_effort: Field::Custom("high".into()),
@@ -307,6 +310,11 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     policy.channels[0].defaults.reasoning_efforts =
         Field::Custom(vec!["low".into(), "high".into()]);
     policy.channels[0].defaults.reasoning_authoritative = Field::Custom(true);
+    policy.channels[0]
+        .overrides
+        .get_mut("fixture-anthropic")
+        .unwrap()
+        .reasoning_authoritative = Field::Custom(false);
     policy.channels[0].defaults.fast_wire = Field::Custom(Some(FastWire {
         kind: "service-tier".into(),
         canonical_to_wire: BTreeMap::from([("priority".into(), "priority".into())]),
@@ -700,6 +708,7 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
     }
     copy.connection.active_node_id = copy.connection.nodes[0].id.clone();
     copy.overrides.clear();
+    copy.defaults.reasoning_authoritative = Field::Inherit;
     copy.discovered.retain(|m| m.id == "fixture-base");
     copy.model_order = vec!["fixture-base".into()];
     copy.template_refs.clear();
@@ -1728,4 +1737,320 @@ async fn isolated_official_discovery_save_and_protocol_mapping_readback() {
 }
 fn discovered_count(value: &serde_json::Value) -> usize {
     value.as_array().map(Vec::len).unwrap_or_default()
+}
+
+/// Focused wire proof, separate from the no-generation configuration/recovery
+/// chain. Every generation-shaped request terminates at our loopback fixture.
+#[tokio::test]
+#[ignore = "requires explicit installed official entry/node; generation requests only hit a temporary loopback fixture"]
+async fn isolated_official_saved_protocol_alias_reasoning_and_fast_wire() {
+    use std::os::unix::fs::PermissionsExt;
+    let entry = std::path::PathBuf::from(
+        std::env::var_os("OCXD_TEST_OFFICIAL_ENTRY").expect("explicit installed entry"),
+    );
+    let node = std::path::PathBuf::from(
+        std::env::var_os("OCXD_TEST_OFFICIAL_NODE").expect("explicit Node"),
+    );
+    assert!(entry.is_absolute() && entry.is_file() && node.is_absolute() && node.is_file());
+    keyring::set_default_credential_builder(Box::new(MemoryBuilder(Default::default())));
+    let root = tempfile::tempdir().unwrap();
+    let user = root.path().join("user");
+    let home = root.path().join("official");
+    let manager = root.path().join("manager");
+    for p in [&home, &manager, &user.join(".codex"), &user.join(".config")] {
+        std::fs::create_dir_all(p).unwrap();
+    }
+    let seen = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
+    let captured = seen.clone();
+    let service=axum::Router::new().route("/v1/models",axum::routing::get(||async{axum::Json(json!({"object":"list","data":[{"id":"wire-response","object":"model"},{"id":"wire-chat","object":"model"},{"id":"wire-anthropic","object":"model"}]}))})).fallback(move|request:axum::extract::Request|{
+        let captured=captured.clone();async move{
+            let path=request.uri().path().to_string();
+            if request.method()!=axum::http::Method::POST{return (axum::http::StatusCode::NOT_FOUND,axum::Json(json!({"error":"fixture route"})));}
+            let beta=request.headers().get("anthropic-beta").and_then(|v|v.to_str().ok()).map(str::to_owned);
+            let bytes=axum::body::to_bytes(request.into_body(),1024*1024).await.unwrap();let body:serde_json::Value=serde_json::from_slice(&bytes).unwrap();
+            captured.lock().unwrap().push(json!({"path":path,"body":body,"beta":beta}));
+            let model=body["model"].as_str().unwrap_or("fixture");
+            let response=if path.ends_with("/messages"){json!({"id":"msg_fixture","type":"message","role":"assistant","model":model,"content":[{"type":"text","text":"fixture"}],"stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":1,"output_tokens":1}})}else if path.ends_with("/chat/completions"){json!({"id":"chat_fixture","object":"chat.completion","created":1,"model":model,"choices":[{"index":0,"message":{"role":"assistant","content":"fixture"},"finish_reason":"stop"}],"usage":{"prompt_tokens":1,"completion_tokens":1,"total_tokens":2}})}else{json!({"id":"resp_fixture","object":"response","created_at":1,"status":"completed","model":model,"output":[{"id":"message_fixture","type":"message","status":"completed","role":"assistant","content":[{"type":"output_text","text":"fixture","annotations":[]}]}],"usage":{"input_tokens":1,"output_tokens":1,"total_tokens":2}})};
+            (axum::http::StatusCode::OK,axum::Json(response))
+        }
+    });
+    let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
+        .await
+        .unwrap();
+    let model_port = listener.local_addr().unwrap().port();
+    let model_server = tokio::spawn(async move { axum::serve(listener, service).await.unwrap() });
+    let port = free_port();
+    let base = format!("http://127.0.0.1:{model_port}/v1");
+    let raw_ids = vec![
+        "wire-response".to_string(),
+        "wire-chat".to_string(),
+        "wire-anthropic".to_string(),
+    ];
+    std::fs::write(home.join("config.json"),serde_json::to_vec(&json!({"port":port,"hostname":"127.0.0.1","defaultProvider":"fixture","providers":{"fixture":{"adapter":"openai-responses","authMode":"key","baseUrl":base,"apiKey":"fixture-wire-only-key","models":raw_ids,"liveModels":false,"allowPrivateNetwork":true,"newModelPolicy":"off","selectedModels":raw_ids}},"claudeCode":{"systemEnv":false,"enabled":false},"clientIntegrations":{"codex":true,"grok":false,"claude":false},"syncResumeHistory":false,"serviceHealthRecovery":{"enabled":false},"oauthOpenBrowser":false})).unwrap()).unwrap();
+    let wrapper = root.path().join("ocx");
+    std::fs::write(&wrapper,format!("#!/bin/sh\nexport HOME={}\nexport CODEX_HOME={}\nexport XDG_CONFIG_HOME={}\nexec {} {} \"$@\"\n",quote(&user),quote(&user.join(".codex")),quote(&user.join(".config")),quote(&node),quote(&entry))).unwrap();
+    std::fs::set_permissions(&wrapper, std::fs::Permissions::from_mode(0o700)).unwrap();
+    let mut command = tokio::process::Command::new(&wrapper);
+    command
+        .args(["start", "--port", &port.to_string()])
+        .env("OPENCODEX_HOME", &home)
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .kill_on_drop(true)
+        .process_group(0);
+    let mut child = command.spawn().unwrap();
+    let _group = ProcessGroup(child.id().unwrap());
+    let context=ProcessContext{runtime:opencodex_desktop_lib::infrastructure::runtime_executable::FixedRuntimeExecutable::resolved(wrapper),working_directory:root.path().into(),opencodex_home:home.clone()};
+    let deadline = std::time::Instant::now() + Duration::from_secs(45);
+    loop {
+        assert!(
+            child.try_wait().unwrap().is_none(),
+            "isolated official exited"
+        );
+        if home.join("runtime-port.json").exists()
+            && model_config::management::Management::bind(&context)
+                .await
+                .is_ok()
+        {
+            break;
+        }
+        assert!(
+            std::time::Instant::now() < deadline,
+            "isolated startup timeout"
+        );
+        tokio::time::sleep(Duration::from_millis(100)).await;
+    }
+    assert!(
+        upstream::write(&context, upstream::WriteOperation::Sync)
+            .await
+            .unwrap()
+            .success
+    );
+    let version = upstream::snapshot(&context).await.unwrap().version;
+    assert!(
+        version.contains("2.84.0"),
+        "recheck actual installed contract before admitting another version"
+    );
+    let discovered = discovery::discover(discovery::DiscoveryRequest {
+        protocol: "openai-responses".into(),
+        url: base.clone(),
+        api_key: Some("fixture-wire-only-key".into()),
+        credential_ref: None,
+        allow_private_network: true,
+    })
+    .await
+    .unwrap();
+    let node_id = uuid::Uuid::new_v4().to_string();
+    let channel = ChannelPolicy {
+        id: uuid::Uuid::new_v4().to_string(),
+        label: "wire fixture".into(),
+        template_refs: vec![],
+        model_refs: BTreeMap::new(),
+        connection: ChannelConnection {
+            provider_id: "fixture".into(),
+            protocol: "openai-responses".into(),
+            nodes: vec![ServiceNode {
+                id: node_id.clone(),
+                name: "loopback".into(),
+                url: base,
+            }],
+            active_node_id: node_id,
+            credential_ref: discovered.credential_ref,
+            enabled: true,
+            allow_private_network: true,
+            ..Default::default()
+        },
+        selection: ModelSelection::Whitelist(raw_ids.clone()),
+        model_order: raw_ids.clone(),
+        discovered: discovered.models,
+        defaults: ModelRules {
+            fast: Field::Custom(true),
+            reasoning_efforts: Field::Custom(vec!["low".into(), "high".into()]),
+            default_effort: Field::Custom("low".into()),
+            fast_wire: Field::Custom(Some(FastWire {
+                kind: "service-tier".into(),
+                canonical_to_wire: BTreeMap::from([("priority".into(), "priority".into())]),
+                foreign_caller_tiers: "drop".into(),
+                betas: vec![],
+            })),
+            ..Default::default()
+        },
+        overrides: BTreeMap::from([
+            (
+                "wire-response".into(),
+                ModelRules {
+                    ..Default::default()
+                },
+            ),
+            (
+                "wire-chat".into(),
+                ModelRules {
+                    protocol: Field::Custom("openai-chat".into()),
+                    pinned_effort: Field::Custom("high".into()),
+                    effort_map: Field::Custom(BTreeMap::from([("high".into(), "low".into())])),
+                    reasoning_authoritative: Field::Custom(true),
+                    ..Default::default()
+                },
+            ),
+            (
+                "wire-anthropic".into(),
+                ModelRules {
+                    protocol: Field::Custom("anthropic".into()),
+                    fast_wire: Field::Custom(Some(FastWire {
+                        kind: "anthropic-speed".into(),
+                        canonical_to_wire: BTreeMap::from([("priority".into(), "fast".into())]),
+                        foreign_caller_tiers: "drop".into(),
+                        betas: vec![],
+                    })),
+                    ..Default::default()
+                },
+            ),
+        ]),
+        family_overrides: BTreeMap::new(),
+        naming: BTreeMap::from([(
+            "wire-response".into(),
+            ModelNaming {
+                alias: Some("friendly-response".into()),
+                display_name: Some("Wire Response".into()),
+            },
+        )]),
+    };
+    let policy = Policy {
+        channels: vec![channel],
+        ..Default::default()
+    };
+    let store = model_config::ModelStore::new(&manager);
+    let before = store.load().unwrap();
+    let staged = store
+        .stage_policy(
+            &before.policy_digest,
+            &before.workspace_digest,
+            policy.clone(),
+        )
+        .unwrap();
+    let plan = runtime::prepare(
+        &manager,
+        &context,
+        policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    let applied = runtime::apply(&manager, &context, &plan.id).await.unwrap();
+    assert_eq!(applied.phase, "committed", "{:?}", applied.error);
+    let actual = upstream::snapshot(&context).await.unwrap();
+    eprintln!(
+        "wire-published-policy {}",
+        json!({"order":actual.order,"providers":actual.providers["providers"].as_object().unwrap().iter().map(|(id,p)|json!({"id":id,"adapter":p["adapter"],"models":p["models"],"noReasoningModels":p["noReasoningModels"],"fastWire":p["fastWire"]})).collect::<Vec<_>>()})
+    );
+
+    let client = reqwest::Client::builder()
+        .no_proxy()
+        .timeout(Duration::from_secs(20))
+        .build()
+        .unwrap();
+    for raw in &raw_ids {
+        let slug = actual.order["pickerOrder"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter_map(serde_json::Value::as_str)
+            .find(|slug| slug.ends_with(&format!("/{raw}")))
+            .expect("exact published selector identity");
+        let provider = slug.strip_suffix(&format!("/{raw}")).unwrap();
+        let alias = if raw == "wire-response" {
+            "friendly-response"
+        } else {
+            raw
+        };
+        let response=client.post(format!("http://127.0.0.1:{port}/v1/responses")).json(&json!({"model":format!("{provider}/{alias}"),"input":"fixture only","stream":false,"reasoning":{"effort":"high"},"service_tier":"priority"})).send().await.unwrap();
+        let status = response.status();
+        let result = response.text().await.unwrap();
+        assert!(status.is_success(), "{raw}: {status} {result}");
+    }
+    let requests = seen.lock().unwrap().clone();
+    assert_eq!(requests.len(), 3, "{:?}", requests);
+    eprintln!(
+        "loopback-wire-receipts {}",
+        serde_json::to_string(&requests).unwrap()
+    );
+    let find = |raw: &str| {
+        requests
+            .iter()
+            .find(|r| r["body"]["model"] == raw)
+            .expect("upstream raw identity, never client alias")
+    };
+    let response = find("wire-response");
+    assert_eq!(response["path"], "/v1/responses");
+    assert_eq!(response["body"]["reasoning"]["effort"], "high");
+    assert_eq!(response["body"]["service_tier"], "priority");
+    let chat = find("wire-chat");
+    assert_eq!(chat["path"], "/v1/chat/completions");
+    assert_eq!(chat["body"]["reasoning_effort"], "low");
+    assert_eq!(chat["body"]["service_tier"], "priority");
+    let anthropic = find("wire-anthropic");
+    assert_eq!(anthropic["path"], "/v1/messages");
+    assert_eq!(anthropic["body"]["speed"], "fast");
+    assert_eq!(anthropic["body"]["thinking"]["type"], "enabled");
+    let before = store.load().unwrap();
+    let mut policy = before.policy.clone();
+    policy.channels[0]
+        .overrides
+        .get_mut("wire-chat")
+        .unwrap()
+        .no_reasoning = Field::Custom(true);
+    let staged = store
+        .stage_policy(
+            &before.policy_digest,
+            &before.workspace_digest,
+            policy.clone(),
+        )
+        .unwrap();
+    let plan = runtime::prepare(
+        &manager,
+        &context,
+        policy,
+        staged.library_digest,
+        staged.policy_digest,
+        staged.workspace_digest,
+    )
+    .await
+    .unwrap();
+    assert_eq!(
+        runtime::apply(&manager, &context, &plan.id)
+            .await
+            .unwrap()
+            .phase,
+        "committed"
+    );
+    let actual = upstream::snapshot(&context).await.unwrap();
+    let slug = actual.order["pickerOrder"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter_map(serde_json::Value::as_str)
+        .find(|slug| slug.ends_with("/wire-chat"))
+        .unwrap();
+    let result=client.post(format!("http://127.0.0.1:{port}/v1/responses")).json(&json!({"model":slug,"input":"fixture only","stream":false,"reasoning":{"effort":"high"},"service_tier":"priority"})).send().await.unwrap();
+    assert!(
+        result.status().is_success(),
+        "{}",
+        result.text().await.unwrap()
+    );
+    let final_requests = seen.lock().unwrap().clone();
+    assert_eq!(final_requests.len(), 4);
+    let omitted = &final_requests[3];
+    assert_eq!(omitted["path"], "/v1/chat/completions");
+    assert_eq!(omitted["body"]["model"], "wire-chat");
+    assert!(
+        omitted["body"].get("reasoning_effort").is_none(),
+        "{}",
+        omitted
+    );
+    println!("wire-official={version} committed=true exact-raw-id=true alias-resolved=true protocols=responses/chat/anthropic pinned-and-map=true no-reasoning=true fast=service-tier/anthropic-speed chat-no-reasoning=true unsupported-reasoning-controls=blocked loopback-generation-requests=4 paid-requests=0");
+    let _ = child.kill().await;
+    let _ = child.wait().await;
+    model_server.abort();
 }
