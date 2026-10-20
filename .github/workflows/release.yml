@@ -105,3 +105,20 @@ jobs:
           releaseDraft: true
           prerelease: true
           args: --config tauri.updater.conf.json ${{ matrix.args }}
+
+      # Keep the release private until its actual installer bytes pass the existing
+      # ephemeral-runner checks. This does not replace updater signature validation.
+      - name: Verify Windows release installers on isolated runner
+        if: runner.os == 'Windows'
+        shell: pwsh
+        working-directory: apps/desktop/tauri
+        run: |
+          & ../../../test/smoke/windows-installer.ps1 -BundleDirectory target/release/bundle -BuiltExecutable target/release/opencodex-desktop.exe -Node (Get-Command node).Source -OutputDirectory ../../../test/out/release-windows-installer
+
+      - name: Preserve Windows release installer evidence
+        if: always() && runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-windows-installer-evidence
+          path: test/out/release-windows-installer
+          if-no-files-found: warn
