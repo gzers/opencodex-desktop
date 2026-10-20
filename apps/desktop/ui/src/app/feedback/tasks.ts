@@ -9,7 +9,7 @@ export const operationTitles: Record<ModelOperationKind,string> = { generation:'
 export const operationPhases: Record<ModelOperationPhase,string> = { running:'正在执行',review:'结果待比较，尚未保存',succeeded:'已完成',failed:'未完成，请查看对应操作',stopped:'已停止等待' }
 export function operationPhaseText(task: OperationTask):string {
   if(task.phase==='review'&&task.kind==='generation')return '建议已生成，可在模版编辑中查看'
-  if(task.phase==='review'&&task.kind==='policy_save')return '已写入，待客户端核对'
+  if(task.phase==='review'&&task.kind==='policy_save')return '已写入；客户端结果请在核对入口查看'
   if(task.phase==='review'&&task.kind==='transfer')return '已接收，待比较采用'
   return operationPhases[task.phase]
 }
@@ -31,7 +31,7 @@ export const useOperationTasks = defineStore('operation-tasks', {
       const previous = this.tasks.find(t => t.id === value.id)
       if (previous) { if(previous.kind!==value.kind)return; if((previous.kind==='policy_save'||previous.kind==='transfer')&&value.phase==='running'){previous.phase='running';previous.collapsed=false;return} if(previous.phase!=='running')return;previous.phase=value.phase as ModelOperationPhase }
       else this.tasks.push({ id:value.id,kind:value.kind as ModelOperationKind,phase:value.phase as ModelOperationPhase,collapsed:false })
-      while (this.tasks.length > 24) { const index=this.tasks.findIndex(t => t.phase !== 'running'); if(index < 0) break;this.tasks.splice(index,1) }
+      while (this.tasks.length > 24) { const index=this.tasks.findIndex(t => t.phase === 'succeeded' || t.phase === 'stopped'); if(index < 0) break;this.tasks.splice(index,1) }
     },
     collapse(id: string) { const task=this.tasks.find(t => t.id===id);if(task)task.collapsed=true },
     expandAll() { for(const task of this.tasks)task.collapsed=false },

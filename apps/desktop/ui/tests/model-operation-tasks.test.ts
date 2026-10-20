@@ -3,6 +3,15 @@ import { createPinia, setActivePinia } from 'pinia'
 import { useOperationTasks } from '@/app/feedback/tasks'
 beforeEach(() => setActivePinia(createPinia()))
 describe('registered model task observations', () => {
+  it('does not evict running, failed or pending-review observations at the display history budget, even when collapsed',()=>{
+    const tasks=useOperationTasks(),pending=Array.from({length:26},()=>crypto.randomUUID()),failed=crypto.randomUUID(),running=crypto.randomUUID()
+    for(const id of pending){tasks.apply({id,kind:'generation',phase:'running'});tasks.apply({id,kind:'generation',phase:'review'});tasks.collapse(id)}
+    tasks.apply({id:failed,kind:'policy_save',phase:'running'});tasks.apply({id:failed,kind:'policy_save',phase:'failed'});tasks.apply({id:running,kind:'transfer',phase:'running'})
+    const completed=crypto.randomUUID();tasks.apply({id:completed,kind:'research',phase:'running'});tasks.apply({id:completed,kind:'research',phase:'succeeded'})
+    expect(tasks.tasks.map(t=>t.id)).toEqual([...pending,failed,running]);expect(tasks.tasks.find(t=>t.id===failed)?.phase).toBe('failed');expect(tasks.tasks.find(t=>t.id===running)?.phase).toBe('running')
+    tasks.expandAll();expect(tasks.tasks.filter(t=>t.phase==='review')).toHaveLength(26);expect(tasks.tasks.every(t=>!t.collapsed)).toBe(true)
+  })
+
   it('rejects unknown state and raw prompt/config payloads', () => {
     const tasks=useOperationTasks();const id=crypto.randomUUID()
     tasks.apply({id,kind:'unknown',phase:'running'});tasks.apply({id,kind:'generation',phase:'running',prompt:'private'})
