@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "24a25438",
+  "sources": [
+    {
+      "path": "apps/desktop/ui/src/components/registry.ts",
+      "sha256": "33767252cb46b12b325b704010e4ed07d511f6c4a1cae83c8c9a45cd43ae8be4"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "2ebfe120f9c866170fbc2765d54bfd6f58f5186b57c9715717528219bda6dca4"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelsView.vue",
+      "sha256": "6495e54047685fc3a3ee2d80e94a7beb5701693f218aaa454edc4e5c2dfab85c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ModelRuleFields.vue",
+      "sha256": "8e94437d65f4cbcd391e5897b37633e9d60f10aac5a9d5acf9ca7672c85bed9c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/store.ts",
+      "sha256": "95098b4a469349fe7d93afdc525c5523c2880169fb2e54ff7850ea10adab652f"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+      "sha256": "a6252ba114338aa1d1be272ae049abdfb60760451c3bdb351233584a2a30ac5a"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-effective-source.test.ts",
+      "sha256": "befd53f1ce30e5b7d275f80ea86f0c2d517e32fd7ca45807f8d1242f0d13254e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelModelTable.vue",
+      "sha256": "d9c4a2b7f372a0a70023934fd45e90d59957a3bc7059b1ed4affd9c6fa1810d7"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/modelRows.ts",
+      "sha256": "7d2c3ba7f50f505cb98a4c084fa367852717a7dd96e49aeda7e09a2a78268071"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-table-workspace.test.ts",
+      "sha256": "b893acd942a6d0046aa3c815888e8c04da13fdf343af549243cc6b3f3d3c8d89"
+    }
+  ],
+  "checks": {
+    "frontendFull": "134 files / 668 passed before final context preset exact-prototype alignment and source-label polish",
+    "finalAffected": "4 files / 16 passed after exact context presets; final pending-status polish 2 files / 11 passed and typecheck",
+    "build": "passed after display caption/column sizing/preset changes; pending status last UI wording has typecheck",
+    "browser": {
+      "fixture": "formal Vue DEV audit; project is explicit no-network fixture",
+      "flows": [
+        "action checkbox selected without changing visibility",
+        "expand row, type32768, global Save disabled while pending",
+        "collapse and reopen keeps32768",
+        "Join draft enables Save and clears pending flag",
+        "light/dark material and 900px table scroll; viewport reset"
+      ],
+      "geometry": {
+        "defaultTableClient": 989,
+        "defaultTableScroll": 989,
+        "narrowViewport": 900,
+        "narrowTableClient": 609,
+        "narrowTableScroll": 645,
+        "documentOverflow": false
+      },
+      "screenshots": [
+        "model-table-light.png",
+        "model-table-dark.png",
+        "model-table-dark-900.png",
+        "model-table-pending-light.png"
+      ]
+    }
+  },
+  "boundary": [
+    "ModelRowsState is local session-only UI data, never inserted in portable policy or treated as a saved version.",
+    "Row and batch candidate passed to common project service; actual frontend tests mock validation responses and failure/late states. Backend naming/rules guards use previous fixed service evidence.",
+    "Final acceptance/native matrix, full channel-detail anchor layout, real drag, all multi-platform consumers and release remain open.",
+    "Old tests expected card DOM and immediate naming writes or filtered sorting. Replaced with table, blur validation, manual-ID confirmation and filter-sort prohibition from approved prototype; did not preserve superseded behavior."
+  ],
+  "registration": "Existing data.table/choice.switch/overlay.dialog/local-feedback IDs map actual feature consumer; no duplicate global notification or foundation widget.",
+  "logs": [
+    {
+      "file": "model-table-status-final-20261020.log.gz",
+      "rawSHA256": "3412cef335d7471c7ee458aa033722bd67f26bc048ae1fa33f2b4d7743f6f427"
+    },
+    {
+      "file": "model-table-status-types-20261020.log.gz",
+      "rawSHA256": "0933782eae08a1cea0b09a07b52feb4deb42b16e87c78d13d78cf8fe7e59c769"
+    }
+  ]
+}

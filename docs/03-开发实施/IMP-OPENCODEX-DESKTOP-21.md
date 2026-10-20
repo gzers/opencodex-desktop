@@ -552,3 +552,14 @@ new_channel模块6项（含新增replacement身份/原Key/其他草稿/后来编
 installed2.84.0临时用户/数据根真实链223.91秒通过：同协议新组权威false、wire verbatim，父组权威true、wire drop分别准确读回；恢复原产品策略后旧同协议组不再发布，删除时parent/原协议组/同协议组三个精确归属provider均不存在，后续历史/认证/补偿链全部通过，生成POST=0、测试Key在内存vault。最初写失败保留：上游Key注册将过滤后空modelPinnedReasoningEfforts:{}正规化为空缺，导致旧公开baseline拒绝；已从seed移空并回归。随后删除测试旧计数2与新增第三组不符，已改精确身份集合及实际缺席断言，不跳过。原日志/摘要见checks-shared-partitions-20261020.json。
 
 全量Rust945通过、4既有忽略；分组5项、共享名筛选9项（含未改域不算新增规则项）、Clippy全目标-D warnings/fmt通过；前端133文件662项、构建通过，既有Canvas/dynamic-import诊断保留。改动只涉及字段说明无新UI流程，不重复旧原生外壳门；不把配置读回当付费wire现场。a88454505 CI39373693094和daccf093 CI39372057167现均全部适用job成功。继续已确认完整模型表格/行缓冲、批量操作、族片段和所有消费者指标/native矩阵，版本仍0.1.10，未发布。
+
+
+### 渠道型号四列表格、行缓冲及批量确认
+
+补实际ChannelModelTable业务组件，按批准原型四列呈现操作选择/排序、rawID与别名/两组摘要、独立启停、展开/明细/排序。ModelRowsState分别记录操作selected、展开与每rawID缓冲/接受基准，放models会话状态，返回/Tab/路由重挂载不丢输入；不序列化到policy/便携文件。普通输入只改buffer，Join调用共同project校验冻结候选，响应后重验整个渠道/策略与本行基准；后改/晚回拒绝。别名失焦单独校验/回退，不清规则缓冲；detail取消保留原缓冲。批量完整范围确认，字段keep/inherit/custom和启停/命名分别选择，任一失败不写。pending计数/定位与页级Save门、全还原/删除的明确输入边界已接。
+
+新增全部展开/收起及名称/别名/协议/上下文/启用快捷排序，任一过滤和pending禁排，unknown context排末、同值稳定、未选/暂缺槽保留。手动精确ID改局部确认后才添加，不再创建空ID行；All时明确转旧已知白名单以保证新项不自动启用。上下文数字与既有原型contextPresets一致。原卡片DOM/即时命名/仅启用可排序的测试按最终表格需求改写，新6项覆盖操作与启停分离、收起/过滤/重挂载缓冲、无效别名只回退自身、整批失败/过期拒绝、只改指定字段、明细取消/晚回及全局pending来源。
+
+全量134文件668项通过后，最后caption/当前显示名及预设对齐再跑受影响与构建（原日志见checks-model-table-20261020.json）。首次新fixture错误及旧卡片定位失败保留，不降校验。DEV实际选择gpt-demo-0不改All启用，输入32768只留行buffer→Save禁用，收起重开仍32768→Join后pending0/Save可用；亮暗和900宽窄窗无文档横溢，表内client609/scroll645，默认client/scroll989一致，已复位viewport。有效值说明区分已加入草稿与缓冲；DEV的project fixture未替代真实IPC能力。截图model-table-light/dark/dark-900/pending-light，非完整native或物理拖动验收。
+
+公共登记沿既有data.table/choice.switch/overlay.dialog/local-feedback，业务状态和公共纯视图职责分开。渠道整体左导航/完整批量采用族片段/原生所有消费者仍未据表格完成；后续继续这些要求和发布前完整核对。0.2.0未发布。
