@@ -1,0 +1,50 @@
+{
+  "scope": "actual public HTTPS research/read/search and provenance receipts, no model calls",
+  "sourceBase": "0378a69e30f1d05627c13f1fd144db6f39f14de8",
+  "initialFailure": "direct RFC read passed; www.bing.com search regional302 was refused by ordinary no-redirect policy",
+  "fix": "only search page follows up to3 first-party HTTPS bing.com/subdomain redirects, every hop separately validates DNS/public destination/TLS; no proxy,cookies,auth or external redirect; ordinary source reads still require final public URL",
+  "checks": {
+    "realPublicOptIn": 1,
+    "agentUnit": 8,
+    "clippyAllTargets": "passed"
+  },
+  "actualSources": [
+    "direct_source url=https://www.rfc-editor.org/rfc/rfc8259.txt retrieved=2026-10-20T15:04:33.043802+00:00 receipt=990601e8-a62b-4fd0-9985-71ebeabe5cd8 digest=sha256:1a869a901c8ae70595858f8faf3bda4366ba1cd7097e8a9a6cc08bcc4b2c6262",
+    "search_source url=https://www.rfc-editor.org/ retrieved=2026-10-20T15:04:36.610184+00:00 receipt=6ca53ac3-a7d2-4238-9aa8-4453319d34d5 digest=sha256:c16e0581078d91e28ef92ea508fbb3af104a819a95d9d64b8dfcd23fcf4fcd90",
+    "search_source url=https://blog.csdn.net/i826056899/article/details/146158278 retrieved=2026-10-20T15:04:37.854756+00:00 receipt=527c4460-c769-49ca-95f8-d8f13570fb13 digest=sha256:5c7cf90d0452d832873914044981e30ee47b171aa8a950647e66d918d9e5f1d7"
+  ],
+  "readSemantics": "receipt proves actual bounded content snapshot/URL/time, not accuracy or complete search relevance. Search returned RFC home plus one public CSDN page; no model capability inferred.",
+  "scopeLimits": [
+    "opt-in OCX_TEST_RESEARCH_REAL=1 plus ignored test; ordinary CI does not contact public search servers",
+    "test uses temporary source store; no template/policy files or account/credentials",
+    "no semantic-quality claim, no paid requests, no model service"
+  ],
+  "commandCorrection": "one exploratory shell curl noproxy wildcard expanded repository filenames into extra public-domain requests; no file body read or sent. Switched to subprocess fixed argument list and printed only HTTP/location. No cookie values copied into evidence.",
+  "initialLintCorrection": "useless vec changed to single-entry array before successful all-targets Clippy",
+  "sources": {
+    "apps/desktop/tauri/src/modules/model_config/agent.rs": "c72eb8f560556a7c3fec7ee0ccbf48b2223d42681b816a87cf58e86779d05407",
+    "apps/desktop/tauri/tests/model_research_real.rs": "a4b1e4f656660c6a3940160b918d48a63ab547cafe5357e9d3692e44c06badab"
+  },
+  "logs": [
+    {
+      "path": "research-public-first-failure-20261020.log.gz",
+      "rawSha256": "59f71671ecf8eea3fb746cdfb31678be630cf2d0b134110b9b5325964173adee"
+    },
+    {
+      "path": "research-public-real-20261020.log.gz",
+      "rawSha256": "105761dcafa49a98bb2a884bbaedf7d615ef89e328612520f2282b6dc3806c73"
+    },
+    {
+      "path": "search-guards-20261020.log.gz",
+      "rawSha256": "b5228997f4f1ae286ee3c9aecf9c740a7079fd3ab5167f57bd5cb3ea61296c9c"
+    },
+    {
+      "path": "search-clippy-initial-20261020.log.gz",
+      "rawSha256": "73535bc5a6ae41eeed633f03e4cf8fa2098327f6a3326238013d39aab7144698"
+    },
+    {
+      "path": "search-clippy-20261020.log.gz",
+      "rawSha256": "d2e8300c904df7b533fff050cf7183ce077a6ab7e10d48c8b6a3b09523e17669"
+    }
+  ]
+}
