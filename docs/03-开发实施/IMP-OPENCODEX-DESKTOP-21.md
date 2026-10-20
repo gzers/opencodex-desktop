@@ -536,3 +536,10 @@ Rust传输模块14项通过，新候选测试验证精确依赖、范围外全�
 Rust scoped2项通过：完整保存受缺Key新渠道阻断，明确暂缓后实际回环CLI/API写入可用渠道显示名，成功policy不含受阻新渠道、工作区完整保留并重基准，运行端无受阻provider，重复apply保持后来编辑；共享项/顺序、重复范围与历史恢复拒绝另有纯行为检查。模型模块150项、Clippy全目标及前端133文件660项/构建通过。新UI专项揭示之前context切片optional Boolean的active默认false，已改默认true；正式Tab仍显式控制隐藏动作。失败原件保留。DEV双渠道修改→保存→调整→取消一项→本次/待办分列→Escape，未调用真实写入且无横向溢出。证据checks-scoped-save-20261020.json、截图scoped-save-review-light.png。非本轮installed/native保存证明，最终受影响集成再核。
 
 ec92d53b账户CI39367956094、18584625上下文CI39369016960均全部适用job成功，feature发布构建跳过如实保留。4bf58c89候选导出CI39370311527仍在运行，本批源码另需CI。下一步连接变更重取重选、族/共享字段分组及完整批准消费者/平台，0.2.0尚未发布。
+
+
+### 已有连接局部缓冲与重取重选
+
+移除详情直接改协议/节点地址进入工作区的路径，复用两步新增弹窗处理已有连接：先局部修改，再只读获取/手动精确型号和明确勾选，确认才沿共同恢复事务替换当前channel。平台保留稳定ID、启停和所有非连接规则；新Key重新输入，旧Key不自动发往新地址或删除，已有保存态不动。Request.replace绑定完整旧对象与两个CAS摘要，记录不含rawKey、持久结果同ID核对，失败清理仅本次独有材料。32节点上限沿公共服务，详情保留手动切已知节点/测速，名称地址只读。正常同目标刷新保留暂缺已选存根与顺序；native/OAuth专用路径不开放通用Key假支持。
+
+new_channel模块6项（含新增replacement身份/原Key/其他草稿/后来编辑与旧基准拒绝）和Clippy全目标通过；前端全量133文件661项后，浏览器发现节点URL还有一个旧可编辑绑定，已补readonly输入及handler保护；最后相关3文件13项和构建通过，含纯节点只读/已知节点选择行为。DEV替换fixture最后修成同ID替换而非新增，属无生产影响的fixture修正。首轮构建implicit-any/template crypto错误已修，不降检查。DEV实际新地址未输Key被拒，输fixture后第二步0项→mock清单12项仍零选，关闭原地址/12型号/未修改状态保持，无横向溢出；截图connection-edit-reselect-light.png，非真实Key/HTTP/native IPC。checks-connection-edit-20261020.json绑定源。4bf58c89候选CI39370311527已全部适用job成功，发布构建按feature跳过。继续共享高级字段差异分组、完整批准表格/行缓冲与所有消费者/平台；0.2.0未发布。

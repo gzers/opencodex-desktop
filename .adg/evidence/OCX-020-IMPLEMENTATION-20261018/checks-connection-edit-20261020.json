@@ -1,0 +1,94 @@
+{
+  "date": "2026-10-20",
+  "baseCommit": "daccf093",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/new_channel.rs",
+      "sha256": "b6d95e9b4431d0ea64fdabee6d09dc441aa87edff8d782a7fc383e86e780b0d7"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/modelFixtures.ts",
+      "sha256": "279fa65c59bc224033f46921f0dda753769b0dae528cb6076ec464a30a410f57"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/ChannelEditor.vue",
+      "sha256": "bd50e6157ed22b8995f9fc0b469ecd586a8e4be6eb0554f1d070ba731f167b7f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NewChannelDialog.vue",
+      "sha256": "abd87d6fe28dcd3223aff9268a6c391ab43ccde1edbe0cf2d84eebacd665f309"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/NodePicker.vue",
+      "sha256": "3370a10583664ce5ef0b4e508938307234ab35b67471d35e6fb7145e81b4fa05"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/models/api.ts",
+      "sha256": "4c874341ac957dbf7b42511f950a8f8bd78350e2bf0149a20d0d00387b152860"
+    },
+    {
+      "path": "apps/desktop/ui/tests/model-node-picker.test.ts",
+      "sha256": "1d09c5b8f4a25c7b80444fbc523a0edd6ce936d853567fe2a207b37efd915e02"
+    },
+    {
+      "path": "apps/desktop/ui/tests/new-channel-dialog.test.ts",
+      "sha256": "a08b5be972c46c042652260c2581f9415e287776c2a4a8f842d2e43d0e34236f"
+    }
+  ],
+  "checks": {
+    "service": "6 passed including frozen connection replacement, new vault credential, original key retained, unchanged saved policy, unrelated draft preserved, stale baseline no new key",
+    "clippy": "all targets -D warnings passed",
+    "frontendFull": "133 files / 661 passed before readonly address follow-up",
+    "finalAffected": "3 files / 13 passed including readonly node summary; new/edit two-step fixture, selection, identity/rules preserved",
+    "build": "passed after readonly follow-up; final DEV fixture replacing rather than adding is a fixture-only correction after build"
+  },
+  "logs": [
+    {
+      "file": "connection-edit-rust-final-20261020.log.gz",
+      "rawSHA256": "33fb4082e52d11f58baaf85538a9897adad1129ed0fc231fb9f7cfd9accc550f"
+    },
+    {
+      "file": "connection-edit-clippy-20261020.log.gz",
+      "rawSHA256": "0f4115d08f82d65f97b215d785430e81ef6663c479039491725decc7566ec8ca"
+    },
+    {
+      "file": "connection-edit-ui-full-20261020.log.gz",
+      "rawSHA256": "7631cda92ffe22979c68c2ba44e9b727a71217c09fa0f12d001e680c825fa0a4"
+    },
+    {
+      "file": "connection-edit-ui-final2-20261020.log.gz",
+      "rawSHA256": "c4fb716e4dc83d6763d0e844e28b00af0956f211388c67b7c323cd89c3860dfd"
+    },
+    {
+      "file": "connection-edit-build-final3-20261020.log.gz",
+      "rawSHA256": "7a3913cc650d2a15e0cc3a407ffaeaa9dc0fb3d5f68b8df0eea459d40f360274"
+    },
+    {
+      "file": "connection-edit-build-first-20261020.log.gz",
+      "rawSHA256": "b332c4ec533bd5be6c6e6f34beee59101e4a8ad85ffbb668c382958bfbf14481"
+    }
+  ],
+  "browser": {
+    "fixture": "formal ChannelEditor/NewChannelDialog DEV audit; no IPC or network",
+    "flow": [
+      "old node address disabled outside editor",
+      "edit new address; Next without new Key rejected",
+      "enter fixture key; step2 empty selection",
+      "read mock12 models, all unselected",
+      "close; original address and 12models remain, page unmodified"
+    ],
+    "screenshot": "connection-edit-reselect-light.png",
+    "overflow": false,
+    "keyLeakedInProductText": false
+  },
+  "limitations": [
+    "Installed/native full save chain not repeated because connection-edit operation only stages; normal Save remains separate",
+    "No OAuth/forward native connection editing allowed as generic Key",
+    "Failed/late/unknown operation recovery uses existing new-channel admission journal, not a task queue"
+  ],
+  "ciPrior": {
+    "sha": "4bf58c89",
+    "run": 39370311527,
+    "result": "all applicable jobs successful; build skipped for feature branch"
+  }
+}
