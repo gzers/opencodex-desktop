@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-21",
+  "source": "76337257810a3fe3ffdb671061eae38bc2bb71a4",
+  "run": 39451396439,
+  "conclusion": "success",
+  "artifact": 12280667256,
+  "nativeReports": [
+    {
+      "path": "windows-763-model-ui.json",
+      "sha256": "86644eda105480d3d2d519cf596026a4721344637f9930b318b2eab8b74f77b5"
+    },
+    {
+      "path": "windows-763-model-editor-context-native.json",
+      "sha256": "92da0d45bb4474866104c6337db132537620e1f68bf05e431a09d690fd57ef2f"
+    },
+    {
+      "path": "windows-763-model-sort-native.json",
+      "sha256": "a53b6531023b0f1ffad8dbbe75f18793231bb0ebd0d3bca772acd63e203d8d5d"
+    },
+    {
+      "path": "windows-763-model-sort-pointer.json",
+      "sha256": "5c2a2d6453da9bfbe87587ac3c0a43644ca93c178a77c735db873ece2e2b85b0"
+    },
+    {
+      "path": "windows-763-startup.json",
+      "sha256": "bd201a3074fda800cda70dcd5422d29f3c42ab3fefefed925e8820518d8ff70f",
+      "normalization": "CRLF to LF JSON only; raw bytes preserved in windows-763-startup.raw.json.gz",
+      "rawSha256": "10b8764ffa8f226906f71e2fd5a398af7a86b65671605916a8d43b1bfd55ace0"
+    },
+    {
+      "path": "windows-763-model-template-native.png",
+      "sha256": "39aa5dae562f57b6690ef5b1f22134282f38175ef7e5c95bad2740ea09025006"
+    }
+  ],
+  "observed": {
+    "templateSaveDefaultFileRoundtrip": true,
+    "readonlyComparisonOneDescription": true,
+    "exactUnsavedBufferInExternalTask": true,
+    "privateChatExcluded": true,
+    "taskActivated": false,
+    "generationRequests": 0,
+    "actualPointerModelSortPersisted": true
+  },
+  "limits": [
+    "This precedes the final editor-copy/cancel source b19b01e2; that source has a separate running CI.",
+    "GitHub Windows host observed elevated process token; not a normal-user proof.",
+    "Only listed reports and PNG copied; broker Bearer/task payload and browser profile excluded.",
+    "No main merge/tag/public publication yet."
+  ],
+  "actualCheckout": "7e548cbc06da39096b92490a35e800dc7a763cba"
+}
