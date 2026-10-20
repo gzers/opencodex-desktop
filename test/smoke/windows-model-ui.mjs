@@ -60,9 +60,32 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  assert.equal(incoming.package.payload.templates[0].id,created.templateId)
  const adopted=await invoke('model_transfer_accept',{incomingId:incoming.id,adoptKeys:false,adoptWebdavPasswords:false,adoptExtensionCredentials:false,passphrase:null})
  assert.deepEqual(adopted.policy,before.policy);assert.equal(adopted.library.templates.find(t=>t.id===created.templateId).defaultRevision,revision.id)
+ // Persist explicit fixture-only channels through the real draft IPC, never runtime Save.
+ // This exercises native HTML5 row sorting; no DEV store injection or provider request.
+ const modelIds=['fixture-alpha','fixture-beta','fixture-gamma'],channelId=randomUUID(),nodeId=randomUUID()
+ const channel={id:channelId,label:'Native sort fixture',templateRefs:[],modelRefs:{},selection:{mode:'none'},modelOrder:modelIds,discovered:modelIds.map(id=>({id,label:id,rules:content.rules})),defaults:content.rules,overrides:{},familyOverrides:{},connection:{providerId:'native-sort-fixture',protocol:'openai-chat',nodes:[{id:nodeId,name:'Fixture only',url:'https://example.test/v1'}],activeNodeId:nodeId,credentialRef:null,enabled:false,allowPrivateNetwork:false,authMode:'none'}}
+ const staged=await invoke('model_policy_stage',{expectedPolicy:adopted.policyDigest,expectedWorkspace:adopted.workspaceDigest,policy:{...adopted.policy,channels:[...adopted.policy.channels,channel]}})
+ assert.deepEqual(staged.policy,adopted.policy,'staging must not commit runtime policy')
+ await evaluate("(()=>{[...document.querySelectorAll('aside button')].find(e=>e.textContent.trim()==='设置').click();return true})()")
+ await wait("!document.querySelector('.models-page')",'leave model route')
+ await evaluate("(()=>{[...document.querySelectorAll('aside button')].find(e=>e.textContent.trim()==='模型').click();return true})()")
+ await wait("!!document.querySelector('.models-page')",'restore staged model route')
+ await click('渠道模型');await wait("[...document.querySelectorAll('.model-table tbody tr')].some(e=>e.textContent.includes('Native sort fixture'))",'staged channel visible')
+ await evaluate("(()=>{const row=[...document.querySelectorAll('.model-table tbody tr')].find(e=>e.textContent.includes('Native sort fixture'));[...row.querySelectorAll('button')].find(e=>e.textContent.trim()==='编辑').click();return true})()")
+ await wait("document.querySelectorAll('.channel-model-table tr[data-model]').length===3",'three actual model rows')
+ const points=await evaluate("(()=>{const rows=[...document.querySelectorAll('.channel-model-table tr[data-model]')];const from=rows[0].querySelector('button[draggable=true]');from.scrollIntoView({block:'center'});const a=from.getBoundingClientRect(),b=rows[1].querySelector('strong').getBoundingClientRect();return {from:{x:a.x+a.width/2,y:a.y+a.height/2},to:{x:b.x+b.width/2,y:b.y+b.height/2},width:innerWidth,height:innerHeight,before:rows.map(e=>e.dataset.model)}})()")
+ await writeFile(join(output,'model-sort-pointer.json'),JSON.stringify(points,null,2)+'\n')
+ for(const point of [points.from,points.to])assert(point.x>0&&point.y>0&&point.x<points.width&&point.y<points.height,'native sort target outside viewport')
+ await call('Input.dispatchMouseEvent',{type:'mouseMoved',...points.from})
+ await call('Input.dispatchMouseEvent',{type:'mousePressed',...points.from,button:'left',buttons:1,clickCount:1})
+ for(let step=1;step<=12;step++){await call('Input.dispatchMouseEvent',{type:'mouseMoved',x:points.from.x+(points.to.x-points.from.x)*step/12,y:points.from.y+(points.to.y-points.from.y)*step/12,button:'left',buttons:1});await new Promise(resolve=>setTimeout(resolve,25))}
+ await call('Input.dispatchMouseEvent',{type:'mouseReleased',...points.to,button:'left',buttons:0,clickCount:1})
+ const order=await wait("(async()=>{const s=await window.__TAURI_INTERNALS__.invoke('model_config_snapshot');const c=s.workspace?.policy.channels.find(c=>c.id==="+JSON.stringify(channelId)+");return c?.modelOrder[0]==='fixture-beta'&&c.modelOrder[1]==='fixture-alpha'?{order:c.modelOrder,snapshot:s}:null})()",'native pointer sort persisted to draft')
+ assert.deepEqual(order.order,['fixture-beta','fixture-alpha','fixture-gamma']);assert.deepEqual(order.snapshot.policy,before.policy,'sorting draft must not save runtime')
+ await writeFile(join(output,'model-sort-native.json'),JSON.stringify({result:'pass',input:'WebView2 CDP mouse press/move/release, not synthetic DOM drag events',channelId,before:points.before,after:order.order,policyUnchanged:true,runtimeSave:false},null,2)+'\n')
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
- const result={result:'pass',scope:'native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true}
+ const result={result:'pass',scope:'native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true}
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }
