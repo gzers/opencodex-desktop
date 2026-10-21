@@ -5,7 +5,7 @@ import UiDialog from '@/components/ui/UiDialog.vue'
 import ModelPicker,{type ModelChoice} from './ModelPicker.vue'
 import {modelApi,errorText,type AgentSettings,type ExecutionDirectory} from './api'
 const settings=defineModel<AgentSettings|null>({default:null})
-defineProps<{disabled?:boolean}>()
+defineProps<{disabled?:boolean;compact?:boolean}>()
 const error=ref('');const busy=ref(false);const open=ref(false);const configuring=ref(false)
 const candidate=ref<AgentSettings|null>(null);const directory=ref<ExecutionDirectory|null>(null)
 const channels=computed(()=>directory.value?.channels??[])
@@ -20,11 +20,11 @@ async function save(){if(!candidate.value||busy.value)return;busy.value=true;err
 function summary(value:AgentSettings){return (value.reasoningEffort??'默认推理')+' · '+(value.fast===null?'默认快速模式':value.fast?'快速模式已开启':'快速模式已关闭')}
 </script>
 <template>
- <div class="model-execution-field"><UiButton :disabled="disabled" :loading="busy" @click="configure">Agent 配置</UiButton><small v-if="settings">{{ settings.providerId }} / {{ settings.modelId }} · {{ summary(settings) }}</small><p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
+ <div class="model-execution-field" :class="{'model-execution-compact':compact}"><UiButton :disabled="disabled" :loading="busy" @click="configure" :title="settings?settings.providerId+' / '+settings.modelId:undefined">Agent 配置</UiButton><small v-if="settings&&!compact">{{ settings.providerId }} / {{ settings.modelId }} · {{ summary(settings) }}</small><p v-if="error&&!configuring" role="alert" class="model-error">{{ error }}</p>
   <UiDialog :open="configuring" title="Agent 配置" :busy="busy" @close="configuring=false"><p>模型模版助手 · 本机共用</p><UiButton :loading="busy" @click="browse">{{ candidate?candidate.providerId+' / '+candidate.modelId:'选择执行模型' }}</UiButton><p v-if="candidate">{{ summary(candidate) }}</p><p>此设置用于下一次自动填充、持续纠偏和批量模版检查。</p><p v-if="error" role="alert" class="model-error">{{ error }}</p><template #actions><UiButton @click="configuring=false">取消</UiButton><UiButton variant="primary" :disabled="!candidate" :loading="busy" @click="save">保存共用设置</UiButton></template></UiDialog>
   <ModelPicker :open="open" :loading="busy" :error="open?error:undefined" @retry="browse" :rows="directory?.rows??[]" :channels="channels" :current="current" reasoning title="执行模型" @close="open=false" @confirm="choose" />
  </div>
 </template>
 <style scoped>
-.model-execution-field{display:grid;gap:6px;min-width:0}.model-execution-field small{color:var(--muted);overflow-wrap:anywhere}.model-error{color:var(--red);overflow-wrap:anywhere}
+.model-execution-compact{width:max-content;max-width:100%}.model-execution-field{display:grid;gap:6px;min-width:0}.model-execution-field small{color:var(--muted);overflow-wrap:anywhere}.model-error{color:var(--red);overflow-wrap:anywhere}
 </style>

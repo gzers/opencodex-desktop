@@ -14,6 +14,8 @@ import { useAppStore } from '@/stores/app'
 import { useRuntimeStore } from '@/features/runtime/store'
 import { buildEnvironmentPresentation } from '@/features/environment/presentation'
 import { useRouteStore } from '@/stores/routes'
+import UiSegmented from '@/components/ui/UiSegmented.vue'
+import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import { settingsSections } from '@/navigation'
 import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
@@ -100,13 +102,7 @@ const defaultPreferences: PreferencesDto = {
   glowRender: 'mesh',
 }
 const preferences = ref<PreferencesDto>({ ...defaultPreferences })
-const effectsLabel = computed(() =>
-  preferences.value.visualEffects === 'low' ? '低' : preferences.value.visualEffects === 'mid' ? '中' : '高（默认）',
-)
 const glowRender = useGlowRenderStore()
-const glowRenderLabel = computed(() =>
-  preferences.value.glowRender === 'css' ? 'CSS（纯极光）' : 'WEBGL（网格渐变＋颗粒）',
-)
 const savingPreference = ref(false)
 const codexShim = ref<CodexShimDto | null>(null)
 const codexShimLoading = ref(false)
@@ -321,7 +317,7 @@ function refreshEnvironment() {
 }
 
 const sectionLabels: Record<string, string> = {
-  general: '通用', installation: '安装配置', backup: '数据与备份', extensions: '扩展管理', migration: '文件同步', sync: 'WebDAV 同步', cleanup: '日志与通知', cli: 'CLI 控制面', upgrade: '版本升级', about: '关于',
+  agent: 'Agent 配置', general: '通用', installation: '安装配置', backup: '数据与备份', extensions: '扩展管理', migration: '文件同步', sync: 'WebDAV 同步', cleanup: '日志与通知', cli: 'CLI 控制面', upgrade: '版本升级', about: '关于',
 }
 const scaleTicks = [
   { value: 50, pos: '0%' },
@@ -1003,8 +999,8 @@ function restoreGeneralDefaults() {
       <UiCard data-testid="card-quality">
         <UiCardHeader><h2>画质</h2><p>背景光与视觉效果的渲染方式；按设备能力自动降级。</p></UiCardHeader>
         <div class="setting-list">
-          <div class="setting-row" data-testid="setting-visual-effects"><div><div class="setting-title">界面特效</div><div class="setting-desc">高档为通知玻璃与动态光场；中档玻璃静态；低档统一实底、无光场。画质由所选档位决定，不跟随系统减少动态。即时生效并按偏好恢复。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'visualEffects' }"><button class="select-trigger" :aria-expanded="openSelect === 'visualEffects' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="界面特效" @click="toggleSelect('visualEffects')"><span class="select-value">{{ effectsLabel }}</span></button><UiSelectMenu :open="openSelect === 'visualEffects'" @close="openSelect = ''" role="listbox" aria-label="界面特效"><button class="select-option" :class="{ selected: preferences.visualEffects === 'high' }" type="button" role="option" :aria-selected="preferences.visualEffects === 'high' ? 'true' : 'false'" @click="chooseVisualEffects('high', '高（默认）')">高（默认）</button><button class="select-option" :class="{ selected: preferences.visualEffects === 'mid' }" type="button" role="option" :aria-selected="preferences.visualEffects === 'mid' ? 'true' : 'false'" @click="chooseVisualEffects('mid', '中')">中</button><button class="select-option" :class="{ selected: preferences.visualEffects === 'low' }" type="button" role="option" :aria-selected="preferences.visualEffects === 'low' ? 'true' : 'false'" @click="chooseVisualEffects('low', '低')">低</button></UiSelectMenu></div></div></div>
-          <div class="setting-row" data-testid="setting-glow-render"><div><div class="setting-title">背景光渲染</div><div class="setting-desc">WEBGL 用网格渐变＋颗粒着色器，过渡最平滑、色带最少；CSS 为纯极光兜底，不依赖 GPU。<span v-if="glowRender.fellBack" class="setting-note" data-testid="glow-render-fallback">当前环境不支持 WEBGL，已自动回退纯 CSS 极光。</span></div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'glowRender' }"><button class="select-trigger" :aria-expanded="openSelect === 'glowRender' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="背景光渲染" @click="toggleSelect('glowRender')"><span class="select-value">{{ glowRenderLabel }}</span></button><UiSelectMenu :open="openSelect === 'glowRender'" @close="openSelect = ''" role="listbox" aria-label="背景光渲染"><button class="select-option" :class="{ selected: preferences.glowRender === 'mesh' }" type="button" role="option" :aria-selected="preferences.glowRender === 'mesh' ? 'true' : 'false'" @click="chooseGlowRender('mesh', 'WEBGL（网格渐变＋颗粒）')">WEBGL（网格渐变＋颗粒）</button><button class="select-option" :class="{ selected: preferences.glowRender === 'css' }" type="button" role="option" :aria-selected="preferences.glowRender === 'css' ? 'true' : 'false'" @click="chooseGlowRender('css', 'CSS（纯极光）')">CSS（纯极光）</button></UiSelectMenu></div></div></div>
+          <div class="setting-row" data-testid="setting-visual-effects"><div><div class="setting-title">界面特效</div><div class="setting-desc">高档为通知玻璃与动态光场；中档玻璃静态；低档统一实底、无光场。画质由所选档位决定，不跟随系统减少动态。即时生效并按偏好恢复。</div></div><div class="controls"><UiSegmented :model-value="preferences.visualEffects" label="界面特效" :options="[{value:'high',label:'高'},{value:'mid',label:'中'},{value:'low',label:'低'}]" @update:model-value="chooseVisualEffects($event as 'high'|'mid'|'low', $event==='high'?'高':$event==='mid'?'中':'低')" /></div></div>
+          <div class="setting-row" data-testid="setting-glow-render"><div><div class="setting-title">背景光渲染</div><div class="setting-desc">WEBGL 用网格渐变＋颗粒着色器，过渡最平滑、色带最少；CSS 为纯极光兜底，不依赖 GPU。<span v-if="glowRender.fellBack" class="setting-note" data-testid="glow-render-fallback">当前环境不支持 WEBGL，已自动回退纯 CSS 极光。</span></div></div><div class="controls"><UiSegmented :model-value="preferences.glowRender" label="背景光渲染" :options="[{value:'mesh',label:'WEBGL'},{value:'css',label:'CSS'}]" @update:model-value="chooseGlowRender($event as 'mesh'|'css', $event==='mesh'?'WEBGL':'CSS')" /></div></div>
         </div>
       </UiCard>
 <UiCard data-testid="setting-network">
@@ -1023,6 +1019,7 @@ function restoreGeneralDefaults() {
       <div class="section-actions"><UiButton class="btn ghost" @click="restoreGeneralDefaults">还原通用默认</UiButton></div>
     </section>
 
+    <section v-else-if="section === 'agent'" class="settings-panel active"><UiCard><UiCardHeader><h2>模型模版助手</h2><p>自动填充、持续纠偏和批量检查共用本机执行配置；保存不触发任务。</p></UiCardHeader><AgentExecutionField /></UiCard></section>
     <section v-else-if="section === 'installation'" class="settings-panel active">
       <article class="card"><div class="card-head"><div><h2>运行环境与安装发现</h2><p>只发现 / 展示 / 校验现有环境与安装。</p></div><UiButton class="btn ghost" :disabled="app.environmentLoading" @click="refreshEnvironment()">重新发现</UiButton></div>
         <div v-if="environment.blocked" class="empty" data-testid="install-blocked">已按前置条件暂停 OpenCodex 发现；请先处理概览中的环境门禁。</div>
