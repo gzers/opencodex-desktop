@@ -1,7 +1,7 @@
 <!-- project-governance:managed-start -->
 ## 开发实施
 
-2026-10-21执行状态更新：用户已授权0.2.1目标模式实施至发布；[IMP-22](IMP-OPENCODEX-DESKTOP-22.md)已进入in_progress，新代码工作树ocx-021-ui-alignment/feature/0.2.1-ui-alignment已建立。下方仅文档准备为此前快照；当前开始批次A，尚未验收或发布。
+2026-10-21执行状态更新：用户已授权0.2.1目标模式实施至发布；[IMP-22](IMP-OPENCODEX-DESKTOP-22.md)已进入in_progress，新代码工作树ocx-021-ui-alignment/feature/0.2.1-ui-alignment已建立。15项修复已验收，PR9合并main fbd6e1d1；当前制作私有发布制品，公开/stable门未完成。
 
 
 复杂变化按需建立 `IMP-*`；`REL-*` 与 `RUN-*` 只记录需要长期查阅的人类结论。
@@ -9,7 +9,9 @@
 
 ## 实施计划入口
 
-- [0.2.1公共UI收敛与原型还原修复](IMP-OPENCODEX-DESKTOP-22.md)：**planned，文档计划已编制，软件修复未开始**；承接发布后15项UI问题，先公共配方/消费者约束，再页面还原和有界回归；新分支/工作树待实施授权后建立，非发布授权。
+- [0.2.1公共UI与原型还原修复发布](REL-OPENCODEX-DESKTOP-12.md)：main/tag fbd6e1d1；私有制品生成中，独立验签、隔离回读与公开stable尚待。
+
+- [0.2.1公共UI收敛与原型还原修复](IMP-OPENCODEX-DESKTOP-22.md)：**in_progress，修复验收完成，发布门进行中**；15项UI问题、公共采用守卫及双平台适用检查通过，新工作树/分批提交已合并。
 
 - [0.2.0模型配置与范围同步发布](REL-OPENCODEX-DESKTOP-11.md)：**已公开并晋升stable**；main/tag f1bbe7d9，完整CI、双平台安装/版本回读、原公钥验签及匿名清单/资产核对通过。
 

@@ -1,0 +1,90 @@
+Window: "", App: OpenCodeX Desktop.
+0 standard window Secondary Actions: Raise
+	1 scroll area
+		2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=about
+			3 container 窗口控制区
+			4 container
+				5 image OpenCodeX logo
+				6 text OpenCodeX-Desktop Desktop Manager
+				7 button 概览
+				8 button 面板
+				9 button 模型
+				10 button 拓展
+				11 button 同步
+				12 button 诊断
+				13 button 设置
+			14 container
+				15 heading 设置, Value: 1
+					16 text 设置
+				17 text 集中管理偏好、安装配置、备份、升级与官方归属。
+				18 container 主题
+					19 button 浅色
+					20 button 深色
+					21 button 跟随系统
+				22 text 运行中
+				23 button 刷新状态
+				24 button (collapsed) Description: 通知, Secondary Actions: Expand
+				25 tab group (selectable) 通用
+安装配置
+数据与备份
+扩展管理
+Agent 配置
+日志与通知
+CLI 控制面
+版本升级
+关于
+				26 container opencodex
+					27 container opencodex
+						28 text 官方项目
+						29 heading opencodex, Value: 2
+							30 text opencodex
+						31 text 被管理的外部项目；本应用仅负责本机发现、运行托管与状态观测。
+						32 text 外部项目
+						33 description list
+							34 text 项目版本
+							35 text v2.84.0
+							36 text 发行包
+							37 text @bitkyc08/opencodex
+							38 text 代码作者
+							39 text lidge-jun
+							40 text 项目维护者
+							41 text bitkyc08
+						42 button 官网
+						43 button GitHub
+						44 button Issues
+					45 container OpenCodeX Desktop
+						46 text 本应用
+						47 heading OpenCodeX Desktop, Value: 3
+							48 text OpenCodeX Desktop
+						49 text 独立的桌面壳封装，不是 OpenCodex 官方作品。
+						50 text v0.2.1
+						51 description list
+							52 text 应用版本
+							53 text v0.2.1
+							54 text 项目作者
+							55 text gzers
+							56 text 运行平台
+							57 text macOS · Tauri v2
+							58 text 开源许可
+							59 text MIT License
+						60 button 本应用 GitHub
+						61 button Issues
+						62 button 查看 MIT 许可
+					63 container 许可、归属与免责声明
+						64 text 版权与归属
+						65 heading 许可、归属与免责声明, Value: 3
+							66 text 许可、归属与免责声明
+						67 text 本项目与 OpenCodex 官方项目及其权利人不存在隶属、授权或背书关系。仅在必要范围内使用项目名称、版本与链接进行兼容性说明，不复制或重新分发 OpenCodex 源代码、构建产物、图标、界面素材或商标标识。OpenCodex 的源代码、名称、商标及其他权利仍归其权利人所有；使用官方软件时请以官方仓库中的 LICENSE、NOTICE 和服务条款为准。本项目自身代码与素材按 MIT License 发布，二者许可彼此独立。
+						68 button 查看官方许可
+						69 button 查看第三方声明
+	70 close button
+	71 full screen button Help: this button also has an action to zoom the window, Secondary Actions: zoom the window
+	72 minimize button
+73 menu bar
+	74 OpenCodeX 021 Release
+	75 进程
+	76 编辑
+	77 视图
+	78 诊断
+
+The focused UI element is 2 HTML content Description: OpenCodeX Desktop, URL: tauri://localhost#settings?section=about

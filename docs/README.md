@@ -12,6 +12,8 @@
 
 ## 当前发布与执行结果
 
+- 2026-10-21：[0.2.1公共UI与原型还原修复](03-开发实施/REL-OPENCODEX-DESKTOP-12.md)完成15项适用验收并合并main/tag fbd6e1d1；723项前端及双平台源检查通过，当前生成私有制品，尚未公开。实施与边界沿[IMP-22](03-开发实施/IMP-OPENCODEX-DESKTOP-22.md)。
+
 - 2026-10-21：[0.2.0模型配置与范围同步发布](03-开发实施/REL-OPENCODEX-DESKTOP-11.md)已公开并晋升stable，main/tag f1bbe7d9；完整CI、双平台安装/版本回读、原公钥验签、匿名通道/资产核对通过。实施沿[IMP-21](03-开发实施/IMP-OPENCODEX-DESKTOP-21.md)，长期DMD及旧版未验边界各自保留。
 
 ## 历史活动对象快照

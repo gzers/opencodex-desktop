@@ -38,3 +38,20 @@ PR9于2026-10-21T12:50:06Z合并，main fbd6e1d17a9029c89807100dab6f3f7089559c44
 当前决定：可制作v0.2.1双平台私有草稿。只有main适用检查、实际NSIS/MSI与Mac压缩包身份、原公钥对实际updater资产密码学验签、隔离启动/版本及源码回读完成后，才能公开并晋升stable；实际结果完成后追加。当前Latest仍为0.2.0，不提前宣称新版已投递。
 
 版本不引入存储或账户迁移；回退材料继续保留0.2.0原标签、原制品及REL-11，不改写历史或轮换公钥。若候选门失败，保持私有草稿和原稳定通道，不用日常安装验证。既有测试分发边界不变：安装包没有正式OS代码签名/Apple公证，updater签名须独立真实验证。
+
+## 实际私有制品及公开前决定
+
+main CI39602802413的6个job全部success；Release39604319577同一fbd6e1d1源码的Mac/Windows job均success。v0.2.1已固定该源码，Release ID419574046仍draft/prerelease。独立下载全部实际资产，API大小/摘要相符，三种updater资产使用tag内原公钥minisign密码学验签通过；公钥解码SHA30190687026fdc7b7e223884315baa52f6d42c1c37d447b8631e9597c1ecdfee与v0.2.0、v0.1.7逐字节相同。
+
+| 实际资产 | 字节数 | SHA256 |
+| --- | ---: | --- |
+| Mac updater app.tar.gz | 6454094 | 6e70082d4417d69edb662a45167d20f71de7cbca3084e94c8d4600a100fd04b0 |
+| Windows MSI | 6705152 | 30bdb68a3ee0774a33d26438b4c8baaad4393d1fc51fb08c7a9e21713b3a2d1d |
+| Windows NSIS | 4775982 | f1d3467818caec936cb99c063e0c9af8e70bdf125bdf8ce1adea3b3852a96e7f |
+| Mac DMG | 6347504 | 81306a5fa2dd44da34e28ba116a5037f2301baa985038d3dbd0dc8b078933a51 |
+
+Windows实际MSI/NSIS安装、0.2.1版本/源码与内嵌包标记、原生模型交互、默认卸载保留及隔离清理边界通过；安装器摘要与上表已验签资产一致。Built EXE20457e30…与各包标记后的installed摘要分别核对，不将合法标记差异误认字节相同；生产者releaseAccepted=false仍保留，发布决定不由该脚本拥有。mode=any不冒充普通/管理员或人工升级/DPI/OTA验收。
+
+Mac DMG容器校验通过，DMG与updater中Mach-O均为9885d99123d176bb270b9e3ce48072d2bce20b35cd1b024e18787e8a1d328233，版本0.2.1、production标识正确。独立root中仅改Info.plist隔离身份，逐字节相同发布二进制PID96813实际启动；关于页读得v0.2.1、macOS/Tauri v2，启动日志commit fbd6e1d1；Command-Q后PID不存在。日常PID19133继续运行，没有替换其安装/配置。原包strict codesign exit1按既有未正式签名/未公证分发边界保留，不混同已通过的updater签名。
+
+公开前证据归.adg/evidence/REL-021-20261021，原始日志无损压缩，未将忽略项计通过。当前判断：修复、源检查与实际制品门均具备，可按用户既有授权执行stable公开；尚未把待执行的公开结果写成完成。

@@ -1,0 +1,75 @@
+{
+  "tag": "v0.2.1",
+  "source": "fbd6e1d17a9029c89807100dab6f3f7089559c44",
+  "releaseId": 419574046,
+  "draft": true,
+  "prerelease": true,
+  "publicKeyUnchangedFrom": [
+    "v0.2.0",
+    "v0.1.7"
+  ],
+  "publicKeySha256": "30190687026fdc7b7e223884315baa52f6d42c1c37d447b8631e9597c1ecdfee",
+  "manifestSha256": "9f9879f2767693c575335f27d2dc78c4e34ccf7e7766e6f39252e63e856f2ac7",
+  "assets": [
+    {
+      "name": "latest.json",
+      "bytes": 4906,
+      "sha256": "9f9879f2767693c575335f27d2dc78c4e34ccf7e7766e6f39252e63e856f2ac7"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_aarch64.dmg",
+      "bytes": 6347504,
+      "sha256": "81306a5fa2dd44da34e28ba116a5037f2301baa985038d3dbd0dc8b078933a51"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_x64-setup.exe",
+      "bytes": 4775982,
+      "sha256": "f1d3467818caec936cb99c063e0c9af8e70bdf125bdf8ce1adea3b3852a96e7f"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_x64-setup.exe.sig",
+      "bytes": 448,
+      "sha256": "133a9cf4df4ecf5c7f947d7c787c4f20d948d51fc3b4b93ea35b10284cc00b42"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_x64_en-US.msi",
+      "bytes": 6705152,
+      "sha256": "30bdb68a3ee0774a33d26438b4c8baaad4393d1fc51fb08c7a9e21713b3a2d1d"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_x64_en-US.msi.sig",
+      "bytes": 448,
+      "sha256": "2f7aa015c97377d0701dc2f90d269a771dcd3b4e78db1d97d0c5318d90dce472"
+    },
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "bytes": 6454094,
+      "sha256": "6e70082d4417d69edb662a45167d20f71de7cbca3084e94c8d4600a100fd04b0"
+    },
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz.sig",
+      "bytes": 436,
+      "sha256": "77d55fdd6b8322c2990512a70d107ba6b18b949a0461a4ab01a8774c2d7bb24e"
+    }
+  ],
+  "signatures": [
+    {
+      "name": "OpenCodeX.Desktop_aarch64.app.tar.gz",
+      "platform": "darwin-aarch64",
+      "signatureValid": true,
+      "output": "Signature and comment signature verified\nTrusted comment: timestamp:1792588243\tfile:OpenCodeX Desktop.app.tar.gz\tversion:0.2.1"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_x64_en-US.msi",
+      "platform": "windows-x86_64",
+      "signatureValid": true,
+      "output": "Signature and comment signature verified\nTrusted comment: timestamp:1792588432\tfile:OpenCodeX Desktop_0.2.1_x64_en-US.msi\tversion:0.2.1"
+    },
+    {
+      "name": "OpenCodeX.Desktop_0.2.1_x64-setup.exe",
+      "platform": "windows-x86_64-nsis",
+      "signatureValid": true,
+      "output": "Signature and comment signature verified\nTrusted comment: timestamp:1792588432\tfile:OpenCodeX Desktop_0.2.1_x64-setup.exe\tversion:0.2.1"
+    }
+  ]
+}
