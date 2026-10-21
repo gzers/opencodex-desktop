@@ -5,7 +5,7 @@
 <h1 align="center">OpenCodeX Desktop</h1>
 
 <p align="center">
-  Discovery, process control, status observation, configuration migration, sync, and extension management for OpenCodex — in a desktop GUI instead of a terminal.
+  Discovery, process control, status observation, model configuration, sync, and extension management for OpenCodex — in a desktop GUI instead of a terminal.
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 > [!IMPORTANT]
 > This is an **independent, third-party desktop manager**. It is not part of the official OpenCodex project and has **no affiliation, authorization, or endorsement** relationship with it or its rights holders. It is a graphical host only — it **does not rewrite the OpenCodex core and does not bypass the official API**. See [Attribution and license](#attribution-and-license).
 >
-> The project is still in **testing, with no official release published yet**; current builds are **unsigned test packages (macOS Apple Silicon first)**, intended for evaluation and internal testing only — not a public release.
+> Public test releases are available for macOS Apple Silicon and Windows x64. Installers have no formal OS code signature or Apple notarization; updater assets are verified separately. See Releases for the versions actually published.
 
 ---
 
@@ -53,12 +53,12 @@
 | Item | Requirement |
 |---|---|
 | OS | macOS (Apple Silicon, officially supported) / Windows x64 (test build) |
-| OpenCodex | An existing official OpenCodex install (`ocx`). The manager only **discovers** it — it never installs it for you; the UI guides you when it is missing |
+| OpenCodex | Node.js/npm and official OpenCodex; select an existing install or explicitly approve a private-prefix managed install or an official offline package. Third-party lifecycle scripts require separate permission |
 
 ### Download
 
 > [!NOTE]
-> The project is still in **testing and has no official release yet**, so no version number is hard-coded here. The links below **always point to the latest release**: once an official version is published they jump straight to it; until then they land on the Releases list.
+> The link below points to the currently public Latest release. Candidate branches and draft Releases do not automatically enter the stable channel. See Releases for historical versions and their limitations.
 
 <p align="center">
   <a href="https://github.com/gzers/opencodex-desktop/releases/latest"><b>⬇ Get the latest version</b></a>
@@ -114,7 +114,7 @@ open "/Applications/OpenCodeX Desktop.app"
 1. Download `*_x64-setup.exe` (or `.msi`) and run it.
 2. If the blue **SmartScreen** dialog appears, click *More info* → *Run anyway*.
 
-> The Windows build is an **unsigned test build**: the cross-platform work is done and passes the CI compile gate, but it has not been verified on real hardware — features and visuals may be incomplete.
+> Windows installers have no Authenticode signature. Release records state the normal/admin, installation and data-retention scenarios actually verified. Default uninstall preserves data; explicit NSIS cleanup removes only validated owned roots and preserves external HOME.
 
 ---
 
@@ -126,10 +126,11 @@ open "/Applications/OpenCodeX Desktop.app"
 4. **Panel**: switch to *Panel* to view the official web panel (requires OpenCodex to be running).
 5. **Diagnostics**: a read-only `ocx doctor` summary, logs (app log / call log, secrets masked), and notification history.
 6. **Extensions**: manage **Skills** and **MCP** with distribution to six clients (Codex, Claude, Gemini, Grok, Opencode, Hermes); backup before write, atomic replace, per-client connect/disconnect.
-7. **Migration and sync**: full export into a passphrase-protected encrypted container; WebDAV sync encrypts locally before upload, backs up before overwrite, and queues conflicts instead of overwriting silently.
-8. **Data directory**: choose or switch the data root and `OPENCODEX_HOME` (reference-first, migration optional, rollback on failure).
-9. **Tray and menus**: status is expressed through tray icon and colour, plus native macOS menu entries.
-10. **Optional CLI control plane**: enabling it registers `ocxd`, which delegates to the running instance over local IPC; **off by default**.
+7. **Model configuration**: keep channel models, nodes, per-model rules and ordering in a draft. Save template edits as new versions; default selection, adoption and runtime save are separate confirmations. The assistant uses a configured execution model, and external tasks copy their instructions and contract together.
+8. **Migration and sync**: select templates, channels, models, families or manager objects, then compare before adopting. Credentials require encrypted content. Only supported account information transfers; sign in again on a new device. WebDAV backs up before overwrite and preserves conflicts for review.
+9. **Data directory**: choose or switch the data root and `OPENCODEX_HOME` (reference-first, migration optional, rollback on failure).
+10. **Tray and menus**: status is expressed through tray icon and colour, plus native macOS menu entries.
+11. **Optional CLI control plane**: enabling it registers `ocxd`, which delegates to the running instance over local IPC; **off by default**.
 
 
 ### Configuration files and settings
@@ -163,26 +164,28 @@ Test isolation: development and automated tests run under a separate sandbox ide
 
 | Capability | Description |
 |---|---|
-| **Installation discovery** | Detects, displays, and validates an existing install only; **does not manage npm** — no install, uninstall, or dependency resolution |
+| **Installation discovery** | Discovers existing installs and manages official packages in a private prefix after explicit confirmation, without writing the global npm prefix. Lifecycle scripts require separate permission |
 | **Process control** | Hosts the official start/stop subprocesses directly; does not install or manage launchd and does not take over `codex-shim` |
 | **Status observation** | Run / connection / operation dimensions that can hold simultaneously; actions render per status |
 | **Logs and diagnostics** | Read-only logs with masked secrets; read-only `ocx doctor` summary; states clearly when live logs are unavailable |
 | **Official panel** | Hosts the official web panel in a runtime child WebView — no restyling, no injection, and the official assets are not bundled |
 | **Notification center** | Shares one data source with *Diagnostics → Notification history*; detail dialog and per-item deletion |
+| **Model configuration** | Channels and immutable template versions, exact adoption, inherited fields, nodes and two-level ordering; compare, back up and read back before completing a runtime save |
+| **Template assistant** | Local execution settings, public sources and iterative correction; accept fields into the buffer. Scoped external tasks validate baselines/locks and save candidates without automatic adoption or runtime application |
 | **Configuration migration** | Full export into a **passphrase-protected encrypted container**; validate, back up automatically, confirm explicitly, roll back on failure |
-| **WebDAV sync** | Content is **encrypted client-side** before upload; recoverable backup before overwrite; conflicts go to a pending state |
+| **WebDAV sync** | Stores configuration payloads and integrity metadata on a trusted HTTPS service; credentials remain in the OS credential store. Backs up before overwrite and requires conflict confirmation. File export containers are separately passphrase-encrypted |
 | **Extension management** | Skills discovery/import/update/uninstall/restore; MCP import/add/edit/delete; multi-client targets |
 | **Appearance** | Three visual effects tiers; overview background light field (WebGL grid gradient + grain shader, CSS aurora fallback) and glass materials |
-| **Two upgrade tracks** | OpenCodex itself via the official `ocx update`; the app updates independently (signature check, restart to apply, rollback — endpoints are still placeholders) |
+| **Two upgrade tracks** | Manager and panel updates have separate confirmation. App updates use this repository's actual release manifests and verify updater signatures; panel updates use protected official-package installation |
 | **Tray and menus** | Tray actions limited to the manager's own domain; native macOS menu entries |
-| **CLI control plane (optional)** | `ocxd`, **off by default**; delegates to the running instance over local IPC |
+| **CLI control plane (optional)** | `ocxd` is off by default; when enabled on macOS it delegates over local IPC. Windows product preferences still disable CLI access |
 
 ### What it deliberately does not do (security boundaries)
 
 - It does not rewrite the OpenCodex core and does not bypass the official API.
 - It does not take over npm or replace the official `ocx update` transaction.
 - It does not take over `codex-shim`, and does not install or manage launchd.
-- It **never writes OpenCodex core runtime configuration** such as providers, routing, or model mappings — those always go through the official CLI.
+- Model configuration submits provider, routing and model-mapping changes through the official CLI, with comparison, budget validation, backup and readback. The manager template library, draft and runtime configuration retain separate ownership.
 - It never silently overwrites configuration owned by an external provider; it detects, explains, and guides the user through the official `restore`.
 - No credential may enter the repository, Markdown, logs, command-line arguments, or unencrypted files.
 - The WebDAV remote is always treated as **untrusted**; TLS validation failures are rejected by default, with **no "ignore certificate" option**.
@@ -212,7 +215,7 @@ The build is unsigned. Click *More info* → *Run anyway*; signing is planned fo
 <details>
 <summary><b>Overview says "OpenCodex not found"</b></summary>
 
-The manager only discovers — it never installs. Install the official OpenCodex first (so `ocx` is available), then retry. Missing prerequisites (Node / npm) are surfaced with their own guidance on the page.
+Follow Overview to provide Node.js/npm, then select an existing OpenCodex install or explicitly approve a private-prefix install/offline import. Third-party lifecycle scripts require separate permission.
 </details>
 
 <details>
@@ -248,13 +251,13 @@ Sync and migration credentials are stored in the macOS Keychain (service name `O
 <details>
 <summary><b>Where are the logs and data?</b></summary>
 
-The default data root is `~/Library/Application Support/OpenCodex Desktop/`, with logs under `logs/`. The Settings page opens both directories for you.
+The macOS default is `~/Library/Application Support/com.gzers.opencodex.desktop/`. New Windows installs use `data` under the actual installation directory; valid existing bindings are retained. Settings shows actual paths, with logs under `logs/`. Preference backups exclude full panel configuration, sessions and login state.
 </details>
 
 <details>
 <summary><b>App auto-update does nothing</b></summary>
 
-The app's own update endpoints are still placeholders and not wired up yet; download and reinstall the new version manually.
+Use software-update settings to check manually and inspect the error and network configuration. Stable reads this repository's Latest manifest; no higher candidate means there is nothing to install. Automatic checks only check and notify, without automatic download or restart; installation requires signature verification.
 </details>
 
 ---
@@ -266,7 +269,7 @@ The app's own update endpoints are still placeholders and not wired up yet; down
 ```text
 ┌─────────────────────────────────────────────┐
 │ Frontend (Vue 3 + TypeScript)                 │
-│ Overview / Panel / Extensions / Logs / Settings / Tray │
+│ Overview / Panel / Models / Sync / Extensions / Diagnostics / Settings / Tray │
 └──────────────────┬──────────────────────────┘
                    │ Tauri IPC commands
 ┌──────────────────▼──────────────────────────┐
@@ -350,7 +353,7 @@ git tag vX.Y.Z
 git push origin vX.Y.Z
 ```
 
-Pushing a `v*` tag triggers `.github/workflows/release.yml`: it extracts the version section from `CHANGELOG.md`, then `tauri-action` builds and creates the Release (**draft + pre-release by default**; un-draft manually once verified).
+Pushing a version tag triggers the Release workflow: it extracts the matching changelog, builds signed updater assets and creates a draft prerelease. Windows verifies the actual installers on an ephemeral runner. After checking the artifacts, run Publish Release with the version tag and choose stable or preserve-latest; the publisher verifies signatures, makes the release public and checks the anonymous manifest.
 
 ### Branch model
 
@@ -365,9 +368,9 @@ When documenting implementation status, only reference the implementation branch
 
 ## Project status and known limitations
 
-- **Still in testing, with no official release yet.** `0.1.0` is an unsigned test package: macOS Apple Silicon first, with an unsigned Windows x64 test build.
+- Public test versions exist; Releases Latest identifies the actual stable delivery. Candidate branches and draft Releases do not count as public publication.
 - Requirements, prototype, and implementation contracts are finalized and passed the review gates; all 13 capability domains are implemented, with multiple rounds of real-device acceptance on macOS.
-- **Known limitations**: no code signing or notarization; no auto-update; Windows runtime tests and real-device verification are incomplete; Intel macOS builds are disabled; non-macOS-arm64 platforms are handled separately per the authorization boundary.
+- **Known limitations**: no formal OS code signing or Apple notarization; Intel macOS builds and Windows CLI are disabled. Account transfer includes only supported information. The current full-runtime catalog budget is 100 rows; exceeding it blocks writes and preserves drafts. Unsupported Responses/Anthropic advanced reasoning constraints on OpenCodex2.84.0 are rejected before writes. A runtime save does not prove that Codex loaded it; use the client-check entry. Historical unverified scenarios and resource exceptions keep their original release dispositions.
 
 ---
 
