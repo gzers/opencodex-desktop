@@ -10,6 +10,41 @@ use std::path::{Path, PathBuf};
 use crate::errors::AppError;
 
 pub const PREFERENCES_RELATIVE_PATH: &str = "manager-state/preferences.json";
+pub const MODEL_AGENT_LOCAL_NAMESPACE: &str = "modelTemplateAgent";
+
+/// Local execution references never travel with portable preference documents.
+pub fn strip_model_agent(bytes: &[u8]) -> Result<Vec<u8>, PreferencesError> {
+    let mut document: serde_json::Value =
+        serde_json::from_slice(bytes).map_err(|_| PreferencesError::Corrupted)?;
+    let object = document
+        .as_object_mut()
+        .ok_or(PreferencesError::Corrupted)?;
+    if object.remove(MODEL_AGENT_LOCAL_NAMESPACE).is_none() {
+        return Ok(bytes.to_vec());
+    }
+    serde_json::to_vec_pretty(&document).map_err(|_| PreferencesError::Io)
+}
+pub fn preserve_model_agent(
+    path: &Path,
+    document: &mut serde_json::Value,
+) -> Result<(), PreferencesError> {
+    let existing = match std::fs::read(path) {
+        Ok(bytes) => Some(
+            serde_json::from_slice::<serde_json::Value>(&bytes)
+                .map_err(|_| PreferencesError::Corrupted)?,
+        ),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => None,
+        Err(_) => return Err(PreferencesError::Io),
+    };
+    let object = document
+        .as_object_mut()
+        .ok_or(PreferencesError::Corrupted)?;
+    object.remove(MODEL_AGENT_LOCAL_NAMESPACE);
+    if let Some(value) = existing.and_then(|v| v.get(MODEL_AGENT_LOCAL_NAMESPACE).cloned()) {
+        object.insert(MODEL_AGENT_LOCAL_NAMESPACE.into(), value);
+    }
+    Ok(())
+}
 pub const INTERFACE_SCALE_MIN: i32 = 50;
 pub const INTERFACE_SCALE_MAX: i32 = 200;
 
@@ -460,7 +495,8 @@ pub fn save_preferences(path: &Path, value: &Preferences) -> Result<Preferences,
         return Err(PreferencesError::NotConfigured);
     }
     // C 阶段：磁盘落盘为分域结构（schema v2）；内存与 DTO 保持扁平。
-    let document = document_from_preferences(value);
+    let mut document = document_from_preferences(value);
+    preserve_model_agent(path, &mut document)?;
     let payload = serde_json::to_vec_pretty(&document).map_err(|_| PreferencesError::Io)?;
     crate::infrastructure::atomic_write::atomic_write(path, &payload, 0o600)
         .map_err(|_| PreferencesError::Io)?;

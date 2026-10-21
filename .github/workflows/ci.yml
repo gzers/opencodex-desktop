@@ -44,7 +44,7 @@ jobs:
         with:
           node-version: 24
       - name: Windows CDP protocol regression
-        run: node --test test/smoke/windows-cdp.test.mjs
+        run: node --test test/smoke/windows-cdp.test.mjs test/smoke/windows-model-ui.test.mjs
       - run: npm --prefix apps/desktop/ui ci
       - run: npm --prefix apps/desktop/ui run typecheck
       - run: npm --prefix apps/desktop/ui run test -- --run
@@ -116,8 +116,10 @@ jobs:
             rustTestThreads = $env:RUST_TEST_THREADS
             rustTestTimeUnit = $env:RUST_TEST_TIME_UNIT
           } | ConvertTo-Json
-          # Print captured fixture phases after execution, including successful
-          # cases, without changing test parallelism or production deadlines.
+          # Preserve the original process deadlines and default test worker count.
+          # The diagnostic branch retains its original first-regression capture.
+          # In normal CI, run the cold two-second version probes before the large
+          # workspace workload; the remainder excludes only that completed group.
           if ('${{ steps.regression-etw.outputs.enabled }}' -ceq 'true') {
             $taskAdmission = Get-Content -LiteralPath ../../../test/out/windows-query-etw/admission.json -Raw | ConvertFrom-Json
             $env:OPENCODEX_TEST_NODE = $taskAdmission.node
@@ -131,8 +133,18 @@ jobs:
             }
             cargo --config $taskConfigPath test --locked --workspace --features integration-test -- --show-output
           } else {
-            cargo test --locked --workspace --features integration-test -- --show-output
+            cargo test --locked --lib --features integration-test infrastructure::official_version_source::windows_tests -- --show-output
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            cargo test --locked --workspace --features integration-test -- --show-output --skip infrastructure::official_version_source::windows_tests
           }
+      - name: Verify isolated native credential protection
+        if: always()
+        shell: pwsh
+        run: |
+          $env:OPENCODEX_SANDBOX = '1'
+          cargo test --locked --test provider_auth_native -- --ignored --test-threads=1 --nocapture
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - name: Collect Windows native dependency diagnostics
         if: always()
         shell: pwsh

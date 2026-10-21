@@ -50,3 +50,10 @@ test/smoke/sect.py "WebDAV 同步" test/out/sync.png
 > 锁屏状态下所有截图/点击都无效：`bin/lids` 的 `CGSSessionScreenIsLocked` 为 1 时，
 > macOS 不为 WKWebView 合成内容，截到的画面会发白或发虚（边缘标准差会从 ~30 掉到 ~8）。
 > `run-smoke.sh` 与 `winclick.py`/`sect.py` 已内置守卫，锁屏时会直接报 BLOCKED，不会产出假证据。
+
+
+### 0.2.0 Windows真实WebView模型切片
+
+windows-startup.ps1向windows-webview.mjs传入其本次新建的显式sandbox根时，附加执行windows-model-ui.mjs。先比对immutable currentDataRoot/activeDataRoot及runtimeActive，拒绝相对路径/其他目录，再通过真实Tauri服务建立专属模版，使用正式DOM编辑/保存和版本默认确认，检查旧版本不可变与渠道策略不变；仅模版文件导出/接收/采用沿同一IPC，不接运行服务或生成。生成model-ui.json和截图归当前Windows启动证据。未提供精确根的旧appearance/native调用继续原首屏流程，不自动执行写测试。脚本单测只证明准入边界与CDP读取合同，真实Windows结果必须等对应CI/制品实际运行后登记。
+
+Windows普通CI将具有2秒生产截止的official_version_source三项冷进程检查先运行，再执行排除该已完成分组的其余workspace回归；每项仍执行一次，保持默认Rust工作线程、原2秒截止、4秒清理边界及子进程/无关控制句柄断言，无预热、重试或放行失败。首组失败立即返回失败。原ETW诊断分支仍保留完整首次回归，不以重放替代。该调度调整的实际有效性由新源Windows结果确认。

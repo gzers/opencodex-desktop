@@ -12,18 +12,22 @@ export interface RouteMeta {
 export const ROUTE_NAMES: readonly RouteName[] = [
   'overview',
   'panel',
+  'models',
   'extensions',
+  'sync',
   'logs',
   'settings',
   'tray',
 ]
 
 export const routeMetadata: Record<RouteName, RouteMeta> = {
+  models: { title: '模型配置', subtitle: '管理渠道模型、模版与选择器顺序。' },
   overview: { title: '概览', subtitle: '运行状态与常用操作；环境明细收进运行详情。' },
   panel: { title: '面板', subtitle: '窄图标栏常驻承载 OpenCodex 官方 GUI；视觉与状态由官方页面自己维护。' },
   extensions: { title: '扩展管理', subtitle: '集中发现与同步本机 Skills 和 MCP 服务器；目标客户端按图标开关。' },
   logs: { title: '诊断中心', subtitle: '环境诊断、日志历史与通知历史分 Tab 管理；日志支持清理与自动保留策略。' },
-  settings: { title: '设置', subtitle: '集中管理偏好、安装配置、备份、迁移、同步、升级与官方归属。' },
+  sync: {title:'配置同步',subtitle:'文件导入导出与WebDAV同步；明确选择范围、比较后采用。'},
+  settings: { title: '设置', subtitle: '集中管理偏好、安装配置、备份、升级与官方归属。' },
   tray: { title: '托盘', subtitle: '系统托盘状态菜单的跨平台样式预览；控制动作走管理器自有域。' },
 }
 
@@ -32,8 +36,6 @@ export const settingsSections: readonly SettingsSection[] = [
   'installation',
   'backup',
   'extensions',
-  'migration',
-  'sync',
   'cleanup',
   'cli',
   'upgrade',
@@ -67,11 +69,14 @@ export function normalizeExtensionTab(value: string | null | undefined): Extensi
   return value === 'mcp' ? 'mcp' : 'skills'
 }
 
+export type SyncTab='file'|'webdav'
+export function normalizeSyncTab(value:string|null|undefined):SyncTab{return value==='webdav'?'webdav':'file'}
 export interface ParsedNavigation {
   route: RouteName
   section: SettingsSection
   extensionTab: ExtensionTab
   diagnosticsTab: DiagnosticsTab
+  syncTab:SyncTab
 }
 
 /** 解析 `#route?query`（允许带或不带前导 `#`）；未知取值回落到既定默认值。 */
@@ -79,8 +84,10 @@ export function parseHash(hash: string): ParsedNavigation {
   const raw = hash.replace(/^#/, '')
   const [name, query = ''] = raw.split('?')
   const params = new URLSearchParams(query)
+  const legacySync=name==='settings'&&['migration','sync'].includes(params.get('section')??'')
   return {
-    route: isRouteName(name) ? name : 'overview',
+    route: legacySync?'sync':isRouteName(name) ? name : 'overview',
+    syncTab:legacySync?(params.get('section')==='sync'?'webdav':'file'):normalizeSyncTab(params.get('tab')),
     section: isSettingsSection(params.get('section')) ? (params.get('section') as SettingsSection) : 'general',
     extensionTab: normalizeExtensionTab(params.get('tab')),
     diagnosticsTab: normalizeDiagnosticsTab(params.get('tab')),
@@ -89,6 +96,7 @@ export function parseHash(hash: string): ParsedNavigation {
 
 /** 序列化 `#route?query`；参数顺序保持传入顺序。 */
 export function serializeHash(route: RouteName, params: Record<string, string> = {}): string {
+  if(route==='settings'&&['migration','sync'].includes(params.section??'')){return serializeHash('sync',{tab:params.section==='sync'?'webdav':'file'})}
   const query = new URLSearchParams(params).toString()
   return `#${route}${query ? `?${query}` : ''}`
 }

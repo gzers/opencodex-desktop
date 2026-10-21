@@ -89,6 +89,8 @@ pub fn run() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(move |app| {
+            crate::modules::model_config::feedback::configure(app.handle().clone());
+            crate::modules::model_config::broker::configure(app.handle().clone());
             use tauri::Manager;
             #[cfg(windows)]
             if let Some(smoke) = smoke_window {
@@ -361,6 +363,7 @@ pub fn run() {
                 working_directory: home.clone(),
                 opencodex_home,
             });
+            crate::modules::model_config::broker::resume(data_root.clone());
 
             app.manage(crate::infrastructure::app_activity::AppActivity::default());
             app.manage(crate::commands::panel::PanelLifetime::default());
@@ -518,6 +521,65 @@ pub fn run() {
             }
         })
         .invoke_handler(tauri::generate_handler![
+            commands::model_transfer::model_transfer_export,
+            commands::model_transfer::model_transfer_prepare,
+            commands::model_transfer::model_transfer_prepare_draft,
+            commands::model_transfer::model_transfer_receive,
+            commands::model_transfer::model_transfer_accept,
+            commands::model_transfer::model_transfer_select,
+            commands::model_transfer::portable_latest_incoming,
+            commands::model_transfer::portable_recompare,
+            commands::model_transfer::portable_open_received,
+            commands::model_transfer::portable_extension_catalog,
+            commands::model_transfer::portable_account_catalog,
+            commands::model_transfer::portable_channel_catalog,
+            commands::model_transfer::config_sync_scope,
+            commands::model_transfer::config_sync_save_scope,
+            commands::model_transfer::config_sync_prepare,
+            commands::model_transfer::config_sync_publish,
+            commands::model_transfer::config_sync_download,
+            commands::model_transfer::config_sync_latest_upload,
+            commands::model_config::model_config_snapshot,
+            commands::model_config::model_template_save,
+            commands::model_config::model_template_usage,
+            commands::model_config::model_template_set_default,
+            commands::model_config::model_template_delete,
+            commands::model_config::model_match_preview,
+            commands::model_config::model_policy_preview,
+            commands::model_config::model_policy_stage,
+            commands::model_config::model_policy_prepare,
+            commands::model_config::model_policy_apply,
+            commands::model_config::model_policy_result,
+            commands::model_config::model_policy_latest,
+            commands::model_config::model_policy_history,
+            commands::model_config::model_policy_client_status,
+            commands::model_config::model_policy_client_check,
+            commands::model_config::model_policy_recovery_prepare,
+            commands::model_config::model_policy_recovery_accept,
+            commands::model_config::model_policy_compensate,
+            commands::model_config::model_upstream_snapshot,
+            commands::model_config::model_channel_discover,
+            commands::model_config::model_new_channel_preview,
+            commands::model_config::model_new_channel_add,
+            commands::model_config::model_new_channel_result,
+            commands::model_config::model_new_channel_latest,
+            commands::model_config::model_channel_forget_credential,
+            commands::model_config::model_node_measure,
+            commands::model_config::model_node_measure_stop,
+            commands::model_config::model_external_task,
+            commands::model_config::model_external_activate,
+            commands::model_config::model_external_result,
+            commands::model_config::model_agent_preferences,
+            commands::model_config::model_agent_directory,
+            commands::model_config::model_agent_preferences_save,
+            commands::model_config::model_research_sources,
+            commands::model_config::model_research_search,
+            commands::model_config::model_agent_generate,
+            commands::model_config::model_agent_stop,
+            commands::model_config::model_agent_accept_review,
+            commands::model_config::model_agent_latest_result,
+            commands::model_config::model_agent_conversation,
+            commands::model_config::model_agent_conversation_save,
             commands::backup::backup_files,
             commands::backup::open_backup_file,
             commands::backup::create_preferences_backup,
@@ -578,6 +640,8 @@ pub fn run() {
             commands::preferences::restore_default_preferences,
             commands::network::check_network_proxy,
             commands::sync::get_sync_config,
+            commands::sync::list_imported_sync_connections,
+            commands::sync::activate_imported_sync_connection,
             commands::sync::save_sync_endpoint,
             commands::sync::delete_sync_endpoint,
             commands::sync::test_sync_connection,

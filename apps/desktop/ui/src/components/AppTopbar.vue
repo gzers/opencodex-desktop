@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import UiIconButton from '@/components/ui/UiIconButton.vue'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { useRouteStore } from '@/stores/routes'
 import { useThemeStore } from '@/app/appearance/theme'
 import { useAppController } from '@/composables/useAppController'
 import { useNotificationsStore } from '@/features/notifications/store'
+import { useOperationTasks } from '@/app/feedback/tasks'
 import type { NotificationItem } from '@/types/ui'
 
 const routes = useRouteStore()
@@ -58,6 +60,7 @@ function onDocumentClick(event: MouseEvent) {
 }
 
 function togglePanel() {
+  useOperationTasks().expandAll()
   panelOpen.value = !panelOpen.value
   if (panelOpen.value) document.addEventListener('click', onDocumentClick)
   else document.removeEventListener('click', onDocumentClick)
@@ -95,18 +98,18 @@ onBeforeUnmount(() => {
         </button>
       </div>
       <span v-if="!compact && routes.current !== 'panel' && routes.current !== 'overview'" class="state-pill" :class="pillClass">{{ controller.scenario.value.label }}</span>
-      <button
+      <UiIconButton
         class="icon-btn topbar-refresh"
         :class="{ 'is-busy': refreshing }"
         type="button"
         title="刷新状态"
-        aria-label="刷新状态"
-        :aria-busy="refreshing ? 'true' : 'false'"
+        label="刷新状态"
+        :busy="refreshing"
         :disabled="refreshing"
         @click="refreshCurrentView"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M18.2 3.4v3.3h-3.3"/></svg>
-      </button>
+      </UiIconButton>
       <div class="notification-wrap">
         <button
           class="notification-btn"

@@ -56,8 +56,17 @@ export function useAppController(initialize = false) {
       confirmLabel: notificationConfirmLabel(notification.action),
       onConfirm: () => {
         if (notification.action === 'restore') openRestoreConfirm(notification.target ?? app.runtimeState)
-        else if (notification.action === 'sync') routes.go('settings', { section: 'sync' })
+        else if (notification.action === 'sync') routes.go('sync',{tab:'webdav'})
         else if (notification.action === 'logs') routes.go('logs', { tab: 'logs' })
+        else if (notification.action === 'model_policy') {
+          void import('@/features/models/store').then(({useModelsStore})=>{if(notification.objectId)useModelsStore().policyNotificationTarget={planId:notification.objectId};routes.go('models')})
+        }
+        else if (notification.action === 'models') {
+          void import('@/features/models/store').then(({ useModelsStore }) => {
+            if (notification.objectId && notification.candidateId) useModelsStore().notificationTarget = { taskId:notification.objectId,submissionId:notification.candidateId }
+            routes.go('models')
+          })
+        }
         else if (notification.action === 'settings_installation') routes.go('settings', { section: 'installation' })
         else if (notification.action === 'settings_cleanup') routes.go('settings', { section: 'cleanup' })
         else routes.go('settings', { section: 'upgrade' })
@@ -112,15 +121,19 @@ export function useAppController(initialize = false) {
         usePanelStore().requestReload()
       } else if (route === 'extensions') {
         await Promise.all([app.loadExtensions(), app.loadExtensionConfig()])
+      } else if (route === 'models') {
+        const { useModelsStore } = await import('@/features/models/store')
+        await useModelsStore().load()
       } else if (route === 'logs') {
         if (routes.diagnosticsTab === 'notifications') await app.loadNotifications()
         else if (routes.diagnosticsTab === 'doctor') await runDoctor()
         else await loadLogs()
+      } else if(route==='sync'){
+        await app.loadSyncConfig()
       } else if (route === 'settings') {
         await app.loadRuntimeSource()
         await app.loadPreferences()
         await app.refreshRuntimeVersionFact()
-        if (routes.settingsSection === 'sync') await app.loadSyncConfig()
       }
     } catch {
       app.showToast('刷新失败；已保留当前内容。')

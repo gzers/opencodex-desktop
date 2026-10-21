@@ -11,6 +11,8 @@ pub(crate) mod event_delivery;
 pub mod extensions;
 pub mod logs;
 pub mod migration;
+pub mod model_config;
+pub mod model_transfer;
 pub mod network;
 pub mod notifications;
 pub mod panel;

@@ -4,21 +4,22 @@
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 defineOptions({ inheritAttrs: false })
-const props = defineProps<{ open: boolean }>()
+const props = withDefaults(defineProps<{ open: boolean; closeOnSelect?: boolean; manageFocus?: boolean }>(), { closeOnSelect: true, manageFocus:true })
 const emit = defineEmits<{ close: [] }>()
 const anchor = ref<HTMLElement | null>(null)
 const menu = ref<HTMLElement | null>(null)
 const target = ref<HTMLElement | string>('body')
 const position = ref({ left: '0px', top: '0px', minWidth: '0px', maxWidth: '320px', maxHeight: '260px' })
 const trigger = () => anchor.value?.closest('.select')?.querySelector<HTMLButtonElement>('.select-trigger')
-const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled)') ?? [])]
+const options = () => [...(menu.value?.querySelectorAll<HTMLButtonElement>('[role="option"]:not(:disabled),[role="menuitem"]:not(:disabled),[role="menuitemradio"]:not(:disabled)') ?? [])]
 const visible = computed(() => props.open)
 let observer: ResizeObserver | undefined
+let disposed=false
 
 function place() {
   const button = trigger()
   if (!button || !menu.value) return
-  const zoom = Number(getComputedStyle(button.closest('.app-window') ?? document.documentElement).zoom) || 1
+  const zoom = Number(getComputedStyle(button.closest('dialog, .app-window, [data-ui-overlay-root]') ?? document.documentElement).zoom) || 1
   const bounds = button.getBoundingClientRect()
   const viewportWidth = window.innerWidth / zoom
   const viewportHeight = window.innerHeight / zoom
@@ -29,9 +30,10 @@ function place() {
   const upwards = below < height && above > below
   const available = Math.max(30, upwards ? above : below)
   const shownHeight = Math.min(height, available)
+  const host = target.value instanceof HTMLDialogElement ? target.value.getBoundingClientRect() : null
   position.value = {
-    left: `${Math.max(12, Math.min(bounds.right / zoom - width, viewportWidth - width - 12))}px`,
-    top: `${upwards ? Math.max(12, bounds.top / zoom - shownHeight - 6) : bounds.bottom / zoom + 6}px`,
+    left: `${Math.max(12, Math.min(bounds.right / zoom - width, viewportWidth - width - 12)) - (host?.left ?? 0) / zoom}px`,
+    top: `${(upwards ? Math.max(12, bounds.top / zoom - shownHeight - 6) : bounds.bottom / zoom + 6) - (host?.top ?? 0) / zoom}px`,
     minWidth: `${Math.min(bounds.width / zoom, viewportWidth - 24)}px`,
     maxWidth: `${viewportWidth - 24}px`,
     maxHeight: `${Math.min(260, available)}px`,
@@ -47,6 +49,7 @@ function outside(event: PointerEvent) {
   if (!menu.value?.contains(node) && !anchor.value?.closest('.select')?.contains(node)) close()
 }
 function keydown(event: KeyboardEvent) {
+  if(!props.manageFocus)return
   const button = trigger()
   const inside = menu.value?.contains(event.target as Node)
   if (!inside && event.target !== button) return
@@ -60,7 +63,7 @@ function keydown(event: KeyboardEvent) {
   }
   const items = options()
   const index = items.indexOf(document.activeElement as HTMLButtonElement)
-  if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+  if (items.length && ['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
     event.preventDefault()
     const next = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1
       : (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length
@@ -83,10 +86,12 @@ function keydown(event: KeyboardEvent) {
 }
 watch(visible, async open => {
   await nextTick()
+  if(disposed||visible.value!==open)return
   if (open) {
+    const element=menu.value;if(!element)return
     place()
     const button = trigger()
-    button?.setAttribute('aria-controls', menu.value!.id)
+    button?.setAttribute('aria-controls', element.id)
     observer?.disconnect()
     if (typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(place)
@@ -98,13 +103,14 @@ watch(visible, async open => {
   }
 })
 onMounted(() => {
-  target.value = anchor.value?.closest('.app-window') as HTMLElement ?? document.body
+  target.value = anchor.value?.closest('dialog, .app-window, [data-ui-overlay-root]') as HTMLElement ?? document.body
   window.addEventListener('pointerdown', outside)
   window.addEventListener('keydown', keydown)
   window.addEventListener('resize', place)
   window.addEventListener('scroll', place, true)
 })
 onBeforeUnmount(() => {
+  disposed=true;trigger()?.removeAttribute('aria-controls')
   observer?.disconnect()
   window.removeEventListener('pointerdown', outside)
   window.removeEventListener('keydown', keydown)
@@ -118,7 +124,7 @@ const id = `select-menu-${Math.random().toString(36).slice(2)}`
   <span ref="anchor" hidden></span>
   <Teleport :to="target">
     <div v-if="visible" :id="id" ref="menu" v-bind="$attrs" class="select-menu select-menu-portal"
-      :style="position" @click="close(true)">
+      :style="position" @click="props.closeOnSelect !== false && close(true)">
       <slot />
     </div>
   </Teleport>

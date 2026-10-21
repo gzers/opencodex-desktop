@@ -274,6 +274,7 @@ export async function installAuditHarness() {
   const params = new URLSearchParams(window.location.search)
   auditParams = params
   if (!params.has('__audit')) return
+  if (params.get('route') === 'models') (await import('./modelFixtures')).installModelFixtures()
 
   const app = useAppStore()
   const routes = useRouteStore()
@@ -294,7 +295,7 @@ export async function installAuditHarness() {
 
   const requestedRoute = params.get('route')
   if (requestedRoute) {
-    const valid: RouteName[] = ['overview', 'panel', 'extensions', 'logs', 'settings', 'tray']
+    const valid: RouteName[] = ['overview', 'panel', 'models', 'extensions', 'sync', 'logs', 'settings', 'tray']
     if (valid.includes(requestedRoute as RouteName)) {
       const next = requestedRoute as RouteName
       const routeParams: Record<string, string> = {}

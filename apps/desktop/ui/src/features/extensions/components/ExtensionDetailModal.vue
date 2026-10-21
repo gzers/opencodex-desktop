@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { onMounted, ref, useId } from 'vue'
 import ClientIcon from './ClientIcon.vue'
 import MarkdownContent from '@/components/patterns/MarkdownContent.vue'
@@ -125,7 +126,7 @@ onMounted(() => dialog.value?.focus())
         </ul>
       </div>
       <div class="modal-actions">
-        <button type="button" class="btn" @click="close">关闭</button>
+        <UiButton type="button" class="btn" @click="close">关闭</UiButton>
       </div>
     </div>
   </div>

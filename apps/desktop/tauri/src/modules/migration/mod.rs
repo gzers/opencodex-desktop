@@ -191,8 +191,16 @@ pub fn derive_key_for_test(
     passphrase: &[u8],
     salt: &[u8],
 ) -> Result<Zeroizing<[u8; 32]>, MigrationError> {
+    // v1 compatibility used the encoded salt bytes. Keep that historical
+    // contract isolated; new portable envelopes use the raw random salt.
     let salt = argon2::password_hash::SaltString::encode_b64(salt)
         .map_err(|_| MigrationError::ContainerFormat)?;
+    derive_portable_key(passphrase, salt.as_str().as_bytes())
+}
+pub(crate) fn derive_portable_key(
+    passphrase: &[u8],
+    salt: &[u8],
+) -> Result<Zeroizing<[u8; 32]>, MigrationError> {
     let argon = Argon2::new(
         argon2::Algorithm::Argon2id,
         argon2::Version::V0x13,
@@ -206,7 +214,7 @@ pub fn derive_key_for_test(
     );
     let mut key = Zeroizing::new([0_u8; 32]);
     argon
-        .hash_password_into(passphrase, salt.as_str().as_bytes(), key.as_mut())
+        .hash_password_into(passphrase, salt, key.as_mut())
         .map_err(|_| MigrationError::ContainerFormat)?;
     Ok(key)
 }
@@ -548,6 +556,20 @@ fn open_legacy_document(
     let key = derive_key_for_test(passphrase.as_bytes(), &salt)?;
     open_document_for_test(payload_b64, header, &key)
 }
+pub(crate) fn read_portable_legacy(
+    bytes: &[u8],
+    passphrase: Option<&str>,
+) -> Result<ContainerDocument, MigrationError> {
+    let document = match parse_container(bytes)? {
+        ParsedContainer::Legacy {
+            header,
+            payload_b64,
+        } => open_legacy_document(&header, &payload_b64, passphrase)?,
+        ParsedContainer::Plaintext(document) => document,
+    };
+    container::validate_document(&document).map_err(map_container_error)?;
+    Ok(document)
+}
 
 /// Captured export ownership, separate from the planned generic migration job.
 /// Begin runs after the target lock is acquired; completed runs before it drops.
@@ -755,6 +777,7 @@ fn import_preferences(
         .map_err(|_| MigrationError::CorruptedDocument)?;
     // C 阶段：导入落盘为分域结构（与偏好存储一致），而不是写回 legacy 扁平文件。
     let document = crate::modules::preferences::document_from_preferences(&preferences);
+
     Ok(AppliedSection {
         changed_paths: vec![data_root.join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH)],
         document: serde_json::to_vec_pretty(&document).map_err(|_| MigrationError::Preferences)?,
@@ -882,7 +905,7 @@ fn import_with_parsed_verified(
 
     // Incoming validation precedes admission. Existing-file capture, backup,
     // mutation, readback and terminal share the same owned lock scope.
-    let preferences_section = import_preferences(data_root, &document)?;
+    let mut preferences_section = import_preferences(data_root, &document)?;
     if !home.is_absolute() || !home.is_dir() {
         return Err(MigrationError::NotConfigured.into());
     }
@@ -921,6 +944,19 @@ fn import_with_parsed_verified(
     observer.begin(&document_sha256, home);
     let result = (|| {
         let previous_preferences = previous_import_file(data_root, preferences_path)?;
+        // Preserve local execution bindings only under the admitted target
+        // locks and registered operation. An unreadable existing file is a
+        // terminal import failure, never a pre-admission empty configuration.
+        let mut preferences_document: serde_json::Value =
+            serde_json::from_slice(&preferences_section.document)
+                .map_err(|_| MigrationError::Preferences)?;
+        crate::modules::preferences::preserve_model_agent(
+            preferences_path,
+            &mut preferences_document,
+        )
+        .map_err(|_| MigrationError::Preferences)?;
+        preferences_section.document = serde_json::to_vec_pretty(&preferences_document)
+            .map_err(|_| MigrationError::Preferences)?;
         let previous_sync = if has_sync {
             previous_import_file(data_root, &sync_path)?
         } else {

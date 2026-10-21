@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import type { RouteName, SettingsSection } from '@/types/ui'
 import {
   normalizeDiagnosticsTab,
+  normalizeSyncTab,
+  type SyncTab,
   parseHash,
   routeMetadata,
   serializeHash,
@@ -14,10 +16,13 @@ import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
 import LogsRoute from '@/routes/LogsRoute.vue'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
 import TrayRoute from '@/routes/TrayRoute.vue'
+const SyncRoute=defineAsyncComponent(()=>import('@/routes/SyncRoute.vue'))
+const ModelsRoute = defineAsyncComponent(() => import('@/routes/ModelsRoute.vue'))
 
 export const useRouteStore = defineStore('routes', () => {
   const route = ref<RouteName>(readHash().route)
   const settingsSection = ref<SettingsSection>(readHash().section)
+  const syncTab=ref<SyncTab>(readHash().syncTab)
   const extensionTab = ref(readHash().extensionTab)
   const diagnosticsTab = ref<DiagnosticsTab>(readHash().diagnosticsTab)
   const meta = computed(() => routeMetadata[route.value])
@@ -35,6 +40,8 @@ export const useRouteStore = defineStore('routes', () => {
       case 'extensions': return ExtensionsRoute
       case 'logs': return LogsRoute
       case 'settings': return SettingsRoute
+      case 'models': return ModelsRoute
+      case 'sync':return SyncRoute
       case 'tray': return TrayRoute
     }
   })
@@ -44,7 +51,9 @@ export const useRouteStore = defineStore('routes', () => {
   }
 
   function go(next: RouteName, params: Record<string, string> = {}) {
+    if(next==='settings'&&['migration','sync'].includes(params.section??'')){params={tab:params.section==='sync'?'webdav':'file'};next='sync'}
     route.value = next
+    if(next==='sync'&&params.tab)syncTab.value=normalizeSyncTab(params.tab)
     if (next === 'settings' && params.section) settingsSection.value = params.section as SettingsSection
     if (next === 'extensions' && params.tab) extensionTab.value = params.tab === 'mcp' ? 'mcp' : 'skills'
     if (next === 'logs' && params.tab) diagnosticsTab.value = normalizeDiagnosticsTab(params.tab)
@@ -55,12 +64,15 @@ export const useRouteStore = defineStore('routes', () => {
   function updateFromLocation() {
     const parsed = readHash()
     route.value = parsed.route
+    syncTab.value=parsed.syncTab
+    if(parsed.route==='sync'&&window.location.hash.startsWith('#settings'))window.history.replaceState(null,'',serializeHash('sync',{tab:parsed.syncTab}))
     settingsSection.value = parsed.section
     extensionTab.value = parsed.extensionTab
     diagnosticsTab.value = parsed.diagnosticsTab
   }
 
   window.addEventListener('hashchange', updateFromLocation)
+  if(window.location.hash.startsWith('#settings')&&route.value==='sync')window.history.replaceState(null,'',serializeHash('sync',{tab:syncTab.value}))
 
   // 路由名投影到根元素（与原型 `html[data-route=...]` 同源、单一写入点）：
   // 页面级样式（如概览的内距与区块间距）据此按路由生效，不新增第二套状态。
@@ -75,6 +87,7 @@ export const useRouteStore = defineStore('routes', () => {
     current: route,
     settingsSection,
     extensionTab,
+    syncTab,
     diagnosticsTab,
     meta,
     component,

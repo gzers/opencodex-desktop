@@ -24,6 +24,9 @@
   --surface-panel-blur: var(--glass-blur-notif);
   --surface-panel-shadow: 0 18px 44px #10182814, 0 2px 6px #1018280f;
   --surface-panel-radius: var(--radius);
+  /* Fixed navigation uses the same panel material, with no second opaque page layer. */
+  --surface-sticky-bg: var(--surface-panel-bg);
+  --surface-sticky-blur: var(--surface-panel-blur);
 
   /* control：按钮、标签、选择器等可交互控件（同一玻璃配方，独立投影）。 */
   --surface-control-bg: var(--glass-fill);
@@ -68,14 +71,14 @@ html[data-theme="dark"] {
 .about-hero, .about-panel, .mcp-form-card, .choice, .modal, .select-menu {
   box-shadow: var(--surface-panel-shadow);
 }
-.btn:not(.primary):not(.danger):not(.ghost), .tag, .select-trigger {
+.btn:not(.primary):not(.danger):not(.ghost):not(.btn-plain), .tag, .select-trigger {
   background: var(--surface-control-bg);
   border-color: var(--surface-control-border);
   -webkit-backdrop-filter: var(--surface-control-blur);
   backdrop-filter: var(--surface-control-blur);
   box-shadow: var(--surface-control-shadow);
 }
-.btn:not(.primary):not(.danger):not(.ghost):hover, .select-trigger:hover {
+.btn:not(.primary):not(.danger):not(.ghost):not(.btn-plain):hover, .select-trigger:hover {
   background: var(--surface-control-bg-hover);
 }
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiIconButton from '@/components/ui/UiIconButton.vue'
 import type { NotificationItem as NotificationItemModel } from '@/types/ui'
 import { formatNotificationTime } from '../model'
 
@@ -24,17 +25,17 @@ defineEmits<{ open: [string]; delete: [string] }>()
     </button>
     <time v-if="showTime" class="n-time">{{ formatNotificationTime(item.time) }}</time>
     <div class="n-actions">
-      <button
+      <UiIconButton size="notification"
         class="n-del"
         type="button"
         title="删除这条通知"
-        :aria-label="`删除这条通知：${item.title}`"
+        :label="`删除这条通知：${item.title}`"
         @click.stop="$emit('delete', item.id)"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M6.5 7l.8 12a2 2 0 0 0 2 1.9h5.4a2 2 0 0 0 2-1.9L17.5 7"/>
         </svg>
-      </button>
+      </UiIconButton>
     </div>
   </div>
 </template>

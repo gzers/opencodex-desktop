@@ -232,8 +232,8 @@ const mods = computed(() => [
       { label: '检查更新', cls: 'btn primary', run: () => openUpdates(null, true) },
     ],
   },
-  { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('settings', { section: 'migration' }) }, { label: '导入配置', cls: 'btn', run: () => routes.go('settings', { section: 'migration' }) }] },
-  { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('settings', { section: 'sync' }) })) },
+  { key: 'migration', title: '配置迁移', tag: '已接入', rows: [['导出配置', '加密容器'], ['导入校验', '备份后替换']], actions: [{ label: '导出配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }, { label: '导入配置', cls: 'btn', run: () => routes.go('sync',{tab:'file'}) }] },
+  { key: 'sync', title: 'WebDAV 同步', tag: webdavStates[app.webdavState].tag, rows: [['连接状态', webdavStates[app.webdavState].conn], ['冲突策略', webdavStates[app.webdavState].conflict]], actions: webdavStates[app.webdavState].actions.map(a => ({ label: a.label, cls: a.cls, run: () => routes.go('sync',{tab:'webdav'}) })) },
 ])
 </script>
 
@@ -280,13 +280,13 @@ const mods = computed(() => [
           <details v-if="moreActions.length" class="motion-more">
             <summary>更多</summary>
             <div class="motion-more-menu">
-              <button
+              <UiButton
                 v-for="action in moreActions"
                 :key="action"
                 type="button"
                 class="btn ghost"
                 @click="controller.runAction(action)"
-              >{{ actionLabel(action) }}</button>
+              >{{ actionLabel(action) }}</UiButton>
             </div>
           </details>
         </div>
@@ -309,8 +309,8 @@ const mods = computed(() => [
         </div>
         <div class="mod-status">
           <template v-if="mod.key === 'upgrade'">
-            <button class="btn ghost overview-update-row" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')"><span>桌面管理器</span><b>{{ managerUpdateStatus?.currentVersion ?? app.aboutApp?.version ?? '—' }}</b><span aria-hidden="true">›</span></button>
-            <button class="btn ghost overview-update-row" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')"><span>OpenCodex 面板</span><b>{{ app.officialProject?.version ?? '—' }}</b><span aria-hidden="true">›</span></button>
+            <UiButton class="overview-update-row" variant="ghost" surface="plain" size="sm" type="button" aria-label="查看桌面管理器更新详情" @click="openUpdates('manager')"><span>桌面管理器</span><b>{{ managerUpdateStatus?.currentVersion ?? app.aboutApp?.version ?? '—' }}</b><span aria-hidden="true">›</span></UiButton>
+            <UiButton class="overview-update-row" variant="ghost" surface="plain" size="sm" type="button" aria-label="查看 OpenCodex 面板更新详情" @click="openUpdates('official')"><span>OpenCodex 面板</span><b>{{ app.officialProject?.version ?? '—' }}</b><span aria-hidden="true">›</span></UiButton>
           </template>
           <template v-else><span v-for="row in mod.rows" :key="row[0]">{{ row[0] }} <b>{{ row[1] }}</b></span></template>
         </div>
@@ -329,7 +329,7 @@ const mods = computed(() => [
     <UiCard v-if="!gateBlocked" class="recent-events-card" data-testid="overview-recent-events">
       <div class="recent-events-head">
         <h2>最近事件</h2>
-        <button class="btn ghost" type="button" @click="routes.go('logs')">诊断中心</button>
+        <UiButton size="sm" class="btn ghost" type="button" @click="routes.go('logs')">诊断中心</UiButton>
       </div>
       <ul class="recent-events-list">
         <li v-if="!recentEvents.length" class="recent-events-empty">暂无事件记录。</li>
@@ -345,7 +345,7 @@ const mods = computed(() => [
       <div class="modal motion-modal motion-runtime-modal" role="dialog" aria-modal="true" aria-label="运行详情">
         <div class="motion-modal-head">
           <h3>运行详情</h3>
-          <button class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="detailOpen = false">✕</button>
+          <UiButton class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="detailOpen = false">✕</UiButton>
         </div>
         <div class="motion-modal-body">
           <div class="motion-runtime-grid">
@@ -368,7 +368,7 @@ const mods = computed(() => [
                   <span class="motion-check-value" :data-tone="check.tone">{{ check.value }}</span>
                 </li>
               </ol>
-              <button v-if="gateBlocked" class="btn ghost" type="button" @click="openEnvironment">完整环境指引</button>
+              <UiButton v-if="gateBlocked" class="btn ghost" type="button" @click="openEnvironment">完整环境指引</UiButton>
             </section>
           </div>
           <section class="motion-runtime-source" aria-labelledby="runtimeSourceTitle">
@@ -390,9 +390,9 @@ const mods = computed(() => [
           </section>
         </div>
         <div class="motion-modal-actions">
-          <button class="btn ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</button>
-          <button class="btn ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</button>
-          <button class="btn primary" type="button" @click="detailOpen = false">关闭</button>
+          <UiButton class="btn ghost" type="button" @click="app.openOverviewDataRoot()">打开数据目录</UiButton>
+          <UiButton class="btn ghost" type="button" @click="app.openOverviewOpencodexHome()">打开 OPENCODEX_HOME</UiButton>
+          <UiButton class="btn primary" type="button" @click="detailOpen = false">关闭</UiButton>
         </div>
       </div>
     </div>
@@ -402,7 +402,7 @@ const mods = computed(() => [
       <div class="modal motion-modal" role="dialog" aria-modal="true" aria-label="运行环境">
         <div class="motion-modal-head">
           <h3>运行环境</h3>
-          <button class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="envOpen = false">✕</button>
+          <UiButton class="btn ghost motion-modal-close" type="button" aria-label="关闭" @click="envOpen = false">✕</UiButton>
         </div>
         <div class="motion-modal-body">
           <p class="motion-modal-sub">{{ environment.title }}</p>
@@ -424,12 +424,12 @@ const mods = computed(() => [
         </div>
         <div class="motion-modal-actions">
           <template v-if="environment.state === 'missing_ocx'">
-            <button class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</button>
-            <button class="btn" type="button" @click="installManaged('offline')">导入离线包</button>
+            <UiButton class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</UiButton>
+            <UiButton class="btn" type="button" @click="installManaged('offline')">导入离线包</UiButton>
           </template>
-          <button class="btn ghost" type="button" @click="guide">查看安装指引</button>
-          <button class="btn ghost" type="button" @click="recheckEnvironment">重新检查</button>
-          <button class="btn primary" type="button" @click="envOpen = false">关闭</button>
+          <UiButton class="btn ghost" type="button" @click="guide">查看安装指引</UiButton>
+          <UiButton class="btn ghost" type="button" @click="recheckEnvironment">重新检查</UiButton>
+          <UiButton class="btn primary" type="button" @click="envOpen = false">关闭</UiButton>
         </div>
       </div>
     </div>
@@ -437,6 +437,7 @@ const mods = computed(() => [
 </template>
 
 <style scoped>
-.overview-update-row { display: flex; justify-content: space-between; width: 100%; gap: var(--space-2); min-height: 26px; padding: var(--space-1) 0; font-size: var(--text-label); }
-.overview-update-row > b { margin-left: auto; overflow-wrap: anywhere; }
+.overview-update-row { display: block; width: 100%; padding: var(--space-1) 0; color: inherit; font: inherit; text-align: left; }
+.overview-update-row :deep(.btn-content) { display: flex; align-items: baseline; width: 100%; gap: var(--space-2); }
+.overview-update-row :deep(b) { margin-left: auto; overflow-wrap: anywhere; }
 </style>

@@ -110,6 +110,86 @@ fn registry_is_closed_and_references_are_consistent() {
         assert!(config.events.iter().any(|e| e.id == site.event));
     }
 }
+#[test]
+fn model_external_failures_link_to_exact_task_and_only_matching_success_resolves() {
+    let mut store = NotificationStore::new();
+    let mut delivery = failure();
+    delivery.event = "model-template-external-failed";
+    delivery.job = Job::ModelConfig;
+    delivery.trigger = Trigger::Commit;
+    delivery.identity.object = ObjectKind::Configuration;
+    delivery.identity.action = Action::Save;
+    assert!(deliver(&mut store, &delivery, prefs()).unwrap().added);
+    let item = &store.all()[0];
+    let dto = NotificationDto::from_domain(item);
+    assert_eq!(
+        dto.action,
+        Some(opencodex_desktop_lib::modules::notifications::NotificationAction::Models)
+    );
+    assert_eq!(
+        dto.object_id,
+        Some(String::from(delivery.identity.object_id.clone()))
+    );
+    assert_eq!(
+        dto.candidate_id,
+        Some(String::from(delivery.identity.candidate.clone()))
+    );
+    let mut wrong = success();
+    wrong.job = delivery.job;
+    wrong.trigger = delivery.trigger;
+    wrong.identity = delivery.identity.clone();
+    wrong.event = "model-template-external-succeeded";
+    wrong.identity.candidate = opaque(99);
+    wrong.evidence = Evidence::Success {
+        candidate: wrong.identity.candidate.clone(),
+        verified: true,
+    };
+    wrong.occurred_at = at(110);
+    assert_eq!(deliver(&mut store, &wrong, prefs()).unwrap().resolved, 0);
+    wrong.identity = delivery.identity.clone();
+    wrong.evidence = Evidence::Success {
+        candidate: wrong.identity.candidate.clone(),
+        verified: true,
+    };
+    assert_eq!(deliver(&mut store, &wrong, prefs()).unwrap().resolved, 1);
+    assert!(!store.all()[0].read);
+}
+#[test]
+fn policy_save_risk_links_to_its_exact_plan_and_only_verified_commit_or_compensation_resolves() {
+    let mut store = NotificationStore::new();
+    let mut delivery = failure();
+    delivery.event = "model-policy-save-failed";
+    delivery.job = Job::ModelConfig;
+    delivery.trigger = Trigger::Commit;
+    delivery.identity.object = ObjectKind::Configuration;
+    delivery.identity.action = Action::Save;
+    assert!(deliver(&mut store, &delivery, prefs()).unwrap().added);
+    let dto = NotificationDto::from_domain(&store.all()[0]);
+    assert_eq!(
+        dto.action,
+        Some(opencodex_desktop_lib::modules::notifications::NotificationAction::ModelPolicy)
+    );
+    assert_eq!(
+        dto.object_id,
+        Some(String::from(delivery.identity.object_id.clone()))
+    );
+    let mut resolved = failure();
+    resolved.job = delivery.job;
+    resolved.trigger = delivery.trigger;
+    resolved.identity = delivery.identity.clone();
+    resolved.event = "model-policy-save-succeeded";
+    resolved.evidence = Evidence::Success {
+        candidate: delivery.identity.candidate.clone(),
+        verified: false,
+    };
+    assert!(deliver(&mut store, &resolved, prefs()).is_err());
+    resolved.evidence = Evidence::Success {
+        candidate: delivery.identity.candidate.clone(),
+        verified: true,
+    };
+    assert_eq!(deliver(&mut store, &resolved, prefs()).unwrap().resolved, 1);
+    assert!(!store.all()[0].read);
+}
 
 #[test]
 fn legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes() {

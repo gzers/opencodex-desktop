@@ -8,7 +8,7 @@ export type {
 
 export type ThemeSetting = 'light' | 'dark' | 'system'
 
-export type RouteName = 'overview' | 'panel' | 'extensions' | 'logs' | 'settings' | 'tray'
+export type RouteName = 'overview' | 'panel' | 'models' | 'extensions' | 'sync' | 'logs' | 'settings' | 'tray'
 
 export type SettingsSection =
   | 'general'
@@ -56,13 +56,15 @@ export interface NotificationItem {
   resolved?: boolean
   resolvedAt?: string | null
   operationId?: string | null
+  objectId?: string | null
+  candidateId?: string | null
   dedupeKey?: string | null
   occurrenceCount?: number
   lastObservedAt?: string | null
   // 后端 `NotificationAction` 冻结为 snake_case（见 `types/notifications.rs` 的 DTO 契约测试），
   // 前端必须用同一套取值，否则多词动作（app_update / settings_installation / settings_cleanup）
   // 查不到对应按钮与跳转——「通知详情没有前往处理的按钮」。
-  action?: 'restore' | 'upgrade' | 'app_update' | 'sync' | 'logs' | 'settings_installation' | 'settings_cleanup'
+  action?: 'restore' | 'upgrade' | 'app_update' | 'sync' | 'logs' | 'models' | 'model_policy' | 'settings_installation' | 'settings_cleanup'
   target?: RuntimeState
 }
 

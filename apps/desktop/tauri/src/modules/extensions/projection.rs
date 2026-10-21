@@ -560,7 +560,7 @@ fn execute_locked(
             validate_artifact_name(&definition.name)?;
             validate_server_definition(&definition)?;
             if config.servers.contains(&definition.name)
-                || source_server_definition(targets, &definition.name)?.is_some()
+                || source_server_definition(data_root, targets, &definition.name)?.is_some()
             {
                 return Err(ProjectionError::Conflict);
             }
@@ -580,7 +580,7 @@ fn execute_locked(
             validate_artifact_name(&name)?;
             validate_artifact_name(&definition.name)?;
             validate_server_definition(&definition)?;
-            if !confirm && source_server_definition(targets, &name)?.is_none() {
+            if !confirm && source_server_definition(data_root, targets, &name)?.is_none() {
                 return Err(ProjectionError::Conflict);
             }
             let written =
@@ -593,6 +593,8 @@ fn execute_locked(
             result.mcp_written = written;
             let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
             result.skills_linked = apply_skill_links(data_root, &live, targets)?;
+            crate::modules::sync::portable_assets::remove_stored(data_root, &name)
+                .map_err(|_| ProjectionError::AtomicWrite)?;
             return Ok(result);
         }
         ProjectionCommand::UninstallSkill { name, confirm } => {
@@ -610,8 +612,8 @@ fn execute_locked(
             confirm,
         } => {
             validate_artifact_name(&name)?;
-            let definition =
-                source_server_definition(targets, &name)?.ok_or(ProjectionError::TargetInvalid)?;
+            let definition = source_server_definition(data_root, targets, &name)?
+                .ok_or(ProjectionError::TargetInvalid)?;
             let mut written = Vec::new();
             let mut prepared = Vec::new();
             for target in mcp_targets(targets, &config, Some(client))? {
@@ -705,6 +707,10 @@ fn execute_locked(
             result.mcp_written = written;
             let live = std::fs::read(path).map_err(|_| ProjectionError::AtomicWrite)?;
             result.skills_linked = apply_skill_links(data_root, &live, targets)?;
+            if client.is_none() {
+                crate::modules::sync::portable_assets::remove_stored(data_root, &name)
+                    .map_err(|_| ProjectionError::AtomicWrite)?;
+            }
             return Ok(result);
         }
     }
@@ -873,9 +879,16 @@ fn resolve_skill_source(
 }
 
 fn source_server_definition(
+    data_root: &Path,
     targets: &[ClientTarget],
     name: &str,
 ) -> Result<Option<RawServerDefinition>, ProjectionError> {
+    if let Some(definition) =
+        crate::modules::sync::portable_assets::resolve_mcp(data_root, name, targets)
+            .map_err(|_| ProjectionError::TargetInvalid)?
+    {
+        return Ok(Some(definition));
+    }
     for target in targets {
         match read_server_definition(target, name) {
             Ok(Some(value)) => return Ok(Some(value)),

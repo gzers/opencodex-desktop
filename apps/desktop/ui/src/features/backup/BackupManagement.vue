@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import UiButton from '@/components/ui/UiButton.vue'
+import { defineAsyncComponent, onMounted, ref } from 'vue'
 import BackupFiles from './BackupFiles.vue'
+const ModelSaveHistory = defineAsyncComponent(() => import('./ModelSaveHistory.vue'))
 import { createBackup, executeCleanup, getBackupPolicy, listBackups, openBackupFile, pinBackup, previewCleanup, restoreBackup, saveBackupPolicy, type BackupFileNode, type BackupPolicy, type PreferencesBackup } from './api'
 import { useAppStore } from '@/stores/app'
 import { getUpdateStatus } from '@/features/updates/update'
@@ -113,7 +115,7 @@ onMounted(() => { void refresh() })
   <section class="backup-management" aria-label="管理器偏好备份">
     <div class="backup-summary">
       <p>备份管理器偏好与清单；面板完整配置、会话及登录态由对应事务另行管理。</p>
-      <button class="btn" :disabled="busy || loading" @click="generate">{{ busy ? '处理中…' : '生成备份' }}</button>
+      <UiButton class="btn" :disabled="busy || loading" @click="generate">{{ busy ? '处理中…' : '生成备份' }}</UiButton>
     </div>
     <BackupFiles ref="files" @open="openFile" />
     <div class="backup-policy">
@@ -124,11 +126,11 @@ onMounted(() => { void refresh() })
           <option value="manual">手动确认（默认）</option>
           <option value="automatic">新备份成功后自动清理</option>
         </select>
-        <button class="btn ghost" :disabled="busy || loading || !policy || mode === policy.mode" @click="applyPolicy">保存策略</button>
-        <button class="btn ghost" :disabled="busy || loading" @click="cleanup">预览清理</button>
+        <UiButton class="btn ghost" :disabled="busy || loading || !policy || mode === policy.mode" @click="applyPolicy">保存策略</UiButton>
+        <UiButton class="btn ghost" :disabled="busy || loading" @click="cleanup">预览清理</UiButton>
       </div>
     </div>
-    <div class="backup-list-head"><h3>备份记录</h3><button class="btn ghost" :disabled="busy || loading" @click="refresh">刷新记录</button></div>
+    <div class="backup-list-head"><h3>备份记录</h3><UiButton class="btn ghost" :disabled="busy || loading" @click="refresh">刷新记录</UiButton></div>
     <p v-if="error" class="backup-error" role="alert">{{ error }}</p>
     <p v-if="feedback" role="status">{{ feedback }}</p>
     <p v-if="loading" role="status">正在读取备份清单…</p>
@@ -138,9 +140,10 @@ onMounted(() => { void refresh() })
         <div class="backup-record-info"><strong>{{ actionName(record.action) }} · {{ date(record.createdAt) }}</strong><code>{{ record.id }}</code>
           <span>{{ bytes(record.bytes) }} · {{ record.integrityVerified ? '已校验' : '恢复前重新校验' }}{{ record.pinned ? ' · 已固定' : '' }}{{ record.protected ? ' · 受保护' : '' }}</span>
         </div>
-        <div class="controls"><button class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="setPinned(record)">{{ record.pinned ? '取消固定' : '固定保留' }}</button><button class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="restore(record)">恢复</button></div>
+        <div class="controls"><UiButton class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="setPinned(record)">{{ record.pinned ? '取消固定' : '固定保留' }}</UiButton><UiButton class="btn ghost" :disabled="busy || loading || !record.preferencesCandidate" @click="restore(record)">恢复</UiButton></div>
       </li>
     </ul>
+    <ModelSaveHistory />
   </section>
 </template>
 

@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { nextTick } from 'vue'
 import SettingsRoute from '@/routes/SettingsRoute.vue'
+import WebDavConnection from '@/features/sync/WebDavConnection.vue'
 import AppModal from '@/components/AppModal.vue'
 import { useRouteStore } from '@/stores/routes'
 import { useAppStore } from '@/stores/app'
@@ -36,7 +37,7 @@ describe('technical text inputs disable OS auto-capitalization', () => {
     const pinia = createPinia()
     setActivePinia(pinia)
     useRouteStore().go('settings', { section: 'sync' })
-    const wrapper = mount(SettingsRoute, { global: { plugins: [pinia] } })
+    const wrapper = mount(WebDavConnection, { global: { plugins: [pinia] } })
     await nextTick()
     const fields = wrapper.findAll('.field input')
     // 服务地址 / 远端目录 / 账号 / 应用密码

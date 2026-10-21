@@ -42,6 +42,8 @@ pub enum NotificationSource {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum NotificationAction {
+    ModelPolicy,
+    Models,
     Restore,
     Upgrade,
     AppUpdate,

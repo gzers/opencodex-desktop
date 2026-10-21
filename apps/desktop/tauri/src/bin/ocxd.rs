@@ -99,7 +99,7 @@ fn parse(argv: &[String], request_id: String) -> CliOutcome {
 
 #[cfg(unix)]
 fn socket_path() -> Option<PathBuf> {
-    let home = std::env::var_os("HOME").map(PathBuf::from)?;
+    let home = opencodex_desktop_lib::infrastructure::platform::home_dir()?;
     Some(home.join(CLI_SOCKET_RELATIVE_PATH))
 }
 

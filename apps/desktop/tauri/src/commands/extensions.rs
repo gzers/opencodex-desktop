@@ -293,6 +293,15 @@ pub fn read_mcp_detail_with_paths(
     let targets = CLIENT_IDS.map(|client| ClientTarget::user_target(client, home, true, true));
     let mut landings = Vec::new();
     let mut config_json = None;
+    if let Some(definition) = crate::modules::sync::portable_assets::stored_public(data_root)
+        .map_err(|_| AppError::NotConfigured)?
+        .into_iter()
+        .find(|definition| definition.name == name)
+    {
+        let mut value = definition.value;
+        mask_json_value(&mut value, MaskMode::Default);
+        config_json = serde_json::to_string_pretty(&value).ok();
+    }
     for target in &targets {
         let definition =
             discovery::read_server_definition(target, name).map_err(|_| AppError::FileSystem {

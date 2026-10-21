@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, nextTick, onMounted, onUpdated, ref, watch } from 'vue'
 import AppTopbar from '@/components/AppTopbar.vue'
+import StickyTabs from '@/components/layout/StickyTabs.vue'
 import ExtensionDetailModal from '@/features/extensions/components/ExtensionDetailModal.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
@@ -551,10 +553,10 @@ onUpdated(markClampedDescriptions)
 <template>
   <section class="route-section active">
     <AppTopbar />
-    <div class="ext-tabs" role="tablist">
+    <StickyTabs><div class="ext-tabs" role="tablist">
       <button :class="{ active: tab === 'skills' }" @click="routes.go('extensions', { tab: 'skills' })">Skills</button>
       <button :class="{ active: tab === 'mcp' }" @click="routes.go('extensions', { tab: 'mcp' })">MCP</button>
-    </div>
+    </div></StickyTabs>
 
     <div v-if="tab === 'skills'" class="ext-view active">
       <UiCard>
@@ -562,13 +564,13 @@ onUpdated(markClampedDescriptions)
           <h2>Skills 管理</h2><p>发现本机 Skills 库，并把同一个 Skill 按需同步到各客户端配置。</p>
           <template #actions>
             <div class="toolbar">
-            <button class="btn ghost" @click="checkSkillUpdate()">检查更新</button>
-            <button class="btn ghost" @click="app.loadExtensions()">发现</button>
-            <button class="btn ghost" @click="app.showToast('仓库管理暂未开放；只操作本机 Skills。')">仓库管理</button>
-            <button class="btn ghost" @click="restoreSkill()">恢复</button>
-            <button class="btn ghost" @click="importSkillArchive()">ZIP</button>
-            <button class="btn ghost" @click="importMcpDefinition()">导入</button>
-            <button class="btn" @click="routes.go('settings', { section: 'extensions' })">设置</button>
+            <UiButton class="btn ghost" @click="checkSkillUpdate()">检查更新</UiButton>
+            <UiButton class="btn ghost" @click="app.loadExtensions()">发现</UiButton>
+            <UiButton class="btn ghost" @click="app.showToast('仓库管理暂未开放；只操作本机 Skills。')">仓库管理</UiButton>
+            <UiButton class="btn ghost" @click="restoreSkill()">恢复</UiButton>
+            <UiButton class="btn ghost" @click="importSkillArchive()">ZIP</UiButton>
+            <UiButton class="btn ghost" @click="importMcpDefinition()">导入</UiButton>
+            <UiButton class="btn" @click="routes.go('settings', { section: 'extensions' })">设置</UiButton>
             </div>
           </template>
         </UiCardHeader>
@@ -630,11 +632,11 @@ onUpdated(markClampedDescriptions)
         <div class="ext-pagination">
           <span>{{ filteredSkills.length }} / {{ skills.length }} 条 · 第 {{ skillsPage }} / {{ skillsPageCount }} 页</span>
           <div class="ext-page-controls">
-            <button class="btn ghost" :disabled="skillsPage <= 1" aria-label="首页" @click="goSkillsPage(1)">«</button>
-            <button class="btn ghost" :disabled="skillsPage <= 1" aria-label="上一页" @click="goSkillsPage(skillsPage - 1)">‹</button>
+            <UiButton size="sm" class="btn ghost" :disabled="skillsPage <= 1" aria-label="首页" @click="goSkillsPage(1)">«</UiButton>
+            <UiButton size="sm" class="btn ghost" :disabled="skillsPage <= 1" aria-label="上一页" @click="goSkillsPage(skillsPage - 1)">‹</UiButton>
             <span>{{ skillsPage }}</span>
-            <button class="btn ghost" :disabled="skillsPage >= skillsPageCount" aria-label="下一页" @click="goSkillsPage(skillsPage + 1)">›</button>
-            <button class="btn ghost" :disabled="skillsPage >= skillsPageCount" aria-label="末页" @click="goSkillsPage(skillsPageCount)">»</button>
+            <UiButton size="sm" class="btn ghost" :disabled="skillsPage >= skillsPageCount" aria-label="下一页" @click="goSkillsPage(skillsPage + 1)">›</UiButton>
+            <UiButton size="sm" class="btn ghost" :disabled="skillsPage >= skillsPageCount" aria-label="末页" @click="goSkillsPage(skillsPageCount)">»</UiButton>
           </div>
         </div>
       </UiCard>
@@ -646,9 +648,9 @@ onUpdated(markClampedDescriptions)
           <h2>MCP 服务器管理</h2><p>把同一个 MCP 服务器按需同步到各客户端配置；只写对应配置节点。</p>
           <template #actions>
             <div class="toolbar">
-            <button class="btn ghost" @click="importMcpDefinition()">导入</button>
-            <button class="btn" @click="addMcpDefinition()">添加</button>
-            <button class="btn ghost" @click="routes.go('settings', { section: 'extensions' })">设置</button>
+            <UiButton class="btn ghost" @click="importMcpDefinition()">导入</UiButton>
+            <UiButton class="btn" @click="addMcpDefinition()">添加</UiButton>
+            <UiButton class="btn ghost" @click="routes.go('settings', { section: 'extensions' })">设置</UiButton>
             </div>
           </template>
         </UiCardHeader>
@@ -710,11 +712,11 @@ onUpdated(markClampedDescriptions)
         <div class="ext-pagination">
           <span>{{ filteredServers.length }} / {{ mcpServers.length }} 条 · 第 {{ mcpPage }} / {{ serversPageCount }} 页</span>
           <div class="ext-page-controls">
-            <button class="btn ghost" :disabled="mcpPage <= 1" aria-label="首页" @click="goServersPage(1)">«</button>
-            <button class="btn ghost" :disabled="mcpPage <= 1" aria-label="上一页" @click="goServersPage(mcpPage - 1)">‹</button>
+            <UiButton size="sm" class="btn ghost" :disabled="mcpPage <= 1" aria-label="首页" @click="goServersPage(1)">«</UiButton>
+            <UiButton size="sm" class="btn ghost" :disabled="mcpPage <= 1" aria-label="上一页" @click="goServersPage(mcpPage - 1)">‹</UiButton>
             <span>{{ mcpPage }}</span>
-            <button class="btn ghost" :disabled="mcpPage >= serversPageCount" aria-label="下一页" @click="goServersPage(mcpPage + 1)">›</button>
-            <button class="btn ghost" :disabled="mcpPage >= serversPageCount" aria-label="末页" @click="goServersPage(serversPageCount)">»</button>
+            <UiButton size="sm" class="btn ghost" :disabled="mcpPage >= serversPageCount" aria-label="下一页" @click="goServersPage(mcpPage + 1)">›</UiButton>
+            <UiButton size="sm" class="btn ghost" :disabled="mcpPage >= serversPageCount" aria-label="末页" @click="goServersPage(serversPageCount)">»</UiButton>
           </div>
         </div>
       </UiCard>

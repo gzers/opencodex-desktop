@@ -97,7 +97,7 @@ try {
     }
     $taskResult.sourceCommitMatched = $true
     if (!(Test-Path -LiteralPath (Join-Path $taskSandbox 'manager-state/data-root.json'))) { throw 'Sandbox data root not initialized' }
-    & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput
+    & $taskNode (Join-Path $PSScriptRoot 'windows-webview.mjs') "http://127.0.0.1:$taskPort" $taskOutput $taskSandbox
     if ($LASTEXITCODE -ne 0) { throw "WebView smoke failed: $LASTEXITCODE" }
     $taskResult.applicationToken = Get-WindowsProcessToken -Process $taskProcess -ExpectedExecutable $taskExe
     Assert-WindowsProcessMode -Observation $taskResult.applicationToken -Mode $Mode

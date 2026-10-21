@@ -1892,6 +1892,13 @@ mod tests {
         )
         .is_err());
         assert_eq!(records(root.path()).unwrap().len(), 12);
+        assert_eq!(
+            std::fs::read(root.path().join(PREFERENCES_RELATIVE_PATH)).unwrap(),
+            b"invalid"
+        );
+        // Explicit fixture repair: normal Save must not overwrite corrupted
+        // source bytes or discard unknown local execution settings.
+        std::fs::remove_file(root.path().join(PREFERENCES_RELATIVE_PATH)).unwrap();
         PreferencesStore::new(root.path())
             .save(&Preferences::default())
             .unwrap();
@@ -1963,6 +1970,13 @@ mod tests {
         std::fs::write(root.path().join(PREFERENCES_RELATIVE_PATH), b"invalid").unwrap();
         assert!(create_with_saved_policy(root.path(), now()).is_err());
         assert_eq!(records(root.path()).unwrap().len(), 12);
+        assert_eq!(
+            std::fs::read(root.path().join(PREFERENCES_RELATIVE_PATH)).unwrap(),
+            b"invalid"
+        );
+        // Explicit fixture repair: normal Save must not overwrite corrupted
+        // source bytes or discard unknown local execution settings.
+        std::fs::remove_file(root.path().join(PREFERENCES_RELATIVE_PATH)).unwrap();
         PreferencesStore::new(root.path())
             .save(&Preferences::default())
             .unwrap();

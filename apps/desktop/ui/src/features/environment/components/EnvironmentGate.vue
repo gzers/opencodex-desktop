@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 // 概览「环境准备」门禁卡（UI规范 §25.1 / §25.3）。
 //
 // 结构对齐已确认原型 `#envGate`：标题 + 通过计数；左列纵向检查，右列当前指引 +
@@ -133,15 +134,15 @@ function installManaged(source: InstallSourceKind) {
           ><code>{{ command.command }}</code></button>
         </div>
         <div class="overview-repair-actions" :data-testid="presentation.state === 'missing_ocx' ? 'env-install-actions' : undefined">
-          <button v-if="checking" class="btn" type="button" disabled>检查中…</button>
+          <UiButton v-if="checking" class="btn" type="button" disabled>检查中…</UiButton>
           <template v-else-if="presentation.state === 'missing_ocx'">
-            <button class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</button>
-            <button class="btn" type="button" @click="installManaged('offline')">导入离线包</button>
-            <button class="btn ghost" type="button" @click="recheck">重新检查</button>
+            <UiButton class="btn primary" type="button" @click="installManaged('registry')">安装 OpenCodex</UiButton>
+            <UiButton class="btn" type="button" @click="installManaged('offline')">导入离线包</UiButton>
+            <UiButton class="btn ghost" type="button" @click="recheck">重新检查</UiButton>
           </template>
           <template v-else>
-            <button v-if="presentation.state === 'missing_node_nobrew'" class="btn primary" type="button" @click="guide">安装指引</button>
-            <button class="btn" type="button" @click="recheck">重新检查</button>
+            <UiButton v-if="presentation.state === 'missing_node_nobrew'" class="btn primary" type="button" @click="guide">安装指引</UiButton>
+            <UiButton class="btn" type="button" @click="recheck">重新检查</UiButton>
           </template>
         </div>
       </section>

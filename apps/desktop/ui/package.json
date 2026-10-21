@@ -1,7 +1,7 @@
 {
   "name": "opencodex-desktop-ui",
   "private": true,
-  "version": "0.1.10",
+  "version": "0.2.0",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -12,7 +12,8 @@
     "preview": "vite preview --host 127.0.0.1 --port 4173",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest",
-    "audit:browser": "node qa/audit.browser.mjs"
+    "audit:browser": "node qa/audit.browser.mjs",
+    "inventory:components": "node qa/component-inventory.mjs"
   },
   "dependencies": {
     "@tauri-apps/api": "2.12.1",

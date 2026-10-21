@@ -1,14 +1,11 @@
 <script setup lang="ts">
+import UiButton from '@/components/ui/UiButton.vue'
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 import AppSidebar from '@/components/AppSidebar.vue'
+import {useShellLayout} from '@/components/layout/useShellLayout'
 import { useAppController } from '@/composables/useAppController'
-import PanelRoute from '@/routes/PanelRoute.vue'
-import OverviewRoute from '@/routes/OverviewRoute.vue'
-import ExtensionsRoute from '@/routes/ExtensionsRoute.vue'
-import LogsRoute from '@/routes/LogsRoute.vue'
-import SettingsRoute from '@/routes/SettingsRoute.vue'
 import TrayRoute from '@/routes/TrayRoute.vue'
 import AppModal from '@/components/AppModal.vue'
 import ToastHost from '@/components/ToastHost.vue'
@@ -16,6 +13,7 @@ import TaskProgressHost from '@/components/TaskProgressHost.vue'
 import NotificationCenter from '@/features/notifications/components/NotificationCenter.vue'
 import { useNotificationsStore } from '@/features/notifications/store'
 
+const compactShell=useShellLayout()
 const app = useAppStore()
 const routes = useRouteStore()
 const notifications = useNotificationsStore()
@@ -36,28 +34,19 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onFaultKeydown))
 // Overlay keeps the native macOS window buttons above the web content.
 const isMacOS = /^Mac/.test(navigator.platform)
 const isWindows = /^Win/.test(navigator.platform)
-const component = computed(() => {
-  switch (routes.current) {
-    case 'panel': return PanelRoute
-    case 'overview': return OverviewRoute
-    case 'extensions': return ExtensionsRoute
-    case 'logs': return LogsRoute
-    case 'settings': return SettingsRoute
-    default: return undefined
-  }
-})
+const component = computed(() => routes.current === 'tray' ? undefined : routes.component)
 </script>
 
 <template>
-  <div class="app-window" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS, 'is-windows': isWindows }">
+  <div class="app-window" :data-compact="compactShell?'true':undefined" :class="{ 'tray-mode': routes.current === 'tray', 'panel-route': routes.current === 'panel', 'is-macos': isMacOS, 'is-windows': isWindows }">
     <div v-if="app.uiFault" class="ui-fault-modal" role="alertdialog" aria-modal="true" aria-label="界面出现异常">
       <div class="ui-fault-mask" @click="app.clearUiFault()"></div>
       <div class="ui-fault">
         <h3>界面出现异常</h3>
         <p class="ui-fault-text">{{ app.uiFault }}</p>
         <div class="ui-fault-actions">
-          <button class="btn ghost" type="button" @click="app.clearUiFault()">关闭提示</button>
-          <button class="btn" type="button" @click="reloadUi()">重新加载界面</button>
+          <UiButton class="btn ghost" type="button" @click="app.clearUiFault()">关闭提示</UiButton>
+          <UiButton class="btn" type="button" @click="reloadUi()">重新加载界面</UiButton>
         </div>
       </div>
     </div>

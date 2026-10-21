@@ -22,7 +22,7 @@ pub fn retention_days() -> i64 {
     30
 }
 
-pub const ACTIONS: [&str; 9] = [
+pub const ACTIONS: [&str; 10] = [
     "upgrade",
     "import",
     "sync-overwrite",
@@ -32,11 +32,13 @@ pub const ACTIONS: [&str; 9] = [
     "manual-preferences",
     "restore-protection",
     "preferences-protection",
+    "model-config",
 ];
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum BackupAction {
+    ModelConfig,
     Upgrade,
     Import,
     SyncOverwrite,
@@ -52,6 +54,7 @@ pub enum BackupAction {
 impl BackupAction {
     pub fn as_str(&self) -> &'static str {
         match self {
+            Self::ModelConfig => "model-config",
             Self::Upgrade => "upgrade",
             Self::Import => "import",
             Self::SyncOverwrite => "sync-overwrite",
@@ -66,6 +69,7 @@ impl BackupAction {
 
     pub fn parse(value: &str) -> Option<Self> {
         match value {
+            "model-config" => Some(Self::ModelConfig),
             "upgrade" => Some(Self::Upgrade),
             "import" => Some(Self::Import),
             "sync-overwrite" => Some(Self::SyncOverwrite),

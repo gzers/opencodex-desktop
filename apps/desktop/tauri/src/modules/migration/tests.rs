@@ -946,6 +946,47 @@ fn import_restoration_failure_is_explicit_and_cannot_report_success() {
 }
 
 #[test]
+fn import_keeps_local_agent_execution_binding_and_reports_corrupted_local_source() {
+    let source = data_root();
+    let target = data_root();
+    let home = home_dir();
+    PreferencesStore::new(target.path())
+        .save(&Preferences::default())
+        .unwrap();
+    let path = target
+        .path()
+        .join(crate::modules::preferences::PREFERENCES_RELATIVE_PATH);
+    let mut local: serde_json::Value =
+        serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    local[crate::modules::preferences::MODEL_AGENT_LOCAL_NAMESPACE] = serde_json::json!({"providerId":"owned-local-execution","modelId":"kept-model","connectionDigest":"bound-local-only"});
+    std::fs::write(&path, serde_json::to_vec(&local).unwrap()).unwrap();
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    verified_import(
+        target.path(),
+        home.path(),
+        import_document(source.path()),
+        &mut observer,
+    )
+    .unwrap();
+    let actual: serde_json::Value = serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
+    assert_eq!(
+        actual[crate::modules::preferences::MODEL_AGENT_LOCAL_NAMESPACE],
+        local[crate::modules::preferences::MODEL_AGENT_LOCAL_NAMESPACE]
+    );
+    assert_eq!(observer.terminals, [true]);
+    std::fs::write(&path, b"broken-local-preferences").unwrap();
+    let mut observer = RegisteredImportObserver::new(target.path(), home.path());
+    assert!(verified_import(
+        target.path(),
+        home.path(),
+        import_document(source.path()),
+        &mut observer
+    )
+    .is_err());
+    assert_eq!(observer.terminals, [false]);
+    assert_eq!(std::fs::read(&path).unwrap(), b"broken-local-preferences");
+}
+#[test]
 fn import_existing_unreadable_or_corrupt_projection_is_not_an_empty_configuration() {
     for corrupt_extension in [false, true] {
         let source = data_root();
