@@ -1,9 +1,9 @@
 ---
 id: REL-OPENCODEX-DESKTOP-12
 object_kind: release.candidate
-state: in_progress
+state: verified
 title: 0.2.1 公共UI与原型还原修复发布
-summary: PR9已合并，候选804ef0f6的两轮完整CI和Windows原生验收通过；main固定fbd6e1d1，准备双平台草稿制品，尚未公开或晋升stable。
+summary: 0.2.1已公开并晋升stable，main/tag固定fbd6e1d1；15项UI修复、723项前端、双平台源与制品、原公钥验签及匿名通道/全部资产核对通过，日常安装未替换。
 source_refs:
   - IMP-OPENCODEX-DESKTOP-22
   - 804ef0f646a978d9498404c2b2dc937b3c5c4baf
@@ -35,7 +35,7 @@ PR9于2026-10-21T12:50:06Z合并，main fbd6e1d17a9029c89807100dab6f3f7089559c44
 
 ## 发布门、兼容与回退
 
-当前决定：可制作v0.2.1双平台私有草稿。只有main适用检查、实际NSIS/MSI与Mac压缩包身份、原公钥对实际updater资产密码学验签、隔离启动/版本及源码回读完成后，才能公开并晋升stable；实际结果完成后追加。当前Latest仍为0.2.0，不提前宣称新版已投递。
+公开前决定（历史阶段）：可制作v0.2.1双平台私有草稿。只有main适用检查、实际NSIS/MSI与Mac压缩包身份、原公钥对实际updater资产密码学验签、隔离启动/版本及源码回读完成后，才能公开并晋升stable；实际结果完成后追加。该阶段Latest仍为0.2.0，未提前宣称新版已投递。
 
 版本不引入存储或账户迁移；回退材料继续保留0.2.0原标签、原制品及REL-11，不改写历史或轮换公钥。若候选门失败，保持私有草稿和原稳定通道，不用日常安装验证。既有测试分发边界不变：安装包没有正式OS代码签名/Apple公证，updater签名须独立真实验证。
 
@@ -54,4 +54,15 @@ Windows实际MSI/NSIS安装、0.2.1版本/源码与内嵌包标记、原生模�
 
 Mac DMG容器校验通过，DMG与updater中Mach-O均为9885d99123d176bb270b9e3ce48072d2bce20b35cd1b024e18787e8a1d328233，版本0.2.1、production标识正确。独立root中仅改Info.plist隔离身份，逐字节相同发布二进制PID96813实际启动；关于页读得v0.2.1、macOS/Tauri v2，启动日志commit fbd6e1d1；Command-Q后PID不存在。日常PID19133继续运行，没有替换其安装/配置。原包strict codesign exit1按既有未正式签名/未公证分发边界保留，不混同已通过的updater签名。
 
-公开前证据归.adg/evidence/REL-021-20261021，原始日志无损压缩，未将忽略项计通过。当前判断：修复、源检查与实际制品门均具备，可按用户既有授权执行stable公开；尚未把待执行的公开结果写成完成。
+公开前证据归.adg/evidence/REL-021-20261021，原始日志无损压缩，未将忽略项计通过。公开前判断：修复、源检查与实际制品门均具备，可按用户既有授权执行stable公开；尚未把待执行的公开结果写成完成。
+
+
+## 公开结果与发布后核对
+
+唯一Publish Release39610640310以stable模式成功。Release ID419574046的[v0.2.1](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.1)于2026-10-21T13:45:01Z（北京时间21:45:01）公开，draft=false、prerelease=false；Latest从0.2.0晋升0.2.1，main/tag保持fbd6e1d17a9029c89807100dab6f3f7089559c44。没有重建、替换已核对资产或改写旧标签。
+
+集成线不带Authorization独立读取固定v0.2.1与stable latest.json，均HTTP200、4906字节，SHA9f9879f2767693c575335f27d2dc78c4e34ccf7e7766e6f39252e63e856f2ac7，与公开前清单逐字节相同。全部8个公开资产（清单、Mac DMG/updater及签名、Windows MSI/NSIS及签名）匿名HTTP200，大小/摘要均与已验签及实际安装/回读的同一批字节一致。详见public-verification.json、public-release-api.json和发布流水线原日志。
+
+公开字节相同，故不再次启动同一发布二进制重跑旧周期。Mac实际退出、候选/fixture进程组和临时组件服务已清理，浏览器尺寸恢复；用户原型标签及日常PID19133/安装配置保留。既有OS正式签名/公证、人工DPI/OTA与长期性能未验边界不因本版自动升级为通过。
+
+0.2.1请求范围的文档、实现、修复验收、实际制品和公开stable链已完成。IMP-22关闭；长期DMD、后续平台/登录态或新UI反馈仍随各自范围推进，不重开/倒改0.2.0发布历史。
