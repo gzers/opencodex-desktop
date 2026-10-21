@@ -1,0 +1,95 @@
+{
+  "startup.json": {
+    "schemaVersion": 2,
+    "mode": "any",
+    "harnessToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 8328,
+      "executable": "C:\\Program Files\\PowerShell\\7\\pwsh.exe",
+      "creationTimeUtc": "2026-10-21T03:26:29.1795183Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-10-21T03:26:33.1154501Z"
+    },
+    "applicationToken": {
+      "schemaVersion": 1,
+      "status": "observed",
+      "processId": 7444,
+      "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+      "creationTimeUtc": "2026-10-21T03:26:33.1226143Z",
+      "elevated": true,
+      "elevationType": 1,
+      "collectedAtUtc": "2026-10-21T03:27:07.0280142Z"
+    },
+    "applicationTokenVerified": true,
+    "applicationModeMatched": false,
+    "result": "pass",
+    "executable": "D:\\a\\opencodex-desktop\\opencodex-desktop\\apps\\desktop\\tauri\\target\\release\\opencodex-desktop.exe",
+    "sha256": "5bc9ac6ad5df662c52c2d80e12ce98c7b3b108d1ce4bd7c9657a36b1c922af44",
+    "homeRemoved": true,
+    "sandbox": "D:\\a\\opencodex-desktop\\opencodex-desktop\\test\\out\\windows-startup\\sandbox-472050b4d3a045c199091b92b0c0426a",
+    "observedSeconds": 30,
+    "cdpPort": 58736,
+    "expectedCommit": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+    "sourceCommitMatched": true,
+    "mainWindowPresent": true,
+    "pid": 7444,
+    "responding": true
+  },
+  "model-ui.json": {
+    "result": "pass",
+    "scope": "native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation",
+    "templateId": "2e0b3d94-9a0d-4a8f-a679-6abbf402c0c9",
+    "revisionId": "0bb71238-a722-4865-86d9-1d93b0bc918c",
+    "immutablePriorRevision": true,
+    "channelPolicyUnchanged": true,
+    "defaultSeparateFromAdoption": true,
+    "confirmationLeftNativeTopLayer": true,
+    "returnedToVersionManager": true,
+    "exportedWithinSandbox": true,
+    "fileRoundtrip": true,
+    "nativePointerModelSort": true,
+    "readonlyComparison": true,
+    "externalContextBundle": true
+  },
+  "model-editor-context-native.json": {
+    "result": "pass",
+    "comparisonRows": 1,
+    "comparisonDidNotSave": true,
+    "externalCurrentTargetCount": 1,
+    "exactBufferDescription": true,
+    "includesSharedContractAndTransport": true,
+    "privateChatExcluded": true,
+    "taskActivated": false,
+    "generationRequests": 0
+  },
+  "model-sort-native.json": {
+    "result": "pass",
+    "input": "WebView2 CDP mouse press/move/release, not synthetic DOM drag events",
+    "channelId": "64fe2b42-fb89-42e3-9ea3-6ec59574fbe1",
+    "before": [
+      "fixture-alpha",
+      "fixture-beta",
+      "fixture-gamma"
+    ],
+    "after": [
+      "fixture-beta",
+      "fixture-alpha",
+      "fixture-gamma"
+    ],
+    "policyUnchanged": true,
+    "runtimeSave": false
+  },
+  "regression": {
+    "groups": 41,
+    "passed": 843,
+    "failed": 0,
+    "ignored": 10,
+    "rawSha256": "bc443536504851be4f91a6c2f53f9492e4461d05fa423b34aa12472773694024"
+  },
+  "run": 39533974950,
+  "attempt": 2,
+  "artifact": 12317678903,
+  "result": "Windows current main passed; macOS main build separate"
+}

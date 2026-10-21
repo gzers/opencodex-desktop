@@ -1862,7 +1862,14 @@
     "Platform source reuse eligibility is byte-based and existing valid evidence; prior REL10 exceptions are not promoted to pass.",
     "This audit maps original requirements to evidence. It does not replace raw receipts, tests or final tag artifact/install/publication proof."
   ],
-  "releaseGate": "main CI39533974950 and Release39534419661 running on f1bbe7d9/v0.2.0; actual installers/signatures/publication still pending",
+  "releaseGate": {
+    "result": "verified",
+    "source": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+    "mainCI": 39533974950,
+    "release": 39534419661,
+    "publish": 39539741260,
+    "evidence": "../REL-020-20261021/final-release-verification.json"
+  },
   "originalSyncConditions": [
     {
       "id": "AC-S01",

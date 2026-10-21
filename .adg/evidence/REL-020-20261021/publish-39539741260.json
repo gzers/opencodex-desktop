@@ -1,0 +1,74 @@
+{
+  "conclusion": "success",
+  "headSha": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+  "jobs": [
+    {
+      "completedAt": "2026-10-21T03:39:39Z",
+      "conclusion": "success",
+      "databaseId": 119024514525,
+      "name": "publish",
+      "startedAt": "2026-10-21T03:39:12Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-21T03:39:14Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-21T03:39:13Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:39:15Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@v5",
+          "number": 2,
+          "startedAt": "2026-10-21T03:39:14Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:39:23Z",
+          "conclusion": "success",
+          "name": "安装签名验证工具",
+          "number": 3,
+          "startedAt": "2026-10-21T03:39:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:39:35Z",
+          "conclusion": "success",
+          "name": "公开版本并验证所选通道",
+          "number": 4,
+          "startedAt": "2026-10-21T03:39:23Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:39:36Z",
+          "conclusion": "success",
+          "name": "公开诊断结果",
+          "number": 5,
+          "startedAt": "2026-10-21T03:39:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:39:37Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@v5",
+          "number": 10,
+          "startedAt": "2026-10-21T03:39:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-21T03:39:37Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 11,
+          "startedAt": "2026-10-21T03:39:37Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/gzers/opencodex-desktop/actions/runs/39539741260/job/119024514525"
+    }
+  ],
+  "status": "completed"
+}

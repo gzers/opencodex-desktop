@@ -1,0 +1,104 @@
+{
+  "objective": "0.2.0 confirmed implementation, evidence, documentation and stable release",
+  "source": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+  "checks": [
+    {
+      "requirement": "main/tag actual identity",
+      "result": "verified",
+      "evidence": "localGit+main-ci-final-summary.json"
+    },
+    {
+      "requirement": "0.1.10 stable ancestry",
+      "result": "verified",
+      "evidence": "Git ancestry"
+    },
+    {
+      "requirement": "requested feature branch and independent checkout",
+      "result": "verified",
+      "evidence": "worktree Git identity"
+    },
+    {
+      "requirement": "final full main CI",
+      "result": "verified",
+      "evidence": "main-ci-final-summary.json"
+    },
+    {
+      "requirement": "actual two-platform release",
+      "result": "verified",
+      "evidence": "release-39534419661.json"
+    },
+    {
+      "requirement": "unchanged updater trust and actual signatures",
+      "result": "verified",
+      "evidence": "draft-verification.json"
+    },
+    {
+      "requirement": "actual MSI/NSIS installation and retention",
+      "result": "verified",
+      "evidence": "windows-installer-verification.json"
+    },
+    {
+      "requirement": "Mac actual version/source and exit",
+      "result": "verified",
+      "evidence": "native-release-result.json+mac-artifact-identity.json"
+    },
+    {
+      "requirement": "public stable identity",
+      "result": "verified",
+      "evidence": "public-release.json+publish-39539741260.json"
+    },
+    {
+      "requirement": "anonymous stable/fixed manifests and four assets",
+      "result": "verified",
+      "evidence": "anonymous-verification.json"
+    },
+    {
+      "requirement": "originalModelConditions",
+      "result": "verified",
+      "evidence": "acceptance-source-review-20261021.json"
+    },
+    {
+      "requirement": "originalSyncConditions",
+      "result": "verified",
+      "evidence": "acceptance-source-review-20261021.json"
+    },
+    {
+      "requirement": "notificationConditions",
+      "result": "verified",
+      "evidence": "acceptance-source-review-20261021.json"
+    },
+    {
+      "requirement": "buttonConditions",
+      "result": "verified",
+      "evidence": "acceptance-source-review-20261021.json"
+    },
+    {
+      "requirement": "componentConditions",
+      "result": "verified",
+      "evidence": "acceptance-source-review-20261021.json"
+    },
+    {
+      "requirement": "technicalGates",
+      "result": "verified",
+      "evidence": "acceptance-source-review-20261021.json"
+    },
+    {
+      "requirement": "shared files consistent across active worktrees",
+      "result": "verified",
+      "evidence": "SHA256 comparison of five shared files"
+    },
+    {
+      "requirement": "no application delta after final validation",
+      "result": "verified",
+      "evidence": "Git tree comparison"
+    },
+    {
+      "requirement": "edited navigation links",
+      "result": "verified",
+      "evidence": "resolved local Markdown links"
+    }
+  ],
+  "result": "verified",
+  "scopeBoundary": "current confirmed0.2.0 requirements; login migration future gates, historical long-term DMD/native/performance limitations are explicitly retained rather than markedpassed",
+  "releaseURL": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.0"
+}

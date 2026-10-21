@@ -9,11 +9,11 @@
   "macNativeVersionReadback": "0.2.0",
   "mainCi": {
     "run": 39533974950,
-    "attempt1": "failed4 existing metadata child-process fixtures; no parent/child marker, control alive",
-    "response": "rerun failed Windows job once, no source/deadline/thread/assertion changes",
-    "attempt2": "in_progress"
+    "attempt1": "4 old metadata fixture failures retained",
+    "attempt2": "success, all six jobs"
   },
-  "publicRelease": false,
-  "stablePromoted": false,
-  "oldKeyRetained": true
+  "publicRelease": true,
+  "stablePromoted": true,
+  "oldKeyRetained": true,
+  "state": "final outcome appended; original prerelease facts remain in raw records"
 }

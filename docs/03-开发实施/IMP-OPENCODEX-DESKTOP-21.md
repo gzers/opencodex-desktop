@@ -1,9 +1,9 @@
 ---
 id: IMP-OPENCODEX-DESKTOP-21
 object_kind: implementation.change
-state: in_progress
+state: completed
 demand_ids: ["DMD-OPENCODEX-DESKTOP-MANAGER"]
-completion_summary: null
+completion_summary: "0.2.0按确认范围完成并入main、公开及stable投递；针对性服务/原生/组件验证、完整CI、双平台实际制品与原公钥验签、匿名通道和资产核对通过，范围及历史失败沿REL-11保留。"
 title: 0.2.0 模型配置与公共界面实施
 summary: 用户授权目标模式完成文档、实施、针对性测试与发布，WP-06全部纳入；新feature分支及独立工作树已建立，按六步依赖推进，复用未受影响的0.1.10证据。
 ---
@@ -33,7 +33,7 @@ summary: 用户授权目标模式完成文档、实施、针对性测试与发�
 
 ## 当前验收收口入口（2026-10-21）
 
-当前main/tag为f1bbe7d9/v0.2.0，PR8已合并；特性完整CI39455864253和解锁后的原生消费者已核，主线CI39533974950及Release39534419661进行中。发布状态沿[REL-11](REL-OPENCODEX-DESKTOP-11.md)，使用与回退说明见协作包发布目录。下方10月20日快照保留历史，不能再解释为没有main/tag。
+当前main/tag为f1bbe7d9/v0.2.0，PR8已合并；特性/主线完整CI、解锁后的原生消费者、Release39534419661及Publish39539741260已通过，0.2.0公开并晋升stable，匿名清单与四个实际资产核对完成。发布状态沿[REL-11](REL-OPENCODEX-DESKTOP-11.md)，使用与回退说明见协作包发布目录。下方10月20日快照保留历史，不能再解释为没有main/tag。
 
 ### 2026-10-20收口快照
 
@@ -916,3 +916,12 @@ PR8最后head b19b01e2，PR检出4831c60a的CI39455864253已完整success：前�
 正式批量检查勾选GPT/Claude两项→共同执行设置/公共型号选择器选fixture-one/gpt→保存返回原2项目标。首次502真实原因为前夜fixture HTTP runner已经退出，官方进程还在，socket拒绝且旧exec handle不存在；当时库未落盘、建议未保存。恢复自有同65022端口HTTP fixture后重试同范围，实际收2份建议；只选GPT说明，另存1版。持久库GPT2版/Claude1版，GPT新说明准确、contextWindow仍inherit、默认仍基线，policy文件不存在。固定回环POST1，不称付费模型质量；失败任务与后续任务各自保持。
 
 原生编辑GPT说明为“原生复制取消检查 · 保留当前说明”→侧栏复制得到GPT副本/新建未保存且再次复制禁用→取消新建统一确认放弃→列表再进原GPT，说明仍在且复制重新可用。没有持久副本或空对象，前述GPT2/Claude1不变。checks-final-native-consumers-20261021.json和6张原始图/AX保留实际证据。此前锁屏等待门已消除，本轮不重跑已通过当前710项与无变化后端。当前进入主线整合和真实tag制品/安装/验签阶段，公开结果仍待后续事实。
+
+
+### 2026-10-21发布完成与本次目标收口
+
+main f1bbe7d9及v0.2.0已通过完整主线CI，双平台Release实际安装/版本回读与三个更新包原公钥验签通过，唯一Publish39539741260成功公开并晋升stable。北京时间2026-10-21 11:39:33发布，匿名固定/stable清单与Mac DMG/tar、Windows MSI/NSIS均200且字节摘要与已验材料一致。详细事实沿REL-11和.adg/evidence/REL-020-20261021/final-release-verification.json。
+
+用户要求的新feature分支/独立工作树、文档主线、WP-01～08已确认范围、受影响验证及最终发布现已完成；有效未变0.1.10证据复用，旧CPU/RSS/DPI/调度等没有重新扩大执行或假定通过。所有当前工作树共享说明保持一致，保留维护分支只同步共享文件，文档触发的重复旧CI已取消不充当验收。测试进程精确退出，用户日常软件/数据未替换；main既有未跟踪test/codex-collaboration以及文档其他协作变更均保留。
+
+最终长期事实对齐：DMD保留in_progress及长期AC，不整份关闭；其当前summary/next_action、AC-06/07机读与正文同步承接已确认0.2.0范围文件/WebDAV及含秘密须独立保护，旧“无额外加密”明确保留此前非秘密载荷语境。provider/路由边界改为禁止旁路改写，当前模型页受控官方CLI路径纳入；没有改变应用源码或追加产品功能。

@@ -6,9 +6,9 @@
 
 ## 实施计划入口
 
-- [0.2.0模型配置与范围同步发布](REL-OPENCODEX-DESKTOP-11.md)：main/tag f1bbe7d9，当前双平台草稿构建与主线CI进行中；实际安装/验签/公开及匿名验证尚待。
+- [0.2.0模型配置与范围同步发布](REL-OPENCODEX-DESKTOP-11.md)：**已公开并晋升stable**；main/tag f1bbe7d9，完整CI、双平台安装/版本回读、原公钥验签及匿名清单/资产核对通过。
 
-- [0.2.0 模型配置与公共界面实施](IMP-OPENCODEX-DESKTOP-21.md)：in_progress；feature/0.2.0-model-config独立工作树，WP-06全部纳入；按新增/受影响范围验证并复用0.1.10有效证据。
+- [0.2.0 模型配置与公共界面实施](IMP-OPENCODEX-DESKTOP-21.md)：completed；feature/0.2.0-model-config独立工作树完成并整合main，WP-06全部纳入；新增/受影响验证及0.1.10有效证据复用，发布事实沿REL-11。
 
 - [0.1.10 运行维护完整实施与验收计划](IMP-OPENCODEX-DESKTOP-20.md)：**in_progress**；已在 feature/0.1.10-maintenance 提交存储、调度、更新、备份、统一事件、共享树表和视觉实现，继续收口写入隔离与调用点盘点。双平台原生、安装、配对性能和真实周期仍待验；真实用户迁移、日常安装替换与发布未执行。
 - [0.1.8 Windows 启动与运行适配修复](IMP-OPENCODEX-DESKTOP-18.md)：**feature 与首屏续修已推送；9262a5b 的 CI、Windows 普通/管理员首屏复验均通过**；本轮协议 7、Windows 后端 335 项通过。原始 375 前端及托管安装/ICO 回执保留；日常 0.1.7 未替换，未合并、未生成安装器、未发布，后续集成门禁继续保留。

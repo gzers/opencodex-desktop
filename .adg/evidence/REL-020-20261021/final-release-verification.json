@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-21",
+  "source": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+  "tag": "v0.2.0",
+  "release": {
+    "databaseId": 419091323,
+    "isDraft": false,
+    "isPrerelease": false,
+    "publishedAt": "2026-10-21T03:39:33Z",
+    "tagName": "v0.2.0",
+    "url": "https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.0"
+  },
+  "stableLatest": "v0.2.0",
+  "mainCi": {
+    "run": 39533974950,
+    "attempt": 2,
+    "result": "success",
+    "allSixJobsPassed": true
+  },
+  "releaseRun": 39534419661,
+  "publishRun": 39539741260,
+  "signedUpdaterArtifacts": 3,
+  "windowsInstallers": "MSI+NSIS actual install/first screen/uninstall retained data passed",
+  "macNative": "published same Mach-O identity read0.2.0 in isolated copy before publication; public bytes equal verified copy",
+  "anonymousRequests": 6,
+  "allAnonymousBytesEqualVerifiedAssets": true,
+  "logs": [
+    {
+      "file": "main-ci-final.log.gz",
+      "rawSha256": "352a021b81507ada0b1380cc95a93a183e4827095d1f46caebd4231a62eecbb2",
+      "rawBytes": 2141627
+    },
+    {
+      "file": "release-final.log.gz",
+      "rawSha256": "d049ad173031755a1c10b4830468571f20306b50b3968c38bd306914953e25d7",
+      "rawBytes": 434256
+    },
+    {
+      "file": "publish-final.log.gz",
+      "rawSha256": "70824375b6f86b89ec09f533ef429bd3a5cb5c13f208d9ae383659f0dba69b44",
+      "rawBytes": 24155
+    },
+    {
+      "file": "anonymous-verification.log.gz",
+      "rawSha256": "d464a0d3d32b16b913bb55196c7a0b1e2930bbd77aaa3f707a17f8e1bd3d425f",
+      "rawBytes": 1975
+    }
+  ],
+  "historicalFailure": "attempt1 metadata fixture failure retained; attempt2 same code/deadlines/default threads passed",
+  "dailyInstallationReplaced": false,
+  "paidModelCalls": 0,
+  "scope": "confirmed0.2.0 release; historical unsupported/platform/performance boundaries remain separate"
+}

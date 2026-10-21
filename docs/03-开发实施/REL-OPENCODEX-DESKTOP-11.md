@@ -1,9 +1,9 @@
 ---
 id: REL-OPENCODEX-DESKTOP-11
 object_kind: release.candidate
-state: in_progress
+state: verified
 title: 0.2.0 模型配置与范围同步发布
-summary: PR8已合并，main及v0.2.0固定f1bbe7d9；当前进行主线CI和双平台私有草稿构建，实际制品安装、验签与公开通道尚待。
+summary: 0.2.0已公开并晋升stable，main/tag固定f1bbe7d9；完整CI、双平台制品、实际安装/版本回读、原公钥验签与匿名清单/资产核对通过，首次Windows fixture失败保留。
 source_refs:
   - IMP-OPENCODEX-DESKTOP-21
   - f1bbe7d996389097dcf6237a6bc65b7995d68190
@@ -53,3 +53,16 @@ Mac发布tar逐字节相同Mach-O4321c151…制作仅Info.plist改隔离身份�
 ### main CI首次失败与限定复跑
 
 main39533974950首次Linux/前端/发布工具与准入通过，Windows原始冷版本探测3项通过；大套件733 passed/4 failed/4 ignored。失败4项为旧about::remote::windows_tests元数据子进程fixture，2秒查询内无parent-started等任何标记，5秒observer也未见父子PID，控制进程仍活。该组源码与v0.1.10未变，特性b19完整CI曾通过；不据此忽略当前失败，也不称业务保存回归。保留原始日志并仅复跑该失败Windows job一次，deadline/断言/默认线程数及产品代码全不变。第二次结果尚待，当前不公开/晋升stable。
+
+
+## 公开结果与发布后验证
+
+最终main CI39533974950第2次运行全部6 job success：Windows后端回归843 passed/10 ignored、原生凭据及最终EXE成功，后续macOS arm64 bundle成功，Linux/前端/发布工具/准入沿同SHA成功job。原4项metadata fixture在完全相同产品代码/时限/默认线程数下通过，首次失败原日志保留，未增加重试循环、延时、预热或豁免。最终Windows实际EXE5bc9ac6a…通过版本/源码、模版保存/默认确认、只读比较/外部上下文、文件往返和实际指针排序。该CI EXE与Release EXE分别记录各自构建身份，安装结果归Release真实字节。
+
+Release39534419661同f1bbe7d9双平台success。唯一Publish Release39539741260以stable模式成功，公开前再次验证三种实际资产签名，公开后检查固定/stable清单。[v0.2.0](https://github.com/gzers/opencodex-desktop/releases/tag/v0.2.0) Release ID419091323，公开时间2026-10-21T03:39:33Z（北京时间11:39:33），draft=false、prerelease=false；Latest由v0.1.10晋升v0.2.0。
+
+集成线独立以不带Authorization的HTTPS读取固定v0.2.0和stable latest.json，均HTTP200、5989字节/SHA65c8d50f4937f062cd3a65f7985104cbb41e3900e8d74bdd6b8a5be585cd5701，与公开前验签时清单逐字节摘要相同。Mac DMG、Mac updater tar、Windows NSIS/MSI均匿名下载200，大小/SHA与已验签/安装的同一批资产完全一致。临时目录在后续轮次已清理，因此匿名核对依据已提交的draft-verification原始摘要恢复预期，不重新构建或改变制品；验证结果与所有原始日志已固化于REL证据目录。
+
+发布后不重复启动相同字节的Mac二进制：公开下载与已完成原生回读的Mach-O来源压缩包摘要一致，实际原生0.2.0及正常退出证据继续有效。没有替换日常安装、迁移真实账户/配置或发送付费调用。OS正式签名/公证边界、账户信息范围、100条兼容预算和协议请求能力门按本页及CHANGELOG保留。
+
+本版请求的实施、受影响验证、文档交付和发布链已完成。原长期DMD/旧版未验性能及原生全组合不因此自动关闭；未来业务和登录态适配各随其所属范围继续。本记录只确认已明确的0.2.0交付，完整事实入口为final-release-verification.json、原条件审阅和IMP-21。
