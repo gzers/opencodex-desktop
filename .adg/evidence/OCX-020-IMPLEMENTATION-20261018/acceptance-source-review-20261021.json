@@ -1,0 +1,3763 @@
+{
+  "date": "2026-10-21",
+  "main": "f1bbe7d996389097dcf6237a6bc65b7995d68190",
+  "applicationTreeEqualsVerifiedFeature": true,
+  "originalModelConditions": [
+    {
+      "id": "AC-M01",
+      "condition": {
+        "scenario": "NewApi 30 项全量发现、勾选 17 项",
+        "required": "discovery 保持开启，管理列表全量，选择器按白名单过滤"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M02",
+      "condition": {
+        "scenario": "A6api 104 → 32 清单 fixture",
+        "required": "保留选择和注册状态的一致性；不发送额度 / 生成测试"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M03",
+      "condition": {
+        "scenario": "all / whitelist / none，选择零项及新发现模型",
+        "required": "空 selectedModels 不被当作全隐藏；none 对未来发现仍有效"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M04",
+      "condition": {
+        "scenario": "pending、发现失败、成功空列表、stale",
+        "required": "pending 409 可重试；失败保留缓存 / 选择，和真实空列表分开"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M05",
+      "condition": {
+        "scenario": "全部渠道含 disabled、静态恢复渠道",
+        "required": "可编辑策略，保留渠道启用状态及既有 discovery 方式"
+      },
+      "evidence": [
+        "checks-original-channels-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M06",
+      "condition": {
+        "scenario": "模板作用域选择、逐字段继承、upstream、单模型覆盖",
+        "required": "先选一份匹配模板再按字段层次解析，每字段有来源；批量改继承按预览生效"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M07",
+      "condition": {
+        "scenario": "推理 [] / null / 无字段、默认值越界",
+        "required": "[] 隐藏、null 删除覆盖；默认必须在最终列表，隐藏不误强制请求"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M08",
+      "condition": {
+        "scenario": "pin、wire 映射和 noReasoningModels",
+        "required": "默认、强制和参数移除独立；只对支持协议应用"
+      },
+      "evidence": [
+        "checks-wire-capability-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M09",
+      "condition": {
+        "scenario": "全渠道及原生 + featured + routed + alias 完整排序",
+        "required": "明确实际来源归属，按渠道及内部模型顺序逐组展开；实际 priority 与预览一致；不改 subagentModels 或会话默认；API 缺口被适配"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json",
+        "checks-native-consumers-20261019.json",
+        "checks-codex-model-menu-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M10",
+      "condition": {
+        "scenario": "新勾选、取消后重选、all 模式新发现、暂缺恢复、Fast 合成行",
+        "required": "首次新项追加渠道末尾；重选 / 恢复回保存位置；Fast 实际发布时跟父项，不存重复模型身份；停用 / 未绑定保留位置并明确不进入运行选择器"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M11",
+      "condition": {
+        "scenario": "fastEnabled 三态、能力覆盖与 fastRows / fastMode",
+        "required": "关闭具有硬拒绝语义；开启不凭空声明支持，继承不误覆盖"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M12",
+      "condition": {
+        "scenario": "GPT 前缀、图片、未知族、不同 Fast wire",
+        "required": "不靠名称赋予能力；来源可见，未知不做付费探测"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M13",
+      "condition": {
+        "scenario": "首次精确导入、同名异端点、跨机缺渠道",
+        "required": "保留精确覆盖；不自动错绑或创建无密钥渠道，验证状态不迁移"
+      },
+      "evidence": [
+        "checks-original-channels-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M14",
+      "condition": {
+        "scenario": "官方 UI 外部改动、应用期间漂移",
+        "required": "显示冲突，不覆盖未受管值；读取草稿不自动回写"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M15",
+      "condition": {
+        "scenario": "多 API 中途失败、崩溃、回滚时外部又改",
+        "required": "如实 partial，保存操作记录，补偿只恢复仍属本次的字段"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M16",
+      "condition": {
+        "scenario": "独立导出全量 / 渠道 / 族、merge / scope replace",
+        "required": "依赖完整，范围外不动；无 key / token / account / 机器路径"
+      },
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-family-fragment-20261020.json",
+        "checks-sync-model-subset-20261020.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M17",
+      "condition": {
+        "scenario": "损坏 digest、未知 schema、旧容器、缺 section",
+        "required": "拒绝损坏 / 未知；旧结构可迁入，缺 section 不清空现有"
+      },
+      "evidence": [
+        "checks-unified-file-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M18",
+      "condition": {
+        "scenario": "WebDAV 缺文件、双边改动、旧客户端上传 / 清理",
+        "required": "不传空 payload；保留冲突；旧域操作不丢新模型策略"
+      },
+      "evidence": [
+        "checks-config-webdav-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M19",
+      "condition": {
+        "scenario": "下载成功但未绑定 / 运行时不可用、一个域失败",
+        "required": "区分已下载和已应用，报告各域结果，不虚报整体成功"
+      },
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M20",
+      "condition": {
+        "scenario": "双文件 schema、模板引用缺失、同 ID / revision 内容冲突",
+        "required": "分别校验；缺依赖 / 冲突不应用，保留现有运行值"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M21",
+      "condition": {
+        "scenario": "模板新 revision、改名、删除已引用 revision",
+        "required": "新版不自动切换；改名不破引用；删除须检查并保留依赖"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M22",
+      "condition": {
+        "scenario": "仅模板 / 仅策略 / 组合包导入导出、双文件同步不齐",
+        "required": "仅模板不启用；策略默认带依赖；缺 section 不清现有；组合输入齐备后应用"
+      },
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-family-fragment-20261020.json",
+        "checks-sync-model-subset-20261020.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M23",
+      "condition": {
+        "scenario": "预览后模板 / 策略变化，双文件写入中断",
+        "required": "不混用不同快照；重新预览；staging / 操作记录可恢复，不能虚报原子成功"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M24",
+      "condition": {
+        "scenario": "同页拖动渠道与内部模型、键盘重排、置顶",
+        "required": "渠道移动整组，模型只在当前组移动；完整预览实时逐组展开；族模板 / 分类不改变顺序，无独立排序分区"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M25",
+      "condition": {
+        "scenario": "渠道搜索、模型搜索 / 族筛选、仅已选视图、刷新发现、本机暂存草稿",
+        "required": "搜索筛选不改变顺序或完整预览，隐藏同级排序项时退出对应过滤后重排，完整仅已选视图可直接重排；刷新不重排已有项；草稿即时可见但未应用不改运行选择器"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M26",
+      "condition": {
+        "scenario": "首次迁入已有跨渠道交错顺序、原生来源组映射",
+        "required": "显示成组排序差异，未明确应用前保留原运行顺序；原生来源组不创建虚假上游渠道；读回不符或不支持时不宣称已生效"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json",
+        "checks-native-consumers-20261019.json",
+        "checks-codex-model-menu-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M27",
+      "condition": {
+        "scenario": "菜单图标、两字短名、页面全名与两个 Tab",
+        "required": "两个 Tab 明确为渠道模型 / 模型模版，图标 / 左侧菜单按最终确认候选呈现并符合侧栏 / Tab 公共规格；tooltip / 读屏名称明确，无重复大标题或独立排序 Tab"
+      },
+      "evidence": [
+        "checks-detail-workspace-20261020.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-ui-output-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/detail-workspace.test.ts",
+        "apps/desktop/ui/tests/model-view-context.test.ts",
+        "apps/desktop/ui/tests/model-agent-entry.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M28",
+      "condition": {
+        "scenario": "两个 Tab 的标准 / 紧凑布局及详情",
+        "required": "900 × 600、1180 × 760、缩放、两主题 / 三档材质下入口可达；全宽列表 / 详情返回保留上下文，字段编辑与完整预览按需打开，短控件不折行，长值有全文出口"
+      },
+      "evidence": [
+        "checks-detail-workspace-20261020.json",
+        "checks-final-native-consumers-20261021.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-ui-output-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/detail-workspace.test.ts",
+        "apps/desktop/ui/tests/model-view-context.test.ts",
+        "apps/desktop/ui/tests/model-agent-entry.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M29",
+      "condition": {
+        "scenario": "渠道查看与批量勾选、Tab / 详情切换、保存模板",
+        "required": "查看与批量范围独立，草稿和上下文保留；弹窗取消不撤回此前草稿，保存新 revision 不自动升级策略或应用运行态"
+      },
+      "evidence": [
+        "checks-detail-workspace-20261020.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/detail-workspace.test.ts",
+        "apps/desktop/ui/tests/model-view-context.test.ts",
+        "apps/desktop/ui/tests/model-agent-entry.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M30",
+      "condition": {
+        "scenario": "配套设置的全局 Fast、同步两项范围和主页面返回",
+        "required": "共用草稿与已有 Fast 状态，点击保存才写入并提示重启；端点不重复配置，依赖缺失有提示，勾选同步范围不触发同步或扩大既有授权"
+      },
+      "evidence": [
+        "checks-sync-navigation-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M31",
+      "condition": {
+        "scenario": "99 / 100 / 101 / 108 项目录与带 nextCursor 的分页 fixture",
+        "required": "数量按实际 RPC 行计，完整分页不丢失；当前兼容模式显示全渠道 xx/100 并在超限时阻止保存写入，保留草稿 / 完整发现 / 导入候选；schema 无永久上限，不静默删超额项、不关闭 discovery"
+      },
+      "evidence": [
+        "checks-template-comparison-budget-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M32",
+      "condition": {
+        "scenario": "草稿全量、catalog 读回、Codex 实际可选集合不一致",
+        "required": "三者分别报告；有未读分页 / UI 过滤时明确差额与原因，不仅读回 catalog 即报所有模型可选；在当前兼容预算内、重启后实际下拉可达及过滤原因可解释是交付门；未来解除预算需客户端分页修复证据"
+      },
+      "evidence": [
+        "checks-codex-model-menu-20261021.json",
+        "checks-native-consumers-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M33",
+      "condition": {
+        "scenario": "Agent 来源过旧 / 冲突、族内不同型号、发现 ID 存在但能力未知",
+        "required": "字段附来源 / 时间 / 协议 / 范围，推断与声明分开；未知不补支持，不能凭族名或模型清单证明能力，不迁移本机验证状态"
+      },
+      "evidence": [
+        "checks-agent-dialogue-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M34",
+      "condition": {
+        "scenario": "Agent 完成 / 失败 / 多族结果 / 并发人工编辑",
+        "required": "只保存可校验候选，不自动设主版本或应用；各候选独立，失败保留输入及旧版，基准变化显示冲突，不覆盖人工编辑"
+      },
+      "evidence": [
+        "checks-batch-20261019.json",
+        "checks-final-native-consumers-20261021.json",
+        "checks-agent-native-multiturn-20261020.json",
+        "checks-agent-view-continuity-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M35",
+      "condition": {
+        "scenario": "候选修改、新主版本、部分渠道采用、主版本与引用不同",
+        "required": "已保存规则不原地改写；主指针只影响以后默认选择，已有引用固定；采用范围形成草稿，清楚显示主 v3 / 此渠道 v2，保留单模型例外"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M36",
+      "condition": {
+        "scenario": "删除候选 / 主版本 / 被策略或恢复记录依赖的版本、整条模板替换",
+        "required": "无依赖候选可删除；依赖明确展示，阻止悬空，允许归档；保留恢复记录依赖的精确规则仍可解析"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M37",
+      "condition": {
+        "scenario": "编辑新草稿后保存提交、首次写入、备份失败、部分失败 / 崩溃",
+        "required": "快照包含旧成功组合及精确依赖和实际受管字段，不能只备份新草稿；首次记录运行基线，备份失败不写，失败不晋升成功写入基线，待重启 / 客户端验证状态另记"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M38",
+      "condition": {
+        "scenario": "编辑还原修改、恢复上次 / 指定记录、恢复后再向前（以2026-10-14最终确认取消撤销/重做入口）",
+        "required": "未应用操作不写运行态；历史先转草稿再点击保存、确认差异、写入及重启核对，保留无关新候选；恢复形成新记录，旧记录可用，不要求靠导出才能反悔"
+      },
+      "evidence": [
+        "checks-history-runtime-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M39",
+      "condition": {
+        "scenario": "恢复期间外部漂移 / endpoint 变化、导入 / 同步新主指针、缺 revision",
+        "required": "保留外部值并提示冲突；重新核对绑定，不继承验证；输入默认候选不自动切主指针 / 引用 / 运行态，精确依赖缺失不改用最新"
+      },
+      "evidence": [
+        "checks-history-runtime-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M40",
+      "condition": {
+        "scenario": "执行 Agent 与目标模型探测、资料含指令、本机历史与便携文件",
+        "required": "未配置 / 失效执行连接或 runner 不可用时生成 / 纠偏不可执行，显示执行渠道 / 模型及计费提示；执行推理 / Fast 按已保存连接能力，独立保存返回原输入且不改渠道草稿；搜索资料不赋予运行写权，目标能力不自动生成探测；A6api 无生成请求，快照 / 绑定 / 实测不默认同步导出"
+      },
+      "evidence": [
+        "checks-agent-dialogue-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M41",
+      "condition": {
+        "scenario": "渠道默认 / 渠道内族 / 单模型与模型模版的统一设置",
+        "required": "共用上下文、输入模态、可选档位、默认档及 Fast 字段表达；模型模板只含规则，不混入渠道白名单、排序或凭据；模板无目标时不虚构统一最终值"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M42",
+      "condition": {
+        "scenario": "推理列表继承时单独设置默认、切回继承、缩窄列表",
+        "required": "默认档与列表独立；默认必须属于最终列表；恢复继承只清本层，保留父模板与其他层；自定义列表不自动启用强制档或 authoritative，越界修正纳入草稿差异"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M43",
+      "condition": {
+        "scenario": "上下文未知 / 大小预设 / 非正整数、族内不同型号与协议",
+        "required": "单位为 tokens，仅合法正整数可自定义；显示声明与有效值，不把更大配置宣称扩容；按来源收窄模板范围或保留继承，未支持的目标不虚报应用成功"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M44",
+      "condition": {
+        "scenario": "输入模态继承 / 非空自定义 / 全部取消、video、未知能力",
+        "required": "当前 model-settings [] / null 恢复声明继承，不表示禁止输入；UI 明确空选行为，仅开放版本 / 协议可表达项；不凭族名声明多模态，不自动探测 A6api"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M45",
+      "condition": {
+        "scenario": "继承未知推理、档位 none、列表 [] / null、模板编辑与能力恢复",
+        "required": "未覆盖不表示禁用推理；档位无、隐藏控制、恢复继承与不传参数分开；已保存模板修改产生新 revision，能力字段差异 / 导入依赖 / 应用记录与恢复均完整，不清无关运行字段"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M46",
+      "condition": {
+        "scenario": "全渠道 100 项计数、native / featured / alias / hidden、Fast 元数据与实际派生行",
+        "required": "分子按实际读页条目，不按上游总数 / 基础勾选数；Fast 元数据不加项，独立发布行才占项；草稿计划 / 已写入 / 客户端显示数可区分，全渠道共享预算"
+      },
+      "evidence": [
+        "checks-template-comparison-budget-20261020.json",
+        "checks-native-consumers-20261019.json",
+        "checks-codex-model-menu-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M47",
+      "condition": {
+        "scenario": "草稿 99 / 100 / 101 / 108、计数未知、版本修复、all 新发现 / 外部变化",
+        "required": "当前兼容超限阻止运行提交，保留草稿和完整发现并提示收窄；未知不伪造精确计数；打开旧超限配置不自动改，新发现不静默截断；预算随已证实客户端能力调整，读回偏差如实报告"
+      },
+      "evidence": [
+        "checks-template-comparison-budget-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M48",
+      "condition": {
+        "scenario": "勾选 / 排序 / 详情确认 / 预览 / 暂存、点击保存 / 取消确认、运行时不可用",
+        "required": "编辑及暂存不写运行态、不同步为已提交策略；保存一个流程完成差异确认、预算与依赖校验、备份、写入和读回；取消 / 失败不报保存成功，失败 / partial staging 不作为已提交策略同步；运行已写入而 Desktop 发布中断可依据 journal 核对，不要求再点独立应用按钮"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M49",
+      "condition": {
+        "scenario": "保存成功后立即重启 / 稍后、重启后可达不符、不能核对客户端、无运行差异",
+        "required": "成功先显示已保存待重启，明确重启对象是 Codex 且不自动关闭；稍后保留状态，客户端核对后才报已生效，不可核对保持待验证；无运行差异不重复要求重启"
+      },
+      "evidence": [
+        "checks-client-state-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M50",
+      "condition": {
+        "scenario": "仅保存模版 / 设主版本、采用到渠道、全局 Fast / 导入 / 同步 / 历史恢复",
+        "required": "保存模版只入库候选、无运行写入或重启，主指针不切既有引用；采用形成渠道草稿，所有运行变更统一由保存提交、预算核对并提示重启"
+      },
+      "evidence": [
+        "checks-draft-version-context-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M51",
+      "condition": {
+        "scenario": "自动生成后多轮对话、人工纠偏保留、字段范围变更、已保存候选再修改",
+        "required": "可按反馈只改相关字段并显示来源 / 差异，保留已确认偏好和人工值；不填协议不支持参数，已保存规则修改产新 revision；失败 / 取消不丢草稿，不自动主用 / 切引用"
+      },
+      "evidence": [
+        "checks-agent-dialogue-20261019.json",
+        "checks-agent-native-multiturn-20261020.json",
+        "checks-agent-view-continuity-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M52",
+      "condition": {
+        "scenario": "外部 Agent 无会话历史 / 无本机路径 / 不能联网，任务包再导出",
+        "required": "单弹窗范围/预设场景生成可一次复制的指令＋目标/基准/字段契约和来源，足以独立制模，不携带全量渠道/模型/节点；摘要可预览修改，未知 / 未搜索明确；无密钥 / 账号 / 完整 config / 私密聊天自动输出，包不成为第三份配置事实源；外部模型 / 搜索自行配置，不导出内部执行偏好，preferences 本机 Agent 分区从通用导出 / WebDAV 排除，导入保留本机值且校验失效连接"
+      },
+      "evidence": [
+        "checks-windows-editor-current-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M53",
+      "condition": {
+        "scenario": "内置 / 外部统一提交、损坏 / 越界结果、重复提交、伪造验证来源",
+        "required": "统一schema/匹配/锁/来源及版本事务服务，软件分配新版本；预检不写、同提交同内容返回原回执，同ID不同内容拒绝，坏项全批不写；外部声明不认定已验证，不自动默认/采用/运行写入"
+      },
+      "evidence": [
+        "checks-batch-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M54",
+      "condition": {
+        "scenario": "生成 / 纠偏期间人工改动、外部任务旧 baseDigest、多个返回、会话同步 / 导出",
+        "required": "taskId / 基准 digest / 范围可核对，过期返回成为分支候选或差异合并，不覆盖新修改；逐轮摘要可更新，详细对话本机保留且不默认随双文件同步 / 导出"
+      },
+      "evidence": [
+        "checks-agent-dialogue-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M55",
+      "condition": {
+        "scenario": "全局 v1、A 渠道 v3、B 渠道 v1、单模型 v1、同 scope 重复 templateId / 同优先级匹配冲突",
+        "required": "局部采用只改相应引用；精确单模型引用优先，否则按同 ID 渠道替换全局、匹配与优先级先选一份模板，规则不叠版，渠道默认 / 族 / 单模型字段优先级保持；重复冲突拒绝，全部依赖精确可解析"
+      },
+      "evidence": [
+        "checks-shared-partitions-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M56",
+      "condition": {
+        "scenario": "未改离线 / 待绑定渠道、本次受阻渠道、显式留待稍后、共享字段",
+        "required": "未改对象不阻塞独立变更；受阻项不静默跳过，重新确认范围后提交，上次成功策略加本次范围为新提交，剩余草稿未提交；共享影响和预算全域检查"
+      },
+      "evidence": [
+        "checks-scoped-save-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M57",
+      "condition": {
+        "scenario": "写前投影缺失、发现晚变、未知客户端版本、不可管理 native / hidden、写后预算偏差",
+        "required": "待核对不伪精确，不将全页读回当草稿投影能力；相关变化使旧计划失效，版本未验证有说明；不可收窄占用有原因 / 出口，异常读回不晋升成功或绕过预算"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M58",
+      "condition": {
+        "scenario": "modelOrder 有未选存根、暂缺、取消后重选",
+        "required": "校验不要求顺序是白名单子集；存根保留唯一身份和位置，不占发布计数；重选 / 恢复回原位，其他可见项不漂移"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M59",
+      "condition": {
+        "scenario": "保存 A 待重启、编辑 / 丢弃 B、再保存 B、A 核对晚回、无新增运行差异",
+        "required": "草稿和待重启并存，丢弃 B 回最新成功提交；再次成功待重启目标改 B，旧结果不标新计划生效；本次无差异不清旧待重启"
+      },
+      "evidence": [
+        "checks-client-state-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M60",
+      "condition": {
+        "scenario": "自动重启 / 客户端观察不可用、只重启代理、用户目视确认",
+        "required": "提供手动 Codex 重启 / 重新检查，明确对象及会话边界；进程启动或目录读回不等于客户端加载，自动证据与用户确认分开，不可验证如实待验证"
+      },
+      "evidence": [
+        "checks-client-state-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M61",
+      "condition": {
+        "scenario": "双击保存、确认后基准改变、写前取消 / 写后停止、超时、进度关闭",
+        "required": "只一个 planId，相关变化重新确认、进行中锁编辑；取消 / 停止语义明确，超时先核对再重试；收起不取消，实际写入与安全补偿 / 冲突完整报告"
+      },
+      "evidence": [
+        "checks-scoped-save-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M62",
+      "condition": {
+        "scenario": "多机并发新版本、同身份不同规则、改名、改主指针、归档主版、草稿 / incoming 依赖",
+        "required": "不用本机整数自增保证跨机唯一；规则 / 元数据 / 产物 digest 分开，冲突保留；另存新身份不静默重编号引用；归档先清 / 移主指针，临时依赖受保护"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M63",
+      "condition": {
+        "scenario": "同 taskId 同 / 不同结果、未知 taskId、越界 scope、人工字段锁、取消晚回",
+        "required": "同结果去重，不同结果独立；未知任务只普通候选，禁止自动 patch；保留人工值，版本由服务分配，晚回只收件候选；无运行写权限"
+      },
+      "evidence": [
+        "checks-task-retention-20261020.json",
+        "checks-batch-20261019.json",
+        "checks-agent-dialogue-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M64",
+      "condition": {
+        "scenario": "下载候选与未保存草稿冲突、新 revision 与远端主指针、成功待重启 / partial 上传",
+        "required": "incoming 不直接替换当前双文件；无关改动可合并，重叠逐项选择；主指针待接受，成功策略连依赖闭包可同步，partial / 本机暂存不上传，不传验证状态"
+      },
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-family-fragment-20261020.json",
+        "checks-sync-model-subset-20261020.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M65",
+      "condition": {
+        "scenario": "渠道 / 族局部包、范围 replace、共享字段另选、显式导出草稿",
+        "required": "不默认携全局 Fast / 来源顺序 / 范围外字段；族片段不删他族选择，依赖足够，接收端差异说明；默认已提交，草稿有未提交候选标记，不据此扩大同步当前策略"
+      },
+      "evidence": [
+        "checks-family-fragment-20261020.json",
+        "checks-final-native-consumers-20261021.json",
+        "checks-sync-model-subset-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M66",
+      "condition": {
+        "scenario": "上次影响范围 / 完整基线恢复、主指针可选、已有草稿、partial 记录",
+        "required": "默认恢复影响字段，完整范围另确认，主指针默认保留；先处理草稿冲突，旧规则入库而无关新候选保留；partial 不是成功点，恢复产生新记录并经过统一保存"
+      },
+      "evidence": [
+        "checks-history-runtime-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M67",
+      "condition": {
+        "scenario": "all 取消单项、清单不全、零项取消 none 确认、白名单与配置范围、跨搜索批量",
+        "required": "模式转换及未来新增语义明确，清单不完整不构造截断白名单；取消保留原模式，选择框不同时承担两种范围，搜索只影响查看，本次完整目标 / 数量可复核"
+      },
+      "evidence": [
+        "checks-model-ordering-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/model-draft-ordering.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M68",
+      "condition": {
+        "scenario": "文字原型页面 / 浮层走查、缩放 / 主题 / 材质、固定引用登记",
+        "required": "W-01～W-12 可追踪到契约和验收；符合 UI 公共规则，正常 / 失败 / 取消 / 晚回均有出口；文字 / mock 不当真实功能通过，真实原型制作后才登记 commit，不复制完整原型建第二事实源"
+      },
+      "evidence": [
+        "checks-detail-workspace-20261020.json",
+        "checks-final-native-consumers-20261021.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-ui-output-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/detail-workspace.test.ts",
+        "apps/desktop/ui/tests/model-view-context.test.ts",
+        "apps/desktop/ui/tests/model-agent-entry.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M69",
+      "condition": {
+        "scenario": "新增渠道 / 已有连接编辑、重复标识 / 名称、错误 Base URL、无选择 / 取消",
+        "required": "两步入口可达、稳定标识与名称分开，输入校验就地；加入只改草稿且新渠道追加末尾，取消不创建；原生无凭据表单，零项不写空 selectedModels"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json",
+        "checks-new-channel-20261020.json",
+        "checks-connection-edit-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M70",
+      "condition": {
+        "scenario": "未保存连接获取、各协议认证 / discovery override / 分页 / 响应上限",
+        "required": "以本机短期暂存连接返回完整精确 ID，不为获取先注册；不依赖现有只返回数量的已注册 test 接口；不发生成，协议 / 认证不可用有明确出口，未实现 preview 不能宣称支持"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M71",
+      "condition": {
+        "scenario": "新发现 / 手动精确 ID、重复、未归族、能力未知",
+        "required": "新项不选，手动去重后显式选择；ID 不改写 / HTML 安全呈现，不按族名或清单宣称上下文 / 推理 / Fast；discovery 继续开启，清单不按 100 截断"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json",
+        "checks-new-channel-20261020.json",
+        "checks-connection-edit-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M72",
+      "condition": {
+        "scenario": "重试失败 / 空 / 401 / 无接口、取消 / 关闭 / 变更连接目标、迟到结果",
+        "required": "同目标保留白名单和顺序，错误原因与重试 / 修改 / 手动出口明确；晚回不创建或污染新目标；变更目标重取 / 重选，原保存态保留，未变连接保留当前有效选择"
+      },
+      "evidence": [
+        "checks-discovery-contract-20261020.json",
+        "checks-new-channel-20261020.json",
+        "checks-connection-edit-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/discovery_contract_tests.rs",
+        "apps/desktop/ui/tests/new-channel-dialog.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M73",
+      "condition": {
+        "scenario": "新渠道保存 / 预算超限 / 注册后白名单失败 / 超时 / 外部漂移",
+        "required": "注册、凭据、绑定、白名单 / 可见性、字段和顺序属于同一受管计划；不短暂默认 all 或报部分成功；超限不提交且保留完整草稿，失败核对并安全补偿，成功仍待 Codex 重启"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M74",
+      "condition": {
+        "scenario": "密码遮罩 / 取消清理、导出 / WebDAV / 任务包 / digest、撤销与恢复新增渠道",
+        "required": "不回写遮罩值或泄漏 raw key / 连接摘要；本机凭据不进入便携双文件及基线；撤销 / 恢复先到草稿且不破当前页，真实恢复仅清理受管注册 / 绑定，外部漂移不删除"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M75",
+      "condition": {
+        "scenario": "模版输出协议、版本化包含 / 排除 / 范围规则、继承与人工例外",
+        "required": "协议按渠道默认 → 模版通用 → 最长后缀具体型号 → 渠道族覆盖 → 单模型覆盖解析；输出协议不参与适用匹配，不循环选模版；单模型自定义最高，恢复继承用上层值；采用保留精确引用 / 指定端点，明确清除才删字段例外"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M76",
+      "condition": {
+        "scenario": "缺端点 / 同协议多个端点 / 指定冲突 / 未绑定，编辑 / 删除 / 撤销",
+        "required": "端点独立于协议，自动匹配仅限唯一合法绑定；受影响保存被阻止且草稿 / 保存态不变；删除保留引用解释错误，取消 / 过期确认 / 保存锁和撤销有明确结果"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M77",
+      "condition": {
+        "scenario": "合法逐模型 modelAdapters 与必要的受管 provider 展开",
+        "required": "以真实允许集合、hard pin / forward / 认证契约决定；同地址但不同凭据身份不能合并；不能写入不支持的 adapter 值；注册 / 非空白名单 / 字段 / 排序统一计划，失败核对与补偿"
+      },
+      "evidence": [
+        "checks-protocol-real-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M78",
+      "condition": {
+        "scenario": "稳定 provider / catalog 身份、旧会话、白名单变化与逻辑顺序",
+        "required": "实际 ID / 基础 adapter 不随选择集合重派生，拆分 / 合并显式迁移；验证旧会话路由 / 别名或明确影响与恢复，不虚报无损；物理分组不改变渠道 / 内部模型交错顺序，Fast 跟父项，全域预算与读回一致"
+      },
+      "evidence": [
+        "checks-naming-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M79",
+      "condition": {
+        "scenario": "双文件端点引用、独立导出 / WebDAV / 恢复、跨机本机绑定",
+        "required": "便携文件只有端点 ID / 协议和规则，无地址 / 路径 / 认证 / 凭据引用或实际注册；导入不能覆盖本机连接，新 ID 待绑定；缺依赖 / 密钥保留运行态和草稿，恢复不承诺不存在的凭据"
+      },
+      "evidence": [
+        "checks-portable-nodes-20261019.json",
+        "checks-family-fragment-20261020.json",
+        "checks-sync-model-subset-20261020.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/transfer.rs",
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/tests/model-transfer.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M80",
+      "condition": {
+        "scenario": "切协议后的推理 / Fast 及 Agent / 外部任务候选",
+        "required": "最终协议重新验证档位 / 默认 / pin / 映射 / authoritative / noReasoning / fastWire；不静默丢参数或继承旧验证；任务仅带安全协议 / 端点状态和人工例外，未知协议拒绝，候选不创建端点 / 改主指针 / 写运行态"
+      },
+      "evidence": [
+        "checks-wire-capability-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M81",
+      "condition": {
+        "scenario": "自建任意族、预置复制、改名 / 匹配修改、旧固定族迁入",
+        "required": "模版本身就是可创建的族，无必选族枚举；稳定身份不随名称改动，规则修改入新候选；预置是起点不代表全部模型或能力，旧族映射明确不按同名错绑"
+      },
+      "evidence": [
+        "checks-version-candidate-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M82",
+      "condition": {
+        "scenario": "精确 / 前缀 / 通配、多条包含、排除、大小写、渠道范围、优先级与预览",
+        "required": "包含任一命中、排除优先，通配仅 * / ? 不当正则；精确 ID 不改写；命中 / 排除 / 零命中 / 重叠 / 未选 / 停用可解释，预览不改白名单或启停"
+      },
+      "evidence": [
+        "checks-template-usage-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M83",
+      "condition": {
+        "scenario": "未采用候选、主指针变化、全局 / 渠道同 ID 不同版、精确单模型指定、平优先级",
+        "required": "只解析已采用精确版本；渠道同 ID 替换全局，其他 ID 保留，再取最高匹配优先级；精确引用可越过自动匹配但仍校验；平优先级冲突和缺 revision 阻止受影响保存，保留草稿"
+      },
+      "evidence": [
+        "checks-template-usage-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M84",
+      "condition": {
+        "scenario": "模版完整字段、通用 / 专用适配器、未知列表默认、最终协议变化",
+        "required": "名称说明 / 规则 / 协议 / 上下文 / 模态 / 档位与默认 / Fast / 高级 / 来源可编辑且独立继承；合法标签可入待目标校验候选，采用时必须通过最终目标列表 / 协议；专用适配器缺绑定不可假装通用 Key 已支持"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M85",
+      "condition": {
+        "scenario": "编辑内自动填充、连续纠偏、人工并发修改 / 锁定、停止晚回",
+        "required": "新建 / 编辑内生成当前模版字段及规则；输入保留，逐字段三方合并保留人工值并显示冲突；来源 / 未知可见，停止使晚回不能覆盖；不保存空模版、不自动主用或采用"
+      },
+      "evidence": [
+        "checks-agent-native-multiturn-20261020.json",
+        "checks-agent-view-continuity-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M86",
+      "condition": {
+        "scenario": "独立外部入口、当前 / 多选 / 全部 / 仅新建，无既有聊天、复制失败",
+        "required": "一个外部任务弹窗，选范围/场景就原位预览并一次复制完整指令和资料；包含目标/精确版本及编辑基准、同源匹配/字段契约、锁/来源与提交方法，无任务队列或第二步详情；任务工作区不直写正式库，软件分配新版本并返回实际回执；无凭据 / 地址 / 内部执行偏好，用户点击复制、失败可选文本；支持单个多个新增 / 修改候选"
+      },
+      "evidence": [
+        "checks-windows-editor-current-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M87",
+      "condition": {
+        "scenario": "外部多结果含非法项 / 重复 ID / 越界 / 旧库或缓冲基准、比较后又变、UI / CLI",
+        "required": "全批校验、逐项差异、落盘前重验，任一错误拒绝全批且无部分入库；版本身份 / digest / 重放 / 并发由共同服务管理；CLI 与 UI 同规则，仅新候选，无裸覆盖旧版或运行写入"
+      },
+      "evidence": [
+        "checks-batch-20261019.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M88",
+      "condition": {
+        "scenario": "返回列表 / 切详情 / 取消新建、比较 / 版本操作、直接选择采用渠道、渠道保存",
+        "required": "未保存缓冲可继续，取消不留空对象，编辑中版本操作先处理缓冲；比较含名称说明 / 匹配 / 配置；候选保存、设主、采用草稿、渠道提交四步独立，有依赖版本删除保护；采用保留例外，不自动启用 / 勾选模型，最终保存才提示 Codex 重启"
+      },
+      "evidence": [
+        "checks-draft-version-context-20261020.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M89",
+      "condition": {
+        "scenario": "模版渠道全部 / 白名单 / 黑名单、空选 / 新增 / 失效 ID / 旧缺模式",
+        "required": "白名单空选不匹配、黑名单空选允许全部；全部忽略保留清单，切模式不丢选择，未来渠道按模式决定；旧非空迁白名单 / 空迁全部，失效项不回退全部；与 selectedModels 独立且 discovery 保持开启"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json",
+        "checks-effective-source-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M90",
+      "condition": {
+        "scenario": "可选具体型号新增 / 编辑 / 删除、字面后缀 / 大小写 / 重复 / 多命中",
+        "required": "完整 raw modelId 按 endsWith，最长一项生效，不叠多项；自动匹配须先满足顶层范围与包含排除，人工精确引用例外可见；重复身份 / 等价后缀拒绝，空子项只用通用，零命中可保留"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json",
+        "checks-effective-source-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M91",
+      "condition": {
+        "scenario": "具体型号能力与协议继承、渠道默认 / 族覆盖 / 单模型例外、无效未命中子项",
+        "required": "能力为官方 → 模版通用 → 具体型号 → 渠道默认 → 渠道族覆盖 → 单模型；协议为渠道默认 → 模版通用 → 具体型号 → 渠道族覆盖 → 单模型；来源可见，保存同时验证通用及每项合成值，采用再按最终协议 / 能力校验"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/ui/tests/model-advanced-reasoning.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M92",
+      "condition": {
+        "scenario": "版本 / 复制 / 比较 / 导入导出 / 外部任务及子项人工锁",
+        "required": "模式与 variants 随不可变版本完整保留；缺 variants 的旧编辑导入保留当前子项，显式空数组为清除请求且受锁 / 冲突约束；内外结果不能修改或删除锁定子项上下文，冲突保留人工数组，不直接主用 / 写运行态"
+      },
+      "evidence": [
+        "checks-shared-rules-20261020.json",
+        "checks-effective-source-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/store.rs",
+        "apps/desktop/tauri/src/modules/model_config/matching.rs",
+        "apps/desktop/ui/tests/model-template-version-context.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M93",
+      "condition": {
+        "scenario": "连续表单锚点导航 / 展开收起、非模态 Agent / 模态 / Select、切目标 / 异步 / 停止",
+        "required": "五区连续展示，点击仅滚主内容、不改路由 / 重建表单，手动滚动同步高亮；收起及同对象重绘保持可见锚点和缓冲，切目标从顶部开始；导航下匹配预览 / 与主版本比较 / 更多操作只出现一次，收起图标 / tooltip / 标签可达，无主版本比较说明不可用；按最终模型页交互仅保留左侧Agent自动填充入口，导航收起有图标/tooltip/可读标签；不恢复已取消的右下动效入口，打开无蒙层面板，不锁页面；顶部实际模型入口与图标收起、中部聊天独立滚动，底部紧凑资料 / 上下文锁 / 导出及统一输入发送；设置返回保留未发输入，持续纠偏接受才改缓冲；逐目标消息 / 聊天位置 / 焦点光标保留，冻结身份、晚回不切走、停止使结果失效；减弱动效、正式多建议及动效组件共用须实屏 / 服务验证"
+      },
+      "evidence": [
+        "checks-detail-workspace-20261020.json",
+        "checks-final-native-consumers-20261021.json",
+        "checks-agent-native-multiturn-20261020.json",
+        "checks-agent-view-continuity-20261020.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-ui-output-20261021.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/ui/tests/detail-workspace.test.ts",
+        "apps/desktop/ui/tests/model-view-context.test.ts",
+        "apps/desktop/ui/tests/model-agent-entry.test.ts",
+        "apps/desktop/tauri/src/modules/model_config/tasks.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent.rs",
+        "apps/desktop/tauri/src/modules/model_config/agent_conversation.rs",
+        "apps/desktop/ui/tests/model-agent-batch.test.ts",
+        "apps/desktop/ui/tests/model-external-task.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-M94",
+      "condition": {
+        "scenario": "上游非标准 ID、路由别名 / 显示名称、冲突 / 编译 / Fast / 预算 / 旧会话",
+        "required": "raw modelId 不改；naming 单模型提案编译到实际 provider modelAliases / modelDisplayNames，校验格式、大小写重复、原始 ID / combo 冲突及保留前缀；别名解析回原始 wire，显示标签与身份分开；真实 catalog / Fast / 条数 / 分组 / 旧会话核对，未实施不可报通过"
+      },
+      "evidence": [
+        "checks-naming-20261020.json"
+      ],
+      "assessment": "source-specific evidence reviewed; final release artifact gate remains separate",
+      "reviewedSourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/schema.rs",
+        "apps/desktop/tauri/src/modules/model_config/tests.rs",
+        "apps/desktop/tauri/src/modules/model_config/runtime.rs",
+        "apps/desktop/tauri/tests/model_config_official_real.rs",
+        "apps/desktop/ui/tests/model-save-recovery.test.ts"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    }
+  ],
+  "contractCorrections": {
+    "AC-M36/62": "Archive/keep flags removed by user final version-management rules; automatic dependency protection and delete apply.",
+    "AC-M38/74/76": "No undo/redo UI after final confirmation; restore history to draft and ordinary Save is the confirmed path.",
+    "AC-M79": "Latest confirmed portable connection contract carries original public provider fields/nodes, keeps secrets separately, stages disabled new local identity. Old no-address wording superseded in contract.",
+    "AC-M93": "Sidebar Agent only; old floating launcher superseded.",
+    "Sync AC-S12/13": "User confirmed account information scope; login portability/refresh gates retained for future, unverified, not0.2.0 delivery."
+  },
+  "scopeLimits": [
+    "Actual supported protocol/credential capabilities; unknown/special adapters rejected rather than silently treated as generic Key.",
+    "Network behavior proven with real installed2.84.0 and owned HTTP/TLS services; no claim for all internet vendors or paid response quality.",
+    "Platform source reuse eligibility is byte-based and existing valid evidence; prior REL10 exceptions are not promoted to pass.",
+    "This audit maps original requirements to evidence. It does not replace raw receipts, tests or final tag artifact/install/publication proof."
+  ],
+  "releaseGate": "main CI39533974950 and Release39534419661 running on f1bbe7d9/v0.2.0; actual installers/signatures/publication still pending",
+  "originalSyncConditions": [
+    {
+      "id": "AC-S01",
+      "namespace": "sync",
+      "evidence": [
+        "checks-sync-navigation-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S02",
+      "namespace": "sync",
+      "evidence": [
+        "checks-sync-object-tree-20261019.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S03",
+      "namespace": "sync",
+      "evidence": [
+        "checks-original-channels-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S04",
+      "namespace": "sync",
+      "evidence": [
+        "checks-original-channels-20261019.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S05",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-family-fragment-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S06",
+      "namespace": "sync",
+      "evidence": [
+        "checks-sync-object-tree-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S07",
+      "namespace": "sync",
+      "evidence": [
+        "checks-account-origin-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S08",
+      "namespace": "sync",
+      "evidence": [
+        "checks-portable-assets-20261019.json",
+        "checks-original-channels-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S09",
+      "namespace": "sync",
+      "evidence": [
+        "checks-provider-auth-20261019.json",
+        "checks-asset-mappings-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S10",
+      "namespace": "sync",
+      "evidence": [
+        "checks-history-direction-20261019.json",
+        "checks-provider-auth-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S11",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-portable-assets-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S12",
+      "namespace": "sync",
+      "evidence": [],
+      "assessment": "future_login_capability_unverified_per_user_scope",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S13",
+      "namespace": "sync",
+      "evidence": [],
+      "assessment": "future_login_capability_unverified_per_user_scope",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S14",
+      "namespace": "sync",
+      "evidence": [
+        "checks-account-origin-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S15",
+      "namespace": "sync",
+      "evidence": [
+        "checks-portable-assets-20261019.json",
+        "checks-asset-mappings-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S16",
+      "namespace": "sync",
+      "evidence": [
+        "checks-account-origin-20261020.json",
+        "checks-sync-model-subset-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S17",
+      "namespace": "sync",
+      "evidence": [
+        "checks-draft-export-20261020.json",
+        "checks-family-fragment-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S18",
+      "namespace": "sync",
+      "evidence": [
+        "checks-config-webdav-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S19",
+      "namespace": "sync",
+      "evidence": [
+        "checks-config-webdav-20261019.json",
+        "checks-family-fragment-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S20",
+      "namespace": "sync",
+      "evidence": [
+        "checks-config-webdav-20261019.json",
+        "checks-sync-navigation-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S21",
+      "namespace": "sync",
+      "evidence": [
+        "checks-draft-export-20261020.json",
+        "checks-scoped-save-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S22",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S23",
+      "namespace": "sync",
+      "evidence": [
+        "checks-config-webdav-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S24",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-portable-nodes-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S25",
+      "namespace": "sync",
+      "evidence": [
+        "checks-portable-assets-20261019.json",
+        "checks-unified-file-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S26",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json",
+        "checks-provider-auth-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S27",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S28",
+      "namespace": "sync",
+      "evidence": [
+        "checks-final-native-consumers-20261021.json",
+        "checks-native-current-transfer-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S29",
+      "namespace": "sync",
+      "evidence": [
+        "checks-config-webdav-20261019.json",
+        "checks-account-origin-20261020.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S30",
+      "namespace": "sync",
+      "evidence": [
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S31",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    },
+    {
+      "id": "AC-S32",
+      "namespace": "sync",
+      "evidence": [
+        "checks-unified-file-20261019.json"
+      ],
+      "assessment": "current information/scope contract evidence reviewed",
+      "sourceOwners": [
+        "apps/desktop/tauri/src/modules/model_config/file_objects.rs",
+        "apps/desktop/tauri/src/modules/model_config/config_remote.rs",
+        "apps/desktop/ui/src/features/sync/ModelTransfer.vue"
+      ],
+      "currentExecution": "checks-final-feature-ci-20261021.json"
+    }
+  ],
+  "notificationConditions": [
+    {
+      "id": "AC-N01",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N02",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N03",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N04",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N05",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-native-consumers-20261019.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N06",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-native-consumers-20261019.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N07",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N08",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-native-consumers-20261019.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N09",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-native-consumers-20261019.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N10",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N11",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    },
+    {
+      "id": "AC-N12",
+      "evidence": [
+        "checks-final-feature-ci-20261021.json",
+        "checks-notification-doc-alignment-20261021.json",
+        "checks-native-consumers-20261019.json",
+        "checks-final-native-consumers-20261021.json"
+      ],
+      "sourceOwners": [
+        "apps/desktop/tauri/tests/event_registry.rs",
+        "apps/desktop/tauri/tests/notifications.rs",
+        "apps/desktop/ui/tests/model-operation-tasks.test.ts",
+        "apps/desktop/ui/tests/notification-center.test.ts",
+        "apps/desktop/ui/tests/app-modal.test.ts"
+      ],
+      "assessment": "shared registration/lifecycle tests and applicable native owner evidence reviewed"
+    }
+  ],
+  "buttonConditions": [
+    {
+      "id": "AC-S01",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S02",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S03",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S04",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S05",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S06",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S07",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    },
+    {
+      "id": "AC-S08",
+      "namespace": "button-style",
+      "evidence": [
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-component-coverage-20261020.json",
+        "checks-current-page-visuals-20261020.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "actual shared geometry/state and migrated page evidence reviewed; native profiles retain separate owner evidence"
+    }
+  ],
+  "componentConditions": [
+    {
+      "id": "brand.logo",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "components/BrandMark.vue",
+          "exists": true,
+          "sha256": "b5eaff1b5b0812a79f95b0af0063a48661187b664b783d944a8635f9c8c8c14c"
+        }
+      ],
+      "declaredConsumers": [
+        "components/AppSidebar.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "brand.app-macos",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "../tauri/icons/icon.icns",
+          "exists": true,
+          "sha256": "3a89852efb32d8e0169a0dfdbef6efec53dccb47cfedd9b1445dfc802d180357"
+        }
+      ],
+      "declaredConsumers": [
+        "../tauri/tauri.conf.json"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "brand.app-windows",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "../tauri/icons/windows/icon.ico",
+          "exists": true,
+          "sha256": "6093b7f46ccb8db92d3a064c8694f1cbae22b781410b9679de0e7beb4fda5813"
+        }
+      ],
+      "declaredConsumers": [
+        "../tauri/tauri.conf.json"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "brand.tray-macos",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "../tauri/src/infrastructure/tray_controller.rs",
+          "exists": true,
+          "sha256": "0f3c050ee710ae59d1b53b9957de0ba3c13ea1551457cb2c40124817c1511bc1"
+        }
+      ],
+      "declaredConsumers": [
+        "../tauri/src/lib.rs"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "brand.tray-windows",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "../tauri/src/infrastructure/windows_tray_icon.rs",
+          "exists": true,
+          "sha256": "d7dc620967cc02ef624f696390b5d9caad9eb9cefb1e65e685fac50f0ee09f64"
+        }
+      ],
+      "declaredConsumers": [
+        "../tauri/src/infrastructure/tray_controller.rs"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "type.scale",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/tokens.css",
+          "exists": true,
+          "sha256": "c3422a5db327ace8056f219e8cfbd134fe100a666839787b725a102fcdba6032"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "content.markdown",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/patterns/MarkdownContent.vue",
+          "exists": true,
+          "sha256": "cc586cd00d6057c743d5c914469189641fc2ee50970540adbe4550e33ffb2679"
+        }
+      ],
+      "declaredConsumers": [
+        "features/extensions/components/ExtensionDetailModal.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "surface.recipe",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/materials.css",
+          "exists": true,
+          "sha256": "44bc8fd8796d401342c2d0a30d95ca79af7ca902b0a09f3e77d0543de5d8c1fe"
+        }
+      ],
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "appearance.effects",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "app/appearance/effects.ts",
+          "exists": true,
+          "sha256": "f9aedbd6f3be18d8c05c552cad45f5f335b390ee8462dde8edaabc4eb079b1fb"
+        }
+      ],
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "icon.scale",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/tokens.css",
+          "exists": true,
+          "sha256": "c3422a5db327ace8056f219e8cfbd134fe100a666839787b725a102fcdba6032"
+        }
+      ],
+      "declaredConsumers": [
+        "components/AppTopbar.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "layout.stack",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/layout/Stack.vue",
+          "exists": true,
+          "sha256": "86e2f931965a08ba1e1d8369acb7cfd787479d37932dd60a01959ffdecd2aadf"
+        }
+      ],
+      "declaredConsumers": [
+        "dev/component-gallery/GalleryApp.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "layout.inline",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/layout/Inline.vue",
+          "exists": true,
+          "sha256": "c9d8e8fea90c095643ee5fba65e0e67d2ebc83d7136409fe7e2607bd7bc6fcad"
+        }
+      ],
+      "declaredConsumers": [
+        "dev/component-gallery/GalleryApp.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "layout.split",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        },
+        {
+          "path": "components/layout/useShellLayout.ts",
+          "exists": true,
+          "sha256": "8b7a8443ab2625b50d1972821ff0c981c116066b7351d4fceb40f8c1da827e30"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/ModelsRoute.vue",
+        "App.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "navigation.anchor",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/layout/StickyTabs.vue",
+          "exists": true,
+          "sha256": "3be9bfd2c6ee3e0410bfd038883e147676e52187bc6e9eeec13ae9b6d73dc34b"
+        },
+        {
+          "path": "components/layout/DetailWorkspace.vue",
+          "exists": true,
+          "sha256": "754ba7583293e6127e5f6edad5ea85a948ef341b1257330ebda93d305f030f87"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/ModelsRoute.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "button.text",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiButton.vue",
+          "exists": true,
+          "sha256": "0c5ffc08988ca329f0aafcc9de4a3aee09a822087e8ea7cd26a6093affad66f9"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "routes/OverviewRoute.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "button.icon",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiIconButton.vue",
+          "exists": true,
+          "sha256": "583f322175c13fe5450617ffe9ceca4a1d0483b5210c0cbd464de189db297b24"
+        }
+      ],
+      "declaredConsumers": [
+        "components/AppTopbar.vue",
+        "features/notifications/components/NotificationItem.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "field.input",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ChannelEditor.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "field.textarea",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/AgentPanel.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "choice.checkbox",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ModelPicker.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "choice.radio",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/BatchAgentDialog.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "choice.switch",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiSwitch.vue",
+          "exists": true,
+          "sha256": "5683aff3256bdd2f3aaa9e7b8d913441cc67c7a5effe1da742db019a61808253"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "choice.slider",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiDiscreteSlider.vue",
+          "exists": true,
+          "sha256": "6119de3354ca471d6b6f39543635637eb7da7452ffe537350a9c198a53ef138d"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ModelChoiceOptions.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "choice.select",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiSelectField.vue",
+          "exists": true,
+          "sha256": "b024333f4fd345d263202342a03d4cc09bb2ca6b76b595c734d75ce7779ae210"
+        },
+        {
+          "path": "components/ui/UiSelectMenu.vue",
+          "exists": true,
+          "sha256": "7f34b14838be00a3a8bb37eca4c1fa79b41058b4886261afa41df1edbce4ec0d"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "routes/ModelsRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "menu.actions",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiSelectMenu.vue",
+          "exists": true,
+          "sha256": "7f34b14838be00a3a8bb37eca4c1fa79b41058b4886261afa41df1edbce4ec0d"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "navigation.tabs",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/layout/StickyTabs.vue",
+          "exists": true,
+          "sha256": "3be9bfd2c6ee3e0410bfd038883e147676e52187bc6e9eeec13ae9b6d73dc34b"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue",
+        "routes/ExtensionsRoute.vue",
+        "routes/LogsRoute.vue",
+        "routes/ModelsRoute.vue",
+        "routes/SyncRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "data.table",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        },
+        {
+          "path": "features/models/ChannelModelTable.vue",
+          "exists": true,
+          "sha256": "2acab39304b5ad2a6b9b3648fad54b777bbcf24c9355c697c076048e9c752095"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ChannelsView.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "data.tree",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiTreeTable.vue",
+          "exists": true,
+          "sha256": "7fe97fc20ff86e3e7a22944e1783cb7378d299ad8ed29e2d359ea0cfb20244f1"
+        },
+        {
+          "path": "components/ui/treeTable.ts",
+          "exists": true,
+          "sha256": "833aa945f33b9a524cba2009da7460efa2c67b19b608b319d49518ab3de5afd4"
+        }
+      ],
+      "declaredConsumers": [
+        "features/backup/BackupFiles.vue",
+        "features/sync/ObjectScopeTree.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "data.status",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ChannelsView.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "overlay.dialog",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiDialog.vue",
+          "exists": true,
+          "sha256": "0b469560dc2c257c13755bd2ff37658c9c2c37c8dc861bd99559aee325faef1b"
+        }
+      ],
+      "declaredConsumers": [
+        "features/sync/ModelTransfer.vue",
+        "features/models/NewChannelDialog.vue",
+        "features/models/ChannelModelTable.vue",
+        "features/models/ChannelBatchDialog.vue",
+        "features/models/PolicyDraftDialog.vue",
+        "features/models/TemplateComparisonDialog.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "overlay.annotation",
+      "kind": "prototype_only",
+      "implementations": [],
+      "declaredConsumers": [],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json"
+      ],
+      "assessment": "not shipped; docs prototype annotation only, production excludes it",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "feedback.local",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ChannelsView.vue",
+        "features/models/ChannelEditor.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "feedback.steps",
+      "kind": "recipe",
+      "implementations": [
+        {
+          "path": "styles/base.css",
+          "exists": true,
+          "sha256": "ed905b246a80f6b88291165b7df8cdcc93148d1a007009ce8b03b7f3a3d13602"
+        }
+      ],
+      "declaredConsumers": [
+        "components/TaskProgressHost.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "model.selection",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "features/models/ModelPicker.vue",
+          "exists": true,
+          "sha256": "d9960dcbc173c795241f67442855fdf9d82a86dbc3f58592c6610adfc9f00585"
+        },
+        {
+          "path": "features/models/ModelChoiceOptions.vue",
+          "exists": true,
+          "sha256": "641600fcd5b7a229d52471da35c38c31fe42bf85e7abd26f2f9e816df57eb401"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/AgentExecutionField.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "node.selection",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "features/models/NodePicker.vue",
+          "exists": true,
+          "sha256": "dadcb5ff58199f7c2feb3fea0efa05696cd275f2994084990802db1021845ca2"
+        },
+        {
+          "path": "features/models/useNodeMeasurements.ts",
+          "exists": true,
+          "sha256": "0688a33e0dbed570f98cbe705265769426e2492e1a00dbd89b806d98fb84e49b"
+        },
+        {
+          "path": "features/models/ChannelNodeSelect.vue",
+          "exists": true,
+          "sha256": "b7a9a2e38141b8c2fe2b09db1e6834cbf31de21ce4168fc8fd0f34da598dd316"
+        }
+      ],
+      "declaredConsumers": [
+        "features/models/ChannelEditor.vue",
+        "features/models/ChannelsView.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "feedback.toast",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/patterns/FeedbackToast.vue",
+          "exists": true,
+          "sha256": "4b8192449eb5a2904381413664d448789fe686552bf4363b780569082d056239"
+        },
+        {
+          "path": "components/ToastHost.vue",
+          "exists": true,
+          "sha256": "e2ed18454fd3cc13705d6822ad82bcea628e774d10a123048909f700f8d72fef"
+        }
+      ],
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "feedback.task",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/patterns/TaskProgressCard.vue",
+          "exists": true,
+          "sha256": "6cbe2ea3adb9cd6d08277e3c309dff2fea336addc71e8d8ba50bca78cecce38c"
+        },
+        {
+          "path": "components/TaskProgressHost.vue",
+          "exists": true,
+          "sha256": "567273e38c6d47433f82a007c39e96f98020310e86d2919fa65ffcb57f253357"
+        }
+      ],
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "feedback.notification",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "features/notifications/components/NotificationItem.vue",
+          "exists": true,
+          "sha256": "b732229fd7f96b3cd46a6b44d4b312740b6826e886dff698eb5d8fff54e829fa"
+        }
+      ],
+      "declaredConsumers": [
+        "features/notifications/components/NotificationCenter.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    },
+    {
+      "id": "platform.caption",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "../tauri/src/infrastructure/window_appearance.rs",
+          "exists": true,
+          "sha256": "f4d318555bc1764dcdfbd5e311d99137a2fe5b15d1257cfda4f12f783032b6cc"
+        }
+      ],
+      "declaredConsumers": [
+        "../tauri/src/lib.rs"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "platform.tray",
+      "kind": "platform",
+      "implementations": [
+        {
+          "path": "../tauri/src/modules/tray/mod.rs",
+          "exists": true,
+          "sha256": "7baef7a6729850f82054bfc62914d350b0a1750be28adb4e6a5cca7dea2b5273"
+        },
+        {
+          "path": "../tauri/src/infrastructure/tray_controller.rs",
+          "exists": true,
+          "sha256": "0f3c050ee710ae59d1b53b9957de0ba3c13ea1551457cb2c40124817c1511bc1"
+        }
+      ],
+      "declaredConsumers": [
+        "../tauri/src/lib.rs"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "component-source-reuse-20261020.json"
+      ],
+      "assessment": "exact unchanged platform source and valid baseline native evidence reused; current app packaging identity still requires tag checks",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "pattern.setting",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/patterns/SettingRow.vue",
+          "exists": true,
+          "sha256": "5a75b4ed3a669716e08c821398488174ab92a2cfb7c8a729629a7a7783890ce0"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/SettingsRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "pattern.card",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiCard.vue",
+          "exists": true,
+          "sha256": "f05f99ef3bf02ae810f4ed5935c7f4fb98cbfc6f410c08bdd05ceec08a8d5146"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/OverviewRoute.vue",
+        "routes/ExtensionsRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "pattern.card-header",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/ui/UiCardHeader.vue",
+          "exists": true,
+          "sha256": "6cf1bad6c06de90a3ecb6cbd9becfe9c5067cb90e54037eafab22a5a9f503ebb"
+        }
+      ],
+      "declaredConsumers": [
+        "routes/OverviewRoute.vue",
+        "routes/ExtensionsRoute.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": true
+    },
+    {
+      "id": "overlay.modal-host",
+      "kind": "component",
+      "implementations": [
+        {
+          "path": "components/AppModal.vue",
+          "exists": true,
+          "sha256": "12a5cbf195c8c0cc971e8f557654051367dad449911b0ea132909ab7d5d82b91"
+        },
+        {
+          "path": "components/patterns/ModalContent.vue",
+          "exists": true,
+          "sha256": "aa793b8a61e73d38648634664a27355fac3ebca6360b5d4c4c986233f4ab50fb"
+        },
+        {
+          "path": "components/patterns/modalContent.ts",
+          "exists": true,
+          "sha256": "e9f1d7a74c2998f71fcc90ba20c2d1333b5df057a30873dba75dd6cf14582828"
+        }
+      ],
+      "declaredConsumers": [
+        "App.vue"
+      ],
+      "evidence": [
+        "checks-current-component-coverage-20261020.json",
+        "checks-final-ui-output-20261021.json",
+        "checks-final-feature-ci-20261021.json",
+        "checks-ui-controls-20261019.json",
+        "checks-ui-foundations-20261019.json",
+        "checks-nodes-modal-matrix-20261019.json",
+        "checks-current-page-visuals-20261020.json"
+      ],
+      "assessment": "shared component/recipe measured through real gallery plus production consumer/sample and behavior tests",
+      "sameAs0110AtPriorReview": false
+    }
+  ]
+}
