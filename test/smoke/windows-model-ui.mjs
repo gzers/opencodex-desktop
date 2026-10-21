@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import {win32,join} from 'node:path'
 import {randomUUID} from 'node:crypto'
 import {writeFile} from 'node:fs/promises'
+import {verifyUiAlignment} from './windows-ui-alignment.mjs'
 function normalize(value){assert(typeof value==='string'&&win32.isAbsolute(value),'absolute active root required');const canonical=value.startsWith('\\\\?\\UNC\\')?'\\\\'+value.slice(8):value.replace(/^\\\\\?\\/,'');return win32.resolve(canonical).toLowerCase()}
 export function assertModelExportPath(path,expected){
  const file=normalize(path),directory=normalize(win32.join(expected,'exports'))
@@ -107,6 +108,7 @@ export async function verifyWindowsModelUi(call,output,facts,expected){
  await new Promise(resolve=>setTimeout(resolve,100))
  const tasks=await evaluate("[...document.querySelectorAll('.model-operation-task,.model-operation-card')].filter(e=>e.getClientRects().length).map(e=>e.textContent)")
  const screenshot=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'model-template-native.png'),Buffer.from(screenshot.data,'base64'))
+ await verifyUiAlignment({call,evaluate,wait,click,output,templateLabel:label})
  const result={result:'pass',scope:'native template edit/save/default-confirm plus exact template file export/receive/adopt; no runtime generation',templateId:created.templateId,revisionId:revision.id,immutablePriorRevision:true,channelPolicyUnchanged:true,defaultSeparateFromAdoption:true,confirmationLeftNativeTopLayer:true,returnedToVersionManager:true,exportedWithinSandbox:true,fileRoundtrip:true,nativePointerModelSort:true,readonlyComparison:true,externalContextBundle:true}
  await writeFile(join(output,'model-ui.json'),JSON.stringify(result,null,2)+'\n');return result
 }

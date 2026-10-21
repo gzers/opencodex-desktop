@@ -36,6 +36,7 @@ export const settingsSections: readonly SettingsSection[] = [
   'installation',
   'backup',
   'extensions',
+  'agent',
   'cleanup',
   'cli',
   'upgrade',

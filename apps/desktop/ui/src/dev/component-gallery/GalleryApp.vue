@@ -83,7 +83,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
       <UiCard id="tabs">
         <UiCardHeader><h2>主Tab固定容器</h2><p>到滚动顶部固定，换行后自动更新下层标题偏移。</p></UiCardHeader>
         <StickyTabs><div role="tablist" class="diag-tabs"><button class="active" role="tab" aria-selected="true">当前分区</button><button role="tab" aria-selected="false">长中文 English 分区名称</button></div></StickyTabs>
-        <div class="main gallery-detail-scroll"><DetailWorkspace v-model:collapsed="detailCollapsed" v-model:active-id="detailActive" label="样例分区导航" :sections="[{id:'gallery-section-one',label:'基础设置'},{id:'gallery-section-two',label:long?'较长中文 English 设置分区名称':'完整内容'}]"><template #header><strong>详情固定标题</strong><UiButton size="sm">样例操作</UiButton></template><section id="gallery-section-one" tabindex="-1"><h3>基础设置</h3><p>滚动与展开收起只改变视图。</p><div style="height:280px"></div></section><section id="gallery-section-two" tabindex="-1"><h3>完整内容</h3><p>点击锚点和手动滚动使用相同高亮。</p><div style="height:280px"></div></section></DetailWorkspace></div>
+        <div class="main gallery-detail-scroll"><DetailWorkspace v-model:collapsed="detailCollapsed" v-model:active-id="detailActive" label="样例分区导航" :sections="[{id:'gallery-section-one',label:'基础设置'},{id:'gallery-section-two',label:long?'较长中文 English 设置分区名称':'完整内容'}]"><template #primary><UiButton variant="primary">保存样例</UiButton></template><template #header><strong>详情固定标题</strong><UiButton size="sm">样例操作</UiButton></template><section id="gallery-section-one" tabindex="-1"><h3>基础设置</h3><p>滚动与展开收起只改变视图。</p><div style="height:280px"></div></section><section id="gallery-section-two" tabindex="-1"><h3>完整内容</h3><p>点击锚点和手动滚动使用相同高亮。</p><div style="height:280px"></div></section></DetailWorkspace></div>
       </UiCard>
       <UiCard id="buttons">
         <UiCardHeader>
@@ -91,7 +91,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
           <p>变体 API：variant / size / density / surface；loading 不改变宽度；禁用与焦点规则一致。</p>
         </UiCardHeader>
         <Inline>
-          <UiButton>默认</UiButton>
+          <UiButton><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M4 3h13l3 3v18H4zM8 3v6h8V3"/></svg><span>图文按钮</span></UiButton><UiButton>默认</UiButton>
           <UiButton variant="primary">主操作</UiButton>
           <UiButton variant="ghost">幽灵</UiButton>
           <UiButton variant="danger">危险</UiButton>
@@ -163,7 +163,7 @@ function setEffects(next: 'high' | 'mid' | 'low') {
         <p class="mono gallery-path" :title="longPath">{{ longPath }}</p>
       </UiCard>
       <UiCard id="model-picker"><UiCardHeader><h2>公共模型选择器</h2><p>真实组件的原生身份、渠道引用、未知能力、失效选择、明确推荐、读取失败与临时组合；下面的固定样例不连接服务。</p></UiCardHeader><Inline><UiSelectField v-model="pickerState" label="模型选择器样例状态" :options="pickerStates" /><UiButton @click="showPicker(false)">单选打样</UiButton><UiButton @click="showPicker(true)">多选与优先级打样</UiButton></Inline><p>返回：{{ galleryChoice.length?galleryChoice:'尚未确认' }}</p><ModelPicker :open="pickerOpen" :multiple="pickerMultiple" ordered reasoning :rows="pickerRows" :channels="pickerChannels" :current="galleryChoice" :recommendations="[{channelId:'primary',modelId:'model/3'},{nativeModelId:'gpt-native'}]" :loading="pickerState==='loading'" :error="pickerState==='error'?'固定读取失败样例，已选项保持':undefined" @close="pickerOpen=false" @confirm="galleryChoice=$event;pickerOpen=false" @retry="pickerState='normal'" /></UiCard>
-      <UiCard id="registration"><UiCardHeader><h2>规格与采用登记</h2><p>43项稳定ID对应真实源码。已有配方、实际组件、平台实现和原型专用说明分别记录；完整尺寸/主题/画质/原生验证尚未全部完成。</p></UiCardHeader><div class="gallery-registry-scroll"><table><thead><tr><th>组件</th><th>正式来源</th><th>实际消费者</th><th>检查状态</th></tr></thead><tbody><tr v-for="item in componentRegistry" :id="'entry-'+item.id" :key="item.id"><th scope="row">{{ item.name }}<small>{{ item.id }}</small><small>{{ item.specification.document }}</small></th><td><code v-for="file in item.implementations" :key="file">{{ file }}</code><span v-if="item.reason">{{ item.reason }}</span></td><td><code v-for="file in item.consumers" :key="file">{{ file }}</code></td><td>完整矩阵待验证{{ item.gallery?' · 有组件样例':' · 样例待补/原生独立核验' }}</td></tr></tbody></table></div></UiCard>
+      <UiCard id="registration"><UiCardHeader><h2>规格与采用登记</h2><p>43项稳定ID对应真实源码。已有配方、实际组件、平台实现和原型专用说明分别记录；来源及适用自动检查、未变原生基线和原型专用项分别列出；实屏结果由版本验收回执绑定源码。</p></UiCardHeader><div class="gallery-registry-scroll"><table><thead><tr><th>组件</th><th>正式来源</th><th>实际消费者</th><th>检查状态</th></tr></thead><tbody><tr v-for="item in componentRegistry" :id="'entry-'+item.id" :key="item.id"><th scope="row">{{ item.name }}<small>{{ item.id }}</small><small>{{ item.specification.document }}</small></th><td><code v-for="file in item.implementations" :key="file">{{ file }}</code><span v-if="item.reason">{{ item.reason }}</span></td><td><code v-for="file in item.consumers" :key="file">{{ file }}</code></td><td>{{ item.verification==='scoped_automated'?'来源/适用自动检查':item.verification==='baseline_native_reused'?'未变原生基线复用':'原型专用' }}<small>{{ item.verificationEvidence.boundary }}</small><code v-for="check in item.verificationEvidence.checks" :key="check">{{ check }}</code></td></tr></tbody></table></div></UiCard>
     </Stack></div></div>
   </main>
 </template>

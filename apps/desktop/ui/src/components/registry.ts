@@ -6,9 +6,9 @@ export interface ComponentRegistration {
  id:string;name:string;section:string;kind:'component'|'recipe'|'platform'|'prototype_only';
  implementations:string[];consumers:string[];gallery:string|null;
  specification:{document:string;componentId:string};
- verification:'pending_full_matrix';reason?:string;metrics?:Record<string,unknown>
+ verification:'scoped_automated'|'baseline_native_reused'|'prototype_only';verificationEvidence:{checks:string[];boundary:string;baseline?:string};reason?:string;metrics?:Record<string,unknown>
 }
-const entries:Array<Omit<ComponentRegistration,'specification'|'verification'>> = [
+const entries:Array<Omit<ComponentRegistration,'specification'|'verification'|'verificationEvidence'>> = [
  {"id":"brand.logo","name":"Logo与标识","section":"brand","kind":"platform","implementations":["components/BrandMark.vue"],"consumers":["components/AppSidebar.vue"],"gallery":"brand"},
  {"id":"brand.app-macos","name":"macOS应用图标","section":"app-icons","kind":"platform","implementations":["../tauri/icons/icon.icns"],"consumers":["../tauri/tauri.conf.json"],"gallery":"brand"},
  {"id":"brand.app-windows","name":"Windows应用图标","section":"app-icons","kind":"platform","implementations":["../tauri/icons/windows/icon.ico"],"consumers":["../tauri/tauri.conf.json"],"gallery":"brand"},
@@ -28,7 +28,7 @@ const entries:Array<Omit<ComponentRegistration,'specification'|'verification'>> 
  {"id":"field.input","name":"输入字段","section":"forms","kind":"recipe","implementations":["styles/base.css"],"consumers":["features/models/ChannelEditor.vue"],"gallery":"native-fields"},
  {"id":"field.textarea","name":"多行输入","section":"forms","kind":"recipe","implementations":["styles/base.css"],"consumers":["features/models/AgentPanel.vue"],"gallery":"native-fields"},
  {"id":"choice.checkbox","name":"复选/半选","section":"forms","kind":"recipe","implementations":["styles/base.css"],"consumers":["features/models/ModelPicker.vue"],"gallery":"native-fields"},
- {"id":"choice.radio","name":"单选","section":"forms","kind":"recipe","implementations":["styles/base.css"],"consumers":["features/models/BatchAgentDialog.vue"],"gallery":"native-fields"},
+ {"id":"choice.radio","name":"单选","section":"forms","kind":"recipe","implementations":["styles/base.css","components/ui/UiSegmented.vue"],"consumers":["features/models/BatchAgentDialog.vue","routes/SettingsRoute.vue"],"gallery":"native-fields"},
  {"id":"choice.switch","name":"开关","section":"forms","kind":"component","implementations":["components/ui/UiSwitch.vue"],"consumers":["routes/SettingsRoute.vue","features/models/ChannelModelTable.vue","features/models/ChannelsView.vue"],"gallery":"switches","metrics":{"track":"38 × 22","hitHeight":"28","states":["off","on","focus","disabled","busy"]}},
  {"id":"choice.slider","name":"滑杆","section":"forms","kind":"component","implementations":["components/ui/UiDiscreteSlider.vue"],"consumers":["features/models/ModelChoiceOptions.vue"],"gallery":"fields"},
  {"id":"choice.select","name":"选择与下拉","section":"menus-tabs","kind":"component","implementations":["components/ui/UiSelectField.vue","components/ui/UiSelectMenu.vue"],"consumers":["routes/SettingsRoute.vue","routes/ModelsRoute.vue"],"gallery":"fields"},
@@ -49,10 +49,33 @@ const entries:Array<Omit<ComponentRegistration,'specification'|'verification'>> 
  {"id":"platform.caption","name":"Windows标题栏","section":"windows","kind":"platform","implementations":["../tauri/src/infrastructure/window_appearance.rs"],"consumers":["../tauri/src/lib.rs"],"gallery":"platform-boundary"},
  {"id":"platform.tray","name":"托盘菜单","section":"tray","kind":"platform","implementations":["../tauri/src/modules/tray/mod.rs","../tauri/src/infrastructure/tray_controller.rs"],"consumers":["../tauri/src/lib.rs"],"gallery":"platform-boundary"},
  {"id":"pattern.setting","name":"设置行","section":"examples","kind":"component","implementations":["components/patterns/SettingRow.vue"],"consumers":["routes/SettingsRoute.vue"],"gallery":"settings"},
- {"id":"pattern.card","name":"卡片","section":"examples","kind":"component","implementations":["components/ui/UiCard.vue"],"consumers":["routes/OverviewRoute.vue","routes/ExtensionsRoute.vue"],"gallery":"cards"},
+ {"id":"pattern.card","name":"卡片","section":"examples","kind":"component","implementations":["components/ui/UiCard.vue","components/patterns/InformationRow.vue"],"consumers":["routes/OverviewRoute.vue","routes/ExtensionsRoute.vue"],"gallery":"cards"},
  {"id":"pattern.card-header","name":"卡片标题","section":"examples","kind":"component","implementations":["components/ui/UiCardHeader.vue"],"consumers":["routes/OverviewRoute.vue","routes/ExtensionsRoute.vue"],"gallery":"cards"},
  {"id":"overlay.modal-host","name":"应用Modal宿主","section":"overlays","kind":"component","implementations":["components/AppModal.vue","components/patterns/ModalContent.vue","components/patterns/modalContent.ts"],"consumers":["App.vue"],"gallery":"modal-content"},
 ]
+const nativeIds=new Set(['brand.app-macos','brand.app-windows','brand.tray-macos','brand.tray-windows','platform.caption','platform.tray'])
+const checkGroups:Record<string,string[]>={
+ 'content.markdown':['tests/markdown-content.test.ts'],
+ 'surface.recipe':['tests/page-surface-material.test.ts','tests/overlay-surfaces.test.ts'],
+ 'appearance.effects':['tests/effects.test.ts','tests/effects-runtime.test.ts'],
+ 'navigation.anchor':['tests/detail-workspace.test.ts'],
+ 'navigation.tabs':['tests/detail-workspace.test.ts','tests/page-surface-material.test.ts'],
+ 'choice.radio':['tests/ui021-public-patterns.test.ts','tests/effects.test.ts'],
+ 'choice.switch':['tests/ui-switch.test.ts'],
+ 'choice.slider':['tests/discrete-slider.test.ts'],
+ 'choice.select':['tests/select-menu.test.ts'],
+ 'menu.actions':['tests/select-menu.test.ts'],
+ 'data.tree':['tests/ui-tree-table.test.ts','tests/sync-object-tree.test.ts'],
+ 'model.selection':['tests/model-components.test.ts','tests/model-selection.test.ts'],
+ 'node.selection':['tests/model-node-picker.test.ts','tests/channel-node-select.test.ts'],
+ 'feedback.notification':['tests/notification-center.test.ts','tests/notification-actions.test.ts'],
+ 'overlay.modal-host':['tests/app-modal.test.ts'],
+ 'pattern.card':['tests/ui021-public-patterns.test.ts','tests/ui-components.test.ts'],
+}
 export const componentRegistry:ReadonlyArray<ComponentRegistration> = entries.map(entry=>({
- ...entry,specification:{document:'UI规范§34.1 / 组件与样式专题',componentId:entry.id},verification:'pending_full_matrix',
+ ...entry,specification:{document:'UI规范§34.1 / 组件与样式专题',componentId:entry.id},
+ verification:entry.kind==='prototype_only'?'prototype_only':nativeIds.has(entry.id)?'baseline_native_reused':'scoped_automated',
+ verificationEvidence:entry.kind==='prototype_only'?{checks:[],boundary:'原型专用说明不进入生产，登记不代表产品控件'}:nativeIds.has(entry.id)?{
+  checks:['tests/component-registry.test.ts'],baseline:'f1bbe7d996389097dcf6237a6bc65b7995d68190 / REL-11',boundary:'原生素材、托盘及caption源码未改；复用0.2.0固定证据，不把Gallery图像当原生验证'
+ }:{checks:['tests/component-inventory.test.mjs','tests/component-style-rules.test.ts','tests/consumer-style-contract.test.ts',...(checkGroups[entry.id]??['tests/ui-components.test.ts'])],boundary:'已覆盖来源、采用和适用自动检查；真实页面/亮暗/画质/缩放/平台结果按IMP-22中绑定源码SHA的验收回执判定，不宣称无限状态全矩阵通过'},
 }))

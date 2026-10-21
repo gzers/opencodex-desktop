@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {escapeHtml} from '@/lib/html'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, toRef } from 'vue'
+import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
 import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import DetailWorkspace from '@/components/layout/DetailWorkspace.vue'
@@ -48,8 +49,12 @@ watch(() => models.notificationTarget, async target => {
 const selectedTemplates = toRef(models.view,'selectedTemplates')
 const search = toRef(models.view,'templateSearch')
 const draft = computed(() => models.draft)
-const agentView=computed(()=>models.view.agentViews[models.draftSession]??=createAgentViewContext())
-const templateNavigation=computed(()=>models.view.navigation['template:'+models.draftSession]??={collapsed:false,activeId:'model-basic'})
+const editingTemplate=computed(()=>models.snapshot?.library.templates.find(t=>t.id===draft.value?.templateId))
+const editingRevisionLabel=computed(()=>{const revision=editingTemplate.value?.revisions.find(r=>r.id===draft.value?.baseRevision);return revision?versionLabel(revision):'新建未保存'})
+// Read back through the reactive store: returning the assignment expression
+// would cache the raw object during the first session and bypass nested updates.
+const agentView=computed(()=>{const key=models.draftSession;models.view.agentViews[key]??=createAgentViewContext();return models.view.agentViews[key]!})
+const templateNavigation=computed(()=>{const key='template:'+models.draftSession;models.view.navigation[key]??={collapsed:false,activeId:'model-basic'};return models.view.navigation[key]!})
 const templateSections=[{id:'model-basic',label:'基本信息'},{id:'model-matching',label:'匹配规则'},{id:'model-rules',label:'通用配置'},{id:'model-variants',label:'版本或后缀'},{id:'model-source',label:'来源与版本'}]
 const templates = computed(() => models.snapshot?.library.templates.filter(t => t.label.toLowerCase().includes(search.value.toLowerCase())) ?? [])
 const usage=ref<{templateId:string;revisionId:string}>()
@@ -149,20 +154,20 @@ function prepareDelete() {
 <template>
   <section ref="page" class="models-page">
     <AppTopbar />
-    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><div id="model-tabs-actions"></div></div></StickyTabs>
+    <StickyTabs><div class="model-tabs-line"><div class="model-tabs ext-tabs" role="tablist" aria-label="模型配置"><button class="tab" :class="{ active: tab === 'channels' }" role="tab" :aria-selected="tab === 'channels'" @click="tab = 'channels'">渠道模型</button><button class="tab" :class="{ active: tab === 'templates' }" role="tab" :aria-selected="tab === 'templates'" @click="tab = 'templates'">模型模版</button></div><div id="model-tabs-actions"></div><AgentExecutionField compact v-if="tab==='templates'&&!models.view.templateEditor" /></div></StickyTabs>
     <p v-if="models.error" class="model-error" role="alert">{{ models.error }}</p>
     <div v-if="!models.snapshot" class="model-empty"><p>{{ models.busy ? '正在读取模型配置…' : '模型配置读取未完成' }}</p><UiButton :disabled="models.busy" @click="models.load">重新读取</UiButton></div>
     <ChannelsView v-if="models.snapshot" v-show="tab==='channels'" :active="tab==='channels'" actions-target="#model-tabs-actions" />
     <template v-if="models.snapshot&&tab==='templates'&&(!draft||!models.view.templateEditor)">
       <div class="model-toolbar"><input class="input" v-model="search" type="search" placeholder="搜索模版" aria-label="搜索模版" /><div class="model-inline"><UiButton v-if="draft" @click="models.view.templateEditor=true">继续编辑</UiButton><UiButton @click="batchOpen=true">{{ selectedTemplates.length?'检查勾选更新':'检查全部更新' }}</UiButton><UiButton @click="externalOpen = true">外部任务</UiButton><UiButton variant="primary" @click="edit()">新建模版</UiButton></div></div>
-      <div class="model-table-scroll"><table class="model-table"><thead><tr><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
-        <td><label class="model-inline"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="`勾选${t.label}`" /><strong>{{ t.label }}</strong></label><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
+      <div class="model-table-scroll"><table class="model-table ui-table template-table"><colgroup><col class="ui-selection-col"/><col/><col class="template-version-col"/><col class="template-actions-col"/></colgroup><thead><tr><th class="ui-selection-cell"><span class="sr-only">选择</span></th><th>模版</th><th>版本</th><th>操作</th></tr></thead><tbody><tr v-for="t in templates" :key="t.id">
+        <td class="ui-selection-cell"><input v-model="selectedTemplates" type="checkbox" :value="t.id" :aria-label="'勾选'+t.label" /></td><td><div class="template-title"><strong>{{ t.label }}</strong><span class="tag">{{ t.source === 'builtin' ? '内置' : '自建' }}</span></div><small>{{ t.source === 'builtin' && current(t) === t.revisions[0] ? '内置基线' : current(t).changes.map(c => c.field).slice(0, 3).join('、') || '内容变更依据缺失' }}</small></td>
         <td><UiSelectField :model-value="current(t).id" :options="choices(t)" :label="`${t.label}保存版本`" size="sm" :disabled="versionLocked(t)" @update:model-value="chooseVersion(t,$event)" /></td>
-        <td><div class="model-inline"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton><UiButton size="sm" @click="usage={templateId:t.id,revisionId:current(t).id}">匹配与使用</UiButton></div></td>
+        <td><div class="ui-row-actions"><UiButton size="sm" :data-model-focus="'template:'+t.id" @click="edit(t, current(t).id)">编辑</UiButton><UiButton size="sm" @click="edit(t, current(t).id, true)">复制</UiButton><UiButton size="sm" @click="manage(t)">版本管理</UiButton><UiButton size="sm" @click="usage={templateId:t.id,revisionId:current(t).id}">匹配与使用</UiButton></div></td>
       </tr></tbody></table></div><p v-if="!templates.length" class="model-empty">没有匹配的模版</p>
     </template>
     <template v-if="models.snapshot&&tab==='templates'&&draft&&models.view.templateEditor">
-      <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
+      <DetailWorkspace v-model:collapsed="templateNavigation.collapsed" v-model:active-id="templateNavigation.activeId" label="模版导航" :sections="templateSections"><template #header><UiButton variant="ghost" @click="models.view.templateEditor=false">返回</UiButton><div class="model-identity"><div class="model-inline"><span class="tag">{{ editingTemplate?.source==='builtin'?'内置':'自建' }}</span><input v-model="draft.label" aria-label="模版名称" placeholder="模版名称" class="input model-name" :disabled="models.busy" /></div><small class="model-muted">编辑基于 {{ editingRevisionLabel }}</small></div><UiButton v-if="editingTemplate" size="sm" @click="manage(editingTemplate)">版本管理</UiButton><span class="tag">{{ models.dirty ? '未保存修改' : models.status || (draft.templateId ? '未修改' : '新建未保存') }}</span></template>
       <template #actions="{collapsed}">
        <UiButton class="model-editor-action" size="sm" aria-label="Agent自动填充" title="Agent自动填充" :disabled="models.busy" @click="openAgent" :aria-expanded="agentOpen" aria-controls="model-agent-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg><span v-if="!collapsed">Agent自动填充</span></UiButton>
        <UiButton class="model-editor-action" size="sm" aria-label="外部任务" title="外部任务" :disabled="models.busy" @click="externalOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7M21 3 10 14M10 5H4v15h15v-6"/></svg><span v-if="!collapsed">外部任务</span></UiButton>
@@ -171,8 +176,9 @@ function prepareDelete() {
        <UiButton class="model-editor-action" size="sm" aria-label="与版本比较" :title="compareTemplate?'比较当前缓冲与保存版本':'保存首版后可比较'" :disabled="!compareTemplate||models.busy" @click="compareOpen=true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M8 6H3v12h5M16 6h5v12h-5"/></svg><span v-if="!collapsed">与版本比较</span></UiButton>
        <UiButton class="model-editor-action" size="sm" variant="ghost" aria-label="还原修改" title="还原修改" :disabled="!models.dirty||models.busy" @click="restoreTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9a8 8 0 1 1 0 7M4 3v6h6"/></svg><span v-if="!collapsed">还原修改</span></UiButton>
        <UiButton v-if="!draft.templateId" class="model-editor-action" size="sm" variant="ghost" aria-label="取消新建" title="放弃当前未保存的新建模版" :disabled="models.busy" @click="cancelNewTemplate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg><span v-if="!collapsed">取消新建</span></UiButton>
-       <UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton>
+
       </template>
+      <template #primary="{collapsed}"><UiButton class="model-editor-action" size="sm" variant="primary" aria-label="保存" title="保存" :loading="models.busy" :disabled="!models.dirty&&!!draft.templateId" @click="models.save"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 3h13l3 3v15H4zM8 3v6h8V3M8 21v-8h8v8"/></svg><span v-if="!collapsed">保存</span></UiButton></template>
       <div class="model-form">
         <section id="model-basic" tabindex="-1"><h2>基本信息</h2><label>说明<textarea class="input" v-model="draft.content.description" rows="3" :disabled="models.busy" /></label><label class="model-inline"><input type="checkbox" :checked="draft.content.lockedFields.includes('description')" :disabled="models.busy" @change="contentLock('description')" />锁定说明</label></section>
         <section id="model-matching" tabindex="-1"><h2>匹配规则</h2><div v-for="kind in (['include','exclude'] as const)" :key="kind"><div class="model-field-title"><strong>{{ kind === 'include' ? '包含' : '排除' }}</strong><UiButton size="sm" :disabled="models.busy" @click="draft.content.matching[kind].push({ kind: 'prefix', value: '' })">添加规则</UiButton></div>
@@ -203,7 +209,7 @@ function prepareDelete() {
   </section>
 </template>
 <style>
-.model-tabs{display:flex;align-items:center;gap:var(--space-2);border-bottom:1px solid var(--border);padding:10px 0}
+.model-tabs{display:flex;align-items:center;gap:var(--space-2);padding:10px 0}
 .model-tabs{position:static;min-height:48px;background:transparent}
 .model-tabs-line{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap}
 .model-policy-actions{justify-content:flex-end;padding:6px 0}
@@ -213,16 +219,15 @@ function prepareDelete() {
 .model-policy-state[data-tone=success]{color:var(--green)}
 .model-source-record{padding:10px 0}.model-source-record p{white-space:pre-wrap;overflow-wrap:anywhere}
 .model-editor-action{width:100%}.model-editor-action svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
-.model-name{flex:1;min-width:160px;font-weight:650}
+.model-name{flex:1;min-width:120px;font-weight:var(--weight-semibold)}.model-identity{flex:1;min-width:180px}
 .model-toolbar{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin:20px 0;flex-wrap:wrap}
 .model-toolbar input{flex:1;max-width:360px;min-width:180px}
 .model-table-scroll{overflow-x:auto}
 .model-table{width:100%;border-collapse:collapse}
 .model-table th{color:var(--muted);font-weight:500;text-align:left}
 .model-table th,.model-table td{padding:14px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
-.model-table td:first-child{min-width:140px}
-.model-table td:nth-child(2){min-width:250px}
-.model-table .tag{margin-left:8px}
+.template-title{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap}.template-table{min-width:740px}.template-version-col{width:270px}.template-actions-col{width:300px}
+.model-table .tag{margin-left:0}
 .model-table small,.model-version small{display:block;margin-top:5px;color:var(--muted)}
 .model-inline{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2)}
 .model-form{display:grid;gap:20px}

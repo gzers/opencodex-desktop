@@ -21,6 +21,18 @@ function fixture(zoom=1,reflowShift=0){
  return{wrapper,main,header}
 }
 describe('shared continuous detail workspace',()=>{
+ it('reveals a zoom-constrained workspace without repeatedly scrolling past its sticky boundary',()=>{
+  const{wrapper,main}=fixture(2),nav=wrapper.get('.detail-navigation').element as HTMLElement
+  Object.defineProperty(wrapper.get('.detail-collapse').element,'offsetHeight',{value:28})
+  nav.style.top='50px';nav.getBoundingClientRect=()=>({top:1200-main.scrollTop*2} as DOMRect)
+  window.dispatchEvent(new Event('resize'));drain()
+  expect(main.scrollTop).toBe(46)
+  expect(Number.parseFloat((wrapper.get('.detail-workspace').element as HTMLElement).style.getPropertyValue('--detail-navigation-height'))).toBe(84)
+  main.getBoundingClientRect=()=>({top:100,bottom:200,height:1200} as DOMRect)
+  nav.getBoundingClientRect=()=>({top:200} as DOMRect)
+  const before=main.scrollTop;window.dispatchEvent(new Event('resize'));drain()
+  expect(main.scrollTop).toBe(before);wrapper.unmount()
+ })
  it('positions an anchor below both fixed layers under UI scaling and tracks manual scroll without changing fields',async()=>{
   const{wrapper,main}=fixture(2)
   await wrapper.get('a[href="#second"]').trigger('click');await flushPromises();drain()

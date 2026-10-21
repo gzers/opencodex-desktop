@@ -25,6 +25,7 @@ onBeforeUnmount(() => { observer?.disconnect(); for(const key of ['height','inse
 <template><div ref="bar" class="sticky-page-tabs"><slot /></div></template>
 <style scoped>
 .sticky-page-tabs { position: sticky; top: calc(-1 * var(--page-tabs-inset-top,0px)); margin-inline-start: calc(-1 * var(--page-tabs-inset-left,0px)); margin-inline-end: calc(-1 * var(--page-tabs-inset-right,0px)); padding-inline-start: var(--page-tabs-inset-left,0px); padding-inline-end: var(--page-tabs-inset-right,0px); z-index: var(--z-sticky); background: var(--surface-sticky-bg, var(--surface-panel-bg)); backdrop-filter: var(--surface-sticky-blur); -webkit-backdrop-filter: var(--surface-sticky-blur); }
-.sticky-page-tabs :deep([role=tablist]) { margin-top: 0; margin-bottom: 0; }
+.sticky-page-tabs { border-bottom: 1px solid var(--border); }
+.sticky-page-tabs :deep([role=tablist]) { margin-top: 0; margin-bottom: 0; border-bottom-color: transparent; }
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) { .sticky-page-tabs { background: var(--panel); } }
 </style>

@@ -1,6 +1,13 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
 import {assertModelSandbox,assertModelExportPath,parseTaskContent,verifyWindowsModelUi} from './windows-model-ui.mjs'
+import {overviewScene} from './windows-ui-alignment.mjs'
+test('overview accepts either complete cards or the real settled setup gate, never an empty or partial page',()=>{
+ assert.equal(overviewScene(Array(6).fill({}),{}),'ready')
+ assert.equal(overviewScene([],{present:true,settled:true,checks:3}),'environment-gated')
+ for(const gate of [{},{present:true,settled:false,checks:3},{present:true,settled:true,checks:0}])assert.throws(()=>overviewScene([],gate))
+ assert.throws(()=>overviewScene([{}],{present:true,settled:true,checks:3}))
+})
 const root='C:\\runner\\owned-sandbox',facts={about:{platform:'Windows'},dataRoot:{currentDataRoot:root,activeDataRoot:root,runtimeActive:true}}
 test('writes require the exact admitted immutable and saved sandbox, never a relative root or another account directory',()=>{
  assert.doesNotThrow(()=>assertModelSandbox(facts,root.toUpperCase()))
