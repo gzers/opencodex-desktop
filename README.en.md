@@ -5,7 +5,7 @@
 <h1 align="center">OpenCodeX Desktop</h1>
 
 <p align="center">
-  Discovery, process control, status observation, configuration migration, sync, and extension management for OpenCodex — in a desktop GUI instead of a terminal.
+  Discovery, process control, status observation, model configuration, sync, and extension management for OpenCodex — in a desktop GUI instead of a terminal.
 </p>
 
 <p align="center">
@@ -126,10 +126,11 @@ open "/Applications/OpenCodeX Desktop.app"
 4. **Panel**: switch to *Panel* to view the official web panel (requires OpenCodex to be running).
 5. **Diagnostics**: a read-only `ocx doctor` summary, logs (app log / call log, secrets masked), and notification history.
 6. **Extensions**: manage **Skills** and **MCP** with distribution to six clients (Codex, Claude, Gemini, Grok, Opencode, Hermes); backup before write, atomic replace, per-client connect/disconnect.
-7. **Migration and sync**: full export into a passphrase-protected encrypted container; WebDAV sync encrypts locally before upload, backs up before overwrite, and queues conflicts instead of overwriting silently.
-8. **Data directory**: choose or switch the data root and `OPENCODEX_HOME` (reference-first, migration optional, rollback on failure).
-9. **Tray and menus**: status is expressed through tray icon and colour, plus native macOS menu entries.
-10. **Optional CLI control plane**: enabling it registers `ocxd`, which delegates to the running instance over local IPC; **off by default**.
+7. **Model configuration**: keep channel models, nodes, per-model rules and ordering in a draft. Save template edits as new versions; default selection, adoption and runtime save are separate confirmations. The assistant uses a configured execution model, and external tasks copy their instructions and contract together.
+8. **Migration and sync**: select templates, channels, models, families or manager objects, then compare before adopting. Credentials require encrypted content. Only supported account information transfers; sign in again on a new device. WebDAV backs up before overwrite and preserves conflicts for review.
+9. **Data directory**: choose or switch the data root and `OPENCODEX_HOME` (reference-first, migration optional, rollback on failure).
+10. **Tray and menus**: status is expressed through tray icon and colour, plus native macOS menu entries.
+11. **Optional CLI control plane**: enabling it registers `ocxd`, which delegates to the running instance over local IPC; **off by default**.
 
 
 ### Configuration files and settings
@@ -169,6 +170,8 @@ Test isolation: development and automated tests run under a separate sandbox ide
 | **Logs and diagnostics** | Read-only logs with masked secrets; read-only `ocx doctor` summary; states clearly when live logs are unavailable |
 | **Official panel** | Hosts the official web panel in a runtime child WebView — no restyling, no injection, and the official assets are not bundled |
 | **Notification center** | Shares one data source with *Diagnostics → Notification history*; detail dialog and per-item deletion |
+| **Model configuration** | Channels and immutable template versions, exact adoption, inherited fields, nodes and two-level ordering; compare, back up and read back before completing a runtime save |
+| **Template assistant** | Local execution settings, public sources and iterative correction; accept fields into the buffer. Scoped external tasks validate baselines/locks and save candidates without automatic adoption or runtime application |
 | **Configuration migration** | Full export into a **passphrase-protected encrypted container**; validate, back up automatically, confirm explicitly, roll back on failure |
 | **WebDAV sync** | Stores configuration payloads and integrity metadata on a trusted HTTPS service; credentials remain in the OS credential store. Backs up before overwrite and requires conflict confirmation. File export containers are separately passphrase-encrypted |
 | **Extension management** | Skills discovery/import/update/uninstall/restore; MCP import/add/edit/delete; multi-client targets |
@@ -182,7 +185,7 @@ Test isolation: development and automated tests run under a separate sandbox ide
 - It does not rewrite the OpenCodex core and does not bypass the official API.
 - It does not take over npm or replace the official `ocx update` transaction.
 - It does not take over `codex-shim`, and does not install or manage launchd.
-- It **never writes OpenCodex core runtime configuration** such as providers, routing, or model mappings — those always go through the official CLI.
+- Model configuration submits provider, routing and model-mapping changes through the official CLI, with comparison, budget validation, backup and readback. The manager template library, draft and runtime configuration retain separate ownership.
 - It never silently overwrites configuration owned by an external provider; it detects, explains, and guides the user through the official `restore`.
 - No credential may enter the repository, Markdown, logs, command-line arguments, or unencrypted files.
 - The WebDAV remote is always treated as **untrusted**; TLS validation failures are rejected by default, with **no "ignore certificate" option**.
@@ -266,7 +269,7 @@ Use software-update settings to check manually and inspect the error and network
 ```text
 ┌─────────────────────────────────────────────┐
 │ Frontend (Vue 3 + TypeScript)                 │
-│ Overview / Panel / Extensions / Logs / Settings / Tray │
+│ Overview / Panel / Models / Sync / Extensions / Diagnostics / Settings / Tray │
 └──────────────────┬──────────────────────────┘
                    │ Tauri IPC commands
 ┌──────────────────▼──────────────────────────┐
@@ -350,7 +353,7 @@ git tag vX.Y.Z
 git push origin vX.Y.Z
 ```
 
-Pushing a `v*` tag triggers `.github/workflows/release.yml`: it extracts the version section from `CHANGELOG.md`, then `tauri-action` builds and creates the Release (**draft + pre-release by default**; un-draft manually once verified).
+Pushing a version tag triggers the Release workflow: it extracts the matching changelog, builds signed updater assets and creates a draft prerelease. Windows verifies the actual installers on an ephemeral runner. After checking the artifacts, run Publish Release with the version tag and choose stable or preserve-latest; the publisher verifies signatures, makes the release public and checks the anonymous manifest.
 
 ### Branch model
 
@@ -367,7 +370,7 @@ When documenting implementation status, only reference the implementation branch
 
 - Public test versions exist; Releases Latest identifies the actual stable delivery. Candidate branches and draft Releases do not count as public publication.
 - Requirements, prototype, and implementation contracts are finalized and passed the review gates; all 13 capability domains are implemented, with multiple rounds of real-device acceptance on macOS.
-- **Known limitations**: no formal OS code signing or Apple notarization; Intel macOS builds are disabled; Windows CLI remains disabled. Release records retain unverified update, native and scheduling scenarios and accepted resource exceptions.
+- **Known limitations**: no formal OS code signing or Apple notarization; Intel macOS builds and Windows CLI are disabled. Account transfer includes only supported information. The current full-runtime catalog budget is 100 rows; exceeding it blocks writes and preserves drafts. Unsupported Responses/Anthropic advanced reasoning constraints on OpenCodex2.84.0 are rejected before writes. A runtime save does not prove that Codex loaded it; use the client-check entry. Historical unverified scenarios and resource exceptions keep their original release dispositions.
 
 ---
 
