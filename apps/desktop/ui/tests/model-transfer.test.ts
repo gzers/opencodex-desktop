@@ -5,6 +5,7 @@ import { defineComponent } from 'vue'
 import ModelTransfer from '@/features/sync/ModelTransfer.vue'
 import { modelTransferApi, scopeFor, remoteScope, type ModelPackage } from '@/features/sync/modelTransfer'
 import UiSelectField from '@/components/ui/UiSelectField.vue'
+import ObjectScopeTree from '@/features/sync/ObjectScopeTree.vue'
 import { useModelsStore } from '@/features/models/store'
 import { emptyContent, emptyRules, type ChannelPolicy, type ModelSnapshot } from '@/features/models/api'
 vi.mock('@tauri-apps/plugin-dialog', () => ({ open: vi.fn().mockResolvedValue('/fixture/models.json') }))
@@ -33,10 +34,19 @@ describe('model transfer review', () => {
     expect(wrapper.find('.sync-scope-credentials').exists()).toBe(true)
     const save=()=>wrapper.findAll('button').find(b=>b.text()==='保存本机范围')!
     expect(save().attributes('disabled')).toBeDefined()
+    expect(wrapper.get('input[aria-label="导出保护口令"]').attributes('disabled')).toBeDefined()
     expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled();expect(modelTransferApi.saveRemoteScope).not.toHaveBeenCalled()
     resolve({templateIds:[],channelIds:[],includeGlobal:false,preferences:true,extensions:false,includeKeys:false});await flushPromises()
     expect(save().attributes('disabled')).toBeUndefined();expect(modelTransferApi.prepareUpload).not.toHaveBeenCalled()
     wrapper.unmount()
+  })
+  it('preserves explicit file selections after an initially failed catalogue is recovered, without applying all by surprise',async()=>{
+    vi.mocked(modelTransferApi.channelCatalog).mockRejectedValueOnce({message:'目录读取失败'}).mockResolvedValue([])
+    const wrapper=render();await flushPromises();await chooseExport(wrapper,'测试族')
+    const before=[...wrapper.getComponent(ObjectScopeTree).props('selectedIds')]
+    await wrapper.findAll('button').find(b=>b.text()==='重新读取范围目录')!.trigger('click');await flushPromises()
+    expect(wrapper.getComponent(ObjectScopeTree).props('selectedIds')).toEqual(before)
+    expect(wrapper.text()).not.toContain('目录读取失败');expect(modelTransferApi.prepare).not.toHaveBeenCalled();wrapper.unmount()
   })
   it('does not overwrite an unreadable saved WebDAV scope with initial defaults; an explicit reload can recover',async()=>{
     vi.mocked(modelTransferApi.loadRemoteScope).mockRejectedValue({message:'范围读取失败'})
