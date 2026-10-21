@@ -24,7 +24,7 @@ const channelCatalog=ref<ChannelPolicy[]|null>(null);const channelError=ref('')
 const savedChannels=computed(()=>exportSource.value==='draft'?(models.channelDraft?.channels??[]):channelCatalog.value??models.snapshot?.policy.channels??[])
 const versions = ref<Record<string,string>>({})
 const includeGlobal = ref(false)
-const selectionOpen = ref(false)
+const selectionOpen = ref(true)
 const filePlan = ref<FilePlan | null>(null)
 const upload = ref<UploadPlan | null>(null)
 const incoming = ref<IncomingPlan | null>(null)
@@ -98,6 +98,7 @@ function updateReceiveKeys(keys:string[]){
  receivePreferences.value=ids('manager').includes('preferences');receiveExtensions.value=ids('manager').includes('extensions');receiveEndpoints.value=ids('endpoints');receiveAccounts.value=ids('accounts');receiveRefs.value=ids('templates');receiveChannels.value=ids('channels');receiveSkills.value=ids('skills');receiveMcps.value=ids('mcps');receiveDirty.value=true;
 }
 const selectedCredentialKinds=computed(()=>[...(exportKeys.value?['渠道认证（'+keyChannelIds.value.length+'个渠道）']:[]),...(hasAssets.value&&extensionCredentials.value?['所选扩展授权']:[]),...(!props.remote&&managerWebdav.value&&activeWebdav.value&&webdavPasswords.value?['WebDAV连接密码']:[])])
+watch(()=>JSON.stringify([templateIds.value,channelIds.value,channelModels.value,channelFamilies.value,includeGlobal.value,versions.value,accountIds.value,managerPreferences.value,managerExtensions.value,exportKeys.value,skillNames.value,mcpNames.value,extensionCredentials.value,allTemplates.value,allChannels.value,allSkills.value,allMcps.value]),()=>{scopeSaved.value=false},{flush:'sync'})
 const scopePreset=ref('custom');const catalogueLoading=ref(false);let fileScopeInitialized=false
 function updateScopeKeys(keys:string[]){
  const previous=new Set(scopeKeys.value);const next=new Set(keys);const changed=new Set([...previous,...next].filter(k=>previous.has(k)!==next.has(k)).map(k=>(JSON.parse(k) as [string,string])[0]))
@@ -117,7 +118,7 @@ function applyScopePreset(value:string){
  allTemplates.value=false;allChannels.value=false;allSkills.value=false;allMcps.value=false;exportKeys.value=value==='move';extensionCredentials.value=value==='move';assetsReviewed.value=false;
 }
 
-onMounted(() => { if (!models.snapshot) void models.load();if(!props.remote)void getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else void loadScope();void loadAssets() })
+onMounted(async () => { if (!models.snapshot) await models.load();if(!props.remote)await getSyncConfig().then(config=>{activeWebdav.value=!!config.endpoint}).catch(()=>{});else await loadScope();await begin() })
 async function loadAssets(){try{const catalog=await modelTransferApi.extensionCatalog();if(!catalog||!Array.isArray(catalog.skills)||!Array.isArray(catalog.mcps)||![...catalog.skills,...catalog.mcps].every(name=>typeof name==='string'))throw {message:'扩展目录返回结构无效，请重新读取；未扩大配置范围'};assetCatalog.value=catalog;assetError.value=''}catch(cause){assetError.value=errorText(cause)}}
 function assetScope(){return hasAssets.value?{skillNames:skillNames.value,mcpNames:mcpNames.value,extensionCredentials:extensionCredentials.value,assetsReviewed:assetsReviewed.value}:{}}
 function remoteOptions(){return {...(accountIds.value.length?{accountIds:accountIds.value}:{}),preferences:managerPreferences.value,extensions:managerExtensions.value,includeKeys:exportKeys.value,...assetScope(),...(allTemplates.value||allChannels.value||allSkills.value||allMcps.value?{allTemplates:allTemplates.value,allChannels:allChannels.value,allSkills:allSkills.value,allMcps:allMcps.value}:{}),passphrase:exportPassword.value||undefined}}
@@ -131,7 +132,7 @@ async function perform(action: () => Promise<void>) {
 }
 async function begin() {
  if(catalogueLoading.value)return
- selectionOpen.value=true;exportedPath.value='';error.value='';accountError.value='';channelError.value='';catalogueLoading.value=true
+ selectionOpen.value=true;accountError.value='';channelError.value='';catalogueLoading.value=true
  try {await Promise.all([modelTransferApi.channelCatalog().then(items=>{channelCatalog.value=items}).catch(cause=>{channelError.value=errorText(cause)}),modelTransferApi.accountCatalog().then(items=>{accountCatalog.value=items}).catch(cause=>{accountError.value=errorText(cause)}),loadAssets()]);if(!props.remote&&!fileScopeInitialized&&selectionOpen.value&&!channelError.value&&!accountError.value&&!assetError.value){applyScopePreset('all');fileScopeInitialized=true}}finally{catalogueLoading.value=false}
 }
 async function prepare() {
@@ -225,32 +226,33 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
   <article class="card model-transfer">
     <div class="card-head"><div><h2>{{ remote ? '配置同步 · WebDAV' : '文件同步' }}</h2><p>{{ remote ? '本设备范围同时约束上传和接收；下载后比较并采用。' : '导入导出管理器配置和模型；模型采用后进入本机草稿。' }}</p></div></div>
     <p v-if="models.error && !models.snapshot" class="model-error" role="alert">{{ models.error }}</p>
-    <p v-if="error && !selectionOpen && !preview" class="model-error" role="alert">{{ error }}</p>
-    <div class="controls"><UiButton :disabled="busy || !models.snapshot" @click="begin">{{ remote ? '选择本设备范围' : '导出配置' }}</UiButton><UiButton :loading="busy" @click="receive">{{ remote ? '下载并比较' : '导入配置' }}</UiButton><UiButton v-if="!remote" variant="ghost" :disabled="busy" @click="restoreIncoming">恢复上次接收</UiButton><UiButton v-else variant="ghost" :disabled="busy" @click="restoreUpload">查看原上传计划</UiButton><UiButton variant="ghost" @click="models.load">重新读取</UiButton></div><p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传。</p>
+    <p v-if="error && !preview" class="model-error" role="alert">{{ error }}</p>
+    <div class="controls"><UiButton variant="primary" :disabled="busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(!remote&&((exportSource==='draft'&&!channelIds.length)||(requiresPassword&&!exportPassword)||(hasAssets&&!assetsReviewed)))" @click="remote?saveRemoteScope():prepare()">{{ remote ? '保存本机范围' : '导出配置' }}</UiButton><UiButton v-if="remote" :disabled="busy||!models.snapshot||catalogueLoading||!hasScope||!familyScopesValid||(requiresPassword&&!exportPassword)||(hasAssets&&!assetsReviewed)" @click="prepare">预览上传</UiButton><UiButton :loading="busy" @click="receive">{{ remote ? '下载并比较' : '导入配置' }}</UiButton><UiButton v-if="!remote" variant="ghost" :disabled="busy" @click="restoreIncoming">恢复上次接收</UiButton><UiButton v-else variant="ghost" :disabled="busy" @click="restoreUpload">查看原上传计划</UiButton><UiButton variant="ghost" :disabled="busy||catalogueLoading" @click="begin">重新读取范围目录</UiButton></div><p v-if="remote&&scopeSaved" role="status">本设备范围已保存，尚未上传；采用结果另行核对。</p>
     <div v-if="exportedPath" class="model-transfer-path"><span>导出文件</span><code>{{ exportedPath }}</code><UiButton size="sm" variant="ghost" @click="app.openManagedPathByKey('exports')">打开导出目录</UiButton></div>
-    <UiDialog :open="selectionOpen" :title="remote ? '本设备配置同步范围' : '选择配置导出范围'" :busy="busy" wide @close="selectionOpen = false">
+    <section class="sync-scope-workspace" aria-label="同步范围"><div class="sync-scope-objects">
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
-      <UiSelectField v-if="!remote" :model-value="exportSource" label="导出来源" :disabled="busy||catalogueLoading" :options="[{value:'saved',label:'已提交配置'},{value:'draft',label:'渠道工作区草稿 · 未提交候选'}]" @update:model-value="setExportSource" />
+      <div class="sync-scope-controls">      <UiSelectField v-if="!remote" :model-value="exportSource" label="导出来源" :disabled="busy||catalogueLoading" :options="[{value:'saved',label:'已提交配置'},{value:'draft',label:'渠道工作区草稿 · 未提交候选'}]" @update:model-value="setExportSource" />
       <p v-if="exportSource==='draft'">未提交草稿候选：仅含明确选择的渠道草稿和精确模版依赖，不携带凭据。</p>
       <UiSelectField :model-value="scopePreset" label="配置范围预设" :options="[{value:'all',label:'全部配置'},{value:'share',label:'分享配置 · 不含凭据'},{value:'move',label:'换设备 · 含可转移凭据'},{value:'custom',label:'自定义范围'}]" :disabled="busy||catalogueLoading" @update:model-value="applyScopePreset" />
+</div>
       <p v-if="catalogueLoading" role="status">正在读取已保存配置对象…</p><p v-for="message in [assetError,accountError,channelError].filter(Boolean)" :key="message" class="model-error" role="alert">{{ message }}</p>
       <label v-if="accountCatalog.length&&exportSource!=='draft'">账户平台<UiSelectField v-model="accountPlatform" label="账户平台筛选" :options="[{value:'all',label:'全部平台'},...Object.entries(accountPlatforms).map(([value,label])=>({value,label})),{value:'legacy',label:'旧格式 · 来源未登记'}]" :disabled="busy||catalogueLoading" /></label>
-      <ObjectScopeTree :objects="scopeObjects" :selected-ids="scopeKeys" label="导出配置对象" :disabled="busy||catalogueLoading" @update:selected-ids="updateScopeKeys"><template #options="{object}">
+      <ObjectScopeTree :objects="scopeObjects" :selected-ids="scopeKeys" label="导出配置对象" :disabled="busy||catalogueLoading" @update:selected-ids="updateScopeKeys"><template #actions><UiButton size="sm" variant="ghost" :disabled="busy||catalogueLoading" @click="updateScopeKeys([])">清空选择</UiButton></template><template #options="{object}">
        <template v-if="object.category==='accounts'"><details v-for="account in scopeAccounts(object.id)" :key="account.id"><summary>账户详情与同步选项</summary><dl><dt>管理方</dt><dd>{{ account.origin?.owner==='opencodex'?'OpenCodex账户池':account.origin?.owner??'旧格式 · 来源未登记' }}</dd><dt>来源账户</dt><dd>{{ account.origin?.sourceAccountId??account.id }}</dd><dt>授权主体</dt><dd>{{ account.subject??'未提供；保留独立记录' }}</dd><dt>账户 / 组织</dt><dd>{{ account.origin?.tenant??'未提供' }}</dd></dl><label><input type="checkbox" :checked="accountInformationSupported(account)" disabled />仅账户信息</label><label><input type="checkbox" disabled />同步登录状态</label><p>{{ accountTransferLabel(account.provider) }}</p></details></template>
        <UiSelectField v-if="object.category==='templates'&&!remote" :model-value="versions[JSON.parse(object.id)[1]]??models.snapshot!.library.templates.find(t=>t.id===JSON.parse(object.id)[1])!.revisions.at(-1)!.id" :options="[...models.snapshot!.library.templates.find(t=>t.id===JSON.parse(object.id)[1])!.revisions].reverse().map(r=>({value:r.id,label:versionLabel(r)}))" :label="object.label+'导出版本'" :disabled="busy||!scopeKeys.includes(object.id)" @update:model-value="versions[JSON.parse(object.id)[1]]=$event" />
        <ChannelModelScope v-if="object.category==='channels'&&scopeKeys.includes(object.id)" :label="object.label" :models="sourceModels(JSON.parse(object.id)[1])" :families="sourceFamilies(JSON.parse(object.id)[1])" :family-scope="channelFamilies[JSON.parse(object.id)[1]]" @update:family-scope="setFamilyScope(JSON.parse(object.id)[1],$event)" :selected="channelModels[JSON.parse(object.id)[1]]" :disabled="busy||catalogueLoading" @update:selected="setModelScope(JSON.parse(object.id)[1],$event)" />
        <details v-if="object.id===scopeKey('manager','webdav')&&managerWebdav"><summary>同步选项</summary><label><input v-model="webdavPasswords" type="checkbox" :disabled="busy" />包含连接密码</label></details>
       </template></ObjectScopeTree>
+      </div><aside class="sync-scope-credentials" aria-label="其他凭据与同步选项"><h3>其他凭据与同步选项</h3>
       <details v-if="remote"><summary>后续新增对象</summary><label><input v-model="allTemplates" type="checkbox" :disabled="busy" />全部模版（含后续新增）</label><label><input v-model="allChannels" type="checkbox" :disabled="busy" />全部已保存渠道（含后续新增）</label><label><input v-model="allSkills" type="checkbox" :disabled="busy" />全部Skill（含后续新增）</label><label><input v-model="allMcps" type="checkbox" :disabled="busy" />全部MCP（含后续新增）</label></details>
       <UiButton v-if="exportSource!=='draft'" size="sm" :disabled="busy" @click="loadAssets">读取扩展目录</UiButton><p v-if="selectedCredentialKinds.length" class="model-muted" role="status">受保护部分：{{ selectedCredentialKinds.join('、') }}；须独立口令加密。</p>
       <div v-if="hasAssets"><label><input v-model="extensionCredentials" type="checkbox" :disabled="busy" />携带所选扩展凭据（独立口令保护）</label><label><input v-model="assetsReviewed" type="checkbox" :disabled="busy" />已检查所选Skill自定义文本、资源及MCP自定义字段</label></div>
       <label><input v-model="includeGlobal" type="checkbox" :disabled="busy" />全局采用及渠道组顺序</label>
-      <label>{{ remote?'配置同步保护口令（可选，与连接密码独立）':'文件保护口令（可选）' }}<input v-model="exportPassword" class="input" type="password" autocomplete="new-password" :disabled="busy" placeholder="留空使用完整性校验" /></label>
+      <label>{{ remote?'配置同步保护口令（可选，与连接密码独立）':'文件保护口令（可选）' }}<input v-model="exportPassword" aria-label="导出保护口令" class="input" type="password" autocomplete="new-password" :disabled="busy" placeholder="留空使用完整性校验" /></label>
       <p v-if="exportKeys">仅携带Key认证渠道的完整认证配置；OAuth与转发渠道的登录材料由账户适配处理。</p>
       <label v-if="exportSource!=='draft'"><input v-model="exportKeys" type="checkbox" :disabled="busy||!keyChannelIds.length" />携带所选渠道的Key池与认证配置（须设置独立口令）</label>
-      <template #actions><UiButton v-if="remote" :disabled="!hasScope||!familyScopesValid||busy" @click="saveRemoteScope">仅保存范围</UiButton><UiButton variant="primary" :disabled="catalogueLoading||!hasScope||!familyScopesValid||(exportSource==='draft'&&!channelIds.length)||(requiresPassword&&!exportPassword)||(hasAssets&&!assetsReviewed)" :loading="busy" @click="prepare">预览清单</UiButton></template>
-    </UiDialog>
-    <UiDialog :open="!!preview" :title="incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认配置导出'" :busy="busy" wide @close="closePreview">
+      </aside></section>
+    <UiDialog class="transfer-review" :open="!!preview" :title="incoming ? '比较配置文件' : remote ? '确认配置上传' : '确认配置导出'" :busy="busy" wide @close="closePreview">
       <p v-if="error" class="model-error" role="alert">{{ error }}</p>
       <p v-if="preview?.payload.candidate" role="status">未提交草稿候选；采用后仍进入本机工作区，须另行预览并保存，不表示运行配置已写入。</p>
       <p v-if="filePlan">文件保护：{{ filePlan.protected?'独立口令加密':'未加密，完整性校验' }}</p>
@@ -269,8 +271,8 @@ function closePreview() { if (!busy.value) { incoming.value = null;incomingSourc
       </template>
       <template #actions><UiButton v-if="upload?.phase === 'published'||incoming?.adoption?.completed" variant="primary" @click="closePreview">完成</UiButton><UiButton v-else variant="primary" :loading="busy" :disabled="!!incoming&&(receiveDirty||!!incoming.previewError)" @click="confirm">{{ incoming ? incoming.adoption?'核对原导入':'采用到本机' : remote ? (upload?.phase === 'prepared' ? '确认上传' : '核对原上传') : '生成导出文件' }}</UiButton></template>
     </UiDialog>
-    <UiDialog :open="passwordOpen" :title="remoteUnlock?'读取受保护同步快照':'打开受保护配置文件'" :busy="busy" @close="passwordOpen=false;importPassword=''">
-      <label>文件保护口令<input v-model="importPassword" class="input" type="password" autocomplete="off" :disabled="busy" /></label><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton variant="primary" :disabled="!importPassword" :loading="busy" @click="unlockFile">解密并比较</UiButton></template>
+    <UiDialog class="transfer-password" :open="passwordOpen" :title="remoteUnlock?'读取受保护同步快照':'打开受保护配置文件'" :busy="busy" @close="passwordOpen=false;importPassword=''">
+      <label>文件保护口令<input v-model="importPassword" aria-label="导入解密口令" class="input" type="password" autocomplete="off" :disabled="busy" /></label><p v-if="error" class="model-error" role="alert">{{ error }}</p><template #actions><UiButton variant="primary" :disabled="!importPassword" :loading="busy" @click="unlockFile">解密并比较</UiButton></template>
     </UiDialog>
   </article>
 </template>
@@ -290,4 +292,12 @@ label{display:flex;align-items:center;gap:8px}
 .model-import-channel{border:1px solid var(--border);border-radius:var(--radius);padding:12px;display:grid;gap:10px}.model-import-channel small{color:var(--muted)}
 .model-transfer-scope{border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px}.model-transfer-scope>div{display:grid;gap:8px;margin:14px 0}.model-transfer-scope>label{margin:10px 0}
 @media(max-width:600px){.model-transfer-choice{grid-template-columns:1fr}}
+</style>
+
+<style scoped>
+.sync-scope-workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,240px);gap:var(--space-5);margin-top:var(--space-5);min-width:0}
+.sync-scope-controls{display:flex;flex-wrap:wrap;gap:var(--space-2)}.sync-scope-controls>*{flex:1 1 200px;min-width:0}.sync-scope-objects,.sync-scope-credentials{display:grid;align-content:start;gap:var(--space-3);min-width:0}
+.sync-scope-credentials{border-inline-start:1px solid var(--border);padding-inline-start:var(--space-4)}
+.sync-scope-credentials h3{margin:0;font-size:var(--text-body)}.sync-scope-credentials label{font-size:var(--text-control)}
+@media(max-width:1000px){.sync-scope-workspace{grid-template-columns:minmax(0,1fr)}.sync-scope-credentials{border-inline-start:0;border-top:1px solid var(--border);padding-inline-start:0;padding-top:var(--space-3)}}
 </style>
