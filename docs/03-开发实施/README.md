@@ -1,6 +1,9 @@
 <!-- project-governance:managed-start -->
 ## 开发实施
 
+2026-10-21执行状态更新：用户已授权0.2.1目标模式实施至发布；[IMP-22](IMP-OPENCODEX-DESKTOP-22.md)已进入in_progress，新代码工作树ocx-021-ui-alignment/feature/0.2.1-ui-alignment已建立。下方仅文档准备为此前快照；当前开始批次A，尚未验收或发布。
+
+
 复杂变化按需建立 `IMP-*`；`REL-*` 与 `RUN-*` 只记录需要长期查阅的人类结论。
 <!-- project-governance:managed-end -->
 
