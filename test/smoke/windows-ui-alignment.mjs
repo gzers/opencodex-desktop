@@ -3,6 +3,12 @@
 import assert from 'node:assert/strict'
 import {writeFile} from 'node:fs/promises'
 import {join} from 'node:path'
+export function overviewScene(rows,gate){
+ if(rows.length>=6)return 'ready'
+ assert.equal(rows.length,0,'partial information cards are not a valid overview state')
+ assert(gate.present&&gate.settled&&gate.checks===3,'missing cards require the real, settled environment gate')
+ return 'environment-gated'
+}
 export async function verifyUiAlignment({call,evaluate,wait,click,output,templateLabel}){
  const receipts=[]
  async function shot(name){const image=await call('Page.captureScreenshot',{format:'png'});await writeFile(join(output,'ui021-'+name+'.png'),Buffer.from(image.data,'base64'))}
@@ -46,9 +52,12 @@ export async function verifyUiAlignment({call,evaluate,wait,click,output,templat
   await click('设置','.side');await wait("!!document.querySelector('[aria-label=界面缩放数值]')",'return to actual scale control')
  }
  await click('Agent 配置','.settings-tabs');await wait("!![...document.querySelectorAll('.settings-panel button')].find(e=>e.textContent.trim()==='Agent 配置')",'persistent Agent configuration');await shot('agent-settings')
- await click('概览','.side');await wait("document.querySelectorAll('.info-row').length>=6",'shared overview information rows')
+ await click('概览','.side');await wait("document.querySelectorAll('.info-row').length>=6||!!document.querySelector('[data-testid=environment-gate] .overview-gate-count')?.textContent.includes('/ 3')",'settled overview environment state')
  const information=await evaluate("[...document.querySelectorAll('.info-row')].map(e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect(),label=e.querySelector('.info-row-label').getBoundingClientRect();return {font:s.fontSize,line:s.lineHeight,padding:s.padding,labelInset:label.left-r.left}})")
- assert.equal(new Set(information.map(x=>x.font+'/'+x.line+'/'+x.padding)).size,1);assert(information.every(x=>x.labelInset>=8));receipts.push({label:'overview-information',rows:information});await shot('overview')
+ const gate=await evaluate("(()=>{const e=document.querySelector('[data-testid=environment-gate]');return {present:!!e,settled:!!e?.querySelector('.overview-gate-count')?.textContent.includes('/ 3'),checks:e?.querySelectorAll('.overview-checks li').length??0}})()")
+ const scene=overviewScene(information,gate)
+ if(scene==='ready'){assert.equal(new Set(information.map(x=>x.font+'/'+x.line+'/'+x.padding)).size,1);assert(information.every(x=>x.labelInset>=8))}
+ receipts.push({label:'overview-information',state:scene,rows:information,...(scene==='environment-gated'?{gate,limitation:'This isolated no-HOME/no-runtime admission intentionally shows setup, not ready cards. InformationRow rendering is checked in the same-source Gallery and ready macOS sandbox; no injected environment bypass.'}:{})});await shot('overview')
  const result={result:'pass',platform:'Windows WebView2',checks:receipts,scope:'actual production consumers and 6 theme/quality combinations; no network sync or model generation'}
  await writeFile(join(output,'ui021-alignment.json'),JSON.stringify(result,null,2)+'\n');return result
 }
